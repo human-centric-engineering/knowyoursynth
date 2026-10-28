@@ -878,7 +878,7 @@
         {
           "title": "A drone underneath",
           "module": "osc",
-          "why": "Drone 1, generators 1 and 2 only, tuned to C2, G2: the root and fifth, VOL 5. Patch the keyboard’s gate out to Drone 1’s GATE: Drone 1 sounds while a key is held, so the keys (and Play) start and stop it. RELEASE 9, so it holds between notes.\n- Listen for: a low bed the melody moves over.",
+          "why": "Drone 1, generators 1 and 2 only, tuned to C2, G2: the root and fifth, VOL 5. Patch the keyboard’s gate out to Drone 1’s GATE: Drone 1 sounds while a key is held, so the keys (and Play) start and stop it. RELEASE 9, so it holds between notes. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a low bed the melody moves over.",
           "set": {
             "mix.d1.vol": 5,
             "d1.tune1": 7.74,
@@ -1059,7 +1059,7 @@
         {
           "title": "A second drone, a hair sharp",
           "module": "osc",
-          "why": "Drone 4, the same chord with each TUNE a touch higher, also opened by the keyboard’s gate. PAN Drone 1 hard left and Drone 4 hard right, both at VOL 7.\n- Listen for: a slow shimmer as the two sides drift against each other.",
+          "why": "Drone 4, the same chord with each TUNE a touch higher, also opened by the keyboard’s gate. PAN Drone 1 hard left and Drone 4 hard right, both at VOL 7. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a slow shimmer as the two sides drift against each other.",
           "set": {
             "d4.att": 7,
             "d4.rls": 8,
@@ -1165,7 +1165,7 @@
         {
           "title": "Two drones, one chord",
           "module": "osc",
-          "why": "Drone 1 tuned to A1, A2, C4, A4, and Drone 4 to A1, A2, E4, C5: A minor between them. Generator 5 off on both, ATTACK 6 and RELEASE 7. PAN 1 hard left, 4 hard right, both at VOL 7. Patch the keyboard’s gate out to Drone 1’s GATE and Drone 4’s GATE: Drone 1 and Drone 4 sounds while a key is held, so the keys (and Play) start and stop it.\n- Listen for: a wide minor chord.",
+          "why": "Drone 1 tuned to A1, A2, C4, A4, and Drone 4 to A1, A2, E4, C5: A minor between them. Generator 5 off on both, ATTACK 6 and RELEASE 7. PAN 1 hard left, 4 hard right, both at VOL 7. Patch the keyboard’s gate out to Drone 1’s GATE and Drone 4’s GATE: Drone 1 and Drone 4 sounds while a key is held, so the keys (and Play) start and stop it. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a wide minor chord.",
           "set": {
             "d1.tune1": 6.77,
             "d1.tune2": 5.0,
@@ -1463,7 +1463,7 @@
         {
           "title": "Two drones apart",
           "module": "mixer",
-          "why": "The keys play VCO A, so this lesson turns its channel down first, to hear the drone alone.\n- VCO A VOL 0. Drone 4 panned hard left, Drone 5 hard right.\n- Patch the keyboard’s gate out to Drone 4’s GATE and Drone 5’s GATE: Drone 4 and Drone 5 sounds while a key is held, so the keys (and Play) start and stop it. RELEASE 8 on both.",
+          "why": "The keys play VCO A, so this lesson turns its channel down first, to hear the drone alone.\n- VCO A VOL 0. Drone 4 panned hard left, Drone 5 hard right.\n- Patch the keyboard’s gate out to Drone 4’s GATE and Drone 5’s GATE: Drone 4 and Drone 5 sounds while a key is held, so the keys (and Play) start and stop it. RELEASE 8 on both. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.",
           "set": {
             "mix.va.vol": 0,
             "mix.d4.pan": -5,
@@ -2259,7 +2259,7 @@
         {
           "title": "The same chord, either side",
           "module": "osc",
-          "why": "VCO A VOL 0. Drone 1 tuned to A1, E2, C4, C5, A5 and panned hard left; Drone 4 to A1, E2, A3, A4, E6 and panned hard right, both VOL 7, ATT 6 and RLS 8. Patch the keyboard’s gate out to both GATEs.\n- Listen for: a wide A minor chord.",
+          "why": "VCO A VOL 0. Drone 1 tuned to A1, E2, C4, C5, A5 and panned hard left; Drone 4 to A1, E2, A3, A4, E6 and panned hard right, both VOL 7, ATT 6 and RLS 8. Patch the keyboard’s gate out to both GATEs. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a wide A minor chord.",
           "set": {
             "mix.va.vol": 0,
             "mix.d1.vol": 7,
@@ -4042,7 +4042,7 @@
         {
           "title": "Let it move the filter",
           "module": "filter",
-          "why": "Patch a second cable from the sequencer’s cv out to CV L. Both FREQ to 4, RES 6, MOD L and MOD R 3.\n- Listen for: the high steps brighter and ringing, the low ones dark.",
+          "why": "Patch a second cable from the sequencer’s cv out to CV L. Both FREQ to 4, RES 6, MOD L and MOD R 3. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: the high steps brighter and ringing, the low ones dark.",
           "set": {
             "vcf.lfreq": 4,
             "vcf.rfreq": 4,
@@ -4399,7 +4399,7 @@
         {
           "title": "The frog",
           "module": "osc",
-          "why": "Drone 6: HI on, PITCH 6.5, AM on, 1 / 10 on, rate 2.5. Patch the keyboard’s gate out to its GATE too, ATT 4, RLS 6, VOL 4, PAN +4.\n- Listen for: a slower, lower chirp on the right that never falls in step.",
+          "why": "Drone 6: HI on, PITCH 6.5, AM on, 1 / 10 on, rate 2.5. Patch the keyboard’s gate out to its GATE too, ATT 4, RLS 6, VOL 4, PAN +4. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a slower, lower chirp on the right that never falls in step.",
           "set": {
             "d6.hi": true,
             "d6.pitch": 6.5,
@@ -4900,7 +4900,7 @@
         {
           "title": "Open them slowly",
           "module": "patch",
-          "why": "Patch the keyboard’s gate out to Drone 1’s and Drone 2’s GATE. ATT 6, RLS 7 on both.\n- Listen for: a low, buzzing power chord swelling in.",
+          "why": "Patch the keyboard’s gate out to Drone 1’s and Drone 2’s GATE. ATT 6, RLS 7 on both. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a low, buzzing power chord swelling in.",
           "set": {
             "d1.att": 6,
             "d1.rls": 7,
@@ -5156,7 +5156,7 @@
         {
           "title": "The hum",
           "module": "osc",
-          "why": "Drone 6: PITCH 4.5, HI off. Patch the keyboard’s gate out to its GATE too, ATT 3, RLS 5, VOL 3, PAN 0.\n- Listen for: a low hum under the static.",
+          "why": "Drone 6: PITCH 4.5, HI off. Patch the keyboard’s gate out to its GATE too, ATT 3, RLS 5, VOL 3, PAN 0. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a low hum under the static.",
           "set": {
             "d6.pitch": 4.5,
             "d6.att": 3,
@@ -5235,7 +5235,7 @@
         {
           "title": "The chord",
           "module": "osc",
-          "why": "VCO A VOL 0 for now. Drone 1: C2, G2, E3, C5, G5. Drone 2: generator 1 muted, then C3, G3, E4, C6. Both ATT 7, RLS 8, VOL 4. Patch the keyboard’s gate out to each one’s GATE.\n- Listen for: a wide C major chord rising slowly.",
+          "why": "VCO A VOL 0 for now. Drone 1: C2, G2, E3, C5, G5. Drone 2: generator 1 muted, then C3, G3, E4, C6. Both ATT 7, RLS 8, VOL 4. Patch the keyboard’s gate out to each one’s GATE. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a wide C major chord rising slowly.",
           "set": {
             "d1.tune1": 7.74,
             "d1.tune2": 4.0,
@@ -6824,7 +6824,7 @@
         {
           "title": "A thump on the right",
           "module": "osc",
-          "why": "Drone 3: PITCH 3.5, AM on, rate 6, PAN +5, VOL 7, ATT 0, RLS 3. Patch the keyboard’s gate out to its GATE.\n- Listen for: a low, pulsing thump on the right.",
+          "why": "Drone 3: PITCH 3.5, AM on, rate 6, PAN +5, VOL 7, ATT 0, RLS 3. Patch the keyboard’s gate out to its GATE. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a low, pulsing thump on the right.",
           "set": {
             "d3.pitch": 3.5,
             "d3.am": true,
@@ -7110,7 +7110,7 @@
         {
           "title": "Rain",
           "module": "osc",
-          "why": "Drone 3: NOISE 10, ATT 6, RLS 8, VOL 5, PAN +4. Patch the keyboard’s gate out to its GATE. CATHEDRAL on both sides, program 3, X 2, Y 6, Z 7, BLEND 4.\n- Listen for: hissing rain on the right, the storm in a huge space.",
+          "why": "Drone 3: NOISE 10, ATT 6, RLS 8, VOL 5, PAN +4. Patch the keyboard’s gate out to its GATE. CATHEDRAL on both sides, program 3, X 2, Y 6, Z 7, BLEND 4. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: hissing rain on the right, the storm in a huge space.",
           "set": {
             "d3.noise": 10,
             "d3.att": 6,
@@ -7328,7 +7328,7 @@
         {
           "title": "Two drones",
           "module": "osc",
-          "why": "VCO A VOL 0. Drone 1 tuned to D2, A2, D4, A4, D6; Drone 2 to A1, E3, F♯4, D5, A6. Patch the keyboard’s gate out to both GATEs. ATT 4, RLS 6 on both. PANs −4 and +4.\n- Listen for: a wide D major chord.",
+          "why": "VCO A VOL 0. Drone 1 tuned to D2, A2, D4, A4, D6; Drone 2 to A1, E3, F♯4, D5, A6. Patch the keyboard’s gate out to both GATEs. ATT 4, RLS 6 on both. PANs −4 and +4. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a wide D major chord.",
           "set": {
             "mix.va.vol": 0,
             "d1.att": 4,
@@ -7771,7 +7771,7 @@
         {
           "title": "Bow them",
           "module": "patch",
-          "why": "Patch the keyboard’s gate out to both GATEs. ATT 7.5, RLS 9 on both. PANs −4 and +4, VOL 8.\n- Listen for: a soft chord swelling in, shimmering slightly between the speakers.",
+          "why": "Patch the keyboard’s gate out to both GATEs. ATT 7.5, RLS 9 on both. PANs −4 and +4, VOL 8. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a soft chord swelling in, shimmering slightly between the speakers.",
           "set": {
             "d1.att": 7.5,
             "d1.rls": 9,
@@ -8286,7 +8286,7 @@
         {
           "title": "Wind",
           "module": "osc",
-          "why": "Drone 3: NOISE 10, ATT 7, RLS 9, VOL 3, PAN −3. Patch the keyboard’s gate out to its GATE. Patch LFO A out to CV L, MOD L and MOD R 2, LFO A rate 2.\n- Listen for: a slow wind rising and falling in the middle.",
+          "why": "Drone 3: NOISE 10, ATT 7, RLS 9, VOL 3, PAN −3. Patch the keyboard’s gate out to its GATE. Patch LFO A out to CV L, MOD L and MOD R 2, LFO A rate 2. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a slow wind rising and falling in the middle.",
           "set": {
             "d3.noise": 10,
             "d3.att": 7,
@@ -8368,7 +8368,7 @@
         {
           "title": "The haze",
           "module": "osc",
-          "why": "Drone 1: E2, B2, G♯3, E4, B5. Drone 2: generator 1 muted, then E3, B3, D♯5, F♯6. Patch the keyboard’s gate out to both. ATT 6, RLS 8, VOL 5, PANs −3 and +3.\n- Listen for: a soft, wide E major chord.",
+          "why": "Drone 1: E2, B2, G♯3, E4, B5. Drone 2: generator 1 muted, then E3, B3, D♯5, F♯6. Patch the keyboard’s gate out to both. ATT 6, RLS 8, VOL 5, PANs −3 and +3. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a soft, wide E major chord.",
           "set": {
             "d1.tune1": 9.032,
             "d1.tune2": 6.0,
@@ -8544,7 +8544,7 @@
         {
           "title": "Organ stops",
           "module": "osc",
-          "why": "VCO A VOL 0. Drone 1: F2, C3, F3, A4, C6. Drone 2: generator 1 muted, then C3, C4, F5 and A6. Patch the keyboard’s gate out to both. ATT 5, RLS 8, PANs −2 and +2.\n- Listen for: a full, organ-like F major.",
+          "why": "VCO A VOL 0. Drone 1: F2, C3, F3, A4, C6. Drone 2: generator 1 muted, then C3, C4, F5 and A6. Patch the keyboard’s gate out to both. ATT 5, RLS 8, PANs −2 and +2. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a full, organ-like F major.",
           "set": {
             "mix.va.vol": 0,
             "d1.tune1": 9.355,
@@ -8805,7 +8805,7 @@
         {
           "title": "A distant beacon",
           "module": "osc",
-          "why": "Drone 6: PITCH 7, FM on, MOD 6, rate 0.5, NOISE 2. Patch the keyboard’s gate out to its GATE. ATT 7, RLS 9, VOL 3, PAN 0.\n- Listen for: a tone switching slowly between a low pitch and a high one.",
+          "why": "Drone 6: PITCH 7, FM on, MOD 6, rate 0.5, NOISE 2. Patch the keyboard’s gate out to its GATE. ATT 7, RLS 9, VOL 3, PAN 0. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a tone switching slowly between a low pitch and a high one.",
           "set": {
             "d6.pitch": 7,
             "d6.fm": true,
@@ -8888,7 +8888,7 @@
         {
           "title": "Open it",
           "module": "patch",
-          "why": "Patch the keyboard’s gate out to Drone 1’s and Drone 2’s GATE. ATT 5, RLS 8, VOL 7, PAN 0 on both.\n- Listen for: a C major seventh with no beating: still and bright.",
+          "why": "Patch the keyboard’s gate out to Drone 1’s and Drone 2’s GATE. ATT 5, RLS 8, VOL 7, PAN 0 on both. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a C major seventh with no beating: still and bright.",
           "set": {
             "d1.att": 5,
             "d1.rls": 8,
@@ -9022,7 +9022,7 @@
         {
           "title": "One chord, two drones",
           "module": "osc",
-          "why": "VCO A VOL 0. Drone 1 and Drone 4 both: G2, D3, B3, G4, D6. Patch the keyboard’s gate out to both. ATT 6, RLS 8, VOL 6, PANs −4 and +4.\n- Listen for: a wide G major chord.",
+          "why": "VCO A VOL 0. Drone 1 and Drone 4 both: G2, D3, B3, G4, D6. Patch the keyboard’s gate out to both. ATT 6, RLS 8, VOL 6, PANs −4 and +4. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a wide G major chord.",
           "set": {
             "mix.va.vol": 0,
             "d1.tune1": 10.0,
@@ -9138,7 +9138,7 @@
         {
           "title": "A pentatonic walk",
           "module": "patch",
-          "why": "Steps 0, 0.33, 0.67, 1.17, 1.5 (root, second, third, fifth, sixth). Pulser 2.5. Patch the sequencer’s cv out to both VCOs’ 1v/oct, and its gate out to Envelope A’s gate.\n- Listen for: VCO A walking the scale, a note every second and a half or so.",
+          "why": "Steps 0, 0.33, 0.67, 1.17, 1.5 (root, second, third, fifth, sixth). Pulser 2.5. Patch the sequencer’s cv out to both VCOs’ 1v/oct, and its gate out to Envelope A’s gate. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: VCO A walking the scale, a note every second and a half or so.",
           "set": {
             "seq.s1": 0,
             "seq.s2": 0.33,
@@ -9302,7 +9302,7 @@
         {
           "title": "A pale chord",
           "module": "osc",
-          "why": "VCO A VOL 0. Drone 4: generators 3, 4 and 5 to A3, E5 and C♯6. Drone 5: generators 4 and 5 to B4 and F♯6. The rest muted. Patch the keyboard’s gate out to both. ATT 7, RLS 9, VOL 7, PANs −4 and +4.\n- Listen for: a high, weightless A major chord.",
+          "why": "VCO A VOL 0. Drone 4: generators 3, 4 and 5 to A3, E5 and C♯6. Drone 5: generators 4 and 5 to B4 and F♯6. The rest muted. Patch the keyboard’s gate out to both. ATT 7, RLS 9, VOL 7, PANs −4 and +4. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a high, weightless A major chord.",
           "set": {
             "mix.va.vol": 0,
             "d4.tune3": 3.333,
@@ -9575,7 +9575,7 @@
         {
           "title": "A moving chord",
           "module": "osc",
-          "why": "Drone 5: generator 1 muted, then E3, B3, E5, B6. MOD on all five, CV 3. Patch the keyboard’s gate out to its GATE. ATT 6, RLS 9, VOL 5, PAN +3.\n- Listen for: an E chord resting on the C: C major seventh, for now.",
+          "why": "Drone 5: generator 1 muted, then E3, B3, E5, B6. MOD on all five, CV 3. Patch the keyboard’s gate out to its GATE. ATT 6, RLS 9, VOL 5, PAN +3. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: an E chord resting on the C: C major seventh, for now.",
           "set": {
             "d5.tune2": 8.5,
             "d5.tune3": 4.286,
@@ -9681,7 +9681,7 @@
         {
           "title": "Light them",
           "module": "patch",
-          "why": "Patch the keyboard’s gate out to all four GATEs. ATT 6, RLS 9 on each. PANs −5, −2, +2, +5. VOL 6 each.\n- Listen for: four soft, high tones spread across the sky.",
+          "why": "Patch the keyboard’s gate out to all four GATEs. ATT 6, RLS 9 on each. PANs −5, −2, +2, +5. VOL 6 each. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: four soft, high tones spread across the sky.",
           "set": {
             "d1.att": 6,
             "d1.rls": 9,
@@ -10550,7 +10550,7 @@
         {
           "title": "The machine",
           "module": "osc",
-          "why": "VCO A VOL 0. Drone 3: PITCH 3, NOISE 5, AM on, 1 / 10 on, rate 6. Drone 6: PITCH 2, VOL 5. Patch the keyboard’s gate out to both GATEs. ATT 1, RLS 4 on both.\n- Listen for: a buzzing, chopped grind over a low drone.",
+          "why": "VCO A VOL 0. Drone 3: PITCH 3, NOISE 5, AM on, 1 / 10 on, rate 6. Drone 6: PITCH 2, VOL 5. Patch the keyboard’s gate out to both GATEs. ATT 1, RLS 4 on both. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a buzzing, chopped grind over a low drone.",
           "set": {
             "mix.va.vol": 0,
             "d3.pitch": 3,
@@ -12148,7 +12148,7 @@
         {
           "title": "A cluster",
           "module": "osc",
-          "why": "VCO A VOL 0. Drone 1: generators 2, 3 and 4 a few cents around G3 and G4, 1 and 5 muted. Drone 2 the same, a little differently. Patch the keyboard’s gate out to both. ATT 4, RLS 5, VOL 10, PANs −3 and +3.\n- Listen for: a dense, beating buzz around G.",
+          "why": "VCO A VOL 0. Drone 1: generators 2, 3 and 4 a few cents around G3 and G4, 1 and 5 muted. Drone 2 the same, a little differently. Patch the keyboard’s gate out to both. ATT 4, RLS 5, VOL 10, PANs −3 and +3. On the hardware each jack takes one plug, so sending one output to several inputs needs stackable cables or a multiple.\n- Listen for: a dense, beating buzz around G.",
           "set": {
             "mix.va.vol": 0,
             "d1.tune2": 9.9,
