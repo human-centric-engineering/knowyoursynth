@@ -25,9 +25,9 @@ import {
   ModularCase,
   PanelDefs,
   PAPER,
+  Plate,
   Select,
   StaticDecor,
-  Plate,
   Switch,
 } from '@/components/app/panel/parts';
 import type { NotePress } from '@/components/app/panel/parts';

@@ -21,7 +21,7 @@
 // in words, so `DROP`, the knee, the cross-modulation depth, the filter's saturation and `DIST_GAIN` are the app's
 // choices.
 import { FX_FACTORY, type FxAlgo } from '@/lib/app/synths/audio/dm-fx';
-import type { SolarEnv, SolarParams, SolarVoice } from '@/lib/app/synths/contract';
+import type { SolarEnv, SolarFxKnob, SolarParams, SolarVoice } from '@/lib/app/synths/contract';
 
 const VOICES = 8;
 const range = (n: number): number[] => Array.from({ length: n }, (_, i) => i + 1);
@@ -173,7 +173,9 @@ export function createSolar(
   const cart: (FxAlgo | null)[] = [null, null];
   const cartAlg: (string | null)[] = [null, null];
   const xyzDst = [DI.solFxX, DI.solFxY, DI.solFxZ];
+  // the last value applied, one slot per side and knob (left X/Y/Z, then right), so a side's missing knob shifts nothing
   const xyzLast = [0, 0, 0, 0, 0, 0];
+  const xyzSlot = (q: SolarFxKnob) => (q.side === 'r' ? 3 : 0) + q.k;
   let blk = 0;
   let blend = 0,
     master = 0;
@@ -251,10 +253,10 @@ export function createSolar(
       t = t < 0 ? 0 : t > 1 ? 1 : t;
       const val = q.lo + (q.hi - q.lo) * t;
       vals.push(val);
-      if (Math.abs(val - xyzLast[i]) > Math.abs(q.hi - q.lo) * 0.005) moved = true;
+      if (Math.abs(val - xyzLast[xyzSlot(q)]) > Math.abs(q.hi - q.lo) * 0.005) moved = true;
     }
     if (!moved) return;
-    for (let i = 0; i < vals.length; i++) xyzLast[i] = vals[i];
+    for (let i = 0; i < vals.length; i++) xyzLast[xyzSlot(xyz[i])] = vals[i];
     for (let s = 0; s < 2; s++) {
       const c = cart[s];
       if (!c) continue;

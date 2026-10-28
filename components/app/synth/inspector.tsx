@@ -181,6 +181,8 @@ const cardClass =
 export interface TooltipProps {
   /** Info cards on. Off, only the card that guides a cable being plugged in still appears. */
   enabled?: boolean;
+  /** With cards off, the section cards still appear (Explain sections is on). */
+  areas?: boolean;
   def: SynthDef;
   values: ControlValues;
   /** The sound's values, when a control has moved off them; `null` during a lesson step. */
@@ -190,7 +192,15 @@ export interface TooltipProps {
 }
 
 /** Floating card that follows the mouse over the panel. */
-export function Tooltip({ enabled = true, def, values, target, preset, cables }: TooltipProps) {
+export function Tooltip({
+  enabled = true,
+  areas = false,
+  def,
+  values,
+  target,
+  preset,
+  cables,
+}: TooltipProps) {
   const { f, c, j, cable, area, mark } = useFocused(def);
   const pending = useStore(pendingStore);
   const jm = jackMap(def);
@@ -218,7 +228,7 @@ export function Tooltip({ enabled = true, def, values, target, preset, cables }:
   const prospect = f.kind === 'cable' && !!f.prospect;
   const pin = f.kind === 'cable' && !!f.pin;
   const patching = !!pj || prospect;
-  if (!enabled && !patching) return null;
+  if (!enabled && !patching && !(areas && area)) return null;
 
   if (mark) {
     const mod = moduleOf(mark.module);
@@ -480,7 +490,7 @@ export function Inspector({
   onConnect,
   onUnplug,
 }: InspectorProps) {
-  const { f, c, j, cable, area } = useFocused(def);
+  const { f, c, j, cable, area, mark } = useFocused(def);
   const cableKey = cable ? cable.id : '';
   const x = useMemo(
     () => (cable ? explainCable(def, cable.from, cable.to, values, cables) : null),
@@ -532,6 +542,23 @@ export function Inspector({
               </button>
             )}
           </div>
+        </section>
+        {list}
+      </>
+    );
+  }
+
+  if (mark) {
+    const mod = moduleOf(mark.module);
+    return (
+      <>
+        <section aria-live="polite" className={sectionClass}>
+          <h2 className="kys-label flex items-center gap-1.5" style={{ color: mod.color }}>
+            <span className="h-2 w-2 rounded-full" style={{ background: mod.color }} />
+            {mod.label}
+          </h2>
+          <p className="kys-display mt-1 text-[15px] leading-tight">{mark.name}</p>
+          <p className="mt-2 text-[14.5px] leading-relaxed">{mark.help}</p>
         </section>
         {list}
       </>

@@ -194,6 +194,26 @@ describe('Inspector', () => {
     });
   });
 
+  it('explains a focused mark, so a tap reaches its card on a touch screen', () => {
+    const marked = {
+      ...def,
+      marks: [
+        {
+          id: 'sun',
+          name: 'The sun',
+          help: 'A printed marker.',
+          module: 'filter' as const,
+          rect: { x: 0, y: 0, w: 10, h: 10 },
+        },
+      ],
+    };
+    inspector({ def: marked });
+    focus({ kind: 'mark', id: 'sun', x: 0, y: 0, tip: false });
+
+    const section = screen.getByText('The sun').closest('section');
+    expect(section?.textContent).toContain('A printed marker.');
+  });
+
   it("lists an area's jacks with their direction, and focusing one sets the stores", () => {
     inspector();
     focus({ kind: 'area', id: 'patch', x: 0, y: 0, tip: false });
@@ -323,6 +343,15 @@ describe('Tooltip', () => {
     const { container } = tooltip({ enabled: false });
     focus(control('filter.cutoff'));
     expect(container.firstChild).toBeNull();
+  });
+
+  it('with cards off, shows a section card for Explain sections but not a control card', () => {
+    tooltip({ enabled: false, areas: true });
+    focus(control('filter.cutoff'));
+    expect(screen.queryByRole('tooltip')).toBeNull();
+
+    focus({ kind: 'area', id: 'filter', x: 100, y: 100, tip: true });
+    expect(screen.getByRole('tooltip').textContent).toContain('Filter and filter contour');
   });
 
   it('still guides a cable being plugged in when info cards are off', () => {

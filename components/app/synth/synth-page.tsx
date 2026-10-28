@@ -2557,9 +2557,10 @@ function Synth({
             )}
 
             {/* Inside the player, so the cards and the tour still show with the player full screen. Explain sections
-            is a layer of hover explanations, so it shows them with hover help off, without changing the setting. */}
+            is a layer of section cards, so they show with hover help off, without changing the setting. */}
             <Tooltip
-              enabled={(tipsOn || areasOn) && !(small && coarse)}
+              enabled={tipsOn && !(small && coarse)}
+              areas={areasOn && !(small && coarse)}
               def={def}
               values={sess.values}
               target={step == null ? target : null}

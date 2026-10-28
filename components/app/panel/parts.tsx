@@ -2252,11 +2252,14 @@ const EYE_FACETS: [number, number, number][] = (
  * with the light it sees: its own value or, while the engine runs, the light the meters report, CV included.
  */
 function EyeBody({ c, value, ctx }: { c: KnobControl; value: ControlValue; ctx: PanelCtx }) {
-  const meters = useStore(meterStore);
+  // only this eye's light, so a meter tick that leaves it alone does not redraw the dome
+  const reported = useStore(meterStore, (m) =>
+    c.eye != null && m.power ? m.eyes?.[c.eye] : undefined
+  );
   const r = c.r;
   const own =
     typeof value === 'number' ? (value - (c.min ?? 0)) / ((c.max ?? 10) - (c.min ?? 0)) : 0;
-  const seen = c.eye != null && meters.power ? (meters.eyes?.[c.eye] ?? own) : own;
+  const seen = reported ?? own;
   const lit = Math.min(1, Math.max(0, seen));
   const lenses = [
     <circle key="c" r={r * 0.115} />,
@@ -2306,12 +2309,31 @@ export type NotePress = (note: number, on: boolean) => void;
 export function Plate({ c, onNote }: { c: ButtonControl; onNote?: NotePress }) {
   const hover = useHover('control', c.id);
   const [down, setDown] = useState(false);
+  // what is held now, read by every release: pointer up, cancel and lost capture can all fire for one press
+  const held = useRef<{ note: number; play: NotePress } | null>(null);
   const note = c.note ?? 60;
-  const release = () => {
-    if (!down) return;
-    setDown(false);
-    onNote?.(note, false);
+  const press = () => {
+    if (!onNote || held.current) return;
+    held.current = { note, play: onNote };
+    setDown(true);
+    onNote(note, true);
   };
+  const release = () => {
+    const h = held.current;
+    if (!h) return;
+    held.current = null;
+    setDown(false);
+    h.play(h.note, false);
+  };
+  // a plate taken off the page while held lets its note go
+  useEffect(
+    () => () => {
+      const h = held.current;
+      held.current = null;
+      h?.play(h.note, false);
+    },
+    []
+  );
   return (
     <g>
       <Highlight c={c} r={Math.max(c.w, c.h) * 0.6} />
@@ -2325,6 +2347,7 @@ export function Plate({ c, onNote }: { c: ButtonControl; onNote?: NotePress }) {
         opacity={down ? 0.35 : 1}
         style={{ cursor: onNote ? 'pointer' : 'default', touchAction: 'none' }}
         role="button"
+        tabIndex={0}
         aria-label={(c.label || c.id).replace(/\n/g, ' ')}
         aria-pressed={down}
         {...hover}
@@ -2332,12 +2355,21 @@ export function Plate({ c, onNote }: { c: ButtonControl; onNote?: NotePress }) {
           if (!onNote) return;
           e.preventDefault();
           e.currentTarget.setPointerCapture(e.pointerId);
-          setDown(true);
-          onNote(note, true);
+          press();
         }}
         onPointerUp={release}
         onPointerCancel={release}
         onLostPointerCapture={release}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            if (!e.repeat) press();
+          }
+        }}
+        onKeyUp={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') release();
+        }}
+        onBlur={release}
       />
     </g>
   );
