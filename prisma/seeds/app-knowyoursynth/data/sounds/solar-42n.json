@@ -5363,6 +5363,2293 @@
           "hear": "The surf rolling in louder under the chord."
         }
       ]
+    },
+    {
+      "id": "solar-808-glide",
+      "name": "808 Glide Bass",
+      "ref": "In the style of trap’s gliding 808 basses",
+      "artist": "Trap",
+      "tags": ["bass", "vco", "sub", "portamento", "distortion"],
+      "level": 1,
+      "blurb": "A deep sine with a sub under it that slides between notes and growls a little: the gliding 808 of trap.",
+      "how": "A trap 808 is a long, low sine that slides from note to note, often driven until it growls. VCO A on sine with its sub-oscillator gives the depth; PORTAMENTO makes every new note glide from the last; a touch of the distortion after the filter adds the growl that lets it cut through on small speakers.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 36, 2.9],
+          [3, 43, 0.9],
+          [4, 41, 1.9],
+          [6, 34, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A deep sine",
+          "module": "osc",
+          "why": "VCO A on sine, −1 SUB on. Envelope A: ATTACK 0, DECAY 8, SUSTAIN 4, RELEASE 5.\n- Listen for: a round, booming bass that fades as it holds.",
+          "set": {
+            "va.wave": "sine",
+            "va.sub": "on",
+            "ea.a": 0,
+            "ea.d": 8,
+            "ea.s": 4,
+            "ea.r": 5
+          }
+        },
+        {
+          "title": "Glide",
+          "module": "glide",
+          "why": "PORTAMENTO 3.5.\n- Listen for: each note sliding up or down into the next.",
+          "set": {
+            "kb.glide": 3.5
+          }
+        },
+        {
+          "title": "Growl",
+          "module": "filter",
+          "why": "DIST 4, GAIN 6. Both FREQ to 5.\n- Listen for: a little grit on top of the boom.",
+          "set": {
+            "vcf.dist": 4,
+            "vcf.gain": 6,
+            "vcf.lfreq": 5,
+            "vcf.rfreq": 5
+          }
+        }
+      ],
+      "context": {
+        "kb.glide": "In this sound: how long each slide takes."
+      },
+      "tweaks": [
+        {
+          "id": "kb.glide",
+          "try": "Turn PORTAMENTO to 5",
+          "hear": "Long, lazy slides."
+        },
+        {
+          "id": "vcf.dist",
+          "try": "Turn DIST to 8",
+          "hear": "A distorted, saturated 808."
+        }
+      ]
+    },
+    {
+      "id": "solar-italo-bass",
+      "name": "Italo Octave Bass",
+      "ref": "In the style of early-80s Italo disco octave basslines",
+      "artist": "Italo disco",
+      "tags": ["bass", "vco", "filter", "delay"],
+      "level": 1,
+      "blurb": "A punchy saw bass jumping between octaves on every eighth note, as Italo disco and hi-NRG basslines do.",
+      "how": "The Italo and hi-NRG bass is one note alternating with its octave, eighth notes, all night. A saw with a short, snappy envelope opening the filter by cable gives it punch, and a quick TIME echo in time-ish with the line makes it shimmer.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0.0, 36, 0.4],
+          [0.5, 48, 0.4],
+          [1.0, 36, 0.4],
+          [1.5, 48, 0.4],
+          [2.0, 36, 0.4],
+          [2.5, 48, 0.4],
+          [3.0, 36, 0.4],
+          [3.5, 48, 0.4],
+          [4.0, 41, 0.4],
+          [4.5, 53, 0.4],
+          [5.0, 41, 0.4],
+          [5.5, 53, 0.4],
+          [6.0, 41, 0.4],
+          [6.5, 53, 0.4],
+          [7.0, 41, 0.4],
+          [7.5, 53, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A punchy saw",
+          "module": "osc",
+          "why": "VCO A on saw. Envelope A: ATTACK 0, DECAY 4.5, SUSTAIN 3, RELEASE 2.\n- Listen for: short, punchy notes.",
+          "set": {
+            "va.wave": "saw",
+            "ea.a": 0,
+            "ea.d": 4.5,
+            "ea.s": 3,
+            "ea.r": 2
+          }
+        },
+        {
+          "title": "Let it bite",
+          "module": "filter",
+          "why": "Both FREQ to 3.5, RES 3. Patch Envelope A’s env out to CV L, MOD L and MOD R 4.\n- Listen for: a click of brightness at the start of each note.",
+          "set": {
+            "vcf.lfreq": 3.5,
+            "vcf.rfreq": 3.5,
+            "vcf.lres": 3,
+            "vcf.rres": 3,
+            "vcf.lmod": 4,
+            "vcf.rmod": 4
+          },
+          "cables": [["ea.env", "vcf.cvl"]]
+        },
+        {
+          "title": "A little echo",
+          "module": "fx",
+          "why": "TIME on both sides, program 1. X 2, Y 2, Z 2, BLEND 2.\n- Listen for: a short slap behind the bass.",
+          "set": {
+            "fx.cartL": "time",
+            "fx.cartR": "time",
+            "fx.x": 2,
+            "fx.y": 2,
+            "fx.z": 2,
+            "fx.blend": 2
+          }
+        }
+      ],
+      "context": {
+        "ea.d": "In this sound: how long the punch lasts."
+      },
+      "tweaks": [
+        {
+          "id": "va.sub",
+          "try": "Switch −1 SUB on",
+          "hear": "A heavier, fuller bass."
+        },
+        {
+          "id": "vcf.lres",
+          "try": "Turn both RES to 7",
+          "hear": "A rubbery, wet bass."
+        }
+      ]
+    },
+    {
+      "id": "solar-trance-lead",
+      "name": "Trance Lead",
+      "ref": "In the style of late-90s trance leads",
+      "artist": "Trance",
+      "tags": ["lead", "vco", "detune", "delay", "melody"],
+      "level": 2,
+      "blurb": "Two bright, detuned saws spread wide and thrown into a long, spacious delay: an anthemic trance lead.",
+      "how": "Trance leads stack detuned saws and soak them in delay and reverb. The 42N has two VCOs; detune VCO B, pan them apart and leave the filter well open. TIME’s Delay reverb, with plenty of feedback, gives the long, stadium-sized tail.",
+      "phrase": {
+        "bpm": 138,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.9],
+          [1, 72, 0.4],
+          [1.5, 76, 0.9],
+          [2.5, 74, 0.4],
+          [3, 72, 0.9],
+          [4, 69, 0.4],
+          [4.5, 67, 0.4],
+          [5, 69, 2.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two detuned saws",
+          "module": "osc",
+          "why": "VCO A and VCO B on saw, VCO B VOL 7, TUNE 5.15. VCO A PAN −3, VCO B PAN +3.\n- Listen for: a wide, buzzing unison.",
+          "set": {
+            "va.wave": "saw",
+            "vb.wave": "saw",
+            "mix.vb.vol": 7,
+            "vb.tune": 5.15,
+            "mix.va.pan": -3,
+            "mix.vb.pan": 3
+          }
+        },
+        {
+          "title": "Bright and sustained",
+          "module": "env",
+          "why": "Both envelopes: ATTACK 1, DECAY 6, SUSTAIN 8, RELEASE 5. Both FREQ to 7.5.\n- Listen for: a bright, held lead.",
+          "set": {
+            "ea.a": 1,
+            "ea.d": 6,
+            "ea.s": 8,
+            "ea.r": 5,
+            "eb.a": 1,
+            "eb.d": 6,
+            "eb.s": 8,
+            "eb.r": 5,
+            "vcf.lfreq": 7.5,
+            "vcf.rfreq": 7.5
+          }
+        },
+        {
+          "title": "Huge space",
+          "module": "fx",
+          "why": "TIME on both sides, program 1. X 6, Y 4, Z 7, BLEND 4. MASTER VOLUME 6.\n- Listen for: a long tail of echoes behind every phrase.",
+          "set": {
+            "fx.cartL": "time",
+            "fx.cartR": "time",
+            "fx.x": 6,
+            "fx.y": 4,
+            "fx.z": 7,
+            "fx.blend": 4,
+            "fx.master": 6
+          }
+        }
+      ],
+      "context": {
+        "vb.tune": "In this sound: how thick the unison is."
+      },
+      "tweaks": [
+        {
+          "id": "kb.glide",
+          "try": "Turn PORTAMENTO to 1",
+          "hear": "A slight slide between notes, as many trance leads have."
+        },
+        {
+          "id": "vcf.lfreq",
+          "try": "Sweep both FREQ from 4 up to 8",
+          "hear": "The classic trance filter build."
+        }
+      ]
+    },
+    {
+      "id": "solar-funky-clav",
+      "name": "Funky Clav",
+      "ref": "In the style of 70s funk clavinet",
+      "artist": "70s funk",
+      "tags": ["keys", "vco", "bandpass", "pulse", "melody"],
+      "level": 2,
+      "blurb": "A narrow pulse through the band-pass filter, struck short and percussive: a funky, quacking clavinet.",
+      "how": "A clavinet is a struck string with a bright, nasal attack that dies quickly. A narrow pulse has the nasal edge, the band-pass filter takes away the body, and an envelope patched to the filter adds the quack on each note. Keep the notes short and syncopated.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.2],
+          [0.5, 60, 0.2],
+          [0.75, 63, 0.2],
+          [1.25, 65, 0.2],
+          [1.5, 60, 0.2],
+          [2.25, 67, 0.2],
+          [2.5, 65, 0.2],
+          [3, 63, 0.2],
+          [3.5, 60, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A narrow pulse",
+          "module": "osc",
+          "why": "VCO A on square, PW 2, VOL 10. Envelope A: ATTACK 0, DECAY 4, SUSTAIN 2, RELEASE 2. MASTER VOLUME 9.\n- Listen for: short, nasal notes.",
+          "set": {
+            "va.wave": "square",
+            "va.pw": 2,
+            "mix.va.vol": 10,
+            "fx.master": 9,
+            "ea.a": 0,
+            "ea.d": 4,
+            "ea.s": 2,
+            "ea.r": 2
+          }
+        },
+        {
+          "title": "Band-pass",
+          "module": "filter",
+          "why": "Both filters BP, FREQ 5.5, RES 4.\n- Listen for: a thin, honky tone.",
+          "set": {
+            "vcf.lmode": "bp",
+            "vcf.rmode": "bp",
+            "vcf.lfreq": 5.5,
+            "vcf.rfreq": 5.5,
+            "vcf.lres": 4,
+            "vcf.rres": 4
+          }
+        },
+        {
+          "title": "Quack",
+          "module": "patch",
+          "why": "Patch Envelope A’s env out to CV L, MOD L and MOD R 2.\n- Listen for: a little upward “wow” at the start of every note.",
+          "set": {
+            "vcf.lmod": 2,
+            "vcf.rmod": 2
+          },
+          "cables": [["ea.env", "vcf.cvl"]]
+        },
+        {
+          "title": "Phaser",
+          "module": "fx",
+          "why": "VIBE on both sides, program 1. X 5, Y 3, BLEND 3.\n- Listen for: a gentle swirl, as on many funk records.",
+          "set": {
+            "fx.cartL": "vibe",
+            "fx.cartR": "vibe",
+            "fx.x": 5,
+            "fx.y": 3,
+            "fx.blend": 3
+          }
+        }
+      ],
+      "context": {
+        "vcf.lmod": "In this sound: how much the quack opens."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.lmod",
+          "try": "Turn MOD L and MOD R to 4",
+          "hear": "An exaggerated, wah-wah quack."
+        },
+        {
+          "id": "va.pw",
+          "try": "Turn PW to 5",
+          "hear": "A rounder, woodier clav."
+        }
+      ]
+    },
+    {
+      "id": "solar-rave-hoover",
+      "name": "Rave Hoover",
+      "ref": "In the style of early-90s hardcore rave “hoover” sounds",
+      "artist": "Rave",
+      "tags": ["lead", "vco", "pwm", "portamento", "distortion"],
+      "level": 3,
+      "blurb": "Both VCOs on the 42N’s morphing saw, their shape swept by the LFOs and gliding between notes: the swooping, menacing rave hoover.",
+      "how": "The hoover is a thick, detuned, pulse-width-modulated saw that slides into every note. The 42N’s VCOs have a morph wave, saw to inverted saw, which PW sweeps through. LFO A and LFO B, at different speeds, move each VCO’s shape through its pwm input; VCO B a fourth below, portamento and the distortion finish it.",
+      "phrase": {
+        "bpm": 150,
+        "loop": true,
+        "steps": [
+          [0, 50, 1.9],
+          [2, 53, 0.9],
+          [3, 55, 0.9],
+          [4, 50, 1.4],
+          [5.5, 48, 2.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two morphing saws",
+          "module": "osc",
+          "why": "Both VCOs on the saw-to-inverted-saw morph. VCO B VOL 6, TUNE 0.83 (a fourth below). Both PWM 6.\n- Listen for: a thick, hollow interval.",
+          "set": {
+            "va.wave": "sawInv",
+            "vb.wave": "sawInv",
+            "mix.vb.vol": 6,
+            "vb.tune": 0.83,
+            "va.pwm": 6,
+            "vb.pwm": 6
+          }
+        },
+        {
+          "title": "Sweep the shapes",
+          "module": "patch",
+          "why": "Patch LFO A out to VCO A’s pwm and LFO B out to VCO B’s pwm. LFO A speed ×6, rate 5; LFO B rate 3.\n- Listen for: the tone churning and phasing as the shapes move.",
+          "set": {
+            "lfoa.speed": "x6",
+            "lfoa.rate": 5,
+            "lfob.rate": 3
+          },
+          "cables": [
+            ["lfoa.out", "va.pwmin"],
+            ["lfob.out", "vb.pwmin"]
+          ]
+        },
+        {
+          "title": "Swoop",
+          "module": "glide",
+          "why": "PORTAMENTO 3. Both envelopes: ATTACK 0, SUSTAIN 10, RELEASE 5.\n- Listen for: every note diving or rising into place.",
+          "set": {
+            "kb.glide": 3,
+            "ea.a": 0,
+            "ea.s": 10,
+            "ea.r": 5,
+            "eb.a": 0,
+            "eb.s": 10,
+            "eb.r": 5
+          }
+        },
+        {
+          "title": "Menace",
+          "module": "filter",
+          "why": "DIST 4, GAIN 6. Both FREQ to 6. MASTER VOLUME 6.\n- Listen for: a snarling edge.",
+          "set": {
+            "vcf.dist": 4,
+            "vcf.gain": 6,
+            "vcf.lfreq": 6,
+            "vcf.rfreq": 6,
+            "fx.master": 6
+          }
+        }
+      ],
+      "context": {
+        "va.pwm": "In this sound: how far LFO A sweeps VCO A’s shape."
+      },
+      "tweaks": [
+        {
+          "id": "kb.glide",
+          "try": "Turn PORTAMENTO to 5",
+          "hear": "Huge, slow dives between notes."
+        },
+        {
+          "id": "keys.down",
+          "try": "Press the keyboard’s octave down",
+          "hear": "A heavier, darker hoover."
+        }
+      ]
+    },
+    {
+      "id": "solar-techno-blip",
+      "name": "Techno Blip",
+      "ref": "In the style of 90s minimal techno blips",
+      "artist": "Minimal techno",
+      "tags": ["perc", "vco", "filter", "resonance", "delay"],
+      "level": 1,
+      "blurb": "A tiny, resonant sine click with a dub echo behind it: the dry blip of minimal techno.",
+      "how": "Minimal techno leans on tiny sounds: a click with a pitch, gone almost as it starts. A sine through a ringing filter with a very short envelope gives that, and a delay with feedback turns a few blips into a pattern.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [
+          [0.5, 72, 0.1],
+          [1.25, 79, 0.1],
+          [2.5, 72, 0.1],
+          [3, 75, 0.1],
+          [3.75, 79, 0.1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A click",
+          "module": "env",
+          "why": "VCO A on sine, VOL 10. Envelope A: ATTACK 0, DECAY 3.5, SUSTAIN 0, RELEASE 2.\n- Listen for: tiny, pitched clicks.",
+          "set": {
+            "va.wave": "sine",
+            "mix.va.vol": 10,
+            "ea.a": 0,
+            "ea.d": 3.5,
+            "ea.s": 0,
+            "ea.r": 2
+          }
+        },
+        {
+          "title": "Ring",
+          "module": "filter",
+          "why": "Both FREQ to 6.5, RES 8.\n- Listen for: each click ringing like a struck glass.",
+          "set": {
+            "vcf.lfreq": 6.5,
+            "vcf.rfreq": 6.5,
+            "vcf.lres": 8,
+            "vcf.rres": 8
+          }
+        },
+        {
+          "title": "Dub echo",
+          "module": "fx",
+          "why": "TIME on both sides, program 1. X 6, Y 3, Z 2, BLEND 5. MASTER VOLUME 9.\n- Listen for: the blips repeating into a pattern.",
+          "set": {
+            "fx.cartL": "time",
+            "fx.cartR": "time",
+            "fx.x": 6,
+            "fx.y": 3,
+            "fx.z": 2,
+            "fx.blend": 5,
+            "fx.master": 9
+          }
+        }
+      ],
+      "context": {
+        "vcf.lres": "In this sound: how long each blip rings."
+      },
+      "tweaks": [
+        {
+          "id": "ea.d",
+          "try": "Turn Envelope A’s DECAY to 4",
+          "hear": "A longer, rounder blip."
+        },
+        {
+          "id": "fx.y",
+          "try": "Turn Y to 6",
+          "hear": "Wider-spaced echoes."
+        }
+      ]
+    },
+    {
+      "id": "solar-breathy-flute",
+      "name": "Breathy Flute",
+      "ref": "In the style of synthesised flutes in 70s library music",
+      "artist": "70s library music",
+      "tags": ["wind", "vco", "papa srapa", "noise", "melody"],
+      "level": 2,
+      "blurb": "A soft sine flute with real breath: a Papa Srapa’s noise opened by the same keys, so every note starts with a puff of air.",
+      "how": "A flute is a near-sine with breath noise on its attack. VCO A gives the tone with a slow-ish attack; Drone 3, turned to noise alone and opened by the keyboard’s gate with a quick release, adds the breath. A gentle vibrato from LFO B on VCO A’s cv brings it to life.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.4],
+          [1.5, 74, 0.4],
+          [2, 76, 1.9],
+          [4, 79, 0.9],
+          [5, 77, 0.9],
+          [6, 76, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The tone",
+          "module": "osc",
+          "why": "VCO A on sine. Envelope A: ATTACK 4, DECAY 6, SUSTAIN 8, RELEASE 4.\n- Listen for: a pure, soft tone easing in.",
+          "set": {
+            "va.wave": "sine",
+            "ea.a": 4,
+            "ea.d": 6,
+            "ea.s": 8,
+            "ea.r": 4
+          }
+        },
+        {
+          "title": "The breath",
+          "module": "osc",
+          "why": "Drone 3: NOISE 10, ATT 2, RLS 2, VOL 2, PAN 0. Patch the keyboard’s gate out to its GATE. Both FREQ to 6.\n- Listen for: a puff of air with each note.",
+          "set": {
+            "d3.noise": 10,
+            "d3.att": 2,
+            "d3.rls": 2,
+            "mix.d3.vol": 2,
+            "mix.d3.pan": 0,
+            "vcf.lfreq": 6,
+            "vcf.rfreq": 6
+          },
+          "cables": [["kb.gatel", "d3.gate"]]
+        },
+        {
+          "title": "Vibrato",
+          "module": "lfo",
+          "why": "Patch LFO B out to VCO A’s cv. CV AMT 0.1, LFO B rate 6.5.\n- Listen for: a gentle, flute-like waver.",
+          "set": {
+            "va.cvamt": 0.1,
+            "lfob.rate": 6.5
+          },
+          "cables": [["lfob.out", "va.cv"]]
+        },
+        {
+          "title": "A hall",
+          "module": "fx",
+          "why": "CATHEDRAL on both sides, program 3. X 2, Y 4, Z 5, BLEND 3.\n- Listen for: the flute in a soft space.",
+          "set": {
+            "fx.cartL": "cathedral",
+            "fx.cartR": "cathedral",
+            "fx.progL": "3",
+            "fx.progR": "3",
+            "fx.x": 2,
+            "fx.y": 4,
+            "fx.z": 5,
+            "fx.blend": 3
+          }
+        }
+      ],
+      "context": {
+        "mix.d3.vol": "In this sound: how breathy the flute is."
+      },
+      "tweaks": [
+        {
+          "id": "mix.d3.vol",
+          "try": "Turn Drone 3 VOL to 5",
+          "hear": "A pan-pipe, mostly-air sound."
+        },
+        {
+          "id": "va.cvamt",
+          "try": "Turn CV AMT to 0",
+          "hear": "A straight tone without vibrato."
+        }
+      ]
+    },
+    {
+      "id": "solar-horror-cluster",
+      "name": "Horror Cluster",
+      "ref": "In the style of 70s horror film scores",
+      "artist": "Horror scores",
+      "tags": ["drone", "classic drone", "cluster", "volt", "reverb"],
+      "level": 2,
+      "blurb": "Five generators a semitone apart, sagging slowly flat with VOLT and swelling in a dark hall: a horror-film tension cluster.",
+      "how": "Horror scores lean on clusters: notes a semitone apart that beat and grind. A classic drone’s generators can be tuned to one, and VOLT then pulls all five down by different amounts, so the cluster smears and slides as it falls. A slow LFO on the filter breathes it in and out of the dark.",
+      "phrase": {
+        "bpm": 40,
+        "loop": true,
+        "steps": [[0, 60, 7.8]]
+      },
+      "steps": [
+        {
+          "title": "A semitone cluster",
+          "module": "osc",
+          "why": "VCO A VOL 0. Drone 5: generator 1 to D♯2, 2 to E2, 3 to F3, 4 to F♯4, 5 to G5.\n- Listen for: nothing yet: the drone is closed.",
+          "set": {
+            "mix.va.vol": 0,
+            "d5.tune1": 8.71,
+            "d5.tune2": 2.5,
+            "d5.tune3": 1.43,
+            "d5.tune4": 1.0,
+            "d5.tune5": 0.0
+          }
+        },
+        {
+          "title": "Open it slowly",
+          "module": "patch",
+          "why": "Patch the keyboard’s gate out to Drone 5’s GATE. ATT 7, RLS 8, VOL 8, PAN 0.\n- Listen for: a grinding, beating cluster swelling in.",
+          "set": {
+            "d5.att": 7,
+            "d5.rls": 8,
+            "mix.d5.vol": 8,
+            "mix.d5.pan": 0
+          },
+          "cables": [["kb.gatel", "d5.gate"]]
+        },
+        {
+          "title": "Let it sag",
+          "module": "osc",
+          "why": "VOLT 3.\n- Listen for: the cluster pulled flat and smeared, each generator by its own amount.",
+          "set": {
+            "d5.volt": 3
+          }
+        },
+        {
+          "title": "Breathe in the dark",
+          "module": "filter",
+          "why": "Both FREQ to 4.5. Patch LFO A out to CV L, MOD L and MOD R 3, LFO A rate 3. CATHEDRAL on both sides, program 1, Z 8, BLEND 5.\n- Listen for: the cluster looming up and sinking away in a vast hall.",
+          "set": {
+            "vcf.lfreq": 4.5,
+            "vcf.rfreq": 4.5,
+            "vcf.lmod": 3,
+            "vcf.rmod": 3,
+            "lfoa.rate": 3,
+            "fx.cartL": "cathedral",
+            "fx.cartR": "cathedral",
+            "fx.z": 8,
+            "fx.blend": 5
+          },
+          "cables": [["lfoa.out", "vcf.cvl"]]
+        }
+      ],
+      "context": {
+        "d5.volt": "In this sound: how far the cluster has sagged."
+      },
+      "tweaks": [
+        {
+          "id": "d5.volt",
+          "try": "Turn VOLT slowly up to 8",
+          "hear": "The cluster collapsing into a cross-modulated roar."
+        },
+        {
+          "id": "d5.on3",
+          "try": "Mute generator 3",
+          "hear": "A thinner, more piercing cluster."
+        }
+      ]
+    },
+    {
+      "id": "solar-split-drone",
+      "name": "Bass and Drone Split",
+      "ref": "Classic technique: SPLIT’s right-hand gate opening a drone",
+      "artist": "Classic technique",
+      "tags": ["keys", "classic drone", "split", "bass", "chord"],
+      "level": 2,
+      "blurb": "In SPLIT the left plates play a VCO bass and the right plates’ gate opens a drone chord: a bassline with one hand and a chord pad with the other.",
+      "how": "In SPLIT the keyboard has two gate outs: the left half’s (main) and the right half’s. The right one does not have to play VCO B: patched to a drone’s GATE, the right-hand plates open a whole chord. VCO B is turned down, so the right hand plays only the drone, while the left plays VCO A as a bass.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 45, 0.9],
+          [1, 45, 0.4],
+          [1.5, 52, 0.4],
+          [2, 43, 0.9],
+          [3, 43, 0.4],
+          [3.5, 50, 0.4],
+          [0, 72, 1.9],
+          [2, 72, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Split the keyboard",
+          "module": "mode",
+          "why": "Set the keyboard to SPLIT.\n- Listen for: the left plates playing VCO A, the right ones nothing you can hear yet.",
+          "set": {
+            "keys.mode": "split"
+          }
+        },
+        {
+          "title": "A bass on the left",
+          "module": "osc",
+          "why": "VCO A on square, −1 SUB on. Envelope A: ATTACK 0, DECAY 5, SUSTAIN 5, RELEASE 2. Both FREQ to 5.\n- Listen for: a round bass from the left hand.",
+          "set": {
+            "va.wave": "square",
+            "va.sub": "on",
+            "ea.a": 0,
+            "ea.d": 5,
+            "ea.s": 5,
+            "ea.r": 2,
+            "vcf.lfreq": 5,
+            "vcf.rfreq": 5
+          }
+        },
+        {
+          "title": "A chord on the right",
+          "module": "patch",
+          "why": "Drone 2: generator 1 muted, then A2, E4, A4, C♯6. Patch the keyboard’s right gate out to Drone 2’s GATE. ATT 3, RLS 6, VOL 5.\n- Listen for: the right hand opening an A major chord over the bass.",
+          "set": {
+            "d2.tune2": 5.0,
+            "d2.tune3": 6.67,
+            "d2.tune4": 2.5,
+            "d2.tune5": 3.16,
+            "d2.on1": false,
+            "d2.att": 3,
+            "d2.rls": 6,
+            "mix.d2.vol": 5
+          },
+          "cables": [["kb.gater", "d2.gate"]]
+        },
+        {
+          "title": "Space for the chord",
+          "module": "fx",
+          "why": "CATHEDRAL on both sides, program 1. Z 5, BLEND 3.\n- Listen for: the chord ringing on; the bass mostly dry.",
+          "set": {
+            "fx.cartL": "cathedral",
+            "fx.cartR": "cathedral",
+            "fx.z": 5,
+            "fx.blend": 3
+          }
+        }
+      ],
+      "context": {
+        "keys.mode": "In this sound: SPLIT, so the right half has its own gate for the drone."
+      },
+      "tweaks": [
+        {
+          "id": "mix.vb.vol",
+          "try": "Turn VCO B VOL up to 4",
+          "hear": "The right hand also playing VCO B’s melody over the chord."
+        },
+        {
+          "id": "d2.rls",
+          "try": "Turn Drone 2’s RLS to 9",
+          "hear": "The chord hanging on long after the right hand lets go."
+        }
+      ]
+    },
+    {
+      "id": "solar-endless-oscillator",
+      "name": "Endless Oscillator",
+      "ref": "Classic technique: an oscillator patched past its envelope",
+      "artist": "Classic technique",
+      "tags": ["pad", "vco", "drone", "portamento", "melody"],
+      "level": 2,
+      "blurb": "VCO B’s oscillator, patched into EXT.AUDIO, sounds without its envelope: a held tone that never stops, gliding to each new key while VCO A plucks over it.",
+      "how": "VCO B’s osc out is the oscillator itself, before its envelope and VCA. Patched into EXT. AUDIO in, it reaches the mixer on a channel of its own that no key opens or closes: it sounds all the time, at the pitch of the last key. Portamento makes it glide from one to the next, under VCO A playing as usual.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.4],
+          [1, 64, 0.4],
+          [2, 60, 0.4],
+          [4, 53, 0.4],
+          [5, 60, 0.4],
+          [6, 57, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pluck",
+          "module": "osc",
+          "why": "VCO A on triangle. Envelope A: ATTACK 0, DECAY 5, SUSTAIN 0, RELEASE 4.\n- Listen for: short, soft notes.",
+          "set": {
+            "va.wave": "tri",
+            "ea.a": 0,
+            "ea.d": 5,
+            "ea.s": 0,
+            "ea.r": 4
+          }
+        },
+        {
+          "title": "An endless tone",
+          "module": "patch",
+          "why": "VCO B on saw, VOL 0, with −1 SUB on. Patch VCO B’s osc out to EXT. AUDIO in. EXT.AUDIO VOL 6.\n- Listen for: a buzzing tone that holds between the plucks and changes pitch with each.",
+          "set": {
+            "vb.wave": "saw",
+            "vb.sub": "on",
+            "mix.ext.vol": 6
+          },
+          "cables": [["vb.osc", "ext.in"]]
+        },
+        {
+          "title": "Glide",
+          "module": "glide",
+          "why": "PORTAMENTO 5. Both FREQ to 4.5, RES 4.\n- Listen for: the held tone sliding slowly to each new note, darker now.",
+          "set": {
+            "kb.glide": 5,
+            "vcf.lfreq": 4.5,
+            "vcf.rfreq": 4.5,
+            "vcf.lres": 4,
+            "vcf.rres": 4
+          }
+        },
+        {
+          "title": "Space",
+          "module": "fx",
+          "why": "CATHEDRAL on both sides, program 1. Z 6, BLEND 4.\n- Listen for: the plucks and the glide in a wide space.",
+          "set": {
+            "fx.cartL": "cathedral",
+            "fx.cartR": "cathedral",
+            "fx.z": 6,
+            "fx.blend": 4
+          }
+        }
+      ],
+      "context": {
+        "mix.ext.vol": "In this sound: how loud the endless tone is."
+      },
+      "tweaks": [
+        {
+          "id": "vb.tune",
+          "try": "Turn VCO B’s TUNE to 0.83",
+          "hear": "The held tone a fourth below the plucks."
+        },
+        {
+          "id": "kb.glide",
+          "try": "Turn PORTAMENTO to 7",
+          "hear": "Slow, sirening slides."
+        }
+      ]
+    },
+    {
+      "id": "solar-modulator-sync",
+      "name": "Modulator Sync",
+      "ref": "Classic technique: a Papa Srapa’s modulator syncing a VCO",
+      "artist": "Classic technique",
+      "tags": ["lead", "vco", "sync", "papa srapa", "noisy"],
+      "level": 3,
+      "blurb": "VCO A hard-synced to a Papa Srapa’s modulator: a fixed, buzzing pulse whose tone the keys colour.",
+      "how": "Sync restarts an oscillator each time a signal rises. The usual master is the other VCO, but any square will do: a Papa Srapa’s modulator out is one, from slow to buzzing. Synced to it, VCO A sounds at the modulator’s rate, a low buzz, while VCO A’s own pitch, from the keys, decides the tone inside each cycle: the keys play colour, not notes.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.9],
+          [1, 55, 0.9],
+          [2, 60, 0.9],
+          [3, 67, 0.9],
+          [4, 72, 1.9],
+          [6, 64, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bright saw",
+          "module": "osc",
+          "why": "VCO A on saw. Envelope A: ATTACK 0, SUSTAIN 9.\n- Listen for: a saw following the keys.",
+          "set": {
+            "va.wave": "saw",
+            "ea.a": 0,
+            "ea.s": 9
+          }
+        },
+        {
+          "title": "A buzzing master",
+          "module": "osc",
+          "why": "Drone 3: 1 / 10 on, rate 9. The voice stays closed; only its modulator is used.\n- Listen for: nothing new yet: the modulator runs silently.",
+          "set": {
+            "d3.x10": true,
+            "d3.rate": 9
+          }
+        },
+        {
+          "title": "Sync",
+          "module": "patch",
+          "why": "Patch Drone 3’s modulator out to VCO A’s sync.\n- Listen for: a fixed, low buzz; each key now changes its colour, not its pitch.",
+          "cables": [["d3.modout", "va.sync"]]
+        },
+        {
+          "title": "Sweep the colour",
+          "module": "mod",
+          "why": "Patch LFO A out to VCO A’s cv, CV AMT 3, LFO A rate 6.\n- Listen for: the buzz’s colour sweeping slowly up and down, a vowel-like sync sweep.",
+          "set": {
+            "va.cvamt": 3,
+            "lfoa.rate": 6
+          },
+          "cables": [["lfoa.out", "va.cv"]]
+        }
+      ],
+      "context": {
+        "d3.rate": "In this sound: the pitch you hear, set by the modulator."
+      },
+      "tweaks": [
+        {
+          "id": "d3.rate",
+          "try": "Turn Drone 3’s rate down to 6",
+          "hear": "The buzz slowing into a stuttering motor."
+        },
+        {
+          "id": "d3.x10",
+          "try": "Switch Drone 3’s 1 / 10 off",
+          "hear": "A slow, rhythmic restart: a clicking, retriggered saw."
+        }
+      ]
+    },
+    {
+      "id": "solar-srapa-sequence",
+      "name": "Srapa Sequence",
+      "ref": "Classic technique: the sequencer playing a Papa Srapa",
+      "artist": "Classic technique",
+      "tags": ["seq", "papa srapa", "sequencer", "fm", "delay"],
+      "level": 2,
+      "blurb": "The sequencer plays a Papa Srapa voice as a bassline, its FM trilling every note: a sequence no VCO is used for.",
+      "how": "The sequencer’s cv out and gate out can play anything with a pitch input and a gate. A Papa Srapa has both, so the pulser can step it through a five-note line on its own. Its FM, set shallow and fast, gives each note a burbling trill. The pulser runs on its own: this sound plays without a key held.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [[0, 60, 0.2]]
+      },
+      "steps": [
+        {
+          "title": "A low square",
+          "module": "osc",
+          "why": "VCO A VOL 0. Drone 6: PITCH 6.92, so its tone sits on C3. ATT 0, RLS 3, VOL 7, PAN 0.\n- Listen for: nothing yet: the voice is closed.",
+          "set": {
+            "mix.va.vol": 0,
+            "d6.pitch": 6.92,
+            "d6.att": 0,
+            "d6.rls": 3,
+            "mix.d6.vol": 7,
+            "mix.d6.pan": 0
+          }
+        },
+        {
+          "title": "Sequence it",
+          "module": "patch",
+          "why": "Patch the sequencer’s cv out to Drone 6’s cv and its gate out to Drone 6’s GATE. Steps 0, 1.17, 2, 1.67, 0.5. Pulser 6.\n- Listen for: a five-note bass pattern played on its own.",
+          "set": {
+            "seq.s1": 0,
+            "seq.s2": 1.17,
+            "seq.s3": 2,
+            "seq.s4": 1.67,
+            "seq.s5": 0.5,
+            "seq.pulser": 6
+          },
+          "cables": [
+            ["seq.cv", "d6.cvin"],
+            ["seq.gate", "d6.gate"]
+          ]
+        },
+        {
+          "title": "Burble",
+          "module": "mod",
+          "why": "Drone 6: FM on, MOD 1, DIVIDER 5, 1 / 10 on, rate 6.\n- Listen for: each note trilling and burbling.",
+          "set": {
+            "d6.fm": true,
+            "d6.mod": 1,
+            "d6.div": 5,
+            "d6.x10": true,
+            "d6.rate": 6
+          }
+        },
+        {
+          "title": "Echo",
+          "module": "fx",
+          "why": "Both FREQ to 5, RES 4. TIME on both sides, program 1. X 4, Y 4, Z 3, BLEND 3.\n- Listen for: the pattern echoing in the dark.",
+          "set": {
+            "vcf.lfreq": 5,
+            "vcf.rfreq": 5,
+            "vcf.lres": 4,
+            "vcf.rres": 4,
+            "fx.cartL": "time",
+            "fx.cartR": "time",
+            "fx.x": 4,
+            "fx.y": 4,
+            "fx.z": 3,
+            "fx.blend": 3
+          }
+        }
+      ],
+      "context": {
+        "d6.mod": "In this sound: how wide each note’s trill is."
+      },
+      "tweaks": [
+        {
+          "id": "d6.am",
+          "try": "Press Drone 6’s AM",
+          "hear": "Each note chopped into a stutter."
+        },
+        {
+          "id": "seq.g3",
+          "try": "Switch step 3’s gate off",
+          "hear": "A rest in the pattern, which turns the groove."
+        }
+      ]
+    },
+    {
+      "id": "solar-wandering-chords",
+      "name": "Wandering Chords",
+      "ref": "Classic technique: a sample and hold lighting a drone’s eye",
+      "artist": "Classic technique",
+      "tags": ["drone", "classic drone", "sample and hold", "photosensor", "reverb"],
+      "level": 3,
+      "blurb": "A Papa Srapa’s sample and hold throws a drone’s eye to a new brightness every few seconds, so its upper chord jumps to a new, unpredictable place over a still bass.",
+      "how": "A Papa Srapa’s S&H, with nothing in its clock, is clocked by its own modulator, so it hands out a new random voltage at the modulator’s rate even while the voice is silent. Into a classic drone’s CV it moves the light on the eye up and down from where the LIGHT knob leaves it, and the generators whose MOD is on jump with it: a chord that keeps wandering.",
+      "phrase": {
+        "bpm": 50,
+        "loop": true,
+        "steps": [[0, 60, 7.9]]
+      },
+      "steps": [
+        {
+          "title": "A drone chord",
+          "module": "osc",
+          "why": "VCO A VOL 0. Drone 4: generator 1 to F1, 2 to C3, 3 to A3, 4 to E4, 5 to C6. Patch the keyboard’s gate out to its GATE. ATT 5, RLS 7, PAN 0.\n- Listen for: an F major seventh, spread wide.",
+          "set": {
+            "mix.va.vol": 0,
+            "d4.att": 5,
+            "d4.rls": 7,
+            "mix.d4.pan": 0,
+            "d4.tune1": 5.48,
+            "d4.tune2": 6.5,
+            "d4.tune3": 3.33,
+            "d4.tune4": 0.0,
+            "d4.tune5": 2.63
+          },
+          "cables": [["kb.gatel", "d4.gate"]]
+        },
+        {
+          "title": "Half-light the eye",
+          "module": "osc",
+          "why": "MOD on generators 3, 4 and 5. Drone 4’s LIGHT 5, CV 10.\n- Listen for: the upper three rising six semitones: room for the light to move both ways.",
+          "set": {
+            "d4.mod3": true,
+            "d4.mod4": true,
+            "d4.mod5": true,
+            "d4.light": 5,
+            "d4.cv": 10
+          }
+        },
+        {
+          "title": "Random light",
+          "module": "patch",
+          "why": "Patch Drone 3’s S&H out to Drone 4’s CV. Drone 3’s rate 2.\n- Listen for: the upper chord jumping to a new place every few seconds.",
+          "set": {
+            "d3.rate": 2
+          },
+          "cables": [["d3.shout", "d4.cvin"]]
+        },
+        {
+          "title": "Blur it",
+          "module": "fx",
+          "why": "CATHEDRAL on both sides, program 1. Z 7, BLEND 5. Both FREQ to 6.\n- Listen for: each jump melting into the last.",
+          "set": {
+            "fx.cartL": "cathedral",
+            "fx.cartR": "cathedral",
+            "fx.z": 7,
+            "fx.blend": 5,
+            "vcf.lfreq": 6,
+            "vcf.rfreq": 6
+          }
+        }
+      ],
+      "context": {
+        "d3.rate": "In this sound: how often the chord wanders.",
+        "d4.cv": "In this sound: how far each jump can go."
+      },
+      "tweaks": [
+        {
+          "id": "d4.cv",
+          "try": "Turn Drone 4’s CV down to 3",
+          "hear": "Small, microtonal drifts instead of jumps."
+        },
+        {
+          "id": "d4.mod1",
+          "try": "Switch MOD on generator 1 too",
+          "hear": "The bass wandering as well."
+        }
+      ]
+    },
+    {
+      "id": "solar-glitch-echo",
+      "name": "Glitch Echo",
+      "ref": "Classic technique: random voltages on a delay’s time",
+      "artist": "Classic technique",
+      "tags": ["fx", "vco", "sample and hold", "delay", "glitch", "melody"],
+      "level": 2,
+      "blurb": "A sample and hold jumps TIME’s delay length at random, so the echoes of a plain melody leap in pitch and stutter like a skipping CD.",
+      "how": "Jumping a delay’s time while it holds sound makes its repeats skip and bend. The effector’s cv y moves Y, which on TIME is the delay time; a Papa Srapa’s sample and hold gives it a new random length at its modulator’s rate. The dry melody stays clean while its echoes glitch.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 67, 0.9],
+          [1, 64, 0.9],
+          [2, 62, 0.9],
+          [3, 60, 0.9],
+          [4, 64, 1.9],
+          [6, 67, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A plain melody",
+          "module": "osc",
+          "why": "VCO A on square, PW 4. Envelope A: ATTACK 0, DECAY 5, SUSTAIN 5, RELEASE 4. Both FREQ to 6.\n- Listen for: a simple, hollow tune.",
+          "set": {
+            "va.wave": "square",
+            "va.pw": 4,
+            "ea.a": 0,
+            "ea.d": 5,
+            "ea.s": 5,
+            "ea.r": 4,
+            "vcf.lfreq": 6,
+            "vcf.rfreq": 6
+          }
+        },
+        {
+          "title": "An echo",
+          "module": "fx",
+          "why": "TIME on both sides, program 1. X 6, Y 3, Z 3, BLEND 5.\n- Listen for: a steady, repeating echo.",
+          "set": {
+            "fx.cartL": "time",
+            "fx.cartR": "time",
+            "fx.x": 6,
+            "fx.y": 3,
+            "fx.z": 3,
+            "fx.blend": 5
+          }
+        },
+        {
+          "title": "Glitch it",
+          "module": "patch",
+          "why": "Patch Drone 6’s S&H out to the effector’s cv y. Drone 6’s 1 / 10 off, rate 6.\n- Listen for: the echoes jumping in pitch and stuttering once or twice a second.",
+          "set": {
+            "d6.rate": 6
+          },
+          "cables": [["d6.shout", "fx.cvy"]]
+        }
+      ],
+      "context": {
+        "d6.rate": "In this sound: how often the delay jumps."
+      },
+      "tweaks": [
+        {
+          "id": "d6.x10",
+          "try": "Press Drone 6’s 1 / 10",
+          "hear": "Jumps many times a second: a granular smear."
+        },
+        {
+          "id": "fx.x",
+          "try": "Turn X up to 8",
+          "hear": "Glitches piling on glitches."
+        }
+      ]
+    },
+    {
+      "id": "solar-audio-pwm",
+      "name": "Pulse-Width FM",
+      "ref": "Classic technique: an oscillator modulating another’s pulse width",
+      "artist": "Classic technique",
+      "tags": ["keys", "vco", "pwm", "fm", "melody"],
+      "level": 2,
+      "blurb": "VCO B, unheard, moves VCO A’s pulse width at audio rate: a reedy, ring-modulated tone that changes character as VCO B is retuned.",
+      "how": "Pulse-width modulation is usually slow. At audio rate it becomes a kind of FM: the width changes hundreds of times a cycle, adding sidebands. VCO B’s osc out into VCO A’s pwm input does that; both follow the keys, so the sound stays in tune, and VCO B’s TUNE picks the colour.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.9],
+          [1, 64, 0.9],
+          [2, 67, 1.9],
+          [4, 65, 0.9],
+          [5, 64, 0.9],
+          [6, 60, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A square",
+          "module": "osc",
+          "why": "VCO A on square, PW 5. Envelope A: ATTACK 0, DECAY 6, SUSTAIN 6, RELEASE 4.\n- Listen for: a plain, hollow square.",
+          "set": {
+            "va.wave": "square",
+            "va.pw": 5,
+            "ea.a": 0,
+            "ea.d": 6,
+            "ea.s": 6,
+            "ea.r": 4
+          }
+        },
+        {
+          "title": "Move its width at audio rate",
+          "module": "patch",
+          "why": "VCO B on sine, VOL 0. Patch VCO B’s osc out to VCO A’s pwm, PWM 8.\n- Listen for: the square turning reedy and nasal.",
+          "set": {
+            "vb.wave": "sine",
+            "va.pwm": 8
+          },
+          "cables": [["vb.osc", "va.pwmin"]]
+        },
+        {
+          "title": "Pick the colour",
+          "module": "osc",
+          "why": "VCO B’s OCT LOW, so it moves the width three octaves below.\n- Listen for: a growling, buzzing reed.",
+          "set": {
+            "vb.oct": "low"
+          }
+        },
+        {
+          "title": "Room",
+          "module": "fx",
+          "why": "Both FREQ to 6. CATHEDRAL on both sides, program 3. X 2, Y 3, Z 4, BLEND 3.\n- Listen for: the reed in a small room.",
+          "set": {
+            "vcf.lfreq": 6,
+            "vcf.rfreq": 6,
+            "fx.cartL": "cathedral",
+            "fx.cartR": "cathedral",
+            "fx.progL": "3",
+            "fx.progR": "3",
+            "fx.x": 2,
+            "fx.y": 3,
+            "fx.z": 4,
+            "fx.blend": 3
+          }
+        }
+      ],
+      "context": {
+        "vb.tune": "In this sound: the colour of the reed."
+      },
+      "tweaks": [
+        {
+          "id": "vb.tune",
+          "try": "Turn VCO B’s TUNE slowly",
+          "hear": "Beating, shifting partials: the reed going in and out of tune with itself."
+        },
+        {
+          "id": "vb.oct",
+          "try": "Set VCO B back to OCT +3",
+          "hear": "A brighter, glassier ring."
+        }
+      ]
+    },
+    {
+      "id": "solar-srapa-scrape",
+      "name": "Metal Scrape",
+      "ref": "Classic technique: a VCO frequency-modulating a Papa Srapa",
+      "artist": "Classic technique",
+      "tags": ["fx", "papa srapa", "vco", "fm", "noisy"],
+      "level": 3,
+      "blurb": "VCO B’s oscillator swings a Papa Srapa’s pitch across ten octaves at audio rate: a scraping, clanging metal sound that the keys retune.",
+      "how": "A Papa Srapa’s cv input moves its pitch an octave a volt, and VCO B’s osc out swings ±5 V: patched together, VCO B throws the square up and down five octaves each way, hundreds of times a second. That is frequency modulation far past polite, and it scrapes and clangs. The keys change VCO B’s pitch, and so the metal.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 48, 1.9],
+          [2, 51, 1.9],
+          [4, 46, 1.9],
+          [6, 53, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A square tone",
+          "module": "osc",
+          "why": "VCO A VOL 0. Drone 3: PITCH 5. Patch the keyboard’s gate out to its GATE, ATT 1, RLS 5, VOL 5, PAN 0.\n- Listen for: a plain low square on each key.",
+          "set": {
+            "mix.va.vol": 0,
+            "d3.pitch": 5,
+            "d3.att": 1,
+            "d3.rls": 5,
+            "mix.d3.vol": 5,
+            "mix.d3.pan": 0
+          },
+          "cables": [["kb.gatel", "d3.gate"]]
+        },
+        {
+          "title": "Scrape it",
+          "module": "patch",
+          "why": "VCO B on triangle, OCT LOW, VOL 0. Patch VCO B’s osc out to Drone 3’s cv.\n- Listen for: the square shattered into a scraping, metallic clang.",
+          "set": {
+            "vb.wave": "tri",
+            "vb.oct": "low"
+          },
+          "cables": [["vb.osc", "d3.cvin"]]
+        },
+        {
+          "title": "Tame the top",
+          "module": "filter",
+          "why": "Both FREQ to 5, RES 5. CATHEDRAL on both sides, program 1, Z 6, BLEND 4.\n- Listen for: a darker, ringing metal in a big space.",
+          "set": {
+            "vcf.lfreq": 5,
+            "vcf.rfreq": 5,
+            "vcf.lres": 5,
+            "vcf.rres": 5,
+            "fx.cartL": "cathedral",
+            "fx.cartR": "cathedral",
+            "fx.z": 6,
+            "fx.blend": 4
+          }
+        }
+      ],
+      "context": {
+        "vb.oct": "In this sound: LOW, so VCO B swings the pitch slowly enough to hear it scrape."
+      },
+      "tweaks": [
+        {
+          "id": "vb.oct",
+          "try": "Set VCO B to OCT +3",
+          "hear": "A dense, hissing noise."
+        },
+        {
+          "id": "vb.wave",
+          "try": "Set VCO B to square",
+          "hear": "The pitch jumping between two extremes: a two-tone alarm."
+        }
+      ]
+    },
+    {
+      "id": "solar-envelope-eye",
+      "name": "Envelope on the Eye",
+      "ref": "Classic technique: a looping envelope lighting a drone’s eye",
+      "artist": "Classic technique",
+      "tags": ["drone", "classic drone", "envelope", "loop", "photosensor"],
+      "level": 2,
+      "blurb": "VCO A’s envelope, looping while a key is held, flickers the light on a drone’s eye, so its upper generators pulse up and down: a drone that throbs while you hold it.",
+      "how": "A 42N VCO envelope with LOOP on cycles for as long as its key is held, and its env out can go anywhere. Here VCO A is silent; its looping envelope goes into a classic drone’s CV jack, lighting the eye in pulses. Only the generators whose MOD is on rise with it, so the drone’s top swoops while its bottom holds.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 60, 3.9],
+          [4, 60, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A drone",
+          "module": "osc",
+          "why": "VCO A VOL 0. Drone 5: generator 1 to G1, 2 to D3, 3 to G3, 4 to B4, 5 to D6. Patch the keyboard’s gate out to its GATE. ATT 3, RLS 6, PAN 0.\n- Listen for: a G major chord.",
+          "set": {
+            "mix.va.vol": 0,
+            "d5.att": 3,
+            "d5.rls": 6,
+            "mix.d5.pan": 0,
+            "d5.tune1": 6.13,
+            "d5.tune2": 7.5,
+            "d5.tune3": 2.38,
+            "d5.tune4": 3.5,
+            "d5.tune5": 3.68
+          },
+          "cables": [["kb.gatel", "d5.gate"]]
+        },
+        {
+          "title": "A looping envelope",
+          "module": "env",
+          "why": "Envelope A: LOOP on, ATTACK 6, DECAY 6, SUSTAIN 0.\n- Listen for: nothing yet: VCO A is silent.",
+          "set": {
+            "ea.loop": true,
+            "ea.a": 6,
+            "ea.d": 6,
+            "ea.s": 0
+          }
+        },
+        {
+          "title": "Onto the eye",
+          "module": "patch",
+          "why": "Patch Envelope A’s env out to Drone 5’s CV. MOD on generators 4 and 5. Drone 5’s CV 4.\n- Listen for: the top two generators swooping up and back, over and over.",
+          "set": {
+            "d5.mod4": true,
+            "d5.mod5": true,
+            "d5.cv": 4
+          },
+          "cables": [["ea.env", "d5.cvin"]]
+        },
+        {
+          "title": "Space",
+          "module": "fx",
+          "why": "CATHEDRAL on both sides, program 1. Z 6, BLEND 4. Both FREQ to 6.\n- Listen for: the swoops trailing into the reverb.",
+          "set": {
+            "fx.cartL": "cathedral",
+            "fx.cartR": "cathedral",
+            "fx.z": 6,
+            "fx.blend": 4,
+            "vcf.lfreq": 6,
+            "vcf.rfreq": 6
+          }
+        }
+      ],
+      "context": {
+        "ea.d": "In this sound: with ATTACK, the speed of the swoop."
+      },
+      "tweaks": [
+        {
+          "id": "ea.a",
+          "try": "Turn Envelope A’s ATTACK to 1",
+          "hear": "A sharp jump and slow fall: a sighing chord."
+        },
+        {
+          "id": "d5.cv",
+          "try": "Turn Drone 5’s CV to 8",
+          "hear": "Swoops of most of an octave."
+        }
+      ]
+    },
+    {
+      "id": "solar-follower-pump",
+      "name": "Pumping Pad",
+      "ref": "Classic technique: one side’s loudness opening the other’s filter",
+      "artist": "Classic technique",
+      "tags": ["pad", "classic drone", "papa srapa", "envelope follower", "rhythm"],
+      "level": 3,
+      "blurb": "A Papa Srapa thump on the right feeds the envelope follower, which opens the left side’s filter on a drone pad: a pad that pulses in time with the beat.",
+      "how": "WET OUT R is a signal like any other, so it can feed the PREAMP and the envelope follower. Put a rhythm on the right and a pad on the left, and the follower’s voltage into CV L opens the left filter on every beat. MOD R at 0 keeps the right side out of it, though CV L still reaches it through the normal.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [[0, 60, 7.9]]
+      },
+      "steps": [
+        {
+          "title": "A pad on the left",
+          "module": "osc",
+          "why": "VCO A VOL 0. Drone 1: generator 1 to A1, 2 to E2, 3 to C4, 4 to G4, 5 to B5, PAN −5. Patch the keyboard’s gate out to its GATE, ATT 3, RLS 6.\n- Listen for: an A minor pad on the left.",
+          "set": {
+            "mix.va.vol": 0,
+            "mix.d1.pan": -5,
+            "d1.att": 3,
+            "d1.rls": 6,
+            "d1.tune1": 6.77,
+            "d1.tune2": 2.5,
+            "d1.tune3": 4.76,
+            "d1.tune4": 1.5,
+            "d1.tune5": 2.11
+          },
+          "cables": [["kb.gatel", "d1.gate"]]
+        },
+        {
+          "title": "A thump on the right",
+          "module": "osc",
+          "why": "Drone 3: PITCH 3.5, AM on, rate 6, PAN +5, VOL 7, ATT 0, RLS 3. Patch the keyboard’s gate out to its GATE.\n- Listen for: a low, pulsing thump on the right.",
+          "set": {
+            "d3.pitch": 3.5,
+            "d3.am": true,
+            "d3.rate": 6,
+            "mix.d3.pan": 5,
+            "mix.d3.vol": 7,
+            "d3.att": 0,
+            "d3.rls": 3
+          },
+          "cables": [["kb.gatel", "d3.gate"]]
+        },
+        {
+          "title": "Close the left",
+          "module": "filter",
+          "why": "Left FREQ 3, RES 4. MOD L 6, MOD R 0.\n- Listen for: the pad muffled on the left.",
+          "set": {
+            "vcf.lfreq": 3,
+            "vcf.lres": 4,
+            "vcf.lmod": 6,
+            "vcf.rmod": 0
+          }
+        },
+        {
+          "title": "Let the thump open it",
+          "module": "patch",
+          "why": "Patch WET OUT R to the PREAMP’s ext. source, PREAMP gain 6, and the envelope follower’s env out to CV L.\n- Listen for: the pad swelling open on every thump.",
+          "set": {
+            "pre.gain": 6
+          },
+          "cables": [
+            ["out.r", "pre.ext"],
+            ["ef.env", "vcf.cvl"]
+          ]
+        },
+        {
+          "title": "Space",
+          "module": "fx",
+          "why": "CATHEDRAL on the left side only, program 1. Z 5, BLEND 4.\n- Listen for: the pumping pad in a room; the thump dry.",
+          "set": {
+            "fx.cartL": "cathedral",
+            "fx.z": 5,
+            "fx.blend": 4
+          }
+        }
+      ],
+      "context": {
+        "d3.rate": "In this sound: the tempo of the pumping.",
+        "vcf.lmod": "In this sound: how far each beat opens the pad."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.lmod",
+          "try": "Turn MOD L to 9",
+          "hear": "The pad slamming fully open on every beat."
+        },
+        {
+          "id": "d3.rate",
+          "try": "Turn Drone 3’s rate to 7",
+          "hear": "Faster pumping."
+        }
+      ]
+    },
+    {
+      "id": "solar-key-wobble",
+      "name": "Wobble That Follows",
+      "ref": "Classic technique: a sub-audio VCO as a key-tracked LFO",
+      "artist": "Classic technique",
+      "tags": ["bass", "vco", "lfo", "filter", "keyboard tracking"],
+      "level": 3,
+      "blurb": "VCO B, dropped to OCT LOW and unheard, wobbles the filter at a rate set by the key you play: high notes wobble fast, low notes slow.",
+      "how": "An LFO has its own rate, but a VCO follows the keys. VCO B at OCT LOW runs three octaves under the key, which for bass notes is slow enough to hear as a wobble, not a pitch. Patched into CV L, it moves the filter on VCO A’s bass at a rate that rises an octave for every octave you play: an LFO that tracks the keyboard.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 28, 1.9],
+          [2, 31, 1.9],
+          [4, 36, 1.9],
+          [6, 40, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bass",
+          "module": "osc",
+          "why": "VCO A on saw, −1 SUB on. Envelope A: ATTACK 0, SUSTAIN 10, RELEASE 2.\n- Listen for: a plain, buzzing bass.",
+          "set": {
+            "va.wave": "saw",
+            "va.sub": "on",
+            "ea.a": 0,
+            "ea.s": 10,
+            "ea.r": 2
+          }
+        },
+        {
+          "title": "A slow VCO",
+          "module": "osc",
+          "why": "VCO B on triangle, OCT LOW, VOL 0.\n- Listen for: nothing new: VCO B is silent, running far below the keys.",
+          "set": {
+            "vb.wave": "tri",
+            "vb.oct": "low"
+          }
+        },
+        {
+          "title": "On the filter",
+          "module": "patch",
+          "why": "Both FREQ to 4, RES 6, MOD L and MOD R 4. Patch VCO B’s osc out to CV L.\n- Listen for: the bass wobbling, faster on the higher notes.",
+          "set": {
+            "vcf.lfreq": 4,
+            "vcf.rfreq": 4,
+            "vcf.lres": 6,
+            "vcf.rres": 6,
+            "vcf.lmod": 4,
+            "vcf.rmod": 4
+          },
+          "cables": [["vb.osc", "vcf.cvl"]]
+        },
+        {
+          "title": "Grit",
+          "module": "filter",
+          "why": "DIST 4, GAIN 6. MASTER VOLUME 6.\n- Listen for: a growling, tracking wobble.",
+          "set": {
+            "vcf.dist": 4,
+            "vcf.gain": 6,
+            "fx.master": 6
+          }
+        }
+      ],
+      "context": {
+        "vb.tune": "In this sound: fine-tunes the wobble’s rate against the note."
+      },
+      "tweaks": [
+        {
+          "id": "vb.wave",
+          "try": "Set VCO B to square",
+          "hear": "A hard, on-off wobble."
+        },
+        {
+          "id": "vb.oct",
+          "try": "Set VCO B to OCT +3",
+          "hear": "Audio-rate filter FM: a clangorous growl."
+        }
+      ]
+    },
+    {
+      "id": "solar-buzzing-eye",
+      "name": "Buzzing Eye",
+      "ref": "Classic technique: an audio-rate LFO on a drone’s eye",
+      "artist": "Classic technique",
+      "tags": ["drone", "classic drone", "lfo", "fm", "photosensor"],
+      "level": 2,
+      "blurb": "LFO B at ×10, fast enough to be a low tone, flickers a drone’s eye, so its generators pick up a buzzing, growling FM.",
+      "how": "LFO B’s ×10 switch takes it up to two hundred cycles a second, into audio. Into a classic drone’s CV, it flickers the light on the eye that fast, and the generators whose MOD is on are frequency-modulated: a buzz and a growl that change with LFO B’s rate.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 60, 7.8]]
+      },
+      "steps": [
+        {
+          "title": "A drone",
+          "module": "osc",
+          "why": "VCO A VOL 0. Drone 2: generator 1 muted, then G2, D4, G4, D6. Patch the keyboard’s gate out to its GATE, ATT 3, RLS 6, PAN 0.\n- Listen for: an open G fifth chord.",
+          "set": {
+            "mix.va.vol": 0,
+            "d2.att": 3,
+            "d2.rls": 6,
+            "mix.d2.pan": 0,
+            "d2.tune2": 4.0,
+            "d2.tune3": 5.71,
+            "d2.tune4": 1.5,
+            "d2.tune5": 3.68,
+            "d2.on1": false
+          },
+          "cables": [["kb.gatel", "d2.gate"]]
+        },
+        {
+          "title": "Flicker the eye",
+          "module": "patch",
+          "why": "MOD on all four. LFO B out to Drone 2’s CV, Drone 2’s CV 2. LFO B speed ×10, rate 7, wave 0.\n- Listen for: the chord buzzing and growling.",
+          "set": {
+            "d2.mod2": true,
+            "d2.mod3": true,
+            "d2.mod4": true,
+            "d2.mod5": true,
+            "d2.cv": 2,
+            "lfob.speed": "x10",
+            "lfob.rate": 7,
+            "lfob.wave": 0
+          },
+          "cables": [["lfob.out", "d2.cvin"]]
+        },
+        {
+          "title": "Shape it",
+          "module": "filter",
+          "why": "Both FREQ to 5, RES 4. VIBE on both sides, program 3 (Resonance flanger). X 5, Y 2, Z 6, BLEND 4.\n- Listen for: a metallic, sweeping growl.",
+          "set": {
+            "vcf.lfreq": 5,
+            "vcf.rfreq": 5,
+            "vcf.lres": 4,
+            "vcf.rres": 4,
+            "fx.cartL": "vibe",
+            "fx.cartR": "vibe",
+            "fx.progL": "3",
+            "fx.progR": "3",
+            "fx.x": 5,
+            "fx.y": 2,
+            "fx.z": 6,
+            "fx.blend": 4
+          }
+        }
+      ],
+      "context": {
+        "lfob.rate": "In this sound: the pitch of the buzz."
+      },
+      "tweaks": [
+        {
+          "id": "lfob.speed",
+          "try": "Set LFO B’s speed to ×1",
+          "hear": "The buzz slowing to a fast vibrato."
+        },
+        {
+          "id": "d2.cv",
+          "try": "Turn Drone 2’s CV to 6",
+          "hear": "A harsher, clanging growl."
+        }
+      ]
+    },
+    {
+      "id": "solar-thunderstorm",
+      "name": "Thunderstorm",
+      "ref": "Classic technique: VOLT cross-modulation as thunder",
+      "artist": "Classic technique",
+      "tags": ["fx", "classic drone", "volt", "noise", "papa srapa"],
+      "level": 3,
+      "blurb": "A low classic drone, VOLT past halfway so its generators cross-modulate into a rumble, rolling through a slowly moving filter, with Papa Srapa rain on top.",
+      "how": "Past the middle of VOLT, a classic drone’s generators frequency-modulate one another and the chord turns into noise. Tuned low and filtered dark, that is a roll of thunder; a slow LFO on the filter makes it rumble nearer and further. Drone 3’s noise, panned the other way, is the rain.",
+      "phrase": {
+        "bpm": 40,
+        "loop": true,
+        "steps": [[0, 60, 7.8]]
+      },
+      "steps": [
+        {
+          "title": "A low drone",
+          "module": "osc",
+          "why": "VCO A VOL 0. Drone 4: generators 1, 2 and 3 to C1, F♯2 and C4, 4 and 5 muted. Patch the keyboard’s gate out to its GATE, ATT 6, RLS 8, VOL 8, PAN −2.\n- Listen for: a low, dissonant chord.",
+          "set": {
+            "mix.va.vol": 0,
+            "d4.att": 6,
+            "d4.rls": 8,
+            "mix.d4.vol": 8,
+            "mix.d4.pan": -2,
+            "d4.tune1": 3.87,
+            "d4.tune2": 3.5,
+            "d4.tune3": 4.76,
+            "d4.on4": false,
+            "d4.on5": false
+          },
+          "cables": [["kb.gatel", "d4.gate"]]
+        },
+        {
+          "title": "Thunder",
+          "module": "osc",
+          "why": "Drone 4’s VOLT 8.\n- Listen for: the chord breaking down into a rough, rolling rumble.",
+          "set": {
+            "d4.volt": 8
+          }
+        },
+        {
+          "title": "Roll it",
+          "module": "filter",
+          "why": "Both FREQ to 3.5. Patch LFO A out to CV L, MOD L and MOD R 3, LFO A rate 5.\n- Listen for: the rumble rolling nearer and further.",
+          "set": {
+            "vcf.lfreq": 3.5,
+            "vcf.rfreq": 3.5,
+            "vcf.lmod": 3,
+            "vcf.rmod": 3,
+            "lfoa.rate": 5
+          },
+          "cables": [["lfoa.out", "vcf.cvl"]]
+        },
+        {
+          "title": "Rain",
+          "module": "osc",
+          "why": "Drone 3: NOISE 10, ATT 6, RLS 8, VOL 5, PAN +4. Patch the keyboard’s gate out to its GATE. CATHEDRAL on both sides, program 3, X 2, Y 6, Z 7, BLEND 4.\n- Listen for: hissing rain on the right, the storm in a huge space.",
+          "set": {
+            "d3.noise": 10,
+            "d3.att": 6,
+            "d3.rls": 8,
+            "mix.d3.vol": 5,
+            "mix.d3.pan": 4,
+            "fx.cartL": "cathedral",
+            "fx.cartR": "cathedral",
+            "fx.progL": "3",
+            "fx.progR": "3",
+            "fx.x": 2,
+            "fx.y": 6,
+            "fx.z": 7,
+            "fx.blend": 4
+          },
+          "cables": [["kb.gatel", "d3.gate"]]
+        }
+      ],
+      "context": {
+        "d4.volt": "In this sound: past halfway, how violently the generators cross-modulate."
+      },
+      "tweaks": [
+        {
+          "id": "d4.volt",
+          "try": "Turn VOLT down to 5",
+          "hear": "The thunder collapsing back into a sagging chord."
+        },
+        {
+          "id": "lfoa.rate",
+          "try": "Turn LFO A’s rate to 8",
+          "hear": "A storm overhead, rumbling fast."
+        }
+      ]
+    },
+    {
+      "id": "solar-joystick-siren",
+      "name": "Joystick Siren",
+      "ref": "Classic technique: a joystick on a Papa Srapa’s pitch",
+      "artist": "Classic technique",
+      "tags": ["fx", "papa srapa", "joystick", "filter", "siren"],
+      "level": 2,
+      "blurb": "The joystick’s X throws a Papa Srapa’s pitch across octaves and its Y opens the filter: a hand-played siren, whistle or dive.",
+      "how": "A Papa Srapa’s cv moves its pitch an octave a volt, and the joystick’s X out spans ±5 V around its offset: across the stick, ten octaves. Small moves are slides and swoops; big ones are whistles and dives. Y goes to CV L, so pushing up brightens it as it climbs.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 60, 7.8]]
+      },
+      "steps": [
+        {
+          "title": "A square tone",
+          "module": "osc",
+          "why": "VCO A VOL 0. Drone 6: PITCH 5, HI on, FM on, MOD 1, rate 6. Patch the keyboard’s gate out to its GATE. ATT 2, RLS 5, PAN 0.\n- Listen for: a trilling, whistling square.",
+          "set": {
+            "mix.va.vol": 0,
+            "d6.pitch": 5,
+            "d6.hi": true,
+            "d6.fm": true,
+            "d6.mod": 1,
+            "d6.rate": 6,
+            "d6.att": 2,
+            "d6.rls": 5,
+            "mix.d6.pan": 0
+          },
+          "cables": [["kb.gatel", "d6.gate"]]
+        },
+        {
+          "title": "X on the pitch",
+          "module": "patch",
+          "why": "Patch the joystick’s X out to Drone 6’s cv. Stick X at −0.2.\n- Listen for: the tone a full octave lower; push the stick for sirens.",
+          "set": {
+            "joy.x": -0.2
+          },
+          "cables": [["joy.outx", "d6.cvin"]]
+        },
+        {
+          "title": "Y on the filter",
+          "module": "patch",
+          "why": "Patch the joystick’s Y out to CV L. Both FREQ to 5, MOD L and MOD R 2.\n- Listen for: the tone darker below the middle and brighter above.",
+          "set": {
+            "vcf.lfreq": 5,
+            "vcf.rfreq": 5,
+            "vcf.lmod": 2,
+            "vcf.rmod": 2
+          },
+          "cables": [["joy.outy", "vcf.cvl"]]
+        },
+        {
+          "title": "Distance",
+          "module": "fx",
+          "why": "TIME on both sides, program 1. X 4, Y 5, Z 4, BLEND 4.\n- Listen for: the siren echoing off buildings.",
+          "set": {
+            "fx.cartL": "time",
+            "fx.cartR": "time",
+            "fx.x": 4,
+            "fx.y": 5,
+            "fx.z": 4,
+            "fx.blend": 4
+          }
+        }
+      ],
+      "context": {
+        "joy.x": "In this sound: the pitch, ten octaves across the stick.",
+        "joy.y": "In this sound: the brightness."
+      },
+      "tweaks": [
+        {
+          "id": "joy.x",
+          "try": "Swing the stick slowly left and right",
+          "hear": "A wailing siren."
+        },
+        {
+          "id": "joy.ox",
+          "try": "Turn offset X to −3",
+          "hear": "The whole range shifted down: dives and rumbles."
+        }
+      ]
+    },
+    {
+      "id": "solar-opening-bloom",
+      "name": "Opening Bloom",
+      "ref": "Classic technique: a drone’s own envelope on the filter",
+      "artist": "Classic technique",
+      "tags": ["pad", "classic drone", "envelope", "filter", "reverb"],
+      "level": 1,
+      "blurb": "A drone chord whose own slow envelope, patched to the filter, opens it as the chord fades in: a pad that blooms from dark to bright.",
+      "how": "A classic drone’s envelope only shapes its volume, but its env out lets it do more. Patched into CV L, it opens the filter as the voice fades in and closes it as it fades out, so the chord brightens as it swells, as an acoustic sound does.",
+      "phrase": {
+        "bpm": 48,
+        "loop": true,
+        "steps": [
+          [0, 60, 5.8],
+          [8, 60, 5.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A slow chord",
+          "module": "osc",
+          "why": "VCO A VOL 0. Drone 1: C2, G2, D4, E4, B5. Patch the keyboard’s gate out to its GATE, ATT 8, RLS 8, VOL 9, PAN 0.\n- Listen for: a C major ninth swelling in slowly.",
+          "set": {
+            "mix.va.vol": 0,
+            "d1.att": 8,
+            "d1.rls": 8,
+            "mix.d1.vol": 9,
+            "mix.d1.pan": 0,
+            "d1.tune1": 7.74,
+            "d1.tune2": 4.0,
+            "d1.tune3": 5.71,
+            "d1.tune4": 0.0,
+            "d1.tune5": 2.11
+          },
+          "cables": [["kb.gatel", "d1.gate"]]
+        },
+        {
+          "title": "Close the filter",
+          "module": "filter",
+          "why": "Both FREQ to 2.5, RES 3.\n- Listen for: the chord muffled.",
+          "set": {
+            "vcf.lfreq": 2.5,
+            "vcf.rfreq": 2.5,
+            "vcf.lres": 3,
+            "vcf.rres": 3
+          }
+        },
+        {
+          "title": "Let it bloom",
+          "module": "patch",
+          "why": "Patch Drone 1’s env out to CV L. MOD L and MOD R 5.\n- Listen for: the chord brightening as it swells and darkening as it fades.",
+          "cables": [["d1.env", "vcf.cvl"]]
+        },
+        {
+          "title": "Space",
+          "module": "fx",
+          "why": "CATHEDRAL on both sides, program 1. Z 6, BLEND 4.\n- Listen for: the bloom in a large space.",
+          "set": {
+            "fx.cartL": "cathedral",
+            "fx.cartR": "cathedral",
+            "fx.z": 6,
+            "fx.blend": 4
+          }
+        }
+      ],
+      "context": {
+        "d1.att": "In this sound: how slowly the chord swells and opens."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.lres",
+          "try": "Turn both RES to 7",
+          "hear": "A singing peak sweeping up through the chord."
+        },
+        {
+          "id": "d1.att",
+          "try": "Turn ATT down to 4",
+          "hear": "A quicker bloom."
+        }
+      ]
+    },
+    {
+      "id": "solar-jet-drone",
+      "name": "Jet Drone",
+      "ref": "Classic technique: a drone through the resonance flanger",
+      "artist": "Classic technique",
+      "tags": ["drone", "classic drone", "flanger", "stereo"],
+      "level": 1,
+      "blurb": "Two classic drones, one each side, swept by VIBE’s resonance flanger: a roaring, jet-plane whoosh moving through a chord.",
+      "how": "A flanger mixes a sound with a copy of itself delayed by a few milliseconds that moves, and with feedback the comb it makes rings. On a thick, steady drone it is a jet passing overhead. VIBE’s third program is the resonant one: X is its feedback, Y its speed and Z its depth.",
+      "phrase": {
+        "bpm": 50,
+        "loop": true,
+        "steps": [[0, 60, 7.8]]
+      },
+      "steps": [
+        {
+          "title": "Two drones",
+          "module": "osc",
+          "why": "VCO A VOL 0. Drone 1 tuned to D2, A2, D4, A4, D6; Drone 2 to A1, E3, F♯4, D5, A6. Patch the keyboard’s gate out to both GATEs. ATT 4, RLS 6 on both. PANs −4 and +4.\n- Listen for: a wide D major chord.",
+          "set": {
+            "mix.va.vol": 0,
+            "d1.att": 4,
+            "d1.rls": 6,
+            "d2.att": 4,
+            "d2.rls": 6,
+            "mix.d1.pan": -4,
+            "mix.d2.pan": 4,
+            "d1.tune1": 8.39,
+            "d1.tune2": 5.0,
+            "d1.tune3": 5.71,
+            "d1.tune4": 2.5,
+            "d1.tune5": 3.68,
+            "d2.tune2": 8.5,
+            "d2.tune3": 7.62,
+            "d2.tune4": 5.0,
+            "d2.tune5": 7.37,
+            "d2.on1": false
+          },
+          "cables": [
+            ["kb.gatel", "d1.gate"],
+            ["kb.gatel", "d2.gate"]
+          ]
+        },
+        {
+          "title": "Flange it",
+          "module": "fx",
+          "why": "VIBE on both sides, program 3 (Resonance flanger). X 7, Y 2, Z 8, BLEND 6.\n- Listen for: a roaring whoosh sweeping slowly up and down.",
+          "set": {
+            "fx.cartL": "vibe",
+            "fx.cartR": "vibe",
+            "fx.progL": "3",
+            "fx.progR": "3",
+            "fx.x": 7,
+            "fx.y": 2,
+            "fx.z": 8,
+            "fx.blend": 6
+          }
+        },
+        {
+          "title": "Brighter",
+          "module": "filter",
+          "why": "Both FREQ to 8.\n- Listen for: more for the flanger to sweep through.",
+          "set": {
+            "vcf.lfreq": 8,
+            "vcf.rfreq": 8
+          }
+        }
+      ],
+      "context": {
+        "fx.x": "In this sound: how hard the flanger rings."
+      },
+      "tweaks": [
+        {
+          "id": "fx.y",
+          "try": "Turn Y to 7",
+          "hear": "A fast, warbling flutter."
+        },
+        {
+          "id": "fx.x",
+          "try": "Turn X to 10",
+          "hear": "A metallic, almost pitched scream."
+        }
+      ]
+    },
+    {
+      "id": "solar-stepping-echoes",
+      "name": "Stepping Echoes",
+      "ref": "Classic technique: the sequencer moving a pitch delay",
+      "artist": "Classic technique",
+      "tags": ["keys", "vco", "sequencer", "delay", "magic", "melody"],
+      "level": 3,
+      "blurb": "The sequencer steps MAGIC’s pitch delay to a new interval every beat, so each held note’s echoes climb a different chord.",
+      "how": "The effector’s cv z moves Z, which on MAGIC’s pitch delay sets how far each echo is shifted. The sequencer’s cv out there makes the shift step: an echo a fourth up, then a fifth, then an octave. Run by the pulser, it keeps changing the harmony of the echoes while you play.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 60, 1.9],
+          [2, 64, 1.9],
+          [4, 57, 1.9],
+          [6, 59, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bell tone",
+          "module": "osc",
+          "why": "VCO A on the sine-to-triangle morph, PW 5. Envelope A: ATTACK 0, DECAY 7, SUSTAIN 3, RELEASE 6.\n- Listen for: a soft, bell-like melody.",
+          "set": {
+            "va.wave": "sineTri",
+            "va.pw": 5,
+            "ea.a": 0,
+            "ea.d": 7,
+            "ea.s": 3,
+            "ea.r": 6
+          }
+        },
+        {
+          "title": "A pitch delay",
+          "module": "fx",
+          "why": "MAGIC on both sides, program 1 (Pitch delay). X 6, Y 5, Z 5, BLEND 5.\n- Listen for: echoes at the same pitch.",
+          "set": {
+            "fx.cartL": "magic",
+            "fx.cartR": "magic",
+            "fx.x": 6,
+            "fx.y": 5,
+            "fx.z": 5,
+            "fx.blend": 5
+          }
+        },
+        {
+          "title": "Step the shift",
+          "module": "patch",
+          "why": "Patch the sequencer’s cv out to the effector’s cv z. Stages 4: steps 0, 4.17, 5.83, 10 (unison, a fourth, a fifth, an octave). Pulser 3.\n- Listen for: the echoes shifting to a new interval about once a second.",
+          "set": {
+            "seq.stages": "4",
+            "seq.s1": 0,
+            "seq.s2": 4.17,
+            "seq.s3": 5.83,
+            "seq.s4": 10,
+            "seq.pulser": 3
+          },
+          "cables": [["seq.cv", "fx.cvz"]]
+        }
+      ],
+      "context": {
+        "seq.s4": "In this sound: the octave step: 1.2 semitones of shift per division."
+      },
+      "tweaks": [
+        {
+          "id": "seq.pulser",
+          "try": "Turn the pulser to 6",
+          "hear": "Echoes skittering between intervals."
+        },
+        {
+          "id": "fx.x",
+          "try": "Turn X to 8",
+          "hear": "Echoes of echoes, each shifted again: rising arpeggios."
+        }
+      ]
+    },
+    {
+      "id": "solar-rhythm-section",
+      "name": "Rhythm Section",
+      "ref": "Classic technique: one modulator clocking the sequencer and a hi-hat",
+      "artist": "Classic technique",
+      "tags": ["seq", "papa srapa", "vco", "sequencer", "rhythm"],
+      "level": 3,
+      "blurb": "Drone 3’s modulator clocks the sequencer and chops Drone 3’s own noise, so a ticking hi-hat and a sequenced bass run off the same clock: a self-playing groove.",
+      "how": "A Papa Srapa’s modulator out is a square clock. Patched to the sequencer’s clock in, it steps the bass line; the same modulator chops Drone 3’s noise with AM, a hi-hat ticking at exactly the same rate. Two parts, one clock, always in time. Both run on their own, with the hi-hat on HOLD, so the groove plays without a key held; a short tap on a key transposes the bass.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.2],
+          [8, 53, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sequenced bass",
+          "module": "osc",
+          "why": "VCO A on saw, −1 SUB on. Envelope A: ATTACK 0, DECAY 5, SUSTAIN 0, RELEASE 3. Both FREQ to 4.5, RES 5. Steps 0, 0, 1.17, 2, 1.67.\n- Listen for: nothing yet: nothing gates or clocks it.",
+          "set": {
+            "va.wave": "saw",
+            "va.sub": "on",
+            "ea.a": 0,
+            "ea.d": 5,
+            "ea.s": 0,
+            "ea.r": 3,
+            "vcf.lfreq": 4.5,
+            "vcf.rfreq": 4.5,
+            "vcf.lres": 5,
+            "vcf.rres": 5,
+            "seq.s1": 0,
+            "seq.s2": 0,
+            "seq.s3": 1.17,
+            "seq.s4": 2,
+            "seq.s5": 1.67
+          }
+        },
+        {
+          "title": "Drone 3 is the clock",
+          "module": "patch",
+          "why": "Drone 3’s rate 7.4. Patch its modulator out to the sequencer’s clock in; the sequencer’s cv out to VCO A’s 1v/oct and gate out to Envelope A’s gate.\n- Listen for: the bass line stepping about three times a second.",
+          "set": {
+            "d3.rate": 7.4
+          },
+          "cables": [
+            ["d3.modout", "seq.clk"],
+            ["seq.cv", "va.voct"],
+            ["seq.gate", "ea.gate"]
+          ]
+        },
+        {
+          "title": "The hi-hat",
+          "module": "osc",
+          "why": "Drone 3: NOISE 10, AM on, HOLD on, VOL 3, PAN +3.\n- Listen for: a ticking hiss locked to the bass.",
+          "set": {
+            "d3.noise": 10,
+            "d3.am": true,
+            "d3.hold": true,
+            "mix.d3.vol": 3,
+            "mix.d3.pan": 3
+          }
+        },
+        {
+          "title": "Room",
+          "module": "fx",
+          "why": "TIME on both sides, program 1. X 3, Y 3, Z 3, BLEND 2.\n- Listen for: a short echo around the groove.",
+          "set": {
+            "fx.cartL": "time",
+            "fx.cartR": "time",
+            "fx.x": 3,
+            "fx.y": 3,
+            "fx.z": 3,
+            "fx.blend": 2
+          }
+        }
+      ],
+      "context": {
+        "d3.rate": "In this sound: the tempo of both parts at once."
+      },
+      "tweaks": [
+        {
+          "id": "d3.rate",
+          "try": "Turn Drone 3’s rate to 6.5",
+          "hear": "The whole groove slowing together."
+        },
+        {
+          "id": "seq.stages",
+          "try": "Set stages to 3",
+          "hear": "A shorter, tumbling bass figure."
+        }
+      ]
+    },
+    {
+      "id": "solar-robot-chatter",
+      "name": "Robot Chatter",
+      "ref": "Classic technique: one Papa Srapa’s sample and hold on the other’s pitch",
+      "artist": "Classic technique",
+      "tags": ["fx", "papa srapa", "sample and hold", "sci-fi"],
+      "level": 2,
+      "blurb": "Drone 6’s sample and hold throws Drone 3’s pitch to a new random note many times a second: the beeping, burbling chatter of a film robot.",
+      "how": "Each Papa Srapa has a sample and hold, clocked by its own modulator. Drone 6’s, running fast, sends a new random voltage to Drone 3’s pitch several times a second, and Drone 3 jumps with it: a stream of random beeps. Drone 3’s own AM, at another rate, breaks the stream into phrases.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 60, 1.4],
+          [2, 60, 0.9],
+          [3.5, 60, 2.4],
+          [6.5, 60, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A high beep",
+          "module": "osc",
+          "why": "VCO A VOL 0. Drone 3: HI on, PITCH 5.5. Patch the keyboard’s gate out to its GATE, ATT 0, RLS 2, PAN 0.\n- Listen for: a plain square beep on each key.",
+          "set": {
+            "mix.va.vol": 0,
+            "d3.hi": true,
+            "d3.pitch": 5.5,
+            "d3.att": 0,
+            "d3.rls": 2,
+            "mix.d3.pan": 0
+          },
+          "cables": [["kb.gatel", "d3.gate"]]
+        },
+        {
+          "title": "Random notes",
+          "module": "patch",
+          "why": "Patch Drone 6’s S&H out to Drone 3’s cv. Drone 6: 1 / 10 on, rate 5.\n- Listen for: the beep jumping to a new random note many times a second.",
+          "set": {
+            "d6.x10": true,
+            "d6.rate": 5
+          },
+          "cables": [["d6.shout", "d3.cvin"]]
+        },
+        {
+          "title": "Phrases",
+          "module": "mod",
+          "why": "Drone 3: AM on, rate 5.\n- Listen for: the chatter breaking into bursts, like speech.",
+          "set": {
+            "d3.am": true,
+            "d3.rate": 5
+          }
+        },
+        {
+          "title": "Tame it",
+          "module": "filter",
+          "why": "Both FREQ to 6.5. TIME on both sides, program 1. X 3, Y 2, Z 2, BLEND 2.\n- Listen for: softer chatter with a little room.",
+          "set": {
+            "vcf.lfreq": 6.5,
+            "vcf.rfreq": 6.5,
+            "fx.cartL": "time",
+            "fx.cartR": "time",
+            "fx.x": 3,
+            "fx.y": 2,
+            "fx.z": 2,
+            "fx.blend": 2
+          }
+        }
+      ],
+      "context": {
+        "d6.rate": "In this sound: how fast the robot chatters."
+      },
+      "tweaks": [
+        {
+          "id": "d6.rate",
+          "try": "Turn Drone 6’s rate to 0.5",
+          "hear": "Slow, considered beeps."
+        },
+        {
+          "id": "d3.fm",
+          "try": "Press Drone 3’s FM, MOD 1",
+          "hear": "Each beep trilling."
+        }
+      ]
     }
   ]
 }
