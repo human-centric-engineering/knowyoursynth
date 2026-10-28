@@ -1,0 +1,926 @@
+{
+  "synth": "solar-42n",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "solar-first-drone",
+      "name": "First Drone",
+      "ref": "The SOLAR 42N manual, classic drone voices (p. 7)",
+      "artist": "Classic technique",
+      "tags": ["drone", "basics", "classic drone"],
+      "level": 1,
+      "blurb": "One classic drone voice: five saws tuned by ear into a C major chord.",
+      "how": "A classic drone voice has no keyboard and no volt-per-octave: five sawtooth generators, each tuned by its own knob, sound together while the voice is open. DRONE VOICES 1 opens it. Tune the five into a chord and it plays on its own, which is what the SOLAR is for.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 48, 7.5]]
+      },
+      "steps": [
+        {
+          "title": "Open Drone 1",
+          "module": "mode",
+          "why": "The keys play VCO A, so this lesson turns its channel down first: everything here comes from the drones.\n- VCO A VOL 0.\n- Press DRONE VOICES 1: here it latches on.\n- Listen for: a dense cluster fading in over ATT, five saws at the middle of their ranges.",
+          "set": {
+            "mix.va.vol": 0,
+            "gate.d1": true
+          }
+        },
+        {
+          "title": "Tune the low pair",
+          "module": "osc",
+          "why": "Generators 1 and 2 are the low ones. Tune 1 to C2 and 2 to G2, a fifth above.\n- Listen for: the bottom of the cluster settling into an open fifth.",
+          "set": {
+            "d1.tune1": 7.74,
+            "d1.tune2": 4.0
+          }
+        },
+        {
+          "title": "Tune the top three",
+          "module": "osc",
+          "why": "Generator 3 to E3, 4 to C5 and 5 to G5: a spread C major chord across five octaves.\n- Listen for: the beating stop as each one lands. Tuning by ear is the instrument: the manual warns the generators drift and need touching up.",
+          "set": {
+            "d1.tune3": 0.95,
+            "d1.tune4": 4.0,
+            "d1.tune5": 0.0
+          }
+        },
+        {
+          "title": "Mute two generators",
+          "module": "osc",
+          "why": "MUTE switches a generator out; its lamp in the OSC STATUS bar goes dark.\n- MUTE 4 and 5 off.\n- Listen for: the chord closing down to a low triad.",
+          "set": {
+            "d1.on4": false,
+            "d1.on5": false
+          }
+        }
+      ],
+      "context": {
+        "d1.tune1": "In this sound: C2, the root.",
+        "d1.on4": "In this sound: off, for a low triad."
+      },
+      "tweaks": [
+        {
+          "id": "d1.tune3",
+          "try": "Move TUNE 3 slowly either side of E3",
+          "hear": "Beating against the other generators, faster the further it goes, until it lands on another interval."
+        },
+        {
+          "id": "d1.rls",
+          "try": "Turn RLS up and press DRONE VOICES 1 off",
+          "hear": "The chord dies away slowly instead of stopping."
+        }
+      ]
+    },
+    {
+      "id": "solar-falling-chord",
+      "name": "Falling Chord",
+      "ref": "The SOLAR 42N manual, the VOLT knob (p. 7)",
+      "artist": "Classic technique",
+      "tags": ["drone", "classic drone", "volt"],
+      "level": 1,
+      "blurb": "VOLT lowers a tuned chord, each generator by its own amount, so it drifts as it falls.",
+      "how": "VOLT transposes all five generators down together, but not by the same interval, so a chord tuned at the top of VOLT goes out of tune in an interesting way as it falls. This sound sets VOLT part way, to a sour, slowly beating version of the chord.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 48, 7.5]]
+      },
+      "steps": [
+        {
+          "title": "Open Drone 2",
+          "module": "mode",
+          "why": "The keys play VCO A, so this lesson turns its channel down first: everything here comes from the drones.\n- VCO A VOL 0, DRONE VOICES 2 on.",
+          "set": {
+            "mix.va.vol": 0,
+            "gate.d2": true
+          }
+        },
+        {
+          "title": "Tune a minor chord",
+          "module": "osc",
+          "why": "A minor across the five: A1, E2, C4, A4, E6.\n- Listen for: a dark, open minor chord.",
+          "set": {
+            "d2.tune1": 6.77,
+            "d2.tune2": 2.5,
+            "d2.tune3": 4.76,
+            "d2.tune4": 2.5,
+            "d2.tune5": 4.74
+          }
+        },
+        {
+          "title": "Lower it with VOLT",
+          "module": "osc",
+          "why": "VOLT 4: every generator falls, the lowest by over an octave, the top by less.\n- Listen for: the chord sliding down and souring into a slow, beating cluster.",
+          "set": {
+            "d2.volt": 4
+          }
+        },
+        {
+          "title": "Slow the fades",
+          "module": "env",
+          "why": "ATT 6 and RLS 7, so the voice swells in and out.\n- Listen for: the chord breathing in when its button goes on.",
+          "set": {
+            "d2.att": 6,
+            "d2.rls": 7
+          }
+        }
+      ],
+      "context": {
+        "d2.volt": "In this sound: 4, before the generators start to cross-modulate."
+      },
+      "tweaks": [
+        {
+          "id": "d2.volt",
+          "try": "Sweep VOLT from 0 to 5",
+          "hear": "The chord falling and drifting apart, each note at its own rate."
+        }
+      ]
+    },
+    {
+      "id": "solar-cross-mod-metal",
+      "name": "Cross-Mod Metal",
+      "ref": "The SOLAR 42N manual, the VOLT knob (p. 7)",
+      "artist": "Classic technique",
+      "tags": ["drone", "classic drone", "fm", "noisy"],
+      "level": 2,
+      "blurb": "VOLT past half way: the five saws frequency-modulate each other into a metallic roar.",
+      "how": "After half its turn VOLT stops just lowering the generators and starts them modulating each other, which the manual calls an FM synthesis effect. The chord turns rough, clangorous and alive. A resonant filter on top picks out a moving whistle.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 48, 7.5]]
+      },
+      "steps": [
+        {
+          "title": "Open Drone 4",
+          "module": "mode",
+          "why": "The keys play VCO A, so this lesson turns its channel down first: everything here comes from the drones.\n- VCO A VOL 0, DRONE VOICES 4 on.",
+          "set": {
+            "mix.va.vol": 0,
+            "gate.d4": true,
+            "mix.d4.pan": 0
+          }
+        },
+        {
+          "title": "Turn VOLT past half way",
+          "module": "osc",
+          "why": "VOLT 8.\n- Listen for: the chord dropping, then breaking up into a rough, metallic growl as the generators modulate each other.",
+          "set": {
+            "d4.volt": 8
+          }
+        },
+        {
+          "title": "Resonate the filters",
+          "module": "filter",
+          "why": "Both filters' FREQ to 4.5 and RES to 7.\n- Listen for: a whistling peak riding on the growl.",
+          "set": {
+            "vcf.lfreq": 4.5,
+            "vcf.rfreq": 4.5,
+            "vcf.lres": 7,
+            "vcf.rres": 7
+          }
+        }
+      ],
+      "context": {
+        "d4.volt": "In this sound: 8, well into the cross-modulation."
+      },
+      "tweaks": [
+        {
+          "id": "d4.volt",
+          "try": "Rock VOLT between 5 and 10",
+          "hear": "The sound tipping from a falling chord into metal and back."
+        },
+        {
+          "id": "d4.on1",
+          "try": "MUTE generator 1",
+          "hear": "The roar thins: the cross-modulation runs through every generator that is in."
+        }
+      ]
+    },
+    {
+      "id": "solar-light-wobble",
+      "name": "Photosensor Wobble",
+      "ref": "The SOLAR 42N manual, MOD buttons and the LFOs (pp. 7, 10)",
+      "artist": "Classic technique",
+      "tags": ["drone", "classic drone", "modulation", "lfo"],
+      "level": 2,
+      "blurb": "LFO A lights a drone's photosensor, so the generators with MOD on waver in pitch.",
+      "how": "Each classic drone has a photosensor, the eye, that bends the generators whose MOD button is on. On the hardware the room's light moves it too. Its CV jack lights a red LED in front of it, which is why the LFOs swing positive only: patch LFO A in and the chosen generators drift up and back while the others hold.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 48, 7.5]]
+      },
+      "steps": [
+        {
+          "title": "Open Drone 1 on a chord",
+          "module": "osc",
+          "why": "The keys play VCO A, so this lesson turns its channel down first: everything here comes from the drones.\n- VCO A VOL 0, DRONE VOICES 1 on, tuned to D minor: D2, A2, F3, D5, A5.",
+          "set": {
+            "mix.va.vol": 0,
+            "gate.d1": true,
+            "d1.tune1": 8.39,
+            "d1.tune2": 5.0,
+            "d1.tune3": 1.43,
+            "d1.tune4": 5.0,
+            "d1.tune5": 1.05
+          }
+        },
+        {
+          "title": "Light the eye with LFO A",
+          "module": "lfo",
+          "why": "Patch LFO A's out to Drone 1's CV jack, and set the LFO slow and smooth: RATE 3, WAVE at triangle.\n- Listen for: nothing yet. No generator has MOD on, so the light does nothing.",
+          "set": {
+            "lfoa.rate": 3,
+            "lfoa.wave": 0
+          },
+          "cables": [["lfoa.out", "d1.cvin"]]
+        },
+        {
+          "title": "Turn MOD on for the top two",
+          "module": "mod",
+          "why": "MOD 4 and 5 on, and CV 4.\n- Listen for: the top of the chord sighing up and back with the LFO while the bass stays put.",
+          "set": {
+            "d1.mod4": true,
+            "d1.mod5": true,
+            "d1.cv": 4
+          }
+        }
+      ],
+      "context": {
+        "d1.mod4": "In this sound: on, so the LFO bends generator 4.",
+        "d1.cv": "In this sound: how far the LFO bends."
+      },
+      "tweaks": [
+        {
+          "id": "d1.mod1",
+          "try": "Turn MOD 1 on too",
+          "hear": "The bass joins the wobble, and the chord loses its anchor."
+        },
+        {
+          "id": "lfoa.wave",
+          "try": "Turn WAVE to square",
+          "hear": "The bent notes jump between two pitches instead of gliding."
+        }
+      ]
+    },
+    {
+      "id": "solar-srapa-siren",
+      "name": "Papa Srapa Siren",
+      "ref": "The SOLAR 42N manual, Papa Srapa voices (p. 8)",
+      "artist": "Classic technique",
+      "tags": ["fx", "papa srapa", "fm", "siren"],
+      "level": 1,
+      "blurb": "A square tone swung up and down by its own slow square: a siren.",
+      "how": "The Papa Srapa voices are two square oscillators: a slow one, the modulator, and a tone. With FM on the modulator throws the tone between two pitches, and MOD and DIVIDER set how far apart. Slow it down and it is a siren.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 48, 7.5]]
+      },
+      "steps": [
+        {
+          "title": "Open Drone 3",
+          "module": "mode",
+          "why": "The keys play VCO A, so this lesson turns its channel down first: everything here comes from the drones.\n- VCO A VOL 0, DRONE VOICES 3 on, centred.\n- Listen for: a plain buzzy square.",
+          "set": {
+            "mix.va.vol": 0,
+            "gate.d3": true,
+            "mix.d3.pan": 0
+          }
+        },
+        {
+          "title": "Turn FM on",
+          "module": "mod",
+          "why": "FM on: the modulator now moves the tone. MOD 5 sets how far.\n- Listen for: a two-note see-saw.",
+          "set": {
+            "d3.fm": true,
+            "d3.mod": 5
+          }
+        },
+        {
+          "title": "Slow it to a siren",
+          "module": "lfo",
+          "why": "RATE 2.\n- Listen for: the two pitches alternating at a siren's pace.",
+          "set": {
+            "d3.rate": 2
+          }
+        },
+        {
+          "title": "Soften the edges",
+          "module": "filter",
+          "why": "Both filters' FREQ to 5.5.\n- Listen for: a rounder, more distant siren.",
+          "set": {
+            "vcf.lfreq": 5.5,
+            "vcf.rfreq": 5.5
+          }
+        }
+      ],
+      "context": {
+        "d3.mod": "In this sound: the interval between the two pitches."
+      },
+      "tweaks": [
+        {
+          "id": "d3.div",
+          "try": "Turn DIVIDER up",
+          "hear": "The two pitches close in until it is a trill."
+        },
+        {
+          "id": "d3.x10",
+          "try": "Press 1 | 10",
+          "hear": "The see-saw speeds up into a rough, ringing buzz."
+        }
+      ]
+    },
+    {
+      "id": "solar-space-birds",
+      "name": "Space Birds",
+      "ref": "The SOLAR 42N manual, Papa Srapa voices (p. 8)",
+      "artist": "Classic technique",
+      "tags": ["fx", "papa srapa", "fm", "am", "delay"],
+      "level": 2,
+      "blurb": "FM and AM together on a high tone: chirps that the TIME cartridge echoes into a flock.",
+      "how": "With both FM and AM on, the modulator moves the tone and chops it at once: one pitch is sounded, the other silenced, so each pulse is a short chirp. A high range and a quick rate make birdsong, and a delay cartridge throws the chirps across the stereo field.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 48, 7.5]]
+      },
+      "steps": [
+        {
+          "title": "Open Drone 6 high",
+          "module": "osc",
+          "why": "The keys play VCO A, so this lesson turns its channel down first: everything here comes from the drones.\n- VCO A VOL 0, DRONE VOICES 6 on, HI / LOW on, PITCH 6.",
+          "set": {
+            "mix.va.vol": 0,
+            "gate.d6": true,
+            "d6.hi": true,
+            "d6.pitch": 6
+          }
+        },
+        {
+          "title": "FM and AM together",
+          "module": "mod",
+          "why": "FM on and AM on, MOD 6, RATE 7.\n- Listen for: rapid chirps, each one a jump in pitch cut short.",
+          "set": {
+            "d6.fm": true,
+            "d6.am": true,
+            "d6.mod": 6,
+            "d6.rate": 7
+          }
+        },
+        {
+          "title": "Load the TIME cartridge",
+          "module": "fx",
+          "why": "Load TIME on both sides, program 1 (delay and reverb): Y sets the delay time, X the feedback. BLEND 5.\n- Listen for: the chirps echoing back from both sides.",
+          "set": {
+            "fx.cartL": "time",
+            "fx.cartR": "time",
+            "fx.x": 5,
+            "fx.y": 4,
+            "fx.z": 4
+          }
+        }
+      ],
+      "context": {
+        "d6.am": "In this sound: on, so every other half of the modulator is silent."
+      },
+      "tweaks": [
+        {
+          "id": "d6.x10",
+          "try": "Press 1 | 10",
+          "hear": "The chirps blur into a buzzing insect."
+        },
+        {
+          "id": "fx.y",
+          "try": "Turn Y up",
+          "hear": "Longer gaps before the echoes, a bigger space."
+        }
+      ]
+    },
+    {
+      "id": "solar-surf",
+      "name": "Surf",
+      "ref": "The SOLAR 42N manual, a clean noise sound (p. 8)",
+      "artist": "Classic technique",
+      "tags": ["fx", "papa srapa", "noise", "filter"],
+      "level": 2,
+      "blurb": "A Papa Srapa voice as pure noise, its filter swept by a slow LFO: waves on a beach.",
+      "how": "The manual's recipe for clean noise: FM and AM off, PITCH at zero, MOD and DIVIDER at maximum, NOISE at maximum. A slow LFO into the filter's CV then makes the noise swell and fall like surf.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 48, 7.5]]
+      },
+      "steps": [
+        {
+          "title": "Drone 3 as clean noise",
+          "module": "osc",
+          "why": "The keys play VCO A, so this lesson turns its channel down first: everything here comes from the drones.\n- VCO A VOL 0, DRONE VOICES 3 on, centred. PITCH 0, MOD 10, DIVIDER 10, NOISE 10, as the manual says.\n- Listen for: a steady hiss.",
+          "set": {
+            "mix.va.vol": 0,
+            "gate.d3": true,
+            "mix.d3.pan": 0,
+            "d3.pitch": 0,
+            "d3.mod": 10,
+            "d3.div": 10,
+            "d3.noise": 10
+          }
+        },
+        {
+          "title": "Close the filters",
+          "module": "filter",
+          "why": "FREQ 4 on both sides, RES 3.\n- Listen for: a dull roar.",
+          "set": {
+            "vcf.lfreq": 4,
+            "vcf.rfreq": 4,
+            "vcf.lres": 3,
+            "vcf.rres": 3
+          }
+        },
+        {
+          "title": "Let the LFO open them",
+          "module": "lfo",
+          "why": "Patch LFO A into CV L. With nothing in CV R it moves both filters. RATE 2.5, WAVE at triangle, MOD L 7.\n- Listen for: the roar swelling and falling back every few seconds.",
+          "set": {
+            "lfoa.rate": 2.5,
+            "lfoa.wave": 0,
+            "vcf.lmod": 7
+          },
+          "cables": [["lfoa.out", "vcf.cvl"]]
+        }
+      ],
+      "context": {
+        "vcf.lmod": "In this sound: how far each wave rises."
+      },
+      "tweaks": [
+        {
+          "id": "lfoa.rate",
+          "try": "Turn LFO A's RATE down",
+          "hear": "Longer, slower waves."
+        },
+        {
+          "id": "vcf.lmode",
+          "try": "Switch filter L to BP",
+          "hear": "The left side thins to a whistling wind."
+        }
+      ]
+    },
+    {
+      "id": "solar-lead-over-drone",
+      "name": "Lead Over the Drone",
+      "ref": "The SOLAR 42N manual, the instrument as a whole (p. 3)",
+      "artist": "Classic technique",
+      "tags": ["lead", "vco", "classic drone", "reverb"],
+      "level": 2,
+      "blurb": "A drone chord from Drone 1 under a VCO A melody, both in the Cathedral cartridge.",
+      "how": "The manual's point is that the SOLAR makes a whole piece without multitrack recording: drones hold the harmony on their buttons while the touch keyboard plays VCO A on top. Here Drone 1 holds C minor and VCO A plays a slow line, the two in one reverb.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.8],
+          [2, 75, 1.8],
+          [4, 79, 3.8],
+          [8, 77, 1.8],
+          [10, 75, 1.8],
+          [12, 74, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The drone underneath",
+          "module": "osc",
+          "why": "DRONE VOICES 1 on, tuned to C minor: C2, G2, E♭3, C5, G5. Its VOL down to 5.\n- Listen for: a dark held chord.",
+          "set": {
+            "gate.d1": true,
+            "mix.d1.vol": 5,
+            "d1.tune1": 7.74,
+            "d1.tune2": 4.0,
+            "d1.tune3": 0.48,
+            "d1.tune4": 4.0,
+            "d1.tune5": 0.0
+          }
+        },
+        {
+          "title": "Shape VCO A",
+          "module": "env",
+          "why": "VCO A plays the melody. Envelope A: ATTACK 3, DECAY 5, SUSTAIN 6, RELEASE 6, for a soft, singing note.\n- Listen for: the line swelling in over the chord.",
+          "set": {
+            "ea.a": 3,
+            "ea.d": 5,
+            "ea.s": 6,
+            "ea.r": 6
+          }
+        },
+        {
+          "title": "Round the wave",
+          "module": "osc",
+          "why": "WAVEFORM to triangle.\n- Listen for: a flute-like line.",
+          "set": {
+            "va.wave": "tri"
+          }
+        },
+        {
+          "title": "Into the Cathedral",
+          "module": "fx",
+          "why": "Load CATHEDRAL on both sides, program 1 (Shimmer): Z sets the reverb's decay. BLEND 6.\n- Listen for: everything in one big space.",
+          "set": {
+            "fx.cartL": "cathedral",
+            "fx.cartR": "cathedral",
+            "fx.z": 7,
+            "fx.blend": 6
+          }
+        }
+      ],
+      "context": {
+        "va.wave": "In this sound: triangle, soft against the saws."
+      },
+      "tweaks": [
+        {
+          "id": "va.sub",
+          "try": "Switch −1 SUB on",
+          "hear": "The line gains a square an octave below, more body."
+        },
+        {
+          "id": "fx.z",
+          "try": "Turn Z down",
+          "hear": "A shorter reverb and a closer, drier line."
+        }
+      ]
+    },
+    {
+      "id": "solar-sub-bass",
+      "name": "Sub Bass",
+      "ref": "The SOLAR 42N manual, VCO voices (p. 9)",
+      "artist": "Classic technique",
+      "tags": ["bass", "vco", "sub"],
+      "level": 1,
+      "blurb": "VCO A three octaves down with its sub-oscillator, under a closed filter.",
+      "how": "The 42N's VCOs gained a −1 SUB switch: a square an octave below whatever wave is chosen. With the OCT +3 / LOW switch at LOW and the filter closed, VCO A is a deep, round bass.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.8],
+          [1, 60, 0.4],
+          [1.5, 63, 0.4],
+          [2, 67, 0.8],
+          [3, 65, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Drop VCO A three octaves",
+          "module": "osc",
+          "why": "OCT +3 / LOW to LOW.\n- Listen for: the saw falling to a buzzy bass.",
+          "set": {
+            "va.oct": "low"
+          }
+        },
+        {
+          "title": "A square and its sub",
+          "module": "osc",
+          "why": "WAVEFORM to square and −1 SUB on.\n- Listen for: a hollow bass with a deeper octave under it.",
+          "set": {
+            "va.wave": "square",
+            "va.sub": "on"
+          }
+        },
+        {
+          "title": "Close the filters",
+          "module": "filter",
+          "why": "FREQ 4 on both sides.\n- Listen for: the buzz gone, the weight left.",
+          "set": {
+            "vcf.lfreq": 4,
+            "vcf.rfreq": 4
+          }
+        },
+        {
+          "title": "Make it punch",
+          "module": "env",
+          "why": "Envelope A: ATTACK 0, DECAY 4, SUSTAIN 5, RELEASE 2.\n- Listen for: a firm start to each note.",
+          "set": {
+            "ea.a": 0,
+            "ea.d": 4,
+            "ea.s": 5,
+            "ea.r": 2
+          }
+        }
+      ],
+      "context": {
+        "va.sub": "In this sound: on, the octave below."
+      },
+      "tweaks": [
+        {
+          "id": "va.pw",
+          "try": "Turn PW down",
+          "hear": "The square narrows to a thinner, nasal pulse."
+        },
+        {
+          "id": "vcf.lres",
+          "try": "Turn RES L up",
+          "hear": "A rubbery peak on the left side."
+        }
+      ]
+    },
+    {
+      "id": "solar-vco-bell",
+      "name": "FM Bell",
+      "ref": "The SOLAR 42N manual, VCO A normalled to VCO B (p. 9)",
+      "artist": "Classic technique",
+      "tags": ["keys", "vco", "fm", "bell"],
+      "level": 2,
+      "blurb": "VCO A frequency-modulating VCO B through the normal into its CV input: struck bells.",
+      "how": "VCO A is wired inside to VCO B's CV input, and VCO B's CV AMT sets how far it moves VCO B's pitch: frequency modulation with no cable. Hear only VCO B, tune VCO A against it and give VCO B a struck envelope, and the keys play bells.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.2],
+          [1.5, 79, 1.2],
+          [3, 76, 0.8],
+          [4, 84, 2.2],
+          [6.5, 79, 1.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Hear VCO B alone",
+          "module": "mixer",
+          "why": "VCO A VOL 0 and VCO B VOL 7. VCO A still runs, feeding VCO B.\n- Listen for: VCO B's saw on the keys.",
+          "set": {
+            "mix.va.vol": 0,
+            "mix.vb.vol": 7,
+            "mix.vb.pan": 0
+          }
+        },
+        {
+          "title": "Two sines",
+          "module": "osc",
+          "why": "Both VCOs to sine, and VCO A's TUNE to 9 so it sits off VCO B's pitch.\n- Listen for: a pure tone.",
+          "set": {
+            "va.wave": "sine",
+            "vb.wave": "sine",
+            "va.tune": 9
+          }
+        },
+        {
+          "title": "Turn the FM up",
+          "module": "mod",
+          "why": "VCO B's CV AMT 4: VCO A now frequency-modulates it.\n- Listen for: the sine turning into a bright, inharmonic bell.",
+          "set": {
+            "vb.cvamt": 4
+          }
+        },
+        {
+          "title": "Strike it",
+          "module": "env",
+          "why": "Envelope B: ATTACK 0, DECAY 8, SUSTAIN 0, RELEASE 7.\n- Listen for: each note struck and ringing away.",
+          "set": {
+            "eb.a": 0,
+            "eb.d": 8,
+            "eb.s": 0,
+            "eb.r": 7
+          }
+        }
+      ],
+      "context": {
+        "vb.cvamt": "In this sound: how bright the bell is.",
+        "va.tune": "In this sound: sets which bell, by the ratio of the two pitches."
+      },
+      "tweaks": [
+        {
+          "id": "va.tune",
+          "try": "Turn VCO A's TUNE slowly",
+          "hear": "The bell's colour changing, harmonic at some points, clangorous between."
+        },
+        {
+          "id": "vb.cvamt",
+          "try": "Turn CV AMT up",
+          "hear": "A harsher, brighter strike."
+        }
+      ]
+    },
+    {
+      "id": "solar-five-steps",
+      "name": "Five-Step Melody",
+      "ref": "The SOLAR 42N manual, the 5-step sequencer (p. 11)",
+      "artist": "Classic technique",
+      "tags": ["seq", "sequencer", "vco"],
+      "level": 3,
+      "blurb": "The 5-step sequencer plays VCO A by cable: its voltages set the pitch, its gates the envelope.",
+      "how": "The sequencer is a Buchla-style voltage source: five knobs, five gate switches and the PULSER for a clock. Its cv out into VCO A's 1v/oct sets the notes, a twelfth of a volt per semitone, and its gate out into Envelope A's gate plays them. The keyboard sets the starting note once and lets go.",
+      "phrase": {
+        "bpm": 60,
+        "loop": false,
+        "steps": [[0, 48, 0.1]]
+      },
+      "steps": [
+        {
+          "title": "Patch the sequencer to VCO A",
+          "module": "mod",
+          "why": "Patch cv out to VCO A's 1v/oct and gate out to Envelope A's gate.\n- Listen for: VCO A jumping between five pitches, far apart at the default steps.",
+          "cables": [
+            ["seq.cv", "va.voct"],
+            ["seq.gate", "ea.gate"]
+          ]
+        },
+        {
+          "title": "Set the five notes",
+          "module": "mod",
+          "why": "STEP 1 0, STEP 2 0.5, STEP 3 1.17, STEP 4 1.67, STEP 5 2: about 0, 3, 7, 10 and 12 semitones up, a minor seventh arpeggio.\n- Listen for: a five-note figure.",
+          "set": {
+            "seq.s1": 0,
+            "seq.s2": 0.5,
+            "seq.s3": 1.17,
+            "seq.s4": 1.67,
+            "seq.s5": 2
+          }
+        },
+        {
+          "title": "Short notes",
+          "module": "env",
+          "why": "Envelope A: ATTACK 0, DECAY 6, SUSTAIN 0, RELEASE 5, so each gate plucks a note.\n- Listen for: a plucked sequence.",
+          "set": {
+            "ea.a": 0,
+            "ea.d": 6,
+            "ea.s": 0,
+            "ea.r": 5
+          }
+        },
+        {
+          "title": "Rest a step",
+          "module": "mod",
+          "why": "Step 4's gate off: the step still sets the pitch, but plays nothing.\n- Listen for: a gap in the figure.",
+          "set": {
+            "seq.g4": false
+          }
+        }
+      ],
+      "context": {
+        "seq.s3": "In this sound: 1.17, seven semitones up.",
+        "seq.g4": "In this sound: off, a rest."
+      },
+      "tweaks": [
+        {
+          "id": "seq.stages",
+          "try": "Set STAGES to 3",
+          "hear": "Only the first three notes, a shorter loop."
+        },
+        {
+          "id": "seq.pulser",
+          "try": "Turn PULSER up",
+          "hear": "The sequence runs faster."
+        }
+      ]
+    },
+    {
+      "id": "solar-dist-resonance",
+      "name": "Distorted Resonance",
+      "ref": "The SOLAR 42N manual, DIST and GAIN (p. 21)",
+      "artist": "Classic technique",
+      "tags": ["lead", "vco", "filter", "distortion"],
+      "level": 2,
+      "blurb": "A resonant Polivoks peak clipped by the 42N's distortion after the filter.",
+      "how": "The 42N added a distortion after both filters: DIST balances the clean and distorted sound, GAIN sets how hard it drives. Because it comes after the filter, the resonant peak is what clips first, a snarling, Soviet-synth lead. The manual warns it is louder: bring MASTER VOLUME down.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.9],
+          [1, 60, 0.4],
+          [1.5, 64, 0.4],
+          [2, 62, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Resonate the filters",
+          "module": "filter",
+          "why": "FREQ 5 and RES 8 on both sides.\n- Listen for: VCO A's saw with a whistling peak.",
+          "set": {
+            "vcf.lfreq": 5,
+            "vcf.rfreq": 5,
+            "vcf.lres": 8,
+            "vcf.rres": 8
+          }
+        },
+        {
+          "title": "Turn the distortion in",
+          "module": "filter",
+          "why": "DIST 8: mostly the distorted sound.\n- Listen for: the peak clipping into a snarl.",
+          "set": {
+            "vcf.dist": 8
+          }
+        },
+        {
+          "title": "Drive it",
+          "module": "filter",
+          "why": "GAIN 7.\n- Listen for: a harder, squarer, louder sound.",
+          "set": {
+            "vcf.gain": 7
+          }
+        },
+        {
+          "title": "Bring the level back",
+          "module": "out",
+          "why": "MASTER VOLUME 4, as the manual says to.\n- Listen for: the same snarl at a sensible level.",
+          "set": {
+            "fx.master": 4
+          }
+        }
+      ],
+      "context": {
+        "vcf.dist": "In this sound: 8, nearly all distorted.",
+        "fx.master": "In this sound: down, to make up for the distortion."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.dist",
+          "try": "Turn DIST to 0",
+          "hear": "The clean resonant filter, much quieter."
+        },
+        {
+          "id": "vcf.lmode",
+          "try": "Switch filter L to BP",
+          "hear": "A thinner, nasal distortion on the left."
+        }
+      ]
+    },
+    {
+      "id": "solar-infinity-wash",
+      "name": "Infinity Wash",
+      "ref": "The SOLAR 42N manual, the INFINITY cartridge (p. 24)",
+      "artist": "Classic technique",
+      "tags": ["pad", "classic drone", "reverb", "stereo"],
+      "level": 2,
+      "blurb": "Two drones panned apart into the INFINITY cartridge's huge resonance reverb.",
+      "how": "INFINITY is the cartridge for big ambient effects; its first program is a resonance reverb whose X, Y and Z set the pre-delay, its modulation and the decay. Two classic drones, panned left and right, go through it nearly wet.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 48, 7.5]]
+      },
+      "steps": [
+        {
+          "title": "Two drones apart",
+          "module": "mixer",
+          "why": "The keys play VCO A, so this lesson turns its channel down first: everything here comes from the drones.\n- VCO A VOL 0. DRONE VOICES 4 and 5 on, Drone 4 panned hard left, Drone 5 hard right.",
+          "set": {
+            "mix.va.vol": 0,
+            "gate.d4": true,
+            "gate.d5": true,
+            "mix.d4.pan": -5,
+            "mix.d5.pan": 5
+          }
+        },
+        {
+          "title": "Tune them together",
+          "module": "osc",
+          "why": "Drone 4 to F: F1, C2, A3, F4, C6. Drone 5 a fifth above, on C: C2, G2, E3, C5, G5.\n- Listen for: a wide, consonant chord.",
+          "set": {
+            "d4.tune1": 5.48,
+            "d4.tune2": 0.5,
+            "d4.tune3": 3.33,
+            "d4.tune4": 0.5,
+            "d4.tune5": 2.63,
+            "d5.tune1": 7.74,
+            "d5.tune2": 4.0,
+            "d5.tune3": 0.95,
+            "d5.tune4": 4.0,
+            "d5.tune5": 0.0
+          }
+        },
+        {
+          "title": "Load INFINITY",
+          "module": "fx",
+          "why": "INFINITY on both sides, program 1, resonance reverb. Z 9 for a long decay, Y 6 for movement, BLEND 8.\n- Listen for: the chord blooming into a vast, shimmering wash.",
+          "set": {
+            "fx.cartL": "infinity",
+            "fx.cartR": "infinity",
+            "fx.z": 9,
+            "fx.y": 6,
+            "fx.blend": 8
+          }
+        }
+      ],
+      "context": {
+        "fx.blend": "In this sound: 8, mostly reverb."
+      },
+      "tweaks": [
+        {
+          "id": "fx.x",
+          "try": "Turn X up",
+          "hear": "A gap before the reverb comes in."
+        },
+        {
+          "id": "d5.volt",
+          "try": "Turn Drone 5's VOLT up a little",
+          "hear": "The right side falling out of tune with the left, a slow beating across the stereo field."
+        }
+      ]
+    }
+  ]
+}

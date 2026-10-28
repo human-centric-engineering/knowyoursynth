@@ -1,0 +1,78 @@
+{
+  "synth": "solar-42n",
+  "unusual": [
+    {
+      "target": "drone1",
+      "text": "A classic drone voice has no keyboard and no volt-per-octave input: five sawtooth generators, each a single transistor, tuned by ear with their own knobs into chords, triads or clusters, and opened by a button. The manual warns that a tuned chord drifts and needs touching up, because they are primitive oscillators."
+    },
+    {
+      "target": "d1.volt",
+      "text": "VOLT lowers all five generators together, but each by its own amount, so a chord drifts as it falls; past half its turn the generators start to frequency-modulate each other."
+    },
+    {
+      "target": "d1.mod1",
+      "text": "The MOD buttons choose which generators the photosensor, the eye beside them, bends. On the hardware the light in the room moves them, so the drone changes with where you play it."
+    },
+    {
+      "target": "lfoa",
+      "text": "The LFOs swing positive only, 0 to +10 V: they are made to drive the red LEDs that light the drones' photosensors, which do nothing with a negative voltage."
+    },
+    {
+      "target": "drone3",
+      "text": "Drones 3 and 6 are after the DIY noise synthesizers of the Russian electro-shaman artist Papa Srapa: a square tone under a slow square modulator, made for sirens, birds, space monsters, gunfire, surf and wind."
+    },
+    {
+      "target": "vcob",
+      "text": "VCO A is wired inside to VCO B's cv input, so CV AMT on VCO B is frequency modulation from VCO A with no cable."
+    },
+    {
+      "target": "ea.loop",
+      "text": "The loop button makes the VCO's envelope run on its own like an LFO, which the manual calls self-generation."
+    },
+    {
+      "target": "filter",
+      "text": "The filters are Polivoks circuits, after the Soviet synth's: one per side, so a voice's PAN decides which filter it goes through. Unlike most filters they keep their bass as the resonance rises."
+    },
+    {
+      "target": "vcf.dist",
+      "text": "The distortion comes after the filters, so the resonant peak is what clips first. DIST is a balance, not an amount: GAIN sets how hard it drives."
+    },
+    {
+      "target": "vcf.cvl",
+      "text": "CV L is normalled to CV R: with nothing in CV R, one cable in CV L moves both filters."
+    },
+    {
+      "target": "effector",
+      "text": "Each side has its own effect circuit, loaded from the cartridge in the slot when its 1-2-3 switch is flipped, so the two sides can run different cartridges. The two circuits differ a little, which the manual says gives a live stereo sound."
+    },
+    {
+      "target": "fx.master",
+      "text": "There is no VCA after the effector, so the manual's advice is to run the mixer high and MASTER VOLUME no higher than three o'clock, or the effector's noise comes up."
+    },
+    {
+      "target": "keys",
+      "text": "The plates respond to how much skin touches them, not how hard: the pressure output follows the area of the finger."
+    },
+    {
+      "target": "pre.gain",
+      "text": "A contact microphone is fixed under the keyboard, so the case itself is a microphone: scratch or tap it and the sound goes through the preamp into the mixer, the filters and the effects."
+    }
+  ],
+  "limits": {
+    "intro": "All eight voices are modelled: the four classic drones with their five generators, MUTE, TUNE, MOD, VOLT, photosensor CV and envelopes, the two Papa Srapa voices with FM, AM, NOISE and the S&H, and both VCOs with their six waves, sub, octave switch, FM, sync and ADSRs; the ten-channel stereo mixer, both filters with BP / LP, CV and LINK, the distortion, both cartridge slots, the LFOs, the sequencer and pulser, the joystick, the preamp from EXT. SOURCE and the envelope follower, in stereo.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "The touch keyboard's arpeggiator, sequencer, quantiser, vibrato, presets and pressure output, and its clock and reset inputs: the app's own keyboard plays it, SINGLE or SPLIT, with the octave buttons as one octave each. The contact microphone, so the PREAMP channel hears only EXT. SOURCE. The envelope follower's ATTACK, RELEASE and gate output. The VCA CV inputs, the S&H inputs (the noise is always sampled), the lin / exp switches and the headphone volume. Seven of the twelve cartridges: VIBROTREM, FILTER, PITCH SHIFTER, DIGITAL, STRING RINGER, GENERATOR and SYNTEX-1. The photosensors hear no room light, only their CV jacks."
+      },
+      {
+        "title": "Simplified here",
+        "text": "The DRONE VOICES buttons latch, where the hardware's sound while held. The cartridges are the app's own reverbs, delays, pitch delays, phasers and flangers in place of Elta's programs, and some X, Y or Z knobs do nothing where no parameter matches (the Shimmer's octaves, the Phaser's reverb); with different programs on the two sides, X, Y and Z follow the left one's. A cable in CV R adds to CV L on the right side rather than replacing it. The VCOs' octave switch is three octaves apart."
+      },
+      {
+        "title": "The circuit is approximated",
+        "text": "The manual gives the generators' ranges (on the original SOLAR 42), the Papa Srapa tone's range and the output voltages; the knob ranges of the LFOs, the pulser, the modulators, the filters and the envelopes, the VOLT fall, the FM depths and the distortion's drive are this app's estimates. The generators here hold their tuning, where the hardware's drift."
+      }
+    ]
+  }
+}

@@ -1749,8 +1749,8 @@ controls.push({
   y: Y(890),
   w: 54 * K,
   h: 16 * K,
-  size: 24,
-  vw: 54 * K,
+  size: 18,
+  vw: 34 * K,
   kind: 'enum',
   options: [
     { v: 'single', label: 'SINGLE' },
@@ -1758,7 +1758,7 @@ controls.push({
   ],
   def: 'single',
   module: 'mode',
-  label: '',
+  label: 'MODE',
   name: 'Keyboard behaviour',
   help: 'How the touch keyboard plays the two VCOs. SINGLE: both together. SPLIT: the lower half plays VCO A and the upper half VCO B, each with its own gate. On the hardware it is a menu, chosen with the encoder; its arpeggiator, sequencer, quantiser, vibrato and presets are not modelled.',
 });
