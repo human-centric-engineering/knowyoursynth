@@ -64,7 +64,6 @@ export const SOLAR_DESTS: string[] = [
     `solPw${n}`,
   ]),
   'solExt',
-  'solCut',
   'solCutL',
   'solCutR',
   'solFxX',
@@ -91,6 +90,8 @@ export interface Solar {
   step: () => void;
   /** The sequencer's stage (0-based). */
   seqStage: () => number;
+  /** The light on each voice's photosensor, 0..1 (0 for a voice without one). */
+  eyes: () => number[];
 }
 
 const TWO_PI = Math.PI * 2;
@@ -152,6 +153,8 @@ export function createSolar(
     shClkPrev: 0,
     sh: 0,
     syncPrev: 0,
+    // the light on a classic drone's photosensor, for the meters
+    eye: 0,
     env: idleEnv(),
     level: 0,
     pan: 0,
@@ -170,7 +173,7 @@ export function createSolar(
   const cart: (FxAlgo | null)[] = [null, null];
   const cartAlg: (string | null)[] = [null, null];
   const xyzDst = [DI.solFxX, DI.solFxY, DI.solFxZ];
-  const xyzLast = [0, 0, 0];
+  const xyzLast = [0, 0, 0, 0, 0, 0];
   let blk = 0;
   let blend = 0,
     master = 0;
@@ -240,21 +243,24 @@ export function createSolar(
     if (!P) return;
     let moved = force;
     const vals: number[] = [];
-    for (let k = 0; k < P.fx.xyz.length && k < 3; k++) {
-      const q = P.fx.xyz[k];
-      let t = q.v + ev(xyzDst[k]);
+    // at most three knobs a side, each on its own side's parameter
+    const xyz = P.fx.xyz.slice(0, 6);
+    for (let i = 0; i < xyz.length; i++) {
+      const q = xyz[i];
+      let t = q.v + ev(xyzDst[q.k]);
       t = t < 0 ? 0 : t > 1 ? 1 : t;
       const val = q.lo + (q.hi - q.lo) * t;
       vals.push(val);
-      if (Math.abs(val - xyzLast[k]) > Math.abs(q.hi - q.lo) * 0.005) moved = true;
+      if (Math.abs(val - xyzLast[i]) > Math.abs(q.hi - q.lo) * 0.005) moved = true;
     }
     if (!moved) return;
-    for (let k = 0; k < vals.length; k++) xyzLast[k] = vals[k];
+    for (let i = 0; i < vals.length; i++) xyzLast[i] = vals[i];
     for (let s = 0; s < 2; s++) {
       const c = cart[s];
       if (!c) continue;
-      const p = { ...P.fx[s ? 'r' : 'l'].p };
-      for (let k = 0; k < vals.length; k++) p[P.fx.xyz[k].ref] = vals[k];
+      const side = s ? 'r' : 'l';
+      const p = { ...P.fx[side].p };
+      for (let i = 0; i < xyz.length; i++) if (xyz[i].side === side) p[xyz[i].ref] = vals[i];
       c.set(p, true);
     }
   }
@@ -344,8 +350,9 @@ export function createSolar(
     volt = volt < 0 ? 0 : volt > 1 ? 1 : volt;
     const fall = volt < KNEE ? volt / KNEE : 1;
     const xm = volt > KNEE ? ((volt - KNEE) / (1 - KNEE)) * 0.9 : 0;
-    let light = ev(D[2]);
+    let light = q.light + ev(D[2]);
     light = light < 0 ? 0 : light > 1 ? 1 : light;
+    x.eye = light;
     const cv = ev(D[1]),
       bend = q.photo * light;
     let sum = 0;
@@ -496,6 +503,7 @@ export function createSolar(
     for (let i = 0; i < VOICES; i++) {
       const q = p.voices[i];
       const x = v[i];
+      if (!q || q.kind !== 'drone') x.eye = 0;
       if (!q) {
         for (const o of x.o) S[o] = 0;
         x.env.st = 0;
@@ -538,10 +546,11 @@ export function createSolar(
     S[SI.solMixR] = mR;
 
     // ── dual filter ──
-    const cv = ev(DI.solCut);
+    // CV L is normalled to CV R: the right side hears CV L, at its own MOD R, until CV R is cabled
     const cL = ev(DI.solCutL);
-    const tL = p.vcf.l.cutoff * Math.pow(2, cv + cL);
-    const tR = p.vcf.link ? tL : p.vcf.r.cutoff * Math.pow(2, cv + ev(DI.solCutR));
+    const cR = cabled[DI.solCutR] ? ev(DI.solCutR) : cL;
+    const tL = p.vcf.l.cutoff * Math.pow(2, cL * p.vcf.l.mod);
+    const tR = p.vcf.link ? tL : p.vcf.r.cutoff * Math.pow(2, cR * p.vcf.r.mod);
     fHz[0] += (tL - fHz[0]) * sm;
     fHz[1] += (tR - fHz[1]) * sm;
     let fl = filter(0, mL, fHz[0], p.vcf.l.res, p.vcf.l.mode, p.vcf.l.drive);
@@ -580,5 +589,5 @@ export function createSolar(
     S[SI.solR] = (fr * (1 - blend) + wr * blend) * master;
   }
 
-  return { set, key, panic, step, seqStage: () => stage };
+  return { set, key, panic, step, seqStage: () => stage, eyes: () => v.map((x) => x.eye) };
 }

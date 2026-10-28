@@ -32,6 +32,7 @@ import type {
   ModulePlate,
   MenuControl,
   PanelLayout,
+  PanelMark,
   PatchCable,
   RockerControl,
   SelectControl,
@@ -1743,6 +1744,7 @@ const KNOB_GEOM: Record<KnobStyle, KnobGeom> = {
   'vcs3-dial': { body: 1.3, tick: 1.4, num: 1.7 },
   e7: { body: 1.08, tick: 1.34, num: 1.68 },
   solar: { body: 1.08, tick: 1.36, num: 1.7 },
+  'solar-eye': { body: 1.0, tick: 1.1, num: 1.3 },
 };
 
 function KnobScale({ c, ctx, g }: { c: KnobControl; ctx: PanelCtx; g: KnobGeom }) {
@@ -2226,6 +2228,137 @@ function KnobBody({ c, angle, ctx }: { c: KnobControl; angle: number; ctx: Panel
   );
 }
 
+/**
+ * The SOLAR 42N photosensor's facets: rings of small lenses round one in the middle, as [x, y, radius] in eye radii.
+ * Worked out once and rounded, so the server and the browser draw the same numbers (their sine and cosine can differ
+ * in the last digit, and a hydrated attribute must match).
+ */
+const EYE_FACETS: [number, number, number][] = (
+  [
+    [0.25, 6, 0.12],
+    [0.48, 12, 0.124],
+    [0.7, 18, 0.12],
+    [0.886, 24, 0.105],
+  ] as const
+).flatMap(([rr, n, lr]) =>
+  Array.from({ length: n }, (_, k): [number, number, number] => {
+    const a = (2 * Math.PI * (k + (rr > 0.6 ? 0.5 : 0))) / n;
+    return [Math.round(rr * Math.cos(a) * 1e4) / 1e4, Math.round(rr * Math.sin(a) * 1e4) / 1e4, lr];
+  })
+);
+
+/**
+ * A `solar-eye` knob: the SOLAR 42N's photosensor, a faceted lens dome turned by dragging, with no pointer. It glows
+ * with the light it sees: its own value or, while the engine runs, the light the meters report, CV included.
+ */
+function EyeBody({ c, value, ctx }: { c: KnobControl; value: ControlValue; ctx: PanelCtx }) {
+  const meters = useStore(meterStore);
+  const r = c.r;
+  const own =
+    typeof value === 'number' ? (value - (c.min ?? 0)) / ((c.max ?? 10) - (c.min ?? 0)) : 0;
+  const seen = c.eye != null && meters.power ? (meters.eyes?.[c.eye] ?? own) : own;
+  const lit = Math.min(1, Math.max(0, seen));
+  const lenses = [
+    <circle key="c" r={r * 0.115} />,
+    ...EYE_FACETS.map(([x, y, lr], k) => <circle key={k} cx={r * x} cy={r * y} r={r * lr} />),
+  ];
+  if (ctx.outline)
+    return (
+      <g transform={`translate(${c.x} ${c.y})`} stroke={INK} fill={PAPER}>
+        <circle r={r} strokeWidth="2.2" />
+        <g strokeWidth="0.8">{lenses}</g>
+        {lit > 0 && <circle r={r} fill={INK} stroke="none" opacity={0.35 * lit} />}
+      </g>
+    );
+  return (
+    <g transform={`translate(${c.x} ${c.y})`}>
+      {lit > 0 && <circle r={r * 1.5} fill="#ffb02e" opacity={0.45 * lit} />}
+      <circle r={r} fill="#a7b6c3" stroke="#94a3b0" strokeWidth="1.5" />
+      {lit > 0 && <circle r={r} fill="#ffa928" opacity={lit} />}
+      <g
+        fill={lit > 0 ? '#ffe7a8' : '#cbd7e1'}
+        fillOpacity={0.85 - 0.25 * lit}
+        stroke={lit > 0 ? '#d98a1c' : '#9aa9b6'}
+        strokeWidth="1"
+      >
+        {lenses}
+      </g>
+      {lit > 0 && <circle r={r * 0.45} fill="#fffbe8" opacity={0.75 * lit} />}
+      <path
+        d={`M ${-r * 0.71} ${-r * 0.19} A ${r * 0.74} ${r * 0.74} 0 0 1 ${-r * 0.19} ${-r * 0.71}`}
+        fill="none"
+        stroke="#fff"
+        strokeWidth={r * 0.14}
+        strokeLinecap="round"
+        opacity="0.55"
+      />
+    </g>
+  );
+}
+
+/** Plays a note while it is pressed, and lets it go: the page's keyboard, reached from the panel. */
+export type NotePress = (note: number, on: boolean) => void;
+
+/**
+ * A touch plate (a `button` with `note`): clear over the plate its decor draws, it plays its note while it is held and
+ * lights while it does. It holds no value, so a press never changes the patch.
+ */
+export function Plate({ c, onNote }: { c: ButtonControl; onNote?: NotePress }) {
+  const hover = useHover('control', c.id);
+  const [down, setDown] = useState(false);
+  const note = c.note ?? 60;
+  const release = () => {
+    if (!down) return;
+    setDown(false);
+    onNote?.(note, false);
+  };
+  return (
+    <g>
+      <Highlight c={c} r={Math.max(c.w, c.h) * 0.6} />
+      <rect
+        x={c.x - c.w / 2}
+        y={c.y - c.h / 2}
+        width={c.w}
+        height={c.h}
+        rx={4}
+        fill={down ? '#ffe7a8' : 'transparent'}
+        opacity={down ? 0.35 : 1}
+        style={{ cursor: onNote ? 'pointer' : 'default', touchAction: 'none' }}
+        role="button"
+        aria-label={(c.label || c.id).replace(/\n/g, ' ')}
+        aria-pressed={down}
+        {...hover}
+        onPointerDown={(e) => {
+          if (!onNote) return;
+          e.preventDefault();
+          e.currentTarget.setPointerCapture(e.pointerId);
+          setDown(true);
+          onNote(note, true);
+        }}
+        onPointerUp={release}
+        onPointerCancel={release}
+        onLostPointerCapture={release}
+      />
+    </g>
+  );
+}
+
+/** A part with a hover card and nothing to turn (`SynthDef.marks`): an invisible target over what the decor draws. */
+export function Mark({ m }: { m: PanelMark }) {
+  const hover = useHover('mark', m.id);
+  return (
+    <rect
+      x={m.rect.x}
+      y={m.rect.y}
+      width={m.rect.w}
+      height={m.rect.h}
+      fill="transparent"
+      aria-label={m.name}
+      {...hover}
+    />
+  );
+}
+
 export const Knob = memo(function Knob({
   c,
   value,
@@ -2281,7 +2414,11 @@ export const Knob = memo(function Knob({
         }
       />
       <Highlight c={c} r={c.r * 1.62} />
-      <KnobBody c={c} angle={angle} ctx={ctx} />
+      {c.style === 'solar-eye' ? (
+        <EyeBody c={c} value={value} ctx={ctx} />
+      ) : (
+        <KnobBody c={c} angle={angle} ctx={ctx} />
+      )}
       {ghost}
       <circle
         cx={c.x}

@@ -18,6 +18,7 @@ import { moduleOf } from '@/lib/app/synths/lib/modules';
 import { controlMap, displayName, formatValue, isShown, jackMap } from '@/lib/app/synths/lib/patch';
 import type {
   Area,
+  PanelMark,
   Control,
   ControlValue,
   ControlValues,
@@ -41,6 +42,7 @@ interface Focused {
   j?: Jack | null;
   cable?: CableFocus | null;
   area?: Area | null;
+  mark?: PanelMark | null;
 }
 
 function useFocused(def: SynthDef): Focused {
@@ -51,7 +53,8 @@ function useFocused(def: SynthDef): Focused {
   const j = f.kind === 'jack' ? jm[f.id] : null;
   const cable = f.kind === 'cable' && jm[f.from] && jm[f.to] ? f : null;
   const area = f.kind === 'area' ? areaMap(def)[f.id] || null : null;
-  return { f, c, j, cable, area };
+  const mark = f.kind === 'mark' ? def.marks?.find((m) => m.id === f.id) || null : null;
+  return { f, c, j, cable, area, mark };
 }
 
 /** Keep a floating card on screen: flip to the left of the pointer near the right edge, and above it in the lower half. */
@@ -188,7 +191,7 @@ export interface TooltipProps {
 
 /** Floating card that follows the mouse over the panel. */
 export function Tooltip({ enabled = true, def, values, target, preset, cables }: TooltipProps) {
-  const { f, c, j, cable, area } = useFocused(def);
+  const { f, c, j, cable, area, mark } = useFocused(def);
   const pending = useStore(pendingStore);
   const jm = jackMap(def);
   const pj = pending && j && pending !== j.id ? jm[pending] : null;
@@ -211,11 +214,24 @@ export function Tooltip({ enabled = true, def, values, target, preset, cables }:
     return () => window.removeEventListener('pointerdown', clear);
   }, [stickyId]);
 
-  if (!f || !f.tip || (!c && !j && !cable && !area)) return null;
+  if (!f || !f.tip || (!c && !j && !cable && !area && !mark)) return null;
   const prospect = f.kind === 'cable' && !!f.prospect;
   const pin = f.kind === 'cable' && !!f.pin;
   const patching = !!pj || prospect;
   if (!enabled && !patching) return null;
+
+  if (mark) {
+    const mod = moduleOf(mark.module);
+    return (
+      <div role="tooltip" className={`${cardClass} text-[13.5px]`} style={place(f, 320)}>
+        <p className="kys-label" style={{ color: mod.color }}>
+          {mod.label}
+        </p>
+        <p className="kys-display mt-0.5 text-[15px] leading-tight">{mark.name}</p>
+        <p className="mt-1.5 leading-snug text-(--kys-text)/90">{mark.help}</p>
+      </div>
+    );
+  }
 
   if (area) {
     const mod = moduleOf(area.module);

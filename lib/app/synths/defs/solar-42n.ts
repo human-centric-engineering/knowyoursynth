@@ -44,6 +44,7 @@ import type {
   KnobScale,
   LitWhen,
   OutputJack,
+  PanelMark,
   SolarDrone,
   SolarFxKnob,
   SolarParams,
@@ -57,7 +58,7 @@ import type {
 } from '@/lib/app/synths/contract';
 import { FX_ALGOS } from '@/lib/app/synths/defs/deepmind-12d-fx';
 import { num } from '@/lib/app/synths/lib/def-kit';
-import { clamp, expMap, fmtHz, fmtTime } from '@/lib/app/synths/lib/maps';
+import { clamp, expMap, fmtHz, fmtSemi, fmtTime } from '@/lib/app/synths/lib/maps';
 
 type TextRest = Partial<
   Pick<TextDecor, 'anchor' | 'fill' | 'weight' | 'brand' | 'spacing' | 'rotate'>
@@ -109,6 +110,10 @@ const GEN_RANGE: [number, number][] = [
 /** Semitones a classic drone's photosensor raises a MOD generator at full light. */
 const PHOTO_SEMI = 12;
 const droneEnvS = (v: number): number => expMap(v / 10, 0.005, 12);
+/** The keyboard encoder's PORTAMENTO: the glide's time constant in seconds, 0 (off) at the bottom. */
+const glideS = (v: number): number => (v <= 0 ? 0 : expMap(v / 10, 0.01, 2));
+/** SPLIT's first right-hand note: the 7th plate, F♯4, so each half has six plates. */
+const KEY_SPLIT = 66;
 const vcoEnvS = (v: number): number => expMap(v / 10, 0.002, 10);
 /** A Papa Srapa's modulator: 0.1–10 Hz, ten times that on 10. */
 const srapaHz = (v: number, x10: boolean): number => expMap(v / 10, 0.1, 10) * (x10 ? 10 : 1);
@@ -293,7 +298,7 @@ const jackIn = (
   dest: string | null,
   name: string,
   help: string,
-  rest: Partial<Pick<InputJack, 'amt' | 'label' | 'labelPos'>> = {}
+  rest: Partial<Pick<InputJack, 'amt' | 'does' | 'label' | 'labelPos'>> = {}
 ): void => {
   jacks.push({
     id,
@@ -307,6 +312,7 @@ const jackIn = (
     dest,
     help,
     ...(rest.amt !== undefined ? { amt: rest.amt } : {}),
+    ...(rest.does !== undefined ? { does: rest.does } : {}),
   });
 };
 const jackOut = (
@@ -426,9 +432,28 @@ function classicDrone(n: number, mx: number, my: number): void {
   circle(mx + 26, my + 116, 4, 'none', INK);
   circle(mx + 26, my + 116, 1.5, INK);
   label(mx + 50, my + 128, 'env', 12, { fill: RED_INK });
-  // the photosensor and its number
+  // the photosensor in its bezel: its dome is the LIGHT control, drawn (and lit) by the panel's `solar-eye` knob
   circle(mx + 138, my + 101, 27, '#b9c7d3', '#8a99a6');
-  circle(mx + 138, my + 101, 20, '#c9d5df');
+  controls.push({
+    id: `${d}.light`,
+    type: 'knob',
+    x: X(mx + 138),
+    y: Y(my + 101),
+    r: 21 * K,
+    style: 'solar-eye',
+    eye: voiceOf(n) - 1,
+    ring: false,
+    kind: 'cont',
+    min: 0,
+    max: 10,
+    def: 0,
+    module: 'mod',
+    name: `Drone ${n} photosensor`,
+    label: `Drone ${n} photosensor`,
+    labelPos: 'none',
+    fmt: pct,
+    help: `The photosensor, the voice’s eye: a light sensor under a lens. The more light falls on it, the higher it bends the generators whose MOD is on, up to an octave. On the hardware you shade it with a hand or shine a torch on it; here drag it to set the light. Its CV jack adds light from a voltage, and the dome glows with the light it sees.`,
+  });
   decor.push({
     t: 'rect',
     x: X(mx + 158),
@@ -494,7 +519,8 @@ function srapaDrone(n: number, dx: number): void {
     def: 4,
     name: `Drone ${n} rate`,
     label: 'rate',
-    fmt: (v) => fmtHz(srapaHz(v, false)),
+    // a readout sees only its own knob: both rates, with 1 / 10 off and on
+    fmt: (v) => `${fmtHz(srapaHz(v, false))}, ${fmtHz(srapaHz(v, true))} with 1 / 10`,
     help: 'The speed of the voice’s low square modulator, the one that warbles the tone (FM) or chops it (AM). Its own output is the jack below.',
   });
   button(`${d}.x10`, x(98), 565, 14, {
@@ -533,15 +559,16 @@ function srapaDrone(n: number, dx: number): void {
     def: 5,
     name: `Drone ${n} PITCH`,
     label: 'PITCH',
-    fmt: (v) => fmtNote(srapaNote(v, false)),
+    // a readout sees only its own knob: both ranges, LOW and HI
+    fmt: (v) => `${fmtNote(srapaNote(v, false))}, ${fmtNote(srapaNote(v, true))} with HI`,
     help: 'The pitch of the voice’s square tone, about C0 to E7 across both ranges.',
   });
-  button(`${d}.hi`, x(200), 603, 14, {
+  button(`${d}.hi`, x(190), 603, 14, {
     module: 'osc',
     name: `Drone ${n} hi / low`,
     help: 'Moves PITCH’s range up three octaves, from rumbles to whistles.',
   });
-  label(x(200), 620, 'hi/low', 13);
+  label(x(190), 620, 'hi/low', 13);
   knob(`${d}.noise`, x(174), 639, 14, BLUE, {
     module: 'osc',
     def: 0,
@@ -661,14 +688,7 @@ const VCO_WAVES: ControlOption[] = [
   { v: 'sawInv', label: '', a: 55 },
   { v: 'sineTri', label: '', a: 95 },
 ];
-const WAVE_OF: Record<string, SolarVco['wave']> = {
-  sine: 'sine',
-  tri: 'tri',
-  saw: 'saw',
-  square: 'square',
-  sawInv: 'sawInv',
-  sineTri: 'sineTri',
-};
+const isWave = (w: unknown): w is SolarVco['wave'] => VCO_WAVES.some((o) => o.v === w);
 const WAVE_NAMES: Record<string, string> = {
   sine: 'sine',
   tri: 'triangle',
@@ -725,7 +745,7 @@ function vco(s: 'a' | 'b', dx: number, frameX: [number, number]): void {
     def: 5,
     name: `VCO ${S} tune`,
     label: 'tune',
-    fmt: (v) => `${v >= 5 ? '+' : '−'}${Math.abs(Math.round((v - 5) * 12) / 10)} st`,
+    fmt: (v) => fmtSemi((v - 5) * 1.2),
     help: 'Fine-tunes the VCO over about an octave: detune it against the other VCO for beating, or tune it to an interval.',
   });
   toggle(`${id}.lin`, x(262), 610, {
@@ -877,7 +897,7 @@ function envelope(
   button(`${id}.loop`, holdX + 38, 628, 14, {
     module: 'env',
     name: `Envelope ${S} loop`,
-    help: 'Makes the envelope cycle attack and decay over and over while it is open, like an LFO (self-generation). Short ATTACK and RELEASE make it fastest.',
+    help: 'Makes the envelope cycle attack and decay over and over while it is open, like an LFO (self-generation). ATTACK and DECAY set its speed, short ones fastest; SUSTAIN does nothing while it loops, and RELEASE only fades it once the gate closes.',
   });
   decor.push({ t: 'wave', x: X(holdX + 58), y: Y(624), size: 12, shape: 'adsr', w: 1.6 });
   led(holdX + 79, 628, 'amber', { id: `${id}.loop`, eq: true }, 3);
@@ -960,14 +980,15 @@ const PAN_DEF: Record<string, number> = { d1: -2, d2: 2, d3: -3, d4: -2, d5: 2, 
 frame(447, 535, 832, 612);
 CHANNELS.forEach(([ch, printed, name], i) => {
   const x = MIX_X[i];
-  label(x - 9, 538, 'PAN •', 9);
-  knob(`mix.${ch}.pan`, x, 548, 12, PAN_CAP, {
+  // PAN is printed over its knob, between it and the frame above
+  label(x, 542, 'PAN', 7);
+  knob(`mix.${ch}.pan`, x, 553, 9, PAN_CAP, {
     module: 'mixer',
     def: PAN_DEF[ch] ?? 0,
     min: -5,
     max: 5,
     name: `${name} PAN`,
-    fmt: (v) => fmtPan(v / 5),
+    fmt: fmtPan,
     help: `Where ${name} sits between the left and right outputs, and so which side’s filter and cartridge it goes through.`,
   });
   plate(x, 568, printed, 38, 12);
@@ -1188,7 +1209,7 @@ plate(637, 355, 'DUAL EFFECTOR', 70, 13);
     name: `Effector ${n}`,
     label: n,
     fmt: pct,
-    help: `The loaded program’s ${['first', 'second', 'third'][k]} parameter, on both sides: what it is depends on the cartridge (a reverb’s decay, a delay’s time, a pitch shift). The hover shows what it turns now.`,
+    help: `Each loaded program’s ${['first', 'second', 'third'][k]} parameter, on both sides at once: what it is depends on each side’s cartridge (a reverb’s decay, a delay’s time, a pitch shift), so with two programs loaded one knob can turn two different things.`,
   });
   jackIn(
     `fx.cv${n.toLowerCase()}`,
@@ -1264,7 +1285,7 @@ knob('ui.phones', 815, 437, 12, RED, {
 
 // ── Dual Polivoks filter and distortion ──────────────────────────────────
 tab(450, 497, 'FILTER L', 46);
-tab(829, 497, 'FILTER R', 46);
+tab(825, 497, 'FILTER R', 46);
 for (const [side, fx, bx, rx, name] of [
   ['l', 480, 512, 540, 'left'],
   ['r', 738, 767, 798, 'right'],
@@ -1355,11 +1376,13 @@ jackIn(
   'vcf.cvl',
   570,
   498,
-  'solCut',
+  'solCutL',
   'CV L',
-  'Moves the left cutoff, as far as MOD L, an octave a volt at full. It is normalled to CV R, so with nothing in CV R it moves both sides.',
+  'Moves the left cutoff, as far as MOD L, an octave a volt at full. It is normalled to CV R, so with nothing in CV R it moves the right cutoff too, as far as MOD R.',
   {
-    amt: (v) => num(v, 'vcf.lmod') / 10,
+    // the depth is the engine's (MOD L here, MOD R through the normal), so the jack names the knobs itself
+    does: (v) =>
+      `A signal here moves the left cutoff as far as MOD L (${pct(num(v, 'vcf.lmod'))}) and, while CV R is empty, the right cutoff as far as MOD R (${pct(num(v, 'vcf.rmod'))}).`,
   }
 );
 jackIn(
@@ -1368,9 +1391,10 @@ jackIn(
   498,
   'solCutR',
   'CV R',
-  'Moves the right cutoff on its own, as far as MOD R.',
+  'Moves the right cutoff on its own, as far as MOD R, and breaks the normal from CV L.',
   {
-    amt: (v) => num(v, 'vcf.rmod') / 10,
+    does: (v) =>
+      `A signal here moves the right cutoff as far as MOD R (${pct(num(v, 'vcf.rmod'))}), and CV L no longer reaches it.`,
   }
 );
 
@@ -1409,7 +1433,8 @@ function lfoBlock(s: 'a' | 'b', dx: number): void {
     def: 4,
     name: `LFO ${S} rate`,
     label: 'rate',
-    fmt: (v) => fmtHz(lfoHz(v, s === 'a', 'x1')),
+    // a readout sees only its own knob, so it gives the rate at ×1 and says so: the SPEED switch multiplies it
+    fmt: (v) => `${fmtHz(lfoHz(v, s === 'a', 'x1'))} at ×1`,
     help: s === 'a' ? 'The speed of LFO A, the slow one.' : 'The speed of LFO B, the fast one.',
   });
   led(x(110), 744, 'blue', undefined, 3);
@@ -1556,7 +1581,8 @@ label(443, 748, 'stages', 13);
 label(410, 748, 'clock', 13);
 const STEP_X = [478, 537, 597, 657, 715];
 const GATE_X = [507, 567, 627, 685, 743];
-const STEP_DEF = [0, 3, 7, 5, 10];
+// a minor figure at 1v/oct (a knob unit is half a volt, six semitones): root, ♭3, 5, 4, ♭7
+const STEP_DEF = [0, 0.5, 1.17, 0.83, 1.67];
 STEP_X.forEach((sx, k) => {
   knob(`seq.s${k + 1}`, sx, 725, 14, RED, {
     module: 'mod',
@@ -1718,7 +1744,27 @@ for (const [px, y0, y1] of PLATES) {
   for (let yy = y0 + 6; yy < y1 - 3; yy += 7)
     decor.push({ t: 'rect', x: X(px + 5), y: Y(yy), w: 35 * K, h: 2.5 * K, fill: '#9b8452' });
 }
-for (const tx of [310, 890])
+// each plate plays its note while it is held: C4 to B4 left to right, so SPLIT parts them at F♯4 (`KEY_SPLIT`)
+PLATES.forEach(([px, y0, y1], k) => {
+  controls.push({
+    id: `kb.plate${k + 1}`,
+    type: 'button',
+    x: X(px + 22.5),
+    y: Y((y0 + y1) / 2),
+    w: 45 * K,
+    h: (y1 - y0) * K,
+    note: 60 + k,
+    kind: 'bool',
+    def: false,
+    ui: true,
+    module: 'mode',
+    label: `Plate ${k + 1}`,
+    labelPos: 'none',
+    name: `Touch plate ${k + 1} (${fmtNote(60 + k).replace(/\d+$/, '')})`,
+    help: `A touch plate: hold it to play ${fmtNote(60 + k)} on the VCOs, as a key does, through the octave buttons. ${k < 6 ? 'In SPLIT it plays VCO A, with the left half.' : 'In SPLIT it plays VCO B, with the right half.'} On the hardware each plate can be retuned with the encoder, and the pressure output follows how much finger is on it.`,
+  });
+});
+for (const tx of [390, 890])
   decor.push({
     t: 'path',
     d: shiftPath('M 0 -22 L 24 18 L -24 18 Z', X(tx), Y(965)),
@@ -1730,8 +1776,30 @@ for (const tx of [310, 890])
 [34, 26, 18, 10].forEach((r, i) => circle(640, 950, r, 'none', i % 2 ? '#9b8452' : '#c9d5df'));
 circle(640, 950, 3, '#c9d5df');
 circle(640, 846, 22, 'none', '#9b8452');
-circle(640, 846, 15, '#2a2b2e');
-circle(640, 851, 11, '#d6342a');
+knob('kb.glide', 640, 846, 15, '#d6342a', {
+  module: 'mode',
+  def: 0,
+  name: 'Keyboard encoder (PORTAMENTO)',
+  fmt: (v) => (glideS(v) ? fmtTime(glideS(v)) : 'off'),
+  help: 'On the hardware the encoder scrolls through the keyboard’s menu and edits it: its behaviour, arpeggiator, sequencer, quantiser, vibrato, presets and portamento. Here it sets only PORTAMENTO: how slowly the keyboard’s pitch glides from one note to the next, off at the bottom. The display beside it shows the behaviour.',
+});
+// the triangles and the sun: parts with a card and nothing to turn
+const marks: PanelMark[] = [
+  ...[390, 890].map((tx, i) => ({
+    id: `kb.triangle${i + 1}`,
+    name: 'Triangle',
+    module: 'mode' as const,
+    help: 'A printed triangle on the keyboard’s faceplate. The manual does not say it does anything, and here it is decoration.',
+    rect: { x: X(tx - 24), y: Y(943), w: 48 * K, h: 40 * K },
+  })),
+  {
+    id: 'kb.sun',
+    name: 'The sun (contact microphone)',
+    module: 'mode',
+    help: 'The built-in contact microphone, a piezo, sits under the keyboard beneath the sun and turns the whole case into a microphone: scratch or tap it and the PREAMP hears it. Here the preamp has no microphone to listen to, so the sun is a marker.',
+    rect: { x: X(606), y: Y(916), w: 68 * K, h: 68 * K },
+  },
+];
 for (const [px, py] of [
   [434, 798],
   [640, 798],
@@ -1750,7 +1818,8 @@ controls.push({
   w: 54 * K,
   h: 16 * K,
   size: 18,
-  vw: 34 * K,
+  // the value fills the display, as the hardware shows only the value
+  vw: 50 * K,
   kind: 'enum',
   options: [
     { v: 'single', label: 'SINGLE' },
@@ -1829,6 +1898,30 @@ jackOut(
   'keyboard v/oct',
   'The held plate’s pitch, one volt per octave: it drives both VCOs from inside, and can play anything else.'
 );
+// the printed symbol beside each jack: clock, reset, the two gates, pressure, v/oct
+const glyph = (x: number, y: number, d: string): void => {
+  decor.push({ t: 'path', d: shiftPath(d, X(x), Y(y)), w: 1.6, fill: 'none', stroke: '#c9d5df' });
+};
+decor.push({
+  t: 'circle',
+  x: X(501),
+  y: Y(826),
+  r: 3.5 * K,
+  fill: 'none',
+  stroke: '#9fc3e6',
+  sw: 1.6,
+});
+decor.push({
+  t: 'path',
+  d: shiftPath('M 0 -2 L 0 0 L 1.8 0', X(501), Y(826)),
+  w: 1.6,
+  fill: 'none',
+  stroke: '#9fc3e6',
+});
+glyph(531, 835, 'M 1.5 -4 L -2 0.5 L 1 0.5 L -1.5 4');
+for (const x of [564, 715]) glyph(x, 844, 'M -4 3 L -2 3 L -2 -3 L 2 -3 L 2 3 L 4 3');
+glyph(746, 836, 'M 0 -4 L 0 3 M -3 3 L 3 3');
+glyph(776, 827, 'M 2 -4 L 2 2 L -2 2 M -0.5 0.5 L -2 2 L -0.5 3.5');
 
 // ── Drone voice buttons ──────────────────────────────────────────────────
 label(1145, 793, 'DRONE VOICES', 14);
@@ -1905,7 +1998,7 @@ const classicArea = (n: number, mx: number): Area => ({
   keywords:
     'drone classic solar 50 saw sawtooth chord tune mute mod volt photosensor eye light hold attack release',
   rects: [R(mx - 25, 386, mx + 170, 541)],
-  help: `A classic drone voice: five sawtooth generators, each with a TUNE knob, a MUTE button to switch it in and a MOD button to let the photosensor and the CV jack bend it. VOLT lowers all five and then makes them modulate each other. ATT and RLS fade the voice in and out when DRONE VOICES ${n}, HOLD or the GATE jack opens it.`,
+  help: `A classic drone voice: five sawtooth generators, each with a TUNE knob, a MUTE button to switch it in and a MOD button to let the photosensor and the CV jack bend it. VOLT lowers all five and then makes them modulate each other. ATT and RLS fade the voice in and out when DRONE VOICES ${n}, HOLD or the GATE jack opens it. Its eye, the photosensor, bends the MOD generators with the light on it: drag the eye, or light it from the CV jack.`,
 });
 const areas: Area[] = [
   {
@@ -2059,10 +2152,12 @@ function cartridge(prog: Prog | null): SolarParams['fx']['l'] {
 const pan = (v: ControlValues, ch: string): number => clamp(num(v, `mix.${ch}.pan`) / 5, -1, 1);
 const level = (v: ControlValues, ch: string): number => vol(num(v, `mix.${ch}.vol`));
 
-function classicVoice(v: ControlValues, n: number): SolarDrone {
-  const d = `d${n}`;
+/** What every drone voice, classic or Papa Srapa, has: its gate, its ASR envelope and its mixer channel. */
+function droneCommon(
+  v: ControlValues,
+  d: string
+): Pick<SolarDrone, 'gate' | 'env' | 'level' | 'pan'> {
   return {
-    kind: 'drone',
     gate: !!v[`gate.${d}`],
     env: {
       mode: 'asr',
@@ -2074,6 +2169,13 @@ function classicVoice(v: ControlValues, n: number): SolarDrone {
     },
     level: level(v, d),
     pan: pan(v, d),
+  };
+}
+function classicVoice(v: ControlValues, n: number): SolarDrone {
+  const d = `d${n}`;
+  return {
+    kind: 'drone',
+    ...droneCommon(v, d),
     gens: GEN_RANGE.map(([lo, hi], k) => ({
       note: lo + ((hi - lo) * num(v, `${d}.tune${k + 1}`)) / 10,
       on: !!v[`${d}.on${k + 1}`],
@@ -2081,23 +2183,14 @@ function classicVoice(v: ControlValues, n: number): SolarDrone {
     })),
     volt: clamp(num(v, `${d}.volt`) / 10, 0, 1),
     photo: PHOTO_SEMI,
+    light: clamp(num(v, `${d}.light`) / 10, 0, 1),
   };
 }
 function srapaVoice(v: ControlValues, n: number): SolarSrapa {
   const d = `d${n}`;
   return {
     kind: 'srapa',
-    gate: !!v[`gate.${d}`],
-    env: {
-      mode: 'asr',
-      a: droneEnvS(num(v, `${d}.att`)),
-      d: 0.1,
-      s: 1,
-      r: droneEnvS(num(v, `${d}.rls`)),
-      hold: !!v[`${d}.hold`],
-    },
-    level: level(v, d),
-    pan: pan(v, d),
+    ...droneCommon(v, d),
     note: srapaNote(num(v, `${d}.pitch`), !!v[`${d}.hi`]),
     rate: srapaHz(num(v, `${d}.rate`), !!v[`${d}.x10`]),
     fm: !!v[`${d}.fm`],
@@ -2110,6 +2203,7 @@ function vcoVoice(v: ControlValues, s: 'a' | 'b'): SolarVco {
   const id = `v${s}`;
   const e = `e${s}`;
   const octave = (v['keys.up'] ? 12 : 0) - (v['keys.down'] ? 12 : 0);
+  const wave = v[`${id}.wave`];
   return {
     kind: 'vco',
     gate: false,
@@ -2124,20 +2218,24 @@ function vcoVoice(v: ControlValues, s: 'a' | 'b'): SolarVco {
     level: level(v, id),
     pan: pan(v, id),
     semi: (v[`${id}.oct`] === 'low' ? -36 : 0) + (num(v, `${id}.tune`) - 5) * 1.2 + octave,
-    wave: WAVE_OF[String(v[`${id}.wave`])] ?? 'saw',
+    wave: isWave(wave) ? wave : 'saw',
     shape: clamp(num(v, `${id}.pw`) / 10, 0, 1),
     sub: v[`${id}.sub`] === 'on',
     fm: clamp(num(v, `${id}.cvamt`) / 10, 0, 1),
   };
 }
 function xyzKnobs(v: ControlValues): SolarFxKnob[] {
-  // one program's parameters for the shared knobs: the left one's, or the right one's with the left side empty
-  const prog = progOf(v, 'l') ?? progOf(v, 'r');
-  if (!prog) return [];
-  return (['x', 'y', 'z'] as const).map((n, k) => {
-    const t = prog.xyz[k];
-    const at = num(v, `fx.${n}`) / 10;
-    return t ? { ref: t[0], lo: t[1], hi: t[2], v: at } : { ref: '-', lo: 0, hi: 0, v: at };
+  // the knobs are shared, but each side's program decides what they turn there; an unmodelled knob turns nothing
+  return (['l', 'r'] as const).flatMap((side) => {
+    const prog = progOf(v, side);
+    if (!prog) return [];
+    return (['x', 'y', 'z'] as const).flatMap((n, k) => {
+      const t = prog.xyz[k];
+      if (!t) return [];
+      return [
+        { side, k: k as 0 | 1 | 2, ref: t[0], lo: t[1], hi: t[2], v: num(v, `fx.${n}`) / 10 },
+      ];
+    });
   });
 }
 
@@ -2147,6 +2245,7 @@ function toEngine(v: ControlValues): EngineParams {
     cutoff: cutoffHz(num(v, `vcf.${s}freq`)),
     res: clamp(num(v, `vcf.${s}res`) / 10, 0, 1) * 0.98,
     drive: DRIVE,
+    mod: clamp(num(v, `vcf.${s}mod`) / 10, 0, 1),
   });
   const solar: SolarParams = {
     voices: [
@@ -2159,7 +2258,11 @@ function toEngine(v: ControlValues): EngineParams {
       classicVoice(v, 5),
       srapaVoice(v, 6),
     ],
-    keys: { mode: v['keys.mode'] === 'split' ? 'split' : 'single', split: 60, glide: 0 },
+    keys: {
+      mode: v['keys.mode'] === 'split' ? 'split' : 'single',
+      split: KEY_SPLIT,
+      glide: glideS(num(v, 'kb.glide')),
+    },
     ext: { level: level(v, 'ext'), pan: pan(v, 'ext') },
     pre: { level: level(v, 'pre'), pan: pan(v, 'pre') },
     vcf: {
@@ -2274,7 +2377,7 @@ const solar42n: SynthDef & { version: number } = {
     preamp: 'the preamp',
   },
   destNames: {
-    solCut: 'both filters’ cutoff',
+    solCutL: 'the left filter’s cutoff',
     solCutR: 'the right filter’s cutoff',
     solFxX: 'the effector’s X',
     solFxY: 'the effector’s Y',
@@ -2287,6 +2390,7 @@ const solar42n: SynthDef & { version: number } = {
   },
   decor,
   areas,
+  marks,
   controls,
   jacks,
   init,

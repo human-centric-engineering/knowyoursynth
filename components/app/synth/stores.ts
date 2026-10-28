@@ -64,11 +64,14 @@ export interface Meters {
   /** The sequencer stage (0-based), −1 when stopped. */
   seq?: number;
   pulser?: number;
+  /** The SOLAR 42N's light on each voice's photosensor, 0..1. */
+  eyes?: number[];
 }
 
 /** A control, jack or area the pointer, the keyboard or a press is on. */
 export interface ItemFocus {
-  kind: 'control' | 'jack' | 'area';
+  /** `mark`: a part with a card and nothing to turn (`SynthDef.marks`). */
+  kind: 'control' | 'jack' | 'area' | 'mark';
   id: string;
   /** Screen position for the tooltip. */
   x: number;

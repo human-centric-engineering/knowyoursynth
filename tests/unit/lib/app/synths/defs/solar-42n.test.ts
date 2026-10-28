@@ -96,7 +96,8 @@ describe('SOLAR 42N toEngine at the init patch', () => {
     expect(a.semi).toBeCloseTo(0, 10);
     expect(a.level).toBeCloseTo(0.8 * 0.49, 10);
     expect(vco({}, 4).level).toBe(0);
-    expect(s.keys).toEqual({ mode: 'single', split: 60, glide: 0 });
+    // split at F♯4, the seventh plate, so each half has six; the encoder’s portamento off
+    expect(s.keys).toEqual({ mode: 'single', split: 66, glide: 0 });
   });
 
   it('opens the filters as low-pass, with no distortion heard, and loads no cartridge', () => {
@@ -129,6 +130,14 @@ describe('SOLAR 42N switches', () => {
     const d = drone({ 'd2.on3': false, 'd2.mod5': true }, 1);
     expect(d.gens[2].on).toBe(false);
     expect(d.gens[4].mod).toBe(true);
+  });
+
+  it('shines light on each eye from its photosensor control, dark at init', () => {
+    expect(drone({}, 5).light).toBe(0);
+    expect(drone({ 'd4.light': 6 }, 5).light).toBeCloseTo(0.6);
+    // the dome is drawn as a `solar-eye` knob that the meters light by its voice
+    const eye = solar.controls.find((c) => c.id === 'd4.light');
+    expect(eye && eye.type === 'knob' && [eye.style, eye.eye]).toEqual(['solar-eye', 5]);
   });
 
   it('tunes each generator over its range and VOLT over the whole travel', () => {
@@ -173,6 +182,27 @@ describe('SOLAR 42N switches', () => {
     expect(sol({ 'keys.mode': 'split' }).keys.mode).toBe('split');
   });
 
+  it('glides the keyboard by the encoder’s portamento, off at the bottom', () => {
+    expect(sol({ 'kb.glide': 0 }).keys.glide).toBe(0);
+    expect(sol({ 'kb.glide': 5 }).keys.glide).toBeCloseTo(Math.sqrt(0.01 * 2), 6);
+    expect(sol({ 'kb.glide': 10 }).keys.glide).toBeCloseTo(2, 6);
+  });
+
+  it('gives each touch plate its note, C4 to B4, holding no value and leaving the sound alone', () => {
+    const plates = solar.controls.filter((c) => c.type === 'button' && c.note != null);
+    expect(plates.map((c) => (c.type === 'button' ? c.note : null))).toEqual(
+      Array.from({ length: 12 }, (_, k) => 60 + k)
+    );
+    expect(plates.every((c) => c.ui)).toBe(true);
+    expect(solar.toEngine(values({ 'kb.plate1': true }), CTX)).toEqual(
+      solar.toEngine(values(), CTX)
+    );
+  });
+
+  it('explains the triangles and the sun, which have nothing to turn', () => {
+    expect(solar.marks?.map((m) => m.id)).toEqual(['kb.triangle1', 'kb.triangle2', 'kb.sun']);
+  });
+
   it('switches each filter side to band-pass and links them', () => {
     const s = sol({ 'vcf.rmode': 'bp', 'vcf.link': true });
     expect(s.vcf.l.mode).toBe('lp');
@@ -193,10 +223,17 @@ describe('SOLAR 42N switches', () => {
   });
 
   it('runs the sequencer on its stages and gate switches', () => {
-    const s = sol({ 'seq.stages': '3', 'seq.g2': false });
+    const s = sol({ 'seq.stages': '3', 'seq.g2': false, 'seq.s2': 3, 'seq.s5': 10 });
     expect(s.seq.stages).toBe(3);
     expect(s.seq.gates).toEqual([true, false, true, true, true]);
-    expect(s.seq.levels).toEqual([0, 0.3, 0.7, 0.5, 1]);
+    expect(s.seq.levels[1]).toBeCloseTo(0.3, 10);
+    expect(s.seq.levels[4]).toBe(1);
+  });
+
+  it('starts the sequencer on a minor figure in semitones, not octaves apart', () => {
+    // a level of 1 is 5 V at the cv out, 60 semitones at 1v/oct
+    const semis = sol().seq.levels.map((l) => Math.round(l * 60));
+    expect(semis).toEqual([0, 3, 7, 5, 10]);
   });
 
   it('adds each joystick offset to its axis, 5 V either side', () => {
@@ -217,15 +254,30 @@ describe('SOLAR 42N cartridges', () => {
     expect(s.fx.l.p).toMatchObject({ MIX: 100, SIZ: 140 });
   });
 
-  it('turns the left program’s parameters with X, Y and Z, and leaves an unmodelled knob at nothing', () => {
+  it('turns the left program’s parameters with X, Y and Z, and leaves an unmodelled knob out', () => {
     const xyz = sol({ 'fx.cartL': 'cathedral', 'fx.x': 2, 'fx.z': 10 }).fx.xyz;
-    expect(xyz[0]).toEqual({ ref: '-', lo: 0, hi: 0, v: 0.2 });
-    expect(xyz[2]).toEqual({ ref: 'DCY', lo: 0.6, hi: 4.9, v: 1 });
+    expect(xyz).toEqual([{ side: 'l', k: 2, ref: 'DCY', lo: 0.6, hi: 4.9, v: 1 }]);
   });
 
-  it('takes X, Y and Z from the right program when the left side is empty', () => {
+  it('turns the right program’s parameters on the right when the left side is empty', () => {
     const xyz = sol({ 'fx.cartR': 'magic', 'fx.progR': '3' }).fx.xyz;
-    expect(xyz.map((k) => k.ref)).toEqual(['FB1', 'DL1', 'SM1']);
+    expect(xyz.map((k) => [k.side, k.k, k.ref])).toEqual([
+      ['r', 0, 'FB1'],
+      ['r', 1, 'DL1'],
+      ['r', 2, 'SM1'],
+    ]);
+  });
+
+  it('gives each side its own program’s parameters when the two programs differ', () => {
+    const xyz = sol({
+      'fx.cartL': 'cathedral',
+      'fx.cartR': 'magic',
+      'fx.progR': '3',
+      'fx.z': 10,
+    }).fx.xyz;
+    expect(xyz.filter((k) => k.side === 'l').map((k) => k.ref)).toEqual(['DCY']);
+    expect(xyz.filter((k) => k.side === 'r').map((k) => k.ref)).toEqual(['FB1', 'DL1', 'SM1']);
+    expect(xyz.find((k) => k.side === 'r' && k.k === 2)?.v).toBe(1);
   });
 });
 
@@ -250,14 +302,15 @@ describe('SOLAR 42N jacks', () => {
     expect(c).toMatchObject({ src: 'solSeqCv', dst: 'solP4', amt: 60 });
   });
 
-  it('moves the left cutoff by MOD L, both sides through the CV L normal', () => {
-    const [c] = cablesToEngine(
-      solar,
-      [{ from: 'lfoa.out', to: 'vcf.cvl' }],
-      values({ 'vcf.lmod': 7 })
-    );
-    expect(c).toMatchObject({ src: 'solLfoA', dst: 'solCut' });
-    expect(c.amt).toBeCloseTo(7, 10);
+  it('sends CV L and CV R to their own sides, with MOD L and MOD R as the engine depths', () => {
+    const v = values({ 'vcf.lmod': 7, 'vcf.rmod': 3 });
+    const [l] = cablesToEngine(solar, [{ from: 'lfoa.out', to: 'vcf.cvl' }], v);
+    const [r] = cablesToEngine(solar, [{ from: 'lfoa.out', to: 'vcf.cvr' }], v);
+    expect(l).toMatchObject({ src: 'solLfoA', dst: 'solCutL' });
+    expect(r).toMatchObject({ src: 'solLfoA', dst: 'solCutR' });
+    const { vcf } = sol({ 'vcf.lmod': 7, 'vcf.rmod': 3 });
+    expect(vcf.l.mod).toBeCloseTo(0.7, 10);
+    expect(vcf.r.mod).toBeCloseTo(0.3, 10);
   });
 
   it('leaves the unmodelled jacks with no signal or destination', () => {

@@ -19,6 +19,7 @@ import {
   Joystick,
   Knob,
   Leds,
+  Mark,
   Matrix,
   MenuRow,
   ModularCase,
@@ -26,8 +27,10 @@ import {
   PAPER,
   Select,
   StaticDecor,
+  Plate,
   Switch,
 } from '@/components/app/panel/parts';
+import type { NotePress } from '@/components/app/panel/parts';
 import { tweenCables } from '@/lib/app/synths/lib/history';
 import type {
   CableHandlers,
@@ -110,6 +113,8 @@ export interface SynthPanelProps {
   onRemoveCable: (i: number) => void;
   /** Moves one end of cable `i` to another jack. Without it the plugs cannot be dragged. */
   onMoveCable?: (i: number, end: CableEnd, jackId: string) => void;
+  /** Plays a touch plate's note (a `button` with `note`). Without it the plates only explain themselves. */
+  onNote?: NotePress;
   /** D11. Default `neutral`: faithful needs a recorded approval. */
   design?: PanelDesign;
 }
@@ -177,6 +182,7 @@ export function SynthPanel({
   onConnect,
   onRemoveCable,
   onMoveCable,
+  onNote,
   design = 'neutral',
 }: SynthPanelProps) {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -560,6 +566,8 @@ export function SynthPanel({
                 onChange={turn}
               />
             );
+          if (c.type === 'button' && c.note != null)
+            return <Plate key={c.id} c={c} onNote={onNote} />;
           // const Comp = knob ? Knob : fader ? Fader : select ? Select : menu ? MenuRow : Switch
           if (c.type === 'knob')
             return <Knob key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;
@@ -571,6 +579,9 @@ export function SynthPanel({
             return <MenuRow key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;
           return <Switch key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;
         })}
+        {def.marks?.map((m) => (
+          <Mark key={m.id} m={m} />
+        ))}
         {def.jacks.map((j) =>
           inMatrix.has(j.id) ? null : (
             <Jack key={j.id} j={j} ctx={ctx} pending={pending === j.id} onJack={onJack} />

@@ -54,6 +54,7 @@ const drone = (over: Partial<SolarDrone> = {}): SolarDrone => ({
   ],
   volt: 0,
   photo: 0,
+  light: 0,
   ...over,
 });
 
@@ -94,8 +95,8 @@ function solar(over: Partial<SolarParams> = {}): SolarParams {
     ext: { level: 0, pan: 0 },
     pre: { level: 0, pan: 0 },
     vcf: {
-      l: { mode: 'lp', cutoff: 18000, res: 0, drive: 0 },
-      r: { mode: 'lp', cutoff: 18000, res: 0, drive: 0 },
+      l: { mode: 'lp', cutoff: 18000, res: 0, drive: 0, mod: 0 },
+      r: { mode: 'lp', cutoff: 18000, res: 0, drive: 0, mod: 0 },
       link: false,
     },
     fx: { l: { alg: null, p: {} }, r: { alg: null, p: {} }, xyz: [], blend: 0 },
@@ -225,6 +226,48 @@ describe('SOLAR 42 voices', () => {
     // MIDI 57 is 220 Hz; with MOD on, the light lifts it towards an octave (LFO A is a triangle, so on average half way)
     expect(hz(lit(false), 4800, 48000)).toBeCloseTo(220, -1);
     expect(hz(lit(true), 4800, 48000)).toBeGreaterThan(260);
+  });
+
+  it('bends the MOD generators with the light knob alone, a fifth at 7/12 of full light', () => {
+    const out = play(
+      withVoice(
+        solar(),
+        0,
+        drone({
+          gate: true,
+          level: 1,
+          photo: 12,
+          light: 7 / 12,
+          gens: drone().gens.map((_, k) => ({ note: 57, on: k === 0, mod: true })),
+        })
+      ),
+      noKeys,
+      48000
+    ).out;
+    expect(hz(out, 4800, 48000)).toBeCloseTo(220 * Math.pow(2, 7 / 12), -1);
+  });
+
+  it('reports each eye’s light, the knob and the CV jack together, clamped to full', () => {
+    const SI = Object.fromEntries([...SOLAR_SIGNALS, 'preamp'].map((n, i) => [n, i]));
+    const DI = Object.fromEntries(SOLAR_DESTS.map((n, i) => [n, i]));
+    const S = new Float64Array(SOLAR_SIGNALS.length + 1);
+    const sol = createSolar(
+      SR,
+      S,
+      SI,
+      DI,
+      (d) => (d === DI.solPh1 ? 0.5 : 0),
+      new Uint8Array(SOLAR_DESTS.length)
+    );
+    const seen = (light: number) => {
+      sol.set(withVoice(solar(), 0, drone({ light })));
+      sol.step();
+      return sol.eyes();
+    };
+    expect(seen(0.25)[0]).toBeCloseTo(0.75);
+    expect(seen(0.9)[0]).toBe(1);
+    // a voice that is not a classic drone has no eye
+    expect(seen(0.25).slice(1)).toEqual([0, 0, 0, 0, 0, 0, 0]);
   });
 
   it('cross-modulates the generators past the knee', () => {
@@ -392,8 +435,8 @@ describe('SOLAR 42 mixer, filter and effector', () => {
       play({
         ...tone(0),
         vcf: {
-          l: { mode: 'lp', cutoff: l, res: 0, drive: 0 },
-          r: { mode: 'lp', cutoff: r, res: 0, drive: 0 },
+          l: { mode: 'lp', cutoff: l, res: 0, drive: 0, mod: 0 },
+          r: { mode: 'lp', cutoff: r, res: 0, drive: 0, mod: 0 },
           link,
         },
       });
@@ -403,6 +446,49 @@ describe('SOLAR 42 mixer, filter and effector', () => {
     expect(rms(linked.right!, 2400, 9600)).toBeCloseTo(rms(linked.out, 2400, 9600), 3);
   });
 
+  describe('the CV L → CV R normal', () => {
+    /** The right output's RMS with both filters shut at 150 Hz and CV L at +4 (four octaves at a MOD of 1). */
+    function right(rmod: number, cvR?: number): number {
+      const SI = Object.fromEntries([...SOLAR_SIGNALS, 'preamp'].map((n, i) => [n, i]));
+      const DI = Object.fromEntries(SOLAR_DESTS.map((n, i) => [n, i]));
+      const S = new Float64Array(SOLAR_SIGNALS.length + 1);
+      const cabled = new Uint8Array(SOLAR_DESTS.length);
+      cabled[DI.solCutL] = 1;
+      if (cvR !== undefined) cabled[DI.solCutR] = 1;
+      const ev = (d: number) => (d === DI.solCutL ? 4 : d === DI.solCutR ? (cvR ?? 0) : 0);
+      const spy = vi.spyOn(Math, 'random').mockImplementation(seeded(20240919));
+      try {
+        const sol = createSolar(SR, S, SI, DI, ev, cabled);
+        sol.set({
+          ...tone(0),
+          vcf: {
+            l: { mode: 'lp', cutoff: 150, res: 0, drive: 0, mod: 1 },
+            r: { mode: 'lp', cutoff: 150, res: 0, drive: 0, mod: rmod },
+            link: false,
+          },
+        });
+        const out = new Float64Array(9600);
+        for (let i = 0; i < out.length; i++) {
+          sol.step();
+          out[i] = S[SI.solR];
+        }
+        let sq = 0;
+        for (let i = 2400; i < out.length; i++) sq += out[i] * out[i];
+        return Math.sqrt(sq / (out.length - 2400));
+      } finally {
+        spy.mockRestore();
+      }
+    }
+
+    it('opens the right filter from CV L, as far as MOD R', () => {
+      expect(right(1)).toBeGreaterThan(right(0) * 2);
+    });
+
+    it('breaks the normal once CV R is cabled: the right follows CV R alone', () => {
+      expect(right(1, 0)).toBeCloseTo(right(0), 6);
+    });
+  });
+
   describe('distortion after the filter (vcf.dist)', () => {
     // a quiet, resonant tone on the left only, so the filter's peak is what reaches the clipper
     const quiet = withVoice(solar(), 2, srapa({ gate: true, level: 0.3, pan: -1, note: 45 }));
@@ -410,8 +496,8 @@ describe('SOLAR 42 mixer, filter and effector', () => {
       play({
         ...quiet,
         vcf: {
-          l: { mode: 'lp', cutoff: 1200, res: 0.8, drive: 0 },
-          r: { mode: 'lp', cutoff: 18000, res: 0, drive: 0 },
+          l: { mode: 'lp', cutoff: 1200, res: 0.8, drive: 0, mod: 0 },
+          r: { mode: 'lp', cutoff: 18000, res: 0, drive: 0, mod: 0 },
           link: false,
           dist,
         },
@@ -453,8 +539,8 @@ describe('SOLAR 42 mixer, filter and effector', () => {
         const at = (d?: { mix: number; gain: number }): SolarParams => ({
           ...quiet,
           vcf: {
-            l: { mode: 'lp', cutoff: 1200, res: 0.8, drive: 0 },
-            r: { mode: 'lp', cutoff: 18000, res: 0, drive: 0 },
+            l: { mode: 'lp', cutoff: 1200, res: 0.8, drive: 0, mod: 0 },
+            r: { mode: 'lp', cutoff: 18000, res: 0, drive: 0, mod: 0 },
             link: false,
             dist: d,
           },
@@ -735,7 +821,19 @@ describe('SOLAR 42 sequencer, effector knobs and filter mode', () => {
     const echo = (v: number, cv = 0) => {
       const p = params({
         ...tone,
-        fx: { l: delay, r: delay, xyz: [{ ref: 'TIM', lo: 150, hi: 500, v }], blend: 1 },
+        fx: {
+          l: delay,
+          r: delay,
+          xyz: (['l', 'r'] as const).map((side) => ({
+            side,
+            k: 0 as const,
+            ref: 'TIM',
+            lo: 150,
+            hi: 500,
+            v,
+          })),
+          blend: 1,
+        },
       });
       const o = render(cv ? { ...p, routes: [{ src: 'solKg1', dst: 'solFxX', amt: cv }] } : p, {
         sr: SR,
@@ -762,8 +860,8 @@ describe('SOLAR 42 sequencer, effector knobs and filter mode', () => {
       play({
         ...withVoice(solar(), 2, srapa({ gate: true, level: 1, pan: -1, note: 45 })),
         vcf: {
-          l: { mode, cutoff: 12000, res: 0.2, drive: 0 },
-          r: { mode: 'lp', cutoff: 18000, res: 0, drive: 0 },
+          l: { mode, cutoff: 12000, res: 0.2, drive: 0, mod: 0 },
+          r: { mode: 'lp', cutoff: 18000, res: 0, drive: 0, mod: 0 },
           link: false,
         },
       }).out;
