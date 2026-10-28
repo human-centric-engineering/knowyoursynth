@@ -174,6 +174,11 @@ export function createSolar(
   let blk = 0;
   let blend = 0,
     master = 0;
+  // the distortion's DIST and GAIN, smoothed like the other knobs so a turn does not step the waveform
+  let dMix = 0,
+    dGain = 0;
+  /** 0..1, and 0 for anything that is not a number, so a NaN never reaches the clipper or the cartridges' state. */
+  const unit = (x: number): number => (x > 0 ? (x < 1 ? x : 1) : 0);
   let lfoA = 0,
     lfoB = 0,
     pul = 0,
@@ -223,6 +228,8 @@ export function createSolar(
     if (first) {
       blend = p.fx.blend;
       master = p.master;
+      dMix = p.vcf.dist ? unit(p.vcf.dist.mix) : 0;
+      dGain = p.vcf.dist ? unit(p.vcf.dist.gain) : 0;
       fHz[0] = p.vcf.l.cutoff;
       fHz[1] = p.vcf.link ? p.vcf.l.cutoff : p.vcf.r.cutoff;
     }
@@ -540,12 +547,16 @@ export function createSolar(
     let fl = filter(0, mL, fHz[0], p.vcf.l.res, p.vcf.l.mode, p.vcf.l.drive);
     let fr = filter(1, mR, fHz[1], p.vcf.r.res, p.vcf.r.mode, p.vcf.r.drive);
     // ── the 42N's distortion after the filter: DIST blends the clipped side in, GAIN drives it ──
-    const dist = p.vcf.dist;
-    if (dist && dist.mix > 0) {
-      const k = 1 + (dist.gain < 0 ? 0 : dist.gain > 1 ? 1 : dist.gain) * DIST_GAIN,
-        m = dist.mix > 1 ? 1 : dist.mix;
-      fl += (Math.tanh(fl * k) - fl) * m;
-      fr += (Math.tanh(fr * k) - fr) * m;
+    const dist = p.vcf.dist,
+      mixT = dist ? unit(dist.mix) : 0;
+    dMix += (mixT - dMix) * sm;
+    // settled back at 0, the side is left exactly as the filter gave it
+    if (mixT === 0 && dMix < 1e-6) dMix = 0;
+    dGain += ((dist ? unit(dist.gain) : 0) - dGain) * sm;
+    if (dMix > 0) {
+      const k = 1 + dGain * DIST_GAIN;
+      fl += (Math.tanh(fl * k) - fl) * dMix;
+      fr += (Math.tanh(fr * k) - fr) * dMix;
     }
 
     // ── effector: each side's cartridge, wet only, blended with the dry side ──

@@ -9,7 +9,7 @@
  * @see lib/app/synths/audio/solar-core.ts
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 import type {
   EngineParams,
@@ -19,12 +19,20 @@ import type {
   SolarSrapa,
   SolarVco,
 } from '@/lib/app/synths/contract';
-import { DROP, KNEE } from '@/lib/app/synths/audio/solar-core';
+import {
+  createSolar,
+  DIST_GAIN,
+  DROP,
+  KNEE,
+  SOLAR_DESTS,
+  SOLAR_SIGNALS,
+} from '@/lib/app/synths/audio/solar-core';
 import {
   allFinite,
   monoParams,
   render,
   rms,
+  seeded,
   type Timed,
 } from '@/tests/unit/lib/app/synths/audio/render';
 
@@ -422,10 +430,63 @@ describe('SOLAR 42 mixer, filter and effector', () => {
       const clean = at(),
         hot = at({ mix: 1, gain: 1 });
       expect(allFinite(hot)).toBe(true);
-      // driven 25× into a tanh: louder, flatter, never past full scale
+      // driven 25× into a tanh: louder and flatter
       expect(rms(hot, 4800, 9600)).toBeGreaterThan(rms(clean, 4800, 9600) * 2);
       expect(crest(hot)).toBeLessThan(crest(clean) * 0.8);
-      expect(peak(hot, 0, hot.length)).toBeLessThanOrEqual(1);
+    });
+
+    /**
+     * The SOLAR core's own left output, before the engine's output stage (which bounds every sample whatever the
+     * core does), with the same seeded start phases as `render`.
+     */
+    function core(
+      dist?: { mix: number; gain: number },
+      len = 9600,
+      turn?: { at: number; dist: { mix: number; gain: number } }
+    ): Float64Array {
+      const SI = Object.fromEntries([...SOLAR_SIGNALS, 'preamp'].map((n, i) => [n, i]));
+      const DI = Object.fromEntries(SOLAR_DESTS.map((n, i) => [n, i]));
+      const S = new Float64Array(SOLAR_SIGNALS.length + 1);
+      const spy = vi.spyOn(Math, 'random').mockImplementation(seeded(20240919));
+      try {
+        const sol = createSolar(SR, S, SI, DI, () => 0, new Uint8Array(SOLAR_DESTS.length));
+        const at = (d?: { mix: number; gain: number }): SolarParams => ({
+          ...quiet,
+          vcf: {
+            l: { mode: 'lp', cutoff: 1200, res: 0.8, drive: 0 },
+            r: { mode: 'lp', cutoff: 18000, res: 0, drive: 0 },
+            link: false,
+            dist: d,
+          },
+        });
+        sol.set(at(dist));
+        const out = new Float64Array(len);
+        for (let i = 0; i < len; i++) {
+          if (turn && i === turn.at) sol.set(at(turn.dist));
+          sol.step();
+          out[i] = S[SI.solL];
+        }
+        return out;
+      } finally {
+        spy.mockRestore();
+      }
+    }
+
+    it('keeps the clipped side within full scale before the output stage', () => {
+      const clean = core(),
+        hot = core({ mix: 1, gain: 1 });
+      // the resonant peak alone overshoots; the clipper is what brings it back in
+      let cleanPeak = 0,
+        hotPeak = 0;
+      for (let i = 0; i < hot.length; i++) {
+        cleanPeak = Math.max(cleanPeak, Math.abs(clean[i]));
+        hotPeak = Math.max(hotPeak, Math.abs(hot[i]));
+      }
+      expect(hotPeak).toBeGreaterThan(0.5);
+      expect(hotPeak).toBeLessThanOrEqual(1);
+      // and each sample is the clean one driven by 1 + GAIN × DIST_GAIN through the tanh
+      for (let i = 0; i < hot.length; i += 97)
+        expect(hot[i]).toBeCloseTo(Math.tanh(clean[i] * (1 + DIST_GAIN)), 9);
     });
 
     it('blends the clean and clipped sides with DIST between', () => {
@@ -437,6 +498,37 @@ describe('SOLAR 42 mixer, filter and effector', () => {
       expect(r(half)).toBeGreaterThan(r(clean) * 1.2);
       expect(r(half)).toBeLessThan(r(hot) * 0.9);
       expect(crest(half)).toBeLessThan(crest(clean));
+      // before the output stage the blend is linear: each sample halfway between the clean and the clipped one
+      const c = core(),
+        h = core({ mix: 1, gain: 1 }),
+        m = core({ mix: 0.5, gain: 1 });
+      for (let i = 0; i < m.length; i += 97)
+        expect(m[i]).toBeCloseTo(c[i] + (h[i] - c[i]) * 0.5, 9);
+    });
+
+    it('eases DIST and GAIN to a new setting rather than stepping', () => {
+      const clean = core(),
+        hot = core({ mix: 1, gain: 1 });
+      // the same tone, clean until both knobs are turned full up at sample 2400
+      const turned = core(undefined, 9600, { at: 2400, dist: { mix: 1, gain: 1 } });
+      for (let i = 0; i < 2400; i++) expect(turned[i]).toBe(clean[i]);
+      // just after the turn it has barely left the clean side, where a step would land on the clipped one at once
+      for (let i = 2400; i < 2410; i++)
+        expect(Math.abs(turned[i] - clean[i])).toBeLessThan(
+          Math.abs(hot[i] - clean[i]) * 0.1 + 1e-9
+        );
+      // and some milliseconds on it has arrived
+      for (let i = 4800; i < 9600; i += 97) expect(turned[i]).toBeCloseTo(hot[i], 4);
+    });
+
+    it('treats a GAIN or DIST that is not a number as 0, so the output stays finite', () => {
+      const bad = core({ mix: 1, gain: Number.NaN });
+      const off = core({ mix: Number.NaN, gain: 1 });
+      expect(bad.every(Number.isFinite)).toBe(true);
+      expect(off.every(Number.isFinite)).toBe(true);
+      // NaN DIST is DIST at 0: the clean side, sample for sample
+      const clean = core();
+      for (let i = 0; i < off.length; i++) expect(off[i]).toBe(clean[i]);
     });
   });
 
