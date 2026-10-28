@@ -1840,7 +1840,16 @@ export interface SolarParams {
   /** The EXT.AUDIO and PREAMP mixer channels (dest `solExt` and signal `preamp`). */
   ext: { level: number; pan: number };
   pre: { level: number; pan: number };
-  vcf: { l: SolarFilterSide; r: SolarFilterSide; link: boolean };
+  /**
+   * `dist` is the 42N's distortion after the filter, the same on both sides: `mix` (DIST) 0 clean .. 1 distorted
+   * only, `gain` (GAIN) 0..1 how hard each side is driven into the clipper. Absent, the filters' output is untouched.
+   */
+  vcf: {
+    l: SolarFilterSide;
+    r: SolarFilterSide;
+    link: boolean;
+    dist?: { mix: number; gain: number };
+  };
   /** Two cartridges, left and right: an `FX_FACTORY` algorithm (or none) with its parameters and its X/Y/Z knobs. */
   fx: {
     l: { alg: string | null; p: Record<string, number | string> };

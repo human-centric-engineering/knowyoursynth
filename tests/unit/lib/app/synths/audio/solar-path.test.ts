@@ -395,6 +395,51 @@ describe('SOLAR 42 mixer, filter and effector', () => {
     expect(rms(linked.right!, 2400, 9600)).toBeCloseTo(rms(linked.out, 2400, 9600), 3);
   });
 
+  describe('distortion after the filter (vcf.dist)', () => {
+    // a quiet, resonant tone on the left only, so the filter's peak is what reaches the clipper
+    const quiet = withVoice(solar(), 2, srapa({ gate: true, level: 0.3, pan: -1, note: 45 }));
+    const at = (dist?: { mix: number; gain: number }) =>
+      play({
+        ...quiet,
+        vcf: {
+          l: { mode: 'lp', cutoff: 1200, res: 0.8, drive: 0 },
+          r: { mode: 'lp', cutoff: 18000, res: 0, drive: 0 },
+          link: false,
+          dist,
+        },
+      }).out;
+    /** Crest factor: peak over RMS. A clipped tone is flatter, so its crest falls. */
+    const crest = (b: Float32Array) => peak(b, 4800, 9600) / rms(b, 4800, 9600);
+
+    it('leaves the filtered side untouched with DIST at 0, however high GAIN is', () => {
+      const clean = at(),
+        zero = at({ mix: 0, gain: 1 });
+      expect(rms(clean, 4800, 9600)).toBeGreaterThan(0.01);
+      for (let i = 0; i < clean.length; i++) expect(zero[i]).toBe(clean[i]);
+    });
+
+    it('clips the filtered side with DIST and GAIN full up', () => {
+      const clean = at(),
+        hot = at({ mix: 1, gain: 1 });
+      expect(allFinite(hot)).toBe(true);
+      // driven 25× into a tanh: louder, flatter, never past full scale
+      expect(rms(hot, 4800, 9600)).toBeGreaterThan(rms(clean, 4800, 9600) * 2);
+      expect(crest(hot)).toBeLessThan(crest(clean) * 0.8);
+      expect(peak(hot, 0, hot.length)).toBeLessThanOrEqual(1);
+    });
+
+    it('blends the clean and clipped sides with DIST between', () => {
+      const clean = at(),
+        hot = at({ mix: 1, gain: 1 }),
+        half = at({ mix: 0.5, gain: 1 });
+      // the engine's own output stage follows, so the halfway mix is between the two, not their exact average
+      const r = (b: Float32Array) => rms(b, 4800, 9600);
+      expect(r(half)).toBeGreaterThan(r(clean) * 1.2);
+      expect(r(half)).toBeLessThan(r(hot) * 0.9);
+      expect(crest(half)).toBeLessThan(crest(clean));
+    });
+  });
+
   it('blends the cartridges in with BLEND', () => {
     // the stereo delay with its own parameters, as a definition gives them
     const delay = {
