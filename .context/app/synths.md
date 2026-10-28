@@ -173,7 +173,7 @@ when absent**, added synth by synth:
 
 A synth whose sound path is `easel`, `moog` or `solar` still returns the core stubs (`osc: []` etc.).
 `solar` runs eight voices of three kinds (`drone`, `srapa`, `vco`), each with its own gate and envelope, into
-a stereo mixer, a dual filter and two `dm-fx` cartridges; its signals and destinations are numbered by the
+a stereo mixer, a dual filter (with the 42N's distortion after it, `vcf.dist`) and two `dm-fx` cartridges; its signals and destinations are numbered by the
 voice's place in `solar.voices` (`sol3`, `solG3`), and `audio/solar-core.ts` documents them.
 `layer`, `ringMod` and `tremolo` are poly only: `layer` gives every note a second voice with
 its own settings, so `poly.voices` counts notes; with `layer.split` a key below the split plays

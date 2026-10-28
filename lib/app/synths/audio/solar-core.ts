@@ -12,11 +12,14 @@
 //   a VCO its side of the keyboard. The second VCO's FM input is normalled to the first VCO's oscillator.
 // - The ten-channel mixer pans each voice, EXT.AUDIO (`solExt`) and the preamp (signal `preamp`) to stereo; each side
 //   goes through its own 12 dB state-variable filter, saturating in its band path like the Polivoks chip, and its own
-//   cartridge (an `FX_FACTORY` algorithm, wet only, blended with the dry side by BLEND).
+//   cartridge (an `FX_FACTORY` algorithm, wet only, blended with the dry side by BLEND). On the 42N a distortion
+//   sits between the two (`vcf.dist`): each side is clipped by a tanh after its filter, so a resonant peak is what
+//   clips first, and DIST blends that in with the clean side; GAIN at full turn is `DIST_GAIN`.
 // - LFO A and B (0..1, square to triangle), the pulser (±1) and the 5-step sequencer are signals for cables.
 //
 // The spec leaves the ranges out (`not_in_source`: LFO rates, filter cutoff range) and gives the VOLT behaviour only
-// in words, so `DROP`, the knee, the cross-modulation depth and the filter's saturation are the app's choices.
+// in words, so `DROP`, the knee, the cross-modulation depth, the filter's saturation and `DIST_GAIN` are the app's
+// choices.
 import { FX_FACTORY, type FxAlgo } from '@/lib/app/synths/audio/dm-fx';
 import type { SolarEnv, SolarParams, SolarVoice } from '@/lib/app/synths/contract';
 
@@ -74,6 +77,8 @@ export const SOLAR_DESTS: string[] = [
 export const DROP = [19, 16, 14, 12, 10];
 /** VOLT at which the generators stop falling and start to cross-modulate. */
 export const KNEE = 0.6;
+/** How hard GAIN at full turn drives the 42N's distortion after the filter (the input is multiplied by 1 + this). */
+export const DIST_GAIN = 24;
 
 /** What `createSolar` hands back to the voice. */
 export interface Solar {
@@ -169,6 +174,11 @@ export function createSolar(
   let blk = 0;
   let blend = 0,
     master = 0;
+  // the distortion's DIST and GAIN, smoothed like the other knobs so a turn does not step the waveform
+  let dMix = 0,
+    dGain = 0;
+  /** 0..1, and 0 for anything that is not a number, so a NaN never reaches the clipper or the cartridges' state. */
+  const unit = (x: number): number => (x > 0 ? (x < 1 ? x : 1) : 0);
   let lfoA = 0,
     lfoB = 0,
     pul = 0,
@@ -218,6 +228,8 @@ export function createSolar(
     if (first) {
       blend = p.fx.blend;
       master = p.master;
+      dMix = p.vcf.dist ? unit(p.vcf.dist.mix) : 0;
+      dGain = p.vcf.dist ? unit(p.vcf.dist.gain) : 0;
       fHz[0] = p.vcf.l.cutoff;
       fHz[1] = p.vcf.link ? p.vcf.l.cutoff : p.vcf.r.cutoff;
     }
@@ -532,8 +544,20 @@ export function createSolar(
     const tR = p.vcf.link ? tL : p.vcf.r.cutoff * Math.pow(2, cv + ev(DI.solCutR));
     fHz[0] += (tL - fHz[0]) * sm;
     fHz[1] += (tR - fHz[1]) * sm;
-    const fl = filter(0, mL, fHz[0], p.vcf.l.res, p.vcf.l.mode, p.vcf.l.drive);
-    const fr = filter(1, mR, fHz[1], p.vcf.r.res, p.vcf.r.mode, p.vcf.r.drive);
+    let fl = filter(0, mL, fHz[0], p.vcf.l.res, p.vcf.l.mode, p.vcf.l.drive);
+    let fr = filter(1, mR, fHz[1], p.vcf.r.res, p.vcf.r.mode, p.vcf.r.drive);
+    // ── the 42N's distortion after the filter: DIST blends the clipped side in, GAIN drives it ──
+    const dist = p.vcf.dist,
+      mixT = dist ? unit(dist.mix) : 0;
+    dMix += (mixT - dMix) * sm;
+    // settled back at 0, the side is left exactly as the filter gave it
+    if (mixT === 0 && dMix < 1e-6) dMix = 0;
+    dGain += ((dist ? unit(dist.gain) : 0) - dGain) * sm;
+    if (dMix > 0) {
+      const k = 1 + dGain * DIST_GAIN;
+      fl += (Math.tanh(fl * k) - fl) * dMix;
+      fr += (Math.tanh(fr * k) - fr) * dMix;
+    }
 
     // ── effector: each side's cartridge, wet only, blended with the dry side ──
     if (++blk >= 64) {
