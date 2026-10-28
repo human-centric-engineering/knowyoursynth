@@ -824,6 +824,24 @@ describe('SynthPage patch', () => {
     act(() => focusStore.set({ kind: 'control', id: 'filter.cutoff', x: 5, y: 5, tip: true }));
     expect(screen.queryByRole('tooltip')).toBeNull();
   });
+
+  it('explains sections on hover with hover cards off, and leaves the setting off', () => {
+    page();
+    const cards = () => within(screen.getByRole('group', { name: 'Hover help' }));
+    fireEvent.click(cards().getByRole('button', { name: 'Off' }));
+    fireEvent.click(button('Explain sections'));
+
+    act(() => focusStore.set({ kind: 'area', id: 'filter', x: 5, y: 5, tip: true }));
+    expect(screen.getByRole('tooltip')).toBeTruthy();
+    expect(readStored('kys.tips')).toBe(false);
+    // a control outside the section layer keeps its card hidden: only sections are explained
+    act(() => focusStore.set({ kind: 'control', id: 'filter.cutoff', x: 5, y: 5, tip: true }));
+    expect(screen.queryByRole('tooltip')).toBeNull();
+
+    fireEvent.click(button('Explain sections'));
+    act(() => focusStore.set({ kind: 'control', id: 'filter.cutoff', x: 5, y: 5, tip: true }));
+    expect(screen.queryByRole('tooltip')).toBeNull();
+  });
 });
 
 // ── the view ────────────────────────────────────────────────────────────────

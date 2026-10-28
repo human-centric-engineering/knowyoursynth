@@ -1,0 +1,41 @@
+{
+  "synth": "solar-42n",
+  "title": "From the SOLAR 50 to the SOLAR 42N",
+  "intro": "The SOLAR 42N is the third version of Elta Music's SOLAR 42, a microtonal analogue drone machine designed by Arseny Tokarev. Its manual says it takes its inspiration from early electronic instruments of the 1920s to 1950s, Leon Theremin's \"Harmonium\" in particular, and from the soundtrack of Blade Runner 2049. Its classic drone voices come from the SOLAR 50, its Papa Srapa voices from a Russian artist's DIY noise synths, and its effector from Elta's CONSOLE pedal.",
+  "timeline": [
+    {
+      "year": "2020",
+      "name": "Elta Music SOLAR 50",
+      "tag": "Closest ancestor",
+      "text": "The Big Ambient Machine: 50 sawtooth oscillators in ten voices of five, each voice with its own envelope, touch plate and light-sensitive orb for pitch, through a Polivoks low-pass filter and a cartridge effects section. The SOLAR 42's classic drone voices are its voices."
+    },
+    {
+      "year": "2023",
+      "name": "Elta Music SOLAR 42",
+      "text": "Shown at Superbooth 2023: four classic drone voices, two Papa Srapa voices and two AS3340 VCOs on a touch keyboard, a ten-channel stereo mixer, a dual Polivoks filter and a dual cartridge effector, with LFOs, a 5-step sequencer, a joystick and a contact microphone to patch."
+    },
+    {
+      "year": "2024",
+      "name": "Elta Music SOLAR 42F",
+      "text": "The next batch: a new, stable filter circuit, sub-oscillators on the VCOs and renumbered voices."
+    },
+    {
+      "year": "2025",
+      "name": "Elta Music SOLAR 42N",
+      "tag": "This synth",
+      "text": "Its manual lists what it adds over the 42F: an LFO speed switch, an independent CV input for each filter side and simpler loading of effects. Over the original 42 it adds band-pass on the filters, a distortion after them, lamps on the joystick, push-buttons in place of most toggles, colour-coded knobs and the VCOs' dry outputs on the front panel."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Formanta Polivoks",
+      "years": "1982",
+      "text": "The Soviet synthesizer whose filter, built on a K140UD12 chip, gives the SOLAR its \"dirty and angry\" 12 dB filters, as the manual calls them. The 42N rebuilds the circuit so it no longer needs tuning."
+    },
+    {
+      "name": "Papa Srapa's noise synthesizers",
+      "years": "2000s",
+      "text": "The DIY sound machines of the Russian electro-shaman artist Papa Srapa: two Schmitt-trigger oscillators, one modulating the other. The SOLAR's Drones 3 and 6 follow them."
+    }
+  ]
+}

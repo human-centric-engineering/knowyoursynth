@@ -116,6 +116,8 @@ export interface SynthDef {
   decor: Decor[];
   /** Named regions for "Explain sections", the search, the cards and the orientation tour. */
   areas: Area[];
+  /** Printed or fitted parts that are neither a control nor a jack but deserve a hover card (the SOLAR 42N's sun). */
+  marks?: PanelMark[];
   controls: Control[];
   jacks: Jack[];
   /** The init patch: a plain audible tone. Built from each control's `def`. */
@@ -289,6 +291,16 @@ export interface Area {
   unusual?: string;
 }
 
+/** A part of the panel with a hover card and nothing to turn: drawn by `decor`, pointed at over `rect`. */
+export interface PanelMark {
+  id: string;
+  name: string;
+  /** One to three plain sentences: what it is, and what it does if anything. */
+  help: string;
+  module: SynthModule;
+  rect: ViewRect;
+}
+
 // ─── Control ─────────────────────────────────────────────────────────────────
 
 export type LabelPos = 'top' | 'bottom' | 'left' | 'right' | 'none';
@@ -388,7 +400,7 @@ export interface BoolValue {
 
 export type ControlKind = 'cont' | 'enum' | 'bool';
 
-/** Knob skirts and caps, one or more per maker. `vcs3` takes its cap colour from `cap`; `vcs3-dial` is a slow-motion dial; `e7` is white all over. */
+/** Knob skirts and caps, one or more per maker. `vcs3` takes its cap colour from `cap`; `vcs3-dial` is a slow-motion dial; `e7` is white all over; `solar` is a black skirt under a big cap coloured by `cap`. */
 export type KnobStyle =
   | 'd-silver'
   | 'd-chicken'
@@ -401,7 +413,9 @@ export type KnobStyle =
   | 'wasp'
   | 'vcs3'
   | 'vcs3-dial'
-  | 'e7';
+  | 'e7'
+  | 'solar'
+  | 'solar-eye';
 
 /**
  * Printing round a knob. `nums` are panel values printed at their true angle;
@@ -428,8 +442,10 @@ export type KnobControl = ControlCommon & {
   scale?: KnobScale;
   /** `false` leaves this knob out of `theme.knobRing` (e.g. one with its own printed arc). */
   ring?: boolean;
-  /** Cap colour for `vcs3` knobs. */
+  /** Cap colour for `vcs3` and `solar` knobs. */
   cap?: string;
+  /** `solar-eye`: the voice (0-based) whose light the meters report as `eyes[eye]`, so the dome glows with it. */
+  eye?: number;
 } & (ContinuousValue | EnumValue);
 
 /**
@@ -476,6 +492,11 @@ export type ButtonControl = ControlCommon & {
   capColor?: string;
   /** With `capColor`: the button draws its own lamp in the cap, lit when on. */
   capLamp?: boolean;
+  /**
+   * A touch plate: the button plays this MIDI note while it is held, through the page's keyboard, and is drawn as a
+   * clear plate over its decor. It holds no value (give it `ui: true`).
+   */
+  note?: number;
 } & (BoolValue | EnumValue);
 
 /** Fader colours. `led` colours the lamp in the cap; `cap` replaces the lamp cap with a round coloured one. */
@@ -1768,6 +1789,8 @@ export interface SolarDrone extends SolarVoiceCommon {
   volt: number;
   /** Semitones the photosensor raises the pitch at full light. */
   photo: number;
+  /** Light on the photosensor from its own LIGHT control (a hand or a lamp over the eye), 0..1; the CV input adds to it. */
+  light: number;
 }
 
 /** A Papa Srapa voice: a square tone under a low-frequency square modulator, with noise and a sample and hold. */
@@ -1810,10 +1833,18 @@ export interface SolarFilterSide {
   res: number;
   /** Drive into the filter, 0..1. */
   drive: number;
+  /** MOD: how far this side's CV input moves its cutoff, 0..1 (an octave a volt at 1). */
+  mod: number;
 }
 
-/** One knob of the effector (X, Y or Z) on its cartridge's algorithm parameter. */
+/**
+ * One knob of the effector (X, Y or Z) on one side's cartridge parameter: each side's program has its own, so a knob
+ * appears once per side it turns.
+ */
 export interface SolarFxKnob {
+  /** The cartridge it turns, and which knob: 0 X, 1 Y, 2 Z (dests `solFxX` … `solFxZ`). */
+  side: 'l' | 'r';
+  k: 0 | 1 | 2;
   /** The `FX_FACTORY` parameter it turns. */
   ref: string;
   /** Its value at 0 and at full turn, in the parameter's display units. */
@@ -1847,6 +1878,7 @@ export interface SolarParams {
   vcf: {
     l: SolarFilterSide;
     r: SolarFilterSide;
+    /** Dest `solCutL` moves the left cutoff and is normalled to the right; dest `solCutR`, once cabled, breaks it. */
     link: boolean;
     dist?: { mix: number; gain: number };
   };

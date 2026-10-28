@@ -27,6 +27,7 @@ export function toStores(e: SynthEvent): void {
       env1: e.env1 || 0,
       seq: e.seq == null ? -1 : e.seq,
       pulser: e.pulser || 0,
+      eyes: e.eyes,
     }));
   else if (e.type === 'note')
     notesStore.set((ns) =>

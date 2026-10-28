@@ -56,6 +56,7 @@ const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {
   'behringer-syncussion': () => import('@/lib/app/synths/defs/behringer-syncussion'),
   e7: () => import('@/lib/app/synths/defs/e7'),
   'syntrx-ii': () => import('@/lib/app/synths/defs/syntrx-ii'),
+  'solar-42n': () => import('@/lib/app/synths/defs/solar-42n'),
 };
 
 /** Every id a loader exists for. */

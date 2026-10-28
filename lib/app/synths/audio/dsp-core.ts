@@ -72,6 +72,8 @@ export interface MeterEvent {
   seq?: number;
   /** The Easel's pulser ramp. */
   pulser?: number;
+  /** The SOLAR 42N's light on each voice's photosensor, 0..1. */
+  eyes?: number[];
 }
 
 /** What the synth reports back. */
@@ -2299,7 +2301,7 @@ function createVoice(
           ...(P.easel ? { gate: gate > 0, seq: ezSeqSt, pulser: ezPul } : null),
           // the 960's lamps: its stage (0-based) while it has one
           ...(P.moog && moog.seqState() ? { seq: moog.seqState()!.stage } : null),
-          ...(P.solar ? { seq: solar.seqStage() } : null),
+          ...(P.solar ? { seq: solar.seqStage(), eyes: solar.eyes() } : null),
         });
       overloadPeak = 0;
     }

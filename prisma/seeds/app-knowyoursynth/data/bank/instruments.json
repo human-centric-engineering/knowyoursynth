@@ -847,6 +847,16 @@
       "app": ["pearl-syncussion", "behringer-syncussion"],
       "text": "Pearl’s two-channel analogue drum synthesizer, played from its CU-1 drum pads: each channel two oscillators (alone, mixed, frequency-modulated or with noise), a pitch sweep up or down, an LFO and a sample and hold on pitch, and a filter swept by the decay, louder and brighter the harder the pad is hit. The falling synth tom of late-1970s disco.",
       "source": "https://en.wikipedia.org/wiki/Pearl_Drums"
+    },
+    {
+      "id": "elta-music-solar-42n",
+      "name": "Elta Music SOLAR 42N",
+      "maker": "Elta Music",
+      "year": "2025",
+      "kind": "semi-modular",
+      "app": ["solar-42n"],
+      "text": "An analogue microtonal drone machine from Riga: four classic drone voices of five tuned saws and two Papa Srapa noise voices on push-buttons, two AS3340 VCOs on a touch keyboard, a ten-channel stereo mixer, a dual Polivoks filter with distortion after it, two cartridge effects, LFOs, a 5-step sequencer, a joystick and a contact microphone.",
+      "source": "https://www.perfectcircuit.com/signal/elta-solar-42n-review"
     }
   ]
 }

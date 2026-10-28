@@ -7768,6 +7768,33 @@
       "kind": "poly",
       "text": "GS Music’s six-voice analogue polysynth, as a keyboard and a desktop, influenced by the e7.",
       "source": "https://synthanatomy.com/2024/09/gs-music-bree6-new-keyboard-and-desktop-analog-polyphonic-synthesizer-knobcon-2024.html"
+    },
+    {
+      "id": "elta-music-solar-50",
+      "name": "Elta Music SOLAR 50",
+      "maker": "Elta Music",
+      "year": "2020",
+      "kind": "semi-modular",
+      "text": "The Big Ambient Machine: 50 sawtooth oscillators in ten drone voices of five, each with an envelope, a touch plate and a light-sensitive orb for pitch, through a Polivoks low-pass filter and cartridge effects, with a contact microphone.",
+      "source": "https://synthanatomy.com/2020/04/elta-music-solar-50-big-ambient-machine-synth-ready-for-pre-order.html"
+    },
+    {
+      "id": "elta-music-solar-42",
+      "name": "Elta Music SOLAR 42",
+      "maker": "Elta Music",
+      "year": "2023",
+      "kind": "semi-modular",
+      "text": "A microtonal polyphonic ambient machine shown at Superbooth 2023: six drone voices on push-buttons and two VCOs on a touch keyboard, a stereo mixer, a dual Polivoks filter and a dual cartridge effector.",
+      "source": "https://sonicstate.com/news/2023/05/13/superbooth-2023-elta-music-solar-42/"
+    },
+    {
+      "id": "elta-music-solar-42f",
+      "name": "Elta Music SOLAR 42F",
+      "maker": "Elta Music",
+      "year": "2024",
+      "kind": "semi-modular",
+      "text": "The second SOLAR 42, with a new, stable filter circuit, sub-oscillators on its two VCOs and renumbered voices.",
+      "source": "https://sonicstate.com/news/2024/07/31/elta-music-solar-42f"
     }
   ]
 }

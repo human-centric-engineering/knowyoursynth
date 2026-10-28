@@ -529,3 +529,107 @@ describe('magnifier', () => {
     expect(lensStore.get()).toBeNull();
   });
 });
+
+describe('SynthPanel touch plates and marks', () => {
+  // the Model D fixture with one plate (C4) and one mark added
+  const withPlate: SynthDef = {
+    ...modelD,
+    controls: [
+      ...modelD.controls,
+      {
+        id: 'kb.plate1',
+        type: 'button',
+        x: 40,
+        y: 40,
+        w: 30,
+        h: 60,
+        note: 60,
+        kind: 'bool',
+        def: false,
+        ui: true,
+        module: 'mode',
+        label: 'Plate 1',
+        name: 'Touch plate 1 (C)',
+        help: 'Plays C4.',
+      },
+    ],
+    marks: [
+      {
+        id: 'sun',
+        name: 'The sun',
+        help: 'A marker.',
+        module: 'mode',
+        rect: { x: 100, y: 40, w: 20, h: 20 },
+      },
+    ],
+  };
+
+  it('plays a plate’s note while it is held and lets it go, without changing the patch', () => {
+    const onNote = vi.fn();
+    const onChange = vi.fn();
+    render(<SynthPanel {...props({ def: withPlate, onNote, onChange })} />);
+    const plate = screen.getByRole('button', { name: 'Plate 1' });
+
+    fireEvent.pointerDown(plate, { pointerId: 1 });
+    expect(onNote).toHaveBeenLastCalledWith(60, true);
+    expect(plate.getAttribute('aria-pressed')).toBe('true');
+
+    fireEvent.pointerUp(plate, { pointerId: 1 });
+    expect(onNote).toHaveBeenLastCalledWith(60, false);
+    expect(onNote).toHaveBeenCalledTimes(2);
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('lets a plate’s note go once, however many release events follow', () => {
+    const onNote = vi.fn();
+    render(<SynthPanel {...props({ def: withPlate, onNote })} />);
+    const plate = screen.getByRole('button', { name: 'Plate 1' });
+
+    fireEvent.pointerDown(plate, { pointerId: 1 });
+    // up, cancel and lost capture can all arrive for one press, before the plate redraws
+    act(() => {
+      fireEvent.pointerUp(plate, { pointerId: 1 });
+      fireEvent.pointerCancel(plate, { pointerId: 1 });
+      fireEvent.lostPointerCapture(plate, { pointerId: 1 });
+    });
+
+    expect(onNote.mock.calls).toEqual([
+      [60, true],
+      [60, false],
+    ]);
+  });
+
+  it('lets a held plate’s note go when the panel goes away', () => {
+    const onNote = vi.fn();
+    const { unmount } = render(<SynthPanel {...props({ def: withPlate, onNote })} />);
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'Plate 1' }), { pointerId: 1 });
+
+    unmount();
+
+    expect(onNote).toHaveBeenLastCalledWith(60, false);
+    expect(onNote).toHaveBeenCalledTimes(2);
+  });
+
+  it('plays a plate from the keyboard: held on Enter or Space, let go on key up', () => {
+    const onNote = vi.fn();
+    render(<SynthPanel {...props({ def: withPlate, onNote })} />);
+    const plate = screen.getByRole('button', { name: 'Plate 1' });
+    expect(plate.getAttribute('tabindex')).toBe('0');
+
+    fireEvent.keyDown(plate, { key: ' ' });
+    fireEvent.keyDown(plate, { key: ' ', repeat: true });
+    expect(onNote.mock.calls).toEqual([[60, true]]);
+
+    fireEvent.keyUp(plate, { key: ' ' });
+    expect(onNote).toHaveBeenLastCalledWith(60, false);
+    expect(onNote).toHaveBeenCalledTimes(2);
+  });
+
+  it('points the hover card at a mark', () => {
+    const { container } = render(<SynthPanel {...props({ def: withPlate })} />);
+    const mark = container.querySelector('rect[aria-label="The sun"]');
+    if (!mark) throw new Error('no mark drawn');
+    fireEvent.pointerEnter(mark, { clientX: 5, clientY: 6, pointerType: 'mouse' });
+    expect(focusStore.get()).toMatchObject({ kind: 'mark', id: 'sun', tip: true });
+  });
+});

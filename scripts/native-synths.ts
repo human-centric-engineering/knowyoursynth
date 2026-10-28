@@ -18,6 +18,7 @@ export const NATIVE_SYNTHS: readonly string[] = [
   'behringer-syncussion',
   'e7',
   'syntrx-ii',
+  'solar-42n',
 ];
 
 export const isNativeSynth = (id: string): boolean => NATIVE_SYNTHS.includes(id);

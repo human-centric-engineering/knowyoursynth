@@ -41,6 +41,7 @@ describe('nativeSynthProblems', () => {
       'native synth behringer-syncussion is not registered',
       'native synth e7 is not registered',
       'native synth syntrx-ii is not registered',
+      'native synth solar-42n is not registered',
     ]);
   });
 

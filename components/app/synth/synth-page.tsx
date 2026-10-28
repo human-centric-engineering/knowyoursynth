@@ -2180,6 +2180,7 @@ function Synth({
                         onConnect={onConnect}
                         onRemoveCable={onRemoveCable}
                         onMoveCable={onMoveCable}
+                        onNote={(n, on) => (on ? noteOn(n) : noteOff(n))}
                         design={detail.synth.design}
                       />
                     </div>
@@ -2555,9 +2556,11 @@ function Synth({
               </TutorDrawer>
             )}
 
-            {/* Inside the player, so the cards and the tour still show with the player full screen. */}
+            {/* Inside the player, so the cards and the tour still show with the player full screen. Explain sections
+            is a layer of section cards, so they show with hover help off, without changing the setting. */}
             <Tooltip
               enabled={tipsOn && !(small && coarse)}
+              areas={areasOn && !(small && coarse)}
               def={def}
               values={sess.values}
               target={step == null ? target : null}
