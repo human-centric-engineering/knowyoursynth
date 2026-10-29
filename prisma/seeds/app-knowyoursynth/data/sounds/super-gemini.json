@@ -870,6 +870,4654 @@
           "hear": "Fuller, with the bass back."
         }
       ]
+    },
+    {
+      "id": "sg-trance-supersaw",
+      "name": "Trance Supersaw",
+      "ref": "In the style of late-1990s trance",
+      "artist": "Trance",
+      "tags": ["pad", "trance", "supersaw"],
+      "level": 1,
+      "blurb": "Huge, bright, shimmering chords from a stack of detuned saws: the anthem chords of late-1990s trance.",
+      "how": "Trance’s supersaw was seven saws detuned around one note. SUPER mode does exactly that on DDS 1; PW/DETUNE spreads them. Bright, with chorus and a delay.",
+      "phrase": {
+        "bpm": 138,
+        "loop": true,
+        "steps": [
+          [0, 45, 3.8, 0.75],
+          [0, 57, 3.8, 0.75],
+          [0, 60, 3.8, 0.75],
+          [0, 64, 3.8, 0.75],
+          [4, 41, 3.8, 0.75],
+          [4, 57, 3.8, 0.75],
+          [4, 60, 3.8, 0.75],
+          [4, 65, 3.8, 0.75],
+          [8, 48, 3.8, 0.75],
+          [8, 55, 3.8, 0.75],
+          [8, 60, 3.8, 0.75],
+          [8, 64, 3.8, 0.75],
+          [12, 43, 3.8, 0.75],
+          [12, 55, 3.8, 0.75],
+          [12, 59, 3.8, 0.75],
+          [12, 62, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The stack",
+          "module": "osc",
+          "why": "SUPER brings in DDS 1’s sisters.\n- Listen for: a wide, shimmering stack.",
+          "set": {
+            "up.super": "on",
+            "up.pwDetune": 7
+          }
+        },
+        {
+          "title": "Bright",
+          "module": "filter",
+          "why": "Open the filter, a short release.\n- Listen for: bright anthem chords.",
+          "set": {
+            "up.lpf": 8.5,
+            "up.e2r": 5
+          }
+        },
+        {
+          "title": "Space",
+          "module": "fx",
+          "why": "- Listen for: chords filling a club.",
+          "set": {
+            "chorus.i": true,
+            "up.send": 3,
+            "dly.time": 9,
+            "dly.feedback": 4
+          }
+        }
+      ],
+      "context": {
+        "up.pwDetune": "How wide the stack is."
+      },
+      "tweaks": [
+        {
+          "id": "up.pwDetune",
+          "try": "Lower to 3",
+          "hear": "A tighter, smoother stack."
+        },
+        {
+          "id": "up.lpf",
+          "try": "Lower to 6",
+          "hear": "A darker breakdown chord."
+        }
+      ]
+    },
+    {
+      "id": "sg-supersaw-lead",
+      "name": "Supersaw Lead",
+      "ref": "In the style of trance leads",
+      "artist": "Trance",
+      "tags": ["lead", "trance", "supersaw"],
+      "level": 1,
+      "blurb": "A soaring, bright supersaw lead with a short glide and echoes.",
+      "how": "SUPER on a single line, LEGATO with a little portamento, and a long echo.",
+      "phrase": {
+        "bpm": 138,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.45, 0.8],
+          [0.5, 69, 0.45, 0.8],
+          [1, 72, 0.45, 0.8],
+          [1.5, 69, 0.45, 0.8],
+          [2, 76, 0.9, 0.8],
+          [3, 74, 0.45, 0.8],
+          [3.5, 72, 0.45, 0.8],
+          [4, 71, 0.9, 0.8],
+          [5, 67, 0.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One voice",
+          "module": "mode",
+          "why": "- Listen for: a single gliding line.",
+          "set": {
+            "voice.mode": "legato",
+            "perf.porta": 2
+          }
+        },
+        {
+          "title": "Super",
+          "module": "osc",
+          "why": "- Listen for: a soaring lead.",
+          "set": {
+            "up.super": "on",
+            "up.pwDetune": 6,
+            "up.lpf": 8
+          }
+        },
+        {
+          "title": "Echo",
+          "module": "fx",
+          "why": "- Listen for: a lead over a crowd.",
+          "set": {
+            "up.send": 4,
+            "dly.time": 9,
+            "dly.feedback": 5
+          }
+        }
+      ],
+      "context": {
+        "up.pwDetune": "How wide the lead is."
+      },
+      "tweaks": [
+        {
+          "id": "perf.porta",
+          "try": "Raise to 3",
+          "hear": "More glide."
+        },
+        {
+          "id": "up.dds1Range",
+          "try": "Step to 4′",
+          "hear": "An octave up: thinner, piercing."
+        }
+      ]
+    },
+    {
+      "id": "sg-trance-pluck",
+      "name": "Trance Pluck",
+      "ref": "In the style of trance",
+      "artist": "Trance",
+      "tags": ["pluck", "trance", "supersaw"],
+      "level": 1,
+      "blurb": "A bright, short supersaw pluck in rolling echoes.",
+      "how": "A supersaw with no sustain and a fast filter envelope, into a long delay.",
+      "phrase": {
+        "bpm": 138,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.2, 0.8],
+          [0, 60, 0.2, 0.8],
+          [0, 64, 0.2, 0.8],
+          [0, 69, 0.2, 0.8],
+          [0.75, 57, 0.2, 0.8],
+          [0.75, 60, 0.2, 0.8],
+          [0.75, 64, 0.2, 0.8],
+          [0.75, 69, 0.2, 0.8],
+          [1.5, 57, 0.2, 0.8],
+          [1.5, 60, 0.2, 0.8],
+          [1.5, 64, 0.2, 0.8],
+          [1.5, 69, 0.2, 0.8],
+          [2.25, 57, 0.2, 0.8],
+          [2.25, 60, 0.2, 0.8],
+          [2.25, 64, 0.2, 0.8],
+          [2.25, 69, 0.2, 0.8],
+          [3, 57, 0.2, 0.8],
+          [3, 60, 0.2, 0.8],
+          [3, 64, 0.2, 0.8],
+          [3, 69, 0.2, 0.8],
+          [3.75, 57, 0.2, 0.8],
+          [3.75, 60, 0.2, 0.8],
+          [3.75, 64, 0.2, 0.8],
+          [3.75, 69, 0.2, 0.8],
+          [4.5, 53, 0.2, 0.8],
+          [4.5, 57, 0.2, 0.8],
+          [4.5, 60, 0.2, 0.8],
+          [4.5, 65, 0.2, 0.8],
+          [5.25, 53, 0.2, 0.8],
+          [5.25, 57, 0.2, 0.8],
+          [5.25, 60, 0.2, 0.8],
+          [5.25, 65, 0.2, 0.8],
+          [6, 53, 0.2, 0.8],
+          [6, 57, 0.2, 0.8],
+          [6, 60, 0.2, 0.8],
+          [6, 65, 0.2, 0.8],
+          [6.75, 53, 0.2, 0.8],
+          [6.75, 57, 0.2, 0.8],
+          [6.75, 60, 0.2, 0.8],
+          [6.75, 65, 0.2, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Stack",
+          "module": "osc",
+          "why": "- Listen for: a supersaw.",
+          "set": {
+            "up.super": "on",
+            "up.pwDetune": 5
+          }
+        },
+        {
+          "title": "Pluck",
+          "module": "filter",
+          "why": "Envelope 1 snaps the filter; envelope 2 has no sustain.\n- Listen for: short, bright plucks.",
+          "set": {
+            "up.lpf": 5,
+            "up.vcfEnv": 5,
+            "up.e1d": 6,
+            "up.e1s": 0,
+            "up.e2d": 6.5,
+            "up.e2s": 0,
+            "up.e2r": 6
+          }
+        },
+        {
+          "title": "Echoes",
+          "module": "fx",
+          "why": "- Listen for: plucks rolling through echoes.",
+          "set": {
+            "up.send": 5,
+            "dly.time": 9,
+            "dly.feedback": 5
+          }
+        }
+      ],
+      "context": {
+        "up.e1d": "How long each pluck stays bright."
+      },
+      "tweaks": [
+        {
+          "id": "up.res",
+          "try": "Raise to 4",
+          "hear": "A glassier pluck."
+        },
+        {
+          "id": "dly.feedback",
+          "try": "Raise to 7",
+          "hear": "A longer roll."
+        }
+      ]
+    },
+    {
+      "id": "sg-hoover",
+      "name": "Hoover",
+      "ref": "In the style of early-1990s rave",
+      "artist": "Rave",
+      "tags": ["lead", "rave", "90s"],
+      "level": 3,
+      "blurb": "A huge, dark, churning, swooping growl: the rave “hoover”.",
+      "how": "The hoover is a detuned, pulse-width-swept stack bending down into each note. SUPER, a swept pulse on DDS 2, unison, envelope 1 bending the pitch, and heavy chorus.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 57, 1.8, 0.8],
+          [2, 55, 0.9, 0.8],
+          [3, 52, 0.9, 0.8],
+          [4, 57, 1.8, 0.8],
+          [6, 60, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Stack",
+          "module": "mode",
+          "why": "- Listen for: a churning stack.",
+          "set": {
+            "voice.mode": "legato",
+            "voice.unison": true,
+            "up.super": "on",
+            "up.pwDetune": 7,
+            "up.dds2Wave": "pulse",
+            "up.mix": 5,
+            "up.pwSrc": "lfo1",
+            "up.pwWave": 6,
+            "up.lfoRate": 4
+          }
+        },
+        {
+          "title": "Swoop",
+          "module": "osc",
+          "why": "Envelope 1, inverted, drops the pitch into each note.\n- Listen for: notes swooping in.",
+          "set": {
+            "up.modDest": "both",
+            "up.modEnv": 3,
+            "up.env1Mode": "inv",
+            "up.e1d": 7,
+            "up.e1s": 10,
+            "perf.porta": 3
+          }
+        },
+        {
+          "title": "Ensemble",
+          "module": "fx",
+          "why": "- Listen for: the hoover.",
+          "set": {
+            "chorus.i": true,
+            "chorus.ii": true,
+            "up.lpf": 6
+          }
+        }
+      ],
+      "context": {
+        "up.modEnv": "How far each note swoops."
+      },
+      "tweaks": [
+        {
+          "id": "perf.porta",
+          "try": "Raise to 5",
+          "hear": "Wilder swoops."
+        },
+        {
+          "id": "up.lpf",
+          "try": "Raise to 8",
+          "hear": "A brighter, harsher hoover."
+        }
+      ]
+    },
+    {
+      "id": "sg-uplifting-pad",
+      "name": "Uplifting Pad",
+      "ref": "In the style of uplifting trance",
+      "artist": "Trance",
+      "tags": ["pad", "trance", "dual"],
+      "level": 2,
+      "blurb": "A soaring two-layer pad: a bright supersaw on top of a warm, slow pad.",
+      "how": "DUAL stacks both layers. The upper is a bright supersaw; the lower a warm, slow sawtooth an octave down.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 50, 3.8, 0.75],
+          [0, 57, 3.8, 0.75],
+          [0, 62, 3.8, 0.75],
+          [0, 65, 3.8, 0.75],
+          [4, 46, 3.8, 0.75],
+          [4, 53, 3.8, 0.75],
+          [4, 58, 3.8, 0.75],
+          [4, 62, 3.8, 0.75],
+          [8, 48, 3.8, 0.75],
+          [8, 55, 3.8, 0.75],
+          [8, 60, 3.8, 0.75],
+          [8, 64, 3.8, 0.75],
+          [12, 45, 3.8, 0.75],
+          [12, 52, 3.8, 0.75],
+          [12, 57, 3.8, 0.75],
+          [12, 61, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two layers",
+          "module": "mode",
+          "why": "- KEYBOARD DUAL: both layers on every key\n- Listen for: both layers together.",
+          "set": {
+            "kbd.mode": "dual"
+          }
+        },
+        {
+          "title": "Bright top",
+          "module": "osc",
+          "why": "- Listen for: a bright supersaw.",
+          "set": {
+            "up.super": "on",
+            "up.pwDetune": 6,
+            "up.lpf": 8,
+            "up.e2a": 5,
+            "up.e2r": 7
+          }
+        },
+        {
+          "title": "Warm bottom",
+          "module": "osc",
+          "why": "- Listen for: a warm, slow pad underneath.",
+          "set": {
+            "lo.dds1Range": "16",
+            "lo.lpf": 5.5,
+            "lo.e2a": 7,
+            "lo.e2r": 8,
+            "lo.vcaEnv": 6
+          }
+        },
+        {
+          "title": "Space",
+          "module": "fx",
+          "why": "- Listen for: a soaring pad.",
+          "set": {
+            "chorus.i": true,
+            "up.send": 3,
+            "dly.time": 9,
+            "dly.feedback": 5
+          }
+        }
+      ],
+      "context": {
+        "lo.vcaEnv": "How much warmth is underneath."
+      },
+      "tweaks": [
+        {
+          "id": "perf.lowerDetune",
+          "try": "Set to +7",
+          "hear": "The lower layer a fifth up: a huge, open chord."
+        },
+        {
+          "id": "up.pwDetune",
+          "try": "Raise to 9",
+          "hear": "A wilder top."
+        }
+      ]
+    },
+    {
+      "id": "sg-gated-trance",
+      "name": "Gated Trance Pad",
+      "ref": "In the style of trance",
+      "artist": "Trance",
+      "tags": ["pad", "trance", "rhythm"],
+      "level": 2,
+      "blurb": "A held supersaw chord chopped into a sixteenth-note rhythm.",
+      "how": "LFO 1 on a square at about eight cycles a second, on the VCA at full depth, chops the chord. RESET restarts it with every chord so the rhythm lines up.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 45, 3.8, 0.75],
+          [0, 57, 3.8, 0.75],
+          [0, 60, 3.8, 0.75],
+          [0, 64, 3.8, 0.75],
+          [4, 41, 3.8, 0.75],
+          [4, 57, 3.8, 0.75],
+          [4, 60, 3.8, 0.75],
+          [4, 65, 3.8, 0.75],
+          [8, 48, 3.8, 0.75],
+          [8, 55, 3.8, 0.75],
+          [8, 60, 3.8, 0.75],
+          [8, 64, 3.8, 0.75],
+          [12, 43, 3.8, 0.75],
+          [12, 55, 3.8, 0.75],
+          [12, 59, 3.8, 0.75],
+          [12, 62, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Stack",
+          "module": "osc",
+          "why": "- Listen for: a bright chord.",
+          "set": {
+            "up.super": "on",
+            "up.pwDetune": 6,
+            "up.lpf": 7.5
+          }
+        },
+        {
+          "title": "Gate",
+          "module": "mod",
+          "why": "- Listen for: the chord chopped into a rhythm.",
+          "set": {
+            "up.lfoWave": "sq",
+            "up.lfoMode": "reset",
+            "up.lfoRate": 7.8,
+            "up.vcaLfo": 10
+          }
+        },
+        {
+          "title": "Echo",
+          "module": "fx",
+          "why": "- Listen for: a gated trance pad.",
+          "set": {
+            "up.send": 3,
+            "dly.time": 8.5,
+            "dly.feedback": 4
+          }
+        }
+      ],
+      "context": {
+        "up.lfoRate": "How fast the gate chops."
+      },
+      "tweaks": [
+        {
+          "id": "up.lfoRate",
+          "try": "Lower to 7",
+          "hear": "A slower gate."
+        },
+        {
+          "id": "up.vcaLfo",
+          "try": "Lower to 6",
+          "hear": "A pulsing gate."
+        }
+      ]
+    },
+    {
+      "id": "sg-hardstyle-lead",
+      "name": "Hardstyle Screech",
+      "ref": "In the style of hardstyle",
+      "artist": "Hardstyle",
+      "tags": ["lead", "hardstyle", "distortion"],
+      "level": 3,
+      "blurb": "A huge, distorted, screeching supersaw lead.",
+      "how": "A supersaw with DRIVE 2, resonance and unison, gliding.",
+      "phrase": {
+        "bpm": 150,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.9, 0.8],
+          [1, 69, 0.45, 0.8],
+          [1.5, 72, 0.45, 0.8],
+          [2, 74, 0.9, 0.8],
+          [3, 72, 0.9, 0.8],
+          [4, 69, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Stack",
+          "module": "osc",
+          "why": "- Listen for: a huge lead.",
+          "set": {
+            "voice.mode": "legato",
+            "voice.unison": true,
+            "perf.porta": 2,
+            "up.super": "on",
+            "up.pwDetune": 8
+          }
+        },
+        {
+          "title": "Screech",
+          "module": "filter",
+          "why": "- Listen for: a distorted screech.",
+          "set": {
+            "up.drive": "2",
+            "up.lpf": 7,
+            "up.res": 5,
+            "up.vcaEnv": 6
+          }
+        }
+      ],
+      "context": {
+        "up.res": "How much it screeches."
+      },
+      "tweaks": [
+        {
+          "id": "up.res",
+          "try": "Raise to 8",
+          "hear": "A whistling screech."
+        },
+        {
+          "id": "up.drive",
+          "try": "Step to 1",
+          "hear": "Less grit."
+        }
+      ]
+    },
+    {
+      "id": "sg-dream-trance",
+      "name": "Dream Piano",
+      "ref": "In the style of mid-1990s dream trance",
+      "artist": "Dream trance",
+      "tags": ["keys", "trance", "90s"],
+      "level": 2,
+      "blurb": "A bright, slightly detuned piano-like chord with echoes: the dreamy keys of 1990s dream trance.",
+      "how": "A sine and a saw stacked, a quick decay to a low sustain, and long echoes.",
+      "phrase": {
+        "bpm": 136,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.9, 0.8],
+          [0, 64, 0.9, 0.8],
+          [0, 69, 0.9, 0.8],
+          [0, 72, 0.9, 0.8],
+          [1.5, 57, 0.4, 0.8],
+          [1.5, 64, 0.4, 0.8],
+          [1.5, 69, 0.4, 0.8],
+          [1.5, 72, 0.4, 0.8],
+          [2, 55, 1.9, 0.8],
+          [2, 62, 1.9, 0.8],
+          [2, 67, 1.9, 0.8],
+          [2, 71, 1.9, 0.8],
+          [4, 53, 1.9, 0.8],
+          [4, 60, 1.9, 0.8],
+          [4, 65, 1.9, 0.8],
+          [4, 69, 1.9, 0.8],
+          [6, 52, 1.9, 0.8],
+          [6, 59, 1.9, 0.8],
+          [6, 64, 1.9, 0.8],
+          [6, 67, 1.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Keys",
+          "module": "osc",
+          "why": "- Listen for: a bright piano-like chord.",
+          "set": {
+            "up.dds1Wave": "sine",
+            "up.dds2Wave": "saw",
+            "up.mix": 4,
+            "up.dds2Tune": 0.1,
+            "up.lpf": 7,
+            "up.e2d": 7,
+            "up.e2s": 3,
+            "up.e2r": 6.5
+          }
+        },
+        {
+          "title": "Dream",
+          "module": "fx",
+          "why": "- Listen for: dreamy echoes.",
+          "set": {
+            "chorus.i": true,
+            "up.send": 5,
+            "dly.time": 9,
+            "dly.feedback": 5
+          }
+        }
+      ],
+      "context": {
+        "up.send": "How dreamy it is."
+      },
+      "tweaks": [
+        {
+          "id": "up.mix",
+          "try": "Raise to 7",
+          "hear": "A brighter, buzzier piano."
+        },
+        {
+          "id": "dly.feedback",
+          "try": "Raise to 7",
+          "hear": "A wash of echoes."
+        }
+      ]
+    },
+    {
+      "id": "sg-warm-pad",
+      "name": "Warm Pad",
+      "ref": "Classic technique: two saws and a soft filter",
+      "artist": "Classic technique",
+      "tags": ["pad", "warm", "basics"],
+      "level": 1,
+      "blurb": "A plain, warm, slow analogue-style pad.",
+      "how": "DDS 1 and DDS 2 both saws, a few cents apart, a soft filter, a slow swell and the chorus.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 45, 3.8, 0.75],
+          [0, 57, 3.8, 0.75],
+          [0, 60, 3.8, 0.75],
+          [0, 64, 3.8, 0.75],
+          [4, 41, 3.8, 0.75],
+          [4, 57, 3.8, 0.75],
+          [4, 60, 3.8, 0.75],
+          [4, 65, 3.8, 0.75],
+          [8, 48, 3.8, 0.75],
+          [8, 55, 3.8, 0.75],
+          [8, 60, 3.8, 0.75],
+          [8, 64, 3.8, 0.75],
+          [12, 43, 3.8, 0.75],
+          [12, 55, 3.8, 0.75],
+          [12, 59, 3.8, 0.75],
+          [12, 62, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two saws",
+          "module": "osc",
+          "why": "- Listen for: a thick, beating chord.",
+          "set": {
+            "up.mix": 5,
+            "up.dds2Tune": 0.1
+          }
+        },
+        {
+          "title": "Soft",
+          "module": "filter",
+          "why": "- Listen for: a warm, swelling pad.",
+          "set": {
+            "up.lpf": 6,
+            "up.e2a": 7,
+            "up.e2r": 7.5
+          }
+        },
+        {
+          "title": "Wide",
+          "module": "fx",
+          "why": "- Listen for: a warm pad.",
+          "set": {
+            "chorus.i": true
+          }
+        }
+      ],
+      "context": {
+        "up.dds2Tune": "How fast the two saws beat."
+      },
+      "tweaks": [
+        {
+          "id": "up.dds2Tune",
+          "try": "Raise to +0.3",
+          "hear": "Faster beating."
+        },
+        {
+          "id": "up.lpf",
+          "try": "Lower to 5",
+          "hear": "A darker pad."
+        }
+      ]
+    },
+    {
+      "id": "sg-glass-pad",
+      "name": "Glass Pad",
+      "ref": "Classic technique: triangles an octave apart",
+      "artist": "Classic technique",
+      "tags": ["pad", "ambient", "soft"],
+      "level": 1,
+      "blurb": "A pure, glassy pad that rings on.",
+      "how": "Triangle waves an octave apart, a slow swell, a long release and echoes.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 52, 3.8, 0.75],
+          [0, 59, 3.8, 0.75],
+          [0, 64, 3.8, 0.75],
+          [0, 71, 3.8, 0.75],
+          [4, 48, 3.8, 0.75],
+          [4, 55, 3.8, 0.75],
+          [4, 64, 3.8, 0.75],
+          [4, 67, 3.8, 0.75],
+          [8, 45, 3.8, 0.75],
+          [8, 52, 3.8, 0.75],
+          [8, 60, 3.8, 0.75],
+          [8, 64, 3.8, 0.75],
+          [12, 50, 3.8, 0.75],
+          [12, 57, 3.8, 0.75],
+          [12, 62, 3.8, 0.75],
+          [12, 66, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Glass",
+          "module": "osc",
+          "why": "- Listen for: a pure, glassy pad.",
+          "set": {
+            "up.dds1Wave": "tri",
+            "up.dds2Wave": "tri",
+            "up.dds2Range": "4",
+            "up.mix": 4,
+            "up.e2a": 6.5,
+            "up.e2r": 8
+          }
+        },
+        {
+          "title": "Air",
+          "module": "fx",
+          "why": "- Listen for: glass ringing in the air.",
+          "set": {
+            "chorus.i": true,
+            "up.send": 3,
+            "dly.time": 9.5,
+            "dly.feedback": 5
+          }
+        }
+      ],
+      "context": {
+        "up.e2r": "How long the chords hang."
+      },
+      "tweaks": [
+        {
+          "id": "up.dds2Range",
+          "try": "Step to 2′",
+          "hear": "A higher, bell-like shimmer."
+        },
+        {
+          "id": "up.dds1Wave",
+          "try": "Step to SINE",
+          "hear": "Even purer."
+        }
+      ]
+    },
+    {
+      "id": "sg-strings-pwm",
+      "name": "PWM Pad",
+      "ref": "Classic technique: a pulse swept by LFO 1",
+      "artist": "Classic technique",
+      "tags": ["pad", "pwm", "soft"],
+      "level": 2,
+      "blurb": "A soft, shimmering pulse-wave pad.",
+      "how": "DDS 2 as a pulse, its width swept by LFO 1: pulse-width modulation.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 50, 3.8, 0.75],
+          [0, 57, 3.8, 0.75],
+          [0, 62, 3.8, 0.75],
+          [0, 65, 3.8, 0.75],
+          [4, 46, 3.8, 0.75],
+          [4, 53, 3.8, 0.75],
+          [4, 58, 3.8, 0.75],
+          [4, 62, 3.8, 0.75],
+          [8, 48, 3.8, 0.75],
+          [8, 55, 3.8, 0.75],
+          [8, 60, 3.8, 0.75],
+          [8, 64, 3.8, 0.75],
+          [12, 45, 3.8, 0.75],
+          [12, 52, 3.8, 0.75],
+          [12, 57, 3.8, 0.75],
+          [12, 61, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Pulse",
+          "module": "osc",
+          "why": "- Listen for: a shimmering pulse.",
+          "set": {
+            "up.dds2Wave": "pulse",
+            "up.mix": 10,
+            "up.pwSrc": "lfo1",
+            "up.pwWave": 6,
+            "up.lfoRate": 4
+          }
+        },
+        {
+          "title": "Pad",
+          "module": "env",
+          "why": "- Listen for: a soft PWM pad.",
+          "set": {
+            "up.lpf": 6.5,
+            "up.e2a": 7,
+            "up.e2r": 7.5,
+            "chorus.i": true
+          }
+        }
+      ],
+      "context": {
+        "up.pwWave": "How deep the shimmer is."
+      },
+      "tweaks": [
+        {
+          "id": "up.lfoRate",
+          "try": "Raise to 5.5",
+          "hear": "A faster, warbling shimmer."
+        },
+        {
+          "id": "up.mix",
+          "try": "Lower to 5",
+          "hear": "Half saw: a thicker pad."
+        }
+      ]
+    },
+    {
+      "id": "sg-dual-octave-pad",
+      "name": "Octave Layers",
+      "ref": "Classic technique: DUAL with the lower layer an octave down",
+      "artist": "Classic technique",
+      "tags": ["pad", "dual", "octave"],
+      "level": 1,
+      "blurb": "A broad pad with every chord doubled an octave below by the second layer.",
+      "how": "DUAL plays both layers; the lower one at 16′ is an octave down, softer and darker.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.8, 0.75],
+          [0, 60, 3.8, 0.75],
+          [0, 64, 3.8, 0.75],
+          [4, 55, 3.8, 0.75],
+          [4, 59, 3.8, 0.75],
+          [4, 62, 3.8, 0.75],
+          [8, 53, 3.8, 0.75],
+          [8, 57, 3.8, 0.75],
+          [8, 60, 3.8, 0.75],
+          [12, 52, 3.8, 0.75],
+          [12, 55, 3.8, 0.75],
+          [12, 59, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two layers",
+          "module": "mode",
+          "why": "- KEYBOARD DUAL: both layers on every key\n- Listen for: both layers.",
+          "set": {
+            "kbd.mode": "dual"
+          }
+        },
+        {
+          "title": "The layers",
+          "module": "osc",
+          "why": "- Listen for: a broad pad with a deep shadow.",
+          "set": {
+            "up.lpf": 7,
+            "up.e2a": 6,
+            "up.e2r": 7,
+            "lo.dds1Range": "16",
+            "lo.dds1Wave": "tri",
+            "lo.lpf": 5,
+            "lo.e2a": 6,
+            "lo.e2r": 7
+          }
+        },
+        {
+          "title": "Wide",
+          "module": "fx",
+          "why": "- Listen for: a broad, warm pad.",
+          "set": {
+            "chorus.i": true
+          }
+        }
+      ],
+      "context": {
+        "lo.dds1Range": "The lower layer’s octave."
+      },
+      "tweaks": [
+        {
+          "id": "lo.dds1Range",
+          "try": "Step to 32′",
+          "hear": "Two octaves down: an organ pedal."
+        },
+        {
+          "id": "perf.lowerDetune",
+          "try": "Set to +7",
+          "hear": "A fifth in place of the octave."
+        }
+      ]
+    },
+    {
+      "id": "sg-fifths-pad",
+      "name": "Fifths Layers",
+      "ref": "Classic technique: the lower layer detuned a fifth",
+      "artist": "Classic technique",
+      "tags": ["pad", "dual", "fifths"],
+      "level": 1,
+      "blurb": "Single notes become open fifths: the lower layer a fifth up.",
+      "how": "DETUNE (lower layer) moves the lower layer up to seven semitones: at +7 every key plays a fifth.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 57, 1.8, 0.8],
+          [2, 55, 1.8, 0.8],
+          [4, 53, 1.8, 0.8],
+          [6, 52, 1.8, 0.8],
+          [0, 45, 1.8, 0.8],
+          [2, 43, 1.8, 0.8],
+          [4, 41, 1.8, 0.8],
+          [6, 40, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A fifth",
+          "module": "mode",
+          "why": "- KEYBOARD DUAL: both layers on every key\n- DETUNE (LOWER LAYER) +7 st: a fifth up\n- Listen for: every note an open fifth.",
+          "set": {
+            "kbd.mode": "dual",
+            "perf.lowerDetune": 7
+          }
+        },
+        {
+          "title": "Soften",
+          "module": "env",
+          "why": "- Listen for: a hollow, glowing pad.",
+          "set": {
+            "up.lpf": 6.5,
+            "up.e2a": 5,
+            "up.e2r": 6,
+            "lo.lpf": 6.5,
+            "lo.e2a": 5,
+            "lo.e2r": 6,
+            "chorus.i": true
+          }
+        }
+      ],
+      "context": {
+        "perf.lowerDetune": "The interval the lower layer adds."
+      },
+      "tweaks": [
+        {
+          "id": "perf.lowerDetune",
+          "try": "Set to +5",
+          "hear": "Fourths: more modal."
+        },
+        {
+          "id": "perf.lowerDetune",
+          "try": "Set to −5",
+          "hear": "A fifth below."
+        }
+      ]
+    },
+    {
+      "id": "sg-drift-pad",
+      "name": "Drifting Pad",
+      "ref": "Classic technique: DRIFT for an unstable vintage pad",
+      "artist": "Classic technique",
+      "tags": ["pad", "vintage", "drift"],
+      "level": 2,
+      "blurb": "A pad whose voices wander slightly out of tune, like an old, warm-up-needing polysynth.",
+      "how": "DRIFT adds a slow, random wander to each voice’s pitch.",
+      "phrase": {
+        "bpm": 68,
+        "loop": true,
+        "steps": [
+          [0, 45, 3.8, 0.75],
+          [0, 57, 3.8, 0.75],
+          [0, 60, 3.8, 0.75],
+          [0, 64, 3.8, 0.75],
+          [4, 41, 3.8, 0.75],
+          [4, 57, 3.8, 0.75],
+          [4, 60, 3.8, 0.75],
+          [4, 65, 3.8, 0.75],
+          [8, 48, 3.8, 0.75],
+          [8, 55, 3.8, 0.75],
+          [8, 60, 3.8, 0.75],
+          [8, 64, 3.8, 0.75],
+          [12, 43, 3.8, 0.75],
+          [12, 55, 3.8, 0.75],
+          [12, 59, 3.8, 0.75],
+          [12, 62, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pad",
+          "module": "osc",
+          "why": "- Listen for: a steady pad.",
+          "set": {
+            "up.mix": 5,
+            "up.dds2Tune": 0.1,
+            "up.lpf": 6,
+            "up.e2a": 6.5,
+            "up.e2r": 7
+          }
+        },
+        {
+          "title": "Drift",
+          "module": "osc",
+          "why": "- Listen for: every voice wandering slightly.",
+          "set": {
+            "up.drift": 5
+          }
+        },
+        {
+          "title": "Wide",
+          "module": "fx",
+          "why": "- Listen for: a vintage pad.",
+          "set": {
+            "chorus.i": true
+          }
+        }
+      ],
+      "context": {
+        "up.drift": "How much the voices wander."
+      },
+      "tweaks": [
+        {
+          "id": "up.drift",
+          "try": "Raise to 9",
+          "hear": "A very sick, detuned synth."
+        },
+        {
+          "id": "up.drift",
+          "try": "Lower to 2",
+          "hear": "A subtle warmth."
+        }
+      ]
+    },
+    {
+      "id": "sg-sweep-pad",
+      "name": "Sweep Pad",
+      "ref": "Classic technique: LFO 2 slowly sweeping both layers",
+      "artist": "Classic technique",
+      "tags": ["pad", "filter", "lfo"],
+      "level": 2,
+      "blurb": "A resonant pad whose filter rises and falls very slowly.",
+      "how": "LFO 2, ON so it needs no wheel, slow, on the cutoff.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 57, 7.8, 0.75],
+          [0, 60, 7.8, 0.75],
+          [0, 64, 7.8, 0.75],
+          [8, 53, 7.8, 0.75],
+          [8, 57, 7.8, 0.75],
+          [8, 60, 7.8, 0.75],
+          [16, 48, 7.8, 0.75],
+          [16, 55, 7.8, 0.75],
+          [16, 60, 7.8, 0.75],
+          [24, 55, 7.8, 0.75],
+          [24, 59, 7.8, 0.75],
+          [24, 62, 7.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A resonant pad",
+          "module": "filter",
+          "why": "- Listen for: a ringing chord.",
+          "set": {
+            "up.super": "on",
+            "up.pwDetune": 4,
+            "up.lpf": 5,
+            "up.res": 6,
+            "up.e2a": 5,
+            "up.e2r": 6
+          }
+        },
+        {
+          "title": "Sweep",
+          "module": "mod",
+          "why": "- LFO 2 TRIGGER ON: always, no wheel\n- Listen for: the chord sweeping slowly.",
+          "set": {
+            "lfo2.trig": "on",
+            "lfo2.rate": 2.5,
+            "lfo2.vcf": 6
+          }
+        }
+      ],
+      "context": {
+        "lfo2.rate": "How long one sweep takes."
+      },
+      "tweaks": [
+        {
+          "id": "up.res",
+          "try": "Raise to 8",
+          "hear": "A whistling sweep."
+        },
+        {
+          "id": "lfo2.wave",
+          "try": "Step to S&G",
+          "hear": "A sweep that wanders."
+        }
+      ]
+    },
+    {
+      "id": "sg-choir-pad",
+      "name": "Synth Choir",
+      "ref": "Classic technique: a vowel filter and the dense chorus",
+      "artist": "Classic technique",
+      "tags": ["pad", "choir", "vocal"],
+      "level": 2,
+      "blurb": "A soft, vowel-like choir.",
+      "how": "A resonant filter around an “ah”, triangles and saws, and both choruses.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 50, 3.8, 0.75],
+          [0, 57, 3.8, 0.75],
+          [0, 62, 3.8, 0.75],
+          [0, 65, 3.8, 0.75],
+          [4, 46, 3.8, 0.75],
+          [4, 53, 3.8, 0.75],
+          [4, 58, 3.8, 0.75],
+          [4, 62, 3.8, 0.75],
+          [8, 48, 3.8, 0.75],
+          [8, 55, 3.8, 0.75],
+          [8, 60, 3.8, 0.75],
+          [8, 64, 3.8, 0.75],
+          [12, 45, 3.8, 0.75],
+          [12, 52, 3.8, 0.75],
+          [12, 57, 3.8, 0.75],
+          [12, 61, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A vowel",
+          "module": "filter",
+          "why": "- Listen for: an “ah”-like colour.",
+          "set": {
+            "up.dds1Wave": "tri",
+            "up.mix": 4,
+            "up.lpf": 6,
+            "up.res": 5,
+            "up.vcfKey": "off"
+          }
+        },
+        {
+          "title": "Sing",
+          "module": "mod",
+          "why": "- Listen for: a slow, singing swell.",
+          "set": {
+            "up.lfoRate": 6.5,
+            "up.lfoDelay": 3,
+            "up.modLfo": 1,
+            "up.modDest": "both",
+            "up.e2a": 7,
+            "up.e2r": 7
+          }
+        },
+        {
+          "title": "A choir",
+          "module": "fx",
+          "why": "- Listen for: many voices.",
+          "set": {
+            "chorus.i": true,
+            "chorus.ii": true
+          }
+        }
+      ],
+      "context": {
+        "up.lpf": "Which vowel the choir sings."
+      },
+      "tweaks": [
+        {
+          "id": "up.lpf",
+          "try": "Lower to 5",
+          "hear": "An “oo”."
+        },
+        {
+          "id": "up.res",
+          "try": "Raise to 7",
+          "hear": "A sharper, synthetic choir."
+        }
+      ]
+    },
+    {
+      "id": "sg-dark-pad",
+      "name": "Dark Drone Pad",
+      "ref": "Classic technique: both layers low and dark",
+      "artist": "Classic technique",
+      "tags": ["pad", "dark", "dual"],
+      "level": 2,
+      "blurb": "A heavy, dark bed of sound for tension.",
+      "how": "DUAL, both layers low; the lower an octave down with drift, the filters low.",
+      "phrase": {
+        "bpm": 50,
+        "loop": true,
+        "steps": [
+          [0, 38, 7.8, 0.7],
+          [0, 45, 7.8, 0.7],
+          [0, 50, 7.8, 0.7],
+          [0, 53, 7.8, 0.7],
+          [8, 36, 7.8, 0.7],
+          [8, 43, 7.8, 0.7],
+          [8, 48, 7.8, 0.7],
+          [8, 51, 7.8, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two dark layers",
+          "module": "mode",
+          "why": "- KEYBOARD DUAL: both layers on every key\n- Listen for: a heavy, dark chord.",
+          "set": {
+            "kbd.mode": "dual",
+            "up.lpf": 4.5,
+            "up.res": 3,
+            "up.e2a": 8,
+            "up.e2r": 8,
+            "lo.dds1Range": "16",
+            "lo.lpf": 4,
+            "lo.drift": 4,
+            "lo.e2a": 8,
+            "lo.e2r": 8
+          }
+        },
+        {
+          "title": "A cave",
+          "module": "fx",
+          "why": "- Listen for: a cavernous drone.",
+          "set": {
+            "up.send": 3,
+            "lo.send": 3,
+            "dly.time": 10,
+            "dly.feedback": 6
+          }
+        }
+      ],
+      "context": {
+        "up.lpf": "How dark the bed is."
+      },
+      "tweaks": [
+        {
+          "id": "up.lpf",
+          "try": "Raise to 6",
+          "hear": "More edge, more menace."
+        },
+        {
+          "id": "lo.drift",
+          "try": "Raise to 8",
+          "hear": "A sickly, unstable dark."
+        }
+      ]
+    },
+    {
+      "id": "sg-breathing-pad",
+      "name": "Breathing Pad",
+      "ref": "Classic technique: noise from DDS 2 under a pad",
+      "artist": "Classic technique",
+      "tags": ["pad", "noise", "ambient"],
+      "level": 2,
+      "blurb": "An airy pad with a breath of noise.",
+      "how": "DDS 2 on noise, mixed under DDS 1’s saw, through a slightly resonant filter.",
+      "phrase": {
+        "bpm": 64,
+        "loop": true,
+        "steps": [
+          [0, 50, 3.8, 0.75],
+          [0, 57, 3.8, 0.75],
+          [0, 62, 3.8, 0.75],
+          [0, 65, 3.8, 0.75],
+          [0, 69, 3.8, 0.75],
+          [4, 48, 3.8, 0.75],
+          [4, 55, 3.8, 0.75],
+          [4, 62, 3.8, 0.75],
+          [4, 64, 3.8, 0.75],
+          [4, 67, 3.8, 0.75],
+          [8, 46, 3.8, 0.75],
+          [8, 53, 3.8, 0.75],
+          [8, 58, 3.8, 0.75],
+          [8, 62, 3.8, 0.75],
+          [8, 65, 3.8, 0.75],
+          [12, 45, 3.8, 0.75],
+          [12, 52, 3.8, 0.75],
+          [12, 57, 3.8, 0.75],
+          [12, 60, 3.8, 0.75],
+          [12, 64, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Breath",
+          "module": "osc",
+          "why": "- Listen for: a hiss under the chord.",
+          "set": {
+            "up.dds2Wave": "noise",
+            "up.mix": 3,
+            "up.lpf": 6,
+            "up.res": 4
+          }
+        },
+        {
+          "title": "Breathe",
+          "module": "env",
+          "why": "- Listen for: a breathing pad.",
+          "set": {
+            "up.e2a": 7.5,
+            "up.e2r": 8,
+            "chorus.i": true,
+            "chorus.ii": true
+          }
+        }
+      ],
+      "context": {
+        "up.mix": "How much breath there is."
+      },
+      "tweaks": [
+        {
+          "id": "up.mix",
+          "try": "Raise to 6",
+          "hear": "More wind than chord."
+        },
+        {
+          "id": "up.res",
+          "try": "Raise to 7",
+          "hear": "A whistling breath."
+        }
+      ]
+    },
+    {
+      "id": "sg-evolving-pad",
+      "name": "Evolving Pad",
+      "ref": "Classic technique: two layers moving at different speeds",
+      "artist": "Classic technique",
+      "tags": ["pad", "dual", "evolving"],
+      "level": 3,
+      "blurb": "A pad that keeps changing: each layer’s filter moves at its own pace.",
+      "how": "DUAL with each layer’s LFO 1 on its own cutoff at a different rate, so the two drift in and out of each other.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 50, 7.8, 0.75],
+          [0, 57, 7.8, 0.75],
+          [0, 62, 7.8, 0.75],
+          [0, 65, 7.8, 0.75],
+          [8, 48, 7.8, 0.75],
+          [8, 55, 7.8, 0.75],
+          [8, 60, 7.8, 0.75],
+          [8, 64, 7.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two layers",
+          "module": "mode",
+          "why": "- KEYBOARD DUAL: both layers on every key\n- Listen for: a two-layer pad.",
+          "set": {
+            "kbd.mode": "dual",
+            "up.super": "on",
+            "up.pwDetune": 4,
+            "up.lpf": 5.5,
+            "up.res": 4,
+            "up.e2a": 7,
+            "up.e2r": 7,
+            "lo.dds1Wave": "square",
+            "lo.lpf": 5,
+            "lo.res": 4,
+            "lo.e2a": 7,
+            "lo.e2r": 7
+          }
+        },
+        {
+          "title": "Different speeds",
+          "module": "mod",
+          "why": "- Listen for: the layers moving in and out of each other.",
+          "set": {
+            "up.lfoRate": 2.5,
+            "up.vcfLfo": 4,
+            "lo.lfoRate": 1.5,
+            "lo.vcfLfo": 5
+          }
+        },
+        {
+          "title": "Space",
+          "module": "fx",
+          "why": "- Listen for: an ever-changing pad.",
+          "set": {
+            "chorus.i": true,
+            "up.send": 3,
+            "dly.time": 9.5,
+            "dly.feedback": 6
+          }
+        }
+      ],
+      "context": {
+        "lo.lfoRate": "How slowly the lower layer moves."
+      },
+      "tweaks": [
+        {
+          "id": "up.lfoWave",
+          "try": "Step to S&H",
+          "hear": "The top stepping at random."
+        },
+        {
+          "id": "lo.lfoRate",
+          "try": "Raise to 3",
+          "hear": "Both faster."
+        }
+      ]
+    },
+    {
+      "id": "sg-ambient-wash",
+      "name": "Ambient Wash",
+      "ref": "In the style of ambient music",
+      "artist": "Ambient",
+      "tags": ["pad", "ambient", "delay"],
+      "level": 2,
+      "blurb": "Soft chords smearing into long echoes.",
+      "how": "A soft pad with a lot of delay send at long time and high feedback.",
+      "phrase": {
+        "bpm": 56,
+        "loop": true,
+        "steps": [
+          [0, 52, 3.8, 0.75],
+          [0, 59, 3.8, 0.75],
+          [0, 64, 3.8, 0.75],
+          [0, 66, 3.8, 0.75],
+          [4, 48, 3.8, 0.75],
+          [4, 55, 3.8, 0.75],
+          [4, 62, 3.8, 0.75],
+          [4, 64, 3.8, 0.75],
+          [8, 45, 3.8, 0.75],
+          [8, 52, 3.8, 0.75],
+          [8, 59, 3.8, 0.75],
+          [8, 64, 3.8, 0.75],
+          [12, 47, 3.8, 0.75],
+          [12, 54, 3.8, 0.75],
+          [12, 59, 3.8, 0.75],
+          [12, 62, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Soft",
+          "module": "osc",
+          "why": "- Listen for: a soft pad.",
+          "set": {
+            "up.dds1Wave": "tri",
+            "up.mix": 3,
+            "up.lpf": 6,
+            "up.e2a": 7.5,
+            "up.e2r": 8
+          }
+        },
+        {
+          "title": "Wash",
+          "module": "fx",
+          "why": "- Listen for: an endless wash.",
+          "set": {
+            "up.send": 6,
+            "dly.time": 10,
+            "dly.feedback": 7,
+            "chorus.i": true
+          }
+        }
+      ],
+      "context": {
+        "dly.feedback": "How long the wash lasts."
+      },
+      "tweaks": [
+        {
+          "id": "dly.feedback",
+          "try": "Raise to 9",
+          "hear": "An almost endless smear."
+        },
+        {
+          "id": "up.drift",
+          "try": "Raise to 4",
+          "hear": "A wavering wash."
+        }
+      ]
+    },
+    {
+      "id": "sg-string-machine",
+      "name": "String Machine",
+      "ref": "In the style of the 1970s string ensembles",
+      "artist": "Various",
+      "tags": ["strings", "pad", "70s"],
+      "level": 1,
+      "blurb": "A bright sawtooth through the dense ensemble: a 1970s string machine.",
+      "how": "Both chorus buttons together give the dense ensemble of a string machine.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 48, 3.8, 0.75],
+          [0, 60, 3.8, 0.75],
+          [0, 64, 3.8, 0.75],
+          [0, 67, 3.8, 0.75],
+          [4, 45, 3.8, 0.75],
+          [4, 60, 3.8, 0.75],
+          [4, 64, 3.8, 0.75],
+          [4, 69, 3.8, 0.75],
+          [8, 41, 3.8, 0.75],
+          [8, 57, 3.8, 0.75],
+          [8, 60, 3.8, 0.75],
+          [8, 65, 3.8, 0.75],
+          [12, 43, 3.8, 0.75],
+          [12, 55, 3.8, 0.75],
+          [12, 62, 3.8, 0.75],
+          [12, 67, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bow",
+          "module": "env",
+          "why": "- Listen for: a plain organ-like saw.",
+          "set": {
+            "up.e2a": 6.5,
+            "up.e2r": 7,
+            "up.lpf": 7.5
+          }
+        },
+        {
+          "title": "Ensemble",
+          "module": "fx",
+          "why": "- Listen for: a shimmering string section.",
+          "set": {
+            "chorus.i": true,
+            "chorus.ii": true
+          }
+        }
+      ],
+      "context": {
+        "chorus.ii": "With I, the dense ensemble."
+      },
+      "tweaks": [
+        {
+          "id": "chorus.ii",
+          "try": "Switch off",
+          "hear": "A thinner chorus."
+        },
+        {
+          "id": "up.e2a",
+          "try": "Raise to 8",
+          "hear": "Slower bowing."
+        }
+      ]
+    },
+    {
+      "id": "sg-film-strings",
+      "name": "Film Strings",
+      "ref": "In the style of synth strings in film scores",
+      "artist": "Film scores",
+      "tags": ["strings", "film", "supersaw"],
+      "level": 2,
+      "blurb": "A lush, slow string section with vibrato that arrives on held notes.",
+      "how": "SUPER for the section, a slow bow, LFO 1 delayed so the vibrato fades in, and the ensemble.",
+      "phrase": {
+        "bpm": 64,
+        "loop": true,
+        "steps": [
+          [0, 45, 3.8, 0.75],
+          [0, 57, 3.8, 0.75],
+          [0, 64, 3.8, 0.75],
+          [0, 69, 3.8, 0.75],
+          [0, 72, 3.8, 0.75],
+          [4, 43, 3.8, 0.75],
+          [4, 55, 3.8, 0.75],
+          [4, 62, 3.8, 0.75],
+          [4, 67, 3.8, 0.75],
+          [4, 71, 3.8, 0.75],
+          [8, 41, 3.8, 0.75],
+          [8, 53, 3.8, 0.75],
+          [8, 60, 3.8, 0.75],
+          [8, 65, 3.8, 0.75],
+          [8, 69, 3.8, 0.75],
+          [12, 40, 3.8, 0.75],
+          [12, 52, 3.8, 0.75],
+          [12, 59, 3.8, 0.75],
+          [12, 64, 3.8, 0.75],
+          [12, 68, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Section",
+          "module": "osc",
+          "why": "- Listen for: a broad string chord.",
+          "set": {
+            "up.super": "on",
+            "up.pwDetune": 4,
+            "up.lpf": 6.5,
+            "up.e2a": 7,
+            "up.e2r": 7.5
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "mod",
+          "why": "- Listen for: vibrato arriving as the chord holds.",
+          "set": {
+            "up.lfoRate": 6.7,
+            "up.lfoDelay": 3,
+            "up.modLfo": 1,
+            "up.modDest": "both"
+          }
+        },
+        {
+          "title": "Hall",
+          "module": "fx",
+          "why": "- Listen for: lush film strings.",
+          "set": {
+            "chorus.i": true,
+            "chorus.ii": true,
+            "up.send": 2,
+            "dly.time": 9,
+            "dly.feedback": 4
+          }
+        }
+      ],
+      "context": {
+        "up.lfoDelay": "How long before the vibrato arrives."
+      },
+      "tweaks": [
+        {
+          "id": "up.e2a",
+          "try": "Lower to 5",
+          "hear": "Firmer bowing."
+        },
+        {
+          "id": "up.modLfo",
+          "try": "Raise to 2",
+          "hear": "A romantic, wide vibrato."
+        }
+      ]
+    },
+    {
+      "id": "sg-strings-and-horns",
+      "name": "Strings and Horns",
+      "ref": "Classic technique: two orchestral layers",
+      "artist": "Classic technique",
+      "tags": ["strings", "brass", "dual"],
+      "level": 2,
+      "blurb": "Slow strings on top and mellow horns below, on every key.",
+      "how": "DUAL: the upper layer a slow supersaw string; the lower a mellow brass whose filter swells.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 48, 3.8, 0.75],
+          [0, 55, 3.8, 0.75],
+          [0, 60, 3.8, 0.75],
+          [0, 64, 3.8, 0.75],
+          [4, 45, 3.8, 0.75],
+          [4, 53, 3.8, 0.75],
+          [4, 57, 3.8, 0.75],
+          [4, 60, 3.8, 0.75],
+          [8, 46, 3.8, 0.75],
+          [8, 53, 3.8, 0.75],
+          [8, 58, 3.8, 0.75],
+          [8, 62, 3.8, 0.75],
+          [12, 43, 3.8, 0.75],
+          [12, 50, 3.8, 0.75],
+          [12, 55, 3.8, 0.75],
+          [12, 59, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Layers",
+          "module": "mode",
+          "why": "- KEYBOARD DUAL: both layers on every key\n- Listen for: both layers.",
+          "set": {
+            "kbd.mode": "dual"
+          }
+        },
+        {
+          "title": "Strings",
+          "module": "env",
+          "why": "- Listen for: slow strings.",
+          "set": {
+            "up.super": "on",
+            "up.pwDetune": 4,
+            "up.lpf": 6.5,
+            "up.e2a": 7.5,
+            "up.e2r": 7.5
+          }
+        },
+        {
+          "title": "Horns",
+          "module": "filter",
+          "why": "- Listen for: mellow horns swelling under them.",
+          "set": {
+            "lo.dds1Wave": "saw",
+            "lo.lpf": 4,
+            "lo.vcfEnv": 4,
+            "lo.e1a": 6,
+            "lo.e1d": 7,
+            "lo.e1s": 4,
+            "lo.e2a": 5,
+            "lo.e2r": 6,
+            "lo.vcaEnv": 6
+          }
+        },
+        {
+          "title": "Hall",
+          "module": "fx",
+          "why": "- Listen for: an orchestra.",
+          "set": {
+            "chorus.i": true,
+            "up.send": 2,
+            "lo.send": 2,
+            "dly.time": 9,
+            "dly.feedback": 4
+          }
+        }
+      ],
+      "context": {
+        "lo.vcfEnv": "How brassy the horns are."
+      },
+      "tweaks": [
+        {
+          "id": "lo.vcaEnv",
+          "try": "Raise to 9",
+          "hear": "Horns leading."
+        },
+        {
+          "id": "perf.lowerDetune",
+          "try": "Set to −5",
+          "hear": "Horns a fourth below."
+        }
+      ]
+    },
+    {
+      "id": "sg-brass-stab",
+      "name": "Brass Stab",
+      "ref": "In the style of 1980s pop brass",
+      "artist": "Various",
+      "tags": ["brass", "stab", "80s"],
+      "level": 1,
+      "blurb": "A short, punchy brass chord stab.",
+      "how": "Two saws, the filter blaring open with envelope 1 and settling, and a short volume.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 55, 0.4, 0.8],
+          [0, 59, 0.4, 0.8],
+          [0, 62, 0.4, 0.8],
+          [0, 67, 0.4, 0.8],
+          [1.5, 55, 0.4, 0.8],
+          [1.5, 59, 0.4, 0.8],
+          [1.5, 62, 0.4, 0.8],
+          [1.5, 67, 0.4, 0.8],
+          [2.5, 57, 0.9, 0.8],
+          [2.5, 60, 0.9, 0.8],
+          [2.5, 64, 0.9, 0.8],
+          [2.5, 69, 0.9, 0.8],
+          [4, 53, 0.4, 0.8],
+          [4, 57, 0.4, 0.8],
+          [4, 60, 0.4, 0.8],
+          [4, 65, 0.4, 0.8],
+          [5.5, 53, 0.4, 0.8],
+          [5.5, 57, 0.4, 0.8],
+          [5.5, 60, 0.4, 0.8],
+          [5.5, 65, 0.4, 0.8],
+          [6.5, 55, 0.9, 0.8],
+          [6.5, 59, 0.9, 0.8],
+          [6.5, 62, 0.9, 0.8],
+          [6.5, 67, 0.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Blare",
+          "module": "filter",
+          "why": "- Listen for: a brassy blare.",
+          "set": {
+            "up.mix": 5,
+            "up.dds2Tune": 0.1,
+            "up.lpf": 4.5,
+            "up.vcfEnv": 5,
+            "up.e1a": 4,
+            "up.e1d": 6,
+            "up.e1s": 3
+          }
+        },
+        {
+          "title": "Stab",
+          "module": "env",
+          "why": "- Listen for: punchy stabs.",
+          "set": {
+            "up.e2d": 6.5,
+            "up.e2s": 6,
+            "up.e2r": 5
+          }
+        }
+      ],
+      "context": {
+        "up.vcfEnv": "How hard the brass blares."
+      },
+      "tweaks": [
+        {
+          "id": "up.e1a",
+          "try": "Raise to 6",
+          "hear": "A swelling horn."
+        },
+        {
+          "id": "up.res",
+          "try": "Raise to 3",
+          "hear": "A rasp."
+        }
+      ]
+    },
+    {
+      "id": "sg-poly-brass",
+      "name": "Poly Brass",
+      "ref": "Classic technique: a fat, held brass chord",
+      "artist": "Classic technique",
+      "tags": ["brass", "pad", "80s"],
+      "level": 1,
+      "blurb": "Big, held brass chords with a slow blare: the synth brass of 1980s ballads.",
+      "how": "Two detuned saws, a slower blare, DUAL with the lower layer an octave down.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 48, 3.8, 0.75],
+          [0, 55, 3.8, 0.75],
+          [0, 60, 3.8, 0.75],
+          [0, 64, 3.8, 0.75],
+          [4, 50, 3.8, 0.75],
+          [4, 57, 3.8, 0.75],
+          [4, 62, 3.8, 0.75],
+          [4, 65, 3.8, 0.75],
+          [8, 53, 3.8, 0.75],
+          [8, 57, 3.8, 0.75],
+          [8, 60, 3.8, 0.75],
+          [8, 65, 3.8, 0.75],
+          [12, 55, 3.8, 0.75],
+          [12, 59, 3.8, 0.75],
+          [12, 62, 3.8, 0.75],
+          [12, 67, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Layers",
+          "module": "mode",
+          "why": "- KEYBOARD DUAL: both layers on every key\n- Listen for: a fat chord.",
+          "set": {
+            "kbd.mode": "dual",
+            "lo.dds1Range": "16",
+            "lo.lpf": 4.5,
+            "lo.vcaEnv": 5
+          }
+        },
+        {
+          "title": "Blare",
+          "module": "filter",
+          "why": "- Listen for: chords blaring open slowly.",
+          "set": {
+            "up.mix": 5,
+            "up.dds2Tune": 0.15,
+            "up.lpf": 4.5,
+            "up.vcfEnv": 5,
+            "up.e1a": 6,
+            "up.e1d": 7,
+            "up.e1s": 5,
+            "up.e2r": 5.5
+          }
+        },
+        {
+          "title": "Wide",
+          "module": "fx",
+          "why": "- Listen for: big poly brass.",
+          "set": {
+            "chorus.i": true
+          }
+        }
+      ],
+      "context": {
+        "up.e1a": "How slowly the brass opens."
+      },
+      "tweaks": [
+        {
+          "id": "up.e1a",
+          "try": "Lower to 4",
+          "hear": "A punchier blare."
+        },
+        {
+          "id": "up.drive",
+          "try": "Step to 1",
+          "hear": "A grittier brass."
+        }
+      ]
+    },
+    {
+      "id": "sg-fanfare",
+      "name": "Fanfare",
+      "ref": "Classic technique: bright brass with a pitch lift",
+      "artist": "Classic technique",
+      "tags": ["brass", "film", "bright"],
+      "level": 2,
+      "blurb": "Bright, triumphant brass with a lip lift on every chord.",
+      "how": "Envelope 1 lifts the pitch a hair at the start (DDS MOD ENV 1) and opens the filter.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 55, 0.9, 0.8],
+          [0, 60, 0.9, 0.8],
+          [0, 64, 0.9, 0.8],
+          [0, 67, 0.9, 0.8],
+          [1, 55, 0.4, 0.8],
+          [1, 60, 0.4, 0.8],
+          [1, 64, 0.4, 0.8],
+          [1, 67, 0.4, 0.8],
+          [1.5, 55, 0.4, 0.8],
+          [1.5, 60, 0.4, 0.8],
+          [1.5, 64, 0.4, 0.8],
+          [1.5, 67, 0.4, 0.8],
+          [2, 60, 1.9, 0.8],
+          [2, 64, 1.9, 0.8],
+          [2, 67, 1.9, 0.8],
+          [2, 72, 1.9, 0.8],
+          [4, 57, 0.9, 0.8],
+          [4, 62, 0.9, 0.8],
+          [4, 65, 0.9, 0.8],
+          [4, 69, 0.9, 0.8],
+          [5, 59, 0.9, 0.8],
+          [5, 62, 0.9, 0.8],
+          [5, 67, 0.9, 0.8],
+          [5, 71, 0.9, 0.8],
+          [6, 60, 1.9, 0.8],
+          [6, 64, 1.9, 0.8],
+          [6, 67, 1.9, 0.8],
+          [6, 72, 1.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bright brass",
+          "module": "filter",
+          "why": "- Listen for: bright brass.",
+          "set": {
+            "up.mix": 5,
+            "up.dds2Tune": 0.1,
+            "up.lpf": 5.5,
+            "up.vcfEnv": 4,
+            "up.e1a": 4,
+            "up.e1d": 6.5,
+            "up.e1s": 5
+          }
+        },
+        {
+          "title": "Lip",
+          "module": "osc",
+          "why": "- Listen for: each chord lifting into tune.",
+          "set": {
+            "up.modEnv": 0.4,
+            "up.modDest": "both"
+          }
+        },
+        {
+          "title": "Hall",
+          "module": "fx",
+          "why": "- Listen for: a fanfare.",
+          "set": {
+            "up.send": 2,
+            "dly.time": 8.5,
+            "dly.feedback": 3
+          }
+        }
+      ],
+      "context": {
+        "up.modEnv": "How far each chord lifts."
+      },
+      "tweaks": [
+        {
+          "id": "up.modEnv",
+          "try": "Raise to 1.5",
+          "hear": "A wobbly lip."
+        },
+        {
+          "id": "up.vcfEnv",
+          "try": "Raise to 7",
+          "hear": "A blazing fanfare."
+        }
+      ]
+    },
+    {
+      "id": "sg-pizzicato",
+      "name": "Pizzicato",
+      "ref": "Classic technique: a short, plucked string",
+      "artist": "Classic technique",
+      "tags": ["strings", "pluck", "classical"],
+      "level": 1,
+      "blurb": "Short plucked strings.",
+      "how": "A pluck: no sustain, a quick filter pop.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.45, 0.8],
+          [0.5, 64, 0.45, 0.8],
+          [1, 67, 0.45, 0.8],
+          [1.5, 72, 0.45, 0.8],
+          [2, 71, 0.45, 0.8],
+          [2.5, 67, 0.45, 0.8],
+          [3, 64, 0.45, 0.8],
+          [3.5, 62, 0.45, 0.8],
+          [4, 60, 0.45, 0.8],
+          [4.5, 59, 0.45, 0.8],
+          [5, 55, 0.45, 0.8],
+          [5.5, 59, 0.45, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Pluck",
+          "module": "env",
+          "why": "- Listen for: plucked strings.",
+          "set": {
+            "up.lpf": 5,
+            "up.vcfEnv": 4,
+            "up.e1d": 5.5,
+            "up.e1s": 0,
+            "up.e2d": 6.5,
+            "up.e2s": 0,
+            "up.e2r": 6
+          }
+        },
+        {
+          "title": "Hall",
+          "module": "fx",
+          "why": "- Listen for: pizzicato in a hall.",
+          "set": {
+            "chorus.i": true,
+            "up.send": 2,
+            "dly.time": 8,
+            "dly.feedback": 3
+          }
+        }
+      ],
+      "context": {
+        "up.e2d": "How long each pluck rings."
+      },
+      "tweaks": [
+        {
+          "id": "up.e2d",
+          "try": "Raise to 7.5",
+          "hear": "Harp-like plucks."
+        },
+        {
+          "id": "up.vcfEnv",
+          "try": "Raise to 7",
+          "hear": "A harder snap."
+        }
+      ]
+    },
+    {
+      "id": "sg-cello",
+      "name": "Cello",
+      "ref": "Classic technique: a bowed saw an octave down with delayed vibrato",
+      "artist": "Classic technique",
+      "tags": ["strings", "classical", "mono"],
+      "level": 2,
+      "blurb": "A dark, bowed, singing low line.",
+      "how": "SOLO, DDS 1 at 16′, a slow bow, a woody filter and delayed vibrato.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 48, 1.8, 0.8],
+          [2, 55, 1.8, 0.8],
+          [4, 53, 0.9, 0.8],
+          [5, 52, 0.9, 0.8],
+          [6, 50, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One cello",
+          "module": "mode",
+          "why": "- Listen for: a bowed cello.",
+          "set": {
+            "voice.mode": "legato",
+            "up.dds1Range": "16",
+            "up.lpf": 5.5,
+            "up.e2a": 6.5,
+            "up.e2r": 6
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "mod",
+          "why": "- Listen for: a singing cello.",
+          "set": {
+            "up.lfoRate": 6.5,
+            "up.lfoDelay": 2,
+            "up.modLfo": 1
+          }
+        }
+      ],
+      "context": {
+        "up.lfoDelay": "How long before the vibrato comes in."
+      },
+      "tweaks": [
+        {
+          "id": "up.dds1Range",
+          "try": "Step to 8′",
+          "hear": "A viola."
+        },
+        {
+          "id": "up.e2a",
+          "try": "Lower to 4",
+          "hear": "A firmer bow."
+        }
+      ]
+    },
+    {
+      "id": "sg-tremolo-strings",
+      "name": "Tremolo Strings",
+      "ref": "Classic technique: a fast tremolo for tension",
+      "artist": "Classic technique",
+      "tags": ["strings", "film", "tremolo"],
+      "level": 2,
+      "blurb": "A string chord shivering with tension.",
+      "how": "LFO 1 fast on the VCA: the bows moving back and forth.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 45, 3.8, 0.8],
+          [0, 52, 3.8, 0.8],
+          [0, 57, 3.8, 0.8],
+          [0, 60, 3.8, 0.8],
+          [0, 64, 3.8, 0.8],
+          [4, 44, 3.8, 0.8],
+          [4, 52, 3.8, 0.8],
+          [4, 56, 3.8, 0.8],
+          [4, 59, 3.8, 0.8],
+          [4, 64, 3.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Strings",
+          "module": "osc",
+          "why": "- Listen for: a string chord.",
+          "set": {
+            "up.super": "on",
+            "up.pwDetune": 4,
+            "up.lpf": 6.5,
+            "up.e2a": 6,
+            "up.e2r": 6.5
+          }
+        },
+        {
+          "title": "Shiver",
+          "module": "mod",
+          "why": "- Listen for: a shivering section.",
+          "set": {
+            "up.lfoRate": 7.3,
+            "up.vcaLfo": 5,
+            "chorus.i": true,
+            "chorus.ii": true
+          }
+        }
+      ],
+      "context": {
+        "up.lfoRate": "How fast the bows move."
+      },
+      "tweaks": [
+        {
+          "id": "up.vcaLfo",
+          "try": "Raise to 9",
+          "hear": "A hard stutter."
+        },
+        {
+          "id": "up.lfoWave",
+          "try": "Step to SQUARE",
+          "hear": "A choppy tremolo."
+        }
+      ]
+    },
+    {
+      "id": "sg-orchestra-hit",
+      "name": "Orchestra Hit",
+      "ref": "In the style of 1980s hip-hop and pop",
+      "artist": "Various",
+      "tags": ["brass", "stab", "hit"],
+      "level": 2,
+      "blurb": "A huge, short, dramatic stab of full orchestra.",
+      "how": "DUAL: a bright brass and string stack on top, a dark low layer below, struck short with a long tail.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.2, 0.8],
+          [0, 55, 0.2, 0.8],
+          [0, 60, 0.2, 0.8],
+          [0, 64, 0.2, 0.8],
+          [0, 67, 0.2, 0.8],
+          [1.5, 48, 0.2, 0.8],
+          [1.5, 55, 0.2, 0.8],
+          [1.5, 60, 0.2, 0.8],
+          [1.5, 64, 0.2, 0.8],
+          [1.5, 67, 0.2, 0.8],
+          [3, 51, 0.2, 0.8],
+          [3, 58, 0.2, 0.8],
+          [3, 63, 0.2, 0.8],
+          [3, 67, 0.2, 0.8],
+          [3, 70, 0.2, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Layers",
+          "module": "mode",
+          "why": "- KEYBOARD DUAL: both layers on every key\n- Listen for: both layers.",
+          "set": {
+            "kbd.mode": "dual"
+          }
+        },
+        {
+          "title": "Hit",
+          "module": "env",
+          "why": "- Listen for: a huge, short hit.",
+          "set": {
+            "up.super": "on",
+            "up.pwDetune": 5,
+            "up.lpf": 7,
+            "up.vcfEnv": 3,
+            "up.e1d": 6,
+            "up.e1s": 0,
+            "up.e2d": 7,
+            "up.e2s": 0,
+            "up.e2r": 7,
+            "lo.dds1Range": "16",
+            "lo.lpf": 5,
+            "lo.e2d": 7,
+            "lo.e2s": 0,
+            "lo.e2r": 7
+          }
+        },
+        {
+          "title": "Hall",
+          "module": "fx",
+          "why": "- Listen for: an orchestra hit.",
+          "set": {
+            "chorus.i": true,
+            "up.send": 3,
+            "lo.send": 3,
+            "dly.time": 9,
+            "dly.feedback": 4
+          }
+        }
+      ],
+      "context": {
+        "up.e2d": "How long the hit rings."
+      },
+      "tweaks": [
+        {
+          "id": "up.drive",
+          "try": "Step to 1",
+          "hear": "A crunchier, sampled-sounding hit."
+        },
+        {
+          "id": "perf.lowerDetune",
+          "try": "Set to −5",
+          "hear": "A darker, fourths hit."
+        }
+      ]
+    },
+    {
+      "id": "sg-electric-piano",
+      "name": "Electric Piano",
+      "ref": "Classic technique: a sine with a little cross-mod bark",
+      "artist": "Classic technique",
+      "tags": ["keys", "piano", "70s"],
+      "level": 1,
+      "blurb": "Soft, round keys with a bark when played hard.",
+      "how": "A sine on DDS 1 with a little cross-modulation from DDS 2 an octave up gives a tine’s bark; DYNAMICS makes it follow touch; the volume decays.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 48, 1.4, 0.5],
+          [0, 55, 1.4, 0.5],
+          [0, 64, 1.4, 0.5],
+          [0, 67, 1.4, 0.5],
+          [1.5, 48, 0.4, 0.95],
+          [1.5, 55, 0.4, 0.95],
+          [1.5, 64, 0.4, 0.95],
+          [1.5, 67, 0.4, 0.95],
+          [2, 45, 1.9, 0.6],
+          [2, 55, 1.9, 0.6],
+          [2, 60, 1.9, 0.6],
+          [2, 64, 1.9, 0.6],
+          [4, 41, 1.4, 0.55],
+          [4, 52, 1.4, 0.55],
+          [4, 57, 1.4, 0.55],
+          [4, 64, 1.4, 0.55],
+          [5.5, 43, 2.4, 0.9],
+          [5.5, 53, 2.4, 0.9],
+          [5.5, 59, 2.4, 0.9],
+          [5.5, 62, 2.4, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A tine",
+          "module": "osc",
+          "why": "- Listen for: a soft tone with a little bark.",
+          "set": {
+            "up.dds1Wave": "sine",
+            "up.dds2Wave": "sine",
+            "up.dds2Range": "4",
+            "up.xmod": 2
+          }
+        },
+        {
+          "title": "Decay",
+          "module": "env",
+          "why": "- Listen for: touch-sensitive, decaying keys.",
+          "set": {
+            "up.e2d": 8,
+            "up.e2s": 2,
+            "up.e2r": 6.5,
+            "up.dyn": "on"
+          }
+        },
+        {
+          "title": "Chorus",
+          "module": "fx",
+          "why": "- Listen for: a warm electric piano.",
+          "set": {
+            "chorus.i": true
+          }
+        }
+      ],
+      "context": {
+        "up.xmod": "How much the tine barks."
+      },
+      "tweaks": [
+        {
+          "id": "up.xmod",
+          "try": "Raise to 4",
+          "hear": "A bright, FM-style piano."
+        },
+        {
+          "id": "up.vcaLfo",
+          "try": "Raise to 3",
+          "hear": "A suitcase tremolo."
+        }
+      ]
+    },
+    {
+      "id": "sg-fm-piano",
+      "name": "FM Piano",
+      "ref": "In the style of 1980s FM electric pianos",
+      "artist": "Various",
+      "tags": ["keys", "fm", "80s"],
+      "level": 2,
+      "blurb": "A glassy, bell-like 1980s FM electric piano.",
+      "how": "More cross-modulation, from DDS 2 fourteen semitones up via TUNE and RANGE, gives the glassy FM tine; the bark decays faster than the tone.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 52, 1.9, 0.8],
+          [0, 59, 1.9, 0.8],
+          [0, 64, 1.9, 0.8],
+          [0, 68, 1.9, 0.8],
+          [2, 50, 1.9, 0.8],
+          [2, 57, 1.9, 0.8],
+          [2, 62, 1.9, 0.8],
+          [2, 66, 1.9, 0.8],
+          [4, 49, 1.9, 0.8],
+          [4, 56, 1.9, 0.8],
+          [4, 61, 1.9, 0.8],
+          [4, 64, 1.9, 0.8],
+          [6, 47, 1.9, 0.8],
+          [6, 54, 1.9, 0.8],
+          [6, 59, 1.9, 0.8],
+          [6, 63, 1.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Glass",
+          "module": "osc",
+          "why": "- Listen for: a glassy, bright tone.",
+          "set": {
+            "up.dds1Wave": "sine",
+            "up.dds2Wave": "sine",
+            "up.dds2Range": "4",
+            "up.xmod": 4
+          }
+        },
+        {
+          "title": "Keys",
+          "module": "env",
+          "why": "- Listen for: a classic FM piano.",
+          "set": {
+            "up.e2d": 8.3,
+            "up.e2s": 1,
+            "up.e2r": 7,
+            "up.dyn": "on",
+            "chorus.i": true
+          }
+        }
+      ],
+      "context": {
+        "up.xmod": "How glassy the tine is."
+      },
+      "tweaks": [
+        {
+          "id": "up.xmod",
+          "try": "Raise to 7",
+          "hear": "A metallic, clangy piano."
+        },
+        {
+          "id": "up.dds2Range",
+          "try": "Step to 2′",
+          "hear": "A higher, bell-like tine."
+        }
+      ]
+    },
+    {
+      "id": "sg-clav",
+      "name": "Clav",
+      "ref": "In the style of 1970s funk clavinet",
+      "artist": "70s funk",
+      "tags": ["keys", "funk", "pluck"],
+      "level": 2,
+      "blurb": "A snappy, nasal, funky pluck.",
+      "how": "A thin pulse from DDS 2, a resonant filter snapped by envelope 1, a short decay.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.18, 0.8],
+          [0.5, 60, 0.18, 0.8],
+          [0.75, 63, 0.18, 0.8],
+          [1.25, 65, 0.18, 0.8],
+          [1.5, 60, 0.18, 0.8],
+          [2, 67, 0.18, 0.8],
+          [2.25, 65, 0.18, 0.8],
+          [2.5, 63, 0.18, 0.8],
+          [2.75, 60, 0.18, 0.8],
+          [3.25, 58, 0.18, 0.8],
+          [3.5, 60, 0.18, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Twang",
+          "module": "osc",
+          "why": "- Listen for: a nasal tone.",
+          "set": {
+            "up.dds2Wave": "pulse",
+            "up.pwDetune": 7,
+            "up.mix": 10
+          }
+        },
+        {
+          "title": "Snap",
+          "module": "filter",
+          "why": "- Listen for: a funky clav.",
+          "set": {
+            "up.lpf": 5,
+            "up.res": 4,
+            "up.vcfEnv": 5,
+            "up.e1d": 5,
+            "up.e1s": 0,
+            "up.e2d": 6.5,
+            "up.e2s": 0,
+            "up.e2r": 6
+          }
+        }
+      ],
+      "context": {
+        "up.vcfEnv": "How hard each note snaps."
+      },
+      "tweaks": [
+        {
+          "id": "up.res",
+          "try": "Raise to 7",
+          "hear": "A quacking clav."
+        },
+        {
+          "id": "up.pwDetune",
+          "try": "Lower to 3",
+          "hear": "A rounder pluck."
+        }
+      ]
+    },
+    {
+      "id": "sg-organ",
+      "name": "Combo Organ",
+      "ref": "Classic technique: square waves in octaves, gated",
+      "artist": "Classic technique",
+      "tags": ["keys", "organ", "60s"],
+      "level": 1,
+      "blurb": "A buzzy, bright combo organ.",
+      "how": "DDS 1 and DDS 2 squares an octave apart, the VCA on a fixed gate so it starts and stops with the keys.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 55, 0.9, 0.8],
+          [0, 59, 0.9, 0.8],
+          [0, 62, 0.9, 0.8],
+          [0, 67, 0.9, 0.8],
+          [1, 55, 0.4, 0.8],
+          [1, 59, 0.4, 0.8],
+          [1, 62, 0.4, 0.8],
+          [1, 67, 0.4, 0.8],
+          [1.5, 57, 0.9, 0.8],
+          [1.5, 60, 0.9, 0.8],
+          [1.5, 64, 0.9, 0.8],
+          [1.5, 69, 0.9, 0.8],
+          [3, 53, 0.9, 0.8],
+          [3, 57, 0.9, 0.8],
+          [3, 60, 0.9, 0.8],
+          [3, 65, 0.9, 0.8],
+          [4, 55, 1.9, 0.8],
+          [4, 59, 1.9, 0.8],
+          [4, 62, 1.9, 0.8],
+          [4, 67, 1.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Drawbars",
+          "module": "osc",
+          "why": "- Listen for: a hollow organ.",
+          "set": {
+            "up.dds1Wave": "square",
+            "up.dds2Wave": "square",
+            "up.dds2Range": "4",
+            "up.mix": 4,
+            "up.lpf": 7
+          }
+        },
+        {
+          "title": "On, off",
+          "module": "env",
+          "why": "The fixed gate.\n- Listen for: an organ starting and stopping with the keys.",
+          "set": {
+            "up.vcaMode": "fixed1",
+            "up.vcaEnv": 7
+          }
+        }
+      ],
+      "context": {
+        "up.vcaMode": "A fixed gate: on while the key is held."
+      },
+      "tweaks": [
+        {
+          "id": "up.vcaLfo",
+          "try": "Raise to 2 (LFO 1 RATE 7)",
+          "hear": "A vibrato-tremolo."
+        },
+        {
+          "id": "chorus.ii",
+          "try": "Switch on",
+          "hear": "A swirling organ."
+        }
+      ]
+    },
+    {
+      "id": "sg-church-organ",
+      "name": "Pipe Organ",
+      "ref": "Classic technique: stacked octaves in two layers",
+      "artist": "Classic technique",
+      "tags": ["keys", "organ", "church"],
+      "level": 2,
+      "blurb": "A majestic pipe organ in a big space.",
+      "how": "DUAL: the upper layer a sine and its octave; the lower at 16′ for the pedal; both on a fixed gate; a long delay for the space.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 48, 3.8, 0.8],
+          [0, 55, 3.8, 0.8],
+          [0, 60, 3.8, 0.8],
+          [0, 64, 3.8, 0.8],
+          [4, 53, 3.8, 0.8],
+          [4, 57, 3.8, 0.8],
+          [4, 60, 3.8, 0.8],
+          [4, 65, 3.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Stops",
+          "module": "mode",
+          "why": "- KEYBOARD DUAL: both layers on every key\n- Listen for: a full organ.",
+          "set": {
+            "kbd.mode": "dual",
+            "up.dds1Wave": "square",
+            "up.dds2Wave": "tri",
+            "up.dds2Range": "2",
+            "up.mix": 4,
+            "up.vcaMode": "fixed2",
+            "lo.dds1Range": "16",
+            "lo.dds1Wave": "tri",
+            "lo.vcaMode": "fixed2",
+            "lo.vcaEnv": 6
+          }
+        },
+        {
+          "title": "The church",
+          "module": "fx",
+          "why": "- Listen for: an organ in a cathedral.",
+          "set": {
+            "up.send": 4,
+            "lo.send": 4,
+            "dly.time": 10,
+            "dly.feedback": 6,
+            "chorus.i": true
+          }
+        }
+      ],
+      "context": {
+        "up.dds2Range": "The mixture stop above."
+      },
+      "tweaks": [
+        {
+          "id": "lo.dds1Range",
+          "try": "Step to 32′",
+          "hear": "A deeper pedal."
+        },
+        {
+          "id": "up.dds2Range",
+          "try": "Step to 4′",
+          "hear": "A plainer principal stop."
+        }
+      ]
+    },
+    {
+      "id": "sg-harpsichord",
+      "name": "Harpsichord",
+      "ref": "Classic technique: a thin pulse and a saw, plucked",
+      "artist": "Classic technique",
+      "tags": ["keys", "baroque", "pluck"],
+      "level": 1,
+      "blurb": "A bright, decaying harpsichord pluck.",
+      "how": "A narrow pulse and a saw, no sustain, a bright filter.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.45, 0.8],
+          [0.5, 65, 0.45, 0.8],
+          [1, 69, 0.45, 0.8],
+          [1.5, 65, 0.45, 0.8],
+          [2, 62, 0.45, 0.8],
+          [2.5, 65, 0.45, 0.8],
+          [3, 69, 0.45, 0.8],
+          [3.5, 74, 0.45, 0.8],
+          [4, 73, 0.45, 0.8],
+          [4.5, 69, 0.45, 0.8],
+          [5, 64, 0.45, 0.8],
+          [5.5, 67, 0.45, 0.8],
+          [6, 61, 0.45, 0.8],
+          [6.5, 64, 0.45, 0.8],
+          [7, 69, 0.45, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Quills",
+          "module": "osc",
+          "why": "- Listen for: bright plucks.",
+          "set": {
+            "up.dds2Wave": "pulse",
+            "up.pwDetune": 8,
+            "up.mix": 6,
+            "up.lpf": 8.5,
+            "up.e2d": 7,
+            "up.e2s": 0,
+            "up.e2r": 6.5
+          }
+        }
+      ],
+      "context": {
+        "up.pwDetune": "How thin the quill is."
+      },
+      "tweaks": [
+        {
+          "id": "up.pwDetune",
+          "try": "Lower to 3",
+          "hear": "A lute."
+        },
+        {
+          "id": "up.send",
+          "try": "Raise to 3",
+          "hear": "A harpsichord in a stone room."
+        }
+      ]
+    },
+    {
+      "id": "sg-vibes",
+      "name": "Vibraphone",
+      "ref": "Classic technique: a ringing sine with a tremolo",
+      "artist": "Classic technique",
+      "tags": ["keys", "mallet", "jazz"],
+      "level": 1,
+      "blurb": "Soft, ringing mallet notes with a tremolo.",
+      "how": "A sine with a ringing decay; LFO 1 on the volume is the motor.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 57, 1.9, 0.8],
+          [0, 60, 1.9, 0.8],
+          [0, 64, 1.9, 0.8],
+          [0, 67, 1.9, 0.8],
+          [2, 55, 1.9, 0.8],
+          [2, 59, 1.9, 0.8],
+          [2, 62, 1.9, 0.8],
+          [2, 65, 1.9, 0.8],
+          [4, 72, 0.9, 0.8],
+          [5, 71, 0.9, 0.8],
+          [6, 69, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bars",
+          "module": "osc",
+          "why": "- Listen for: ringing bars.",
+          "set": {
+            "up.dds1Wave": "sine",
+            "up.dds2Wave": "sine",
+            "up.dds2Range": "2",
+            "up.mix": 1,
+            "up.e2d": 8.5,
+            "up.e2s": 0,
+            "up.e2r": 8
+          }
+        },
+        {
+          "title": "Motor",
+          "module": "mod",
+          "why": "- Listen for: a pulsing vibraphone.",
+          "set": {
+            "up.lfoRate": 6.5,
+            "up.vcaLfo": 3
+          }
+        }
+      ],
+      "context": {
+        "up.lfoRate": "The motor’s speed."
+      },
+      "tweaks": [
+        {
+          "id": "up.vcaLfo",
+          "try": "Lower to 0",
+          "hear": "Motor off: a marimba."
+        },
+        {
+          "id": "up.lfoRate",
+          "try": "Raise to 7.3",
+          "hear": "A fast shimmer."
+        }
+      ]
+    },
+    {
+      "id": "sg-bells",
+      "name": "Ring Bells",
+      "ref": "Classic technique: the ring modulator on two sines",
+      "artist": "Classic technique",
+      "tags": ["keys", "bell", "ring"],
+      "level": 2,
+      "blurb": "Bright, chiming bells with inharmonic overtones.",
+      "how": "DDS 2 in RING mode, tuned an odd interval above, makes a bell’s clang; a long decay.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.9, 0.8],
+          [1, 76, 0.9, 0.8],
+          [2, 79, 0.9, 0.8],
+          [3, 84, 0.9, 0.8],
+          [4, 83, 1.35, 0.8],
+          [5.5, 79, 0.45, 0.8],
+          [6, 76, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Clang",
+          "module": "osc",
+          "why": "- Listen for: bells.",
+          "set": {
+            "up.dds1Wave": "sine",
+            "up.dds2Wave": "sine",
+            "up.dds2Mode": "ring",
+            "up.dds2Tune": 3.3,
+            "up.mix": 5,
+            "up.e2d": 8.5,
+            "up.e2s": 0,
+            "up.e2r": 8
+          }
+        },
+        {
+          "title": "Tower",
+          "module": "fx",
+          "why": "- Listen for: bells in a tower.",
+          "set": {
+            "up.send": 3,
+            "dly.time": 9,
+            "dly.feedback": 5
+          }
+        }
+      ],
+      "context": {
+        "up.dds2Tune": "The bell’s metal."
+      },
+      "tweaks": [
+        {
+          "id": "up.dds2Tune",
+          "try": "Set to +5",
+          "hear": "A sweeter bell."
+        },
+        {
+          "id": "up.mix",
+          "try": "Raise to 9",
+          "hear": "All clang."
+        }
+      ]
+    },
+    {
+      "id": "sg-music-box",
+      "name": "Music Box",
+      "ref": "Classic technique: tiny high plucks",
+      "artist": "Classic technique",
+      "tags": ["keys", "toy", "bell"],
+      "level": 1,
+      "blurb": "Tiny, high, ringing notes: a music box.",
+      "how": "A triangle two octaves up, a ringing pluck, a faint wobble.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.9, 0.8],
+          [1, 76, 0.9, 0.8],
+          [2, 79, 0.9, 0.8],
+          [3, 84, 1.8, 0.8],
+          [5, 83, 0.9, 0.8],
+          [6, 79, 0.9, 0.8],
+          [7, 76, 0.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A comb",
+          "module": "osc",
+          "why": "- Listen for: tiny ringing notes.",
+          "set": {
+            "up.dds1Wave": "tri",
+            "up.dds1Range": "2",
+            "up.e2d": 8,
+            "up.e2s": 0,
+            "up.e2r": 7.5
+          }
+        },
+        {
+          "title": "Worn",
+          "module": "mod",
+          "why": "- Listen for: an old music box.",
+          "set": {
+            "up.lfoRate": 4,
+            "up.modLfo": 0.4,
+            "up.send": 2,
+            "dly.time": 8,
+            "dly.feedback": 4
+          }
+        }
+      ],
+      "context": {
+        "up.modLfo": "How worn the box is."
+      },
+      "tweaks": [
+        {
+          "id": "up.modLfo",
+          "try": "Raise to 1.5",
+          "hear": "A box winding down."
+        },
+        {
+          "id": "up.dds1Wave",
+          "try": "Step to SINE",
+          "hear": "Softer chimes."
+        }
+      ]
+    },
+    {
+      "id": "sg-house-stab",
+      "name": "House Organ Stab",
+      "ref": "In the style of early-1990s house",
+      "artist": "House",
+      "tags": ["keys", "house", "90s"],
+      "level": 1,
+      "blurb": "A short, hollow organ chord stab in an offbeat rhythm.",
+      "how": "Squares an octave apart, a short decay, ping-like echoes.",
+      "phrase": {
+        "bpm": 122,
+        "loop": true,
+        "steps": [
+          [0.5, 57, 0.25, 0.8],
+          [0.5, 60, 0.25, 0.8],
+          [0.5, 64, 0.25, 0.8],
+          [0.5, 67, 0.25, 0.8],
+          [1.5, 57, 0.25, 0.8],
+          [1.5, 60, 0.25, 0.8],
+          [1.5, 64, 0.25, 0.8],
+          [1.5, 67, 0.25, 0.8],
+          [2.25, 57, 0.25, 0.8],
+          [2.25, 60, 0.25, 0.8],
+          [2.25, 64, 0.25, 0.8],
+          [2.25, 67, 0.25, 0.8],
+          [3.5, 57, 0.25, 0.8],
+          [3.5, 60, 0.25, 0.8],
+          [3.5, 64, 0.25, 0.8],
+          [3.5, 67, 0.25, 0.8],
+          [4.5, 55, 0.25, 0.8],
+          [4.5, 59, 0.25, 0.8],
+          [4.5, 62, 0.25, 0.8],
+          [4.5, 65, 0.25, 0.8],
+          [5.5, 55, 0.25, 0.8],
+          [5.5, 59, 0.25, 0.8],
+          [5.5, 62, 0.25, 0.8],
+          [5.5, 65, 0.25, 0.8],
+          [6.25, 55, 0.25, 0.8],
+          [6.25, 59, 0.25, 0.8],
+          [6.25, 62, 0.25, 0.8],
+          [6.25, 65, 0.25, 0.8],
+          [7.5, 55, 0.25, 0.8],
+          [7.5, 59, 0.25, 0.8],
+          [7.5, 62, 0.25, 0.8],
+          [7.5, 65, 0.25, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Stab",
+          "module": "osc",
+          "why": "- Listen for: house organ stabs.",
+          "set": {
+            "up.dds1Wave": "square",
+            "up.dds2Wave": "square",
+            "up.dds2Range": "4",
+            "up.mix": 5,
+            "up.e2d": 6.5,
+            "up.e2s": 0,
+            "up.e2r": 6,
+            "up.send": 2,
+            "dly.time": 8,
+            "dly.feedback": 3
+          }
+        }
+      ],
+      "context": {
+        "up.e2d": "How short each stab is."
+      },
+      "tweaks": [
+        {
+          "id": "up.dds2Range",
+          "try": "Step to 2′",
+          "hear": "A whistling top."
+        },
+        {
+          "id": "up.e2d",
+          "try": "Raise to 7.5",
+          "hear": "Longer stabs."
+        }
+      ]
+    },
+    {
+      "id": "sg-toy-keys",
+      "name": "Toy Piano",
+      "ref": "Classic technique: a tinny, slightly sour pluck",
+      "artist": "Classic technique",
+      "tags": ["keys", "toy", "pluck"],
+      "level": 1,
+      "blurb": "A child’s toy piano, a little out of tune.",
+      "how": "A triangle and a pulse slightly sour above it, short.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.45, 0.8],
+          [0.5, 72, 0.45, 0.8],
+          [1, 79, 0.45, 0.8],
+          [1.5, 79, 0.45, 0.8],
+          [2, 81, 0.45, 0.8],
+          [2.5, 81, 0.45, 0.8],
+          [3, 79, 1.8, 0.8],
+          [5, 77, 0.45, 0.8],
+          [5.5, 77, 0.45, 0.8],
+          [6, 76, 0.45, 0.8],
+          [6.5, 76, 0.45, 0.8],
+          [7, 74, 0.45, 0.8],
+          [7.5, 74, 0.45, 0.8],
+          [8, 72, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Rods",
+          "module": "osc",
+          "why": "- Listen for: a toy piano.",
+          "set": {
+            "up.dds1Wave": "tri",
+            "up.dds2Wave": "pulse",
+            "up.dds2Range": "2",
+            "up.dds2Tune": -0.3,
+            "up.mix": 3,
+            "up.e2d": 6,
+            "up.e2s": 0,
+            "up.e2r": 5.5
+          }
+        }
+      ],
+      "context": {
+        "up.dds2Tune": "How out of tune the toy is."
+      },
+      "tweaks": [
+        {
+          "id": "up.dds2Tune",
+          "try": "Set to −0.6",
+          "hear": "A broken toy."
+        },
+        {
+          "id": "up.send",
+          "try": "Raise to 4",
+          "hear": "A haunting toy in an empty room."
+        }
+      ]
+    },
+    {
+      "id": "sg-mono-bass",
+      "name": "Classic Mono Bass",
+      "ref": "Classic technique: a saw an octave down with a filter pluck",
+      "artist": "Classic technique",
+      "tags": ["bass", "basics", "mono"],
+      "level": 1,
+      "blurb": "A fat, plucky analogue-style mono bass.",
+      "how": "SOLO, DDS 1 at 16′, DDS 2 a square an octave down, a quick filter pluck.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.45, 0.8],
+          [1, 36, 0.45, 0.8],
+          [1.5, 48, 0.45, 0.8],
+          [2.5, 36, 0.45, 0.8],
+          [3, 43, 0.45, 0.8],
+          [3.5, 46, 0.45, 0.8],
+          [4, 36, 0.45, 0.8],
+          [5, 36, 0.45, 0.8],
+          [5.5, 48, 0.45, 0.8],
+          [6.5, 43, 0.45, 0.8],
+          [7, 41, 0.45, 0.8],
+          [7.5, 39, 0.45, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Fat",
+          "module": "osc",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a fat bass.",
+          "set": {
+            "voice.mode": "solo",
+            "up.dds1Range": "16",
+            "up.dds2Wave": "square",
+            "up.dds2Range": "16",
+            "up.mix": 4
+          }
+        },
+        {
+          "title": "Pluck",
+          "module": "filter",
+          "why": "- Listen for: a plucky bass.",
+          "set": {
+            "up.lpf": 4,
+            "up.res": 2,
+            "up.vcfEnv": 4,
+            "up.e1d": 6,
+            "up.e1s": 2,
+            "up.e2r": 4
+          }
+        }
+      ],
+      "context": {
+        "up.vcfEnv": "How much each note plucks."
+      },
+      "tweaks": [
+        {
+          "id": "up.res",
+          "try": "Raise to 5",
+          "hear": "A rubbery bass."
+        },
+        {
+          "id": "up.drive",
+          "try": "Step to 1",
+          "hear": "A gritty bass."
+        }
+      ]
+    },
+    {
+      "id": "sg-acid-bass",
+      "name": "Acid Bass",
+      "ref": "In the style of acid house",
+      "artist": "Acid house",
+      "tags": ["bass", "acid", "house"],
+      "level": 2,
+      "blurb": "A squelching, resonant bass with slides.",
+      "how": "LEGATO and portamento for slides, a very resonant filter snapped by envelope 1, DRIVE 1.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4, 0.8],
+          [0.5, 36, 0.4, 0.8],
+          [1, 48, 0.4, 0.8],
+          [1.5, 36, 0.4, 0.8],
+          [2, 39, 0.4, 0.8],
+          [2.5, 36, 0.4, 0.8],
+          [3, 46, 0.4, 0.8],
+          [3.5, 48, 0.4, 0.8],
+          [4, 36, 0.4, 0.8],
+          [4.5, 36, 0.4, 0.8],
+          [5, 43, 0.4, 0.8],
+          [5.5, 36, 0.4, 0.8],
+          [6, 41, 0.4, 0.8],
+          [6.5, 39, 0.4, 0.8],
+          [7, 36, 0.4, 0.8],
+          [7.5, 34, 0.4, 0.8],
+          [1.5, 48, 0.6, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Slides",
+          "module": "mode",
+          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: tied notes sliding.",
+          "set": {
+            "voice.mode": "legato",
+            "perf.porta": 2,
+            "up.dds1Range": "16"
+          }
+        },
+        {
+          "title": "Squelch",
+          "module": "filter",
+          "why": "- Listen for: every note squelching.",
+          "set": {
+            "up.lpf": 4,
+            "up.res": 7.5,
+            "up.vcfEnv": 5,
+            "up.e1d": 5.5,
+            "up.e1s": 0,
+            "up.drive": "1"
+          }
+        }
+      ],
+      "context": {
+        "up.res": "How much it squelches."
+      },
+      "tweaks": [
+        {
+          "id": "up.lpf",
+          "try": "Sweep between 3 and 6",
+          "hear": "The line opening up."
+        },
+        {
+          "id": "up.drive",
+          "try": "Step to 2",
+          "hear": "A distorted acid line."
+        }
+      ]
+    },
+    {
+      "id": "sg-sub-bass-2",
+      "name": "Sine Sub",
+      "ref": "Classic technique: a pure sine an octave down",
+      "artist": "Classic technique",
+      "tags": ["bass", "sub", "electronic"],
+      "level": 1,
+      "blurb": "A deep, pure sine sub bass.",
+      "how": "A sine at 16′, SOLO, nothing else.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 33, 1.35, 0.8],
+          [1.5, 33, 0.45, 0.8],
+          [2, 36, 0.9, 0.8],
+          [3, 31, 2.7, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Pure",
+          "module": "osc",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a deep sub.",
+          "set": {
+            "voice.mode": "solo",
+            "up.dds1Range": "16",
+            "up.dds1Wave": "sine",
+            "up.e2r": 4
+          }
+        }
+      ],
+      "context": {
+        "up.dds1Range": "The sub’s octave."
+      },
+      "tweaks": [
+        {
+          "id": "up.dds1Range",
+          "try": "Step to 32′",
+          "hear": "Deeper still."
+        },
+        {
+          "id": "perf.porta",
+          "try": "Raise to 2",
+          "hear": "An 808 slide."
+        }
+      ]
+    },
+    {
+      "id": "sg-reese",
+      "name": "Reese Bass",
+      "ref": "In the style of drum and bass",
+      "artist": "Drum & bass",
+      "tags": ["bass", "dnb", "supersaw"],
+      "level": 2,
+      "blurb": "A churning, phasing bass.",
+      "how": "SUPER with a wide spread and unison, a low filter.",
+      "phrase": {
+        "bpm": 87,
+        "loop": true,
+        "steps": [
+          [0, 36, 1.8, 0.8],
+          [2, 36, 0.9, 0.8],
+          [3, 39, 0.9, 0.8],
+          [4, 34, 2.7, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Churn",
+          "module": "osc",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a churning bass.",
+          "set": {
+            "voice.mode": "solo",
+            "up.dds1Range": "16",
+            "voice.unison": true,
+            "up.super": "on",
+            "up.pwDetune": 8,
+            "up.lpf": 5,
+            "up.res": 2
+          }
+        }
+      ],
+      "context": {
+        "up.pwDetune": "How fast it churns."
+      },
+      "tweaks": [
+        {
+          "id": "up.lpf",
+          "try": "Raise to 6.5",
+          "hear": "A snarling Reese."
+        },
+        {
+          "id": "up.vcfLfo",
+          "try": "Raise to 3",
+          "hear": "A slow wobble on the churn."
+        }
+      ]
+    },
+    {
+      "id": "sg-wobble",
+      "name": "Wobble Bass",
+      "ref": "In the style of dubstep",
+      "artist": "Dubstep",
+      "tags": ["bass", "dubstep", "lfo"],
+      "level": 2,
+      "blurb": "A heavy bass wobbling in time.",
+      "how": "LFO 1, RESET on every note, on a resonant filter.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 31, 1.26, 0.8],
+          [1.4, 31, 0.54, 0.8],
+          [2, 34, 1.8, 0.8],
+          [4, 29, 1.26, 0.8],
+          [5.4, 29, 0.54, 0.8],
+          [6, 26, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Heavy",
+          "module": "osc",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a heavy bass.",
+          "set": {
+            "voice.mode": "solo",
+            "up.dds1Range": "16",
+            "voice.unison": true,
+            "up.super": "on",
+            "up.pwDetune": 5,
+            "up.drive": "1"
+          }
+        },
+        {
+          "title": "Wobble",
+          "module": "mod",
+          "why": "- Listen for: the bass wobbling.",
+          "set": {
+            "up.lfoMode": "reset",
+            "up.lfoRate": 6.5,
+            "up.lpf": 3.5,
+            "up.res": 5,
+            "up.vcfLfo": 7
+          }
+        }
+      ],
+      "context": {
+        "up.lfoRate": "How fast it wobbles."
+      },
+      "tweaks": [
+        {
+          "id": "up.lfoWave",
+          "try": "Step to R.SAW",
+          "hear": "A chopping “wub”."
+        },
+        {
+          "id": "up.lfoRate",
+          "try": "Raise to 7.5",
+          "hear": "A frantic wobble."
+        }
+      ]
+    },
+    {
+      "id": "sg-sync-bass",
+      "name": "Sync Bass",
+      "ref": "Classic technique: hard sync swept in the bass",
+      "artist": "Classic technique",
+      "tags": ["bass", "sync", "aggressive"],
+      "level": 3,
+      "blurb": "A biting, ripping bass.",
+      "how": "DDS 2 SYNC to DDS 1, envelope 1 sweeping DDS 2.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4, 0.8],
+          [1, 36, 0.4, 0.8],
+          [1.5, 39, 0.4, 0.8],
+          [2.5, 41, 0.4, 0.8],
+          [3, 36, 0.4, 0.8],
+          [4, 43, 0.4, 0.8],
+          [5, 41, 0.4, 0.8],
+          [5.5, 39, 0.4, 0.8],
+          [6, 36, 0.4, 0.8],
+          [7, 34, 0.4, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sync",
+          "module": "osc",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a hard bass.",
+          "set": {
+            "voice.mode": "solo",
+            "up.dds1Range": "16",
+            "up.dds2Range": "16",
+            "up.dds2Mode": "sync",
+            "up.dds2Tune": 5,
+            "up.mix": 10
+          }
+        },
+        {
+          "title": "Rip",
+          "module": "env",
+          "why": "- Listen for: every note ripping.",
+          "set": {
+            "up.modDest": "dds2",
+            "up.modEnv": 5,
+            "up.e1d": 6,
+            "up.e1s": 0,
+            "up.lpf": 6.5
+          }
+        }
+      ],
+      "context": {
+        "up.modEnv": "How wide each rip is."
+      },
+      "tweaks": [
+        {
+          "id": "up.modEnv",
+          "try": "Raise to 8",
+          "hear": "A screaming bite."
+        },
+        {
+          "id": "up.drive",
+          "try": "Step to 2",
+          "hear": "A shredded bass."
+        }
+      ]
+    },
+    {
+      "id": "sg-funk-bass",
+      "name": "Funk Bass",
+      "ref": "In the style of 1970s funk",
+      "artist": "70s funk",
+      "tags": ["bass", "funk", "70s"],
+      "level": 2,
+      "blurb": "A rubbery, wah-ing funk bass.",
+      "how": "A square and a saw with a quick, resonant envelope.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.35, 0.8],
+          [1.5, 36, 0.35, 0.8],
+          [2, 48, 0.35, 0.8],
+          [3, 46, 0.35, 0.8],
+          [3.5, 43, 0.35, 0.8],
+          [4.5, 36, 0.35, 0.8],
+          [5.5, 39, 0.35, 0.8],
+          [6, 41, 0.35, 0.8],
+          [7, 43, 0.35, 0.8],
+          [7.5, 36, 0.35, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Rubber",
+          "module": "filter",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a funky bass.",
+          "set": {
+            "voice.mode": "solo",
+            "up.dds1Range": "16",
+            "up.dds2Wave": "square",
+            "up.mix": 5,
+            "up.lpf": 4,
+            "up.res": 5,
+            "up.vcfEnv": 5,
+            "up.e1d": 5.5,
+            "up.e1s": 1,
+            "up.e2r": 3.5
+          }
+        }
+      ],
+      "context": {
+        "up.res": "How rubbery it is."
+      },
+      "tweaks": [
+        {
+          "id": "up.e1d",
+          "try": "Raise to 7",
+          "hear": "A lazier wah."
+        },
+        {
+          "id": "perf.porta",
+          "try": "Raise to 2",
+          "hear": "Slides."
+        }
+      ]
+    },
+    {
+      "id": "sg-octave-bass",
+      "name": "Octave Bass",
+      "ref": "In the style of synth-pop",
+      "artist": "Synth-pop",
+      "tags": ["bass", "synth-pop", "80s"],
+      "level": 1,
+      "blurb": "A bright bass bouncing between octaves.",
+      "how": "A plucky saw an octave down.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.35, 0.8],
+          [0.5, 48, 0.35, 0.8],
+          [1, 36, 0.35, 0.8],
+          [1.5, 48, 0.35, 0.8],
+          [2, 36, 0.35, 0.8],
+          [2.5, 48, 0.35, 0.8],
+          [3, 36, 0.35, 0.8],
+          [3.5, 48, 0.35, 0.8],
+          [4, 41, 0.35, 0.8],
+          [4.5, 53, 0.35, 0.8],
+          [5, 41, 0.35, 0.8],
+          [5.5, 53, 0.35, 0.8],
+          [6, 43, 0.35, 0.8],
+          [6.5, 55, 0.35, 0.8],
+          [7, 43, 0.35, 0.8],
+          [7.5, 55, 0.35, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bounce",
+          "module": "filter",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a bouncing bass.",
+          "set": {
+            "voice.mode": "solo",
+            "up.dds1Range": "16",
+            "up.lpf": 5,
+            "up.vcfEnv": 3.5,
+            "up.e1d": 5.5,
+            "up.e1s": 2,
+            "up.e2r": 3.5
+          }
+        }
+      ],
+      "context": {
+        "up.vcfEnv": "How bright each note pops."
+      },
+      "tweaks": [
+        {
+          "id": "up.res",
+          "try": "Raise to 4",
+          "hear": "A more electronic bass."
+        },
+        {
+          "id": "up.send",
+          "try": "Raise to 3",
+          "hear": "Echoes doubling the bounce."
+        }
+      ]
+    },
+    {
+      "id": "sg-808",
+      "name": "808 Bass",
+      "ref": "In the style of trap",
+      "artist": "Trap",
+      "tags": ["bass", "trap", "hip-hop"],
+      "level": 2,
+      "blurb": "A booming, sliding sine bass with a punch.",
+      "how": "A sine at 16′, envelope 1 dropping the pitch for the punch, a long decay and slides.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 31, 1.35, 0.8],
+          [1.5, 31, 0.45, 0.8],
+          [2, 34, 1.8, 0.8],
+          [4, 29, 2.7, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Boom",
+          "module": "osc",
+          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: a sliding boom.",
+          "set": {
+            "voice.mode": "legato",
+            "perf.porta": 3,
+            "up.dds1Range": "16",
+            "up.dds1Wave": "sine",
+            "up.e2d": 8.5,
+            "up.e2s": 3,
+            "up.e2r": 6
+          }
+        },
+        {
+          "title": "Punch",
+          "module": "osc",
+          "why": "- Listen for: a punchy 808.",
+          "set": {
+            "up.modEnv": 2,
+            "up.e1d": 5,
+            "up.e1s": 0,
+            "up.drive": "1"
+          }
+        }
+      ],
+      "context": {
+        "up.modEnv": "How punchy the start is."
+      },
+      "tweaks": [
+        {
+          "id": "up.drive",
+          "try": "Step to 2",
+          "hear": "A distorted 808."
+        },
+        {
+          "id": "perf.porta",
+          "try": "Raise to 4",
+          "hear": "Longer slides."
+        }
+      ]
+    },
+    {
+      "id": "sg-split-bass-keys",
+      "name": "Bass and Keys Split",
+      "ref": "Classic technique: SPLIT with a bass below and keys above",
+      "artist": "Classic technique",
+      "tags": ["bass", "keys", "split"],
+      "level": 2,
+      "blurb": "A bass on the left hand and electric piano chords on the right.",
+      "how": "SPLIT puts the lower layer below C4 and the upper from C4: a bass and keys from one keyboard.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.45, 0.8],
+          [1, 36, 0.45, 0.8],
+          [1.5, 43, 0.45, 0.8],
+          [2.5, 36, 0.45, 0.8],
+          [3, 41, 0.45, 0.8],
+          [3.5, 43, 0.45, 0.8],
+          [0, 64, 1.4, 0.6],
+          [0, 67, 1.4, 0.6],
+          [0, 71, 1.4, 0.6],
+          [2, 62, 1.4, 0.6],
+          [2, 65, 1.4, 0.6],
+          [2, 69, 1.4, 0.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Split",
+          "module": "mode",
+          "why": "- KEYBOARD SPLIT: the lower layer below C4, the upper from C4 up\n- Listen for: two instruments.",
+          "set": {
+            "kbd.mode": "split"
+          }
+        },
+        {
+          "title": "Bass",
+          "module": "osc",
+          "why": "- Listen for: a plucky bass below.",
+          "set": {
+            "lo.dds1Range": "16",
+            "lo.lpf": 4,
+            "lo.vcfEnv": 4,
+            "lo.e1d": 6,
+            "lo.e1s": 2,
+            "lo.e2r": 4
+          }
+        },
+        {
+          "title": "Keys",
+          "module": "osc",
+          "why": "- Listen for: soft keys above.",
+          "set": {
+            "up.dds1Wave": "sine",
+            "up.dds2Wave": "sine",
+            "up.dds2Range": "4",
+            "up.xmod": 2,
+            "up.e2d": 8,
+            "up.e2s": 2,
+            "up.e2r": 6,
+            "chorus.i": true
+          }
+        }
+      ],
+      "context": {
+        "kbd.mode": "SPLIT: bass below C4, keys above."
+      },
+      "tweaks": [
+        {
+          "id": "kbd.mode",
+          "try": "Switch to DUAL",
+          "hear": "Both on every key."
+        },
+        {
+          "id": "lo.res",
+          "try": "Raise to 5",
+          "hear": "A rubbery bass."
+        }
+      ]
+    },
+    {
+      "id": "sg-dub-bass",
+      "name": "Dub Bass",
+      "ref": "In the style of dub",
+      "artist": "Dub",
+      "tags": ["bass", "dub", "reggae"],
+      "level": 1,
+      "blurb": "A deep, round, warm bass.",
+      "how": "A triangle at 16′ through a closed filter.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 36, 1.35, 0.8],
+          [2, 43, 0.45, 0.8],
+          [2.5, 41, 0.45, 0.8],
+          [3, 39, 0.9, 0.8],
+          [4, 36, 0.9, 0.8],
+          [6, 34, 0.9, 0.8],
+          [7, 31, 0.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Round",
+          "module": "osc",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a deep dub bass.",
+          "set": {
+            "voice.mode": "solo",
+            "up.dds1Range": "16",
+            "up.dds1Wave": "tri",
+            "up.lpf": 4.5,
+            "up.e2r": 4
+          }
+        }
+      ],
+      "context": {
+        "up.lpf": "How warm the bass is."
+      },
+      "tweaks": [
+        {
+          "id": "up.lpf",
+          "try": "Raise to 6",
+          "hear": "A punchier bass."
+        },
+        {
+          "id": "up.modEnv",
+          "try": "Raise to 1 (ENV 1 D 5, S 0)",
+          "hear": "A drop on each note."
+        }
+      ]
+    },
+    {
+      "id": "sg-techno-bass",
+      "name": "Techno Rumble",
+      "ref": "In the style of modern techno",
+      "artist": "Techno",
+      "tags": ["bass", "techno", "dark"],
+      "level": 2,
+      "blurb": "A dark, low, echoing rumble.",
+      "how": "A dark offbeat note into a long, high-feedback delay.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0.5, 33, 0.25, 0.8],
+          [1.5, 33, 0.25, 0.8],
+          [2.5, 33, 0.25, 0.8],
+          [3.5, 33, 0.25, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Dark",
+          "module": "filter",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- UPPER VCA ENV LEVEL 100 %: up: a short note in a dark filter is quiet\n- Listen for: a rolling rumble.",
+          "set": {
+            "voice.mode": "solo",
+            "up.dds1Range": "16",
+            "up.lpf": 4,
+            "up.res": 3,
+            "up.e2d": 7,
+            "up.e2s": 0,
+            "up.e2r": 6.5,
+            "up.send": 6,
+            "dly.time": 8,
+            "dly.feedback": 7,
+            "up.vcaEnv": 10,
+            "out.volume": 10
+          }
+        }
+      ],
+      "context": {
+        "dly.feedback": "How long the rumble rolls."
+      },
+      "tweaks": [
+        {
+          "id": "up.lpf",
+          "try": "Raise to 5",
+          "hear": "A grittier rumble."
+        },
+        {
+          "id": "up.drive",
+          "try": "Step to 1",
+          "hear": "A distorted rumble."
+        }
+      ]
+    },
+    {
+      "id": "sg-trance-bass",
+      "name": "Offbeat Bass",
+      "ref": "In the style of trance",
+      "artist": "Trance",
+      "tags": ["bass", "trance", "rhythm"],
+      "level": 1,
+      "blurb": "Short, bright bass notes on every offbeat.",
+      "how": "A short supersaw bass between the kicks.",
+      "phrase": {
+        "bpm": 138,
+        "loop": true,
+        "steps": [
+          [0.5, 36, 0.3, 0.8],
+          [1.5, 36, 0.3, 0.8],
+          [2.5, 36, 0.3, 0.8],
+          [3.5, 36, 0.3, 0.8],
+          [4.5, 36, 0.3, 0.8],
+          [5.5, 36, 0.3, 0.8],
+          [6.5, 36, 0.3, 0.8],
+          [7.5, 36, 0.3, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Offbeats",
+          "module": "filter",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a trance bassline.",
+          "set": {
+            "voice.mode": "solo",
+            "up.dds1Range": "16",
+            "up.super": "on",
+            "up.pwDetune": 3,
+            "up.lpf": 5,
+            "up.vcfEnv": 3,
+            "up.e1d": 5.5,
+            "up.e1s": 1,
+            "up.e2d": 6.5,
+            "up.e2s": 0,
+            "up.e2r": 6
+          }
+        }
+      ],
+      "context": {
+        "up.lpf": "How bright the bass is."
+      },
+      "tweaks": [
+        {
+          "id": "up.lpf",
+          "try": "Raise to 6.5",
+          "hear": "A brighter drop bass."
+        },
+        {
+          "id": "up.res",
+          "try": "Raise to 4",
+          "hear": "A more acidic bite."
+        }
+      ]
+    },
+    {
+      "id": "sg-fm-bass",
+      "name": "FM Bass",
+      "ref": "In the style of 1980s FM bass",
+      "artist": "Various",
+      "tags": ["bass", "fm", "80s"],
+      "level": 2,
+      "blurb": "A punchy, metallic, slapping FM bass.",
+      "how": "Cross-modulation, envelope-shaped: DDS 2 an octave up modulating DDS 1, bright at the strike.",
+      "phrase": {
+        "bpm": 116,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.35, 0.8],
+          [1, 36, 0.35, 0.8],
+          [1.5, 48, 0.35, 0.8],
+          [2.5, 36, 0.35, 0.8],
+          [3, 46, 0.35, 0.8],
+          [3.5, 43, 0.35, 0.8],
+          [4, 36, 0.35, 0.8],
+          [5, 36, 0.35, 0.8],
+          [5.5, 48, 0.35, 0.8],
+          [6.5, 41, 0.35, 0.8],
+          [7, 39, 0.35, 0.8],
+          [7.5, 34, 0.35, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "FM",
+          "module": "osc",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a metallic bass.",
+          "set": {
+            "voice.mode": "solo",
+            "up.dds1Range": "16",
+            "up.dds1Wave": "sine",
+            "up.dds2Wave": "sine",
+            "up.dds2Range": "8",
+            "up.xmod": 6
+          }
+        },
+        {
+          "title": "Snap",
+          "module": "env",
+          "why": "- Listen for: a slapping FM bass.",
+          "set": {
+            "up.lpf": 6,
+            "up.vcfEnv": 4,
+            "up.e1d": 5.5,
+            "up.e1s": 1,
+            "up.e2d": 7,
+            "up.e2s": 3,
+            "up.e2r": 3
+          }
+        }
+      ],
+      "context": {
+        "up.xmod": "How metallic the bass is."
+      },
+      "tweaks": [
+        {
+          "id": "up.xmod",
+          "try": "Raise to 9",
+          "hear": "A harsh, clangy bass."
+        },
+        {
+          "id": "up.dds2Range",
+          "try": "Step to 4′",
+          "hear": "A bell-like bass."
+        }
+      ]
+    },
+    {
+      "id": "sg-saw-lead",
+      "name": "Saw Lead",
+      "ref": "Classic technique: a mono saw with delayed vibrato",
+      "artist": "Classic technique",
+      "tags": ["lead", "basics", "mono"],
+      "level": 1,
+      "blurb": "A bright, singing saw lead.",
+      "how": "LEGATO with a little glide, two saws slightly apart, LFO 1 delayed for vibrato on held notes.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.9, 0.8],
+          [1, 72, 0.9, 0.8],
+          [2, 74, 1.35, 0.8],
+          [3.5, 72, 0.45, 0.8],
+          [4, 69, 0.9, 0.8],
+          [5, 67, 0.9, 0.8],
+          [6, 69, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One voice",
+          "module": "mode",
+          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: a gliding lead.",
+          "set": {
+            "voice.mode": "legato",
+            "perf.porta": 2,
+            "up.mix": 5,
+            "up.dds2Tune": 0.1
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "mod",
+          "why": "- Listen for: a singing lead.",
+          "set": {
+            "up.lfoRate": 6.7,
+            "up.lfoDelay": 3,
+            "up.modLfo": 1,
+            "up.modDest": "both",
+            "up.send": 2,
+            "dly.time": 8.5,
+            "dly.feedback": 3
+          }
+        }
+      ],
+      "context": {
+        "up.lfoDelay": "How long before the vibrato comes."
+      },
+      "tweaks": [
+        {
+          "id": "perf.porta",
+          "try": "Raise to 4",
+          "hear": "Long slides."
+        },
+        {
+          "id": "up.res",
+          "try": "Raise to 4",
+          "hear": "A vocal lead."
+        }
+      ]
+    },
+    {
+      "id": "sg-sync-lead-2",
+      "name": "Sync Sweep Lead",
+      "ref": "Classic technique: sync swept by an envelope",
+      "artist": "Classic technique",
+      "tags": ["lead", "sync", "80s"],
+      "level": 2,
+      "blurb": "A tearing sync lead that yowls into each note.",
+      "how": "DDS 2 SYNC, ENV 1 sweeping DDS 2 down as each note starts.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 69, 1.35, 0.8],
+          [1.5, 72, 0.45, 0.8],
+          [2, 74, 0.9, 0.8],
+          [3, 72, 0.45, 0.8],
+          [3.5, 69, 0.45, 0.8],
+          [4, 67, 1.8, 0.8],
+          [6, 64, 0.9, 0.8],
+          [7, 67, 0.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sync",
+          "module": "osc",
+          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: a hard lead.",
+          "set": {
+            "voice.mode": "legato",
+            "up.dds2Mode": "sync",
+            "up.dds2Tune": 7,
+            "up.mix": 10
+          }
+        },
+        {
+          "title": "Yow",
+          "module": "env",
+          "why": "- Listen for: a tearing yowl on every note.",
+          "set": {
+            "up.modDest": "dds2",
+            "up.modEnv": 6,
+            "up.e1d": 6.5,
+            "up.e1s": 0,
+            "up.send": 3,
+            "dly.time": 8.5,
+            "dly.feedback": 4
+          }
+        }
+      ],
+      "context": {
+        "up.modEnv": "How wide each sweep is."
+      },
+      "tweaks": [
+        {
+          "id": "up.modEnv",
+          "try": "Raise to 9",
+          "hear": "A screaming yowl."
+        },
+        {
+          "id": "up.dds2Tune",
+          "try": "Lower to 0",
+          "hear": "A softer sync."
+        }
+      ]
+    },
+    {
+      "id": "sg-square-lead",
+      "name": "Square Lead",
+      "ref": "Classic technique: a hollow square lead",
+      "artist": "Classic technique",
+      "tags": ["lead", "square", "mono"],
+      "level": 1,
+      "blurb": "A hollow, woody square lead.",
+      "how": "A square from DDS 1, a little vibrato.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.45, 0.8],
+          [0.5, 67, 0.45, 0.8],
+          [1, 72, 0.9, 0.8],
+          [2, 71, 0.45, 0.8],
+          [2.5, 69, 0.45, 0.8],
+          [3, 67, 0.9, 0.8],
+          [4, 64, 0.45, 0.8],
+          [4.5, 62, 0.45, 0.8],
+          [5, 60, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Hollow",
+          "module": "osc",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a hollow lead.",
+          "set": {
+            "voice.mode": "solo",
+            "up.dds1Wave": "square",
+            "up.lpf": 7,
+            "up.lfoRate": 6.7,
+            "up.lfoDelay": 2,
+            "up.modLfo": 0.8
+          }
+        }
+      ],
+      "context": {
+        "up.dds1Wave": "SQUARE: hollow."
+      },
+      "tweaks": [
+        {
+          "id": "up.pwWave",
+          "try": "Raise to 5",
+          "hear": "Morphing towards the next wave."
+        },
+        {
+          "id": "perf.porta",
+          "try": "Raise to 2",
+          "hear": "Slides."
+        }
+      ]
+    },
+    {
+      "id": "sg-whistle",
+      "name": "Whistle",
+      "ref": "Classic technique: the self-oscillating filter played with keytrack",
+      "artist": "Classic technique",
+      "tags": ["lead", "filter", "whistle"],
+      "level": 2,
+      "blurb": "A pure whistle from the filter itself, in tune with the keys.",
+      "how": "With RES at the top the filter whistles; KEYTRACK ON plays it in tune; a little of DDS 1 gives breath.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 76, 0.9, 0.8],
+          [1, 79, 0.9, 0.8],
+          [2, 84, 1.8, 0.8],
+          [4, 83, 0.9, 0.8],
+          [5, 79, 0.9, 0.8],
+          [6, 76, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Whistle",
+          "module": "filter",
+          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: a pure whistle.",
+          "set": {
+            "voice.mode": "legato",
+            "perf.porta": 2,
+            "up.lpf": 6.3,
+            "up.res": 10,
+            "up.vcfKey": "on",
+            "up.vcaEnv": 5
+          }
+        },
+        {
+          "title": "Echo",
+          "module": "fx",
+          "why": "- Listen for: a whistle in a valley.",
+          "set": {
+            "up.send": 3,
+            "dly.time": 9,
+            "dly.feedback": 4
+          }
+        }
+      ],
+      "context": {
+        "up.res": "At the top, the filter whistles."
+      },
+      "tweaks": [
+        {
+          "id": "up.res",
+          "try": "Lower to 8",
+          "hear": "More of the saw, less whistle."
+        },
+        {
+          "id": "up.lpf",
+          "try": "Raise a little",
+          "hear": "The whistle drifting sharp."
+        }
+      ]
+    },
+    {
+      "id": "sg-fifths-lead",
+      "name": "Fifths Lead",
+      "ref": "Classic technique: DDS 2 a fifth up",
+      "artist": "Classic technique",
+      "tags": ["lead", "fifths", "rock"],
+      "level": 1,
+      "blurb": "A powerful lead doubled a fifth up.",
+      "how": "DDS 2 TUNE +7 puts a fifth over every note.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.45, 0.8],
+          [0.5, 57, 0.45, 0.8],
+          [1, 60, 0.45, 0.8],
+          [1.5, 62, 0.9, 0.8],
+          [2.5, 60, 0.45, 0.8],
+          [3, 57, 0.9, 0.8],
+          [4, 55, 0.45, 0.8],
+          [4.5, 57, 1.35, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Fifths",
+          "module": "osc",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a powerful riff.",
+          "set": {
+            "voice.mode": "solo",
+            "up.mix": 5,
+            "up.dds2Tune": 7,
+            "up.lpf": 7,
+            "up.vcfEnv": 2,
+            "up.e1d": 6,
+            "up.e1s": 4
+          }
+        }
+      ],
+      "context": {
+        "up.dds2Tune": "The interval above."
+      },
+      "tweaks": [
+        {
+          "id": "up.dds2Tune",
+          "try": "Set to +5",
+          "hear": "Fourths."
+        },
+        {
+          "id": "up.drive",
+          "try": "Step to 2",
+          "hear": "A distorted riff."
+        }
+      ]
+    },
+    {
+      "id": "sg-unison-lead",
+      "name": "Unison Lead",
+      "ref": "Classic technique: unison and super for a huge lead",
+      "artist": "Classic technique",
+      "tags": ["lead", "unison", "big"],
+      "level": 2,
+      "blurb": "A huge, wide lead.",
+      "how": "UNISON stacks voices on every note, and SUPER thickens each.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 74, 0.9, 0.8],
+          [1, 76, 0.45, 0.8],
+          [1.5, 79, 1.35, 0.8],
+          [3, 81, 0.9, 0.8],
+          [4, 79, 0.45, 0.8],
+          [4.5, 76, 0.45, 0.8],
+          [5, 74, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Huge",
+          "module": "mode",
+          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: a huge lead.",
+          "set": {
+            "voice.mode": "legato",
+            "voice.unison": true,
+            "up.super": "on",
+            "up.pwDetune": 4,
+            "up.lpf": 7.5,
+            "up.send": 3,
+            "dly.time": 8.5,
+            "dly.feedback": 4
+          }
+        }
+      ],
+      "context": {
+        "voice.unison": "Several voices on every note."
+      },
+      "tweaks": [
+        {
+          "id": "voice.unison",
+          "try": "Switch off",
+          "hear": "A single voice."
+        },
+        {
+          "id": "up.res",
+          "try": "Raise to 5",
+          "hear": "A screaming lead."
+        }
+      ]
+    },
+    {
+      "id": "sg-gfunk",
+      "name": "G-funk Whine",
+      "ref": "In the style of West Coast G-funk",
+      "artist": "G-funk",
+      "tags": ["lead", "hip-hop", "90s"],
+      "level": 2,
+      "blurb": "A high, thin, sliding whine with vibrato.",
+      "how": "A sine-ish triangle with long portamento and a quick vibrato.",
+      "phrase": {
+        "bpm": 92,
+        "loop": true,
+        "steps": [
+          [0, 79, 1.35, 0.8],
+          [1.5, 82, 0.45, 0.8],
+          [2, 84, 1.8, 0.8],
+          [4, 82, 0.9, 0.8],
+          [5, 79, 0.9, 0.8],
+          [6, 77, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Whine",
+          "module": "osc",
+          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: a sliding whine.",
+          "set": {
+            "voice.mode": "legato",
+            "perf.porta": 3,
+            "up.dds1Wave": "tri",
+            "up.lpf": 9,
+            "up.lfoRate": 7,
+            "up.modLfo": 1
+          }
+        }
+      ],
+      "context": {
+        "perf.porta": "How long each slide is."
+      },
+      "tweaks": [
+        {
+          "id": "perf.porta",
+          "try": "Raise to 4",
+          "hear": "Long, lazy slides."
+        },
+        {
+          "id": "up.dds1Wave",
+          "try": "Step to SINE",
+          "hear": "A purer whine."
+        }
+      ]
+    },
+    {
+      "id": "sg-chip-lead",
+      "name": "Chiptune Lead",
+      "ref": "In the style of 8-bit game music",
+      "artist": "Chiptune",
+      "tags": ["lead", "chiptune", "game"],
+      "level": 1,
+      "blurb": "A buzzy pulse lead with a fast trill.",
+      "how": "A thin pulse, LFO 1 on SQUARE trilling the pitch fast.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.45, 0.8],
+          [0.5, 76, 0.45, 0.8],
+          [1, 79, 0.45, 0.8],
+          [1.5, 84, 0.9, 0.8],
+          [2.5, 83, 0.45, 0.8],
+          [3, 79, 0.45, 0.8],
+          [3.5, 76, 0.9, 0.8],
+          [4.5, 74, 0.45, 0.8],
+          [5, 72, 0.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Pulse",
+          "module": "osc",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a buzzy beep.",
+          "set": {
+            "voice.mode": "solo",
+            "up.dds2Wave": "pulse",
+            "up.pwDetune": 6,
+            "up.mix": 10,
+            "up.lpf": 10
+          }
+        },
+        {
+          "title": "Trill",
+          "module": "mod",
+          "why": "- Listen for: a chip trill.",
+          "set": {
+            "up.lfoWave": "sq",
+            "up.lfoRate": 8.3,
+            "up.modLfo": 2.5,
+            "up.modDest": "dds2"
+          }
+        }
+      ],
+      "context": {
+        "up.modLfo": "How wide the trill is."
+      },
+      "tweaks": [
+        {
+          "id": "up.modLfo",
+          "try": "Lower to 0",
+          "hear": "Plain beeps."
+        },
+        {
+          "id": "up.pwDetune",
+          "try": "Lower to 0",
+          "hear": "A square."
+        }
+      ]
+    },
+    {
+      "id": "sg-flute",
+      "name": "Flute",
+      "ref": "Classic technique: a sine with breath and a chiff",
+      "artist": "Classic technique",
+      "tags": ["lead", "flute", "soft"],
+      "level": 2,
+      "blurb": "A soft, breathy flute.",
+      "how": "A sine, a little noise from DDS 2, a soft attack, a brief filter chiff and delayed vibrato.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.9, 0.8],
+          [1, 74, 0.45, 0.8],
+          [1.5, 76, 0.45, 0.8],
+          [2, 79, 1.35, 0.8],
+          [3.5, 77, 0.45, 0.8],
+          [4, 76, 0.9, 0.8],
+          [5, 74, 0.9, 0.8],
+          [6, 72, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Breath",
+          "module": "osc",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a breathy tone.",
+          "set": {
+            "voice.mode": "solo",
+            "up.dds1Wave": "sine",
+            "up.dds2Wave": "noise",
+            "up.mix": 2,
+            "up.lpf": 7
+          }
+        },
+        {
+          "title": "Chiff",
+          "module": "filter",
+          "why": "- Listen for: a flute.",
+          "set": {
+            "up.vcfEnv": 2,
+            "up.e1d": 5,
+            "up.e1s": 0,
+            "up.e2a": 4,
+            "up.lfoRate": 6.5,
+            "up.lfoDelay": 2,
+            "up.modLfo": 0.7
+          }
+        }
+      ],
+      "context": {
+        "up.mix": "How breathy the flute is."
+      },
+      "tweaks": [
+        {
+          "id": "up.mix",
+          "try": "Raise to 4",
+          "hear": "A shakuhachi."
+        },
+        {
+          "id": "up.dds1Range",
+          "try": "Step to 16′",
+          "hear": "An alto flute."
+        }
+      ]
+    },
+    {
+      "id": "sg-acid-lead",
+      "name": "Acid Lead",
+      "ref": "Classic technique: a high squelching line",
+      "artist": "Classic technique",
+      "tags": ["lead", "acid", "electronic"],
+      "level": 2,
+      "blurb": "A high, squelching, sliding acid line.",
+      "how": "LEGATO and glide, a resonant filter snapped by envelope 1, DRIVE 1.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.4, 0.8],
+          [0.5, 60, 0.4, 0.8],
+          [1, 72, 0.4, 0.8],
+          [1.5, 60, 0.4, 0.8],
+          [2, 63, 0.4, 0.8],
+          [2.5, 60, 0.4, 0.8],
+          [3, 70, 0.4, 0.8],
+          [3.5, 72, 0.4, 0.8],
+          [4, 60, 0.4, 0.8],
+          [4.5, 60, 0.4, 0.8],
+          [5, 67, 0.4, 0.8],
+          [5.5, 60, 0.4, 0.8],
+          [6, 65, 0.4, 0.8],
+          [6.5, 63, 0.4, 0.8],
+          [7, 60, 0.4, 0.8],
+          [7.5, 58, 0.4, 0.8],
+          [1.5, 72, 0.6, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Squelch",
+          "module": "filter",
+          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: a squelching line.",
+          "set": {
+            "voice.mode": "legato",
+            "perf.porta": 2,
+            "up.dds1Wave": "square",
+            "up.lpf": 5,
+            "up.res": 7.5,
+            "up.vcfEnv": 5,
+            "up.e1d": 5.5,
+            "up.e1s": 0,
+            "up.drive": "1"
+          }
+        }
+      ],
+      "context": {
+        "up.res": "How much it squelches."
+      },
+      "tweaks": [
+        {
+          "id": "up.lpf",
+          "try": "Sweep up to 7",
+          "hear": "A screaming acid line."
+        },
+        {
+          "id": "up.drive",
+          "try": "Step to 2",
+          "hear": "A shredded acid."
+        }
+      ]
+    },
+    {
+      "id": "sg-dual-lead",
+      "name": "Octave Dual Lead",
+      "ref": "Classic technique: two layers an octave apart on a lead",
+      "artist": "Classic technique",
+      "tags": ["lead", "dual", "octave"],
+      "level": 2,
+      "blurb": "A bright lead doubled an octave below by the second layer.",
+      "how": "DUAL with the lower layer at 16′: two layers, two colours, one line.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 67, 0.9, 0.8],
+          [1, 69, 0.9, 0.8],
+          [2, 71, 0.9, 0.8],
+          [3, 74, 0.9, 0.8],
+          [4, 72, 1.8, 0.8],
+          [6, 71, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two layers",
+          "module": "mode",
+          "why": "- KEYBOARD DUAL: both layers on every key\n- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: an octave lead.",
+          "set": {
+            "kbd.mode": "dual",
+            "voice.mode": "legato",
+            "up.dds1Wave": "square",
+            "up.lpf": 7,
+            "lo.dds1Range": "16",
+            "lo.lpf": 5,
+            "lo.vcaEnv": 6
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "mod",
+          "why": "- Listen for: a singing lead.",
+          "set": {
+            "lfo2.trig": "on",
+            "lfo2.rate": 7,
+            "lfo2.dds": 1
+          }
+        }
+      ],
+      "context": {
+        "lo.vcaEnv": "How strong the octave below is."
+      },
+      "tweaks": [
+        {
+          "id": "perf.lowerDetune",
+          "try": "Set to +7",
+          "hear": "A fifth below the octave: a big lead."
+        },
+        {
+          "id": "lo.dds1Wave",
+          "try": "Step to SQUARE",
+          "hear": "A hollow lower layer."
+        }
+      ]
     }
   ]
 }
