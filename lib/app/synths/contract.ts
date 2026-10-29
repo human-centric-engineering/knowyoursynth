@@ -1226,6 +1226,86 @@ export interface BankMaker {
   innovations: string[];
 }
 
+// ─── Signal routing ──────────────────────────────────────────────────────────
+
+/**
+ * How a synth's parts are wired behind the panel: its blocks (oscillators, mixer, filter, …) and the
+ * edges between them, each with the rule that says when it carries signal. The routing view draws it,
+ * and `routingState()` (`lib/routing.ts`) lights the path the current patch takes.
+ *
+ * Kept beside the definition, not on it (`lib/app/synths/routing/<id>.ts`), and projected by hand from the
+ * synth's research spec (`.context/app/synth-data/<id>/<id>.synth.json`): block and edge ids are the
+ * spec's module and connection ids, and every condition and jack is in the definition's ids. A test holds
+ * each routing to both (`tests/unit/lib/app/synths/routing.test.ts`).
+ */
+export interface SynthRouting {
+  /** The definition this routing is for. */
+  synth: string;
+  blocks: RoutingBlock[];
+  edges: RoutingEdge[];
+  /** The block every live path ends at: the synth's output. */
+  out: string;
+  /** Which block each of the definition's jacks belongs to. Every jack is listed, so any cable can be drawn. */
+  jacks: Record<string, string>;
+  /** Spec modules and connections the routing leaves out, by spec id, with the reason. */
+  omitted?: Record<string, string>;
+}
+
+/** One part of the synth, drawn as a box. */
+export interface RoutingBlock {
+  /** The spec's module id (`osc1`, `filter`). */
+  id: string;
+  name: string;
+  /** Picks the colour, from `MODULES`, so the diagram matches the panel's lesson highlights. */
+  module: SynthModule;
+  /** One or two plain sentences on what the part does. */
+  description: string;
+  /** What the hover card lists: `{ label: 'Slope', value: '24 dB per octave' }`. Facts from the spec only. */
+  specs?: { label: string; value: string }[];
+}
+
+/** What an edge carries. */
+export type RoutingSignal = 'audio' | 'cv' | 'gate';
+
+/**
+ * When an edge carries signal, in the definition's control ids. `{ id, eq }` and `{ id, in }` read as for
+ * `ShowCondition`; `all` and `any` combine.
+ */
+export type RoutingWhen =
+  | { id: string; eq: ControlValue }
+  | { id: string; in: ControlValue[] }
+  | { all: RoutingWhen[] }
+  | { any: RoutingWhen[] };
+
+/**
+ * A control that scales an edge, which carries nothing while the level is at zero:
+ * - a continuous control's id, at zero at its `min`;
+ * - `{ id, off }`, at zero at the value `off` (MOD MIX fully right silences source A);
+ * - `{ sum }`, at zero only while every part is (MOD DEPTH plus the mod wheel).
+ * The id `@wheel` is the mod wheel.
+ */
+export type RoutingLevel = string | { id: string; off: ControlValue } | { sum: RoutingLevel[] };
+
+/** One connection between two blocks, inside the synth. Cables are not edges: they come from the patch. */
+export interface RoutingEdge {
+  /** The spec's connection id (`c40`). */
+  id: string;
+  from: string;
+  to: string;
+  signal: RoutingSignal;
+  /** What it does where it arrives, when the block's name does not say (`pitch`, `cutoff`). */
+  label?: string;
+  /** A switch it depends on; absent = fixed. */
+  when?: RoutingWhen;
+  /** Controls that scale it; all must be above zero. */
+  levels?: RoutingLevel[];
+  /**
+   * A normal: the input jack whose cable breaks this edge. A cable into that jack takes the edge's place
+   * and needs its `when` and `levels` to be heard. The jack must not be `add` (an `add` jack sums).
+   */
+  breaks?: string;
+}
+
 // ─── EngineParams ────────────────────────────────────────────────────────────
 
 /** Gain per waveform; omitted or 0 = silent. */
