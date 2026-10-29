@@ -122,6 +122,20 @@ describe('mono voice', () => {
     expect(m[0].overload).toBeGreaterThan(0);
   });
 
+  it('meters the LFO’s rate and each oscillator’s output, pitch and mixer level, for the routing view', () => {
+    const { events } = render(monoParams(), { len: 9600 });
+    const m = meters(events)[2];
+    expect(m.lfoHz).toBeCloseTo(5, 5);
+    expect(m.oscV).toHaveLength(3);
+    for (const v of m.oscV ?? []) expect(Math.abs(v)).toBeLessThanOrEqual(1.5);
+    // Middle C on the first; an octave down on the second; a fifth up on the third.
+    const [a, b, c] = m.oscHz ?? [];
+    expect(a).toBeCloseTo(261.63, 0);
+    expect(b / a).toBeCloseTo(0.5, 3);
+    expect(c / a).toBeCloseTo(2 ** (7 / 12), 3);
+    expect(m.oscLv?.map((l) => Number(l.toFixed(2)))).toEqual([0.8, 0.5, 0.3]);
+  });
+
   it('plays a phrase, ends it with phraseEnd when it does not loop, and panics to allOff', () => {
     const phrase: Phrase = {
       bpm: 240,

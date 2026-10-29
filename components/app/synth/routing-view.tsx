@@ -14,7 +14,8 @@
  *
  * Two layers of "in use". What `routingState()` says the patch routes is drawn solid, the rest faint: structural,
  * so a filter closed to nothing is still solid. Over that, what is going through it now (`routingActivity()`, from
- * the engine's meters and output level) lights the lamps and runs along the lines, and fades as the sound does. That
+ * the engine's meters and output level) lights the lamps and runs along the lines, and fades as the sound does; the
+ * LFO, and an oscillator slow enough to see, pulse with their waves. That
  * is written straight to a CSS variable (`--a`) once a frame, never through React state.
  */
 
@@ -254,14 +255,26 @@ export function RoutingView({
         out = levelOfRms(rmsOf(samples));
       }
       const meters: ActivityMeters = m.power
-        ? { gate: m.gate, env1: m.env1 ?? 0, env2: m.env2 ?? 0, lfo: m.lfo, out }
+        ? {
+            gate: m.gate,
+            env1: m.env1 ?? 0,
+            env2: m.env2 ?? 0,
+            lfo: m.lfo,
+            lfoHz: m.lfoHz ?? 0,
+            osc: (m.oscV ?? []).map((v, k) => ({
+              v,
+              hz: m.oscHz?.[k] ?? 0,
+              lv: m.oscLv?.[k] ?? 0,
+            })),
+            out,
+          }
         : SILENT;
       const a = routingActivity(routing, stateRef.current, meters);
       const dt = now - last;
       last = now;
-      const ease = (el: Element | null, target: number) => {
+      const ease = (el: Element | null, target: number, pulsing: boolean) => {
         if (!(el instanceof SVGElement)) return;
-        const v = settle(shown.get(el) ?? 0, target, dt);
+        const v = settle(shown.get(el) ?? 0, target, dt, pulsing);
         shown.set(el, v);
         const was = written.get(el) ?? -1;
         // Small steps wait until they add up, but landing on the target is always written.
@@ -270,10 +283,16 @@ export function RoutingView({
         el.style.setProperty('--a', v.toFixed(3));
       };
       for (const [id, v] of Object.entries(a.blocks))
-        ease(svg.querySelector(`[data-block="${CSS.escape(id)}"]`), v);
-      for (const [id, v] of Object.entries(a.edges))
-        ease(svg.querySelector(`[data-edge="${CSS.escape(id)}"]`), v);
-      a.cables.forEach((v, i) => ease(svg.querySelector(`[data-cable-index="${i}"]`), v));
+        ease(svg.querySelector(`[data-block="${CSS.escape(id)}"]`), v, a.pulsing[id]);
+      for (const e of routing.edges)
+        ease(
+          svg.querySelector(`[data-edge="${CSS.escape(e.id)}"]`),
+          a.edges[e.id],
+          a.pulsing[e.from]
+        );
+      stateRef.current.cables.forEach((c, i) =>
+        ease(svg.querySelector(`[data-cable-index="${i}"]`), a.cables[i], a.pulsing[c.fromBlock])
+      );
       frame = requestAnimationFrame(tick);
     });
     return () => cancelAnimationFrame(frame);

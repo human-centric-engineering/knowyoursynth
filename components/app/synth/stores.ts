@@ -62,6 +62,11 @@ export interface Meters {
   oscs?: number;
   env1?: number;
   env2?: number;
+  /** The LFO's rate in Hz, and each oscillator's output, pitch and mixer level: the routing view's lamps. */
+  lfoHz?: number;
+  oscV?: number[];
+  oscHz?: number[];
+  oscLv?: number[];
   /** The sequencer stage (0-based), −1 when stopped. */
   seq?: number;
   pulser?: number;

@@ -63,6 +63,7 @@ export const routing: SynthRouting = {
       id: 'osc1',
       name: 'Oscillator 1',
       module: 'osc',
+      meter: 'osc1',
       description:
         'The reference oscillator: no fine-tune knob, its pitch set by RANGE and the master TUNE.',
       specs: [
@@ -77,6 +78,7 @@ export const routing: SynthRouting = {
       id: 'osc2',
       name: 'Oscillator 2',
       module: 'osc',
+      meter: 'osc2',
       description: 'An oscillator with a detune knob of about seven semitones either way.',
       specs: [
         ...OSC_SPECS,
@@ -90,6 +92,7 @@ export const routing: SynthRouting = {
       id: 'osc3',
       name: 'Oscillator 3',
       module: 'osc',
+      meter: 'osc3',
       description:
         'An oscillator that doubles as a modulation source. Off keyboard control it runs free, usually at LO as a second LFO.',
       specs: [

@@ -13,11 +13,13 @@ import modelD from '@/lib/app/synths/defs/model-d';
 import { routingState } from '@/lib/app/synths/lib/routing';
 import {
   FALL_MS,
+  FAST_HZ,
   levelOfRms,
   RISE_MS,
   routingActivity,
   settle,
   SILENT,
+  SLOW_HZ,
   type ActivityMeters,
 } from '@/lib/app/synths/lib/routing-activity';
 import { routing } from '@/lib/app/synths/routing/model-d';
@@ -26,7 +28,7 @@ const state = (set: ControlValues = {}) =>
   routingState(modelD, routing, { values: { ...modelD.init, ...set }, cables: [], wheel: 0 });
 
 /** A note held, loud: the gate up, both contours at the top, the output at full. */
-const PLAYING: ActivityMeters = { gate: true, env1: 1, env2: 1, lfo: 0, out: 1 };
+const PLAYING: ActivityMeters = { ...SILENT, gate: true, env1: 1, env2: 1, out: 1 };
 
 describe('routingActivity on Model D', () => {
   it('is dark everywhere while nothing is playing, though the path is routed', () => {
@@ -76,22 +78,78 @@ describe('routingActivity on Model D', () => {
     expect(routingActivity(routing, off, { ...SILENT, env1: 0.3 }).blocks.filter_contour).toBe(0);
   });
 
-  it('keeps the LFO glowing while it is routed, swelling with its swing, and dark while it is not', () => {
-    const routed = state({
-      'mod.toFilter': true,
-      'mod.depth': 5,
-      'mod.mix': 10,
-      'mod.srcB': 'lfo',
-    });
+  const LFO_ROUTED: ControlValues = {
+    'mod.toFilter': true,
+    'mod.depth': 5,
+    'mod.mix': 10,
+    'mod.srcB': 'lfo',
+  };
+
+  it('pulses a slow LFO with its wave, dark at the trough and full at the peak, and the mod bus with it', () => {
+    const routed = state(LFO_ROUTED);
     expect(routed.blocks.lfo).toBe(true);
-    const low = routingActivity(routing, routed, { ...SILENT, lfo: 0 });
-    const peak = routingActivity(routing, routed, { ...SILENT, lfo: -1 });
-    expect(low.blocks.lfo).toBeGreaterThan(0);
+    const peak = routingActivity(routing, routed, { ...SILENT, lfo: 1, lfoHz: 1 });
+    const trough = routingActivity(routing, routed, { ...SILENT, lfo: -1, lfoHz: 1 });
     expect(peak.blocks.lfo).toBe(1);
-    expect(low.blocks.lfo).toBeLessThan(peak.blocks.lfo);
-    // The mod bus passes on what feeds it.
+    expect(trough.blocks.lfo).toBeCloseTo(0.12, 5);
+    expect(peak.pulsing.lfo).toBe(true);
+    // The mod bus passes on what feeds it, pulse and all.
     expect(peak.blocks.mod_bus).toBe(1);
-    expect(routingActivity(routing, state(), { ...SILENT, lfo: 1 }).blocks.lfo).toBe(0);
+    expect(peak.pulsing.mod_bus).toBe(true);
+    expect(trough.blocks.mod_bus).toBeCloseTo(0.12, 5);
+    // Not routed: dark at any point of its wave.
+    expect(routingActivity(routing, state(), { ...SILENT, lfo: 1, lfoHz: 1 }).blocks.lfo).toBe(0);
+  });
+
+  it('draws a fast LFO as a steady glow, not a false slow pulse, blending between', () => {
+    const routed = state(LFO_ROUTED);
+    const fast = (lfo: number, lfoHz: number) =>
+      routingActivity(routing, routed, { ...SILENT, lfo, lfoHz });
+    expect(fast(1, 20).blocks.lfo).toBe(0.75);
+    expect(fast(-1, 20).blocks.lfo).toBe(0.75);
+    expect(fast(1, 20).pulsing.lfo).toBe(false);
+    // Half way from SLOW_HZ to FAST_HZ: half the wave, half the steady glow.
+    expect(fast(-1, (SLOW_HZ + FAST_HZ) / 2).blocks.lfo).toBeCloseTo((0.12 + 0.75) / 2, 5);
+    expect(fast(-1, SLOW_HZ).blocks.lfo).toBeCloseTo(0.12, 5);
+  });
+
+  /** Oscillator 1 full in the mixer, Oscillator 2 at a third, both at audio pitch; Oscillator 3 as given. */
+  const oscs = (osc3: { v: number; hz: number; lv: number }) => [
+    { v: 0.3, hz: 220, lv: 0.9 },
+    { v: -0.2, hz: 220, lv: 0.3 },
+    osc3,
+  ];
+  const BOTH_IN = { 'mix.osc2On': true, 'mix.osc2': 3.3 };
+
+  it('lights an oscillator at audio pitch with the output times its share of the mixer', () => {
+    const a = routingActivity(routing, state(BOTH_IN), {
+      ...PLAYING,
+      out: 0.8,
+      osc: oscs({ v: 0, hz: 220, lv: 0 }),
+    });
+    expect(a.blocks.osc1).toBeCloseTo(0.8, 5);
+    expect(a.blocks.osc2).toBeCloseTo(0.8 / 3, 5);
+    expect(a.pulsing.osc1).toBe(false);
+    // Off the path: dark, whatever the engine says of it.
+    expect(a.blocks.osc3).toBe(0);
+  });
+
+  it('pulses Oscillator 3 at LO with its wave as a mod source, and holds it at half when fast', () => {
+    const asSource = state({ ...LFO_ROUTED, 'mod.mix': 0, 'mod.srcA': 'osc3' });
+    expect(asSource.blocks.osc3).toBe(true);
+    const at = (v: number, hz: number) =>
+      routingActivity(routing, asSource, { ...PLAYING, osc: oscs({ v, hz, lv: 0 }) });
+    expect(at(1, 0.5).blocks.osc3).toBe(1);
+    expect(at(-1, 0.5).blocks.osc3).toBeCloseTo(0.12, 5);
+    expect(at(1, 0.5).pulsing.osc3).toBe(true);
+    // At audio pitch and switched out of the mixer: running, not heard.
+    expect(at(-1, 440).blocks.osc3).toBe(0.5);
+    expect(at(-1, 440).pulsing.osc3).toBe(false);
+  });
+
+  it('falls back to the output’s level for an oscillator the engine did not report', () => {
+    const a = routingActivity(routing, state(), { ...PLAYING, out: 0.6, osc: [] });
+    expect(a.blocks.osc1).toBe(0.6);
   });
 
   it('lights a live cable with the block it leaves, and not a dead one', () => {
@@ -108,10 +166,10 @@ describe('routingActivity on Model D', () => {
 
   it('never goes past full or below dark on a wild meter', () => {
     const a = routingActivity(routing, state({ 'filter.contour': 5 }), {
+      ...SILENT,
       gate: true,
       env1: 4,
       env2: Number.NaN,
-      lfo: 0,
       out: -2,
     });
     expect(a.blocks.filter_contour).toBe(1);
@@ -121,6 +179,11 @@ describe('routingActivity on Model D', () => {
 });
 
 describe('settle', () => {
+  it('lets a moving wave fall as quickly as it rises', () => {
+    expect(settle(1, 0, RISE_MS, true)).toBeCloseTo(Math.exp(-1), 5);
+    expect(settle(1, 0, RISE_MS, true)).toBeLessThan(settle(1, 0, RISE_MS));
+  });
+
   it('comes up quickly and falls away slowly', () => {
     const up = settle(0, 1, RISE_MS);
     const down = settle(1, 0, RISE_MS);

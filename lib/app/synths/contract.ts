@@ -1293,8 +1293,11 @@ export type RoutingSymbol =
   | 'out'
   | 'util';
 
-/** The engine meters a block can follow (`MeterEvent`): the gate, the first two envelopes, the LFO. */
-export type RoutingMeter = 'gate' | 'env1' | 'env2' | 'lfo';
+/**
+ * The engine meters a block can follow (`MeterEvent`): the gate, the first two envelopes, the LFO, and an oscillator
+ * by its place in the engine's (`osc1` is the first).
+ */
+export type RoutingMeter = 'gate' | 'env1' | 'env2' | 'lfo' | 'osc1' | 'osc2' | 'osc3' | 'osc4';
 
 /** What an edge carries. */
 export type RoutingSignal = 'audio' | 'cv' | 'gate';
