@@ -14690,6 +14690,3196 @@
           "hear": "A slower, more ominous build."
         }
       ]
+    },
+    {
+      "id": "flying-saucer",
+      "name": "Flying Saucer",
+      "ref": "In the style of the flying saucers in 1950s science-fiction films",
+      "artist": "1950s science-fiction film",
+      "tags": ["fx", "sci-fi", "sound design", "50s"],
+      "level": 3,
+      "blurb": "A wobbling, warbling hover whose wobble keeps speeding up and slowing down by itself.",
+      "how": "The LFO wobbles the pitch, and a cable from the LFO’s own triangle output into LFO CV makes it modulate its own speed, so the wobble lurches between fast and slow in a lopsided way no plain LFO does. A resonant filter and a pure triangle give the eerie whine.",
+      "phrase": {
+        "bpm": 60,
+        "loop": false,
+        "steps": [[0, 72, 6]]
+      },
+      "steps": [
+        {
+          "title": "An eerie whine",
+          "module": "osc",
+          "why": "A triangle with a quiet octave above gives a smooth, whistling tone.\n- Osc 1 WAVEFORM triangle, Osc 2 WAVEFORM triangle, Osc 2 RANGE 4’: smooth.\n- OSC 2 on, OSC 1 VOLUME 8, OSC 2 VOLUME 4: the octave quieter.\n- Listen for: a pure, high tone.",
+          "set": {
+            "osc1.wave": "tri",
+            "osc2.wave": "tri",
+            "osc2.range": "4",
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 4
+          }
+        },
+        {
+          "title": "A ringing filter",
+          "module": "filter",
+          "why": "Resonance adds a whistling ring over the tone.\n- CUTOFF 1.5 (about 1.8 kHz): open.\n- EMPHASIS 6: a strong ring.\n- Listen for: a sci-fi whine.",
+          "set": {
+            "filter.cutoff": 1.5,
+            "filter.emphasis": 6
+          }
+        },
+        {
+          "title": "The wobble",
+          "module": "mod",
+          "why": "The LFO swings the pitch up and down.\n- right-hand mod source LFO, MOD MIX 10, OSCILLATOR MODULATION on: the LFO to pitch.\n- LFO RATE 5 (3.2 Hz), LFO shape triangle: a few wobbles a second.\n- MOD DEPTH 4: a couple of semitones each way.\n- Listen for: a regular \"woo-woo-woo\".",
+          "set": {
+            "mod.srcB": "lfo",
+            "mod.mix": 10,
+            "mod.toOsc": true,
+            "lfo.rate": 5,
+            "lfo.shape": "tri",
+            "mod.depth": 4
+          }
+        },
+        {
+          "title": "Patch LFO (triangle) → LFO CV",
+          "module": "patch",
+          "why": "The LFO’s triangle output goes back into its own rate input. As it swings up it speeds itself up; as it swings down it slows itself down. Each wobble is a different length.\n- LFO (triangle) → LFO CV: the LFO modulates its own speed.\n- Listen for: the wobble rushing and dragging, like a saucer that cannot hold still.",
+          "cables": [["j.lfoTri", "j.lfoCv"]]
+        }
+      ],
+      "context": {
+        "lfo.rate": "The average wobble speed; the cable makes it lurch around this."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "Raise to 6",
+          "hear": "A wild, swooping saucer."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Lower to 3.5",
+          "hear": "A slow, lumbering mothership."
+        }
+      ]
+    },
+    {
+      "id": "ping-pong-settling",
+      "name": "Ping-Pong Ball Coming to Rest",
+      "ref": "In the style of a Foley artist dropping a ping-pong ball",
+      "artist": "Foley sound effects",
+      "tags": ["fx", "foley", "sound design"],
+      "level": 3,
+      "blurb": "Bright little clicks that come faster and faster, like a ball bouncing lower until it settles.",
+      "how": "A bouncing ball’s hits get closer together. The square LFO, cabled into LC GATE, retriggers the loudness contour for each bounce. The filter contour rises slowly while the key is held and, cabled into LFO CV, speeds the LFO up, so the bounces accelerate. The filter contour does nothing else here: AMOUNT OF CONTOUR is zero.",
+      "phrase": {
+        "bpm": 60,
+        "loop": false,
+        "steps": [[0, 84, 4]]
+      },
+      "steps": [
+        {
+          "title": "A hollow click",
+          "module": "osc",
+          "why": "A square at a high pitch through a resonant filter makes a hard, hollow \"tock\".\n- Osc 1 WAVEFORM square, Osc 1 RANGE 4’: high and hollow.\n- Listen for: a high square tone.",
+          "set": {
+            "osc1.wave": "sq",
+            "osc1.range": "4"
+          }
+        },
+        {
+          "title": "Short hits",
+          "module": "amp",
+          "why": "The loudness contour has no sustain and the decay switch is off, so each hit is a tiny click.\n- loudness ATTACK 0 (3 ms), loudness DECAY 1.5 (70 ms), loudness SUSTAIN 0: about 50 ms.\n- loudness DECAY switch off: no tail when the gate goes low.\n- CUTOFF 2 (about 2.5 kHz), EMPHASIS 5: bright, with a woody ring.\n- Listen for: a single \"tock\".",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 1.5,
+            "aenv.sustain": 0,
+            "env.loudDecay": false,
+            "filter.cutoff": 2,
+            "filter.emphasis": 5
+          }
+        },
+        {
+          "title": "Patch LFO (square) → LC GATE",
+          "module": "patch",
+          "why": "The square LFO fires the loudness contour once per cycle.\n- LFO (square) → LC GATE: retriggers the loudness contour.\n- LFO RATE 3.5 (0.91 Hz): about one bounce a second to start.\n- Listen for: bounces at a steady rate.",
+          "set": {
+            "lfo.rate": 3.5
+          },
+          "cables": [["j.lfoSq", "j.lcGate"]]
+        },
+        {
+          "title": "Patch FILT CONT → LFO CV",
+          "module": "patch",
+          "why": "The filter contour rises slowly while the key is held. Cabled into LFO CV, it speeds up the bounces.\n- FILT CONT → LFO CV: the slow rise speeds the LFO.\n- AMOUNT OF CONTOUR 0: the contour does not move the cutoff.\n- filter ATTACK 7.5 (3.3 s), filter DECAY 7 (2.2 s), filter SUSTAIN 10: a rise of about three seconds.\n- Listen for: the bounces closing up into a rattle, then stopping when you let go.",
+          "set": {
+            "filter.contour": 0,
+            "fenv.attack": 7.5,
+            "fenv.decay": 7,
+            "fenv.sustain": 10
+          },
+          "cables": [["j.filtCont", "j.lfoCv"]]
+        }
+      ],
+      "context": {
+        "fenv.attack": "How long the ball takes to settle."
+      },
+      "tweaks": [
+        {
+          "id": "fenv.attack",
+          "try": "Shorten to 6",
+          "hear": "The ball settles quickly, like a marble."
+        },
+        {
+          "id": "osc1.range",
+          "try": "Set to 8'",
+          "hear": "A lower, heavier ball."
+        }
+      ]
+    },
+    {
+      "id": "submarine-sonar",
+      "name": "Submarine Sonar Ping",
+      "ref": "In the style of Klaus Doldinger — \"Das Boot\"",
+      "artist": "Klaus Doldinger",
+      "tags": ["fx", "cinematic", "sound design", "80s"],
+      "level": 3,
+      "blurb": "A pure, ringing ping that repeats every few seconds and fades into the deep.",
+      "how": "Sonar is a pure tone pulse and its long ring. No oscillator is used: the filter’s resonance is turned to maximum so it rings by itself, and the square LFO, cabled into LC GATE, opens the loudness contour for each ping.",
+      "phrase": {
+        "bpm": 60,
+        "loop": false,
+        "steps": [[0, 69, 6]]
+      },
+      "steps": [
+        {
+          "title": "Oscillators off",
+          "module": "mixer",
+          "why": "The filter will make the sound itself.\n- OSC 1 off: nothing from the oscillators.\n- Listen for: silence.",
+          "set": {
+            "mix.osc1On": false
+          }
+        },
+        {
+          "title": "A ringing filter",
+          "module": "filter",
+          "why": "With EMPHASIS at maximum the ladder filter rings as a pure sine at the cutoff. Full keyboard tracking makes it follow the keys.\n- EMPHASIS 10: self-oscillation.\n- CUTOFF 0.5 (about 890 Hz): a ping around 900 Hz.\n- KEYBOARD CONTROL 1 on, KEYBOARD CONTROL 2 on: the ping follows the keys.\n- Listen for: a steady whistle.",
+          "set": {
+            "filter.emphasis": 10,
+            "filter.cutoff": 0.5,
+            "filter.kbd1": true,
+            "filter.kbd2": true
+          }
+        },
+        {
+          "title": "A ping and a long fade",
+          "module": "amp",
+          "why": "The loudness contour shapes the steady whistle into a ping.\n- loudness ATTACK 0 (3 ms), loudness DECAY 8 (5.0 s), loudness SUSTAIN 0: a fade of several seconds.\n- VOLUME 10: the ringing filter is quieter than the oscillators, so the output goes up to full.\n- loudness DECAY switch off: the gate’s low half cuts any leftover ring before the next ping.\n- Listen for: one ping.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 8,
+            "aenv.sustain": 0,
+            "out.volume": 10,
+            "env.loudDecay": false
+          }
+        },
+        {
+          "title": "Patch LFO (square) → LC GATE",
+          "module": "patch",
+          "why": "The square LFO fires a new ping on every cycle.\n- LFO (square) → LC GATE: fires the loudness contour.\n- LFO RATE 2.2 (0.31 Hz): a ping about every three and a half seconds.\n- Listen for: pings repeating in the dark.",
+          "set": {
+            "lfo.rate": 2.2
+          },
+          "cables": [["j.lfoSq", "j.lcGate"]]
+        }
+      ],
+      "context": {
+        "filter.emphasis": "At 10 the filter rings on its own: it is the sound source."
+      },
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Lower to -0.5",
+          "hear": "A deeper, larger-vessel ping."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Raise to 3",
+          "hear": "The sub is closing in: faster pings."
+        }
+      ]
+    },
+    {
+      "id": "warbling-phone-ring",
+      "name": "Old Telephone Warble",
+      "ref": "In the style of the telephone bells in old radio dramas",
+      "artist": "Radio drama sound effects",
+      "tags": ["fx", "foley", "retro"],
+      "level": 3,
+      "blurb": "A buzzing electronic warble that rings in bursts, like an old desk telephone.",
+      "how": "Two separate rhythms make a phone ring: a fast warble inside each ring, and the slow on-off cadence. Oscillator 3, switched away from the keyboard and set to its LO range, becomes a second LFO: a square wave sent through the mod bus to make the pitch warble. The real LFO’s square is cabled into LOUD CV to switch the rings on and off.",
+      "phrase": {
+        "bpm": 60,
+        "loop": false,
+        "steps": [[0, 79, 6]]
+      },
+      "steps": [
+        {
+          "title": "A buzzy tone",
+          "module": "osc",
+          "why": "A narrow pulse is thin and buzzy, like a cheap ringer.\n- Osc 1 WAVEFORM narrow pulse: thin and buzzy.\n- CUTOFF 2 (about 2.5 kHz), EMPHASIS 2: bright with a little edge.\n- Listen for: a buzzy tone.",
+          "set": {
+            "osc1.wave": "narrow",
+            "filter.cutoff": 2,
+            "filter.emphasis": 2
+          }
+        },
+        {
+          "title": "Oscillator 3 as a warble",
+          "module": "mod",
+          "why": "Oscillator 3 in LO range runs far below hearing. With OSC 3 CONTROL off it ignores the keys and ticks over at a fixed rate, and the mod bus sends it to pitch.\n- Osc 3 RANGE LO, Osc 3 WAVEFORM square, OSC 3 CONTROL off: a slow square, independent of the keys.\n- Osc 3 FREQUENCY +7.5: speeds it up to a fast warble, many times a second.\n- left-hand mod source OSC 3, MOD MIX 0, OSCILLATOR MODULATION on: Oscillator 3 alone, to pitch.\n- MOD DEPTH 4: a two-tone flip a few semitones apart.\n- Listen for: a fast two-tone trill.",
+          "set": {
+            "osc3.range": "lo",
+            "osc3.wave": "sq",
+            "osc3.kbd": false,
+            "osc3.freq": 7.5,
+            "mod.srcA": "osc3",
+            "mod.mix": 0,
+            "mod.toOsc": true,
+            "mod.depth": 4
+          }
+        },
+        {
+          "title": "Patch LFO (square) → LOUD CV",
+          "module": "patch",
+          "why": "The LFO’s square, added to the loudness, switches the ring on and off.\n- LFO (square) → LOUD CV: gates the ring.\n- LFO RATE 2.6 (0.43 Hz): about two rings every three seconds.\n- loudness SUSTAIN 5, loudness ATTACK 0 (3 ms), loudness DECAY 2 (200 ms): holds the loudness halfway, so the square swings it fully on and off.\n- Listen for: \"brrring... brrring\".",
+          "set": {
+            "lfo.rate": 2.6,
+            "aenv.sustain": 5,
+            "aenv.attack": 0,
+            "aenv.decay": 2
+          },
+          "cables": [["j.lfoSq", "j.loudCv"]]
+        }
+      ],
+      "context": {
+        "osc3.freq": "With OSC 3 CONTROL off and RANGE LO, this is the speed of the warble.",
+        "lfo.rate": "The ring cadence."
+      },
+      "tweaks": [
+        {
+          "id": "osc3.freq",
+          "try": "Lower to 4",
+          "hear": "A slower, clunkier bell warble."
+        },
+        {
+          "id": "mod.depth",
+          "try": "Raise to 6",
+          "hear": "A wider, more alarming two-tone."
+        }
+      ]
+    },
+    {
+      "id": "falling-blaster",
+      "name": "Falling Blaster Shot",
+      "ref": "In the style of Ben Burtt’s blaster sounds for \"Star Wars\"",
+      "artist": "Ben Burtt",
+      "tags": ["fx", "sci-fi", "sound design", "70s"],
+      "level": 2,
+      "blurb": "A bright \"pew\" that drops two octaves in a fraction of a second.",
+      "how": "The loudness contour, cabled into OSC 1V/OCT, adds up to two octaves to the pitch at the start of each note and falls with the contour. So every shot starts high and dives. A resonant, bright tone makes it zing.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.25],
+          [0.5, 72, 0.25],
+          [1.5, 76, 0.25],
+          [2, 69, 0.25],
+          [3, 72, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bright, ringing source",
+          "module": "osc",
+          "why": "A sawtooth and a narrow pulse give a piercing tone.\n- Osc 1 WAVEFORM sawtooth, Osc 2 WAVEFORM narrow pulse: piercing.\n- Osc 2 FREQUENCY +0.4: a sour, metallic beat.\n- OSC 2 on, OSC 1 VOLUME 7, OSC 2 VOLUME 7: both.\n- CUTOFF 1.5 (about 1.8 kHz), EMPHASIS 6: bright and ringing.\n- Listen for: a harsh, ringing tone.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "narrow",
+            "osc2.freq": 0.4,
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 7,
+            "filter.cutoff": 1.5,
+            "filter.emphasis": 6
+          }
+        },
+        {
+          "title": "A short shot",
+          "module": "amp",
+          "why": "Each shot is short.\n- loudness ATTACK 0 (3 ms), loudness DECAY 2.5 (260 ms), loudness SUSTAIN 0: about a quarter of a second.\n- Listen for: a short blip.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 2.5,
+            "aenv.sustain": 0
+          }
+        },
+        {
+          "title": "Patch LOUD CONT → OSC 1V/OCT",
+          "module": "patch",
+          "why": "The loudness contour is also a voltage. Into the pitch input it adds two octaves at the start of each shot and falls away with it.\n- LOUD CONT → OSC 1V/OCT: the fading loudness pulls the pitch down.\n- Listen for: \"pew\": a fast dive on every shot.",
+          "cables": [["j.loudCont", "j.oscCv"]]
+        }
+      ],
+      "context": {
+        "aenv.decay": "The length of the shot and of the dive."
+      },
+      "tweaks": [
+        {
+          "id": "aenv.decay",
+          "try": "Lengthen to 4",
+          "hear": "A slower, falling \"peeyoo\"."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Raise to 8",
+          "hear": "A zingier, more electric shot."
+        }
+      ]
+    },
+    {
+      "id": "speak-to-me-heartbeat",
+      "name": "Heartbeat",
+      "ref": "In the style of Pink Floyd — \"Speak to Me (The Dark Side of the Moon)\"",
+      "artist": "Pink Floyd",
+      "tags": ["perc", "fx", "progressive rock", "70s"],
+      "level": 2,
+      "blurb": "A muffled, deep \"lub-dub\" thump, felt as much as heard.",
+      "how": "A heartbeat is two soft, low thumps close together. A low triangle with a quick pitch drop from the filter contour, sent through the mod bus, makes each thump, and the phrase plays them in pairs. A very low cutoff keeps it muffled, as if heard through a chest.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 31, 0.2],
+          [0.3, 31, 0.2],
+          [1, 31, 0.2],
+          [1.3, 31, 0.2],
+          [2, 31, 0.2],
+          [2.3, 31, 0.2],
+          [3, 31, 0.2],
+          [3.3, 31, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A low triangle",
+          "module": "osc",
+          "why": "A near-sine at the very bottom of hearing.\n- Osc 1 WAVEFORM triangle, Osc 1 RANGE 16’: deep.\n- OSC 1 VOLUME 10: full.\n- Listen for: a low hum.",
+          "set": {
+            "osc1.wave": "tri",
+            "osc1.range": "16",
+            "mix.osc1": 10
+          }
+        },
+        {
+          "title": "Muffled",
+          "module": "filter",
+          "why": "A very dark VCF.\n- CUTOFF −2.5 (about 110 Hz): only the thump.\n- AMOUNT OF CONTOUR 0, filter ATTACK 0 (3 ms), filter DECAY 2 (200 ms), filter SUSTAIN 0: the contour only drives the pitch drop.\n- Listen for: a dull hum.",
+          "set": {
+            "filter.cutoff": -2.5,
+            "filter.contour": 0,
+            "fenv.attack": 0,
+            "fenv.decay": 2,
+            "fenv.sustain": 0
+          }
+        },
+        {
+          "title": "A pitch drop",
+          "module": "mod",
+          "why": "The filter contour through the mod bus makes each beat thump downward.\n- left-hand mod source FILTER EG, MOD MIX 0, OSCILLATOR MODULATION on: filter contour to pitch.\n- MOD DEPTH 6: a few semitones of drop.\n- Listen for: a soft \"thud\".",
+          "set": {
+            "mod.srcA": "eg",
+            "mod.mix": 0,
+            "mod.toOsc": true,
+            "mod.depth": 6
+          }
+        },
+        {
+          "title": "Short thumps",
+          "module": "amp",
+          "why": "Each beat is short.\n- loudness ATTACK 0.5 (9 ms), loudness DECAY 2.5 (260 ms), loudness SUSTAIN 0: a soft, short thump.\n- Listen for: \"lub-dub... lub-dub\".",
+          "set": {
+            "aenv.attack": 0.5,
+            "aenv.decay": 2.5,
+            "aenv.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "filter.cutoff": "How muffled the heartbeat is."
+      },
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Raise to -1",
+          "hear": "Closer and harder, like a stethoscope."
+        },
+        {
+          "id": "mod.depth",
+          "try": "Lower to 3",
+          "hear": "A softer, more distant heartbeat."
+        }
+      ]
+    },
+    {
+      "id": "shortwave-drift",
+      "name": "Shortwave Radio Between Stations",
+      "ref": "In the style of Holger Czukay’s shortwave radio pieces (\"Persian Love\")",
+      "artist": "Holger Czukay",
+      "tags": ["fx", "krautrock", "sound design", "70s"],
+      "level": 3,
+      "blurb": "Whistles, squeals and static drifting in and out, like tuning an old radio at night.",
+      "how": "MOD MIX blends two sources: Oscillator 3, slowed to a drifting LFO with OSC 3 CONTROL off, sweeps the pitch in long arcs, and noise adds random jitter. Both go to pitch and filter. A resonant filter makes it squeal, and a little noise in the mixer is the static.",
+      "phrase": {
+        "bpm": 60,
+        "loop": false,
+        "steps": [[0, 72, 6]]
+      },
+      "steps": [
+        {
+          "title": "A whistling carrier",
+          "module": "osc",
+          "why": "A triangle and a sawtooth give the carrier tone that drifts in.\n- Osc 1 WAVEFORM triangle, Osc 2 WAVEFORM sawtooth: a whistle with some edge.\n- OSC 2 on, OSC 1 VOLUME 7, OSC 2 VOLUME 3: mostly triangle.\n- NOISE on, NOISE VOLUME 4, noise colour white: static.\n- Listen for: a tone with hiss.",
+          "set": {
+            "osc1.wave": "tri",
+            "osc2.wave": "saw",
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 3,
+            "mix.noiseOn": true,
+            "mix.noise": 4,
+            "noise.colour": "white"
+          }
+        },
+        {
+          "title": "A squealing filter",
+          "module": "filter",
+          "why": "High resonance makes every sweep squeal.\n- CUTOFF 1 (about 1.3 kHz): mid.\n- EMPHASIS 7.5: squeals.\n- Listen for: a nasal, radio-like tone.",
+          "set": {
+            "filter.cutoff": 1,
+            "filter.emphasis": 7.5
+          }
+        },
+        {
+          "title": "Drift and jitter",
+          "module": "mod",
+          "why": "Oscillator 3 becomes a slow drift and is blended with noise on the mod bus.\n- Osc 3 RANGE LO, Osc 3 WAVEFORM triangle, OSC 3 CONTROL off, Osc 3 FREQUENCY −3: a very slow triangle, a few seconds per sweep.\n- left-hand mod source OSC 3, right-hand mod source NOISE, MOD MIX 3.5: mostly the drift, some noise.\n- OSCILLATOR MODULATION on, FILTER MODULATION on: both pitch and filter.\n- MOD DEPTH 6.5: wide.\n- Listen for: whistles sweeping through and static flickering around them.",
+          "set": {
+            "osc3.range": "lo",
+            "osc3.wave": "tri",
+            "osc3.kbd": false,
+            "osc3.freq": -3,
+            "mod.srcA": "osc3",
+            "mod.srcB": "noise",
+            "mod.mix": 3.5,
+            "mod.toOsc": true,
+            "mod.toFilter": true,
+            "mod.depth": 6.5
+          }
+        }
+      ],
+      "context": {
+        "mod.mix": "The balance between slow drift and random jitter."
+      },
+      "tweaks": [
+        {
+          "id": "mod.mix",
+          "try": "Raise to 7",
+          "hear": "More jitter, less drift: a storm on the band."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Raise to 9",
+          "hear": "Piercing heterodyne whistles."
+        }
+      ]
+    },
+    {
+      "id": "gamelan-gong-ageng",
+      "name": "Great Gong",
+      "ref": "In the style of the gong ageng in Javanese gamelan",
+      "artist": "Javanese gamelan",
+      "tags": ["perc", "world", "gamelan", "drone"],
+      "level": 3,
+      "blurb": "A deep, shimmering gong that swells after the strike and hums for a long time.",
+      "how": "A big bronze gong blooms after it is struck and beats as it rings. Two low triangles a little apart give the beating hum. A patch cable sends the mixer’s own output into MOD SOURCE, and the mod bus feeds it back to the oscillators’ pitch at audio rate: a small amount of this self-modulation adds a metallic shimmer.",
+      "phrase": {
+        "bpm": 40,
+        "loop": false,
+        "steps": [[0, 36, 4]]
+      },
+      "steps": [
+        {
+          "title": "A beating hum",
+          "module": "osc",
+          "why": "Two low triangles a little apart.\n- Osc 1 WAVEFORM triangle, Osc 1 RANGE 16’, Osc 2 WAVEFORM triangle, Osc 2 RANGE 16’: deep and soft.\n- Osc 2 FREQUENCY +0.3: a slow, wide beat.\n- OSC 2 on, OSC 1 VOLUME 8, OSC 2 VOLUME 8: equal.\n- Listen for: a low, throbbing hum.",
+          "set": {
+            "osc1.wave": "tri",
+            "osc1.range": "16",
+            "osc2.wave": "tri",
+            "osc2.range": "16",
+            "osc2.freq": 0.3,
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 8
+          }
+        },
+        {
+          "title": "Patch MIX → MOD SOURCE",
+          "module": "patch",
+          "why": "The mixer output, cabled into MOD SOURCE, replaces noise on the mod bus. Sent to pitch, the oscillators modulate themselves at audio rate, and the tone becomes clangorous.\n- MIX → MOD SOURCE: the oscillators modulate themselves.\n- right-hand mod source NOISE, MOD MIX 10, OSCILLATOR MODULATION on: the cable, alone, to pitch.\n- MOD DEPTH 2.5: just enough to make metal. Much more and it turns to noise.\n- Listen for: a bright, metallic shimmer over the hum.",
+          "set": {
+            "mod.srcB": "noise",
+            "mod.mix": 10,
+            "mod.toOsc": true,
+            "mod.depth": 2.5
+          },
+          "cables": [["j.mix", "j.modSrc"]]
+        },
+        {
+          "title": "A dark bronze",
+          "module": "filter",
+          "why": "The VCF blooms after the strike.\n- CUTOFF −1 (about 320 Hz): dark.\n- EMPHASIS 2: a little ring.\n- AMOUNT OF CONTOUR 3, filter ATTACK 3 (350 ms), filter DECAY 8 (5.0 s), filter SUSTAIN 0: opens over a few hundred milliseconds, then dies over seconds.\n- Listen for: the gong swelling after it is hit.",
+          "set": {
+            "filter.cutoff": -1,
+            "filter.emphasis": 2,
+            "filter.contour": 3,
+            "fenv.attack": 3,
+            "fenv.decay": 8,
+            "fenv.sustain": 0
+          }
+        },
+        {
+          "title": "A long ring",
+          "module": "amp",
+          "why": "The gong hums for a very long time.\n- loudness ATTACK 0 (3 ms), loudness DECAY 9 (7.1 s), loudness SUSTAIN 0: several seconds.\n- Listen for: a deep, shimmering wash.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 9,
+            "aenv.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "mod.depth": "How metallic the gong is: the cable feeds the oscillators back into their own pitch."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "Raise to 4",
+          "hear": "A trashier, Chinese-opera gong."
+        },
+        {
+          "id": "osc2.freq",
+          "try": "Lower to 0.1",
+          "hear": "A calmer, slower beating."
+        }
+      ]
+    },
+    {
+      "id": "backwards-guitar-swell",
+      "name": "Backwards Tape Swell",
+      "ref": "In the style of The Beatles — \"I'm Only Sleeping\"",
+      "artist": "The Beatles",
+      "tags": ["lead", "psychedelic", "60s"],
+      "level": 2,
+      "blurb": "A note that sucks in out of nowhere and cuts off at its loudest, like tape played backwards.",
+      "how": "A reversed recording swells up instead of decaying and ends abruptly. The loudness contour has a slow attack and its decay switch is off, so letting go of a key cuts the note dead at full volume. The filter rises with it for the \"sucked-in\" brightness.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 64, 1.5],
+          [1.5, 67, 0.5],
+          [2, 69, 1.5],
+          [3.5, 67, 0.5],
+          [4, 64, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A guitar-ish tone",
+          "module": "osc",
+          "why": "A sawtooth and a slightly detuned square.\n- Osc 1 WAVEFORM sawtooth, Osc 2 WAVEFORM square: bright.\n- Osc 2 FREQUENCY +0.1: slight beat.\n- OSC 2 on, OSC 1 VOLUME 7, OSC 2 VOLUME 5: both.\n- Listen for: a buzzy tone.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "sq",
+            "osc2.freq": 0.1,
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 5
+          }
+        },
+        {
+          "title": "A rising filter",
+          "module": "filter",
+          "why": "The VCF opens as the note swells.\n- CUTOFF −1 (about 320 Hz): dark to start.\n- EMPHASIS 2.5: a little whine.\n- AMOUNT OF CONTOUR 4, filter ATTACK 5 (770 ms), filter DECAY 6 (1.0 s), filter SUSTAIN 10: opens over about three-quarters of a second.\n- filter DECAY switch off: no tail.\n- Listen for: brightness rising into each note.",
+          "set": {
+            "filter.cutoff": -1,
+            "filter.emphasis": 2.5,
+            "filter.contour": 4,
+            "fenv.attack": 5,
+            "fenv.decay": 6,
+            "fenv.sustain": 10,
+            "env.filterDecay": false
+          }
+        },
+        {
+          "title": "Backwards loudness",
+          "module": "amp",
+          "why": "A slow attack, and no tail.\n- loudness ATTACK 5 (770 ms), loudness DECAY 4 (600 ms), loudness SUSTAIN 10: a swell of about three-quarters of a second.\n- loudness DECAY switch off: stops dead on release.\n- Listen for: notes that suck in and cut off.",
+          "set": {
+            "aenv.attack": 5,
+            "aenv.decay": 4,
+            "aenv.sustain": 10,
+            "env.loudDecay": false
+          }
+        }
+      ],
+      "context": {
+        "env.loudDecay": "Off, so the note stops at full volume, like reversed tape."
+      },
+      "tweaks": [
+        {
+          "id": "aenv.attack",
+          "try": "Lengthen to 6",
+          "hear": "A longer, more obviously reversed swell."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Raise to 5",
+          "hear": "A whinier, more psychedelic swell."
+        }
+      ]
+    },
+    {
+      "id": "tanpura-drone",
+      "name": "Tanpura Drone",
+      "ref": "In the style of the tanpura drone in Hindustani classical music",
+      "artist": "Hindustani classical tanpura",
+      "tags": ["drone", "world", "indian classical"],
+      "level": 2,
+      "blurb": "A shimmering, buzzing drone of plucked strings on the tonic and fifth.",
+      "how": "The tanpura is plucked in a slow cycle (fifth, tonic, tonic, low tonic) and its bridge makes each string buzz and bloom. A sawtooth and a narrow pulse give the buzz, and a resonant filter that opens slowly after each pluck gives the \"jawari\" bloom. Long decays let the strings overlap into one shimmering drone.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 55, 1],
+          [1, 60, 1],
+          [2, 60, 1],
+          [3, 48, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Buzzing strings",
+          "module": "osc",
+          "why": "A sawtooth and a narrow pulse, slightly apart.\n- Osc 1 WAVEFORM sawtooth, Osc 2 WAVEFORM narrow pulse: buzzy.\n- Osc 2 FREQUENCY +0.06: a slow shimmer.\n- OSC 2 on, OSC 1 VOLUME 7, OSC 2 VOLUME 5: both.\n- Listen for: a buzzing tone.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "narrow",
+            "osc2.freq": 0.06,
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 5
+          }
+        },
+        {
+          "title": "Jawari bloom",
+          "module": "filter",
+          "why": "After each pluck the overtones swell up, then fade.\n- CUTOFF −0.5 (about 450 Hz): warm.\n- EMPHASIS 5: a singing overtone.\n- AMOUNT OF CONTOUR 3, filter ATTACK 3.5 (460 ms), filter DECAY 7 (2.2 s), filter SUSTAIN 2: a slow bloom after each pluck.\n- KEYBOARD CONTROL 1 on: some tracking.\n- Listen for: a \"wow\" of overtones after each pluck.",
+          "set": {
+            "filter.cutoff": -0.5,
+            "filter.emphasis": 5,
+            "filter.contour": 3,
+            "fenv.attack": 3.5,
+            "fenv.decay": 7,
+            "fenv.sustain": 2,
+            "filter.kbd1": true
+          }
+        },
+        {
+          "title": "Overlapping strings",
+          "module": "amp",
+          "why": "Each string rings well into the next.\n- loudness ATTACK 0.5 (9 ms), loudness DECAY 7.5 (3.3 s), loudness SUSTAIN 3: several seconds.\n- Listen for: four strings blending into one drone.",
+          "set": {
+            "aenv.attack": 0.5,
+            "aenv.decay": 7.5,
+            "aenv.sustain": 3
+          }
+        }
+      ],
+      "context": {
+        "fenv.attack": "How slowly each string blooms."
+      },
+      "tweaks": [
+        {
+          "id": "filter.emphasis",
+          "try": "Raise to 7",
+          "hear": "A more pronounced, singing jawari."
+        },
+        {
+          "id": "fenv.attack",
+          "try": "Lengthen to 5",
+          "hear": "A slower, dreamier bloom."
+        }
+      ]
+    },
+    {
+      "id": "dungchen-horn",
+      "name": "Tibetan Long Horn",
+      "ref": "In the style of the dungchen horns in Tibetan Buddhist ritual music",
+      "artist": "Tibetan Buddhist ritual music",
+      "tags": ["drone", "world", "ritual"],
+      "level": 2,
+      "blurb": "An enormously deep, rough, rasping horn blast that swells and wavers.",
+      "how": "The dungchen is a telescopic horn several metres long that plays a growling, very low tone. Three sawtooths in the lowest octaves, roughened by the EXT feedback loop, make the rasp, and a slow LFO through the mod bus gives the wavering of breath.",
+      "phrase": {
+        "bpm": 40,
+        "loop": false,
+        "steps": [[0, 31, 4]]
+      },
+      "steps": [
+        {
+          "title": "Very low saws",
+          "module": "osc",
+          "why": "Three sawtooths, very low and a little apart.\n- Osc 1 WAVEFORM sawtooth, Osc 1 RANGE 32’, Osc 2 WAVEFORM sawtooth, Osc 2 RANGE 32’, Osc 3 WAVEFORM sawtooth, Osc 3 RANGE 32’: all very low.\n- Osc 2 FREQUENCY +0.25, Osc 3 FREQUENCY −0.3: beating against each other.\n- OSC 2 on, OSC 3 on, OSC 1 VOLUME 8, OSC 2 VOLUME 8, OSC 3 VOLUME 8: all in.\n- EXT on, EXT IN VOLUME 5: the EXT feedback rasp.\n- Listen for: a deep, rough growl.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc1.range": "32",
+            "osc2.wave": "saw",
+            "osc2.range": "32",
+            "osc3.wave": "saw",
+            "osc3.range": "32",
+            "osc2.freq": 0.25,
+            "osc3.freq": -0.3,
+            "mix.osc2On": true,
+            "mix.osc3On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 8,
+            "mix.osc3": 8,
+            "mix.extOn": true,
+            "mix.ext": 5
+          }
+        },
+        {
+          "title": "A dark bell",
+          "module": "filter",
+          "why": "The VCF keeps it dark with a little honk.\n- CUTOFF −1.5 (about 220 Hz): dark.\n- EMPHASIS 3: a horn-like honk.\n- Listen for: a dark blast.",
+          "set": {
+            "filter.cutoff": -1.5,
+            "filter.emphasis": 3
+          }
+        },
+        {
+          "title": "Breath",
+          "module": "mod",
+          "why": "The players’ breath makes the tone waver. A slow LFO moves the filter.\n- right-hand mod source LFO, MOD MIX 10, FILTER MODULATION on: LFO to cutoff.\n- LFO RATE 3 (0.60 Hz), LFO shape triangle: slow.\n- MOD DEPTH 3.5: a gentle swell and fade in brightness.\n- Listen for: the blast slowly breathing.",
+          "set": {
+            "mod.srcB": "lfo",
+            "mod.mix": 10,
+            "mod.toFilter": true,
+            "lfo.rate": 3,
+            "lfo.shape": "tri",
+            "mod.depth": 3.5
+          }
+        },
+        {
+          "title": "Swell",
+          "module": "amp",
+          "why": "A slow swell in and a long fade.\n- loudness ATTACK 4 (600 ms), loudness DECAY 6.5 (1.5 s), loudness SUSTAIN 10: swells in over about half a second.\n- Listen for: a single long, ritual blast.",
+          "set": {
+            "aenv.attack": 4,
+            "aenv.decay": 6.5,
+            "aenv.sustain": 10
+          }
+        }
+      ],
+      "context": {
+        "mix.ext": "How rough the horn rasps."
+      },
+      "tweaks": [
+        {
+          "id": "mix.ext",
+          "try": "Raise to 8",
+          "hear": "A harsher, more rasping blast."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Raise to 4",
+          "hear": "A shakier, more effortful breath."
+        }
+      ]
+    },
+    {
+      "id": "bertoia-wind-chimes",
+      "name": "Wind Chimes",
+      "ref": "In the style of Harry Bertoia’s Sonambient sound sculptures",
+      "artist": "Harry Bertoia",
+      "tags": ["fx", "ambient", "sound art", "70s"],
+      "level": 2,
+      "blurb": "Bright, metallic chimes that ring and shimmer as they are struck at random.",
+      "how": "Bertoia’s sculptures are rods of metal that ring against each other. Oscillator 3 is set to an inharmonic interval above the note, which gives the clangy metal partial, and very long decays let each chime ring under the next.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 84, 0.5],
+          [0.75, 91, 0.5],
+          [1.25, 88, 0.5],
+          [2.5, 86, 0.5],
+          [3, 93, 0.5],
+          [4.5, 84, 0.5],
+          [5, 89, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A metal rod",
+          "module": "osc",
+          "why": "Triangles: one on the note, one a little over a tritone above.\n- Osc 1 WAVEFORM triangle, Osc 3 WAVEFORM triangle, Osc 3 RANGE 8’, Osc 3 FREQUENCY +6.3: an inharmonic partial.\n- OSC 3 on, OSC 1 VOLUME 8, OSC 3 VOLUME 5: both.\n- Listen for: a clangy, metallic tone.",
+          "set": {
+            "osc1.wave": "tri",
+            "osc3.wave": "tri",
+            "osc3.range": "8",
+            "osc3.freq": 6.3,
+            "mix.osc3On": true,
+            "mix.osc1": 8,
+            "mix.osc3": 5
+          }
+        },
+        {
+          "title": "Struck",
+          "module": "filter",
+          "why": "A bright VCF with a short ping.\n- CUTOFF 2.5 (about 3.6 kHz): bright.\n- EMPHASIS 2: a slight ring.\n- AMOUNT OF CONTOUR 2, filter ATTACK 0 (3 ms), filter DECAY 2.5 (260 ms), filter SUSTAIN 0: a ping.\n- Listen for: a \"tink\".",
+          "set": {
+            "filter.cutoff": 2.5,
+            "filter.emphasis": 2,
+            "filter.contour": 2,
+            "fenv.attack": 0,
+            "fenv.decay": 2.5,
+            "fenv.sustain": 0
+          }
+        },
+        {
+          "title": "A long ring",
+          "module": "amp",
+          "why": "Metal rings a long time.\n- loudness ATTACK 0 (3 ms), loudness DECAY 8 (5.0 s), loudness SUSTAIN 0: several seconds.\n- Listen for: chimes ringing into each other.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 8,
+            "aenv.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "osc3.freq": "The inharmonic partial: the sound of the metal."
+      },
+      "tweaks": [
+        {
+          "id": "osc3.freq",
+          "try": "Move to 3.7",
+          "hear": "A different set of rods, a different clang."
+        },
+        {
+          "id": "aenv.decay",
+          "try": "Lengthen to 9.5",
+          "hear": "A huge, resonant sculpture."
+        }
+      ]
+    },
+    {
+      "id": "ecstasy-soprano",
+      "name": "Wordless Soprano",
+      "ref": "In the style of Ennio Morricone — \"The Ecstasy of Gold\"",
+      "artist": "Ennio Morricone",
+      "tags": ["lead", "film score", "western", "60s"],
+      "level": 2,
+      "blurb": "A soaring, wordless \"aah\" voice with a wide operatic vibrato.",
+      "how": "Edda Dell’Orso’s voice soars over Morricone’s scores. A sawtooth and a triangle through a resonant filter that tracks the keyboard give an \"aah\" vowel, and a deep, slightly fast vibrato makes it operatic.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 72, 2],
+          [2, 76, 1],
+          [3, 79, 1],
+          [4, 81, 3],
+          [7, 79, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A voice",
+          "module": "osc",
+          "why": "A sawtooth gives the harmonics a vowel needs; a triangle smooths it.\n- Osc 1 WAVEFORM sawtooth, Osc 2 WAVEFORM triangle: rich but smooth.\n- OSC 2 on, OSC 1 VOLUME 6, OSC 2 VOLUME 7: both.\n- Listen for: a smooth buzz.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "tri",
+            "mix.osc2On": true,
+            "mix.osc1": 6,
+            "mix.osc2": 7
+          }
+        },
+        {
+          "title": "The vowel",
+          "module": "filter",
+          "why": "A resonant peak that follows the keys is the \"aah\" formant.\n- CUTOFF 0.5 (about 890 Hz): an open vowel.\n- EMPHASIS 4: a vocal peak.\n- KEYBOARD CONTROL 1 on, KEYBOARD CONTROL 2 on: full tracking.\n- Listen for: an \"aah\".",
+          "set": {
+            "filter.cutoff": 0.5,
+            "filter.emphasis": 4,
+            "filter.kbd1": true,
+            "filter.kbd2": true
+          }
+        },
+        {
+          "title": "Breath and slurs",
+          "module": "amp",
+          "why": "A soft attack and a slur between notes.\n- loudness ATTACK 2.5 (260 ms), loudness DECAY 5 (770 ms), loudness SUSTAIN 10: breathed in.\n- GLIDE 1.5: small slurs.\n- Listen for: a singing line.",
+          "set": {
+            "aenv.attack": 2.5,
+            "aenv.decay": 5,
+            "aenv.sustain": 10,
+            "ctl.glide": 1.5
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "mod",
+          "why": "The LFO (low-frequency oscillator) adds vibrato through the mod bus.\n- right-hand mod source LFO, MOD MIX 10, OSCILLATOR MODULATION on: the LFO alone, to pitch.\n- LFO RATE 5.9 (6.7 Hz), LFO shape triangle: a smooth wobble.\n- MOD DEPTH 2.2: how wide the vibrato is.\n- Listen for: a wide, operatic vibrato.",
+          "set": {
+            "mod.srcB": "lfo",
+            "mod.mix": 10,
+            "mod.toOsc": true,
+            "lfo.rate": 5.9,
+            "lfo.shape": "tri",
+            "mod.depth": 2.2
+          }
+        }
+      ],
+      "context": {
+        "mod.depth": "The singer’s vibrato."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "Lower to 1.2",
+          "hear": "A purer, choirboy tone."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Raise to 6",
+          "hear": "A brighter, more nasal \"eh\" vowel."
+        }
+      ]
+    },
+    {
+      "id": "rockmore-theremin",
+      "name": "Concert Theremin",
+      "ref": "In the style of Clara Rockmore — \"The Swan\"",
+      "artist": "Clara Rockmore",
+      "tags": ["lead", "classical", "theremin", "40s"],
+      "level": 2,
+      "blurb": "A pure, singing tone that glides between every note with a slow, expressive vibrato.",
+      "how": "A theremin is played without touching it, so every note slides into the next. Clara Rockmore played it like a violin, with careful slides and a singer’s vibrato. A triangle with its edges filtered away is nearly a sine; long glide and slow vibrato do the rest.",
+      "phrase": {
+        "bpm": 56,
+        "loop": true,
+        "steps": [
+          [0, 67, 2],
+          [2, 71, 1],
+          [3, 74, 1],
+          [4, 79, 3],
+          [7, 78, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pure tone",
+          "module": "osc",
+          "why": "A filtered triangle is close to the theremin’s sine.\n- Osc 1 WAVEFORM triangle: soft.\n- CUTOFF 0.5 (about 890 Hz): removes the edges.\n- KEYBOARD CONTROL 1 on, KEYBOARD CONTROL 2 on: full tracking.\n- Listen for: a pure, hollow tone.",
+          "set": {
+            "osc1.wave": "tri",
+            "filter.cutoff": 0.5,
+            "filter.kbd1": true,
+            "filter.kbd2": true
+          }
+        },
+        {
+          "title": "Slides",
+          "module": "glide",
+          "why": "Every note slides.\n- GLIDE 5: slow, expressive slides.\n- loudness ATTACK 3 (350 ms), loudness DECAY 5.5 (880 ms), loudness SUSTAIN 10: a swelling entry, a soft fade.\n- Listen for: notes gliding into each other.",
+          "set": {
+            "ctl.glide": 5,
+            "aenv.attack": 3,
+            "aenv.decay": 5.5,
+            "aenv.sustain": 10
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "mod",
+          "why": "The LFO (low-frequency oscillator) adds vibrato through the mod bus.\n- right-hand mod source LFO, MOD MIX 10, OSCILLATOR MODULATION on: the LFO alone, to pitch.\n- LFO RATE 5.5 (4.8 Hz), LFO shape triangle: a smooth wobble.\n- MOD DEPTH 2: how wide the vibrato is.\n- Listen for: a violinist’s vibrato.",
+          "set": {
+            "mod.srcB": "lfo",
+            "mod.mix": 10,
+            "mod.toOsc": true,
+            "lfo.rate": 5.5,
+            "lfo.shape": "tri",
+            "mod.depth": 2
+          }
+        }
+      ],
+      "context": {
+        "ctl.glide": "How far the hand travels between notes."
+      },
+      "tweaks": [
+        {
+          "id": "ctl.glide",
+          "try": "Lower to 3",
+          "hear": "Cleaner, more precise slides."
+        },
+        {
+          "id": "mod.depth",
+          "try": "Raise to 3",
+          "hear": "A wild, B-movie wobble."
+        }
+      ]
+    },
+    {
+      "id": "khomus-jaw-harp",
+      "name": "Jaw Harp",
+      "ref": "In the style of the khomus (jaw harp) of Sakha (Yakutia)",
+      "artist": "Sakha khomus tradition",
+      "tags": ["fx", "world", "folk"],
+      "level": 3,
+      "blurb": "A twanging, boinging drone whose overtones sing as the mouth changes shape.",
+      "how": "A jaw harp plays one low note; the player changes the overtones with the mouth. A narrow pulse gives the twang, a very resonant filter picks out the singing overtones, and Oscillator 3, used as a slow modulator, sweeps that filter up and down like a moving mouth.",
+      "phrase": {
+        "bpm": 116,
+        "loop": true,
+        "steps": [
+          [0, 45, 0.5],
+          [0.5, 45, 0.25],
+          [0.75, 45, 0.25],
+          [1, 45, 0.5],
+          [1.5, 45, 0.5],
+          [2, 45, 0.5],
+          [2.5, 45, 0.25],
+          [2.75, 45, 0.25],
+          [3, 45, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A twanging reed",
+          "module": "osc",
+          "why": "A narrow pulse is all overtones.\n- Osc 1 WAVEFORM narrow pulse, Osc 1 RANGE 8’: buzzy.\n- Listen for: a thin, low buzz.",
+          "set": {
+            "osc1.wave": "narrow",
+            "osc1.range": "8"
+          }
+        },
+        {
+          "title": "Singing overtones",
+          "module": "filter",
+          "why": "A very resonant VCF picks out one overtone at a time.\n- CUTOFF 0 (about 630 Hz): mid.\n- EMPHASIS 8: a sharp, singing peak.\n- AMOUNT OF CONTOUR 2.5, filter ATTACK 0 (3 ms), filter DECAY 2 (200 ms), filter SUSTAIN 3: a \"boing\" at each pluck.\n- Listen for: a whistling overtone.",
+          "set": {
+            "filter.cutoff": 0,
+            "filter.emphasis": 8,
+            "filter.contour": 2.5,
+            "fenv.attack": 0,
+            "fenv.decay": 2,
+            "fenv.sustain": 3
+          }
+        },
+        {
+          "title": "The mouth",
+          "module": "mod",
+          "why": "Oscillator 3, slowed down and freed from the keys, sweeps the filter.\n- Osc 3 RANGE LO, Osc 3 WAVEFORM triangle, OSC 3 CONTROL off, Osc 3 FREQUENCY +2: a slow sweep.\n- left-hand mod source OSC 3, MOD MIX 0, FILTER MODULATION on: Oscillator 3 to the cutoff.\n- MOD DEPTH 5: a wide sweep of overtones.\n- Listen for: a melody of overtones over the drone.",
+          "set": {
+            "osc3.range": "lo",
+            "osc3.wave": "tri",
+            "osc3.kbd": false,
+            "osc3.freq": 2,
+            "mod.srcA": "osc3",
+            "mod.mix": 0,
+            "mod.toFilter": true,
+            "mod.depth": 5
+          }
+        },
+        {
+          "title": "Plucked",
+          "module": "amp",
+          "why": "Each pluck rings and fades.\n- loudness ATTACK 0 (3 ms), loudness DECAY 5 (770 ms), loudness SUSTAIN 4: a ringing pluck.\n- Listen for: \"boing-oing-oing\".",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 5,
+            "aenv.sustain": 4
+          }
+        }
+      ],
+      "context": {
+        "osc3.freq": "How fast the \"mouth\" moves."
+      },
+      "tweaks": [
+        {
+          "id": "osc3.freq",
+          "try": "Raise to 5",
+          "hear": "A fast, chattering mouth."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Raise to 9",
+          "hear": "Piercing, whistling overtones."
+        }
+      ]
+    },
+    {
+      "id": "dive-klaxon",
+      "name": "Dive Klaxon",
+      "ref": "In the style of the dive alarms in submarine war films",
+      "artist": "Submarine war films",
+      "tags": ["fx", "cinematic", "retro"],
+      "level": 2,
+      "blurb": "A harsh, buzzing \"aaoogah\" alarm that repeats.",
+      "how": "A klaxon is a rough, buzzing tone that sags in pitch. A square and a narrow pulse go through the EXT feedback loop for grit, the filter contour sags the pitch through the mod bus, and the square LFO, cabled into LOUD CV, sounds it in bursts.",
+      "phrase": {
+        "bpm": 60,
+        "loop": false,
+        "steps": [[0, 62, 6]]
+      },
+      "steps": [
+        {
+          "title": "A rough buzz",
+          "module": "osc",
+          "why": "A square and a narrow pulse, slightly sour.\n- Osc 1 WAVEFORM square, Osc 2 WAVEFORM narrow pulse: buzzy.\n- Osc 2 FREQUENCY +0.5: sour.\n- OSC 2 on, OSC 1 VOLUME 8, OSC 2 VOLUME 7: both.\n- EXT on, EXT IN VOLUME 5: EXT feedback for grit.\n- CUTOFF 1 (about 1.3 kHz), EMPHASIS 3: harsh.\n- Listen for: a raw, harsh buzz.",
+          "set": {
+            "osc1.wave": "sq",
+            "osc2.wave": "narrow",
+            "osc2.freq": 0.5,
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 7,
+            "mix.extOn": true,
+            "mix.ext": 5,
+            "filter.cutoff": 1,
+            "filter.emphasis": 3
+          }
+        },
+        {
+          "title": "Patch LFO (square) → FC GATE and LOUD CV",
+          "module": "patch",
+          "why": "The square LFO goes to two places at once: LOUD CV switches each blast on and off, and FC GATE restarts the filter contour so every blast starts high.\n- LFO (square) → LOUD CV: gates each blast.\n- LFO (square) → FC GATE: restarts the filter contour on each blast.\n- LFO RATE 3 (0.60 Hz): a blast about every second and a half.\n- loudness ATTACK 0 (3 ms), loudness DECAY 2 (200 ms), loudness SUSTAIN 5: loudness held halfway so the square switches it fully on and off.\n- Listen for: \"aah... aah...\".",
+          "set": {
+            "lfo.rate": 3,
+            "aenv.attack": 0,
+            "aenv.decay": 2,
+            "aenv.sustain": 5
+          },
+          "cables": [
+            ["j.lfoSq", "j.loudCv"],
+            ["j.lfoSq", "j.fcGate"]
+          ]
+        },
+        {
+          "title": "The \"ooo-gah\" sag",
+          "module": "mod",
+          "why": "The filter contour, restarted on each blast, pulls the pitch down through the mod bus.\n- left-hand mod source FILTER EG, MOD MIX 0, OSCILLATOR MODULATION on: filter contour to pitch.\n- MOD DEPTH 5: a few semitones.\n- AMOUNT OF CONTOUR 0, filter ATTACK 2 (200 ms), filter DECAY 4 (600 ms), filter SUSTAIN 0: rises quickly, then sags over half a second; it moves only the pitch.\n- Listen for: \"aaoo-gah\": a rise and a sag in each blast.",
+          "set": {
+            "mod.srcA": "eg",
+            "mod.mix": 0,
+            "mod.toOsc": true,
+            "mod.depth": 5,
+            "filter.contour": 0,
+            "fenv.attack": 2,
+            "fenv.decay": 4,
+            "fenv.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "lfo.rate": "The alarm’s repeat rate."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "Raise to 7",
+          "hear": "A more cartoonish, swooping horn."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Raise to 4",
+          "hear": "An urgent, faster alarm."
+        }
+      ]
+    },
+    {
+      "id": "forbidden-planet-circuit",
+      "name": "Bleeping Circuit",
+      "ref": "In the style of Louis and Bebe Barron — \"Forbidden Planet\"",
+      "artist": "Louis and Bebe Barron",
+      "tags": ["fx", "sci-fi", "electronic", "50s"],
+      "level": 3,
+      "blurb": "A burbling, bleeping alien circuit that keeps chattering in a looping pattern.",
+      "how": "The Barrons built circuits that \"lived\" and recorded their squeals. Here Oscillator 3, at a low audio-ish rate with OSC 3 CONTROL off, swings the pitch in a fast sawtooth pattern through the mod bus, and the square LFO, cabled into LOUD CV, chops it into bleeps.",
+      "phrase": {
+        "bpm": 60,
+        "loop": false,
+        "steps": [[0, 72, 6]]
+      },
+      "steps": [
+        {
+          "title": "A pure bleep",
+          "module": "osc",
+          "why": "A triangle through a resonant filter.\n- Osc 1 WAVEFORM triangle: pure.\n- CUTOFF 1.5 (about 1.8 kHz), EMPHASIS 5: ringing.\n- Listen for: a pure whistle.",
+          "set": {
+            "osc1.wave": "tri",
+            "filter.cutoff": 1.5,
+            "filter.emphasis": 5
+          }
+        },
+        {
+          "title": "A chattering pitch",
+          "module": "mod",
+          "why": "Oscillator 3 in LO range, freed from the keys, is a fast sawtooth LFO on the mod bus.\n- Osc 3 RANGE LO, Osc 3 WAVEFORM sawtooth, OSC 3 CONTROL off, Osc 3 FREQUENCY +5: a few ramps a second.\n- left-hand mod source OSC 3, MOD MIX 0, OSCILLATOR MODULATION on: to pitch.\n- MOD DEPTH 7: sweeps of most of an octave.\n- Listen for: a rising, repeating \"bweep-bweep\".",
+          "set": {
+            "osc3.range": "lo",
+            "osc3.wave": "saw",
+            "osc3.kbd": false,
+            "osc3.freq": 5,
+            "mod.srcA": "osc3",
+            "mod.mix": 0,
+            "mod.toOsc": true,
+            "mod.depth": 7
+          }
+        },
+        {
+          "title": "Patch LFO (square) → LOUD CV",
+          "module": "patch",
+          "why": "The square LFO chops the sweep into separate bleeps.\n- LFO (square) → LOUD CV: chops the sound.\n- LFO RATE 6 (7.2 Hz): fast chopping.\n- loudness SUSTAIN 5: loudness held halfway so the square chops fully.\n- Listen for: bleeps and bloops that never quite repeat the same way.",
+          "set": {
+            "lfo.rate": 6,
+            "aenv.sustain": 5
+          },
+          "cables": [["j.lfoSq", "j.loudCv"]]
+        }
+      ],
+      "context": {
+        "osc3.freq": "The speed of the pitch pattern.",
+        "lfo.rate": "How finely it is chopped."
+      },
+      "tweaks": [
+        {
+          "id": "osc3.freq",
+          "try": "Lower to 2",
+          "hear": "Slower, more ponderous swoops."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Raise to 7",
+          "hear": "A fast, nervous chatter."
+        }
+      ]
+    },
+    {
+      "id": "ascent-swell-pad",
+      "name": "Slow Ascent Swell",
+      "ref": "In the style of Brian Eno — \"An Ending (Ascent)\"",
+      "artist": "Brian Eno",
+      "tags": ["pad", "ambient", "80s"],
+      "level": 1,
+      "blurb": "A soft, glowing tone that rises out of silence and fades away just as slowly.",
+      "how": "This is a one-note-at-a-time pad: three softly detuned oscillators swell in over a couple of seconds and take as long to fade. Played slowly, each note hangs over the next like light over water.",
+      "phrase": {
+        "bpm": 50,
+        "loop": true,
+        "steps": [
+          [0, 64, 3],
+          [3, 67, 3],
+          [6, 62, 3]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Three soft tones",
+          "module": "osc",
+          "why": "Two triangles and a sawtooth an octave down, all a little apart.\n- Osc 1 WAVEFORM triangle, Osc 2 WAVEFORM triangle, Osc 3 WAVEFORM sawtooth, Osc 3 RANGE 16’: soft, with a little warmth below.\n- Osc 2 FREQUENCY +0.1, Osc 3 FREQUENCY −0.08: gentle beating.\n- OSC 2 on, OSC 3 on, OSC 1 VOLUME 7, OSC 2 VOLUME 7, OSC 3 VOLUME 4: the low saw quieter.\n- Listen for: a soft, slowly moving tone.",
+          "set": {
+            "osc1.wave": "tri",
+            "osc2.wave": "tri",
+            "osc3.wave": "saw",
+            "osc3.range": "16",
+            "osc2.freq": 0.1,
+            "osc3.freq": -0.08,
+            "mix.osc2On": true,
+            "mix.osc3On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 7,
+            "mix.osc3": 4
+          }
+        },
+        {
+          "title": "A gentle glow",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) keeps it soft.\n- CUTOFF −0.5 (about 450 Hz): warm.\n- EMPHASIS 1: a hint of glow.\n- KEYBOARD CONTROL 1 on: some tracking.\n- Listen for: a dark, warm tone.",
+          "set": {
+            "filter.cutoff": -0.5,
+            "filter.emphasis": 1,
+            "filter.kbd1": true
+          }
+        },
+        {
+          "title": "Very slow in and out",
+          "module": "amp",
+          "why": "Long attack and long release.\n- loudness ATTACK 6.5 (1.5 s), loudness DECAY 7.5 (3.3 s), loudness SUSTAIN 10: swells in over more than a second, fades over several.\n- Listen for: notes rising out of nothing and hanging in the air.",
+          "set": {
+            "aenv.attack": 6.5,
+            "aenv.decay": 7.5,
+            "aenv.sustain": 10
+          }
+        }
+      ],
+      "context": {
+        "aenv.attack": "How slowly each note rises."
+      },
+      "tweaks": [
+        {
+          "id": "aenv.attack",
+          "try": "Lengthen to 8",
+          "hear": "An even slower, more distant swell."
+        },
+        {
+          "id": "mix.osc3",
+          "try": "Raise to 7",
+          "hear": "A darker, warmer floor."
+        }
+      ]
+    },
+    {
+      "id": "flight-strings",
+      "name": "Hushed Strings",
+      "ref": "In the style of Jóhann Jóhannsson — \"Flight from the City\"",
+      "artist": "Jóhann Jóhannsson",
+      "tags": ["strings", "modern classical", "2010s"],
+      "level": 2,
+      "blurb": "A soft, bowed string line, warm and slightly breathy, with a slow swell.",
+      "how": "Quiet modern-classical strings: three sawtooths, detuned like a few players, filtered dark with a slow bow attack and a gentle vibrato.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 62, 2],
+          [2, 64, 1],
+          [3, 65, 3],
+          [6, 64, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A small section",
+          "module": "osc",
+          "why": "Three sawtooths, slightly apart: three players.\n- Osc 1 WAVEFORM sawtooth, Osc 2 WAVEFORM sawtooth, Osc 3 WAVEFORM sawtooth, Osc 3 RANGE 8’: bowed strings are rich in harmonics.\n- Osc 2 FREQUENCY +0.12, Osc 3 FREQUENCY −0.12: a little apart.\n- OSC 2 on, OSC 3 on, OSC 1 VOLUME 6, OSC 2 VOLUME 6, OSC 3 VOLUME 6: equal.\n- Listen for: a shimmering, buzzy tone.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "saw",
+            "osc3.wave": "saw",
+            "osc3.range": "8",
+            "osc2.freq": 0.12,
+            "osc3.freq": -0.12,
+            "mix.osc2On": true,
+            "mix.osc3On": true,
+            "mix.osc1": 6,
+            "mix.osc2": 6,
+            "mix.osc3": 6
+          }
+        },
+        {
+          "title": "Muted",
+          "module": "filter",
+          "why": "A dark VCF makes them hushed, like strings with mutes on.\n- CUTOFF −0.5 (about 450 Hz): soft.\n- EMPHASIS 1: a little body.\n- KEYBOARD CONTROL 1 on: some tracking.\n- Listen for: a hushed, warm tone.",
+          "set": {
+            "filter.cutoff": -0.5,
+            "filter.emphasis": 1,
+            "filter.kbd1": true
+          }
+        },
+        {
+          "title": "The bow",
+          "module": "amp",
+          "why": "A slow bow attack and a soft release.\n- loudness ATTACK 4.5 (680 ms), loudness DECAY 5.5 (880 ms), loudness SUSTAIN 10: swells in.\n- GLIDE 0.8: a tiny slur.\n- Listen for: bowed, swelling notes.",
+          "set": {
+            "aenv.attack": 4.5,
+            "aenv.decay": 5.5,
+            "aenv.sustain": 10,
+            "ctl.glide": 0.8
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "mod",
+          "why": "The LFO (low-frequency oscillator) adds vibrato through the mod bus.\n- right-hand mod source LFO, MOD MIX 10, OSCILLATOR MODULATION on: the LFO alone, to pitch.\n- LFO RATE 5.3 (4.1 Hz), LFO shape triangle: a smooth wobble.\n- MOD DEPTH 1: how wide the vibrato is.\n- Listen for: a gentle string vibrato.",
+          "set": {
+            "mod.srcB": "lfo",
+            "mod.mix": 10,
+            "mod.toOsc": true,
+            "lfo.rate": 5.3,
+            "lfo.shape": "tri",
+            "mod.depth": 1
+          }
+        }
+      ],
+      "context": {
+        "aenv.attack": "The speed of the bow."
+      },
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Open to 0.5",
+          "hear": "Brighter, as if the mutes came off."
+        },
+        {
+          "id": "aenv.attack",
+          "try": "Shorten to 3",
+          "hear": "A firmer bow."
+        }
+      ]
+    },
+    {
+      "id": "sugar-plum-celesta",
+      "name": "Celesta",
+      "ref": "In the style of Pyotr Ilyich Tchaikovsky — \"Dance of the Sugar Plum Fairy\"",
+      "artist": "Pyotr Ilyich Tchaikovsky",
+      "tags": ["keys", "classical", "orchestral"],
+      "level": 1,
+      "blurb": "A delicate, sparkling bell-piano with a soft strike and a ringing tail.",
+      "how": "The celesta is a keyboard of hammers striking small steel plates over wooden resonators. A triangle gives the plate’s tone and a quiet triangle two octaves up gives the sparkle, with a quick filter ping and a ringing decay.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 79, 0.5],
+          [0.5, 76, 0.25],
+          [0.75, 79, 0.25],
+          [1, 78, 0.5],
+          [1.5, 75, 0.5],
+          [2, 76, 0.5],
+          [2.5, 74, 0.25],
+          [2.75, 74, 0.25],
+          [3, 74, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Plate and sparkle",
+          "module": "osc",
+          "why": "A triangle for the plate and a quiet triangle two octaves up for the sparkle.\n- Osc 1 WAVEFORM triangle, Osc 2 WAVEFORM triangle, Osc 2 RANGE 2’: soft and glassy.\n- OSC 2 on, OSC 1 VOLUME 8, OSC 2 VOLUME 3: the sparkle quiet.\n- Listen for: a soft, bell-like tone.",
+          "set": {
+            "osc1.wave": "tri",
+            "osc2.wave": "tri",
+            "osc2.range": "2",
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 3
+          }
+        },
+        {
+          "title": "A soft hammer",
+          "module": "filter",
+          "why": "A short ping from the VCF.\n- CUTOFF 2 (about 2.5 kHz): bright.\n- AMOUNT OF CONTOUR 2, filter ATTACK 0 (3 ms), filter DECAY 2.5 (260 ms), filter SUSTAIN 0: a soft strike.\n- KEYBOARD CONTROL 1 on, KEYBOARD CONTROL 2 on: full tracking.\n- Listen for: a gentle \"ting\".",
+          "set": {
+            "filter.cutoff": 2,
+            "filter.contour": 2,
+            "fenv.attack": 0,
+            "fenv.decay": 2.5,
+            "fenv.sustain": 0,
+            "filter.kbd1": true,
+            "filter.kbd2": true
+          }
+        },
+        {
+          "title": "A ring",
+          "module": "amp",
+          "why": "The plates ring and fade.\n- loudness ATTACK 0 (3 ms), loudness DECAY 6 (1.0 s), loudness SUSTAIN 0: about a second.\n- Listen for: a delicate, sparkling melody.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 6,
+            "aenv.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "mix.osc2": "How much sparkle the plates have."
+      },
+      "tweaks": [
+        {
+          "id": "mix.osc2",
+          "try": "Raise to 6",
+          "hear": "A brighter glockenspiel."
+        },
+        {
+          "id": "aenv.decay",
+          "try": "Lengthen to 7.5",
+          "hear": "A longer, more music-box ring."
+        }
+      ]
+    },
+    {
+      "id": "fusion-electric-violin",
+      "name": "Electric Violin",
+      "ref": "In the style of Jean-Luc Ponty — \"Enigmatic Ocean\"",
+      "artist": "Jean-Luc Ponty",
+      "tags": ["strings", "jazz fusion", "70s"],
+      "level": 2,
+      "blurb": "A singing, slightly buzzy solo violin with a quick bow and a fast vibrato.",
+      "how": "Ponty’s electric violin sang like a lead synth. A sawtooth and a narrow pulse give the bowed buzz, a resonant filter that tracks the keys gives the violin’s body resonance, and a quick attack, a little glide and a fast vibrato make it sing.",
+      "phrase": {
+        "bpm": 116,
+        "loop": true,
+        "steps": [
+          [0, 76, 0.5],
+          [0.5, 79, 0.5],
+          [1, 81, 1],
+          [2, 83, 0.25],
+          [2.25, 81, 0.25],
+          [2.5, 79, 0.5],
+          [3, 76, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bowed string",
+          "module": "osc",
+          "why": "A sawtooth plus a narrow pulse.\n- Osc 1 WAVEFORM sawtooth, Osc 2 WAVEFORM narrow pulse: bright and buzzy.\n- Osc 2 FREQUENCY +0.05: a slight shimmer.\n- OSC 2 on, OSC 1 VOLUME 7, OSC 2 VOLUME 4: saw on top.\n- Listen for: a buzzing, bright tone.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "narrow",
+            "osc2.freq": 0.05,
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 4
+          }
+        },
+        {
+          "title": "The body",
+          "module": "filter",
+          "why": "A resonant peak that follows the keys.\n- CUTOFF 1 (about 1.3 kHz): bright.\n- EMPHASIS 3.5: a singing body resonance.\n- KEYBOARD CONTROL 1 on, KEYBOARD CONTROL 2 on: full tracking.\n- Listen for: a violin-like tone.",
+          "set": {
+            "filter.cutoff": 1,
+            "filter.emphasis": 3.5,
+            "filter.kbd1": true,
+            "filter.kbd2": true
+          }
+        },
+        {
+          "title": "A quick bow",
+          "module": "amp",
+          "why": "A fast but not clicky attack.\n- loudness ATTACK 1.5 (70 ms), loudness DECAY 4 (600 ms), loudness SUSTAIN 10: a quick bow.\n- GLIDE 1.2: slides between notes.\n- Listen for: expressive, singing notes.",
+          "set": {
+            "aenv.attack": 1.5,
+            "aenv.decay": 4,
+            "aenv.sustain": 10,
+            "ctl.glide": 1.2
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "mod",
+          "why": "The LFO (low-frequency oscillator) adds vibrato through the mod bus.\n- right-hand mod source LFO, MOD MIX 10, OSCILLATOR MODULATION on: the LFO alone, to pitch.\n- LFO RATE 6 (7.2 Hz), LFO shape triangle: a smooth wobble.\n- MOD DEPTH 1.6: how wide the vibrato is.\n- Listen for: a quick, intense vibrato.",
+          "set": {
+            "mod.srcB": "lfo",
+            "mod.mix": 10,
+            "mod.toOsc": true,
+            "lfo.rate": 6,
+            "lfo.shape": "tri",
+            "mod.depth": 1.6
+          }
+        }
+      ],
+      "context": {
+        "filter.emphasis": "The violin’s body resonance."
+      },
+      "tweaks": [
+        {
+          "id": "filter.emphasis",
+          "try": "Raise to 5.5",
+          "hear": "A more nasal, electric tone."
+        },
+        {
+          "id": "ctl.glide",
+          "try": "Raise to 2.5",
+          "hear": "More slides, like a gypsy-jazz fiddler."
+        }
+      ]
+    },
+    {
+      "id": "erhu-moon",
+      "name": "Erhu",
+      "ref": "In the style of Abing — \"Erquan Yingyue (The Moon Reflected on the Second Spring)\"",
+      "artist": "Abing",
+      "tags": ["strings", "chinese", "world"],
+      "level": 2,
+      "blurb": "A plaintive, nasal two-string fiddle that slides and sobs between notes.",
+      "how": "The erhu has a small snakeskin body and no fingerboard, so it is nasal and every note slides. A narrow pulse and a sawtooth through a resonant, key-tracking filter give its reedy voice; a long glide and a slow, deep vibrato give its sob.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 69, 1],
+          [1, 72, 0.5],
+          [1.5, 74, 0.5],
+          [2, 76, 2],
+          [4, 74, 0.5],
+          [4.5, 72, 0.5],
+          [5, 69, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A nasal string",
+          "module": "osc",
+          "why": "A narrow pulse for the snakeskin buzz, a saw for the string.\n- Osc 1 WAVEFORM narrow pulse, Osc 2 WAVEFORM sawtooth: nasal.\n- OSC 2 on, OSC 1 VOLUME 7, OSC 2 VOLUME 4: pulse on top.\n- Listen for: a thin, nasal tone.",
+          "set": {
+            "osc1.wave": "narrow",
+            "osc2.wave": "saw",
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 4
+          }
+        },
+        {
+          "title": "A small body",
+          "module": "filter",
+          "why": "A resonant peak above the note.\n- CUTOFF 0.5 (about 890 Hz): focused.\n- EMPHASIS 5: a strong, nasal peak.\n- KEYBOARD CONTROL 1 on, KEYBOARD CONTROL 2 on: full tracking.\n- Listen for: a plaintive voice.",
+          "set": {
+            "filter.cutoff": 0.5,
+            "filter.emphasis": 5,
+            "filter.kbd1": true,
+            "filter.kbd2": true
+          }
+        },
+        {
+          "title": "Slides",
+          "module": "glide",
+          "why": "There is no fingerboard, so the player slides between notes.\n- GLIDE 3.5: expressive slides.\n- loudness ATTACK 2 (200 ms), loudness DECAY 4.5 (680 ms), loudness SUSTAIN 10: a bowed start.\n- Listen for: every note sliding into the next.",
+          "set": {
+            "ctl.glide": 3.5,
+            "aenv.attack": 2,
+            "aenv.decay": 4.5,
+            "aenv.sustain": 10
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "mod",
+          "why": "The LFO (low-frequency oscillator) adds vibrato through the mod bus.\n- right-hand mod source LFO, MOD MIX 10, OSCILLATOR MODULATION on: the LFO alone, to pitch.\n- LFO RATE 5.2 (3.7 Hz), LFO shape triangle: a smooth wobble.\n- MOD DEPTH 2.2: how wide the vibrato is.\n- Listen for: a deep, sobbing vibrato.",
+          "set": {
+            "mod.srcB": "lfo",
+            "mod.mix": 10,
+            "mod.toOsc": true,
+            "lfo.rate": 5.2,
+            "lfo.shape": "tri",
+            "mod.depth": 2.2
+          }
+        }
+      ],
+      "context": {
+        "ctl.glide": "The erhu’s slides."
+      },
+      "tweaks": [
+        {
+          "id": "ctl.glide",
+          "try": "Raise to 5",
+          "hear": "Even more mournful slides."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Raise to 6.5",
+          "hear": "A thinner, more piercing tone."
+        }
+      ]
+    },
+    {
+      "id": "duduk-lament",
+      "name": "Duduk",
+      "ref": "In the style of Djivan Gasparyan — \"I Will Not Be Sad in This World\"",
+      "artist": "Djivan Gasparyan",
+      "tags": ["wind", "armenian", "world"],
+      "level": 2,
+      "blurb": "A dark, mellow, breathy reed with a gentle vibrato and soft slides.",
+      "how": "The duduk is an apricot-wood double reed with a huge reed, so it is dark and velvety. A square and a triangle give the soft reed, a low filter keeps it mellow, and noise adds the breath. A slow vibrato and a little glide give its mournful line.",
+      "phrase": {
+        "bpm": 56,
+        "loop": true,
+        "steps": [
+          [0, 62, 2],
+          [2, 63, 1],
+          [3, 65, 1],
+          [4, 67, 2],
+          [6, 65, 1],
+          [7, 63, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A soft reed",
+          "module": "osc",
+          "why": "A square for the reed’s hollowness, a triangle for softness.\n- Osc 1 WAVEFORM square, Osc 2 WAVEFORM triangle: soft and hollow.\n- OSC 2 on, OSC 1 VOLUME 6, OSC 2 VOLUME 7: mostly triangle.\n- NOISE on, NOISE VOLUME 1.5, noise colour pink: a touch of breath.\n- Listen for: a breathy, hollow tone.",
+          "set": {
+            "osc1.wave": "sq",
+            "osc2.wave": "tri",
+            "mix.osc2On": true,
+            "mix.osc1": 6,
+            "mix.osc2": 7,
+            "mix.noiseOn": true,
+            "mix.noise": 1.5,
+            "noise.colour": "pink"
+          }
+        },
+        {
+          "title": "Velvety",
+          "module": "filter",
+          "why": "A low VCF with gentle resonance.\n- CUTOFF −0.5 (about 450 Hz): dark.\n- EMPHASIS 2.5: a soft reedy peak.\n- KEYBOARD CONTROL 1 on, KEYBOARD CONTROL 2 on: full tracking.\n- Listen for: a dark, velvety voice.",
+          "set": {
+            "filter.cutoff": -0.5,
+            "filter.emphasis": 2.5,
+            "filter.kbd1": true,
+            "filter.kbd2": true
+          }
+        },
+        {
+          "title": "Breathed",
+          "module": "amp",
+          "why": "A soft attack and small slides.\n- loudness ATTACK 3 (350 ms), loudness DECAY 5 (770 ms), loudness SUSTAIN 10: breathed in.\n- GLIDE 2: soft slides.\n- Listen for: a mournful, singing line.",
+          "set": {
+            "aenv.attack": 3,
+            "aenv.decay": 5,
+            "aenv.sustain": 10,
+            "ctl.glide": 2
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "mod",
+          "why": "The LFO (low-frequency oscillator) adds vibrato through the mod bus.\n- right-hand mod source LFO, MOD MIX 10, OSCILLATOR MODULATION on: the LFO alone, to pitch.\n- LFO RATE 5 (3.2 Hz), LFO shape triangle: a smooth wobble.\n- MOD DEPTH 1.4: how wide the vibrato is.\n- Listen for: a slow, gentle vibrato.",
+          "set": {
+            "mod.srcB": "lfo",
+            "mod.mix": 10,
+            "mod.toOsc": true,
+            "lfo.rate": 5,
+            "lfo.shape": "tri",
+            "mod.depth": 1.4
+          }
+        }
+      ],
+      "context": {
+        "filter.cutoff": "How dark the reed is."
+      },
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Raise to 0.5",
+          "hear": "A brighter, more piercing zurna-like reed."
+        },
+        {
+          "id": "mix.noise",
+          "try": "Raise to 3",
+          "hear": "A breathier, more intimate duduk."
+        }
+      ]
+    },
+    {
+      "id": "bansuri-morning",
+      "name": "Bansuri Flute",
+      "ref": "In the style of Hariprasad Chaurasia’s bansuri in a morning raga",
+      "artist": "Hariprasad Chaurasia",
+      "tags": ["wind", "indian classical", "world"],
+      "level": 2,
+      "blurb": "A breathy, hollow bamboo flute that bends into notes with ornaments.",
+      "how": "The bansuri is a side-blown bamboo flute: hollow, very breathy and full of slides. A triangle with a quiet square an octave up gives the bamboo tube, plenty of noise is the breath, and glide and vibrato give the ornaments.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 67, 1.5],
+          [1.5, 69, 0.5],
+          [2, 71, 1],
+          [3, 72, 0.25],
+          [3.25, 71, 0.25],
+          [3.5, 69, 0.5],
+          [4, 67, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bamboo tube",
+          "module": "osc",
+          "why": "A triangle and a very quiet square an octave up.\n- Osc 1 WAVEFORM triangle, Osc 2 WAVEFORM square, Osc 2 RANGE 4’: hollow.\n- OSC 2 on, OSC 1 VOLUME 8, OSC 2 VOLUME 1.5: the square barely there.\n- NOISE on, NOISE VOLUME 3.5, noise colour white: lots of breath.\n- Listen for: an airy, hollow tone.",
+          "set": {
+            "osc1.wave": "tri",
+            "osc2.wave": "sq",
+            "osc2.range": "4",
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 1.5,
+            "mix.noiseOn": true,
+            "mix.noise": 3.5,
+            "noise.colour": "white"
+          }
+        },
+        {
+          "title": "Soft",
+          "module": "filter",
+          "why": "A soft VCF that tracks the keys.\n- CUTOFF 0.5 (about 890 Hz): soft.\n- EMPHASIS 1: a hint of focus.\n- KEYBOARD CONTROL 1 on, KEYBOARD CONTROL 2 on: full tracking.\n- Listen for: a breathy flute.",
+          "set": {
+            "filter.cutoff": 0.5,
+            "filter.emphasis": 1,
+            "filter.kbd1": true,
+            "filter.kbd2": true
+          }
+        },
+        {
+          "title": "Meend",
+          "module": "glide",
+          "why": "Slides into and between notes.\n- GLIDE 2.5: gentle slides.\n- loudness ATTACK 2 (200 ms), loudness DECAY 4.5 (680 ms), loudness SUSTAIN 10: breathed in.\n- Listen for: an ornamented, singing line.",
+          "set": {
+            "ctl.glide": 2.5,
+            "aenv.attack": 2,
+            "aenv.decay": 4.5,
+            "aenv.sustain": 10
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "mod",
+          "why": "The LFO (low-frequency oscillator) adds vibrato through the mod bus.\n- right-hand mod source LFO, MOD MIX 10, OSCILLATOR MODULATION on: the LFO alone, to pitch.\n- LFO RATE 5.2 (3.7 Hz), LFO shape triangle: a smooth wobble.\n- MOD DEPTH 1.3: how wide the vibrato is.\n- Listen for: a gentle, late vibrato.",
+          "set": {
+            "mod.srcB": "lfo",
+            "mod.mix": 10,
+            "mod.toOsc": true,
+            "lfo.rate": 5.2,
+            "lfo.shape": "tri",
+            "mod.depth": 1.3
+          }
+        }
+      ],
+      "context": {
+        "ctl.glide": "The bend into each note."
+      },
+      "tweaks": [
+        {
+          "id": "mix.noise",
+          "try": "Raise to 5",
+          "hear": "A very breathy, intimate flute."
+        },
+        {
+          "id": "osc1.range",
+          "try": "Set to 16'",
+          "hear": "A deep, low bass bansuri."
+        }
+      ]
+    },
+    {
+      "id": "fretless-continuum",
+      "name": "Singing Fretless Bass",
+      "ref": "In the style of Jaco Pastorius — \"Continuum\"",
+      "artist": "Jaco Pastorius",
+      "tags": ["bass", "jazz fusion", "70s"],
+      "level": 2,
+      "blurb": "A singing, vocal fretless bass with a \"mwah\" on every note and smooth slides.",
+      "how": "Jaco’s fretless sang: each note has a vocal \"mwah\" from the string buzzing against the bare fingerboard. A sawtooth and a triangle give the string, a resonant filter with a slower contour gives the mwah, and glide gives the slides.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 40, 1],
+          [1, 47, 0.5],
+          [1.5, 52, 1.5],
+          [3, 50, 0.5],
+          [3.5, 47, 0.5],
+          [4, 45, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "String",
+          "module": "osc",
+          "why": "A sawtooth and a triangle an octave down.\n- Osc 1 WAVEFORM sawtooth, Osc 1 RANGE 16’, Osc 2 WAVEFORM triangle, Osc 2 RANGE 16’: warm and singing.\n- OSC 2 on, OSC 1 VOLUME 6, OSC 2 VOLUME 8: mostly triangle.\n- Listen for: a warm bass tone.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc1.range": "16",
+            "osc2.wave": "tri",
+            "osc2.range": "16",
+            "mix.osc2On": true,
+            "mix.osc1": 6,
+            "mix.osc2": 8
+          }
+        },
+        {
+          "title": "The mwah",
+          "module": "filter",
+          "why": "A resonant VCF with a contour that peaks a little after the pluck.\n- CUTOFF −1.5 (about 220 Hz): dark.\n- EMPHASIS 4.5: vocal.\n- AMOUNT OF CONTOUR 3.5, filter ATTACK 2.5 (260 ms), filter DECAY 5 (770 ms), filter SUSTAIN 3: a \"mwah\" a moment after each note.\n- KEYBOARD CONTROL 1 on: some tracking.\n- Listen for: a vocal, singing bass.",
+          "set": {
+            "filter.cutoff": -1.5,
+            "filter.emphasis": 4.5,
+            "filter.contour": 3.5,
+            "fenv.attack": 2.5,
+            "fenv.decay": 5,
+            "fenv.sustain": 3,
+            "filter.kbd1": true
+          }
+        },
+        {
+          "title": "Slides",
+          "module": "glide",
+          "why": "Fretless slides.\n- GLIDE 2.5: smooth slides.\n- loudness ATTACK 0 (3 ms), loudness DECAY 6 (1.0 s), loudness SUSTAIN 7: a long sustain.\n- Listen for: notes sliding and singing.",
+          "set": {
+            "ctl.glide": 2.5,
+            "aenv.attack": 0,
+            "aenv.decay": 6,
+            "aenv.sustain": 7
+          }
+        }
+      ],
+      "context": {
+        "fenv.attack": "How late the \"mwah\" arrives."
+      },
+      "tweaks": [
+        {
+          "id": "filter.emphasis",
+          "try": "Raise to 6",
+          "hear": "A more pronounced, almost talking \"mwah\"."
+        },
+        {
+          "id": "ctl.glide",
+          "try": "Lower to 1",
+          "hear": "Cleaner, more precise slides."
+        }
+      ]
+    },
+    {
+      "id": "tubby-dub-sub",
+      "name": "Dub Sub Bass",
+      "ref": "In the style of King Tubby’s dub mixes",
+      "artist": "King Tubby",
+      "tags": ["bass", "dub", "reggae", "70s"],
+      "level": 1,
+      "blurb": "A deep, round, warm sub bass that you feel in your chest.",
+      "how": "Dub bass is all weight and no edge. A triangle and a square an octave apart through a very low filter give a round, deep bass, and the notes are slightly short so the drums have room.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.75],
+          [1, 36, 0.4],
+          [1.5, 43, 0.4],
+          [2, 41, 0.75],
+          [3, 39, 0.4],
+          [3.5, 36, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Deep tones",
+          "module": "osc",
+          "why": "A triangle and a square an octave apart.\n- Osc 1 WAVEFORM triangle, Osc 1 RANGE 16’, Osc 2 WAVEFORM square, Osc 2 RANGE 32’: deep.\n- OSC 2 on, OSC 1 VOLUME 9, OSC 2 VOLUME 5: mostly triangle.\n- Listen for: a deep tone.",
+          "set": {
+            "osc1.wave": "tri",
+            "osc1.range": "16",
+            "osc2.wave": "sq",
+            "osc2.range": "32",
+            "mix.osc2On": true,
+            "mix.osc1": 9,
+            "mix.osc2": 5
+          }
+        },
+        {
+          "title": "No edge",
+          "module": "filter",
+          "why": "A very low VCF.\n- CUTOFF −2 (about 160 Hz): only the weight.\n- EMPHASIS 1.5: a little round boom.\n- Listen for: a round, warm bass.",
+          "set": {
+            "filter.cutoff": -2,
+            "filter.emphasis": 1.5
+          }
+        },
+        {
+          "title": "Room for the drums",
+          "module": "amp",
+          "why": "Slightly short notes.\n- loudness ATTACK 0.5 (9 ms), loudness DECAY 3.5 (460 ms), loudness SUSTAIN 9: a soft start.\n- Listen for: a rolling, heavy dub line.",
+          "set": {
+            "aenv.attack": 0.5,
+            "aenv.decay": 3.5,
+            "aenv.sustain": 9
+          }
+        }
+      ],
+      "context": {
+        "filter.cutoff": "How deep and soft the bass is."
+      },
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Raise to -1",
+          "hear": "A punchier, more audible bass on small speakers."
+        },
+        {
+          "id": "mix.osc2",
+          "try": "Raise to 8",
+          "hear": "More low-end weight."
+        }
+      ]
+    },
+    {
+      "id": "planet-rock-bass",
+      "name": "Electro Pop Bass",
+      "ref": "In the style of Afrika Bambaataa & the Soulsonic Force — \"Planet Rock\"",
+      "artist": "Afrika Bambaataa",
+      "tags": ["bass", "electro", "hip hop", "80s"],
+      "level": 1,
+      "blurb": "A short, popping electro bass with a quick blip on each note.",
+      "how": "Early electro bass is short and punchy. A square and a saw with a quick resonant filter blip, and no tail at all.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.25],
+          [0.75, 36, 0.25],
+          [1.5, 39, 0.25],
+          [2, 36, 0.25],
+          [2.5, 43, 0.25],
+          [3, 41, 0.25],
+          [3.5, 39, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Square and saw",
+          "module": "osc",
+          "why": "A square and a sawtooth.\n- Osc 1 WAVEFORM square, Osc 1 RANGE 16’, Osc 2 WAVEFORM sawtooth, Osc 2 RANGE 16’: punchy.\n- OSC 2 on, OSC 1 VOLUME 8, OSC 2 VOLUME 5: square on top.\n- Listen for: a punchy bass tone.",
+          "set": {
+            "osc1.wave": "sq",
+            "osc1.range": "16",
+            "osc2.wave": "saw",
+            "osc2.range": "16",
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 5
+          }
+        },
+        {
+          "title": "Blip",
+          "module": "filter",
+          "why": "A quick resonant VCF blip.\n- CUTOFF −1.5 (about 220 Hz): dark.\n- EMPHASIS 4: a little pop.\n- AMOUNT OF CONTOUR 4, filter ATTACK 0 (3 ms), filter DECAY 1.8 (130 ms), filter SUSTAIN 0: a fast blip.\n- Listen for: a \"bip\" on each note.",
+          "set": {
+            "filter.cutoff": -1.5,
+            "filter.emphasis": 4,
+            "filter.contour": 4,
+            "fenv.attack": 0,
+            "fenv.decay": 1.8,
+            "fenv.sustain": 0
+          }
+        },
+        {
+          "title": "No tail",
+          "module": "amp",
+          "why": "Short notes, stopped dead.\n- loudness ATTACK 0 (3 ms), loudness DECAY 2.5 (260 ms), loudness SUSTAIN 4: short.\n- loudness DECAY switch off: no release.\n- Listen for: a popping electro line.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 2.5,
+            "aenv.sustain": 4,
+            "env.loudDecay": false
+          }
+        }
+      ],
+      "context": {
+        "filter.contour": "How hard each note pops."
+      },
+      "tweaks": [
+        {
+          "id": "filter.emphasis",
+          "try": "Raise to 6",
+          "hear": "A rubberier, more squelchy pop."
+        },
+        {
+          "id": "aenv.sustain",
+          "try": "Raise to 8",
+          "hear": "Fatter, longer notes."
+        }
+      ]
+    },
+    {
+      "id": "trap-808-slide",
+      "name": "Sliding 808 Bass",
+      "ref": "In the style of the sliding 808 bass in trap",
+      "artist": "Trap",
+      "tags": ["bass", "trap", "hip hop", "2010s"],
+      "level": 2,
+      "blurb": "A huge, booming sub with a gritty front that slides between notes.",
+      "how": "Trap’s 808 is a long, booming sine with saturation, and producers glide it between notes. A low triangle, overdriven by the EXT feedback loop, gives the grit. A cable from LOUD CONT to CUT CV makes the filter follow the loudness, so the grit is bright at the start of each note and darkens as it fades.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 36, 1.5],
+          [1.5, 36, 0.5],
+          [2, 43, 1],
+          [3, 41, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A booming sub",
+          "module": "osc",
+          "why": "A low triangle, nearly a sine.\n- Osc 1 WAVEFORM triangle, Osc 1 RANGE 32’: very low.\n- OSC 1 VOLUME 10: full.\n- EXT on, EXT IN VOLUME 5: EXT feedback grit.\n- Listen for: a deep, slightly gritty boom.",
+          "set": {
+            "osc1.wave": "tri",
+            "osc1.range": "32",
+            "mix.osc1": 10,
+            "mix.extOn": true,
+            "mix.ext": 5
+          }
+        },
+        {
+          "title": "Long boom and slide",
+          "module": "amp",
+          "why": "A long decay and a glide between notes.\n- loudness ATTACK 0 (3 ms), loudness DECAY 6.5 (1.5 s), loudness SUSTAIN 3: a long boom.\n- GLIDE 3: the 808 slide.\n- Listen for: notes that slide.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 6.5,
+            "aenv.sustain": 3,
+            "ctl.glide": 3
+          }
+        },
+        {
+          "title": "Patch LOUD CONT → CUT CV",
+          "module": "patch",
+          "why": "The loudness contour is added to the cutoff, so the filter opens at the start of each note and darkens as it fades.\n- LOUD CONT → CUT CV: the filter follows the loudness.\n- CUTOFF −2.5 (about 110 Hz): dark once the note has faded.\n- Listen for: a gritty front that melts into a clean boom.",
+          "set": {
+            "filter.cutoff": -2.5
+          },
+          "cables": [["j.loudCont", "j.cutCv"]]
+        }
+      ],
+      "context": {
+        "ctl.glide": "The slide between notes."
+      },
+      "tweaks": [
+        {
+          "id": "ctl.glide",
+          "try": "Raise to 4.5",
+          "hear": "Long, dramatic slides."
+        },
+        {
+          "id": "mix.ext",
+          "try": "Raise to 8",
+          "hear": "A distorted, clipping 808."
+        }
+      ]
+    },
+    {
+      "id": "enola-gay-lead",
+      "name": "Bright Synth-Pop Hook",
+      "ref": "In the style of Orchestral Manoeuvres in the Dark — \"Enola Gay\"",
+      "artist": "OMD",
+      "tags": ["lead", "synth-pop", "new wave", "80s"],
+      "level": 1,
+      "blurb": "A bright, clean, slightly brassy lead for a bouncy synth-pop hook.",
+      "how": "Early-80s synth-pop hooks are bright and catchy. A square and a sawtooth with a short filter blip and a hint of vibrato.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.5],
+          [0.5, 69, 0.5],
+          [1, 71, 0.5],
+          [1.5, 72, 0.5],
+          [2, 74, 0.5],
+          [2.5, 72, 0.5],
+          [3, 71, 0.5],
+          [3.5, 67, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Square and saw",
+          "module": "osc",
+          "why": "Hollow and bright.\n- Osc 1 WAVEFORM square, Osc 2 WAVEFORM sawtooth, Osc 2 RANGE 4’: hollow with a bright octave.\n- OSC 2 on, OSC 1 VOLUME 8, OSC 2 VOLUME 4: both.\n- Listen for: a bright tone.",
+          "set": {
+            "osc1.wave": "sq",
+            "osc2.wave": "saw",
+            "osc2.range": "4",
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 4
+          }
+        },
+        {
+          "title": "A blip",
+          "module": "filter",
+          "why": "A short brightening.\n- CUTOFF 1 (about 1.3 kHz): bright.\n- EMPHASIS 2: a little bite.\n- AMOUNT OF CONTOUR 2.5, filter ATTACK 0 (3 ms), filter DECAY 2.5 (260 ms), filter SUSTAIN 4: a blip on each note.\n- Listen for: a bouncy attack.",
+          "set": {
+            "filter.cutoff": 1,
+            "filter.emphasis": 2,
+            "filter.contour": 2.5,
+            "fenv.attack": 0,
+            "fenv.decay": 2.5,
+            "fenv.sustain": 4
+          }
+        },
+        {
+          "title": "Clean",
+          "module": "amp",
+          "why": "Clean notes.\n- loudness ATTACK 0 (3 ms), loudness DECAY 3 (350 ms), loudness SUSTAIN 10: instant on.\n- Listen for: a catchy hook.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 3,
+            "aenv.sustain": 10
+          }
+        }
+      ],
+      "context": {
+        "mix.osc2": "How bright the hook is."
+      },
+      "tweaks": [
+        {
+          "id": "mix.osc2",
+          "try": "Raise to 7",
+          "hear": "A brighter, more piercing hook."
+        },
+        {
+          "id": "filter.contour",
+          "try": "Raise to 4",
+          "hear": "A more brassy blip."
+        }
+      ]
+    },
+    {
+      "id": "vienna-lead",
+      "name": "Brooding Solo Lead",
+      "ref": "In the style of Ultravox — \"Vienna\"",
+      "artist": "Ultravox",
+      "tags": ["lead", "new romantic", "80s"],
+      "level": 2,
+      "blurb": "A dramatic, slow, slightly mournful lead with a long vibrato.",
+      "how": "New-romantic solos were slow and dramatic. A sawtooth and a square through a resonant filter with a slow vibrato that grows over long notes.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 72, 2],
+          [2, 71, 1],
+          [3, 69, 1],
+          [4, 67, 3],
+          [7, 69, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Rich tone",
+          "module": "osc",
+          "why": "A sawtooth and a slightly detuned square.\n- Osc 1 WAVEFORM sawtooth, Osc 2 WAVEFORM square: rich.\n- Osc 2 FREQUENCY −0.1: slightly flat.\n- OSC 2 on, OSC 1 VOLUME 7, OSC 2 VOLUME 6: both.\n- Listen for: a rich tone.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "sq",
+            "osc2.freq": -0.1,
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 6
+          }
+        },
+        {
+          "title": "Dramatic",
+          "module": "filter",
+          "why": "A resonant VCF with a slow swell.\n- CUTOFF 0 (about 630 Hz): mid.\n- EMPHASIS 3.5: a singing edge.\n- AMOUNT OF CONTOUR 2, filter ATTACK 4 (600 ms), filter DECAY 6 (1.0 s), filter SUSTAIN 7: swells a little.\n- KEYBOARD CONTROL 1 on: some tracking.\n- Listen for: a dramatic tone.",
+          "set": {
+            "filter.cutoff": 0,
+            "filter.emphasis": 3.5,
+            "filter.contour": 2,
+            "fenv.attack": 4,
+            "fenv.decay": 6,
+            "fenv.sustain": 7,
+            "filter.kbd1": true
+          }
+        },
+        {
+          "title": "Slow",
+          "module": "amp",
+          "why": "A soft attack.\n- loudness ATTACK 2 (200 ms), loudness DECAY 5 (770 ms), loudness SUSTAIN 10: gentle.\n- Listen for: a mournful line.",
+          "set": {
+            "aenv.attack": 2,
+            "aenv.decay": 5,
+            "aenv.sustain": 10
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "mod",
+          "why": "The LFO (low-frequency oscillator) adds vibrato through the mod bus.\n- right-hand mod source LFO, MOD MIX 10, OSCILLATOR MODULATION on: the LFO alone, to pitch.\n- LFO RATE 5.2 (3.7 Hz), LFO shape triangle: a smooth wobble.\n- MOD DEPTH 1.8: how wide the vibrato is.\n- Listen for: a slow, dramatic vibrato.",
+          "set": {
+            "mod.srcB": "lfo",
+            "mod.mix": 10,
+            "mod.toOsc": true,
+            "lfo.rate": 5.2,
+            "lfo.shape": "tri",
+            "mod.depth": 1.8
+          }
+        }
+      ],
+      "context": {
+        "mod.depth": "The drama in the vibrato."
+      },
+      "tweaks": [
+        {
+          "id": "filter.emphasis",
+          "try": "Raise to 5.5",
+          "hear": "A more piercing, operatic lead."
+        },
+        {
+          "id": "mod.depth",
+          "try": "Lower to 1",
+          "hear": "A colder, straighter lead."
+        }
+      ]
+    },
+    {
+      "id": "tycho-awake-pluck",
+      "name": "Sunlit Pluck",
+      "ref": "In the style of Tycho — \"Awake\"",
+      "artist": "Tycho",
+      "tags": ["pluck", "chillwave", "downtempo", "2010s"],
+      "level": 1,
+      "blurb": "A warm, soft pluck with a gentle glow, made for bright, flowing melodies.",
+      "how": "Tycho’s sound is warm, sunny and soft-edged. A triangle and a sawtooth an octave up with a gentle filter pluck and a medium decay give a pluck that glows rather than snaps.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.5],
+          [0.5, 76, 0.5],
+          [1, 74, 0.5],
+          [1.5, 76, 0.5],
+          [2, 72, 0.5],
+          [2.5, 76, 0.5],
+          [3, 74, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Warm tones",
+          "module": "osc",
+          "why": "A triangle and a quiet sawtooth an octave up.\n- Osc 1 WAVEFORM triangle, Osc 2 WAVEFORM sawtooth, Osc 2 RANGE 4’: warm with a bright glint.\n- Osc 2 FREQUENCY +0.08: a slight shimmer.\n- OSC 2 on, OSC 1 VOLUME 8, OSC 2 VOLUME 3: mostly triangle.\n- Listen for: a warm tone.",
+          "set": {
+            "osc1.wave": "tri",
+            "osc2.wave": "saw",
+            "osc2.range": "4",
+            "osc2.freq": 0.08,
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 3
+          }
+        },
+        {
+          "title": "A soft pluck",
+          "module": "filter",
+          "why": "A gentle VCF pluck.\n- CUTOFF −0.5 (about 450 Hz): warm.\n- EMPHASIS 1.5: a slight glow.\n- AMOUNT OF CONTOUR 3, filter ATTACK 0 (3 ms), filter DECAY 3.5 (460 ms), filter SUSTAIN 2: a soft pluck.\n- KEYBOARD CONTROL 1 on: some tracking.\n- Listen for: a glowing pluck.",
+          "set": {
+            "filter.cutoff": -0.5,
+            "filter.emphasis": 1.5,
+            "filter.contour": 3,
+            "fenv.attack": 0,
+            "fenv.decay": 3.5,
+            "fenv.sustain": 2,
+            "filter.kbd1": true
+          }
+        },
+        {
+          "title": "A medium decay",
+          "module": "amp",
+          "why": "A decay that lets notes flow.\n- loudness ATTACK 0 (3 ms), loudness DECAY 5 (770 ms), loudness SUSTAIN 3: notes ring into each other a little.\n- Listen for: a flowing, sunny melody.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 5,
+            "aenv.sustain": 3
+          }
+        }
+      ],
+      "context": {
+        "fenv.decay": "How long the glow lasts."
+      },
+      "tweaks": [
+        {
+          "id": "fenv.decay",
+          "try": "Lengthen to 4.5",
+          "hear": "A softer, more drawn-out glow."
+        },
+        {
+          "id": "osc2.freq",
+          "try": "Raise to 0.25",
+          "hear": "A warped, sun-faded cassette feel."
+        }
+      ]
+    },
+    {
+      "id": "looking-glass-marimba",
+      "name": "Minimalist Marimba",
+      "ref": "In the style of Midori Takada — \"Through the Looking Glass\"",
+      "artist": "Midori Takada",
+      "tags": ["keys", "minimalism", "ambient", "80s"],
+      "level": 1,
+      "blurb": "A soft, woody mallet tone for slowly repeating minimalist patterns.",
+      "how": "A marimba bar is wood over a tuned tube: a soft thump and a round tone that dies quickly. A triangle and a quiet triangle two octaves up (the bar’s tuned overtone) with a short filter ping and a short decay.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.5],
+          [0.5, 67, 0.5],
+          [1, 71, 0.5],
+          [1.5, 67, 0.5],
+          [2, 64, 0.5],
+          [2.5, 69, 0.5],
+          [3, 72, 0.5],
+          [3.5, 69, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Wood and overtone",
+          "module": "osc",
+          "why": "A triangle and its tuned overtone two octaves up.\n- Osc 1 WAVEFORM triangle, Osc 2 WAVEFORM triangle, Osc 2 RANGE 2’: woody.\n- OSC 2 on, OSC 1 VOLUME 9, OSC 2 VOLUME 2: overtone very quiet.\n- Listen for: a soft tone.",
+          "set": {
+            "osc1.wave": "tri",
+            "osc2.wave": "tri",
+            "osc2.range": "2",
+            "mix.osc2On": true,
+            "mix.osc1": 9,
+            "mix.osc2": 2
+          }
+        },
+        {
+          "title": "A mallet",
+          "module": "filter",
+          "why": "A soft ping.\n- CUTOFF 0.5 (about 890 Hz): soft.\n- AMOUNT OF CONTOUR 2.5, filter ATTACK 0 (3 ms), filter DECAY 1.8 (130 ms), filter SUSTAIN 0: a soft knock.\n- KEYBOARD CONTROL 1 on, KEYBOARD CONTROL 2 on: full tracking.\n- Listen for: a woody \"tok\".",
+          "set": {
+            "filter.cutoff": 0.5,
+            "filter.contour": 2.5,
+            "fenv.attack": 0,
+            "fenv.decay": 1.8,
+            "fenv.sustain": 0,
+            "filter.kbd1": true,
+            "filter.kbd2": true
+          }
+        },
+        {
+          "title": "A short ring",
+          "module": "amp",
+          "why": "Wood does not ring long.\n- loudness ATTACK 0 (3 ms), loudness DECAY 4 (600 ms), loudness SUSTAIN 0: half a second.\n- Listen for: a gentle, repeating pattern.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 4,
+            "aenv.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "aenv.decay": "How long each bar rings."
+      },
+      "tweaks": [
+        {
+          "id": "aenv.decay",
+          "try": "Lengthen to 5.5",
+          "hear": "A longer, more vibraphone-like ring."
+        },
+        {
+          "id": "mix.osc2",
+          "try": "Raise to 5",
+          "hear": "A harder, xylophone-like mallet."
+        }
+      ]
+    },
+    {
+      "id": "just-intonation-drone",
+      "name": "Just-Tuned Sine Drone",
+      "ref": "In the style of La Monte Young’s Dream House drones",
+      "artist": "La Monte Young",
+      "tags": ["drone", "minimalism", "ambient", "60s"],
+      "level": 3,
+      "blurb": "A pure, sustained chord of near-sine tones on a root, fifth and octave, slowly breathing.",
+      "how": "La Monte Young’s drones are pure, sustained intervals tuned to whole-number ratios, so they lock together. Three triangles, filtered almost to sines, sit on the root, a fifth above and an octave above. A patch cable from the triangle LFO into CUT CV opens and closes the filter very slowly, and a whisper of noise through the mod bus keeps the pitch alive.",
+      "phrase": {
+        "bpm": 40,
+        "loop": false,
+        "steps": [[0, 48, 8]]
+      },
+      "steps": [
+        {
+          "title": "Root, fifth, octave",
+          "module": "osc",
+          "why": "Oscillator 2 seven semitones up is a fifth; Oscillator 3 an octave up.\n- Osc 1 WAVEFORM triangle, Osc 2 WAVEFORM triangle, Osc 3 WAVEFORM triangle, Osc 3 RANGE 4’: pure tones.\n- Osc 2 FREQUENCY +7.02: a fifth, nudged to the pure 3:2 ratio.\n- Osc 3 FREQUENCY 0: a pure octave.\n- OSC 2 on, OSC 3 on, OSC 1 VOLUME 7, OSC 2 VOLUME 6, OSC 3 VOLUME 4: balanced.\n- Listen for: a locked, glowing chord.",
+          "set": {
+            "osc1.wave": "tri",
+            "osc2.wave": "tri",
+            "osc3.wave": "tri",
+            "osc3.range": "4",
+            "osc2.freq": 7.02,
+            "osc3.freq": 0,
+            "mix.osc2On": true,
+            "mix.osc3On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 6,
+            "mix.osc3": 4
+          }
+        },
+        {
+          "title": "Near-sines",
+          "module": "filter",
+          "why": "A low VCF removes the triangles’ overtones.\n- CUTOFF −1 (about 320 Hz): pure.\n- KEYBOARD CONTROL 1 on, KEYBOARD CONTROL 2 on: full tracking.\n- Listen for: a soft, pure chord.",
+          "set": {
+            "filter.cutoff": -1,
+            "filter.kbd1": true,
+            "filter.kbd2": true
+          }
+        },
+        {
+          "title": "Patch LFO (triangle) → CUT CV",
+          "module": "patch",
+          "why": "The triangle LFO, added to the cutoff, makes the drone breathe in brightness.\n- LFO (triangle) → CUT CV: slowly opens and closes the filter.\n- LFO RATE 1.5 (0.17 Hz): one breath every several seconds.\n- Listen for: slow swells of brightness.",
+          "set": {
+            "lfo.rate": 1.5
+          },
+          "cables": [["j.lfoTri", "j.cutCv"]]
+        },
+        {
+          "title": "Alive",
+          "module": "mod",
+          "why": "A trace of noise on pitch keeps the drone from sounding static.\n- right-hand mod source NOISE, MOD MIX 10, OSCILLATOR MODULATION on: noise to pitch.\n- MOD DEPTH 0.5: tiny.\n- loudness ATTACK 6 (1.0 s), loudness DECAY 7 (2.2 s), loudness SUSTAIN 10: a slow swell in.\n- Listen for: a living, breathing drone.",
+          "set": {
+            "mod.srcB": "noise",
+            "mod.mix": 10,
+            "mod.toOsc": true,
+            "mod.depth": 0.5,
+            "aenv.attack": 6,
+            "aenv.decay": 7,
+            "aenv.sustain": 10
+          }
+        }
+      ],
+      "context": {
+        "osc2.freq": "The fifth, tuned pure.",
+        "lfo.rate": "The breathing of the drone."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.freq",
+          "try": "Set to 5",
+          "hear": "A fourth instead of a fifth: a darker, more suspended drone."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Raise to 2.5",
+          "hear": "Faster breathing."
+        }
+      ]
+    },
+    {
+      "id": "rainbow-organ-arp",
+      "name": "Curved Air Organ Run",
+      "ref": "In the style of Terry Riley — \"A Rainbow in Curved Air\"",
+      "artist": "Terry Riley",
+      "tags": ["seq", "minimalism", "psychedelic", "60s"],
+      "level": 2,
+      "blurb": "A bright, buzzy organ voice for fast, repeating modal runs.",
+      "how": "Riley layered fast organ patterns into shimmering clouds. A square and a saw an octave up with a short filter pop give a bright organ-like voice that stays clear at speed.",
+      "phrase": {
+        "bpm": 150,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.25],
+          [0.25, 65, 0.25],
+          [0.5, 69, 0.25],
+          [0.75, 72, 0.25],
+          [1, 74, 0.25],
+          [1.25, 72, 0.25],
+          [1.5, 69, 0.25],
+          [1.75, 65, 0.25],
+          [2, 64, 0.25],
+          [2.25, 67, 0.25],
+          [2.5, 71, 0.25],
+          [2.75, 74, 0.25],
+          [3, 76, 0.25],
+          [3.25, 74, 0.25],
+          [3.5, 71, 0.25],
+          [3.75, 67, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bright organ",
+          "module": "osc",
+          "why": "A square and a saw an octave up.\n- Osc 1 WAVEFORM square, Osc 2 WAVEFORM sawtooth, Osc 2 RANGE 4’: bright.\n- OSC 2 on, OSC 1 VOLUME 7, OSC 2 VOLUME 5: both.\n- Listen for: a buzzy, bright tone.",
+          "set": {
+            "osc1.wave": "sq",
+            "osc2.wave": "saw",
+            "osc2.range": "4",
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 5
+          }
+        },
+        {
+          "title": "A pop",
+          "module": "filter",
+          "why": "A short VCF pop.\n- CUTOFF 1 (about 1.3 kHz): bright.\n- AMOUNT OF CONTOUR 2, filter ATTACK 0 (3 ms), filter DECAY 1.5 (70 ms), filter SUSTAIN 3: a short pop.\n- KEYBOARD CONTROL 1 on: some tracking.\n- Listen for: clear note starts.",
+          "set": {
+            "filter.cutoff": 1,
+            "filter.contour": 2,
+            "fenv.attack": 0,
+            "fenv.decay": 1.5,
+            "fenv.sustain": 3,
+            "filter.kbd1": true
+          }
+        },
+        {
+          "title": "Organ keys",
+          "module": "amp",
+          "why": "Instant on and off.\n- loudness ATTACK 0 (3 ms), loudness DECAY 1 (24 ms), loudness SUSTAIN 10: switch-like.\n- Listen for: a fast, shimmering run.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 1,
+            "aenv.sustain": 10
+          }
+        }
+      ],
+      "context": {
+        "mix.osc2": "How bright the organ is."
+      },
+      "tweaks": [
+        {
+          "id": "mix.osc2",
+          "try": "Raise to 8",
+          "hear": "A brighter, harsher organ."
+        },
+        {
+          "id": "fenv.decay",
+          "try": "Lengthen to 2.5",
+          "hear": "A more percussive pop at speed."
+        }
+      ]
+    },
+    {
+      "id": "mbira-nhemamusasa",
+      "name": "Mbira",
+      "ref": "In the style of Shona mbira music (\"Nhemamusasa\")",
+      "artist": "Shona mbira tradition",
+      "tags": ["pluck", "world", "african"],
+      "level": 2,
+      "blurb": "A soft, ringing metal tine with a little buzz, for interlocking patterns.",
+      "how": "The mbira is a set of metal tines plucked with the thumbs, played inside a gourd, often with bottle caps fitted to buzz. A triangle gives the tine, a quiet narrow pulse adds the buzz, and a short pluck and medium ring let patterns interlock.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 67, 0.5],
+          [0.5, 74, 0.5],
+          [1, 71, 0.5],
+          [1.5, 62, 0.5],
+          [2, 69, 0.5],
+          [2.5, 74, 0.5],
+          [3, 67, 0.5],
+          [3.5, 64, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Tine and buzz",
+          "module": "osc",
+          "why": "A triangle and a quiet narrow pulse.\n- Osc 1 WAVEFORM triangle, Osc 2 WAVEFORM narrow pulse: tine and buzz.\n- Osc 2 FREQUENCY +0.15: a slight shimmer.\n- OSC 2 on, OSC 1 VOLUME 8, OSC 2 VOLUME 2.5: the buzz quiet.\n- Listen for: a soft, slightly buzzy tone.",
+          "set": {
+            "osc1.wave": "tri",
+            "osc2.wave": "narrow",
+            "osc2.freq": 0.15,
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 2.5
+          }
+        },
+        {
+          "title": "A thumb pluck",
+          "module": "filter",
+          "why": "A short pluck.\n- CUTOFF 0.5 (about 890 Hz): soft.\n- EMPHASIS 2: a little ring.\n- AMOUNT OF CONTOUR 2.5, filter ATTACK 0 (3 ms), filter DECAY 2 (200 ms), filter SUSTAIN 1: a soft pluck.\n- KEYBOARD CONTROL 1 on, KEYBOARD CONTROL 2 on: full tracking.\n- Listen for: a soft \"plink\".",
+          "set": {
+            "filter.cutoff": 0.5,
+            "filter.emphasis": 2,
+            "filter.contour": 2.5,
+            "fenv.attack": 0,
+            "fenv.decay": 2,
+            "fenv.sustain": 1,
+            "filter.kbd1": true,
+            "filter.kbd2": true
+          }
+        },
+        {
+          "title": "A ring",
+          "module": "amp",
+          "why": "Tines ring for a while.\n- loudness ATTACK 0 (3 ms), loudness DECAY 5.5 (880 ms), loudness SUSTAIN 0: about a second.\n- Listen for: interlocking, rippling patterns.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 5.5,
+            "aenv.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "mix.osc2": "How much the bottle caps buzz."
+      },
+      "tweaks": [
+        {
+          "id": "mix.osc2",
+          "try": "Raise to 5",
+          "hear": "More bottle-cap buzz."
+        },
+        {
+          "id": "aenv.decay",
+          "try": "Lengthen to 7",
+          "hear": "A larger, gourd-resonated mbira."
+        }
+      ]
+    },
+    {
+      "id": "oldfield-tubular-bells",
+      "name": "Tubular Bells",
+      "ref": "In the style of Mike Oldfield — \"Tubular Bells\"",
+      "artist": "Mike Oldfield",
+      "tags": ["keys", "progressive rock", "orchestral", "70s"],
+      "level": 2,
+      "blurb": "A bright, clanging orchestral chime with a long, shimmering ring.",
+      "how": "Tubular bells are long brass tubes struck with a mallet. Their sound is mostly inharmonic overtones. Oscillator 3 adds a clangy partial at an odd interval above the note, and a long decay lets each strike ring.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 72, 1],
+          [1, 67, 1],
+          [2, 72, 1],
+          [3, 74, 1],
+          [4, 76, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Tube and clang",
+          "module": "osc",
+          "why": "A triangle for the tone and two clangy partials.\n- Osc 1 WAVEFORM triangle, Osc 2 WAVEFORM triangle, Osc 2 RANGE 4’, Osc 3 WAVEFORM triangle, Osc 3 RANGE 4’: bell-like.\n- Osc 2 FREQUENCY +0.3, Osc 3 FREQUENCY +3.2: an octave slightly stretched, and a partial between a minor and major third above it.\n- OSC 2 on, OSC 3 on, OSC 1 VOLUME 7, OSC 2 VOLUME 5, OSC 3 VOLUME 5: balanced.\n- Listen for: a clangy chime.",
+          "set": {
+            "osc1.wave": "tri",
+            "osc2.wave": "tri",
+            "osc2.range": "4",
+            "osc3.wave": "tri",
+            "osc3.range": "4",
+            "osc2.freq": 0.3,
+            "osc3.freq": 3.2,
+            "mix.osc2On": true,
+            "mix.osc3On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 5,
+            "mix.osc3": 5
+          }
+        },
+        {
+          "title": "A mallet",
+          "module": "filter",
+          "why": "A bright strike.\n- CUTOFF 2 (about 2.5 kHz): bright.\n- AMOUNT OF CONTOUR 2.5, filter ATTACK 0 (3 ms), filter DECAY 2.5 (260 ms), filter SUSTAIN 0: a ping.\n- Listen for: a hard \"dong\".",
+          "set": {
+            "filter.cutoff": 2,
+            "filter.contour": 2.5,
+            "fenv.attack": 0,
+            "fenv.decay": 2.5,
+            "fenv.sustain": 0
+          }
+        },
+        {
+          "title": "A long ring",
+          "module": "amp",
+          "why": "Bells ring for a long time.\n- loudness ATTACK 0 (3 ms), loudness DECAY 8 (5.0 s), loudness SUSTAIN 0: several seconds.\n- Listen for: a shimmering bell melody.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 8,
+            "aenv.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "osc3.freq": "The tube’s clangy overtone."
+      },
+      "tweaks": [
+        {
+          "id": "osc3.freq",
+          "try": "Move to 5.7",
+          "hear": "A different, sourer bell."
+        },
+        {
+          "id": "aenv.decay",
+          "try": "Shorten to 6.5",
+          "hear": "A damped, shorter chime."
+        }
+      ]
+    },
+    {
+      "id": "machine-gun-stutter",
+      "name": "Machine-Gun Feedback",
+      "ref": "In the style of Band of Gypsys — \"Machine Gun\"",
+      "artist": "Jimi Hendrix",
+      "tags": ["lead", "psychedelic", "rock", "60s"],
+      "level": 3,
+      "blurb": "A howling, overdriven feedback lead that stutters like gunfire when you hold a note.",
+      "how": "Hendrix imitated gunfire by stuttering a feedback-drenched note. Two sawtooths go through the EXT feedback loop for a screaming, sustaining tone, and the square LFO, cabled into LOUD CV, chops it into fast bursts.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 64, 3],
+          [3, 67, 1],
+          [4, 69, 4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A screaming guitar",
+          "module": "osc",
+          "why": "Two sawtooths an octave apart, heavily driven.\n- Osc 1 WAVEFORM sawtooth, Osc 2 WAVEFORM sawtooth, Osc 2 RANGE 4’: bright.\n- Osc 2 FREQUENCY +0.1: a slight beat.\n- OSC 2 on, OSC 1 VOLUME 8, OSC 2 VOLUME 5: both.\n- EXT on, EXT IN VOLUME 8: heavy EXT feedback: the overdriven amp.\n- Listen for: a howling, distorted tone.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "saw",
+            "osc2.range": "4",
+            "osc2.freq": 0.1,
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 5,
+            "mix.extOn": true,
+            "mix.ext": 8
+          }
+        },
+        {
+          "title": "Amp tone",
+          "module": "filter",
+          "why": "A mid VCF with resonance, like a cranked amp.\n- CUTOFF 0.5 (about 890 Hz): mid.\n- EMPHASIS 4: a howl.\n- loudness ATTACK 0.5 (9 ms), loudness DECAY 5 (770 ms), loudness SUSTAIN 5: loudness held halfway, so the square can chop it fully.\n- Listen for: a screaming lead.",
+          "set": {
+            "filter.cutoff": 0.5,
+            "filter.emphasis": 4,
+            "aenv.attack": 0.5,
+            "aenv.decay": 5,
+            "aenv.sustain": 5
+          }
+        },
+        {
+          "title": "Patch LFO (square) → LOUD CV",
+          "module": "patch",
+          "why": "The square LFO chops the loudness on and off.\n- LFO (square) → LOUD CV: chops the note.\n- LFO RATE 6.3 (9.3 Hz): about eight bursts a second.\n- Listen for: rat-a-tat stutter on every held note.",
+          "set": {
+            "lfo.rate": 6.3
+          },
+          "cables": [["j.lfoSq", "j.loudCv"]]
+        },
+        {
+          "title": "Feedback bend",
+          "module": "glide",
+          "why": "A little glide for the bends.\n- GLIDE 2: short slides.\n- Listen for: notes bending into the stutter.",
+          "set": {
+            "ctl.glide": 2
+          }
+        }
+      ],
+      "context": {
+        "lfo.rate": "The rate of fire."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Lower to 5",
+          "hear": "Slower bursts, like a heavy gun."
+        },
+        {
+          "id": "mix.ext",
+          "try": "Raise to 10",
+          "hear": "Total, collapsing distortion."
+        }
+      ]
+    },
+    {
+      "id": "paris-texas-slide",
+      "name": "Desert Slide Guitar",
+      "ref": "In the style of Ry Cooder — \"Paris, Texas\"",
+      "artist": "Ry Cooder",
+      "tags": ["lead", "americana", "film score", "80s"],
+      "level": 2,
+      "blurb": "A lonely, ringing slide guitar note that slides up into pitch and hangs in the air.",
+      "how": "Cooder’s slide guitar is spare and reverberant. A sawtooth and a triangle give the steel string, a resonant filter gives its ring, and a long glide slides into each note like a bottleneck. The loudness rings on long after the pick.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 57, 2],
+          [2, 64, 1],
+          [3, 62, 1],
+          [4, 57, 3]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A steel string",
+          "module": "osc",
+          "why": "A sawtooth and a triangle.\n- Osc 1 WAVEFORM sawtooth, Osc 2 WAVEFORM triangle: bright with a round body.\n- OSC 2 on, OSC 1 VOLUME 6, OSC 2 VOLUME 8: mostly triangle.\n- Listen for: a round, bright tone.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "tri",
+            "mix.osc2On": true,
+            "mix.osc1": 6,
+            "mix.osc2": 8
+          }
+        },
+        {
+          "title": "The ring",
+          "module": "filter",
+          "why": "A resonant VCF with a pluck.\n- CUTOFF 0 (about 630 Hz): mid.\n- EMPHASIS 3.5: a ringing string.\n- AMOUNT OF CONTOUR 2.5, filter ATTACK 0 (3 ms), filter DECAY 4 (600 ms), filter SUSTAIN 4: a soft pick.\n- KEYBOARD CONTROL 1 on: some tracking.\n- Listen for: a ringing tone.",
+          "set": {
+            "filter.cutoff": 0,
+            "filter.emphasis": 3.5,
+            "filter.contour": 2.5,
+            "fenv.attack": 0,
+            "fenv.decay": 4,
+            "fenv.sustain": 4,
+            "filter.kbd1": true
+          }
+        },
+        {
+          "title": "The bottleneck",
+          "module": "glide",
+          "why": "A slow glide is the slide on the string.\n- GLIDE 4: a slow slide into each note.\n- loudness ATTACK 0 (3 ms), loudness DECAY 7 (2.2 s), loudness SUSTAIN 5: a long ring.\n- Listen for: a lonely, sliding melody.",
+          "set": {
+            "ctl.glide": 4,
+            "aenv.attack": 0,
+            "aenv.decay": 7,
+            "aenv.sustain": 5
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "mod",
+          "why": "The LFO (low-frequency oscillator) adds vibrato through the mod bus.\n- right-hand mod source LFO, MOD MIX 10, OSCILLATOR MODULATION on: the LFO alone, to pitch.\n- LFO RATE 5 (3.2 Hz), LFO shape triangle: a smooth wobble.\n- MOD DEPTH 1: how wide the vibrato is.\n- Listen for: a slight slide vibrato.",
+          "set": {
+            "mod.srcB": "lfo",
+            "mod.mix": 10,
+            "mod.toOsc": true,
+            "lfo.rate": 5,
+            "lfo.shape": "tri",
+            "mod.depth": 1
+          }
+        }
+      ],
+      "context": {
+        "ctl.glide": "How far the bottleneck slides."
+      },
+      "tweaks": [
+        {
+          "id": "ctl.glide",
+          "try": "Raise to 5.5",
+          "hear": "A lazier, more drawling slide."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Raise to 5",
+          "hear": "A twangier, more metallic string."
+        }
+      ]
+    },
+    {
+      "id": "harmon-mute-trumpet",
+      "name": "Harmon-Mute Trumpet",
+      "ref": "In the style of Miles Davis — \"It Never Entered My Mind\"",
+      "artist": "Miles Davis",
+      "tags": ["brass", "jazz", "cool jazz", "50s"],
+      "level": 2,
+      "blurb": "A thin, buzzy, intimate muted trumpet with no low end at all.",
+      "how": "A Harmon mute removes the trumpet’s body and leaves a thin, buzzing, intimate tone. This is one of the few sounds that uses the Model D’s high-pass mode: the filter removes everything below the cutoff, and its resonance adds the mute’s nasal buzz.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 69, 1.5],
+          [1.5, 67, 0.5],
+          [2, 65, 1],
+          [3, 64, 1],
+          [4, 62, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A brassy buzz",
+          "module": "osc",
+          "why": "A sawtooth and a narrow pulse.\n- Osc 1 WAVEFORM sawtooth, Osc 2 WAVEFORM narrow pulse: buzzy.\n- OSC 2 on, OSC 1 VOLUME 7, OSC 2 VOLUME 5: both.\n- Listen for: a buzzy tone.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "narrow",
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 5
+          }
+        },
+        {
+          "title": "High-pass mute",
+          "module": "filter",
+          "why": "In high-pass mode the VCF removes the lows instead of the highs.\n- filter mode high-pass: removes the body.\n- CUTOFF 0.5 (about 890 Hz): cuts below about 900 Hz.\n- EMPHASIS 4: a nasal buzz at the cutoff.\n- KEYBOARD CONTROL 1 on, KEYBOARD CONTROL 2 on: full tracking.\n- Listen for: a thin, nasal, muted tone.",
+          "set": {
+            "filter.mode": "hp",
+            "filter.cutoff": 0.5,
+            "filter.emphasis": 4,
+            "filter.kbd1": true,
+            "filter.kbd2": true
+          }
+        },
+        {
+          "title": "Breathy",
+          "module": "amp",
+          "why": "A soft attack.\n- loudness ATTACK 1.5 (70 ms), loudness DECAY 4 (600 ms), loudness SUSTAIN 10: breathed.\n- GLIDE 1: a hint of slur.\n- Listen for: an intimate, muted line.",
+          "set": {
+            "aenv.attack": 1.5,
+            "aenv.decay": 4,
+            "aenv.sustain": 10,
+            "ctl.glide": 1
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "mod",
+          "why": "The LFO (low-frequency oscillator) adds vibrato through the mod bus.\n- right-hand mod source LFO, MOD MIX 10, OSCILLATOR MODULATION on: the LFO alone, to pitch.\n- LFO RATE 5.3 (4.1 Hz), LFO shape triangle: a smooth wobble.\n- MOD DEPTH 0.8: how wide the vibrato is.\n- Listen for: a very slight vibrato.",
+          "set": {
+            "mod.srcB": "lfo",
+            "mod.mix": 10,
+            "mod.toOsc": true,
+            "lfo.rate": 5.3,
+            "lfo.shape": "tri",
+            "mod.depth": 0.8
+          }
+        }
+      ],
+      "context": {
+        "filter.mode": "High-pass: the filter removes the lows, which is what a Harmon mute does."
+      },
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Lower to -0.5",
+          "hear": "An open trumpet with a bucket mute."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Raise to 6",
+          "hear": "A more pronounced \"wah\" in the mute."
+        }
+      ]
+    },
+    {
+      "id": "feels-so-good-flugelhorn",
+      "name": "Mellow Flugelhorn",
+      "ref": "In the style of Chuck Mangione — \"Feels So Good\"",
+      "artist": "Chuck Mangione",
+      "tags": ["brass", "smooth jazz", "70s"],
+      "level": 1,
+      "blurb": "A warm, round, mellow horn with a soft attack.",
+      "how": "The flugelhorn is a trumpet’s mellow cousin. A sawtooth and a triangle through a dark filter with a gentle bloom give a warm, round horn.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 67, 1],
+          [1, 72, 1],
+          [2, 71, 0.5],
+          [2.5, 69, 0.5],
+          [3, 67, 2],
+          [5, 64, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Mellow brass",
+          "module": "osc",
+          "why": "A sawtooth and a triangle.\n- Osc 1 WAVEFORM sawtooth, Osc 2 WAVEFORM triangle: brass softened.\n- OSC 2 on, OSC 1 VOLUME 6, OSC 2 VOLUME 8: mostly triangle.\n- Listen for: a soft brass tone.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "tri",
+            "mix.osc2On": true,
+            "mix.osc1": 6,
+            "mix.osc2": 8
+          }
+        },
+        {
+          "title": "Warm bloom",
+          "module": "filter",
+          "why": "A dark VCF that blooms gently.\n- CUTOFF −1 (about 320 Hz): dark.\n- EMPHASIS 1: a little body.\n- AMOUNT OF CONTOUR 2.5, filter ATTACK 2.5 (260 ms), filter DECAY 5 (770 ms), filter SUSTAIN 6: a soft bloom.\n- KEYBOARD CONTROL 1 on: some tracking.\n- Listen for: a warm horn.",
+          "set": {
+            "filter.cutoff": -1,
+            "filter.emphasis": 1,
+            "filter.contour": 2.5,
+            "fenv.attack": 2.5,
+            "fenv.decay": 5,
+            "fenv.sustain": 6,
+            "filter.kbd1": true
+          }
+        },
+        {
+          "title": "Soft",
+          "module": "amp",
+          "why": "A soft attack and a short tail.\n- loudness ATTACK 2 (200 ms), loudness DECAY 4.5 (680 ms), loudness SUSTAIN 10: gentle.\n- GLIDE 1: slight slurs.\n- Listen for: a mellow, smooth line.",
+          "set": {
+            "aenv.attack": 2,
+            "aenv.decay": 4.5,
+            "aenv.sustain": 10,
+            "ctl.glide": 1
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "mod",
+          "why": "The LFO (low-frequency oscillator) adds vibrato through the mod bus.\n- right-hand mod source LFO, MOD MIX 10, OSCILLATOR MODULATION on: the LFO alone, to pitch.\n- LFO RATE 5.4 (4.4 Hz), LFO shape triangle: a smooth wobble.\n- MOD DEPTH 1: how wide the vibrato is.\n- Listen for: a gentle vibrato.",
+          "set": {
+            "mod.srcB": "lfo",
+            "mod.mix": 10,
+            "mod.toOsc": true,
+            "lfo.rate": 5.4,
+            "lfo.shape": "tri",
+            "mod.depth": 1
+          }
+        }
+      ],
+      "context": {
+        "filter.cutoff": "How mellow the horn is."
+      },
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Raise to 0",
+          "hear": "A brighter trumpet."
+        },
+        {
+          "id": "fenv.attack",
+          "try": "Lengthen to 4",
+          "hear": "A softer, more cushioned entry."
+        }
+      ]
     }
   ]
 }
