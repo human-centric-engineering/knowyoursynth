@@ -27,6 +27,7 @@ import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
 import { glideMotion } from '@/components/app/synth/motion';
+import { getSynthRouting } from '@/lib/app/synths/routing';
 
 const { router, engine, events } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -44,6 +45,11 @@ const { router, engine, events } = vi.hoisted(() => ({
 }));
 
 vi.mock('next/navigation', () => ({ useRouter: () => router }));
+// The real routings, unless a test takes Model D's away to see a synth without one.
+vi.mock('@/lib/app/synths/routing', async (importOriginal) => {
+  const real = await importOriginal<typeof import('@/lib/app/synths/routing')>();
+  return { ...real, getSynthRouting: vi.fn(real.getSynthRouting) };
+});
 // Signed out. The real client's session-refresh timer can fire after jsdom tears down ("window is not defined").
 vi.mock('@/lib/auth/client', () => ({ useSession: () => ({ data: null, isPending: false }) }));
 vi.mock('@/components/app/synth/engine', () => ({
@@ -2019,6 +2025,64 @@ describe('SynthPage patch edge cases', () => {
     page();
     expect(replace).not.toHaveBeenCalled();
     expect(setting('Outline').getAttribute('aria-pressed')).toBe('false');
+  });
+});
+
+describe('SynthPage signal routing', () => {
+  const toggle = () => button('Signal routing');
+  const diagram = () => screen.queryByRole('img', { name: 'Model D signal routing' });
+  const scroller = () => screen.getByTestId('panel-frame').closest('.kys-panel-scroller');
+  const lit = (sel: string) => document.querySelector(sel)?.getAttribute('data-live');
+
+  it('flips the panel over to the routing diagram from the top rail, and back', () => {
+    page();
+    const rail = toggle().closest('.kys-rail');
+    expect(rail).toHaveClass('is-top');
+    expect(toggle()).toHaveAttribute('aria-pressed', 'false');
+    expect(diagram()).toBeNull();
+
+    fireEvent.click(toggle());
+    expect(toggle()).toHaveAttribute('aria-pressed', 'true');
+    expect(diagram()).not.toBeNull();
+    // The panel stays laid out underneath, out of reach.
+    expect(scroller()).toHaveClass('is-away');
+    expect(scroller()).toHaveAttribute('inert');
+
+    fireEvent.click(toggle());
+    expect(toggle()).toHaveAttribute('aria-pressed', 'false');
+    expect(diagram()).toBeNull();
+    expect(scroller()).not.toHaveClass('is-away');
+    expect(scroller()).not.toHaveAttribute('inert');
+  });
+
+  it('draws the patch on the panel, and follows it as it changes while the diagram shows', async () => {
+    page();
+    // Oscillator 1's mixer level turned right down on the panel.
+    const volume = screen.getAllByRole('slider', { name: /^VOLUME/ })[0];
+    for (let i = 0; i < 100; i++) fireEvent.keyDown(volume, { key: 'ArrowDown' });
+    fireEvent.click(toggle());
+    expect(lit('[data-edge="c40"]')).toBe('false');
+    expect(lit('[data-block="osc1"]')).toBe('false');
+
+    // Undo, on the rail beside the toggle, turns the level back up (the turns grouped as one change): the diagram
+    // lights it as the knob comes up.
+    fireEvent.click(button('Undo'));
+    await waitFor(() => expect(lit('[data-edge="c40"]')).toBe('true'), { timeout: 3000 });
+    expect(lit('[data-block="osc1"]')).toBe('true');
+    expect(diagram()).not.toBeNull();
+  }, 10_000);
+
+  it('shows no toggle for a synth without a routing', () => {
+    const real = vi.mocked(getSynthRouting).getMockImplementation();
+    vi.mocked(getSynthRouting).mockImplementation(() => undefined);
+    try {
+      page();
+      expect(screen.queryByRole('button', { name: 'Signal routing' })).toBeNull();
+      // The rest of the rail is there.
+      expect(button('Explain sections')).toBeTruthy();
+    } finally {
+      vi.mocked(getSynthRouting).mockImplementation(real ?? (() => undefined));
+    }
   });
 });
 

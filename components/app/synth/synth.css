@@ -2761,3 +2761,137 @@ svg .kys-hit:focus-visible {
     animation: none;
   }
 }
+
+/*
+ * The routing view (t-142): the back of the panel. The flip is the view transition `routing-flip`: the panel turns
+ * edge-on and the diagram turns in from the other edge, as a card turns over. Only the snapshots turn, so nothing that
+ * holds the panel carries a transform. None with reduced motion: the view swaps.
+ */
+::view-transition-group(.kys-panel-flip) {
+  animation-duration: 420ms;
+}
+::view-transition-image-pair(.kys-panel-flip) {
+  perspective: 2400px;
+}
+::view-transition-old(.kys-panel-flip) {
+  animation: kys-turn-away 190ms cubic-bezier(0.55, 0, 1, 0.45) both;
+  backface-visibility: hidden;
+}
+::view-transition-new(.kys-panel-flip) {
+  animation: kys-turn-in 230ms cubic-bezier(0, 0.55, 0.45, 1) 190ms both;
+  backface-visibility: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(.kys-panel-flip),
+  ::view-transition-old(.kys-panel-flip),
+  ::view-transition-new(.kys-panel-flip) {
+    animation: none;
+  }
+}
+/* The panel stays laid out under the view, at the width it fits, so it comes back as it was. */
+.kys-flip {
+  position: relative;
+}
+.kys-panel-scroller.is-away {
+  position: absolute;
+  inset: 0 0 auto;
+  visibility: hidden;
+  pointer-events: none;
+}
+.kys-routing {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-inline: auto;
+  max-width: 1500px;
+  padding: 8px 0 4px;
+}
+/* On a narrow screen the diagram keeps a readable size and scrolls sideways in its own scroller. */
+.kys-routing-scroll {
+  min-width: 0;
+  overflow-x: auto;
+}
+.kys-routing-svg {
+  display: block;
+  width: 100%;
+  min-width: 900px;
+  height: auto;
+}
+.kys-route-block rect {
+  fill: color-mix(in srgb, currentColor 14%, var(--kys-surface));
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+.kys-route-block text {
+  fill: var(--kys-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+.kys-route-block:not(.is-live) {
+  opacity: 0.35;
+}
+.kys-route-block:not(.is-live) rect {
+  stroke-dasharray: 3 3;
+}
+.kys-route-edge path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+}
+.kys-route-edge:not(.is-live) {
+  opacity: 0.2;
+}
+.kys-route-edge.is-audio .kys-route-line,
+.kys-route-edge.is-cable .kys-route-line {
+  stroke-width: 3.5;
+}
+.kys-route-edge.is-cv .kys-route-line {
+  stroke-width: 1.6;
+}
+.kys-route-edge.is-gate .kys-route-line {
+  stroke-width: 1.8;
+  stroke-dasharray: 0.5 5;
+}
+/* The signal running along a lit line, in its direction: bright dashes over the line. */
+.kys-route-flow {
+  stroke: var(--kys-text);
+  stroke-width: 1.4;
+  stroke-dasharray: 3 15;
+  opacity: 0.85;
+  animation: kys-route-flow 900ms linear infinite;
+}
+@keyframes kys-route-flow {
+  to {
+    stroke-dashoffset: -18;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kys-route-flow {
+    animation: none;
+  }
+}
+.kys-routing-key {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 16px;
+  padding-inline: 8px;
+  font-size: 12px;
+  color: var(--kys-muted);
+}
+.kys-routing-key li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.kys-routing-key .kys-route-edge {
+  color: var(--kys-muted);
+}
+.kys-routing-key .kys-routing-note {
+  flex-basis: 100%;
+}
+@media (min-width: 1024px) {
+  .kys-routing-key .kys-routing-note {
+    flex-basis: auto;
+  }
+}
