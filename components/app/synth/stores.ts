@@ -61,6 +61,7 @@ export interface Meters {
   /** Bit per oscillator that is sounding. */
   oscs?: number;
   env1?: number;
+  env2?: number;
   /** The sequencer stage (0-based), −1 when stopped. */
   seq?: number;
   pulser?: number;

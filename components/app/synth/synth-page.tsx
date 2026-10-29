@@ -2245,14 +2245,18 @@ function Synth({
                         </div>
                       </div>
                       {routingOn && routing && (
+                        // The back of the faceplate, between its rails: their width, colour and ink.
                         <div className="px-2">
-                          <RoutingView
-                            def={synthDef}
-                            routing={routing}
-                            values={sess.values}
-                            cables={sess.cables}
-                            wheel={wheel}
-                          />
+                          <div className="mx-auto" style={railStyle}>
+                            <RoutingView
+                              def={synthDef}
+                              routing={routing}
+                              values={sess.values}
+                              cables={sess.cables}
+                              wheel={wheel}
+                              source={engine}
+                            />
+                          </div>
                         </div>
                       )}
                     </div>

@@ -25,6 +25,7 @@ export function toStores(e: SynthEvent): void {
       overload: e.overload,
       voices: e.voices || 0,
       env1: e.env1 || 0,
+      env2: e.env2 || 0,
       seq: e.seq == null ? -1 : e.seq,
       pulser: e.pulser || 0,
       eyes: e.eyes,

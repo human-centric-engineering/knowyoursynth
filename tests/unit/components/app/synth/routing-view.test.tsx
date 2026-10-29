@@ -7,11 +7,12 @@
  * @see components/app/synth/routing-view.tsx
  */
 
-import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { afterEach, describe, expect, it } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
 import { RoutingView } from '@/components/app/synth/routing-view';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { routing } from '@/lib/app/synths/routing/model-d';
+import { meterStore } from '@/components/app/synth/stores';
 import type { ControlValues, SynthRouting } from '@/lib/app/synths/contract';
 
 const found = getSynthDef('model-d');
@@ -114,7 +115,7 @@ describe('RoutingView', () => {
   it('keys the cables as well as audio, control voltage and gate', () => {
     view();
     const key = screen.getByRole('list', { name: 'Key' });
-    expect(key.textContent).toMatch(/Audio.*Control voltage.*Gate.*Cable/);
+    expect(key.textContent).toMatch(/Audio.*Control voltage.*Gate.*Patch cable/);
   });
 
   it('is never drawn bigger than its own size', () => {
@@ -150,5 +151,88 @@ describe('RoutingView', () => {
     expect(edge('c03')).toBe('false');
     r.rerender(<RoutingView def={def} routing={routing} values={values} cables={[]} wheel={0.5} />);
     expect(edge('c03')).toBe('true');
+  });
+
+  it('draws every block as a box with its schematic symbol and designator', () => {
+    view();
+    const want: Record<string, string> = {
+      osc1: 'VCO',
+      noise: 'NOISE',
+      ext_in: 'EXT',
+      mixer: 'MIX',
+      filter: 'VCF',
+      filter_contour: 'EG',
+      vca: 'VCA',
+      lfo: 'LFO',
+      midi: 'MIDI',
+      output: 'OUT',
+    };
+    for (const b of routing.blocks) {
+      const g = document.querySelector(`[data-block="${b.id}"]`);
+      expect(g?.querySelector('.kys-route-glyph')?.childElementCount, b.id).toBeGreaterThan(0);
+      if (want[b.id])
+        expect(g?.querySelector('.kys-route-tag')?.textContent, b.id).toBe(want[b.id]);
+    }
+    // A block that names its own symbol keeps it over its module's: noise is in the mixer module.
+    expect(document.querySelector('[data-block="noise"]')).toHaveAttribute('data-symbol', 'noise');
+    expect(document.querySelector('[data-block="mixer"]')).toHaveAttribute('data-symbol', 'mixer');
+  });
+
+  it('draws the synth’s own routes as ink lines with arrowheads, and cables as cased cables with jacks', () => {
+    view({}, [{ from: 'j.lfoTri', to: 'j.cutCv', color: '#38c6ff' }]);
+    const route = document.querySelector('[data-edge="c40"]');
+    expect(route?.querySelector('.kys-route-line')?.getAttribute('marker-end')).toMatch(/^url\(#/);
+    expect(route?.querySelector('.kys-route-casing')).toBeNull();
+    expect(route?.querySelectorAll('.kys-route-jack')).toHaveLength(0);
+    const cable = document.querySelector('[data-cable="j.lfoTri>j.cutCv"]');
+    expect(cable).toHaveClass('is-cable');
+    expect(cable?.querySelector('.kys-route-casing')).not.toBeNull();
+    expect(cable?.querySelector('.kys-route-line')?.getAttribute('marker-end')).toBeNull();
+    expect(cable?.querySelectorAll('.kys-route-jack')).toHaveLength(2);
+  });
+
+  describe('lit by the sound', () => {
+    afterEach(() => meterStore.set({ gate: false, lfo: 0, overload: 0, power: false }));
+
+    /** An analyser reading a steady signal at `rms`. */
+    const source = (rms: number) => ({
+      analyser: {
+        fftSize: 64,
+        getFloatTimeDomainData: (out: Float32Array<ArrayBuffer>) => void out.fill(rms),
+      },
+    });
+    const glow = (sel: string) =>
+      Number(document.querySelector<SVGElement>(sel)?.style.getPropertyValue('--a') || 0);
+
+    it('glows the routed path while a note sounds, and leaves the unrouted dark', async () => {
+      meterStore.set({ gate: true, lfo: 0, overload: 0, power: true, env1: 1, env2: 1 });
+      render(
+        <RoutingView
+          def={def}
+          routing={routing}
+          values={def.init}
+          cables={[]}
+          wheel={0}
+          source={source(0.5)}
+        />
+      );
+      await waitFor(() => expect(glow('[data-block="vca"]')).toBeGreaterThan(0.5));
+      expect(glow('[data-block="midi"]')).toBeGreaterThan(0.5);
+      expect(glow('[data-edge="c40"]')).toBeGreaterThan(0.5);
+      expect(glow('[data-block="osc2"]')).toBe(0);
+    });
+
+    it('fades as the sound does rather than cutting out', async () => {
+      meterStore.set({ gate: true, lfo: 0, overload: 0, power: true, env1: 1, env2: 1 });
+      const props = { def, routing, values: def.init, cables: [], wheel: 0 };
+      const r = render(<RoutingView {...props} source={source(0.5)} />);
+      await waitFor(() => expect(glow('[data-block="vca"]')).toBeGreaterThan(0.9));
+      meterStore.set({ gate: false, lfo: 0, overload: 0, power: true, env1: 0, env2: 0 });
+      r.rerender(<RoutingView {...props} source={source(0)} />);
+      // Part way down, then on down: not the cut an on/off light would make.
+      await waitFor(() => expect(glow('[data-block="vca"]')).toBeLessThan(0.9));
+      expect(glow('[data-block="vca"]')).toBeGreaterThan(0);
+      await waitFor(() => expect(glow('[data-block="vca"]')).toBe(0), { timeout: 4000 });
+    });
   });
 });
