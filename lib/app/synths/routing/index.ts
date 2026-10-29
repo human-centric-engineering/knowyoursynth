@@ -12,8 +12,24 @@ import { routing as k2 } from '@/lib/app/synths/routing/k2';
 import { routing as kobol } from '@/lib/app/synths/routing/kobol';
 import { routing as waspDeluxe } from '@/lib/app/synths/routing/wasp-deluxe';
 import { routing as b2600 } from '@/lib/app/synths/routing/b2600';
+import { routing as tb303 } from '@/lib/app/synths/routing/tb-303';
+import { routing as td3 } from '@/lib/app/synths/routing/td-3';
+import { routing as donnerB1 } from '@/lib/app/synths/routing/donner-b1';
+import { routing as grandmother } from '@/lib/app/synths/routing/grandmother';
 
-export const SYNTH_ROUTINGS: SynthRouting[] = [modelD, neutron, pro1, k2, waspDeluxe, kobol, b2600];
+export const SYNTH_ROUTINGS: SynthRouting[] = [
+  modelD,
+  neutron,
+  pro1,
+  k2,
+  waspDeluxe,
+  kobol,
+  b2600,
+  tb303,
+  td3,
+  donnerB1,
+  grandmother,
+];
 
 const BY_ID = new Map(SYNTH_ROUTINGS.map((r) => [r.synth, r]));
 
