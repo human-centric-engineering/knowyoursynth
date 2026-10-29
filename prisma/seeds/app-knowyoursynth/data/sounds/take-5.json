@@ -9762,15 +9762,15 @@
         {
           "title": "Pipes",
           "module": "osc",
-          "why": "- OSC 1 SHAPE square\n- OSC 2 SHAPE sawtooth, OCTAVE +1 oct\n- OSC 1 level 35 %, OSC 2 20 %, OSC 1 SUB 30 %\n- CUTOFF 1.7 kHz\n- Listen for: a full, reedy stack.",
+          "why": "- OSC 1 SHAPE square\n- OSC 2 SHAPE sawtooth, OCTAVE +1 oct\n- OSC 1 level 25 %, OSC 2 15 %, OSC 1 SUB 20 %\n- CUTOFF 1.2 kHz\n- Listen for: a full, reedy stack.",
           "set": {
             "osc1.shape": 7.5,
             "osc2.shape": 5,
             "osc2.octave": "+1",
-            "mix.osc1": 3.5,
-            "mix.osc2": 2,
-            "mix.sub": 3,
-            "vcf.cutoff": 6.5
+            "mix.osc1": 2.5,
+            "mix.osc2": 1.5,
+            "mix.sub": 2,
+            "vcf.cutoff": 6
           }
         },
         {
@@ -9978,6 +9978,5502 @@
           "id": "mix.osc2",
           "try": "Raise to 4",
           "hear": "A brighter, reedier organ."
+        }
+      ]
+    },
+    {
+      "id": "t5-electro-kick",
+      "name": "Electro Kick",
+      "ref": "In the style of Afrika Bambaataa — “Planet Rock”",
+      "artist": "Afrika Bambaataa",
+      "tags": ["perc", "drums", "electro", "80s"],
+      "level": 2,
+      "blurb": "A deep, booming, round kick drum.",
+      "how": "A drum-machine kick is a sine whose pitch falls fast. ENV ROUTING frees Envelope 1, which drops both oscillators an octave in a few tens of milliseconds, and Envelope 2 lets it boom.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.3, 0.8],
+          [1, 36, 0.3, 0.8],
+          [1.75, 36, 0.3, 0.8],
+          [3, 36, 0.3, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sine",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine\n- OSC 1 level 100 %\n- Listen for: a pure, low tone.",
+          "set": {
+            "osc1.shape": 0,
+            "mix.osc1": 10
+          }
+        },
+        {
+          "title": "The drop",
+          "module": "env",
+          "why": "- ENV ROUTING Env 1 Aux / Env 2 Filter+Amp: Envelope 2 now runs the filter and the volume; Envelope 1 is free\n- ENV 1 DEST Osc All Freq: Envelope 1 now bends both oscillators\n- Envelope 1 AMOUNT +5.0, DECAY 75 ms, SUSTAIN 0 %: an octave down in a blink\n- Listen for: a thump at the front.",
+          "set": {
+            "env.routing": "aux-filteramp",
+            "env1.dest": "osc-all",
+            "env1.amount": 5,
+            "env1.decay": 3.5,
+            "env1.sustain": 0
+          }
+        },
+        {
+          "title": "Boom",
+          "module": "env",
+          "why": "- CUTOFF 600 Hz\n- Envelope 2 DECAY 700 ms, SUSTAIN 0 %, RELEASE 460 ms\n- Listen for: a long, booming kick.",
+          "set": {
+            "vcf.cutoff": 5,
+            "env2.decay": 6,
+            "env2.sustain": 0,
+            "env2.release": 5.5
+          }
+        }
+      ],
+      "context": {
+        "env2.decay": "How long the kick booms.",
+        "env1.decay": "How fast the pitch falls."
+      },
+      "tweaks": [
+        {
+          "id": "env2.decay",
+          "try": "Lower to 4.5",
+          "hear": "A tight, punchy kick."
+        },
+        {
+          "id": "env1.decay",
+          "try": "Raise to 4.5",
+          "hear": "A slower, zappy kick."
+        }
+      ]
+    },
+    {
+      "id": "t5-techno-kick",
+      "name": "Techno Kick",
+      "ref": "In the style of 1990s techno",
+      "artist": "Techno",
+      "tags": ["perc", "drums", "techno"],
+      "level": 2,
+      "blurb": "A hard, punchy, driven kick with a click at the front.",
+      "how": "The techno kick is shorter and harder: the same falling sine, with OVERDRIVE for punch and a breath of white noise for the click.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.3, 0.8],
+          [1, 36, 0.3, 0.8],
+          [2, 36, 0.3, 0.8],
+          [3, 36, 0.3, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sine and click",
+          "module": "mixer",
+          "why": "- OSC 1 SHAPE sine\n- OSC 1 level 100 %, NOISE white 20 %: a little click\n- Listen for: a tone with an edge.",
+          "set": {
+            "osc1.shape": 0,
+            "mix.osc1": 10,
+            "mix.noise": 1
+          }
+        },
+        {
+          "title": "Drop",
+          "module": "env",
+          "why": "- ENV ROUTING Env 1 Aux / Env 2 Filter+Amp: Envelope 2 now runs the filter and the volume; Envelope 1 is free\n- ENV 1 DEST Osc All Freq: Envelope 1 now bends both oscillators\n- Envelope 1 AMOUNT +5.0, DECAY 48 ms, SUSTAIN 0 %\n- Listen for: a hard thump.",
+          "set": {
+            "env.routing": "aux-filteramp",
+            "env1.dest": "osc-all",
+            "env1.amount": 5,
+            "env1.decay": 3,
+            "env1.sustain": 0
+          }
+        },
+        {
+          "title": "Punch",
+          "module": "env",
+          "why": "- CUTOFF 600 Hz\n- Envelope 2 DECAY 300 ms, SUSTAIN 0 %, RELEASE 120 ms\n- OVERDRIVE 50 %: harder\n- Listen for: a driving kick.",
+          "set": {
+            "vcf.cutoff": 5,
+            "env2.decay": 5,
+            "env2.sustain": 0,
+            "env2.release": 4,
+            "drive.amount": 5
+          }
+        }
+      ],
+      "context": {
+        "drive.amount": "How hard the kick hits."
+      },
+      "tweaks": [
+        {
+          "id": "drive.amount",
+          "try": "Raise to 9",
+          "hear": "A distorted, industrial kick."
+        },
+        {
+          "id": "mix.noise",
+          "try": "Lower to 0",
+          "hear": "A softer, rounder kick."
+        }
+      ]
+    },
+    {
+      "id": "t5-big-snare",
+      "name": "Big Eighties Snare",
+      "ref": "In the style of Phil Collins — “In the Air Tonight”",
+      "artist": "Phil Collins",
+      "tags": ["perc", "drums", "rock", "80s"],
+      "level": 2,
+      "blurb": "A huge, cracking snare in a big room.",
+      "how": "A synth snare is a tone and a burst of noise. White noise and a short tone, a fast decay, and a big, bright reverb for the 1980s size.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [1, 55, 0.2, 0.8],
+          [3, 55, 0.2, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Tone and noise",
+          "module": "mixer",
+          "why": "- OSC 1 SHAPE sine → saw\n- OSC 1 level 50 %, NOISE white 90 %\n- Listen for: a tone in a burst of noise.",
+          "set": {
+            "osc1.shape": 2.5,
+            "mix.osc1": 5,
+            "mix.noise": 4.5
+          }
+        },
+        {
+          "title": "Crack",
+          "module": "env",
+          "why": "- CUTOFF 3.3 kHz\n- Envelope 2 DECAY 460 ms, SUSTAIN 0 %, RELEASE 300 ms\n- VOLUME 100 %: up full: each hit is short\n- Listen for: a short crack.",
+          "set": {
+            "vcf.cutoff": 7.5,
+            "env2.decay": 5.5,
+            "env2.sustain": 0,
+            "env2.release": 5,
+            "out.volume": 10
+          }
+        },
+        {
+          "title": "A big room",
+          "module": "fx",
+          "why": "- REVERB on, MIX 60 %, DECAY 60 %, TONE thinner 40 %\n- Listen for: a huge 1980s snare.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 6,
+            "rev.decay": 6,
+            "rev.tone": 2
+          }
+        }
+      ],
+      "context": {
+        "rev.mix": "How big the room is."
+      },
+      "tweaks": [
+        {
+          "id": "rev.decay",
+          "try": "Raise to 9",
+          "hear": "An arena."
+        },
+        {
+          "id": "mix.osc1",
+          "try": "Raise to 8",
+          "hear": "A tonal, tom-like snare."
+        }
+      ]
+    },
+    {
+      "id": "t5-disco-hat",
+      "name": "Closed Hi-Hat",
+      "ref": "In the style of 1970s disco",
+      "artist": "Disco",
+      "tags": ["perc", "drums", "disco"],
+      "level": 2,
+      "blurb": "A crisp, ticking closed hi-hat in sixteenths.",
+      "how": "A hi-hat is bright noise, very short. The oscillators are off, white noise plays, and the effect’s high-pass filter cuts everything but the sizzle.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.1, 0.6],
+          [0.5, 60, 0.1, 0.9],
+          [1, 60, 0.1, 0.6],
+          [1.5, 60, 0.1, 0.9],
+          [2, 60, 0.1, 0.6],
+          [2.5, 60, 0.1, 0.9],
+          [3, 60, 0.1, 0.6],
+          [3.5, 60, 0.1, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "White noise",
+          "module": "mixer",
+          "why": "- OSC 1 level 0 %, NOISE white 100 %: all hiss\n- CUTOFF 18 kHz\n- Listen for: hiss.",
+          "set": {
+            "mix.osc1": 0,
+            "mix.noise": 5,
+            "vcf.cutoff": 10
+          }
+        },
+        {
+          "title": "Short",
+          "module": "env",
+          "why": "- Envelope 2 DECAY 48 ms, SUSTAIN 0 %, RELEASE 48 ms\n- Listen for: ticks.",
+          "set": {
+            "env2.decay": 3,
+            "env2.sustain": 0,
+            "env2.release": 3
+          }
+        },
+        {
+          "title": "Only the sizzle",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE High-pass filter, TIME 90 %, DEPTH/MIX 100 %, FBACK/MISC 20 %: the effect’s high-pass filter takes away the body\n- Listen for: a crisp hi-hat.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "hpf",
+            "fx.time": 9,
+            "fx.mix": 10,
+            "fx.misc": 2
+          }
+        }
+      ],
+      "context": {
+        "env2.decay": "How long each hat sizzles."
+      },
+      "tweaks": [
+        {
+          "id": "env2.decay",
+          "try": "Raise to 4.5",
+          "hear": "A looser hat."
+        },
+        {
+          "id": "fx.time",
+          "try": "Lower to 7",
+          "hear": "A thicker, trashier hat."
+        }
+      ]
+    },
+    {
+      "id": "t5-open-hat",
+      "name": "Open Hi-Hat",
+      "ref": "In the style of 1990s house",
+      "artist": "House",
+      "tags": ["perc", "drums", "house"],
+      "level": 2,
+      "blurb": "A sizzling, off-beat open hi-hat.",
+      "how": "The house off-beat hat: white noise through the high-pass effect, with a longer decay than a closed hat.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0.5, 60, 0.3, 0.8],
+          [1.5, 60, 0.3, 0.8],
+          [2.5, 60, 0.3, 0.8],
+          [3.5, 60, 0.3, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "White noise",
+          "module": "mixer",
+          "why": "- OSC 1 level 0 %, NOISE white 100 %\n- CUTOFF 18 kHz\n- Listen for: hiss.",
+          "set": {
+            "mix.osc1": 0,
+            "mix.noise": 5,
+            "vcf.cutoff": 10
+          }
+        },
+        {
+          "title": "Open",
+          "module": "env",
+          "why": "- Envelope 2 DECAY 300 ms, SUSTAIN 0 %, RELEASE 190 ms\n- Listen for: sizzling hats.",
+          "set": {
+            "env2.decay": 5,
+            "env2.sustain": 0,
+            "env2.release": 4.5
+          }
+        },
+        {
+          "title": "Sizzle",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE High-pass filter, TIME 88 %, DEPTH/MIX 100 %, FBACK/MISC 20 %: the effect’s high-pass filter takes away the body\n- Listen for: an off-beat open hat.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "hpf",
+            "fx.time": 8.8,
+            "fx.mix": 10,
+            "fx.misc": 2
+          }
+        }
+      ],
+      "context": {
+        "env2.decay": "How open the hat is."
+      },
+      "tweaks": [
+        {
+          "id": "env2.decay",
+          "try": "Raise to 6.5",
+          "hear": "A crash-like wash."
+        },
+        {
+          "id": "fx.misc",
+          "try": "Raise to 6",
+          "hear": "A ringing, metallic hat."
+        }
+      ]
+    },
+    {
+      "id": "t5-healing-clap",
+      "name": "Drum-Machine Clap",
+      "ref": "In the style of Marvin Gaye — “Sexual Healing”",
+      "artist": "Marvin Gaye",
+      "tags": ["perc", "drums", "soul", "80s"],
+      "level": 2,
+      "blurb": "A soft, papery, drum-machine handclap.",
+      "how": "A clap is filtered noise with a slightly soft start. White noise through the filter at the middle, a short decay, and a little room.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [1, 60, 0.2, 0.8],
+          [3, 60, 0.2, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Noise",
+          "module": "mixer",
+          "why": "- OSC 1 level 0 %, NOISE white 100 %\n- CUTOFF 2.3 kHz, RESONANCE 30 %\n- Listen for: filtered hiss.",
+          "set": {
+            "mix.osc1": 0,
+            "mix.noise": 5,
+            "vcf.cutoff": 7,
+            "vcf.resonance": 3
+          }
+        },
+        {
+          "title": "Clap",
+          "module": "env",
+          "why": "- Envelope 2 ATTACK 8 ms, DECAY 460 ms, SUSTAIN 0 %, RELEASE 300 ms\n- VOLUME 100 %: up full: each hit is short\n- Listen for: a papery clap.",
+          "set": {
+            "env2.attack": 1.5,
+            "env2.decay": 5.5,
+            "env2.sustain": 0,
+            "env2.release": 5,
+            "out.volume": 10
+          }
+        },
+        {
+          "title": "Room",
+          "module": "fx",
+          "why": "- REVERB on, MIX 40 %, DECAY 40 %\n- Listen for: a drum-machine clap.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 4,
+            "rev.decay": 4
+          }
+        }
+      ],
+      "context": {
+        "vcf.cutoff": "How bright the clap is."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Lower to 6",
+          "hear": "A duller, thuddier clap."
+        },
+        {
+          "id": "rev.mix",
+          "try": "Raise to 7",
+          "hear": "A clap in a hall."
+        }
+      ]
+    },
+    {
+      "id": "t5-simmons-tom",
+      "name": "Electronic Tom",
+      "ref": "In the style of 1980s new wave",
+      "artist": "New wave",
+      "tags": ["perc", "drums", "new wave", "80s"],
+      "level": 2,
+      "blurb": "Punchy, pitch-dropping electronic toms for a fill.",
+      "how": "The electronic tom is a tone whose pitch drops, with a touch of noise. Envelope 1 bends both oscillators down into each hit.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 55, 0.3, 0.8],
+          [0.5, 52, 0.3, 0.8],
+          [1, 48, 0.3, 0.8],
+          [1.5, 45, 0.3, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Tone",
+          "module": "mixer",
+          "why": "- OSC 1 SHAPE sine → saw\n- OSC 1 level 90 %, NOISE white 20 %\n- Listen for: a tone.",
+          "set": {
+            "osc1.shape": 1.5,
+            "mix.osc1": 9,
+            "mix.noise": 1
+          }
+        },
+        {
+          "title": "Drop",
+          "module": "env",
+          "why": "- ENV ROUTING Env 1 Aux / Env 2 Filter+Amp: Envelope 2 now runs the filter and the volume; Envelope 1 is free\n- ENV 1 DEST Osc All Freq: Envelope 1 now bends both oscillators\n- Envelope 1 AMOUNT +4.0, DECAY 300 ms, SUSTAIN 0 %\n- Listen for: pitch falling on every hit.",
+          "set": {
+            "env.routing": "aux-filteramp",
+            "env1.dest": "osc-all",
+            "env1.amount": 4,
+            "env1.decay": 5,
+            "env1.sustain": 0
+          }
+        },
+        {
+          "title": "Punch",
+          "module": "env",
+          "why": "- CUTOFF 600 Hz\n- Envelope 2 DECAY 460 ms, SUSTAIN 0 %, RELEASE 300 ms\n- REVERB on, MIX 30 %, DECAY 40 %\n- Listen for: punchy toms.",
+          "set": {
+            "vcf.cutoff": 5,
+            "env2.decay": 5.5,
+            "env2.sustain": 0,
+            "env2.release": 5,
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 4
+          }
+        }
+      ],
+      "context": {
+        "env1.decay": "How slowly each tom falls."
+      },
+      "tweaks": [
+        {
+          "id": "env1.decay",
+          "try": "Raise to 6",
+          "hear": "A dramatic, falling “pew”."
+        },
+        {
+          "id": "mix.noise",
+          "try": "Raise to +3",
+          "hear": "A rattling snare-tom."
+        }
+      ]
+    },
+    {
+      "id": "t5-miami-cowbell",
+      "name": "Cowbell",
+      "ref": "In the style of Miami bass",
+      "artist": "Miami bass",
+      "tags": ["perc", "drums", "hip-hop"],
+      "level": 2,
+      "blurb": "A bright, clanking, drum-machine cowbell.",
+      "how": "The drum-machine cowbell is two square waves at an odd interval, through a short envelope. Oscillator 2 sits just under a fifth above Oscillator 1.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0.5, 69, 0.15, 0.8],
+          [1, 69, 0.15, 0.8],
+          [2, 69, 0.15, 0.8],
+          [3, 69, 0.15, 0.8],
+          [3.75, 69, 0.15, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two squares",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE square\n- OSC 2 SHAPE square, PITCH +6.8 st\n- OSC 1 level 60 %, OSC 2 60 %\n- CUTOFF 1.2 kHz, RESONANCE 30 %\n- Listen for: a clanking, hollow tone.",
+          "set": {
+            "osc1.shape": 7.5,
+            "osc2.shape": 7.5,
+            "osc2.pitch": 6.8,
+            "mix.osc1": 6,
+            "mix.osc2": 6,
+            "vcf.cutoff": 6,
+            "vcf.resonance": 3
+          }
+        },
+        {
+          "title": "Short",
+          "module": "env",
+          "why": "- Envelope 2 DECAY 190 ms, SUSTAIN 0 %, RELEASE 75 ms\n- Listen for: a cowbell.",
+          "set": {
+            "env2.decay": 4.5,
+            "env2.sustain": 0,
+            "env2.release": 3.5
+          }
+        }
+      ],
+      "context": {
+        "osc2.pitch": "The interval that makes it a bell."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.pitch",
+          "try": "Turn to +5",
+          "hear": "A different, odder bell."
+        },
+        {
+          "id": "env2.decay",
+          "try": "Raise to 6",
+          "hear": "A ringing bell."
+        }
+      ]
+    },
+    {
+      "id": "t5-clave",
+      "name": "Claves",
+      "ref": "In the style of Cuban son",
+      "artist": "Cuban son",
+      "tags": ["perc", "drums", "latin"],
+      "level": 1,
+      "blurb": "A bright, woody click playing the son clave rhythm.",
+      "how": "Claves are two hardwood sticks: a high sine with an instant, tiny decay.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 84, 0.1, 0.8],
+          [0.75, 84, 0.1, 0.8],
+          [1.5, 84, 0.1, 0.8],
+          [2.5, 84, 0.1, 0.8],
+          [3, 84, 0.1, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A high sine",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine → saw, OCTAVE +1 oct\n- OSC 1 level 100 %\n- CUTOFF 9.1 kHz\n- Listen for: a pure, high tone.",
+          "set": {
+            "osc1.shape": 0.5,
+            "osc1.octave": "+1",
+            "mix.osc1": 10,
+            "vcf.cutoff": 9
+          }
+        },
+        {
+          "title": "Click",
+          "module": "env",
+          "why": "- Envelope 2 DECAY 75 ms, SUSTAIN 0 %, RELEASE 48 ms\n- Listen for: woody clicks.",
+          "set": {
+            "env2.decay": 3.5,
+            "env2.sustain": 0,
+            "env2.release": 3
+          }
+        },
+        {
+          "title": "Room",
+          "module": "fx",
+          "why": "- REVERB on, MIX 25 %, DECAY 30 %\n- Listen for: claves.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 2.5,
+            "rev.decay": 3
+          }
+        }
+      ],
+      "context": {
+        "env2.decay": "How woody the click is."
+      },
+      "tweaks": [
+        {
+          "id": "osc1.octave",
+          "try": "Turn to centre",
+          "hear": "A woodblock."
+        },
+        {
+          "id": "env2.decay",
+          "try": "Raise to 5",
+          "hear": "A ringing, glassy click."
+        }
+      ]
+    },
+    {
+      "id": "t5-conga",
+      "name": "Conga",
+      "ref": "In the style of Afro-Cuban percussion",
+      "artist": "Afro-Cuban music",
+      "tags": ["perc", "drums", "latin"],
+      "level": 2,
+      "blurb": "A round, slapping hand drum with a little pitch bend.",
+      "how": "A conga is a skin struck by a hand: a resonant tone, a quick small pitch drop, and a short decay.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.3, 0.8],
+          [0.5, 57, 0.3, 0.8],
+          [0.75, 62, 0.3, 0.8],
+          [1, 57, 0.3, 0.8],
+          [1.5, 55, 0.3, 0.8],
+          [2, 57, 0.3, 0.8],
+          [2.5, 62, 0.3, 0.8],
+          [3, 55, 0.3, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Skin",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine → saw\n- OSC 1 level 90 %\n- CUTOFF 600 Hz, RESONANCE 50 %\n- Listen for: a resonant tone.",
+          "set": {
+            "osc1.shape": 1,
+            "mix.osc1": 9,
+            "vcf.cutoff": 5,
+            "vcf.resonance": 5
+          }
+        },
+        {
+          "title": "Slap",
+          "module": "env",
+          "why": "- ENV ROUTING Env 1 Aux / Env 2 Filter+Amp: Envelope 2 now runs the filter and the volume; Envelope 1 is free\n- ENV 1 DEST Osc All Freq: Envelope 1 now bends both oscillators\n- Envelope 1 AMOUNT +2.5, DECAY 75 ms, SUSTAIN 0 %\n- Envelope 2 DECAY 300 ms, SUSTAIN 0 %, RELEASE 120 ms\n- Listen for: a slapped hand drum.",
+          "set": {
+            "env.routing": "aux-filteramp",
+            "env1.dest": "osc-all",
+            "env1.amount": 2.5,
+            "env1.decay": 3.5,
+            "env1.sustain": 0,
+            "env2.decay": 5,
+            "env2.sustain": 0,
+            "env2.release": 4
+          }
+        },
+        {
+          "title": "Room",
+          "module": "fx",
+          "why": "- REVERB on, MIX 25 %, DECAY 30 %\n- Listen for: congas.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 2.5,
+            "rev.decay": 3
+          }
+        }
+      ],
+      "context": {
+        "env1.amount": "How much each slap bends."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 8",
+          "hear": "A ringing, tuned drum."
+        },
+        {
+          "id": "env1.amount",
+          "try": "Raise to +4",
+          "hear": "A tabla-like bend."
+        }
+      ]
+    },
+    {
+      "id": "t5-samba-shaker",
+      "name": "Shaker",
+      "ref": "In the style of samba",
+      "artist": "Samba",
+      "tags": ["perc", "drums", "latin"],
+      "level": 2,
+      "blurb": "A swishing shaker in sixteenths, accented on the beat.",
+      "how": "A shaker is noise with a soft start. White noise through the high-pass effect, a tiny attack and VELOCITY for the accents.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.1, 1],
+          [0.25, 60, 0.1, 0.55],
+          [0.5, 60, 0.1, 0.55],
+          [0.75, 60, 0.1, 0.55],
+          [1, 60, 0.1, 1],
+          [1.25, 60, 0.1, 0.55],
+          [1.5, 60, 0.1, 0.55],
+          [1.75, 60, 0.1, 0.55],
+          [2, 60, 0.1, 1],
+          [2.25, 60, 0.1, 0.55],
+          [2.5, 60, 0.1, 0.55],
+          [2.75, 60, 0.1, 0.55],
+          [3, 60, 0.1, 1],
+          [3.25, 60, 0.1, 0.55],
+          [3.5, 60, 0.1, 0.55],
+          [3.75, 60, 0.1, 0.55]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Noise",
+          "module": "mixer",
+          "why": "- OSC 1 level 0 %, NOISE white 100 %\n- CUTOFF 18 kHz\n- Listen for: hiss.",
+          "set": {
+            "mix.osc1": 0,
+            "mix.noise": 5,
+            "vcf.cutoff": 10
+          }
+        },
+        {
+          "title": "Swish",
+          "module": "env",
+          "why": "- Envelope 2 ATTACK 15 ms, DECAY 75 ms, SUSTAIN 0 %, RELEASE 48 ms\n- Envelope 2 VELOCITY on: accents louder\n- Listen for: swishes.",
+          "set": {
+            "env2.attack": 2,
+            "env2.decay": 3.5,
+            "env2.sustain": 0,
+            "env2.release": 3,
+            "env2.vel": true
+          }
+        },
+        {
+          "title": "Sizzle",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE High-pass filter, TIME 80 %, DEPTH/MIX 100 %, FBACK/MISC 10 %\n- Listen for: a shaker.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "hpf",
+            "fx.time": 8,
+            "fx.mix": 10,
+            "fx.misc": 1
+          }
+        }
+      ],
+      "context": {
+        "env2.vel": "Accents from how hard each note is played."
+      },
+      "tweaks": [
+        {
+          "id": "env2.attack",
+          "try": "Raise to 3.5",
+          "hear": "A softer, rounder shaker."
+        },
+        {
+          "id": "fx.time",
+          "try": "Lower to 6",
+          "hear": "A thicker, rattling shaker."
+        }
+      ]
+    },
+    {
+      "id": "t5-syndrum-pew",
+      "name": "Disco Syndrum",
+      "ref": "In the style of Anita Ward — “Ring My Bell”",
+      "artist": "Anita Ward",
+      "tags": ["perc", "drums", "disco", "70s"],
+      "level": 2,
+      "blurb": "A sweeping, descending “pew” drum.",
+      "how": "The disco syndrum is a tone whose pitch drops slowly. Envelope 1 bends both oscillators down an octave over a third of a second.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [1.5, 64, 0.3, 0.8],
+          [3.5, 64, 0.3, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A tone",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine → saw\n- OSC 1 level 100 %\n- Listen for: a tone.",
+          "set": {
+            "osc1.shape": 1,
+            "mix.osc1": 10
+          }
+        },
+        {
+          "title": "The sweep",
+          "module": "env",
+          "why": "- ENV ROUTING Env 1 Aux / Env 2 Filter+Amp: Envelope 2 now runs the filter and the volume; Envelope 1 is free\n- ENV 1 DEST Osc All Freq: Envelope 1 now bends both oscillators\n- Envelope 1 AMOUNT +5.0, DECAY 460 ms, SUSTAIN 0 %\n- Listen for: a falling “pew”.",
+          "set": {
+            "env.routing": "aux-filteramp",
+            "env1.dest": "osc-all",
+            "env1.amount": 5,
+            "env1.decay": 5.5,
+            "env1.sustain": 0
+          }
+        },
+        {
+          "title": "Ring",
+          "module": "env",
+          "why": "- CUTOFF 1.2 kHz\n- Envelope 2 DECAY 700 ms, SUSTAIN 0 %, RELEASE 460 ms\n- REVERB on, MIX 30 %, DECAY 50 %\n- Listen for: a disco syndrum.",
+          "set": {
+            "vcf.cutoff": 6,
+            "env2.decay": 6,
+            "env2.sustain": 0,
+            "env2.release": 5.5,
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 5
+          }
+        }
+      ],
+      "context": {
+        "env1.decay": "How long the sweep falls."
+      },
+      "tweaks": [
+        {
+          "id": "env1.amount",
+          "try": "Turn to −5",
+          "hear": "A rising “woop”."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 6",
+          "hear": "A zappier drum."
+        }
+      ]
+    },
+    {
+      "id": "t5-build-riser",
+      "name": "Noise Riser",
+      "ref": "In the style of EDM build-ups",
+      "artist": "EDM",
+      "tags": ["fx", "edm", "texture"],
+      "level": 2,
+      "blurb": "A long, rising whoosh of noise before a drop.",
+      "how": "A riser is noise whose filter climbs. Envelope 1 runs the filter, and with a long attack it pushes the cutoff up over several seconds.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [[0, 60, 7.8, 0.8]]
+      },
+      "steps": [
+        {
+          "title": "Noise",
+          "module": "mixer",
+          "why": "- OSC 1 level 0 %, NOISE white 100 %\n- CUTOFF 154 Hz, RESONANCE 50 %\n- Listen for: a dark hiss.",
+          "set": {
+            "mix.osc1": 0,
+            "mix.noise": 5,
+            "vcf.cutoff": 3,
+            "vcf.resonance": 5
+          }
+        },
+        {
+          "title": "Rise",
+          "module": "env",
+          "why": "- Envelope 1 AMOUNT +5.0, ATTACK 3.8 s, SUSTAIN 100 %: a climb over seconds\n- Listen for: the hiss rising.",
+          "set": {
+            "env1.amount": 5,
+            "env1.attack": 8,
+            "env1.sustain": 10
+          }
+        },
+        {
+          "title": "Space",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Stereo delay, TIME 60 %, DEPTH/MIX 30 %, FBACK/MISC 50 %\n- REVERB on, MIX 40 %, DECAY 60 %\n- Listen for: a rising whoosh.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "delay",
+            "fx.time": 6,
+            "fx.mix": 3,
+            "fx.misc": 5,
+            "rev.on": true,
+            "rev.mix": 4,
+            "rev.decay": 6
+          }
+        }
+      ],
+      "context": {
+        "env1.attack": "How long the rise takes."
+      },
+      "tweaks": [
+        {
+          "id": "env1.attack",
+          "try": "Lower to 6.5",
+          "hear": "A quick swoosh."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 8",
+          "hear": "A whistling riser."
+        }
+      ]
+    },
+    {
+      "id": "t5-downlifter",
+      "name": "Downlifter",
+      "ref": "In the style of EDM breakdowns",
+      "artist": "EDM",
+      "tags": ["fx", "edm", "texture"],
+      "level": 2,
+      "blurb": "A falling, fading sweep of noise and tone.",
+      "how": "A downlifter is the reverse: noise and a tone that start bright and high and sink. Envelope 1 bends the pitch down while Envelope 2 closes the filter.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.5, 0.8],
+          [4, 72, 0.5, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Noise and tone",
+          "module": "mixer",
+          "why": "- OSC 1 level 60 %, NOISE white 80 %\n- Listen for: a bright hiss and tone.",
+          "set": {
+            "mix.osc1": 6,
+            "mix.noise": 4
+          }
+        },
+        {
+          "title": "Sink",
+          "module": "env",
+          "why": "- ENV ROUTING Env 1 Aux / Env 2 Filter+Amp: Envelope 2 now runs the filter and the volume; Envelope 1 is free\n- ENV 1 DEST Osc All Freq: Envelope 1 now bends both oscillators\n- Envelope 1 AMOUNT +5.0, DECAY 2.5 s, SUSTAIN 0 %\n- Listen for: the pitch falling.",
+          "set": {
+            "env.routing": "aux-filteramp",
+            "env1.dest": "osc-all",
+            "env1.amount": 5,
+            "env1.decay": 7.5,
+            "env1.sustain": 0
+          }
+        },
+        {
+          "title": "Fade",
+          "module": "env",
+          "why": "- CUTOFF 304 Hz\n- Envelope 2 DECAY 2.5 s, SUSTAIN 0 %, RELEASE 1.6 s\n- REVERB on, MIX 40 %, DECAY 60 %\n- Listen for: a sinking sweep.",
+          "set": {
+            "vcf.cutoff": 4,
+            "env2.decay": 7.5,
+            "env2.sustain": 0,
+            "env2.release": 7,
+            "rev.on": true,
+            "rev.mix": 4,
+            "rev.decay": 6
+          }
+        }
+      ],
+      "context": {
+        "env1.decay": "How long the fall takes."
+      },
+      "tweaks": [
+        {
+          "id": "env1.decay",
+          "try": "Raise to 8.5",
+          "hear": "A longer fall."
+        },
+        {
+          "id": "mix.osc1",
+          "try": "Lower to 0",
+          "hear": "Noise only."
+        }
+      ]
+    },
+    {
+      "id": "t5-laser-zap",
+      "name": "Laser Zap",
+      "ref": "In the style of 1970s sci-fi films",
+      "artist": "Sci-fi films",
+      "tags": ["fx", "sci-fi", "film"],
+      "level": 2,
+      "blurb": "A fast, piercing laser “pew-pew”.",
+      "how": "A laser is a high, bright tone whose pitch falls in a flash. The arpeggiator repeats it.",
+      "phrase": {
+        "bpm": 150,
+        "loop": true,
+        "steps": [[0, 84, 3.9, 0.8]]
+      },
+      "steps": [
+        {
+          "title": "Bright tone",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE square\n- OSC 1 level 90 %\n- CUTOFF 4.6 kHz, RESONANCE 40 %\n- Listen for: a piercing tone.",
+          "set": {
+            "osc1.shape": 8,
+            "mix.osc1": 9,
+            "vcf.cutoff": 8,
+            "vcf.resonance": 4
+          }
+        },
+        {
+          "title": "Zap",
+          "module": "env",
+          "why": "- ENV ROUTING Env 1 Aux / Env 2 Filter+Amp: Envelope 2 now runs the filter and the volume; Envelope 1 is free\n- ENV 1 DEST Osc All Freq: Envelope 1 now bends both oscillators\n- Envelope 1 AMOUNT +5.0, DECAY 190 ms, SUSTAIN 0 %\n- Envelope 2 DECAY 190 ms, SUSTAIN 0 %, RELEASE 48 ms\n- Listen for: a falling zap.",
+          "set": {
+            "env.routing": "aux-filteramp",
+            "env1.dest": "osc-all",
+            "env1.amount": 5,
+            "env1.decay": 4.5,
+            "env1.sustain": 0,
+            "env2.decay": 4.5,
+            "env2.sustain": 0,
+            "env2.release": 3
+          }
+        },
+        {
+          "title": "Fire",
+          "module": "mode",
+          "why": "- ARPEGGIATOR on, MODE Up, OCTAVE 1 octave, CLK DIV 1/8, BPM 150 BPM\n- REVERB on, MIX 30 %, DECAY 40 %\n- Listen for: lasers firing.",
+          "set": {
+            "arp.on": true,
+            "arp.mode": "up",
+            "arp.octave": "1",
+            "clock.div": "1/8",
+            "clock.bpm": 150,
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 4
+          }
+        }
+      ],
+      "context": {
+        "env1.decay": "How quick the zap is."
+      },
+      "tweaks": [
+        {
+          "id": "env1.decay",
+          "try": "Raise to 5.5",
+          "hear": "A slower, bigger zap."
+        },
+        {
+          "id": "arp.octave",
+          "try": "Turn to 2 octaves",
+          "hear": "Two lasers."
+        }
+      ]
+    },
+    {
+      "id": "t5-ocean-surf",
+      "name": "Ocean Surf",
+      "ref": "In the style of ambient nature recordings",
+      "artist": "Ambient",
+      "tags": ["fx", "ambient", "texture"],
+      "level": 2,
+      "blurb": "Waves washing in and out on a beach.",
+      "how": "Surf is pink noise whose brightness rises and falls slowly. LFO 1 on the cutoff, slow, brings each wave in and out.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 60, 7.9, 0.8]]
+      },
+      "steps": [
+        {
+          "title": "Pink noise",
+          "module": "mixer",
+          "why": "- OSC 1 level 0 %, NOISE pink 100 %: all rumble\n- Listen for: a soft roar.",
+          "set": {
+            "mix.osc1": 0,
+            "mix.noise": -5
+          }
+        },
+        {
+          "title": "Waves",
+          "module": "lfo",
+          "why": "- CUTOFF 304 Hz\n- LFO 1 DEST Cutoff, FREQUENCY 0.32 Hz, AMOUNT +4.0, SHAPE Triangle: a wave every three seconds\n- Listen for: waves washing in and out.",
+          "set": {
+            "vcf.cutoff": 4,
+            "lfo1.dest": "cutoff",
+            "lfo1.freq": 2.7,
+            "lfo1.amt": 4,
+            "lfo1.shape": "tri"
+          }
+        },
+        {
+          "title": "Space",
+          "module": "fx",
+          "why": "- Envelope 2 ATTACK 700 ms, RELEASE 2.5 s\n- REVERB on, MIX 50 %, DECAY 80 %\n- Listen for: an ocean.",
+          "set": {
+            "env2.attack": 6,
+            "env2.release": 7.5,
+            "rev.on": true,
+            "rev.mix": 5,
+            "rev.decay": 8
+          }
+        }
+      ],
+      "context": {
+        "lfo1.freq": "How often the waves come."
+      },
+      "tweaks": [
+        {
+          "id": "lfo1.shape",
+          "try": "Choose reverse sawtooth",
+          "hear": "Waves that crash in, then drain."
+        },
+        {
+          "id": "vcf.cutoff",
+          "try": "Lower to 3",
+          "hear": "A distant sea."
+        }
+      ]
+    },
+    {
+      "id": "t5-rain",
+      "name": "Rain",
+      "ref": "In the style of ambient nature recordings",
+      "artist": "Ambient",
+      "tags": ["fx", "ambient", "texture"],
+      "level": 3,
+      "blurb": "A pattering, dripping rainfall.",
+      "how": "Rain is noise in random little bursts. LFO 2 in sample-and-hold throws the cutoff of a resonant filter to a new random spot many times a second, in each voice on its own, so the drops patter.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 60, 7.9, 0.8],
+          [0, 67, 7.9, 0.8],
+          [0, 72, 7.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "White noise",
+          "module": "mixer",
+          "why": "- OSC 1 level 0 %, NOISE white 80 %\n- CUTOFF 1.2 kHz, RESONANCE 60 %\n- Listen for: a resonant hiss.",
+          "set": {
+            "mix.osc1": 0,
+            "mix.noise": 4,
+            "vcf.cutoff": 6,
+            "vcf.resonance": 6
+          }
+        },
+        {
+          "title": "Drops",
+          "module": "lfo",
+          "why": "- LFO 2 DEST Cutoff, FREQUENCY 8.89 Hz, AMOUNT +3.0, SHAPE Sample and hold: a new random brightness about 9 times a second\n- Listen for: drops pattering.",
+          "set": {
+            "lfo2.dest": "cutoff",
+            "lfo2.freq": 7.5,
+            "lfo2.amt": 3,
+            "lfo2.shape": "sh"
+          }
+        },
+        {
+          "title": "Outside",
+          "module": "fx",
+          "why": "- Envelope 2 ATTACK 700 ms, RELEASE 1.6 s\n- REVERB on, MIX 40 %, DECAY 60 %, DAMPING 60 %\n- Listen for: rain falling outside.",
+          "set": {
+            "env2.attack": 6,
+            "env2.release": 7,
+            "rev.on": true,
+            "rev.mix": 4,
+            "rev.decay": 6,
+            "rev.damping": 6
+          }
+        }
+      ],
+      "context": {
+        "lfo2.freq": "How fast the drops fall."
+      },
+      "tweaks": [
+        {
+          "id": "lfo2.freq",
+          "try": "Raise to 9",
+          "hear": "A downpour."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 8",
+          "hear": "Glassy, ringing drops."
+        }
+      ]
+    },
+    {
+      "id": "t5-thunder",
+      "name": "Thunder",
+      "ref": "In the style of film sound design",
+      "artist": "Film sound design",
+      "tags": ["fx", "film", "texture"],
+      "level": 2,
+      "blurb": "A deep, rolling rumble of distant thunder.",
+      "how": "Thunder is a burst of low noise that rolls away. Pink noise through a low, driven filter, a quick attack and a very long release, in a long reverb.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 36, 1, 1]]
+      },
+      "steps": [
+        {
+          "title": "Low noise",
+          "module": "mixer",
+          "why": "- OSC 1 level 0 %, NOISE pink 100 %\n- CUTOFF 154 Hz, RESONANCE 20 %, DRIVE 80 %\n- Listen for: a deep rumble.",
+          "set": {
+            "mix.osc1": 0,
+            "mix.noise": -5,
+            "vcf.cutoff": 3,
+            "vcf.resonance": 2,
+            "vcf.drive": 8
+          }
+        },
+        {
+          "title": "Roll",
+          "module": "env",
+          "why": "- Envelope 2 ATTACK 48 ms, DECAY 5.7 s, SUSTAIN 0 %, RELEASE 5.7 s\n- OVERDRIVE 40 %\n- Listen for: a rolling crack.",
+          "set": {
+            "env2.attack": 3,
+            "env2.decay": 8.5,
+            "env2.sustain": 0,
+            "env2.release": 8.5,
+            "drive.amount": 4
+          }
+        },
+        {
+          "title": "Distance",
+          "module": "fx",
+          "why": "- REVERB on, MIX 60 %, DECAY 90 %, DAMPING 80 %\n- Listen for: thunder rolling away.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 6,
+            "rev.decay": 9,
+            "rev.damping": 8
+          }
+        }
+      ],
+      "context": {
+        "vcf.cutoff": "How close the storm is."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Raise to 5",
+          "hear": "A close crack."
+        },
+        {
+          "id": "lfo1.dest",
+          "try": "Choose Cutoff, AMOUNT +2",
+          "hear": "A rumbling, rolling storm."
+        }
+      ]
+    },
+    {
+      "id": "t5-film-computer",
+      "name": "Film Computer",
+      "ref": "In the style of 1970s sci-fi films",
+      "artist": "Sci-fi films",
+      "tags": ["fx", "sci-fi", "film"],
+      "level": 2,
+      "blurb": "A computer burbling random bleeps.",
+      "how": "The classic film computer is random pitches, fast. LFO 1 in sample-and-hold sets a new random pitch on both oscillators several times a second.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [[0, 72, 7.9, 0.8]]
+      },
+      "steps": [
+        {
+          "title": "A square",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE square\n- OSC 1 level 70 %\n- CUTOFF 2.3 kHz\n- Listen for: a beep.",
+          "set": {
+            "osc1.shape": 7.5,
+            "mix.osc1": 7,
+            "vcf.cutoff": 7
+          }
+        },
+        {
+          "title": "Random pitch",
+          "module": "lfo",
+          "why": "- LFO 1 DEST Osc All Freq, FREQUENCY 4.46 Hz, AMOUNT +4.5, SHAPE Sample and hold: a new pitch about 5 times a second\n- Listen for: random bleeps.",
+          "set": {
+            "lfo1.dest": "osc-all",
+            "lfo1.freq": 6.5,
+            "lfo1.amt": 4.5,
+            "lfo1.shape": "sh"
+          }
+        },
+        {
+          "title": "Echo",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Stereo delay, TIME 30 %, DEPTH/MIX 20 %, FBACK/MISC 30 %\n- REVERB on, MIX 20 %, DECAY 30 %\n- Listen for: a burbling computer.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "delay",
+            "fx.time": 3,
+            "fx.mix": 2,
+            "fx.misc": 3,
+            "rev.on": true,
+            "rev.mix": 2,
+            "rev.decay": 3
+          }
+        }
+      ],
+      "context": {
+        "lfo1.freq": "How fast the computer thinks."
+      },
+      "tweaks": [
+        {
+          "id": "lfo1.freq",
+          "try": "Raise to 8",
+          "hear": "A frantic computer."
+        },
+        {
+          "id": "lfo1.amt",
+          "try": "Lower to 2",
+          "hear": "Bleeps within a narrow range."
+        }
+      ]
+    },
+    {
+      "id": "t5-hip-hop-siren",
+      "name": "Siren Whistle",
+      "ref": "In the style of Public Enemy — “Rebel Without a Pause”",
+      "artist": "Public Enemy",
+      "tags": ["fx", "hip-hop"],
+      "level": 2,
+      "blurb": "A piercing, rising and falling siren.",
+      "how": "A siren is a tone whose pitch slides up and down. LFO 1, a triangle, swings both oscillators’ pitch an octave.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [[0, 76, 7.9, 0.8]]
+      },
+      "steps": [
+        {
+          "title": "Shrill",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE pulse 32 %\n- OSC 1 level 70 %\n- CUTOFF 3.3 kHz, RESONANCE 30 %\n- Listen for: a shrill tone.",
+          "set": {
+            "osc1.shape": 8.5,
+            "mix.osc1": 7,
+            "vcf.cutoff": 7.5,
+            "vcf.resonance": 3
+          }
+        },
+        {
+          "title": "Swing",
+          "module": "lfo",
+          "why": "- LFO 1 DEST Osc All Freq, FREQUENCY 1.58 Hz, AMOUNT +5.0, SHAPE Triangle: up and down about 1.5 times a second\n- Listen for: a wailing siren.",
+          "set": {
+            "lfo1.dest": "osc-all",
+            "lfo1.freq": 5,
+            "lfo1.amt": 5,
+            "lfo1.shape": "tri"
+          }
+        },
+        {
+          "title": "Grit",
+          "module": "fx",
+          "why": "- OVERDRIVE 30 %\n- REVERB on, MIX 20 %, DECAY 30 %\n- Listen for: a siren.",
+          "set": {
+            "drive.amount": 3,
+            "rev.on": true,
+            "rev.mix": 2,
+            "rev.decay": 3
+          }
+        }
+      ],
+      "context": {
+        "lfo1.freq": "How fast it wails."
+      },
+      "tweaks": [
+        {
+          "id": "lfo1.shape",
+          "try": "Choose square",
+          "hear": "A two-tone European siren."
+        },
+        {
+          "id": "lfo1.freq",
+          "try": "Raise to 6.5",
+          "hear": "A frantic siren."
+        }
+      ]
+    },
+    {
+      "id": "t5-flying-saucer",
+      "name": "Flying Saucer",
+      "ref": "In the style of Bernard Herrmann — The Day the Earth Stood Still",
+      "artist": "Bernard Herrmann",
+      "tags": ["fx", "sci-fi", "film", "50s"],
+      "level": 2,
+      "blurb": "A wavering, eerie, hovering saucer.",
+      "how": "The 1950s saucer sound is a theremin-like sine with a fast, deep vibrato. LFO 1 wobbles the pitch, LFO 2 the brightness in each voice.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 72, 7.9, 0.8],
+          [0, 79, 7.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sine",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine → saw\n- OSC 1 level 80 %\n- CUTOFF 1.2 kHz, RESONANCE 30 %\n- Listen for: a pure tone.",
+          "set": {
+            "osc1.shape": 1,
+            "mix.osc1": 8,
+            "vcf.cutoff": 6,
+            "vcf.resonance": 3
+          }
+        },
+        {
+          "title": "Wobble",
+          "module": "lfo",
+          "why": "- LFO 1 DEST Osc All Freq, FREQUENCY 5.48 Hz, AMOUNT +1.8\n- LFO 2 DEST Cutoff, FREQUENCY 0.40 Hz, AMOUNT +1.5\n- Listen for: an eerie, wavering hover.",
+          "set": {
+            "lfo1.dest": "osc-all",
+            "lfo1.freq": 6.8,
+            "lfo1.amt": 1.8,
+            "lfo2.dest": "cutoff",
+            "lfo2.freq": 3,
+            "lfo2.amt": 1.5
+          }
+        },
+        {
+          "title": "Space",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Stereo delay, TIME 60 %, DEPTH/MIX 30 %, FBACK/MISC 50 %\n- REVERB on, MIX 40 %, DECAY 70 %\n- Listen for: a saucer hovering.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "delay",
+            "fx.time": 6,
+            "fx.mix": 3,
+            "fx.misc": 5,
+            "rev.on": true,
+            "rev.mix": 4,
+            "rev.decay": 7
+          }
+        }
+      ],
+      "context": {
+        "lfo1.amt": "How wide the wobble is."
+      },
+      "tweaks": [
+        {
+          "id": "lfo1.freq",
+          "try": "Raise to 8",
+          "hear": "A buzzing alien."
+        },
+        {
+          "id": "lfo1.amt",
+          "try": "Raise to 3",
+          "hear": "A wild, warping saucer."
+        }
+      ]
+    },
+    {
+      "id": "t5-dark-side-heartbeat",
+      "name": "Heartbeat",
+      "ref": "In the style of Pink Floyd — The Dark Side of the Moon",
+      "artist": "Pink Floyd",
+      "tags": ["perc", "fx", "rock", "70s"],
+      "level": 2,
+      "blurb": "A deep, soft, thudding heartbeat.",
+      "how": "A heartbeat is two soft, low thuds. A sine with a small pitch drop, a dark filter and a soft decay.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 31, 0.2, 0.8],
+          [0.3, 31, 0.2, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Low sine",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine\n- OSC 1 level 100 %\n- CUTOFF 154 Hz\n- Listen for: a deep, soft tone.",
+          "set": {
+            "osc1.shape": 0,
+            "mix.osc1": 10,
+            "vcf.cutoff": 3
+          }
+        },
+        {
+          "title": "Thud",
+          "module": "env",
+          "why": "- ENV ROUTING Env 1 Aux / Env 2 Filter+Amp: Envelope 2 now runs the filter and the volume; Envelope 1 is free\n- ENV 1 DEST Osc All Freq: Envelope 1 now bends both oscillators\n- Envelope 1 AMOUNT +3.0, DECAY 75 ms, SUSTAIN 0 %\n- Envelope 2 DECAY 300 ms, SUSTAIN 0 %, RELEASE 300 ms\n- Listen for: soft thuds.",
+          "set": {
+            "env.routing": "aux-filteramp",
+            "env1.dest": "osc-all",
+            "env1.amount": 3,
+            "env1.decay": 3.5,
+            "env1.sustain": 0,
+            "env2.decay": 5,
+            "env2.sustain": 0,
+            "env2.release": 5
+          }
+        },
+        {
+          "title": "Weight",
+          "module": "mixer",
+          "why": "- OSC 1 SUB 60 %\n- OVERDRIVE 20 %\n- Listen for: a heartbeat.",
+          "set": {
+            "mix.sub": 6,
+            "drive.amount": 2
+          }
+        }
+      ],
+      "context": {
+        "mix.sub": "How deep each beat is."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Raise to 5",
+          "hear": "A harder, kick-like beat."
+        },
+        {
+          "id": "env2.decay",
+          "try": "Raise to 6",
+          "hear": "A longer, booming beat."
+        }
+      ]
+    },
+    {
+      "id": "t5-helicopter",
+      "name": "Helicopter",
+      "ref": "In the style of film sound design",
+      "artist": "Film sound design",
+      "tags": ["fx", "film"],
+      "level": 2,
+      "blurb": "Chopping helicopter blades over an engine whine.",
+      "how": "Rotor blades chop the air. LFO 1, a square wave, slams the cutoff open and shut fast over pink noise and a low tone.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 36, 7.9, 0.8]]
+      },
+      "steps": [
+        {
+          "title": "Engine",
+          "module": "mixer",
+          "why": "- OSC 1 level 40 %, NOISE pink 100 %\n- Listen for: a rumble and a tone.",
+          "set": {
+            "mix.osc1": 4,
+            "mix.noise": -5
+          }
+        },
+        {
+          "title": "Chop",
+          "module": "lfo",
+          "why": "- CUTOFF 154 Hz\n- LFO 1 DEST Cutoff, FREQUENCY 4.46 Hz, AMOUNT +5.0, SHAPE Square: about 5 chops a second\n- Listen for: chopping blades.",
+          "set": {
+            "vcf.cutoff": 3,
+            "lfo1.dest": "cutoff",
+            "lfo1.freq": 6.5,
+            "lfo1.amt": 5,
+            "lfo1.shape": "sq"
+          }
+        },
+        {
+          "title": "Distance",
+          "module": "fx",
+          "why": "- REVERB on, MIX 30 %, DECAY 50 %\n- Listen for: a helicopter.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 5
+          }
+        }
+      ],
+      "context": {
+        "lfo1.freq": "How fast the blades turn."
+      },
+      "tweaks": [
+        {
+          "id": "lfo1.freq",
+          "try": "Lower to 5",
+          "hear": "A slow, landing chopper."
+        },
+        {
+          "id": "lfo1.shape",
+          "try": "Choose sawtooth",
+          "hear": "A lawnmower."
+        }
+      ]
+    },
+    {
+      "id": "t5-wind-chimes",
+      "name": "Wind Chimes",
+      "ref": "In the style of ambient nature recordings",
+      "artist": "Ambient",
+      "tags": ["fx", "ambient", "bells"],
+      "level": 2,
+      "blurb": "Delicate chimes tinkling at random in a breeze.",
+      "how": "The arpeggiator in Random plays a held chord’s notes in any order; FM bells and a short, ringing envelope make them chimes.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 79, 7.9, 0.7],
+          [0, 84, 7.9, 0.7],
+          [0, 86, 7.9, 0.7],
+          [0, 91, 7.9, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Chimes",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine\n- OSC 2 SHAPE sine, OCTAVE +1 oct, PITCH +4 st\n- FM 2→1 on\n- OSC 2 level 25 %\n- CUTOFF 9.1 kHz\n- Listen for: bell tones.",
+          "set": {
+            "osc1.shape": 0,
+            "osc2.shape": 0,
+            "osc2.octave": "+1",
+            "osc2.pitch": 4,
+            "osc.fm": true,
+            "mix.osc2": 2.5,
+            "vcf.cutoff": 9
+          }
+        },
+        {
+          "title": "Random",
+          "module": "mode",
+          "why": "- ARPEGGIATOR on, MODE Random, OCTAVE 1 octave, CLK DIV 1/8T, BPM 90 BPM\n- Envelope 2 DECAY 1.6 s, SUSTAIN 0 %, RELEASE 1.1 s\n- Listen for: chimes at random.",
+          "set": {
+            "arp.on": true,
+            "arp.mode": "random",
+            "arp.octave": "1",
+            "clock.div": "1/8T",
+            "clock.bpm": 90,
+            "env2.decay": 7,
+            "env2.sustain": 0,
+            "env2.release": 6.5
+          }
+        },
+        {
+          "title": "Breeze",
+          "module": "fx",
+          "why": "- REVERB on, MIX 50 %, DECAY 70 %\n- Listen for: wind chimes.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 5,
+            "rev.decay": 7
+          }
+        }
+      ],
+      "context": {
+        "arp.mode": "Random: chimes in no order."
+      },
+      "tweaks": [
+        {
+          "id": "clock.div",
+          "try": "Turn to 1/16",
+          "hear": "A gust."
+        },
+        {
+          "id": "osc2.pitch",
+          "try": "Turn to 0",
+          "hear": "Sweeter, tuned chimes."
+        }
+      ]
+    },
+    {
+      "id": "t5-radiophonic-bubbles",
+      "name": "Radiophonic Bubbles",
+      "ref": "In the style of the BBC Radiophonic Workshop",
+      "artist": "BBC Radiophonic Workshop",
+      "tags": ["fx", "electronic", "60s"],
+      "level": 3,
+      "blurb": "Bubbling, blooping, resonant noises.",
+      "how": "A resonant filter jumping around in random steps bubbles. LFO 1 in sample-and-hold on the cutoff, fast, over a soft tone.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 48, 7.9, 0.8]]
+      },
+      "steps": [
+        {
+          "title": "A soft tone",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine → saw\n- OSC 1 level 70 %\n- CUTOFF 600 Hz, RESONANCE 85 %\n- Listen for: a resonant tone.",
+          "set": {
+            "osc1.shape": 4,
+            "mix.osc1": 7,
+            "vcf.cutoff": 5,
+            "vcf.resonance": 8.5
+          }
+        },
+        {
+          "title": "Bubble",
+          "module": "lfo",
+          "why": "- LFO 1 DEST Cutoff, FREQUENCY 6.29 Hz, AMOUNT +3.0, SHAPE Sample and hold: a new step about 6 times a second\n- Listen for: bubbles.",
+          "set": {
+            "lfo1.dest": "cutoff",
+            "lfo1.freq": 7,
+            "lfo1.amt": 3,
+            "lfo1.shape": "sh"
+          }
+        },
+        {
+          "title": "Echo",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Tape delay 1, TIME 40 %, DEPTH/MIX 30 %, FBACK/MISC 40 %\n- Listen for: a bubbling, radiophonic texture.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "tape1",
+            "fx.time": 4,
+            "fx.mix": 3,
+            "fx.misc": 4
+          }
+        }
+      ],
+      "context": {
+        "vcf.resonance": "How bubbly each step is."
+      },
+      "tweaks": [
+        {
+          "id": "lfo1.freq",
+          "try": "Raise to 8.5",
+          "hear": "A boiling pot."
+        },
+        {
+          "id": "lfo1.shape",
+          "try": "Choose triangle",
+          "hear": "A smooth, wah-like bubble."
+        }
+      ]
+    },
+    {
+      "id": "t5-doctor-who-lead",
+      "name": "Time Lord Lead",
+      "ref": "In the style of Delia Derbyshire — Doctor Who",
+      "artist": "Delia Derbyshire",
+      "tags": ["lead", "electronic", "tv", "60s"],
+      "level": 2,
+      "blurb": "An eerie, swooping, wavering sine melody.",
+      "how": "Derbyshire’s melody was made from sine tones, swooping between notes. A sine, long glide and vibrato.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 71, 1.8, 0.8],
+          [2, 69, 0.45, 0.8],
+          [2.5, 71, 0.45, 0.8],
+          [3, 66, 0.9, 0.8],
+          [4, 71, 1.8, 0.8],
+          [6, 76, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sine",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine → saw, OCTAVE +1 oct\n- OSC 1 level 80 %\n- CUTOFF 2.3 kHz\n- Listen for: a pure tone.",
+          "set": {
+            "osc1.shape": 0.5,
+            "osc1.octave": "+1",
+            "mix.osc1": 8,
+            "vcf.cutoff": 7
+          }
+        },
+        {
+          "title": "Swoop",
+          "module": "mode",
+          "why": "- GLIDE on, time 490 ms\n- Listen for: swooping notes.",
+          "set": {
+            "glide.on": true,
+            "glide.time": 3.5
+          }
+        },
+        {
+          "title": "Waver",
+          "module": "lfo",
+          "why": "- LFO 1 DEST Osc All Freq, FREQUENCY 3.15 Hz, AMOUNT +0.8\n- EFFECT on, TYPE Tape delay 1, TIME 50 %, DEPTH/MIX 20 %, FBACK/MISC 30 %\n- REVERB on, MIX 30 %, DECAY 50 %\n- Listen for: an eerie, wavering lead.",
+          "set": {
+            "lfo1.dest": "osc-all",
+            "lfo1.freq": 6,
+            "lfo1.amt": 0.8,
+            "fx.on": true,
+            "fx.type": "tape1",
+            "fx.time": 5,
+            "fx.mix": 2,
+            "fx.misc": 3,
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 5
+          }
+        }
+      ],
+      "context": {
+        "glide.time": "How it swoops."
+      },
+      "tweaks": [
+        {
+          "id": "glide.time",
+          "try": "Raise to 5",
+          "hear": "Longer swoops."
+        },
+        {
+          "id": "osc1.shape",
+          "try": "Turn to 7.5 (square)",
+          "hear": "A hollower, buzzier lead."
+        }
+      ]
+    },
+    {
+      "id": "t5-arcade-alarm",
+      "name": "Arcade Alarm",
+      "ref": "In the style of 1980s arcade games",
+      "artist": "Arcade games",
+      "tags": ["fx", "chiptune", "80s"],
+      "level": 2,
+      "blurb": "A fast, two-tone warbling alarm.",
+      "how": "A square LFO on pitch jumps between two notes. LFO 1, square, flips both oscillators’ pitch fast.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [[0, 76, 7.9, 0.8]]
+      },
+      "steps": [
+        {
+          "title": "A square",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE square\n- OSC 1 level 70 %\n- Listen for: a hollow beep.",
+          "set": {
+            "osc1.shape": 7.5,
+            "mix.osc1": 7
+          }
+        },
+        {
+          "title": "Warble",
+          "module": "lfo",
+          "why": "- LFO 1 DEST Osc All Freq, FREQUENCY 4.77 Hz, AMOUNT +3.8, SHAPE Square: a jump of about a fifth, 6 times a second\n- Listen for: a two-tone alarm.",
+          "set": {
+            "lfo1.dest": "osc-all",
+            "lfo1.freq": 6.6,
+            "lfo1.amt": 3.8,
+            "lfo1.shape": "sq"
+          }
+        }
+      ],
+      "context": {
+        "lfo1.amt": "The interval it jumps."
+      },
+      "tweaks": [
+        {
+          "id": "lfo1.freq",
+          "try": "Raise to 8",
+          "hear": "A frantic alarm."
+        },
+        {
+          "id": "lfo1.shape",
+          "try": "Choose sawtooth",
+          "hear": "A rising “whoop” alarm."
+        }
+      ]
+    },
+    {
+      "id": "t5-arcade-coin",
+      "name": "Coin Pickup",
+      "ref": "In the style of 1980s arcade games",
+      "artist": "Arcade games",
+      "tags": ["fx", "chiptune", "80s"],
+      "level": 1,
+      "blurb": "A quick, bright arpeggio “bling”.",
+      "how": "The coin sound is a fast arpeggio upward. The arpeggiator runs the held notes in 32nds.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 76, 0.4, 0.8],
+          [0, 83, 0.4, 0.8],
+          [2, 76, 0.4, 0.8],
+          [2, 83, 0.4, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Square",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE square\n- OSC 1 level 80 %\n- CUTOFF 4.6 kHz\n- Listen for: a bright beep.",
+          "set": {
+            "osc1.shape": 7.5,
+            "mix.osc1": 8,
+            "vcf.cutoff": 8
+          }
+        },
+        {
+          "title": "Bling",
+          "module": "mode",
+          "why": "- ARPEGGIATOR on, MODE Up, OCTAVE 2 octaves, CLK DIV 1/32, BPM 120 BPM\n- Envelope 2 DECAY 300 ms, SUSTAIN 0 %, RELEASE 120 ms\n- Listen for: a bling.",
+          "set": {
+            "arp.on": true,
+            "arp.mode": "up",
+            "arp.octave": "2",
+            "clock.div": "1/32",
+            "clock.bpm": 120,
+            "env2.decay": 5,
+            "env2.sustain": 0,
+            "env2.release": 4
+          }
+        }
+      ],
+      "context": {
+        "clock.div": "How fast the bling runs."
+      },
+      "tweaks": [
+        {
+          "id": "arp.octave",
+          "try": "Turn to 3 octaves",
+          "hear": "A bigger power-up."
+        },
+        {
+          "id": "osc1.shape",
+          "try": "Turn to 9",
+          "hear": "A thinner, Game Boy beep."
+        }
+      ]
+    },
+    {
+      "id": "t5-chiptune-lead",
+      "name": "Chiptune Lead",
+      "ref": "In the style of chiptune",
+      "artist": "Chiptune",
+      "tags": ["lead", "chiptune", "game"],
+      "level": 2,
+      "blurb": "A thin, buzzy, pulse-wave game melody with a fast vibrato.",
+      "how": "Game consoles had pulse waves at fixed widths. A narrow pulse, an open filter, no effects and a quick vibrato.",
+      "phrase": {
+        "bpm": 150,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.4, 0.8],
+          [0.5, 76, 0.4, 0.8],
+          [1, 79, 0.4, 0.8],
+          [1.5, 84, 0.4, 0.8],
+          [2, 83, 0.4, 0.8],
+          [2.5, 79, 0.4, 0.8],
+          [3, 76, 0.4, 0.8],
+          [4, 74, 0.4, 0.8],
+          [4.5, 77, 0.4, 0.8],
+          [5, 81, 0.4, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A narrow pulse",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE pulse 23 %\n- OSC 1 level 70 %\n- CUTOFF 18 kHz\n- Listen for: a thin, buzzy beep.",
+          "set": {
+            "osc1.shape": 9,
+            "mix.osc1": 7,
+            "vcf.cutoff": 10
+          }
+        },
+        {
+          "title": "Snappy",
+          "module": "env",
+          "why": "- Envelope 2 DECAY 460 ms, SUSTAIN 60 %, RELEASE 30 ms\n- Listen for: snappy notes.",
+          "set": {
+            "env2.decay": 5.5,
+            "env2.sustain": 6,
+            "env2.release": 2.5
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "lfo",
+          "why": "- LFO 1 DEST Osc All Freq, FREQUENCY 4.16 Hz, AMOUNT +0.6\n- Listen for: a game melody.",
+          "set": {
+            "lfo1.dest": "osc-all",
+            "lfo1.freq": 6.4,
+            "lfo1.amt": 0.6
+          }
+        }
+      ],
+      "context": {
+        "osc1.shape": "The pulse width: 12.5 %, 25 % or 50 % on the consoles."
+      },
+      "tweaks": [
+        {
+          "id": "osc1.shape",
+          "try": "Turn to 7.5 (square)",
+          "hear": "A rounder, 50 % pulse."
+        },
+        {
+          "id": "lfo1.amt",
+          "try": "Lower to 0",
+          "hear": "A plain beep."
+        }
+      ]
+    },
+    {
+      "id": "t5-tanpura",
+      "name": "Tanpura Drone",
+      "ref": "In the style of Hindustani classical music",
+      "artist": "Hindustani classical",
+      "tags": ["drone", "world"],
+      "level": 2,
+      "blurb": "A shimmering, buzzing drone of tonic and fifth.",
+      "how": "The tanpura’s buzz comes from its bridge. A narrow pulse into resonance, the tonic, fifth and octave held, with LFO 2 moving each voice’s brightness on its own.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 48, 7.9, 0.7],
+          [0, 55, 7.9, 0.7],
+          [0, 60, 7.9, 0.7],
+          [0, 36, 7.9, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Buzz",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE pulse 23 %\n- CUTOFF 600 Hz, RESONANCE 60 %\n- Listen for: a buzzing tone.",
+          "set": {
+            "osc1.shape": 9,
+            "vcf.cutoff": 5,
+            "vcf.resonance": 6
+          }
+        },
+        {
+          "title": "Shimmer",
+          "module": "lfo",
+          "why": "LFO 2 is in each voice, so each string shimmers on its own.\n- LFO 2 DEST Cutoff, FREQUENCY 0.56 Hz, AMOUNT +1.2\n- Listen for: a living drone.",
+          "set": {
+            "lfo2.dest": "cutoff",
+            "lfo2.freq": 3.5,
+            "lfo2.amt": 1.2
+          }
+        },
+        {
+          "title": "Swell",
+          "module": "env",
+          "why": "- Envelope 2 ATTACK 700 ms, RELEASE 1.6 s\n- REVERB on, MIX 40 %, DECAY 70 %\n- Listen for: a tanpura drone.",
+          "set": {
+            "env2.attack": 6,
+            "env2.release": 7,
+            "rev.on": true,
+            "rev.mix": 4,
+            "rev.decay": 7
+          }
+        }
+      ],
+      "context": {
+        "lfo2.amt": "How much the strings shimmer."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 8",
+          "hear": "A buzzier, jawari drone."
+        },
+        {
+          "id": "voice.vintage",
+          "try": "Raise to 3",
+          "hear": "Strings drifting apart."
+        }
+      ]
+    },
+    {
+      "id": "t5-dream-house-drone",
+      "name": "Beating Drone",
+      "ref": "In the style of La Monte Young",
+      "artist": "La Monte Young",
+      "tags": ["drone", "minimalism"],
+      "level": 2,
+      "blurb": "A pure, still drone whose overtones beat slowly.",
+      "how": "Two sines almost in tune beat against each other. Oscillator 2 a fraction sharp: the slower the beat, the closer they are.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 43, 7.9, 0.7],
+          [0, 50, 7.9, 0.7],
+          [0, 55, 7.9, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sines nearly together",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine\n- OSC 2 SHAPE sine, PITCH +0.1 st\n- OSC 1 level 60 %, OSC 2 60 %\n- CUTOFF 1.2 kHz\n- Listen for: a slow beating inside the drone.",
+          "set": {
+            "osc1.shape": 0,
+            "osc2.shape": 0,
+            "osc2.pitch": 0.06,
+            "mix.osc1": 6,
+            "mix.osc2": 6,
+            "vcf.cutoff": 6
+          }
+        },
+        {
+          "title": "Still",
+          "module": "env",
+          "why": "- Envelope 2 ATTACK 700 ms, RELEASE 2.5 s\n- Listen for: a still, endless tone.",
+          "set": {
+            "env2.attack": 6,
+            "env2.release": 7.5
+          }
+        },
+        {
+          "title": "Room",
+          "module": "fx",
+          "why": "- REVERB on, MIX 30 %, DECAY 60 %\n- Listen for: a beating drone.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 6
+          }
+        }
+      ],
+      "context": {
+        "osc2.pitch": "How fast the beating is."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.pitch",
+          "try": "Raise to +0.2",
+          "hear": "Faster beating."
+        },
+        {
+          "id": "osc1.shape",
+          "try": "Turn to 2.5",
+          "hear": "Overtones beating too."
+        }
+      ]
+    },
+    {
+      "id": "t5-dark-ambient",
+      "name": "Dark Ambient Drone",
+      "ref": "In the style of Lustmord",
+      "artist": "Lustmord",
+      "tags": ["drone", "dark ambient"],
+      "level": 2,
+      "blurb": "A vast, dark, rumbling drone from deep underground.",
+      "how": "Low saws and the sub through a dark filter, with a slow LFO opening it and pink noise rumbling underneath.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 24, 7.9, 0.8],
+          [0, 31, 7.9, 0.8],
+          [0, 36, 7.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Low",
+          "module": "mixer",
+          "why": "- OSC 1 level 35 %, OSC 2 30 %, OSC 1 SUB 35 %, NOISE pink 30 %\n- OSC 2 PITCH +0.2 st\n- CUTOFF 154 Hz, RESONANCE 30 %, DRIVE 50 %\n- Listen for: a deep, dark rumble.",
+          "set": {
+            "mix.osc1": 3.5,
+            "mix.osc2": 3,
+            "mix.sub": 3.5,
+            "mix.noise": -1.5,
+            "osc2.pitch": 0.15,
+            "vcf.cutoff": 3,
+            "vcf.resonance": 3,
+            "vcf.drive": 5
+          }
+        },
+        {
+          "title": "Breathe",
+          "module": "lfo",
+          "why": "- LFO 1 DEST Cutoff, FREQUENCY 0.14 Hz, AMOUNT +2.0: one breath every 10 seconds or so\n- Listen for: the drone opening slowly.",
+          "set": {
+            "lfo1.dest": "cutoff",
+            "lfo1.freq": 1.5,
+            "lfo1.amt": 2
+          }
+        },
+        {
+          "title": "Abyss",
+          "module": "fx",
+          "why": "- Envelope 2 ATTACK 1.6 s, RELEASE 3.8 s\n- REVERB on, MIX 60 %, DECAY 90 %, DAMPING 80 %\n- Listen for: a vast, dark space.",
+          "set": {
+            "env2.attack": 7,
+            "env2.release": 8,
+            "rev.on": true,
+            "rev.mix": 6,
+            "rev.decay": 9,
+            "rev.damping": 8
+          }
+        }
+      ],
+      "context": {
+        "vcf.cutoff": "How deep underground."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Raise to 5",
+          "hear": "A harsher, grinding drone."
+        },
+        {
+          "id": "voice.vintage",
+          "try": "Raise to 6",
+          "hear": "A churning, unstable drone."
+        }
+      ]
+    },
+    {
+      "id": "t5-airports-pad",
+      "name": "Airport Pad",
+      "ref": "In the style of Brian Eno — Music for Airports",
+      "artist": "Brian Eno",
+      "tags": ["pad", "ambient"],
+      "level": 1,
+      "blurb": "Soft, sparse tones that bloom and fade into a long reverb.",
+      "how": "Eno’s piece is soft notes that come and go. A sine-ish tone with a slow attack and a slow fade, in a very long reverb.",
+      "phrase": {
+        "bpm": 50,
+        "loop": true,
+        "steps": [
+          [0, 65, 3, 0.6],
+          [2, 72, 3, 0.55],
+          [5, 68, 3, 0.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Soft",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine → saw\n- OSC 1 level 80 %\n- CUTOFF 600 Hz\n- Listen for: a soft tone.",
+          "set": {
+            "osc1.shape": 1.5,
+            "mix.osc1": 8,
+            "vcf.cutoff": 5
+          }
+        },
+        {
+          "title": "Bloom",
+          "module": "env",
+          "why": "- Envelope 2 ATTACK 460 ms, DECAY 2.5 s, SUSTAIN 40 %, RELEASE 2.5 s\n- Listen for: notes blooming and fading.",
+          "set": {
+            "env2.attack": 5.5,
+            "env2.decay": 7.5,
+            "env2.sustain": 4,
+            "env2.release": 7.5
+          }
+        },
+        {
+          "title": "Long",
+          "module": "fx",
+          "why": "- REVERB on, MIX 60 %, DECAY 90 %, PREDELAY 60 ms\n- Listen for: a calm, endless space.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 6,
+            "rev.decay": 9,
+            "rev.predelay": 3
+          }
+        }
+      ],
+      "context": {
+        "env2.attack": "How gently each note arrives."
+      },
+      "tweaks": [
+        {
+          "id": "osc1.shape",
+          "try": "Turn to 0 (sine)",
+          "hear": "Purer tones."
+        },
+        {
+          "id": "fx.on",
+          "try": "Turn EFFECT on, TYPE Tape delay 1",
+          "hear": "A tape loop echo."
+        }
+      ]
+    },
+    {
+      "id": "t5-radigue-drone",
+      "name": "Slow Feedback Drone",
+      "ref": "In the style of Éliane Radigue",
+      "artist": "Éliane Radigue",
+      "tags": ["drone", "minimalism"],
+      "level": 3,
+      "blurb": "A barely changing drone whose overtones slowly appear and vanish.",
+      "how": "Radigue’s drones change almost imperceptibly. A very slow LFO on the resonance brings a whistling overtone in and out.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 38, 7.9, 0.8],
+          [0, 45, 7.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Saws",
+          "module": "osc",
+          "why": "- OSC 1 level 60 %, OSC 2 50 %\n- OSC 2 PITCH 0 st\n- CUTOFF 427 Hz, RESONANCE 40 %\n- Listen for: a soft drone.",
+          "set": {
+            "mix.osc1": 6,
+            "mix.osc2": 5,
+            "osc2.pitch": 0.04,
+            "vcf.cutoff": 4.5,
+            "vcf.resonance": 4
+          }
+        },
+        {
+          "title": "Overtones",
+          "module": "lfo",
+          "why": "- LFO 1 DEST Resonance, FREQUENCY 0.10 Hz, AMOUNT +4.0: one cycle every 15 seconds or so\n- Listen for: an overtone slowly appearing.",
+          "set": {
+            "lfo1.dest": "res",
+            "lfo1.freq": 1,
+            "lfo1.amt": 4
+          }
+        },
+        {
+          "title": "Still",
+          "module": "env",
+          "why": "- Envelope 2 ATTACK 1.6 s, RELEASE 3.8 s\n- REVERB on, MIX 30 %, DECAY 60 %\n- Listen for: a slowly shifting drone.",
+          "set": {
+            "env2.attack": 7,
+            "env2.release": 8,
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 6
+          }
+        }
+      ],
+      "context": {
+        "lfo1.dest": "Resonance: the overtone the filter sings."
+      },
+      "tweaks": [
+        {
+          "id": "lfo1.freq",
+          "try": "Raise to 3",
+          "hear": "A faster, singing drone."
+        },
+        {
+          "id": "vcf.cutoff",
+          "try": "Raise to 6",
+          "hear": "A higher overtone."
+        }
+      ]
+    },
+    {
+      "id": "t5-singing-bowl",
+      "name": "Singing Bowl",
+      "ref": "In the style of Tibetan singing bowls",
+      "artist": "Singing bowls",
+      "tags": ["drone", "world", "ambient"],
+      "level": 2,
+      "blurb": "A struck metal bowl ringing for a long time, its overtones beating.",
+      "how": "A singing bowl rings inharmonically and beats. FM between sines at an odd ratio, a long decay and VINTAGE making the overtones beat.",
+      "phrase": {
+        "bpm": 50,
+        "loop": true,
+        "steps": [
+          [0, 60, 1, 0.8],
+          [4, 67, 1, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Metal",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine\n- OSC 2 SHAPE sine, OCTAVE +1 oct, PITCH +4.7 st\n- FM 2→1 on\n- OSC 2 level 25 %\n- CUTOFF 2.3 kHz\n- Listen for: a metallic ring.",
+          "set": {
+            "osc1.shape": 0,
+            "osc2.shape": 0,
+            "osc2.octave": "+1",
+            "osc2.pitch": 4.7,
+            "osc.fm": true,
+            "mix.osc2": 2.5,
+            "vcf.cutoff": 7
+          }
+        },
+        {
+          "title": "Long ring",
+          "module": "env",
+          "why": "- Envelope 2 DECAY 8.7 s, SUSTAIN 0 %, RELEASE 8.7 s\n- VINTAGE 40 %: beating overtones\n- Listen for: a ring that lasts.",
+          "set": {
+            "env2.decay": 9,
+            "env2.sustain": 0,
+            "env2.release": 9,
+            "voice.vintage": 4
+          }
+        },
+        {
+          "title": "Temple",
+          "module": "fx",
+          "why": "- REVERB on, MIX 50 %, DECAY 80 %\n- Listen for: a singing bowl.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 5,
+            "rev.decay": 8
+          }
+        }
+      ],
+      "context": {
+        "osc2.pitch": "The bowl’s ratio."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.pitch",
+          "try": "Turn to +2",
+          "hear": "A different bowl."
+        },
+        {
+          "id": "mix.osc2",
+          "try": "Raise to 4",
+          "hear": "A harsher, struck bowl."
+        }
+      ]
+    },
+    {
+      "id": "t5-phaedra-whistle",
+      "name": "Filter Whistle",
+      "ref": "In the style of Tangerine Dream — Phaedra",
+      "artist": "Tangerine Dream",
+      "tags": ["drone", "electronic", "70s"],
+      "level": 3,
+      "blurb": "A haunting, whistling tone made by the filter alone.",
+      "how": "Turned up near full, RESONANCE makes the filter sing a sine of its own. With the oscillators off and a whisper of noise to start it, the filter is the instrument; its key tracking makes it follow the keys roughly.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 72, 3.8, 0.8],
+          [4, 79, 3.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Oscillators off",
+          "module": "mixer",
+          "why": "- OSC 1 level 0 %, NOISE white 10 %: a whisper to excite the filter\n- Listen for: almost nothing.",
+          "set": {
+            "mix.osc1": 0,
+            "mix.noise": 0.5
+          }
+        },
+        {
+          "title": "Self-oscillate",
+          "module": "filter",
+          "why": "- CUTOFF 1.2 kHz, RESONANCE 100 %: the filter sings\n- Listen for: a pure, whistling tone.",
+          "set": {
+            "vcf.cutoff": 6,
+            "vcf.resonance": 10
+          }
+        },
+        {
+          "title": "Drift",
+          "module": "lfo",
+          "why": "- LFO 1 DEST Cutoff, FREQUENCY 0.20 Hz, AMOUNT +0.6\n- Envelope 2 ATTACK 700 ms, RELEASE 1.6 s\n- EFFECT on, TYPE Tape delay 1, TIME 60 %, DEPTH/MIX 30 %, FBACK/MISC 50 %\n- REVERB on, MIX 40 %, DECAY 70 %\n- Listen for: a haunting whistle.",
+          "set": {
+            "lfo1.dest": "cutoff",
+            "lfo1.freq": 2,
+            "lfo1.amt": 0.6,
+            "env2.attack": 6,
+            "env2.release": 7,
+            "fx.on": true,
+            "fx.type": "tape1",
+            "fx.time": 6,
+            "fx.mix": 3,
+            "fx.misc": 5,
+            "rev.on": true,
+            "rev.mix": 4,
+            "rev.decay": 7
+          }
+        }
+      ],
+      "context": {
+        "vcf.resonance": "Near full, the filter sings.",
+        "vcf.cutoff": "The whistle’s pitch."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Lower to 4.5",
+          "hear": "A deeper whistle."
+        },
+        {
+          "id": "mix.noise",
+          "try": "Raise to +2",
+          "hear": "A breathier whistle."
+        }
+      ]
+    },
+    {
+      "id": "t5-phaedra-seq",
+      "name": "Berlin School Sequence",
+      "ref": "In the style of Tangerine Dream — “Phaedra”",
+      "artist": "Tangerine Dream",
+      "tags": ["seq", "electronic", "70s"],
+      "level": 2,
+      "blurb": "A hypnotic, bubbling sequence whose filter slowly drifts.",
+      "how": "The Berlin School is a sequence that repeats while its tone drifts. The arpeggiator plays the held notes; a slow LFO on a resonant filter changes the tone over many bars.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 45, 7.9, 0.7],
+          [0, 52, 7.9, 0.7],
+          [0, 57, 7.9, 0.7],
+          [0, 60, 7.9, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sequence",
+          "module": "mode",
+          "why": "- ARPEGGIATOR on, MODE Up+Down, OCTAVE 2 octaves, CLK DIV 1/16, BPM 120 BPM\n- Listen for: a hypnotic pattern.",
+          "set": {
+            "arp.on": true,
+            "arp.mode": "updown",
+            "arp.octave": "2",
+            "clock.div": "1/16",
+            "clock.bpm": 120
+          }
+        },
+        {
+          "title": "Bubble",
+          "module": "filter",
+          "why": "- CUTOFF 304 Hz, RESONANCE 60 %\n- Envelope 1 AMOUNT +2.0, DECAY 120 ms, SUSTAIN 0 %\n- Envelope 2 DECAY 190 ms, SUSTAIN 20 %, RELEASE 48 ms\n- Listen for: bubbling notes.",
+          "set": {
+            "vcf.cutoff": 4,
+            "vcf.resonance": 6,
+            "env1.amount": 2,
+            "env1.decay": 4,
+            "env1.sustain": 0,
+            "env2.decay": 4.5,
+            "env2.sustain": 2,
+            "env2.release": 3
+          }
+        },
+        {
+          "title": "Drift",
+          "module": "lfo",
+          "why": "- LFO 1 DEST Cutoff, FREQUENCY 0.20 Hz, AMOUNT +2.5\n- EFFECT on, TYPE Tape delay 1, TIME 60 %, DEPTH/MIX 30 %, FBACK/MISC 50 %\n- Listen for: the sequence drifting through tones.",
+          "set": {
+            "lfo1.dest": "cutoff",
+            "lfo1.freq": 2,
+            "lfo1.amt": 2.5,
+            "fx.on": true,
+            "fx.type": "tape1",
+            "fx.time": 6,
+            "fx.mix": 3,
+            "fx.misc": 5
+          }
+        }
+      ],
+      "context": {
+        "lfo1.freq": "How slowly the tone drifts."
+      },
+      "tweaks": [
+        {
+          "id": "lfo1.freq",
+          "try": "Raise to 4",
+          "hear": "A pulsing drift."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 8.5",
+          "hear": "A wetter, whistling sequence."
+        }
+      ]
+    },
+    {
+      "id": "t5-handel-trill",
+      "name": "Two-Voice Trill",
+      "ref": "In the style of Handel — a Baroque trill",
+      "artist": "Handel",
+      "tags": ["lead", "classical", "baroque"],
+      "level": 3,
+      "blurb": "A held note with a second voice trilling against it.",
+      "how": "LFO 1 can move one oscillator alone. A square wave on Oscillator 2’s pitch flips it up and down fast, while Oscillator 1 holds the note: a trill and its note at once.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.8, 0.8],
+          [2, 74, 1.8, 0.8],
+          [4, 71, 1.8, 0.8],
+          [6, 72, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two voices",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE square\n- OSC 2 SHAPE square\n- OSC 1 level 60 %, OSC 2 60 %\n- CUTOFF 843 Hz\n- Listen for: one note, twice.",
+          "set": {
+            "osc1.shape": 7,
+            "osc2.shape": 7,
+            "mix.osc1": 6,
+            "mix.osc2": 6,
+            "vcf.cutoff": 5.5
+          }
+        },
+        {
+          "title": "Trill",
+          "module": "lfo",
+          "why": "Only Oscillator 2.\n- LFO 1 DEST Osc 2 Freq, FREQUENCY 5.12 Hz, AMOUNT +2.1, SHAPE Square: Oscillator 2 jumps about a tone, 7 times a second\n- Listen for: Oscillator 2 trilling against a steady note.",
+          "set": {
+            "lfo1.dest": "osc2",
+            "lfo1.freq": 6.7,
+            "lfo1.amt": 2.1,
+            "lfo1.shape": "sq"
+          }
+        },
+        {
+          "title": "Chapel",
+          "module": "fx",
+          "why": "- Envelope 2 ATTACK 15 ms, RELEASE 120 ms\n- REVERB on, MIX 30 %, DECAY 50 %\n- Listen for: a Baroque ornament.",
+          "set": {
+            "env2.attack": 2,
+            "env2.release": 4,
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 5
+          }
+        }
+      ],
+      "context": {
+        "lfo1.dest": "Osc 2 Freq: only one oscillator trills.",
+        "lfo1.amt": "The trill’s interval."
+      },
+      "tweaks": [
+        {
+          "id": "lfo1.dest",
+          "try": "Choose Osc All Freq",
+          "hear": "Both trill: a plain trill."
+        },
+        {
+          "id": "lfo1.amt",
+          "try": "Raise to 3",
+          "hear": "A wider, wilder trill."
+        }
+      ]
+    },
+    {
+      "id": "t5-plastikman-ping",
+      "name": "Resonant Ping",
+      "ref": "In the style of Plastikman — “Spastik”",
+      "artist": "Plastikman",
+      "tags": ["perc", "minimal techno"],
+      "level": 3,
+      "blurb": "A dry, resonant “ping” on every note, from the filter ringing.",
+      "how": "ENV ROUTING frees Envelope 1, and here it goes to Resonance: each note’s resonance leaps up then falls, so the filter rings briefly like a struck pipe.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.15, 0.8],
+          [0.5, 48, 0.15, 0.8],
+          [0.75, 55, 0.15, 0.8],
+          [1.5, 48, 0.15, 0.8],
+          [1.75, 51, 0.15, 0.8],
+          [2, 48, 0.15, 0.8],
+          [2.5, 48, 0.15, 0.8],
+          [2.75, 55, 0.15, 0.8],
+          [3.5, 48, 0.15, 0.8],
+          [3.75, 51, 0.15, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A soft wave",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine → saw\n- OSC 1 level 90 %\n- CUTOFF 600 Hz, RESONANCE 40 %\n- Listen for: a soft tone.",
+          "set": {
+            "osc1.shape": 3,
+            "mix.osc1": 9,
+            "vcf.cutoff": 5,
+            "vcf.resonance": 4
+          }
+        },
+        {
+          "title": "Ring the filter",
+          "module": "env",
+          "why": "- ENV ROUTING Env 1 Aux / Env 2 Filter+Amp: Envelope 2 now runs the filter and the volume; Envelope 1 is free\n- ENV 1 DEST Resonance: Envelope 1 moves the resonance\n- Envelope 1 AMOUNT +5.0, DECAY 190 ms, SUSTAIN 0 %: a leap of resonance on each note\n- Listen for: a ringing ping.",
+          "set": {
+            "env.routing": "aux-filteramp",
+            "env1.dest": "res",
+            "env1.amount": 5,
+            "env1.decay": 4.5,
+            "env1.sustain": 0
+          }
+        },
+        {
+          "title": "Dry and short",
+          "module": "env",
+          "why": "- Envelope 2 DECAY 300 ms, SUSTAIN 0 %, RELEASE 75 ms\n- VOLUME 100 %: up full: each hit is short\n- EFFECT on, TYPE Stereo delay, TIME 40 %, DEPTH/MIX 20 %, FBACK/MISC 40 %\n- Listen for: minimal, pinging percussion.",
+          "set": {
+            "env2.decay": 5,
+            "env2.sustain": 0,
+            "env2.release": 3.5,
+            "out.volume": 10,
+            "fx.on": true,
+            "fx.type": "delay",
+            "fx.time": 4,
+            "fx.mix": 2,
+            "fx.misc": 4
+          }
+        }
+      ],
+      "context": {
+        "env1.dest": "Resonance: Envelope 1 rings the filter."
+      },
+      "tweaks": [
+        {
+          "id": "env1.decay",
+          "try": "Raise to 6",
+          "hear": "A longer, singing ring."
+        },
+        {
+          "id": "vcf.cutoff",
+          "try": "Raise to 7",
+          "hear": "A higher, glassier ping."
+        }
+      ]
+    },
+    {
+      "id": "t5-shaft-wah",
+      "name": "Wah Lead",
+      "ref": "In the style of Isaac Hayes — “Theme from Shaft”",
+      "artist": "Isaac Hayes",
+      "tags": ["lead", "funk", "soul", "70s"],
+      "level": 2,
+      "blurb": "A funky, wah-wah lead, the filter rocking in time.",
+      "how": "A wah pedal sweeps a resonant filter. LFO 1, a triangle on the cutoff, rocks it about twice a beat.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.22, 0.8],
+          [0.25, 64, 0.22, 0.8],
+          [0.5, 67, 0.22, 0.8],
+          [1, 64, 0.22, 0.8],
+          [1.5, 69, 0.22, 0.8],
+          [2, 67, 0.22, 0.8],
+          [2.5, 64, 0.22, 0.8],
+          [3, 62, 0.22, 0.8],
+          [3.5, 64, 0.22, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A saw",
+          "module": "osc",
+          "why": "- OSC 1 level 90 %\n- CUTOFF 427 Hz, RESONANCE 60 %\n- Listen for: a resonant buzz.",
+          "set": {
+            "mix.osc1": 9,
+            "vcf.cutoff": 4.5,
+            "vcf.resonance": 6
+          }
+        },
+        {
+          "title": "Wah",
+          "module": "lfo",
+          "why": "- LFO 1 DEST Cutoff, FREQUENCY 2.23 Hz, AMOUNT +3.0, SHAPE Triangle: about twice a beat\n- Listen for: a funky wah.",
+          "set": {
+            "lfo1.dest": "cutoff",
+            "lfo1.freq": 5.5,
+            "lfo1.amt": 3,
+            "lfo1.shape": "tri"
+          }
+        },
+        {
+          "title": "Room",
+          "module": "fx",
+          "why": "- Envelope 2 DECAY 300 ms, SUSTAIN 50 %, RELEASE 48 ms\n- REVERB on, MIX 20 %, DECAY 30 %\n- Listen for: a wah-wah lead.",
+          "set": {
+            "env2.decay": 5,
+            "env2.sustain": 5,
+            "env2.release": 3,
+            "rev.on": true,
+            "rev.mix": 2,
+            "rev.decay": 3
+          }
+        }
+      ],
+      "context": {
+        "lfo1.freq": "How fast the wah rocks."
+      },
+      "tweaks": [
+        {
+          "id": "lfo1.freq",
+          "try": "Raise to 6.5",
+          "hear": "A faster, frantic wah."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 8",
+          "hear": "A quackier wah."
+        }
+      ]
+    },
+    {
+      "id": "t5-shine-on-strings",
+      "name": "String Machine",
+      "ref": "In the style of Pink Floyd — “Shine On You Crazy Diamond”",
+      "artist": "Pink Floyd",
+      "tags": ["strings", "rock", "prog", "70s"],
+      "level": 2,
+      "blurb": "A lush, wavering, 1970s string-machine chord.",
+      "how": "String machines got their lushness from each note wavering on its own. LFO 2 runs separately in each voice, so on pitch it detunes the notes of a chord against each other, like a section.",
+      "phrase": {
+        "bpm": 64,
+        "loop": true,
+        "steps": [
+          [0, 43, 7.5, 0.7],
+          [0, 50, 7.5, 0.7],
+          [0, 55, 7.5, 0.7],
+          [0, 58, 7.5, 0.7],
+          [8, 41, 7.5, 0.7],
+          [8, 48, 7.5, 0.7],
+          [8, 53, 7.5, 0.7],
+          [8, 57, 7.5, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Saws",
+          "module": "osc",
+          "why": "- OSC 1 level 60 %, OSC 2 40 %\n- OSC 2 OCTAVE +1 oct\n- CUTOFF 843 Hz\n- Listen for: a bright buzz.",
+          "set": {
+            "mix.osc1": 6,
+            "mix.osc2": 4,
+            "osc2.octave": "+1",
+            "vcf.cutoff": 5.5
+          }
+        },
+        {
+          "title": "Each voice wavers",
+          "module": "lfo",
+          "why": "LFO 2 is per voice.\n- LFO 2 DEST Osc All Freq, FREQUENCY 1.58 Hz, AMOUNT +0.5: a quick, shallow waver in every note\n- Listen for: an ensemble shimmer.",
+          "set": {
+            "lfo2.dest": "osc-all",
+            "lfo2.freq": 5,
+            "lfo2.amt": 0.5
+          }
+        },
+        {
+          "title": "Bow",
+          "module": "fx",
+          "why": "- Envelope 2 ATTACK 460 ms, RELEASE 1.1 s\n- EFFECT on, TYPE Phaser, TIME 20 %, DEPTH/MIX 50 %, FBACK/MISC 40 %\n- REVERB on, MIX 40 %, DECAY 70 %\n- Listen for: a lush string machine.",
+          "set": {
+            "env2.attack": 5.5,
+            "env2.release": 6.5,
+            "fx.on": true,
+            "fx.type": "phaser",
+            "fx.time": 2,
+            "fx.mix": 5,
+            "fx.misc": 4,
+            "rev.on": true,
+            "rev.mix": 4,
+            "rev.decay": 7
+          }
+        }
+      ],
+      "context": {
+        "lfo2.amt": "How much the voices waver against each other."
+      },
+      "tweaks": [
+        {
+          "id": "lfo2.amt",
+          "try": "Raise to 1",
+          "hear": "A seasick ensemble."
+        },
+        {
+          "id": "fx.on",
+          "try": "Turn EFFECT off",
+          "hear": "A dry string machine."
+        }
+      ]
+    },
+    {
+      "id": "t5-96-tears-organ",
+      "name": "Combo Organ",
+      "ref": "In the style of ? and the Mysterians — “96 Tears”",
+      "artist": "? and the Mysterians",
+      "tags": ["keys", "organ", "garage rock", "60s"],
+      "level": 1,
+      "blurb": "A thin, reedy, buzzing 1960s combo organ.",
+      "how": "A transistor combo organ is a thin, reedy buzz with no attack or release: a narrow pulse, the gated volume and a fast vibrato.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 55, 0.4, 0.8],
+          [0, 59, 0.4, 0.8],
+          [0, 62, 0.4, 0.8],
+          [0.5, 55, 0.4, 0.8],
+          [0.5, 59, 0.4, 0.8],
+          [0.5, 62, 0.4, 0.8],
+          [1, 57, 0.9, 0.8],
+          [1, 60, 0.9, 0.8],
+          [1, 64, 0.9, 0.8],
+          [2, 55, 0.4, 0.8],
+          [2, 59, 0.4, 0.8],
+          [2, 62, 0.4, 0.8],
+          [2.5, 53, 1.4, 0.8],
+          [2.5, 57, 1.4, 0.8],
+          [2.5, 60, 1.4, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A thin pulse",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE pulse 27 %\n- OSC 1 level 60 %\n- CUTOFF 1.7 kHz\n- Listen for: a reedy, thin tone.",
+          "set": {
+            "osc1.shape": 8.8,
+            "mix.osc1": 6,
+            "vcf.cutoff": 6.5
+          }
+        },
+        {
+          "title": "Keys",
+          "module": "env",
+          "why": "- ENV ROUTING Env 1 Aux / Env 2 Filter+Gate: the volume opens with the key; Envelope 2 runs the filter\n- Envelope 2 AMOUNT 0: the filter stays where CUTOFF puts it\n- Listen for: instant on, instant off.",
+          "set": {
+            "env.routing": "aux-filtergate",
+            "env2.amount": 0
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "lfo",
+          "why": "- LFO 1 DEST Osc All Freq, FREQUENCY 3.62 Hz, AMOUNT +0.5\n- REVERB on, MIX 20 %, DECAY 30 %\n- Listen for: a garage-rock organ.",
+          "set": {
+            "lfo1.dest": "osc-all",
+            "lfo1.freq": 6.2,
+            "lfo1.amt": 0.5,
+            "rev.on": true,
+            "rev.mix": 2,
+            "rev.decay": 3
+          }
+        }
+      ],
+      "context": {
+        "osc1.shape": "How reedy the organ is."
+      },
+      "tweaks": [
+        {
+          "id": "osc1.shape",
+          "try": "Turn to 7.5 (square)",
+          "hear": "A hollower, flute-stop organ."
+        },
+        {
+          "id": "drive.amount",
+          "try": "Raise to 5",
+          "hear": "A fuzzy organ."
+        }
+      ]
+    },
+    {
+      "id": "t5-backwards-swell",
+      "name": "Backwards Swell",
+      "ref": "In the style of The Beatles — “I’m Only Sleeping”",
+      "artist": "The Beatles",
+      "tags": ["pad", "psychedelic", "60s"],
+      "level": 3,
+      "blurb": "Notes that swell in from nothing and cut off, like a tape played backwards.",
+      "how": "A tape reversed swells in and stops dead. Envelope 2’s slow attack and short release do the volume; Envelope 1, turned upside down, darkens the filter at first and lets it open as the note grows.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 64, 1.9, 0.8],
+          [2, 67, 1.9, 0.8],
+          [4, 69, 1.9, 0.8],
+          [6, 71, 1.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bright saw",
+          "module": "osc",
+          "why": "- OSC 1 level 80 %\n- CUTOFF 1.7 kHz\n- Listen for: a bright buzz.",
+          "set": {
+            "mix.osc1": 8,
+            "vcf.cutoff": 6.5
+          }
+        },
+        {
+          "title": "Swell and stop",
+          "module": "env",
+          "why": "- Envelope 2 ATTACK 1.6 s, RELEASE 15 ms\n- Listen for: notes swelling up and stopping.",
+          "set": {
+            "env2.attack": 7,
+            "env2.release": 2
+          }
+        },
+        {
+          "title": "Upside-down filter",
+          "module": "filter",
+          "why": "AMOUNT left of 0 turns Envelope 1 upside down: it closes the filter, then lets it go.\n- Envelope 1 AMOUNT −3.0, ATTACK 1 ms, DECAY 1.6 s, SUSTAIN 0 %: dark at first, opening as the note grows\n- Listen for: a backwards bloom.",
+          "set": {
+            "env1.amount": -3,
+            "env1.attack": 0,
+            "env1.decay": 7,
+            "env1.sustain": 0
+          }
+        },
+        {
+          "title": "Psychedelia",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Tape delay 2, TIME 30 %, DEPTH/MIX 30 %, FBACK/MISC 30 %\n- REVERB on, MIX 30 %, DECAY 50 %\n- Listen for: a backwards tape swell.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "tape2",
+            "fx.time": 3,
+            "fx.mix": 3,
+            "fx.misc": 3,
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 5
+          }
+        }
+      ],
+      "context": {
+        "env1.amount": "Left of 0: the filter closes, then opens."
+      },
+      "tweaks": [
+        {
+          "id": "env1.amount",
+          "try": "Turn to +3",
+          "hear": "A forwards bloom instead."
+        },
+        {
+          "id": "env2.attack",
+          "try": "Raise to 8",
+          "hear": "A slower, longer swell."
+        }
+      ]
+    },
+    {
+      "id": "t5-itchycoo-flange",
+      "name": "Jet Flanger",
+      "ref": "In the style of The Small Faces — “Itchycoo Park”",
+      "artist": "The Small Faces",
+      "tags": ["pad", "psychedelic", "60s"],
+      "level": 2,
+      "blurb": "A roaring, jet-plane flanged chord.",
+      "how": "Flanging, first made with two tape machines, sweeps a comb of notches through the sound. With high feedback it roars like a jet; white noise in the mix gives it something to sweep.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 52, 3.8, 0.75],
+          [0, 59, 3.8, 0.75],
+          [0, 64, 3.8, 0.75],
+          [0, 68, 3.8, 0.75],
+          [4, 50, 3.8, 0.75],
+          [4, 57, 3.8, 0.75],
+          [4, 62, 3.8, 0.75],
+          [4, 66, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Saws and noise",
+          "module": "mixer",
+          "why": "- OSC 1 level 50 %, OSC 2 50 %, NOISE white 30 %\n- OSC 2 PITCH +0.1 st\n- CUTOFF 2.3 kHz\n- Listen for: a bright chord with hiss.",
+          "set": {
+            "mix.osc1": 5,
+            "mix.osc2": 5,
+            "mix.noise": 1.5,
+            "osc2.pitch": 0.1,
+            "vcf.cutoff": 7
+          }
+        },
+        {
+          "title": "Jet",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Flanger, TIME 20 %, DEPTH/MIX 80 %, FBACK/MISC 80 %: a slow, deep, roaring sweep\n- Listen for: a jet flying past.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "flanger",
+            "fx.time": 2,
+            "fx.mix": 8,
+            "fx.misc": 8
+          }
+        },
+        {
+          "title": "Room",
+          "module": "fx",
+          "why": "- Envelope 2 ATTACK 48 ms, RELEASE 300 ms\n- REVERB on, MIX 25 %, DECAY 40 %\n- Listen for: a psychedelic chord.",
+          "set": {
+            "env2.attack": 3,
+            "env2.release": 5,
+            "rev.on": true,
+            "rev.mix": 2.5,
+            "rev.decay": 4
+          }
+        }
+      ],
+      "context": {
+        "fx.misc": "How much the flanger roars."
+      },
+      "tweaks": [
+        {
+          "id": "fx.misc",
+          "try": "Lower to 3",
+          "hear": "A gentle, chorus-like flange."
+        },
+        {
+          "id": "fx.time",
+          "try": "Raise to 6",
+          "hear": "A fast, warbling flange."
+        }
+      ]
+    },
+    {
+      "id": "t5-radio-lead",
+      "name": "Old Radio Lead",
+      "ref": "In the style of 1930s radio",
+      "artist": "Old-time radio",
+      "tags": ["lead", "texture"],
+      "level": 2,
+      "blurb": "A thin, boxy melody, as if from an old wireless.",
+      "how": "An old radio has no bass and no treble. The effect’s high-pass filter cuts the bass; the low-pass filter cuts the treble; a little resonance in the high-pass gives the box.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.9, 0.8],
+          [1, 74, 0.45, 0.8],
+          [1.5, 76, 0.45, 0.8],
+          [2, 77, 0.9, 0.8],
+          [3, 76, 0.9, 0.8],
+          [4, 74, 0.9, 0.8],
+          [5, 72, 0.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A tone",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE saw → square\n- OSC 1 level 90 %\n- CUTOFF 843 Hz\n- Listen for: a muffled tone.",
+          "set": {
+            "osc1.shape": 6,
+            "mix.osc1": 9,
+            "vcf.cutoff": 5.5
+          }
+        },
+        {
+          "title": "No bass",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE High-pass filter, TIME 55 %, DEPTH/MIX 100 %, FBACK/MISC 50 %: only the middle is left\n- Listen for: a thin, boxy tone.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "hpf",
+            "fx.time": 5.5,
+            "fx.mix": 10,
+            "fx.misc": 5
+          }
+        },
+        {
+          "title": "Hiss",
+          "module": "mixer",
+          "why": "- NOISE white 16 %\n- OVERDRIVE 30 %: a worn valve\n- Listen for: an old wireless.",
+          "set": {
+            "mix.noise": 0.8,
+            "drive.amount": 3
+          }
+        }
+      ],
+      "context": {
+        "fx.time": "How much bass the radio loses."
+      },
+      "tweaks": [
+        {
+          "id": "fx.time",
+          "try": "Raise to 7",
+          "hear": "A tinny telephone."
+        },
+        {
+          "id": "fx.on",
+          "try": "Turn EFFECT off",
+          "hear": "The full sound back."
+        }
+      ]
+    },
+    {
+      "id": "t5-streets-delay",
+      "name": "Dotted-Eighth Pluck",
+      "ref": "In the style of U2 — “Where the Streets Have No Name”",
+      "artist": "U2",
+      "tags": ["pluck", "rock", "80s"],
+      "level": 2,
+      "blurb": "A shimmering eighth-note pluck that a dotted-eighth delay turns into a running pattern.",
+      "how": "The Edge’s trick: play eighths into a delay set to a dotted eighth, and the echoes fall between them, making sixteenths. The stereo delay is set to about 340 ms at this tempo.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.3, 0.8],
+          [0.5, 69, 0.3, 0.8],
+          [1, 73, 0.3, 0.8],
+          [1.5, 69, 0.3, 0.8],
+          [2, 64, 0.3, 0.8],
+          [2.5, 69, 0.3, 0.8],
+          [3, 73, 0.3, 0.8],
+          [3.5, 69, 0.3, 0.8],
+          [4, 64, 0.3, 0.8],
+          [4.5, 68, 0.3, 0.8],
+          [5, 71, 0.3, 0.8],
+          [5.5, 68, 0.3, 0.8],
+          [6, 64, 0.3, 0.8],
+          [6.5, 68, 0.3, 0.8],
+          [7, 71, 0.3, 0.8],
+          [7.5, 68, 0.3, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bright pluck",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE saw → square\n- OSC 1 level 80 %\n- CUTOFF 600 Hz\n- Envelope 1 AMOUNT +2.5, DECAY 190 ms, SUSTAIN 10 %\n- Envelope 2 DECAY 460 ms, SUSTAIN 20 %, RELEASE 120 ms\n- Listen for: bright plucks.",
+          "set": {
+            "osc1.shape": 6.5,
+            "mix.osc1": 8,
+            "vcf.cutoff": 5,
+            "env1.amount": 2.5,
+            "env1.decay": 4.5,
+            "env1.sustain": 1,
+            "env2.decay": 5.5,
+            "env2.sustain": 2,
+            "env2.release": 4
+          }
+        },
+        {
+          "title": "Dotted eighth",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Stereo delay, TIME 74 %, DEPTH/MIX 40 %, FBACK/MISC 35 %: the echo falls between the notes\n- Listen for: eighths turning into a running pattern.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "delay",
+            "fx.time": 7.4,
+            "fx.mix": 4,
+            "fx.misc": 3.5
+          }
+        },
+        {
+          "title": "Space",
+          "module": "fx",
+          "why": "- REVERB on, MIX 30 %, DECAY 60 %\n- Listen for: a shimmering, chiming rock riff.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 6
+          }
+        }
+      ],
+      "context": {
+        "fx.time": "Where the echoes fall."
+      },
+      "tweaks": [
+        {
+          "id": "fx.time",
+          "try": "Lower to 6.5",
+          "hear": "The echoes fall elsewhere: a stumble."
+        },
+        {
+          "id": "fx.misc",
+          "try": "Raise to 6",
+          "hear": "A longer wash of echoes."
+        }
+      ]
+    },
+    {
+      "id": "t5-popcorn",
+      "name": "Popcorn",
+      "ref": "In the style of Hot Butter — “Popcorn”",
+      "artist": "Hot Butter",
+      "tags": ["lead", "pop", "70s"],
+      "level": 1,
+      "blurb": "A bouncy, plucky, staccato lead that pops.",
+      "how": "The “Popcorn” sound is a short, hollow, plucky square. Very short notes and a filter that snaps shut.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 71, 0.18, 0.8],
+          [0.5, 69, 0.18, 0.8],
+          [1, 71, 0.18, 0.8],
+          [1.5, 66, 0.18, 0.8],
+          [2, 62, 0.18, 0.8],
+          [2.5, 66, 0.18, 0.8],
+          [3, 59, 0.18, 0.8],
+          [4, 71, 0.18, 0.8],
+          [4.5, 69, 0.18, 0.8],
+          [5, 71, 0.18, 0.8],
+          [5.5, 66, 0.18, 0.8],
+          [6, 62, 0.18, 0.8],
+          [6.5, 66, 0.18, 0.8],
+          [7, 59, 0.18, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A square",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE square\n- OSC 1 level 90 %\n- CUTOFF 427 Hz\n- Listen for: a hollow tone.",
+          "set": {
+            "osc1.shape": 7.5,
+            "mix.osc1": 9,
+            "vcf.cutoff": 4.5
+          }
+        },
+        {
+          "title": "Pop",
+          "module": "filter",
+          "why": "- Envelope 1 AMOUNT +3.0, DECAY 120 ms, SUSTAIN 0 %\n- Envelope 2 DECAY 190 ms, SUSTAIN 0 %, RELEASE 48 ms\n- Listen for: popping notes.",
+          "set": {
+            "env1.amount": 3,
+            "env1.decay": 4,
+            "env1.sustain": 0,
+            "env2.decay": 4.5,
+            "env2.sustain": 0,
+            "env2.release": 3
+          }
+        },
+        {
+          "title": "A little echo",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Stereo delay, TIME 30 %, DEPTH/MIX 15 %, FBACK/MISC 20 %\n- Listen for: popcorn.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "delay",
+            "fx.time": 3,
+            "fx.mix": 1.5,
+            "fx.misc": 2
+          }
+        }
+      ],
+      "context": {
+        "env2.decay": "How short each pop is."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 6",
+          "hear": "A blippier pop."
+        },
+        {
+          "id": "osc1.shape",
+          "try": "Turn to 9",
+          "hear": "A thinner, buzzier pop."
+        }
+      ]
+    },
+    {
+      "id": "t5-plantasia-lead",
+      "name": "Plantasia Lead",
+      "ref": "In the style of Mort Garson — Mother Earth’s Plantasia",
+      "artist": "Mort Garson",
+      "tags": ["lead", "electronic", "70s"],
+      "level": 1,
+      "blurb": "A warm, gentle, round lead for growing plants.",
+      "how": "Garson’s Moog tones are warm and round. A triangle-ish blend between sine and saw, a soft filter and a gentle glide.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 67, 0.9, 0.8],
+          [1, 71, 0.45, 0.8],
+          [1.5, 74, 0.45, 0.8],
+          [2, 76, 0.9, 0.8],
+          [3, 74, 0.45, 0.8],
+          [3.5, 71, 0.45, 0.8],
+          [4, 69, 0.9, 0.8],
+          [5, 67, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Round",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine → saw\n- OSC 1 level 90 %\n- CUTOFF 843 Hz, RESONANCE 20 %\n- Listen for: a warm, round tone.",
+          "set": {
+            "osc1.shape": 2,
+            "mix.osc1": 9,
+            "vcf.cutoff": 5.5,
+            "vcf.resonance": 2
+          }
+        },
+        {
+          "title": "Gentle",
+          "module": "mode",
+          "why": "- GLIDE on, time 90 ms\n- Envelope 2 ATTACK 30 ms, RELEASE 190 ms\n- Listen for: a gentle lead.",
+          "set": {
+            "glide.on": true,
+            "glide.time": 1.5,
+            "env2.attack": 2.5,
+            "env2.release": 4.5
+          }
+        },
+        {
+          "title": "Greenhouse",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Chorus, TIME 20 %, DEPTH/MIX 40 %, FBACK/MISC 60 %\n- REVERB on, MIX 30 %, DECAY 50 %\n- Listen for: a warm, pastoral lead.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "chorus",
+            "fx.time": 2,
+            "fx.mix": 4,
+            "fx.misc": 6,
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 5
+          }
+        }
+      ],
+      "context": {
+        "osc1.shape": "How round the tone is."
+      },
+      "tweaks": [
+        {
+          "id": "osc1.shape",
+          "try": "Turn to 5 (sawtooth)",
+          "hear": "A brighter lead."
+        },
+        {
+          "id": "lfo1.amt",
+          "try": "Raise to +0.6",
+          "hear": "A vibrato."
+        }
+      ]
+    },
+    {
+      "id": "t5-baroque-hoedown",
+      "name": "Baroque Hoedown",
+      "ref": "In the style of Perrey and Kingsley — “Baroque Hoedown”",
+      "artist": "Perrey and Kingsley",
+      "tags": ["lead", "electronic", "60s"],
+      "level": 2,
+      "blurb": "A perky, plinky, twangy little lead.",
+      "how": "Perrey and Kingsley’s Moog lead is perky and twangy: a resonant pluck with a dash of sync bite.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 67, 0.3, 0.8],
+          [0.5, 69, 0.3, 0.8],
+          [1, 71, 0.3, 0.8],
+          [1.5, 72, 0.3, 0.8],
+          [2, 74, 0.3, 0.8],
+          [2.5, 72, 0.3, 0.8],
+          [3, 71, 0.3, 0.8],
+          [3.5, 69, 0.3, 0.8],
+          [4, 67, 0.3, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bite",
+          "module": "osc",
+          "why": "- SYNC 2→1 on\n- OSC 1 PITCH +5 st\n- OSC 1 level 80 %\n- Listen for: a perky, twangy tone.",
+          "set": {
+            "osc1.sync": true,
+            "osc1.pitch": 5,
+            "mix.osc1": 8
+          }
+        },
+        {
+          "title": "Pluck",
+          "module": "filter",
+          "why": "- CUTOFF 427 Hz, RESONANCE 50 %\n- Envelope 1 AMOUNT +3.0, DECAY 190 ms, SUSTAIN 10 %\n- Envelope 2 DECAY 300 ms, SUSTAIN 20 %, RELEASE 48 ms\n- Listen for: twangy plucks.",
+          "set": {
+            "vcf.cutoff": 4.5,
+            "vcf.resonance": 5,
+            "env1.amount": 3,
+            "env1.decay": 4.5,
+            "env1.sustain": 1,
+            "env2.decay": 5,
+            "env2.sustain": 2,
+            "env2.release": 3
+          }
+        },
+        {
+          "title": "Room",
+          "module": "fx",
+          "why": "- REVERB on, MIX 20 %, DECAY 30 %\n- Listen for: a perky hoedown.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 2,
+            "rev.decay": 3
+          }
+        }
+      ],
+      "context": {
+        "osc1.pitch": "How twangy the sync is."
+      },
+      "tweaks": [
+        {
+          "id": "osc1.pitch",
+          "try": "Raise to +7",
+          "hear": "A brighter twang."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 8",
+          "hear": "A boingy pluck."
+        }
+      ]
+    },
+    {
+      "id": "t5-einstein-organ",
+      "name": "Minimalist Organ Arp",
+      "ref": "In the style of Philip Glass — Einstein on the Beach",
+      "artist": "Philip Glass",
+      "tags": ["seq", "organ", "minimalism"],
+      "level": 2,
+      "blurb": "A fast, relentless, rocking organ arpeggio.",
+      "how": "Glass’s organ figures rock up and down without pause. A gated organ tone on the arpeggiator in Up+Down sixteenths.",
+      "phrase": {
+        "bpm": 144,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.9, 0.7],
+          [0, 60, 3.9, 0.7],
+          [0, 64, 3.9, 0.7],
+          [0, 57, 3.9, 0.7],
+          [0, 60, 3.9, 0.7],
+          [0, 65, 3.9, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Organ",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE square\n- OSC 2 SHAPE sine, OCTAVE +1 oct\n- OSC 1 level 50 %, OSC 2 30 %\n- CUTOFF 1.2 kHz\n- ENV ROUTING Env 1 Aux / Env 2 Filter+Gate: the volume opens with the key; Envelope 2 runs the filter\n- Envelope 2 AMOUNT 0: the filter stays where CUTOFF puts it\n- Listen for: a reedy organ.",
+          "set": {
+            "osc1.shape": 7.5,
+            "osc2.shape": 0,
+            "osc2.octave": "+1",
+            "mix.osc1": 5,
+            "mix.osc2": 3,
+            "vcf.cutoff": 6,
+            "env.routing": "aux-filtergate",
+            "env2.amount": 0
+          }
+        },
+        {
+          "title": "Rock",
+          "module": "mode",
+          "why": "- ARPEGGIATOR on, MODE Up+Down, OCTAVE 1 octave, CLK DIV 1/16, BPM 144 BPM\n- Listen for: a rocking, relentless figure.",
+          "set": {
+            "arp.on": true,
+            "arp.mode": "updown",
+            "arp.octave": "1",
+            "clock.div": "1/16",
+            "clock.bpm": 144
+          }
+        },
+        {
+          "title": "Hall",
+          "module": "fx",
+          "why": "- REVERB on, MIX 30 %, DECAY 50 %\n- Listen for: a minimalist organ.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 5
+          }
+        }
+      ],
+      "context": {
+        "arp.mode": "Up and down: the rocking figure."
+      },
+      "tweaks": [
+        {
+          "id": "arp.octave",
+          "try": "Turn to 2 octaves",
+          "hear": "A wider figure."
+        },
+        {
+          "id": "clock.div",
+          "try": "Turn to 1/8T",
+          "hear": "A lilting, triplet figure."
+        }
+      ]
+    },
+    {
+      "id": "t5-in-c-pulse",
+      "name": "In C Pulse",
+      "ref": "In the style of Terry Riley — In C",
+      "artist": "Terry Riley",
+      "tags": ["seq", "minimalism"],
+      "level": 1,
+      "blurb": "A bright, steady eighth-note pulse on a high C.",
+      "how": "“In C” is held together by a pulse of high Cs. A bright, short pluck in steady eighths.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 84, 0.2, 0.8],
+          [0.5, 84, 0.2, 0.8],
+          [1, 84, 0.2, 0.8],
+          [1.5, 84, 0.2, 0.8],
+          [2, 84, 0.2, 0.8],
+          [2.5, 84, 0.2, 0.8],
+          [3, 84, 0.2, 0.8],
+          [3.5, 84, 0.2, 0.8],
+          [4, 72, 0.2, 0.8],
+          [4.5, 72, 0.2, 0.8],
+          [5, 72, 0.2, 0.8],
+          [5.5, 72, 0.2, 0.8],
+          [6, 72, 0.2, 0.8],
+          [6.5, 72, 0.2, 0.8],
+          [7, 72, 0.2, 0.8],
+          [7.5, 72, 0.2, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bright tone",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE square\n- OSC 1 level 80 %\n- CUTOFF 1.2 kHz\n- Listen for: a bright beep.",
+          "set": {
+            "osc1.shape": 7.5,
+            "mix.osc1": 8,
+            "vcf.cutoff": 6
+          }
+        },
+        {
+          "title": "Short",
+          "module": "env",
+          "why": "- Envelope 2 DECAY 190 ms, SUSTAIN 0 %, RELEASE 75 ms\n- Listen for: a steady pulse.",
+          "set": {
+            "env2.decay": 4.5,
+            "env2.sustain": 0,
+            "env2.release": 3.5
+          }
+        },
+        {
+          "title": "Room",
+          "module": "fx",
+          "why": "- REVERB on, MIX 30 %, DECAY 40 %\n- Listen for: the pulse.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 4
+          }
+        }
+      ],
+      "context": {
+        "env2.decay": "How short each pulse is."
+      },
+      "tweaks": [
+        {
+          "id": "osc1.shape",
+          "try": "Turn to 0 (sine)",
+          "hear": "A pure, piano-like pulse."
+        },
+        {
+          "id": "fx.on",
+          "try": "Turn EFFECT on, TYPE Stereo delay",
+          "hear": "Echoing pulses."
+        }
+      ]
+    },
+    {
+      "id": "t5-tubular-bells",
+      "name": "Tubular Bells",
+      "ref": "In the style of Mike Oldfield — Tubular Bells",
+      "artist": "Mike Oldfield",
+      "tags": ["keys", "bells", "prog", "70s"],
+      "level": 2,
+      "blurb": "Big, clanging, ringing tubular bells.",
+      "how": "Tubular bells ring with strong, slightly out-of-tune overtones. FM at an off-octave ratio, a hard strike and a long ring.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.6, 0.8],
+          [1, 67, 0.6, 0.8],
+          [2, 72, 0.6, 0.8],
+          [4, 71, 0.6, 0.8],
+          [6, 67, 0.6, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bell",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine\n- OSC 2 SHAPE sine, OCTAVE +1 oct, PITCH +4 st\n- FM 2→1 on\n- OSC 2 level 40 %\n- CUTOFF 4.6 kHz\n- Listen for: a clanging bell.",
+          "set": {
+            "osc1.shape": 0,
+            "osc2.shape": 0,
+            "osc2.octave": "+1",
+            "osc2.pitch": 4,
+            "osc.fm": true,
+            "mix.osc2": 4,
+            "vcf.cutoff": 8
+          }
+        },
+        {
+          "title": "Ring",
+          "module": "env",
+          "why": "- Envelope 2 DECAY 5.7 s, SUSTAIN 0 %, RELEASE 3.8 s\n- Listen for: long-ringing bells.",
+          "set": {
+            "env2.decay": 8.5,
+            "env2.sustain": 0,
+            "env2.release": 8
+          }
+        },
+        {
+          "title": "Church",
+          "module": "fx",
+          "why": "- REVERB on, MIX 50 %, DECAY 80 %\n- Listen for: tubular bells.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 5,
+            "rev.decay": 8
+          }
+        }
+      ],
+      "context": {
+        "osc2.pitch": "The bell’s overtone ratio."
+      },
+      "tweaks": [
+        {
+          "id": "mix.osc2",
+          "try": "Raise to 6",
+          "hear": "A harsher clang."
+        },
+        {
+          "id": "osc2.pitch",
+          "try": "Turn to 0",
+          "hear": "A sweeter bell."
+        }
+      ]
+    },
+    {
+      "id": "t5-equinoxe-seq",
+      "name": "Équinoxe Sequence",
+      "ref": "In the style of Jean-Michel Jarre — “Équinoxe Part 5”",
+      "artist": "Jean-Michel Jarre",
+      "tags": ["seq", "electronic", "70s"],
+      "level": 2,
+      "blurb": "A bright, chirpy, galloping sequence that sweeps open and shut.",
+      "how": "Jarre’s sequences gallop and sweep. The arpeggiator gallops in triplets; LFO 1 sweeps a resonant filter across the pattern.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.9, 0.7],
+          [0, 64, 3.9, 0.7],
+          [0, 69, 3.9, 0.7],
+          [0, 55, 3.9, 0.7],
+          [0, 62, 3.9, 0.7],
+          [0, 67, 3.9, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Gallop",
+          "module": "mode",
+          "why": "- ARPEGGIATOR on, MODE Up, OCTAVE 2 octaves, CLK DIV 1/16T, BPM 126 BPM\n- Listen for: a galloping pattern.",
+          "set": {
+            "arp.on": true,
+            "arp.mode": "up",
+            "arp.octave": "2",
+            "clock.div": "1/16T",
+            "clock.bpm": 126
+          }
+        },
+        {
+          "title": "Chirp",
+          "module": "filter",
+          "why": "- CUTOFF 427 Hz, RESONANCE 50 %\n- Envelope 1 AMOUNT +2.5, DECAY 120 ms, SUSTAIN 0 %\n- Envelope 2 DECAY 190 ms, SUSTAIN 20 %, RELEASE 48 ms\n- Listen for: chirpy notes.",
+          "set": {
+            "vcf.cutoff": 4.5,
+            "vcf.resonance": 5,
+            "env1.amount": 2.5,
+            "env1.decay": 4,
+            "env1.sustain": 0,
+            "env2.decay": 4.5,
+            "env2.sustain": 2,
+            "env2.release": 3
+          }
+        },
+        {
+          "title": "Sweep",
+          "module": "lfo",
+          "why": "- LFO 1 DEST Cutoff, FREQUENCY 0.40 Hz, AMOUNT +2.5\n- EFFECT on, TYPE Stereo delay, TIME 50 %, DEPTH/MIX 25 %, FBACK/MISC 40 %\n- Listen for: a sweeping sequence.",
+          "set": {
+            "lfo1.dest": "cutoff",
+            "lfo1.freq": 3,
+            "lfo1.amt": 2.5,
+            "fx.on": true,
+            "fx.type": "delay",
+            "fx.time": 5,
+            "fx.mix": 2.5,
+            "fx.misc": 4
+          }
+        }
+      ],
+      "context": {
+        "lfo1.freq": "How fast the sweep comes round."
+      },
+      "tweaks": [
+        {
+          "id": "lfo1.amt",
+          "try": "Raise to 4",
+          "hear": "A deeper sweep."
+        },
+        {
+          "id": "arp.mode",
+          "try": "Turn to Up+Down",
+          "hear": "A rocking gallop."
+        }
+      ]
+    },
+    {
+      "id": "t5-suspiria-bell",
+      "name": "Witch Bell",
+      "ref": "In the style of Goblin — Suspiria",
+      "artist": "Goblin",
+      "tags": ["keys", "bells", "horror", "film"],
+      "level": 2,
+      "blurb": "A cold, chiming bell over a ghostly whisper of noise.",
+      "how": "Goblin’s theme is a celesta-like chime over whispers. A FM chime with pink noise breathing underneath and a dark echo.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 76, 0.45, 0.8],
+          [0.5, 75, 0.45, 0.8],
+          [1, 76, 0.45, 0.8],
+          [1.5, 71, 0.45, 0.8],
+          [2, 76, 0.45, 0.8],
+          [2.5, 75, 0.45, 0.8],
+          [3, 76, 0.45, 0.8],
+          [3.5, 69, 0.45, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Chime and whisper",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine\n- OSC 2 SHAPE sine, OCTAVE +2 oct\n- FM 2→1 on\n- OSC 2 level 25 %, NOISE pink 30 %\n- CUTOFF 2.3 kHz\n- Listen for: a chime over a whisper.",
+          "set": {
+            "osc1.shape": 0,
+            "osc2.shape": 0,
+            "osc2.octave": "+2",
+            "osc.fm": true,
+            "mix.osc2": 2.5,
+            "mix.noise": -1.5,
+            "vcf.cutoff": 7
+          }
+        },
+        {
+          "title": "Ring",
+          "module": "env",
+          "why": "- Envelope 2 DECAY 1.1 s, SUSTAIN 10 %, RELEASE 700 ms\n- Listen for: cold, ringing notes.",
+          "set": {
+            "env2.decay": 6.5,
+            "env2.sustain": 1,
+            "env2.release": 6
+          }
+        },
+        {
+          "title": "Echo",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE BBD delay, TIME 60 %, DEPTH/MIX 30 %, FBACK/MISC 50 %\n- REVERB on, MIX 40 %, DECAY 60 %\n- Listen for: a creepy chime.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "bbd",
+            "fx.time": 6,
+            "fx.mix": 3,
+            "fx.misc": 5,
+            "rev.on": true,
+            "rev.mix": 4,
+            "rev.decay": 6
+          }
+        }
+      ],
+      "context": {
+        "mix.noise": "The whisper underneath."
+      },
+      "tweaks": [
+        {
+          "id": "mix.noise",
+          "try": "Lower to −3.5",
+          "hear": "Louder whispers."
+        },
+        {
+          "id": "voice.vintage",
+          "try": "Raise to 4",
+          "hear": "A sour, haunted chime."
+        }
+      ]
+    },
+    {
+      "id": "t5-precinct-lead",
+      "name": "Precinct Lead",
+      "ref": "In the style of John Carpenter — Assault on Precinct 13",
+      "artist": "John Carpenter",
+      "tags": ["lead", "film", "synthwave"],
+      "level": 1,
+      "blurb": "A dark, hollow, repeating square-wave riff.",
+      "how": "Carpenter’s riffs are simple, dark and repetitive: a hollow square, a low-ish filter and a dark room.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.4, 0.8],
+          [0.5, 57, 0.4, 0.8],
+          [1, 60, 0.4, 0.8],
+          [1.5, 57, 0.4, 0.8],
+          [2, 55, 0.4, 0.8],
+          [2.5, 57, 0.4, 0.8],
+          [3, 52, 0.4, 0.8],
+          [4, 57, 0.4, 0.8],
+          [4.5, 57, 0.4, 0.8],
+          [5, 60, 0.4, 0.8],
+          [5.5, 57, 0.4, 0.8],
+          [6, 55, 0.4, 0.8],
+          [6.5, 57, 0.4, 0.8],
+          [7, 52, 0.4, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Square",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE square\n- OSC 1 level 70 %, OSC 2 40 %\n- OSC 2 SHAPE square, OCTAVE -1 oct\n- CUTOFF 427 Hz\n- Listen for: a dark, hollow riff.",
+          "set": {
+            "osc1.shape": 7.5,
+            "mix.osc1": 7,
+            "mix.osc2": 4,
+            "osc2.shape": 7.5,
+            "osc2.octave": "-1",
+            "vcf.cutoff": 4.5
+          }
+        },
+        {
+          "title": "Room",
+          "module": "fx",
+          "why": "- Envelope 2 RELEASE 75 ms\n- REVERB on, MIX 30 %, DECAY 50 %, DAMPING 60 %\n- Listen for: a menacing riff.",
+          "set": {
+            "env2.release": 3.5,
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 5,
+            "rev.damping": 6
+          }
+        }
+      ],
+      "context": {
+        "osc2.octave": "The octave below for weight."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Raise to 6",
+          "hear": "A brighter, harder riff."
+        },
+        {
+          "id": "osc1.shape",
+          "try": "Turn to 5 (sawtooth)",
+          "hear": "A buzzier riff."
+        }
+      ]
+    },
+    {
+      "id": "t5-sandstorm-lead",
+      "name": "Sandstorm Lead",
+      "ref": "In the style of Darude — “Sandstorm”",
+      "artist": "Darude",
+      "tags": ["lead", "trance", "90s"],
+      "level": 1,
+      "blurb": "A bright, buzzing, relentless sixteenth-note lead.",
+      "how": "The “Sandstorm” lead is a bright saw hammered in sixteenths, with a delay and a little resonance.",
+      "phrase": {
+        "bpm": 136,
+        "loop": true,
+        "steps": [
+          [0, 71, 0.18, 0.8],
+          [0.25, 71, 0.18, 0.8],
+          [0.5, 71, 0.18, 0.8],
+          [0.75, 71, 0.18, 0.8],
+          [1, 71, 0.18, 0.8],
+          [1.25, 71, 0.18, 0.8],
+          [1.5, 71, 0.18, 0.8],
+          [1.75, 71, 0.18, 0.8],
+          [2, 76, 0.18, 0.8],
+          [2.25, 76, 0.18, 0.8],
+          [2.5, 76, 0.18, 0.8],
+          [2.75, 76, 0.18, 0.8],
+          [3, 74, 0.18, 0.8],
+          [3.25, 74, 0.18, 0.8],
+          [3.5, 74, 0.18, 0.8],
+          [3.75, 74, 0.18, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bright",
+          "module": "osc",
+          "why": "- OSC 1 level 70 %, OSC 2 50 %\n- OSC 2 PITCH +0.2 st\n- CUTOFF 1.7 kHz, RESONANCE 30 %\n- Listen for: a bright buzz.",
+          "set": {
+            "mix.osc1": 7,
+            "mix.osc2": 5,
+            "osc2.pitch": 0.15,
+            "vcf.cutoff": 6.5,
+            "vcf.resonance": 3
+          }
+        },
+        {
+          "title": "Short",
+          "module": "env",
+          "why": "- Envelope 2 DECAY 190 ms, SUSTAIN 30 %, RELEASE 30 ms\n- Listen for: hammered notes.",
+          "set": {
+            "env2.decay": 4.5,
+            "env2.sustain": 3,
+            "env2.release": 2.5
+          }
+        },
+        {
+          "title": "Echo",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Stereo delay, TIME 50 %, DEPTH/MIX 20 %, FBACK/MISC 30 %\n- REVERB on, MIX 25 %, DECAY 40 %\n- Listen for: a relentless lead.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "delay",
+            "fx.time": 5,
+            "fx.mix": 2,
+            "fx.misc": 3,
+            "rev.on": true,
+            "rev.mix": 2.5,
+            "rev.decay": 4
+          }
+        }
+      ],
+      "context": {
+        "vcf.cutoff": "How bright the lead is."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 6",
+          "hear": "A zappier lead."
+        },
+        {
+          "id": "drive.amount",
+          "try": "Raise to 4",
+          "hear": "A grittier lead."
+        }
+      ]
+    },
+    {
+      "id": "t5-what-is-love-stab",
+      "name": "Eurodance Stab",
+      "ref": "In the style of Haddaway — “What Is Love”",
+      "artist": "Haddaway",
+      "tags": ["brass", "eurodance", "90s"],
+      "level": 1,
+      "blurb": "Bright, punchy, chorused chord stabs for a dance floor.",
+      "how": "Eurodance stabs are bright, detuned saw chords with a fast filter decay and lots of chorus.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 55, 0.3, 0.8],
+          [0, 58, 0.3, 0.8],
+          [0, 62, 0.3, 0.8],
+          [0.75, 55, 0.3, 0.8],
+          [0.75, 58, 0.3, 0.8],
+          [0.75, 62, 0.3, 0.8],
+          [1.5, 55, 0.3, 0.8],
+          [1.5, 58, 0.3, 0.8],
+          [1.5, 62, 0.3, 0.8],
+          [2.5, 53, 0.3, 0.8],
+          [2.5, 57, 0.3, 0.8],
+          [2.5, 60, 0.3, 0.8],
+          [3.25, 53, 0.6, 0.8],
+          [3.25, 57, 0.6, 0.8],
+          [3.25, 60, 0.6, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Saws",
+          "module": "osc",
+          "why": "- OSC 1 level 50 %, OSC 2 50 %\n- OSC 2 PITCH +0.2 st\n- Listen for: a bright buzz.",
+          "set": {
+            "mix.osc1": 5,
+            "mix.osc2": 5,
+            "osc2.pitch": 0.15
+          }
+        },
+        {
+          "title": "Stab",
+          "module": "filter",
+          "why": "- CUTOFF 427 Hz\n- Envelope 1 AMOUNT +3.0, DECAY 300 ms, SUSTAIN 20 %\n- Envelope 2 RELEASE 75 ms\n- Listen for: punchy stabs.",
+          "set": {
+            "vcf.cutoff": 4.5,
+            "env1.amount": 3,
+            "env1.decay": 5,
+            "env1.sustain": 2,
+            "env2.release": 3.5
+          }
+        },
+        {
+          "title": "Shine",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Chorus, TIME 40 %, DEPTH/MIX 60 %, FBACK/MISC 70 %\n- REVERB on, MIX 30 %, DECAY 40 %\n- Listen for: Eurodance stabs.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "chorus",
+            "fx.time": 4,
+            "fx.mix": 6,
+            "fx.misc": 7,
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 4
+          }
+        }
+      ],
+      "context": {
+        "env1.amount": "How bright each stab is."
+      },
+      "tweaks": [
+        {
+          "id": "env1.decay",
+          "try": "Raise to 6",
+          "hear": "Longer, brassier stabs."
+        },
+        {
+          "id": "osc2.octave",
+          "try": "Turn to +1",
+          "hear": "A brighter, organ-like stab."
+        }
+      ]
+    },
+    {
+      "id": "t5-lamour-lead",
+      "name": "Italo-Dance Lead",
+      "ref": "In the style of Gigi D’Agostino — “L’amour toujours”",
+      "artist": "Gigi D’Agostino",
+      "tags": ["lead", "italo dance", "2000s"],
+      "level": 1,
+      "blurb": "A bouncy, bright, plucky lead with a skipping echo.",
+      "how": "A bright, hollow pluck with a short decay and a delay that skips between the notes.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 68, 0.3, 0.8],
+          [0.5, 66, 0.3, 0.8],
+          [1, 68, 0.3, 0.8],
+          [1.5, 71, 0.3, 0.8],
+          [2, 73, 0.3, 0.8],
+          [3, 71, 0.3, 0.8],
+          [3.5, 68, 0.3, 0.8],
+          [4, 66, 0.3, 0.8],
+          [5, 64, 0.3, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Hollow",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE square\n- OSC 1 level 80 %\n- CUTOFF 600 Hz\n- Listen for: a hollow tone.",
+          "set": {
+            "osc1.shape": 7,
+            "mix.osc1": 8,
+            "vcf.cutoff": 5
+          }
+        },
+        {
+          "title": "Pluck",
+          "module": "filter",
+          "why": "- Envelope 1 AMOUNT +2.5, DECAY 190 ms, SUSTAIN 20 %\n- Envelope 2 DECAY 460 ms, SUSTAIN 30 %, RELEASE 75 ms\n- Listen for: bouncy notes.",
+          "set": {
+            "env1.amount": 2.5,
+            "env1.decay": 4.5,
+            "env1.sustain": 2,
+            "env2.decay": 5.5,
+            "env2.sustain": 3,
+            "env2.release": 3.5
+          }
+        },
+        {
+          "title": "Skip",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Stereo delay, TIME 55 %, DEPTH/MIX 30 %, FBACK/MISC 40 %\n- REVERB on, MIX 30 %, DECAY 40 %\n- Listen for: a bouncy dance lead.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "delay",
+            "fx.time": 5.5,
+            "fx.mix": 3,
+            "fx.misc": 4,
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 4
+          }
+        }
+      ],
+      "context": {
+        "fx.time": "Where the echo skips."
+      },
+      "tweaks": [
+        {
+          "id": "osc1.shape",
+          "try": "Turn to 5 (sawtooth)",
+          "hear": "A brighter, fuller lead."
+        },
+        {
+          "id": "fx.misc",
+          "try": "Raise to 6",
+          "hear": "More skips."
+        }
+      ]
+    },
+    {
+      "id": "t5-born-slippy-stab",
+      "name": "Rave Chord Stab",
+      "ref": "In the style of Underworld — “Born Slippy .NUXX”",
+      "artist": "Underworld",
+      "tags": ["pad", "techno", "90s"],
+      "level": 2,
+      "blurb": "Huge, soaring, sustained chord stabs over a rave.",
+      "how": "Underworld’s chords are bright, wide saw chords that hit and hang. A fast attack, long release, chorus and a big reverb.",
+      "phrase": {
+        "bpm": 136,
+        "loop": true,
+        "steps": [
+          [0, 52, 1.4, 0.8],
+          [0, 59, 1.4, 0.8],
+          [0, 64, 1.4, 0.8],
+          [0, 67, 1.4, 0.8],
+          [2, 52, 0.4, 0.8],
+          [2, 59, 0.4, 0.8],
+          [2, 64, 0.4, 0.8],
+          [2, 67, 0.4, 0.8],
+          [3, 50, 0.9, 0.8],
+          [3, 57, 0.9, 0.8],
+          [3, 62, 0.9, 0.8],
+          [3, 66, 0.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Saws",
+          "module": "osc",
+          "why": "- OSC 1 level 50 %, OSC 2 50 %\n- OSC 2 PITCH +0.1 st\n- CUTOFF 843 Hz\n- Listen for: a bright buzz.",
+          "set": {
+            "mix.osc1": 5,
+            "mix.osc2": 5,
+            "osc2.pitch": 0.12,
+            "vcf.cutoff": 5.5
+          }
+        },
+        {
+          "title": "Hit and hang",
+          "module": "env",
+          "why": "- Envelope 1 AMOUNT +2.0, DECAY 700 ms, SUSTAIN 40 %\n- Envelope 2 RELEASE 1.1 s\n- Listen for: chords that hang.",
+          "set": {
+            "env1.amount": 2,
+            "env1.decay": 6,
+            "env1.sustain": 4,
+            "env2.release": 6.5
+          }
+        },
+        {
+          "title": "Rave",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Chorus, TIME 40 %, DEPTH/MIX 60 %, FBACK/MISC 80 %\n- REVERB on, MIX 50 %, DECAY 70 %\n- Listen for: soaring rave chords.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "chorus",
+            "fx.time": 4,
+            "fx.mix": 6,
+            "fx.misc": 8,
+            "rev.on": true,
+            "rev.mix": 5,
+            "rev.decay": 7
+          }
+        }
+      ],
+      "context": {
+        "env2.release": "How long each chord hangs."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Raise to 7",
+          "hear": "Harder, brighter stabs."
+        },
+        {
+          "id": "env2.release",
+          "try": "Lower to 4",
+          "hear": "Tighter stabs."
+        }
+      ]
+    },
+    {
+      "id": "t5-halcyon-pad",
+      "name": "Halcyon Pad",
+      "ref": "In the style of Orbital — “Halcyon + On + On”",
+      "artist": "Orbital",
+      "tags": ["pad", "electronica", "90s"],
+      "level": 2,
+      "blurb": "An airy, rippling pad with a gentle arpeggio inside it.",
+      "how": "Orbital’s pads ripple. A soft, airy chord on the arpeggiator in Up+Down, with long envelopes so the notes overlap into a pad.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 57, 7.9, 0.7],
+          [0, 61, 7.9, 0.7],
+          [0, 64, 7.9, 0.7],
+          [0, 68, 7.9, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Airy",
+          "module": "mixer",
+          "why": "- OSC 1 SHAPE sine → saw\n- OSC 1 level 70 %, NOISE white 16 %\n- CUTOFF 843 Hz\n- Listen for: a soft, airy tone.",
+          "set": {
+            "osc1.shape": 3,
+            "mix.osc1": 7,
+            "mix.noise": 0.8,
+            "vcf.cutoff": 5.5
+          }
+        },
+        {
+          "title": "Ripple",
+          "module": "mode",
+          "why": "- ARPEGGIATOR on, MODE Up+Down, OCTAVE 2 octaves, CLK DIV 1/16, BPM 132 BPM\n- Envelope 2 ATTACK 48 ms, RELEASE 700 ms\n- Listen for: notes rippling into a pad.",
+          "set": {
+            "arp.on": true,
+            "arp.mode": "updown",
+            "arp.octave": "2",
+            "clock.div": "1/16",
+            "clock.bpm": 132,
+            "env2.attack": 3,
+            "env2.release": 6
+          }
+        },
+        {
+          "title": "Space",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Stereo delay, TIME 60 %, DEPTH/MIX 30 %, FBACK/MISC 50 %\n- REVERB on, MIX 40 %, DECAY 70 %\n- Listen for: an airy, rippling pad.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "delay",
+            "fx.time": 6,
+            "fx.mix": 3,
+            "fx.misc": 5,
+            "rev.on": true,
+            "rev.mix": 4,
+            "rev.decay": 7
+          }
+        }
+      ],
+      "context": {
+        "env2.release": "How much the notes overlap."
+      },
+      "tweaks": [
+        {
+          "id": "env2.release",
+          "try": "Lower to 4",
+          "hear": "A clearer arpeggio."
+        },
+        {
+          "id": "vcf.cutoff",
+          "try": "Raise to 7",
+          "hear": "A brighter ripple."
+        }
+      ]
+    },
+    {
+      "id": "t5-angel-bass",
+      "name": "Trip-Hop Bass",
+      "ref": "In the style of Massive Attack — “Angel”",
+      "artist": "Massive Attack",
+      "tags": ["bass", "trip-hop", "90s"],
+      "level": 1,
+      "blurb": "A deep, dark, slow, menacing bass.",
+      "how": "A round, dark bass: sine and sub with a little drive, notes held and slow.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 31, 0.9, 0.8],
+          [1.5, 31, 0.9, 0.8],
+          [2, 34, 0.9, 0.8],
+          [3, 31, 0.9, 0.8],
+          [4, 29, 0.9, 0.8],
+          [5.5, 31, 0.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Deep",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine → saw\n- OSC 1 level 90 %, OSC 1 SUB 60 %\n- CUTOFF 216 Hz\n- Listen for: a deep, round bass.",
+          "set": {
+            "osc1.shape": 1.5,
+            "mix.osc1": 9,
+            "mix.sub": 6,
+            "vcf.cutoff": 3.5
+          }
+        },
+        {
+          "title": "Menace",
+          "module": "fx",
+          "why": "- OVERDRIVE 30 %\n- Envelope 2 RELEASE 120 ms\n- Listen for: a dark, menacing bass.",
+          "set": {
+            "drive.amount": 3,
+            "env2.release": 4
+          }
+        }
+      ],
+      "context": {
+        "drive.amount": "How much grit."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Raise to 5",
+          "hear": "A punchier bass."
+        },
+        {
+          "id": "drive.amount",
+          "try": "Raise to 6",
+          "hear": "A fuzzier bass."
+        }
+      ]
+    },
+    {
+      "id": "t5-mysterons-theremin",
+      "name": "Theremin",
+      "ref": "In the style of Portishead — “Mysterons”",
+      "artist": "Portishead",
+      "tags": ["lead", "trip-hop", "90s"],
+      "level": 2,
+      "blurb": "An eerie, wailing, wide-vibrato theremin line.",
+      "how": "A theremin is a pure tone that slides everywhere with a wide, wobbling vibrato. A sine, long glide and a deep vibrato.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.8, 0.8],
+          [2, 79, 0.9, 0.8],
+          [3, 77, 0.9, 0.8],
+          [4, 75, 1.8, 0.8],
+          [6, 72, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sine",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine → saw, OCTAVE +1 oct\n- OSC 1 level 80 %\n- CUTOFF 2.3 kHz\n- Listen for: a pure tone.",
+          "set": {
+            "osc1.shape": 0.5,
+            "osc1.octave": "+1",
+            "mix.osc1": 8,
+            "vcf.cutoff": 7
+          }
+        },
+        {
+          "title": "Slide",
+          "module": "mode",
+          "why": "- GLIDE on, time 810 ms\n- Envelope 2 ATTACK 48 ms, RELEASE 300 ms\n- Listen for: notes sliding.",
+          "set": {
+            "glide.on": true,
+            "glide.time": 4.5,
+            "env2.attack": 3,
+            "env2.release": 5
+          }
+        },
+        {
+          "title": "Wail",
+          "module": "lfo",
+          "why": "- LFO 1 DEST Osc All Freq, FREQUENCY 2.75 Hz, AMOUNT +1.1\n- REVERB on, MIX 40 %, DECAY 60 %\n- Listen for: an eerie theremin.",
+          "set": {
+            "lfo1.dest": "osc-all",
+            "lfo1.freq": 5.8,
+            "lfo1.amt": 1.1,
+            "rev.on": true,
+            "rev.mix": 4,
+            "rev.decay": 6
+          }
+        }
+      ],
+      "context": {
+        "lfo1.amt": "How wide the wail is."
+      },
+      "tweaks": [
+        {
+          "id": "glide.time",
+          "try": "Raise to 6",
+          "hear": "More sliding."
+        },
+        {
+          "id": "lfo1.amt",
+          "try": "Raise to 1.6",
+          "hear": "A wilder wail."
+        }
+      ]
+    },
+    {
+      "id": "t5-bad-guy-bass",
+      "name": "Buzzy Sub Bass",
+      "ref": "In the style of Billie Eilish — “bad guy”",
+      "artist": "Billie Eilish",
+      "tags": ["bass", "pop", "2010s"],
+      "level": 2,
+      "blurb": "A deep, buzzing, distorted sub bass.",
+      "how": "A sub bass pushed into OVERDRIVE until it buzzes: the harmonics let it be heard on phone speakers.",
+      "phrase": {
+        "bpm": 135,
+        "loop": true,
+        "steps": [
+          [0, 31, 0.4, 0.8],
+          [0.5, 31, 0.4, 0.8],
+          [1, 34, 0.4, 0.8],
+          [1.5, 31, 0.4, 0.8],
+          [2, 36, 0.4, 0.8],
+          [3, 34, 0.4, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sine",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine\n- OSC 1 level 100 %, OSC 1 SUB 40 %\n- CUTOFF 304 Hz\n- Listen for: a deep sub.",
+          "set": {
+            "osc1.shape": 0,
+            "mix.osc1": 10,
+            "mix.sub": 4,
+            "vcf.cutoff": 4
+          }
+        },
+        {
+          "title": "Buzz",
+          "module": "fx",
+          "why": "- OVERDRIVE 70 %: a buzzing edge\n- Envelope 2 DECAY 460 ms, SUSTAIN 60 %, RELEASE 48 ms\n- Listen for: a buzzing sub.",
+          "set": {
+            "drive.amount": 7,
+            "env2.decay": 5.5,
+            "env2.sustain": 6,
+            "env2.release": 3
+          }
+        }
+      ],
+      "context": {
+        "drive.amount": "How much the sub buzzes."
+      },
+      "tweaks": [
+        {
+          "id": "drive.amount",
+          "try": "Raise to 10",
+          "hear": "A fuzzed-out bass."
+        },
+        {
+          "id": "glide.on",
+          "try": "Turn GLIDE on",
+          "hear": "Slides between notes."
+        }
+      ]
+    },
+    {
+      "id": "t5-oblivion-bass",
+      "name": "Bouncy Square Bass",
+      "ref": "In the style of Grimes — “Oblivion”",
+      "artist": "Grimes",
+      "tags": ["bass", "synth-pop", "2010s"],
+      "level": 1,
+      "blurb": "A bouncy, round, plucky square bass.",
+      "how": "A square bass with a short pluck and a little echo: bouncy and light.",
+      "phrase": {
+        "bpm": 156,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.3, 0.8],
+          [0.5, 38, 0.3, 0.8],
+          [1, 45, 0.3, 0.8],
+          [1.5, 38, 0.3, 0.8],
+          [2, 41, 0.3, 0.8],
+          [2.5, 43, 0.3, 0.8],
+          [3, 41, 0.3, 0.8],
+          [3.5, 36, 0.3, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Square",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE square\n- OSC 1 level 90 %\n- CUTOFF 304 Hz\n- Envelope 1 AMOUNT +2.5, DECAY 190 ms, SUSTAIN 10 %\n- Envelope 2 DECAY 300 ms, SUSTAIN 30 %, RELEASE 48 ms\n- Listen for: a bouncy bass.",
+          "set": {
+            "osc1.shape": 7.5,
+            "mix.osc1": 9,
+            "vcf.cutoff": 4,
+            "env1.amount": 2.5,
+            "env1.decay": 4.5,
+            "env1.sustain": 1,
+            "env2.decay": 5,
+            "env2.sustain": 3,
+            "env2.release": 3
+          }
+        },
+        {
+          "title": "Echo",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Stereo delay, TIME 40 %, DEPTH/MIX 15 %, FBACK/MISC 20 %\n- Listen for: a light, bouncy bass.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "delay",
+            "fx.time": 4,
+            "fx.mix": 1.5,
+            "fx.misc": 2
+          }
+        }
+      ],
+      "context": {
+        "env1.decay": "How bouncy each note is."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 6",
+          "hear": "A rubberier bass."
+        },
+        {
+          "id": "osc1.shape",
+          "try": "Turn to 9",
+          "hear": "A thinner, buzzier bass."
+        }
+      ]
+    },
+    {
+      "id": "t5-vroom-metal-bass",
+      "name": "Hyperpop Metal Bass",
+      "ref": "In the style of SOPHIE — “Vroom Vroom”",
+      "artist": "SOPHIE",
+      "tags": ["bass", "hyperpop", "2010s"],
+      "level": 3,
+      "blurb": "A hard, metallic, rubbery bass that sounds like bending plastic.",
+      "how": "SOPHIE’s sounds are synthetic and plastic. Hard FM and Envelope 1 sweeping Oscillator 2’s pitch make the timbre bend on every note; OVERDRIVE hardens it.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.6, 0.8],
+          [0.75, 36, 0.6, 0.8],
+          [1.5, 39, 0.6, 0.8],
+          [2, 36, 0.6, 0.8],
+          [3, 34, 0.6, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Hard FM",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine\n- OSC 2 SHAPE sine\n- FM 2→1 on\n- OSC 1 level 100 %, OSC 2 60 %\n- Listen for: a metallic bass.",
+          "set": {
+            "osc1.shape": 0,
+            "osc2.shape": 0,
+            "osc.fm": true,
+            "mix.osc1": 10,
+            "mix.osc2": 6
+          }
+        },
+        {
+          "title": "Bend the metal",
+          "module": "env",
+          "why": "- ENV ROUTING Env 1 Aux / Env 2 Filter+Amp: Envelope 2 now runs the filter and the volume; Envelope 1 is free\n- ENV 1 DEST Osc 2 Freq: the modulator\n- Envelope 1 AMOUNT +4.0, DECAY 460 ms, SUSTAIN 0 %\n- Listen for: the timbre bending.",
+          "set": {
+            "env.routing": "aux-filteramp",
+            "env1.dest": "osc2",
+            "env1.amount": 4,
+            "env1.decay": 5.5,
+            "env1.sustain": 0
+          }
+        },
+        {
+          "title": "Harden",
+          "module": "fx",
+          "why": "- CUTOFF 1.2 kHz\n- Envelope 2 RELEASE 30 ms\n- OVERDRIVE 50 %\n- Listen for: a plastic, metallic bass.",
+          "set": {
+            "vcf.cutoff": 6,
+            "env2.release": 2.5,
+            "drive.amount": 5
+          }
+        }
+      ],
+      "context": {
+        "env1.amount": "How far the timbre bends."
+      },
+      "tweaks": [
+        {
+          "id": "env1.amount",
+          "try": "Turn to −4",
+          "hear": "A bend the other way."
+        },
+        {
+          "id": "mix.osc2",
+          "try": "Raise to 9",
+          "hear": "Harsher metal."
+        }
+      ]
+    },
+    {
+      "id": "t5-garage-bass",
+      "name": "UK Garage Bass",
+      "ref": "In the style of Artful Dodger — “Re-Rewind”",
+      "artist": "Artful Dodger",
+      "tags": ["bass", "uk garage", "90s"],
+      "level": 2,
+      "blurb": "A deep, round, sliding sub bass for a shuffling groove.",
+      "how": "Garage bass is a round sine that slides between notes. A sine, a touch of saw for definition, and glide.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.6, 0.8],
+          [0.75, 36, 0.6, 0.8],
+          [1.25, 33, 0.6, 0.8],
+          [1.5, 40, 0.6, 0.8],
+          [2, 38, 0.6, 0.8],
+          [2.75, 36, 0.6, 0.8],
+          [3.5, 33, 0.6, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Round",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine → saw\n- OSC 1 level 100 %\n- CUTOFF 304 Hz\n- Listen for: a round bass.",
+          "set": {
+            "osc1.shape": 1.5,
+            "mix.osc1": 10,
+            "vcf.cutoff": 4
+          }
+        },
+        {
+          "title": "Slide",
+          "module": "mode",
+          "why": "- GLIDE on, time 90 ms\n- Envelope 2 DECAY 460 ms, SUSTAIN 70 %, RELEASE 48 ms\n- Listen for: notes sliding.",
+          "set": {
+            "glide.on": true,
+            "glide.time": 1.5,
+            "env2.decay": 5.5,
+            "env2.sustain": 7,
+            "env2.release": 3
+          }
+        }
+      ],
+      "context": {
+        "glide.time": "How the bass slides."
+      },
+      "tweaks": [
+        {
+          "id": "glide.time",
+          "try": "Raise to 3",
+          "hear": "Longer slides."
+        },
+        {
+          "id": "osc1.shape",
+          "try": "Turn to 7.5 (square)",
+          "hear": "A grime-like square."
+        }
+      ]
+    },
+    {
+      "id": "t5-eskimo-bass",
+      "name": "Grime Square Bass",
+      "ref": "In the style of Wiley — “Eskimo”",
+      "artist": "Wiley",
+      "tags": ["bass", "grime", "2000s"],
+      "level": 2,
+      "blurb": "A cold, hollow, icy square-wave bass.",
+      "how": "Grime’s “eski” sound is a bare square wave, short and cold. An open square, a short envelope, no effects.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.3, 0.8],
+          [0.75, 40, 0.3, 0.8],
+          [1, 43, 0.3, 0.8],
+          [1.5, 40, 0.3, 0.8],
+          [2, 47, 0.3, 0.8],
+          [2.5, 45, 0.3, 0.8],
+          [3, 43, 0.3, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bare square",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE square\n- OSC 1 level 90 %\n- CUTOFF 2.3 kHz\n- Listen for: a cold, hollow tone.",
+          "set": {
+            "osc1.shape": 7.5,
+            "mix.osc1": 9,
+            "vcf.cutoff": 7
+          }
+        },
+        {
+          "title": "Short",
+          "module": "env",
+          "why": "- Envelope 2 DECAY 300 ms, SUSTAIN 30 %, RELEASE 30 ms\n- Listen for: icy notes.",
+          "set": {
+            "env2.decay": 5,
+            "env2.sustain": 3,
+            "env2.release": 2.5
+          }
+        }
+      ],
+      "context": {
+        "osc1.shape": "The bare square."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Lower to 4",
+          "hear": "A softer square."
+        },
+        {
+          "id": "fx.on",
+          "try": "Turn EFFECT on, TYPE BBD delay",
+          "hear": "Icy echoes."
+        }
+      ]
+    },
+    {
+      "id": "t5-reggae-bubble",
+      "name": "Reggae Organ Bubble",
+      "ref": "In the style of Bob Marley and the Wailers",
+      "artist": "Bob Marley and the Wailers",
+      "tags": ["keys", "organ", "reggae"],
+      "level": 2,
+      "blurb": "A bouncing, percussive organ “bubble” on the off-beats.",
+      "how": "The reggae bubble is short organ chords on the off-beats. A gated organ with a click from Envelope 2 on the filter.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0.5, 57, 0.2, 0.7],
+          [0.5, 60, 0.2, 0.7],
+          [0.5, 64, 0.2, 0.7],
+          [1.5, 57, 0.2, 0.7],
+          [1.5, 60, 0.2, 0.7],
+          [1.5, 64, 0.2, 0.7],
+          [2.5, 57, 0.2, 0.7],
+          [2.5, 60, 0.2, 0.7],
+          [2.5, 64, 0.2, 0.7],
+          [3.5, 57, 0.2, 0.7],
+          [3.5, 60, 0.2, 0.7],
+          [3.5, 64, 0.2, 0.7],
+          [0.75, 57, 0.15, 0.5],
+          [0.75, 60, 0.15, 0.5],
+          [0.75, 64, 0.15, 0.5],
+          [1.75, 57, 0.15, 0.5],
+          [1.75, 60, 0.15, 0.5],
+          [1.75, 64, 0.15, 0.5],
+          [2.75, 57, 0.15, 0.5],
+          [2.75, 60, 0.15, 0.5],
+          [2.75, 64, 0.15, 0.5],
+          [3.75, 57, 0.15, 0.5],
+          [3.75, 60, 0.15, 0.5],
+          [3.75, 64, 0.15, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Organ",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine\n- OSC 2 SHAPE square, OCTAVE +1 oct\n- OSC 1 level 50 %, OSC 2 20 %\n- CUTOFF 600 Hz\n- Listen for: an organ tone.",
+          "set": {
+            "osc1.shape": 0,
+            "osc2.shape": 7.5,
+            "osc2.octave": "+1",
+            "mix.osc1": 5,
+            "mix.osc2": 2,
+            "vcf.cutoff": 5
+          }
+        },
+        {
+          "title": "Click",
+          "module": "env",
+          "why": "- ENV ROUTING Env 1 Aux / Env 2 Filter+Gate: the volume opens with the key; Envelope 2 runs the filter\n- Envelope 2 AMOUNT +2.0, DECAY 75 ms, SUSTAIN 30 %\n- Listen for: short, clicking chords.",
+          "set": {
+            "env.routing": "aux-filtergate",
+            "env2.amount": 2,
+            "env2.decay": 3.5,
+            "env2.sustain": 3
+          }
+        },
+        {
+          "title": "Room",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Rotating speaker, TIME 30 %, DEPTH/MIX 60 %, FBACK/MISC 40 %\n- REVERB on, MIX 20 %, DECAY 30 %\n- Listen for: a bubbling organ.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "rotary",
+            "fx.time": 3,
+            "fx.mix": 6,
+            "fx.misc": 4,
+            "rev.on": true,
+            "rev.mix": 2,
+            "rev.decay": 3
+          }
+        }
+      ],
+      "context": {
+        "env2.decay": "How much click each chord has."
+      },
+      "tweaks": [
+        {
+          "id": "fx.time",
+          "try": "Raise to 7",
+          "hear": "A faster swirl."
+        },
+        {
+          "id": "mix.osc2",
+          "try": "Raise to 4",
+          "hear": "A reedier bubble."
+        }
+      ]
+    },
+    {
+      "id": "t5-dub-siren",
+      "name": "Dub Siren",
+      "ref": "In the style of King Tubby",
+      "artist": "King Tubby",
+      "tags": ["fx", "dub", "reggae"],
+      "level": 2,
+      "blurb": "A wailing siren drowned in long, runaway echoes.",
+      "how": "The dub siren is a rising tone into a tape echo turned up until it nearly runs away. LFO 1, a sawtooth on pitch, makes it whoop.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.5, 0.8],
+          [4, 76, 1.5, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Tone",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE square\n- OSC 1 level 80 %\n- CUTOFF 2.3 kHz\n- Listen for: a hollow tone.",
+          "set": {
+            "osc1.shape": 7.5,
+            "mix.osc1": 8,
+            "vcf.cutoff": 7
+          }
+        },
+        {
+          "title": "Whoop",
+          "module": "lfo",
+          "why": "- LFO 1 DEST Osc All Freq, FREQUENCY 2.75 Hz, AMOUNT +3.5, SHAPE Sawtooth: rising, then dropping\n- Listen for: a whooping siren.",
+          "set": {
+            "lfo1.dest": "osc-all",
+            "lfo1.freq": 5.8,
+            "lfo1.amt": 3.5,
+            "lfo1.shape": "saw"
+          }
+        },
+        {
+          "title": "Runaway echo",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Tape delay 2, TIME 60 %, DEPTH/MIX 50 %, FBACK/MISC 85 %: repeats that almost never die\n- REVERB on, MIX 30 %, DECAY 50 %\n- Listen for: a siren in a dub echo.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "tape2",
+            "fx.time": 6,
+            "fx.mix": 5,
+            "fx.misc": 8.5,
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 5
+          }
+        }
+      ],
+      "context": {
+        "fx.misc": "How long the echoes run."
+      },
+      "tweaks": [
+        {
+          "id": "fx.misc",
+          "try": "Raise to 10",
+          "hear": "Echoes that run away."
+        },
+        {
+          "id": "lfo1.shape",
+          "try": "Choose square",
+          "hear": "A two-tone siren."
+        }
+      ]
+    },
+    {
+      "id": "t5-let-it-happen-warp",
+      "name": "Warped Polysynth",
+      "ref": "In the style of Tame Impala — “Let It Happen”",
+      "artist": "Tame Impala",
+      "tags": ["pad", "psychedelic", "2010s"],
+      "level": 2,
+      "blurb": "A woozy, out-of-tune, phasing chord, as if the synth were melting.",
+      "how": "Turned up, VINTAGE lets each voice wander far from the others. With a phaser it sounds like a polysynth melting in the sun.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 52, 3.8, 0.75],
+          [0, 56, 3.8, 0.75],
+          [0, 59, 3.8, 0.75],
+          [0, 63, 3.8, 0.75],
+          [4, 49, 3.8, 0.75],
+          [4, 52, 3.8, 0.75],
+          [4, 56, 3.8, 0.75],
+          [4, 59, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Saws",
+          "module": "osc",
+          "why": "- OSC 1 level 50 %, OSC 2 50 %\n- OSC 2 PITCH +0.1 st\n- CUTOFF 600 Hz\n- Listen for: a buzz.",
+          "set": {
+            "mix.osc1": 5,
+            "mix.osc2": 5,
+            "osc2.pitch": 0.1,
+            "vcf.cutoff": 5
+          }
+        },
+        {
+          "title": "Melt",
+          "module": "osc",
+          "why": "- VINTAGE 90 %: each voice wanders a long way\n- Listen for: a woozy, sour chord.",
+          "set": {
+            "voice.vintage": 9
+          }
+        },
+        {
+          "title": "Phase",
+          "module": "fx",
+          "why": "- Envelope 2 ATTACK 30 ms, RELEASE 300 ms\n- EFFECT on, TYPE Phaser, TIME 40 %, DEPTH/MIX 70 %, FBACK/MISC 60 %\n- REVERB on, MIX 30 %, DECAY 50 %\n- Listen for: a melting polysynth.",
+          "set": {
+            "env2.attack": 2.5,
+            "env2.release": 5,
+            "fx.on": true,
+            "fx.type": "phaser",
+            "fx.time": 4,
+            "fx.mix": 7,
+            "fx.misc": 6,
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 5
+          }
+        }
+      ],
+      "context": {
+        "voice.vintage": "How far each voice wanders."
+      },
+      "tweaks": [
+        {
+          "id": "voice.vintage",
+          "try": "Lower to 3",
+          "hear": "A gently aged synth."
+        },
+        {
+          "id": "fx.type",
+          "try": "Choose Flanger",
+          "hear": "A jet-like melt."
+        }
+      ]
+    },
+    {
+      "id": "t5-shoegaze-noise-pad",
+      "name": "Shoegaze Wall",
+      "ref": "In the style of My Bloody Valentine — “Only Shallow”",
+      "artist": "My Bloody Valentine",
+      "tags": ["pad", "shoegaze", "90s"],
+      "level": 2,
+      "blurb": "A wall of noisy, bending, blurred chords.",
+      "how": "Shoegaze blurs chords into noise and bends them. White noise in the mixer, OVERDRIVE, a wobbly tape echo and LFO 1 bending the pitch slowly.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 52, 3.8, 0.75],
+          [0, 59, 3.8, 0.75],
+          [0, 64, 3.8, 0.75],
+          [0, 66, 3.8, 0.75],
+          [4, 49, 3.8, 0.75],
+          [4, 56, 3.8, 0.75],
+          [4, 61, 3.8, 0.75],
+          [4, 64, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Noise in the chord",
+          "module": "mixer",
+          "why": "- OSC 1 level 30 %, OSC 2 30 %, NOISE white 30 %\n- OSC 2 PITCH +0.2 st\n- CUTOFF 600 Hz\n- Listen for: a noisy chord.",
+          "set": {
+            "mix.osc1": 3,
+            "mix.osc2": 3,
+            "mix.noise": 1.5,
+            "osc2.pitch": 0.15,
+            "vcf.cutoff": 5
+          }
+        },
+        {
+          "title": "Bend",
+          "module": "lfo",
+          "why": "- LFO 1 DEST Osc All Freq, FREQUENCY 0.56 Hz, AMOUNT +0.9: the chord bending slowly, like a whammy bar\n- Listen for: bending chords.",
+          "set": {
+            "lfo1.dest": "osc-all",
+            "lfo1.freq": 3.5,
+            "lfo1.amt": 0.9
+          }
+        },
+        {
+          "title": "Wall",
+          "module": "fx",
+          "why": "- OVERDRIVE 30 %\n- EFFECT on, TYPE Tape delay 2, TIME 50 %, DEPTH/MIX 40 %, FBACK/MISC 50 %\n- REVERB on, MIX 50 %, DECAY 70 %\n- Listen for: a wall of blurred noise.",
+          "set": {
+            "drive.amount": 3,
+            "fx.on": true,
+            "fx.type": "tape2",
+            "fx.time": 5,
+            "fx.mix": 4,
+            "fx.misc": 5,
+            "rev.on": true,
+            "rev.mix": 5,
+            "rev.decay": 7
+          }
+        }
+      ],
+      "context": {
+        "mix.noise": "How noisy the wall is."
+      },
+      "tweaks": [
+        {
+          "id": "mix.noise",
+          "try": "Turn to −2.5",
+          "hear": "Pink noise: a darker wall."
+        },
+        {
+          "id": "lfo1.amt",
+          "try": "Raise to 1.5",
+          "hear": "Wilder bends."
+        }
+      ]
+    },
+    {
+      "id": "t5-motorik-pulse",
+      "name": "Motorik Pulse",
+      "ref": "In the style of Neu! — “Hallogallo”",
+      "artist": "Neu!",
+      "tags": ["seq", "krautrock", "70s"],
+      "level": 2,
+      "blurb": "A steady, driving, hypnotic eighth-note pulse.",
+      "how": "Motorik is a relentless steady pulse. A driven saw pluck in even eighths on one note, with a slow LFO moving the tone.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.35, 0.8],
+          [0.5, 40, 0.35, 0.8],
+          [1, 40, 0.35, 0.8],
+          [1.5, 40, 0.35, 0.8],
+          [2, 40, 0.35, 0.8],
+          [2.5, 40, 0.35, 0.8],
+          [3, 40, 0.35, 0.8],
+          [3.5, 40, 0.35, 0.8],
+          [4, 43, 0.35, 0.8],
+          [4.5, 43, 0.35, 0.8],
+          [5, 43, 0.35, 0.8],
+          [5.5, 43, 0.35, 0.8],
+          [6, 38, 0.35, 0.8],
+          [6.5, 38, 0.35, 0.8],
+          [7, 38, 0.35, 0.8],
+          [7.5, 38, 0.35, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Saw",
+          "module": "osc",
+          "why": "- OSC 1 level 80 %, OSC 1 SUB 30 %\n- CUTOFF 304 Hz, RESONANCE 30 %, DRIVE 60 %\n- Listen for: a driven buzz.",
+          "set": {
+            "mix.osc1": 8,
+            "mix.sub": 3,
+            "vcf.cutoff": 4,
+            "vcf.resonance": 3,
+            "vcf.drive": 6
+          }
+        },
+        {
+          "title": "Pulse",
+          "module": "env",
+          "why": "- Envelope 1 AMOUNT +2.0, DECAY 190 ms, SUSTAIN 20 %\n- Envelope 2 DECAY 300 ms, SUSTAIN 40 %, RELEASE 30 ms\n- Listen for: a steady pulse.",
+          "set": {
+            "env1.amount": 2,
+            "env1.decay": 4.5,
+            "env1.sustain": 2,
+            "env2.decay": 5,
+            "env2.sustain": 4,
+            "env2.release": 2.5
+          }
+        },
+        {
+          "title": "Drift",
+          "module": "lfo",
+          "why": "- LFO 2 DEST Cutoff, FREQUENCY 0.28 Hz, AMOUNT +1.5\n- EFFECT on, TYPE Tape delay 1, TIME 40 %, DEPTH/MIX 20 %, FBACK/MISC 30 %\n- Listen for: a hypnotic, driving pulse.",
+          "set": {
+            "lfo2.dest": "cutoff",
+            "lfo2.freq": 2.5,
+            "lfo2.amt": 1.5,
+            "fx.on": true,
+            "fx.type": "tape1",
+            "fx.time": 4,
+            "fx.mix": 2,
+            "fx.misc": 3
+          }
+        }
+      ],
+      "context": {
+        "lfo2.freq": "How slowly the tone drifts."
+      },
+      "tweaks": [
+        {
+          "id": "drive.amount",
+          "try": "Raise to 5",
+          "hear": "A rougher drive."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 6",
+          "hear": "A more vocal pulse."
+        }
+      ]
+    },
+    {
+      "id": "t5-ghost-rider-organ",
+      "name": "Punk Organ",
+      "ref": "In the style of Suicide — “Ghost Rider”",
+      "artist": "Suicide",
+      "tags": ["keys", "organ", "punk", "70s"],
+      "level": 2,
+      "blurb": "A cheap, distorted organ riff smeared with echo.",
+      "how": "Martin Rev played a battered organ through effects. A thin, gated organ, the Distortion effect, and a lot of reverb.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 45, 0.4, 0.8],
+          [0.5, 45, 0.4, 0.8],
+          [1, 48, 0.4, 0.8],
+          [1.5, 45, 0.4, 0.8],
+          [2, 50, 0.4, 0.8],
+          [2.5, 48, 0.4, 0.8],
+          [3, 45, 0.4, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Cheap organ",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE pulse 32 %\n- OSC 1 level 70 %\n- CUTOFF 1.2 kHz\n- ENV ROUTING Env 1 Aux / Env 2 Filter+Gate: the volume opens with the key; Envelope 2 runs the filter\n- Envelope 2 AMOUNT 0: the filter stays where CUTOFF puts it\n- Listen for: a thin, cheap organ.",
+          "set": {
+            "osc1.shape": 8.5,
+            "mix.osc1": 7,
+            "vcf.cutoff": 6,
+            "env.routing": "aux-filtergate",
+            "env2.amount": 0
+          }
+        },
+        {
+          "title": "Dirt",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Distortion, TIME 50 %, DEPTH/MIX 60 %, FBACK/MISC 50 %\n- Listen for: a fuzzy organ.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "dist",
+            "fx.time": 5,
+            "fx.mix": 6,
+            "fx.misc": 5
+          }
+        },
+        {
+          "title": "Smear",
+          "module": "fx",
+          "why": "- REVERB on, MIX 50 %, DECAY 70 %\n- Listen for: a distorted, echoing riff.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 5,
+            "rev.decay": 7
+          }
+        }
+      ],
+      "context": {
+        "fx.time": "How dirty the organ is."
+      },
+      "tweaks": [
+        {
+          "id": "fx.type",
+          "try": "Choose Tape delay 2",
+          "hear": "A slapback echo instead."
+        },
+        {
+          "id": "osc1.shape",
+          "try": "Turn to 7.5 (square)",
+          "hear": "A rounder organ."
+        }
+      ]
+    },
+    {
+      "id": "t5-silver-apples-osc",
+      "name": "Oscillator Chime",
+      "ref": "In the style of Silver Apples — “Oscillations”",
+      "artist": "Silver Apples",
+      "tags": ["seq", "psychedelic", "60s"],
+      "level": 2,
+      "blurb": "A pulsing, chiming pattern of pure oscillator tones.",
+      "how": "Simeon played banks of oscillators by hand. Pure sines, the arpeggiator in Assign order, and a tape echo.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 64, 3.9, 0.8],
+          [0.01, 67, 3.9, 0.8],
+          [0.02, 71, 3.9, 0.8],
+          [0.03, 74, 3.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sines",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE sine\n- OSC 2 SHAPE sine, OCTAVE +1 oct\n- OSC 1 level 70 %, OSC 2 30 %\n- CUTOFF 4.6 kHz\n- Listen for: pure tones.",
+          "set": {
+            "osc1.shape": 0,
+            "osc2.shape": 0,
+            "osc2.octave": "+1",
+            "mix.osc1": 7,
+            "mix.osc2": 3,
+            "vcf.cutoff": 8
+          }
+        },
+        {
+          "title": "In order played",
+          "module": "mode",
+          "why": "Assign plays the notes in the order the keys went down.\n- ARPEGGIATOR on, MODE Assign, OCTAVE 1 octave, CLK DIV 1/8, BPM 140 BPM\n- Envelope 2 DECAY 300 ms, SUSTAIN 20 %, RELEASE 120 ms\n- Listen for: a chiming pattern.",
+          "set": {
+            "arp.on": true,
+            "arp.mode": "assign",
+            "arp.octave": "1",
+            "clock.div": "1/8",
+            "clock.bpm": 140,
+            "env2.decay": 5,
+            "env2.sustain": 2,
+            "env2.release": 4
+          }
+        },
+        {
+          "title": "Echo",
+          "module": "fx",
+          "why": "- EFFECT on, TYPE Tape delay 1, TIME 50 %, DEPTH/MIX 30 %, FBACK/MISC 40 %\n- Listen for: pulsing oscillator chimes.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "tape1",
+            "fx.time": 5,
+            "fx.mix": 3,
+            "fx.misc": 4
+          }
+        }
+      ],
+      "context": {
+        "arp.mode": "Assign: the order the keys were pressed."
+      },
+      "tweaks": [
+        {
+          "id": "arp.mode",
+          "try": "Turn to Down",
+          "hear": "A falling pattern."
+        },
+        {
+          "id": "arp.octave",
+          "try": "Turn to 2 octaves",
+          "hear": "A wider pattern."
+        }
+      ]
+    },
+    {
+      "id": "t5-cocteau-shimmer",
+      "name": "Dream-Pop Shimmer",
+      "ref": "In the style of Cocteau Twins — “Heaven or Las Vegas”",
+      "artist": "Cocteau Twins",
+      "tags": ["pad", "dream pop", "80s"],
+      "level": 2,
+      "blurb": "A shimmering, liquid, chorused chord that glistens.",
+      "how": "Dream pop is shimmer and space. A bright, gentle chord through a slow flanger, into a long, bright reverb with predelay.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 52, 3.8, 0.7],
+          [0, 59, 3.8, 0.7],
+          [0, 64, 3.8, 0.7],
+          [0, 68, 3.8, 0.7],
+          [4, 57, 3.8, 0.7],
+          [4, 61, 3.8, 0.7],
+          [4, 64, 3.8, 0.7],
+          [4, 69, 3.8, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bright",
+          "module": "osc",
+          "why": "- OSC 1 SHAPE saw → square\n- OSC 2 SHAPE sine → saw, OCTAVE +1 oct, PITCH +0.1 st\n- OSC 1 level 60 %, OSC 2 40 %\n- CUTOFF 1.2 kHz\n- Listen for: a bright, gentle chord.",
+          "set": {
+            "osc1.shape": 6,
+            "osc2.shape": 3,
+            "osc2.octave": "+1",
+            "osc2.pitch": 0.08,
+            "mix.osc1": 6,
+            "mix.osc2": 4,
+            "vcf.cutoff": 6
+          }
+        },
+        {
+          "title": "Shimmer",
+          "module": "fx",
+          "why": "- Envelope 2 ATTACK 75 ms, RELEASE 700 ms\n- EFFECT on, TYPE Flanger, TIME 15 %, DEPTH/MIX 50 %, FBACK/MISC 50 %\n- Listen for: a liquid shimmer.",
+          "set": {
+            "env2.attack": 3.5,
+            "env2.release": 6,
+            "fx.on": true,
+            "fx.type": "flanger",
+            "fx.time": 1.5,
+            "fx.mix": 5,
+            "fx.misc": 5
+          }
+        },
+        {
+          "title": "Space",
+          "module": "fx",
+          "why": "- REVERB on, MIX 60 %, DECAY 80 %, PREDELAY 60 ms, TONE thinner 40 %\n- Listen for: a glistening, dreamy chord.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 6,
+            "rev.decay": 8,
+            "rev.predelay": 3,
+            "rev.tone": 2
+          }
+        }
+      ],
+      "context": {
+        "fx.mix": "How much the chord shimmers."
+      },
+      "tweaks": [
+        {
+          "id": "fx.type",
+          "try": "Choose Chorus",
+          "hear": "A softer, wider shimmer."
+        },
+        {
+          "id": "rev.predelay",
+          "try": "Raise to 5",
+          "hear": "More room before the reverb."
         }
       ]
     }
