@@ -55,7 +55,7 @@ const EXPORTED: {
   { id: 'td-3', sounds: 20, timeline: 4, relatives: 3, unusual: 9, limits: 4 },
   // Written straight into the app (`scripts/native-synths.ts`), not exported: these counts are its own files'.
   { id: 'donner-b1', sounds: 10, timeline: 4, relatives: 3, unusual: 9, limits: 3 },
-  { id: 'take-5', sounds: 10, timeline: 3, relatives: 3, unusual: 9, limits: 3 },
+  { id: 'take-5', sounds: 125, timeline: 3, relatives: 3, unusual: 9, limits: 3 },
   { id: 'cs-80', sounds: 13, timeline: 3, relatives: 3, unusual: 11, limits: 3 },
   { id: 'super-gemini', sounds: 208, timeline: 3, relatives: 3, unusual: 11, limits: 3 },
   { id: 'pearl-syncussion', sounds: 6, timeline: 5, relatives: 3, unusual: 6, limits: 3 },
