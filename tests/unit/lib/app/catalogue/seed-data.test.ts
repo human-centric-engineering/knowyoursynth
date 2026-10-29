@@ -57,7 +57,7 @@ const EXPORTED: {
   { id: 'donner-b1', sounds: 10, timeline: 4, relatives: 3, unusual: 9, limits: 3 },
   { id: 'take-5', sounds: 10, timeline: 3, relatives: 3, unusual: 9, limits: 3 },
   { id: 'cs-80', sounds: 13, timeline: 3, relatives: 3, unusual: 11, limits: 3 },
-  { id: 'super-gemini', sounds: 76, timeline: 3, relatives: 3, unusual: 11, limits: 3 },
+  { id: 'super-gemini', sounds: 208, timeline: 3, relatives: 3, unusual: 11, limits: 3 },
   { id: 'pearl-syncussion', sounds: 6, timeline: 5, relatives: 3, unusual: 6, limits: 3 },
   { id: 'behringer-syncussion', sounds: 6, timeline: 4, relatives: 2, unusual: 7, limits: 3 },
   { id: 'e7', sounds: 200, timeline: 3, relatives: 3, unusual: 11, limits: 3 },
