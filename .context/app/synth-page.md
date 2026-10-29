@@ -237,16 +237,32 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
 - **Signal routing turns the panel over** (`f-routing-view` t-142, `routing-view.tsx`): a toggle on the
   head rail, at every width, for a synth with a routing (`getSynthRouting`, see
   [`synths.md`](./synths.md#signal-routing)); a synth without one has no toggle. Its back is a diagram of the
-  synth's blocks, coloured by module as the lesson highlights are, laid out by `layoutRouting()`
+  synth's blocks, laid out by `layoutRouting()`
   (`lib/app/synths/lib/routing-layout.ts`): left to right, the audio band (sources, mixer, filter, amplifier,
   output) on a straight line, and pitch, modulation and contours in the band beneath, each a column left of what
   it feeds. A link that skips a column runs along the channel between the bands, so it never passes behind a
   block; a link against the flow (the output fed back, Oscillator 3 into the mod bus) goes round the top or the
   bottom. Hand-rolled rather than a layout library: a routing is a dozen or two blocks in a known shape, and a
-  pure layout is the same every time and testable. What `routingState()` says the patch uses is lit, a dash
-  running along each lit line in the signal's direction; the rest is dimmed and its boxes dashed. Audio lines are
-  thick, CV thin, gate dotted; cables thick, in their own colours, and the key names all four. The key says lit means wired to be used, not
-  heard. It is drawn from `sess` (the panel as shown, glides and undos included) and the mod wheel, so it
+  pure layout is the same every time and testable. **Drawn as a manual's flow diagram** (t-146): on the
+  faceplate in its silkscreen ink, between the rails and at their width (the page wraps it in `railStyle`, so
+  `--rail-face` / `--rail-print` are the panel's colours in Hardware and paper and ink in Outline). Each block is
+  a square box with its schematic symbol and designator (VCO, VCF, EG) in a cell at the left, picked by module or
+  by the block's own `symbol`; the module's colour is kept to the lamp in its corner. The synth's routes are ink
+  lines with arrowheads, audio heavier, CV light, gate dotted; the player's cables are drawn over them cased, in
+  their colours, with a jack at each end, and the key names all four. Two layers of "in use": what
+  `routingState()` says the patch routes is solid and the rest faint, its boxes dashed (structural: a filter closed
+  right down is still solid, which the key says). Over that, what is going through it now
+  (`routingActivity()`, `lib/app/synths/lib/routing-activity.ts`) lights the lamps, tints the boxes and runs in
+  the source's colour along the lines, and fades as the sound does. A block follows its `meter`: the gate, a
+  contour's envelope, or a wave. The LFO and an oscillator slow enough to see (Oscillator 3 at LO) pulse with the
+  wave itself, dark at its trough and full at its peak, eased quickly both ways so the trough is drawn; the meter
+  comes 25 times a second, so from 3 to 6 Hz the pulse blends into a steady glow rather than alias into a false
+  slow one. An oscillator at audio pitch glows with the output's level times its share of the mixer (as the mix
+  hears it, CV into its level included), and at half the output's level when it is switched out of the mixer but
+  feeds the mod bus. A glow is a soft ring whose opacity follows `--a`, not an animated filter. The rest of the audio path follows the output's level (read off the engine's analyser, as the scope
+  does), and the buses the brightest line into them. The view eases each part towards that once a frame
+  (`settle()`: up in ~40 ms, down over ~450 ms) and writes it to `--a` on the element, never to React state; with
+  reduced motion the lines glow without moving. It is drawn from `sess` (the panel as shown, glides and undos included) and the mod wheel, so it
   follows the panel while it shows. The panel stays laid out underneath (`.is-away`, `inert`), so its fit and
   scroll are kept for the flip back. Whatever works on the panel itself turns it face up again as it comes
   on: a find (a new one too), a lesson step, the tour, Explain sections or the Inspector (its card, or its sheet

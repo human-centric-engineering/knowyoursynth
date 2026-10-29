@@ -1267,7 +1267,37 @@ export interface RoutingBlock {
    * edge or cable feeds it. Absent = it makes signal (an oscillator, a contour), and is live on any path out.
    */
   passes?: boolean;
+  /** The schematic symbol drawn in its box, when its `module` does not say (noise is in the mixer module). */
+  symbol?: RoutingSymbol;
+  /**
+   * The engine meter that shows this part working: the gate for the keyboard, an envelope for a contour, the LFO.
+   * Absent = it shows the output's level when it is on the audio path, else what feeds it.
+   */
+  meter?: RoutingMeter;
 }
+
+/** The schematic symbols the routing view draws, one per kind of part. */
+export type RoutingSymbol =
+  | 'osc'
+  | 'noise'
+  | 'input'
+  | 'mixer'
+  | 'filter'
+  | 'env'
+  | 'amp'
+  | 'lfo'
+  | 'mod'
+  | 'pitch'
+  | 'midi'
+  | 'fx'
+  | 'out'
+  | 'util';
+
+/**
+ * The engine meters a block can follow (`MeterEvent`): the gate, the first two envelopes, the LFO, and an oscillator
+ * by its place in the engine's (`osc1` is the first).
+ */
+export type RoutingMeter = 'gate' | 'env1' | 'env2' | 'lfo' | 'osc1' | 'osc2' | 'osc3' | 'osc4';
 
 /** What an edge carries. */
 export type RoutingSignal = 'audio' | 'cv' | 'gate';

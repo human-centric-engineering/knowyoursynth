@@ -19,8 +19,8 @@
 //   of the far end's height, so two edges between the same blocks are drawn apart and fewer cross.
 import type { RoutingSignal, SynthRouting } from '@/lib/app/synths/contract';
 
-export const BLOCK_W = 132;
-export const BLOCK_H = 44;
+export const BLOCK_W = 150;
+export const BLOCK_H = 46;
 const COL_GAP = 48;
 const ROW_GAP = 16;
 /** The space between the audio band and the band beneath it: the channel long links run along. */
@@ -45,6 +45,9 @@ export interface PlacedLink {
   to: string;
   /** An SVG path from the source's right side to the target's left. */
   d: string;
+  /** Where it leaves the source and arrives at the target: a cable's jacks are drawn there. */
+  start: [number, number];
+  end: [number, number];
   /** Drawn back against the flow, round the top or the bottom. */
   back: boolean;
 }
@@ -252,11 +255,17 @@ export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): 
   }
 
   const r = COL_GAP / 2;
-  const pathOf = (l: (typeof links)[number], i: number): string => {
-    const sx = blocks[l.from].x + BLOCK_W;
-    const sy = port.get(`${i}:out`) ?? centre(l.from);
-    const tx = blocks[l.to].x;
-    const ty = port.get(`${i}:in`) ?? centre(l.to);
+  const endsOf = (l: (typeof links)[number], i: number) => ({
+    sx: blocks[l.from].x + BLOCK_W,
+    sy: port.get(`${i}:out`) ?? centre(l.from),
+    tx: blocks[l.to].x,
+    ty: port.get(`${i}:in`) ?? centre(l.to),
+  });
+  const pathOf = (
+    l: (typeof links)[number],
+    i: number,
+    { sx, sy, tx, ty }: ReturnType<typeof endsOf>
+  ): string => {
     if (l.back) {
       // Out to the right, round the top or the bottom, back along and into the target's left.
       const y = backLane.get(i) ?? backMid(l.back);
@@ -270,13 +279,18 @@ export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): 
     return `M${sx},${sy} C${sx + dx},${sy} ${tx - dx},${ty} ${tx},${ty}`;
   };
 
-  const placed = links.map((l, i): PlacedLink => ({
-    id: l.id,
-    from: l.from,
-    to: l.to,
-    d: pathOf(l, i),
-    back: !!l.back,
-  }));
+  const placed = links.map((l, i): PlacedLink => {
+    const ends = endsOf(l, i);
+    return {
+      id: l.id,
+      from: l.from,
+      to: l.to,
+      d: pathOf(l, i, ends),
+      start: [ends.sx, ends.sy],
+      end: [ends.tx, ends.ty],
+      back: !!l.back,
+    };
+  });
   return {
     width: xOf(ncols) - COL_GAP + MARGIN,
     height,

@@ -27,6 +27,8 @@ export const routing: SynthRouting = {
       id: 'midi',
       name: 'MIDI / USB',
       module: 'util',
+      symbol: 'midi',
+      meter: 'gate',
       description:
         'Turns incoming MIDI into the keyboard’s pitch, gate, pitch bend and mod wheel voltages.',
     },
@@ -49,6 +51,7 @@ export const routing: SynthRouting = {
       id: 'lfo',
       name: 'LFO',
       module: 'lfo',
+      meter: 'lfo',
       description:
         'A dedicated low-frequency oscillator. Both shapes are always on their jacks; the switch picks which one feeds the mod bus.',
       specs: [
@@ -60,6 +63,7 @@ export const routing: SynthRouting = {
       id: 'osc1',
       name: 'Oscillator 1',
       module: 'osc',
+      meter: 'osc1',
       description:
         'The reference oscillator: no fine-tune knob, its pitch set by RANGE and the master TUNE.',
       specs: [
@@ -74,6 +78,7 @@ export const routing: SynthRouting = {
       id: 'osc2',
       name: 'Oscillator 2',
       module: 'osc',
+      meter: 'osc2',
       description: 'An oscillator with a detune knob of about seven semitones either way.',
       specs: [
         ...OSC_SPECS,
@@ -87,6 +92,7 @@ export const routing: SynthRouting = {
       id: 'osc3',
       name: 'Oscillator 3',
       module: 'osc',
+      meter: 'osc3',
       description:
         'An oscillator that doubles as a modulation source. Off keyboard control it runs free, usually at LO as a second LFO.',
       specs: [
@@ -101,6 +107,7 @@ export const routing: SynthRouting = {
       id: 'noise',
       name: 'Noise',
       module: 'mixer',
+      symbol: 'noise',
       description: 'White or pink noise: a sound source in the mixer and source B of the mod bus.',
       specs: [{ label: 'Colours', value: 'White, pink' }],
     },
@@ -108,6 +115,7 @@ export const routing: SynthRouting = {
       id: 'ext_in',
       name: 'External input',
       module: 'mixer',
+      symbol: 'input',
       description:
         'Audio from outside into the mixer. With nothing plugged into EXT, the main output is fed back here, the loop used for overdrive.',
       specs: [{ label: 'Input impedance', value: '1 MΩ' }],
@@ -134,6 +142,7 @@ export const routing: SynthRouting = {
       id: 'filter_contour',
       name: 'Filter contour',
       module: 'env',
+      meter: 'env1',
       description:
         'An attack, decay, sustain envelope for the cutoff. Release is either immediate or the decay time, set by FILTER DECAY.',
       specs: [{ label: 'Output', value: '0 to 4 V' }],
@@ -142,6 +151,7 @@ export const routing: SynthRouting = {
       id: 'loudness_contour',
       name: 'Loudness contour',
       module: 'env',
+      meter: 'env2',
       description:
         'An attack, decay, sustain envelope for the amplifier. Release is either immediate or the decay time, set by LOUD DECAY.',
       specs: [

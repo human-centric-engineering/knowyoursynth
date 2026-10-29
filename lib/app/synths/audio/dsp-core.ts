@@ -66,6 +66,12 @@ export interface MeterEvent {
   env2: number;
   /** Bit k: oscillator k is sounding a note. */
   oscs?: number;
+  /** The LFO's rate now, in Hz. */
+  lfoHz?: number;
+  /** Each oscillator's output now (−1..1), its pitch in Hz and its mixer level (0 while switched out). */
+  oscV?: number[];
+  oscHz?: number[];
+  oscLv?: number[];
   /** Bit k: voice k is sounding (poly and dual). */
   voices?: number;
   /** The Easel's sequencer stage, or the 960's (0-based). */
@@ -532,6 +538,7 @@ function createVoice(
     br: 0.2,
   });
   const env = [mkEnv(), mkEnv(), mkEnv()];
+  let lfoHzNow = 0;
   let lfoPhase = 0,
     lfoTrigPrev = 0;
   // Opt-in extras (added for the DeepMind): LFO delay + fade-in, sample-and-hold shapes, a second LFO, a per-voice pitch
@@ -1670,6 +1677,7 @@ function createVoice(
 
       // ── LFO ──
       const lfoHz = Math.min(p.lfo.rate * Math.exp(ev(DI.lfoRate) * Math.LN2), sr * 0.4);
+      lfoHzNow = lfoHz;
       const trig = ev(DI.lfoTrig);
       if (!lCom && ((trig > 0.5 && lfoTrigPrev <= 0.5) || (retrigFlag && p.lfo.keySync)))
         lfoPhase = 0;
@@ -2298,6 +2306,8 @@ function createVoice(
           env1: S[SI.env1],
           env2: S[SI.env2],
           oscs: oscMask(),
+          lfoHz: lfoHzNow,
+          ...oscMeters(),
           ...(P.easel ? { gate: gate > 0, seq: ezSeqSt, pulser: ezPul } : null),
           // the 960's lamps: its stage (0-based) while it has one
           ...(P.moog && moog.seqState() ? { seq: moog.seqState()!.stage } : null),
@@ -2307,6 +2317,27 @@ function createVoice(
     }
   }
 
+  /**
+   * Each oscillator's output, pitch and mixer level, for the routing view's lamps. Written into the same three arrays
+   * each time rather than new ones, so the audio thread makes no garbage 25 times a second per voice: the worklet
+   * posts (and so copies) a meter as it is made, and a later meter only ever replaces it.
+   */
+  const oscVOut: number[] = [];
+  const oscHzOut: number[] = [];
+  const oscLvOut: number[] = [];
+  function oscMeters(): Pick<MeterEvent, 'oscV' | 'oscHz' | 'oscLv'> {
+    oscVOut.length = oscHzOut.length = oscLvOut.length = nOsc;
+    for (let k = 0; k < nOsc; k++) {
+      const o = osc[k];
+      oscVOut[k] = S[OSC_SI[k]];
+      oscHzOut[k] = o.inc * sr;
+      // The level the mixer hears, as the mix does: the knob, a cable into the first two's level inputs, and with
+      // `oscAssign` whether the oscillator has been given a note.
+      const knob = k < 2 ? Math.max(0, o.level + ev(DI.lvl1 + k)) : o.level;
+      oscLvOut[k] = o.on ? knob * (P?.oscAssign && o.kbd ? slotG[k] : 1) : 0;
+    }
+    return { oscV: oscVOut, oscHz: oscHzOut, oscLv: oscLvOut };
+  }
   /** Which oscillators are sounding a note: all of them while a key is down, or with `oscAssign` the ones given a note. */
   function oscMask() {
     if (!P) return 0;
@@ -2849,6 +2880,10 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         lfo: m.lfo || 0,
         env1: m.env1 || 0,
         env2: m.env2 || 0,
+        lfoHz: m.lfoHz,
+        oscV: m.oscV,
+        oscHz: m.oscHz,
+        oscLv: m.oscLv,
         voices: mask,
       });
     }
@@ -3223,6 +3258,10 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         lfo: m.lfo || 0,
         env1: m.env1 || 0,
         env2: m.env2 || 0,
+        lfoHz: m.lfoHz,
+        oscV: m.oscV,
+        oscHz: m.oscHz,
+        oscLv: m.oscLv,
         voices: mask,
         oscs: m.oscs || 0,
       });
