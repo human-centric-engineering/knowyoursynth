@@ -2862,10 +2862,17 @@ svg .kys-hit:focus-visible {
   stroke: var(--rt-ink);
   stroke-width: 1.3;
 }
-.kys-route-block.is-live .kys-route-box {
-  filter: drop-shadow(
-    0 0 calc(var(--a) * 9px) color-mix(in srgb, currentColor calc(var(--a) * 90%), transparent)
-  );
+/* The glow round a live block: a soft ring whose opacity follows `--a`. Opacity, not an animated filter, so a frame's
+   change repaints a stroke rather than re-rasterising a blur. */
+.kys-route-halo {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 5;
+  stroke-opacity: 0.35;
+  opacity: 0;
+}
+.kys-route-block.is-live .kys-route-halo {
+  opacity: var(--a);
 }
 .kys-route-rule {
   stroke: var(--rt-ink);
@@ -2901,9 +2908,6 @@ svg .kys-hit:focus-visible {
   fill: color-mix(in srgb, currentColor calc(25% + var(--a) * 75%), var(--rt-face));
   stroke: color-mix(in srgb, var(--rt-ink) 45%, transparent);
   stroke-width: 0.6;
-}
-.kys-route-block.is-live .kys-route-lamp {
-  filter: drop-shadow(0 0 calc(var(--a) * 4px) currentColor);
 }
 .kys-route-block:not(.is-live) {
   opacity: 0.32;

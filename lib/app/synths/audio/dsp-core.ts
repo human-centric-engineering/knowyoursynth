@@ -2319,12 +2319,17 @@ function createVoice(
 
   /** Each oscillator's output, pitch and mixer level, for the routing view's lamps. */
   function oscMeters(): Pick<MeterEvent, 'oscV' | 'oscHz' | 'oscLv'> {
-    const live = osc.slice(0, nOsc);
-    return {
-      oscV: live.map((_, k) => S[OSC_SI[k]]),
-      oscHz: live.map((o) => o.inc * sr),
-      oscLv: live.map((o) => (o.on ? Math.max(0, o.level) : 0)),
-    };
+    const oscV: number[] = [];
+    const oscHz: number[] = [];
+    const oscLv: number[] = [];
+    for (let k = 0; k < nOsc; k++) {
+      const o = osc[k];
+      oscV.push(S[OSC_SI[k]]);
+      oscHz.push(o.inc * sr);
+      // The level the mixer hears, as the mix does: the knob, plus a cable into the first two's level inputs.
+      oscLv.push(o.on ? Math.max(0, o.level + (k < 2 ? ev(DI.lvl1 + k) : 0)) : 0);
+    }
+    return { oscV, oscHz, oscLv };
   }
   /** Which oscillators are sounding a note: all of them while a key is down, or with `oscAssign` the ones given a note. */
   function oscMask() {

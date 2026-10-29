@@ -19,7 +19,7 @@
  * is written straight to a CSS variable (`--a`) once a frame, never through React state.
  */
 
-import { useEffect, useId, useMemo, useRef } from 'react';
+import { useEffect, useId, useLayoutEffect, useMemo, useRef } from 'react';
 import { z } from 'zod';
 import type { CSSProperties, ReactNode } from 'react';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
@@ -45,6 +45,13 @@ import type {
 /** What the view reads the output's level from: the engine's analyser, as the scope does. */
 export interface RoutingSource {
   analyser: Pick<AnalyserNode, 'fftSize' | 'getFloatTimeDomainData'> | null;
+}
+
+/** The diagram's parts by id (a cable by its index in the patch), found once per render for the frame loop. */
+interface Parts {
+  blocks: Map<string | null, SVGGElement>;
+  edges: Map<string | null, SVGGElement>;
+  cables: Map<string | null, SVGGElement>;
 }
 
 /** The symbol cell at a block's left, and the symbol's size in it. */
@@ -228,21 +235,33 @@ export function RoutingView({
     cables.find((c) => c.from === from && c.to === to)?.color ?? moduleOf('patch').color;
 
   // The glow, once a frame: the meters and the output's level in, each part's `--a` eased towards its target. The
-  // latest state and source are read through refs, so the loop runs for as long as the view is up rather than
-  // restarting (and dropping every glow to dark) with every knob turned.
+  // latest state and source, and the parts' elements, are read through refs, so the loop runs for as long as the
+  // view is up rather than restarting (and dropping every glow to dark) with every knob turned. They are set as each
+  // render commits, before the next frame can pair the old state with the new elements.
   const stateRef = useRef(state);
   const sourceRef = useRef(source);
-  useEffect(() => {
+  const partsRef = useRef<Parts | null>(null);
+  useLayoutEffect(() => {
     stateRef.current = state;
     sourceRef.current = source;
-  }, [state, source]);
-  useEffect(() => {
     const svg = svgRef.current;
     if (!svg) return;
+    const byAttr = (attr: string) =>
+      new Map(
+        [...svg.querySelectorAll<SVGGElement>(`[${attr}]`)].map((el) => [el.getAttribute(attr), el])
+      );
+    partsRef.current = {
+      blocks: byAttr('data-block'),
+      edges: byAttr('data-edge'),
+      cables: byAttr('data-cable-index'),
+    };
+  });
+  useEffect(() => {
     // Each part's eased level, and what was last written to it: a write is skipped when it would not show, but the
     // easing carries on from the exact level, or a slow fade on a fast screen would stall in steps too small to write.
-    const shown = new Map<Element, number>();
-    const written = new Map<Element, number>();
+    // Kept by element, weakly, so a cable's glow stays with its cable and an unplugged one is let go.
+    const shown = new WeakMap<Element, number>();
+    const written = new WeakMap<Element, number>();
     let samples: Float32Array<ArrayBuffer> | null = null;
     let last = performance.now();
     let frame = requestAnimationFrame(function tick(now) {
@@ -272,8 +291,9 @@ export function RoutingView({
       const a = routingActivity(routing, stateRef.current, meters);
       const dt = now - last;
       last = now;
-      const ease = (el: Element | null, target: number, pulsing: boolean) => {
-        if (!(el instanceof SVGElement)) return;
+      const parts = partsRef.current;
+      const ease = (el: SVGGElement | undefined, target: number, pulsing: boolean) => {
+        if (!el) return;
         const v = settle(shown.get(el) ?? 0, target, dt, pulsing);
         shown.set(el, v);
         const was = written.get(el) ?? -1;
@@ -282,16 +302,10 @@ export function RoutingView({
         written.set(el, v);
         el.style.setProperty('--a', v.toFixed(3));
       };
-      for (const [id, v] of Object.entries(a.blocks))
-        ease(svg.querySelector(`[data-block="${CSS.escape(id)}"]`), v, a.pulsing[id]);
-      for (const e of routing.edges)
-        ease(
-          svg.querySelector(`[data-edge="${CSS.escape(e.id)}"]`),
-          a.edges[e.id],
-          a.pulsing[e.from]
-        );
+      for (const [id, v] of Object.entries(a.blocks)) ease(parts?.blocks.get(id), v, a.pulsing[id]);
+      for (const e of routing.edges) ease(parts?.edges.get(e.id), a.edges[e.id], a.pulsing[e.from]);
       stateRef.current.cables.forEach((c, i) =>
-        ease(svg.querySelector(`[data-cable-index="${i}"]`), a.cables[i], a.pulsing[c.fromBlock])
+        ease(parts?.cables.get(String(i)), a.cables[i], a.pulsing[c.fromBlock])
       );
       frame = requestAnimationFrame(tick);
     });
@@ -372,6 +386,13 @@ export function RoutingView({
                 transform={`translate(${at.x} ${at.y})`}
               >
                 <title>{b.description}</title>
+                <rect
+                  x={-3.5}
+                  y={-3.5}
+                  width={BLOCK_W + 7}
+                  height={BLOCK_H + 7}
+                  className="kys-route-halo"
+                />
                 <rect width={BLOCK_W} height={BLOCK_H} className="kys-route-box" />
                 <path d={`M${CELL},0 V${BLOCK_H}`} className="kys-route-rule" />
                 <g
@@ -401,10 +422,16 @@ export function RoutingView({
           {state.cables.map((c, i) => {
             const p = cablePath.get(`cable:${i}`);
             if (!p) return null;
+            // Keyed by its jacks, not its place, so its element (and the glow kept by it) stays with it when an
+            // earlier cable comes out. A second cable between the same jacks is told apart by its count.
+            const pair = `${c.from}>${c.to}`;
+            const twin = state.cables
+              .slice(0, i)
+              .filter((d) => `${d.from}>${d.to}` === pair).length;
             return (
               <g
-                key={p.id}
-                data-cable={`${c.from}>${c.to}`}
+                key={`${pair}#${twin}`}
+                data-cable={pair}
                 data-cable-index={i}
                 data-live={c.live ? 'true' : 'false'}
                 className={`kys-route-edge is-cable ${c.live ? 'is-live' : ''}`}

@@ -142,9 +142,14 @@ describe('routingActivity on Model D', () => {
     expect(at(1, 0.5).blocks.osc3).toBe(1);
     expect(at(-1, 0.5).blocks.osc3).toBeCloseTo(0.12, 5);
     expect(at(1, 0.5).pulsing.osc3).toBe(true);
-    // At audio pitch and switched out of the mixer: running, not heard.
+    // At audio pitch and switched out of the mixer: half the sound it modulates, and dark with nothing sounding.
     expect(at(-1, 440).blocks.osc3).toBe(0.5);
     expect(at(-1, 440).pulsing.osc3).toBe(false);
+    const quiet = routingActivity(routing, asSource, {
+      ...SILENT,
+      osc: oscs({ v: 1, hz: 440, lv: 0 }),
+    });
+    expect(quiet.blocks.osc3).toBe(0);
   });
 
   it('falls back to the output’s level for an oscillator the engine did not report', () => {

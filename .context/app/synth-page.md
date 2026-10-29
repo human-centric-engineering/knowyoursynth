@@ -257,8 +257,9 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   contour's envelope, or a wave. The LFO and an oscillator slow enough to see (Oscillator 3 at LO) pulse with the
   wave itself, dark at its trough and full at its peak, eased quickly both ways so the trough is drawn; the meter
   comes 25 times a second, so from 3 to 6 Hz the pulse blends into a steady glow rather than alias into a false
-  slow one. An oscillator at audio pitch glows with the output's level times its share of the mixer, and at half
-  when it runs switched out of the mixer (feeding the mod bus). The rest of the audio path follows the output's level (read off the engine's analyser, as the scope
+  slow one. An oscillator at audio pitch glows with the output's level times its share of the mixer (as the mix
+  hears it, CV into its level included), and at half the output's level when it is switched out of the mixer but
+  feeds the mod bus. A glow is a soft ring whose opacity follows `--a`, not an animated filter. The rest of the audio path follows the output's level (read off the engine's analyser, as the scope
   does), and the buses the brightest line into them. The view eases each part towards that once a frame
   (`settle()`: up in ~40 ms, down over ~450 ms) and writes it to `--a` on the element, never to React state; with
   reduced motion the lines glow without moving. It is drawn from `sess` (the panel as shown, glides and undos included) and the mod wheel, so it

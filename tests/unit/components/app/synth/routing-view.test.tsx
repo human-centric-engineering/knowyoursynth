@@ -191,6 +191,17 @@ describe('RoutingView', () => {
     expect(cable?.querySelectorAll('.kys-route-jack')).toHaveLength(2);
   });
 
+  it('keeps each cable’s element (and so its glow) with it when an earlier cable comes out', () => {
+    const a = { from: 'j.lfoTri', to: 'j.cutCv', color: '#38c6ff' };
+    const b = { from: 'j.lfoSq', to: 'j.loudCv', color: '#ffb020' };
+    const v = view({}, [a, b]);
+    const before = document.querySelector(`[data-cable="${b.from}>${b.to}"]`);
+    expect(before).not.toBeNull();
+    v.rerender({}, [b]);
+    expect(document.querySelector(`[data-cable="${b.from}>${b.to}"]`)).toBe(before);
+    expect(document.querySelector(`[data-cable="${a.from}>${a.to}"]`)).toBeNull();
+  });
+
   describe('lit by the sound', () => {
     afterEach(() => meterStore.set({ gate: false, lfo: 0, overload: 0, power: false }));
 

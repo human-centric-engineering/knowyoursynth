@@ -261,8 +261,11 @@ export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): 
     tx: blocks[l.to].x,
     ty: port.get(`${i}:in`) ?? centre(l.to),
   });
-  const pathOf = (l: (typeof links)[number], i: number): string => {
-    const { sx, sy, tx, ty } = endsOf(l, i);
+  const pathOf = (
+    l: (typeof links)[number],
+    i: number,
+    { sx, sy, tx, ty }: ReturnType<typeof endsOf>
+  ): string => {
     if (l.back) {
       // Out to the right, round the top or the bottom, back along and into the target's left.
       const y = backLane.get(i) ?? backMid(l.back);
@@ -277,14 +280,14 @@ export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): 
   };
 
   const placed = links.map((l, i): PlacedLink => {
-    const { sx, sy, tx, ty } = endsOf(l, i);
+    const ends = endsOf(l, i);
     return {
       id: l.id,
       from: l.from,
       to: l.to,
-      d: pathOf(l, i),
-      start: [sx, sy],
-      end: [tx, ty],
+      d: pathOf(l, i, ends),
+      start: [ends.sx, ends.sy],
+      end: [ends.tx, ends.ty],
       back: !!l.back,
     };
   });

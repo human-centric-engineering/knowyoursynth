@@ -136,6 +136,11 @@ describe('mono voice', () => {
     expect(m.oscLv?.map((l) => Number(l.toFixed(2)))).toEqual([0.8, 0.5, 0.3]);
   });
 
+  it('meters an oscillator’s level as the mix hears it, a cable into its level input included', () => {
+    const { events } = render(monoParams({ cables: [cable('one', 'lvl1', 0.5)] }), { len: 9600 });
+    expect(Number(meters(events)[2].oscLv?.[0].toFixed(2))).toBe(1.3);
+  });
+
   it('plays a phrase, ends it with phraseEnd when it does not loop, and panics to allOff', () => {
     const phrase: Phrase = {
       bpm: 240,

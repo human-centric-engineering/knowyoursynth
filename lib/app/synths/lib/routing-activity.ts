@@ -7,7 +7,8 @@
 //   trough, full at its peak. The meter arrives 25 times a second, so a faster wave would alias into a false slow
 //   pulse; from `SLOW_HZ` to `FAST_HZ` the pulse blends into a steady glow, as a fast lamp blurs to the eye.
 // - An oscillator at audio pitch glows with the output's level times its own share of the mixer, so one turned
-//   down glows less; one running but switched out of the mixer (feeding the mod bus) glows at half.
+//   down glows less; one switched out of the mixer but feeding the mod bus glows at half the output's level, so
+//   it too goes dark when the sound does.
 // - Any other block on the audio path follows the output's level, so a release tail fades the whole line together.
 // - Any other block (the pitch and modulation buses) glows with the brightest live line into it.
 // - A live line glows with the block it leaves.
@@ -81,7 +82,7 @@ function reading(meter: RoutingMeter, m: ActivityMeters): [number, boolean] | nu
   const o = m.osc[OSC_METERS[meter] ?? -1];
   if (!o) return null;
   const loudest = Math.max(0, ...m.osc.map((x) => x.lv));
-  const steady = o.lv > 0 && loudest > 0 ? clamp(m.out) * (o.lv / loudest) : o.hz > 0 ? 0.5 : 0;
+  const steady = clamp(m.out) * (o.lv > 0 && loudest > 0 ? o.lv / loudest : 0.5);
   return [wave(o.v, o.hz, steady), blur(o.hz) < 1];
 }
 
