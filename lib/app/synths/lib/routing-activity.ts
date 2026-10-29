@@ -73,15 +73,21 @@ function wave(v: number, hz: number, steady: number): number {
   return (0.12 + 0.88 * clamp((v + 1) / 2)) * (1 - w) + steady * w;
 }
 
-/** A metered block's glow, and whether it is a moving wave. Null for an oscillator the engine did not report. */
-function reading(meter: RoutingMeter, m: ActivityMeters): [number, boolean] | null {
+/**
+ * A metered block's glow, and whether it is a moving wave; `loudest` is the highest oscillator mixer level. Null for
+ * an oscillator the engine did not report.
+ */
+function reading(
+  meter: RoutingMeter,
+  m: ActivityMeters,
+  loudest: number
+): [number, boolean] | null {
   if (meter === 'gate') return [m.gate ? 1 : 0, false];
   if (meter === 'env1' || meter === 'env2') return [clamp(m[meter]), false];
   // A free-running LFO is always working: steady, it glows at three quarters.
   if (meter === 'lfo') return [wave(m.lfo, m.lfoHz, 0.75), blur(m.lfoHz) < 1];
   const o = m.osc[OSC_METERS[meter] ?? -1];
   if (!o) return null;
-  const loudest = Math.max(0, ...m.osc.map((x) => x.lv));
   const steady = clamp(m.out) * (o.lv > 0 && loudest > 0 ? o.lv / loudest : 0.5);
   return [wave(o.v, o.hz, steady), blur(o.hz) < 1];
 }
@@ -97,11 +103,12 @@ export function routingActivity(
   );
   audio.add(routing.out);
 
+  const loudest = Math.max(0, ...meters.osc.map((x) => x.lv));
   const blocks: Record<string, number> = {};
   const pulsing: Record<string, boolean> = {};
   const fedOnly: string[] = [];
   for (const b of routing.blocks) {
-    const metered = state.blocks[b.id] && b.meter ? reading(b.meter, meters) : null;
+    const metered = state.blocks[b.id] && b.meter ? reading(b.meter, meters, loudest) : null;
     pulsing[b.id] = !!metered?.[1];
     if (!state.blocks[b.id]) blocks[b.id] = 0;
     else if (metered) blocks[b.id] = metered[0];

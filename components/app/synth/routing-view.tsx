@@ -241,9 +241,15 @@ export function RoutingView({
   const stateRef = useRef(state);
   const sourceRef = useRef(source);
   const partsRef = useRef<Parts | null>(null);
+  const routingRef = useRef(routing);
   useLayoutEffect(() => {
     stateRef.current = state;
     sourceRef.current = source;
+    routingRef.current = routing;
+  });
+  // The elements change only when the drawing's parts do: another routing, or a cable in or out.
+  const cableKeys = JSON.stringify(state.cables.map((c) => [c.from, c.to]));
+  useLayoutEffect(() => {
     const svg = svgRef.current;
     if (!svg) return;
     const byAttr = (attr: string) =>
@@ -255,7 +261,7 @@ export function RoutingView({
       edges: byAttr('data-edge'),
       cables: byAttr('data-cable-index'),
     };
-  });
+  }, [routing, layout, cableKeys]);
   useEffect(() => {
     // Each part's eased level, and what was last written to it: a write is skipped when it would not show, but the
     // easing carries on from the exact level, or a slow fade on a fast screen would stall in steps too small to write.
@@ -268,7 +274,7 @@ export function RoutingView({
       const m = meterStore.get();
       const an = sourceRef.current?.analyser;
       let out = 0;
-      if (an) {
+      if (an && m.power) {
         if (samples?.length !== an.fftSize) samples = new Float32Array(an.fftSize);
         an.getFloatTimeDomainData(samples);
         out = levelOfRms(rmsOf(samples));
@@ -288,6 +294,7 @@ export function RoutingView({
             out,
           }
         : SILENT;
+      const routing = routingRef.current;
       const a = routingActivity(routing, stateRef.current, meters);
       const dt = now - last;
       last = now;
@@ -310,7 +317,7 @@ export function RoutingView({
       frame = requestAnimationFrame(tick);
     });
     return () => cancelAnimationFrame(frame);
-  }, [routing]);
+  }, []);
 
   const lit = routing.blocks.filter((b) => state.blocks[b.id]).map((b) => b.name);
   const dark = routing.blocks.filter((b) => !state.blocks[b.id]).map((b) => b.name);
@@ -479,6 +486,7 @@ export function RoutingView({
             height="10"
             aria-hidden="true"
             className="kys-route-edge is-cable is-live"
+            style={{ color: moduleOf('patch').color }}
           >
             <path d="M5,5 H25" className="kys-route-casing" />
             <path d="M5,5 H25" className="kys-route-line" />

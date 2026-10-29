@@ -3004,9 +3004,6 @@ svg .kys-hit:focus-visible {
   align-items: center;
   gap: 6px;
 }
-.kys-routing-key .kys-route-edge.is-cable {
-  color: #ffb020;
-}
 .kys-routing-key .kys-routing-note {
   flex-basis: 100%;
 }

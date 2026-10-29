@@ -2317,19 +2317,26 @@ function createVoice(
     }
   }
 
-  /** Each oscillator's output, pitch and mixer level, for the routing view's lamps. */
+  /**
+   * Each oscillator's output, pitch and mixer level, for the routing view's lamps. Written into the same three arrays
+   * each time rather than new ones, so the audio thread makes no garbage 25 times a second per voice: the worklet
+   * posts (and so copies) a meter as it is made, and a later meter only ever replaces it.
+   */
+  const oscVOut: number[] = [];
+  const oscHzOut: number[] = [];
+  const oscLvOut: number[] = [];
   function oscMeters(): Pick<MeterEvent, 'oscV' | 'oscHz' | 'oscLv'> {
-    const oscV: number[] = [];
-    const oscHz: number[] = [];
-    const oscLv: number[] = [];
+    oscVOut.length = oscHzOut.length = oscLvOut.length = nOsc;
     for (let k = 0; k < nOsc; k++) {
       const o = osc[k];
-      oscV.push(S[OSC_SI[k]]);
-      oscHz.push(o.inc * sr);
-      // The level the mixer hears, as the mix does: the knob, plus a cable into the first two's level inputs.
-      oscLv.push(o.on ? Math.max(0, o.level + (k < 2 ? ev(DI.lvl1 + k) : 0)) : 0);
+      oscVOut[k] = S[OSC_SI[k]];
+      oscHzOut[k] = o.inc * sr;
+      // The level the mixer hears, as the mix does: the knob, a cable into the first two's level inputs, and with
+      // `oscAssign` whether the oscillator has been given a note.
+      const knob = k < 2 ? Math.max(0, o.level + ev(DI.lvl1 + k)) : o.level;
+      oscLvOut[k] = o.on ? knob * (P?.oscAssign && o.kbd ? slotG[k] : 1) : 0;
     }
-    return { oscV, oscHz, oscLv };
+    return { oscV: oscVOut, oscHz: oscHzOut, oscLv: oscLvOut };
   }
   /** Which oscillators are sounding a note: all of them while a key is down, or with `oscAssign` the ones given a note. */
   function oscMask() {
