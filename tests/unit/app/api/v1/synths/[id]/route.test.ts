@@ -68,7 +68,7 @@ beforeEach(() => {
 });
 
 describe('GET /api/v1/synths/:id', () => {
-  it('serves Model D: its entry, all 99 sounds as the panel plays them, lineage and notes', async () => {
+  it('serves Model D: its entry, all 200 sounds as the panel plays them, lineage and notes', async () => {
     const response = await call('model-d');
     const body = await parseJsonResponse(response);
 
@@ -77,7 +77,7 @@ describe('GET /api/v1/synths/:id', () => {
     const { data: detail } = DetailBody.parse(body);
     expect(Object.keys(detail)).toEqual(['synth', 'sounds', 'lineage', 'notes']);
     expect(detail).toMatchObject({
-      synth: { id: 'model-d', name: 'Model D', definitionVersion: 1, soundCount: 99 },
+      synth: { id: 'model-d', name: 'Model D', definitionVersion: 1, soundCount: 200 },
       lineage: { title: 'From the Moog modular to the Model D' },
       notes: {
         limits: {
@@ -87,7 +87,7 @@ describe('GET /api/v1/synths/:id', () => {
       },
     });
     // A sound comes back exactly as the seed data holds it, plus the version it was made on.
-    expect(detail.sounds).toHaveLength(99);
+    expect(detail.sounds).toHaveLength(200);
     expect(detail.sounds[0]).toEqual({ ...firstModelDSound(), version: 1 });
     expect(response.headers.get('ETag')).toMatch(/^W\/".+"$/);
   });

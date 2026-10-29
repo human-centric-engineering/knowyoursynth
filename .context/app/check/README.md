@@ -72,3 +72,18 @@ From then on the native synth is held to its baseline exactly as a ported one is
 
 **Re-record only on purpose.** A baseline rewritten to make a port pass loses the only thing
 that would have shown that the port changed a sound.
+
+## Adding sounds to a synth
+
+A synth whose library gains sounds, ported or native, keeps its baseline and adds to it:
+
+```bash
+npm run check:synths -- model-d --add-sounds
+```
+
+This is `--compare` for one synth, except that a sound missing from the baseline is recorded
+instead of failing. Every sound already recorded must still match, or nothing is written, and no
+recorded entry is ever rewritten, so the diff is additions only. A ported synth's added entries
+are the app's own rendering: the prototype never had those sounds. That also means
+`node check.mjs <synth> --compare` in `prototype/` reports them as "in the baseline but no
+longer in the library". The prototype is frozen and the app's check is the one that counts.
