@@ -207,8 +207,9 @@ How the parts are wired behind the panel, for the routing view: one **`SynthRout
 `lib/app/synths/routing/<id>.ts`, registered in `routing/index.ts` (`SYNTH_ROUTINGS`). It sits beside the
 definition, not on it. A synth with no routing has no routing view.
 
-- **Blocks** are the parts (`osc1`, `mixer`, `filter`), each with a `module` for its colour, a `description`
-  and the `specs` its hover card lists; `passes: true` marks one that makes no signal of its own (a mixer, the
+- **Blocks** are the parts (`osc1`, `mixer`, `filter`), each with a `module` for its colour, a `description`,
+  the `specs` its card lists, and the `controls` that set it (the definition's ids, in the card's order; the
+  card takes its jacks from `jacks`). Every control but a `ui` one is on some block; one may be on two. `passes: true` marks one that makes no signal of its own (a mixer, the
   mod bus). `symbol` names its schematic symbol where the module does not say (`noise`, `input`, `midi`), and
   `meter` the engine meter that shows it working (`gate`, `env1`, `env2`, `lfo`, `osc1`–`osc4`), for the view's
   glow; check which envelope the definition's `toEngine()` gives each contour (Model D: `env1` filter, `env2`
@@ -246,7 +247,8 @@ definition, not on it. A synth with no routing has no routing view.
 - **`tests/unit/lib/app/synths/routing.test.ts`** holds every registered routing to its definition
   (`routingProblems`: every control, value and jack exists, a normal is broken only by a jack that is not
   `add` and by one edge at most, every jack has a block, every block has a way to the output through edges or
-  some cable, every `passes` block has an edge or input jack into it) and to its spec (every module and
+  some cable, every `passes` block has an edge or input jack into it, every heard control sets some block and no
+  block names a `ui` one) and to its spec (every module and
   connection is drawn, or listed in `omitted` with the reason).
 
 Model D's is the worked example.

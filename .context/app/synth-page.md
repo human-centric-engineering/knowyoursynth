@@ -271,6 +271,15 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   `.kys-panel-flip`, nested in the instrument's): only the snapshots turn, so nothing that holds the panel takes
   a transform; with reduced motion, or no view transitions, it swaps. Under `lg` the diagram keeps a readable
   size (`min-width: 900px`) and scrolls sideways in its own scroller.
+  Each block is a button for its card (`routing-card.tsx`, t-143): what it is (its designator and name), whether
+  the patch uses it now, its description and specs, and the controls and jacks that set it. Hover or keyboard
+  focus shows it while the pointer or focus stays (crossing into the card keeps it); a click, a tap, Enter or
+  Space keeps it open and moves focus into it, and a kept card stays while the pointer passes other blocks
+  (keyboard focus moving to another block takes it there). A second press of its block, or Escape, puts it away
+  and returns focus to the block; a press elsewhere closes it. Choosing a control or jack finds it on the panel
+  (`findStore`) and turns the panel face up, through the page's flip rather than the find (the page marks the find
+  seen, so its check does not turn the view off first), so a control already found turns it over too; focus
+  goes to the Signal routing switch. A Radix popover, not portalled, so it comes into full screen with the panel.
 - **The player's buttons carry their own tooltip** (`PlayerTip`, `player-tip.tsx`): the button's
   name and a line on what it does, on hover or focus, in place of the browser's slow `title`. It
   is a Radix popup that is not portalled, so it works full screen.

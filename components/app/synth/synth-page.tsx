@@ -124,6 +124,7 @@ import {
 import { PlayerTip, PlayerTips } from '@/components/app/synth/player-tip';
 import { LayerToggle, PlayerSettings } from '@/components/app/synth/player-tools';
 import { RoutingView } from '@/components/app/synth/routing-view';
+import type { RoutingShowTarget } from '@/components/app/synth/routing-card';
 import { getSynthRouting } from '@/lib/app/synths/routing';
 import { TutorDrawer } from '@/components/app/synth/drawers';
 import { LessonCard, type CardId } from '@/components/app/synth/lesson-card';
@@ -185,6 +186,7 @@ import {
   pendingStore,
   useStore,
 } from '@/components/app/synth/stores';
+import type { FindTarget } from '@/components/app/synth/stores';
 import { SynthPicker } from '@/components/app/synth/synth-picker';
 import { Tour } from '@/components/app/synth/tour';
 import type { TutorDesign } from '@/components/app/tutor/apply';
@@ -304,6 +306,10 @@ const UNNAMED_COPY = 'Untitled patch';
 const TUTOR_PATTERN_NAME = 'Tutor’s pattern';
 
 /** A panel with the synth's first sound loaded and no lesson step: how a synth opens the first time. */
+/** A find as one comparable value, so the page can tell a new one from the one it has seen. */
+const findKey = (f: FindTarget | null) =>
+  f === null ? null : f.kind === 'areas' ? `areas:${f.ids.join(',')}` : `${f.kind}:${f.id}`;
+
 function freshSession(def: SynthDef, preset: CatalogueSound | undefined): Session {
   return { presetId: preset?.id ?? null, step: null, soundId: null, ...presetState(def, preset) };
 }
@@ -631,9 +637,7 @@ function Synth({
   // step, the tour, Explain sections or the Inspector coming on. Turning one off leaves the view be, and so does Undo
   // (it lights what it changes, which the view follows). Dim unused and Sensitive are left out: they point at nothing,
   // and they come from stored settings that can land after the view is open.
-  const finding = useStore(findStore, (f) =>
-    f === null ? null : f.kind === 'areas' ? `areas:${f.ids.join(',')}` : `${f.kind}:${f.id}`
-  );
+  const finding = useStore(findStore, findKey);
   const inspecting = card === 'inspector' || sheet === 'inspector';
   const panelWork = [finding, step, tourOn, areasOn, inspecting];
   const [seenWork, setSeenWork] = useState(panelWork);
@@ -642,6 +646,16 @@ function Synth({
     if (routingOn && panelWork.some((v, i) => v !== seenWork[i] && v !== false && v !== null))
       setRoutingOn(false);
   }
+  // A find from a block's card turns the panel over through the flip: the store's update renders at once, so it is
+  // marked seen here, or the check above would turn the view off first, with no transition.
+  const routingToggleRef = useRef<HTMLButtonElement>(null);
+  const showFromRouting = (t: RoutingShowTarget) => {
+    setSeenWork((w) => [findKey(t), ...w.slice(1)]);
+    findStore.set(t);
+    flipPanel(false);
+    // The card goes with the view: focus waits on the switch that turns it over again.
+    routingToggleRef.current?.focus({ preventScroll: true });
+  };
   const [cardSide, setCardSide] = useStoredPref(STORAGE_KEYS.cardSide, CardSideSchema, 'right');
   const [soundsOpen, setSoundsOpen] = useState(false);
   // The Sound Design drawer (from `lg` up, with a pointer): up from a press on its tab until the next, so it stays
@@ -2151,6 +2165,7 @@ function Synth({
                       {routing && (
                         <div role="group" aria-label="Views" className="kys-rail-group">
                           <LayerToggle
+                            ref={routingToggleRef}
                             label="Signal routing"
                             short="Signal routing"
                             icon={<Waypoints size={17} aria-hidden="true" />}
@@ -2255,6 +2270,7 @@ function Synth({
                               cables={sess.cables}
                               wheel={wheel}
                               source={engine}
+                              onShow={showFromRouting}
                             />
                           </div>
                         </div>

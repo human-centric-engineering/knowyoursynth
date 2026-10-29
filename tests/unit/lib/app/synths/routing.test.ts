@@ -2,7 +2,7 @@
  * Every registered routing against its definition and its spec.
  *
  * Against the definition (`routingProblems`): every control, value and jack it names exists, a normal is broken only
- * by an input that does not sum, every jack belongs to a block, and every block has a way to the output. A renamed
+ * by an input that does not sum, every jack belongs to a block, every control the sound hears sets one, and every block has a way to the output. A renamed
  * control or jack therefore fails here rather than leaving part of the diagram dark for good.
  *
  * Against the spec it was projected from (`.context/app/synth-data/<id>/<id>.synth.json`): every module and
@@ -195,6 +195,34 @@ describe('routingProblems', () => {
         'loudness_contour',
         'vca',
       ].map((b) => `block ${b} has no way to output`),
+    ]);
+  });
+  it('refuses a control the definition does not have, a panel mode, and a heard control on no block', () => {
+    const block = (r: SynthRouting, id: string) => {
+      const b = r.blocks.find((x) => x.id === id);
+      if (!b) throw new Error(`no block ${id}`);
+      return b;
+    };
+    expect(
+      edit((r) => {
+        const filter = block(r, 'filter');
+        filter.controls = (filter.controls ?? []).filter((c) => c !== 'filter.emphasis');
+        filter.controls.push('filter.resonance', 'filter.cutoff');
+        block(r, 'lfo').controls?.push('view.mode');
+      })
+    ).toEqual([
+      'block lfo: no control view.mode',
+      'block filter: no control filter.resonance',
+      'block filter: filter.cutoff is listed twice',
+      'control filter.emphasis sets no block',
+    ]);
+    // A panel mode changes what the panel shows, never the sound, so no block lists it.
+    const moded = {
+      ...def,
+      controls: def.controls.map((c) => (c.id === 'out.a440' ? { ...c, ui: true } : c)),
+    };
+    expect(routingProblems(moded, base)).toEqual([
+      'block output: out.a440 is a panel mode, not heard',
     ]);
   });
 });

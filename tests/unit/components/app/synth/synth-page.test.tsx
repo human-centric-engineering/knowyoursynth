@@ -2030,7 +2030,7 @@ describe('SynthPage patch edge cases', () => {
 
 describe('SynthPage signal routing', () => {
   const toggle = () => button('Signal routing');
-  const diagram = () => screen.queryByRole('img', { name: 'Model D signal routing' });
+  const diagram = () => screen.queryByRole('group', { name: 'Model D signal routing' });
   const scroller = () => screen.getByTestId('panel-frame').closest('.kys-panel-scroller');
   const lit = (sel: string) => document.querySelector(sel)?.getAttribute('data-live');
 
@@ -2096,6 +2096,35 @@ describe('SynthPage signal routing', () => {
     fireEvent.click(toggle());
     fireEvent.click(button('Explain sections'));
     expect(diagram()).not.toBeNull();
+  });
+
+  it('turns face up with a control chosen on a block’s card found, even one already found', () => {
+    page();
+    const away = () => scroller()?.classList.contains('is-away');
+    const choose = (block: RegExp, name: string | RegExp) => {
+      fireEvent.click(screen.getByRole('button', { name: block }));
+      const card = screen.getByRole('dialog');
+      fireEvent.click(within(card).getByRole('button', { name }));
+    };
+    fireEvent.click(toggle());
+    choose(/^Ladder filter,/, 'EMPHASIS');
+    expect(findStore.get()).toEqual({ kind: 'control', id: 'filter.emphasis' });
+    expect(diagram()).toBeNull();
+    expect(away()).toBe(false);
+    // The card went with the view: focus is on the switch that turns it over again.
+    expect(toggle()).toHaveFocus();
+    // The panel spotlights it.
+    expect(document.querySelector('.kys-pulse')).not.toBeNull();
+    // The same control again, with its find still up: it turns face up all the same.
+    fireEvent.click(toggle());
+    expect(diagram()).not.toBeNull();
+    choose(/^Ladder filter,/, 'EMPHASIS');
+    expect(diagram()).toBeNull();
+    // A jack too.
+    fireEvent.click(toggle());
+    choose(/^LFO,/, /^LFO CV/);
+    expect(findStore.get()).toEqual({ kind: 'jack', id: 'j.lfoCv' });
+    expect(diagram()).toBeNull();
   });
 
   it('shows no toggle for a synth without a routing', () => {

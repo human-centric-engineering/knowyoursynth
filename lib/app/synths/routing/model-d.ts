@@ -36,6 +36,7 @@ export const routing: SynthRouting = {
       id: 'pitch_bus',
       name: 'Master pitch',
       module: 'glide',
+      controls: ['ctl.tune', 'ctl.glide'],
       description:
         'Adds up keyboard pitch, pitch bend, the OSC 1V/OCT input and TUNE, applies GLIDE, and sets the oscillators’ pitch.',
     },
@@ -43,6 +44,7 @@ export const routing: SynthRouting = {
       id: 'mod_bus',
       name: 'Modulation mix',
       module: 'mod',
+      controls: ['mod.srcA', 'mod.srcB', 'mod.mix', 'mod.depth', 'mod.toOsc', 'mod.toFilter'],
       passes: true,
       description:
         'Crossfades source A (Oscillator 3 or the filter contour) with source B (noise or the LFO), scales the result by MOD DEPTH and the mod wheel, and sends it to oscillator pitch, filter cutoff or both.',
@@ -51,6 +53,7 @@ export const routing: SynthRouting = {
       id: 'lfo',
       name: 'LFO',
       module: 'lfo',
+      controls: ['lfo.rate', 'lfo.shape'],
       meter: 'lfo',
       description:
         'A dedicated low-frequency oscillator. Both shapes are always on their jacks; the switch picks which one feeds the mod bus.',
@@ -63,6 +66,7 @@ export const routing: SynthRouting = {
       id: 'osc1',
       name: 'Oscillator 1',
       module: 'osc',
+      controls: ['osc1.range', 'osc1.wave'],
       meter: 'osc1',
       description:
         'The reference oscillator: no fine-tune knob, its pitch set by RANGE and the master TUNE.',
@@ -78,6 +82,7 @@ export const routing: SynthRouting = {
       id: 'osc2',
       name: 'Oscillator 2',
       module: 'osc',
+      controls: ['osc2.range', 'osc2.freq', 'osc2.wave'],
       meter: 'osc2',
       description: 'An oscillator with a detune knob of about seven semitones either way.',
       specs: [
@@ -92,6 +97,7 @@ export const routing: SynthRouting = {
       id: 'osc3',
       name: 'Oscillator 3',
       module: 'osc',
+      controls: ['osc3.range', 'osc3.freq', 'osc3.wave', 'osc3.kbd'],
       meter: 'osc3',
       description:
         'An oscillator that doubles as a modulation source. Off keyboard control it runs free, usually at LO as a second LFO.',
@@ -107,6 +113,7 @@ export const routing: SynthRouting = {
       id: 'noise',
       name: 'Noise',
       module: 'mixer',
+      controls: ['noise.colour'],
       symbol: 'noise',
       description: 'White or pink noise: a sound source in the mixer and source B of the mod bus.',
       specs: [{ label: 'Colours', value: 'White, pink' }],
@@ -124,6 +131,18 @@ export const routing: SynthRouting = {
       id: 'mixer',
       name: 'Mixer',
       module: 'mixer',
+      controls: [
+        'mix.osc1On',
+        'mix.osc1',
+        'mix.osc2On',
+        'mix.osc2',
+        'mix.osc3On',
+        'mix.osc3',
+        'mix.extOn',
+        'mix.ext',
+        'mix.noiseOn',
+        'mix.noise',
+      ],
       passes: true,
       description: 'Five channels, each with a level knob and an on/off switch, into the filter.',
       specs: [{ label: 'Channels', value: 'Oscillators 1–3, external input, noise' }],
@@ -132,6 +151,14 @@ export const routing: SynthRouting = {
       id: 'filter',
       name: 'Ladder filter',
       module: 'filter',
+      controls: [
+        'filter.cutoff',
+        'filter.emphasis',
+        'filter.contour',
+        'filter.mode',
+        'filter.kbd1',
+        'filter.kbd2',
+      ],
       description: 'A transistor ladder filter with EMPHASIS (resonance), low-pass or high-pass.',
       specs: [
         { label: 'Slope', value: '24 dB per octave (4 poles)' },
@@ -142,6 +169,7 @@ export const routing: SynthRouting = {
       id: 'filter_contour',
       name: 'Filter contour',
       module: 'env',
+      controls: ['fenv.attack', 'fenv.decay', 'fenv.sustain', 'env.filterDecay'],
       meter: 'env1',
       description:
         'An attack, decay, sustain envelope for the cutoff. Release is either immediate or the decay time, set by FILTER DECAY.',
@@ -151,6 +179,7 @@ export const routing: SynthRouting = {
       id: 'loudness_contour',
       name: 'Loudness contour',
       module: 'env',
+      controls: ['aenv.attack', 'aenv.decay', 'aenv.sustain', 'env.loudDecay'],
       meter: 'env2',
       description:
         'An attack, decay, sustain envelope for the amplifier. Release is either immediate or the decay time, set by LOUD DECAY.',
@@ -169,6 +198,7 @@ export const routing: SynthRouting = {
       id: 'output',
       name: 'Output',
       module: 'out',
+      controls: ['out.volume', 'out.mainOn', 'out.phones', 'out.a440'],
       description:
         'Master volume, the MAIN OUT switch, the headphone amplifier and the A-440 tone.',
     },

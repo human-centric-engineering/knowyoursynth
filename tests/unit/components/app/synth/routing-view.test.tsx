@@ -2,17 +2,20 @@
 
 /**
  * The routing view over Model D's real routing: what the patch uses is lit and the rest dimmed, and a mixer level, a
- * switch or a cable changes which.
+ * switch or a cable changes which. Each block opens its card (t-143) by hover, keyboard or tap, and the card's
+ * controls and jacks are handed back to be found on the panel.
  *
  * @see components/app/synth/routing-view.tsx
  */
 
-import { afterEach, describe, expect, it } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { RoutingView } from '@/components/app/synth/routing-view';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { routing } from '@/lib/app/synths/routing/model-d';
 import { meterStore } from '@/components/app/synth/stores';
+import { controlMap, displayName } from '@/lib/app/synths/lib/patch';
 import type { ControlValues, SynthRouting } from '@/lib/app/synths/contract';
 
 const found = getSynthDef('model-d');
@@ -37,7 +40,7 @@ const edge = (id: string) => lit(`[data-edge="${id}"]`);
 describe('RoutingView', () => {
   it('names the diagram, and says what is in use in words', () => {
     view();
-    const img = screen.getByRole('img', { name: 'Model D signal routing' });
+    const img = screen.getByRole('group', { name: 'Model D signal routing' });
     expect(img.querySelector('desc')?.textContent).toMatch(
       /^In use now: .*Oscillator 1.*Not in use: .*Oscillator 2/
     );
@@ -120,7 +123,7 @@ describe('RoutingView', () => {
 
   it('is never drawn bigger than its own size', () => {
     view();
-    const svg = screen.getByRole('img', { name: 'Model D signal routing' });
+    const svg = screen.getByRole('group', { name: 'Model D signal routing' });
     expect(svg.getAttribute('style')).toContain(`--routing-w: ${svg.getAttribute('width')}px`);
   });
 
@@ -244,6 +247,211 @@ describe('RoutingView', () => {
       await waitFor(() => expect(glow('[data-block="vca"]')).toBeLessThan(0.9));
       expect(glow('[data-block="vca"]')).toBeGreaterThan(0);
       await waitFor(() => expect(glow('[data-block="vca"]')).toBe(0), { timeout: 4000 });
+    });
+  });
+});
+
+describe('a block’s card', () => {
+  const blockButton = (name: string) =>
+    screen.getByRole('button', { name: new RegExp(`^${name},`) });
+  const card = (name: string) => screen.queryByRole('dialog', { name });
+  const cardBody = (name: string) => {
+    const c = card(name);
+    if (!c) throw new Error(`no card for ${name}`);
+    return within(c);
+  };
+  const DESIGNATOR: Record<string, string> = {
+    midi: 'MIDI',
+    pitch_bus: 'CV',
+    mod_bus: 'MOD',
+    lfo: 'LFO',
+    osc1: 'VCO',
+    osc2: 'VCO',
+    osc3: 'VCO',
+    noise: 'NOISE',
+    ext_in: 'EXT',
+    mixer: 'MIX',
+    filter: 'VCF',
+    filter_contour: 'EG',
+    loudness_contour: 'EG',
+    vca: 'VCA',
+    output: 'OUT',
+  };
+
+  it('shows every block’s type, description and the controls that set it, on a tap', () => {
+    view();
+    const controls = controlMap(def);
+    expect(Object.keys(DESIGNATOR)).toEqual(routing.blocks.map((b) => b.id));
+    for (const b of routing.blocks) {
+      fireEvent.click(blockButton(b.name));
+      const c = cardBody(b.name);
+      expect(c.getByText(DESIGNATOR[b.id], { selector: '.kys-routing-card-tag' })).toBeTruthy();
+      expect(c.getByText(b.description)).toBeTruthy();
+      for (const id of b.controls ?? []) {
+        const ctl = controls[id];
+        if (!ctl) throw new Error(`no control ${id}`);
+        expect(c.getByText(displayName(def, ctl))).toBeTruthy();
+      }
+      for (const s of b.specs ?? []) expect(c.getByText(s.value)).toBeTruthy();
+    }
+    // Model D's blocks between them name every control on the panel.
+    const named = new Set(routing.blocks.flatMap((b) => b.controls ?? []));
+    expect(def.controls.filter((c) => !named.has(c.id)).map((c) => c.id)).toEqual([]);
+  });
+
+  it('lists a block’s jacks, and says so when nothing on the panel sets it', () => {
+    view();
+    fireEvent.click(blockButton('LFO'));
+    const lfo = cardBody('LFO');
+    for (const name of ['LFO CV', 'LFO (triangle)', 'LFO (square)'])
+      expect(lfo.getByText(name)).toBeTruthy();
+    fireEvent.click(blockButton('MIDI / USB'));
+    expect(cardBody('MIDI / USB').getByText('Nothing on the panel sets it.')).toBeTruthy();
+  });
+
+  it('says whether the block is on the path the patch uses now', () => {
+    view();
+    fireEvent.click(blockButton('Oscillator 1'));
+    expect(cardBody('Oscillator 1').getByText('On the path the patch uses now')).toBeTruthy();
+    fireEvent.click(blockButton('Oscillator 2'));
+    expect(cardBody('Oscillator 2').getByText('Not on the path the patch uses now')).toBeTruthy();
+    expect(blockButton('Oscillator 2')).toHaveAccessibleName('Oscillator 2, not in use');
+  });
+
+  it('hands a chosen control or jack back to be found on the panel', () => {
+    const onShow = vi.fn();
+    render(
+      <RoutingView
+        def={def}
+        routing={routing}
+        values={def.init}
+        cables={[]}
+        wheel={0}
+        onShow={onShow}
+      />
+    );
+    fireEvent.click(blockButton('Ladder filter'));
+    fireEvent.click(cardBody('Ladder filter').getByRole('button', { name: 'EMPHASIS' }));
+    expect(onShow).toHaveBeenLastCalledWith({ kind: 'control', id: 'filter.emphasis' });
+    fireEvent.click(cardBody('Ladder filter').getByRole('button', { name: /CUT CV/ }));
+    expect(onShow).toHaveBeenLastCalledWith({ kind: 'jack', id: 'j.cutCv' });
+  });
+
+  it('lists the controls without offering them when nothing can find them', () => {
+    view();
+    fireEvent.click(blockButton('Ladder filter'));
+    const c = cardBody('Ladder filter');
+    expect(c.getByText('EMPHASIS')).toBeTruthy();
+    expect(c.queryByRole('button')).toBeNull();
+  });
+
+  it('is reached by the keyboard: Enter opens it with focus inside, Tab reaches its controls, Escape returns', async () => {
+    const user = userEvent.setup();
+    const onShow = vi.fn();
+    render(
+      <RoutingView
+        def={def}
+        routing={routing}
+        values={def.init}
+        cables={[]}
+        wheel={0}
+        onShow={onShow}
+      />
+    );
+    const filter = blockButton('Ladder filter');
+    expect(filter).toHaveAttribute('tabindex', '0');
+    act(() => filter.focus());
+    await user.keyboard('{Enter}');
+    const dialog = card('Ladder filter');
+    expect(dialog).not.toBeNull();
+    expect(filter).toHaveAttribute('aria-expanded', 'true');
+    await waitFor(() => expect(dialog).toHaveFocus());
+    await user.tab();
+    expect(within(dialog as HTMLElement).getAllByRole('button')[0]).toHaveFocus();
+    await user.keyboard('{Enter}');
+    expect(onShow).toHaveBeenCalledWith({ kind: 'control', id: 'filter.cutoff' });
+    await user.keyboard('{Escape}');
+    expect(card('Ladder filter')).toBeNull();
+    expect(filter).toHaveFocus();
+    expect(filter).toHaveAttribute('aria-expanded', 'false');
+    // Space opens it too.
+    await user.keyboard(' ');
+    expect(card('Ladder filter')).not.toBeNull();
+  });
+
+  it('closes a kept card on a second press of its block, and follows focus to another block', async () => {
+    const user = userEvent.setup();
+    view();
+    const filter = blockButton('Ladder filter');
+    act(() => filter.focus());
+    await user.keyboard('{Enter}');
+    expect(filter).toHaveAttribute('aria-expanded', 'true');
+    // Back from the card to its own block, it stays kept, and a press puts it away.
+    act(() => filter.focus());
+    expect(card('Ladder filter')).not.toBeNull();
+    await user.keyboard('{Enter}');
+    expect(card('Ladder filter')).toBeNull();
+    expect(filter).toHaveAttribute('aria-expanded', 'false');
+    // Kept again, then focus moves to another block: the card goes with it.
+    await user.keyboard('{Enter}');
+    const mixer = blockButton('Mixer');
+    act(() => mixer.focus());
+    expect(card('Ladder filter')).toBeNull();
+    expect(mixer).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('opens on a tap of another block in place of the one open, and closes on a tap away', async () => {
+    view();
+    fireEvent.pointerEnter(blockButton('Mixer'), { pointerType: 'touch' });
+    expect(card('Mixer')).toBeNull(); // a touch has no hover
+    fireEvent.click(blockButton('Mixer'));
+    expect(card('Mixer')).not.toBeNull();
+    fireEvent.pointerDown(blockButton('Noise'));
+    fireEvent.click(blockButton('Noise'));
+    expect(card('Mixer')).toBeNull();
+    expect(card('Noise')).not.toBeNull();
+    await userEvent
+      .setup()
+      .pointer({ keys: '[MouseLeft]', target: screen.getByRole('list', { name: 'Key' }) });
+    expect(card('Noise')).toBeNull();
+  });
+
+  describe('on hover', () => {
+    afterEach(() => vi.useRealTimers());
+
+    it('shows while the pointer is on the block or the card, and goes when it leaves both', () => {
+      vi.useFakeTimers();
+      view();
+      const lfo = blockButton('LFO');
+      fireEvent.pointerEnter(lfo, { pointerType: 'mouse' });
+      const dialog = card('LFO');
+      expect(dialog).not.toBeNull();
+      expect(dialog).not.toHaveFocus(); // a hover does not take focus
+      // Across the gap into the card, it stays.
+      fireEvent.pointerLeave(lfo, { pointerType: 'mouse' });
+      fireEvent.pointerEnter(dialog as HTMLElement, { pointerType: 'mouse' });
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      expect(card('LFO')).not.toBeNull();
+      fireEvent.pointerLeave(dialog as HTMLElement, { pointerType: 'mouse' });
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      expect(card('LFO')).toBeNull();
+    });
+
+    it('keeps a card opened by a click while the pointer passes over other blocks', () => {
+      vi.useFakeTimers();
+      view();
+      fireEvent.click(blockButton('LFO'));
+      fireEvent.pointerLeave(blockButton('LFO'), { pointerType: 'mouse' });
+      fireEvent.pointerEnter(blockButton('Mixer'), { pointerType: 'mouse' });
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      expect(card('LFO')).not.toBeNull();
+      expect(card('Mixer')).toBeNull();
     });
   });
 });
