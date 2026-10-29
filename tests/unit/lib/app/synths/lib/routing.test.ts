@@ -8,10 +8,11 @@
 import { describe, expect, it } from 'vitest';
 import type { ControlValues } from '@/lib/app/synths/contract';
 import modelD from '@/lib/app/synths/defs/model-d';
-import { routingState, type RoutingCable } from '@/lib/app/synths/lib/routing';
+import type { CableLike } from '@/lib/app/synths/lib/patch';
+import { routingState } from '@/lib/app/synths/lib/routing';
 import { routing } from '@/lib/app/synths/routing/model-d';
 
-const state = (set: ControlValues = {}, cables: RoutingCable[] = [], wheel = 0) =>
+const state = (set: ControlValues = {}, cables: CableLike[] = [], wheel = 0) =>
   routingState(modelD, routing, { values: { ...modelD.init, ...set }, cables, wheel });
 
 /** Oscillator 3 and the LFO both feeding the filter through the mod bus, nothing else on it. */
@@ -69,6 +70,52 @@ describe('routingState on Model D', () => {
     expect(state(off, [], 0.5).blocks.mod_bus).toBe(true);
   });
 
+  it('lights the mod wheel edge only while the wheel is up', () => {
+    expect(state(MOD_TO_FILTER).edges.c03).toBe(false);
+    expect(state(MOD_TO_FILTER, [], 0.5).edges.c03).toBe(true);
+  });
+
+  it('darkens the mod bus where the engine drops the route: MOD DEPTH squared, times the source’s share', () => {
+    // Depth 0.1 is (0.01)² = 0.0001 of full depth, under the floor; 0.3 is 0.0009, over it.
+    expect(state({ ...MOD_TO_FILTER, 'mod.depth': 0.1 }).blocks.mod_bus).toBe(false);
+    expect(state({ ...MOD_TO_FILTER, 'mod.depth': 0.1 }).edges.c33).toBe(false);
+    expect(state({ ...MOD_TO_FILTER, 'mod.depth': 0.3, 'mod.mix': 0 }).edges.c33).toBe(true);
+    // Centred, each source carries half of 0.0009: both under the floor, so nothing feeds the bus.
+    expect(state({ ...MOD_TO_FILTER, 'mod.depth': 0.3 }).edges.c33).toBe(false);
+    expect(state({ ...MOD_TO_FILTER, 'mod.depth': 0.3 }).blocks.mod_bus).toBe(false);
+    // Mix 9.9 leaves source A 1% of a depth of 1%: 0.0001, dropped. Source B carries the rest.
+    const s = state({ ...MOD_TO_FILTER, 'mod.depth': 1, 'mod.mix': 9.9, 'mod.srcB': 'lfo' });
+    expect([s.edges.c20, s.edges.c23]).toEqual([false, true]);
+  });
+
+  it('treats a missing MOD MIX as the engine does: neither source carries', () => {
+    const values: ControlValues = { ...modelD.init, ...MOD_TO_FILTER, 'mod.srcB': 'lfo' };
+    delete values['mod.mix'];
+    const s = routingState(modelD, routing, { values, cables: [] });
+    expect([s.edges.c20, s.edges.c23, s.blocks.osc3, s.blocks.lfo]).toEqual([
+      false,
+      false,
+      false,
+      false,
+    ]);
+    // With nothing feeding it, the bus and its way to the filter are dark too, though both are switched on.
+    expect([s.blocks.mod_bus, s.edges.c33]).toEqual([false, false]);
+  });
+
+  it('darkens the mixer, and its way to the filter, with every channel off', () => {
+    const s = state({ 'mix.osc1On': false });
+    expect([s.blocks.mixer, s.edges.c50]).toEqual([false, false]);
+    // The filter makes signal of its own (it self-oscillates), so it stays on the path.
+    expect([s.blocks.filter, s.blocks.vca, s.blocks.output]).toEqual([true, true, true]);
+  });
+
+  it('feeds the mod bus from the mod wheel alone', () => {
+    const values: ControlValues = { ...modelD.init, ...MOD_TO_FILTER, 'mod.depth': 0 };
+    delete values['mod.mix'];
+    const s = routingState(modelD, routing, { values, cables: [], wheel: 0.5 });
+    expect([s.edges.c03, s.blocks.mod_bus, s.edges.c33]).toEqual([true, true, true]);
+  });
+
   it('needs every part of an all-condition: modulation reaches Oscillator 3 only under keyboard control', () => {
     const on = { ...MOD_TO_FILTER, 'mod.toOsc': true, 'mix.osc3On': true, 'mix.osc3': 5 };
     expect(state({ ...on, 'osc3.kbd': true }).edges.c32).toBe(true);
@@ -83,7 +130,7 @@ describe('routingState on Model D', () => {
 
   describe('cables', () => {
     const NOISE_B = { ...MOD_TO_FILTER, 'mod.srcB': 'noise' };
-    const SQUARE_IN: RoutingCable = { from: 'j.lfoSq', to: 'j.modSrc' };
+    const SQUARE_IN: CableLike = { from: 'j.lfoSq', to: 'j.modSrc' };
 
     it('lights the noise normal into the mod bus with no cable in MOD SOURCE', () => {
       const s = state(NOISE_B);
@@ -132,6 +179,11 @@ describe('routingState on Model D', () => {
 
     it('skips a cable to a jack the routing does not know', () => {
       expect(state({}, [{ from: 'j.lfoTri', to: 'j.nope' }]).cables).toEqual([]);
+    });
+
+    it('skips a cable whose jack ids are names an object inherits', () => {
+      expect(state({}, [{ from: 'toString', to: 'constructor' }]).cables).toEqual([]);
+      expect(state({}, [{ from: 'j.lfoTri', to: '__proto__' }]).cables).toEqual([]);
     });
   });
 

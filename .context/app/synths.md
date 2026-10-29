@@ -208,7 +208,8 @@ How the parts are wired behind the panel, for the routing view: one **`SynthRout
 definition, not on it. A synth with no routing has no routing view.
 
 - **Blocks** are the parts (`osc1`, `mixer`, `filter`), each with a `module` for its colour, a `description`
-  and the `specs` its hover card lists. **Edges** join them, each with its `signal` (`audio`, `cv`, `gate`) and
+  and the `specs` its hover card lists; `passes: true` marks one that makes no signal of its own (a mixer, the
+  mod bus). **Edges** join them, each with its `signal` (`audio`, `cv`, `gate`) and
   the rule for when it carries signal: `when` (switches, in the definition's control ids), `levels` (controls
   that scale it) and `breaks` (the input jack whose cable breaks this normal). An edge with none is fixed.
   `jacks` puts every jack of the definition in a block, so any cable can be drawn.
@@ -219,19 +220,28 @@ definition, not on it. A synth with no routing has no routing view.
   so a generated module would be edited afterwards and could never be regenerated. The test below gives the
   drift check a script would have.
 - **`routingState(def, routing, { values, cables, wheel })`** (`lib/routing.ts`) says which blocks, edges and
-  cables are live. Pure, like `toEngine()`. An edge is enabled while its `when` holds, every level is above zero
-  and no cable has broken it; a block is live while an enabled edge or cable leads from it to `out`; an edge or
-  cable is live while it is enabled and its block is. A cable into a jack that breaks a normal takes the
+  cables are live. Pure, like `toEngine()`. An edge is enabled while its `when` holds, its levels multiply to
+  more than `ROUTING_FLOOR` (0.0005, the floor below which `toEngine()` drops a mod route) and no cable has
+  broken it; a block has signal if it makes its own, or if it `passes` and an enabled edge or cable from a block
+  with signal feeds it; a block is live while it has signal and an enabled edge or cable leads from it to `out`
+  through blocks with signal; an edge or cable is live while it is enabled, its source has signal and its
+  target is live. So Model D's mod bus goes dark, lines out and all, when MOD MIX leaves each source under the
+  floor, and the mixer does with every channel off. A cable into a jack that breaks a normal takes the
   normal's place, and needs the normal's `when` and `levels` to be heard (MOD SOURCE is ignored with the switch
-  on LFO). `@wheel` (`ROUTING_WHEEL`) in a level is the mod wheel.
-- **Structural, not heard.** A level at zero is judged from the panel: a continuous control at its `min`, or
-  the `off` value given. The sound map answers a different question by probing the voice, asynchronously and
+  on LFO). `@wheel` (`WHEEL`, from `lib/patch.ts`) in a level is the mod wheel.
+- **Levels are amounts, 0 to 1.** A continuous control's id runs from its `min` to its `max`; `{ id, off }` is 0
+  at `off` and rises away from it (a switch is 0 at `off`, 1 elsewhere); `{ id, pow }` curves it as the engine
+  does (MOD DEPTH squared); `{ sum }` adds. A missing value is 0, as `toEngine()` hears it. Give a level the
+  engine's whole product where it drops a route below a floor: Model D's source edges carry their MOD MIX share
+  times the depth, as the engine's `(1 - m) * depth > 0.0005` does.
+- **Structural, not heard.** A level at zero is judged from the panel, not from the voice. The sound map answers a different question by probing the voice, asynchronously and
   only in the browser, so the routing cannot use it and stay pure. The two can disagree: a filter closed to
   nothing is still on the path. Where the definition says more than the spec (Model D's MOD MIX crossfade), the
   routing follows the definition.
 - **`tests/unit/lib/app/synths/routing.test.ts`** holds every registered routing to its definition
   (`routingProblems`: every control, value and jack exists, a normal is broken only by a jack that is not
-  `add`, every jack has a block, every block has a way to the output) and to its spec (every module and
+  `add` and by one edge at most, every jack has a block, every block has a way to the output through edges or
+  some cable, every `passes` block has an edge or input jack into it) and to its spec (every module and
   connection is drawn, or listed in `omitted` with the reason).
 
 Model D's is the worked example.

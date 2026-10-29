@@ -20,6 +20,7 @@ import {
   type Preset,
   type PresetStep,
   type PresetTweak,
+  type ShowCondition,
   type SynthDef,
   type SynthModule,
 } from '@/lib/app/synths/contract';
@@ -51,8 +52,15 @@ export const isRecord = (x: unknown): x is Record<string, unknown> =>
 export function isShown(c: Control, values: ControlValues): boolean {
   if (!c.show) return true;
   const list = Array.isArray(c.show) ? c.show : [c.show];
-  return list.every((w) => ('in' in w ? w.in.includes(values[w.id]) : values[w.id] === w.eq));
+  return list.every((w) => conditionHolds(w, values));
 }
+
+/** Whether `{ id, eq }` or `{ id, in }` holds: a control's `show`, or a switch in a routing's `when`. */
+export const conditionHolds = (w: ShowCondition, values: ControlValues): boolean =>
+  'in' in w ? w.in.includes(values[w.id]) : values[w.id] === w.eq;
+
+/** The mod wheel, where a control id is expected: a sound map door, a routing level. */
+export const WHEEL = '@wheel';
 
 // The lookups are null-prototype objects: their keys come from untrusted sounds (a saved sound, an AI reply), and
 // on a plain object an id like `constructor` or `toString` would find an inherited member instead of `undefined`.

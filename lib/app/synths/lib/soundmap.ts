@@ -7,7 +7,7 @@
 // probe Workers from source text embedded at build time (`__PROBE_SRC__`); the app serves the probe worker as a
 // static file, `PROBE_WORKER_URL` (from the audio module).
 import { logger } from '@/lib/logging';
-import { cablesToEngine, type CableLike } from '@/lib/app/synths/lib/patch';
+import { cablesToEngine, WHEEL, type CableLike } from '@/lib/app/synths/lib/patch';
 import { createProbe, PROBE_WORKER_URL } from '@/lib/app/synths/audio/probe';
 import type {
   Control,
@@ -215,7 +215,7 @@ export function buildJobs(
 // Every (dead control, door) pair is a rendering, so doors are tried nearest first, each dead control has a budget,
 // and the search for a control stops soon after its first answer (see `stale` in the mapper).
 
-export const WHEEL = '@wheel';
+export { WHEEL };
 const SINGLE_BUDGET = 18;
 const PAIR_BUDGET = 14;
 

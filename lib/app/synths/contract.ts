@@ -1262,6 +1262,11 @@ export interface RoutingBlock {
   description: string;
   /** What the hover card lists: `{ label: 'Slope', value: '24 dB per octave' }`. Facts from the spec only. */
   specs?: { label: string; value: string }[];
+  /**
+   * Makes no signal of its own, only passes on what reaches it (a mixer, the mod bus): live only while a live
+   * edge or cable feeds it. Absent = it makes signal (an oscillator, a contour), and is live on any path out.
+   */
+  passes?: boolean;
 }
 
 /** What an edge carries. */
@@ -1278,13 +1283,16 @@ export type RoutingWhen =
   | { any: RoutingWhen[] };
 
 /**
- * A control that scales an edge, which carries nothing while the level is at zero:
- * - a continuous control's id, at zero at its `min`;
- * - `{ id, off }`, at zero at the value `off` (MOD MIX fully right silences source A);
- * - `{ sum }`, at zero only while every part is (MOD DEPTH plus the mod wheel).
- * The id `@wheel` is the mod wheel.
+ * A control that scales an edge, as an amount from 0 (carries nothing) to 1:
+ * - a continuous control's id, 0 at its `min` and 1 at its `max`;
+ * - `{ id, off }`, 0 at the value `off` and rising away from it (MOD MIX fully right silences source A); a switch
+ *   is 0 at `off` and 1 anywhere else;
+ * - `{ id, pow }`, a continuous control's amount raised to `pow`, for a knob the engine curves (MOD DEPTH squared);
+ * - `{ sum }`, the parts added (MOD DEPTH plus the mod wheel).
+ * The id `@wheel` is the mod wheel. A value that is missing is 0, as `toEngine()` hears it.
  */
-export type RoutingLevel = string | { id: string; off: ControlValue } | { sum: RoutingLevel[] };
+export type RoutingLevel =
+  string | { id: string; off?: ControlValue; pow?: number } | { sum: RoutingLevel[] };
 
 /** One connection between two blocks, inside the synth. Cables are not edges: they come from the patch. */
 export interface RoutingEdge {
@@ -1297,7 +1305,7 @@ export interface RoutingEdge {
   label?: string;
   /** A switch it depends on; absent = fixed. */
   when?: RoutingWhen;
-  /** Controls that scale it; all must be above zero. */
+  /** Controls that scale it; it carries signal while their product is above `ROUTING_FLOOR`. */
   levels?: RoutingLevel[];
   /**
    * A normal: the input jack whose cable breaks this edge. A cable into that jack takes the edge's place

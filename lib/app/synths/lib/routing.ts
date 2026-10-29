@@ -1,11 +1,18 @@
 // Signal routing: which parts of a synth the current patch actually uses, read from its routing (`SynthRouting`).
-// Structural, not heard: an edge is live while its switches are set, its levels are above zero and no cable has broken
-// it, and a block is live while some live path runs from it to the output. The sound map (`soundmap.ts`) answers the
+// Structural, not heard: an edge is live while its switches are set, its levels multiply to more than the engine's
+// floor and no cable has broken it, and a block is live while some live path runs from it to the output (and, for a
+// block that only passes signal on, while a live edge or cable feeds it). The sound map (`soundmap.ts`) answers the
 // other question, whether a control changes what is heard, by probing the real voice; the two can disagree (a filter
 // closed to nothing is still on the path), and the view says which it shows.
 //
 // Pure, like `toEngine()`: same definition, routing, values and cables in, same answer out.
-import { controlMap, jackMap } from '@/lib/app/synths/lib/patch';
+import {
+  conditionHolds,
+  controlMap,
+  jackMap,
+  WHEEL,
+  type CableLike,
+} from '@/lib/app/synths/lib/patch';
 import type {
   ControlValues,
   RoutingEdge,
@@ -15,14 +22,11 @@ import type {
   SynthRouting,
 } from '@/lib/app/synths/contract';
 
-/** The mod wheel, in a `RoutingLevel` (the sound map's `WHEEL` uses the same name). */
-export const ROUTING_WHEEL = '@wheel';
-
-/** A cable as the panel holds it: output jack to input jack. */
-export interface RoutingCable {
-  from: string;
-  to: string;
-}
+/**
+ * An edge whose levels multiply to no more than this carries nothing: the floor below which `toEngine()` drops a
+ * modulation route (Model D's mod bus). A mixer knob under 1/2000 of its travel therefore counts as zero too.
+ */
+export const ROUTING_FLOOR = 0.0005;
 
 /** A cable between two blocks, and whether it is on a live path. */
 export interface RoutingCableState {
@@ -34,7 +38,7 @@ export interface RoutingCableState {
 }
 
 export interface RoutingState {
-  /** Every block, true while it is on a live path to the output. */
+  /** Every block, true while it has signal (made, or fed to a `passes` block) on a live path to the output. */
   blocks: Record<string, boolean>;
   /** Every edge, true while it carries signal to a live block. */
   edges: Record<string, boolean>;
@@ -44,7 +48,7 @@ export interface RoutingState {
 
 export interface RoutingInput {
   values: ControlValues;
-  cables: RoutingCable[];
+  cables: CableLike[];
   /** Mod wheel position, 0..1. */
   wheel?: number;
 }
@@ -52,24 +56,72 @@ export interface RoutingInput {
 function holds(when: RoutingWhen, values: ControlValues): boolean {
   if ('all' in when) return when.all.every((w) => holds(w, values));
   if ('any' in when) return when.any.some((w) => holds(w, values));
-  if ('in' in when) return when.in.includes(values[when.id]);
-  return values[when.id] === when.eq;
+  return conditionHolds(when, values);
 }
 
-function aboveZero(def: SynthDef, level: RoutingLevel, input: RoutingInput): boolean {
-  if (typeof level !== 'string') {
-    if ('sum' in level) return level.sum.some((l) => aboveZero(def, l, input));
-    return input.values[level.id] !== level.off;
-  }
-  if (level === ROUTING_WHEEL) return (input.wheel ?? 0) > 0;
-  const c = controlMap(def)[level];
-  const v = input.values[level];
-  return c?.kind === 'cont' && typeof v === 'number' ? v > c.min : false;
+/** A level's amount, 0..1 per control (a `sum` can pass 1). A missing value is 0, as `toEngine()` hears it. */
+function amount(def: SynthDef, level: RoutingLevel, input: RoutingInput): number {
+  if (typeof level !== 'string' && 'sum' in level)
+    return level.sum.reduce((t, l) => t + amount(def, l, input), 0);
+  const { id, off, pow = 1 } = typeof level === 'string' ? { id: level } : level;
+  if (id === WHEEL) return Math.max(input.wheel ?? 0, 0);
+  const c = controlMap(def)[id];
+  const v = input.values[id];
+  if (v === undefined) return 0;
+  if (c?.kind !== 'cont') return v === off ? 0 : 1;
+  if (typeof v !== 'number') return 0;
+  const zero = typeof off === 'number' ? off : c.min;
+  return Math.pow(Math.abs(v - zero) / (c.max - c.min), pow);
 }
 
 const enabled = (def: SynthDef, edge: RoutingEdge, input: RoutingInput): boolean =>
   (!edge.when || holds(edge.when, input.values)) &&
-  (edge.levels ?? []).every((l) => aboveZero(def, l, input));
+  (edge.levels ?? []).reduce((p, l) => p * amount(def, l, input), 1) > ROUTING_FLOOR;
+
+/** Every block with a path to `out` over `links` (from, to), `out` included. */
+function reachBack(out: string, links: Iterable<[string, string]>): Set<string> {
+  const into = new Map<string, string[]>();
+  for (const [from, to] of links) {
+    const list = into.get(to);
+    if (list) list.push(from);
+    else into.set(to, [from]);
+  }
+  const reach = new Set([out]);
+  const queue = [out];
+  for (let b = queue.pop(); b !== undefined; b = queue.pop())
+    for (const from of into.get(b) ?? [])
+      if (!reach.has(from)) {
+        reach.add(from);
+        queue.push(from);
+      }
+  return reach;
+}
+
+/** Every block with signal over `links`: a block that makes its own, and a `passes` block one of them feeds. */
+function fedBlocks(routing: SynthRouting, links: Iterable<[string, string]>): Set<string> {
+  const outOf = new Map<string, string[]>();
+  for (const [from, to] of links) {
+    const list = outOf.get(from);
+    if (list) list.push(to);
+    else outOf.set(from, [to]);
+  }
+  const fed = new Set(routing.blocks.filter((b) => !b.passes).map((b) => b.id));
+  const queue = [...fed];
+  for (let b = queue.pop(); b !== undefined; b = queue.pop())
+    for (const to of outOf.get(b) ?? [])
+      if (!fed.has(to)) {
+        fed.add(to);
+        queue.push(to);
+      }
+  return fed;
+}
+
+/** `routing.jacks` with a null prototype: cable jack ids come from untrusted sounds (see `byId` in `patch.ts`). */
+function jackBlocks(routing: SynthRouting): Record<string, string | undefined> {
+  const m = Object.create(null) as Record<string, string | undefined>;
+  for (const [jack, block] of Object.entries(routing.jacks)) m[jack] = block;
+  return m;
+}
 
 /**
  * Which blocks, edges and cables of `routing` the patch uses. A cable into a jack that breaks a normal takes the
@@ -86,34 +138,38 @@ export function routingState(
   const edgeOn = new Map(
     routing.edges.map((e) => [e.id, enabled(def, e, input) && !(e.breaks && patched.has(e.breaks))])
   );
+  const jackBlock = jackBlocks(routing);
   const cables = input.cables.flatMap((c) => {
-    const fromBlock = routing.jacks[c.from];
-    const toBlock = routing.jacks[c.to];
+    const fromBlock = jackBlock[c.from];
+    const toBlock = jackBlock[c.to];
     if (!fromBlock || !toBlock) return [];
     const normal = normalAt.get(c.to);
-    return [{ ...c, fromBlock, toBlock, on: !normal || enabled(def, normal, input) }];
+    return [
+      { from: c.from, to: c.to, fromBlock, toBlock, on: !normal || enabled(def, normal, input) },
+    ];
   });
 
-  // Walk back from the output over everything that carries signal.
-  const into = new Map<string, string[]>();
-  const link = (from: string, to: string) => into.set(to, [...(into.get(to) ?? []), from]);
-  for (const e of routing.edges) if (edgeOn.get(e.id)) link(e.from, e.to);
-  for (const c of cables) if (c.on) link(c.fromBlock, c.toBlock);
-  const live = new Set([routing.out]);
-  const queue = [routing.out];
-  for (let b = queue.pop(); b !== undefined; b = queue.pop())
-    for (const from of into.get(b) ?? [])
-      if (!live.has(from)) {
-        live.add(from);
-        queue.push(from);
-      }
+  // Walk forward from the blocks that make signal, then back from the output over what carries it.
+  const links = [
+    ...routing.edges.filter((e) => edgeOn.get(e.id)).map((e): [string, string] => [e.from, e.to]),
+    ...cables.filter((c) => c.on).map((c): [string, string] => [c.fromBlock, c.toBlock]),
+  ];
+  const fed = fedBlocks(routing, links);
+  const reach = reachBack(
+    routing.out,
+    links.filter(([from]) => fed.has(from))
+  );
+  const live = (b: string) => fed.has(b) && reach.has(b);
 
   return {
-    blocks: Object.fromEntries(routing.blocks.map((b) => [b.id, live.has(b.id)])),
+    blocks: Object.fromEntries(routing.blocks.map((b) => [b.id, live(b.id)])),
     edges: Object.fromEntries(
-      routing.edges.map((e) => [e.id, !!edgeOn.get(e.id) && live.has(e.to)])
+      routing.edges.map((e) => [e.id, !!edgeOn.get(e.id) && fed.has(e.from) && live(e.to)])
     ),
-    cables: cables.map(({ on, ...c }) => ({ ...c, live: on && live.has(c.toBlock) })),
+    cables: cables.map(({ on, ...c }) => ({
+      ...c,
+      live: on && fed.has(c.fromBlock) && live(c.toBlock),
+    })),
   };
 }
 
@@ -149,16 +205,19 @@ export function routingProblems(def: SynthDef, routing: SynthRouting): string[] 
       if (!legal(x)) problems.push(`${where}: ${JSON.stringify(x)} is not a value of ${w.id}`);
   };
   const checkLevel = (where: string, l: RoutingLevel): void => {
-    if (typeof l !== 'string') {
-      if ('sum' in l) return l.sum.forEach((x) => checkLevel(where, x));
-      return checkWhen(where, { id: l.id, eq: l.off });
-    }
-    if (l === ROUTING_WHEEL) return;
-    const c = controls[l];
-    if (!c) problems.push(`${where}: no control ${l}`);
+    if (typeof l !== 'string' && 'sum' in l) return l.sum.forEach((x) => checkLevel(where, x));
+    const { id, off, pow } = typeof l === 'string' ? { id: l } : l;
+    if (id === WHEEL) return;
+    const c = controls[id];
+    if (!c) return void problems.push(`${where}: no control ${id}`);
+    if (off !== undefined) checkWhen(where, { id, eq: off });
     else if (c.kind !== 'cont')
-      problems.push(`${where}: ${l} is not continuous; give it an off value`);
+      problems.push(`${where}: ${id} is not continuous; give it an off value`);
+    if (pow !== undefined && (c.kind !== 'cont' || !(pow > 0)))
+      problems.push(`${where}: ${id} cannot take pow ${pow}`);
   };
+
+  const breaker = new Map<string, string>();
 
   if (routing.synth !== def.id) problems.push(`routing is for ${routing.synth}, not ${def.id}`);
   routing.blocks.forEach((b) => once('block', b.id));
@@ -171,6 +230,9 @@ export function routingProblems(def: SynthDef, routing: SynthRouting): string[] 
     if (e.when) checkWhen(where, e.when);
     e.levels?.forEach((l) => checkLevel(where, l));
     if (e.breaks) {
+      const other = breaker.get(e.breaks);
+      if (other) problems.push(`${where}: ${e.breaks} already breaks edge ${other}`);
+      breaker.set(e.breaks, e.id);
       const j = jacks[e.breaks];
       if (!j) problems.push(`${where}: no jack ${e.breaks}`);
       else if (j.dir !== 'in') problems.push(`${where}: ${e.breaks} is not an input`);
@@ -187,19 +249,21 @@ export function routingProblems(def: SynthDef, routing: SynthRouting): string[] 
   for (const j of def.jacks)
     if (!(j.id in routing.jacks)) problems.push(`jack ${j.id} belongs to no block`);
 
-  // Every block has a way to the output, with every switch and cable allowed.
-  const into = new Map<string, string[]>();
-  for (const e of routing.edges) into.set(e.to, [...(into.get(e.to) ?? []), e.from]);
-  const reach = new Set([routing.out]);
-  const queue = [routing.out];
-  for (let b = queue.pop(); b !== undefined; b = queue.pop())
-    for (const from of into.get(b) ?? [])
-      if (!reach.has(from)) {
-        reach.add(from);
-        queue.push(from);
-      }
+  // Every block has a way to the output, with every switch allowed and a cable from any output jack to any input.
+  const blockOf = (dir: 'in' | 'out') =>
+    def.jacks.filter((j) => j.dir === dir).flatMap((j) => routing.jacks[j.id] ?? []);
+  const outs = blockOf('out');
+  const reach = reachBack(routing.out, [
+    ...routing.edges.map((e): [string, string] => [e.from, e.to]),
+    ...blockOf('in').flatMap((to) => outs.map((from): [string, string] => [from, to])),
+  ]);
   for (const b of routing.blocks)
     if (!reach.has(b.id)) problems.push(`block ${b.id} has no way to ${routing.out}`);
+  // And every block that only passes signal on has something that could feed it.
+  const inBlocks = new Set(blockOf('in'));
+  for (const b of routing.blocks)
+    if (b.passes && !inBlocks.has(b.id) && !routing.edges.some((e) => e.to === b.id))
+      problems.push(`block ${b.id} passes signal on, but nothing feeds it`);
 
   return problems;
 }

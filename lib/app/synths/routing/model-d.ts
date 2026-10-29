@@ -4,14 +4,16 @@
  * (`defs/model-d.ts`).
  *
  * Where the definition says more than the spec, it decides: the mod bus's crossfade (MOD MIX fully right silences
- * source A, fully left source B) and its depth (MOD DEPTH plus the mod wheel) are read from `toEngine()`.
+ * source A, fully left source B) and its depth (MOD DEPTH squared, plus the mod wheel) are read from `toEngine()`,
+ * which drops a source whose share of the depth is under `ROUTING_FLOOR`. So each source edge carries its share
+ * times the depth, and matches the engine at the floor.
  */
 import type { RoutingLevel, SynthRouting } from '@/lib/app/synths/contract';
-import { ROUTING_WHEEL } from '@/lib/app/synths/lib/routing';
+import { WHEEL } from '@/lib/app/synths/lib/patch';
 
-const SOURCE_A: RoutingLevel[] = [{ id: 'mod.mix', off: 10 }];
-const SOURCE_B: RoutingLevel[] = ['mod.mix'];
-const DEPTH: RoutingLevel[] = [{ sum: ['mod.depth', ROUTING_WHEEL] }];
+const DEPTH: RoutingLevel[] = [{ sum: [{ id: 'mod.depth', pow: 2 }, WHEEL] }];
+const SOURCE_A: RoutingLevel[] = [{ id: 'mod.mix', off: 10 }, ...DEPTH];
+const SOURCE_B: RoutingLevel[] = ['mod.mix', ...DEPTH];
 const OSC_SPECS = [
   { label: 'Frequency', value: '0.1 Hz to 20 kHz' },
   { label: 'Ranges', value: "LO, 32', 16', 8', 4', 2'" },
@@ -39,6 +41,7 @@ export const routing: SynthRouting = {
       id: 'mod_bus',
       name: 'Modulation mix',
       module: 'mod',
+      passes: true,
       description:
         'Crossfades source A (Oscillator 3 or the filter contour) with source B (noise or the LFO), scales the result by MOD DEPTH and the mod wheel, and sends it to oscillator pitch, filter cutoff or both.',
     },
@@ -113,6 +116,7 @@ export const routing: SynthRouting = {
       id: 'mixer',
       name: 'Mixer',
       module: 'mixer',
+      passes: true,
       description: 'Five channels, each with a level knob and an on/off switch, into the filter.',
       specs: [{ label: 'Channels', value: 'Oscillators 1–3, external input, noise' }],
     },
@@ -162,7 +166,7 @@ export const routing: SynthRouting = {
   edges: [
     { id: 'c01', from: 'midi', to: 'pitch_bus', signal: 'cv', label: 'pitch' },
     { id: 'c02', from: 'midi', to: 'pitch_bus', signal: 'cv', label: 'pitch bend' },
-    { id: 'c03', from: 'midi', to: 'mod_bus', signal: 'cv', label: 'mod wheel' },
+    { id: 'c03', from: 'midi', to: 'mod_bus', signal: 'cv', label: 'mod wheel', levels: [WHEEL] },
     { id: 'c04', from: 'midi', to: 'filter_contour', signal: 'gate' },
     { id: 'c05', from: 'midi', to: 'loudness_contour', signal: 'gate' },
     { id: 'c10', from: 'pitch_bus', to: 'osc1', signal: 'cv', label: 'pitch' },

@@ -119,6 +119,45 @@ describe('routingProblems', () => {
     ]);
   });
 
+  it('refuses two normals broken by the same jack', () => {
+    expect(
+      edit((r) => {
+        r.edges.push({ ...edge(r, 'c22'), id: 'c99', from: 'lfo' });
+      })
+    ).toEqual(['edge c99: j.modSrc already breaks edge c22']);
+  });
+
+  it('refuses a pow on a control that is not continuous, or one that is not above zero', () => {
+    expect(
+      edit((r) => {
+        edge(r, 'c40').levels = [
+          { id: 'mix.osc1On', off: false, pow: 2 },
+          { id: 'mix.osc1', pow: 0 },
+        ];
+      })
+    ).toEqual(['edge c40: mix.osc1On cannot take pow 2', 'edge c40: mix.osc1 cannot take pow 0']);
+  });
+
+  it('counts a cable as a way to the output for a block that has no edge out', () => {
+    expect(
+      edit((r) => {
+        r.edges = r.edges.filter((e) => e.from !== 'lfo');
+      })
+    ).toEqual([]);
+  });
+
+  it('refuses a block that passes signal on with nothing to feed it', () => {
+    expect(
+      edit((r) => {
+        r.blocks.find((b) => b.id === 'lfo')!.passes = true;
+        delete r.jacks['j.lfoCv'];
+      })
+    ).toEqual([
+      'jack j.lfoCv belongs to no block',
+      'block lfo passes signal on, but nothing feeds it',
+    ]);
+  });
+
   it('refuses a jack id the definition does not have, and a definition jack left out', () => {
     expect(
       edit((r) => {
