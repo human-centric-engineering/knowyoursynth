@@ -906,7 +906,7 @@
         {
           "title": "The stack",
           "module": "osc",
-          "why": "SUPER brings in DDS 1’s sisters.\n- Listen for: a wide, shimmering stack.",
+          "why": "SUPER brings in DDS 1’s sisters.\n- UPPER SUPER ON, PW / DETUNE 70 %\n- Listen for: a wide, shimmering stack.",
           "set": {
             "up.super": "on",
             "up.pwDetune": 7
@@ -915,7 +915,7 @@
         {
           "title": "Bright",
           "module": "filter",
-          "why": "Open the filter, a short release.\n- Listen for: bright anthem chords.",
+          "why": "Open the filter, a short release.\n- UPPER LPF 7.1 kHz\n- UPPER ENV 2 R 100 ms\n- Listen for: bright anthem chords.",
           "set": {
             "up.lpf": 8.5,
             "up.e2r": 5
@@ -924,7 +924,7 @@
         {
           "title": "Space",
           "module": "fx",
-          "why": "- Listen for: chords filling a club.",
+          "why": "- CHORUS I on\n- UPPER DELAY SEND 30 %\n- DELAY TIME 500 ms, FEEDBACK 40 %\n- Listen for: chords filling a club.",
           "set": {
             "chorus.i": true,
             "up.send": 3,
@@ -977,7 +977,7 @@
         {
           "title": "One voice",
           "module": "mode",
-          "why": "- Listen for: a single gliding line.",
+          "why": "- VOICE ASSIGN MODE LEGATO\n- PORTAMENTO 80 ms\n- Listen for: a single gliding line.",
           "set": {
             "voice.mode": "legato",
             "perf.porta": 2
@@ -986,7 +986,7 @@
         {
           "title": "Super",
           "module": "osc",
-          "why": "- Listen for: a soaring lead.",
+          "why": "- UPPER SUPER ON, PW / DETUNE 60 %, LPF 5.0 kHz\n- Listen for: a soaring lead.",
           "set": {
             "up.super": "on",
             "up.pwDetune": 6,
@@ -996,7 +996,7 @@
         {
           "title": "Echo",
           "module": "fx",
-          "why": "- Listen for: a lead over a crowd.",
+          "why": "- UPPER DELAY SEND 40 %\n- DELAY TIME 500 ms, FEEDBACK 50 %\n- Listen for: a lead over a crowd.",
           "set": {
             "up.send": 4,
             "dly.time": 9,
@@ -1079,7 +1079,7 @@
         {
           "title": "Stack",
           "module": "osc",
-          "why": "- Listen for: a supersaw.",
+          "why": "- UPPER SUPER ON, PW / DETUNE 50 %\n- Listen for: a supersaw.",
           "set": {
             "up.super": "on",
             "up.pwDetune": 5
@@ -1088,7 +1088,7 @@
         {
           "title": "Pluck",
           "module": "filter",
-          "why": "Envelope 1 snaps the filter; envelope 2 has no sustain.\n- Listen for: short, bright plucks.",
+          "why": "Envelope 1 snaps the filter; envelope 2 has no sustain.\n- UPPER LPF 632 Hz, VCF ENV 50 %\n- UPPER ENV 1 D 250 ms, S 0 %\n- UPPER ENV 2 D 400 ms, S 0 %, R 250 ms\n- Listen for: short, bright plucks.",
           "set": {
             "up.lpf": 5,
             "up.vcfEnv": 5,
@@ -1102,7 +1102,7 @@
         {
           "title": "Echoes",
           "module": "fx",
-          "why": "- Listen for: plucks rolling through echoes.",
+          "why": "- UPPER DELAY SEND 50 %\n- DELAY TIME 500 ms, FEEDBACK 50 %\n- Listen for: plucks rolling through echoes.",
           "set": {
             "up.send": 5,
             "dly.time": 9,
@@ -1150,7 +1150,7 @@
         {
           "title": "Stack",
           "module": "mode",
-          "why": "- Listen for: a churning stack.",
+          "why": "- VOICE ASSIGN MODE LEGATO\n- UNISON on\n- UPPER SUPER ON, PW / DETUNE 70 %, DDS 2 WAVEFORM pulse, MIX 50 : 50, PW / WAVE source LFO 1, PW / WAVE 60 %\n- UPPER LFO 1 RATE 0.58 Hz\n- Listen for: a churning stack.",
           "set": {
             "voice.mode": "legato",
             "voice.unison": true,
@@ -1166,7 +1166,7 @@
         {
           "title": "Swoop",
           "module": "osc",
-          "why": "Envelope 1, inverted, drops the pitch into each note.\n- Listen for: notes swooping in.",
+          "why": "Envelope 1, inverted, drops the pitch into each note.\n- UPPER DDS MOD destination 1 + 2, ENV 1 30 %\n- UPPER ENV 1 MODE INVERTED, D 630 ms, S 100 %\n- PORTAMENTO 270 ms\n- Listen for: notes swooping in.",
           "set": {
             "up.modDest": "both",
             "up.modEnv": 3,
@@ -1179,7 +1179,7 @@
         {
           "title": "Ensemble",
           "module": "fx",
-          "why": "- Listen for: the hoover.",
+          "why": "- CHORUS I on, II on\n- UPPER LPF 1.3 kHz\n- Listen for: the hoover.",
           "set": {
             "chorus.i": true,
             "chorus.ii": true,
@@ -1246,7 +1246,7 @@
         {
           "title": "Bright top",
           "module": "osc",
-          "why": "- Listen for: a bright supersaw.",
+          "why": "- UPPER SUPER ON, PW / DETUNE 60 %, LPF 5.0 kHz\n- UPPER ENV 2 A 100 ms, R 630 ms\n- Listen for: a bright supersaw.",
           "set": {
             "up.super": "on",
             "up.pwDetune": 6,
@@ -1258,7 +1258,7 @@
         {
           "title": "Warm bottom",
           "module": "osc",
-          "why": "- Listen for: a warm, slow pad underneath.",
+          "why": "- LOWER DDS 1 RANGE 16′, LPF 893 Hz\n- LOWER ENV 2 A 630 ms, R 1.6 s\n- LOWER VCA ENV LEVEL 60 %\n- Listen for: a warm, slow pad underneath.",
           "set": {
             "lo.dds1Range": "16",
             "lo.lpf": 5.5,
@@ -1270,7 +1270,7 @@
         {
           "title": "Space",
           "module": "fx",
-          "why": "- Listen for: a soaring pad.",
+          "why": "- CHORUS I on\n- UPPER DELAY SEND 30 %\n- DELAY TIME 500 ms, FEEDBACK 50 %\n- Listen for: a soaring pad.",
           "set": {
             "chorus.i": true,
             "up.send": 3,
@@ -1330,7 +1330,7 @@
         {
           "title": "Stack",
           "module": "osc",
-          "why": "- Listen for: a bright chord.",
+          "why": "- UPPER SUPER ON, PW / DETUNE 60 %, LPF 3.6 kHz\n- Listen for: a bright chord.",
           "set": {
             "up.super": "on",
             "up.pwDetune": 6,
@@ -1340,7 +1340,7 @@
         {
           "title": "Gate",
           "module": "mod",
-          "why": "- Listen for: the chord chopped into a rhythm.",
+          "why": "- UPPER LFO 1 WAVEFORM square, MODE RESET, RATE 9.78 Hz\n- UPPER VCA LFO 1 100 %\n- Listen for: the chord chopped into a rhythm.",
           "set": {
             "up.lfoWave": "sq",
             "up.lfoMode": "reset",
@@ -1351,7 +1351,7 @@
         {
           "title": "Echo",
           "module": "fx",
-          "why": "- Listen for: a gated trance pad.",
+          "why": "- UPPER DELAY SEND 30 %\n- DELAY TIME 350 ms, FEEDBACK 40 %\n- Listen for: a gated trance pad.",
           "set": {
             "up.send": 3,
             "dly.time": 8.5,
@@ -1400,7 +1400,7 @@
         {
           "title": "Stack",
           "module": "osc",
-          "why": "- Listen for: a huge lead.",
+          "why": "- VOICE ASSIGN MODE LEGATO\n- UNISON on\n- PORTAMENTO 80 ms\n- UPPER SUPER ON, PW / DETUNE 80 %\n- Listen for: a huge lead.",
           "set": {
             "voice.mode": "legato",
             "voice.unison": true,
@@ -1412,7 +1412,7 @@
         {
           "title": "Screech",
           "module": "filter",
-          "why": "- Listen for: a distorted screech.",
+          "why": "- UPPER DRIVE 2, LPF 2.5 kHz, RES 50 %, VCA ENV LEVEL 60 %\n- Listen for: a distorted screech.",
           "set": {
             "up.drive": "2",
             "up.lpf": 7,
@@ -1476,7 +1476,7 @@
         {
           "title": "Keys",
           "module": "osc",
-          "why": "- Listen for: a bright piano-like chord.",
+          "why": "- UPPER DDS 1 WAVEFORM sine, DDS 2 WAVEFORM sawtooth, MIX 60 : 40, DDS 2 TUNE +0.1 st, LPF 2.5 kHz\n- UPPER ENV 2 D 630 ms, S 30 %, R 400 ms\n- Listen for: a bright piano-like chord.",
           "set": {
             "up.dds1Wave": "sine",
             "up.dds2Wave": "saw",
@@ -1491,7 +1491,7 @@
         {
           "title": "Dream",
           "module": "fx",
-          "why": "- Listen for: dreamy echoes.",
+          "why": "- CHORUS I on\n- UPPER DELAY SEND 50 %\n- DELAY TIME 500 ms, FEEDBACK 50 %\n- Listen for: dreamy echoes.",
           "set": {
             "chorus.i": true,
             "up.send": 5,
@@ -1519,8 +1519,8 @@
     {
       "id": "sg-warm-pad",
       "name": "Warm Pad",
-      "ref": "Classic technique: two saws and a soft filter",
-      "artist": "Classic technique",
+      "ref": "In the style of 1980s synth-pop pads",
+      "artist": "80s synth-pop",
       "tags": ["pad", "warm", "basics"],
       "level": 1,
       "blurb": "A plain, warm, slow analogue-style pad.",
@@ -1551,7 +1551,7 @@
         {
           "title": "Two saws",
           "module": "osc",
-          "why": "- Listen for: a thick, beating chord.",
+          "why": "- UPPER MIX 50 : 50, DDS 2 TUNE +0.1 st\n- Listen for: a thick, beating chord.",
           "set": {
             "up.mix": 5,
             "up.dds2Tune": 0.1
@@ -1560,7 +1560,7 @@
         {
           "title": "Soft",
           "module": "filter",
-          "why": "- Listen for: a warm, swelling pad.",
+          "why": "- UPPER LPF 1.3 kHz\n- UPPER ENV 2 A 630 ms, R 1.0 s\n- Listen for: a warm, swelling pad.",
           "set": {
             "up.lpf": 6,
             "up.e2a": 7,
@@ -1570,7 +1570,7 @@
         {
           "title": "Wide",
           "module": "fx",
-          "why": "- Listen for: a warm pad.",
+          "why": "- CHORUS I on\n- Listen for: a warm pad.",
           "set": {
             "chorus.i": true
           }
@@ -1595,8 +1595,8 @@
     {
       "id": "sg-glass-pad",
       "name": "Glass Pad",
-      "ref": "Classic technique: triangles an octave apart",
-      "artist": "Classic technique",
+      "ref": "In the style of 1980s ambient glass pads",
+      "artist": "Ambient",
       "tags": ["pad", "ambient", "soft"],
       "level": 1,
       "blurb": "A pure, glassy pad that rings on.",
@@ -1627,7 +1627,7 @@
         {
           "title": "Glass",
           "module": "osc",
-          "why": "- Listen for: a pure, glassy pad.",
+          "why": "- UPPER DDS 1 WAVEFORM triangle, DDS 2 WAVEFORM triangle, DDS 2 RANGE 4′, MIX 60 : 40\n- UPPER ENV 2 A 400 ms, R 1.6 s\n- Listen for: a pure, glassy pad.",
           "set": {
             "up.dds1Wave": "tri",
             "up.dds2Wave": "tri",
@@ -1640,7 +1640,7 @@
         {
           "title": "Air",
           "module": "fx",
-          "why": "- Listen for: glass ringing in the air.",
+          "why": "- CHORUS I on\n- UPPER DELAY SEND 30 %\n- DELAY TIME 710 ms, FEEDBACK 50 %\n- Listen for: glass ringing in the air.",
           "set": {
             "chorus.i": true,
             "up.send": 3,
@@ -1668,8 +1668,8 @@
     {
       "id": "sg-strings-pwm",
       "name": "PWM Pad",
-      "ref": "Classic technique: a pulse swept by LFO 1",
-      "artist": "Classic technique",
+      "ref": "In the style of 1970s polysynth string pads",
+      "artist": "Polysynth pads",
       "tags": ["pad", "pwm", "soft"],
       "level": 2,
       "blurb": "A soft, shimmering pulse-wave pad.",
@@ -1700,7 +1700,7 @@
         {
           "title": "Pulse",
           "module": "osc",
-          "why": "- Listen for: a shimmering pulse.",
+          "why": "- UPPER DDS 2 WAVEFORM pulse, MIX 0 : 100, PW / WAVE source LFO 1, PW / WAVE 60 %\n- UPPER LFO 1 RATE 0.58 Hz\n- Listen for: a shimmering pulse.",
           "set": {
             "up.dds2Wave": "pulse",
             "up.mix": 10,
@@ -1712,7 +1712,7 @@
         {
           "title": "Pad",
           "module": "env",
-          "why": "- Listen for: a soft PWM pad.",
+          "why": "- UPPER LPF 1.8 kHz\n- UPPER ENV 2 A 630 ms, R 1.0 s\n- CHORUS I on\n- Listen for: a soft PWM pad.",
           "set": {
             "up.lpf": 6.5,
             "up.e2a": 7,
@@ -1740,8 +1740,8 @@
     {
       "id": "sg-dual-octave-pad",
       "name": "Octave Layers",
-      "ref": "Classic technique: DUAL with the lower layer an octave down",
-      "artist": "Classic technique",
+      "ref": "In the style of 1980s ballad pads",
+      "artist": "80s ballads",
       "tags": ["pad", "dual", "octave"],
       "level": 1,
       "blurb": "A broad pad with every chord doubled an octave below by the second layer.",
@@ -1776,7 +1776,7 @@
         {
           "title": "The layers",
           "module": "osc",
-          "why": "- Listen for: a broad pad with a deep shadow.",
+          "why": "- UPPER LPF 2.5 kHz\n- UPPER ENV 2 A 250 ms, R 630 ms\n- LOWER DDS 1 RANGE 16′, DDS 1 WAVEFORM triangle, LPF 632 Hz\n- LOWER ENV 2 A 250 ms, R 630 ms\n- Listen for: a broad pad with a deep shadow.",
           "set": {
             "up.lpf": 7,
             "up.e2a": 6,
@@ -1791,7 +1791,7 @@
         {
           "title": "Wide",
           "module": "fx",
-          "why": "- Listen for: a broad, warm pad.",
+          "why": "- CHORUS I on\n- Listen for: a broad, warm pad.",
           "set": {
             "chorus.i": true
           }
@@ -1816,8 +1816,8 @@
     {
       "id": "sg-fifths-pad",
       "name": "Fifths Layers",
-      "ref": "Classic technique: the lower layer detuned a fifth",
-      "artist": "Classic technique",
+      "ref": "In the style of 1970s cosmic synth records",
+      "artist": "Kosmische / ambient",
       "tags": ["pad", "dual", "fifths"],
       "level": 1,
       "blurb": "Single notes become open fifths: the lower layer a fifth up.",
@@ -1849,7 +1849,7 @@
         {
           "title": "Soften",
           "module": "env",
-          "why": "- Listen for: a hollow, glowing pad.",
+          "why": "- UPPER LPF 1.8 kHz\n- UPPER ENV 2 A 100 ms, R 250 ms\n- LOWER LPF 1.8 kHz\n- LOWER ENV 2 A 100 ms, R 250 ms\n- CHORUS I on\n- Listen for: a hollow, glowing pad.",
           "set": {
             "up.lpf": 6.5,
             "up.e2a": 5,
@@ -1880,8 +1880,8 @@
     {
       "id": "sg-drift-pad",
       "name": "Drifting Pad",
-      "ref": "Classic technique: DRIFT for an unstable vintage pad",
-      "artist": "Classic technique",
+      "ref": "In the style of vintage polysynths with drifting voices",
+      "artist": "Polysynth pads",
       "tags": ["pad", "vintage", "drift"],
       "level": 2,
       "blurb": "A pad whose voices wander slightly out of tune, like an old, warm-up-needing polysynth.",
@@ -1912,7 +1912,7 @@
         {
           "title": "A pad",
           "module": "osc",
-          "why": "- Listen for: a steady pad.",
+          "why": "- UPPER MIX 50 : 50, DDS 2 TUNE +0.1 st, LPF 1.3 kHz\n- UPPER ENV 2 A 400 ms, R 630 ms\n- Listen for: a steady pad.",
           "set": {
             "up.mix": 5,
             "up.dds2Tune": 0.1,
@@ -1924,7 +1924,7 @@
         {
           "title": "Drift",
           "module": "osc",
-          "why": "- Listen for: every voice wandering slightly.",
+          "why": "- UPPER DRIFT 50 %\n- Listen for: every voice wandering slightly.",
           "set": {
             "up.drift": 5
           }
@@ -1932,7 +1932,7 @@
         {
           "title": "Wide",
           "module": "fx",
-          "why": "- Listen for: a vintage pad.",
+          "why": "- CHORUS I on\n- Listen for: a vintage pad.",
           "set": {
             "chorus.i": true
           }
@@ -1957,8 +1957,8 @@
     {
       "id": "sg-sweep-pad",
       "name": "Sweep Pad",
-      "ref": "Classic technique: LFO 2 slowly sweeping both layers",
-      "artist": "Classic technique",
+      "ref": "In the style of synthwave filter-sweep pads",
+      "artist": "Synthwave",
       "tags": ["pad", "filter", "lfo"],
       "level": 2,
       "blurb": "A resonant pad whose filter rises and falls very slowly.",
@@ -1985,7 +1985,7 @@
         {
           "title": "A resonant pad",
           "module": "filter",
-          "why": "- Listen for: a ringing chord.",
+          "why": "- UPPER SUPER ON, PW / DETUNE 40 %, LPF 632 Hz, RES 60 %\n- UPPER ENV 2 A 100 ms, R 250 ms\n- Listen for: a ringing chord.",
           "set": {
             "up.super": "on",
             "up.pwDetune": 4,
@@ -1998,7 +1998,7 @@
         {
           "title": "Sweep",
           "module": "mod",
-          "why": "- LFO 2 TRIGGER ON: always, no wheel\n- Listen for: the chord sweeping slowly.",
+          "why": "- LFO 2 TRIGGER ON: always, no wheel\n- LFO 2 RATE 0.19 Hz, VCF 60 %\n- Listen for: the chord sweeping slowly.",
           "set": {
             "lfo2.trig": "on",
             "lfo2.rate": 2.5,
@@ -2025,8 +2025,8 @@
     {
       "id": "sg-choir-pad",
       "name": "Synth Choir",
-      "ref": "Classic technique: a vowel filter and the dense chorus",
-      "artist": "Classic technique",
+      "ref": "In the style of 1980s synth choirs",
+      "artist": "80s ballads",
       "tags": ["pad", "choir", "vocal"],
       "level": 2,
       "blurb": "A soft, vowel-like choir.",
@@ -2057,7 +2057,7 @@
         {
           "title": "A vowel",
           "module": "filter",
-          "why": "- Listen for: an “ah”-like colour.",
+          "why": "- UPPER DDS 1 WAVEFORM triangle, MIX 60 : 40, LPF 1.3 kHz, RES 50 %, VCF KEYTRACK OFF\n- Listen for: an “ah”-like colour.",
           "set": {
             "up.dds1Wave": "tri",
             "up.mix": 4,
@@ -2069,7 +2069,7 @@
         {
           "title": "Sing",
           "module": "mod",
-          "why": "- Listen for: a slow, singing swell.",
+          "why": "- UPPER LFO 1 RATE 3.73 Hz, DELAY 900 ms\n- UPPER DDS MOD LFO 1 10 %, destination 1 + 2\n- UPPER ENV 2 A 630 ms, R 630 ms\n- Listen for: a slow, singing swell.",
           "set": {
             "up.lfoRate": 6.5,
             "up.lfoDelay": 3,
@@ -2082,7 +2082,7 @@
         {
           "title": "A choir",
           "module": "fx",
-          "why": "- Listen for: many voices.",
+          "why": "- CHORUS I on, II on\n- Listen for: many voices.",
           "set": {
             "chorus.i": true,
             "chorus.ii": true
@@ -2108,8 +2108,8 @@
     {
       "id": "sg-dark-pad",
       "name": "Dark Drone Pad",
-      "ref": "Classic technique: both layers low and dark",
-      "artist": "Classic technique",
+      "ref": "In the style of dark ambient drones",
+      "artist": "Dark ambient",
       "tags": ["pad", "dark", "dual"],
       "level": 2,
       "blurb": "A heavy, dark bed of sound for tension.",
@@ -2132,7 +2132,7 @@
         {
           "title": "Two dark layers",
           "module": "mode",
-          "why": "- KEYBOARD DUAL: both layers on every key\n- Listen for: a heavy, dark chord.",
+          "why": "- KEYBOARD DUAL: both layers on every key\n- UPPER LPF 448 Hz, RES 30 %\n- UPPER ENV 2 A 1.6 s, R 1.6 s\n- LOWER DDS 1 RANGE 16′, LPF 317 Hz, DRIFT 40 %\n- LOWER ENV 2 A 1.6 s, R 1.6 s\n- Listen for: a heavy, dark chord.",
           "set": {
             "kbd.mode": "dual",
             "up.lpf": 4.5,
@@ -2149,7 +2149,7 @@
         {
           "title": "A cave",
           "module": "fx",
-          "why": "- Listen for: a cavernous drone.",
+          "why": "- UPPER DELAY SEND 30 %\n- LOWER DELAY SEND 30 %\n- DELAY TIME 1.0 s, FEEDBACK 60 %\n- Listen for: a cavernous drone.",
           "set": {
             "up.send": 3,
             "lo.send": 3,
@@ -2177,8 +2177,8 @@
     {
       "id": "sg-breathing-pad",
       "name": "Breathing Pad",
-      "ref": "Classic technique: noise from DDS 2 under a pad",
-      "artist": "Classic technique",
+      "ref": "In the style of ambient pads with breath",
+      "artist": "Ambient",
       "tags": ["pad", "noise", "ambient"],
       "level": 2,
       "blurb": "An airy pad with a breath of noise.",
@@ -2213,7 +2213,7 @@
         {
           "title": "Breath",
           "module": "osc",
-          "why": "- Listen for: a hiss under the chord.",
+          "why": "- UPPER DDS 2 WAVEFORM noise, MIX 70 : 30, LPF 1.3 kHz, RES 40 %\n- Listen for: a hiss under the chord.",
           "set": {
             "up.dds2Wave": "noise",
             "up.mix": 3,
@@ -2224,7 +2224,7 @@
         {
           "title": "Breathe",
           "module": "env",
-          "why": "- Listen for: a breathing pad.",
+          "why": "- UPPER ENV 2 A 1.0 s, R 1.6 s\n- CHORUS I on, II on\n- Listen for: a breathing pad.",
           "set": {
             "up.e2a": 7.5,
             "up.e2r": 8,
@@ -2252,8 +2252,8 @@
     {
       "id": "sg-evolving-pad",
       "name": "Evolving Pad",
-      "ref": "Classic technique: two layers moving at different speeds",
-      "artist": "Classic technique",
+      "ref": "In the style of evolving ambient pads",
+      "artist": "Ambient",
       "tags": ["pad", "dual", "evolving"],
       "level": 3,
       "blurb": "A pad that keeps changing: each layer’s filter moves at its own pace.",
@@ -2276,7 +2276,7 @@
         {
           "title": "Two layers",
           "module": "mode",
-          "why": "- KEYBOARD DUAL: both layers on every key\n- Listen for: a two-layer pad.",
+          "why": "- KEYBOARD DUAL: both layers on every key\n- UPPER SUPER ON, PW / DETUNE 40 %, LPF 893 Hz, RES 40 %\n- UPPER ENV 2 A 630 ms, R 630 ms\n- LOWER DDS 1 WAVEFORM square, LPF 632 Hz, RES 40 %\n- LOWER ENV 2 A 630 ms, R 630 ms\n- Listen for: a two-layer pad.",
           "set": {
             "kbd.mode": "dual",
             "up.super": "on",
@@ -2295,7 +2295,7 @@
         {
           "title": "Different speeds",
           "module": "mod",
-          "why": "- Listen for: the layers moving in and out of each other.",
+          "why": "- UPPER LFO 1 RATE 0.19 Hz\n- UPPER VCF LFO 1 40 %\n- LOWER LFO 1 RATE 0.09 Hz\n- LOWER VCF LFO 1 50 %\n- Listen for: the layers moving in and out of each other.",
           "set": {
             "up.lfoRate": 2.5,
             "up.vcfLfo": 4,
@@ -2306,7 +2306,7 @@
         {
           "title": "Space",
           "module": "fx",
-          "why": "- Listen for: an ever-changing pad.",
+          "why": "- CHORUS I on\n- UPPER DELAY SEND 30 %\n- DELAY TIME 710 ms, FEEDBACK 60 %\n- Listen for: an ever-changing pad.",
           "set": {
             "chorus.i": true,
             "up.send": 3,
@@ -2366,7 +2366,7 @@
         {
           "title": "Soft",
           "module": "osc",
-          "why": "- Listen for: a soft pad.",
+          "why": "- UPPER DDS 1 WAVEFORM triangle, MIX 70 : 30, LPF 1.3 kHz\n- UPPER ENV 2 A 1.0 s, R 1.6 s\n- Listen for: a soft pad.",
           "set": {
             "up.dds1Wave": "tri",
             "up.mix": 3,
@@ -2378,7 +2378,7 @@
         {
           "title": "Wash",
           "module": "fx",
-          "why": "- Listen for: an endless wash.",
+          "why": "- UPPER DELAY SEND 60 %\n- DELAY TIME 1.0 s, FEEDBACK 70 %\n- CHORUS I on\n- Listen for: an endless wash.",
           "set": {
             "up.send": 6,
             "dly.time": 10,
@@ -2438,7 +2438,7 @@
         {
           "title": "Bow",
           "module": "env",
-          "why": "- Listen for: a plain organ-like saw.",
+          "why": "- UPPER ENV 2 A 400 ms, R 630 ms\n- UPPER LPF 3.6 kHz\n- Listen for: a plain organ-like saw.",
           "set": {
             "up.e2a": 6.5,
             "up.e2r": 7,
@@ -2448,7 +2448,7 @@
         {
           "title": "Ensemble",
           "module": "fx",
-          "why": "- Listen for: a shimmering string section.",
+          "why": "- CHORUS I on, II on\n- Listen for: a shimmering string section.",
           "set": {
             "chorus.i": true,
             "chorus.ii": true
@@ -2510,7 +2510,7 @@
         {
           "title": "Section",
           "module": "osc",
-          "why": "- Listen for: a broad string chord.",
+          "why": "- UPPER SUPER ON, PW / DETUNE 40 %, LPF 1.8 kHz\n- UPPER ENV 2 A 630 ms, R 1.0 s\n- Listen for: a broad string chord.",
           "set": {
             "up.super": "on",
             "up.pwDetune": 4,
@@ -2522,7 +2522,7 @@
         {
           "title": "Vibrato",
           "module": "mod",
-          "why": "- Listen for: vibrato arriving as the chord holds.",
+          "why": "- UPPER LFO 1 RATE 4.32 Hz, DELAY 900 ms\n- UPPER DDS MOD LFO 1 10 %, destination 1 + 2\n- Listen for: vibrato arriving as the chord holds.",
           "set": {
             "up.lfoRate": 6.7,
             "up.lfoDelay": 3,
@@ -2533,7 +2533,7 @@
         {
           "title": "Hall",
           "module": "fx",
-          "why": "- Listen for: lush film strings.",
+          "why": "- CHORUS I on, II on\n- UPPER DELAY SEND 20 %\n- DELAY TIME 500 ms, FEEDBACK 40 %\n- Listen for: lush film strings.",
           "set": {
             "chorus.i": true,
             "chorus.ii": true,
@@ -2562,8 +2562,8 @@
     {
       "id": "sg-strings-and-horns",
       "name": "Strings and Horns",
-      "ref": "Classic technique: two orchestral layers",
-      "artist": "Classic technique",
+      "ref": "In the style of 1980s film-score synth orchestras",
+      "artist": "Film scores",
       "tags": ["strings", "brass", "dual"],
       "level": 2,
       "blurb": "Slow strings on top and mellow horns below, on every key.",
@@ -2602,7 +2602,7 @@
         {
           "title": "Strings",
           "module": "env",
-          "why": "- Listen for: slow strings.",
+          "why": "- UPPER SUPER ON, PW / DETUNE 40 %, LPF 1.8 kHz\n- UPPER ENV 2 A 1.0 s, R 1.0 s\n- Listen for: slow strings.",
           "set": {
             "up.super": "on",
             "up.pwDetune": 4,
@@ -2614,7 +2614,7 @@
         {
           "title": "Horns",
           "module": "filter",
-          "why": "- Listen for: mellow horns swelling under them.",
+          "why": "- LOWER DDS 1 WAVEFORM sawtooth, LPF 317 Hz, VCF ENV 40 %\n- LOWER ENV 1 A 250 ms, D 630 ms, S 40 %\n- LOWER ENV 2 A 100 ms, R 250 ms\n- LOWER VCA ENV LEVEL 60 %\n- Listen for: mellow horns swelling under them.",
           "set": {
             "lo.dds1Wave": "saw",
             "lo.lpf": 4,
@@ -2630,7 +2630,7 @@
         {
           "title": "Hall",
           "module": "fx",
-          "why": "- Listen for: an orchestra.",
+          "why": "- CHORUS I on\n- UPPER DELAY SEND 20 %\n- LOWER DELAY SEND 20 %\n- DELAY TIME 500 ms, FEEDBACK 40 %\n- Listen for: an orchestra.",
           "set": {
             "chorus.i": true,
             "up.send": 2,
@@ -2699,7 +2699,7 @@
         {
           "title": "Blare",
           "module": "filter",
-          "why": "- Listen for: a brassy blare.",
+          "why": "- UPPER MIX 50 : 50, DDS 2 TUNE +0.1 st, LPF 448 Hz, VCF ENV 50 %\n- UPPER ENV 1 A 40 ms, D 250 ms, S 30 %\n- Listen for: a brassy blare.",
           "set": {
             "up.mix": 5,
             "up.dds2Tune": 0.1,
@@ -2713,7 +2713,7 @@
         {
           "title": "Stab",
           "module": "env",
-          "why": "- Listen for: punchy stabs.",
+          "why": "- UPPER ENV 2 D 400 ms, S 60 %, R 100 ms\n- Listen for: punchy stabs.",
           "set": {
             "up.e2d": 6.5,
             "up.e2s": 6,
@@ -2740,8 +2740,8 @@
     {
       "id": "sg-poly-brass",
       "name": "Poly Brass",
-      "ref": "Classic technique: a fat, held brass chord",
-      "artist": "Classic technique",
+      "ref": "In the style of 1980s polysynth brass",
+      "artist": "Prophet-style brass",
       "tags": ["brass", "pad", "80s"],
       "level": 1,
       "blurb": "Big, held brass chords with a slow blare: the synth brass of 1980s ballads.",
@@ -2772,7 +2772,7 @@
         {
           "title": "Layers",
           "module": "mode",
-          "why": "- KEYBOARD DUAL: both layers on every key\n- Listen for: a fat chord.",
+          "why": "- KEYBOARD DUAL: both layers on every key\n- LOWER DDS 1 RANGE 16′, LPF 448 Hz, VCA ENV LEVEL 50 %\n- Listen for: a fat chord.",
           "set": {
             "kbd.mode": "dual",
             "lo.dds1Range": "16",
@@ -2783,7 +2783,7 @@
         {
           "title": "Blare",
           "module": "filter",
-          "why": "- Listen for: chords blaring open slowly.",
+          "why": "- UPPER MIX 50 : 50, DDS 2 TUNE +0.2 st, LPF 448 Hz, VCF ENV 50 %\n- UPPER ENV 1 A 250 ms, D 630 ms, S 50 %\n- UPPER ENV 2 R 160 ms\n- Listen for: chords blaring open slowly.",
           "set": {
             "up.mix": 5,
             "up.dds2Tune": 0.15,
@@ -2798,7 +2798,7 @@
         {
           "title": "Wide",
           "module": "fx",
-          "why": "- Listen for: big poly brass.",
+          "why": "- CHORUS I on\n- Listen for: big poly brass.",
           "set": {
             "chorus.i": true
           }
@@ -2823,8 +2823,8 @@
     {
       "id": "sg-fanfare",
       "name": "Fanfare",
-      "ref": "Classic technique: bright brass with a pitch lift",
-      "artist": "Classic technique",
+      "ref": "In the style of heroic film-score fanfares",
+      "artist": "Film scores",
       "tags": ["brass", "film", "bright"],
       "level": 2,
       "blurb": "Bright, triumphant brass with a lip lift on every chord.",
@@ -2867,7 +2867,7 @@
         {
           "title": "Bright brass",
           "module": "filter",
-          "why": "- Listen for: bright brass.",
+          "why": "- UPPER MIX 50 : 50, DDS 2 TUNE +0.1 st, LPF 893 Hz, VCF ENV 40 %\n- UPPER ENV 1 A 40 ms, D 400 ms, S 50 %\n- Listen for: bright brass.",
           "set": {
             "up.mix": 5,
             "up.dds2Tune": 0.1,
@@ -2881,7 +2881,7 @@
         {
           "title": "Lip",
           "module": "osc",
-          "why": "- Listen for: each chord lifting into tune.",
+          "why": "- UPPER DDS MOD ENV 1 4 %, destination 1 + 2\n- Listen for: each chord lifting into tune.",
           "set": {
             "up.modEnv": 0.4,
             "up.modDest": "both"
@@ -2890,7 +2890,7 @@
         {
           "title": "Hall",
           "module": "fx",
-          "why": "- Listen for: a fanfare.",
+          "why": "- UPPER DELAY SEND 20 %\n- DELAY TIME 350 ms, FEEDBACK 30 %\n- Listen for: a fanfare.",
           "set": {
             "up.send": 2,
             "dly.time": 8.5,
@@ -2917,8 +2917,8 @@
     {
       "id": "sg-pizzicato",
       "name": "Pizzicato",
-      "ref": "Classic technique: a short, plucked string",
-      "artist": "Classic technique",
+      "ref": "In the style of orchestral pizzicato strings",
+      "artist": "Orchestral",
       "tags": ["strings", "pluck", "classical"],
       "level": 1,
       "blurb": "Short plucked strings.",
@@ -2945,7 +2945,7 @@
         {
           "title": "Pluck",
           "module": "env",
-          "why": "- Listen for: plucked strings.",
+          "why": "- UPPER LPF 632 Hz, VCF ENV 40 %\n- UPPER ENV 1 D 160 ms, S 0 %\n- UPPER ENV 2 D 400 ms, S 0 %, R 250 ms\n- Listen for: plucked strings.",
           "set": {
             "up.lpf": 5,
             "up.vcfEnv": 4,
@@ -2959,7 +2959,7 @@
         {
           "title": "Hall",
           "module": "fx",
-          "why": "- Listen for: pizzicato in a hall.",
+          "why": "- CHORUS I on\n- UPPER DELAY SEND 20 %\n- DELAY TIME 250 ms, FEEDBACK 30 %\n- Listen for: pizzicato in a hall.",
           "set": {
             "chorus.i": true,
             "up.send": 2,
@@ -2987,8 +2987,8 @@
     {
       "id": "sg-cello",
       "name": "Cello",
-      "ref": "Classic technique: a bowed saw an octave down with delayed vibrato",
-      "artist": "Classic technique",
+      "ref": "In the style of the orchestral cello",
+      "artist": "Orchestral",
       "tags": ["strings", "classical", "mono"],
       "level": 2,
       "blurb": "A dark, bowed, singing low line.",
@@ -3008,7 +3008,7 @@
         {
           "title": "One cello",
           "module": "mode",
-          "why": "- Listen for: a bowed cello.",
+          "why": "- VOICE ASSIGN MODE LEGATO\n- UPPER DDS 1 RANGE 16′, LPF 893 Hz\n- UPPER ENV 2 A 400 ms, R 250 ms\n- Listen for: a bowed cello.",
           "set": {
             "voice.mode": "legato",
             "up.dds1Range": "16",
@@ -3020,7 +3020,7 @@
         {
           "title": "Vibrato",
           "module": "mod",
-          "why": "- Listen for: a singing cello.",
+          "why": "- UPPER LFO 1 RATE 3.73 Hz, DELAY 400 ms\n- UPPER DDS MOD LFO 1 10 %\n- Listen for: a singing cello.",
           "set": {
             "up.lfoRate": 6.5,
             "up.lfoDelay": 2,
@@ -3047,8 +3047,8 @@
     {
       "id": "sg-tremolo-strings",
       "name": "Tremolo Strings",
-      "ref": "Classic technique: a fast tremolo for tension",
-      "artist": "Classic technique",
+      "ref": "In the style of suspense film-score tremolo strings",
+      "artist": "Film scores",
       "tags": ["strings", "film", "tremolo"],
       "level": 2,
       "blurb": "A string chord shivering with tension.",
@@ -3073,7 +3073,7 @@
         {
           "title": "Strings",
           "module": "osc",
-          "why": "- Listen for: a string chord.",
+          "why": "- UPPER SUPER ON, PW / DETUNE 40 %, LPF 1.8 kHz\n- UPPER ENV 2 A 250 ms, R 400 ms\n- Listen for: a string chord.",
           "set": {
             "up.super": "on",
             "up.pwDetune": 4,
@@ -3085,7 +3085,7 @@
         {
           "title": "Shiver",
           "module": "mod",
-          "why": "- Listen for: a shivering section.",
+          "why": "- UPPER LFO 1 RATE 6.75 Hz\n- UPPER VCA LFO 1 50 %\n- CHORUS I on, II on\n- Listen for: a shivering section.",
           "set": {
             "up.lfoRate": 7.3,
             "up.vcaLfo": 5,
@@ -3152,7 +3152,7 @@
         {
           "title": "Hit",
           "module": "env",
-          "why": "- Listen for: a huge, short hit.",
+          "why": "- UPPER SUPER ON, PW / DETUNE 50 %, LPF 2.5 kHz, VCF ENV 30 %\n- UPPER ENV 1 D 250 ms, S 0 %\n- UPPER ENV 2 D 630 ms, S 0 %, R 630 ms\n- LOWER DDS 1 RANGE 16′, LPF 632 Hz\n- LOWER ENV 2 D 630 ms, S 0 %, R 630 ms\n- Listen for: a huge, short hit.",
           "set": {
             "up.super": "on",
             "up.pwDetune": 5,
@@ -3173,7 +3173,7 @@
         {
           "title": "Hall",
           "module": "fx",
-          "why": "- Listen for: an orchestra hit.",
+          "why": "- CHORUS I on\n- UPPER DELAY SEND 30 %\n- LOWER DELAY SEND 30 %\n- DELAY TIME 500 ms, FEEDBACK 40 %\n- Listen for: an orchestra hit.",
           "set": {
             "chorus.i": true,
             "up.send": 3,
@@ -3202,8 +3202,8 @@
     {
       "id": "sg-electric-piano",
       "name": "Electric Piano",
-      "ref": "Classic technique: a sine with a little cross-mod bark",
-      "artist": "Classic technique",
+      "ref": "In the style of 1970s soul electric pianos",
+      "artist": "70s soul",
       "tags": ["keys", "piano", "70s"],
       "level": 1,
       "blurb": "Soft, round keys with a bark when played hard.",
@@ -3238,7 +3238,7 @@
         {
           "title": "A tine",
           "module": "osc",
-          "why": "- Listen for: a soft tone with a little bark.",
+          "why": "- UPPER DDS 1 WAVEFORM sine, DDS 2 WAVEFORM sine, DDS 2 RANGE 4′, CROSS MOD 20 %\n- Listen for: a soft tone with a little bark.",
           "set": {
             "up.dds1Wave": "sine",
             "up.dds2Wave": "sine",
@@ -3249,7 +3249,7 @@
         {
           "title": "Decay",
           "module": "env",
-          "why": "- Listen for: touch-sensitive, decaying keys.",
+          "why": "- UPPER ENV 2 D 1.6 s, S 20 %, R 400 ms\n- UPPER DYNAMICS ON\n- Listen for: touch-sensitive, decaying keys.",
           "set": {
             "up.e2d": 8,
             "up.e2s": 2,
@@ -3260,7 +3260,7 @@
         {
           "title": "Chorus",
           "module": "fx",
-          "why": "- Listen for: a warm electric piano.",
+          "why": "- CHORUS I on\n- Listen for: a warm electric piano.",
           "set": {
             "chorus.i": true
           }
@@ -3317,7 +3317,7 @@
         {
           "title": "Glass",
           "module": "osc",
-          "why": "- Listen for: a glassy, bright tone.",
+          "why": "- UPPER DDS 1 WAVEFORM sine, DDS 2 WAVEFORM sine, DDS 2 RANGE 4′, CROSS MOD 40 %\n- Listen for: a glassy, bright tone.",
           "set": {
             "up.dds1Wave": "sine",
             "up.dds2Wave": "sine",
@@ -3328,7 +3328,7 @@
         {
           "title": "Keys",
           "module": "env",
-          "why": "- Listen for: a classic FM piano.",
+          "why": "- UPPER ENV 2 D 2.1 s, S 10 %, R 630 ms\n- UPPER DYNAMICS ON\n- CHORUS I on\n- Listen for: a classic FM piano.",
           "set": {
             "up.e2d": 8.3,
             "up.e2s": 1,
@@ -3384,7 +3384,7 @@
         {
           "title": "Twang",
           "module": "osc",
-          "why": "- Listen for: a nasal tone.",
+          "why": "- UPPER DDS 2 WAVEFORM pulse, PW / DETUNE 70 %, MIX 0 : 100\n- Listen for: a nasal tone.",
           "set": {
             "up.dds2Wave": "pulse",
             "up.pwDetune": 7,
@@ -3394,7 +3394,7 @@
         {
           "title": "Snap",
           "module": "filter",
-          "why": "- Listen for: a funky clav.",
+          "why": "- UPPER LPF 632 Hz, RES 40 %, VCF ENV 50 %\n- UPPER ENV 1 D 100 ms, S 0 %\n- UPPER ENV 2 D 400 ms, S 0 %, R 250 ms\n- Listen for: a funky clav.",
           "set": {
             "up.lpf": 5,
             "up.res": 4,
@@ -3426,8 +3426,8 @@
     {
       "id": "sg-organ",
       "name": "Combo Organ",
-      "ref": "Classic technique: square waves in octaves, gated",
-      "artist": "Classic technique",
+      "ref": "In the style of 1960s garage-rock combo organs",
+      "artist": "60s garage rock",
       "tags": ["keys", "organ", "60s"],
       "level": 1,
       "blurb": "A buzzy, bright combo organ.",
@@ -3462,7 +3462,7 @@
         {
           "title": "Drawbars",
           "module": "osc",
-          "why": "- Listen for: a hollow organ.",
+          "why": "- UPPER DDS 1 WAVEFORM square, DDS 2 WAVEFORM square, DDS 2 RANGE 4′, MIX 60 : 40, LPF 2.5 kHz\n- Listen for: a hollow organ.",
           "set": {
             "up.dds1Wave": "square",
             "up.dds2Wave": "square",
@@ -3474,7 +3474,7 @@
         {
           "title": "On, off",
           "module": "env",
-          "why": "The fixed gate.\n- Listen for: an organ starting and stopping with the keys.",
+          "why": "The fixed gate.\n- UPPER VCA envelope FIXED 1, VCA ENV LEVEL 70 %\n- Listen for: an organ starting and stopping with the keys.",
           "set": {
             "up.vcaMode": "fixed1",
             "up.vcaEnv": 7
@@ -3500,8 +3500,8 @@
     {
       "id": "sg-church-organ",
       "name": "Pipe Organ",
-      "ref": "Classic technique: stacked octaves in two layers",
-      "artist": "Classic technique",
+      "ref": "In the style of the cathedral pipe organ",
+      "artist": "Church organ",
       "tags": ["keys", "organ", "church"],
       "level": 2,
       "blurb": "A majestic pipe organ in a big space.",
@@ -3524,7 +3524,7 @@
         {
           "title": "Stops",
           "module": "mode",
-          "why": "- KEYBOARD DUAL: both layers on every key\n- Listen for: a full organ.",
+          "why": "- KEYBOARD DUAL: both layers on every key\n- UPPER DDS 1 WAVEFORM square, DDS 2 WAVEFORM triangle, DDS 2 RANGE 2′, MIX 60 : 40, VCA envelope FIXED 2\n- LOWER DDS 1 RANGE 16′, DDS 1 WAVEFORM triangle, VCA envelope FIXED 2, VCA ENV LEVEL 60 %\n- Listen for: a full organ.",
           "set": {
             "kbd.mode": "dual",
             "up.dds1Wave": "square",
@@ -3541,7 +3541,7 @@
         {
           "title": "The church",
           "module": "fx",
-          "why": "- Listen for: an organ in a cathedral.",
+          "why": "- UPPER DELAY SEND 40 %\n- LOWER DELAY SEND 40 %\n- DELAY TIME 1.0 s, FEEDBACK 60 %\n- CHORUS I on\n- Listen for: an organ in a cathedral.",
           "set": {
             "up.send": 4,
             "lo.send": 4,
@@ -3570,8 +3570,8 @@
     {
       "id": "sg-harpsichord",
       "name": "Harpsichord",
-      "ref": "Classic technique: a thin pulse and a saw, plucked",
-      "artist": "Classic technique",
+      "ref": "In the style of Baroque harpsichord music",
+      "artist": "Baroque",
       "tags": ["keys", "baroque", "pluck"],
       "level": 1,
       "blurb": "A bright, decaying harpsichord pluck.",
@@ -3601,7 +3601,7 @@
         {
           "title": "Quills",
           "module": "osc",
-          "why": "- Listen for: bright plucks.",
+          "why": "- UPPER DDS 2 WAVEFORM pulse, PW / DETUNE 80 %, MIX 40 : 60, LPF 7.1 kHz\n- UPPER ENV 2 D 630 ms, S 0 %, R 400 ms\n- Listen for: bright plucks.",
           "set": {
             "up.dds2Wave": "pulse",
             "up.pwDetune": 8,
@@ -3632,8 +3632,8 @@
     {
       "id": "sg-vibes",
       "name": "Vibraphone",
-      "ref": "Classic technique: a ringing sine with a tremolo",
-      "artist": "Classic technique",
+      "ref": "In the style of jazz vibraphone",
+      "artist": "Jazz",
       "tags": ["keys", "mallet", "jazz"],
       "level": 1,
       "blurb": "Soft, ringing mallet notes with a tremolo.",
@@ -3659,7 +3659,7 @@
         {
           "title": "Bars",
           "module": "osc",
-          "why": "- Listen for: ringing bars.",
+          "why": "- UPPER DDS 1 WAVEFORM sine, DDS 2 WAVEFORM sine, DDS 2 RANGE 2′, MIX 90 : 10\n- UPPER ENV 2 D 2.5 s, S 0 %, R 1.6 s\n- Listen for: ringing bars.",
           "set": {
             "up.dds1Wave": "sine",
             "up.dds2Wave": "sine",
@@ -3673,7 +3673,7 @@
         {
           "title": "Motor",
           "module": "mod",
-          "why": "- Listen for: a pulsing vibraphone.",
+          "why": "- UPPER LFO 1 RATE 3.73 Hz\n- UPPER VCA LFO 1 30 %\n- Listen for: a pulsing vibraphone.",
           "set": {
             "up.lfoRate": 6.5,
             "up.vcaLfo": 3
@@ -3699,8 +3699,8 @@
     {
       "id": "sg-bells",
       "name": "Ring Bells",
-      "ref": "Classic technique: the ring modulator on two sines",
-      "artist": "Classic technique",
+      "ref": "In the style of ring-modulated bells of early electronic music",
+      "artist": "Experimental",
       "tags": ["keys", "bell", "ring"],
       "level": 2,
       "blurb": "Bright, chiming bells with inharmonic overtones.",
@@ -3722,7 +3722,7 @@
         {
           "title": "Clang",
           "module": "osc",
-          "why": "- Listen for: bells.",
+          "why": "- UPPER DDS 1 WAVEFORM sine, DDS 2 WAVEFORM sine, DDS 2 MODE / SUB OSC RING, DDS 2 TUNE +3.3 st, MIX 50 : 50\n- UPPER ENV 2 D 2.5 s, S 0 %, R 1.6 s\n- Listen for: bells.",
           "set": {
             "up.dds1Wave": "sine",
             "up.dds2Wave": "sine",
@@ -3737,7 +3737,7 @@
         {
           "title": "Tower",
           "module": "fx",
-          "why": "- Listen for: bells in a tower.",
+          "why": "- UPPER DELAY SEND 30 %\n- DELAY TIME 500 ms, FEEDBACK 50 %\n- Listen for: bells in a tower.",
           "set": {
             "up.send": 3,
             "dly.time": 9,
@@ -3764,8 +3764,8 @@
     {
       "id": "sg-music-box",
       "name": "Music Box",
-      "ref": "Classic technique: tiny high plucks",
-      "artist": "Classic technique",
+      "ref": "In the style of the mechanical music box",
+      "artist": "Music box",
       "tags": ["keys", "toy", "bell"],
       "level": 1,
       "blurb": "Tiny, high, ringing notes: a music box.",
@@ -3787,7 +3787,7 @@
         {
           "title": "A comb",
           "module": "osc",
-          "why": "- Listen for: tiny ringing notes.",
+          "why": "- UPPER DDS 1 WAVEFORM triangle, DDS 1 RANGE 2′\n- UPPER ENV 2 D 1.6 s, S 0 %, R 1.0 s\n- Listen for: tiny ringing notes.",
           "set": {
             "up.dds1Wave": "tri",
             "up.dds1Range": "2",
@@ -3799,7 +3799,7 @@
         {
           "title": "Worn",
           "module": "mod",
-          "why": "- Listen for: an old music box.",
+          "why": "- UPPER LFO 1 RATE 0.58 Hz\n- UPPER DDS MOD LFO 1 4 %\n- UPPER DELAY SEND 20 %\n- DELAY TIME 250 ms, FEEDBACK 40 %\n- Listen for: an old music box.",
           "set": {
             "up.lfoRate": 4,
             "up.modLfo": 0.4,
@@ -3876,7 +3876,7 @@
         {
           "title": "Stab",
           "module": "osc",
-          "why": "- Listen for: house organ stabs.",
+          "why": "- UPPER DDS 1 WAVEFORM square, DDS 2 WAVEFORM square, DDS 2 RANGE 4′, MIX 50 : 50\n- UPPER ENV 2 D 400 ms, S 0 %, R 250 ms\n- UPPER DELAY SEND 20 %\n- DELAY TIME 250 ms, FEEDBACK 30 %\n- Listen for: house organ stabs.",
           "set": {
             "up.dds1Wave": "square",
             "up.dds2Wave": "square",
@@ -3910,8 +3910,8 @@
     {
       "id": "sg-toy-keys",
       "name": "Toy Piano",
-      "ref": "Classic technique: a tinny, slightly sour pluck",
-      "artist": "Classic technique",
+      "ref": "In the style of indie-pop toy pianos",
+      "artist": "Indie pop",
       "tags": ["keys", "toy", "pluck"],
       "level": 1,
       "blurb": "A child’s toy piano, a little out of tune.",
@@ -3940,7 +3940,7 @@
         {
           "title": "Rods",
           "module": "osc",
-          "why": "- Listen for: a toy piano.",
+          "why": "- UPPER DDS 1 WAVEFORM triangle, DDS 2 WAVEFORM pulse, DDS 2 RANGE 2′, DDS 2 TUNE -0.3 st, MIX 70 : 30\n- UPPER ENV 2 D 250 ms, S 0 %, R 160 ms\n- Listen for: a toy piano.",
           "set": {
             "up.dds1Wave": "tri",
             "up.dds2Wave": "pulse",
@@ -3972,8 +3972,8 @@
     {
       "id": "sg-mono-bass",
       "name": "Classic Mono Bass",
-      "ref": "Classic technique: a saw an octave down with a filter pluck",
-      "artist": "Classic technique",
+      "ref": "In the style of 1970s funk synth bass",
+      "artist": "70s funk",
       "tags": ["bass", "basics", "mono"],
       "level": 1,
       "blurb": "A fat, plucky analogue-style mono bass.",
@@ -4000,7 +4000,7 @@
         {
           "title": "Fat",
           "module": "osc",
-          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a fat bass.",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- UPPER DDS 1 RANGE 16′, DDS 2 WAVEFORM square, DDS 2 RANGE 16′, MIX 60 : 40\n- Listen for: a fat bass.",
           "set": {
             "voice.mode": "solo",
             "up.dds1Range": "16",
@@ -4012,7 +4012,7 @@
         {
           "title": "Pluck",
           "module": "filter",
-          "why": "- Listen for: a plucky bass.",
+          "why": "- UPPER LPF 317 Hz, RES 20 %, VCF ENV 40 %\n- UPPER ENV 1 D 250 ms, S 20 %\n- UPPER ENV 2 R 40 ms\n- Listen for: a plucky bass.",
           "set": {
             "up.lpf": 4,
             "up.res": 2,
@@ -4075,7 +4075,7 @@
         {
           "title": "Slides",
           "module": "mode",
-          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: tied notes sliding.",
+          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- PORTAMENTO 80 ms\n- UPPER DDS 1 RANGE 16′\n- Listen for: tied notes sliding.",
           "set": {
             "voice.mode": "legato",
             "perf.porta": 2,
@@ -4085,7 +4085,7 @@
         {
           "title": "Squelch",
           "module": "filter",
-          "why": "- Listen for: every note squelching.",
+          "why": "- UPPER LPF 317 Hz, RES 75 %, VCF ENV 50 %\n- UPPER ENV 1 D 160 ms, S 0 %\n- UPPER DRIVE 1\n- Listen for: every note squelching.",
           "set": {
             "up.lpf": 4,
             "up.res": 7.5,
@@ -4115,8 +4115,8 @@
     {
       "id": "sg-sub-bass-2",
       "name": "Sine Sub",
-      "ref": "Classic technique: a pure sine an octave down",
-      "artist": "Classic technique",
+      "ref": "In the style of UK garage sub bass",
+      "artist": "UK garage",
       "tags": ["bass", "sub", "electronic"],
       "level": 1,
       "blurb": "A deep, pure sine sub bass.",
@@ -4135,7 +4135,7 @@
         {
           "title": "Pure",
           "module": "osc",
-          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a deep sub.",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- UPPER DDS 1 RANGE 16′, DDS 1 WAVEFORM sine\n- UPPER ENV 2 R 40 ms\n- Listen for: a deep sub.",
           "set": {
             "voice.mode": "solo",
             "up.dds1Range": "16",
@@ -4183,7 +4183,7 @@
         {
           "title": "Churn",
           "module": "osc",
-          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a churning bass.",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- UPPER DDS 1 RANGE 16′\n- UNISON on\n- UPPER SUPER ON, PW / DETUNE 80 %, LPF 632 Hz, RES 20 %\n- Listen for: a churning bass.",
           "set": {
             "voice.mode": "solo",
             "up.dds1Range": "16",
@@ -4236,7 +4236,7 @@
         {
           "title": "Heavy",
           "module": "osc",
-          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a heavy bass.",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- UPPER DDS 1 RANGE 16′\n- UNISON on\n- UPPER SUPER ON, PW / DETUNE 50 %, DRIVE 1\n- Listen for: a heavy bass.",
           "set": {
             "voice.mode": "solo",
             "up.dds1Range": "16",
@@ -4249,7 +4249,7 @@
         {
           "title": "Wobble",
           "module": "mod",
-          "why": "- Listen for: the bass wobbling.",
+          "why": "- UPPER LFO 1 MODE RESET, RATE 3.73 Hz\n- UPPER LPF 224 Hz, RES 50 %, VCF LFO 1 70 %\n- Listen for: the bass wobbling.",
           "set": {
             "up.lfoMode": "reset",
             "up.lfoRate": 6.5,
@@ -4278,8 +4278,8 @@
     {
       "id": "sg-sync-bass",
       "name": "Sync Bass",
-      "ref": "Classic technique: hard sync swept in the bass",
-      "artist": "Classic technique",
+      "ref": "In the style of 1980s electro sync bass",
+      "artist": "Electro",
       "tags": ["bass", "sync", "aggressive"],
       "level": 3,
       "blurb": "A biting, ripping bass.",
@@ -4304,7 +4304,7 @@
         {
           "title": "Sync",
           "module": "osc",
-          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a hard bass.",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- UPPER DDS 1 RANGE 16′, DDS 2 RANGE 16′, DDS 2 MODE / SUB OSC SYNC, DDS 2 TUNE +5 st, MIX 0 : 100\n- Listen for: a hard bass.",
           "set": {
             "voice.mode": "solo",
             "up.dds1Range": "16",
@@ -4317,7 +4317,7 @@
         {
           "title": "Rip",
           "module": "env",
-          "why": "- Listen for: every note ripping.",
+          "why": "- UPPER DDS MOD destination DDS 2, ENV 1 50 %\n- UPPER ENV 1 D 250 ms, S 0 %\n- UPPER LPF 1.8 kHz\n- Listen for: every note ripping.",
           "set": {
             "up.modDest": "dds2",
             "up.modEnv": 5,
@@ -4372,7 +4372,7 @@
         {
           "title": "Rubber",
           "module": "filter",
-          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a funky bass.",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- UPPER DDS 1 RANGE 16′, DDS 2 WAVEFORM square, MIX 50 : 50, LPF 317 Hz, RES 50 %, VCF ENV 50 %\n- UPPER ENV 1 D 160 ms, S 10 %\n- UPPER ENV 2 R 25 ms\n- Listen for: a funky bass.",
           "set": {
             "voice.mode": "solo",
             "up.dds1Range": "16",
@@ -4438,7 +4438,7 @@
         {
           "title": "Bounce",
           "module": "filter",
-          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a bouncing bass.",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- UPPER DDS 1 RANGE 16′, LPF 632 Hz, VCF ENV 35 %\n- UPPER ENV 1 D 160 ms, S 20 %\n- UPPER ENV 2 R 25 ms\n- Listen for: a bouncing bass.",
           "set": {
             "voice.mode": "solo",
             "up.dds1Range": "16",
@@ -4489,7 +4489,7 @@
         {
           "title": "Boom",
           "module": "osc",
-          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: a sliding boom.",
+          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- PORTAMENTO 270 ms\n- UPPER DDS 1 RANGE 16′, DDS 1 WAVEFORM sine\n- UPPER ENV 2 D 2.5 s, S 30 %, R 250 ms\n- Listen for: a sliding boom.",
           "set": {
             "voice.mode": "legato",
             "perf.porta": 3,
@@ -4503,7 +4503,7 @@
         {
           "title": "Punch",
           "module": "osc",
-          "why": "- Listen for: a punchy 808.",
+          "why": "- UPPER DDS MOD ENV 1 20 %\n- UPPER ENV 1 D 100 ms, S 0 %\n- UPPER DRIVE 1\n- Listen for: a punchy 808.",
           "set": {
             "up.modEnv": 2,
             "up.e1d": 5,
@@ -4531,8 +4531,8 @@
     {
       "id": "sg-split-bass-keys",
       "name": "Bass and Keys Split",
-      "ref": "Classic technique: SPLIT with a bass below and keys above",
-      "artist": "Classic technique",
+      "ref": "In the style of synth-pop played by one keyboardist",
+      "artist": "Synth-pop",
       "tags": ["bass", "keys", "split"],
       "level": 2,
       "blurb": "A bass on the left hand and electric piano chords on the right.",
@@ -4567,7 +4567,7 @@
         {
           "title": "Bass",
           "module": "osc",
-          "why": "- Listen for: a plucky bass below.",
+          "why": "- LOWER DDS 1 RANGE 16′, LPF 317 Hz, VCF ENV 40 %\n- LOWER ENV 1 D 250 ms, S 20 %\n- LOWER ENV 2 R 40 ms\n- Listen for: a plucky bass below.",
           "set": {
             "lo.dds1Range": "16",
             "lo.lpf": 4,
@@ -4580,7 +4580,7 @@
         {
           "title": "Keys",
           "module": "osc",
-          "why": "- Listen for: soft keys above.",
+          "why": "- UPPER DDS 1 WAVEFORM sine, DDS 2 WAVEFORM sine, DDS 2 RANGE 4′, CROSS MOD 20 %\n- UPPER ENV 2 D 1.6 s, S 20 %, R 250 ms\n- CHORUS I on\n- Listen for: soft keys above.",
           "set": {
             "up.dds1Wave": "sine",
             "up.dds2Wave": "sine",
@@ -4635,7 +4635,7 @@
         {
           "title": "Round",
           "module": "osc",
-          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a deep dub bass.",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- UPPER DDS 1 RANGE 16′, DDS 1 WAVEFORM triangle, LPF 448 Hz\n- UPPER ENV 2 R 40 ms\n- Listen for: a deep dub bass.",
           "set": {
             "voice.mode": "solo",
             "up.dds1Range": "16",
@@ -4684,7 +4684,7 @@
         {
           "title": "Dark",
           "module": "filter",
-          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- UPPER VCA ENV LEVEL 100 %: up: a short note in a dark filter is quiet\n- Listen for: a rolling rumble.",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- UPPER VCA ENV LEVEL 100 %: up: a short note in a dark filter is quiet\n- UPPER DDS 1 RANGE 16′, LPF 317 Hz, RES 30 %\n- UPPER ENV 2 D 630 ms, S 0 %, R 400 ms\n- UPPER DELAY SEND 60 %\n- DELAY TIME 250 ms, FEEDBACK 70 %\n- MASTER VOLUME 100 %\n- Listen for: a rolling rumble.",
           "set": {
             "voice.mode": "solo",
             "up.dds1Range": "16",
@@ -4744,7 +4744,7 @@
         {
           "title": "Offbeats",
           "module": "filter",
-          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a trance bassline.",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- UPPER DDS 1 RANGE 16′, SUPER ON, PW / DETUNE 30 %, LPF 632 Hz, VCF ENV 30 %\n- UPPER ENV 1 D 160 ms, S 10 %\n- UPPER ENV 2 D 400 ms, S 0 %, R 250 ms\n- Listen for: a trance bassline.",
           "set": {
             "voice.mode": "solo",
             "up.dds1Range": "16",
@@ -4807,7 +4807,7 @@
         {
           "title": "FM",
           "module": "osc",
-          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a metallic bass.",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- UPPER DDS 1 RANGE 16′, DDS 1 WAVEFORM sine, DDS 2 WAVEFORM sine, DDS 2 RANGE 8′, CROSS MOD 60 %\n- Listen for: a metallic bass.",
           "set": {
             "voice.mode": "solo",
             "up.dds1Range": "16",
@@ -4820,7 +4820,7 @@
         {
           "title": "Snap",
           "module": "env",
-          "why": "- Listen for: a slapping FM bass.",
+          "why": "- UPPER LPF 1.3 kHz, VCF ENV 40 %\n- UPPER ENV 1 D 160 ms, S 10 %\n- UPPER ENV 2 D 630 ms, S 30 %, R 16 ms\n- Listen for: a slapping FM bass.",
           "set": {
             "up.lpf": 6,
             "up.vcfEnv": 4,
@@ -4851,8 +4851,8 @@
     {
       "id": "sg-saw-lead",
       "name": "Saw Lead",
-      "ref": "Classic technique: a mono saw with delayed vibrato",
-      "artist": "Classic technique",
+      "ref": "In the style of 1970s progressive-rock synth leads",
+      "artist": "70s progressive rock",
       "tags": ["lead", "basics", "mono"],
       "level": 1,
       "blurb": "A bright, singing saw lead.",
@@ -4874,7 +4874,7 @@
         {
           "title": "One voice",
           "module": "mode",
-          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: a gliding lead.",
+          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- PORTAMENTO 80 ms\n- UPPER MIX 50 : 50, DDS 2 TUNE +0.1 st\n- Listen for: a gliding lead.",
           "set": {
             "voice.mode": "legato",
             "perf.porta": 2,
@@ -4885,7 +4885,7 @@
         {
           "title": "Vibrato",
           "module": "mod",
-          "why": "- Listen for: a singing lead.",
+          "why": "- UPPER LFO 1 RATE 4.32 Hz, DELAY 900 ms\n- UPPER DDS MOD LFO 1 10 %, destination 1 + 2\n- UPPER DELAY SEND 20 %\n- DELAY TIME 350 ms, FEEDBACK 30 %\n- Listen for: a singing lead.",
           "set": {
             "up.lfoRate": 6.7,
             "up.lfoDelay": 3,
@@ -4916,8 +4916,8 @@
     {
       "id": "sg-sync-lead-2",
       "name": "Sync Sweep Lead",
-      "ref": "Classic technique: sync swept by an envelope",
-      "artist": "Classic technique",
+      "ref": "In the style of 1980s synth-rock sync leads",
+      "artist": "Synth-rock",
       "tags": ["lead", "sync", "80s"],
       "level": 2,
       "blurb": "A tearing sync lead that yowls into each note.",
@@ -4940,7 +4940,7 @@
         {
           "title": "Sync",
           "module": "osc",
-          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: a hard lead.",
+          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- UPPER DDS 2 MODE / SUB OSC SYNC, DDS 2 TUNE +7 st, MIX 0 : 100\n- Listen for: a hard lead.",
           "set": {
             "voice.mode": "legato",
             "up.dds2Mode": "sync",
@@ -4951,7 +4951,7 @@
         {
           "title": "Yow",
           "module": "env",
-          "why": "- Listen for: a tearing yowl on every note.",
+          "why": "- UPPER DDS MOD destination DDS 2, ENV 1 60 %\n- UPPER ENV 1 D 400 ms, S 0 %\n- UPPER DELAY SEND 30 %\n- DELAY TIME 350 ms, FEEDBACK 40 %\n- Listen for: a tearing yowl on every note.",
           "set": {
             "up.modDest": "dds2",
             "up.modEnv": 6,
@@ -4982,8 +4982,8 @@
     {
       "id": "sg-square-lead",
       "name": "Square Lead",
-      "ref": "Classic technique: a hollow square lead",
-      "artist": "Classic technique",
+      "ref": "In the style of 8-bit video game music",
+      "artist": "Chiptune",
       "tags": ["lead", "square", "mono"],
       "level": 1,
       "blurb": "A hollow, woody square lead.",
@@ -5007,7 +5007,7 @@
         {
           "title": "Hollow",
           "module": "osc",
-          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a hollow lead.",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- UPPER DDS 1 WAVEFORM square, LPF 2.5 kHz\n- UPPER LFO 1 RATE 4.32 Hz, DELAY 400 ms\n- UPPER DDS MOD LFO 1 8 %\n- Listen for: a hollow lead.",
           "set": {
             "voice.mode": "solo",
             "up.dds1Wave": "square",
@@ -5037,8 +5037,8 @@
     {
       "id": "sg-whistle",
       "name": "Whistle",
-      "ref": "Classic technique: the self-oscillating filter played with keytrack",
-      "artist": "Classic technique",
+      "ref": "In the style of G-funk whistle leads",
+      "artist": "G-funk",
       "tags": ["lead", "filter", "whistle"],
       "level": 2,
       "blurb": "A pure whistle from the filter itself, in tune with the keys.",
@@ -5059,7 +5059,7 @@
         {
           "title": "Whistle",
           "module": "filter",
-          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: a pure whistle.",
+          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- PORTAMENTO 80 ms\n- UPPER LPF 1.6 kHz, RES 100 %, VCF KEYTRACK ON, VCA ENV LEVEL 50 %\n- Listen for: a pure whistle.",
           "set": {
             "voice.mode": "legato",
             "perf.porta": 2,
@@ -5072,7 +5072,7 @@
         {
           "title": "Echo",
           "module": "fx",
-          "why": "- Listen for: a whistle in a valley.",
+          "why": "- UPPER DELAY SEND 30 %\n- DELAY TIME 500 ms, FEEDBACK 40 %\n- Listen for: a whistle in a valley.",
           "set": {
             "up.send": 3,
             "dly.time": 9,
@@ -5099,8 +5099,8 @@
     {
       "id": "sg-fifths-lead",
       "name": "Fifths Lead",
-      "ref": "Classic technique: DDS 2 a fifth up",
-      "artist": "Classic technique",
+      "ref": "In the style of 1970s rock synth leads in fifths",
+      "artist": "70s rock",
       "tags": ["lead", "fifths", "rock"],
       "level": 1,
       "blurb": "A powerful lead doubled a fifth up.",
@@ -5123,7 +5123,7 @@
         {
           "title": "Fifths",
           "module": "osc",
-          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a powerful riff.",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- UPPER MIX 50 : 50, DDS 2 TUNE +7 st, LPF 2.5 kHz, VCF ENV 20 %\n- UPPER ENV 1 D 250 ms, S 40 %\n- Listen for: a powerful riff.",
           "set": {
             "voice.mode": "solo",
             "up.mix": 5,
@@ -5154,8 +5154,8 @@
     {
       "id": "sg-unison-lead",
       "name": "Unison Lead",
-      "ref": "Classic technique: unison and super for a huge lead",
-      "artist": "Classic technique",
+      "ref": "In the style of trance unison leads",
+      "artist": "Trance",
       "tags": ["lead", "unison", "big"],
       "level": 2,
       "blurb": "A huge, wide lead.",
@@ -5177,7 +5177,7 @@
         {
           "title": "Huge",
           "module": "mode",
-          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: a huge lead.",
+          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- UNISON on\n- UPPER SUPER ON, PW / DETUNE 40 %, LPF 3.6 kHz, DELAY SEND 30 %\n- DELAY TIME 350 ms, FEEDBACK 40 %\n- Listen for: a huge lead.",
           "set": {
             "voice.mode": "legato",
             "voice.unison": true,
@@ -5231,7 +5231,7 @@
         {
           "title": "Whine",
           "module": "osc",
-          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: a sliding whine.",
+          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- PORTAMENTO 270 ms\n- UPPER DDS 1 WAVEFORM triangle, LPF 10 kHz\n- UPPER LFO 1 RATE 5.40 Hz\n- UPPER DDS MOD LFO 1 10 %\n- Listen for: a sliding whine.",
           "set": {
             "voice.mode": "legato",
             "perf.porta": 3,
@@ -5286,7 +5286,7 @@
         {
           "title": "Pulse",
           "module": "osc",
-          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a buzzy beep.",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- UPPER DDS 2 WAVEFORM pulse, PW / DETUNE 60 %, MIX 0 : 100, LPF 20 kHz\n- Listen for: a buzzy beep.",
           "set": {
             "voice.mode": "solo",
             "up.dds2Wave": "pulse",
@@ -5298,7 +5298,7 @@
         {
           "title": "Trill",
           "module": "mod",
-          "why": "- Listen for: a chip trill.",
+          "why": "- UPPER LFO 1 WAVEFORM square, RATE 14 Hz\n- UPPER DDS MOD LFO 1 25 %, destination DDS 2\n- Listen for: a chip trill.",
           "set": {
             "up.lfoWave": "sq",
             "up.lfoRate": 8.3,
@@ -5326,8 +5326,8 @@
     {
       "id": "sg-flute",
       "name": "Flute",
-      "ref": "Classic technique: a sine with breath and a chiff",
-      "artist": "Classic technique",
+      "ref": "In the style of the orchestral flute",
+      "artist": "Orchestral",
       "tags": ["lead", "flute", "soft"],
       "level": 2,
       "blurb": "A soft, breathy flute.",
@@ -5350,7 +5350,7 @@
         {
           "title": "Breath",
           "module": "osc",
-          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a breathy tone.",
+          "why": "- VOICE ASSIGN MODE SOLO: one note at a time\n- UPPER DDS 1 WAVEFORM sine, DDS 2 WAVEFORM noise, MIX 80 : 20, LPF 2.5 kHz\n- Listen for: a breathy tone.",
           "set": {
             "voice.mode": "solo",
             "up.dds1Wave": "sine",
@@ -5362,7 +5362,7 @@
         {
           "title": "Chiff",
           "module": "filter",
-          "why": "- Listen for: a flute.",
+          "why": "- UPPER VCF ENV 20 %\n- UPPER ENV 1 D 100 ms, S 0 %\n- UPPER ENV 2 A 40 ms\n- UPPER LFO 1 RATE 3.73 Hz, DELAY 400 ms\n- UPPER DDS MOD LFO 1 7 %\n- Listen for: a flute.",
           "set": {
             "up.vcfEnv": 2,
             "up.e1d": 5,
@@ -5393,8 +5393,8 @@
     {
       "id": "sg-acid-lead",
       "name": "Acid Lead",
-      "ref": "Classic technique: a high squelching line",
-      "artist": "Classic technique",
+      "ref": "In the style of acid house",
+      "artist": "Acid house",
       "tags": ["lead", "acid", "electronic"],
       "level": 2,
       "blurb": "A high, squelching, sliding acid line.",
@@ -5426,7 +5426,7 @@
         {
           "title": "Squelch",
           "module": "filter",
-          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: a squelching line.",
+          "why": "- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- PORTAMENTO 80 ms\n- UPPER DDS 1 WAVEFORM square, LPF 632 Hz, RES 75 %, VCF ENV 50 %\n- UPPER ENV 1 D 160 ms, S 0 %\n- UPPER DRIVE 1\n- Listen for: a squelching line.",
           "set": {
             "voice.mode": "legato",
             "perf.porta": 2,
@@ -5459,8 +5459,8 @@
     {
       "id": "sg-dual-lead",
       "name": "Octave Dual Lead",
-      "ref": "Classic technique: two layers an octave apart on a lead",
-      "artist": "Classic technique",
+      "ref": "In the style of synthwave octave leads",
+      "artist": "Synthwave",
       "tags": ["lead", "dual", "octave"],
       "level": 2,
       "blurb": "A bright lead doubled an octave below by the second layer.",
@@ -5481,7 +5481,7 @@
         {
           "title": "Two layers",
           "module": "mode",
-          "why": "- KEYBOARD DUAL: both layers on every key\n- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- Listen for: an octave lead.",
+          "why": "- KEYBOARD DUAL: both layers on every key\n- VOICE ASSIGN MODE LEGATO: one note at a time, tied notes gliding\n- UPPER DDS 1 WAVEFORM square, LPF 2.5 kHz\n- LOWER DDS 1 RANGE 16′, LPF 632 Hz, VCA ENV LEVEL 60 %\n- Listen for: an octave lead.",
           "set": {
             "kbd.mode": "dual",
             "voice.mode": "legato",
@@ -5495,7 +5495,7 @@
         {
           "title": "Vibrato",
           "module": "mod",
-          "why": "- Listen for: a singing lead.",
+          "why": "- LFO 2 trigger ON, RATE 5.40 Hz, DDS 10 %\n- Listen for: a singing lead.",
           "set": {
             "lfo2.trig": "on",
             "lfo2.rate": 7,
@@ -5574,7 +5574,7 @@
         {
           "title": "Make each chord bite",
           "module": "filter",
-          "why": "Envelope 1 opens the filter at the start of each chord and lets it fall back.\n- UPPER LPF 893 Hz: warm at rest\n- UPPER VCF ENV 45 %: a bright blare at each attack\n- UPPER ENV 1 DECAY 250 ms: falling back over a quarter second\n- UPPER ENV 1 SUSTAIN 30 %: leaving a little brightness\n- Listen for: each chord blaring and then mellowing.",
+          "why": "Envelope 1 opens the filter at the start of each chord and lets it fall back.\n- UPPER LPF 893 Hz: warm at rest\n- UPPER VCF ENV 45 %: a bright blare at each attack\n- UPPER ENV 1 DECAY 250 ms: falling back over a quarter second\n- UPPER ENV 1 SUSTAIN 30 %: leaving a little brightness\n- UPPER RES 10 %\n- Listen for: each chord blaring and then mellowing.",
           "set": {
             "up.lpf": 5.5,
             "up.res": 1,
@@ -5647,7 +5647,7 @@
         {
           "title": "A breath at the start",
           "module": "env",
-          "why": "A short attack on the amp and a slightly later filter bloom make it brassy.\n- UPPER ENV 2 ATTACK 40 ms: a quick breath in\n- UPPER ENV 1 ATTACK 100 ms: the brightness arriving just after\n- Listen for: notes that bloom rather than click.",
+          "why": "A short attack on the amp and a slightly later filter bloom make it brassy.\n- UPPER ENV 2 ATTACK 40 ms: a quick breath in\n- UPPER ENV 1 ATTACK 100 ms: the brightness arriving just after\n- UPPER LPF 893 Hz, VCF ENV 40 %\n- UPPER ENV 1 D 630 ms, S 40 %\n- Listen for: notes that bloom rather than click.",
           "set": {
             "up.e2a": 4,
             "up.e1a": 5,
@@ -5660,7 +5660,7 @@
         {
           "title": "Make it huge",
           "module": "fx",
-          "why": "- CHORUS II on: the dense ensemble\n- UPPER DELAY SEND 20 %: a little hall\n- Listen for: an arena-sized fanfare.",
+          "why": "- CHORUS II on: the dense ensemble\n- UPPER DELAY SEND 20 %: a little hall\n- CHORUS I on\n- DELAY TIME 350 ms\n- Listen for: an arena-sized fanfare.",
           "set": {
             "chorus.i": true,
             "chorus.ii": true,
@@ -5731,7 +5731,7 @@
         {
           "title": "A pop on each note",
           "module": "filter",
-          "why": "- UPPER VCF ENV 35 %: opening a little on each note\n- UPPER ENV 1 DECAY 160 ms: and closing quickly\n- UPPER ENV 2 RELEASE 40 ms: a short tail\n- Listen for: a bouncy, poppy lead.",
+          "why": "- UPPER VCF ENV 35 %: opening a little on each note\n- UPPER ENV 1 DECAY 160 ms: and closing quickly\n- UPPER ENV 2 RELEASE 40 ms: a short tail\n- UPPER LPF 1.3 kHz\n- UPPER ENV 1 S 20 %\n- Listen for: a bouncy, poppy lead.",
           "set": {
             "up.lpf": 6,
             "up.vcfEnv": 3.5,
@@ -5783,7 +5783,7 @@
         {
           "title": "A thick brass body",
           "module": "osc",
-          "why": "- UPPER DDS 2 TUNE -0.1 st: a touch flat against DDS 1\n- UPPER DRIFT 30 %: the pitches wandering slightly, like an old poly\n- Listen for: a broad, slightly unstable brass body.",
+          "why": "- UPPER DDS 2 TUNE -0.1 st: a touch flat against DDS 1\n- UPPER DRIFT 30 %: the pitches wandering slightly, like an old poly\n- UPPER MIX 50 : 50\n- Listen for: a broad, slightly unstable brass body.",
           "set": {
             "up.mix": 5,
             "up.dds2Tune": -0.12,
@@ -5793,7 +5793,7 @@
         {
           "title": "Swell like pressing in",
           "module": "filter",
-          "why": "A slow attack on envelope 1 opens the filter well after the note starts.\n- UPPER LPF 448 Hz: dark at first\n- UPPER ENV 1 ATTACK 1.0 s: opening over a second\n- UPPER ENV 1 SUSTAIN 70 %: and staying bright\n- UPPER ENV 2 RELEASE 1.0 s: a long fade\n- Listen for: each chord growing brighter as it is held.",
+          "why": "A slow attack on envelope 1 opens the filter well after the note starts.\n- UPPER LPF 448 Hz: dark at first\n- UPPER ENV 1 ATTACK 1.0 s: opening over a second\n- UPPER ENV 1 SUSTAIN 70 %: and staying bright\n- UPPER ENV 2 RELEASE 1.0 s: a long fade\n- UPPER RES 20 %, VCF ENV 50 %\n- UPPER ENV 2 A 100 ms\n- Listen for: each chord growing brighter as it is held.",
           "set": {
             "up.lpf": 4.5,
             "up.res": 2,
@@ -5807,7 +5807,7 @@
         {
           "title": "Late vibrato",
           "module": "mod",
-          "why": "LFO 2, switched ON, is a vibrato that its DELAY holds back.\n- LFO 2 trigger ON: always on, no wheel needed\n- LFO 2 DDS 12 %: a gentle wobble\n- LFO 2 DELAY 2.4 s: arriving after a second or so\n- DELAY FEEDBACK 50 %: a long, rainy echo\n- Listen for: vibrato growing into each held chord, echoing into the dark.",
+          "why": "LFO 2, switched ON, is a vibrato that its DELAY holds back.\n- LFO 2 trigger ON: always on, no wheel needed\n- LFO 2 DDS 12 %: a gentle wobble\n- LFO 2 DELAY 2.4 s: arriving after a second or so\n- DELAY FEEDBACK 50 %: a long, rainy echo\n- LFO 2 RATE 3.21 Hz\n- UPPER DELAY SEND 40 %\n- DELAY TIME 500 ms\n- Listen for: vibrato growing into each held chord, echoing into the dark.",
           "set": {
             "lfo2.trig": "on",
             "lfo2.rate": 6.3,
@@ -5890,7 +5890,7 @@
         {
           "title": "Grand",
           "module": "fx",
-          "why": "- Listen for: a big, ceremonial wash.",
+          "why": "- CHORUS I on, II on\n- UPPER DELAY SEND 30 %\n- DELAY TIME 500 ms, FEEDBACK 45 %\n- Listen for: a big, ceremonial wash.",
           "set": {
             "chorus.i": true,
             "chorus.ii": true,
@@ -5947,7 +5947,7 @@
         {
           "title": "A soft string machine",
           "module": "osc",
-          "why": "- UPPER SUPER (DDS 1) 1/2: a gentle spread\n- UPPER ENV 2 ATTACK 630 ms: swelling in\n- UPPER ENV 2 RELEASE 1.6 s: and slowly away\n- UPPER LPF 893 Hz: soft\n- Listen for: a smooth, distant string pad.",
+          "why": "- UPPER SUPER (DDS 1) 1/2: a gentle spread\n- UPPER ENV 2 ATTACK 630 ms: swelling in\n- UPPER ENV 2 RELEASE 1.6 s: and slowly away\n- UPPER LPF 893 Hz: soft\n- UPPER PW / DETUNE 30 %\n- Listen for: a smooth, distant string pad.",
           "set": {
             "up.super": "half",
             "up.pwDetune": 3,
@@ -5969,7 +5969,7 @@
         {
           "title": "Spread it",
           "module": "fx",
-          "why": "- Listen for: a floating, phasing wash.",
+          "why": "- CHORUS I on\n- UPPER DELAY SEND 40 %\n- DELAY TIME 500 ms, FEEDBACK 50 %\n- Listen for: a floating, phasing wash.",
           "set": {
             "chorus.i": true,
             "up.send": 4,
@@ -6020,7 +6020,7 @@
         {
           "title": "Run the arpeggiator",
           "module": "mode",
-          "why": "- CLK DIV 1/16: sixteenth notes\n- ARP RANGE 2: two octaves\n- ARP MODE UP: climbing\n- TEMPO 120 BPM: the song’s tempo\n- Listen for: a running, climbing pattern.",
+          "why": "- CLK DIV 1/16: sixteenth notes\n- ARP RANGE 2: two octaves\n- ARP MODE UP: climbing\n- TEMPO 120 BPM: the song’s tempo\n- ARP ON on\n- Listen for: a running, climbing pattern.",
           "set": {
             "arp.on": true,
             "arp.div": "1/16",
@@ -6032,7 +6032,7 @@
         {
           "title": "Bubble",
           "module": "filter",
-          "why": "- UPPER RES 60 %: a squelchy peak\n- UPPER ENV 1 DECAY 63 ms: a very short pop\n- Listen for: each step bubbling.",
+          "why": "- UPPER RES 60 %: a squelchy peak\n- UPPER ENV 1 DECAY 63 ms: a very short pop\n- UPPER LPF 448 Hz, VCF ENV 45 %\n- UPPER ENV 1 S 0 %\n- UPPER ENV 2 D 160 ms, S 30 %\n- Listen for: each step bubbling.",
           "set": {
             "up.lpf": 4.5,
             "up.res": 6,
@@ -6046,7 +6046,7 @@
         {
           "title": "Roll it along",
           "module": "fx",
-          "why": "- DELAY TIME 380 ms: about a dotted eighth\n- Listen for: a galloping, rolling sequence.",
+          "why": "- DELAY TIME 380 ms: about a dotted eighth\n- UPPER DELAY SEND 40 %\n- DELAY FEEDBACK 40 %\n- Listen for: a galloping, rolling sequence.",
           "set": {
             "up.send": 4,
             "dly.time": 8.6,
@@ -6093,7 +6093,7 @@
         {
           "title": "A low sequence",
           "module": "mode",
-          "why": "- Listen for: a hypnotic loop.",
+          "why": "- ARP ON on\n- CLK DIV 1/16\n- ARP RANGE 2, MODE U&D\n- Listen for: a hypnotic loop.",
           "set": {
             "arp.on": true,
             "arp.div": "1/16",
@@ -6104,7 +6104,7 @@
         {
           "title": "A pluck",
           "module": "filter",
-          "why": "- Listen for: a pulsing sequence.",
+          "why": "- UPPER LPF 551 Hz, RES 50 %, VCF ENV 35 %\n- UPPER ENV 1 D 100 ms, S 0 %\n- UPPER ENV 2 D 160 ms, S 20 %\n- Listen for: a pulsing sequence.",
           "set": {
             "up.lpf": 4.8,
             "up.res": 5,
@@ -6118,7 +6118,7 @@
         {
           "title": "Travel",
           "module": "lfo",
-          "why": "A very slow LFO 1 on the cutoff opens and closes the whole sequence.\n- UPPER LFO 1 RATE 0.19 Hz: one sweep in about ten seconds\n- Listen for: the sequence slowly brightening and darkening.",
+          "why": "A very slow LFO 1 on the cutoff opens and closes the whole sequence.\n- UPPER LFO 1 RATE 0.19 Hz: one sweep in about ten seconds\n- UPPER VCF LFO 1 35 %, DELAY SEND 30 %\n- DELAY TIME 250 ms\n- Listen for: the sequence slowly brightening and darkening.",
           "set": {
             "up.lfoRate": 2.5,
             "up.vcfLfo": 3.5,
@@ -6170,7 +6170,7 @@
         {
           "title": "The arpeggio",
           "module": "mode",
-          "why": "- CLK DIV 1/8: eighth notes\n- Listen for: an endless, climbing tick.",
+          "why": "- CLK DIV 1/8: eighth notes\n- ARP ON on, RANGE 2, MODE UP\n- Listen for: an endless, climbing tick.",
           "set": {
             "arp.on": true,
             "arp.div": "1/8",
@@ -6181,7 +6181,7 @@
         {
           "title": "Cold and dark",
           "module": "filter",
-          "why": "- Listen for: a cold, plucky pattern.",
+          "why": "- UPPER LPF 551 Hz, RES 40 %, VCF ENV 30 %\n- UPPER ENV 1 D 250 ms, S 10 %\n- UPPER ENV 2 D 400 ms, S 40 %\n- Listen for: a cold, plucky pattern.",
           "set": {
             "up.lpf": 4.8,
             "up.res": 4,
@@ -6195,7 +6195,7 @@
         {
           "title": "Haunt it",
           "module": "fx",
-          "why": "- Listen for: the arpeggio echoing into a dark room.",
+          "why": "- UPPER DELAY SEND 50 %\n- DELAY TIME 440 ms, FEEDBACK 50 %\n- CHORUS I on\n- Listen for: the arpeggio echoing into a dark room.",
           "set": {
             "up.send": 5,
             "dly.time": 8.8,
@@ -6246,7 +6246,7 @@
         {
           "title": "Low and thick",
           "module": "osc",
-          "why": "- UPPER DDS 1 RANGE 16′: an octave down\n- UPPER DDS 2 TUNE +0.2 st: beating against DDS 1\n- Listen for: a deep, thick bass.",
+          "why": "- UPPER DDS 1 RANGE 16′: an octave down\n- UPPER DDS 2 TUNE +0.2 st: beating against DDS 1\n- UPPER DDS 2 RANGE 16′, MIX 50 : 50\n- Listen for: a deep, thick bass.",
           "set": {
             "up.dds1Range": "16",
             "up.dds2Range": "16",
@@ -6257,7 +6257,7 @@
         {
           "title": "Dark and driven",
           "module": "filter",
-          "why": "- UPPER DRIVE 1: a little grit\n- Listen for: a dark bass with a growl.",
+          "why": "- UPPER DRIVE 1: a little grit\n- UPPER LPF 448 Hz, RES 20 %, VCF ENV 25 %\n- UPPER ENV 1 D 400 ms, S 20 %\n- Listen for: a dark bass with a growl.",
           "set": {
             "up.lpf": 4.5,
             "up.res": 2,
@@ -6318,7 +6318,7 @@
         {
           "title": "A wide lead",
           "module": "osc",
-          "why": "- UNISON on: every voice on the note, detuned\n- Listen for: a wide, bright lead.",
+          "why": "- UNISON on: every voice on the note, detuned\n- UPPER DDS 2 WAVEFORM square, MIX 60 : 40\n- VOICE ASSIGN MODE LEGATO\n- Listen for: a wide, bright lead.",
           "set": {
             "up.dds2Wave": "square",
             "up.mix": 4,
@@ -6329,7 +6329,7 @@
         {
           "title": "Late vibrato",
           "module": "lfo",
-          "why": "- UPPER DDS MOD LFO 1 12 %: a gentle pitch wobble\n- UPPER LFO 1 DELAY 900 ms: coming in after a moment\n- UPPER LFO 1 MODE RESET: restarting with each note\n- Listen for: vibrato blooming on the held notes.",
+          "why": "- UPPER DDS MOD LFO 1 12 %: a gentle pitch wobble\n- UPPER LFO 1 DELAY 900 ms: coming in after a moment\n- UPPER LFO 1 MODE RESET: restarting with each note\n- UPPER LFO 1 RATE 3.73 Hz\n- Listen for: vibrato blooming on the held notes.",
           "set": {
             "up.lfoRate": 6.5,
             "up.modLfo": 1.2,
@@ -6340,7 +6340,7 @@
         {
           "title": "A long echo",
           "module": "fx",
-          "why": "- Listen for: a lead singing into the night.",
+          "why": "- UPPER LPF 2.5 kHz, DELAY SEND 40 %\n- DELAY TIME 500 ms, FEEDBACK 50 %\n- PORTAMENTO 34 ms\n- Listen for: a lead singing into the night.",
           "set": {
             "up.lpf": 7,
             "up.send": 4,
@@ -6396,7 +6396,7 @@
         {
           "title": "A bright stack",
           "module": "osc",
-          "why": "- Listen for: a bright, chorused saw.",
+          "why": "- UPPER SUPER 1/2, PW / DETUNE 40 %\n- Listen for: a bright, chorused saw.",
           "set": {
             "up.super": "half",
             "up.pwDetune": 4
@@ -6405,7 +6405,7 @@
         {
           "title": "Snap",
           "module": "filter",
-          "why": "- Listen for: a snappy, punchy riff.",
+          "why": "- UPPER LPF 1.3 kHz, VCF ENV 40 %\n- UPPER ENV 1 D 160 ms, S 30 %\n- UPPER ENV 2 R 63 ms\n- Listen for: a snappy, punchy riff.",
           "set": {
             "up.lpf": 6,
             "up.vcfEnv": 4,
@@ -6417,7 +6417,7 @@
         {
           "title": "Double it",
           "module": "fx",
-          "why": "- Listen for: a pumping, retro riff.",
+          "why": "- UPPER DELAY SEND 30 %\n- DELAY TIME 330 ms, FEEDBACK 30 %\n- CHORUS I on\n- Listen for: a pumping, retro riff.",
           "set": {
             "up.send": 3,
             "dly.time": 8.4,
@@ -6473,7 +6473,7 @@
         {
           "title": "A plucky sawtooth",
           "module": "filter",
-          "why": "- UPPER ENV 2 SUSTAIN 60 %: a slight drop after each attack\n- Listen for: bouncy, plucked notes.",
+          "why": "- UPPER ENV 2 SUSTAIN 60 %: a slight drop after each attack\n- UPPER LPF 1.4 kHz, VCF ENV 35 %\n- UPPER ENV 1 D 160 ms, S 20 %\n- UPPER ENV 2 D 400 ms\n- Listen for: bouncy, plucked notes.",
           "set": {
             "up.lpf": 6.2,
             "up.vcfEnv": 3.5,
@@ -6486,7 +6486,7 @@
         {
           "title": "Shimmer",
           "module": "fx",
-          "why": "- Listen for: a bright, shimmering riff.",
+          "why": "- CHORUS I on\n- UPPER DELAY SEND 20 %\n- DELAY TIME 250 ms\n- Listen for: a bright, shimmering riff.",
           "set": {
             "chorus.i": true,
             "up.send": 2,
@@ -6545,7 +6545,7 @@
         {
           "title": "A metallic edge",
           "module": "osc",
-          "why": "- UPPER PW / DETUNE 40 %: a narrow pulse\n- UPPER CROSS MOD 20 %: a hint of metal\n- Listen for: a hard, slightly clangy bass.",
+          "why": "- UPPER PW / DETUNE 40 %: a narrow pulse\n- UPPER CROSS MOD 20 %: a hint of metal\n- UPPER DDS 2 WAVEFORM pulse, MIX 50 : 50\n- Listen for: a hard, slightly clangy bass.",
           "set": {
             "up.dds2Wave": "pulse",
             "up.mix": 5,
@@ -6556,7 +6556,7 @@
         {
           "title": "Tight",
           "module": "filter",
-          "why": "- Listen for: a tight, sequenced bass.",
+          "why": "- UPPER LPF 632 Hz, RES 30 %, VCF ENV 35 %\n- UPPER ENV 1 D 160 ms, S 0 %\n- UPPER ENV 2 D 250 ms, S 30 %\n- Listen for: a tight, sequenced bass.",
           "set": {
             "up.lpf": 5,
             "up.res": 3,
@@ -6607,7 +6607,7 @@
         {
           "title": "Octaves from one note",
           "module": "mode",
-          "why": "- ARP RANGE 2: each note and its octave\n- Listen for: one note chugging between two octaves.",
+          "why": "- ARP RANGE 2: each note and its octave\n- ARP ON on\n- CLK DIV 1/16\n- ARP MODE UP\n- Listen for: one note chugging between two octaves.",
           "set": {
             "arp.on": true,
             "arp.div": "1/16",
@@ -6618,7 +6618,7 @@
         {
           "title": "A sharp pluck",
           "module": "filter",
-          "why": "- Listen for: a relentless, sharp chug.",
+          "why": "- UPPER DDS 1 RANGE 16′, LPF 632 Hz, VCF ENV 40 %\n- UPPER ENV 1 D 100 ms, S 0 %\n- UPPER ENV 2 D 160 ms, S 20 %\n- Listen for: a relentless, sharp chug.",
           "set": {
             "up.dds1Range": "16",
             "up.lpf": 5,
@@ -6681,7 +6681,7 @@
         {
           "title": "Two layers",
           "module": "mode",
-          "why": "- KEYBOARD DUAL: both layers on every key\n- LOWER DDS 1 RANGE 16′: the lower layer an octave down\n- UPPER DDS 1 RANGE 4′: the upper an octave up\n- Listen for: a bass and a bright top together.",
+          "why": "- KEYBOARD DUAL: both layers on every key\n- LOWER DDS 1 RANGE 16′: the lower layer an octave down\n- UPPER DDS 1 RANGE 4′: the upper an octave up\n- UPPER DDS 1 WAVEFORM square, PW / DETUNE 60 %\n- Listen for: a bass and a bright top together.",
           "set": {
             "kbd.mode": "dual",
             "lo.dds1Range": "16",
@@ -6693,7 +6693,7 @@
         {
           "title": "Tight",
           "module": "env",
-          "why": "- UPPER VCA ENV LEVEL 60 %: the top layer a little quieter\n- Listen for: a dark, insistent riff.",
+          "why": "- UPPER VCA ENV LEVEL 60 %: the top layer a little quieter\n- LOWER LPF 632 Hz, VCF ENV 30 %\n- LOWER ENV 1 D 100 ms, S 0 %\n- UPPER LPF 2.5 kHz\n- UPPER ENV 2 D 100 ms, S 20 %\n- Listen for: a dark, insistent riff.",
           "set": {
             "lo.lpf": 5,
             "lo.vcfEnv": 3,
@@ -6749,7 +6749,7 @@
         {
           "title": "A dull tone",
           "module": "osc",
-          "why": "- UPPER DDS 1 WAVEFORM triangle: soft and round\n- Listen for: a soft tone.",
+          "why": "- UPPER DDS 1 WAVEFORM triangle: soft and round\n- UPPER LPF 1.3 kHz\n- Listen for: a soft tone.",
           "set": {
             "up.dds1Wave": "tri",
             "up.lpf": 6
@@ -6758,7 +6758,7 @@
         {
           "title": "A drop",
           "module": "mod",
-          "why": "- UPPER DDS MOD ENV 1 20 %: envelope 1 pitches each note up\n- UPPER ENV 1 DECAY 100 ms: then drops it quickly\n- Listen for: each blip falling.",
+          "why": "- UPPER DDS MOD ENV 1 20 %: envelope 1 pitches each note up\n- UPPER ENV 1 DECAY 100 ms: then drops it quickly\n- UPPER ENV 1 S 0 %\n- Listen for: each blip falling.",
           "set": {
             "up.modEnv": 2,
             "up.e1d": 5,
@@ -6768,7 +6768,7 @@
         {
           "title": "Short",
           "module": "env",
-          "why": "- UPPER VCA ENV LEVEL 100 %: full level: the blips are short\n- Listen for: two dull blips.",
+          "why": "- UPPER VCA ENV LEVEL 100 %: full level: the blips are short\n- UPPER ENV 2 D 300 ms, S 0 %, R 160 ms\n- UPPER DELAY SEND 30 %\n- DELAY TIME 180 ms\n- Listen for: two dull blips.",
           "set": {
             "up.e2d": 6.2,
             "up.e2s": 0,
@@ -6822,7 +6822,7 @@
         {
           "title": "Two layers, sour",
           "module": "mode",
-          "why": "- DETUNE (lower layer) -0.1 st: the lower layer a little flat\n- Listen for: a sour, thick buzz.",
+          "why": "- DETUNE (lower layer) -0.1 st: the lower layer a little flat\n- KEYBOARD DUAL\n- LOWER DDS 1 RANGE 16′, DDS 1 WAVEFORM square\n- Listen for: a sour, thick buzz.",
           "set": {
             "kbd.mode": "dual",
             "perf.lowerDetune": -0.12,
@@ -6833,7 +6833,7 @@
         {
           "title": "Raw",
           "module": "filter",
-          "why": "- Listen for: a raw, cold riff.",
+          "why": "- UPPER LPF 2.5 kHz\n- LOWER LPF 1.8 kHz\n- UPPER ENV 2 R 63 ms\n- LOWER ENV 2 R 63 ms\n- CHORUS I on\n- Listen for: a raw, cold riff.",
           "set": {
             "up.lpf": 7,
             "lo.lpf": 6.5,
@@ -6892,7 +6892,7 @@
         {
           "title": "Clean and glassy",
           "module": "osc",
-          "why": "- Listen for: a clean, glassy tone.",
+          "why": "- UPPER DDS 1 WAVEFORM triangle, DDS 2 WAVEFORM sine, DDS 2 RANGE 4′, MIX 70 : 30\n- Listen for: a clean, glassy tone.",
           "set": {
             "up.dds1Wave": "tri",
             "up.dds2Wave": "sine",
@@ -6903,7 +6903,7 @@
         {
           "title": "A pluck",
           "module": "env",
-          "why": "- Listen for: precise, glassy plucks.",
+          "why": "- UPPER ENV 2 D 400 ms, S 0 %, R 250 ms\n- UPPER DELAY SEND 20 %\n- DELAY TIME 290 ms\n- Listen for: precise, glassy plucks.",
           "set": {
             "up.e2d": 6.5,
             "up.e2s": 0,
@@ -6952,7 +6952,7 @@
         {
           "title": "Arpeggiate",
           "module": "mode",
-          "why": "- Listen for: a bouncing sequence.",
+          "why": "- ARP ON on\n- CLK DIV 1/16\n- ARP RANGE 2, MODE UP\n- Listen for: a bouncing sequence.",
           "set": {
             "arp.on": true,
             "arp.div": "1/16",
@@ -6963,7 +6963,7 @@
         {
           "title": "A tight bass",
           "module": "filter",
-          "why": "- Listen for: a tight bass pulse.",
+          "why": "- UPPER DDS 1 RANGE 16′, LPF 726 Hz, RES 20 %, VCF ENV 30 %\n- UPPER ENV 1 D 160 ms, S 0 %\n- UPPER ENV 2 D 160 ms, S 20 %\n- Listen for: a tight bass pulse.",
           "set": {
             "up.dds1Range": "16",
             "up.lpf": 5.2,
@@ -6978,7 +6978,7 @@
         {
           "title": "The gallop",
           "module": "fx",
-          "why": "- DELAY TIME 250 ms: a sixteenth-ish delay\n- DELAY FEEDBACK 20 %: one repeat\n- Listen for: the gallop: every step answered.",
+          "why": "- DELAY TIME 250 ms: a sixteenth-ish delay\n- DELAY FEEDBACK 20 %: one repeat\n- UPPER DELAY SEND 40 %\n- Listen for: the gallop: every step answered.",
           "set": {
             "up.send": 4,
             "dly.time": 8,
@@ -7045,7 +7045,7 @@
         {
           "title": "Bright and detuned",
           "module": "osc",
-          "why": "- Listen for: a bright, fizzing stack.",
+          "why": "- UPPER MIX 55 : 45, DDS 2 RANGE 4′, DDS 2 TUNE +0.1 st\n- Listen for: a bright, fizzing stack.",
           "set": {
             "up.mix": 4.5,
             "up.dds2Range": "4",
@@ -7055,7 +7055,7 @@
         {
           "title": "Stab",
           "module": "filter",
-          "why": "- Listen for: punchy, bright stabs.",
+          "why": "- UPPER LPF 1.1 kHz, VCF ENV 45 %\n- UPPER ENV 1 D 250 ms, S 20 %\n- UPPER ENV 2 R 63 ms\n- CHORUS I on\n- Listen for: punchy, bright stabs.",
           "set": {
             "up.lpf": 5.8,
             "up.vcfEnv": 4.5,
@@ -7105,7 +7105,7 @@
         {
           "title": "A thick stack",
           "module": "osc",
-          "why": "- PORTAMENTO 270 ms: a big swoop\n- Listen for: a thick, swooping growl.",
+          "why": "- PORTAMENTO 270 ms: a big swoop\n- UPPER DDS 1 RANGE 16′, MIX 50 : 50, DDS 2 TUNE +0.2 st\n- VOICE ASSIGN MODE LEGATO\n- Listen for: a thick, swooping growl.",
           "set": {
             "up.dds1Range": "16",
             "up.mix": 5,
@@ -7117,7 +7117,7 @@
         {
           "title": "Sweep it open",
           "module": "filter",
-          "why": "- UPPER LPF 224 Hz: dark at the start\n- UPPER RES 60 %: a growling peak\n- UPPER ENV 1 ATTACK 1.0 s: opening over a second\n- UPPER ENV 1 SUSTAIN 80 %: staying open\n- Listen for: the growl opening up on each note.",
+          "why": "- UPPER LPF 224 Hz: dark at the start\n- UPPER RES 60 %: a growling peak\n- UPPER ENV 1 ATTACK 1.0 s: opening over a second\n- UPPER ENV 1 SUSTAIN 80 %: staying open\n- UPPER VCF ENV 60 %, DRIVE 1\n- Listen for: the growl opening up on each note.",
           "set": {
             "up.lpf": 3.5,
             "up.res": 6,
@@ -7180,7 +7180,7 @@
         {
           "title": "Two layers",
           "module": "mode",
-          "why": "- Listen for: a warm pad below.",
+          "why": "- KEYBOARD DUAL\n- LOWER SUPER 1/2, PW / DETUNE 40 %, LPF 893 Hz\n- LOWER ENV 2 A 250 ms, R 1.0 s\n- Listen for: a warm pad below.",
           "set": {
             "kbd.mode": "dual",
             "lo.super": "half",
@@ -7193,7 +7193,7 @@
         {
           "title": "A glassy shimmer",
           "module": "osc",
-          "why": "- Listen for: a glassy, bell-like shimmer on top.",
+          "why": "- UPPER DDS 1 WAVEFORM sine, DDS 2 WAVEFORM sine, DDS 2 MODE / SUB OSC RING, DDS 2 RANGE 4′, MIX 60 : 40\n- UPPER ENV 2 D 1.0 s, S 30 %, R 1.0 s\n- UPPER VCA ENV LEVEL 60 %\n- Listen for: a glassy, bell-like shimmer on top.",
           "set": {
             "up.dds1Wave": "sine",
             "up.dds2Wave": "sine",
@@ -7209,7 +7209,7 @@
         {
           "title": "Gloss",
           "module": "fx",
-          "why": "- Listen for: a glossy, melancholy pad.",
+          "why": "- CHORUS I on, II on\n- UPPER DELAY SEND 30 %\n- DELAY TIME 440 ms\n- Listen for: a glossy, melancholy pad.",
           "set": {
             "chorus.i": true,
             "chorus.ii": true,
@@ -7269,7 +7269,7 @@
         {
           "title": "Wide",
           "module": "osc",
-          "why": "- Listen for: a wide stack.",
+          "why": "- UPPER SUPER ON, PW / DETUNE 40 %\n- Listen for: a wide stack.",
           "set": {
             "up.super": "on",
             "up.pwDetune": 4
@@ -7278,7 +7278,7 @@
         {
           "title": "Swell",
           "module": "env",
-          "why": "- Listen for: heroic, swelling chords.",
+          "why": "- UPPER ENV 2 A 630 ms, R 1.6 s\n- UPPER LPF 893 Hz, VCF ENV 25 %\n- UPPER ENV 1 A 1.6 s, S 60 %\n- Listen for: heroic, swelling chords.",
           "set": {
             "up.e2a": 7,
             "up.e2r": 8,
@@ -7291,7 +7291,7 @@
         {
           "title": "Big",
           "module": "fx",
-          "why": "- Listen for: a big, cinematic pad.",
+          "why": "- CHORUS I on\n- UPPER DELAY SEND 30 %\n- DELAY TIME 500 ms\n- Listen for: a big, cinematic pad.",
           "set": {
             "chorus.i": true,
             "up.send": 3,
@@ -7336,7 +7336,7 @@
         {
           "title": "A low throb",
           "module": "amp",
-          "why": "LFO 1, as a square, turns the level on and off.\n- UPPER LFO 1 WAVEFORM square: on and off\n- UPPER LFO 1 RATE 2.57 Hz: about two and a half times a second\n- UPPER VCA LFO 1 70 %: a deep throb\n- Listen for: a low, throbbing pulse.",
+          "why": "LFO 1, as a square, turns the level on and off.\n- UPPER LFO 1 WAVEFORM square: on and off\n- UPPER LFO 1 RATE 2.57 Hz: about two and a half times a second\n- UPPER VCA LFO 1 70 %: a deep throb\n- UPPER DDS 1 RANGE 16′\n- Listen for: a low, throbbing pulse.",
           "set": {
             "up.dds1Range": "16",
             "up.lfoWave": "sq",
@@ -7347,7 +7347,7 @@
         {
           "title": "Cold",
           "module": "filter",
-          "why": "- Listen for: a cold, menacing pulse.",
+          "why": "- UPPER LPF 448 Hz, RES 40 %\n- UPPER ENV 2 R 250 ms\n- Listen for: a cold, menacing pulse.",
           "set": {
             "up.lpf": 4.5,
             "up.res": 4,
@@ -7397,7 +7397,7 @@
         {
           "title": "Driven",
           "module": "filter",
-          "why": "- UPPER DDS 2 TUNE +7 st: DDS 2 a fifth up, for a power-chord edge\n- UPPER DRIVE 2: heavy drive\n- Listen for: a distorted, guitar-like lead.",
+          "why": "- UPPER DDS 2 TUNE +7 st: DDS 2 a fifth up, for a power-chord edge\n- UPPER DRIVE 2: heavy drive\n- UPPER MIX 50 : 50, LPF 1.8 kHz\n- VOICE ASSIGN MODE LEGATO\n- Listen for: a distorted, guitar-like lead.",
           "set": {
             "up.mix": 5,
             "up.dds2Tune": 7,
@@ -7409,7 +7409,7 @@
         {
           "title": "Bend into each note",
           "module": "mod",
-          "why": "INVERTED envelope 1 starts each note flat and, as it decays to no sustain, bends it up into tune.\n- UPPER DDS MOD ENV 1 12 %: a small bend\n- UPPER ENV 1 DECAY 250 ms: over a quarter second\n- UPPER ENV 1 SUSTAIN 0 %: ending in tune\n- Listen for: each note bending up into pitch.",
+          "why": "INVERTED envelope 1 starts each note flat and, as it decays to no sustain, bends it up into tune.\n- UPPER DDS MOD ENV 1 12 %: a small bend\n- UPPER ENV 1 DECAY 250 ms: over a quarter second\n- UPPER ENV 1 SUSTAIN 0 %: ending in tune\n- UPPER ENV 1 MODE INVERTED\n- Listen for: each note bending up into pitch.",
           "set": {
             "up.env1Mode": "inv",
             "up.modEnv": 1.2,
@@ -7420,7 +7420,7 @@
         {
           "title": "Vibrato",
           "module": "mod",
-          "why": "- Listen for: a screaming, bending lead.",
+          "why": "- LFO 2 trigger ON, RATE 4.01 Hz, DDS 13 %, DELAY 1.8 s\n- UPPER DELAY SEND 30 %\n- DELAY TIME 380 ms\n- Listen for: a screaming, bending lead.",
           "set": {
             "lfo2.trig": "on",
             "lfo2.rate": 6.6,
@@ -7480,7 +7480,7 @@
         {
           "title": "Wah each note",
           "module": "filter",
-          "why": "- UPPER ENV 1 DECAY 400 ms: a slower wah\n- Listen for: a fat, wah-ing bass.",
+          "why": "- UPPER ENV 1 DECAY 400 ms: a slower wah\n- UPPER DDS 1 RANGE 16′, LPF 448 Hz, RES 60 %, VCF ENV 45 %\n- UPPER ENV 1 S 10 %\n- UPPER ENV 2 R 40 ms\n- Listen for: a fat, wah-ing bass.",
           "set": {
             "up.dds1Range": "16",
             "up.lpf": 4.5,
@@ -7494,7 +7494,7 @@
         {
           "title": "Fat",
           "module": "osc",
-          "why": "- Listen for: a fatter, funkier bass.",
+          "why": "- UPPER MIX 60 : 40, DDS 2 WAVEFORM square, DDS 2 RANGE 16′\n- VOICE ASSIGN MODE SOLO\n- Listen for: a fatter, funkier bass.",
           "set": {
             "up.mix": 4,
             "up.dds2Wave": "square",
@@ -7570,7 +7570,7 @@
         {
           "title": "A chord stab",
           "module": "env",
-          "why": "- Listen for: short chord stabs.",
+          "why": "- UPPER MIX 60 : 40, DDS 2 WAVEFORM square\n- UPPER ENV 2 D 250 ms, S 20 %, R 100 ms\n- Listen for: short chord stabs.",
           "set": {
             "up.mix": 4,
             "up.dds2Wave": "square",
@@ -7582,7 +7582,7 @@
         {
           "title": "The sweep",
           "module": "lfo",
-          "why": "- UPPER RES 60 %: a singing peak\n- UPPER LFO 1 RATE 0.35 Hz: a sweep every few seconds\n- Listen for: the stabs sweeping open and closed.",
+          "why": "- UPPER RES 60 %: a singing peak\n- UPPER LFO 1 RATE 0.35 Hz: a sweep every few seconds\n- UPPER LPF 632 Hz, VCF LFO 1 45 %\n- Listen for: the stabs sweeping open and closed.",
           "set": {
             "up.lpf": 5,
             "up.res": 6,
@@ -7635,7 +7635,7 @@
         {
           "title": "Two octaves",
           "module": "osc",
-          "why": "- Listen for: a thick bass.",
+          "why": "- UPPER DDS 1 RANGE 16′, MIX 50 : 50, DDS 2 TUNE +0.1 st\n- Listen for: a thick bass.",
           "set": {
             "up.dds1Range": "16",
             "up.mix": 5,
@@ -7645,7 +7645,7 @@
         {
           "title": "Rip",
           "module": "filter",
-          "why": "- UPPER DRIVE 2: driven hard\n- UPPER VCA ENV LEVEL 60 %: a little lower, the drive is loud\n- Listen for: a dirty, ripping bass.",
+          "why": "- UPPER DRIVE 2: driven hard\n- UPPER VCA ENV LEVEL 60 %: a little lower, the drive is loud\n- UPPER LPF 1.3 kHz, RES 30 %, VCF ENV 30 %\n- UPPER ENV 1 D 250 ms, S 40 %\n- VOICE ASSIGN MODE SOLO\n- Listen for: a dirty, ripping bass.",
           "set": {
             "up.drive": "2",
             "up.lpf": 6,
@@ -7717,7 +7717,7 @@
         {
           "title": "A pluck",
           "module": "filter",
-          "why": "- Listen for: clean plucked chords.",
+          "why": "- UPPER LPF 632 Hz, VCF ENV 45 %\n- UPPER ENV 1 D 160 ms, S 0 %\n- UPPER ENV 2 D 400 ms, S 0 %, R 250 ms\n- Listen for: clean plucked chords.",
           "set": {
             "up.lpf": 5,
             "up.vcfEnv": 4.5,
@@ -7731,7 +7731,7 @@
         {
           "title": "An echo",
           "module": "fx",
-          "why": "- Listen for: bouncy plucks with echoes.",
+          "why": "- UPPER DELAY SEND 40 %\n- DELAY TIME 410 ms, FEEDBACK 40 %\n- CHORUS I on\n- Listen for: bouncy plucks with echoes.",
           "set": {
             "up.send": 4,
             "dly.time": 8.7,
@@ -7789,7 +7789,7 @@
         {
           "title": "A supersaw",
           "module": "osc",
-          "why": "- Listen for: a huge, bright stack.",
+          "why": "- UPPER SUPER ON, PW / DETUNE 60 %\n- Listen for: a huge, bright stack.",
           "set": {
             "up.super": "on",
             "up.pwDetune": 6
@@ -7798,7 +7798,7 @@
         {
           "title": "Pluck and ring",
           "module": "filter",
-          "why": "- Listen for: a bold, plucky festival lead.",
+          "why": "- UPPER LPF 1.3 kHz, VCF ENV 35 %\n- UPPER ENV 1 D 250 ms, S 40 %\n- UPPER ENV 2 R 100 ms\n- CHORUS I on\n- UPPER DELAY SEND 30 %\n- DELAY TIME 410 ms\n- Listen for: a bold, plucky festival lead.",
           "set": {
             "up.lpf": 6,
             "up.vcfEnv": 3.5,
@@ -7854,7 +7854,7 @@
         {
           "title": "A huge pad",
           "module": "osc",
-          "why": "- Listen for: a huge pad.",
+          "why": "- UPPER SUPER ON, PW / DETUNE 50 %\n- UPPER ENV 2 A 400 ms, R 1.6 s\n- Listen for: a huge pad.",
           "set": {
             "up.super": "on",
             "up.pwDetune": 5,
@@ -7865,7 +7865,7 @@
         {
           "title": "A long sweep",
           "module": "filter",
-          "why": "A very slow attack on envelope 1 opens the filter over many seconds.\n- UPPER LPF 224 Hz: closed at first\n- UPPER ENV 1 ATTACK 4.0 s: four seconds to open\n- Listen for: each chord slowly building open.",
+          "why": "A very slow attack on envelope 1 opens the filter over many seconds.\n- UPPER LPF 224 Hz: closed at first\n- UPPER ENV 1 ATTACK 4.0 s: four seconds to open\n- UPPER RES 40 %, VCF ENV 70 %\n- UPPER ENV 1 S 100 %\n- Listen for: each chord slowly building open.",
           "set": {
             "up.lpf": 3.5,
             "up.res": 4,
@@ -7877,7 +7877,7 @@
         {
           "title": "Space",
           "module": "fx",
-          "why": "- Listen for: a pad building over a breakdown.",
+          "why": "- CHORUS I on, II on\n- UPPER DELAY SEND 40 %\n- DELAY TIME 500 ms, FEEDBACK 50 %\n- Listen for: a pad building over a breakdown.",
           "set": {
             "chorus.i": true,
             "chorus.ii": true,
@@ -7938,7 +7938,7 @@
         {
           "title": "Warm",
           "module": "filter",
-          "why": "- Listen for: a warm, soft pad.",
+          "why": "- UPPER LPF 726 Hz\n- UPPER ENV 2 A 160 ms, R 630 ms\n- UPPER MIX 60 : 40, DDS 2 WAVEFORM triangle, DDS 2 RANGE 4′\n- Listen for: a warm, soft pad.",
           "set": {
             "up.lpf": 5.2,
             "up.e2a": 5.5,
@@ -7951,7 +7951,7 @@
         {
           "title": "Waver",
           "module": "mod",
-          "why": "DRIFT and a slow LFO 1 make the pitch waver like tape.\n- UPPER DDS MOD LFO 1 6 %: a very shallow wobble\n- Listen for: a pad wavering slightly.",
+          "why": "DRIFT and a slow LFO 1 make the pitch waver like tape.\n- UPPER DDS MOD LFO 1 6 %: a very shallow wobble\n- UPPER DRIFT 50 %\n- UPPER LFO 1 RATE 0.85 Hz\n- Listen for: a pad wavering slightly.",
           "set": {
             "up.drift": 5,
             "up.lfoRate": 4.5,
@@ -7961,7 +7961,7 @@
         {
           "title": "Haze",
           "module": "fx",
-          "why": "- Listen for: a hazy, sunlit pad.",
+          "why": "- CHORUS I on\n- UPPER DELAY SEND 30 %\n- DELAY TIME 440 ms, FEEDBACK 50 %\n- Listen for: a hazy, sunlit pad.",
           "set": {
             "chorus.i": true,
             "up.send": 3,
@@ -8021,7 +8021,7 @@
         {
           "title": "Soft keys",
           "module": "env",
-          "why": "- Listen for: soft, warm keys.",
+          "why": "- UPPER DDS 1 WAVEFORM triangle, MIX 60 : 40, DDS 2 WAVEFORM sawtooth, LPF 893 Hz\n- UPPER ENV 2 D 1.0 s, S 40 %, R 400 ms\n- Listen for: soft, warm keys.",
           "set": {
             "up.dds1Wave": "tri",
             "up.mix": 4,
@@ -8035,7 +8035,7 @@
         {
           "title": "Warp",
           "module": "mod",
-          "why": "- UPPER DRIFT 80 %: wandering pitches\n- UPPER DDS MOD destination 1 + 2: both oscillators\n- Listen for: keys warping in and out of tune.",
+          "why": "- UPPER DRIFT 80 %: wandering pitches\n- UPPER DDS MOD destination 1 + 2: both oscillators\n- UPPER LFO 1 RATE 0.43 Hz\n- UPPER DDS MOD LFO 1 12 %\n- Listen for: keys warping in and out of tune.",
           "set": {
             "up.drift": 8,
             "up.lfoRate": 3.6,
@@ -8046,7 +8046,7 @@
         {
           "title": "Worn",
           "module": "fx",
-          "why": "- UPPER HPF 65 Hz: a little bass taken out\n- Listen for: nostalgic, warped keys.",
+          "why": "- UPPER HPF 65 Hz: a little bass taken out\n- CHORUS I on\n- UPPER DELAY SEND 40 %\n- DELAY TIME 440 ms\n- Listen for: nostalgic, warped keys.",
           "set": {
             "up.hpf": 3,
             "chorus.i": true,
@@ -8107,7 +8107,7 @@
         {
           "title": "Two supersaws",
           "module": "mode",
-          "why": "- Listen for: an enormous wall.",
+          "why": "- KEYBOARD DUAL\n- UPPER SUPER ON, PW / DETUNE 50 %\n- LOWER SUPER ON, PW / DETUNE 50 %, DDS 1 RANGE 16′\n- DETUNE (lower layer) +0.1 st\n- Listen for: an enormous wall.",
           "set": {
             "kbd.mode": "dual",
             "up.super": "on",
@@ -8121,7 +8121,7 @@
         {
           "title": "Glow",
           "module": "env",
-          "why": "- Listen for: glowing swells.",
+          "why": "- UPPER ENV 2 A 250 ms, R 1.6 s\n- LOWER ENV 2 A 250 ms, R 1.6 s\n- UPPER LPF 1.4 kHz\n- LOWER LPF 893 Hz\n- Listen for: glowing swells.",
           "set": {
             "up.e2a": 6,
             "up.e2r": 8,
@@ -8134,7 +8134,7 @@
         {
           "title": "Euphoria",
           "module": "fx",
-          "why": "- Listen for: a euphoric wall of sound.",
+          "why": "- CHORUS I on, II on\n- UPPER DELAY SEND 40 %\n- LOWER DELAY SEND 40 %\n- DELAY TIME 500 ms, FEEDBACK 50 %\n- Listen for: a euphoric wall of sound.",
           "set": {
             "chorus.i": true,
             "chorus.ii": true,
@@ -8185,7 +8185,7 @@
         {
           "title": "A soft lead",
           "module": "osc",
-          "why": "- PORTAMENTO 270 ms: a slow slur\n- Listen for: a slurring lead.",
+          "why": "- PORTAMENTO 270 ms: a slow slur\n- UPPER DDS 1 WAVEFORM square, DDS 2 WAVEFORM sine, MIX 50 : 50, LPF 1.3 kHz\n- VOICE ASSIGN MODE LEGATO\n- Listen for: a slurring lead.",
           "set": {
             "up.dds1Wave": "square",
             "up.dds2Wave": "sine",
@@ -8198,7 +8198,7 @@
         {
           "title": "Melt",
           "module": "mod",
-          "why": "- Listen for: a melted, wobbly lead.",
+          "why": "- UPPER DRIFT 50 %\n- UPPER LFO 1 RATE 1.22 Hz\n- UPPER DDS MOD LFO 1 15 %\n- Listen for: a melted, wobbly lead.",
           "set": {
             "up.drift": 5,
             "up.lfoRate": 5,
@@ -8244,7 +8244,7 @@
         {
           "title": "Relentless",
           "module": "mode",
-          "why": "- ARP RANGE 1: one octave: a pounding repeat\n- Listen for: a pounding pulse.",
+          "why": "- ARP RANGE 1: one octave: a pounding repeat\n- ARP ON on\n- CLK DIV 1/16\n- Listen for: a pounding pulse.",
           "set": {
             "arp.on": true,
             "arp.div": "1/16",
@@ -8254,7 +8254,7 @@
         {
           "title": "Menace",
           "module": "filter",
-          "why": "- Listen for: a menacing, driven bass.",
+          "why": "- UPPER DDS 1 RANGE 16′, DRIVE 2, LPF 551 Hz, RES 40 %, VCF ENV 35 %\n- UPPER ENV 1 D 100 ms, S 0 %\n- UPPER VCA ENV LEVEL 60 %\n- Listen for: a menacing, driven bass.",
           "set": {
             "up.dds1Range": "16",
             "up.drive": "2",
@@ -8318,7 +8318,7 @@
         {
           "title": "Blare",
           "module": "filter",
-          "why": "- Listen for: bold, blaring chords.",
+          "why": "- UPPER SUPER 1/2, PW / DETUNE 40 %, LPF 893 Hz, VCF ENV 40 %\n- UPPER ENV 1 D 630 ms, S 40 %\n- UPPER ENV 2 A 16 ms, R 160 ms\n- Listen for: bold, blaring chords.",
           "set": {
             "up.super": "half",
             "up.pwDetune": 4,
@@ -8333,7 +8333,7 @@
         {
           "title": "Wide",
           "module": "fx",
-          "why": "- Listen for: big, wide brass.",
+          "why": "- CHORUS I on, II on\n- UPPER DELAY SEND 20 %\n- DELAY TIME 440 ms\n- Listen for: big, wide brass.",
           "set": {
             "chorus.i": true,
             "chorus.ii": true,
@@ -8407,7 +8407,7 @@
         {
           "title": "Sparkle",
           "module": "osc",
-          "why": "- Listen for: a sparkling tone.",
+          "why": "- UPPER DDS 2 WAVEFORM square, DDS 2 RANGE 4′, MIX 60 : 40\n- Listen for: a sparkling tone.",
           "set": {
             "up.dds2Wave": "square",
             "up.dds2Range": "4",
@@ -8417,7 +8417,7 @@
         {
           "title": "Pluck",
           "module": "env",
-          "why": "- Listen for: a bright pop pluck.",
+          "why": "- UPPER LPF 1.3 kHz, VCF ENV 35 %\n- UPPER ENV 1 D 250 ms, S 0 %\n- UPPER ENV 2 D 400 ms, S 0 %, R 160 ms\n- UPPER DELAY SEND 30 %\n- DELAY TIME 290 ms\n- Listen for: a bright pop pluck.",
           "set": {
             "up.lpf": 6,
             "up.vcfEnv": 3.5,
@@ -8472,7 +8472,7 @@
         {
           "title": "A bell edge",
           "module": "osc",
-          "why": "- UPPER DDS 2 RANGE 2′: DDS 2 two octaves up\n- UPPER CROSS MOD 25 %: a little FM for the bell edge\n- Listen for: a soft, bell-like tone.",
+          "why": "- UPPER DDS 2 RANGE 2′: DDS 2 two octaves up\n- UPPER CROSS MOD 25 %: a little FM for the bell edge\n- UPPER DDS 1 WAVEFORM sine, DDS 2 WAVEFORM sine\n- Listen for: a soft, bell-like tone.",
           "set": {
             "up.dds1Wave": "sine",
             "up.dds2Wave": "sine",
@@ -8483,7 +8483,7 @@
         {
           "title": "Ring",
           "module": "env",
-          "why": "- Listen for: melancholy, ringing bells.",
+          "why": "- UPPER ENV 2 D 1.6 s, S 0 %, R 630 ms\n- UPPER DELAY SEND 40 %\n- DELAY TIME 470 ms, FEEDBACK 50 %\n- Listen for: melancholy, ringing bells.",
           "set": {
             "up.e2d": 8,
             "up.e2s": 0,
@@ -8532,7 +8532,7 @@
         {
           "title": "A drone",
           "module": "osc",
-          "why": "- UPPER DDS 2 TUNE +7 st: a fifth up\n- Listen for: a deep, open drone.",
+          "why": "- UPPER DDS 2 TUNE +7 st: a fifth up\n- UPPER MIX 50 : 50\n- UPPER ENV 2 A 250 ms, R 1.6 s\n- Listen for: a deep, open drone.",
           "set": {
             "up.mix": 5,
             "up.dds2Tune": 7,
@@ -8543,7 +8543,7 @@
         {
           "title": "Pulse",
           "module": "env",
-          "why": "- UPPER ENV 1 MODE LOOP: envelope 1 repeating\n- Listen for: the drone pulsing.",
+          "why": "- UPPER ENV 1 MODE LOOP: envelope 1 repeating\n- UPPER ENV 1 A 160 ms, D 250 ms, S 0 %\n- UPPER LPF 317 Hz, RES 40 %, VCF ENV 50 %\n- Listen for: the drone pulsing.",
           "set": {
             "up.env1Mode": "loop",
             "up.e1a": 5.5,
@@ -8557,7 +8557,7 @@
         {
           "title": "Crackle",
           "module": "filter",
-          "why": "- Listen for: a living, crackling pulse.",
+          "why": "- UPPER DRIVE 2, VCA ENV LEVEL 60 %, DELAY SEND 30 %\n- DELAY TIME 350 ms\n- Listen for: a living, crackling pulse.",
           "set": {
             "up.drive": "2",
             "up.vcaEnv": 6,
@@ -8617,7 +8617,7 @@
         {
           "title": "Warm",
           "module": "osc",
-          "why": "- Listen for: a warm tone.",
+          "why": "- UPPER DDS 1 WAVEFORM triangle, DDS 2 WAVEFORM sine, DDS 2 RANGE 4′, MIX 70 : 30, LPF 893 Hz\n- Listen for: a warm tone.",
           "set": {
             "up.dds1Wave": "tri",
             "up.dds2Wave": "sine",
@@ -8629,7 +8629,7 @@
         {
           "title": "Mellow",
           "module": "env",
-          "why": "- UPPER DYNAMICS 1/2: harder notes a little brighter\n- Listen for: warm, mellow keys.",
+          "why": "- UPPER DYNAMICS 1/2: harder notes a little brighter\n- UPPER ENV 2 D 1.0 s, S 30 %, R 400 ms\n- UPPER DELAY SEND 30 %\n- DELAY TIME 440 ms\n- Listen for: warm, mellow keys.",
           "set": {
             "up.e2d": 7.5,
             "up.e2s": 3,
@@ -8701,7 +8701,7 @@
         {
           "title": "Slow edges",
           "module": "env",
-          "why": "- Listen for: an intimate, breathy pad.",
+          "why": "- UPPER ENV 2 A 630 ms, R 1.6 s\n- CHORUS I on\n- UPPER DELAY SEND 30 %\n- DELAY TIME 500 ms\n- Listen for: an intimate, breathy pad.",
           "set": {
             "up.e2a": 7,
             "up.e2r": 8,
@@ -8752,7 +8752,7 @@
         {
           "title": "Two massive layers",
           "module": "mode",
-          "why": "- Listen for: a massive stack.",
+          "why": "- KEYBOARD DUAL\n- UPPER SUPER ON, PW / DETUNE 30 %\n- LOWER SUPER ON, PW / DETUNE 30 %, DDS 1 RANGE 16′\n- Listen for: a massive stack.",
           "set": {
             "kbd.mode": "dual",
             "up.super": "on",
@@ -8765,7 +8765,7 @@
         {
           "title": "Blast",
           "module": "filter",
-          "why": "- Listen for: the braam.",
+          "why": "- UPPER DRIVE 2\n- LOWER DRIVE 2\n- UPPER LPF 551 Hz\n- LOWER LPF 448 Hz\n- UPPER VCF ENV 40 %\n- LOWER VCF ENV 40 %\n- UPPER ENV 1 D 1.6 s\n- LOWER ENV 1 D 1.6 s\n- UPPER ENV 1 S 30 %\n- LOWER ENV 1 S 30 %\n- UPPER ENV 2 R 1.6 s\n- LOWER ENV 2 R 1.6 s\n- UPPER VCA ENV LEVEL 60 %\n- LOWER VCA ENV LEVEL 60 %\n- Listen for: the braam.",
           "set": {
             "up.drive": "2",
             "lo.drive": "2",
@@ -8858,7 +8858,7 @@
         {
           "title": "Glassy",
           "module": "osc",
-          "why": "- Listen for: a glassy, light tone.",
+          "why": "- UPPER DDS 1 WAVEFORM square, DDS 2 WAVEFORM sine, DDS 2 RANGE 4′, MIX 60 : 40, LPF 1.8 kHz\n- Listen for: a glassy, light tone.",
           "set": {
             "up.dds1Wave": "square",
             "up.dds2Wave": "sine",
@@ -8870,7 +8870,7 @@
         {
           "title": "Bounce",
           "module": "env",
-          "why": "- Listen for: a light, shuffling chord.",
+          "why": "- UPPER ENV 2 D 400 ms, S 20 %, R 100 ms\n- CHORUS I on\n- Listen for: a light, shuffling chord.",
           "set": {
             "up.e2d": 6.5,
             "up.e2s": 2,
@@ -8921,7 +8921,7 @@
         {
           "title": "Round and low",
           "module": "osc",
-          "why": "With DDS 2’s RANGE at LFO, its MODE switch picks a sub oscillator: SYNC for a sine an octave below.\n- UPPER DDS 2 MODE / SUB OSC SYNC: a sine sub\n- Listen for: a round, deep bass.",
+          "why": "With DDS 2’s RANGE at LFO, its MODE switch picks a sub oscillator: SYNC for a sine an octave below.\n- UPPER DDS 2 MODE / SUB OSC SYNC: a sine sub\n- UPPER DDS 1 WAVEFORM square, DDS 1 RANGE 16′, DDS 2 RANGE LFO, MIX 60 : 40\n- Listen for: a round, deep bass.",
           "set": {
             "up.dds1Wave": "square",
             "up.dds1Range": "16",
@@ -8933,7 +8933,7 @@
         {
           "title": "A soft pluck",
           "module": "filter",
-          "why": "- Listen for: a warm, plucky bass.",
+          "why": "- UPPER LPF 551 Hz, VCF ENV 30 %\n- UPPER ENV 1 D 250 ms, S 20 %\n- UPPER ENV 2 R 63 ms\n- VOICE ASSIGN MODE SOLO\n- Listen for: a warm, plucky bass.",
           "set": {
             "up.lpf": 4.8,
             "up.vcfEnv": 3,
@@ -8993,7 +8993,7 @@
         {
           "title": "Reedy",
           "module": "osc",
-          "why": "- UPPER PW / DETUNE 60 %: a narrow, reedy pulse\n- Listen for: a fat, reedy tone.",
+          "why": "- UPPER PW / DETUNE 60 %: a narrow, reedy pulse\n- UPPER DDS 2 WAVEFORM pulse, MIX 50 : 50, DDS 2 TUNE +0.1 st\n- VOICE ASSIGN MODE SOLO\n- Listen for: a fat, reedy tone.",
           "set": {
             "up.dds2Wave": "pulse",
             "up.pwDetune": 6,
@@ -9005,7 +9005,7 @@
         {
           "title": "Pluck",
           "module": "filter",
-          "why": "- Listen for: a bold riff.",
+          "why": "- UPPER LPF 1.1 kHz, VCF ENV 35 %\n- UPPER ENV 1 D 250 ms, S 30 %\n- UPPER ENV 2 R 63 ms\n- Listen for: a bold riff.",
           "set": {
             "up.lpf": 5.8,
             "up.vcfEnv": 3.5,
@@ -9059,7 +9059,7 @@
         {
           "title": "Hollow and bright",
           "module": "osc",
-          "why": "- Listen for: a clean, bright lead.",
+          "why": "- UPPER DDS 1 WAVEFORM square, DDS 2 RANGE 4′, MIX 70 : 30, LPF 2.5 kHz\n- UPPER ENV 2 R 63 ms\n- VOICE ASSIGN MODE SOLO\n- Listen for: a clean, bright lead.",
           "set": {
             "up.dds1Wave": "square",
             "up.dds2Range": "4",
@@ -9121,7 +9121,7 @@
         {
           "title": "A string machine",
           "module": "osc",
-          "why": "- Listen for: a string pad.",
+          "why": "- UPPER SUPER ON, PW / DETUNE 30 %, LPF 1.3 kHz\n- UPPER ENV 2 A 400 ms, R 1.0 s\n- Listen for: a string pad.",
           "set": {
             "up.super": "on",
             "up.pwDetune": 3,
@@ -9133,7 +9133,7 @@
         {
           "title": "Ensemble",
           "module": "fx",
-          "why": "- UPPER HPF 65 Hz: thinner, like a string machine\n- Listen for: cold, dramatic strings.",
+          "why": "- UPPER HPF 65 Hz: thinner, like a string machine\n- CHORUS I on, II on\n- Listen for: cold, dramatic strings.",
           "set": {
             "chorus.i": true,
             "chorus.ii": true,
@@ -9180,7 +9180,7 @@
         {
           "title": "Round",
           "module": "osc",
-          "why": "- Listen for: soft tones fading in.",
+          "why": "- UPPER DDS 1 WAVEFORM sine, DDS 2 WAVEFORM triangle, MIX 70 : 30\n- UPPER ENV 2 A 1.0 s, R 2.5 s\n- Listen for: soft tones fading in.",
           "set": {
             "up.dds1Wave": "sine",
             "up.dds2Wave": "tri",
@@ -9192,7 +9192,7 @@
         {
           "title": "Float",
           "module": "fx",
-          "why": "- Listen for: tones floating away.",
+          "why": "- UPPER DELAY SEND 60 %\n- DELAY TIME 710 ms, FEEDBACK 60 %\n- CHORUS I on\n- Listen for: tones floating away.",
           "set": {
             "up.send": 6,
             "dly.time": 9.5,
@@ -9250,7 +9250,7 @@
         {
           "title": "Reedy",
           "module": "osc",
-          "why": "- UPPER PW / DETUNE 70 %: a thin pulse\n- Listen for: a reedy tone.",
+          "why": "- UPPER PW / DETUNE 70 %: a thin pulse\n- UPPER DDS 1 WAVEFORM square, DDS 2 WAVEFORM pulse, MIX 50 : 50, LPF 1.8 kHz\n- Listen for: a reedy tone.",
           "set": {
             "up.dds1Wave": "square",
             "up.dds2Wave": "pulse",
@@ -9262,7 +9262,7 @@
         {
           "title": "Precise",
           "module": "env",
-          "why": "- Listen for: a clear baroque lead.",
+          "why": "- UPPER ENV 2 D 250 ms, S 60 %, R 40 ms\n- VOICE ASSIGN MODE SOLO\n- Listen for: a clear baroque lead.",
           "set": {
             "up.e2d": 6,
             "up.e2s": 6,
@@ -9313,7 +9313,7 @@
         {
           "title": "Round",
           "module": "filter",
-          "why": "- Listen for: a round, wah-ing bass.",
+          "why": "- UPPER DDS 1 RANGE 16′, LPF 448 Hz, RES 30 %, VCF ENV 30 %\n- UPPER ENV 1 D 400 ms, S 20 %\n- Listen for: a round, wah-ing bass.",
           "set": {
             "up.dds1Range": "16",
             "up.lpf": 4.5,
@@ -9326,7 +9326,7 @@
         {
           "title": "Slide",
           "module": "glide",
-          "why": "- Listen for: a bouncing, sliding bass.",
+          "why": "- VOICE ASSIGN MODE LEGATO\n- PORTAMENTO 80 ms\n- Listen for: a bouncing, sliding bass.",
           "set": {
             "voice.mode": "legato",
             "perf.porta": 2
@@ -9352,8 +9352,8 @@
     {
       "id": "sg-zawinul-lead",
       "name": "Fusion Lead",
-      "ref": "In the style of Joe Zawinul — Weather Report",
-      "artist": "Weather Report",
+      "ref": "In the style of Joe Zawinul — “Birdland”",
+      "artist": "Joe Zawinul",
       "tags": ["lead", "fusion", "70s"],
       "level": 3,
       "blurb": "A soft, vocal, wah-like lead that bends and speaks.",
@@ -9375,7 +9375,7 @@
         {
           "title": "Vocal",
           "module": "filter",
-          "why": "- UPPER RES 60 %: a vocal peak\n- Listen for: a vocal, wah-like lead.",
+          "why": "- UPPER RES 60 %: a vocal peak\n- UPPER LPF 632 Hz, VCF ENV 30 %\n- UPPER ENV 1 A 100 ms, D 630 ms, S 30 %\n- VOICE ASSIGN MODE LEGATO\n- PORTAMENTO 34 ms\n- Listen for: a vocal, wah-like lead.",
           "set": {
             "up.lpf": 5,
             "up.res": 6,
@@ -9390,7 +9390,7 @@
         {
           "title": "Touch",
           "module": "filter",
-          "why": "- UPPER DYNAMICS ON: harder notes open the filter further\n- Listen for: louder notes speaking brighter.",
+          "why": "- UPPER DYNAMICS ON: harder notes open the filter further\n- LFO 2 trigger ON, RATE 3.21 Hz, DDS 8 %, DELAY 1.3 s\n- Listen for: louder notes speaking brighter.",
           "set": {
             "up.dyn": "on",
             "lfo2.trig": "on",
@@ -9451,7 +9451,7 @@
         {
           "title": "A warm pad",
           "module": "osc",
-          "why": "- Listen for: a warm pad.",
+          "why": "- UPPER SUPER 1/2, PW / DETUNE 40 %, LPF 1.1 kHz\n- UPPER ENV 2 R 250 ms\n- CHORUS I on\n- Listen for: a warm pad.",
           "set": {
             "up.super": "half",
             "up.pwDetune": 4,
@@ -9463,7 +9463,7 @@
         {
           "title": "Pump",
           "module": "amp",
-          "why": "LFO 1 on the VCA, a rising ramp, starts each beat quiet and swells back.\n- UPPER LFO 1 RATE 3.21 Hz: about twice a second, near the beat\n- UPPER VCA LFO 1 60 %: a deep pump\n- Listen for: the pad pumping.",
+          "why": "LFO 1 on the VCA, a rising ramp, starts each beat quiet and swells back.\n- UPPER LFO 1 RATE 3.21 Hz: about twice a second, near the beat\n- UPPER VCA LFO 1 60 %: a deep pump\n- UPPER LFO 1 WAVEFORM reverse sawtooth\n- Listen for: the pad pumping.",
           "set": {
             "up.lfoWave": "rsaw",
             "up.lfoRate": 6.3,
@@ -9512,7 +9512,7 @@
         {
           "title": "Deep",
           "module": "osc",
-          "why": "- UPPER DDS 2 MODE / SUB OSC SYNC: a sine sub\n- Listen for: a deep, round bass.",
+          "why": "- UPPER DDS 2 MODE / SUB OSC SYNC: a sine sub\n- UPPER DDS 1 WAVEFORM triangle, DDS 1 RANGE 16′, DDS 2 RANGE LFO, MIX 50 : 50\n- Listen for: a deep, round bass.",
           "set": {
             "up.dds1Wave": "tri",
             "up.dds1Range": "16",
@@ -9524,7 +9524,7 @@
         {
           "title": "Sheen",
           "module": "filter",
-          "why": "- Listen for: a deep bass with a swelling sheen.",
+          "why": "- UPPER LPF 364 Hz, RES 50 %, VCF ENV 30 %\n- UPPER ENV 1 A 250 ms, D 630 ms, S 20 %\n- VOICE ASSIGN MODE SOLO\n- Listen for: a deep bass with a swelling sheen.",
           "set": {
             "up.lpf": 4.2,
             "up.res": 5,
@@ -9576,7 +9576,7 @@
         {
           "title": "Soar",
           "module": "osc",
-          "why": "- Listen for: a soaring lead.",
+          "why": "- UPPER SUPER ON, PW / DETUNE 50 %, DDS 2 RANGE 4′, MIX 70 : 30, LPF 2.5 kHz\n- VOICE ASSIGN MODE LEGATO\n- PORTAMENTO 34 ms\n- Listen for: a soaring lead.",
           "set": {
             "up.super": "on",
             "up.pwDetune": 5,
@@ -9590,7 +9590,7 @@
         {
           "title": "Echo",
           "module": "fx",
-          "why": "- Listen for: an emotional trance lead.",
+          "why": "- UPPER DELAY SEND 40 %\n- DELAY TIME 470 ms, FEEDBACK 50 %\n- CHORUS I on\n- Listen for: an emotional trance lead.",
           "set": {
             "up.send": 4,
             "dly.time": 8.9,
@@ -9658,7 +9658,7 @@
         {
           "title": "Horns",
           "module": "osc",
-          "why": "- Listen for: punchy synth horns.",
+          "why": "- UPPER DDS 2 WAVEFORM pulse, DDS 2 RANGE 4′, MIX 70 : 30, LPF 1.1 kHz, VCF ENV 40 %\n- UPPER ENV 1 D 400 ms, S 30 %\n- UPPER ENV 2 R 63 ms\n- CHORUS I on\n- Listen for: punchy synth horns.",
           "set": {
             "up.dds2Wave": "pulse",
             "up.dds2Range": "4",
@@ -9713,7 +9713,7 @@
         {
           "title": "Drive",
           "module": "mode",
-          "why": "- Listen for: a driving arpeggio.",
+          "why": "- ARP ON on\n- CLK DIV 1/16\n- ARP RANGE 1, MODE UP\n- Listen for: a driving arpeggio.",
           "set": {
             "arp.on": true,
             "arp.div": "1/16",
@@ -9724,7 +9724,7 @@
         {
           "title": "Dark",
           "module": "filter",
-          "why": "- Listen for: an ominous, pulsing arpeggio.",
+          "why": "- UPPER LPF 448 Hz, RES 50 %, VCF ENV 35 %\n- UPPER ENV 1 D 160 ms, S 0 %\n- UPPER ENV 2 D 250 ms, S 20 %\n- UPPER DELAY SEND 40 %\n- DELAY TIME 500 ms, FEEDBACK 50 %\n- Listen for: an ominous, pulsing arpeggio.",
           "set": {
             "up.lpf": 4.5,
             "up.res": 5,
@@ -9790,7 +9790,7 @@
         {
           "title": "Bouncy",
           "module": "filter",
-          "why": "- Listen for: a bright, bouncy octave bass.",
+          "why": "- UPPER DDS 1 RANGE 16′, LPF 726 Hz, VCF ENV 35 %\n- UPPER ENV 1 D 160 ms, S 0 %\n- UPPER ENV 2 D 250 ms, S 30 %\n- UPPER DELAY SEND 20 %\n- DELAY TIME 330 ms\n- Listen for: a bright, bouncy octave bass.",
           "set": {
             "up.dds1Range": "16",
             "up.lpf": 5.2,
@@ -9855,7 +9855,7 @@
         {
           "title": "Organ layers",
           "module": "mode",
-          "why": "- Listen for: an organ in octaves.",
+          "why": "- KEYBOARD DUAL\n- LOWER DDS 1 WAVEFORM sine, DDS 1 RANGE 16′, DDS 2 WAVEFORM triangle, MIX 60 : 40\n- UPPER DDS 1 WAVEFORM square, DDS 1 RANGE 4′, LPF 1.3 kHz, VCA ENV LEVEL 50 %\n- Listen for: an organ in octaves.",
           "set": {
             "kbd.mode": "dual",
             "lo.dds1Wave": "sine",
@@ -9871,7 +9871,7 @@
         {
           "title": "Swell",
           "module": "env",
-          "why": "- Listen for: a vast, swelling organ.",
+          "why": "- UPPER ENV 2 A 400 ms, R 1.6 s\n- LOWER ENV 2 A 400 ms, R 1.6 s\n- UPPER DELAY SEND 40 %\n- LOWER DELAY SEND 40 %\n- DELAY TIME 620 ms, FEEDBACK 60 %\n- Listen for: a vast, swelling organ.",
           "set": {
             "up.e2a": 6.5,
             "up.e2r": 8,
@@ -9943,7 +9943,7 @@
         {
           "title": "Bright stab",
           "module": "osc",
-          "why": "- Listen for: a bright, hard chord stab.",
+          "why": "- UPPER DDS 2 WAVEFORM square, DDS 2 RANGE 4′, MIX 50 : 50, LPF 2.9 kHz\n- UPPER ENV 2 D 250 ms, S 10 %, R 100 ms\n- CHORUS I on\n- Listen for: a bright, hard chord stab.",
           "set": {
             "up.dds2Wave": "square",
             "up.dds2Range": "4",
@@ -10000,7 +10000,7 @@
         {
           "title": "Squelch",
           "module": "filter",
-          "why": "- Listen for: a squelchy lead.",
+          "why": "- UPPER DDS 1 WAVEFORM square, LPF 632 Hz, RES 65 %, VCF ENV 40 %\n- UPPER ENV 1 D 250 ms, S 20 %\n- Listen for: a squelchy lead.",
           "set": {
             "up.dds1Wave": "square",
             "up.lpf": 5,
@@ -10013,7 +10013,7 @@
         {
           "title": "Slide",
           "module": "glide",
-          "why": "- Listen for: a sliding funk lead.",
+          "why": "- VOICE ASSIGN MODE LEGATO\n- PORTAMENTO 58 ms\n- Listen for: a sliding funk lead.",
           "set": {
             "voice.mode": "legato",
             "perf.porta": 1.8
@@ -10058,7 +10058,7 @@
         {
           "title": "Tick",
           "module": "mode",
-          "why": "- Listen for: a ticking pulse.",
+          "why": "- ARP ON on\n- CLK DIV 1/8\n- ARP RANGE 1, MODE UP\n- Listen for: a ticking pulse.",
           "set": {
             "arp.on": true,
             "arp.div": "1/8",
@@ -10069,7 +10069,7 @@
         {
           "title": "String-like",
           "module": "env",
-          "why": "- Listen for: short, string-like steps.",
+          "why": "- UPPER SUPER 1/2, PW / DETUNE 30 %\n- UPPER ENV 2 D 400 ms, S 40 %, R 100 ms\n- UPPER LPF 957 Hz\n- Listen for: short, string-like steps.",
           "set": {
             "up.super": "half",
             "up.pwDetune": 3,
@@ -10082,7 +10082,7 @@
         {
           "title": "Tension",
           "module": "lfo",
-          "why": "- UPPER LFO 1 RATE 0.13 Hz: a very slow sweep\n- Listen for: tension rising and falling.",
+          "why": "- UPPER LFO 1 RATE 0.13 Hz: a very slow sweep\n- UPPER VCF LFO 1 30 %\n- CHORUS I on\n- Listen for: tension rising and falling.",
           "set": {
             "up.lfoRate": 2,
             "up.vcfLfo": 3,
@@ -10131,7 +10131,7 @@
         {
           "title": "Piercing",
           "module": "osc",
-          "why": "- Listen for: a piercing tone.",
+          "why": "- UPPER DDS 1 WAVEFORM square, DDS 1 RANGE 4′, LPF 2.5 kHz\n- UPPER ENV 2 R 400 ms\n- VOICE ASSIGN MODE LEGATO\n- Listen for: a piercing tone.",
           "set": {
             "up.dds1Wave": "square",
             "up.dds1Range": "4",
@@ -10143,7 +10143,7 @@
         {
           "title": "Shine",
           "module": "fx",
-          "why": "- Listen for: a shining lead ringing out.",
+          "why": "- UPPER LFO 1 RATE 3.73 Hz\n- UPPER DDS MOD LFO 1 10 %\n- UPPER LFO 1 DELAY 900 ms\n- UPPER DELAY SEND 50 %\n- DELAY TIME 500 ms, FEEDBACK 60 %\n- Listen for: a shining lead ringing out.",
           "set": {
             "up.lfoRate": 6.5,
             "up.modLfo": 1,
@@ -10207,7 +10207,7 @@
         {
           "title": "The pitch drop",
           "module": "mod",
-          "why": "Envelope 1 sends each note sharply up in pitch, then drops it back.\n- UPPER DDS MOD ENV 1 50 %: a big drop, for the click and punch\n- UPPER ENV 1 DECAY 63 ms: over a few tens of milliseconds\n- Listen for: each note starting with a thwack.",
+          "why": "Envelope 1 sends each note sharply up in pitch, then drops it back.\n- UPPER DDS MOD ENV 1 50 %: a big drop, for the click and punch\n- UPPER ENV 1 DECAY 63 ms: over a few tens of milliseconds\n- UPPER ENV 1 S 0 %\n- Listen for: each note starting with a thwack.",
           "set": {
             "up.modEnv": 5,
             "up.e1d": 4.5,
@@ -10217,7 +10217,7 @@
         {
           "title": "Boom, then gone",
           "module": "env",
-          "why": "- UPPER ENV 2 DECAY 520 ms: a short boom\n- UPPER VCA ENV LEVEL 100 %: as loud as it goes\n- Listen for: a round, booming kick.",
+          "why": "- UPPER ENV 2 DECAY 520 ms: a short boom\n- UPPER VCA ENV LEVEL 100 %: as loud as it goes\n- UPPER ENV 2 S 0 %, R 250 ms\n- Listen for: a round, booming kick.",
           "set": {
             "up.e2d": 6.8,
             "up.e2s": 0,
@@ -10280,7 +10280,7 @@
         {
           "title": "Snap",
           "module": "env",
-          "why": "- UPPER ENV 2 DECAY 480 ms: about half a second\n- UPPER LPF 5.0 kHz: bright\n- UPPER HPF 65 Hz: no boom\n- Listen for: a snappy snare.",
+          "why": "- UPPER ENV 2 DECAY 480 ms: about half a second\n- UPPER LPF 5.0 kHz: bright\n- UPPER HPF 65 Hz: no boom\n- UPPER ENV 2 S 0 %, R 250 ms\n- UPPER VCA ENV LEVEL 100 %\n- Listen for: a snappy snare.",
           "set": {
             "up.e2d": 6.7,
             "up.e2s": 0,
@@ -10342,7 +10342,7 @@
         {
           "title": "Sizzle",
           "module": "osc",
-          "why": "- UPPER HPF 2.0 kHz: only the top left\n- UPPER LPF 20 kHz: fully open\n- Listen for: a thin hiss.",
+          "why": "- UPPER HPF 2.0 kHz: only the top left\n- UPPER LPF 20 kHz: fully open\n- UPPER DDS 1 WAVEFORM noise\n- Listen for: a thin hiss.",
           "set": {
             "up.dds1Wave": "noise",
             "up.hpf": 8.5,
@@ -10352,7 +10352,7 @@
         {
           "title": "Ticks",
           "module": "env",
-          "why": "With no sustain, a short note is a tick and a longer one rings on.\n- UPPER ENV 2 DECAY 330 ms: a closed hat\n- UPPER DYNAMICS ON: harder hits brighter\n- Listen for: crisp, ticking hats.",
+          "why": "With no sustain, a short note is a tick and a longer one rings on.\n- UPPER ENV 2 DECAY 330 ms: a closed hat\n- UPPER DYNAMICS ON: harder hits brighter\n- UPPER ENV 2 S 0 %, R 63 ms\n- UPPER VCA ENV LEVEL 100 %\n- Listen for: crisp, ticking hats.",
           "set": {
             "up.e2d": 6.3,
             "up.e2s": 0,
@@ -10407,7 +10407,7 @@
         {
           "title": "Mid noise",
           "module": "filter",
-          "why": "- UPPER RES 20 %: a slight ring\n- Listen for: a mid-range hiss.",
+          "why": "- UPPER RES 20 %: a slight ring\n- UPPER DDS 1 WAVEFORM noise, HPF 164 Hz, LPF 7.1 kHz\n- Listen for: a mid-range hiss.",
           "set": {
             "up.dds1Wave": "noise",
             "up.hpf": 4.5,
@@ -10418,7 +10418,7 @@
         {
           "title": "Smear",
           "module": "env",
-          "why": "- UPPER ENV 2 DECAY HOLD 100 ms: a short plateau\n- DELAY TIME 32 ms: a tiny slap\n- Listen for: a smeared clap.",
+          "why": "- UPPER ENV 2 DECAY HOLD 100 ms: a short plateau\n- DELAY TIME 32 ms: a tiny slap\n- UPPER ENV 2 S 0 %, R 160 ms\n- UPPER VCA ENV LEVEL 100 %, DELAY SEND 20 %\n- Listen for: a smeared clap.",
           "set": {
             "up.e2dh": 5,
             "up.e2d": 7,
@@ -10436,7 +10436,7 @@
       "tweaks": [
         {
           "id": "up.e2d",
-          "try": "Raise to 7",
+          "try": "Raise to 9",
           "hear": "A long, reverb-like clap."
         },
         {
@@ -10475,7 +10475,7 @@
         {
           "title": "A tone with a stick",
           "module": "osc",
-          "why": "- Listen for: a tone with a tick.",
+          "why": "- UPPER DDS 1 WAVEFORM triangle, DDS 2 WAVEFORM noise, MIX 80 : 20\n- Listen for: a tone with a tick.",
           "set": {
             "up.dds1Wave": "tri",
             "up.dds2Wave": "noise",
@@ -10485,7 +10485,7 @@
         {
           "title": "Pew",
           "module": "mod",
-          "why": "- UPPER ENV 1 DECAY 250 ms: a slower fall\n- Listen for: dropping, pew-ing toms.",
+          "why": "- UPPER ENV 1 DECAY 250 ms: a slower fall\n- UPPER DDS MOD ENV 1 30 %\n- UPPER ENV 1 S 0 %\n- UPPER ENV 2 D 520 ms, S 0 %, R 250 ms\n- UPPER VCA ENV LEVEL 100 %\n- Listen for: dropping, pew-ing toms.",
           "set": {
             "up.modEnv": 3,
             "up.e1d": 6,
@@ -10543,7 +10543,7 @@
         {
           "title": "Two squares",
           "module": "osc",
-          "why": "- UPPER DDS 2 TUNE +6.8 st: an awkward interval\n- Listen for: a clanky chord.",
+          "why": "- UPPER DDS 2 TUNE +6.8 st: an awkward interval\n- UPPER DDS 1 WAVEFORM square, DDS 2 WAVEFORM square, MIX 50 : 50, HPF 224 Hz\n- Listen for: a clanky chord.",
           "set": {
             "up.dds1Wave": "square",
             "up.dds2Wave": "square",
@@ -10555,7 +10555,7 @@
         {
           "title": "Clank",
           "module": "env",
-          "why": "- Listen for: a cowbell.",
+          "why": "- UPPER ENV 2 D 250 ms, S 0 %, R 100 ms\n- UPPER LPF 3.6 kHz, VCA ENV LEVEL 100 %\n- Listen for: a cowbell.",
           "set": {
             "up.e2d": 6,
             "up.e2s": 0,
@@ -10612,7 +10612,7 @@
         {
           "title": "Click",
           "module": "filter",
-          "why": "- UPPER RES 70 %: a woody ring\n- UPPER ENV 2 DECAY 210 ms: tiny\n- Listen for: a tiny, woody click.",
+          "why": "- UPPER RES 70 %: a woody ring\n- UPPER ENV 2 DECAY 210 ms: tiny\n- UPPER DDS 1 WAVEFORM square, LPF 2.5 kHz, HPF 224 Hz\n- UPPER ENV 2 S 0 %, R 40 ms\n- UPPER VCA ENV LEVEL 100 %\n- Listen for: a tiny, woody click.",
           "set": {
             "up.dds1Wave": "square",
             "up.lpf": 7,
@@ -10692,7 +10692,7 @@
         {
           "title": "Swish",
           "module": "env",
-          "why": "- UPPER ENV 2 ATTACK 63 ms: a little swell\n- UPPER DYNAMICS ON: accents louder\n- Listen for: a soft shaker.",
+          "why": "- UPPER ENV 2 ATTACK 63 ms: a little swell\n- UPPER DYNAMICS ON: accents louder\n- UPPER DDS 1 WAVEFORM noise, HPF 1.1 kHz, LPF 10 kHz\n- UPPER ENV 2 D 160 ms, S 0 %, R 100 ms\n- UPPER VCA ENV LEVEL 100 %\n- Listen for: a soft shaker.",
           "set": {
             "up.dds1Wave": "noise",
             "up.hpf": 7.5,
@@ -10755,7 +10755,7 @@
         {
           "title": "Hollow",
           "module": "filter",
-          "why": "- Listen for: a hollow tone.",
+          "why": "- UPPER DDS 1 WAVEFORM triangle, LPF 1.3 kHz, RES 50 %, VCF KEYTRACK ON\n- Listen for: a hollow tone.",
           "set": {
             "up.dds1Wave": "tri",
             "up.lpf": 6,
@@ -10766,7 +10766,7 @@
         {
           "title": "Slap",
           "module": "env",
-          "why": "- UPPER DDS MOD ENV 1 12 %: a slight drop\n- Listen for: a slapping hand drum.",
+          "why": "- UPPER DDS MOD ENV 1 12 %: a slight drop\n- UPPER ENV 1 D 100 ms, S 0 %\n- UPPER ENV 2 D 330 ms, S 0 %, R 160 ms\n- UPPER VCA ENV LEVEL 100 %\n- Listen for: a slapping hand drum.",
           "set": {
             "up.modEnv": 1.2,
             "up.e1d": 5,
@@ -10819,7 +10819,7 @@
         {
           "title": "Zap",
           "module": "mod",
-          "why": "- UPPER DDS MOD ENV 1 70 %: a huge drop\n- Listen for: zaps.",
+          "why": "- UPPER DDS MOD ENV 1 70 %: a huge drop\n- UPPER ENV 1 D 100 ms, S 0 %\n- UPPER ENV 2 D 210 ms, S 0 %, R 100 ms\n- UPPER LPF 2.5 kHz, VCA ENV LEVEL 100 %\n- Listen for: zaps.",
           "set": {
             "up.modEnv": 7,
             "up.e1d": 5,
@@ -10866,7 +10866,7 @@
         {
           "title": "Noise",
           "module": "osc",
-          "why": "- UPPER LPF 159 Hz: closed at first\n- UPPER RES 60 %: a whistling peak\n- Listen for: a dark rush.",
+          "why": "- UPPER LPF 159 Hz: closed at first\n- UPPER RES 60 %: a whistling peak\n- UPPER DDS 1 WAVEFORM noise\n- Listen for: a dark rush.",
           "set": {
             "up.dds1Wave": "noise",
             "up.lpf": 3,
@@ -10876,7 +10876,7 @@
         {
           "title": "Rise",
           "module": "env",
-          "why": "A very slow attack on envelope 1 sweeps the filter all the way up.\n- UPPER ENV 1 ATTACK 5.2 s: about five seconds\n- UPPER ENV 2 ATTACK 2.5 s: getting louder too\n- Listen for: a whoosh rising and rising.",
+          "why": "A very slow attack on envelope 1 sweeps the filter all the way up.\n- UPPER ENV 1 ATTACK 5.2 s: about five seconds\n- UPPER ENV 2 ATTACK 2.5 s: getting louder too\n- UPPER VCF ENV 100 %\n- UPPER ENV 1 S 100 %\n- UPPER ENV 2 R 630 ms\n- UPPER DELAY SEND 40 %\n- DELAY TIME 350 ms, FEEDBACK 50 %\n- Listen for: a whoosh rising and rising.",
           "set": {
             "up.vcfEnv": 10,
             "up.e1a": 9.3,
@@ -10923,7 +10923,7 @@
         {
           "title": "Noise and saw",
           "module": "osc",
-          "why": "- UPPER MIX 40 : 60: mostly noise\n- Listen for: a rush.",
+          "why": "- UPPER MIX 40 : 60: mostly noise\n- UPPER DDS 2 WAVEFORM noise, LPF 632 Hz, RES 40 %\n- Listen for: a rush.",
           "set": {
             "up.dds2Wave": "noise",
             "up.mix": 6,
@@ -10934,7 +10934,7 @@
         {
           "title": "Fall",
           "module": "env",
-          "why": "- UPPER VCF ENV 70 %: the filter starting open\n- UPPER DDS MOD ENV 1 40 %: and the pitch high\n- UPPER ENV 1 DECAY 3.3 s: both falling over three seconds\n- Listen for: a whoosh falling away.",
+          "why": "- UPPER VCF ENV 70 %: the filter starting open\n- UPPER DDS MOD ENV 1 40 %: and the pitch high\n- UPPER ENV 1 DECAY 3.3 s: both falling over three seconds\n- UPPER ENV 1 S 0 %\n- UPPER ENV 2 D 4.0 s, S 0 %\n- UPPER VCA ENV LEVEL 100 %\n- Listen for: a whoosh falling away.",
           "set": {
             "up.vcfEnv": 7,
             "up.modEnv": 4,
@@ -10980,7 +10980,7 @@
         {
           "title": "Surf",
           "module": "osc",
-          "why": "- Listen for: a rushing hiss.",
+          "why": "- UPPER DDS 1 WAVEFORM noise, LPF 1.1 kHz, VCA ENV LEVEL 100 %\n- Listen for: a rushing hiss.",
           "set": {
             "up.dds1Wave": "noise",
             "up.lpf": 5.8,
@@ -10990,7 +10990,7 @@
         {
           "title": "Waves",
           "module": "lfo",
-          "why": "- UPPER LFO 1 RATE 0.28 Hz: a wave every few seconds\n- UPPER VCF LFO 1 40 %: brightening as they break\n- UPPER VCA LFO 1 40 %: and swelling\n- Listen for: waves rolling in and out.",
+          "why": "- UPPER LFO 1 RATE 0.28 Hz: a wave every few seconds\n- UPPER VCF LFO 1 40 %: brightening as they break\n- UPPER VCA LFO 1 40 %: and swelling\n- UPPER ENV 2 A 250 ms, R 1.6 s\n- Listen for: waves rolling in and out.",
           "set": {
             "up.lfoRate": 3,
             "up.vcfLfo": 4,
@@ -11034,7 +11034,7 @@
         {
           "title": "Noise, ringing",
           "module": "filter",
-          "why": "- UPPER RES 70 %: each step rings like a drop\n- Listen for: a ringing hiss.",
+          "why": "- UPPER RES 70 %: each step rings like a drop\n- UPPER DDS 1 WAVEFORM noise, LPF 1.8 kHz, HPF 224 Hz\n- Listen for: a ringing hiss.",
           "set": {
             "up.dds1Wave": "noise",
             "up.lpf": 6.5,
@@ -11045,7 +11045,7 @@
         {
           "title": "Patter",
           "module": "lfo",
-          "why": "- UPPER LFO 1 WAVEFORM S&H: a new random level each step\n- UPPER LFO 1 RATE 7.83 Hz: many times a second\n- Listen for: random drops pattering.",
+          "why": "- UPPER LFO 1 WAVEFORM S&H: a new random level each step\n- UPPER LFO 1 RATE 7.83 Hz: many times a second\n- UPPER VCF LFO 1 50 %\n- Listen for: random drops pattering.",
           "set": {
             "up.lfoWave": "sh",
             "up.lfoRate": 7.5,
@@ -11087,7 +11087,7 @@
         {
           "title": "A clean tone",
           "module": "osc",
-          "why": "- Listen for: a beep.",
+          "why": "- UPPER DDS 1 WAVEFORM square, LPF 2.5 kHz, VCA ENV LEVEL 60 %\n- Listen for: a beep.",
           "set": {
             "up.dds1Wave": "square",
             "up.lpf": 7,
@@ -11097,7 +11097,7 @@
         {
           "title": "Chatter",
           "module": "lfo",
-          "why": "- UPPER DDS MOD LFO 1 60 %: random pitches\n- Listen for: a computer chattering.",
+          "why": "- UPPER DDS MOD LFO 1 60 %: random pitches\n- UPPER LFO 1 WAVEFORM sample and hold, RATE 4.66 Hz\n- UPPER DELAY SEND 30 %\n- DELAY TIME 250 ms\n- Listen for: a computer chattering.",
           "set": {
             "up.lfoWave": "sh",
             "up.lfoRate": 6.8,
@@ -11142,7 +11142,7 @@
         {
           "title": "Warble",
           "module": "lfo",
-          "why": "- Listen for: a warbling tone.",
+          "why": "- UPPER DDS 1 WAVEFORM sine\n- UPPER LFO 1 RATE 5.40 Hz\n- UPPER DDS MOD LFO 1 30 %\n- Listen for: a warbling tone.",
           "set": {
             "up.dds1Wave": "sine",
             "up.lfoRate": 7,
@@ -11152,7 +11152,7 @@
         {
           "title": "Swoop",
           "module": "mod",
-          "why": "- LFO 2 DDS 50 %: a wide, slow swoop\n- Listen for: a flying saucer.",
+          "why": "- LFO 2 DDS 50 %: a wide, slow swoop\n- LFO 2 trigger ON, RATE 0.40 Hz\n- UPPER DELAY SEND 40 %\n- DELAY TIME 350 ms, FEEDBACK 50 %\n- Listen for: a flying saucer.",
           "set": {
             "lfo2.trig": "on",
             "lfo2.rate": 3.5,
@@ -11197,7 +11197,7 @@
         {
           "title": "Two tones",
           "module": "lfo",
-          "why": "- UPPER DDS MOD LFO 1 30 %: about a third apart\n- Listen for: two tones alternating.",
+          "why": "- UPPER DDS MOD LFO 1 30 %: about a third apart\n- UPPER LFO 1 WAVEFORM square, RATE 1.77 Hz\n- Listen for: two tones alternating.",
           "set": {
             "up.lfoWave": "sq",
             "up.lfoRate": 5.5,
@@ -11207,7 +11207,7 @@
         {
           "title": "Harsh",
           "module": "filter",
-          "why": "- Listen for: an urgent alarm.",
+          "why": "- UPPER DDS 1 WAVEFORM square, DRIVE 1, LPF 2.5 kHz, VCA ENV LEVEL 60 %\n- Listen for: an urgent alarm.",
           "set": {
             "up.dds1Wave": "square",
             "up.drive": "1",
@@ -11259,7 +11259,7 @@
         {
           "title": "Thud",
           "module": "osc",
-          "why": "- Listen for: a low heartbeat.",
+          "why": "- UPPER DDS 1 WAVEFORM sine, DDS 1 RANGE 16′\n- UPPER DDS MOD ENV 1 20 %\n- UPPER ENV 1 D 100 ms, S 0 %\n- UPPER ENV 2 D 400 ms, S 0 %, R 250 ms\n- UPPER LPF 317 Hz, VCA ENV LEVEL 100 %\n- Listen for: a low heartbeat.",
           "set": {
             "up.dds1Wave": "sine",
             "up.dds1Range": "16",
@@ -11308,7 +11308,7 @@
         {
           "title": "Whistle",
           "module": "filter",
-          "why": "- UPPER RES 80 %: a whistling peak\n- Listen for: a whistling hiss.",
+          "why": "- UPPER RES 80 %: a whistling peak\n- UPPER DDS 1 WAVEFORM noise, LPF 893 Hz\n- Listen for: a whistling hiss.",
           "set": {
             "up.dds1Wave": "noise",
             "up.lpf": 5.5,
@@ -11318,7 +11318,7 @@
         {
           "title": "Gusts",
           "module": "mod",
-          "why": "- LFO 2 WAVEFORM smooth S&H: wandering at random\n- Listen for: wind howling in gusts.",
+          "why": "- LFO 2 WAVEFORM smooth S&H: wandering at random\n- LFO 2 trigger ON, RATE 0.85 Hz, VCF 70 %\n- UPPER ENV 2 A 630 ms, R 1.6 s\n- Listen for: wind howling in gusts.",
           "set": {
             "lfo2.trig": "on",
             "lfo2.wave": "shg",
@@ -11366,7 +11366,7 @@
         {
           "title": "A low hum",
           "module": "osc",
-          "why": "- Listen for: a low hum.",
+          "why": "- UPPER DDS 1 RANGE 16′, LPF 448 Hz, RES 30 %\n- Listen for: a low hum.",
           "set": {
             "up.dds1Range": "16",
             "up.lpf": 4.5,
@@ -11376,7 +11376,7 @@
         {
           "title": "Throb",
           "module": "mod",
-          "why": "With RANGE at LFO, DDS 2 stops sounding and becomes a modulator: TUNE sets its speed.\n- UPPER DDS 2 TUNE -3 st: a few times a second\n- UPPER VCA DDS 2 40 %: throbbing the level\n- UPPER VCF DDS 2 30 %: and the filter\n- UPPER CROSS MOD 15 %: and wobbling the pitch\n- Listen for: a throbbing engine.",
+          "why": "With RANGE at LFO, DDS 2 stops sounding and becomes a modulator: TUNE sets its speed.\n- UPPER DDS 2 TUNE -3 st: a few times a second\n- UPPER VCA DDS 2 40 %: throbbing the level\n- UPPER VCF DDS 2 30 %: and the filter\n- UPPER CROSS MOD 15 %: and wobbling the pitch\n- UPPER DDS 2 RANGE LFO, DDS 2 WAVEFORM sine\n- Listen for: a throbbing engine.",
           "set": {
             "up.dds2Range": "lfo",
             "up.dds2Wave": "sine",
@@ -11426,7 +11426,7 @@
         {
           "title": "Fifths",
           "module": "osc",
-          "why": "- Listen for: an open drone.",
+          "why": "- UPPER DDS 1 WAVEFORM triangle, LPF 893 Hz\n- UPPER ENV 2 A 630 ms, R 2.5 s\n- Listen for: an open drone.",
           "set": {
             "up.dds1Wave": "tri",
             "up.lpf": 5.5,
@@ -11437,7 +11437,7 @@
         {
           "title": "Binaural",
           "module": "mode",
-          "why": "- BINAURAL on: a detuned voice in each ear\n- Listen for: the drone shimmering around you.",
+          "why": "- BINAURAL on: a detuned voice in each ear\n- UPPER DRIFT 40 %\n- CHORUS I on\n- UPPER DELAY SEND 40 %\n- DELAY TIME 620 ms, FEEDBACK 60 %\n- Listen for: the drone shimmering around you.",
           "set": {
             "voice.binaural": true,
             "up.drift": 4,
@@ -11488,7 +11488,7 @@
         {
           "title": "A dense cluster",
           "module": "osc",
-          "why": "- UPPER LPF 448 Hz: dark\n- Listen for: a beating, clashing mass.",
+          "why": "- UPPER LPF 448 Hz: dark\n- UPPER SUPER 1/2, PW / DETUNE 40 %\n- Listen for: a beating, clashing mass.",
           "set": {
             "up.super": "half",
             "up.pwDetune": 4,
@@ -11498,7 +11498,7 @@
         {
           "title": "Out of nothing",
           "module": "env",
-          "why": "- UPPER VCF LFO 1 20 %: slowly breathing\n- Listen for: a menacing cluster rising.",
+          "why": "- UPPER VCF LFO 1 20 %: slowly breathing\n- UPPER ENV 2 A 2.5 s, R 2.5 s\n- UPPER LFO 1 RATE 0.19 Hz\n- UPPER DELAY SEND 30 %\n- DELAY TIME 660 ms, FEEDBACK 60 %\n- Listen for: a menacing cluster rising.",
           "set": {
             "up.e2a": 8.5,
             "up.e2r": 8.5,
@@ -11547,7 +11547,7 @@
         {
           "title": "Deep",
           "module": "osc",
-          "why": "- UPPER DDS 2 MODE / SUB OSC RING: a square sub\n- Listen for: a deep rumble.",
+          "why": "- UPPER DDS 2 MODE / SUB OSC RING: a square sub\n- UPPER DDS 1 WAVEFORM triangle, DDS 1 RANGE 16′, DDS 2 RANGE LFO, MIX 60 : 40, LPF 317 Hz\n- Listen for: a deep rumble.",
           "set": {
             "up.dds1Wave": "tri",
             "up.dds1Range": "16",
@@ -11560,7 +11560,7 @@
         {
           "title": "Throb",
           "module": "lfo",
-          "why": "- Listen for: a throbbing floor.",
+          "why": "- UPPER LFO 1 RATE 0.28 Hz\n- UPPER VCA LFO 1 30 %\n- UPPER ENV 2 A 630 ms, R 2.5 s\n- Listen for: a throbbing floor.",
           "set": {
             "up.lfoRate": 3,
             "up.vcaLfo": 3,
@@ -11607,7 +11607,7 @@
         {
           "title": "A buzz",
           "module": "osc",
-          "why": "- UPPER PW / WAVE source LFO 1: the pulse width moved by LFO 1\n- Listen for: a buzzing, shimmering tone.",
+          "why": "- UPPER PW / WAVE source LFO 1: the pulse width moved by LFO 1\n- UPPER DDS 2 WAVEFORM pulse, MIX 40 : 60\n- UPPER LFO 1 RATE 0.58 Hz\n- UPPER LPF 1.8 kHz\n- Listen for: a buzzing, shimmering tone.",
           "set": {
             "up.dds2Wave": "pulse",
             "up.mix": 6,
@@ -11620,7 +11620,7 @@
         {
           "title": "Breathe",
           "module": "env",
-          "why": "- Listen for: a tanpura drone.",
+          "why": "- UPPER ENV 2 A 400 ms, R 2.5 s\n- UPPER DRIFT 20 %\n- CHORUS I on\n- UPPER DELAY SEND 30 %\n- DELAY TIME 500 ms\n- Listen for: a tanpura drone.",
           "set": {
             "up.e2a": 6.5,
             "up.e2r": 8.5,
@@ -11670,7 +11670,7 @@
         {
           "title": "Organ",
           "module": "osc",
-          "why": "- Listen for: an organ chord.",
+          "why": "- UPPER DDS 1 WAVEFORM square, DDS 2 WAVEFORM square, DDS 2 RANGE 4′, MIX 60 : 40, LPF 1.3 kHz\n- Listen for: an organ chord.",
           "set": {
             "up.dds1Wave": "square",
             "up.dds2Wave": "square",
@@ -11682,7 +11682,7 @@
         {
           "title": "Fixed",
           "module": "amp",
-          "why": "- UPPER VCA envelope FIXED 1: on and off, no envelope\n- Listen for: a steady, unchanging drone.",
+          "why": "- UPPER VCA envelope FIXED 1: on and off, no envelope\n- UPPER VCA ENV LEVEL 60 %\n- Listen for: a steady, unchanging drone.",
           "set": {
             "up.vcaMode": "fixed1",
             "up.vcaEnv": 6
@@ -11730,7 +11730,7 @@
         {
           "title": "Breath",
           "module": "osc",
-          "why": "- Listen for: a breathy tone.",
+          "why": "- UPPER DDS 1 WAVEFORM sine, DDS 2 WAVEFORM noise, MIX 70 : 30, LPF 1.8 kHz\n- VOICE ASSIGN MODE SOLO\n- Listen for: a breathy tone.",
           "set": {
             "up.dds1Wave": "sine",
             "up.dds2Wave": "noise",
@@ -11742,7 +11742,7 @@
         {
           "title": "Chiff",
           "module": "filter",
-          "why": "- UPPER VCF ENV 30 %: a burst of breath at the start\n- Listen for: a puff at each note.",
+          "why": "- UPPER VCF ENV 30 %: a burst of breath at the start\n- UPPER ENV 1 D 160 ms, S 0 %\n- UPPER ENV 2 A 63 ms, R 160 ms\n- Listen for: a puff at each note.",
           "set": {
             "up.vcfEnv": 3,
             "up.e1d": 5.5,
@@ -11754,7 +11754,7 @@
         {
           "title": "Late vibrato",
           "module": "lfo",
-          "why": "- Listen for: a hollow, breathy pipe.",
+          "why": "- UPPER LFO 1 RATE 2.98 Hz\n- UPPER DDS MOD LFO 1 7 %\n- UPPER LFO 1 DELAY 900 ms, MODE RESET\n- UPPER DELAY SEND 30 %\n- DELAY TIME 410 ms\n- Listen for: a hollow, breathy pipe.",
           "set": {
             "up.lfoRate": 6.2,
             "up.modLfo": 0.7,
@@ -11807,7 +11807,7 @@
         {
           "title": "Odd harmonics",
           "module": "osc",
-          "why": "- UPPER DDS 1 WAVEFORM square: odd harmonics only\n- UPPER LPF 1.1 kHz: woody\n- Listen for: a hollow, woody tone.",
+          "why": "- UPPER DDS 1 WAVEFORM square: odd harmonics only\n- UPPER LPF 1.1 kHz: woody\n- UPPER VCF KEYTRACK ON\n- VOICE ASSIGN MODE LEGATO\n- Listen for: a hollow, woody tone.",
           "set": {
             "up.dds1Wave": "square",
             "up.lpf": 5.8,
@@ -11818,7 +11818,7 @@
         {
           "title": "Blow",
           "module": "env",
-          "why": "- Listen for: a clarinet.",
+          "why": "- UPPER ENV 2 A 63 ms, R 100 ms\n- UPPER LFO 1 RATE 3.21 Hz\n- UPPER DDS MOD LFO 1 5 %\n- UPPER LFO 1 DELAY 900 ms\n- Listen for: a clarinet.",
           "set": {
             "up.e2a": 4.5,
             "up.e2r": 5,
@@ -11869,7 +11869,7 @@
         {
           "title": "Nasal",
           "module": "osc",
-          "why": "- UPPER MIX 0 : 100: only DDS 2\n- UPPER PW / DETUNE 80 %: very narrow\n- Listen for: a thin, nasal tone.",
+          "why": "- UPPER MIX 0 : 100: only DDS 2\n- UPPER PW / DETUNE 80 %: very narrow\n- UPPER DDS 2 WAVEFORM pulse, HPF 224 Hz, LPF 2.5 kHz\n- VOICE ASSIGN MODE LEGATO\n- Listen for: a thin, nasal tone.",
           "set": {
             "up.dds2Wave": "pulse",
             "up.mix": 10,
@@ -11882,7 +11882,7 @@
         {
           "title": "Sing",
           "module": "env",
-          "why": "- Listen for: a plaintive oboe.",
+          "why": "- UPPER ENV 2 A 63 ms, R 100 ms\n- LFO 2 trigger ON, RATE 3.46 Hz, DDS 8 %, DELAY 1.3 s\n- Listen for: a plaintive oboe.",
           "set": {
             "up.e2a": 4.5,
             "up.e2r": 5,
@@ -11935,7 +11935,7 @@
         {
           "title": "A reed",
           "module": "osc",
-          "why": "- UPPER DRIVE 1: a rasp\n- Listen for: a raspy reed.",
+          "why": "- UPPER DRIVE 1: a rasp\n- UPPER DDS 2 WAVEFORM pulse, MIX 30 : 70, PW / DETUNE 60 %, LPF 1.8 kHz\n- UPPER ENV 2 A 40 ms\n- VOICE ASSIGN MODE LEGATO\n- Listen for: a raspy reed.",
           "set": {
             "up.dds2Wave": "pulse",
             "up.mix": 7,
@@ -11949,7 +11949,7 @@
         {
           "title": "Bend",
           "module": "mod",
-          "why": "INVERTED envelope 1, with no sustain, starts each note flat and bends it up into tune.\n- UPPER VCA LFO 1 15 %: a hand tremolo\n- Listen for: a wailing, bending harp.",
+          "why": "INVERTED envelope 1, with no sustain, starts each note flat and bends it up into tune.\n- UPPER VCA LFO 1 15 %: a hand tremolo\n- UPPER ENV 1 MODE INVERTED\n- UPPER DDS MOD destination 1 + 2, ENV 1 12 %\n- UPPER ENV 1 D 250 ms, S 0 %\n- UPPER LFO 1 RATE 3.73 Hz\n- Listen for: a wailing, bending harp.",
           "set": {
             "up.env1Mode": "inv",
             "up.modDest": "both",
@@ -12008,7 +12008,7 @@
         {
           "title": "Drones and chanter",
           "module": "mode",
-          "why": "- KEYBOARD SPLIT: drones below C4, the chanter above\n- Listen for: a held drone below.",
+          "why": "- KEYBOARD SPLIT: drones below C4, the chanter above\n- LOWER DDS 2 WAVEFORM pulse, MIX 50 : 50, LPF 1.3 kHz, VCA envelope FIXED 2\n- Listen for: a held drone below.",
           "set": {
             "kbd.mode": "split",
             "lo.dds2Wave": "pulse",
@@ -12020,7 +12020,7 @@
         {
           "title": "The chanter",
           "module": "osc",
-          "why": "- UPPER VCA envelope FIXED 2: full level, no envelope\n- Listen for: bagpipes.",
+          "why": "- UPPER VCA envelope FIXED 2: full level, no envelope\n- UPPER DDS 2 WAVEFORM pulse, MIX 0 : 100, PW / DETUNE 70 %, DRIVE 1, LPF 2.5 kHz\n- VOICE ASSIGN MODE LEGATO\n- Listen for: bagpipes.",
           "set": {
             "up.dds2Wave": "pulse",
             "up.mix": 10,
@@ -12076,7 +12076,7 @@
         {
           "title": "Sweet",
           "module": "osc",
-          "why": "- UPPER MIX 85 : 15: a pinch of breath\n- Listen for: a sweet recorder.",
+          "why": "- UPPER MIX 85 : 15: a pinch of breath\n- UPPER DDS 1 WAVEFORM triangle, DDS 2 WAVEFORM noise, LPF 2.5 kHz\n- UPPER ENV 2 A 40 ms, R 63 ms\n- VOICE ASSIGN MODE SOLO\n- Listen for: a sweet recorder.",
           "set": {
             "up.dds1Wave": "tri",
             "up.dds2Wave": "noise",
@@ -12129,7 +12129,7 @@
         {
           "title": "A bow",
           "module": "env",
-          "why": "- UPPER ENV 1 ATTACK 250 ms: the tone brightening with the bow\n- UPPER HPF 65 Hz: no body boom\n- Listen for: a bowed tone.",
+          "why": "- UPPER ENV 1 ATTACK 250 ms: the tone brightening with the bow\n- UPPER HPF 65 Hz: no body boom\n- UPPER ENV 2 A 160 ms, R 250 ms\n- UPPER LPF 893 Hz, VCF ENV 20 %\n- UPPER ENV 1 S 80 %\n- VOICE ASSIGN MODE LEGATO\n- Listen for: a bowed tone.",
           "set": {
             "up.e2a": 5.5,
             "up.e2r": 6,
@@ -12144,7 +12144,7 @@
         {
           "title": "The left hand",
           "module": "mod",
-          "why": "- PORTAMENTO 10 ms: a hint of slide\n- Listen for: a singing violin.",
+          "why": "- PORTAMENTO 10 ms: a hint of slide\n- LFO 2 trigger ON, RATE 3.73 Hz, DDS 10 %, DELAY 1.5 s\n- UPPER DELAY SEND 30 %\n- DELAY TIME 500 ms\n- Listen for: a singing violin.",
           "set": {
             "lfo2.trig": "on",
             "lfo2.rate": 6.5,
@@ -12196,7 +12196,7 @@
         {
           "title": "Deep and dark",
           "module": "osc",
-          "why": "- UPPER DDS 1 RANGE 32′: two octaves down\n- Listen for: a bowed double bass.",
+          "why": "- UPPER DDS 1 RANGE 32′: two octaves down\n- UPPER LPF 448 Hz\n- UPPER ENV 2 A 160 ms, R 250 ms\n- UPPER LFO 1 RATE 2.57 Hz\n- UPPER DDS MOD LFO 1 5 %\n- UPPER LFO 1 DELAY 1.6 s\n- VOICE ASSIGN MODE LEGATO\n- Listen for: a bowed double bass.",
           "set": {
             "up.dds1Range": "32",
             "up.lpf": 4.5,
@@ -12253,7 +12253,7 @@
         {
           "title": "Blow",
           "module": "filter",
-          "why": "- UPPER ENV 1 ATTACK 63 ms: the brightness arriving just after\n- UPPER DYNAMICS ON: harder notes brighter\n- Listen for: a brassy tone.",
+          "why": "- UPPER ENV 1 ATTACK 63 ms: the brightness arriving just after\n- UPPER DYNAMICS ON: harder notes brighter\n- UPPER LPF 893 Hz, VCF ENV 35 %\n- UPPER ENV 1 D 400 ms, S 60 %\n- UPPER ENV 2 A 25 ms\n- VOICE ASSIGN MODE LEGATO\n- Listen for: a brassy tone.",
           "set": {
             "up.lpf": 5.5,
             "up.vcfEnv": 3.5,
@@ -12268,7 +12268,7 @@
         {
           "title": "Vibrato",
           "module": "mod",
-          "why": "- Listen for: a jazz trumpet.",
+          "why": "- LFO 2 trigger ON, RATE 3.73 Hz, DDS 6 %, DELAY 1.5 s\n- UPPER DELAY SEND 20 %\n- DELAY TIME 440 ms\n- Listen for: a jazz trumpet.",
           "set": {
             "lfo2.trig": "on",
             "lfo2.rate": 6.5,
@@ -12326,7 +12326,7 @@
         {
           "title": "Round",
           "module": "filter",
-          "why": "- Listen for: a noble horn section.",
+          "why": "- UPPER LPF 480 Hz, RES 20 %, VCF ENV 25 %\n- UPPER ENV 1 A 250 ms, S 60 %\n- UPPER ENV 2 A 160 ms, R 400 ms\n- CHORUS I on\n- UPPER DELAY SEND 30 %\n- DELAY TIME 500 ms\n- Listen for: a noble horn section.",
           "set": {
             "up.lpf": 4.6,
             "up.res": 2,
@@ -12380,7 +12380,7 @@
         {
           "title": "Puff",
           "module": "filter",
-          "why": "- Listen for: an oom-pah tuba.",
+          "why": "- UPPER DDS 1 RANGE 32′, LPF 364 Hz, VCF ENV 25 %\n- UPPER ENV 1 D 250 ms, S 30 %\n- UPPER ENV 2 A 40 ms, R 100 ms\n- VOICE ASSIGN MODE SOLO\n- Listen for: an oom-pah tuba.",
           "set": {
             "up.dds1Range": "32",
             "up.lpf": 4.2,
@@ -12436,7 +12436,7 @@
         {
           "title": "Two sections",
           "module": "mode",
-          "why": "- KEYBOARD SPLIT: low strings below C4, violins above\n- Listen for: two sections.",
+          "why": "- KEYBOARD SPLIT: low strings below C4, violins above\n- LOWER SUPER 1/2, PW / DETUNE 30 %, LPF 632 Hz\n- LOWER ENV 2 A 250 ms, R 630 ms\n- UPPER SUPER 1/2, PW / DETUNE 30 %, LPF 1.3 kHz, HPF 65 Hz\n- UPPER ENV 2 A 160 ms, R 630 ms\n- Listen for: two sections.",
           "set": {
             "kbd.mode": "split",
             "lo.super": "half",
@@ -12455,7 +12455,7 @@
         {
           "title": "Bloom",
           "module": "fx",
-          "why": "- Listen for: warm, layered strings.",
+          "why": "- CHORUS I on\n- UPPER DELAY SEND 30 %\n- LOWER DELAY SEND 30 %\n- DELAY TIME 500 ms\n- LFO 2 trigger ON, RATE 3.21 Hz, DDS 6 %, DELAY 1.8 s\n- Listen for: warm, layered strings.",
           "set": {
             "chorus.i": true,
             "up.send": 3,
@@ -12521,7 +12521,7 @@
         {
           "title": "A reed",
           "module": "osc",
-          "why": "- Listen for: a reedy tone.",
+          "why": "- UPPER DDS 1 WAVEFORM triangle, DDS 2 WAVEFORM square, DDS 2 RANGE 4′, MIX 70 : 30, LPF 893 Hz, VCF ENV 30 %\n- UPPER ENV 1 D 400 ms, S 0 %\n- Listen for: a reedy tone.",
           "set": {
             "up.dds1Wave": "tri",
             "up.dds2Wave": "square",
@@ -12536,7 +12536,7 @@
         {
           "title": "Bark",
           "module": "filter",
-          "why": "- UPPER DYNAMICS ON: hard notes bark\n- UPPER VCA LFO 1 20 %: tremolo\n- Listen for: a barking Wurly.",
+          "why": "- UPPER DYNAMICS ON: hard notes bark\n- UPPER VCA LFO 1 20 %: tremolo\n- UPPER DRIVE 1\n- UPPER ENV 2 D 1.6 s, S 20 %, R 160 ms\n- UPPER LFO 1 RATE 2.57 Hz\n- Listen for: a barking Wurly.",
           "set": {
             "up.drive": "1",
             "up.dyn": "on",
@@ -12594,7 +12594,7 @@
         {
           "title": "Metal bars",
           "module": "osc",
-          "why": "- Listen for: a sparkling tone.",
+          "why": "- UPPER DDS 1 WAVEFORM sine, DDS 1 RANGE 4′, DDS 2 WAVEFORM sine, DDS 2 RANGE 2′, MIX 60 : 40\n- Listen for: a sparkling tone.",
           "set": {
             "up.dds1Wave": "sine",
             "up.dds1Range": "4",
@@ -12606,7 +12606,7 @@
         {
           "title": "Ring",
           "module": "env",
-          "why": "- Listen for: a celesta.",
+          "why": "- UPPER ENV 2 D 1.0 s, S 0 %, R 630 ms\n- UPPER DELAY SEND 20 %\n- DELAY TIME 440 ms\n- Listen for: a celesta.",
           "set": {
             "up.e2d": 7.5,
             "up.e2s": 0,
@@ -12661,7 +12661,7 @@
         {
           "title": "A bar",
           "module": "osc",
-          "why": "- UPPER DDS 2 TUNE +3.5 st: an inharmonic ratio\n- UPPER CROSS MOD 20 %: a glassy clang\n- Listen for: a glassy tone.",
+          "why": "- UPPER DDS 2 TUNE +3.5 st: an inharmonic ratio\n- UPPER CROSS MOD 20 %: a glassy clang\n- UPPER DDS 1 WAVEFORM sine, DDS 2 WAVEFORM sine, DDS 2 RANGE 2′\n- Listen for: a glassy tone.",
           "set": {
             "up.dds1Wave": "sine",
             "up.dds2Wave": "sine",
@@ -12673,7 +12673,7 @@
         {
           "title": "Ring",
           "module": "env",
-          "why": "- Listen for: a ringing glockenspiel.",
+          "why": "- UPPER ENV 2 D 1.6 s, S 0 %, R 1.0 s\n- UPPER VCA ENV LEVEL 100 %, DELAY SEND 20 %\n- DELAY TIME 440 ms\n- Listen for: a ringing glockenspiel.",
           "set": {
             "up.e2d": 8,
             "up.e2s": 0,
@@ -12743,7 +12743,7 @@
         {
           "title": "Reeds",
           "module": "osc",
-          "why": "- Listen for: reedy chords.",
+          "why": "- KEYBOARD DUAL\n- UPPER DDS 2 WAVEFORM pulse, MIX 20 : 80, PW / DETUNE 60 %\n- LOWER DDS 2 WAVEFORM pulse, MIX 20 : 80, PW / DETUNE 60 %\n- UPPER LPF 1.8 kHz\n- LOWER LPF 1.8 kHz\n- Listen for: reedy chords.",
           "set": {
             "kbd.mode": "dual",
             "up.dds2Wave": "pulse",
@@ -12759,7 +12759,7 @@
         {
           "title": "Musette",
           "module": "osc",
-          "why": "- DETUNE (lower layer) +0.2 st: the second set of reeds a little sharp\n- Listen for: a wavering accordion.",
+          "why": "- DETUNE (lower layer) +0.2 st: the second set of reeds a little sharp\n- UPPER VCA envelope FIXED 2\n- LOWER VCA envelope FIXED 2\n- Listen for: a wavering accordion.",
           "set": {
             "perf.lowerDetune": 0.15,
             "up.vcaMode": "fixed2",
@@ -12814,7 +12814,7 @@
         {
           "title": "Metal",
           "module": "osc",
-          "why": "- Listen for: a metallic tone.",
+          "why": "- UPPER DDS 1 WAVEFORM sine, DDS 2 WAVEFORM sine, DDS 2 RANGE 2′, MIX 70 : 30, CROSS MOD 15 %\n- Listen for: a metallic tone.",
           "set": {
             "up.dds1Wave": "sine",
             "up.dds2Wave": "sine",
@@ -12826,7 +12826,7 @@
         {
           "title": "Strike",
           "module": "env",
-          "why": "- UPPER ENV 2 ATTACK 25 ms: a slightly soft strike\n- Listen for: a singing steel drum.",
+          "why": "- UPPER ENV 2 ATTACK 25 ms: a slightly soft strike\n- UPPER ENV 2 D 630 ms, S 0 %, R 400 ms\n- UPPER VCA ENV LEVEL 100 %\n- Listen for: a singing steel drum.",
           "set": {
             "up.e2a": 3.5,
             "up.e2d": 7,
@@ -12879,7 +12879,7 @@
         {
           "title": "A string",
           "module": "filter",
-          "why": "- Listen for: a soft pluck.",
+          "why": "- UPPER DDS 1 WAVEFORM triangle, DDS 2 WAVEFORM sawtooth, MIX 80 : 20, LPF 893 Hz, VCF ENV 30 %\n- UPPER ENV 1 D 250 ms, S 0 %\n- UPPER ENV 2 D 1.6 s, S 0 %, R 1.0 s\n- Listen for: a soft pluck.",
           "set": {
             "up.dds1Wave": "tri",
             "up.dds2Wave": "saw",
@@ -12896,7 +12896,7 @@
         {
           "title": "Ripple",
           "module": "mode",
-          "why": "- Listen for: a rippling harp.",
+          "why": "- ARP ON on\n- CLK DIV 1/16\n- ARP RANGE 3, MODE UP\n- TEMPO 96 BPM\n- Listen for: a rippling harp.",
           "set": {
             "arp.on": true,
             "arp.div": "1/16",
@@ -12949,7 +12949,7 @@
         {
           "title": "Twang",
           "module": "filter",
-          "why": "- Listen for: a twangy pluck.",
+          "why": "- UPPER DDS 2 WAVEFORM pulse, MIX 30 : 70, PW / DETUNE 60 %, LPF 1.1 kHz, VCF ENV 40 %\n- UPPER ENV 1 D 250 ms, S 0 %\n- UPPER ENV 2 D 1.0 s, S 0 %, R 400 ms\n- Listen for: a twangy pluck.",
           "set": {
             "up.dds2Wave": "pulse",
             "up.mix": 7,
@@ -12966,7 +12966,7 @@
         {
           "title": "Press",
           "module": "mod",
-          "why": "ENV 1’s ATTACK HOLD waits before envelope 1 rises, so the bend comes after the pluck.\n- UPPER DDS MOD ENV 1 7 %: a small bend\n- UPPER ENV 1 ATTACK HOLD 250 ms: a quarter second late\n- Listen for: notes bending after the pluck.",
+          "why": "ENV 1’s ATTACK HOLD waits before envelope 1 rises, so the bend comes after the pluck.\n- UPPER DDS MOD ENV 1 7 %: a small bend\n- UPPER ENV 1 ATTACK HOLD 250 ms: a quarter second late\n- UPPER DELAY SEND 30 %\n- DELAY TIME 500 ms\n- Listen for: notes bending after the pluck.",
           "set": {
             "up.modEnv": 0.7,
             "up.e1ah": 6,
@@ -13036,7 +13036,7 @@
         {
           "title": "A pluck",
           "module": "filter",
-          "why": "- UPPER VCF KEYTRACK ON: higher strings brighter\n- Listen for: a soft nylon guitar.",
+          "why": "- UPPER VCF KEYTRACK ON: higher strings brighter\n- UPPER LPF 551 Hz, VCF ENV 35 %\n- UPPER ENV 1 D 250 ms, S 0 %\n- UPPER ENV 2 D 1.0 s, S 0 %, R 250 ms\n- UPPER DYNAMICS ON\n- Listen for: a soft nylon guitar.",
           "set": {
             "up.lpf": 4.8,
             "up.vcfEnv": 3.5,
@@ -13101,7 +13101,7 @@
         {
           "title": "Twang",
           "module": "osc",
-          "why": "- UPPER HPF 164 Hz: no body\n- UPPER ENV 2 DECAY 400 ms: quick to fade\n- Listen for: a twangy banjo roll.",
+          "why": "- UPPER HPF 164 Hz: no body\n- UPPER ENV 2 DECAY 400 ms: quick to fade\n- UPPER DDS 2 WAVEFORM pulse, MIX 20 : 80, PW / DETUNE 70 %, LPF 2.5 kHz\n- UPPER ENV 2 S 0 %, R 160 ms\n- UPPER VCA ENV LEVEL 100 %\n- Listen for: a twangy banjo roll.",
           "set": {
             "up.dds2Wave": "pulse",
             "up.mix": 8,
@@ -13164,7 +13164,7 @@
         {
           "title": "Woody",
           "module": "filter",
-          "why": "- Listen for: a dry xylophone.",
+          "why": "- UPPER DDS 1 WAVEFORM triangle, DDS 1 RANGE 4′, LPF 1.3 kHz, RES 30 %, VCF ENV 40 %\n- UPPER ENV 1 D 63 ms, S 0 %\n- UPPER ENV 2 D 330 ms, S 0 %, R 160 ms\n- UPPER VCA ENV LEVEL 100 %\n- Listen for: a dry xylophone.",
           "set": {
             "up.dds1Wave": "tri",
             "up.dds1Range": "4",
@@ -13220,7 +13220,7 @@
         {
           "title": "Sync",
           "module": "osc",
-          "why": "SYNC restarts DDS 2 with DDS 1, so DDS 2’s tuning changes its tone instead of its pitch.\n- Listen for: a hard, nasal bass.",
+          "why": "SYNC restarts DDS 2 with DDS 1, so DDS 2’s tuning changes its tone instead of its pitch.\n- UPPER DDS 2 MODE / SUB OSC SYNC, DDS 2 RANGE 16′, DDS 2 TUNE +5 st, MIX 20 : 80, DDS 1 RANGE 16′\n- Listen for: a hard, nasal bass.",
           "set": {
             "up.dds2Mode": "sync",
             "up.dds2Range": "16",
@@ -13232,7 +13232,7 @@
         {
           "title": "Twist",
           "module": "mod",
-          "why": "- UPPER DDS MOD destination DDS 2: LFO 1 on DDS 2 only\n- UPPER LFO 1 MODE RESET: restarting with each note\n- Listen for: the bass twisting.",
+          "why": "- UPPER DDS MOD destination DDS 2: LFO 1 on DDS 2 only\n- UPPER LFO 1 MODE RESET: restarting with each note\n- UPPER LFO 1 RATE 1.77 Hz\n- UPPER DDS MOD LFO 1 40 %\n- UPPER CROSS MOD 20 %\n- Listen for: the bass twisting.",
           "set": {
             "up.modDest": "dds2",
             "up.lfoRate": 5.5,
@@ -13244,7 +13244,7 @@
         {
           "title": "Snarl",
           "module": "filter",
-          "why": "- Listen for: a snarling neuro bass.",
+          "why": "- UPPER DRIVE 2, LPF 1.1 kHz, RES 30 %, VCA ENV LEVEL 60 %\n- VOICE ASSIGN MODE SOLO\n- Listen for: a snarling neuro bass.",
           "set": {
             "up.drive": "2",
             "up.lpf": 5.8,
@@ -13296,7 +13296,7 @@
         {
           "title": "Round",
           "module": "osc",
-          "why": "- Listen for: a round bass.",
+          "why": "- UPPER DDS 1 WAVEFORM square, DDS 1 RANGE 16′, DDS 2 WAVEFORM sine, DDS 2 RANGE 16′, MIX 40 : 60, LPF 448 Hz, RES 50 %\n- Listen for: a round bass.",
           "set": {
             "up.dds1Wave": "square",
             "up.dds1Range": "16",
@@ -13310,7 +13310,7 @@
         {
           "title": "Bend",
           "module": "mod",
-          "why": "- Listen for: a rubbery, bending bass.",
+          "why": "- UPPER DDS MOD destination 1 + 2, ENV 1 12 %\n- UPPER ENV 1 D 160 ms, S 0 %\n- UPPER VCF ENV 25 %\n- VOICE ASSIGN MODE SOLO\n- Listen for: a rubbery, bending bass.",
           "set": {
             "up.modDest": "both",
             "up.modEnv": 1.2,
@@ -13366,7 +13366,7 @@
         {
           "title": "Organ",
           "module": "osc",
-          "why": "- UPPER ENV 1 DECAY 40 ms: a click\n- Listen for: a punchy organ bass.",
+          "why": "- UPPER ENV 1 DECAY 40 ms: a click\n- UPPER DDS 1 WAVEFORM square, DDS 1 RANGE 16′, DDS 2 WAVEFORM square, MIX 60 : 40, LPF 893 Hz, VCF ENV 30 %\n- UPPER ENV 1 S 0 %\n- UPPER ENV 2 D 400 ms, S 30 %, R 40 ms\n- Listen for: a punchy organ bass.",
           "set": {
             "up.dds1Wave": "square",
             "up.dds1Range": "16",
@@ -13422,7 +13422,7 @@
         {
           "title": "A low saw",
           "module": "osc",
-          "why": "- Listen for: a low saw.",
+          "why": "- UPPER DDS 1 RANGE 16′, LPF 632 Hz, RES 40 %\n- VOICE ASSIGN MODE SOLO\n- Listen for: a low saw.",
           "set": {
             "up.dds1Range": "16",
             "up.lpf": 5,
@@ -13433,7 +13433,7 @@
         {
           "title": "LFO at audio rate",
           "module": "lfo",
-          "why": "HF TRACK takes LFO 1 into audio range and keytracks it, so the growl keeps its colour across the keyboard.\n- UPPER VCF LFO 1 50 %: growling the filter\n- UPPER DDS MOD LFO 1 10 %: and a little on the pitch\n- Listen for: a buzzing, gnarly growl.",
+          "why": "HF TRACK takes LFO 1 into audio range and keytracks it, so the growl keeps its colour across the keyboard.\n- UPPER VCF LFO 1 50 %: growling the filter\n- UPPER DDS MOD LFO 1 10 %: and a little on the pitch\n- UPPER LFO 1 WAVEFORM HF TRACK, RATE 1.22 Hz\n- Listen for: a buzzing, gnarly growl.",
           "set": {
             "up.lfoWave": "hftrk",
             "up.lfoRate": 5,
@@ -13444,7 +13444,7 @@
         {
           "title": "Grit",
           "module": "filter",
-          "why": "- Listen for: an audio-rate growl.",
+          "why": "- UPPER DRIVE 1, VCA ENV LEVEL 70 %\n- Listen for: an audio-rate growl.",
           "set": {
             "up.drive": "1",
             "up.vcaEnv": 7
@@ -13499,7 +13499,7 @@
         {
           "title": "A pulse",
           "module": "osc",
-          "why": "- Listen for: a square lead.",
+          "why": "- UPPER DDS 2 WAVEFORM pulse, MIX 0 : 100, LPF 5.0 kHz\n- VOICE ASSIGN MODE SOLO\n- Listen for: a square lead.",
           "set": {
             "up.dds2Wave": "pulse",
             "up.mix": 10,
@@ -13510,7 +13510,7 @@
         {
           "title": "Sweep the width",
           "module": "osc",
-          "why": "- UPPER PW / WAVE source ENV 1: envelope 1 moves the width\n- Listen for: each note thinning out.",
+          "why": "- UPPER PW / WAVE source ENV 1: envelope 1 moves the width\n- UPPER ENV 1 D 400 ms, S 0 %\n- UPPER ENV 2 R 40 ms\n- Listen for: each note thinning out.",
           "set": {
             "up.pwSrc": "env1",
             "up.pwWave": 8,
@@ -13559,7 +13559,7 @@
         {
           "title": "Arpeggiate",
           "module": "mode",
-          "why": "- Listen for: a repeating pattern.",
+          "why": "- ARP ON on\n- CLK DIV 1/16\n- ARP RANGE 2, MODE UP\n- Listen for: a repeating pattern.",
           "set": {
             "arp.on": true,
             "arp.div": "1/16",
@@ -13570,7 +13570,7 @@
         {
           "title": "A pluck",
           "module": "filter",
-          "why": "- Listen for: a resonant pattern.",
+          "why": "- UPPER LPF 632 Hz, RES 60 %\n- UPPER ENV 2 D 160 ms, S 20 %\n- Listen for: a resonant pattern.",
           "set": {
             "up.lpf": 5,
             "up.res": 6,
@@ -13581,7 +13581,7 @@
         {
           "title": "Random",
           "module": "mod",
-          "why": "- LFO 2 RATE 6.75 Hz: about once a step\n- Listen for: every step a different colour.",
+          "why": "- LFO 2 RATE 6.75 Hz: about once a step\n- LFO 2 trigger ON, WAVEFORM sample and hold, VCF 60 %\n- UPPER DELAY SEND 30 %\n- DELAY TIME 380 ms\n- Listen for: every step a different colour.",
           "set": {
             "lfo2.trig": "on",
             "lfo2.wave": "sh",
@@ -13654,7 +13654,7 @@
         {
           "title": "A clav",
           "module": "osc",
-          "why": "- Listen for: a clavinet-like chord.",
+          "why": "- UPPER DDS 2 WAVEFORM pulse, MIX 40 : 60, PW / DETUNE 60 %\n- UPPER ENV 2 D 400 ms, S 20 %, R 63 ms\n- Listen for: a clavinet-like chord.",
           "set": {
             "up.dds2Wave": "pulse",
             "up.mix": 6,
@@ -13667,7 +13667,7 @@
         {
           "title": "One wah",
           "module": "lfo",
-          "why": "- UPPER LFO 1 MODE ONCE: one cycle per note\n- Listen for: a wah on each hit.",
+          "why": "- UPPER LFO 1 MODE ONCE: one cycle per note\n- UPPER LFO 1 WAVEFORM triangle, RATE 2.57 Hz\n- UPPER LPF 632 Hz, RES 60 %, VCF LFO 1 50 %\n- Listen for: a wah on each hit.",
           "set": {
             "up.lfoMode": "once",
             "up.lfoWave": "tri",
@@ -13745,7 +13745,7 @@
         {
           "title": "A supersaw chord",
           "module": "osc",
-          "why": "- Listen for: a plucked supersaw.",
+          "why": "- UPPER SUPER ON, PW / DETUNE 50 %, LPF 893 Hz, VCF ENV 40 %\n- UPPER ENV 1 D 250 ms, S 0 %\n- Listen for: a plucked supersaw.",
           "set": {
             "up.super": "on",
             "up.pwDetune": 5,
@@ -13758,7 +13758,7 @@
         {
           "title": "Hold, then drop",
           "module": "env",
-          "why": "- UPPER ENV 1 DECAY HOLD 160 ms: the filter holding bright\n- UPPER ENV 2 DECAY HOLD 160 ms: and the level\n- Listen for: chords that hold, then drop.",
+          "why": "- UPPER ENV 1 DECAY HOLD 160 ms: the filter holding bright\n- UPPER ENV 2 DECAY HOLD 160 ms: and the level\n- UPPER ENV 2 S 10 %, R 100 ms\n- CHORUS I on\n- UPPER DELAY SEND 30 %\n- DELAY TIME 350 ms\n- Listen for: chords that hold, then drop.",
           "set": {
             "up.e1dh": 5.5,
             "up.e2dh": 5.5,
@@ -13814,7 +13814,7 @@
         {
           "title": "A pad",
           "module": "osc",
-          "why": "- Listen for: a warm pad.",
+          "why": "- UPPER MIX 50 : 50, DDS 2 TUNE +0.1 st, LPF 1.1 kHz\n- UPPER ENV 2 A 250 ms, R 630 ms\n- Listen for: a warm pad.",
           "set": {
             "up.mix": 5,
             "up.dds2Tune": 0.1,
@@ -13826,7 +13826,7 @@
         {
           "title": "Bloom",
           "module": "lfo",
-          "why": "- UPPER LFO 1 MODE RESET: restarting with each chord\n- UPPER LFO 1 DELAY 2.0 s: two seconds still\n- Listen for: each chord blooming into vibrato.",
+          "why": "- UPPER LFO 1 MODE RESET: restarting with each chord\n- UPPER LFO 1 DELAY 2.0 s: two seconds still\n- UPPER LFO 1 RATE 1.77 Hz\n- UPPER DDS MOD LFO 1 12 %, destination 1 + 2\n- CHORUS I on\n- Listen for: each chord blooming into vibrato.",
           "set": {
             "up.lfoMode": "reset",
             "up.lfoDelay": 4.5,
@@ -13880,7 +13880,7 @@
         {
           "title": "A pad",
           "module": "osc",
-          "why": "- Listen for: a soft pad.",
+          "why": "- UPPER SUPER 1/2, PW / DETUNE 30 %, LPF 893 Hz, RES 30 %\n- UPPER ENV 2 A 400 ms, R 1.0 s\n- Listen for: a soft pad.",
           "set": {
             "up.super": "half",
             "up.pwDetune": 3,
@@ -13893,7 +13893,7 @@
         {
           "title": "Swirl",
           "module": "lfo",
-          "why": "- UPPER LFO 1 LR PHASE / SPREAD 80 %: left and right out of step\n- Listen for: the pad swirling between your ears.",
+          "why": "- UPPER LFO 1 LR PHASE / SPREAD 80 %: left and right out of step\n- UPPER LFO 1 RATE 0.58 Hz\n- UPPER VCF LFO 1 35 %, DELAY SEND 30 %\n- DELAY TIME 500 ms\n- Listen for: the pad swirling between your ears.",
           "set": {
             "up.lfoRate": 4,
             "up.vcfLfo": 3.5,
@@ -13945,7 +13945,7 @@
         {
           "title": "Twang",
           "module": "filter",
-          "why": "- Listen for: a twangy tone.",
+          "why": "- UPPER LPF 1.3 kHz, VCF ENV 30 %\n- UPPER ENV 1 D 250 ms, S 20 %\n- UPPER ENV 2 D 1.6 s, S 30 %, R 250 ms\n- Listen for: a twangy tone.",
           "set": {
             "up.lpf": 6,
             "up.vcfEnv": 3,
@@ -13959,7 +13959,7 @@
         {
           "title": "Tremolo",
           "module": "amp",
-          "why": "- UPPER DDS 2 TUNE -1 st: about six times a second\n- Listen for: a shimmering tremolo.",
+          "why": "- UPPER DDS 2 TUNE -1 st: about six times a second\n- UPPER DDS 2 RANGE LFO, DDS 2 WAVEFORM square, VCA DDS 2 50 %, DELAY SEND 30 %\n- DELAY TIME 330 ms\n- Listen for: a shimmering tremolo.",
           "set": {
             "up.dds2Range": "lfo",
             "up.dds2Wave": "square",
@@ -14015,7 +14015,7 @@
         {
           "title": "A lead",
           "module": "osc",
-          "why": "- Listen for: a plain lead.",
+          "why": "- UPPER LPF 893 Hz, RES 40 %\n- VOICE ASSIGN MODE SOLO\n- Listen for: a plain lead.",
           "set": {
             "up.lpf": 5.5,
             "up.res": 4,
@@ -14025,7 +14025,7 @@
         {
           "title": "Buzz the filter",
           "module": "filter",
-          "why": "- UPPER VCF DDS 2 40 %: DDS 2 rattling the cutoff\n- Listen for: a raspy, gritty lead.",
+          "why": "- UPPER VCF DDS 2 40 %: DDS 2 rattling the cutoff\n- UPPER DDS 2 WAVEFORM sine, DDS 2 RANGE 4′, DRIVE 1\n- Listen for: a raspy, gritty lead.",
           "set": {
             "up.dds2Wave": "sine",
             "up.dds2Range": "4",
@@ -14101,7 +14101,7 @@
         {
           "title": "A ringing chord",
           "module": "env",
-          "why": "- UPPER ENV 2 RELEASE 1.0 s: a long ring\n- Listen for: piano-like chords.",
+          "why": "- UPPER ENV 2 RELEASE 1.0 s: a long ring\n- UPPER DDS 1 WAVEFORM triangle, DDS 2 WAVEFORM sawtooth, MIX 70 : 30, LPF 1.3 kHz\n- UPPER ENV 2 D 1.0 s, S 0 %\n- Listen for: piano-like chords.",
           "set": {
             "up.dds1Wave": "tri",
             "up.dds2Wave": "saw",
@@ -14174,7 +14174,7 @@
         {
           "title": "Scream",
           "module": "osc",
-          "why": "- Listen for: a screaming lead.",
+          "why": "- UPPER SUPER 1/2, PW / DETUNE 50 %, LPF 2.5 kHz, DRIVE 1, VCA ENV LEVEL 60 %\n- VOICE ASSIGN MODE LEGATO\n- PORTAMENTO 10 ms\n- UPPER DELAY SEND 30 %\n- DELAY TIME 410 ms\n- Listen for: a screaming lead.",
           "set": {
             "up.super": "half",
             "up.pwDetune": 5,
@@ -14248,7 +14248,7 @@
         {
           "title": "Keys",
           "module": "env",
-          "why": "- Listen for: glassy, digital keys.",
+          "why": "- UPPER LPF 1.3 kHz, VCF ENV 25 %\n- UPPER ENV 1 D 400 ms, S 20 %\n- UPPER ENV 2 D 1.0 s, S 30 %, R 250 ms\n- CHORUS I on\n- Listen for: glassy, digital keys.",
           "set": {
             "up.lpf": 6,
             "up.vcfEnv": 2.5,
@@ -14312,7 +14312,7 @@
         {
           "title": "Brassy chords",
           "module": "filter",
-          "why": "- Listen for: brassy chords.",
+          "why": "- UPPER MIX 50 : 50, LPF 893 Hz, VCF ENV 30 %\n- UPPER ENV 1 D 630 ms, S 40 %\n- UPPER ENV 2 A 16 ms, R 250 ms\n- Listen for: brassy chords.",
           "set": {
             "up.mix": 5,
             "up.lpf": 5.5,
@@ -14326,7 +14326,7 @@
         {
           "title": "Drift",
           "module": "osc",
-          "why": "- UPPER DRIFT 100 %: every voice wandering\n- Listen for: tired, beating, out-of-tune chords.",
+          "why": "- UPPER DRIFT 100 %: every voice wandering\n- UPPER HPF 35 Hz\n- Listen for: tired, beating, out-of-tune chords.",
           "set": {
             "up.drift": 10,
             "up.hpf": 2
@@ -14384,7 +14384,7 @@
         {
           "title": "A pad",
           "module": "osc",
-          "why": "- Listen for: a dark pad.",
+          "why": "- UPPER SUPER 1/2, PW / DETUNE 30 %, LPF 448 Hz\n- UPPER ENV 2 A 250 ms, R 1.0 s\n- Listen for: a dark pad.",
           "set": {
             "up.super": "half",
             "up.pwDetune": 3,
@@ -14396,7 +14396,7 @@
         {
           "title": "Touch",
           "module": "filter",
-          "why": "- UPPER DYNAMICS ON: velocity to filter and level\n- UPPER VCF envelope source 1 + 2: both envelopes on the filter\n- Listen for: soft chords dark, hard chords bright.",
+          "why": "- UPPER DYNAMICS ON: velocity to filter and level\n- UPPER VCF envelope source 1 + 2: both envelopes on the filter\n- UPPER VCF ENV 30 %\n- UPPER ENV 1 A 250 ms, S 60 %\n- CHORUS I on\n- Listen for: soft chords dark, hard chords bright.",
           "set": {
             "up.dyn": "on",
             "up.vcfSrc": "both",
@@ -14447,7 +14447,7 @@
         {
           "title": "Latch",
           "module": "mode",
-          "why": "- HOLD UPPER on: the chord keeps cycling\n- Listen for: a pattern that does not stop.",
+          "why": "- HOLD UPPER on: the chord keeps cycling\n- ARP ON on\n- CLK DIV 1/8\n- ARP RANGE 2, MODE U&D\n- TEMPO 90 BPM\n- Listen for: a pattern that does not stop.",
           "set": {
             "arp.on": true,
             "hold.upper": true,
@@ -14460,7 +14460,7 @@
         {
           "title": "Soft",
           "module": "env",
-          "why": "- Listen for: a soft, endless arpeggio bed.",
+          "why": "- UPPER DDS 1 WAVEFORM triangle, LPF 1.3 kHz\n- UPPER ENV 2 A 40 ms, D 1.0 s, S 0 %, R 1.0 s\n- UPPER DELAY SEND 50 %\n- DELAY TIME 500 ms, FEEDBACK 50 %\n- Listen for: a soft, endless arpeggio bed.",
           "set": {
             "up.dds1Wave": "tri",
             "up.lpf": 6,
@@ -14526,7 +14526,7 @@
         {
           "title": "Backwards",
           "module": "filter",
-          "why": "- Listen for: chords that seem to play backwards.",
+          "why": "- UPPER ENV 1 MODE INVERTED\n- UPPER LPF 3.6 kHz, VCF ENV 30 %\n- UPPER ENV 1 A 2.5 s, S 100 %\n- UPPER DRIFT 30 %\n- CHORUS I on\n- Listen for: chords that seem to play backwards.",
           "set": {
             "up.env1Mode": "inv",
             "up.lpf": 7.5,
@@ -14581,7 +14581,7 @@
         {
           "title": "Sync",
           "module": "osc",
-          "why": "- Listen for: a hard, nasal tone.",
+          "why": "- UPPER DDS 2 MODE / SUB OSC SYNC, MIX 20 : 80, DDS 2 TUNE +3 st\n- Listen for: a hard, nasal tone.",
           "set": {
             "up.dds2Mode": "sync",
             "up.mix": 8,
@@ -14591,7 +14591,7 @@
         {
           "title": "Sweep",
           "module": "mod",
-          "why": "- Listen for: a tearing scream on each note.",
+          "why": "- UPPER DDS MOD destination DDS 2, ENV 1 50 %\n- UPPER ENV 1 D 630 ms, S 20 %\n- UPPER CROSS MOD 20 %, DRIVE 1, LPF 2.5 kHz, VCA ENV LEVEL 60 %\n- VOICE ASSIGN MODE LEGATO\n- UPPER DELAY SEND 30 %\n- DELAY TIME 410 ms\n- Listen for: a tearing scream on each note.",
           "set": {
             "up.modDest": "dds2",
             "up.modEnv": 5,
@@ -14654,7 +14654,7 @@
         {
           "title": "Split",
           "module": "mode",
-          "why": "- KEYBOARD SPLIT: pad below C4, lead above\n- Listen for: a pad on the left.",
+          "why": "- KEYBOARD SPLIT: pad below C4, lead above\n- LOWER SUPER 1/2, PW / DETUNE 30 %, LPF 893 Hz\n- LOWER ENV 2 A 250 ms, R 630 ms\n- Listen for: a pad on the left.",
           "set": {
             "kbd.mode": "split",
             "lo.super": "half",
@@ -14667,7 +14667,7 @@
         {
           "title": "A lead",
           "module": "osc",
-          "why": "- PORTAMENTO / OCTAVE layer UPPER: only the lead glides\n- DEST layer UPPER: only the lead gets vibrato\n- Listen for: a soaring lead over the pad.",
+          "why": "- PORTAMENTO / OCTAVE layer UPPER: only the lead glides\n- DEST layer UPPER: only the lead gets vibrato\n- UPPER DDS 2 WAVEFORM square, MIX 60 : 40, LPF 2.5 kHz\n- VOICE ASSIGN MODE LEGATO\n- LFO 2 trigger ON, RATE 3.73 Hz, DDS 9 %, DELAY 1.3 s\n- CHORUS I on\n- Listen for: a soaring lead over the pad.",
           "set": {
             "up.dds2Wave": "square",
             "up.mix": 4,

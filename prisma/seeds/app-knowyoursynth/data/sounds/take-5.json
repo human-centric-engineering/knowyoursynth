@@ -3640,8 +3640,8 @@
       "tweaks": [
         {
           "id": "mix.noise",
-          "try": "Lower to 0",
-          "hear": "A pure, whistling tone."
+          "try": "Turn to 0",
+          "hear": "No breath: a pure, whistling tone."
         },
         {
           "id": "osc1.shape",
@@ -7206,7 +7206,7 @@
       "name": "Lawrence Bells",
       "ref": "In the style of Ryuichi Sakamoto — “Merry Christmas Mr. Lawrence”",
       "artist": "Ryuichi Sakamoto",
-      "tags": ["keys", "bells", "film", "keys"],
+      "tags": ["keys", "bells", "film"],
       "level": 2,
       "blurb": "Delicate, shimmering, slightly wavering bells for a haunting melody.",
       "how": "Sakamoto’s bells shimmer. FM gives the bell; a slow LFO on Oscillator 2’s pitch only moves the FM ratio a hair, so the overtones shimmer while the note stays put.",
