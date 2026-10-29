@@ -13940,6 +13940,1959 @@
           "hear": "A wilder wobble."
         }
       ]
+    },
+    {
+      "id": "born-slippy-bass",
+      "name": "Rolling Rave Bass",
+      "ref": "In the style of Underworld — \"Born Slippy .NUXX\"",
+      "artist": "Underworld",
+      "tags": ["bass", "techno", "rave", "90s"],
+      "level": 1,
+      "blurb": "A rolling, driving bass pulse that pushes a long rave track forward.",
+      "how": "A sawtooth and a pulse an octave down, through a filter with a short pluck, overdriven a little, with a fast echo that fills the gaps between notes so the bass rolls.",
+      "phrase": {
+        "bpm": 136,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.4],
+          [0.5, 40, 0.4],
+          [1, 40, 0.4],
+          [1.5, 43, 0.4],
+          [2, 40, 0.4],
+          [2.5, 40, 0.4],
+          [3, 38, 0.4],
+          [3.5, 40, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Saw and pulse",
+          "module": "osc",
+          "why": "A sawtooth and a pulse an octave lower.\n- Osc 1 SHAPE 2 (saw), Osc 1 RANGE 16’, Osc 2 SHAPE 1 (pulse), Osc 2 RANGE 32’: thick.\n- OSC MIX −1: saw on top.\n- Listen for: a thick bass.",
+          "set": {
+            "osc1.shape": 2,
+            "osc1.range": "16",
+            "osc2.shape": 1,
+            "osc2.range": "32",
+            "osc.mix": -1
+          }
+        },
+        {
+          "title": "Pluck",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) with a short pluck from Envelope 2.\n- FREQ 5 (about 390 Hz): dark.\n- RESO 3: a little bite.\n- ENV DEPTH 4, Env 2 A 0 (1 ms), Env 2 D 4.5 (100 ms), Env 2 S 1, Env 2 R 3 (18 ms): a pluck on each note.\n- Listen for: a driving pulse.",
+          "set": {
+            "vcf.freq": 5,
+            "vcf.reso": 3,
+            "vcf.envDepth": 4,
+            "env2.a": 0,
+            "env2.d": 4.5,
+            "env2.s": 1,
+            "env2.r": 3
+          }
+        },
+        {
+          "title": "Roll",
+          "module": "fx",
+          "why": "Short notes, drive and a fast echo.\n- Env 1 A 0 (1 ms), Env 1 D 5 (150 ms), Env 1 S 6, Env 1 R 3 (18 ms): short.\n- DRIVE 3: warm grit.\n- delay TIME 6.4 (200 ms), REPEATS 3, delay MIX 2.5: an echo between notes.\n- Listen for: a rolling, hypnotic bass.",
+          "set": {
+            "env1.a": 0,
+            "env1.d": 5,
+            "env1.s": 6,
+            "env1.r": 3,
+            "od.drive": 3,
+            "delay.time": 6.4,
+            "delay.repeats": 3,
+            "delay.mix": 2.5
+          }
+        }
+      ],
+      "context": {
+        "delay.time": "Fills the gaps between bass notes."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.envDepth",
+          "try": "Raise to 6",
+          "hear": "A brighter, more urgent bass."
+        },
+        {
+          "id": "delay.mix",
+          "try": "Raise to 4",
+          "hear": "More roll between notes."
+        }
+      ]
+    },
+    {
+      "id": "drexciya-bubble-bass",
+      "name": "Aquatic Electro Bass",
+      "ref": "In the style of Drexciya — \"Bubble Metropolis\"",
+      "artist": "Drexciya",
+      "tags": ["bass", "electro", "detroit", "90s"],
+      "level": 3,
+      "blurb": "A wet, bubbling electro bass where every note squelches slightly differently.",
+      "how": "Drexciya’s electro is aquatic and restless. MIDI GATE clocks the S&H (sample and hold), so it takes one new random reading per note, and that reading, patched into FREQ MOD, moves the cutoff. Each note gets its own squelch.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.3],
+          [0.5, 36, 0.3],
+          [0.75, 48, 0.2],
+          [1.5, 39, 0.3],
+          [2, 36, 0.3],
+          [2.5, 43, 0.3],
+          [3, 41, 0.3],
+          [3.5, 39, 0.3]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pulse bass",
+          "module": "osc",
+          "why": "A pulse an octave down.\n- Osc 1 SHAPE 1 (pulse), Osc 1 WIDTH 4, Osc 1 RANGE 16’: hollow.\n- Listen for: a hollow bass.",
+          "set": {
+            "osc1.shape": 1,
+            "osc1.width": 4,
+            "osc1.range": "16"
+          }
+        },
+        {
+          "title": "Squelch",
+          "module": "filter",
+          "why": "A resonant filter with a quick pluck.\n- FREQ 4.5 (about 270 Hz): dark.\n- RESO 6.5: wet and squelchy.\n- ENV DEPTH 4, Env 2 A 0 (1 ms), Env 2 D 4 (67 ms), Env 2 S 0, Env 2 R 3 (18 ms): a \"bloop\".\n- Listen for: a bubbling bass.",
+          "set": {
+            "vcf.freq": 4.5,
+            "vcf.reso": 6.5,
+            "vcf.envDepth": 4,
+            "env2.a": 0,
+            "env2.d": 4,
+            "env2.s": 0,
+            "env2.r": 3
+          }
+        },
+        {
+          "title": "Patch S&H → FREQ MOD, MIDI GATE → S&H CLOCK",
+          "module": "patch",
+          "why": "The keyboard gate clocks the S&H once per note, and the random reading moves the cutoff.\n- S&H → FREQ MOD: random cutoff.\n- MIDI GATE → S&H CLOCK: one reading per note.\n- MOD DEPTH 3: how far each note’s cutoff can wander.\n- Listen for: every note squelching differently.",
+          "set": {
+            "vcf.modDepth": 3
+          },
+          "cables": [
+            ["j.sh", "j.freqMod"],
+            ["j.midiGate", "j.shClock"]
+          ]
+        },
+        {
+          "title": "Short",
+          "module": "amp",
+          "why": "Short notes.\n- Env 1 A 0 (1 ms), Env 1 D 5 (150 ms), Env 1 S 4, Env 1 R 3 (18 ms): tight.\n- Listen for: a restless, aquatic bass line.",
+          "set": {
+            "env1.a": 0,
+            "env1.d": 5,
+            "env1.s": 4,
+            "env1.r": 3
+          }
+        }
+      ],
+      "context": {
+        "vcf.modDepth": "How differently each note squelches."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.modDepth",
+          "try": "Raise to 5",
+          "hear": "Wilder variation between notes."
+        },
+        {
+          "id": "vcf.reso",
+          "try": "Raise to 8",
+          "hear": "A wetter, more bubbling bass."
+        }
+      ]
+    },
+    {
+      "id": "open-eye-pulse",
+      "name": "Pulsing Distorted Bass",
+      "ref": "In the style of Jon Hopkins — \"Open Eye Signal\"",
+      "artist": "Jon Hopkins",
+      "tags": ["bass", "electronica", "techno", "2010s"],
+      "level": 3,
+      "blurb": "A thick, distorted bass that throbs in a steady pulse while you hold a note.",
+      "how": "\"Open Eye Signal\" is built on a gritty, pulsing bass that keeps throbbing. The LFO is patched into VCA CV in place of Envelope 1, so a held note pulses on its own, and the overdrive is pushed hard.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 33, 4],
+          [4, 31, 4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Thick tones",
+          "module": "osc",
+          "why": "Two detuned sawtooths, low.\n- Osc 1 SHAPE 2 (saw), Osc 1 RANGE 16’, Osc 2 SHAPE 2 (saw), Osc 2 RANGE 16’, Osc 2 TUNE +0.1: thick.\n- OSC MIX 0: equal.\n- Listen for: a thick bass.",
+          "set": {
+            "osc1.shape": 2,
+            "osc1.range": "16",
+            "osc2.shape": 2,
+            "osc2.range": "16",
+            "osc2.tune": 0.1,
+            "osc.mix": 0
+          }
+        },
+        {
+          "title": "Grit",
+          "module": "filter",
+          "why": "Dark filter and heavy drive.\n- FREQ 5.5 (about 560 Hz): dark.\n- RESO 3: a growl.\n- DRIVE 7.5, overdrive TONE 4, overdrive LEVEL 7: heavy distortion.\n- Listen for: a gritty growl.",
+          "set": {
+            "vcf.freq": 5.5,
+            "vcf.reso": 3,
+            "od.drive": 7.5,
+            "od.tone": 4,
+            "od.level": 7
+          }
+        },
+        {
+          "title": "Patch LFO → VCA CV",
+          "module": "patch",
+          "why": "The LFO replaces Envelope 1 at the amplifier, so the loudness throbs.\n- LFO → VCA CV: throbs the loudness.\n- LFO RATE 4.6 (4.0 Hz), LFO SHAPE 0 (sine): about four throbs a second.\n- LFO KEY SYNC on: restarts with each note.\n- VCA BIAS 1: a little level between throbs.\n- Listen for: a steady, pulsing throb.",
+          "set": {
+            "lfo.rate": 4.6,
+            "lfo.shape": 0,
+            "lfo.keySync": true,
+            "vca.bias": 1
+          },
+          "cables": [["j.lfo", "j.vcaCv"]]
+        }
+      ],
+      "context": {
+        "lfo.rate": "The throb rate."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Raise to 5.2",
+          "hear": "A faster, more urgent pulse."
+        },
+        {
+          "id": "od.drive",
+          "try": "Raise to 9.5",
+          "hear": "A shredded, broken bass."
+        }
+      ]
+    },
+    {
+      "id": "glue-rave-pad",
+      "name": "Nostalgic Rave Pad",
+      "ref": "In the style of Bicep — \"Glue\"",
+      "artist": "Bicep",
+      "tags": ["pad", "electronica", "uk garage", "2010s"],
+      "level": 2,
+      "blurb": "A wistful, slightly wobbly pad with a soft filter breathing and long echoes.",
+      "how": "Bicep’s \"Glue\" uses a melancholic, hazy pad. Two detuned sawtooths through a soft filter that the LFO slowly opens and closes, with long echoes, give a hazy, nostalgic chord.",
+      "phrase": {
+        "bpm": 65,
+        "loop": true,
+        "steps": [
+          [0, 57, 4],
+          [0, 64, 4],
+          [4, 55, 4],
+          [4, 62, 4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two voices",
+          "module": "osc",
+          "why": "Detuned sawtooths, paraphonic for two-note chords.\n- Osc 1 SHAPE 2 (saw), Osc 2 SHAPE 2 (saw), Osc 2 TUNE +0.08: warm.\n- OSC MIX 0: equal.\n- PARAPHONIC on: two notes.\n- Listen for: a warm interval.",
+          "set": {
+            "osc1.shape": 2,
+            "osc2.shape": 2,
+            "osc2.tune": 0.08,
+            "osc.mix": 0,
+            "osc.para": true
+          }
+        },
+        {
+          "title": "Breathing filter",
+          "module": "filter",
+          "why": "The LFO slowly moves the cutoff through MOD DEPTH.\n- FREQ 6 (about 800 Hz): soft.\n- RESO 2: a slight glow.\n- MOD DEPTH 2.5, LFO RATE 2 (0.20 Hz), LFO SHAPE 1 (triangle): a slow breath.\n- Listen for: a breathing pad.",
+          "set": {
+            "vcf.freq": 6,
+            "vcf.reso": 2,
+            "vcf.modDepth": 2.5,
+            "lfo.rate": 2,
+            "lfo.shape": 1
+          }
+        },
+        {
+          "title": "Haze",
+          "module": "amp",
+          "why": "Slow attack and long echoes.\n- Env 1 A 6 (100 ms), Env 1 D 8 (1.9 s), Env 1 S 10, Env 1 R 7.5 (750 ms): a slow swell.\n- delay TIME 9 (460 ms), REPEATS 6, delay MIX 3.5: long echoes.\n- Listen for: a hazy, wistful pad.",
+          "set": {
+            "env1.a": 6,
+            "env1.d": 8,
+            "env1.s": 10,
+            "env1.r": 7.5,
+            "delay.time": 9,
+            "delay.repeats": 6,
+            "delay.mix": 3.5
+          }
+        }
+      ],
+      "context": {
+        "vcf.modDepth": "How much the pad breathes."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.modDepth",
+          "try": "Raise to 4",
+          "hear": "More obvious breathing."
+        },
+        {
+          "id": "osc2.tune",
+          "try": "Raise to 0.2",
+          "hear": "A wobblier, more detuned haze."
+        }
+      ]
+    },
+    {
+      "id": "silk-road-lead",
+      "name": "Silk Road Lead",
+      "ref": "In the style of Kitaro — \"Silk Road\"",
+      "artist": "Kitaro",
+      "tags": ["lead", "new age", "ambient", "80s"],
+      "level": 2,
+      "blurb": "A soaring, flute-like lead with a soft swell, slow vibrato and long echoes.",
+      "how": "Kitaro’s melodies float over vast landscapes. A triangle with a quiet sawtooth, a gentle swell, a slow vibrato through Attenuator 2 and long, soft echoes.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 69, 2],
+          [2, 72, 1],
+          [3, 74, 1],
+          [4, 76, 3],
+          [7, 74, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Soft tone",
+          "module": "osc",
+          "why": "A triangle and a quiet sawtooth.\n- Osc 1 SHAPE 3 (triangle), Osc 2 SHAPE 2 (saw): soft with a little edge.\n- OSC MIX −3: mostly triangle.\n- FREQ 7 (about 1.7 kHz): soft.\n- Listen for: a flute-like tone.",
+          "set": {
+            "osc1.shape": 3,
+            "osc2.shape": 2,
+            "osc.mix": -3,
+            "vcf.freq": 7
+          }
+        },
+        {
+          "title": "Swell",
+          "module": "amp",
+          "why": "A soft attack.\n- Env 1 A 5.5 (63 ms), Env 1 D 7 (820 ms), Env 1 S 10, Env 1 R 6.5 (330 ms): swells in.\n- PORTA TIME 2 (400 ms): small slides.\n- Listen for: a floating line.",
+          "set": {
+            "env1.a": 5.5,
+            "env1.d": 7,
+            "env1.s": 10,
+            "env1.r": 6.5,
+            "porta.time": 2
+          }
+        },
+        {
+          "title": "Patch ATT 2 → OSC 1+2",
+          "module": "patch",
+          "why": "Attenuator 2 carries the LFO (low-frequency oscillator) by default. Patched into both oscillators’ pitch, it is vibrato, and the ATT 2 knob is its depth. (It also feeds pulse width, which only changes the pulse and tone-mod shapes.)\n- ATT 2 out → OSC 1+2: the LFO, scaled by ATT 2, to pitch.\n- ATT 2 1.2: vibrato depth.\n- LFO RATE 4.3 (2.8 Hz), LFO SHAPE 0 (sine): a smooth sine wobble.\n- Listen for: a slow, singing vibrato.",
+          "set": {
+            "att.2": 1.2,
+            "lfo.rate": 4.3,
+            "lfo.shape": 0
+          },
+          "cables": [["j.att2", "j.osc12In"]]
+        },
+        {
+          "title": "Echoes",
+          "module": "fx",
+          "why": "Long echoes.\n- delay TIME 9.5 (540 ms), REPEATS 5, delay MIX 3.5: vast.\n- Listen for: a melody across a landscape.",
+          "set": {
+            "delay.time": 9.5,
+            "delay.repeats": 5,
+            "delay.mix": 3.5
+          }
+        }
+      ],
+      "context": {
+        "att.2": "Vibrato depth."
+      },
+      "tweaks": [
+        {
+          "id": "att.2",
+          "try": "Raise to 2",
+          "hear": "A wider, more emotional vibrato."
+        },
+        {
+          "id": "delay.repeats",
+          "try": "Raise to 7",
+          "hear": "An even vaster space."
+        }
+      ]
+    },
+    {
+      "id": "rydeen-lead",
+      "name": "Bright Techno-Pop Lead",
+      "ref": "In the style of Yellow Magic Orchestra — \"Rydeen\"",
+      "artist": "Yellow Magic Orchestra",
+      "tags": ["lead", "techno-pop", "city pop", "70s"],
+      "level": 1,
+      "blurb": "A bright, cheerful square lead with a fast, light vibrato.",
+      "how": "YMO’s leads are bright, square and joyful. A pulse wave at square width through an open filter, with a quick, light vibrato.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.5],
+          [0.5, 74, 0.5],
+          [1, 76, 0.5],
+          [1.5, 79, 0.5],
+          [2, 81, 1],
+          [3, 79, 0.5],
+          [3.5, 76, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Square",
+          "module": "osc",
+          "why": "A pulse at its centre width is a square.\n- Osc 1 SHAPE 1 (pulse), Osc 1 WIDTH 5: hollow and bright.\n- FREQ 8 (about 3.5 kHz): open.\n- Listen for: a bright square.",
+          "set": {
+            "osc1.shape": 1,
+            "osc1.width": 5,
+            "vcf.freq": 8
+          }
+        },
+        {
+          "title": "Clean",
+          "module": "amp",
+          "why": "Clean notes.\n- Env 1 A 0 (1 ms), Env 1 D 5 (150 ms), Env 1 S 10, Env 1 R 4 (41 ms): clean.\n- Listen for: a cheerful line.",
+          "set": {
+            "env1.a": 0,
+            "env1.d": 5,
+            "env1.s": 10,
+            "env1.r": 4
+          }
+        },
+        {
+          "title": "Patch ATT 2 → OSC 1+2",
+          "module": "patch",
+          "why": "Attenuator 2 carries the LFO (low-frequency oscillator) by default. Patched into both oscillators’ pitch, it is vibrato, and the ATT 2 knob is its depth. (It also feeds pulse width, which only changes the pulse and tone-mod shapes.)\n- ATT 2 out → OSC 1+2: the LFO, scaled by ATT 2, to pitch.\n- ATT 2 0.8: vibrato depth.\n- LFO RATE 5.2 (8.0 Hz), LFO SHAPE 0 (sine): a smooth sine wobble.\n- Listen for: a fast, light vibrato.",
+          "set": {
+            "att.2": 0.8,
+            "lfo.rate": 5.2,
+            "lfo.shape": 0
+          },
+          "cables": [["j.att2", "j.osc12In"]]
+        }
+      ],
+      "context": {
+        "osc1.width": "Square at 5; thinner either side."
+      },
+      "tweaks": [
+        {
+          "id": "osc1.width",
+          "try": "Lower to 2",
+          "hear": "A thinner, nasal lead."
+        },
+        {
+          "id": "att.2",
+          "try": "Raise to 1.5",
+          "hear": "A wobblier, cartoonish vibrato."
+        }
+      ]
+    },
+    {
+      "id": "solaris-shimmer",
+      "name": "Solaris Shimmer",
+      "ref": "In the style of Cliff Martinez — \"Solaris\"",
+      "artist": "Cliff Martinez",
+      "tags": ["keys", "film score", "ambient", "2000s"],
+      "level": 3,
+      "blurb": "A shimmering, glassy, steel-drum-like tone that blooms into long echoes.",
+      "how": "Martinez scored \"Solaris\" with glassy, floating tones. A light amount of FM (Oscillator 2 through Attenuator 1 into Oscillator 1) gives a metallic shimmer, a soft attack takes away the strike, and long echoes multiply it.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 64, 1],
+          [1, 71, 1],
+          [2, 69, 2],
+          [4, 64, 1],
+          [5, 67, 1],
+          [6, 66, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Glass",
+          "module": "osc",
+          "why": "Two sines; Oscillator 2 slightly above an octave, only modulating.\n- OSC 2 out → ATT1 IN: the modulator.\n- ATT 1 out → OSC 1: bends the carrier.\n- Osc 1 SHAPE 4 (sine), Osc 2 SHAPE 4 (sine), Osc 2 TUNE +0.4, Osc 2 RANGE 8’, Osc 1 RANGE 16’: a slightly stretched octave.\n- OSC MIX −5: only Oscillator 1 heard.\n- FREQ 9 (about 7.2 kHz): open.\n- ATT 1 4.5: light FM.\n- Listen for: a shimmering tone.",
+          "set": {
+            "osc1.shape": 4,
+            "osc2.shape": 4,
+            "osc2.tune": 0.4,
+            "osc2.range": "8",
+            "osc1.range": "16",
+            "osc.mix": -5,
+            "vcf.freq": 9,
+            "att.1": 4.5
+          },
+          "cables": [
+            ["j.osc2", "j.att1In"],
+            ["j.att1", "j.osc1In"]
+          ]
+        },
+        {
+          "title": "Bloom",
+          "module": "amp",
+          "why": "A soft attack and long ring.\n- Env 1 A 4 (15 ms), Env 1 D 9 (4.3 s), Env 1 S 3, Env 1 R 8 (1.1 s): blooms in.\n- Listen for: glassy notes appearing.",
+          "set": {
+            "env1.a": 4,
+            "env1.d": 9,
+            "env1.s": 3,
+            "env1.r": 8
+          }
+        },
+        {
+          "title": "Space",
+          "module": "fx",
+          "why": "Long echoes.\n- delay TIME 9.2 (490 ms), REPEATS 6.5, delay MIX 4: a long tail.\n- Listen for: a floating, alien atmosphere.",
+          "set": {
+            "delay.time": 9.2,
+            "delay.repeats": 6.5,
+            "delay.mix": 4
+          }
+        }
+      ],
+      "context": {
+        "att.1": "The amount of shimmer.",
+        "osc2.tune": "Stretches the octave, which makes it metallic."
+      },
+      "tweaks": [
+        {
+          "id": "att.1",
+          "try": "Raise to 6.5",
+          "hear": "A clangier, more metallic shimmer."
+        },
+        {
+          "id": "osc2.tune",
+          "try": "Set to 0",
+          "hear": "A pure octave: softer, more organ-like."
+        }
+      ]
+    },
+    {
+      "id": "eple-pluck",
+      "name": "Playful Pluck",
+      "ref": "In the style of Röyksopp — \"Eple\"",
+      "artist": "Röyksopp",
+      "tags": ["pluck", "downtempo", "electronica", "2000s"],
+      "level": 1,
+      "blurb": "A cute, bright, bouncy pluck with a playful echo.",
+      "how": "\"Eple\" has a cheerful, bouncy melody. A triangle–sine blend with a quick, resonant pluck and a dotted echo.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 76, 0.25],
+          [0.5, 79, 0.25],
+          [1, 84, 0.25],
+          [1.5, 81, 0.5],
+          [2, 79, 0.25],
+          [2.5, 76, 0.25],
+          [3, 74, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Soft",
+          "module": "osc",
+          "why": "A triangle–sine blend.\n- Osc 1 SHAPE 3.5 (triangle–sine blend): soft.\n- Listen for: a soft tone.",
+          "set": {
+            "osc1.shape": 3.5
+          }
+        },
+        {
+          "title": "Pluck",
+          "module": "filter",
+          "why": "A resonant pluck.\n- FREQ 6 (about 800 Hz): soft.\n- RESO 4: bouncy.\n- ENV DEPTH 3.5, Env 2 A 0 (1 ms), Env 2 D 4 (67 ms), Env 2 S 0, Env 2 R 3 (18 ms): a quick pluck.\n- Listen for: a bouncy pluck.",
+          "set": {
+            "vcf.freq": 6,
+            "vcf.reso": 4,
+            "vcf.envDepth": 3.5,
+            "env2.a": 0,
+            "env2.d": 4,
+            "env2.s": 0,
+            "env2.r": 3
+          }
+        },
+        {
+          "title": "Short and echoed",
+          "module": "amp",
+          "why": "Short notes and a dotted echo.\n- Env 1 A 0 (1 ms), Env 1 D 6 (360 ms), Env 1 S 0, Env 1 R 5 (95 ms): plucked.\n- delay TIME 8.5 (390 ms), REPEATS 3.5, delay MIX 3: a dotted echo.\n- Listen for: a playful melody.",
+          "set": {
+            "env1.a": 0,
+            "env1.d": 6,
+            "env1.s": 0,
+            "env1.r": 5,
+            "delay.time": 8.5,
+            "delay.repeats": 3.5,
+            "delay.mix": 3
+          }
+        }
+      ],
+      "context": {
+        "vcf.reso": "How bouncy the pluck is."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.reso",
+          "try": "Raise to 6",
+          "hear": "A boingier, more squelchy pluck."
+        },
+        {
+          "id": "delay.mix",
+          "try": "Raise to 5",
+          "hear": "Echoes that bounce around more."
+        }
+      ]
+    },
+    {
+      "id": "for-an-angel-pluck",
+      "name": "Trance Pluck",
+      "ref": "In the style of Paul van Dyk — \"For an Angel\"",
+      "artist": "Paul van Dyk",
+      "tags": ["pluck", "trance", "90s"],
+      "level": 1,
+      "blurb": "A bright, short, euphoric pluck with a rhythmic echo.",
+      "how": "Trance plucks are bright and short, and the echo makes the rhythm. Two detuned sawtooths with a quick filter pluck and a dotted-eighth echo.",
+      "phrase": {
+        "bpm": 138,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.25],
+          [0.5, 72, 0.25],
+          [1, 76, 0.25],
+          [1.5, 72, 0.25],
+          [2, 71, 0.25],
+          [2.5, 74, 0.25],
+          [3, 79, 0.25],
+          [3.5, 74, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Detuned saws",
+          "module": "osc",
+          "why": "Two sawtooths slightly apart.\n- Osc 1 SHAPE 2 (saw), Osc 2 SHAPE 2 (saw), Osc 2 TUNE +0.12: wide.\n- OSC MIX 0: equal.\n- Listen for: a wide, bright tone.",
+          "set": {
+            "osc1.shape": 2,
+            "osc2.shape": 2,
+            "osc2.tune": 0.12,
+            "osc.mix": 0
+          }
+        },
+        {
+          "title": "Pluck",
+          "module": "filter",
+          "why": "A fast filter pluck.\n- FREQ 5.5 (about 560 Hz): dark at rest.\n- RESO 2: a slight edge.\n- ENV DEPTH 5, Env 2 A 0 (1 ms), Env 2 D 4 (67 ms), Env 2 S 0, Env 2 R 3 (18 ms): a bright pluck.\n- Listen for: a bright pluck.",
+          "set": {
+            "vcf.freq": 5.5,
+            "vcf.reso": 2,
+            "vcf.envDepth": 5,
+            "env2.a": 0,
+            "env2.d": 4,
+            "env2.s": 0,
+            "env2.r": 3
+          }
+        },
+        {
+          "title": "Echo",
+          "module": "fx",
+          "why": "Short notes, dotted echo.\n- Env 1 A 0 (1 ms), Env 1 D 5.5 (240 ms), Env 1 S 0, Env 1 R 4.5 (63 ms): short.\n- delay TIME 8.4 (380 ms), REPEATS 4.5, delay MIX 3.5: a dotted echo.\n- Listen for: a euphoric, rolling riff.",
+          "set": {
+            "env1.a": 0,
+            "env1.d": 5.5,
+            "env1.s": 0,
+            "env1.r": 4.5,
+            "delay.time": 8.4,
+            "delay.repeats": 4.5,
+            "delay.mix": 3.5
+          }
+        }
+      ],
+      "context": {
+        "delay.time": "Sets the echo rhythm."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.envDepth",
+          "try": "Raise to 7",
+          "hear": "A brighter, more cutting pluck."
+        },
+        {
+          "id": "delay.repeats",
+          "try": "Raise to 6",
+          "hear": "A longer, more rolling echo."
+        }
+      ]
+    },
+    {
+      "id": "assimilate-grind",
+      "name": "Industrial Filter-FM Grind",
+      "ref": "In the style of Skinny Puppy — \"Assimilate\"",
+      "artist": "Skinny Puppy",
+      "tags": ["bass", "industrial", "ebm", "80s"],
+      "level": 3,
+      "blurb": "A harsh, metallic, grinding bass where the filter itself is being shaken at audio rate.",
+      "how": "Patching an oscillator into FREQ MOD moves the cutoff at audio rate. Here Oscillator 2, slightly detuned from Oscillator 1, is only used for that, and MOD DEPTH sets how hard. The result is a metallic, grinding growl, pushed further by the overdrive.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4],
+          [0.5, 36, 0.4],
+          [1, 39, 0.4],
+          [1.5, 36, 0.4],
+          [2, 41, 0.4],
+          [2.5, 39, 0.4],
+          [3, 36, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bass and a modulator",
+          "module": "osc",
+          "why": "Oscillator 1 is heard; Oscillator 2, a little sharp, only modulates.\n- Osc 1 SHAPE 2 (saw), Osc 1 RANGE 16’, Osc 2 SHAPE 1 (pulse), Osc 2 RANGE 16’, Osc 2 TUNE +0.3: saw and pulse.\n- OSC MIX −5: only Oscillator 1 heard.\n- Listen for: a saw bass.",
+          "set": {
+            "osc1.shape": 2,
+            "osc1.range": "16",
+            "osc2.shape": 1,
+            "osc2.range": "16",
+            "osc2.tune": 0.3,
+            "osc.mix": -5
+          }
+        },
+        {
+          "title": "Patch OSC 2 → FREQ MOD",
+          "module": "patch",
+          "why": "Oscillator 2 replaces the LFO at the cutoff input, so the filter moves at audio rate.\n- OSC 2 out → FREQ MOD: shakes the filter at audio rate.\n- FREQ 5 (about 390 Hz): dark.\n- RESO 5: resonant: metallic.\n- MOD DEPTH 5: strong filter FM.\n- Listen for: a metallic, grinding tone.",
+          "set": {
+            "vcf.freq": 5,
+            "vcf.reso": 5,
+            "vcf.modDepth": 5
+          },
+          "cables": [["j.osc2", "j.freqMod"]]
+        },
+        {
+          "title": "Harsh",
+          "module": "fx",
+          "why": "Heavy overdrive, short notes.\n- DRIVE 7, overdrive TONE 6: harsh.\n- Env 1 A 0 (1 ms), Env 1 D 5 (150 ms), Env 1 S 6, Env 1 R 3 (18 ms): tight.\n- Listen for: an industrial grind.",
+          "set": {
+            "od.drive": 7,
+            "od.tone": 6,
+            "env1.a": 0,
+            "env1.d": 5,
+            "env1.s": 6,
+            "env1.r": 3
+          }
+        }
+      ],
+      "context": {
+        "vcf.modDepth": "How hard Oscillator 2 shakes the filter."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.modDepth",
+          "try": "Raise to 7.5",
+          "hear": "A noisier, more metallic grind."
+        },
+        {
+          "id": "osc2.tune",
+          "try": "Raise to 1",
+          "hear": "A sourer, beating grind."
+        }
+      ]
+    },
+    {
+      "id": "gantz-graf-glitch",
+      "name": "Glitch Crunch",
+      "ref": "In the style of Autechre — \"Gantz Graf\"",
+      "artist": "Autechre",
+      "tags": ["fx", "idm", "glitch", "2000s"],
+      "level": 3,
+      "blurb": "A crunching, stuttering, bit-crushed texture that jumps between random pitches.",
+      "how": "Autechre’s sounds are mangled and machine-like. Oscillator 2, in its wide range and tuned down to a buzz, clocks the S&H very fast. The S&H’s random readings go through Attenuator 1 to both oscillators’ pitch, so the pitch jumps around many times a second: a crunching, bit-crushed glitch.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 48, 1],
+          [1.5, 53, 0.5],
+          [2, 46, 1],
+          [3.25, 55, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A harsh source",
+          "module": "osc",
+          "why": "A pulse is heard; Oscillator 2 is a fast clock.\n- Osc 1 SHAPE 1 (pulse), Osc 1 WIDTH 3: harsh.\n- OSC MIX −5: only Oscillator 1 heard.\n- Osc 2 RANGE wide, Osc 2 TUNE −2.5, Osc 2 SHAPE 1 (pulse): Oscillator 2 slowed to a fast buzz, used as a clock.\n- FREQ 8 (about 3.5 kHz), RESO 3: bright.\n- Listen for: a harsh tone.",
+          "set": {
+            "osc1.shape": 1,
+            "osc1.width": 3,
+            "osc.mix": -5,
+            "osc2.range": "wide",
+            "osc2.tune": -2.5,
+            "osc2.shape": 1,
+            "vcf.freq": 8,
+            "vcf.reso": 3
+          }
+        },
+        {
+          "title": "Patch OSC 2 → S&H CLOCK, S&H → ATT1 IN, ATT 1 → OSC 1+2",
+          "module": "patch",
+          "why": "Oscillator 2 clocks the S&H; the random readings, scaled by Attenuator 1, jump the pitch.\n- OSC 2 out → S&H CLOCK: a very fast clock.\n- S&H → ATT1 IN: random readings.\n- ATT 1 out → OSC 1+2: jumps the pitch.\n- ATT 1 4: jumps of several semitones.\n- S&H GLIDE 0: hard steps.\n- Listen for: a stuttering, glitching texture.",
+          "set": {
+            "att.1": 4,
+            "sh.glide": 0
+          },
+          "cables": [
+            ["j.osc2", "j.shClock"],
+            ["j.sh", "j.att1In"],
+            ["j.att1", "j.osc12In"]
+          ]
+        },
+        {
+          "title": "Clipped",
+          "module": "amp",
+          "why": "Short, clipped bursts.\n- Env 1 A 0 (1 ms), Env 1 D 5 (150 ms), Env 1 S 3, Env 1 R 2 (8 ms): clipped.\n- DRIVE 5: crunch.\n- Listen for: mechanical, glitching bursts.",
+          "set": {
+            "env1.a": 0,
+            "env1.d": 5,
+            "env1.s": 3,
+            "env1.r": 2,
+            "od.drive": 5
+          }
+        }
+      ],
+      "context": {
+        "osc2.tune": "With RANGE wide, this is the clock speed.",
+        "att.1": "How far the pitch jumps."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.tune",
+          "try": "Lower to -3.5",
+          "hear": "A slower clock: distinct random steps."
+        },
+        {
+          "id": "att.1",
+          "try": "Raise to 6",
+          "hear": "Wilder, wider jumps."
+        }
+      ]
+    },
+    {
+      "id": "scary-monsters-growl",
+      "name": "Sync Growl Bass",
+      "ref": "In the style of Skrillex — \"Scary Monsters and Nice Sprites\"",
+      "artist": "Skrillex",
+      "tags": ["bass", "dubstep", "brostep", "2010s"],
+      "level": 3,
+      "blurb": "A snarling, talking, distorted bass that yaps rhythmically.",
+      "how": "Brostep basses \"talk\" because their harmonics are swept rhythmically. OSC SYNC makes Oscillator 2’s tuning change its tone, not its pitch. The LFO through Attenuator 2 into OSC 2 sweeps that tone, and the same LFO moves the filter, all through heavy overdrive.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 31, 1],
+          [1, 31, 0.5],
+          [1.5, 34, 0.5],
+          [2, 31, 1],
+          [3, 36, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Synced saws",
+          "module": "osc",
+          "why": "With OSC SYNC on, Oscillator 2 follows Oscillator 1’s pitch and its TUNE changes the tone.\n- Osc 1 SHAPE 2 (saw), Osc 1 RANGE 16’, Osc 2 SHAPE 2 (saw), Osc 2 RANGE 16’: saws.\n- OSC SYNC on: hard sync.\n- Osc 2 TUNE +2: a nasal sync tone.\n- OSC MIX +2: mostly the synced oscillator.\n- Listen for: a nasal, tearing tone.",
+          "set": {
+            "osc1.shape": 2,
+            "osc1.range": "16",
+            "osc2.shape": 2,
+            "osc2.range": "16",
+            "osc.sync": true,
+            "osc2.tune": 2,
+            "osc.mix": 2
+          }
+        },
+        {
+          "title": "Patch ATT 2 → OSC 2",
+          "module": "patch",
+          "why": "The LFO through Attenuator 2 sweeps Oscillator 2’s sync tone.\n- ATT 2 out → OSC 2: sweeps the sync tone.\n- ATT 2 7: a wide sweep.\n- LFO RATE 4.4 (3.2 Hz), LFO SHAPE 3 (square), LFO KEY SYNC on: a square, a couple of times a second, starting with each note.\n- Listen for: \"yah-yah-yah\".",
+          "set": {
+            "att.2": 7,
+            "lfo.rate": 4.4,
+            "lfo.shape": 3,
+            "lfo.keySync": true
+          },
+          "cables": [["j.att2", "j.osc2In"]]
+        },
+        {
+          "title": "Talking filter",
+          "module": "filter",
+          "why": "The LFO also moves the cutoff through MOD DEPTH.\n- FREQ 6 (about 800 Hz): mid.\n- RESO 4: vocal.\n- MOD DEPTH 4: the filter talks with the sweep.\n- Listen for: a talking bass.",
+          "set": {
+            "vcf.freq": 6,
+            "vcf.reso": 4,
+            "vcf.modDepth": 4
+          }
+        },
+        {
+          "title": "Distortion",
+          "module": "fx",
+          "why": "Heavy overdrive.\n- DRIVE 8.5, overdrive TONE 6.5, overdrive LEVEL 7: heavy.\n- Env 1 A 0 (1 ms), Env 1 D 6 (360 ms), Env 1 S 9, Env 1 R 3 (18 ms): held.\n- Listen for: a snarling, yapping growl.",
+          "set": {
+            "od.drive": 8.5,
+            "od.tone": 6.5,
+            "od.level": 7,
+            "env1.a": 0,
+            "env1.d": 6,
+            "env1.s": 9,
+            "env1.r": 3
+          }
+        }
+      ],
+      "context": {
+        "lfo.rate": "The talking rhythm.",
+        "osc2.tune": "With sync on, the tone of the growl."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Raise to 5",
+          "hear": "A faster, more frantic yap."
+        },
+        {
+          "id": "lfo.shape",
+          "try": "Set to 2",
+          "hear": "A sawtooth sweep: a different rhythm of yap."
+        }
+      ]
+    },
+    {
+      "id": "horizons-liquid-pad",
+      "name": "Liquid Atmosphere Pad",
+      "ref": "In the style of LTJ Bukem — \"Horizons\"",
+      "artist": "LTJ Bukem",
+      "tags": ["pad", "drum and bass", "liquid", "90s"],
+      "level": 2,
+      "blurb": "A soft, warm, jazzy pad with a gentle shimmer, made for floating over fast breakbeats.",
+      "how": "Liquid drum and bass floats lush, jazzy pads over fast drums. Two soft, detuned voices, paraphonic for two-note chords, with a slow attack, a little chorus from Attenuator 2 into DELAY TIME, and soft echoes.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 62, 4],
+          [0, 69, 4],
+          [4, 60, 4],
+          [4, 67, 4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two soft voices",
+          "module": "osc",
+          "why": "Triangle–saw blends, paraphonic.\n- Osc 1 SHAPE 2.6 (saw–triangle blend), Osc 2 SHAPE 2.6 (saw–triangle blend), Osc 2 TUNE +0.05: warm.\n- OSC MIX 0: equal.\n- PARAPHONIC on: two notes.\n- FREQ 6.3 (about 1 kHz), RESO 1: soft.\n- Listen for: a soft chord.",
+          "set": {
+            "osc1.shape": 2.6,
+            "osc2.shape": 2.6,
+            "osc2.tune": 0.05,
+            "osc.mix": 0,
+            "osc.para": true,
+            "vcf.freq": 6.3,
+            "vcf.reso": 1
+          }
+        },
+        {
+          "title": "Patch ATT 2 → DELAY TIME",
+          "module": "patch",
+          "why": "A slow LFO wobbles a short delay: chorus.\n- ATT 2 out → DELAY TIME: wobbles the delay.\n- ATT 2 2, LFO RATE 3 (0.63 Hz), LFO SHAPE 0 (sine): a slow, gentle wobble.\n- delay TIME 2 (48 ms), REPEATS 2, delay MIX 4: a short delay for chorus.\n- Listen for: a shimmering, widened pad.",
+          "set": {
+            "att.2": 2,
+            "lfo.rate": 3,
+            "lfo.shape": 0,
+            "delay.time": 2,
+            "delay.repeats": 2,
+            "delay.mix": 4
+          },
+          "cables": [["j.att2", "j.delayTime"]]
+        },
+        {
+          "title": "Slow",
+          "module": "amp",
+          "why": "A slow attack and release.\n- Env 1 A 6.5 (170 ms), Env 1 D 8 (1.9 s), Env 1 S 10, Env 1 R 7.5 (750 ms): slow.\n- Listen for: a lush, floating pad.",
+          "set": {
+            "env1.a": 6.5,
+            "env1.d": 8,
+            "env1.s": 10,
+            "env1.r": 7.5
+          }
+        }
+      ],
+      "context": {
+        "att.2": "Chorus depth."
+      },
+      "tweaks": [
+        {
+          "id": "att.2",
+          "try": "Raise to 3.5",
+          "hear": "A wobblier, seasick chorus."
+        },
+        {
+          "id": "vcf.freq",
+          "try": "Raise to 7",
+          "hear": "A brighter, airier pad."
+        }
+      ]
+    },
+    {
+      "id": "tour-de-france-breath",
+      "name": "Cyclist’s Breath",
+      "ref": "In the style of Kraftwerk — \"Tour de France\"",
+      "artist": "Kraftwerk",
+      "tags": ["fx", "electro", "synth-pop", "80s"],
+      "level": 3,
+      "blurb": "Rhythmic, breathy huffs of filtered noise, like a cyclist breathing in time.",
+      "how": "Kraftwerk built \"Tour de France\" from the sounds of cycling, including breathing. Noise through a band-pass filter is the breath, and the LFO, patched into VCA CV, swells and cuts it in a steady rhythm.",
+      "phrase": {
+        "bpm": 100,
+        "loop": false,
+        "steps": [[0, 60, 6]]
+      },
+      "steps": [
+        {
+          "title": "Breath",
+          "module": "osc",
+          "why": "Noise through a band-pass.\n- OSC MIX −5, Osc 1 SHAPE 4 (sine): a quiet sine.\n- NOISE 10: noise.\n- MODE band-pass, FREQ 7 (about 1.7 kHz), RESO 2: a breathy band.\n- Listen for: a hiss.",
+          "set": {
+            "osc.mix": -5,
+            "osc1.shape": 4,
+            "mix.noise": 10,
+            "vcf.mode": "bp",
+            "vcf.freq": 7,
+            "vcf.reso": 2
+          }
+        },
+        {
+          "title": "Patch LFO → VCA CV",
+          "module": "patch",
+          "why": "The LFO replaces Envelope 1 at the amplifier.\n- LFO → VCA CV: huffs the loudness.\n- LFO RATE 3.9 (1.8 Hz), LFO SHAPE 2 (saw): a sawtooth: each huff builds, then stops.\n- Listen for: \"hhh... hhh... hhh\".",
+          "set": {
+            "lfo.rate": 3.9,
+            "lfo.shape": 2
+          },
+          "cables": [["j.lfo", "j.vcaCv"]]
+        },
+        {
+          "title": "Patch LFO UNI → FREQ MOD",
+          "module": "patch",
+          "why": "The one-sided LFO also brightens each huff as it builds.\n- LFO UNI → FREQ MOD: brightens each huff.\n- MOD DEPTH 3: a little brighter at the peak.\n- Listen for: breaths with a rising \"hee\".",
+          "set": {
+            "vcf.modDepth": 3
+          },
+          "cables": [["j.lfoUni", "j.freqMod"]]
+        }
+      ],
+      "context": {
+        "lfo.rate": "The breathing rate."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Raise to 4.4",
+          "hear": "A cyclist sprinting."
+        },
+        {
+          "id": "vcf.freq",
+          "try": "Lower to 6",
+          "hear": "Deeper, heavier breathing."
+        }
+      ]
+    },
+    {
+      "id": "midnight-city-lead",
+      "name": "Vocal Horn Lead",
+      "ref": "In the style of M83 — \"Midnight City\"",
+      "artist": "M83",
+      "tags": ["lead", "synth-pop", "dream pop", "2010s"],
+      "level": 2,
+      "blurb": "A bright, nasal, almost vocal lead with an \"ow\" in every note.",
+      "how": "The famous hook of \"Midnight City\" sounds half synth, half voice. Two sawtooths through the band-pass filter, swept by a quick Envelope 2, give a vocal \"ow\", with drive and an echo.",
+      "phrase": {
+        "bpm": 105,
+        "loop": true,
+        "steps": [
+          [0, 76, 0.5],
+          [0.5, 76, 0.25],
+          [0.75, 79, 0.5],
+          [1.25, 76, 0.25],
+          [1.5, 74, 0.5],
+          [2, 72, 1],
+          [3, 74, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two saws",
+          "module": "osc",
+          "why": "Detuned sawtooths.\n- Osc 1 SHAPE 2 (saw), Osc 2 SHAPE 2 (saw), Osc 2 TUNE +0.1: bright.\n- OSC MIX 0: equal.\n- Listen for: a bright tone.",
+          "set": {
+            "osc1.shape": 2,
+            "osc2.shape": 2,
+            "osc2.tune": 0.1,
+            "osc.mix": 0
+          }
+        },
+        {
+          "title": "\"Ow\"",
+          "module": "filter",
+          "why": "Band-pass swept by Envelope 2.\n- MODE band-pass: band-pass.\n- FREQ 6.5 (about 1.2 kHz): a vowel.\n- RESO 4.5: vocal.\n- KEY TRK on: follows the notes.\n- ENV DEPTH 3, Env 2 A 0 (1 ms), Env 2 D 5 (150 ms), Env 2 S 3, Env 2 R 4 (41 ms): an \"ow\".\n- Listen for: a vocal lead.",
+          "set": {
+            "vcf.mode": "bp",
+            "vcf.freq": 6.5,
+            "vcf.reso": 4.5,
+            "vcf.keyTrk": true,
+            "vcf.envDepth": 3,
+            "env2.a": 0,
+            "env2.d": 5,
+            "env2.s": 3,
+            "env2.r": 4
+          }
+        },
+        {
+          "title": "Drive and echo",
+          "module": "fx",
+          "why": "Drive and echo.\n- DRIVE 5, overdrive TONE 6: gritty.\n- Env 1 A 0 (1 ms), Env 1 D 6 (360 ms), Env 1 S 8, Env 1 R 4 (41 ms): punchy.\n- delay TIME 8 (330 ms), REPEATS 3, delay MIX 2.5: an echo.\n- Listen for: a huge, vocal hook.",
+          "set": {
+            "od.drive": 5,
+            "od.tone": 6,
+            "env1.a": 0,
+            "env1.d": 6,
+            "env1.s": 8,
+            "env1.r": 4,
+            "delay.time": 8,
+            "delay.repeats": 3,
+            "delay.mix": 2.5
+          }
+        }
+      ],
+      "context": {
+        "vcf.envDepth": "How big the \"ow\" is."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.reso",
+          "try": "Raise to 6.5",
+          "hear": "A more pronounced vowel."
+        },
+        {
+          "id": "od.drive",
+          "try": "Raise to 8",
+          "hear": "A dirtier, more blown-out hook."
+        }
+      ]
+    },
+    {
+      "id": "courtship-chip-lead",
+      "name": "Broken Chip Lead",
+      "ref": "In the style of Crystal Castles — \"Courtship Dating\"",
+      "artist": "Crystal Castles",
+      "tags": ["lead", "electroclash", "chiptune", "2000s"],
+      "level": 2,
+      "blurb": "A harsh, distorted, 8-bit-style square lead that sounds like a broken game console.",
+      "how": "Crystal Castles ran game-console sounds through distortion. A narrow pulse with fast, jumpy portamento and heavy overdrive.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 76, 0.25],
+          [0.25, 79, 0.25],
+          [0.5, 84, 0.25],
+          [0.75, 79, 0.25],
+          [1, 76, 0.5],
+          [1.5, 74, 0.5],
+          [2, 72, 0.25],
+          [2.25, 76, 0.25],
+          [2.5, 79, 0.5],
+          [3, 76, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Chip pulse",
+          "module": "osc",
+          "why": "A narrow pulse.\n- Osc 1 SHAPE 1 (pulse), Osc 1 WIDTH 2.5: 8-bit.\n- FREQ 9 (about 7.2 kHz): open.\n- Listen for: a buzzy chip tone.",
+          "set": {
+            "osc1.shape": 1,
+            "osc1.width": 2.5,
+            "vcf.freq": 9
+          }
+        },
+        {
+          "title": "Broken",
+          "module": "fx",
+          "why": "Heavy drive.\n- DRIVE 8, overdrive TONE 7.5, overdrive LEVEL 6.5: harsh.\n- PORTA TIME 0.8 (64 ms): tiny jumps between notes.\n- Env 1 A 0 (1 ms), Env 1 D 4 (67 ms), Env 1 S 10, Env 1 R 2 (8 ms): switch-like.\n- Listen for: a broken, distorted chip melody.",
+          "set": {
+            "od.drive": 8,
+            "od.tone": 7.5,
+            "od.level": 6.5,
+            "porta.time": 0.8,
+            "env1.a": 0,
+            "env1.d": 4,
+            "env1.s": 10,
+            "env1.r": 2
+          }
+        }
+      ],
+      "context": {
+        "od.drive": "How broken the console sounds."
+      },
+      "tweaks": [
+        {
+          "id": "od.drive",
+          "try": "Raise to 10",
+          "hear": "Total destruction."
+        },
+        {
+          "id": "osc1.width",
+          "try": "Raise to 5",
+          "hear": "A square: rounder, more Game Boy."
+        }
+      ]
+    },
+    {
+      "id": "ghost-rider-pulse",
+      "name": "Raw Pulse Riff",
+      "ref": "In the style of Suicide — \"Ghost Rider\"",
+      "artist": "Suicide",
+      "tags": ["seq", "proto-punk", "electronic", "70s"],
+      "level": 2,
+      "blurb": "A raw, fuzzy, pulsing riff that never lets up.",
+      "how": "Martin Rev played cheap organs and drum machines through effects. A buzzing pulse through heavy overdrive, cut into a pulse by the LFO on the filter, with a slapback echo.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 45, 0.5],
+          [0.5, 45, 0.5],
+          [1, 48, 0.5],
+          [1.5, 45, 0.5],
+          [2, 50, 0.5],
+          [2.5, 48, 0.5],
+          [3, 45, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Cheap organ",
+          "module": "osc",
+          "why": "A pulse.\n- Osc 1 SHAPE 1 (pulse), Osc 1 WIDTH 4: buzzy.\n- Listen for: a buzz.",
+          "set": {
+            "osc1.shape": 1,
+            "osc1.width": 4
+          }
+        },
+        {
+          "title": "Pulsing filter",
+          "module": "filter",
+          "why": "A square LFO on the cutoff.\n- FREQ 6 (about 800 Hz), RESO 3: mid.\n- MOD DEPTH 4, LFO RATE 5.3 (8.9 Hz), LFO SHAPE 3 (square): a fast pulse.\n- Listen for: a pulsing tone.",
+          "set": {
+            "vcf.freq": 6,
+            "vcf.reso": 3,
+            "vcf.modDepth": 4,
+            "lfo.rate": 5.3,
+            "lfo.shape": 3
+          }
+        },
+        {
+          "title": "Fuzz and slapback",
+          "module": "fx",
+          "why": "Fuzz and a short echo.\n- DRIVE 7, overdrive TONE 5: fuzzy.\n- delay TIME 5 (130 ms), REPEATS 2, delay MIX 3: slapback.\n- Listen for: a raw, relentless riff.",
+          "set": {
+            "od.drive": 7,
+            "od.tone": 5,
+            "delay.time": 5,
+            "delay.repeats": 2,
+            "delay.mix": 3
+          }
+        }
+      ],
+      "context": {
+        "lfo.rate": "The pulse speed."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Raise to 6",
+          "hear": "A frantic pulse."
+        },
+        {
+          "id": "od.drive",
+          "try": "Raise to 9",
+          "hear": "Blown speakers."
+        }
+      ]
+    },
+    {
+      "id": "silver-apples-oscillations",
+      "name": "Oscillations",
+      "ref": "In the style of Silver Apples — \"Oscillations\"",
+      "artist": "Silver Apples",
+      "tags": ["drone", "psychedelic", "electronic", "60s"],
+      "level": 2,
+      "blurb": "Two warbling oscillators, one droning and one melodic, pulsing over a beat.",
+      "how": "Simeon played a stack of oscillators by hand with his elbows and knees. PARAPHONIC lets one oscillator drone while the other plays, and a slow LFO through Attenuator 2 makes both warble.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 45, 8],
+          [0, 69, 1],
+          [1, 72, 1],
+          [2, 69, 0.5],
+          [2.5, 67, 0.5],
+          [3, 64, 1],
+          [4, 69, 2],
+          [6, 67, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two oscillators",
+          "module": "osc",
+          "why": "Triangle–saw blends, paraphonic.\n- Osc 1 SHAPE 2.5 (saw–triangle blend), Osc 2 SHAPE 2 (saw): buzzy.\n- OSC MIX 0: equal.\n- PARAPHONIC on: drone plus melody.\n- FREQ 7 (about 1.7 kHz), RESO 2: warm.\n- Listen for: a drone and a melody.",
+          "set": {
+            "osc1.shape": 2.5,
+            "osc2.shape": 2,
+            "osc.mix": 0,
+            "osc.para": true,
+            "vcf.freq": 7,
+            "vcf.reso": 2
+          }
+        },
+        {
+          "title": "Patch ATT 2 → OSC 1+2",
+          "module": "patch",
+          "why": "Attenuator 2 carries the LFO (low-frequency oscillator) by default. Patched into both oscillators’ pitch, it is vibrato, and the ATT 2 knob is its depth. (It also feeds pulse width, which only changes the pulse and tone-mod shapes.)\n- ATT 2 out → OSC 1+2: the LFO, scaled by ATT 2, to pitch.\n- ATT 2 1.6: vibrato depth.\n- LFO RATE 3.5 (1.1 Hz), LFO SHAPE 0 (sine): a smooth sine wobble.\n- Listen for: a slow, homemade warble.",
+          "set": {
+            "att.2": 1.6,
+            "lfo.rate": 3.5,
+            "lfo.shape": 0
+          },
+          "cables": [["j.att2", "j.osc12In"]]
+        },
+        {
+          "title": "Sustained",
+          "module": "amp",
+          "why": "Held notes and a slapback.\n- Env 1 A 1 (1 ms), Env 1 D 6 (360 ms), Env 1 S 10, Env 1 R 5 (95 ms): sustained.\n- delay TIME 6 (170 ms), REPEATS 3, delay MIX 2.5: slapback.\n- Listen for: a hypnotic, homemade electronic sound.",
+          "set": {
+            "env1.a": 1,
+            "env1.d": 6,
+            "env1.s": 10,
+            "env1.r": 5,
+            "delay.time": 6,
+            "delay.repeats": 3,
+            "delay.mix": 2.5
+          }
+        }
+      ],
+      "context": {
+        "osc.para": "One oscillator drones, the other plays."
+      },
+      "tweaks": [
+        {
+          "id": "att.2",
+          "try": "Raise to 3",
+          "hear": "Wilder, more unstable oscillators."
+        },
+        {
+          "id": "osc2.shape",
+          "try": "Set to 1",
+          "hear": "A buzzier melody oscillator."
+        }
+      ]
+    },
+    {
+      "id": "mussolini-bass",
+      "name": "Body-Music Bass",
+      "ref": "In the style of DAF — \"Der Mussolini\"",
+      "artist": "DAF",
+      "tags": ["bass", "ebm", "neue deutsche welle", "80s"],
+      "level": 1,
+      "blurb": "A hard, tight, sequenced bass that hammers out eighth notes.",
+      "how": "DAF’s bass is a tight, punchy sequence. A sawtooth with a pulse below, a hard filter pluck and no tail.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.3],
+          [0.5, 36, 0.3],
+          [1, 48, 0.3],
+          [1.5, 36, 0.3],
+          [2, 39, 0.3],
+          [2.5, 36, 0.3],
+          [3, 46, 0.3],
+          [3.5, 36, 0.3]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Hard tones",
+          "module": "osc",
+          "why": "A saw and a pulse below.\n- Osc 1 SHAPE 2 (saw), Osc 1 RANGE 16’, Osc 2 SHAPE 1 (pulse), Osc 2 RANGE 32’: hard.\n- OSC MIX −1.5: saw on top.\n- Listen for: a hard bass.",
+          "set": {
+            "osc1.shape": 2,
+            "osc1.range": "16",
+            "osc2.shape": 1,
+            "osc2.range": "32",
+            "osc.mix": -1.5
+          }
+        },
+        {
+          "title": "Pluck",
+          "module": "filter",
+          "why": "A hard pluck.\n- FREQ 5 (about 390 Hz): dark.\n- RESO 3.5: punchy.\n- ENV DEPTH 5, Env 2 A 0 (1 ms), Env 2 D 3.5 (44 ms), Env 2 S 0, Env 2 R 2 (8 ms): a hard pluck.\n- Listen for: a punchy bass.",
+          "set": {
+            "vcf.freq": 5,
+            "vcf.reso": 3.5,
+            "vcf.envDepth": 5,
+            "env2.a": 0,
+            "env2.d": 3.5,
+            "env2.s": 0,
+            "env2.r": 2
+          }
+        },
+        {
+          "title": "Tight",
+          "module": "amp",
+          "why": "Tight notes.\n- Env 1 A 0 (1 ms), Env 1 D 4.5 (100 ms), Env 1 S 3, Env 1 R 2 (8 ms): tight.\n- Listen for: a hammering sequence.",
+          "set": {
+            "env1.a": 0,
+            "env1.d": 4.5,
+            "env1.s": 3,
+            "env1.r": 2
+          }
+        }
+      ],
+      "context": {
+        "vcf.envDepth": "How hard each note hits."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.reso",
+          "try": "Raise to 5.5",
+          "hear": "A more acidic bass."
+        },
+        {
+          "id": "env1.s",
+          "try": "Raise to 7",
+          "hear": "Fatter notes."
+        }
+      ]
+    },
+    {
+      "id": "headhunter-ebm-bass",
+      "name": "Driving EBM Bass",
+      "ref": "In the style of Front 242 — \"Headhunter\"",
+      "artist": "Front 242",
+      "tags": ["bass", "ebm", "industrial", "80s"],
+      "level": 2,
+      "blurb": "A gritty, galloping sequenced bass with a short echo doubling it.",
+      "how": "EBM basses gallop in sixteenths. A sawtooth with a pluck and drive, and a sixteenth-note echo that fills in the gallop.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.25],
+          [0.75, 33, 0.25],
+          [1, 33, 0.25],
+          [1.75, 33, 0.25],
+          [2, 36, 0.25],
+          [2.75, 33, 0.25],
+          [3, 31, 0.25],
+          [3.75, 33, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Saw",
+          "module": "osc",
+          "why": "A saw an octave down.\n- Osc 1 SHAPE 2 (saw), Osc 1 RANGE 16’: gritty.\n- Listen for: a saw.",
+          "set": {
+            "osc1.shape": 2,
+            "osc1.range": "16"
+          }
+        },
+        {
+          "title": "Pluck",
+          "module": "filter",
+          "why": "A pluck.\n- FREQ 5.5 (about 560 Hz), RESO 3: mid.\n- ENV DEPTH 4, Env 2 A 0 (1 ms), Env 2 D 3.5 (44 ms), Env 2 S 0, Env 2 R 2 (8 ms): pluck.\n- Listen for: a pluck.",
+          "set": {
+            "vcf.freq": 5.5,
+            "vcf.reso": 3,
+            "vcf.envDepth": 4,
+            "env2.a": 0,
+            "env2.d": 3.5,
+            "env2.s": 0,
+            "env2.r": 2
+          }
+        },
+        {
+          "title": "Gallop",
+          "module": "fx",
+          "why": "Drive and a sixteenth-note echo.\n- DRIVE 4.5: gritty.\n- Env 1 A 0 (1 ms), Env 1 D 4 (67 ms), Env 1 S 0, Env 1 R 2 (8 ms): short.\n- delay TIME 6.4 (200 ms), REPEATS 2.5, delay MIX 3.5: a sixteenth-note echo.\n- Listen for: a galloping, driving bass.",
+          "set": {
+            "od.drive": 4.5,
+            "env1.a": 0,
+            "env1.d": 4,
+            "env1.s": 0,
+            "env1.r": 2,
+            "delay.time": 6.4,
+            "delay.repeats": 2.5,
+            "delay.mix": 3.5
+          }
+        }
+      ],
+      "context": {
+        "delay.time": "The echo that fills in the gallop."
+      },
+      "tweaks": [
+        {
+          "id": "delay.repeats",
+          "try": "Raise to 4.5",
+          "hear": "A busier, more rolling gallop."
+        },
+        {
+          "id": "od.drive",
+          "try": "Raise to 7",
+          "hear": "A harder, more industrial grit."
+        }
+      ]
+    },
+    {
+      "id": "norwegian-wood-sitar",
+      "name": "Sync Sitar",
+      "ref": "In the style of The Beatles — \"Norwegian Wood (This Bird Has Flown)\"",
+      "artist": "The Beatles",
+      "tags": ["lead", "psychedelic", "raga rock", "60s"],
+      "level": 3,
+      "blurb": "A twangy, buzzing, sitar-like lead with a bright \"jvang\" on each note.",
+      "how": "Hard sync gives the sitar’s buzzing twang. With OSC SYNC on, Oscillator 2’s TUNE changes its tone. Envelope 2, patched through Attenuator 1 into OSC 2, sweeps that tone down after each pluck: the \"jvang\". A resonant filter and a little glide finish it.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.5],
+          [0.5, 66, 0.5],
+          [1, 68, 0.5],
+          [1.5, 69, 0.5],
+          [2, 71, 1],
+          [3, 69, 0.5],
+          [3.5, 68, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Synced",
+          "module": "osc",
+          "why": "Sync on; Oscillator 2 carries the tone.\n- Osc 1 SHAPE 2 (saw), Osc 2 SHAPE 2 (saw): saws.\n- OSC SYNC on: hard sync.\n- Osc 2 TUNE +1: a nasal starting tone.\n- OSC MIX +3: mostly Oscillator 2.\n- Listen for: a nasal, buzzy tone.",
+          "set": {
+            "osc1.shape": 2,
+            "osc2.shape": 2,
+            "osc.sync": true,
+            "osc2.tune": 1,
+            "osc.mix": 3
+          }
+        },
+        {
+          "title": "Patch ENV 2 → ATT1 IN, ATT 1 → OSC 2",
+          "module": "patch",
+          "why": "Envelope 2 sweeps the sync tone after each pluck.\n- ENV 2 → ATT1 IN: envelope.\n- ATT 1 out → OSC 2: sweeps the sync tone.\n- ATT 1 4: a wide sweep.\n- Env 2 A 0 (1 ms), Env 2 D 5 (150 ms), Env 2 S 0, Env 2 R 4 (41 ms): a quick fall.\n- Listen for: \"jvang\" on each note.",
+          "set": {
+            "att.1": 4,
+            "env2.a": 0,
+            "env2.d": 5,
+            "env2.s": 0,
+            "env2.r": 4
+          },
+          "cables": [
+            ["j.env2", "j.att1In"],
+            ["j.att1", "j.osc2In"]
+          ]
+        },
+        {
+          "title": "Resonance and slides",
+          "module": "filter",
+          "why": "A resonant filter and a little glide.\n- FREQ 7.5 (about 2.4 kHz), RESO 4: twangy.\n- PORTA TIME 1.5 (220 ms): small slides.\n- Env 1 A 0 (1 ms), Env 1 D 7 (820 ms), Env 1 S 4, Env 1 R 5 (95 ms): a ringing pluck.\n- Listen for: a raga-rock lead.",
+          "set": {
+            "vcf.freq": 7.5,
+            "vcf.reso": 4,
+            "porta.time": 1.5,
+            "env1.a": 0,
+            "env1.d": 7,
+            "env1.s": 4,
+            "env1.r": 5
+          }
+        }
+      ],
+      "context": {
+        "att.1": "How far the twang sweeps."
+      },
+      "tweaks": [
+        {
+          "id": "att.1",
+          "try": "Raise to 6",
+          "hear": "A wilder, more electric twang."
+        },
+        {
+          "id": "env2.d",
+          "try": "Lengthen to 6.5",
+          "hear": "A slower, more singing sweep."
+        }
+      ]
+    },
+    {
+      "id": "khoomei-overtones",
+      "name": "Overtone Singing",
+      "ref": "In the style of Huun-Huur-Tu — \"Prayer\"",
+      "artist": "Huun-Huur-Tu",
+      "tags": ["drone", "world", "tuvan", "throat singing"],
+      "level": 3,
+      "blurb": "A low, buzzing drone with a whistling overtone that slowly sweeps above it.",
+      "how": "Tuvan khoomei singers hold a low note and shape their mouths to pick out single overtones, which whistle above the drone. A narrow pulse has lots of overtones; a very resonant band-pass picks one out, and a slow LFO through MOD DEPTH sweeps it up and down the overtone series.",
+      "phrase": {
+        "bpm": 50,
+        "loop": false,
+        "steps": [[0, 45, 8]]
+      },
+      "steps": [
+        {
+          "title": "A buzzing voice",
+          "module": "osc",
+          "why": "A narrow pulse is all overtones.\n- Osc 1 SHAPE 1 (pulse), Osc 1 WIDTH 1.5, Osc 1 RANGE 16’: buzzy.\n- Listen for: a low buzz.",
+          "set": {
+            "osc1.shape": 1,
+            "osc1.width": 1.5,
+            "osc1.range": "16"
+          }
+        },
+        {
+          "title": "One overtone",
+          "module": "filter",
+          "why": "A very resonant band-pass picks out one overtone.\n- MODE band-pass: band-pass.\n- FREQ 7 (about 1.7 kHz): a high overtone.\n- RESO 8.5: whistling.\n- Listen for: a whistle above the drone.",
+          "set": {
+            "vcf.mode": "bp",
+            "vcf.freq": 7,
+            "vcf.reso": 8.5
+          }
+        },
+        {
+          "title": "The mouth",
+          "module": "mod",
+          "why": "The LFO sweeps the band slowly.\n- MOD DEPTH 2.5, LFO RATE 2.2 (0.25 Hz), LFO SHAPE 1 (triangle): slow sweeps through the overtones.\n- Listen for: a melody of overtones.",
+          "set": {
+            "vcf.modDepth": 2.5,
+            "lfo.rate": 2.2,
+            "lfo.shape": 1
+          }
+        },
+        {
+          "title": "Held",
+          "module": "amp",
+          "why": "A long, held breath.\n- Env 1 A 4 (15 ms), Env 1 D 8 (1.9 s), Env 1 S 10, Env 1 R 6 (220 ms): swells in.\n- VOLUME 9: the narrow band costs level.\n- Listen for: a meditative drone.",
+          "set": {
+            "env1.a": 4,
+            "env1.d": 8,
+            "env1.s": 10,
+            "env1.r": 6,
+            "out.volume": 9
+          }
+        }
+      ],
+      "context": {
+        "vcf.freq": "Which overtone sings.",
+        "vcf.reso": "How pure the whistle is."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.reso",
+          "try": "Raise to 9.5",
+          "hear": "A purer, more piercing whistle."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Raise to 3",
+          "hear": "A quicker overtone melody."
+        }
+      ]
+    },
+    {
+      "id": "guzheng-gliss",
+      "name": "Guzheng",
+      "ref": "In the style of the Chinese guzheng (zither)",
+      "artist": "Chinese guzheng tradition",
+      "tags": ["pluck", "chinese", "world"],
+      "level": 2,
+      "blurb": "A bright, twangy plucked zither with a ringing tail, lovely in fast glissandi.",
+      "how": "The guzheng has 21 strings over moveable bridges; its sweeping glissandi are its signature. A saw–triangle with a resonant pluck, a long ring and a short echo.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.125],
+          [0.125, 64, 0.125],
+          [0.25, 67, 0.125],
+          [0.375, 69, 0.125],
+          [0.5, 72, 0.125],
+          [0.625, 74, 0.125],
+          [0.75, 76, 0.125],
+          [0.875, 79, 1.125],
+          [2, 74, 0.5],
+          [2.5, 72, 0.5],
+          [3, 69, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A string",
+          "module": "osc",
+          "why": "A saw–triangle blend.\n- Osc 1 SHAPE 2.4 (saw–triangle blend): bright but soft.\n- Listen for: a string tone.",
+          "set": {
+            "osc1.shape": 2.4
+          }
+        },
+        {
+          "title": "Twang",
+          "module": "filter",
+          "why": "A resonant pluck.\n- FREQ 6.5 (about 1.2 kHz), RESO 4: twangy.\n- KEY TRK on: follows the keys.\n- ENV DEPTH 3.5, Env 2 A 0 (1 ms), Env 2 D 4.5 (100 ms), Env 2 S 0, Env 2 R 4 (41 ms): a pluck.\n- Listen for: a twang.",
+          "set": {
+            "vcf.freq": 6.5,
+            "vcf.reso": 4,
+            "vcf.keyTrk": true,
+            "vcf.envDepth": 3.5,
+            "env2.a": 0,
+            "env2.d": 4.5,
+            "env2.s": 0,
+            "env2.r": 4
+          }
+        },
+        {
+          "title": "Ring",
+          "module": "amp",
+          "why": "A long ring and a short echo.\n- Env 1 A 0 (1 ms), Env 1 D 8 (1.9 s), Env 1 S 0, Env 1 R 7 (500 ms): a long ring.\n- delay TIME 7 (240 ms), REPEATS 2.5, delay MIX 2: a little space.\n- Listen for: a shimmering glissando.",
+          "set": {
+            "env1.a": 0,
+            "env1.d": 8,
+            "env1.s": 0,
+            "env1.r": 7,
+            "delay.time": 7,
+            "delay.repeats": 2.5,
+            "delay.mix": 2
+          }
+        }
+      ],
+      "context": {
+        "vcf.reso": "How twangy the string is."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.reso",
+          "try": "Raise to 6",
+          "hear": "A twangier, koto-like string."
+        },
+        {
+          "id": "env1.d",
+          "try": "Shorten to 6.5",
+          "hear": "A drier, damped pluck."
+        }
+      ]
+    },
+    {
+      "id": "hurdy-gurdy-drone",
+      "name": "Hurdy-Gurdy",
+      "ref": "In the style of the hurdy-gurdy in medieval and folk music",
+      "artist": "Medieval and folk hurdy-gurdy",
+      "tags": ["strings", "medieval", "folk"],
+      "level": 2,
+      "blurb": "A buzzing, droning wheel-fiddle: a nasal melody over a steady drone string.",
+      "how": "A hurdy-gurdy’s rosined wheel bows a drone string and the melody strings together, with a buzzing bridge. PARAPHONIC lets one oscillator hold the drone while the other plays the melody, and a narrow pulse with a little noise gives the buzz.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 50, 8],
+          [0, 62, 1],
+          [1, 64, 0.5],
+          [1.5, 65, 0.5],
+          [2, 67, 1],
+          [3, 65, 0.5],
+          [3.5, 64, 0.5],
+          [4, 62, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Drone and melody",
+          "module": "osc",
+          "why": "Narrow pulses, paraphonic.\n- Osc 1 SHAPE 1 (pulse), Osc 1 WIDTH 2, Osc 2 SHAPE 2 (saw): buzzy.\n- OSC MIX 0: equal.\n- PARAPHONIC on: one key holds the drone, the other plays.\n- NOISE 1.5: the rosined wheel.\n- Listen for: a buzzing drone and melody.",
+          "set": {
+            "osc1.shape": 1,
+            "osc1.width": 2,
+            "osc2.shape": 2,
+            "osc.mix": 0,
+            "osc.para": true,
+            "mix.noise": 1.5
+          }
+        },
+        {
+          "title": "Nasal",
+          "module": "filter",
+          "why": "A nasal band-pass.\n- MODE band-pass, FREQ 7 (about 1.7 kHz), RESO 3: nasal.\n- Listen for: a nasal, buzzing tone.",
+          "set": {
+            "vcf.mode": "bp",
+            "vcf.freq": 7,
+            "vcf.reso": 3
+          }
+        },
+        {
+          "title": "Constant wheel",
+          "module": "amp",
+          "why": "The wheel keeps turning.\n- Env 1 A 1.5 (1 ms), Env 1 D 6 (360 ms), Env 1 S 10, Env 1 R 4.5 (63 ms): steady.\n- VOLUME 8.5: a little more level.\n- Listen for: a medieval dance.",
+          "set": {
+            "env1.a": 1.5,
+            "env1.d": 6,
+            "env1.s": 10,
+            "env1.r": 4.5,
+            "out.volume": 8.5
+          }
+        }
+      ],
+      "context": {
+        "osc.para": "Gives the drone and the melody a voice each."
+      },
+      "tweaks": [
+        {
+          "id": "mix.noise",
+          "try": "Raise to 3",
+          "hear": "A scratchier, rosin-heavy wheel."
+        },
+        {
+          "id": "vcf.reso",
+          "try": "Raise to 5",
+          "hear": "A more nasal, buzzing bridge."
+        }
+      ]
+    },
+    {
+      "id": "lofi-radio-lead",
+      "name": "Old Radio Lead",
+      "ref": "In the style of the band-limited \"old radio\" sounds in lo-fi hip hop",
+      "artist": "Lo-fi hip hop",
+      "tags": ["lead", "lo-fi", "hip hop", "2010s"],
+      "level": 3,
+      "blurb": "A soft lead squeezed through a narrow band, like it is coming out of an old radio.",
+      "how": "The filter has two outputs, and VCF 2 is always a different type from the main one. Here MODE is high-pass, so VCF 2 is band-pass. Patching VCF 2 into OD IN sends the band-pass version on instead of the high-pass one: a thin, boxy \"radio\" lead.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 72, 1],
+          [1, 74, 0.5],
+          [1.5, 76, 0.5],
+          [2, 79, 1],
+          [3, 76, 0.5],
+          [3.5, 74, 0.5],
+          [4, 72, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Soft lead",
+          "module": "osc",
+          "why": "A triangle–saw blend with a slight detune.\n- Osc 1 SHAPE 2.5 (saw–triangle blend), Osc 2 SHAPE 2.5 (saw–triangle blend), Osc 2 TUNE +0.06: soft.\n- OSC MIX 0: equal.\n- Listen for: a soft lead.",
+          "set": {
+            "osc1.shape": 2.5,
+            "osc2.shape": 2.5,
+            "osc2.tune": 0.06,
+            "osc.mix": 0
+          }
+        },
+        {
+          "title": "Patch VCF 2 → OD IN",
+          "module": "patch",
+          "why": "With MODE on high-pass, VCF 2 is band-pass. The cable sends that on, in place of VCF 1.\n- VCF 2 → OD IN: the band-pass output instead of the high-pass one.\n- MODE high-pass: VCF 1 high-pass, VCF 2 band-pass.\n- FREQ 7.3 (about 2.1 kHz): the centre of the radio band.\n- RESO 2.5: a boxy peak.\n- DRIVE 3, overdrive TONE 6: a little speaker crunch.\n- Listen for: a thin, boxy, radio sound.",
+          "set": {
+            "vcf.mode": "hp",
+            "vcf.freq": 7.3,
+            "vcf.reso": 2.5,
+            "od.drive": 3,
+            "od.tone": 6
+          },
+          "cables": [["j.vcf2", "j.odIn"]]
+        },
+        {
+          "title": "Patch ATT 2 → OSC 1+2",
+          "module": "patch",
+          "why": "Attenuator 2 carries the LFO (low-frequency oscillator) by default. Patched into both oscillators’ pitch, it is vibrato, and the ATT 2 knob is its depth. (It also feeds pulse width, which only changes the pulse and tone-mod shapes.)\n- ATT 2 out → OSC 1+2: the LFO, scaled by ATT 2, to pitch.\n- ATT 2 0.7: vibrato depth.\n- LFO RATE 3.8 (1.6 Hz), LFO SHAPE 0 (sine): a smooth sine wobble.\n- Listen for: a slight, wobbly tape wow.",
+          "set": {
+            "att.2": 0.7,
+            "lfo.rate": 3.8,
+            "lfo.shape": 0
+          },
+          "cables": [["j.att2", "j.osc12In"]]
+        },
+        {
+          "title": "Soft",
+          "module": "amp",
+          "why": "A soft attack.\n- Env 1 A 3 (6 ms), Env 1 D 6 (360 ms), Env 1 S 10, Env 1 R 5 (95 ms): soft.\n- VOLUME 9: the narrow band costs level.\n- Listen for: a nostalgic, lo-fi melody.",
+          "set": {
+            "env1.a": 3,
+            "env1.d": 6,
+            "env1.s": 10,
+            "env1.r": 5,
+            "out.volume": 9
+          }
+        }
+      ],
+      "context": {
+        "vcf.mode": "High-pass here, so VCF 2 (patched) is band-pass."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.freq",
+          "try": "Lower to 6.5",
+          "hear": "A smaller, more muffled radio."
+        },
+        {
+          "id": "att.2",
+          "try": "Raise to 1.5",
+          "hear": "Worn tape with obvious wow."
+        }
+      ]
     }
   ]
 }
