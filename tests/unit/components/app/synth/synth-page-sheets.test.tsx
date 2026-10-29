@@ -297,6 +297,15 @@ describe('at lg and up', () => {
 });
 
 describe('below lg', () => {
+  it('turns the panel face up from Signal routing when the Inspector sheet opens', () => {
+    phone();
+    page();
+    fireEvent.click(screen.getByRole('button', { name: 'Signal routing' }));
+    expect(screen.getByRole('img', { name: 'Model D signal routing' })).toBeTruthy();
+    fireEvent.click(within(bar()).getByRole('button', { name: 'Inspector' }));
+    expect(screen.queryByRole('img', { name: 'Model D signal routing', hidden: true })).toBeNull();
+  });
+
   it('puts the four regions behind a bar, each opening as its own sheet, and keeps About on the page', () => {
     phone();
     page();

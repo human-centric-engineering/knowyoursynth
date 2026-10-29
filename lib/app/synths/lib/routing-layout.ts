@@ -145,14 +145,16 @@ export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): 
   controlIds.forEach(place);
   // A block beneath that feeds nothing (a sink, or one whose only way out is a cable) goes one column right of the
   // latest block that feeds it, so that edge runs forward; with nothing feeding it either, the first column.
-  for (let moved = true; moved;) {
+  // Settled together, since a sink can feed another: each pass moves a sink right of every feeder placed so far, and
+  // a loop between sinks stops after as many passes as there are sinks.
+  const sinks = controlIds.filter((id) => !at.has(id));
+  for (let pass = 0, moved = true; moved && pass <= sinks.length; pass++) {
     moved = false;
-    for (const id of controlIds) {
-      if (at.has(id)) continue;
+    for (const id of sinks) {
       const after = routing.edges
-        .filter((e) => e.to === id && !back.has(e.id) && at.has(e.from))
+        .filter((e) => e.to === id && e.from !== id && !back.has(e.id) && at.has(e.from))
         .map((e) => (at.get(e.from) ?? 0) + 1);
-      if (after.length) {
+      if (after.length && Math.max(...after) !== at.get(id)) {
         at.set(id, Math.max(...after));
         moved = true;
       }
@@ -193,7 +195,12 @@ export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): 
     (l) => {
       const isBack = back.has(l.id) || blocks[l.to].col <= blocks[l.from].col;
       const over = blocks[l.from].band === 'audio' && blocks[l.to].band === 'audio';
-      return { id: l.id, from: l.from, to: l.to, back: isBack ? (over ? 'top' : 'bottom') : null };
+      return {
+        id: l.id,
+        from: l.from,
+        to: l.to,
+        back: isBack ? (over ? ('top' as const) : ('bottom' as const)) : null,
+      };
     }
   );
 
@@ -233,13 +240,15 @@ export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): 
     long.map((i, k) => [i, (channel ?? 0) + (k % 2 ? 1 : -1) * Math.ceil(k / 2) * step])
   );
 
-  // Back links round the same side each take a lane of their own, outward from the margin's middle.
+  // Back links round the same side each take a lane of their own, outward from the margin's middle and kept inside it.
+  const backMid = (side: 'top' | 'bottom') => (side === 'top' ? MARGIN / 2 : height - MARGIN / 2);
   const backLane = new Map<number, number>();
   for (const side of ['top', 'bottom'] as const) {
-    const mid = side === 'top' ? MARGIN / 2 : height - MARGIN / 2;
-    links
-      .flatMap((l, i) => (l.back === side ? [i] : []))
-      .forEach((i, k) => backLane.set(i, mid + (k % 2 ? 1 : -1) * Math.ceil(k / 2) * LANE_GAP));
+    const on = links.flatMap((l, i) => (l.back === side ? [i] : []));
+    const gap = Math.min(LANE_GAP, (MARGIN / 2 - 2) / Math.max(1, Math.ceil((on.length - 1) / 2)));
+    on.forEach((i, k) =>
+      backLane.set(i, backMid(side) + (k % 2 ? 1 : -1) * Math.ceil(k / 2) * gap)
+    );
   }
 
   const r = COL_GAP / 2;
@@ -250,7 +259,7 @@ export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): 
     const ty = port.get(`${i}:in`) ?? centre(l.to);
     if (l.back) {
       // Out to the right, round the top or the bottom, back along and into the target's left.
-      const y = backLane.get(i) ?? MARGIN / 2;
+      const y = backLane.get(i) ?? backMid(l.back);
       return `M${sx},${sy} C${sx + r},${sy} ${sx + r},${y} ${sx},${y} L${tx},${y} C${tx - r},${y} ${tx - r},${ty} ${tx},${ty}`;
     }
     const y = lane.get(i);

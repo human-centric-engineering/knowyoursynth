@@ -627,11 +627,15 @@ function Synth({
   // From `lg` up (t-74): the lesson card over the panel, the sounds in a drawer on the left, the tutor's drawer over the panel,
   // and the dock's piano. The card's side and the piano are remembered in this browser.
   const [card, setCard] = useState<CardId | null>(null);
-  // What works on the panel itself turns it face up again from the routing view: a find, a lesson step, the tour, a
-  // layer or the Inspector coming on. Turning one off leaves the view be, and so does Undo (it lights what it changes,
-  // which the view follows).
-  const finding = useStore(findStore, (f) => f !== null);
-  const panelWork = [finding, step, tourOn, areasOn, dimOn, heatOn, card === 'inspector'];
+  // What works on the panel itself turns it face up again from the routing view: a find (a new one too), a lesson
+  // step, the tour, Explain sections or the Inspector coming on. Turning one off leaves the view be, and so does Undo
+  // (it lights what it changes, which the view follows). Dim unused and Sensitive are left out: they point at nothing,
+  // and they come from stored settings that can land after the view is open.
+  const finding = useStore(findStore, (f) =>
+    f === null ? null : f.kind === 'areas' ? `areas:${f.ids.join(',')}` : `${f.kind}:${f.id}`
+  );
+  const inspecting = card === 'inspector' || sheet === 'inspector';
+  const panelWork = [finding, step, tourOn, areasOn, inspecting];
   const [seenWork, setSeenWork] = useState(panelWork);
   if (panelWork.some((v, i) => v !== seenWork[i])) {
     setSeenWork(panelWork);

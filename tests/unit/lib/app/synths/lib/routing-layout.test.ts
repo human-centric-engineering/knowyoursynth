@@ -186,6 +186,48 @@ describe('layoutRouting: the rules', () => {
     expect(l.edges.find((e) => e.id === '3')?.back).toBe(false);
   });
 
+  it('puts a sink fed by a later sink right of it too', () => {
+    // `s1` comes first in the routing's order but is fed by `s2`, itself a sink of `lfo`.
+    const l = layoutRouting(
+      small(
+        ['a', 'out', 's1', 'lfo', 's2'],
+        [
+          edge('1', 'a', 'out'),
+          edge('2', 'lfo', 'a', 'cv'),
+          edge('3', 'lfo', 's2', 'cv'),
+          edge('4', 's2', 's1', 'cv'),
+          edge('5', 'lfo', 's1', 'cv'),
+        ]
+      )
+    );
+    expect(l.blocks.s2.col).toBe(l.blocks.lfo.col + 1);
+    expect(l.blocks.s1.col).toBe(l.blocks.s2.col + 1);
+    expect(l.edges.some((e) => e.back)).toBe(false);
+  });
+
+  it('keeps many back links round the top inside the margin, above the blocks', () => {
+    const many = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+    const l = layoutRouting(
+      small(
+        [...many, 'out'],
+        [
+          ...many.map((b) => edge(`in-${b}`, b, 'out')),
+          ...many.map((b) => edge(`back-${b}`, 'out', b)),
+        ]
+      )
+    );
+    const top = Math.min(...Object.values(l.blocks).map((b) => b.y));
+    const lanes = l.edges
+      .filter((e) => e.back)
+      .map((e) => Math.min(...points(e.d).map((p) => p.y)));
+    expect(lanes).toHaveLength(8);
+    expect(new Set(lanes).size).toBe(8);
+    for (const y of lanes) {
+      expect(y).toBeGreaterThan(0);
+      expect(y).toBeLessThan(top);
+    }
+  });
+
   it('gives each back link round the same side a lane of its own', () => {
     const l = layoutRouting(
       small(

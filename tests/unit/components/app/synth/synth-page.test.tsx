@@ -2087,6 +2087,10 @@ describe('SynthPage signal routing', () => {
       expect(diagram()).toBeNull();
       expect(away()).toBe(false);
     }
+    // A new find while one is up turns it face up too.
+    fireEvent.click(toggle());
+    act(() => findStore.set({ kind: 'control', id: 'filter.emphasis' }));
+    expect(diagram()).toBeNull();
     // Turning one off again leaves the view be.
     act(() => findStore.set(null));
     fireEvent.click(toggle());

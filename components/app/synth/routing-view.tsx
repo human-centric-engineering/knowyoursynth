@@ -12,6 +12,7 @@
  */
 
 import { useId, useMemo } from 'react';
+import { z } from 'zod';
 import type { CSSProperties } from 'react';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
 import { routingState } from '@/lib/app/synths/lib/routing';
@@ -40,27 +41,20 @@ export function RoutingView({
     [def, routing, values, cables, wheel]
   );
   // Laid out again only when a cable goes in or comes out, not on every turn of a knob: `state.cables` is a new array
-  // each time, so the memo is keyed on the blocks each cable joins.
-  const cableEnds = state.cables.map((c) => `${c.fromBlock}>${c.toBlock}`).join(' ');
-  const layout = useMemo(
-    () =>
-      layoutRouting(
-        routing,
-        cableEnds
-          .split(' ')
-          .filter(Boolean)
-          .map((ends, i) => {
-            const [from, to] = ends.split('>');
-            return { id: `cable:${i}`, from, to };
-          })
-      ),
-    [routing, cableEnds]
-  );
+  // each time, so the memo is keyed on the blocks each cable joins (as JSON, which no id can break).
+  const cableEnds = JSON.stringify(state.cables.map((c) => [c.fromBlock, c.toBlock]));
+  const { layout, cablePath } = useMemo(() => {
+    const ends = z.array(z.tuple([z.string(), z.string()])).parse(JSON.parse(cableEnds));
+    const l = layoutRouting(
+      routing,
+      ends.map(([from, to], i) => ({ id: `cable:${i}`, from, to }))
+    );
+    // A cable's path by its id: the layout leaves out one whose ends are not both blocks.
+    return { layout: l, cablePath: new Map(l.cables.map((p) => [p.id, p])) };
+  }, [routing, cableEnds]);
   const size: CSSProperties & Record<'--routing-w', string> = {
     '--routing-w': `${layout.width}px`,
   };
-  // A cable's path by its id: the layout leaves out one whose ends are not both blocks.
-  const cablePath = new Map(layout.cables.map((p) => [p.id, p]));
   const byId = useMemo(() => new Map(routing.blocks.map((b) => [b.id, b])), [routing]);
   const colourOf = (block: string) => moduleOf(byId.get(block)?.module).color;
   // A cable's colour, from the patch: `state.cables` keeps the patch's order but drops a cable it cannot place.
