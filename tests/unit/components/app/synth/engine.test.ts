@@ -46,6 +46,7 @@ describe('toStores', () => {
       overload: 0.1,
       voices: 0,
       env1: 0,
+      env2: 0,
       seq: -1,
       pulser: 0,
       power: false,
@@ -54,8 +55,14 @@ describe('toStores', () => {
 
   it('keeps the optional meter fields when given, including a sequencer step of 0', async () => {
     const { toStores, meterStore } = await load();
-    toStores(meter({ voices: 3, env1: 0.7, seq: 0, pulser: 0.2 }));
-    expect(meterStore.get()).toMatchObject({ voices: 3, env1: 0.7, seq: 0, pulser: 0.2 });
+    toStores(meter({ voices: 3, env1: 0.7, env2: 0.4, seq: 0, pulser: 0.2 }));
+    expect(meterStore.get()).toMatchObject({
+      voices: 3,
+      env1: 0.7,
+      env2: 0.4,
+      seq: 0,
+      pulser: 0.2,
+    });
   });
 
   it('adds a note on, once, and removes it on note off', async () => {
