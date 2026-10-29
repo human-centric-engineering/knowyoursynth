@@ -10,6 +10,7 @@ from the definition.
 | The shapes (source of truth)                           | `lib/app/synths/contract.ts`                            |
 | The definitions                                        | `lib/app/synths/defs/<id>.ts` (ported in m1 and p1–p5)  |
 | Sound validator (unknown controls, ranges, bad cables) | `lib/app/synths/validate.ts`                            |
+| Signal routing (the routing view's diagram)            | `lib/app/synths/routing/<id>.ts`, `lib/routing.ts`      |
 | The sound engine, worklet and probe worker             | `lib/app/synths/audio/`, built to `public/worklets/`    |
 | Shared library (layout, explainers, sound map, tour)   | `lib/app/synths/lib/`                                   |
 | The check: every sound against the baseline            | `npm run check:synths` (`.context/app/check/README.md`) |
@@ -199,6 +200,51 @@ or `null` to remove one of the engine's built-ins (`vcfIn←mixer`, `odIn←vcf1
 functions are how a panel depth knob scales whatever is patched into (or normalled to) its
 jack. **Routes** are panel routings: they sum and never break a normal; `by` multiplies a
 route's depth by a second signal.
+
+## Signal routing
+
+How the parts are wired behind the panel, for the routing view: one **`SynthRouting`** per synth in
+`lib/app/synths/routing/<id>.ts`, registered in `routing/index.ts` (`SYNTH_ROUTINGS`). It sits beside the
+definition, not on it. A synth with no routing has no routing view.
+
+- **Blocks** are the parts (`osc1`, `mixer`, `filter`), each with a `module` for its colour, a `description`
+  and the `specs` its hover card lists; `passes: true` marks one that makes no signal of its own (a mixer, the
+  mod bus). **Edges** join them, each with its `signal` (`audio`, `cv`, `gate`) and
+  the rule for when it carries signal: `when` (switches, in the definition's control ids), `levels` (controls
+  that scale it) and `breaks` (the input jack whose cable breaks this normal). An edge with none is fixed.
+  `jacks` puts every jack of the definition in a block, so any cable can be drawn.
+- **Projected by hand from the spec.** Block and edge ids are the spec's module and connection ids
+  (`.context/app/synth-data/<id>/<id>.synth.json`); everything they depend on is in the definition's ids. Hand-written
+  rather than generated: the spec and the definition share no ids, and each edge takes judgement (which control
+  is the spec's `mixer.osc1_on`, whether a jack sums or breaks its normal, a crossfade the spec only describes),
+  so a generated module would be edited afterwards and could never be regenerated. The test below gives the
+  drift check a script would have.
+- **`routingState(def, routing, { values, cables, wheel })`** (`lib/routing.ts`) says which blocks, edges and
+  cables are live. Pure, like `toEngine()`. An edge is enabled while its `when` holds, its levels multiply to
+  more than `ROUTING_FLOOR` (0.0005, the floor below which `toEngine()` drops a mod route) and no cable has
+  broken it; a block has signal if it makes its own, or if it `passes` and an enabled edge or cable from a block
+  with signal feeds it; a block is live while it has signal and an enabled edge or cable leads from it to `out`
+  through blocks with signal; an edge or cable is live while it is enabled, its source has signal and its
+  target is live. So Model D's mod bus goes dark, lines out and all, when MOD MIX leaves each source under the
+  floor, and the mixer does with every channel off. A cable into a jack that breaks a normal takes the
+  normal's place, and needs the normal's `when` and `levels` to be heard (MOD SOURCE is ignored with the switch
+  on LFO). `@wheel` (`WHEEL`, from `lib/patch.ts`) in a level is the mod wheel.
+- **Levels are amounts, 0 to 1.** A continuous control's id runs from its `min` to its `max`; `{ id, off }` is 0
+  at `off` and rises away from it (a switch is 0 at `off`, 1 elsewhere); `{ id, pow }` curves it as the engine
+  does (MOD DEPTH squared); `{ sum }` adds. A missing value is 0, as `toEngine()` hears it. Give a level the
+  engine's whole product where it drops a route below a floor: Model D's source edges carry their MOD MIX share
+  times the depth, as the engine's `(1 - m) * depth > 0.0005` does.
+- **Structural, not heard.** A level at zero is judged from the panel, not from the voice. The sound map answers a different question by probing the voice, asynchronously and
+  only in the browser, so the routing cannot use it and stay pure. The two can disagree: a filter closed to
+  nothing is still on the path. Where the definition says more than the spec (Model D's MOD MIX crossfade), the
+  routing follows the definition.
+- **`tests/unit/lib/app/synths/routing.test.ts`** holds every registered routing to its definition
+  (`routingProblems`: every control, value and jack exists, a normal is broken only by a jack that is not
+  `add` and by one edge at most, every jack has a block, every block has a way to the output through edges or
+  some cable, every `passes` block has an edge or input jack into it) and to its spec (every module and
+  connection is drawn, or listed in `omitted` with the reason).
+
+Model D's is the worked example.
 
 ## Sounds
 
