@@ -209,7 +209,10 @@ definition, not on it. A synth with no routing has no routing view.
 
 - **Blocks** are the parts (`osc1`, `mixer`, `filter`), each with a `module` for its colour, a `description`
   and the `specs` its hover card lists; `passes: true` marks one that makes no signal of its own (a mixer, the
-  mod bus). **Edges** join them, each with its `signal` (`audio`, `cv`, `gate`) and
+  mod bus). `symbol` names its schematic symbol where the module does not say (`noise`, `input`, `midi`), and
+  `meter` the engine meter that shows it working (`gate`, `env1`, `env2`, `lfo`), for the view's glow; check
+  which envelope the definition's `toEngine()` gives each contour (Model D: `env1` filter, `env2` loudness).
+  **Edges** join them, each with its `signal` (`audio`, `cv`, `gate`) and
   the rule for when it carries signal: `when` (switches, in the definition's control ids), `levels` (controls
   that scale it) and `breaks` (the input jack whose cable breaks this normal). An edge with none is fixed.
   `jacks` puts every jack of the definition in a block, so any cable can be drawn.

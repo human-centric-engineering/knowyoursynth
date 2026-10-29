@@ -2807,7 +2807,7 @@ svg .kys-hit:focus-visible {
   --rt-face: var(--rail-face, #16181e);
   --rt-ink: var(--rail-print, #ece9e2);
   --rt-dim: color-mix(in srgb, var(--rt-ink) 55%, var(--rt-face));
-  --rt-faint: color-mix(in srgb, var(--rt-ink) 14%, transparent);
+  --rt-faint: color-mix(in srgb, var(--rt-ink) 8%, transparent);
   display: flex;
   flex-direction: column;
   gap: 6px;
