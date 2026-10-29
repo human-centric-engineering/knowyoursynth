@@ -58,3 +58,22 @@ export function writeBaselineRefusal(run: {
     return `${run.synth} already has a baseline. A sound that differs from it is the sound's to fix; delete the file only if the sounds are meant to change`;
   return null;
 }
+
+/**
+ * Why `check:synths --add-sounds` must not run, or `null` when it may. It appends the sounds a synth's library has
+ * gained to that synth's existing baseline, ported or native, and refuses to write if any recorded sound differs, so a
+ * recorded entry is never rewritten. A ported synth's new sounds have no prototype rendering; their entries are the
+ * app's own, as a native synth's are.
+ */
+export function addSoundsRefusal(run: {
+  write: boolean;
+  synth: string | null;
+  soundFilter: string | undefined;
+  baselineExists: boolean;
+}): string | null {
+  if (run.write) return 'use --add-sounds or --write-baseline, not both';
+  if (!run.synth) return '--add-sounds adds to one synth: name it';
+  if (run.soundFilter) return '--add-sounds checks whole synths – drop the sound filter';
+  if (!run.baselineExists) return `${run.synth} has no baseline to add to`;
+  return null;
+}

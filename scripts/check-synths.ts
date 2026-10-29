@@ -33,6 +33,9 @@
  *
  * A synth written straight into the app (`scripts/native-synths.ts`) has no prototype: it is checked like a ported one
  * without the parity check, and `--write-baseline` records its first baseline, once. It never overwrites a baseline.
+ * - `--add-sounds` for one synth, ported or native: a `--compare` that appends the sounds its library has gained to its
+ *   baseline instead of failing on them. Every recorded sound must still match, or nothing is written, and no recorded
+ *   entry is rewritten. A ported synth's added entries are the app's rendering: the prototype never had those sounds.
  * - One tightening: under `--compare` a different sample hash is an error here, where `check.mjs` only noted it. The
  *   port is meant to be exact, so "agrees to the fingerprint's precision" is not good enough.
  *
@@ -42,6 +45,7 @@
  *   npm run check:synths -- neutron reese         one synth, only sounds whose id contains "reese"
  *   npm run check:synths -- model-d --compare     one synth against its baseline
  *   npm run check:synths -- donner-b1 --write-baseline   a native synth's first baseline (refuses to overwrite one)
+ *   npm run check:synths -- model-d --add-sounds         append a synth's new sounds to its baseline
  * Flags (anywhere on the line, after npm's `--`):
  *   --seed=N            seed for Math.random, reset before every sound (default 20240919, as the sound-map probe)
  *   --compare           compare each synth's fingerprints with .context/app/check/<synth>.json; any difference is an error
@@ -73,6 +77,7 @@ import {
   NATIVE_SYNTHS,
   nativeSynthProblems,
   writeBaselineRefusal,
+  addSoundsRefusal,
 } from '@/scripts/native-synths';
 import { loadPrototypeSynths } from '@/scripts/prototype-synths';
 import { explainCable } from '@/lib/app/synths/lib/explain';
@@ -263,7 +268,7 @@ async function main(): Promise<void> {
   const optValue = (name: string): string | undefined => (opt(name) || '').split('=')[1];
   for (const f of flags) {
     if (
-      !['seed', 'compare', 'jobs', 'write-baseline'].some(
+      !['seed', 'compare', 'jobs', 'write-baseline', 'add-sounds'].some(
         (n) => f === `--${n}` || f.startsWith(`--${n}=`)
       )
     ) {
@@ -271,7 +276,11 @@ async function main(): Promise<void> {
       process.exit(1);
     }
     // On or off by being there: `--write-baseline=false` would otherwise still write one.
-    if (f.startsWith('--compare=') || f.startsWith('--write-baseline=')) {
+    if (
+      f.startsWith('--compare=') ||
+      f.startsWith('--write-baseline=') ||
+      f.startsWith('--add-sounds=')
+    ) {
       console.log(`ERR ${f.split('=')[0]} takes no value`);
       process.exit(1);
     }
@@ -281,8 +290,10 @@ async function main(): Promise<void> {
     console.log('ERR --seed needs a whole number, as --seed=42');
     process.exit(1);
   }
-  const COMPARE = !!opt('compare');
   const WRITE = !!opt('write-baseline');
+  // `--add-sounds` is a `--compare` that records the sounds the baseline lacks instead of failing on them.
+  const ADD = !!opt('add-sounds');
+  const COMPARE = !!opt('compare') || ADD;
   const BASELINE_DIR = join(ROOT, '.context', 'app', 'check');
 
   const norm = (t: string | undefined): string =>
@@ -321,6 +332,21 @@ async function main(): Promise<void> {
   const SR = 48000;
   const baselineFile = (id: string): string => join(BASELINE_DIR, `${id}.json`);
 
+  // `--add-sounds` adds new sounds to one synth's baseline and leaves every recorded one as it is (`addSoundsRefusal`). It
+  // goes first, so `--add-sounds --write-baseline` is refused as the conflict it is.
+  if (ADD) {
+    const refuse = addSoundsRefusal({
+      write: WRITE,
+      synth: onlySynth,
+      soundFilter: onlyPreset,
+      baselineExists: !!onlySynth && existsSync(baselineFile(onlySynth)),
+    });
+    if (refuse) {
+      console.log(`ERR ${refuse}`);
+      process.exit(1);
+    }
+  }
+
   // `--write-baseline` records a native synth's first baseline, and nothing else (`writeBaselineRefusal`).
   if (WRITE) {
     const refuse = writeBaselineRefusal({
@@ -334,7 +360,6 @@ async function main(): Promise<void> {
       process.exit(1);
     }
   }
-
   // Every synth at once: one process per synth, as many at a time as there are cores. A full run is about 1,100 sounds of
   // 3 s each, roughly half an hour on one core and about ten minutes on eight. Each synth's report is printed whole, in
   // catalogue order.
@@ -480,7 +505,8 @@ async function main(): Promise<void> {
 
   type Sound = Pick<Preset, 'id' | 'steps' | 'phrase'> & Partial<Preset>;
 
-  let toWrite: (Baseline & { sampleRate: number; seconds: number }) | null = null;
+  let toWrite: (Baseline & { sampleRate?: number; seconds?: number }) | null = null;
+  let addedCount = 0;
   for (const def of SYNTHS) {
     if (onlySynth && def.id !== onlySynth) continue;
     const d = drift.get(def.id);
@@ -555,6 +581,7 @@ async function main(): Promise<void> {
     }
     const ids = new Set<string>();
     const prints: Record<string, Fingerprint> = {};
+    const added: string[] = [];
     let baseline: Baseline | null = null;
     if (COMPARE) {
       try {
@@ -722,8 +749,10 @@ async function main(): Promise<void> {
       prints[p.id] = print;
       if (baseline) {
         const was = baseline.sounds[p.id];
-        if (!was) E(`${tag} is not in the baseline`);
-        else {
+        if (!was) {
+          if (ADD) added.push(p.id);
+          else E(`${tag} is not in the baseline`);
+        } else {
           const moved = FIELDS.filter((k) => JSON.stringify(print[k]) !== JSON.stringify(was[k]));
           if (moved.length)
             E(
@@ -739,6 +768,19 @@ async function main(): Promise<void> {
       for (const id of Object.keys(baseline.sounds))
         if (!prints[id]) E(`${def.id}/${id} is in the baseline but no longer in the library`);
     if (WRITE) toWrite = { synth: def.id, seed: SEED, sampleRate: SR, seconds: 3, sounds: prints };
+    // The baseline goes back exactly as it was read, header and recorded sounds; only the new ones are appended, after them.
+    if (ADD && baseline) {
+      addedCount = added.length;
+      if (added.length)
+        toWrite = {
+          ...baseline,
+          sounds: {
+            ...baseline.sounds,
+            ...Object.fromEntries(added.map((id) => [id, prints[id]])),
+          },
+        };
+      else console.log(`${def.id}: no new sounds to add`);
+    }
   }
   if (!rendered) {
     console.log('ERR nothing matched – no sounds were checked');
@@ -760,7 +802,7 @@ async function main(): Promise<void> {
   console.log(
     errs
       ? `\n${errs} errors`
-      : `\nno errors (${rendered} sounds rendered${COMPARE ? ', every one identical to the baseline' : ''})`
+      : `\nno errors (${rendered} sounds rendered${COMPARE ? `, ${ADD ? `every recorded one identical to the baseline, ${addedCount} added` : 'every one identical to the baseline'}` : ''})`
   );
   process.exit(errs ? 1 : 0);
 }

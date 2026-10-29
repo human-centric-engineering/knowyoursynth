@@ -7,6 +7,7 @@
 import { describe, expect, it } from 'vitest';
 import { SYNTH_DEFS } from '@/lib/app/synths/defs';
 import {
+  addSoundsRefusal,
   isNativeSynth,
   NATIVE_SYNTHS,
   nativeSynthProblems,
@@ -73,5 +74,29 @@ describe('writeBaselineRefusal', () => {
     expect(writeBaselineRefusal({ ...run, synth: null })).toMatch(/name it$/);
     expect(writeBaselineRefusal({ ...run, soundFilter: 'acid' })).toMatch(/drop the sound filter$/);
     expect(writeBaselineRefusal({ ...run, compare: true })).toMatch(/not both$/);
+  });
+});
+
+describe('addSoundsRefusal', () => {
+  const run = { write: false, synth: 'model-d', soundFilter: undefined, baselineExists: true };
+
+  it('lets a ported synth add to its baseline', () => {
+    expect(addSoundsRefusal(run)).toBeNull();
+  });
+
+  it('lets a native synth add to its baseline', () => {
+    expect(addSoundsRefusal({ ...run, synth: 'donner-b1' })).toBeNull();
+  });
+
+  it('refuses a synth with no baseline to add to', () => {
+    expect(addSoundsRefusal({ ...run, baselineExists: false })).toBe(
+      'model-d has no baseline to add to'
+    );
+  });
+
+  it('refuses a run over every synth, a sound filter, and --write-baseline alongside', () => {
+    expect(addSoundsRefusal({ ...run, synth: null })).toMatch(/name it$/);
+    expect(addSoundsRefusal({ ...run, soundFilter: 'acid' })).toMatch(/drop the sound filter$/);
+    expect(addSoundsRefusal({ ...run, write: true })).toMatch(/not both$/);
   });
 });

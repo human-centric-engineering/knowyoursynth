@@ -211,8 +211,8 @@ unusual-notes file.
 
 | Synth                    | Id             | Controls | Jacks | Sounds | Engine                       | Port task | Notes                                                           |
 | ------------------------ | -------------- | -------: | ----: | -----: | ---------------------------- | --------- | --------------------------------------------------------------- |
-| Behringer Model D        | `model-d`      |       48 |    15 |     99 | dsp-core                     | m1, m2    | The pattern for the rest                                        |
-| Behringer Neutron        | `neutron`      |       43 |    56 |    103 | dsp-core                     | p1        | Uses every optional faceplate look                              |
+| Behringer Model D        | `model-d`      |       48 |    15 |    200 | dsp-core                     | m1, m2    | The pattern for the rest                                        |
+| Behringer Neutron        | `neutron`      |       43 |    56 |    200 | dsp-core                     | p1        | Uses every optional faceplate look                              |
 | Behringer Pro-1          | `pro1`         |       55 |    15 |     98 | dsp-core                     | p1        |                                                                 |
 | Behringer K-2            | `k2`           |       38 |    34 |     93 | dsp-core                     | p1        | Two filters in series                                           |
 | Behringer 2600           | `b2600`        |       81 |    92 |     93 | dsp-core                     | p1        | Most functions of any synth (134); added engine features        |
