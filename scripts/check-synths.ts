@@ -332,20 +332,8 @@ async function main(): Promise<void> {
   const SR = 48000;
   const baselineFile = (id: string): string => join(BASELINE_DIR, `${id}.json`);
 
-  // `--write-baseline` records a native synth's first baseline, and nothing else (`writeBaselineRefusal`).
-  if (WRITE) {
-    const refuse = writeBaselineRefusal({
-      compare: COMPARE,
-      synth: onlySynth,
-      soundFilter: onlyPreset,
-      baselineExists: !!onlySynth && existsSync(baselineFile(onlySynth)),
-    });
-    if (refuse) {
-      console.log(`ERR ${refuse}`);
-      process.exit(1);
-    }
-  }
-  // `--add-sounds` adds new sounds to one synth's baseline and leaves every recorded one as it is (`addSoundsRefusal`).
+  // `--add-sounds` adds new sounds to one synth's baseline and leaves every recorded one as it is (`addSoundsRefusal`). It
+  // goes first, so `--add-sounds --write-baseline` is refused as the conflict it is.
   if (ADD) {
     const refuse = addSoundsRefusal({
       write: WRITE,
@@ -359,6 +347,19 @@ async function main(): Promise<void> {
     }
   }
 
+  // `--write-baseline` records a native synth's first baseline, and nothing else (`writeBaselineRefusal`).
+  if (WRITE) {
+    const refuse = writeBaselineRefusal({
+      compare: COMPARE,
+      synth: onlySynth,
+      soundFilter: onlyPreset,
+      baselineExists: !!onlySynth && existsSync(baselineFile(onlySynth)),
+    });
+    if (refuse) {
+      console.log(`ERR ${refuse}`);
+      process.exit(1);
+    }
+  }
   // Every synth at once: one process per synth, as many at a time as there are cores. A full run is about 1,100 sounds of
   // 3 s each, roughly half an hour on one core and about ten minutes on eight. Each synth's report is printed whole, in
   // catalogue order.
@@ -504,7 +505,7 @@ async function main(): Promise<void> {
 
   type Sound = Pick<Preset, 'id' | 'steps' | 'phrase'> & Partial<Preset>;
 
-  let toWrite: (Baseline & { sampleRate: number; seconds: number }) | null = null;
+  let toWrite: (Baseline & { sampleRate?: number; seconds?: number }) | null = null;
   let addedCount = 0;
   for (const def of SYNTHS) {
     if (onlySynth && def.id !== onlySynth) continue;
@@ -767,15 +768,12 @@ async function main(): Promise<void> {
       for (const id of Object.keys(baseline.sounds))
         if (!prints[id]) E(`${def.id}/${id} is in the baseline but no longer in the library`);
     if (WRITE) toWrite = { synth: def.id, seed: SEED, sampleRate: SR, seconds: 3, sounds: prints };
-    // The recorded sounds go back exactly as they were read; only the new ones are appended, after them.
+    // The baseline goes back exactly as it was read, header and recorded sounds; only the new ones are appended, after them.
     if (ADD && baseline) {
       addedCount = added.length;
       if (added.length)
         toWrite = {
-          synth: def.id,
-          seed: SEED,
-          sampleRate: SR,
-          seconds: 3,
+          ...baseline,
           sounds: {
             ...baseline.sounds,
             ...Object.fromEntries(added.map((id) => [id, prints[id]])),
@@ -804,7 +802,7 @@ async function main(): Promise<void> {
   console.log(
     errs
       ? `\n${errs} errors`
-      : `\nno errors (${rendered} sounds rendered${COMPARE ? `, every recorded one identical to the baseline${ADD ? `, ${addedCount} added` : ''}` : ''})`
+      : `\nno errors (${rendered} sounds rendered${COMPARE ? `, ${ADD ? `every recorded one identical to the baseline, ${addedCount} added` : 'every one identical to the baseline'}` : ''})`
   );
   process.exit(errs ? 1 : 0);
 }

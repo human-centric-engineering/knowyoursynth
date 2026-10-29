@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
 /**
- * The sound library, over Model D's real 99 sounds as the read layer serves them.
+ * The sound library, over Model D's real 200 sounds as the read layer serves them.
  *
  * @see components/app/synth/library.tsx
  */
@@ -46,13 +46,13 @@ function setup(currentId: string | null = null) {
 }
 
 describe('Library', () => {
-  it('lists all 99 sounds in catalogue order, with the count', () => {
+  it('lists all 200 sounds in catalogue order, with the count', () => {
     setup();
-    expect(sounds).toHaveLength(99);
+    expect(sounds).toHaveLength(200);
     expect(rows().map((r) => r.querySelector('.font-semibold')?.textContent)).toEqual(
       sounds.map((s) => s.name)
     );
-    expect(screen.getByText('99 of 99')).toBeTruthy();
+    expect(screen.getByText('200 of 200')).toBeTruthy();
   });
 
   it('marks the loaded sound as current and no other', () => {
@@ -79,11 +79,11 @@ describe('Library', () => {
     fireEvent.click(screen.getByRole('button', { name: cat, pressed: false }));
     const expected = sounds.filter((s) => s.tags[0] === cat);
     expect(rows()).toHaveLength(expected.length);
-    expect(screen.getByText(`${expected.length} of 99`)).toBeTruthy();
+    expect(screen.getByText(`${expected.length} of 200`)).toBeTruthy();
     expect(screen.getByRole('button', { name: cat, pressed: true })).toBeTruthy();
 
     fireEvent.click(screen.getByRole('button', { name: 'all' }));
-    expect(rows()).toHaveLength(99);
+    expect(rows()).toHaveLength(200);
   });
 
   it('searches name, reference, artist, tags and blurb, every word having to match', () => {
@@ -98,7 +98,7 @@ describe('Library', () => {
       return words.every((w) => hay.includes(w));
     });
     expect(expected.length).toBeGreaterThan(0);
-    expect(expected.length).toBeLessThan(99);
+    expect(expected.length).toBeLessThan(200);
     expect(rows().map((r) => r.querySelector('.font-semibold')?.textContent)).toEqual(
       expected.map((s) => s.name)
     );
@@ -107,7 +107,7 @@ describe('Library', () => {
   it('says so when nothing matches, without pointing at a tutor that is not there', () => {
     setup();
     fireEvent.change(search(), { target: { value: 'zzzz-no-such-sound' } });
-    expect(screen.getByText('0 of 99')).toBeTruthy();
+    expect(screen.getByText('0 of 200')).toBeTruthy();
     const empty = screen.getByText(/No library patch matches that/);
     expect(empty.textContent).not.toMatch(/tutor/i);
   });
