@@ -6,8 +6,10 @@
  */
 import type { SynthRouting } from '@/lib/app/synths/contract';
 import { routing as modelD } from '@/lib/app/synths/routing/model-d';
+import { routing as neutron } from '@/lib/app/synths/routing/neutron';
+import { routing as pro1 } from '@/lib/app/synths/routing/pro-1';
 
-export const SYNTH_ROUTINGS: SynthRouting[] = [modelD];
+export const SYNTH_ROUTINGS: SynthRouting[] = [modelD, neutron, pro1];
 
 const BY_ID = new Map(SYNTH_ROUTINGS.map((r) => [r.synth, r]));
 
