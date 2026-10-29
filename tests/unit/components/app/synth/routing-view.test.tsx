@@ -12,7 +12,7 @@ import { render, screen } from '@testing-library/react';
 import { RoutingView } from '@/components/app/synth/routing-view';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { routing } from '@/lib/app/synths/routing/model-d';
-import type { ControlValues } from '@/lib/app/synths/contract';
+import type { ControlValues, SynthRouting } from '@/lib/app/synths/contract';
 
 const found = getSynthDef('model-d');
 if (!found) throw new Error('model-d is not registered');
@@ -109,6 +109,37 @@ describe('RoutingView', () => {
     // Source B switched to the LFO: the jack is ignored.
     v.rerender({ ...mod, 'mod.srcB': 'lfo' }, cable);
     expect(lit('[data-cable="j.lfoSq>j.modSrc"]')).toBe('false');
+  });
+
+  it('keys the cables as well as audio, control voltage and gate', () => {
+    view();
+    const key = screen.getByRole('list', { name: 'Key' });
+    expect(key.textContent).toMatch(/Audio.*Control voltage.*Gate.*Cable/);
+  });
+
+  it('is never drawn bigger than its own size', () => {
+    view();
+    const svg = screen.getByRole('img', { name: 'Model D signal routing' });
+    expect(svg.getAttribute('style')).toContain(`--routing-w: ${svg.getAttribute('width')}px`);
+  });
+
+  it('draws nothing for a cable to a jack whose block is missing, rather than failing', () => {
+    // Only a malformed routing does this (`routingProblems` refuses it), but the page must survive one.
+    const broken: SynthRouting = { ...routing, jacks: { ...routing.jacks, 'j.lfoTri': 'ghost' } };
+    render(
+      <RoutingView
+        def={def}
+        routing={broken}
+        values={def.init}
+        cables={[
+          { from: 'j.lfoTri', to: 'j.cutCv' },
+          { from: 'j.lfoSq', to: 'j.cutCv' },
+        ]}
+        wheel={0}
+      />
+    );
+    expect(document.querySelector('[data-cable="j.lfoTri>j.cutCv"]')).toBeNull();
+    expect(document.querySelector('[data-cable="j.lfoSq>j.cutCv"]')).not.toBeNull();
   });
 
   it('lights the mod wheel’s line while the wheel is up and the mod bus goes somewhere', () => {

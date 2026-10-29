@@ -183,6 +183,7 @@ import {
   meterStore,
   notesStore,
   pendingStore,
+  useStore,
 } from '@/components/app/synth/stores';
 import { SynthPicker } from '@/components/app/synth/synth-picker';
 import { Tour } from '@/components/app/synth/tour';
@@ -626,6 +627,17 @@ function Synth({
   // From `lg` up (t-74): the lesson card over the panel, the sounds in a drawer on the left, the tutor's drawer over the panel,
   // and the dock's piano. The card's side and the piano are remembered in this browser.
   const [card, setCard] = useState<CardId | null>(null);
+  // What works on the panel itself turns it face up again from the routing view: a find, a lesson step, the tour, a
+  // layer or the Inspector coming on. Turning one off leaves the view be, and so does Undo (it lights what it changes,
+  // which the view follows).
+  const finding = useStore(findStore, (f) => f !== null);
+  const panelWork = [finding, step, tourOn, areasOn, dimOn, heatOn, card === 'inspector'];
+  const [seenWork, setSeenWork] = useState(panelWork);
+  if (panelWork.some((v, i) => v !== seenWork[i])) {
+    setSeenWork(panelWork);
+    if (routingOn && panelWork.some((v, i) => v !== seenWork[i] && v !== false && v !== null))
+      setRoutingOn(false);
+  }
   const [cardSide, setCardSide] = useStoredPref(STORAGE_KEYS.cardSide, CardSideSchema, 'right');
   const [soundsOpen, setSoundsOpen] = useState(false);
   // The Sound Design drawer (from `lg` up, with a pointer): up from a press on its tab until the next, so it stays

@@ -2811,11 +2811,15 @@ svg .kys-hit:focus-visible {
   min-width: 0;
   overflow-x: auto;
 }
+/* Never drawn bigger than its own size (a small routing is not blown up), nor, on a narrow screen, smaller than a
+   readable 900px. */
 .kys-routing-svg {
   display: block;
   width: 100%;
-  min-width: 900px;
+  min-width: min(900px, var(--routing-w));
+  max-width: var(--routing-w);
   height: auto;
+  margin-inline: auto;
 }
 .kys-route-block rect {
   fill: color-mix(in srgb, currentColor 14%, var(--kys-surface));

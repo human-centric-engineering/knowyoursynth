@@ -12,6 +12,7 @@
  */
 
 import { useId, useMemo } from 'react';
+import type { CSSProperties } from 'react';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
 import { routingState } from '@/lib/app/synths/lib/routing';
 import { BLOCK_H, BLOCK_W, layoutRouting } from '@/lib/app/synths/lib/routing-layout';
@@ -38,14 +39,28 @@ export function RoutingView({
     () => routingState(def, routing, { values, cables, wheel }),
     [def, routing, values, cables, wheel]
   );
+  // Laid out again only when a cable goes in or comes out, not on every turn of a knob: `state.cables` is a new array
+  // each time, so the memo is keyed on the blocks each cable joins.
+  const cableEnds = state.cables.map((c) => `${c.fromBlock}>${c.toBlock}`).join(' ');
   const layout = useMemo(
     () =>
       layoutRouting(
         routing,
-        state.cables.map((c, i) => ({ id: `cable:${i}`, from: c.fromBlock, to: c.toBlock }))
+        cableEnds
+          .split(' ')
+          .filter(Boolean)
+          .map((ends, i) => {
+            const [from, to] = ends.split('>');
+            return { id: `cable:${i}`, from, to };
+          })
       ),
-    [routing, state.cables]
+    [routing, cableEnds]
   );
+  const size: CSSProperties & Record<'--routing-w', string> = {
+    '--routing-w': `${layout.width}px`,
+  };
+  // A cable's path by its id: the layout leaves out one whose ends are not both blocks.
+  const cablePath = new Map(layout.cables.map((p) => [p.id, p]));
   const byId = useMemo(() => new Map(routing.blocks.map((b) => [b.id, b])), [routing]);
   const colourOf = (block: string) => moduleOf(byId.get(block)?.module).color;
   // A cable's colour, from the patch: `state.cables` keeps the patch's order but drops a cable it cannot place.
@@ -66,6 +81,7 @@ export function RoutingView({
           aria-labelledby={titleId}
           aria-describedby={descId}
           className="kys-routing-svg"
+          style={size}
         >
           <title id={titleId}>{`${def.name} signal routing`}</title>
           <desc id={descId}>
@@ -89,7 +105,8 @@ export function RoutingView({
             );
           })}
           {state.cables.map((c, i) => {
-            const p = layout.cables[i];
+            const p = cablePath.get(`cable:${i}`);
+            if (!p) return null;
             return (
               <g
                 key={p.id}
@@ -149,6 +166,12 @@ export function RoutingView({
             <path d="M1,4 H25" className="kys-route-line" />
           </svg>
           Gate
+        </li>
+        <li>
+          <svg width="26" height="8" aria-hidden="true" className="kys-route-edge is-cable is-live">
+            <path d="M1,4 H25" className="kys-route-line" />
+          </svg>
+          Cable, in its colour on the panel
         </li>
         <li className="kys-routing-note">
           Lit: the path the patch is set to use now. A part can be lit and still quiet, such as a

@@ -9,7 +9,7 @@
 // - **Columns, audio first.** The audio band is laid out from its own edges alone, "as late as possible": the
 //   output is the last column and every other block one column left of the earliest block it feeds. Then each
 //   block beneath goes one column left of the earliest block it feeds, so a contour sits just before the filter it
-//   opens. A block beneath that feeds nothing goes in the first column.
+//   opens. A block beneath that feeds nothing goes one column right of what feeds it, or in the first column.
 // - **Back links.** An edge out of the output (Model D's output fed back into its external input), an edge that
 //   would close a loop, and any link that ends up running leftward (Oscillator 3 into the mod bus that bends its
 //   own pitch) are drawn back against the flow: over the top between two audio blocks, under the bottom otherwise.
@@ -143,6 +143,21 @@ export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): 
     return c;
   };
   controlIds.forEach(place);
+  // A block beneath that feeds nothing (a sink, or one whose only way out is a cable) goes one column right of the
+  // latest block that feeds it, so that edge runs forward; with nothing feeding it either, the first column.
+  for (let moved = true; moved;) {
+    moved = false;
+    for (const id of controlIds) {
+      if (at.has(id)) continue;
+      const after = routing.edges
+        .filter((e) => e.to === id && !back.has(e.id) && at.has(e.from))
+        .map((e) => (at.get(e.from) ?? 0) + 1);
+      if (after.length) {
+        at.set(id, Math.max(...after));
+        moved = true;
+      }
+    }
+  }
   const first = Math.min(0, ...at.values());
   const col = new Map(ids.map((id) => [id, (at.get(id) ?? first) - first]));
   const ncols = Math.max(0, ...col.values()) + 1;
@@ -218,6 +233,15 @@ export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): 
     long.map((i, k) => [i, (channel ?? 0) + (k % 2 ? 1 : -1) * Math.ceil(k / 2) * step])
   );
 
+  // Back links round the same side each take a lane of their own, outward from the margin's middle.
+  const backLane = new Map<number, number>();
+  for (const side of ['top', 'bottom'] as const) {
+    const mid = side === 'top' ? MARGIN / 2 : height - MARGIN / 2;
+    links
+      .flatMap((l, i) => (l.back === side ? [i] : []))
+      .forEach((i, k) => backLane.set(i, mid + (k % 2 ? 1 : -1) * Math.ceil(k / 2) * LANE_GAP));
+  }
+
   const r = COL_GAP / 2;
   const pathOf = (l: (typeof links)[number], i: number): string => {
     const sx = blocks[l.from].x + BLOCK_W;
@@ -226,7 +250,7 @@ export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): 
     const ty = port.get(`${i}:in`) ?? centre(l.to);
     if (l.back) {
       // Out to the right, round the top or the bottom, back along and into the target's left.
-      const y = l.back === 'top' ? MARGIN / 2 : height - MARGIN / 2;
+      const y = backLane.get(i) ?? MARGIN / 2;
       return `M${sx},${sy} C${sx + r},${sy} ${sx + r},${y} ${sx},${y} L${tx},${y} C${tx - r},${y} ${tx - r},${ty} ${tx},${ty}`;
     }
     const y = lane.get(i);

@@ -2072,6 +2072,28 @@ describe('SynthPage signal routing', () => {
     expect(diagram()).not.toBeNull();
   }, 10_000);
 
+  it('turns face up again when something works on the panel: a find, the tour, a layer, the Inspector', () => {
+    page();
+    const away = () => scroller()?.classList.contains('is-away');
+    for (const start of [
+      () => act(() => findStore.set({ kind: 'control', id: 'filter.cutoff' })),
+      () => fireEvent.click(button('Orientation tour')),
+      () => fireEvent.click(button('Explain sections')),
+      () => fireEvent.click(button('Inspector')),
+    ]) {
+      fireEvent.click(toggle());
+      expect(away()).toBe(true);
+      start();
+      expect(diagram()).toBeNull();
+      expect(away()).toBe(false);
+    }
+    // Turning one off again leaves the view be.
+    act(() => findStore.set(null));
+    fireEvent.click(toggle());
+    fireEvent.click(button('Explain sections'));
+    expect(diagram()).not.toBeNull();
+  });
+
   it('shows no toggle for a synth without a routing', () => {
     const real = vi.mocked(getSynthRouting).getMockImplementation();
     vi.mocked(getSynthRouting).mockImplementation(() => undefined);

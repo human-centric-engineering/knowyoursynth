@@ -175,6 +175,31 @@ describe('layoutRouting: the rules', () => {
     expect(l.blocks.idle).toMatchObject({ col: 0, band: 'control' });
   });
 
+  it('puts a block beneath that feeds nothing one column right of what feeds it, so the edge runs forward', () => {
+    const l = layoutRouting(
+      small(
+        ['a', 'out', 'lfo', 'sink'],
+        [edge('1', 'a', 'out'), edge('2', 'lfo', 'a', 'cv'), edge('3', 'lfo', 'sink', 'cv')]
+      )
+    );
+    expect(l.blocks.sink.col).toBe(l.blocks.lfo.col + 1);
+    expect(l.edges.find((e) => e.id === '3')?.back).toBe(false);
+  });
+
+  it('gives each back link round the same side a lane of its own', () => {
+    const l = layoutRouting(
+      small(
+        ['a', 'b', 'out'],
+        [edge('1', 'a', 'b'), edge('2', 'b', 'out'), edge('3', 'out', 'a'), edge('4', 'out', 'b')]
+      )
+    );
+    const lane = (id: string) =>
+      Math.min(...points(l.edges.find((e) => e.id === id)?.d ?? '').map((p) => p.y));
+    expect(l.edges.filter((e) => e.back).map((e) => e.id)).toEqual(['3', '4']);
+    expect(lane('3')).not.toBe(lane('4'));
+    expect(Math.min(lane('3'), lane('4'))).toBeGreaterThanOrEqual(0);
+  });
+
   it('lays out a routing with one band only, without a channel', () => {
     const l = layoutRouting(
       small(['a', 'b', 'out'], [edge('1', 'a', 'b'), edge('2', 'b', 'out'), edge('3', 'a', 'out')])
