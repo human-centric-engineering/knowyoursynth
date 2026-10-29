@@ -248,6 +248,20 @@ export function routingProblems(def: SynthDef, routing: SynthRouting): string[] 
   }
   for (const j of def.jacks)
     if (!(j.id in routing.jacks)) problems.push(`jack ${j.id} belongs to no block`);
+  // Every control the sound hears sets some block, so a block's card can name what drives it.
+  const listed = new Set<string>();
+  for (const b of routing.blocks) {
+    const own = new Set<string>();
+    for (const id of b.controls ?? []) {
+      if (!controls[id]) problems.push(`block ${b.id}: no control ${id}`);
+      else if (controls[id].ui) problems.push(`block ${b.id}: ${id} is a panel mode, not heard`);
+      if (own.has(id)) problems.push(`block ${b.id}: ${id} is listed twice`);
+      own.add(id);
+      listed.add(id);
+    }
+  }
+  for (const c of def.controls)
+    if (!c.ui && !listed.has(c.id)) problems.push(`control ${c.id} sets no block`);
 
   // Every block has a way to the output, with every switch allowed and a cable from any output jack to any input.
   const blockOf = (dir: 'in' | 'out') =>

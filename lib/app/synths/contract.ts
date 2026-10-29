@@ -1263,6 +1263,11 @@ export interface RoutingBlock {
   /** What the hover card lists: `{ label: 'Slope', value: '24 dB per octave' }`. Facts from the spec only. */
   specs?: { label: string; value: string }[];
   /**
+   * The panel controls that set this part, in the definition's ids, in the order the card lists them. Every control
+   * the sound hears is listed on some block; its jacks come from `SynthRouting.jacks`.
+   */
+  controls?: string[];
+  /**
    * Makes no signal of its own, only passes on what reaches it (a mixer, the mod bus): live only while a live
    * edge or cable feeds it. Absent = it makes signal (an oscillator, a contour), and is live on any path out.
    */
