@@ -8,8 +8,11 @@ import type { SynthRouting } from '@/lib/app/synths/contract';
 import { routing as modelD } from '@/lib/app/synths/routing/model-d';
 import { routing as neutron } from '@/lib/app/synths/routing/neutron';
 import { routing as pro1 } from '@/lib/app/synths/routing/pro-1';
+import { routing as k2 } from '@/lib/app/synths/routing/k2';
+import { routing as kobol } from '@/lib/app/synths/routing/kobol';
+import { routing as waspDeluxe } from '@/lib/app/synths/routing/wasp-deluxe';
 
-export const SYNTH_ROUTINGS: SynthRouting[] = [modelD, neutron, pro1];
+export const SYNTH_ROUTINGS: SynthRouting[] = [modelD, neutron, pro1, k2, waspDeluxe, kobol];
 
 const BY_ID = new Map(SYNTH_ROUTINGS.map((r) => [r.synth, r]));
 
