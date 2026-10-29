@@ -17,11 +17,16 @@
  * the engine's meters and output level) lights the lamps and runs along the lines, and fades as the sound does; the
  * LFO, and an oscillator slow enough to see, pulse with their waves. That
  * is written straight to a CSS variable (`--a`) once a frame, never through React state.
+ *
+ * Each block is a button for its card (`RoutingCard`, t-143): hovering it, or reaching it with the keyboard, shows the
+ * card beside it while the pointer or focus stays; a click, a tap, Enter or Space keeps it open and moves focus into
+ * it, so its controls and jacks can be chosen. Escape puts it away and returns focus to the block.
  */
 
-import { useEffect, useId, useLayoutEffect, useMemo, useRef } from 'react';
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import * as Popover from '@radix-ui/react-popover';
 import { z } from 'zod';
-import type { CSSProperties, ReactNode } from 'react';
+import type { CSSProperties, KeyboardEvent, PointerEvent, ReactNode } from 'react';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
 import { routingState } from '@/lib/app/synths/lib/routing';
 import {
@@ -33,6 +38,7 @@ import {
 } from '@/lib/app/synths/lib/routing-activity';
 import { BLOCK_H, BLOCK_W, layoutRouting } from '@/lib/app/synths/lib/routing-layout';
 import { meterStore } from '@/components/app/synth/stores';
+import { RoutingCard, type RoutingShowTarget } from '@/components/app/synth/routing-card';
 import type { CableLike } from '@/lib/app/synths/lib/patch';
 import type {
   ControlValues,
@@ -53,6 +59,9 @@ interface Parts {
   edges: Map<string | null, SVGGElement>;
   cables: Map<string | null, SVGGElement>;
 }
+
+/** How long a card shown on hover waits after the pointer leaves, so it can cross the gap into the card. */
+const LEAVE_MS = 160;
 
 /** The symbol cell at a block's left, and the symbol's size in it. */
 const CELL = 38;
@@ -196,6 +205,7 @@ export function RoutingView({
   cables,
   wheel,
   source = null,
+  onShow,
 }: {
   def: SynthDef;
   routing: SynthRouting;
@@ -205,10 +215,52 @@ export function RoutingView({
   wheel: number;
   /** Where the output's level comes from. Absent: the audio path never lights, but the keyboard and contours do. */
   source?: RoutingSource | null;
+  /** Turns the panel face up with a control or jack found, from a block's card. */
+  onShow?: (target: RoutingShowTarget) => void;
 }) {
   const titleId = useId();
   const descId = useId();
   const svgRef = useRef<SVGSVGElement>(null);
+  // The open card: which block, and whether it was asked for (a click, a tap, Enter) and so stays, or is only shown
+  // while the pointer or focus is on the block.
+  const [card, setCard] = useState<{ id: string; kept: boolean } | null>(null);
+  const anchorRef = useRef<Element | null>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const leaveRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const stay = () => {
+    if (leaveRef.current) clearTimeout(leaveRef.current);
+    leaveRef.current = null;
+  };
+  useEffect(() => stay, []);
+  const blockEl = (id: string) =>
+    [...(svgRef.current?.querySelectorAll('[data-block]') ?? [])].find(
+      (el) => el.getAttribute('data-block') === id
+    ) ?? null;
+  const show = (id: string, kept: boolean) => {
+    stay();
+    // A kept card stays put while the pointer or focus passes over other blocks.
+    if (card?.kept && !kept) return;
+    anchorRef.current = blockEl(id);
+    setCard({ id, kept });
+  };
+  // A press or focus on a block is the block's to handle, not a reason to put the card away: it opens its own.
+  const onBlock = (t: EventTarget | null) =>
+    t instanceof Element && !!svgRef.current?.contains(t) && !!t.closest('[data-block]');
+  const leave = () => {
+    stay();
+    leaveRef.current = setTimeout(() => setCard((was) => (was?.kept ? was : null)), LEAVE_MS);
+  };
+  const close = (refocus: boolean) => {
+    stay();
+    const el = card && blockEl(card.id);
+    setCard(null);
+    if (refocus && el instanceof SVGElement) el.focus();
+  };
+  // A kept card takes focus, so its controls are next for the keyboard and a screen reader reads it.
+  const keptId = card?.kept ? card.id : null;
+  useEffect(() => {
+    if (keptId) cardRef.current?.focus();
+  }, [keptId]);
   const state = useMemo(
     () => routingState(def, routing, { values, cables, wheel }),
     [def, routing, values, cables, wheel]
@@ -319,6 +371,8 @@ export function RoutingView({
     return () => cancelAnimationFrame(frame);
   }, []);
 
+  const cardId = `${titleId}-card`;
+  const open = card ? byId.get(card.id) : undefined;
   const lit = routing.blocks.filter((b) => state.blocks[b.id]).map((b) => b.name);
   const dark = routing.blocks.filter((b) => !state.blocks[b.id]).map((b) => b.name);
   const arrow = `${titleId}-arrow`;
@@ -335,7 +389,7 @@ export function RoutingView({
           viewBox={`0 0 ${layout.width} ${layout.height}`}
           width={layout.width}
           height={layout.height}
-          role="img"
+          role="group"
           aria-labelledby={titleId}
           aria-describedby={descId}
           className="kys-routing-svg"
@@ -391,8 +445,23 @@ export function RoutingView({
                 className={`kys-route-block ${live ? 'is-live' : ''}`}
                 style={{ color: moduleOf(b.module).color }}
                 transform={`translate(${at.x} ${at.y})`}
+                role="button"
+                tabIndex={0}
+                aria-label={`${b.name}, ${live ? 'in use' : 'not in use'}`}
+                aria-haspopup="dialog"
+                aria-expanded={card?.id === b.id}
+                aria-controls={card?.id === b.id ? cardId : undefined}
+                onPointerEnter={(e: PointerEvent) => e.pointerType === 'mouse' && show(b.id, false)}
+                onPointerLeave={(e: PointerEvent) => e.pointerType === 'mouse' && leave()}
+                onFocus={(e) => e.currentTarget.matches(':focus-visible') && show(b.id, false)}
+                onBlur={(e) => !cardRef.current?.contains(e.relatedTarget) && leave()}
+                onClick={() => show(b.id, true)}
+                onKeyDown={(e: KeyboardEvent) => {
+                  if (e.key !== 'Enter' && e.key !== ' ') return;
+                  e.preventDefault();
+                  show(b.id, true);
+                }}
               >
-                <title>{b.description}</title>
                 <rect
                   x={-3.5}
                   y={-3.5}
@@ -455,6 +524,43 @@ export function RoutingView({
             );
           })}
         </svg>
+        {/* The card, by its block. Not portalled, so it comes with the panel into full screen. */}
+        <Popover.Root open={!!open} onOpenChange={(o) => !o && close(false)} modal={false}>
+          <Popover.Anchor virtualRef={anchorRef} />
+          {open && (
+            <Popover.Content
+              ref={cardRef}
+              id={cardId}
+              aria-label={open.name}
+              tabIndex={-1}
+              side="bottom"
+              align="center"
+              sideOffset={8}
+              collisionPadding={12}
+              className="kys-routing-card"
+              onOpenAutoFocus={(e) => e.preventDefault()}
+              onCloseAutoFocus={(e) => e.preventDefault()}
+              onEscapeKeyDown={(e) => {
+                e.preventDefault();
+                close(true);
+              }}
+              onPointerDownOutside={(e) => onBlock(e.target) && e.preventDefault()}
+              onFocusOutside={(e) => onBlock(e.target) && e.preventDefault()}
+              onPointerEnter={(e) => e.pointerType === 'mouse' && stay()}
+              onPointerLeave={(e) => e.pointerType === 'mouse' && leave()}
+            >
+              <RoutingCard
+                def={def}
+                routing={routing}
+                block={open}
+                tag={TAG[symbolOf(open)]}
+                live={state.blocks[open.id]}
+                onShow={onShow}
+              />
+              <Popover.Arrow className="kys-routing-card-arrow" width={12} height={6} />
+            </Popover.Content>
+          )}
+        </Popover.Root>
       </div>
       <ul aria-label="Key" className="kys-routing-key">
         <li>

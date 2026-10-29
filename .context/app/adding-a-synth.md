@@ -41,8 +41,9 @@ them. `goldens.test.ts` then holds the definition to them. Write
 
 Write `lib/app/synths/routing/<id>.ts` from the spec's `modules` and `connections`, in the definition's control and
 jack ids, and add it to `SYNTH_ROUTINGS` (`routing/index.ts`). Start from `routing/model-d.ts`; the rules are in
-[`synths.md`](./synths.md#signal-routing). `routing.test.ts` fails until every id it names exists in the definition
-and every spec module and connection is drawn or `omitted` with a reason.
+[`synths.md`](./synths.md#signal-routing). `routing.test.ts` fails until every id it names exists in the definition,
+every control the sound hears is in some block's `controls`, and every spec module and connection is drawn or
+`omitted` with a reason.
 
 ## 2. Brand tags
 

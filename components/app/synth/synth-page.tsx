@@ -2255,6 +2255,10 @@ function Synth({
                               cables={sess.cables}
                               wheel={wheel}
                               source={engine}
+                              onShow={(t) => {
+                                findStore.set(t);
+                                flipPanel(false);
+                              }}
                             />
                           </div>
                         </div>
