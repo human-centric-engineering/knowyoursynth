@@ -245,10 +245,12 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   bottom. Hand-rolled rather than a layout library: a routing is a dozen or two blocks in a known shape, and a
   pure layout is the same every time and testable. What `routingState()` says the patch uses is lit, a dash
   running along each lit line in the signal's direction; the rest is dimmed and its boxes dashed. Audio lines are
-  thick, CV thin, gate dotted; cables thick, in their own colours. The key says lit means wired to be used, not
+  thick, CV thin, gate dotted; cables thick, in their own colours, and the key names all four. The key says lit means wired to be used, not
   heard. It is drawn from `sess` (the panel as shown, glides and undos included) and the mod wheel, so it
   follows the panel while it shows. The panel stays laid out underneath (`.is-away`, `inert`), so its fit and
-  scroll are kept for the flip back. The flip is a view transition (transition type `routing-flip`,
+  scroll are kept for the flip back. Whatever works on the panel itself turns it face up again as it comes
+  on: a find, a lesson step, the tour, a layer or the Inspector (turning one off does not, and nor does Undo, which
+  the view follows). The flip is a view transition (transition type `routing-flip`,
   `.kys-panel-flip`, nested in the instrument's): only the snapshots turn, so nothing that holds the panel takes
   a transform; with reduced motion, or no view transitions, it swaps. Under `lg` the diagram keeps a readable
   size (`min-width: 900px`) and scrolls sideways in its own scroller.
