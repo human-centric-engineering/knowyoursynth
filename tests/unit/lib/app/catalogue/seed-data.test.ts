@@ -62,7 +62,7 @@ const EXPORTED: {
   { id: 'behringer-syncussion', sounds: 6, timeline: 4, relatives: 2, unusual: 7, limits: 3 },
   { id: 'e7', sounds: 10, timeline: 3, relatives: 3, unusual: 11, limits: 3 },
   { id: 'syntrx-ii', sounds: 12, timeline: 5, relatives: 3, unusual: 13, limits: 3 },
-  { id: 'solar-42n', sounds: 141, timeline: 4, relatives: 2, unusual: 14, limits: 3 },
+  { id: 'solar-42n', sounds: 191, timeline: 4, relatives: 2, unusual: 14, limits: 3 },
   { id: 'jupiter-4', sounds: 19, timeline: 5, relatives: 3, unusual: 12, limits: 8 },
   { id: 'jupiter-6', sounds: 18, timeline: 5, relatives: 3, unusual: 25, limits: 10 },
   { id: 'jupiter-8', sounds: 20, timeline: 5, relatives: 3, unusual: 15, limits: 6 },
