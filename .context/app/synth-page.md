@@ -21,6 +21,7 @@ break shared links for no visible gain. "Sound" on screen means what you hear ("
 | `components/app/synth/player-tools.tsx`  | The bar's layer toggles and the panel settings on the panel's rail        |
 | `components/app/synth/drawers.tsx`       | The tutor's drawer, sliding over the panel from `lg` up                   |
 | `components/app/synth/lesson-card.tsx`   | The card over the panel from `lg` up: lesson, inspector or effects        |
+| `components/app/synth/routing-view.tsx`  | The back of the panel: how the synth's parts are wired, the live path lit |
 | `components/app/synth/engine.ts`         | One audio engine for the visit                                            |
 | `components/app/synth/storage.ts`        | What a signed-out visitor's browser keeps                                 |
 | `components/app/synth/routes.ts`         | `?view=`, `?sound=` and the prototype's hash links                        |
@@ -187,8 +188,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   the screen, as a hardware panel's lip carries its smaller switches. They take the synth's own
   faceplate colour and print in its silkscreen ink (`theme.panel`, `panel2` and `ink`, passed as
   `--rail-face`, `--rail-face2` and `--rail-print`), or the outline drawing's paper and ink. The
-  head (`.is-top`) carries Sections, Dim unused and Sensitive, the inspector, then the tour and its
-  help at the right; each layer is its icon (with its word from `xl` up and below `lg`) and an LED
+  head (`.is-top`) carries Sections, Dim unused and Sensitive, the inspector, Signal routing, then the
+  tour and its help at the right; each layer is its icon (with its word from `xl` up and below `lg`) and an LED
   lit while it is over the panel. The foot (`.is-foot`) carries how the panel is drawn (Hardware or
   Outline, Modular or Long), the magnifier and Hover help (the card that pops up when you point at a
   control; `kys.tips`): each its name in the panel's lettering, which explains it on hover, then its
@@ -233,6 +234,24 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   the player's, because their tooltips are inside them. The foot's height (`RAIL_H`) is counted in
   the room the panel is fitted to; the head is above the scroller, so it is counted already. The
   tutor stays in the row over the panel. Harmonics is in the deck, beside the scope it extends.
+- **Signal routing turns the panel over** (`f-routing-view` t-142, `routing-view.tsx`): a toggle on the
+  head rail, at every width, for a synth with a routing (`getSynthRouting`, see
+  [`synths.md`](./synths.md#signal-routing)); a synth without one has no toggle. Its back is a diagram of the
+  synth's blocks, coloured by module as the lesson highlights are, laid out by `layoutRouting()`
+  (`lib/app/synths/lib/routing-layout.ts`): left to right, the audio band (sources, mixer, filter, amplifier,
+  output) on a straight line, and pitch, modulation and contours in the band beneath, each a column left of what
+  it feeds. A link that skips a column runs along the channel between the bands, so it never passes behind a
+  block; a link against the flow (the output fed back, Oscillator 3 into the mod bus) goes round the top or the
+  bottom. Hand-rolled rather than a layout library: a routing is a dozen or two blocks in a known shape, and a
+  pure layout is the same every time and testable. What `routingState()` says the patch uses is lit, a dash
+  running along each lit line in the signal's direction; the rest is dimmed and its boxes dashed. Audio lines are
+  thick, CV thin, gate dotted; cables thick, in their own colours. The key says lit means wired to be used, not
+  heard. It is drawn from `sess` (the panel as shown, glides and undos included) and the mod wheel, so it
+  follows the panel while it shows. The panel stays laid out underneath (`.is-away`, `inert`), so its fit and
+  scroll are kept for the flip back. The flip is a view transition (transition type `routing-flip`,
+  `.kys-panel-flip`, nested in the instrument's): only the snapshots turn, so nothing that holds the panel takes
+  a transform; with reduced motion, or no view transitions, it swaps. Under `lg` the diagram keeps a readable
+  size (`min-width: 900px`) and scrolls sideways in its own scroller.
 - **The player's buttons carry their own tooltip** (`PlayerTip`, `player-tip.tsx`): the button's
   name and a line on what it does, on hover or focus, in place of the browser's slow `title`. It
   is a Radix popup that is not portalled, so it works full screen.
