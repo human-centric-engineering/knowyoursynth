@@ -379,6 +379,27 @@ describe('a block’s card', () => {
     expect(card('Ladder filter')).not.toBeNull();
   });
 
+  it('closes a kept card on a second press of its block, and follows focus to another block', async () => {
+    const user = userEvent.setup();
+    view();
+    const filter = blockButton('Ladder filter');
+    act(() => filter.focus());
+    await user.keyboard('{Enter}');
+    expect(filter).toHaveAttribute('aria-expanded', 'true');
+    // Back from the card to its own block, it stays kept, and a press puts it away.
+    act(() => filter.focus());
+    expect(card('Ladder filter')).not.toBeNull();
+    await user.keyboard('{Enter}');
+    expect(card('Ladder filter')).toBeNull();
+    expect(filter).toHaveAttribute('aria-expanded', 'false');
+    // Kept again, then focus moves to another block: the card goes with it.
+    await user.keyboard('{Enter}');
+    const mixer = blockButton('Mixer');
+    act(() => mixer.focus());
+    expect(card('Ladder filter')).toBeNull();
+    expect(mixer).toHaveAttribute('aria-expanded', 'true');
+  });
+
   it('opens on a tap of another block in place of the one open, and closes on a tap away', async () => {
     view();
     fireEvent.pointerEnter(blockButton('Mixer'), { pointerType: 'touch' });

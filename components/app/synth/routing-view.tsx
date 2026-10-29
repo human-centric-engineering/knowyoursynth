@@ -233,13 +233,18 @@ export function RoutingView({
   };
   useEffect(() => stay, []);
   const blockEl = (id: string) =>
-    [...(svgRef.current?.querySelectorAll('[data-block]') ?? [])].find(
-      (el) => el.getAttribute('data-block') === id
-    ) ?? null;
-  const show = (id: string, kept: boolean) => {
+    svgRef.current?.querySelector(`[data-block="${CSS.escape(id)}"]`) ?? null;
+  // The block keyboard focus is on, if any: its card is the one to come back to when the pointer leaves.
+  const focusedBlock = () => {
+    const el = document.activeElement;
+    return el instanceof Element && svgRef.current?.contains(el) && el.matches(':focus-visible')
+      ? el.getAttribute('data-block')
+      : null;
+  };
+  const show = (id: string, kept: boolean, byFocus = false) => {
     stay();
-    // A kept card stays put while the pointer or focus passes over other blocks.
-    if (card?.kept && !kept) return;
+    // A kept card stays put while the pointer passes over other blocks; focus moving to another block takes it there.
+    if (card?.kept && !kept && (!byFocus || card.id === id)) return;
     anchorRef.current = blockEl(id);
     setCard({ id, kept });
   };
@@ -248,7 +253,11 @@ export function RoutingView({
     t instanceof Element && !!svgRef.current?.contains(t) && !!t.closest('[data-block]');
   const leave = () => {
     stay();
-    leaveRef.current = setTimeout(() => setCard((was) => (was?.kept ? was : null)), LEAVE_MS);
+    leaveRef.current = setTimeout(() => {
+      const focused = focusedBlock();
+      if (focused) anchorRef.current = blockEl(focused);
+      setCard((was) => (was?.kept ? was : focused ? { id: focused, kept: false } : null));
+    }, LEAVE_MS);
   };
   const close = (refocus: boolean) => {
     stay();
@@ -256,10 +265,12 @@ export function RoutingView({
     setCard(null);
     if (refocus && el instanceof SVGElement) el.focus();
   };
+  // A press keeps the block's card open, or puts it away if it already is.
+  const press = (id: string) => (card?.kept && card.id === id ? close(true) : show(id, true));
   // A kept card takes focus, so its controls are next for the keyboard and a screen reader reads it.
   const keptId = card?.kept ? card.id : null;
   useEffect(() => {
-    if (keptId) cardRef.current?.focus();
+    if (keptId) cardRef.current?.focus({ preventScroll: true });
   }, [keptId]);
   const state = useMemo(
     () => routingState(def, routing, { values, cables, wheel }),
@@ -453,13 +464,15 @@ export function RoutingView({
                 aria-controls={card?.id === b.id ? cardId : undefined}
                 onPointerEnter={(e: PointerEvent) => e.pointerType === 'mouse' && show(b.id, false)}
                 onPointerLeave={(e: PointerEvent) => e.pointerType === 'mouse' && leave()}
-                onFocus={(e) => e.currentTarget.matches(':focus-visible') && show(b.id, false)}
+                onFocus={(e) =>
+                  e.currentTarget.matches(':focus-visible') && show(b.id, false, true)
+                }
                 onBlur={(e) => !cardRef.current?.contains(e.relatedTarget) && leave()}
-                onClick={() => show(b.id, true)}
+                onClick={() => press(b.id)}
                 onKeyDown={(e: KeyboardEvent) => {
                   if (e.key !== 'Enter' && e.key !== ' ') return;
                   e.preventDefault();
-                  show(b.id, true);
+                  press(b.id);
                 }}
               >
                 <rect

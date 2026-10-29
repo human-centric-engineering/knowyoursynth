@@ -2111,6 +2111,8 @@ describe('SynthPage signal routing', () => {
     expect(findStore.get()).toEqual({ kind: 'control', id: 'filter.emphasis' });
     expect(diagram()).toBeNull();
     expect(away()).toBe(false);
+    // The card went with the view: focus is on the switch that turns it over again.
+    expect(toggle()).toHaveFocus();
     // The panel spotlights it.
     expect(document.querySelector('.kys-pulse')).not.toBeNull();
     // The same control again, with its find still up: it turns face up all the same.

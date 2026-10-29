@@ -43,26 +43,30 @@ export function RoutingCard({
   const plugs = Object.entries(routing.jacks).flatMap(([id, b]) =>
     b === block.id && jacks[id] ? [jacks[id]] : []
   );
-  const item = (kind: RoutingShowTarget['kind'], id: string, name: string, note?: string) => (
-    <li key={id}>
-      {onShow ? (
-        <button
-          type="button"
-          className="kys-routing-card-item"
-          title="Show it on the panel"
-          onClick={() => onShow({ kind, id })}
-        >
-          {name}
-          {note && <span className="kys-routing-card-note">{note}</span>}
-        </button>
-      ) : (
-        <span className="kys-routing-card-item">
-          {name}
-          {note && <span className="kys-routing-card-note">{note}</span>}
-        </span>
-      )}
-    </li>
-  );
+  const item = (kind: RoutingShowTarget['kind'], id: string, name: string, note?: string) => {
+    const label = (
+      <>
+        {name}
+        {note && <span className="kys-routing-card-note">{note}</span>}
+      </>
+    );
+    return (
+      <li key={id}>
+        {onShow ? (
+          <button
+            type="button"
+            className="kys-routing-card-item"
+            title="Show it on the panel"
+            onClick={() => onShow({ kind, id })}
+          >
+            {label}
+          </button>
+        ) : (
+          <span className="kys-routing-card-item">{label}</span>
+        )}
+      </li>
+    );
+  };
 
   return (
     <div className="kys-routing-card-body" style={{ color: moduleOf(block.module).color }}>
