@@ -32,7 +32,17 @@
  */
 
 import { z } from 'zod';
-import { use, useCallback, useEffect, useMemo, useRef, useState, ViewTransition } from 'react';
+import {
+  addTransitionType,
+  startTransition,
+  use,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  ViewTransition,
+} from 'react';
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
 import { INK, PAPER } from '@/components/app/panel/parts';
 import { createPortal } from 'react-dom';
@@ -82,6 +92,7 @@ import {
   Undo2,
   Volume2,
   VolumeX,
+  Waypoints,
 } from 'lucide-react';
 import { getEngine, listen } from '@/components/app/synth/engine';
 import { PAGE as SEQ_PAGE, Sequencer } from '@/components/app/sequencer/sequencer';
@@ -112,6 +123,8 @@ import {
 } from '@/components/app/synth/panel-zoom';
 import { PlayerTip, PlayerTips } from '@/components/app/synth/player-tip';
 import { LayerToggle, PlayerSettings } from '@/components/app/synth/player-tools';
+import { RoutingView } from '@/components/app/synth/routing-view';
+import { getSynthRouting } from '@/lib/app/synths/routing';
 import { TutorDrawer } from '@/components/app/synth/drawers';
 import { LessonCard, type CardId } from '@/components/app/synth/lesson-card';
 import {
@@ -170,6 +183,7 @@ import {
   meterStore,
   notesStore,
   pendingStore,
+  useStore,
 } from '@/components/app/synth/stores';
 import { SynthPicker } from '@/components/app/synth/synth-picker';
 import { Tour } from '@/components/app/synth/tour';
@@ -573,6 +587,16 @@ function Synth({
   const scrollerRef = useKeepCentre(scale);
   const [areasOn, setAreasOn] = useState(false);
   const [tourOn, setTourOn] = useState(false);
+  // The routing view on the back of the panel (t-142), for a synth that has a routing. The flip is a view transition
+  // (`routing-flip`, `.kys-panel-flip`), so nothing that holds the panel carries a transform; reduced motion swaps.
+  const routing = useMemo(() => getSynthRouting(synthId), [synthId]);
+  const [routingOn, setRoutingOn] = useState(false);
+  const flipPanel = useCallback((on: boolean) => {
+    startTransition(() => {
+      addTransitionType('routing-flip');
+      setRoutingOn(on);
+    });
+  }, []);
   const [lineageOpen, setLineageOpen] = useState(false);
   const [limitsOpen, setLimitsOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
@@ -603,6 +627,21 @@ function Synth({
   // From `lg` up (t-74): the lesson card over the panel, the sounds in a drawer on the left, the tutor's drawer over the panel,
   // and the dock's piano. The card's side and the piano are remembered in this browser.
   const [card, setCard] = useState<CardId | null>(null);
+  // What works on the panel itself turns it face up again from the routing view: a find (a new one too), a lesson
+  // step, the tour, Explain sections or the Inspector coming on. Turning one off leaves the view be, and so does Undo
+  // (it lights what it changes, which the view follows). Dim unused and Sensitive are left out: they point at nothing,
+  // and they come from stored settings that can land after the view is open.
+  const finding = useStore(findStore, (f) =>
+    f === null ? null : f.kind === 'areas' ? `areas:${f.ids.join(',')}` : `${f.kind}:${f.id}`
+  );
+  const inspecting = card === 'inspector' || sheet === 'inspector';
+  const panelWork = [finding, step, tourOn, areasOn, inspecting];
+  const [seenWork, setSeenWork] = useState(panelWork);
+  if (panelWork.some((v, i) => v !== seenWork[i])) {
+    setSeenWork(panelWork);
+    if (routingOn && panelWork.some((v, i) => v !== seenWork[i] && v !== false && v !== null))
+      setRoutingOn(false);
+  }
   const [cardSide, setCardSide] = useStoredPref(STORAGE_KEYS.cardSide, CardSideSchema, 'right');
   const [soundsOpen, setSoundsOpen] = useState(false);
   // The Sound Design drawer (from `lg` up, with a pointer): up from a press on its tab until the next, so it stays
@@ -2109,6 +2148,18 @@ function Synth({
                           />
                         </div>
                       )}
+                      {routing && (
+                        <div role="group" aria-label="Views" className="kys-rail-group">
+                          <LayerToggle
+                            label="Signal routing"
+                            short="Signal routing"
+                            icon={<Waypoints size={17} aria-hidden="true" />}
+                            on={routingOn}
+                            title="Turn the panel over to see how its parts are wired. What the patch uses now is lit, and follows the panel as it changes."
+                            onClick={() => flipPanel(!routingOn)}
+                          />
+                        </div>
+                      )}
                       <span className="kys-rail-end">
                         {/* Undo and Redo, on the panel's own rail: they take back what was done to it. */}
                         <span role="group" aria-label="History" className="kys-rail-history">
@@ -2154,37 +2205,58 @@ function Synth({
                       </span>
                     </div>
                   </div>
-                  <div
-                    ref={scrollerRef}
-                    className="kys-scroll kys-panel-scroller overflow-x-auto px-2"
-                    {...panelTaps}
+                  {/* The panel, or its back: the routing view. The panel stays laid out under the view, hidden and inert,
+                  so its fit and its scroll are kept for the flip back. */}
+                  <ViewTransition
+                    update={{ 'routing-flip': 'kys-panel-flip', default: 'none' }}
+                    default="none"
                   >
-                    <div
-                      ref={frameRef}
-                      data-testid="panel-frame"
-                      className={`kys-synth-shadow mx-auto ${view.outline ? 'is-outline' : ''} ${lightFace ? 'is-light' : ''}`}
-                      style={panelFrameStyle(faceView(def), scale)}
-                    >
-                      <SynthPanel
-                        def={def}
-                        values={synthDef.seqButtons ? panelValues : sess.values}
-                        moved={modShown}
-                        target={step == null ? target : null}
-                        cables={sess.cables}
-                        outline={view.outline}
-                        zoom={zoom}
-                        areasOn={areasOn}
-                        dimOn={dimOn}
-                        heatOn={heatOn}
-                        onChange={synthDef.seqButtons ? onPanelChange : onChange}
-                        onConnect={onConnect}
-                        onRemoveCable={onRemoveCable}
-                        onMoveCable={onMoveCable}
-                        onNote={(n, on) => (on ? noteOn(n) : noteOff(n))}
-                        design={detail.synth.design}
-                      />
+                    <div className="kys-flip">
+                      <div
+                        ref={scrollerRef}
+                        className={`kys-scroll kys-panel-scroller overflow-x-auto px-2 ${routingOn && routing ? 'is-away' : ''}`}
+                        inert={routingOn && !!routing}
+                        {...panelTaps}
+                      >
+                        <div
+                          ref={frameRef}
+                          data-testid="panel-frame"
+                          className={`kys-synth-shadow mx-auto ${view.outline ? 'is-outline' : ''} ${lightFace ? 'is-light' : ''}`}
+                          style={panelFrameStyle(faceView(def), scale)}
+                        >
+                          <SynthPanel
+                            def={def}
+                            values={synthDef.seqButtons ? panelValues : sess.values}
+                            moved={modShown}
+                            target={step == null ? target : null}
+                            cables={sess.cables}
+                            outline={view.outline}
+                            zoom={zoom}
+                            areasOn={areasOn}
+                            dimOn={dimOn}
+                            heatOn={heatOn}
+                            onChange={synthDef.seqButtons ? onPanelChange : onChange}
+                            onConnect={onConnect}
+                            onRemoveCable={onRemoveCable}
+                            onMoveCable={onMoveCable}
+                            onNote={(n, on) => (on ? noteOn(n) : noteOff(n))}
+                            design={detail.synth.design}
+                          />
+                        </div>
+                      </div>
+                      {routingOn && routing && (
+                        <div className="px-2">
+                          <RoutingView
+                            def={synthDef}
+                            routing={routing}
+                            values={sess.values}
+                            cables={sess.cables}
+                            wheel={wheel}
+                          />
+                        </div>
+                      )}
                     </div>
-                  </div>
+                  </ViewTransition>
                   {/* The panel's rail: how it is drawn and find a control, on a strip along its foot as a hardware
               panel's lip carries its smaller switches, the width of the panel as it fits the screen. */}
                   <div className="px-2">
