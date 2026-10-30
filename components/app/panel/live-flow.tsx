@@ -15,6 +15,11 @@ import type { SynthRouting } from '@/lib/app/synths/contract';
 
 /** How far the dashes run along a line, in panel units a second. */
 export const RUN_PER_S = 40;
+/**
+ * One dash and its gap, in panel units (`.kys-flow-run`'s `stroke-dasharray` in `synth.css`, 8 + 30, and a gate
+ * line's dots, 1.5 + 36.5): the run wraps at it, so the dashes never jump.
+ */
+export const RUN_PERIOD = 38;
 
 export function LiveFlow({ lines, routing }: { lines: FlowLine[]; routing: SynthRouting }) {
   const moduleOfBlock = new Map(routing.blocks.map((b) => [b.id, b.module]));

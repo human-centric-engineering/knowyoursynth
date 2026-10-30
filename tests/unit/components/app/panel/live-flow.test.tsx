@@ -14,6 +14,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, render } from '@testing-library/react';
 import { LiveLayer, type LiveGlow } from '@/components/app/panel/live-layer';
+import { RUN_PERIOD } from '@/components/app/panel/live-flow';
 import { meterStore, type Meters } from '@/components/app/synth/stores';
 import type { ControlValues } from '@/lib/app/synths/contract';
 import modelD from '@/lib/app/synths/defs/model-d';
@@ -121,6 +122,9 @@ describe('LiveLayer with the flow on Model D', () => {
     const later = Number(runOf(container));
     expect(first).toBeGreaterThan(0);
     expect(later).toBeGreaterThan(first);
+    // It wraps at one dash and its gap, so the dashes never jump.
+    run(200);
+    expect(Number(runOf(container))).toBeLessThan(RUN_PERIOD);
   });
 
   it('shows the lines without moving them for a visitor who asks for less motion', () => {

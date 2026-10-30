@@ -3279,6 +3279,11 @@ button.kys-routing-card-item:focus-visible {
 .kys-flow-line.is-audio .kys-flow-run {
   stroke-width: 4;
 }
+/* A gate line's signal runs as dots, so it stays dotted; one dot to a period (`RUN_PERIOD`), as the dashes. */
+.kys-flow-line.is-gate .kys-flow-run {
+  stroke-width: 3.5;
+  stroke-dasharray: 1.5 36.5;
+}
 .kys-flow-line .kys-flow-head {
   fill: currentColor;
   stroke: none;

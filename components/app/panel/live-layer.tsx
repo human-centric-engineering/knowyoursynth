@@ -27,7 +27,7 @@ import type { RoutingState } from '@/lib/app/synths/lib/routing';
 import { createMeterReader, type LiveSource } from '@/components/app/synth/live-meters';
 import { meterStore } from '@/components/app/synth/stores';
 import { reducedMotion } from '@/components/app/panel/parts';
-import { LiveFlow, RUN_PER_S } from '@/components/app/panel/live-flow';
+import { LiveFlow, RUN_PER_S, RUN_PERIOD } from '@/components/app/panel/live-flow';
 import type { ControlValues, PatchCable, SynthDef, SynthRouting } from '@/lib/app/synths/contract';
 
 /**
@@ -136,7 +136,7 @@ export function LiveLayer({
         ease(el, l.id, target, a.pulsing[l.from]);
       });
       if (flowEl && !steady) {
-        run = (run + (dt * RUN_PER_S) / 1000) % 1000;
+        run = (run + (dt * RUN_PER_S) / 1000) % RUN_PERIOD;
         flowEl.style.setProperty('--run', run.toFixed(1));
       }
       frame = requestAnimationFrame(tick);
