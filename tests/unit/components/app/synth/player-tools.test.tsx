@@ -114,10 +114,16 @@ describe('SignalMenu', () => {
     const onMode = draw(true);
     chooseSignal('Live');
     expect(onMode).toHaveBeenCalledWith('live');
-    expect(offered()).toEqual(['Off', 'In use', 'Live']);
+    expect(offered()).toEqual(['Off', 'In use', 'Live', 'Live + flow']);
   });
 
-  it('leaves Live out on a synth without a routing', () => {
+  it('offers Live + flow beside it, and chooses it', () => {
+    const onMode = draw(true);
+    chooseSignal('Live + flow');
+    expect(onMode).toHaveBeenCalledWith('flow');
+  });
+
+  it('leaves Live and Live + flow out on a synth without a routing', () => {
     draw(false);
     expect(offered()).toEqual(['Off', 'In use']);
   });

@@ -275,7 +275,8 @@ const DeckSchema = z.boolean().nullable();
 const TALL_QUERY = '(min-height: 900px)';
 /** The side of the panel the lesson card floats on, as stored. */
 const CardSideSchema = z.enum(['left', 'right']);
-const LiveSchema = z.boolean();
+/** Live, or Live + flow (`'flow'`); `false` = In use. A `true` kept before Live + flow was added reads as Live. */
+const LiveSchema = z.union([z.boolean(), z.literal('flow')]);
 /** How long the pointer may rest before the player's secondary controls fade, as a video's do, in ms. */
 const IDLE_MS = 2500;
 /** How far above the dock the pointer lifts the Sound Design tab, inviting a press, in px. */
@@ -619,15 +620,22 @@ function Synth({
   const [tipsOn, setTipsOn] = settings.tips;
   const [dimOn, setDimOn] = settings.dim;
   // The Signal layer (`f-live-panel` t-150): In use is the sound map's "Dim unused parts", kept with the settings;
-  // Live is that and the live glow, on a synth that has a routing to light, and is kept in this browser only.
+  // Live is that and the live glow, on a synth that has a routing to light, and Live + flow that and the lines between
+  // the lit parts (t-153); either is kept in this browser only.
   const [liveOn, setLiveOn] = useStoredPref(STORAGE_KEYS.live, LiveSchema, false);
   const liveOffered = !!routing;
-  const signal: SignalMode = !dimOn ? 'off' : liveOn && liveOffered ? 'live' : 'inUse';
+  const signal: SignalMode = !dimOn
+    ? 'off'
+    : liveOn && liveOffered
+      ? liveOn === 'flow'
+        ? 'flow'
+        : 'live'
+      : 'inUse';
   const setSignal = (m: SignalMode) => {
     setDimOn(m !== 'off');
     // Off clears Live too, so a dim synced back on from the account opens In use. In use is left alone where Live is
     // not offered, so a synth without a routing does not clear the choice made on the others.
-    if (m !== 'inUse' || liveOffered) setLiveOn(m === 'live');
+    if (m !== 'inUse' || liveOffered) setLiveOn(m === 'flow' ? 'flow' : m === 'live');
   };
   const [heatOn, setHeatOn] = settings.heat;
   const [harmOn, setHarmOn] = settings.harm;
@@ -876,9 +884,10 @@ function Synth({
   // What the live glow lights: what the patch routes now, worked out only while it is showing on the panel's face.
   const liveGlow = useMemo<LiveGlow | null>(
     () =>
-      signal === 'live' && routing && !routingOn
+      (signal === 'live' || signal === 'flow') && routing && !routingOn
         ? {
             routing,
+            flow: signal === 'flow',
             state: routingState(synthDef, routing, {
               values: sess.values,
               cables: sess.cables,

@@ -151,7 +151,8 @@ function StopBody({ def, stop }: { def: SynthDef; stop: TourStop }) {
           <li>
             <span className="text-(--kys-text)">Signal</span>, set to In use, darkens everything
             that is doing nothing in the patch you have loaded, which is the fastest way to see a
-            patch as a picture. Set to Live, the parts it uses light up as you play.
+            patch as a picture. Set to Live, the parts it uses light up as you play; Live + flow
+            adds lines from each part to the next.
           </li>
           <li>
             <span className="text-(--kys-text)">Show sensitive controls</span> glows behind the

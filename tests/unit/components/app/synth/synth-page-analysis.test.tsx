@@ -224,6 +224,25 @@ describe('the panel switches', () => {
     expect(signalShown()).toBe('In use');
     expect(window.localStorage.getItem('kys.live')).toBe('false');
   });
+
+  it('draws the flow with Live + flow, keeps it in this browser, and drops it back in Live', () => {
+    vi.stubGlobal('Worker', undefined);
+    window.localStorage.setItem('kys.dim', 'true');
+    const { unmount } = page();
+    chooseSignal('Live');
+    expect(screen.getByTestId('live-layer')).toBeTruthy();
+    expect(screen.queryByTestId('live-flow')).toBeNull();
+    chooseSignal('Live + flow');
+    expect(signalShown()).toBe('Live + flow');
+    expect(screen.getByTestId('live-flow')).toBeTruthy();
+    expect(window.localStorage.getItem('kys.live')).toBe('"flow"');
+    unmount();
+    page();
+    expect(signalShown()).toBe('Live + flow');
+    chooseSignal('Live');
+    expect(screen.queryByTestId('live-flow')).toBeNull();
+    expect(window.localStorage.getItem('kys.live')).toBe('true');
+  });
 });
 
 describe('the sound map', () => {
