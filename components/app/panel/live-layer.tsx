@@ -66,15 +66,14 @@ export function LiveLayer({
     let frame = requestAnimationFrame(function tick(now) {
       const { routing: r, state: st, source: src } = liveRef.current;
       const a = routingActivity(r, st, read(src, steady));
+      const level = (block: string) => a.blocks[block] ?? 0;
       const dt = now - last;
       last = now;
       for (const el of gRef.current?.querySelectorAll<SVGPathElement>('[data-live]') ?? []) {
         const id = el.getAttribute('data-live') ?? '';
         // An area two parts share (`liveAreas()`) glows with the brighter of them, and pulses as that one does.
-        const lead = id
-          .split(' ')
-          .reduce((x, y) => ((a.blocks[y] ?? 0) > (a.blocks[x] ?? 0) ? y : x));
-        const target = a.blocks[lead] ?? 0;
+        const lead = id.split(' ').reduce((x, y) => (level(y) > level(x) ? y : x));
+        const target = level(lead);
         const v = settle(shown.get(id) ?? 0, target, dt, a.pulsing[lead]);
         shown.set(id, v);
         const was = written.get(el) ?? -1;
