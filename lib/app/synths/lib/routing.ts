@@ -291,8 +291,14 @@ export function routingProblems(def: SynthDef, routing: SynthRouting): string[] 
     ...routing.edges.map((e): [string, string] => [e.from, e.to]),
     ...blockOf('in').flatMap((to) => outs.map((from): [string, string] => [from, to])),
   ]);
+  // A block that only measures (the VCS3's meter: no edges, and only inputs the engine does not hear) needs no way out.
+  const measures = (id: string) =>
+    !routing.edges.some((e) => e.from === id || e.to === id) &&
+    def.jacks.some((j) => routing.jacks[j.id] === id) &&
+    def.jacks.every((j) => routing.jacks[j.id] !== id || (j.dir === 'in' && j.dest === null));
   for (const b of routing.blocks)
-    if (!reach.has(b.id)) problems.push(`block ${b.id} has no way to ${routing.out}`);
+    if (!reach.has(b.id) && !measures(b.id))
+      problems.push(`block ${b.id} has no way to ${routing.out}`);
   // And every block that only passes signal on has something that could feed it.
   const inBlocks = new Set(blockOf('in'));
   for (const b of routing.blocks)

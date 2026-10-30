@@ -39,6 +39,7 @@ import { routing as pearlSyncussion } from '@/lib/app/synths/routing/pearl-syncu
 import { routing as behringerSyncussion } from '@/lib/app/synths/routing/behringer-syncussion';
 import { routing as e7 } from '@/lib/app/synths/routing/e7';
 import { routing as solar42n } from '@/lib/app/synths/routing/solar-42n';
+import { routing as emsVcs3 } from '@/lib/app/synths/routing/ems-vcs3';
 
 export const SYNTH_ROUTINGS: SynthRouting[] = [
   modelD,
@@ -70,6 +71,7 @@ export const SYNTH_ROUTINGS: SynthRouting[] = [
   behringerSyncussion,
   e7,
   solar42n,
+  emsVcs3,
 ];
 
 /** The routings built from their definition, by synth id. */
