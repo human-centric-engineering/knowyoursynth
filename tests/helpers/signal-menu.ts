@@ -10,7 +10,7 @@
 
 import { fireEvent } from '@testing-library/react';
 
-export type SignalName = 'Off' | 'In use' | 'Live';
+export type SignalName = 'Off' | 'In use' | 'Live' | 'Live + flow';
 
 const LABEL = 'Signal on the panel';
 
@@ -33,6 +33,6 @@ export function chooseSignal(name: SignalName): void {
 
 /** The mode the trigger says it is set to. */
 export function signalShown(): SignalName {
-  const m = /Signal: (In use|Live)/.exec(trigger().textContent ?? '');
-  return m ? (m[1] === 'Live' ? 'Live' : 'In use') : 'Off';
+  const m = /Signal: (In use|Live \+ flow|Live)/.exec(trigger().textContent ?? '');
+  return m ? (m[1] === 'In use' ? 'In use' : m[1] === 'Live' ? 'Live' : 'Live + flow') : 'Off';
 }
