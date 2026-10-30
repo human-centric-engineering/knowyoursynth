@@ -30,6 +30,10 @@ import { routing as deepmind12d } from '@/lib/app/synths/routing/deepmind-12d';
 import { routing as take5 } from '@/lib/app/synths/routing/take-5';
 import { routing as cs80 } from '@/lib/app/synths/routing/cs-80';
 import { routing as superGemini } from '@/lib/app/synths/routing/super-gemini';
+import { routing as pearlSyncussion } from '@/lib/app/synths/routing/pearl-syncussion';
+import { routing as behringerSyncussion } from '@/lib/app/synths/routing/behringer-syncussion';
+import { routing as e7 } from '@/lib/app/synths/routing/e7';
+import { routing as solar42n } from '@/lib/app/synths/routing/solar-42n';
 
 export const SYNTH_ROUTINGS: SynthRouting[] = [
   modelD,
@@ -57,6 +61,10 @@ export const SYNTH_ROUTINGS: SynthRouting[] = [
   take5,
   cs80,
   superGemini,
+  pearlSyncussion,
+  behringerSyncussion,
+  e7,
+  solar42n,
 ];
 
 const BY_ID = new Map(SYNTH_ROUTINGS.map((r) => [r.synth, r]));
