@@ -12,6 +12,7 @@
 
 import { useSyncExternalStore } from 'react';
 import type { ControlValue } from '@/lib/app/synths/contract';
+import type { MoogMeters } from '@/lib/app/synths/audio/moog-core';
 
 /** A store: read it, replace it (or map it), and hear about changes. */
 export interface Store<T> {
@@ -72,6 +73,8 @@ export interface Meters {
   pulser?: number;
   /** The SOLAR 42N's light on each voice's photosensor, 0..1. */
   eyes?: number[];
+  /** A 900-series modular's reading per module: the routing view lights each 921, 911 and 902 with its own. */
+  moog?: MoogMeters;
 }
 
 /** A control, jack or area the pointer, the keyboard or a press is on. */

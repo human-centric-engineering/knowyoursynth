@@ -9,12 +9,13 @@
  * app's output panel (`appout`, jacks `j.out.l` and `j.out.r`) is not on the hardware, so the spec has no module for
  * it; its block keeps the area's id. What each kind of module is, says and carries is written below, from the spec.
  *
- * Only the CM1A has a `meter`: the engine reports the key being held as its gate on the 900 path. The engine's `env1`
- * and `env2` are its own two envelopes, which the 900 sound path does not use (the 911s are separate slots in
- * `moog-core.ts`), and its oscillator and LFO meters describe no 921, so a live 911 or 921 follows the output's level
- * (`routingActivity()`). Each module following its own reading needs the engine to report one per module.
+ * The CM1A's `meter` is the gate: the engine reports the key being held as its gate on the 900 path. Each 921 and
+ * 921B, 911 and 902 follows its own engine slot (`MoogMeters`): its wave, its envelope, its gain. The engine's `env1`
+ * and `env2` are its own two envelopes, which the 900 sound path does not use, so no block reads them. The slot is
+ * read off the module's output jacks (`j.m911_2.out` carries `e2`), as the slots are numbered in build order.
  */
 import type {
+  ModuleMeter,
   RoutingBlock,
   RoutingMeter,
   RoutingSymbol,
@@ -209,6 +210,26 @@ const jackModule = (id: string) => {
   return m === 'out' ? OUT : m;
 };
 
+/** The output signal that numbers a module's engine slot, and the reading that slot reports. */
+const SLOT_SIGNALS: [RegExp, 'vco' | 'env' | 'amp'][] = [
+  [/^v(\d+)sin$/, 'vco'],
+  [/^e(\d+)$/, 'env'],
+  [/^a(\d+)p$/, 'amp'],
+];
+
+/** Each module's own engine reading, by module id, from the signals its jacks carry. */
+function slotMeters(def: SynthDef): Map<string, ModuleMeter> {
+  const meters = new Map<string, ModuleMeter>();
+  for (const j of def.jacks) {
+    if (!j.signal) continue;
+    for (const [re, kind] of SLOT_SIGNALS) {
+      const m = re.exec(j.signal);
+      if (m) meters.set(jackModule(j.id), `${kind}:${Number(m[1])}`);
+    }
+  }
+  return meters;
+}
+
 /**
  * The routing of a System 15, 35 or 55: one block per module of `def`, its cables the only paths. A module this file
  * does not know is left out rather than thrown on, since this runs as the synth page renders: `routingProblems` then
@@ -216,6 +237,7 @@ const jackModule = (id: string) => {
  */
 export function moog900Routing(def: SynthDef): SynthRouting {
   const areas = def.areas ?? [];
+  const slots = slotMeters(def);
   const blocks = areas.flatMap((a): RoutingBlock[] => {
     const kind = a.id.replace(/_\d+$/, '');
     const k = KINDS[kind];
@@ -231,7 +253,8 @@ export function moog900Routing(def: SynthDef): SynthRouting {
     if (k.specs) block.specs = k.specs;
     if (k.passes) block.passes = true;
     if (k.symbol) block.symbol = k.symbol;
-    if (k.meter) block.meter = k.meter;
+    const meter = k.meter ?? slots.get(a.id);
+    if (meter) block.meter = meter;
     return [block];
   });
   const placed = new Set(blocks.map((b) => b.id));
