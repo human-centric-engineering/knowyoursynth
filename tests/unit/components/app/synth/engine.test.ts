@@ -51,15 +51,29 @@ describe('toStores', () => {
       pulser: 0,
       power: false,
     });
+    // A stage the engine does not report stays unknown, not idle.
+    expect(meterStore.get().env1Stage).toBeUndefined();
   });
 
-  it('keeps the optional meter fields when given, including a sequencer step of 0', async () => {
+  it('keeps the optional meter fields when given, including envelope stages and a sequencer step of 0', async () => {
     const { toStores, meterStore } = await load();
-    toStores(meter({ voices: 3, env1: 0.7, env2: 0.4, seq: 0, pulser: 0.2 }));
+    toStores(
+      meter({
+        voices: 3,
+        env1: 0.7,
+        env2: 0.4,
+        env1Stage: 'decay',
+        env2Stage: 'sustain',
+        seq: 0,
+        pulser: 0.2,
+      })
+    );
     expect(meterStore.get()).toMatchObject({
       voices: 3,
       env1: 0.7,
       env2: 0.4,
+      env1Stage: 'decay',
+      env2Stage: 'sustain',
       seq: 0,
       pulser: 0.2,
     });

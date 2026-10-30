@@ -134,6 +134,35 @@ describe('LiveLayer on Model D', () => {
     expect(filter?.getAttribute('d')).toContain(cells[cable.to]);
   });
 
+  const stageOf = (container: HTMLElement, id: string) => {
+    const el = container.querySelector<SVGPathElement>(`[data-stage="${id}"]`);
+    if (!el) throw new Error(`no stage light ${id}`);
+    return Number(el.style.getPropertyValue('--a') || 0);
+  };
+
+  it('lights the knob for the stage each contour’s envelope is in, and moves on with it', () => {
+    meterStore.set({ ...PLAYING, env1Stage: 'attack', env2Stage: 'sustain' });
+    const { container } = draw({ 'env.filterDecay': true, 'env.loudDecay': false });
+    run(20);
+    expect(stageOf(container, 'filter_contour:attack')).toBeCloseTo(1, 2);
+    expect(stageOf(container, 'filter_contour:decay')).toBe(0);
+    expect(stageOf(container, 'loudness_contour:sustain')).toBeCloseTo(1, 2);
+    meterStore.set({ ...PLAYING, gate: false, env1Stage: 'release', env2Stage: 'release' });
+    run(20);
+    expect(stageOf(container, 'filter_contour:attack')).toBeLessThan(0.01);
+    expect(stageOf(container, 'filter_contour:release')).toBeCloseTo(1, 2);
+    // LOUD DECAY is off: the loudness release lights nothing, and its sustain goes dark.
+    expect(container.querySelector('[data-stage="loudness_contour:release"]')).toBeNull();
+    expect(stageOf(container, 'loudness_contour:sustain')).toBeLessThan(0.01);
+  });
+
+  it('lights no stage with the power off', () => {
+    meterStore.set({ ...PLAYING, power: false, env1Stage: 'attack' });
+    const { container } = draw();
+    run(20);
+    expect(stageOf(container, 'filter_contour:attack')).toBe(0);
+  });
+
   it('stays dark with the power off, whatever the meters last said', () => {
     meterStore.set({ ...PLAYING, power: false });
     const { container } = draw();

@@ -26,6 +26,7 @@ import type {
   RoutingEdge,
   RoutingLevel,
   RoutingWhen,
+  StageControl,
   SynthDef,
   SynthRouting,
 } from '@/lib/app/synths/contract';
@@ -63,7 +64,13 @@ export interface RoutingInput {
   wheel?: number;
 }
 
-function holds(when: RoutingWhen, values: ControlValues): boolean {
+/** A stage's knob and the condition it lights under (`RoutingBlock.stages`), whichever way it is written. */
+export function stageControl(light: StageControl): { id: string; when?: RoutingWhen } {
+  return typeof light === 'string' ? { id: light } : light;
+}
+
+/** Whether `when` holds for the panel's `values`. */
+export function holds(when: RoutingWhen, values: ControlValues): boolean {
   if ('all' in when) return when.all.every((w) => holds(w, values));
   if ('any' in when) return when.any.some((w) => holds(w, values));
   return conditionHolds(when, values);
@@ -452,6 +459,20 @@ export function routingProblems(def: SynthDef, routing: SynthRouting): string[] 
   }
   for (const c of def.controls)
     if (!c.ui && !listed.has(c.id)) problems.push(`control ${c.id} sets no block`);
+  // A stage map names the block's own knobs, on a block that follows an envelope the engine reports a stage for.
+  for (const b of routing.blocks) {
+    if (!b.stages) continue;
+    if (b.meter !== 'env1' && b.meter !== 'env2')
+      problems.push(`block ${b.id}: stages need an env1 or env2 meter`);
+    for (const [stage, light] of Object.entries(b.stages)) {
+      if (!light) continue;
+      const where = `block ${b.id} stage ${stage}`;
+      const { id, when } = stageControl(light);
+      if (!(b.controls ?? []).includes(id))
+        problems.push(`${where}: ${id} is not one of its controls`);
+      if (when) checkWhen(where, when);
+    }
+  }
 
   // Every block has a way to the output, with every switch allowed and a cable from any output jack to any input.
   const blockOf = (dir: 'in' | 'out') =>

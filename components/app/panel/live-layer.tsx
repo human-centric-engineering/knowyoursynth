@@ -6,16 +6,20 @@
  * It is the routing view's lamps (`routingActivity()`), drawn where the knobs and patched jacks of each part are (`liveAreas()`),
  * over the "In use" wash, so the still picture and the live one read together.
  *
+ * Over a contour, the knob for the stage its envelope is in lights too (t-152, `liveStages()`): Attack, then Decay,
+ * then Sustain while the key is held, then Release after it, as the engine reports the stage (`env1Stage`).
+ *
  * As on the routing view, the glow is written straight to a CSS variable (`--a`) once a frame, never through React
  * state. A visitor who asks for less motion gets steady glows (`steadyMeters()`).
  */
 
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
-import { liveAreas } from '@/lib/app/synths/lib/live-areas';
+import { liveAreas, liveStages } from '@/lib/app/synths/lib/live-areas';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
 import { routingActivity, settle } from '@/lib/app/synths/lib/routing-activity';
 import type { RoutingState } from '@/lib/app/synths/lib/routing';
 import { createMeterReader, type LiveSource } from '@/components/app/synth/live-meters';
+import { meterStore } from '@/components/app/synth/stores';
 import { reducedMotion } from '@/components/app/panel/parts';
 import type { ControlValues, PatchCable, SynthDef, SynthRouting } from '@/lib/app/synths/contract';
 
@@ -43,10 +47,13 @@ export function LiveLayer({
     .flatMap((cb) => [cb.from, cb.to])
     .sort()
     .join(' ');
-  const areas = useMemo(
-    () => liveAreas(def, routing, patched.split(' ').filter(Boolean), values),
-    [def, routing, patched, values]
-  );
+  const { areas, stages } = useMemo(() => {
+    const jacks = patched.split(' ').filter(Boolean);
+    return {
+      areas: liveAreas(def, routing, jacks, values),
+      stages: liveStages(def, routing, jacks, values),
+    };
+  }, [def, routing, patched, values]);
 
   // The latest routing, state and source are read through refs, so the loop runs for as long as the layer is up
   // rather than restarting (and dropping every glow to dark) with every knob turned.
@@ -63,23 +70,37 @@ export function LiveLayer({
     const read = createMeterReader();
     const steady = reducedMotion();
     let last = performance.now();
+    let dt = 0;
+    const ease = (el: SVGPathElement, key: string, target: number, quick: boolean) => {
+      const v = settle(shown.get(key) ?? 0, target, dt, quick);
+      shown.set(key, v);
+      const was = written.get(el) ?? -1;
+      if (v === was || (v !== target && Math.abs(v - was) < 0.004)) return;
+      written.set(el, v);
+      el.style.setProperty('--a', v.toFixed(3));
+    };
     let frame = requestAnimationFrame(function tick(now) {
       const { routing: r, state: st, source: src } = liveRef.current;
       const a = routingActivity(r, st, read(src, steady));
       const level = (block: string) => a.blocks[block] ?? 0;
-      const dt = now - last;
+      dt = now - last;
       last = now;
       for (const el of gRef.current?.querySelectorAll<SVGPathElement>('[data-live]') ?? []) {
         const id = el.getAttribute('data-live') ?? '';
         // An area two parts share (`liveAreas()`) glows with the brighter of them, and pulses as that one does.
         const lead = id.split(' ').reduce((x, y) => (level(y) > level(x) ? y : x));
-        const target = level(lead);
-        const v = settle(shown.get(id) ?? 0, target, dt, a.pulsing[lead]);
-        shown.set(id, v);
-        const was = written.get(el) ?? -1;
-        if (v === was || (v !== target && Math.abs(v - was) < 0.004)) continue;
-        written.set(el, v);
-        el.style.setProperty('--a', v.toFixed(3));
+        ease(el, id, level(lead), a.pulsing[lead]);
+      }
+      // A stage knob is on while its envelope is in that stage, and moves on quickly, as a pulse does.
+      const m = meterStore.get();
+      const at = {
+        env1: m.power ? m.env1Stage : undefined,
+        env2: m.power ? m.env2Stage : undefined,
+      };
+      for (const el of gRef.current?.querySelectorAll<SVGPathElement>('[data-stage]') ?? []) {
+        const id = el.getAttribute('data-stage') ?? '';
+        const env = el.getAttribute('data-env') === 'env2' ? 'env2' : 'env1';
+        ease(el, id, at[env] === el.getAttribute('data-at') ? 1 : 0, true);
       }
       frame = requestAnimationFrame(tick);
     });
@@ -91,6 +112,18 @@ export function LiveLayer({
       {areas.map((a) => (
         <path key={a.id} data-live={a.id} d={a.d} fill={moduleOf(a.module).color} />
       ))}
+      <g className="kys-live-stages">
+        {stages.map((st) => (
+          <path
+            key={st.id}
+            data-stage={st.id}
+            data-env={st.env}
+            data-at={st.stage}
+            d={st.d}
+            fill={moduleOf(st.module).color}
+          />
+        ))}
+      </g>
     </g>
   );
 }

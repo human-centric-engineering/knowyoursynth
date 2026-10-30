@@ -3233,3 +3233,14 @@ button.kys-routing-card-item:focus-visible {
   opacity: calc(var(--a, 0) * 0.35);
   mix-blend-mode: multiply;
 }
+/*
+ * The knob for the stage a contour is in (t-152): over its section's glow, brighter. Not stroked: a cell is several
+ * convex pieces, and a stroke would draw the seams between them across the knob.
+ */
+.kys-live .kys-live-stages path {
+  opacity: calc(var(--a, 0) * 0.8);
+}
+.is-outline .kys-live .kys-live-stages path,
+.is-light .kys-live .kys-live-stages path {
+  opacity: calc(var(--a, 0) * 0.55);
+}

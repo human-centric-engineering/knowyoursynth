@@ -394,6 +394,32 @@ describe('routingProblems', () => {
       })
     ).toEqual(['audioJacks: j.nope belongs to no block', 'audio jack j.ext is listed twice']);
   });
+
+  it('refuses a stage knob that is not the block’s, a condition on no control, and stages off an envelope', () => {
+    expect(
+      edit((r) => {
+        const contour = r.blocks.find((b) => b.id === 'filter_contour');
+        const lfo = r.blocks.find((b) => b.id === 'lfo');
+        if (!contour || !lfo) throw new Error('model-d has a filter contour and an LFO');
+        contour.stages = {
+          attack: 'aenv.attack',
+          release: { id: 'fenv.decay', when: { id: 'env.filterDecayy', eq: true } },
+        };
+        lfo.stages = { attack: 'lfo.rate' };
+      })
+    ).toEqual([
+      'block lfo: stages need an env1 or env2 meter',
+      'block filter_contour stage attack: aenv.attack is not one of its controls',
+      'block filter_contour stage release: no control env.filterDecayy',
+    ]);
+    // A stage set to nothing is passed over, as `liveStages()` passes it over.
+    expect(
+      edit((r) => {
+        const contour = r.blocks.find((b) => b.id === 'filter_contour');
+        if (contour) contour.stages = { attack: 'fenv.attack', release: undefined };
+      })
+    ).toEqual([]);
+  });
 });
 
 describe('routingProblems: a block that only measures', () => {

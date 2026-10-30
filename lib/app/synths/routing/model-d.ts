@@ -171,6 +171,13 @@ export const routing: SynthRouting = {
       module: 'env',
       controls: ['fenv.attack', 'fenv.decay', 'fenv.sustain', 'env.filterDecay'],
       meter: 'env1',
+      // No release knob: the release takes the decay time with FILTER DECAY on, and is immediate with it off.
+      stages: {
+        attack: 'fenv.attack',
+        decay: 'fenv.decay',
+        sustain: 'fenv.sustain',
+        release: { id: 'fenv.decay', when: { id: 'env.filterDecay', eq: true } },
+      },
       description:
         'An attack, decay, sustain envelope for the cutoff. Release is either immediate or the decay time, set by FILTER DECAY.',
       specs: [{ label: 'Output', value: '0 to 4 V' }],
@@ -181,6 +188,13 @@ export const routing: SynthRouting = {
       module: 'env',
       controls: ['aenv.attack', 'aenv.decay', 'aenv.sustain', 'env.loudDecay'],
       meter: 'env2',
+      // As the filter contour's, with LOUD DECAY.
+      stages: {
+        attack: 'aenv.attack',
+        decay: 'aenv.decay',
+        sustain: 'aenv.sustain',
+        release: { id: 'aenv.decay', when: { id: 'env.loudDecay', eq: true } },
+      },
       description:
         'An attack, decay, sustain envelope for the amplifier. Release is either immediate or the decay time, set by LOUD DECAY.',
       specs: [

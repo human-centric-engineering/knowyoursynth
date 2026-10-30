@@ -216,7 +216,11 @@ registry would put it in every synth page's bundle (`defs/load.ts`).
   `meter` the engine meter that shows it working (`gate`, `env1`, `env2`, `lfo`, `osc1`–`osc4`), for the view's
   glow; check which envelope the definition's `toEngine()` gives each contour (Model D: `env1` filter, `env2`
   loudness), and that `oscN` is the engine's Nth oscillator. The DSP meter carries what these read (`lfoHz`,
-  and each oscillator's `oscV`, `oscHz`, `oscLv`).
+  and each oscillator's `oscV`, `oscHz`, `oscLv`). On a contour (`meter` `env1` or `env2`), `stages` maps the
+  envelope's stages to the block's own knobs for the live panel's stage lights (`{ attack, decay, sustain,
+release }`, and `delay`, `hold` where a synth has them); a stage takes `{ id, when }` where its knob counts
+  only with a switch set (the Model D's release is its Decay knob with DECAY on, and nothing with it off). The
+  meter reports the stage as `env1Stage` / `env2Stage`. Only the Model D has one so far.
   **Edges** join them, each with its `signal` (`audio`, `cv`, `gate`) and
   the rule for when it carries signal: `when` (switches, in the definition's control ids), `levels` (controls
   that scale it) and `breaks` (the input jack whose cable breaks this normal). An edge with none is fixed.
@@ -257,7 +261,8 @@ registry would put it in every synth page's bundle (`defs/load.ts`).
   `add` and by one edge at most, every jack has a block, every block has a way to the output through edges or
   some cable, unless it only measures (no edges, and only inputs whose `dest` is `null`: the VCS3's meter), every
   `passes` block has an edge or input jack into it, every heard control sets some block and no block names a
-  `ui` one, and every `audioJacks` entry is a placed jack, once) and to its spec (every module and connection is
+  `ui` one, every `audioJacks` entry is a placed jack, once, and every `stages` knob is the block's own, on a
+  block metered by `env1` or `env2`) and to its spec (every module and connection is
   drawn, or listed in `omitted` with the reason). It also requires a routing on every registered synth.
 
 Model D's is the worked example. Synths that share a voice share a builder (`routing/acid-voice.ts`,

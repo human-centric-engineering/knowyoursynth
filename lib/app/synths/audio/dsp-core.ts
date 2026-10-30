@@ -24,6 +24,7 @@ import type {
   ChorusParams,
   RingModParams,
   TremoloParams,
+  EnvStage,
 } from '@/lib/app/synths/contract';
 import { createFx } from '@/lib/app/synths/audio/dm-fx';
 import {
@@ -69,6 +70,12 @@ export interface MeterEvent {
   lfo: number;
   env1: number;
   env2: number;
+  /**
+   * Where Envelope 1 and 2 are, for the panel's stage lights. Absent where the voice's own envelopes do not drive
+   * them: the Easel's, the 900 series' and the VCS3 trapezoid (Envelope 1 only) are their own.
+   */
+  env1Stage?: EnvStage;
+  env2Stage?: EnvStage;
   /** Bit k: oscillator k is sounding a note. */
   oscs?: number;
   /** The LFO's rate now, in Hz. */
@@ -399,6 +406,8 @@ export const BUILTIN_NORMALS: Record<string, string> = {
   dryIn: 'out',
 };
 const TWO_PI = Math.PI * 2;
+/** How near its sustain level a decaying RC envelope is said to be sustaining (`envStage()`). */
+const SUSTAIN_NEAR = 0.01;
 const LN2_12 = Math.LN2 / 12;
 
 /**
@@ -1142,6 +1151,30 @@ function createVoice(
         break;
     }
     return e.level;
+  }
+
+  /**
+   * Where an envelope is, by name. The curved envelope has a sustain stage of its own; the RC one decays towards the
+   * sustain level in stage 2 and stays there, so it is sustaining once it is within `SUSTAIN_NEAR` of it (a looping
+   * one never is: it falls to zero and starts again).
+   */
+  function envStage(e: VoiceEnv): EnvStage {
+    switch (e.stage) {
+      case 1:
+        return 'attack';
+      case 2:
+        return !e.curved && !e.loop && Math.abs(e.level - e.s) < SUSTAIN_NEAR ? 'sustain' : 'decay';
+      case 3:
+        return 'sustain';
+      case 4:
+        return 'release';
+      case 5:
+        return 'delay';
+      case 6:
+        return 'hold';
+      default:
+        return 'idle';
+    }
   }
 
   function runEnv(e: VoiceEnv, g: boolean) {
@@ -2312,6 +2345,8 @@ function createVoice(
           lfo: S[SI.lfo],
           env1: S[SI.env1],
           env2: S[SI.env2],
+          env1Stage: P.easel || P.moog || P.trap ? undefined : envStage(env[0]),
+          env2Stage: P.easel || P.moog ? undefined : envStage(env[1]),
           oscs: oscMask(),
           lfoHz: lfoHzNow,
           ...oscMeters(),
@@ -2883,7 +2918,10 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
           if (meters[k]) over = Math.max(over, meters[k].overload);
         }
       });
-      const m: Partial<MeterEvent> = meters[partCur[0] < 0 && partCur[1] >= 0 ? 1 : 0] || {};
+      const part = partCur[0] < 0 && partCur[1] >= 0 ? 1 : 0;
+      const m: Partial<MeterEvent> = meters[part] || {};
+      // An idle module stops metering: its envelopes are at rest, whatever it last said.
+      const rest = !parts[part] || parts[part].idle();
       emit({
         type: 'meter',
         overload: over,
@@ -2891,6 +2929,8 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         lfo: m.lfo || 0,
         env1: m.env1 || 0,
         env2: m.env2 || 0,
+        env1Stage: rest && m.env1Stage ? 'idle' : m.env1Stage,
+        env2Stage: rest && m.env2Stage ? 'idle' : m.env2Stage,
         lfoHz: m.lfoHz,
         oscV: m.oscV,
         oscHz: m.oscHz,
@@ -3262,6 +3302,8 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         }
       });
       const m: Partial<MeterEvent> = meters[lead] || {};
+      // An idle voice stops metering: its envelopes are at rest, whatever it last said.
+      const rest = !voices[lead] || voices[lead].idle();
       emit({
         type: 'meter',
         overload: over,
@@ -3269,6 +3311,8 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         lfo: m.lfo || 0,
         env1: m.env1 || 0,
         env2: m.env2 || 0,
+        env1Stage: rest && m.env1Stage ? 'idle' : m.env1Stage,
+        env2Stage: rest && m.env2Stage ? 'idle' : m.env2Stage,
         lfoHz: m.lfoHz,
         oscV: m.oscV,
         oscHz: m.oscHz,
