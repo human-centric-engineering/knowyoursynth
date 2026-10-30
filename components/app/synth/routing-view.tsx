@@ -277,13 +277,16 @@ export function RoutingView({
     [def, routing, values, cables, wheel]
   );
   // Laid out again only when a cable goes in or comes out, not on every turn of a knob: `state.cables` is a new array
-  // each time, so the memo is keyed on the blocks each cable joins (as JSON, which no id can break).
-  const cableEnds = JSON.stringify(state.cables.map((c) => [c.fromBlock, c.toBlock]));
+  // each time, so the memo is keyed on the blocks each cable joins and what it carries (as JSON, which no id can
+  // break). On a modular or a pin matrix the cables are what place the blocks, so the drawing changes shape.
+  const cableEnds = JSON.stringify(state.cables.map((c) => [c.fromBlock, c.toBlock, c.signal]));
   const { layout, cablePath } = useMemo(() => {
-    const ends = z.array(z.tuple([z.string(), z.string()])).parse(JSON.parse(cableEnds));
+    const ends = z
+      .array(z.tuple([z.string(), z.string(), z.enum(['audio', 'cv'])]))
+      .parse(JSON.parse(cableEnds));
     const l = layoutRouting(
       routing,
-      ends.map(([from, to], i) => ({ id: `cable:${i}`, from, to }))
+      ends.map(([from, to, signal], i) => ({ id: `cable:${i}`, from, to, signal }))
     );
     // A cable's path by its id: the layout leaves out one whose ends are not both blocks.
     return { layout: l, cablePath: new Map(l.cables.map((p) => [p.id, p])) };

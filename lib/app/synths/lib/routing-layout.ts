@@ -7,9 +7,18 @@
 // - **Bands.** A block on an audio edge is in the audio band; the rest (pitch, modulation, contours) are in the band
 //   beneath. Each column's audio blocks are centred on the tallest column's, so the main line runs straight.
 // - **Columns, audio first.** The audio band is laid out from its own edges alone, "as late as possible": the
-//   output is the last column and every other block one column left of the earliest block it feeds. Then each
-//   block beneath goes one column left of the earliest block it feeds, so a contour sits just before the filter it
-//   opens. A block beneath that feeds nothing goes one column right of what feeds it, or in the first column.
+//   output is the last column and every other block one column left of the earliest block it feeds (an audio block
+//   with no way on, as if it fed the output, so it and what feeds it stay left of the output). Then each block
+//   beneath goes one column left of the earliest block it feeds, so a contour sits just before the filter it opens.
+//   A block beneath that feeds nothing goes one column right of what feeds it, or in the first column.
+// - **Cables place what the edges leave loose, and audio cables the main line.** A block on none of the routing's
+//   edges (every block of a modular, most of a pin-matrix synth, a patch-only utility) is placed by the cables that
+//   join it, by the same two rules. An audio cable (`signal`, from the routing's `audioJacks`) places both its ends
+//   on the main line, whatever else they are on, since on a pin-matrix synth the main line is pins between blocks
+//   that edges also join. Only those synths declare audio jacks, so on a synth whose path is wired a block an edge
+//   places never moves for a cable: patching redraws the loose parts and leaves the synth's own path where it was.
+// - **Spare blocks.** A loose block no cable joins either sits in a grid beneath the rest, in the routing's order,
+//   so a modular with nothing patched is a tray of its modules rather than one tall column.
 // - **Back links.** An edge out of the output (Model D's output fed back into its external input), an edge that
 //   would close a loop, and any link that ends up running leftward (Oscillator 3 into the mod bus that bends its
 //   own pitch) are drawn back against the flow: over the top between two audio blocks, under the bottom otherwise.
@@ -18,6 +27,7 @@
 // - **Ports.** A block's links leave from its right side and arrive on its left, spread down the side in the order
 //   of the far end's height, so two edges between the same blocks are drawn apart and fewer cross.
 import type { RoutingSignal, SynthRouting } from '@/lib/app/synths/contract';
+import { reachBack } from '@/lib/app/synths/lib/routing';
 
 export const BLOCK_W = 150;
 export const BLOCK_H = 46;
@@ -34,8 +44,9 @@ export interface PlacedBlock {
   id: string;
   x: number;
   y: number;
+  /** Its column in its band; in the spare grid, its column there. */
   col: number;
-  band: 'audio' | 'control';
+  band: 'audio' | 'control' | 'spare';
 }
 
 export interface PlacedLink {
@@ -83,6 +94,9 @@ function outOf(links: Link[]): Map<string, Link[]> {
   return m;
 }
 
+/** The stand-in an audio dead-end feeds while steps are counted: in the output's column, so the dead-end is left of it. */
+const DEAD_END = '\0dead-end';
+
 /**
  * Steps from the end over `links` for each of `ids`: 0 for a block that feeds none of them, else one more than the
  * most of what it feeds. A link that would close a loop is skipped, and added to `back`.
@@ -108,25 +122,54 @@ function stepsToEnd(ids: string[], links: Link[], back: Set<string>): Map<string
   return steps;
 }
 
-/** Lays `routing` out, with `cables` (between blocks) drawn over it. */
+/** Lays `routing` out, with `cables` (between blocks) drawn over it, placing the blocks no edge places. */
 export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): RoutingLayout {
+  const ids = routing.blocks.map((b) => b.id);
+  const known = new Set(ids);
+  const drawn = cables.filter((c) => known.has(c.from) && known.has(c.to));
+  const edged = new Set(routing.edges.flatMap((e) => [e.from, e.to]));
+  edged.add(routing.out);
+  const cabled = new Set(drawn.flatMap((c) => [c.from, c.to]));
+  const spareIds = ids.filter((id) => !edged.has(id) && !cabled.has(id));
+  // What places a block: the edges, the audio cables, and the control cables out of a loose block. A control cable
+  // out of a block an edge places only feeds the sink pass below, so it can move the loose block it reaches but
+  // never its source.
+  const placing: LinkInput[] = [
+    ...routing.edges,
+    ...drawn.filter((c) => (c.signal === 'audio' || !edged.has(c.from)) && c.from !== c.to),
+  ];
+  // What moves a sink: every link into it, except that a block an edge places moves only for edges and audio cables.
+  const feeding = [...routing.edges, ...drawn.filter((c) => c.from !== c.to)];
+  const edgeFeeding = [
+    ...routing.edges,
+    ...drawn.filter((c) => c.signal === 'audio' && c.from !== c.to),
+  ];
+
   const audio = new Set(
-    routing.edges.filter((e) => e.signal === 'audio').flatMap((e) => [e.from, e.to])
+    [...routing.edges, ...drawn].filter((e) => e.signal === 'audio').flatMap((e) => [e.from, e.to])
   );
   audio.add(routing.out);
-  const ids = routing.blocks.map((b) => b.id);
-  const audioIds = ids.filter((id) => audio.has(id));
-  const controlIds = ids.filter((id) => !audio.has(id));
+  const banded = ids.filter((id) => edged.has(id) || cabled.has(id));
+  const audioIds = banded.filter((id) => audio.has(id));
+  const controlIds = banded.filter((id) => !audio.has(id));
 
-  // Columns, relative to the output at 0: the audio band from its own edges, then the band beneath.
-  const back = new Set(routing.edges.filter((e) => e.from === routing.out).map((e) => e.id));
-  const audioSteps = stepsToEnd(
-    audioIds,
-    routing.edges.filter((e) => audio.has(e.from) && audio.has(e.to) && !back.has(e.id)),
-    back
+  // Columns, relative to the output at 0: the audio band from its own links, then the band beneath.
+  const back = new Set(placing.filter((e) => e.from === routing.out).map((e) => e.id));
+  const mainLine = placing.filter((e) => audio.has(e.from) && audio.has(e.to) && !back.has(e.id));
+  // An audio block with no way on along the band (the Syntrx's ring modulator, whose output is a pin; a filter not
+  // yet patched on) is counted as feeding a stand-in in the output's column, so it ends one column left of the output
+  // rather than in its column, where it would read as feeding it, and whatever feeds it lands left of it.
+  const toOut = reachBack(
+    routing.out,
+    mainLine.map((l): [string, string] => [l.from, l.to])
   );
+  const leaves = new Set(mainLine.map((l) => l.from));
+  const deadEnds = audioIds
+    .filter((id) => !toOut.has(id) && !leaves.has(id))
+    .map((id) => ({ id: `${DEAD_END}:${id}`, from: id, to: DEAD_END }));
+  const audioSteps = stepsToEnd(audioIds, [...mainLine, ...deadEnds], back);
   const at = new Map<string, number>(audioIds.map((id) => [id, -(audioSteps.get(id) ?? 0)]));
-  const fromControl = outOf(routing.edges.filter((e) => !audio.has(e.from) && !back.has(e.id)));
+  const fromControl = outOf(placing.filter((e) => !audio.has(e.from) && !back.has(e.id)));
   const open = new Set<string>();
   const place = (b: string): number | undefined => {
     const known = at.get(b);
@@ -148,13 +191,13 @@ export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): 
   controlIds.forEach(place);
   // A block beneath that feeds nothing (a sink, or one whose only way out is a cable) goes one column right of the
   // latest block that feeds it, so that edge runs forward; with nothing feeding it either, the first column.
-  // Settled together, since a sink can feed another: each pass moves a sink right of every feeder placed so far, and
-  // a loop between sinks stops after as many passes as there are sinks.
+  // Settled together, since a sink can feed another: each pass moves a sink right of every feeder placed so far,
+  // and a loop between sinks stops after as many passes as there are sinks.
   const sinks = controlIds.filter((id) => !at.has(id));
   for (let pass = 0, moved = true; moved && pass <= sinks.length; pass++) {
     moved = false;
     for (const id of sinks) {
-      const after = routing.edges
+      const after = (edged.has(id) ? edgeFeeding : feeding)
         .filter((e) => e.to === id && e.from !== id && !back.has(e.id) && at.has(e.from))
         .map((e) => (at.get(e.from) ?? 0) + 1);
       if (after.length && Math.max(...after) !== at.get(id)) {
@@ -164,7 +207,7 @@ export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): 
     }
   }
   const first = Math.min(0, ...at.values());
-  const col = new Map(ids.map((id) => [id, (at.get(id) ?? first) - first]));
+  const col = new Map(banded.map((id) => [id, (at.get(id) ?? first) - first]));
   const ncols = Math.max(0, ...col.values()) + 1;
 
   // Each column's blocks, per band, in the routing's order.
@@ -176,8 +219,14 @@ export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): 
   const controlRows = Math.max(0, ...controlCols.map((c) => c.length));
   const rowH = BLOCK_H + ROW_GAP;
   const controlTop = MARGIN + audioRows * rowH + (audioRows && controlRows ? BAND_GAP : 0);
-  const height =
-    (controlRows ? controlTop + controlRows * rowH : MARGIN + audioRows * rowH) - ROW_GAP + MARGIN;
+  const bandsEnd = controlRows ? controlTop + controlRows * rowH : MARGIN + audioRows * rowH;
+  // The spare grid: as wide as the bands, or wider when there are many (about twice as wide as it is tall).
+  const spareCols = spareIds.length
+    ? Math.min(spareIds.length, Math.max(ncols, Math.ceil(Math.sqrt(2 * spareIds.length))))
+    : 0;
+  const spareRows = spareCols && Math.ceil(spareIds.length / spareCols);
+  const spareTop = bandsEnd - ROW_GAP + BAND_GAP;
+  const height = (spareRows ? spareTop + spareRows * rowH : bandsEnd) - ROW_GAP + MARGIN;
   const xOf = (c: number) => MARGIN + c * (BLOCK_W + COL_GAP);
 
   const blocks: Record<string, PlacedBlock> = {};
@@ -192,20 +241,28 @@ export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): 
       blocks[id] = { id, col: c, band: 'control', x: xOf(c), y: controlTop + r * rowH };
     })
   );
+  spareIds.forEach((id, k) => {
+    const c = k % spareCols;
+    blocks[id] = {
+      id,
+      col: c,
+      band: 'spare',
+      x: xOf(c),
+      y: spareTop + Math.floor(k / spareCols) * rowH,
+    };
+  });
 
   // The routing's edges first, then the cables whose ends are both blocks.
-  const links = [...routing.edges, ...cables.filter((c) => blocks[c.from] && blocks[c.to])].map(
-    (l) => {
-      const isBack = back.has(l.id) || blocks[l.to].col <= blocks[l.from].col;
-      const over = blocks[l.from].band === 'audio' && blocks[l.to].band === 'audio';
-      return {
-        id: l.id,
-        from: l.from,
-        to: l.to,
-        back: isBack ? (over ? ('top' as const) : ('bottom' as const)) : null,
-      };
-    }
-  );
+  const links = [...routing.edges, ...drawn].map((l) => {
+    const isBack = back.has(l.id) || blocks[l.to].col <= blocks[l.from].col;
+    const over = blocks[l.from].band === 'audio' && blocks[l.to].band === 'audio';
+    return {
+      id: l.id,
+      from: l.from,
+      to: l.to,
+      back: isBack ? (over ? ('top' as const) : ('bottom' as const)) : null,
+    };
+  });
 
   // Ports: each block's outgoing links spread down its right side, incoming down its left, ordered by the far end.
   // A link drawn round the top takes the topmost port, one round the bottom the bottommost.
@@ -292,7 +349,7 @@ export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): 
     };
   });
   return {
-    width: xOf(ncols) - COL_GAP + MARGIN,
+    width: xOf(Math.max(ncols, spareCols)) - COL_GAP + MARGIN,
     height,
     blocks,
     edges: placed.slice(0, routing.edges.length),

@@ -595,7 +595,7 @@ function Synth({
   const [tourOn, setTourOn] = useState(false);
   // The routing view on the back of the panel (t-142), for a synth that has a routing. The flip is a view transition
   // (`routing-flip`, `.kys-panel-flip`), so nothing that holds the panel carries a transform; reduced motion swaps.
-  const routing = useMemo(() => getSynthRouting(synthId), [synthId]);
+  const routing = useMemo(() => getSynthRouting(synthDef), [synthDef]);
   const [routingOn, setRoutingOn] = useState(false);
   const flipPanel = useCallback((on: boolean) => {
     startTransition(() => {

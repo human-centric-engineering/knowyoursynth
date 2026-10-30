@@ -170,9 +170,134 @@ describe('layoutRouting: the rules', () => {
     expect(Math.max(...ys('5'))).toBeGreaterThan(l.blocks.lfo.y + BLOCK_H);
   });
 
-  it('puts a block beneath that feeds nothing in the first column', () => {
-    const l = layoutRouting(small(['a', 'out', 'idle'], [edge('1', 'a', 'out')]));
+  it('puts a block beneath that feeds nothing, fed only by a cable, in the first column', () => {
+    const l = layoutRouting(small(['a', 'out', 'idle'], [edge('1', 'a', 'out')]), [
+      { id: 'cable:0', from: 'idle', to: 'idle' },
+    ]);
     expect(l.blocks.idle).toMatchObject({ col: 0, band: 'control' });
+  });
+
+  it('ends an audio chain with no way to the output one column left of it, not in its column', () => {
+    const l = layoutRouting(
+      small(['a', 'out', 'ring', 'carrier'], [edge('1', 'a', 'out'), edge('2', 'carrier', 'ring')])
+    );
+    expect(l.blocks.ring).toMatchObject({ band: 'audio', col: l.blocks.out.col - 1 });
+    expect(l.blocks.carrier.col).toBe(l.blocks.ring.col - 1);
+    expect(Math.max(...Object.values(l.blocks).map((b) => b.col))).toBe(l.blocks.out.col);
+  });
+
+  it('puts a block that feeds both the output and an audio dead-end left of the dead-end', () => {
+    // The VCS3: an oscillator pinned to the output and to the ring modulator, whose output goes nowhere.
+    const l = layoutRouting(
+      small(['osc', 'ring', 'out'], [edge('1', 'osc', 'out'), edge('2', 'osc', 'ring')])
+    );
+    expect(l.blocks.ring.col).toBe(l.blocks.out.col - 1);
+    expect(l.blocks.osc.col).toBe(l.blocks.ring.col - 1);
+    expect(l.edges.some((e) => e.back)).toBe(false);
+  });
+
+  it('puts a block no edge or cable joins in the spare grid beneath the rest', () => {
+    const l = layoutRouting(
+      small(['a', 'out', 'lfo', 'idle'], [edge('1', 'a', 'out'), edge('2', 'lfo', 'a', 'cv')])
+    );
+    expect(l.blocks.idle).toMatchObject({ col: 0, band: 'spare' });
+    expect(l.blocks.idle.y).toBeGreaterThan(l.blocks.lfo.y + BLOCK_H);
+    expect(l.height).toBeGreaterThanOrEqual(l.blocks.idle.y + BLOCK_H);
+  });
+
+  it('lays a modular with nothing patched out as a grid about twice as wide as it is tall', () => {
+    const mods = Array.from({ length: 18 }, (_, k) => `m${k}`);
+    const l = layoutRouting(small([...mods, 'out'], []));
+    expect(mods.every((m) => l.blocks[m].band === 'spare')).toBe(true);
+    const cols = new Set(mods.map((m) => l.blocks[m].col)).size;
+    const rows = new Set(mods.map((m) => l.blocks[m].y)).size;
+    expect([cols, rows]).toEqual([6, 3]);
+    // The routing's order, row by row.
+    expect(mods.slice(0, 6).map((m) => l.blocks[m].col)).toEqual([0, 1, 2, 3, 4, 5]);
+    expect(l.width).toBeGreaterThanOrEqual(l.blocks.m5.x + BLOCK_W);
+  });
+
+  describe('cables placing a routing with no edges', () => {
+    const modular = small(['vco', 'vcf', 'vca', 'env', 'kbd', 'lfo', 'out'], []);
+    const patch = [
+      { id: 'cable:0', from: 'vco', to: 'vcf', signal: 'audio' as const },
+      { id: 'cable:1', from: 'vcf', to: 'vca', signal: 'audio' as const },
+      { id: 'cable:2', from: 'vca', to: 'out', signal: 'audio' as const },
+      { id: 'cable:3', from: 'env', to: 'vca', signal: 'cv' as const },
+      { id: 'cable:4', from: 'kbd', to: 'vco', signal: 'cv' as const },
+    ];
+
+    it('runs the audio cables left to right on the main line, the control beneath, the rest spare', () => {
+      const l = layoutRouting(modular, patch);
+      // The keyboard one column left of the oscillator it plays, the envelope just before the amplifier it opens.
+      expect(l.blocks.kbd).toMatchObject({ band: 'control', col: 0 });
+      expect(['vco', 'vcf', 'vca', 'out'].map((b) => l.blocks[b].col)).toEqual([1, 2, 3, 4]);
+      expect(['vco', 'vcf', 'vca', 'out'].every((b) => l.blocks[b].band === 'audio')).toBe(true);
+      expect(l.blocks.env).toMatchObject({ band: 'control', col: 2 });
+      expect(l.blocks.lfo.band).toBe('spare');
+      expect(l.cables.map((c) => c.id)).toEqual(patch.map((c) => c.id));
+      expect(l.cables.some((c) => c.back)).toBe(false);
+    });
+
+    it('changes shape as a cable goes in, and goes back when it comes out', () => {
+      const before = layoutRouting(modular, patch);
+      const lfo = { id: 'cable:5', from: 'lfo', to: 'vcf', signal: 'cv' as const };
+      const after = layoutRouting(modular, [...patch, lfo]);
+      expect(before.blocks.lfo.band).toBe('spare');
+      expect(after.blocks.lfo).toMatchObject({ band: 'control', col: after.blocks.vcf.col - 1 });
+      expect(layoutRouting(modular, patch)).toEqual(before);
+    });
+
+    it('puts an audio cable between two blocks edges place on the main line', () => {
+      // A pin-matrix synth: the oscillator and filter are on control edges only, and pins carry the audio.
+      const matrix = small(
+        ['kbd', 'osc', 'vcf', 'amp', 'out'],
+        [edge('1', 'kbd', 'osc', 'cv'), edge('2', 'kbd', 'vcf', 'cv'), edge('3', 'amp', 'out')]
+      );
+      const bare = layoutRouting(matrix);
+      expect(bare.blocks.osc.band).toBe('control');
+      const l = layoutRouting(matrix, [
+        { id: 'cable:0', from: 'osc', to: 'vcf', signal: 'audio' },
+        { id: 'cable:1', from: 'vcf', to: 'amp', signal: 'audio' },
+      ]);
+      expect(['osc', 'vcf', 'amp', 'out'].map((b) => l.blocks[b].band)).toEqual(
+        Array(4).fill('audio')
+      );
+      expect(['osc', 'vcf', 'amp', 'out'].map((b) => l.blocks[b].col)).toEqual([1, 2, 3, 4]);
+      expect(l.blocks.kbd).toMatchObject({ band: 'control', col: 0 });
+    });
+
+    it('never moves a block an edge places for a control cable out of it', () => {
+      const fixed = small(['a', 'out', 'util'], [edge('1', 'a', 'out')]);
+      const alone = layoutRouting(fixed, [{ id: 'cable:0', from: 'util', to: 'a' }]);
+      const both = layoutRouting(fixed, [
+        { id: 'cable:0', from: 'util', to: 'a' },
+        { id: 'cable:1', from: 'out', to: 'util' },
+        { id: 'cable:2', from: 'a', to: 'util' },
+      ]);
+      expect(both.blocks.a).toEqual(alone.blocks.a);
+      expect(both.blocks.out).toEqual(alone.blocks.out);
+    });
+
+    it('never moves a sink an edge places for a control cable into it', () => {
+      // `att` feeds nothing, so sits right of the LFO that feeds it; a cable in from the later envelope leaves it.
+      const fixed = small(
+        ['a', 'b', 'out', 'lfo', 'env', 'att'],
+        [
+          edge('1', 'a', 'b'),
+          edge('2', 'b', 'out'),
+          edge('3', 'lfo', 'a', 'cv'),
+          edge('4', 'env', 'b', 'cv'),
+          edge('5', 'lfo', 'att', 'cv'),
+        ]
+      );
+      const bare = layoutRouting(fixed);
+      expect(bare.blocks.att.col).toBe(bare.blocks.lfo.col + 1);
+      const patched = layoutRouting(fixed, [
+        { id: 'cable:0', from: 'env', to: 'att', signal: 'cv' },
+      ]);
+      expect(patched.blocks.att).toEqual(bare.blocks.att);
+    });
   });
 
   it('puts a block beneath that feeds nothing one column right of what feeds it, so the edge runs forward', () => {
