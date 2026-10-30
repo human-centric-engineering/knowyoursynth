@@ -235,4 +235,28 @@ describe('routingProblems', () => {
       'block output: out.a440 is a panel mode, not heard',
     ]);
   });
+
+  it('refuses an audio jack the routing does not place, or one listed twice', () => {
+    expect(
+      edit((r) => {
+        r.audioJacks = ['j.ext', 'j.nope', 'j.ext'];
+      })
+    ).toEqual(['audioJacks: j.nope belongs to no block', 'audio jack j.ext is listed twice']);
+  });
+});
+
+describe('routingProblems: a block that only measures', () => {
+  const vcs3 = defOf('ems-vcs3');
+  const base = getSynthRouting(vcs3);
+  if (!base) throw new Error('ems-vcs3 has a routing');
+
+  it('lets the VCS3’s meter have no way out, since nothing pinned to it is heard', () => {
+    expect(routingProblems(vcs3, base)).toEqual([]);
+  });
+
+  it('refuses a block with no way out once a jack on it is heard', () => {
+    const r = structuredClone(base);
+    r.jacks['c.vcf'] = 'meter';
+    expect(routingProblems(vcs3, r)).toEqual(['block meter has no way to output']);
+  });
 });

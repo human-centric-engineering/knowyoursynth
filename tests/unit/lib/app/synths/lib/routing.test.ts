@@ -1,5 +1,6 @@
 /**
- * The live path: which blocks, edges and cables of a routing the patch uses, on Model D.
+ * The live path: which blocks, edges and cables of a routing the patch uses, on Model D, and on a modular and a pin
+ * matrix, whose paths are all or mostly cables.
  *
  * Every case has something dark in it, so a `routingState` that lit everything would fail it.
  *
@@ -11,6 +12,9 @@ import modelD from '@/lib/app/synths/defs/model-d';
 import type { CableLike } from '@/lib/app/synths/lib/patch';
 import { routingState } from '@/lib/app/synths/lib/routing';
 import { routing } from '@/lib/app/synths/routing/model-d';
+import { getSynthRouting } from '@/lib/app/synths/routing';
+import system55 from '@/lib/app/synths/defs/system-55';
+import vcs3 from '@/lib/app/synths/defs/ems-vcs3';
 
 const state = (set: ControlValues = {}, cables: CableLike[] = [], wheel = 0) =>
   routingState(modelD, routing, { values: { ...modelD.init, ...set }, cables, wheel });
@@ -202,5 +206,110 @@ describe('routingState on Model D', () => {
     const b = routingState(modelD, routing, { values, cables });
     expect(b).toEqual(a);
     expect(JSON.stringify({ values, cables })).toBe(frozen);
+  });
+});
+
+describe('routingState on a modular: the System 55, every path a cable', () => {
+  const s55 = system55;
+  const modular = getSynthRouting(s55);
+  if (!modular) throw new Error('system-55 has a routing');
+  const run = (cables: CableLike[]) => routingState(s55, modular, { values: s55.init, cables });
+  const VOICE: CableLike[] = [
+    { from: 'j.cm1a.cv_1', to: 'j.m921b_1.dc_mod' },
+    { from: 'j.m921b_1.sawtooth', to: 'j.m904a.sig_in' },
+    { from: 'j.m904a.sig_out', to: 'j.m902_1.sig_in_pos' },
+    { from: 'j.m902_1.out_pos', to: 'j.out.l' },
+    { from: 'j.m911_1.out', to: 'j.m902_1.cv_1' },
+  ];
+  const litBlocks = (s: ReturnType<typeof run>) =>
+    Object.entries(s.blocks)
+      .filter(([, on]) => on)
+      .map(([id]) => id)
+      .sort();
+
+  it('lights nothing with nothing patched: no block has a way out but a cable', () => {
+    const s = run([]);
+    expect(Object.keys(s.blocks)).toHaveLength(modular.blocks.length);
+    expect(litBlocks(s)).toEqual([]);
+    expect(s.edges).toEqual({});
+  });
+
+  it('lights the blocks a patch joins to the output, and only those', () => {
+    const s = run(VOICE);
+    expect(litBlocks(s)).toEqual(['appout', 'cm1a', 'm902_1', 'm904a', 'm911_1', 'm921b_1']);
+    expect(s.cables.every((c) => c.live)).toBe(true);
+    // The audio path is audio; the keyboard's pitch and the envelope are control.
+    expect(s.cables.map((c) => c.signal)).toEqual(['cv', 'audio', 'audio', 'audio', 'cv']);
+  });
+
+  it('follows a cable going in: a second oscillator into the filter lights', () => {
+    const s = run([...VOICE, { from: 'j.m921b_2.rectangular', to: 'j.m904a.sig_in' }]);
+    expect(s.blocks.m921b_2).toBe(true);
+    expect(s.cables.at(-1)).toMatchObject({ fromBlock: 'm921b_2', toBlock: 'm904a', live: true });
+  });
+
+  it('follows a cable coming out: without the cable to the output everything goes dark', () => {
+    const s = run(VOICE.filter((c) => c.to !== 'j.out.l'));
+    expect(litBlocks(s)).toEqual([]);
+    expect(s.cables.some((c) => c.live)).toBe(false);
+  });
+
+  it('needs something to pass on: an amplifier patched to the output with nothing in it stays dark', () => {
+    const s = run([{ from: 'j.m902_1.out_pos', to: 'j.out.l' }]);
+    expect(s.blocks.m902_1).toBe(false);
+    expect(s.cables[0].live).toBe(false);
+  });
+});
+
+describe('routingState on a pin matrix: the VCS3', () => {
+  const vcs3Routing = getSynthRouting(vcs3);
+  if (!vcs3Routing) throw new Error('ems-vcs3 has a routing');
+  const run = (set: ControlValues, pins: CableLike[]) =>
+    routingState(vcs3, vcs3Routing, { values: { ...vcs3.init, ...set }, cables: pins });
+  // Oscillator 1's sine through the filter to output channel 1.
+  const PINS: CableLike[] = [
+    { from: 'r.osc1sine', to: 'c.vcf' },
+    { from: 'r.vcf', to: 'c.out1' },
+  ];
+  const UP = { power: true, 'osc1.sine': 8, 'vcf.level': 8 };
+
+  it('lights the pins and the blocks they join to the output', () => {
+    const s = run(UP, PINS);
+    for (const id of ['osc1', 'vcf', 'out_amp1', 'output']) expect(s.blocks[id]).toBe(true);
+    expect(s.blocks.osc2).toBe(false);
+    expect(s.edges.c01).toBe(true);
+    expect(s.edges.c02).toBe(false);
+    expect(s.cables.map((c) => [c.signal, c.live])).toEqual([
+      ['audio', true],
+      ['audio', true],
+    ]);
+  });
+
+  it('carries nothing on a pin whose row LEVEL is at 0', () => {
+    const s = run({ ...UP, 'osc1.sine': 0 }, PINS);
+    expect(s.cables[0].live).toBe(false);
+    expect(s.blocks.osc1).toBe(false);
+    // The filter still passes nothing on, so it and the way out go dark too.
+    expect(s.blocks.vcf).toBe(false);
+    expect(s.cables[1].live).toBe(false);
+  });
+
+  it('never carries Input 2, which has nothing plugged into it', () => {
+    const s = run({ ...UP, 'in.ch2': 10 }, [{ from: 'r.in2', to: 'c.out1' }]);
+    expect(s.cables[0].live).toBe(false);
+    expect(s.blocks.in_amp2).toBe(false);
+  });
+
+  it('goes dark with the mains switch off', () => {
+    const s = run({ ...UP, power: false }, PINS);
+    expect(s.edges.c01).toBe(false);
+    expect(Object.values(s.blocks).some(Boolean)).toBe(false);
+  });
+
+  it('never lights the meter, which measures and is not heard', () => {
+    const s = run(UP, [...PINS, { from: 'r.osc1sine', to: 'c.meter' }]);
+    expect(s.blocks.meter).toBe(false);
+    expect(s.cables[2]).toMatchObject({ toBlock: 'meter', live: false });
+    expect(s.blocks.osc1).toBe(true);
   });
 });

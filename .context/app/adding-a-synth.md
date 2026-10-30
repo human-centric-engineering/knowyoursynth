@@ -43,7 +43,9 @@ Write `lib/app/synths/routing/<id>.ts` from the spec's `modules` and `connection
 jack ids, and add it to `SYNTH_ROUTINGS` (`routing/index.ts`). Start from `routing/model-d.ts`; the rules are in
 [`synths.md`](./synths.md#signal-routing). `routing.test.ts` fails until every id it names exists in the definition,
 every control the sound hears is in some block's `controls`, and every spec module and connection is drawn or
-`omitted` with a reason.
+`omitted` with a reason; it also fails while the new synth has no routing at all. A pin-matrix synth starts from
+`routing/ems-vcs3.ts` and lists its `audioJacks`; another 900-series case joins `DERIVED_ROUTINGS` with
+`moog900Routing()`.
 
 ## 2. Brand tags
 

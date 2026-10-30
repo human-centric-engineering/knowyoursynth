@@ -2,7 +2,7 @@
 
 /**
  * The routing view over Model D's real routing: what the patch uses is lit and the rest dimmed, and a mixer level, a
- * switch or a cable changes which. Each block opens its card (t-143) by hover, keyboard or tap, and the card's
+ * switch or a cable changes which. On the System 55, which has no routes of its own, the cables are the diagram. Each block opens its card (t-143) by hover, keyboard or tap, and the card's
  * controls and jacks are handed back to be found on the panel.
  *
  * @see components/app/synth/routing-view.tsx
@@ -14,6 +14,7 @@ import userEvent from '@testing-library/user-event';
 import { RoutingView } from '@/components/app/synth/routing-view';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { routing } from '@/lib/app/synths/routing/model-d';
+import { getSynthRouting } from '@/lib/app/synths/routing';
 import { meterStore } from '@/components/app/synth/stores';
 import { controlMap, displayName } from '@/lib/app/synths/lib/patch';
 import type { ControlValues, SynthRouting } from '@/lib/app/synths/contract';
@@ -453,5 +454,58 @@ describe('a block’s card', () => {
       expect(card('LFO')).not.toBeNull();
       expect(card('Mixer')).toBeNull();
     });
+  });
+});
+
+describe('RoutingView on a modular (System 55)', () => {
+  const s55 = getSynthDef('system-55');
+  if (!s55) throw new Error('system-55 is not registered');
+  const modular = getSynthRouting(s55);
+  if (!modular) throw new Error('system-55 has a routing');
+  const voice: Cable[] = [
+    { from: 'j.cm1a.cv_1', to: 'j.m921b_1.dc_mod' },
+    { from: 'j.m921b_1.sawtooth', to: 'j.m904a.sig_in' },
+    { from: 'j.m904a.sig_out', to: 'j.m902_1.sig_in_pos' },
+    { from: 'j.m902_1.out_pos', to: 'j.out.l' },
+    { from: 'j.cm1a.trig_upper', to: 'j.m911_1.strig' },
+    { from: 'j.m911_1.out', to: 'j.m902_1.cv_1' },
+  ];
+  const draw = (cables: Cable[]) => {
+    const props = { def: s55, routing: modular, values: s55.init, cables, wheel: 0 };
+    const r = render(<RoutingView {...props} />);
+    return (next: Cable[]) => r.rerender(<RoutingView {...props} cables={next} />);
+  };
+  const at = (id: string) =>
+    document.querySelector(`[data-block="${id}"]`)?.getAttribute('transform');
+
+  it('draws no route of its own, and nothing lit with nothing patched', () => {
+    draw([]);
+    expect(document.querySelectorAll('[data-edge]')).toHaveLength(0);
+    expect(document.querySelectorAll('[data-block]')).toHaveLength(modular.blocks.length);
+    expect(document.querySelectorAll('[data-block][data-live="true"]')).toHaveLength(0);
+  });
+
+  it('draws its cables as the diagram’s routes, and changes as one goes in and comes out', () => {
+    const redraw = draw(voice);
+    expect(document.querySelectorAll('[data-cable]')).toHaveLength(voice.length);
+    for (const id of ['cm1a', 'm921b_1', 'm904a', 'm902_1', 'm911_1', 'appout'])
+      expect(block(id)).toBe('true');
+    expect(lit('[data-cable="j.m921b_1.sawtooth>j.m904a.sig_in"]')).toBe('true');
+    expect(block('m921')).toBe('false');
+    const spare = at('m921');
+
+    // The 921 as an LFO into the filter's cutoff: a new route, lit, and the 921 moves out of the spare grid.
+    const lfo = { from: 'j.m921.triangle', to: 'j.m904a.cv_1' };
+    redraw([...voice, lfo]);
+    expect(document.querySelectorAll('[data-cable]')).toHaveLength(voice.length + 1);
+    expect(lit('[data-cable="j.m921.triangle>j.m904a.cv_1"]')).toBe('true');
+    expect(block('m921')).toBe('true');
+    expect(at('m921')).not.toBe(spare);
+
+    // Out comes the cable to the output: everything goes dark, though every cable is still drawn.
+    redraw([...voice.filter((c) => c.to !== 'j.out.l'), lfo]);
+    expect(document.querySelectorAll('[data-cable]')).toHaveLength(voice.length);
+    expect(document.querySelectorAll('[data-block][data-live="true"]')).toHaveLength(0);
+    expect(document.querySelectorAll('[data-cable][data-live="true"]')).toHaveLength(0);
   });
 });

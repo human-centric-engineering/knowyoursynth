@@ -205,7 +205,9 @@ route's depth by a second signal.
 
 How the parts are wired behind the panel, for the routing view: one **`SynthRouting`** per synth in
 `lib/app/synths/routing/<id>.ts`, registered in `routing/index.ts` (`SYNTH_ROUTINGS`). It sits beside the
-definition, not on it. A synth with no routing has no routing view.
+definition, not on it. A synth with no routing has no routing view. `getSynthRouting(def)` takes the definition,
+because the System 15, 35 and 55 build theirs from it (`DERIVED_ROUTINGS`, below); importing a definition into the
+registry would put it in every synth page's bundle (`defs/load.ts`).
 
 - **Blocks** are the parts (`osc1`, `mixer`, `filter`), each with a `module` for its colour, a `description`,
   the `specs` its card lists, and the `controls` that set it (the definition's ids, in the card's order; the
@@ -218,7 +220,9 @@ definition, not on it. A synth with no routing has no routing view.
   **Edges** join them, each with its `signal` (`audio`, `cv`, `gate`) and
   the rule for when it carries signal: `when` (switches, in the definition's control ids), `levels` (controls
   that scale it) and `breaks` (the input jack whose cable breaks this normal). An edge with none is fixed.
-  `jacks` puts every jack of the definition in a block, so any cable can be drawn.
+  `jacks` puts every jack of the definition in a block, so any cable can be drawn. A matrix pin is a cable from a
+  row jack to a column jack. `audioJacks` lists the jacks that carry audio: a cable between two of them is an
+  audio cable, which the layout puts on the main line. Only the patched synths list them (below).
 - **Projected by hand from the spec.** Block and edge ids are the spec's module and connection ids
   (`.context/app/synth-data/<id>/<id>.synth.json`); everything they depend on is in the definition's ids. Where the
   definition wires something the spec has no id for (Take 5's destination selectors in place of the spec's matrix,
@@ -237,7 +241,8 @@ definition, not on it. A synth with no routing has no routing view.
   target is live. So Model D's mod bus goes dark, lines out and all, when MOD MIX leaves each source under the
   floor, and the mixer does with every channel off. A cable into a jack that breaks a normal takes the
   normal's place, and needs the normal's `when` and `levels` to be heard (MOD SOURCE is ignored with the switch
-  on LFO). `@wheel` (`WHEEL`, from `lib/patch.ts`) in a level is the mod wheel.
+  on LFO). A cable from an output jack whose `gain` is at zero carries nothing (a VCS3 row with its LEVEL down).
+  `@wheel` (`WHEEL`, from `lib/patch.ts`) in a level is the mod wheel.
 - **Levels are amounts, 0 to 1.** A continuous control's id runs from its `min` to its `max`; `{ id, off }` is 0
   at `off` and rises away from it (a switch is 0 at `off`, 1 elsewhere); `{ id, pow }` curves it as the engine
   does (MOD DEPTH squared); `{ sum }` adds. A missing value is 0, as `toEngine()` hears it. Give a level the
@@ -250,14 +255,23 @@ definition, not on it. A synth with no routing has no routing view.
 - **`tests/unit/lib/app/synths/routing.test.ts`** holds every registered routing to its definition
   (`routingProblems`: every control, value and jack exists, a normal is broken only by a jack that is not
   `add` and by one edge at most, every jack has a block, every block has a way to the output through edges or
-  some cable, every `passes` block has an edge or input jack into it, every heard control sets some block and no
-  block names a `ui` one) and to its spec (every module and
-  connection is drawn, or listed in `omitted` with the reason).
+  some cable, unless it only measures (no edges, and only inputs whose `dest` is `null`: the VCS3's meter), every
+  `passes` block has an edge or input jack into it, every heard control sets some block and no block names a
+  `ui` one, and every `audioJacks` entry is a placed jack, once) and to its spec (every module and connection is
+  drawn, or listed in `omitted` with the reason). It also requires a routing on every registered synth.
 
-Model D's is the worked example. Every synth whose path is normalled or switched has one; the modular and
-pin-matrix synths (System 15/35/55, VCS3, Syntrx II) are drawn from their patch instead (t-145), and the test
-checks exactly those are the ones without. Synths that share a voice share a builder (`routing/acid-voice.ts`,
+Model D's is the worked example. Synths that share a voice share a builder (`routing/acid-voice.ts`,
 `routing/syncussion-voice.ts`).
+
+**Synths routed by their patch.** The System 15, 35 and 55 have nothing wired between their modules, and the VCS3
+and Syntrx II route through a pin matrix, so their diagrams are drawn from the cables and pins
+(`layoutRouting()`, `lib/routing-layout.ts`): a block no edge joins is placed by the cables that join it, an audio
+cable puts both its ends on the main line, and a block nothing joins sits in a spare grid beneath. On a synth whose
+path is wired (no `audioJacks`), a block an edge places never moves for a cable. The three modulars' routing is
+built from their definitions by `moog900Routing()` (`routing/moog900.ts`): one block per module area, its controls
+and jacks the ones under its id, no edges. That is the one place a routing is generated rather than hand-written:
+with no edges there is no judgement to lose, and what each kind of module is and carries is written once there.
+The VCS3 and Syntrx II are hand-written like the rest, their edges being what is wired behind the matrix.
 
 ## Sounds
 
