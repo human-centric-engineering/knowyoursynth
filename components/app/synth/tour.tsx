@@ -149,9 +149,9 @@ function StopBody({ def, stop }: { def: SynthDef; stop: TourStop }) {
             panel itself: point at any coloured region to read what it does.
           </li>
           <li>
-            <span className="text-(--kys-text)">Dim unused parts</span> darkens everything that is
-            doing nothing in the patch you have loaded, which is the fastest way to see a patch as a
-            picture.
+            <span className="text-(--kys-text)">Signal</span>, set to In use, darkens everything
+            that is doing nothing in the patch you have loaded, which is the fastest way to see a
+            patch as a picture. Set to Live, the parts it uses light up as you play.
           </li>
           <li>
             <span className="text-(--kys-text)">Show sensitive controls</span> glows behind the

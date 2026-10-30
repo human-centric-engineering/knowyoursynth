@@ -4,9 +4,11 @@
  * The player's tools (`f-player` t-72): the learning layers as toggles over the panel, as a video player carries its
  * captions button, and how the panel is drawn, as switches under it.
  *
- * - `LayerToggle`: one layer or tool over the panel (Sections, Dim unused, Sensitive, Inspect over it, Ask AI at its far right; Piano,
+ * - `LayerToggle`: one layer or tool over the panel (Sections, Sensitive, Inspect over it, Ask AI at its far right; Piano,
  *   Harmonics, Effects on the bar). An icon, with its word from `xl` up and below `lg` (a phone has no tooltips to name it); the full name is the
  *   accessible name and the tooltip at every width.
+ * - `SignalMenu`: the Signal layer over the panel (`f-live-panel` t-150), a toggle with a menu of its modes: off, the parts
+ *   the patch uses ("In use", once "Dim unused"), and those parts lit live as signal goes through them.
  * - `PlayerSettings`: on the panel's rail (the strip along its foot, by the search). Hardware or Outline, Modular or
  *   Long, the magnifier and the hover help, each named in the panel's lettering with an LED by each choice, lit
  *   for the one in use, as a hardware selector shows its position. What each does is on hover.
@@ -14,9 +16,10 @@
  * The page owns every state these show; each is told what is true and calls back to change it.
  */
 
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import type { CSSProperties, ReactNode, Ref } from 'react';
-import { X } from 'lucide-react';
+import * as Popover from '@radix-ui/react-popover';
+import { ChevronDown, X } from 'lucide-react';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 
 export function LayerToggle({
@@ -65,6 +68,89 @@ export function LayerToggle({
         {on && <X size={13} strokeWidth={2.5} aria-hidden="true" className="kys-layer-x" />}
       </button>
     </PlayerTip>
+  );
+}
+
+/** The Signal layer's modes: nothing, the parts the patch uses, and those lit live as signal goes through them. */
+export type SignalMode = 'off' | 'inUse' | 'live';
+
+const SIGNAL_MODES: readonly { mode: SignalMode; name: string; help: string }[] = [
+  { mode: 'off', name: 'Off', help: 'Nothing over the panel.' },
+  {
+    mode: 'inUse',
+    name: 'In use',
+    help: 'Darken every part of the panel that is not part of the patch as it is set now. Point at a dark control to see what would bring it in.',
+  },
+  {
+    mode: 'live',
+    name: 'Live',
+    help: 'As In use, and each part the patch uses lights up as signal goes through it when you play.',
+  },
+];
+
+export function SignalMenu({
+  mode,
+  onMode,
+  live,
+  icon,
+}: {
+  mode: SignalMode;
+  onMode: (m: SignalMode) => void;
+  /** Whether the synth can show its signal live (it has a routing): without it, Live is not offered. */
+  live: boolean;
+  icon: ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  const modes = SIGNAL_MODES.filter((m) => live || m.mode !== 'live');
+  const on = mode !== 'off';
+  return (
+    <Popover.Root open={open} onOpenChange={setOpen}>
+      <PlayerTip
+        name="Signal on the panel"
+        help="Show which parts of the panel the patch uses, or light them live as you play."
+      >
+        <Popover.Trigger asChild>
+          <button
+            type="button"
+            aria-label="Signal on the panel"
+            className={`kys-layer ${on ? 'is-on' : ''}`}
+          >
+            {icon}
+            <span className="lg:max-xl:hidden">
+              {on ? `Signal: ${SIGNAL_MODES.find((m) => m.mode === mode)?.name}` : 'Signal'}
+            </span>
+            <ChevronDown size={13} strokeWidth={2.5} aria-hidden="true" className="kys-layer-x" />
+          </button>
+        </Popover.Trigger>
+      </PlayerTip>
+      {/* Not portalled, as the tips are not: it opens inside the player and comes with it into full screen. */}
+      <Popover.Content
+        side="bottom"
+        align="start"
+        sideOffset={6}
+        collisionPadding={12}
+        className="kys-signal-menu"
+      >
+        <div role="group" aria-label="Signal on the panel" className="kys-signal-modes">
+          {modes.map((m) => (
+            <button
+              key={m.mode}
+              type="button"
+              aria-pressed={mode === m.mode}
+              onClick={() => {
+                onMode(m.mode);
+                setOpen(false);
+              }}
+              className="kys-led-opt kys-signal-opt"
+            >
+              <span className="kys-led-dot" aria-hidden="true" />
+              <span className="kys-signal-name">{m.name}</span>
+              <span className="kys-signal-help">{m.help}</span>
+            </button>
+          ))}
+        </div>
+      </Popover.Content>
+    </Popover.Root>
   );
 }
 

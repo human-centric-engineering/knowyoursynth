@@ -204,6 +204,20 @@ export function routingActivity(
   };
 }
 
+/**
+ * `meters` with every wave drawn steady, for a visitor who asks for less motion: each rate is raised to `FAST_HZ`, so
+ * the LFO and a slow oscillator glow at the level a fast one would rather than pulsing.
+ */
+export function steadyMeters(meters: ActivityMeters): ActivityMeters {
+  const fast = (hz: number) => (hz > 0 ? Math.max(hz, FAST_HZ) : hz);
+  return {
+    ...meters,
+    lfoHz: Math.max(meters.lfoHz, FAST_HZ),
+    osc: meters.osc.map((o) => ({ ...o, hz: fast(o.hz) })),
+    ...(meters.moog && { moog: { ...meters.moog, vcoHz: meters.moog.vcoHz.map(fast) } }),
+  };
+}
+
 /** How fast a glow comes up to a louder signal, and falls away from a quieter one, in ms (time constants). */
 export const RISE_MS = 40;
 export const FALL_MS = 450;
