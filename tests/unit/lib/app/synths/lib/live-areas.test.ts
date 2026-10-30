@@ -23,6 +23,13 @@ import { getSynthRouting } from '@/lib/app/synths/routing';
 
 const values = modelD.init;
 
+const load = (id: string) => {
+  const def = getSynthDef(id);
+  const r = def && getSynthRouting(def);
+  if (!def || !r) throw new Error(`${id} has a routing`);
+  return { def, r };
+};
+
 describe('liveAreas on Model D', () => {
   const areas = liveAreas(modelD, routing, [], values);
   const byId = new Map(areas.map((a) => [a.id, a]));
@@ -84,13 +91,6 @@ describe('liveAreas on Model D', () => {
 });
 
 describe('liveAreas on a section of jacks alone', () => {
-  const load = (id: string) => {
-    const def = getSynthDef(id);
-    const r = def && getSynthRouting(def);
-    if (!def || !r) throw new Error(`${id} has a routing`);
-    return { def, r };
-  };
-
   it('lights all of a section whose jacks are one block’s once one of them is patched', () => {
     // The System 55's output module: L and R, both the app output's.
     const { def, r } = load('system-55');
@@ -144,11 +144,48 @@ describe('liveStages on Model D', () => {
     expect(off.byId.has('filter_contour:decay')).toBe(true);
   });
 
-  it('lights nothing on a synth whose routing has no stage map', () => {
-    const def = getSynthDef('neutron');
-    const r = def && getSynthRouting(def);
-    if (!def || !r) throw new Error('neutron has a routing');
+  it('lights nothing on a synth whose engine reports no stage', () => {
+    const { def, r } = load('buchla-easel');
+    expect(r.blocks.some((b) => b.meter === 'env1')).toBe(true);
     expect(liveStages(def, r, [], def.init)).toEqual([]);
+  });
+});
+
+describe('liveStages on other synths (t-155)', () => {
+  const lit = (id: string, set: ControlValues = {}) => {
+    const { def, r } = load(id);
+    const v = { ...def.init, ...set };
+    const { cells } = panelCells(def, [], v);
+    return { cells, byId: new Map(liveStages(def, r, [], v).map((l) => [l.id, l])) };
+  };
+
+  it('lights nothing on the Wasp’s VCA envelope while HOLD freezes it, and every stage once it thaws', () => {
+    const thawed = lit('wasp-deluxe', { 'vca.hold': false });
+    expect(thawed.byId.get('vca_env:attack')).toMatchObject({
+      env: 'env1',
+      d: thawed.cells['vca.attack'],
+    });
+    expect(thawed.byId.get('vca_env:release')?.d).toBe(thawed.cells['vca.decay']);
+    const frozen = lit('wasp-deluxe', { 'vca.hold': true });
+    expect([...frozen.byId.keys()].filter((k) => k.startsWith('vca_env:'))).toEqual([]);
+    // HOLD freezes only the VCA envelope: the control envelope lights either way.
+    expect(frozen.byId.get('ctrl_env:attack')?.d).toBe(frozen.cells['cenv.attack']);
+  });
+
+  it('lights the Kobol’s ADS 1 DECAY for the decay and the release only with DECAY OFF off', () => {
+    const on = lit('kobol', { 'ads1.decayOff': false });
+    expect(on.byId.get('ads1:decay')?.d).toBe(on.cells['ads1.decay']);
+    expect(on.byId.get('ads1:release')?.d).toBe(on.cells['ads1.decay']);
+    const off = lit('kobol', { 'ads1.decayOff': true });
+    expect(off.byId.has('ads1:decay')).toBe(false);
+    expect(off.byId.has('ads1:release')).toBe(false);
+    expect(off.byId.get('ads1:attack')?.d).toBe(off.cells['ads1.attack']);
+  });
+
+  it('lights the K-2’s EG1 DELAY and EG2 HOLD for the stages only they have', () => {
+    const { cells, byId } = lit('k2');
+    expect(byId.get('eg1:delay')).toMatchObject({ env: 'env1', d: cells['eg1.delay'] });
+    expect(byId.get('eg2:hold')).toMatchObject({ env: 'env2', d: cells['eg2.hold'] });
   });
 });
 

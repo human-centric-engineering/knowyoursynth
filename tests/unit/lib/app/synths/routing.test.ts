@@ -23,7 +23,7 @@ import { getSynthDef, SYNTH_DEFS } from '@/lib/app/synths/defs';
 import { panelCells } from '@/lib/app/synths/lib/cells';
 import { modularDef } from '@/lib/app/synths/lib/layout';
 import { liveAreas } from '@/lib/app/synths/lib/live-areas';
-import { routingProblems } from '@/lib/app/synths/lib/routing';
+import { routingProblems, stageControl } from '@/lib/app/synths/lib/routing';
 import { DERIVED_ROUTINGS, getSynthRouting, SYNTH_ROUTINGS } from '@/lib/app/synths/routing';
 import { moog900Routing } from '@/lib/app/synths/routing/moog900';
 
@@ -113,6 +113,12 @@ it('leaves a 900-series module it does not know out of the routing, and says so,
   expect(routingProblems(def, routing).some((p) => p.includes('belongs to no block'))).toBe(true);
 });
 
+/**
+ * The synths whose envelope the engine reports no stage for (`MeterEvent.env1Stage`), so whose contour lights no knob:
+ * the Easel's envelope runs in its own core and leaves the voice's unused.
+ */
+const NO_STAGE = ['buchla-easel'];
+
 describe.each(ROUTINGS.map((r) => [r.synth, r] as const))('%s', (id, routing) => {
   it('names only what its definition has, and reaches the output from every block', () => {
     expect(routingProblems(defOf(id), routing)).toEqual([]);
@@ -128,6 +134,30 @@ describe.each(ROUTINGS.map((r) => [r.synth, r] as const))('%s', (id, routing) =>
     ]);
     const missing = [...modules, ...connections].map((x) => x.id).filter((x) => !drawn.has(x));
     expect(missing).toEqual([]);
+  });
+
+  it('maps every contour that follows the voice’s envelopes to knobs on the panel (t-155)', () => {
+    const def = defOf(id);
+    // A contour with no knob of its own (the TB-303's fixed volume envelope) has nothing to light, and nor has one
+    // whose engine reports no stage.
+    const contours = routing.blocks.filter(
+      (b) =>
+        (b.meter === 'env1' || b.meter === 'env2') && b.controls?.length && !NO_STAGE.includes(id)
+    );
+    expect(contours.filter((b) => !Object.values(b.stages ?? {}).some(Boolean))).toEqual([]);
+    // Each knob is drawn on the panel page that shows it (SHIFT on the Super Gemini, ENV SELECT on the DeepMind).
+    const undrawn = contours.flatMap((b) =>
+      Object.values(b.stages ?? {}).flatMap((light) => {
+        if (!light) return [];
+        const knob = stageControl(light).id;
+        const show = def.controls.find((c) => c.id === knob)?.show ?? [];
+        const values = { ...def.init };
+        for (const w of Array.isArray(show) ? show : [show])
+          values[w.id] = 'eq' in w ? w.eq : w.in[0];
+        return panelCells(def, [], values).cells[knob] ? [] : [knob];
+      })
+    );
+    expect(undrawn).toEqual([]);
   });
 });
 
