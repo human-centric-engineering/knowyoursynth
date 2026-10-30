@@ -24,6 +24,9 @@ import { routing as jupiter4 } from '@/lib/app/synths/routing/jupiter-4';
 import { routing as jupiter6 } from '@/lib/app/synths/routing/jupiter-6';
 import { routing as jupiter8 } from '@/lib/app/synths/routing/jupiter-8';
 import { routing as pro800 } from '@/lib/app/synths/routing/pro-800';
+import { routing as buchlaEasel } from '@/lib/app/synths/routing/buchla-easel';
+import { routing as ubXaD } from '@/lib/app/synths/routing/ub-xa-d';
+import { routing as deepmind12d } from '@/lib/app/synths/routing/deepmind-12d';
 
 export const SYNTH_ROUTINGS: SynthRouting[] = [
   modelD,
@@ -45,6 +48,9 @@ export const SYNTH_ROUTINGS: SynthRouting[] = [
   jupiter6,
   jupiter8,
   pro800,
+  buchlaEasel,
+  ubXaD,
+  deepmind12d,
 ];
 
 const BY_ID = new Map(SYNTH_ROUTINGS.map((r) => [r.synth, r]));
