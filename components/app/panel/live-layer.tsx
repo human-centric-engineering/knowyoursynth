@@ -74,8 +74,10 @@ export function LiveLayer({
   // rather than restarting (and dropping every glow to dark) with every knob turned.
   const gRef = useRef<SVGGElement>(null);
   const liveRef = useRef(live);
+  const flowRef = useRef(lines);
   useLayoutEffect(() => {
     liveRef.current = live;
+    flowRef.current = lines;
   });
   useEffect(() => {
     // Each part's eased level and what was last written to it, as on the routing view: a write is skipped when it
@@ -119,22 +121,20 @@ export function LiveLayer({
         const env = el.getAttribute('data-env') === 'env2' ? 'env2' : 'env1';
         ease(el, id, at[env] === el.getAttribute('data-at') ? 1 : 0, true);
       }
-      // A flow line glows with the brightest edge or pin it stands for, and pulses with the part it leaves.
+      // A flow line glows with the brightest edge or pin it stands for, and pulses with the part it leaves. Its
+      // elements are drawn from the same lines, in their order, in the commit that set the ref.
       const flowEl = gRef.current?.querySelector<SVGGElement>('.kys-flow');
-      for (const el of flowEl?.querySelectorAll<SVGGElement>('[data-flow]') ?? []) {
-        const ids = (name: string) => (el.getAttribute(name) ?? '').split(' ').filter(Boolean);
+      const flowEls = flowEl?.querySelectorAll<SVGGElement>('[data-flow]');
+      flowRef.current.forEach((l, i) => {
+        const el = flowEls?.[i];
+        if (!el) return;
         const target = Math.max(
           0,
-          ...ids('data-edges').map((e) => a.edges[e] ?? 0),
-          ...ids('data-cables').map((i) => a.cables[Number(i)] ?? 0)
+          ...l.edges.map((e) => a.edges[e] ?? 0),
+          ...l.cables.map((c) => a.cables[c] ?? 0)
         );
-        ease(
-          el,
-          el.getAttribute('data-flow') ?? '',
-          target,
-          a.pulsing[el.getAttribute('data-from') ?? '']
-        );
-      }
+        ease(el, l.id, target, a.pulsing[l.from]);
+      });
       if (flowEl && !steady) {
         run = (run + (dt * RUN_PER_S) / 1000) % 1000;
         flowEl.style.setProperty('--run', run.toFixed(1));

@@ -24,9 +24,6 @@ export function LiveFlow({ lines, routing }: { lines: FlowLine[]; routing: Synth
         <g
           key={l.id}
           data-flow={l.id}
-          data-from={l.from}
-          data-edges={l.edges.join(' ')}
-          data-cables={l.cables.join(' ')}
           className={`kys-flow-line is-${l.signal}`}
           style={{ color: moduleOf(moduleOfBlock.get(l.from)).color }}
         >

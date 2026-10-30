@@ -17,8 +17,11 @@ import { LiveLayer, type LiveGlow } from '@/components/app/panel/live-layer';
 import { meterStore, type Meters } from '@/components/app/synth/stores';
 import type { ControlValues } from '@/lib/app/synths/contract';
 import modelD from '@/lib/app/synths/defs/model-d';
+import vcs3 from '@/lib/app/synths/defs/ems-vcs3';
 import { routingState } from '@/lib/app/synths/lib/routing';
+import { routingActivity, SILENT } from '@/lib/app/synths/lib/routing-activity';
 import { routing } from '@/lib/app/synths/routing/model-d';
+import { routing as vcs3Routing } from '@/lib/app/synths/routing/ems-vcs3';
 
 let frames: FrameRequestCallback[] = [];
 let now = 0;
@@ -127,5 +130,33 @@ describe('LiveLayer with the flow on Model D', () => {
     run(30);
     expect(glow(lineOf(container, 'mixer>filter:audio'))).toBeCloseTo(1, 2);
     expect(runOf(container)).toBe('');
+  });
+
+  it('reads a pin matrix’s line from its pin, dark while nothing comes into the part it leaves', () => {
+    const cables = [{ from: 'r.in1', to: 'c.out1' }];
+    const live: LiveGlow = {
+      routing: vcs3Routing,
+      state: routingState(vcs3, vcs3Routing, { values: vcs3.init, cables, wheel: 0 }),
+      source: {
+        analyser: { fftSize: 64, getFloatTimeDomainData: (a: Float32Array) => a.fill(0.5) },
+      },
+      flow: true,
+    };
+    const { container } = render(
+      <svg>
+        <LiveLayer def={vcs3} live={live} cables={cables} values={vcs3.init} />
+      </svg>
+    );
+    const line = lineOf(container, 'in_amp1>out_amp1:cv');
+    // Its line stands for the pin: the routing has no edge between the two.
+    expect(vcs3Routing.edges.some((e) => e.from === 'in_amp1' && e.to === 'out_amp1')).toBe(false);
+    run(30);
+    expect(glow(line)).toBe(0);
+    meterStore.set(PLAYING);
+    run(30);
+    // The input amplifier has nothing coming in on the init panel: its pin carries nothing, and the line shows it.
+    const a = routingActivity(vcs3Routing, live.state, { ...SILENT, gate: true, out: 1 });
+    expect(a.blocks.in_amp1).toBe(0);
+    expect(glow(line)).toBe(0);
   });
 });
