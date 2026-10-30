@@ -280,6 +280,13 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   (`findStore`) and turns the panel face up, through the page's flip rather than the find (the page marks the find
   seen, so its check does not turn the view off first), so a control already found turns it over too; focus
   goes to the Signal routing switch. A Radix popover, not portalled, so it comes into full screen with the panel.
+  Above the list, a picture of where the block sits (t-147): the faceplate under the view reused through
+  `<use href="#kysPanelAll">` (`PANEL_ALL_ID`), so it is the panel at its current values, cables and design with
+  no second render, cropped by `panelCrops()` (`lib/routing.ts`) and lit in the module's colour, the rest of the
+  crop dimmed. The crop is padded round each control's and jack's reach (`controlReach`, `jackReach`, which the
+  find's spotlight uses too). A block spread past 840 × 660 units is drawn as one crop per cluster, in a row at
+  one scale; past three crops, or with nothing on the panel, there is no picture. The page passes the panel's
+  definition (`panel`) to `RoutingView`, since a modular's case places the parts where its definition does not.
 - **The player's buttons carry their own tooltip** (`PlayerTip`, `player-tip.tsx`): the button's
   name and a line on what it does, on hover or focus, in place of the browser's slow `title`. It
   is a Radix popup that is not portalled, so it works full screen.
