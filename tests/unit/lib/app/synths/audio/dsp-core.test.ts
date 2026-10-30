@@ -183,6 +183,44 @@ describe('mono voice', () => {
     });
   });
 
+  describe('reports the cutoff and the VCA’s gain as they are now, for the panel’s live pointers', () => {
+    const held = {
+      len: 48000,
+      events: [
+        [0, { type: 'noteOn', n: 60 }],
+        [24000, { type: 'noteOff', n: 60 }],
+      ] satisfies Timed[],
+    };
+    const filter = (envAmt: number) => ({ ...monoParams().filter, cutoff: 400, envAmt, kbd: 0 });
+
+    it('at the knob’s cutoff with nothing moving it', () => {
+      const m = meters(render(monoParams({ filter: filter(0) }), held).events).slice(1);
+      expect(m.length).toBeGreaterThan(10);
+      for (const x of m) expect(x.cutoff).toBeCloseTo(400, 6);
+    });
+
+    it('swept up by the filter envelope as it rises, back to the knob as it falls', () => {
+      // Three octaves of Envelope 1: a 0.1 s attack, a 0.1 s decay to half, held, then a 0.1 s release.
+      const p = monoParams({ filter: filter(3), env1: { a: 0.1, d: 0.1, s: 0.5, r: 0.1 } });
+      const m = meters(render(p, held).events);
+      const cut = m.map((x) => x.cutoff ?? NaN);
+      // The peak is near the full three octaves; sustaining, half of them; after the release, the knob again.
+      expect(Math.max(...cut)).toBeGreaterThan(400 * 2 ** 2.7);
+      const sustain = m.filter((x) => x.env1Stage === 'sustain');
+      expect(sustain.length).toBeGreaterThan(5);
+      for (const x of sustain) expect(x.cutoff).toBeCloseTo(400 * 2 ** (3 * (x.env1 ?? 0)), 0);
+      expect(sustain[0].cutoff).toBeGreaterThan(400 * 2 ** 1.4);
+      expect(cut.at(-1)).toBeCloseTo(400, 0);
+    });
+
+    it('the VCA’s gain opening with its envelope and shutting after it', () => {
+      const m = meters(render(monoParams(), held).events);
+      const gate = m.filter((x) => x.gate).slice(5);
+      for (const x of gate) expect(x.amp).toBeCloseTo(0.8, 1);
+      expect(m.at(-1)?.amp).toBeLessThan(1e-3);
+    });
+  });
+
   it('meters the LFO’s rate and each oscillator’s output, pitch and mixer level, for the routing view', () => {
     const { events } = render(monoParams(), { len: 9600 });
     const m = meters(events)[2];
@@ -779,6 +817,12 @@ describe('Buchla Music Easel path', () => {
       ],
     });
 
+  it('leaves the cutoff and VCA meters out: the voice’s own filter and VCA do not make its sound', () => {
+    const m = meters(render(easel(), { len: 9600 }).events);
+    expect(m.length).toBeGreaterThan(3);
+    expect(m.every((x) => x.cutoff === undefined && x.amp === undefined)).toBe(true);
+  });
+
   it.each([
     ['FM, triangle, self-cycling pulser', easel()],
     [
@@ -1081,6 +1125,14 @@ describe('polyphonic synth', () => {
     const last = meters(render(p, { events: chord, len: 24000 }).events).at(-1);
     expect(last?.voices).toBe(0);
     expect(last?.env1Stage).toBe('idle');
+  });
+
+  it('passes on the lead voice’s cutoff while it sounds, and none once it falls idle, which stops it running', () => {
+    const m = meters(render(poly(), { events: chord, len: 24000 }).events);
+    expect(m.slice(1, 3).every((x) => (x.cutoff ?? 0) > 0)).toBe(true);
+    expect(m.at(-1)?.voices).toBe(0);
+    expect(m.at(-1)?.cutoff).toBeUndefined();
+    expect(m.at(-1)?.amp).toBeUndefined();
   });
 
   it('plays a chord on several voices, steals the oldest when they run out, and meters the voices', () => {
