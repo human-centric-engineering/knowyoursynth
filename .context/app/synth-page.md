@@ -217,6 +217,15 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   metered value off `toEngine()` across that travel. None on the Easel, the SOLAR 42N or the 900 series, whose
   voices do not use the engine's filter and VCA. Hidden while under the control's own pointer; eased between
   meters, straight to each under reduced motion.
+  **Live + flow** (t-153, `LiveFlow`, `components/app/panel/live-flow.tsx`) is Live with a line from each lit
+  part to the part it feeds while the patch routes signal along it (`liveFlows()`,
+  `lib/app/synths/lib/live-flow.ts`), in the routing view's style: audio heavy, control light, gate dotted, in
+  the source's colour, with an arrowhead. A line runs between the boxes of the two blocks' glow areas, and is a
+  short arrow across the seam where they touch; a block with nothing on the panel (the VCA, MIDI) is passed
+  through, so the filter's line runs on to the output. Lines are the routing's live edges and a pin matrix's live
+  pins; never a patch cable, which the face already draws, so a modular has none. `LiveLayer`'s loop writes
+  each line's `--a` (the brightest of its edges' and pins' `routingActivity()` levels) and the dashes' `--run`,
+  which it leaves at 0 under reduced motion: the lines show, and do not move. Kept as `kys.live` = `"flow"`.
   The foot's LEDs light in a sweep when the page loads (not with reduced motion). The search is at
   the foot's right as an amber readout, and `/` outside a field puts the cursor in it. Under the
   foot's right end, while cables are plugged, a key in the same faceplate colours and print
@@ -448,7 +457,7 @@ in the account as well. The newer copy wins ([`sounds.md`](./sounds.md)).
 | `kys.fx`, `kys.fxOpen` | The effects rack and whether it is unfolded                                                                                                                                                                                                                        |
 | `kys.midi`             | Reconnect MIDI on the next visit                                                                                                                                                                                                                                   |
 | `kys.dim`, `kys.heat`  | The Signal layer's In use (the sound map's "Dim unused parts"; on under Live too) and "Show sensitive controls"                                                                                                                                                    |
-| `kys.live`             | The Signal layer is Live rather than In use (`f-live-panel`). In this browser only, never kept in the account                                                                                                                                                      |
+| `kys.live`             | The Signal layer is Live (`true`) or Live + flow (`"flow"`) rather than In use (`f-live-panel`). In this browser only, never kept in the account                                                                                                                   |
 | `kys.harm`             | The harmonics strip under the panel                                                                                                                                                                                                                                |
 | `kys.rotateSeen`       | The small-screen note above the panel has been put away                                                                                                                                                                                                            |
 | `kys.deck`             | The Piano button's choice: out, put away, or `null` for the screen's default                                                                                                                                                                                       |
