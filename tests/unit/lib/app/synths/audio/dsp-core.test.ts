@@ -904,6 +904,20 @@ describe('Moog modular path', () => {
     expect(meters(r.events).some((m) => typeof m.seq === 'number')).toBe(true);
   });
 
+  it('meters the gate as the key held, for the CM1A on the routing view', () => {
+    const gates = (p: EngineParams, events: NonNullable<Parameters<typeof render>[1]>['events']) =>
+      meters(render(p, { len: 24000, events }).events).map((x) => x.gate);
+    // Held the whole render, every reading is up; never pressed, none is.
+    const held = gates(moog(), [[0, { type: 'noteOn', n: 60 }]]);
+    expect(held.length).toBeGreaterThan(5);
+    expect(held.every(Boolean)).toBe(true);
+    expect(gates(moog(), []).some(Boolean)).toBe(false);
+    // The engine's own envelopes run on its trigger settings; the CM1A is the key, so a drone does not light it.
+    const drone = moog();
+    drone.trig = { retrig: false, drone: true, repeat: false };
+    expect(gates(drone, []).some(Boolean)).toBe(false);
+  });
+
   it('is silent with nothing patched to the output', () => {
     const p = moog();
     p.cables = [];

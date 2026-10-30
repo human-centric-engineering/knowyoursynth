@@ -8,9 +8,15 @@
  * (`m921b_1`), and its controls and jacks are the ones under its id (`m921b_1.frequency`, `j.m921b_1.sine`). The
  * app's output panel (`appout`, jacks `j.out.l` and `j.out.r`) is not on the hardware, so the spec has no module for
  * it; its block keeps the area's id. What each kind of module is, says and carries is written below, from the spec.
+ *
+ * Only the CM1A has a `meter`: the engine reports the key being held as its gate on the 900 path. The engine's `env1`
+ * and `env2` are its own two envelopes, which the 900 sound path does not use (the 911s are separate slots in
+ * `moog-core.ts`), and its oscillator and LFO meters describe no 921, so a live 911 or 921 follows the output's level
+ * (`routingActivity()`). Each module following its own reading needs the engine to report one per module.
  */
 import type {
   RoutingBlock,
+  RoutingMeter,
   RoutingSymbol,
   SynthDef,
   SynthRouting,
@@ -24,6 +30,7 @@ interface Kind {
   /** Makes no signal of its own (`RoutingBlock.passes`). */
   passes?: true;
   symbol?: RoutingSymbol;
+  meter?: RoutingMeter;
   /** The jacks that carry audio, by what follows the module's id (`sine` in `j.m921b_1.sine`). */
   audio?: RegExp;
 }
@@ -130,6 +137,7 @@ const KINDS: Record<string, Kind> = {
       'The keyboard: MIDI in, pitch voltages and triggers out. Patch its CV to an oscillator to play it.',
     specs: [{ label: 'Notes', value: 'C0 to C9' }],
     symbol: 'midi',
+    meter: 'gate',
   },
   cp3ao: {
     name: 'CP3A-O Controller #',
@@ -223,6 +231,7 @@ export function moog900Routing(def: SynthDef): SynthRouting {
     if (k.specs) block.specs = k.specs;
     if (k.passes) block.passes = true;
     if (k.symbol) block.symbol = k.symbol;
+    if (k.meter) block.meter = k.meter;
     return [block];
   });
   const placed = new Set(blocks.map((b) => b.id));
