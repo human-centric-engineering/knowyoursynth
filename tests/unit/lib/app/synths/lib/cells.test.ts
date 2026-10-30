@@ -151,6 +151,52 @@ describe('panelCells', () => {
     expect(frame).toContain('M344 400v60h112v-60Z');
   });
 
+  /** A knob `id` at (x, y), shaped as the mini D's noise level. */
+  const knobAt = (id: string, x: number, y: number): Control => ({
+    ...makeMiniD().controls.find((c) => c.id === 'mix.noise')!,
+    id,
+    x,
+    y,
+  });
+  const area = (id: string, rect: { x: number; y: number; w: number; h: number }) => ({
+    id,
+    label: id,
+    module: 'util' as const,
+    keywords: '',
+    rects: [rect],
+    help: '',
+  });
+
+  it('settles which of two overlapping areas gives way on their drawn sizes, whatever was cut first', () => {
+    // A and B are the same size and overlap by 10; C, bigger, cuts A's foot (and only A's) before B is reached. Judged on A's size
+    // after that cut, neither would give way and the strip would stay under both.
+    const def = makeMiniD({
+      view: { w: 400, h: 400 },
+      controls: [knobAt('k.a', 50, 40), knobAt('k.b', 150, 40), knobAt('k.c', 40, 200)],
+      areas: [
+        area('a', { x: 0, y: 0, w: 100, h: 100 }),
+        area('b', { x: 90, y: 0, w: 100, h: 100 }),
+        area('c', { x: 0, y: 80, w: 85, h: 220 }),
+      ],
+    });
+    const { cells } = panelCells(def);
+    const owners = ['k.a', 'k.b'].filter((id) => covers(cells[id], [95, 40]));
+    expect(owners).toEqual(['k.a']);
+  });
+
+  it('leaves an area that crosses a bigger one whole, rather than losing what lies beyond it', () => {
+    // A column, the smaller, crossing a wide bar: out of it at both ends, so there is no one side to cut back.
+    const def = makeMiniD({
+      view: { w: 600, h: 400 },
+      controls: [knobAt('k.bar', 560, 170), knobAt('k.col', 230, 300)],
+      areas: [
+        area('bar', { x: 20, y: 150, w: 560, h: 40 }),
+        area('col', { x: 200, y: 20, w: 60, h: 360 }),
+      ],
+    });
+    expect(covers(panelCells(def).cells['k.col'], [230, 300])).toBe(true);
+  });
+
   it('skips an area with nothing in it, leaving it part of the frame', () => {
     const base = makeMiniD();
     const def = makeMiniD({

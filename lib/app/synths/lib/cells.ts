@@ -92,31 +92,37 @@ const SIDES: Side[] = ['l', 'r', 't', 'b'];
 /**
  * Area rects with no two overlapping: where a definition's rects overlap (a strip of a few units, where a small one
  * reaches into a module above it), the smaller gives the strip up along its shallower side, so no two cells cover the
- * same patch of panel. A rect wholly inside another is left as it is.
+ * same patch of panel. Only a side it sticks out of the other at one end can be cut back: a rect wholly inside
+ * another, or crossing it (out at both ends both ways), is left as it is rather than losing panel beyond the overlap.
  */
 function trimmed(def: SynthDef): Map<ViewRect, ViewRect> {
   const all = (def.areas || []).flatMap((a) => a.rects);
   const out = new Map(all.map((r) => [r, { ...r }]));
+  // Which gives way is settled on the definition's sizes, so a rect another has already cut back does not change sides.
   const size = (r: ViewRect) => r.w * r.h;
   all.forEach((orig, i) => {
     const r = out.get(orig) ?? orig;
     all.forEach((other, j) => {
       const o = out.get(other) ?? other;
       // Only the smaller of the two gives way (the later, between two of a size).
-      if (i === j || size(o) < size(r) || (size(o) === size(r) && j > i)) return;
+      if (i === j || size(other) < size(orig) || (size(other) === size(orig) && j > i)) return;
       const ox = Math.min(r.x + r.w, o.x + o.w) - Math.max(r.x, o.x);
       const oy = Math.min(r.y + r.h, o.y + o.h) - Math.max(r.y, o.y);
-      if (ox <= 0 || oy <= 0 || (ox >= r.w && oy >= r.h)) return;
-      if (oy < r.h && (oy <= ox || ox >= r.w)) {
+      if (ox <= 0 || oy <= 0) return;
+      const canY = r.y < o.y !== r.y + r.h > o.y + o.h;
+      const canX = r.x < o.x !== r.x + r.w > o.x + o.w;
+      if (canY && (!canX || oy <= ox)) {
         if (r.y < o.y) r.h = o.y - r.y;
         else {
           r.h = r.y + r.h - (o.y + o.h);
           r.y = o.y + o.h;
         }
-      } else if (r.x < o.x) r.w = o.x - r.x;
-      else {
-        r.w = r.x + r.w - (o.x + o.w);
-        r.x = o.x + o.w;
+      } else if (canX) {
+        if (r.x < o.x) r.w = o.x - r.x;
+        else {
+          r.w = r.x + r.w - (o.x + o.w);
+          r.x = o.x + o.w;
+        }
       }
     });
   });
