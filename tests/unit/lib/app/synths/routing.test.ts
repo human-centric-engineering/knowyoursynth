@@ -15,7 +15,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { z } from 'zod';
 import type { SynthRouting } from '@/lib/app/synths/contract';
-import { getSynthDef } from '@/lib/app/synths/defs';
+import { getSynthDef, SYNTH_DEFS } from '@/lib/app/synths/defs';
 import { routingProblems } from '@/lib/app/synths/lib/routing';
 import { getSynthRouting, SYNTH_ROUTINGS } from '@/lib/app/synths/routing';
 
@@ -38,6 +38,17 @@ const defOf = (id: string) => {
   if (!def) throw new Error(`${id} is not a registered synth`);
   return def;
 };
+
+// Routed from their patch rather than from normals (t-145), so none of them has a routing yet.
+const PATCHED = ['system-15', 'system-35', 'system-55', 'ems-vcs3', 'syntrx-ii'];
+
+it('has a routing for every synth whose path is fixed, and none for the patched ones', () => {
+  const routed = new Set(SYNTH_ROUTINGS.map((r) => r.synth));
+  const ids = SYNTH_DEFS.map((d) => d.id);
+  expect(PATCHED.every((id) => ids.includes(id))).toBe(true);
+  expect(ids.filter((id) => !PATCHED.includes(id) && !routed.has(id))).toEqual([]);
+  expect(PATCHED.filter((id) => routed.has(id))).toEqual([]);
+});
 
 it('has a routing for Model D, and one routing per synth', () => {
   const ids = SYNTH_ROUTINGS.map((r) => r.synth);
