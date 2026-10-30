@@ -220,7 +220,10 @@ definition, not on it. A synth with no routing has no routing view.
   that scale it) and `breaks` (the input jack whose cable breaks this normal). An edge with none is fixed.
   `jacks` puts every jack of the definition in a block, so any cable can be drawn.
 - **Projected by hand from the spec.** Block and edge ids are the spec's module and connection ids
-  (`.context/app/synth-data/<id>/<id>.synth.json`); everything they depend on is in the definition's ids. Hand-written
+  (`.context/app/synth-data/<id>/<id>.synth.json`); everything they depend on is in the definition's ids. Where the
+  definition wires something the spec has no id for (Take 5's destination selectors in place of the spec's matrix,
+  the Behringer Syncussion's output) or the spec reuses an id (DeepMind's envelope routes), the routing gives it a
+  derived id and its docblock says so. Hand-written
   rather than generated: the spec and the definition share no ids, and each edge takes judgement (which control
   is the spec's `mixer.osc1_on`, whether a jack sums or breaks its normal, a crossfade the spec only describes),
   so a generated module would be edited afterwards and could never be regenerated. The test below gives the
@@ -251,7 +254,10 @@ definition, not on it. A synth with no routing has no routing view.
   block names a `ui` one) and to its spec (every module and
   connection is drawn, or listed in `omitted` with the reason).
 
-Model D's is the worked example.
+Model D's is the worked example. Every synth whose path is normalled or switched has one; the modular and
+pin-matrix synths (System 15/35/55, VCS3, Syntrx II) are drawn from their patch instead (t-145), and the test
+checks exactly those are the ones without. Synths that share a voice share a builder (`routing/acid-voice.ts`,
+`routing/syncussion-voice.ts`).
 
 ## Sounds
 
