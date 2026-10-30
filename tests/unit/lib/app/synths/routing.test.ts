@@ -18,6 +18,7 @@ import type { SynthRouting } from '@/lib/app/synths/contract';
 import { getSynthDef, SYNTH_DEFS } from '@/lib/app/synths/defs';
 import { routingProblems } from '@/lib/app/synths/lib/routing';
 import { DERIVED_ROUTINGS, getSynthRouting, SYNTH_ROUTINGS } from '@/lib/app/synths/routing';
+import { moog900Routing } from '@/lib/app/synths/routing/moog900';
 
 const Spec = z.object({
   modules: z.array(z.object({ id: z.string() })),
@@ -55,6 +56,24 @@ it('has one routing per synth, listed or derived but not both', () => {
   expect(getSynthRouting({ ...defOf('model-d'), id: 'no-such-synth' })).toBeUndefined();
   // A derived routing is built once per definition.
   expect(getSynthRouting(defOf('system-55'))).toBe(getSynthRouting(defOf('system-55')));
+});
+
+it('leaves a 900-series module it does not know out of the routing, and says so, rather than throwing', () => {
+  const base = defOf('system-15');
+  const known = base.areas?.find((a) => a.id !== 'appout')?.id;
+  if (!known) throw new Error('system-15 has modules');
+  // An unknown kind with the module's own controls and jacks, as a definition change that outran this file would be.
+  const renamed = (id: string) =>
+    id.replace(new RegExp(`^(j\\.)?${known}\\b`), (_, j = '') => `${j}m999`);
+  const def = {
+    ...base,
+    areas: base.areas?.map((a) => (a.id === known ? { ...a, id: 'm999' } : a)),
+    controls: base.controls.map((c) => ({ ...c, id: renamed(c.id) })),
+    jacks: base.jacks.map((j) => ({ ...j, id: renamed(j.id) })),
+  };
+  const routing = moog900Routing(def);
+  expect(routing.blocks.map((b) => b.id)).not.toContain('m999');
+  expect(routingProblems(def, routing).some((p) => p.includes('belongs to no block'))).toBe(true);
 });
 
 describe.each(ROUTINGS.map((r) => [r.synth, r] as const))('%s', (id, routing) => {

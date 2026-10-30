@@ -186,6 +186,16 @@ describe('layoutRouting: the rules', () => {
     expect(Math.max(...Object.values(l.blocks).map((b) => b.col))).toBe(l.blocks.out.col);
   });
 
+  it('puts a block that feeds both the output and an audio dead-end left of the dead-end', () => {
+    // The VCS3: an oscillator pinned to the output and to the ring modulator, whose output goes nowhere.
+    const l = layoutRouting(
+      small(['osc', 'ring', 'out'], [edge('1', 'osc', 'out'), edge('2', 'osc', 'ring')])
+    );
+    expect(l.blocks.ring.col).toBe(l.blocks.out.col - 1);
+    expect(l.blocks.osc.col).toBe(l.blocks.ring.col - 1);
+    expect(l.edges.some((e) => e.back)).toBe(false);
+  });
+
   it('puts a block no edge or cable joins in the spare grid beneath the rest', () => {
     const l = layoutRouting(
       small(['a', 'out', 'lfo', 'idle'], [edge('1', 'a', 'out'), edge('2', 'lfo', 'a', 'cv')])
@@ -267,6 +277,26 @@ describe('layoutRouting: the rules', () => {
       ]);
       expect(both.blocks.a).toEqual(alone.blocks.a);
       expect(both.blocks.out).toEqual(alone.blocks.out);
+    });
+
+    it('never moves a sink an edge places for a control cable into it', () => {
+      // `att` feeds nothing, so sits right of the LFO that feeds it; a cable in from the later envelope leaves it.
+      const fixed = small(
+        ['a', 'b', 'out', 'lfo', 'env', 'att'],
+        [
+          edge('1', 'a', 'b'),
+          edge('2', 'b', 'out'),
+          edge('3', 'lfo', 'a', 'cv'),
+          edge('4', 'env', 'b', 'cv'),
+          edge('5', 'lfo', 'att', 'cv'),
+        ]
+      );
+      const bare = layoutRouting(fixed);
+      expect(bare.blocks.att.col).toBe(bare.blocks.lfo.col + 1);
+      const patched = layoutRouting(fixed, [
+        { id: 'cable:0', from: 'env', to: 'att', signal: 'cv' },
+      ]);
+      expect(patched.blocks.att).toEqual(bare.blocks.att);
     });
   });
 

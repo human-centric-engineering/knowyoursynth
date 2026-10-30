@@ -294,6 +294,14 @@ describe('routingState on a pin matrix: the VCS3', () => {
     expect(s.cables[1].live).toBe(false);
   });
 
+  it('draws a pin whose row level cannot be read, rather than taking it as at 0', () => {
+    // A sound saved before the row had a LEVEL control: its gain reads NaN, which is not known to be zero.
+    const values: ControlValues = { ...vcs3.init, ...UP };
+    delete values['osc1.sine'];
+    const s = routingState(vcs3, vcs3Routing, { values, cables: PINS });
+    expect(s.cables[0].live).toBe(true);
+  });
+
   it('never carries Input 2, which has nothing plugged into it', () => {
     const s = run({ ...UP, 'in.ch2': 10 }, [{ from: 'r.in2', to: 'c.out1' }]);
     expect(s.cables[0].live).toBe(false);

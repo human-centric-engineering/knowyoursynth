@@ -1,7 +1,8 @@
 // Signal routing: which parts of a synth the current patch actually uses, read from its routing (`SynthRouting`).
 // Structural, not heard: an edge is live while its switches are set, its levels multiply to more than the engine's
-// floor and no cable has broken it, a cable (or a matrix pin) while the jack it comes from sends something, and a block is live while some live path runs from it to the output (and, for a
-// block that only passes signal on, while a live edge or cable feeds it). The sound map (`soundmap.ts`) answers the
+// floor and no cable has broken it, a cable (or a matrix pin) while the jack it comes from sends something, and a
+// block is live while some live path runs from it to the output (and, for a block that only passes signal on, while
+// a live edge or cable feeds it). The sound map (`soundmap.ts`) answers the
 // other question, whether a control changes what is heard, by probing the real voice; the two can disagree (a filter
 // closed to nothing is still on the path), and the view says which it shows.
 //
@@ -9,6 +10,7 @@
 import {
   conditionHolds,
   controlMap,
+  jackGain,
   jackMap,
   WHEEL,
   type CableLike,
@@ -81,7 +83,7 @@ const enabled = (def: SynthDef, edge: RoutingEdge, input: RoutingInput): boolean
   (edge.levels ?? []).reduce((p, l) => p * amount(def, l, input), 1) > ROUTING_FLOOR;
 
 /** Every block with a path to `out` over `links` (from, to), `out` included. */
-function reachBack(out: string, links: Iterable<[string, string]>): Set<string> {
+export function reachBack(out: string, links: Iterable<[string, string]>): Set<string> {
   const into = new Map<string, string[]>();
   for (const [from, to] of links) {
     const list = into.get(to);
@@ -131,9 +133,9 @@ function jackBlocks(routing: SynthRouting): Record<string, string | undefined> {
  */
 function sends(def: SynthDef, id: string, values: ControlValues): boolean {
   const j = jackMap(def)[id];
-  if (j?.dir !== 'out' || j.gain === undefined) return true;
-  const g = typeof j.gain === 'number' ? j.gain : j.gain(values);
-  return Math.abs(g) > ROUTING_FLOOR;
+  if (!j) return true;
+  // A gain that cannot be read (NaN, from a level the values lack) is not known to be zero, so the cable is drawn.
+  return !(Math.abs(jackGain(j, values)) <= ROUTING_FLOOR);
 }
 
 /**

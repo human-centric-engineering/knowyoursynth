@@ -201,13 +201,17 @@ const jackModule = (id: string) => {
   return m === 'out' ? OUT : m;
 };
 
-/** The routing of a System 15, 35 or 55: one block per module of `def`, its cables the only paths. */
+/**
+ * The routing of a System 15, 35 or 55: one block per module of `def`, its cables the only paths. A module this file
+ * does not know is left out rather than thrown on, since this runs as the synth page renders: `routingProblems` then
+ * names its controls and jacks as on no block, which fails the routing test.
+ */
 export function moog900Routing(def: SynthDef): SynthRouting {
   const areas = def.areas ?? [];
-  const blocks = areas.map((a): RoutingBlock => {
+  const blocks = areas.flatMap((a): RoutingBlock[] => {
     const kind = a.id.replace(/_\d+$/, '');
     const k = KINDS[kind];
-    if (!k) throw new Error(`no 900-series module ${kind} (${def.id})`);
+    if (!k) return [];
     const n = a.id.slice(kind.length + 1);
     const block: RoutingBlock = {
       id: a.id,
@@ -219,8 +223,9 @@ export function moog900Routing(def: SynthDef): SynthRouting {
     if (k.specs) block.specs = k.specs;
     if (k.passes) block.passes = true;
     if (k.symbol) block.symbol = k.symbol;
-    return block;
+    return [block];
   });
+  const placed = new Set(blocks.map((b) => b.id));
   const audio = (id: string) => {
     const k = KINDS[jackModule(id).replace(/_\d+$/, '')];
     return !!k?.audio?.test(id.split('.').slice(2).join('.'));
@@ -230,7 +235,11 @@ export function moog900Routing(def: SynthDef): SynthRouting {
     blocks,
     edges: [],
     out: OUT,
-    jacks: Object.fromEntries(def.jacks.map((j) => [j.id, jackModule(j.id)])),
-    audioJacks: def.jacks.filter((j) => audio(j.id)).map((j) => j.id),
+    jacks: Object.fromEntries(
+      def.jacks.filter((j) => placed.has(jackModule(j.id))).map((j) => [j.id, jackModule(j.id)])
+    ),
+    audioJacks: def.jacks
+      .filter((j) => placed.has(jackModule(j.id)) && audio(j.id))
+      .map((j) => j.id),
   };
 }
