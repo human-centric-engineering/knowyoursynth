@@ -203,7 +203,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   routing view's activity (`routingActivity()`) drawn over each block's cells (`liveAreas()`, the same
   `panelCells()` the dimming uses): its controls', and its jacks' with a cable in them, which is what carries
   a modular's or a pin matrix's module (a section of jacks that are all one block's lights whole once one is
-  patched). A control two blocks list gets an area of its own, lit with the brighter, so no two glows overlap. In the block's module colour, with `--a` written once a frame. Steady under reduced motion.
+  patched). A control two blocks list gets an area of its own, lit with the brighter, so no two glows overlap.
+  In the block's module colour, with `--a` written once a frame. Steady under reduced motion.
   The foot's LEDs light in a sweep when the page loads (not with reduced motion). The search is at
   the foot's right as an amber readout, and `/` outside a field puts the cursor in it. Under the
   foot's right end, while cables are plugged, a key in the same faceplate colours and print
