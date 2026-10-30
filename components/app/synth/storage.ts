@@ -53,8 +53,9 @@ export const STORAGE_KEYS = {
   /** Which side of the panel the lesson card floats on from `lg` up (t-74). Kept in this browser only. */
   cardSide: 'kys.cardSide',
   /**
-   * The Signal layer is Live rather than In use, while `dim` is on (`f-live-panel` t-150). Not one of the settings
-   * above: it is kept in this browser only, never stamped or kept in the account.
+   * The Signal layer is Live (`true`) or Live + flow (`'flow'`, t-153) rather than In use, while `dim` is on
+   * (`f-live-panel` t-150). Not one of the settings above: it is kept in this browser only, never stamped or kept in
+   * the account.
    */
   live: 'kys.live',
 } as const;

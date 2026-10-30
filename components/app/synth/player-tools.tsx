@@ -71,8 +71,11 @@ export function LayerToggle({
   );
 }
 
-/** The Signal layer's modes: nothing, the parts the patch uses, and those lit live as signal goes through them. */
-export type SignalMode = 'off' | 'inUse' | 'live';
+/**
+ * The Signal layer's modes: nothing, the parts the patch uses, those lit live as signal goes through them, and that
+ * with lines from each lit part to the next.
+ */
+export type SignalMode = 'off' | 'inUse' | 'live' | 'flow';
 
 const SIGNAL_MODES: readonly { mode: SignalMode; name: string; help: string }[] = [
   { mode: 'off', name: 'Off', help: 'Nothing over the panel.' },
@@ -86,6 +89,11 @@ const SIGNAL_MODES: readonly { mode: SignalMode; name: string; help: string }[] 
     name: 'Live',
     help: 'As In use, and each part the patch uses lights up as signal goes through it when you play.',
   },
+  {
+    mode: 'flow',
+    name: 'Live + flow',
+    help: 'As Live, with a line from each part to the next while signal runs along it: audio heavy, control light, gate dotted.',
+  },
 ];
 
 export function SignalMenu({
@@ -96,12 +104,12 @@ export function SignalMenu({
 }: {
   mode: SignalMode;
   onMode: (m: SignalMode) => void;
-  /** Whether the synth can show its signal live (it has a routing): without it, Live is not offered. */
+  /** Whether the synth can show its signal live (it has a routing): without it, Live and Live + flow are not offered. */
   live: boolean;
   icon: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
-  const modes = SIGNAL_MODES.filter((m) => live || m.mode !== 'live');
+  const modes = SIGNAL_MODES.filter((m) => live || (m.mode !== 'live' && m.mode !== 'flow'));
   const on = mode !== 'off';
   const name = SIGNAL_MODES.find((m) => m.mode === mode)?.name;
   return (

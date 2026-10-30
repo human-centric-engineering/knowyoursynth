@@ -9,25 +9,36 @@
  * Over a contour, the knob for the stage its envelope is in lights too (t-152, `liveStages()`): Attack, then Decay,
  * then Sustain while the key is held, then Release after it, as the engine reports the stage (`env1Stage`).
  *
+ * With Signal ▾ Live + flow (t-153, `LiveFlow`), a line runs from each lit part to the part it feeds while the patch
+ * routes signal along it, glowing with the edge or pin it stands for (`routingActivity()`'s `edges` and `cables`), its
+ * dashes running in the direction of flow.
+ *
  * As on the routing view, the glow is written straight to a CSS variable (`--a`) once a frame, never through React
- * state. A visitor who asks for less motion gets steady glows (`steadyMeters()`).
+ * state, and so is how far the flow's dashes have run (`--run`). A visitor who asks for less motion gets steady glows
+ * (`steadyMeters()`), and lines that show but do not run.
  */
 
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { liveAreas, liveStages } from '@/lib/app/synths/lib/live-areas';
+import { liveFlows } from '@/lib/app/synths/lib/live-flow';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
 import { routingActivity, settle } from '@/lib/app/synths/lib/routing-activity';
 import type { RoutingState } from '@/lib/app/synths/lib/routing';
 import { createMeterReader, type LiveSource } from '@/components/app/synth/live-meters';
 import { meterStore } from '@/components/app/synth/stores';
 import { reducedMotion } from '@/components/app/panel/parts';
+import { LiveFlow, RUN_PER_S } from '@/components/app/panel/live-flow';
 import type { ControlValues, PatchCable, SynthDef, SynthRouting } from '@/lib/app/synths/contract';
 
-/** What the panel needs to glow live: the synth's routing, what the patch routes now, and the engine to listen to. */
+/**
+ * What the panel needs to glow live: the synth's routing, what the patch routes now, and the engine to listen to;
+ * `flow` = draw the lines between the lit parts too (Live + flow).
+ */
 export interface LiveGlow {
   routing: SynthRouting;
   state: RoutingState;
   source: LiveSource | null;
+  flow?: boolean;
 }
 
 export function LiveLayer({
@@ -41,7 +52,7 @@ export function LiveLayer({
   cables: PatchCable[];
   values: ControlValues;
 }) {
-  const { routing } = live;
+  const { routing, state, flow } = live;
   // Keyed on the jacks a cable is in, not the cables, which are a new array with every change to the patch.
   const patched = cables
     .flatMap((cb) => [cb.from, cb.to])
@@ -54,6 +65,10 @@ export function LiveLayer({
       stages: liveStages(def, routing, jacks, values),
     };
   }, [def, routing, patched, values]);
+  const lines = useMemo(
+    () => (flow ? liveFlows(def, routing, state, areas) : []),
+    [flow, def, routing, state, areas]
+  );
 
   // The latest routing, state and source are read through refs, so the loop runs for as long as the layer is up
   // rather than restarting (and dropping every glow to dark) with every knob turned.
@@ -71,7 +86,9 @@ export function LiveLayer({
     const steady = reducedMotion();
     let last = performance.now();
     let dt = 0;
-    const ease = (el: SVGPathElement, key: string, target: number, quick: boolean) => {
+    // How far the flow's dashes have run: they stand still for a visitor who asks for less motion.
+    let run = 0;
+    const ease = (el: SVGElement, key: string, target: number, quick: boolean) => {
       const v = settle(shown.get(key) ?? 0, target, dt, quick);
       shown.set(key, v);
       const was = written.get(el) ?? -1;
@@ -102,28 +119,51 @@ export function LiveLayer({
         const env = el.getAttribute('data-env') === 'env2' ? 'env2' : 'env1';
         ease(el, id, at[env] === el.getAttribute('data-at') ? 1 : 0, true);
       }
+      // A flow line glows with the brightest edge or pin it stands for, and pulses with the part it leaves.
+      const flowEl = gRef.current?.querySelector<SVGGElement>('.kys-flow');
+      for (const el of flowEl?.querySelectorAll<SVGGElement>('[data-flow]') ?? []) {
+        const ids = (name: string) => (el.getAttribute(name) ?? '').split(' ').filter(Boolean);
+        const target = Math.max(
+          0,
+          ...ids('data-edges').map((e) => a.edges[e] ?? 0),
+          ...ids('data-cables').map((i) => a.cables[Number(i)] ?? 0)
+        );
+        ease(
+          el,
+          el.getAttribute('data-flow') ?? '',
+          target,
+          a.pulsing[el.getAttribute('data-from') ?? '']
+        );
+      }
+      if (flowEl && !steady) {
+        run = (run + (dt * RUN_PER_S) / 1000) % 1000;
+        flowEl.style.setProperty('--run', run.toFixed(1));
+      }
       frame = requestAnimationFrame(tick);
     });
     return () => cancelAnimationFrame(frame);
   }, []);
 
   return (
-    <g ref={gRef} pointerEvents="none" className="kys-live" data-testid="live-layer">
-      {areas.map((a) => (
-        <path key={a.id} data-live={a.id} d={a.d} fill={moduleOf(a.module).color} />
-      ))}
-      <g className="kys-live-stages">
-        {stages.map((st) => (
-          <path
-            key={st.id}
-            data-stage={st.id}
-            data-env={st.env}
-            data-at={st.stage}
-            d={st.d}
-            fill={moduleOf(st.module).color}
-          />
+    <g ref={gRef} pointerEvents="none" data-testid="live-layer">
+      <g className="kys-live">
+        {areas.map((a) => (
+          <path key={a.id} data-live={a.id} d={a.d} fill={moduleOf(a.module).color} />
         ))}
+        <g className="kys-live-stages">
+          {stages.map((st) => (
+            <path
+              key={st.id}
+              data-stage={st.id}
+              data-env={st.env}
+              data-at={st.stage}
+              d={st.d}
+              fill={moduleOf(st.module).color}
+            />
+          ))}
+        </g>
       </g>
+      {flow && <LiveFlow lines={lines} routing={routing} />}
     </g>
   );
 }

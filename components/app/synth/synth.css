@@ -3244,6 +3244,49 @@ button.kys-routing-card-item:focus-visible {
 .is-light .kys-live .kys-live-stages path {
   opacity: calc(var(--a, 0) * 0.55);
 }
+/*
+ * The live flow (t-153): a line from each lit part to the next, in the routing view's style (audio heavy, control
+ * light, gate dotted) and its source's colour, as bright as what goes along it (`--a`), with dashes running along it
+ * in the direction of flow (`--run`, written by the frame loop and left at 0 for reduced motion). Faint: it is read
+ * over the knobs, not instead of them.
+ */
+.kys-flow-line {
+  --a: 0;
+  opacity: calc(var(--a) * 0.9);
+}
+.kys-flow-line path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+}
+.kys-flow-line .kys-flow-path {
+  stroke-width: 3;
+  opacity: 0.75;
+}
+.kys-flow-line.is-audio .kys-flow-path {
+  stroke-width: 6;
+}
+.kys-flow-line.is-gate .kys-flow-path {
+  stroke-width: 3.5;
+  stroke-dasharray: 1.5 9;
+}
+.kys-flow-line .kys-flow-run {
+  stroke: color-mix(in srgb, currentColor 40%, #fff);
+  stroke-width: 3;
+  stroke-dasharray: 8 30;
+  stroke-dashoffset: calc(var(--run, 0) * -1);
+}
+.kys-flow-line.is-audio .kys-flow-run {
+  stroke-width: 4;
+}
+.kys-flow-line .kys-flow-head {
+  fill: currentColor;
+  stroke: none;
+}
+.is-outline .kys-flow-line .kys-flow-run,
+.is-light .kys-flow-line .kys-flow-run {
+  stroke: color-mix(in srgb, currentColor 60%, #000);
+}
 /* The live pointer on the cutoff's knob (t-154): it comes and goes with the modulation, a fade rather than a blink. */
 .kys-live-pointers > g {
   transition: opacity 0.15s;
