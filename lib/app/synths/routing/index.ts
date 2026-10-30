@@ -20,6 +20,10 @@ import { routing as model15 } from '@/lib/app/synths/routing/model-15';
 import { routing as cat } from '@/lib/app/synths/routing/cat';
 import { routing as xm2 } from '@/lib/app/synths/routing/2-xm';
 import { routing as polyD } from '@/lib/app/synths/routing/poly-d';
+import { routing as jupiter4 } from '@/lib/app/synths/routing/jupiter-4';
+import { routing as jupiter6 } from '@/lib/app/synths/routing/jupiter-6';
+import { routing as jupiter8 } from '@/lib/app/synths/routing/jupiter-8';
+import { routing as pro800 } from '@/lib/app/synths/routing/pro-800';
 
 export const SYNTH_ROUTINGS: SynthRouting[] = [
   modelD,
@@ -37,6 +41,10 @@ export const SYNTH_ROUTINGS: SynthRouting[] = [
   cat,
   xm2,
   polyD,
+  jupiter4,
+  jupiter6,
+  jupiter8,
+  pro800,
 ];
 
 const BY_ID = new Map(SYNTH_ROUTINGS.map((r) => [r.synth, r]));
