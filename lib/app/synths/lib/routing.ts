@@ -12,6 +12,7 @@ import {
   controlMap,
   controlReach,
   faceView,
+  isShown,
   jackGain,
   jackMap,
   jackReach,
@@ -229,6 +230,12 @@ function controlLit(c: Control): PanelSpot['lit'] {
     const short = 40 + LIT_PAD * 2;
     return c.orient === 'h' ? { w: long, h: short } : { w: short, h: long };
   }
+  if (c.type === 'select') {
+    // A row of buttons, each `w` × `h` at its option's x, y: the box round the row, not a circle as wide as it.
+    const dx = Math.max(...c.options.map((o) => Math.abs((o.x ?? c.x) - c.x)));
+    const dy = Math.max(...c.options.map((o) => Math.abs((o.y ?? c.y) - c.y)));
+    return { w: dx * 2 + c.w + LIT_PAD * 2, h: dy * 2 + c.h + LIT_PAD * 2 };
+  }
   return round(controlReach(c));
 }
 
@@ -276,26 +283,29 @@ const fits = (spots: PanelSpot[]) => {
  * that hold the controls the block lists and the jacks the routing gives it, each spot by its reach (`controlReach`,
  * `jackReach`), padded and kept on the faceplate. One box when they fit `CROP_MAX_W` × `CROP_MAX_H`; otherwise the
  * clusters, joined while a join still fits, left to right. Empty for a block with nothing on the panel, and for one
- * spread over more than `CROP_MAX` boxes.
+ * spread over more than `CROP_MAX` boxes. With `values`, a control the panel does not draw at them (`isShown`) is
+ * left out, as it is from the faceplate.
  */
 export function panelCrops(
   panel: SynthDef,
   routing: SynthRouting,
-  block: RoutingBlock
+  block: RoutingBlock,
+  values?: ControlValues
 ): PanelCrop[] {
   const controls = controlMap(panel);
   const jacks = jackMap(panel);
   const spots: PanelSpot[] = [
     ...(block.controls ?? []).flatMap((id) => {
       const c = controls[id];
-      return c
+      return c && (!values || isShown(c, values))
         ? [{ kind: 'control' as const, id, x: c.x, y: c.y, r: controlReach(c), lit: controlLit(c) }]
         : [];
     }),
     ...Object.entries(routing.jacks).flatMap(([id, b]) => {
       const j = b === block.id ? jacks[id] : undefined;
-      const r = j && jackReach(j);
-      return j && r ? [{ kind: 'jack' as const, id, x: j.x, y: j.y, r, lit: round(r) }] : [];
+      if (!j) return [];
+      const r = jackReach(j);
+      return [{ kind: 'jack' as const, id, x: j.x, y: j.y, r, lit: round(r) }];
     }),
   ];
   if (!spots.length) return [];

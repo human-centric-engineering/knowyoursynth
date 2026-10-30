@@ -19,7 +19,12 @@ import { moduleOf } from '@/lib/app/synths/lib/modules';
 import { jackName } from '@/lib/app/synths/lib/explain';
 import { controlMap, displayName, jackMap } from '@/lib/app/synths/lib/patch';
 import { panelCrops, type PanelCrop, type PanelSpot } from '@/lib/app/synths/lib/routing';
-import type { RoutingBlock, SynthDef, SynthRouting } from '@/lib/app/synths/contract';
+import type {
+  ControlValues,
+  RoutingBlock,
+  SynthDef,
+  SynthRouting,
+} from '@/lib/app/synths/contract';
 
 /** A control or a jack to find on the panel. */
 export interface RoutingShowTarget {
@@ -87,6 +92,7 @@ export function RoutingCard({
   live,
   onShow,
   panel,
+  values,
 }: {
   def: SynthDef;
   routing: SynthRouting;
@@ -99,10 +105,12 @@ export function RoutingCard({
   onShow?: (target: RoutingShowTarget) => void;
   /** The definition as the panel draws it (a modular's case), whose faceplate is on the page. Absent: no picture. */
   panel?: SynthDef;
+  /** The panel's values, so a control it does not draw at them is not lit. Absent: every control is. */
+  values?: ControlValues;
 }) {
   const crops = useMemo(
-    () => (panel ? panelCrops(panel, routing, block) : []),
-    [panel, routing, block]
+    () => (panel ? panelCrops(panel, routing, block, values) : []),
+    [panel, routing, block, values]
   );
   // At one scale, the row of crops is no wider than its tallest drawn CROP_PX_H high.
   const cropsW = crops.reduce((t, k) => t + k.w, 0);

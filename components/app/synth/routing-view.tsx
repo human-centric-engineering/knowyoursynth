@@ -576,6 +576,7 @@ export function RoutingView({
                 live={state.blocks[open.id]}
                 onShow={onShow}
                 panel={panel}
+                values={values}
               />
               <Popover.Arrow className="kys-routing-card-arrow" width={12} height={6} />
             </Popover.Content>
