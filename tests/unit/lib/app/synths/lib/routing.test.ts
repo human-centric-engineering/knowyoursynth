@@ -33,6 +33,7 @@ import { routing } from '@/lib/app/synths/routing/model-d';
 import { getSynthRouting } from '@/lib/app/synths/routing';
 import system55 from '@/lib/app/synths/defs/system-55';
 import vcs3 from '@/lib/app/synths/defs/ems-vcs3';
+import b2600 from '@/lib/app/synths/defs/b2600';
 
 const state = (set: ControlValues = {}, cables: CableLike[] = [], wheel = 0) =>
   routingState(modelD, routing, { values: { ...modelD.init, ...set }, cables, wheel });
@@ -454,6 +455,25 @@ describe('panelCrops', () => {
     const c = controls[rocker.id] as Extract<Control, { type: 'rocker' }>;
     expect(rocker.lit.w).toBeGreaterThan(c.w);
     expect(rocker.lit.h).toBeGreaterThan(c.h);
+  });
+
+  it('lights a fader along its travel, upright or lying down (the 2600 has both)', () => {
+    const r2600 = getSynthRouting(b2600);
+    if (!r2600) throw new Error('the 2600 has a routing');
+    const controls = controlMap(b2600);
+    const faders = r2600.blocks
+      .flatMap((b) => panelCrops(b2600, r2600, b).flatMap((k) => k.spots))
+      .flatMap((s) => {
+        const c = controls[s.id];
+        return c?.type === 'fader' ? [{ s, c }] : [];
+      });
+    const up = faders.find(({ c }) => c.orient === 'v');
+    const flat = faders.find(({ c }) => c.orient === 'h');
+    if (!up || !flat) throw new Error('the 2600 has upright and lying faders');
+    expect(up.s.lit.h).toBeGreaterThan(up.c.len);
+    expect(up.s.lit.w).toBeLessThan(up.s.lit.h);
+    expect(flat.s.lit.w).toBeGreaterThan(flat.c.len);
+    expect(flat.s.lit.h).toBeLessThan(flat.s.lit.w);
   });
 
   it('reads positions from the panel as drawn, not from where the routing’s synth has them', () => {
