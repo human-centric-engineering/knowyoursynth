@@ -144,7 +144,14 @@ describe('routingState on Model D', () => {
       expect(s.blocks.noise).toBe(false);
       expect(s.blocks.lfo).toBe(true);
       expect(s.cables).toEqual([
-        { from: 'j.lfoSq', to: 'j.modSrc', fromBlock: 'lfo', toBlock: 'mod_bus', live: true },
+        {
+          from: 'j.lfoSq',
+          to: 'j.modSrc',
+          fromBlock: 'lfo',
+          toBlock: 'mod_bus',
+          signal: 'cv',
+          live: true,
+        },
       ]);
     });
 

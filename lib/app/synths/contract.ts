@@ -1247,6 +1247,12 @@ export interface SynthRouting {
   out: string;
   /** Which block each of the definition's jacks belongs to. Every jack is listed, so any cable can be drawn. */
   jacks: Record<string, string>;
+  /**
+   * The jacks that carry audio. A cable between two of them is an audio cable, and the diagram draws the blocks it
+   * joins on the main line; any other cable is control. Absent = every cable is control, which only matters where
+   * cables place the blocks (a modular, a pin matrix) rather than the routing's own edges.
+   */
+  audioJacks?: string[];
   /** Spec modules and connections the routing leaves out, by spec id, with the reason. */
   omitted?: Record<string, string>;
 }
@@ -1329,7 +1335,10 @@ export type RoutingWhen =
 export type RoutingLevel =
   string | { id: string; off?: ControlValue; pow?: number } | { sum: RoutingLevel[] };
 
-/** One connection between two blocks, inside the synth. Cables are not edges: they come from the patch. */
+/**
+ * One connection between two blocks, inside the synth. Cables are not edges: they come from the patch, and a matrix
+ * pin is a cable. A modular has no edges at all, so every connection on its diagram is a cable.
+ */
 export interface RoutingEdge {
   /** The spec's connection id (`c40`). */
   id: string;

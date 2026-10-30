@@ -170,9 +170,76 @@ describe('layoutRouting: the rules', () => {
     expect(Math.max(...ys('5'))).toBeGreaterThan(l.blocks.lfo.y + BLOCK_H);
   });
 
-  it('puts a block beneath that feeds nothing in the first column', () => {
-    const l = layoutRouting(small(['a', 'out', 'idle'], [edge('1', 'a', 'out')]));
+  it('puts a block beneath that feeds nothing, fed only by a cable, in the first column', () => {
+    const l = layoutRouting(small(['a', 'out', 'idle'], [edge('1', 'a', 'out')]), [
+      { id: 'cable:0', from: 'idle', to: 'idle' },
+    ]);
     expect(l.blocks.idle).toMatchObject({ col: 0, band: 'control' });
+  });
+
+  it('puts a block no edge or cable joins in the spare grid beneath the rest', () => {
+    const l = layoutRouting(
+      small(['a', 'out', 'lfo', 'idle'], [edge('1', 'a', 'out'), edge('2', 'lfo', 'a', 'cv')])
+    );
+    expect(l.blocks.idle).toMatchObject({ col: 0, band: 'spare' });
+    expect(l.blocks.idle.y).toBeGreaterThan(l.blocks.lfo.y + BLOCK_H);
+    expect(l.height).toBeGreaterThanOrEqual(l.blocks.idle.y + BLOCK_H);
+  });
+
+  it('lays a modular with nothing patched out as a grid about twice as wide as it is tall', () => {
+    const mods = Array.from({ length: 18 }, (_, k) => `m${k}`);
+    const l = layoutRouting(small([...mods, 'out'], []));
+    expect(mods.every((m) => l.blocks[m].band === 'spare')).toBe(true);
+    const cols = new Set(mods.map((m) => l.blocks[m].col)).size;
+    const rows = new Set(mods.map((m) => l.blocks[m].y)).size;
+    expect([cols, rows]).toEqual([6, 3]);
+    // The routing's order, row by row.
+    expect(mods.slice(0, 6).map((m) => l.blocks[m].col)).toEqual([0, 1, 2, 3, 4, 5]);
+    expect(l.width).toBeGreaterThanOrEqual(l.blocks.m5.x + BLOCK_W);
+  });
+
+  describe('cables placing a routing with no edges', () => {
+    const modular = small(['vco', 'vcf', 'vca', 'env', 'kbd', 'lfo', 'out'], []);
+    const patch = [
+      { id: 'cable:0', from: 'vco', to: 'vcf', signal: 'audio' as const },
+      { id: 'cable:1', from: 'vcf', to: 'vca', signal: 'audio' as const },
+      { id: 'cable:2', from: 'vca', to: 'out', signal: 'audio' as const },
+      { id: 'cable:3', from: 'env', to: 'vca', signal: 'cv' as const },
+      { id: 'cable:4', from: 'kbd', to: 'vco', signal: 'cv' as const },
+    ];
+
+    it('runs the audio cables left to right on the main line, the control beneath, the rest spare', () => {
+      const l = layoutRouting(modular, patch);
+      // The keyboard one column left of the oscillator it plays, the envelope just before the amplifier it opens.
+      expect(l.blocks.kbd).toMatchObject({ band: 'control', col: 0 });
+      expect(['vco', 'vcf', 'vca', 'out'].map((b) => l.blocks[b].col)).toEqual([1, 2, 3, 4]);
+      expect(['vco', 'vcf', 'vca', 'out'].every((b) => l.blocks[b].band === 'audio')).toBe(true);
+      expect(l.blocks.env).toMatchObject({ band: 'control', col: 2 });
+      expect(l.blocks.lfo.band).toBe('spare');
+      expect(l.cables.map((c) => c.id)).toEqual(patch.map((c) => c.id));
+      expect(l.cables.some((c) => c.back)).toBe(false);
+    });
+
+    it('changes shape as a cable goes in, and goes back when it comes out', () => {
+      const before = layoutRouting(modular, patch);
+      const lfo = { id: 'cable:5', from: 'lfo', to: 'vcf', signal: 'cv' as const };
+      const after = layoutRouting(modular, [...patch, lfo]);
+      expect(before.blocks.lfo.band).toBe('spare');
+      expect(after.blocks.lfo).toMatchObject({ band: 'control', col: after.blocks.vcf.col - 1 });
+      expect(layoutRouting(modular, patch)).toEqual(before);
+    });
+
+    it('never moves a block an edge places for a cable out of it', () => {
+      const fixed = small(['a', 'out', 'util'], [edge('1', 'a', 'out')]);
+      const alone = layoutRouting(fixed, [{ id: 'cable:0', from: 'util', to: 'a' }]);
+      const both = layoutRouting(fixed, [
+        { id: 'cable:0', from: 'util', to: 'a' },
+        { id: 'cable:1', from: 'out', to: 'util' },
+        { id: 'cable:2', from: 'a', to: 'util' },
+      ]);
+      expect(both.blocks.a).toEqual(alone.blocks.a);
+      expect(both.blocks.out).toEqual(alone.blocks.out);
+    });
   });
 
   it('puts a block beneath that feeds nothing one column right of what feeds it, so the edge runs forward', () => {
