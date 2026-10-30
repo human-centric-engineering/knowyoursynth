@@ -88,14 +88,51 @@ function clip(poly: Point[], a: number, b: number, c: number): Point[] {
 const PAD = 16;
 type Side = 'l' | 'r' | 't' | 'b';
 const SIDES: Side[] = ['l', 'r', 't', 'b'];
+
+/**
+ * Area rects with no two overlapping: where a definition's rects overlap (a strip of a few units, where a small one
+ * reaches into a module above it), the smaller gives the strip up along its shallower side, so no two cells cover the
+ * same patch of panel. A rect wholly inside another is left as it is.
+ */
+function trimmed(def: SynthDef): Map<ViewRect, ViewRect> {
+  const all = (def.areas || []).flatMap((a) => a.rects);
+  const out = new Map(all.map((r) => [r, { ...r }]));
+  const size = (r: ViewRect) => r.w * r.h;
+  all.forEach((orig, i) => {
+    const r = out.get(orig) ?? orig;
+    all.forEach((other, j) => {
+      const o = out.get(other) ?? other;
+      // Only the smaller of the two gives way (the later, between two of a size).
+      if (i === j || size(o) < size(r) || (size(o) === size(r) && j > i)) return;
+      const ox = Math.min(r.x + r.w, o.x + o.w) - Math.max(r.x, o.x);
+      const oy = Math.min(r.y + r.h, o.y + o.h) - Math.max(r.y, o.y);
+      if (ox <= 0 || oy <= 0 || (ox >= r.w && oy >= r.h)) return;
+      if (oy < r.h && (oy <= ox || ox >= r.w)) {
+        if (r.y < o.y) r.h = o.y - r.y;
+        else {
+          r.h = r.y + r.h - (o.y + o.h);
+          r.y = o.y + o.h;
+        }
+      } else if (r.x < o.x) r.w = o.x - r.x;
+      else {
+        r.w = r.x + r.w - (o.x + o.w);
+        r.x = o.x + o.w;
+      }
+    });
+  });
+  return out;
+}
+
 /**
  * Area rects grown into the gutters round them (up to PAD, never past half way to a neighbouring rect), so a section
  * name printed ON the frame line belongs to its section instead of being cut in half by the wash over the gutter.
+ * Keyed by the definition's rect; grown from its `trimmed()` copy.
  */
 function grown(def: SynthDef): Map<ViewRect, ViewRect> {
-  const all = (def.areas || []).flatMap((a) => a.rects);
+  const cut = trimmed(def);
+  const all = [...cut.values()];
   const out = new Map<ViewRect, ViewRect>();
-  for (const r of all) {
+  for (const [orig, r] of cut) {
     const room: Record<Side, number> = {
       l: Math.min(PAD, r.x),
       t: Math.min(PAD, r.y),
@@ -118,7 +155,7 @@ function grown(def: SynthDef): Map<ViewRect, ViewRect> {
           room[side] = Math.min(room[side], Math.max(0, gaps[side]) / 2);
       }
     }
-    out.set(r, {
+    out.set(orig, {
       x: r.x - room.l,
       y: r.y - room.t,
       w: r.w + room.l + room.r,

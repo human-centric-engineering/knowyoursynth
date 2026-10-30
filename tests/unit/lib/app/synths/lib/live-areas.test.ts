@@ -44,6 +44,30 @@ describe('liveAreas on Model D', () => {
     expect(byId.has('vca')).toBe(false);
   });
 
+  it('lights a patched jack with the part it belongs to, and an empty one not at all', () => {
+    const jack = Object.keys(routing.jacks).find((j) => routing.jacks[j] === 'filter');
+    if (!jack) throw new Error('the filter has a jack');
+    const patched = liveAreas(modelD, routing, [jack], values).find((a) => a.id === 'filter');
+    const { cells } = panelCells(modelD, [jack], values);
+    expect(cells[jack]).toBeTruthy();
+    expect(patched?.d).toContain(cells[jack]);
+    expect(byId.get('filter')?.d).not.toContain(cells[jack]);
+  });
+
+  it('gives a control two parts list one area of its own, glowing for both', () => {
+    const shared = structuredClone(routing);
+    shared.blocks.find((b) => b.id === 'osc2')?.controls?.push('filter.emphasis');
+    const out = liveAreas(modelD, shared, [], values);
+    const { cells } = panelCells(modelD, [], values);
+    const both = out.find((a) => a.id === 'osc2 filter');
+    expect(both?.blocks).toEqual(['osc2', 'filter']);
+    expect(both?.d).toBe(cells['filter.emphasis']);
+    // It is neither part's own any more, and comes after the first of them in the routing's order.
+    expect(out.find((a) => a.id === 'filter')?.d).not.toContain(cells['filter.emphasis']);
+    const ids = out.map((a) => a.id);
+    expect(ids.indexOf('osc2 filter')).toBe(ids.indexOf('osc2') + 1);
+  });
+
   it('gives no two parts the same patch of panel', () => {
     const { cells } = panelCells(modelD, [], values);
     const owner = new Map<string, string>();

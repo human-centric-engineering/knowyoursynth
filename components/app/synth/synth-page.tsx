@@ -276,8 +276,6 @@ const TALL_QUERY = '(min-height: 900px)';
 /** The side of the panel the lesson card floats on, as stored. */
 const CardSideSchema = z.enum(['left', 'right']);
 const LiveSchema = z.boolean();
-/** The synths whose panel can glow live: the Model D first (`f-live-panel` t-150); the rest follow in t-151. */
-const LIVE_SYNTHS = new Set(['model-d']);
 /** How long the pointer may rest before the player's secondary controls fade, as a video's do, in ms. */
 const IDLE_MS = 2500;
 /** How far above the dock the pointer lifts the Sound Design tab, inviting a press, in px. */
@@ -623,12 +621,12 @@ function Synth({
   // The Signal layer (`f-live-panel` t-150): In use is the sound map's "Dim unused parts", kept with the settings;
   // Live is that and the live glow, on a synth that has a routing to light, and is kept in this browser only.
   const [liveOn, setLiveOn] = useStoredPref(STORAGE_KEYS.live, LiveSchema, false);
-  const liveOffered = !!routing && LIVE_SYNTHS.has(synthDef.id);
+  const liveOffered = !!routing;
   const signal: SignalMode = !dimOn ? 'off' : liveOn && liveOffered ? 'live' : 'inUse';
   const setSignal = (m: SignalMode) => {
     setDimOn(m !== 'off');
     // Off clears Live too, so a dim synced back on from the account opens In use. In use is left alone where Live is
-    // not offered, so another synth's page does not clear the Model D's choice.
+    // not offered, so a synth without a routing does not clear the choice made on the others.
     if (m !== 'inUse' || liveOffered) setLiveOn(m === 'live');
   };
   const [heatOn, setHeatOn] = settings.heat;

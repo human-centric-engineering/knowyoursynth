@@ -2,7 +2,7 @@
 
 /**
  * The live glow on Model D's panel (`f-live-panel` t-150): each part lit over its controls with what the engine says
- * goes through it, frame by frame; dark with the power off or off the patch's path; and steady, not pulsing, for a
+ * goes through it, frame by frame (a control two parts share, with the brighter); dark with the power off or off the patch's path; and steady, not pulsing, for a
  * visitor who asks for less motion.
  *
  * The frames are driven by hand (a fake `requestAnimationFrame`), and the engine's meters are set on `meterStore`.
@@ -47,10 +47,10 @@ function glowOf(container: HTMLElement, id: string): number {
   return Number(el.style.getPropertyValue('--a') || 0);
 }
 
-function draw(set: ControlValues = {}, amp = 0.5) {
+function draw(set: ControlValues = {}, amp = 0.5, r = routing) {
   const values = { ...modelD.init, ...set };
   const live: LiveGlow = {
-    routing,
+    routing: r,
     state: routingState(modelD, routing, { values, cables: [], wheel: 0 }),
     source: source(amp),
   };
@@ -103,6 +103,17 @@ describe('LiveLayer on Model D', () => {
     expect(fading).toBeLessThan(1);
     run(200);
     expect(glowOf(container, 'loudness_contour')).toBe(0);
+  });
+
+  it('lights a control two parts share with the brighter of them', () => {
+    // Emphasis as if it set Oscillator 2 as well, which is switched out at init and stays dark.
+    const shared = structuredClone(routing);
+    shared.blocks.find((b) => b.id === 'osc2')?.controls?.push('filter.emphasis');
+    meterStore.set(PLAYING);
+    const { container } = draw({}, 0.5, shared);
+    run(30);
+    expect(glowOf(container, 'osc2')).toBe(0);
+    expect(glowOf(container, 'osc2 filter')).toBeCloseTo(1, 2);
   });
 
   it('stays dark with the power off, whatever the meters last said', () => {

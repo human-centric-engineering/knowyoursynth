@@ -1,14 +1,15 @@
 // @vitest-environment happy-dom
 
 /**
- * The player bar's tools: a layer toggle, and the panel settings, on show under the panel.
+ * The player bar's tools: a layer toggle, the Signal layer's menu, and the panel settings, on show under the panel.
  *
  * @see components/app/synth/player-tools.tsx
  */
 
 import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen, within } from '@testing-library/react';
-import { LayerToggle, PlayerSettings } from '@/components/app/synth/player-tools';
+import { LayerToggle, PlayerSettings, SignalMenu } from '@/components/app/synth/player-tools';
+import { chooseSignal } from '@/tests/helpers/signal-menu';
 
 function settings(
   over: { modular?: boolean; zoom?: number; view?: { outline: boolean; long: boolean } } = {}
@@ -95,5 +96,29 @@ describe('LayerToggle', () => {
     expect(b.getAttribute('aria-pressed')).toBe('true');
     fireEvent.click(b);
     expect(onClick).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('SignalMenu', () => {
+  function draw(live: boolean) {
+    const onMode = vi.fn();
+    render(<SignalMenu mode="inUse" onMode={onMode} live={live} icon={null} />);
+    return onMode;
+  }
+  const offered = () => {
+    fireEvent.click(screen.getByRole('button', { name: 'Signal on the panel: In use' }));
+    return [...document.querySelectorAll('.kys-signal-name')].map((n) => n.textContent);
+  };
+
+  it('offers Live on a synth whose signal it can show, and chooses it', () => {
+    const onMode = draw(true);
+    chooseSignal('Live');
+    expect(onMode).toHaveBeenCalledWith('live');
+    expect(offered()).toEqual(['Off', 'In use', 'Live']);
+  });
+
+  it('leaves Live out on a synth without a routing', () => {
+    draw(false);
+    expect(offered()).toEqual(['Off', 'In use']);
   });
 });
