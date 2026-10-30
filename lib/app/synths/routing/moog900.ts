@@ -9,10 +9,10 @@
  * app's output panel (`appout`, jacks `j.out.l` and `j.out.r`) is not on the hardware, so the spec has no module for
  * it; its block keeps the area's id. What each kind of module is, says and carries is written below, from the spec.
  *
- * Only the CM1A has a `meter`: the engine's gate is the key being held, which is what the CM1A reports. The engine's
- * `env1` and `env2` are its own two envelopes, which the 900 sound path does not use (the 911s are separate slots in
- * `moog-core.ts`), and its oscillator and LFO meters describe no 921, so a 911 or 921 glows from the audio line or
- * from what feeds it instead. Each module following its own reading needs the engine to report one per module.
+ * Only the CM1A has a `meter`: the engine reports the key being held as its gate on the 900 path. The engine's `env1`
+ * and `env2` are its own two envelopes, which the 900 sound path does not use (the 911s are separate slots in
+ * `moog-core.ts`), and its oscillator and LFO meters describe no 921, so a live 911 or 921 follows the output's level
+ * (`routingActivity()`). Each module following its own reading needs the engine to report one per module.
  */
 import type {
   RoutingBlock,

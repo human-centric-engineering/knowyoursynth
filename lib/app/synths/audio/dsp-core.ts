@@ -2309,6 +2309,8 @@ function createVoice(
           lfoHz: lfoHzNow,
           ...oscMeters(),
           ...(P.easel ? { gate: gate > 0, seq: ezSeqSt, pulser: ezPul } : null),
+          // the CM1A's lamp: the key held, not the engine's own envelopes, which the 900 path does not use
+          ...(P.moog ? { gate: gate > 0 } : null),
           // the 960's lamps: its stage (0-based) while it has one
           ...(P.moog && moog.seqState() ? { seq: moog.seqState()!.stage } : null),
           ...(P.solar ? { seq: solar.seqStage(), eyes: solar.eyes() } : null),

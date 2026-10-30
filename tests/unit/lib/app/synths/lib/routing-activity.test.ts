@@ -189,12 +189,10 @@ describe('routingActivity on Model D', () => {
 describe('routingActivity on a modular: the System 55, every path a cable', () => {
   const modular = getSynthRouting(system55);
   if (!modular) throw new Error('system-55 has a routing');
+  const state55 = (cables: CableLike[]) =>
+    routingState(system55, modular, { values: system55.init, cables });
   const run = (cables: CableLike[], meters: ActivityMeters) =>
-    routingActivity(
-      modular,
-      routingState(system55, modular, { values: system55.init, cables }),
-      meters
-    );
+    routingActivity(modular, state55(cables), meters);
   // The keyboard plays an oscillator through the filter and an amplifier to the output; the keyboard's trigger fires
   // an envelope that opens the amplifier.
   const VOICE: CableLike[] = [
@@ -213,7 +211,8 @@ describe('routingActivity on a modular: the System 55, every path a cable', () =
     const tail = run(VOICE, { ...SILENT, out: 0.2 });
     for (const b of LINE) expect(tail.blocks[b], b).toBe(0.2);
     // The audio cables glow with the line; a module the patch does not use stays dark.
-    expect(loud.cables.slice(1, 4)).toEqual([0.8, 0.8, 0.8]);
+    const audio = loud.cables.filter((_, i) => state55(VOICE).cables[i].signal === 'audio');
+    expect(audio).toEqual([0.8, 0.8, 0.8]);
     expect(loud.blocks.m921b_2).toBe(0);
   });
 
@@ -225,13 +224,50 @@ describe('routingActivity on a modular: the System 55, every path a cable', () =
     for (const b of LINE) expect(a.blocks[b], b).toBe(0);
   });
 
-  it('lights the keyboard with its gate, and the envelope it triggers from it', () => {
-    const held = run(VOICE, { ...SILENT, gate: true });
+  it('lights the keyboard with its gate, and the envelope with the sound it shapes, through its release', () => {
+    const held = run(VOICE, { ...SILENT, gate: true, out: 0.6 });
     expect(held.blocks.cm1a).toBe(1);
-    expect(held.blocks.m911_1).toBe(1);
-    const let_go = run(VOICE, SILENT);
-    expect(let_go.blocks.cm1a).toBe(0);
-    expect(let_go.blocks.m911_1).toBe(0);
+    expect(held.blocks.m911_1).toBe(0.6);
+    // Key up, the release still sounding: the keyboard goes dark, the envelope does not.
+    const tail = run(VOICE, { ...SILENT, out: 0.3 });
+    expect(tail.blocks.cm1a).toBe(0);
+    expect(tail.blocks.m911_1).toBe(0.3);
+    expect(run(VOICE, SILENT).blocks.m911_1).toBe(0);
+  });
+
+  it('lights a modulating oscillator with the sound, not with the key it is tuned from', () => {
+    const FM: CableLike[] = [
+      ...VOICE,
+      { from: 'j.cm1a.cv_2', to: 'j.m921b_2.dc_mod' },
+      { from: 'j.m921b_2.sine', to: 'j.m921b_1.ac_mod' },
+    ];
+    const held = run(FM, { ...SILENT, gate: true, out: 0.3 });
+    expect(held.blocks.m921b_2).toBe(0.3);
+    expect(run(FM, { ...SILENT, out: 0.2 }).blocks.m921b_2).toBe(0.2);
+  });
+
+  it('keeps a mixer on the audio line only while it mixes audio', () => {
+    // The keyboard's trigger through a mixer into the amplifier's audio input: control, so the mixer glows with the
+    // trigger rather than the output's level.
+    const cv = run(
+      [
+        ...VOICE,
+        { from: 'j.cm1a.trig_upper', to: 'j.cp3am_1.in1' },
+        { from: 'j.cp3am_1.out_pos_1', to: 'j.m902_1.sig_in_neg' },
+      ],
+      { ...SILENT, gate: true, out: 0.2 }
+    );
+    expect(cv.blocks.cp3am_1).toBe(1);
+    // A second oscillator mixed in is audio, so the mixer follows the output's level.
+    const mixed = run(
+      [
+        ...VOICE,
+        { from: 'j.m921b_2.sawtooth', to: 'j.cp3am_1.in1' },
+        { from: 'j.cp3am_1.out_pos_1', to: 'j.m902_1.sig_in_neg' },
+      ],
+      { ...SILENT, gate: true, out: 0.2 }
+    );
+    expect(mixed.blocks.cp3am_1).toBe(0.2);
   });
 });
 

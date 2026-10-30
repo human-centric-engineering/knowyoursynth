@@ -10,8 +10,12 @@
 //   down glows less; one switched out of the mixer but feeding the mod bus glows at half the output's level, so
 //   it too goes dark when the sound does.
 // - Any other block on the audio path follows the output's level, so a release tail fades the whole line together.
-//   The audio path is the audio edges and the live audio cables, so a modular's patched line (it has no edges) and a
-//   block only a pin or cable reaches glow the way a wired path does.
+//   The audio path is the audio edges, and the live audio cables that carry audio on from a block that makes it or
+//   is already on the path: a modular's patched line (it has no edges) and a block only a pin reaches glow the way a
+//   wired path does, while a mixer or mult that only passes control voltage on stays off it.
+// - On a modular (every path a cable), a live module that makes its own signal and has no meter (a 911 envelope, a
+//   921 modulating another) is shaping the sound, so it too follows the output's level: the engine reports nothing
+//   per module, and what feeds it (the keyboard's gate) says nothing of its own release or rate.
 // - Any other block (the pitch and modulation buses) glows with the brightest live line into it.
 // - A live line glows with the block it leaves.
 //
@@ -100,13 +104,25 @@ export function routingActivity(
   state: RoutingState,
   meters: ActivityMeters
 ): RoutingActivity {
-  const audio = new Set([
-    ...routing.edges.filter((e) => e.signal === 'audio').flatMap((e) => [e.from, e.to]),
-    ...state.cables
-      .filter((c) => c.live && c.signal === 'audio')
-      .flatMap((c) => [c.fromBlock, c.toBlock]),
-  ]);
+  const passes = new Set(routing.blocks.filter((b) => b.passes).map((b) => b.id));
+  const audio = new Set(
+    routing.edges.filter((e) => e.signal === 'audio').flatMap((e) => [e.from, e.to])
+  );
+  const live = state.cables.filter((c) => c.live);
+  const audioCables = live.filter((c) => c.signal === 'audio');
+  for (let moved = true; moved;) {
+    moved = false;
+    for (const c of audioCables) {
+      const carries = !passes.has(c.fromBlock) || audio.has(c.fromBlock);
+      if (carries && !(audio.has(c.fromBlock) && audio.has(c.toBlock))) {
+        audio.add(c.fromBlock);
+        audio.add(c.toBlock);
+        moved = true;
+      }
+    }
+  }
   audio.add(routing.out);
+  const modular = routing.edges.length === 0;
 
   const loudest = Math.max(0, ...meters.osc.map((x) => x.lv));
   const blocks: Record<string, number> = {};
@@ -117,7 +133,7 @@ export function routingActivity(
     pulsing[b.id] = !!metered?.[1];
     if (!state.blocks[b.id]) blocks[b.id] = 0;
     else if (metered) blocks[b.id] = metered[0];
-    else if (audio.has(b.id)) blocks[b.id] = clamp(meters.out);
+    else if (audio.has(b.id) || (modular && !b.passes)) blocks[b.id] = clamp(meters.out);
     else {
       blocks[b.id] = 0;
       fedOnly.push(b.id);
@@ -128,7 +144,7 @@ export function routingActivity(
   // that line does.
   const into = [
     ...routing.edges.filter((e) => state.edges[e.id]).map((e) => [e.from, e.to]),
-    ...state.cables.filter((c) => c.live).map((c) => [c.fromBlock, c.toBlock]),
+    ...live.map((c) => [c.fromBlock, c.toBlock]),
   ];
   for (let pass = 0, moved = true; moved && pass <= fedOnly.length; pass++) {
     moved = false;
