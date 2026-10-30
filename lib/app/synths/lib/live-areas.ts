@@ -5,7 +5,7 @@
 // read as a thin sliver. A part with nothing on the panel (the VCA, the mod bus on a synth that has no switch for it)
 // has nothing to light.
 import { inArea, panelCells } from '@/lib/app/synths/lib/cells';
-import { holds } from '@/lib/app/synths/lib/routing';
+import { holds, stageControl } from '@/lib/app/synths/lib/routing';
 import type {
   ControlValues,
   LitStage,
@@ -116,7 +116,7 @@ export function liveStages(
     return LIT_STAGES.flatMap((stage) => {
       const light = stages[stage];
       if (!light) return [];
-      const { id, when } = typeof light === 'string' ? { id: light, when: undefined } : light;
+      const { id, when } = stageControl(light);
       const d = cells[id];
       if (!d || (when && !holds(when, values))) return [];
       return [{ id: `${b.id}:${stage}`, env: meter, stage, module: b.module, d }];

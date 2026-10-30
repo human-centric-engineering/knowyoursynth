@@ -26,6 +26,7 @@ import type {
   RoutingEdge,
   RoutingLevel,
   RoutingWhen,
+  StageControl,
   SynthDef,
   SynthRouting,
 } from '@/lib/app/synths/contract';
@@ -61,6 +62,11 @@ export interface RoutingInput {
   cables: CableLike[];
   /** Mod wheel position, 0..1. */
   wheel?: number;
+}
+
+/** A stage's knob and the condition it lights under (`RoutingBlock.stages`), whichever way it is written. */
+export function stageControl(light: StageControl): { id: string; when?: RoutingWhen } {
+  return typeof light === 'string' ? { id: light } : light;
 }
 
 /** Whether `when` holds for the panel's `values`. */
@@ -461,7 +467,7 @@ export function routingProblems(def: SynthDef, routing: SynthRouting): string[] 
     for (const [stage, light] of Object.entries(b.stages)) {
       if (!light) continue;
       const where = `block ${b.id} stage ${stage}`;
-      const { id, when } = typeof light === 'string' ? { id: light, when: undefined } : light;
+      const { id, when } = stageControl(light);
       if (!(b.controls ?? []).includes(id))
         problems.push(`${where}: ${id} is not one of its controls`);
       if (when) checkWhen(where, when);
