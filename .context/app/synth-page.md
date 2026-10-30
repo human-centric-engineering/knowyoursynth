@@ -205,6 +205,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   a modular's or a pin matrix's module (a section of jacks that are all one block's lights whole once one is
   patched). A control two blocks list gets an area of its own, lit with the brighter, so no two glows overlap.
   In the block's module colour, with `--a` written once a frame. Steady under reduced motion.
+  Over a contour, the knob for the stage its envelope is in lights brighter (t-152, `liveStages()`): the
+  engine reports the stage (`env1Stage`, `env2Stage` on `meterStore`) and the block's `stages` names the knob.
   The foot's LEDs light in a sweep when the page loads (not with reduced motion). The search is at
   the foot's right as an amber readout, and `/` outside a field puts the cursor in it. Under the
   foot's right end, while cables are plugged, a key in the same faceplate colours and print
