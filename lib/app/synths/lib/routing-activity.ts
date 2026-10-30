@@ -13,14 +13,18 @@
 //   The audio path is the audio edges, and the live audio cables that carry audio on from a block that makes it or
 //   is already on the path: a modular's patched line (it has no edges) and a block only a pin reaches glow the way a
 //   wired path does, while a mixer or mult that only passes control voltage on stays off it.
-// - On a modular (every path a cable), a live module that makes its own signal and has no meter (a 911 envelope, a
-//   921 modulating another) is shaping the sound, so it too follows the output's level: the engine reports nothing
-//   per module, and what feeds it (the keyboard's gate) says nothing of its own release or rate.
+// - A 900-series module follows its own engine slot (`MoogMeters`): a 921 its wave, as an oscillator above (pulsing at
+//   LO, steady at the output's level at audio pitch), a 911 its envelope, a 902 its gain, no brighter than the output
+//   while it carries audio. So two oscillators at different rates, or two envelopes on different contours, glow apart.
+// - On a modular (every path a cable), a live module that makes its own signal and has no reading (the engine has not
+//   reported yet) is shaping the sound, so it too follows the output's level: what feeds it (the keyboard's gate)
+//   says nothing of its own release or rate.
 // - Any other block (the pitch and modulation buses) glows with the brightest live line into it.
 // - A live line glows with the block it leaves.
 //
 // Pure: the view reads the meters and the output's level once a frame and eases what it draws towards these targets
 // with `settle()`.
+import type { MoogMeters } from '@/lib/app/synths/audio/moog-core';
 import type { RoutingMeter, SynthRouting } from '@/lib/app/synths/contract';
 import type { RoutingState } from '@/lib/app/synths/lib/routing';
 
@@ -36,6 +40,8 @@ export interface ActivityMeters {
   osc: { v: number; hz: number; lv: number }[];
   /** The output's level, 0..1 (`levelOfRms()`). */
   out: number;
+  /** A 900-series modular's reading per module, while the engine reports one. */
+  moog?: MoogMeters;
 }
 
 export const SILENT: ActivityMeters = {
@@ -69,6 +75,7 @@ export interface RoutingActivity {
 const clamp = (v: number) => (Number.isFinite(v) ? Math.min(Math.max(v, 0), 1) : 0);
 
 const OSC_METERS: Partial<Record<RoutingMeter, number>> = { osc1: 0, osc2: 1, osc3: 2, osc4: 3 };
+const MODULE_METER = /^(vco|env|amp):(\d+)$/;
 
 /** How far a wave at `hz` is drawn steady rather than as it moves: 0 at `SLOW_HZ` and below, 1 at `FAST_HZ`. */
 const blur = (hz: number) => clamp((hz - SLOW_HZ) / (FAST_HZ - SLOW_HZ));
@@ -80,14 +87,40 @@ function wave(v: number, hz: number, steady: number): number {
 }
 
 /**
- * A metered block's glow, and whether it is a moving wave; `loudest` is the highest oscillator mixer level. Null for
- * an oscillator the engine did not report.
+ * A 900-series module's glow from its own slot, and whether it is a moving wave; `audio` = it is on the audio path.
+ * Null while the engine reports nothing for it.
+ */
+function moduleReading(
+  kind: string,
+  i: number,
+  m: ActivityMeters,
+  audio: boolean
+): [number, boolean] | null {
+  const r = m.moog;
+  if (!r) return null;
+  if (kind === 'vco') {
+    const v = r.vco[i];
+    const hz = r.vcoHz[i];
+    if (v === undefined || !(hz > 0)) return null;
+    return [wave(v, hz, clamp(m.out)), blur(hz) < 1];
+  }
+  const level = kind === 'env' ? r.env[i] : r.amp[i];
+  if (level === undefined) return null;
+  return [kind === 'amp' && audio ? Math.min(clamp(level), clamp(m.out)) : clamp(level), false];
+}
+
+/**
+ * A metered block's glow, and whether it is a moving wave; `loudest` is the highest oscillator mixer level, `audio`
+ * whether the block is on the audio path. Null for an oscillator or module the engine did not report.
  */
 function reading(
   meter: RoutingMeter,
   m: ActivityMeters,
-  loudest: number
+  loudest: number,
+  audio: boolean
 ): [number, boolean] | null {
+  const slot = MODULE_METER.exec(meter);
+  if (slot) return moduleReading(slot[1], Number(slot[2]) - 1, m, audio);
   if (meter === 'gate') return [m.gate ? 1 : 0, false];
   if (meter === 'env1' || meter === 'env2') return [clamp(m[meter]), false];
   // A free-running LFO is always working: steady, it glows at three quarters.
@@ -129,7 +162,8 @@ export function routingActivity(
   const pulsing: Record<string, boolean> = {};
   const fedOnly: string[] = [];
   for (const b of routing.blocks) {
-    const metered = state.blocks[b.id] && b.meter ? reading(b.meter, meters, loudest) : null;
+    const metered =
+      state.blocks[b.id] && b.meter ? reading(b.meter, meters, loudest, audio.has(b.id)) : null;
     pulsing[b.id] = !!metered?.[1];
     if (!state.blocks[b.id]) blocks[b.id] = 0;
     else if (metered) blocks[b.id] = metered[0];

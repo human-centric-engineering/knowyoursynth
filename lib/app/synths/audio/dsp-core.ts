@@ -26,7 +26,12 @@ import type {
   TremoloParams,
 } from '@/lib/app/synths/contract';
 import { createFx } from '@/lib/app/synths/audio/dm-fx';
-import { createMoog, MOOG_SIGNALS, MOOG_DESTS } from '@/lib/app/synths/audio/moog-core';
+import {
+  createMoog,
+  MOOG_SIGNALS,
+  MOOG_DESTS,
+  type MoogMeters,
+} from '@/lib/app/synths/audio/moog-core';
 import { createSolar, SOLAR_SIGNALS, SOLAR_DESTS } from '@/lib/app/synths/audio/solar-core';
 import { DEFAULT_VELOCITY, noteEvents } from '@/lib/app/synths/audio/note-events';
 import {
@@ -80,6 +85,8 @@ export interface MeterEvent {
   pulser?: number;
   /** The SOLAR 42N's light on each voice's photosensor, 0..1. */
   eyes?: number[];
+  /** A 900-series modular's reading per module (`MoogMeters`), for the routing view. */
+  moog?: MoogMeters;
 }
 
 /** What the synth reports back. */
@@ -2313,6 +2320,8 @@ function createVoice(
           ...(P.moog ? { gate: gate > 0 } : null),
           // the 960's lamps: its stage (0-based) while it has one
           ...(P.moog && moog.seqState() ? { seq: moog.seqState()!.stage } : null),
+          // each 921, 911 and 902 on its own, so the routing view lights a module with its own signal
+          ...(P.moog ? { moog: moog.meters() } : null),
           ...(P.solar ? { seq: solar.seqStage(), eyes: solar.eyes() } : null),
         });
       overloadPeak = 0;

@@ -269,6 +269,121 @@ describe('routingActivity on a modular: the System 55, every path a cable', () =
     );
     expect(mixed.blocks.cp3am_1).toBe(0.2);
   });
+
+  describe('with the engine reporting each module', () => {
+    /** The engine slot (0-based) a block reads, as the routing gives it. */
+    const slot = (id: string, kind: string) => {
+      const meter = modular.blocks.find((b) => b.id === id)?.meter ?? '';
+      const m = new RegExp(`^${kind}:(\\d+)$`).exec(meter);
+      if (!m) throw new Error(`${id} reads no ${kind} slot`);
+      return Number(m[1]) - 1;
+    };
+    /** A reading for every slot of a System 55, all at rest but those `set` gives. */
+    const moog = (
+      set: Partial<Record<'vco' | 'vcoHz' | 'env' | 'amp', [string, number][]>>
+    ): NonNullable<ActivityMeters['moog']> => {
+      const r = {
+        vco: Array(7).fill(0),
+        vcoHz: Array(7).fill(0),
+        env: Array(4).fill(0),
+        amp: Array(5).fill(0),
+      };
+      for (const [k, pairs] of Object.entries(set) as [keyof typeof r, [string, number][]][])
+        for (const [id, v] of pairs) r[k][slot(id, k === 'vcoHz' ? 'vco' : k)] = v;
+      return r;
+    };
+    // Two 921Bs at LO into the filter, and two envelopes: one opens the amplifier, the other sweeps the filter.
+    const TWO: CableLike[] = [
+      ...VOICE,
+      { from: 'j.m921b_2.sawtooth', to: 'j.m904a.sig_in' },
+      { from: 'j.cm1a.trig_upper', to: 'j.m911_2.strig' },
+      { from: 'j.m911_2.out', to: 'j.m904a.cv_1' },
+    ];
+
+    it('reads each 921, 911 and 902 from its own slot, and each from a different one', () => {
+      const ids: [string, string][] = [
+        ['m921b_1', 'vco'],
+        ['m921b_2', 'vco'],
+        ['m921', 'vco'],
+        ['m911_1', 'env'],
+        ['m911_2', 'env'],
+        ['m902_1', 'amp'],
+        ['m902_2', 'amp'],
+      ];
+      const slots = ids.map(([id, kind]) => `${kind}:${slot(id, kind)}`);
+      expect(new Set(slots).size).toBe(ids.length);
+      // The 921A driver makes no sound of its own, and the keyboard keeps its gate.
+      expect(modular.blocks.find((b) => b.id === 'cm1a')?.meter).toBe('gate');
+    });
+
+    it('lights two oscillators at LO with their own waves: one at its peak, one at its trough', () => {
+      const a = run(TWO, {
+        ...PLAYING,
+        out: 0.5,
+        moog: moog({
+          vco: [
+            ['m921b_1', 1],
+            ['m921b_2', -1],
+          ],
+          vcoHz: [
+            ['m921b_1', 1],
+            ['m921b_2', 2],
+          ],
+        }),
+      });
+      expect(a.blocks.m921b_1).toBeCloseTo(1, 5);
+      expect(a.blocks.m921b_2).toBeCloseTo(0.12, 5);
+      expect(a.pulsing.m921b_1).toBe(true);
+      expect(a.pulsing.m921b_2).toBe(true);
+      // Their cables pulse with them, apart.
+      const s = state55(TWO);
+      const from = (id: string) =>
+        a.cables[s.cables.findIndex((c) => c.fromBlock === id && c.live)];
+      expect(from('m921b_1')).toBeCloseTo(1, 5);
+      expect(from('m921b_2')).toBeCloseTo(0.12, 5);
+    });
+
+    it('lights an oscillator at audio pitch with the output, steady', () => {
+      const a = run(TWO, {
+        ...PLAYING,
+        out: 0.4,
+        moog: moog({ vco: [['m921b_1', -1]], vcoHz: [['m921b_1', 220]] }),
+      });
+      expect(a.blocks.m921b_1).toBeCloseTo(0.4, 5);
+      expect(a.pulsing.m921b_1).toBe(false);
+    });
+
+    it('lights two envelopes on different contours with their own levels', () => {
+      const a = run(TWO, {
+        ...PLAYING,
+        out: 0.5,
+        moog: moog({
+          env: [
+            ['m911_1', 0.9],
+            ['m911_2', 0.25],
+          ],
+        }),
+      });
+      expect(a.blocks.m911_1).toBeCloseTo(0.9, 5);
+      expect(a.blocks.m911_2).toBeCloseTo(0.25, 5);
+    });
+
+    it('lights an amplifier with its gain, never brighter than the output it carries', () => {
+      const open = run(TWO, { ...PLAYING, out: 0.7, moog: moog({ amp: [['m902_1', 0.3]] }) });
+      expect(open.blocks.m902_1).toBeCloseTo(0.3, 5);
+      const quiet = run(TWO, { ...PLAYING, out: 0.1, moog: moog({ amp: [['m902_1', 1]] }) });
+      expect(quiet.blocks.m902_1).toBeCloseTo(0.1, 5);
+    });
+
+    it('leaves a module the patch does not use dark, whatever its slot reads', () => {
+      const a = run(VOICE, {
+        ...PLAYING,
+        moog: moog({ vco: [['m921b_2', 1]], vcoHz: [['m921b_2', 1]], env: [['m911_2', 1]] }),
+      });
+      expect(a.blocks.m921b_2).toBe(0);
+      expect(a.blocks.m911_2).toBe(0);
+    });
+  });
 });
 
 describe('settle', () => {

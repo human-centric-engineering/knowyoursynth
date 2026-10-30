@@ -361,6 +361,7 @@ export function RoutingView({
               lv: m.oscLv?.[k] ?? 0,
             })),
             out,
+            moog: m.moog,
           }
         : SILENT;
       const routing = routingRef.current;

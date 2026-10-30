@@ -33,6 +33,7 @@ export function toStores(e: SynthEvent): void {
       seq: e.seq == null ? -1 : e.seq,
       pulser: e.pulser || 0,
       eyes: e.eyes,
+      moog: e.moog,
     }));
   else if (e.type === 'note')
     notesStore.set((ns) =>

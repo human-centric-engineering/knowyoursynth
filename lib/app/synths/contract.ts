@@ -1305,10 +1305,17 @@ export type RoutingSymbol =
   | 'util';
 
 /**
- * The engine meters a block can follow (`MeterEvent`): the gate, the first two envelopes, the LFO, and an oscillator
- * by its place in the engine's (`osc1` is the first).
+ * The engine meters a block can follow (`MeterEvent`): the gate, the first two envelopes, the LFO, an oscillator by
+ * its place in the engine's (`osc1` is the first), and a 900-series module by its slot.
  */
-export type RoutingMeter = 'gate' | 'env1' | 'env2' | 'lfo' | 'osc1' | 'osc2' | 'osc3' | 'osc4';
+export type RoutingMeter =
+  'gate' | 'env1' | 'env2' | 'lfo' | 'osc1' | 'osc2' | 'osc3' | 'osc4' | ModuleMeter;
+
+/**
+ * One 900-series module's own reading, by its engine slot (1-based, as in the signal names: `vco:3` is the oscillator
+ * whose outputs are `v3sin`…): an oscillator's wave, an envelope's level, an amplifier's gain (`MoogMeters`).
+ */
+export type ModuleMeter = `${'vco' | 'env' | 'amp'}:${number}`;
 
 /** What an edge carries. */
 export type RoutingSignal = 'audio' | 'cv' | 'gate';

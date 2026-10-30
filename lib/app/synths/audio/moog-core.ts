@@ -125,6 +125,18 @@ export const MOOG_DESTS: string[] = [
 /** The 960 sequencer's settings, as EngineParams `moog.s960` carries them. */
 type S960 = NonNullable<MoogParams['s960']>;
 
+/**
+ * Each module's reading, for the routing view: per oscillator slot its wave (−1..1, the sine) and pitch in Hz, per
+ * envelope slot its level (0..1 of the +6 V peak), per amplifier slot its gain (0..1). A slot that is not running
+ * reads 0. Slot k is index k − 1, as in the signal names (`v3sin` is `vco[2]`).
+ */
+export interface MoogMeters {
+  vco: number[];
+  vcoHz: number[];
+  env: number[];
+  amp: number[];
+}
+
 /** What `createMoog` hands back to the voice. */
 export interface Moog {
   /** Take new settings: `m` = EngineParams `moog`, `used` = the signal names some cable reads. */
@@ -135,6 +147,8 @@ export interface Moog {
   envLevel: (i: number) => number;
   /** The 960's stage (0-based) and whether it runs, or null without a 960. */
   seqState: () => { stage: number; run: boolean } | null;
+  /** Every module's reading now; the same object each call, rewritten, so the meter makes no garbage. */
+  meters: () => MoogMeters;
 }
 
 /** Trigger levels. A V-trigger is +5 V while on. An S-trigger idles high and is pulled to 0 V while on. */
@@ -182,6 +196,7 @@ export function createMoog(
     syPrev: 0,
     tvPrev: 0,
     tsPrev: TRIG_HI,
+    hz: 0,
     o: ['sin', 'tri', 'saw', 'rect', 'aux', 'lft', 'lwt'].map((w) => sig(`v${n}${w}`)),
     d: ['lf', 'lw', 'dc', 'ac', 'sy', 'wc', 'tv', 'ts'].map((w) => dst(`v${n}${w}`)),
     p: null as MoogVco | null,
@@ -200,6 +215,7 @@ export function createMoog(
     on: false,
     v: 0,
     vT: 0,
+    g: 0,
     exp: false,
     o: [sig(`a${n}p`), sig(`a${n}n`)],
     d: [dst(`a${n}ip`), dst(`a${n}in`), dst(`a${n}cv`)],
@@ -578,6 +594,7 @@ export function createMoog(
         o.tsPrev = ts;
       }
       o.phase = ph;
+      o.hz = hz;
       let w;
       if (q.kind === '921') w = q.width! + ev(D[5]) * 0.15;
       else w = cabled[D[1]] ? lwIn * 0.16 : 0.5;
@@ -650,6 +667,7 @@ export function createMoog(
         g = cv <= 0 ? 0 : Math.exp((cv - 6) * 1.38) * (cv < 1 ? cv : 1); // about 12 dB per volt
       else g = cv <= 0 ? 0 : cv / 6;
       if (g > 1.6) g = 1.6;
+      v.g = g;
       const y = (ev(v.d[0]) - ev(v.d[1])) * g;
       S[v.o[0]] = y;
       S[v.o[1]] = -y;
@@ -816,5 +834,22 @@ export function createMoog(
   /** The 960's current stage (0-based) and whether it is running, for the panel lamps. */
   const seqState = (): { stage: number; run: boolean } | null =>
     sq.p ? { stage: sq.st, run: sq.run } : null;
-  return { set, step, envLevel, seqState };
+  const out: MoogMeters = {
+    vco: vco.map(() => 0),
+    vcoHz: vco.map(() => 0),
+    env: env.map(() => 0),
+    amp: vca.map(() => 0),
+  };
+  /** Each module's reading (`MoogMeters`), 25 times a second for the routing view. */
+  function meters(): MoogMeters {
+    for (let i = 0; i < vco.length; i++) {
+      const o = vco[i];
+      out.vco[i] = o.on ? Math.sin(TWO_PI * o.phase) : 0;
+      out.vcoHz[i] = o.on ? o.hz : 0;
+    }
+    for (let i = 0; i < env.length; i++) out.env[i] = env[i].on ? Math.min(env[i].level / 6, 1) : 0;
+    for (let i = 0; i < vca.length; i++) out.amp[i] = vca[i].on ? Math.min(vca[i].g, 1) : 0;
+    return out;
+  }
+  return { set, step, envLevel, seqState, meters };
 }

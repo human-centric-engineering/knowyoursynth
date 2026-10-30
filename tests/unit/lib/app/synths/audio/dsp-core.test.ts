@@ -918,6 +918,20 @@ describe('Moog modular path', () => {
     expect(gates(drone, []).some(Boolean)).toBe(false);
   });
 
+  it('meters each module on its own, for the routing view', () => {
+    const m = meters(
+      render(moog(), { len: 9600, events: [[0, { type: 'noteOn', n: 60 }]] }).events
+    );
+    const r = m.at(-1)?.moog;
+    expect(r).toBeDefined();
+    // Oscillators 1 and 2 are a fifth apart (semi 7), both played from the key. Envelope 2 hears the key's S-trigger
+    // and opens; envelope 1 hears its V-trigger, which holds an S-trigger input off; envelope 3 is unpatched.
+    expect(r!.vcoHz[1] / r!.vcoHz[0]).toBeCloseTo(2 ** (7 / 12), 2);
+    expect(r!.env[1]).toBeGreaterThan(0);
+    expect(r!.env[0]).toBe(0);
+    expect(r!.env[2]).toBe(0);
+  });
+
   it('is silent with nothing patched to the output', () => {
     const p = moog();
     p.cables = [];
