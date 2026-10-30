@@ -1747,6 +1747,10 @@ const KNOB_GEOM: Record<KnobStyle, KnobGeom> = {
   'solar-eye': { body: 1.0, tick: 1.1, num: 1.3 },
 };
 
+/** How far from a knob's centre a pointer on its rim sits: the lesson's ghost, and the live pointer (t-154). */
+export const knobRim = (c: KnobControl) =>
+  c.r * ((KNOB_GEOM[c.style] || KNOB_GEOM['d-silver']).tick + 0.06);
+
 function KnobScale({ c, ctx, g }: { c: KnobControl; ctx: PanelCtx; g: KnobGeom }) {
   const out: ReactNode[] = [];
   const sc = c.scale;
@@ -2417,7 +2421,7 @@ export const Knob = memo(function Knob({
   let ghost = null;
   if (showGhost) {
     const ta = valueAngle(c, target);
-    const [gx, gy] = polar(c.x, c.y, c.r * (g.tick + 0.06), ta);
+    const [gx, gy] = polar(c.x, c.y, knobRim(c), ta);
     ghost = (
       <path
         transform={`translate(${gx} ${gy}) rotate(${ta})`}

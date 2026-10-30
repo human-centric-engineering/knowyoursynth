@@ -3244,3 +3244,12 @@ button.kys-routing-card-item:focus-visible {
 .is-light .kys-live .kys-live-stages path {
   opacity: calc(var(--a, 0) * 0.55);
 }
+/* The live pointer on the cutoff's knob (t-154): it comes and goes with the modulation, a fade rather than a blink. */
+.kys-live-pointers > g {
+  transition: opacity 0.15s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .kys-live-pointers > g {
+    transition: none;
+  }
+}
