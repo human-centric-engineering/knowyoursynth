@@ -143,7 +143,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   is the picker (`SynthPicker variant="caption"`). The page's `h1` is visually hidden, since the
   picker shows the name, on one line. Beside it the description (up to two lines from `lg`), with
   About (the synth's summary, in a dialog), History and What is not modelled under it. On the right of the header are the layers (Sections,
-  Dim unused, Sensitive) and Inspect, icons with their words from `xl`, then Tour, the one
+  Signal, Sensitive) and Inspect, icons with their words from `xl`, then Tour, the one
   switch that starts something. At the header's far right, from `lg` up, is **Ask AI** (the tutor):
   always named (`keepShort`), filled on hover (`hoverFill`), and not faded with the tools when the
   pointer rests. Under the panel, on the stage, is the sound on it (see below), then the panel
@@ -188,12 +188,21 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   the screen, as a hardware panel's lip carries its smaller switches. They take the synth's own
   faceplate colour and print in its silkscreen ink (`theme.panel`, `panel2` and `ink`, passed as
   `--rail-face`, `--rail-face2` and `--rail-print`), or the outline drawing's paper and ink. The
-  head (`.is-top`) carries Sections, Dim unused and Sensitive, the inspector, Signal routing, then the
+  head (`.is-top`) carries Sections, Signal and Sensitive, the inspector, Signal routing, then the
   tour and its help at the right; each layer is its icon (with its word from `xl` up and below `lg`) and an LED
   lit while it is over the panel. The foot (`.is-foot`) carries how the panel is drawn (Hardware or
   Outline, Modular or Long), the magnifier and Hover help (the card that pops up when you point at a
   control; `kys.tips`): each its name in the panel's lettering, which explains it on hover, then its
   choices, each a word with an LED lit for the one in use (`aria-pressed` buttons in a named group).
+- **Signal** (`f-live-panel` t-150, `SignalMenu` in `player-tools.tsx`) is the head's layer for the patch's
+  signal, a button with a menu of its modes (a popover inside the player, not portalled, as the tips are):
+  **Off**; **In use**, the sound map's dimming of what the patch does not use (it was the Dim unused toggle, and
+  is still `kys.dim`, kept in the account); and **Live**, In use with each part the patch uses lit over its
+  controls as signal goes through it. Live is offered only where the synth has a routing (the Model D for now) and
+  is kept in this browser (`kys.live`). Its glow (`LiveLayer`, `components/app/panel/live-layer.tsx`) is the
+  routing view's activity (`routingActivity()`) drawn over each block's controls' cells (`liveAreas()`, the
+  same `panelCells()` the dimming uses), in the block's module colour, with `--a` written once a frame. Steady
+  under reduced motion.
   The foot's LEDs light in a sweep when the page loads (not with reduced motion). The search is at
   the foot's right as an amber readout, and `/` outside a field puts the cursor in it. Under the
   foot's right end, while cables are plugged, a key in the same faceplate colours and print
@@ -268,11 +277,13 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   two oscillators at different rates, or two envelopes on different contours, glow apart. Until the engine reports,
   a live module that makes signal follows the output's level (see `moog900.ts`). The view eases each part towards that once a frame
   (`settle()`: up in ~40 ms, down over ~450 ms) and writes it to `--a` on the element, never to React state; with
-  reduced motion the lines glow without moving. It is drawn from `sess` (the panel as shown, glides and undos included) and the mod wheel, so it
+  reduced motion the lines glow without moving, and the LFO and slow oscillators glow steady rather than pulse
+  (`steadyMeters()`). The meters are read through `createMeterReader()` (`live-meters.ts`), which the panel's live
+  glow shares. It is drawn from `sess` (the panel as shown, glides and undos included) and the mod wheel, so it
   follows the panel while it shows. The panel stays laid out underneath (`.is-away`, `inert`), so its fit and
   scroll are kept for the flip back. Whatever works on the panel itself turns it face up again as it comes
   on: a find (a new one too), a lesson step, the tour, Explain sections or the Inspector (its card, or its sheet
-  under `lg`). Turning one off does not, nor does Undo, which the view follows, nor Dim unused or Sensitive, which
+  under `lg`). Turning one off does not, nor does Undo, which the view follows, nor Signal or Sensitive, which
   point at nothing and come from stored settings that can land after the view is open. The flip is a view transition (transition type `routing-flip`,
   `.kys-panel-flip`, nested in the instrument's): only the snapshots turn, so nothing that holds the panel takes
   a transform; with reduced motion, or no view transitions, it swaps. Under `lg` the diagram keeps a readable
@@ -422,7 +433,8 @@ in the account as well. The newer copy wins ([`sounds.md`](./sounds.md)).
 | `kys.tips`             | Info cards on                                                                                                                                                                                                                                                      |
 | `kys.fx`, `kys.fxOpen` | The effects rack and whether it is unfolded                                                                                                                                                                                                                        |
 | `kys.midi`             | Reconnect MIDI on the next visit                                                                                                                                                                                                                                   |
-| `kys.dim`, `kys.heat`  | The sound map's "Dim unused parts" and "Show sensitive controls"                                                                                                                                                                                                   |
+| `kys.dim`, `kys.heat`  | The Signal layer's In use (the sound map's "Dim unused parts"; on under Live too) and "Show sensitive controls"                                                                                                                                                    |
+| `kys.live`             | The Signal layer is Live rather than In use (`f-live-panel`). In this browser only, never kept in the account                                                                                                                                                      |
 | `kys.harm`             | The harmonics strip under the panel                                                                                                                                                                                                                                |
 | `kys.rotateSeen`       | The small-screen note above the panel has been put away                                                                                                                                                                                                            |
 | `kys.deck`             | The Piano button's choice: out, put away, or `null` for the screen's default                                                                                                                                                                                       |
