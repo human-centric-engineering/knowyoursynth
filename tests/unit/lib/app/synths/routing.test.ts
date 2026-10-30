@@ -164,6 +164,8 @@ describe.each(FACES)('the live glow on %s', (_, routing, def) => {
         )
         .map((b) => b.id);
       expect(due.length).toBeGreaterThan(0);
+      // An area's id is its blocks joined by spaces, which the layer splits back.
+      expect(routing.blocks.filter((b) => /\s/.test(b.id))).toEqual([]);
       const lit = new Set(areas.filter((a) => a.d).flatMap((a) => a.blocks));
       expect(due.filter((b) => !lit.has(b))).toEqual([]);
       // And nothing for a block with neither.

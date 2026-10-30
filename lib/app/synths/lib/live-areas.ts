@@ -4,12 +4,15 @@
 // lines. The jacks matter on a modular or a pin matrix, whose modules have few controls: a live one would otherwise
 // read as a thin sliver. A part with nothing on the panel (the VCA, the mod bus on a synth that has no switch for it)
 // has nothing to light.
-import { panelCells } from '@/lib/app/synths/lib/cells';
+import { inArea, panelCells } from '@/lib/app/synths/lib/cells';
 import type { ControlValues, SynthDef, SynthModule, SynthRouting } from '@/lib/app/synths/contract';
 
 /** One patch of the panel that glows: the union of its controls' and patched jacks' cells, as one path. */
 export interface LiveArea {
-  /** Its blocks' ids, space-separated: one block's id, but for a control two blocks share. */
+  /**
+   * Its blocks' ids, space-separated (block ids have no spaces): one block's id, but for a control two blocks share.
+   * The layer reads its blocks back from it, off the path's `data-live`.
+   */
   id: string;
   /**
    * The routing blocks it glows for, at the brightest of them. One, but for a control that sets two parts (one
@@ -47,8 +50,7 @@ export function liveAreas(
   // A section of jacks alone that are all one block's (a modular's output module) is that block's: one cable in it
   // lights the whole of it, where a patch bay shared by many blocks lights jack by jack.
   for (const area of def.areas ?? []) {
-    const within = (p: { x: number; y: number }) =>
-      area.rects.some((r) => p.x >= r.x && p.x <= r.x + r.w && p.y >= r.y && p.y <= r.y + r.h);
+    const within = (p: { x: number; y: number }) => inArea(def, area, p);
     if (def.controls.some((c) => cells[c.id] && within(c))) continue;
     const jacks = def.jacks.filter(within).map((j) => j.id);
     const blocks = new Set(jacks.map(blockOf));

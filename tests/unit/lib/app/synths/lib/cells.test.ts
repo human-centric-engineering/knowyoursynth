@@ -197,6 +197,31 @@ describe('panelCells', () => {
     expect(covers(panelCells(def).cells['k.col'], [230, 300])).toBe(true);
   });
 
+  it('cuts back no panel the other area does not cover', () => {
+    // A short, wide area over a narrow, taller one: cutting its foot would lose all of it either side of the column.
+    const def = makeMiniD({
+      view: { w: 400, h: 400 },
+      controls: [knobAt('k.wide', 15, 40), knobAt('k.tall', 50, 300)],
+      areas: [
+        area('wide', { x: 0, y: 0, w: 100, h: 50 }),
+        area('tall', { x: 40, y: 10, w: 20, h: 390 }),
+      ],
+    });
+    expect(covers(panelCells(def).cells['k.wide'], [15, 40])).toBe(true);
+  });
+
+  it('counts a control in a strip a smaller area gave up as the larger area’s only', () => {
+    const base = makeMiniD();
+    const def = makeMiniD({
+      view: { w: 1300, h: 460 },
+      controls: [...base.controls, knobAt('tab.k', 400, 425), knobAt('strip.k', 430, 395)],
+      areas: [...base.areas, area('tab', { x: 360, y: 390, w: 80, h: 60 })],
+    });
+    const { cells } = panelCells(def);
+    expect(covers(cells['tab.k'], [435, 405])).toBe(true);
+    expect(covers(cells['strip.k'], [435, 405])).toBe(false);
+  });
+
   it('skips an area with nothing in it, leaving it part of the frame', () => {
     const base = makeMiniD();
     const def = makeMiniD({
