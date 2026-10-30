@@ -229,7 +229,26 @@ describe('layoutRouting: the rules', () => {
       expect(layoutRouting(modular, patch)).toEqual(before);
     });
 
-    it('never moves a block an edge places for a cable out of it', () => {
+    it('puts an audio cable between two blocks edges place on the main line', () => {
+      // A pin-matrix synth: the oscillator and filter are on control edges only, and pins carry the audio.
+      const matrix = small(
+        ['kbd', 'osc', 'vcf', 'amp', 'out'],
+        [edge('1', 'kbd', 'osc', 'cv'), edge('2', 'kbd', 'vcf', 'cv'), edge('3', 'amp', 'out')]
+      );
+      const bare = layoutRouting(matrix);
+      expect(bare.blocks.osc.band).toBe('control');
+      const l = layoutRouting(matrix, [
+        { id: 'cable:0', from: 'osc', to: 'vcf', signal: 'audio' },
+        { id: 'cable:1', from: 'vcf', to: 'amp', signal: 'audio' },
+      ]);
+      expect(['osc', 'vcf', 'amp', 'out'].map((b) => l.blocks[b].band)).toEqual(
+        Array(4).fill('audio')
+      );
+      expect(['osc', 'vcf', 'amp', 'out'].map((b) => l.blocks[b].col)).toEqual([1, 2, 3, 4]);
+      expect(l.blocks.kbd).toMatchObject({ band: 'control', col: 0 });
+    });
+
+    it('never moves a block an edge places for a control cable out of it', () => {
       const fixed = small(['a', 'out', 'util'], [edge('1', 'a', 'out')]);
       const alone = layoutRouting(fixed, [{ id: 'cable:0', from: 'util', to: 'a' }]);
       const both = layoutRouting(fixed, [

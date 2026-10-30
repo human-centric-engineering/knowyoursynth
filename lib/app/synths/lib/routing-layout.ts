@@ -10,10 +10,12 @@
 //   output is the last column and every other block one column left of the earliest block it feeds. Then each
 //   block beneath goes one column left of the earliest block it feeds, so a contour sits just before the filter it
 //   opens. A block beneath that feeds nothing goes one column right of what feeds it, or in the first column.
-// - **Cables place what the edges leave loose.** A block on none of the routing's edges (every block of a modular,
-//   most of a pin-matrix synth, a patch-only utility) is placed by the cables that join it, by the same two rules,
-//   with an audio cable (`signal`) putting its loose ends in the audio band. A block an edge places never moves
-//   for a cable, so patching redraws the loose parts and leaves the synth's own path where it was.
+// - **Cables place what the edges leave loose, and audio cables the main line.** A block on none of the routing's
+//   edges (every block of a modular, most of a pin-matrix synth, a patch-only utility) is placed by the cables that
+//   join it, by the same two rules. An audio cable (`signal`, from the routing's `audioJacks`) places both its ends
+//   on the main line, whatever else they are on, since on a pin-matrix synth the main line is pins between blocks
+//   that edges also join. Only those synths declare audio jacks, so on a synth whose path is wired a block an edge
+//   places never moves for a cable: patching redraws the loose parts and leaves the synth's own path where it was.
 // - **Spare blocks.** A loose block no cable joins either sits in a grid beneath the rest, in the routing's order,
 //   so a modular with nothing patched is a tray of its modules rather than one tall column.
 // - **Back links.** An edge out of the output (Model D's output fed back into its external input), an edge that
@@ -124,20 +126,19 @@ export function layoutRouting(routing: SynthRouting, cables: LinkInput[] = []): 
   edged.add(routing.out);
   const cabled = new Set(drawn.flatMap((c) => [c.from, c.to]));
   const spareIds = ids.filter((id) => !edged.has(id) && !cabled.has(id));
-  // What places a block: the edges, and the cables out of a loose block. A cable out of a block an edge places
-  // only feeds the sink pass below, so it can move the loose block it reaches but never its source.
-  const placing: (LinkInput & { signal?: RoutingSignal })[] = [
+  // What places a block: the edges, the audio cables, and the control cables out of a loose block. A control cable
+  // out of a block an edge places only feeds the sink pass below, so it can move the loose block it reaches but
+  // never its source.
+  const placing: LinkInput[] = [
     ...routing.edges,
-    ...drawn.filter((c) => !edged.has(c.from) && c.from !== c.to),
+    ...drawn.filter((c) => (c.signal === 'audio' || !edged.has(c.from)) && c.from !== c.to),
   ];
   const feeding = [...routing.edges, ...drawn.filter((c) => c.from !== c.to)];
 
   const audio = new Set(
-    routing.edges.filter((e) => e.signal === 'audio').flatMap((e) => [e.from, e.to])
+    [...routing.edges, ...drawn].filter((e) => e.signal === 'audio').flatMap((e) => [e.from, e.to])
   );
   audio.add(routing.out);
-  for (const c of drawn)
-    if (c.signal === 'audio') for (const b of [c.from, c.to]) if (!edged.has(b)) audio.add(b);
   const banded = ids.filter((id) => !spareIds.includes(id));
   const audioIds = banded.filter((id) => audio.has(id));
   const controlIds = banded.filter((id) => !audio.has(id));
