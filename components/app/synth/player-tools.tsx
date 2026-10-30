@@ -103,6 +103,7 @@ export function SignalMenu({
   const [open, setOpen] = useState(false);
   const modes = SIGNAL_MODES.filter((m) => live || m.mode !== 'live');
   const on = mode !== 'off';
+  const name = SIGNAL_MODES.find((m) => m.mode === mode)?.name;
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
       <PlayerTip
@@ -112,14 +113,18 @@ export function SignalMenu({
         <Popover.Trigger asChild>
           <button
             type="button"
-            aria-label="Signal on the panel"
+            aria-label={`Signal on the panel: ${name}`}
             className={`kys-layer ${on ? 'is-on' : ''}`}
           >
             {icon}
-            <span className="lg:max-xl:hidden">
-              {on ? `Signal: ${SIGNAL_MODES.find((m) => m.mode === mode)?.name}` : 'Signal'}
-            </span>
-            <ChevronDown size={13} strokeWidth={2.5} aria-hidden="true" className="kys-layer-x" />
+            <span className="lg:max-xl:hidden">{on ? `Signal: ${name}` : 'Signal'}</span>
+            {/* Not the toggles' close mark, which the rail hides: this one says a press opens a menu. */}
+            <ChevronDown
+              size={13}
+              strokeWidth={2.5}
+              aria-hidden="true"
+              className="kys-signal-caret"
+            />
           </button>
         </Popover.Trigger>
       </PlayerTip>

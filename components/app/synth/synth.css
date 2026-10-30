@@ -610,6 +610,10 @@ svg .kys-hit:focus-visible {
   margin-left: -2px;
   opacity: 0.75;
 }
+.kys-signal-caret {
+  margin-left: -2px;
+  opacity: 0.75;
+}
 .kys-layer.is-on {
   color: var(--kys-accent);
   background: rgb(246 166 58 / 0.12);

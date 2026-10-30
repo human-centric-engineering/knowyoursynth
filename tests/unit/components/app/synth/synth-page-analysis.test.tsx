@@ -204,6 +204,8 @@ describe('the panel switches', () => {
     expect(screen.queryByTestId('live-layer')).toBeNull();
     chooseSignal('Live');
     expect(signalShown()).toBe('Live');
+    // Its accessible name says the mode, as its word does.
+    expect(document.querySelector('button[aria-label="Signal on the panel: Live"]')).toBeTruthy();
     expect(screen.getByTestId('live-layer')).toBeTruthy();
     expect(window.localStorage.getItem('kys.live')).toBe('true');
     expect(window.localStorage.getItem('kys.dim')).toBe('true');
@@ -214,6 +216,9 @@ describe('the panel switches', () => {
     expect(signalShown()).toBe('Off');
     expect(screen.queryByTestId('live-layer')).toBeNull();
     expect(window.localStorage.getItem('kys.dim')).toBe('false');
+    // Off clears Live as well, so a dim synced back on from the account opens In use, not Live.
+    expect(window.localStorage.getItem('kys.live')).toBe('false');
+    expect(document.querySelector('button[aria-label="Signal on the panel: Off"]')).toBeTruthy();
     // Back on, In use is In use: Live is a choice of its own.
     chooseSignal('In use');
     expect(signalShown()).toBe('In use');

@@ -627,7 +627,9 @@ function Synth({
   const signal: SignalMode = !dimOn ? 'off' : liveOn && liveOffered ? 'live' : 'inUse';
   const setSignal = (m: SignalMode) => {
     setDimOn(m !== 'off');
-    if (m !== 'off') setLiveOn(m === 'live');
+    // Off clears Live too, so a dim synced back on from the account opens In use. In use is left alone where Live is
+    // not offered, so another synth's page does not clear the Model D's choice.
+    if (m !== 'inUse' || liveOffered) setLiveOn(m === 'live');
   };
   const [heatOn, setHeatOn] = settings.heat;
   const [harmOn, setHarmOn] = settings.harm;

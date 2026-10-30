@@ -15,7 +15,7 @@ export type SignalName = 'Off' | 'In use' | 'Live';
 const LABEL = 'Signal on the panel';
 
 function trigger(): HTMLButtonElement {
-  const b = document.querySelector<HTMLButtonElement>(`button[aria-label="${LABEL}"]`);
+  const b = document.querySelector<HTMLButtonElement>(`button[aria-label^="${LABEL}:"]`);
   if (!b) throw new Error('no Signal control on the page');
   return b;
 }
