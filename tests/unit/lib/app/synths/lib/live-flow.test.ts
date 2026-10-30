@@ -5,7 +5,8 @@
  * @see lib/app/synths/lib/live-flow.ts
  */
 import { describe, expect, it } from 'vitest';
-import type { ControlValues, PatchCable, SynthDef, SynthRouting } from '@/lib/app/synths/contract';
+import type { ControlValues, SynthDef, SynthRouting } from '@/lib/app/synths/contract';
+import type { CableLike } from '@/lib/app/synths/lib/patch';
 import modelD from '@/lib/app/synths/defs/model-d';
 import vcs3 from '@/lib/app/synths/defs/ems-vcs3';
 import system15 from '@/lib/app/synths/defs/system-15';
@@ -16,7 +17,7 @@ import { routing } from '@/lib/app/synths/routing/model-d';
 import { routing as vcs3Routing } from '@/lib/app/synths/routing/ems-vcs3';
 import { getSynthRouting } from '@/lib/app/synths/routing';
 
-function flows(def: SynthDef, r: SynthRouting, set: ControlValues = {}, cables: PatchCable[] = []) {
+function flows(def: SynthDef, r: SynthRouting, set: ControlValues = {}, cables: CableLike[] = []) {
   const values = { ...def.init, ...set };
   const patched = cables.flatMap((c) => [c.from, c.to]);
   const state = routingState(def, r, { values, cables, wheel: 0 });

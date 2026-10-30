@@ -137,7 +137,7 @@ describe('LiveLayer with the flow on Model D', () => {
   });
 
   it('reads a pin matrix’s line from its pin, dark while nothing comes into the part it leaves', () => {
-    const cables = [{ from: 'r.in1', to: 'c.out1' }];
+    const cables = [{ from: 'r.in1', to: 'c.out1', color: '#fff' }];
     const live: LiveGlow = {
       routing: vcs3Routing,
       state: routingState(vcs3, vcs3Routing, { values: vcs3.init, cables, wheel: 0 }),
