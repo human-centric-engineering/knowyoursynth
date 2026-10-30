@@ -16,6 +16,10 @@ import { routing as tb303 } from '@/lib/app/synths/routing/tb-303';
 import { routing as td3 } from '@/lib/app/synths/routing/td-3';
 import { routing as donnerB1 } from '@/lib/app/synths/routing/donner-b1';
 import { routing as grandmother } from '@/lib/app/synths/routing/grandmother';
+import { routing as model15 } from '@/lib/app/synths/routing/model-15';
+import { routing as cat } from '@/lib/app/synths/routing/cat';
+import { routing as xm2 } from '@/lib/app/synths/routing/2-xm';
+import { routing as polyD } from '@/lib/app/synths/routing/poly-d';
 
 export const SYNTH_ROUTINGS: SynthRouting[] = [
   modelD,
@@ -29,6 +33,10 @@ export const SYNTH_ROUTINGS: SynthRouting[] = [
   td3,
   donnerB1,
   grandmother,
+  model15,
+  cat,
+  xm2,
+  polyD,
 ];
 
 const BY_ID = new Map(SYNTH_ROUTINGS.map((r) => [r.synth, r]));
