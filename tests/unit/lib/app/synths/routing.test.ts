@@ -17,7 +17,7 @@ import { z } from 'zod';
 import type { SynthRouting } from '@/lib/app/synths/contract';
 import { getSynthDef, SYNTH_DEFS } from '@/lib/app/synths/defs';
 import { routingProblems } from '@/lib/app/synths/lib/routing';
-import { getSynthRouting, SYNTH_ROUTINGS } from '@/lib/app/synths/routing';
+import { DERIVED_ROUTINGS, getSynthRouting, SYNTH_ROUTINGS } from '@/lib/app/synths/routing';
 
 const Spec = z.object({
   modules: z.array(z.object({ id: z.string() })),
@@ -39,26 +39,25 @@ const defOf = (id: string) => {
   return def;
 };
 
-// Routed from their patch rather than from normals (t-145), so none of them has a routing yet.
-const PATCHED = ['system-15', 'system-35', 'system-55', 'ems-vcs3', 'syntrx-ii'];
+/** Every synth's routing, the derived ones (the System 15, 35 and 55) built from their definitions. */
+const ROUTINGS = SYNTH_DEFS.flatMap((d) => getSynthRouting(d) ?? []);
 
-it('has a routing for every synth whose path is fixed, and none for the patched ones', () => {
-  const routed = new Set(SYNTH_ROUTINGS.map((r) => r.synth));
-  const ids = SYNTH_DEFS.map((d) => d.id);
-  expect(PATCHED.every((id) => ids.includes(id))).toBe(true);
-  expect(ids.filter((id) => !PATCHED.includes(id) && !routed.has(id))).toEqual([]);
-  expect(PATCHED.filter((id) => routed.has(id))).toEqual([]);
+it('has a routing for every synth', () => {
+  const routed = new Set(ROUTINGS.map((r) => r.synth));
+  expect(SYNTH_DEFS.map((d) => d.id).filter((id) => !routed.has(id))).toEqual([]);
 });
 
-it('has a routing for Model D, and one routing per synth', () => {
+it('has one routing per synth, listed or derived but not both', () => {
   const ids = SYNTH_ROUTINGS.map((r) => r.synth);
-  expect(ids).toContain('model-d');
   expect(new Set(ids).size).toBe(ids.length);
-  expect(getSynthRouting('model-d')?.synth).toBe('model-d');
-  expect(getSynthRouting('no-such-synth')).toBeUndefined();
+  expect(Object.keys(DERIVED_ROUTINGS).filter((id) => ids.includes(id))).toEqual([]);
+  expect(getSynthRouting(defOf('model-d'))).toBe(SYNTH_ROUTINGS.find((r) => r.synth === 'model-d'));
+  expect(getSynthRouting({ ...defOf('model-d'), id: 'no-such-synth' })).toBeUndefined();
+  // A derived routing is built once per definition.
+  expect(getSynthRouting(defOf('system-55'))).toBe(getSynthRouting(defOf('system-55')));
 });
 
-describe.each(SYNTH_ROUTINGS.map((r) => [r.synth, r] as const))('%s', (id, routing) => {
+describe.each(ROUTINGS.map((r) => [r.synth, r] as const))('%s', (id, routing) => {
   it('names only what its definition has, and reaches the output from every block', () => {
     expect(routingProblems(defOf(id), routing)).toEqual([]);
   });
@@ -78,7 +77,7 @@ describe.each(SYNTH_ROUTINGS.map((r) => [r.synth, r] as const))('%s', (id, routi
 
 describe('routingProblems', () => {
   const def = defOf('model-d');
-  const base = getSynthRouting('model-d');
+  const base = getSynthRouting(def);
   if (!base) throw new Error('model-d has a routing');
   const edit = (change: (r: SynthRouting) => void): string[] => {
     const r = structuredClone(base);

@@ -3,8 +3,13 @@
  *
  * A routing joins by adding its module under `routing/` and one line below (`.context/app/synths.md`).
  * `tests/unit/lib/app/synths/routing.test.ts` checks every one listed here against its definition and its spec.
+ *
+ * The System 15, 35 and 55 are built from their definitions instead (`moog900Routing()`), so `getSynthRouting()`
+ * takes the definition. Importing the definitions here would put them in every synth page's bundle, which loads one
+ * definition at a time (`defs/load.ts`).
  */
-import type { SynthRouting } from '@/lib/app/synths/contract';
+import type { SynthDef, SynthRouting } from '@/lib/app/synths/contract';
+import { moog900Routing } from '@/lib/app/synths/routing/moog900';
 import { routing as modelD } from '@/lib/app/synths/routing/model-d';
 import { routing as neutron } from '@/lib/app/synths/routing/neutron';
 import { routing as pro1 } from '@/lib/app/synths/routing/pro-1';
@@ -67,6 +72,26 @@ export const SYNTH_ROUTINGS: SynthRouting[] = [
   solar42n,
 ];
 
-const BY_ID = new Map(SYNTH_ROUTINGS.map((r) => [r.synth, r]));
+/** The routings built from their definition, by synth id. */
+export const DERIVED_ROUTINGS: Record<string, (def: SynthDef) => SynthRouting> = {
+  'system-15': moog900Routing,
+  'system-35': moog900Routing,
+  'system-55': moog900Routing,
+};
 
-export const getSynthRouting = (id: string): SynthRouting | undefined => BY_ID.get(id);
+const BY_ID = new Map(SYNTH_ROUTINGS.map((r) => [r.synth, r]));
+const built = new WeakMap<SynthDef, SynthRouting>();
+
+/** `def`'s routing, or undefined when it has none. A derived one is built once per definition. */
+export function getSynthRouting(def: SynthDef): SynthRouting | undefined {
+  const fixed = BY_ID.get(def.id);
+  if (fixed) return fixed;
+  const build = Object.hasOwn(DERIVED_ROUTINGS, def.id) ? DERIVED_ROUTINGS[def.id] : undefined;
+  if (!build) return undefined;
+  let r = built.get(def);
+  if (!r) {
+    r = build(def);
+    built.set(def, r);
+  }
+  return r;
+}
