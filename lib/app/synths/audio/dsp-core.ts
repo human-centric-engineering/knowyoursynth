@@ -2345,8 +2345,8 @@ function createVoice(
           lfo: S[SI.lfo],
           env1: S[SI.env1],
           env2: S[SI.env2],
-          ...(P.easel || P.moog ? null : { env2Stage: envStage(env[1]) }),
-          ...(P.easel || P.moog || P.trap ? null : { env1Stage: envStage(env[0]) }),
+          env1Stage: P.easel || P.moog || P.trap ? undefined : envStage(env[0]),
+          env2Stage: P.easel || P.moog ? undefined : envStage(env[1]),
           oscs: oscMask(),
           lfoHz: lfoHzNow,
           ...oscMeters(),
@@ -2918,7 +2918,10 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
           if (meters[k]) over = Math.max(over, meters[k].overload);
         }
       });
-      const m: Partial<MeterEvent> = meters[partCur[0] < 0 && partCur[1] >= 0 ? 1 : 0] || {};
+      const part = partCur[0] < 0 && partCur[1] >= 0 ? 1 : 0;
+      const m: Partial<MeterEvent> = meters[part] || {};
+      // An idle module stops metering: its envelopes are at rest, whatever it last said.
+      const rest = !parts[part] || parts[part].idle();
       emit({
         type: 'meter',
         overload: over,
@@ -2926,8 +2929,8 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         lfo: m.lfo || 0,
         env1: m.env1 || 0,
         env2: m.env2 || 0,
-        env1Stage: m.env1Stage,
-        env2Stage: m.env2Stage,
+        env1Stage: rest && m.env1Stage ? 'idle' : m.env1Stage,
+        env2Stage: rest && m.env2Stage ? 'idle' : m.env2Stage,
         lfoHz: m.lfoHz,
         oscV: m.oscV,
         oscHz: m.oscHz,
@@ -3299,6 +3302,8 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         }
       });
       const m: Partial<MeterEvent> = meters[lead] || {};
+      // An idle voice stops metering: its envelopes are at rest, whatever it last said.
+      const rest = !voices[lead] || voices[lead].idle();
       emit({
         type: 'meter',
         overload: over,
@@ -3306,8 +3311,8 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         lfo: m.lfo || 0,
         env1: m.env1 || 0,
         env2: m.env2 || 0,
-        env1Stage: m.env1Stage,
-        env2Stage: m.env2Stage,
+        env1Stage: rest && m.env1Stage ? 'idle' : m.env1Stage,
+        env2Stage: rest && m.env2Stage ? 'idle' : m.env2Stage,
         lfoHz: m.lfoHz,
         oscV: m.oscV,
         oscHz: m.oscHz,

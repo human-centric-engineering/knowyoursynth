@@ -11,9 +11,8 @@
  */
 
 import { useSyncExternalStore } from 'react';
-import type { ControlValue } from '@/lib/app/synths/contract';
+import type { ControlValue, EnvStage } from '@/lib/app/synths/contract';
 import type { MoogMeters } from '@/lib/app/synths/audio/moog-core';
-import type { EnvStage } from '@/lib/app/synths/contract';
 
 /** A store: read it, replace it (or map it), and hear about changes. */
 export interface Store<T> {

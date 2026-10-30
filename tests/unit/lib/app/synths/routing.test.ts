@@ -412,6 +412,13 @@ describe('routingProblems', () => {
       'block filter_contour stage attack: aenv.attack is not one of its controls',
       'block filter_contour stage release: no control env.filterDecayy',
     ]);
+    // A stage set to nothing is passed over, as `liveStages()` passes it over.
+    expect(
+      edit((r) => {
+        const contour = r.blocks.find((b) => b.id === 'filter_contour');
+        if (contour) contour.stages = { attack: 'fenv.attack', release: undefined };
+      })
+    ).toEqual([]);
   });
 });
 

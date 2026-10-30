@@ -459,6 +459,7 @@ export function routingProblems(def: SynthDef, routing: SynthRouting): string[] 
     if (b.meter !== 'env1' && b.meter !== 'env2')
       problems.push(`block ${b.id}: stages need an env1 or env2 meter`);
     for (const [stage, light] of Object.entries(b.stages)) {
+      if (!light) continue;
       const where = `block ${b.id} stage ${stage}`;
       const { id, when } = typeof light === 'string' ? { id: light, when: undefined } : light;
       if (!(b.controls ?? []).includes(id))

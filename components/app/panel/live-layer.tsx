@@ -47,14 +47,13 @@ export function LiveLayer({
     .flatMap((cb) => [cb.from, cb.to])
     .sort()
     .join(' ');
-  const areas = useMemo(
-    () => liveAreas(def, routing, patched.split(' ').filter(Boolean), values),
-    [def, routing, patched, values]
-  );
-  const stages = useMemo(
-    () => liveStages(def, routing, patched.split(' ').filter(Boolean), values),
-    [def, routing, patched, values]
-  );
+  const { areas, stages } = useMemo(() => {
+    const jacks = patched.split(' ').filter(Boolean);
+    return {
+      areas: liveAreas(def, routing, jacks, values),
+      stages: liveStages(def, routing, jacks, values),
+    };
+  }, [def, routing, patched, values]);
 
   // The latest routing, state and source are read through refs, so the loop runs for as long as the layer is up
   // rather than restarting (and dropping every glow to dark) with every knob turned.
@@ -71,20 +70,21 @@ export function LiveLayer({
     const read = createMeterReader();
     const steady = reducedMotion();
     let last = performance.now();
+    let dt = 0;
+    const ease = (el: SVGPathElement, key: string, target: number, quick: boolean) => {
+      const v = settle(shown.get(key) ?? 0, target, dt, quick);
+      shown.set(key, v);
+      const was = written.get(el) ?? -1;
+      if (v === was || (v !== target && Math.abs(v - was) < 0.004)) return;
+      written.set(el, v);
+      el.style.setProperty('--a', v.toFixed(3));
+    };
     let frame = requestAnimationFrame(function tick(now) {
       const { routing: r, state: st, source: src } = liveRef.current;
       const a = routingActivity(r, st, read(src, steady));
       const level = (block: string) => a.blocks[block] ?? 0;
-      const dt = now - last;
+      dt = now - last;
       last = now;
-      const ease = (el: SVGPathElement, key: string, target: number, quick: boolean) => {
-        const v = settle(shown.get(key) ?? 0, target, dt, quick);
-        shown.set(key, v);
-        const was = written.get(el) ?? -1;
-        if (v === was || (v !== target && Math.abs(v - was) < 0.004)) return;
-        written.set(el, v);
-        el.style.setProperty('--a', v.toFixed(3));
-      };
       for (const el of gRef.current?.querySelectorAll<SVGPathElement>('[data-live]') ?? []) {
         const id = el.getAttribute('data-live') ?? '';
         // An area two parts share (`liveAreas()`) glows with the brighter of them, and pulses as that one does.

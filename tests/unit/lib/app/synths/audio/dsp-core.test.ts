@@ -1071,6 +1071,18 @@ describe('polyphonic synth', () => {
     expect(stages.at(-1)).toBe('idle');
   });
 
+  it('reports a voice gone quiet as at rest, though its filter envelope was still releasing', () => {
+    // Envelope 1 (the filter's) releases over 2 s, Envelope 2 (the loudness) over 0.05 s: the voice falls idle, and
+    // stops metering, with Envelope 1 still in its release.
+    const p = poly({
+      env1: { a: 0.005, d: 0.1, s: 0.5, r: 2 },
+      env2: { a: 0.005, d: 0.1, s: 0.8, r: 0.05 },
+    });
+    const last = meters(render(p, { events: chord, len: 24000 }).events).at(-1);
+    expect(last?.voices).toBe(0);
+    expect(last?.env1Stage).toBe('idle');
+  });
+
   it('plays a chord on several voices, steals the oldest when they run out, and meters the voices', () => {
     const r = renderStable(poly(), { events: chord, len: 9600, stereo: true });
     expect(rms(r.out, 0, 4800)).toBeGreaterThan(0.02);
