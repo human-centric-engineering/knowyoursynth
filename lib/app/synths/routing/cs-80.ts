@@ -171,7 +171,14 @@ function channel(c: 1 | 2): { blocks: RoutingBlock[]; edges: RoutingEdge[] } {
         id: b('fenv'),
         name: `Channel ${N} filter envelope`,
         module: 'env',
-        ...(lead ? { meter: 'env1' as const } : {}),
+        // Only channel I's envelopes are the voice's own, so only they light. The level it sustains at is the set
+        // cutoffs, which IL and AL scale between: no knob of its own.
+        ...(lead
+          ? {
+              meter: 'env1' as const,
+              stages: { attack: k('fa'), decay: k('fd'), release: k('fr') },
+            }
+          : {}),
         controls: [k('il'), k('al'), k('fa'), k('fd'), k('fr')],
         description:
           'Starts at IL below the set cutoffs, rises over A to AL above them, decays over D to the set cutoffs and releases over R back to IL.',
@@ -189,7 +196,12 @@ function channel(c: 1 | 2): { blocks: RoutingBlock[]; edges: RoutingEdge[] } {
         id: b('aenv'),
         name: `Channel ${N} VCA envelope`,
         module: 'env',
-        ...(lead ? { meter: 'env2' as const } : {}),
+        ...(lead
+          ? {
+              meter: 'env2' as const,
+              stages: { attack: k('a'), decay: k('d'), sustain: k('s'), release: k('r') },
+            }
+          : {}),
         controls: [k('a'), k('d'), k('s'), k('r')],
         description: 'An ADSR for the channel’s VCA, raised by velocity.',
         specs: ENV_SPECS,

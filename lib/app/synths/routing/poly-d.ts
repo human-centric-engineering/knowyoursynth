@@ -200,6 +200,13 @@ export const routing: SynthRouting = {
       module: 'env',
       meter: 'env1',
       controls: ['fenv.attack', 'fenv.decay', 'fenv.sustain', 'env.decay'],
+      // As the Model D's: the release is the decay time with DECAY on, and immediate with it off.
+      stages: {
+        attack: 'fenv.attack',
+        decay: 'fenv.decay',
+        sustain: 'fenv.sustain',
+        release: { id: 'fenv.decay', when: { id: 'env.decay', eq: true } },
+      },
       description:
         'An attack, decay, sustain envelope for the cutoff, shared by every note. With DECAY on, the release follows the decay time.',
       specs: ENV_SPECS,
@@ -210,6 +217,13 @@ export const routing: SynthRouting = {
       module: 'env',
       meter: 'env2',
       controls: ['aenv.attack', 'aenv.decay', 'aenv.sustain', 'env.decay'],
+      // As the Model D's: the release is the decay time with DECAY on, and immediate with it off.
+      stages: {
+        attack: 'aenv.attack',
+        decay: 'aenv.decay',
+        sustain: 'aenv.sustain',
+        release: { id: 'aenv.decay', when: { id: 'env.decay', eq: true } },
+      },
       description:
         'An attack, decay, sustain envelope for the amplifier, shared by every note. With DECAY on, the release follows the decay time; otherwise it is immediate.',
       specs: ENV_SPECS,

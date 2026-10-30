@@ -180,6 +180,12 @@ export const routing: SynthRouting = {
       module: 'env',
       meter: 'env1',
       controls: ['adsr.attack', 'adsr.decay', 'adsr.sustain', 'adsr.release'],
+      stages: {
+        attack: 'adsr.attack',
+        decay: 'adsr.decay',
+        sustain: 'adsr.sustain',
+        release: 'adsr.release',
+      },
       description:
         'Attack, decay, sustain, release: a modulation choice everywhere and a VCA source.',
       specs: [
@@ -195,6 +201,8 @@ export const routing: SynthRouting = {
       module: 'env',
       meter: 'env2',
       controls: ['ar.attack', 'ar.release'],
+      // The short decay to full level has no knob, nor has the sustain.
+      stages: { attack: 'ar.attack', release: 'ar.release' },
       description:
         'Attack and release only, holding full level while the key is down: a modulation choice everywhere and a VCA source.',
       specs: [

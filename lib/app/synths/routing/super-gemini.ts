@@ -167,7 +167,21 @@ function layer(s: Side): { blocks: RoutingBlock[]; edges: RoutingEdge[] } {
         id: b('env1'),
         name: `${L} ENV 1`,
         module: 'env',
-        ...(lead ? { meter: 'env1' as const } : {}),
+        // Only the upper layer's envelopes are the voice's own, so only they light. ATTACK HOLD is the wait before
+        // the attack, DECAY HOLD the stay at the peak.
+        ...(lead
+          ? {
+              meter: 'env1' as const,
+              stages: {
+                delay: k('e1ah'),
+                attack: k('e1a'),
+                hold: k('e1dh'),
+                decay: k('e1d'),
+                sustain: k('e1s'),
+                release: k('e1r'),
+              },
+            }
+          : {}),
         controls: [
           k('e1ah'),
           k('e1a'),
@@ -190,7 +204,18 @@ function layer(s: Side): { blocks: RoutingBlock[]; edges: RoutingEdge[] } {
         id: b('env2'),
         name: `${L} ENV 2`,
         module: 'env',
-        ...(lead ? { meter: 'env2' as const } : {}),
+        ...(lead
+          ? {
+              meter: 'env2' as const,
+              stages: {
+                attack: k('e2a'),
+                hold: k('e2dh'),
+                decay: k('e2d'),
+                sustain: k('e2s'),
+                release: k('e2r'),
+              },
+            }
+          : {}),
         controls: [k('e2a'), k('e2dh'), k('e2d'), k('e2s'), k('e2r')],
         description: 'An envelope with a decay hold, for the VCA and the filter.',
         specs: [

@@ -62,6 +62,8 @@ export const acidBlocks = (o: {
     module: 'env',
     meter: 'env1',
     controls: ['env.decay'],
+    // The attack is fixed. With no sustain, letting go carries on the decay at DECAY's rate.
+    stages: { decay: 'env.decay', release: 'env.decay' },
     description:
       'A sharp attack and an exponential decay on each note, for the filter. Accented notes take its shortest decay.',
     specs: [

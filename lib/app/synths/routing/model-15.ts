@@ -153,6 +153,12 @@ export const routing: SynthRouting = {
       module: 'env',
       meter: 'env1',
       controls: ['env.attack', 'env.decay', 'env.sustain', 'env.release'],
+      stages: {
+        attack: 'env.attack',
+        decay: 'env.decay',
+        sustain: 'env.sustain',
+        release: 'env.release',
+      },
       description:
         'An ADSR envelope for the cutoff and the VCA, with an upside-down output. It fires from the keys unless ENV TRIG is patched.',
       specs: [

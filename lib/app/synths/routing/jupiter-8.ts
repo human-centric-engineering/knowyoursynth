@@ -168,6 +168,12 @@ export const routing: SynthRouting = {
         'env1.kf',
         'env1.polarity',
       ],
+      stages: {
+        attack: 'env1.attack',
+        decay: 'env1.decay',
+        sustain: 'env1.sustain',
+        release: 'env1.release',
+      },
       description:
         'An ADSR with key follow and polarity, for the VCOs’ pitch and pulse width, and the filter if picked.',
       specs: ENV_SPECS,
@@ -178,6 +184,12 @@ export const routing: SynthRouting = {
       module: 'env',
       meter: 'env2',
       controls: ['env2.attack', 'env2.decay', 'env2.sustain', 'env2.release', 'env2.kf'],
+      stages: {
+        attack: 'env2.attack',
+        decay: 'env2.decay',
+        sustain: 'env2.sustain',
+        release: 'env2.release',
+      },
       description: 'An ADSR with key follow for the VCA, and the filter if picked.',
       specs: ENV_SPECS,
     },

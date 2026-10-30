@@ -60,7 +60,18 @@ function xm(k: 1 | 2): {
     id: b(`env${n}`),
     name: n === 1 ? `${M} ENV 1 (VCA)` : `${M} ENV 2`,
     module: 'env',
-    ...(lead ? { meter: n === 1 ? ('env1' as const) : ('env2' as const) } : {}),
+    // Only the lead module's contours follow the voice's envelopes, so only theirs light.
+    ...(lead
+      ? {
+          meter: n === 1 ? ('env1' as const) : ('env2' as const),
+          stages: {
+            attack: b(`env${n}.attack`),
+            decay: b(`env${n}.decay`),
+            sustain: b(`env${n}.sustain`),
+            release: b(`env${n}.decay`),
+          },
+        }
+      : {}),
     controls: [b(`env${n}.attack`), b(`env${n}.decay`), b(`env${n}.sustain`)],
     description:
       n === 1

@@ -163,7 +163,14 @@ export function syncussionChannel(
       id: b('sweep'),
       name: `Channel ${ch} sweep`,
       module: 'env',
-      ...(lead ? { meter: 'env2' as const } : {}),
+      // Only channel 1's envelopes are the voice's own, so only they light. One fall at SWEEP SPEED, which letting go
+      // of the key does not change.
+      ...(lead
+        ? {
+            meter: 'env2' as const,
+            stages: { decay: k('sweepSpeed'), release: k('sweepSpeed') },
+          }
+        : {}),
       controls: [k('sweep'), k('sweepSpeed'), k('sweepRange')],
       description:
         'Slides both oscillators’ pitch on every strike, up or down, at SWEEP SPEED over SWEEP RANGE. Mode D replaces it with its own sweep.',
@@ -202,7 +209,10 @@ export function syncussionChannel(
       id: b('env'),
       name: `Channel ${ch} decay`,
       module: 'env',
-      ...(lead ? { meter: 'env1' as const } : {}),
+      // One fall at DECAY, which letting go of the key does not change.
+      ...(lead
+        ? { meter: 'env1' as const, stages: { decay: k('decay'), release: k('decay') } }
+        : {}),
       controls: [k('decay')],
       description:
         'One decay on each strike, its level set by how hard: it shapes the VCA and the filter, and in mode D sweeps the oscillators.',
