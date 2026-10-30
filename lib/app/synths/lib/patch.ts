@@ -20,6 +20,7 @@ import {
   type Preset,
   type PresetStep,
   type PresetTweak,
+  type SelectControl,
   type ShowCondition,
   type SynthDef,
   type SynthModule,
@@ -82,6 +83,32 @@ export function faceView(def: Pick<SynthDef, 'view' | 'theme'>): {
   const x = cheeks && cheeks !== 'none' ? cheekW || 40 : 0;
   return { x, w: def.view.w - x * 2, h: def.view.h };
 }
+
+/**
+ * How far a control reaches from its centre, legend and travel included, in panel units: the find's spotlight
+ * (`Locator`) rings it at this radius (floored at 40), and a block's card crops the panel to it.
+ */
+export const controlReach = (p: Control): number =>
+  p.type === 'knob'
+    ? p.r * 1.95
+    : p.type === 'fader'
+      ? (p.len || 200) * 0.62
+      : p.type === 'menu'
+        ? p.w * 0.58
+        : p.type === 'select'
+          ? selectSpan(p)
+          : // The prototype has no joystick case (it has no w or h, so the radius came out NaN): its own radius stands in.
+            p.type === 'joystick'
+            ? p.r * 1.1
+            : Math.max(p.w, p.h ?? p.w) * 1.1;
+
+/** Half the width of a row of buttons, from its centre to the far edge of its outermost button. */
+const selectSpan = (p: SelectControl) =>
+  Math.max(...p.options.map((o) => Math.hypot((o.x ?? p.x) - p.x, (o.y ?? p.y) - p.y))) +
+  Math.max(p.w, p.h);
+
+/** How far a jack reaches from its centre, its legend included, in panel units: as `controlReach`, for a jack. */
+export const jackReach = (j: Jack): number => (j.r || 16) * 2.4;
 
 /**
  * Whether a faceplate reads as light: its relative luminance (WCAG's) above that of the darkest greys a panel is

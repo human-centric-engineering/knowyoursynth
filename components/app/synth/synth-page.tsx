@@ -2271,6 +2271,7 @@ function Synth({
                               wheel={wheel}
                               source={engine}
                               onShow={showFromRouting}
+                              panel={def}
                             />
                           </div>
                         </div>

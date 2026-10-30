@@ -300,6 +300,25 @@ describe('a block’s card', () => {
     expect(def.controls.filter((c) => !named.has(c.id)).map((c) => c.id)).toEqual([]);
   });
 
+  it('gives a card a crop of the panel when it has the panel’s definition, and none without (t-147)', () => {
+    const { unmount } = render(
+      <RoutingView
+        def={def}
+        routing={routing}
+        values={def.init}
+        cables={[]}
+        wheel={0}
+        panel={def}
+      />
+    );
+    fireEvent.click(blockButton('Ladder filter'));
+    expect(cardBody('Ladder filter').getAllByTestId('routing-card-crop')).toHaveLength(1);
+    unmount();
+    view();
+    fireEvent.click(blockButton('Ladder filter'));
+    expect(cardBody('Ladder filter').queryAllByTestId('routing-card-crop')).toHaveLength(0);
+  });
+
   it('lists a block’s jacks, and says so when nothing on the panel sets it', () => {
     view();
     fireEvent.click(blockButton('LFO'));

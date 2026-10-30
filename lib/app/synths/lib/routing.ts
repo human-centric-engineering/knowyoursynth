@@ -10,13 +10,18 @@
 import {
   conditionHolds,
   controlMap,
+  controlReach,
+  faceView,
   jackGain,
   jackMap,
+  jackReach,
   WHEEL,
   type CableLike,
 } from '@/lib/app/synths/lib/patch';
 import type {
+  Control,
   ControlValues,
+  RoutingBlock,
   RoutingEdge,
   RoutingLevel,
   RoutingWhen,
@@ -189,6 +194,159 @@ export function routingState(
       live: on && fed.has(c.fromBlock) && live(c.toBlock),
     })),
   };
+}
+
+// ─── The panel's crop ────────────────────────────────────────────────────────
+
+/**
+ * A control or jack a block's card lights on its crop of the panel: its centre, how far it reaches (legends included,
+ * for the crop's box), and the box lit around the part itself, which the card draws with its short side rounded: a
+ * circle round a knob or a jack, a pill round a switch or a fader.
+ */
+export interface PanelSpot {
+  kind: 'control' | 'jack';
+  id: string;
+  x: number;
+  y: number;
+  r: number;
+  lit: { w: number; h: number };
+}
+
+/** A round part's lit circle, as a share of its reach: the reach takes in the legends, and rings that wide overlap. */
+const LIT_ROUND = 0.7;
+/** Panel units round a square part's own box. */
+const LIT_PAD = 10;
+
+const round = (r: number) => ({ w: r * 2 * LIT_ROUND, h: r * 2 * LIT_ROUND });
+
+/** The box lit round a control: its own rectangle where it has one, otherwise a circle a share of its reach. */
+function controlLit(c: Control): PanelSpot['lit'] {
+  if (c.type === 'slide' || c.type === 'rocker' || c.type === 'button' || c.type === 'menu')
+    return { w: c.w + LIT_PAD * 2, h: c.h + LIT_PAD * 2 };
+  if (c.type === 'fader') {
+    // The slot (`Fader` in parts.tsx) runs `pad` past each end of the travel; the cap is about 40 across.
+    const long = (c.len || 200) + (c.pad ?? 12) * 2 + LIT_PAD * 2;
+    const short = 40 + LIT_PAD * 2;
+    return c.orient === 'h' ? { w: long, h: short } : { w: short, h: long };
+  }
+  return round(controlReach(c));
+}
+
+/** A box of the panel, in panel units, and the spots inside it. */
+export interface PanelCrop {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  spots: PanelSpot[];
+}
+
+/** Panel units around the outermost spots of a crop. */
+export const CROP_PAD = 16;
+/** Spots closer than this, edge to edge, are one cluster: they are drawn in the same crop, never split. */
+export const CROP_GAP = 60;
+/**
+ * The largest crop that still reads in the card's picture, about 280 × 220 px: either side at its limit draws at a
+ * third of a pixel a unit, a Model D knob about 19 px across. A block whose spots spread wider is drawn as one crop
+ * per cluster. A cluster is never cut, so a dense one can pass the cap and draw smaller.
+ */
+export const CROP_MAX_W = 840;
+export const CROP_MAX_H = 660;
+/** Past this many crops a block's spots are scattered over the panel, and its card shows no picture. */
+export const CROP_MAX = 3;
+
+const spotsBox = (spots: PanelSpot[]) => {
+  const x = Math.min(...spots.map((s) => s.x - s.r));
+  const y = Math.min(...spots.map((s) => s.y - s.r));
+  return {
+    x,
+    y,
+    w: Math.max(...spots.map((s) => s.x + s.r)) - x,
+    h: Math.max(...spots.map((s) => s.y + s.r)) - y,
+  };
+};
+
+const fits = (spots: PanelSpot[]) => {
+  const b = spotsBox(spots);
+  return b.w + CROP_PAD * 2 <= CROP_MAX_W && b.h + CROP_PAD * 2 <= CROP_MAX_H;
+};
+
+/**
+ * Where a block sits on the panel: the boxes of `panel` (the definition as the panel draws it, so a modular's case)
+ * that hold the controls the block lists and the jacks the routing gives it, each spot by its reach (`controlReach`,
+ * `jackReach`), padded and kept on the faceplate. One box when they fit `CROP_MAX_W` × `CROP_MAX_H`; otherwise the
+ * clusters, joined while a join still fits, left to right. Empty for a block with nothing on the panel, and for one
+ * spread over more than `CROP_MAX` boxes.
+ */
+export function panelCrops(
+  panel: SynthDef,
+  routing: SynthRouting,
+  block: RoutingBlock
+): PanelCrop[] {
+  const controls = controlMap(panel);
+  const jacks = jackMap(panel);
+  const spots: PanelSpot[] = [
+    ...(block.controls ?? []).flatMap((id) => {
+      const c = controls[id];
+      return c
+        ? [{ kind: 'control' as const, id, x: c.x, y: c.y, r: controlReach(c), lit: controlLit(c) }]
+        : [];
+    }),
+    ...Object.entries(routing.jacks).flatMap(([id, b]) => {
+      const j = b === block.id ? jacks[id] : undefined;
+      const r = j && jackReach(j);
+      return j && r ? [{ kind: 'jack' as const, id, x: j.x, y: j.y, r, lit: round(r) }] : [];
+    }),
+  ];
+  if (!spots.length) return [];
+
+  let groups: PanelSpot[][];
+  if (fits(spots)) groups = [spots];
+  else {
+    // Clusters: a spot joins every cluster it comes within CROP_GAP of, which merges them.
+    groups = [];
+    for (const s of spots) {
+      const near = (g: PanelSpot[]) =>
+        g.some(
+          (t) =>
+            Math.abs(s.x - t.x) - s.r - t.r <= CROP_GAP &&
+            Math.abs(s.y - t.y) - s.r - t.r <= CROP_GAP
+        );
+      const joined = [s, ...groups.filter(near).flat()];
+      groups = [...groups.filter((g) => !near(g)), joined];
+    }
+    // Then join the pair of clusters whose box is smallest, while it fits.
+    for (;;) {
+      let best: { i: number; j: number; area: number } | null = null;
+      for (let i = 0; i < groups.length; i++)
+        for (let j = i + 1; j < groups.length; j++) {
+          const both = [...groups[i], ...groups[j]];
+          if (!fits(both)) continue;
+          const b = spotsBox(both);
+          if (!best || b.w * b.h < best.area) best = { i, j, area: b.w * b.h };
+        }
+      if (!best) break;
+      const { i, j } = best;
+      groups = [...groups.filter((_, k) => k !== i && k !== j), [...groups[i], ...groups[j]]];
+    }
+    if (groups.length > CROP_MAX) return [];
+  }
+
+  const face = faceView(panel);
+  return groups
+    .map((g) => {
+      const b = spotsBox(g);
+      const x = Math.max(face.x, b.x - CROP_PAD);
+      const y = Math.max(0, b.y - CROP_PAD);
+      return {
+        x,
+        y,
+        w: Math.min(face.x + face.w, b.x + b.w + CROP_PAD) - x,
+        h: Math.min(face.h, b.y + b.h + CROP_PAD) - y,
+        spots: g,
+      };
+    })
+    .sort((a, b) => a.x - b.x);
 }
 
 // ─── Validation ──────────────────────────────────────────────────────────────

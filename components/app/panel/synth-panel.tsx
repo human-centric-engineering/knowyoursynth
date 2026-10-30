@@ -63,6 +63,12 @@ import type { CableFocus } from '@/components/app/synth/stores';
 import type { ControlValues, PatchCable, SynthDef } from '@/lib/app/synths/contract';
 import type { SynthDesign } from '@/lib/app/catalogue/designs';
 
+/**
+ * The id of the group holding everything drawn on the faceplate. The magnifier redraws it (`Lens`), and a routing
+ * block's card shows a crop of it (`RoutingCard`), both through `<use>`, so neither draws the panel a second time.
+ */
+export const PANEL_ALL_ID = 'kysPanelAll';
+
 /** Which end of a cable: the output plug (`from`) or the input plug (`to`). */
 export type CableEnd = 'from' | 'to';
 
@@ -497,7 +503,7 @@ export function SynthPanel({
       }}
     >
       <PanelDefs />
-      <g id="kysPanelAll">
+      <g id={PANEL_ALL_ID}>
         {shown.layout ? (
           <ModularCase layout={shown.layout} view={view} ctx={ctx} />
         ) : outline ? (
@@ -691,7 +697,7 @@ export function SynthPanel({
       {dimOn && !areasOn && <DoorRings def={def} values={values} />}
       <Locator def={def} />
       {areasOn && <AreaLayer def={def} />}
-      {zoom > 0 && <Lens view={view} zoom={zoom} source="kysPanelAll" />}
+      {zoom > 0 && <Lens view={view} zoom={zoom} source={PANEL_ALL_ID} />}
     </svg>
   );
 }

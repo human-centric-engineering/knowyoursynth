@@ -206,6 +206,7 @@ export function RoutingView({
   wheel,
   source = null,
   onShow,
+  panel,
 }: {
   def: SynthDef;
   routing: SynthRouting;
@@ -217,6 +218,8 @@ export function RoutingView({
   source?: RoutingSource | null;
   /** Turns the panel face up with a control or jack found, from a block's card. */
   onShow?: (target: RoutingShowTarget) => void;
+  /** The definition as the panel under the view draws it, for the cards' crops of it. Absent: no crops. */
+  panel?: SynthDef;
 }) {
   const titleId = useId();
   const descId = useId();
@@ -572,6 +575,7 @@ export function RoutingView({
                 tag={TAG[symbolOf(open)]}
                 live={state.blocks[open.id]}
                 onShow={onShow}
+                panel={panel}
               />
               <Popover.Arrow className="kys-routing-card-arrow" width={12} height={6} />
             </Popover.Content>

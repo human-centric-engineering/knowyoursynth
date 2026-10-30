@@ -3145,6 +3145,22 @@ button.kys-routing-card-item:focus-visible {
   font-weight: 400;
   color: var(--kys-muted);
 }
+/* The block on the panel (t-147): the crops in a row at one scale, each its width's share of the card. */
+.kys-routing-card-panel {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  margin-top: 2px;
+}
+.kys-routing-card-crop {
+  display: block;
+  flex-basis: 0;
+  min-width: 0;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px rgb(var(--kys-wash) / 0.1);
+  pointer-events: none;
+}
 .kys-routing-card-none,
 .kys-routing-card-hint {
   font-size: 11.5px;

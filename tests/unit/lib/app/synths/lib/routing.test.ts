@@ -4,13 +4,31 @@
  *
  * Every case has something dark in it, so a `routingState` that lit everything would fail it.
  *
+ * Then the crops of the panel a block's card draws (`panelCrops`, t-147): they hold every control and jack the block
+ * has, padded and kept on the faceplate, one crop while that fits the cap and one per cluster past it.
+ *
  * @see lib/app/synths/lib/routing.ts
  */
 import { describe, expect, it } from 'vitest';
-import type { ControlValues } from '@/lib/app/synths/contract';
+import type { Control, ControlValues, RoutingBlock, SynthDef } from '@/lib/app/synths/contract';
 import modelD from '@/lib/app/synths/defs/model-d';
-import type { CableLike } from '@/lib/app/synths/lib/patch';
-import { routingState } from '@/lib/app/synths/lib/routing';
+import {
+  controlMap,
+  controlReach,
+  faceView,
+  jackMap,
+  jackReach,
+  type CableLike,
+} from '@/lib/app/synths/lib/patch';
+import {
+  CROP_MAX,
+  CROP_MAX_H,
+  CROP_MAX_W,
+  CROP_PAD,
+  panelCrops,
+  routingState,
+  type PanelCrop,
+} from '@/lib/app/synths/lib/routing';
 import { routing } from '@/lib/app/synths/routing/model-d';
 import { getSynthRouting } from '@/lib/app/synths/routing';
 import system55 from '@/lib/app/synths/defs/system-55';
@@ -319,5 +337,173 @@ describe('routingState on a pin matrix: the VCS3', () => {
     expect(s.blocks.meter).toBe(false);
     expect(s.cables[2]).toMatchObject({ toBlock: 'meter', live: false });
     expect(s.blocks.osc1).toBe(true);
+  });
+});
+
+describe('panelCrops', () => {
+  /** Every control and jack of `block` on `panel`, with its reach. */
+  const partsOf = (panel: SynthDef, block: RoutingBlock, jacksOf = routing.jacks) => {
+    const controls = controlMap(panel);
+    const jacks = jackMap(panel);
+    return [
+      ...(block.controls ?? []).flatMap((id) => {
+        const c = controls[id];
+        return c ? [{ id, x: c.x, y: c.y, r: controlReach(c) }] : [];
+      }),
+      ...Object.entries(jacksOf).flatMap(([id, b]) => {
+        const j = b === block.id ? jacks[id] : undefined;
+        return j ? [{ id, x: j.x, y: j.y, r: jackReach(j) }] : [];
+      }),
+    ];
+  };
+  /** Whether `part`, out to its reach, lies inside `crop` wherever the faceplate lets it. */
+  const holds = (panel: SynthDef, crop: PanelCrop, p: { x: number; y: number; r: number }) => {
+    const face = faceView(panel);
+    return (
+      crop.x <= Math.max(face.x, p.x - p.r) &&
+      crop.y <= Math.max(0, p.y - p.r) &&
+      crop.x + crop.w >= Math.min(face.x + face.w, p.x + p.r) &&
+      crop.y + crop.h >= Math.min(face.h, p.y + p.r)
+    );
+  };
+  const blockOf = (id: string) => {
+    const b = routing.blocks.find((x) => x.id === id);
+    if (!b) throw new Error(`no block ${id}`);
+    return b;
+  };
+
+  it('holds every control and jack of every Model D block, each in a crop that lights it', () => {
+    let parts = 0;
+    for (const b of routing.blocks) {
+      const crops = panelCrops(modelD, routing, b);
+      const want = partsOf(modelD, b);
+      expect(crops.length > 0, b.id).toBe(want.length > 0);
+      for (const p of want) {
+        parts++;
+        const home = crops.filter((k) => k.spots.some((s) => s.id === p.id));
+        expect(home, `${b.id} ${p.id}`).toHaveLength(1);
+        expect(holds(modelD, home[0], p), `${b.id} ${p.id}`).toBe(true);
+      }
+      // Nothing lit that the block does not have.
+      expect(crops.flatMap((k) => k.spots.map((s) => s.id)).sort()).toEqual(
+        want.map((p) => p.id).sort()
+      );
+    }
+    expect(parts).toBeGreaterThan(50);
+  });
+
+  it('pads a crop by CROP_PAD past its outermost spots, and keeps it on the faceplate', () => {
+    const [crop] = panelCrops(modelD, routing, blockOf('osc1'));
+    const want = partsOf(modelD, blockOf('osc1'));
+    expect(crop.x).toBeCloseTo(Math.min(...want.map((p) => p.x - p.r)) - CROP_PAD);
+    expect(crop.y).toBeCloseTo(Math.min(...want.map((p) => p.y - p.r)) - CROP_PAD);
+    expect(crop.x + crop.w).toBeCloseTo(Math.max(...want.map((p) => p.x + p.r)) + CROP_PAD);
+    expect(crop.y + crop.h).toBeCloseTo(Math.max(...want.map((p) => p.y + p.r)) + CROP_PAD);
+    // The output section runs to the right-hand cheek: its crop stops at the faceplate's edge.
+    const face = faceView(modelD);
+    for (const b of routing.blocks)
+      for (const k of panelCrops(modelD, routing, b)) {
+        expect(k.x, b.id).toBeGreaterThanOrEqual(face.x);
+        expect(k.y, b.id).toBeGreaterThanOrEqual(0);
+        expect(k.x + k.w, b.id).toBeLessThanOrEqual(face.x + face.w);
+        expect(k.y + k.h, b.id).toBeLessThanOrEqual(face.h);
+      }
+  });
+
+  it('draws a block whose parts fit the cap as one crop', () => {
+    for (const id of ['osc1', 'mixer', 'filter']) {
+      const crops = panelCrops(modelD, routing, blockOf(id));
+      expect(crops, id).toHaveLength(1);
+      expect(crops[0].w, id).toBeLessThanOrEqual(CROP_MAX_W);
+      expect(crops[0].h, id).toBeLessThanOrEqual(CROP_MAX_H);
+    }
+  });
+
+  it('splits a block spread wider than the cap into its clusters, left to right, none of them joinable', () => {
+    // The mod bus: its switches and knobs at the left, FILTER MODULATION over by the filter.
+    const crops = panelCrops(modelD, routing, blockOf('mod_bus'));
+    expect(crops).toHaveLength(2);
+    expect(crops[0].x).toBeLessThan(crops[1].x);
+    expect(crops[1].spots.map((s) => s.id)).toEqual(['mod.toFilter']);
+    const all = partsOf(modelD, blockOf('mod_bus'));
+    expect(
+      Math.max(...all.map((p) => p.x + p.r)) - Math.min(...all.map((p) => p.x - p.r))
+    ).toBeGreaterThan(CROP_MAX_W);
+  });
+
+  it('shows nothing for a block with nothing on the panel', () => {
+    expect(blockOf('midi').controls ?? []).toEqual([]);
+    expect(panelCrops(modelD, routing, blockOf('midi'))).toEqual([]);
+  });
+
+  it('skips a control the panel does not have, rather than failing', () => {
+    const block = { ...blockOf('osc1'), controls: ['osc1.range', 'no.such'] };
+    expect(panelCrops(modelD, routing, block).flatMap((k) => k.spots.map((s) => s.id))).toEqual([
+      'osc1.range',
+    ]);
+  });
+
+  it('lights a round part in a circle and a square one in its own box', () => {
+    const spots = panelCrops(modelD, routing, blockOf('mixer')).flatMap((k) => k.spots);
+    const controls = controlMap(modelD);
+    const knob = spots.find((s) => controls[s.id]?.type === 'knob');
+    const rocker = spots.find((s) => controls[s.id]?.type === 'rocker');
+    if (!knob || !rocker) throw new Error('the mixer has a knob and a rocker');
+    expect(knob.lit.w).toBe(knob.lit.h);
+    expect(knob.lit.w).toBeLessThan(knob.r * 2);
+    const c = controls[rocker.id] as Extract<Control, { type: 'rocker' }>;
+    expect(rocker.lit.w).toBeGreaterThan(c.w);
+    expect(rocker.lit.h).toBeGreaterThan(c.h);
+  });
+
+  it('reads positions from the panel as drawn, not from where the routing’s synth has them', () => {
+    // As a modular's case moves its modules (`modularDef`): every part 100 units right.
+    const moved: SynthDef = {
+      ...modelD,
+      controls: modelD.controls.map((c) => ({ ...c, x: c.x + 100 })),
+      jacks: modelD.jacks.map((j) => ({ ...j, x: j.x + 100 })),
+    };
+    const [was] = panelCrops(modelD, routing, blockOf('osc1'));
+    const [now] = panelCrops(moved, routing, blockOf('osc1'));
+    expect(now.x - was.x).toBeCloseTo(100);
+    expect(now.spots.map((s) => s.x)).toEqual(was.spots.map((s) => s.x + 100));
+  });
+
+  describe('spread parts, on a widened Model D', () => {
+    /** Model D's panel eight times as wide, with `ids` moved to `xs`, all on one line. */
+    const spread = (ids: string[], xs: number[]): SynthDef => ({
+      ...modelD,
+      view: { ...modelD.view, w: 16000 },
+      controls: modelD.controls.map((c) => {
+        const i = ids.indexOf(c.id);
+        return i < 0 ? c : { ...c, x: xs[i], y: 300 };
+      }),
+    });
+    const knobs = modelD.controls.filter((c) => c.type === 'knob').map((c) => c.id);
+    const block = (ids: string[]): RoutingBlock => ({
+      ...blockOf('osc1'),
+      id: 'test',
+      controls: ids,
+    });
+
+    it(`draws up to CROP_MAX (${CROP_MAX}) far-apart clusters, and none past that`, () => {
+      const ids = knobs.slice(0, CROP_MAX + 1);
+      const xs = ids.map((_, i) => 1000 + i * 3000);
+      const few = ids.slice(0, CROP_MAX);
+      expect(panelCrops(spread(few, xs), routing, block(few))).toHaveLength(CROP_MAX);
+      expect(panelCrops(spread(ids, xs), routing, block(ids))).toEqual([]);
+    });
+
+    it('never cuts a cluster, though it passes the cap', () => {
+      const ids = knobs.slice(0, 12);
+      const def = spread(
+        ids,
+        ids.map((_, i) => 1000 + i * 100)
+      );
+      const crops = panelCrops(def, routing, block(ids));
+      expect(crops).toHaveLength(1);
+      expect(crops[0].w).toBeGreaterThan(CROP_MAX_W);
+      expect(crops[0].spots).toHaveLength(12);
+    });
   });
 });

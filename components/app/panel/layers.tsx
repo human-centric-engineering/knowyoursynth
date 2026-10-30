@@ -18,7 +18,15 @@ import type { ItemFocus, MapCellState } from '@/components/app/synth/stores';
 import { panelCells } from '@/lib/app/synths/lib/cells';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
 import { areaMap, areaPath, rectsPath } from '@/lib/app/synths/lib/areas';
-import { controlMap, faceView, formatValue, isShown, jackMap } from '@/lib/app/synths/lib/patch';
+import {
+  controlMap,
+  controlReach,
+  faceView,
+  formatValue,
+  isShown,
+  jackMap,
+  jackReach,
+} from '@/lib/app/synths/lib/patch';
 import { WHEEL } from '@/lib/app/synths/lib/soundmap';
 import type {
   Area,
@@ -26,7 +34,6 @@ import type {
   ControlValue,
   ControlValues,
   PatchCable,
-  SelectControl,
   SynthDef,
   ViewRect,
 } from '@/lib/app/synths/contract';
@@ -204,7 +211,7 @@ export function Locator({ def }: { def: SynthDef }) {
   if (t.kind === 'jack') {
     const j = jackMap(def)[t.id];
     p = j;
-    r = j ? Math.max(40, (j.r || 16) * 2.4) : 0;
+    r = j ? Math.max(40, jackReach(j)) : 0;
   } else {
     const c = controlMap(def)[t.id];
     p = c;
@@ -232,26 +239,6 @@ export function Locator({ def }: { def: SynthDef }) {
     </g>
   );
 }
-
-/** The spotlight's radius for a control, before the 40-unit floor. */
-const controlReach = (p: Control): number =>
-  p.type === 'knob'
-    ? p.r * 1.95
-    : p.type === 'fader'
-      ? (p.len || 200) * 0.62
-      : p.type === 'menu'
-        ? p.w * 0.58
-        : p.type === 'select'
-          ? selectSpan(p)
-          : // The prototype has no joystick case (it has no w or h, so the radius came out NaN): its own radius stands in.
-            p.type === 'joystick'
-            ? p.r * 1.1
-            : Math.max(p.w, p.h ?? p.w) * 1.1;
-
-/** Half the width of a row of buttons, from its centre to the far edge of its outermost button. */
-const selectSpan = (p: SelectControl) =>
-  Math.max(...p.options.map((o) => Math.hypot((o.x ?? p.x) - p.x, (o.y ?? p.y) - p.y))) +
-  Math.max(p.w, p.h);
 
 /** Magnifier: a second, enlarged drawing of the faceplate, clipped to a circle centred on the pointer. */
 export function Lens({
