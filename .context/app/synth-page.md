@@ -264,7 +264,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   that carry audio on from a module that makes it, so a modular's patched line glows though it has no edges, and a
   mixer passing only control stays off it. On a modular the CM1A's meter is the key held, and each 921, 911 and 902
   reads its own engine slot (`MoogMeters` in `moog-core.ts`, the meter's `moog`): a 921 its wave (pulsing at LO,
-  the output's level at audio pitch), a 911 its envelope, a 902 its gain, no brighter than the output it carries. So
+  the output's level at audio pitch), a 911 its envelope, a 902 on the audio line its gain, no brighter than the output. So
   two oscillators at different rates, or two envelopes on different contours, glow apart. Until the engine reports,
   a live module that makes signal follows the output's level (see `moog900.ts`). The view eases each part towards that once a frame
   (`settle()`: up in ~40 ms, down over ~450 ms) and writes it to `--a` on the element, never to React state; with

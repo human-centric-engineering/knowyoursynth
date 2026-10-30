@@ -14,8 +14,8 @@
 //   is already on the path: a modular's patched line (it has no edges) and a block only a pin reaches glow the way a
 //   wired path does, while a mixer or mult that only passes control voltage on stays off it.
 // - A 900-series module follows its own engine slot (`MoogMeters`): a 921 its wave, as an oscillator above (pulsing at
-//   LO, steady at the output's level at audio pitch), a 911 its envelope, a 902 its gain, no brighter than the output
-//   while it carries audio. So two oscillators at different rates, or two envelopes on different contours, glow apart.
+//   LO, steady at the output's level at audio pitch), a 911 its envelope, a 902 on the audio path its gain, no brighter
+//   than the output. So two oscillators at different rates, or two envelopes on different contours, glow apart.
 // - On a modular (every path a cable), a live module that makes its own signal and has no reading (the engine has not
 //   reported yet) is shaping the sound, so it too follows the output's level: what feeds it (the keyboard's gate)
 //   says nothing of its own release or rate.
@@ -104,9 +104,11 @@ function moduleReading(
     if (v === undefined || !(hz > 0)) return null;
     return [wave(v, hz, clamp(m.out)), blur(hz) < 1];
   }
-  const level = kind === 'env' ? r.env[i] : r.amp[i];
-  if (level === undefined) return null;
-  return [kind === 'amp' && audio ? Math.min(clamp(level), clamp(m.out)) : clamp(level), false];
+  if (kind === 'env') return r.env[i] === undefined ? null : [clamp(r.env[i]), false];
+  // An amplifier's gain says how much it lets through, not that anything reaches it: on the audio path the output
+  // bounds it; passing control only, it has nothing of its own to show, so it falls back like any other module.
+  if (!audio || r.amp[i] === undefined) return null;
+  return [Math.min(clamp(r.amp[i]), clamp(m.out)), false];
 }
 
 /**

@@ -375,6 +375,23 @@ describe('routingActivity on a modular: the System 55, every path a cable', () =
       expect(quiet.blocks.m902_1).toBeCloseTo(0.1, 5);
     });
 
+    it('lights an amplifier passing only control with what feeds it, not its gain', () => {
+      // An envelope through the second amplifier to the filter's cutoff: control, off the audio line. Its gain is
+      // full, which says nothing of what reaches it; it glows with the envelope.
+      const cv: CableLike[] = [
+        ...VOICE,
+        { from: 'j.m911_1.out', to: 'j.m902_2.sig_in_pos' },
+        { from: 'j.m902_2.out_pos', to: 'j.m904a.cv_1' },
+      ];
+      const meters = (env: number) => ({
+        ...PLAYING,
+        out: 0.8,
+        moog: moog({ amp: [['m902_2', 1]], env: [['m911_1', env]] }),
+      });
+      expect(run(cv, meters(0.4)).blocks.m902_2).toBeCloseTo(0.4, 5);
+      expect(run(cv, meters(0)).blocks.m902_2).toBe(0);
+    });
+
     it('leaves a module the patch does not use dark, whatever its slot reads', () => {
       const a = run(VOICE, {
         ...PLAYING,
