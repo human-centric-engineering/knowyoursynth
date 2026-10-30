@@ -78,6 +78,9 @@ export interface Meters {
   eyes?: number[];
   /** A 900-series modular's reading per module: the routing view lights each 921, 911 and 902 with its own. */
   moog?: MoogMeters;
+  /** The filter's cutoff (Hz) and the VCA's gain now (`MeterEvent.cutoff`, `.amp`): the panel's live pointers. */
+  cutoff?: number;
+  amp?: number;
 }
 
 /** A control, jack or area the pointer, the keyboard or a press is on. */

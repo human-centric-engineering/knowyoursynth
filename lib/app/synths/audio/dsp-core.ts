@@ -94,6 +94,13 @@ export interface MeterEvent {
   eyes?: number[];
   /** A 900-series modular's reading per module (`MoogMeters`), for the routing view. */
   moog?: MoogMeters;
+  /**
+   * The filter's cutoff now, in Hz, with everything that moves it (envelope, LFO, keyboard, cables), and the VCA's
+   * gain now (0..1.6): the panel's live pointers. Absent where the voice's own filter and VCA do not make the sound
+   * (the Easel, the 900 series and the SOLAR 42N), and from an idle poly voice, which is not running to say.
+   */
+  cutoff?: number;
+  amp?: number;
 }
 
 /** What the synth reports back. */
@@ -606,6 +613,8 @@ function createVoice(
     hB2 = 0;
   let odLp = 0,
     vcaGain = 0,
+    /** The cutoff the filter last ran at, before its clamp (`MeterEvent.cutoff`). */
+    fcNow = 0,
     dcX = 0,
     dcY = 0,
     a440Phase = 0;
@@ -2140,6 +2149,7 @@ function createVoice(
         let fc = Math.exp(
           cutLog + (f.envAmt * S[envSrcIdx] + f.kbd * kbdOct + ev(DI.cutoff) + accCut) * Math.LN2
         );
+        fcNow = fc;
         fc = fc < 12 ? 12 : fc > sr * 0.42 ? sr * 0.42 : fc;
         let rr = res + ev(DI.res);
         rr = rr < 0 ? 0 : rr > 1.15 ? 1.15 : rr;
@@ -2347,6 +2357,8 @@ function createVoice(
           env2: S[SI.env2],
           env1Stage: P.easel || P.moog || P.trap ? undefined : envStage(env[0]),
           env2Stage: P.easel || P.moog ? undefined : envStage(env[1]),
+          cutoff: P.easel || P.moog || P.solar ? undefined : fcNow,
+          amp: P.easel || P.moog || P.solar ? undefined : vcaGain,
           oscs: oscMask(),
           lfoHz: lfoHzNow,
           ...oscMeters(),
@@ -2931,6 +2943,8 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         env2: m.env2 || 0,
         env1Stage: rest && m.env1Stage ? 'idle' : m.env1Stage,
         env2Stage: rest && m.env2Stage ? 'idle' : m.env2Stage,
+        cutoff: rest ? undefined : m.cutoff,
+        amp: rest ? undefined : m.amp,
         lfoHz: m.lfoHz,
         oscV: m.oscV,
         oscHz: m.oscHz,
@@ -3313,6 +3327,8 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         env2: m.env2 || 0,
         env1Stage: rest && m.env1Stage ? 'idle' : m.env1Stage,
         env2Stage: rest && m.env2Stage ? 'idle' : m.env2Stage,
+        cutoff: rest ? undefined : m.cutoff,
+        amp: rest ? undefined : m.amp,
         lfoHz: m.lfoHz,
         oscV: m.oscV,
         oscHz: m.oscHz,

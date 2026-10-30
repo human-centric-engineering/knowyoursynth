@@ -36,6 +36,8 @@ export function toStores(e: SynthEvent): void {
       pulser: e.pulser || 0,
       eyes: e.eyes,
       moog: e.moog,
+      cutoff: e.cutoff,
+      amp: e.amp,
     }));
   else if (e.type === 'note')
     notesStore.set((ns) =>

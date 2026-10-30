@@ -52,6 +52,7 @@ import {
   Locator,
 } from '@/components/app/panel/layers';
 import { LiveLayer, type LiveGlow } from '@/components/app/panel/live-layer';
+import { LivePointers } from '@/components/app/panel/live-pointer';
 import {
   findStore,
   focusStore,
@@ -603,6 +604,7 @@ export function SynthPanel({
         {liveGlow && !areasOn && (
           <LiveLayer def={def} live={liveGlow} cables={cables} values={values} />
         )}
+        {liveGlow && !areasOn && <LivePointers def={def} cables={cables} values={values} />}
         {heatOn && !areasOn && <HeatRanks def={shown} values={values} outline={outline} />}
         {!areasOn && <LessonBadges def={shown} values={values} />}
         {def.matrix && (

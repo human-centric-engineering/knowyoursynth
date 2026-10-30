@@ -53,6 +53,8 @@ describe('toStores', () => {
     });
     // A stage the engine does not report stays unknown, not idle.
     expect(meterStore.get().env1Stage).toBeUndefined();
+    // Nor is a cutoff the engine does not report: a live pointer then rests under its knob.
+    expect(meterStore.get().cutoff).toBeUndefined();
   });
 
   it('keeps the optional meter fields when given, including envelope stages and a sequencer step of 0', async () => {
@@ -66,6 +68,8 @@ describe('toStores', () => {
         env2Stage: 'sustain',
         seq: 0,
         pulser: 0.2,
+        cutoff: 880,
+        amp: 0.6,
       })
     );
     expect(meterStore.get()).toMatchObject({
@@ -76,6 +80,8 @@ describe('toStores', () => {
       env2Stage: 'sustain',
       seq: 0,
       pulser: 0.2,
+      cutoff: 880,
+      amp: 0.6,
     });
   });
 

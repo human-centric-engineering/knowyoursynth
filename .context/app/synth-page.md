@@ -208,6 +208,15 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   Over a contour, the knob for the stage its envelope is in lights brighter (t-152, `liveStages()`): the
   engine reports the stage (`env1Stage`, `env2Stage` on `meterStore`) and the block's `stages` names the knob.
   Under reduced motion the stage lights still step with the note: they follow it, they do not pulse.
+  The knob or fader that sets the cutoff gets a second, live pointer at the cutoff the engine runs at
+  (t-154, `LivePointers`, `components/app/panel/live-pointer.tsx`; `MeterEvent.cutoff` on `meterStore`), so an
+  envelope or LFO sweep shows on it; so does one that sets the VCA's gain (`.amp`), where there is one (the
+  Neutron, the ARP 2600; not the Model D). No per-synth data: `pointerControl()`
+  (`lib/app/synths/lib/live-pointer.ts`) takes the control whose travel moves `filter.cutoff` / `vca.bias`
+  furthest in `toEngine()`, passing over one that also tunes the oscillators, and reads its position for a
+  metered value off `toEngine()` across that travel. None on the Easel, the SOLAR 42N or the 900 series, whose
+  voices do not use the engine's filter and VCA. Hidden while under the control's own pointer; eased between
+  meters, straight to each under reduced motion.
   The foot's LEDs light in a sweep when the page loads (not with reduced motion). The search is at
   the foot's right as an amber readout, and `/` outside a field puts the cursor in it. Under the
   foot's right end, while cables are plugged, a key in the same faceplate colours and print
