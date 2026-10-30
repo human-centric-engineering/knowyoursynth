@@ -262,9 +262,11 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   feeds the mod bus. A glow is a soft ring whose opacity follows `--a`, not an animated filter. The rest of the audio path follows the output's level (read off the engine's analyser, as the scope
   does), and the buses the brightest line into them. The audio path is the audio edges and the live audio cables
   that carry audio on from a module that makes it, so a modular's patched line glows though it has no edges, and a
-  mixer passing only control stays off it. On a modular only the CM1A has a meter (the key held); the engine reports
-  nothing per module, so a live module that makes signal (a 911, a modulating 921) follows the output's level, through
-  its release (see `moog900.ts`). The view eases each part towards that once a frame
+  mixer passing only control stays off it. On a modular the CM1A's meter is the key held, and each 921, 911 and 902
+  reads its own engine slot (`MoogMeters` in `moog-core.ts`, the meter's `moog`): a 921 its wave (pulsing at LO,
+  the output's level at audio pitch), a 911 its envelope, a 902 its gain, no brighter than the output it carries. So
+  two oscillators at different rates, or two envelopes on different contours, glow apart. Until the engine reports,
+  a live module that makes signal follows the output's level (see `moog900.ts`). The view eases each part towards that once a frame
   (`settle()`: up in ~40 ms, down over ~450 ms) and writes it to `--a` on the element, never to React state; with
   reduced motion the lines glow without moving. It is drawn from `sess` (the panel as shown, glides and undos included) and the mod wheel, so it
   follows the panel while it shows. The panel stays laid out underneath (`.is-away`, `inert`), so its fit and
