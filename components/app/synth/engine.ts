@@ -26,6 +26,8 @@ export function toStores(e: SynthEvent): void {
       voices: e.voices || 0,
       env1: e.env1 || 0,
       env2: e.env2 || 0,
+      env1Stage: e.env1Stage,
+      env2Stage: e.env2Stage,
       lfoHz: e.lfoHz || 0,
       oscV: e.oscV,
       oscHz: e.oscHz,

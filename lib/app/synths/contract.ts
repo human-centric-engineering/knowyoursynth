@@ -1285,7 +1285,25 @@ export interface RoutingBlock {
    * Absent = it shows the output's level when it is on the audio path, else what feeds it.
    */
   meter?: RoutingMeter;
+  /**
+   * On a contour (`meter` 'env1' or 'env2'): the knob that sets each stage, lit on the panel while the envelope is in
+   * it (`f-live-panel`). A stage left out lights nothing; so does one whose `when` does not hold (the Model D's
+   * release follows its Decay knob only with the DECAY switch on). Ids are the definition's, and the block's own.
+   */
+  stages?: Partial<Record<LitStage, StageControl>>;
 }
+
+/**
+ * Where an envelope is, as the engine reports it (`MeterEvent.env1Stage`): waiting out its delay, rising, holding at
+ * the peak, falling to the sustain level, holding there while the key is down, falling away after it, or at rest.
+ */
+export type EnvStage = 'idle' | 'delay' | 'attack' | 'hold' | 'decay' | 'sustain' | 'release';
+
+/** The stages a knob can show: all but rest. */
+export type LitStage = Exclude<EnvStage, 'idle'>;
+
+/** The control that sets a stage, or `{ id, when }`: that control only while `when` holds. */
+export type StageControl = string | { id: string; when: RoutingWhen };
 
 /** The schematic symbols the routing view draws, one per kind of part. */
 export type RoutingSymbol =

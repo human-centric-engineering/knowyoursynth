@@ -122,6 +122,67 @@ describe('mono voice', () => {
     expect(m[0].overload).toBeGreaterThan(0);
   });
 
+  describe('reports where each envelope is, for the panel’s stage lights', () => {
+    /** Each stage in turn, as the meters report it, repeats run together. */
+    const stagesOf = (m: MeterEvent[], key: 'env1Stage' | 'env2Stage') =>
+      m.map((x) => x[key]).filter((st, i, all) => st !== all[i - 1]);
+    const held = (len: number, off: number) => ({
+      len,
+      events: [
+        [0, { type: 'noteOn', n: 60 }],
+        [off, { type: 'noteOff', n: 60 }],
+      ] satisfies Timed[],
+    });
+
+    it('through attack, decay, sustain while held, then release and rest', () => {
+      // Envelope 1: a 0.1 s attack and 0.1 s decay to 0.5, held for half a second, then a 0.1 s release.
+      const p = monoParams({ env1: { a: 0.1, d: 0.1, s: 0.5, r: 0.1 } });
+      const m = meters(render(p, held(48000, 24000)).events);
+      expect(stagesOf(m, 'env1Stage')).toEqual(['attack', 'decay', 'sustain', 'release', 'idle']);
+      // Sustaining: the level sits at the sustain level, the gate still up.
+      const sustain = m.find((x) => x.env1Stage === 'sustain');
+      expect(sustain?.gate).toBe(true);
+      expect(sustain?.env1).toBeCloseTo(0.5, 1);
+    });
+
+    it('with its delay and hold stages, where the envelope has them', () => {
+      const p = monoParams({ env1: { a: 0.05, d: 0.1, s: 0.5, r: 0.05, dly: 0.1, hold: 0.1 } });
+      const m = meters(render(p, held(48000, 30000)).events);
+      expect(stagesOf(m, 'env1Stage')).toEqual([
+        'delay',
+        'attack',
+        'hold',
+        'decay',
+        'sustain',
+        'release',
+        'idle',
+      ]);
+    });
+
+    it('for a curved envelope, whose sustain is a stage of its own', () => {
+      const curve = { a: 0.5, d: 0.5, r: 0.5 };
+      const p = monoParams({ env2: { a: 0.1, d: 0.1, s: 0.6, r: 0.1, curve } });
+      const m = meters(render(p, held(48000, 24000)).events);
+      expect(stagesOf(m, 'env2Stage')).toEqual(['attack', 'decay', 'sustain', 'release', 'idle']);
+    });
+
+    it('never as sustaining while a looping envelope repeats', () => {
+      const p = monoParams({ env1: { a: 0.02, d: 0.05, s: 0, r: 0.05, loop: true } });
+      const m = meters(render(p, held(24000, 20000)).events).filter((x) => x.gate);
+      expect(m.length).toBeGreaterThan(5);
+      expect(m.some((x) => x.env1Stage === 'sustain')).toBe(false);
+      expect(new Set(m.map((x) => x.env1Stage))).toEqual(new Set(['attack', 'decay']));
+    });
+
+    it('leaves Envelope 1 out where the VCS3 trapezoid replaces it', () => {
+      const trap = { a: 0.1, on: 0.1, d: 0.1, off: 0.1, auto: false, hold: false };
+      const m = meters(render(monoParams({ trap }), held(9600, 4800)).events);
+      expect(m.every((x) => x.env1Stage === undefined)).toBe(true);
+      // Envelope 2 is the voice's own still.
+      expect(m[0].env2Stage).toBe('decay');
+    });
+  });
+
   it('meters the LFO’s rate and each oscillator’s output, pitch and mixer level, for the routing view', () => {
     const { events } = render(monoParams(), { len: 9600 });
     const m = meters(events)[2];
@@ -1000,6 +1061,16 @@ describe('polyphonic synth', () => {
     [5000, { type: 'noteOff', n: 99 }],
   ];
 
+  it('passes on the lead voice’s envelope stages', () => {
+    const stages = meters(render(poly(), { events: chord, len: 24000 }).events).map(
+      (m) => m.env2Stage
+    );
+    // The first meter may come before any voice has reported.
+    expect(stages.slice(1, 3)).toEqual(['decay', 'decay']);
+    expect(stages).toContain('release');
+    expect(stages.at(-1)).toBe('idle');
+  });
+
   it('plays a chord on several voices, steals the oldest when they run out, and meters the voices', () => {
     const r = renderStable(poly(), { events: chord, len: 9600, stereo: true });
     expect(rms(r.out, 0, 4800)).toBeGreaterThan(0.02);
@@ -1201,6 +1272,11 @@ describe('dual (two-module) synth', () => {
       expect(meters(r.events).some((m) => (m.voices ?? 0) > 0)).toBe(true);
     }
   );
+
+  it('passes on the sounding module’s envelope stages', () => {
+    const stages = meters(render(dual('unison'), { events: keys }).events).map((m) => m.env2Stage);
+    expect(stages).toEqual(['decay', 'decay', 'release', 'release']);
+  });
 
   it('runs sample by sample when a cable crosses between the modules', () => {
     const crossed = dual('unison', [

@@ -13,6 +13,7 @@
 import { useSyncExternalStore } from 'react';
 import type { ControlValue } from '@/lib/app/synths/contract';
 import type { MoogMeters } from '@/lib/app/synths/audio/moog-core';
+import type { EnvStage } from '@/lib/app/synths/contract';
 
 /** A store: read it, replace it (or map it), and hear about changes. */
 export interface Store<T> {
@@ -63,6 +64,9 @@ export interface Meters {
   oscs?: number;
   env1?: number;
   env2?: number;
+  /** Where each envelope is (`MeterEvent.env1Stage`), for the panel's stage lights; absent where it is not reported. */
+  env1Stage?: EnvStage;
+  env2Stage?: EnvStage;
   /** The LFO's rate in Hz, and each oscillator's output, pitch and mixer level: the routing view's lamps. */
   lfoHz?: number;
   oscV?: number[];
