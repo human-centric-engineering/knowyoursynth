@@ -10,6 +10,8 @@
 //   down glows less; one switched out of the mixer but feeding the mod bus glows at half the output's level, so
 //   it too goes dark when the sound does.
 // - Any other block on the audio path follows the output's level, so a release tail fades the whole line together.
+//   The audio path is the audio edges and the live audio cables, so a modular's patched line (it has no edges) and a
+//   block only a pin or cable reaches glow the way a wired path does.
 // - Any other block (the pitch and modulation buses) glows with the brightest live line into it.
 // - A live line glows with the block it leaves.
 //
@@ -98,9 +100,12 @@ export function routingActivity(
   state: RoutingState,
   meters: ActivityMeters
 ): RoutingActivity {
-  const audio = new Set(
-    routing.edges.filter((e) => e.signal === 'audio').flatMap((e) => [e.from, e.to])
-  );
+  const audio = new Set([
+    ...routing.edges.filter((e) => e.signal === 'audio').flatMap((e) => [e.from, e.to]),
+    ...state.cables
+      .filter((c) => c.live && c.signal === 'audio')
+      .flatMap((c) => [c.fromBlock, c.toBlock]),
+  ]);
   audio.add(routing.out);
 
   const loudest = Math.max(0, ...meters.osc.map((x) => x.lv));

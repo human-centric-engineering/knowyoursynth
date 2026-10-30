@@ -904,6 +904,24 @@ describe('Moog modular path', () => {
     expect(meters(r.events).some((m) => typeof m.seq === 'number')).toBe(true);
   });
 
+  it('meters the gate as the key held, for the CM1A on the routing view', () => {
+    const r = render(moog(), {
+      len: 48000,
+      events: [
+        [0, { type: 'noteOn', n: 60 }],
+        [24000, { type: 'noteOff', n: 60 }],
+      ],
+    });
+    const m = meters(r.events);
+    // About 25 over a second at 48 kHz: the first half with the key down, the second with it up.
+    const held = m.slice(1, m.length / 2 - 1).map((x) => x.gate);
+    const up = m.slice(m.length / 2 + 1).map((x) => x.gate);
+    expect(held.length).toBeGreaterThan(0);
+    expect(up.length).toBeGreaterThan(0);
+    expect(held.every(Boolean)).toBe(true);
+    expect(up.some(Boolean)).toBe(false);
+  });
+
   it('is silent with nothing patched to the output', () => {
     const p = moog();
     p.cables = [];
