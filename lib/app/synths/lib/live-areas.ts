@@ -25,7 +25,7 @@ export interface LiveArea {
  * Every patch of the drawn panel `def` that glows for a part of `routing`, in the routing's order: one per block, and
  * one per set of blocks that share a control. No two overlap. `patched` = ids of the jacks with a cable in them, and
  * `values` the panel's, as `panelCells()` takes them: a control a panel mode hides has no cell while it is hidden, and
- * an empty jack none of its own.
+ * an empty jack lights only in a section of jacks that are all one block's.
  */
 export function liveAreas(
   def: SynthDef,
@@ -38,9 +38,23 @@ export function liveAreas(
   const owners = new Map<string, string[]>();
   for (const b of routing.blocks)
     for (const id of b.controls ?? []) owners.set(id, [...(owners.get(id) ?? []), b.id]);
+  const blockOf = (jack: string) =>
+    Object.hasOwn(routing.jacks, jack) ? routing.jacks[jack] : undefined;
   for (const id of patched) {
-    const block = Object.hasOwn(routing.jacks, id) ? routing.jacks[id] : undefined;
+    const block = blockOf(id);
     if (block) owners.set(id, [block]);
+  }
+  // A section of jacks alone that are all one block's (a modular's output module) is that block's: one cable in it
+  // lights the whole of it, where a patch bay shared by many blocks lights jack by jack.
+  for (const area of def.areas ?? []) {
+    const within = (p: { x: number; y: number }) =>
+      area.rects.some((r) => p.x >= r.x && p.x <= r.x + r.w && p.y >= r.y && p.y <= r.y + r.h);
+    if (def.controls.some((c) => cells[c.id] && within(c))) continue;
+    const jacks = def.jacks.filter(within).map((j) => j.id);
+    const blocks = new Set(jacks.map(blockOf));
+    const [block] = blocks;
+    if (blocks.size !== 1 || !block || !jacks.some((j) => patched.includes(j))) continue;
+    for (const j of jacks) owners.set(j, [block]);
   }
   const order = new Map(routing.blocks.map((b, i) => [b.id, i]));
   const first = (a: LiveArea) => order.get(a.blocks[0]) ?? 0;

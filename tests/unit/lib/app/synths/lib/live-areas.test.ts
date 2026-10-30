@@ -18,6 +18,8 @@ import {
   steadyMeters,
 } from '@/lib/app/synths/lib/routing-activity';
 import { routing } from '@/lib/app/synths/routing/model-d';
+import { getSynthDef } from '@/lib/app/synths/defs';
+import { getSynthRouting } from '@/lib/app/synths/routing';
 
 const values = modelD.init;
 
@@ -78,6 +80,35 @@ describe('liveAreas on Model D', () => {
         owner.set(id, b.id);
       }
     expect(owner.size).toBeGreaterThan(10);
+  });
+});
+
+describe('liveAreas on a section of jacks alone', () => {
+  const load = (id: string) => {
+    const def = getSynthDef(id);
+    const r = def && getSynthRouting(def);
+    if (!def || !r) throw new Error(`${id} has a routing`);
+    return { def, r };
+  };
+
+  it('lights all of a section whose jacks are one block’s once one of them is patched', () => {
+    // The System 55's output module: L and R, both the app output's.
+    const { def, r } = load('system-55');
+    const { cells } = panelCells(def, ['j.out.l'], def.init);
+    expect(cells['j.out.r']).toBeTruthy();
+    const out = liveAreas(def, r, ['j.out.l'], def.init).find((a) => a.id === 'appout');
+    expect(out?.d).toBe(cells['j.out.l'] + cells['j.out.r']);
+    expect(liveAreas(def, r, [], def.init).some((a) => a.id === 'appout')).toBe(false);
+  });
+
+  it('lights a patch bay shared by many blocks jack by jack', () => {
+    const { def, r } = load('neutron');
+    const { cells } = panelCells(def, ['j.osc1In'], def.init);
+    const osc1 = liveAreas(def, r, ['j.osc1In'], def.init).find((a) => a.id === 'osc1');
+    expect(osc1?.d).toContain(cells['j.osc1In']);
+    // Oscillator 1's other jack in the bay, empty, stays out.
+    expect(cells['j.shape1']).toBeTruthy();
+    expect(osc1?.d).not.toContain(cells['j.shape1']);
   });
 });
 
