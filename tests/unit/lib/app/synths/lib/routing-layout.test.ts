@@ -177,6 +177,15 @@ describe('layoutRouting: the rules', () => {
     expect(l.blocks.idle).toMatchObject({ col: 0, band: 'control' });
   });
 
+  it('ends an audio chain with no way to the output one column left of it, not in its column', () => {
+    const l = layoutRouting(
+      small(['a', 'out', 'ring', 'carrier'], [edge('1', 'a', 'out'), edge('2', 'carrier', 'ring')])
+    );
+    expect(l.blocks.ring).toMatchObject({ band: 'audio', col: l.blocks.out.col - 1 });
+    expect(l.blocks.carrier.col).toBe(l.blocks.ring.col - 1);
+    expect(Math.max(...Object.values(l.blocks).map((b) => b.col))).toBe(l.blocks.out.col);
+  });
+
   it('puts a block no edge or cable joins in the spare grid beneath the rest', () => {
     const l = layoutRouting(
       small(['a', 'out', 'lfo', 'idle'], [edge('1', 'a', 'out'), edge('2', 'lfo', 'a', 'cv')])
