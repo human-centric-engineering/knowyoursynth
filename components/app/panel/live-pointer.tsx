@@ -69,14 +69,23 @@ export function LivePointers({
     .sort()
     .join(' ');
   const switches = pointerSwitches(def, values);
-  const found = useMemo(() => {
-    const ctx = { wheel: 0, patched: Object.fromEntries(patched.split(' ').map((j) => [j, true])) };
-    return pointerControls(def, switches, ctx);
-  }, [def, patched, switches]);
-  const pointers = useMemo(() => {
-    const ctx = { wheel: 0, patched: Object.fromEntries(patched.split(' ').map((j) => [j, true])) };
-    return found.map(({ param, control }) => pointerTable(def, param, control, values, ctx));
-  }, [def, found, values, patched]);
+  const ctx = useMemo(
+    () => ({
+      wheel: 0,
+      patched: Object.fromEntries(
+        patched
+          .split(' ')
+          .filter(Boolean)
+          .map((j) => [j, true])
+      ),
+    }),
+    [patched]
+  );
+  const found = useMemo(() => pointerControls(def, switches, ctx), [def, switches, ctx]);
+  const pointers = useMemo(
+    () => found.map(({ param, control }) => pointerTable(def, param, control, values, ctx)),
+    [def, found, values, ctx]
+  );
 
   // Read through a ref, so the loop runs for as long as the layer is up rather than restarting with every knob turned.
   const gRef = useRef<SVGGElement>(null);
@@ -84,8 +93,12 @@ export function LivePointers({
   useLayoutEffect(() => {
     live.current = { pointers, values };
   });
+  const any = pointers.length > 0;
   useEffect(() => {
+    if (!any) return;
+    // Each pointer's eased place, and what was last written to it: a write is skipped when nothing would change.
     const shown = new Map<string, number>();
+    const written = new WeakMap<Element, string>();
     const steady = reducedMotion();
     let last = performance.now();
     let frame = requestAnimationFrame(function tick(now) {
@@ -105,25 +118,26 @@ export function LivePointers({
         const target = meter == null ? own : travel(c, pointerValue(pk, meter));
         const f = steady ? target : settle(shown.get(pk.param) ?? own, target, dt, true);
         shown.set(pk.param, f);
-        el.setAttribute('transform', pointerAt(c, f));
-        el.style.opacity = meter != null && Math.abs(f - own) > SAME ? '1' : '0';
+        const transform = pointerAt(c, f);
+        const opacity = meter != null && Math.abs(f - own) > SAME ? '1' : '0';
+        const key = `${transform}|${opacity}`;
+        if (written.get(el) === key) continue;
+        written.set(el, key);
+        el.setAttribute('transform', transform);
+        el.style.opacity = opacity;
       }
       frame = requestAnimationFrame(tick);
     });
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [any]);
 
-  if (!pointers.length) return null;
+  if (!any) return null;
+  // The loop alone sets a pointer's transform: written here too, React would put it back under the knob's own pointer
+  // with every turn of that knob, a frame before the loop moved it again.
   return (
     <g ref={gRef} pointerEvents="none" className="kys-live-pointers" data-testid="live-pointers">
       {pointers.map(({ param, control: c }) => (
-        <g
-          key={param}
-          data-pointer={param}
-          data-control={c.id}
-          transform={pointerAt(c, travel(c, Number(values[c.id] ?? c.def)))}
-          style={{ opacity: 0 }}
-        >
+        <g key={param} data-pointer={param} data-control={c.id} style={{ opacity: 0 }}>
           <path d={mark(c)} fill={moduleOf(c.module).color} stroke="#000a" strokeWidth="1.5" />
         </g>
       ))}

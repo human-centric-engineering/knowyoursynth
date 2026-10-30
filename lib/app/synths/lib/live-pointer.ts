@@ -55,6 +55,8 @@ export interface PointerKnob {
   control: PointerControl;
   /** Control values, rising, each with its engine value on `SCALE`; the control's own value is one of them. */
   table: { v: number; e: number }[];
+  /** The control's own value, which an engine value it gives at more than one place on its travel is read nearest. */
+  own: number;
 }
 
 /**
@@ -102,22 +104,30 @@ export function pointerTable(
     v,
     e: SCALE[param](READ[param](def.toEngine({ ...values, [control.id]: v }, ctx))),
   }));
-  return { param, control, table };
+  return { param, control, table, own: Number.isFinite(own) ? own : control.def };
 }
 
 /**
  * Where on its control the engine's `value` of the control's parameter sits: the control value that gives it, read
- * between the two nearest samples. Past the control's reach, the end nearer the value.
+ * between the two nearest samples. Where more than one does (a stretch of travel past the voice's clamp, all at
+ * 20 kHz), the one nearest the control's own value, so an unmodulated cutoff stays under the knob. Past the control's
+ * reach, the end nearer the value.
  */
 export function pointerValue(pk: PointerKnob, value: number): number {
-  const { table } = pk;
+  const { table, own } = pk;
   const e = SCALE[pk.param](value);
+  let best: number | null = null;
   for (let k = 1; k < table.length; k++) {
     const a = table[k - 1],
       b = table[k];
     if ((e - a.e) * (e - b.e) > 0) continue;
-    return a.e === b.e ? a.v : a.v + ((b.v - a.v) * (e - a.e)) / (b.e - a.e);
+    const v =
+      a.e === b.e
+        ? Math.min(Math.max(own, a.v), b.v)
+        : a.v + ((b.v - a.v) * (e - a.e)) / (b.e - a.e);
+    if (best === null || Math.abs(v - own) < Math.abs(best - own)) best = v;
   }
+  if (best !== null) return best;
   const lo = table[0],
     hi = table[table.length - 1];
   return Math.abs(e - lo.e) < Math.abs(e - hi.e) ? lo.v : hi.v;

@@ -126,6 +126,19 @@ describe('LivePointers', () => {
     expect(pointer(steady.container).angle).toBeCloseTo(settled, 1);
   });
 
+  it('stays where the sweep has it when its knob is turned, rather than jumping back under the knob', () => {
+    const { container, rerender } = draw();
+    playing(knobHz * 4);
+    run(20);
+    const swept = pointer(container).angle;
+    rerender(
+      <svg>
+        <LivePointers def={modelD} cables={[]} values={{ ...values, 'filter.cutoff': 1.5 }} />
+      </svg>
+    );
+    expect(pointer(container).angle).toBe(swept);
+  });
+
   it('draws no VCA pointer on the Model D, whose VCA has no knob, and one on the Neutron’s', () => {
     expect(draw().container.querySelector('[data-pointer="amp"]')).toBeNull();
     const n = draw(neutron, neutron.init).container;
@@ -143,6 +156,8 @@ describe('LivePointers on other panels', () => {
     const el = container.querySelector<SVGGElement>('[data-pointer="cutoff"]');
     expect(el?.getAttribute('data-control')).toBe('vcf.freq');
     const x = () => Number(/translate\((-?[\d.]+) /.exec(el?.getAttribute('transform') ?? '')?.[1]);
+    // Unmetered, the first frame puts it at the fader's own place.
+    run(1);
     const rest = x();
     // 30 Hz is far down the fader from its 2.6 kHz: to the left, and drawn.
     meterStore.set({ power: true, gate: true, lfo: 0, overload: 0, cutoff: 30 });

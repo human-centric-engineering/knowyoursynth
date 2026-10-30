@@ -12,6 +12,7 @@ import {
   pointerSwitches,
   pointerTable,
   pointerValue,
+  type PointerKnob,
 } from '@/lib/app/synths/lib/live-pointer';
 import b2600 from '@/lib/app/synths/defs/b2600';
 import behringerSyncussion from '@/lib/app/synths/defs/behringer-syncussion';
@@ -82,5 +83,21 @@ describe('pointerValue', () => {
     expect(up).toBeCloseTo(-1.3 + 10 / Math.log2(1000), 1);
     expect(pointerValue(pk, 1e6)).toBe(knob.max);
     expect(pointerValue(pk, 1)).toBe(knob.min);
+  });
+
+  it('reads a value the control gives along a flat stretch (past the voice’s clamp) at the place nearest its own', () => {
+    // The top fifth of the travel is all at the clamp, and the control is at its end.
+    const flat: PointerKnob = {
+      param: 'cutoff',
+      control: knob,
+      own: 5,
+      table: [
+        { v: -5, e: 4 },
+        { v: 3, e: 14 },
+        { v: 5, e: 14 },
+      ],
+    };
+    expect(pointerValue(flat, 2 ** 14)).toBe(5);
+    expect(pointerValue({ ...flat, own: -5 }, 2 ** 14)).toBe(3);
   });
 });
