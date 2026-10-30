@@ -76,9 +76,9 @@ import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/cata
 import { HelpButton, MidiStatus, PanelSwitch } from '@/components/app/synth/bar-controls';
 import { usePanelHistory } from '@/components/app/synth/use-panel-history';
 import {
+  Activity,
   AudioWaveform,
   Columns4,
-  EyeOff,
   Flame,
   Eraser,
   Piano,
@@ -122,10 +122,17 @@ import {
   useKeepCentre,
 } from '@/components/app/synth/panel-zoom';
 import { PlayerTip, PlayerTips } from '@/components/app/synth/player-tip';
-import { LayerToggle, PlayerSettings } from '@/components/app/synth/player-tools';
+import {
+  LayerToggle,
+  PlayerSettings,
+  SignalMenu,
+  type SignalMode,
+} from '@/components/app/synth/player-tools';
 import { RoutingView } from '@/components/app/synth/routing-view';
 import type { RoutingShowTarget } from '@/components/app/synth/routing-card';
 import { getSynthRouting } from '@/lib/app/synths/routing';
+import { routingState } from '@/lib/app/synths/lib/routing';
+import type { LiveGlow } from '@/components/app/panel/live-layer';
 import { TutorDrawer } from '@/components/app/synth/drawers';
 import { LessonCard, type CardId } from '@/components/app/synth/lesson-card';
 import {
@@ -268,6 +275,9 @@ const DeckSchema = z.boolean().nullable();
 const TALL_QUERY = '(min-height: 900px)';
 /** The side of the panel the lesson card floats on, as stored. */
 const CardSideSchema = z.enum(['left', 'right']);
+const LiveSchema = z.boolean();
+/** The synths whose panel can glow live: the Model D first (`f-live-panel` t-150); the rest follow in t-151. */
+const LIVE_SYNTHS = new Set(['model-d']);
 /** How long the pointer may rest before the player's secondary controls fade, as a video's do, in ms. */
 const IDLE_MS = 2500;
 /** How far above the dock the pointer lifts the Sound Design tab, inviting a press, in px. */
@@ -610,6 +620,17 @@ function Synth({
   const settings = useSettings(userId);
   const [tipsOn, setTipsOn] = settings.tips;
   const [dimOn, setDimOn] = settings.dim;
+  // The Signal layer (`f-live-panel` t-150): In use is the sound map's "Dim unused parts", kept with the settings;
+  // Live is that and the live glow, on a synth that has a routing to light, and is kept in this browser only.
+  const [liveOn, setLiveOn] = useStoredPref(STORAGE_KEYS.live, LiveSchema, false);
+  const liveOffered = !!routing && LIVE_SYNTHS.has(synthDef.id);
+  const signal: SignalMode = !dimOn ? 'off' : liveOn && liveOffered ? 'live' : 'inUse';
+  const setSignal = (m: SignalMode) => {
+    setDimOn(m !== 'off');
+    // Off clears Live too, so a dim synced back on from the account opens In use. In use is left alone where Live is
+    // not offered, so another synth's page does not clear the Model D's choice.
+    if (m !== 'inUse' || liveOffered) setLiveOn(m === 'live');
+  };
   const [heatOn, setHeatOn] = settings.heat;
   const [harmOn, setHarmOn] = settings.harm;
   const [fx, setFx] = settings.fx;
@@ -854,6 +875,22 @@ function Synth({
 
   // ── audio ──
   const engine = useMemo(() => (typeof window === 'undefined' ? null : getEngine()), []);
+  // What the live glow lights: what the patch routes now, worked out only while it is showing on the panel's face.
+  const liveGlow = useMemo<LiveGlow | null>(
+    () =>
+      signal === 'live' && routing && !routingOn
+        ? {
+            routing,
+            state: routingState(synthDef, routing, {
+              values: sess.values,
+              cables: sess.cables,
+              wheel,
+            }),
+            source: engine,
+          }
+        : null,
+    [signal, routing, routingOn, synthDef, sess.values, sess.cables, wheel, engine]
+  );
   // The sequencer hears the engine's events too (its loops and the playhead): handed over once it exists, below.
   const seqEvents = useRef<(e: SynthEvent) => void>(() => undefined);
   useEffect(() => {
@@ -2133,13 +2170,11 @@ function Synth({
                             focusStore.set((f) => (f && f.kind === 'area' ? null : f));
                           }}
                         />
-                        <LayerToggle
-                          label="Dim unused parts"
-                          short="Dim unused"
-                          icon={<EyeOff size={17} aria-hidden="true" />}
-                          on={dimOn}
-                          title="Darken every part of the panel that is not part of the patch as it is set now. Point at a dark control to see what would bring it in."
-                          onClick={() => setDimOn(!dimOn)}
+                        <SignalMenu
+                          mode={signal}
+                          onMode={setSignal}
+                          live={liveOffered}
+                          icon={<Activity size={17} aria-hidden="true" />}
                         />
                         <LayerToggle
                           label="Show sensitive controls"
@@ -2249,6 +2284,7 @@ function Synth({
                             zoom={zoom}
                             areasOn={areasOn}
                             dimOn={dimOn}
+                            liveGlow={liveGlow}
                             heatOn={heatOn}
                             onChange={synthDef.seqButtons ? onPanelChange : onChange}
                             onConnect={onConnect}

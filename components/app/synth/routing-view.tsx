@@ -15,8 +15,10 @@
  * Two layers of "in use". What `routingState()` says the patch routes is drawn solid, the rest faint: structural,
  * so a filter closed to nothing is still solid. Over that, what is going through it now (`routingActivity()`, from
  * the engine's meters and output level) lights the lamps and runs along the lines, and fades as the sound does; the
- * LFO, and an oscillator slow enough to see, pulse with their waves. That
- * is written straight to a CSS variable (`--a`) once a frame, never through React state.
+ * LFO, and an oscillator slow enough to see, pulse with their waves, or
+ * glow steady for a visitor who asks for less motion. The meters are read as the panel's live glow reads them
+ * (`createMeterReader()`), and the glow is written straight to a CSS variable (`--a`) once a frame, never through React
+ * state.
  *
  * Each block is a button for its card (`RoutingCard`, t-143): hovering it, or reaching it with the keyboard, shows the
  * card beside it while the pointer or focus stays; a click, a tap, Enter or Space keeps it open and moves focus into
@@ -29,15 +31,10 @@ import { z } from 'zod';
 import type { CSSProperties, KeyboardEvent, PointerEvent, ReactNode } from 'react';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
 import { routingState } from '@/lib/app/synths/lib/routing';
-import {
-  levelOfRms,
-  routingActivity,
-  settle,
-  SILENT,
-  type ActivityMeters,
-} from '@/lib/app/synths/lib/routing-activity';
+import { routingActivity, settle } from '@/lib/app/synths/lib/routing-activity';
 import { BLOCK_H, BLOCK_W, layoutRouting } from '@/lib/app/synths/lib/routing-layout';
-import { meterStore } from '@/components/app/synth/stores';
+import { createMeterReader, type LiveSource } from '@/components/app/synth/live-meters';
+import { reducedMotion } from '@/components/app/panel/parts';
 import { RoutingCard, type RoutingShowTarget } from '@/components/app/synth/routing-card';
 import type { CableLike } from '@/lib/app/synths/lib/patch';
 import type {
@@ -49,9 +46,7 @@ import type {
 } from '@/lib/app/synths/contract';
 
 /** What the view reads the output's level from: the engine's analyser, as the scope does. */
-export interface RoutingSource {
-  analyser: Pick<AnalyserNode, 'fftSize' | 'getFloatTimeDomainData'> | null;
-}
+export type RoutingSource = LiveSource;
 
 /** The diagram's parts by id (a cable by its index in the patch), found once per render for the frame loop. */
 interface Parts {
@@ -189,13 +184,6 @@ function nameLines(name: string): string[] {
     Math.abs(i - name.length / 2) < Math.abs(best - name.length / 2) ? i : best
   );
   return [name.slice(0, at), name.slice(at + 1)];
-}
-
-/** The output's RMS, from `samples` read off the analyser. */
-function rmsOf(samples: Float32Array): number {
-  let sum = 0;
-  for (const s of samples) sum += s * s;
-  return Math.sqrt(sum / (samples.length || 1));
 }
 
 export function RoutingView({
@@ -337,33 +325,11 @@ export function RoutingView({
     // Kept by element, weakly, so a cable's glow stays with its cable and an unplugged one is let go.
     const shown = new WeakMap<Element, number>();
     const written = new WeakMap<Element, number>();
-    let samples: Float32Array<ArrayBuffer> | null = null;
+    const read = createMeterReader();
+    const steady = reducedMotion();
     let last = performance.now();
     let frame = requestAnimationFrame(function tick(now) {
-      const m = meterStore.get();
-      const an = sourceRef.current?.analyser;
-      let out = 0;
-      if (an && m.power) {
-        if (samples?.length !== an.fftSize) samples = new Float32Array(an.fftSize);
-        an.getFloatTimeDomainData(samples);
-        out = levelOfRms(rmsOf(samples));
-      }
-      const meters: ActivityMeters = m.power
-        ? {
-            gate: m.gate,
-            env1: m.env1 ?? 0,
-            env2: m.env2 ?? 0,
-            lfo: m.lfo,
-            lfoHz: m.lfoHz ?? 0,
-            osc: (m.oscV ?? []).map((v, k) => ({
-              v,
-              hz: m.oscHz?.[k] ?? 0,
-              lv: m.oscLv?.[k] ?? 0,
-            })),
-            out,
-            moog: m.moog,
-          }
-        : SILENT;
+      const meters = read(sourceRef.current, steady);
       const routing = routingRef.current;
       const a = routingActivity(routing, stateRef.current, meters);
       const dt = now - last;

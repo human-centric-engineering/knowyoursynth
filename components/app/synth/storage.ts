@@ -33,7 +33,7 @@ export const STORAGE_KEYS = {
   fxOpen: 'kys.fxOpen',
   /** MIDI reconnects on the next visit. */
   midi: 'kys.midi',
-  /** The sound map's "Dim unused parts". */
+  /** The sound map's "Dim unused parts": the Signal layer's In use, and under its Live. */
   dim: 'kys.dim',
   /** The sound map's "Show sensitive controls". */
   heat: 'kys.heat',
@@ -52,6 +52,11 @@ export const STORAGE_KEYS = {
   deck: 'kys.deck',
   /** Which side of the panel the lesson card floats on from `lg` up (t-74). Kept in this browser only. */
   cardSide: 'kys.cardSide',
+  /**
+   * The Signal layer is Live rather than In use, while `dim` is on (`f-live-panel` t-150). Not one of the settings
+   * above: it is kept in this browser only, never stamped or kept in the account.
+   */
+  live: 'kys.live',
 } as const;
 
 /** One synth's panel, as it was left. */

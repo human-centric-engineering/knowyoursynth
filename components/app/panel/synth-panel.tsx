@@ -51,6 +51,7 @@ import {
   LessonBadges,
   Locator,
 } from '@/components/app/panel/layers';
+import { LiveLayer, type LiveGlow } from '@/components/app/panel/live-layer';
 import {
   findStore,
   focusStore,
@@ -113,6 +114,8 @@ export interface SynthPanelProps {
   zoom?: number;
   areasOn?: boolean;
   dimOn?: boolean;
+  /** The live glow over "In use" (`f-live-panel`): what to light and the engine to listen to. Null = none. */
+  liveGlow?: LiveGlow | null;
   heatOn?: boolean;
   onChange: ControlChange;
   onConnect: (from: string, to: string) => void;
@@ -183,6 +186,7 @@ export function SynthPanel({
   zoom = 0,
   areasOn = false,
   dimOn = false,
+  liveGlow = null,
   heatOn = false,
   onChange,
   onConnect,
@@ -595,6 +599,9 @@ export function SynthPanel({
         )}
         {dimOn && !areasOn && (
           <DimLayer def={def} cables={cables} values={values} outline={outline} />
+        )}
+        {liveGlow && !areasOn && (
+          <LiveLayer def={def} live={liveGlow} cables={cables} values={values} />
         )}
         {heatOn && !areasOn && <HeatRanks def={shown} values={values} outline={outline} />}
         {!areasOn && <LessonBadges def={shown} values={values} />}
