@@ -15,6 +15,8 @@ import { act, render } from '@testing-library/react';
 import { LivePointers, pointerAt } from '@/components/app/panel/live-pointer';
 import { meterStore } from '@/components/app/synth/stores';
 import modelD from '@/lib/app/synths/defs/model-d';
+import b2600 from '@/lib/app/synths/defs/b2600';
+import buchlaEasel from '@/lib/app/synths/defs/buchla-easel';
 import neutron from '@/lib/app/synths/defs/neutron';
 import type { ControlValues, SynthDef } from '@/lib/app/synths/contract';
 
@@ -128,6 +130,34 @@ describe('LivePointers', () => {
     expect(draw().container.querySelector('[data-pointer="amp"]')).toBeNull();
     const n = draw(neutron, neutron.init).container;
     expect(n.querySelector('[data-pointer="amp"]')?.getAttribute('data-control')).toBe('vca.bias');
+  });
+});
+
+describe('LivePointers on other panels', () => {
+  it('runs a fader’s pointer along its slot, off the ARP 2600’s cutoff fader (a horizontal one)', () => {
+    const { container } = render(
+      <svg>
+        <LivePointers def={b2600} cables={[]} values={b2600.init} />
+      </svg>
+    );
+    const el = container.querySelector<SVGGElement>('[data-pointer="cutoff"]');
+    expect(el?.getAttribute('data-control')).toBe('vcf.freq');
+    const x = () => Number(/translate\((-?[\d.]+) /.exec(el?.getAttribute('transform') ?? '')?.[1]);
+    const rest = x();
+    // 30 Hz is far down the fader from its 2.6 kHz: to the left, and drawn.
+    meterStore.set({ power: true, gate: true, lfo: 0, overload: 0, cutoff: 30 });
+    run(30);
+    expect(x()).toBeLessThan(rest - 50);
+    expect(el?.style.opacity).toBe('1');
+  });
+
+  it('draws nothing on a synth with no control the engine’s filter or VCA answers to (the Easel)', () => {
+    const { container } = render(
+      <svg>
+        <LivePointers def={buchlaEasel} cables={[]} values={buchlaEasel.init} />
+      </svg>
+    );
+    expect(container.querySelector('[data-testid="live-pointers"]')).toBeNull();
   });
 });
 
