@@ -18,6 +18,8 @@ import {
   steadyMeters,
 } from '@/lib/app/synths/lib/routing-activity';
 import { routing } from '@/lib/app/synths/routing/model-d';
+import { getSynthDef } from '@/lib/app/synths/defs';
+import { getSynthRouting } from '@/lib/app/synths/routing';
 
 const values = modelD.init;
 
@@ -44,6 +46,30 @@ describe('liveAreas on Model D', () => {
     expect(byId.has('vca')).toBe(false);
   });
 
+  it('lights a patched jack with the part it belongs to, and an empty one not at all', () => {
+    const jack = Object.keys(routing.jacks).find((j) => routing.jacks[j] === 'filter');
+    if (!jack) throw new Error('the filter has a jack');
+    const patched = liveAreas(modelD, routing, [jack], values).find((a) => a.id === 'filter');
+    const { cells } = panelCells(modelD, [jack], values);
+    expect(cells[jack]).toBeTruthy();
+    expect(patched?.d).toContain(cells[jack]);
+    expect(byId.get('filter')?.d).not.toContain(cells[jack]);
+  });
+
+  it('gives a control two parts list one area of its own, glowing for both', () => {
+    const shared = structuredClone(routing);
+    shared.blocks.find((b) => b.id === 'osc2')?.controls?.push('filter.emphasis');
+    const out = liveAreas(modelD, shared, [], values);
+    const { cells } = panelCells(modelD, [], values);
+    const both = out.find((a) => a.id === 'osc2 filter');
+    expect(both?.blocks).toEqual(['osc2', 'filter']);
+    expect(both?.d).toBe(cells['filter.emphasis']);
+    // It is neither part's own any more, and comes after the first of them in the routing's order.
+    expect(out.find((a) => a.id === 'filter')?.d).not.toContain(cells['filter.emphasis']);
+    const ids = out.map((a) => a.id);
+    expect(ids.indexOf('osc2 filter')).toBe(ids.indexOf('osc2') + 1);
+  });
+
   it('gives no two parts the same patch of panel', () => {
     const { cells } = panelCells(modelD, [], values);
     const owner = new Map<string, string>();
@@ -54,6 +80,35 @@ describe('liveAreas on Model D', () => {
         owner.set(id, b.id);
       }
     expect(owner.size).toBeGreaterThan(10);
+  });
+});
+
+describe('liveAreas on a section of jacks alone', () => {
+  const load = (id: string) => {
+    const def = getSynthDef(id);
+    const r = def && getSynthRouting(def);
+    if (!def || !r) throw new Error(`${id} has a routing`);
+    return { def, r };
+  };
+
+  it('lights all of a section whose jacks are one block’s once one of them is patched', () => {
+    // The System 55's output module: L and R, both the app output's.
+    const { def, r } = load('system-55');
+    const { cells } = panelCells(def, ['j.out.l'], def.init);
+    expect(cells['j.out.r']).toBeTruthy();
+    const out = liveAreas(def, r, ['j.out.l'], def.init).find((a) => a.id === 'appout');
+    expect(out?.d).toBe(cells['j.out.l'] + cells['j.out.r']);
+    expect(liveAreas(def, r, [], def.init).some((a) => a.id === 'appout')).toBe(false);
+  });
+
+  it('lights a patch bay shared by many blocks jack by jack', () => {
+    const { def, r } = load('neutron');
+    const { cells } = panelCells(def, ['j.osc1In'], def.init);
+    const osc1 = liveAreas(def, r, ['j.osc1In'], def.init).find((a) => a.id === 'osc1');
+    expect(osc1?.d).toContain(cells['j.osc1In']);
+    // Oscillator 1's other jack in the bay, empty, stays out.
+    expect(cells['j.shape1']).toBeTruthy();
+    expect(osc1?.d).not.toContain(cells['j.shape1']);
   });
 });
 

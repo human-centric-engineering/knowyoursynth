@@ -125,6 +125,103 @@ describe('panelCells', () => {
     expect(panelCells(def, ['lfo.tri'])).not.toBe(a);
   });
 
+  it('cuts the strip where two areas overlap from the smaller, so no two cells cover it', () => {
+    const base = makeMiniD();
+    // A small area reaching 10 units up into the mixer's foot (the mixer runs to y = 400).
+    const small = { x: 360, y: 390, w: 80, h: 60 };
+    const knob: Control = {
+      ...base.controls.find((c) => c.id === 'mix.noise')!,
+      id: 'tab.k',
+      y: 425,
+    };
+    const def = makeMiniD({
+      view: { w: 1300, h: 460 },
+      controls: [...base.controls, knob],
+      areas: [
+        ...base.areas,
+        { id: 'tab', label: 'Tab', module: 'util', keywords: '', rects: [small], help: '' },
+      ],
+    });
+    const { cells, frame } = panelCells(def);
+
+    expect(covers(cells['mix.noise'], [400, 395])).toBe(true);
+    expect(covers(cells['tab.k'], [400, 395])).toBe(false);
+    expect(covers(cells['tab.k'], [400, 430])).toBe(true);
+    // The small area's hole in the frame starts at the mixer's foot, grown no further into it.
+    expect(frame).toContain('M344 400v60h112v-60Z');
+  });
+
+  /** A knob `id` at (x, y), shaped as the mini D's noise level. */
+  const knobAt = (id: string, x: number, y: number): Control => ({
+    ...makeMiniD().controls.find((c) => c.id === 'mix.noise')!,
+    id,
+    x,
+    y,
+  });
+  const area = (id: string, rect: { x: number; y: number; w: number; h: number }) => ({
+    id,
+    label: id,
+    module: 'util' as const,
+    keywords: '',
+    rects: [rect],
+    help: '',
+  });
+
+  it('settles which of two overlapping areas gives way on their drawn sizes, whatever was cut first', () => {
+    // A and B are the same size and overlap by 10; C, bigger, cuts A's foot (and only A's) before B is reached. Judged on A's size
+    // after that cut, neither would give way and the strip would stay under both.
+    const def = makeMiniD({
+      view: { w: 400, h: 400 },
+      controls: [knobAt('k.a', 50, 40), knobAt('k.b', 150, 40), knobAt('k.c', 40, 200)],
+      areas: [
+        area('a', { x: 0, y: 0, w: 100, h: 100 }),
+        area('b', { x: 90, y: 0, w: 100, h: 100 }),
+        area('c', { x: 0, y: 80, w: 85, h: 220 }),
+      ],
+    });
+    const { cells } = panelCells(def);
+    const owners = ['k.a', 'k.b'].filter((id) => covers(cells[id], [95, 40]));
+    expect(owners).toEqual(['k.a']);
+  });
+
+  it('leaves an area that crosses a bigger one whole, rather than losing what lies beyond it', () => {
+    // A column, the smaller, crossing a wide bar: out of it at both ends, so there is no one side to cut back.
+    const def = makeMiniD({
+      view: { w: 600, h: 400 },
+      controls: [knobAt('k.bar', 560, 170), knobAt('k.col', 230, 300)],
+      areas: [
+        area('bar', { x: 20, y: 150, w: 560, h: 40 }),
+        area('col', { x: 200, y: 20, w: 60, h: 360 }),
+      ],
+    });
+    expect(covers(panelCells(def).cells['k.col'], [230, 300])).toBe(true);
+  });
+
+  it('cuts back no panel the other area does not cover', () => {
+    // A short, wide area over a narrow, taller one: cutting its foot would lose all of it either side of the column.
+    const def = makeMiniD({
+      view: { w: 400, h: 400 },
+      controls: [knobAt('k.wide', 15, 40), knobAt('k.tall', 50, 300)],
+      areas: [
+        area('wide', { x: 0, y: 0, w: 100, h: 50 }),
+        area('tall', { x: 40, y: 10, w: 20, h: 390 }),
+      ],
+    });
+    expect(covers(panelCells(def).cells['k.wide'], [15, 40])).toBe(true);
+  });
+
+  it('counts a control in a strip a smaller area gave up as the larger area’s only', () => {
+    const base = makeMiniD();
+    const def = makeMiniD({
+      view: { w: 1300, h: 460 },
+      controls: [...base.controls, knobAt('tab.k', 400, 425), knobAt('strip.k', 430, 395)],
+      areas: [...base.areas, area('tab', { x: 360, y: 390, w: 80, h: 60 })],
+    });
+    const { cells } = panelCells(def);
+    expect(covers(cells['tab.k'], [435, 405])).toBe(true);
+    expect(covers(cells['strip.k'], [435, 405])).toBe(false);
+  });
+
   it('skips an area with nothing in it, leaving it part of the frame', () => {
     const base = makeMiniD();
     const def = makeMiniD({

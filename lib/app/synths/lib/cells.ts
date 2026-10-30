@@ -88,14 +88,86 @@ function clip(poly: Point[], a: number, b: number, c: number): Point[] {
 const PAD = 16;
 type Side = 'l' | 'r' | 't' | 'b';
 const SIDES: Side[] = ['l', 'r', 't', 'b'];
+
+/** How deep a strip may be cut back off a rect beyond what the other covers: a layout's edges a unit or two out. */
+const SLIP = 2;
+
+/**
+ * Area rects with no two overlapping: where a definition's rects overlap (a strip of a few units, where a small one
+ * reaches into a module above it), the smaller gives the strip up along its shallower side, so no two cells cover the
+ * same patch of panel. The larger are settled first, on the definition's sizes, so the answer does not hang on the
+ * order the areas are listed in.
+ *
+ * A side is cut back only where the rect sticks out of the other at one end, and only where the other covers all
+ * that is cut (or the strip is no deeper than `SLIP`), so no panel the other does not cover is lost. Anything else (a
+ * rect wholly inside another, crossing it, or overlapping it corner to corner by more than a slip) is left as it is.
+ */
+function trimmed(def: SynthDef): Map<ViewRect, ViewRect> {
+  const all = (def.areas || []).flatMap((a) => a.rects);
+  const out = new Map(all.map((r) => [r, { ...r }]));
+  const size = (r: ViewRect) => r.w * r.h;
+  // Largest first (the earlier, between two of a size): each gives way only to those before it.
+  const order = all.map((r, i) => ({ r, i })).sort((a, b) => size(b.r) - size(a.r) || a.i - b.i);
+  order.forEach(({ r: orig }, k) => {
+    const r = out.get(orig) ?? orig;
+    for (const { r: other } of order.slice(0, k)) {
+      const o = out.get(other) ?? other;
+      const ox = Math.min(r.x + r.w, o.x + o.w) - Math.max(r.x, o.x);
+      const oy = Math.min(r.y + r.h, o.y + o.h) - Math.max(r.y, o.y);
+      if (ox <= 0 || oy <= 0) continue;
+      const canY = r.y < o.y !== r.y + r.h > o.y + o.h && (ox >= r.w || oy <= SLIP);
+      const canX = r.x < o.x !== r.x + r.w > o.x + o.w && (oy >= r.h || ox <= SLIP);
+      if (canY && (!canX || oy <= ox)) {
+        if (r.y < o.y) r.h = o.y - r.y;
+        else {
+          r.h = r.y + r.h - (o.y + o.h);
+          r.y = o.y + o.h;
+        }
+      } else if (canX) {
+        if (r.x < o.x) r.w = o.x - r.x;
+        else {
+          r.w = r.x + r.w - (o.x + o.w);
+          r.x = o.x + o.w;
+        }
+      }
+    }
+  });
+  return out;
+}
+
+const trimCache = new WeakMap<SynthDef, Map<ViewRect, ViewRect>>();
+/** `trimmed()`, worked out once per definition. */
+function trimmedOf(def: SynthDef): Map<ViewRect, ViewRect> {
+  let cut = trimCache.get(def);
+  if (!cut) {
+    cut = trimmed(def);
+    trimCache.set(def, cut);
+  }
+  return cut;
+}
+
+/**
+ * Whether the point (a control or a jack) is in `area` of `def` as the cells draw it: within one of its rects as
+ * `trimmed()` leaves them, so a control in a strip a smaller area gave up belongs to the larger one only.
+ */
+export function inArea(def: SynthDef, area: Area, p: { x: number; y: number }): boolean {
+  const cut = trimmedOf(def);
+  return area.rects.some((orig) => {
+    const r = cut.get(orig) ?? orig;
+    return p.x >= r.x && p.x <= r.x + r.w && p.y >= r.y && p.y <= r.y + r.h;
+  });
+}
+
 /**
  * Area rects grown into the gutters round them (up to PAD, never past half way to a neighbouring rect), so a section
  * name printed ON the frame line belongs to its section instead of being cut in half by the wash over the gutter.
+ * Keyed by the definition's rect; grown from its `trimmed()` copy.
  */
 function grown(def: SynthDef): Map<ViewRect, ViewRect> {
-  const all = (def.areas || []).flatMap((a) => a.rects);
+  const cut = trimmedOf(def);
+  const all = [...cut.values()];
   const out = new Map<ViewRect, ViewRect>();
-  for (const r of all) {
+  for (const [orig, r] of cut) {
     const room: Record<Side, number> = {
       l: Math.min(PAD, r.x),
       t: Math.min(PAD, r.y),
@@ -118,7 +190,7 @@ function grown(def: SynthDef): Map<ViewRect, ViewRect> {
           room[side] = Math.min(room[side], Math.max(0, gaps[side]) / 2);
       }
     }
-    out.set(r, {
+    out.set(orig, {
       x: r.x - room.l,
       y: r.y - room.t,
       w: r.w + room.l + room.r,
@@ -129,8 +201,6 @@ function grown(def: SynthDef): Map<ViewRect, ViewRect> {
 }
 
 const n1 = (x: number) => Math.round(x * 10) / 10;
-const inside = (a: Area, p: { x: number; y: number }) =>
-  a.rects.some((r) => p.x >= r.x && p.x <= r.x + r.w && p.y >= r.y && p.y <= r.y + r.h);
 
 /** The faceplate with every area cut out (`frame`), and one SVG path per control or jack id (`cells`). */
 export interface PanelCells {
@@ -170,11 +240,11 @@ export function panelCells(
   const big = grown(def);
   let frame = `M0 0H${view.w}V${view.h}H0Z`;
   for (const area of def.areas || []) {
-    const controls = def.controls.filter((c) => inside(area, c) && shown(c));
+    const controls = def.controls.filter((c) => inArea(def, area, c) && shown(c));
     const owners = [
       ...controls.map((c) => ({ id: c.id, pts: sitesOf(c) })),
       ...def.jacks
-        .filter((j) => inside(area, j) && (!controls.length || patched.includes(j.id)))
+        .filter((j) => inArea(def, area, j) && (!controls.length || patched.includes(j.id)))
         .map((j) => ({ id: j.id, pts: sitesOf(j) })),
     ];
     if (!owners.length) continue; // nothing to light here: it stays part of the frame

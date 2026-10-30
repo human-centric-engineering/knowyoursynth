@@ -2,7 +2,7 @@
 
 /**
  * The live glow on Model D's panel (`f-live-panel` t-150): each part lit over its controls with what the engine says
- * goes through it, frame by frame; dark with the power off or off the patch's path; and steady, not pulsing, for a
+ * goes through it, frame by frame (a control two parts share, with the brighter); dark with the power off or off the patch's path; and steady, not pulsing, for a
  * visitor who asks for less motion.
  *
  * The frames are driven by hand (a fake `requestAnimationFrame`), and the engine's meters are set on `meterStore`.
@@ -14,7 +14,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, render } from '@testing-library/react';
 import { LiveLayer, type LiveGlow } from '@/components/app/panel/live-layer';
 import { meterStore, type Meters } from '@/components/app/synth/stores';
-import type { ControlValues } from '@/lib/app/synths/contract';
+import type { ControlValues, PatchCable } from '@/lib/app/synths/contract';
+import { panelCells } from '@/lib/app/synths/lib/cells';
 import modelD from '@/lib/app/synths/defs/model-d';
 import { routingState } from '@/lib/app/synths/lib/routing';
 import { routing } from '@/lib/app/synths/routing/model-d';
@@ -47,16 +48,16 @@ function glowOf(container: HTMLElement, id: string): number {
   return Number(el.style.getPropertyValue('--a') || 0);
 }
 
-function draw(set: ControlValues = {}, amp = 0.5) {
+function draw(set: ControlValues = {}, amp = 0.5, r = routing, cables: PatchCable[] = []) {
   const values = { ...modelD.init, ...set };
   const live: LiveGlow = {
-    routing,
-    state: routingState(modelD, routing, { values, cables: [], wheel: 0 }),
+    routing: r,
+    state: routingState(modelD, routing, { values, cables, wheel: 0 }),
     source: source(amp),
   };
   return render(
     <svg>
-      <LiveLayer def={modelD} live={live} cables={[]} values={values} />
+      <LiveLayer def={modelD} live={live} cables={cables} values={values} />
     </svg>
   );
 }
@@ -103,6 +104,34 @@ describe('LiveLayer on Model D', () => {
     expect(fading).toBeLessThan(1);
     run(200);
     expect(glowOf(container, 'loudness_contour')).toBe(0);
+  });
+
+  it('lights a control two parts share with the brighter of them', () => {
+    // Oscillator 2 is switched out at init and stays dark. Emphasis, and Oscillator 1's first control, as if each
+    // set Oscillator 2 as well: the brighter part is listed after it in one, and before it in the other.
+    const shared = structuredClone(routing);
+    const osc1 = shared.blocks.find((b) => b.id === 'osc1')?.controls?.[0] ?? '';
+    shared.blocks.find((b) => b.id === 'osc2')?.controls?.push('filter.emphasis', osc1);
+    meterStore.set(PLAYING);
+    const { container } = draw({}, 0.5, shared);
+    run(30);
+    expect(glowOf(container, 'osc2')).toBe(0);
+    expect(glowOf(container, 'osc2 filter')).toBeCloseTo(1, 2);
+    expect(glowOf(container, 'osc1 osc2')).toBeGreaterThan(0.5);
+  });
+
+  it('takes a patched jack into its part’s glow, keyed on the jacks rather than the cables', () => {
+    const jackOf = (block: string, dir: 'in' | 'out') => {
+      const j = modelD.jacks.find((x) => x.dir === dir && routing.jacks[x.id] === block);
+      if (!j) throw new Error(`no ${dir} jack on ${block}`);
+      return j.id;
+    };
+    const cable = { from: jackOf('lfo', 'out'), to: jackOf('filter', 'in'), color: '#fff' };
+    const { container } = draw({}, 0.5, routing, [cable]);
+    const { cells } = panelCells(modelD, [cable.from, cable.to], modelD.init);
+    const filter = container.querySelector('[data-live="filter"]');
+    expect(cells[cable.to]).toBeTruthy();
+    expect(filter?.getAttribute('d')).toContain(cells[cable.to]);
   });
 
   it('stays dark with the power off, whatever the meters last said', () => {

@@ -198,11 +198,13 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   signal, a button with a menu of its modes (a popover inside the player, not portalled, as the tips are):
   **Off**; **In use**, the sound map's dimming of what the patch does not use (it was the Dim unused toggle, and
   is still `kys.dim`, kept in the account); and **Live**, In use with each part the patch uses lit over its
-  controls as signal goes through it. Live is offered only where the synth has a routing (the Model D for now) and
+  controls as signal goes through it. Live is offered wherever the synth has a routing (`getSynthRouting()`) and
   is kept in this browser (`kys.live`). Its glow (`LiveLayer`, `components/app/panel/live-layer.tsx`) is the
-  routing view's activity (`routingActivity()`) drawn over each block's controls' cells (`liveAreas()`, the
-  same `panelCells()` the dimming uses), in the block's module colour, with `--a` written once a frame. Steady
-  under reduced motion.
+  routing view's activity (`routingActivity()`) drawn over each block's cells (`liveAreas()`, the same
+  `panelCells()` the dimming uses): its controls', and its jacks' with a cable in them, which is what carries
+  a modular's or a pin matrix's module (a section of jacks that are all one block's lights whole once one is
+  patched). A control two blocks list gets an area of its own, lit with the brighter, so no two glows overlap.
+  In the block's module colour, with `--a` written once a frame. Steady under reduced motion.
   The foot's LEDs light in a sweep when the page loads (not with reduced motion). The search is at
   the foot's right as an amber readout, and `/` outside a field puts the cursor in it. Under the
   foot's right end, while cables are plugged, a key in the same faceplate colours and print

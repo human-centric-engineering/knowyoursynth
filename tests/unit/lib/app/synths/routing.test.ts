@@ -8,14 +8,21 @@
  * Against the spec it was projected from (`.context/app/synth-data/<id>/<id>.synth.json`): every module and
  * connection the spec lists is drawn, or left out with a reason.
  *
+ * Against the drawn panel (`liveAreas`, `f-live-panel` t-151): every block with a control or a patched jack on the face
+ * has a patch of it to glow over, and no two blocks glow over the same patch.
+ *
  * @see lib/app/synths/lib/routing.ts
+ * @see lib/app/synths/lib/live-areas.ts
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { z } from 'zod';
-import type { SynthRouting } from '@/lib/app/synths/contract';
+import type { SynthDef, SynthRouting } from '@/lib/app/synths/contract';
 import { getSynthDef, SYNTH_DEFS } from '@/lib/app/synths/defs';
+import { panelCells } from '@/lib/app/synths/lib/cells';
+import { modularDef } from '@/lib/app/synths/lib/layout';
+import { liveAreas } from '@/lib/app/synths/lib/live-areas';
 import { routingProblems } from '@/lib/app/synths/lib/routing';
 import { DERIVED_ROUTINGS, getSynthRouting, SYNTH_ROUTINGS } from '@/lib/app/synths/routing';
 import { moog900Routing } from '@/lib/app/synths/routing/moog900';
@@ -42,6 +49,36 @@ const defOf = (id: string) => {
 
 /** Every synth's routing, the derived ones (the System 15, 35 and 55) built from their definitions. */
 const ROUTINGS = SYNTH_DEFS.flatMap((d) => getSynthRouting(d) ?? []);
+
+type Pt = [number, number];
+/** The convex pieces a cell path is made of (`panelCells()` writes each as `M x yL x y … Z`). */
+const pieces = (d: string): Pt[][] =>
+  [...d.matchAll(/M([^MZ]+)Z/g)].map((m) =>
+    m[1].split('L').map((p) => {
+      const [x, y] = p.trim().split(/\s+/).map(Number);
+      return [x, y];
+    })
+  );
+/**
+ * Whether two convex pieces share more than an edge: no axis of either separates them by more than the rounding the
+ * cells are written with (a tenth of a unit), so neighbours that only touch do not count.
+ */
+function overlap(a: Pt[], b: Pt[]): boolean {
+  for (const poly of [a, b])
+    for (let i = 0; i < poly.length; i++) {
+      const [x1, y1] = poly[i];
+      const [x2, y2] = poly[(i + 1) % poly.length];
+      const len = Math.hypot(x2 - x1, y2 - y1);
+      if (len < 1e-6) continue;
+      const nx = (y1 - y2) / len;
+      const ny = (x2 - x1) / len;
+      const span = (p: Pt[]) => p.map(([x, y]) => x * nx + y * ny);
+      const [pa, pb] = [span(a), span(b)];
+      if (Math.min(...pa) >= Math.max(...pb) - 0.2 || Math.min(...pb) >= Math.max(...pa) - 0.2)
+        return false;
+    }
+  return true;
+}
 
 it('has a routing for every synth', () => {
   const routed = new Set(ROUTINGS.map((r) => r.synth));
@@ -91,6 +128,101 @@ describe.each(ROUTINGS.map((r) => [r.synth, r] as const))('%s', (id, routing) =>
     ]);
     const missing = [...modules, ...connections].map((x) => x.id).filter((x) => !drawn.has(x));
     expect(missing).toEqual([]);
+  });
+});
+
+/** Each face a synth's panel is drawn in: its own, and a modular's case as the page opens it (`modularDef()`). */
+const FACES = ROUTINGS.flatMap((routing): [string, SynthRouting, SynthDef][] => {
+  const def = defOf(routing.synth);
+  return def.modular
+    ? [
+        [`${routing.synth} (modular)`, routing, modularDef(def)],
+        [`${routing.synth} (long)`, routing, def],
+      ]
+    : [[routing.synth, routing, def]];
+});
+
+describe.each(FACES)('the live glow on %s', (_, routing, def) => {
+  const values = def.init;
+  const jacksOf = (block: string) =>
+    Object.keys(routing.jacks).filter((j) => routing.jacks[j] === block);
+
+  // With nothing patched, and with every jack patched: the most a patch can give the jacks.
+  describe.each([
+    ['nothing patched', [] as string[]],
+    ['every jack patched', def.jacks.map((j) => j.id)],
+  ])('with %s', (__, patched) => {
+    const areas = liveAreas(def, routing, patched, values);
+    const { cells } = panelCells(def, patched, values);
+
+    it('gives every block with a control or a patched jack on the panel a patch of it to glow over', () => {
+      const due = routing.blocks
+        .filter(
+          (b) =>
+            (b.controls ?? []).some((c) => cells[c]) ||
+            jacksOf(b.id).some((j) => patched.includes(j) && cells[j])
+        )
+        .map((b) => b.id);
+      expect(due.length).toBeGreaterThan(0);
+      // An area's id is its blocks joined by spaces, which the layer splits back.
+      expect(routing.blocks.filter((b) => /\s/.test(b.id))).toEqual([]);
+      const lit = new Set(areas.filter((a) => a.d).flatMap((a) => a.blocks));
+      expect(due.filter((b) => !lit.has(b))).toEqual([]);
+      // And nothing for a block with neither.
+      expect([...lit].filter((b) => !due.includes(b))).toEqual([]);
+    });
+
+    it('lets no two blocks glow over the same patch of panel', () => {
+      const shapes = areas.flatMap((a) =>
+        pieces(a.d).map((p) => {
+          const xs = p.map((q) => q[0]);
+          const ys = p.map((q) => q[1]);
+          const box = [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
+          return { id: a.id, p, box };
+        })
+      );
+      expect(shapes.length).toBeGreaterThan(0);
+      const clashes: string[] = [];
+      for (let i = 0; i < shapes.length; i++)
+        for (let j = i + 1; j < shapes.length; j++) {
+          const [s, t] = [shapes[i], shapes[j]];
+          if (s.id === t.id) continue;
+          const apart =
+            s.box[0] >= t.box[2] ||
+            t.box[0] >= s.box[2] ||
+            s.box[1] >= t.box[3] ||
+            t.box[1] >= s.box[3];
+          if (!apart && overlap(s.p, t.p)) clashes.push(`${s.id} / ${t.id}`);
+        }
+      expect([...new Set(clashes)]).toEqual([]);
+    });
+  });
+});
+
+describe('the overlap check the live glow is held to', () => {
+  const square = (x: number, y: number): Pt[] => [
+    [x, y],
+    [x + 10, y],
+    [x + 10, y + 10],
+    [x, y + 10],
+  ];
+
+  it('tells pieces that overlap from neighbours that only share an edge', () => {
+    expect(overlap(square(0, 0), square(5, 5))).toBe(true);
+    expect(overlap(square(0, 0), square(10, 0))).toBe(false);
+    expect(overlap(square(0, 0), square(10.1, 3))).toBe(false);
+    expect(pieces('M0 0L10 0L10 10ZM1.5 2L3 4L5 6Z')).toEqual([
+      [
+        [0, 0],
+        [10, 0],
+        [10, 10],
+      ],
+      [
+        [1.5, 2],
+        [3, 4],
+        [5, 6],
+      ],
+    ]);
   });
 });
 
