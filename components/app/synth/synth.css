@@ -3233,3 +3233,16 @@ button.kys-routing-card-item:focus-visible {
   opacity: calc(var(--a, 0) * 0.35);
   mix-blend-mode: multiply;
 }
+/* The knob for the stage a contour is in (t-152): over its section's glow, brighter and ringed. */
+.kys-live .kys-live-stages path {
+  opacity: calc(var(--a, 0) * 0.8);
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-opacity: 0.7;
+}
+.is-outline .kys-live .kys-live-stages path,
+.is-light .kys-live .kys-live-stages path {
+  opacity: calc(var(--a, 0) * 0.55);
+  stroke: #000;
+  stroke-opacity: 0.5;
+}

@@ -5,7 +5,14 @@
 // read as a thin sliver. A part with nothing on the panel (the VCA, the mod bus on a synth that has no switch for it)
 // has nothing to light.
 import { inArea, panelCells } from '@/lib/app/synths/lib/cells';
-import type { ControlValues, SynthDef, SynthModule, SynthRouting } from '@/lib/app/synths/contract';
+import { holds } from '@/lib/app/synths/lib/routing';
+import type {
+  ControlValues,
+  LitStage,
+  SynthDef,
+  SynthModule,
+  SynthRouting,
+} from '@/lib/app/synths/contract';
 
 /** One patch of the panel that glows: the union of its controls' and patched jacks' cells, as one path. */
 export interface LiveArea {
@@ -74,4 +81,45 @@ export function liveAreas(
   return [...areas.values()].sort(
     (a, b) => first(a) - first(b) || a.blocks.length - b.blocks.length
   );
+}
+
+/** One contour's knob for one stage: lit while the envelope the contour follows is in that stage. */
+export interface StageLight {
+  /** `block:stage`. */
+  id: string;
+  /** The envelope whose stage it follows (the block's `meter`). */
+  env: 'env1' | 'env2';
+  stage: LitStage;
+  /** Picks its colour: its block's. */
+  module: SynthModule;
+  /** The knob's cell, as `liveAreas()` draws it. */
+  d: string;
+}
+
+const LIT_STAGES: readonly LitStage[] = ['delay', 'attack', 'hold', 'decay', 'sustain', 'release'];
+
+/**
+ * Every stage knob of `routing`'s contours (`RoutingBlock.stages`) on the drawn panel `def`, with `patched` and
+ * `values` as `liveAreas()` takes them. A stage whose `when` does not hold for `values` lights nothing: the Model D's
+ * release, with its DECAY switch off.
+ */
+export function liveStages(
+  def: SynthDef,
+  routing: SynthRouting,
+  patched: string[],
+  values: ControlValues
+): StageLight[] {
+  const { cells } = panelCells(def, patched, values);
+  return routing.blocks.flatMap((b) => {
+    const { stages, meter } = b;
+    if (!stages || (meter !== 'env1' && meter !== 'env2')) return [];
+    return LIT_STAGES.flatMap((stage) => {
+      const light = stages[stage];
+      if (!light) return [];
+      const { id, when } = typeof light === 'string' ? { id: light, when: undefined } : light;
+      const d = cells[id];
+      if (!d || (when && !holds(when, values))) return [];
+      return [{ id: `${b.id}:${stage}`, env: meter, stage, module: b.module, d }];
+    });
+  });
 }

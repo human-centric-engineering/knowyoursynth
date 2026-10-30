@@ -9,7 +9,7 @@ import { describe, expect, it } from 'vitest';
 import type { ControlValues } from '@/lib/app/synths/contract';
 import modelD from '@/lib/app/synths/defs/model-d';
 import { panelCells } from '@/lib/app/synths/lib/cells';
-import { liveAreas } from '@/lib/app/synths/lib/live-areas';
+import { liveAreas, liveStages } from '@/lib/app/synths/lib/live-areas';
 import { routingState } from '@/lib/app/synths/lib/routing';
 import {
   FAST_HZ,
@@ -109,6 +109,46 @@ describe('liveAreas on a section of jacks alone', () => {
     // Oscillator 1's other jack in the bay, empty, stays out.
     expect(cells['j.shape1']).toBeTruthy();
     expect(osc1?.d).not.toContain(cells['j.shape1']);
+  });
+});
+
+describe('liveStages on Model D', () => {
+  const lights = (set: ControlValues) => {
+    const v = { ...values, ...set };
+    const { cells } = panelCells(modelD, [], v);
+    return { cells, byId: new Map(liveStages(modelD, routing, [], v).map((l) => [l.id, l])) };
+  };
+
+  it('lights each contour’s Attack, Decay and Sustain knobs, following its own envelope', () => {
+    const { cells, byId } = lights({});
+    expect(byId.get('filter_contour:attack')).toMatchObject({
+      env: 'env1',
+      d: cells['fenv.attack'],
+    });
+    expect(byId.get('filter_contour:decay')?.d).toBe(cells['fenv.decay']);
+    expect(byId.get('filter_contour:sustain')?.d).toBe(cells['fenv.sustain']);
+    expect(byId.get('loudness_contour:attack')).toMatchObject({
+      env: 'env2',
+      d: cells['aenv.attack'],
+    });
+  });
+
+  it('lights the Decay knob for the release only with DECAY on, and nothing with it off', () => {
+    const on = lights({ 'env.filterDecay': true, 'env.loudDecay': true });
+    expect(on.byId.get('filter_contour:release')?.d).toBe(on.cells['fenv.decay']);
+    expect(on.byId.get('loudness_contour:release')?.d).toBe(on.cells['aenv.decay']);
+    const off = lights({ 'env.filterDecay': false, 'env.loudDecay': false });
+    expect(off.byId.has('filter_contour:release')).toBe(false);
+    expect(off.byId.has('loudness_contour:release')).toBe(false);
+    // The other stages are there either way.
+    expect(off.byId.has('filter_contour:decay')).toBe(true);
+  });
+
+  it('lights nothing on a synth whose routing has no stage map', () => {
+    const def = getSynthDef('neutron');
+    const r = def && getSynthRouting(def);
+    if (!def || !r) throw new Error('neutron has a routing');
+    expect(liveStages(def, r, [], def.init)).toEqual([]);
   });
 });
 
