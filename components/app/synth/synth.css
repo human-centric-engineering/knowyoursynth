@@ -2556,6 +2556,62 @@ svg .kys-hit:focus-visible {
   color: var(--kys-faint);
 }
 
+/* The pattern picker (f-pattern-library t-123): a sound's patterns, each with its credit under it. */
+.kys-seq-lib-browser.is-patterns {
+  max-width: 640px;
+}
+.kys-seq-pat-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.kys-seq-pat-group h3 {
+  margin: 0;
+}
+.kys-seq-lib-list.is-patterns {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 6px;
+  max-height: 260px;
+}
+.kys-seq-pat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.kys-seq-pat-default {
+  margin-left: 6px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lcd-ink);
+  background: var(--lcd);
+}
+.kys-seq-pat-credit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 6px;
+  margin: 0;
+  padding: 0 10px 4px;
+  font-size: 11px;
+  color: var(--kys-muted);
+}
+.kys-seq-pat-link {
+  color: var(--kys-text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.kys-seq-pat-fidelity {
+  padding: 0 5px;
+  border-radius: 4px;
+  border: 1px solid rgb(var(--kys-wash, 255 255 255) / 0.16);
+  font-size: 10.5px;
+  color: var(--kys-faint);
+}
+
 /* The step inspector: the same height for every step, in the readout's language. */
 .kys-seq-inspect {
   display: flex;

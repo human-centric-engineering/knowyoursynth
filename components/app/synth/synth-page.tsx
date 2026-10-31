@@ -107,6 +107,7 @@ import { SharedPatternStrip } from '@/components/app/sharing/shared-pattern-stri
 import { voiceMode } from '@/lib/app/synths/audio/pattern-player';
 import { useMyPatterns } from '@/components/app/sequencer/use-my-patterns';
 import type { PatternLibraryProps } from '@/components/app/sequencer/pattern-library';
+import { useSoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
 import { useFavourites } from '@/components/app/synth/favourites';
 import { FxRack } from '@/components/app/synth/fx-rack';
 import { Inspector, Tooltip } from '@/components/app/synth/inspector';
@@ -1303,6 +1304,13 @@ function Synth({
       .catch(() => undefined);
   };
 
+  // The library sound on the panel, as it came: its patterns are offered in the sequencer (`f-pattern-library` t-123),
+  // read once the sequencer opens. One of the user's sounds, a shared one, a lesson's or the tutor's has none of its own.
+  const librarySound =
+    !sharedPattern && !openSound && !sharedPanel && !ownLesson && preset
+      ? { synthId, slug: preset.id, name: preset.name }
+      : null;
+  const soundPatterns = useSoundPatterns(librarySound, seqShown);
   const seqLibrary: PatternLibraryProps = {
     signedIn: authPending ? null : signedIn,
     // Save a copy is offered to someone else's pattern only; its owner saves it as any pattern of theirs.
@@ -1311,6 +1319,7 @@ function Synth({
     synthId,
     synths,
     mine: myPatterns,
+    soundPatterns,
     sound: openSound
       ? {
           name: openSound.name,

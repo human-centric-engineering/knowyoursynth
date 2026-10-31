@@ -156,6 +156,16 @@ export interface EditOptions {
 export interface LoadedPattern {
   id: string | null;
   name: string;
+  /** The library pattern it was opened from (`f-pattern-library` t-123), for the picker to mark. */
+  libraryId?: string;
+}
+
+export interface LoadOptions {
+  /**
+   * It takes the place of the sound's own riff, unedited: the sound's default pattern, which is that riff (t-123). No
+   * Undo goes back to the riff, as none goes back past a sound's riff arriving.
+   */
+  quiet?: boolean;
 }
 
 export interface Sequencer {
@@ -169,7 +179,7 @@ export interface Sequencer {
    * sound's riff arrives, and that Undo names it as it was named. A pattern that would not be valid is refused and
    * logged: null. Returns the pattern now held, which on a synth with a tempo knob plays at the knob's tempo.
    */
-  load: (p: Pattern, from: LoadedPattern) => Pattern | null;
+  load: (p: Pattern, from: LoadedPattern, o?: LoadOptions) => Pattern | null;
   /**
    * Which pattern is held: it changes whenever the whole pattern is replaced (one opened, another sound's riff, an Undo
    * past either). A save, rename or delete takes it as it sends, and names what is held only if it is unchanged.
@@ -576,7 +586,7 @@ export function useSequencer({
   }, [riffKey, start, replaced, setLoaded, setBaseline]);
 
   const load = useCallback(
-    (p: Pattern, from: LoadedPattern) => {
+    (p: Pattern, from: LoadedPattern, o: LoadOptions = {}) => {
       const ok = PatternSchema.safeParse(p);
       if (!ok.success) {
         logger.warn('sequencer: pattern refused', { issue: ok.error.issues[0]?.message });
@@ -590,8 +600,8 @@ export function useSequencer({
       setPattern(next);
       setLoaded(from);
       setBaseline(JSON.stringify(next));
-      past.current = [...past.current.slice(-(UNDO_DEPTH - 1)), was];
-      setUndoable(true);
+      if (!o.quiet) past.current = [...past.current.slice(-(UNDO_DEPTH - 1)), was];
+      setUndoable(past.current.length > 0);
       lastGroup.current = null;
       if (playingRef.current) start(next);
       return next;
