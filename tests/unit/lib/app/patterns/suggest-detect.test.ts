@@ -122,4 +122,32 @@ describe('createKindReader', () => {
       expect.objectContaining({ error: 'failed to load' })
     );
   });
+
+  it('ignores what is not a kind answer, and an answer nobody is waiting for', async () => {
+    const reader = createKindReader();
+    const reading = reader.read(PATCH);
+    const w = workers[0];
+    w.onmessage?.({ data: 'noise' } as MessageEvent);
+    w.onmessage?.({ data: { type: 'result', id: 0 } } as MessageEvent);
+    w.onmessage?.({ data: { type: 'kind', id: 99, features: FEATURES } } as MessageEvent);
+    expect(await reading).toEqual(FEATURES);
+  });
+
+  it('names a load failure with no message as an error, and gives up only once', async () => {
+    mode = 'silent';
+    const reader = createKindReader();
+    const reading = reader.read(PATCH);
+    workers[0].onerror?.({ message: '' } as ErrorEvent);
+    workers[0].onerror?.({ message: 'again' } as ErrorEvent);
+    expect(await reading).toEqual(FEATURES);
+    const failed = mockLog.warn.mock.calls.filter(
+      ([m]) => m === 'Sound detector worker failed; reading on the main thread'
+    );
+    expect(failed).toEqual([[expect.any(String), expect.objectContaining({ error: 'error' })]]);
+  });
+
+  it('rejects a reading that throws on the page’s thread', async () => {
+    vi.stubGlobal('Worker', undefined);
+    await expect(createKindReader().read(null as never)).rejects.toThrow();
+  });
 });
