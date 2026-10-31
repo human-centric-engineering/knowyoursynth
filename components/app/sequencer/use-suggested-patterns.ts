@@ -41,9 +41,10 @@ export interface SuggestInput {
   panel: PanelState;
   /**
    * The library sound the panel started as, as it came, or null with none (then the patch is always offered more).
-   * Keep it the same object while the sound is the same: a new one reads the patch again.
+   * Its panel is worked out only when it is read. Keep it the same object while the sound is the same: a new one reads
+   * the patch again.
    */
-  start: (PanelState & { slug: string }) | null;
+  start: { slug: string; panel: () => PanelState } | null;
   /** False while what is on the panel is not settled yet (one of the user's sounds still loading). */
   enabled?: boolean;
 }
@@ -104,7 +105,7 @@ export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
         const key = `${synthId}/${start.slug}`;
         let kept = starts.current.get(key);
         if (!kept) {
-          kept = readPanel(start);
+          kept = readPanel(start.panel());
           starts.current.set(key, kept);
           kept.catch(() => starts.current.delete(key));
         }

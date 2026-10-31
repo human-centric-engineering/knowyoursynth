@@ -1320,7 +1320,7 @@ function Synth({
   const suggestStart = useMemo(
     () =>
       startSlug && preset?.id === startSlug
-        ? { slug: startSlug, ...presetState(synthDef, preset) }
+        ? { slug: startSlug, panel: () => presetState(synthDef, preset) }
         : null,
     [startSlug, preset, synthDef]
   );

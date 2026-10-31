@@ -116,7 +116,7 @@ const HELD = view(
 );
 
 let suggestState: SuggestState = 'off';
-const START = { slug: BASS.id, ...presetState(DEF, BASS) };
+const START = { slug: BASS.id, panel: () => presetState(DEF, BASS) };
 
 /** A library sound (`fromLibrary`) or another patch on the panel, at `panel`. */
 function Page({ panel, fromLibrary = true }: { panel: PanelState; fromLibrary?: boolean }) {
