@@ -12,13 +12,15 @@ import { vi, type Mock } from 'vitest';
 type Row = Record<string, unknown>;
 type Where = Record<string, unknown>;
 
-/** Does a row satisfy a Prisma `where`: equality, `{ in }`, `{ not }`, `OR` and the compound keys. */
+/** Does a row satisfy a Prisma `where`: equality, `{ in }`, `{ not }`, `{ contains }` (case-insensitive), `OR` and the compound keys. */
 export function matches(row: Row, where: Where = {}): boolean {
   return Object.entries(where).every(([k, v]) => {
     if (k === 'OR') return (v as Where[]).some((w) => matches(row, w));
     if (k === 'synthId_slug' || k === 'soundId_patternId') return matches(row, v as Where);
     if (v !== null && typeof v === 'object' && 'in' in v)
       return (v as { in: unknown[] }).in.includes(row[k]);
+    if (v !== null && typeof v === 'object' && 'contains' in v)
+      return String(row[k]).toLowerCase().includes(String(v.contains).toLowerCase());
     if (v !== null && typeof v === 'object' && 'not' in v) return row[k] !== v.not;
     return row[k] === v;
   });
