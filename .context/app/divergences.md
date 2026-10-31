@@ -164,7 +164,8 @@ the same PR**, and each row names what deletes it.
 
 - **Files:** `tests/unit/reserved-fork-tiers.test.ts`
 - **Change:** the `prisma/schema/app.prisma declares no models` case expects the catalogue's
-  declarations (five models and three enums), the databank's (thirteen models), the synth
+  declarations (five models and three enums), the pattern library's (two models and four enums,
+  `f-pattern-library` t-122), the databank's (thirteen models), the synth
   suggestions' (one model and one enum, `f-databank` t-37), user sounds' (one model,
   `f-my-sounds` s1), user patterns' (one model, `f-step-sequencer` t-81), reports about shared sounds (one model and two enums, `f-sharing` h4), user preferences' (two models, s3), lesson progress and favourites' (two
   models, s4), synth profiles' (two models, `f-profiles` r1) and the synths owned and wanted (one

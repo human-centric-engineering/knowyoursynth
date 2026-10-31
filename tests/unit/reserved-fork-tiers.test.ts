@@ -211,7 +211,7 @@ describe('reserved fork tiers', () => {
       .split('\n')
       .filter((line) => /^\s*(model|enum|type|view)\s+\w+/.test(line));
 
-    // FORK (Know Your Synth): pinned to the catalogue's, databank's, synth suggestions', user sounds', user preferences', s4's, the synth profile's and the owned synths' declarations rather than deleted, as this
+    // FORK (Know Your Synth): pinned to the catalogue's, pattern library's, databank's, synth suggestions', user sounds', user preferences', s4's, the synth profile's and the owned synths' declarations rather than deleted, as this
     // file's header asks, so a stray extra declaration still fails. Ledger: .context/app/divergences.md.
     expect(
       declarations,
@@ -224,6 +224,12 @@ describe('reserved fork tiers', () => {
       'model SynthLineage {',
       'enum SynthNoteKind {',
       'model SynthNote {',
+      'enum PatternRole {',
+      'enum PatternFidelity {',
+      'enum PatternInspiration {',
+      'enum PatternOrigin {',
+      'model LibraryPattern {',
+      'model SynthSoundPattern {',
       'enum CatalogueTable {',
       'model CatalogueSeedRecord {',
       'model BankMaker {',
