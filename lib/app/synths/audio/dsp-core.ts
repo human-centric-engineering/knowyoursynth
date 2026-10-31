@@ -2661,8 +2661,14 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         true
       );
       if (P) v.handle({ type: 'params', p: paramsFor(k) });
-      // each voice's LFOs run free of the others; a `common` one is set from the shared phase on each note
-      v.handle({ type: 'phase', lfo: Math.random(), lfo2: Math.random(), lfo3: Math.random() });
+      // each voice's LFOs run free of the others; a `common` one is set from the shared phase on each note. `lfo3` draws
+      // only for a synth that has one, so the others' seeded renders keep the sequence they had before it existed
+      v.handle({
+        type: 'phase',
+        lfo: Math.random(),
+        lfo2: Math.random(),
+        lfo3: P && P.lfo3 ? Math.random() : undefined,
+      });
       voices.push(v);
     }
     return voices[i];

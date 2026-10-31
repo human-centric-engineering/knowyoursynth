@@ -8,8 +8,9 @@
  * @see lib/app/synths/audio/dsp-core.ts
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
+import { createSynth } from '@/lib/app/synths/audio/dsp-core';
 import type { EngineParams, Lfo2Params } from '@/lib/app/synths/contract';
 import { monoParams, render, rms, type Timed } from '@/tests/unit/lib/app/synths/audio/render';
 
@@ -93,5 +94,27 @@ describe('LFOs shared by every voice (common)', () => {
     // the second voice sounds at once, before the cycle ends, rather than holding nothing until it does
     expect(rms(one.out, 3100, 4700)).toBeGreaterThan(0.02);
     expect(rms(two.out, 3100, 4700)).toBeGreaterThan(1.2 * rms(one.out, 3100, 4700));
+  });
+
+  /**
+   * The check renders seed `Math.random` before every sound, so a draw added to each new voice moves every later draw a
+   * poly synth makes (t-138: twelve synths' baselines). A voice draws its `lfo3` phase only when the synth has an `lfo3`.
+   */
+  it('draws a phase for lfo3 only on a synth that has one', () => {
+    const draws = (p: EngineParams): number => {
+      const spy = vi.spyOn(Math, 'random');
+      try {
+        const syn = createSynth(48000, null);
+        syn.handle({ type: 'params', p: structuredClone(p) });
+        syn.handle({ type: 'noteOn', n: 60 });
+        syn.process(new Float32Array(128), 128);
+        return spy.mock.calls.length;
+      } finally {
+        spy.mockRestore();
+      }
+    };
+    const without = shutVoice({ poly: { voices: 4, stack: 1, mono: false } });
+    // all four voices are made for the note, so the synth with an lfo3 draws one more for each
+    expect(draws({ ...without, lfo3: square() }) - draws(without)).toBe(4);
   });
 });
