@@ -29,7 +29,7 @@ vi.mock('@/lib/logging', () => ({
 }));
 
 const server = vi.hoisted(() => ({
-  sounds: {},
+  sounds: new Map<string, unknown>(),
   /** A read that has not come back yet, for the test to settle. */
   hold: null as null | { resolve: () => void },
   fail: false,
@@ -42,7 +42,7 @@ vi.mock('@/lib/api/client', () => ({
       if (!m) throw new Error(`unexpected GET ${path}`);
       if (server.hold) await new Promise<void>((resolve) => (server.hold = { resolve }));
       if (server.fail) throw new Error('Server error');
-      const list = server.sounds[`${m[1]}/${m[2]}`];
+      const list = server.sounds.get(`${m[1]}/${m[2]}`);
       if (!list) throw new Error('Patch not found');
       return structuredClone(list);
     }),
@@ -75,7 +75,9 @@ const SECOND: Pattern = importPhrase(OTHER);
 function view(
   id: string,
   pattern: Pattern,
-  over: Partial<LibraryPatternView> & { inspiredBy?: Partial<LibraryPatternView['inspiredBy']> }
+  over: Partial<Omit<LibraryPatternView, 'inspiredBy'>> & {
+    inspiredBy?: Partial<LibraryPatternView['inspiredBy']>;
+  }
 ): LibraryPatternView {
   const { inspiredBy, ...rest } = over;
   return {
@@ -156,7 +158,7 @@ async function openPicker() {
 
 beforeEach(() => {
   vi.clearAllMocks();
-  server.sounds = { 'model-d/fat-bass': PATTERNS };
+  server.sounds = new Map([['model-d/fat-bass', PATTERNS]]);
   server.hold = null;
   server.fail = false;
 });
