@@ -52,14 +52,16 @@ model Synth {
   designApprovedAt   DateTime?
   designApprovalNote String?     @db.Text
 
-  sounds     SynthSound[]
-  lineage    SynthLineage?
-  notes      SynthNote[]
-  userSounds UserSound[]
+  sounds           SynthSound[]
+  lineage          SynthLineage?
+  notes            SynthNote[]
+  userSounds       UserSound[]
+  /// Library patterns inspired by this synth (`f-pattern-library`).
+  inspiredPatterns LibraryPattern[]
   /// Signed-in users' last panel on this synth.
-  panelPrefs SynthPreference[]
+  panelPrefs       SynthPreference[]
   /// Users who starred this synth.
-  favourites Favourite[]
+  favourites       Favourite[]
 
   /// Databank instruments this synth models, and record parts listed under it.
   bankInstruments BankInstrumentSynth[]
@@ -96,7 +98,9 @@ model SynthSound {
   level             Int
   blurb             String    @db.Text
   how               String    @db.Text
-  /// `Phrase`: the riff that shows the sound off.
+  /// `Phrase`: the riff that shows the sound off. Since `f-pattern-library` it is always its default library pattern
+  /// (the first of `patterns`) compiled for its first loop, kept here so every reader of a sound's riff reads one
+  /// column. Written by `lib/app/patterns/library.ts`, never on its own.
   phrase            Json
   /// `PresetStep[]`: the lesson, and the panel values and cables it sets.
   steps             Json
@@ -117,6 +121,8 @@ model SynthSound {
   /// Users' progress through this sound's lesson, and users who starred it.
   progress   LessonProgress[]
   favourites Favourite[]
+  /// Its library patterns, in order; the first is its default.
+  patterns   SynthSoundPattern[]
 
   @@unique([synthId, slug])
   @@index([synthId, order])
@@ -174,6 +180,118 @@ model SynthNote {
 
   @@index([synthId, kind, order])
   @@map("synth_note")
+}
+
+// ─── Pattern library (f-pattern-library, .context/app/pattern-library.md) ──
+//
+// Product content every org shares, as the catalogue is: on
+// GLOBAL_CONFIG_MODELS (same divergence row), no user foreign key, so on the
+// export manifest's excluded list. Seeded by `005-library-patterns.ts`, admin-
+// edited after that under the catalogue's rules: `editedAt` marks a row the
+// seed never writes again, and nothing is deleted.
+
+/// The part a pattern's notes play. Read from the notes by the default role rule, and settable by a person.
+enum PatternRole {
+  lead_line
+  /// One held note or chord: the patch does the moving.
+  held
+  bass_line
+  slow_melody
+  percussive
+  chord_changes
+  /// An arpeggio, sequence or ostinato: a fast repeating figure of single notes.
+  arp
+  chord_stabs
+}
+
+/// How close a pattern is to the part it is inspired by.
+enum PatternFidelity {
+  /// From a tier-1 source for the part, checked by ear.
+  transcribed
+  /// Worked out by ear, supported by a second source. Aims at the actual part.
+  reconstructed
+  /// No specific part: written to sound like the artist, synth or genre.
+  in_the_style_of
+}
+
+/// What a pattern is inspired by.
+enum PatternInspiration {
+  /// A specific work: `inspiredSongId`, and `inspiredPartId` where the part is in the databank.
+  work
+  /// `inspiredArtistId`.
+  artist
+  /// A catalogue synth, `inspiredSynthId`.
+  synth
+  /// Free text in `inspiredBy`.
+  genre
+}
+
+/// Who or what made a pattern's notes.
+enum PatternOrigin {
+  ai_generated
+  human_authored
+  user_contributed
+}
+
+/// A pattern in the library: the sequencer's `Pattern`, the part it plays, and where it came from.
+model LibraryPattern {
+  id               String             @id @default(cuid())
+  /// Stable natural key the seed matches on. A sound's original riff is `riff:<synthId>/<slug>`.
+  key              String             @unique
+  name             String
+  /// `Pattern`, its own `version` inside it.
+  pattern          Json
+  /// The pattern shape's version it was stored as (`PATTERN_VERSION`).
+  version          Int
+  role             PatternRole
+  /// The tempo range it still works in. Null when nobody has said: then it is only known to work at its own bpm.
+  bpmMin           Int?
+  bpmMax           Int?
+  inspiration      PatternInspiration
+  /// The inspiration as shown: the work's title, the artist's or synth's name, or the genre. Kept beside the links
+  /// so it still reads when a linked row goes.
+  inspiredBy       String
+  inspiredSongId   String?
+  inspiredPartId   String?
+  inspiredArtistId String?
+  inspiredSynthId  String?
+  fidelity         PatternFidelity
+  /// `PatternSource[]` (`lib/app/patterns/library.ts`): each with a type, citation, url and the date it was checked.
+  sources          Json               @default("[]")
+  origin           PatternOrigin
+  editedAt         DateTime?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  inspiredSong   BankSong?     @relation(fields: [inspiredSongId], references: [id], onDelete: SetNull)
+  inspiredPart   BankSongPart? @relation(fields: [inspiredPartId], references: [id], onDelete: SetNull)
+  inspiredArtist BankArtist?   @relation(fields: [inspiredArtistId], references: [id], onDelete: SetNull)
+  inspiredSynth  Synth?        @relation(fields: [inspiredSynthId], references: [id], onDelete: SetNull)
+
+  /// The sounds that list it.
+  sounds SynthSoundPattern[]
+
+  @@index([role])
+  @@index([inspiredArtistId])
+  @@index([inspiredSongId])
+  @@index([inspiredPartId])
+  @@index([inspiredSynthId])
+  @@map("library_pattern")
+}
+
+/// A sound's place for a library pattern. The lowest `order` is the sound's default.
+model SynthSoundPattern {
+  soundId   String
+  patternId String
+  order     Int
+
+  sound   SynthSound     @relation(fields: [soundId], references: [id], onDelete: Cascade)
+  pattern LibraryPattern @relation(fields: [patternId], references: [id], onDelete: Restrict)
+
+  @@id([soundId, patternId])
+  @@index([soundId, order])
+  @@index([patternId])
+  @@map("synth_sound_pattern")
 }
 
 enum CatalogueTable {
@@ -324,6 +442,8 @@ model BankArtist {
   instruments BankArtistInstrument[]
   songs       BankSongArtist[]
   playedParts BankSongPart[]
+  /// Library patterns inspired by this artist.
+  patterns    LibraryPattern[]
 
   @@map("bank_artist")
 }
@@ -372,8 +492,10 @@ model BankSong {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
-  artists BankSongArtist[]
-  parts   BankSongPart[]
+  artists  BankSongArtist[]
+  parts    BankSongPart[]
+  /// Library patterns that recreate a part of it.
+  patterns LibraryPattern[]
 
   @@map("bank_song")
 }
@@ -406,6 +528,8 @@ model BankSongPart {
   player      BankArtist?          @relation(fields: [playerId], references: [id], onDelete: Restrict)
   instruments BankPartInstrument[]
   synths      BankPartSynth[]
+  /// Library patterns that recreate this part.
+  patterns    LibraryPattern[]
 
   @@unique([songId, order])
   @@index([playerId])

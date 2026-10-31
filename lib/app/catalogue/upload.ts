@@ -39,6 +39,7 @@ import {
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { MAX_CONTENT_BYTES, SynthContentSchema, toSeedFiles } from '@/lib/app/catalogue/data';
 import { lockSynth, SoundSlugSchema } from '@/lib/app/catalogue/edit';
+import { syncRiffPatterns } from '@/lib/app/patterns/library';
 import {
   catalogueKey,
   planSynthContent,
@@ -258,6 +259,9 @@ async function writeUpload(id: string, rows: SynthContentRows): Promise<UploadRe
         (data) => tx.synthNote.create({ data }),
         ({ key, ...data }) => tx.synthNote.updateMany({ where: { key, editedAt: null }, data })
       );
+
+      // Each new or changed sound's riff becomes, or updates, its library pattern, as the seed would make it.
+      await syncRiffPatterns(tx, { synthId: id });
 
       return { sounds, lineage, notes };
     },

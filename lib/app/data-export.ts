@@ -230,6 +230,9 @@ export const CATALOGUE_MODELS = [
   'SynthLineage',
   'SynthNote',
   'CatalogueSeedRecord',
+  // The pattern library (`f-pattern-library`): library patterns and each sound's list of them.
+  'LibraryPattern',
+  'SynthSoundPattern',
 ] as const;
 const CATALOGUE_REASON =
   'Catalogue content written by the seed and by admins, the same for every user; it holds no column about a person.';

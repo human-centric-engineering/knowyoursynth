@@ -18,7 +18,8 @@ export const CATALOGUE_READ = {
   },
 } as const;
 
-export type CatalogueEntity = 'synth' | 'synth_sound' | 'synth_lineage' | 'synth_note';
+export type CatalogueEntity =
+  'synth' | 'synth_sound' | 'synth_lineage' | 'synth_note' | 'library_pattern';
 
 /**
  * Write one admin-audit entry for a catalogue change. Logs nothing when before and after are the same, and returns

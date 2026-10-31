@@ -24,6 +24,7 @@ import type { CatalogueTable, Prisma, SynthNoteKind } from '@prisma/client';
 import type { TenancyClient } from '@/lib/db/tenancy-extension';
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
+import { importPhrase } from '@/lib/app/sequencer/import';
 import {
   noteKey,
   noteTargets,
@@ -172,6 +173,14 @@ export function planSynthContent(
         if (sound.ai)
           problems.push(`${name} sound ${sound.id} is marked ai, which a library sound cannot be`);
         if (slugs.has(sound.id)) problems.push(`${name} has two sounds with the id ${sound.id}`);
+        // A riff becomes its sound's first library pattern (`lib/app/patterns/library.ts`), so it must be one.
+        try {
+          importPhrase(sound.phrase);
+        } catch (err) {
+          problems.push(
+            `${name} sound ${sound.id} at phrase: ${err instanceof Error ? err.message : String(err)}`
+          );
+        }
         slugs.add(sound.id);
         rows.sounds.push({
           synthId: def.id,
