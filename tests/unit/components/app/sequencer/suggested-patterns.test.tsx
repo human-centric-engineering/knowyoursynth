@@ -11,6 +11,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from 'vitest';
+import { useEffect, useState } from 'react';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { Sequencer } from '@/components/app/sequencer/sequencer';
 import { useSequencer } from '@/components/app/sequencer/use-sequencer';
@@ -326,4 +327,53 @@ describe('Suits this sound', () => {
     await waitForState('near');
     expect(post()).not.toHaveBeenCalled();
   });
+
+  // A glide moves the panel every frame (`use-panel-history.ts`), outside any act. A state update on each move, even to
+  // the state it already is, chains an update onto every frame, which React reports as "Maximum update depth exceeded"
+  // a second or so in (t-157).
+  it.each([
+    ['closed', false],
+    ['reading', true],
+  ])(
+    'chains no update onto each frame of a glide, with the picker %s',
+    async (_, picker) => {
+      const err = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+      const FRAMES = 120;
+      let frame = 0;
+      let state: SuggestState = 'off';
+      function Gliding() {
+        const [panel, setPanel] = useState(FAR);
+        const suggested = useSuggestedPatterns({
+          synthId: 'model-d',
+          def: DEF,
+          panel,
+          start: null,
+        });
+        state = suggested.state;
+        const { want } = suggested;
+        useEffect(() => {
+          want(picker);
+          let raf = 0;
+          const turn = () => {
+            frame += 1;
+            setPanel({
+              values: { ...FAR.values, 'filter.cutoff': frame / FRAMES },
+              cables: FAR.cables,
+            });
+            if (frame < FRAMES) raf = requestAnimationFrame(turn);
+          };
+          raf = requestAnimationFrame(turn);
+          return () => cancelAnimationFrame(raf);
+        }, [want]);
+        return null;
+      }
+      render(<Gliding />);
+      await waitFor(() => expect(frame).toBe(FRAMES), { timeout: 10_000 });
+      await new Promise((r) => setTimeout(r, 100));
+      expect(state).toBe(picker ? 'reading' : 'off');
+      const loops = err.mock.calls.filter((c) => String(c[0]).includes('Maximum update depth'));
+      expect(loops).toEqual([]);
+    },
+    15_000
+  );
 });

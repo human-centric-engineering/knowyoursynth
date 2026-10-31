@@ -77,7 +77,18 @@ export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
   const { synthId, def, panel, enabled = true } = input;
   const start = input.ownPatterns === 0 ? null : input.start;
   const [wanted, setWanted] = useState(false);
-  const [status, setStatus] = useState<{ state: SuggestState; result: SuggestResult | null }>(OFF);
+  const [status, setStatusNow] = useState<{ state: SuggestState; result: SuggestResult | null }>(
+    OFF
+  );
+  // Set only when it changes, checked here rather than in an updater: an updater returning the state it was given is
+  // still an update queued, and queued from the effect below on every move of the panel it chains an update onto each
+  // frame of a glide, which React reports as "Maximum update depth exceeded" (t-157).
+  const statusRef = useRef(status);
+  const setStatus = useCallback((next: typeof status) => {
+    if (statusRef.current === next) return;
+    statusRef.current = next;
+    setStatusNow(next);
+  }, []);
   const reader = useRef<KindReader | null>(null);
   // Each start's reading, by the start itself: a new sound, or a new lesson step of it, is a new start.
   const starts = useRef(new WeakMap<object, Promise<SoundFeatures>>());
@@ -96,14 +107,14 @@ export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
 
   useEffect(() => {
     if (!wanted || !enabled) {
-      // The same object while it stays off: a panel change with the picker closed re-renders nothing.
-      setStatus((s) => (s.state === 'off' ? s : OFF));
+      // Nothing while it stays off: a panel change with the picker closed re-renders nothing.
+      setStatus(OFF);
       return undefined;
     }
     let live = true;
     // What was suggested for the patch before is not for this one: it goes while this is read. The same object while
     // it stays reading, so each tick of a knob re-renders nothing.
-    setStatus((s) => (s.state === 'reading' ? s : READING));
+    setStatus(READING);
     const t = setTimeout(() => {
       const read = (reader.current ??= createKindReader());
       // Working out a panel (presetState) or its sound (engineOf) can throw; that is a reading that failed, not a crash.
@@ -163,7 +174,7 @@ export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
       live = false;
       clearTimeout(t);
     };
-  }, [wanted, enabled, synthId, def, start, values, cables]);
+  }, [wanted, enabled, synthId, def, start, values, cables, setStatus]);
 
   return { state: status.state, result: status.result, want };
 }
