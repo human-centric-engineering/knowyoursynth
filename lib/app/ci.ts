@@ -140,6 +140,23 @@ export const appCoverageExclusions: AppCoverageExclusion[] = [
       'by `tests/unit/lib/app/synths/defs/goldens.test.ts`.',
   },
   {
+    pattern: 'scripts/fit-soundkind.ts',
+    reason:
+      'a standalone tsx CLI run by hand to refit the sound detector: it renders every library sound ' +
+      'for minutes and writes `lib/app/synths/lib/soundkind-model.ts`. Nothing imports it, so vitest ' +
+      'never executes it. What it runs stays gated: the fit is `soundkind-fit.ts` (tested in ' +
+      '`soundkind-fit.test.ts`) and the sweep is `scripts/soundkind-sweep.ts` (run by ' +
+      '`soundkind-library.test.ts`).',
+  },
+  {
+    pattern: 'scripts/soundkind-sweep-worker.ts',
+    reason:
+      'the entry point of one worker thread of the sound detector sweep: `sweepLibrary` starts it ' +
+      'with `new Worker` and nothing imports it, and vitest cannot see coverage inside a worker ' +
+      'thread. It is two lines over `sweepShard`, which is tested in-process by ' +
+      '`tests/unit/scripts/soundkind-sweep.test.ts`; `soundkind-library.test.ts` runs it for real.',
+  },
+  {
     pattern: 'scripts/prototype-synths.ts',
     reason:
       'the esbuild bundle-and-load of the reference definitions shared by `scripts/check-synths.ts` ' +

@@ -23,7 +23,7 @@ const MIN_S = 0.34; // enough for a fast envelope to open and settle
 const MAX_S = 1.2; // ...and a ceiling, so a two-second pad attack does not cost two seconds of rendering
 
 /** Panel state → EngineParams, exactly as App feeds the live voice. */
-function engineOf(
+export function engineOf(
   def: SynthDef,
   values: ControlValues,
   cables: CableLike[],

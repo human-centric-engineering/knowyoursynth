@@ -127,6 +127,37 @@ export function renderNote(p: EngineParams, note: number, seconds: number): Floa
   }
 }
 
+/**
+ * One note held for `hold` seconds, then let go and listened to for `tail` more — for reading what kind of sound a
+ * patch makes (lib/soundkind): how it starts, holds and dies away. Seeded the same way, so the same panel always gives
+ * the same samples. One channel, as `renderNote`: a stereo patch renders as the engine's mono sum. With no `tail` the key
+ * never comes up, so it is sample for sample what `renderNote` plays.
+ */
+export function renderHeld(
+  p: EngineParams,
+  note: number,
+  hold: number,
+  tail: number
+): Float32Array {
+  const real = Math.random;
+  Math.random = seeded(20240919);
+  try {
+    const len = Math.round((hold + tail) * PROBE_SR);
+    const off = Math.round((hold * PROBE_SR) / 128) * 128;
+    const buf = new Float32Array(len);
+    const syn = createSynth(PROBE_SR, () => {});
+    syn.handle({ type: 'params', p });
+    syn.handle({ type: 'noteOn', n: note, v: 0.85 });
+    for (let o = 0; o < len; o += 128) {
+      if (tail > 0 && o === off) syn.handle({ type: 'noteOff', n: note });
+      syn.process(buf.subarray(o, o + Math.min(128, len - o)), Math.min(128, len - o));
+    }
+    return buf;
+  } finally {
+    Math.random = real;
+  }
+}
+
 // ── features: log energy in third-of-an-octave bands, frame by frame ──
 const hann = new Float32Array(N);
 for (let i = 0; i < N; i++) hann[i] = 0.5 - 0.5 * Math.cos((2 * Math.PI * i) / (N - 1));
