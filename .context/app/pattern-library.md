@@ -522,3 +522,158 @@ came. One of the user's sounds, a shared sound, a lesson's or the tutor's has no
 - **Phones.** Below `lg` the sequencer is a bottom sheet, and the picker is in it with the rest of the module.
 
 Tested in `tests/unit/components/app/sequencer/sound-pattern-picker.test.tsx`.
+
+### The sound detector
+
+t-124. To suggest patterns for a patch someone has changed, the app has to know what that patch sounds like now. A
+library sound's category is a tag someone wrote, and an edited patch has no tag that is still true. The detector
+(`lib/app/synths/lib/soundkind.ts`) plays probe notes through the real voice and reads the answer off the audio.
+Nothing in it is written per synth.
+
+`soundKind(engineParams)` and `panelSoundKind(def, values, cables)` return null for a silent patch. Otherwise they
+return:
+
+- **`categories`**: a share for each of the 12 sound categories, summing to 1, and **`category`**, the largest.
+- **`roles`**: a share for each of the eight pattern roles, summing to 1, and **`role`**, the largest.
+- **`register`**: `low`, `mid` or `high`.
+- **`features`**: what it read, below.
+
+It is deterministic. The renderer seeds `Math.random`, so the same patch always reads the same.
+
+#### The probe
+
+`renderHeld` (`audio/probe.ts`) is new for the detector. It holds one note, lets it go, and listens to the release,
+through the same `createSynth` voice, at the same rate and with the same seed as the sound map's probe and the predicted
+scope. It adds a function and changes none, so `check:synths --compare` and the goldens are unchanged.
+
+Each patch gets three notes, about 1.25 s of audio and about 80 ms of rendering:
+
+- **G3 (55)**, held for 0.55 s, then 0.3 s of release.
+- **C2 (36)** and **D5 (74)**, 0.2 s each, for level and pitch.
+
+The detector does not tap a separate short note. Whether a sound stops when the key comes up is read from the held
+note's release instead, and that saved a quarter of the cost.
+
+#### The features
+
+| Feature    | What it is                                                                                         |
+| ---------- | -------------------------------------------------------------------------------------------------- |
+| attack     | Time to 90% of the peak (capped by the 0.55 s hold, so a slower swell reads as about 0.5)          |
+| decay      | Time from there to half the peak while held                                                        |
+| sustain    | Level over the last 0.1 s of the hold, against the peak                                            |
+| release    | Time from letting go to 40 dB below the peak (0 if already there, 0.3 if still sounding)           |
+| pulses     | Rises of 6 dB or more after the attack while held: a sequencer, an arpeggio, a gated LFO           |
+| wobble     | Mean change of the level's slope per 10 ms frame, in dB: a tremolo moves it, a plain decay doesn't |
+| brightness | Spectral centroid, in octaves above the played note                                                |
+| brightMove | How far that moves from the start of the note to the end of the hold (a filter sweep)              |
+| noise      | Spectral flatness, with each bin counted at 40 dB below the loudest at most                        |
+| clarity    | How cleanly it repeats at its pitch (YIN, down to 13 Hz)                                           |
+| pitch      | Where the mid note sounds against its key, in octaves (−1 is an octave down)                       |
+| tracking   | How the pitch follows the keys from C2 to D5: 1 tracks, 0 is a fixed pitch                         |
+| drift      | How far the pitch wanders while held, in semitones                                                 |
+| levels     | The low, mid and high notes' peaks, in dB below the loudest of the three                           |
+| voices     | Notes the patch can play at once, from the engine parameters (`poly.voices` over its stack)        |
+
+The pitch detector is its own YIN, not the scope's `detectPeriod`. The scope's detector stops at 38 Hz, and many bass
+patches sound an octave or two below their key: on C2, that is below 38 Hz. `pitch` turned out to be the strongest
+single sign of a bass.
+
+#### The scores
+
+**Categories** come from a multinomial logistic regression over the features, fitted to the library's own
+categories (the first tag). Each feature is put on a scale where a step means about the same everywhere: times on a
+log scale, counts capped (`kindInputs`). The inputs are then standardised. The fitted weights are generated, not
+written: `npx tsx scripts/fit-soundkind.ts` renders the library (`scripts/soundkind-sweep.ts`, on worker threads),
+fits it (`soundkind-fit.ts`) and writes `soundkind-model.ts`.
+
+A fitted model, rather than hand-written rules, because the categories overlap. Pluck, keys and lead differ by degree
+in every feature, not in any one, and hand-placed thresholds would be guesses with the library's answers sitting there
+unused. The cost is that the model learns the labels' mistakes as well as their sense. The cross-validated figure
+below shows how much of the fit carries over to sounds it wasn't fitted to, and nearly all of it does.
+
+**Roles** are not fitted separately. A role's share is how often library sounds of each category carry that role
+(the share of their riffs the default role rule gives it, `model.roles`), weighted by how much this patch sounds like
+each category. So the roles follow what the library pairs sounds of this kind with, and they move when the patch does:
+a pad changed to start and stop at once loses most of its _Held_ share (tested). The voices filter (a pattern is never
+suggested to a patch with fewer voices than it needs) is applied by suggestions (t-125), not here. A mono patch still
+shows the chord roles its category's sounds carry.
+
+**Register**: `low` if the patch sounds most like a bass, or sounds an octave or more below its key. `high` if it
+sounds an octave or more above its key, or is thin at the bottom (the low note 9 dB or more below the loudest).
+Otherwise `mid`.
+
+#### Agreement with the library
+
+Measured on 2026-10-31 over the library's 2,293 sounds:
+
+- **The detector reads the sound's own category for 1,140 of them (49.7%).** Picking the commonest category, lead, every
+  time would get 16.6%.
+- **Cross-validated: 1,115 (48.6%).** Each fifth of the library is measured on a model fitted to the other four fifths.
+- **3 sounds are silent on the probe notes**: `model-d/just-intonation-drone`, `model-d/slow-breaking-waves` and
+  `pro-1/filter-clave`. `check:synths` hears each one play its riff, so they do make sound, but not on a held G3 within
+  the probe's 0.85 s. Why has not been looked into. They count as disagreements.
+
+`soundkind-library.test.ts` pins the 49.7%, so a change to the probe, the engine, the features or the library can't
+make the detector worse without someone deciding it should. It renders the whole library, about three minutes of CPU
+spread over worker threads, so it is the slowest test in the app. It runs when something it imports changes, and in
+the full suite.
+
+The confusion table: one row per category the sound is tagged with, and the categories the detector read across. No
+sound was read as strings or wind, so those columns are left out.
+
+| Label   |    bass |    lead |     pad | pluck |    keys |      fx |  drone |    perc |    seq | brass | silent | Agree |
+| ------- | ------: | ------: | ------: | ----: | ------: | ------: | -----: | ------: | -----: | ----: | -----: | ----: |
+| bass    | **248** |      24 |       2 |     · |      23 |       1 |      5 |      14 |      8 |     1 |      · |   76% |
+| lead    |      30 | **259** |      25 |     1 |      36 |      19 |      3 |       5 |      3 |     · |      · |   68% |
+| pad     |       2 |      21 | **180** |     · |       8 |      11 |      8 |       1 |      8 |     · |      · |   75% |
+| pluck   |       3 |      14 |       5 | **7** |      64 |       1 |      · |      12 |      5 |     · |      · |    6% |
+| keys    |      27 |      41 |      15 |     5 | **162** |       6 |      3 |       9 |     10 |     3 |      · |   58% |
+| fx      |      21 |      63 |      18 |     1 |      16 | **105** |     10 |      27 |     11 |     · |      1 |   38% |
+| drone   |       7 |      28 |      33 |     · |       4 |      12 | **32** |       · |      4 |     · |      1 |   26% |
+| perc    |      23 |      10 |       · |     1 |      25 |      17 |      2 | **109** |      2 |     · |      1 |   57% |
+| seq     |      27 |      14 |      13 |     3 |      30 |      15 |      4 |       8 | **35** |     · |      · |   23% |
+| brass   |       6 |      18 |      27 |     · |      21 |       · |      · |       1 |      · | **3** |      · |    4% |
+| strings |       3 |      18 |      49 |     · |       6 |       1 |      1 |       · |      1 |     · |      · |    0% |
+| wind    |       2 |      49 |       2 |     · |       6 |       5 |      1 |       · |      1 |     1 |      · |    0% |
+
+#### The disagreements
+
+The review on 2026-10-31 sorted the disagreements by how sure the detector was. Most of the ones it was surest about
+are not a wrong detector. They are a label on a different axis from the sound:
+
+- **Orchestral names.** _Strings_, _wind_ and _brass_ name the instrument a patch imitates, not how it behaves. A string
+  ensemble swells and holds like a pad (49 of 79 read as pad), and a synth flute plays like a lead (49 of 67). The
+  detector hears timbre the way a filter shapes it, and none of its features can hear formants. These three
+  categories are where it is weakest, and suggestions lose almost nothing by it, because the roles that suit a string
+  pad are the roles that suit a pad.
+- **Labels for what a sound is for.** _Seq_ says the patch runs a sequence. A sequenced bass (`model-d/octave-sequence-bass`,
+  `pro-1/pulsing-seq-bass`) still sounds like a bass, and the detector says so. A tuba (`super-gemini/sg-tuba`, brass)
+  and a bass clarinet (`neutron/bitches-brew-bass-clarinet`, wind) read as bass too.
+- **Drones that are pads.** A slow-attack, held, polyphonic drone (`deepmind-12d/cosmic-drone`, `pro-800/p8-drone`)
+  reads as pad. Drone and pad suit much the same roles, led by _Held_ (see [Category to role](#category-to-role)).
+- **Pluck against keys.** 64 of the 111 plucks read as keys. A pluck and an electric piano both start at once and decay
+  while held, and the probe can't tell a decay that is the sound from one that is the player's.
+
+The detector is plainly wrong on a few kinds:
+
+- **Tonal kick drums** read as bass (`model-d/techno-kick-909`, `behringer-syncussion/electro-kick`, `neutron/taiko-drum`).
+  A kick is a pitched sine an octave or two down, so it scores like a sub bass. What gives it away is how short it is,
+  and the features don't weigh that enough.
+- **Organs with a 16′ stop** read as bass (`model-d/jimmy-smith-organ`), because the lowest footage is the loudest.
+
+None of these labels has been changed. Which category a sound should carry is the content review's call (see
+[Reviewing the current riffs](#reviewing-the-current-riffs)). The table is where to start.
+
+#### Refitting
+
+Refit when the features change or the library grows. Run `npx tsx scripts/fit-soundkind.ts`, then move the floor in
+`soundkind-library.test.ts` and the figures above together. `--report` prints the committed model's figures without
+writing anything.
+
+The model records the inputs it was fitted to. If the features change without a refit, the model test fails before
+the agreement test does.
+
+Tested in `tests/unit/lib/app/synths/lib/soundkind.test.ts`, on hand-built patches the model was never fitted to: a
+plucked bass reads as bass for a bass line in the low register, a long-attack pad as pad for held parts, a noise sweep
+as fx. Also tested there: the same patch twice, a pad edited into a pluck, and silence. The fit is tested in
+`soundkind-fit.test.ts`, and the library in `soundkind-library.test.ts`.
