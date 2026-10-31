@@ -74,6 +74,7 @@ export function createKindReader(): KindReader {
         if (!isObj(msg) || msg.type !== 'kind' || typeof msg.id !== 'number') return;
         proven = true;
         clearTimeout(timer);
+        timer = undefined;
         const p = pending.get(msg.id);
         if (!p) return;
         pending.delete(msg.id);
@@ -108,8 +109,8 @@ export function createKindReader(): KindReader {
         const msg: ProbeWorkerRequest = { type: 'kind', id, params };
         w.postMessage(msg);
         if (!proven) {
-          clearTimeout(timer);
-          timer = setTimeout(() => giveUp('no answer'), KIND_WORKER_TIMEOUT_MS);
+          // From the first reading still unanswered: a later one does not put the deadline back.
+          timer ??= setTimeout(() => giveUp('no answer'), KIND_WORKER_TIMEOUT_MS);
         }
       });
     },
@@ -117,7 +118,9 @@ export function createKindReader(): KindReader {
       clearTimeout(timer);
       worker?.terminate();
       worker = null;
+      const waiting = [...pending.values()];
       pending.clear();
+      waiting.forEach((p) => p.reject(new Error('sound detector: disposed')));
     },
   };
 }

@@ -72,7 +72,11 @@ export function forgetSuggestLibrary(): void {
   kept = null;
 }
 
-/** Suggestions for these features, or null when the synth, or the sound named, is not one the catalogue serves. */
+/**
+ * Suggestions for these features, or null for a synth the app has no definition for, or a sound named that is not on
+ * a listed synth. The synth only steers the ranking (a researched pattern of it is lifted); what is suggested is
+ * always the public library, so an unlisted synth's id reads nothing that is not public.
+ */
 export async function suggestPatterns(body: SuggestBody): Promise<SuggestResult | null> {
   if (!getSynthDef(body.synthId)) return null;
   let artistId: string | null = null;

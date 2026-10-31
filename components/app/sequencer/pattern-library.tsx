@@ -309,13 +309,15 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
       patterns: suits.suggestions.map((s) => s.pattern),
       reasons: new Map(suits.suggestions.map((s) => [s.id, capitalise(s.reason)])),
     });
+  // Said only where the picker has nothing else to show: no patterns of the sound's own to look at meanwhile.
+  const ownNone = !soundPatterns?.patterns?.length;
   const suggestLine = !suggested
     ? null
-    : suggested.state === 'reading' && !soundPatterns
+    : suggested.state === 'reading' && ownNone
       ? 'Listening to the patch for patterns that suit it…'
       : suggested.state === 'error'
-        ? 'Patterns that suit this sound could not be worked out. Press Patterns to try again.'
-        : suits && !suits.suggestions.length && !soundPatterns
+        ? 'Patterns that suit this sound could not be worked out. Close Patterns and open it again to try again.'
+        : suits && !suits.suggestions.length && ownNone
           ? suits.reading
             ? 'No library pattern suits this sound yet.'
             : 'The patch is silent, so there is nothing to suit yet.'

@@ -150,4 +150,25 @@ describe('createKindReader', () => {
     vi.stubGlobal('Worker', undefined);
     await expect(createKindReader().read(null as never)).rejects.toThrow();
   });
+
+  it('gives up from the first unanswered reading, however many follow it', async () => {
+    vi.useFakeTimers();
+    mode = 'silent';
+    const reader = createKindReader();
+    const first = reader.read(PATCH);
+    await vi.advanceTimersByTimeAsync(KIND_WORKER_TIMEOUT_MS - 1000);
+    const second = reader.read(PATCH);
+    await vi.advanceTimersByTimeAsync(1010);
+    expect(workers[0].terminated).toBe(true);
+    expect(await first).toEqual(FEATURES);
+    expect(await second).toEqual(FEATURES);
+  });
+
+  it('rejects the readings still waiting when it is disposed', async () => {
+    mode = 'silent';
+    const reader = createKindReader();
+    const reading = reader.read(PATCH);
+    reader.dispose();
+    await expect(reading).rejects.toThrow('disposed');
+  });
 });

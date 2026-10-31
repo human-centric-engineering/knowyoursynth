@@ -22,17 +22,15 @@ import { movedFar } from '@/lib/app/patterns/suggest';
 // Type only: this module reaches the browser, and the read module holds the database client.
 import type { SuggestResult } from '@/lib/app/patterns/suggest-read';
 import { engineOf } from '@/lib/app/synths/lib/predict';
-import type { CableLike } from '@/lib/app/synths/lib/patch';
+import type { PanelState } from '@/lib/app/synths/lib/patch';
 import type { SoundFeatures } from '@/lib/app/synths/lib/soundkind';
-import type { ControlValues, SynthDef } from '@/lib/app/synths/contract';
+import type { SynthDef } from '@/lib/app/synths/contract';
 
 /** How long the panel has to be still before the patch is read again, in ms. */
 export const SETTLE_MS = 800;
 
-export interface PanelState {
-  values: ControlValues;
-  cables: CableLike[];
-}
+/** The panel's values and cables, as `presetState` gives a sound's. */
+export type { PanelState };
 
 export interface SuggestInput {
   synthId: string;
@@ -72,6 +70,7 @@ export interface SuggestedPatterns {
 const KEEP_ANSWERS = 50;
 
 const OFF = { state: 'off', result: null } as const;
+const READING = { state: 'reading', result: null } as const;
 
 export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
   const { synthId, def, panel, enabled = true } = input;
@@ -100,31 +99,35 @@ export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
       return undefined;
     }
     let live = true;
-    setStatus((s) => (s.state === 'ready' ? s : { state: 'reading', result: null }));
+    // What was suggested for the patch before is not for this one: it goes while this is read. The same object while
+    // it stays reading, so each tick of a knob re-renders nothing.
+    setStatus((s) => (s.state === 'reading' ? s : READING));
     const t = setTimeout(() => {
       const read = (reader.current ??= createKindReader());
-      // engineOf throws on a panel it cannot turn into sound; that is a reading that failed, not a crash.
-      const readPanel = (p: PanelState) =>
-        Promise.resolve().then(() => read.read(engineOf(def, p.values, p.cables, 0)));
+      // Working out a panel (presetState) or its sound (engineOf) can throw; that is a reading that failed, not a crash.
+      const readPanel = (panelOf: () => PanelState) =>
+        Promise.resolve().then(() => {
+          const p = panelOf();
+          return read.read(engineOf(def, p.values, p.cables, 0));
+        });
       let startRead: Promise<SoundFeatures | null> = Promise.resolve(null);
       if (start) {
         const key = `${synthId}/${start.slug}`;
         let kept = starts.current.get(key);
         if (!kept) {
-          kept = readPanel(start.panel());
+          kept = readPanel(start.panel);
           starts.current.set(key, kept);
           kept.catch(() => starts.current.delete(key));
         }
         startRead = kept;
       }
-      Promise.all([startRead, readPanel({ values, cables })])
+      Promise.all([startRead, readPanel(() => ({ values, cables }))])
         .then(([was, now]) => {
           if (!live) return null;
           if (!movedFar(was, now)) {
             setStatus({ state: 'near', result: null });
             return null;
           }
-          setStatus((s) => (s.state === 'ready' ? s : { state: 'reading', result: null }));
           const slug = start?.slug;
           const key = `${synthId}|${slug ?? ''}|${JSON.stringify(now)}`;
           let asked = answers.current.get(key);

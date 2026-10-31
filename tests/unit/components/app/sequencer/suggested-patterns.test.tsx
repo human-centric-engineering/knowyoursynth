@@ -264,7 +264,7 @@ describe('Suits this sound', () => {
     await waitForState('error');
     expect(
       screen.getByText(
-        'Patterns that suit this sound could not be worked out. Press Patterns to try again.'
+        'Patterns that suit this sound could not be worked out. Close Patterns and open it again to try again.'
       )
     ).toBeTruthy();
     server.fail = false;
@@ -294,5 +294,24 @@ describe('Suits this sound', () => {
     rerender(<Page panel={AS_IT_CAME} fromLibrary={false} open={false} />);
     await new Promise((r) => setTimeout(r, SETTLE_MS + 300));
     expect(post()).toHaveBeenCalledTimes(1);
+  });
+
+  it('says so when nothing suits a sound with no patterns of its own', async () => {
+    server.own = [];
+    server.suits = [];
+    render(<Page panel={AS_IT_CAME} />);
+    await open(`${BASS.name}’s patterns`);
+    await waitForState('ready');
+    expect(screen.getByText('No library pattern suits this sound yet.')).toBeTruthy();
+  });
+
+  it('takes away what suited the patch before while the new one is read', async () => {
+    const { rerender } = render(<Page panel={FAR} fromLibrary={false} />);
+    await open('Patterns that suit this sound');
+    await waitForState('ready');
+    rerender(<Page panel={AS_IT_CAME} fromLibrary={false} />);
+    expect(suggestState).toBe('reading');
+    expect(screen.queryByRole('list', { name: 'Suits this sound' })).toBeNull();
+    await waitForState('ready');
   });
 });
