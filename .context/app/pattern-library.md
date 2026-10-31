@@ -12,13 +12,14 @@ This page is the design, written before the build (t-121). It covers:
 - what "Inspired by" links to, and the fidelity levels
 - the research method the batches follow (t-127, t-128, t-129)
 - the rights rule
+- how admins see and control each pattern's origin, rights risk and status
 - how the current riffs are reviewed
 
 Each later task updates its section as it lands. The table, the migration and the seed are t-122. The picker on the synth
-page is t-123, the sound detector t-124, suggestions t-125 and the admin editor t-126.
+page is t-123, the sound detector t-124, suggestions t-125, the admin editor t-126 and admin control t-156.
 
-**Awaiting the owner's sign-off on the PR:** the role vocabulary, the fidelity labels and the rights rule. Each is marked
-_Proposed_ below until it is signed off.
+**Awaiting the owner's sign-off on the PR:** the role vocabulary, the fidelity labels, the rights rule and admin
+control. Each is marked _Proposed_ below until it is signed off.
 
 ## What the library holds today
 
@@ -263,6 +264,8 @@ What is kept with it (committed, in the seed beside the pattern):
 - what was changed in reducing it, and why
 - who researched it and when
 - whether the owner has listened to it, and when
+- its origin ([Admin control](#admin-control)). Rights risk, status and comments are admin edits, kept in the database
+  and never overwritten by a reseed
 
 ## Rights
 
@@ -299,11 +302,11 @@ things beside its [provenance](#provenance): its origin, its rights risk, its st
 
 Who or what made the pattern's notes. Exactly one of:
 
-| Origin               | Means                                                    |
-| -------------------- | -------------------------------------------------------- |
-| **AI-generated**     | Written or transcribed by an agent                       |
-| **Human-authored**   | Written by the owner or an admin                         |
-| **User-contributed** | Came from a user's My patterns, taken into the library   |
+| Origin               | Means                                                  |
+| -------------------- | ------------------------------------------------------ |
+| **AI-generated**     | Written or transcribed by an agent                     |
+| **Human-authored**   | Written by the owner or an admin                       |
+| **User-contributed** | Came from a user's My patterns, taken into the library |
 
 With it, the pattern records who or what made it (the agent and session, or the user) and when. _Owner ruling,
 2026-10-31:_ every current riff is _AI-generated_. Research batches (t-127, t-128, t-129) record _AI-generated_ and the
@@ -316,12 +319,12 @@ _Human-authored_ one can be _In the style of_.
 
 An admin-set status, always with a reason. _Owner ruling, 2026-10-31:_ the statuses are:
 
-| Status           | Means                                                          |
-| ---------------- | -------------------------------------------------------------- |
-| **None**         | Nothing in it is taken from a specific work                    |
-| **Needs review** | It recreates a specific part, and no one has checked it yet    |
-| **Cleared**      | Checked against the [rights rule](#rights), and it fits        |
-| **Blocked**      | It must not be shown. A blocked pattern is always disabled     |
+| Status           | Means                                                       |
+| ---------------- | ----------------------------------------------------------- |
+| **None**         | Nothing in it is taken from a specific work                 |
+| **Needs review** | It recreates a specific part, and no one has checked it yet |
+| **Cleared**      | Checked against the [rights rule](#rights), and it fits     |
+| **Blocked**      | It must not be shown. A blocked pattern is always disabled  |
 
 A pattern starts at **Needs review** if it is _Transcribed_ or _Reconstructed_, and at **None** if it is _In the style
 of_. An admin can raise or lower it, with a reason. The `f-launch` legal review works from this list.
@@ -356,6 +359,7 @@ No riff is deleted. When t-122 moves the library into its own table, every curre
 
 - the role the [default role rule](#the-vocabulary) gives it
 - fidelity _In the style of_
+- origin _AI-generated_, rights risk _None_ and status _enabled_ ([Admin control](#admin-control))
 - Inspired by, from the sound's `artist`:
   - a `BankArtist` → that artist
   - a catalogue synth or a maker ("Oberheim SEM", "Behringer") → the synth the sound was written for
