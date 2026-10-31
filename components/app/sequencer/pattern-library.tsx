@@ -135,6 +135,8 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
   const pickerOpen = panel === 'sound';
   useEffect(() => {
     want?.(pickerOpen);
+    // Closing the sequencer with the picker open closes the picker too.
+    return () => want?.(false);
   }, [want, pickerOpen]);
 
   // The sound's default pattern is its riff: it takes the riff's place while the sequencer holds the riff as it came,
@@ -464,7 +466,6 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
                 const next = panel === 'sound' ? null : 'sound';
                 setPanel(next);
                 if (next && soundPatterns?.error) soundPatterns.retry();
-                if (next && suggested?.state === 'error') suggested.retry();
               },
               {
                 expanded: panel === 'sound',

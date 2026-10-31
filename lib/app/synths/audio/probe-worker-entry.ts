@@ -31,6 +31,13 @@ scope.onmessage = (m) => {
   } else if (msg.type === 'job' && probe && msg.run === run) {
     scope.postMessage({ type: 'result', run, result: probe.measure(msg.job) });
   } else if (msg.type === 'kind') {
-    scope.postMessage({ type: 'kind', id: msg.id, features: soundFeatures(msg.params) });
+    // A patch that cannot be read fails its own reading (null is not one), not the worker for every reading after it.
+    let features: unknown = null;
+    try {
+      features = soundFeatures(msg.params);
+    } catch {
+      features = null;
+    }
+    scope.postMessage({ type: 'kind', id: msg.id, features });
   }
 };

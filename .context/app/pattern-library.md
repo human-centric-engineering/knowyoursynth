@@ -705,7 +705,7 @@ sound**.
 | `POST /api/v1/library-patterns/suggest` | Scores the features with the model (`kindOf`) and ranks the library (`rankPatterns`) | Only the server has the whole library; the scoring is pure and costs nothing                |
 
 The worker is the sound map's (`PROBE_WORKER_URL`): a `kind` message, answered with the features. Where a host blocks
-workers, or the worker doesn't answer within 5 s, the page reads on its own thread instead (`suggest-detect.ts`).
+workers, or the worker doesn’t answer its first reading within 15 s, the page reads on its own thread instead (`suggest-detect.ts`).
 `PATTERN_ROLES` lives in `library-roles.ts`, which imports nothing, so the worker doesn't bundle the sequencer.
 
 The endpoint takes `{ synthId, sound?, features, limit? }`. `features` is validated field by field
@@ -726,6 +726,7 @@ it is kept for a minute: an admin's edit, or a pattern disabled (t-156), reaches
   of its travel crosses 0.4 9% of the time, a knob moved a third of its travel 17%, and another sound of the same synth
   96% (the median distance between two sounds of one synth is 1.1). Most single knob moves change the reading by
   nothing at all, because the knob isn't in the sound's path.
+- **A library sound whose list is empty** brought no patterns of its own, so it is offered them at once.
 - **Anything else on the panel** (one of the user's sounds, a shared one, the tutor's) shows Suits this sound at once,
   under a Patterns button of its own.
 - **Only while the picker is open**, and only once the panel settles: 800 ms after the last change

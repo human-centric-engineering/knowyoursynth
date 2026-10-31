@@ -1,7 +1,8 @@
 /**
  * The sound detector, run in the browser (`f-pattern-library` t-125): what a patch sounds like, read in the probe
  * worker (`probe-worker-entry.ts`, a `kind` message) so the page's thread never renders the probe notes. Where the
- * host blocks workers, or the worker never answers, it reads on the page's thread instead, as the sound map does.
+ * host blocks workers, or the worker never answers its first reading, it reads on the page's thread instead, as the
+ * sound map does. A patch the worker cannot read fails that reading alone.
  *
  * Why here and not on the server: only the browser has the panel, and rendering about 1.25 s of audio a reading is
  * work the server would otherwise do for every visitor. The server ranks (`suggest-read.ts`), because only it has the
@@ -13,8 +14,11 @@ import { soundFeatures, type SoundFeatures } from '@/lib/app/synths/lib/soundkin
 import type { EngineParams } from '@/lib/app/synths/contract';
 import { SoundFeaturesSchema } from '@/lib/app/patterns/suggest';
 
-/** How long the worker has to answer its first reading before it is taken as blocked. */
-export const KIND_WORKER_TIMEOUT_MS = 5000;
+/**
+ * How long the worker has to answer its first reading before it is taken as blocked: loading the worker's script and
+ * two readings, on a slow phone.
+ */
+export const KIND_WORKER_TIMEOUT_MS = 15000;
 
 export interface KindReader {
   /** What these engine parameters sound like. */

@@ -138,5 +138,10 @@ describe('probe-worker-entry', () => {
     // The sound detector's question (t-125), with or without a session: what a patch sounds like.
     scope.onmessage!({ data: { type: 'kind', id: 7, params: darker } });
     expect(replies[2]).toEqual({ type: 'kind', id: 7, features: soundFeatures(darker) });
+    // A patch it cannot read fails that reading alone, and the worker answers the next one.
+    scope.onmessage!({ data: { type: 'kind', id: 8, params: null as never } });
+    expect(replies[3]).toEqual({ type: 'kind', id: 8, features: null });
+    scope.onmessage!({ data: { type: 'kind', id: 9, params: darker } });
+    expect(replies[4]).toMatchObject({ type: 'kind', id: 9 });
   });
 });

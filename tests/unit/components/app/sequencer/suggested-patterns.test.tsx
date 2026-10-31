@@ -119,7 +119,16 @@ let suggestState: SuggestState = 'off';
 const START = { slug: BASS.id, panel: () => presetState(DEF, BASS) };
 
 /** A library sound (`fromLibrary`) or another patch on the panel, at `panel`. */
-function Page({ panel, fromLibrary = true }: { panel: PanelState; fromLibrary?: boolean }) {
+function Page({
+  panel,
+  fromLibrary = true,
+  open = true,
+}: {
+  panel: PanelState;
+  fromLibrary?: boolean;
+  /** Whether the sequencer is on the page. */
+  open?: boolean;
+}) {
   const seq = useSequencer({ engine: null, ensureAudio: async () => false, riff: BASS.phrase });
   const mine = useMyPatterns();
   const soundPatterns = useSoundPatterns(
@@ -131,8 +140,10 @@ function Page({ panel, fromLibrary = true }: { panel: PanelState; fromLibrary?: 
     def: DEF,
     panel,
     start: fromLibrary ? START : null,
+    ownPatterns: soundPatterns?.patterns?.length ?? null,
   });
   suggestState = suggested.state;
+  if (!open) return null;
   return (
     <Sequencer
       seq={seq}
@@ -261,5 +272,27 @@ describe('Suits this sound', () => {
     await open('Patterns that suit this sound'); // opens, and tries again
     await waitForState('ready');
     expect(screen.getByRole('list', { name: 'Suits this sound' })).toBeTruthy();
+  });
+
+  it('offers a library sound with no patterns of its own patterns that suit it at once', async () => {
+    server.own = [];
+    render(<Page panel={AS_IT_CAME} />);
+    await open(`${BASS.name}’s patterns`);
+    await waitForState('ready');
+    expect(screen.getByText(`${BASS.name} has no patterns yet.`)).toBeTruthy();
+    expect(screen.getByRole('list', { name: 'Suits this sound' })).toBeTruthy();
+    const [, options] = post().mock.calls[0] as [string, { body: Record<string, unknown> }];
+    expect(options.body).not.toHaveProperty('sound');
+  });
+
+  it('stops working them out when the sequencer closes with the picker open', async () => {
+    const { rerender } = render(<Page panel={FAR} fromLibrary={false} />);
+    await open('Patterns that suit this sound');
+    await waitForState('ready');
+    rerender(<Page panel={FAR} fromLibrary={false} open={false} />);
+    await waitForState('off');
+    rerender(<Page panel={AS_IT_CAME} fromLibrary={false} open={false} />);
+    await new Promise((r) => setTimeout(r, SETTLE_MS + 300));
+    expect(post()).toHaveBeenCalledTimes(1);
   });
 });

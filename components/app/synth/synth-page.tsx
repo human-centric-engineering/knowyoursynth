@@ -1319,9 +1319,7 @@ function Synth({
   const startSlug = librarySound?.slug ?? null;
   const suggestStart = useMemo(
     () =>
-      startSlug && preset?.id === startSlug
-        ? { slug: startSlug, panel: () => presetState(synthDef, preset) }
-        : null,
+      startSlug && preset ? { slug: startSlug, panel: () => presetState(synthDef, preset) } : null,
     [startSlug, preset, synthDef]
   );
   const suggestPanel = useMemo(
@@ -1333,6 +1331,7 @@ function Synth({
     def: synthDef,
     panel: suggestPanel,
     start: suggestStart,
+    ownPatterns: soundPatterns?.patterns?.length ?? null,
     enabled: !ownSoundPending,
   });
   const seqLibrary: PatternLibraryProps = {

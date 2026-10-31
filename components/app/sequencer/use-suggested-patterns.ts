@@ -45,6 +45,11 @@ export interface SuggestInput {
    * the patch again.
    */
   start: { slug: string; panel: () => PanelState } | null;
+  /**
+   * How many patterns the start sound has of its own, null while they are being read. A sound with none brought
+   * nothing to the picker, so it is offered more at once, as a patch with no start is.
+   */
+  ownPatterns?: number | null;
   /** False while what is on the panel is not settled yet (one of the user's sounds still loading). */
   enabled?: boolean;
 }
@@ -52,7 +57,7 @@ export interface SuggestInput {
 /**
  * `off`: the picker is closed. `reading`: the detector or the endpoint is working. `near`: a library sound not moved
  * far from how it came, so nothing more is offered. `ready`: `result` holds the answer. `error`: it could not be worked
- * out; `retry` tries again.
+ * out; closing the picker and opening it again tries again.
  */
 export type SuggestState = 'off' | 'reading' | 'near' | 'ready' | 'error';
 
@@ -61,15 +66,17 @@ export interface SuggestedPatterns {
   result: SuggestResult | null;
   /** Whether the picker is open: nothing is read while it is not. */
   want: (on: boolean) => void;
-  retry: () => void;
 }
+
+/** How many answers are kept for the visit; the oldest goes first. */
+const KEEP_ANSWERS = 50;
 
 const OFF = { state: 'off', result: null } as const;
 
 export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
-  const { synthId, def, panel, start, enabled = true } = input;
+  const { synthId, def, panel, enabled = true } = input;
+  const start = input.ownPatterns === 0 ? null : input.start;
   const [wanted, setWanted] = useState(false);
-  const [tries, setTries] = useState(0);
   const [status, setStatus] = useState<{ state: SuggestState; result: SuggestResult | null }>(OFF);
   const reader = useRef<KindReader | null>(null);
   const starts = useRef(new Map<string, Promise<SoundFeatures>>());
@@ -83,7 +90,6 @@ export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
   );
 
   const want = useCallback((on: boolean) => setWanted(on), []);
-  const retry = useCallback(() => setTries((n) => n + 1), []);
 
   const { values, cables } = panel;
 
@@ -127,6 +133,9 @@ export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
               body: { synthId, ...(slug ? { sound: slug } : {}), features: now },
             });
             answers.current.set(key, asked);
+            const oldest = answers.current.keys().next().value;
+            if (answers.current.size > KEEP_ANSWERS && oldest !== undefined)
+              answers.current.delete(oldest);
             asked.catch(() => answers.current.delete(key));
           }
           return asked;
@@ -148,7 +157,7 @@ export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
       live = false;
       clearTimeout(t);
     };
-  }, [wanted, enabled, synthId, def, start, values, cables, tries]);
+  }, [wanted, enabled, synthId, def, start, values, cables]);
 
-  return { state: status.state, result: status.result, want, retry };
+  return { state: status.state, result: status.result, want };
 }
