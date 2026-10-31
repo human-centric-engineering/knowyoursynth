@@ -149,6 +149,14 @@ export const appCoverageExclusions: AppCoverageExclusion[] = [
       '`soundkind-library.test.ts`).',
   },
   {
+    pattern: 'scripts/soundkind-sweep-worker.ts',
+    reason:
+      'the entry point of one worker thread of the sound detector sweep: `sweepLibrary` starts it ' +
+      'with `new Worker` and nothing imports it, and vitest cannot see coverage inside a worker ' +
+      'thread. It is two lines over `sweepShard`, which is tested in-process by ' +
+      '`tests/unit/scripts/soundkind-sweep.test.ts`; `soundkind-library.test.ts` runs it for real.',
+  },
+  {
     pattern: 'scripts/prototype-synths.ts',
     reason:
       'the esbuild bundle-and-load of the reference definitions shared by `scripts/check-synths.ts` ' +

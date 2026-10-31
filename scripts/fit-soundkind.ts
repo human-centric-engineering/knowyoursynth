@@ -15,6 +15,7 @@
  * Printing goes through `console`, not `logger` — see the `scripts/**` override in `eslint.config.mjs`.
  */
 import { writeFileSync } from 'node:fs';
+import { availableParallelism } from 'node:os';
 import { join } from 'node:path';
 import { format, resolveConfig } from 'prettier';
 import { KIND_MODEL } from '@/lib/app/synths/lib/soundkind-model';
@@ -33,7 +34,7 @@ const pct = (a: { agree: number; total: number }): string =>
 async function main(): Promise<void> {
   const report = process.argv.includes('--report');
   const t0 = performance.now();
-  const rows = await sweepLibrary();
+  const rows = await sweepLibrary(Math.max(1, availableParallelism() - 1));
   console.log(`read ${rows.length} sounds in ${((performance.now() - t0) / 1000).toFixed(0)} s`);
 
   const model = report ? KIND_MODEL : fitKindModel(rows);
