@@ -10,6 +10,12 @@ Each sound plays its phrase for 3 s at 48 kHz. `Math.random` is reset to the sam
 every sound, so a sound's numbers depend only on its own settings, not on run order or on
 which sounds were selected.
 
+The engine draws from that one sequence for everything random: each voice's LFO phases, noise,
+sample and hold. So an engine change that adds a draw moves every draw after it and changes
+sounds that never use the new feature. A draw for a new feature belongs behind the params that
+turn it on (t-138: a third LFO's phase, drawn for every poly voice, moved twelve synths). After
+any engine change, run `--compare` on every synth, not just the one the change was for.
+
 | Field    | What it is                                                                                       |
 | -------- | ------------------------------------------------------------------------------------------------ |
 | `peak`   | largest absolute sample                                                                          |
