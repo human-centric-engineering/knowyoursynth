@@ -190,6 +190,8 @@ beforeEach(() => {
 });
 afterEach(() => {
   vi.unstubAllGlobals();
+  // The glide tests silence console.error to read it; the rest of the file keeps React's warnings.
+  vi.restoreAllMocks();
 });
 
 describe('Suits this sound', () => {
