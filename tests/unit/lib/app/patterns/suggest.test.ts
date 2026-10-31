@@ -36,20 +36,25 @@ import { monoParams } from '@/tests/unit/lib/app/synths/audio/render';
 const CATALOGUE = loadCatalogueData();
 
 /** Every library riff as a candidate, keyed `<synth>/<sound>`. */
-const RIFFS: SuggestCandidate[] = CATALOGUE.sounds.flatMap((file) =>
-  file.sounds.map((sound) => {
+const RIFFS: SuggestCandidate[] = CATALOGUE.sounds.flatMap((file) => {
+  const def = getSynthDef(file.synth);
+  if (!def) throw new Error(`no definition for ${file.synth}`);
+  return file.sounds.map((input) => {
+    const checked = validatePreset(def, input);
+    if (!checked.ok) throw new Error(`${file.synth}: a sound that is not valid`);
+    const sound = checked.value;
     const pattern = importPhrase(sound.phrase);
     const { notes, beats } = firstLoop(pattern);
     return {
-      id: `${file.synth}/${String(sound.id)}`,
-      name: String(sound.name),
+      id: `${file.synth}/${sound.id}`,
+      name: sound.name,
       role: defaultRole(notes, beats),
       fidelity: 'in_the_style_of' as const,
       facts: patternFacts(pattern),
       inspiredBy: { artistId: null, synthId: null },
     };
-  })
-);
+  });
+});
 const byId = new Map(RIFFS.map((c) => [c.id, c]));
 const NO_CONTEXT: SuggestContext = { synthId: 'model-d', artistId: null, exclude: new Set() };
 

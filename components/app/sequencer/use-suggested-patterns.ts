@@ -63,14 +63,13 @@ export interface SuggestedPatterns {
   retry: () => void;
 }
 
+const OFF = { state: 'off', result: null } as const;
+
 export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
   const { synthId, def, panel, start, enabled = true } = input;
   const [wanted, setWanted] = useState(false);
   const [tries, setTries] = useState(0);
-  const [status, setStatus] = useState<{ state: SuggestState; result: SuggestResult | null }>({
-    state: 'off',
-    result: null,
-  });
+  const [status, setStatus] = useState<{ state: SuggestState; result: SuggestResult | null }>(OFF);
   const reader = useRef<KindReader | null>(null);
   const starts = useRef(new Map<string, Promise<SoundFeatures>>());
   const answers = useRef(new Map<string, Promise<SuggestResult>>());
@@ -89,7 +88,8 @@ export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
 
   useEffect(() => {
     if (!wanted || !enabled) {
-      setStatus({ state: 'off', result: null });
+      // The same object while it stays off: a panel change with the picker closed re-renders nothing.
+      setStatus((s) => (s.state === 'off' ? s : OFF));
       return undefined;
     }
     let live = true;
