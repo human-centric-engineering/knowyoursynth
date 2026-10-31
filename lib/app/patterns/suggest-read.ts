@@ -79,6 +79,9 @@ export function forgetSuggestLibrary(): void {
  */
 export async function suggestPatterns(body: SuggestBody): Promise<SuggestResult | null> {
   if (!getSynthDef(body.synthId)) return null;
+  // The library is read while the sound is looked up; a silent patch needs neither.
+  const kind = kindOf(body.features);
+  const library = kind ? publicLibrary() : null;
   let artistId: string | null = null;
   const exclude = new Set<string>();
   if (body.sound) {
@@ -97,9 +100,8 @@ export async function suggestPatterns(body: SuggestBody): Promise<SuggestResult 
       artistId ??= pattern.inspiredArtistId;
     }
   }
-  const kind = kindOf(body.features);
-  if (!kind) return { reading: null, suggestions: [] };
-  const views = await publicLibrary();
+  if (!kind || !library) return { reading: null, suggestions: [] };
+  const views = await library;
   const byId = new Map(views.map((v) => [v.id, v]));
   const ranked = rankPatterns(
     kind,

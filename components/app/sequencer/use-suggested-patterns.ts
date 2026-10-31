@@ -38,7 +38,8 @@ export interface SuggestInput {
   /** The panel now. */
   panel: PanelState;
   /**
-   * The library sound the panel started as, as it came, or null with none (then the patch is always offered more).
+   * The library sound the panel started as, as it came (at the lesson step on the panel, if it is on one), or null
+   * with none (then the patch is always offered more).
    * Its panel is worked out only when it is read. Keep it the same object while the sound is the same: a new one reads
    * the patch again.
    */
@@ -78,7 +79,8 @@ export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
   const [wanted, setWanted] = useState(false);
   const [status, setStatus] = useState<{ state: SuggestState; result: SuggestResult | null }>(OFF);
   const reader = useRef<KindReader | null>(null);
-  const starts = useRef(new Map<string, Promise<SoundFeatures>>());
+  // Each start's reading, by the start itself: a new sound, or a new lesson step of it, is a new start.
+  const starts = useRef(new WeakMap<object, Promise<SoundFeatures>>());
   const answers = useRef(new Map<string, Promise<SuggestResult>>());
   useEffect(
     () => () => {
@@ -112,12 +114,11 @@ export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
         });
       let startRead: Promise<SoundFeatures | null> = Promise.resolve(null);
       if (start) {
-        const key = `${synthId}/${start.slug}`;
-        let kept = starts.current.get(key);
+        let kept = starts.current.get(start);
         if (!kept) {
           kept = readPanel(start.panel);
-          starts.current.set(key, kept);
-          kept.catch(() => starts.current.delete(key));
+          starts.current.set(start, kept);
+          kept.catch(() => starts.current.delete(start));
         }
         startRead = kept;
       }
@@ -148,11 +149,13 @@ export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
             if (live && result) setStatus({ state: 'ready', result });
           },
           (err: unknown) => {
+            // A reading of a patch that has gone (the picker closed, the page left) failed nobody.
+            if (!live) return;
             logger.warn('sequencer: patterns that suit the patch could not be worked out', {
               synthId,
               err: String(err),
             });
-            if (live) setStatus({ state: 'error', result: null });
+            setStatus({ state: 'error', result: null });
           }
         );
     }, SETTLE_MS);

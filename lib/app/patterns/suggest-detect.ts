@@ -105,9 +105,9 @@ export function createKindReader(): KindReader {
           return;
         }
         const id = next++;
-        pending.set(id, p);
         const msg: ProbeWorkerRequest = { type: 'kind', id, params };
-        w.postMessage(msg);
+        w.postMessage(msg); // throws (and rejects) before anything waits on it
+        pending.set(id, p);
         if (!proven) {
           // From the first reading still unanswered: a later one does not put the deadline back.
           timer ??= setTimeout(() => giveUp('no answer'), KIND_WORKER_TIMEOUT_MS);

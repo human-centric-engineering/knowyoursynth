@@ -313,7 +313,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
   const ownNone = !soundPatterns?.patterns?.length;
   const suggestLine = !suggested
     ? null
-    : suggested.state === 'reading' && ownNone
+    : (suggested.state === 'reading' || (suggested.state === 'off' && panel === 'sound')) && ownNone
       ? 'Listening to the patch for patterns that suit it…'
       : suggested.state === 'error'
         ? 'Patterns that suit this sound could not be worked out. Close Patterns and open it again to try again.'

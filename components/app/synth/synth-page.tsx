@@ -1319,8 +1319,10 @@ function Synth({
   const startSlug = librarySound?.slug ?? null;
   const suggestStart = useMemo(
     () =>
-      startSlug && preset ? { slug: startSlug, panel: () => presetState(synthDef, preset) } : null,
-    [startSlug, preset, synthDef]
+      startSlug && preset
+        ? { slug: startSlug, panel: () => presetState(synthDef, preset, sess.step) }
+        : null,
+    [startSlug, preset, synthDef, sess.step]
   );
   const suggestPanel = useMemo(
     () => ({ values: sess.values, cables: sess.cables }),

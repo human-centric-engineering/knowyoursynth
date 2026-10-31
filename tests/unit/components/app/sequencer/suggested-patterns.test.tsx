@@ -123,11 +123,14 @@ function Page({
   panel,
   fromLibrary = true,
   open = true,
+  start = START,
 }: {
   panel: PanelState;
   fromLibrary?: boolean;
   /** Whether the sequencer is on the page. */
   open?: boolean;
+  /** What the panel started as: the sound as it came, unless a test says otherwise. */
+  start?: typeof START;
 }) {
   const seq = useSequencer({ engine: null, ensureAudio: async () => false, riff: BASS.phrase });
   const mine = useMyPatterns();
@@ -139,7 +142,7 @@ function Page({
     synthId: 'model-d',
     def: DEF,
     panel,
-    start: fromLibrary ? START : null,
+    start: fromLibrary ? start : null,
     ownPatterns: soundPatterns?.patterns?.length ?? null,
   });
   suggestState = suggested.state;
@@ -313,5 +316,14 @@ describe('Suits this sound', () => {
     expect(suggestState).toBe('reading');
     expect(screen.queryByRole('list', { name: 'Suits this sound' })).toBeNull();
     await waitForState('ready');
+  });
+
+  it('takes a lesson step of a library sound as it came, not as moved far from the finished sound', async () => {
+    const step = { slug: BASS.id, panel: () => presetState(DEF, BASS, 0) };
+    // The first step is far from the finished sound, so comparing against that would offer more.
+    render(<Page panel={presetState(DEF, BASS, 0)} start={step} />);
+    await open(`${BASS.name}’s patterns`);
+    await waitForState('near');
+    expect(post()).not.toHaveBeenCalled();
   });
 });

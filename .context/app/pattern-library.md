@@ -720,7 +720,7 @@ it is kept for a minute: an admin's edit, or a pattern disabled (t-156), reaches
 
 - **A library sound as it came** shows its own patterns only.
 - **Once it has moved far from how it came**, Suits this sound appears under them. Far is a `kindDistance` of
-  **0.4** or more between the patch now and the sound as it came (`presetState`), both read by the detector.
+  **0.4** or more between the patch now and the sound as it came (`presetState`, at the lesson step on the panel if it is on one, so following a lesson is not moving away from the sound), both read by the detector.
   `kindDistance` is the root mean square of the difference over the model's inputs, each in its standard deviations
   across the library (`KIND_MODEL.scale`). Measured over every 12th library sound on 2026-10-31: a knob moved a tenth
   of its travel crosses 0.4 9% of the time, a knob moved a third of its travel 17%, and another sound of the same synth
