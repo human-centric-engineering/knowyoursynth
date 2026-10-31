@@ -11,15 +11,18 @@
  *   upload all go through it.
  * - **The riff pattern follows the riff while nobody has edited it.** An unedited riff pattern that is still its
  *   sound's default is rewritten from the sound's riff whenever the two differ, so a changed seed file reaches both.
- * - **Whatever changes a default rewrites the riff** ({@link syncSoundPhrases}): an admin's edit to a pattern, or a
- *   new order for a sound's list. The sound is then marked edited, so the seed leaves the pair alone, as it leaves any
- *   admin's edit. A riff already holding the pattern's notes is not rewritten, so a re-run writes nothing.
+ * - **Whatever an admin does to a default marks the sound edited** ({@link syncSoundPhrases}): an edit to the
+ *   pattern, or a new pattern at the head of the list. The riff is rewritten to the new notes where they differ, and
+ *   the sound is marked edited even where they do not, so the seed and an upload leave the pair alone, as they leave
+ *   any admin's edit. A riff already holding the pattern's notes is not rewritten, so a re-run writes nothing.
+ * - **A default plays whole as a riff** ({@link riffProblem}). A riff has one part and loops at its last note's end,
+ *   so a pattern with a second part in its chain, or rests after its last note, cannot be a sound's default.
  * - **Nothing is deleted.** A pattern stays in the library, and in every list it is on, whatever happens to it.
  */
 import { z } from 'zod';
 import type { LibraryPattern, PatternInspiration, Prisma } from '@prisma/client';
 import type { Phrase } from '@/lib/app/synths/contract';
-import { importPhrase } from '@/lib/app/sequencer/import';
+import { importPhrase, phraseBeats } from '@/lib/app/sequencer/import';
 import { PresetSchema } from '@/lib/app/synths/validate';
 import { PATTERN_VERSION, PatternSchema, type Pattern } from '@/lib/app/sequencer/pattern';
 import { sameValue } from '@/lib/app/catalogue/seed';
@@ -93,6 +96,21 @@ export function phraseOf(pattern: Pattern): Phrase {
         : [tidy(beat), note, tidy(len), velocity]
     ),
   };
+}
+
+/**
+ * Why a pattern cannot be a sound's default, or `null` when it can: the riff it becomes must play it whole. A riff
+ * has one part, plays at least one note, and loops where its last note ends.
+ */
+export function riffProblem(pattern: Pattern): string | null {
+  if (new Set(pattern.chain).size > 1)
+    return 'A sound plays its default as a riff, which has one part: a chain of two parts cannot be a default';
+  const riff = phraseOf(pattern);
+  if (!riff.steps.length) return 'A default plays at least one note on its first loop';
+  // The engine loops a riff at its last note's end, rounded up to a whole beat.
+  if (phraseBeats(riff) !== firstLoop(pattern).beats)
+    return 'A sound plays its default as a riff, which loops where its last note ends: a default cannot end in rests';
+  return null;
 }
 
 /** A riff, as a sound stores it. */
@@ -221,9 +239,12 @@ export interface RiffSyncCounts {
   unchanged: number;
   /** Riff patterns an admin has edited, or that are no longer their sound's default: left alone. */
   edited: number;
+  /** Other sounds an admin put an updated riff pattern at the head of, whose riffs followed it. */
+  rewritten: RewrittenRiff[];
 }
 
-const DEFAULT_FIRST: Prisma.SynthSoundPatternOrderByWithRelationInput[] = [
+/** The order a sound's list is read in: its default first. Every read of "the default" uses it. */
+export const DEFAULT_FIRST: Prisma.SynthSoundPatternOrderByWithRelationInput[] = [
   { order: 'asc' },
   { patternId: 'asc' },
 ];
@@ -239,9 +260,15 @@ const DEFAULT_FIRST: Prisma.SynthSoundPatternOrderByWithRelationInput[] = [
 export async function syncRiffPatterns(
   db: LibraryDb,
   where: Prisma.SynthSoundWhereInput = {},
-  ctx?: InspirationContext
+  { ctx, markEdited = false }: { ctx?: InspirationContext; markEdited?: boolean } = {}
 ): Promise<RiffSyncCounts> {
-  const counts: RiffSyncCounts = { created: 0, updated: 0, unchanged: 0, edited: 0 };
+  const counts: RiffSyncCounts = {
+    created: 0,
+    updated: 0,
+    unchanged: 0,
+    edited: 0,
+    rewritten: [],
+  };
   const sounds = await db.synthSound.findMany({
     where,
     select: {
@@ -264,7 +291,7 @@ export async function syncRiffPatterns(
     ).map((p) => [p.key, p])
   );
 
-  const changed: string[] = [];
+  const changed: { patternId: string; soundId: string }[] = [];
   for (const sound of sounds) {
     // Every write checks a sound's riff, so a riff that does not parse was changed by hand: the reader leaves that
     // sound out, and so does this.
@@ -287,21 +314,23 @@ export async function syncRiffPatterns(
       counts.unchanged++;
     } else {
       await db.libraryPattern.update({ where: { id: current.id }, data: planned });
-      changed.push(current.id);
+      changed.push({ patternId: current.id, soundId: sound.id });
       counts.updated++;
     }
   }
-  // A riff pattern an admin also put at the head of another sound's list: that sound's riff follows it.
-  if (changed.length)
-    await syncSoundPhrases(db, { patterns: { some: { patternId: { in: changed } } } });
+  // A riff pattern an admin also put at the head of another sound's list: that sound's riff follows it. Such a sound
+  // is already edited (putting another sound's pattern first marked it), so the seed's pass changes no ownership.
+  for (const { patternId, soundId } of changed)
+    counts.rewritten.push(
+      ...(await syncSoundPhrases(
+        db,
+        { id: { not: soundId }, patterns: { some: { patternId } } },
+        { head: patternId, markEdited }
+      ))
+    );
   return counts;
 }
 
-/**
- * Rewrite each sound's riff as its default pattern's notes, where it does not already play them. `markEdited` marks
- * a rewritten sound as an admin's, which every admin write does: the seed would otherwise put the old riff back.
- * Returns each sound whose riff changed, before and after, for the caller to audit.
- */
 /** A sound whose riff was rewritten to its default's notes, before and after. */
 export interface RewrittenRiff {
   synthId: string;
@@ -311,10 +340,16 @@ export interface RewrittenRiff {
   after: Phrase;
 }
 
+/**
+ * Rewrite each sound's riff as its default pattern's notes, where it does not already play them. `head` limits it to
+ * the sounds that pattern is the default of. `markEdited`, which every admin write passes, marks each such sound as an
+ * admin's whether or not its riff changed: the seed and an upload would otherwise write a riff the default no longer
+ * matches. Returns each sound whose riff changed, before and after, for the caller to audit.
+ */
 export async function syncSoundPhrases(
   db: LibraryDb,
   where: Prisma.SynthSoundWhereInput,
-  { markEdited = false }: { markEdited?: boolean } = {}
+  { markEdited = false, head }: { markEdited?: boolean; head?: string } = {}
 ): Promise<RewrittenRiff[]> {
   const sounds = await db.synthSound.findMany({
     where,
@@ -324,22 +359,29 @@ export async function syncSoundPhrases(
       slug: true,
       name: true,
       phrase: true,
+      editedAt: true,
       patterns: {
         orderBy: DEFAULT_FIRST,
         take: 1,
-        select: { pattern: { select: { pattern: true } } },
+        select: { patternId: true, pattern: { select: { pattern: true } } },
       },
     },
   });
   const rewritten: RewrittenRiff[] = [];
   for (const sound of sounds) {
-    const parsed = PatternSchema.safeParse(sound.patterns[0]?.pattern.pattern);
+    const first = sound.patterns[0];
+    if (!first || (head !== undefined && first.patternId !== head)) continue;
+    const mark = markEdited && !sound.editedAt ? { editedAt: new Date() } : {};
+    const parsed = PatternSchema.safeParse(first.pattern.pattern);
     // Checked on every write; a row changed by hand is left for the admin page to show.
-    if (!parsed.success || riffPlays(sound.phrase, parsed.data)) continue;
+    if (!parsed.success || riffPlays(sound.phrase, parsed.data)) {
+      if ('editedAt' in mark) await db.synthSound.update({ where: { id: sound.id }, data: mark });
+      continue;
+    }
     const after = phraseOf(parsed.data);
     await db.synthSound.update({
       where: { id: sound.id },
-      data: { phrase: toJson(after), ...(markEdited ? { editedAt: new Date() } : {}) },
+      data: { phrase: toJson(after), ...mark },
     });
     rewritten.push({
       synthId: sound.synthId,
@@ -362,54 +404,34 @@ export interface PatternChange {
 }
 
 /**
- * After an admin changed a sound, bring its default pattern along. While the default is the sound's own unedited riff
- * pattern, it is re-made from the riff as the seed would make it. Otherwise the default is an admin's choice, and a
- * new riff is written into it, marking it edited, and every other sound it is the default of follows.
- *
- * The caller has checked the riff with `importPhrase`.
+ * Whether a sound's default is its own riff pattern, unedited: the one case where the sound's riff is the source of
+ * its default, and so the one case where the riff may be edited directly. Any other default is a pattern in its own
+ * right (an admin's, or another sound's), and is changed as a pattern, never by rewriting a sound's riff into it.
  */
-export async function followSoundRiff(
-  db: LibraryDb,
-  soundId: string
-): Promise<{
-  pattern: PatternChange | null;
-  sounds: Awaited<ReturnType<typeof syncSoundPhrases>>;
-}> {
+export async function riffLeadsDefault(db: LibraryDb, soundId: string): Promise<boolean> {
   const sound = await db.synthSound.findUniqueOrThrow({
     where: { id: soundId },
     select: {
       synthId: true,
       slug: true,
-      phrase: true,
-      patterns: { orderBy: DEFAULT_FIRST, take: 1, select: { pattern: true } },
+      patterns: {
+        orderBy: DEFAULT_FIRST,
+        take: 1,
+        select: { pattern: { select: { key: true, editedAt: true } } },
+      },
     },
   });
   const head = sound.patterns[0]?.pattern;
-  if (!head || (head.key === riffKey(sound.synthId, sound.slug) && !head.editedAt)) {
-    await syncRiffPatterns(db, { id: soundId });
-    return { pattern: null, sounds: [] };
-  }
-  const phrase = PhraseSchema.parse(sound.phrase);
-  const current = PatternSchema.safeParse(head.pattern);
-  if (current.success && riffPlays(phrase, current.data)) return { pattern: null, sounds: [] };
-  const pattern = toJson(importPhrase(phrase));
-  await db.libraryPattern.update({
-    where: { id: head.id },
-    data: { pattern, version: PATTERN_VERSION, editedAt: new Date() },
-  });
-  return {
-    pattern: {
-      id: head.id,
-      name: head.name,
-      before: { pattern: head.pattern },
-      after: { pattern },
-    },
-    sounds: await syncSoundPhrases(
-      db,
-      { id: { not: soundId }, patterns: { some: { patternId: head.id } } },
-      { markEdited: true }
-    ),
-  };
+  return !head || (head.key === riffKey(sound.synthId, sound.slug) && !head.editedAt);
+}
+
+/**
+ * After an admin changed a sound whose riff leads its default ({@link riffLeadsDefault}), re-make the riff pattern
+ * from it as the seed would. Returns every other sound whose riff followed, for the caller to audit.
+ */
+export async function followSoundRiff(db: LibraryDb, soundId: string): Promise<RewrittenRiff[]> {
+  const { rewritten } = await syncRiffPatterns(db, { id: soundId }, { markEdited: true });
+  return rewritten;
 }
 
 // ─── The view every read serves ──────────────────────────────────────────────

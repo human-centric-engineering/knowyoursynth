@@ -412,16 +412,24 @@ probe, lessons, the tutor, sharing and the content template all still read the o
   `importPhrase` refuses is refused by the seed's checks and by the admin API, before anything is written.
 - **An unedited riff pattern follows its sound's riff** while it is still the sound's default. A changed seed file
   reaches both.
-- **Whatever changes a default rewrites the riff** (`syncSoundPhrases`): an admin's edit to a pattern that is a
-  sound's default, or a new order for a sound's list. Each sound rewritten is marked edited, so the seed then leaves
-  it alone, as it leaves any admin's edit. A riff that already plays the pattern's notes is not rewritten.
-- **Editing a sound's riff directly** (`PATCH …/sounds/:slug` with `phrase`) moves its default with it
-  (`followSoundRiff`). If the default is the sound's own unedited riff pattern, it is remade as the seed would make
-  it. If the default is an admin's choice, the new riff is written into it, marked edited, and every other sound it is
-  the default of follows.
+- **Whatever an admin does to a default marks the sound edited** (`syncSoundPhrases`): any edit to a pattern that
+  is a sound's default (its name alone included), or a new pattern at the head of a sound's list. The riff is
+  rewritten where the notes differ, and the sound is marked edited either way, so the seed and an upload then leave
+  it alone. Otherwise a reseed could write a riff the admin's default no longer matches. A riff that already plays
+  the pattern's notes is not rewritten.
+- **A default plays whole as a riff** (`riffProblem`). A riff has one part and loops where its last note ends, so a
+  pattern whose chain has a second part, that ends in rests, or that plays nothing on its first loop cannot be a
+  sound's default. It can still be in the library and on a sound's list behind the default. Playing a pattern in full
+  is the sequencer's job (t-123).
+- **A sound's riff is edited directly only while it leads** (`riffLeadsDefault`): while the default is the sound's own
+  unedited riff pattern, `PATCH …/sounds/:slug` with `phrase` remakes that pattern as the seed would
+  (`followSoundRiff`), and any other sound an admin put it first on follows, marked edited and audited. Once the
+  default is an admin's pattern, a new `phrase` is refused: the admin changes the pattern, which keeps its parts,
+  swing and scale, instead of having them flattened into a riff.
 
 Placement is content here, unlike the catalogue's: a new order that changes a sound's default changes its riff, so it
-marks the sound edited. A new order that keeps the default writes only the list.
+marks the sound edited. A new order behind the same default writes only the list. A sound's list is written holding
+its synth's row, as a reorder of its sounds is.
 
 ### The seed
 
@@ -445,8 +453,9 @@ pilot's to add, since there is nothing to load yet.
 
 ### The API
 
-Public, no session needed, in `lib/app/patterns/library-read.ts`. A pattern only a hidden synth's sounds list is not
-served, so hiding a synth hides its riffs; one on no sound yet is.
+Public, no session needed, in `lib/app/patterns/library-read.ts`. A pattern is served only when it is on a sound of
+a synth the catalogue serves (listed, and in the registry). So hiding a synth hides its riffs, and a pattern on no
+sound yet (an admin's, still being written) is admin only.
 
 | Route                                             | Does                                                 |
 | ------------------------------------------------- | ---------------------------------------------------- |
@@ -471,8 +480,9 @@ apart so the two never meet.
 
 The checks on a write, merged into the stored pattern first:
 
-- The pattern passes `PatternSchema` and plays at least one note on its first loop, so a sound it is the default of
-  always has a riff.
+- The pattern passes `PatternSchema` and plays at least one note on its first loop.
+- A pattern that is, or is being made, a sound's default plays whole as a riff (`riffProblem`, above).
+- A tempo range includes the bpm the pattern is written at.
 - A _Transcribed_ or _Reconstructed_ pattern is inspired by a work in the databank and lists at least one source.
 - Inspired by links to a row that exists (a part must be of the song named), and takes its label from that row.
 - An edit that changes nothing writes and audits nothing.

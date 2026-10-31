@@ -213,9 +213,10 @@ describe('a hidden synth', () => {
     const list = await json(await getPublicList(request('GET', 'library-patterns')));
     expect(list.data).toEqual([]);
 
+    db.synth.rows[0].listed = true;
     db.synthSoundPattern.rows.length = 0;
     expect((await getPublicOne(request('GET', `library-patterns/${id}`), ctx({ id }))).status).toBe(
-      200
+      404
     );
   });
 
@@ -394,6 +395,38 @@ describe('editing a pattern', () => {
     expect(await set({ kind: 'work', songId: 'the-model', partId: 'not-its-part' })).toBe(400);
   });
 
+  it('refuses a tempo range that leaves out the bpm it is written at, and an edit to a default that ends in rests', async () => {
+    const id = String(riff(0).id);
+    const bpm = Number((riff(0).pattern as { bpm: number }).bpm);
+    const tempo = await patchPattern(
+      request('PATCH', `admin/library-patterns/${id}`, { tempo: { min: bpm + 1, max: bpm + 10 } }),
+      ctx({ id })
+    );
+    expect(tempo.status).toBe(400);
+    expect((await json(tempo)).error?.details?.errors?.[0].path).toBe('tempo');
+
+    const rests = importPhrase({ bpm: 120, loop: true, steps: [[0, 48, 1]] });
+    rests.parts[0].steps.push(
+      ...structuredClone(rests.parts[0].steps).map((s) => ({ ...s, notes: [] }))
+    );
+    const res = await patchPattern(
+      request('PATCH', `admin/library-patterns/${id}`, { pattern: rests }),
+      ctx({ id })
+    );
+    expect(res.status).toBe(400);
+    expect(writes()).toBe(0);
+  });
+
+  it('marks the sound it is the default of edited, even for a change of name alone', async () => {
+    const id = String(riff(0).id);
+    await patchPattern(
+      request('PATCH', `admin/library-patterns/${id}`, { name: 'Renamed' }),
+      ctx({ id })
+    );
+    expect(sound(0).editedAt).toBeInstanceOf(Date);
+    expect(sound(1).editedAt).toBeNull();
+  });
+
   it('is a 404 for a pattern that is not there', async () => {
     const none = 'c' + 'x'.repeat(24);
     const res = await patchPattern(
@@ -472,6 +505,36 @@ describe("a sound's list", () => {
     expect(sound(0).editedAt).toBeNull();
   });
 
+  it('refuses a new default that ends in rests, which its riff could not play whole', async () => {
+    const id = String(riff(1).id);
+    const rests = importPhrase({ bpm: 120, loop: true, steps: [[0, 48, 1]] });
+    rests.parts[0].steps.push(
+      ...structuredClone(rests.parts[0].steps).map((s) => ({ ...s, notes: [] }))
+    );
+    // As a pattern on no sound's head, it may end in rests.
+    db.synthSoundPattern.rows.splice(
+      db.synthSoundPattern.rows.findIndex((l) => l.patternId === id),
+      1
+    );
+    expect(
+      (
+        await patchPattern(
+          request('PATCH', `admin/library-patterns/${id}`, { pattern: rests }),
+          ctx({ id })
+        )
+      ).status
+    ).toBe(200);
+    const res = await putSoundPatterns(
+      request('PUT', `admin/synths/model-d/sounds/${slug(0)}/patterns`, {
+        patternIds: [id, riff(0).id],
+      }),
+      ctx({ id: 'model-d', slug: slug(0) })
+    );
+    expect(res.status).toBe(400);
+    expect((await json(res)).error?.details?.errors?.[0].path).toBe('patternIds.0');
+    expect(listOf(0)).toEqual([riff(0).id]);
+  });
+
   it('refuses a pattern named twice, and a sound that is not there', async () => {
     const twice = await putSoundPatterns(
       request('PUT', `admin/synths/model-d/sounds/${slug(0)}/patterns`, {
@@ -540,33 +603,25 @@ describe('adding a pattern', () => {
 });
 
 describe("a sound's riff edited directly", () => {
-  it('writes into a default an admin chose, and audits it with the other sounds it reached', async () => {
-    // Sound 1's riff is the default of sounds 1 and 0, and an admin has edited it.
+  it('refuses a new riff while the sound plays a pattern an admin chose, writing nothing', async () => {
     for (const l of db.synthSoundPattern.rows) if (l.soundId === sound(0).id) l.order = 1;
     db.synthSoundPattern.rows.push({ soundId: sound(0).id, patternId: riff(1).id, order: 0 });
-    riff(1).editedAt = new Date();
-    const phrase: Phrase = {
-      bpm: 100,
-      loop: true,
-      steps: [
-        [0, 38, 1],
-        [1, 41, 1],
-      ],
-    };
-
     const res = await patchSound(
-      request('PATCH', `admin/synths/model-d/sounds/${slug(1)}`, { phrase }),
-      ctx({ id: 'model-d', slug: slug(1) })
+      request('PATCH', `admin/synths/model-d/sounds/${slug(0)}`, {
+        phrase: { bpm: 100, loop: true, steps: [[0, 38, 1]] },
+      }),
+      ctx({ id: 'model-d', slug: slug(0) })
     );
+    expect(res.status).toBe(400);
+    expect((await json(res)).error?.details?.errors?.[0].path).toBe('phrase');
+    expect(writes()).toBe(0);
 
-    expect(res.status).toBe(200);
-    expect(riff(1).pattern).toEqual(JSON.parse(JSON.stringify(importPhrase(phrase))));
-    expect((sound(0).phrase as Phrase).steps.map(([, n]) => n)).toEqual([38, 41]);
-    expect(audits().map((a) => [a.action, a.entityId])).toEqual([
-      ['synth_sound.update', `model-d/${slug(1)}`],
-      ['library_pattern.update', riff(1).id],
-      ['synth_sound.update', `model-d/${slug(0)}`],
-    ]);
+    // Its other fields can still change.
+    const named = await patchSound(
+      request('PATCH', `admin/synths/model-d/sounds/${slug(0)}`, { name: 'Renamed' }),
+      ctx({ id: 'model-d', slug: slug(0) })
+    );
+    expect(named.status).toBe(200);
   });
 
   it('refuses a riff that cannot be a pattern, writing nothing', async () => {

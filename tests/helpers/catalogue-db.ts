@@ -162,9 +162,9 @@ function withLibraryRelations(db: {
   const soundWhere = (row: Row, where: Where = {}): boolean => {
     const { patterns, synth, ...rest } = where as {
       patterns?: { some: { patternId: unknown } };
-      synth?: { listed: boolean };
+      synth?: Where;
     };
-    if (synth && db.synth.rows.find((s) => s.id === row.synthId)?.listed !== synth.listed)
+    if (synth && !matches(db.synth.rows.find((s) => s.id === row.synthId) ?? {}, synth))
       return false;
     if (patterns) {
       const id = patterns.some.patternId;
@@ -223,7 +223,7 @@ function withLibraryRelations(db: {
     const { AND, OR, sounds, ...rest } = where as {
       AND?: Where[];
       OR?: Where[];
-      sounds?: { none?: object; some?: { sound: { synth: { listed: boolean } } } };
+      sounds?: { none?: object; some?: { sound: { synth: Where } } };
     };
     if (AND && !AND.every((w) => patternWhere(row, w))) return false;
     if (OR && !OR.some((w) => patternWhere(row, w))) return false;

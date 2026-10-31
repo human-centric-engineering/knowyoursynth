@@ -2,21 +2,24 @@
  * Public reads of the pattern library (`f-pattern-library` t-122): a sound's patterns, one pattern, and the library
  * filtered by role.
  *
- * A pattern is public when it is on a listed synth's sound, or on no sound at all (a researched pattern waiting for
- * one). One that only a hidden synth's sounds list is not, so hiding a synth hides its riffs as well. A row that no
+ * A pattern is public when it is on a sound of a synth the catalogue serves: listed, and in the registry, as
+ * `lib/app/catalogue/read.ts` decides it. One that only a hidden synth's sounds list is not, so hiding a synth hides
+ * its riffs as well, and one on no sound yet (an admin's pattern still being written) is admin only. A row that no
  * longer parses is left out and logged (`toView`).
  */
 import { z } from 'zod';
 import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
 import { logger } from '@/lib/logging';
-import { getSynthDef } from '@/lib/app/synths/defs';
+import { getSynthDef, SYNTH_DEFS } from '@/lib/app/synths/defs';
 import { PATTERN_ROLES } from '@/lib/app/patterns/library-facts';
-import { toView, type LibraryPatternView } from '@/lib/app/patterns/library';
+import { DEFAULT_FIRST, toView, type LibraryPatternView } from '@/lib/app/patterns/library';
 
-/** Where a pattern may be read from: on a listed synth's sound, or on no sound. */
+/** Where a pattern may be read from: on a sound of a listed synth the app can play. */
 const PUBLIC: Prisma.LibraryPatternWhereInput = {
-  OR: [{ sounds: { none: {} } }, { sounds: { some: { sound: { synth: { listed: true } } } } }],
+  sounds: {
+    some: { sound: { synth: { listed: true, id: { in: SYNTH_DEFS.map((d) => d.id) } } } },
+  },
 };
 
 function served(row: Parameters<typeof toView>[0]): LibraryPatternView | null {
@@ -47,7 +50,7 @@ export async function getSoundPatterns(
     where: { synthId, slug, synth: { listed: true } },
     select: {
       patterns: {
-        orderBy: [{ order: 'asc' }, { patternId: 'asc' }],
+        orderBy: DEFAULT_FIRST,
         select: { pattern: true },
       },
     },

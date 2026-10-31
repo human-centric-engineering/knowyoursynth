@@ -15,6 +15,8 @@ import { PatternSchema } from '@/lib/app/sequencer/pattern';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import {
   followSoundRiff,
+  riffLeadsDefault,
+  riffProblem,
   phraseOf,
   planRiffPattern,
   riffInspiration,
@@ -265,7 +267,7 @@ beforeEach(async () => {
 describe('syncRiffPatterns', () => {
   it('gives every sound its riff as its only, default pattern', async () => {
     const counts = await syncRiffPatterns(lib());
-    expect(counts).toEqual({ created: 4, updated: 0, unchanged: 0, edited: 0 });
+    expect(counts).toEqual({ created: 4, updated: 0, unchanged: 0, edited: 0, rewritten: [] });
     expect(db.libraryPattern.rows).toHaveLength(4);
     db.synthSound.rows.forEach((_, i) => expect(listOf(i)).toEqual([patternOf(i).id]));
   });
@@ -278,6 +280,7 @@ describe('syncRiffPatterns', () => {
       updated: 0,
       unchanged: 4,
       edited: 0,
+      rewritten: [],
     });
     expect(writes()).toBe(0);
   });
@@ -289,6 +292,7 @@ describe('syncRiffPatterns', () => {
       updated: 0,
       unchanged: 0,
       edited: 0,
+      rewritten: [],
     });
     expect(writes()).toBe(0);
   });
@@ -362,19 +366,18 @@ describe('a default changed by an admin', () => {
   });
 
   it('leaves a riff that already plays its default alone', async () => {
-    expect(await syncSoundPhrases(lib(), {}, { markEdited: true })).toEqual([]);
+    expect(await syncSoundPhrases(lib(), {})).toEqual([]);
     expect(writes()).toBe(0);
   });
 
-  it("writes a sound's new riff into a default an admin chose, and every sound it is the default of follows", async () => {
-    // Sound 1's riff pattern is the default of sounds 1 and 2, and an admin has edited it.
+  it("follows a sound's riff into its own riff pattern, and every sound an admin put it first on, marked edited", async () => {
+    // Sound 1's riff pattern, unedited, is also the default of sound 2.
     for (const l of db.synthSoundPattern.rows) if (l.soundId === soundRow(2).id) l.order = 1;
     db.synthSoundPattern.rows.push({
       soundId: soundRow(2).id,
       patternId: patternOf(1).id,
       order: 0,
     });
-    patternOf(1).editedAt = new Date();
     const changed: Phrase = {
       bpm: 90,
       loop: true,
@@ -384,23 +387,71 @@ describe('a default changed by an admin', () => {
       ],
     };
     soundRow(1).phrase = changed;
+    expect(await riffLeadsDefault(lib(), String(soundRow(1).id))).toBe(true);
+    expect(await riffLeadsDefault(lib(), String(soundRow(2).id))).toBe(false);
 
-    const result = await followSoundRiff(lib(), String(soundRow(1).id));
+    const rewritten = await followSoundRiff(lib(), String(soundRow(1).id));
 
     expect(PatternSchema.parse(patternOf(1).pattern)).toEqual(importPhrase(changed));
-    expect(result.pattern?.id).toBe(patternOf(1).id);
-    expect(result.sounds.map((s) => s.slug)).toEqual([soundRow(2).slug]);
+    expect(patternOf(1).editedAt).toBeNull();
+    expect(rewritten.map((s) => s.slug)).toEqual([soundRow(2).slug]);
     expectSameNotes((soundRow(2).phrase as Phrase).steps, changed.steps);
+    expect(soundRow(2).editedAt).toBeInstanceOf(Date);
   });
 
   it("re-makes a sound's own unedited riff pattern from its riff, as the seed would", async () => {
     soundRow(3).phrase = { bpm: 110, loop: true, steps: [[0, 50, 1]] };
     soundRow(3).name = 'Renamed';
 
-    const result = await followSoundRiff(lib(), String(soundRow(3).id));
-
-    expect(result).toEqual({ pattern: null, sounds: [] });
+    expect(await followSoundRiff(lib(), String(soundRow(3).id))).toEqual([]);
     expect(patternOf(3)).toMatchObject({ name: 'Renamed', editedAt: null });
+  });
+
+  it('marks a default edited when only its name changed, so a reseed cannot split the pair', async () => {
+    const before = structuredClone(soundRow(0).phrase);
+    expect(
+      await syncSoundPhrases(
+        lib(),
+        { patterns: { some: { patternId: String(patternOf(0).id) } } },
+        { head: String(patternOf(0).id), markEdited: true }
+      )
+    ).toEqual([]);
+    expect(soundRow(0).phrase).toEqual(before);
+    expect(soundRow(0).editedAt).toBeInstanceOf(Date);
+    expect(soundRow(1).editedAt).toBeNull();
+  });
+});
+
+describe('a pattern that can be a default', () => {
+  const pattern = () =>
+    importPhrase({
+      bpm: 120,
+      loop: true,
+      steps: [
+        [0, 48, 1],
+        [1, 52, 1],
+      ],
+    });
+
+  it('is one its riff plays whole', () => {
+    expect(riffProblem(pattern())).toBeNull();
+  });
+
+  it('is not one that ends in rests, has a second part in its chain, or plays nothing', () => {
+    const rests = pattern();
+    rests.parts[0].steps.push(
+      ...structuredClone(rests.parts[0].steps).map((s) => ({ ...s, notes: [] }))
+    );
+    expect(riffProblem(rests)).toMatch(/rests/);
+
+    const ab = pattern();
+    ab.parts.push(structuredClone(ab.parts[0]));
+    ab.chain = [0, 1];
+    expect(riffProblem(ab)).toMatch(/two parts/);
+
+    const silent = pattern();
+    for (const step of silent.parts[0].steps) step.notes = [];
+    expect(riffProblem(silent)).toMatch(/at least one note/);
   });
 });
 

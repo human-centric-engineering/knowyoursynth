@@ -19,12 +19,21 @@ import { z } from 'zod';
 import type { LibraryPattern, Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
 import { NotFoundError, ValidationError } from '@/lib/api/errors';
-import { MAX_BPM, MIN_BPM, PATTERN_VERSION, PatternSchema } from '@/lib/app/sequencer/pattern';
+import {
+  MAX_BPM,
+  MIN_BPM,
+  PATTERN_VERSION,
+  PatternSchema,
+  type Pattern,
+} from '@/lib/app/sequencer/pattern';
 import { sameValue } from '@/lib/app/catalogue/seed';
+import { lockSynth } from '@/lib/app/catalogue/edit';
 import { PATTERN_ROLES } from '@/lib/app/patterns/library-facts';
 import {
+  DEFAULT_FIRST,
   PatternSourcesSchema,
   phraseOf,
+  riffProblem,
   syncSoundPhrases,
   toView,
   type LibraryDb,
@@ -187,6 +196,11 @@ function checkWhole(c: Columns) {
       path: 'pattern',
       message: 'A library pattern plays at least one note on its first loop',
     });
+  if (c.bpmMin !== null && c.bpmMax !== null && (pattern.bpm < c.bpmMin || pattern.bpm > c.bpmMax))
+    problems.push({
+      path: 'tempo',
+      message: `The tempo range must include the ${pattern.bpm} bpm the pattern is written at`,
+    });
   if (c.fidelity !== 'in_the_style_of') {
     if (c.inspiration !== 'work')
       problems.push({
@@ -201,6 +215,21 @@ function checkWhole(c: Columns) {
       });
   }
   if (problems.length) refuse('The pattern cannot be saved as it is', problems);
+}
+
+/** Whether any sound plays this pattern as its default. */
+async function isADefault(db: LibraryDb, id: string): Promise<boolean> {
+  const sounds = await db.synthSound.findMany({
+    where: { patterns: { some: { patternId: id } } },
+    select: { patterns: { orderBy: DEFAULT_FIRST, take: 1, select: { patternId: true } } },
+  });
+  return sounds.some((s) => s.patterns[0]?.patternId === id);
+}
+
+/** Refuse a pattern that cannot be a sound's default, because its riff would not play it whole (`riffProblem`). */
+function checkDefault(pattern: Pattern, path: string) {
+  const why = riffProblem(pattern);
+  if (why) refuse('The pattern cannot be a sound’s default', [{ path, message: why }]);
 }
 
 /** The columns an input sets, inspiration resolved. */
@@ -295,7 +324,7 @@ const withSounds = {
           slug: true,
           name: true,
           patterns: {
-            orderBy: [{ order: 'asc' }, { patternId: 'asc' }],
+            orderBy: DEFAULT_FIRST,
             take: 1,
             select: { patternId: true },
           },
@@ -395,6 +424,7 @@ export async function editLibraryPattern(
     checkWhole(after);
     // An edit that changes nothing is not an edit: the row stays the seed's.
     if (sameValue(after, before)) return { change: null, sounds: [] };
+    if (await isADefault(tx, id)) checkDefault(PatternSchema.parse(after.pattern), 'pattern');
     await tx.libraryPattern.update({
       where: { id },
       data: {
@@ -409,7 +439,7 @@ export async function editLibraryPattern(
     const sounds = await syncSoundPhrases(
       tx,
       { patterns: { some: { patternId: id } } },
-      { markEdited: true }
+      { head: id, markEdited: true }
     );
     return { change, sounds };
   });
@@ -417,7 +447,9 @@ export async function editLibraryPattern(
 
 /**
  * Put a sound's patterns in a new order, the default first, adding any not on it yet. Every pattern it has must stay
- * on it. The sound's riff becomes its new default's notes.
+ * on it, and a new default must play whole as a riff (`riffProblem`). A new default makes the sound's riff its notes
+ * and marks the sound edited; a new order behind the same default writes only the list. Holds the synth's row, as a
+ * reorder of its sounds does, so two admins' lists for one sound cannot interleave.
  */
 export async function setSoundPatterns(
   synthId: string,
@@ -425,13 +457,14 @@ export async function setSoundPatterns(
   patternIds: string[]
 ): Promise<{ before: string[]; after: string[]; sound: RewrittenRiff | null; name: string }> {
   return prisma.$transaction(async (tx) => {
+    await lockSynth(tx, synthId);
     const sound = await tx.synthSound.findUnique({
       where: { synthId_slug: { synthId, slug } },
       select: {
         id: true,
         name: true,
         patterns: {
-          orderBy: [{ order: 'asc' }, { patternId: 'asc' }],
+          orderBy: DEFAULT_FIRST,
           select: { patternId: true, order: true },
         },
       },
@@ -451,14 +484,11 @@ export async function setSoundPatterns(
         path: 'patternIds',
         message: `A pattern is never taken off a sound; the list leaves out ${missing.join(', ')}`,
       });
-    const known = new Set(
-      (
-        await tx.libraryPattern.findMany({
-          where: { id: { in: patternIds } },
-          select: { id: true },
-        })
-      ).map((p) => p.id)
-    );
+    const found = await tx.libraryPattern.findMany({
+      where: { id: { in: patternIds } },
+      select: { id: true, pattern: true },
+    });
+    const known = new Set(found.map((p) => p.id));
     patternIds.forEach((id, i) => {
       if (!known.has(id))
         problems.push({ path: `patternIds.${i}`, message: `No library pattern has the id ${id}` });
@@ -467,6 +497,9 @@ export async function setSoundPatterns(
 
     if (sameValue(patternIds, before))
       return { before, after: before, sound: null, name: sound.name };
+    const newDefault = patternIds[0] !== before[0];
+    const head = found.find((p) => p.id === patternIds[0]);
+    if (newDefault && head) checkDefault(PatternSchema.parse(head.pattern), 'patternIds.0');
     const orderOf = new Map(sound.patterns.map((p) => [p.patternId, p.order]));
     for (const [order, patternId] of patternIds.entries()) {
       if (!orderOf.has(patternId))
@@ -477,7 +510,9 @@ export async function setSoundPatterns(
           data: { order },
         });
     }
-    const [riff = null] = await syncSoundPhrases(tx, { id: sound.id }, { markEdited: true });
+    const [riff = null] = newDefault
+      ? await syncSoundPhrases(tx, { id: sound.id }, { markEdited: true })
+      : [];
     return { before, after: patternIds, sound: riff, name: sound.name };
   });
 }

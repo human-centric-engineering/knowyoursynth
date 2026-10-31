@@ -23,7 +23,12 @@ import { LineageFileSchema, noteKey, noteTargets } from '@/lib/app/catalogue/dat
 import { sameValue } from '@/lib/app/catalogue/seed';
 import { listSynthDesigns, type AdminSynthDesign } from '@/lib/app/catalogue/designs';
 import { importPhrase } from '@/lib/app/sequencer/import';
-import { followSoundRiff, syncRiffPatterns } from '@/lib/app/patterns/library';
+import {
+  followSoundRiff,
+  riffLeadsDefault,
+  syncRiffPatterns,
+  type RewrittenRiff,
+} from '@/lib/app/patterns/library';
 
 type Json = Prisma.InputJsonValue;
 type Tx = Prisma.TransactionClient;
@@ -394,7 +399,9 @@ const soundColumns = (p: Preset) => ({
 
 /**
  * Change a sound: the edit is merged into the stored sound and the whole is checked before anything is written. Its
- * default library pattern follows (`followSoundRiff`); `library` is what that changed, for the route to audit.
+ * riff can change only while it leads the sound's default (`riffLeadsDefault`); a default an admin chose is changed as
+ * a library pattern instead. The riff pattern follows (`followSoundRiff`); `library` is every other sound whose riff
+ * followed with it, for the route to audit.
  */
 export async function editSound(
   synthId: string,
@@ -403,7 +410,7 @@ export async function editSound(
 ): Promise<{
   before: ReturnType<typeof soundOf>;
   after: ReturnType<typeof soundOf>;
-  library: Awaited<ReturnType<typeof followSoundRiff>>;
+  library: RewrittenRiff[];
 }> {
   const def = defOrRefuse(synthId);
   return prisma.$transaction(async (tx) => {
@@ -422,8 +429,18 @@ export async function editSound(
     const sound = checkSound(def, { ...before, ...edits });
     // An edit that changes nothing is not an edit: the row stays the seed's.
     const { id: _slug, ...stored } = before;
-    if (sameValue(soundColumns(sound), stored))
-      return { before, after: before, library: { pattern: null, sounds: [] } };
+    if (sameValue(soundColumns(sound), stored)) return { before, after: before, library: [] };
+    if (
+      !sameValue(soundColumns(sound).phrase, stored.phrase) &&
+      !(await riffLeadsDefault(tx, row.id))
+    )
+      refuse(`${slug} plays a library pattern an admin chose`, [
+        {
+          path: 'phrase',
+          message:
+            'This sound plays a library pattern an admin chose, so its riff is that pattern’s notes. Change the pattern instead.',
+        },
+      ]);
     const after = await tx.synthSound.update({
       where: { synthId_slug: { synthId, slug } },
       data: { ...soundColumns(sound), editedAt: new Date() },
