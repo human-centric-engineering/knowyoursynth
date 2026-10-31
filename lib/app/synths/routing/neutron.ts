@@ -146,6 +146,12 @@ export const routing: SynthRouting = {
       module: 'env',
       controls: ['env1.a', 'env1.d', 'env1.s', 'env1.r'],
       meter: 'env1',
+      stages: {
+        attack: 'env1.a',
+        decay: 'env1.d',
+        sustain: 'env1.s',
+        release: 'env1.r',
+      },
       description:
         'An ADSR envelope for the amplifier. Its gate passes on to Envelope 2 unless E.GATE 2 is patched.',
       specs: ENV_SPECS,
@@ -156,6 +162,12 @@ export const routing: SynthRouting = {
       module: 'env',
       controls: ['env2.a', 'env2.d', 'env2.s', 'env2.r'],
       meter: 'env2',
+      stages: {
+        attack: 'env2.a',
+        decay: 'env2.d',
+        sustain: 'env2.s',
+        release: 'env2.r',
+      },
       description: 'An ADSR envelope for the cutoff, through ENV DEPTH, and the inverter.',
       specs: ENV_SPECS,
     },

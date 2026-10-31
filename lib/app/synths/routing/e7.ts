@@ -210,6 +210,12 @@ export const routing: SynthRouting = {
       module: 'env',
       meter: 'env1',
       controls: ['env1.attack', 'env1.decay', 'env1.sustain', 'env1.release', 'env1.kbd'],
+      stages: {
+        attack: 'env1.attack',
+        decay: 'env1.decay',
+        sustain: 'env1.sustain',
+        release: 'env1.release',
+      },
       description:
         'An ADSR for the filter, and for the VCOs’ pitch and pulse width and LFO 2’s rate. Keyboard tracking shortens its times up the keys.',
     },
@@ -219,6 +225,12 @@ export const routing: SynthRouting = {
       module: 'env',
       meter: 'env2',
       controls: ['env2.attack', 'env2.decay', 'env2.sustain', 'env2.release', 'env2.kbd'],
+      stages: {
+        attack: 'env2.attack',
+        decay: 'env2.decay',
+        sustain: 'env2.sustain',
+        release: 'env2.release',
+      },
       description: 'An ADSR for the VCA. Keyboard tracking shortens its times up the keys.',
     },
     {

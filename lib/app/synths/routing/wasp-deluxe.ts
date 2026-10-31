@@ -108,6 +108,14 @@ export const routing: SynthRouting = {
       module: 'env',
       controls: ['vca.attack', 'vca.decay', 'vca.sustain', 'vca.hold'],
       meter: 'env1',
+      // HOLD freezes the level where it is, but the engine still notes the key going down and up, so it would report
+      // an attack or a release that is not moving. A frozen envelope lights nothing.
+      stages: {
+        attack: { id: 'vca.attack', when: { id: 'vca.hold', eq: false } },
+        decay: { id: 'vca.decay', when: { id: 'vca.hold', eq: false } },
+        sustain: { id: 'vca.sustain', when: { id: 'vca.hold', eq: false } },
+        release: { id: 'vca.decay', when: { id: 'vca.hold', eq: false } },
+      },
       description:
         'Attack, decay and sustain for the amplifier; decay also sets the fade after release. SUSTAIN at its end stop repeats the envelope, and HOLD freezes it.',
       specs: [{ label: 'Stages', value: 'Attack, decay (also release), sustain; repeat' }],
@@ -118,6 +126,14 @@ export const routing: SynthRouting = {
       module: 'env',
       controls: ['cenv.attack', 'cenv.decay', 'cenv.delay'],
       meter: 'env2',
+      // DECAY sets the release too. In its REPEAT position DELAY sets no wait: the engine zeroes it (`dly` under `cRep`
+      // in defs/wasp-deluxe.ts), so the delay stage never runs and the knob does not light.
+      stages: {
+        delay: 'cenv.delay',
+        attack: 'cenv.attack',
+        decay: 'cenv.decay',
+        release: 'cenv.decay',
+      },
       description:
         'Attack and decay for the filter, after a delay. The delay knob’s other end is REPEAT.',
       specs: [

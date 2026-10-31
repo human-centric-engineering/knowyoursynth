@@ -125,6 +125,13 @@ export const routing: SynthRouting = {
       module: 'env',
       controls: ['ads1.attack', 'ads1.decay', 'ads1.sustain', 'ads1.decayOff'],
       meter: 'env1',
+      // DECAY sets the release too, unless DECAY OFF makes both near-instant: then neither follows the knob.
+      stages: {
+        attack: 'ads1.attack',
+        decay: { id: 'ads1.decay', when: { id: 'ads1.decayOff', eq: false } },
+        sustain: 'ads1.sustain',
+        release: { id: 'ads1.decay', when: { id: 'ads1.decayOff', eq: false } },
+      },
       description:
         'The loudness envelope. DECAY sets the release too, and DECAY OFF sets both to zero.',
       specs: ENV_SPECS,
@@ -135,6 +142,13 @@ export const routing: SynthRouting = {
       module: 'env',
       controls: ['ads2.attack', 'ads2.decay', 'ads2.sustain'],
       meter: 'env2',
+      // DECAY sets the release too.
+      stages: {
+        attack: 'ads2.attack',
+        decay: 'ads2.decay',
+        sustain: 'ads2.sustain',
+        release: 'ads2.decay',
+      },
       description: 'The filter envelope, and a pulse-width source. DECAY sets the release too.',
       specs: ENV_SPECS,
     },

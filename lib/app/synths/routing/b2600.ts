@@ -162,6 +162,8 @@ export const routing: SynthRouting = {
       module: 'env',
       controls: ['ar.a', 'ar.r', 'ar.time'],
       meter: 'env2',
+      // It holds full level while the key is down: the short decay to it has no knob, nor has the sustain.
+      stages: { attack: 'ar.a', release: 'ar.r' },
       description:
         'Attack and release, pre-wired to the amplifier’s linear input. TIME FACTOR scales both times.',
       specs: [{ label: 'Stages', value: 'Attack, release' }, ENV_OUT],
@@ -172,6 +174,7 @@ export const routing: SynthRouting = {
       module: 'env',
       controls: ['adsr.a', 'adsr.d', 'adsr.s', 'adsr.r', 'adsr.time'],
       meter: 'env1',
+      stages: { attack: 'adsr.a', decay: 'adsr.d', sustain: 'adsr.s', release: 'adsr.r' },
       description:
         'Attack, decay, sustain and release, pre-wired to the amplifier, the filter and the FM and PWM inputs of the oscillators.',
       specs: [{ label: 'Stages', value: 'Attack, decay, sustain, release' }, ENV_OUT],

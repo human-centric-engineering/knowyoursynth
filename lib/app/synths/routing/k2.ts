@@ -163,6 +163,8 @@ export const routing: SynthRouting = {
       module: 'env',
       controls: ['eg1.delay', 'eg1.attack', 'eg1.release'],
       meter: 'env1',
+      // It holds full level while the key is down: the short decay to it has no knob, nor has the sustain.
+      stages: { delay: 'eg1.delay', attack: 'eg1.attack', release: 'eg1.release' },
       description:
         'Delay, attack and release, wired to oscillator pitch. EG1 TRIG IN fires it on its own.',
       specs: [
@@ -178,6 +180,13 @@ export const routing: SynthRouting = {
       module: 'env',
       controls: ['eg2.hold', 'eg2.attack', 'eg2.decay', 'eg2.sustain', 'eg2.release'],
       meter: 'env2',
+      stages: {
+        attack: 'eg2.attack',
+        hold: 'eg2.hold',
+        decay: 'eg2.decay',
+        sustain: 'eg2.sustain',
+        release: 'eg2.release',
+      },
       description:
         'Hold, attack, decay, sustain and release, wired to both filter cutoffs and the amplifier. Only its reversed output has a jack.',
       specs: [

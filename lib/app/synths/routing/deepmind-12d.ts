@@ -38,6 +38,13 @@ const ENV_CONTROLS = (e: string): string[] =>
   ['attack', 'attackCurve', 'decay', 'decayCurve', 'sustain', 'release', 'releaseCurve'].map(
     (s) => `${e}Env.${s}`
   );
+/** An envelope's stage lights: each stage's time slider, and the SUSTAIN level (its curve faders light nothing). */
+const ENV_STAGES = (e: string) => ({
+  attack: `${e}Env.attack`,
+  decay: `${e}Env.decay`,
+  sustain: `${e}Env.sustain`,
+  release: `${e}Env.release`,
+});
 const ENV_SPECS = [
   { label: 'Stages', value: 'Attack, decay, sustain, release' },
   { label: 'Curves', value: 'Adjustable per stage' },
@@ -218,6 +225,7 @@ export const routing: SynthRouting = {
       module: 'env',
       meter: 'env2',
       controls: ENV_CONTROLS('vca'),
+      stages: ENV_STAGES('vca'),
       description:
         'An ADSR for the VCA, with a curve for each stage, and a source for the oscillators.',
       specs: ENV_SPECS,
@@ -228,6 +236,7 @@ export const routing: SynthRouting = {
       module: 'env',
       meter: 'env1',
       controls: ENV_CONTROLS('vcf'),
+      stages: ENV_STAGES('vcf'),
       description:
         'An ADSR for the filter cutoff, with a curve for each stage, and a source for the oscillators.',
       specs: ENV_SPECS,

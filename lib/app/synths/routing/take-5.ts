@@ -173,6 +173,12 @@ export const routing: SynthRouting = {
         'env1.vel',
         'env1.dest',
       ],
+      stages: {
+        attack: 'env1.attack',
+        decay: 'env1.decay',
+        sustain: 'env1.sustain',
+        release: 'env1.release',
+      },
       description:
         'The filter envelope in the first ENV ROUTING; in the other two it is free, sent by ENV 1 to a destination of its own. AMOUNT is bipolar.',
     },
@@ -189,6 +195,12 @@ export const routing: SynthRouting = {
         'env2.amount',
         'env2.vel',
       ],
+      stages: {
+        attack: 'env2.attack',
+        decay: 'env2.decay',
+        sustain: 'env2.sustain',
+        release: 'env2.release',
+      },
       description:
         'The loudness envelope; in the second and third ENV ROUTING it sweeps the filter too, and in the third the VCA follows the gate instead.',
     },

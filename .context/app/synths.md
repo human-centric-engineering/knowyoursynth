@@ -220,7 +220,12 @@ registry would put it in every synth page's bundle (`defs/load.ts`).
   envelope's stages to the block's own knobs for the live panel's stage lights (`{ attack, decay, sustain,
 release }`, and `delay`, `hold` where a synth has them); a stage takes `{ id, when }` where its knob counts
   only with a switch set (the Model D's release is its Decay knob with DECAY on, and nothing with it off). The
-  meter reports the stage as `env1Stage` / `env2Stage`. Only the Model D has one so far.
+  meter reports the stage as `env1Stage` / `env2Stage`. Every contour metered `env1` or `env2` with a knob of its own
+  has one (the routing test holds each to it, and each knob to a cell on the panel page that shows it); a stage with
+  no knob is left out (the TB-303's fixed attack, the 2600's AR sustain). The Easel reports no stage, so its contour
+  has none; the 900 series and the VCS3 and Syntrx trapezoids meter no `env1`/`env2` contour. A `when` can also
+  turn a whole envelope's lights off: the Wasp's HOLD freezes the VCA envelope, which the engine still reports
+  moving, so each of its stages takes `{ id, when: { id: 'vca.hold', eq: false } }`.
   **Edges** join them, each with its `signal` (`audio`, `cv`, `gate`) and
   the rule for when it carries signal: `when` (switches, in the definition's control ids), `levels` (controls
   that scale it) and `breaks` (the input jack whose cable breaks this normal). An edge with none is fixed.
