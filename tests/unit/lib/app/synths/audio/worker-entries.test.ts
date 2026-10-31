@@ -11,6 +11,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 
 import type { SynthEvent } from '@/lib/app/synths/audio/dsp-core';
 import type { ProbeWorkerReply, ProbeWorkerRequest } from '@/lib/app/synths/audio/probe';
+import { soundFeatures } from '@/lib/app/synths/lib/soundkind';
 import { monoParams } from '@/tests/unit/lib/app/synths/audio/render';
 
 afterEach(() => {
@@ -133,5 +134,9 @@ describe('probe-worker-entry', () => {
       run: 2,
       result: { key: 'cutoff', live: true },
     });
+
+    // The sound detector's question (t-125), with or without a session: what a patch sounds like.
+    scope.onmessage!({ data: { type: 'kind', id: 7, params: darker } });
+    expect(replies[2]).toEqual({ type: 'kind', id: 7, features: soundFeatures(darker) });
   });
 });
