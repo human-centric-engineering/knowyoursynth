@@ -154,13 +154,15 @@ describe('soundFeatures', () => {
 
   it('counts a note per oscillator when they are assigned to notes, and two for a duophonic keyboard', () => {
     expect(voicesOf(monoParams({ oscAssign: { mode: 'poly' } }))).toBe(3);
+    const oneOffKeys = monoParams().osc.map((o, i) => (i === 2 ? { ...o, kbd: false } : o));
+    expect(voicesOf(monoParams({ oscAssign: { mode: 'poly' }, osc: oneOffKeys }))).toBe(2);
     expect(voicesOf(monoParams({ oscAssign: { mode: 'unison' } }))).toBe(1);
     expect(voicesOf(monoParams({ duo: true }))).toBe(2);
     expect(voicesOf(monoParams({ paraphonic: true }))).toBe(2);
     const b = monoParams();
     const dual = (assign: 'unison' | 'split' | 'duo') =>
       voicesOf(monoParams({ dual: { b, assign, split: 60, level: [1, 1], pan: [0, 0] } }));
-    expect([dual('unison'), dual('split'), dual('duo')]).toEqual([1, 2, 2]);
+    expect([dual('unison'), dual('split'), dual('duo')]).toEqual([2, 2, 2]);
     expect(voicesOf(monoParams())).toBe(1);
   });
 
@@ -263,8 +265,11 @@ describe('the model and its inputs', () => {
 
   it('refuses to score with a model fitted to other inputs, rather than calling everything a bass', () => {
     const f = soundFeatures(monoParams());
-    const stale = { ...KIND_MODEL, mean: KIND_MODEL.mean.slice(1) };
-    expect(() => kindCategories(f, stale)).toThrow(/refit/);
+    const shorter = { ...KIND_MODEL, mean: KIND_MODEL.mean.slice(1) };
+    expect(() => kindCategories(f, shorter)).toThrow(/refit/);
+    // The same count of inputs, in another order, is as stale.
+    const swapped = { ...KIND_MODEL, inputs: [...KIND_MODEL.inputs].reverse() };
+    expect(() => kindCategories(f, swapped)).toThrow(/refit/);
   });
 
   it('gives every category the share of its sounds carrying each role, summing to 1', () => {

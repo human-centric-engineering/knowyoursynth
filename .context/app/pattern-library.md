@@ -155,11 +155,20 @@ properly, and shown on the bank's song page, not left as a string in a pattern.
 
 _Proposed._ The picker shows one of three labels beside "Inspired by":
 
-| Label               | Means                                                                                                                                                                                         |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Transcribed**     | The notes come from a tier-1 source for this part (see [Order of trust](#order-of-trust)): a published score, or official stems, multitracks or MIDI. Then checked by ear against the record. |
-| **Reconstructed**   | Worked out by ear, with the artist's own account or a reputable transcription to support it. It aims at the actual part.                                                                      |
-| **In the style of** | No specific part. Written to sound like the artist or genre.                                                                                                                                  |
+| Label   |    bass |    lead |     pad | pluck |    keys |      fx |  drone |    perc |    seq | brass | silent | Agree |
+| ------- | ------: | ------: | ------: | ----: | ------: | ------: | -----: | ------: | -----: | ----: | -----: | ----: |
+| bass    | **248** |      25 |       2 |     · |      21 |       2 |      5 |      13 |      9 |     1 |      · |   76% |
+| lead    |      31 | **258** |      27 |     1 |      34 |      19 |      3 |       5 |      3 |     · |      · |   68% |
+| pad     |       1 |      19 | **183** |     · |       8 |      11 |      8 |       1 |      8 |     · |      · |   77% |
+| pluck   |       3 |      14 |       5 | **8** |      62 |       1 |      · |      13 |      5 |     · |      · |    7% |
+| keys    |      27 |      39 |      16 |     6 | **162** |       6 |      3 |       9 |     11 |     2 |      · |   58% |
+| fx      |      20 |      64 |      18 |     1 |      14 | **107** |      9 |      27 |     12 |     · |      1 |   39% |
+| drone   |       8 |      27 |      32 |     · |       4 |      12 | **32** |       · |      5 |     · |      1 |   26% |
+| perc    |      22 |      10 |       · |     1 |      25 |      17 |      2 | **110** |      2 |     · |      1 |   58% |
+| seq     |      26 |      14 |      13 |     4 |      29 |      15 |      4 |       8 | **36** |     · |      · |   24% |
+| brass   |       6 |      19 |      26 |     · |      21 |       · |      · |       1 |      · | **3** |      · |    4% |
+| strings |       3 |      18 |      49 |     · |       6 |       1 |      1 |       · |      1 |     · |      · |    0% |
+| wind    |       2 |      50 |       2 |     · |       6 |       4 |      1 |       · |      1 |     1 |      · |    0% |
 
 The rules that keep the labels honest:
 
@@ -606,14 +615,14 @@ octave above its key, or is thin at the bottom (the low note 9 dB or more below 
 
 Measured on 2026-10-31 over the library's 2,293 sounds:
 
-- **The detector reads the sound's own category for 1,149 of them (50.1%).** Picking the commonest category, lead, every
+- **The detector reads the sound's own category for 1,147 of them (50.0%).** Picking the commonest category, lead, every
   time would get 16.6%.
-- **Cross-validated: 1,120 (48.8%).** Each fifth of the library is measured on a model fitted to the other four fifths.
+- **Cross-validated: 1,122 (48.9%).** Each fifth of the library is measured on a model fitted to the other four fifths.
 - **3 sounds are silent on the probe notes**: `model-d/just-intonation-drone`, `model-d/slow-breaking-waves` and
   `pro-1/filter-clave`. `check:synths` hears each one play its riff, so they do make sound, but not on a held G3 within
   the probe's 0.85 s. Why has not been looked into. They count as disagreements.
 
-`soundkind-library.test.ts` pins the 50.1%, so a change to the probe, the engine, the features or the library can't
+`soundkind-library.test.ts` pins the 50.0%, so a change to the probe, the engine, the features or the library can't
 make the detector worse without someone deciding it should. It renders the whole library, about three minutes of CPU,
 so it is the slowest test in the app. It sweeps on two worker threads rather than one per core: a sweep across every
 core starved the tests vitest runs alongside it into timeouts. It runs when something it imports changes (the probe

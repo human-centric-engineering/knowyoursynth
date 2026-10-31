@@ -133,7 +133,7 @@ const PITCH_SPAN = 2 * (PITCH_W + PITCH_MAX_LAG);
  * The pitch (Hz, 0 = none) of the stretch at `off`, and how clearly it repeats at that period (0–1). The YIN
  * difference function on a half-rate copy: the first dip below 0.2 (YIN's absolute threshold). The difference
  * function is normalised by its running mean, which is what keeps a smooth wave's short lags from reading as several
- * octaves too high; with no dip that deep, the deepest one, if it is below 0.5. The scope's `detectPeriod` stops at 38 Hz,
+ * octaves too high; with no dip that deep, the deepest one, if it is no higher than 0.5. The scope's `detectPeriod` stops at 38 Hz,
  * which a sub bass played on C2 is below.
  */
 function pitchAt(buf: Float32Array, off: number): { f0: number; clarity: number } {
@@ -189,16 +189,20 @@ const semis = (a: number, b: number): number => (a > 0 && b > 0 ? 12 * Math.log2
 
 /**
  * How many notes the patch can play at once: the poly wrapper's voices over its stack, unless it is set to play as one;
- * a note per oscillator when they are assigned to notes (the Poly D); two for a duophonic or paraphonic keyboard, or
- * two voices played one per note or split across the keys.
+ * a note per oscillator that follows the keyboard when they are assigned to notes (the Poly D); two for a duophonic or
+ * paraphonic keyboard, or two voices (`dual`, whose unison still plays a second key on the second voice).
  */
 export function voicesOf(p: EngineParams): number {
   if (p.poly) {
     if (p.poly.mono) return 1;
-    return Math.max(1, Math.floor(p.poly.voices / Math.max(1, p.poly.stack || 1)));
+    // A layer plays every note on two stacks of voices.
+    const block = Math.max(1, p.poly.stack || 1) * (p.layer ? 2 : 1);
+    return Math.max(1, Math.floor(p.poly.voices / block));
   }
-  if (p.oscAssign?.mode === 'poly') return Math.max(1, p.osc.length);
-  if (p.duo || p.paraphonic || p.dual?.assign === 'duo' || p.dual?.assign === 'split') return 2;
+  // The engine assigns notes to the first four oscillators that follow the keyboard.
+  if (p.oscAssign?.mode === 'poly')
+    return Math.max(1, p.osc.slice(0, 4).filter((o) => o.kbd !== false).length);
+  if (p.duo || p.paraphonic || p.dual) return 2; // a dual's unison still plays a second key on its second voice
   return 1;
 }
 
@@ -256,16 +260,16 @@ export function soundFeatures(p: EngineParams): SoundFeatures {
   let moved = 0;
   let movedN = 0;
   for (let f = attackF + 1; f < offFrame; f++) {
-    const d = db(env[f] / peak);
-    // Below −40 dB is a tail dying away, where the level's jitter is not a re-attack.
-    if (env[f] <= floor) continue;
+    // Counted at −40 dB at the lowest: a gate dropping to silence still dips that far, and the jitter of a tail dying
+    // away below it is not a re-attack.
+    const d = Math.max(db(env[f] / peak), -40);
     if (d < low) low = d;
     else if (d - low >= 6) {
       pulses++;
       low = d;
     }
     if (f >= attackF + 2 && env[f] > floor && env[f - 1] > floor && env[f - 2] > floor) {
-      const slope = d - db(env[f - 1] / peak);
+      const slope = db(env[f] / peak) - db(env[f - 1] / peak);
       const before = db(env[f - 1] / peak) - db(env[f - 2] / peak);
       moved += Math.abs(slope - before);
       movedN++;
@@ -419,7 +423,12 @@ export function kindCategories(
 ): Record<PresetCategory, number> {
   const inputs = kindInputs(f);
   // A model fitted to other inputs would score NaN everywhere and quietly call every patch a bass.
-  if (model.mean.length !== inputs.length || model.weights.bass.length !== inputs.length + 1)
+  if (
+    model.inputs.join() !== KIND_INPUTS.join() ||
+    model.mean.length !== inputs.length ||
+    model.scale.length !== inputs.length ||
+    PRESET_CATEGORIES.some((c) => model.weights[c].length !== inputs.length + 1)
+  )
     throw new Error(
       'soundkind: the model was fitted to other inputs; refit with scripts/fit-soundkind.ts'
     );
