@@ -108,6 +108,7 @@ import { voiceMode } from '@/lib/app/synths/audio/pattern-player';
 import { useMyPatterns } from '@/components/app/sequencer/use-my-patterns';
 import type { PatternLibraryProps } from '@/components/app/sequencer/pattern-library';
 import { useSoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
+import { useSuggestedPatterns } from '@/components/app/sequencer/use-suggested-patterns';
 import { useFavourites } from '@/components/app/synth/favourites';
 import { FxRack } from '@/components/app/synth/fx-rack';
 import { Inspector, Tooltip } from '@/components/app/synth/inspector';
@@ -1313,6 +1314,28 @@ function Synth({
       ? { synthId, slug: preset.id, name: preset.name }
       : null;
   const soundPatterns = useSoundPatterns(librarySound, seqShown);
+  // Patterns that suit the patch as it is now (t-125). A library sound is offered them once the patch has moved far
+  // from how that sound came; anything else on the panel is offered them at once.
+  const startSlug = librarySound?.slug ?? null;
+  const suggestStart = useMemo(
+    () =>
+      startSlug && preset
+        ? { slug: startSlug, panel: () => presetState(synthDef, preset, sess.step) }
+        : null,
+    [startSlug, preset, synthDef, sess.step]
+  );
+  const suggestPanel = useMemo(
+    () => ({ values: sess.values, cables: sess.cables }),
+    [sess.values, sess.cables]
+  );
+  const suggested = useSuggestedPatterns({
+    synthId,
+    def: synthDef,
+    panel: suggestPanel,
+    start: suggestStart,
+    ownPatterns: soundPatterns?.patterns?.length ?? null,
+    enabled: !ownSoundPending,
+  });
   const seqLibrary: PatternLibraryProps = {
     signedIn: authPending ? null : signedIn,
     // Save a copy is offered to someone else's pattern only; its owner saves it as any pattern of theirs.
@@ -1322,6 +1345,7 @@ function Synth({
     synths,
     mine: myPatterns,
     soundPatterns,
+    suggested,
     sound: openSound
       ? {
           name: openSound.name,

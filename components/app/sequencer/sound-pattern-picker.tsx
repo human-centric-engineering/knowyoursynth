@@ -6,8 +6,9 @@
  * **Inspired by** (linked to the databank's page for it) and how close it is to that (its fidelity). Picking one opens
  * it in the sequencer, from where it can be edited and saved to My patterns.
  *
- * The list is in groups, so suggestions for the patch on the panel (t-125, "Suits this sound") are a second group in
- * the same picker. Below `lg` it is in the sequencer's sheet, as the rest of the module is.
+ * The list is in groups: the sound's own, then patterns that suit the patch on the panel (t-125, "Suits this sound"),
+ * which says what it heard (`note`) and why each was chosen (`reasons`, each row's tooltip). Below `lg` it is in the
+ * sequencer's sheet, as the rest of the module is.
  */
 
 import type { LibraryPatternView } from '@/lib/app/patterns/library';
@@ -22,6 +23,10 @@ export interface PatternGroup {
   patterns: readonly LibraryPatternView[];
   /** Whether the group's first pattern is the sound's default, and says so. */
   leadIsDefault?: boolean;
+  /** A line under the title: for suggestions, what the patch sounds like and the parts that suit it. */
+  note?: string;
+  /** Why each pattern is in the group, by id: its row's tooltip. */
+  reasons?: ReadonlyMap<string, string>;
 }
 
 export interface SoundPatternPickerProps {
@@ -54,6 +59,7 @@ export function SoundPatternPicker({ groups, current, synthId, onPick }: SoundPa
       {groups.map((g) => (
         <section key={g.key} className="kys-seq-pat-group">
           <h3 className="kys-seq-lib-label">{g.title}</h3>
+          {g.note && <p className="kys-seq-pat-note">{g.note}</p>}
           <ul className="kys-seq-lib-list is-patterns" aria-label={g.title}>
             {g.patterns.map((p, i) => {
               const by = p.inspiredBy.label.trim();
@@ -65,6 +71,7 @@ export function SoundPatternPicker({ groups, current, synthId, onPick }: SoundPa
                     type="button"
                     className="kys-seq-lib-item"
                     aria-current={p.id === current ? 'true' : undefined}
+                    title={g.reasons?.get(p.id)}
                     onClick={() => onPick(p)}
                   >
                     <span className="kys-seq-lib-item-name">

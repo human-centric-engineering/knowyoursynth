@@ -2568,6 +2568,12 @@ svg .kys-hit:focus-visible {
 .kys-seq-pat-group h3 {
   margin: 0;
 }
+/* Under "Suits this sound": what the patch sounds like, and the parts that suit it. */
+.kys-seq-pat-note {
+  margin: 0;
+  font-size: 11px;
+  color: var(--kys-muted);
+}
 .kys-seq-lib-list.is-patterns {
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 6px;

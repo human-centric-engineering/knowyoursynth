@@ -6,6 +6,8 @@
  * - The name of the pattern held (the sound's riff, one of the user's patterns, or a library riff), marked when edited.
  * - With a library sound on the panel, Patterns: its patterns, default first (`f-pattern-library` t-123,
  *   `SoundPatternPicker`). The default opens in place of the riff it is, and any other opens as a library riff does.
+ *   Under them, once the patch has moved far from the sound, or for any other patch on its own, "Suits this sound":
+ *   library patterns that suit what the patch sounds like now (t-125, `useSuggestedPatterns`).
  * - Save, Save as, Rename and Delete, against My patterns (`/api/v1/patterns`). Signed out, a link to sign in instead.
  * - My patterns: the user's saved patterns, any of which opens in place of what is held (Undo brings that back).
  * - Library: any synth's library riffs, as a starting point. A riff from one synth plays on any other.
@@ -35,8 +37,12 @@ import { PatternNameSchema } from '@/lib/app/patterns/data';
 import type { Sequencer } from '@/components/app/sequencer/use-sequencer';
 import type { MyPatterns } from '@/components/app/sequencer/use-my-patterns';
 import { SeqSelect } from '@/components/app/sequencer/select';
-import { SoundPatternPicker } from '@/components/app/sequencer/sound-pattern-picker';
+import {
+  SoundPatternPicker,
+  type PatternGroup,
+} from '@/components/app/sequencer/sound-pattern-picker';
 import type { SoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
+import type { SuggestedPatterns } from '@/components/app/sequencer/use-suggested-patterns';
 import type { LibraryPatternView } from '@/lib/app/patterns/library';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 import { PatternSharing } from '@/components/app/sharing/pattern-sharing';
@@ -70,6 +76,8 @@ export interface PatternLibraryProps {
   sound: OpenSoundDefault | null;
   /** The library sound on the panel and its patterns (t-123); null with none on it. */
   soundPatterns?: SoundPatterns | null;
+  /** Patterns that suit the patch on the panel (t-125). */
+  suggested?: SuggestedPatterns | null;
 }
 
 type Panel = 'mine' | 'library' | 'share' | 'sound' | null;
@@ -87,6 +95,8 @@ type LibraryRiff = Pick<SynthDetail['sounds'][number], 'id' | 'name' | 'phrase'>
 /** A save or rename's status when the sequencer holds another pattern by the time it comes back. */
 const since = '. The sequencer holds another pattern now.';
 
+const capitalise = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+
 const failure = (err: unknown) =>
   err instanceof Error && err.message ? err.message : 'Try again.';
 
@@ -100,6 +110,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
     sound,
     sharedHeld = false,
     soundPatterns = null,
+    suggested = null,
   } = library;
   const { loaded, edited, load } = seq;
   const [panel, setPanel] = useState<Panel>(null);
@@ -118,6 +129,15 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
     if (formMode) nameInput.current?.focus();
   }, [formMode]);
   const own = loaded?.id ? { id: loaded.id, name: loaded.name } : null;
+
+  // Patterns that suit the patch are worked out only while the picker is open: most visits never open it.
+  const want = suggested?.want;
+  const pickerOpen = panel === 'sound';
+  useEffect(() => {
+    want?.(pickerOpen);
+    // Closing the sequencer with the picker open closes the picker too.
+    return () => want?.(false);
+  }, [want, pickerOpen]);
 
   // The sound's default pattern is its riff: it takes the riff's place while the sequencer holds the riff as it came,
   // so what is held is named, and has the pattern's own settings. Run again once a new sound's riff has arrived
@@ -271,6 +291,38 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
     setStatus(`Opened ${p.name}. Undo goes back to what was here.`);
   };
 
+  // The picker's groups: the sound's own, then what suits the patch as it is now.
+  const pickerGroups: PatternGroup[] = [];
+  if (soundPatterns?.patterns?.length)
+    pickerGroups.push({
+      key: 'sound',
+      title: `${soundPatterns.sound.name}’s patterns`,
+      patterns: soundPatterns.patterns,
+      leadIsDefault: true,
+    });
+  const suits = suggested?.state === 'ready' ? suggested.result : null;
+  if (suits?.suggestions.length)
+    pickerGroups.push({
+      key: 'suits',
+      title: 'Suits this sound',
+      note: suits.reading ? capitalise(suits.reading.summary) : undefined,
+      patterns: suits.suggestions.map((s) => s.pattern),
+      reasons: new Map(suits.suggestions.map((s) => [s.id, capitalise(s.reason)])),
+    });
+  // Said only where the picker has nothing else to show: no patterns of the sound's own to look at meanwhile.
+  const ownNone = !soundPatterns?.patterns?.length;
+  const suggestLine = !suggested
+    ? null
+    : (suggested.state === 'reading' || (suggested.state === 'off' && panel === 'sound')) && ownNone
+      ? 'Listening to the patch for patterns that suit it…'
+      : suggested.state === 'error'
+        ? 'Patterns that suit this sound could not be worked out. Close Patterns and open it again to try again.'
+        : suits && !suits.suggestions.length && ownNone
+          ? suits.reading
+            ? 'No library pattern suits this sound yet.'
+            : 'The patch is silent, so there is nothing to suit yet.'
+          : null;
+
   const openSharing = () => {
     if (panel === 'share') {
       setPanel(null);
@@ -403,19 +455,23 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
               )}
             </>
           ) : null}
-          {soundPatterns &&
+          {(soundPatterns || suggested) &&
             button(
-              `${soundPatterns.sound.name}’s patterns`,
-              'The patterns that come with this patch, its default first. Open one to play and edit it.',
+              soundPatterns
+                ? `${soundPatterns.sound.name}’s patterns`
+                : 'Patterns that suit this sound',
+              soundPatterns
+                ? 'The patterns that come with this patch, its default first, and once you have changed it, patterns that suit what it sounds like now. Open one to play and edit it.'
+                : 'Library patterns that suit what this patch sounds like. Open one to play and edit it.',
               <ListMusic size={15} aria-hidden="true" />,
               () => {
                 const next = panel === 'sound' ? null : 'sound';
                 setPanel(next);
-                if (next && soundPatterns.error) soundPatterns.retry();
+                if (next && soundPatterns?.error) soundPatterns.retry();
               },
               {
                 expanded: panel === 'sound',
-                text: soundPatterns.patterns
+                text: soundPatterns?.patterns
                   ? `Patterns (${soundPatterns.patterns.length})`
                   : 'Patterns',
               }
@@ -513,31 +569,30 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
           backHref={synthHref(synthId)}
         />
       )}
-      {panel === 'sound' &&
-        soundPatterns &&
-        (soundPatterns.error ? (
-          <p className="kys-seq-lib-empty">
-            {soundPatterns.sound.name}’s patterns could not be read. Press Patterns to try again.
-          </p>
-        ) : soundPatterns.patterns === null ? (
-          <p className="kys-seq-lib-empty">Reading {soundPatterns.sound.name}’s patterns…</p>
-        ) : soundPatterns.patterns.length === 0 ? (
-          <p className="kys-seq-lib-empty">{soundPatterns.sound.name} has no patterns yet.</p>
-        ) : (
-          <SoundPatternPicker
-            groups={[
-              {
-                key: 'sound',
-                title: `${soundPatterns.sound.name}’s patterns`,
-                patterns: soundPatterns.patterns,
-                leadIsDefault: true,
-              },
-            ]}
-            current={edited ? null : (loaded?.libraryId ?? null)}
-            synthId={synthId}
-            onPick={openSoundPattern}
-          />
-        ))}
+      {panel === 'sound' && (
+        <>
+          {soundPatterns &&
+            (soundPatterns.error ? (
+              <p className="kys-seq-lib-empty">
+                {soundPatterns.sound.name}’s patterns could not be read. Press Patterns to try
+                again.
+              </p>
+            ) : soundPatterns.patterns === null ? (
+              <p className="kys-seq-lib-empty">Reading {soundPatterns.sound.name}’s patterns…</p>
+            ) : soundPatterns.patterns.length === 0 ? (
+              <p className="kys-seq-lib-empty">{soundPatterns.sound.name} has no patterns yet.</p>
+            ) : null)}
+          {pickerGroups.length > 0 && (
+            <SoundPatternPicker
+              groups={pickerGroups}
+              current={edited ? null : (loaded?.libraryId ?? null)}
+              synthId={synthId}
+              onPick={openSoundPattern}
+            />
+          )}
+          {suggestLine && <p className="kys-seq-lib-empty">{suggestLine}</p>}
+        </>
+      )}
       {panel === 'library' && (
         <LibraryBrowser synthId={synthId} synths={synths} onOpen={openRiff} />
       )}

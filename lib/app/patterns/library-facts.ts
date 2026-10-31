@@ -12,17 +12,8 @@ import { compileLoop, seededRng } from '@/lib/app/sequencer/compile';
 import { importPhrase } from '@/lib/app/sequencer/import';
 import type { Pattern } from '@/lib/app/sequencer/pattern';
 
-/** The roles, in the order the design lists them. */
-export const PATTERN_ROLES = [
-  'lead_line',
-  'held',
-  'bass_line',
-  'slow_melody',
-  'percussive',
-  'chord_changes',
-  'arp',
-  'chord_stabs',
-] as const satisfies readonly PatternRole[];
+/** The roles, in the order the design lists them: in `library-roles.ts`, which the probe worker can bundle. */
+export { PATTERN_ROLES } from '@/lib/app/patterns/library-roles';
 
 /**
  * Why a riff cannot become a library pattern (`importPhrase` refuses it), or `null`. Every riff becomes its sound's
