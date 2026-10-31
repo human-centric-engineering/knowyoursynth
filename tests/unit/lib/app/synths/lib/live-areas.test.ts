@@ -182,6 +182,22 @@ describe('liveStages on other synths (t-155)', () => {
     expect(off.byId.get('ads1:attack')?.d).toBe(off.cells['ads1.attack']);
   });
 
+  it('lights the Syncussion’s SWEEP SPEED only while the sweep moves the pitch: not with SWEEP off, nor in mode D', () => {
+    const sweeping = lit('pearl-syncussion', { 'ch1.sweep': 'down', 'ch1.mode': 'A' });
+    expect(sweeping.byId.get('ch1_sweep:decay')).toMatchObject({
+      env: 'env2',
+      d: sweeping.cells['ch1.sweepSpeed'],
+    });
+    expect(sweeping.byId.get('ch1_sweep:release')?.d).toBe(sweeping.cells['ch1.sweepSpeed']);
+    for (const set of [
+      { 'ch1.sweep': 'off', 'ch1.mode': 'A' },
+      { 'ch1.sweep': 'down', 'ch1.mode': 'D' },
+    ]) {
+      const still = lit('pearl-syncussion', set);
+      expect([...still.byId.keys()].filter((k) => k.startsWith('ch1_sweep:'))).toEqual([]);
+    }
+  });
+
   it('lights the K-2’s EG1 DELAY and EG2 HOLD for the stages only they have', () => {
     const { cells, byId } = lit('k2');
     expect(byId.get('eg1:delay')).toMatchObject({ env: 'env1', d: cells['eg1.delay'] });

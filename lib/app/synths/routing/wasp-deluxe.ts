@@ -126,7 +126,8 @@ export const routing: SynthRouting = {
       module: 'env',
       controls: ['cenv.attack', 'cenv.decay', 'cenv.delay'],
       meter: 'env2',
-      // DECAY sets the release too. In its REPEAT position DELAY has no wait to light.
+      // DECAY sets the release too. In its REPEAT position DELAY sets no wait: the engine zeroes it (`dly` under `cRep`
+      // in defs/wasp-deluxe.ts), so the delay stage never runs and the knob does not light.
       stages: {
         delay: 'cenv.delay',
         attack: 'cenv.attack',

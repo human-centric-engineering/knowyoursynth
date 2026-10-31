@@ -75,7 +75,7 @@ export const routing: SynthRouting = {
       // The attack is fixed. With no sustain, letting go carries on the decay at DECAY's rate.
       stages: { decay: 'env.decay', release: 'env.decay' },
       description:
-        'One decay envelope, started by each note, for the filter and the amplifier. It has no release stage.',
+        'One decay envelope, started by each note, for the filter and the amplifier. It has no release of its own: letting go carries on the decay.',
     },
     {
       id: 'vca',

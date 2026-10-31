@@ -164,11 +164,15 @@ export function syncussionChannel(
       name: `Channel ${ch} sweep`,
       module: 'env',
       // Only channel 1's envelopes are the voice's own, so only they light. One fall at SWEEP SPEED, which letting go
-      // of the key does not change.
+      // of the key does not change. With SWEEP off, or in mode D, the envelope still runs but moves nothing, so it
+      // lights nothing.
       ...(lead
         ? {
             meter: 'env2' as const,
-            stages: { decay: k('sweepSpeed'), release: k('sweepSpeed') },
+            stages: {
+              decay: { id: k('sweepSpeed'), when: sweepOn },
+              release: { id: k('sweepSpeed'), when: sweepOn },
+            },
           }
         : {}),
       controls: [k('sweep'), k('sweepSpeed'), k('sweepRange')],
