@@ -26,6 +26,8 @@ const ALLOWED = (path: string) =>
   path === 'scripts/check-synths.ts' ||
   // Dev-only: checks the seeded tables read back as the seed data (f-databank b1).
   path === 'scripts/smoke/bank.ts' ||
+  // Dev-only: renders every library sound through the sound detector, for its fit and its library test (t-124).
+  path === 'scripts/soundkind-sweep.ts' ||
   // Names the seed units as keys for Sunrise's capability parity test, and reads nothing (t-77).
   path === 'lib/app/capability-seed-pairs.ts';
 

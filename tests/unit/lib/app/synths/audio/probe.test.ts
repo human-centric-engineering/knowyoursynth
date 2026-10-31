@@ -15,6 +15,7 @@ import {
   PROBE_SR,
   PROBE_WORKER_URL,
   renderGesture,
+  renderHeld,
   renderNote,
   spectrumAt,
 } from '@/lib/app/synths/audio/probe';
@@ -76,6 +77,31 @@ describe('renderNote', () => {
     // @ts-expect-error -- a voice with no filter throws inside the render
     delete broken.filter;
     expect(() => renderNote(broken, 60, 0.05)).toThrow();
+    expect(Math.random).toBe(before);
+  });
+});
+
+describe('renderHeld', () => {
+  it('holds the note, lets it go, and listens to the release, repeatably', () => {
+    // A release of 50 ms: well under the 0.2 s tail.
+    const p = monoParams({ env2: { a: 0.003, d: 0.2, s: 0.8, r: 0.05 } });
+    const a = renderHeld(p, 60, 0.2, 0.2);
+    expect(a.length).toBe(Math.round(0.4 * PROBE_SR));
+    expect(sameSamples(a, renderHeld(p, 60, 0.2, 0.2))).toBe(true);
+    const held = a.subarray(Math.round(0.1 * PROBE_SR), Math.round(0.19 * PROBE_SR));
+    const gone = a.subarray(Math.round(0.35 * PROBE_SR));
+    expect(rms(held)).toBeGreaterThan(0.05);
+    expect(rms(gone)).toBeLessThan(rms(held) / 100);
+    // With no tail it is the held note alone, sample for sample what renderNote plays.
+    expect(sameSamples(renderHeld(p, 60, 0.1, 0), renderNote(p, 60, 0.1))).toBe(true);
+  });
+
+  it('puts Math.random back even when the render throws', () => {
+    const before = Math.random;
+    const broken = monoParams();
+    // @ts-expect-error -- a voice with no filter throws inside the render
+    delete broken.filter;
+    expect(() => renderHeld(broken, 60, 0.05, 0.05)).toThrow();
     expect(Math.random).toBe(before);
   });
 });
