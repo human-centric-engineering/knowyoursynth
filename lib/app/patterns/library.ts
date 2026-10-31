@@ -105,6 +105,14 @@ export function phraseOf(pattern: Pattern): Phrase {
 export function riffProblem(pattern: Pattern): string | null {
   if (new Set(pattern.chain).size > 1)
     return 'A sound plays its default as a riff, which has one part: a chain of two parts cannot be a default';
+  // A riff is the first loop, frozen: anything that makes one loop differ from the next is lost.
+  if (!['forward', 'reverse'].includes(pattern.direction))
+    return 'A sound plays its default as a riff, the same every loop: a default plays forward or in reverse';
+  const steps = pattern.parts.flatMap((p) => p.steps);
+  if (steps.some((s) => s.probability !== undefined || s.condition !== undefined))
+    return 'A sound plays its default as a riff, the same every loop: a default has no probability or conditions';
+  if (pattern.lanes?.length)
+    return 'A sound plays its default as a riff, which moves no controls: a default has no mod lanes';
   const riff = phraseOf(pattern);
   if (!riff.steps.length) return 'A default plays at least one note on its first loop';
   // The engine loops a riff at its last note's end, rounded up to a whole beat.
@@ -291,7 +299,7 @@ export async function syncRiffPatterns(
     ).map((p) => [p.key, p])
   );
 
-  const changed: { patternId: string; soundId: string }[] = [];
+  const changed: string[] = [];
   for (const sound of sounds) {
     // Every write checks a sound's riff, so a riff that does not parse was changed by hand: the reader leaves that
     // sound out, and so does this.
@@ -314,19 +322,18 @@ export async function syncRiffPatterns(
       counts.unchanged++;
     } else {
       await db.libraryPattern.update({ where: { id: current.id }, data: planned });
-      changed.push({ patternId: current.id, soundId: sound.id });
+      changed.push(current.id);
       counts.updated++;
     }
   }
   // A riff pattern an admin also put at the head of another sound's list: that sound's riff follows it. Such a sound
   // is already edited (putting another sound's pattern first marked it), so the seed's pass changes no ownership.
-  for (const { patternId, soundId } of changed)
-    counts.rewritten.push(
-      ...(await syncSoundPhrases(
-        db,
-        { id: { not: soundId }, patterns: { some: { patternId } } },
-        { head: patternId, markEdited }
-      ))
+  // One read for all of them. A riff pattern's own sound already plays it, so it is not rewritten.
+  if (changed.length)
+    counts.rewritten = await syncSoundPhrases(
+      db,
+      { patterns: { some: { patternId: { in: changed } } } },
+      { heads: changed, markEdited, onlyRewritten: true }
     );
   return counts;
 }
@@ -349,7 +356,11 @@ export interface RewrittenRiff {
 export async function syncSoundPhrases(
   db: LibraryDb,
   where: Prisma.SynthSoundWhereInput,
-  { markEdited = false, head }: { markEdited?: boolean; head?: string } = {}
+  {
+    markEdited = false,
+    heads,
+    onlyRewritten = false,
+  }: { markEdited?: boolean; heads?: string[]; onlyRewritten?: boolean } = {}
 ): Promise<RewrittenRiff[]> {
   const sounds = await db.synthSound.findMany({
     where,
@@ -370,8 +381,9 @@ export async function syncSoundPhrases(
   const rewritten: RewrittenRiff[] = [];
   for (const sound of sounds) {
     const first = sound.patterns[0];
-    if (!first || (head !== undefined && first.patternId !== head)) continue;
-    const mark = markEdited && !sound.editedAt ? { editedAt: new Date() } : {};
+    if (!first || (heads !== undefined && !heads.includes(first.patternId))) continue;
+    // `onlyRewritten` marks only the sounds whose riff changed: a riff pattern's own sound already plays it.
+    const mark = markEdited && !sound.editedAt && !onlyRewritten ? { editedAt: new Date() } : {};
     const parsed = PatternSchema.safeParse(first.pattern.pattern);
     // Checked on every write; a row changed by hand is left for the admin page to show.
     if (!parsed.success || riffPlays(sound.phrase, parsed.data)) {
@@ -381,7 +393,10 @@ export async function syncSoundPhrases(
     const after = phraseOf(parsed.data);
     await db.synthSound.update({
       where: { id: sound.id },
-      data: { phrase: toJson(after), ...mark },
+      data: {
+        phrase: toJson(after),
+        ...(markEdited && !sound.editedAt ? { editedAt: new Date() } : {}),
+      },
     });
     rewritten.push({
       synthId: sound.synthId,
@@ -420,8 +435,8 @@ async function headOf(db: LibraryDb, soundId: string) {
 
 /**
  * Whether a sound's riff leads its default, and so may be edited directly: the default is the sound's own riff
- * pattern, and the pattern is still exactly the riff's import (an admin may have changed its name or role, not its
- * notes or anything that plays them). Any other
+ * pattern, still exactly the riff's import, and _In the style of_ (an admin may have changed its name or role, not
+ * its notes, anything that plays them, or the claim that they come from a source). Any other
  * default is a pattern in its own right (an admin's, another sound's, or this one's with notes an admin changed),
  * and is changed as a pattern, never by flattening a riff into it.
  */
@@ -430,6 +445,8 @@ export async function riffLeadsDefault(db: LibraryDb, soundId: string): Promise<
   if (!head) return true;
   if (!own) return false;
   if (!head.editedAt) return true;
+  // A transcribed or reconstructed pattern names its sources for these notes; a new riff would not be them.
+  if (head.fidelity !== 'in_the_style_of') return false;
   // Exactly what the riff imports to, so a new riff replaces nothing the riff did not already say: no swing, scale,
   // second part or anything else an admin added. Comparing notes would not do, since the riff is always rewritten
   // to its default's notes.
@@ -456,14 +473,23 @@ export async function followSoundRiff(db: LibraryDb, soundId: string): Promise<R
   const phrase = PhraseSchema.parse(sound.phrase);
   const current = PatternSchema.safeParse(head.pattern);
   if (current.success && riffPlays(phrase, current.data)) return [];
+  // A tempo range the new riff's bpm falls outside of no longer says anything about it.
+  const outside =
+    head.bpmMin !== null &&
+    head.bpmMax !== null &&
+    (phrase.bpm < head.bpmMin || phrase.bpm > head.bpmMax);
   await db.libraryPattern.update({
     where: { id: head.id },
-    data: { pattern: toJson(importPhrase(phrase)), version: PATTERN_VERSION },
+    data: {
+      pattern: toJson(importPhrase(phrase)),
+      version: PATTERN_VERSION,
+      ...(outside ? { bpmMin: null, bpmMax: null } : {}),
+    },
   });
   return syncSoundPhrases(
     db,
     { id: { not: soundId }, patterns: { some: { patternId: head.id } } },
-    { head: head.id, markEdited: true }
+    { heads: [head.id], markEdited: true }
   );
 }
 

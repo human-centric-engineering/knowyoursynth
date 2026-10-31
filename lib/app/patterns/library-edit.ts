@@ -28,6 +28,7 @@ import {
 } from '@/lib/app/sequencer/pattern';
 import { sameValue } from '@/lib/app/catalogue/seed';
 import { lockSynth } from '@/lib/app/catalogue/edit';
+import { getSynthDef } from '@/lib/app/synths/defs';
 import { PATTERN_ROLES } from '@/lib/app/patterns/library-facts';
 import {
   DEFAULT_FIRST,
@@ -446,7 +447,7 @@ export async function editLibraryPattern(
     const sounds = await syncSoundPhrases(
       tx,
       { patterns: { some: { patternId: id } } },
-      { head: id, markEdited: true }
+      { heads: [id], markEdited: true }
     );
     return { change, sounds };
   });
@@ -470,6 +471,7 @@ export async function setSoundPatterns(
       select: {
         id: true,
         name: true,
+        definitionVersion: true,
         patterns: {
           orderBy: DEFAULT_FIRST,
           select: { patternId: true, order: true },
@@ -477,6 +479,18 @@ export async function setSoundPatterns(
       },
     });
     if (!sound) throw new NotFoundError('Patch not found');
+    // As a sound edit is refused (`editSound`): a new default rewrites its riff and makes the row an admin's.
+    const version = getSynthDef(synthId)?.version;
+    if (sound.definitionVersion !== version)
+      refuse(`${slug} cannot be changed`, [
+        {
+          path: 'definitionVersion',
+          message:
+            version === undefined
+              ? `${synthId} has no definition`
+              : `Made on version ${sound.definitionVersion}; ${synthId} is at version ${version}, and there is no mapping between them`,
+        },
+      ]);
     const before = sound.patterns.map((p) => p.patternId);
 
     const problems: { path: string; message: string }[] = [];

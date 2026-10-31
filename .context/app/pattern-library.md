@@ -417,12 +417,14 @@ probe, lessons, the tutor, sharing and the content template all still read the o
   rewritten where the notes differ, and the sound is marked edited either way, so the seed and an upload then leave
   it alone. Otherwise a reseed could write a riff the admin's default no longer matches. A riff that already plays
   the pattern's notes is not rewritten.
-- **A default plays whole as a riff** (`riffProblem`). A riff has one part and loops where its last note ends, so a
-  pattern whose chain has a second part, that ends in rests, or that plays nothing on its first loop cannot be a
-  sound's default. It can still be in the library and on a sound's list behind the default. Playing a pattern in full
+- **A default plays whole as a riff** (`riffProblem`). A riff is the first loop, frozen: one part, looping where its
+  last note ends, the same every time, moving no controls. So a pattern whose chain has a second part, that ends in
+  rests, that plays nothing on its first loop, that uses probability or conditions, that plays in a random, Brownian
+  or pendulum direction, or that has mod lanes cannot be a sound's default. It can still be in the library and on a sound's list behind the default. Playing a pattern in full
   is the sequencer's job (t-123).
 - **A sound's riff is edited directly only while it leads** (`riffLeadsDefault`): while the default is the sound's own
-  riff pattern and that pattern is still exactly what the riff imports to. An admin may have changed its name or role.
+  riff pattern, that pattern is still exactly what the riff imports to, and it is _In the style of_. An admin may have
+  changed its name or role. A new riff whose bpm falls outside the pattern's tempo range clears the range.
   Then `PATCH …/sounds/:slug` with `phrase` gives the riff pattern the new notes (`followSoundRiff`), keeping the
   admin's name and role, and any other sound an admin put it first on follows, marked edited and audited. An upload
   that changes a riff does the same, and its audit entry names the sounds that followed (`riffsFollowed`). Once the
@@ -489,3 +491,4 @@ The checks on a write, merged into the stored pattern first:
 - A _Transcribed_ or _Reconstructed_ pattern is inspired by a work in the databank and lists at least one source.
 - Inspired by links to a row that exists (a part must be of the song named), and takes its label from that row.
 - An edit that changes nothing writes and audits nothing.
+- A sound's new list is refused while the sound was made on an older definition, as an edit to the sound is.

@@ -535,6 +535,19 @@ describe("a sound's list", () => {
     expect(listOf(0)).toEqual([riff(0).id]);
   });
 
+  it('refuses a new list for a sound made on an older definition', async () => {
+    sound(0).definitionVersion = 0;
+    const res = await putSoundPatterns(
+      request('PUT', `admin/synths/model-d/sounds/${slug(0)}/patterns`, {
+        patternIds: [riff(1).id, riff(0).id],
+      }),
+      ctx({ id: 'model-d', slug: slug(0) })
+    );
+    expect(res.status).toBe(400);
+    expect((await json(res)).error?.details?.errors?.[0].path).toBe('definitionVersion');
+    expect(writes()).toBe(0);
+  });
+
   it('refuses a pattern named twice, and a sound that is not there', async () => {
     const twice = await putSoundPatterns(
       request('PUT', `admin/synths/model-d/sounds/${slug(0)}/patterns`, {

@@ -399,6 +399,20 @@ describe('a default changed by an admin', () => {
     expect(soundRow(2).editedAt).toBeInstanceOf(Date);
   });
 
+  it('stops a riff leading its own pattern once that pattern says it was transcribed', async () => {
+    patternOf(3).editedAt = new Date();
+    expect(await riffLeadsDefault(lib(), String(soundRow(3).id))).toBe(true);
+    patternOf(3).fidelity = 'transcribed';
+    expect(await riffLeadsDefault(lib(), String(soundRow(3).id))).toBe(false);
+  });
+
+  it("clears an admin's tempo range that a new riff's bpm falls outside", async () => {
+    Object.assign(patternOf(3), { editedAt: new Date(), bpmMin: 140, bpmMax: 160 });
+    soundRow(3).phrase = { bpm: 110, loop: true, steps: [[0, 50, 1]] };
+    await followSoundRiff(lib(), String(soundRow(3).id));
+    expect(patternOf(3)).toMatchObject({ bpmMin: null, bpmMax: null });
+  });
+
   it("re-makes a sound's own unedited riff pattern from its riff, as the seed would", async () => {
     soundRow(3).phrase = { bpm: 110, loop: true, steps: [[0, 50, 1]] };
     soundRow(3).name = 'Renamed';
@@ -413,7 +427,7 @@ describe('a default changed by an admin', () => {
       await syncSoundPhrases(
         lib(),
         { patterns: { some: { patternId: String(patternOf(0).id) } } },
-        { head: String(patternOf(0).id), markEdited: true }
+        { heads: [String(patternOf(0).id)], markEdited: true }
       )
     ).toEqual([]);
     expect(soundRow(0).phrase).toEqual(before);
@@ -448,6 +462,16 @@ describe('a pattern that can be a default', () => {
     ab.parts.push(structuredClone(ab.parts[0]));
     ab.chain = [0, 1];
     expect(riffProblem(ab)).toMatch(/two parts/);
+
+    const chance = pattern();
+    chance.parts[0].steps[0].probability = 0.5;
+    expect(riffProblem(chance)).toMatch(/probability/);
+
+    const random = { ...pattern(), direction: 'random' as const };
+    expect(riffProblem(random)).toMatch(/forward or in reverse/);
+
+    const lanes = { ...pattern(), lanes: ['vcf.cutoff'] };
+    expect(riffProblem(lanes)).toMatch(/mod lanes/);
 
     const silent = pattern();
     for (const step of silent.parts[0].steps) step.notes = [];
