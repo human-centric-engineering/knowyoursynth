@@ -34,6 +34,7 @@ import {
   PatternSourcesSchema,
   phraseOf,
   riffProblem,
+  toJson,
   syncSoundPhrases,
   toView,
   type LibraryDb,
@@ -41,9 +42,6 @@ import {
   type PatternChange,
   type RewrittenRiff,
 } from '@/lib/app/patterns/library';
-
-type Json = Prisma.InputJsonValue;
-const toJson = (value: unknown): Json => JSON.parse(JSON.stringify(value)) as Json;
 
 function refuse(message: string, problems: { path: string; message: string }[]): never {
   throw new ValidationError(message, { errors: problems });
@@ -190,7 +188,16 @@ async function inspirationColumns(db: LibraryDb, input: InspiredByInput) {
 /** The rules a whole pattern must keep, checked once an edit is merged into it. */
 function checkWhole(c: Columns) {
   const problems: { path: string; message: string }[] = [];
-  const pattern = PatternSchema.parse(c.pattern);
+  const parsed = PatternSchema.safeParse(c.pattern);
+  // Only a stored row changed by hand fails here: a pattern in the request was parsed already.
+  if (!parsed.success)
+    refuse('The stored pattern no longer parses', [
+      {
+        path: 'pattern',
+        message: 'The stored pattern no longer parses: send a whole pattern to replace it',
+      },
+    ]);
+  const pattern = parsed.data;
   if (!phraseOf(pattern).steps.length)
     problems.push({
       path: 'pattern',
@@ -274,11 +281,11 @@ export interface AdminLibraryPattern extends LibraryPatternView {
   sounds: { synthId: string; slug: string; name: string; order: number; isDefault: boolean }[];
 }
 
-/** A stored row as admin sees it, or a placeholder naming the problem when it no longer parses. */
 /** A pattern as admin reads it, or what is wrong with a stored one that no longer parses. */
 export type AdminLibraryRow =
   AdminLibraryPattern | { id: string; key: string; name: string; problem: string };
 
+/** A stored row as admin sees it, or a placeholder naming the problem when it no longer parses. */
 function adminView(
   row: LibraryPattern & {
     sounds: {

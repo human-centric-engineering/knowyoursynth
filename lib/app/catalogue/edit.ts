@@ -22,7 +22,7 @@ import { validatePreset, type SoundProblem } from '@/lib/app/synths/validate';
 import { LineageFileSchema, noteKey, noteTargets } from '@/lib/app/catalogue/data';
 import { sameValue } from '@/lib/app/catalogue/seed';
 import { listSynthDesigns, type AdminSynthDesign } from '@/lib/app/catalogue/designs';
-import { importPhrase } from '@/lib/app/sequencer/import';
+import { riffImportProblem } from '@/lib/app/patterns/library-facts';
 import {
   followSoundRiff,
   riffLeadsDefault,
@@ -373,13 +373,9 @@ function checkSound(def: AppSynthDef, input: unknown): Preset {
       { path: 'ai', message: 'Leave ai out of a library patch' },
     ]);
   // A sound's riff is its default library pattern's notes (`lib/app/patterns/library.ts`), so it must be one.
-  try {
-    importPhrase(result.value.phrase);
-  } catch (err) {
-    refuse('The riff cannot be a pattern', [
-      { path: 'phrase', message: err instanceof Error ? err.message : String(err) },
-    ]);
-  }
+  const riffProblem = riffImportProblem(result.value.phrase);
+  if (riffProblem)
+    refuse('The riff cannot be a pattern', [{ path: 'phrase', message: riffProblem }]);
   return result.value;
 }
 
@@ -414,6 +410,8 @@ export async function editSound(
 }> {
   const def = defOrRefuse(synthId);
   return prisma.$transaction(async (tx) => {
+    // Held so a new list for this sound (`setSoundPatterns`) cannot swap its default between the check and the write.
+    await lockSynth(tx, synthId);
     const row = await tx.synthSound.findUnique({ where: { synthId_slug: { synthId, slug } } });
     if (!row) throw new NotFoundError('Patch not found');
     if (row.definitionVersion !== def.version)
@@ -429,23 +427,26 @@ export async function editSound(
     const sound = checkSound(def, { ...before, ...edits });
     // An edit that changes nothing is not an edit: the row stays the seed's.
     const { id: _slug, ...stored } = before;
-    if (sameValue(soundColumns(sound), stored)) return { before, after: before, library: [] };
-    if (
-      !sameValue(soundColumns(sound).phrase, stored.phrase) &&
-      !(await riffLeadsDefault(tx, row.id))
-    )
-      refuse(`${slug} plays a library pattern an admin chose`, [
+    const columns = soundColumns(sound);
+    if (sameValue(columns, stored)) return { before, after: before, library: [] };
+    const riffChanged = !sameValue(columns.phrase, stored.phrase);
+    if (riffChanged && !(await riffLeadsDefault(tx, row.id)))
+      refuse(`${slug} plays a library pattern of its own`, [
         {
           path: 'phrase',
           message:
-            'This sound plays a library pattern an admin chose, so its riff is that pattern’s notes. Change the pattern instead.',
+            'This sound plays a library pattern that is more than its riff (another pattern, or its own with notes an admin changed), so its riff is that pattern’s notes. Change the pattern instead.',
         },
       ]);
     const after = await tx.synthSound.update({
       where: { synthId_slug: { synthId, slug } },
-      data: { ...soundColumns(sound), editedAt: new Date() },
+      data: { ...columns, editedAt: new Date() },
     });
-    const library = await followSoundRiff(tx, row.id);
+    // Only the riff, the name and the credit reach the riff pattern.
+    const library =
+      riffChanged || columns.name !== stored.name || columns.artist !== stored.artist
+        ? await followSoundRiff(tx, row.id)
+        : [];
     return { before, after: soundOf(after), library };
   });
 }

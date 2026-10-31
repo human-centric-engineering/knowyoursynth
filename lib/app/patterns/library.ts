@@ -48,7 +48,7 @@ export type LibraryDb = Pick<
 >;
 
 /** A copy typed as JSON for a Prisma `Json` column. */
-const toJson = (value: unknown): Json => JSON.parse(JSON.stringify(value)) as Json;
+export const toJson = (value: unknown): Json => JSON.parse(JSON.stringify(value)) as Json;
 
 // ─── Shapes ──────────────────────────────────────────────────────────────────
 
@@ -403,35 +403,68 @@ export interface PatternChange {
   after: Record<string, unknown>;
 }
 
-/**
- * Whether a sound's default is its own riff pattern, unedited: the one case where the sound's riff is the source of
- * its default, and so the one case where the riff may be edited directly. Any other default is a pattern in its own
- * right (an admin's, or another sound's), and is changed as a pattern, never by rewriting a sound's riff into it.
- */
-export async function riffLeadsDefault(db: LibraryDb, soundId: string): Promise<boolean> {
+/** A sound's default pattern, and whether it is the sound's own riff pattern. */
+async function headOf(db: LibraryDb, soundId: string) {
   const sound = await db.synthSound.findUniqueOrThrow({
     where: { id: soundId },
     select: {
       synthId: true,
       slug: true,
-      patterns: {
-        orderBy: DEFAULT_FIRST,
-        take: 1,
-        select: { pattern: { select: { key: true, editedAt: true } } },
-      },
+      phrase: true,
+      patterns: { orderBy: DEFAULT_FIRST, take: 1, select: { pattern: true } },
     },
   });
-  const head = sound.patterns[0]?.pattern;
-  return !head || (head.key === riffKey(sound.synthId, sound.slug) && !head.editedAt);
+  const head = sound.patterns[0]?.pattern ?? null;
+  return { sound, head, own: head?.key === riffKey(sound.synthId, sound.slug) };
 }
 
 /**
- * After an admin changed a sound whose riff leads its default ({@link riffLeadsDefault}), re-make the riff pattern
- * from it as the seed would. Returns every other sound whose riff followed, for the caller to audit.
+ * Whether a sound's riff leads its default, and so may be edited directly: the default is the sound's own riff
+ * pattern, and the pattern is still exactly the riff's import (an admin may have changed its name or role, not its
+ * notes or anything that plays them). Any other
+ * default is a pattern in its own right (an admin's, another sound's, or this one's with notes an admin changed),
+ * and is changed as a pattern, never by flattening a riff into it.
+ */
+export async function riffLeadsDefault(db: LibraryDb, soundId: string): Promise<boolean> {
+  const { sound, head, own } = await headOf(db, soundId);
+  if (!head) return true;
+  if (!own) return false;
+  if (!head.editedAt) return true;
+  // Exactly what the riff imports to, so a new riff replaces nothing the riff did not already say: no swing, scale,
+  // second part or anything else an admin added. Comparing notes would not do, since the riff is always rewritten
+  // to its default's notes.
+  const phrase = PhraseSchema.safeParse(sound.phrase);
+  if (!phrase.success) return false;
+  try {
+    return sameValue(importPhrase(phrase.data), head.pattern);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * After an admin changed a sound whose riff leads its default ({@link riffLeadsDefault}), bring its riff pattern
+ * along: re-made as the seed would while nobody has edited it, or, once an admin has, given the new notes and nothing
+ * else. Returns every other sound whose riff followed, marked edited, for the caller to audit.
  */
 export async function followSoundRiff(db: LibraryDb, soundId: string): Promise<RewrittenRiff[]> {
-  const { rewritten } = await syncRiffPatterns(db, { id: soundId }, { markEdited: true });
-  return rewritten;
+  const { sound, head, own } = await headOf(db, soundId);
+  if (!head || !own || !head.editedAt) {
+    const { rewritten } = await syncRiffPatterns(db, { id: soundId }, { markEdited: true });
+    return rewritten;
+  }
+  const phrase = PhraseSchema.parse(sound.phrase);
+  const current = PatternSchema.safeParse(head.pattern);
+  if (current.success && riffPlays(phrase, current.data)) return [];
+  await db.libraryPattern.update({
+    where: { id: head.id },
+    data: { pattern: toJson(importPhrase(phrase)), version: PATTERN_VERSION },
+  });
+  return syncSoundPhrases(
+    db,
+    { id: { not: soundId }, patterns: { some: { patternId: head.id } } },
+    { head: head.id, markEdited: true }
+  );
 }
 
 // ─── The view every read serves ──────────────────────────────────────────────

@@ -624,6 +624,73 @@ describe("a sound's riff edited directly", () => {
     expect(named.status).toBe(200);
   });
 
+  it("still takes a new riff once an admin changed only its own riff pattern's name or role", async () => {
+    const id = String(riff(2).id);
+    await patchPattern(
+      request('PATCH', `admin/library-patterns/${id}`, { role: 'held' }),
+      ctx({ id })
+    );
+    const phrase: Phrase = {
+      bpm: 100,
+      loop: true,
+      steps: [
+        [0, 43, 1],
+        [1, 47, 1],
+      ],
+    };
+    const res = await patchSound(
+      request('PATCH', `admin/synths/model-d/sounds/${slug(2)}`, { phrase }),
+      ctx({ id: 'model-d', slug: slug(2) })
+    );
+    expect(res.status).toBe(200);
+    // The new notes, with the admin's role kept.
+    expect(riff(2)).toMatchObject({
+      role: 'held',
+      pattern: JSON.parse(JSON.stringify(importPhrase(phrase))),
+    });
+
+    // Once an admin added what a riff cannot say (here, swing), the riff no longer leads, and a new one is refused.
+    const swung = { ...importPhrase(phrase), swing: 60 };
+    expect(
+      (
+        await patchPattern(
+          request('PATCH', `admin/library-patterns/${id}`, { pattern: swung }),
+          ctx({ id })
+        )
+      ).status
+    ).toBe(200);
+    const refused = await patchSound(
+      request('PATCH', `admin/synths/model-d/sounds/${slug(2)}`, {
+        phrase: { bpm: 100, loop: true, steps: [[0, 52, 1]] },
+      }),
+      ctx({ id: 'model-d', slug: slug(2) })
+    );
+    expect(refused.status).toBe(400);
+    expect(riff(2).pattern).toMatchObject({ swing: 60 });
+  });
+
+  it('leaves the riff pattern alone when an edit touches neither the riff, the name nor the credit', async () => {
+    db.bankArtist.findMany.mockClear();
+    const res = await patchSound(
+      request('PATCH', `admin/synths/model-d/sounds/${slug(2)}`, { blurb: 'A new blurb' }),
+      ctx({ id: 'model-d', slug: slug(2) })
+    );
+    expect(res.status).toBe(200);
+    expect(db.libraryPattern.update).not.toHaveBeenCalled();
+    expect(db.bankArtist.findMany).not.toHaveBeenCalled();
+  });
+
+  it('refuses an edit to a stored pattern that no longer parses unless it sends a whole pattern', async () => {
+    const id = String(riff(0).id);
+    riff(0).pattern = { version: 99 };
+    const res = await patchPattern(
+      request('PATCH', `admin/library-patterns/${id}`, { name: 'x' }),
+      ctx({ id })
+    );
+    expect(res.status).toBe(400);
+    expect((await json(res)).error?.details?.errors?.[0].path).toBe('pattern');
+  });
+
   it('refuses a riff that cannot be a pattern, writing nothing', async () => {
     const res = await patchSound(
       request('PATCH', `admin/synths/model-d/sounds/${slug(1)}`, {

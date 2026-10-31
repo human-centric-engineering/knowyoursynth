@@ -422,10 +422,13 @@ probe, lessons, the tutor, sharing and the content template all still read the o
   sound's default. It can still be in the library and on a sound's list behind the default. Playing a pattern in full
   is the sequencer's job (t-123).
 - **A sound's riff is edited directly only while it leads** (`riffLeadsDefault`): while the default is the sound's own
-  unedited riff pattern, `PATCH …/sounds/:slug` with `phrase` remakes that pattern as the seed would
-  (`followSoundRiff`), and any other sound an admin put it first on follows, marked edited and audited. Once the
-  default is an admin's pattern, a new `phrase` is refused: the admin changes the pattern, which keeps its parts,
-  swing and scale, instead of having them flattened into a riff.
+  riff pattern and that pattern is still exactly what the riff imports to. An admin may have changed its name or role.
+  Then `PATCH …/sounds/:slug` with `phrase` gives the riff pattern the new notes (`followSoundRiff`), keeping the
+  admin's name and role, and any other sound an admin put it first on follows, marked edited and audited. An upload
+  that changes a riff does the same, and its audit entry names the sounds that followed (`riffsFollowed`). Once the
+  default is another pattern, or its own with something a riff cannot say (swing, a scale, a second part), a new
+  `phrase` is refused: the admin changes the pattern instead, so nothing they added is flattened into a riff.
+- **An edit that leaves the riff, the name and the credit alone** does not touch the riff pattern.
 
 Placement is content here, unlike the catalogue's: a new order that changes a sound's default changes its riff, so it
 marks the sound edited. A new order behind the same default writes only the list. A sound's list is written holding

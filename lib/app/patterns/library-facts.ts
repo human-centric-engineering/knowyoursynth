@@ -7,8 +7,9 @@
  * the notes. Pure, so the seed, the API and the tests read a pattern with the same code.
  */
 import type { PatternRole } from '@prisma/client';
-import type { PhraseNote } from '@/lib/app/synths/contract';
+import type { Phrase, PhraseNote } from '@/lib/app/synths/contract';
 import { compileLoop, seededRng } from '@/lib/app/sequencer/compile';
+import { importPhrase } from '@/lib/app/sequencer/import';
 import type { Pattern } from '@/lib/app/sequencer/pattern';
 
 /** The roles, in the order the design lists them. */
@@ -22,6 +23,19 @@ export const PATTERN_ROLES = [
   'arp',
   'chord_stabs',
 ] as const satisfies readonly PatternRole[];
+
+/**
+ * Why a riff cannot become a library pattern (`importPhrase` refuses it), or `null`. Every riff becomes its sound's
+ * first pattern, so the seed, an upload and an admin's edit all check it with this before writing.
+ */
+export function riffImportProblem(phrase: Phrase): string | null {
+  try {
+    importPhrase(phrase);
+    return null;
+  } catch (err) {
+    return err instanceof Error ? err.message : String(err);
+  }
+}
 
 /** C3: a line whose median note is below it is a bass line. */
 const BASS_BELOW = 48;
