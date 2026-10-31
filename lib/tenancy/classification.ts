@@ -97,6 +97,9 @@ export const GLOBAL_CONFIG_MODELS = [
   'SynthLineage',
   'SynthNote',
   'CatalogueSeedRecord',
+  // Know Your Synth: the pattern library (same divergence row).
+  'LibraryPattern',
+  'SynthSoundPattern',
   // Know Your Synth: the databank (same divergence row).
   'BankMaker',
   'BankInstrument',

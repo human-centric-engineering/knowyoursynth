@@ -448,7 +448,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       // exercises the REAL seam. A stray source here would also silence the
       // fork-accounting rule in export-sources.test.ts for that model.
       __resetAppSubjectSourceRegistryForTests();
-      // Know Your Synth exports a user's synth suggestions, sounds, reports filed, last panels, settings, lesson progress, favourites, profile, owned and wanted synths and patterns, and declares its catalogue and databank tables
+      // Know Your Synth exports a user's synth suggestions, sounds, reports filed, last panels, settings, lesson progress, favourites, profile, owned and wanted synths and patterns, and declares its catalogue (pattern library included) and databank tables
       // and its held usernames as excluded: no row of theirs is about a user.
       expect(getAppSubjectSources().map((s) => [s.model, s.section, s.disposition])).toEqual([
         ['SynthSuggestion', 'synthSuggestions', 'export'],
@@ -469,6 +469,8 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         'SynthLineage',
         'SynthNote',
         'CatalogueSeedRecord',
+        'LibraryPattern',
+        'SynthSoundPattern',
         'BankMaker',
         'BankInstrument',
         'BankInstrumentPerson',

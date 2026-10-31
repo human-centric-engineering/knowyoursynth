@@ -22,6 +22,7 @@ import {
   type CatalogueTables,
 } from '@/tests/helpers/catalogue-db';
 import { seedCatalogue } from '@/lib/app/catalogue/seed';
+import { riffKey, syncRiffPatterns, type LibraryDb } from '@/lib/app/patterns/library';
 import {
   checkSynthContent,
   readJsonBody,
@@ -74,7 +75,9 @@ const writes = () =>
       n + t.create.mock.calls.length + t.update.mock.calls.length + t.updateMany.mock.calls.length,
     0
   );
-const rowCount = () => Object.values(db).reduce((n, t) => n + t.rows.length, 0);
+/** Rows in the four catalogue tables. The pattern library's are counted on their own. */
+const rowCount = () =>
+  [db.synth, db.synthSound, db.synthLineage, db.synthNote].reduce((n, t) => n + t.rows.length, 0);
 
 /** Check then write, as the route does. */
 const upload = (file: unknown, id = 'model-d') =>
@@ -106,6 +109,8 @@ beforeEach(async () => {
     $queryRaw: vi.fn(async () => []),
   });
   await seedCatalogue(mockPrisma as unknown as TenancyClient, sample());
+  // As the seed leaves it: every sound's riff a library pattern (`005-library-patterns`).
+  await syncRiffPatterns(db as unknown as LibraryDb);
   for (const t of Object.values(db)) {
     t.create.mockClear();
     t.update.mockClear();
@@ -199,6 +204,11 @@ describe('writeSynthContent', () => {
     expect(report.notes.created + report.notes.updated + report.notes.edited).toBe(0);
     expect(rowCount()).toBe(before + 2);
     const added = db.synthSound.rows.filter((r) => r.editedAt);
+    // Each new sound's riff is its first library pattern, as the seed would make it.
+    for (const r of added)
+      expect(db.libraryPattern.rows.map((p) => p.key)).toContain(
+        riffKey('model-d', String(r.slug))
+      );
     expect(added.map((r) => [r.slug, r.order])).toEqual([
       [modelDSounds.sounds[3].id, 3],
       [modelDSounds.sounds[4].id, 4],

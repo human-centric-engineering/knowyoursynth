@@ -22,6 +22,13 @@ import { validatePreset, type SoundProblem } from '@/lib/app/synths/validate';
 import { LineageFileSchema, noteKey, noteTargets } from '@/lib/app/catalogue/data';
 import { sameValue } from '@/lib/app/catalogue/seed';
 import { listSynthDesigns, type AdminSynthDesign } from '@/lib/app/catalogue/designs';
+import { riffImportProblem } from '@/lib/app/patterns/library-facts';
+import {
+  followSoundRiff,
+  riffLeadsDefault,
+  syncRiffPatterns,
+  type RewrittenRiff,
+} from '@/lib/app/patterns/library';
 
 type Json = Prisma.InputJsonValue;
 type Tx = Prisma.TransactionClient;
@@ -365,6 +372,10 @@ function checkSound(def: AppSynthDef, input: unknown): Preset {
     refuse('A library patch cannot be marked as designed by the tutor', [
       { path: 'ai', message: 'Leave ai out of a library patch' },
     ]);
+  // A sound's riff is its default library pattern's notes (`lib/app/patterns/library.ts`), so it must be one.
+  const riffProblem = riffImportProblem(result.value.phrase);
+  if (riffProblem)
+    refuse('The riff cannot be a pattern', [{ path: 'phrase', message: riffProblem }]);
   return result.value;
 }
 
@@ -382,14 +393,25 @@ const soundColumns = (p: Preset) => ({
   tweaks: toJson(p.tweaks),
 });
 
-/** Change a sound: the edit is merged into the stored sound and the whole is checked before anything is written. */
+/**
+ * Change a sound: the edit is merged into the stored sound and the whole is checked before anything is written. Its
+ * riff can change only while it leads the sound's default (`riffLeadsDefault`); a default an admin chose is changed as
+ * a library pattern instead. The riff pattern follows (`followSoundRiff`); `library` is every other sound whose riff
+ * followed with it, for the route to audit.
+ */
 export async function editSound(
   synthId: string,
   slug: string,
   input: SoundEdit
-): Promise<{ before: ReturnType<typeof soundOf>; after: ReturnType<typeof soundOf> }> {
+): Promise<{
+  before: ReturnType<typeof soundOf>;
+  after: ReturnType<typeof soundOf>;
+  library: RewrittenRiff[];
+}> {
   const def = defOrRefuse(synthId);
   return prisma.$transaction(async (tx) => {
+    // Held so a new list for this sound (`setSoundPatterns`) cannot swap its default between the check and the write.
+    await lockSynth(tx, synthId);
     const row = await tx.synthSound.findUnique({ where: { synthId_slug: { synthId, slug } } });
     if (!row) throw new NotFoundError('Patch not found');
     if (row.definitionVersion !== def.version)
@@ -405,12 +427,27 @@ export async function editSound(
     const sound = checkSound(def, { ...before, ...edits });
     // An edit that changes nothing is not an edit: the row stays the seed's.
     const { id: _slug, ...stored } = before;
-    if (sameValue(soundColumns(sound), stored)) return { before, after: before };
+    const columns = soundColumns(sound);
+    if (sameValue(columns, stored)) return { before, after: before, library: [] };
+    const riffChanged = !sameValue(columns.phrase, stored.phrase);
+    if (riffChanged && !(await riffLeadsDefault(tx, row.id)))
+      refuse(`${slug} plays a library pattern of its own`, [
+        {
+          path: 'phrase',
+          message:
+            'This sound plays a library pattern that is more than its riff (another pattern, or its own with notes an admin changed), so its riff is that pattern’s notes. Change the pattern instead.',
+        },
+      ]);
     const after = await tx.synthSound.update({
       where: { synthId_slug: { synthId, slug } },
-      data: { ...soundColumns(sound), editedAt: new Date() },
+      data: { ...columns, editedAt: new Date() },
     });
-    return { before, after: soundOf(after) };
+    // Only the riff, the name and the credit reach the riff pattern.
+    const library =
+      riffChanged || columns.name !== stored.name || columns.artist !== stored.artist
+        ? await followSoundRiff(tx, row.id)
+        : [];
+    return { before, after: soundOf(after), library };
   });
 }
 
@@ -445,6 +482,8 @@ export async function createSound(
         editedAt: new Date(),
       },
     });
+    // Its riff becomes its first library pattern, as the seed does for every sound.
+    await syncRiffPatterns(tx, { id: row.id });
     return soundOf(row);
   });
 }

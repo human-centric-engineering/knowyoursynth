@@ -39,6 +39,7 @@ import {
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { MAX_CONTENT_BYTES, SynthContentSchema, toSeedFiles } from '@/lib/app/catalogue/data';
 import { lockSynth, SoundSlugSchema } from '@/lib/app/catalogue/edit';
+import { syncRiffPatterns } from '@/lib/app/patterns/library';
 import {
   catalogueKey,
   planSynthContent,
@@ -55,6 +56,12 @@ export interface UploadProblem {
 
 /** What an upload did, per table. `edited` counts the rows skipped because an admin had edited them. */
 export type UploadReport = Record<'sounds' | 'lineage' | 'notes', SeedCounts>;
+
+/**
+ * What a write did: the report, and other sounds whose riffs followed a riff pattern it changed, because an admin had
+ * made it their default. The route audits both.
+ */
+export type UploadOutcome = UploadReport & { riffsFollowed: string[] };
 
 /**
  * Read the request body as UTF-8 text, refusing it once it passes `max` bytes, whatever the `Content-Length` header
@@ -205,7 +212,10 @@ async function bringIn<Row extends object>(
  * `ConflictError` when an admin created one of the file's rows while it was being written; either way, having written
  * nothing.
  */
-export async function writeSynthContent(id: string, rows: SynthContentRows): Promise<UploadReport> {
+export async function writeSynthContent(
+  id: string,
+  rows: SynthContentRows
+): Promise<UploadOutcome> {
   try {
     return await writeUpload(id, rows);
   } catch (err) {
@@ -217,7 +227,7 @@ export async function writeSynthContent(id: string, rows: SynthContentRows): Pro
   }
 }
 
-async function writeUpload(id: string, rows: SynthContentRows): Promise<UploadReport> {
+async function writeUpload(id: string, rows: SynthContentRows): Promise<UploadOutcome> {
   return prisma.$transaction(
     async (tx: Tx) => {
       await lockSynth(tx, id);
@@ -259,7 +269,15 @@ async function writeUpload(id: string, rows: SynthContentRows): Promise<UploadRe
         ({ key, ...data }) => tx.synthNote.updateMany({ where: { key, editedAt: null }, data })
       );
 
-      return { sounds, lineage, notes };
+      // Each new or changed sound's riff becomes, or updates, its library pattern, as the seed would make it.
+      const { rewritten } = await syncRiffPatterns(tx, { synthId: id }, { markEdited: true });
+
+      return {
+        sounds,
+        lineage,
+        notes,
+        riffsFollowed: rewritten.map((r) => `${r.synthId}/${r.slug}`),
+      };
     },
     // A whole library is a few hundred row reads and writes: more than the default five seconds allows for.
     { timeout: 30_000 }
