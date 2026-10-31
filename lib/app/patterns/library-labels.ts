@@ -1,7 +1,7 @@
 /**
  * What a library pattern's role and fidelity are called where a player reads them (`f-pattern-library` t-123): the
- * names in `.context/app/pattern-library.md` (Roles, Fidelity). Pure and client-safe, so the picker and the admin
- * editor say the same words.
+ * names in `.context/app/pattern-library.md` (Roles, Fidelity). Pure and client-safe, for the picker and anything else
+ * a player reads them in.
  */
 import type { PatternFidelity, PatternRole } from '@prisma/client';
 

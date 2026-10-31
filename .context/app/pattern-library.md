@@ -500,11 +500,13 @@ came. One of the user's sounds, a shared sound, a lesson's or the tutor's has no
 
 - **One read per sound.** `useSoundPatterns` (`components/app/sequencer/use-sound-patterns.ts`) reads
   `GET /api/v1/synths/:id/sounds/:slug/patterns` the first time the sequencer is open with the sound on the panel,
-  and keeps it for the visit. Nothing is read per pattern, and nothing while the sequencer stays closed. A read that
+  and keeps it for the visit, a read still in flight included. Nothing is read per pattern, and nothing while the
+  sequencer stays closed. One of the user's sounds whose list is still loading is not taken for the library's. A read that
   failed is tried again when Patterns is pressed.
 - **The default opens first.** When the list arrives and the sequencer still holds the sound's riff as it came, the
   default takes its place, named and with its own settings (`SynthSound.phrase` is its first loop). There is no Undo
-  back to the riff, because it is the same music. An edit made while the list was being read is left alone.
+  back to the riff, because it is the same music. An edit made while the list was being read is left alone, and so is an Undo back to a riff once the
+  default has opened for the sound. A sound whose list is empty says so.
 - **The list** (`sound-pattern-picker.tsx`) is in the sound's order. Each pattern shows its name (the first marked
   _Default_), its role (`ROLE_LABELS`, `lib/app/patterns/library-labels.ts`) and its length. Where it has an Inspired
   by, it shows _Inspired by_ and the label, then the fidelity's label (`FIDELITY_LABELS`), with what it means as the

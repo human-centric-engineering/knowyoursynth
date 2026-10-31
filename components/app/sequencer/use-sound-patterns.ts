@@ -39,6 +39,8 @@ export function useSoundPatterns(
   sound: LibrarySound | null,
   enabled: boolean
 ): SoundPatterns | null {
+  // Each sound's read, kept from when it is sent: one in flight when the sequencer closes and opens is not sent again.
+  const reads = useRef(new Map<string, Promise<LibraryPatternView[]>>());
   const cache = useRef(new Map<string, LibraryPatternView[]>());
   // What the last read came back with, for the sound it was for: a sound chosen since shows nothing of it.
   const [read, setRead] = useState<{
@@ -61,18 +63,28 @@ export function useSoundPatterns(
     }
     let live = true;
     setRead({ key, patterns: null, error: false });
-    apiClient
-      .get<LibraryPatternView[]>(
+    let sent = reads.current.get(key);
+    if (!sent) {
+      sent = apiClient.get<LibraryPatternView[]>(
         `/api/v1/synths/${encodeURIComponent(synthId)}/sounds/${encodeURIComponent(slug)}/patterns`
-      )
-      .then((patterns) => {
-        cache.current.set(key, patterns);
+      );
+      reads.current.set(key, sent);
+      sent.then(
+        (patterns) => cache.current.set(key, patterns),
+        (err: unknown) => {
+          reads.current.delete(key);
+          logger.warn('sequencer: sound patterns could not be read', { key, err: String(err) });
+        }
+      );
+    }
+    sent.then(
+      (patterns) => {
         if (live) setRead({ key, patterns, error: false });
-      })
-      .catch((err: unknown) => {
-        logger.warn('sequencer: sound patterns could not be read', { key, err: String(err) });
+      },
+      () => {
         if (live) setRead({ key, patterns: null, error: true });
-      });
+      }
+    );
     return () => {
       live = false;
     };

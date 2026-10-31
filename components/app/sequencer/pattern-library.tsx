@@ -121,16 +121,23 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
 
   // The sound's default pattern is its riff: it takes the riff's place while the sequencer holds the riff as it came,
   // so what is held is named, and has the pattern's own settings. Run again once a new sound's riff has arrived
-  // (`loaded` back to null), so it never lands on another sound's riff.
+  // (`loaded` back to null), so it never lands on another sound's riff. Once per sound on the panel: an Undo back to an
+  // unedited riff is where the Undo said it would go.
   const soundDefault = soundPatterns?.patterns?.[0] ?? null;
+  const soundKey = soundPatterns
+    ? `${soundPatterns.sound.synthId}/${soundPatterns.sound.slug}`
+    : null;
+  const defaultFor = useRef<string | null>(null);
   useEffect(() => {
-    if (!soundDefault || loaded !== null || edited) return;
+    if (!soundKey) defaultFor.current = null;
+    if (!soundDefault || loaded !== null || edited || defaultFor.current === soundKey) return;
+    defaultFor.current = soundKey;
     load(
       soundDefault.pattern,
       { id: null, name: soundDefault.name, libraryId: soundDefault.id },
       { quiet: true }
     );
-  }, [soundDefault, loaded, edited, load]);
+  }, [soundDefault, soundKey, loaded, edited, load]);
 
   const run = async (what: string, fn: () => Promise<void>) => {
     setBusy(true);
@@ -251,7 +258,12 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
   };
 
   const openSoundPattern = (p: LibraryPatternView) => {
-    if (!seq.load(p.pattern, { id: null, name: p.name, libraryId: p.id })) {
+    // Already held as it came: nothing to open, and no Undo that would change nothing.
+    if (loaded?.libraryId === p.id && !edited) {
+      setPanel(null);
+      return;
+    }
+    if (!load(p.pattern, { id: null, name: p.name, libraryId: p.id })) {
       setStatus(`${p.name} cannot be opened in the sequencer.`);
       return;
     }
@@ -509,6 +521,8 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
           </p>
         ) : soundPatterns.patterns === null ? (
           <p className="kys-seq-lib-empty">Reading {soundPatterns.sound.name}’s patterns…</p>
+        ) : soundPatterns.patterns.length === 0 ? (
+          <p className="kys-seq-lib-empty">{soundPatterns.sound.name} has no patterns yet.</p>
         ) : (
           <SoundPatternPicker
             groups={[
@@ -519,7 +533,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
                 leadIsDefault: true,
               },
             ]}
-            current={loaded?.libraryId ?? null}
+            current={edited ? null : (loaded?.libraryId ?? null)}
             synthId={synthId}
             onPick={openSoundPattern}
           />

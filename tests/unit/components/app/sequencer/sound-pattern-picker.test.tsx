@@ -121,10 +121,22 @@ const PATTERNS = [
 
 let state: SeqState;
 
-function Page({ enabled = true, slug = 'fat-bass' }: { enabled?: boolean; slug?: string }) {
-  const seq = useSequencer({ engine: null, ensureAudio: async () => false, riff: RIFF });
+/** `slug` null: a sound with no patterns of its own (one of the user's) on the panel. */
+function Page({
+  enabled = true,
+  slug = 'fat-bass',
+  riff = RIFF,
+}: {
+  enabled?: boolean;
+  slug?: string | null;
+  riff?: Phrase;
+}) {
+  const seq = useSequencer({ engine: null, ensureAudio: async () => false, riff });
   const mine = useMyPatterns();
-  const soundPatterns = useSoundPatterns({ synthId: 'model-d', slug, name: 'Fat bass' }, enabled);
+  const soundPatterns = useSoundPatterns(
+    slug ? { synthId: 'model-d', slug, name: 'Fat bass' } : null,
+    enabled
+  );
   state = seq;
   return (
     <Sequencer
@@ -235,6 +247,41 @@ describe('opening on the default', () => {
     await waitFor(() => expect(items()).toHaveLength(3));
     expect(state.loaded?.libraryId).toBe('patdefault000000000001');
   });
+  it('reads once when the sequencer closes and opens before the first read is back', async () => {
+    server.hold = { resolve: () => undefined };
+    const { rerender } = render(<Page />);
+    rerender(<Page enabled={false} />);
+    rerender(<Page />);
+    await act(async () => server.hold?.resolve());
+    await waitFor(() => expect(state.loaded?.libraryId).toBe('patdefault000000000001'));
+    expect(apiClient.get as Mock).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not open the default over an Undo back to an unedited riff', async () => {
+    const { rerender } = render(<Page slug={null} riff={OTHER} />);
+    act(() => {
+      state.edit((p) => ({ ...p, swing: 55 }));
+    });
+    // the library sound chosen: the edit is one Undo away, and its default opens
+    rerender(<Page />);
+    await waitFor(() => expect(state.loaded?.libraryId).toBe('patdefault000000000001'));
+
+    act(() => state.undo()); // the edited riff
+    act(() => state.undo()); // the riff as it came
+    await act(async () => undefined);
+    expect(state.pattern).toEqual(importPhrase(OTHER));
+    expect(state.loaded).toBeNull();
+  });
+
+  it('says so when the sound has no patterns', async () => {
+    server.sounds = new Map([['model-d/fat-bass', []]]);
+    render(<Page />);
+    await act(async () =>
+      fireEvent.click(strip().getByRole('button', { name: 'Fat bass’s patterns' }))
+    );
+    expect(await screen.findByText('Fat bass has no patterns yet.')).toBeTruthy();
+    expect(state.loaded).toBeNull();
+  });
 });
 
 describe('picking a pattern', () => {
@@ -259,6 +306,25 @@ describe('picking a pattern', () => {
     act(() => state.undo());
     expect(state.pattern).toEqual(DEFAULT);
     expect(state.loaded?.libraryId).toBe('patdefault000000000001');
+  });
+
+  it('adds no Undo for the pattern already held, as it came', async () => {
+    render(<Page />);
+    await waitFor(() => expect(state.loaded?.libraryId).toBe('patdefault000000000001'));
+    const [first] = await openPicker();
+    await act(async () => fireEvent.click(within(first).getByRole('button')));
+    expect(state.pattern).toEqual(DEFAULT);
+    expect(state.canUndo).toBe(false);
+  });
+
+  it('marks no pattern as held once what is held is edited', async () => {
+    render(<Page />);
+    await waitFor(() => expect(state.loaded?.libraryId).toBe('patdefault000000000001'));
+    act(() => {
+      state.edit((p) => ({ ...p, swing: 55 }));
+    });
+    const [first] = await openPicker();
+    expect(within(first).getByRole('button').getAttribute('aria-current')).toBeNull();
   });
 });
 

@@ -1306,8 +1306,10 @@ function Synth({
 
   // The library sound on the panel, as it came: its patterns are offered in the sequencer (`f-pattern-library` t-123),
   // read once the sequencer opens. One of the user's sounds, a shared one, a lesson's or the tutor's has none of its own.
+  // Nor does a sound of theirs whose list is still being read: the library's preset is only standing in for it.
+  const ownSoundPending = !!sess.soundId && (authPending || (signedIn && !mine.sounds));
   const librarySound =
-    !sharedPattern && !openSound && !sharedPanel && !ownLesson && preset
+    !sharedPattern && !openSound && !ownSoundPending && !sharedPanel && !ownLesson && preset
       ? { synthId, slug: preset.id, name: preset.name }
       : null;
   const soundPatterns = useSoundPatterns(librarySound, seqShown);
