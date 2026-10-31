@@ -492,3 +492,33 @@ The checks on a write, merged into the stored pattern first:
 - Inspired by links to a row that exists (a part must be of the song named), and takes its label from that row.
 - An edit that changes nothing writes and audits nothing.
 - A sound's new list is refused while the sound was made on an older definition, as an edit to the sound is.
+
+### The picker
+
+t-123. On the synth page, the sequencer's patterns strip has **Patterns** while a library sound is on the panel as it
+came. One of the user's sounds, a shared sound, a lesson's or the tutor's has no patterns of its own, so it has none.
+
+- **One read per sound.** `useSoundPatterns` (`components/app/sequencer/use-sound-patterns.ts`) reads
+  `GET /api/v1/synths/:id/sounds/:slug/patterns` the first time the sequencer is open with the sound on the panel,
+  and keeps it for the visit, a read still in flight included. Nothing is read per pattern, and nothing while the
+  sequencer stays closed. One of the user's sounds whose list is still loading is not taken for the library's. A read that
+  failed is tried again when Patterns is pressed.
+- **The default opens first.** When the list arrives and the sequencer still holds the sound's riff as it came, the
+  default takes its place, named and with its own settings (`SynthSound.phrase` is its first loop). There is no Undo
+  back to the riff, because it is the same music. An edit made while the list was being read is left alone, and so is an Undo back to a riff once the
+  default has opened for the sound. A sound whose list is empty says so.
+- **The list** (`sound-pattern-picker.tsx`) is in the sound's order. Each pattern shows its name (the first marked
+  _Default_), its role (`ROLE_LABELS`, `lib/app/patterns/library-labels.ts`) and its length. Where it has an Inspired
+  by, it shows _Inspired by_ and the label, then the fidelity's label (`FIDELITY_LABELS`), with what it means as the
+  tooltip. A pattern with no Inspired by label shows neither.
+- **The link** (`inspiredHref`) goes to the databank's page: a work to its song (a part too, which has no page of its
+  own), an artist to theirs. A synth links to its synth page unless it is the one on the panel. A genre, or a link
+  whose row has gone, is plain text.
+- **Picking one** opens it in the sequencer as a library riff opens, with Undo back to what was held. From there it is
+  edited and saved to My patterns like any pattern. Copying its Inspired by and fidelity into the saved copy is not
+  done yet.
+- **Groups.** The picker takes a list of groups, and the sound's own is the first. Suggestions for the patch on the
+  panel (t-125, "Suits this sound") are a second group in the same picker.
+- **Phones.** Below `lg` the sequencer is a bottom sheet, and the picker is in it with the rest of the module.
+
+Tested in `tests/unit/components/app/sequencer/sound-pattern-picker.test.tsx`.

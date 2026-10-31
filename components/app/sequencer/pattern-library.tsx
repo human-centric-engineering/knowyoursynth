@@ -4,6 +4,8 @@
  * The sequencer's patterns strip (`f-step-sequencer` t-81): what the module holds, and where patterns come from and go.
  *
  * - The name of the pattern held (the sound's riff, one of the user's patterns, or a library riff), marked when edited.
+ * - With a library sound on the panel, Patterns: its patterns, default first (`f-pattern-library` t-123,
+ *   `SoundPatternPicker`). The default opens in place of the riff it is, and any other opens as a library riff does.
  * - Save, Save as, Rename and Delete, against My patterns (`/api/v1/patterns`). Signed out, a link to sign in instead.
  * - My patterns: the user's saved patterns, any of which opens in place of what is held (Undo brings that back).
  * - Library: any synth's library riffs, as a starting point. A riff from one synth plays on any other.
@@ -15,7 +17,17 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 import type { FormEvent, ReactNode } from 'react';
-import { BookOpen, FolderOpen, Link2, Pencil, Save, SaveAll, Share2, Trash2 } from 'lucide-react';
+import {
+  BookOpen,
+  FolderOpen,
+  Link2,
+  ListMusic,
+  Pencil,
+  Save,
+  SaveAll,
+  Share2,
+  Trash2,
+} from 'lucide-react';
 import { apiClient } from '@/lib/api/client';
 import type { SynthDetail } from '@/lib/app/catalogue/read';
 import { importPhrase } from '@/lib/app/sequencer/import';
@@ -23,6 +35,9 @@ import { PatternNameSchema } from '@/lib/app/patterns/data';
 import type { Sequencer } from '@/components/app/sequencer/use-sequencer';
 import type { MyPatterns } from '@/components/app/sequencer/use-my-patterns';
 import { SeqSelect } from '@/components/app/sequencer/select';
+import { SoundPatternPicker } from '@/components/app/sequencer/sound-pattern-picker';
+import type { SoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
+import type { LibraryPatternView } from '@/lib/app/patterns/library';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 import { PatternSharing } from '@/components/app/sharing/pattern-sharing';
 import { soundStateLabel } from '@/components/app/sharing/visibility';
@@ -53,9 +68,11 @@ export interface PatternLibraryProps {
   synths: readonly { id: string; name: string }[];
   mine: MyPatterns;
   sound: OpenSoundDefault | null;
+  /** The library sound on the panel and its patterns (t-123); null with none on it. */
+  soundPatterns?: SoundPatterns | null;
 }
 
-type Panel = 'mine' | 'library' | 'share' | null;
+type Panel = 'mine' | 'library' | 'share' | 'sound' | null;
 /** `id` is the saved pattern a rename is for: the one held when the box opened. */
 type Form = {
   mode: 'save' | 'saveAs' | 'rename';
@@ -74,8 +91,17 @@ const failure = (err: unknown) =>
   err instanceof Error && err.message ? err.message : 'Try again.';
 
 export function PatternLibrary({ seq, library }: { seq: Sequencer; library: PatternLibraryProps }) {
-  const { signedIn, signInHref, synthId, synths, mine, sound, sharedHeld = false } = library;
-  const { loaded, edited } = seq;
+  const {
+    signedIn,
+    signInHref,
+    synthId,
+    synths,
+    mine,
+    sound,
+    sharedHeld = false,
+    soundPatterns = null,
+  } = library;
+  const { loaded, edited, load } = seq;
   const [panel, setPanel] = useState<Panel>(null);
   const [form, setForm] = useState<Form>(null);
   /** The saved pattern Delete was pressed for: what the confirmation names and removes. */
@@ -92,6 +118,26 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
     if (formMode) nameInput.current?.focus();
   }, [formMode]);
   const own = loaded?.id ? { id: loaded.id, name: loaded.name } : null;
+
+  // The sound's default pattern is its riff: it takes the riff's place while the sequencer holds the riff as it came,
+  // so what is held is named, and has the pattern's own settings. Run again once a new sound's riff has arrived
+  // (`loaded` back to null), so it never lands on another sound's riff. Once per sound on the panel: an Undo back to an
+  // unedited riff is where the Undo said it would go.
+  const soundDefault = soundPatterns?.patterns?.[0] ?? null;
+  const soundKey = soundPatterns
+    ? `${soundPatterns.sound.synthId}/${soundPatterns.sound.slug}`
+    : null;
+  const defaultFor = useRef<string | null>(null);
+  useEffect(() => {
+    if (!soundKey) defaultFor.current = null;
+    if (!soundDefault || loaded !== null || edited || defaultFor.current === soundKey) return;
+    defaultFor.current = soundKey;
+    load(
+      soundDefault.pattern,
+      { id: null, name: soundDefault.name, libraryId: soundDefault.id },
+      { quiet: true }
+    );
+  }, [soundDefault, soundKey, loaded, edited, load]);
 
   const run = async (what: string, fn: () => Promise<void>) => {
     setBusy(true);
@@ -209,6 +255,20 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
     setStatus(
       `Opened the riff of ${riff.name} from the ${synthName}. Undo goes back to what was here.`
     );
+  };
+
+  const openSoundPattern = (p: LibraryPatternView) => {
+    // Already held as it came: nothing to open, and no Undo that would change nothing.
+    if (loaded?.libraryId === p.id && !edited) {
+      setPanel(null);
+      return;
+    }
+    if (!load(p.pattern, { id: null, name: p.name, libraryId: p.id })) {
+      setStatus(`${p.name} cannot be opened in the sequencer.`);
+      return;
+    }
+    setPanel(null);
+    setStatus(`Opened ${p.name}. Undo goes back to what was here.`);
   };
 
   const openSharing = () => {
@@ -343,6 +403,23 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
               )}
             </>
           ) : null}
+          {soundPatterns &&
+            button(
+              `${soundPatterns.sound.name}’s patterns`,
+              'The patterns that come with this patch, its default first. Open one to play and edit it.',
+              <ListMusic size={15} aria-hidden="true" />,
+              () => {
+                const next = panel === 'sound' ? null : 'sound';
+                setPanel(next);
+                if (next && soundPatterns.error) soundPatterns.retry();
+              },
+              {
+                expanded: panel === 'sound',
+                text: soundPatterns.patterns
+                  ? `Patterns (${soundPatterns.patterns.length})`
+                  : 'Patterns',
+              }
+            )}
           {button(
             'Library',
             'Every synth’s library riffs. Open one as a starting point: it plays on this synth.',
@@ -436,6 +513,31 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
           backHref={synthHref(synthId)}
         />
       )}
+      {panel === 'sound' &&
+        soundPatterns &&
+        (soundPatterns.error ? (
+          <p className="kys-seq-lib-empty">
+            {soundPatterns.sound.name}’s patterns could not be read. Press Patterns to try again.
+          </p>
+        ) : soundPatterns.patterns === null ? (
+          <p className="kys-seq-lib-empty">Reading {soundPatterns.sound.name}’s patterns…</p>
+        ) : soundPatterns.patterns.length === 0 ? (
+          <p className="kys-seq-lib-empty">{soundPatterns.sound.name} has no patterns yet.</p>
+        ) : (
+          <SoundPatternPicker
+            groups={[
+              {
+                key: 'sound',
+                title: `${soundPatterns.sound.name}’s patterns`,
+                patterns: soundPatterns.patterns,
+                leadIsDefault: true,
+              },
+            ]}
+            current={edited ? null : (loaded?.libraryId ?? null)}
+            synthId={synthId}
+            onPick={openSoundPattern}
+          />
+        ))}
       {panel === 'library' && (
         <LibraryBrowser synthId={synthId} synths={synths} onOpen={openRiff} />
       )}

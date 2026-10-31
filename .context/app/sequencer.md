@@ -372,6 +372,11 @@ again, so pointing the open sound at it keeps the edits.
   sequencer, saved nowhere, until something else opens. Signed out, the strip has a link to sign in in their place.
 - **My patterns** lists the user's patterns, read when it is first opened. One opens in place of what is held, and Undo
   brings that back.
+- **Patterns** (with a library sound on the panel, as it came) is the pattern picker (`sound-pattern-picker.tsx`,
+  `f-pattern-library` t-123): the sound's patterns, default first. See [the picker](./pattern-library.md#the-picker).
+  The sequencer opens holding the default, which takes the riff's place with no Undo back to the riff (`load` with
+  `quiet`). Any other opens as a library riff does, and Undo brings back what was held. `loaded.libraryId` marks the
+  one held in the list while it is unedited. Picking that one again opens nothing, and adds no Undo.
 - **Library** lists any synth's library riffs, one synth at a time. It starts on the synth on the panel and reads the
   catalogue's `GET /api/v1/synths/:id`. A riff is imported as `importPhrase` imports the sound's own (no note changes), as
   a starting point saved nowhere.
