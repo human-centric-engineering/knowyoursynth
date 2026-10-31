@@ -8,12 +8,12 @@ belongs to the seed alone (below).
 
 ## Where it lives
 
-| Table          | Holds                                                                                                                                                                           |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Synth`        | One row per synth: name, maker, year, heritage, summary (from the definition), listed, order.                                                                                   |
-| `SynthSound`   | A library sound, built step by step (`Preset`), and the definition version it was made on.                                                                                      |
-| `SynthLineage` | A synth's history section, without "Heard on" (that comes from the databank: [`bank.md`](./bank.md)).                                                                           |
-| `SynthNote`    | `UNUSUAL` notes on a control, jack or area, and the `LIMIT_INTRO` and `LIMIT` entries of a synth's "What is not modelled" list. A `LIMIT` with no synth is true of every panel. |
+| Table          | Holds                                                                                                                                                                                                                      |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Synth`        | One row per synth: name, maker, year, heritage, summary (from the definition), listed, order.                                                                                                                              |
+| `SynthSound`   | A library sound, built step by step (`Preset`), and the definition version it was made on. Its riff (`phrase`) is its default library pattern's notes ([`pattern-library.md`](./pattern-library.md#the-library-as-built)). |
+| `SynthLineage` | A synth's history section, without "Heard on" (that comes from the databank: [`bank.md`](./bank.md)).                                                                                                                      |
+| `SynthNote`    | `UNUSUAL` notes on a control, jack or area, and the `LIMIT_INTRO` and `LIMIT` entries of a synth's "What is not modelled" list. A `LIMIT` with no synth is true of every panel.                                            |
 
 `CatalogueSeedRecord` holds, per catalogue row, what the seed last planned for it: the content
 columns it would write, placement left out, keyed by table and the row's natural key. Nothing but
@@ -36,8 +36,9 @@ person, so `lib/app/data-export.ts` declares them excluded.
 The seed's rules, each tested in `tests/unit/lib/app/catalogue/seed.test.ts`:
 
 - **It checks everything before it writes anything.** Every sound must pass `validatePreset` on
-  the definition version it was made on, and every unusual note must name a control, jack or area
-  the synth has. One problem anywhere and it throws with the whole list.
+  the definition version it was made on, its riff must be one `importPhrase` takes (it becomes the
+  sound's first library pattern), and every unusual note must name a control, jack or area the
+  synth has. One problem anywhere and it throws with the whole list.
 - **A re-run writes nothing.** JSON columns are compared by value, because `jsonb` does not keep
   key order.
 - **A row with `editedAt` set is an admin's**, and the seed never writes it again. The admin API
@@ -53,6 +54,10 @@ The seed's rules, each tested in `tests/unit/lib/app/catalogue/seed.test.ts`:
   this run's plan: a record per planned row, edited rows included, written only when its values
   change, and the records of rows the data no longer has removed. The record is the seed's own, so
   removing from it never touches content. Writing it never writes an edited catalogue row.
+
+After the catalogue and the databank, `005-library-patterns` makes each sound's riff a library
+pattern at the head of its list, under the same rules (re-runs write nothing, an admin's pattern
+is never written, nothing is deleted). See [`pattern-library.md`](./pattern-library.md#the-seed).
 
 The seed re-runs when its hash changes, and the hash takes in the data files, the loader, the
 seed logic, the definitions and the validator. **After pulling a change to any of them, run
@@ -95,6 +100,12 @@ The rules, each tested in `tests/unit/app/api/v1/admin/synths/catalogue-edit.tes
 - **Every change is audited** in the admin audit log, entity types `synth`, `synth_sound`,
   `synth_lineage` and `synth_note`, with before and after. The audit page's type filter is a
   fixed list in a platform file, so these show under "All types".
+- **A sound's riff and its default pattern move together.** A new sound gets its riff as its first
+  library pattern; a changed riff moves the sound's default with it, audited as a
+  `library_pattern` change where it reaches one an admin chose. A riff `importPhrase` refuses is
+  a 400. A sound's list of patterns is set at
+  `PUT /api/v1/admin/synths/:id/sounds/:slug/patterns`
+  ([`pattern-library.md`](./pattern-library.md#the-api)).
 - **A sound's id never changes**, and neither does what a note is about. Removing a sound is not
   possible yet: the seed recreates a missing row, so it needs a retired flag first.
 

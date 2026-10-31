@@ -15,8 +15,9 @@ This page is the design, written before the build (t-121). It covers:
 - how admins see and control each pattern's origin, rights risk and status
 - how the current riffs are reviewed
 
-Each later task updates its section as it lands. The table, the migration and the seed are t-122. The picker on the synth
-page is t-123, the sound detector t-124, suggestions t-125, the admin editor t-126 and admin control t-156.
+Each later task updates its section as it lands. The table, the migration, the seed and the API are t-122 and are
+described as built in [The library as built](#the-library-as-built). The picker on the synth page is t-123, the sound
+detector t-124, suggestions t-125, the admin editor t-126 and admin control t-156.
 
 **Awaiting the owner's sign-off on the PR:** the role vocabulary, the fidelity labels, the rights rule and admin
 control. Each is marked _Proposed_ below until it is signed off.
@@ -376,3 +377,102 @@ The owner reviews riffs per sound, in the admin editor (t-126), and marks each o
 
 Demoting is the only way a riff stops being a default. A researched pattern becomes a sound's default only after the
 owner has listened to it, and the riff it replaces is demoted, never removed.
+
+## The library as built
+
+t-122 built the table, moved every riff into it, and added the read and admin APIs.
+
+### Where it lives
+
+| Table               | Holds                                                                                                                                                |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `LibraryPattern`    | A `Pattern` (with its `version`), its name, role, tempo range, Inspired by, fidelity, sources and origin. `key` is the seed's natural key.           |
+| `SynthSoundPattern` | A sound's place for a pattern. The lowest `order` is the sound's default. A pattern can be on any number of sounds, and a sound can list any number. |
+
+Both are in `prisma/schema/app.prisma`, on `GLOBAL_CONFIG_MODELS` with the catalogue (the same divergence row), and
+excluded from the data export (`CATALOGUE_MODELS` in `lib/app/data-export.ts`): no row has a user foreign key.
+
+- **Inspired by** is `inspiration` (work, artist, synth or genre), the label shown (`inspiredBy`), and a link to the
+  `BankSong`, `BankSongPart`, `BankArtist` or `Synth`. The label is kept beside the link, so it still reads if the
+  linked row goes (the link is `SetNull`).
+- **The facts** (register, density, note length, voices, bars, slides) are not stored. `patternFacts` in
+  `lib/app/patterns/library-facts.ts` reads them from the first loop on every read, so they cannot drift from the notes.
+  The role and the tempo range are stored, because a person can set them.
+- **Rights risk, status and comments** are not here yet. They are t-156's. Origin is here, because the migration sets
+  it.
+
+### A sound's riff is its default pattern
+
+`SynthSound.phrase` stays. It is always the sound's default pattern played for its first loop, so the panel, the
+probe, lessons, the tutor, sharing and the content template all still read the one column, and none of them changed.
+`lib/app/patterns/library.ts` keeps the two together:
+
+- **Every sound gets its riff as a pattern**, keyed `riff:<synthId>/<slug>`, through `importPhrase`, at the head of an
+  empty list (`syncRiffPatterns`). The seed, a new admin sound and a content upload all go through it. A riff that
+  `importPhrase` refuses is refused by the seed's checks and by the admin API, before anything is written.
+- **An unedited riff pattern follows its sound's riff** while it is still the sound's default. A changed seed file
+  reaches both.
+- **Whatever changes a default rewrites the riff** (`syncSoundPhrases`): an admin's edit to a pattern that is a
+  sound's default, or a new order for a sound's list. Each sound rewritten is marked edited, so the seed then leaves
+  it alone, as it leaves any admin's edit. A riff that already plays the pattern's notes is not rewritten.
+- **Editing a sound's riff directly** (`PATCH …/sounds/:slug` with `phrase`) moves its default with it
+  (`followSoundRiff`). If the default is the sound's own unedited riff pattern, it is remade as the seed would make
+  it. If the default is an admin's choice, the new riff is written into it, marked edited, and every other sound it is
+  the default of follows.
+
+Placement is content here, unlike the catalogue's: a new order that changes a sound's default changes its riff, so it
+marks the sound edited. A new order that keeps the default writes only the list.
+
+### The seed
+
+`prisma/seeds/app-knowyoursynth/005-library-patterns.ts` runs `syncRiffPatterns` over every sound, after the catalogue
+and the databank. It reads the stored sounds, not the data files, so a sound an admin edited gives its pattern the riff
+the admin left. Each rule is tested in `tests/unit/lib/app/patterns/library.test.ts`:
+
+- **A re-run writes nothing.** Measured on the dev database: 2,293 sounds, 2,293 patterns, 2,293 places, and a second
+  run reports 2,293 unchanged.
+- **Safe on empty.** No sounds, no writes. It never deletes a pattern or a place.
+- **An admin's pattern is never written**, nor one that is no longer its sound's default.
+- **A new riff pattern goes at the end** of a list that already has patterns, so it never takes a default an admin
+  chose.
+
+The migrated riffs, as measured: roles exactly as the [table](#the-vocabulary) above; Inspired by 577 artists, 537
+synths and 1,179 genres; all _In the style of_ and _AI-generated_. The test that every default still plays its riff,
+and that none is missing, runs over the real seed data.
+
+Researched patterns (t-127 on) come from their own seed data, planned beside the riffs. The loader for that is the
+pilot's to add, since there is nothing to load yet.
+
+### The API
+
+Public, no session needed, in `lib/app/patterns/library-read.ts`. A pattern only a hidden synth's sounds list is not
+served, so hiding a synth hides its riffs; one on no sound yet is.
+
+| Route                                             | Does                                                 |
+| ------------------------------------------------- | ---------------------------------------------------- |
+| `GET /api/v1/synths/:id/sounds/:slug/patterns`    | A sound's patterns, default first, with their facts. |
+| `GET /api/v1/library-patterns?role=&page=&limit=` | A page of the library by name, optionally one role.  |
+| `GET /api/v1/library-patterns/:id`                | One pattern.                                         |
+
+Admin, in `lib/app/patterns/library-edit.ts`, over the catalogue's guard and audit (`lib/app/catalogue/admin-route.ts`).
+Every write is `writesSharedSettings` and audited: a pattern as `library_pattern`, a sound's list or riff as
+`synth_sound`. Tested in `tests/unit/app/api/v1/library-patterns.test.ts`.
+
+| Route                                                | Does                                                                                           |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `GET /api/v1/admin/library-patterns?role=&q=`        | Every pattern, hidden synths' included, with when it was edited and every sound that lists it. |
+| `POST /api/v1/admin/library-patterns`                | A new pattern, on no sound yet. Origin defaults to _Human-authored_.                           |
+| `GET /api/v1/admin/library-patterns/:id`             | One pattern, as above.                                                                         |
+| `PATCH /api/v1/admin/library-patterns/:id`           | Any field but its key. Rewrites the riff of every sound it is the default of.                  |
+| `PUT /api/v1/admin/synths/:id/sounds/:slug/patterns` | `{ patternIds }`, default first. Must keep every pattern the sound has; may add any.           |
+
+The `/api/v1/patterns` routes are users' own patterns (My patterns), a different table. The library's routes are named
+apart so the two never meet.
+
+The checks on a write, merged into the stored pattern first:
+
+- The pattern passes `PatternSchema` and plays at least one note on its first loop, so a sound it is the default of
+  always has a riff.
+- A _Transcribed_ or _Reconstructed_ pattern is inspired by a work in the databank and lists at least one source.
+- Inspired by links to a row that exists (a part must be of the song named), and takes its label from that row.
+- An edit that changes nothing writes and audits nothing.
