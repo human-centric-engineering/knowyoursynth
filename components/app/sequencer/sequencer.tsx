@@ -23,7 +23,7 @@
  * `.context/app/sequencer.md`.
  */
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { KeyboardEvent, ReactNode } from 'react';
 import {
   ArrowLeftRight,
@@ -266,7 +266,17 @@ export function Sequencer({
   const moveFocus = useRef(false);
 
   // The playhead, read from the audio clock once a frame while the pattern plays; the keys redraw only as it moves on.
-  const [at, setAt] = useState<SeqPosition | null>(null);
+  const [at, setAtNow] = useState<SeqPosition | null>(null);
+  // Set only when the step or part changes, checked here rather than in an updater: an updater returning the state it
+  // was given is still an update queued, and the first one after each move renders the module again for nothing
+  // (t-158, as t-157 found for the suggestions).
+  const atRef = useRef(at);
+  const setAt = useCallback((now: SeqPosition | null) => {
+    const was = atRef.current;
+    if (was === now || (was && now && was.step === now.step && was.part === now.part)) return;
+    atRef.current = now;
+    setAtNow(now);
+  }, []);
   const { position } = seq;
   useEffect(() => {
     if (!seq.playing) {
@@ -276,12 +286,12 @@ export function Sequencer({
     let raf = 0;
     const tick = () => {
       const now = position();
-      setAt((was) => (was?.step === now?.step && was?.part === now?.part ? was : now));
+      setAt(now);
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [seq.playing, position]);
+  }, [seq.playing, position, setAt]);
 
   // While the part on show plays, its keys (and the lanes under them) show the page the playhead is on (t-87). The
   // chosen step stays where it is, so notes and tools still land on it. A page chosen by hand (or one a lane is being

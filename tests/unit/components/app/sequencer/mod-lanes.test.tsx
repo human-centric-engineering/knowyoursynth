@@ -89,6 +89,9 @@ function fakeEngine() {
 let engine: ReturnType<typeof fakeEngine>;
 let state: SeqState;
 
+/** Times the module has rendered: it reads `held` once a render. */
+let renders = 0;
+
 function Harness({ panel = PANEL, def = DEF }: { panel?: ControlValues; def?: SynthDef }) {
   // Made afresh only when the panel or the synth changes, as the page does.
   const lanes = useMemo<LaneTarget>(
@@ -99,7 +102,13 @@ function Harness({ panel = PANEL, def = DEF }: { panel?: ControlValues; def?: Sy
   state = seq;
   return (
     <Sequencer
-      seq={seq}
+      seq={{
+        ...seq,
+        held: () => {
+          renders += 1;
+          return seq.held();
+        },
+      }}
       playing={seq.playing}
       onPlay={() => void seq.play()}
       onStop={seq.stop}
@@ -595,6 +604,22 @@ describe('following the playhead across pages', () => {
     // the stroke over, the next turn shows the page being heard
     playheadOn(33);
     await waitFor(() => expect(firstCell()).toBe('cutoff, step 33'));
+  });
+
+  it('renders the module once each time the playhead moves on, and not on the frames between (t-158)', async () => {
+    await playLong();
+    // a few frames on one step first: none of them renders
+    renders = 0;
+    for (let f = 0; f < 4; f++) await aFrame();
+    expect(renders).toBe(0);
+
+    for (let step = 1; step <= 6; step++) {
+      playheadOn(step);
+      for (let f = 0; f < 4; f++) await aFrame();
+    }
+    expect(state.position()).toEqual({ step: 6, part: 0 });
+    expect(stepKeys()[6]).toHaveAttribute('aria-label', expect.stringMatching(/^Step 7:/));
+    expect(renders).toBe(6);
   });
 });
 
