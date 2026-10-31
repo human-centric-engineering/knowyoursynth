@@ -37,8 +37,8 @@ Measured on `main` on 2026-10-31, from the seed data under `prisma/seeds/app-kno
 A sound's category (its first tag, `PRESET_CATEGORIES`) says what the patch sounds like: its timbre. A pattern's
 **role** says what part the notes play. These are different things, and the map between them is what matching uses.
 
-The data shows how far apart they are. Of the 149 `seq` sounds, 79 hold one note or chord and leave the synth's own
-sequencer or arpeggiator to move. Of the 273 `fx` sounds, 198 do the same. So the role is read from the notes, never
+The data shows how far apart they are. By the rule below, 73 of the 149 `seq` sounds hold one note or chord and leave
+the synth's own sequencer or arpeggiator to move. So do 187 of the 273 `fx` sounds. So the role is read from the notes, never
 copied from the category.
 
 ### The vocabulary
@@ -48,33 +48,39 @@ under the table, run on every riff.
 
 | Role               | What the part does                                                               | Riffs today |
 | ------------------ | -------------------------------------------------------------------------------- | ----------: |
-| **Lead line**      | A melody or riff of single notes, about a note a beat or faster                  |         591 |
-| **Held**           | One held note or chord. The patch does the moving: drones, fx, a synth's own seq |         546 |
-| **Bass line**      | A low line of single notes                                                       |         362 |
-| **Slow melody**    | Single notes held for a beat and a half or more                                  |         222 |
-| **Arp / sequence** | A fast repeating figure of single notes: an arpeggio or an ostinato              |         161 |
-| **Percussive**     | One or two pitches, short: hits and rhythms                                      |         160 |
-| **Chord changes**  | Chords that are held and move: pad and string parts                              |         155 |
+| **Lead line**      | A melody or riff of single notes, about a note a beat or faster                  |         605 |
+| **Held**           | One held note or chord. The patch does the moving: drones, fx, a synth's own seq |         525 |
+| **Bass line**      | A low line of single notes                                                       |         364 |
+| **Slow melody**    | Single notes held for a beat and a half or more                                  |         226 |
+| **Percussive**     | One or two pitches, short: hits and rhythms                                      |         173 |
+| **Chord changes**  | Chords that are held and move: pad and string parts                              |         156 |
+| **Arp / sequence** | A fast repeating figure of single notes: an arpeggio or an ostinato              |         148 |
 | **Chord stabs**    | Short chords on the beat or off it                                               |          96 |
 
 Some names the owner suggested in 2026-10 are folded into other roles:
 
-- **Drone** is _Held_. A drone's riff is a held note (78 of the 121 drone sounds), and the drone itself is in the patch.
+- **Drone** is _Held_. A drone's riff is a held note (95 of the 121 drone sounds), and the drone itself is in the patch.
   "Drone" stays a sound category.
 - **Sequence/ostinato and arp** share one role. They can't be told apart from the notes alone, and they suit the same
   sounds.
 - **Fx** is not a role. An fx sound's riff is a trigger: a held note, or a few hits.
 
 The **default role rule** proposes a role for a pattern and for each current riff. A person can always override it.
-Where the rule says _beats_, it means the pattern's loop length (`phraseBeats`). An _onset_ is a distinct start time, so a
-chord is one onset.
+The terms are exact, so t-122 can implement the rule and reproduce the counts above:
 
-1. At most 2 onsets, with notes lasting at least 40% of the loop → **Held**.
+- The **loop** is `phraseBeats`: the last note's end, rounded up to a whole beat.
+- An **onset** is a distinct start time, so a chord is one onset. A **chord** is an onset with two or more notes.
+- The **average note** is the mean length, in beats, of every note.
+- The **median pitch** is the median over every note.
+
+The rules are checked in order, and the first that fits wins:
+
+1. At most 2 onsets, and every note lasts at least 40% of the loop → **Held**.
 2. At most 2 distinct pitches, with an average note of half a beat or less → **Percussive**.
 3. Half the onsets or more are chords, with an average note of a beat or less → **Chord stabs**.
 4. Half the onsets or more are chords → **Chord changes**.
 5. The median pitch is below C3 (MIDI 48) → **Bass line**.
-6. At least 2 onsets a beat, with an average note of half a beat or less → **Arp / sequence**.
+6. At least 2 onsets per beat of the loop, with an average note of half a beat or less → **Arp / sequence**.
 7. An average note of 1.5 beats or more → **Slow melody**.
 8. Anything else → **Lead line**.
 
@@ -109,13 +115,18 @@ drift from the notes.
 | Register    | Lowest, highest and median note                               | A sub bass shouldn't be offered a line round C5         |
 | Density     | Onsets per beat                                               | A slow-attack pad smears a fast line                    |
 | Note length | Average gate in beats                                         | Long notes need a sustain to be heard; short ones don't |
-| Voices      | The most notes sounding at once (1 = mono)                    | A mono synth can't play chords. Never offered them      |
+| Voices      | The most notes that start together (1 = no chords)            | A mono synth can't play chords. Never offered them      |
 | Tempo range | The bpm it is written at, and the range it still works in     | A Held pattern works at any tempo; a bass line doesn't  |
 | Length      | Bars, at the pattern's step size                              | Shown in the picker                                     |
 | Slides      | Whether it uses `slide`                                       | It wants a synth with glide                             |
 
-Voices is a hard filter: a pattern is never offered to a synth with fewer voices than it needs. Every other fact is a
-weight.
+Voices counts notes that start together, not notes that overlap. A mono line written legato, with each note running
+into the next, is still 1.
+
+Voices is a hard filter on suggestions: a pattern is never suggested to a synth with fewer voices than it needs. Every
+other fact is a weight. The filter doesn't apply to a sound's own patterns. Those were written for its synth, and some
+use what a mono synth can do with chords: the Neutron's and the K-2's oscillators tuned apart, or the CAT's duophonic
+keyboard. A sound always lists its own patterns.
 
 ## Provenance
 
@@ -142,11 +153,11 @@ properly, and shown on the bank's song page, not left as a string in a pattern.
 
 _Proposed._ The picker shows one of three labels beside "Inspired by":
 
-| Label               | Means                                                                                                                                                              |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Transcribed**     | The notes come from an authoritative source for this part: a published score, official stems or MIDI, or an isolated part. Then checked by ear against the record. |
-| **Reconstructed**   | Worked out by ear, with the artist's own account or a reputable transcription to support it. It aims at the actual part.                                           |
-| **In the style of** | No specific part. Written to sound like the artist or genre.                                                                                                       |
+| Label               | Means                                                                                                                                                                                         |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Transcribed**     | The notes come from a tier-1 source for this part (see [Order of trust](#order-of-trust)): a published score, or official stems, multitracks or MIDI. Then checked by ear against the record. |
+| **Reconstructed**   | Worked out by ear, with the artist's own account or a reputable transcription to support it. It aims at the actual part.                                                                      |
+| **In the style of** | No specific part. Written to sound like the artist or genre.                                                                                                                                  |
 
 The rules that keep the labels honest:
 
@@ -158,7 +169,9 @@ The rules that keep the labels honest:
 - **Every current riff starts as _In the style of_.** None was researched.
 
 Copying a library pattern into My patterns keeps its Inspired by and its fidelity, so a shared copy says what it is.
-If the user then edits the notes, the copy drops to _In the style of_.
+If the user then changes a note's pitch, timing or length, or adds or removes a note, the copy drops to _In the style
+of_. Moving every note by whole octaves doesn't count, for the same reason it doesn't when reducing a part. Neither
+does changing the tempo, the swing, `transpose` or the sound.
 
 ### Sources
 
@@ -183,19 +196,20 @@ Every batch follows one method, so patterns researched in different sessions can
 From most trusted to least:
 
 1. **Official sources for the part**: a published score or songbook from the rights holder, official stems or
-   multitracks, or MIDI the artist released.
+   multitracks (which include an isolated part taken from them), or MIDI the artist released.
 2. **The artist's own account**: interviews, gear write-ups, liner notes, and video of them playing the part.
 3. **Reputable transcriptions**: published transcription books, or a transcriber whose work is checked and cited by
    others.
 4. **By ear**, against the original recording.
 
-A fan-made MIDI file or a tab site is not a source. It can be a starting point, and its notes then have to be checked
+A fan-made MIDI file, a tab site, or a part split out of the mix by software (stem separation, an "isolated" upload)
+is not a source. It can be a starting point, and its notes then have to be checked
 by ear like anything else. _Transcribed_ needs a tier-1 source. _Reconstructed_ needs two sources that agree (by ear
 counts as one), or one tier-1 or tier-2 source checked by ear.
 
 ### Choosing the part
 
-- **Pick one part**: the line the synth plays, not the vocal melody. Prefer a part the databank already says was played
+- **Pick one part of the work**: the line the synth plays, not the vocal melody. Prefer a part the databank already says was played
   on a synth (`BankSongPart`) and, where possible, the synth in our catalogue that played it.
 - **Pick the passage**: the bars that repeat and make the part recognisable, within the [rights rule](#rights).
 - **Write down** the work, the part, which bars (for example "the four-bar synth bass under the verse") and the
@@ -218,8 +232,11 @@ The sequencer's model is in [`sequencer.md`](./sequencer.md#riffs-and-patterns).
 
 Some changes are allowed without lowering the fidelity: transposing by whole octaves to suit a synth's register,
 dropping notes beyond six in a chord, and rounding a timing smaller than the nudge can hold. Anything else lowers it
-to _Reconstructed_, and the change is written down: a simplified ornament, a note changed to fit, or two parts merged
-into one.
+to _Reconstructed_, and the change is written down: a simplified ornament, or a note changed to fit. Merging two parts
+of the work into one is not a reduction. The [rights rule](#rights) forbids it.
+
+Parts A and B with a `chain` carry one part of the work: the part as it plays, then its variation. They never carry
+two parts of the work.
 
 What the pattern does **not** carry:
 
@@ -254,8 +271,12 @@ _Proposed. The owner's call; goes to the `f-launch` legal review._
 A recreated part is still a reproduction of a melody, however short, so the library limits how much it takes and says
 what it is:
 
+Here a _part_ is a part of the work: the bass line, the lead, the arpeggio. The sequencer's parts A and B are something
+else (see [Reducing a part to a loop](#reducing-a-part-to-a-loop)).
+
 - **One part of a work**, never two parts of the same work together, and never the vocal melody.
-- **At most 8 bars**, and no longer than the passage that repeats on the record.
+- **At most 8 bars**, and no longer than the passage that repeats on the record. The 8 bars count the chain played
+  through once. Parts A and B with a chain of `[0, 0, 0, 1]` and 2-bar parts are 8 bars.
 - **Never the whole of a part** that is itself short enough to fit in 8 bars and is the work's main hook. In that case
   take the passage under it instead, or write it _In the style of_. _(Open for the owner: whether the hook rule goes too
   far for learning use.)_
@@ -267,14 +288,80 @@ what it is:
 
 The pattern library is named in `f-launch`'s legal-review scope on the Hub (added by t-121).
 
+## Admin control
+
+_Proposed. Asked for by the owner on 2026-10-31 and built by t-156, on t-122's table and t-126's admin page._
+
+Admins can see where every library pattern came from and control it without a deploy. Each pattern carries four
+things beside its [provenance](#provenance): its origin, its rights risk, its status and admin comments.
+
+### Origin
+
+Who or what made the pattern's notes. Exactly one of:
+
+| Origin               | Means                                                    |
+| -------------------- | -------------------------------------------------------- |
+| **AI-generated**     | Written or transcribed by an agent                       |
+| **Human-authored**   | Written by the owner or an admin                         |
+| **User-contributed** | Came from a user's My patterns, taken into the library   |
+
+With it, the pattern records who or what made it (the agent and session, or the user) and when. _Owner ruling,
+2026-10-31:_ every current riff is _AI-generated_. Research batches (t-127, t-128, t-129) record _AI-generated_ and the
+agent that wrote each pattern.
+
+Origin is separate from fidelity. An _AI-generated_ pattern can be _Transcribed_ if its sources support it, and a
+_Human-authored_ one can be _In the style of_.
+
+### Rights risk
+
+An admin-set status, always with a reason. _Owner ruling, 2026-10-31:_ the statuses are:
+
+| Status           | Means                                                          |
+| ---------------- | -------------------------------------------------------------- |
+| **None**         | Nothing in it is taken from a specific work                    |
+| **Needs review** | It recreates a specific part, and no one has checked it yet    |
+| **Cleared**      | Checked against the [rights rule](#rights), and it fits        |
+| **Blocked**      | It must not be shown. A blocked pattern is always disabled     |
+
+A pattern starts at **Needs review** if it is _Transcribed_ or _Reconstructed_, and at **None** if it is _In the style
+of_. An admin can raise or lower it, with a reason. The `f-launch` legal review works from this list.
+
+### Status
+
+**Enabled** or **disabled**. A disabled pattern is hidden from every user-facing place: the synth page's picker
+(t-123), suggestions (t-125) and the public pattern reads. It is never deleted, so the
+[no-delete rule](#reviewing-the-current-riffs) still holds. It stays in the admin list and can be enabled again.
+
+- If a sound's default is disabled, the sound plays its next enabled pattern.
+- A sound keeps at least one enabled pattern. Disabling its last one warns the admin first.
+- Copies a user has already taken into My patterns are theirs, and are not touched.
+
+### Comments
+
+A dated thread on each pattern, with each comment attributed to the admin who wrote it, shown only in admin. Use it for
+why a status changed, what a reviewer heard, or what still needs checking.
+
+### The provenance panel
+
+Each pattern's admin page shows everything about where it came from in one place: origin, Inspired by, fidelity,
+sources, who researched it, when the owner listened, rights risk, status and comments. Under that is its audit history:
+who changed what, and when.
+
+The admin list filters by origin, rights risk and status, and can enable, disable or set the rights risk of several
+patterns at once, with one reason for all of them. Every change is audited.
+
 ## Reviewing the current riffs
 
 No riff is deleted. When t-122 moves the library into its own table, every current riff becomes a library pattern with:
 
 - the role the [default role rule](#the-vocabulary) gives it
 - fidelity _In the style of_
-- Inspired by: the sound's artist where it is a `BankArtist`, otherwise its genre text. "Classic technique" riffs carry
-  the synth they were written for, until a housekeeping pass names a player or genre for them
+- Inspired by, from the sound's `artist`:
+  - a `BankArtist` → that artist
+  - a catalogue synth or a maker ("Oberheim SEM", "Behringer") → the synth the sound was written for
+  - "Classic technique" (393) or "Various" (87) → the synth the sound was written for, until a housekeeping pass names
+    a player or genre for it
+  - anything else ("Ambient", "Berlin school", "Sound effects") → that text, as a genre
 - a place as its sound's first, and default, pattern
 
 The owner reviews riffs per sound, in the admin editor (t-126), and marks each one:
