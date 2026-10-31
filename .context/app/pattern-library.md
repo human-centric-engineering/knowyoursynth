@@ -89,7 +89,9 @@ The rules are checked in order, and the first that fits wins:
 ### Category to role
 
 This shows which roles suit which kind of sound. It comes from the cross-tab of the current riffs' categories and roles.
-t-125 uses it as the starting weights for suggestions, and the owner's review can move them.
+Suggestions (t-125) use the same pairing, measured rather than read off this table: the detector's role shares are how
+often library sounds of each category carry each role (see [The scores](#the-scores)). A change to the riffs' roles
+moves them at the next refit.
 
 | Sound category | Roles that suit it, most common first  |
 | -------------- | -------------------------------------- |
@@ -471,11 +473,12 @@ Public, no session needed, in `lib/app/patterns/library-read.ts`. A pattern is s
 a synth the catalogue serves (listed, and in the registry). So hiding a synth hides its riffs, and a pattern on no
 sound yet (an admin's, still being written) is admin only.
 
-| Route                                             | Does                                                 |
-| ------------------------------------------------- | ---------------------------------------------------- |
-| `GET /api/v1/synths/:id/sounds/:slug/patterns`    | A sound's patterns, default first, with their facts. |
-| `GET /api/v1/library-patterns?role=&page=&limit=` | A page of the library by name, optionally one role.  |
-| `GET /api/v1/library-patterns/:id`                | One pattern.                                         |
+| Route                                             | Does                                                                                |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `GET /api/v1/synths/:id/sounds/:slug/patterns`    | A sound's patterns, default first, with their facts.                                |
+| `GET /api/v1/library-patterns?role=&page=&limit=` | A page of the library by name, optionally one role.                                 |
+| `GET /api/v1/library-patterns/:id`                | One pattern.                                                                        |
+| `POST /api/v1/library-patterns/suggest`           | Patterns that suit a reading of a patch, with why. See [Suggestions](#suggestions). |
 
 Admin, in `lib/app/patterns/library-edit.ts`, over the catalogue's guard and audit (`lib/app/catalogue/admin-route.ts`).
 Every write is `writesSharedSettings` and audited: a pattern as `library_pattern`, a sound's list or riff as
@@ -527,7 +530,7 @@ came. One of the user's sounds, a shared sound, a lesson's or the tutor's has no
   edited and saved to My patterns like any pattern. Copying its Inspired by and fidelity into the saved copy is not
   done yet.
 - **Groups.** The picker takes a list of groups, and the sound's own is the first. Suggestions for the patch on the
-  panel (t-125, "Suits this sound") are a second group in the same picker.
+  panel ("Suits this sound", [Suggestions](#suggestions)) are the second.
 - **Phones.** Below `lg` the sequencer is a bottom sheet, and the picker is in it with the rest of the module.
 
 Tested in `tests/unit/components/app/sequencer/sound-pattern-picker.test.tsx`.
@@ -604,7 +607,7 @@ below shows how much of the fit carries over to sounds it wasn't fitted to, and 
 (the share of their riffs the default role rule gives it, `model.roles`), weighted by how much this patch sounds like
 each category. So the roles follow what the library pairs sounds of this kind with, and they move when the patch does:
 a pad changed to start and stop at once loses most of its _Held_ share (tested). The voices filter (a pattern is never
-suggested to a patch with fewer voices than it needs) is applied by suggestions (t-125), not here. A mono patch still
+suggested to a patch with fewer voices than it needs) is applied by [suggestions](#suggestions), not here. A mono patch still
 shows the chord roles its category's sounds carry.
 
 **Register**: `low` if the patch sounds most like a bass, or sounds more than half an octave below its key (the
@@ -687,3 +690,82 @@ Tested in `tests/unit/lib/app/synths/lib/soundkind.test.ts`, on hand-built patch
 plucked bass reads as bass for a bass line in the low register, a long-attack pad as pad for held parts, a noise sweep
 as fx. Also tested there: the same patch twice, a pad edited into a pluck, and silence. The fit is tested in
 `soundkind-fit.test.ts`, and the library in `soundkind-library.test.ts`.
+
+### Suggestions
+
+t-125. A user who changes a patch a lot, or opens a sound of their own, is left with patterns that may no longer fit.
+So the picker offers library patterns that suit what the patch sounds like now, as a second group, **Suits this
+sound**.
+
+#### Which side does what
+
+| Where                                   | What                                                                                 | Why                                                                                         |
+| --------------------------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| The browser, in the probe worker        | Plays the probe notes through the voice and reads the features (`soundFeatures`)     | Only the browser has the panel, and about 80 ms of rendering a reading stays off the server |
+| `POST /api/v1/library-patterns/suggest` | Scores the features with the model (`kindOf`) and ranks the library (`rankPatterns`) | Only the server has the whole library; the scoring is pure and costs nothing                |
+
+The worker is the sound map's (`PROBE_WORKER_URL`): a `kind` message, answered with the features. Where a host blocks
+workers, or the worker doesn't answer within 5 s, the page reads on its own thread instead (`suggest-detect.ts`).
+`PATTERN_ROLES` lives in `library-roles.ts`, which imports nothing, so the worker doesn't bundle the sequencer.
+
+The endpoint takes `{ synthId, sound?, features, limit? }`. `features` is validated field by field
+(`SoundFeaturesSchema`), and `sound` is the library sound the patch started as. It returns what the patch sounds like
+(category, role, register, traits and a summary) and up to `limit` suggestions (8 by default, 20 at most). Each one has
+the pattern itself, its score and its reason, so the picker reads nothing per pattern. It writes nothing. It sits under
+the `/api/v1/**` section cap (100 a minute) with no work in the handler. It reads the sound, if one is named, and the
+public library. The library is the same for every caller and costs about 80 ms to read and work out the facts of, so
+it is kept for a minute: an admin's edit, or a pattern disabled (t-156), reaches suggestions within that.
+
+#### When to suggest
+
+- **A library sound as it came** shows its own patterns only.
+- **Once it has moved far from how it came**, Suits this sound appears under them. Far is a `kindDistance` of
+  **0.4** or more between the patch now and the sound as it came (`presetState`), both read by the detector.
+  `kindDistance` is the root mean square of the difference over the model's inputs, each in its standard deviations
+  across the library (`KIND_MODEL.scale`). Measured over every 12th library sound on 2026-10-31: a knob moved a tenth
+  of its travel crosses 0.4 9% of the time, a knob moved a third of its travel 17%, and another sound of the same synth
+  96% (the median distance between two sounds of one synth is 1.1). Most single knob moves change the reading by
+  nothing at all, because the knob isn't in the sound's path.
+- **Anything else on the panel** (one of the user's sounds, a shared one, the tutor's) shows Suits this sound at once,
+  under a Patterns button of its own.
+- **Only while the picker is open**, and only once the panel settles: 800 ms after the last change
+  (`useSuggestedPatterns`). A knob turned and turned again asks once, when it stops. The detector is deterministic, so
+  the same patch reads the same, and an answer is kept for the visit: a patch that comes back to where it was asks
+  nothing.
+
+#### The ranking
+
+`rankPatterns` (`lib/app/patterns/suggest.ts`):
+
+1. **Voices is a filter.** A pattern that starts more notes together than the patch can play is never offered, so a
+   mono patch gets no chords. A pattern with no notes isn't offered, nor are the sound's own patterns.
+2. **Roles take places in proportion to their share.** A role with less than 5% of the sound's role shares isn't
+   offered. Each place goes to the role with the highest quotient: its share times its next pattern's fit, over the
+   places it already has plus one (D'Hondt). So the best-suited role leads, and the others come in as its quotient
+   falls. A bass gets mostly bass lines, a pad a mix of held parts, chord changes and slow melodies.
+3. **Within a role, fit orders them**, from 0 to 1:
+   - **Register.** How far the pattern's median note is from the register's centre (D2, D4, E5 for low, mid, high), as
+     a bell curve one octave wide: 0.61 an octave away, 0.14 two.
+   - **Slow attack** (0.15 s or more to 90%). A line denser than one onset a beat is weighed down by
+     `exp(−(density − 1) / 2)`, because the attack smears it.
+   - **Dies away** (sustain under 0.1). Notes longer than a beat are weighed down by `exp(−(length − 1) / 2)`, because
+     the sound is gone before the note ends.
+4. **Researched patterns of the same artist or synth are lifted** by 1.3: _Transcribed_ or _Reconstructed_, inspired by
+   the artist of the sound the patch started as or by the synth on the panel. Only where they fit, because the lift is
+   on the fit within a role the sound suits: a researched chord part is still never offered to a bass. Ties go to a
+   researched pattern, then by name.
+
+Each suggestion's **reason** is the sound's traits and the part: `slow attack, holds, plays chords → held`, with
+` · same artist` or ` · this synth` when it was lifted. The traits are at most three of: slow or sharp attack, holds or
+dies away, a low or high register, pulses, mono or plays chords, noisy. The picker shows the summary under the group's
+title (the traits and the three roles that suit it most) and each reason as its row's tooltip.
+
+What it doesn't weigh yet: tempo range, and slides against a synth with no glide (the features don't say whether the
+patch glides).
+
+Tested in `tests/unit/lib/app/patterns/suggest.test.ts`, over every library riff and hand-built patches: a bass patch
+gets bass lines first, a pad held parts, chord changes and slow melodies, a noise hit percussive patterns, and a mono
+patch no pattern with chords, of 200 asked for. Also the lift, the threshold on a real Model D sound, and the schema.
+The endpoint is tested in `tests/unit/app/api/v1/library-patterns-suggest.test.ts` (validation, the reads, the kept
+library, the section cap), the picker group in `tests/unit/components/app/sequencer/suggested-patterns.test.tsx` (as it
+came, moved far, another patch, the settle, an error), and the worker reader in `suggest-detect.test.ts`.
