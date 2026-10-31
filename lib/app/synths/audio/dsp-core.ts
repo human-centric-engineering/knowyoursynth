@@ -2580,6 +2580,8 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
     dcR = [0, 0];
   const pg = [0, 0, 0, 0]; // smoothed gains: voice A left, A right, B left, B right
   const voices: Voice[] = [];
+  /** Whether voice `i` has had its own `lfo3` phase: drawn when it first plays settings with an `lfo3`. */
+  const lfo3Phased: boolean[] = [];
   const meters: MeterEvent[] = [];
   let groups: { note: number; held: boolean; t: number }[] = [];
   let shape = '';
@@ -2662,10 +2664,22 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
       );
       if (P) v.handle({ type: 'params', p: paramsFor(k) });
       // each voice's LFOs run free of the others; a `common` one is set from the shared phase on each note
-      v.handle({ type: 'phase', lfo: Math.random(), lfo2: Math.random(), lfo3: Math.random() });
+      v.handle({ type: 'phase', lfo: Math.random(), lfo2: Math.random() });
       voices.push(v);
+      lfo3Phased.push(false);
+      phaseLfo3(k);
     }
     return voices[i];
+  }
+  /**
+   * Gives voice `i` its own `lfo3` phase the first time it plays settings with an `lfo3`: on a voice made for such a
+   * synth, or on one kept from a synth without one. Drawing only then keeps the seeded renders of synths without an
+   * `lfo3` on the sequence they had before it existed.
+   */
+  function phaseLfo3(i: number): void {
+    if (lfo3Phased[i] || !P || !paramsFor(i).lfo3) return;
+    lfo3Phased[i] = true;
+    voices[i].handle({ type: 'phase', lfo3: Math.random() });
   }
   const groupVoices = (g: number, f: (v: Voice, i: number) => void): void => {
     const b = blockOf();
@@ -2703,6 +2717,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
     for (let i = 0; i < voices.length; i++) {
       voices[i].handle({ type: 'params', p: paramsFor(i) });
       voices[i].handle({ type: 'offset', semi: offsetOf(i % st) });
+      phaseLfo3(i);
     }
     if (!(p.arp && p.arp.on) && arpRun) arpStop();
   }
