@@ -131,8 +131,9 @@ const PITCH_SPAN = 2 * (PITCH_W + PITCH_MAX_LAG);
 
 /**
  * The pitch (Hz, 0 = none) of the stretch at `off`, and how clearly it repeats at that period (0–1). The YIN
- * difference function on a half-rate copy: the first dip below 0.2 after it has risen above it, so a smooth wave that
- * matches itself at short lags is not read as several octaves too high. The scope's `detectPeriod` stops at 38 Hz,
+ * difference function on a half-rate copy: the first dip below 0.2 (YIN's absolute threshold). The difference
+ * function is normalised by its running mean, which is what keeps a smooth wave's short lags from reading as several
+ * octaves too high; with no dip that deep, the deepest one, if it is below 0.5. The scope's `detectPeriod` stops at 38 Hz,
  * which a sub bass played on C2 is below.
  */
 function pitchAt(buf: Float32Array, off: number): { f0: number; clarity: number } {
@@ -186,10 +187,19 @@ function loudestFrame(env: Float32Array, from: number, to: number): number {
 /** How many semitones apart two frequencies are (0 when either is missing). */
 const semis = (a: number, b: number): number => (a > 0 && b > 0 ? 12 * Math.log2(a / b) : 0);
 
-/** How many notes the patch can play at once: the poly wrapper's voices over its stack, unless it is set to play as one. */
-function voicesOf(p: EngineParams): number {
-  if (!p.poly) return 1;
-  return p.poly.mono ? 1 : Math.max(1, Math.floor(p.poly.voices / Math.max(1, p.poly.stack || 1)));
+/**
+ * How many notes the patch can play at once: the poly wrapper's voices over its stack, unless it is set to play as one;
+ * a note per oscillator when they are assigned to notes (the Poly D); two for a duophonic or paraphonic keyboard, or
+ * two voices played one per note or split across the keys.
+ */
+export function voicesOf(p: EngineParams): number {
+  if (p.poly) {
+    if (p.poly.mono) return 1;
+    return Math.max(1, Math.floor(p.poly.voices / Math.max(1, p.poly.stack || 1)));
+  }
+  if (p.oscAssign?.mode === 'poly') return Math.max(1, p.osc.length);
+  if (p.duo || p.paraphonic || p.dual?.assign === 'duo' || p.dual?.assign === 'split') return 2;
+  return 1;
 }
 
 const SILENT_FEATURES = (voices: number): SoundFeatures => ({
@@ -247,6 +257,8 @@ export function soundFeatures(p: EngineParams): SoundFeatures {
   let movedN = 0;
   for (let f = attackF + 1; f < offFrame; f++) {
     const d = db(env[f] / peak);
+    // Below −40 dB is a tail dying away, where the level's jitter is not a re-attack.
+    if (env[f] <= floor) continue;
     if (d < low) low = d;
     else if (d - low >= 6) {
       pulses++;
@@ -297,7 +309,7 @@ export function soundFeatures(p: EngineParams): SoundFeatures {
   const span = KIND_NOTES.high - KIND_NOTES.low;
   const tracking =
     lowP.f0 > 0 && highP.f0 > 0 ? Math.max(0, Math.min(1.5, semis(highP.f0, lowP.f0) / span)) : 0;
-  const top = Math.max(lowPeak, highPeak, peak);
+  const loudest = Math.max(lowPeak, highPeak, peak);
 
   const r3 = (x: number): number => Math.round(x * 1000) / 1000;
   return {
@@ -316,9 +328,9 @@ export function soundFeatures(p: EngineParams): SoundFeatures {
     tracking: r3(tracking),
     drift: r3(drift),
     levels: {
-      low: r3(Math.max(-60, db(lowPeak / top))),
-      mid: r3(Math.max(-60, db(peak / top))),
-      high: r3(Math.max(-60, db(highPeak / top))),
+      low: r3(Math.max(-60, db(lowPeak / loudest))),
+      mid: r3(Math.max(-60, db(peak / loudest))),
+      high: r3(Math.max(-60, db(highPeak / loudest))),
     },
     voices,
   };
@@ -405,7 +417,13 @@ export function kindCategories(
   f: SoundFeatures,
   model: KindModel = KIND_MODEL
 ): Record<PresetCategory, number> {
-  const z = kindInputs(f).map((x, j) => (x - model.mean[j]) / model.scale[j]);
+  const inputs = kindInputs(f);
+  // A model fitted to other inputs would score NaN everywhere and quietly call every patch a bass.
+  if (model.mean.length !== inputs.length || model.weights.bass.length !== inputs.length + 1)
+    throw new Error(
+      'soundkind: the model was fitted to other inputs; refit with scripts/fit-soundkind.ts'
+    );
+  const z = inputs.map((x, j) => (x - model.mean[j]) / model.scale[j]);
   const raw = PRESET_CATEGORIES.map((c) => {
     const w = model.weights[c];
     return z.reduce((s, x, j) => s + x * w[j], w[z.length]);
@@ -420,8 +438,9 @@ export function kindCategories(
 }
 
 /**
- * The register a patch suits: low if it sounds most like a bass or sounds an octave or more below its key; high if
- * it sounds an octave or more above, or is thin at the bottom (the low note 9 dB or more below the loudest); mid
+ * The register a patch suits: low if it sounds most like a bass or sounds more than half an octave below its key
+ * (the octave-down a bass patch is usually set to, with room for a detuned oscillator); high if it sounds more than
+ * half an octave above, or is thin at the bottom (the low note 9 dB or more below the loudest); mid
  * otherwise.
  */
 export function registerOf(f: SoundFeatures, category: PresetCategory): KindRegister {

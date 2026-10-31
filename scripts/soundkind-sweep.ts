@@ -61,6 +61,8 @@ export interface SweepOrders {
 
 /** Every library sound, read by the detector, sorted by synth and sound. */
 export async function sweepLibrary(threads: number): Promise<KindRow[]> {
+  const workers: Worker[] = [];
+  const stopAll = () => workers.forEach((w) => void w.terminate());
   const shards = await Promise.all(
     Array.from(
       { length: threads },
@@ -71,15 +73,28 @@ export async function sweepLibrary(threads: number): Promise<KindRow[]> {
             workerData: orders,
             execArgv: ['--import', 'tsx'],
           });
+          workers.push(worker);
+          let answered = false;
           // Our own worker posts exactly one message: its rows.
           worker.once('message', (rows: KindRow[]) => {
+            answered = true;
             resolve(rows);
             void worker.terminate();
           });
           worker.once('error', reject);
+          // A worker that stops without answering would leave the sweep waiting for ever.
+          worker.once('exit', (code) => {
+            if (!answered)
+              reject(
+                new Error(`soundkind sweep: shard ${shard} stopped (exit ${code}) without its rows`)
+              );
+          });
         })
     )
-  );
+  ).catch((err: unknown) => {
+    stopAll(); // one shard failed: the others' minutes of rendering would be wasted
+    throw err;
+  });
   return shards
     .flat()
     .sort((a, b) =>

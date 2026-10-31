@@ -22,6 +22,7 @@ import {
   registerOf,
   soundFeatures,
   soundKind,
+  voicesOf,
   type SoundFeatures,
 } from '@/lib/app/synths/lib/soundkind';
 import { KIND_MODEL } from '@/lib/app/synths/lib/soundkind-model';
@@ -104,6 +105,7 @@ describe('soundFeatures', () => {
     expect(f.decay).toBeLessThan(0.15);
     expect(f.sustain).toBeLessThan(0.05);
     expect(f.release).toBe(0); // gone before the key comes up
+    expect(f.pulses).toBe(0); // the jitter of a tail dying away is not a re-attack
     // The loudest oscillator is two octaves below the key, and it still follows the keys from C2 up.
     expect(f.pitch).toBeCloseTo(-2, 1);
     expect(f.clarity).toBeGreaterThan(0.9);
@@ -148,6 +150,18 @@ describe('soundFeatures', () => {
     expect(soundFeatures(monoParams({ poly: { voices: 8, stack: 2, mono: false } })).voices).toBe(
       4
     );
+  });
+
+  it('counts a note per oscillator when they are assigned to notes, and two for a duophonic keyboard', () => {
+    expect(voicesOf(monoParams({ oscAssign: { mode: 'poly' } }))).toBe(3);
+    expect(voicesOf(monoParams({ oscAssign: { mode: 'unison' } }))).toBe(1);
+    expect(voicesOf(monoParams({ duo: true }))).toBe(2);
+    expect(voicesOf(monoParams({ paraphonic: true }))).toBe(2);
+    const b = monoParams();
+    const dual = (assign: 'unison' | 'split' | 'duo') =>
+      voicesOf(monoParams({ dual: { b, assign, split: 60, level: [1, 1], pan: [0, 0] } }));
+    expect([dual('unison'), dual('split'), dual('duo')]).toEqual([1, 2, 2]);
+    expect(voicesOf(monoParams())).toBe(1);
   });
 
   it('reads a patch with nothing turned up as silent, and every other field as zero', () => {
@@ -245,6 +259,12 @@ describe('the model and its inputs', () => {
     for (const c of PRESET_CATEGORIES)
       expect(KIND_MODEL.weights[c]).toHaveLength(KIND_INPUTS.length + 1);
     expect(kindInputs(soundFeatures(monoParams()))).toHaveLength(KIND_INPUTS.length);
+  });
+
+  it('refuses to score with a model fitted to other inputs, rather than calling everything a bass', () => {
+    const f = soundFeatures(monoParams());
+    const stale = { ...KIND_MODEL, mean: KIND_MODEL.mean.slice(1) };
+    expect(() => kindCategories(f, stale)).toThrow(/refit/);
   });
 
   it('gives every category the share of its sounds carrying each role, summing to 1', () => {

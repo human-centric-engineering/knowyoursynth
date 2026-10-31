@@ -562,7 +562,7 @@ note's release instead, and that saved a quarter of the cost.
 | decay      | Time from there to half the peak while held                                                        |
 | sustain    | Level over the last 0.1 s of the hold, against the peak                                            |
 | release    | Time from letting go to 40 dB below the peak (0 if already there, 0.3 if still sounding)           |
-| pulses     | Rises of 6 dB or more after the attack while held: a sequencer, an arpeggio, a gated LFO           |
+| pulses     | Rises of 6 dB or more after the attack while held, above −40 dB: a sequencer, an arpeggio, an LFO  |
 | wobble     | Mean change of the level's slope per 10 ms frame, in dB: a tremolo moves it, a plain decay doesn't |
 | brightness | Spectral centroid, in octaves above the played note                                                |
 | brightMove | How far that moves from the start of the note to the end of the hold (a filter sweep)              |
@@ -572,7 +572,7 @@ note's release instead, and that saved a quarter of the cost.
 | tracking   | How the pitch follows the keys from C2 to D5: 1 tracks, 0 is a fixed pitch                         |
 | drift      | How far the pitch wanders while held, in semitones                                                 |
 | levels     | The low, mid and high notes' peaks, in dB below the loudest of the three                           |
-| voices     | Notes the patch can play at once, from the engine parameters (`poly.voices` over its stack)        |
+| voices     | Notes the patch can play at once, from the engine parameters (`voicesOf`, which says how)          |
 
 The pitch detector is its own YIN, not the scope's `detectPeriod`. The scope's detector stops at 38 Hz, and many bass
 patches sound an octave or two below their key: on C2, that is below 38 Hz. `pitch` turned out to be the strongest
@@ -598,22 +598,22 @@ a pad changed to start and stop at once loses most of its _Held_ share (tested).
 suggested to a patch with fewer voices than it needs) is applied by suggestions (t-125), not here. A mono patch still
 shows the chord roles its category's sounds carry.
 
-**Register**: `low` if the patch sounds most like a bass, or sounds an octave or more below its key. `high` if it
-sounds an octave or more above its key, or is thin at the bottom (the low note 9 dB or more below the loudest).
-Otherwise `mid`.
+**Register**: `low` if the patch sounds most like a bass, or sounds more than half an octave below its key (the
+octave down a bass patch is usually set to, with room for a detuned oscillator). `high` if it sounds more than half an
+octave above its key, or is thin at the bottom (the low note 9 dB or more below the loudest). Otherwise `mid`.
 
 #### Agreement with the library
 
 Measured on 2026-10-31 over the library's 2,293 sounds:
 
-- **The detector reads the sound's own category for 1,140 of them (49.7%).** Picking the commonest category, lead, every
+- **The detector reads the sound's own category for 1,149 of them (50.1%).** Picking the commonest category, lead, every
   time would get 16.6%.
-- **Cross-validated: 1,115 (48.6%).** Each fifth of the library is measured on a model fitted to the other four fifths.
+- **Cross-validated: 1,120 (48.8%).** Each fifth of the library is measured on a model fitted to the other four fifths.
 - **3 sounds are silent on the probe notes**: `model-d/just-intonation-drone`, `model-d/slow-breaking-waves` and
   `pro-1/filter-clave`. `check:synths` hears each one play its riff, so they do make sound, but not on a held G3 within
   the probe's 0.85 s. Why has not been looked into. They count as disagreements.
 
-`soundkind-library.test.ts` pins the 49.7%, so a change to the probe, the engine, the features or the library can't
+`soundkind-library.test.ts` pins the 50.1%, so a change to the probe, the engine, the features or the library can't
 make the detector worse without someone deciding it should. It renders the whole library, about three minutes of CPU,
 so it is the slowest test in the app. It sweeps on two worker threads rather than one per core: a sweep across every
 core starved the tests vitest runs alongside it into timeouts. It runs when something it imports changes (the probe
@@ -624,18 +624,18 @@ sound was read as strings or wind, so those columns are left out.
 
 | Label   |    bass |    lead |     pad | pluck |    keys |      fx |  drone |    perc |    seq | brass | silent | Agree |
 | ------- | ------: | ------: | ------: | ----: | ------: | ------: | -----: | ------: | -----: | ----: | -----: | ----: |
-| bass    | **248** |      24 |       2 |     · |      23 |       1 |      5 |      14 |      8 |     1 |      · |   76% |
-| lead    |      30 | **259** |      25 |     1 |      36 |      19 |      3 |       5 |      3 |     · |      · |   68% |
-| pad     |       2 |      21 | **180** |     · |       8 |      11 |      8 |       1 |      8 |     · |      · |   75% |
-| pluck   |       3 |      14 |       5 | **7** |      64 |       1 |      · |      12 |      5 |     · |      · |    6% |
-| keys    |      27 |      41 |      15 |     5 | **162** |       6 |      3 |       9 |     10 |     3 |      · |   58% |
-| fx      |      21 |      63 |      18 |     1 |      16 | **105** |     10 |      27 |     11 |     · |      1 |   38% |
-| drone   |       7 |      28 |      33 |     · |       4 |      12 | **32** |       · |      4 |     · |      1 |   26% |
-| perc    |      23 |      10 |       · |     1 |      25 |      17 |      2 | **109** |      2 |     · |      1 |   57% |
-| seq     |      27 |      14 |      13 |     3 |      30 |      15 |      4 |       8 | **35** |     · |      · |   23% |
+| bass    | **251** |      25 |       2 |     · |      21 |       2 |      5 |      11 |      8 |     1 |      · |   77% |
+| lead    |      31 | **258** |      27 |     1 |      35 |      18 |      3 |       5 |      3 |     · |      · |   68% |
+| pad     |       1 |      20 | **182** |     · |       8 |      11 |      8 |       1 |      8 |     · |      · |   76% |
+| pluck   |       3 |      14 |       5 | **8** |      62 |       1 |      · |      13 |      5 |     · |      · |    7% |
+| keys    |      27 |      39 |      16 |     6 | **161** |       6 |      3 |       9 |     11 |     3 |      · |   57% |
+| fx      |      20 |      63 |      18 |     1 |      15 | **107** |      9 |      27 |     12 |     · |      1 |   39% |
+| drone   |       8 |      29 |      30 |     · |       4 |      12 | **32** |       · |      5 |     · |      1 |   26% |
+| perc    |      22 |      10 |       · |     1 |      25 |      16 |      2 | **111** |      2 |     · |      1 |   58% |
+| seq     |      26 |      14 |      13 |     4 |      29 |      15 |      4 |       8 | **36** |     · |      · |   24% |
 | brass   |       6 |      18 |      27 |     · |      21 |       · |      · |       1 |      · | **3** |      · |    4% |
 | strings |       3 |      18 |      49 |     · |       6 |       1 |      1 |       · |      1 |     · |      · |    0% |
-| wind    |       2 |      49 |       2 |     · |       6 |       5 |      1 |       · |      1 |     1 |      · |    0% |
+| wind    |       2 |      50 |       2 |     · |       6 |       4 |      1 |       · |      1 |     1 |      · |    0% |
 
 #### The disagreements
 
@@ -643,7 +643,7 @@ The review on 2026-10-31 sorted the disagreements by how sure the detector was. 
 are not a wrong detector. They are a label on a different axis from the sound:
 
 - **Orchestral names.** _Strings_, _wind_ and _brass_ name the instrument a patch imitates, not how it behaves. A string
-  ensemble swells and holds like a pad (49 of 79 read as pad), and a synth flute plays like a lead (49 of 67). The
+  ensemble swells and holds like a pad (49 of 79 read as pad), and a synth flute plays like a lead (50 of 67). The
   detector hears timbre the way a filter shapes it, and none of its features can hear formants. These three
   categories are where it is weakest, and suggestions lose almost nothing by it, because the roles that suit a string
   pad are the roles that suit a pad.
@@ -652,7 +652,7 @@ are not a wrong detector. They are a label on a different axis from the sound:
   and a bass clarinet (`neutron/bitches-brew-bass-clarinet`, wind) read as bass too.
 - **Drones that are pads.** A slow-attack, held, polyphonic drone (`deepmind-12d/cosmic-drone`, `pro-800/p8-drone`)
   reads as pad. Drone and pad suit much the same roles, led by _Held_ (see [Category to role](#category-to-role)).
-- **Pluck against keys.** 64 of the 111 plucks read as keys. A pluck and an electric piano both start at once and decay
+- **Pluck against keys.** 62 of the 111 plucks read as keys. A pluck and an electric piano both start at once and decay
   while held, and the probe can't tell a decay that is the sound from one that is the player's.
 
 The detector is plainly wrong on a few kinds:

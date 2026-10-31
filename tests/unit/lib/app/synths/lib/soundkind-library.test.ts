@@ -22,8 +22,8 @@ import { agreement, confusionMarkdown } from '@/lib/app/synths/lib/soundkind-fit
 import { KIND_MODEL } from '@/lib/app/synths/lib/soundkind-model';
 import { sweepLibrary, sweepShard } from '@/scripts/soundkind-sweep';
 
-/** Measured 2026-10-31 over the library's 2,293 sounds: 1,140 agree (49.72%). */
-const MEASURED = 0.4971;
+/** Measured 2026-10-31 over the library's 2,293 sounds: 1,149 agree (50.11%). */
+const MEASURED = 0.501;
 
 /** Threads for the sweep (see above). */
 const SWEEP_THREADS = 2;
