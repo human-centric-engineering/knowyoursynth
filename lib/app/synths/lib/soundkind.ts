@@ -12,7 +12,7 @@
 // (The sound detector).
 import type { PatternRole } from '@prisma/client';
 import { PROBE_SR, renderHeld, spectrumAt } from '@/lib/app/synths/audio/probe';
-import { PATTERN_ROLES } from '@/lib/app/patterns/library-facts';
+import { PATTERN_ROLES } from '@/lib/app/patterns/library-roles';
 import { engineOf } from '@/lib/app/synths/lib/predict';
 import { KIND_MODEL } from '@/lib/app/synths/lib/soundkind-model';
 import type { CableLike } from '@/lib/app/synths/lib/patch';

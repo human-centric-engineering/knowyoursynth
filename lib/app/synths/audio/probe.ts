@@ -23,14 +23,20 @@ export interface ProbeResult {
   live: boolean;
 }
 
-/** A message from the page to the probe Worker (`probe-worker-entry.ts`). */
+/**
+ * A message from the page to the probe Worker (`probe-worker-entry.ts`): a sound-map session and its jobs, or the
+ * sound detector's question (`kind`, `f-pattern-library` t-125), what a patch sounds like, answered with its features.
+ */
 export type ProbeWorkerRequest =
   | { type: 'start'; run: number; baseline: EngineParams; notes: number[] }
-  | { type: 'job'; run: number; job: ProbeJob };
+  | { type: 'job'; run: number; job: ProbeJob }
+  | { type: 'kind'; id: number; params: EngineParams };
 
-/** The probe Worker's answers. */
+/** The probe Worker's answers. A `kind` answer's features are `SoundFeatures` (`lib/app/synths/lib/soundkind.ts`). */
 export type ProbeWorkerReply =
-  { type: 'ready'; run: number } | { type: 'result'; run: number; result: ProbeResult };
+  | { type: 'ready'; run: number }
+  | { type: 'result'; run: number; result: ProbeResult }
+  | { type: 'kind'; id: number; features: unknown };
 
 /** A probe session for one panel state. */
 export interface Probe {

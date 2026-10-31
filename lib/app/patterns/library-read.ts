@@ -84,3 +84,9 @@ export async function listLibraryPatterns(
   ]);
   return { patterns: rows.flatMap((r) => served(r) ?? []), total };
 }
+
+/** Every public pattern, by id: what suggestions rank (`suggest-read.ts`, which keeps it for a minute). */
+export async function listAllPublicPatterns(): Promise<LibraryPatternView[]> {
+  const rows = await prisma.libraryPattern.findMany({ where: PUBLIC, orderBy: { id: 'asc' } });
+  return rows.flatMap((r) => served(r) ?? []);
+}
