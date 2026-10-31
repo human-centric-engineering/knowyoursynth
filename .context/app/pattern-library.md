@@ -614,9 +614,10 @@ Measured on 2026-10-31 over the library's 2,293 sounds:
   the probe's 0.85 s. Why has not been looked into. They count as disagreements.
 
 `soundkind-library.test.ts` pins the 49.7%, so a change to the probe, the engine, the features or the library can't
-make the detector worse without someone deciding it should. It renders the whole library, about three minutes of CPU
-spread over worker threads, so it is the slowest test in the app. It runs when something it imports changes, and in
-the full suite.
+make the detector worse without someone deciding it should. It renders the whole library, about three minutes of CPU,
+so it is the slowest test in the app. It sweeps on two worker threads rather than one per core: a sweep across every
+core starved the tests vitest runs alongside it into timeouts. It runs when something it imports changes (the probe
+and `predict.ts` are imported widely, so that is often), and in the full suite.
 
 The confusion table: one row per category the sound is tagged with, and the categories the detector read across. No
 sound was read as strings or wind, so those columns are left out.
