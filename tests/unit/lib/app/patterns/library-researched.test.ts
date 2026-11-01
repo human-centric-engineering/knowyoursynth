@@ -1,0 +1,354 @@
+/**
+ * Researched patterns (`f-pattern-library` t-127): the research batches under the seed's `data/patterns/`, and the
+ * seed that puts them on their sounds.
+ *
+ * First the real batches, against the real catalogue and databank data: every pattern parses and plays, every sound a
+ * batch names is in the catalogue and is looked at once (a pattern, or a reason it has none), every link resolves, and
+ * the rights rule's length holds. Then the sync, over the stateful catalogue fake seeded from Model D's real sounds:
+ * a pattern goes behind the riff and never in front, a second run writes nothing, an empty batch writes nothing, and an
+ * admin's pattern (edited, or made a default) is left alone.
+ */
+import { describe, it, expect, beforeEach } from 'vitest';
+import { PresetSchema } from '@/lib/app/synths/validate';
+import { compileLoop, seededRng } from '@/lib/app/sequencer/compile';
+import { MAX_STEPS, PatternSchema, type Pattern } from '@/lib/app/sequencer/pattern';
+import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
+import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
+import { loadPatternData } from '@/prisma/seeds/app-knowyoursynth/pattern-data';
+import { riffKey, syncRiffPatterns, type LibraryDb } from '@/lib/app/patterns/library';
+import { firstLoop, patternFacts } from '@/lib/app/patterns/library-facts';
+import {
+  ResearchBatchSchema,
+  syncResearchedPatterns,
+  type ResearchBatch,
+  type ResearchedPattern,
+} from '@/lib/app/patterns/library-researched';
+import { seedCatalogue } from '@/lib/app/catalogue/seed';
+import type { CatalogueSeedData } from '@/lib/app/catalogue/data';
+import type { TenancyClient } from '@/lib/db/tenancy-extension';
+import {
+  catalogueTables,
+  seedRecordTable,
+  type CatalogueTables,
+} from '@/tests/helpers/catalogue-db';
+
+const catalogue = loadCatalogueData();
+const bank = loadBankData();
+const batches = loadPatternData();
+const patterns = batches.flatMap((b) => b.patterns);
+
+const sounds = new Map(
+  catalogue.sounds.flatMap((file) =>
+    file.sounds.map((s) => {
+      const preset = PresetSchema.parse(s);
+      return [`${file.synth}/${preset.id}`, preset] as const;
+    })
+  )
+);
+
+/** The beats a pattern's chain plays through once. */
+const chainBeats = (p: Pattern) => p.chain.length * firstLoop(p).beats;
+
+describe('the research batches', () => {
+  it('has the pilot, with patterns and reasons, or every check below is vacuous', () => {
+    expect(batches.map((b) => b.task)).toContain('t-127');
+    expect(patterns.length).toBeGreaterThan(10);
+    expect(batches.flatMap((b) => b.notRecreated).length).toBeGreaterThan(0);
+  });
+
+  it('names only sounds that are in the catalogue', () => {
+    const named = [
+      ...patterns.flatMap((p) => p.sounds),
+      ...batches.flatMap((b) => b.notRecreated.map((n) => n.sound)),
+    ];
+    expect(named.filter((s) => !sounds.has(s))).toEqual([]);
+  });
+
+  it('looks at every Kraftwerk and Depeche Mode sound exactly once: a pattern, or a reason it has none', () => {
+    const pilot = [...sounds]
+      .filter(([, s]) => ['Kraftwerk', 'Depeche Mode'].includes(s.artist))
+      .map(([k]) => k)
+      .sort();
+    expect(pilot.length).toBe(42);
+    const looked = [
+      ...patterns.flatMap((p) => p.sounds),
+      ...batches.flatMap((b) => b.notRecreated.map((n) => n.sound)),
+    ];
+    expect([...looked].sort()).toEqual(pilot);
+  });
+
+  it('links Inspired by only to databank rows that exist', () => {
+    const songs = new Map(bank.songs.map((s) => [s.id, s]));
+    const artists = new Set(bank.artists.map((a) => a.id));
+    for (const p of patterns) {
+      const i = p.inspiredBy;
+      if (i.kind === 'work') {
+        expect(songs.has(i.songId), p.key).toBe(true);
+        if (i.part !== undefined) expect(songs.get(i.songId)!.parts[i.part], p.key).toBeDefined();
+      }
+      if (i.kind === 'artist') expect(artists.has(i.artistId), p.key).toBe(true);
+    }
+  });
+
+  it('keeps every pattern playable, within the sequencer and the rights rule’s 8 bars', () => {
+    for (const p of patterns) {
+      const pattern = PatternSchema.parse(p.pattern);
+      const loop = compileLoop(pattern, { loop: 0, rng: seededRng(1) });
+      expect(loop.notes.length, p.key).toBeGreaterThan(0);
+      // No note runs past the loop it is in.
+      for (const [beat, , len] of loop.notes)
+        expect(beat + len, p.key).toBeLessThanOrEqual(loop.beats + 1e-9);
+      expect(pattern.parts[0].steps.length, p.key).toBeLessThanOrEqual(MAX_STEPS);
+      expect(chainBeats(pattern), p.key).toBeLessThanOrEqual(8 * 4);
+      // A batch pattern goes on its sounds whole: the same every loop.
+      expect(pattern.direction, p.key).toBe('forward');
+    }
+  });
+
+  it('gives a mono line to every sound whose own riff plays no chords', () => {
+    for (const p of patterns)
+      for (const s of p.sounds) {
+        const riff = sounds.get(s)!.phrase;
+        const starts = new Map<number, number>();
+        for (const [beat] of riff.steps) starts.set(beat, (starts.get(beat) ?? 0) + 1);
+        if (Math.max(...starts.values()) === 1)
+          expect(patternFacts(p.pattern).voices, `${p.key} on ${s}`).toBe(1);
+      }
+  });
+
+  it('records each pattern’s research: the work, the part, its leads and why its fidelity is what it is', () => {
+    for (const p of patterns) {
+      expect(p.research.leads.length, p.key).toBeGreaterThan(0);
+      expect(p.research.listenedAt, p.key).toBeNull();
+      // Leads are not sources (Order of trust), so nothing in the pilot can claim more than _In the style of_.
+      expect(p.fidelity, p.key).toBe('in_the_style_of');
+    }
+  });
+
+  it('plays the notes its leads give: the bass of “Just Can’t Get Enough”, as both leads have it', () => {
+    const p = patterns.find((x) => x.key === 'researched:depeche-mode/just-cant-get-enough-bass')!;
+    const pitches = compileLoop(PatternSchema.parse(p.pattern), {
+      loop: 0,
+      rng: seededRng(1),
+    }).notes.map(([, n]) => n);
+    // G G C B, G G C B, C C F E, C C C C: Songsterr track 6 and the BitMIDI file, bars 5–8, an octave up.
+    expect(pitches).toEqual([43, 43, 48, 47, 43, 43, 48, 47, 48, 48, 53, 52, 48, 48, 48, 48]);
+  });
+});
+
+describe('a batch file', () => {
+  const one = (): ResearchedPattern => structuredClone(patterns[0]);
+  const batch = (p: unknown): unknown => ({
+    task: 't-1',
+    researchedBy: 'a test',
+    researchedAt: '2026-11-01',
+    patterns: [p],
+    notRecreated: [],
+  });
+
+  it('refuses a transcribed or reconstructed pattern that names no work or lists no sources', () => {
+    const p = {
+      ...one(),
+      fidelity: 'reconstructed',
+      inspiredBy: { kind: 'artist', artistId: 'kraftwerk' },
+      sources: [],
+    };
+    const parsed = ResearchBatchSchema.safeParse(batch(p));
+    expect(parsed.success).toBe(false);
+    expect(parsed.error?.issues.map((i) => i.path.at(-1))).toEqual(['inspiredBy', 'sources']);
+  });
+
+  it('refuses a tempo range that leaves out the pattern’s own tempo, and a key used twice', () => {
+    const p = { ...one(), tempo: { min: 20, max: 30 } };
+    expect(ResearchBatchSchema.safeParse(batch(p)).error?.issues[0].path.at(-1)).toBe('tempo');
+    const twice = { ...(batch(one()) as object), patterns: [one(), one()] };
+    expect(ResearchBatchSchema.safeParse(twice).error?.issues[0].message).toBe(
+      'A key is used once'
+    );
+  });
+});
+
+// ─── The sync ────────────────────────────────────────────────────────────────
+
+let db: CatalogueTables;
+const lib = () => db as unknown as LibraryDb;
+
+/** Model D with its first three sounds, and the databank rows the test batch links to. */
+function sample(): CatalogueSeedData {
+  const data = structuredClone(catalogue);
+  data.listing.synths = [{ id: 'model-d', order: 0, listed: true }];
+  data.sounds = data.sounds
+    .filter((f) => f.synth === 'model-d')
+    .map((f) => ({ ...f, sounds: f.sounds.slice(0, 3) }));
+  data.lineage = [];
+  data.notes = [];
+  return data;
+}
+
+const soundRow = (i: number) => db.synthSound.rows[i];
+const ref = (i: number) => `model-d/${String(soundRow(i).slug)}`;
+const listOf = (i: number) =>
+  db.synthSoundPattern.rows
+    .filter((l) => l.soundId === soundRow(i).id)
+    .sort((a, b) => Number(a.order) - Number(b.order))
+    .map((l) => l.patternId);
+const riffOf = (i: number) =>
+  db.libraryPattern.rows.find((p) => p.key === riffKey('model-d', String(soundRow(i).slug)))!;
+const keyed = (key: string) => db.libraryPattern.rows.find((p) => p.key === key)!;
+const writes = () =>
+  [db.libraryPattern, db.synthSoundPattern, db.synthSound].reduce(
+    (n, t) => n + t.create.mock.calls.length + t.update.mock.calls.length,
+    0
+  );
+const clearWrites = () => {
+  for (const t of Object.values(db)) {
+    t.create.mockClear();
+    t.update.mockClear();
+  }
+};
+
+/** A batch of two real pilot patterns, put on the sample's sounds: one on sounds 0 and 1, one on sound 2. */
+function testBatch(): ResearchBatch {
+  const [a, b] = [
+    'researched:kraftwerk/the-model-counter-line',
+    'researched:depeche-mode/just-cant-get-enough-bass',
+  ].map((k) => structuredClone(patterns.find((p) => p.key === k)!));
+  return {
+    task: 't-127',
+    researchedBy: 'a test',
+    researchedAt: '2026-11-01',
+    patterns: [
+      { ...a, sounds: [ref(0), ref(1)] },
+      { ...b, sounds: [ref(2)] },
+    ],
+    notRecreated: [],
+  };
+}
+
+beforeEach(async () => {
+  db = catalogueTables();
+  const prisma = { ...db, catalogueSeedRecord: seedRecordTable() };
+  await seedCatalogue(prisma as unknown as TenancyClient, sample());
+  db.bankArtist.rows.push({ id: 'kraftwerk', name: 'Kraftwerk' });
+  db.bankSong.rows.push({
+    id: 'depeche-mode-just-cant-get-enough',
+    title: '"Just Can’t Get Enough"',
+    parts: [{ id: 'part-1', order: 0 }],
+  });
+  await syncRiffPatterns(lib());
+  clearWrites();
+});
+
+describe('syncResearchedPatterns', () => {
+  it('puts each pattern on its sounds behind the riff, so every riff stays its sound’s default', async () => {
+    const counts = await syncResearchedPatterns(lib(), [testBatch()]);
+
+    expect(counts).toEqual({ created: 2, updated: 0, unchanged: 0, edited: 0, placed: 3 });
+    const model = keyed('researched:kraftwerk/the-model-counter-line');
+    const jcge = keyed('researched:depeche-mode/just-cant-get-enough-bass');
+    expect(listOf(0)).toEqual([riffOf(0).id, model.id]);
+    expect(listOf(1)).toEqual([riffOf(1).id, model.id]);
+    expect(listOf(2)).toEqual([riffOf(2).id, jcge.id]);
+    // Its riff is untouched, so the sound still plays it.
+    expect(db.synthSound.update).not.toHaveBeenCalled();
+  });
+
+  it('stores the pattern as the batch has it, AI-generated, its label from the linked row', async () => {
+    await syncResearchedPatterns(lib(), [testBatch()]);
+    const jcge = keyed('researched:depeche-mode/just-cant-get-enough-bass');
+    const planned = testBatch().patterns[1];
+    expect(PatternSchema.parse(jcge.pattern)).toEqual(planned.pattern);
+    expect(jcge).toMatchObject({
+      name: planned.name,
+      role: 'bass_line',
+      fidelity: 'in_the_style_of',
+      origin: 'ai_generated',
+      inspiration: 'work',
+      inspiredBy: '"Just Can’t Get Enough"',
+      inspiredSongId: 'depeche-mode-just-cant-get-enough',
+      inspiredPartId: null,
+      bpmMin: null,
+      bpmMax: null,
+    });
+    expect(keyed('researched:kraftwerk/the-model-counter-line')).toMatchObject({
+      inspiration: 'artist',
+      inspiredBy: 'Kraftwerk',
+      inspiredArtistId: 'kraftwerk',
+    });
+  });
+
+  it('writes nothing the second time, nor for an empty batch', async () => {
+    await syncResearchedPatterns(lib(), [testBatch()]);
+    clearWrites();
+    expect(await syncResearchedPatterns(lib(), [testBatch()])).toEqual({
+      created: 0,
+      updated: 0,
+      unchanged: 2,
+      edited: 0,
+      placed: 0,
+    });
+    expect(await syncResearchedPatterns(lib(), [])).toMatchObject({ created: 0, placed: 0 });
+    expect(await syncResearchedPatterns(lib(), [{ ...testBatch(), patterns: [] }])).toMatchObject({
+      created: 0,
+    });
+    expect(writes()).toBe(0);
+  });
+
+  it('follows a changed batch, and leaves alone a pattern an admin edited or made a default', async () => {
+    await syncResearchedPatterns(lib(), [testBatch()]);
+    const model = keyed('researched:kraftwerk/the-model-counter-line');
+    const jcge = keyed('researched:depeche-mode/just-cant-get-enough-bass');
+    // An admin edited one, and made the other sound 2's default.
+    model.editedAt = new Date();
+    model.name = 'An admin named it';
+    const keptModel = structuredClone(model);
+    const link = db.synthSoundPattern.rows.find((l) => l.patternId === jcge.id)!;
+    link.order = -1;
+    const keptJcge = structuredClone(jcge);
+    const changed = testBatch();
+    for (const p of changed.patterns) p.name = 'Renamed in the batch';
+    clearWrites();
+
+    expect(await syncResearchedPatterns(lib(), [changed])).toMatchObject({ edited: 2, updated: 0 });
+    expect(model).toEqual(keptModel);
+    expect(jcge).toEqual(keptJcge);
+    expect(writes()).toBe(0);
+
+    // Without the admin's hand, the batch's change lands.
+    model.editedAt = null;
+    expect(await syncResearchedPatterns(lib(), [changed])).toMatchObject({ updated: 1, edited: 1 });
+    expect(model.name).toBe('Renamed in the batch');
+  });
+
+  it('adds a newly named sound at the end of its list, and never moves or removes a place', async () => {
+    await syncResearchedPatterns(lib(), [testBatch()]);
+    const before = structuredClone(db.synthSoundPattern.rows);
+    const wider = testBatch();
+    wider.patterns[1].sounds = [ref(2), ref(0)];
+    // Taken out of the file: still in the library and on its sounds.
+    wider.patterns.splice(0, 1);
+
+    expect(await syncResearchedPatterns(lib(), [wider])).toMatchObject({ placed: 1 });
+    const jcge = keyed('researched:depeche-mode/just-cant-get-enough-bass');
+    expect(db.synthSoundPattern.rows.slice(0, before.length)).toEqual(before);
+    expect(listOf(0).at(-1)).toBe(jcge.id);
+    expect(listOf(0)[0]).toBe(riffOf(0).id);
+    expect(keyed('researched:kraftwerk/the-model-counter-line')).toBeDefined();
+  });
+
+  it('refuses a batch that names a sound or a song that is not there, before writing that pattern', async () => {
+    const lost = testBatch();
+    lost.patterns[0].sounds = ['model-d/no-such-sound'];
+    await expect(syncResearchedPatterns(lib(), [lost])).rejects.toThrow(
+      'names the sound model-d/no-such-sound, which is not in the catalogue'
+    );
+    const unlinked = testBatch();
+    unlinked.patterns[1].inspiredBy = { kind: 'work', songId: 'no-such-song' };
+    await expect(syncResearchedPatterns(lib(), [unlinked])).rejects.toThrow(
+      'Inspired by names the song no-such-song'
+    );
+    expect(
+      db.libraryPattern.rows.filter((p) => String(p.key).startsWith('researched:'))
+    ).toHaveLength(1);
+  });
+});
