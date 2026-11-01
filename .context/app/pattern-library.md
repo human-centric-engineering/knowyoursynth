@@ -371,7 +371,8 @@ and the soaring Tangerine Dream lead (the Stratosfear theme). Four works still g
   as the laser harp's melody without a listen.
 
 One hook was set aside in a pattern's notes rather than a reason, and t-159 did not revisit it: Digital Love's intro
-melody. Its sound already plays the solo; the intro is in the same lead's "Lead Synths" track, for a later batch.
+melody. Its sound already plays the solo, and the intro is in the same lead's "Lead Synths" track. t-129 added it (see
+below).
 
 Two things for the next batches:
 
@@ -380,6 +381,31 @@ Two things for the next batches:
   are lengthened from the "Synth" track, which doubles it straight.
 - **A Songsterr beat's duration already includes its dots**, as it does its triplet, and a grace note takes no time of
   its own. The rewritten reader got both wrong at first, which showed up as bars of 4½ beats.
+
+**The third batch (t-129): Brian Eno, Daniel Lanois, Vangelis and Boards of Canada.** The plan counted 53 sounds; there
+were 77 (Eno 35, Vangelis 19, Lanois 13, Boards of Canada 10). 31 got one of 16 patterns, and 46 got a recorded reason
+why not. The batch is `prisma/seeds/app-knowyoursynth/data/patterns/t129-eno-lanois-vangelis-boards-of-canada.json`.
+It used the same method and readers, and found:
+
+- **Ambient works are almost never transcribed.** Songsterr and BitMIDI had nothing from Music for Airports (12
+  sounds name it), On Land, Thursday Afternoon, Neroli, Discreet Music or the Apollo steel parts, and 2 of the 13 Lanois works.
+  What they had of Eno is mostly the song albums, in guitar and bass. Only one Eno pattern is a melody ("An Ending
+  (Ascent)"); the others are three bass parts.
+- **Film scores and Boards of Canada were well covered.** The Blade Runner End Titles has a transcription and a MIDI
+  file that agree note for note, which gave four patterns: the theme, the chords, and the sequence at two octaves.
+  The Chariots of Fire MIDI file is in the record's key, D♭, with the brass melody and the strings on their own tracks.
+  Both works the Boards of Canada sounds name, "Olson" and "Roygbiv", gave a melody and their chords.
+- **Held parts carry as written.** The drones and pads took held chords and bass notes without any change the method
+  doesn't allow. What is lost is what the patch does: the swell, the drift, the tape wow.
+- **A wordless choir is still the vocal melody.** Conquest of Paradise's tune is sung, so its choir sound got the string
+  line under it.
+- **In older transcriptions a tied note has no pitch of its own.** Its fret reads 0, so read naively it is a new open-string
+  note. The reader now lengthens whatever the tie's string last played. A tie onto a note struck before the bars taken
+  is struck again where they begin. The tracks t-159 read were checked, and none of their ties is affected.
+- **Five sounds name no work** (Vangelis's Swelling Film Brass and four Boards of Canada sounds), and got the work by
+  their artist whose notes suit them, as t-128 did for Tangerine Dream. Each pattern's notes say so.
+- **Digital Love's intro**, which t-159 left in the solo's notes, is now a pattern on the same sound, in t-128's file:
+  bars 9–16 of the "Lead Synths" track. Bars 4–5 have one more phrase, but bars 6–8 are silent.
 
 ## Rights
 
@@ -590,7 +616,8 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
 - **A re-run writes nothing, and nor does an empty batch.** Measured on the dev database: the pilot created 17
   patterns and 26 places, and left the 2,293 riffs unchanged. The second batch (t-128) created 20 and 33, left the
   pilot's 17 unchanged, and skipped nothing. The hooks (t-159) created 15 and 26, which brought the totals to 52 and 85, and
-  left every riff its sound's default.
+  left every riff its sound's default. The third batch (t-129) created 17 and 36, its own 16 and Digital Love's intro,
+  which brought the totals to 69 and 121 and again left every riff its sound's default.
 - **An admin's pattern is never written**: one an admin edited, or made any sound's default.
 - **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
   taken out of a batch file stays in the library and on its sounds.
@@ -604,10 +631,11 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
 
 Over the real data, the same test checks that every sound a batch names is in the catalogue, that each batch looks at
 every sound by its artists exactly once (Kraftwerk and Depeche Mode for t-127; Daft Punk, Jean-Michel Jarre and
-Tangerine Dream for t-128), that every link resolves in the databank, and that every pattern plays. It also checks
-that no pattern runs past the rights rule's 8 bars, that a sound whose own riff plays no chords gets a single line,
-that the Just Can't Get Enough bass plays the notes both of its leads give, and that the Da Funk break figure plays its
-lead's notes in both octaves, as does the Da Funk main riff. A sound can be on more than one pattern of a batch, but a
+Tangerine Dream for t-128; Brian Eno, Daniel Lanois, Vangelis and Boards of Canada for t-129), that every link resolves
+in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
+a sound whose own riff plays no chords gets a single line, that the Just Can't Get Enough bass and the Blade Runner End
+Titles theme play the notes both of their leads give, that the Da Funk break figure plays its lead's notes in both
+octaves, as does the Da Funk main riff, and that Digital Love's intro plays its lead's notes. A sound can be on more than one pattern of a batch, but a
 sound with a pattern never also has a reason.
 
 The catalogue unit's hash leaves the `patterns/` folder out, as it does `bank/`, so a batch edit re-runs only this
