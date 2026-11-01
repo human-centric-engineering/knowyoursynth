@@ -330,6 +330,32 @@ write it down. Writing why a sound has no pattern took as long as writing one.
 - If the owner wants _Reconstructed_ or _Transcribed_ patterns, a source has to come from outside the free web:
   bought sheet music, or the owner's own ear on the leads.
 
+**The second batch (t-128): Daft Punk, Jean-Michel Jarre and Tangerine Dream.** The plan counted 55 sounds; there
+were 75, 25 for each artist. 33 got one of 20 patterns, and 42 got a recorded reason why not. The batch is
+`prisma/seeds/app-knowyoursynth/data/patterns/t128-daft-punk-jarre-tangerine-dream.json`. It used the pilot's
+method and readers, and found:
+
+- **The free web covers the three artists very unevenly.** Songsterr had 19 of the works the sounds name (Daft Punk 15,
+  Jarre 3, Tangerine Dream 1), and BitMIDI had files for Daft Punk and Jarre but none for Tangerine Dream. Nothing was
+  found for Phaedra, Rubycon, Zeit, Tangram, "White Eagle" or "Mysterious Semblance at the Strand of Nightmares",
+  which 16 of the Tangerine Dream sounds name. So Tangerine Dream got three patterns, two of them from "Stratosfear"
+  (a work no sound names) for the sounds that name no work.
+- **Ten Jarre sounds are effects**: wind, surf, waves and zaps made by the patch from noise. They have no part to
+  transcribe, and are recorded as such rather than searched for.
+- **The hook rule bit again**, on Da Funk, Around the World, Harder Better Faster Stronger, Derezzed, Robot Rock,
+  Technologic, Oxygène IV, Second Rendez-Vous and Love on a Real Train. Most of those works still gave their sounds a
+  part: the break figure, the bass under the hook, the arpeggio or the pad. Five Da Funk sounds now play one break
+  figure, at the two octaves the record has it.
+- **A mono sound took the lower note** where the only usable part doubles at the octave (Around the World's pluck
+  line). Where a part is two- or more-note chords and nothing else is usable, the sound gets no pattern, as in the
+  pilot.
+- **A Songsterr beat's duration already includes its triplet.** A triplet eighth is `[1, 12]` and also carries a
+  `tuplet` flag; scaling by the flag as well, as the pilot's scratch reader did, counts the triplet twice. So a reader
+  should scale by `tuplet` only when the duration's denominator is a power of two. No pilot pattern used a triplet;
+  Oxygène IV's arpeggio is the first on the `1/8t` grid.
+- **Tempos the leads disagree on are left unset**, as the pilot did: Oxygène IV (123 and 125) and Équinoxe 5 (157 in
+  its only lead, which seems fast).
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._
@@ -538,7 +564,8 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
   default and nothing a sound plays changes. A researched pattern becomes a default only when an admin reorders the
   sound after the owner's listen.
 - **A re-run writes nothing, and nor does an empty batch.** Measured on the dev database: the pilot created 17
-  patterns and 26 places, and left the 2,293 riffs unchanged.
+  patterns and 26 places, and left the 2,293 riffs unchanged. The second batch (t-128) created 20 and 33, left the
+  pilot's 17 unchanged, and skipped nothing.
 - **An admin's pattern is never written**: one an admin edited, or made any sound's default.
 - **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
   taken out of a batch file stays in the library and on its sounds.
@@ -550,10 +577,12 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
   part, artist or synth. So the seed is safe on an empty catalogue. The seed logs each skip as a warning; with the
   batch's test checking every name against the seed data, a skip means a row was removed or not seeded yet.
 
-Over the real data, the same test checks that every sound a batch names is in the catalogue, that every Kraftwerk and
-Depeche Mode sound is looked at exactly once, that every link resolves in the databank, and that every pattern plays.
-It also checks that no pattern runs past the rights rule's 8 bars, that a sound whose own riff plays no chords gets a
-single line, and that the Just Can't Get Enough bass plays the notes both of its leads give.
+Over the real data, the same test checks that every sound a batch names is in the catalogue, that each batch looks at
+every sound by its artists exactly once (Kraftwerk and Depeche Mode for t-127; Daft Punk, Jean-Michel Jarre and
+Tangerine Dream for t-128), that every link resolves in the databank, and that every pattern plays. It also checks
+that no pattern runs past the rights rule's 8 bars, that a sound whose own riff plays no chords gets a single line,
+that the Just Can't Get Enough bass plays the notes both of its leads give, and that the Da Funk break figure plays its
+lead's notes in both octaves.
 
 The catalogue unit's hash leaves the `patterns/` folder out, as it does `bank/`, so a batch edit re-runs only this
 unit.
