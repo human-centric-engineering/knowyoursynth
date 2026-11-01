@@ -37,15 +37,11 @@
     },
     {
       "sound": "pro-1/stretched-key-bleeps",
-      "reason": "The “Pocket Calculator” MIDI on BitMIDI (kraftwerk-pocket_calculator.mid) holds the vocal melody, four-note chord stabs and the bass. None is a single-note bleep part: the melody is barred by the rights rule, and a mono synth cannot play the stabs."
+      "reason": "The “Pocket Calculator” MIDI on BitMIDI (kraftwerk-pocket_calculator.mid) holds the vocal melody, four-note chord stabs and the bass. None is a single-note bleep part: the vocal melody is never taken, and a mono synth cannot play the stabs."
     },
     {
       "sound": "solar-42n/solar-pocket-calculator",
-      "reason": "As for the Pro-1’s bleeps: the “Pocket Calculator” lead holds the vocal melody (barred), four-note stabs (more voices than this sound plays) and the bass."
-    },
-    {
-      "sound": "neutron/staircase-bleep-arp",
-      "reason": "The bleeping figure of “Home Computer” (the C, E♭, B♭, D♭ riff in the Songsterr transcription, 2024) is the song’s main hook and fits in 8 bars, so the rights rule bars taking it whole. “Pocket Calculator” has no single-note bleep part in its lead."
+      "reason": "As for the Pro-1’s bleeps: the “Pocket Calculator” lead holds the vocal melody (never taken), four-note stabs (more voices than this sound plays) and the bass."
     },
     {
       "sound": "pro-1/noise-tick-pluck",
@@ -60,12 +56,8 @@
       "reason": "Its credit names no work (“early-80s metal percussion”), and no transcription of a metal-percussion part was found."
     },
     {
-      "sound": "b2600/dm-metal-lead",
-      "reason": "The Violator lead lines in the Songsterr transcriptions are the songs’ hooks (the “Enjoy the Silence” riff, and “Policy of Truth”), which the rights rule bars taking whole."
-    },
-    {
       "sound": "e7/e7-metal-bell-lead",
-      "reason": "Its credit names no work, and no Depeche Mode transcription found has a bell-like lead that is not a hook. Choosing a song for it would be a guess, so it waits for a batch that can name one."
+      "reason": "Its credit names no work. With the hook rule dropped (t-159) the Violator lead lines could be taken, but nothing ties this sound to one of them over another. Choosing a song for it would be a guess, so it waits for a batch that can name one."
     }
   ],
   "patterns": [
@@ -407,7 +399,236 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "The main synth riff is the work’s hook and fits in 8 bars, so it is not taken (rights rule). The counter-line is from the MIDI file’s second melody track, bars 26–33; the Songsterr transcription has the same C–B–A line an octave down in the bridge. Each note is cut a little short so the next one speaks. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The main synth riff is its own pattern (researched:kraftwerk/the-model-riff). The counter-line is from the MIDI file’s second melody track, bars 26–33; the Songsterr transcription has the same C–B–A line an octave down in the bridge. Each note is cut a little short so the next one speaks. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:kraftwerk/the-model-riff",
+      "name": "The Model: intro riff",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "kraftwerk"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 125,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 6.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 6.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["model-d/plain-pulse-lead", "take-5/t5-model-lead"],
+      "research": {
+        "work": "Kraftwerk, “The Model” (Das Model), The Man-Machine, 1978",
+        "part": "The two-bar synth riff of the intro: A and C over A minor, then E and G. Bars 3–4 repeat it.",
+        "originalKey": "A minor",
+        "originalBpm": 125,
+        "leads": [
+          {
+            "citation": "Kraftwerk — “The Model”, fan transcription by zamo. on Songsterr (revision 6295501, 2026-04-15)",
+            "url": "https://www.songsterr.com/a/wsa/kraftwerk-the-model-tab-s10792",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "The work’s main synth riff, from the transcription’s “Synth 1” track, bars 1–2, moved up an octave to sit in a lead’s register. The verse melody on “Synth 2” doubles the vocal, so it is not taken (never the vocal melody). The transcription has the record at 125 bpm; the pilot’s counter-line follows the MIDI file’s 124. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -1159,7 +1380,231 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "The lead melody is the work’s hook and fits in 8 bars, so it is not taken (rights rule), even for the lead sounds: they get this part instead. From the MIDI file’s track 5, bars 21–24, moved up an octave to sit in a lead’s register. The Songsterr transcription (2025) has guitar, bass and drums only, so nothing confirms it. The Casio-style melody sound credited on e7-computer-melody names no work; this is the nearest Kraftwerk computer melody found. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The lead melody is its own pattern (researched:kraftwerk/computer-love-melody). From the MIDI file’s track 5, bars 21–24, moved up an octave to sit in a lead’s register. The Songsterr transcription (2025) has guitar, bass and drums only, so nothing confirms it. The Casio-style melody sound credited on e7-computer-melody names no work; this is the nearest Kraftwerk computer melody found. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:kraftwerk/computer-love-melody",
+      "name": "Computer Love: lead melody",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "kraftwerk"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 128,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 77,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 5.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 1.0
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": [
+        "model-d/computer-love-melody",
+        "poly-d/pd-clean-melody",
+        "super-gemini/sg-computer-love",
+        "e7/e7-computer-melody"
+      ],
+      "research": {
+        "work": "Kraftwerk, “Computer Love”, Computer World, 1981",
+        "part": "The four-bar lead melody: G, F, D, C, then B♭, C, D down to a held G, with the D that leads back in.",
+        "originalKey": null,
+        "originalBpm": 128,
+        "leads": [
+          {
+            "citation": "“kraftwerk-computer_love.mid”, fan-made MIDI file on BitMIDI, uploader unknown",
+            "url": "https://bitmidi.com/kraftwerk-computer_love-mid",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "From the MIDI file’s track 4, bars 41–44, as written. The file’s timing is played in, so starts and lengths are rounded to eighths. The pickup D at the end of bar 44 is the one that starts the next phrase, so the loop leads back into itself. The Songsterr transcription (2025) has guitar, bass and drums only, so nothing confirms it. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -3258,7 +3703,469 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "The Jupiter-4 riff is the work’s hook and fits in 8 bars, so it is not taken (rights rule). This is the counter-line from Songsterr track 7, unchanged. One transcription only. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The Jupiter-4 riff is its own pattern (researched:depeche-mode/just-cant-get-enough-riff). This is the counter-line from Songsterr track 7, unchanged. One transcription only. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:depeche-mode/just-cant-get-enough-riff",
+      "name": "Just Can’t Get Enough: riff",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "depeche-mode-just-cant-get-enough"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 128,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["pro-1/square-pop-lead"],
+      "research": {
+        "work": "Depeche Mode, “Just Can’t Get Enough”, Speak & Spell, 1981",
+        "part": "The riff, Songsterr bars 5–8: three bars on G, A and B, then the fourth turning on C.",
+        "originalKey": "G major",
+        "originalBpm": 128,
+        "leads": [
+          {
+            "citation": "Depeche Mode — “Just Can't Get Enough”, fan transcription by Alex Conant on Songsterr (revision 6430130, 2026-04-23)",
+            "url": "https://www.songsterr.com/a/wsa/depeche-mode-just-cant-get-enough-tab-s64831",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "From the transcription’s track 1, bars 5–8, as written. Bars 9–12 repeat them. The fourth bar of the intro (bar 4) is octave chords, so the loop starts after it. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -4521,7 +5428,685 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "The reed-like melody this sound was written for is the work’s hook and fits in 8 bars, so it is not taken (rights rule). One transcription only. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The reed-like hook this sound was written for is its own pattern (researched:depeche-mode/everything-counts-hook). One transcription only. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:depeche-mode/everything-counts-hook",
+      "name": "Everything Counts: reed hook",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "depeche-mode"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 110,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 10.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 10.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 10.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 10.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 10.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 10.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 10.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["pro-1/nasal-reed-lead"],
+      "research": {
+        "work": "Depeche Mode, “Everything Counts”, Construction Time Again, 1983",
+        "part": "Eight bars of the reed-like hook, Songsterr “Synth IV”: A, E, C over A minor, then E, B, D over E minor.",
+        "originalKey": null,
+        "originalBpm": 110,
+        "leads": [
+          {
+            "citation": "Depeche Mode — “Everything Counts”, fan transcription by a Songsterr user on Songsterr (revision 3700094, 2025-11-04)",
+            "url": "https://www.songsterr.com/a/wsa/depeche-mode-everything-counts-tab-s29308",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "From the transcription’s “Synth IV” track, bars 17–24, as written. Each bar’s last note is tied into the next; the last one is not, so the loop starts clean. The hook runs on for four more bars, past the 8-bar limit. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -5068,6 +6653,220 @@
       }
     },
     {
+      "key": "researched:depeche-mode/enjoy-the-silence-riff",
+      "name": "Enjoy the Silence: riff",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "depeche-mode"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 114,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 51,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 51,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 51,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 51,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["b2600/dm-metal-lead"],
+      "research": {
+        "work": "Depeche Mode, “Enjoy the Silence”, Violator, 1990",
+        "part": "The two-bar riff: E♭ to C, then up to D; E♭ to C, then down to B♭.",
+        "originalKey": "C minor",
+        "originalBpm": 114,
+        "leads": [
+          {
+            "citation": "Depeche Mode — “Enjoy The Silence”, fan transcription by miguelitoz on Songsterr (revision 5762766, 2026-03-17)",
+            "url": "https://www.songsterr.com/a/wsa/depeche-mode-enjoy-the-silence-tab-s5782",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "From Martin Gore’s guitar track, bars 5–6, as written; bars 7–8 repeat them. The last note is tied into the next bar on the record and held one beat here, so the loop starts clean. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:depeche-mode/waiting-for-the-night-staircase",
       "name": "Waiting for the Night: staircase",
       "role": "arp",
@@ -5571,6 +7370,433 @@
           }
         ],
         "notes": "From Songsterr track 1. The transcription cuts bar 11 short of its last beat; it is left as it is, so the loop rests there. One transcription only. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:kraftwerk/home-computer-riff",
+      "name": "Home Computer: bleep riff",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "kraftwerk"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 120,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 6.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 56,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["neutron/staircase-bleep-arp"],
+      "research": {
+        "work": "Kraftwerk, “Home Computer”, Computer World, 1981",
+        "part": "Four bars of the riff: C, E♭, B♭, D♭, with the ending that changes from bar to bar.",
+        "originalKey": null,
+        "originalBpm": 120,
+        "leads": [
+          {
+            "citation": "Kraftwerk — “Home Computer”, fan transcription by Obama Obama on Songsterr (revision 794293, 2024-06-30)",
+            "url": "https://www.songsterr.com/a/wsa/kraftwerk-home-computer-tab-s657662",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "From the transcription’s guitar track, bars 4–7, moved up an octave to where the sound plays. The riff’s ending changes every bar, so four bars are taken as they come rather than one bar looped. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     }
