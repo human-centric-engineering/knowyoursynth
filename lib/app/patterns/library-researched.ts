@@ -12,6 +12,9 @@
  * - **An admin's pattern is never written**: one an admin has edited, or put at the head of a sound's list (its notes
  *   are that sound's riff now, so the seed changing them would split the pair).
  * - **Nothing is deleted or moved.** A pattern taken out of a batch file stays in the library and on its sounds.
+ * - **A pattern whose sound or link is not there is skipped and reported**, not written, so the seed is safe on an
+ *   empty catalogue. The batch's test checks every name against the seed data, so the seed only meets one an admin
+ *   removed, or tables not seeded yet.
  */
 import { z } from 'zod';
 import type { LibraryPattern, Prisma } from '@prisma/client';
@@ -163,6 +166,8 @@ export interface ResearchedSyncCounts {
   edited: number;
   /** Places made on a sound's list. */
   placed: number;
+  /** Patterns not written, because a sound or a link they name is not there. */
+  skipped: { key: string; reason: string }[];
 }
 
 type Row = Pick<
@@ -183,7 +188,7 @@ type Row = Pick<
   | 'origin'
 > & { pattern: Prisma.InputJsonValue; sources: Prisma.InputJsonValue };
 
-/** The inspiration's columns, its label taken from the row it links to. Throws on a link to nothing. */
+/** The inspiration's columns, its label taken from the row it links to, or why the link leads to nothing. */
 async function inspirationOf(db: LibraryDb, p: ResearchedPattern) {
   const none = {
     inspiredSongId: null,
@@ -191,9 +196,7 @@ async function inspirationOf(db: LibraryDb, p: ResearchedPattern) {
     inspiredArtistId: null,
     inspiredSynthId: null,
   };
-  const missing = (what: string): never => {
-    throw new Error(`${p.key}: Inspired by names ${what}, which is not there`);
-  };
+  const missing = (what: string) => ({ missing: `Inspired by names ${what}, which is not there` });
   const i = p.inspiredBy;
   switch (i.kind) {
     case 'work': {
@@ -240,8 +243,16 @@ async function inspirationOf(db: LibraryDb, p: ResearchedPattern) {
   }
 }
 
-/** The columns a researched pattern is stored as. Every batch pattern is _AI-generated_ (owner ruling, 2026-10-31). */
-async function planResearched(db: LibraryDb, p: ResearchedPattern): Promise<Row> {
+/**
+ * The columns a researched pattern is stored as, or why it cannot be. Every batch pattern is _AI-generated_ (owner
+ * ruling, 2026-10-31).
+ */
+async function planResearched(
+  db: LibraryDb,
+  p: ResearchedPattern
+): Promise<Row | { missing: string }> {
+  const inspiration = await inspirationOf(db, p);
+  if ('missing' in inspiration) return inspiration;
   return {
     key: p.key,
     name: p.name,
@@ -253,14 +264,13 @@ async function planResearched(db: LibraryDb, p: ResearchedPattern): Promise<Row>
     fidelity: p.fidelity,
     sources: toJson(p.sources),
     origin: 'ai_generated',
-    ...(await inspirationOf(db, p)),
+    ...inspiration,
   };
 }
 
 /**
- * Put every batch pattern in the library, and on each of its sounds behind what the sound already lists. Throws when
- * a pattern names a sound, song, part, artist or synth that is not there, before anything is written for it: the
- * batch's test checks the same against the seed data, so the seed only meets one an admin removed.
+ * Put every batch pattern in the library, and on each of its sounds behind what the sound already lists. A pattern
+ * that names a sound, song, part, artist or synth that is not there is skipped whole, with the reason.
  */
 export async function syncResearchedPatterns(
   db: LibraryDb,
@@ -272,6 +282,7 @@ export async function syncResearchedPatterns(
     unchanged: 0,
     edited: 0,
     placed: 0,
+    skipped: [],
   };
   const patterns = batches.flatMap((b) => b.patterns);
   if (!patterns.length) return counts;
@@ -315,8 +326,17 @@ export async function syncResearchedPatterns(
   );
 
   for (const p of patterns) {
-    const mine = p.sounds.map((s) => sounds.get(s) ?? missingSound(p.key, s));
+    const lost = p.sounds.filter((s) => !sounds.has(s));
+    if (lost.length) {
+      counts.skipped.push({ key: p.key, reason: `Names ${lost.join(', ')}, not in the catalogue` });
+      continue;
+    }
+    const mine = p.sounds.map((s) => sounds.get(s)!);
     const planned = await planResearched(db, p);
+    if ('missing' in planned) {
+      counts.skipped.push({ key: p.key, reason: planned.missing });
+      continue;
+    }
     const current = stored.get(p.key);
     let id: string;
     if (!current) {
@@ -345,8 +365,4 @@ export async function syncResearchedPatterns(
     }
   }
   return counts;
-}
-
-function missingSound(key: string, sound: string): never {
-  throw new Error(`${key}: names the sound ${sound}, which is not in the catalogue`);
 }

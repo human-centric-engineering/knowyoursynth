@@ -9,6 +9,9 @@
  * admin's pattern (edited, or made a default) is left alone.
  */
 import { describe, it, expect, beforeEach } from 'vitest';
+import { mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { PresetSchema } from '@/lib/app/synths/validate';
 import { compileLoop, seededRng } from '@/lib/app/sequencer/compile';
 import { MAX_STEPS, PatternSchema, type Pattern } from '@/lib/app/sequencer/pattern';
@@ -37,11 +40,11 @@ const bank = loadBankData();
 const batches = loadPatternData();
 const patterns = batches.flatMap((b) => b.patterns);
 
-const sounds = new Map(
+const sounds = new Map<string, ReturnType<typeof PresetSchema.parse>>(
   catalogue.sounds.flatMap((file) =>
     file.sounds.map((s) => {
       const preset = PresetSchema.parse(s);
-      return [`${file.synth}/${preset.id}`, preset] as const;
+      return [`${file.synth}/${preset.id}`, preset];
     })
   )
 );
@@ -168,6 +171,16 @@ describe('a batch file', () => {
   });
 });
 
+describe('the loader', () => {
+  it('names the file that does not parse as JSON, or does not fit the schema', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'patterns-'));
+    writeFileSync(join(dir, 'a.json'), '{ not json');
+    expect(() => loadPatternData(dir)).toThrow(/^patterns\/a\.json: /);
+    writeFileSync(join(dir, 'a.json'), JSON.stringify({ task: 'nope' }));
+    expect(() => loadPatternData(dir)).toThrow(/^patterns\/a\.json: .*task/s);
+  });
+});
+
 // ─── The sync ────────────────────────────────────────────────────────────────
 
 let db: CatalogueTables;
@@ -243,7 +256,14 @@ describe('syncResearchedPatterns', () => {
   it('puts each pattern on its sounds behind the riff, so every riff stays its sound’s default', async () => {
     const counts = await syncResearchedPatterns(lib(), [testBatch()]);
 
-    expect(counts).toEqual({ created: 2, updated: 0, unchanged: 0, edited: 0, placed: 3 });
+    expect(counts).toEqual({
+      created: 2,
+      updated: 0,
+      unchanged: 0,
+      edited: 0,
+      placed: 3,
+      skipped: [],
+    });
     const model = keyed('researched:kraftwerk/the-model-counter-line');
     const jcge = keyed('researched:depeche-mode/just-cant-get-enough-bass');
     expect(listOf(0)).toEqual([riffOf(0).id, model.id]);
@@ -286,6 +306,7 @@ describe('syncResearchedPatterns', () => {
       unchanged: 2,
       edited: 0,
       placed: 0,
+      skipped: [],
     });
     expect(await syncResearchedPatterns(lib(), [])).toMatchObject({ created: 0, placed: 0 });
     expect(await syncResearchedPatterns(lib(), [{ ...testBatch(), patterns: [] }])).toMatchObject({
@@ -336,19 +357,32 @@ describe('syncResearchedPatterns', () => {
     expect(keyed('researched:kraftwerk/the-model-counter-line')).toBeDefined();
   });
 
-  it('refuses a batch that names a sound or a song that is not there, before writing that pattern', async () => {
+  it('skips a pattern that names a sound or a song that is not there, and says why, writing nothing for it', async () => {
     const lost = testBatch();
-    lost.patterns[0].sounds = ['model-d/no-such-sound'];
-    await expect(syncResearchedPatterns(lib(), [lost])).rejects.toThrow(
-      'names the sound model-d/no-such-sound, which is not in the catalogue'
-    );
-    const unlinked = testBatch();
-    unlinked.patterns[1].inspiredBy = { kind: 'work', songId: 'no-such-song' };
-    await expect(syncResearchedPatterns(lib(), [unlinked])).rejects.toThrow(
-      'Inspired by names the song no-such-song'
-    );
-    expect(
-      db.libraryPattern.rows.filter((p) => String(p.key).startsWith('researched:'))
-    ).toHaveLength(1);
+    lost.patterns[0].sounds = [ref(0), 'model-d/no-such-sound'];
+    lost.patterns[1].inspiredBy = { kind: 'work', songId: 'no-such-song' };
+
+    const counts = await syncResearchedPatterns(lib(), [lost]);
+
+    expect(counts).toMatchObject({ created: 0, placed: 0 });
+    expect(counts.skipped).toEqual([
+      {
+        key: 'researched:kraftwerk/the-model-counter-line',
+        reason: 'Names model-d/no-such-sound, not in the catalogue',
+      },
+      {
+        key: 'researched:depeche-mode/just-cant-get-enough-bass',
+        reason: 'Inspired by names the song no-such-song, which is not there',
+      },
+    ]);
+    expect(writes()).toBe(0);
+  });
+
+  it('writes nothing on an empty catalogue, skipping every pattern', async () => {
+    const batch = testBatch();
+    db.synthSound.rows.length = 0;
+    const counts = await syncResearchedPatterns(lib(), [batch]);
+    expect(counts.skipped).toHaveLength(2);
+    expect(writes()).toBe(0);
   });
 });

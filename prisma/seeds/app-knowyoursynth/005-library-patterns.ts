@@ -52,6 +52,9 @@ const unit: SeedUnit = {
     const report = await syncRiffPatterns(prisma);
     const researched = await syncResearchedPatterns(prisma, loadPatternData());
     logger.info('Library patterns seeded', { report, researched });
+    // A batch names only what its test found in the seed data, so a skip means a row was removed or not seeded yet.
+    if (researched.skipped.length)
+      logger.warn('Researched patterns skipped', { skipped: researched.skipped });
   },
 };
 
