@@ -370,6 +370,42 @@ describe('syncResearchedPatterns', () => {
     });
   });
 
+  it('records who made each pattern, its research record, and its rights risk from its fidelity (t-156)', async () => {
+    const batch = testBatch();
+    // One says it recreates the part, with a source: it needs review.
+    Object.assign(batch.patterns[1], {
+      fidelity: 'reconstructed',
+      sources: [{ type: 'by_ear', citation: 'The single', checkedAt: '2026-11-01' }],
+    });
+    await syncResearchedPatterns(lib(), [batch]);
+    const model = keyed('researched:kraftwerk/the-model-counter-line');
+    const jcge = keyed('researched:depeche-mode/just-cant-get-enough-bass');
+    expect(model).toMatchObject({
+      origin: 'ai_generated',
+      madeBy: 'a test (t-127)',
+      madeAt: new Date('2026-11-01T00:00:00.000Z'),
+      research: { task: 't-127', ...batch.patterns[0].research },
+      rightsRisk: 'none',
+    });
+    expect(jcge.rightsRisk).toBe('needs_review');
+    // The seed never writes a status.
+    expect(model.status).toBe('enabled');
+
+    // An admin's rights risk (it has a reason) is kept through a changed batch; status is never touched.
+    Object.assign(jcge, { rightsRisk: 'cleared', rightsReason: 'Checked', status: 'disabled' });
+    batch.patterns[1].name = 'Renamed in the batch';
+    expect(await syncResearchedPatterns(lib(), [batch])).toMatchObject({ updated: 1 });
+    expect(jcge).toMatchObject({
+      name: 'Renamed in the batch',
+      rightsRisk: 'cleared',
+      status: 'disabled',
+    });
+    // Without one, the risk follows the batch's fidelity.
+    Object.assign(jcge, { rightsReason: null });
+    expect(await syncResearchedPatterns(lib(), [batch])).toMatchObject({ updated: 1 });
+    expect(jcge.rightsRisk).toBe('needs_review');
+  });
+
   it('writes nothing the second time, nor for an empty batch', async () => {
     await syncResearchedPatterns(lib(), [testBatch()]);
     clearWrites();

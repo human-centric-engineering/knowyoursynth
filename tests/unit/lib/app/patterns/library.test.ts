@@ -26,6 +26,7 @@ import {
   toView,
   type InspirationContext,
   type LibraryDb,
+  RIFF_MADE_BY,
 } from '@/lib/app/patterns/library';
 import { defaultRole, patternFacts } from '@/lib/app/patterns/library-facts';
 import { seedCatalogue } from '@/lib/app/catalogue/seed';
@@ -91,7 +92,12 @@ describe('every seeded riff, as a library pattern', () => {
       expect(pattern.bpm).toBe(sound.phrase.bpm);
       // What a sound whose default this is plays, read back the same way.
       expectSameNotes(phraseOf(pattern).steps, sound.phrase.steps);
-      expect(row).toMatchObject({ fidelity: 'in_the_style_of', origin: 'ai_generated' });
+      // Owner ruling, 2026-10-31: every riff is AI-generated, made by an agent with the library (t-156).
+      expect(row).toMatchObject({
+        fidelity: 'in_the_style_of',
+        origin: 'ai_generated',
+        madeBy: RIFF_MADE_BY,
+      });
     }
   );
 });

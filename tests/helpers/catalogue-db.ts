@@ -26,9 +26,12 @@ export function matches(row: Row, where: Where = {}): boolean {
   });
 }
 
-export function sortRows(rows: Row[], orderBy: Record<string, 'asc'>[] = []): Row[] {
+export function sortRows(
+  rows: Row[],
+  orderBy: Record<string, 'asc'>[] | Record<string, 'asc'> = []
+): Row[] {
   return [...rows].sort((a, b) => {
-    for (const o of orderBy) {
+    for (const o of [orderBy].flat()) {
       const [k] = Object.keys(o);
       const x = a[k] as string | number;
       const y = b[k] as string | number;
