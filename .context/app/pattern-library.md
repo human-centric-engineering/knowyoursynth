@@ -349,9 +349,10 @@ method and readers, and found:
 - **A mono sound took the lower note** where the only usable part doubles at the octave (Around the World's pluck
   line). Where a part is two- or more-note chords and nothing else is usable, the sound gets no pattern, as in the
   pilot.
-- **The Songsterr reader double-counted triplets.** A beat whose duration is already a triplet (`[1, 12]`) also
-  carries a `tuplet` flag. The reader now scales only a power-of-two duration. No pilot pattern used a triplet, so none
-  was affected; Oxygène IV's arpeggio is the first on the `1/8t` grid.
+- **A Songsterr beat's duration already includes its triplet.** A triplet eighth is `[1, 12]` and also carries a
+  `tuplet` flag; scaling by the flag as well, as the pilot's scratch reader did, counts the triplet twice. So a reader
+  should scale by `tuplet` only when the duration's denominator is a power of two. No pilot pattern used a triplet;
+  Oxygène IV's arpeggio is the first on the `1/8t` grid.
 - **Tempos the leads disagree on are left unset**, as the pilot did: Oxygène IV (123 and 125) and Équinoxe 5 (157 in
   its only lead, which seems fast).
 

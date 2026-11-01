@@ -4878,7 +4878,7 @@
       "sounds": ["super-gemini/sg-filter-house"],
       "research": {
         "work": "Daft Punk, “Digital Love”, Discovery, 2001",
-        "part": "The two-bar figure of four-note chord stabs: D, C♯m, then F♯m and C♯m.",
+        "part": "The two-bar figure of four-note chord stabs: D, C♯, then F♯m and C♯m.",
         "originalKey": null,
         "originalBpm": 125,
         "leads": [
@@ -5129,7 +5129,7 @@
       "sources": [],
       "pattern": {
         "version": 1,
-        "bpm": 124,
+        "bpm": 123,
         "stepSize": "1/8",
         "loop": true,
         "direction": "forward",
@@ -5487,7 +5487,7 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "From the MIDI file’s second string track, bars 11–18, voiced as written. The Songsterr transcription has no pad, but its bass and melody match the file’s, which places the chords. The melody is the work’s hook and is not taken (rights rule). The leads put the record at 123 and 125 bpm, so the tempo is left unset. Each chord is cut a little short so the next one speaks. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the MIDI file’s second string track, bars 11–18, voiced as written. The Songsterr transcription has no pad, but its bass and melody match the file’s, which places the chords. The melody is the work’s hook and is not taken (rights rule). The leads put the record at 123 (the MIDI file, which the pattern follows) and 125 bpm, so the original tempo is left unset. Each chord is cut a little short so the next one speaks. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -5957,7 +5957,7 @@
         "work": "Jean-Michel Jarre, “Oxygène (Part IV)”, Oxygène, 1976",
         "part": "Four bars of the triplet arpeggio under the melody: F, then C minor.",
         "originalKey": "C minor",
-        "originalBpm": 125,
+        "originalBpm": null,
         "leads": [
           {
             "citation": "Jean-Michel Jarre — “Oxygene, Pt. 4”, fan transcription by Plonker on Songsterr (revision 9433017, 2026-09-30)",
@@ -5965,7 +5965,7 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "The melody is the work’s hook and fits in 8 bars, so it is not taken (rights rule), even for the lead sounds: they get the arpeggio instead. From the transcription’s lower piano staff, bars 17–20, moved up an octave to sit in a lead’s register. The laser-harp lead on the E7 names no work. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The melody is the work’s hook and fits in 8 bars, so it is not taken (rights rule), even for the lead sounds: they get the arpeggio instead. From the transcription’s lower piano staff, bars 17–20, moved up an octave to sit in a lead’s register. It plays at the transcription’s 125 bpm; the MIDI file has the work at 123, so the original tempo is left unset. The laser-harp lead on the E7 names no work. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },

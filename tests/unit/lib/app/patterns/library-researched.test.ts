@@ -1,10 +1,10 @@
 /**
- * Researched patterns (`f-pattern-library` t-127): the research batches under the seed's `data/patterns/`, and the
- * seed that puts them on their sounds.
+ * Researched patterns (`f-pattern-library` t-127, t-128): the research batches under the seed's `data/patterns/`, and
+ * the seed that puts them on their sounds.
  *
  * First the real batches, against the real catalogue and databank data: every pattern parses and plays, every sound a
- * batch names is in the catalogue and is looked at once (a pattern, or a reason it has none), every link resolves, and
- * the rights rule's length holds. Then the sync, over the stateful catalogue fake seeded from Model D's real sounds:
+ * batch names is in the catalogue and is looked at once (a pattern, or a reason it has none) by one batch, every link
+ * resolves, the rights rule's length holds, and two patterns play the notes their leads give. Then the sync, over the stateful catalogue fake seeded from Model D's real sounds:
  * a pattern goes behind the riff and never in front, a second run writes nothing, an empty batch writes nothing, and an
  * admin's pattern (edited, or made a default) is left alone.
  */
@@ -67,10 +67,24 @@ describe('the research batches', () => {
     expect(named.filter((s) => !sounds.has(s))).toEqual([]);
   });
 
-  it.each([
+  /** Each batch's artists and how many of their sounds the catalogue held when it was researched. */
+  const rosters: [string, string[], number][] = [
     ['t-127', ['Kraftwerk', 'Depeche Mode'], 42],
     ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 75],
-  ])(
+  ];
+
+  it('has a roster for every batch, so none goes unchecked below', () => {
+    expect(batches.map((b) => b.task).sort()).toEqual(rosters.map(([task]) => task).sort());
+  });
+
+  it('places each sound in one batch at most', () => {
+    const named = batches.flatMap((b) => [
+      ...new Set([...b.patterns.flatMap((p) => p.sounds), ...b.notRecreated.map((n) => n.sound)]),
+    ]);
+    expect(named.filter((s, i) => named.indexOf(s) !== i)).toEqual([]);
+  });
+
+  it.each(rosters)(
     '%s looks at every sound by %j exactly once: a pattern, or a reason it has none',
     (task, artists, count) => {
       const roster = [...sounds]
@@ -78,7 +92,8 @@ describe('the research batches', () => {
         .map(([k]) => k)
         .sort();
       expect(roster.length).toBe(count);
-      const batch = batches.find((b) => b.task === task)!;
+      const batch = batches.find((b) => b.task === task);
+      if (!batch) throw new Error(`No batch for ${task} under data/patterns/`);
       const looked = [
         ...batch.patterns.flatMap((p) => p.sounds),
         ...batch.notRecreated.map((n) => n.sound),
