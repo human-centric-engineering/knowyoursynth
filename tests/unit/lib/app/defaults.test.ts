@@ -45,6 +45,8 @@ vi.mock('@/lib/db/client', () => ({
     ownedInstrument: { findMany: vi.fn() },
     userPattern: { findMany: vi.fn() },
     patternReport: { findMany: vi.fn() },
+    libraryPattern: { findMany: vi.fn() },
+    libraryPatternComment: { findMany: vi.fn() },
   },
 }));
 import { registerAppRateLimits } from '@/lib/app/rate-limit';
@@ -387,7 +389,8 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       // (`f-my-sounds` s1), the reports they filed about shared sounds (`f-sharing` h4), their last panels and
       // settings (s3), their lesson progress and favourites (s4), their synth profile (`f-profiles` r1), the synths
       // they own and want (r2), their patterns (`f-step-sequencer` t-81) and the reports they filed about shared
-      // patterns (t-83), and asks only for theirs.
+      // patterns (t-83), the library patterns they made and the comments they wrote on them (`f-pattern-library`
+      // t-156), and asks only for theirs.
       vi.mocked(prisma.synthSuggestion.findMany).mockResolvedValue([]);
       vi.mocked(prisma.userSound.findMany).mockResolvedValue([]);
       vi.mocked(prisma.soundReport.findMany).mockResolvedValue([]);
@@ -399,6 +402,8 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       vi.mocked(prisma.ownedInstrument.findMany).mockResolvedValue([]);
       vi.mocked(prisma.userPattern.findMany).mockResolvedValue([]);
       vi.mocked(prisma.patternReport.findMany).mockResolvedValue([]);
+      vi.mocked(prisma.libraryPattern.findMany).mockResolvedValue([]);
+      vi.mocked(prisma.libraryPatternComment.findMany).mockResolvedValue([]);
       expect(await collectAppSubjectData({ userId: 'user-1', email: 'user@example.com' })).toEqual({
         synthSuggestions: [],
         sounds: [],
@@ -411,6 +416,8 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         ownedSynths: [],
         patterns: [],
         patternReportsFiled: [],
+        libraryPatternsMade: [],
+        libraryPatternComments: [],
       });
       expect(prisma.synthSuggestion.findMany).toHaveBeenCalledWith(
         expect.objectContaining({ where: { userId: 'user-1' } })
@@ -445,6 +452,12 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       expect(prisma.patternReport.findMany).toHaveBeenCalledWith(
         expect.objectContaining({ where: { reporterId: 'user-1' } })
       );
+      expect(prisma.libraryPattern.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { madeByUserId: 'user-1' } })
+      );
+      expect(prisma.libraryPatternComment.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { authorId: 'user-1' } })
+      );
       // The declaration half (#533). The reads trigger the lazy init, so this
       // exercises the REAL seam. A stray source here would also silence the
       // fork-accounting rule in export-sources.test.ts for that model.
@@ -462,6 +475,8 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         ['LessonProgress', 'lessonProgress', 'export'],
         ['Favourite', 'favourites', 'export'],
         ['SynthProfile', 'synthProfile', 'export'],
+        ['LibraryPattern', 'libraryPatternsMade', 'attribution'],
+        ['LibraryPatternComment', 'libraryPatternComments', 'export'],
         ['OwnedInstrument', 'ownedSynths', 'export'],
       ]);
       expect(getAppExcludedSubjectSources().map((e) => e.model)).toEqual([
@@ -470,7 +485,6 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         'SynthLineage',
         'SynthNote',
         'CatalogueSeedRecord',
-        'LibraryPattern',
         'SynthSoundPattern',
         'BankMaker',
         'BankInstrument',
