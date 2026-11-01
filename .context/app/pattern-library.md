@@ -157,20 +157,11 @@ properly, and shown on the bank's song page, not left as a string in a pattern.
 
 _Proposed._ The picker shows one of three labels beside "Inspired by":
 
-| Label   |    bass |    lead |     pad | pluck |    keys |      fx |  drone |    perc |    seq | brass | silent | Agree |
-| ------- | ------: | ------: | ------: | ----: | ------: | ------: | -----: | ------: | -----: | ----: | -----: | ----: |
-| bass    | **248** |      25 |       2 |     · |      21 |       2 |      5 |      13 |      9 |     1 |      · |   76% |
-| lead    |      31 | **258** |      27 |     1 |      34 |      19 |      3 |       5 |      3 |     · |      · |   68% |
-| pad     |       1 |      19 | **183** |     · |       8 |      11 |      8 |       1 |      8 |     · |      · |   77% |
-| pluck   |       3 |      14 |       5 | **8** |      62 |       1 |      · |      13 |      5 |     · |      · |    7% |
-| keys    |      27 |      39 |      16 |     6 | **162** |       6 |      3 |       9 |     11 |     2 |      · |   58% |
-| fx      |      20 |      64 |      18 |     1 |      14 | **107** |      9 |      27 |     12 |     · |      1 |   39% |
-| drone   |       8 |      27 |      32 |     · |       4 |      12 | **32** |       · |      5 |     · |      1 |   26% |
-| perc    |      22 |      10 |       · |     1 |      25 |      17 |      2 | **110** |      2 |     · |      1 |   58% |
-| seq     |      26 |      14 |      13 |     4 |      29 |      15 |      4 |       8 | **36** |     · |      · |   24% |
-| brass   |       6 |      19 |      26 |     · |      21 |       · |      · |       1 |      · | **3** |      · |    4% |
-| strings |       3 |      18 |      49 |     · |       6 |       1 |      1 |       · |      1 |     · |      · |    0% |
-| wind    |       2 |      50 |       2 |     · |       6 |       4 |      1 |       · |      1 |     1 |      · |    0% |
+| Label               | Means                                                                                                                                                                                         |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Transcribed**     | The notes come from a tier-1 source for this part (see [Order of trust](#order-of-trust)): a published score, or official stems, multitracks or MIDI. Then checked by ear against the record. |
+| **Reconstructed**   | Worked out by ear, with the artist's own account or a reputable transcription to support it. It aims at the actual part.                                                                      |
+| **In the style of** | No specific part. Written to sound like the artist or genre.                                                                                                                                  |
 
 The rules that keep the labels honest:
 
