@@ -20,8 +20,8 @@ described as built in [The library as built](#the-library-as-built). The picker 
 detector t-124, suggestions t-125, the admin editor t-126 and admin control t-156. The research batches and their seed are
 t-127 on ([Researched patterns](#researched-patterns), [The method as practised](#the-method-as-practised)).
 
-**Awaiting the owner's sign-off on the PR:** the role vocabulary, the fidelity labels, the rights rule and admin
-control. Each is marked _Proposed_ below until it is signed off.
+**Awaiting the owner's sign-off on the PR:** the role vocabulary, the fidelity labels and the rights rule. Each is
+marked _Proposed_ below until it is signed off.
 
 ## What the library holds today
 
@@ -272,6 +272,9 @@ What is kept with it (committed, in the seed beside the pattern):
 - its origin ([Admin control](#admin-control)). Rights risk, status and comments are admin edits, kept in the database
   and never overwritten by a reseed
 
+The seed stores this record with the pattern (`research`, with the batch's task), so the admin page can show it
+without reading the seed files.
+
 ### The method as practised
 
 The pilot (t-127) researched the 42 Kraftwerk and Depeche Mode sounds. The library had grown since the plan, which
@@ -432,7 +435,8 @@ The pattern library is named in `f-launch`'s legal-review scope on the Hub (adde
 
 ## Admin control
 
-_Proposed. Asked for by the owner on 2026-10-31 and built by t-156, on t-122's table and t-126's admin page._
+_Asked for by the owner on 2026-10-31, the rights statuses ruled on that day, and built by t-156 on t-122's table and
+t-126's admin page. As built: [Admin control as built](#admin-control-as-built)._
 
 Admins can see where every library pattern came from and control it without a deploy. Each pattern carries four
 things beside its [provenance](#provenance): its origin, its rights risk, its status and admin comments.
@@ -474,8 +478,10 @@ of_. An admin can raise or lower it, with a reason. The `f-launch` legal review 
 (t-123), suggestions (t-125) and the public pattern reads. It is never deleted, so the
 [no-delete rule](#reviewing-the-current-riffs) still holds. It stays in the admin list and can be enabled again.
 
-- If a sound's default is disabled, the sound plays its next enabled pattern.
-- A sound keeps at least one enabled pattern. Disabling its last one warns the admin first.
+- If a sound's default is disabled, the sound plays its next enabled pattern that can be a riff, and its riff is
+  rewritten to it. Enabling the pattern again gives the sound back.
+- A sound keeps at least one enabled pattern it can play. A change that would leave one with none warns the admin
+  first. If they go ahead, the sound keeps the riff it has.
 - Copies a user has already taken into My patterns are theirs, and are not touched.
 
 ### Comments
@@ -536,8 +542,7 @@ excluded from the data export (`CATALOGUE_MODELS` in `lib/app/data-export.ts`): 
 - **The facts** (register, density, note length, voices, bars, slides) are not stored. `patternFacts` in
   `lib/app/patterns/library-facts.ts` reads them from the first loop on every read, so they cannot drift from the notes.
   The role and the tempo range are stored, because a person can set them.
-- **Rights risk, status and comments** are not here yet. They are t-156's. Origin is here, because the migration sets
-  it.
+- **Who made it, rights risk, status and comments** are t-156's: [Admin control as built](#admin-control-as-built).
 
 ### A sound's riff is its default pattern
 
@@ -735,7 +740,69 @@ as the catalogue's pages are. The components are in `components/app/admin/patter
   could not be a riff, and the page shows why.
 
 Not on the page yet: adding a new pattern (`POST`) or adding a library pattern to a patch's list. The API takes both.
-Origin, rights risk, status and comments are [Admin control](#admin-control) (t-156).
+Rights risk, status, comments and history are on both pages: [Admin control as built](#admin-control-as-built).
+
+### Admin control as built
+
+t-156. The design is [Admin control](#admin-control).
+
+**What each pattern stores** (`LibraryPattern`, migration `20261101223122_library_pattern_admin_control`):
+
+| Column                       | Holds                                                                                                                                      |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `origin`                     | _AI-generated_, _Human-authored_ or _User-contributed_ (t-122's column).                                                                   |
+| `madeBy`                     | Who or what made it when no account did: the agent and its task. Every riff is `RIFF_MADE_BY`; a batch's pattern is `researchedBy (task)`. |
+| `madeByUserId`               | The person who made it: the admin who added it with `POST`. A hand-written FK to `user`, `SET NULL`.                                       |
+| `madeAt`                     | When: a batch's `researchedAt`, or when an admin added it. Null for the riffs.                                                             |
+| `research`                   | A batch's research record and its task, the owner's listen (`listenedAt`) included. Null for a pattern no batch wrote.                     |
+| `rightsRisk`, `rightsReason` | _None_, _Needs review_, _Cleared_ or _Blocked_, and why. A null reason means no admin has set it.                                          |
+| `status`, `statusReason`     | _Enabled_ or _disabled_, and why.                                                                                                          |
+
+Comments are `LibraryPatternComment`: the pattern, the body, the author (a hand-written FK to `user`, `SET NULL`) and
+when. A comment goes with its pattern (`Cascade`), though nothing deletes one.
+
+**The rules**, each tested in `tests/unit/app/api/v1/library-patterns.test.ts` and `library-researched.test.ts`:
+
+- **The migration** set every _Transcribed_ or _Reconstructed_ pattern to _Needs review_ (there were none: every
+  pattern on 2026-11-01 was _In the style of_) and every riff's `madeBy`. The seed sets both from then on.
+- **A rights risk no admin has set follows the fidelity**: changing the fidelity, by an admin's edit or a batch's,
+  changes it. Once an admin sets one (with a reason), neither does.
+- **Rights risk and status are not edits to the pattern.** They don't set `editedAt`, so the seed still brings an
+  unedited pattern's notes up to date. The seed never writes them.
+- **A sound's default is its first enabled pattern that can be a riff** (`headOf` in `library.ts`). Every reader of
+  "the default" uses it: the riff sync, the seed, an admin's reorder and edit, and the admin page's _Default_ mark. An
+  admin's reorder still refuses a first enabled pattern that can't be a riff, as before.
+- **Disabling** rewrites the riff of each sound whose default changes, marks those sounds edited, and audits each
+  as a `synth_sound.update`. A change that would leave a sound with no default is refused, naming each sound on the
+  `acknowledge` path, until it is sent again with `acknowledge: true`. The refusal writes nothing.
+- **A blocked pattern is disabled** in the same change, and enabling one is refused unless the same change lowers its
+  rights risk.
+- **The public reads** (`library-read.ts`) serve enabled patterns only. A sound's list leads with its default. The
+  suggestions' kept library is the same read, so a disable reaches suggestions within its minute.
+
+**The API**, admin only, each write `writesSharedSettings` and audited on the pattern:
+
+| Route                                                    | Does                                                                                                                                   |
+| -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /api/v1/admin/library-patterns`                     | Also takes `origin=`, `rights=` and `status=`. Each row carries who made it, its research, rights risk and status, with their reasons. |
+| `PATCH /api/v1/admin/library-patterns/:id`               | Also takes `madeBy`. A fidelity change moves a rights risk no admin has set.                                                           |
+| `POST /api/v1/admin/library-patterns/control`            | `{ ids, rightsRisk?, status?, reason, acknowledge? }`: one pattern or up to 100. `library_pattern.control`.                            |
+| `GET`/`POST /api/v1/admin/library-patterns/:id/comments` | The comments, oldest first, with their authors; add one as the signed-in admin. `library_pattern.comment`.                             |
+| `GET /api/v1/admin/library-patterns/:id/history`         | The last 100 audit entries on the pattern, newest first: the action, who, when and what changed.                                       |
+
+**The admin page.** The list filters by origin, rights risk and status, shows each row's rights risk and status, and has
+a bar above it that sets either for the rows ticked, with one reason (`pattern-bulk-bar.tsx`). Each pattern's page opens
+with its provenance panel (`provenance-panel.tsx`): origin and who made it, Inspired by, fidelity, sources, the
+research and the owner's listen, rights risk and status with their reasons, the form that changes them
+(`pattern-control-form.tsx`), comments and history. A disable that would leave a patch with nothing lists the patches
+and asks **Disable anyway** or **Cancel**.
+
+**Privacy.** Both user links are on the subject-data manifest (`lib/app/data-export.ts`): the patterns a person made as
+attribution (id, name, date), and the comments they wrote in full. Both FKs are pinned by drift probes
+(`lib/app/db-drift.ts`). `LibraryPatternComment` is global config, beside the library.
+
+Tested also in `tests/unit/components/app/admin/patterns/provenance-panel.test.tsx` and
+`tests/unit/app/admin/synths/patterns/pages.test.tsx`.
 
 Tested in `tests/unit/components/app/admin/patterns/` and, for the reads it added, `tests/unit/app/api/v1/library-patterns.test.ts`.
 
