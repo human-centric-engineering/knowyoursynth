@@ -3,8 +3,8 @@
  * the seed that puts them on their sounds.
  *
  * First the real batches, against the real catalogue and databank data: every pattern parses and plays, every sound a
- * batch names is in the catalogue and is looked at once (a pattern, or a reason it has none) by one batch, every link
- * resolves, the rights rule's length holds, and two patterns play the notes their leads give. Then the sync, over the stateful catalogue fake seeded from Model D's real sounds:
+ * batch names is in the catalogue and is looked at by one batch (one or more patterns, or a reason it has none), every
+ * link resolves, the rights rule's length holds, and three parts play the notes their leads give. Then the sync, over the stateful catalogue fake seeded from Model D's real sounds:
  * a pattern goes behind the riff and never in front, a second run writes nothing, an empty batch writes nothing, and an
  * admin's pattern (edited, or made a default) is left alone.
  */
@@ -97,7 +97,8 @@ describe('the research batches', () => {
       // A sound can have its work's hook and another part of it (t-159), so it can be on more than one pattern.
       const patterned = new Set(batch.patterns.flatMap((p) => p.sounds));
       const reasoned = batch.notRecreated.map((n) => n.sound);
-      // A reason beside a pattern would be stale.
+      // No pattern lists a sound twice, and a reason beside a pattern would be stale.
+      for (const p of batch.patterns) expect(new Set(p.sounds).size, p.key).toBe(p.sounds.length);
       expect(reasoned.filter((s) => patterned.has(s))).toEqual([]);
       expect([...patterned, ...reasoned].sort()).toEqual(roster);
     }
@@ -161,12 +162,14 @@ describe('the research batches', () => {
     expect(pitches).toEqual([43, 43, 48, 47, 43, 43, 48, 47, 48, 48, 53, 52, 48, 48, 48, 48]);
   });
 
+  /** The pitches a batch pattern plays through its first loop. */
+  const pitches = (key: string) =>
+    compileLoop(PatternSchema.parse(patterns.find((x) => x.key === key)!.pattern), {
+      loop: 0,
+      rng: seededRng(1),
+    }).notes.map(([, n]) => n);
+
   it('plays the notes its lead gives: the break figure of “Da Funk”, in both octaves the record has it', () => {
-    const pitches = (key: string) =>
-      compileLoop(PatternSchema.parse(patterns.find((x) => x.key === key)!.pattern), {
-        loop: 0,
-        rng: seededRng(1),
-      }).notes.map(([, n]) => n);
     // G G' D E♭ D E♭ F G' G: Songsterr “Synths 1”, bar 71, and “Synths 3”, bar 65, two octaves apart.
     const high = pitches('researched:daft-punk/da-funk-breakdown-figure');
     expect(high).toEqual([55, 67, 62, 63, 62, 63, 65, 67, 55]);
@@ -176,11 +179,6 @@ describe('the research batches', () => {
   });
 
   it('plays the notes its lead gives: the main riff of “Da Funk”, now the hook rule is dropped', () => {
-    const pitches = (key: string) =>
-      compileLoop(PatternSchema.parse(patterns.find((x) => x.key === key)!.pattern), {
-        loop: 0,
-        rng: seededRng(1),
-      }).notes.map(([, n]) => n);
     // G F G B♭ D, C D F B♭, A B♭ D G, A B♭: Songsterr “Main Synth Riff 1”, bars 1–4, ties merged.
     const high = pitches('researched:daft-punk/da-funk-riff');
     expect(high).toEqual([67, 65, 67, 70, 62, 60, 62, 65, 58, 57, 58, 62, 55, 57, 58]);

@@ -838,15 +838,20 @@
         "work": "Daft Punk, “Da Funk”, Homework, 1995",
         "part": "The four-bar riff: each bar holds a note and then climbs back, G, D, B♭, G, down the G minor chord.",
         "originalKey": "G minor",
-        "originalBpm": 110,
+        "originalBpm": 111,
         "leads": [
           {
             "citation": "Daft Punk — “Da Funk”, fan transcription by Oleg Kalbenko on Songsterr (revision 3572201, 2025-10-26)",
             "url": "https://www.songsterr.com/a/wsa/daft-punk-da-funk-tab-s28804",
             "checkedAt": "2026-11-01"
+          },
+          {
+            "citation": "“daft-punk-da-funk.mid”, fan-made MIDI file on BitMIDI, uploader unknown",
+            "url": "https://bitmidi.com/daft-punk-da-funk-mid",
+            "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "The work’s main riff, from the transcription’s “Main Synth Riff 1” track, bars 1–4; bars 5–8 repeat them. The BitMIDI file (daft-punk-da-funk.mid) has the same riff. As written. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The work’s main riff, from the transcription’s “Main Synth Riff 1” track, bars 1–4; bars 5–8 repeat them. The BitMIDI file (daft-punk-da-funk.mid) has the same riff. Both leads put the record at 110–111 bpm. As written. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -1215,15 +1220,20 @@
         "work": "Daft Punk, “Da Funk”, Homework, 1995",
         "part": "The same riff two octaves down, for the bass sounds.",
         "originalKey": "G minor",
-        "originalBpm": 110,
+        "originalBpm": 111,
         "leads": [
           {
             "citation": "Daft Punk — “Da Funk”, fan transcription by Oleg Kalbenko on Songsterr (revision 3572201, 2025-10-26)",
             "url": "https://www.songsterr.com/a/wsa/daft-punk-da-funk-tab-s28804",
             "checkedAt": "2026-11-01"
+          },
+          {
+            "citation": "“daft-punk-da-funk.mid”, fan-made MIDI file on BitMIDI, uploader unknown",
+            "url": "https://bitmidi.com/daft-punk-da-funk-mid",
+            "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "The work’s main riff, from the transcription’s “Main Synth Riff 1” track, bars 1–4; bars 5–8 repeat them. The BitMIDI file (daft-punk-da-funk.mid) has the same riff. Moved down two octaves, as the break figure’s low pattern is. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The work’s main riff, from the transcription’s “Main Synth Riff 1” track, bars 1–4; bars 5–8 repeat them. The BitMIDI file (daft-punk-da-funk.mid) has the same riff. Both leads put the record at 110–111 bpm. Moved down two octaves, as the break figure’s low pattern is. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -2813,7 +2823,7 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "From the transcription’s lead synth track, bars 41–44. The solo runs for 30 bars, so four are within the rights rule. Its later bars are fast runs in tuplets that the step grid cannot hold, so the phrase was taken from where it moves in eighths. The intro melody is another part of the work. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s lead synth track, bars 41–44. The solo runs for 30 bars, so four are within the rights rule. Its later bars are fast runs in tuplets that the step grid cannot hold, so the phrase was taken from where it moves in eighths. The intro melody, the work’s hook, is another part of the work, and t-159 did not revisit it. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },

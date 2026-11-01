@@ -357,7 +357,8 @@ method and readers, and found:
   its only lead, which seems fast).
 
 **The hooks (t-159).** Once the owner dropped the hook rule, t-159 went back to the 16 works it had ruled out, using the
-same leads. 15 hook patterns went on 26 places. 19 of the places are on sounds that already had another part of the
+same leads, and to Stratosfear, whose theme t-128 had set aside as a hook in a sound's reason rather than in the list
+above. 13 works gave 15 hook patterns (Da Funk's riff at two octaves, and Derezzed's riff and its bass), on 26 places. 19 of the places are on sounds that already had another part of the
 work, and those sounds now carry both, the hook behind the part they had. Seven sounds that had none got one: the
 Home Computer bleep arp, the Enjoy the Silence lead, two Derezzed sounds, the Robot Rock lead, the Oxygène whistle
 and the soaring Tangerine Dream lead (the Stratosfear theme). Four works still give no hook pattern:
@@ -368,6 +369,9 @@ and the soaring Tangerine Dream lead (the Stratosfear theme). Four works still g
 - **Chords on a mono sound.** Technologic's only transcription is a guitar riff in two-note shapes.
 - **No usable notes.** The Second Rendez-Vous transcription has only a few scattered guitar bars, which can't be placed
   as the laser harp's melody without a listen.
+
+One hook was set aside in a pattern's notes rather than a reason, and t-159 did not revisit it: Digital Love's intro
+melody. Its sound already plays the solo; the intro is in the same lead's "Lead Synths" track, for a later batch.
 
 Two things for the next batches:
 
