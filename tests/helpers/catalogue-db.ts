@@ -153,6 +153,7 @@ function withLibraryRelations(db: {
   synthSound: FakeTable & { findUniqueOrThrow: Mock; findFirst: Mock };
   libraryPattern: FakeTable & { count: Mock; findFirst: Mock };
   synthSoundPattern: { rows: Row[] };
+  bankSong: { rows: Row[] };
 }) {
   const linksOf = (soundId: unknown) =>
     sortRows(
@@ -218,15 +219,24 @@ function withLibraryRelations(db: {
         };
       }),
   });
-  /** A pattern's `where`: its columns, `AND`, `OR`, and `sounds: { none: {} }` or `{ some: on a listed synth }`. */
+  /**
+   * A pattern's `where`: its columns, `AND`, `OR`, `sounds: { none: {} }` or `{ some: on a synth }`, and
+   * `inspiredSong: { artists: { some: { artistId } } }`, read from the song row's own `artists` list.
+   */
   const patternWhere = (row: Row, where: Where = {}): boolean => {
-    const { AND, OR, sounds, ...rest } = where as {
+    const { AND, OR, sounds, inspiredSong, ...rest } = where as {
       AND?: Where[];
       OR?: Where[];
       sounds?: { none?: object; some?: { sound: { synth: Where } } };
+      inspiredSong?: { artists: { some: { artistId: unknown } } };
     };
     if (AND && !AND.every((w) => patternWhere(row, w))) return false;
     if (OR && !OR.some((w) => patternWhere(row, w))) return false;
+    if (inspiredSong) {
+      const song = db.bankSong.rows.find((s) => s.id === row.inspiredSongId);
+      const credited = (song?.artists as { artistId: unknown }[] | undefined) ?? [];
+      if (!credited.some((a) => a.artistId === inspiredSong.artists.some.artistId)) return false;
+    }
     if (sounds) {
       const on = db.synthSoundPattern.rows
         .filter((l) => l.patternId === row.id)

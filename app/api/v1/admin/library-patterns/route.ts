@@ -1,9 +1,10 @@
 /**
  * The pattern library as the admin sees it (`f-pattern-library` t-122).
  *
- * GET /api/v1/admin/library-patterns?role=&q=&page=&limit= — every library pattern, hidden synths' included, by
- *     name: the public view, when an admin last edited it, and every sound that lists it. `q` matches a name or an
- *     Inspired by.
+ * GET /api/v1/admin/library-patterns?role=&synth=&artist=&fidelity=&q=&page=&limit= — every library pattern, hidden
+ *     synths' included, by name: the public view, when an admin last edited it, and every sound that lists it. `synth`
+ *     keeps those on a sound of that synth, `artist` those inspired by that databank artist or a work they are credited
+ *     on (t-126), and `q` matches a name or an Inspired by.
  * POST /api/v1/admin/library-patterns — a new pattern, on no sound yet. Checked whole (`library-edit.ts`); marked as
  *     an admin's, so the seed never writes it. Audited.
  */
