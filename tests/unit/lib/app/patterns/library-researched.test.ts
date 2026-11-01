@@ -179,6 +179,17 @@ describe('the loader', () => {
     writeFileSync(join(dir, 'a.json'), JSON.stringify({ task: 'nope' }));
     expect(() => loadPatternData(dir)).toThrow(/^patterns\/a\.json: .*task/s);
   });
+
+  it('refuses a key that another batch file already uses, naming both files', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'patterns-'));
+    const file = { ...batches[0], patterns: [batches[0].patterns[0]], notRecreated: [] };
+    writeFileSync(join(dir, 'a.json'), JSON.stringify(file));
+    expect(loadPatternData(dir)).toHaveLength(1);
+    writeFileSync(join(dir, 'b.json'), JSON.stringify(file));
+    expect(() => loadPatternData(dir)).toThrow(
+      `patterns/b.json: ${file.patterns[0].key} is already used in patterns/a.json`
+    );
+  });
 });
 
 // ─── The sync ────────────────────────────────────────────────────────────────
@@ -374,6 +385,17 @@ describe('syncResearchedPatterns', () => {
         key: 'researched:depeche-mode/just-cant-get-enough-bass',
         reason: 'Inspired by names the song no-such-song, which is not there',
       },
+    ]);
+    expect(writes()).toBe(0);
+  });
+
+  it('does not create a pattern none of whose sounds has its riff yet, so it is never on no sound', async () => {
+    const batch = testBatch();
+    db.synthSoundPattern.rows.length = 0;
+    const counts = await syncResearchedPatterns(lib(), [batch]);
+    expect(counts.skipped.map((s) => s.reason)).toEqual([
+      'No sound it names has its riff pattern yet',
+      'No sound it names has its riff pattern yet',
     ]);
     expect(writes()).toBe(0);
   });

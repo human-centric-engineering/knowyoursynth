@@ -321,7 +321,7 @@ export async function syncResearchedPatterns(
             },
             select: { patterns: { orderBy: DEFAULT_FIRST, take: 1, select: { patternId: true } } },
           })
-        ).flatMap((s) => s.patterns.slice(0, 1).map((l) => l.patternId))
+        ).flatMap((s) => (s.patterns[0] ? [s.patterns[0].patternId] : []))
       : []
   );
 
@@ -340,6 +340,12 @@ export async function syncResearchedPatterns(
     const current = stored.get(p.key);
     let id: string;
     if (!current) {
+      // A sound with an empty list would take it as its default (below), so a new pattern none of whose sounds has
+      // its riff yet would sit in the library on no sound. It waits for the riff pass instead.
+      if (!mine.some((sound) => sound.patterns.length)) {
+        counts.skipped.push({ key: p.key, reason: 'No sound it names has its riff pattern yet' });
+        continue;
+      }
       id = (await db.libraryPattern.create({ data: planned })).id;
       counts.created++;
     } else {

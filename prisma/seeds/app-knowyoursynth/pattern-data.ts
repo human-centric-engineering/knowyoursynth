@@ -21,8 +21,12 @@ export function patternDataFiles(dir = PATTERN_DATA_DIR): string[] {
     .map((f) => relative(dir, join(dir, f)));
 }
 
-/** Read and shape-check every batch. Whether its sounds and links resolve is the seed's check. */
+/**
+ * Read and shape-check every batch. A key is used once across all of them, since the seed matches on it: a key in two
+ * files would be created twice. Whether a batch's sounds and links resolve is the seed's check.
+ */
 export function loadPatternData(dir = PATTERN_DATA_DIR): ResearchBatch[] {
+  const seen = new Map<string, string>();
   return patternDataFiles(dir).map((rel) => {
     let json: unknown;
     try {
@@ -32,6 +36,11 @@ export function loadPatternData(dir = PATTERN_DATA_DIR): ResearchBatch[] {
     }
     const parsed = ResearchBatchSchema.safeParse(json);
     if (!parsed.success) throw new Error(`patterns/${rel}: ${parsed.error.message}`);
+    for (const { key } of parsed.data.patterns) {
+      const first = seen.get(key);
+      if (first) throw new Error(`patterns/${rel}: ${key} is already used in patterns/${first}`);
+      seen.set(key, rel);
+    }
     return parsed.data;
   });
 }

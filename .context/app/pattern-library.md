@@ -542,6 +542,10 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
 - **An admin's pattern is never written**: one an admin edited, or made any sound's default.
 - **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
   taken out of a batch file stays in the library and on its sounds.
+- **A key is used once across every batch file.** The loader refuses one in two files and names both, so the seed
+  never creates a pattern twice.
+- **A new pattern none of whose sounds has its riff yet is not created**, so it is never left in the library on no
+  sound. It waits, reported, for the riff pass.
 - **A pattern that names something not there is skipped and reported**, and nothing is written for it: a sound, song,
   part, artist or synth. So the seed is safe on an empty catalogue. The seed logs each skip as a warning; with the
   batch's test checking every name against the seed data, a skip means a row was removed or not seeded yet.
