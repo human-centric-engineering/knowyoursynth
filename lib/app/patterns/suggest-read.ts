@@ -90,14 +90,18 @@ export async function suggestPatterns(body: SuggestBody): Promise<SuggestResult 
       select: {
         patterns: {
           orderBy: DEFAULT_FIRST,
-          select: { patternId: true, pattern: { select: { inspiredArtistId: true } } },
+          select: {
+            patternId: true,
+            pattern: { select: { inspiredArtistId: true, status: true } },
+          },
         },
       },
     });
     if (!sound) return null;
     for (const { patternId, pattern } of sound.patterns) {
       exclude.add(patternId);
-      artistId ??= pattern.inspiredArtistId;
+      // A disabled pattern says nothing to users, so not who the sound is after either.
+      if (pattern.status === 'enabled') artistId ??= pattern.inspiredArtistId;
     }
   }
   if (!kind || !library) return { reading: null, suggestions: [] };

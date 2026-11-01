@@ -64,6 +64,7 @@ import { createMockAuthSession } from '@/tests/helpers/auth';
 import {
   catalogueTables,
   seedRecordTable,
+  table,
   type CatalogueTables,
 } from '@/tests/helpers/catalogue-db';
 import { seedCatalogue } from '@/lib/app/catalogue/seed';
@@ -146,6 +147,13 @@ beforeEach(async () => {
       findUnique: vi.fn(async () => ({ role: 'OWNER', org: { status: 'ACTIVE' } })),
     },
     aiApiKey: { findFirst: vi.fn(async () => null), update: vi.fn() },
+    user: {
+      findMany: vi.fn(async ({ where }: { where: { id: { in: string[] } } }) =>
+        where.id.in.map((id) => ({ id, name: `Admin ${id}` }))
+      ),
+    },
+    libraryPatternComment: table(),
+    aiAdminAuditLog: { findMany: vi.fn(async () => []) },
     $transaction: vi.fn((fn: (tx: unknown) => unknown) => fn(mockPrisma)),
     $queryRaw: vi.fn(async () => []),
   });

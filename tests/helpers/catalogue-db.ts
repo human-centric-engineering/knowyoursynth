@@ -214,7 +214,11 @@ function withLibraryRelations(db: {
             synthId: sound.synthId,
             slug: sound.slug,
             name: sound.name,
-            patterns: linksOf(sound.id).slice(0, 1),
+            // Its whole list, each place with its pattern: what the default is read from (`headOf`).
+            patterns: linksOf(sound.id).map((link) => ({
+              ...structuredClone(link),
+              pattern: structuredClone(db.libraryPattern.rows.find((x) => x.id === link.patternId)),
+            })),
           },
         };
       }),
@@ -262,6 +266,15 @@ function withLibraryRelations(db: {
         inspiredPartId: null,
         inspiredArtistId: null,
         inspiredSynthId: null,
+        madeBy: null,
+        madeByUserId: null,
+        madeAt: null,
+        research: null,
+        rightsRisk: 'none',
+        rightsReason: null,
+        status: 'enabled',
+        statusReason: null,
+        editedAt: null,
         updatedAt: new Date(),
         ...columns,
       },

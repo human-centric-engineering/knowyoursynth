@@ -178,6 +178,20 @@ export function initAppSubjectSources(): void {
           'Your synth profile: your username and when you last changed it, your links, who can see your page, and when you first published each patch in the last day.',
       },
       {
+        model: 'LibraryPattern',
+        section: LIBRARY_PATTERNS_SECTION,
+        disposition: 'attribution',
+        description:
+          "Patterns in the shared library recorded as made by you: each one's id, name and when it was made. Not the pattern, which is library content.",
+      },
+      {
+        model: 'LibraryPatternComment',
+        section: LIBRARY_COMMENTS_SECTION,
+        disposition: 'export',
+        description:
+          'Comments you wrote as an admin on library patterns: the pattern, what you wrote and when.',
+      },
+      {
         model: 'OwnedInstrument',
         section: SYNTHS_SECTION,
         disposition: 'export',
@@ -230,8 +244,8 @@ export const CATALOGUE_MODELS = [
   'SynthLineage',
   'SynthNote',
   'CatalogueSeedRecord',
-  // The pattern library (`f-pattern-library`): library patterns and each sound's list of them.
-  'LibraryPattern',
+  // The pattern library (`f-pattern-library`): each sound's list of patterns. The patterns themselves record who made
+  // them, and admins' comments who wrote them (t-156), so both are sources above.
   'SynthSoundPattern',
 ] as const;
 const CATALOGUE_REASON =
@@ -266,6 +280,10 @@ const PROFILE_SECTION = 'synthProfile';
 /** The export section for the synths a user owns and wants (`f-profiles` r2). */
 const SYNTHS_SECTION = 'ownedSynths';
 
+/** The export sections for library patterns a user made, and the comments they wrote on them (`f-pattern-library` t-156). */
+const LIBRARY_PATTERNS_SECTION = 'libraryPatternsMade';
+const LIBRARY_COMMENTS_SECTION = 'libraryPatternComments';
+
 /**
  * Collect this app's data about one subject: the synths they suggested (`f-databank` t-37), the sounds they saved
  * (`f-my-sounds` s1), their last panels and settings (s3), their lesson progress and favourites (s4), their synth
@@ -286,6 +304,8 @@ export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promis
     synths,
     patterns,
     patternReports,
+    libraryPatterns,
+    libraryComments,
   ] = await Promise.all([
     collectSuggestions(userId),
     collectSounds(userId),
@@ -298,6 +318,8 @@ export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promis
     collectOwnedSynths(userId),
     collectPatterns(userId),
     collectPatternReportsFiled(userId),
+    collectLibraryPatternsMade(userId),
+    collectLibraryPatternComments(userId),
   ]);
   return {
     [SUGGESTIONS_SECTION]: suggestions,
@@ -311,7 +333,38 @@ export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promis
     [SYNTHS_SECTION]: synths,
     [PATTERNS_SECTION]: patterns,
     [PATTERN_REPORTS_SECTION]: patternReports,
+    [LIBRARY_PATTERNS_SECTION]: libraryPatterns,
+    [LIBRARY_COMMENTS_SECTION]: libraryComments,
   };
+}
+
+/** Attribution only: that this subject made a library pattern, not the pattern. */
+async function collectLibraryPatternsMade(userId: string) {
+  const rows = await prisma.libraryPattern.findMany({
+    where: { madeByUserId: userId },
+    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+    select: { id: true, name: true, madeAt: true, createdAt: true },
+  });
+  return rows.map((r) => ({ id: r.id, label: r.name, createdAt: r.madeAt ?? r.createdAt }));
+}
+
+/** The comments this subject wrote on library patterns, each naming its pattern. */
+async function collectLibraryPatternComments(userId: string) {
+  const rows = await prisma.libraryPatternComment.findMany({
+    where: { authorId: userId },
+    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+    select: {
+      id: true,
+      body: true,
+      createdAt: true,
+      pattern: { select: { id: true, name: true } },
+    },
+  });
+  return rows.map(({ pattern, ...comment }) => ({
+    ...comment,
+    patternId: pattern.id,
+    patternName: pattern.name,
+  }));
 }
 
 /** Each names its instrument by the databank's id and name, which mean something outside this database. */

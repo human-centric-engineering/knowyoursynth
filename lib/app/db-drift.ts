@@ -136,4 +136,16 @@ export function registerAppDriftProbes(): void {
     table: 'pattern_report',
     probe: constraintExists('pattern_report_resolvedById_fkey', 'ON DELETE SET NULL'),
   });
+  registerAppDriftProbe({
+    name: 'library_pattern_madeByUserId_fkey (hand-written FK → User)',
+    kind: 'FK constraint',
+    table: 'library_pattern',
+    probe: constraintExists('library_pattern_madeByUserId_fkey', 'ON DELETE SET NULL'),
+  });
+  registerAppDriftProbe({
+    name: 'library_pattern_comment_authorId_fkey (hand-written FK → User)',
+    kind: 'FK constraint',
+    table: 'library_pattern_comment',
+    probe: constraintExists('library_pattern_comment_authorId_fkey', 'ON DELETE SET NULL'),
+  });
 }

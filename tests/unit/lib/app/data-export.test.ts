@@ -25,6 +25,8 @@ vi.mock('@/lib/db/client', () => ({
     ownedInstrument: { findMany: vi.fn(async () => []) },
     userPattern: { findMany: vi.fn(async () => []) },
     patternReport: { findMany: vi.fn(async () => []) },
+    libraryPattern: { findMany: vi.fn(async () => []) },
+    libraryPatternComment: { findMany: vi.fn(async () => []) },
   },
 }));
 

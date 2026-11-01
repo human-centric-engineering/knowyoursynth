@@ -6,6 +6,8 @@
  * compiled for its first loop. Every reader of a sound's riff (the panel, the probe, lessons, the tutor, sharing, the
  * content template) reads that one column, so none of them changed. What keeps the two together, each tested:
  *
+ * - **A sound's riff is its default: its first enabled pattern that can be one** ({@link headOf}). A disabled pattern
+ *   is never a default (`pattern-library.md`, Status), so disabling a default hands its sounds to the next.
  * - **A sound's riff is its first pattern.** Every sound gets a library pattern made from its riff by `importPhrase`,
  *   keyed `riff:<synthId>/<slug>`, at the head of its list ({@link syncRiffPatterns}). The seed, a new sound and an
  *   upload all go through it.
@@ -20,7 +22,13 @@
  * - **Nothing is deleted.** A pattern stays in the library, and in every list it is on, whatever happens to it.
  */
 import { z } from 'zod';
-import type { LibraryPattern, PatternInspiration, Prisma } from '@prisma/client';
+import type {
+  LibraryPattern,
+  PatternFidelity,
+  PatternInspiration,
+  PatternRightsRisk,
+  Prisma,
+} from '@prisma/client';
 import type { Phrase } from '@/lib/app/synths/contract';
 import { importPhrase, phraseBeats } from '@/lib/app/sequencer/import';
 import { PresetSchema } from '@/lib/app/synths/validate';
@@ -78,6 +86,16 @@ export const PatternSourceSchema = z
 export type PatternSource = z.infer<typeof PatternSourceSchema>;
 
 export const PatternSourcesSchema = z.array(PatternSourceSchema).max(20);
+
+/** Who made the riffs every sound came with (owner ruling, 2026-10-31: every one is _AI-generated_). */
+export const RIFF_MADE_BY = 'An AI agent, writing the sound library';
+
+/**
+ * The rights risk a pattern starts at, and keeps while no admin has set one (`rightsReason` is null): a pattern that
+ * recreates a specific part needs review, one in the style of takes nothing from a work (owner ruling, 2026-10-31).
+ */
+export const defaultRightsRisk = (fidelity: PatternFidelity): PatternRightsRisk =>
+  fidelity === 'in_the_style_of' ? 'none' : 'needs_review';
 
 /** The key of the pattern made from a sound's own riff. */
 export const riffKey = (synthId: string, slug: string): string => `riff:${synthId}/${slug}`;
@@ -214,6 +232,7 @@ export interface RiffPatternRow extends Inspiration {
   role: LibraryPattern['role'];
   fidelity: 'in_the_style_of';
   origin: 'ai_generated';
+  madeBy: string;
 }
 
 /**
@@ -234,6 +253,7 @@ export function planRiffPattern(
     role: defaultRole(notes, beats),
     fidelity: 'in_the_style_of',
     origin: 'ai_generated',
+    madeBy: RIFF_MADE_BY,
     ...riffInspiration(sound, ctx),
   };
 }
@@ -256,6 +276,36 @@ export const DEFAULT_FIRST: Prisma.SynthSoundPatternOrderByWithRelationInput[] =
   { order: 'asc' },
   { patternId: 'asc' },
 ];
+
+/** A sound's list as its default is read from it: in order, each with what decides whether it can be the default. */
+export const PLACES = {
+  orderBy: DEFAULT_FIRST,
+  select: {
+    patternId: true,
+    order: true,
+    pattern: { select: { status: true, pattern: true } },
+  },
+} satisfies Prisma.SynthSound$patternsArgs;
+
+/** One place on a sound's list: at least what {@link headOf} decides on. */
+export interface Place {
+  pattern: { status: LibraryPattern['status']; pattern: unknown };
+}
+
+/**
+ * The place of a sound's default, or `null` when it has none: the first enabled pattern on its list that can be a riff
+ * (`riffProblem`). An admin's order puts one that can first, so this is the head of the list until a pattern ahead of
+ * it is disabled, when the sound plays the next (`pattern-library.md`, Status). A sound with no such pattern keeps the
+ * riff it has.
+ */
+export function headOf<P extends Place>(places: P[]): P | null {
+  for (const place of places) {
+    if (place.pattern.status !== 'enabled') continue;
+    const parsed = PatternSchema.safeParse(place.pattern.pattern);
+    if (parsed.success && !riffProblem(parsed.data)) return place;
+  }
+  return null;
+}
 
 /**
  * Give each sound its riff pattern, and bring unedited riff patterns in line with their sounds' riffs. `where` picks
@@ -286,7 +336,7 @@ export async function syncRiffPatterns(
       name: true,
       artist: true,
       phrase: true,
-      patterns: { orderBy: DEFAULT_FIRST, select: { patternId: true, order: true } },
+      patterns: PLACES,
     },
   });
   if (!sounds.length) return counts;
@@ -314,7 +364,7 @@ export async function syncRiffPatterns(
         data: { ...planned, sounds: { create: { soundId: sound.id, order: last + 1 } } },
       });
       counts.created++;
-    } else if (current.editedAt || sound.patterns[0]?.patternId !== current.id) {
+    } else if (current.editedAt || headOf(sound.patterns)?.patternId !== current.id) {
       counts.edited++;
     } else if (
       Object.entries(planned).every(([k, v]) => sameValue(current[k as keyof LibraryPattern], v))
@@ -371,16 +421,12 @@ export async function syncSoundPhrases(
       name: true,
       phrase: true,
       editedAt: true,
-      patterns: {
-        orderBy: DEFAULT_FIRST,
-        take: 1,
-        select: { patternId: true, pattern: { select: { pattern: true } } },
-      },
+      patterns: PLACES,
     },
   });
   const rewritten: RewrittenRiff[] = [];
   for (const sound of sounds) {
-    const first = sound.patterns[0];
+    const first = headOf(sound.patterns);
     if (!first || (heads !== undefined && !heads.includes(first.patternId))) continue;
     // `onlyRewritten` marks only the sounds whose riff changed: a riff pattern's own sound already plays it.
     const mark = markEdited && !sound.editedAt && !onlyRewritten ? { editedAt: new Date() } : {};
@@ -419,17 +465,17 @@ export interface PatternChange {
 }
 
 /** A sound's default pattern, and whether it is the sound's own riff pattern. */
-async function headOf(db: LibraryDb, soundId: string) {
+async function defaultOf(db: LibraryDb, soundId: string) {
   const sound = await db.synthSound.findUniqueOrThrow({
     where: { id: soundId },
     select: {
       synthId: true,
       slug: true,
       phrase: true,
-      patterns: { orderBy: DEFAULT_FIRST, take: 1, select: { pattern: true } },
+      patterns: { orderBy: DEFAULT_FIRST, select: { pattern: true } },
     },
   });
-  const head = sound.patterns[0]?.pattern ?? null;
+  const head = headOf(sound.patterns)?.pattern ?? null;
   return { sound, head, own: head?.key === riffKey(sound.synthId, sound.slug) };
 }
 
@@ -441,7 +487,7 @@ async function headOf(db: LibraryDb, soundId: string) {
  * and is changed as a pattern, never by flattening a riff into it.
  */
 export async function riffLeadsDefault(db: LibraryDb, soundId: string): Promise<boolean> {
-  const { sound, head, own } = await headOf(db, soundId);
+  const { sound, head, own } = await defaultOf(db, soundId);
   if (!head) return true;
   if (!own) return false;
   if (!head.editedAt) return true;
@@ -465,7 +511,7 @@ export async function riffLeadsDefault(db: LibraryDb, soundId: string): Promise<
  * else. Returns every other sound whose riff followed, marked edited, for the caller to audit.
  */
 export async function followSoundRiff(db: LibraryDb, soundId: string): Promise<RewrittenRiff[]> {
-  const { sound, head, own } = await headOf(db, soundId);
+  const { sound, head, own } = await defaultOf(db, soundId);
   if (!head || !own || !head.editedAt) {
     const { rewritten } = await syncRiffPatterns(db, { id: soundId }, { markEdited: true });
     return rewritten;
@@ -518,6 +564,9 @@ export interface LibraryPatternView {
   origin: LibraryPattern['origin'];
   facts: PatternFacts;
 }
+
+/** Whether users can see a pattern at all: what every public read filters on (`pattern-library.md`, Status). */
+export const ENABLED = { status: 'enabled' } as const satisfies Prisma.LibraryPatternWhereInput;
 
 /**
  * A stored row as the API serves it, or `null` when its pattern or sources no longer parse: every write checks both,

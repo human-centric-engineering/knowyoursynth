@@ -11,6 +11,11 @@
  *   riff is putting another pattern first (`pattern-library.md`, Reviewing the current riffs).
  * - **Honest labels.** A _Transcribed_ or _Reconstructed_ pattern recreates a part of a work, so it must link to the
  *   work in the databank and list its sources (`pattern-library.md`, Provenance).
+ * - **Admin control** (t-156, `pattern-library.md`, Admin control). Rights risk and status are set with a reason, one
+ *   pattern or many at once, and are not edits to the pattern: the seed may still bring its notes up to date. A
+ *   blocked pattern is always disabled. Disabling a sound's default hands the sound to its next enabled pattern
+ *   (`headOf`), and one that would leave a sound with none is refused until the admin acknowledges it. A rights risk
+ *   no admin has set follows the fidelity.
  *
  * Each write returns what it changed, before and after, for the route to audit.
  */
@@ -30,8 +35,12 @@ import { sameValue } from '@/lib/app/catalogue/seed';
 import { lockSynth } from '@/lib/app/catalogue/edit';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { PATTERN_ROLES } from '@/lib/app/patterns/library-facts';
+import { LibraryPatternIdSchema } from '@/lib/app/patterns/library-read';
 import {
   DEFAULT_FIRST,
+  defaultRightsRisk,
+  headOf,
+  PLACES,
   PatternSourcesSchema,
   phraseOf,
   riffProblem,
@@ -51,6 +60,10 @@ function refuse(message: string, problems: { path: string; message: string }[]):
 // ─── Shapes ──────────────────────────────────────────────────────────────────
 
 const Id = z.string().trim().min(1).max(64);
+
+export const PATTERN_ORIGINS = ['ai_generated', 'human_authored', 'user_contributed'] as const;
+export const PATTERN_RIGHTS_RISKS = ['none', 'needs_review', 'cleared', 'blocked'] as const;
+export const PATTERN_STATUSES = ['enabled', 'disabled'] as const;
 
 /** What a pattern is inspired by. A linked kind takes its label from the row it links to. */
 export const InspiredBySchema = z.discriminatedUnion('kind', [
@@ -76,7 +89,9 @@ const fields = {
   inspiredBy: InspiredBySchema,
   fidelity: z.enum(['transcribed', 'reconstructed', 'in_the_style_of']),
   sources: PatternSourcesSchema,
-  origin: z.enum(['ai_generated', 'human_authored', 'user_contributed']),
+  origin: z.enum(PATTERN_ORIGINS),
+  /** Who or what made it, when no user account did: the agent and its task or session. */
+  madeBy: z.string().trim().min(1).max(200).nullable(),
 };
 
 /** A new pattern. Tempo and sources may be left out; origin defaults to _Human-authored_, as an admin wrote it. */
@@ -86,6 +101,7 @@ export const LibraryPatternCreateSchema = z
     tempo: fields.tempo.default(null),
     sources: fields.sources.default([]),
     origin: fields.origin.default('human_authored'),
+    madeBy: fields.madeBy.default(null),
   })
   .strict();
 export type LibraryPatternCreate = z.infer<typeof LibraryPatternCreateSchema>;
@@ -121,6 +137,8 @@ type Columns = Omit<
     | 'fidelity'
     | 'sources'
     | 'origin'
+    | 'madeBy'
+    | 'rightsRisk'
   >,
   'pattern' | 'sources'
 > & { pattern: unknown; sources: unknown };
@@ -229,9 +247,9 @@ function checkWhole(c: Columns) {
 async function isADefault(db: LibraryDb, id: string): Promise<boolean> {
   const sounds = await db.synthSound.findMany({
     where: { patterns: { some: { patternId: id } } },
-    select: { patterns: { orderBy: DEFAULT_FIRST, take: 1, select: { patternId: true } } },
+    select: { patterns: PLACES },
   });
-  return sounds.some((s) => s.patterns[0]?.patternId === id);
+  return sounds.some((s) => headOf(s.patterns)?.patternId === id);
 }
 
 /** Refuse a pattern that cannot be a sound's default, because its riff would not play it whole (`riffProblem`). */
@@ -254,6 +272,7 @@ async function columnsOf(db: LibraryDb, input: LibraryPatternEdit): Promise<Part
     ...(input.fidelity !== undefined && { fidelity: input.fidelity }),
     ...(input.sources !== undefined && { sources: input.sources }),
     ...(input.origin !== undefined && { origin: input.origin }),
+    ...(input.madeBy !== undefined && { madeBy: input.madeBy }),
   };
 }
 
@@ -272,14 +291,30 @@ const pick = (row: LibraryPattern): Columns => ({
   fidelity: row.fidelity,
   sources: row.sources,
   origin: row.origin,
+  madeBy: row.madeBy,
+  rightsRisk: row.rightsRisk,
 });
 
 // ─── Reads ───────────────────────────────────────────────────────────────────
 
-/** A pattern as admin sees it: the public view, its key, whether an admin has edited it, and the sounds listing it. */
+/**
+ * A pattern as admin sees it: the public view, its key, whether an admin has edited it, the sounds listing it, and its
+ * admin control: who made it, a research batch's record, its rights risk and status, each with a reason.
+ */
 export interface AdminLibraryPattern extends LibraryPatternView {
   editedAt: string | null;
   sounds: { synthId: string; slug: string; name: string; order: number; isDefault: boolean }[];
+  madeBy: string | null;
+  /** The person who made it, where one did: the admin who added it, or the user it came from. */
+  madeByUser: { id: string; name: string } | null;
+  madeAt: string | null;
+  /** A research batch's record (`ResearchRecordSchema` and its task); null for a pattern no batch wrote. */
+  research: Record<string, unknown> | null;
+  rightsRisk: LibraryPattern['rightsRisk'];
+  /** Why an admin set the rights risk; null while it is the default for the fidelity. */
+  rightsReason: string | null;
+  status: LibraryPattern['status'];
+  statusReason: string | null;
 }
 
 /** A pattern as admin reads it, or what is wrong with a stored one that no longer parses. */
@@ -287,19 +322,36 @@ export type AdminLibraryRow =
   AdminLibraryPattern | { id: string; key: string; name: string; problem: string };
 
 /** A stored row as admin sees it, or a placeholder naming the problem when it no longer parses. */
-function adminView(
-  row: LibraryPattern & {
-    sounds: {
-      order: number;
-      sound: {
-        synthId: string;
-        slug: string;
-        name: string;
-        patterns: { patternId: string }[];
-      };
-    }[];
-  }
-): AdminLibraryRow {
+type AdminRow = LibraryPattern & {
+  sounds: {
+    order: number;
+    sound: {
+      synthId: string;
+      slug: string;
+      name: string;
+      patterns: {
+        patternId: string;
+        pattern: { status: LibraryPattern['status']; pattern: unknown };
+      }[];
+    };
+  }[];
+};
+
+/** The names of the people rows were made by, in one read. */
+async function madeByNames(rows: LibraryPattern[]): Promise<Map<string, string>> {
+  const ids = [...new Set(rows.flatMap((r) => r.madeByUserId ?? []))];
+  if (!ids.length) return new Map();
+  const users = await prisma.user.findMany({
+    where: { id: { in: ids } },
+    select: { id: true, name: true },
+  });
+  return new Map(users.map((u) => [u.id, u.name]));
+}
+
+const isRecord = (v: unknown): v is Record<string, unknown> =>
+  v !== null && typeof v === 'object' && !Array.isArray(v);
+
+function adminView(row: AdminRow, names: Map<string, string>): AdminLibraryRow {
   const view = toView(row);
   if (!view)
     return {
@@ -316,8 +368,18 @@ function adminView(
       slug: sound.slug,
       name: sound.name,
       order,
-      isDefault: sound.patterns[0]?.patternId === row.id,
+      isDefault: headOf(sound.patterns)?.patternId === row.id,
     })),
+    madeBy: row.madeBy,
+    madeByUser: row.madeByUserId
+      ? { id: row.madeByUserId, name: names.get(row.madeByUserId) ?? 'A deleted account' }
+      : null,
+    madeAt: row.madeAt?.toISOString() ?? null,
+    research: isRecord(row.research) ? row.research : null,
+    rightsRisk: row.rightsRisk,
+    rightsReason: row.rightsReason,
+    status: row.status,
+    statusReason: row.statusReason,
   };
 }
 
@@ -333,8 +395,7 @@ const withSounds = {
           name: true,
           patterns: {
             orderBy: DEFAULT_FIRST,
-            take: 1,
-            select: { patternId: true },
+            select: { patternId: true, pattern: { select: { status: true, pattern: true } } },
           },
         },
       },
@@ -349,6 +410,9 @@ export const AdminLibraryQuerySchema = z.object({
   /** Inspired by this databank artist, or by a work they are credited on. */
   artist: Id.optional(),
   fidelity: fields.fidelity.optional(),
+  origin: fields.origin.optional(),
+  rights: z.enum(PATTERN_RIGHTS_RISKS).optional(),
+  status: z.enum(PATTERN_STATUSES).optional(),
   /** Matches a pattern's name or Inspired by. */
   q: z.string().trim().min(1).max(100).optional(),
   page: z.coerce.number().int().min(1).default(1),
@@ -364,6 +428,9 @@ export async function listAdminLibraryPatterns(
     AND: [
       ...(query.role ? [{ role: query.role }] : []),
       ...(query.fidelity ? [{ fidelity: query.fidelity }] : []),
+      ...(query.origin ? [{ origin: query.origin }] : []),
+      ...(query.rights ? [{ rightsRisk: query.rights }] : []),
+      ...(query.status ? [{ status: query.status }] : []),
       ...(query.synth ? [{ sounds: { some: { sound: { synth: { id: query.synth } } } } }] : []),
       ...(query.artist
         ? [
@@ -397,13 +464,14 @@ export async function listAdminLibraryPatterns(
     }),
     prisma.libraryPattern.count({ where }),
   ]);
-  return { patterns: rows.map(adminView), total };
+  const names = await madeByNames(rows);
+  return { patterns: rows.map((r) => adminView(r, names)), total };
 }
 
 /** One library pattern, or `null`. */
 export async function getAdminLibraryPattern(id: string): Promise<AdminLibraryRow | null> {
   const row = await prisma.libraryPattern.findUnique({ where: { id }, include: withSounds });
-  return row && adminView(row);
+  return row && adminView(row, await madeByNames([row]));
 }
 
 /** A sound's patterns as admin reads them, default first, hidden synths' included. */
@@ -429,7 +497,8 @@ export async function getAdminSoundPatterns(
     where: { id: { in: ids } },
     include: withSounds,
   });
-  const byId = new Map(rows.map((r) => [r.id, adminView(r)]));
+  const names = await madeByNames(rows);
+  const byId = new Map(rows.map((r) => [r.id, adminView(r, names)]));
   return {
     synthId,
     slug,
@@ -474,10 +543,92 @@ export async function listLibraryPatternChoices(): Promise<LibraryPatternChoices
   };
 }
 
+/** One entry in a pattern's audit history (`pattern-library.md`, The provenance panel). */
+export interface PatternHistoryEntry {
+  id: string;
+  action: string;
+  /** The admin who made the change; null once their account is gone. */
+  by: string | null;
+  at: string;
+  changes: Record<string, { from: unknown; to: unknown }> | null;
+}
+
+/** An admin's comment on a pattern. */
+export interface PatternComment {
+  id: string;
+  body: string;
+  /** Null once the author's account is gone. */
+  author: { id: string; name: string } | null;
+  createdAt: string;
+}
+
+/** The changes column of an audit row, when it has the shape `computeChanges` writes. */
+const ChangesSchema = z.record(z.string(), z.object({ from: z.unknown(), to: z.unknown() }));
+
+/** The last 100 audited changes to a pattern, newest first, or `null` when there is no such pattern. */
+export async function getLibraryPatternHistory(id: string): Promise<PatternHistoryEntry[] | null> {
+  const exists = await prisma.libraryPattern.findUnique({ where: { id }, select: { id: true } });
+  if (!exists) return null;
+  const rows = await prisma.aiAdminAuditLog.findMany({
+    where: { entityType: 'library_pattern', entityId: id },
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+    take: 100,
+    select: {
+      id: true,
+      action: true,
+      changes: true,
+      createdAt: true,
+      user: { select: { name: true } },
+    },
+  });
+  return rows.map((r) => {
+    const changes = ChangesSchema.safeParse(r.changes);
+    return {
+      id: r.id,
+      action: r.action,
+      by: r.user?.name ?? null,
+      at: r.createdAt.toISOString(),
+      changes: changes.success ? changes.data : null,
+    };
+  });
+}
+
+/** A pattern's comments, oldest first, or `null` when there is no such pattern. */
+export async function listLibraryPatternComments(id: string): Promise<PatternComment[] | null> {
+  const exists = await prisma.libraryPattern.findUnique({ where: { id }, select: { id: true } });
+  if (!exists) return null;
+  const rows = await prisma.libraryPatternComment.findMany({
+    where: { patternId: id },
+    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+  });
+  return withAuthors(rows);
+}
+
+async function withAuthors(
+  rows: { id: string; body: string; authorId: string | null; createdAt: Date }[]
+): Promise<PatternComment[]> {
+  const ids = [...new Set(rows.flatMap((r) => r.authorId ?? []))];
+  const users = ids.length
+    ? await prisma.user.findMany({ where: { id: { in: ids } }, select: { id: true, name: true } })
+    : [];
+  const names = new Map(users.map((u) => [u.id, u.name]));
+  return rows.map((r) => ({
+    id: r.id,
+    body: r.body,
+    author: r.authorId
+      ? { id: r.authorId, name: names.get(r.authorId) ?? 'A deleted account' }
+      : null,
+    createdAt: r.createdAt.toISOString(),
+  }));
+}
+
 // ─── Writes ──────────────────────────────────────────────────────────────────
 
-/** Add a pattern to the library, on no sound yet. */
-export async function createLibraryPattern(input: LibraryPatternCreate): Promise<AdminLibraryRow> {
+/** Add a pattern to the library, on no sound yet, made by the admin adding it. */
+export async function createLibraryPattern(
+  input: LibraryPatternCreate,
+  userId: string
+): Promise<AdminLibraryRow> {
   return prisma.$transaction(async (tx) => {
     const columns: Columns = {
       name: input.name,
@@ -489,6 +640,8 @@ export async function createLibraryPattern(input: LibraryPatternCreate): Promise
       fidelity: input.fidelity,
       sources: input.sources,
       origin: input.origin,
+      madeBy: input.madeBy,
+      rightsRisk: defaultRightsRisk(input.fidelity),
     };
     checkWhole(columns);
     const row = await tx.libraryPattern.create({
@@ -499,11 +652,13 @@ export async function createLibraryPattern(input: LibraryPatternCreate): Promise
         // An admin's pattern is not one the seed plans, so its key only has to be unique.
         key: `admin:${randomUUID()}`,
         version: PATTERN_VERSION,
+        madeByUserId: userId,
+        madeAt: new Date(),
         editedAt: new Date(),
       },
       include: withSounds,
     });
-    return adminView(row);
+    return adminView(row, await madeByNames([row]));
   });
 }
 
@@ -520,6 +675,8 @@ export async function editLibraryPattern(
     if (!row) throw new NotFoundError('Pattern not found');
     const before = pick(row);
     const after = { ...before, ...(await columnsOf(tx, input)) };
+    // A rights risk no admin has set follows the fidelity (`pattern-library.md`, Rights risk).
+    if (row.rightsReason === null) after.rightsRisk = defaultRightsRisk(after.fidelity);
     checkWhole(after);
     // An edit that changes nothing is not an edit: the row stays the seed's.
     if (sameValue(after, before)) return { change: null, sounds: [] };
@@ -598,7 +755,7 @@ export async function setSoundPatterns(
       });
     const found = await tx.libraryPattern.findMany({
       where: { id: { in: patternIds } },
-      select: { id: true, pattern: true },
+      select: { id: true, pattern: true, status: true },
     });
     const known = new Set(found.map((p) => p.id));
     patternIds.forEach((id, i) => {
@@ -609,9 +766,14 @@ export async function setSoundPatterns(
 
     if (sameValue(patternIds, before))
       return { before, after: before, sound: null, name: sound.name };
-    const newDefault = patternIds[0] !== before[0];
-    const head = found.find((p) => p.id === patternIds[0]);
-    if (newDefault && head) checkDefault(PatternSchema.parse(head.pattern), 'patternIds.0');
+    // The default is the first enabled pattern (`headOf`): disabled ones ahead of it are passed over, as they were.
+    const statusOf = new Map(found.map((p) => [p.id, p.status]));
+    const firstEnabled = (ids: string[]) => ids.find((id) => statusOf.get(id) === 'enabled');
+    const chosen = firstEnabled(patternIds);
+    const newDefault = chosen !== firstEnabled(before);
+    const head = found.find((p) => p.id === chosen);
+    if (newDefault && head)
+      checkDefault(PatternSchema.parse(head.pattern), `patternIds.${patternIds.indexOf(head.id)}`);
     const orderOf = new Map(sound.patterns.map((p) => [p.patternId, p.order]));
     for (const [order, patternId] of patternIds.entries()) {
       if (!orderOf.has(patternId))
@@ -627,4 +789,166 @@ export async function setSoundPatterns(
       : [];
     return { before, after: patternIds, sound: riff, name: sound.name };
   });
+}
+
+// ─── Admin control ───────────────────────────────────────────────────────────
+
+/** A comment on a pattern. */
+export const PatternCommentSchema = z.object({ body: z.string().trim().min(1).max(4000) }).strict();
+
+/** Add an admin's comment to a pattern. */
+export async function addLibraryPatternComment(
+  id: string,
+  authorId: string,
+  body: string
+): Promise<{ comment: PatternComment; name: string }> {
+  const pattern = await prisma.libraryPattern.findUnique({
+    where: { id },
+    select: { name: true },
+  });
+  if (!pattern) throw new NotFoundError('Pattern not found');
+  const row = await prisma.libraryPatternComment.create({
+    data: { patternId: id, authorId, body },
+  });
+  const [comment] = await withAuthors([row]);
+  return { comment, name: pattern.name };
+}
+
+/**
+ * Set the rights risk or status of one pattern or many, with one reason for all of them (`pattern-library.md`, Admin
+ * control). `acknowledge` is the admin's answer to the warning a disable gives when it would leave a sound with no
+ * enabled pattern to play.
+ */
+export const PatternControlSchema = z
+  .object({
+    ids: z.array(LibraryPatternIdSchema).min(1).max(100),
+    rightsRisk: z.enum(PATTERN_RIGHTS_RISKS).optional(),
+    status: z.enum(PATTERN_STATUSES).optional(),
+    reason: z.string().trim().min(1).max(1000),
+    acknowledge: z.boolean().default(false),
+  })
+  .strict()
+  .refine((v) => v.rightsRisk !== undefined || v.status !== undefined, {
+    message: 'Set a rights risk, a status or both',
+  });
+export type PatternControl = z.infer<typeof PatternControlSchema>;
+
+/** A sound a change left with no enabled pattern to play: it keeps the riff it had. */
+export interface SoundLeftWithout {
+  synthId: string;
+  slug: string;
+  name: string;
+}
+
+/** The path a control's refusal names when a sound would be left with no enabled pattern: answered by `acknowledge`. */
+export const ACKNOWLEDGE_PATH = 'acknowledge';
+
+/**
+ * Set rights risk and status on each pattern named, and hand each sound whose default that changes to its new one,
+ * rewriting its riff (`syncSoundPhrases`). Refuses the whole change when a pattern is not there, when it would enable
+ * a blocked pattern, or, unless acknowledged, when it would leave a sound with no enabled pattern that can be its
+ * default. A pattern the change leaves as it was writes and audits nothing.
+ */
+export async function setLibraryPatternControl(input: PatternControl): Promise<{
+  changes: PatternChange[];
+  sounds: RewrittenRiff[];
+  leftWithout: SoundLeftWithout[];
+}> {
+  return prisma.$transaction(async (tx) => {
+    const ids = [...new Set(input.ids)];
+    const rows = await tx.libraryPattern.findMany({ where: { id: { in: ids } } });
+    const known = new Set(rows.map((r) => r.id));
+    const unknown = ids.filter((id) => !known.has(id));
+    if (unknown.length)
+      refuse(
+        'No library pattern has that id',
+        unknown.map((id) => ({ path: 'ids', message: `No library pattern has the id ${id}` }))
+      );
+
+    const problems: { path: string; message: string }[] = [];
+    const planned = rows.map((row) => {
+      const rightsRisk = input.rightsRisk ?? row.rightsRisk;
+      // A blocked pattern must not be shown, so it is always disabled.
+      if (rightsRisk === 'blocked' && input.status === 'enabled')
+        problems.push({
+          path: 'status',
+          message: `${row.name} is blocked: a blocked pattern is always disabled`,
+        });
+      const status = rightsRisk === 'blocked' ? 'disabled' : (input.status ?? row.status);
+      const before = {
+        rightsRisk: row.rightsRisk,
+        rightsReason: row.rightsReason,
+        status: row.status,
+        statusReason: row.statusReason,
+      };
+      const after = {
+        rightsRisk,
+        rightsReason: rightsRisk !== row.rightsRisk ? input.reason : row.rightsReason,
+        status,
+        statusReason: status !== row.status ? input.reason : row.statusReason,
+      };
+      return { row, before, after };
+    });
+    if (problems.length) refuse('A blocked pattern cannot be enabled', problems);
+    const changed = planned.filter((p) => !sameValue(p.before, p.after));
+    const moved = changed.filter((p) => p.before.status !== p.after.status).map((p) => p.row.id);
+
+    // Each sound listing a pattern whose status changes: its default before and after.
+    const soundWhere = { patterns: { some: { patternId: { in: moved } } } };
+    const heads = async (): Promise<SoundHeads> =>
+      moved.length ? soundHeads(tx, soundWhere) : new Map();
+    const headsBefore = await heads();
+    for (const { row, after } of changed)
+      await tx.libraryPattern.update({ where: { id: row.id }, data: after });
+    const headsAfter = await heads();
+
+    const leftWithout: SoundLeftWithout[] = [];
+    const handed: string[] = [];
+    for (const [soundId, after] of headsAfter) {
+      const before = headsBefore.get(soundId);
+      if (!before || before.head === after.head) continue;
+      if (after.head === null) leftWithout.push(after.sound);
+      else handed.push(soundId);
+    }
+    if (leftWithout.length && !input.acknowledge)
+      refuse(
+        'This would leave a patch with no enabled pattern to play',
+        leftWithout.map((s) => ({
+          path: ACKNOWLEDGE_PATH,
+          message: `${s.name} (${s.synthId}) would have no enabled pattern that can be its default, and would keep playing the riff it has`,
+        }))
+      );
+    const sounds = handed.length
+      ? await syncSoundPhrases(tx, { id: { in: handed } }, { markEdited: true })
+      : [];
+    return {
+      changes: changed.map(({ row, before, after }) => ({
+        id: row.id,
+        name: row.name,
+        before,
+        after,
+      })),
+      sounds,
+      leftWithout,
+    };
+  });
+}
+
+/** Each sound by id: its default pattern id (`headOf`), or null where it has none. */
+type SoundHeads = Map<string, { sound: SoundLeftWithout; head: string | null }>;
+
+async function soundHeads(db: LibraryDb, where: Prisma.SynthSoundWhereInput): Promise<SoundHeads> {
+  const sounds = await db.synthSound.findMany({
+    where,
+    select: { id: true, synthId: true, slug: true, name: true, patterns: PLACES },
+  });
+  return new Map(
+    sounds.map((s) => [
+      s.id,
+      {
+        sound: { synthId: s.synthId, slug: s.slug, name: s.name },
+        head: headOf(s.patterns)?.patternId ?? null,
+      },
+    ])
+  );
 }
