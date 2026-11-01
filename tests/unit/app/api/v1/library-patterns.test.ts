@@ -10,7 +10,9 @@
  * - a pattern edit is audited, marks the pattern edited, and rewrites the riff of each sound it is the default of;
  * - a sound's list keeps every pattern it had; a new default rewrites its riff, audited;
  * - a transcribed pattern must name a work and list its sources;
- * - a pattern an admin edited survives a reseed.
+ * - a pattern an admin edited survives a reseed;
+ * - the admin page's reads (t-126): the list filtered by synth, artist and fidelity, a sound's patterns in order, and
+ *   the synths, artists and works a pattern's Inspired by chooses from.
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { NextRequest } from 'next/server';
@@ -52,7 +54,11 @@ import {
   GET as getAdminOne,
   PATCH as patchPattern,
 } from '@/app/api/v1/admin/library-patterns/[id]/route';
-import { PUT as putSoundPatterns } from '@/app/api/v1/admin/synths/[id]/sounds/[slug]/patterns/route';
+import {
+  GET as getAdminSoundPatterns,
+  PUT as putSoundPatterns,
+} from '@/app/api/v1/admin/synths/[id]/sounds/[slug]/patterns/route';
+import { GET as getChoices } from '@/app/api/v1/admin/library-patterns/choices/route';
 import { PATCH as patchSound } from '@/app/api/v1/admin/synths/[id]/sounds/[slug]/route';
 import { createMockAuthSession } from '@/tests/helpers/auth';
 import {
@@ -267,6 +273,94 @@ describe('admin reads', () => {
       ctx({ id: none })
     );
     expect(missing.status).toBe(404);
+  });
+});
+
+describe("the admin page's reads", () => {
+  const ids = (body: { data?: unknown }) => (body.data as { id: string }[]).map((p) => p.id);
+  const list = async (query: string) =>
+    json(await getAdminList(request('GET', `admin/library-patterns?${query}`)));
+
+  it('filters by synth, by artist (or a work they are credited on) and by fidelity', async () => {
+    db.bankArtist.rows.push({ id: 'kraftwerk', name: 'Kraftwerk' });
+    db.bankSong.rows[0].artists = [{ artistId: 'kraftwerk' }];
+    Object.assign(riff(0), { inspiration: 'artist', inspiredArtistId: 'kraftwerk' });
+    Object.assign(riff(1), { inspiration: 'work', inspiredSongId: 'the-model' });
+    riff(2).fidelity = 'reconstructed';
+    // A pattern on no sound: no synth's.
+    db.libraryPattern.rows.push({
+      ...structuredClone(riff(2)),
+      id: 'c' + 'o'.repeat(24),
+      key: 'admin:loose',
+    });
+
+    const all = await list('');
+    expect(ids(all)).toHaveLength(4);
+    expect(new Set(ids(await list('synth=model-d')))).toEqual(
+      new Set([riff(0).id, riff(1).id, riff(2).id])
+    );
+    expect(await list('synth=nothere')).toMatchObject({ data: [], meta: { total: 0 } });
+    expect(new Set(ids(await list('artist=kraftwerk')))).toEqual(new Set([riff(0).id, riff(1).id]));
+    expect(new Set(ids(await list('fidelity=reconstructed')))).toEqual(
+      new Set([riff(2).id, 'c' + 'o'.repeat(24)])
+    );
+    expect(ids(await list('fidelity=reconstructed&synth=model-d'))).toEqual([riff(2).id]);
+  });
+
+  it('refuses a fidelity that is not one', async () => {
+    const res = await getAdminList(request('GET', 'admin/library-patterns?fidelity=exact'));
+    expect(res.status).toBe(400);
+  });
+
+  it("reads a sound's patterns, default first, with the sounds each is on, and is a 404 for none", async () => {
+    db.synthSoundPattern.rows.push({ soundId: sound(0).id, patternId: riff(1).id, order: 1 });
+    const res = await getAdminSoundPatterns(
+      request('GET', `admin/synths/model-d/sounds/${slug(0)}/patterns`),
+      ctx({ id: 'model-d', slug: slug(0) })
+    );
+    expect(res.status).toBe(200);
+    const body = await json(res);
+    expect(body.data).toMatchObject({ synthId: 'model-d', slug: slug(0), name: sound(0).name });
+    const patterns = (body.data as { patterns: { id: string; sounds: { slug: string }[] }[] })
+      .patterns;
+    expect(patterns.map((p) => p.id)).toEqual([riff(0).id, riff(1).id]);
+    expect(patterns[1].sounds.map((s) => s.slug).sort()).toEqual([slug(0), slug(1)].sort());
+
+    const missing = await getAdminSoundPatterns(
+      request('GET', 'admin/synths/model-d/sounds/nothere/patterns'),
+      ctx({ id: 'model-d', slug: 'nothere' })
+    );
+    expect(missing.status).toBe(404);
+  });
+
+  it('names every synth, artist and work, each work with its parts, for the pickers', async () => {
+    db.bankArtist.rows.push({ id: 'kraftwerk', name: 'Kraftwerk', story: 'not sent' });
+    db.bankSong.rows[0].parts = [{ id: 'part-1', order: 0, on: 'Minimoog (the bass)', text: 'x' }];
+    const res = await getChoices(request('GET', 'admin/library-patterns/choices'));
+    expect(res.status).toBe(200);
+    expect((await json(res)).data).toEqual({
+      synths: [{ id: 'model-d', name: db.synth.rows[0].name, maker: db.synth.rows[0].maker }],
+      artists: [{ id: 'kraftwerk', name: 'Kraftwerk' }],
+      songs: [
+        {
+          id: 'the-model',
+          title: 'The Model',
+          parts: [{ id: 'part-1', on: 'Minimoog (the bass)' }],
+        },
+      ],
+    });
+  });
+
+  it('is admin only', async () => {
+    mockGetSession.mockResolvedValue(session('USER'));
+    const responses = [
+      await getChoices(request('GET', 'admin/library-patterns/choices')),
+      await getAdminSoundPatterns(
+        request('GET', `admin/synths/model-d/sounds/${slug(0)}/patterns`),
+        ctx({ id: 'model-d', slug: slug(0) })
+      ),
+    ];
+    expect(responses.map((r) => r.status)).toEqual([403, 403]);
   });
 });
 

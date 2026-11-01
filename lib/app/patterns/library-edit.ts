@@ -344,6 +344,11 @@ const withSounds = {
 
 export const AdminLibraryQuerySchema = z.object({
   role: z.enum(PATTERN_ROLES).optional(),
+  /** On a sound of this synth. */
+  synth: Id.optional(),
+  /** Inspired by this databank artist, or by a work they are credited on. */
+  artist: Id.optional(),
+  fidelity: fields.fidelity.optional(),
   /** Matches a pattern's name or Inspired by. */
   q: z.string().trim().min(1).max(100).optional(),
   page: z.coerce.number().int().min(1).default(1),
@@ -356,13 +361,31 @@ export async function listAdminLibraryPatterns(
   query: AdminLibraryQuery
 ): Promise<{ patterns: AdminLibraryRow[]; total: number }> {
   const where: Prisma.LibraryPatternWhereInput = {
-    ...(query.role && { role: query.role }),
-    ...(query.q && {
-      OR: [
-        { name: { contains: query.q, mode: 'insensitive' } },
-        { inspiredBy: { contains: query.q, mode: 'insensitive' } },
-      ],
-    }),
+    AND: [
+      ...(query.role ? [{ role: query.role }] : []),
+      ...(query.fidelity ? [{ fidelity: query.fidelity }] : []),
+      ...(query.synth ? [{ sounds: { some: { sound: { synth: { id: query.synth } } } } }] : []),
+      ...(query.artist
+        ? [
+            {
+              OR: [
+                { inspiredArtistId: query.artist },
+                { inspiredSong: { artists: { some: { artistId: query.artist } } } },
+              ],
+            },
+          ]
+        : []),
+      ...(query.q
+        ? [
+            {
+              OR: [
+                { name: { contains: query.q, mode: 'insensitive' as const } },
+                { inspiredBy: { contains: query.q, mode: 'insensitive' as const } },
+              ],
+            },
+          ]
+        : []),
+    ],
   };
   const [rows, total] = await Promise.all([
     prisma.libraryPattern.findMany({
@@ -381,6 +404,74 @@ export async function listAdminLibraryPatterns(
 export async function getAdminLibraryPattern(id: string): Promise<AdminLibraryRow | null> {
   const row = await prisma.libraryPattern.findUnique({ where: { id }, include: withSounds });
   return row && adminView(row);
+}
+
+/** A sound's patterns as admin reads them, default first, hidden synths' included. */
+export interface AdminSoundPatterns {
+  synthId: string;
+  slug: string;
+  name: string;
+  patterns: AdminLibraryRow[];
+}
+
+/** A sound's patterns in order, the default first, or `null` when there is no such sound. */
+export async function getAdminSoundPatterns(
+  synthId: string,
+  slug: string
+): Promise<AdminSoundPatterns | null> {
+  const sound = await prisma.synthSound.findUnique({
+    where: { synthId_slug: { synthId, slug } },
+    select: { name: true, patterns: { orderBy: DEFAULT_FIRST, select: { patternId: true } } },
+  });
+  if (!sound) return null;
+  const ids = sound.patterns.map((p) => p.patternId);
+  const rows = await prisma.libraryPattern.findMany({
+    where: { id: { in: ids } },
+    include: withSounds,
+  });
+  const byId = new Map(rows.map((r) => [r.id, adminView(r)]));
+  return {
+    synthId,
+    slug,
+    name: sound.name,
+    patterns: ids.flatMap((id) => byId.get(id) ?? []),
+  };
+}
+
+/** What a pattern's Inspired by and the list's filters choose from. */
+export interface LibraryPatternChoices {
+  synths: { id: string; name: string; maker: string }[];
+  artists: { id: string; name: string }[];
+  /** Works in the databank, each with the parts a pattern may recreate. */
+  songs: { id: string; title: string; parts: { id: string; on: string }[] }[];
+}
+
+/** Every synth, databank artist and work, by name: one read for the admin page's pickers. */
+export async function listLibraryPatternChoices(): Promise<LibraryPatternChoices> {
+  const [synths, artists, songs] = await Promise.all([
+    prisma.synth.findMany({
+      select: { id: true, name: true, maker: true },
+      orderBy: [{ name: 'asc' }],
+    }),
+    prisma.bankArtist.findMany({ select: { id: true, name: true }, orderBy: [{ name: 'asc' }] }),
+    prisma.bankSong.findMany({
+      select: {
+        id: true,
+        title: true,
+        parts: { orderBy: { order: 'asc' }, select: { id: true, on: true } },
+      },
+      orderBy: [{ title: 'asc' }],
+    }),
+  ]);
+  return {
+    synths: synths.map(({ id, name, maker }) => ({ id, name, maker })),
+    artists: artists.map(({ id, name }) => ({ id, name })),
+    songs: songs.map(({ id, title, parts }) => ({
+      id,
+      title,
+      parts: parts.map((p) => ({ id: p.id, on: p.on })),
+    })),
+  };
 }
 
 // ─── Writes ──────────────────────────────────────────────────────────────────

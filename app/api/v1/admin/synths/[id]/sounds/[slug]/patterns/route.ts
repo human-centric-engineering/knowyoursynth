@@ -1,20 +1,37 @@
 /**
  * A library sound's patterns, in order (`f-pattern-library` t-122).
  *
+ * GET /api/v1/admin/synths/:id/sounds/:slug/patterns — the sound's patterns, the default first, each as the admin
+ *     library reads it, hidden synths' included (t-126).
  * PUT /api/v1/admin/synths/:id/sounds/:slug/patterns — `{ patternIds }`, the default first. Every pattern the sound
  *     has must stay on it; any library pattern may be added. When the default changes, the sound's riff becomes the
  *     new default's notes and the sound is marked edited, so the seed leaves it alone. Audited.
  */
 import { z } from 'zod';
 import { withAdminAuth } from '@/lib/auth/guards';
+import { NotFoundError } from '@/lib/api/errors';
 import { successResponse } from '@/lib/api/responses';
 import { validateQueryParams, validateRequestBody } from '@/lib/api/validation';
 import { getRouteLogger } from '@/lib/api/context';
 import { SoundSlugSchema, SynthIdSchema } from '@/lib/app/catalogue/edit';
-import { setSoundPatterns, SoundPatternsSchema } from '@/lib/app/patterns/library-edit';
+import {
+  getAdminSoundPatterns,
+  setSoundPatterns,
+  SoundPatternsSchema,
+} from '@/lib/app/patterns/library-edit';
 import { auditCatalogue, CATALOGUE_READ } from '@/lib/app/catalogue/admin-route';
 
 const ParamsSchema = z.object({ id: SynthIdSchema, slug: SoundSlugSchema });
+
+export const GET = withAdminAuth<{ id: string; slug: string }>(
+  async (_request, _session, { params }) => {
+    const { id, slug } = validateQueryParams(new URLSearchParams(await params), ParamsSchema);
+    const sound = await getAdminSoundPatterns(id, slug);
+    if (!sound) throw new NotFoundError('Patch not found');
+    return successResponse(sound);
+  },
+  CATALOGUE_READ
+);
 
 export const PUT = withAdminAuth<{ id: string; slug: string }>(
   async (request, session, { params }) => {
