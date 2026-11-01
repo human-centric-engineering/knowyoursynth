@@ -67,18 +67,25 @@ describe('the research batches', () => {
     expect(named.filter((s) => !sounds.has(s))).toEqual([]);
   });
 
-  it('looks at every Kraftwerk and Depeche Mode sound exactly once: a pattern, or a reason it has none', () => {
-    const pilot = [...sounds]
-      .filter(([, s]) => ['Kraftwerk', 'Depeche Mode'].includes(s.artist))
-      .map(([k]) => k)
-      .sort();
-    expect(pilot.length).toBe(42);
-    const looked = [
-      ...patterns.flatMap((p) => p.sounds),
-      ...batches.flatMap((b) => b.notRecreated.map((n) => n.sound)),
-    ];
-    expect([...looked].sort()).toEqual(pilot);
-  });
+  it.each([
+    ['t-127', ['Kraftwerk', 'Depeche Mode'], 42],
+    ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 75],
+  ])(
+    '%s looks at every sound by %j exactly once: a pattern, or a reason it has none',
+    (task, artists, count) => {
+      const roster = [...sounds]
+        .filter(([, s]) => artists.includes(s.artist))
+        .map(([k]) => k)
+        .sort();
+      expect(roster.length).toBe(count);
+      const batch = batches.find((b) => b.task === task)!;
+      const looked = [
+        ...batch.patterns.flatMap((p) => p.sounds),
+        ...batch.notRecreated.map((n) => n.sound),
+      ];
+      expect([...looked].sort()).toEqual(roster);
+    }
+  );
 
   it('links Inspired by only to databank rows that exist', () => {
     const songs = new Map(bank.songs.map((s) => [s.id, s]));
@@ -136,6 +143,20 @@ describe('the research batches', () => {
     }).notes.map(([, n]) => n);
     // G G C B, G G C B, C C F E, C C C C: Songsterr track 6 and the BitMIDI file, bars 5–8, an octave up.
     expect(pitches).toEqual([43, 43, 48, 47, 43, 43, 48, 47, 48, 48, 53, 52, 48, 48, 48, 48]);
+  });
+
+  it('plays the notes its lead gives: the break figure of “Da Funk”, in both octaves the record has it', () => {
+    const pitches = (key: string) =>
+      compileLoop(PatternSchema.parse(patterns.find((x) => x.key === key)!.pattern), {
+        loop: 0,
+        rng: seededRng(1),
+      }).notes.map(([, n]) => n);
+    // G G' D E♭ D E♭ F G' G: Songsterr “Synths 1”, bar 71, and “Synths 3”, bar 65, two octaves apart.
+    const high = pitches('researched:daft-punk/da-funk-breakdown-figure');
+    expect(high).toEqual([55, 67, 62, 63, 62, 63, 65, 67, 55]);
+    expect(pitches('researched:daft-punk/da-funk-breakdown-figure-low')).toEqual(
+      high.map((n) => n - 24)
+    );
   });
 });
 
