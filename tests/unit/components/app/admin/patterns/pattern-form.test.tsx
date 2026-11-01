@@ -10,6 +10,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { renderToString } from 'react-dom/server';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -116,6 +117,35 @@ describe('PatternForm', () => {
     expect(sent()).toEqual({
       inspiredBy: { kind: 'work', songId: 'the-model', partId: 'part-bass' },
     });
+  });
+
+  it('starts unchanged, before the sequencer has loaded the saved notes', () => {
+    // The server render is the moment before the load effect runs.
+    const html = renderToString(<PatternForm pattern={adminLibraryPattern()} choices={CHOICES} />);
+    const container = document.createElement('div');
+    container.innerHTML = html;
+
+    expect(within(container).getByRole('button', { name: 'Save' })).toBeDisabled();
+    expect(within(container).queryByText(/Saving rewrites the riff/)).toBeNull();
+  });
+
+  it('dates a new source by the admin’s own calendar, not UTC', async () => {
+    const tz = process.env.TZ;
+    process.env.TZ = 'America/New_York';
+    vi.useFakeTimers({ toFake: ['Date'] });
+    // 01:00 UTC on 2 November is the evening of 1 November in New York.
+    vi.setSystemTime(new Date('2026-11-02T01:00:00Z'));
+    try {
+      const user = userEvent.setup();
+      render(<PatternForm pattern={adminLibraryPattern()} choices={CHOICES} />);
+      await user.click(screen.getByRole('button', { name: 'Add a source' }));
+
+      const source = screen.getByRole('group', { name: 'Source 1' });
+      expect(within(source).getByLabelText('Checked')).toHaveValue('2026-11-01');
+    } finally {
+      vi.useRealTimers();
+      process.env.TZ = tz;
+    }
   });
 
   it('adds a source and a tempo range for a transcribed pattern', async () => {

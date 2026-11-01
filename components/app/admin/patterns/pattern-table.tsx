@@ -153,7 +153,11 @@ export function PatternTable({ rows, total, page, limit, filters, choices }: Pat
       </form>
 
       <p className="text-muted-foreground text-xs">
-        {total === 0 ? 'No patterns' : `${first}–${first + rows.length - 1} of ${total}`}
+        {total === 0
+          ? 'No patterns'
+          : rows.length === 0
+            ? `None on page ${page} of ${pages} — ${total} in all`
+            : `${first}–${first + rows.length - 1} of ${total}`}
       </p>
 
       <Table>
@@ -205,7 +209,11 @@ export function PatternTable({ rows, total, page, limit, filters, choices }: Pat
           {rows.length === 0 && (
             <TableRow>
               <TableCell colSpan={7} className="text-muted-foreground text-sm">
-                {filtered ? 'Nothing matches.' : 'The library is empty.'}
+                {total > 0
+                  ? 'This page is past the end of the list.'
+                  : filtered
+                    ? 'Nothing matches.'
+                    : 'The library is empty.'}
               </TableCell>
             </TableRow>
           )}

@@ -133,4 +133,12 @@ describe('PatternTable', () => {
     expect(screen.getByText('The library is empty.')).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Clear' })).toBeNull();
   });
+
+  it('says a page past the end is past the end, not that the library is empty', () => {
+    table({ rows: [], total: 60, page: 3 });
+
+    expect(screen.getByText('None on page 3 of 2 — 60 in all')).toBeInTheDocument();
+    expect(screen.getByText('This page is past the end of the list.')).toBeInTheDocument();
+    expect(screen.queryByText('The library is empty.')).toBeNull();
+  });
 });

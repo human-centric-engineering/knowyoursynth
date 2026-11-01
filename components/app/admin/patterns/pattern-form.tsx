@@ -144,7 +144,7 @@ function inspiredInput(d: InspiredDraft): InspiredByInput {
   }
 }
 
-/** A tempo field as a number. Empty or not a number, it is sent as nothing, and the server names the field. */
+/** A tempo field as a number. Empty or not a number it is NaN, which JSON sends as `null`: the server refuses it and names the field. */
 const bpm = (text: string): number => (text.trim() === '' ? NaN : Number(text));
 
 /** The tempo range a draft sends: none when both are empty. */
@@ -160,6 +160,13 @@ const sourcesInput = (sources: SourceDraft[]): PatternSource[] =>
     ...(s.url.trim() && { url: s.url.trim() }),
     checkedAt: s.checkedAt,
   }));
+
+/** Today in the admin's own calendar, `YYYY-MM-DD`: a new source's checked date. */
+function today(): string {
+  const now = new Date();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+}
 
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 
@@ -213,15 +220,18 @@ export function PatternForm({ pattern, choices }: PatternFormProps) {
   const { load } = seq;
   // What the sequencer holds once the saved notes are loaded: the baseline its edits are compared with.
   const [notesBase, setNotesBase] = useState(saved.pattern);
+  // Until the first load the sequencer holds its empty start, which is no edit of anyone's.
+  const [notesLoaded, setNotesLoaded] = useState(false);
   // On mount and after each save: the sequencer then holds the notes as the server stored them.
   useEffect(() => {
     const held = load(saved.pattern, { id: null, name: saved.name }, { quiet: true });
     if (held) setNotesBase(held);
+    setNotesLoaded(true);
   }, [load, saved]);
 
   const edit = useMemo(
-    () => editOf({ ...saved, pattern: notesBase }, draft, seq.pattern),
-    [saved, notesBase, draft, seq.pattern]
+    () => editOf({ ...saved, pattern: notesBase }, draft, notesLoaded ? seq.pattern : notesBase),
+    [saved, notesBase, draft, notesLoaded, seq.pattern]
   );
   const changed = Object.keys(edit).length > 0;
   const placed = placeProblems(refusal?.problems ?? [], FIELDS);
@@ -229,13 +239,17 @@ export function PatternForm({ pattern, choices }: PatternFormProps) {
     setDraft((d) => ({ ...d, [key]: value }));
     setStatus(null);
   };
-  const setInspired = (patch: Partial<InspiredDraft>) =>
-    set('inspired', { ...draft.inspired, ...patch });
-  const setSource = (key: number, patch: Partial<SourceDraft>) =>
-    set(
-      'sources',
-      draft.sources.map((s) => (s.key === key ? { ...s, ...patch } : s))
-    );
+  const setInspired = (patch: Partial<InspiredDraft>) => {
+    setDraft((d) => ({ ...d, inspired: { ...d.inspired, ...patch } }));
+    setStatus(null);
+  };
+  const setSource = (key: number, patch: Partial<SourceDraft>) => {
+    setDraft((d) => ({
+      ...d,
+      sources: d.sources.map((s) => (s.key === key ? { ...s, ...patch } : s)),
+    }));
+    setStatus(null);
+  };
   const song = choices.songs.find((s) => s.id === draft.inspired.songId);
   const defaults = saved.sounds.filter((s) => s.isDefault);
 
@@ -662,7 +676,7 @@ export function PatternForm({ pattern, choices }: PatternFormProps) {
                 type: 'by_ear',
                 citation: '',
                 url: '',
-                checkedAt: new Date().toISOString().slice(0, 10),
+                checkedAt: today(),
               },
             ])
           }
