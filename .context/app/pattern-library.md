@@ -304,8 +304,8 @@ The readers were scratch scripts, not committed: they fetch someone else's work,
 Model, Computer Love, Home Computer, Pocket Calculator, Just Can't Get Enough, Everything Counts and Enjoy the Silence.
 Four of those works gave their sounds another part instead: a counter-line, a sequence or the bass under the hook. The other three gave none.
 The one-part rule also cost the Numbers snare its kick, so that pattern is plainer than the beat the record is known
-for. Whether the hook rule goes too far is still open for the owner, and the pilot is the evidence: it bites on most
-famous songs.
+for. The pilot showed the hook rule bites on most famous songs; the owner dropped it on 2026-11-01, and t-159 revisits
+these works.
 
 **What the sequencer couldn't express:**
 
@@ -345,7 +345,7 @@ method and readers, and found:
 - **The hook rule bit again**, on Da Funk, Around the World, Harder Better Faster Stronger, Derezzed, Robot Rock,
   Technologic, Oxygène IV, Second Rendez-Vous and Love on a Real Train. Most of those works still gave their sounds a
   part: the break figure, the bass under the hook, the arpeggio or the pad. Five Da Funk sounds now play one break
-  figure, at the two octaves the record has it.
+  figure, at the two octaves the record has it. (The hook rule was dropped on 2026-11-01; t-159 revisits these works.)
 - **A mono sound took the lower note** where the only usable part doubles at the octave (Around the World's pluck
   line). Where a part is two- or more-note chords and nothing else is usable, the sound gets no pattern, as in the
   pilot.
@@ -358,7 +358,9 @@ method and readers, and found:
 
 ## Rights
 
-_Proposed. The owner's call; goes to the `f-launch` legal review._
+_Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on
+2026-11-01: that a work's main hook, if it fits in 8 bars, is never taken whole. A hook may now be recreated within the
+limits below.
 
 A recreated part is still a reproduction of a melody, however short, so the library limits how much it takes and says
 what it is:
@@ -369,9 +371,6 @@ else (see [Reducing a part to a loop](#reducing-a-part-to-a-loop)).
 - **One part of a work**, never two parts of the same work together, and never the vocal melody.
 - **At most 8 bars**, and no longer than the passage that repeats on the record. The 8 bars count the chain played
   through once. Parts A and B with a chain of `[0, 0, 0, 1]` and 2-bar parts are 8 bars.
-- **Never the whole of a part** that is itself short enough to fit in 8 bars and is the work's main hook. In that case
-  take the passage under it instead, or write it _In the style of_. _(Open for the owner: whether the hook rule goes too
-  far for learning use.)_
 - **Labelled every time**: "Inspired by" with the work and artist, the fidelity, and, on the pattern's detail, the line
   _"A short recreation for learning. Not the original recording; the work belongs to its rights holders."_
 - **No downloadable copy**: a library pattern plays in the app, and can be copied into My patterns. It is not offered
