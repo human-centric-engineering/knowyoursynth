@@ -636,6 +636,7 @@ export function PatternForm({ pattern, choices }: PatternFormProps) {
                 type="button"
                 size="sm"
                 variant="ghost"
+                aria-label={`Remove source ${i + 1}`}
                 onClick={() =>
                   set(
                     'sources',
@@ -643,7 +644,7 @@ export function PatternForm({ pattern, choices }: PatternFormProps) {
                   )
                 }
               >
-                Remove source {i + 1}
+                Remove
               </Button>
             </div>
           </div>
