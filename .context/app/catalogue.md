@@ -116,6 +116,8 @@ a tab each for details, sounds, lineage and notes (`?tab=` opens one); `…/:id/
 `…/:id/new-sound` edit and add a sound. A lesson step's values and cables are JSON text, which the
 server checks either way. A refused save puts each of the server's `details.errors` on the field
 its path names, and lists whatever no field claims (`components/app/admin/synths/problems.tsx`).
+A sound's patterns, their order and its default are edited under Synths → Patterns, linked from the
+sound's page ([`pattern-library.md`](./pattern-library.md#the-admin-page)).
 
 ## Which content is still the seed's
 

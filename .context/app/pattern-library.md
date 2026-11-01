@@ -484,13 +484,15 @@ Admin, in `lib/app/patterns/library-edit.ts`, over the catalogue's guard and aud
 Every write is `writesSharedSettings` and audited: a pattern as `library_pattern`, a sound's list or riff as
 `synth_sound`. Tested in `tests/unit/app/api/v1/library-patterns.test.ts`.
 
-| Route                                                | Does                                                                                           |
-| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `GET /api/v1/admin/library-patterns?role=&q=`        | Every pattern, hidden synths' included, with when it was edited and every sound that lists it. |
-| `POST /api/v1/admin/library-patterns`                | A new pattern, on no sound yet. Origin defaults to _Human-authored_.                           |
-| `GET /api/v1/admin/library-patterns/:id`             | One pattern, as above.                                                                         |
-| `PATCH /api/v1/admin/library-patterns/:id`           | Any field but its key. Rewrites the riff of every sound it is the default of.                  |
-| `PUT /api/v1/admin/synths/:id/sounds/:slug/patterns` | `{ patternIds }`, default first. Must keep every pattern the sound has; may add any.           |
+| Route                                                                  | Does                                                                                                                                                                                             |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `GET /api/v1/admin/library-patterns?role=&synth=&artist=&fidelity=&q=` | Every pattern, hidden synths' included, with when it was edited and every sound that lists it. `synth`: on a sound of that synth. `artist`: inspired by them, or by a work they are credited on. |
+| `GET /api/v1/admin/library-patterns/choices`                           | Every synth, databank artist and work (each with its parts), by name: what Inspired by and the filters choose from.                                                                              |
+| `POST /api/v1/admin/library-patterns`                                  | A new pattern, on no sound yet. Origin defaults to _Human-authored_.                                                                                                                             |
+| `GET /api/v1/admin/library-patterns/:id`                               | One pattern, as above.                                                                                                                                                                           |
+| `PATCH /api/v1/admin/library-patterns/:id`                             | Any field but its key. Rewrites the riff of every sound it is the default of.                                                                                                                    |
+| `GET /api/v1/admin/synths/:id/sounds/:slug/patterns`                   | A sound's patterns, default first, each as above.                                                                                                                                                |
+| `PUT /api/v1/admin/synths/:id/sounds/:slug/patterns`                   | `{ patternIds }`, default first. Must keep every pattern the sound has; may add any.                                                                                                             |
 
 The `/api/v1/patterns` routes are users' own patterns (My patterns), a different table. The library's routes are named
 apart so the two never meet.
@@ -534,6 +536,34 @@ came. One of the user's sounds, a shared sound, a lesson's or the tutor's has no
 - **Phones.** Below `lg` the sequencer is a bottom sheet, and the picker is in it with the rest of the module.
 
 Tested in `tests/unit/components/app/sequencer/sound-pattern-picker.test.tsx`.
+
+### The admin page
+
+t-126. Synths → Patterns in the admin nav. Thin server shells over the admin routes above, fetched with `serverFetch`
+as the catalogue's pages are. The components are in `components/app/admin/patterns/`.
+
+- **`/admin/synths/patterns`** lists the library, 50 to a page, by name (`pattern-table.tsx`). Filter by name or
+  Inspired by, synth, role, artist and fidelity. The filters are a plain GET form whose query string is the API's, so
+  the server filters the whole library and a filtered list is a link. Each row shows the role, Inspired by, fidelity,
+  origin, how many patches list it and how many play it by default, and whether an admin has edited it. A stored row
+  that no longer parses is listed with its problem.
+- **`/admin/synths/patterns/:id`** edits one pattern (`pattern-form.tsx`): its name, role, fidelity, origin, tempo
+  range, Inspired by (kind, then the work and part, artist, synth or genre) and sources. Every non-trivial field has a
+  `<FieldHelp>`. The notes are edited in the sequencer module itself, the same component players have, with no
+  engine, so it is silent. Hearing a pattern means opening a patch that lists it. Save sends only the fields that
+  changed (the notes as a whole `pattern`), and each problem the server names lands on its field. The page lists the
+  patches the pattern is on, marking those it is the default of. Saving rewrites their riffs, and the form says so
+  before and after.
+- **`/admin/synths/patterns/sounds/:synthId/:slug`** puts one patch's patterns in order (`sound-patterns-editor.tsx`),
+  reached from a pattern's patches and from the catalogue's patch page. Move a pattern up or down, or **Make default**,
+  then **Save order** sends the whole list. Nothing on the page takes a pattern off. A riff is demoted by another
+  pattern going first, and stays on the patch marked _Was the default_ until saved. The server refuses a default that
+  could not be a riff, and the page shows why.
+
+Not on the page yet: adding a new pattern (`POST`) or adding a library pattern to a patch's list. The API takes both.
+Origin, rights risk, status and comments are [Admin control](#admin-control) (t-156).
+
+Tested in `tests/unit/components/app/admin/patterns/` and, for the reads it added, `tests/unit/app/api/v1/library-patterns.test.ts`.
 
 ### The sound detector
 

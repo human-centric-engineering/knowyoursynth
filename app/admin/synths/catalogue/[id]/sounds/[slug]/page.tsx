@@ -6,6 +6,7 @@ import {
   SharedSettingsReadOnlyNotice,
   SharedSettingsSaveHint,
 } from '@/components/admin/shared-settings-access';
+import { soundPatternsPath } from '@/components/app/admin/patterns/paths';
 import { SoundForm } from '@/components/app/admin/synths/sound-form';
 import { Badge } from '@/components/ui/badge';
 import { getAdminSynthDetail } from '@/app/admin/synths/catalogue/[id]/admin-synth';
@@ -42,6 +43,11 @@ export default async function CatalogueSoundPage({ params }: Props) {
             {sound.sound.name}
             {sound.editedAt && <Badge variant="outline">Edited</Badge>}
           </h1>
+        )}
+        {sound && (
+          <Link href={soundPatternsPath(id, slug)} className="text-sm hover:underline">
+            Its patterns, and which is the default →
+          </Link>
         )}
       </header>
 
