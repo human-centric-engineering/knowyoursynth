@@ -247,7 +247,7 @@ export function PatternForm({ pattern, choices }: PatternFormProps) {
     setStatus(null);
     try {
       const row = await apiClient.patch<AdminLibraryRow>(
-        `/api/v1/admin/library-patterns/${saved.id}`,
+        `/api/v1/admin/library-patterns/${encodeURIComponent(saved.id)}`,
         { body: edit }
       );
       if ('problem' in row) {

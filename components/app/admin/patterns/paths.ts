@@ -31,7 +31,8 @@ export function filterQuery(filters: PatternFilters): string {
 /** The list, filtered; one pattern's editor; or a sound's patterns, in order. */
 export const patternListPath = (filters: PatternFilters = {}): string =>
   `${PATTERNS_ADMIN_ROOT}${filterQuery(filters)}`;
-export const patternAdminPath = (id: string): string => `${PATTERNS_ADMIN_ROOT}/${id}`;
+export const patternAdminPath = (id: string): string =>
+  `${PATTERNS_ADMIN_ROOT}/${encodeURIComponent(id)}`;
 export const soundPatternsPath = (synthId: string, slug: string): string =>
   `${PATTERNS_ADMIN_ROOT}/sounds/${encodeURIComponent(synthId)}/${encodeURIComponent(slug)}`;
 
