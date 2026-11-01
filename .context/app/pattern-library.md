@@ -356,6 +356,27 @@ method and readers, and found:
 - **Tempos the leads disagree on are left unset**, as the pilot did: Oxygène IV (123 and 125) and Équinoxe 5 (157 in
   its only lead, which seems fast).
 
+**The hooks (t-159).** Once the owner dropped the hook rule, t-159 went back to the 16 works it had ruled out, using the
+same leads. 15 hook patterns went on 26 places. 19 of the places are on sounds that already had another part of the
+work, and those sounds now carry both, the hook behind the part they had. Seven sounds that had none got one: the
+Home Computer bleep arp, the Enjoy the Silence lead, two Derezzed sounds, the Robot Rock lead, the Oxygène whistle
+and the soaring Tangerine Dream lead (the Stratosfear theme). Four works still give no hook pattern:
+
+- **The vocal melody is still never taken.** Pocket Calculator's only single-note line is the vocal, and Harder,
+  Better, Faster, Stronger's talking riff is the vocoded vocal. (The Model's verse synth doubles the voice too, but
+  its intro riff is a synth part, and that is what its sounds got.)
+- **Chords on a mono sound.** Technologic's only transcription is a guitar riff in two-note shapes.
+- **No usable notes.** The Second Rendez-Vous transcription has only a few scattered guitar bars, which can't be placed
+  as the laser harp's melody without a listen.
+
+Two things for the next batches:
+
+- **A hook can be on a track the batch didn't read.** The Everything Counts hook is on Songsterr's "Synth IV"; the pilot
+  took its held line from "Synth III". Oxygène IV's melody is on the "Wind" track in triplet swing, and its held notes
+  are lengthened from the "Synth" track, which doubles it straight.
+- **A Songsterr beat's duration already includes its dots**, as it does its triplet, and a grace note takes no time of
+  its own. The rewritten reader got both wrong at first, which showed up as bars of 4½ beats.
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on
@@ -564,7 +585,8 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
   sound after the owner's listen.
 - **A re-run writes nothing, and nor does an empty batch.** Measured on the dev database: the pilot created 17
   patterns and 26 places, and left the 2,293 riffs unchanged. The second batch (t-128) created 20 and 33, left the
-  pilot's 17 unchanged, and skipped nothing.
+  pilot's 17 unchanged, and skipped nothing. The hooks (t-159) created 15 and 26, which brought the totals to 52 and 85, and
+  left every riff its sound's default.
 - **An admin's pattern is never written**: one an admin edited, or made any sound's default.
 - **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
   taken out of a batch file stays in the library and on its sounds.
@@ -581,7 +603,8 @@ every sound by its artists exactly once (Kraftwerk and Depeche Mode for t-127; D
 Tangerine Dream for t-128), that every link resolves in the databank, and that every pattern plays. It also checks
 that no pattern runs past the rights rule's 8 bars, that a sound whose own riff plays no chords gets a single line,
 that the Just Can't Get Enough bass plays the notes both of its leads give, and that the Da Funk break figure plays its
-lead's notes in both octaves.
+lead's notes in both octaves, as does the Da Funk main riff. A sound can be on more than one pattern of a batch, but a
+sound with a pattern never also has a reason.
 
 The catalogue unit's hash leaves the `patterns/` folder out, as it does `bank/`, so a batch edit re-runs only this
 unit.

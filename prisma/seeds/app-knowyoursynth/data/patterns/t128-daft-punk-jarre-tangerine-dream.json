@@ -8,14 +8,6 @@
       "reason": "The siren on “Contact” is a riser swept by the patch, not a part with notes. The Songsterr transcription (Christian Ciro M., 2026) writes its synths as held notes that a sweep starts from, so there is nothing to recreate."
     },
     {
-      "sound": "k2/snarling-drive-riff",
-      "reason": "The arpeggiated riff of “Derezzed” is its hook and fits in 8 bars (rights rule). The only other synth part in the Songsterr transcription is the fifth stabs, which a mono sound cannot play."
-    },
-    {
-      "sound": "neutron/derezzed-arp-bass",
-      "reason": "As for the MS-20’s riff: the “Derezzed” riff is its hook (rights rule), and the fifth stabs need two voices."
-    },
-    {
       "sound": "neutron/cutoff-feedback-screech",
       "reason": "No transcription or MIDI of “Rollin’ & Scratchin’” was found on Songsterr or BitMIDI."
     },
@@ -25,11 +17,7 @@
     },
     {
       "sound": "pro-1/nasal-loop-riff",
-      "reason": "The only transcription of “Technologic” (Songsterr, Evgeny, 2023) is its guitar riff, the work’s hook, written in two-note shapes. Nothing else of the work was found."
-    },
-    {
-      "sound": "super-gemini/sg-sync-lead",
-      "reason": "The “Robot Rock” riff is the work’s hook and fits in 8 bars (rights rule). The other synth parts in the Songsterr transcription (Amber6513, 2026) are four-note chords, which a mono sound cannot play."
+      "reason": "The only transcription of “Technologic” (Songsterr, Evgeny, 2023) is its guitar riff, written in two-note shapes, which a mono sound cannot play. Nothing else of the work was found."
     },
     {
       "sound": "b2600/surf-and-wind",
@@ -80,10 +68,6 @@
       "reason": "The sound’s point is a random filter pattern made by the patch, and it names no work."
     },
     {
-      "sound": "b2600/jarre-oxygene-whistle",
-      "reason": "The whistling lines of Oxygène are melodies: on Part IV the melody is the work’s hook (rights rule). The BitMIDI file of Part II (j-m-jarre-oxygene-part-2.mid) does not line up with any bar length that can be read with confidence, so it was not used."
-    },
-    {
       "sound": "deepmind-12d/phaser-pad",
       "reason": "No transcription found has the phased pads of Équinoxe. The Songsterr “Equinoxe 5” (Leonard, 2009) writes its string parts with ties that cannot be read as chords."
     },
@@ -93,7 +77,7 @@
     },
     {
       "sound": "super-gemini/sg-jarre-laser-harp",
-      "reason": "The laser harp plays the melody of “Second Rendez-Vous”, the work’s hook (rights rule). The only transcription of it (Songsterr, 2025) has guitar, bass and drums."
+      "reason": "The laser harp plays the melody of “Second Rendez-Vous”. The only transcription of it (Songsterr, 2025) has guitar, bass and drums, and its guitar has only a few scattered bars, which can’t be placed as the melody without a listen."
     },
     {
       "sound": "b2600/td-berlin-seq",
@@ -164,12 +148,8 @@
       "reason": "The sound is a slowly evolving drone made by the patch and names no work, so there is no part to transcribe."
     },
     {
-      "sound": "b2600/td-soaring-lead",
-      "reason": "The sound names no work. The one Tangerine Dream solo line found in readable notes is the theme of “Stratosfear”, the work’s hook (rights rule)."
-    },
-    {
       "sound": "ub-xa-d/wah-pad",
-      "reason": "The Songsterr transcription of “Love on a Real Train” (Kiss King, 2025) has the sequence, the work’s hook (rights rule), and two bars of bass. It has no pad chords."
+      "reason": "The Songsterr transcription of “Love on a Real Train” (Kiss King, 2025) has the sequence and two bars of bass. It has no pad chords."
     }
   ],
   "patterns": [
@@ -329,7 +309,7 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "The main 303 riff is the work’s hook and fits in 8 bars, so it is not taken (rights rule), even for the sounds made for it: they get this figure instead. From the transcription’s “Synths 1” track, bar 71, where it sits an octave above “Synths 2” and two above “Synths 3”. The BitMIDI file (daft-punk-da-funk.mid) has only the main riff and drums, so nothing confirms it. Both leads put the record at 110–111 bpm. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The main 303 riff is its own pattern (researched:daft-punk/da-funk-riff). From the transcription’s “Synths 1” track, bar 71, where it sits an octave above “Synths 2” and two above “Synths 3”. The BitMIDI file (daft-punk-da-funk.mid) has only the main riff and drums, so nothing confirms it. Both leads put the record at 110–111 bpm. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -484,7 +464,766 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "The main riff is the hook (rights rule), so the bass sounds get the break figure too. From the transcription’s “Synths 3” track, bar 65. The Homework-era bass sound names no work; Da Funk is the album’s single. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The main riff is its own pattern (researched:daft-punk/da-funk-riff-low). From the transcription’s “Synths 3” track, bar 65. The Homework-era bass sound names no work; Da Funk is the album’s single. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:daft-punk/da-funk-riff",
+      "name": "Da Funk: main riff",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "daft-punk-da-funk"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 110,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 10.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 10.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 10.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": [
+        "neutron/funk-drive-lead",
+        "pro-1/rasp-filter-riff",
+        "take-5/t5-da-funk-lead",
+        "td-3/td-high-lead"
+      ],
+      "research": {
+        "work": "Daft Punk, “Da Funk”, Homework, 1995",
+        "part": "The four-bar riff: each bar holds a note and then climbs back, G, D, B♭, G, down the G minor chord.",
+        "originalKey": "G minor",
+        "originalBpm": 110,
+        "leads": [
+          {
+            "citation": "Daft Punk — “Da Funk”, fan transcription by Oleg Kalbenko on Songsterr (revision 3572201, 2025-10-26)",
+            "url": "https://www.songsterr.com/a/wsa/daft-punk-da-funk-tab-s28804",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "The work’s main riff, from the transcription’s “Main Synth Riff 1” track, bars 1–4; bars 5–8 repeat them. The BitMIDI file (daft-punk-da-funk.mid) has the same riff. As written. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:daft-punk/da-funk-riff-low",
+      "name": "Da Funk: main riff, low",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "daft-punk-da-funk"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 110,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 46,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 10.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 10.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 33,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 10.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 33,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["tb-303/tb-funk-stab", "k2/rubber-funk"],
+      "research": {
+        "work": "Daft Punk, “Da Funk”, Homework, 1995",
+        "part": "The same riff two octaves down, for the bass sounds.",
+        "originalKey": "G minor",
+        "originalBpm": 110,
+        "leads": [
+          {
+            "citation": "Daft Punk — “Da Funk”, fan transcription by Oleg Kalbenko on Songsterr (revision 3572201, 2025-10-26)",
+            "url": "https://www.songsterr.com/a/wsa/daft-punk-da-funk-tab-s28804",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "The work’s main riff, from the transcription’s “Main Synth Riff 1” track, bars 1–4; bars 5–8 repeat them. The BitMIDI file (daft-punk-da-funk.mid) has the same riff. Moved down two octaves, as the break figure’s low pattern is. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -2074,7 +2813,7 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "From the transcription’s lead synth track, bars 41–44. The solo runs for 30 bars, so four are within the rights rule. Its later bars are fast runs in tuplets that the step grid cannot hold, so the phrase was taken from where it moves in eighths. The intro melody, the work’s hook, is not taken. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s lead synth track, bars 41–44. The solo runs for 30 bars, so four are within the rights rule. Its later bars are fast runs in tuplets that the step grid cannot hold, so the phrase was taken from where it moves in eighths. The intro melody is another part of the work. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -2910,7 +3649,414 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "The bass line is the work’s hook with the vocal, and fits in 8 bars, so it is not taken (rights rule), even for the bass sound made for it. From the transcription’s pluck synth track, bars 21–22, which double each note at the octave: the lower note only, moved down two octaves for a mono bass. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The bass line is its own pattern (researched:daft-punk/around-the-world-bass). From the transcription’s pluck synth track, bars 21–22, which double each note at the octave: the lower note only, moved down two octaves for a mono bass. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:daft-punk/around-the-world-bass",
+      "name": "Around the World: bass line",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "daft-punk"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 121,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 33,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 33,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 33,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 35,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 42,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 35,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 33,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 33,
+                    "gate": 1.0
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["model-d/muted-house-bass"],
+      "research": {
+        "work": "Daft Punk, “Around the World”, Homework, 1997",
+        "part": "The four-bar bass line: A, C and E each pushed off the beat, then the run down from F♯ to G.",
+        "originalKey": null,
+        "originalBpm": 121,
+        "leads": [
+          {
+            "citation": "Daft Punk — “Around The World (Radio Edit)”, fan transcription by guytolyou on Songsterr (revision 8764321, 2026-08-29)",
+            "url": "https://www.songsterr.com/a/wsa/daft-punk-around-the-world-radio-edit-tab-s83791",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "From the transcription’s bass track, bars 13–16, as written. The staccato notes are held for half their length. The grace note before the run’s F♯ is left out. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -3110,7 +4256,327 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "The arpeggiated riff the work is built on is its hook and fits in 8 bars, so it is not taken (rights rule). From the transcription’s synth bass track, bar 63 (bars 63–66 repeat it), moved down an octave. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The riff the work is built on is its own pattern, as is its bass (researched:daft-punk/derezzed-riff and researched:daft-punk/derezzed-bass). From the transcription’s synth bass track, bar 63 (bars 63–66 repeat it), moved down an octave. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:daft-punk/derezzed-riff",
+      "name": "Derezzed: arpeggiated riff",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "daft-punk"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 120,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 51,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 51,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 54,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 51,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 54,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 49,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 46,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 49,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 51,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 54,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 1.0
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["k2/snarling-drive-riff"],
+      "research": {
+        "work": "Daft Punk, “Derezzed”, Tron: Legacy, 2010",
+        "part": "The one-bar riff on E♭ minor: E♭, F♯, E♭, then a run up and down the chord.",
+        "originalKey": null,
+        "originalBpm": 120,
+        "leads": [
+          {
+            "citation": "Daft Punk — “Derezzed”, fan transcription by Deletion on Songsterr (revision 3544150, 2025-10-24)",
+            "url": "https://www.songsterr.com/a/wsa/daft-punk-derezzed-tab-s69799",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "From the transcription’s keyboard lead track, bar 5, which the guitar and the other lead double; it repeats through the piece. Moved down an octave to sit in the MS-20’s register. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:daft-punk/derezzed-bass",
+      "name": "Derezzed: bass riff",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "daft-punk"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 120,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 51,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 54,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 51,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 37,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 51,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 42,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 46,
+                    "gate": 1.0
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["neutron/derezzed-arp-bass", "take-5/t5-derezzed-bass"],
+      "research": {
+        "work": "Daft Punk, “Derezzed”, Tron: Legacy, 2010",
+        "part": "The one-bar bass riff under the lead: E♭, F♯, E♭, then a run down to the bottom octave and back.",
+        "originalKey": null,
+        "originalBpm": 120,
+        "leads": [
+          {
+            "citation": "Daft Punk — “Derezzed”, fan transcription by Deletion on Songsterr (revision 3544150, 2025-10-24)",
+            "url": "https://www.songsterr.com/a/wsa/daft-punk-derezzed-tab-s69799",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "From the transcription’s synth bass track, bar 19, as written. Bars 20–31 repeat it. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -4561,7 +6027,7 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "The talking riff is the work’s hook and fits in 8 bars, so it is not taken (rights rule), even for the sound made for it. From the transcription’s synth bass track, bars 11–14, moved up two octaves to sit where the sound plays. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The talking riff the sound was made for is the vocoded vocal (the transcription’s “Vocal” track), and the vocal melody is never taken. From the transcription’s synth bass track, bars 11–14, moved up two octaves to sit where the sound plays. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -5117,6 +6583,235 @@
       }
     },
     {
+      "key": "researched:daft-punk/robot-rock-riff",
+      "name": "Robot Rock: riff",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "daft-punk"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 112,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 6.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["super-gemini/sg-sync-lead"],
+      "research": {
+        "work": "Daft Punk, “Robot Rock”, Human After All, 2005",
+        "part": "The two-bar riff: a fast fall E, C, A, F to a held E, then the same fall on to D and a held C.",
+        "originalKey": null,
+        "originalBpm": 112,
+        "leads": [
+          {
+            "citation": "Daft Punk — “Robot Rock”, fan transcription by Amber6513 on Songsterr (revision 7867494, 2026-07-12)",
+            "url": "https://www.songsterr.com/a/wsa/daft-punk-robot-rock-tab-s5524",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "From the transcription’s lead guitar track, bars 12–13, which the synth lead track doubles. Moved up an octave to sit in the sound’s register. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:jean-michel-jarre/oxygene-iv-chords",
       "name": "Oxygène IV: pad chords",
       "role": "chord_changes",
@@ -5487,7 +7182,7 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "From the MIDI file’s second string track, bars 11–18, voiced as written. The Songsterr transcription has no pad, but its bass and melody match the file’s, which places the chords. The melody is the work’s hook and is not taken (rights rule). The leads put the record at 123 (the MIDI file, which the pattern follows) and 125 bpm, so the original tempo is left unset. Each chord is cut a little short so the next one speaks. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the MIDI file’s second string track, bars 11–18, voiced as written. The Songsterr transcription has no pad, but its bass and melody match the file’s, which places the chords. The melody is its own pattern (researched:jean-michel-jarre/oxygene-iv-melody). The leads put the record at 123 (the MIDI file, which the pattern follows) and 125 bpm, so the original tempo is left unset. Each chord is cut a little short so the next one speaks. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -5965,7 +7660,416 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "The melody is the work’s hook and fits in 8 bars, so it is not taken (rights rule), even for the lead sounds: they get the arpeggio instead. From the transcription’s lower piano staff, bars 17–20, moved up an octave to sit in a lead’s register. It plays at the transcription’s 125 bpm; the MIDI file has the work at 123, so the original tempo is left unset. The laser-harp lead on the E7 names no work. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The melody is its own pattern (researched:jean-michel-jarre/oxygene-iv-melody). From the transcription’s lower piano staff, bars 17–20, moved up an octave to sit in a lead’s register. It plays at the transcription’s 125 bpm; the MIDI file has the work at 123, so the original tempo is left unset. The laser-harp lead on the E7 names no work. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:jean-michel-jarre/oxygene-iv-melody",
+      "name": "Oxygène IV: melody",
+      "role": "slow_melody",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "jean-michel-jarre-oxygene"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 125,
+        "stepSize": "1/8t",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 84,
+                    "gate": 5.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 75,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 13.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 84,
+                    "gate": 5.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 75,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 13.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 82,
+                    "gate": 5.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 81,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 81,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 13.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["model-d/oxygene-lead", "e7/e7-jarre-lead", "b2600/jarre-oxygene-whistle"],
+      "research": {
+        "work": "Jean-Michel Jarre, “Oxygène (Part IV)”, Oxygène, 1976",
+        "part": "Six bars of the melody: C falling to G, E♭, G and a held C, twice, then B♭ falling to A, G, A and a held D.",
+        "originalKey": "C minor",
+        "originalBpm": null,
+        "leads": [
+          {
+            "citation": "Jean-Michel Jarre — “Oxygene, Pt. 4”, fan transcription by Plonker on Songsterr (revision 9433017, 2026-09-30)",
+            "url": "https://www.songsterr.com/a/wsa/jean-michel-jarre-oxygene-pt-4-tab-s3218938",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "From the transcription’s “Wind” track, bars 11–16, in its triplet swing, moved up an octave. The wind track rests after each phrase; the synth track, which plays the same melody straight, holds the last note through the bar, so it is held here. The leads put the record at 123 and 125 bpm, so the original tempo is left unset. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -7507,7 +9611,7 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "From the transcription’s synth track, bars 13–18. The theme over it is the work’s hook and is not taken. None of these four Berlin-school sounds names a work; this is the one Tangerine Dream sequence the free web has in readable notes. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s synth track, bars 13–18. The theme over it is its own pattern (researched:tangerine-dream/stratosfear-theme). None of these four Berlin-school sounds names a work; this is the one Tangerine Dream sequence the free web has in readable notes. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -8134,6 +10238,240 @@
       }
     },
     {
+      "key": "researched:tangerine-dream/stratosfear-theme",
+      "name": "Stratosfear: theme",
+      "role": "slow_melody",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "tangerine-dream"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 90,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["b2600/td-soaring-lead"],
+      "research": {
+        "work": "Tangerine Dream, “Stratosfear”, Stratosfear, 1976",
+        "part": "The first four bars of the theme: B rising to C and falling to F♯, then G, A, G, E.",
+        "originalKey": null,
+        "originalBpm": 90,
+        "leads": [
+          {
+            "citation": "Tangerine Dream — “Stratosfear”, fan transcription by Patrik Arvidsson on Songsterr (revision 9363480, 2026-09-27)",
+            "url": "https://www.songsterr.com/a/wsa/tangerine-dream-stratosfear-tab-s7171909",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "From the transcription’s synth track, bars 19–22. The fourth bar is in thirds; a mono sound takes the upper note, the melody. The sound names no work; this is the one Tangerine Dream solo line the free web has in readable notes. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:tangerine-dream/love-on-a-real-train-pulse",
       "name": "Love on a Real Train: octave pulse",
       "role": "arp",
@@ -8319,7 +10657,484 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "The sequence the piece is built on is its hook and fits in 8 bars, so it is not taken (rights rule), even for the arpeggio sound made for it. From the transcription’s bass track, bars 9–10, moved up an octave; the transcription stops after them. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The sequence the piece is built on is its own pattern (researched:tangerine-dream/love-on-a-real-train-sequence). From the transcription’s bass track, bars 9–10, moved up an octave; the transcription stops after them. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:tangerine-dream/love-on-a-real-train-sequence",
+      "name": "Love on a Real Train: sequence",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "tangerine-dream"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 115,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 9.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["deepmind-12d/arp-pulse"],
+      "research": {
+        "work": "Tangerine Dream, “Love on a Real Train”, Risky Business soundtrack, 1984",
+        "part": "Four bars of the sequence the piece is built on: A, E, E, D, B, E, E, D, A, B, with the third bar held.",
+        "originalKey": null,
+        "originalBpm": 115,
+        "leads": [
+          {
+            "citation": "Tangerine Dream — “Love on a Real Train”, fan transcription by Kiss King on Songsterr (revision 2557465, 2025-07-27)",
+            "url": "https://www.songsterr.com/a/wsa/tangerine-dream-love-on-a-real-train-tab-s1920279",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "From the transcription’s first guitar track, bars 2–5, as written. Bar 1 opens on a rest, so the loop starts on the A that begins bar 2. The hook rule that kept it out of the pilot was dropped by the owner on 2026-11-01 (t-159). _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     }
