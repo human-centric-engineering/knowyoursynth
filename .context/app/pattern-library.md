@@ -17,7 +17,8 @@ This page is the design, written before the build (t-121). It covers:
 
 Each later task updates its section as it lands. The table, the migration, the seed and the API are t-122 and are
 described as built in [The library as built](#the-library-as-built). The picker on the synth page is t-123, the sound
-detector t-124, suggestions t-125, the admin editor t-126 and admin control t-156.
+detector t-124, suggestions t-125, the admin editor t-126 and admin control t-156. The research batches and their seed are
+t-127 on ([Researched patterns](#researched-patterns), [The method as practised](#the-method-as-practised)).
 
 **Awaiting the owner's sign-off on the PR:** the role vocabulary, the fidelity labels, the rights rule and admin
 control. Each is marked _Proposed_ below until it is signed off.
@@ -252,7 +253,8 @@ What the pattern does **not** carry:
 
 - The pattern passes `PatternSchema`, and compiles to the intended notes (a test per batch, like `import.test.ts`).
 - The pattern is played on the sound it is for, at the original key and tempo, against the record. Then a second time
-  at the sound's own tempo.
+  at the sound's own tempo. An agent researching a batch cannot listen, so this is the owner's (_owner ruling,
+  2026-11-01_): see [The method as practised](#the-method-as-practised).
 - The owner listens to each batch. This is batched with the end checks, and the pilot batch (t-127) is the first.
   The owner's listen is what moves a pattern into a sound's defaults.
 
@@ -269,6 +271,64 @@ What is kept with it (committed, in the seed beside the pattern):
 - whether the owner has listened to it, and when
 - its origin ([Admin control](#admin-control)). Rights risk, status and comments are admin edits, kept in the database
   and never overwritten by a reseed
+
+### The method as practised
+
+The pilot (t-127) researched the 42 Kraftwerk and Depeche Mode sounds. The library had grown since the plan, which
+counted 31. 26 sounds got one of 17 patterns, and 16 got a recorded reason why not. The batch is
+`prisma/seeds/app-knowyoursynth/data/patterns/t127-kraftwerk-depeche-mode.json`. What it taught the next batches
+(t-128, t-129):
+
+**An agent can't make the by-ear check, and the free web has almost no sources.** _Owner ruling, 2026-11-01:_ a batch
+writes from what it can read, with fan transcriptions as starting points (`research.leads`, never `sources`). Each
+pattern goes on its sounds behind the riff, and the owner's listen is the by-ear step. So every pilot pattern is _In
+the style of_. Two leads that agree are still not two sources. The Just Can't Get Enough bass is the strongest case:
+two independent leads agree note for note. That is the one the owner's listen could most easily raise to
+_Reconstructed_.
+
+**Where readable notes were, and weren't:**
+
+| Tried                                                                    | Result                                                                                                                                                                                                                                                                        |
+| ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Songsterr                                                                | **Worked.** Its public API (`/api/songs?pattern=`, `/api/meta/:id`) and its CDN serve every track of a transcription as JSON: pitches from string and fret, durations, bars, section markers and tempo. Most of the batch came from here. It had 16 of the 25 works searched. |
+| BitMIDI                                                                  | **Worked.** A search API and direct `.mid` downloads, read with a small parser. Fan MIDI, often with echoes or played-in timing written as notes.                                                                                                                             |
+| Ultimate Guitar                                                          | Tabs are drawn by JavaScript; a fetch gets the title only.                                                                                                                                                                                                                    |
+| MusicRadar, Computer Music (Readly), MusicTech                           | How-to articles behind sign-ups or paywalls.                                                                                                                                                                                                                                  |
+| Publisher sheet music (Musicnotes, Sheet Music Direct)                   | Paid. These would be real sources (tier 3 or better) if bought.                                                                                                                                                                                                               |
+| Audio analysers (SongBPM, AcousticBrainz)                                | Key and tempo guesses that disagree, by up to 40 bpm on Autobahn. Not used.                                                                                                                                                                                                   |
+| Gear write-ups (Mixdown's Gear Rundown, Syntorial's patch recipes, etc.) | Name the synth and describe the part, but give no notes.                                                                                                                                                                                                                      |
+
+The readers were scratch scripts, not committed: they fetch someone else's work, which the repo never holds.
+
+**What the rights rule decided.** The hook rule ruled out the part a lead sound was written for on seven works: The
+Model, Computer Love, Home Computer, Pocket Calculator, Just Can't Get Enough, Everything Counts and Enjoy the Silence.
+Four of those works gave their sounds another part instead: a counter-line, a sequence or the bass under the hook. The other three gave none.
+The one-part rule also cost the Numbers snare its kick, so that pattern is plainer than the beat the record is known
+for. Whether the hook rule goes too far is still open for the owner, and the pilot is the evidence: it bites on most
+famous songs.
+
+**What the sequencer couldn't express:**
+
+- **A bar of 5/4.** Spacelab's rise ends in one, so the top note is held through a fourth bar of 4/4 instead.
+- **Echoes written as notes.** Fan MIDI often writes the tape echo as notes (Autobahn's octave pulse). A pattern
+  shouldn't carry those, and only a listen can pick them out.
+- **Chords on a mono sound.** Only 3 of the 42 sounds' own riffs play chords. So a part made of dyads or four-note
+  stabs (Pocket Calculator, The Model's pulsing fifths) can't go on most of them, and the batch test holds every other
+  sound to single lines.
+- **Long parts in eight bars.** Tour de France holds each chord for four bars; the pattern changes chord every bar so
+  the 8-bar limit still shows the movement.
+
+**Time.** Roughly an hour and a half for the batch, by the session's clock. The first hour went on finding sources that could be
+read at all. Once the two readers existed, a work took a few minutes: list its tracks, pick the part and the bars,
+write it down. Writing why a sound has no pattern took as long as writing one.
+
+**For the next batches:**
+
+- Start from Songsterr and BitMIDI, and record a work with neither as not recreated rather than searching further.
+- Read the record kept per pattern before listening: it says which bars were taken, which lead they came from, and
+  what was changed.
+- If the owner wants _Reconstructed_ or _Transcribed_ patterns, a source has to come from outside the free web:
+  bought sheet music, or the owner's own ear on the leads.
 
 ## Rights
 
@@ -455,8 +515,43 @@ The migrated riffs, as measured: roles exactly as the [table](#the-vocabulary) a
 synths and 1,179 genres; all _In the style of_ and _AI-generated_. The test that every default still plays its riff,
 and that none is missing, runs over the real seed data.
 
-Researched patterns (t-127 on) come from their own seed data, planned beside the riffs. The loader for that is the
-pilot's to add, since there is nothing to load yet.
+#### Researched patterns
+
+The same unit then runs `syncResearchedPatterns` (`lib/app/patterns/library-researched.ts`) over the research batches
+under `prisma/seeds/app-knowyoursynth/data/patterns/`, read by `pattern-data.ts`. A batch file is checked by
+`ResearchBatchSchema`. It records the task, who researched it and when, its patterns, and the sounds it looked at and
+wrote no pattern for, each with a reason. Each pattern has:
+
+- its name, role, tempo range, Inspired by (a databank song by id, with its part by place in the song's list, an
+  artist, a synth or a genre), fidelity, sources and notes
+- the sounds it is for, as `<synthId>/<slug>`
+- `research`: the record kept per pattern ([above](#the-record-kept-per-pattern)). It stays in the file and is not
+  stored, so it never drifts from the batch it came with.
+
+The schema refuses what the admin API refuses: a pattern that plays nothing on its first loop, a tempo range that
+leaves out its own bpm, and a _Transcribed_ or _Reconstructed_ pattern that names no work or lists no sources. Every
+batch pattern is stored as _AI-generated_.
+
+The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.ts`:
+
+- **Behind, never in front.** Each pattern goes at the end of each of its sounds' lists, so every riff stays its sound's
+  default and nothing a sound plays changes. A researched pattern becomes a default only when an admin reorders the
+  sound after the owner's listen.
+- **A re-run writes nothing, and nor does an empty batch.** Measured on the dev database: the pilot created 17
+  patterns and 26 places, and left the 2,293 riffs unchanged.
+- **An admin's pattern is never written**: one an admin edited, or made any sound's default.
+- **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
+  taken out of a batch file stays in the library and on its sounds.
+- **A link to nothing stops the seed** before that pattern is written: a sound, song, part, artist or synth that is not
+  there.
+
+Over the real data, the same test checks that every sound a batch names is in the catalogue, that every Kraftwerk and
+Depeche Mode sound is looked at exactly once, that every link resolves in the databank, and that every pattern plays.
+It also checks that no pattern runs past the rights rule's 8 bars, that a sound whose own riff plays no chords gets a
+single line, and that the Just Can't Get Enough bass plays the notes both of its leads give.
+
+The catalogue unit's hash leaves the `patterns/` folder out, as it does `bank/`, so a batch edit re-runs only this
+unit.
 
 ### The API
 
