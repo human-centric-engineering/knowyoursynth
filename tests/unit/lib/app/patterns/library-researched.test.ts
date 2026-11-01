@@ -1,10 +1,10 @@
 /**
- * Researched patterns (`f-pattern-library` t-127, t-128, t-159): the research batches under the seed's `data/patterns/`, and
+ * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129): the research batches under the seed's `data/patterns/`, and
  * the seed that puts them on their sounds.
  *
  * First the real batches, against the real catalogue and databank data: every pattern parses and plays, every sound a
  * batch names is in the catalogue and is looked at by one batch (one or more patterns, or a reason it has none), every
- * link resolves, the rights rule's length holds, and three parts play the notes their leads give. Then the sync, over the stateful catalogue fake seeded from Model D's real sounds:
+ * link resolves, the rights rule's length holds, and five parts play the notes their leads give. Then the sync, over the stateful catalogue fake seeded from Model D's real sounds:
  * a pattern goes behind the riff and never in front, a second run writes nothing, an empty batch writes nothing, and an
  * admin's pattern (edited, or made a default) is left alone.
  */
@@ -71,6 +71,7 @@ describe('the research batches', () => {
   const rosters: [string, string[], number][] = [
     ['t-127', ['Kraftwerk', 'Depeche Mode'], 42],
     ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 75],
+    ['t-129', ['Brian Eno', 'Daniel Lanois', 'Vangelis', 'Boards of Canada'], 77],
   ];
 
   it('has a roster for every batch, so none goes unchecked below', () => {
@@ -183,6 +184,20 @@ describe('the research batches', () => {
     const high = pitches('researched:daft-punk/da-funk-riff');
     expect(high).toEqual([67, 65, 67, 70, 62, 60, 62, 65, 58, 57, 58, 62, 55, 57, 58]);
     expect(pitches('researched:daft-punk/da-funk-riff-low')).toEqual(high.map((n) => n - 24));
+  });
+
+  it('plays the notes its leads give: the End Titles theme of “Blade Runner”, as both leads have it', () => {
+    // C B♭ A♭ G, B♭ A G F: Songsterr keys track 5 and the BitMIDI file's track 4, bars 13–20.
+    expect(pitches('researched:vangelis/blade-runner-end-titles-theme')).toEqual([
+      72, 70, 68, 67, 70, 69, 67, 65,
+    ]);
+  });
+
+  it('plays the notes its lead gives: the intro of “Digital Love”, which t-159 left for a later batch', () => {
+    // Songsterr “Lead Synths”, bars 9–16.
+    expect(pitches('researched:daft-punk/digital-love-intro')).toEqual([
+      81, 80, 81, 76, 73, 76, 69, 71, 69, 73, 69, 76, 69, 81, 57, 64, 69, 66, 76,
+    ]);
   });
 });
 
