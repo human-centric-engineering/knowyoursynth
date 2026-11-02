@@ -10,7 +10,7 @@ This page is the design, written before the build (t-121). It covers:
 
 - the roles a pattern plays and the facts it carries for matching
 - what "Inspired by" links to, and the fidelity levels
-- the research method the batches follow (t-127, t-128, t-129, t-160, t-161)
+- the research method the batches follow (t-127, t-128, t-129, t-160, t-161, t-162)
 - the rights rule
 - how admins see and control each pattern's origin, rights risk and status
 - how the current riffs are reviewed
@@ -487,6 +487,40 @@ and Vince Clarke (9) to one each by Björk, SOPHIE and The Cure. The task counte
   Humana and the Only You arpeggio for the bright sequencer arp. The Blue Monday bass stays one pattern: its low
   notes sit where all four sounds' do, and only its octave jumps raise its middle.
 
+**The sixth batch (t-162): 80s pop and arena synth hits.** Every sound by 30 artists, from Duran Duran (9 sounds) and
+Talking Heads (8) to one each by Alphaville, Billie Eilish and Yello. The task counted about 81; there were 83. All 83
+got one of 54 patterns, and none needed a reason. The batch is
+`prisma/seeds/app-knowyoursynth/data/patterns/t162-80s-pop-and-arena.json`. It found:
+
+- **The hits are covered as well as synth-pop was.** 50 patterns came from 36 Songsterr transcriptions, most with the
+  synth parts as tracks named by player and instrument: "Take On Me", "Jump", "The Final Countdown", "Sweet Dreams",
+  "Rio", "Hungry Like the Wolf", "Save a Prayer", "Everybody Wants to Rule the World", "Separate Ways" and "West End
+  Girls" among them.
+- **Two transcriptions were made by Songsterr's machine**: the Cars' "Let's Go" and Howard Jones's "What Is Love?". Haddaway's "What Is Love" comes from a fan's (LtLemonade's). The "She Blinded Me with
+  Science" transcription names a fan but marks every track "retranscribed", and both its patterns say so.
+- **Four patterns are best guesses**: three Howard Jones sounds and the two Spandau Ballet toms. The one transcription of Howard Jones's
+  "What Is Love?" has bass, drums and vocal; nothing for "New Song" was found; neither "True" transcription has
+  toms.
+- **Brass stabs in chords went on the chord sounds whole.** The "Jump" riff's triads went on all five of its brass
+  sounds, each of whose own riffs plays chords. "The Final Countdown" riff is a single line in its transcription, so
+  all three Europe sounds got it, and the two poly ones got the chords under it as well. Where a mono sound's part was chords, it took
+  the top line ("This Must Be the Place", the "Born Under Punches" comp, "Relax") or, for the low "In the Air Tonight"
+  pad, the bottom one.
+- **A drum track's notes are drum numbers, not pitches.** The "In the Air Tonight" snare sound got the snare hits from
+  the kit's track, at the sound's own pitch. Songsterr's drum tracks carry no tuning, and that one gives the snare a
+  number above the General MIDI range (91). The Simmons part of "Hungry Like the Wolf" is on a pitched track, so the
+  new-wave tom took its lower pad.
+- **A 12/8 transcription is a triplet pattern.** "Everybody Wants to Rule the World" is transcribed in 12/8 at 165;
+  each eighth is one step on the `1/8t` grid at 110.
+- **An odd-metre phrase loops whole.** The "I Got You" break is a bar of 6/4 then one of 4/4, so its pattern is ten
+  beats long rather than cut to a 4/4 bar.
+- **Played-in timing doesn't fit a step grid.** "The Chauffeur"'s recorder melody is transcribed off the beat by
+  fractions no step size holds, so its flute sound got the intro figure.
+- **A sound naming only an album or an era got a work from it**, as in t-161: the two Remain in Light sounds got "Born
+  Under Punches", the early-albums Cars lead got "Just What I Needed", and the new-wave tom got the "Hungry Like the
+  Wolf" Simmons fill. The Talking Heads works t-160 also read gave different parts here, on new keys.
+- **Octaves went twice** for "Take On Me", "Sweet Dreams" and "West End Girls", whose sounds sit an octave apart.
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on
@@ -704,7 +738,8 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
   nothing. The fifth (t-161) created 57 and 73, which brought them to 185 and 282, and skipped nothing. It also updated
   13 of t-160's patterns, whose review fixes the dev database hadn't had yet, and left the other 115 and every riff
   unchanged. Its review fixes then created 3 and 4, the octave copies, and updated 8: the four relinked, the three
-  whose sounds moved and the renamed hi-hat genre.
+  whose sounds moved and the renamed hi-hat genre. The sixth (t-162) created 54 and 86, which brought them to 242 and
+  372, left the 188 and every riff unchanged, and skipped nothing.
 - **An admin's pattern is never written**: one an admin edited, or made any sound's default.
 - **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
   taken out of a batch file stays in the library and on its sounds.
@@ -719,13 +754,15 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
 Over the real data, the same test checks that every sound a batch names is in the catalogue, that each batch looks at
 every sound by its artists exactly once (Kraftwerk and Depeche Mode for t-127; Daft Punk, Jean-Michel Jarre and
 Tangerine Dream for t-128; Brian Eno, Daniel Lanois, Vangelis and Boards of Canada for t-129; 31 funk, soul and R&B
-artists for t-160; 29 synth-pop and post-punk artists for t-161), that every link resolves
+artists for t-160; 29 synth-pop and post-punk artists for t-161; 30 80s pop and arena artists for t-162), that every
+link resolves
 in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
 a sound whose own riff plays no chords gets a single line, that the Just Can't Get Enough bass and the Blade Runner End
 Titles theme play the notes both of their leads give, that the Da Funk break figure plays its lead's notes in both
 octaves, as does the Da Funk main riff, that Digital Love's intro plays its lead's notes, that the Flash Light
-bass and the Superstition clavinet (in both octaves) play theirs, and that the Blue Monday bass and the Are 'Friends'
-Electric? riff play theirs. A pattern with no lead must say it is a best guess. A sound can be on more
+bass and the Superstition clavinet (in both octaves) play theirs, that the Blue Monday bass, the Are 'Friends'
+Electric? riff, the Take On Me riff and the Sweet Dreams riff play theirs, and that t-161's and t-162's octave copies
+sit an octave from the part they copy. A pattern with no lead must say it is a best guess. A sound can be on more
 than one pattern of a batch, but a sound with a pattern never also has a reason.
 
 The catalogue unit's hash leaves the `patterns/` folder out, as it does `bank/`, so a batch edit re-runs only this
