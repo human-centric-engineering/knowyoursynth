@@ -20,7 +20,7 @@ import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-da
 import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
 import { loadPatternData } from '@/prisma/seeds/app-knowyoursynth/pattern-data';
 import { riffKey, syncRiffPatterns, type LibraryDb } from '@/lib/app/patterns/library';
-import { firstLoop, patternFacts } from '@/lib/app/patterns/library-facts';
+import { firstLoop } from '@/lib/app/patterns/library-facts';
 import {
   ResearchBatchSchema,
   syncResearchedPatterns,
@@ -52,6 +52,19 @@ const sounds = new Map<string, ReturnType<typeof PresetSchema.parse>>(
 
 /** The beats a pattern's chain plays through once. */
 const chainBeats = (p: Pattern) => p.chain.length * firstLoop(p).beats;
+
+/** The most notes sounding at once in a pattern: a note held over the next one counts, as it does on a synth’s voices. */
+const mostSounding = (p: Pattern) => {
+  const { notes } = firstLoop(p);
+  return notes.reduce(
+    (most, [at]) =>
+      Math.max(
+        most,
+        notes.filter(([beat, , len]) => beat === at || (beat < at && at < beat + len - 1e-9)).length
+      ),
+    0
+  );
+};
 
 describe('the research batches', () => {
   it('has the pilot, with patterns and reasons, or every check below is vacuous', () => {
@@ -249,7 +262,7 @@ describe('the research batches', () => {
         const starts = new Map<number, number>();
         for (const [beat] of riff.steps) starts.set(beat, (starts.get(beat) ?? 0) + 1);
         if (Math.max(...starts.values()) === 1)
-          expect(patternFacts(p.pattern).voices, `${p.key} on ${s}`).toBe(1);
+          expect(mostSounding(p.pattern), `${p.key} on ${s}`).toBe(1);
       }
   });
 
@@ -267,9 +280,7 @@ describe('the research batches', () => {
         );
         const poly = def.toEngine(values, { wheel: 0, patched: {} }).poly;
         if (poly && !poly.mono)
-          expect(patternFacts(p.pattern).voices, `${p.key} on ${s}`).toBeLessThanOrEqual(
-            poly.voices
-          );
+          expect(mostSounding(p.pattern), `${p.key} on ${s}`).toBeLessThanOrEqual(poly.voices);
       }
   });
 

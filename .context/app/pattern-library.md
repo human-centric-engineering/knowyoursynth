@@ -496,10 +496,10 @@ got one of 54 patterns, and none needed a reason. The batch is
   synth parts as tracks named by player and instrument: "Take On Me", "Jump", "The Final Countdown", "Sweet Dreams",
   "Rio", "Hungry Like the Wolf", "Save a Prayer", "Everybody Wants to Rule the World", "Separate Ways" and "West End
   Girls" among them.
-- **Two transcriptions were made by Songsterr's machine**: "Let's Go" and "What Is Love?". The "She Blinded Me with
+- **Two transcriptions were made by Songsterr's machine**: the Cars' "Let's Go" and Howard Jones's "What Is Love?". Haddaway's "What Is Love" comes from a fan's (LtLemonade's). The "She Blinded Me with
   Science" transcription names a fan but marks every track "retranscribed", and both its patterns say so.
-- **Four patterns are best guesses**: three Howard Jones sounds and the two Spandau Ballet toms. The one "What Is
-  Love?" transcription has bass, drums and vocal; nothing for "New Song" was found; neither "True" transcription has
+- **Four patterns are best guesses**: three Howard Jones sounds and the two Spandau Ballet toms. The one transcription of Howard Jones's
+  "What Is Love?" has bass, drums and vocal; nothing for "New Song" was found; neither "True" transcription has
   toms.
 - **Brass stabs in chords went on the chord sounds whole.** The "Jump" riff's triads went on all five of its brass
   sounds, each of whose own riffs plays chords. "The Final Countdown" riff is a single line in its transcription, so

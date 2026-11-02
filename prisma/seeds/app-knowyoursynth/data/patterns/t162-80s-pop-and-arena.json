@@ -3762,8 +3762,7 @@
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
-        "songId": "duran-duran-rio",
-        "part": 0
+        "songId": "duran-duran-rio"
       },
       "fidelity": "in_the_style_of",
       "sources": [],
@@ -9134,8 +9133,7 @@
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
-        "songId": "howard-jones-what-is-love",
-        "part": 0
+        "songId": "howard-jones-what-is-love"
       },
       "fidelity": "in_the_style_of",
       "sources": [],
@@ -10580,8 +10578,7 @@
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
-        "songId": "phil-collins-in-the-air-tonight",
-        "part": 0
+        "songId": "phil-collins-in-the-air-tonight"
       },
       "fidelity": "in_the_style_of",
       "sources": [],
@@ -12363,7 +12360,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Jonathan Cain | Roland Jupiter-8 | Synth Lead” track, bars 1–2, as written and an octave down to sit where the sounds play. Each top note rings over the pulse, so the riff plays two notes at once. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Jonathan Cain | Roland Jupiter-8 | Synth Lead” track, bars 1–2, with every note moved down an octave to sit where the sounds play; nothing else changed. Each top note rings over the pulse, so the riff plays two notes at once. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -12374,7 +12371,8 @@
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
-        "songId": "thomas-dolby-she-blinded-me-with-science"
+        "songId": "thomas-dolby-she-blinded-me-with-science",
+        "part": 0
       },
       "fidelity": "in_the_style_of",
       "sources": [],
@@ -12534,7 +12532,8 @@
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
-        "songId": "thomas-dolby-she-blinded-me-with-science"
+        "songId": "thomas-dolby-she-blinded-me-with-science",
+        "part": 0
       },
       "fidelity": "in_the_style_of",
       "sources": [],
@@ -14740,7 +14739,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Rock Organ” track, bars 10–13, as written and an octave down to sit where the sound plays. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Rock Organ” track, bars 10–13, with every note moved down an octave to sit where the sound plays; nothing else changed. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -17014,8 +17013,7 @@
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
-        "songId": "duran-duran-hungry-like-the-wolf",
-        "part": 0
+        "songId": "duran-duran-hungry-like-the-wolf"
       },
       "fidelity": "in_the_style_of",
       "sources": [],
