@@ -1,5 +1,5 @@
 /**
- * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160): the research batches under the seed's `data/patterns/`, and
+ * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161): the research batches under the seed's `data/patterns/`, and
  * the seed that puts them on their sounds.
  *
  * First the real batches, against the real catalogue and databank data: every pattern parses and plays, every sound a
@@ -109,6 +109,41 @@ describe('the research batches', () => {
         'Whitney Houston',
       ],
       92,
+    ],
+    [
+      't-161',
+      [
+        'Gary Numan',
+        'Vince Clarke',
+        'New Order',
+        'Soft Cell',
+        'Ultravox',
+        'CHVRCHES',
+        'Japan',
+        'Marc Almond',
+        'The Human League',
+        'Yellow Magic Orchestra',
+        'Early synth-pop',
+        'Goldfrapp',
+        'Joy Division',
+        'Yazoo',
+        'Björk',
+        'Cabaret Voltaire / early Human League',
+        'Crystal Castles',
+        'Devo',
+        'Grimes',
+        'John Foxx',
+        'Ladytron',
+        'Mark Mothersbaugh',
+        'Martin Hannett',
+        'Metronomy',
+        'OMD',
+        'Orchestral Manoeuvres in the Dark',
+        'SOPHIE',
+        'The Cure',
+        'Tubeway Army',
+      ],
+      73,
     ],
   ];
 
@@ -275,6 +310,21 @@ describe('the research batches', () => {
     expect(pitches('researched:stevie-wonder/superstition-clavinet-high')).toEqual(
       low.map((n) => n + 12)
     );
+  });
+
+  it('plays the notes its lead gives: the bass of “Blue Monday”, an octave up', () => {
+    // F with two Fs an octave up, F again, then the same on C; D; G and C; D: Songsterr “Synthesised Bass”, bars 17–20.
+    const octave = (lo: number) => [lo, lo + 12, lo + 12, lo, lo + 12, lo + 12];
+    expect(pitches('researched:new-order/blue-monday-bass')).toEqual(
+      [41, 36, 38, 38, 43, 36, 38, 38].flatMap(octave)
+    );
+  });
+
+  it('plays the notes its lead gives: the riff of “Are ‘Friends’ Electric?”', () => {
+    // G D F D D A C A, F C E C C G C B: Songsterr “Synth Lead”, bars 33–34.
+    expect(pitches('researched:tubeway-army/are-friends-electric-riff')).toEqual([
+      55, 62, 65, 62, 50, 57, 60, 57, 53, 60, 64, 60, 48, 55, 60, 59,
+    ]);
   });
 
   it('plays the notes its lead gives: the intro of “Digital Love”, which t-159 left for a later batch', () => {
