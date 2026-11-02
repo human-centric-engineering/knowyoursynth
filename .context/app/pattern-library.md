@@ -11,7 +11,7 @@ This page is the design, written before the build (t-121). It covers:
 - the roles a pattern plays and the facts it carries for matching
 - what "Inspired by" links to, and the fidelity levels
 - the research method the batches follow (t-127, t-128, t-129, t-160, t-161, t-162, t-163, t-164, t-165,
-  t-166, t-167)
+  t-166, t-167, t-168)
 - the rights rule
 - how admins see and control each pattern's origin, rights risk and status
 - how the current riffs are reviewed
@@ -739,6 +739,45 @@ and the one "Cluster & Eno" sound was in no batch. 55 got one of 43 patterns, an
 - **The tempo of a score's MIDI file is the engraver's**, not the composer's marking. The patterns keep it, as they
   keep a transcription's, and their notes say so where it matters (the Arabesque at 144).
 
+**The twelfth batch (t-168): ambient, classical, jazz and world.** Every sound by 52 artists under 54 names, from Joe
+Zawinul and Éliane Radigue (5 each) and La Monte Young (4) to one each by Abing, Kodo and Yo-Yo Ma. The task counted
+about 77; there were 90, because Radigue and Young had grown. 83 got one of 73 patterns, and 7 got a reason. The batch
+is `prisma/seeds/app-knowyoursynth/data/patterns/t168-ambient-classical-jazz-and-world.json`. It found:
+
+- **Jazz is well transcribed; ambient is not.** 19 Songsterr transcriptions gave a pattern each: Birdland (the tenor's
+  theme, since the transcription's synthesizer tracks hold the counter-line there), Black Market and A Remark You Made
+  (Zawinul's ARP 2600), Continuum, So What (the bass call), Bags' Groove (the vibes head), My Favorite Things,
+  Libertango, Foggy Mountain Breakdown, Scotland the Brave, Orinoco Flow, Danse Macabre (the xylophone track), the
+  Mr. Lawrence opening figure, the Duel of the Jester theme, First Light and the Sunn O))) drone. Three were made by
+  Songsterr's machine: The Trans-Love Express, Rising and Near Light. Four BitMIDI files gave Sugar Plum Fairy (the
+  celesta theme and the pizzicato), Storms in Africa, Are You Going with Me? and Juke. Nothing was found for Biosphere,
+  Yoshimura, Roach, Basinski, Hassell, Radigue, Young, Stars of the Lid, Kali Malone, Sakamoto's async or any of the
+  world-music sounds but Rising, Scotland the Brave and Libertango.
+- **Only two of the classical works had a free score.** The Mutopia Project has Bach's Toccata and Fugue in D minor and
+  the first cello suite; as in t-167, a score is a lead, so both are _In the style of_. The Toccata's run is in
+  sixty-fourth notes, finer than the sequencer's grid, so its pattern doubles every value and the tempo, which plays
+  the same. Nothing free was found for Mozart's Adagio for glass harmonica (K. 356), though its score is in the public
+  domain, nor for Pérotin; Ligeti, Messiaen, Leroy Anderson and Richter are in copyright.
+- **47 patterns are best guesses**, on 50 sounds. The three Fripp & Eno loop sounds share one, as do the two
+  Basinski sounds. An artist's sound naming no work got its artist's lead where one was found (the Ponty violin, the
+  Arnalds pad) and a guess where not.
+- **Seven sounds have no part to write.** Six are Solar classic drones: their pitches are set on the generators' TUNE
+  knobs and the keyboard only opens the gate, so a pattern can change when they sound but not what. The seventh is
+  Yoshimura's raindrops, whose pitch the sample and hold throws at random.
+- **Drones got held notes**, as in t-167, wherever the key sets the pitch: the Radigue, Young, Roach, Hecker and Ligeti
+  drones, the khoomei fundamental and the Biosphere tones. The arpeggiator sounds (Storms in Africa, The Pearl) got
+  chords.
+- **One pattern is written for its sound's keyboard.** The Black Market sound mirrors the keys around middle C, as
+  Zawinul's inverted ARP 2600 did, so its pattern holds 120 minus each pitch the transcription gives. On it the theme
+  comes out as written; on any other sound it would play upside down, so it sits on that one alone.
+- **A key a transcription doesn't share with the sound.** Scotland the Brave is written as the pipes sound, near B♭;
+  the pipe sound's drone is tuned to A, as pipe music is written, so the pattern is a semitone down.
+- **Swing is written out.** So What's bass is marked swung; with the pattern's own swing, each delayed off-beat ran
+  into the next note, which the batch test reads as two at once. The pattern puts each off-beat eighth two-thirds into
+  its beat on the triplet grid instead.
+- **Two artists have two spellings**: "Tchaikovsky" and "Pyotr Ilyich Tchaikovsky", and "Fripp & Eno" and "Robert
+  Fripp and Brian Eno". The test's roster lists both; the renames are housekeeping's.
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on
@@ -966,7 +1005,8 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
   unchanged, and skipped nothing. The tenth (t-166) created 66 and 79, which brought them to 468 and 675, and skipped
   nothing. It also updated 8 of t-165's patterns, whose review fixes the dev database hadn't had yet, and left the rest
   and every riff unchanged. The eleventh (t-167) created 43 and 56, which brought them to 511 and 731, left the rest
-  and every riff unchanged, and skipped nothing.
+  and every riff unchanged, and skipped nothing. The twelfth (t-168) created 73 and 83, which brought them to 584 and
+  814, left the rest and every riff unchanged, and skipped nothing.
 - **An admin's pattern is never written**: one an admin edited, or made any sound's default.
 - **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
   taken out of a batch file stays in the library and on its sounds.
@@ -983,14 +1023,16 @@ every sound by its artists exactly once (Kraftwerk and Depeche Mode for t-127; D
 Tangerine Dream for t-128; Brian Eno, Daniel Lanois, Vangelis and Boards of Canada for t-129; 31 funk, soul and R&B
 artists for t-160; 29 synth-pop and post-punk artists for t-161; 30 80s pop and arena artists for t-162; 30 film, TV,
 game and synthwave artists, under 31 names, for t-163; 41 prog, psychedelic and rock artists, under 42 names, for t-164; 33 disco, acid, house, techno and industrial
-artists, under 34 names, for t-165; 35 90s electronic, big beat, IDM and downtempo artists for t-166; 33 electronic pioneers, Berlin school and krautrock artists for t-167), that every link resolves in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
+artists, under 34 names, for t-165; 35 90s electronic, big beat, IDM and downtempo artists for t-166; 33 electronic pioneers, Berlin school and krautrock artists for t-167; 52 ambient, classical, jazz and world artists, under 54 names, for t-168), that every link resolves in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
 a sound whose own riff plays no chords gets a single line, that the Just Can't Get Enough bass and the Blade Runner End
 Titles theme play the notes both of their leads give, that the Da Funk break figure plays its lead's notes in both
 octaves, as does the Da Funk main riff, that Digital Love's intro plays its lead's notes, that the Flash Light
 bass and the Superstition clavinet (in both octaves) play theirs, that the Blue Monday bass, the Are 'Friends'
 Electric? riff, the Take On Me riff, the Sweet Dreams riff, the Axel F theme, the Stranger Things arpeggio, the On the
-Run sequence, the Tom Sawyer growl, the I Feel Love bass, the Popcorn theme, the Sexy Boy bass, the Levels riff, the subject of Bach's Invention in F (from the score) and the
-Ghost Rider riff play theirs, and that t-161's, t-162's, t-163's, t-164's, t-165's, t-166's and t-167's octave copies sit one or two octaves from the part they copy, as each copy's check says. A pattern with no lead must say it is a best guess. A sound can be on more
+Run sequence, the Tom Sawyer growl, the I Feel Love bass, the Popcorn theme, the Sexy Boy bass, the Levels riff, the subject of Bach's Invention in F (from the score), the
+Ghost Rider riff, the Birdland theme and the Prelude of Bach's first cello suite (from the score) play theirs, that the
+Black Market theme holds the keys that play it on the upside-down-keys sound (each the transcription's pitch mirrored
+around middle C), and that t-161's, t-162's, t-163's, t-164's, t-165's, t-166's and t-167's octave copies sit one or two octaves from the part they copy, as each copy's check says. A pattern with no lead must say it is a best guess. A sound can be on more
 than one pattern of a batch, but a sound with a pattern never also has a reason.
 
 The catalogue unit's hash leaves the `patterns/` folder out, as it does `bank/`, so a batch edit re-runs only this
