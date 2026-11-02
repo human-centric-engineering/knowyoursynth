@@ -31,7 +31,7 @@ export const POST = withAdminAuth(
     const log = await getRouteLogger(request);
     const body = await validateRequestBody(request, LibraryPatternCreateSchema);
 
-    const pattern = await createLibraryPattern(body);
+    const pattern = await createLibraryPattern(body, session.user.id);
     auditCatalogue(request, session.user.id, {
       action: 'library_pattern.create',
       entityType: 'library_pattern',

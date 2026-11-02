@@ -25,6 +25,8 @@ vi.mock('@/lib/db/client', () => ({
     ownedInstrument: { findMany: vi.fn(async () => []) },
     userPattern: { findMany: vi.fn(async () => []) },
     patternReport: { findMany: vi.fn(async () => []) },
+    libraryPattern: { findMany: vi.fn(async () => []) },
+    libraryPatternComment: { findMany: vi.fn(async () => []) },
   },
 }));
 
@@ -209,5 +211,50 @@ describe('collectAppSubjectData, sharing patterns (f-step-sequencer t-83)', () =
     expect(where).toEqual({ reporterId: 'user-1' });
     expect(select).not.toHaveProperty('resolvedById');
     expect(select).not.toHaveProperty('reporterId');
+  });
+});
+
+describe('collectAppSubjectData, the pattern library (f-pattern-library t-156)', () => {
+  it('names each library pattern the subject made, not its content, and returns the comments they wrote', async () => {
+    const made = new Date('2026-11-01T00:00:00Z');
+    const at = new Date('2026-11-02T00:00:00Z');
+    vi.mocked(prisma.libraryPattern.findMany).mockResolvedValueOnce([
+      { id: 'p1', name: 'Berlin sequence', madeAt: made, createdAt: at },
+      { id: 'p2', name: 'Older', madeAt: null, createdAt: at },
+    ] as never);
+    vi.mocked(prisma.libraryPatternComment.findMany).mockResolvedValueOnce([
+      {
+        id: 'c1',
+        body: 'Heard it.',
+        createdAt: at,
+        pattern: { id: 'p1', name: 'Berlin sequence' },
+      },
+    ] as never);
+
+    const data = await collectAppSubjectData({ userId: 'user-1', email: 'user@example.com' });
+
+    expect(data.libraryPatternsMade).toEqual([
+      { id: 'p1', label: 'Berlin sequence', createdAt: made },
+      { id: 'p2', label: 'Older', createdAt: at },
+    ]);
+    expect(data.libraryPatternComments).toEqual([
+      {
+        id: 'c1',
+        body: 'Heard it.',
+        createdAt: at,
+        patternId: 'p1',
+        patternName: 'Berlin sequence',
+      },
+    ]);
+    const made1 = vi.mocked(prisma.libraryPattern.findMany).mock.lastCall![0] as {
+      where: unknown;
+      select: Record<string, unknown>;
+    };
+    expect(made1.where).toEqual({ madeByUserId: 'user-1' });
+    expect(made1.select).not.toHaveProperty('pattern');
+    expect(
+      (vi.mocked(prisma.libraryPatternComment.findMany).mock.lastCall![0] as { where: unknown })
+        .where
+    ).toEqual({ authorId: 'user-1' });
   });
 });

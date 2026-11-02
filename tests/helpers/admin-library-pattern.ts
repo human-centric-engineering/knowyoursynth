@@ -44,6 +44,14 @@ export function adminLibraryPattern(over: Partial<AdminLibraryPattern> = {}): Ad
     sounds: [
       { synthId: 'model-d', slug: 'funk-bass', name: 'Funk bass', order: 0, isDefault: true },
     ],
+    madeBy: 'An AI agent, writing the sound library',
+    madeByUser: null,
+    madeAt: null,
+    research: null,
+    rightsRisk: 'none',
+    rightsReason: null,
+    status: 'enabled',
+    statusReason: null,
     ...over,
   };
 }

@@ -13,6 +13,9 @@
  * - a pattern an admin edited survives a reseed;
  * - the admin page's reads (t-126): the list filtered by synth, artist and fidelity, a sound's patterns in order, and
  *   the synths, artists and works a pattern's Inspired by chooses from.
+ * - admin control (t-156): who made each pattern, its rights risk and status set one or many at a time with a reason,
+ *   a disabled pattern gone from every public read and its sounds handed to their next enabled pattern, a blocked
+ *   pattern always disabled, comments and the audit history, and the list filtered by origin, rights risk and status.
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { NextRequest } from 'next/server';
@@ -59,15 +62,30 @@ import {
   PUT as putSoundPatterns,
 } from '@/app/api/v1/admin/synths/[id]/sounds/[slug]/patterns/route';
 import { GET as getChoices } from '@/app/api/v1/admin/library-patterns/choices/route';
+import { POST as postControl } from '@/app/api/v1/admin/library-patterns/control/route';
+import {
+  GET as getComments,
+  POST as postComment,
+} from '@/app/api/v1/admin/library-patterns/[id]/comments/route';
+import { GET as getHistory } from '@/app/api/v1/admin/library-patterns/[id]/history/route';
+import { listAllPublicPatterns } from '@/lib/app/patterns/library-read';
 import { PATCH as patchSound } from '@/app/api/v1/admin/synths/[id]/sounds/[slug]/route';
 import { createMockAuthSession } from '@/tests/helpers/auth';
 import {
   catalogueTables,
   seedRecordTable,
+  table,
   type CatalogueTables,
 } from '@/tests/helpers/catalogue-db';
 import { seedCatalogue } from '@/lib/app/catalogue/seed';
-import { riffKey, syncRiffPatterns, type LibraryDb } from '@/lib/app/patterns/library';
+import {
+  phraseOf,
+  RIFF_MADE_BY,
+  riffKey,
+  syncRiffPatterns,
+  type LibraryDb,
+} from '@/lib/app/patterns/library';
+import { PatternSchema } from '@/lib/app/sequencer/pattern';
 import { importPhrase } from '@/lib/app/sequencer/import';
 import type { Phrase } from '@/lib/app/synths/contract';
 import type { CatalogueSeedData } from '@/lib/app/catalogue/data';
@@ -83,6 +101,16 @@ function session(role: 'USER' | 'ADMIN') {
     session: { ...base.session, activeOrgId: INSTALL_ORG_ID },
     user: { ...base.user, role },
   };
+}
+
+/** Admins' comments, with the database's `createdAt`. */
+function comments() {
+  const t = table();
+  const create = t.create.getMockImplementation()!;
+  t.create.mockImplementation(async ({ data }: { data: Row }) =>
+    create({ data: { createdAt: new Date(), ...data } })
+  );
+  return t;
 }
 
 const real = loadCatalogueData();
@@ -146,7 +174,23 @@ beforeEach(async () => {
       findUnique: vi.fn(async () => ({ role: 'OWNER', org: { status: 'ACTIVE' } })),
     },
     aiApiKey: { findFirst: vi.fn(async () => null), update: vi.fn() },
-    $transaction: vi.fn((fn: (tx: unknown) => unknown) => fn(mockPrisma)),
+    user: {
+      findMany: vi.fn(async ({ where }: { where: { id: { in: string[] } } }) =>
+        where.id.in.map((id) => ({ id, name: `Admin ${id}` }))
+      ),
+    },
+    libraryPatternComment: comments(),
+    aiAdminAuditLog: { findMany: vi.fn(async () => []) },
+    // As the database's: a transaction that throws leaves every table as it was.
+    $transaction: vi.fn(async (fn: (tx: unknown) => unknown) => {
+      const before = Object.values(db).map((t) => structuredClone(t.rows));
+      try {
+        return await fn(mockPrisma);
+      } catch (err) {
+        Object.values(db).forEach((t, i) => t.rows.splice(0, t.rows.length, ...before[i]));
+        throw err;
+      }
+    }),
     $queryRaw: vi.fn(async () => []),
   });
   await seedCatalogue(mockPrisma as unknown as TenancyClient, sample());
@@ -826,5 +870,450 @@ describe("a sound's riff edited directly", () => {
     expect(res.status).toBe(200);
     expect(riff(2).pattern).toEqual(JSON.parse(JSON.stringify(importPhrase(phrase))));
     expect(riff(2).editedAt).toBeNull();
+  });
+});
+
+describe('admin control (t-156)', () => {
+  const control = (body: unknown) =>
+    postControl(request('POST', 'admin/library-patterns/control', body));
+  const publicIds = async (i: number) =>
+    (
+      (
+        await json(
+          await getSoundPatterns(
+            request('GET', `synths/model-d/sounds/${slug(i)}/patterns`),
+            ctx({ id: 'model-d', slug: slug(i) })
+          )
+        )
+      ).data as { id: string }[]
+    ).map((p) => p.id);
+  const notesOf = (row: Row) => phraseOf(PatternSchema.parse(row.pattern)).steps;
+  const problems = async (res: Response) => (await json(res)).error?.details?.errors ?? [];
+  /** Sound 0 lists its own riff, then sound 1's: a second pattern to fall back on. */
+  const withFallback = () =>
+    db.synthSoundPattern.rows.push({ soundId: sound(0).id, patternId: riff(1).id, order: 1 });
+
+  describe('origin', () => {
+    it('records every seeded riff as AI-generated, made by an agent, rights None and enabled', () => {
+      for (const i of [0, 1, 2])
+        expect(riff(i)).toMatchObject({
+          origin: 'ai_generated',
+          madeBy: RIFF_MADE_BY,
+          rightsRisk: 'none',
+          rightsReason: null,
+          status: 'enabled',
+        });
+    });
+
+    it('records the admin who added a pattern, and when', async () => {
+      const res = await postPattern(
+        request('POST', 'admin/library-patterns', {
+          name: 'Berlin sequence',
+          pattern: importPhrase({ bpm: 120, loop: true, steps: [[0, 48, 0.25]] }),
+          role: 'arp',
+          inspiredBy: { kind: 'genre', label: 'Berlin school' },
+          fidelity: 'in_the_style_of',
+        })
+      );
+      const userId = session('ADMIN').user.id;
+      expect(db.libraryPattern.rows.at(-1)).toMatchObject({
+        origin: 'human_authored',
+        madeByUserId: userId,
+        madeAt: expect.any(Date),
+        rightsRisk: 'none',
+      });
+      expect((await json(res)).data).toMatchObject({
+        madeByUser: { id: userId, name: `Admin ${userId}` },
+      });
+    });
+
+    it('lets an admin change the origin and who made it, audited', async () => {
+      const id = String(riff(0).id);
+      const res = await patchPattern(
+        request('PATCH', `admin/library-patterns/${id}`, {
+          origin: 'human_authored',
+          madeBy: 'The owner, by hand',
+        }),
+        ctx({ id })
+      );
+      expect(res.status).toBe(200);
+      expect(riff(0)).toMatchObject({ origin: 'human_authored', madeBy: 'The owner, by hand' });
+      expect(audits()[0].changes).toMatchObject({
+        origin: { from: 'ai_generated', to: 'human_authored' },
+      });
+    });
+  });
+
+  describe('rights risk', () => {
+    it('follows the fidelity until an admin sets one, then keeps it', async () => {
+      const id = String(riff(2).id);
+      const reconstruct = {
+        fidelity: 'reconstructed',
+        inspiredBy: { kind: 'work', songId: 'the-model' },
+        sources: [{ type: 'by_ear', citation: 'The record', checkedAt: '2026-11-01' }],
+      };
+      await patchPattern(
+        request('PATCH', `admin/library-patterns/${id}`, reconstruct),
+        ctx({ id })
+      );
+      expect(riff(2).rightsRisk).toBe('needs_review');
+
+      await control({ ids: [id], rightsRisk: 'cleared', reason: 'Four bars, labelled' });
+      expect(riff(2)).toMatchObject({ rightsRisk: 'cleared', rightsReason: 'Four bars, labelled' });
+      await patchPattern(
+        request('PATCH', `admin/library-patterns/${id}`, { fidelity: 'transcribed' }),
+        ctx({ id })
+      );
+      expect(riff(2).rightsRisk).toBe('cleared');
+    });
+
+    it('sets several at once with one reason, each audited, and writes nothing for one already set that way for that reason', async () => {
+      // Already set that way, for the same reason.
+      riff(2).rightsRisk = 'cleared';
+      riff(2).rightsReason = 'Legal review, batch 1';
+      const ids = [riff(0).id, riff(1).id, riff(2).id];
+      const res = await control({ ids, rightsRisk: 'cleared', reason: 'Legal review, batch 1' });
+      expect(res.status).toBe(200);
+      expect((await json(res)).data).toMatchObject({ changed: [riff(0).id, riff(1).id] });
+      expect(audits().map((a) => [a.action, a.entityId])).toEqual([
+        ['library_pattern.control', riff(0).id],
+        ['library_pattern.control', riff(1).id],
+      ]);
+      expect(audits()[0].changes).toMatchObject({
+        rightsRisk: { from: 'none', to: 'cleared' },
+        rightsReason: { from: null, to: 'Legal review, batch 1' },
+      });
+    });
+
+    it('disables a blocked pattern, and refuses to enable one', async () => {
+      withFallback();
+      const id = String(riff(0).id);
+      await control({ ids: [id], rightsRisk: 'blocked', reason: 'The whole hook' });
+      expect(riff(0)).toMatchObject({
+        rightsRisk: 'blocked',
+        status: 'disabled',
+        statusReason: 'The whole hook',
+      });
+
+      const res = await control({ ids: [id], status: 'enabled', reason: 'Try again' });
+      expect(res.status).toBe(400);
+      expect(await problems(res)).toEqual([
+        { path: 'status', message: expect.stringContaining('always disabled') },
+      ]);
+      expect(riff(0).status).toBe('disabled');
+
+      // Lowered with the same request, it can be.
+      await control({
+        ids: [id],
+        rightsRisk: 'cleared',
+        status: 'enabled',
+        reason: 'Cut to 4 bars',
+      });
+      expect(riff(0)).toMatchObject({ rightsRisk: 'cleared', status: 'enabled' });
+    });
+  });
+
+  describe('status', () => {
+    it('hides a disabled pattern from every public read, and keeps it in admin and the database', async () => {
+      withFallback();
+      const id = String(riff(1).id);
+      // Enabled, it is public: sound 1's default, and second on sound 0.
+      expect(await publicIds(0)).toEqual([riff(0).id, id]);
+      expect((await listAllPublicPatterns()).map((p) => p.id)).toContain(id);
+
+      const res = await control({
+        ids: [id],
+        status: 'disabled',
+        reason: 'Too close',
+        acknowledge: true,
+      });
+      expect(res.status).toBe(200);
+      expect(await publicIds(0)).toEqual([riff(0).id]);
+      expect(await publicIds(1)).toEqual([]);
+      expect(
+        (await getPublicOne(request('GET', `library-patterns/${id}`), ctx({ id }))).status
+      ).toBe(404);
+      const list = await json(await getPublicList(request('GET', 'library-patterns')));
+      expect((list.data as { id: string }[]).map((p) => p.id)).not.toContain(id);
+      // Suggestions rank this list.
+      expect((await listAllPublicPatterns()).map((p) => p.id)).not.toContain(id);
+
+      expect(db.libraryPattern.rows.some((p) => p.id === id)).toBe(true);
+      const admin = await json(
+        await getAdminList(request('GET', 'admin/library-patterns?status=disabled'))
+      );
+      expect(admin.data).toEqual([
+        expect.objectContaining({ id, status: 'disabled', statusReason: 'Too close' }),
+      ]);
+    });
+
+    it('hands a sound whose default is disabled to its next enabled pattern, and back when it is enabled', async () => {
+      withFallback();
+      const own = notesOf(riff(0));
+      const id = String(riff(0).id);
+      expect(notesOf(riff(1))).not.toEqual(own);
+
+      const res = await control({ ids: [id], status: 'disabled', reason: 'Under review' });
+      expect(res.status).toBe(200);
+      expect((sound(0).phrase as Phrase).steps).toEqual(notesOf(riff(1)));
+      expect(sound(0).editedAt).toBeInstanceOf(Date);
+      expect(await publicIds(0)).toEqual([riff(1).id]);
+      expect(audits().map((a) => [a.action, a.entityId])).toEqual([
+        ['library_pattern.control', id],
+        ['synth_sound.update', `model-d/${slug(0)}`],
+      ]);
+      // The admin still sees which pattern the sound plays.
+      const admin = (
+        await json(
+          await getAdminOne(
+            request('GET', `admin/library-patterns/${String(riff(1).id)}`),
+            ctx({ id: String(riff(1).id) })
+          )
+        )
+      ).data as { sounds: { slug: string; isDefault: boolean }[] };
+      expect(admin.sounds.find((x) => x.slug === slug(0))?.isDefault).toBe(true);
+
+      await control({ ids: [id], status: 'enabled', reason: 'Cleared' });
+      expect((sound(0).phrase as Phrase).steps).toEqual(own);
+      expect(await publicIds(0)).toEqual([id, riff(1).id]);
+    });
+
+    it("warns before disabling a sound's last enabled pattern, and keeps its riff once acknowledged", async () => {
+      const id = String(riff(1).id);
+      const phrase = structuredClone(sound(1).phrase);
+      const res = await control({ ids: [id], status: 'disabled', reason: 'Gone' });
+      expect(res.status).toBe(400);
+      expect(await problems(res)).toEqual([
+        { path: 'acknowledge', message: expect.stringContaining(String(sound(1).name)) },
+      ]);
+      expect(riff(1).status).toBe('enabled');
+      expect(audits()).toEqual([]);
+
+      const ok = await control({
+        ids: [id],
+        status: 'disabled',
+        reason: 'Gone',
+        acknowledge: true,
+      });
+      expect(ok.status).toBe(200);
+      expect((await json(ok)).data).toMatchObject({
+        leftWithout: [{ synthId: 'model-d', slug: slug(1), name: sound(1).name }],
+      });
+      expect(riff(1).status).toBe('disabled');
+      expect(sound(1).phrase).toEqual(phrase);
+    });
+
+    it('refuses a reason left out, an id no pattern has, and a change of nothing, writing nothing', async () => {
+      const id = String(riff(0).id);
+      const none = 'c' + 'x'.repeat(24);
+      for (const body of [
+        { ids: [id], status: 'disabled' },
+        { ids: [id], status: 'disabled', reason: '  ' },
+        { ids: [id], reason: 'Nothing set' },
+        { ids: [], status: 'disabled', reason: 'x' },
+        { ids: [id], status: 'hidden', reason: 'x' },
+      ])
+        expect((await control(body)).status).toBe(400);
+      const missing = await control({ ids: [id, none], status: 'disabled', reason: 'x' });
+      expect(missing.status).toBe(400);
+      expect(await problems(missing)).toEqual([
+        { path: 'ids', message: `No library pattern has the id ${none}` },
+      ]);
+      expect(writes()).toBe(0);
+    });
+  });
+
+  describe('a reorder past patterns the sound cannot play', () => {
+    it('rewrites the riff when the default moves behind a disabled pattern and one that cannot be a riff', async () => {
+      // Sound 0: its riff (disabled), X (enabled, two parts: never a riff), then sounds 1's and 2's riffs.
+      const two = PatternSchema.parse(riff(2).pattern);
+      two.parts.push(structuredClone(two.parts[0]));
+      two.chain = [0, 1];
+      const x = 'c' + 'q'.repeat(24);
+      db.libraryPattern.rows.push({
+        ...structuredClone(riff(2)),
+        id: x,
+        key: 'admin:two',
+        pattern: two,
+      });
+      riff(0).status = 'disabled';
+      db.synthSoundPattern.rows.push(
+        { soundId: sound(0).id, patternId: x, order: 1 },
+        { soundId: sound(0).id, patternId: riff(1).id, order: 2 },
+        { soundId: sound(0).id, patternId: riff(2).id, order: 3 }
+      );
+      const put = (ids: unknown[]) =>
+        putSoundPatterns(
+          request('PUT', `admin/synths/model-d/sounds/${slug(0)}/patterns`, { patternIds: ids }),
+          ctx({ id: 'model-d', slug: slug(0) })
+        );
+      // The first enabled pattern, X, is the same either way: only what it plays decides the riff.
+      const res = await put([riff(0).id, x, riff(2).id, riff(1).id]);
+      expect(res.status).toBe(200);
+      expect((sound(0).phrase as Phrase).steps).toEqual(notesOf(riff(2)));
+    });
+  });
+
+  describe('a rights risk set to the value it has', () => {
+    it('records the reason, so the risk stops following the fidelity', async () => {
+      const id = String(riff(0).id);
+      const res = await control({
+        ids: [id],
+        rightsRisk: 'none',
+        reason: 'Checked: nothing taken',
+      });
+      expect((await json(res)).data).toMatchObject({ changed: [id] });
+      expect(riff(0)).toMatchObject({ rightsRisk: 'none', rightsReason: 'Checked: nothing taken' });
+      // A second review at the same risk replaces the reason, audited.
+      await control({ ids: [id], rightsRisk: 'none', reason: 'Re-checked' });
+      expect(riff(0).rightsReason).toBe('Re-checked');
+      expect(audits().at(-1)?.changes).toEqual({
+        rightsReason: { from: 'Checked: nothing taken', to: 'Re-checked' },
+      });
+    });
+  });
+
+  describe('the list', () => {
+    it('filters by origin, rights risk and status', async () => {
+      Object.assign(riff(0), { origin: 'human_authored', rightsRisk: 'needs_review' });
+      Object.assign(riff(1), { status: 'disabled' });
+      const ids = async (q: string) =>
+        (
+          (await json(await getAdminList(request('GET', `admin/library-patterns?${q}`)))).data as {
+            id: string;
+          }[]
+        ).map((p) => p.id);
+      expect(await ids('origin=human_authored')).toEqual([riff(0).id]);
+      expect(await ids('rights=needs_review')).toEqual([riff(0).id]);
+      expect(await ids('status=disabled')).toEqual([riff(1).id]);
+      expect(new Set(await ids('origin=ai_generated&status=enabled'))).toEqual(
+        new Set([riff(2).id])
+      );
+      expect(
+        (await getAdminList(request('GET', 'admin/library-patterns?rights=maybe'))).status
+      ).toBe(400);
+    });
+  });
+
+  describe('comments and history', () => {
+    it('adds a comment as the signed-in admin, audited, and lists them oldest first', async () => {
+      const id = String(riff(0).id);
+      const userId = session('ADMIN').user.id;
+      const res = await postComment(
+        request('POST', `admin/library-patterns/${id}/comments`, { body: 'Heard it: fine.' }),
+        ctx({ id })
+      );
+      expect(res.status).toBe(201);
+      await postComment(
+        request('POST', `admin/library-patterns/${id}/comments`, { body: 'Second.' }),
+        ctx({ id })
+      );
+      const list = await json(
+        await getComments(request('GET', `admin/library-patterns/${id}/comments`), ctx({ id }))
+      );
+      expect(list.data).toEqual([
+        expect.objectContaining({
+          body: 'Heard it: fine.',
+          author: { id: userId, name: `Admin ${userId}` },
+        }),
+        expect.objectContaining({ body: 'Second.' }),
+      ]);
+      expect(audits().map((a) => a.action)).toEqual([
+        'library_pattern.comment',
+        'library_pattern.comment',
+      ]);
+    });
+
+    it('refuses an empty comment, and is a 404 for a pattern that is not there', async () => {
+      const id = String(riff(0).id);
+      const empty = await postComment(
+        request('POST', `admin/library-patterns/${id}/comments`, { body: ' ' }),
+        ctx({ id })
+      );
+      expect(empty.status).toBe(400);
+      const none = 'c' + 'x'.repeat(24);
+      for (const res of [
+        await postComment(
+          request('POST', `admin/library-patterns/${none}/comments`, { body: 'x' }),
+          ctx({ id: none })
+        ),
+        await getComments(
+          request('GET', `admin/library-patterns/${none}/comments`),
+          ctx({ id: none })
+        ),
+        await getHistory(
+          request('GET', `admin/library-patterns/${none}/history`),
+          ctx({ id: none })
+        ),
+      ])
+        expect(res.status).toBe(404);
+    });
+
+    it("reads a pattern's audited changes, newest first, with who made them", async () => {
+      const id = String(riff(0).id);
+      const at = new Date('2026-11-01T10:00:00Z');
+      const log = (mockPrisma as { aiAdminAuditLog: { findMany: ReturnType<typeof vi.fn> } })
+        .aiAdminAuditLog.findMany;
+      log.mockResolvedValueOnce([
+        {
+          id: 'a1',
+          action: 'library_pattern.control',
+          changes: { status: { from: 'enabled', to: 'disabled' } },
+          createdAt: at,
+          user: { name: 'Jo' },
+        },
+        {
+          id: 'a2',
+          action: 'library_pattern.update',
+          changes: 'garbled',
+          createdAt: at,
+          user: null,
+        },
+      ]);
+      const res = await getHistory(
+        request('GET', `admin/library-patterns/${id}/history`),
+        ctx({ id })
+      );
+      expect((await json(res)).data).toEqual([
+        {
+          id: 'a1',
+          action: 'library_pattern.control',
+          by: 'Jo',
+          at: at.toISOString(),
+          changes: { status: { from: 'enabled', to: 'disabled' } },
+        },
+        {
+          id: 'a2',
+          action: 'library_pattern.update',
+          by: null,
+          at: at.toISOString(),
+          changes: null,
+        },
+      ]);
+      expect(log).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { entityType: 'library_pattern', entityId: id } })
+      );
+    });
+  });
+
+  describe('who may', () => {
+    it('is admin only, and needs a session', async () => {
+      const id = String(riff(0).id);
+      const calls = () => [
+        control({ ids: [id], status: 'disabled', reason: 'x' }),
+        postComment(
+          request('POST', `admin/library-patterns/${id}/comments`, { body: 'x' }),
+          ctx({ id })
+        ),
+        getComments(request('GET', `admin/library-patterns/${id}/comments`), ctx({ id })),
+        getHistory(request('GET', `admin/library-patterns/${id}/history`), ctx({ id })),
+      ];
+      mockGetSession.mockResolvedValue(session('USER'));
+      for (const res of await Promise.all(calls())) expect(res.status).toBe(403);
+      mockGetSession.mockResolvedValue(null);
+      for (const res of await Promise.all(calls())) expect(res.status).toBe(401);
+      expect(writes()).toBe(0);
+      expect(riff(0).status).toBe('enabled');
+    });
   });
 });

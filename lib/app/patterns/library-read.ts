@@ -4,8 +4,9 @@
  *
  * A pattern is public when it is on a sound of a synth the catalogue serves: listed, and in the registry, as
  * `lib/app/catalogue/read.ts` decides it. One that only a hidden synth's sounds list is not, so hiding a synth hides
- * its riffs as well, and one on no sound yet (an admin's pattern still being written) is admin only. A row that no
- * longer parses is left out and logged (`toView`).
+ * its riffs as well, and one on no sound yet (an admin's pattern still being written) is admin only. A disabled pattern
+ * is never public (t-156): it stays in the admin list and the database. A row that no longer parses is left out and
+ * logged (`toView`).
  */
 import { z } from 'zod';
 import type { Prisma } from '@prisma/client';
@@ -13,10 +14,17 @@ import { prisma } from '@/lib/db/client';
 import { logger } from '@/lib/logging';
 import { getSynthDef, SYNTH_DEFS } from '@/lib/app/synths/defs';
 import { PATTERN_ROLES } from '@/lib/app/patterns/library-facts';
-import { DEFAULT_FIRST, toView, type LibraryPatternView } from '@/lib/app/patterns/library';
+import {
+  DEFAULT_FIRST,
+  ENABLED,
+  headOf,
+  toView,
+  type LibraryPatternView,
+} from '@/lib/app/patterns/library';
 
-/** Where a pattern may be read from: on a sound of a listed synth the app can play. */
+/** Where a pattern may be read from: enabled, and on a sound of a listed synth the app can play. */
 const PUBLIC: Prisma.LibraryPatternWhereInput = {
+  ...ENABLED,
   sounds: {
     some: { sound: { synth: { listed: true, id: { in: SYNTH_DEFS.map((d) => d.id) } } } },
   },
@@ -38,8 +46,10 @@ export async function getLibraryPattern(id: string): Promise<LibraryPatternView 
 }
 
 /**
- * A listed, playable synth's sound's patterns, default first, or `null` when there is no such sound. Every one of a
- * sound's patterns is listed, whatever synth it was written for (`pattern-library.md`, The facts).
+ * A listed, playable synth's sound's enabled patterns, default first, or `null` when there is no such sound. Every one
+ * of a sound's enabled patterns is listed, whatever synth it was written for (`pattern-library.md`, The facts). The
+ * default is the one its riff plays (`headOf`): the head of the list, or, while patterns ahead of it are disabled, the
+ * next that can be a riff, moved to the front.
  */
 export async function getSoundPatterns(
   synthId: string,
@@ -56,7 +66,10 @@ export async function getSoundPatterns(
     },
   });
   if (!sound) return null;
-  return sound.patterns.flatMap(({ pattern }) => served(pattern) ?? []);
+  const enabled = sound.patterns.filter(({ pattern }) => pattern.status === 'enabled');
+  const head = headOf(enabled);
+  const ordered = head ? [head, ...enabled.filter((p) => p !== head)] : enabled;
+  return ordered.flatMap(({ pattern }) => served(pattern) ?? []);
 }
 
 export const LibraryListQuerySchema = z.object({
