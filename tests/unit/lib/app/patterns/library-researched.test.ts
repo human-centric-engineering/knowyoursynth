@@ -441,6 +441,12 @@ describe('syncResearchedPatterns', () => {
     changed.patterns[1].pattern = two;
     expect(await syncResearchedPatterns(lib(), [changed])).toMatchObject({ updated: 1 });
     expect(jcge.name).toBe('Renamed in the batch');
+
+    // Disabled as well: still never the default, so still the batch's.
+    jcge.status = 'disabled';
+    changed.patterns[1].name = 'Renamed again';
+    expect(await syncResearchedPatterns(lib(), [changed])).toMatchObject({ updated: 1 });
+    expect(jcge.name).toBe('Renamed again');
   });
 
   it('writes nothing the second time, nor for an empty batch', async () => {

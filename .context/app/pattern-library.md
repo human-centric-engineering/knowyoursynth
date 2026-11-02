@@ -779,8 +779,9 @@ when. A comment goes with its pattern (`Cascade`), though nothing deletes one.
 - **A blocked pattern is disabled** in the same change, and enabling one is refused unless the same change lowers its
   rights risk.
 - **The public reads** (`library-read.ts`) serve enabled patterns only. A sound's list leads with its default. The
-  suggestions' kept library is the same read. Every admin write that can change it (an edit, a reorder, rights risk or
-  status) drops it in the process that made it; another instance's copy lasts out its minute.
+  suggestions' kept library is the same read. The pattern library's own writes (an edit, a reorder, rights risk or
+  status) drop it in the process that made them; a catalogue edit (a sound's riff, a synth listed or hidden) and
+  another instance's copy last out the minute.
 - **The seed leaves alone a researched pattern that is a sound's default, or disabled ahead of it**, since enabling it
   makes its notes the riff again.
 

@@ -68,8 +68,8 @@ function publicLibrary(now = Date.now()): Promise<LibraryPatternView[]> {
 }
 
 /**
- * Forgets the kept library, so the next suggestion reads it afresh. Every admin write that can change what players see
- * calls it (`library-edit.ts`), and tests do.
+ * Forgets the kept library, so the next suggestion reads it afresh. The pattern library's admin writes call it
+ * (`library-edit.ts`), and tests do. Catalogue edits don't yet: theirs reach suggestions within the minute.
  */
 export function forgetSuggestLibrary(): void {
   kept = null;

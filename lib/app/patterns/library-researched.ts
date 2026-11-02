@@ -347,7 +347,14 @@ export async function syncResearchedPatterns(
           const ahead = head ? s.patterns.slice(0, s.patterns.indexOf(head)) : s.patterns;
           return [
             ...(head ? [head.patternId] : []),
-            ...ahead.filter((p) => p.pattern.status !== 'enabled').map((p) => p.patternId),
+            // Only one that could be the default once enabled: one that cannot be a riff never is.
+            ...ahead
+              .filter(
+                (p) =>
+                  p.pattern.status !== 'enabled' &&
+                  headOf([{ ...p, pattern: { ...p.pattern, status: 'enabled' as const } }])
+              )
+              .map((p) => p.patternId),
           ];
         })
       : []
