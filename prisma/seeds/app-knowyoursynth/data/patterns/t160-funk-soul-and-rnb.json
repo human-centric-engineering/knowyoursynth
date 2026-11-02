@@ -1978,8 +1978,8 @@
       "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
-        "kind": "artist",
-        "artistId": "parliament"
+        "kind": "work",
+        "songId": "parliament-mothership-connection"
       },
       "fidelity": "in_the_style_of",
       "sources": [],
@@ -9308,7 +9308,7 @@
         "originalKey": null,
         "originalBpm": 92,
         "leads": [],
-        "notes": "The sound names an era, not a work.  _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The sound names an era, not a work. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -9644,7 +9644,7 @@
         "originalKey": null,
         "originalBpm": 72,
         "leads": [],
-        "notes": "The sound names a style, not a work.  _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The sound names a style, not a work. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -9782,7 +9782,7 @@
         "originalKey": null,
         "originalBpm": 66,
         "leads": [],
-        "notes": "The sounds name a style, not a work.  _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The sounds name a style, not a work. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -10005,7 +10005,7 @@
         "originalKey": null,
         "originalBpm": 80,
         "leads": [],
-        "notes": "The sound names a style, not a work.  _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The sound names a style, not a work. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -10097,7 +10097,7 @@
         "originalKey": null,
         "originalBpm": 125,
         "leads": [],
-        "notes": "The transcriptions of “Ring My Bell” (Songsterr) have the kit but not the syndrum, and BitMIDI has no file.  _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The transcriptions of “Ring My Bell” (Songsterr) have the kit but not the syndrum, and BitMIDI has no file. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -10917,7 +10917,7 @@
         "originalKey": null,
         "originalBpm": 84,
         "leads": [],
-        "notes": "Nothing for “Everything Is Everything” was found on Songsterr or BitMIDI.  _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "Nothing for “Everything Is Everything” was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -11339,7 +11339,7 @@
         "originalKey": null,
         "originalBpm": 80,
         "leads": [],
-        "notes": "The sound names the album, not a song, and nothing from Voodoo was found on Songsterr or BitMIDI.  _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The sound names the album, not a song, and nothing from Voodoo was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -11687,7 +11687,7 @@
         "originalKey": null,
         "originalBpm": 96,
         "leads": [],
-        "notes": "The transcriptions of “I Can’t Go for That” (Songsterr) have bass, guitar and drums, and BitMIDI has no file.  _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The transcriptions of “I Can’t Go for That” (Songsterr) have bass, guitar and drums, and BitMIDI has no file. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -12540,7 +12540,7 @@
         "originalKey": null,
         "originalBpm": 88,
         "leads": [],
-        "notes": "The sound names no song, and nothing of J Dilla’s was found on Songsterr or BitMIDI.  _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The sound names no song, and nothing of J Dilla’s was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -12783,7 +12783,7 @@
         "originalKey": null,
         "originalBpm": 130,
         "leads": [],
-        "notes": "Nothing for “The Sermon!” or Jimmy Smith was found on Songsterr or BitMIDI.  _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "Nothing for “The Sermon!” or Jimmy Smith was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -13285,7 +13285,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the BitMIDI file’s drum channel, bars 5–6: the clap (note 39), played here on the sound’s own note. The Songsterr transcription gives the drum machine to toms, and its clap can’t be picked out. _In the style of_: the notes come from fan MIDI, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the BitMIDI file’s drum channel, bars 5–6: the clap (note 39), played here on the sound’s own note. The Songsterr transcription gives the drum machine to toms, and its clap can’t be picked out. The file has the clap once a bar, on the second beat, where a TR-808 backbeat would clap on the fourth too: the listen should check which the record has. _In the style of_: the notes come from fan MIDI, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -14155,10 +14155,6 @@
                     "gate": 12.0
                   },
                   {
-                    "note": 76,
-                    "gate": 12.0
-                  },
-                  {
                     "note": 73,
                     "gate": 12.0
                   },
@@ -14266,7 +14262,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s Rhodes track, bars 4–7, as written. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s Rhodes track, bars 4–7, as written, but for one note: the last chord has six, and the upper of its two Es is left out so the Take 5’s five voices play it. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     }

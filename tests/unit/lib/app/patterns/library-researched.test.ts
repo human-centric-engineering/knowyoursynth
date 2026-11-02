@@ -13,6 +13,7 @@ import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { PresetSchema } from '@/lib/app/synths/validate';
+import { SYNTH_DEFS } from '@/lib/app/synths/defs';
 import { compileLoop, seededRng } from '@/lib/app/sequencer/compile';
 import { MAX_STEPS, PatternSchema, type Pattern } from '@/lib/app/sequencer/pattern';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
@@ -181,10 +182,39 @@ describe('the research batches', () => {
       }
   });
 
+  it('never gives a sound more notes at once than its synth has voices', () => {
+    // A sound's own patterns skip the voices filter, so only this stops a chord that loses a note to voice stealing.
+    // A mono synth is left out: its own patterns may use chords its oscillators can stack.
+    for (const p of patterns)
+      for (const s of p.sounds) {
+        const [synth] = s.split('/');
+        const def = SYNTH_DEFS.find((d) => d.id === synth)!;
+        const values = Object.assign(
+          {},
+          def.init,
+          ...sounds.get(s)!.steps.map((st) => st.set ?? {})
+        );
+        const poly = def.toEngine(values, { wheel: 0, patched: {} }).poly;
+        if (poly && !poly.mono)
+          expect(patternFacts(p.pattern).voices, `${p.key} on ${s}`).toBeLessThanOrEqual(
+            poly.voices
+          );
+      }
+  });
+
   it('records each pattern’s research: the work, the part, its leads and why its fidelity is what it is', () => {
+    const ruling =
+      'no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02)';
+    for (const b of batches)
+      for (const p of b.patterns) {
+        // A pattern with no lead is a best guess (owner ruling, 2026-11-02), its record says so, and only it does.
+        if (p.research.leads.length) expect(p.research.notes, p.key).not.toMatch(/best guess/);
+        else {
+          expect(b.researchedAt >= '2026-11-02', p.key).toBe(true);
+          expect(p.research.notes, p.key).toContain(ruling);
+        }
+      }
     for (const p of patterns) {
-      // A pattern with no lead is a best guess (owner ruling, 2026-11-02), and its record says so.
-      if (!p.research.leads.length) expect(p.research.notes, p.key).toMatch(/a best guess/);
       expect(p.research.listenedAt, p.key).toBeNull();
       // Leads are not sources (Order of trust), so nothing in the pilot can claim more than _In the style of_.
       expect(p.fidelity, p.key).toBe('in_the_style_of');
