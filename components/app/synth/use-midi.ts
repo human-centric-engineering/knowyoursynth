@@ -60,6 +60,11 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
   const [error, setError] = useState('');
   const access = useRef<MIDIAccess | null>(null);
   const mounted = useRef(false);
+  // Each request for access takes a number; only the latest may bind. React's dev double mount runs the reconnect
+  // below twice, so two requests are in flight at once, and each grant is its own MIDIAccess with its own inputs:
+  // binding both left one attached that Stop MIDI never reached, so the keyboard kept playing with MIDI "off". The bar
+  // offers no Connect while asking, but the hook does not rely on that.
+  const request = useRef(0);
   const handlers = useRef({ noteOn, noteOff, onWheel });
   useEffect(() => {
     handlers.current = { noteOn, noteOff, onWheel };
@@ -114,10 +119,13 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
       return false;
     }
     setStatus('asking');
+    const mine = ++request.current;
     try {
       const a = await navigator.requestMIDIAccess({ sysex: false });
-      // The page may have gone while the browser asked: its handlers must not be attached to the inputs.
-      if (!mounted.current) return false;
+      // The page may have gone while the browser asked, or a later request or Stop MIDI overtaken this one: its
+      // handlers must not be attached to the inputs.
+      if (!mounted.current || mine !== request.current) return false;
+      detach();
       access.current = a;
       a.onstatechange = bind;
       bind();
@@ -126,15 +134,20 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
       remember(true);
       return true;
     } catch (err) {
-      if (!mounted.current) return false;
+      if (!mounted.current || mine !== request.current) return false;
+      // Whatever was bound before must not go on playing under a status that offers no Stop.
+      detach();
+      access.current = null;
+      setDevices([]);
       setStatus('blocked');
       setError(err instanceof Error ? err.message : String(err));
       remember(false);
       return false;
     }
-  }, [bind, remember]);
+  }, [bind, detach, remember]);
 
   const disconnect = useCallback(() => {
+    request.current++;
     detach();
     access.current = null;
     setDevices([]);

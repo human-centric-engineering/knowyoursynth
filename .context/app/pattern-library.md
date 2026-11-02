@@ -10,7 +10,8 @@ This page is the design, written before the build (t-121). It covers:
 
 - the roles a pattern plays and the facts it carries for matching
 - what "Inspired by" links to, and the fidelity levels
-- the research method the batches follow (t-127, t-128, t-129, t-160, t-161, t-162, t-163, t-164, t-165)
+- the research method the batches follow (t-127, t-128, t-129, t-160, t-161, t-162, t-163, t-164, t-165,
+  t-166)
 - the rights rule
 - how admins see and control each pattern's origin, rights risk and status
 - how the current riffs are reviewed
@@ -652,6 +653,47 @@ batch is `prisma/seeds/app-knowyoursynth/data/patterns/t165-disco-acid-house-tec
 - **Octaves went twice** for the "Headhunter" bass (for the Pro-One EBM bass) and the "Strings of Life" stabs (the
   Neutron's top two notes, an octave up).
 
+**The tenth batch (t-166): 90s electronic, big beat, IDM and downtempo.** Every sound by 35 artists, from Alabama 3 (8
+sounds) and Jon Hopkins and Portishead (5 each) to one each by Bicep, Darude and Wiley. The task counted about 73; there
+were 82. 79 got one of 66 patterns, and 3 got a reason. The batch is
+`prisma/seeds/app-knowyoursynth/data/patterns/t166-90s-electronic-big-beat-idm-and-downtempo.json`. It found:
+
+- **The hits are covered; the albums and the underground are not.** 29 patterns came from 24 Songsterr transcriptions:
+  "Sexy Boy", "La Femme d'Argent", "Kelly Watch the Stars", "Rhubarb", "Levels", "Sandstorm", "L'amour toujours",
+  "Roads", "The Rip", "Girls", "Out of Space", "Hey Boy Hey Girl", "Block Rockin' Beats", "Born Slippy", "Scary
+  Monsters and Nice Sprites", "Ghosts 'n' Stuff" and "Woke Up This Morning" among them. Four came from BitMIDI files:
+  "Eple", "For an Angel", "Strobe" and Orbital's "Belfast". Nothing was found for "Open Eye Signal", "Glue", "Kerala",
+  "Re-Rewind", "Eskimo", "Horizons", "Delta", "Two Thousand and Seventeen", "Vision One", "The Big Jump", "Terrorist",
+  76:14, Lifeforms, Pop or A Strangely Isolated Place, nor for any Alabama 3 record but "Woke Up This Morning".
+- **33 patterns are best guesses**, on 40 sounds: five Alabama 3 basses, all five Jon Hopkins sounds, three Orbital ones,
+  and the pads and basses of the less-transcribed artists. Sounds naming one work share its guess (the two "Ain't Goin'
+  to Goa" basses, the two Open Eye Signal basses, the two Zero 7 leads), and an artist's sound naming no work shares
+  the guess of one that does (the Bonobo keys, the Prydz sweep, the Tycho pad, the Underworld rolling bass).
+- **Five patterns came from transcriptions Songsterr made by machine**: "A New Error" (two), "Archangel", "Awake" and the
+  "For an Angel" pluck. Three more machine-made ones gave nothing a pattern could use: "Opus" and "Chime" have only
+  bass and drums, and "Halcyon + On + On" is a guitar arrangement. The "Woke Up This Morning" transcription marks every track "retranscribed", and both its
+  patterns say so.
+- **Three sounds have no part to write**, all effects: the two Autechre glitch sounds, whose pitch the patch's sample
+  and hold throws at random, and the Burial rain.
+- **Patches that make their own rhythm from a held key got held notes** again, as in t-163 and t-165: the Opus, Four
+  Tet, Halcyon and Tycho arps take their chords held; the Gas pulse, the Big Jump squiggle, the Röyksopp wind-up, the
+  Neutron's Open Eye Signal pulse and the SynTrx build take held notes; and the Super Gemini Hopkins drone takes held
+  fifths. The Take 5 Open Eye Signal pulse plays its sequence as notes, so it shares the bass.
+- **Tempos are the transcriptions'.** "Block Rockin' Beats" is written at 210 in eighths, so its pattern plays it at
+  105 in sixteenths. "La Femme d'Argent" (160), "A New Error" (166) and "Awake" (176) may be written at twice the
+  record's pulse too; their notes say so, for the owner's listen to settle.
+- **The vocal is still never taken.** The "Levels" transcription's "Vox" track is the sampled vocal; the riff came from
+  its "Layer 1" track instead. The "In the Waiting Line" melody track reads as the sung tune, so the Zero 7 leads are
+  best guesses.
+- **A part was found on the wrong instrument often.** The "La Femme d'Argent" bass is a bass guitar, "Alone in Kyoto"
+  and "Awake" are guitars, and the Mysterons line is written for synth strings where the record has a theremin. The
+  pad sound for "Strobe" took the file's organ, the nearest part to a pad it has, and the Moderat stab took the
+  transcription's broken piano chords.
+- **6/8 and 5/4 loop whole**: "A New Error" is four bars of 6/8, and "Rhubarb" two of 5/4. Orbital's "Belfast" figure
+  is three notes in eighths, so its pattern is three bars, eight turns of the figure.
+- **Octaves went twice** for the "Woke Up This Morning" bass (for the TD-3) and the Open Eye Signal roots (for the
+  SynTrx).
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on
@@ -876,7 +918,9 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
   The eighth (t-164) created 64 and 77, which brought them to 352 and 520, left the 288 and every riff unchanged, and
   skipped nothing. Its review fixes updated 7: the fuller Itchycoo Park chords, the two Wakeman links and four
   research notes. The ninth (t-165) created 50 and 76, which brought them to 402 and 596, left the 352 and every riff
-  unchanged, and skipped nothing.
+  unchanged, and skipped nothing. The tenth (t-166) created 66 and 79, which brought them to 468 and 675, and skipped
+  nothing. It also updated 8 of t-165's patterns, whose review fixes the dev database hadn't had yet, and left the rest
+  and every riff unchanged.
 - **An admin's pattern is never written**: one an admin edited, or made any sound's default.
 - **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
   taken out of a batch file stays in the library and on its sounds.
@@ -893,14 +937,14 @@ every sound by its artists exactly once (Kraftwerk and Depeche Mode for t-127; D
 Tangerine Dream for t-128; Brian Eno, Daniel Lanois, Vangelis and Boards of Canada for t-129; 31 funk, soul and R&B
 artists for t-160; 29 synth-pop and post-punk artists for t-161; 30 80s pop and arena artists for t-162; 30 film, TV,
 game and synthwave artists, under 31 names, for t-163; 41 prog, psychedelic and rock artists, under 42 names, for t-164; 33 disco, acid, house, techno and industrial
-artists, under 34 names, for t-165), that every link resolves in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
+artists, under 34 names, for t-165; 35 90s electronic, big beat, IDM and downtempo artists for t-166), that every link resolves in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
 a sound whose own riff plays no chords gets a single line, that the Just Can't Get Enough bass and the Blade Runner End
 Titles theme play the notes both of their leads give, that the Da Funk break figure plays its lead's notes in both
 octaves, as does the Da Funk main riff, that Digital Love's intro plays its lead's notes, that the Flash Light
 bass and the Superstition clavinet (in both octaves) play theirs, that the Blue Monday bass, the Are 'Friends'
 Electric? riff, the Take On Me riff, the Sweet Dreams riff, the Axel F theme, the Stranger Things arpeggio, the On the
-Run sequence, the Tom Sawyer growl, the I Feel Love bass and the Popcorn theme play theirs, and that t-161's, t-162's,
-t-163's, t-164's and t-165's octave copies sit one or two octaves from the part they copy, as each copy's check says. A pattern with no lead must say it is a best guess. A sound can be on more
+Run sequence, the Tom Sawyer growl, the I Feel Love bass, the Popcorn theme, the Sexy Boy bass and the Levels riff play theirs, and that t-161's,
+t-162's, t-163's, t-164's, t-165's and t-166's octave copies sit one or two octaves from the part they copy, as each copy's check says. A pattern with no lead must say it is a best guess. A sound can be on more
 than one pattern of a batch, but a sound with a pattern never also has a reason.
 
 The catalogue unit's hash leaves the `patterns/` folder out, as it does `bank/`, so a batch edit re-runs only this

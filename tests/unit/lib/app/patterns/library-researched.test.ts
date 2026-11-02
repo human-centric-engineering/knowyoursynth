@@ -1,5 +1,5 @@
 /**
- * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162, t-163, t-164, t-165): the research batches under the seed's `data/patterns/`, and
+ * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162, t-163, t-164, t-165, t-166): the research batches under the seed's `data/patterns/`, and
  * the seed that puts them on their sounds.
  *
  * First the real batches, against the real catalogue and databank data: every pattern parses and plays, every sound a
@@ -329,6 +329,47 @@ describe('the research batches', () => {
       ],
       77,
     ],
+    [
+      't-166',
+      [
+        'Alabama 3',
+        'Jon Hopkins',
+        'Portishead',
+        'Air',
+        'Aphex Twin',
+        'Orbital',
+        'Röyksopp',
+        'The Chemical Brothers',
+        'Burial',
+        'Tycho',
+        'Underworld',
+        'Zero 7',
+        'deadmau5',
+        'Autechre',
+        'Avicii',
+        'Bonobo',
+        'Eric Prydz',
+        'Moderat',
+        'Paul van Dyk',
+        'The Prodigy',
+        '90s drum & bass',
+        'Artful Dodger',
+        'Bicep',
+        'Darude',
+        'Four Tet',
+        'Gas',
+        'Gigi D’Agostino',
+        'Global Communication',
+        'LTJ Bukem',
+        'Mount Kimbie',
+        'Skrillex',
+        'Squarepusher',
+        'The Future Sound of London',
+        'Ulrich Schnauss',
+        'Wiley',
+      ],
+      82,
+    ],
   ];
 
   it('has a roster for every batch, so none goes unchecked below', () => {
@@ -617,6 +658,29 @@ describe('the research batches', () => {
     );
     expect(pitches('researched:acid-house/acid-line-high')).toEqual(
       shifted('researched:acid-house/acid-line', 24)
+    );
+  });
+
+  it('plays the notes its lead gives: the bass of “Sexy Boy”', () => {
+    // D D' D D C' D', twice, then the same on C: Songsterr “basse (effet talker)”, bars 1–4.
+    const bar = (root: number) => [root, 50, root, root, 48, 50];
+    expect(pitches('researched:air/sexy-boy-bass')).toEqual([38, 38, 36, 36].flatMap(bar));
+  });
+
+  it('plays the notes its lead gives: the riff of “Levels”', () => {
+    // F♯ E E E E E E, D♯ D♯ E E C♯ B G♯: Songsterr “Layer 1”, bars 73–74.
+    expect(pitches('researched:avicii/levels-riff')).toEqual([
+      66, 64, 64, 64, 64, 64, 64, 63, 63, 64, 64, 73, 71, 68,
+    ]);
+  });
+
+  it('plays t-166’s octave copies one or two octaves from the part they copy', () => {
+    const shifted = (key: string, by: number) => pitches(key).map((n) => n + by);
+    expect(pitches('researched:alabama-3/woke-up-this-morning-bass-high')).toEqual(
+      shifted('researched:alabama-3/woke-up-this-morning-bass', 12)
+    );
+    expect(pitches('researched:jon-hopkins/open-eye-signal-roots-high')).toEqual(
+      shifted('researched:jon-hopkins/open-eye-signal-roots', 12)
     );
   });
 

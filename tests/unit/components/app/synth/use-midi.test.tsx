@@ -6,6 +6,7 @@
  * @see components/app/synth/use-midi.ts
  */
 
+import { StrictMode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { useMidi } from '@/components/app/synth/use-midi';
@@ -216,6 +217,99 @@ describe('useMidi', () => {
     expect(input.onmidimessage).toBeNull();
     expect(access.onstatechange).toBeNull();
     expect(h.remember).not.toHaveBeenCalledWith(true);
+  });
+
+  describe('requests that overlap', () => {
+    /** Each grant is its own MIDIAccess with its own input objects, as in the browser. */
+    function twoGrants() {
+      const inputs = [0, 1].map((): FakeInput => ({
+        name: 'Keystation',
+        state: 'connected',
+        onmidimessage: null,
+      }));
+      const grants = inputs.map((i) => makeAccess([i]));
+      const answers: ((a: unknown) => void)[] = [];
+      setNav(vi.fn(() => new Promise((resolve) => answers.push(resolve))));
+      return { inputs, grants, answers };
+    }
+
+    it('binds only the latest, so Stop MIDI silences the keyboard', async () => {
+      const { inputs, grants, answers } = twoGrants();
+      const h = handlers();
+      const { result } = renderHook(() => useMidi(h));
+      let first: Promise<boolean> = Promise.resolve(true);
+      let second: Promise<boolean> = Promise.resolve(true);
+      act(() => {
+        first = result.current.connect();
+        second = result.current.connect();
+      });
+      // The older request answers last, as it can in the browser.
+      await act(async () => {
+        answers[1](grants[1]);
+        await second;
+        answers[0](grants[0]);
+        await first;
+      });
+      await expect(first).resolves.toBe(false);
+      expect(result.current.status).toBe('on');
+      expect(inputs[0].onmidimessage).toBeNull();
+      expect(grants[0].onstatechange).toBeNull();
+
+      act(() => result.current.disconnect());
+      inputs.forEach((i) => send(i, 0x90, 60, 100));
+      expect(h.noteOn).not.toHaveBeenCalled();
+    });
+
+    it('detaches what was bound when a later request is refused, as blocked offers no Stop', async () => {
+      const h = handlers();
+      const { result } = renderHook(() => useMidi(h));
+      await act(async () => {
+        await result.current.connect();
+      });
+      expect(input.onmidimessage).not.toBeNull();
+      setNav(vi.fn().mockRejectedValue(new Error('Permission denied')));
+      await act(async () => {
+        await result.current.connect();
+      });
+      expect(result.current.status).toBe('blocked');
+      expect(result.current.devices).toEqual([]);
+      send(input, 0x90, 60, 100);
+      expect(h.noteOn).not.toHaveBeenCalled();
+    });
+
+    it('stays off when Stop MIDI comes while the browser is still asking', async () => {
+      const { inputs, grants, answers } = twoGrants();
+      const h = handlers();
+      const { result } = renderHook(() => useMidi(h));
+      let ok: Promise<boolean> = Promise.resolve(true);
+      act(() => {
+        ok = result.current.connect();
+      });
+      act(() => result.current.disconnect());
+      await act(async () => {
+        answers[0](grants[0]);
+        await ok;
+      });
+      await expect(ok).resolves.toBe(false);
+      expect(result.current.status).toBe('off');
+      expect(inputs[0].onmidimessage).toBeNull();
+      expect(h.remember).not.toHaveBeenCalledWith(true);
+    });
+
+    it('reconnecting under StrictMode’s double mount leaves one binding that Stop MIDI removes', async () => {
+      const { inputs, grants, answers } = twoGrants();
+      const h = handlers({ load: vi.fn(() => true) });
+      const { result } = renderHook(() => useMidi(h), { wrapper: StrictMode });
+      await act(async () => {
+        answers.forEach((answer, i) => answer(grants[i]));
+        await Promise.resolve();
+      });
+      await waitFor(() => expect(result.current.status).toBe('on'));
+
+      act(() => result.current.disconnect());
+      inputs.forEach((i) => send(i, 0x90, 60, 100));
+      expect(h.noteOn).not.toHaveBeenCalled();
+    });
   });
 
   it('is blocked on refusal, with the error, and forgets', async () => {
