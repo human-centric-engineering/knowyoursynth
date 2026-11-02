@@ -67,7 +67,10 @@ function publicLibrary(now = Date.now()): Promise<LibraryPatternView[]> {
   return views;
 }
 
-/** Forgets the kept library. For tests. */
+/**
+ * Forgets the kept library, so the next suggestion reads it afresh. The pattern library's admin writes call it
+ * (`library-edit.ts`), and tests do. Catalogue edits don't yet: theirs reach suggestions within the minute.
+ */
 export function forgetSuggestLibrary(): void {
   kept = null;
 }
@@ -90,14 +93,18 @@ export async function suggestPatterns(body: SuggestBody): Promise<SuggestResult 
       select: {
         patterns: {
           orderBy: DEFAULT_FIRST,
-          select: { patternId: true, pattern: { select: { inspiredArtistId: true } } },
+          select: {
+            patternId: true,
+            pattern: { select: { inspiredArtistId: true, status: true } },
+          },
         },
       },
     });
     if (!sound) return null;
     for (const { patternId, pattern } of sound.patterns) {
       exclude.add(patternId);
-      artistId ??= pattern.inspiredArtistId;
+      // A disabled pattern says nothing to users, so not who the sound is after either.
+      if (pattern.status === 'enabled') artistId ??= pattern.inspiredArtistId;
     }
   }
   if (!kind || !library) return { reading: null, suggestions: [] };

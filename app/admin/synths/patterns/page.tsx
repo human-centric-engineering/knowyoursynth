@@ -77,6 +77,9 @@ export default async function PatternsAdminPage({ searchParams }: Props) {
     role: one('role'),
     artist: one('artist'),
     fidelity: one('fidelity'),
+    origin: one('origin'),
+    rights: one('rights'),
+    status: one('status'),
     page: Number.isInteger(page) && page > 1 ? page : undefined,
   };
   const [list, choices] = await Promise.all([getPage(filters), getChoices()]);
@@ -96,6 +99,11 @@ export default async function PatternsAdminPage({ searchParams }: Props) {
               rewrites the riff of every patch it is the default of. Nothing is deleted: to stop a
               riff being a patch&apos;s default, put another of its patterns first. Every change is
               in the audit log.
+            </p>
+            <p className="mt-2">
+              Each pattern also has a rights risk and a status. A disabled pattern is hidden from
+              players, and a patch whose default it was plays its next enabled pattern. Filter by
+              them here, and change several at once with the bar above the list.
             </p>
           </FieldHelp>
         </h1>

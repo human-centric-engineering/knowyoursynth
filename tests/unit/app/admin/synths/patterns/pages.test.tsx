@@ -11,7 +11,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 
 import { adminLibraryPattern } from '@/tests/helpers/admin-library-pattern';
 
@@ -22,11 +22,12 @@ vi.mock('@/lib/api/server-fetch', () => ({
 }));
 
 vi.mock('@/lib/api/client', () => ({
-  apiClient: { put: vi.fn(), patch: vi.fn() },
+  apiClient: { put: vi.fn(), patch: vi.fn(), post: vi.fn() },
   APIClientError: class APIClientError extends Error {},
 }));
 
 vi.mock('next/navigation', () => ({
+  useRouter: () => ({ refresh: vi.fn() }),
   notFound: vi.fn(() => {
     throw new Error('NEXT_NOT_FOUND');
   }),
@@ -95,6 +96,41 @@ describe('PatternsAdminPage', () => {
     expect(screen.getByLabelText('Synth')).toHaveValue('model-d');
   });
 
+  it('passes the admin-control filters too, and offers the bulk bar (t-156)', async () => {
+    api({
+      '/api/v1/admin/library-patterns': () =>
+        ok([adminLibraryPattern({ rightsRisk: 'needs_review', status: 'disabled' })], {
+          page: 1,
+          limit: 50,
+          total: 1,
+        }),
+      '/api/v1/admin/library-patterns/choices': () => ok(CHOICES),
+    });
+    render(
+      await PatternsAdminPage({
+        searchParams: Promise.resolve({
+          origin: 'ai_generated',
+          rights: 'needs_review',
+          status: 'disabled',
+        }),
+      })
+    );
+    expect(mockServerFetch).toHaveBeenCalledWith(
+      '/api/v1/admin/library-patterns?origin=ai_generated&rights=needs_review&status=disabled&limit=50'
+    );
+    expect(
+      within(screen.getByRole('form', { name: 'Filter patterns' })).getByLabelText('Status')
+    ).toHaveValue('disabled');
+    expect(screen.getByRole('region', { name: 'Change several' })).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: 'Choose Funk bass' })).toHaveAttribute(
+      'value',
+      'cpat000000000000000000001'
+    );
+    const row = screen.getByRole('link', { name: 'Funk bass' }).closest('tr')!;
+    expect(row).toHaveTextContent('Needs review');
+    expect(row).toHaveTextContent('Disabled');
+  });
+
   it('asks for the first page with no filters', async () => {
     api({
       '/api/v1/admin/library-patterns': () => ok([]),
@@ -142,6 +178,32 @@ describe('PatternAdminPage', () => {
     expect(heading).toHaveTextContent('Edited');
     expect(screen.getByText('riff:model-d/funk-bass')).toBeInTheDocument();
     expect(screen.getByRole('form', { name: 'Edit pattern' })).toBeInTheDocument();
+  });
+
+  it('shows the provenance panel, with the comments and history it reads (t-156)', async () => {
+    api({
+      '/api/v1/admin/library-patterns/cpat000000000000000000001': () =>
+        ok(adminLibraryPattern({ status: 'disabled', statusReason: 'Too close' })),
+      '/api/v1/admin/library-patterns/choices': () => ok(CHOICES),
+      '/api/v1/admin/library-patterns/cpat000000000000000000001/comments': () =>
+        ok([
+          {
+            id: 'k1',
+            body: 'Heard it.',
+            author: { id: 'u1', name: 'Jo' },
+            createdAt: '2026-11-01T09:30:00.000Z',
+          },
+        ]),
+      '/api/v1/admin/library-patterns/cpat000000000000000000001/history': () => status(500),
+    });
+
+    render(await PatternAdminPage(props('cpat000000000000000000001')));
+
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Disabled');
+    const panel = screen.getByRole('region', { name: /Provenance/ });
+    expect(panel).toHaveTextContent('Too close');
+    expect(panel).toHaveTextContent('Heard it.');
+    expect(panel).toHaveTextContent('The history could not be loaded');
   });
 
   it('is a 404 for a pattern the API does not have, or an id that cannot be one', async () => {

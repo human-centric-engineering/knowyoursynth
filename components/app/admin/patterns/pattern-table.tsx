@@ -3,18 +3,24 @@
  *
  * Renders one page of `GET /api/v1/admin/library-patterns`: the filters, the rows, each linking to its editor, and the
  * pager. The filters are a plain GET form, so the server does the filtering over the whole library and a filtered list
- * is a link an admin can share. No state, so it renders on the server.
+ * is a link an admin can share. No state, so it renders on the server. Each row's rights risk and status show, and
+ * its checkbox is read by the bulk bar above it (t-156), the one client part.
  */
 
 import Link from 'next/link';
 
+import { PATTERN_PICK, PatternBulkBar } from '@/components/app/admin/patterns/pattern-bulk-bar';
 import {
+  FILTER_KEYS,
   ORIGIN_LABELS,
   PATTERNS_ADMIN_ROOT,
   patternAdminPath,
   patternListPath,
+  RIGHTS_LABELS,
+  STATUS_LABELS,
   type PatternFilters,
 } from '@/components/app/admin/patterns/paths';
+import { FieldHelp } from '@/components/ui/field-help';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -45,9 +51,7 @@ export interface PatternTableProps {
 
 export function PatternTable({ rows, total, page, limit, filters, choices }: PatternTableProps) {
   const pages = Math.max(1, Math.ceil(total / limit));
-  const filtered = ['q', 'synth', 'role', 'artist', 'fidelity'].some(
-    (k) => filters[k as keyof PatternFilters]
-  );
+  const filtered = FILTER_KEYS.some((k) => filters[k]);
   const first = total === 0 ? 0 : (page - 1) * limit + 1;
 
   return (
@@ -142,6 +146,36 @@ export function PatternTable({ rows, total, page, limit, filters, choices }: Pat
             ))}
           </select>
         </div>
+        {(
+          [
+            ['origin', 'Origin', ORIGIN_LABELS],
+            [
+              'rights',
+              'Rights risk',
+              Object.fromEntries(Object.entries(RIGHTS_LABELS).map(([k, v]) => [k, v.label])),
+            ],
+            ['status', 'Status', STATUS_LABELS],
+          ] as const
+        ).map(([key, label, options]) => (
+          <div key={key} className="grid gap-1">
+            <Label htmlFor={`pattern-${key}`} className="text-xs">
+              {label}
+            </Label>
+            <select
+              id={`pattern-${key}`}
+              name={key}
+              defaultValue={filters[key] ?? ''}
+              className={SELECT}
+            >
+              <option value="">Any</option>
+              {Object.entries(options).map(([v, text]) => (
+                <option key={v} value={v}>
+                  {text}
+                </option>
+              ))}
+            </select>
+          </div>
+        ))}
         <Button type="submit" size="sm">
           Filter
         </Button>
@@ -151,6 +185,9 @@ export function PatternTable({ rows, total, page, limit, filters, choices }: Pat
           </Button>
         )}
       </form>
+
+      {/* A new page or filter is a new set of rows: the bar starts again with none ticked. */}
+      <PatternBulkBar key={patternListPath({ ...filters, page })} />
 
       <p className="text-muted-foreground text-xs">
         {total === 0
@@ -163,11 +200,27 @@ export function PatternTable({ rows, total, page, limit, filters, choices }: Pat
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead className="w-8">
+              <span className="sr-only">Choose</span>
+            </TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Role</TableHead>
             <TableHead>Inspired by</TableHead>
             <TableHead>Fidelity</TableHead>
             <TableHead>Origin</TableHead>
+            <TableHead>
+              Rights risk{' '}
+              <FieldHelp title="Rights risk" ariaLabel="About the rights risk column">
+                <ul className="list-disc space-y-1 pl-4">
+                  {Object.values(RIGHTS_LABELS).map((r) => (
+                    <li key={r.label}>
+                      <strong>{r.label}</strong>: {r.means}
+                    </li>
+                  ))}
+                </ul>
+              </FieldHelp>
+            </TableHead>
+            <TableHead>Status</TableHead>
             <TableHead>Patches</TableHead>
             <TableHead>Source</TableHead>
           </TableRow>
@@ -176,12 +229,20 @@ export function PatternTable({ rows, total, page, limit, filters, choices }: Pat
           {rows.map((r) => (
             <TableRow key={r.id}>
               <TableCell>
+                <input
+                  type="checkbox"
+                  name={PATTERN_PICK}
+                  value={r.id}
+                  aria-label={`Choose ${r.name}`}
+                />
+              </TableCell>
+              <TableCell>
                 <Link href={patternAdminPath(r.id)} className="font-medium hover:underline">
                   {r.name}
                 </Link>
               </TableCell>
               {'problem' in r ? (
-                <TableCell colSpan={6} className="text-destructive text-sm">
+                <TableCell colSpan={8} className="text-destructive text-sm">
                   {r.problem}
                 </TableCell>
               ) : (
@@ -191,6 +252,26 @@ export function PatternTable({ rows, total, page, limit, filters, choices }: Pat
                   <TableCell className="text-sm">{FIDELITY_LABELS[r.fidelity].label}</TableCell>
                   <TableCell className="text-muted-foreground text-sm">
                     {ORIGIN_LABELS[r.origin]}
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={
+                        r.rightsRisk === 'blocked'
+                          ? 'destructive'
+                          : r.rightsRisk === 'needs_review'
+                            ? 'secondary'
+                            : 'outline'
+                      }
+                    >
+                      {RIGHTS_LABELS[r.rightsRisk].label}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-sm">
+                    {r.status === 'disabled' ? (
+                      <Badge variant="outline">Disabled</Badge>
+                    ) : (
+                      <span className="text-muted-foreground">Enabled</span>
+                    )}
                   </TableCell>
                   <TableCell className="text-muted-foreground text-sm">
                     {soundsLine(r.sounds)}
@@ -208,7 +289,7 @@ export function PatternTable({ rows, total, page, limit, filters, choices }: Pat
           ))}
           {rows.length === 0 && (
             <TableRow>
-              <TableCell colSpan={7} className="text-muted-foreground text-sm">
+              <TableCell colSpan={10} className="text-muted-foreground text-sm">
                 {total > 0
                   ? 'This page is past the end of the list.'
                   : filtered

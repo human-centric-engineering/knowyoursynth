@@ -9,6 +9,9 @@
  * each tested:
  *
  * - **A re-run writes nothing**, and **an empty batch writes nothing**.
+ * - **Each pattern records who made it** (t-156): _AI-generated_, by the batch's `researchedBy` for its task, on the day
+ *   it was researched, with its research record (the owner's listen included) for the admin page. Its rights risk
+ *   follows its fidelity until an admin sets one, and its status is never the seed's to write.
  * - **An admin's pattern is never written**: one an admin has edited, or put at the head of a sound's list (its notes
  *   are that sound's riff now, so the seed changing them would split the pair).
  * - **Nothing is deleted or moved.** A pattern taken out of a batch file stays in the library and on its sounds.
@@ -23,6 +26,9 @@ import { PATTERN_ROLES } from '@/lib/app/patterns/library-roles';
 import { sameValue } from '@/lib/app/catalogue/seed';
 import {
   DEFAULT_FIRST,
+  defaultRightsRisk,
+  headOf,
+  PLACES,
   PatternSourceSchema,
   PatternSourcesSchema,
   phraseOf,
@@ -186,7 +192,14 @@ type Row = Pick<
   | 'inspiredSynthId'
   | 'fidelity'
   | 'origin'
-> & { pattern: Prisma.InputJsonValue; sources: Prisma.InputJsonValue };
+  | 'madeBy'
+  | 'madeAt'
+  | 'rightsRisk'
+> & {
+  pattern: Prisma.InputJsonValue;
+  sources: Prisma.InputJsonValue;
+  research: Prisma.InputJsonValue;
+};
 
 /** The inspiration's columns, its label taken from the row it links to, or why the link leads to nothing. */
 async function inspirationOf(db: LibraryDb, p: ResearchedPattern) {
@@ -245,11 +258,13 @@ async function inspirationOf(db: LibraryDb, p: ResearchedPattern) {
 
 /**
  * The columns a researched pattern is stored as, or why it cannot be. Every batch pattern is _AI-generated_ (owner
- * ruling, 2026-10-31).
+ * ruling, 2026-10-31), made by whoever researched its batch. Its rights risk is the default for its fidelity, which
+ * the caller leaves out once an admin has set one.
  */
 async function planResearched(
   db: LibraryDb,
-  p: ResearchedPattern
+  p: ResearchedPattern,
+  batch: Pick<ResearchBatch, 'task' | 'researchedBy' | 'researchedAt'>
 ): Promise<Row | { missing: string }> {
   const inspiration = await inspirationOf(db, p);
   if ('missing' in inspiration) return inspiration;
@@ -264,6 +279,10 @@ async function planResearched(
     fidelity: p.fidelity,
     sources: toJson(p.sources),
     origin: 'ai_generated',
+    madeBy: `${batch.researchedBy} (${batch.task})`,
+    madeAt: new Date(`${batch.researchedAt}T00:00:00.000Z`),
+    research: toJson({ task: batch.task, ...p.research }),
+    rightsRisk: defaultRightsRisk(p.fidelity),
     ...inspiration,
   };
 }
@@ -286,6 +305,7 @@ export async function syncResearchedPatterns(
   };
   const patterns = batches.flatMap((b) => b.patterns);
   if (!patterns.length) return counts;
+  const batchOf = new Map(batches.flatMap((b) => b.patterns.map((p) => [p.key, b] as const)));
 
   const named = [...new Set(patterns.flatMap((p) => p.sounds))];
   const sounds = new Map(
@@ -311,7 +331,8 @@ export async function syncResearchedPatterns(
       (p) => [p.key, p]
     )
   );
-  // Any sound an admin made one of them the default of, the batch's own sounds or not.
+  // Any sound an admin made one of them the default of, the batch's own sounds or not: its default now, or a disabled
+  // pattern ahead of the default, which becomes it once enabled.
   const heads = new Set(
     stored.size
       ? (
@@ -319,9 +340,23 @@ export async function syncResearchedPatterns(
             where: {
               patterns: { some: { patternId: { in: [...stored.values()].map((p) => p.id) } } },
             },
-            select: { patterns: { orderBy: DEFAULT_FIRST, take: 1, select: { patternId: true } } },
+            select: { patterns: PLACES },
           })
-        ).flatMap((s) => (s.patterns[0] ? [s.patterns[0].patternId] : []))
+        ).flatMap((s) => {
+          const head = headOf(s.patterns);
+          const ahead = head ? s.patterns.slice(0, s.patterns.indexOf(head)) : s.patterns;
+          return [
+            ...(head ? [head.patternId] : []),
+            // Only one that could be the default once enabled: one that cannot be a riff never is.
+            ...ahead
+              .filter(
+                (p) =>
+                  p.pattern.status !== 'enabled' &&
+                  headOf([{ ...p, pattern: { ...p.pattern, status: 'enabled' as const } }])
+              )
+              .map((p) => p.patternId),
+          ];
+        })
       : []
   );
 
@@ -332,12 +367,15 @@ export async function syncResearchedPatterns(
       continue;
     }
     const mine = p.sounds.map((s) => sounds.get(s)!);
-    const planned = await planResearched(db, p);
-    if ('missing' in planned) {
-      counts.skipped.push({ key: p.key, reason: planned.missing });
+    const current = stored.get(p.key);
+    const plan = await planResearched(db, p, batchOf.get(p.key)!);
+    if ('missing' in plan) {
+      counts.skipped.push({ key: p.key, reason: plan.missing });
       continue;
     }
-    const current = stored.get(p.key);
+    // An admin's rights risk (it has a reason) is theirs; until then it follows the fidelity.
+    const { rightsRisk: _rightsRisk, ...rest } = plan;
+    const planned = current?.rightsReason ? rest : plan;
     let id: string;
     if (!current) {
       // A sound with an empty list would take it as its default (below), so a new pattern none of whose sounds has
@@ -346,7 +384,7 @@ export async function syncResearchedPatterns(
         counts.skipped.push({ key: p.key, reason: 'No sound it names has its riff pattern yet' });
         continue;
       }
-      id = (await db.libraryPattern.create({ data: planned })).id;
+      id = (await db.libraryPattern.create({ data: plan })).id;
       counts.created++;
     } else {
       id = current.id;

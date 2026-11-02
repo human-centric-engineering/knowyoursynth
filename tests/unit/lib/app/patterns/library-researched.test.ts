@@ -370,6 +370,85 @@ describe('syncResearchedPatterns', () => {
     });
   });
 
+  it('records who made each pattern, its research record, and its rights risk from its fidelity (t-156)', async () => {
+    const batch = testBatch();
+    // One says it recreates the part, with a source: it needs review.
+    Object.assign(batch.patterns[1], {
+      fidelity: 'reconstructed',
+      sources: [{ type: 'by_ear', citation: 'The single', checkedAt: '2026-11-01' }],
+    });
+    await syncResearchedPatterns(lib(), [batch]);
+    const model = keyed('researched:kraftwerk/the-model-counter-line');
+    const jcge = keyed('researched:depeche-mode/just-cant-get-enough-bass');
+    expect(model).toMatchObject({
+      origin: 'ai_generated',
+      madeBy: 'a test (t-127)',
+      madeAt: new Date('2026-11-01T00:00:00.000Z'),
+      research: { task: 't-127', ...batch.patterns[0].research },
+      rightsRisk: 'none',
+    });
+    expect(jcge.rightsRisk).toBe('needs_review');
+    // The seed never writes a status.
+    expect(model.status).toBe('enabled');
+
+    // An admin's rights risk (it has a reason) is kept through a changed batch; status is never touched.
+    Object.assign(jcge, { rightsRisk: 'cleared', rightsReason: 'Checked', status: 'disabled' });
+    batch.patterns[1].name = 'Renamed in the batch';
+    expect(await syncResearchedPatterns(lib(), [batch])).toMatchObject({ updated: 1 });
+    expect(jcge).toMatchObject({
+      name: 'Renamed in the batch',
+      rightsRisk: 'cleared',
+      status: 'disabled',
+    });
+    // Without one, the risk follows the batch's fidelity.
+    Object.assign(jcge, { rightsReason: null });
+    expect(await syncResearchedPatterns(lib(), [batch])).toMatchObject({ updated: 1 });
+    expect(jcge.rightsRisk).toBe('needs_review');
+  });
+
+  it('leaves alone a pattern an admin put first while it is disabled, as its notes are the default again once enabled', async () => {
+    await syncResearchedPatterns(lib(), [testBatch()]);
+    const jcge = keyed('researched:depeche-mode/just-cant-get-enough-bass');
+    db.synthSoundPattern.rows.find((l) => l.patternId === jcge.id)!.order = -1;
+    jcge.status = 'disabled';
+    const kept = structuredClone(jcge);
+    const changed = testBatch();
+    changed.patterns[1].name = 'Renamed in the batch';
+    clearWrites();
+    expect(await syncResearchedPatterns(lib(), [changed])).toMatchObject({ edited: 1, updated: 0 });
+    expect(jcge).toEqual(kept);
+  });
+
+  it('protects a disabled pattern anywhere ahead of the default, and not an enabled one the sound cannot play', async () => {
+    await syncResearchedPatterns(lib(), [testBatch()]);
+    const jcge = keyed('researched:depeche-mode/just-cant-get-enough-bass');
+    // Sound 2: its own riff, disabled, first; this one, disabled, second; nothing enabled ahead of them.
+    riffOf(2).status = 'disabled';
+    db.synthSoundPattern.rows.find((l) => l.patternId === riffOf(2).id)!.order = -2;
+    db.synthSoundPattern.rows.find((l) => l.patternId === jcge.id)!.order = -1;
+    jcge.status = 'disabled';
+    const changed = testBatch();
+    changed.patterns[1].name = 'Renamed in the batch';
+    expect(await syncResearchedPatterns(lib(), [changed])).toMatchObject({ edited: 1 });
+    expect(jcge.name).not.toBe('Renamed in the batch');
+
+    // Enabled but unplayable as a riff (two parts): never the default, so the batch's change lands.
+    jcge.status = 'enabled';
+    const two = PatternSchema.parse(jcge.pattern);
+    two.parts.push(structuredClone(two.parts[0]));
+    two.chain = [0, 1];
+    jcge.pattern = two;
+    changed.patterns[1].pattern = two;
+    expect(await syncResearchedPatterns(lib(), [changed])).toMatchObject({ updated: 1 });
+    expect(jcge.name).toBe('Renamed in the batch');
+
+    // Disabled as well: still never the default, so still the batch's.
+    jcge.status = 'disabled';
+    changed.patterns[1].name = 'Renamed again';
+    expect(await syncResearchedPatterns(lib(), [changed])).toMatchObject({ updated: 1 });
+    expect(jcge.name).toBe('Renamed again');
+  });
+
   it('writes nothing the second time, nor for an empty batch', async () => {
     await syncResearchedPatterns(lib(), [testBatch()]);
     clearWrites();

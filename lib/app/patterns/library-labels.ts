@@ -5,6 +5,12 @@
  */
 import type { PatternFidelity, PatternRole } from '@prisma/client';
 
+/**
+ * The path a control's refusal names when it would leave a sound with no enabled pattern
+ * (`setLibraryPatternControl`): the admin page answers it by sending the change again with `acknowledge`.
+ */
+export const ACKNOWLEDGE_PATH = 'acknowledge';
+
 export const ROLE_LABELS: Record<PatternRole, string> = {
   lead_line: 'Lead line',
   held: 'Held',

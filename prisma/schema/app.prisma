@@ -233,6 +233,24 @@ enum PatternOrigin {
   user_contributed
 }
 
+/// Whether a pattern could raise a rights problem (`pattern-library.md`, Rights risk). Admin-set, with a reason.
+enum PatternRightsRisk {
+  /// Nothing in it is taken from a specific work.
+  none
+  /// It recreates a specific part, and no one has checked it yet.
+  needs_review
+  /// Checked against the rights rule, and it fits.
+  cleared
+  /// It must not be shown: always disabled.
+  blocked
+}
+
+/// Whether users can see a pattern. A disabled one is hidden from every user-facing read, never deleted.
+enum PatternStatus {
+  enabled
+  disabled
+}
+
 /// A pattern in the library: the sequencer's `Pattern`, the part it plays, and where it came from.
 model LibraryPattern {
   id               String             @id @default(cuid())
@@ -259,6 +277,20 @@ model LibraryPattern {
   /// `PatternSource[]` (`lib/app/patterns/library.ts`): each with a type, citation, url and the date it was checked.
   sources          Json               @default("[]")
   origin           PatternOrigin
+  /// Who or what made the notes, when no user account did: the agent and the task or session.
+  madeBy           String?
+  /// FK to User.id, ON DELETE SET NULL (hand-written in the migration): the admin who added it, or the user it came from.
+  madeByUserId     String?
+  /// When it was made, where known.
+  madeAt           DateTime?
+  /// A research batch's record of it (`ResearchRecord`, `library-researched.ts`): the work, part, notes and when the
+  /// owner listened. Written by the seed; null for a pattern no batch wrote.
+  research         Json?
+  /// Follows the fidelity until an admin sets it (then `rightsReason` is set). Never written by the seed after that.
+  rightsRisk       PatternRightsRisk  @default(none)
+  rightsReason     String?            @db.Text
+  status           PatternStatus      @default(enabled)
+  statusReason     String?            @db.Text
   editedAt         DateTime?
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
@@ -269,14 +301,36 @@ model LibraryPattern {
   inspiredSynth  Synth?        @relation(fields: [inspiredSynthId], references: [id], onDelete: SetNull)
 
   /// The sounds that list it.
-  sounds SynthSoundPattern[]
+  sounds   SynthSoundPattern[]
+  comments LibraryPatternComment[]
 
   @@index([role])
+  @@index([status])
+  @@index([rightsRisk])
+  @@index([origin])
+  @@index([madeByUserId])
   @@index([inspiredArtistId])
   @@index([inspiredSongId])
   @@index([inspiredPartId])
   @@index([inspiredSynthId])
   @@map("library_pattern")
+}
+
+/// An admin's comment on a library pattern, shown only in admin. Goes with the pattern (Cascade, though nothing deletes
+/// one), and outlives its author (hand-written FK, SET NULL).
+model LibraryPatternComment {
+  id        String   @id @default(cuid())
+  patternId String
+  /// FK to User.id, ON DELETE SET NULL (hand-written in the migration).
+  authorId  String?
+  body      String   @db.Text
+  createdAt DateTime @default(now())
+
+  pattern LibraryPattern @relation(fields: [patternId], references: [id], onDelete: Cascade)
+
+  @@index([patternId, createdAt])
+  @@index([authorId])
+  @@map("library_pattern_comment")
 }
 
 /// A sound's place for a library pattern. The lowest `order` is the sound's default.
