@@ -10,7 +10,7 @@ This page is the design, written before the build (t-121). It covers:
 
 - the roles a pattern plays and the facts it carries for matching
 - what "Inspired by" links to, and the fidelity levels
-- the research method the batches follow (t-127, t-128, t-129, t-160, t-161, t-162, t-163)
+- the research method the batches follow (t-127, t-128, t-129, t-160, t-161, t-162, t-163, t-164)
 - the rights rule
 - how admins see and control each pattern's origin, rights risk and status
 - how the current riffs are reviewed
@@ -563,6 +563,55 @@ there were 78. 68 got one of 44 patterns, and 10 got a reason. The batch is
   I V E, their band, in its reference while its artist is the duo.
 - **Octaves went twice** for the Escape from New York ostinato and the Suspiria theme.
 
+**The eighth batch (t-164): prog, psychedelic and rock.** Every sound by 41 artists (42 names: one band is spelled two
+ways), from Pink Floyd (12 sounds) and Rush (6) to one each by ? and the Mysterians, Thin Lizzy and U2. The task counted
+about 80; there were 83. 77 got one of 64 patterns, and 6 got a reason. The batch is
+`prisma/seeds/app-knowyoursynth/data/patterns/t164-prog-psychedelic-and-rock.json`. It found:
+
+- **Rock is the best-covered ground yet.** 61 patterns came from 49 Songsterr transcriptions. Pink Floyd's and Rush's
+  name every keyboard track by player and instrument ("Roger Waters - EMS Synthi AKS - Bassline", "Geddy Lee | Oberheim
+  OB-X"), so "On the Run", "Welcome to the Machine", "Money", "Shine On You Crazy Diamond", "Tom Sawyer",
+  "Subdivisions" and "Time Stand Still" all gave their synth parts directly. So did "Everything In Its Right Place", the
+  "Lucky Man" and "Tarkus" Moogs, Wakeman's Minimoog on "Close to the Edge" and "Catherine of Aragon", the "Here Comes
+  the Sun" Moog and the "Good Vibrations" Electro-Theremin.
+- **Two transcriptions were made by Songsterr's machine**: "Svefn-g-englar" and "The Host of Seraphim". "Itchycoo Park"
+  names a fan but marks every track "regenerated", and its two patterns say so in their lead.
+- **Many sounds stand in for a guitar, an organ or a flute**, and got that part: the "Iron Man" riff (the roots of its
+  power chords, as the transcription gives them), "Misirlou", the "Locomotive Breath" flute, Fripp's "Heroes" line,
+  the "Discipline" figure, The Edge's "Where the Streets Have No Name" introduction, the "Boys Are Back in Town"
+  interlude, the "I'm Only Sleeping" backwards guitar, the "96 Tears" organ and the "Won't Get Fooled Again" organ. The
+  "Riders on the Storm" bass is a bass guitar on the record; both sounds are Manzarek's piano bass.
+- **Where the patch makes the rhythm, the pattern holds the notes.** The "Welcome to the Machine" throb is one held note
+  the VCS3 pulses, which the transcription writes as eighths on one track and as held notes on another; both sounds
+  pulse it themselves, so they got the held notes. The Misirlou tremolo, The Edge's dotted-eighth echo and the "Machine
+  Gun" stutter are likewise the patches', and the transcriptions write them separately or not at all.
+- **Three patterns are best guesses**, one sound each: "Dream Weaver" (its transcription has the Minimoog bass and
+  effects, no lead), the Gong space-rock pad (the one Gong transcription has no keyboards) and AMOK (machine-made,
+  guitar, bass and drums only).
+- **Six sounds have no part to write.** Five are effects: the four Hawkwind sweeps and swoops ("Silver Machine" has
+  guitar, bass and drums only) and the "Larks' Tongues in Aspic" bowed cymbal. The "Time" clocks are a recording.
+- **Some transcriptions mark a swing the reader ignores.** Songsterr sets `tripletFeel` on a bar, and it holds until
+  another bar changes it. Six of the tracks taken are marked "8th". On an eighth-note grid the pattern's `swing` (67)
+  carries it ("Money", "Itchycoo Park", "Good Vibrations"); on the triplet grid the off-beat eighths move to the last
+  third of the beat ("The Boys Are Back in Town"). The "I'm Only Sleeping" bars mix sixteenths into the swung eighths,
+  so they play straight and the record says so. The "Speak to Me" heartbeat is written as muted, unpitched hits in
+  that feel, which the reader skips, so it was placed by hand on the `1/8t` grid at the sounds' own pitch.
+- **Two-note sounds took two notes where the part has chords.** The paraphonic Neutron sounds whose riffs play dyads
+  got the top two or bottom two notes of a part's chords ("Everything In Its Right Place", "Won't Get Fooled Again",
+  "The Host of Seraphim"). Two of them got a single line, because that is all the transcription has: the "Iron Man"
+  riff is written as the roots of its power chords, and the "Boys Are Back in Town" harmony is a second guitar (below).
+  The mono sounds took one line, as before.
+- **A second part is still never merged in.** The "Boys Are Back in Town" twin-guitar sound got Scott Gorham's line, not the
+  harmony a third below it, and the "Discipline" pluck got Fripp's figure without Belew's.
+- **Odd metres loop whole**: two bars of 7/4 ("Money"), four of 7/8 ("Tom Sawyer"), one of 5/4 ("Discipline"), 4/4
+  with 6/4 ("Everything In Its Right Place"), 6/8 with 7/8 ("Golden Brown"), and three bars of 4/4 with one of 2/4
+  (the "Strawberry Fields Forever" flutes). The "Tubular Bells" figure is 15/8 on the record but 7/4 in its
+  transcription, which the pattern follows; it is the first one to check by ear.
+- **One band has two names.** "Small Faces" and "The Small Faces" are the same band, and the test's roster lists both;
+  the rename is housekeeping's, as t-163's duo was.
+- **Octaves went twice** for the "On the Run" sequence, the "Shine On" Solina chords and the "Won't Get Fooled Again"
+  organ's top line.
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on
@@ -784,6 +833,9 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
   372, left the 188 and every riff unchanged, and skipped nothing. The seventh (t-163) created 45 and 70, which brought
   them to 287 and 442, left the 242 and every riff unchanged, and skipped nothing. Its review fixes created 1 and 1,
   the Perturbator bass roots; the two patterns they took out of the file stay in the library, as the rule below says.
+  The eighth (t-164) created 64 and 77, which brought them to 352 and 520, left the 288 and every riff unchanged, and
+  skipped nothing. Its review fixes updated 7: the fuller Itchycoo Park chords, the two Wakeman links and four
+  research notes.
 - **An admin's pattern is never written**: one an admin edited, or made any sound's default.
 - **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
   taken out of a batch file stays in the library and on its sounds.
@@ -799,13 +851,13 @@ Over the real data, the same test checks that every sound a batch names is in th
 every sound by its artists exactly once (Kraftwerk and Depeche Mode for t-127; Daft Punk, Jean-Michel Jarre and
 Tangerine Dream for t-128; Brian Eno, Daniel Lanois, Vangelis and Boards of Canada for t-129; 31 funk, soul and R&B
 artists for t-160; 29 synth-pop and post-punk artists for t-161; 30 80s pop and arena artists for t-162; 30 film, TV,
-game and synthwave artists, under 31 names, for t-163), that every link resolves in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
+game and synthwave artists, under 31 names, for t-163; 41 prog, psychedelic and rock artists, under 42 names, for t-164), that every link resolves in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
 a sound whose own riff plays no chords gets a single line, that the Just Can't Get Enough bass and the Blade Runner End
 Titles theme play the notes both of their leads give, that the Da Funk break figure plays its lead's notes in both
 octaves, as does the Da Funk main riff, that Digital Love's intro plays its lead's notes, that the Flash Light
 bass and the Superstition clavinet (in both octaves) play theirs, that the Blue Monday bass, the Are 'Friends'
-Electric? riff, the Take On Me riff, the Sweet Dreams riff, the Axel F theme and the Stranger Things arpeggio play
-theirs, and that t-161's, t-162's and t-163's octave copies sit an octave from the part they copy. A pattern with no lead must say it is a best guess. A sound can be on more
+Electric? riff, the Take On Me riff, the Sweet Dreams riff, the Axel F theme, the Stranger Things arpeggio, the On the
+Run sequence and the Tom Sawyer growl play theirs, and that t-161's, t-162's, t-163's and t-164's octave copies sit an octave from the part they copy. A pattern with no lead must say it is a best guess. A sound can be on more
 than one pattern of a batch, but a sound with a pattern never also has a reason.
 
 The catalogue unit's hash leaves the `patterns/` folder out, as it does `bank/`, so a batch edit re-runs only this
