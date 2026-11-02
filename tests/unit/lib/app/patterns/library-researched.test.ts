@@ -1,5 +1,5 @@
 /**
- * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162, t-163, t-164, t-165, t-166, t-167): the research batches under the seed's `data/patterns/`, and
+ * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162, t-163, t-164, t-165, t-166, t-167, t-168): the research batches under the seed's `data/patterns/`, and
  * the seed that puts them on their sounds.
  *
  * First the real batches, against the real catalogue and databank data: every pattern parses and plays, every sound a
@@ -409,6 +409,66 @@ describe('the research batches', () => {
       ],
       79,
     ],
+    [
+      't-168',
+      [
+        'Joe Zawinul',
+        'Éliane Radigue',
+        'La Monte Young',
+        'Biosphere',
+        'Enya',
+        'Hiroshi Yoshimura',
+        'Ryuichi Sakamoto',
+        'Stars of the Lid',
+        'Steve Roach',
+        'Chick Corea',
+        'Fripp & Eno',
+        'György Ligeti',
+        'Harold Budd',
+        'Jean-Luc Ponty',
+        'Lyle Mays',
+        'Milt Jackson',
+        'Olivier Messiaen',
+        'Ólafur Arnalds',
+        'Pauline Oliveros',
+        'Tchaikovsky',
+        'Tim Hecker',
+        'William Basinski',
+        'Abing',
+        'Alice Coltrane',
+        'Astor Piazzolla',
+        'Augustus Pablo',
+        'Bennie Maupin',
+        'Camille Saint-Saëns',
+        'Djivan Gasparyan',
+        'Earl Scruggs',
+        'Harold Budd and Brian Eno',
+        'Huun-Huur-Tu',
+        'Jaco Pastorius',
+        'Johann Sebastian Bach',
+        'John Coltrane',
+        'Jon Hassell',
+        'Kali Malone',
+        'Kodo',
+        'Leroy Anderson',
+        'Little Walter',
+        'Max Richter',
+        'Midori Takada',
+        'Miles Davis',
+        'Nusrat Fateh Ali Khan',
+        'Paul Chambers',
+        'Pérotin',
+        'Pyotr Ilyich Tchaikovsky',
+        'Robert Fripp and Brian Eno',
+        'Scottish pipe band tradition',
+        'Shona mbira tradition',
+        'Sunn O)))',
+        'Wolfgang Amadeus Mozart',
+        'Yo-Yo Ma',
+        'Yoshida Brothers',
+      ],
+      90,
+    ],
   ];
 
   it('has a roster for every batch, so none goes unchecked below', () => {
@@ -758,6 +818,36 @@ describe('the research batches', () => {
     expect(pitches('researched:daft-punk/digital-love-intro')).toEqual([
       81, 80, 81, 76, 73, 76, 69, 71, 69, 73, 69, 76, 69, 81, 57, 64, 69, 66, 76,
     ]);
+  });
+
+  it('plays the notes its lead gives: the theme of “Birdland”', () => {
+    // D D D, C B A G B, D G A, B G G, D, D E B G B, D G G, B B♭: Songsterr “Tenor Saxophone”, bars 76–83.
+    expect(pitches('researched:joe-zawinul/birdland-theme')).toEqual([
+      74, 74, 74, 72, 71, 69, 67, 71, 74, 67, 69, 71, 67, 67, 74, 74, 76, 71, 67, 71, 74, 79, 67,
+      71, 70,
+    ]);
+  });
+
+  it('plays the notes its lead gives: the Prelude of Bach’s first cello suite, from the score', () => {
+    // Each bar's figure twice, over G, C, D and G; the fourth bar ends on F♯: Mutopia edition, bars 1–4.
+    const bar = (fig: number[]) => [...fig, ...fig];
+    const fourth = bar([43, 55, 59, 57, 59, 55, 59, 55]);
+    fourth[15] = 54;
+    expect(pitches('researched:yo-yo-ma/cello-suite-1-prelude')).toEqual([
+      ...bar([43, 50, 59, 57, 59, 50, 59, 50]),
+      ...bar([43, 52, 60, 59, 60, 52, 60, 52]),
+      ...bar([43, 54, 60, 59, 60, 54, 60, 54]),
+      ...fourth,
+    ]);
+  });
+
+  it('holds the keys that play “Black Market” on the upside-down keyboard, mirrored around middle C', () => {
+    // D F D C B♭ G F B♭ G D …: Songsterr “ARP 2600”, bars 7–10. The sound plays key k at 120 − k.
+    expect(
+      pitches('researched:joe-zawinul/black-market-theme-inverted')
+        .slice(0, 10)
+        .map((k) => 120 - k)
+    ).toEqual([74, 77, 74, 72, 70, 67, 65, 70, 67, 62]);
   });
 });
 
