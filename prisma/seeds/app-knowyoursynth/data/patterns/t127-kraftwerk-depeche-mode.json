@@ -9525,33 +9525,33 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 72,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 67,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
                     "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
                     "gate": 1.0
                   }
                 ]
@@ -9568,32 +9568,6 @@
                     "gate": 1.0
                   }
                 ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 74,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 69,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
               },
               {
                 "on": true,
@@ -9610,13 +9584,9 @@
               },
               {
                 "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
                 "notes": [
                   {
-                    "note": 60,
+                    "note": 63,
                     "gate": 1.0
                   }
                 ]
@@ -9624,41 +9594,6 @@
               {
                 "on": true,
                 "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 72,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 67,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 64,
-                    "gate": 1.0
-                  }
-                ]
               },
               {
                 "on": true,
@@ -9681,7 +9616,20 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 71,
+                    "note": 60,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
                     "gate": 1.0
                   }
                 ]
@@ -9690,7 +9638,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 67,
+                    "note": 62,
                     "gate": 1.0
                   }
                 ]
@@ -9707,7 +9655,59 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 72,
+                    "note": 61,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
                     "gate": 1.0
                   }
                 ]
@@ -9724,11 +9724,11 @@
       "sounds": ["pro-1/stretched-key-bleeps"],
       "research": {
         "work": "Kraftwerk, “Pocket Calculator”, Computer World, 1981",
-        "part": "Two bars of short sixteenth-note bleeps leaping around C, repeated with a new ending.",
+        "part": "Two bars of short sixteenth-note bleeps leaping around C, the second with a new ending.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
-        "notes": "The “Pocket Calculator” MIDI on BitMIDI (kraftwerk-pocket_calculator.mid) holds the vocal melody, four-note stabs and the bass. None is a single-note bleep part: the vocal melody is never taken, and a mono synth cannot play the stabs. Written by t-169 on 2026-11-02. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The “Pocket Calculator” MIDI on BitMIDI (kraftwerk-pocket_calculator.mid) holds the vocal melody, four-note stabs and the bass. None is a single-note bleep part: the vocal melody is never taken, and a mono synth cannot play the stabs. Written by t-169 on 2026-11-02. The sound’s cable moves the pitch three semitones for each key away from middle C, so the line is written as the keys played, all within a fourth of C. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },

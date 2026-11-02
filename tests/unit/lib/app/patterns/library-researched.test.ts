@@ -562,13 +562,18 @@ describe('the research batches', () => {
   it('records each pattern’s research: the work, the part, its leads and why its fidelity is what it is', () => {
     const ruling =
       'no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02)';
+    // The tasks that added best guesses to a batch researched before the ruling, and the day each did.
+    const addedLater: Record<string, string> = { 't-169': '2026-11-02' };
     for (const b of batches)
       for (const p of b.patterns) {
         // A pattern with no lead is a best guess (owner ruling, 2026-11-02), its record says so, and only it does.
         if (p.research.leads.length) expect(p.research.notes, p.key).not.toMatch(/best guess/);
         else {
           // Written after the ruling: in a batch researched since, or added later by a task that says when (t-169).
-          const added = /Written by t-\d+ on (\d{4}-\d{2}-\d{2})\./.exec(p.research.notes)?.[1];
+          // The task and day are checked against those that did, so a pattern cannot vouch for itself.
+          const [, task, added] =
+            /Written by (t-\d+) on (\d{4}-\d{2}-\d{2})\./.exec(p.research.notes) ?? [];
+          if (task) expect(addedLater[task], p.key).toBe(added);
           expect((added ?? b.researchedAt) >= '2026-11-02', p.key).toBe(true);
           expect(p.research.notes, p.key).toContain(ruling);
         }

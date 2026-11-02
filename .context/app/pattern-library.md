@@ -795,10 +795,13 @@ batch files they were already in, and left 25 reasons: the sounds with no part t
   Depeche Mode bell lead, the Tangerine Dream drone, the Eno and Lanois shimmer pad), as the task asked.
 - **The older batches' date doesn't change.** The batch test lets a best guess sit only in a batch researched after
   the ruling. These patterns sit in batches dated 2026-11-01, so each one's notes say "Written by t-169 on 2026-11-02",
-  and the test reads that date when it is there.
+  and the test reads that date when it is there. It checks the task and date against its own list of tasks that added
+  guesses later, so a pattern can't give itself a date.
 - **Patches that play themselves split two ways**, as in t-167 and t-168. Where the key still sets the pitch (the Model
-  D pulse and ostinato, the System 55 sequence, the Neroli tones, the White Eagle arpeggio) the pattern holds the keys
-  or the chord. Where the pitch is random or set by the patch (the Berlin sequence on the 2600, the SynTrx bells, the
+  D pulse and ostinato, the System 55 sequence, the Neroli tones, the White Eagle arpeggio, the Phaedra arpeggio) the
+  pattern holds the keys or the chord. Some patches change what a written key does, so the pattern is written for the
+  patch: the "Pocket Calculator" bleeps stay within a fourth of middle C, because the cable triples each interval from
+  it, and "The Maker" holds a low A for the CAT's drone. Where the pitch is random or set by the patch (the Berlin sequence on the 2600, the SynTrx bells, the
   Solar generative bells and its Zeit classic drone), the sound keeps a reason, reworded to say so.
 - **Mono sounds named for chord parts got a line**: the Oxygène strings on the Solar a top line, "The Big Ship" its
   roots, "Pocket Calculator" a bleep line and a plucked figure. Only the poly sounds got chords.

@@ -7339,7 +7339,7 @@
       "pattern": {
         "version": 1,
         "bpm": 46,
-        "stepSize": "1/8t",
+        "stepSize": "1/8",
         "loop": true,
         "direction": "forward",
         "swing": 50,
@@ -7353,7 +7353,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 73,
+                    "note": 61,
                     "gate": 1.0
                   }
                 ]
@@ -7362,7 +7362,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 76,
+                    "note": 64,
                     "gate": 1.0
                   }
                 ]
@@ -7371,34 +7371,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 80,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 85,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 80,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 76,
+                    "note": 68,
                     "gate": 1.0
                   }
                 ]
@@ -7416,7 +7389,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 76,
+                    "note": 68,
                     "gate": 1.0
                   }
                 ]
@@ -7425,7 +7398,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 80,
+                    "note": 64,
                     "gate": 1.0
                   }
                 ]
@@ -7434,7 +7407,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 83,
+                    "note": 61,
                     "gate": 1.0
                   }
                 ]
@@ -7443,7 +7416,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 80,
+                    "note": 64,
                     "gate": 1.0
                   }
                 ]
@@ -7452,223 +7425,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 76,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 73,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 78,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 81,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 85,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 81,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 78,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 73,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 78,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 81,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 83,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 81,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 78,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 73,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 76,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 80,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 85,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 80,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 76,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 73,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 76,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 80,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 83,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 80,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 76,
+                    "note": 68,
                     "gate": 1.0
                   }
                 ]
@@ -7686,7 +7443,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 75,
+                    "note": 68,
                     "gate": 1.0
                   }
                 ]
@@ -7695,7 +7452,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 80,
+                    "note": 64,
                     "gate": 1.0
                   }
                 ]
@@ -7704,7 +7461,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 83,
+                    "note": 61,
                     "gate": 1.0
                   }
                 ]
@@ -7713,7 +7470,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 80,
+                    "note": 66,
                     "gate": 1.0
                   }
                 ]
@@ -7722,7 +7479,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 75,
+                    "note": 69,
                     "gate": 1.0
                   }
                 ]
@@ -7731,7 +7488,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 70,
+                    "note": 73,
                     "gate": 1.0
                   }
                 ]
@@ -7740,7 +7497,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 75,
+                    "note": 69,
                     "gate": 1.0
                   }
                 ]
@@ -7749,7 +7506,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 80,
+                    "note": 66,
                     "gate": 1.0
                   }
                 ]
@@ -7758,7 +7515,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 83,
+                    "note": 61,
                     "gate": 1.0
                   }
                 ]
@@ -7767,7 +7524,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 80,
+                    "note": 66,
                     "gate": 1.0
                   }
                 ]
@@ -7776,7 +7533,250 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 75,
+                    "note": 69,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 68,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 73,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 68,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 68,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 68,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 68,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 68,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 68,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 68,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
                     "gate": 1.0
                   }
                 ]
@@ -7799,7 +7799,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "The only transcription of “La Petite Fille de la Mer” (Songsterr, Mort Shvarts, 2026) is a solo-guitar arrangement that folds the melody into its accompaniment. Hooktheory’s TheoryTab gives the key (C♯ minor), the metre (6/8), the tempo (92), the chords (i, iv, v) and the melody’s range (A♯4 to B5); its notes load from behind a sign-in, so the arpeggio is written to those chords in that range, not taken from the record. Its 92 is read here as eighth notes in threes, so the pattern counts a dotted quarter as its beat, at 46. Written by t-169 on 2026-11-02. _In the style of_: the chords come from a fan analysis, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The only transcription of “La Petite Fille de la Mer” (Songsterr, Mort Shvarts, 2026) is a solo-guitar arrangement that folds the melody into its accompaniment. Hooktheory’s TheoryTab gives the key (C♯ minor), the metre (6/8), the tempo (92), the chords (i, iv, v) and the melody’s range (A♯4 to B5); its notes load from behind a sign-in, so the arpeggio is written to those chords, not taken from the record. Its 92 is read here as eighth notes, so the pattern steps in eighths at 46 to the quarter, six to a bar. The arpeggio sits an octave below the melody’s range, where the pluck’s dark tail is heard. Written by t-169 on 2026-11-02. _In the style of_: the chords come from a fan analysis, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -10146,6 +10146,10 @@
                   {
                     "note": 64,
                     "gate": 16.0
+                  },
+                  {
+                    "note": 66,
+                    "gate": 16.0
                   }
                 ]
               },
@@ -10294,7 +10298,7 @@
       "sounds": ["ub-xa-d/evolving-pad"],
       "research": {
         "work": "Brian Eno, Ambient 1: Music for Airports, 1978",
-        "part": "Eight bars of open chords in D, two bars each: Dsus2, Asus4, D with its ninth and Asus2.",
+        "part": "Eight bars of open chords in D, two bars each: Dsus2, Asus4, Dadd9 and Asus2.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
@@ -12258,7 +12262,7 @@
       "sounds": ["poly-d/pd-sonar-drone-pad"],
       "research": {
         "work": "Brian Eno, “Signals”, Apollo: Atmospheres and Soundtracks, 1983",
-        "part": "Eight bars over a low G: Gm for four bars, then E♭ with its seventh for four.",
+        "part": "Eight bars: Gm over a low G for four bars, then E♭ with its major seventh over E♭ for four.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
@@ -13504,6 +13508,10 @@
                     "gate": 16.0
                   },
                   {
+                    "note": 66,
+                    "gate": 16.0
+                  },
+                  {
                     "note": 69,
                     "gate": 16.0
                   }
@@ -14070,6 +14078,10 @@
                     "gate": 16.0
                   },
                   {
+                    "note": 64,
+                    "gate": 16.0
+                  },
+                  {
                     "note": 67,
                     "gate": 16.0
                   }
@@ -14487,7 +14499,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 70,
+                    "note": 58,
                     "gate": 4.0
                   }
                 ]
@@ -14508,7 +14520,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 72,
+                    "note": 60,
                     "gate": 4.0
                   }
                 ]
@@ -14529,7 +14541,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 77,
+                    "note": 65,
                     "gate": 2.0
                   }
                 ]
@@ -14542,7 +14554,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 75,
+                    "note": 63,
                     "gate": 2.0
                   }
                 ]
@@ -14555,7 +14567,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 74,
+                    "note": 62,
                     "gate": 2.0
                   }
                 ]
@@ -14568,7 +14580,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 72,
+                    "note": 60,
                     "gate": 2.0
                   }
                 ]
@@ -14581,7 +14593,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 70,
+                    "note": 58,
                     "gate": 4.0
                   }
                 ]
@@ -14602,7 +14614,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 72,
+                    "note": 60,
                     "gate": 4.0
                   }
                 ]
@@ -14623,7 +14635,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 74,
+                    "note": 62,
                     "gate": 2.0
                   }
                 ]
@@ -14636,7 +14648,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 72,
+                    "note": 60,
                     "gate": 2.0
                   }
                 ]
@@ -14649,7 +14661,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 70,
+                    "note": 58,
                     "gate": 4.0
                   }
                 ]
@@ -14674,7 +14686,7 @@
       "sounds": ["model-d/clang-am-lead"],
       "research": {
         "work": "Brian Eno, “Here Come the Warm Jets”, Here Come the Warm Jets, 1974",
-        "part": "Four bars of a lead in B♭: a held B♭ and C, then a falling run from F through E♭ and D, twice.",
+        "part": "Four bars of a lead in B♭: a held B♭ and C, a run falling from F through E♭ and D to C, then B♭, C and D, turning back down to B♭.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
@@ -15025,6 +15037,10 @@
               {
                 "on": true,
                 "notes": [
+                  {
+                    "note": 45,
+                    "gate": 32.0
+                  },
                   {
                     "note": 64,
                     "gate": 8.0
