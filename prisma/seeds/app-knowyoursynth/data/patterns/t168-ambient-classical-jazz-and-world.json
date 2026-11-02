@@ -383,7 +383,7 @@
         "work": "J. S. Bach, Toccata and Fugue in D minor, BWV 565",
         "part": "The first bar: the long A, the run down to C♯ and D, then the A again and its answer, E, F, C♯ and D.",
         "originalKey": "D minor",
-        "originalBpm": null,
+        "originalBpm": 60,
         "leads": [
           {
             "citation": "J. S. Bach, Toccata and Fugue in D minor, BWV 565: the Mutopia Project’s typeset edition of the score (public domain), its MIDI file",
@@ -391,7 +391,7 @@
             "url": "https://www.mutopiaproject.org/ftp/BachJS/BWV565/ToccataFugue/ToccataFugue.mid"
           }
         ],
-        "notes": "From the edition’s upper part, bar 1; the left hand doubles it an octave down. The run is in sixty-fourth notes, finer than the sequencer’s thirty-second grid, so the pattern writes every value twice as long at twice the tempo, which plays the same. The file plays the first A without the mordent the score marks on it. The score is a tier-1 source for Bach’s notes, but not for an organist’s part: the record’s octaves, ornaments, tempo and phrasing are the player’s, and only a listen can say how far they differ. So it is a starting point like any other lead here, and the pattern is _In the style of_. The tempo is the file’s, which is the engraver’s, not a marking of the composer’s. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the edition’s upper part, bar 1; the left hand doubles it an octave down. The run is in sixty-fourth notes, finer than the sequencer’s thirty-second grid, so the pattern writes every value twice as long at twice the tempo, which plays the same. The file plays the first A without the mordent the score marks on it. The score is a tier-1 source for Bach’s notes, but not for an organist’s part: a recording’s octaves, ornaments, tempo and phrasing are the player’s, and only a listen can say how far they differ. So it is a starting point like any other lead here, and the pattern is _In the style of_. The file’s tempo is 60, the engraver’s, not a marking of the composer’s; the pattern plays at 120 because its values are doubled. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -1013,7 +1013,7 @@
             "url": "https://www.mutopiaproject.org/ftp/BachJS/BWV1007/bwv1007/bwv1007-mids.zip"
           }
         ],
-        "notes": "From the edition’s first movement, bars 1–4, as written. The score is a tier-1 source for Bach’s notes, but not for Ma’s part: the record’s octaves, ornaments, tempo and phrasing are his, and only a listen can say how far they differ. So it is a starting point like any other lead here, and the pattern is _In the style of_. The tempo is the file’s, which is the engraver’s, not a marking of the composer’s. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the edition’s first movement, bars 1–4, as written. The score is a tier-1 source for Bach’s notes, but not for Ma’s part: the record’s octaves, ornaments, tempo and phrasing are his, and only a listen can say how far they differ. So it is a starting point like any other lead here, and the pattern is _In the style of_. The tempo is the file’s, which is the engraver’s, not a marking of the composer’s. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -1749,8 +1749,7 @@
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
-        "songId": "weather-report-heavy-weather-birdland",
-        "part": 0
+        "songId": "weather-report-heavy-weather-birdland"
       },
       "fidelity": "in_the_style_of",
       "sources": [],
@@ -3947,7 +3946,7 @@
       "sounds": ["model-d/walking-upright-bass"],
       "research": {
         "work": "Miles Davis, “So What”, Kind of Blue, 1959, with Paul Chambers on bass",
-        "part": "The bass figure the horns answer, four bars: D A B C D E C, twice, each landing on D.",
+        "part": "The bass figure the horns answer, four bars: D A B C D E C up to D, twice; the first time it steps up to E and back to D, the second it falls to a held A.",
         "originalKey": "D Dorian",
         "originalBpm": 137,
         "leads": [
@@ -6848,7 +6847,7 @@
       "sounds": ["model-d/highland-pipes"],
       "research": {
         "work": "Traditional, “Scotland the Brave”, as a pipe band plays it",
-        "part": "The tune’s first strain, four bars: up from the low note to the high one, its doubling, the turn through E♭ and down to the held D.",
+        "part": "The tune’s first strain, four bars: up from the low note to the high one, its doubling, the turn through D and down to the held C♯.",
         "originalKey": "A (written)",
         "originalBpm": 80,
         "leads": [
@@ -8767,8 +8766,7 @@
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
-        "songId": "ryuichi-sakamoto-merry-christmas-mr-lawrence",
-        "part": 0
+        "songId": "ryuichi-sakamoto-merry-christmas-mr-lawrence"
       },
       "fidelity": "in_the_style_of",
       "sources": [],
@@ -9872,7 +9870,7 @@
             "url": "https://www.songsterr.com/a/wsa/jean-luc-ponty-the-trans-love-express-tab-s2155411"
           }
         ],
-        "notes": "From the transcription’s strings track, bars 3–4. The sound names no work; nothing with Ponty’s violin was found for “Enigmatic Ocean”, so this is the one violin part the free web has. The transcription was made by Songsterr’s machine, not a fan: a weaker starting point, and the first to check by ear. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s strings track, bars 3–4. The sound names no work; nothing with Ponty’s violin was found for “Enigmatic Ocean”, so this is the one violin part the free web has. The transcription was made by Songsterr’s machine, not a fan: a weaker starting point, and the first to check by ear. _In the style of_: the notes come from a machine transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -10294,7 +10292,7 @@
             "url": "https://www.songsterr.com/a/wsa/yoshida-brothers-rising-tab-s4989793"
           }
         ],
-        "notes": "From the transcription’s lead track, bars 13–16 (bars 15–16 repeat 13–14). It transcribes the music video, and calls the lead a guitar; on the record it is the shamisen. Songsterr’s shamisen transcription is of “Kodo”, not “Rising”. The transcription was made by Songsterr’s machine, not a fan: a weaker starting point, and the first to check by ear. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s lead track, bars 13–16 (bars 15–16 repeat 13–14). It transcribes the music video, and calls the lead a guitar; on the record it is the shamisen. Songsterr’s shamisen transcription is of “Kodo”, not “Rising”. The transcription was made by Songsterr’s machine, not a fan: a weaker starting point, and the first to check by ear. _In the style of_: the notes come from a machine transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -10438,7 +10436,7 @@
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
-        "label": "Harold Budd and Brian Eno"
+        "label": "Harold Budd"
       },
       "fidelity": "in_the_style_of",
       "sources": [],
@@ -10730,7 +10728,7 @@
             "url": "https://www.songsterr.com/a/wsa/olafur-arnalds-near-light-tab-s4664361"
           }
         ],
-        "notes": "From the transcription’s synth track, bars 37–38, the only bars it has notes in. The sound names Arnalds, not a work. The transcription was made by Songsterr’s machine, not a fan: a weaker starting point, and the first to check by ear. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s synth track, bars 37–38, the only bars it has notes in. The sound names Arnalds, not a work. The transcription was made by Songsterr’s machine, not a fan: a weaker starting point, and the first to check by ear. _In the style of_: the notes come from a machine transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },

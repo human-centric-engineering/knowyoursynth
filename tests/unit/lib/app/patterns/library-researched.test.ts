@@ -842,12 +842,14 @@ describe('the research batches', () => {
   });
 
   it('holds the keys that play “Black Market” on the upside-down keyboard, mirrored around middle C', () => {
-    // D F D C B♭ G F B♭ G D …: Songsterr “ARP 2600”, bars 7–10. The sound plays key k at 120 − k.
+    // D F D C B♭ G F B♭ G D, the climb back to a held D, A G F G, D: Songsterr “ARP 2600”, bars 7–10.
+    // The sound plays key k at 120 − k.
     expect(
-      pitches('researched:joe-zawinul/black-market-theme-inverted')
-        .slice(0, 10)
-        .map((k) => 120 - k)
-    ).toEqual([74, 77, 74, 72, 70, 67, 65, 70, 67, 62]);
+      pitches('researched:joe-zawinul/black-market-theme-inverted').map((k) => 120 - k)
+    ).toEqual([
+      74, 77, 74, 72, 70, 67, 65, 70, 67, 62, 65, 67, 62, 65, 67, 70, 72, 67, 70, 74, 72, 74, 81,
+      79, 77, 79, 74,
+    ]);
   });
 });
 

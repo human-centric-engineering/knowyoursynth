@@ -752,7 +752,7 @@ is `prisma/seeds/app-knowyoursynth/data/patterns/t168-ambient-classical-jazz-and
   Songsterr's machine: The Trans-Love Express, Rising and Near Light. Four BitMIDI files gave Sugar Plum Fairy (the
   celesta theme and the pizzicato), Storms in Africa, Are You Going with Me? and Juke. Nothing was found for Biosphere,
   Yoshimura, Roach, Basinski, Hassell, Radigue, Young, Stars of the Lid, Kali Malone, Sakamoto's async or any of the
-  world-music sounds but Rising.
+  world-music sounds but Rising, Scotland the Brave and Libertango.
 - **Only two of the classical works had a free score.** The Mutopia Project has Bach's Toccata and Fugue in D minor and
   the first cello suite; as in t-167, a score is a lead, so both are _In the style of_. The Toccata's run is in
   sixty-fourth notes, finer than the sequencer's grid, so its pattern doubles every value and the tempo, which plays
