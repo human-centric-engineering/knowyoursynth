@@ -7799,7 +7799,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "The only transcription of “La Petite Fille de la Mer” (Songsterr, Mort Shvarts, 2026) is a solo-guitar arrangement that folds the melody into its accompaniment. Hooktheory’s TheoryTab gives the key (C♯ minor), the metre (6/8), the tempo (92), the chords (i, iv, v) and the melody’s range (A♯4 to B5); its notes load from behind a sign-in, so the arpeggio is written to those chords, not taken from the record. Its 92 is read here as eighth notes, so the pattern steps in eighths at 46 to the quarter, six to a bar. The arpeggio sits an octave below the melody’s range, where the pluck’s dark tail is heard. Written by t-169 on 2026-11-02. _In the style of_: the chords come from a fan analysis, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The only transcription of “La Petite Fille de la Mer” (Songsterr, Mort Shvarts, 2026) is a solo-guitar arrangement that folds the melody into its accompaniment. Hooktheory’s TheoryTab gives the key (C♯ minor), the metre (6/8), the tempo (92), the chords (i, iv, v) and the melody’s range (A♯4 to B5); its notes load from behind a sign-in, so the arpeggio is written to those chords, not taken from the record. Its 92 is read here as eighth notes, so the pattern steps in eighths at 46 to the quarter, six to a bar. The arpeggio sits mostly below the melody’s range, where the pluck’s dark tail is heard. Written by t-169 on 2026-11-02. _In the style of_: the chords come from a fan analysis, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -15039,29 +15039,13 @@
                 "notes": [
                   {
                     "note": 45,
-                    "gate": 32.0
+                    "gate": 7.4
                   },
                   {
                     "note": 64,
-                    "gate": 8.0
+                    "gate": 4.2
                   }
                 ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": []
               },
               {
                 "on": true,
@@ -15080,7 +15064,7 @@
                 "notes": [
                   {
                     "note": 66,
-                    "gate": 4.0
+                    "gate": 3.4
                   }
                 ]
               },
@@ -15099,9 +15083,13 @@
               {
                 "on": true,
                 "notes": [
+                  {
+                    "note": 45,
+                    "gate": 7.4
+                  },
                   {
                     "note": 68,
-                    "gate": 4.0
+                    "gate": 7.4
                   }
                 ]
               },
@@ -15119,10 +15107,30 @@
               },
               {
                 "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
                 "notes": [
                   {
+                    "note": 45,
+                    "gate": 15.4
+                  },
+                  {
                     "note": 69,
-                    "gate": 16.0
+                    "gate": 15.4
                   }
                 ]
               },
@@ -15194,7 +15202,7 @@
       "sounds": ["cat/duo-steel-swell"],
       "research": {
         "work": "Daniel Lanois, “The Maker”, Acadie, 1989",
-        "part": "Four bars of a steel line in A over a held low A: E rising to F♯ and G♯, settling on A.",
+        "part": "Four bars of a steel line in A over a low A struck with each phrase: E rising to F♯ and G♯, settling on A.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],

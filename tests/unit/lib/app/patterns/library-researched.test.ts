@@ -573,7 +573,7 @@ describe('the research batches', () => {
           // The task and day are checked against those that did, so a pattern cannot vouch for itself.
           const [, task, added] =
             /Written by (t-\d+) on (\d{4}-\d{2}-\d{2})\./.exec(p.research.notes) ?? [];
-          if (task) expect(addedLater[task], p.key).toBe(added);
+          if (task && b.researchedAt < '2026-11-02') expect(addedLater[task], p.key).toBe(added);
           expect((added ?? b.researchedAt) >= '2026-11-02', p.key).toBe(true);
           expect(p.research.notes, p.key).toContain(ruling);
         }

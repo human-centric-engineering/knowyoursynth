@@ -12483,10 +12483,6 @@
                     "gate": 16.0
                   },
                   {
-                    "note": 59,
-                    "gate": 16.0
-                  },
-                  {
                     "note": 62,
                     "gate": 16.0
                   }
@@ -12795,7 +12791,7 @@
       "sounds": ["deepmind-12d/phaser-pad"],
       "research": {
         "work": "Jean-Michel Jarre, Équinoxe, 1978",
-        "part": "Eight bars of open, suspended chords in G, two bars each: Gadd9, Dsus2, Em7 and Asus4.",
+        "part": "Eight bars of open, suspended chords in G, two bars each: Gsus2, Dsus2, Em7 and Asus4.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],

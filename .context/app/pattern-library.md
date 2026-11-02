@@ -801,8 +801,9 @@ batch files they were already in, and left 25 reasons: the sounds with no part t
   D pulse and ostinato, the System 55 sequence, the Neroli tones, the White Eagle arpeggio, the Phaedra arpeggio) the
   pattern holds the keys or the chord. Some patches change what a written key does, so the pattern is written for the
   patch: the "Pocket Calculator" bleeps stay within a fourth of middle C, because the cable triples each interval from
-  it, and "The Maker" holds a low A for the CAT's drone. Where the pitch is random or set by the patch (the Berlin sequence on the 2600, the SynTrx bells, the
-  Solar generative bells and its Zeit classic drone), the sound keeps a reason, reworded to say so.
+  it, and "The Maker" strikes a low A with each phrase for the CAT's drone and swell. Where the pitch is random or set
+  by the patch (the Berlin sequence on the 2600, the SynTrx bells, the Solar generative bells and its Zeit classic
+  drone), the sound keeps a reason, reworded to say so.
 - **Mono sounds named for chord parts got a line**: the Oxygène strings on the Solar a top line, "The Big Ship" its
   roots, "Pocket Calculator" a bleep line and a plucked figure. Only the poly sounds got chords.
 - **The 25 reasons left** are the 14 effects (the Jarre wind and surf, the "Contact" riser, the three Eno treatments),
