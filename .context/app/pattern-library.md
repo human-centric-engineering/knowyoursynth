@@ -10,7 +10,7 @@ This page is the design, written before the build (t-121). It covers:
 
 - the roles a pattern plays and the facts it carries for matching
 - what "Inspired by" links to, and the fidelity levels
-- the research method the batches follow (t-127, t-128, t-129, t-160, t-161, t-162)
+- the research method the batches follow (t-127, t-128, t-129, t-160, t-161, t-162, t-163)
 - the rights rule
 - how admins see and control each pattern's origin, rights risk and status
 - how the current riffs are reviewed
@@ -521,6 +521,46 @@ got one of 54 patterns, and none needed a reason. The batch is
   Wolf" Simmons fill. The Talking Heads works t-160 also read gave different parts here, on new keys.
 - **Octaves went twice** for "Take On Me", "Sweet Dreams" and "West End Girls", whose sounds sit an octave apart.
 
+**The seventh batch (t-163): film, TV, game and synthwave.** Every sound by 31 artists, from John Carpenter (10
+sounds) and Jan Hammer (6) to one each by Angelo Badalamenti, Koji Kondo and Yann Tiersen. The task counted about 67;
+there were 78. 69 got one of 45 patterns, and 9 got a reason. The batch is
+`prisma/seeds/app-knowyoursynth/data/patterns/t163-film-tv-game-and-synthwave.json`. It found:
+
+- **Film and TV themes are well covered; modern scores and synthwave are not.** 33 patterns came from 23 Songsterr
+  transcriptions, among them "Halloween", "Escape from New York", "Axel F", "Miami Vice Theme", "Crockett's Theme",
+  "Nightcall", the "Stranger Things" theme, "Midnight City", "Blinding Lights", "Suspiria", "The Good, the Bad and the
+  Ugly" and "Song of Storms". Nothing was found for Assault on Precinct 13, Drive, Solaris, It Follows, Under the Skin
+  or "Flight from the City". The "Tech Noir", "Brokendate" and "Tick of the Clock" transcriptions have no synth part
+  but the bass, and the one "Silk Road" is a machine-made guitar arrangement with no line that reads as
+  the melody.
+- **Many of these transcriptions are General MIDI arrangements**, with tracks named "Utwór 6" or "Stopa 9", or, in
+  one "Miami Vice Theme", every track a nylon guitar. The part was chosen by its notes, and each research record names
+  the track it came from.
+- **Two transcriptions were made by Songsterr's machine**: "Future Club" and "Paris, Texas". The "Laura Palmer's
+  Theme" transcription names a fan but marks every track "retranscribed", and its pattern says so.
+- **12 patterns are best guesses**, on 14 sounds: the Precinct 13 riff, the Suspiria drone, the two Gunship sounds,
+  the two Com Truise leads, Chromatics, the two Cliff Martinez sounds, Disasterpeace, Mica Levi, the two Jóhann
+  Jóhannsson sounds and Kitaro.
+- **Nine sounds have no part to write.** Seven are effects: Ben Burtt's droids and blaster, the "Pac-Man Fever" zap,
+  Walter Murch's helicopter, the Das Boot sonar and the Fog foghorn. The Chernobyl hum is a field recording. The
+  Close Encounters sound is a sample-and-hold burble, and the one Close Encounters transcription has no tuning, so its
+  notes can't be read as pitches.
+- **A sound that arpeggiates a held chord gets the chord.** Three Stranger Things sounds run their own arpeggiator,
+  so a played arpeggio would come out as repeated notes. They got the arpeggio's four notes held as one chord, for the
+  patch to play; the four sounds that play the arpeggio as notes got the line.
+- **The vocal melody is still never taken.** The Ecstasy of Gold soprano sound got the top of the strings under the
+  soprano, as t-129's choir sound did.
+- **A whole odd-metre phrase loops.** Six bars of Halloween's 5/4 piano figure are 30 beats, inside the 8-bar limit.
+  The Escape from New York ostinato runs in dotted sixteenths and comes back to the bar line every third bar, so its
+  pattern is three bars on the `1/32` grid.
+- **Mixed tuplets still don't fit one step size.** The opening of "Gabriel's Oboe" mixes sixteenths with sixteenth
+  triplets, so its pattern takes the next four bars. The Suspiria celesta is off the beat by fractions no step size
+  holds, so its sounds got the same theme from the transcription's synth track.
+- **One duo has two spellings.** "Kyle Dixon & Michael Stein" and "Kyle Dixon and Michael Stein" are the same artists,
+  and the test's roster lists both; the rename is housekeeping's. The Stranger Things haunting lead also names S U R V
+  I V E, their band, in its reference while its artist is the duo.
+- **Octaves went twice** for the Escape from New York ostinato and the Suspiria theme.
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on
@@ -739,7 +779,8 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
   13 of t-160's patterns, whose review fixes the dev database hadn't had yet, and left the other 115 and every riff
   unchanged. Its review fixes then created 3 and 4, the octave copies, and updated 8: the four relinked, the three
   whose sounds moved and the renamed hi-hat genre. The sixth (t-162) created 54 and 86, which brought them to 242 and
-  372, left the 188 and every riff unchanged, and skipped nothing.
+  372, left the 188 and every riff unchanged, and skipped nothing. The seventh (t-163) created 45 and 70, which brought
+  them to 287 and 442, left the 242 and every riff unchanged, and skipped nothing.
 - **An admin's pattern is never written**: one an admin edited, or made any sound's default.
 - **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
   taken out of a batch file stays in the library and on its sounds.
@@ -754,15 +795,14 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
 Over the real data, the same test checks that every sound a batch names is in the catalogue, that each batch looks at
 every sound by its artists exactly once (Kraftwerk and Depeche Mode for t-127; Daft Punk, Jean-Michel Jarre and
 Tangerine Dream for t-128; Brian Eno, Daniel Lanois, Vangelis and Boards of Canada for t-129; 31 funk, soul and R&B
-artists for t-160; 29 synth-pop and post-punk artists for t-161; 30 80s pop and arena artists for t-162), that every
-link resolves
-in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
+artists for t-160; 29 synth-pop and post-punk artists for t-161; 30 80s pop and arena artists for t-162; 31 film, TV,
+game and synthwave artists for t-163), that every link resolves in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
 a sound whose own riff plays no chords gets a single line, that the Just Can't Get Enough bass and the Blade Runner End
 Titles theme play the notes both of their leads give, that the Da Funk break figure plays its lead's notes in both
 octaves, as does the Da Funk main riff, that Digital Love's intro plays its lead's notes, that the Flash Light
 bass and the Superstition clavinet (in both octaves) play theirs, that the Blue Monday bass, the Are 'Friends'
-Electric? riff, the Take On Me riff and the Sweet Dreams riff play theirs, and that t-161's and t-162's octave copies
-sit an octave from the part they copy. A pattern with no lead must say it is a best guess. A sound can be on more
+Electric? riff, the Take On Me riff, the Sweet Dreams riff, the Axel F theme and the Stranger Things arpeggio play
+theirs, and that t-161's, t-162's and t-163's octave copies sit an octave from the part they copy. A pattern with no lead must say it is a best guess. A sound can be on more
 than one pattern of a batch, but a sound with a pattern never also has a reason.
 
 The catalogue unit's hash leaves the `patterns/` folder out, as it does `bank/`, so a batch edit re-runs only this
