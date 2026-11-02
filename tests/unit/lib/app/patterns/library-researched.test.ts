@@ -15,7 +15,7 @@ import { join } from 'node:path';
 import { PresetSchema } from '@/lib/app/synths/validate';
 import { SYNTH_DEFS } from '@/lib/app/synths/defs';
 import { compileLoop, seededRng, SLIDE_OVERLAP } from '@/lib/app/sequencer/compile';
-import { MAX_STEPS, PatternSchema, type Pattern } from '@/lib/app/sequencer/pattern';
+import { MAX_STEPS, PatternSchema, stepsPerBeat, type Pattern } from '@/lib/app/sequencer/pattern';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
 import { loadPatternData } from '@/prisma/seeds/app-knowyoursynth/pattern-data';
@@ -55,17 +55,19 @@ const chainBeats = (p: Pattern) => p.chain.length * firstLoop(p).beats;
 
 /**
  * The most notes sounding at once in a pattern: a note held over the next one counts, as it does on a synth’s voices.
- * A slide's overlap does not: it is how a mono synth glides into the next note, not a second voice.
+ * A slide's overlap does not: it is how a mono synth glides into the next note, not a second voice. A slid note is
+ * one that ends exactly SLIDE_OVERLAP steps past another note's start; only that note is forgiven, and only that much.
  */
 const mostSounding = (p: Pattern) => {
   const { notes } = firstLoop(p);
+  const overlap = SLIDE_OVERLAP / stepsPerBeat(p);
+  const slid = (end: number) => notes.some(([at]) => Math.abs(at + overlap - end) < 1e-9);
+  const ends = notes.map(([beat, , len]) => (slid(beat + len) ? beat + len - overlap : beat + len));
   return notes.reduce(
     (most, [at]) =>
       Math.max(
         most,
-        notes.filter(
-          ([beat, , len]) => beat === at || (beat < at && at < beat + len - SLIDE_OVERLAP - 1e-9)
-        ).length
+        notes.filter(([beat], i) => beat === at || (beat < at && at < ends[i] - 1e-9)).length
       ),
     0
   );
@@ -605,7 +607,7 @@ describe('the research batches', () => {
     expect(pitches('researched:hot-butter/popcorn-theme').slice(0, 14)).toEqual([...once, ...once]);
   });
 
-  it('plays t-165’s octave copies an octave from the part they copy', () => {
+  it('plays t-165’s octave copies one or two octaves from the part they copy', () => {
     const shifted = (key: string, by: number) => pitches(key).map((n) => n + by);
     expect(pitches('researched:front-242/headhunter-bass-high')).toEqual(
       shifted('researched:front-242/headhunter-bass', 12)

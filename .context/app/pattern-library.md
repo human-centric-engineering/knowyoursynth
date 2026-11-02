@@ -643,8 +643,9 @@ batch is `prisma/seeds/app-knowyoursynth/data/patterns/t165-disco-acid-house-tec
 - **Drum parts went on percussion sounds at their own pitch**: the "Closer" snare on the industrial clang and the NIN
   metal hit, the "Assimilate" snare on the Skinny Puppy hit, and the "Numbers" kick and snare as above.
 - **One sound has no part to write**: the rising siren named for "French Kiss" is an effect the patch's LFO makes.
-- **A slide is not a chord.** The engine holds a slid note `SLIDE_OVERLAP` (0.05 of a beat) into the next one so a
-  mono synth glides. The batch test's mono check read that overlap as two notes at once, so it now leaves it out. A
+- **A slide is not a chord.** The engine holds a slid note `SLIDE_OVERLAP` (0.05 of a step, 0.0125 of a beat at 1/16) into the next one
+  so a mono synth glides. The batch test's mono check read that overlap as two notes at once, so it now leaves it out,
+  for a slid note only. A
   slide's own gate is a half step; the engine stretches it, so a swung slide overlaps by no more.
 - **One artist has two spellings.** "Mr Oizo" and "Mr. Oizo" are the same artist, and the test's roster lists both;
   the rename is housekeeping's, as t-163's duo and t-164's band were.
@@ -899,7 +900,7 @@ octaves, as does the Da Funk main riff, that Digital Love's intro plays its lead
 bass and the Superstition clavinet (in both octaves) play theirs, that the Blue Monday bass, the Are 'Friends'
 Electric? riff, the Take On Me riff, the Sweet Dreams riff, the Axel F theme, the Stranger Things arpeggio, the On the
 Run sequence, the Tom Sawyer growl, the I Feel Love bass and the Popcorn theme play theirs, and that t-161's, t-162's,
-t-163's, t-164's and t-165's octave copies sit an octave from the part they copy. A pattern with no lead must say it is a best guess. A sound can be on more
+t-163's, t-164's and t-165's octave copies sit one or two octaves from the part they copy, as each copy's check says. A pattern with no lead must say it is a best guess. A sound can be on more
 than one pattern of a batch, but a sound with a pattern never also has a reason.
 
 The catalogue unit's hash leaves the `patterns/` folder out, as it does `bank/`, so a batch edit re-runs only this

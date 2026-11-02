@@ -10420,8 +10420,8 @@
       "role": "bass_line",
       "tempo": null,
       "inspiredBy": {
-        "kind": "genre",
-        "label": "Mr. Fingers"
+        "kind": "work",
+        "songId": "larry-heard-mystery-of-love"
       },
       "fidelity": "in_the_style_of",
       "sources": [],
@@ -10668,8 +10668,8 @@
       "role": "bass_line",
       "tempo": null,
       "inspiredBy": {
-        "kind": "genre",
-        "label": "Mr. Fingers"
+        "kind": "work",
+        "songId": "larry-heard-can-you-feel-it"
       },
       "fidelity": "in_the_style_of",
       "sources": [],
@@ -10916,8 +10916,8 @@
       "role": "chord_changes",
       "tempo": null,
       "inspiredBy": {
-        "kind": "genre",
-        "label": "Larry Heard"
+        "kind": "work",
+        "songId": "larry-heard-can-you-feel-it"
       },
       "fidelity": "in_the_style_of",
       "sources": [],
@@ -12244,8 +12244,8 @@
       "role": "percussive",
       "tempo": null,
       "inspiredBy": {
-        "kind": "genre",
-        "label": "Plastikman"
+        "kind": "artist",
+        "artistId": "plastikman"
       },
       "fidelity": "in_the_style_of",
       "sources": [],
@@ -13642,10 +13642,6 @@
               {
                 "on": true,
                 "notes": []
-              },
-              {
-                "on": true,
-                "notes": []
               }
             ]
           }
@@ -13869,10 +13865,6 @@
               {
                 "on": true,
                 "notes": []
-              },
-              {
-                "on": true,
-                "notes": []
               }
             ]
           }
@@ -14000,7 +13992,7 @@
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
-        "label": "Afrika Bambaataa"
+        "label": "Electro"
       },
       "fidelity": "in_the_style_of",
       "sources": [],
