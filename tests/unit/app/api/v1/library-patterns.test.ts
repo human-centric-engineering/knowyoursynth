@@ -967,7 +967,7 @@ describe('admin control (t-156)', () => {
       expect(riff(2).rightsRisk).toBe('cleared');
     });
 
-    it('sets several at once with one reason, each audited, and writes nothing for one already there', async () => {
+    it('sets several at once with one reason, each audited, and writes nothing for one already set that way for that reason', async () => {
       // Already set that way, for the same reason.
       riff(2).rightsRisk = 'cleared';
       riff(2).rightsReason = 'Legal review, batch 1';
@@ -1164,6 +1164,12 @@ describe('admin control (t-156)', () => {
       });
       expect((await json(res)).data).toMatchObject({ changed: [id] });
       expect(riff(0)).toMatchObject({ rightsRisk: 'none', rightsReason: 'Checked: nothing taken' });
+      // A second review at the same risk replaces the reason, audited.
+      await control({ ids: [id], rightsRisk: 'none', reason: 'Re-checked' });
+      expect(riff(0).rightsReason).toBe('Re-checked');
+      expect(audits().at(-1)?.changes).toEqual({
+        rightsReason: { from: 'Checked: nothing taken', to: 'Re-checked' },
+      });
     });
   });
 

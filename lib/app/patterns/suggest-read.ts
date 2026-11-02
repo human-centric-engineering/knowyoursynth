@@ -67,7 +67,10 @@ function publicLibrary(now = Date.now()): Promise<LibraryPatternView[]> {
   return views;
 }
 
-/** Forgets the kept library. For tests. */
+/**
+ * Forgets the kept library, so the next suggestion reads it afresh. Every admin write that can change what players see
+ * calls it (`library-edit.ts`), and tests do.
+ */
 export function forgetSuggestLibrary(): void {
   kept = null;
 }

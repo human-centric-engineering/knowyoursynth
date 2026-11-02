@@ -27,8 +27,8 @@ import { FieldHelp } from '@/components/ui/field-help';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-const isRisk = (v: string): v is PatternRightsRisk => v in RIGHTS_LABELS;
-const isStatus = (v: string): v is PatternStatus => v in STATUS_LABELS;
+const isRisk = (v: string): v is PatternRightsRisk => Object.hasOwn(RIGHTS_LABELS, v);
+const isStatus = (v: string): v is PatternStatus => Object.hasOwn(STATUS_LABELS, v);
 
 const SELECT = 'border-input bg-background h-9 rounded-md border px-3 text-sm';
 

@@ -766,8 +766,8 @@ when. A comment goes with its pattern (`Cascade`), though nothing deletes one.
 - **The migration** set every _Transcribed_ or _Reconstructed_ pattern to _Needs review_ (there were none: every
   pattern on 2026-11-01 was _In the style of_) and every riff's `madeBy`. The seed sets both from then on.
 - **A rights risk no admin has set follows the fidelity**: changing the fidelity, by an admin's edit or a batch's,
-  changes it. Once an admin sets one (with a reason), neither does. Setting the value it already has counts: the reason
-  is recorded.
+  changes it. Once an admin sets one (with a reason), neither does. Setting the value it already has counts: the new
+  reason replaces the old, audited.
 - **Rights risk and status are not edits to the pattern.** They don't set `editedAt`, so the seed still brings an
   unedited pattern's notes up to date. The seed never writes them.
 - **A sound's default is its first enabled pattern that can be a riff** (`headOf` in `library.ts`). Every reader of
@@ -779,9 +779,9 @@ when. A comment goes with its pattern (`Cascade`), though nothing deletes one.
 - **A blocked pattern is disabled** in the same change, and enabling one is refused unless the same change lowers its
   rights risk.
 - **The public reads** (`library-read.ts`) serve enabled patterns only. A sound's list leads with its default. The
-  suggestions' kept library is the same read: a change drops it in the process that made it, and another instance's
-  copy lasts out its minute.
-- **The seed leaves alone a researched pattern at the head of a list** even while it is disabled, since enabling it
+  suggestions' kept library is the same read. Every admin write that can change it (an edit, a reorder, rights risk or
+  status) drops it in the process that made it; another instance's copy lasts out its minute.
+- **The seed leaves alone a researched pattern that is a sound's default, or disabled ahead of it**, since enabling it
   makes its notes the riff again.
 
 **The API**, admin only, each write `writesSharedSettings` and audited on the pattern:

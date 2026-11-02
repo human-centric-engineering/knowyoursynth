@@ -36,6 +36,7 @@ import { lockSynth } from '@/lib/app/catalogue/edit';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { PATTERN_ROLES } from '@/lib/app/patterns/library-facts';
 import { ACKNOWLEDGE_PATH } from '@/lib/app/patterns/library-labels';
+import { forgetSuggestLibrary } from '@/lib/app/patterns/suggest-read';
 import { LibraryPatternIdSchema } from '@/lib/app/patterns/library-read';
 import {
   DEFAULT_FIRST,
@@ -625,6 +626,16 @@ async function withAuthors(
 
 // ─── Writes ──────────────────────────────────────────────────────────────────
 
+/**
+ * Once a write that can change what players see has committed, drop the library suggestions keep, so the next
+ * suggestion reads it afresh (in this process; another instance's copy lasts out its minute).
+ */
+async function fresh<T>(write: Promise<T>): Promise<T> {
+  const result = await write;
+  forgetSuggestLibrary();
+  return result;
+}
+
 /** Add a pattern to the library, on no sound yet, made by the admin adding it. */
 export async function createLibraryPattern(
   input: LibraryPatternCreate,
@@ -671,35 +682,37 @@ export async function editLibraryPattern(
   id: string,
   input: LibraryPatternEdit
 ): Promise<{ change: PatternChange | null; sounds: RewrittenRiff[] }> {
-  return prisma.$transaction(async (tx) => {
-    const row = await tx.libraryPattern.findUnique({ where: { id } });
-    if (!row) throw new NotFoundError('Pattern not found');
-    const before = pick(row);
-    const after = { ...before, ...(await columnsOf(tx, input)) };
-    // A rights risk no admin has set follows the fidelity (`pattern-library.md`, Rights risk).
-    if (row.rightsReason === null) after.rightsRisk = defaultRightsRisk(after.fidelity);
-    checkWhole(after);
-    // An edit that changes nothing is not an edit: the row stays the seed's.
-    if (sameValue(after, before)) return { change: null, sounds: [] };
-    if (await isADefault(tx, id)) checkDefault(PatternSchema.parse(after.pattern), 'pattern');
-    await tx.libraryPattern.update({
-      where: { id },
-      data: {
-        ...after,
-        pattern: toJson(after.pattern),
-        sources: toJson(after.sources),
-        version: PATTERN_VERSION,
-        editedAt: new Date(),
-      },
-    });
-    const change: PatternChange = { id, name: after.name, before, after };
-    const sounds = await syncSoundPhrases(
-      tx,
-      { patterns: { some: { patternId: id } } },
-      { heads: [id], markEdited: true }
-    );
-    return { change, sounds };
-  });
+  return fresh(
+    prisma.$transaction(async (tx) => {
+      const row = await tx.libraryPattern.findUnique({ where: { id } });
+      if (!row) throw new NotFoundError('Pattern not found');
+      const before = pick(row);
+      const after = { ...before, ...(await columnsOf(tx, input)) };
+      // A rights risk no admin has set follows the fidelity (`pattern-library.md`, Rights risk).
+      if (row.rightsReason === null) after.rightsRisk = defaultRightsRisk(after.fidelity);
+      checkWhole(after);
+      // An edit that changes nothing is not an edit: the row stays the seed's.
+      if (sameValue(after, before)) return { change: null, sounds: [] };
+      if (await isADefault(tx, id)) checkDefault(PatternSchema.parse(after.pattern), 'pattern');
+      await tx.libraryPattern.update({
+        where: { id },
+        data: {
+          ...after,
+          pattern: toJson(after.pattern),
+          sources: toJson(after.sources),
+          version: PATTERN_VERSION,
+          editedAt: new Date(),
+        },
+      });
+      const change: PatternChange = { id, name: after.name, before, after };
+      const sounds = await syncSoundPhrases(
+        tx,
+        { patterns: { some: { patternId: id } } },
+        { heads: [id], markEdited: true }
+      );
+      return { change, sounds };
+    })
+  );
 }
 
 /**
@@ -713,86 +726,96 @@ export async function setSoundPatterns(
   slug: string,
   patternIds: string[]
 ): Promise<{ before: string[]; after: string[]; sound: RewrittenRiff | null; name: string }> {
-  return prisma.$transaction(async (tx) => {
-    await lockSynth(tx, synthId);
-    const sound = await tx.synthSound.findUnique({
-      where: { synthId_slug: { synthId, slug } },
-      select: {
-        id: true,
-        name: true,
-        definitionVersion: true,
-        patterns: {
-          orderBy: DEFAULT_FIRST,
-          select: { patternId: true, order: true },
+  return fresh(
+    prisma.$transaction(async (tx) => {
+      await lockSynth(tx, synthId);
+      const sound = await tx.synthSound.findUnique({
+        where: { synthId_slug: { synthId, slug } },
+        select: {
+          id: true,
+          name: true,
+          definitionVersion: true,
+          patterns: {
+            orderBy: DEFAULT_FIRST,
+            select: { patternId: true, order: true },
+          },
         },
-      },
-    });
-    if (!sound) throw new NotFoundError('Patch not found');
-    // As a sound edit is refused (`editSound`): a new default rewrites its riff and makes the row an admin's.
-    const version = getSynthDef(synthId)?.version;
-    if (sound.definitionVersion !== version)
-      refuse(`${slug} cannot be changed`, [
-        {
-          path: 'definitionVersion',
-          message:
-            version === undefined
-              ? `${synthId} has no definition`
-              : `Made on version ${sound.definitionVersion}; ${synthId} is at version ${version}, and there is no mapping between them`,
-        },
-      ]);
-    const before = sound.patterns.map((p) => p.patternId);
-
-    const problems: { path: string; message: string }[] = [];
-    const seen = new Set<string>();
-    patternIds.forEach((id, i) => {
-      if (seen.has(id)) problems.push({ path: `patternIds.${i}`, message: `${id} appears twice` });
-      seen.add(id);
-    });
-    const missing = before.filter((id) => !seen.has(id));
-    if (missing.length)
-      problems.push({
-        path: 'patternIds',
-        message: `A pattern is never taken off a sound; the list leaves out ${missing.join(', ')}`,
       });
-    const found = await tx.libraryPattern.findMany({
-      where: { id: { in: patternIds } },
-      select: { id: true, pattern: true, status: true },
-    });
-    const known = new Set(found.map((p) => p.id));
-    patternIds.forEach((id, i) => {
-      if (!known.has(id))
-        problems.push({ path: `patternIds.${i}`, message: `No library pattern has the id ${id}` });
-    });
-    if (problems.length) refuse('The list must keep every pattern the sound has, once', problems);
+      if (!sound) throw new NotFoundError('Patch not found');
+      // As a sound edit is refused (`editSound`): a new default rewrites its riff and makes the row an admin's.
+      const version = getSynthDef(synthId)?.version;
+      if (sound.definitionVersion !== version)
+        refuse(`${slug} cannot be changed`, [
+          {
+            path: 'definitionVersion',
+            message:
+              version === undefined
+                ? `${synthId} has no definition`
+                : `Made on version ${sound.definitionVersion}; ${synthId} is at version ${version}, and there is no mapping between them`,
+          },
+        ]);
+      const before = sound.patterns.map((p) => p.patternId);
 
-    if (sameValue(patternIds, before))
-      return { before, after: before, sound: null, name: sound.name };
-    // The admin's choice is the first enabled pattern: disabled ones ahead of it are passed over, as they were, and a
-    // new choice must be able to be a riff. The riff then follows the default as `headOf` reads it.
-    const byId = new Map(found.map((p) => [p.id, p]));
-    const places = (ids: string[]) =>
-      ids.flatMap((id) => byId.get(id) ?? []).map((p) => ({ patternId: p.id, pattern: p }));
-    const firstEnabled = (ids: string[]) => ids.find((id) => byId.get(id)?.status === 'enabled');
-    const chosen = firstEnabled(patternIds);
-    const head = chosen === undefined ? undefined : byId.get(chosen);
-    if (head && chosen !== firstEnabled(before))
-      checkDefault(PatternSchema.parse(head.pattern), `patternIds.${patternIds.indexOf(head.id)}`);
-    const newDefault = headOf(places(patternIds))?.patternId !== headOf(places(before))?.patternId;
-    const orderOf = new Map(sound.patterns.map((p) => [p.patternId, p.order]));
-    for (const [order, patternId] of patternIds.entries()) {
-      if (!orderOf.has(patternId))
-        await tx.synthSoundPattern.create({ data: { soundId: sound.id, patternId, order } });
-      else if (orderOf.get(patternId) !== order)
-        await tx.synthSoundPattern.update({
-          where: { soundId_patternId: { soundId: sound.id, patternId } },
-          data: { order },
+      const problems: { path: string; message: string }[] = [];
+      const seen = new Set<string>();
+      patternIds.forEach((id, i) => {
+        if (seen.has(id))
+          problems.push({ path: `patternIds.${i}`, message: `${id} appears twice` });
+        seen.add(id);
+      });
+      const missing = before.filter((id) => !seen.has(id));
+      if (missing.length)
+        problems.push({
+          path: 'patternIds',
+          message: `A pattern is never taken off a sound; the list leaves out ${missing.join(', ')}`,
         });
-    }
-    const [riff = null] = newDefault
-      ? await syncSoundPhrases(tx, { id: sound.id }, { markEdited: true })
-      : [];
-    return { before, after: patternIds, sound: riff, name: sound.name };
-  });
+      const found = await tx.libraryPattern.findMany({
+        where: { id: { in: patternIds } },
+        select: { id: true, pattern: true, status: true },
+      });
+      const known = new Set(found.map((p) => p.id));
+      patternIds.forEach((id, i) => {
+        if (!known.has(id))
+          problems.push({
+            path: `patternIds.${i}`,
+            message: `No library pattern has the id ${id}`,
+          });
+      });
+      if (problems.length) refuse('The list must keep every pattern the sound has, once', problems);
+
+      if (sameValue(patternIds, before))
+        return { before, after: before, sound: null, name: sound.name };
+      // The admin's choice is the first enabled pattern: disabled ones ahead of it are passed over, as they were, and a
+      // new choice must be able to be a riff. The riff then follows the default as `headOf` reads it.
+      const byId = new Map(found.map((p) => [p.id, p]));
+      const places = (ids: string[]) =>
+        ids.flatMap((id) => byId.get(id) ?? []).map((p) => ({ patternId: p.id, pattern: p }));
+      const firstEnabled = (ids: string[]) => ids.find((id) => byId.get(id)?.status === 'enabled');
+      const chosen = firstEnabled(patternIds);
+      const head = chosen === undefined ? undefined : byId.get(chosen);
+      if (head && chosen !== firstEnabled(before))
+        checkDefault(
+          PatternSchema.parse(head.pattern),
+          `patternIds.${patternIds.indexOf(head.id)}`
+        );
+      const newDefault =
+        headOf(places(patternIds))?.patternId !== headOf(places(before))?.patternId;
+      const orderOf = new Map(sound.patterns.map((p) => [p.patternId, p.order]));
+      for (const [order, patternId] of patternIds.entries()) {
+        if (!orderOf.has(patternId))
+          await tx.synthSoundPattern.create({ data: { soundId: sound.id, patternId, order } });
+        else if (orderOf.get(patternId) !== order)
+          await tx.synthSoundPattern.update({
+            where: { soundId_patternId: { soundId: sound.id, patternId } },
+            data: { order },
+          });
+      }
+      const [riff = null] = newDefault
+        ? await syncSoundPhrases(tx, { id: sound.id }, { markEdited: true })
+        : [];
+      return { before, after: patternIds, sound: riff, name: sound.name };
+    })
+  );
 }
 
 // ─── Admin control ───────────────────────────────────────────────────────────
@@ -855,90 +878,88 @@ export async function setLibraryPatternControl(input: PatternControl): Promise<{
   sounds: RewrittenRiff[];
   leftWithout: SoundLeftWithout[];
 }> {
-  return prisma.$transaction(async (tx) => {
-    const ids = [...new Set(input.ids)];
-    const rows = await tx.libraryPattern.findMany({ where: { id: { in: ids } } });
-    const known = new Set(rows.map((r) => r.id));
-    const unknown = ids.filter((id) => !known.has(id));
-    if (unknown.length)
-      refuse(
-        'No library pattern has that id',
-        unknown.map((id) => ({ path: 'ids', message: `No library pattern has the id ${id}` }))
-      );
+  return fresh(
+    prisma.$transaction(async (tx) => {
+      const ids = [...new Set(input.ids)];
+      const rows = await tx.libraryPattern.findMany({ where: { id: { in: ids } } });
+      const known = new Set(rows.map((r) => r.id));
+      const unknown = ids.filter((id) => !known.has(id));
+      if (unknown.length)
+        refuse(
+          'No library pattern has that id',
+          unknown.map((id) => ({ path: 'ids', message: `No library pattern has the id ${id}` }))
+        );
 
-    const problems: { path: string; message: string }[] = [];
-    const planned = rows.map((row) => {
-      const rightsRisk = input.rightsRisk ?? row.rightsRisk;
-      // A blocked pattern must not be shown, so it is always disabled.
-      if (rightsRisk === 'blocked' && input.status === 'enabled')
-        problems.push({
-          path: 'status',
-          message: `${row.name} is blocked: a blocked pattern is always disabled`,
-        });
-      const status = rightsRisk === 'blocked' ? 'disabled' : (input.status ?? row.status);
-      const before = {
-        rightsRisk: row.rightsRisk,
-        rightsReason: row.rightsReason,
-        status: row.status,
-        statusReason: row.statusReason,
+      const problems: { path: string; message: string }[] = [];
+      const planned = rows.map((row) => {
+        const rightsRisk = input.rightsRisk ?? row.rightsRisk;
+        // A blocked pattern must not be shown, so it is always disabled.
+        if (rightsRisk === 'blocked' && input.status === 'enabled')
+          problems.push({
+            path: 'status',
+            message: `${row.name} is blocked: a blocked pattern is always disabled`,
+          });
+        const status = rightsRisk === 'blocked' ? 'disabled' : (input.status ?? row.status);
+        const before = {
+          rightsRisk: row.rightsRisk,
+          rightsReason: row.rightsReason,
+          status: row.status,
+          statusReason: row.statusReason,
+        };
+        const after = {
+          rightsRisk,
+          // An admin who sets a rights risk has decided it, even where it is the value it had: the reason records that,
+          // and stops it following the fidelity.
+          rightsReason: input.rightsRisk !== undefined ? input.reason : row.rightsReason,
+          status,
+          statusReason: status !== row.status ? input.reason : row.statusReason,
+        };
+        return { row, before, after };
+      });
+      if (problems.length) refuse('A blocked pattern cannot be enabled', problems);
+      const changed = planned.filter((p) => !sameValue(p.before, p.after));
+      const moved = changed.filter((p) => p.before.status !== p.after.status).map((p) => p.row.id);
+
+      // Each sound listing a pattern whose status changes: its default before and after.
+      const soundWhere = { patterns: { some: { patternId: { in: moved } } } };
+      const heads = async (): Promise<SoundHeads> =>
+        moved.length ? soundHeads(tx, soundWhere) : new Map();
+      const headsBefore = await heads();
+      for (const { row, after } of changed)
+        await tx.libraryPattern.update({ where: { id: row.id }, data: after });
+      const headsAfter = await heads();
+
+      const leftWithout: SoundLeftWithout[] = [];
+      const handed: string[] = [];
+      for (const [soundId, after] of headsAfter) {
+        const before = headsBefore.get(soundId);
+        if (!before || before.head === after.head) continue;
+        if (after.head === null) leftWithout.push(after.sound);
+        else handed.push(soundId);
+      }
+      if (leftWithout.length && !input.acknowledge)
+        refuse(
+          'This would leave a patch with no enabled pattern to play',
+          leftWithout.map((s) => ({
+            path: ACKNOWLEDGE_PATH,
+            message: `${s.name} (${s.synthId}) would have no enabled pattern that can be its default, and would keep playing the riff it has`,
+          }))
+        );
+      const sounds = handed.length
+        ? await syncSoundPhrases(tx, { id: { in: handed } }, { markEdited: true })
+        : [];
+      return {
+        changes: changed.map(({ row, before, after }) => ({
+          id: row.id,
+          name: row.name,
+          before,
+          after,
+        })),
+        sounds,
+        leftWithout,
       };
-      const after = {
-        rightsRisk,
-        // An admin who sets a rights risk has decided it, even where it is the value it had: the reason records that,
-        // and stops it following the fidelity.
-        rightsReason:
-          (input.rightsRisk !== undefined && rightsRisk === input.rightsRisk) ||
-          rightsRisk !== row.rightsRisk
-            ? input.reason
-            : row.rightsReason,
-        status,
-        statusReason: status !== row.status ? input.reason : row.statusReason,
-      };
-      return { row, before, after };
-    });
-    if (problems.length) refuse('A blocked pattern cannot be enabled', problems);
-    const changed = planned.filter((p) => !sameValue(p.before, p.after));
-    const moved = changed.filter((p) => p.before.status !== p.after.status).map((p) => p.row.id);
-
-    // Each sound listing a pattern whose status changes: its default before and after.
-    const soundWhere = { patterns: { some: { patternId: { in: moved } } } };
-    const heads = async (): Promise<SoundHeads> =>
-      moved.length ? soundHeads(tx, soundWhere) : new Map();
-    const headsBefore = await heads();
-    for (const { row, after } of changed)
-      await tx.libraryPattern.update({ where: { id: row.id }, data: after });
-    const headsAfter = await heads();
-
-    const leftWithout: SoundLeftWithout[] = [];
-    const handed: string[] = [];
-    for (const [soundId, after] of headsAfter) {
-      const before = headsBefore.get(soundId);
-      if (!before || before.head === after.head) continue;
-      if (after.head === null) leftWithout.push(after.sound);
-      else handed.push(soundId);
-    }
-    if (leftWithout.length && !input.acknowledge)
-      refuse(
-        'This would leave a patch with no enabled pattern to play',
-        leftWithout.map((s) => ({
-          path: ACKNOWLEDGE_PATH,
-          message: `${s.name} (${s.synthId}) would have no enabled pattern that can be its default, and would keep playing the riff it has`,
-        }))
-      );
-    const sounds = handed.length
-      ? await syncSoundPhrases(tx, { id: { in: handed } }, { markEdited: true })
-      : [];
-    return {
-      changes: changed.map(({ row, before, after }) => ({
-        id: row.id,
-        name: row.name,
-        before,
-        after,
-      })),
-      sounds,
-      leftWithout,
-    };
-  });
+    })
+  );
 }
 
 /** Each sound by id: its default pattern id (`headOf`), or null where it has none. */

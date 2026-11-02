@@ -6,7 +6,7 @@
  * {@link PATTERN_PICK}, and this reads the ticked ones when Apply is pressed, so choosing rows costs no client state.
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { PatternControlForm } from '@/components/app/admin/patterns/pattern-control-form';
 import { FieldHelp } from '@/components/ui/field-help';
@@ -20,6 +20,10 @@ const boxes = () => [
 
 export function PatternBulkBar() {
   const [all, setAll] = useState(false);
+  // The list remounts the bar for each page and filter: the rows start unticked with it, even one still listed.
+  useEffect(() => {
+    for (const box of boxes()) box.checked = false;
+  }, []);
   return (
     <section aria-label="Change several" className="space-y-2 rounded-md border p-3">
       <div className="flex items-center gap-3">
@@ -28,8 +32,9 @@ export function PatternBulkBar() {
           <FieldHelp title="Changing several at once" ariaLabel="About changing several">
             <p>
               Tick patterns in the list below, then set a rights risk, a status or both, with one
-              reason for all of them. Each pattern&apos;s change is audited on its own, and patterns
-              already set that way are left alone.
+              reason for all of them. Each pattern&apos;s change is audited on its own. A rights
+              risk you set is recorded with this reason even where the pattern already had it; a
+              status it already has is left alone.
             </p>
           </FieldHelp>
         </h2>

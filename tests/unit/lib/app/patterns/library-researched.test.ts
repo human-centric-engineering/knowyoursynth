@@ -419,6 +419,30 @@ describe('syncResearchedPatterns', () => {
     expect(jcge).toEqual(kept);
   });
 
+  it('protects a disabled pattern anywhere ahead of the default, and not an enabled one the sound cannot play', async () => {
+    await syncResearchedPatterns(lib(), [testBatch()]);
+    const jcge = keyed('researched:depeche-mode/just-cant-get-enough-bass');
+    // Sound 2: its own riff, disabled, first; this one, disabled, second; nothing enabled ahead of them.
+    riffOf(2).status = 'disabled';
+    db.synthSoundPattern.rows.find((l) => l.patternId === riffOf(2).id)!.order = -2;
+    db.synthSoundPattern.rows.find((l) => l.patternId === jcge.id)!.order = -1;
+    jcge.status = 'disabled';
+    const changed = testBatch();
+    changed.patterns[1].name = 'Renamed in the batch';
+    expect(await syncResearchedPatterns(lib(), [changed])).toMatchObject({ edited: 1 });
+    expect(jcge.name).not.toBe('Renamed in the batch');
+
+    // Enabled but unplayable as a riff (two parts): never the default, so the batch's change lands.
+    jcge.status = 'enabled';
+    const two = PatternSchema.parse(jcge.pattern);
+    two.parts.push(structuredClone(two.parts[0]));
+    two.chain = [0, 1];
+    jcge.pattern = two;
+    changed.patterns[1].pattern = two;
+    expect(await syncResearchedPatterns(lib(), [changed])).toMatchObject({ updated: 1 });
+    expect(jcge.name).toBe('Renamed in the batch');
+  });
+
   it('writes nothing the second time, nor for an empty batch', async () => {
     await syncResearchedPatterns(lib(), [testBatch()]);
     clearWrites();

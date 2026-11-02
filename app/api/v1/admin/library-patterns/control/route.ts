@@ -12,7 +12,6 @@ import { successResponse } from '@/lib/api/responses';
 import { validateRequestBody } from '@/lib/api/validation';
 import { getRouteLogger } from '@/lib/api/context';
 import { PatternControlSchema, setLibraryPatternControl } from '@/lib/app/patterns/library-edit';
-import { forgetSuggestLibrary } from '@/lib/app/patterns/suggest-read';
 import { auditCatalogue, CATALOGUE_READ } from '@/lib/app/catalogue/admin-route';
 
 export const POST = withAdminAuth(
@@ -21,9 +20,6 @@ export const POST = withAdminAuth(
     const body = await validateRequestBody(request, PatternControlSchema);
 
     const { changes, sounds, leftWithout } = await setLibraryPatternControl(body);
-    // Suggestions keep the public library for a minute; a pattern just disabled or blocked leaves it now, in this
-    // process at least. Another instance's copy lasts out its minute.
-    if (changes.length) forgetSuggestLibrary();
     for (const c of changes)
       auditCatalogue(request, session.user.id, {
         action: 'library_pattern.control',

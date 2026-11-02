@@ -331,8 +331,8 @@ export async function syncResearchedPatterns(
       (p) => [p.key, p]
     )
   );
-  // Any sound an admin made one of them the default of, the batch's own sounds or not: its default now, or the head of
-  // its list while disabled, which is the default again once it is enabled.
+  // Any sound an admin made one of them the default of, the batch's own sounds or not: its default now, or a disabled
+  // pattern ahead of the default, which becomes it once enabled.
   const heads = new Set(
     stored.size
       ? (
@@ -342,9 +342,14 @@ export async function syncResearchedPatterns(
             },
             select: { patterns: PLACES },
           })
-        ).flatMap((s) =>
-          [headOf(s.patterns)?.patternId, s.patterns[0]?.patternId].flatMap((id) => id ?? [])
-        )
+        ).flatMap((s) => {
+          const head = headOf(s.patterns);
+          const ahead = head ? s.patterns.slice(0, s.patterns.indexOf(head)) : s.patterns;
+          return [
+            ...(head ? [head.patternId] : []),
+            ...ahead.filter((p) => p.pattern.status !== 'enabled').map((p) => p.patternId),
+          ];
+        })
       : []
   );
 
