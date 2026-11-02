@@ -10,7 +10,7 @@ This page is the design, written before the build (t-121). It covers:
 
 - the roles a pattern plays and the facts it carries for matching
 - what "Inspired by" links to, and the fidelity levels
-- the research method the batches follow (t-127, t-128, t-129, t-160)
+- the research method the batches follow (t-127, t-128, t-129, t-160, t-161)
 - the rights rule
 - how admins see and control each pattern's origin, rights risk and status
 - how the current riffs are reviewed
@@ -461,6 +461,29 @@ each by Anita Ward and Whitney Houston. The task counted about 81 sounds; there 
 - **Octaves, not parts, were changed to suit a sound.** Where one part went on sounds an octave or more apart, it went
   twice, as Da Funk's did: the Chameleon bass and the Superstition clavinet.
 
+**The fifth batch (t-161): British synth-pop and post-punk.** Every sound by 29 artists, from Gary Numan (11 sounds)
+and Vince Clarke (9) to one each by Björk, SOPHIE and The Cure. The task counted about 71; there were 73, because
+"Early synth-pop" has three. All 73 got one of 57 patterns, and none needed a reason. The batch is
+`prisma/seeds/app-knowyoursynth/data/patterns/t161-synth-pop-and-post-punk.json`. It found:
+
+- **This ground is the best covered yet.** 48 patterns came from 37 Songsterr transcriptions, among them "Cars" (four
+  parts), "Are 'Friends' Electric?", "Blue Monday", "Vienna", "Enola Gay", "Don't You Want Me", "Don't Go", "Only
+  You", "Rydeen" and "The Mother We Share". Unlike the funk batch, most have the synth parts as tracks of their own.
+- **Nine transcriptions were made by Songsterr's machine**, one pattern each: "We Are Glass", "This Wreckage", "Say
+  Hello, Wave Goodbye", "Being Boiled", "Quiet Life", "Technopolis", "Strict Machine", "Seventeen" and "Jóga". As in
+  t-160, each research record says so.
+- **Nine patterns are best guesses**, one sound each: Japan's "Ghosts", Goldfrapp's "Pilots", "The Dignity of Labour",
+  SOPHIE's "Vroom Vroom", Metronomy's "Holiday", John Foxx's Metamatic, the Life Aquatic score and the two noise
+  hi-hats. The free web has nothing of those works, or nothing with that part: the one "Warm Leatherette" transcription
+  has the kick and snare and no hats.
+- **Some synth parts are transcribed for guitar.** "We Are Glass", "This Wreckage", "Say Hello, Wave Goodbye", "Only
+  You" and "Courtship Dating" have no synth track, so their sounds got the line the guitar plays, and the notes say so.
+- **A sound naming only an artist or a genre got that artist's work.** The two plain CHVRCHES plucks got "The Mother
+  We Share"; the early synth-pop pluck and the OMD lead got "Enola Gay"'s pre-theme line; the Erasure-era Clarke lead
+  got "New Life", because no Erasure transcription has a lead synth line.
+- **A theme mixing sixteenths with triplets doesn't fit one step size.** "Rydeen"'s second theme has both in its first
+  four bars, so the pattern takes its last three, which have neither.
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on
@@ -675,7 +698,9 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
   left every riff its sound's default. The third batch (t-129) created 17 and 36, its own 16 and Digital Love's intro,
   which brought the totals to 69 and 121 and again left every riff its sound's default. The fourth (t-160) created 59
   and 88, which brought them to 128 and 209, left the 69 unchanged and every riff its sound's default, and skipped
-  nothing.
+  nothing. The fifth (t-161) created 57 and 73, which brought them to 185 and 282, and skipped nothing. It also updated
+  13 of t-160's patterns, whose review fixes the dev database hadn't had yet, and left the other 115 and every riff
+  unchanged.
 - **An admin's pattern is never written**: one an admin edited, or made any sound's default.
 - **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
   taken out of a batch file stays in the library and on its sounds.
@@ -690,12 +715,13 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
 Over the real data, the same test checks that every sound a batch names is in the catalogue, that each batch looks at
 every sound by its artists exactly once (Kraftwerk and Depeche Mode for t-127; Daft Punk, Jean-Michel Jarre and
 Tangerine Dream for t-128; Brian Eno, Daniel Lanois, Vangelis and Boards of Canada for t-129; 31 funk, soul and R&B
-artists for t-160), that every link resolves
+artists for t-160; 29 synth-pop and post-punk artists for t-161), that every link resolves
 in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
 a sound whose own riff plays no chords gets a single line, that the Just Can't Get Enough bass and the Blade Runner End
 Titles theme play the notes both of their leads give, that the Da Funk break figure plays its lead's notes in both
-octaves, as does the Da Funk main riff, that Digital Love's intro plays its lead's notes, and that the Flash Light
-bass and the Superstition clavinet (in both octaves) play theirs. A pattern with no lead must say it is a best guess. A sound can be on more
+octaves, as does the Da Funk main riff, that Digital Love's intro plays its lead's notes, that the Flash Light
+bass and the Superstition clavinet (in both octaves) play theirs, and that the Blue Monday bass and the Are 'Friends'
+Electric? riff play theirs. A pattern with no lead must say it is a best guess. A sound can be on more
 than one pattern of a batch, but a sound with a pattern never also has a reason.
 
 The catalogue unit's hash leaves the `patterns/` folder out, as it does `bank/`, so a batch edit re-runs only this
