@@ -1,5 +1,5 @@
 /**
- * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162, t-163, t-164, t-165, t-166): the research batches under the seed's `data/patterns/`, and
+ * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162, t-163, t-164, t-165, t-166, t-167): the research batches under the seed's `data/patterns/`, and
  * the seed that puts them on their sounds.
  *
  * First the real batches, against the real catalogue and databank data: every pattern parses and plays, every sound a
@@ -370,6 +370,45 @@ describe('the research batches', () => {
       ],
       82,
     ],
+    [
+      't-167',
+      [
+        'Wendy Carlos',
+        'BBC Radiophonic Workshop',
+        'Isao Tomita',
+        'Terry Riley',
+        'Klaus Schulze',
+        'Delia Derbyshire',
+        'Kaitlyn Aurelia Smith',
+        'Morton Subotnick',
+        'Silver Apples',
+        'Suicide',
+        'Suzanne Ciani',
+        'Cluster',
+        'Laurie Spiegel',
+        'Mort Garson',
+        'Perrey and Kingsley',
+        'Raymond Scott',
+        'Steve Reich',
+        'Sun Ra',
+        'Caterina Barbieri',
+        'Charles Cohen',
+        'Clara Rockmore',
+        'Cluster & Eno',
+        'Daphne Oram',
+        'Holger Czukay',
+        'Laurie Anderson',
+        'Louis and Bebe Barron',
+        'Manuel Göttsching',
+        'Neu!',
+        'Nils Frahm',
+        'Patrick Gleeson',
+        'Pierre Schaeffer',
+        'Popol Vuh',
+        'Roger Payne',
+      ],
+      79,
+    ],
   ];
 
   it('has a roster for every batch, so none goes unchecked below', () => {
@@ -681,6 +720,29 @@ describe('the research batches', () => {
     );
     expect(pitches('researched:jon-hopkins/open-eye-signal-roots-high')).toEqual(
       shifted('researched:jon-hopkins/open-eye-signal-roots', 12)
+    );
+  });
+
+  it('plays the notes its lead gives: the subject of Bach’s Invention in F, from the score', () => {
+    // F A F C F, F E D C D C B♭ A B♭ A G, F A C A F C, then A C B♭ C three times: Mutopia edition, upper part, bars 1–4.
+    expect(pitches('researched:wendy-carlos/invention-in-f-subject')).toEqual([
+      65, 69, 65, 72, 65, 77, 76, 74, 72, 74, 72, 70, 69, 70, 69, 67, 65, 69, 72, 69, 77, 72, 81,
+      84, 82, 84, 81, 84, 82, 84, 81, 84, 82, 84,
+    ]);
+  });
+
+  it('plays the notes its lead gives: the riff of “Ghost Rider”, an octave up', () => {
+    // C F E♭ on every beat: Songsterr “Bass”, bar 1.
+    expect(pitches('researched:suicide/ghost-rider-riff')).toEqual([
+      48, 53, 51, 48, 53, 51, 48, 53, 51, 48, 53, 51,
+    ]);
+  });
+
+  it('plays t-167’s octave copy two octaves from the part it copies', () => {
+    // The invention’s left hand is the subject an octave down, a bar later; the copy goes a second octave down so
+    // all of it sits below the Solar’s split at F♯4, on the left plates its split sound plays the bass from.
+    expect(pitches('researched:wendy-carlos/invention-in-f-answer')).toEqual(
+      pitches('researched:wendy-carlos/invention-in-f-subject').map((n) => n - 24)
     );
   });
 

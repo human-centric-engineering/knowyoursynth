@@ -11,7 +11,7 @@ This page is the design, written before the build (t-121). It covers:
 - the roles a pattern plays and the facts it carries for matching
 - what "Inspired by" links to, and the fidelity levels
 - the research method the batches follow (t-127, t-128, t-129, t-160, t-161, t-162, t-163, t-164, t-165,
-  t-166)
+  t-166, t-167)
 - the rights rule
 - how admins see and control each pattern's origin, rights risk and status
 - how the current riffs are reviewed
@@ -694,6 +694,51 @@ were 82. 79 got one of 66 patterns, and 3 got a reason. The batch is
 - **Octaves went twice** for the "Woke Up This Morning" bass (for the TD-3) and the Open Eye Signal roots (for the
   SynTrx).
 
+**The eleventh batch (t-167): electronic pioneers, Berlin school and krautrock.** Every sound by 33 artists, from Wendy
+Carlos (7 sounds) and the BBC Radiophonic Workshop, Isao Tomita and Terry Riley (6 each) to one each by Roger Payne and
+Pierre Schaeffer. The task counted about 68; there were 79, because the library had grown (Riley 6, Delia Derbyshire 4)
+and the one "Cluster & Eno" sound was in no batch. 55 got one of 43 patterns, and 24 got a reason. The batch is
+`prisma/seeds/app-knowyoursynth/data/patterns/t167-electronic-pioneers-berlin-school-and-krautrock.json`. It found:
+
+- **The classical works have free scores.** The Mutopia Project publishes typeset editions of public-domain scores
+  with MIDI files, which the scratch MIDI reader reads. Eight patterns came from them: three Bach two-part inventions
+  (F, both hands, D minor and B♭) and the "Wachet auf" chorale for the Carlos sounds; Debussy's "Arabesque No. 1" and "Clair de
+  lune", and Holst's own hymn setting of the Jupiter tune ("Thaxted"), for the Tomita ones. Fan MIDI files on BitMIDI
+  gave three more: Purcell's funeral march (Carlos's Clockwork Orange title music), the "Mars" ostinato and "The Swan"
+  (Clara Rockmore's cello line).
+- **A score does not make a pattern _Transcribed_.** The task asked whether these could be the library's first
+  _Transcribed_ or _Reconstructed_ patterns. They can't yet. A public-domain score is tier 1 for Bach's or Debussy's
+  notes, but the part on the record is Carlos's or Tomita's: the octaves, the ornaments, the tempo and the voicing
+  are theirs, and only a listen can say how far the record departs from the score. So the score is a lead like any
+  other, and every pattern from one is _In the style of_. The rights rule is unchanged: the recording and the arrangement
+  belong to their rights holders even when the composition is free, so one part and 8 bars still hold. The Invention
+  in F's left hand went on the two-part Switched-On Bach sound as its own pattern, not merged with the right hand.
+  It is the subject an octave down, and the pattern takes it down a second octave, so all of it falls below the
+  Solar's split at F♯4 and plays on the left plates; it is checked as a two-octave copy. The subject's own lowest F
+  is F4, below the split, so on the Solar those notes play on the bass side.
+- **The rest of the ground is barely transcribed.** Songsterr had five of the works the sounds name: the 1960s "Doctor
+  Who" theme (its gallop and its melody), "Ghost Rider" (the riff, and its root for the SynTrx sound), "Hallogallo"
+  (the low E pulse), "Plantasia" (machine-made) and "E2-E4" (marked "regenerated", with the chords as stabs and no
+  sequencer part, so its pattern breaks the lead's chords into an arpeggio and says so). Nothing was found for
+  Schulze, Riley, Kaitlyn Aurelia Smith, Cluster, Sun Ra, Laurie Spiegel, Nils Frahm, Caterina Barbieri, Popol Vuh,
+  Patrick Gleeson's Sextant, Silver Apples' "Oscillations", "Baroque Hoedown" or Music for 18 Musicians.
+- **25 patterns are best guesses**, on 31 sounds. Sounds naming one work share its guess (the two Cluster "Sowiesoso"
+  sounds, the two "Baroque Hoedown" sounds), and an artist's sound naming no work shares one that does (the SynTrx
+  Riley, Spiegel and Schulze sounds).
+- **24 sounds have no part to write**, the most since t-129. Fifteen are effects: five of the six Radiophonic Workshop
+  sounds, the Sonic Seasonings crickets, Schaeffer's train, Czukay's shortwave radio, the Forbidden Planet circuit,
+  Raymond Scott's robot, Daphne Oram's bird, the three Ciani sounds and Derbyshire's tape-loop bells. Seven play
+  themselves, their pitch thrown at random or set by the patch's own sequencer: Raymond Scott's random bleeps, the
+  three Subotnick sounds, Charles Cohen's Easel and the two Reich phasing sounds. The
+  humpback whales are a recording, and the "O Superman" "ah" is the vocal.
+- **Patches that make their own pattern from a held key got held notes** again: the Schulze drones, the Cluster &
+  Eno overtone steps, the Silver Apples drone, the SynTrx Suicide pulse, and two chords for the Riley arpeggio and
+  tremolo sounds. The Curved Air sequence on the Solar got only the two keys its riff gives it. The Silver Apples
+  arpeggiator sound got a single line, because the batch test holds a sound whose riff has no chords to one note at a
+  time.
+- **The tempo of a score's MIDI file is the engraver's**, not the composer's marking. The patterns keep it, as they
+  keep a transcription's, and their notes say so where it matters (the Arabesque at 144).
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on
@@ -920,7 +965,8 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
   research notes. The ninth (t-165) created 50 and 76, which brought them to 402 and 596, left the 352 and every riff
   unchanged, and skipped nothing. The tenth (t-166) created 66 and 79, which brought them to 468 and 675, and skipped
   nothing. It also updated 8 of t-165's patterns, whose review fixes the dev database hadn't had yet, and left the rest
-  and every riff unchanged.
+  and every riff unchanged. The eleventh (t-167) created 43 and 56, which brought them to 511 and 731, left the rest
+  and every riff unchanged, and skipped nothing.
 - **An admin's pattern is never written**: one an admin edited, or made any sound's default.
 - **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
   taken out of a batch file stays in the library and on its sounds.
@@ -937,14 +983,14 @@ every sound by its artists exactly once (Kraftwerk and Depeche Mode for t-127; D
 Tangerine Dream for t-128; Brian Eno, Daniel Lanois, Vangelis and Boards of Canada for t-129; 31 funk, soul and R&B
 artists for t-160; 29 synth-pop and post-punk artists for t-161; 30 80s pop and arena artists for t-162; 30 film, TV,
 game and synthwave artists, under 31 names, for t-163; 41 prog, psychedelic and rock artists, under 42 names, for t-164; 33 disco, acid, house, techno and industrial
-artists, under 34 names, for t-165; 35 90s electronic, big beat, IDM and downtempo artists for t-166), that every link resolves in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
+artists, under 34 names, for t-165; 35 90s electronic, big beat, IDM and downtempo artists for t-166; 33 electronic pioneers, Berlin school and krautrock artists for t-167), that every link resolves in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
 a sound whose own riff plays no chords gets a single line, that the Just Can't Get Enough bass and the Blade Runner End
 Titles theme play the notes both of their leads give, that the Da Funk break figure plays its lead's notes in both
 octaves, as does the Da Funk main riff, that Digital Love's intro plays its lead's notes, that the Flash Light
 bass and the Superstition clavinet (in both octaves) play theirs, that the Blue Monday bass, the Are 'Friends'
 Electric? riff, the Take On Me riff, the Sweet Dreams riff, the Axel F theme, the Stranger Things arpeggio, the On the
-Run sequence, the Tom Sawyer growl, the I Feel Love bass, the Popcorn theme, the Sexy Boy bass and the Levels riff play theirs, and that t-161's,
-t-162's, t-163's, t-164's, t-165's and t-166's octave copies sit one or two octaves from the part they copy, as each copy's check says. A pattern with no lead must say it is a best guess. A sound can be on more
+Run sequence, the Tom Sawyer growl, the I Feel Love bass, the Popcorn theme, the Sexy Boy bass, the Levels riff, the subject of Bach's Invention in F (from the score) and the
+Ghost Rider riff play theirs, and that t-161's, t-162's, t-163's, t-164's, t-165's, t-166's and t-167's octave copies sit one or two octaves from the part they copy, as each copy's check says. A pattern with no lead must say it is a best guess. A sound can be on more
 than one pattern of a batch, but a sound with a pattern never also has a reason.
 
 The catalogue unit's hash leaves the `patterns/` folder out, as it does `bank/`, so a batch edit re-runs only this
