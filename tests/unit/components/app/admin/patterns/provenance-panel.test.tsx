@@ -284,6 +284,37 @@ describe('PatternBulkBar', () => {
     expect(post).not.toHaveBeenCalled();
   });
 
+  it('counts patches in the plural, and shows a refusal of the acknowledged change', async () => {
+    const user = userEvent.setup();
+    const held = new APIClientError('Held', 'VALIDATION_ERROR', 400, {
+      errors: [{ path: 'acknowledge', message: 'Two patches would have none' }],
+    });
+    post.mockRejectedValueOnce(held);
+    post.mockRejectedValueOnce(new APIClientError('Still refused', 'VALIDATION_ERROR', 400, {}));
+    post.mockRejectedValueOnce(held);
+    post.mockResolvedValueOnce({
+      changed: ['a', 'b'],
+      soundsRewritten: ['model-d/x', 'model-d/y'],
+      leftWithout: [
+        { synthId: 'model-d', slug: 'p', name: 'P' },
+        { synthId: 'model-d', slug: 'q', name: 'Q' },
+      ],
+    });
+    render(withRows('a', 'b'));
+    await user.click(screen.getByRole('checkbox', { name: 'All on this page' }));
+    await user.selectOptions(screen.getByRole('combobox', { name: /^Status/ }), 'disabled');
+    await user.type(screen.getByRole('textbox', { name: /^Reason/ }), 'x');
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+    await user.click(await screen.findByRole('button', { name: 'Disable anyway' }));
+    expect(await screen.findByText('Still refused')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+    await user.click(await screen.findByRole('button', { name: 'Disable anyway' }));
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      'Saved 2 changes. 2 patches now play the next enabled pattern. 2 patches have no enabled pattern and keep their riff.'
+    );
+  });
+
   it('says when nothing changed', async () => {
     const user = userEvent.setup();
     post.mockResolvedValue({ changed: [], soundsRewritten: [], leftWithout: [] });
