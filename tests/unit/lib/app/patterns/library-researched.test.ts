@@ -1,5 +1,5 @@
 /**
- * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162, t-163): the research batches under the seed's `data/patterns/`, and
+ * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162, t-163, t-164): the research batches under the seed's `data/patterns/`, and
  * the seed that puts them on their sounds.
  *
  * First the real batches, against the real catalogue and databank data: every pattern parses and plays, every sound a
@@ -231,6 +231,55 @@ describe('the research batches', () => {
         'Yann Tiersen',
       ],
       78,
+    ],
+    [
+      't-164',
+      [
+        'Pink Floyd',
+        'Rush',
+        'Hawkwind',
+        'Radiohead',
+        'The Beatles',
+        'The Who',
+        'Keith Emerson',
+        'Rick Wakeman',
+        'Tame Impala',
+        'King Crimson',
+        'My Bloody Valentine',
+        'Supertramp',
+        'The Doors',
+        '? and the Mysterians',
+        'Black Sabbath',
+        'Bruce Springsteen',
+        'Cocteau Twins',
+        'Dead Can Dance',
+        'Dick Dale',
+        'Edgar Winter',
+        'Emerson, Lake & Palmer',
+        'Gary Wright',
+        'George Harrison',
+        'Gong',
+        'Jethro Tull',
+        'Jimi Hendrix',
+        'MGMT',
+        'Manfred Mann',
+        'Mike Oldfield',
+        'Neutral Milk Hotel',
+        'Richard Wright',
+        'Robert Fripp',
+        'Sigur Rós',
+        // One band under two names; the rename is housekeeping's, so both are looked at here.
+        'Small Faces',
+        'The Beach Boys',
+        'The Small Faces',
+        'The Stranglers',
+        'The Tornados',
+        'The Zombies',
+        'Thin Lizzy',
+        'Thom Yorke',
+        'U2',
+      ],
+      83,
     ],
   ];
 
@@ -469,6 +518,30 @@ describe('the research batches', () => {
     );
     expect(pitches('researched:goblin/suspiria-theme-low')).toEqual(
       shifted('researched:goblin/suspiria-theme', -12)
+    );
+  });
+
+  it('plays the notes its lead gives: the sequence of “On the Run”, two octaves up', () => {
+    // E G A G D C D E, twice: Songsterr “EMS Synthi AKS - Bassline”, bar 9.
+    const once = [52, 55, 57, 55, 62, 60, 62, 64];
+    expect(pitches('researched:pink-floyd/on-the-run-sequence')).toEqual([...once, ...once]);
+  });
+
+  it('plays the notes its lead gives: the growl of “Tom Sawyer”', () => {
+    // E D A C, each held from the second beat: Songsterr “Oberheim OB-X”, bars 59–62.
+    expect(pitches('researched:rush/tom-sawyer-growl')).toEqual([40, 38, 45, 36]);
+  });
+
+  it('plays t-164’s octave copies an octave from the part they copy', () => {
+    const shifted = (key: string, by: number) => pitches(key).map((n) => n + by);
+    expect(pitches('researched:pink-floyd/on-the-run-sequence-high')).toEqual(
+      shifted('researched:pink-floyd/on-the-run-sequence', 12)
+    );
+    expect(pitches('researched:pink-floyd/shine-on-solina-low')).toEqual(
+      shifted('researched:pink-floyd/shine-on-solina', -12)
+    );
+    expect(pitches('researched:the-who/wont-get-fooled-again-organ-top-low')).toEqual(
+      shifted('researched:the-who/wont-get-fooled-again-organ-top', -12)
     );
   });
 
