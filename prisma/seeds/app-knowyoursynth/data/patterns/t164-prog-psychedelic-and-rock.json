@@ -1074,7 +1074,7 @@
       "sounds": ["deepmind-12d/wurli-drive"],
       "research": {
         "work": "Pink Floyd, “Money”, The Dark Side of the Moon, 1973",
-        "part": "Two bars of 7/4 Wurlitzer stabs off the beat: D major on the second and third beats, then E major on the seventh.",
+        "part": "Two bars of 7/4 Wurlitzer stabs: D major on the second and third beats, then E major on the seventh, the second bar adding a B after the D chord.",
         "originalKey": null,
         "originalBpm": 119,
         "leads": [
@@ -9148,8 +9148,7 @@
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
-        "songId": "rick-wakeman-close-to-the-edge-the-six-wives-of-henry-viii",
-        "part": 0
+        "songId": "rick-wakeman-close-to-the-edge-the-six-wives-of-henry-viii"
       },
       "fidelity": "in_the_style_of",
       "sources": [],
@@ -9511,8 +9510,7 @@
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
-        "songId": "rick-wakeman-close-to-the-edge-the-six-wives-of-henry-viii",
-        "part": 0
+        "songId": "rick-wakeman-close-to-the-edge-the-six-wives-of-henry-viii"
       },
       "fidelity": "in_the_style_of",
       "sources": [],
@@ -12632,7 +12630,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s organ track, bars 6–9, as written. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s organ track, bars 6–9, as written: the verse riff is single notes there; only the introduction has chords. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -13094,7 +13092,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Rhythm & Lead Guitar” track, bars 13–16, as written: the roots of the power chords, which is how the transcription gives them. The fifth above each is the guitar’s; the sound’s own riff plays it. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Rhythm & Lead Guitar” track, bars 13–16, as written: the roots of the power chords, which is how the transcription gives them. The record plays a fifth above each, which the transcription doesn’t write, so the pattern doesn’t add it. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -17871,114 +17869,13 @@
                   {
                     "note": 61,
                     "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
+                  },
                   {
-                    "note": 64,
+                    "note": 57,
                     "gate": 1.0
                   },
                   {
-                    "note": 61,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 66,
-                    "gate": 1.0
-                  },
-                  {
-                    "note": 61,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 66,
-                    "gate": 1.0
-                  },
-                  {
-                    "note": 61,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 64,
-                    "gate": 1.0
-                  },
-                  {
-                    "note": 61,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 64,
-                    "gate": 1.0
-                  },
-                  {
-                    "note": 61,
+                    "note": 52,
                     "gate": 1.0
                   }
                 ]
@@ -18005,6 +17902,14 @@
                   {
                     "note": 61,
                     "gate": 1.0
+                  },
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 52,
+                    "gate": 1.0
                   }
                 ]
               },
@@ -18030,6 +17935,14 @@
                   {
                     "note": 61,
                     "gate": 1.0
+                  },
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 54,
+                    "gate": 1.0
                   }
                 ]
               },
@@ -18054,6 +17967,163 @@
                   },
                   {
                     "note": 61,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 54,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 61,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 52,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 61,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 52,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 61,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 52,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 61,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 54,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 61,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  },
+                  {
+                    "note": 54,
                     "gate": 1.0
                   }
                 ]
@@ -18071,6 +18141,14 @@
                   },
                   {
                     "note": 61,
+                    "gate": 0.66
+                  },
+                  {
+                    "note": 57,
+                    "gate": 0.66
+                  },
+                  {
+                    "note": 52,
                     "gate": 0.66
                   }
                 ]
@@ -18093,7 +18171,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "The transcription names a fan but marks every track “(regenerated)”. From its clean-guitar track, bars 1–4: the chords without the bass notes under them, two notes of each, for a sound the transcription’s four-note chords would overrun. The jet sweep is the patch’s. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The transcription names a fan but marks every track “(regenerated)”. From its clean-guitar track, bars 1–4: the chords without the bass notes under them, which the sound’s riff leaves out too. The jet sweep is the patch’s. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -20187,7 +20265,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Scott Gorham | Lead Guitar (Right)” track, bars 45–48, an octave up to sit where the sound plays. The transcription marks an eighth-note triplet feel, so its off-beat eighths fall on the last third of the beat, which the triplet grid holds. The harmony a third below is the other guitar, a second part, which the pattern doesn’t merge in; the sound’s patch can play it. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Scott Gorham | Lead Guitar (Right)” track, bars 45–48, an octave up to sit where the sound plays. The transcription marks an eighth-note triplet feel, so its off-beat eighths fall on the last third of the beat, which the triplet grid holds. The harmony a third below is the other guitar, a second part, which the rights rule keeps out, so the sound plays the upper line alone. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },

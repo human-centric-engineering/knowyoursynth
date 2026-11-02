@@ -596,14 +596,17 @@ about 80; there were 83. 77 got one of 64 patterns, and 6 got a reason. The batc
   third of the beat ("The Boys Are Back in Town"). The "I'm Only Sleeping" bars mix sixteenths into the swung eighths,
   so they play straight and the record says so. The "Speak to Me" heartbeat is written as muted, unpitched hits in
   that feel, which the reader skips, so it was placed by hand on the `1/8t` grid at the sounds' own pitch.
-- **Two-note sounds took two notes.** The paraphonic Neutron sounds whose riffs play dyads got the top two or bottom two
-  notes of a part's chords ("Everything In Its Right Place", "Won't Get Fooled Again", "The Host of Seraphim", "Itchycoo
-  Park"). The mono sounds took one line, as before.
+- **Two-note sounds took two notes where the part has chords.** The paraphonic Neutron sounds whose riffs play dyads
+  got the top two or bottom two notes of a part's chords ("Everything In Its Right Place", "Won't Get Fooled Again",
+  "The Host of Seraphim"). Two of them got a single line, because that is all the transcription has: the "Iron Man"
+  riff is written as the roots of its power chords, and the "Boys Are Back in Town" harmony is a second guitar (below).
+  The mono sounds took one line, as before.
 - **A second part is still never merged in.** The "Boys Are Back in Town" twin-guitar sound got Scott Gorham's line, not the
   harmony a third below it, and the "Discipline" pluck got Fripp's figure without Belew's.
 - **Odd metres loop whole**: two bars of 7/4 ("Money"), four of 7/8 ("Tom Sawyer"), one of 5/4 ("Discipline"), 4/4
-  with 6/4 ("Everything In Its Right Place"), and 6/8 with 7/8 ("Golden Brown"). The "Tubular Bells" figure is 15/8 on
-  the record but 7/4 in its transcription, which the pattern follows; it is the first one to check by ear.
+  with 6/4 ("Everything In Its Right Place"), 6/8 with 7/8 ("Golden Brown"), and three bars of 4/4 with one of 2/4
+  (the "Strawberry Fields Forever" flutes). The "Tubular Bells" figure is 15/8 on the record but 7/4 in its
+  transcription, which the pattern follows; it is the first one to check by ear.
 - **One band has two names.** "Small Faces" and "The Small Faces" are the same band, and the test's roster lists both;
   the rename is housekeeping's, as t-163's duo was.
 - **Octaves went twice** for the "On the Run" sequence, the "Shine On" Solina chords and the "Won't Get Fooled Again"
@@ -831,7 +834,8 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
   them to 287 and 442, left the 242 and every riff unchanged, and skipped nothing. Its review fixes created 1 and 1,
   the Perturbator bass roots; the two patterns they took out of the file stay in the library, as the rule below says.
   The eighth (t-164) created 64 and 77, which brought them to 352 and 520, left the 288 and every riff unchanged, and
-  skipped nothing.
+  skipped nothing. Its review fixes updated 7: the fuller Itchycoo Park chords, the two Wakeman links and four
+  research notes.
 - **An admin's pattern is never written**: one an admin edited, or made any sound's default.
 - **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
   taken out of a batch file stays in the library and on its sounds.
