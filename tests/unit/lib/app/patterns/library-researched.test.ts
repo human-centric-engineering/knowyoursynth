@@ -1,5 +1,5 @@
 /**
- * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162): the research batches under the seed's `data/patterns/`, and
+ * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162, t-163): the research batches under the seed's `data/patterns/`, and
  * the seed that puts them on their sounds.
  *
  * First the real batches, against the real catalogue and databank data: every pattern parses and plays, every sound a
@@ -193,6 +193,44 @@ describe('the research batches', () => {
         'Yello',
       ],
       83,
+    ],
+    [
+      't-163',
+      [
+        'John Carpenter',
+        'Jan Hammer',
+        'Harold Faltermeyer',
+        'Kavinsky',
+        'Ben Burtt',
+        'Hans Zimmer',
+        // One duo under two spellings; the rename is housekeeping's, so both are looked at here.
+        'Kyle Dixon & Michael Stein',
+        'Kyle Dixon and Michael Stein',
+        'M83',
+        'The Weeknd',
+        'Ennio Morricone',
+        'Goblin',
+        'S U R V I V E',
+        'Angelo Badalamenti',
+        'Buckner & Garcia',
+        'Chromatics',
+        'Cliff Martinez',
+        'Com Truise',
+        'Disasterpeace',
+        'Gunship',
+        'Hildur Guðnadóttir',
+        'John Williams',
+        'Jóhann Jóhannsson',
+        'Kitaro',
+        'Klaus Doldinger',
+        'Koji Kondo',
+        'Mica Levi',
+        'Perturbator',
+        'Ry Cooder',
+        'Walter Murch',
+        'Yann Tiersen',
+      ],
+      78,
     ],
   ];
 
@@ -405,6 +443,32 @@ describe('the research batches', () => {
     );
     expect(pitches('researched:pet-shop-boys/west-end-girls-bass-low')).toEqual(
       shifted('researched:pet-shop-boys/west-end-girls-bass', -12)
+    );
+  });
+
+  it('plays the notes its lead gives: the theme of “Axel F”', () => {
+    // F A♭ F F B♭ F E♭, F C F F D♭ C A♭, F C F' F E♭ E♭ C G F: Songsterr “Synth Brass 1”, bars 1–4.
+    expect(pitches('researched:harold-faltermeyer/axel-f-theme')).toEqual([
+      65, 68, 65, 65, 70, 65, 63, 65, 72, 65, 65, 73, 72, 68, 65, 72, 77, 65, 63, 63, 60, 67, 65,
+    ]);
+  });
+
+  it('plays the notes its lead gives: the arpeggio of “Stranger Things”, an octave up', () => {
+    // C E G B C B G E, twice: Songsterr “Track 1”, bar 2.
+    const once = [48, 52, 55, 59, 60, 59, 55, 52];
+    expect(pitches('researched:kyle-dixon-michael-stein/stranger-things-arpeggio')).toEqual([
+      ...once,
+      ...once,
+    ]);
+  });
+
+  it('plays t-163’s octave copies an octave from the part they copy', () => {
+    const shifted = (key: string, by: number) => pitches(key).map((n) => n + by);
+    expect(pitches('researched:john-carpenter/escape-from-new-york-ostinato-low')).toEqual(
+      shifted('researched:john-carpenter/escape-from-new-york-ostinato', -12)
+    );
+    expect(pitches('researched:goblin/suspiria-theme-low')).toEqual(
+      shifted('researched:goblin/suspiria-theme', -12)
     );
   });
 
