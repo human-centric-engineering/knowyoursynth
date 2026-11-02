@@ -36,6 +36,10 @@
       "reason": "A recorded sound: Hildur Guðnadóttir made the Chernobyl score from field recordings taken in a decommissioned nuclear power plant. The hum is that recording’s, not a written part."
     },
     {
+      "sound": "model-d/inception-braam",
+      "reason": "An effect: a braam is one huge processed brass hit, and the sound plays it once, without looping, through a filter that takes seconds to open. Inception’s braams are hits rather than a line; there is no part to write."
+    },
+    {
       "sound": "ub-xa-d/sh-computer",
       "reason": "An effect: the patch turns one held note into random sample-and-hold blips, the computer “thinking” in 1970s science fiction. The Close Encounters transcription on Songsterr has no tuning, so its notes can’t be read as pitches, and the five-tone motif is a different sound from this one."
     }
@@ -5648,260 +5652,6 @@
       }
     },
     {
-      "key": "researched:hans-zimmer/time-horns",
-      "name": "Time: horn line",
-      "role": "bass_line",
-      "tempo": null,
-      "inspiredBy": {
-        "kind": "artist",
-        "artistId": "hans-zimmer"
-      },
-      "fidelity": "in_the_style_of",
-      "sources": [],
-      "pattern": {
-        "version": 1,
-        "bpm": 70,
-        "stepSize": "1/8",
-        "loop": true,
-        "direction": "forward",
-        "swing": 50,
-        "transpose": 0,
-        "root": 0,
-        "scale": "chromatic",
-        "parts": [
-          {
-            "steps": [
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 36,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 36,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 35,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 33,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 43,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 43,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 42,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 40,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 35,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 35,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 33,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 31,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 42,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 42,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 40,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 38,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              }
-            ]
-          }
-        ],
-        "chain": [0]
-      },
-      "sounds": ["model-d/inception-braam"],
-      "research": {
-        "work": "Hans Zimmer, “Time”, Inception, 2010",
-        "part": "Four bars of the horn line in quarter notes: C, C, B, A; G, G, F♯, E; B, B, A, G; F♯, F♯, E, D.",
-        "originalKey": null,
-        "originalBpm": 70,
-        "leads": [
-          {
-            "citation": "Misc. Soundtrack — “Inception - Time”, fan transcription by Vitgit on Songsterr (revision 587917, 2023-06-29)",
-            "url": "https://www.songsterr.com/a/wsa/misc-soundtrack-inception-time-tab-s73808",
-            "checkedAt": "2026-11-02"
-          }
-        ],
-        "notes": "From the transcription’s “H” French horn track, bars 50–53, an octave down to sit where the sound plays. The film’s braams are hits rather than a line; this is the brass part of the score’s best-known cue. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
-        "listenedAt": null
-      }
-    },
-    {
       "key": "researched:hans-zimmer/interstellar-organ-figure",
       "name": "Interstellar: opening figure",
       "role": "arp",
@@ -10970,9 +10720,9 @@
       }
     },
     {
-      "key": "researched:perturbator/future-club-bass",
-      "name": "Future Club: bass",
-      "role": "bass_line",
+      "key": "researched:perturbator/future-club-roots",
+      "name": "Future Club: bass roots",
+      "role": "held",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -10983,7 +10733,7 @@
       "pattern": {
         "version": 1,
         "bpm": 100,
-        "stepSize": "1/16",
+        "stepSize": "1/8",
         "loop": true,
         "direction": "forward",
         "swing": 50,
@@ -10997,10 +10747,204 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 29,
-                    "gate": 2.0
+                    "note": 37,
+                    "gate": 16.0
                   }
                 ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 16.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 37,
+                    "gate": 16.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
               },
               {
                 "on": true,
@@ -11011,133 +10955,7 @@
                 "notes": [
                   {
                     "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 43,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 29,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 43,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 44,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 29,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 46,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 48,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 29,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 48,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 46,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 49,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 29,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 29,
-                    "gate": 2.0
+                    "gate": 16.0
                   }
                 ]
               },
@@ -11147,66 +10965,7 @@
               },
               {
                 "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 29,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 29,
-                    "gate": 2.0
-                  }
-                ]
+                "notes": []
               },
               {
                 "on": true,
@@ -11214,30 +10973,7 @@
               },
               {
                 "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 29,
-                    "gate": 2.0
-                  }
-                ]
+                "notes": []
               },
               {
                 "on": true,
@@ -11245,30 +10981,7 @@
               },
               {
                 "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 29,
-                    "gate": 2.0
-                  }
-                ]
+                "notes": []
               },
               {
                 "on": true,
@@ -11276,66 +10989,7 @@
               },
               {
                 "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 29,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 29,
-                    "gate": 2.0
-                  }
-                ]
+                "notes": []
               },
               {
                 "on": true,
@@ -11343,30 +10997,7 @@
               },
               {
                 "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 29,
-                    "gate": 2.0
-                  }
-                ]
+                "notes": []
               },
               {
                 "on": true,
@@ -11374,30 +11005,7 @@
               },
               {
                 "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 29,
-                    "gate": 2.0
-                  }
-                ]
+                "notes": []
               },
               {
                 "on": true,
@@ -11405,119 +11013,11 @@
               },
               {
                 "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 29,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 29,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
                 "notes": []
               },
               {
                 "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 29,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
                 "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 41,
-                    "gate": 1.0
-                  }
-                ]
               }
             ]
           }
@@ -11527,7 +11027,7 @@
       "sounds": ["super-gemini/sg-darksynth-bass"],
       "research": {
         "work": "Perturbator, “Future Club”, Dangerous Days, 2014",
-        "part": "Four bars of the bass in sixteenths: a run up from F through G, A♭, B♭, C and D♭, then three bars pumping between low F and its octave.",
+        "part": "The roots the bass pulses on through the second section, two bars each: C♯, B♭, C♯, F.",
         "originalKey": null,
         "originalBpm": 100,
         "leads": [
@@ -11537,7 +11037,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s bass track, bars 8–11, as written. The sound names no work, only Perturbator. _In the style of_: the notes come from a transcription Songsterr generated by machine, a weaker starting point than a fan’s. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s bass track, bars 31–38: each bar’s lowest note, held for as long as the bass stays on it. The sound runs its arpeggiator from a held note, so the record’s sixteenth-note pulse would come out as repeated notes; holding the roots lets the patch play the pulse. The sound names no work, only Perturbator. _In the style of_: the notes come from a transcription Songsterr generated by machine, a weaker starting point than a fan’s. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },

@@ -521,12 +521,12 @@ got one of 54 patterns, and none needed a reason. The batch is
   Wolf" Simmons fill. The Talking Heads works t-160 also read gave different parts here, on new keys.
 - **Octaves went twice** for "Take On Me", "Sweet Dreams" and "West End Girls", whose sounds sit an octave apart.
 
-**The seventh batch (t-163): film, TV, game and synthwave.** Every sound by 31 artists, from John Carpenter (10
+**The seventh batch (t-163): film, TV, game and synthwave.** Every sound by 30 artists (31 names: one duo is spelled two ways), from John Carpenter (10
 sounds) and Jan Hammer (6) to one each by Angelo Badalamenti, Koji Kondo and Yann Tiersen. The task counted about 67;
-there were 78. 69 got one of 45 patterns, and 9 got a reason. The batch is
+there were 78. 68 got one of 44 patterns, and 10 got a reason. The batch is
 `prisma/seeds/app-knowyoursynth/data/patterns/t163-film-tv-game-and-synthwave.json`. It found:
 
-- **Film and TV themes are well covered; modern scores and synthwave are not.** 33 patterns came from 23 Songsterr
+- **Film and TV themes are well covered; modern scores and synthwave are not.** 32 patterns came from 22 Songsterr
   transcriptions, among them "Halloween", "Escape from New York", "Axel F", "Miami Vice Theme", "Crockett's Theme",
   "Nightcall", the "Stranger Things" theme, "Midnight City", "Blinding Lights", "Suspiria", "The Good, the Bad and the
   Ugly" and "Song of Storms". Nothing was found for Assault on Precinct 13, Drive, Solaris, It Follows, Under the Skin
@@ -536,18 +536,20 @@ there were 78. 69 got one of 45 patterns, and 9 got a reason. The batch is
 - **Many of these transcriptions are General MIDI arrangements**, with tracks named "Utwór 6" or "Stopa 9", or, in
   one "Miami Vice Theme", every track a nylon guitar. The part was chosen by its notes, and each research record names
   the track it came from.
-- **Two transcriptions were made by Songsterr's machine**: "Future Club" and "Paris, Texas". The "Laura Palmer's
+- **Two of the transcriptions patterns came from were made by Songsterr's machine**: "Future Club" and "Paris,
+  Texas". Three more were, and gave nothing a pattern could use: "Brokendate", "Tick of the Clock" and "Silk Road". The "Laura Palmer's
   Theme" transcription names a fan but marks every track "retranscribed", and its pattern says so.
 - **12 patterns are best guesses**, on 14 sounds: the Precinct 13 riff, the Suspiria drone, the two Gunship sounds,
   the two Com Truise leads, Chromatics, the two Cliff Martinez sounds, Disasterpeace, Mica Levi, the two Jóhann
   Jóhannsson sounds and Kitaro.
-- **Nine sounds have no part to write.** Seven are effects: Ben Burtt's droids and blaster, the "Pac-Man Fever" zap,
-  Walter Murch's helicopter, the Das Boot sonar and the Fog foghorn. The Chernobyl hum is a field recording. The
+- **Ten sounds have no part to write.** Eight are effects: Ben Burtt's droids and blaster, the "Pac-Man Fever" zap,
+  Walter Murch's helicopter, the Das Boot sonar, the Fog foghorn and the Inception braam, one hit played once. The Chernobyl hum is a field recording. The
   Close Encounters sound is a sample-and-hold burble, and the one Close Encounters transcription has no tuning, so its
   notes can't be read as pitches.
 - **A sound that arpeggiates a held chord gets the chord.** Three Stranger Things sounds run their own arpeggiator,
   so a played arpeggio would come out as repeated notes. They got the arpeggio's four notes held as one chord, for the
-  patch to play; the four sounds that play the arpeggio as notes got the line.
+  patch to play; the four sounds that play the arpeggio as notes got the line. The Perturbator bass arpeggiates one
+  held note, so it got the roots the "Future Club" bass pulses on, held.
 - **The vocal melody is still never taken.** The Ecstasy of Gold soprano sound got the top of the strings under the
   soprano, as t-129's choir sound did.
 - **A whole odd-metre phrase loops.** Six bars of Halloween's 5/4 piano figure are 30 beats, inside the 8-bar limit.
@@ -780,7 +782,8 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
   unchanged. Its review fixes then created 3 and 4, the octave copies, and updated 8: the four relinked, the three
   whose sounds moved and the renamed hi-hat genre. The sixth (t-162) created 54 and 86, which brought them to 242 and
   372, left the 188 and every riff unchanged, and skipped nothing. The seventh (t-163) created 45 and 70, which brought
-  them to 287 and 442, left the 242 and every riff unchanged, and skipped nothing.
+  them to 287 and 442, left the 242 and every riff unchanged, and skipped nothing. Its review fixes created 1 and 1,
+  the Perturbator bass roots; the two patterns they took out of the file stay in the library, as the rule below says.
 - **An admin's pattern is never written**: one an admin edited, or made any sound's default.
 - **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
   taken out of a batch file stays in the library and on its sounds.
@@ -795,8 +798,8 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
 Over the real data, the same test checks that every sound a batch names is in the catalogue, that each batch looks at
 every sound by its artists exactly once (Kraftwerk and Depeche Mode for t-127; Daft Punk, Jean-Michel Jarre and
 Tangerine Dream for t-128; Brian Eno, Daniel Lanois, Vangelis and Boards of Canada for t-129; 31 funk, soul and R&B
-artists for t-160; 29 synth-pop and post-punk artists for t-161; 30 80s pop and arena artists for t-162; 31 film, TV,
-game and synthwave artists for t-163), that every link resolves in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
+artists for t-160; 29 synth-pop and post-punk artists for t-161; 30 80s pop and arena artists for t-162; 30 film, TV,
+game and synthwave artists, under 31 names, for t-163), that every link resolves in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
 a sound whose own riff plays no chords gets a single line, that the Just Can't Get Enough bass and the Blade Runner End
 Titles theme play the notes both of their leads give, that the Da Funk break figure plays its lead's notes in both
 octaves, as does the Da Funk main riff, that Digital Love's intro plays its lead's notes, that the Flash Light
