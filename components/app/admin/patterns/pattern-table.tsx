@@ -186,7 +186,8 @@ export function PatternTable({ rows, total, page, limit, filters, choices }: Pat
         )}
       </form>
 
-      <PatternBulkBar />
+      {/* A new page or filter is a new set of rows: the bar starts again with none ticked. */}
+      <PatternBulkBar key={patternListPath({ ...filters, page })} />
 
       <p className="text-muted-foreground text-xs">
         {total === 0

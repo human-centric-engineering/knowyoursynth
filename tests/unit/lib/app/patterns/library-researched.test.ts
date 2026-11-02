@@ -406,6 +406,19 @@ describe('syncResearchedPatterns', () => {
     expect(jcge.rightsRisk).toBe('needs_review');
   });
 
+  it('leaves alone a pattern an admin put first while it is disabled, as its notes are the default again once enabled', async () => {
+    await syncResearchedPatterns(lib(), [testBatch()]);
+    const jcge = keyed('researched:depeche-mode/just-cant-get-enough-bass');
+    db.synthSoundPattern.rows.find((l) => l.patternId === jcge.id)!.order = -1;
+    jcge.status = 'disabled';
+    const kept = structuredClone(jcge);
+    const changed = testBatch();
+    changed.patterns[1].name = 'Renamed in the batch';
+    clearWrites();
+    expect(await syncResearchedPatterns(lib(), [changed])).toMatchObject({ edited: 1, updated: 0 });
+    expect(jcge).toEqual(kept);
+  });
+
   it('writes nothing the second time, nor for an empty batch', async () => {
     await syncResearchedPatterns(lib(), [testBatch()]);
     clearWrites();

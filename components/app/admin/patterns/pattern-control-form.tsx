@@ -27,6 +27,9 @@ import { FieldHelp } from '@/components/ui/field-help';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
+const isRisk = (v: string): v is PatternRightsRisk => v in RIGHTS_LABELS;
+const isStatus = (v: string): v is PatternStatus => v in STATUS_LABELS;
+
 const SELECT = 'border-input bg-background h-9 rounded-md border px-3 text-sm';
 
 export interface PatternControlFormProps {
@@ -90,7 +93,7 @@ export function PatternControlForm({ ids, idPrefix, noneHint }: PatternControlFo
           <select
             id={id('rights')}
             value={rightsRisk}
-            onChange={(e) => setRightsRisk(e.target.value as PatternRightsRisk | '')}
+            onChange={(e) => setRightsRisk(isRisk(e.target.value) ? e.target.value : '')}
             className={SELECT}
           >
             <option value="">Leave as it is</option>
@@ -120,7 +123,7 @@ export function PatternControlForm({ ids, idPrefix, noneHint }: PatternControlFo
           <select
             id={id('status')}
             value={status}
-            onChange={(e) => setStatus(e.target.value as PatternStatus | '')}
+            onChange={(e) => setStatus(isStatus(e.target.value) ? e.target.value : '')}
             className={SELECT}
           >
             <option value="">Leave as it is</option>

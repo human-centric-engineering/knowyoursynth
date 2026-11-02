@@ -968,8 +968,9 @@ describe('admin control (t-156)', () => {
     });
 
     it('sets several at once with one reason, each audited, and writes nothing for one already there', async () => {
+      // Already set that way, for the same reason.
       riff(2).rightsRisk = 'cleared';
-      riff(2).rightsReason = 'Earlier';
+      riff(2).rightsReason = 'Legal review, batch 1';
       const ids = [riff(0).id, riff(1).id, riff(2).id];
       const res = await control({ ids, rightsRisk: 'cleared', reason: 'Legal review, batch 1' });
       expect(res.status).toBe(200);
@@ -982,7 +983,6 @@ describe('admin control (t-156)', () => {
         rightsRisk: { from: 'none', to: 'cleared' },
         rightsReason: { from: null, to: 'Legal review, batch 1' },
       });
-      expect(riff(2).rightsReason).toBe('Earlier');
     });
 
     it('disables a blocked pattern, and refuses to enable one', async () => {
@@ -1120,6 +1120,50 @@ describe('admin control (t-156)', () => {
         { path: 'ids', message: `No library pattern has the id ${none}` },
       ]);
       expect(writes()).toBe(0);
+    });
+  });
+
+  describe('a reorder past patterns the sound cannot play', () => {
+    it('rewrites the riff when the default moves behind a disabled pattern and one that cannot be a riff', async () => {
+      // Sound 0: its riff (disabled), X (enabled, two parts: never a riff), then sounds 1's and 2's riffs.
+      const two = PatternSchema.parse(riff(2).pattern);
+      two.parts.push(structuredClone(two.parts[0]));
+      two.chain = [0, 1];
+      const x = 'c' + 'q'.repeat(24);
+      db.libraryPattern.rows.push({
+        ...structuredClone(riff(2)),
+        id: x,
+        key: 'admin:two',
+        pattern: two,
+      });
+      riff(0).status = 'disabled';
+      db.synthSoundPattern.rows.push(
+        { soundId: sound(0).id, patternId: x, order: 1 },
+        { soundId: sound(0).id, patternId: riff(1).id, order: 2 },
+        { soundId: sound(0).id, patternId: riff(2).id, order: 3 }
+      );
+      const put = (ids: unknown[]) =>
+        putSoundPatterns(
+          request('PUT', `admin/synths/model-d/sounds/${slug(0)}/patterns`, { patternIds: ids }),
+          ctx({ id: 'model-d', slug: slug(0) })
+        );
+      // The first enabled pattern, X, is the same either way: only what it plays decides the riff.
+      const res = await put([riff(0).id, x, riff(2).id, riff(1).id]);
+      expect(res.status).toBe(200);
+      expect((sound(0).phrase as Phrase).steps).toEqual(notesOf(riff(2)));
+    });
+  });
+
+  describe('a rights risk set to the value it has', () => {
+    it('records the reason, so the risk stops following the fidelity', async () => {
+      const id = String(riff(0).id);
+      const res = await control({
+        ids: [id],
+        rightsRisk: 'none',
+        reason: 'Checked: nothing taken',
+      });
+      expect((await json(res)).data).toMatchObject({ changed: [id] });
+      expect(riff(0)).toMatchObject({ rightsRisk: 'none', rightsReason: 'Checked: nothing taken' });
     });
   });
 

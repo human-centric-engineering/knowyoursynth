@@ -35,6 +35,7 @@ import { sameValue } from '@/lib/app/catalogue/seed';
 import { lockSynth } from '@/lib/app/catalogue/edit';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { PATTERN_ROLES } from '@/lib/app/patterns/library-facts';
+import { ACKNOWLEDGE_PATH } from '@/lib/app/patterns/library-labels';
 import { LibraryPatternIdSchema } from '@/lib/app/patterns/library-read';
 import {
   DEFAULT_FIRST,
@@ -337,16 +338,22 @@ type AdminRow = LibraryPattern & {
   }[];
 };
 
-/** The names of the people rows were made by, in one read. */
-async function madeByNames(rows: LibraryPattern[]): Promise<Map<string, string>> {
-  const ids = [...new Set(rows.flatMap((r) => r.madeByUserId ?? []))];
-  if (!ids.length) return new Map();
+/** What a person no longer here is shown as. */
+const GONE = 'A deleted account';
+
+/** Each person's name by id, in one read. */
+async function namesOf(ids: (string | null)[]): Promise<Map<string, string>> {
+  const unique = [...new Set(ids.flatMap((id) => id ?? []))];
+  if (!unique.length) return new Map();
   const users = await prisma.user.findMany({
-    where: { id: { in: ids } },
+    where: { id: { in: unique } },
     select: { id: true, name: true },
   });
   return new Map(users.map((u) => [u.id, u.name]));
 }
+
+/** The names of the people rows were made by, in one read. */
+const madeByNames = (rows: LibraryPattern[]) => namesOf(rows.map((r) => r.madeByUserId));
 
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   v !== null && typeof v === 'object' && !Array.isArray(v);
@@ -372,7 +379,7 @@ function adminView(row: AdminRow, names: Map<string, string>): AdminLibraryRow {
     })),
     madeBy: row.madeBy,
     madeByUser: row.madeByUserId
-      ? { id: row.madeByUserId, name: names.get(row.madeByUserId) ?? 'A deleted account' }
+      ? { id: row.madeByUserId, name: names.get(row.madeByUserId) ?? GONE }
       : null,
     madeAt: row.madeAt?.toISOString() ?? null,
     research: isRecord(row.research) ? row.research : null,
@@ -607,17 +614,11 @@ export async function listLibraryPatternComments(id: string): Promise<PatternCom
 async function withAuthors(
   rows: { id: string; body: string; authorId: string | null; createdAt: Date }[]
 ): Promise<PatternComment[]> {
-  const ids = [...new Set(rows.flatMap((r) => r.authorId ?? []))];
-  const users = ids.length
-    ? await prisma.user.findMany({ where: { id: { in: ids } }, select: { id: true, name: true } })
-    : [];
-  const names = new Map(users.map((u) => [u.id, u.name]));
+  const names = await namesOf(rows.map((r) => r.authorId));
   return rows.map((r) => ({
     id: r.id,
     body: r.body,
-    author: r.authorId
-      ? { id: r.authorId, name: names.get(r.authorId) ?? 'A deleted account' }
-      : null,
+    author: r.authorId ? { id: r.authorId, name: names.get(r.authorId) ?? GONE } : null,
     createdAt: r.createdAt.toISOString(),
   }));
 }
@@ -766,14 +767,17 @@ export async function setSoundPatterns(
 
     if (sameValue(patternIds, before))
       return { before, after: before, sound: null, name: sound.name };
-    // The default is the first enabled pattern (`headOf`): disabled ones ahead of it are passed over, as they were.
-    const statusOf = new Map(found.map((p) => [p.id, p.status]));
-    const firstEnabled = (ids: string[]) => ids.find((id) => statusOf.get(id) === 'enabled');
+    // The admin's choice is the first enabled pattern: disabled ones ahead of it are passed over, as they were, and a
+    // new choice must be able to be a riff. The riff then follows the default as `headOf` reads it.
+    const byId = new Map(found.map((p) => [p.id, p]));
+    const places = (ids: string[]) =>
+      ids.flatMap((id) => byId.get(id) ?? []).map((p) => ({ patternId: p.id, pattern: p }));
+    const firstEnabled = (ids: string[]) => ids.find((id) => byId.get(id)?.status === 'enabled');
     const chosen = firstEnabled(patternIds);
-    const newDefault = chosen !== firstEnabled(before);
-    const head = found.find((p) => p.id === chosen);
-    if (newDefault && head)
+    const head = chosen === undefined ? undefined : byId.get(chosen);
+    if (head && chosen !== firstEnabled(before))
       checkDefault(PatternSchema.parse(head.pattern), `patternIds.${patternIds.indexOf(head.id)}`);
+    const newDefault = headOf(places(patternIds))?.patternId !== headOf(places(before))?.patternId;
     const orderOf = new Map(sound.patterns.map((p) => [p.patternId, p.order]));
     for (const [order, patternId] of patternIds.entries()) {
       if (!orderOf.has(patternId))
@@ -840,9 +844,6 @@ export interface SoundLeftWithout {
   name: string;
 }
 
-/** The path a control's refusal names when a sound would be left with no enabled pattern: answered by `acknowledge`. */
-export const ACKNOWLEDGE_PATH = 'acknowledge';
-
 /**
  * Set rights risk and status on each pattern named, and hand each sound whose default that changes to its new one,
  * rewriting its riff (`syncSoundPhrases`). Refuses the whole change when a pattern is not there, when it would enable
@@ -883,7 +884,13 @@ export async function setLibraryPatternControl(input: PatternControl): Promise<{
       };
       const after = {
         rightsRisk,
-        rightsReason: rightsRisk !== row.rightsRisk ? input.reason : row.rightsReason,
+        // An admin who sets a rights risk has decided it, even where it is the value it had: the reason records that,
+        // and stops it following the fidelity.
+        rightsReason:
+          (input.rightsRisk !== undefined && rightsRisk === input.rightsRisk) ||
+          rightsRisk !== row.rightsRisk
+            ? input.reason
+            : row.rightsReason,
         status,
         statusReason: status !== row.status ? input.reason : row.statusReason,
       };

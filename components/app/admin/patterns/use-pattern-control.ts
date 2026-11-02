@@ -15,6 +15,7 @@ import type { PatternRightsRisk, PatternStatus } from '@prisma/client';
 
 import { refusalOf, type Problem, type Refusal } from '@/components/app/admin/synths/problems';
 import { apiClient } from '@/lib/api/client';
+import { ACKNOWLEDGE_PATH } from '@/lib/app/patterns/library-labels';
 
 /** What a control sets: a rights risk, a status or both, with one reason. */
 export interface ControlChange {
@@ -48,9 +49,6 @@ export interface PatternControl {
   cancel: () => void;
 }
 
-/** The path the server names when a disable would leave a patch with nothing to play (`ACKNOWLEDGE_PATH`). */
-const ACKNOWLEDGE = 'acknowledge';
-
 export function usePatternControl(onDone: () => void): PatternControl {
   const [busy, setBusy] = useState(false);
   const [refusal, setRefusal] = useState<Refusal | null>(null);
@@ -70,7 +68,7 @@ export function usePatternControl(onDone: () => void): PatternControl {
       onDone();
     } catch (err) {
       const refused = refusalOf(err, 'The change could not be saved. Try again.');
-      const unplayable = refused.problems.filter((p) => p.path === ACKNOWLEDGE);
+      const unplayable = refused.problems.filter((p) => p.path === ACKNOWLEDGE_PATH);
       if (!acknowledge && unplayable.length) setWarning({ ids, change, problems: unplayable });
       else setRefusal(refused);
     } finally {
