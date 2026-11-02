@@ -1,5 +1,5 @@
 /**
- * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161): the research batches under the seed's `data/patterns/`, and
+ * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162): the research batches under the seed's `data/patterns/`, and
  * the seed that puts them on their sounds.
  *
  * First the real batches, against the real catalogue and databank data: every pattern parses and plays, every sound a
@@ -144,6 +144,42 @@ describe('the research batches', () => {
         'Tubeway Army',
       ],
       73,
+    ],
+    [
+      't-162',
+      [
+        'Duran Duran',
+        'Talking Heads',
+        'Eurythmics',
+        'Van Halen',
+        'Pet Shop Boys',
+        'The Cars',
+        'a-ha',
+        'Howard Jones',
+        'Phil Collins',
+        'Tears for Fears',
+        'Europe',
+        'Cyndi Lauper',
+        'Journey',
+        'Thomas Dolby',
+        'Alphaville',
+        'Billie Eilish',
+        'Dead or Alive',
+        'Frankie Goes to Hollywood',
+        'Genesis',
+        'Greg Hawkes',
+        'Haddaway',
+        'New wave',
+        'Roxy Music',
+        'Simple Minds',
+        'Spandau Ballet',
+        'Split Enz',
+        'Styx',
+        'Toto',
+        'Wham!',
+        'Yello',
+      ],
+      83,
     ],
   ];
 
@@ -330,6 +366,34 @@ describe('the research batches', () => {
     );
     expect(pitches('researched:yazoo/only-you-arpeggio-high')).toEqual(
       shifted('researched:yazoo/only-you-arpeggio', 12)
+    );
+  });
+
+  it('plays the notes its lead gives: the riff of “Take On Me”', () => {
+    // F♯ F♯ D B B E E E G♯ G♯ A B, A A A E D F♯ F♯ F♯ E E F♯ E: Songsterr “Keyboard”, bars 13–16.
+    expect(pitches('researched:a-ha/take-on-me-riff')).toEqual([
+      78, 78, 74, 71, 71, 76, 76, 76, 80, 80, 81, 83, 81, 81, 81, 76, 74, 78, 78, 78, 76, 76, 78,
+      76,
+    ]);
+  });
+
+  it('plays the notes its lead gives: the riff of “Sweet Dreams (Are Made of This)”', () => {
+    // C C C C E♭ E♭ C C, A♭ A♭ A♭ C G G G C: Songsterr “Bass Synth (Right)”, bars 1–2.
+    expect(pitches('researched:eurythmics/sweet-dreams-riff')).toEqual([
+      36, 36, 48, 60, 51, 63, 48, 60, 44, 44, 56, 60, 43, 43, 55, 60,
+    ]);
+  });
+
+  it('plays t-162’s octave copies an octave from the part they copy', () => {
+    const shifted = (key: string, by: number) => pitches(key).map((n) => n + by);
+    expect(pitches('researched:a-ha/take-on-me-riff-low')).toEqual(
+      shifted('researched:a-ha/take-on-me-riff', -12)
+    );
+    expect(pitches('researched:eurythmics/sweet-dreams-riff-up')).toEqual(
+      shifted('researched:eurythmics/sweet-dreams-riff', 12)
+    );
+    expect(pitches('researched:pet-shop-boys/west-end-girls-bass-low')).toEqual(
+      shifted('researched:pet-shop-boys/west-end-girls-bass', -12)
     );
   });
 
