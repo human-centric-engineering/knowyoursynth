@@ -428,7 +428,7 @@ It used the same method and readers, and found:
 
 **The fourth batch (t-160): funk, soul and R&B.** The first batch under the 2026-11-02 ruling, and the first not grouped
 by artist: every sound by 31 artists the gap audit found, from Bernie Worrell (19 sounds) and Herbie Hancock (11) to one
-each for Anita Ward or Whitney Houston. The task counted about 81 sounds; there were 92 (G-funk has 6, the 80s ballads
+each by Anita Ward and Whitney Houston. The task counted about 81 sounds; there were 92 (G-funk has 6, the 80s ballads
 5). 88 got one of 59 patterns, and only 4 got a reason. The batch is
 `prisma/seeds/app-knowyoursynth/data/patterns/t160-funk-soul-and-rnb.json`. It found:
 
@@ -438,13 +438,13 @@ each for Anita Ward or Whitney Houston. The task counted about 81 sounds; there 
   seven G-funk sounds. One more, the "Sexual Healing" clap, came from a BitMIDI file's drum channel: the Songsterr
   transcription gives the drum machine to toms.
 - **Many leads have the work but not the synth.** P-Funk songs are transcribed for guitar, bass and horns, and Worrell's
-  synth is rarely a track. Where a lead sound named such a work ("Dr. Funkenstein", "Give Up the Funk", "Bop Gun",
+  synth is rarely a track. Where a sound named such a work ("Dr. Funkenstein", "Give Up the Funk", "Bop Gun",
   "Reach for It", "Kalimba Story"), it got the horn or guitar line instead, and the notes say so. Several bass and
   keyboard parts were played on synths on the record and are transcribed for bass guitar or guitar.
 - **Two transcriptions were made by Songsterr's machine**, not a fan ("(Not Just) Knee Deep" and "One Nation Under a
   Groove"). They are the only free notes for those works, so they were used, and the research record names them as
   machine-made: a weaker starting point than a fan's.
-- **18 patterns are best guesses**, on 21 sounds: four Parliament leads whose works have no transcription, the Hancock
+- **18 patterns are best guesses**, on 21 sounds: four Parliament leads whose works have no transcription with a synth in it, the Hancock
   Rhodes sounds (the Chameleon comping, Mwandishi, "Butterfly", "Hang Up Your Hang Ups"), the Ring My Bell syndrum, the
   80s-ballad sounds, Donny Hathaway, D'Angelo, Hall & Oates, J Dilla, Jimmy Smith and George Duke's jazz-funk Rhodes.
   Most are keyboard sounds whose part is comping, which free transcriptions skip. A best guess on a chord sound is
