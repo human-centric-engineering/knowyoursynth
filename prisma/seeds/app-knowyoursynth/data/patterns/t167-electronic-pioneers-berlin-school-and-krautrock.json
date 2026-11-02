@@ -506,13 +506,13 @@
             "url": "https://www.mutopiaproject.org/ftp/BachJS/BWV779/bach-invention-08/bach-invention-08.mid"
           }
         ],
-        "notes": "From the edition’s upper part, bars 1–4, as written. The score is a tier-1 source for Bach’s notes, but not for Carlos’s part: the record’s octaves, ornaments, tempo and registration are hers, and only a listen can say how far they differ. So it is a starting point like any other lead here, and the pattern is _In the style of_. The left hand answers with the same four bars an octave down, one bar later (below). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the edition’s upper part, bars 1–4, as written. The score is a tier-1 source for Bach’s notes, but not for Carlos’s part: the record’s octaves, ornaments, tempo and registration are hers, and only a listen can say how far they differ. So it is a starting point like any other lead here, and the pattern is _In the style of_. The left hand answers with the same four bars an octave down, one bar later (below, two octaves down for the split sound). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
     {
       "key": "researched:wendy-carlos/invention-in-f-answer",
-      "name": "Invention in F: the answer, an octave down",
+      "name": "Invention in F: the answer, two octaves down",
       "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
@@ -546,7 +546,240 @@
                 "on": true,
                 "notes": [
                   {
+                    "note": 41,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
                     "note": 53,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 46,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 46,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
                     "gate": 2.0
                   }
                 ]
@@ -560,98 +793,6 @@
                 "notes": [
                   {
                     "note": 57,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 53,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 60,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 53,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 65,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 64,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 62,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 60,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 62,
                     "gate": 1.0
                   }
                 ]
@@ -678,7 +819,25 @@
                 "on": true,
                 "notes": [
                   {
+                    "note": 60,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
                     "note": 57,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
                     "gate": 1.0
                   }
                 ]
@@ -696,7 +855,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 57,
+                    "note": 60,
                     "gate": 1.0
                   }
                 ]
@@ -705,193 +864,34 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 55,
+                    "note": 57,
                     "gate": 1.0
                   }
                 ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 53,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 57,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
               },
               {
                 "on": true,
                 "notes": [
                   {
                     "note": 60,
-                    "gate": 2.0
+                    "gate": 1.0
                   }
                 ]
-              },
-              {
-                "on": true,
-                "notes": []
               },
               {
                 "on": true,
                 "notes": [
                   {
-                    "note": 57,
-                    "gate": 2.0
+                    "note": 58,
+                    "gate": 1.0
                   }
                 ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 65,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
               },
               {
                 "on": true,
                 "notes": [
                   {
                     "note": 60,
-                    "gate": 2.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": []
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 69,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 72,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 70,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 72,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 69,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 72,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 70,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 72,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 69,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 72,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 70,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 72,
                     "gate": 1.0
                   }
                 ]
@@ -904,7 +904,7 @@
       "sounds": ["solar-42n/solar-switched-on-bach"],
       "research": {
         "work": "Wendy Carlos, “Two-Part Invention in F Major” (J. S. Bach, BWV 779), Switched-On Bach, 1968",
-        "part": "The left hand’s answer, bars 2–5: the subject an octave below the right hand.",
+        "part": "The left hand’s answer, bars 2–5: the subject an octave below the right hand, here two octaves below.",
         "originalKey": "F major",
         "originalBpm": null,
         "leads": [
@@ -914,7 +914,7 @@
             "url": "https://www.mutopiaproject.org/ftp/BachJS/BWV779/bach-invention-08/bach-invention-08.mid"
           }
         ],
-        "notes": "From the edition’s lower part, bars 2–5, as written: it is the right hand’s bars 1–4 an octave down, so this is that pattern 12 semitones lower. The split sound plays its bass on the left plates; it gets this as its own pattern, not merged with the right hand, because the rights rule takes one part of a work at a time. The score is a tier-1 source for Bach’s notes, but not for Carlos’s part: the record’s octaves, ornaments, tempo and registration are hers, and only a listen can say how far they differ. So it is a starting point like any other lead here, and the pattern is _In the style of_. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the edition’s lower part, bars 2–5, as written: it is the right hand’s bars 1–4 an octave down. This pattern is that one 24 semitones lower, so all of it falls below the Solar’s split at F♯4 and plays on the left plates, where the split sound plays its bass, as its own riff’s bass does; it gets this as its own pattern, not merged with the right hand, because the rights rule takes one part of a work at a time. The score is a tier-1 source for Bach’s notes, but not for Carlos’s part: the record’s octaves, ornaments, tempo and registration are hers, and only a listen can say how far they differ. So it is a starting point like any other lead here, and the pattern is _In the style of_. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -2032,7 +2032,7 @@
       "sounds": ["system-15/s15-brass"],
       "research": {
         "work": "Wendy Carlos, “Chorale Prelude ‘Wachet auf, ruft uns die Stimme’” (J. S. Bach, BWV 645), Switched-On Bach, 1968",
-        "part": "The chorale tune’s first line, in long notes under the counter-melody: E♭ G B♭, four B♭s, C and B♭, and the rest before the next line.",
+        "part": "The chorale tune’s first line, in long notes under the counter-melody: E♭ and G, four B♭s, C and B♭, and the rest before the next line.",
         "originalKey": "E♭ major",
         "originalBpm": null,
         "leads": [
@@ -8150,7 +8150,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 72,
+                    "note": 71,
                     "gate": 1.0
                   }
                 ]
@@ -8168,16 +8168,7 @@
                 "on": true,
                 "notes": [
                   {
-                    "note": 72,
-                    "gate": 1.0
-                  }
-                ]
-              },
-              {
-                "on": true,
-                "notes": [
-                  {
-                    "note": 69,
+                    "note": 71,
                     "gate": 1.0
                   }
                 ]
@@ -8196,6 +8187,15 @@
                 "notes": [
                   {
                     "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
                     "gate": 1.0
                   }
                 ]

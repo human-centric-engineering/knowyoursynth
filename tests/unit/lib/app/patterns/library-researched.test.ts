@@ -738,10 +738,11 @@ describe('the research batches', () => {
     ]);
   });
 
-  it('plays t-167’s octave copy an octave from the part it copies', () => {
-    // The invention’s left hand is the subject an octave down, a bar later.
+  it('plays t-167’s octave copy two octaves from the part it copies', () => {
+    // The invention’s left hand is the subject an octave down, a bar later; the copy goes a second octave down so
+    // all of it sits below the Solar’s split at F♯4, on the left plates its split sound plays the bass from.
     expect(pitches('researched:wendy-carlos/invention-in-f-answer')).toEqual(
-      pitches('researched:wendy-carlos/invention-in-f-subject').map((n) => n - 12)
+      pitches('researched:wendy-carlos/invention-in-f-subject').map((n) => n - 24)
     );
   });
 

@@ -701,8 +701,8 @@ and the one "Cluster & Eno" sound was in no batch. 55 got one of 43 patterns, an
 `prisma/seeds/app-knowyoursynth/data/patterns/t167-electronic-pioneers-berlin-school-and-krautrock.json`. It found:
 
 - **The classical works have free scores.** The Mutopia Project publishes typeset editions of public-domain scores
-  with MIDI files, which the scratch MIDI reader reads. Seven patterns came from them: three Bach two-part inventions
-  (F, D minor and B♭) and the "Wachet auf" chorale for the Carlos sounds; Debussy's "Arabesque No. 1" and "Clair de
+  with MIDI files, which the scratch MIDI reader reads. Eight patterns came from them: three Bach two-part inventions
+  (F, both hands, D minor and B♭) and the "Wachet auf" chorale for the Carlos sounds; Debussy's "Arabesque No. 1" and "Clair de
   lune", and Holst's own hymn setting of the Jupiter tune ("Thaxted"), for the Tomita ones. Fan MIDI files on BitMIDI
   gave three more: Purcell's funeral march (Carlos's Clockwork Orange title music), the "Mars" ostinato and "The Swan"
   (Clara Rockmore's cello line).
@@ -713,7 +713,9 @@ and the one "Cluster & Eno" sound was in no batch. 55 got one of 43 patterns, an
   other, and every pattern from one is _In the style of_. The rights rule is unchanged: the recording and the arrangement
   belong to their rights holders even when the composition is free, so one part and 8 bars still hold. The Invention
   in F's left hand went on the two-part Switched-On Bach sound as its own pattern, not merged with the right hand.
-  It is the subject an octave down, so it is checked as an octave copy.
+  It is the subject an octave down, and the pattern takes it down a second octave, so all of it falls below the
+  Solar's split at F♯4 and plays on the left plates; it is checked as a two-octave copy. The subject's own lowest F
+  is F4, below the split, so on the Solar those notes play on the bass side.
 - **The rest of the ground is barely transcribed.** Songsterr had five of the works the sounds name: the 1960s "Doctor
   Who" theme (its gallop and its melody), "Ghost Rider" (the riff, and its root for the SynTrx sound), "Hallogallo"
   (the low E pulse), "Plantasia" (machine-made) and "E2-E4" (marked "regenerated", with the chords as stabs and no
@@ -730,7 +732,7 @@ and the one "Cluster & Eno" sound was in no batch. 55 got one of 43 patterns, an
   three Subotnick sounds, Charles Cohen's Easel and the two Reich phasing sounds. The
   humpback whales are a recording, and the "O Superman" "ah" is the vocal.
 - **Patches that make their own pattern from a held key got held notes** again: the Schulze drones, the Cluster &
-  Eno overtone steps, the Silver Apples drone, the Ghost Rider pulse, and two chords for the Riley arpeggio and
+  Eno overtone steps, the Silver Apples drone, the SynTrx Suicide pulse, and two chords for the Riley arpeggio and
   tremolo sounds. The Curved Air sequence on the Solar got only the two keys its riff gives it. The Silver Apples
   arpeggiator sound got a single line, because the batch test holds a sound whose riff has no chords to one note at a
   time.
