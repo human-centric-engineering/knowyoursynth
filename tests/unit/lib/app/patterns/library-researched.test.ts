@@ -1,5 +1,5 @@
 /**
- * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162, t-163, t-164, t-165, t-166, t-167, t-168): the research batches under the seed's `data/patterns/`, and
+ * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162, t-163, t-164, t-165, t-166, t-167, t-168, t-169): the research batches under the seed's `data/patterns/`, and
  * the seed that puts them on their sounds.
  *
  * First the real batches, against the real catalogue and databank data: every pattern parses and plays, every sound a
@@ -567,7 +567,9 @@ describe('the research batches', () => {
         // A pattern with no lead is a best guess (owner ruling, 2026-11-02), its record says so, and only it does.
         if (p.research.leads.length) expect(p.research.notes, p.key).not.toMatch(/best guess/);
         else {
-          expect(b.researchedAt >= '2026-11-02', p.key).toBe(true);
+          // Written after the ruling: in a batch researched since, or added later by a task that says when (t-169).
+          const added = /Written by t-\d+ on (\d{4}-\d{2}-\d{2})\./.exec(p.research.notes)?.[1];
+          expect((added ?? b.researchedAt) >= '2026-11-02', p.key).toBe(true);
           expect(p.research.notes, p.key).toContain(ruling);
         }
       }
