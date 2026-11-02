@@ -10,7 +10,7 @@ This page is the design, written before the build (t-121). It covers:
 
 - the roles a pattern plays and the facts it carries for matching
 - what "Inspired by" links to, and the fidelity levels
-- the research method the batches follow (t-127, t-128, t-129, t-160, t-161, t-162, t-163, t-164)
+- the research method the batches follow (t-127, t-128, t-129, t-160, t-161, t-162, t-163, t-164, t-165)
 - the rights rule
 - how admins see and control each pattern's origin, rights risk and status
 - how the current riffs are reviewed
@@ -612,6 +612,46 @@ about 80; there were 83. 77 got one of 64 patterns, and 6 got a reason. The batc
 - **Octaves went twice** for the "On the Run" sequence, the "Shine On" Solina chords and the "Won't Get Fooled Again"
   organ's top line.
 
+**The ninth batch (t-165): disco, acid, house, techno and industrial.** Every sound by 33 artists (34 names: Mr. Oizo is
+also spelled without the point), from Giorgio Moroder (8 sounds), "Acid house" (9) and "Electro" (9) to one each by LFO,
+Plastikman and Robin S. The task counted about 60; there were 77. 76 got one of 50 patterns, and one got a reason. The
+batch is `prisma/seeds/app-knowyoursynth/data/patterns/t165-disco-acid-house-techno-and-industrial.json`. It found:
+
+- **Club tracks are the worst-covered ground yet.** 24 patterns, on 33 sounds, came from 12 Songsterr transcriptions
+  and one BitMIDI file: "I Feel Love", "Chase", "Popcorn", "Genesis", "Numbers", "Pacific 707", "Der Mussolini",
+  "Headhunter", "Assimilate", "Show Me Love", "Closer", "Head Like a Hole" and, from BitMIDI, "Strings of Life". A
+  BitMIDI "I Feel Love" agrees with the Songsterr bass's shape (root, root, fifth, seventh) in another key, and is a
+  second lead on that pattern. Nothing was found for any of the acid records the sounds name ("Acid Tracks", "Higher
+  State of Consciousness", "Acperience 1", "Land of Confusion", "Acid Phase", "Everybody Needs a 303", Ten Ragas to a
+  Disco Beat), nor for "Planet Rock", "Mystery of Love", "Can You Feel It", "Just Want Another Chance", "The Bells",
+  "Mentasm", "LFO", "Flat Beat", "Spastik", "You Don't Know Me" or "Bubble Metropolis".
+- **26 patterns are best guesses**, on 43 sounds, the most of any batch. Most are 303 lines, written
+  with the slides and accents the sequencer carries. Sounds naming one record share its guess: six "Acid Tracks" sounds
+  (the five Phuture ones and the acid squelch named for it), the three Josh Wink and two Hardfloor sounds, and both
+  Mentasm hoovers (Joey Beltram's and Second Phase's, the same record). The six "Acid house" basses share one line, and
+  the two acid leads take it two octaves up.
+- **Three transcriptions were made by Songsterr's machine**: "Pacific 707", "Der Mussolini" and "Show Me Love". The
+  "Chase" transcription names a fan but marks every track "retranscribed"; a machine-made one agrees with its bass.
+- **Electro sounds went to "Numbers"** where they could. Its transcription's drum track gave the two zap kicks their
+  kick (each at its sound's pitch) and the 808 rimshot the snare; its bar-36 bass, which t-127 used, went on the three
+  sync basses. "Planet Rock" has no free lead, so its five sounds (bass, kick, snare and two cowbells) and the zap
+  percussion are best guesses.
+- **Patches that sequence a held note got held notes.** Four Moroder sounds make the octave-bouncing "I Feel Love" bass
+  themselves from one key (a sequencer or an arpeggiator in the patch), so they got the chord change's roots, a bar
+  each; the System 55 one two octaves up, where its sequence is tuned. The "Chase" arpeggio got the clavinet's chord of
+  each bar, held. As in t-163, a played sequence would come out doubled.
+- **Drum parts went on percussion sounds at their own pitch**: the "Closer" snare on the industrial clang and the NIN
+  metal hit, the "Assimilate" snare on the Skinny Puppy hit, and the "Numbers" kick and snare as above.
+- **One sound has no part to write**: the rising siren named for "French Kiss" is an effect the patch's LFO makes.
+- **A slide is not a chord.** The engine holds a slid note `SLIDE_OVERLAP` (0.05 of a step, 0.0125 of a beat at
+  1/16) into the next one so a mono synth glides. The batch test's mono check read that overlap as two notes at once,
+  so it now leaves it out, for a slid note only. A slide's own gate is a half step; the engine stretches it, so a swung
+  slide overlaps by no more.
+- **One artist has two spellings.** "Mr Oizo" and "Mr. Oizo" are the same artist, and the test's roster lists both;
+  the rename is housekeeping's, as t-163's duo and t-164's band were.
+- **Octaves went twice** for the "Headhunter" bass (for the Pro-One EBM bass) and the "Strings of Life" stabs (the
+  Neutron's top two notes, an octave up).
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on
@@ -835,7 +875,8 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
   the Perturbator bass roots; the two patterns they took out of the file stay in the library, as the rule below says.
   The eighth (t-164) created 64 and 77, which brought them to 352 and 520, left the 288 and every riff unchanged, and
   skipped nothing. Its review fixes updated 7: the fuller Itchycoo Park chords, the two Wakeman links and four
-  research notes.
+  research notes. The ninth (t-165) created 50 and 76, which brought them to 402 and 596, left the 352 and every riff
+  unchanged, and skipped nothing.
 - **An admin's pattern is never written**: one an admin edited, or made any sound's default.
 - **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
   taken out of a batch file stays in the library and on its sounds.
@@ -851,13 +892,15 @@ Over the real data, the same test checks that every sound a batch names is in th
 every sound by its artists exactly once (Kraftwerk and Depeche Mode for t-127; Daft Punk, Jean-Michel Jarre and
 Tangerine Dream for t-128; Brian Eno, Daniel Lanois, Vangelis and Boards of Canada for t-129; 31 funk, soul and R&B
 artists for t-160; 29 synth-pop and post-punk artists for t-161; 30 80s pop and arena artists for t-162; 30 film, TV,
-game and synthwave artists, under 31 names, for t-163; 41 prog, psychedelic and rock artists, under 42 names, for t-164), that every link resolves in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
+game and synthwave artists, under 31 names, for t-163; 41 prog, psychedelic and rock artists, under 42 names, for t-164; 33 disco, acid, house, techno and industrial
+artists, under 34 names, for t-165), that every link resolves in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
 a sound whose own riff plays no chords gets a single line, that the Just Can't Get Enough bass and the Blade Runner End
 Titles theme play the notes both of their leads give, that the Da Funk break figure plays its lead's notes in both
 octaves, as does the Da Funk main riff, that Digital Love's intro plays its lead's notes, that the Flash Light
 bass and the Superstition clavinet (in both octaves) play theirs, that the Blue Monday bass, the Are 'Friends'
 Electric? riff, the Take On Me riff, the Sweet Dreams riff, the Axel F theme, the Stranger Things arpeggio, the On the
-Run sequence and the Tom Sawyer growl play theirs, and that t-161's, t-162's, t-163's and t-164's octave copies sit an octave from the part they copy. A pattern with no lead must say it is a best guess. A sound can be on more
+Run sequence, the Tom Sawyer growl, the I Feel Love bass and the Popcorn theme play theirs, and that t-161's, t-162's,
+t-163's, t-164's and t-165's octave copies sit one or two octaves from the part they copy, as each copy's check says. A pattern with no lead must say it is a best guess. A sound can be on more
 than one pattern of a batch, but a sound with a pattern never also has a reason.
 
 The catalogue unit's hash leaves the `patterns/` folder out, as it does `bank/`, so a batch edit re-runs only this

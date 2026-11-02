@@ -1,5 +1,5 @@
 /**
- * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162, t-163, t-164): the research batches under the seed's `data/patterns/`, and
+ * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162, t-163, t-164, t-165): the research batches under the seed's `data/patterns/`, and
  * the seed that puts them on their sounds.
  *
  * First the real batches, against the real catalogue and databank data: every pattern parses and plays, every sound a
@@ -14,8 +14,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { PresetSchema } from '@/lib/app/synths/validate';
 import { SYNTH_DEFS } from '@/lib/app/synths/defs';
-import { compileLoop, seededRng } from '@/lib/app/sequencer/compile';
-import { MAX_STEPS, PatternSchema, type Pattern } from '@/lib/app/sequencer/pattern';
+import { compileLoop, seededRng, SLIDE_OVERLAP } from '@/lib/app/sequencer/compile';
+import { MAX_STEPS, PatternSchema, stepsPerBeat, type Pattern } from '@/lib/app/sequencer/pattern';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
 import { loadPatternData } from '@/prisma/seeds/app-knowyoursynth/pattern-data';
@@ -53,14 +53,21 @@ const sounds = new Map<string, ReturnType<typeof PresetSchema.parse>>(
 /** The beats a pattern's chain plays through once. */
 const chainBeats = (p: Pattern) => p.chain.length * firstLoop(p).beats;
 
-/** The most notes sounding at once in a pattern: a note held over the next one counts, as it does on a synth’s voices. */
+/**
+ * The most notes sounding at once in a pattern: a note held over the next one counts, as it does on a synth’s voices.
+ * A slide's overlap does not: it is how a mono synth glides into the next note, not a second voice. A slid note is
+ * one that ends exactly SLIDE_OVERLAP steps past another note's start; only that note is forgiven, and only that much.
+ */
 const mostSounding = (p: Pattern) => {
   const { notes } = firstLoop(p);
+  const overlap = SLIDE_OVERLAP / stepsPerBeat(p);
+  const slid = (end: number) => notes.some(([at]) => Math.abs(at + overlap - end) < 1e-9);
+  const ends = notes.map(([beat, , len]) => (slid(beat + len) ? beat + len - overlap : beat + len));
   return notes.reduce(
     (most, [at]) =>
       Math.max(
         most,
-        notes.filter(([beat, , len]) => beat === at || (beat < at && at < beat + len - 1e-9)).length
+        notes.filter(([beat], i) => beat === at || (beat < at && at < ends[i] - 1e-9)).length
       ),
     0
   );
@@ -280,6 +287,47 @@ describe('the research batches', () => {
         'U2',
       ],
       83,
+    ],
+    [
+      't-165',
+      [
+        'Giorgio Moroder',
+        'Nine Inch Nails',
+        'Phuture',
+        'Acid house',
+        'Electro',
+        'Josh Wink',
+        'Afrika Bambaataa',
+        'Derrick May',
+        'Hardfloor',
+        'Hot Butter',
+        'Justice',
+        'Kevin Saunderson',
+        'Mr. Fingers',
+        'Skinny Puppy',
+        '808 State',
+        'Armand Van Helden',
+        'Armando',
+        'Charanjit Singh',
+        'DAF',
+        'Drexciya',
+        'Emmanuel Top',
+        'Fatboy Slim',
+        'Front 242',
+        'Front 242 / Nitzer Ebb',
+        'Jeff Mills',
+        'Joey Beltram',
+        'LFO',
+        'Larry Heard',
+        'Lil Louis',
+        // One artist under two spellings; the rename is housekeeping's, so both are looked at here.
+        'Mr Oizo',
+        'Mr. Oizo',
+        'Plastikman',
+        'Robin S',
+        'Second Phase',
+      ],
+      77,
     ],
   ];
 
@@ -542,6 +590,33 @@ describe('the research batches', () => {
     );
     expect(pitches('researched:the-who/wont-get-fooled-again-organ-top-low')).toEqual(
       shifted('researched:the-who/wont-get-fooled-again-organ-top', -12)
+    );
+  });
+
+  it('plays the notes its leads give: the bass of “I Feel Love”', () => {
+    // Root, root, fifth, seventh on C, E♭, F and G: Songsterr “Synth Bass 1”, bars 41–44.
+    const bar = (root: number) => [root, root, root + 7, root + 10];
+    expect(pitches('researched:giorgio-moroder/i-feel-love-bass')).toEqual(
+      [36, 39, 41, 43].flatMap((root) => [...bar(root), ...bar(root)])
+    );
+  });
+
+  it('plays the notes its lead gives: the theme of “Popcorn”', () => {
+    // B A B F♯ D F♯ B, twice: Songsterr “Track 1”, bars 1–2.
+    const once = [71, 69, 71, 66, 62, 66, 59];
+    expect(pitches('researched:hot-butter/popcorn-theme').slice(0, 14)).toEqual([...once, ...once]);
+  });
+
+  it('plays t-165’s octave copies one or two octaves from the part they copy', () => {
+    const shifted = (key: string, by: number) => pitches(key).map((n) => n + by);
+    expect(pitches('researched:front-242/headhunter-bass-high')).toEqual(
+      shifted('researched:front-242/headhunter-bass', 12)
+    );
+    expect(pitches('researched:giorgio-moroder/i-feel-love-roots-high')).toEqual(
+      shifted('researched:giorgio-moroder/i-feel-love-roots', 24)
+    );
+    expect(pitches('researched:acid-house/acid-line-high')).toEqual(
+      shifted('researched:acid-house/acid-line', 24)
     );
   });
 
