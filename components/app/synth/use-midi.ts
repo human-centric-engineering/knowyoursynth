@@ -60,9 +60,10 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
   const [error, setError] = useState('');
   const access = useRef<MIDIAccess | null>(null);
   const mounted = useRef(false);
-  // Each request for access takes a number; only the latest may bind. Two requests can be in flight at once (React's
-  // dev double mount, or a click while a reconnect waits), and each grant is its own MIDIAccess with its own inputs:
-  // binding both left one attached that Stop MIDI never reached, so the keyboard kept playing with MIDI "off".
+  // Each request for access takes a number; only the latest may bind. React's dev double mount runs the reconnect
+  // below twice, so two requests are in flight at once, and each grant is its own MIDIAccess with its own inputs:
+  // binding both left one attached that Stop MIDI never reached, so the keyboard kept playing with MIDI "off". The bar
+  // offers no Connect while asking, but the hook does not rely on that.
   const request = useRef(0);
   const handlers = useRef({ noteOn, noteOff, onWheel });
   useEffect(() => {
@@ -134,6 +135,10 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
       return true;
     } catch (err) {
       if (!mounted.current || mine !== request.current) return false;
+      // Whatever was bound before must not go on playing under a status that offers no Stop.
+      detach();
+      access.current = null;
+      setDevices([]);
       setStatus('blocked');
       setError(err instanceof Error ? err.message : String(err));
       remember(false);

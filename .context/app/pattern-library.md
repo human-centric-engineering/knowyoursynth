@@ -676,8 +676,12 @@ were 82. 79 got one of 66 patterns, and 3 got a reason. The batch is
 - **Three sounds have no part to write**, all effects: the two Autechre glitch sounds, whose pitch the patch's sample
   and hold throws at random, and the Burial rain.
 - **Patches that make their own rhythm from a held key got held notes** again, as in t-163 and t-165: the Opus, Four
-  Tet, Halcyon and Tycho arps take their chords held, and the Gas pulse, the Big Jump squiggle, the Röyksopp wind-up and
-  the Open Eye Signal pulse take held notes.
+  Tet, Halcyon and Tycho arps take their chords held; the Gas pulse, the Big Jump squiggle, the Röyksopp wind-up, the
+  Neutron's Open Eye Signal pulse and the SynTrx build take held notes; and the Super Gemini Hopkins drone takes held
+  fifths. The Take 5 Open Eye Signal pulse plays its sequence as notes, so it shares the bass.
+- **Tempos are the transcriptions'.** "Block Rockin' Beats" is written at 210 in eighths, so its pattern plays it at
+  105 in sixteenths. "La Femme d'Argent" (160), "A New Error" (166) and "Awake" (176) may be written at twice the
+  record's pulse too; their notes say so, for the owner's listen to settle.
 - **The vocal is still never taken.** The "Levels" transcription's "Vox" track is the sampled vocal; the riff came from
   its "Layer 1" track instead. The "In the Waiting Line" melody track reads as the sung tune, so the Zero 7 leads are
   best guesses.

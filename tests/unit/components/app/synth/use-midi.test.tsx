@@ -260,6 +260,23 @@ describe('useMidi', () => {
       expect(h.noteOn).not.toHaveBeenCalled();
     });
 
+    it('detaches what was bound when a later request is refused, as blocked offers no Stop', async () => {
+      const h = handlers();
+      const { result } = renderHook(() => useMidi(h));
+      await act(async () => {
+        await result.current.connect();
+      });
+      expect(input.onmidimessage).not.toBeNull();
+      setNav(vi.fn().mockRejectedValue(new Error('Permission denied')));
+      await act(async () => {
+        await result.current.connect();
+      });
+      expect(result.current.status).toBe('blocked');
+      expect(result.current.devices).toEqual([]);
+      send(input, 0x90, 60, 100);
+      expect(h.noteOn).not.toHaveBeenCalled();
+    });
+
     it('stays off when Stop MIDI comes while the browser is still asking', async () => {
       const { inputs, grants, answers } = twoGrants();
       const h = handlers();
