@@ -10,7 +10,7 @@ This page is the design, written before the build (t-121). It covers:
 
 - the roles a pattern plays and the facts it carries for matching
 - what "Inspired by" links to, and the fidelity levels
-- the research method the batches follow (t-127, t-128, t-129)
+- the research method the batches follow (t-127, t-128, t-129, t-160)
 - the rights rule
 - how admins see and control each pattern's origin, rights risk and status
 - how the current riffs are reviewed
@@ -212,6 +212,20 @@ is not a source. It can be a starting point, and its notes then have to be check
 by ear like anything else. _Transcribed_ needs a tier-1 source. _Reconstructed_ needs two sources that agree (by ear
 counts as one), or one tier-1 or tier-2 source checked by ear.
 
+### Free leads, and a best guess where there are none
+
+_Owner ruling, 2026-11-02._ A batch reads free leads only: Songsterr, BitMIDI and others like them. It never buys sheet
+music or uses any other paid source.
+
+- **Where a free lead has the part**, the pattern is taken from it, as above.
+- **Where no free lead has the part**, the batch writes a best-guess _In the style of_ pattern for it: notes written to
+  the artist's style and taken from no record. Its research record has no leads, and its notes say it is a best guess.
+- **A reason instead of a pattern only where there is no part to write**: an effect, a recorded sound (a sample, a
+  turntable scratch), or a part that is only the vocal.
+
+So every sound by a batch's artists gets a pattern unless there is nothing to play. A lead that has the work but not the
+sound's part (the guitar, not the synth) can still give the sound a part a lead can carry, and its notes say which.
+
 ### Choosing the part
 
 - **Pick one part of the work**: the line the synth plays, not the vocal melody. Prefer a part the databank already says was played
@@ -327,11 +341,13 @@ write it down. Writing why a sound has no pattern took as long as writing one.
 
 **For the next batches:**
 
-- Start from Songsterr and BitMIDI, and record a work with neither as not recreated rather than searching further.
+- Start from Songsterr and BitMIDI. Where neither has the part, write a best guess rather than searching further, or
+  a reason only where there is no part to write (owner ruling, 2026-11-02; see
+  [Free leads, and a best guess where there are none](#free-leads-and-a-best-guess-where-there-are-none)).
 - Read the record kept per pattern before listening: it says which bars were taken, which lead they came from, and
   what was changed.
-- If the owner wants _Reconstructed_ or _Transcribed_ patterns, a source has to come from outside the free web:
-  bought sheet music, or the owner's own ear on the leads.
+- If the owner wants _Reconstructed_ or _Transcribed_ patterns, a source has to come from outside the free web. A batch
+  never buys one (owner ruling, 2026-11-02), so that means the owner's own ear on the leads.
 
 **The second batch (t-128): Daft Punk, Jean-Michel Jarre and Tangerine Dream.** The plan counted 55 sounds; there
 were 75, 25 for each artist. 33 got one of 20 patterns, and 42 got a recorded reason why not. The batch is
@@ -410,6 +426,41 @@ It used the same method and readers, and found:
 - **Digital Love's intro**, which t-159 left in the solo's notes, is now a pattern on the same sound, in t-128's file:
   bars 9–16 of the "Lead Synths" track. Bars 4–5 have one more phrase, but bars 6–8 are silent.
 
+**The fourth batch (t-160): funk, soul and R&B.** The first batch under the 2026-11-02 ruling, and the first not grouped
+by artist: every sound by 31 artists the gap audit found, from Bernie Worrell (19 sounds) and Herbie Hancock (11) to one
+each by Anita Ward and Whitney Houston. The task counted about 81 sounds; there were 92 (G-funk has 6, the 80s ballads
+5). 88 got one of 59 patterns, and only 4 got a reason. The batch is
+`prisma/seeds/app-knowyoursynth/data/patterns/t160-funk-soul-and-rnb.json`. It found:
+
+- **Funk and soul are well covered on Songsterr.** 40 patterns came from 34 transcriptions, 24 by fans and 10 by
+  Songsterr's machine (below), among them the bass of "Flash Light" (on five sounds), "Chameleon", "Boogie On Reggae
+  Woman", "Thriller" and "More Bounce to the Ounce", the "1999" stabs, the "Superstition" clavinet and Moog bass, and
+  the "Nuthin' but a 'G' Thang" lead, which went on the six G-funk sounds and Dr. Dre's G-funk whine. One more, the "Sexual Healing" clap, came from a BitMIDI file's drum channel: the Songsterr
+  transcription gives the drum machine to toms.
+- **Many leads have the work but not the synth.** P-Funk songs are transcribed for guitar, bass and horns, and Worrell's
+  synth is rarely a track. Where a sound named such a work ("Dr. Funkenstein", "Give Up the Funk", "Bop Gun",
+  "Reach for It", "Kalimba Story"), it got the horn or guitar line instead, and the notes say so. Several bass and
+  keyboard parts were played on synths on the record and are transcribed for bass guitar or guitar.
+- **Ten transcriptions were made by Songsterr's machine**, not a fan, and give 11 patterns: "(Not Just) Knee Deep"
+  (two), "One Nation Under a Groove", "Aquaboogie", "Bop Gun", "Boogie On Reggae Woman", "More Bounce to the Ounce",
+  "Atomic Dog", "Reach for It", "Kalimba Story" and "You're the One". They were the leads found for those parts, so they
+  were used, and each research record names its lead as machine-made: a weaker starting point than a fan's, and
+  the first to check by ear.
+- **18 patterns are best guesses**, on 21 sounds: four Parliament leads whose works have no transcription with a synth in it, the Hancock
+  Rhodes sounds (the Chameleon comping, Mwandishi, "Butterfly", "Hang Up Your Hang Ups"), the Ring My Bell syndrum, the
+  80s-ballad sounds, Donny Hathaway, D'Angelo, Hall & Oates, J Dilla, Jimmy Smith and George Duke's jazz-funk Rhodes.
+  Most are keyboard sounds whose part is comping, which free transcriptions skip. A best guess on a chord sound is
+  chords; on a mono sound it is a single line.
+- **Four sounds have no part to write**: the two "Rockit" scratch sounds (turntable scratches), the "Rebel Without a
+  Pause" siren (a sampled horn squeal) and Zapp's talk-box lead (the vocal through the synth).
+- **Chords on a mono sound still take one line.** The "1999" stabs gave a second pattern, their top note, for the
+  Pro-One stab and the Neutron's two-note stab. The "Once in a Lifetime" synth's dyads gave their top line.
+- **A Songsterr pickup bar can hold more than its time signature says.** "Aquaboogie" opens with a bar of 1/4 holding two
+  beats of notes, which a reader placing notes by position spills into the next bar. The reader now takes each note
+  from its own bar only.
+- **Octaves, not parts, were changed to suit a sound.** Where one part went on sounds an octave or more apart, it went
+  twice, as Da Funk's did: the Chameleon bass and the Superstition clavinet.
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on
@@ -452,7 +503,7 @@ Who or what made the pattern's notes. Exactly one of:
 | **User-contributed** | Came from a user's My patterns, taken into the library |
 
 With it, the pattern records who or what made it (the agent and session, or the user) and when. _Owner ruling,
-2026-10-31:_ every current riff is _AI-generated_. Research batches (t-127, t-128, t-129) record _AI-generated_ and the
+2026-10-31:_ every current riff is _AI-generated_. Research batches (t-127 on) record _AI-generated_ and the
 agent that wrote each pattern.
 
 Origin is separate from fidelity. An _AI-generated_ pattern can be _Transcribed_ if its sources support it, and a
@@ -622,7 +673,9 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
   patterns and 26 places, and left the 2,293 riffs unchanged. The second batch (t-128) created 20 and 33, left the
   pilot's 17 unchanged, and skipped nothing. The hooks (t-159) created 15 and 26, which brought the totals to 52 and 85, and
   left every riff its sound's default. The third batch (t-129) created 17 and 36, its own 16 and Digital Love's intro,
-  which brought the totals to 69 and 121 and again left every riff its sound's default.
+  which brought the totals to 69 and 121 and again left every riff its sound's default. The fourth (t-160) created 59
+  and 88, which brought them to 128 and 209, left the 69 unchanged and every riff its sound's default, and skipped
+  nothing.
 - **An admin's pattern is never written**: one an admin edited, or made any sound's default.
 - **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
   taken out of a batch file stays in the library and on its sounds.
@@ -636,11 +689,13 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
 
 Over the real data, the same test checks that every sound a batch names is in the catalogue, that each batch looks at
 every sound by its artists exactly once (Kraftwerk and Depeche Mode for t-127; Daft Punk, Jean-Michel Jarre and
-Tangerine Dream for t-128; Brian Eno, Daniel Lanois, Vangelis and Boards of Canada for t-129), that every link resolves
+Tangerine Dream for t-128; Brian Eno, Daniel Lanois, Vangelis and Boards of Canada for t-129; 31 funk, soul and R&B
+artists for t-160), that every link resolves
 in the databank, and that every pattern plays. It also checks that no pattern runs past the rights rule's 8 bars, that
 a sound whose own riff plays no chords gets a single line, that the Just Can't Get Enough bass and the Blade Runner End
 Titles theme play the notes both of their leads give, that the Da Funk break figure plays its lead's notes in both
-octaves, as does the Da Funk main riff, and that Digital Love's intro plays its lead's notes. A sound can be on more
+octaves, as does the Da Funk main riff, that Digital Love's intro plays its lead's notes, and that the Flash Light
+bass and the Superstition clavinet (in both octaves) play theirs. A pattern with no lead must say it is a best guess. A sound can be on more
 than one pattern of a batch, but a sound with a pattern never also has a reason.
 
 The catalogue unit's hash leaves the `patterns/` folder out, as it does `bank/`, so a batch edit re-runs only this
