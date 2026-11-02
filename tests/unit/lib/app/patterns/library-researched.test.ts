@@ -320,6 +320,19 @@ describe('the research batches', () => {
     );
   });
 
+  it('plays t-161’s octave copies an octave from the part they copy', () => {
+    const shifted = (key: string, by: number) => pitches(key).map((n) => n + by);
+    expect(pitches('researched:ultravox/vienna-strings-low')).toEqual(
+      shifted('researched:ultravox/vienna-strings', -12)
+    );
+    expect(pitches('researched:gary-numan/cars-strings-line-low')).toEqual(
+      shifted('researched:gary-numan/cars-strings-line', -12)
+    );
+    expect(pitches('researched:yazoo/only-you-arpeggio-high')).toEqual(
+      shifted('researched:yazoo/only-you-arpeggio', 12)
+    );
+  });
+
   it('plays the notes its lead gives: the riff of “Are ‘Friends’ Electric?”', () => {
     // G D F D D A C A, F C E C C G C B: Songsterr “Synth Lead”, bars 33–34.
     expect(pitches('researched:tubeway-army/are-friends-electric-riff')).toEqual([

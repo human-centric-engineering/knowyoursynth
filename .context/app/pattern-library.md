@@ -462,11 +462,10 @@ each by Anita Ward and Whitney Houston. The task counted about 81 sounds; there 
   twice, as Da Funk's did: the Chameleon bass and the Superstition clavinet.
 
 **The fifth batch (t-161): British synth-pop and post-punk.** Every sound by 29 artists, from Gary Numan (11 sounds)
-and Vince Clarke (9) to one each by Björk, SOPHIE and The Cure. The task counted about 71; there were 73, because
-"Early synth-pop" has three. All 73 got one of 57 patterns, and none needed a reason. The batch is
+and Vince Clarke (9) to one each by Björk, SOPHIE and The Cure. The task counted about 71; there were 73. All 73 got one of 60 patterns, and none needed a reason. The batch is
 `prisma/seeds/app-knowyoursynth/data/patterns/t161-synth-pop-and-post-punk.json`. It found:
 
-- **This ground is the best covered yet.** 48 patterns came from 37 Songsterr transcriptions, among them "Cars" (four
+- **This ground is the best covered yet.** 51 patterns came from 37 Songsterr transcriptions, among them "Cars" (four
   parts), "Are 'Friends' Electric?", "Blue Monday", "Vienna", "Enola Gay", "Don't You Want Me", "Don't Go", "Only
   You", "Rydeen" and "The Mother We Share". Unlike the funk batch, most have the synth parts as tracks of their own.
 - **Nine transcriptions were made by Songsterr's machine**, one pattern each: "We Are Glass", "This Wreckage", "Say
@@ -483,6 +482,10 @@ and Vince Clarke (9) to one each by Björk, SOPHIE and The Cure. The task counte
   got "New Life", because no Erasure transcription has a lead synth line.
 - **A theme mixing sixteenths with triplets doesn't fit one step size.** "Rydeen"'s second theme has both in its first
   four bars, so the pattern takes its last three, which have neither.
+- **Octaves went twice here too.** The review found three parts on sounds an octave or more from them, so each went
+  again in the sounds' octave: the Vienna strings for the two Vienna pads, the Cars string line for the Cars Vox
+  Humana and the Only You arpeggio for the bright sequencer arp. The Blue Monday bass stays one pattern: its low
+  notes sit where all four sounds' do, and only its octave jumps raise its middle.
 
 ## Rights
 
@@ -700,7 +703,8 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
   and 88, which brought them to 128 and 209, left the 69 unchanged and every riff its sound's default, and skipped
   nothing. The fifth (t-161) created 57 and 73, which brought them to 185 and 282, and skipped nothing. It also updated
   13 of t-160's patterns, whose review fixes the dev database hadn't had yet, and left the other 115 and every riff
-  unchanged.
+  unchanged. Its review fixes then created 3 and 4, the octave copies, and updated 8: the four relinked, the three
+  whose sounds moved and the renamed hi-hat genre.
 - **An admin's pattern is never written**: one an admin edited, or made any sound's default.
 - **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
   taken out of a batch file stays in the library and on its sounds.
