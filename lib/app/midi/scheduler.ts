@@ -25,6 +25,14 @@
  *
  * A loop the player would refuse (`playable`) is refused here too, so the two never disagree about what is playing.
  *
+ * With the clock on (`setClock`, t-89), it also sends MIDI clock, so a hardware arpeggiator, LFO or delay follows the
+ * pattern's tempo: Start, then {@link PPQN} pulses a beat on the straight grid (swing does not bend it), and Stop. They
+ * are placed on the same count of beats as the notes, so they follow every tempo move the notes do. Start goes at beat
+ * 0 of the run, before its first note; turned on mid-run, or after a change of port, at the start of the next loop, as
+ * no Song Position Pointer is sent. Stop goes at the end, after the last let-go, or now when everything is let go,
+ * never ahead of a Start handed over for later; and a Start never with a Stop or pulses still to land after it, so Play
+ * straight after Stop waits for the next loop. A held-up timer stops the clock, which starts again at the next loop.
+ *
  * Pure: no timers, no Web MIDI. The page (`use-midi-out.ts`) gives it a port and a clock and calls `pump`.
  */
 import type { PhraseNote } from '@/lib/app/synths/contract';
@@ -43,6 +51,12 @@ export const LOOKAHEAD_MS = 100;
 export const LATE_MS = 20;
 /** All Notes Off. */
 export const ALL_NOTES_OFF = 123;
+/** MIDI clock's pulses a quarter note: a beat. */
+export const PPQN = 24;
+/** MIDI's real-time messages: a clock pulse, Start, Stop. */
+export const CLOCK = 0xf8;
+export const START = 0xfa;
+export const STOP = 0xfc;
 
 /** What the scheduler sends to: a `MIDIOutput` has this. Times are `performance.now()` milliseconds. */
 export interface MidiPort {
@@ -64,6 +78,12 @@ export const midiVelocity = (v: number | undefined): number =>
 
 /** Messages the scheduler takes; anything else the page sends the engine is not its business. */
 export type SchedulerMessage = PatternMessage | { type: 'tempo'; bpm: number } | { type: string };
+
+/** A real-time message due at beat `g` of the run. */
+interface ClockTick {
+  g: number;
+  kind: 'start' | 'pulse' | 'stop';
+}
 
 /** Where beat `g` (from the run's start) is heard: at `ms`, moving at `bpm`. */
 interface Anchor {
@@ -101,6 +121,8 @@ export interface MidiScheduler {
   silence(): void;
   /** Sends to `port` on `channel` (0..15) from now on, letting go of everything on the one before. `null` sends nothing. */
   setPort(port: MidiPort | null, channel: number): void;
+  /** Sends MIDI clock, or stops sending it (with a Stop, if it had started). Off to begin with. */
+  setClock(on: boolean): void;
 }
 
 const byStart = (a: PhraseNote, b: PhraseNote) => a[0] - b[0] || a[1] - b[1];
@@ -139,6 +161,29 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   let dirty = false;
   /** The port a failed send was last reported for: once each, not once a note. */
   let failed: MidiPort | null = null;
+  /** MIDI clock is sent. */
+  let clockOn = false;
+  /** Start has been sent, and Stop not since: pulses are being sent. */
+  let started = false;
+  /** The beat Start goes at, or null: none yet, and the next loop's start once one turns. */
+  let startG: number | null = null;
+  /** The beat Start went at, and the next pulse counted from there (beat `clockFrom + pulse / PPQN`). */
+  let clockFrom = 0;
+  let pulse = 0;
+  /** The beat the pattern ends on, once it is known. */
+  let endG: number | null = null;
+  /**
+   * When the last Start, pulse, Stop and let-go were handed to the port. A Stop never goes ahead of a Start handed over
+   * for later, which would leave the hardware running, nor a Start ahead of a Stop; the pulses never go back; and the
+   * end's Stop goes after the last let-go. Pulses already handed over may land after a Stop: clock while stopped is
+   * ordinary MIDI, and only sets the hardware's tempo.
+   */
+  let startMs = -Infinity;
+  let stopMs = -Infinity;
+  let pulseMs = -Infinity;
+  let offMs = -Infinity;
+  /** The port those times are of. */
+  let timesFor: MidiPort | null = null;
 
   const msAt = (a: Anchor, g: number) => a.ms + ((g - a.g) * 60000) / a.bpm;
   const beatAt = (a: Anchor, ms: number) => a.g + ((ms - a.ms) * a.bpm) / 60000;
@@ -161,6 +206,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   /** A let-go of `n` at `at`, which a later note of that pitch must not go out before. */
   function offAt(n: number, at: number) {
     out([0x80 | channel, n, 0], at);
+    offMs = Math.max(offMs, at);
     if (at > clock.now()) freeAt.set(n, Math.max(at, freeAt.get(n) ?? at));
   }
 
@@ -184,7 +230,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     offAt(n, Math.max(at, downAt.get(n) ?? at));
   }
 
-  function release() {
+  /** Lets go of everything. With `keepClock` (a change of channel: clock has none) the clock runs on. */
+  function release(keepClock = false) {
     const now = clock.now();
     freeAt.forEach((at, n) => {
       if (at <= now) freeAt.delete(n);
@@ -199,6 +246,11 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       });
       out([0xb0 | channel, ALL_NOTES_OFF, 0], now);
     }
+    if (!keepClock) {
+      stop(now);
+      startG = null;
+    }
+    endG = null;
     held.clear();
     downAt.clear();
     offs.length = 0;
@@ -217,6 +269,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     playing = 0;
     sentTo = 0;
     resync = false;
+    startG = clockOn ? 0 : null;
   }
 
   /** On to the loop after `cur`, as the player turns at its end. False when the pattern ends there. */
@@ -239,6 +292,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       i: 0,
     };
     starts.set(cur.index, start);
+    if (clockOn && !started && startG === null) startG = start;
     starts.forEach((_, k) => {
       if (k < cur!.index - 8) starts.delete(k);
     });
@@ -249,6 +303,79 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   function end(g: number) {
     for (const off of offs) off.g = Math.min(off.g, g);
     cur = null;
+    endG = g;
+  }
+
+  /**
+   * Start at loop `c`'s start, if it is still to come and (unless its notes are sent again) none of them has been sent:
+   * Start goes before the first note. Else at the next loop's, which `turn` arms.
+   */
+  function arm(c: Cursor | null, resent: boolean) {
+    startG =
+      clockOn &&
+      !started &&
+      c &&
+      (resent || sentTo <= c.start) &&
+      (!anchor || msAt(anchor, c.start) >= clock.now())
+        ? c.start
+        : null;
+  }
+
+  /** Stop, if Start was sent: never ahead of a Start handed over for later. */
+  function stop(at: number) {
+    if (port && started) {
+      stopMs = Math.max(at, startMs);
+      out([STOP], stopMs);
+    }
+    started = false;
+  }
+
+  /** The next real-time message due: Start, a pulse or Stop, at beat `g`. */
+  function tick(): ClockTick | null {
+    if (!clockOn) return null;
+    if (!started)
+      return startG !== null && (endG === null || startG < endG)
+        ? { g: startG, kind: 'start' }
+        : null;
+    const g = clockFrom + pulse / PPQN;
+    if (endG !== null && g >= endG) return { g: endG, kind: 'stop' };
+    return { g, kind: 'pulse' };
+  }
+
+  function sendTick(t: ClockTick, a: Anchor, now: number) {
+    const due = msAt(a, t.g);
+    const late = due < now - LATE_MS;
+    if (t.kind === 'start') {
+      startG = null;
+      // A Start whose beat has passed (the timer was held up) would put the hardware's downbeat mid-loop. One with a
+      // Stop or pulses of the clock before still to land after it (Play straight after Stop) would have the hardware
+      // count those pulses as this run's, or start late. Either waits for the next loop's start.
+      if (late || due < pulseMs || due < stopMs) return;
+      const at = Math.max(now, due);
+      out([START], at);
+      started = true;
+      // The first pulse goes with Start: it is the beat Start counts from.
+      clockFrom = t.g;
+      pulse = 0;
+      startMs = at;
+      pulseMs = at;
+      return;
+    }
+    if (t.kind === 'stop') {
+      stop(Math.max(now, due, pulseMs, offMs));
+      return;
+    }
+    // A pulse due long ago (the timer was held up) is not sent late: a burst of them would be a jump in tempo, and
+    // skipping them would leave the hardware's count behind the pattern's for good. So the clock stops, and starts
+    // again in step at the next loop's start.
+    if (late) {
+      stop(now);
+      arm(cur, false);
+      return;
+    }
+    pulse++;
+    pulseMs = Math.max(now, pulseMs, due);
+    out([CLOCK], pulseMs);
   }
 
   /** A let-go owed, in its place: let-gos at one beat keep the order they were owed in. */
@@ -297,11 +424,18 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       }
       if (on && on.g >= to) on = null;
       const off = offs.length > 0 && offs[0].g < to ? offs[0] : null;
-      if (!on && !off) break;
-      // At the same beat a let-go goes first, as in the player.
-      if (off && (!on || off.g <= on.g)) {
+      let t = tick();
+      if (t && t.g >= to) t = null;
+      if (!on && !off && !t) break;
+      // At the same beat a let-go goes first, as in the player, then the clock, then the note: Start before the first
+      // note, Stop after the last let-go.
+      if (off && (!on || off.g <= on.g) && (!t || off.g <= t.g)) {
         offs.shift();
         noteOff(off.n, Math.max(now, msAt(a, off.g)));
+        continue;
+      }
+      if (t && (!on || t.g <= on.g)) {
+        sendTick(t, a, now);
         continue;
       }
       const c = cur!;
@@ -378,27 +512,57 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     sentTo = Math.max(sentTo, anchor.g);
   }
 
-  function silence() {
+  function silence(keepClock = false) {
     const run = cur;
     const n = next;
     const a = anchor;
-    release();
-    // The run goes on from what is heard when next pumped.
+    const e = endG;
+    // A Start not sent yet keeps its place; one whose beat has passed by the next pump waits for the next loop.
+    const sg = started ? null : startG;
+    release(keepClock);
+    // The run goes on from what is heard when next pumped. The clock starts again at the next loop.
     cur = run;
     next = n;
     anchor = a;
+    endG = e;
+    startG = sg;
+    // A clock that was running starts again at the loop notes are placed from, if it is still to come: its notes are
+    // sent again after the silence, so after Start.
+    if (startG === null) arm(cur, true);
     resync = true;
     rewind = true;
   }
 
   function setPort(p: MidiPort | null, ch: number) {
     if (p === port && ch === channel) return;
-    silence();
+    const same = p === port;
+    silence(same);
     port = p;
+    // What was handed to another port holds nothing back on this one; what is still on its way on this one does.
+    if (p && p !== timesFor) {
+      startMs = stopMs = pulseMs = offMs = -Infinity;
+      timesFor = p;
+    }
     channel = Math.min(15, Math.max(0, Math.round(ch)));
   }
 
-  return { message, event, pump, release, silence, setPort };
+  function setClock(on: boolean) {
+    if (on === clockOn) return;
+    clockOn = on;
+    stop(clock.now());
+    // Turned on mid-run, at the start of the next loop.
+    arm(cur, false);
+  }
+
+  return {
+    message,
+    event,
+    pump,
+    release: () => release(),
+    silence: () => silence(),
+    setPort,
+    setClock,
+  };
 }
 
 const PATTERN_TYPES = new Set([

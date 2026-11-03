@@ -4,7 +4,8 @@
  * MIDI out from the sequencer (`f-midi-out` t-88): outputs from the page's one MIDI grant, the choice kept in this
  * browser, the pattern's notes sent to the chosen output on its channel, and everything let go on Stop, at the end, on
  * a change of output, when the output is unplugged, when the page is hidden and when it goes. Then the readout row:
- * what it says in a browser without MIDI, before MIDI is connected, and once it is.
+ * what it says in a browser without MIDI, before MIDI is connected, and once it is. And MIDI clock (t-89): off until
+ * it is turned on, for that output alone.
  *
  * `useMidi` and the scheduler are real; `navigator.requestMIDIAccess` is a fake with two outputs that record what they
  * are sent. With no engine, the clock takes every frame as heard now, so a note on beat 0 goes at once.
@@ -247,6 +248,68 @@ describe('sending', () => {
   });
 });
 
+describe('MIDI clock', () => {
+  const realtime = (o: FakeOutput) => data(o).filter((d) => d[0] >= 0xf8);
+
+  it('is not sent until it is turned on', async () => {
+    const { result } = await playing();
+    expect(result.current.out.clock).toBe(false);
+    act(() => result.current.out.out.message({ type: 'stopPattern' }));
+    expect(realtime(td3)).toEqual([]);
+  });
+
+  it('sends Start and pulses once on, and Stop on Stop, kept with the output it is on for', async () => {
+    const { result } = await connected();
+    act(() => result.current.out.setOutput('td3'));
+    act(() => result.current.out.setClock(true));
+    expect(result.current.out.clock).toBe(true);
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEYS.midiOut) ?? 'null')).toMatchObject({
+      clock: ['td3'],
+    });
+    act(() => {
+      result.current.out.out.message(pattern);
+      result.current.out.out.event(loopStart);
+    });
+    expect(realtime(td3).slice(0, 2)).toEqual([[0xfa], [0xf8]]);
+    act(() => result.current.out.out.message({ type: 'stopPattern' }));
+    expect(realtime(td3).at(-1)).toEqual([0xfc]);
+    // Another output has it off until it is turned on there; back on the first, it is on again.
+    act(() => result.current.out.setOutput('sh101'));
+    expect(result.current.out.clock).toBe(false);
+    act(() => result.current.out.setOutput('td3'));
+    expect(result.current.out.clock).toBe(true);
+    act(() => result.current.out.setClock(false));
+    expect(result.current.out.clock).toBe(false);
+    expect(result.current.out.choice.clock).toEqual([]);
+  });
+
+  it('reads a choice kept before there was a clock', async () => {
+    localStorage.setItem(
+      STORAGE_KEYS.midiOut,
+      JSON.stringify({ output: { id: 'td3', name: 'TD-3' }, channel: 3, plays: 'both' })
+    );
+    const { result } = await connected();
+    expect(result.current.out.choice.channel).toBe(3);
+    expect(result.current.out.clock).toBe(false);
+  });
+
+  it('keeps the rest of a choice whose clock list it cannot read', async () => {
+    localStorage.setItem(
+      STORAGE_KEYS.midiOut,
+      JSON.stringify({
+        output: { id: 'td3', name: 'TD-3' },
+        channel: 3,
+        plays: 'both',
+        clock: ['x'.repeat(300)],
+      })
+    );
+    const { result } = await connected();
+    expect(result.current.out.choice.output?.id).toBe('td3');
+    expect(result.current.out.choice.channel).toBe(3);
+    expect(result.current.out.clock).toBe(false);
+  });
+});
+
 describe('the readout row', () => {
   const engine = { send: vi.fn(), frame: 0, ctx: { sampleRate: 48000 } };
   function Row({ midiOut }: { midiOut: MidiOut }) {
@@ -268,9 +331,11 @@ describe('the readout row', () => {
     choice: { output: null, channel: 1, plays: 'midi' },
     connected: false,
     sending: false,
+    clock: false,
     setOutput: vi.fn(),
     setChannel: vi.fn(),
     setPlays: vi.fn(),
+    setClock: vi.fn(),
     out: { muted: false, message: vi.fn(), event: vi.fn() },
     ...over,
   });
@@ -312,6 +377,15 @@ describe('the readout row', () => {
     fireEvent.click(screen.getByRole('combobox', { name: 'Plays on' }));
     fireEvent.click(screen.getByRole('option', { name: 'MIDI + synth' }));
     expect(chosen.setPlays).toHaveBeenCalledWith('both');
+    const send = screen.getByRole('button', { name: 'Send clock' });
+    expect(send.getAttribute('aria-pressed')).toBe('false');
+    fireEvent.click(send);
+    expect(chosen.setClock).toHaveBeenCalledWith(true);
+    // Synth only sends the output nothing, so there is no clock to turn on.
+    rerender(
+      <Row midiOut={{ ...chosen, choice: { output: outputs[0], channel: 1, plays: 'synth' } }} />
+    );
+    expect(screen.queryByRole('button', { name: 'Send clock' })).toBeNull();
   });
 
   it('keeps a chosen output that is unplugged on the list, and says the synth plays meanwhile', () => {
