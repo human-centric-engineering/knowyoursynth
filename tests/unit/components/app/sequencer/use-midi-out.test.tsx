@@ -292,6 +292,22 @@ describe('MIDI clock', () => {
     expect(result.current.out.choice.channel).toBe(3);
     expect(result.current.out.clock).toBe(false);
   });
+
+  it('keeps the rest of a choice whose clock list it cannot read', async () => {
+    localStorage.setItem(
+      STORAGE_KEYS.midiOut,
+      JSON.stringify({
+        output: { id: 'td3', name: 'TD-3' },
+        channel: 3,
+        plays: 'both',
+        clock: ['x'.repeat(300)],
+      })
+    );
+    const { result } = await connected();
+    expect(result.current.out.choice.output?.id).toBe('td3');
+    expect(result.current.out.choice.channel).toBe(3);
+    expect(result.current.out.clock).toBe(false);
+  });
 });
 
 describe('the readout row', () => {

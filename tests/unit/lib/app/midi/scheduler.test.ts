@@ -856,15 +856,19 @@ describe('MIDI clock', () => {
       [0xb0, 300],
       ['stop', 300],
     ]);
-    // Play again at once: Start at the new run's beat 0, before its first note, not held back behind the old pulses.
+    // Play again at once, heard at 320: the old pulses still to land (to 366.67) would be counted as the new run's
+    // after a Start at 320, so the clock starts at the next loop, 4,320, before that loop's first note.
     const n = t.sent.length;
     t.s.message({ type: 'pattern', loop: loop([[0, 60, 0.5]], 4), bpm: 60, run: 2 });
     t.s.event(ev({ frame: 320, beats: 4 }));
-    t.s.pump();
-    expect(order(t.sent.slice(n)).slice(0, 3)).toEqual([
-      ['start', 320],
-      ['clock', 320],
-      [0x90, 320],
+    t.run(4300);
+    const seq = order(t.sent.slice(n));
+    expect(seq[0]).toEqual([0x90, 320]);
+    const s0 = seq.findIndex(([k]) => k === 'start');
+    expect(seq.slice(s0, s0 + 3)).toEqual([
+      ['start', 4320],
+      ['clock', 4320],
+      [0x90, 4320],
     ]);
   });
 
@@ -910,15 +914,59 @@ describe('MIDI clock', () => {
     );
   });
 
-  it('starts at the loop notes have reached, turned on before it is heard', () => {
+  it('turned on, starts at the next loop none of whose notes is sent, so Start goes before the first', () => {
     const t = setup();
     start(t, loop([[0, 60, 0.5]], 1));
-    // At 950 the look-ahead has crossed into loop 1 (heard at 1,000) and sent its note.
-    t.run(950);
-    expect(ons(t.sent).map(([at]) => at)).toEqual([0, 1000]);
+    // At 920 the look-ahead has crossed into loop 1 (heard at 1,000) but sent none of it; at 950, its note.
+    t.run(920);
+    expect(ons(t.sent).map(([at]) => at)).toEqual([0]);
     t.s.setClock(true);
-    t.s.pump();
-    expect(order(t.sent).filter(([k]) => typeof k === 'string')[0]).toEqual(['start', 1000]);
+    t.run(1000);
+    const seq = order(t.sent);
+    const s0 = seq.findIndex(([k]) => k === 'start');
+    expect(seq.slice(s0, s0 + 3)).toEqual([
+      ['start', 1000],
+      ['clock', 1000],
+      [0x90, 1000],
+    ]);
+    // Turned on again once the note has gone, it waits for loop 2.
+    t.s.setClock(false);
+    t.s.setClock(true);
+    t.run(2000);
+    expect(t.sent.filter(([, d]) => d[0] === START).map(([at]) => at)).toEqual([1000, 2000]);
+  });
+
+  it('starts on a new port at the loop notes are placed from, if it is still to come', () => {
+    const t = clocked(60, loop([[0, 60, 0.5]], 1));
+    // At 1,150 the look-ahead is in loop 1 (heard at 1,200) and has sent its note; then another output is chosen.
+    t.run(1150);
+    expect(ons(t.sent).map(([at]) => at)).toEqual([200, 1200]);
+    const other: Sent[] = [];
+    t.s.setPort({ send: (d, at) => void other.push([at ?? t.now, d]) }, 0);
+    t.run(1300);
+    // On it, Start at 1,200, then that loop's note sent again after it; not a whole loop later.
+    expect(order(other).slice(0, 3)).toEqual([
+      ['start', 1200],
+      ['clock', 1200],
+      [0x90, 1200],
+    ]);
+  });
+
+  it('keeps Start behind a Stop still on its way on a port it comes back to', () => {
+    const t = clocked(60, loop([[0, 60, 0.5]], 1), 260);
+    t.run(200);
+    // Start is on its way for 260; the port goes (Synth only) and comes back at 210: Stop goes at 260, after it, and
+    // the run's beat 0 is still to come, so the clock starts there again, after that Stop rather than ahead of it.
+    t.now = 210;
+    t.s.setPort(null, 0);
+    t.s.setPort(t.port, 0);
+    t.run(1300);
+    const rt = order(t.sent).filter(([k]) => typeof k === 'string');
+    expect(rt.filter(([k]) => k !== 'clock')).toEqual([
+      ['start', 260],
+      ['stop', 260],
+      ['start', 260],
+    ]);
   });
 
   it('starts at the run’s start when turned on before anything of it is sent', () => {
@@ -980,8 +1028,10 @@ describe('MIDI clock', () => {
     t.s.message({ type: 'pattern', loop: loop([[0, 60, 0.5]], 1), bpm: 60, run: 2 });
     t.s.event(ev({ frame: 1160 }));
     t.s.pump();
+    // A Start at 1,160 would land before that Stop, so the clock starts at the next loop, 2,160.
+    t.run(2200);
     const starts = t.sent.filter(([, d]) => d[0] === START).map(([at]) => at);
-    expect(starts).toEqual([200, 1200]);
+    expect(starts).toEqual([200, 2160]);
   });
 
   it('waits for the next loop for a Start whose beat passed while the timer was held up', () => {

@@ -30,7 +30,8 @@
  * are placed on the same count of beats as the notes, so they follow every tempo move the notes do. Start goes at beat
  * 0 of the run, before its first note; turned on mid-run, or after a change of port, at the start of the next loop, as
  * no Song Position Pointer is sent. Stop goes at the end, after the last let-go, or now when everything is let go,
- * never ahead of a Start handed over for later. A held-up timer stops the clock, which starts again at the next loop.
+ * never ahead of a Start handed over for later; and a Start never with a Stop or pulses still to land after it, so Play
+ * straight after Stop waits for the next loop. A held-up timer stops the clock, which starts again at the next loop.
  *
  * Pure: no timers, no Web MIDI. The page (`use-midi-out.ts`) gives it a port and a clock and calls `pump`.
  */
@@ -181,6 +182,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   let stopMs = -Infinity;
   let pulseMs = -Infinity;
   let offMs = -Infinity;
+  /** The port those times are of. */
+  let timesFor: MidiPort | null = null;
 
   const msAt = (a: Anchor, g: number) => a.ms + ((g - a.g) * 60000) / a.bpm;
   const beatAt = (a: Anchor, ms: number) => a.g + ((ms - a.ms) * a.bpm) / 60000;
@@ -303,6 +306,21 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     endG = g;
   }
 
+  /**
+   * Start at loop `c`'s start, if it is still to come and (unless its notes are sent again) none of them has been sent:
+   * Start goes before the first note. Else at the next loop's, which `turn` arms.
+   */
+  function arm(c: Cursor | null, resent: boolean) {
+    startG =
+      clockOn &&
+      !started &&
+      c &&
+      (resent || sentTo <= c.start) &&
+      (!anchor || msAt(anchor, c.start) >= clock.now())
+        ? c.start
+        : null;
+  }
+
   /** Stop, if Start was sent: never ahead of a Start handed over for later. */
   function stop(at: number) {
     if (port && started) {
@@ -329,10 +347,11 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     const late = due < now - LATE_MS;
     if (t.kind === 'start') {
       startG = null;
-      // A Start whose beat has passed (the timer was held up) would put the hardware's downbeat mid-loop: it waits
-      // for the next loop's start.
-      if (late) return;
-      const at = Math.max(now, stopMs, due);
+      // A Start whose beat has passed (the timer was held up) would put the hardware's downbeat mid-loop. One with a
+      // Stop or pulses of the clock before still to land after it (Play straight after Stop) would have the hardware
+      // count those pulses as this run's, or start late. Either waits for the next loop's start.
+      if (late || due < pulseMs || due < stopMs) return;
+      const at = Math.max(now, due);
       out([START], at);
       started = true;
       // The first pulse goes with Start: it is the beat Start counts from.
@@ -351,6 +370,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     // again in step at the next loop's start.
     if (late) {
       stop(now);
+      arm(cur, false);
       return;
     }
     pulse++;
@@ -506,6 +526,9 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     anchor = a;
     endG = e;
     startG = sg;
+    // A clock that was running starts again at the loop notes are placed from, if it is still to come: its notes are
+    // sent again after the silence, so after Start.
+    if (startG === null) arm(cur, true);
     resync = true;
     rewind = true;
   }
@@ -515,8 +538,11 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     const same = p === port;
     silence(same);
     port = p;
-    // What was handed to the old port holds nothing back on the new one.
-    if (!same) startMs = stopMs = pulseMs = offMs = -Infinity;
+    // What was handed to another port holds nothing back on this one; what is still on its way on this one does.
+    if (p && p !== timesFor) {
+      startMs = stopMs = pulseMs = offMs = -Infinity;
+      timesFor = p;
+    }
     channel = Math.min(15, Math.max(0, Math.round(ch)));
   }
 
@@ -524,8 +550,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     if (on === clockOn) return;
     clockOn = on;
     stop(clock.now());
-    // Turned on mid-run, at the start of the next loop: the one notes are being placed from, if it is not heard yet.
-    startG = on && cur && (!anchor || msAt(anchor, cur.start) >= clock.now()) ? cur.start : null;
+    // Turned on mid-run, at the start of the next loop.
+    arm(cur, false);
   }
 
   return {

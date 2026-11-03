@@ -50,7 +50,7 @@ const MidiOutChoiceSchema = z.object({
   channel: z.number().int().min(1).max(16),
   plays: z.enum(MIDI_PLAYS),
   /** The outputs MIDI clock is sent to (t-89): left out by a choice kept before there was a clock. */
-  clock: z.array(z.string().min(1).max(256)).max(64).optional(),
+  clock: z.array(z.string().min(1).max(256)).max(64).optional().catch(undefined),
 });
 export type MidiOutChoice = z.infer<typeof MidiOutChoiceSchema>;
 
@@ -113,7 +113,8 @@ export function useMidiOut({
   useEffect(() => {
     s.setPort(sending && id ? output(id) : null, choice.channel - 1);
   }, [s, sending, id, output, choice.channel, midi.outputs]);
-  useEffect(() => s.setClock(clock), [s, clock]);
+  // Only while notes are sent there: Synth only, or the output unplugged, sends it nothing.
+  useEffect(() => s.setClock(sending && clock), [s, sending, clock]);
 
   // Whether a run is playing: the timer runs only then, and not while the muted player's ticks pump it.
   const [running, setRunning] = useState(false);
