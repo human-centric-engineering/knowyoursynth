@@ -73,10 +73,21 @@ definition reaches the page's up-front bundle.
   sound's steps apply on top of. A synth without one has `init` with no cables as its Default patch, which is right
   only where `init` is already a plain saw that sounds (not on a synth flagged `silentInit`). It is code, not
   catalogue content: lessons and patch loading build on it, so nobody edits it. `validateDefaultPatch` (`validate.ts`)
-  checks it against the synth, `default-patch.test.ts` runs that over every registered definition, and
-  `check:synths` renders it as `(default)` playing its scale. `lib/app/synths/default-patch.ts` turns it into the
-  sound the page lists (`defaultPatchSound`), under the reserved id `default-patch`, with its sequencer pattern: C
+  checks it against the synth, `default-patch.test.ts` runs that over every registered definition and plays each
+  one's Default patch through the real DSP, failing on a silent one, and `check:synths` renders it as `(default)`
+  playing its scale (and refuses a `silentInit` synth that has none). `lib/app/synths/default-patch.ts` turns it into
+  the sound the page lists (`defaultPatchSound`), under the reserved id `default-patch`, with its sequencer pattern: C
   major from C3 up to C4 and back, at 70 bpm.
+
+  What goes in one: one oscillator on its sawtooth, the filter open with no resonance and no envelope on it, the
+  loudness a plain gate (full sustain, short attack and release), no modulation and no effects. Where the synth has no
+  saw it is the nearest wave (the Easel's square); where it has no sustain (the TB-303, TD-3 and B1) the loudness dies
+  away as it must. On a synth that needs cables it is the fewest cables that get that tone to the output, leaving the
+  filter out where it can be; on a poly whose oscillators are its voices (the Poly D) every note's oscillator stays on.
+  A drum synth has its plainest tone (the Syncussions' one oscillator with no sweep). A patch that is not a sawtooth
+  says what to listen for in `listen`, which the page shows in place of the sawtooth's description. The comment above
+  each one says what it changes from `init`.
+
 - **Panel values are `number | string | boolean`.** Read a continuous control as a number with a
   local `num(v, id)`, and narrow an enum to the engine's type explicitly
   (`v['filter.mode'] === 'hp' ? 'hp' : 'lp'`). For the values a valid sound holds, the result
