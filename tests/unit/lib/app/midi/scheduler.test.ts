@@ -658,3 +658,79 @@ describe('what the second review found', () => {
     expect(offs(t.sent)).toEqual([[1100, 60]]);
   });
 });
+
+describe('what the third review found', () => {
+  it('holds a note back for a let-go of its pitch already queued, from the run before', () => {
+    const t = setup();
+    start(t, loop([[0, 60, 0.08]], 2));
+    t.now = 10;
+    t.s.pump(); // 60 down at 0, its let-go queued for 80 ms
+    t.s.message({ type: 'stopPattern' });
+    t.s.message({ type: 'pattern', loop: loop([[0, 60, 0.5]], 2), bpm: 60, run: 2 });
+    t.s.event(ev({ frame: 30, beats: 2, run: 2 }));
+    t.s.pump();
+    // The new 60 would sound at 30 and be cut at 80 by the old let-go: it goes at 80, after it.
+    expect(ons(t.sent).map(([at, n]) => [at, n])).toEqual([
+      [10, 60],
+      [80, 60],
+    ]);
+  });
+
+  it('sends again, after a silence, the notes it let go before they began', () => {
+    const t = setup();
+    start(
+      t,
+      loop(
+        [
+          [0.15, 60, 0.05],
+          [0.18, 62, 0.05],
+        ],
+        1
+      )
+    );
+    t.now = 100;
+    t.s.pump(); // 60 and 62 are on their way for 150 and 180 ms
+    t.s.silence(); // a channel change, say
+    t.now = 110;
+    t.s.pump();
+    expect(ons(t.sent).map(([at, n]) => [at, n])).toEqual([
+      [150, 60],
+      [180, 62],
+      [150, 60],
+      [180, 62],
+    ]);
+    // Let go of at its own time by the silence, then played again at that time, after it.
+    expect(offs(t.sent).filter(([, n]) => n === 62)).toEqual([
+      [100, 62],
+      [180, 62],
+    ]);
+  });
+
+  it('moves the clock on a tempo message from when the change is heard, not when it is sent', () => {
+    let now = 0;
+    const sent: Sent[] = [];
+    const s = createMidiScheduler({ now: () => now, at: (f) => f, heardIn: () => 40 });
+    s.setPort({ send: (d, at) => void sent.push([at ?? now, d]) }, 0);
+    s.message({ type: 'pattern', loop: loop([[0.5, 62, 0.1]]), bpm: 60 });
+    s.event(ev());
+    now = 100;
+    s.message({ type: 'tempo', bpm: 120 });
+    for (; now < 400; now += 25) s.pump();
+    // Heard at 140 (beat 0.14); beat 0.5 is 0.36 beats on at 120 BPM: 180 ms later, at 320.
+    expect(ons(sent).map(([at]) => Math.round(at))).toEqual([320]);
+  });
+
+  it('sends nothing for a note the synth plays silent, at velocity 0', () => {
+    const t = setup();
+    start(
+      t,
+      loop([
+        [0, 60, 0.1, 0],
+        [0.2, 62, 0.1, 0.5],
+      ])
+    );
+    t.run(400);
+    expect(ons(t.sent).map(([, n]) => n)).toEqual([62]);
+    expect(offs(t.sent).map(([, n]) => n)).toEqual([62]);
+  });
+});

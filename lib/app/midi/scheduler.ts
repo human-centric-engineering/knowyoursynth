@@ -54,6 +54,8 @@ export interface MidiClock {
   now(): number;
   /** When audio frame `frame` (the clock `loop` events use) is heard. */
   at(frame: number): number;
+  /** How long after it is rendered audio is heard, in ms: when a change the player makes now is heard. */
+  heardIn?(): number;
 }
 
 /** A velocity 0..1 as MIDI's 1..127: a note-on of 0 would be a note-off. */
@@ -121,14 +123,16 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   let sentTo = 0;
   /** Set when the port changes mid-run: the notes start again from what is heard now, not from where they stopped. */
   let resync = false;
+  /** With `resync`: the notes in the look-ahead were let go before they began, so they are sent again. */
+  let rewind = false;
   /** Let-gos owed, in order. */
   const offs: Off[] = [];
   /** How many sent notes hold each pitch, and when the last of them went down. */
   const held = new Map<number, number>();
   const downAt = new Map<number, number>();
   /**
-   * Per pitch, the time of a let-go a release queued for a note-on already on its way: a note of that pitch sent later
-   * must not go out before it, or that let-go would cut it.
+   * Per pitch, the time of the latest let-go already handed to the port for later: a note of that pitch sent
+   * afterwards must not go out before it, or that let-go would cut it.
    */
   const freeAt = new Map<number, number>();
   /** Something has been sent since the last release. */
@@ -154,7 +158,13 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     }
   }
 
-  function noteOn(n: number, v: number, when: number) {
+  /** A let-go of `n` at `at`, which a later note of that pitch must not go out before. */
+  function offAt(n: number, at: number) {
+    out([0x80 | channel, n, 0], at);
+    if (at > clock.now()) freeAt.set(n, Math.max(at, freeAt.get(n) ?? at));
+  }
+
+  function noteOn(n: number, v: number | undefined, when: number) {
     const free = freeAt.get(n);
     const at = free !== undefined && free > when ? free : when;
     held.set(n, (held.get(n) ?? 0) + 1);
@@ -171,7 +181,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     }
     held.delete(n);
     // Never before its note-on, which a tempo move since it was sent could otherwise put it.
-    out([0x80 | channel, n, 0], Math.max(at, downAt.get(n) ?? at));
+    offAt(n, Math.max(at, downAt.get(n) ?? at));
   }
 
   function release() {
@@ -185,10 +195,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       held.forEach((_, n) => {
         out([0x80 | channel, n, 0], now);
         const down = downAt.get(n) ?? now;
-        if (down > now) {
-          out([0x80 | channel, n, 0], down);
-          freeAt.set(n, down);
-        }
+        if (down > now) offAt(n, down);
       });
       out([0xb0 | channel, ALL_NOTES_OFF, 0], now);
     }
@@ -266,8 +273,15 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     const a = anchor;
     if (resync) {
       resync = false;
-      // From what is heard now, less the lateness any note is allowed: one due this instant still goes.
-      sentTo = Math.max(sentTo, beatAt(a, now - LATE_MS));
+      // From what is heard now, less the lateness any note is allowed: one due this instant still goes. After a
+      // silence, notes from there on that were let go before they began are sent again.
+      const from = beatAt(a, now - LATE_MS);
+      if (rewind && cur) {
+        sentTo = from;
+        const c: Cursor = cur;
+        while (c.i > 0 && c.start + c.notes[c.i - 1][0] >= from) c.i--;
+      } else sentTo = Math.max(sentTo, from);
+      rewind = false;
     }
     const to = beatAt(a, now + LOOKAHEAD_MS);
     for (;;) {
@@ -296,8 +310,9 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       if (on!.g < sentTo || !validNote(n) || !(len > 0)) continue;
       sentTo = on!.g;
       const at = msAt(a, on!.g);
-      if (at < now - LATE_MS) continue;
-      noteOn(n, v ?? DEFAULT_VELOCITY, Math.max(now, at));
+      // Too late, or a velocity the synth would play silent (MIDI would play it at 1).
+      if (at < now - LATE_MS || (v !== undefined && Math.round(v * 127) < 1)) continue;
+      noteOn(n, v, Math.max(now, at));
       owe({ g: c.start + b + len, n });
     }
     sentTo = Math.max(sentTo, to);
@@ -341,8 +356,9 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
 
   function tempo(value: number) {
     if (!(Number.isFinite(value) && value > 0) || !anchor) return;
-    const now = clock.now();
-    anchor = { g: beatAt(anchor, now), ms: now, bpm: value };
+    // The player moves at what it renders now, which is heard a little later.
+    const at = clock.now() + (clock.heardIn?.() ?? 0);
+    anchor = { g: beatAt(anchor, at), ms: at, bpm: value };
   }
 
   function event(e: PatternEvent) {
@@ -372,6 +388,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     next = n;
     anchor = a;
     resync = true;
+    rewind = true;
   }
 
   function setPort(p: MidiPort | null, ch: number) {

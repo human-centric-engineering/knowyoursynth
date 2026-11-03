@@ -113,7 +113,8 @@ export function useMidiOut({
     return () => clearInterval(t);
   }, [s, sending, running, muted]);
 
-  // The page hidden (a tab closed, or switched away on a phone) or gone: nothing is left held on the hardware.
+  // The page hidden (closed, or left for another page) or gone: nothing is left held on the hardware. A tab switched
+  // away from is not: with the synth sounding it is not slowed, and with MIDI alone the ticks keep it going.
   useEffect(() => {
     const hide = () => s.silence();
     window.addEventListener('pagehide', hide);

@@ -24,6 +24,14 @@ export function audioClock(
 ): MidiClock {
   return {
     now,
+    heardIn() {
+      const ctx = source();
+      if (!ctx) return 0;
+      const ts = typeof ctx.getOutputTimestamp === 'function' ? ctx.getOutputTimestamp() : null;
+      if (ts && ts.performanceTime && ts.contextTime !== undefined)
+        return Math.max(0, (ctx.currentTime - ts.contextTime) * 1000);
+      return ((ctx.outputLatency || 0) + (ctx.baseLatency || 0)) * 1000;
+    },
     at(frame) {
       const ctx = source();
       if (!ctx) return now();

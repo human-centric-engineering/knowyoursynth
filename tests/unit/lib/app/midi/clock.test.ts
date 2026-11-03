@@ -53,6 +53,17 @@ describe('audioClock', () => {
     expect(at).toBeLessThanOrEqual(performance.now());
   });
 
+  it('says how long audio rendered now takes to be heard', () => {
+    const withTs = audioClock(() =>
+      ctx({ getOutputTimestamp: () => ({ contextTime: 1.96, performanceTime: 5000 }) })
+    );
+    expect(withTs.heardIn?.()).toBeCloseTo(40, 6);
+    expect(
+      audioClock(() => ctx({ baseLatency: 0.01, outputLatency: 0.02 })).heardIn?.()
+    ).toBeCloseTo(30, 6);
+    expect(audioClock(() => null).heardIn?.()).toBe(0);
+  });
+
   it('takes a frame as heard now with no context yet', () => {
     expect(
       audioClock(
