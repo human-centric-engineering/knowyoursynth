@@ -1469,6 +1469,11 @@ const neutron: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // Init is already Oscillator 1's sawtooth alone, with the loudness an organ gate. The Default patch opens the filter
+  // all the way and takes the overdrive's drive off.
+  defaultPatch: {
+    values: { 'vcf.freq': 10, 'od.drive': 0 },
+  },
   toEngine,
 };
 

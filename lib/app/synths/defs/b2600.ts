@@ -2826,6 +2826,19 @@ const b2600: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // Init sends VCO 1's pulse to the filter. VCO 3 is the one whose filter slider carries a sawtooth with no cable, so
+  // the Default patch swaps VCO 1's slider for VCO 3's, opens the filter all the way with no keyboard tracking, and
+  // makes the ADSR (the loudness) an organ gate with a short release.
+  defaultPatch: {
+    values: {
+      'vcf.vco1': 0,
+      'vcf.vco3': 8,
+      'vcf.freq': 10,
+      'vcf.kbd': 0,
+      'adsr.s': 10,
+      'adsr.r': 1,
+    },
+  },
   toEngine,
 };
 

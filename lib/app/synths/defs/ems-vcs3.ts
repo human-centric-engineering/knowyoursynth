@@ -1429,6 +1429,24 @@ const emsVcs3: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // Nothing sounds until it is pinned. The Default patch pins Oscillator 1's ramp (its sawtooth) through the envelope's
+  // VCA to both outputs, so it sits in the middle, and the keyboard to Oscillator 1's pitch: four pins. The filter is
+  // left out, which is as open as it gets. The envelope opens on a key and stays up while it is held, then falls fast.
+  defaultPatch: {
+    values: {
+      'osc1.ramp': 5,
+      'env.attack': 0,
+      'env.on': 0,
+      'env.decay': 1,
+      'env.sigLevel': 6,
+    },
+    cables: [
+      ['r.osc1ramp', 'c.env'],
+      ['r.envsig', 'c.out1'],
+      ['r.envsig', 'c.out2'],
+      ['r.in1', 'c.osc1'],
+    ],
+  },
   toEngine,
 };
 

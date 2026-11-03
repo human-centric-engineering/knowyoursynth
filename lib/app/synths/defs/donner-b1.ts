@@ -797,6 +797,11 @@ const donnerB1: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // Init is already the sawtooth, with saturation and delay off. The Default patch opens the filter all the way with no
+  // resonance and takes the envelope off it. The B1 has no sustain: its loudness always dies away over a held note.
+  defaultPatch: {
+    values: { 'vcf.cutoff': 10, 'vcf.resonance': 0, 'vcf.depth': 0, 'vca.accent': 0 },
+  },
   toEngine,
 };
 

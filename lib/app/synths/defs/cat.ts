@@ -1049,6 +1049,17 @@ const cat: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // Init is already VCO 1's sawtooth alone. The Default patch opens the filter all the way with no keyboard tracking
+  // and takes the ADSR off it, and makes the ADSR (the loudness) an organ gate with a short release.
+  defaultPatch: {
+    values: {
+      'vcf.fc': 10,
+      'vcf.kbd': 0,
+      'vcf.mod2Depth': 0,
+      'adsr.sustain': 10,
+      'adsr.release': 1,
+    },
+  },
   toEngine,
 };
 

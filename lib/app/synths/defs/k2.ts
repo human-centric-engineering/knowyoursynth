@@ -1492,6 +1492,11 @@ const k2: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // Init is already VCO 1's sawtooth alone. The Default patch opens the low-pass filter all the way, and makes EG 2 (the
+  // loudness) an organ gate with a short release.
+  defaultPatch: {
+    values: { 'lpf.cutoff': 10, 'eg2.sustain': 10, 'eg2.release': 1 },
+  },
   toEngine,
 };
 

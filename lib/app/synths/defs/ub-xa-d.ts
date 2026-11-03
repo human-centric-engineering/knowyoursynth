@@ -1068,6 +1068,11 @@ const ubXaD: SynthDef & { version: number } = {
   controls,
   jacks: [],
   init,
+  // Init is already Oscillator 1's sawtooth alone, with the loudness an organ gate. The Default patch opens the filter
+  // all the way.
+  defaultPatch: {
+    values: { 'vcf.freq': 10 },
+  },
   toEngine,
   signalNames: {
     env1: 'the filter envelope',
