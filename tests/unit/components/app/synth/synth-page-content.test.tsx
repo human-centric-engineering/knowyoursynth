@@ -103,8 +103,8 @@ describe('the library on the page', () => {
   it('opens every one of Model D’s 200 sounds onto the panel', () => {
     page();
     expect(detail.sounds).toHaveLength(200);
-    // Every sound but the first, which is loaded, then the first again.
-    const order = [...detail.sounds.slice(1), detail.sounds[0]];
+    // Every sound in order: the page opens on the Default patch, so none of them is loaded yet.
+    const order = detail.sounds;
     // Plain DOM lookups in the loop: a role query walks the whole page's accessibility tree, 200 times over.
     const lib = library();
     const picker = button(/^Choose a patch/);
