@@ -69,6 +69,11 @@ export const STORAGE_KEYS = {
    */
   midiCc: 'kys.midiCc',
   /**
+   * The patch Play calls up on the hardware over MIDI out (`f-midi-hardware-lead` t-92), per synth: which program holds
+   * which sound is the hardware's business, not the pattern's. Kept in this browser only, as `midiOut` is.
+   */
+  midiProgram: 'kys.midiProgram',
+  /**
    * The MIDI input whose clock the sequencer follows (`f-midi-hardware-lead` t-91), or none (its own). Kept in this
    * browser only, as `midiOut` is.
    */

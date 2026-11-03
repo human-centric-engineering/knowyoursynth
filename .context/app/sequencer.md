@@ -727,6 +727,24 @@ control this synth hasn't got has none. One CC goes to one lane: giving it to an
   panel's: the panel's value is the app's knob, not the hardware's.
 - **On Stop** nothing is sent back: the hardware keeps the last value, as it has no panel value to return to.
 
+**Program change** (`f-midi-hardware-lead` t-92). Notes alone play whatever patch the hardware was left on, so while
+an output is sent to (not Synth only) the row offers a **Program**, None or 1–128 (sent as 0–127, as most synths
+number their patches from 1), and once one is chosen a **Bank MSB** and **Bank LSB**, each None or 0–127. None is set
+to begin with: many synths in the catalogue have no patch memory.
+
+- **Where it lives.** Per synth, in this browser (`kys.midiProgram`: synth id → program, MSB, LSB), not on the
+  pattern: which program holds which sound is the user's own hardware's business. A synth's that doesn't read is
+  dropped, not the others'.
+- **When.** On Play, a run from the top: after the release before it, Bank Select CC 0 (MSB), then CC 32 (LSB), each
+  only if given, then the Program Change, on the output's channel, now. A synth needs a moment to load a patch, so
+  nothing on the channel goes before `PROGRAM_LEAD_MS` (30 ms) after it: a first note due sooner waits that long, and
+  a lane's CC with it (a patch loading sets its controls back), and the clock's Start, the hardware's downbeat. A note
+  held back ends where it did, so the note after it is not overlapped (a slide on a mono synth), unless it would
+  end before the hold does: then it keeps its length. Notes due later keep their time. The browser synth is not
+  held back, so with Both its first note leads the hardware's by up to that much.
+- **Not sent** with no program, with the output not sent to, for a run started part-way (a MIDI Continue: the patch
+  went at its Start), or on a change of program, output or channel mid-run. The next Play calls it up.
+
 Not in it (the feature's later tasks): riffs or keys played outside the sequencer, and CCs filled in from the synth
 specs' MIDI charts.
 
@@ -737,9 +755,11 @@ a change of port; the clock's pulses at two tempos, a tempo move inside the look
 Stop after the last let-go, turning it on and off mid-run, a change of port, Stop never ahead of what was queued, a
 held-up timer; lane CCs ahead of the note at their beat, sent on change only, each CC's value in effect after an
 edit, a CC given mid-run, a change of port and a held-up timer across loops, an edit's change still to come at its
-time, an edit's value after one already handed over for later, nothing on Stop); `clock.test.ts`; `tests/unit/components/app/sequencer/use-midi-out.test.tsx` (the real `useMidi`
+time, an edit's value after one already handed over for later, nothing on Stop; the program change: nothing when none is set, program
+alone and bank then program on the channel, the first note and its CC held back by the lead, again on the next Play,
+none part-way or for a byte out of range); `clock.test.ts`; `tests/unit/components/app/sequencer/use-midi-out.test.tsx` (the real `useMidi`
 with a fake `requestMIDIAccess`: one grant, the choice, the channel, every release, unplugging, Send clock per
-output, lane CCs per synth and sent, and the row); `mod-lanes.test.tsx` (the lane values a loop carries, the CC
+output, lane CCs per synth and sent, the program per synth and sent before the first note, and the row); `mod-lanes.test.tsx` (the lane values a loop carries, the CC
 select);
 `use-midi.test.tsx` (outputs); `sequencer.test.tsx` (the run id, what MIDI out is told, the mute); and
 `pattern-player.test.ts` (run echoed, muted).

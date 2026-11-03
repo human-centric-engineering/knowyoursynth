@@ -16,6 +16,7 @@ import {
   CLOCK,
   LOOKAHEAD_MS,
   PPQN,
+  PROGRAM_LEAD_MS,
   START,
   STOP,
   createMidiScheduler,
@@ -1399,5 +1400,152 @@ describe('mod lanes as CCs (t-90)', () => {
       [0, 'cc74=10', 0],
       [500, 'cc74=10', 0],
     ]);
+  });
+});
+
+describe('the patch Play calls up (f-midi-hardware-lead t-92)', () => {
+  const l = loop([
+    [0, 60, 0.5],
+    [0.5, 62, 0.5],
+  ]);
+  /** Program changes and bank selects, as [time, data]. */
+  const patch = (sent: Sent[]) =>
+    sent.filter(
+      ([, d]) => (d[0] & 0xf0) === 0xc0 || ((d[0] & 0xf0) === 0xb0 && (d[1] === 0 || d[1] === 32))
+    );
+
+  it('sends nothing but the notes with none set, as to begin with', () => {
+    const t = setup();
+    start(t, l);
+    t.run(900);
+    expect(patch(t.sent)).toEqual([]);
+    expect(t.sent[0]).toEqual([0, [0x90, 60, 108]]);
+    expect(ons(t.sent)[0]).toEqual([0, 60, 108]);
+  });
+
+  it('sends a program alone on the channel, as the run starts', () => {
+    const t = setup(4);
+    t.s.setProgram({ program: 7 });
+    start(t, l);
+    t.run(900);
+    expect(patch(t.sent)).toEqual([[0, [0xc4, 7]]]);
+    expect(t.sent[0]).toEqual([0, [0xc4, 7]]);
+  });
+
+  it('sends bank MSB, then LSB, then the program, each bank byte only if given', () => {
+    const t = setup(1);
+    t.s.setProgram({ program: 127, msb: 2, lsb: 5 });
+    start(t, l);
+    t.run(900);
+    expect(patch(t.sent)).toEqual([
+      [0, [0xb1, 0, 2]],
+      [0, [0xb1, 32, 5]],
+      [0, [0xc1, 127]],
+    ]);
+    const u = setup(1);
+    u.s.setProgram({ program: 3, lsb: 9 });
+    start(u, l);
+    expect(patch(u.sent)).toEqual([
+      [0, [0xb1, 32, 9]],
+      [0, [0xc1, 3]],
+    ]);
+  });
+
+  it('leads the first note by the settle time, and leaves a note due after it where it is', () => {
+    const t = setup();
+    t.s.setProgram({ program: 0 });
+    start(t, l);
+    t.run(900);
+    // The patch at 0, before any note; 60 due at 0 waits for the patch to load, 62 at 500 is past it.
+    const pc = t.sent.findIndex(([, d]) => (d[0] & 0xf0) === 0xc0);
+    const firstOn = t.sent.findIndex(([, d]) => (d[0] & 0xf0) === 0x90);
+    expect(pc).toBeLessThan(firstOn);
+    expect(ons(t.sent)).toEqual([
+      [PROGRAM_LEAD_MS, 60, 108],
+      [500, 62, 108],
+    ]);
+    expect(offs(t.sent)[0]).toEqual([500, 60]);
+  });
+
+  it('keeps the length of a first note that would end inside the hold, rather than ending it as it starts', () => {
+    const t = setup();
+    t.s.setProgram({ program: 0 });
+    // 0.02 beats at 60 bpm: 20 ms, all of it inside the hold.
+    start(t, { notes: [[0, 60, 0.02]], beats: 1 });
+    t.run(200);
+    expect(ons(t.sent)).toEqual([[PROGRAM_LEAD_MS, 60, 108]]);
+    expect(offs(t.sent)).toEqual([[PROGRAM_LEAD_MS + 20, 60]]);
+  });
+
+  it('holds the clock’s Start back with the first note, so hardware on the clock starts with it', () => {
+    const t = setup();
+    t.s.setClock(true);
+    t.s.setProgram({ program: 0 });
+    start(t, l);
+    t.run(200);
+    const startAt = t.sent.filter(([, d]) => d[0] === START).map(([at]) => at);
+    expect(startAt).toEqual([PROGRAM_LEAD_MS]);
+    expect(ons(t.sent)[0][0]).toBe(PROGRAM_LEAD_MS);
+  });
+
+  it('holds a lane’s CC on the first beat behind the patch too, which would otherwise set it back', () => {
+    const t = setup();
+    t.s.setCcs(() => [[74, 100]]);
+    t.s.setProgram({ program: 0 });
+    start(t, { notes: [[0, 60, 0.5]], beats: 1, mods: [[0, { cutoff: 1 }]] });
+    t.run(200);
+    const cc = t.sent.filter(([, d]) => (d[0] & 0xf0) === 0xb0 && d[1] === 74);
+    expect(cc).toEqual([[PROGRAM_LEAD_MS, [0xb0, 74, 100]]]);
+  });
+
+  it('calls it up again on the next Play, after letting go of the run before', () => {
+    const t = setup();
+    t.s.setProgram({ program: 5 });
+    start(t, l);
+    t.run(200);
+    t.s.message({ type: 'stopPattern' });
+    t.now = 300;
+    start(t, l, 300);
+    const pcs = t.sent.filter(([, d]) => (d[0] & 0xf0) === 0xc0).map(([at]) => at);
+    expect(pcs).toEqual([0, 300]);
+    const second = t.sent.findIndex(([at, d]) => at === 300 && (d[0] & 0xf0) === 0xc0);
+    const letGo = t.sent.findIndex(([, d]) => d[1] === ALL_NOTES_OFF);
+    expect(letGo).toBeGreaterThan(-1);
+    expect(letGo).toBeLessThan(second);
+  });
+
+  it('sends none for a run started part-way, as a MIDI Continue: the patch went at its Start', () => {
+    const t = setup();
+    t.s.setProgram({ program: 5 });
+    t.s.message({ type: 'pattern', loop: l, bpm: 60, run: 1, index: 2, beat: 0.25 });
+    t.s.event(ev({ index: 2, beat: 0.25, frame: 0 }));
+    t.run(900);
+    expect(patch(t.sent)).toEqual([]);
+    expect(ons(t.sent)[0]).toEqual([250, 62, 108]);
+  });
+
+  it('sends none for a program or bank that isn’t a MIDI byte', () => {
+    for (const p of [
+      { program: 128 },
+      { program: -1 },
+      { program: 1.5 },
+      { program: 1, msb: 200 },
+    ]) {
+      const t = setup();
+      t.s.setProgram(p);
+      start(t, l);
+      expect(patch(t.sent)).toEqual([]);
+    }
+  });
+
+  it('sends none with no output, and nothing after it is set to none', () => {
+    const t = setup();
+    t.s.setProgram({ program: 5 });
+    t.s.setPort(null, 0);
+    start(t, l);
+    t.s.setProgram(null);
+    t.s.setPort(t.port, 0);
+    start(t, l);
+    expect(patch(t.sent)).toEqual([]);
   });
 });
