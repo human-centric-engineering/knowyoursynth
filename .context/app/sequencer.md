@@ -700,14 +700,38 @@ synths start their own sequencer when they hear clock.
   look-ahead) starts the clock at the next loop, the notes playing meanwhile. A change of channel alone keeps the clock
   running, as clock has no channel. Nothing is sent twice: the player's own `patternEnd` after the end sends no second Stop.
 
-Not in it (the feature's later tasks): mod lanes as CCs, and riffs or keys played outside the sequencer.
+**Mod lanes as CCs** (t-90). A lane names one of the app's panel controls, which the hardware doesn't know, so a lane
+is sent only once it is given a CC number. While an output is sent to (not Synth only), each lane's head has a **CC**
+select, No CC or 0–119 (120–127 are the channel-mode messages, All Notes Off among them); a lane for a control this
+synth hasn't got has none. One CC goes to one lane: giving it to another takes it from the first.
 
-Tests: `tests/unit/lib/app/midi/scheduler.test.ts` (timing with swing, nudge, ratchet and slide against a fake clock,
+- **Where the numbers live.** Per synth, in this browser (`kys.midiCc`: synth id → lane control id → CC), not on the
+  pattern: a CC map is the hardware's, not the music's, and a pattern stays synth-agnostic, as it is shared and moved
+  between synths. A synth's map that doesn't read is dropped, not the others (`lib/app/midi/cc.ts`).
+- **The value.** Across the control's travel as the lane draws it (`lanePos`), 0–127: a knob by its taper (a log knob
+  by ratio), a choice by its place among the options the panel shows, a switch 0 or 127. Only values this synth plays
+  are sent: the loop carries its lanes' values as `resolveMods` gives them (`PatternLoop.mods`, which the player
+  doesn't read), beside the `params` the voice plays.
+- **When.** At each change of a lane's value, on the output's channel, on the same count of beats as the notes and in
+  the same look-ahead, so swing moves it as it moves the steps. At one beat: a let-go, then the clock, then the CC,
+  then the note, so a note plays with the value its step sets. A CC is sent only when its value changes; a step with
+  no value on the lane sends nothing. A change the notes have passed (an edit, a CC given mid-run, a change of port, a
+  held-up timer) isn't sent late one by one: only the value in effect, now. A change due but late is sent now, as a CC
+  is a setting, better late than left wrong.
+- **On Stop** nothing is sent back: the hardware keeps the last value, as it has no panel value to return to.
+
+Not in it (the feature's later tasks): riffs or keys played outside the sequencer, and CCs filled in from the synth
+specs' MIDI charts.
+
+Tests: `tests/unit/lib/app/midi/cc.test.ts` (the value for a linear knob, a log knob, a choice and a switch; which
+lanes send); `tests/unit/lib/app/midi/scheduler.test.ts` (timing with swing, nudge, ratchet and slide against a fake clock,
 the look-ahead, tempo, late notes, overlapping pitches, boundary-held notes, edits and Stop inside the window, the end,
 a change of port; the clock's pulses at two tempos, a tempo move inside the look-ahead, Start before the first note and
 Stop after the last let-go, turning it on and off mid-run, a change of port, Stop never ahead of what was queued, a
-held-up timer); `clock.test.ts`; `tests/unit/components/app/sequencer/use-midi-out.test.tsx` (the real `useMidi`
+held-up timer; lane CCs ahead of the note at their beat, sent on change only, the value in effect after an edit, a
+CC given mid-run and a change of port, nothing on Stop); `clock.test.ts`; `tests/unit/components/app/sequencer/use-midi-out.test.tsx` (the real `useMidi`
 with a fake `requestMIDIAccess`: one grant, the choice, the channel, every release, unplugging, Send clock per
-output, and the row);
+output, lane CCs per synth and sent, and the row); `mod-lanes.test.tsx` (the lane values a loop carries, the CC
+select);
 `use-midi.test.tsx` (outputs); `sequencer.test.tsx` (the run id, what MIDI out is told, the mute); and
 `pattern-player.test.ts` (run echoed, muted).

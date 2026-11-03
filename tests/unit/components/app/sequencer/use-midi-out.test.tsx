@@ -22,6 +22,7 @@ import { Sequencer } from '@/components/app/sequencer/sequencer';
 import { STORAGE_KEYS } from '@/components/app/synth/storage';
 import type { LoopEvent } from '@/lib/app/synths/audio/pattern-player';
 import type { SynthMessage } from '@/lib/app/synths/audio/dsp-core';
+import type { SynthDef } from '@/lib/app/synths/contract';
 
 vi.mock('@/lib/logging', () => ({
   logger: { warn: vi.fn(), error: vi.fn(), info: vi.fn(), debug: vi.fn() },
@@ -404,5 +405,90 @@ describe('the readout row', () => {
     );
     fireEvent.click(screen.getByRole('combobox', { name: 'MIDI out' }));
     expect(screen.getByRole('option', { name: 'TD-3 (not connected)' })).toBeTruthy();
+  });
+});
+
+describe('lane CCs (t-90)', () => {
+  const knob = { x: 0, y: 0, module: 'filter', help: '', type: 'knob', r: 10, kind: 'cont' };
+  const synth = (id: string) =>
+    ({
+      id,
+      controls: [
+        { ...knob, id: 'cutoff', min: 0, max: 100, def: 50 },
+        { ...knob, id: 'res', min: 0, max: 10, def: 0 },
+      ],
+      init: { cutoff: 50, res: 0 },
+    }) as unknown as SynthDef;
+
+  async function withSynth(def: SynthDef) {
+    const hook = renderHook(
+      ({ d }: { d: SynthDef }) => {
+        const midi = useMidi(handlers());
+        const out = useMidiOut({ midi, engine: null, connect: () => void midi.connect(), def: d });
+        return { midi, out };
+      },
+      { initialProps: { d: def } }
+    );
+    await act(async () => {
+      await hook.result.current.midi.connect();
+    });
+    return hook;
+  }
+
+  it('keeps a lane’s CC for this synth, in this browser, and another synth has its own', async () => {
+    const hook = await withSynth(synth('sh101'));
+    act(() => hook.result.current.out.setCc('cutoff', 74));
+    expect(hook.result.current.out.ccs).toEqual({ cutoff: 74 });
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEYS.midiCc) ?? 'null')).toEqual({
+      sh101: { cutoff: 74 },
+    });
+    hook.rerender({ d: synth('td3') });
+    expect(hook.result.current.out.ccs).toEqual({});
+    act(() => hook.result.current.out.setCc('cutoff', 20));
+    hook.rerender({ d: synth('sh101') });
+    expect(hook.result.current.out.ccs).toEqual({ cutoff: 74 });
+  });
+
+  it('gives a CC to one lane at a time, takes one away, and refuses a channel-mode CC', async () => {
+    const { result } = await withSynth(synth('sh101'));
+    act(() => result.current.out.setCc('cutoff', 74));
+    act(() => result.current.out.setCc('res', 74));
+    expect(result.current.out.ccs).toEqual({ res: 74 });
+    act(() => result.current.out.setCc('res', 123));
+    expect(result.current.out.ccs).toEqual({ res: 74 });
+    act(() => result.current.out.setCc('res', null));
+    expect(result.current.out.ccs).toEqual({});
+  });
+
+  it('reads a stored map that doesn’t check as none for that synth', async () => {
+    localStorage.setItem(
+      STORAGE_KEYS.midiCc,
+      JSON.stringify({ sh101: { cutoff: 500 }, td3: { res: 71 } })
+    );
+    const hook = await withSynth(synth('sh101'));
+    expect(hook.result.current.out.ccs).toEqual({});
+    hook.rerender({ d: synth('td3') });
+    expect(hook.result.current.out.ccs).toEqual({ res: 71 });
+  });
+
+  it('sends a lane with a CC to the output on its channel, ahead of the note it shares a beat with', async () => {
+    const { result } = await withSynth(synth('sh101'));
+    act(() => result.current.out.setOutput('td3'));
+    act(() => result.current.out.setChannel(2));
+    act(() => result.current.out.setCc('cutoff', 74));
+    act(() => {
+      result.current.out.out.message({
+        type: 'pattern',
+        loop: { notes: [[0, 60, 4]], beats: 4, mods: [[0, { cutoff: 100, res: 5 }]] },
+        bpm: 120,
+        run: 1,
+      });
+      result.current.out.out.event(loopStart);
+    });
+    // res has no CC, so it sends nothing.
+    expect(data(td3)).toEqual([
+      [0xb1, 74, 127],
+      [0x91, 60, 108],
+    ]);
   });
 });
