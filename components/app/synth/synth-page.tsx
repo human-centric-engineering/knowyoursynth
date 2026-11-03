@@ -475,7 +475,9 @@ function Synth({
       router.replace(synthHref(hash.id, hash.view));
       return;
     }
-    switchedTo.current = readStored(STORAGE_KEYS.synth) !== synthId;
+    // Kept once true: React's development remount runs this again after the synth has been remembered, and must not
+    // undo the switch (the stored panel's restore runs again too, and the Default patch has to land over it again).
+    switchedTo.current ||= readStored(STORAGE_KEYS.synth) !== synthId;
     writeStored(STORAGE_KEYS.synth, synthId);
     if (hash) {
       setView(hash.view);
@@ -525,7 +527,7 @@ function Synth({
   // the account's older panel does not replace it. Declared after the stored session, so it lands after the restore,
   // and before `?sound=`, a shared sound and `?mine=`, which still open their own sound over it.
   useEffect(() => {
-    if (switchedTo.current) setSess(() => freshSession(synthDef, sounds[0]));
+    if (switchedTo.current) setSess(() => freshSession(synthDef, defaultSound));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
   // `?sound=` loads that sound over whatever was stored, as a fresh panel, then drops out of the URL: a reload should
   // not throw away what was done on the panel since. Declared after the stored session, so it lands after the restore.

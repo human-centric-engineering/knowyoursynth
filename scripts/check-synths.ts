@@ -68,7 +68,7 @@ import { createSynth, SIGNALS, DESTS } from '@/lib/app/synths/audio/dsp-core';
 import type { EngineParams, Lineage, Preset, SynthDef } from '@/lib/app/synths/contract';
 import { getSynthDef, SYNTH_DEFS } from '@/lib/app/synths/defs';
 import { validateDefaultPatch, validatePreset } from '@/lib/app/synths/validate';
-import { defaultPatchSound } from '@/lib/app/synths/default-patch';
+import { DEFAULT_PATCH_ID, defaultPatchSound } from '@/lib/app/synths/default-patch';
 import type { CatalogueSeedData } from '@/lib/app/catalogue/data';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
@@ -639,6 +639,9 @@ async function main(): Promise<void> {
     ];
     for (const problem of validateDefaultPatch(def).problems)
       E(`${def.id} Default patch ${problem.path}: ${problem.message}`);
+    // The page lists the Default patch under this id, ahead of the catalogue: a sound slugged so would be hidden by it.
+    if (presets.some((p) => p.id === DEFAULT_PATCH_ID))
+      E(`${def.id} has a sound slugged ${DEFAULT_PATCH_ID}, the Default patch's reserved id`);
     // (check.mjs's init phrase has no `loop`, which the engine reads as "loop"; `loop: true` here is the same riff.)
     console.log(`\n${def.name} — ${presets.length} sounds`);
     console.log(

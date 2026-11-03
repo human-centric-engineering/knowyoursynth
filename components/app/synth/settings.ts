@@ -98,6 +98,9 @@ export function useSettings(userId: string | null): Settings {
   // out), which beats what it says.
   const answered = useRef(false);
   const early = useRef<SettingsPatch>({});
+  // When the browser's settings were last changed, as it stood before the first of those early changes: they beat the
+  // account on their own, so their time must not make every other stored setting look newer than the account's too.
+  const atBefore = useRef<{ at: unknown } | null>(null);
   const writer = useAccountWriter<SettingsPatch>(
     userId,
     signedIn && account !== null,
@@ -115,6 +118,7 @@ export function useSettings(userId: string | null): Settings {
     // Kept through the wait for the session, so a change made then still counts once it says who is signed in.
     if (!userId) {
       early.current = {};
+      atBefore.current = null;
       return undefined;
     }
     let live = true;
@@ -127,7 +131,10 @@ export function useSettings(userId: string | null): Settings {
         // replace what it has when they were changed after it was kept (a change whose request did not land).
         const by = SettingsBySchema.safeParse(readStored(STORAGE_KEYS.settingsBy));
         const theirs = by.success && by.data !== null && by.data !== userId;
-        const at = SettingsAtSchema.safeParse(readStored(STORAGE_KEYS.settingsAt));
+        const at = SettingsAtSchema.safeParse(
+          atBefore.current ? atBefore.current.at : readStored(STORAGE_KEYS.settingsAt)
+        );
+        atBefore.current = null;
         // When the account's were kept, on the page's clock.
         const kept = acct.updatedAt === null ? null : Date.parse(acct.updatedAt) - skewOf(acct.now);
         const newer = at.success && (kept === null || at.data > kept);
@@ -165,6 +172,8 @@ export function useSettings(userId: string | null): Settings {
   const toAccount = useCallback(
     (change: SettingsPatch) => {
       if (userId && answered.current) writeStored(STORAGE_KEYS.settingsBy, userId);
+      if (!answered.current && !atBefore.current)
+        atBefore.current = { at: readStored(STORAGE_KEYS.settingsAt) };
       writeStored(STORAGE_KEYS.settingsAt, Date.now());
       if (answered.current) setAccount((a) => a && { ...a, ...change });
       else early.current = { ...early.current, ...change };

@@ -437,6 +437,35 @@ describe('signed in, opening a synth', () => {
     ]);
   });
 
+  it('does not let a change made before the account answered make the other stored settings beat it', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+    vi.setSystemTime(Date.parse('2026-10-16T10:00:00.000Z'));
+    // Changed in this browser before the account's were kept, elsewhere.
+    storeLocal('kys.tips', false);
+    storeLocal('kys.settingsAt', Date.parse('2026-10-16T07:00:00.000Z'));
+    storeLocal('kys.settingsBy', 'user-1');
+    let answer: (s: KeptSettings) => void = () => undefined;
+    api.get.mockImplementation(async (path: string) => {
+      if (path === SETTINGS_PATH)
+        return new Promise((r) => {
+          answer = (kept) => r(served.settings(kept));
+        });
+      if (path === PANEL_PATH) return served.panel(null);
+      return [];
+    });
+    page();
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    fireEvent.click(screen.getByRole('button', { name: 'Show harmonics' }));
+    await act(async () => answer({ ...NO_SETTINGS, tips: true, harm: false, updatedAt: KEPT_AT }));
+    const cards = within(screen.getByRole('group', { name: 'Hover help' }));
+    expect(cards.getByRole('button', { name: 'On' }).getAttribute('aria-pressed')).toBe('true');
+
+    await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_DELAY_MS + 1));
+    expect(settingsPatches()).toEqual([
+      [SETTINGS_PATH, { body: { harm: true }, options: undefined }],
+    ]);
+  });
+
   it('does not restore over a panel moved before the account answered, and keeps the moved one', async () => {
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
     let answer: (p: PanelPref) => void = () => undefined;
