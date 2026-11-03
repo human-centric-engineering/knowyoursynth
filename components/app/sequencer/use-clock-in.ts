@@ -73,6 +73,7 @@ export function useClockIn({
   const connected = midi.status === 'on' && id !== null && midi.inputs.some((i) => i.id === id);
 
   const [bpm, setBpm] = useState<number | null>(null);
+  const shown = useRef<number | null>(null);
   // One follower for the page's life, driving whichever transport is attached.
   const follower = useMemo(() => createClockFollower(), []);
   const at = useMemo(() => audioClock(() => engine?.ctx ?? null), [engine]);
@@ -83,7 +84,12 @@ export function useClockIn({
     const undo = listen((data, ms, input) => {
       if (input !== id) return;
       follower.input(data, ms);
-      setBpm(follower.bpm());
+      // 24 pulses a beat: the page is told only when the tempo taken moves.
+      const now = follower.bpm();
+      if (now !== shown.current) {
+        shown.current = now;
+        setBpm(now);
+      }
     });
     const t = setInterval(() => follower.check(performance.now()), CHECK_MS);
     return () => {
@@ -92,6 +98,7 @@ export function useClockIn({
       // No longer followed (another source, the input unplugged, MIDI off): what the clock started stops, and its
       // tempo is no longer shown.
       follower.input([STOP], performance.now());
+      shown.current = null;
       setBpm(null);
     };
   }, [connected, id, listen, follower]);

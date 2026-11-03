@@ -764,24 +764,30 @@ every input, the chosen one too.
 | -------------------- | ------------------------------------------------------------------------------------------------- |
 | Start                | Plays from beat 0 on the next pulse (a Start while playing starts again from 0)                   |
 | Continue             | Plays on the next pulse from the clock's count: where it stopped, or where a Song Position put it |
+| Continue, playing    | Nothing: some send one on a loop jump, and the clock never stopped                                |
 | Song Position        | Moves the count, while stopped (in sixteenths). A DAW sends one before Continue when moved        |
 | Stop                 | Stops, letting go of everything as Stop does, MIDI out's All Notes Off included                   |
 | No pulse for 2 beats | Counts as Stop, while playing                                                                     |
 | Clock alone          | Starts nothing: its tempo is read and shown                                                       |
 
 Continuing part-way through a pattern starts the player at a loop and a beat within it: `pattern` takes an `index` and
-a `beat` (both 0 if left out), and plays nothing that falls before that beat. The loop is found from the pattern's
+a `beat` (both 0 if left out), and plays nothing that falls before that beat: a note begun before it is passed over
+with its let-go, which would otherwise let go of a later note on the same key. The loop is found from the pattern's
 length (every loop is as long), so a pattern that plays once has nothing past its end to continue from, and Continue
 there plays nothing. MIDI out's scheduler starts its count at the same loop and sends nothing before the beat. This is
 the one change to the player the feature needed.
 
 **Tempo.** Read from the pulses' timestamps, by a least-squares line through the last beat of them (24 spacings), so
-the 1 ms or so a USB timestamp jitters by averages out: within 0.1 BPM or so at 120. It is taken as the tempo (and
-shown, and sent) only once it moves more than 0.25 BPM (`TEMPO_STEP`), as each tempo sent is a message to the player
+the 1 ms or so a USB timestamp jitters by averages out: within 0.1 BPM or so at 120. Over the first beat of pulses
+each reading is taken, as each is better than the last; after that it is taken as the tempo (and shown, and sent) only
+once it moves more than 0.25 BPM (`TEMPO_STEP`), as each tempo sent is a message to the player
 and a move of MIDI out's look-ahead. A clock coming back after a gap of more than 2 beats has its tempo read afresh.
 The tempo is sent to the player as `tempo`, without editing the pattern: the Tempo encoder shows the clock's, read-only
 (`Encoder`'s `readOnly`), and the pattern keeps its own for when the clock is let go. Meanwhile the pattern's own tempo
-and the panel's tempo knob (the TB-303's) are not sent.
+and the panel's tempo knob (the TB-303's) are not sent, and the knob does not edit the pattern's tempo: its tempo is
+taken when the clock is let go. A run Play started here goes on, at the pattern's tempo again.
+A Start or Continue that plays nothing (the sound not yet allowed, a pattern past its end) is not waited on: a Play
+pressed later is a run of the page's own, not held to the beat the clock asked for.
 
 **Phase.** A tempo alone drifts. On every beat (every 24th pulse) the player's beat heard at that pulse is compared with
 the clock's count, and three quarters of the difference (`GAIN`) is made up over the beat after, by sending the tempo
@@ -804,7 +810,8 @@ within 3 ms over 64 bars, and after a change of tempo; no message to set the pla
 
 Tests: `tests/unit/lib/app/midi/follow.test.ts` (a simulated player heard 40 ms after it is told, and jittered pulses:
 the tempo within 0.5 BPM at three tempos, nothing on clock alone, the beat within 3 ms over 64 bars, a start at the
-wrong tempo pulled in, a change of tempo, the nudge's limit, Stop and Continue, Song Position, Start while playing, a
+wrong tempo pulled in, a change of tempo, the nudge's limit, Stop and Continue, Song Position, Start while playing, Continue while playing, a start that plays nothing, the
+first beat refining the tempo, a
 dropout and none while stopped, a run it did not start, nothing after a stop); `pattern-player.test.ts` and
 `scheduler.test.ts` (a run started part-way); `use-midi.test.tsx` (inputs, and clock messages with their input); and
 `use-clock-in.test.tsx` (the real `useMidi`, `useSequencer` and `useMidiOut` with a fake `requestMIDIAccess`: the

@@ -602,6 +602,31 @@ describe('starting part-way (f-midi-hardware-lead t-91)', () => {
     ]);
   });
 
+  it('a note passed over does not let go of a later one on the same key', () => {
+    const { notes } = play(2600, [
+      [
+        0,
+        {
+          type: 'pattern',
+          loop: loop(
+            [
+              [1, 60, 2],
+              [2.5, 60, 1.5],
+            ],
+            4
+          ),
+          bpm: BPM,
+          beat: 2,
+        },
+      ],
+    ]);
+    // The first 60 began before beat 2: its let-go at beat 3 is not the second 60's, which plays to beat 4.
+    expect(notes).toEqual([
+      [500, true, 60],
+      [2000, false, 60],
+    ]);
+  });
+
   it('plays a note on the very beat it starts at', () => {
     const { notes } = play(600, [
       [

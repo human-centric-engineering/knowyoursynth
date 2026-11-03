@@ -329,9 +329,12 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     idx = 0;
     pos = Math.min(Math.round(at * spb()), cur.len - 1);
     index = from;
-    // Started part-way: what falls before the playhead is passed over (a let-go there finds nothing held), and the
-    // settings the lanes have there come in now.
-    while (idx < base.length && base[idx].t < pos) idx++;
+    // Started part-way: a note that starts before the playhead is passed over, its let-go with it (which would let go
+    // of a later note on the same key), and the settings the lanes have there come in now.
+    if (pos > 0) {
+      const s = spb();
+      cur.evs = base.filter((e) => Math.round(e.st * s) >= pos);
+    }
     while (pi < pev.length && pev[pi].t <= pos) pi++;
     if (pi > 0) apply(pev[pi - 1].p);
     announce = true;

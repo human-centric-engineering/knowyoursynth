@@ -592,28 +592,20 @@ export function Sequencer({
           />
         </div>
         <div className="kys-seq-controls">
-          {followed ? (
-            <Encoder
-              label="Tempo"
-              value={followed.clock.bpm ?? p.bpm}
-              min={MIN_BPM}
-              max={MAX_BPM}
-              format={(v) => `${Math.round(v)}`}
-              help={`The tempo of the MIDI clock from ${followed.source?.name ?? 'the input chosen'}, which the pattern follows. Choose Internal under Clock to set it here.`}
-              onChange={() => {}}
-              readOnly
-            />
-          ) : (
-            <Encoder
-              label="Tempo"
-              value={p.bpm}
-              min={MIN_BPM}
-              max={MAX_BPM}
-              format={(v) => `${Math.round(v)}`}
-              help="Beats per minute."
-              onChange={(v) => setP('bpm', v, 'bpm')}
-            />
-          )}
+          <Encoder
+            label="Tempo"
+            value={followed ? (followed.clock.bpm ?? p.bpm) : p.bpm}
+            min={MIN_BPM}
+            max={MAX_BPM}
+            format={(v) => `${Math.round(v)}`}
+            help={
+              followed
+                ? `The tempo of the MIDI clock from ${followed.source?.name ?? 'the input chosen'}, which the pattern follows. Choose Internal under Clock to set it here.`
+                : 'Beats per minute.'
+            }
+            onChange={(v) => setP('bpm', v, 'bpm')}
+            readOnly={!!followed}
+          />
           {clockIn && (clockIn.status === 'on' || clockIn.source) && (
             <ClockSelect clock={clockIn} />
           )}

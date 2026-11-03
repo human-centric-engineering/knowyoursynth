@@ -10,7 +10,7 @@
  *   to send on every pulse.
  * - **Start** (0xFA) plays from beat 0 on the next pulse, **Continue** (0xFB) from where the clock's count is: where it
  *   stopped, or where a **Song Position Pointer** (0xF2) put it while stopped (a DAW sends one before Continue when it
- *   has been moved). **Stop** (0xFC) stops. Clock alone starts nothing.
+ *   has been moved); a Continue while playing is passed over. **Stop** (0xFC) stops. Clock alone starts nothing.
  * - **A clock gone quiet** for {@link DROPOUT_BEATS} beats while playing counts as Stop (`check`, on a timer).
  *
  * **Phase.** A tempo alone drifts: the player's beat is compared with the clock's on every beat, and the difference is
@@ -55,9 +55,9 @@ const DEFAULT_BEAT_MS = 500;
 export interface ClockTransport {
   /**
    * Play from `beat`, counted from the pattern's start across its loops, at `bpm` (`null`: the clock's tempo is not
-   * known yet, so the pattern's own).
+   * known yet, so the pattern's own). Resolves false when nothing started.
    */
-  start(beat: number, bpm: number | null): void;
+  start(beat: number, bpm: number | null): Promise<boolean> | void;
   stop(): void;
   /** The player's tempo, moved without editing the pattern. */
   tempo(bpm: number): void;
@@ -163,16 +163,22 @@ export function createClockFollower(to: ClockTransport | null = null): ClockFoll
     if (times.length <= MIN_SPACINGS) return;
     const bpm = 60000 / (spacing(times) * PPQN);
     if (!(Number.isFinite(bpm) && bpm > 0)) return;
-    if (tempo === null || Math.abs(bpm - tempo) > TEMPO_STEP) tempo = bpm;
+    // Until a beat of pulses is in, each reading is a better one: only then does the tempo wait to move a step.
+    if (tempo === null || times.length <= WINDOW || Math.abs(bpm - tempo) > TEMPO_STEP) tempo = bpm;
   }
 
   function pulse(ms: number) {
     measure(ms);
     if (state === 'armed') {
       state = 'running';
-      asked = count / PPQN;
+      const ask = count / PPQN;
+      asked = ask;
       nudge = 0;
-      transport?.start(asked, tempo);
+      // A start that plays nothing (the sound not allowed yet, a pattern past its end) is not waited on: a Play pressed
+      // later is not held to this beat.
+      void Promise.resolve(transport?.start(ask, tempo)).then((ok) => {
+        if (ok === false && asked === ask) asked = null;
+      });
       count++;
       return;
     }
@@ -193,6 +199,7 @@ export function createClockFollower(to: ClockTransport | null = null): ClockFoll
   function halt() {
     if (state === 'stopped') return;
     state = 'stopped';
+    asked = null;
     transport?.stop();
   }
 
@@ -203,8 +210,10 @@ export function createClockFollower(to: ClockTransport | null = null): ClockFoll
       else if (status === START) {
         count = 0;
         state = 'armed';
-      } else if (status === CONTINUE) state = 'armed';
-      else if (status === STOP) halt();
+      } else if (status === CONTINUE) {
+        // Continue while playing (some send one on a loop jump) is no restart: the clock never stopped.
+        if (state === 'stopped') state = 'armed';
+      } else if (status === STOP) halt();
       else if (status === SONG_POSITION && state === 'stopped') {
         // In sixteenths: six pulses each.
         const lsb = data[1] ?? 0;
@@ -229,6 +238,7 @@ export function createClockFollower(to: ClockTransport | null = null): ClockFoll
     stopped() {
       playing = false;
       lockedFrom = null;
+      asked = null;
       anchors.length = 0;
       starts.clear();
       lengths.clear();

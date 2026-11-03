@@ -118,9 +118,10 @@ export function Encoder({
   };
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
     // The main button or a finger: a right-click opens the context menu, which can swallow the let-go.
-    if (e.button !== 0 || readOnly) return;
-    e.currentTarget.setPointerCapture?.(e.pointerId);
+    if (e.button !== 0) return;
     e.currentTarget.focus();
+    if (readOnly) return;
+    e.currentTarget.setPointerCapture?.(e.pointerId);
     drag.current = { y: e.clientY, from: value };
   };
   const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {

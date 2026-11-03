@@ -306,6 +306,42 @@ describe('createClockFollower', () => {
     expect(r.log).toEqual(['start 0', 'start 0']);
   });
 
+  it('Continue while playing is passed over: the run goes on', () => {
+    const r = rig();
+    r.send([START], 0);
+    const t = clock(r, { from: 1, bpm: 120, beats: 3, j: 0 });
+    r.send([CONTINUE], t);
+    clock(r, { from: t + 1, bpm: 120, beats: 1, j: 0 });
+    expect(r.log).toEqual(['start 0']);
+  });
+
+  it('a start that plays nothing does not hold a later Play to its beat', async () => {
+    const f = createClockFollower({
+      start: () => Promise.resolve(false),
+      stop: () => {},
+      tempo: () => {},
+    });
+    const gap = 60000 / (120 * PPQN);
+    f.input([START], 0);
+    for (let k = 0; k < 2 * PPQN; k++) f.input([CLOCK], k * gap);
+    await Promise.resolve();
+    // Play pressed on the page later: a run of its own, not one the clock started at beat 0.
+    f.started();
+    expect(f.beat(2 * PPQN * gap)).toBeNull();
+  });
+
+  it('the first beat of pulses refines the tempo: a rough first reading does not stand', () => {
+    const f = createClockFollower();
+    // The first six spacings read 120.2, the rest 120: a reading off by less than a step.
+    const rough = 60000 / (120.2 * PPQN);
+    const gap = 60000 / (120 * PPQN);
+    let t = 0;
+    for (let k = 0; k <= 6; k++) f.input([CLOCK], (t = k * rough));
+    expect(f.bpm()).toBeCloseTo(120.2, 6);
+    for (let k = 1; k <= 2 * PPQN; k++) f.input([CLOCK], t + k * gap);
+    expect(Math.abs(f.bpm()! - 120)).toBeLessThan(0.1);
+  });
+
   it('a clock gone quiet for two beats while playing stops it; less does not', () => {
     const r = rig();
     r.send([START], 0);

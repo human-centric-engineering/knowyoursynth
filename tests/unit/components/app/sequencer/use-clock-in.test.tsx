@@ -259,6 +259,21 @@ describe('the transport', () => {
     act(() => void result.current.seq.edit((p) => ({ ...p, bpm: 90 })));
     expect(sent.filter((m) => m.type === 'tempo' && 'bpm' in m && m.bpm === 90)).toEqual([]);
   });
+
+  it('a run Play started here goes back to the pattern’s tempo once the clock is let go', async () => {
+    const { result, sent } = await page();
+    act(() => void result.current.seq.edit((p) => ({ ...p, bpm: 90 })));
+    act(() => result.current.clockIn.setSource('tr8'));
+    await pulses(tr8, PPQN * 2);
+    await act(async () => {
+      await result.current.seq.play();
+    });
+    expect(patterns(sent)[0].bpm).toBeCloseTo(120, 3);
+    sent.length = 0;
+    act(() => result.current.clockIn.setSource(null));
+    expect(result.current.seq.playing).toBe(true);
+    expect(sent.filter((m) => m.type === 'tempo')).toEqual([{ type: 'tempo', bpm: 90 }]);
+  });
 });
 
 describe('MIDI out meanwhile', () => {

@@ -717,9 +717,12 @@ export function useSequencer({
 
   // The panel's tempo knob moves the pattern's tempo, as it moves a riff's. The page sends the engine the tempo itself;
   // MIDI out is told the same here, so its look-ahead moves at once rather than when the player's next event says.
+  // Following a clock, the knob moves nothing: the clock's tempo plays, and the pattern's is not edited unseen. Its
+  // tempo is taken when the clock is no longer followed.
+  const following = clock?.following ?? false;
   useEffect(() => {
-    if (!tempo) return;
-    if (!clockRef.current?.following) outRef.current?.message({ type: 'tempo', bpm: tempo });
+    if (!tempo || following) return;
+    outRef.current?.message({ type: 'tempo', bpm: tempo });
     const p = patternRef.current;
     const bpm = clampBpm(tempo);
     if (p.bpm === bpm) return;
@@ -734,7 +737,7 @@ export function useSequencer({
       named: q.named && { ...q.named, baseline: atTempo(q.named.baseline) },
     }));
     setBaseline(atTempo(baselineRef.current));
-  }, [tempo, setBaseline]);
+  }, [tempo, following, setBaseline]);
 
   /** A Play waiting for the sound: an arp press then joins it rather than starting a run of its own. */
   const starting = useRef(false);
@@ -821,13 +824,21 @@ export function useSequencer({
   useEffect(() => {
     if (!attachClock) return undefined;
     return attachClock({
-      start: (beat, bpm) => void playFrom(beat, bpm),
+      start: (beat, bpm) => playFrom(beat, bpm),
       stop,
       tempo: (bpm) => {
         if (playingRef.current) send({ type: 'tempo', bpm });
       },
     });
   }, [attachClock, playFrom, stop, send]);
+  // No longer following: a run still playing (one Play started here) goes back to the pattern's tempo.
+  const wasFollowing = useRef(following);
+  useEffect(() => {
+    const was = wasFollowing.current;
+    wasFollowing.current = following;
+    if (!was || following || !playingRef.current) return;
+    send({ type: 'tempo', bpm: patternRef.current.bpm });
+  }, [following, send]);
 
   // The loop after this one was queued before Fill changed: queued again, so Fill is heard from the next loop.
   const setFill = useCallback(
