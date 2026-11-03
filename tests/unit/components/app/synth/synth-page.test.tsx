@@ -27,7 +27,7 @@ import { SCALE_PHRASE } from '@/lib/app/synths/default-patch';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
-import { storeSound } from '@/tests/helpers/synth-session';
+import { comeBackTo, storeSound } from '@/tests/helpers/synth-session';
 import { glideMotion } from '@/components/app/synth/motion';
 import { getSynthRouting } from '@/lib/app/synths/routing';
 
@@ -193,7 +193,10 @@ function page(over: Partial<SynthPageProps> = {}) {
 }
 
 /** A stored session as `storedSession()` writes it. */
-const storeSession = (s: object) => window.localStorage.setItem(SESSION_KEY, JSON.stringify(s));
+const storeSession = (s: object) => {
+  comeBackTo('model-d');
+  window.localStorage.setItem(SESSION_KEY, JSON.stringify(s));
+};
 
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
 /** A control in the panel settings on the panel's foot rail (t-72). */
@@ -1360,6 +1363,46 @@ describe('SynthPage session', () => {
 
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+  });
+
+  it('opens on the Default patch when the synth is chosen over another, and keeps that, not the panel left on it', () => {
+    storeSound(def, FAT_BASS);
+    window.localStorage.setItem('kys.synth', JSON.stringify('ob-x'));
+    page();
+    expect(loadedName()).toBe('Default patch');
+    expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
+      '5'
+    );
+    expect(screen.queryByText(/controls? moved/)).toBeNull();
+    act(() => {
+      vi.advanceTimersByTime(SESSION_WRITE_DELAY_MS);
+    });
+    expect(readStored(SESSION_KEY)).toMatchObject({ presetId: 'default-patch' });
+    expect(readStored('kys.synth')).toBe('model-d');
+  });
+
+  it('turns the Signal layer and the sensitive controls off when the synth is chosen over another', () => {
+    window.localStorage.setItem('kys.dim', 'true');
+    window.localStorage.setItem('kys.heat', 'true');
+    window.localStorage.setItem('kys.synth', JSON.stringify('ob-x'));
+    page();
+    expect(
+      screen.getByRole('button', { name: 'Show sensitive controls' }).getAttribute('aria-pressed')
+    ).toBe('false');
+    expect(readStored('kys.dim')).toBe(false);
+    expect(readStored('kys.heat')).toBe(false);
+  });
+
+  it('keeps the panel, the Signal layer and the sensitive controls on a refresh', () => {
+    storeSound(def, FAT_BASS);
+    window.localStorage.setItem('kys.dim', 'true');
+    window.localStorage.setItem('kys.heat', 'true');
+    page();
+    expect(loadedName()).toBe('Fat bass');
+    expect(
+      screen.getByRole('button', { name: 'Show sensitive controls' }).getAttribute('aria-pressed')
+    ).toBe('true');
+    expect(readStored('kys.dim')).toBe(true);
   });
 
   it('writes the panel to kys.session.model-d once it has been still for the write delay', () => {

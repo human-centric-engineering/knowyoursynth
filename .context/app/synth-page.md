@@ -70,7 +70,14 @@ break shared links for no visible gain. "Sound" on screen means what you hear ("
   approval. See `lib/app/catalogue/designs.ts`.
 - **The Default patch comes first** (`f-default-patch`). The page puts it ahead of the catalogue's sounds
   (`defaultPatchSound` in `lib/app/synths/default-patch.ts`, under the reserved id `default-patch`), so a synth with
-  no session yet opens on it, and a stored sound the library no longer has falls back to it. The library lists it
+  no session yet opens on it, and a stored sound the library no longer has falls back to it. **A synth chosen over
+  another opens on it too**, whatever panel it was left with (owner ruling, 2026-11-03): on arrival the page compares
+  `kys.synth`, the last synth opened, with this one (`switchedTo`), and only a refresh, which comes back to the same
+  synth, restores the stored panel. The Default patch is then set as a change the visitor made, so the browser and
+  the account keep it and the account's older panel does not replace it; `?sound=`, a shared sound and `?mine=` still
+  open their own sound over it. The same switch turns the Signal layer and Show sensitive controls off: both are kept
+  as settings, so they would otherwise carry over from the synth before. A dated history of each synth's recent
+  panels, to get one back, is Hub idea #32. The library lists it
   above its sounds, outside their search, categories and count; it is no catalogue row. So nothing that reads or
   writes a library sound through the API is handed it: it records no lesson progress, takes no star, is credited by
   no saved copy, and is no start for the patterns that suit the patch. In the sequencer its one pattern is the C
@@ -183,8 +190,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   it puts back what the page had lit (`SoundDesign`'s `lit`).
 - **From `lg` up the page lights the step's controls itself** while the panel is at a step, since
   the lesson is not on the page there — but only once a step has been picked on this synth since
-  the page opened (`litFor`). A step restored from `kys.session.<id>` (a refresh, or coming back to
-  a synth) leaves the panel unlit.
+  the page opened (`litFor`). A step restored from `kys.session.<id>` (a refresh) leaves the panel
+  unlit.
 - **The step card** is the step the panel is at, in a column no wider than 68ch in the middle of
   the strip, between Previous and Next. With the finished sound on, it is the overview above and
   its button is "Build it step by step"; from the last step Next finishes. Their names ("Previous
@@ -453,7 +460,9 @@ phone. `f-phone-and-tablet` t-65 made the panel and keyboard work on touch:
 
 Keys are the prototype's. Every value is checked when read; a bad one falls back to its default.
 Signed in, `kys.session.<id>`, `kys.tips`, `kys.fx`, `kys.dim`, `kys.heat` and `kys.harm` are kept
-in the account as well. The newer copy wins ([`sounds.md`](./sounds.md)).
+in the account as well. The newer copy wins ([`sounds.md`](./sounds.md)). A synth's stored panel is restored only
+when the page comes back to the synth in `kys.synth`; one chosen over another opens on its Default patch, with
+`kys.dim` and `kys.heat` off.
 
 | Key                    | Holds                                                                                                                                                                                                                                                              |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |

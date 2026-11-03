@@ -138,6 +138,10 @@ so the plan's "scope" has no row.
     last request that did not land), it is sent to the account. A panel saved while **another**
     user was signed in is never sent. Panels stored before this change have no time, so the
     account's wins.
+  - **Only on coming back to the same synth.** A synth chosen over another opens on its Default patch
+    (`f-default-patch`, [`synth-page.md`](./synth-page.md)), set as a change the visitor made, so it is newer than
+    the account's panel and is sent to it. The account's panel is restored over the browser's only when the page
+    comes back to the synth it was on (a refresh).
   - Settings work the same way, as one set: `kys.settingsAt` is when they were last changed and
     `kys.settingsBy` who was signed in then. The browser's fill what the account has no value for,
     and replace what it has when they are newer; the account's are written back to the browser.

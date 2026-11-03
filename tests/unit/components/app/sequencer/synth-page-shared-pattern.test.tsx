@@ -20,6 +20,7 @@
 
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { comeBackTo } from '@/tests/helpers/synth-session';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
@@ -198,6 +199,8 @@ const detailOf = (over: Partial<UserPatternDetail>): UserPatternDetail => ({
 
 beforeEach(() => {
   window.localStorage.clear();
+  // Coming back to Model D, as a refresh does: a synth chosen over another opens on its Default patch instead.
+  comeBackTo('model-d');
   window.history.replaceState(null, '', `/synths/model-d/p/${SLUG}`);
   tallScreen();
   auth.signedIn = false;

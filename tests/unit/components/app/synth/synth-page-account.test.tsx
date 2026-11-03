@@ -23,6 +23,7 @@
 
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { comeBackTo } from '@/tests/helpers/synth-session';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import {
   ACCOUNT_WRITE_DELAY_MS,
@@ -185,6 +186,8 @@ const settingsPatches = () => api.patch.mock.calls.filter((c) => c[0] === SETTIN
 
 beforeEach(() => {
   window.localStorage.clear();
+  // Coming back to Model D, as a refresh does: a synth chosen over another opens on its Default patch instead.
+  comeBackTo('model-d');
   tallScreen();
   window.history.replaceState(null, '', '/synths/model-d');
   auth.signedIn = false;

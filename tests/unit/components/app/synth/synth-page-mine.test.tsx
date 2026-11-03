@@ -12,7 +12,7 @@
 
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import { storeSound } from '@/tests/helpers/synth-session';
+import { comeBackTo, storeSound } from '@/tests/helpers/synth-session';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import type { SynthPageProps } from '@/components/app/synth/synth-page';
 import { focusStore } from '@/components/app/synth/stores';
@@ -216,6 +216,8 @@ function serve(list: UserSoundSummary[], byId: Record<string, UserSoundDetail> =
 
 beforeEach(() => {
   window.localStorage.clear();
+  // Coming back to Model D, as a refresh does: a synth chosen over another opens on its Default patch instead.
+  comeBackTo('model-d');
   tallScreen();
   window.history.replaceState(null, '', '/synths/model-d');
   auth.signedIn = false;

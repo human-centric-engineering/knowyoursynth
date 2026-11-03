@@ -458,6 +458,9 @@ function Synth({
     [hereHref]
   );
 
+  // Whether this synth was chosen over another (`f-default-patch`): the last synth opened was a different one, or none.
+  // Read on arrival, before this synth is remembered; a refresh comes back to the same synth and keeps its panel.
+  const switchedTo = useRef(false);
   // On arrival: follow a prototype hash link, remember this synth, and restore the last view if the URL has none.
   // A hash link to this same synth only sets the view: a navigation to the same page keeps this component, and with
   // it the view it started with. A databank link (`#bank/…`) goes to the databank's page.
@@ -472,6 +475,7 @@ function Synth({
       router.replace(synthHref(hash.id, hash.view));
       return;
     }
+    switchedTo.current = readStored(STORAGE_KEYS.synth) !== synthId;
     writeStored(STORAGE_KEYS.synth, synthId);
     if (hash) {
       setView(hash.view);
@@ -516,6 +520,13 @@ function Synth({
     canRedo,
     shown: historyShown,
   } = usePanelHistory(stored, setSess, synthDef, stopUnplugging);
+  // A synth chosen over another opens on its Default patch, whatever panel it was left with (owner ruling, 2026-11-03).
+  // Set as a change the visitor made, so it is what the browser and the account keep: a refresh comes back to it, and
+  // the account's older panel does not replace it. Declared after the stored session, so it lands after the restore,
+  // and before `?sound=`, a shared sound and `?mine=`, which still open their own sound over it.
+  useEffect(() => {
+    if (switchedTo.current) setSess(() => freshSession(synthDef, sounds[0]));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
   // `?sound=` loads that sound over whatever was stored, as a fresh panel, then drops out of the URL: a reload should
   // not throw away what was done on the panel since. Declared after the stored session, so it lands after the restore.
   // A sound the library does not have opens the synth as it would have opened anyway. Only `sound` is taken off: the
@@ -654,6 +665,14 @@ function Synth({
     if (m !== 'inUse' || liveOffered) setLiveOn(m === 'flow' ? 'flow' : m === 'live');
   };
   const [heatOn, setHeatOn] = settings.heat;
+  // A synth chosen over another starts with the Signal layer and the sensitive controls off: both are kept as settings,
+  // so they would otherwise carry over from the synth before (owner ruling, 2026-11-03). After the settings have read
+  // the browser, so what they read is not put back over this.
+  useEffect(() => {
+    if (!switchedTo.current) return;
+    setSignal('off');
+    setHeatOn(false);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
   const [harmOn, setHarmOn] = settings.harm;
   const [fx, setFx] = settings.fx;
 
