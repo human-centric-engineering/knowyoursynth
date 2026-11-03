@@ -682,7 +682,7 @@ describe('a lane’s CC (t-90)', () => {
     expect(screen.queryByRole('option', { name: 'CC 120' })).toBeNull();
   });
 
-  it('is not offered with no output, or with Synth only', () => {
+  it('is not offered with no output, with Synth only, or with the output not connected', () => {
     const { rerender } = render(<Harness />);
     addCutoff();
     expect(screen.queryByRole('combobox', { name: 'CC' })).toBeNull();
@@ -690,9 +690,13 @@ describe('a lane’s CC (t-90)', () => {
       <Harness
         midiOut={midiOut({
           choice: { output: { id: 'td3', name: 'TD-3' }, channel: 1, plays: 'synth' },
+          sending: false,
         })}
       />
     );
+    expect(screen.queryByRole('combobox', { name: 'CC' })).toBeNull();
+    // An output kept from an earlier visit, not connected yet.
+    rerender(<Harness midiOut={midiOut({ status: 'off', connected: false, sending: false })} />);
     expect(screen.queryByRole('combobox', { name: 'CC' })).toBeNull();
     rerender(<Harness midiOut={midiOut()} />);
     expect(screen.getByRole('combobox', { name: 'CC' })).toBeTruthy();

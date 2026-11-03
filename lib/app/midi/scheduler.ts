@@ -34,8 +34,9 @@
  * straight after Stop waits for the next loop. A held-up timer stops the clock, which starts again at the next loop.
  *
  * With CCs given to mod lanes (`setCcs`, t-90), each change of a lane's value is sent as its CC on the channel, timed
- * like the notes and ahead of a note on the same beat. A CC is sent only when its value changes. A change the notes
- * have passed (an edit, a held-up timer, a change of port) isn't sent late one by one: only the value in effect, now.
+ * like the notes and ahead of a note on the same beat. A CC is sent only when its value changes. Changes whose time
+ * has gone (an edit, a CC given mid-run, a held-up timer, a change of port) aren't sent late one by one: only the
+ * value in effect on each CC, now.
  * Nothing is sent back on Stop: the hardware keeps the last value, as it has no panel value to go back to.
  *
  * Pure: no timers, no Web MIDI. The page (`use-midi-out.ts`) gives it a port and a clock and calls `pump`.
@@ -205,6 +206,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   /** What the lanes' values are sent as, and the value last sent on each CC since the last release. */
   let ccs: CcLookup | null = null;
   const ccSent = new Map<number, number>();
+  /** Per CC, the value in effect from changes whose time has gone, still to be sent (`sendMod`). */
+  const behind = new Map<number, number>();
 
   const msAt = (a: Anchor, g: number) => a.ms + ((g - a.g) * 60000) / a.bpm;
   const beatAt = (a: Anchor, ms: number) => a.g + ((ms - a.ms) * a.bpm) / 60000;
@@ -459,6 +462,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       if (!on && !off && !t && !mod) break;
       // At the same beat a let-go goes first, as in the player, then the clock, then the lanes, then the note: Start
       // before the first note, Stop after the last let-go, a CC before the note it shapes.
+      if (!(mod && (!on || mod.g <= on.g) && (!t || mod.g < t.g) && (!off || mod.g < off.g)))
+        catchUp(now);
       if (off && (!on || off.g <= on.g) && (!t || off.g <= t.g) && (!mod || off.g <= mod.g)) {
         offs.shift();
         noteOff(off.n, Math.max(now, msAt(a, off.g)));
@@ -483,24 +488,39 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       noteOn(n, v, Math.max(now, at));
       owe({ g: c.start + b + len, n });
     }
+    catchUp(now);
     sentTo = Math.max(sentTo, to);
   }
 
+  /** A CC's value, unless it is the value last sent on it. */
+  function ccOut(cc: number, v: number, at: number) {
+    if (ccSent.get(cc) === v) return;
+    ccSent.set(cc, v);
+    out([0xb0 | channel, cc, v], at);
+  }
+
   /**
-   * The lanes' change at beat `g` of loop `c`, as CCs. One the notes have passed goes now, and only if it is the last
-   * passed: the value in effect, not a burst of the ones before it. One due goes at its time, or now if that has gone:
-   * a CC is a setting, better late than left wrong.
+   * The lanes' change at beat `g` of loop `c`, as CCs. One whose time has gone (an edit, a CC given mid-run, a change
+   * of port, a held-up timer) is gathered per CC into `behind`, so only the value in effect on each goes, now, and
+   * not a burst of the ones before it: a CC is a setting, better late than left wrong. One still to come goes at its
+   * time.
    */
   function sendMod(c: Cursor, g: number, set: ControlValues | null, a: Anchor, now: number) {
     c.k++;
     if (!set || !ccs) return;
-    if (g < sentTo && c.k < c.mods.length && c.start + c.mods[c.k][0] < sentTo) return;
-    const at = g < sentTo ? now : Math.max(now, msAt(a, g));
-    for (const [cc, v] of ccs(set)) {
-      if (ccSent.get(cc) === v) continue;
-      ccSent.set(cc, v);
-      out([0xb0 | channel, cc, v], at);
+    const due = msAt(a, g);
+    if (due <= now) {
+      for (const [cc, v] of ccs(set)) behind.set(cc, v);
+      return;
     }
+    catchUp(now);
+    for (const [cc, v] of ccs(set)) ccOut(cc, v, due);
+  }
+
+  /** The values in effect gathered in `behind`, sent now: before anything later is. */
+  function catchUp(now: number) {
+    behind.forEach((v, cc) => ccOut(cc, v, now));
+    behind.clear();
   }
 
   function message(m: SchedulerMessage) {
@@ -600,8 +620,9 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   function setCcs(lookup: CcLookup | null) {
     if (lookup === ccs) return;
     ccs = lookup;
-    // A lane given another CC sends it at its next change, whatever was last sent.
+    // Each lane's CC is sent again from the value in effect, whatever was last sent on it.
     ccSent.clear();
+    if (cur) cur.k = 0;
   }
 
   function setClock(on: boolean) {

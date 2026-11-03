@@ -715,9 +715,10 @@ synth hasn't got has none. One CC goes to one lane: giving it to another takes i
 - **When.** At each change of a lane's value, on the output's channel, on the same count of beats as the notes and in
   the same look-ahead, so swing moves it as it moves the steps. At one beat: a let-go, then the clock, then the CC,
   then the note, so a note plays with the value its step sets. A CC is sent only when its value changes; a step with
-  no value on the lane sends nothing. A change the notes have passed (an edit, a CC given mid-run, a change of port, a
-  held-up timer) isn't sent late one by one: only the value in effect, now. A change due but late is sent now, as a CC
-  is a setting, better late than left wrong.
+  no value on the lane sends nothing. Changes whose time has gone (an edit, a CC given mid-run, a change of port, a
+  held-up timer, across as many loops as it takes) aren't sent late one by one: each CC's value in effect goes once,
+  now, as a CC is a setting, better late than left wrong. One a lane set on an earlier step and not since is among
+  them. An edit's change still to come goes at its own time.
 - **On Stop** nothing is sent back: the hardware keeps the last value, as it has no panel value to return to.
 
 Not in it (the feature's later tasks): riffs or keys played outside the sequencer, and CCs filled in from the synth
@@ -728,8 +729,9 @@ lanes send); `tests/unit/lib/app/midi/scheduler.test.ts` (timing with swing, nud
 the look-ahead, tempo, late notes, overlapping pitches, boundary-held notes, edits and Stop inside the window, the end,
 a change of port; the clock's pulses at two tempos, a tempo move inside the look-ahead, Start before the first note and
 Stop after the last let-go, turning it on and off mid-run, a change of port, Stop never ahead of what was queued, a
-held-up timer; lane CCs ahead of the note at their beat, sent on change only, the value in effect after an edit, a
-CC given mid-run and a change of port, nothing on Stop); `clock.test.ts`; `tests/unit/components/app/sequencer/use-midi-out.test.tsx` (the real `useMidi`
+held-up timer; lane CCs ahead of the note at their beat, sent on change only, each CC's value in effect after an
+edit, a CC given mid-run, a change of port and a held-up timer across loops, an edit's change still to come at its
+time, nothing on Stop); `clock.test.ts`; `tests/unit/components/app/sequencer/use-midi-out.test.tsx` (the real `useMidi`
 with a fake `requestMIDIAccess`: one grant, the choice, the channel, every release, unplugging, Send clock per
 output, lane CCs per synth and sent, and the row); `mod-lanes.test.tsx` (the lane values a loop carries, the CC
 select);

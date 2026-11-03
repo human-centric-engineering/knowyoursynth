@@ -1227,4 +1227,103 @@ describe('mod lanes as CCs (t-90)', () => {
     t.s.pump();
     expect(ccs(other)).toEqual([[1000, 'cc74=10', 0]]);
   });
+
+  /** Lanes on `x` and `y` sent as CC 74 and CC 71. */
+  const both = (set: Record<string, unknown>): [number, number][] => [
+    ...(typeof set.x === 'number' ? [[74, set.x] as [number, number]] : []),
+    ...(typeof set.y === 'number' ? [[71, set.y] as [number, number]] : []),
+  ];
+  const cc71 = (sent: Sent[]) => kinds(sent).filter(([, k]) => String(k).startsWith('cc71'));
+
+  it('sends a lane given a CC mid-run its value in effect, beside a lane that already had one', () => {
+    const t = setup();
+    t.s.setCcs(lookup);
+    start(
+      t,
+      modded(
+        [],
+        [
+          [0, { x: 10, y: 5 }],
+          [0.5, { x: 20 }],
+        ]
+      )
+    );
+    t.run(300);
+    t.s.setCcs(both);
+    t.s.pump();
+    t.run(600);
+    expect(cc71(t.sent)).toEqual([[300, 'cc71=5', 0]]);
+    expect(ccs(t.sent).map(([at]) => at)).toEqual([0, 300, 500]);
+  });
+
+  it('catches up each CC on its own: a lane set only on an earlier passed change keeps its value', () => {
+    const t = setup();
+    t.s.setCcs(both);
+    start(t, modded([], [[0, { x: 1 }]], 4));
+    t.run(1500);
+    t.s.message({
+      type: 'patternEdit',
+      loop: modded(
+        [],
+        [
+          [0, { x: 2, y: 2 }],
+          [1, { y: 3 }],
+        ],
+        4
+      ),
+    });
+    t.s.pump();
+    expect(ccs(t.sent)).toEqual([
+      [0, 'cc74=1', 0],
+      [1500, 'cc74=2', 0],
+    ]);
+    expect(cc71(t.sent)).toEqual([[1500, 'cc71=3', 0]]);
+  });
+
+  it('sends an edit’s change still to come at its time, not now', () => {
+    const t = setup();
+    t.s.setCcs(lookup);
+    start(t, modded([], [[0, { x: 10 }]], 4));
+    t.run(1500);
+    t.s.message({
+      type: 'patternEdit',
+      loop: modded(
+        [],
+        [
+          [0, { x: 10 }],
+          [1.56, { x: 50 }],
+        ],
+        4
+      ),
+    });
+    t.s.pump();
+    expect(ccs(t.sent)).toEqual([
+      [0, 'cc74=10', 0],
+      [1560, 'cc74=50', 0],
+    ]);
+  });
+
+  it('after a held-up timer across loops, sends only the value in effect, not each loop’s last', () => {
+    const t = setup();
+    t.s.setCcs(lookup);
+    start(
+      t,
+      modded(
+        [],
+        [
+          [0, { x: 10 }],
+          [0.5, { x: 20 }],
+        ]
+      )
+    );
+    t.s.pump();
+    t.now = 3200;
+    t.s.pump();
+    t.run(3600);
+    // At 3,200 the fourth loop is in its first half, at 10, which the hardware already has.
+    expect(ccs(t.sent)).toEqual([
+      [0, 'cc74=10', 0],
+      [3500, 'cc74=20', 0],
+    ]);
+  });
 });
