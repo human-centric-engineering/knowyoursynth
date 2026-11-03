@@ -743,3 +743,71 @@ output, lane CCs per synth and sent, and the row); `mod-lanes.test.tsx` (the lan
 select);
 `use-midi.test.tsx` (outputs); `sequencer.test.tsx` (the run id, what MIDI out is told, the mute); and
 `pattern-player.test.ts` (run echoed, muted).
+
+## MIDI in: following a clock
+
+The sequencer can follow a drum machine or DAW that is already running, rather than always being the master
+(`f-midi-hardware-lead` t-91). The code is `lib/app/midi/follow.ts` (the follower: pure, no timers or Web MIDI) and
+`components/app/sequencer/use-clock-in.ts` (the choice, the input, the timer, and the wiring to the sequencer).
+
+**Choosing the source.** **Clock** in the readout, beside Tempo, once MIDI is connected: Internal (the sequencer's own
+tempo and Play, as before) or one MIDI input. A screen setting under `kys.midiClock`, kept in this browser only, as
+`kys.midiOut` is. An input chosen and unplugged stays listed as not connected, and the sequencer is its own clock until
+it is back. The inputs come from the page's one MIDI grant: `useMidi` now lists `inputs` beside `outputs`, and hands
+clock, Start, Continue, Stop and Song Position (0xF8, 0xFA, 0xFB, 0xFC, 0xF2), with each one's `timeStamp` and the
+input it came on, to whoever `listen`s. Only the chosen input's are read. Notes and the mod wheel go on working from
+every input, the chosen one too.
+
+**Transport.**
+
+| From the input       | The sequencer                                                                                     |
+| -------------------- | ------------------------------------------------------------------------------------------------- |
+| Start                | Plays from beat 0 on the next pulse (a Start while playing starts again from 0)                   |
+| Continue             | Plays on the next pulse from the clock's count: where it stopped, or where a Song Position put it |
+| Song Position        | Moves the count, while stopped (in sixteenths). A DAW sends one before Continue when moved        |
+| Stop                 | Stops, letting go of everything as Stop does, MIDI out's All Notes Off included                   |
+| No pulse for 2 beats | Counts as Stop, while playing                                                                     |
+| Clock alone          | Starts nothing: its tempo is read and shown                                                       |
+
+Continuing part-way through a pattern starts the player at a loop and a beat within it: `pattern` takes an `index` and
+a `beat` (both 0 if left out), and plays nothing that falls before that beat. The loop is found from the pattern's
+length (every loop is as long), so a pattern that plays once has nothing past its end to continue from, and Continue
+there plays nothing. MIDI out's scheduler starts its count at the same loop and sends nothing before the beat. This is
+the one change to the player the feature needed.
+
+**Tempo.** Read from the pulses' timestamps, by a least-squares line through the last beat of them (24 spacings), so
+the 1 ms or so a USB timestamp jitters by averages out: within 0.1 BPM or so at 120. It is taken as the tempo (and
+shown, and sent) only once it moves more than 0.25 BPM (`TEMPO_STEP`), as each tempo sent is a message to the player
+and a move of MIDI out's look-ahead. A clock coming back after a gap of more than 2 beats has its tempo read afresh.
+The tempo is sent to the player as `tempo`, without editing the pattern: the Tempo encoder shows the clock's, read-only
+(`Encoder`'s `readOnly`), and the pattern keeps its own for when the clock is let go. Meanwhile the pattern's own tempo
+and the panel's tempo knob (the TB-303's) are not sent.
+
+**Phase.** A tempo alone drifts. On every beat (every 24th pulse) the player's beat heard at that pulse is compared with
+the clock's count, and three quarters of the difference (`GAIN`) is made up over the beat after, by sending the tempo
+moved by at most a tenth either way (`MAX_NUDGE`). The player's beat is read from its own `loop` events, each placed in
+`performance.now()` time by the audio clock MIDI out uses (`audioClock`), so what is matched to the pulses is what is
+heard, output latency and all. That makes up the latency at Start too: the run starts on the pulse, is heard a little
+after it, and is pulled onto the clock over the first beat or two. With pulses jittered by 1 ms, the beat is held
+within 3 ms over 64 bars, and after a change of tempo; no message to set the player's beat outright was needed.
+
+- **Only a run the clock started is held to its beat.** Play pressed here while following still plays, from the top, at
+  the clock's tempo: there is no beat of the clock's for it to be held to until a Start or Continue.
+- **Another pattern while the clock's run plays** (one opened, another sound's riff) starts where the clock is now,
+  not from its top, and is held to it from there, so the bars stay lined up with the drum machine's. One that plays
+  once and is already past its end starts from its top, as it would without a clock.
+- **No clock goes out while one comes in**: MIDI out's Send clock (t-89) is not sent, and not offered, while a clock is
+  followed, whatever the choice says, so a DAW echoing it back can't have the two chase each other. Let go of the clock
+  and it is sent again as chosen.
+- **The input going away** (unplugged, another source chosen, MIDI turned off) stops a run the clock started, as a Stop
+  would, and the sequencer is its own clock again.
+
+Tests: `tests/unit/lib/app/midi/follow.test.ts` (a simulated player heard 40 ms after it is told, and jittered pulses:
+the tempo within 0.5 BPM at three tempos, nothing on clock alone, the beat within 3 ms over 64 bars, a start at the
+wrong tempo pulled in, a change of tempo, the nudge's limit, Stop and Continue, Song Position, Start while playing, a
+dropout and none while stopped, a run it did not start, nothing after a stop); `pattern-player.test.ts` and
+`scheduler.test.ts` (a run started part-way); `use-midi.test.tsx` (inputs, and clock messages with their input); and
+`use-clock-in.test.tsx` (the real `useMidi`, `useSequencer` and `useMidiOut` with a fake `requestMIDIAccess`: the
+choice kept, an unplugged source, only the chosen input read, Start, Continue part-way and Stop driving the
+sequencer, a dropout on the timer, the input let go of, another pattern mid-run, the tempo not the pattern's, the
+clock-out lock and its release; and the readout's Clock select and read-only Tempo).
