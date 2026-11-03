@@ -530,6 +530,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         SynthSuggestion: { kind: 'not-personal', because: expect.any(String) },
         SoundReport: { kind: 'not-personal', because: expect.any(String) },
         PatternReport: { kind: 'not-personal', because: expect.any(String) },
+        LibraryPattern: { kind: 'not-personal', because: expect.any(String) },
       });
     },
   },
