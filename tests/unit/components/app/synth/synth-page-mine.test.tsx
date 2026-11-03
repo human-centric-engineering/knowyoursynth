@@ -185,7 +185,7 @@ const NIGHT_BASS: UserSoundDetail = {
 function page(over: Partial<SynthPageProps> = {}) {
   // Back to the library's first sound, as it came: a first visit opens on the Default patch.
   const first = (over.detail ?? detail).sounds[0];
-  if (first && !window.localStorage.getItem(SESSION_KEY)) storeSound(def, first);
+  if (first && def && !window.localStorage.getItem(SESSION_KEY)) storeSound(def, first);
   return render(<SynthPage detail={detail} synths={[MODEL_D_SYNTH]} viewParam={null} {...over} />);
 }
 
