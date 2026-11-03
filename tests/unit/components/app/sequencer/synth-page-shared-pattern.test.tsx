@@ -229,6 +229,8 @@ describe('signed out', () => {
       type: 'pattern',
       bpm: 128,
       loop: { notes: NOTES, beats: 3 },
+      run: expect.any(Number),
+      muted: false,
     });
   });
 

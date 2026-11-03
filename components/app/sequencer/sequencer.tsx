@@ -104,6 +104,11 @@ import {
   writeChord,
 } from '@/lib/app/sequencer/record';
 import { KEY_MODES } from '@/components/app/sequencer/use-sequencer';
+import {
+  MIDI_PLAYS,
+  MIDI_PLAYS_LABELS,
+  type MidiOut,
+} from '@/components/app/sequencer/use-midi-out';
 import { noteInOctave, type StepButton } from '@/components/app/sequencer/panel-buttons';
 import { HelpButton } from '@/components/app/synth/bar-controls';
 import { PlayerTip } from '@/components/app/synth/player-tip';
@@ -220,8 +225,11 @@ export function Sequencer({
   def,
   panel,
   hold,
+  midiOut,
 }: {
   seq: SequencerState;
+  /** MIDI out (`f-midi-out` t-88): the pattern played on a MIDI output. Left out, the module has no MIDI out row. */
+  midiOut?: MidiOut;
   /** The page's Hold, which arp mode reads. Left out, the arp row has no Hold. */
   hold?: { on: boolean; set: (on: boolean) => void };
   /** The synth on the panel and its values, for the mod lanes. Left out, the module has no lanes. */
@@ -1003,6 +1011,7 @@ export function Sequencer({
             onRest={() => restOrTie(false)}
             onTie={() => restOrTie(true)}
           />
+          {midiOut && <MidiOutRow midi={midiOut} />}
         </div>
         <StepInspector
           key={`${editing}:${sel}`}
@@ -1142,6 +1151,97 @@ function KeysRow({
             />
           )}
         </>
+      )}
+      {hint && (
+        <span className="kys-seq-keys-hint" aria-live="polite">
+          {hint}
+        </span>
+      )}
+    </div>
+  );
+}
+
+/** What MIDI out can't do here, by the grant's state. */
+const MIDI_OUT_NOTE: Partial<Record<MidiOut['status'], string>> = {
+  unsupported:
+    'This browser can’t send MIDI. Chrome, Edge and Firefox on a computer can; Safari can’t.',
+  frame: 'MIDI can’t be used while this page is shown inside another site. Open it on its own.',
+  blocked: 'MIDI was not allowed. The MIDI button on the bar says how to allow it.',
+  asking: 'Waiting for the browser to allow MIDI…',
+};
+
+/**
+ * MIDI out (`f-midi-out` t-88): the output the pattern plays on, its channel, and whether the browser synth plays too.
+ * Before MIDI is connected, a Connect that asks once for keyboard and outputs alike.
+ */
+function MidiOutRow({ midi }: { midi: MidiOut }) {
+  const { choice } = midi;
+  const note = MIDI_OUT_NOTE[midi.status];
+  const chosen = choice.output;
+  // A chosen output that is not plugged in stays listed, so the choice is not lost while it is away.
+  const options: [string, string][] = [
+    ['', 'Off'],
+    ...midi.outputs.map((o): [string, string] => [o.id, o.name]),
+    ...(chosen && !midi.outputs.some((o) => o.id === chosen.id)
+      ? [[chosen.id, `${chosen.name} (not connected)`] as [string, string]]
+      : []),
+  ];
+  const hint = note
+    ? note
+    : midi.status !== 'on'
+      ? 'Play the pattern on a hardware synth over MIDI.'
+      : midi.outputs.length === 0 && !chosen
+        ? 'No MIDI outputs. Plug one in and it appears here.'
+        : chosen && !midi.connected
+          ? `${chosen.name} is not connected: the synth plays the pattern until it is.`
+          : null;
+  return (
+    <div className="kys-seq-keys-row" role="group" aria-label="MIDI out">
+      {midi.status === 'on' ? (
+        <>
+          <Select
+            label="MIDI out"
+            help="A MIDI output to play the pattern on: a hardware synth plugged in by USB or through a MIDI interface."
+            value={chosen?.id ?? ''}
+            options={options}
+            onChange={(v) => midi.setOutput(v === '' ? null : v)}
+          />
+          {chosen && (
+            <>
+              <Select
+                label="Channel"
+                help="The MIDI channel the hardware listens on."
+                value={String(choice.channel)}
+                options={Array.from({ length: 16 }, (_, i): [string, string] => [
+                  String(i + 1),
+                  String(i + 1),
+                ])}
+                onChange={(v) => midi.setChannel(Number(v))}
+              />
+              <Select
+                label="Plays on"
+                help="MIDI only, so the pattern is not heard twice; MIDI and this synth together; or this synth alone, with the output kept chosen."
+                value={choice.plays}
+                options={MIDI_PLAYS.map((m) => [m, MIDI_PLAYS_LABELS[m]])}
+                onChange={(v) => {
+                  const plays = MIDI_PLAYS.find((x) => x === v);
+                  if (plays) midi.setPlays(plays);
+                }}
+              />
+            </>
+          )}
+        </>
+      ) : (
+        !note && (
+          <PlayerTip
+            name="Connect MIDI"
+            help="The browser asks once, for MIDI keyboards and outputs alike."
+          >
+            <button type="button" className="kys-seq-tool" onClick={midi.connect}>
+              <span className="kys-seq-tool-text">Connect MIDI</span>
+            </button>
+          </PlayerTip>
+        )
       )}
       {hint && (
         <span className="kys-seq-keys-hint" aria-live="polite">

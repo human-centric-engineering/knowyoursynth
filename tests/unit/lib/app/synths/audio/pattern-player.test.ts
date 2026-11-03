@@ -491,6 +491,66 @@ describe('stopping, and sharing the synth with riffs', () => {
   });
 });
 
+describe('MIDI out (f-midi-out t-88)', () => {
+  it('echoes the run that started it in every loop event and in its end', () => {
+    const { events } = play(2100, [
+      [0, { type: 'pattern', loop: loop([[0, 60, 0.5]]), bpm: BPM, run: 7 }],
+      [1100, { type: 'patternNext', loop: null }],
+    ]);
+    expect(events.map((e) => [e.type, 'run' in e ? e.run : undefined])).toEqual([
+      ['loop', 7],
+      ['loop', 7],
+      ['patternEnd', 7],
+    ]);
+  });
+
+  it('keeps the next run’s number apart from the last, and leaves it out when the page gave none', () => {
+    const { events } = play(1200, [
+      [0, { type: 'pattern', loop: loop([[0, 60, 0.5]]), bpm: BPM, run: 1 }],
+      [500, { type: 'pattern', loop: loop([[0, 62, 0.5]]), bpm: BPM, run: 2 }],
+      [900, { type: 'pattern', loop: loop([[0, 64, 0.5]]), bpm: BPM }],
+    ]);
+    expect(events.map((e) => ('run' in e ? e.run : 'none'))).toEqual([1, 2, 'none']);
+  });
+
+  it('muted, sends the synth no notes but keeps time and reports its loops', () => {
+    const { notes, loops } = play(2100, [
+      [0, { type: 'pattern', loop: loop([[0, 60, 0.5]]), bpm: BPM, muted: true }],
+    ]);
+    expect(notes).toEqual([]);
+    expect(loops.map((l) => [l.index, l.frame])).toEqual([
+      [0, 0],
+      [1, 1000],
+      [2, 2000],
+    ]);
+  });
+
+  it('muted while it plays, lets go of what the synth holds; unmuted, plays from the next note', () => {
+    const { notes } = play(2600, [
+      [0, { type: 'pattern', loop: loop([[0, 60, 0.75]]), bpm: BPM }],
+      [256, { type: 'patternMute', muted: true }],
+      [1500, { type: 'patternMute', muted: false }],
+    ]);
+    expect(notes).toEqual([
+      [0, true, 60],
+      [256, false, 60],
+      // Loop 1's 60 went by muted, so its let-go at 1,750 is not the synth's; loop 2's plays.
+      [2000, true, 60],
+    ]);
+  });
+
+  it('starts a new run unmuted unless that run says otherwise', () => {
+    const { notes } = play(1200, [
+      [0, { type: 'pattern', loop: loop([[0, 60, 0.25]]), bpm: BPM, muted: true }],
+      [512, { type: 'pattern', loop: loop([[0, 62, 0.25]]), bpm: BPM }],
+    ]);
+    expect(notes).toEqual([
+      [512, true, 62],
+      [762, false, 62],
+    ]);
+  });
+});
+
 describe('beatAt', () => {
   const at: LoopEvent = {
     type: 'loop',

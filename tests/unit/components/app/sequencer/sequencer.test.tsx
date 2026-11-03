@@ -110,7 +110,7 @@ const loopEvent = (over: Partial<LoopEvent> = {}): LoopEvent => ({
   frame: 0,
   ...over,
 });
-const fire = (e: LoopEvent | { type: 'patternEnd' }) => act(() => state.onEvent(e));
+const fire = (e: LoopEvent | { type: 'patternEnd'; run?: number }) => act(() => state.onEvent(e));
 const loopNotes = (l: PatternLoop | null | undefined) => l?.notes;
 
 beforeEach(() => {
@@ -141,7 +141,13 @@ describe('opening on a sound', () => {
     open();
     await play();
     const start = lastOf('pattern');
-    expect(start).toEqual({ type: 'pattern', bpm: 120, loop: { notes: RIFF.steps, beats: 2 } });
+    expect(start).toEqual({
+      type: 'pattern',
+      bpm: 120,
+      loop: { notes: RIFF.steps, beats: 2 },
+      run: 1,
+      muted: false,
+    });
   });
 
   it('follows a tempo the panel sets, as the riff does', async () => {
@@ -202,6 +208,9 @@ describe('opening on a sound', () => {
       type: 'pattern',
       bpm: 90,
       loop: { notes: [[0, 36, 1]], beats: 1 },
+      // A new run of the player, so an event from the first is told apart.
+      run: 2,
+      muted: false,
     });
   });
 
@@ -853,5 +862,70 @@ describe('the help', () => {
     for (const name of ['Tempo', 'Swing', 'Length', 'Transpose', 'Hits'])
       expect(slider(name)).toBeTruthy();
     expect(button('How the sequencer works')).toBeTruthy();
+  });
+});
+
+describe('MIDI out (f-midi-out t-88)', () => {
+  function outSpy(muted = false) {
+    return { muted, message: vi.fn<(m: SynthMessage) => void>(), event: vi.fn() };
+  }
+  type Out = ReturnType<typeof outSpy>;
+  function WithOut({ out }: { out: Out }) {
+    const seq = useSequencer({ engine, ensureAudio: async () => true, riff: RIFF, out });
+    state = seq;
+    return null;
+  }
+  const start = async () => {
+    await act(async () => {
+      await state.play();
+    });
+  };
+  const runOf = () => lastOf('pattern')?.run;
+
+  it('drops an event from the run before a fast Stop and Play, even that run’s first loop', async () => {
+    render(<WithOut out={outSpy()} />);
+    await start();
+    const first = runOf();
+    act(() => state.stop());
+    await start();
+    expect(runOf()).not.toBe(first);
+    const queued = sentOf('patternNext').length;
+    // The first run's loop 0 start, still on its way: without the run it reads as this run's first loop.
+    fire(loopEvent({ run: first }));
+    fire({ type: 'patternEnd', run: first });
+    expect(sentOf('patternNext')).toHaveLength(queued);
+    expect(state.playing).toBe(true);
+    fire(loopEvent({ run: runOf() }));
+    expect(sentOf('patternNext')).toHaveLength(queued + 1);
+  });
+
+  it('tells MIDI out everything the player is sent, and only this run’s events', async () => {
+    const out = outSpy();
+    render(<WithOut out={out} />);
+    await start();
+    const run = runOf();
+    fire(loopEvent({ run: (run ?? 0) - 1 }));
+    expect(out.event).not.toHaveBeenCalled();
+    fire(loopEvent({ run }));
+    expect(out.event).toHaveBeenCalledWith(expect.objectContaining({ type: 'loop', run }));
+    // What the player was sent, in order: the pattern, then the loop queued on its first loop's start.
+    expect(out.message.mock.calls.map(([m]) => m.type)).toEqual(['pattern', 'patternNext']);
+    fire({ type: 'patternEnd', run });
+    expect(out.event).toHaveBeenLastCalledWith({ type: 'patternEnd', run });
+    expect(state.playing).toBe(false);
+  });
+
+  it('starts the player muted while MIDI out plays alone, and mutes or unmutes it as that changes', async () => {
+    const { rerender } = render(<WithOut out={outSpy(true)} />);
+    await start();
+    expect(lastOf('pattern')?.muted).toBe(true);
+    rerender(<WithOut out={outSpy(false)} />);
+    expect(sentOf('patternMute')).toEqual([{ type: 'patternMute', muted: false }]);
+    act(() => state.stop());
+    // Stopped, the next run says it itself.
+    rerender(<WithOut out={outSpy(true)} />);
+    expect(sentOf('patternMute')).toHaveLength(1);
+    await start();
+    expect(lastOf('pattern')?.muted).toBe(true);
   });
 });

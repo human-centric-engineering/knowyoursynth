@@ -181,6 +181,8 @@ describe('MidiStatus', () => {
     return {
       status,
       devices,
+      outputs: [],
+      output: () => null,
       error: '',
       connect: vi.fn().mockResolvedValue(true),
       disconnect: vi.fn(),

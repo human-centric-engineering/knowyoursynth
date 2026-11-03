@@ -201,6 +201,7 @@ import { Tour } from '@/components/app/synth/tour';
 import type { TutorDesign } from '@/components/app/tutor/apply';
 import { TutorPanel } from '@/components/app/tutor/tutor-panel';
 import { useMidi } from '@/components/app/synth/use-midi';
+import { useMidiOut } from '@/components/app/sequencer/use-midi-out';
 import { withNotes } from '@/components/app/synth/with-notes';
 import {
   SharedSoundStrip,
@@ -1147,6 +1148,8 @@ function Synth({
     void ensureAudio();
     void midi.connect();
   };
+  // MIDI out from the sequencer (`f-midi-out` t-88): the outputs of the same grant.
+  const midiOut = useMidiOut({ midi, engine, connect: connectMidi });
 
   // SynthDef `tempo` names the control whose value is the riff's BPM (the TB-303's TEMPO knob): the riff plays at
   // that speed, and turning it while the riff plays moves the riff with it.
@@ -1186,6 +1189,7 @@ function Synth({
     tempo: tempoBpm,
     lanes: laneTarget,
     hold,
+    out: midiOut.out,
   });
   // The panel shows a control a lane moves where the lane has it, while the pattern plays; its own value is unchanged.
   const { modShown } = seq;
@@ -1370,6 +1374,7 @@ function Synth({
     onStop: stopRiff,
     library: seqLibrary,
     hold: { on: hold, set: setHoldMode },
+    midiOut,
   };
   // Opened by the bar's Sequencer button or a panel button (t-85).
   const openSequencer = () => {
