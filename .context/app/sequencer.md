@@ -673,7 +673,8 @@ itself. A change of port and `pagehide` keep the run (`silence`): notes start ag
 pumped, the ones in the look-ahead that were let go before they began sent again, so a page shown again from the
 back-forward cache plays on.
 
-**MIDI clock** (t-89). **Send clock**, on the row once an output is chosen, sends that output MIDI clock, so a
+**MIDI clock** (t-89). **Send clock**, on the row once an output is chosen (not with Synth only, which sends the
+output nothing), sends that output MIDI clock, so a
 hardware arpeggiator, LFO sync or delay (or a drum machine beside it) follows the pattern's tempo. It is off until
 turned on, and on for that output alone (the outputs it is on for are kept with the choice, `clock`), because some
 synths start their own sequencer when they hear clock.
@@ -685,18 +686,22 @@ synths start their own sequencer when they hear clock.
   same count of beats as the notes, in the same look-ahead and pump, so they follow every tempo move the notes do. A
   pulse already handed to the port can't be taken back, so after a tempo rise a pulse that would now fall before one
   already sent goes with it instead: the count is kept, and the hardware's beat stays on the pattern's. A pulse due
-  more than 20 ms ago (a held-up timer) is skipped, as a late note is, rather than sent in a burst.
+  more than 20 ms ago (a held-up timer) is not sent: a burst would jump the tempo, and skipping it would leave the
+  hardware's count behind the pattern's for good. So the clock sends Stop and starts again at the next loop's start, in
+  step. A Start whose beat has passed waits for the next loop the same way.
 - **Stop** (0xFC) goes at the pattern's end, after the last let-go there. Everything that lets go of everything (Stop,
   a panic, a change of output or channel, unplugging, `pagehide`, the page going) sends Stop now, after All Notes Off,
-  as does turning Send clock off. Nothing is sent twice: the player's own `patternEnd` after the end sends no second
-  Stop.
+  as does turning Send clock off. Now, but never ahead of a Start or pulse already handed over for later, which would
+  leave the hardware running, and a next run's Start never ahead of the last one's Stop. Nothing is sent twice: the
+  player's own `patternEnd` after the end sends no second Stop.
 
 Not in it (the feature's later tasks): mod lanes as CCs, and riffs or keys played outside the sequencer.
 
 Tests: `tests/unit/lib/app/midi/scheduler.test.ts` (timing with swing, nudge, ratchet and slide against a fake clock,
 the look-ahead, tempo, late notes, overlapping pitches, boundary-held notes, edits and Stop inside the window, the end,
 a change of port; the clock's pulses at two tempos, a tempo move inside the look-ahead, Start before the first note and
-Stop after the last let-go, turning it on and off mid-run, a change of port); `clock.test.ts`; `tests/unit/components/app/sequencer/use-midi-out.test.tsx` (the real `useMidi`
+Stop after the last let-go, turning it on and off mid-run, a change of port, Stop never ahead of what was queued, a
+held-up timer); `clock.test.ts`; `tests/unit/components/app/sequencer/use-midi-out.test.tsx` (the real `useMidi`
 with a fake `requestMIDIAccess`: one grant, the choice, the channel, every release, unplugging, Send clock per
 output, and the row);
 `use-midi.test.tsx` (outputs); `sequencer.test.tsx` (the run id, what MIDI out is told, the mute); and

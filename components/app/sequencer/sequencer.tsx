@@ -1229,12 +1229,15 @@ function MidiOutRow({ midi }: { midi: MidiOut }) {
                   if (plays) midi.setPlays(plays);
                 }}
               />
-              <Toggle
-                label="Send clock"
-                on={midi.clock}
-                help="Sends MIDI clock at the pattern’s tempo, with Start and Stop, so the hardware’s arpeggiator, LFO sync or delay follows it. Off by default: some synths start their own sequencer on it."
-                onClick={() => midi.setClock(!midi.clock)}
-              />
+              {/* Synth only sends the output nothing, clock included. */}
+              {choice.plays !== 'synth' && (
+                <Toggle
+                  label="Send clock"
+                  on={midi.clock}
+                  help="Sends MIDI clock at the pattern’s tempo, with Start and Stop, so the hardware’s arpeggiator, LFO sync or delay follows it. Off by default: some synths start their own sequencer on it."
+                  onClick={() => midi.setClock(!midi.clock)}
+                />
+              )}
             </>
           )}
         </>

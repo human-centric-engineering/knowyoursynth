@@ -758,12 +758,12 @@ describe('MIDI clock', () => {
     got.forEach((g, i) => expect(g).toBeCloseTo(want[i], 6));
   };
 
-  /** A run at `bpm` of a 4-beat loop, its first loop heard at 200 ms, with the clock on. */
-  function clocked(bpm: number, l = loop([[0, 60, 0.5]], 4)) {
+  /** A run at `bpm` of a 4-beat loop, its first loop heard at `frame` (200 ms), with the clock on. */
+  function clocked(bpm: number, l = loop([[0, 60, 0.5]], 4), frame = 200) {
     const t = setup();
     t.s.setClock(true);
     t.s.message({ type: 'pattern', loop: l, bpm, run: 1 });
-    t.s.event(ev({ frame: 200, beats: l.beats, bpm }));
+    t.s.event(ev({ frame, beats: l.beats, bpm }));
     return t;
   }
 
@@ -850,15 +850,17 @@ describe('MIDI clock', () => {
     const t = clocked(60);
     t.run(300);
     t.s.message({ type: 'stopPattern' });
+    // After the pulses already handed over for later, the last of them at 366.67 (beat 0.2 less a pulse): a Stop at
+    // 300 would land ahead of them.
     expect(order(t.sent).slice(-3)).toEqual([
       [0x80, 300],
       [0xb0, 300],
-      ['stop', 300],
+      ['stop', 200 + (4 * 1000) / 24],
     ]);
     t.s.message({ type: 'pattern', loop: loop([[0, 60, 0.5]], 4), bpm: 60, run: 2 });
     t.s.event(ev({ frame: 320, beats: 4 }));
     t.s.pump();
-    // Not before the pulses the last run already handed over, the last of them at 366.67 (beat 0.2 less a pulse).
+    // Not before the last run's Stop.
     const starts = t.sent.filter(([, d]) => d[0] === START).map(([at]) => at);
     expect(starts).toHaveLength(2);
     expect(starts[1]).toBeCloseTo(200 + (4 * 1000) / 24, 6);
@@ -874,7 +876,8 @@ describe('MIDI clock', () => {
     expect(seq[0]).toEqual(['start', 1000]);
     expect(seq[1]).toEqual(['clock', 1000]);
     t.s.setClock(false);
-    expect(order(t.sent).at(-1)).toEqual(['stop', 1400]);
+    // After the last pulse handed over, out at the look-ahead: beat 1.5 less a pulse.
+    expect(order(t.sent).at(-1)).toEqual(['stop', 1000 + (11 * 1000) / 24]);
     const n = t.sent.length;
     t.run(3000);
     expect(t.sent.slice(n).filter(([, d]) => d[0] >= 0xf8)).toEqual([]);
@@ -885,8 +888,11 @@ describe('MIDI clock', () => {
     t.run(500);
     const other: Sent[] = [];
     t.s.setPort({ send: (d, at) => void other.push([at ?? t.now, d]) }, 0);
-    expect(order(t.sent).at(-1)).toEqual(['stop', 500]);
+    // After the last pulse handed to it (beat 0.4 less a pulse), then nothing more to it.
+    expect(order(t.sent).at(-1)).toEqual(['stop', 200 + (9 * 1000) / 24]);
+    const n = t.sent.length;
     t.run(1400);
+    expect(t.sent).toHaveLength(n);
     expect(order(other).filter(([k]) => typeof k === 'string')[0]).toEqual(['start', 1200]);
   });
 
@@ -902,14 +908,76 @@ describe('MIDI clock', () => {
     ]);
   });
 
-  it('skips pulses whose time passed while the timer was held up, rather than a burst of them', () => {
-    const t = clocked(60);
-    t.s.pump();
+  it('stops when the timer was held up past a pulse, and starts again in step at the next loop', () => {
+    const t = clocked(60, loop([[0, 60, 0.5]], 1));
+    t.run(200);
+    // Nothing pumps from 200 to 700 (a background tab): the pulses from 300 on are long gone.
     t.now = 700;
     t.s.pump();
-    const got = pulses(t.sent);
-    // Up to 300 ms before the hold-up, then from 680 (no more than 20 ms late) on.
-    expect(got.filter((at) => at > 300 && at < 680 - 1e-6)).toEqual([]);
-    expect(got.filter((at) => at >= 700)).not.toEqual([]);
+    const seq = order(t.sent).filter(([k]) => typeof k === 'string');
+    // Neither a burst of late pulses nor a count left behind: Stop after what was sent, then Start at 1,200.
+    expect(seq.filter(([, at]) => (at as number) > 300 && (at as number) < 1200)).toEqual([
+      ['stop', 700],
+    ]);
+    t.run(1300);
+    expect(
+      order(t.sent)
+        .filter(([k]) => typeof k === 'string')
+        .slice(seq.length)
+    ).toEqual(
+      expect.arrayContaining([
+        ['start', 1200],
+        ['clock', 1200],
+      ])
+    );
+  });
+
+  it('stops after a Start already handed over for later, when turned off before it', () => {
+    const t = clocked(60, loop([[0, 60, 0.5]], 1), 260);
+    t.run(200);
+    // Start was handed over at 200 for 260; turned off at 210, Stop goes at 260 too, after it.
+    t.now = 210;
+    t.s.setClock(false);
+    expect(
+      order(t.sent)
+        .filter(([k]) => typeof k === 'string')
+        .at(-1)
+    ).toEqual(['stop', 260]);
+  });
+
+  it('starts the next run after the last one’s Stop at its end, though Play comes before it', () => {
+    const t = clocked(60, loop([[0, 60, 0.5]], 1));
+    t.s.message({ type: 'patternNext', loop: null });
+    t.run(1150);
+    // The end's Stop is handed over for 1,200; Play again at 1,150, its loop heard at 1,160.
+    const stopAt = t.sent.filter(([, d]) => d[0] === STOP).map(([at]) => at);
+    expect(stopAt).toEqual([1200]);
+    t.s.message({ type: 'pattern', loop: loop([[0, 60, 0.5]], 1), bpm: 60, run: 2 });
+    t.s.event(ev({ frame: 1160 }));
+    t.s.pump();
+    const starts = t.sent.filter(([, d]) => d[0] === START).map(([at]) => at);
+    expect(starts).toEqual([200, 1200]);
+  });
+
+  it('waits for the next loop for a Start whose beat passed while the timer was held up', () => {
+    const t = setup();
+    t.s.setClock(true);
+    t.s.message({ type: 'pattern', loop: loop([[0, 60, 0.5]], 1), bpm: 60, run: 1 });
+    t.s.event(ev({ frame: 0 }));
+    t.now = 300;
+    t.s.pump();
+    expect(t.sent.filter(([, d]) => d[0] === START)).toEqual([]);
+    t.run(1000);
+    expect(order(t.sent).filter(([k]) => typeof k === 'string')[0]).toEqual(['start', 1000]);
+  });
+
+  it('keeps the run’s Start at its start through a silence before it is sent', () => {
+    const t = setup();
+    t.s.setClock(true);
+    t.s.message({ type: 'pattern', loop: loop([[0, 60, 0.5]], 4), bpm: 60, run: 1 });
+    t.s.event(ev({ frame: 200 }));
+    t.s.setPort(t.port, 1);
+    t.run(200);
+    expect(order(t.sent).filter(([k]) => typeof k === 'string')[0]).toEqual(['start', 200]);
   });
 });

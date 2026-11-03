@@ -365,6 +365,11 @@ describe('the readout row', () => {
     expect(send.getAttribute('aria-pressed')).toBe('false');
     fireEvent.click(send);
     expect(chosen.setClock).toHaveBeenCalledWith(true);
+    // Synth only sends the output nothing, so there is no clock to turn on.
+    rerender(
+      <Row midiOut={{ ...chosen, choice: { output: outputs[0], channel: 1, plays: 'synth' } }} />
+    );
+    expect(screen.queryByRole('button', { name: 'Send clock' })).toBeNull();
   });
 
   it('keeps a chosen output that is unplugged on the list, and says the synth plays meanwhile', () => {
