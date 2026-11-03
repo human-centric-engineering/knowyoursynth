@@ -681,7 +681,7 @@ synths start their own sequencer when they hear clock.
 
 - **Start** (0xFA) goes at beat 0 of the run, before its first note, followed at once by the first of **24 pulses a
   beat** (0xF8, `PPQN`). Turned on mid-run, or after a change of output or `pagehide`, it starts at the next loop's
-  start instead: no Song Position Pointer is sent, so a loop's start is the only place the hardware can join.
+  start not yet heard instead: no Song Position Pointer is sent, so a loop's start is the only place the hardware can join.
 - The pulses are on the **straight grid**: swing, nudge and ratchet move notes, never the clock. They are placed on the
   same count of beats as the notes, in the same look-ahead and pump, so they follow every tempo move the notes do. A
   pulse already handed to the port can't be taken back, so after a tempo rise a pulse that would now fall before one
@@ -690,10 +690,12 @@ synths start their own sequencer when they hear clock.
   hardware's count behind the pattern's for good. So the clock sends Stop and starts again at the next loop's start, in
   step. A Start whose beat has passed waits for the next loop the same way.
 - **Stop** (0xFC) goes at the pattern's end, after the last let-go there. Everything that lets go of everything (Stop,
-  a panic, a change of output or channel, unplugging, `pagehide`, the page going) sends Stop now, after All Notes Off,
-  as does turning Send clock off. Now, but never ahead of a Start or pulse already handed over for later, which would
-  leave the hardware running, and a next run's Start never ahead of the last one's Stop. Nothing is sent twice: the
-  player's own `patternEnd` after the end sends no second Stop.
+  a panic, a change of output, unplugging, `pagehide`, the page going) sends Stop now, after All Notes Off, as does
+  turning Send clock off. Now, but never ahead of a Start already handed over for later, which would leave the hardware
+  running; and a next run's Start never ahead of the last one's Stop. Pulses already handed over may land after a Stop:
+  clock while stopped is ordinary MIDI and only sets the hardware's tempo, so Play straight after Stop starts on its
+  beat 0, before its first note, not behind them. A change of channel alone keeps the clock running, as clock has no
+  channel. Nothing is sent twice: the player's own `patternEnd` after the end sends no second Stop.
 
 Not in it (the feature's later tasks): mod lanes as CCs, and riffs or keys played outside the sequencer.
 
