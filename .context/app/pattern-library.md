@@ -306,15 +306,19 @@ _Reconstructed_.
 
 **Where readable notes were, and weren't:**
 
-| Tried                                                                    | Result                                                                                                                                                                                                                                                                        |
-| ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Songsterr                                                                | **Worked.** Its public API (`/api/songs?pattern=`, `/api/meta/:id`) and its CDN serve every track of a transcription as JSON: pitches from string and fret, durations, bars, section markers and tempo. Most of the batch came from here. It had 16 of the 25 works searched. |
-| BitMIDI                                                                  | **Worked.** A search API and direct `.mid` downloads, read with a small parser. Fan MIDI, often with echoes or played-in timing written as notes.                                                                                                                             |
-| Ultimate Guitar                                                          | Tabs are drawn by JavaScript; a fetch gets the title only.                                                                                                                                                                                                                    |
-| MusicRadar, Computer Music (Readly), MusicTech                           | How-to articles behind sign-ups or paywalls.                                                                                                                                                                                                                                  |
-| Publisher sheet music (Musicnotes, Sheet Music Direct)                   | Paid. These would be real sources (tier 3 or better) if bought.                                                                                                                                                                                                               |
-| Audio analysers (SongBPM, AcousticBrainz)                                | Key and tempo guesses that disagree, by up to 40 bpm on Autobahn. Not used.                                                                                                                                                                                                   |
-| Gear write-ups (Mixdown's Gear Rundown, Syntorial's patch recipes, etc.) | Name the synth and describe the part, but give no notes.                                                                                                                                                                                                                      |
+| Tried                                                                    | Result                                                                                                                                                                                                                                                                                           |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Songsterr                                                                | **Worked.** Its public API (`/api/songs?pattern=`, `/api/meta/:id`) and its CDN serve every track of a transcription as JSON: pitches from string and fret, durations, bars, section markers and tempo. Most of the batch came from here. It had 16 of the 25 works searched.                    |
+| BitMIDI                                                                  | **Worked.** A search API and direct `.mid` downloads, read with a small parser. Fan MIDI, often with echoes or played-in timing written as notes.                                                                                                                                                |
+| Ultimate Guitar                                                          | Tabs are drawn by JavaScript; a fetch gets the title only.                                                                                                                                                                                                                                       |
+| MusicRadar, Computer Music (Readly), MusicTech                           | How-to articles behind sign-ups or paywalls.                                                                                                                                                                                                                                                     |
+| Publisher sheet music (Musicnotes, Sheet Music Direct)                   | Paid. These would be real sources (tier 3 or better) if bought.                                                                                                                                                                                                                                  |
+| Audio analysers (SongBPM, AcousticBrainz)                                | Key and tempo guesses that disagree, by up to 40 bpm on Autobahn. Not used.                                                                                                                                                                                                                      |
+| Gear write-ups (Mixdown's Gear Rundown, Syntorial's patch recipes, etc.) | Name the synth and describe the part, but give no notes.                                                                                                                                                                                                                                         |
+| Hooktheory (TheoryTab)                                                   | Tried by t-169. A page gives the key, metre, tempo, the chords as numerals and the melody's range in plain text; the notes load from behind a sign-in. Two of the works t-169 looked for were there ("La Petite Fille de la Mer", "Love on a Real Train"), and their patterns cite it as a lead. |
+| MuseScore                                                                | Tried by t-169. Its search refuses a fetch (403), and its scores need a sign-in to read.                                                                                                                                                                                                         |
+| Noteflight                                                               | Tried by t-169. Its search isn't reachable without a sign-in (404).                                                                                                                                                                                                                              |
+| Synth tutorial videos                                                    | Not tried by t-169: an agent can't watch a video, so notes shown on screen can't be read.                                                                                                                                                                                                        |
 
 The readers were scratch scripts, not committed: they fetch someone else's work, which the repo never holds.
 
@@ -777,6 +781,34 @@ is `prisma/seeds/app-knowyoursynth/data/patterns/t168-ambient-classical-jazz-and
   its beat on the triplet grid instead.
 - **Two artists have two spellings**: "Tchaikovsky" and "Pyotr Ilyich Tchaikovsky", and "Fripp & Eno" and "Robert
   Fripp and Brian Eno". The test's roster lists both; the renames are housekeeping's.
+
+**Best guesses for the first three batches (t-169).** t-127, t-128 and t-129 ran before the owner's 2026-11-02 ruling,
+so they left 97 sounds with a reason, 72 of them for want of a free lead. t-169 gave those 72 one of 66 patterns, in the
+batch files they were already in, and left 25 reasons: the sounds with no part to write. It found:
+
+- **Two more free sites have something, and two have nothing readable.** Hooktheory's TheoryTab has the key, tempo and
+  chords of "La Petite Fille de la Mer" and "Love on a Real Train", which gave the Vangelis pluck and the Tangerine Dream
+  wah pad their chords; both cite it as a lead, so neither is a best guess. MuseScore and Noteflight can't be read
+  without signing in. See the table above.
+- **64 patterns are best guesses**, written without a lead. Sounds naming one work share its guess (the two Music for
+  Airports "1/1" sounds; five "2/1" loop and pad sounds). A sound naming no work got a guess at its artist's style (the
+  Depeche Mode bell lead, the Tangerine Dream drone, the Eno and Lanois shimmer pad), as the task asked.
+- **The older batches' date doesn't change.** The batch test lets a best guess sit only in a batch researched after
+  the ruling. These patterns sit in batches dated 2026-11-01, so each one's notes say "Written by t-169 on 2026-11-02",
+  and the test reads that date when it is there. It checks the task and date against its own list of tasks that added
+  guesses later, so a pattern can't give itself a date.
+- **Patches that play themselves split two ways**, as in t-167 and t-168. Where the key still sets the pitch (the Model
+  D pulse and ostinato, the System 55 sequence, the Neroli tones, the White Eagle arpeggio, the Phaedra arpeggio) the
+  pattern holds the keys or the chord. Some patches change what a written key does, so the pattern is written for the
+  patch: the "Pocket Calculator" bleeps stay within a fourth of middle C, because the cable triples each interval from
+  it, and "The Maker" strikes a low A with each phrase for the CAT's drone and swell. Where the pitch is random or set
+  by the patch (the Berlin sequence on the 2600, the SynTrx bells, the Solar generative bells and its Zeit classic
+  drone), the sound keeps a reason, reworded to say so.
+- **Mono sounds named for chord parts got a line**: the Oxygène strings on the Solar a top line, "The Big Ship" its
+  roots, "Pocket Calculator" a bleep line and a plucked figure. Only the poly sounds got chords.
+- **The 25 reasons left** are the 14 effects (the Jarre wind and surf, the "Contact" riser, the three Eno treatments),
+  the four patches above, the two random Jarre sounds, the "Boing Boom Tschak" voices, the "Computer World" vocoder,
+  the "Tour de France" breath and the two Depeche Mode metal-percussion sounds, which were sampled metal.
 
 ## Rights
 
