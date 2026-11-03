@@ -375,3 +375,137 @@ describe('the port', () => {
     expect(t.sent).toEqual([]);
   });
 });
+
+describe('messages beyond the transport', () => {
+  it('moves the clock at once on a tempo message, before the player’s own event places it', () => {
+    const t = setup();
+    start(
+      t,
+      loop([
+        [0, 60, 0.1],
+        [0.5, 62, 0.1],
+      ])
+    );
+    t.run(100);
+    // At 100 ms (beat 0.1), the tempo doubles: beat 0.5 is 0.4 beats on, 200 ms.
+    t.s.message({ type: 'tempo', bpm: 120 });
+    t.run(400);
+    expect(ons(t.sent).map(([at, n]) => [at, n])).toEqual([
+      [0, 60],
+      [300, 62],
+    ]);
+  });
+
+  it('ignores a tempo it cannot use, and one before the run has begun', () => {
+    const t = setup();
+    t.s.message({ type: 'tempo', bpm: 120 });
+    start(t, loop([[0.5, 62, 0.1]]));
+    t.s.message({ type: 'tempo', bpm: 0 });
+    t.run(450);
+    expect(ons(t.sent)).toEqual([[500, 62, midiVelocity(undefined)]]);
+  });
+
+  it('lets go of everything on a panic, and takes no notice of messages that are not the pattern’s', () => {
+    const t = setup();
+    start(t, loop([[0, 60, 1]], 2));
+    t.run(200);
+    t.s.message({ type: 'params' });
+    expect(offs(t.sent)).toEqual([]);
+    t.s.message({ type: 'panic' });
+    expect(offs(t.sent)).toEqual([[200, 60]]);
+  });
+
+  it('sends no note outside MIDI’s range, and none of no length', () => {
+    const t = setup();
+    start(
+      t,
+      loop([
+        [0, 128, 0.1],
+        [0, -1, 0.1],
+        [0.1, 60, 0],
+        [0.2, 62, 0.1],
+      ])
+    );
+    t.run(300);
+    expect(ons(t.sent).map(([, n]) => n)).toEqual([62]);
+  });
+
+  it('ignores queued loops and edits before a run, and an event from no run', () => {
+    const t = setup();
+    t.s.message({ type: 'patternNext', loop: loop([[0, 60, 0.1]]) });
+    t.s.message({ type: 'patternEdit', loop: loop([[0, 60, 0.1]]) });
+    t.s.event(ev());
+    t.run(500);
+    expect(t.sent).toEqual([]);
+  });
+
+  it('never re-sends to the same port and channel, and keeps a channel in range', () => {
+    const t = setup();
+    start(t, loop([[0, 60, 1]], 2));
+    t.run(100);
+    t.s.setPort(t.port, 0);
+    expect(offs(t.sent)).toEqual([]);
+    t.s.setPort(t.port, 99);
+    t.run(2100);
+    expect(t.sent.at(-1)?.[1][0]).toBe(0x9f);
+  });
+});
+
+describe('a loop shorter than the look-ahead', () => {
+  it('takes a loop queued for one it is already placing notes from, from there on', () => {
+    const t = setup();
+    // A loop of 50 ms: the look-ahead reaches into loop 1 before loop 0's start has queued it.
+    start(t, loop([[0, 60, 0.01]], 0.05));
+    t.s.pump();
+    t.s.message({ type: 'patternNext', loop: loop([[0.02, 62, 0.01]], 0.05) });
+    t.run(60);
+    // Loop 1 had been sent up to 100 ms, past where the new loop's 62 falls in it (70 ms): it is heard from loop 2 on.
+    expect(ons(t.sent).map(([at, n]) => [Math.round(at), n])).toEqual([
+      [0, 60],
+      [50, 60],
+      [120, 62],
+    ]);
+  });
+
+  it('stops placing notes when the end is queued for a loop already begun', () => {
+    const t = setup();
+    start(t, loop([[0, 60, 0.01]], 0.05));
+    t.s.pump();
+    t.s.message({ type: 'patternNext', loop: null });
+    const before = ons(t.sent).length;
+    t.run(500);
+    expect(ons(t.sent)).toHaveLength(before);
+  });
+
+  it('leaves the loop the player is in alone when an edit comes after the notes have moved past it', () => {
+    const t = setup();
+    start(t, loop([[0, 60, 0.01]], 0.05));
+    t.s.pump(); // into loop 1 already
+    t.s.message({ type: 'patternEdit', loop: loop([[0.01, 70, 0.01]], 0.05) });
+    t.run(30);
+    expect(ons(t.sent).map(([, n]) => n)).not.toContain(70);
+  });
+
+  it('catches up with the player after the timer was held up, sending nothing it passed', () => {
+    const t = setup();
+    start(
+      t,
+      loop(
+        [
+          [0, 60, 0.1],
+          [0.5, 62, 0.1],
+        ],
+        1
+      )
+    );
+    t.s.pump();
+    // The player reports loop 3 at beat 0.4, heard at 3,400 ms; nothing was pumped since 0.
+    t.now = 3410;
+    t.s.event(ev({ index: 3, start: false, beat: 0.4, frame: 3400 }));
+    t.s.pump();
+    expect(ons(t.sent).map(([at, n]) => [at, n])).toEqual([
+      [0, 60],
+      [3500, 62],
+    ]);
+  });
+});

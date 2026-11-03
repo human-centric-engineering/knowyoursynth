@@ -38,6 +38,21 @@ describe('audioClock', () => {
     expect(clock.at(96000)).toBeCloseTo(1030, 6);
   });
 
+  it('falls back on the context’s latency in a browser without output timestamps', () => {
+    const clock = audioClock(
+      () => ctx({ outputLatency: 0.05 }),
+      () => 1000
+    );
+    expect(clock.at(96000)).toBeCloseTo(1050, 6);
+  });
+
+  it('reads performance.now() unless told otherwise', () => {
+    const before = performance.now();
+    const at = audioClock(() => null).now();
+    expect(at).toBeGreaterThanOrEqual(before);
+    expect(at).toBeLessThanOrEqual(performance.now());
+  });
+
   it('takes a frame as heard now with no context yet', () => {
     expect(
       audioClock(
