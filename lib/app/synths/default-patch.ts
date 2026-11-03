@@ -22,13 +22,13 @@ export const DEFAULT_PATCH_NAME = 'Default patch';
 
 export const isDefaultPatch = (id: string | null | undefined): boolean => id === DEFAULT_PATCH_ID;
 
-/** Middle C (C4), where the scale starts and ends. */
-const SCALE_ROOT = 60;
+/** C3, an octave below middle C: where the scale starts and ends. */
+const SCALE_ROOT = 48;
 const MAJOR_STEPS = [0, 2, 4, 5, 7, 9, 11, 12];
 /** How long each note is held, in beats: a little short of the beat, so every note is struck afresh. */
 const SCALE_GATE = 0.9;
 
-/** C major from middle C up to C5 and back down to middle C. */
+/** C major from C3 up to C4 and back down to C3. */
 export const SCALE_NOTES: readonly number[] = [
   ...MAJOR_STEPS,
   ...MAJOR_STEPS.slice(0, -1).reverse(),

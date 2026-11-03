@@ -76,7 +76,7 @@ definition reaches the page's up-front bundle.
   checks it against the synth, `default-patch.test.ts` runs that over every registered definition, and
   `check:synths` renders it as `(default)` playing its scale. `lib/app/synths/default-patch.ts` turns it into the
   sound the page lists (`defaultPatchSound`), under the reserved id `default-patch`, with its sequencer pattern: C
-  major from middle C up to C5 and back, at 70 bpm.
+  major from C3 up to C4 and back, at 70 bpm.
 - **Panel values are `number | string | boolean`.** Read a continuous control as a number with a
   local `num(v, id)`, and narrow an enum to the engine's type explicitly
   (`v['filter.mode'] === 'hp' ? 'hp' : 'lp'`). For the values a valid sound holds, the result

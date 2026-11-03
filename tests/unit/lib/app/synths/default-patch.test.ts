@@ -27,11 +27,11 @@ describe('the scale pattern', () => {
     expect(PatternSchema.safeParse(SCALE_PATTERN).success).toBe(true);
   });
 
-  it('plays C major from middle C up to C5 and back down, one note a beat, slowly', () => {
+  it('plays C major from C3 up to C4 and back down, one note a beat, slowly', () => {
     const loop = compileLoop(SCALE_PATTERN, { loop: 0, rng: seededRng(1) });
 
     expect(loop.notes.map(([, note]) => note)).toEqual([
-      60, 62, 64, 65, 67, 69, 71, 72, 71, 69, 67, 65, 64, 62, 60,
+      48, 50, 52, 53, 55, 57, 59, 60, 59, 57, 55, 53, 52, 50, 48,
     ]);
     expect(loop.notes.map(([beat]) => beat)).toEqual([
       0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
