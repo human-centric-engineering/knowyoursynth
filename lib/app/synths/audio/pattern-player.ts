@@ -442,6 +442,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
         // Muting lets go of what the synth holds; unmuted, it plays from the next note on.
         if (m.muted && !muted) release();
         muted = m.muted === true;
+        sinceTick = 0;
         return;
       case 'patternNext':
         if (cur && (m.loop === null || playable(m.loop)))

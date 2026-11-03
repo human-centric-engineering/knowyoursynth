@@ -294,7 +294,7 @@ describe('edits and Stop inside the look-ahead', () => {
     ]);
   });
 
-  it('lets go on Stop of everything sent, after the last note-on already on its way, then All Notes Off', () => {
+  it('lets go on Stop of everything sent, a note-on still on its way at its own time too, then All Notes Off', () => {
     const t = setup();
     start(
       t,
@@ -309,14 +309,13 @@ describe('edits and Stop inside the look-ahead', () => {
     t.now = 10;
     t.s.pump(); // 64 is sent for 80 ms, still ahead
     t.s.message({ type: 'stopPattern' });
-    // Now, and again at 80 so the let-go cannot arrive before the note-on it answers.
+    // Now, and 64 again at 80 so its note-on, still on its way, does not sound on. All Notes Off goes now only.
     expect(offs(t.sent)).toEqual([
       [10, 60],
       [10, 64],
-      [80, 60],
       [80, 64],
     ]);
-    expect(allOff(t.sent)).toEqual([10, 80]);
+    expect(allOff(t.sent)).toEqual([10]);
     const before = t.sent.length;
     t.run(3000);
     expect(t.sent).toHaveLength(before);
@@ -600,5 +599,62 @@ describe('what the first review found', () => {
     s.event(ev());
     for (; now < 2000; now += 25) s.pump();
     expect(logger.warn).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('what the second review found', () => {
+  it('cuts none of the next run’s notes with what the last one’s release queued', () => {
+    const t = setup();
+    start(
+      t,
+      loop(
+        [
+          [0, 60, 1],
+          [0.09, 64, 1],
+        ],
+        2
+      )
+    );
+    t.now = 10;
+    t.s.pump(); // 64 is on its way for 90 ms
+    // Stop and Play at once: the new run's first loop is heard from 30 ms.
+    t.s.message({ type: 'stopPattern' });
+    t.s.message({
+      type: 'pattern',
+      loop: loop(
+        [
+          [0, 62, 1],
+          [0, 64, 1],
+        ],
+        2
+      ),
+      bpm: 60,
+      run: 2,
+    });
+    t.s.event(ev({ frame: 30, beats: 2, run: 2 }));
+    t.s.pump();
+    // Nothing is all-noted-off after now, and the new 64 waits for the let-go of the old one on its way.
+    expect(allOff(t.sent)).toEqual([10]);
+    expect(
+      ons(t.sent)
+        .slice(2)
+        .map(([at, n]) => [at, n])
+    ).toEqual([
+      [30, 62],
+      [90, 64],
+    ]);
+    expect(offs(t.sent).filter(([at]) => at > 10)).toEqual([[90, 64]]);
+  });
+
+  it('lets go at the end when catching up with a player that has already ended the pattern', () => {
+    const t = setup();
+    start(t, loop([[0.5, 60, 1]], 1));
+    t.s.message({ type: 'patternNext', loop: null });
+    t.run(600);
+    // The timer was held up; the player reports it is past its last loop. The 60 owed at 1,500 is let go at 1,000.
+    t.s.event(ev({ index: 1, start: true, frame: 1000 }));
+    t.now = 1100;
+    t.s.pump();
+    expect(offs(t.sent)).toEqual([[1100, 60]]);
   });
 });

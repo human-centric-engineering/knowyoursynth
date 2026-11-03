@@ -919,6 +919,19 @@ describe('MIDI out (f-midi-out t-88)', () => {
     expect(state.playing).toBe(false);
   });
 
+  it('tells MIDI out the tempo the panel’s knob sets, which the page sends the engine itself', () => {
+    const out = outSpy();
+    function Knob({ tempo }: { tempo: number }) {
+      state = useSequencer({ engine, ensureAudio: async () => true, riff: RIFF, tempo, out });
+      return null;
+    }
+    const { rerender } = render(<Knob tempo={120} />);
+    rerender(<Knob tempo={133} />);
+    expect(out.message).toHaveBeenLastCalledWith({ type: 'tempo', bpm: 133 });
+    // Not sent to the engine from here: the page does that.
+    expect(sentOf('tempo')).toEqual([]);
+  });
+
   it('starts the player muted while MIDI out plays alone, and mutes or unmutes it as that changes', async () => {
     const { rerender } = render(<WithOut out={outSpy(true)} />);
     await start();

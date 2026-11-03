@@ -27,6 +27,7 @@ import type { Midi, MidiPortInfo, MidiStatus } from '@/components/app/synth/use-
 import { STORAGE_KEYS, useStoredPref } from '@/components/app/synth/storage';
 import { audioClock, type AudioClockSource } from '@/lib/app/midi/clock';
 import { createMidiScheduler } from '@/lib/app/midi/scheduler';
+import { playable } from '@/lib/app/synths/audio/pattern-player';
 import type { SynthEvent, SynthMessage } from '@/lib/app/synths/audio/dsp-core';
 
 /** How often the look-ahead is refilled, in ms: well inside it, so a late timer still finds notes queued. */
@@ -104,13 +105,13 @@ export function useMidiOut({
     s.setPort(sending && id ? output(id) : null, choice.channel - 1);
   }, [s, sending, id, output, choice.channel, midi.outputs]);
 
-  // Whether a run is playing: the timer runs only then.
+  // Whether a run is playing: the timer runs only then, and not while the muted player's ticks pump it.
   const [running, setRunning] = useState(false);
   useEffect(() => {
-    if (!sending || !running) return undefined;
+    if (!sending || !running || muted) return undefined;
     const t = setInterval(() => s.pump(), PUMP_MS);
     return () => clearInterval(t);
-  }, [s, sending, running]);
+  }, [s, sending, running, muted]);
 
   // The page hidden (a tab closed, or switched away on a phone) or gone: nothing is left held on the hardware.
   useEffect(() => {
@@ -144,7 +145,7 @@ export function useMidiOut({
     () => ({
       muted,
       message: (m) => {
-        if (m.type === 'pattern') setRunning(true);
+        if (m.type === 'pattern' && playable(m.loop)) setRunning(true);
         else if (m.type === 'stopPattern') setRunning(false);
         s.message(m);
         s.pump();

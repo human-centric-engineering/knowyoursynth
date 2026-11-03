@@ -121,12 +121,16 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   let sentTo = 0;
   /** Set when the port changes mid-run: the notes start again from what is heard now, not from where they stopped. */
   let resync = false;
+  /** Let-gos owed, in order. */
   const offs: Off[] = [];
   /** How many sent notes hold each pitch, and when the last of them went down. */
   const held = new Map<number, number>();
   const downAt = new Map<number, number>();
-  /** The latest time anything was sent for: a let-go sent earlier would arrive before a note-on already on its way. */
-  let lastAt = 0;
+  /**
+   * Per pitch, the time of a let-go a release queued for a note-on already on its way: a note of that pitch sent later
+   * must not go out before it, or that let-go would cut it.
+   */
+  const freeAt = new Map<number, number>();
   /** Something has been sent since the last release. */
   let dirty = false;
   /** The port a failed send was last reported for: once each, not once a note. */
@@ -139,7 +143,6 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     if (!port) return;
     try {
       port.send(data, at);
-      lastAt = Math.max(lastAt, at);
       dirty = true;
     } catch (err) {
       // A port unplugged between the list and the send: the page drops it on the state change. Anything else would
@@ -151,7 +154,9 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     }
   }
 
-  function noteOn(n: number, v: number, at: number) {
+  function noteOn(n: number, v: number, when: number) {
+    const free = freeAt.get(n);
+    const at = free !== undefined && free > when ? free : when;
     held.set(n, (held.get(n) ?? 0) + 1);
     downAt.set(n, at);
     out([0x90 | channel, n, midiVelocity(v)], at);
@@ -171,19 +176,26 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
 
   function release() {
     const now = clock.now();
-    // Now, in case what is on its way is dropped (the page closing); and again after the last note-on already sent.
-    const times = lastAt > now ? [now, lastAt] : [now];
+    freeAt.forEach((at, n) => {
+      if (at <= now) freeAt.delete(n);
+    });
     if (port && dirty) {
-      for (const at of times) {
-        held.forEach((_, n) => out([0x80 | channel, n, 0], at));
-        out([0xb0 | channel, ALL_NOTES_OFF, 0], at);
-      }
+      // Now, and All Notes Off now: not later, where it would cut what the next run sends. A note-on already on its
+      // way is let go at its own time as well, so it can't sound on after the release.
+      held.forEach((_, n) => {
+        out([0x80 | channel, n, 0], now);
+        const down = downAt.get(n) ?? now;
+        if (down > now) {
+          out([0x80 | channel, n, 0], down);
+          freeAt.set(n, down);
+        }
+      });
+      out([0xb0 | channel, ALL_NOTES_OFF, 0], now);
     }
     held.clear();
     downAt.clear();
     offs.length = 0;
     dirty = false;
-    lastAt = 0;
     cur = null;
     next = undefined;
     anchor = null;
@@ -204,19 +216,39 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   function turn(): boolean {
     const c = cur;
     if (!c) return false;
+    const start = c.start + c.loop.beats;
     if (next === null) {
-      cur = null;
+      end(start);
       return false;
     }
     const loop = next ?? c.loop;
     next = undefined;
-    const start = c.start + c.loop.beats;
-    cur = { index: c.index + 1, start, loop, notes: sorted(loop), i: 0 };
+    // A loop played again keeps its sorted notes.
+    cur = {
+      index: c.index + 1,
+      start,
+      loop,
+      notes: loop === c.loop ? c.notes : sorted(loop),
+      i: 0,
+    };
     starts.set(cur.index, start);
     starts.forEach((_, k) => {
       if (k < cur!.index - 8) starts.delete(k);
     });
     return true;
+  }
+
+  /** The pattern ends at beat `g`: the player lets go of everything there, so what is owed past it is let go there. */
+  function end(g: number) {
+    for (const off of offs) off.g = Math.min(off.g, g);
+    cur = null;
+  }
+
+  /** A let-go owed, in its place: let-gos at one beat keep the order they were owed in. */
+  function owe(off: Off) {
+    let i = offs.length;
+    while (i > 0 && offs[i - 1].g > off.g) i--;
+    offs.splice(i, 0, off);
   }
 
   /** `loop` in place of what is left of `cur` from `sentTo` on. */
@@ -247,16 +279,9 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
           on = { g: c.start + c.notes[c.i][0], note: c.notes[c.i] };
           break;
         }
-        const end = c.start + c.loop.beats;
-        if (end >= to) break;
-        if (!turn()) {
-          // The pattern ends at `end`: the player lets go of everything there, and reports it.
-          for (const off of offs) off.g = Math.min(off.g, end);
-          break;
-        }
+        if (c.start + c.loop.beats >= to || !turn()) break;
       }
       if (on && on.g >= to) on = null;
-      offs.sort((x, y) => x.g - y.g);
       const off = offs.length > 0 && offs[0].g < to ? offs[0] : null;
       if (!on && !off) break;
       // At the same beat a let-go goes first, as in the player.
@@ -273,7 +298,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       const at = msAt(a, on!.g);
       if (at < now - LATE_MS) continue;
       noteOn(n, v ?? DEFAULT_VELOCITY, Math.max(now, at));
-      offs.push({ g: c.start + b + len, n });
+      owe({ g: c.start + b + len, n });
     }
     sentTo = Math.max(sentTo, to);
   }
@@ -294,11 +319,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
         // Already placing notes from the loop it is for (one shorter than the look-ahead): heard from here on, or no
         // more placed if it is the end.
         else if (m.loop) replace(m.loop);
-        else {
-          // The end comes where this loop began: what is owed past it is let go there, as the player lets go.
-          for (const off of offs) off.g = Math.min(off.g, cur.start);
-          cur = null;
-        }
+        // The end comes where this loop began.
+        else end(cur.start);
         return;
       }
       case 'patternEdit':

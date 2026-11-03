@@ -658,9 +658,11 @@ export function useSequencer({
 
   const edited = useMemo(() => JSON.stringify(pattern) !== baseline, [pattern, baseline]);
 
-  // The panel's tempo knob moves the pattern's tempo, as it moves a riff's. The page sends the engine the tempo itself.
+  // The panel's tempo knob moves the pattern's tempo, as it moves a riff's. The page sends the engine the tempo itself;
+  // MIDI out is told the same here, so its look-ahead moves at once rather than when the player's next event says.
   useEffect(() => {
     if (!tempo) return;
+    outRef.current?.message({ type: 'tempo', bpm: tempo });
     const p = patternRef.current;
     const bpm = clampBpm(tempo);
     if (p.bpm === bpm) return;

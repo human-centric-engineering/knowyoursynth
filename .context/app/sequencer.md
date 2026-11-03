@@ -651,7 +651,8 @@ slowed, so the muted player's `patternTick` refills it then. A message sent with
   note already down, and drops the loop queued after it, as the player does.
 - **`patternNext`** is the loop after the one the player is in. With none queued at the boundary the loop plays again;
   `null` ends the pattern there.
-- **`tempo`** moves the clock at once; the player's own `loop` event for the move then places it exactly.
+- **`tempo`** moves the clock at once, whether the sequencer's encoder or the panel's tempo knob set it; the player's
+  own `loop` event for the move then places it exactly.
 - **A note due more than 20 ms ago** when its turn comes (a background tab held the timer up) isn't sent. It would land
   late, and a burst of late notes is worse than a gap.
 - **A loop the player would refuse** (`playable`: no length, or a note it can't play) is refused here too, so the two
@@ -663,11 +664,11 @@ never timestamped before its note-on.
 
 **What lets go of everything.** Note-offs for every note sent and not let go, then All Notes Off (CC 123) on the
 channel, on: Stop, the pattern's end, a panic (through `patternEnd`), a change of output or channel, the output being
-unplugged, the page being hidden (`pagehide`) and the page going. A change of port and `pagehide` keep the run
-(`silence`): notes start again from what is heard when next pumped, so a page shown again from the back-forward cache
-plays on. Each is sent now and again after the last note-on
-already on its way, so it can't arrive before a note it answers, and still goes out if what was queued is dropped. Only
-after something was sent: choosing an output sends nothing by itself.
+unplugged, the page being hidden (`pagehide`) and the page going. All of it goes now, never later, where it would cut
+what the next run sends. A note-on already on its way is also let go at its own time, so it can't sound on, and a note
+of that pitch sent afterwards waits for that let-go. Only after something was sent: choosing an output sends nothing by
+itself. A change of port and `pagehide` keep the run (`silence`): notes start again from what is heard when next
+pumped, so a page shown again from the back-forward cache plays on.
 
 Not in it (the feature's later tasks): MIDI clock, mod lanes as CCs, and riffs or keys played outside the sequencer.
 
