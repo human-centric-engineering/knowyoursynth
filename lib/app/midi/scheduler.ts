@@ -39,6 +39,11 @@
  * value in effect on each CC, now.
  * Nothing is sent back on Stop: the hardware keeps the last value, as it has no panel value to go back to.
  *
+ * With a program set (`setProgram`, `f-midi-hardware-lead` t-92), a run from the top first calls up that patch: Bank
+ * Select (CC 0, then CC 32, each only if given), then Program Change, now. A synth takes a moment to load a patch, so
+ * nothing on the channel (a note, a CC) goes before {@link PROGRAM_LEAD_MS} after it: the first note waits for it if
+ * it is due sooner. A run started part-way (a MIDI Continue) sends none: the patch was called up at its Start.
+ *
  * Pure: no timers, no Web MIDI. The page (`use-midi-out.ts`) gives it a port and a clock and calls `pump`.
  */
 import type { ControlValues, PhraseNote } from '@/lib/app/synths/contract';
@@ -64,6 +69,11 @@ export const PPQN = 24;
 export const CLOCK = 0xf8;
 export const START = 0xfa;
 export const STOP = 0xfc;
+/** Bank Select's two CCs: the bank's MSB, then its LSB. */
+export const BANK_MSB = 0;
+export const BANK_LSB = 32;
+/** How long after a program change the hardware is given to load the patch before a note or CC goes. */
+export const PROGRAM_LEAD_MS = 30;
 
 /** What the scheduler sends to: a `MIDIOutput` has this. Times are `performance.now()` milliseconds. */
 export interface MidiPort {
@@ -77,6 +87,13 @@ export interface MidiClock {
   at(frame: number): number;
   /** How long after it is rendered audio is heard, in ms: when a change the player makes now is heard. */
   heardIn?(): number;
+}
+
+/** A patch to call up on Play: program 0..127 (shown 1–128), and its bank's MSB and LSB, 0..127, where given. */
+export interface MidiProgram {
+  program: number;
+  msb?: number;
+  lsb?: number;
 }
 
 /** A velocity 0..1 as MIDI's 1..127: a note-on of 0 would be a note-off. */
@@ -138,11 +155,15 @@ export interface MidiScheduler {
   setClock(on: boolean): void;
   /** The CCs the lanes' values are sent as, from their next change; `null` sends none. None to begin with. */
   setCcs(lookup: CcLookup | null): void;
+  /** The patch a run from the top calls up first; `null` sends none. None to begin with. */
+  setProgram(program: MidiProgram | null): void;
 }
 
 const byStart = (a: PhraseNote, b: PhraseNote) => a[0] - b[0] || a[1] - b[1];
 const sorted = (loop: PatternLoop): PhraseNote[] => [...loop.notes].sort(byStart);
 const validNote = (n: number) => Number.isInteger(n) && n >= 0 && n <= 127;
+const validByte = (n: unknown): n is number =>
+  typeof n === 'number' && Number.isInteger(n) && n >= 0 && n <= 127;
 const modsOf = (loop: PatternLoop): Mod[] =>
   Array.isArray(loop.mods)
     ? loop.mods.filter((m) => Array.isArray(m) && Number.isFinite(m[0])).sort((a, b) => a[0] - b[0])
@@ -210,6 +231,9 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   const behind = new Map<number, number>();
   /** Per CC, the latest time a value was handed to the port for, on this port and channel. */
   const ccAt = new Map<number, number>();
+  /** The patch a run from the top calls up, and the time nothing on the channel goes before while it loads. */
+  let program: MidiProgram | null = null;
+  let holdUntil = -Infinity;
 
   const msAt = (a: Anchor, g: number) => a.ms + ((g - a.g) * 60000) / a.bpm;
   const beatAt = (a: Anchor, ms: number) => a.g + ((ms - a.ms) * a.bpm) / 60000;
@@ -238,7 +262,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
 
   function noteOn(n: number, v: number | undefined, when: number) {
     const free = freeAt.get(n);
-    const at = free !== undefined && free > when ? free : when;
+    const at = Math.max(holdUntil, free !== undefined && free > when ? free : when);
     held.set(n, (held.get(n) ?? 0) + 1);
     downAt.set(n, at);
     out([0x90 | channel, n, midiVelocity(v)], at);
@@ -299,6 +323,18 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     resync = false;
     // Started part-way, the clock waits for the next loop's start, as it does when turned on mid-run.
     startG = clockOn && beat === 0 ? 0 : null;
+    if (index === 0 && beat === 0) callUp();
+  }
+
+  /** The patch, now, after the release before it, and nothing on the channel until it has loaded. */
+  function callUp() {
+    if (!port || !program) return;
+    const now = clock.now();
+    const { program: pc, msb, lsb } = program;
+    if (msb !== undefined) out([0xb0 | channel, BANK_MSB, msb], now);
+    if (lsb !== undefined) out([0xb0 | channel, BANK_LSB, lsb], now);
+    out([0xc0 | channel, pc], now);
+    holdUntil = now + PROGRAM_LEAD_MS;
   }
 
   /** On to the loop after `cur`, as the player turns at its end. False when the pattern ends there. */
@@ -498,8 +534,10 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   }
 
   /** A CC's value, unless it is the value last sent on it. */
-  function ccOut(cc: number, v: number, at: number) {
+  function ccOut(cc: number, v: number, when: number) {
     if (ccSent.get(cc) === v) return;
+    // Not while a patch loads, which would set it back.
+    const at = Math.max(when, holdUntil);
     ccSent.set(cc, v);
     out([0xb0 | channel, cc, v], at);
     // A value handed over for later on this CC (before an edit, or a silence) can't be taken back: this one goes again
@@ -626,8 +664,9 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     const same = p === port;
     silence(same);
     port = p;
-    // What was handed to another port or channel holds back nothing here.
+    // What was handed to another port or channel holds back nothing here, nor a patch called up there.
     ccAt.clear();
+    holdUntil = -Infinity;
     // What was handed to another port holds nothing back on this one; what is still on its way on this one does.
     if (p && p !== timesFor) {
       startMs = stopMs = pulseMs = offMs = -Infinity;
@@ -642,6 +681,17 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     // Each lane's CC is sent again from the value in effect, whatever was last sent on it.
     ccSent.clear();
     if (cur) cur.k = 0;
+  }
+
+  function setProgram(p: MidiProgram | null) {
+    // A program that doesn't read sends nothing rather than a byte the hardware would misread.
+    program =
+      p &&
+      validByte(p.program) &&
+      (p.msb === undefined || validByte(p.msb)) &&
+      (p.lsb === undefined || validByte(p.lsb))
+        ? p
+        : null;
   }
 
   function setClock(on: boolean) {
@@ -661,6 +711,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     setPort,
     setClock,
     setCcs,
+    setProgram,
   };
 }
 
