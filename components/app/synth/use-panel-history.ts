@@ -13,7 +13,7 @@
  * engine hearing the turn, and its cables go or come one by one through it, in the order they were plugged. Another press, or a change made meanwhile,
  * finishes it at once; with reduced motion it is done at once.
  *
- * A new patch is shown being set (`glide`, `glidePlan`): a sound opened, Blank patch, Restore patch, and the synth
+ * A new patch is shown being set (`glide`, `glidePlan`): a sound opened, Default patch, Restore patch, and the synth
  * itself arriving, which starts from its blank patch. The session holds the new patch at once (saved and recorded as
  * one change); what the hook hands back as the session shows the glide meanwhile, a part of the panel at a time down
  * the voice, the old cables out first and the new ones in last, so the panel and the engine both follow it. Nothing is

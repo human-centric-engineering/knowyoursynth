@@ -251,7 +251,7 @@ export function SynthPanel({
   const isPin = (cb: PatchCable) => inMatrix.has(cb.from) && inMatrix.has(cb.to);
 
   // The cables as drawn, a step behind the patch's: when it changes by more than one at once (another sound, a lesson
-  // step, Blank patch), the old come out one by one, in the order they were plugged, each dropping away, then the new go
+  // step, Default patch), the old come out one by one, in the order they were plugged, each dropping away, then the new go
   // in, each dropping into place (`tweenCables`). The engine has the new patch at once; only the drawing walks. Not as
   // the page opens (the stored panel arriving), on another synth, or with reduced motion: then they are just there.
   const cableKey = (cb: PatchCable) => `${cb.from}>${cb.to}`;

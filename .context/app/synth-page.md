@@ -68,6 +68,13 @@ break shared links for no visible gain. "Sound" on screen means what you hear ("
   (`PATCH /api/v1/admin/synths/[id]/design`). Neutral, the default, is the panel in its own
   colours and lettering without the maker's marks; faithful adds them and needs a recorded
   approval. See `lib/app/catalogue/designs.ts`.
+- **The Default patch comes first** (`f-default-patch`). The page puts it ahead of the catalogue's sounds
+  (`defaultPatchSound` in `lib/app/synths/default-patch.ts`, under the reserved id `default-patch`), so a synth with
+  no session yet opens on it, and a stored sound the library no longer has falls back to it. The library lists it
+  above its sounds, outside their search, categories and count; it is no catalogue row. So nothing that reads or
+  writes a library sound through the API is handed it: it records no lesson progress, takes no star, is credited by
+  no saved copy, and is no start for the patterns that suit the patch. In the sequencer its one pattern is the C
+  major scale, which `useSoundPatterns` offers without a read.
 - **A lesson step is a panel state.** Choosing step _k_ sets the panel to the sound's steps up to
   _k_ (`presetState(def, sound, k)`); Finish sets it back to the whole sound. Picking another
   sound leaves the walkthrough. The step is kept with the session. The lesson is the library
@@ -122,7 +129,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
 │ │   (‹ Previous)  ┌ Step 2 of 4 · FILTER ──────┐  (Next step ›)  │ │               │        │
 │ │                 │ title · why, ≤68ch          │                 │ │               │        │
 │ ├───────────────────────────────────────────────────────────────┤ │               │        │
-│ │ [SOUND <name> ▾] (▶ Play)      [🔊 Mute] [Restore] [Blank]     │ │               │        │
+│ │ [SOUND <name> ▾] (▶ Play)      [🔊 Mute] [Restore] [Default]   │ │               │        │
 │ │         [Piano] [Harmonics] [Effects] MIDI [?] [−Zoom+] [⛶]   │ │               │        │
 │ ├───────────────────────────────────────────────────────────────┤ │               │        │
 │ │ harmonics strip · keyboard │ scope · [Harmonics] MIDI · rack  │ │               │        │
@@ -162,7 +169,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   `visibility: hidden`, so Tab passes it. On touch and below `lg` there is no tab and the strip sits
   in the dock's flow.
 - **The patch picker opens the bar** (`SoundPicker`), next to Play, with Restore patch and
-  Blank patch: the sound's name opens the library as a drawer down the left of the screen (or the Library sheet below `lg`)
+  Default patch, which chooses the Default patch as the library does: the sound's name opens the library as a drawer down the left of the screen (or the Library sheet below `lg`)
   and puts focus in its search. Its "In the style of…" is its tooltip.
 - **The lesson's steps are the chapters**, one per step in its module's colour, each labelled with
   its number and the part of the synth it works on (`moduleOf(step.module).label`), and its title
@@ -244,11 +251,11 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   one it replaces (the held cable, or the end moved), jolted a little as it seats. A cable unplugged on its own drops away
   from the jack still holding it (`FallingCable`). **Unplug all cables** takes them out one by one,
   in the order they were plugged (`UNPLUG_GAP_MS`), as one undo step; Undo and Redo walk cables one
-  by one too (`tweenCables`). A new patch (another sound, a lesson step, Blank) is walked in on the
+  by one too (`tweenCables`). A new patch (another sound, a lesson step, the Default patch) is walked in on the
   panel: the old cables or pins out one by one, then the new in (`REPATCH_STEP_MS`), the engine
   having the new patch at once; not as the page opens, on another synth, or with reduced motion.
-  A new patch from a sound opened (the library's, the user's, the tutor's, a shared one), **Blank
-  patch**, **Restore patch**, or the synth arriving (from its blank patch) is **glided** onto the
+  A new patch from a sound opened (the library's, the user's, the tutor's, a shared one), **Default
+  patch**, **Restore patch**, or the synth arriving (from its `init` patch) is **glided** onto the
   panel through the hook's `glide` (`glidePlan` / `glideAt` in `history.ts`): the cables the new
   patch has not got come out first, then the controls turn a part at a time down the voice as the
   lessons go (`GLIDE_ORDER`: oscillators, mixer, filter, envelopes, amplifier, modulation, … effects,

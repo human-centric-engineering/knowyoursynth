@@ -19,6 +19,11 @@ and `LOADERS` (`defs/load.ts`); `registry.test.ts` fails if one is missing.
 
 - `version: 1`, and no content: no presets, lineage, unusual notes or limits
   (`registry.test.ts` refuses them).
+- **A Default patch** (`defaultPatch`): a plain sawtooth into an open filter and a gated amplifier, set out as the
+  values over `init` (and any cables) that someone could copy onto the hardware. Every lesson starts from it. Leave it
+  out only where `init` is already exactly that. The rules are in
+  [`synths.md`](./synths.md#authoring-a-definition); `default-patch.test.ts` checks it, and `check:synths` renders it as
+  `(default)`, so record it in the baseline with the rest.
 - `toEngine()` maps onto the existing `EngineParams` only. If the voice needs something the
   engine does not have, that is engine work, planned on its own, not part of adding the synth.
 - Controls the app cannot model yet (a sequencer's buttons, MIDI settings) are still drawn, and
