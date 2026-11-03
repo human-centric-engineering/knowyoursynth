@@ -335,11 +335,13 @@ describe('the readout row', () => {
     clock: false,
     following: false,
     ccs: {},
+    program: null,
     setOutput: vi.fn(),
     setChannel: vi.fn(),
     setPlays: vi.fn(),
     setClock: vi.fn(),
     setCc: vi.fn(),
+    setProgram: vi.fn(),
     out: { muted: false, message: vi.fn(), event: vi.fn() },
     ...over,
   });
@@ -406,6 +408,34 @@ describe('the readout row', () => {
     );
     fireEvent.click(screen.getByRole('combobox', { name: 'MIDI out' }));
     expect(screen.getByRole('option', { name: 'TD-3 (not connected)' })).toBeTruthy();
+  });
+
+  it('chooses a program shown 1–128, then its bank, and offers none with Synth only (t-92)', () => {
+    const outputs = [{ id: 'td3', name: 'TD-3' }];
+    const on = {
+      status: 'on' as const,
+      outputs,
+      connected: true,
+      sending: true,
+      choice: { output: outputs[0], channel: 1, plays: 'midi' as const },
+    };
+    const m = fake(on);
+    const { rerender } = render(<Row midiOut={m} />);
+    // A bank goes only with a program, so there is none to choose yet.
+    expect(screen.queryByRole('combobox', { name: 'Bank MSB' })).toBeNull();
+    fireEvent.click(screen.getByRole('combobox', { name: 'Program' }));
+    fireEvent.click(screen.getByRole('option', { name: '1' }));
+    expect(m.setProgram).toHaveBeenCalledWith({ program: 0 });
+    const chosen = fake({ ...on, program: { program: 0 } });
+    rerender(<Row midiOut={chosen} />);
+    fireEvent.click(screen.getByRole('combobox', { name: 'Bank MSB' }));
+    fireEvent.click(screen.getByRole('option', { name: '0' }));
+    expect(chosen.setProgram).toHaveBeenCalledWith({ program: 0, msb: 0 });
+    fireEvent.click(screen.getByRole('combobox', { name: 'Program' }));
+    fireEvent.click(screen.getByRole('option', { name: 'None' }));
+    expect(chosen.setProgram).toHaveBeenLastCalledWith(null);
+    rerender(<Row midiOut={{ ...chosen, choice: { ...on.choice, plays: 'synth' } }} />);
+    expect(screen.queryByRole('combobox', { name: 'Program' })).toBeNull();
   });
 });
 
@@ -496,6 +526,86 @@ describe('lane CCs (t-90)', () => {
     // res has no CC, so it sends nothing.
     expect(data(td3)).toEqual([
       [0xb1, 74, 127],
+      [0x91, 60, 108],
+    ]);
+  });
+});
+
+describe('the patch Play calls up (f-midi-hardware-lead t-92)', () => {
+  const synth = (id: string) => ({ id, controls: [], init: {} }) as unknown as SynthDef;
+
+  async function withSynth(def: SynthDef) {
+    const hook = renderHook(
+      ({ d }: { d: SynthDef }) => {
+        const midi = useMidi(handlers());
+        const out = useMidiOut({ midi, engine: null, connect: () => void midi.connect(), def: d });
+        return { midi, out };
+      },
+      { initialProps: { d: def } }
+    );
+    await act(async () => {
+      await hook.result.current.midi.connect();
+    });
+    return hook;
+  }
+
+  const play = (out: MidiOut) =>
+    act(() => {
+      out.out.message({
+        type: 'pattern',
+        loop: { notes: [[0, 60, 4]], beats: 4 },
+        bpm: 120,
+        run: 1,
+      });
+      out.out.event(loopStart);
+    });
+
+  it('is none to begin with, and Play sends only the notes', async () => {
+    const { result } = await withSynth(synth('sh101'));
+    expect(result.current.out.program).toBeNull();
+    act(() => result.current.out.setOutput('td3'));
+    play(result.current.out);
+    expect(data(td3)).toEqual([[0x90, 60, 108]]);
+  });
+
+  it('keeps a program for this synth, in this browser, and another synth has its own', async () => {
+    const hook = await withSynth(synth('sh101'));
+    act(() => hook.result.current.out.setProgram({ program: 4, msb: 1 }));
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEYS.midiProgram) ?? 'null')).toEqual({
+      sh101: { program: 4, msb: 1 },
+    });
+    hook.rerender({ d: synth('td3') });
+    expect(hook.result.current.out.program).toBeNull();
+    act(() => hook.result.current.out.setProgram({ program: 9 }));
+    hook.rerender({ d: synth('sh101') });
+    expect(hook.result.current.out.program).toEqual({ program: 4, msb: 1 });
+    act(() => hook.result.current.out.setProgram(null));
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEYS.midiProgram) ?? 'null')).toEqual({
+      td3: { program: 9 },
+    });
+  });
+
+  it('reads a stored program that doesn’t check as none for that synth, keeping the others', async () => {
+    localStorage.setItem(
+      STORAGE_KEYS.midiProgram,
+      JSON.stringify({ sh101: { program: 128 }, td3: { program: 2, lsb: 3 } })
+    );
+    const hook = await withSynth(synth('sh101'));
+    expect(hook.result.current.out.program).toBeNull();
+    hook.rerender({ d: synth('td3') });
+    expect(hook.result.current.out.program).toEqual({ program: 2, lsb: 3 });
+  });
+
+  it('sends bank select and the program on the output’s channel when Play starts, before the first note', async () => {
+    const { result } = await withSynth(synth('sh101'));
+    act(() => result.current.out.setOutput('td3'));
+    act(() => result.current.out.setChannel(2));
+    act(() => result.current.out.setProgram({ program: 4, msb: 1, lsb: 2 }));
+    play(result.current.out);
+    expect(data(td3)).toEqual([
+      [0xb1, 0, 1],
+      [0xb1, 32, 2],
+      [0xc1, 4],
       [0x91, 60, 108],
     ]);
   });

@@ -1215,9 +1215,65 @@ function ClockSelect({ clock }: { clock: ClockIn }) {
   );
 }
 
+/** A program shown 1–128 (sent 0–127), or none. */
+const PROGRAM_OPTIONS: [string, string][] = [
+  ['', 'None'],
+  ...Array.from({ length: 128 }, (_, i): [string, string] => [String(i), String(i + 1)]),
+];
+/** A bank byte, 0–127, or none. */
+const BANK_OPTIONS: [string, string][] = [
+  ['', 'None'],
+  ...Array.from({ length: 128 }, (_, i): [string, string] => [String(i), String(i)]),
+];
+/** A select's value as a byte, or undefined for none. */
+const byteOf = (v: string): number | undefined => (v === '' ? undefined : Number(v));
+
 /**
- * MIDI out (`f-midi-out` t-88): the output the pattern plays on, its channel, whether the browser synth plays too, and
- * whether it is sent MIDI clock (t-89).
+ * The patch Play calls up on the hardware (`f-midi-hardware-lead` t-92): a program, and its bank once there is one, as
+ * a bank goes only with a program.
+ */
+function ProgramSelects({ midi }: { midi: MidiOut }) {
+  const { program, setProgram } = midi;
+  const bank = (key: 'msb' | 'lsb', v: string) => {
+    if (program) setProgram({ ...program, [key]: byteOf(v) });
+  };
+  return (
+    <>
+      <Select
+        label="Program"
+        help="The patch Play calls up on the hardware before the pattern’s first note, numbered 1–128 as most synths show them. None leaves it on whatever it is on, as a synth with no patch memory needs. Kept for this synth."
+        value={program ? String(program.program) : ''}
+        options={PROGRAM_OPTIONS}
+        onChange={(v) => {
+          const pc = byteOf(v);
+          setProgram(pc === undefined ? null : { ...program, program: pc });
+        }}
+      />
+      {program && (
+        <>
+          <Select
+            label="Bank MSB"
+            help="Bank Select (CC 0) sent before the program, for a synth with more than 128 patches. Its manual says which banks it has and whether it reads the MSB, the LSB or both. None sends none."
+            value={program.msb === undefined ? '' : String(program.msb)}
+            options={BANK_OPTIONS}
+            onChange={(v) => bank('msb', v)}
+          />
+          <Select
+            label="Bank LSB"
+            help="Bank Select’s fine part (CC 32), sent after the MSB and before the program. None sends none."
+            value={program.lsb === undefined ? '' : String(program.lsb)}
+            options={BANK_OPTIONS}
+            onChange={(v) => bank('lsb', v)}
+          />
+        </>
+      )}
+    </>
+  );
+}
+
+/**
+ * MIDI out (`f-midi-out` t-88): the output the pattern plays on, its channel, whether the browser synth plays too,
+ * whether it is sent MIDI clock (t-89), and the patch Play calls up there (t-92).
  * Before MIDI is connected, a Connect that asks once for keyboard and outputs alike.
  */
 function MidiOutRow({
@@ -1292,6 +1348,7 @@ function MidiOutRow({
                   onClick={() => midi.setClock(!midi.clock)}
                 />
               )}
+              {choice.plays !== 'synth' && <ProgramSelects midi={midi} />}
             </>
           )}
         </>

@@ -656,11 +656,13 @@ describe('a lane’s CC (t-90)', () => {
     clock: false,
     following: false,
     ccs: {},
+    program: null,
     setOutput: vi.fn(),
     setChannel: vi.fn(),
     setPlays: vi.fn(),
     setClock: vi.fn(),
     setCc: vi.fn(),
+    setProgram: vi.fn(),
     out: { muted: true, message: vi.fn(), event: vi.fn() },
     ...over,
   });

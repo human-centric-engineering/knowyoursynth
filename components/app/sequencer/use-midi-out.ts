@@ -21,6 +21,10 @@
  * pattern's, so they are kept per synth in this browser (`kys.midiCc`), apart from the output chosen: a pattern shared
  * or moved to another synth carries none.
  *
+ * A patch to call up on Play (`f-midi-hardware-lead` t-92), a program and optionally its bank, is kept per synth the
+ * same way (`kys.midiProgram`): which program holds which sound is the user's own hardware's business. None is set to
+ * begin with, as many synths have no patch memory.
+ *
  * The sequencer hands `out` everything it sends the player and every event of its own run; the scheduler is pumped on
  * each, and on a timer while a run plays. With MIDI alone the tab is silent, so the browser slows that timer (to once a
  * second, then once a minute); the muted player's `patternTick`, sent from the audio thread, pumps it instead.
@@ -34,7 +38,7 @@ import { z } from 'zod';
 import type { Midi, MidiPortInfo, MidiStatus } from '@/components/app/synth/use-midi';
 import { STORAGE_KEYS, useStoredPref } from '@/components/app/synth/storage';
 import { audioClock, type AudioClockSource } from '@/lib/app/midi/clock';
-import { createMidiScheduler } from '@/lib/app/midi/scheduler';
+import { createMidiScheduler, type MidiProgram } from '@/lib/app/midi/scheduler';
 import { ccLookup, validLaneCc, type LaneCcs } from '@/lib/app/midi/cc';
 import type { SynthDef } from '@/lib/app/synths/contract';
 import { playable } from '@/lib/app/synths/audio/pattern-player';
@@ -75,6 +79,15 @@ type MidiCcs = z.infer<typeof MidiCcSchema>;
 const NO_CCS: MidiCcs = {};
 const NO_LANE_CCS: LaneCcs = {};
 
+const byte = z.number().int().min(0).max(127);
+/** The patch Play calls up, per synth: synth id → program and bank. A synth's that doesn't read is dropped, not every synth's. */
+const MidiProgramsSchema = z.record(
+  z.string(),
+  z.object({ program: byte, msb: byte.optional(), lsb: byte.optional() }).nullable().catch(null)
+);
+type MidiPrograms = z.infer<typeof MidiProgramsSchema>;
+const NO_PROGRAMS: MidiPrograms = {};
+
 /** What the sequencer tells MIDI out, and whether the synth's own notes are muted. */
 export interface SequencerOut {
   /** The browser synth plays no notes: the pattern is heard on the MIDI output alone. */
@@ -105,6 +118,10 @@ export interface MidiOut {
   setClock: (on: boolean) => void;
   /** Gives lane `id` CC `cc`, taking it from any other lane that had it, or none (`null`). */
   setCc: (id: string, cc: number | null) => void;
+  /** The patch Play calls up on this synth's hardware (t-92), or none. */
+  program: MidiProgram | null;
+  /** Sets it, or none (`null`): a bank goes only with a program. */
+  setProgram: (program: MidiProgram | null) => void;
   out: SequencerOut;
 }
 
@@ -162,6 +179,22 @@ export function useMidiOut({
       setAllCcs({ ...allCcs, [synthId]: cc === null ? rest : { ...rest, [id]: cc } });
     },
     [synthId, ccs, allCcs, setAllCcs]
+  );
+
+  const [allPrograms, setAllPrograms] = useStoredPref(
+    STORAGE_KEYS.midiProgram,
+    MidiProgramsSchema,
+    NO_PROGRAMS
+  );
+  const program = (synthId !== null && allPrograms[synthId]) || null;
+  useEffect(() => s.setProgram(program), [s, program]);
+  const setProgram = useCallback(
+    (p: MidiProgram | null) => {
+      if (synthId === null) return;
+      const { [synthId]: _, ...rest } = allPrograms;
+      setAllPrograms(p === null ? rest : { ...rest, [synthId]: p });
+    },
+    [synthId, allPrograms, setAllPrograms]
   );
 
   // Whether a run is playing: the timer runs only then, and not while the muted player's ticks pump it.
@@ -238,11 +271,13 @@ export function useMidiOut({
     clock,
     following,
     ccs,
+    program,
     setOutput,
     setChannel,
     setPlays,
     setClock,
     setCc,
+    setProgram,
     out,
   };
 }
