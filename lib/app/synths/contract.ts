@@ -126,6 +126,7 @@ export interface SynthDef {
    * The Default patch (`f-default-patch`): the plain sawtooth every patch on this synth is explained from, which someone
    * following along on hardware sets their own synth to and checks by ear. Applied on top of `init`, as a sound's step
    * is. Absent, the Default patch is `init` with no cables, which is right only where `init` is already a plain saw.
+   * A synth with no sawtooth (a drum synth, the Easel) has its plainest tone here instead, and says so in `listen`.
    */
   defaultPatch?: DefaultPatch;
   /**
@@ -173,6 +174,11 @@ export interface SynthDef {
 export interface DefaultPatch {
   values: ControlValues;
   cables?: CablePair[];
+  /**
+   * What to listen for, where the patch is not a plain sawtooth: one or two sentences to someone checking it by ear,
+   * which the Default patch's step says in place of the sawtooth's bright, steady buzz.
+   */
+  listen?: string;
 }
 
 /**

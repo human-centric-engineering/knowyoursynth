@@ -292,7 +292,14 @@ export function validateDefaultPatch(def: SynthDef): ValidationResult<DefaultPat
   const { values, problems } = checkSettings(def, patch.values, 'defaultPatch.values');
   const cables = patch.cables ?? [];
   problems.push(...checkCables(def, cables, 'defaultPatch.cables'));
-  return done<DefaultPatch>({ values, ...(patch.cables ? { cables } : {}) }, problems);
+  return done<DefaultPatch>(
+    {
+      values,
+      ...(patch.cables ? { cables } : {}),
+      ...(patch.listen !== undefined ? { listen: patch.listen } : {}),
+    },
+    problems
+  );
 }
 
 /**
