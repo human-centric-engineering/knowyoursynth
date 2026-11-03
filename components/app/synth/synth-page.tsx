@@ -1149,7 +1149,7 @@ function Synth({
     void midi.connect();
   };
   // MIDI out from the sequencer (`f-midi-out` t-88): the outputs of the same grant.
-  const midiOut = useMidiOut({ midi, engine, connect: connectMidi });
+  const midiOut = useMidiOut({ midi, engine, connect: connectMidi, def: synthDef });
 
   // SynthDef `tempo` names the control whose value is the riff's BPM (the TB-303's TEMPO knob): the riff plays at
   // that speed, and turning it while the riff plays moves the riff with it.

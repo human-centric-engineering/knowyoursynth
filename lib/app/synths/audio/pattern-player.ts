@@ -33,7 +33,7 @@
  * `patternTick` every {@link TICK_SECONDS}: the tab is silent then, so the browser slows the page's timers, but not
  * messages from the audio thread, and MIDI out is refilled from those.
  */
-import type { EngineParams, PhraseNote } from '@/lib/app/synths/contract';
+import type { ControlValues, EngineParams, PhraseNote } from '@/lib/app/synths/contract';
 import type { Synth, SynthEventHandler, SynthMessage } from '@/lib/app/synths/audio/dsp-core';
 import { byBeat, noteEvents, type NoteEvent } from '@/lib/app/synths/audio/note-events';
 
@@ -51,6 +51,11 @@ export interface PatternLoop {
   notes: PhraseNote[];
   beats: number;
   params?: ParamChange[];
+  /**
+   * The mod lanes' values as this synth plays them (`resolveMods`), where they change: what MIDI out sends as CCs
+   * (`f-midi-out` t-90). The player plays `params` and does not read these.
+   */
+  mods?: [beat: number, set: ControlValues | null][];
 }
 
 /** A settings change, timed to its sample. */

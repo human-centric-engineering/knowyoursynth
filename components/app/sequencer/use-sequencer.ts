@@ -420,7 +420,10 @@ export function useSequencer({
     };
   }, []);
 
-  /** The loop's lane changes as settings for the voice: none for a pattern without lanes the synth can play. */
+  /**
+   * The loop's lane changes as this synth plays them, and as settings for the voice: none for a pattern without lanes
+   * the synth can play. The values go with the loop for MIDI out's CCs (t-90).
+   */
   const lanePlay = useCallback((p: Pattern, mods: ReturnType<typeof compileLoop>['mods']) => {
     const target = lanesRef.current;
     if (!target || !p.lanes?.length) return undefined;
@@ -428,12 +431,13 @@ export function useSequencer({
     if (live.length === 0) return undefined;
     // One set of lane values is one call to the synth's `toEngine`, however many steps share it.
     const made = new Map<string, EngineParams | null>();
-    return live.map(([beat, set]): ParamChange => {
+    const params = live.map(([beat, set]): ParamChange => {
       if (!set) return [beat, null];
       const key = JSON.stringify(set);
       if (!made.has(key)) made.set(key, target.paramsFor(set));
       return [beat, made.get(key) ?? null];
     });
+    return { params, mods: live };
   }, []);
 
   /** Loop `index` of `p`, compiled from `seed`, with what it was compiled from kept. */
@@ -463,9 +467,12 @@ export function useSequencer({
         if (k < index - 4) loops.current.delete(k);
       });
       const loop: PatternLoop = { notes: c.notes, beats: c.beats };
-      const params = lanePlay(p, c.mods);
-      if (params) loop.params = params;
-      lanesSent.current = !!params;
+      const lanes = lanePlay(p, c.mods);
+      if (lanes) {
+        loop.params = lanes.params;
+        loop.mods = lanes.mods;
+      }
+      lanesSent.current = !!lanes;
       return loop;
     },
     [lanePlay, arpInput]

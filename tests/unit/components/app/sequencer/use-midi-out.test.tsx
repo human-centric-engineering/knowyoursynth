@@ -332,10 +332,12 @@ describe('the readout row', () => {
     connected: false,
     sending: false,
     clock: false,
+    ccs: {},
     setOutput: vi.fn(),
     setChannel: vi.fn(),
     setPlays: vi.fn(),
     setClock: vi.fn(),
+    setCc: vi.fn(),
     out: { muted: false, message: vi.fn(), event: vi.fn() },
     ...over,
   });

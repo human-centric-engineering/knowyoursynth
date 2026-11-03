@@ -19,6 +19,8 @@
  *   and Page Down by more), Home and End go to either end, and Delete clears the cell.
  * - A dashed line marks the panel's value, which a cell with nothing set plays.
  * - A lane for a control this synth does not have stays with the pattern, silent, and says so.
+ * - **CC.** While MIDI out sends to an output, each lane can be given a CC number (`f-midi-out` t-90), and its values
+ *   are sent to the hardware as that CC. The numbers are this browser's, per synth, not the pattern's.
  *
  * The values are the pattern's (`Step.mod`), so rotate, reverse, copy and paste carry them with their steps.
  */
@@ -46,7 +48,19 @@ import type { Control, ControlValue, ControlValues, SynthDef } from '@/lib/app/s
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { SeqPicker, SeqSelect as Select } from '@/components/app/sequencer/select';
 import type { SeqPosition } from '@/components/app/sequencer/use-sequencer';
+import { MAX_LANE_CC, type LaneCcs } from '@/lib/app/midi/cc';
 import { PlayerTip } from '@/components/app/synth/player-tip';
+
+/** The CCs a lane can be sent as, while MIDI out sends (t-90): lane control id → CC, and a change to one. */
+export interface LaneCcChoice {
+  ccs: LaneCcs;
+  set: (id: string, cc: number | null) => void;
+}
+
+const CC_OPTIONS: [string, string][] = [
+  ['', 'No CC'],
+  ...Array.from({ length: MAX_LANE_CC + 1 }, (_, n): [string, string] => [String(n), `CC ${n}`]),
+];
 
 /** How far Up and Down move a value along its lane, and Page Up and Page Down. */
 const NUDGE = 1 / 50;
@@ -105,6 +119,7 @@ export function ModLanes({
   at,
   onEdit,
   onDrawing,
+  cc = null,
 }: {
   pattern: Pattern;
   /** The synth on the panel: the controls a lane can move, and what they take. */
@@ -120,6 +135,8 @@ export function ModLanes({
   onEdit: (fn: (p: Pattern) => Pattern, group?: string) => void;
   /** A stroke starting and ending on a lane: the page above holds still while one is drawn. */
   onDrawing?: (on: boolean) => void;
+  /** While MIDI out sends to an output: the CCs the lanes are sent as. */
+  cc?: LaneCcChoice | null;
 }) {
   const lanes = useMemo(() => pattern.lanes ?? [], [pattern.lanes]);
   const names = useMemo(() => controlNames(def), [def]);
@@ -151,6 +168,7 @@ export function ModLanes({
       at={at}
       onEdit={onEdit}
       onDrawing={onDrawing}
+      cc={cc}
     />
   );
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -336,6 +354,7 @@ function Lane({
   at,
   onEdit,
   onDrawing,
+  cc,
 }: {
   /**
    * In the module, the lane is the tab panel of the tabs, which take the head's lead in place of its select (a lane
@@ -356,6 +375,7 @@ function Lane({
   at: SeqPosition | null;
   onEdit: (fn: (p: Pattern) => Pattern, group?: string) => void;
   onDrawing?: (on: boolean) => void;
+  cc: LaneCcChoice | null;
 }) {
   const steps = pattern.parts[part].steps;
   const [cursor, setCursor] = useState(0);
@@ -444,6 +464,15 @@ function Lane({
               ...free.map((x) => [x.id, names.get(x.id) ?? x.id] as const),
             ]}
             onChange={(v) => onEdit((q) => moveLane(def, q, id, v))}
+          />
+        )}
+        {cc && c && (
+          <Select
+            label="CC"
+            help="The MIDI CC this lane is sent to the hardware as, its values across the control's travel as 0–127. Find the number in the synth's MIDI chart. Kept in this browser, for this synth, not with the pattern."
+            value={cc.ccs[id] === undefined ? '' : String(cc.ccs[id])}
+            options={CC_OPTIONS}
+            onChange={(v) => cc.set(id, v === '' ? null : Number(v))}
           />
         )}
         <span className="kys-seq-lane-readout" aria-live="polite">
