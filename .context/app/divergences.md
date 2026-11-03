@@ -5,9 +5,9 @@ otherwise rediscover these as conflicts, or clobber them. The rule is `sunrise.d
 the Hub's `hub://process/sunrise-fork`: **an edit to a platform-owned file gets a row here in
 the same PR**, and each row names what deletes it.
 
-- **Base:** Sunrise `v0.15.0` (`8b6b7c14`). `lib/sunrise-version.ts` reads `0.15.0`. The fork
-  was cut from `main` at `0e685744` (`v0.13.0-29`), took `v0.14.0` in t-16 and `v0.15.0` in
-  t-77. The next sync
+- **Base:** Sunrise `v0.16.0` (`737ab0cf`). `lib/sunrise-version.ts` reads `0.16.0`. The fork
+  was cut from `main` at `0e685744` (`v0.13.0-29`), took `v0.14.0` in t-16, `v0.15.0` in
+  t-77 and `v0.16.0` in t-136. The next sync
   target is the next Sunrise tag. After a sync, move the base to the commit merged.
 - **Not rows:**
   - new files (but see "New files in platform directories" below);
@@ -18,7 +18,7 @@ the same PR**, and each row names what deletes it.
   Those are listed under "Excluded".
 
 - **Re-derive the list (modified and deleted files) with:**
-  `git diff --diff-filter=MD --name-only 8b6b7c14 HEAD -- . ':!lib/app' ':!components/app' ':!.context/app' ':!prisma/schema/app*.prisma' ':!prototype'`
+  `git diff --diff-filter=MD --name-only 737ab0cf HEAD -- . ':!lib/app' ':!components/app' ':!.context/app' ':!prisma/schema/app*.prisma' ':!prototype'`
 - **Row fields:** files · change · why · on conflict · upstream status · **delete when**.
 - **At a sync:** read the rows before you merge, not after. Read the release's changelog against
   the "Delete when" lines, and delete every row the release discharges. For each conflict in a
@@ -35,8 +35,8 @@ the same PR**, and each row names what deletes it.
     repository URLs. Adds the `predev`, `prebuild`, `build:audio-workers`, `build:panel-renderer`,
     `check:synths`, `smoke:sounds`, `smoke:profile`, `smoke:tutor` and `bank:reindex` scripts, `esbuild` as a devDependency, and
     the five `@fontsource/*` packages and `@resvg/resvg-js` as dependencies.
-  - `package-lock.json`: carries the package rename, plus the transitive patches from
-    `npm audit fix` (undici, engine.io, brace-expansion, source-map-js; #8).
+  - `package-lock.json`: carries the package rename and our own dependencies. The `npm audit fix`
+    patches it carried (#8) are all in upstream's lockfile from 0.16.0 (t-136).
   - `README.md`: rewritten as Know Your Synth's.
   - `.env.development`: `PORT=3024`.
 - **Why:**
@@ -125,40 +125,6 @@ the same PR**, and each row names what deletes it.
   as upstream has it.
 - **Upstream:** app-specific, never going upstream.
 - **Delete when:** never, while the project is coordinated through the Hub.
-
-### VERSIONING.md: the synth library in the Covered list
-
-- **Files:** `VERSIONING.md`
-- **Change:** adds eight bullets to the `lib/app/` Covered list: `lib/app/synths/` (the contract,
-  the engine, the validator and the definition registry), `lib/app/catalogue/` (seeding the
-  catalogue and reading it for the API), `lib/app/bank/` (the same for the databank),
-  `lib/app/sounds/` (users' own sounds, `f-my-sounds` s1), `lib/app/profile/` (synth profiles,
-  `f-profiles` r1), `lib/app/tutor/` (the tutor's agent, tools and context, `f-tutor` t-53),
-  `lib/app/sequencer/` (the pattern model, `f-step-sequencer` t-78) and `lib/app/patterns/` (users' own
-  patterns, t-81).
-- **Why:** the public-surface guard treats everything under `lib/app/` as public surface and
-  fails on an unlisted path. Its fork note names this as the fix (decision on f-engine
-  t-2/t-3).
-- **On conflict:** take theirs and re-insert our eight bullets in the `lib/app/` list, in
-  alphabetical order.
-- **Upstream:** not raised. A guard that read the fork's own list from a fork-owned file would
-  remove this row.
-- **Delete when:** none while synth, catalogue, databank, sounds, profile, tutor, sequencer or patterns code lives in `lib/app/`, or when the guard
-  reads fork scaffolds from a fork-owned file.
-
-### CUSTOMIZATION.md: our `lib/app/` directories in the seam table
-
-- **Files:** `CUSTOMIZATION.md`
-- **Change:** adds eight rows to §4's "Edit this file" table, after `lib/app/provider-credentials.ts`: `lib/app/bank/`,
-  `catalogue/`, `patterns/`, `profile/`, `sequencer/`, `sounds/`, `synths/` and `tutor/`, each padded to the table's
-  existing column widths so Prettier leaves the other rows alone.
-- **Why:** from Sunrise 0.15.0 (#734) the scaffold classifier counts each `lib/app/<name>/` directory as a scaffold, and
-  `versioning-seam-coverage.test.ts` fails on one with no row in that table. Its FORK NOTE names the row as the fix
-  (t-77).
-- **On conflict:** take theirs and re-insert our eight rows at the end of the table, in alphabetical order, keeping
-  them within the column widths.
-- **Upstream:** not raised. The same fork-owned list that would remove the VERSIONING.md row would remove this one.
-- **Delete when:** as for the VERSIONING.md row above.
 
 ### The reserved-tier test, pinned to our app models
 
@@ -342,22 +308,6 @@ the same PR**, and each row names what deletes it.
 - **Delete when:** upstream passes graders each call's result (switch the graders to its field
   names if they differ), or the fork drops its tutor graders.
 
-### The grader parity test, leaving out our graders
-
-- **Files:** `tests/unit/lib/orchestration/evaluations/graders/registry-parity.test.ts`
-- **Change:** the tutor's grader slugs are left out of the test's `extra`, under a `FORK` comment
-  (`f-tutor-knowledge` t-61).
-- **Why:** the test reads the registry, which runs the fork's `initAppGraders()`, so filling
-  `lib/app/evaluations.ts` necessarily adds slugs `KNOWN_GRADER_SLUGS` doesn't list (`HB2`). The
-  graders are pinned in `defaults.test.ts`, so a stray one still fails there.
-- **On conflict:** take theirs, and re-apply the exclusion to whichever check counts the registry's
-  extra slugs.
-- **Upstream:** raised as
-  [sunrise#1045](https://github.com/human-centric-engineering/sunrise/issues/1045), the same shape
-  as sunrise#1032.
-- **Delete when:** upstream stops counting the fork's graders there, or the fork registers no
-  grader.
-
 ### The home, about and contact pages, as thin shims
 
 - **Files:** `app/(public)/page.tsx`, `app/(public)/about/page.tsx`, `app/(public)/contact/page.tsx`
@@ -447,16 +397,18 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
   `TUTOR_DAILY_TURNS`, t-54; the tutor's web search key, `BRAVE_SEARCH_API_KEY`, t-59), and
   `lib/app/evaluations.ts` (the tutor's four eval graders, `f-tutor-knowledge` t-61), and `lib/app/footer.ts` (the
   not-affiliated notice, `f-front-door` t-63), and `lib/app/owner-classification.ts` (our user-linked models,
-  personal but none enforced, and the suggestion and report queues not-personal, t-77) and
+  personal but none enforced, and the suggestion and report queues and the pattern library not-personal, t-77 and
+  t-136) and
   `lib/app/capability-seed-pairs.ts` (the tutor's eight tools, and the catalogue and databank seeds the parity test
-  cannot run, t-77): fork-owned scaffolds, filled.
+  cannot run, t-77), and `lib/app/own-modules.ts` (our eight `lib/app/` directories, which are app code rather than
+  seams, so the seam-coverage guards skip them, t-136): fork-owned scaffolds, filled.
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).
 - `tests/unit/lib/app/defaults.test.ts`: the `SEAM_DEFAULTS` rows for the filled seams (`brand`,
   `ci`, `reserved-tiers`, `protected-nav`, `public-nav`, `auth-landing`, `data-export`, `admin-nav`,
   `account-sections`, `jobs`, `eslint.config`, `capabilities`, `context-contributors`,
   `platform-agents`, `env`, `evaluations`, `footer`, `owner-classification`, `capability-seed-pairs`) are re-pinned to
-  our values rather than deleted (`HB2`). Our eight `lib/app/` directories (the same list as the CUSTOMIZATION.md row
-  above) are on `UNASSERTED_SEAMS`, under a `FORK` comment: they are app code with no empty default to assert. CUSTOMIZATION
-  §4 calls this the one unavoidable cost. The file is platform-owned, so expect it to conflict on
+  our values rather than deleted (`HB2`). CUSTOMIZATION §4 calls this the one unavoidable cost. Our eight `lib/app/`
+  directories no longer need rows here, in VERSIONING.md or in CUSTOMIZATION.md: `lib/app/own-modules.ts` lists them
+  (t-136). The file is platform-owned, so expect it to conflict on
   a sync. Keep our assertions, and take upstream's new rows.

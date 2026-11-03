@@ -94,8 +94,10 @@ covered by the version contract.
   Fork-owned scaffolds in `lib/app/` — a fork edits these, upstream ships them
   empty (or, for `surface.ts`, as a default it may replace):
   - `lib/app/account-sections.ts` → `initAppAccountSections()` — account-page section registry
+  - `lib/app/admin-landing.ts` → `appOrgAdminLandingRoute` — where an org admin lands at `/admin` (checked by `orgAdminLandingProblem()` in `lib/auth/admin-landing.ts`)
   - `lib/app/admin-nav.ts` → `initAppNav()` — admin nav registry (`registerNavSection()`)
-  - `lib/app/admin-tier.ts` → `initAppOrgTierAdminPages()` — the fork's org-tier admin pages (primitive: `registerOrgTierAdminPage()` in `lib/auth/admin-tier.ts`)
+  - `lib/app/admin-tier.ts` → `initAppOrgTierAdminPages()` — the fork's org-tier admin pages, and the core sections it keeps platform-only (primitives: `registerOrgTierAdminPage()` and `closeCoreOrgTierSection()` in `lib/auth/admin-tier.ts`)
+  - `lib/app/admin-tier-routes.ts` → `APP_ORG_TIER_ADMIN_ROUTES` — the fork's org-tier admin API routes and wrappers, as `path#NAME`, read by the roster test
   - `lib/app/agent-fields.ts` → `appAgentFields` — extra `AiAgent` config fields
   - `lib/app/api-key-scopes.ts` → `APP_API_KEY_SCOPES` — extra mintable API-key scopes
   - `lib/app/auth-landing.ts` → `appAuthLandingRoute` / `appAuthLandingLabel` — where sign-in lands
@@ -103,17 +105,16 @@ covered by the version contract.
   - `lib/app/bootstrap.ts` → `initApp()` — the app boot hook, awaited by `instrumentation.ts`
   - `lib/app/brand.ts` → `appBrandName` / `appBrandLegalName` / `appBrandDescription` — brand overrides
   - `lib/app/capabilities.ts` → `initAppCapabilities()` — capability registry (`registerAppCapability()`)
-  - `lib/app/bank/` → `planBank()` / `seedBank()` (`seed.ts`), `getHeardOn()` / `listBank()` / `getBankDetail()` (`read.ts`), the joins (`joins.ts`), the seed-data shapes (`data.ts`) — Know Your Synth's databank: seeding it and reading it for the API
   - `lib/app/capability-seed-pairs.ts` → `APP_CAPABILITY_PAIRS` / `APP_UNCHECKED_SEEDS` — which class goes with each slug the fork's capability seeds write, and which of its seeds the parity test cannot run, read by that test
-  - `lib/app/catalogue/` → `planCatalogue()` / `seedCatalogue()` (`seed.ts`), `listSynths()` / `getSynthDetail()` (`read.ts`), the seed-data shapes (`data.ts`) — Know Your Synth's catalogue: seeding it and reading it for the API
   - `lib/app/ci.ts` → `appCoverageExclusions` / `appAlwaysRunTests` / `appOwnerlessSurfaceExceptions` — the fork's own coverage exclusions, whole-tree always-run tests, and files allowed to read an ownerless-capable model outside the access helpers
   - `lib/app/context-contributors.ts` → `initAppContextContributors()` — chat context contributors (primitive: `registerContextContributor()` in `lib/orchestration/chat/context-builder.ts`)
+  - `lib/app/credential-paths.ts` → `appCredentialPaths` — route patterns whose dynamic segments are credentials, collapsed to `[param]` in every logged, reported and analytics path (read by `collapseDynamicSegments()` in `lib/logging/redact-path.ts`)
   - `lib/app/csp.ts` → `appFrameSrc` — extra CSP `frame-src` origins
   - `lib/app/data-export.ts` → `initAppSubjectSources()` / `collectAppSubjectData()` — Art. 15 export sources
   - `lib/app/db-drift.ts` → `registerAppDriftProbes()` — drift-probe registry (primitives in `lib/db/drift-probes.ts`)
   - `lib/app/emails.ts` → `emailOverrides` — transactional-email template overrides
   - `lib/app/env.ts` → `appEnvSchema` — app env registry
-  - `lib/app/erasure.ts` → `initAppErasureHooks()` — Art. 17 erasure cleanup hooks (primitive: `registerErasureCleanupHook()` in `lib/privacy/erasure-hooks.ts`)
+  - `lib/app/erasure.ts` → `initAppErasureHooks()` — Art. 17 erasure cleanup hooks and stale-writer declarations (primitives: `registerErasureCleanupHook()` and `registerStaleWriter()` in `lib/privacy/erasure-hooks.ts`)
   - `lib/app/eslint.config.mjs` — the fork's own ESLint tier config, spread into the root config
   - `lib/app/evaluations.ts` → `initAppGraders()` — evaluation grader registry
   - `lib/app/footer.ts` → `footerCopyright` — footer copyright line
@@ -127,19 +128,14 @@ covered by the version contract.
   - `lib/app/org-export.ts` → `initAppOrgSources()` — a fork's own tables in the org export (primitive: `registerAppOrgSources()` in `lib/privacy/org-source-registry.ts`)
   - `lib/app/platform-agents.ts` → `initAppPlatformAgents()` — platform agents every org gets an instance of (primitive: `registerPlatformAgent()` in `lib/orchestration/agents/platform-agents.ts`)
   - `lib/app/provider-credentials.ts` → `initAppProviderCredentials()` — where a provider row's API key comes from, per org (primitive: `registerProviderCredentialResolver()` in `lib/orchestration/llm/provider-credentials.ts`)
-  - `lib/app/profile/` → `getProfile()` / `saveProfile()` (`profile.ts`), `usernameSchema` / `usernameProblem()` (`username.ts`), `parseProfileLink()` (`links.ts`), `listInstruments()` / `addInstrument()` / `moveInstrument()` / `removeInstrument()` / `reorderInstruments()` (`instruments.ts`), `getPublicProfile()` (`public.ts`), the API shapes (`profile-data.ts`, `instruments-data.ts`) — Know Your Synth's synth profiles: username, links, visibility and the synths owned and wanted, owner-scoped, and the public read of a profile
   - `lib/app/protected-nav.ts` → `protectedNavItems` — authenticated-area nav
   - `lib/app/protected-routes.ts` → `appProtectedRoutes` — extra route prefixes the proxy protects
   - `lib/app/public-nav.ts` → `publicNavItems` / `footerNavItems` / `footerLegalItems` — public nav and footer
   - `lib/app/rate-limit.ts` → `registerAppRateLimits()` — rate-limit registry (`registerRateLimitTier()` / `registerRateLimitRule()` / `registerRateLimitKeyResolver()`). The per-org request counter (`quotas.requestsPerMinute`, `lib/security/org-request-cap.ts`) runs outside this registry, and `'org'` stays free as a custom key name
   - `lib/app/tenant-resolver.ts` → `registerAppTenantResolver()` — the proxy's tenant resolver (primitive: `registerTenantResolver()` in `lib/tenancy/resolver.ts`; Web-standard only)
   - `lib/app/reserved-tiers.ts` → `occupiedTiers` — which reserved namespace tiers this fork occupies
-  - `lib/app/patterns/` → `listUserPatterns()` / `getUserPattern()` / `createUserPattern()` / `updateUserPattern()` / `deleteUserPattern()` / `assertOwnPattern()` (`store.ts`), the API shapes (`data.ts`) — Know Your Synth's users' own patterns, "My patterns", owner-scoped
-  - `lib/app/sequencer/` → `Pattern` / `PatternSchema` (`pattern.ts`), `importPhrase()` (`import.ts`), `compileLoop()` (`compile.ts`), the tools (`tools.ts`) — Know Your Synth's pattern sequencer: the pattern model, importing a library riff, compiling one loop
-  - `lib/app/sounds/` → `listUserSounds()` / `getUserSound()` / `createUserSound()` / `updateUserSound()` / `deleteUserSound()` (`store.ts`), `getSettings()` / `updateSettings()` / `getPanelPref()` / `putPanelPref()` (`preferences.ts`), `listProgress()` / `recordProgress()` (`progress.ts`), `listFavourites()` / `addFavourite()` / `removeFavourite()` (`favourites.ts`), the API shapes (`data.ts`, `preference-data.ts`, `progress-data.ts`, `favourite-data.ts`) — Know Your Synth's users' own sounds, settings, last panels, lesson progress and favourites, owner-scoped
+  - `lib/app/own-modules.ts` → `appOwnModules` — a leaf fork's own `lib/app/` modules, which the seam-coverage guards then skip
   - `lib/app/surface.ts` → `classifySurface()` / `DEFAULT_SURFACE` — per-surface theming classifier
-  - `lib/app/synths/` → `SynthDef` / `EngineParams` (`contract.ts`), `createSynth()` (`audio/`), `validateSound()` (`validate.ts`), `getSynthDef()` / `SYNTH_DEFS` (`defs/`) — Know Your Synth's synth contract, sound engine, shared library and definition registry
-  - `lib/app/tutor/` → `TUTOR_AGENT` (`agent.ts`), `TUTOR_TOOLS` (`tools.ts`), `readPanel()` / `TutorEntityContextSchema` (`panel.ts`), `synthContext()` (`context.ts`) — Know Your Synth's tutor: the platform agent, its eight tools, the panel (which the panel and pattern tools read) and the synth context
   - `lib/app/user-created.ts` → `initAppUserCreatedHooks()` — post-signup hook registry
 
   Outside `lib/app/` — **hand-maintained, so check it against the tree rather
@@ -181,7 +177,7 @@ covered by the version contract.
   - `successResponse()`, `errorResponse()` from `lib/api/responses.ts`
   - `serverFetch()` from `lib/api/server-fetch.ts`
   - `logger` from `lib/logging/`
-  - org support grants (§121): `GET`/`POST /api/v1/orgs/[id]/support-grants` and `DELETE /api/v1/orgs/[id]/support-grants/[grantId]`; `findOpenSupportGrant()`, `openSupportGrantWhere()`, `grantSupportAccess()`, `revokeSupportGrant()`, `listSupportGrants()` and `SupportGrantError` from `lib/tenancy/support-grants.ts`; `SUPPORT_GRANT_LEVELS` / `DEFAULT_SUPPORT_GRANT_LEVEL` from `lib/tenancy/roles.ts`; `SUPPORT_GRANT_DEFAULT_HOURS` / `SUPPORT_GRANT_MAX_HOURS` and `createSupportGrantSchema` from `lib/validations/tenancy.ts`; entry under a grant (t-824): `verifiedSupportGrant()` and the `'support'` `OrgEntry` source from `lib/tenancy/entry.ts`, the support principal's shape (the default user role in place of the platform role, on the principal and on the handler's session; `presentedRole()` / `presentedSession()` / `isRefusedReadOnlyWrite()` from `lib/auth/support-principal.ts`), `requestSupportSession()` from `lib/auth/admin-page-viewer.ts`, and `support` on the `POST /api/v1/orgs/switch` response; the support stamp on audit rows (t-825): `logAdminAction()` filling `supportGrantId` / `supportOrgId` from the tenant context, `AdminAuditEntry.support` for a caller acting on a session from outside it, `listSupportActivity()`, `GET /api/v1/orgs/[id]/support-grants/activity`, and the `support` / `supportGrantId` filters and `supportGrant` field on `GET /api/v1/admin/orchestration/audit-log` (see [`.context/tenancy/support-access.md`](./.context/tenancy/support-access.md))
+  - org support grants (§121): `GET`/`POST /api/v1/orgs/[id]/support-grants` and `DELETE /api/v1/orgs/[id]/support-grants/[grantId]`; `findOpenSupportGrant()`, `openSupportGrantWhere()`, `grantSupportAccess()`, `revokeSupportGrant()`, `listSupportGrants()` and `SupportGrantError` from `lib/tenancy/support-grants.ts`; `SUPPORT_GRANT_LEVELS` / `DEFAULT_SUPPORT_GRANT_LEVEL` from `lib/tenancy/roles.ts`; `SUPPORT_GRANT_DEFAULT_HOURS` / `SUPPORT_GRANT_MAX_HOURS` and `createSupportGrantSchema` from `lib/validations/tenancy.ts`; entry under a grant (t-824): `verifiedSupportGrant()` and the `'support'` `OrgEntry` source from `lib/tenancy/entry.ts`, the support principal's shape (the default user role in place of the platform role, on the principal and on the handler's session; `presentedRole()` / `presentedSession()` / `isRefusedReadOnlyWrite()` / `presentSessionEntry()` / `refuseReadOnlySupportWrite()` and `READ_ONLY_SUPPORT_MESSAGE` from `lib/auth/support-principal.ts`), `requestSupportSession()` from `lib/auth/admin-page-viewer.ts`, and `support` on the `POST /api/v1/orgs/switch` response; the support stamp on audit rows (t-825): `logAdminAction()` filling `supportGrantId` / `supportOrgId` from the tenant context, `AdminAuditEntry.support` for a caller acting on a session from outside it, `listSupportActivity()`, `GET /api/v1/orgs/[id]/support-grants/activity`, and the `support` / `supportGrantId` filters and `supportGrant` field on `GET /api/v1/admin/orchestration/audit-log` (see [`.context/tenancy/support-access.md`](./.context/tenancy/support-access.md))
   - an org's caps in `Org.settings.quotas` (`monthlyBudgetUsd`, `requestsPerMinute`): `readOrgQuotas()` / `loadOrgQuotas()` / `writeOrgQuotas()` and `ORG_QUOTAS_KEY` from `lib/tenancy/org-settings.ts`, with `orgQuotasSchema` / `OrgQuotas` from `lib/validations/tenancy.ts` — what a fork's billing or plan code calls to set an org's monthly budget and request cap
   - the per-org request counter's cache clear, `forgetOrgRequestCap()` from `lib/security/org-request-cap.ts` — called after a direct `writeOrgQuotas()` so the change applies at once in that process
   - The orchestration admin API surface documented in

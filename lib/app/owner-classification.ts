@@ -94,6 +94,12 @@ export function initAppOwnerClassification(): void {
         because:
           'A report about a shared pattern, decided from one admin queue; reporterId and resolvedById record who acted.',
       },
+      // Named for its column only, so the guard counts it from Sunrise 0.16.0 (t-136).
+      LibraryPattern: {
+        kind: 'not-personal',
+        because:
+          'A pattern in the shared library every org reads; madeByUserId records the admin who added it or the user it came from.',
+      },
     },
   });
 }
