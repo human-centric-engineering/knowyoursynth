@@ -1056,3 +1056,314 @@ describe('MIDI clock', () => {
     expect(order(t.sent).filter(([k]) => typeof k === 'string')[0]).toEqual(['start', 200]);
   });
 });
+
+describe('mod lanes as CCs (t-90)', () => {
+  /** A lane on `x` sent as CC 74, its value as it is. */
+  const lookup = (set: Record<string, unknown>): [number, number][] =>
+    typeof set.x === 'number' ? [[74, set.x]] : [];
+  const modded = (
+    notes: PhraseNote[],
+    mods: [number, Record<string, number> | null][],
+    beats = 1
+  ): PatternLoop => ({ notes, beats, mods });
+  /** Every message in order, as [time, kind]: a CC as `cc74=v`, a note-on as `on60`. */
+  const kinds = (sent: Sent[]) =>
+    sent.map(([at, d]) => {
+      const k = d[0] & 0xf0;
+      if (k === 0xb0) return [at, `cc${d[1]}=${d[2]}`, d[0] & 0x0f];
+      if (k === 0x90) return [at, `on${d[1]}`, d[0] & 0x0f];
+      if (k === 0x80) return [at, `off${d[1]}`, d[0] & 0x0f];
+      return [at, d[0]];
+    });
+  const ccs = (sent: Sent[]) => kinds(sent).filter(([, k]) => String(k).startsWith('cc74'));
+
+  it('sends each change as its CC on the output’s channel, ahead of a note on the same timestamp', () => {
+    const t = setup(2);
+    t.s.setCcs(lookup);
+    start(
+      t,
+      modded(
+        [
+          [0, 60, 0.25],
+          [0.5, 62, 0.25],
+        ],
+        [
+          [0, { x: 10 }],
+          [0.25, { x: 50 }],
+          [0.5, { x: 90 }],
+        ]
+      )
+    );
+    t.run(900);
+    expect(kinds(t.sent).filter(([at]) => (at as number) < 1000)).toEqual([
+      [0, 'cc74=10', 2],
+      [0, 'on60', 2],
+      [250, 'off60', 2],
+      [250, 'cc74=50', 2],
+      [500, 'cc74=90', 2],
+      [500, 'on62', 2],
+      [750, 'off62', 2],
+    ]);
+  });
+
+  it('sends a CC only when its value changes, and nothing for a step with no lane value', () => {
+    const t = setup();
+    t.s.setCcs(lookup);
+    start(
+      t,
+      modded(
+        [],
+        [
+          [0, { x: 10 }],
+          [0.25, { x: 10, y: 3 }],
+          [0.5, null],
+          [0.75, { x: 20 }],
+        ]
+      )
+    );
+    t.run(1900);
+    // The second loop starts at 10 again after 20.
+    expect(ccs(t.sent)).toEqual([
+      [0, 'cc74=10', 0],
+      [750, 'cc74=20', 0],
+      [1000, 'cc74=10', 0],
+      [1750, 'cc74=20', 0],
+    ]);
+  });
+
+  it('sends nothing for a lane without a CC, and nothing at all with none given', () => {
+    const t = setup();
+    start(t, modded([[0, 60, 0.25]], [[0, { x: 10 }]]));
+    t.run(900);
+    expect(ons(t.sent)).toHaveLength(1);
+    expect(t.sent.filter(([, d]) => (d[0] & 0xf0) === 0xb0)).toEqual([]);
+
+    const u = setup();
+    u.s.setCcs(lookup);
+    start(u, modded([[0, 60, 0.25]], [[0, { y: 10 }]]));
+    u.run(900);
+    expect(u.sent.filter(([, d]) => (d[0] & 0xf0) === 0xb0)).toEqual([]);
+  });
+
+  it('sends nothing back on Stop: the hardware keeps the last value', () => {
+    const t = setup();
+    t.s.setCcs(lookup);
+    start(
+      t,
+      modded(
+        [[0, 60, 0.25]],
+        [
+          [0, { x: 10 }],
+          [0.5, { x: 90 }],
+        ]
+      )
+    );
+    t.run(600);
+    t.s.message({ type: 'stopPattern' });
+    t.run(2000);
+    expect(ccs(t.sent)).toEqual([
+      [0, 'cc74=10', 0],
+      [500, 'cc74=90', 0],
+    ]);
+  });
+
+  it('sends only the value in effect, now, for an edit the notes have passed: not each change before it', () => {
+    const t = setup();
+    t.s.setCcs(lookup);
+    start(t, modded([], [[0, { x: 10 }]], 4));
+    t.run(1500);
+    // The look-ahead has reached 1,600: the edit is heard from there, where 30 is in effect.
+    t.s.message({
+      type: 'patternEdit',
+      loop: modded(
+        [],
+        [
+          [0, { x: 20 }],
+          [1, { x: 30 }],
+          [2, { x: 40 }],
+        ],
+        4
+      ),
+    });
+    t.s.pump();
+    t.run(2100);
+    expect(ccs(t.sent)).toEqual([
+      [0, 'cc74=10', 0],
+      [1500, 'cc74=30', 0],
+      [2000, 'cc74=40', 0],
+    ]);
+  });
+
+  it('sends the value in effect once a CC is given mid-run, then each change', () => {
+    const t = setup();
+    start(
+      t,
+      modded(
+        [],
+        [
+          [0, { x: 10 }],
+          [0.25, { x: 20 }],
+          [0.5, { x: 30 }],
+        ]
+      )
+    );
+    t.run(300);
+    t.s.setCcs(lookup);
+    t.s.pump();
+    t.run(600);
+    expect(ccs(t.sent)).toEqual([
+      [300, 'cc74=20', 0],
+      [500, 'cc74=30', 0],
+    ]);
+  });
+
+  it('sends the value in effect to a new port, which has had none', () => {
+    const t = setup();
+    t.s.setCcs(lookup);
+    start(t, modded([], [[0, { x: 10 }]], 4));
+    t.run(1000);
+    const other: Sent[] = [];
+    t.s.setPort({ send: (data, at) => void other.push([at ?? t.now, data]) }, 0);
+    t.s.pump();
+    expect(ccs(other)).toEqual([[1000, 'cc74=10', 0]]);
+  });
+
+  /** Lanes on `x` and `y` sent as CC 74 and CC 71. */
+  const both = (set: Record<string, unknown>): [number, number][] => [
+    ...(typeof set.x === 'number' ? [[74, set.x] as [number, number]] : []),
+    ...(typeof set.y === 'number' ? [[71, set.y] as [number, number]] : []),
+  ];
+  const cc71 = (sent: Sent[]) => kinds(sent).filter(([, k]) => String(k).startsWith('cc71'));
+
+  it('sends a lane given a CC mid-run its value in effect, beside a lane that already had one', () => {
+    const t = setup();
+    t.s.setCcs(lookup);
+    start(
+      t,
+      modded(
+        [],
+        [
+          [0, { x: 10, y: 5 }],
+          [0.5, { x: 20 }],
+        ]
+      )
+    );
+    t.run(300);
+    t.s.setCcs(both);
+    t.s.pump();
+    t.run(600);
+    expect(cc71(t.sent)).toEqual([[300, 'cc71=5', 0]]);
+    expect(ccs(t.sent).map(([at]) => at)).toEqual([0, 300, 500]);
+  });
+
+  it('catches up each CC on its own: a lane set only on an earlier passed change keeps its value', () => {
+    const t = setup();
+    t.s.setCcs(both);
+    start(t, modded([], [[0, { x: 1 }]], 4));
+    t.run(1500);
+    t.s.message({
+      type: 'patternEdit',
+      loop: modded(
+        [],
+        [
+          [0, { x: 2, y: 2 }],
+          [1, { y: 3 }],
+        ],
+        4
+      ),
+    });
+    t.s.pump();
+    expect(ccs(t.sent)).toEqual([
+      [0, 'cc74=1', 0],
+      [1500, 'cc74=2', 0],
+    ]);
+    expect(cc71(t.sent)).toEqual([[1500, 'cc71=3', 0]]);
+  });
+
+  it('sends an edit’s change still to come at its time, not now', () => {
+    const t = setup();
+    t.s.setCcs(lookup);
+    start(t, modded([], [[0, { x: 10 }]], 4));
+    t.run(1500);
+    t.s.message({
+      type: 'patternEdit',
+      loop: modded(
+        [],
+        [
+          [0, { x: 10 }],
+          [1.56, { x: 50 }],
+        ],
+        4
+      ),
+    });
+    t.s.pump();
+    // 10, in effect, again now (an edit sends what is in effect, whatever was sent); 50 at its own time.
+    expect(ccs(t.sent)).toEqual([
+      [0, 'cc74=10', 0],
+      [1500, 'cc74=10', 0],
+      [1560, 'cc74=50', 0],
+    ]);
+  });
+
+  it('after a held-up timer across loops, sends only the value in effect, not each loop’s last', () => {
+    const t = setup();
+    t.s.setCcs(lookup);
+    start(
+      t,
+      modded(
+        [],
+        [
+          [0, { x: 10 }],
+          [0.5, { x: 20 }],
+        ]
+      )
+    );
+    t.s.pump();
+    t.now = 3200;
+    t.s.pump();
+    t.run(3600);
+    // At 3,200 the fourth loop is in its first half, at 10, which the hardware already has.
+    expect(ccs(t.sent)).toEqual([
+      [0, 'cc74=10', 0],
+      [3500, 'cc74=20', 0],
+    ]);
+  });
+
+  it('sends an edit’s value again after a value already handed over for later on that CC', () => {
+    const t = setup();
+    t.s.setCcs(lookup);
+    start(
+      t,
+      modded(
+        [],
+        [
+          [0, { x: 10 }],
+          [0.55, { x: 100 }],
+        ]
+      )
+    );
+    t.run(475);
+    // 100 is on its way for 550. The edit has no change there: 20 from the start.
+    t.s.message({ type: 'patternEdit', loop: modded([], [[0, { x: 20 }]]) });
+    t.s.pump();
+    expect(ccs(t.sent)).toEqual([
+      [0, 'cc74=10', 0],
+      [550, 'cc74=100', 0],
+      [475, 'cc74=20', 0],
+      [550, 'cc74=20', 0],
+    ]);
+  });
+
+  it('sends a value already sent again after an edit, as the hardware may have had another since', () => {
+    const t = setup();
+    t.s.setCcs(lookup);
+    start(t, modded([], [[0, { x: 10 }]], 4));
+    t.run(500);
+    t.s.message({ type: 'patternEdit', loop: modded([], [[0, { x: 10 }]], 4) });
+    t.s.pump();
+    expect(ccs(t.sent)).toEqual([
+      [0, 'cc74=10', 0],
+      [500, 'cc74=10', 0],
+    ]);
+  });
+});

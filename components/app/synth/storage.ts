@@ -63,6 +63,11 @@ export const STORAGE_KEYS = {
    * screen setting (D4): kept in this browser only, never stamped or kept in the account.
    */
   midiOut: 'kys.midiOut',
+  /**
+   * The CCs mod lanes are sent as over MIDI out (`f-midi-out` t-90), per synth: the hardware's, not the pattern's.
+   * Kept in this browser only, as `midiOut` is.
+   */
+  midiCc: 'kys.midiCc',
 } as const;
 
 /** One synth's panel, as it was left. */

@@ -820,6 +820,8 @@ export function Sequencer({
                 if (on) setHeld(page);
               }}
               onEdit={(fn, group) => seq.edit(fn, { group })}
+              // Only while notes go to an output: Synth only, or the output not connected, sends it nothing.
+              cc={midiOut?.sending ? { ccs: midiOut.ccs, set: midiOut.setCc } : null}
             />
           )}
           <div className="kys-seq-tools" role="toolbar" aria-label="Pattern tools">

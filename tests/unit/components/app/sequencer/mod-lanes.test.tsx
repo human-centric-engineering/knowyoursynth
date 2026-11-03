@@ -17,6 +17,7 @@ import { useMemo } from 'react';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { Sequencer } from '@/components/app/sequencer/sequencer';
 import { controlNames, nudged } from '@/components/app/sequencer/mod-lanes';
+import type { MidiOut } from '@/components/app/sequencer/use-midi-out';
 import { SYNTH_DEFS, getSynthDef } from '@/lib/app/synths/defs';
 import {
   useSequencer,
@@ -92,7 +93,15 @@ let state: SeqState;
 /** Times the module has rendered: it reads `held` once a render. */
 let renders = 0;
 
-function Harness({ panel = PANEL, def = DEF }: { panel?: ControlValues; def?: SynthDef }) {
+function Harness({
+  panel = PANEL,
+  def = DEF,
+  midiOut,
+}: {
+  panel?: ControlValues;
+  def?: SynthDef;
+  midiOut?: MidiOut;
+}) {
   // Made afresh only when the panel or the synth changes, as the page does.
   const lanes = useMemo<LaneTarget>(
     () => ({ def, paramsFor: (set) => madeFor(set, panel) }),
@@ -114,6 +123,7 @@ function Harness({ panel = PANEL, def = DEF }: { panel?: ControlValues; def?: Sy
       onStop={seq.stop}
       def={def}
       panel={panel}
+      midiOut={midiOut}
       transport
     />
   );
@@ -434,6 +444,13 @@ describe('the lanes playing', () => {
       [0.5, madeFor({ cutoff: 10 })],
       [0.75, null],
     ]);
+    // And the values themselves, which MIDI out sends as CCs (t-90).
+    expect(start.loop.mods).toEqual([
+      [0, { cutoff: 80 }],
+      [0.25, null],
+      [0.5, { cutoff: 10 }],
+      [0.75, null],
+    ]);
   });
 
   it('sends no settings at all for lanes this synth has no control for', async () => {
@@ -445,6 +462,7 @@ describe('the lanes playing', () => {
     act(() => void state.load(p, { id: null, name: 'test' }));
     await act(async () => void (await state.play()));
     expect(sentOf('pattern').at(-1)!.loop.params).toBeUndefined();
+    expect(sentOf('pattern').at(-1)!.loop.mods).toBeUndefined();
     // And the pattern is held as it was
     expect(state.pattern).toEqual(p);
   });
@@ -626,3 +644,77 @@ describe('following the playhead across pages', () => {
 function loopEvent(over: Partial<LoopEvent> = {}): LoopEvent {
   return { type: 'loop', index: 0, start: true, beat: 0, beats: 2, bpm: 120, frame: 0, ...over };
 }
+
+describe('a lane’s CC (t-90)', () => {
+  const midiOut = (over: Partial<MidiOut> = {}): MidiOut => ({
+    status: 'on',
+    connect: vi.fn(),
+    outputs: [{ id: 'td3', name: 'TD-3' }],
+    choice: { output: { id: 'td3', name: 'TD-3' }, channel: 1, plays: 'midi' },
+    connected: true,
+    sending: true,
+    clock: false,
+    ccs: {},
+    setOutput: vi.fn(),
+    setChannel: vi.fn(),
+    setPlays: vi.fn(),
+    setClock: vi.fn(),
+    setCc: vi.fn(),
+    out: { muted: true, message: vi.fn(), event: vi.fn() },
+    ...over,
+  });
+
+  it('is chosen on the lane while an output is sent to, and taken off with No CC', () => {
+    const out = midiOut({ ccs: { cutoff: 74 } });
+    render(<Harness midiOut={out} />);
+    addCutoff();
+    const cc = screen.getByRole('combobox', { name: 'CC' });
+    expect(cc.textContent).toContain('CC 74');
+    fireEvent.click(cc);
+    fireEvent.click(screen.getByRole('option', { name: 'CC 1' }));
+    expect(out.setCc).toHaveBeenLastCalledWith('cutoff', 1);
+    fireEvent.click(screen.getByRole('combobox', { name: 'CC' }));
+    fireEvent.click(screen.getByRole('option', { name: 'No CC' }));
+    expect(out.setCc).toHaveBeenLastCalledWith('cutoff', null);
+    // Up to 119: 120 on are channel-mode messages.
+    fireEvent.click(screen.getByRole('combobox', { name: 'CC' }));
+    expect(screen.getByRole('option', { name: 'CC 119' })).toBeTruthy();
+    expect(screen.queryByRole('option', { name: 'CC 120' })).toBeNull();
+    // Nor Bank Select.
+    expect(screen.queryByRole('option', { name: 'CC 0' })).toBeNull();
+  });
+
+  it('is not offered with no output, with Synth only, or with the output not connected', () => {
+    const { rerender } = render(<Harness />);
+    addCutoff();
+    expect(screen.queryByRole('combobox', { name: 'CC' })).toBeNull();
+    rerender(
+      <Harness
+        midiOut={midiOut({
+          choice: { output: { id: 'td3', name: 'TD-3' }, channel: 1, plays: 'synth' },
+          sending: false,
+        })}
+      />
+    );
+    expect(screen.queryByRole('combobox', { name: 'CC' })).toBeNull();
+    // An output kept from an earlier visit, not connected yet.
+    rerender(<Harness midiOut={midiOut({ status: 'off', connected: false, sending: false })} />);
+    expect(screen.queryByRole('combobox', { name: 'CC' })).toBeNull();
+    rerender(<Harness midiOut={midiOut()} />);
+    expect(screen.getByRole('combobox', { name: 'CC' })).toBeTruthy();
+  });
+
+  it('is not offered on a lane this synth has no control for', () => {
+    render(<Harness midiOut={midiOut()} />);
+    const p = laned();
+    p.lanes = ['gone'];
+    p.parts[0].steps[0].mod = { gone: 80 };
+    p.parts[0].steps[2].mod = { gone: 10 };
+    // A pattern with lanes opens them.
+    act(() => void state.load(p, { id: null, name: 'test' }));
+    expect(screen.getByRole('group', { name: 'Mod lanes' }).textContent).toContain(
+      'Not on this synth'
+    );
+    expect(screen.queryByRole('combobox', { name: 'CC' })).toBeNull();
+  });
+});

@@ -16,6 +16,10 @@
  * MIDI clock (t-89) is sent to an output only once it is turned on for that output, as some synths start their own
  * sequencer on it: the outputs it is on for are kept with the choice.
  *
+ * Mod lanes are sent as CCs (t-90) once a lane is given a CC number. The numbers are the hardware's, not the
+ * pattern's, so they are kept per synth in this browser (`kys.midiCc`), apart from the output chosen: a pattern shared
+ * or moved to another synth carries none.
+ *
  * The sequencer hands `out` everything it sends the player and every event of its own run; the scheduler is pumped on
  * each, and on a timer while a run plays. With MIDI alone the tab is silent, so the browser slows that timer (to once a
  * second, then once a minute); the muted player's `patternTick`, sent from the audio thread, pumps it instead.
@@ -30,6 +34,8 @@ import type { Midi, MidiPortInfo, MidiStatus } from '@/components/app/synth/use-
 import { STORAGE_KEYS, useStoredPref } from '@/components/app/synth/storage';
 import { audioClock, type AudioClockSource } from '@/lib/app/midi/clock';
 import { createMidiScheduler } from '@/lib/app/midi/scheduler';
+import { ccLookup, validLaneCc, type LaneCcs } from '@/lib/app/midi/cc';
+import type { SynthDef } from '@/lib/app/synths/contract';
 import { playable } from '@/lib/app/synths/audio/pattern-player';
 import type { SynthEvent, SynthMessage } from '@/lib/app/synths/audio/dsp-core';
 
@@ -56,6 +62,18 @@ export type MidiOutChoice = z.infer<typeof MidiOutChoiceSchema>;
 
 const NO_CHOICE: MidiOutChoice = { output: null, channel: 1, plays: 'midi' };
 
+/**
+ * The CCs given to lanes, per synth: synth id → lane control id → CC. A synth's map that doesn't read is dropped, not
+ * every synth's: what is read back is written back on the next change.
+ */
+const MidiCcSchema = z.record(
+  z.string(),
+  z.record(z.string().max(128), z.number().refine(validLaneCc)).catch({})
+);
+type MidiCcs = z.infer<typeof MidiCcSchema>;
+const NO_CCS: MidiCcs = {};
+const NO_LANE_CCS: LaneCcs = {};
+
 /** What the sequencer tells MIDI out, and whether the synth's own notes are muted. */
 export interface SequencerOut {
   /** The browser synth plays no notes: the pattern is heard on the MIDI output alone. */
@@ -76,10 +94,14 @@ export interface MidiOut {
   sending: boolean;
   /** MIDI clock is on for the chosen output. */
   clock: boolean;
+  /** The CCs this synth's lanes are sent as (t-90): lane control id → CC. */
+  ccs: LaneCcs;
   setOutput: (id: string | null) => void;
   setChannel: (channel: number) => void;
   setPlays: (plays: MidiPlays) => void;
   setClock: (on: boolean) => void;
+  /** Gives lane `id` CC `cc`, taking it from any other lane that had it, or none (`null`). */
+  setCc: (id: string, cc: number | null) => void;
   out: SequencerOut;
 }
 
@@ -92,11 +114,14 @@ export function useMidiOut({
   midi,
   engine,
   connect,
+  def = null,
 }: {
   midi: Pick<Midi, 'status' | 'outputs' | 'output'>;
   engine: MidiOutEngine | null;
   /** Asks for MIDI, as the bar's Connect does. */
   connect: () => void;
+  /** The synth on the panel: whose lane CCs are sent, and what its lanes' controls take. */
+  def?: SynthDef | null;
 }): MidiOut {
   const [choice, setChoice] = useStoredPref(STORAGE_KEYS.midiOut, MidiOutChoiceSchema, NO_CHOICE);
   // One per engine, which is the page's for its life; the clock reads the engine's context when asked, as the context
@@ -115,6 +140,22 @@ export function useMidiOut({
   }, [s, sending, id, output, choice.channel, midi.outputs]);
   // Only while notes are sent there: Synth only, or the output unplugged, sends it nothing.
   useEffect(() => s.setClock(sending && clock), [s, sending, clock]);
+
+  const [allCcs, setAllCcs] = useStoredPref(STORAGE_KEYS.midiCc, MidiCcSchema, NO_CCS);
+  const synthId = def?.id ?? null;
+  const ccs = (synthId !== null && allCcs[synthId]) || NO_LANE_CCS;
+  useEffect(() => s.setCcs(def ? ccLookup(def, ccs) : null), [s, def, ccs]);
+  const setCc = useCallback(
+    (id: string, cc: number | null) => {
+      if (synthId === null || (cc !== null && !validLaneCc(cc))) return;
+      // One lane a CC: two would fight over it.
+      const rest = Object.fromEntries(
+        Object.entries(ccs).filter(([lane, n]) => lane !== id && n !== cc)
+      );
+      setAllCcs({ ...allCcs, [synthId]: cc === null ? rest : { ...rest, [id]: cc } });
+    },
+    [synthId, ccs, allCcs, setAllCcs]
+  );
 
   // Whether a run is playing: the timer runs only then, and not while the muted player's ticks pump it.
   const [running, setRunning] = useState(false);
@@ -188,10 +229,12 @@ export function useMidiOut({
     connected,
     sending,
     clock,
+    ccs,
     setOutput,
     setChannel,
     setPlays,
     setClock,
+    setCc,
     out,
   };
 }
