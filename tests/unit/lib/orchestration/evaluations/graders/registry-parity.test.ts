@@ -9,18 +9,20 @@
  * Mirrors the workflow executor-registry parity test pattern.
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+
+// Count only core's graders. `getRegisteredSlugs()` runs the fork seam first,
+// so a fork that registers its own grader would otherwise show up as `extra`.
+vi.mock('@/lib/app/evaluations', () => ({ initAppGraders: vi.fn() }));
+
 import { KNOWN_GRADER_SLUGS, getRegisteredSlugs } from '@/lib/orchestration/evaluations/graders';
-// FORK (Know Your Synth): the app's graders fill `lib/app/evaluations.ts` and are pinned in `defaults.test.ts`.
-import { TUTOR_GRADERS } from '@/lib/app/tutor/evals/graders';
 
 describe('grader registry parity', () => {
   it('registers every slug listed in KNOWN_GRADER_SLUGS at module load', () => {
     const registered = new Set(getRegisteredSlugs());
     const expected = new Set<string>(KNOWN_GRADER_SLUGS);
     const missing = [...expected].filter((s) => !registered.has(s));
-    const app = new Set(TUTOR_GRADERS.map((g) => g.slug));
-    const extra = [...registered].filter((s) => !expected.has(s) && !app.has(s));
+    const extra = [...registered].filter((s) => !expected.has(s));
     expect(missing).toEqual([]);
     expect(extra).toEqual([]);
   });
