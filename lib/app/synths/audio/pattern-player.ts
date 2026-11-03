@@ -5,7 +5,8 @@
  * round (probability, random directions, conditions), and someone editing a step wants to hear it the next time the
  * playhead gets there. So the page compiles one loop at a time (`compileLoop`, t-78) and this player takes it:
  *
- * - `pattern` starts from beat 0 with the first loop.
+ * - `pattern` starts from beat 0 with the first loop, or from `beat` of loop `index` (`f-midi-hardware-lead` t-91: a
+ *   MIDI Continue resumes mid-pattern). Notes before that beat are not played: a note-on skipped is not owed a let-go.
  * - `patternNext` queues the loop after this one, swapped in on the boundary sample. With nothing queued, the loop
  *   plays again, so a page that is late never leaves a gap. `loop: null` ends the pattern at the boundary instead.
  * - `patternEdit` replaces what is still to play of this loop, from the playhead on, without a restart. A loop queued
@@ -67,7 +68,17 @@ interface ParamEvent {
 
 /** What the page sends to play a pattern. */
 export type PatternMessage =
-  | { type: 'pattern'; loop: PatternLoop; bpm: number; run?: number; muted?: boolean }
+  | {
+      type: 'pattern';
+      loop: PatternLoop;
+      bpm: number;
+      run?: number;
+      muted?: boolean;
+      /** Which loop this is, reported back in its events: 0 if left out. */
+      index?: number;
+      /** The beat of the loop to start from: 0 if left out. */
+      beat?: number;
+    }
   | { type: 'patternNext'; loop: PatternLoop | null }
   | { type: 'patternEdit'; loop: PatternLoop }
   | { type: 'patternMute'; muted: boolean }
@@ -295,7 +306,14 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
       onEvent(run === undefined ? { type: 'patternEnd' } : { type: 'patternEnd', run });
   }
 
-  function start(loop: PatternLoop, tempo: number, id: number | undefined, mute: boolean) {
+  function start(
+    loop: PatternLoop,
+    tempo: number,
+    id: number | undefined,
+    mute: boolean,
+    from: number,
+    at: number
+  ) {
     stop(true);
     run = id;
     muted = mute;
@@ -309,8 +327,16 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     next = undefined;
     pi = 0;
     idx = 0;
-    pos = 0;
-    index = 0;
+    pos = Math.min(Math.round(at * spb()), cur.len - 1);
+    index = from;
+    // Started part-way: a note that starts before the playhead is passed over, its let-go with it (which would let go
+    // of a later note on the same key), and the settings the lanes have there come in now.
+    if (pos > 0) {
+      const s = spb();
+      cur.evs = base.filter((e) => Math.round(e.st * s) >= pos);
+    }
+    while (pi < pev.length && pev[pi].t <= pos) pi++;
+    if (pi > 0) apply(pev[pi - 1].p);
     announce = true;
   }
 
@@ -439,10 +465,19 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
 
   function handle(m: SynthMessage) {
     switch (m.type) {
-      case 'pattern':
-        if (playable(m.loop))
-          start(m.loop, m.bpm, Number.isFinite(m.run) ? m.run : undefined, m.muted === true);
+      case 'pattern': {
+        if (!playable(m.loop)) return;
+        const { index: from, beat: at } = m;
+        start(
+          m.loop,
+          m.bpm,
+          Number.isFinite(m.run) ? m.run : undefined,
+          m.muted === true,
+          typeof from === 'number' && Number.isInteger(from) && from >= 0 ? from : 0,
+          typeof at === 'number' && Number.isFinite(at) && at > 0 ? at : 0
+        );
         return;
+      }
       case 'patternMute':
         // Muting lets go of what the synth holds; unmuted, it plays from the next note on.
         if (m.muted && !muted) release();

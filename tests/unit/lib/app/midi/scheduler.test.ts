@@ -84,6 +84,40 @@ function start(t: ReturnType<typeof setup>, l: PatternLoop, frame = 0) {
   t.s.event(ev({ frame, beats: l.beats }));
 }
 
+describe('a run started part-way (f-midi-hardware-lead t-91)', () => {
+  const l = loop(
+    [
+      [0, 60, 0.5],
+      [1, 62, 1],
+      [2.5, 64, 0.25],
+    ],
+    4
+  );
+
+  it('counts from the loop it starts at and sends nothing before the beat', () => {
+    const t = setup();
+    t.s.message({ type: 'pattern', loop: l, bpm: 60, run: 1, index: 2, beat: 1.5 });
+    t.s.event(ev({ index: 2, beat: 1.5, beats: 4, frame: 0 }));
+    t.run(2600);
+    // 60 and 62 began before beat 1.5; 64 is a beat later, and the next loop's 60 at its start.
+    expect(ons(t.sent)).toEqual([
+      [1000, 64, 108],
+      [2500, 60, 108],
+    ]);
+    expect(offs(t.sent)).toEqual([[1250, 64]]);
+  });
+
+  it('with clock on, sends Start at the next loop’s start, not part-way through', () => {
+    const t = setup();
+    t.s.setClock(true);
+    t.s.message({ type: 'pattern', loop: l, bpm: 60, run: 1, index: 2, beat: 1.5 });
+    t.s.event(ev({ index: 2, beat: 1.5, beats: 4, frame: 0 }));
+    t.run(2600);
+    const start = t.sent.filter(([, d]) => d[0] === START).map(([at]) => at);
+    expect(start).toEqual([2500]);
+  });
+});
+
 describe('timing', () => {
   it('sends nothing until the run’s first loop event says when it began', () => {
     const t = setup();

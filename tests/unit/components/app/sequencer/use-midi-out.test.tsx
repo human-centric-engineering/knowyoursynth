@@ -333,6 +333,7 @@ describe('the readout row', () => {
     connected: false,
     sending: false,
     clock: false,
+    following: false,
     ccs: {},
     setOutput: vi.fn(),
     setChannel: vi.fn(),

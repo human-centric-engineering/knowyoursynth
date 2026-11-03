@@ -39,6 +39,8 @@ export interface EncoderProps {
   compact?: boolean;
   /** Reads a typed value ("70%", "C#3"), or `null` for text that is not one. A number in the text by default. */
   parse?: (text: string) => number | null;
+  /** Shows a value set elsewhere (a MIDI clock's tempo): it can be read and focused, not turned or typed into. */
+  readOnly?: boolean;
 }
 
 /** The first number in typed text: "70%" is 70, "×3" is 3, "-12" is -12. */
@@ -66,6 +68,7 @@ export function Encoder({
   unset = false,
   compact = false,
   parse = parseNumber,
+  readOnly = false,
 }: EncoderProps) {
   const drag = useRef<{ y: number; from: number } | null>(null);
   // Typing a value: the cell is a text box until Enter (or leaving it) sets it, or Escape leaves it as it was.
@@ -89,6 +92,7 @@ export function Encoder({
   };
   const bigStep = big ?? step * 10;
   const set = (v: number) => {
+    if (readOnly) return;
     const next = snap(v, min, max, step);
     if (next !== value) onChange(next);
   };
@@ -104,6 +108,7 @@ export function Encoder({
     if (e.key in by) set(value + by[e.key]);
     else if (e.key === 'Home') set(min);
     else if (e.key === 'End') set(max);
+    else if (readOnly) return;
     else if (e.key === 'Enter') setTyping(format(value));
     // A digit, a minus or a point starts typing a value with it. Letters stay the page's: they play notes.
     else if (/^[\d.-]$/.test(e.key)) setTyping(e.key);
@@ -114,8 +119,9 @@ export function Encoder({
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
     // The main button or a finger: a right-click opens the context menu, which can swallow the let-go.
     if (e.button !== 0) return;
-    e.currentTarget.setPointerCapture?.(e.pointerId);
     e.currentTarget.focus();
+    if (readOnly) return;
+    e.currentTarget.setPointerCapture?.(e.pointerId);
     drag.current = { y: e.clientY, from: value };
   };
   const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
@@ -162,7 +168,12 @@ export function Encoder({
       </div>
     );
   return (
-    <div className="kys-cell" data-unset={unset || undefined} data-compact={compact || undefined}>
+    <div
+      className="kys-cell"
+      data-unset={unset || undefined}
+      data-compact={compact || undefined}
+      data-readonly={readOnly || undefined}
+    >
       <PlayerTip name={label} help={help}>
         <div
           ref={knob}
@@ -173,6 +184,7 @@ export function Encoder({
           aria-valuemax={max}
           aria-valuenow={value}
           aria-valuetext={unset ? `${text} (default)` : text}
+          aria-readonly={readOnly || undefined}
           className="kys-cell-hit"
           style={meter}
           onKeyDown={onKeyDown}
@@ -180,7 +192,7 @@ export function Encoder({
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
-          onDoubleClick={() => setTyping(format(value))}
+          onDoubleClick={() => !readOnly && setTyping(format(value))}
         >
           <span className="kys-cell-label" aria-hidden="true">
             {label}

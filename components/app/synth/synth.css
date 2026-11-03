@@ -1795,6 +1795,10 @@ svg .kys-hit:focus-visible {
   color: var(--lcd-dim);
   text-shadow: none;
 }
+/* A value set elsewhere (a MIDI clock's tempo): read, not turned. */
+.kys-cell[data-readonly] .kys-cell-hit {
+  cursor: default;
+}
 .kys-cell-meter {
   position: absolute;
   left: 10px;

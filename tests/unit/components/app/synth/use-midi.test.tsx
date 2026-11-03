@@ -13,9 +13,10 @@ import { useMidi } from '@/components/app/synth/use-midi';
 import type { MidiHandlers } from '@/components/app/synth/use-midi';
 
 interface FakeInput {
+  id?: string;
   name: string | null;
   state: string;
-  onmidimessage: ((e: { data: number[] }) => void) | null;
+  onmidimessage: ((e: { data: number[]; timeStamp?: number }) => void) | null;
 }
 
 interface FakeOutput {
@@ -485,6 +486,58 @@ describe('useMidi', () => {
       });
       const { result } = renderHook(() => useMidi(handlers()));
       expect(result.current.status).toBe('off');
+    });
+  });
+
+  describe('MIDI clock in (f-midi-hardware-lead t-91)', () => {
+    it('lists the inputs with their ids, skipping disconnected ones', async () => {
+      input.id = 'ks';
+      const drums: FakeInput = { id: 'tr8', name: 'TR-8', state: 'connected', onmidimessage: null };
+      const gone: FakeInput = { id: 'x', name: 'Gone', state: 'disconnected', onmidimessage: null };
+      setNav(vi.fn().mockResolvedValue(makeAccess([input, drums, gone])));
+      const { result } = renderHook(() => useMidi(handlers()));
+      await act(async () => {
+        await result.current.connect();
+      });
+      expect(result.current.inputs).toEqual([
+        { id: 'ks', name: 'Keystation' },
+        { id: 'tr8', name: 'TR-8' },
+      ]);
+    });
+
+    it('hands clock, Start, Continue, Stop and Song Position to listeners, with when and where they came', async () => {
+      input.id = 'ks';
+      const drums: FakeInput = { id: 'tr8', name: 'TR-8', state: 'connected', onmidimessage: null };
+      setNav(vi.fn().mockResolvedValue(makeAccess([input, drums])));
+      const h = handlers();
+      const { result } = renderHook(() => useMidi(h));
+      await act(async () => {
+        await result.current.connect();
+      });
+      const heard: [number[], number, string][] = [];
+      const undo = result.current.listen((data, ms, from) => heard.push([[...data], ms, from]));
+      drums.onmidimessage?.({ data: [0xfa], timeStamp: 10 });
+      drums.onmidimessage?.({ data: [0xf8], timeStamp: 11 });
+      input.onmidimessage?.({ data: [0xfb], timeStamp: 12 });
+      drums.onmidimessage?.({ data: [0xf2, 4, 1], timeStamp: 13 });
+      drums.onmidimessage?.({ data: [0xfc], timeStamp: 14 });
+      // Active sensing and a sysex byte are not clock, and are no note either.
+      drums.onmidimessage?.({ data: [0xfe], timeStamp: 15 });
+      drums.onmidimessage?.({ data: [0xf0, 0x7e], timeStamp: 16 });
+      // A note goes on working, on the same input, while it is listened to.
+      drums.onmidimessage?.({ data: [0x99, 36, 127], timeStamp: 17 });
+      expect(heard).toEqual([
+        [[0xfa], 10, 'tr8'],
+        [[0xf8], 11, 'tr8'],
+        [[0xfb], 12, 'ks'],
+        [[0xf2, 4, 1], 13, 'tr8'],
+        [[0xfc], 14, 'tr8'],
+      ]);
+      expect(h.noteOn).toHaveBeenCalledTimes(1);
+      expect(h.noteOn).toHaveBeenCalledWith(36, 1);
+      undo();
+      drums.onmidimessage?.({ data: [0xf8], timeStamp: 20 });
+      expect(heard).toHaveLength(5);
     });
   });
 });

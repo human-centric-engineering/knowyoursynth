@@ -287,16 +287,18 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     anchor = null;
   }
 
-  function begin(loop: PatternLoop) {
+  /** A run from `beat` of loop `index` (both 0 but for a MIDI Continue, t-91): nothing before that beat is sent. */
+  function begin(loop: PatternLoop, index: number, beat: number) {
     release();
-    cur = { index: 0, start: 0, loop, notes: sorted(loop), i: 0, mods: modsOf(loop), k: 0 };
+    cur = { index, start: 0, loop, notes: sorted(loop), i: 0, mods: modsOf(loop), k: 0 };
     next = undefined;
     starts.clear();
-    starts.set(0, 0);
-    playing = 0;
-    sentTo = 0;
+    starts.set(index, 0);
+    playing = index;
+    sentTo = beat;
     resync = false;
-    startG = clockOn ? 0 : null;
+    // Started part-way, the clock waits for the next loop's start, as it does when turned on mid-run.
+    startG = clockOn && beat === 0 ? 0 : null;
   }
 
   /** On to the loop after `cur`, as the player turns at its end. False when the pattern ends there. */
@@ -538,9 +540,16 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       return;
     }
     switch (m.type) {
-      case 'pattern':
-        if (playable(m.loop)) begin(m.loop);
+      case 'pattern': {
+        if (!playable(m.loop)) return;
+        const { index, beat } = m;
+        begin(
+          m.loop,
+          typeof index === 'number' && Number.isInteger(index) && index >= 0 ? index : 0,
+          typeof beat === 'number' && Number.isFinite(beat) && beat > 0 ? beat : 0
+        );
         return;
+      }
       case 'patternNext': {
         if (!cur || (m.loop !== null && !playable(m.loop))) return;
         if (cur.index <= playing) next = m.loop;

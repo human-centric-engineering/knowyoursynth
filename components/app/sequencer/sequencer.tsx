@@ -109,6 +109,8 @@ import {
   MIDI_PLAYS_LABELS,
   type MidiOut,
 } from '@/components/app/sequencer/use-midi-out';
+import type { ClockIn } from '@/components/app/sequencer/use-clock-in';
+import type { MidiPortInfo } from '@/components/app/synth/use-midi';
 import { noteInOctave, type StepButton } from '@/components/app/sequencer/panel-buttons';
 import { HelpButton } from '@/components/app/synth/bar-controls';
 import { PlayerTip } from '@/components/app/synth/player-tip';
@@ -137,6 +139,10 @@ export const SEQ_HELP: readonly (readonly [string, string])[] = [
   [
     'Tempo and swing',
     'Beats per minute, and how late every second step is: 50% is straight, 75% a heavy shuffle.',
+  ],
+  [
+    'Clock',
+    'Internal plays at the pattern’s tempo. With a MIDI input chosen, a drum machine or DAW plugged in there is in charge: its Start plays the pattern from the top, Continue from where it stopped, Stop stops, and the pattern plays at its tempo, in time with it.',
   ],
   ['Length and step size', 'How many steps the pattern has (up to 128), and how long each one is.'],
   [
@@ -226,8 +232,11 @@ export function Sequencer({
   panel,
   hold,
   midiOut,
+  clockIn,
 }: {
   seq: SequencerState;
+  /** Following a MIDI clock (`f-midi-hardware-lead` t-91). Left out, the module has no Clock select. */
+  clockIn?: ClockIn;
   /** MIDI out (`f-midi-out` t-88): the pattern played on a MIDI output. Left out, the module has no MIDI out row. */
   midiOut?: MidiOut;
   /** The page's Hold, which arp mode reads. Left out, the arp row has no Hold. */
@@ -248,6 +257,8 @@ export function Sequencer({
   transport?: boolean;
 }) {
   const p = seq.pattern;
+  // The clock followed, if one is: its tempo is shown, and set there.
+  const followed = clockIn?.clock.following ? clockIn : null;
   const len = patternLength(p);
   const [part, setPart] = useState(0);
   const editing = Math.min(part, p.parts.length - 1);
@@ -583,13 +594,21 @@ export function Sequencer({
         <div className="kys-seq-controls">
           <Encoder
             label="Tempo"
-            value={p.bpm}
+            value={followed ? (followed.clock.bpm ?? p.bpm) : p.bpm}
             min={MIN_BPM}
             max={MAX_BPM}
             format={(v) => `${Math.round(v)}`}
-            help="Beats per minute."
+            help={
+              followed
+                ? `The tempo of the MIDI clock from ${followed.source?.name ?? 'the input chosen'}, which the pattern follows. Choose Internal under Clock to set it here.`
+                : 'Beats per minute.'
+            }
             onChange={(v) => setP('bpm', v, 'bpm')}
+            readOnly={!!followed}
           />
+          {clockIn && (clockIn.status === 'on' || clockIn.source) && (
+            <ClockSelect clock={clockIn} />
+          )}
           <Encoder
             label="Swing"
             value={p.swing}
@@ -1013,7 +1032,7 @@ export function Sequencer({
             onRest={() => restOrTie(false)}
             onTie={() => restOrTie(true)}
           />
-          {midiOut && <MidiOutRow midi={midiOut} />}
+          {midiOut && <MidiOutRow midi={midiOut} clockFrom={followed?.source ?? null} />}
         </div>
         <StepInspector
           key={`${editing}:${sel}`}
@@ -1173,11 +1192,42 @@ const MIDI_OUT_NOTE: Partial<Record<MidiOut['status'], string>> = {
 };
 
 /**
+ * The clock the sequencer runs on (`f-midi-hardware-lead` t-91): its own, or a MIDI input's. A chosen input that is not
+ * plugged in stays listed, so the choice is not lost while it is away, and the sequencer is its own clock meanwhile.
+ */
+function ClockSelect({ clock }: { clock: ClockIn }) {
+  const chosen = clock.source;
+  const options: [string, string][] = [
+    ['', 'Internal'],
+    ...clock.inputs.map((i): [string, string] => [i.id, i.name]),
+    ...(chosen && !clock.inputs.some((i) => i.id === chosen.id)
+      ? [[chosen.id, `${chosen.name} (not connected)`] as [string, string]]
+      : []),
+  ];
+  return (
+    <Select
+      label="Clock"
+      help="Internal plays at the tempo here. A MIDI input: a drum machine or DAW sending MIDI clock there starts, stops and sets the tempo of the pattern, which plays in time with it. Clock alone doesn’t start it: its Start or Continue does."
+      value={chosen?.id ?? ''}
+      options={options}
+      onChange={(v) => clock.setSource(v === '' ? null : v)}
+    />
+  );
+}
+
+/**
  * MIDI out (`f-midi-out` t-88): the output the pattern plays on, its channel, whether the browser synth plays too, and
  * whether it is sent MIDI clock (t-89).
  * Before MIDI is connected, a Connect that asks once for keyboard and outputs alike.
  */
-function MidiOutRow({ midi }: { midi: MidiOut }) {
+function MidiOutRow({
+  midi,
+  clockFrom = null,
+}: {
+  midi: MidiOut;
+  /** The input whose clock the sequencer follows: none is sent meanwhile. */
+  clockFrom?: MidiPortInfo | null;
+}) {
   const { choice } = midi;
   const note = MIDI_OUT_NOTE[midi.status];
   const chosen = choice.output;
@@ -1197,7 +1247,9 @@ function MidiOutRow({ midi }: { midi: MidiOut }) {
         ? 'No MIDI outputs. Plug one in and it appears here.'
         : chosen && !midi.connected
           ? `${chosen.name} is not connected: the synth plays the pattern until it is.`
-          : null;
+          : chosen && midi.sending && clockFrom
+            ? `No clock is sent while the sequencer follows ${clockFrom.name}’s.`
+            : null;
   return (
     <div className="kys-seq-keys-row" role="group" aria-label="MIDI out">
       {midi.status === 'on' ? (
@@ -1231,8 +1283,8 @@ function MidiOutRow({ midi }: { midi: MidiOut }) {
                   if (plays) midi.setPlays(plays);
                 }}
               />
-              {/* Synth only sends the output nothing, clock included. */}
-              {choice.plays !== 'synth' && (
+              {/* Synth only sends the output nothing, clock included; nor is one sent while a clock is followed. */}
+              {choice.plays !== 'synth' && !clockFrom && (
                 <Toggle
                   label="Send clock"
                   on={midi.clock}

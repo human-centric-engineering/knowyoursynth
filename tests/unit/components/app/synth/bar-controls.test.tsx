@@ -181,11 +181,13 @@ describe('MidiStatus', () => {
     return {
       status,
       devices,
+      inputs: [],
       outputs: [],
       output: () => null,
       error: '',
       connect: vi.fn().mockResolvedValue(true),
       disconnect: vi.fn(),
+      listen: () => () => undefined,
     };
   }
   // The bar shows one MIDI button; what is true, and the way to connect, are in the dialog it opens.

@@ -202,6 +202,7 @@ import type { TutorDesign } from '@/components/app/tutor/apply';
 import { TutorPanel } from '@/components/app/tutor/tutor-panel';
 import { useMidi } from '@/components/app/synth/use-midi';
 import { useMidiOut } from '@/components/app/sequencer/use-midi-out';
+import { useClockIn } from '@/components/app/sequencer/use-clock-in';
 import { withNotes } from '@/components/app/synth/with-notes';
 import {
   SharedSoundStrip,
@@ -1148,18 +1149,22 @@ function Synth({
     void ensureAudio();
     void midi.connect();
   };
-  // MIDI out from the sequencer (`f-midi-out` t-88): the outputs of the same grant.
-  const midiOut = useMidiOut({ midi, engine, connect: connectMidi, def: synthDef });
+  // A MIDI clock the sequencer follows (`f-midi-hardware-lead` t-91): an input of the same grant.
+  const clockIn = useClockIn({ midi, engine });
+  const following = clockIn.clock.following;
+  // MIDI out from the sequencer (`f-midi-out` t-88): the outputs of the same grant. No clock out while one is followed.
+  const midiOut = useMidiOut({ midi, engine, connect: connectMidi, def: synthDef, following });
 
   // SynthDef `tempo` names the control whose value is the riff's BPM (the TB-303's TEMPO knob): the riff plays at
   // that speed, and turning it while the riff plays moves the riff with it.
   const tempoValue = def.tempo ? sess.values[def.tempo] : null;
   const tempoBpm = typeof tempoValue === 'number' ? tempoValue : null;
   const tempoRef = useRef(tempoBpm);
+  // Not while a MIDI clock is followed: its tempo is the pattern's then.
   useEffect(() => {
     tempoRef.current = tempoBpm;
-    if (tempoBpm) engine?.send({ type: 'tempo', bpm: tempoBpm });
-  }, [engine, tempoBpm]);
+    if (tempoBpm && !following) engine?.send({ type: 'tempo', bpm: tempoBpm });
+  }, [engine, tempoBpm, following]);
   // The sequencer (`f-step-sequencer` t-80): it holds the sound's riff as a pattern. The bar's Play and the sequencer are one
   // transport: with the sequencer open, Play plays the pattern; either one starting stops the other, and Stop stops both.
   const [seqOpen, setSeqOpen] = useState(false);
@@ -1190,6 +1195,7 @@ function Synth({
     lanes: laneTarget,
     hold,
     out: midiOut.out,
+    clock: clockIn.clock,
   });
   // The panel shows a control a lane moves where the lane has it, while the pattern plays; its own value is unchanged.
   const { modShown } = seq;
@@ -1375,6 +1381,7 @@ function Synth({
     library: seqLibrary,
     hold: { on: hold, set: setHoldMode },
     midiOut,
+    clockIn,
   };
   // Opened by the bar's Sequencer button or a panel button (t-85).
   const openSequencer = () => {
