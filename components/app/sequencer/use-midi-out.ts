@@ -191,7 +191,10 @@ export function useMidiOut({
   const setProgram = useCallback(
     (p: MidiProgram | null) => {
       if (synthId === null) return;
-      const { [synthId]: _, ...rest } = allPrograms;
+      // Another synth's that didn't read goes now, rather than being written back as none.
+      const rest = Object.fromEntries(
+        Object.entries(allPrograms).filter(([id, q]) => id !== synthId && q !== null)
+      );
       setAllPrograms(p === null ? rest : { ...rest, [synthId]: p });
     },
     [synthId, allPrograms, setAllPrograms]

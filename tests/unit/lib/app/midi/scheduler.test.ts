@@ -1467,6 +1467,27 @@ describe('the patch Play calls up (f-midi-hardware-lead t-92)', () => {
     expect(offs(t.sent)[0]).toEqual([500, 60]);
   });
 
+  it('keeps the length of a first note that would end inside the hold, rather than ending it as it starts', () => {
+    const t = setup();
+    t.s.setProgram({ program: 0 });
+    // 0.02 beats at 60 bpm: 20 ms, all of it inside the hold.
+    start(t, { notes: [[0, 60, 0.02]], beats: 1 });
+    t.run(200);
+    expect(ons(t.sent)).toEqual([[PROGRAM_LEAD_MS, 60, 108]]);
+    expect(offs(t.sent)).toEqual([[PROGRAM_LEAD_MS + 20, 60]]);
+  });
+
+  it('holds the clock’s Start back with the first note, so hardware on the clock starts with it', () => {
+    const t = setup();
+    t.s.setClock(true);
+    t.s.setProgram({ program: 0 });
+    start(t, l);
+    t.run(200);
+    const startAt = t.sent.filter(([, d]) => d[0] === START).map(([at]) => at);
+    expect(startAt).toEqual([PROGRAM_LEAD_MS]);
+    expect(ons(t.sent)[0][0]).toBe(PROGRAM_LEAD_MS);
+  });
+
   it('holds a lane’s CC on the first beat behind the patch too, which would otherwise set it back', () => {
     const t = setup();
     t.s.setCcs(() => [[74, 100]]);

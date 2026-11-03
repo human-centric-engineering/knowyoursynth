@@ -42,7 +42,7 @@
  * With a program set (`setProgram`, `f-midi-hardware-lead` t-92), a run from the top first calls up that patch: Bank
  * Select (CC 0, then CC 32, each only if given), then Program Change, now. A synth takes a moment to load a patch, so
  * nothing on the channel (a note, a CC) goes before {@link PROGRAM_LEAD_MS} after it: the first note waits for it if
- * it is due sooner. A run started part-way (a MIDI Continue) sends none: the patch was called up at its Start.
+ * it is due sooner, and the clock's Start with it. A run started part-way (a MIDI Continue) sends none: the patch was called up at its Start.
  *
  * Pure: no timers, no Web MIDI. The page (`use-midi-out.ts`) gives it a port and a clock and calls `pump`.
  */
@@ -161,7 +161,6 @@ export interface MidiScheduler {
 
 const byStart = (a: PhraseNote, b: PhraseNote) => a[0] - b[0] || a[1] - b[1];
 const sorted = (loop: PatternLoop): PhraseNote[] => [...loop.notes].sort(byStart);
-const validNote = (n: number) => Number.isInteger(n) && n >= 0 && n <= 127;
 const validByte = (n: unknown): n is number =>
   typeof n === 'number' && Number.isInteger(n) && n >= 0 && n <= 127;
 const modsOf = (loop: PatternLoop): Mod[] =>
@@ -234,6 +233,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   /** The patch a run from the top calls up, and the time nothing on the channel goes before while it loads. */
   let program: MidiProgram | null = null;
   let holdUntil = -Infinity;
+  /** Per pitch held, how long its note-on was held back for the patch. */
+  const lagOf = new Map<number, number>();
 
   const msAt = (a: Anchor, g: number) => a.ms + ((g - a.g) * 60000) / a.bpm;
   const beatAt = (a: Anchor, ms: number) => a.g + ((ms - a.ms) * a.bpm) / 60000;
@@ -262,9 +263,12 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
 
   function noteOn(n: number, v: number | undefined, when: number) {
     const free = freeAt.get(n);
-    const at = Math.max(holdUntil, free !== undefined && free > when ? free : when);
+    const due = free !== undefined && free > when ? free : when;
+    const at = Math.max(holdUntil, due);
     held.set(n, (held.get(n) ?? 0) + 1);
     downAt.set(n, at);
+    if (at > due) lagOf.set(n, at - due);
+    else lagOf.delete(n);
     out([0x90 | channel, n, midiVelocity(v)], at);
   }
 
@@ -276,8 +280,13 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       return;
     }
     held.delete(n);
-    // Never before its note-on, which a tempo move since it was sent could otherwise put it.
-    offAt(n, Math.max(at, downAt.get(n) ?? at));
+    // Never before its note-on, which a tempo move since it was sent could otherwise put it. One held back for the
+    // whole of its length while a patch loads keeps that length rather than ending as it starts; one that ends after
+    // the hold ends where it did, so the note after it is not overlapped (a slide on a mono synth).
+    const down = downAt.get(n) ?? at;
+    const lag = lagOf.get(n) ?? 0;
+    lagOf.delete(n);
+    offAt(n, at > down ? at : Math.max(down, at + lag));
   }
 
   /** Lets go of everything. With `keepClock` (a change of channel: clock has none) the clock runs on. */
@@ -303,6 +312,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     endG = null;
     held.clear();
     downAt.clear();
+    lagOf.clear();
     ccSent.clear();
     offs.length = 0;
     dirty = false;
@@ -418,7 +428,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       // Stop or pulses of the clock before still to land after it (Play straight after Stop) would have the hardware
       // count those pulses as this run's, or start late. Either waits for the next loop's start.
       if (late || due < pulseMs || due < stopMs) return;
-      const at = Math.max(now, due);
+      // With the first note, if a patch loading holds it back: Start is the hardware's downbeat.
+      const at = Math.max(now, due, holdUntil);
       out([START], at);
       started = true;
       // The first pulse goes with Start: it is the beat Start counts from.
@@ -521,7 +532,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       const c = cur!;
       c.i++;
       const [b, n, len, v] = on!.note;
-      if (on!.g < sentTo || !validNote(n) || !(len > 0)) continue;
+      if (on!.g < sentTo || !validByte(n) || !(len > 0)) continue;
       sentTo = on!.g;
       const at = msAt(a, on!.g);
       // Too late, or a velocity the synth would play silent (MIDI would play it at 1).

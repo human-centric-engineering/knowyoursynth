@@ -738,8 +738,10 @@ to begin with: many synths in the catalogue have no patch memory.
 - **When.** On Play, a run from the top: after the release before it, Bank Select CC 0 (MSB), then CC 32 (LSB), each
   only if given, then the Program Change, on the output's channel, now. A synth needs a moment to load a patch, so
   nothing on the channel goes before `PROGRAM_LEAD_MS` (30 ms) after it: a first note due sooner waits that long, and
-  a lane's CC with it (a patch loading sets its controls back). Notes due later keep their time. The clock's Start is
-  not held: it is not on the channel, and a patch has no tempo.
+  a lane's CC with it (a patch loading sets its controls back), and the clock's Start, the hardware's downbeat. A note
+  held back ends where it did, so the note after it is not overlapped (a slide on a mono synth), unless it would
+  end before the hold does: then it keeps its length. Notes due later keep their time. The browser synth is not
+  held back, so with Both its first note leads the hardware's by up to that much.
 - **Not sent** with no program, with the output not sent to, for a run started part-way (a MIDI Continue: the patch
   went at its Start), or on a change of program, output or channel mid-run. The next Play calls it up.
 

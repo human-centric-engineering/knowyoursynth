@@ -431,6 +431,13 @@ describe('the readout row', () => {
     fireEvent.click(screen.getByRole('combobox', { name: 'Bank MSB' }));
     fireEvent.click(screen.getByRole('option', { name: '0' }));
     expect(chosen.setProgram).toHaveBeenCalledWith({ program: 0, msb: 0 });
+    // A bank back to None drops it, as it is stored.
+    const banked = fake({ ...on, program: { program: 0, msb: 0 } });
+    rerender(<Row midiOut={banked} />);
+    fireEvent.click(screen.getByRole('combobox', { name: 'Bank MSB' }));
+    fireEvent.click(screen.getByRole('option', { name: 'None' }));
+    expect(vi.mocked(banked.setProgram).mock.calls[0][0]).toStrictEqual({ program: 0 });
+    rerender(<Row midiOut={chosen} />);
     fireEvent.click(screen.getByRole('combobox', { name: 'Program' }));
     fireEvent.click(screen.getByRole('option', { name: 'None' }));
     expect(chosen.setProgram).toHaveBeenLastCalledWith(null);
@@ -594,6 +601,11 @@ describe('the patch Play calls up (f-midi-hardware-lead t-92)', () => {
     expect(hook.result.current.out.program).toBeNull();
     hook.rerender({ d: synth('td3') });
     expect(hook.result.current.out.program).toEqual({ program: 2, lsb: 3 });
+    // Written back without it, rather than as none for good.
+    act(() => hook.result.current.out.setProgram({ program: 5 }));
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEYS.midiProgram) ?? 'null')).toEqual({
+      td3: { program: 5 },
+    });
   });
 
   it('sends bank select and the program on the output’s channel when Play starts, before the first note', async () => {

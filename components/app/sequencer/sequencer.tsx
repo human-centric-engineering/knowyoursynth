@@ -1235,7 +1235,10 @@ const byteOf = (v: string): number | undefined => (v === '' ? undefined : Number
 function ProgramSelects({ midi }: { midi: MidiOut }) {
   const { program, setProgram } = midi;
   const bank = (key: 'msb' | 'lsb', v: string) => {
-    if (program) setProgram({ ...program, [key]: byteOf(v) });
+    if (!program) return;
+    const { [key]: _, ...rest } = program;
+    const byte = byteOf(v);
+    setProgram(byte === undefined ? rest : { ...rest, [key]: byte });
   };
   return (
     <>
