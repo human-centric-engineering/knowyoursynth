@@ -32,6 +32,10 @@
  * Notes played (t-86) come in through `noteIn` and `noteOut`, and `keys` says what they do: edit the chosen step or
  * step record (both the module's, which knows the chosen step), live record over the loop playing (here, which knows
  * where the playhead is), or play the arp (here: the keys held are compiled into each loop).
+ *
+ * Each start of the player is a run with a number of its own (`f-midi-out` t-88), which the player echoes in its
+ * events: one from an earlier run (on its way when Stop and Play were pressed) is dropped. MIDI out (`out`) is told
+ * everything sent to the player and every event of this run, and says whether the synth's own notes are muted.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -74,6 +78,7 @@ import {
 } from '@/lib/app/synths/audio/pattern-player';
 import { logger } from '@/lib/logging';
 import type { ChosenStep, StepButton } from '@/components/app/sequencer/panel-buttons';
+import type { SequencerOut } from '@/components/app/sequencer/use-midi-out';
 
 /** What the sequencer needs of the page's engine: `Engine` has all three. */
 export interface SequencerEngine {
@@ -289,6 +294,7 @@ export function useSequencer({
   tempo = null,
   lanes = null,
   hold = false,
+  out = null,
 }: {
   engine: SequencerEngine | null;
   /** Turns the sound on, as a press of Play on the bar does; false if it could not. */
@@ -301,6 +307,8 @@ export function useSequencer({
   lanes?: LaneTarget | null;
   /** The page's Hold: in arp mode, keys let go keep playing. */
   hold?: boolean;
+  /** MIDI out (`f-midi-out` t-88): told what the player is sent and what it reports. */
+  out?: SequencerOut | null;
 }): Sequencer {
   const [pattern, setPattern] = useState<Pattern>(() =>
     riff ? fromRiff(riff, tempo) : newPattern()
@@ -350,9 +358,21 @@ export function useSequencer({
   const awaiting = useRef(false);
   /** Counts Plays and Stops, so a Play still waiting for the sound knows a Stop came after it. */
   const runs = useRef(0);
+  /** The number of the player's run now: each `pattern` sent starts one, and its events carry it. */
+  const runId = useRef(0);
   const playhead = useRef(createPlayhead());
 
-  const send = useCallback((m: SynthMessage) => engine?.send(m), [engine]);
+  const outRef = useRef(out);
+  useEffect(() => {
+    outRef.current = out;
+  });
+  const send = useCallback(
+    (m: SynthMessage) => {
+      engine?.send(m);
+      outRef.current?.message(m);
+    },
+    [engine]
+  );
   const riffRef = useRef(riff);
   const tempoRef = useRef(tempo);
   const lanesRef = useRef(lanes);
@@ -470,7 +490,13 @@ export function useSequencer({
       playhead.current.clear();
       current.current = 0;
       awaiting.current = true;
-      send({ type: 'pattern', loop: compile(p, 0, newSeed(), undefined, undefined), bpm: p.bpm });
+      send({
+        type: 'pattern',
+        loop: compile(p, 0, newSeed(), undefined, undefined),
+        bpm: p.bpm,
+        run: ++runId.current,
+        muted: outRef.current?.muted ?? false,
+      });
     },
     [compile, send]
   );
@@ -632,9 +658,11 @@ export function useSequencer({
 
   const edited = useMemo(() => JSON.stringify(pattern) !== baseline, [pattern, baseline]);
 
-  // The panel's tempo knob moves the pattern's tempo, as it moves a riff's. The page sends the engine the tempo itself.
+  // The panel's tempo knob moves the pattern's tempo, as it moves a riff's. The page sends the engine the tempo itself;
+  // MIDI out is told the same here, so its look-ahead moves at once rather than when the player's next event says.
   useEffect(() => {
     if (!tempo) return;
+    outRef.current?.message({ type: 'tempo', bpm: tempo });
     const p = patternRef.current;
     const bpm = clampBpm(tempo);
     if (p.bpm === bpm) return;
@@ -733,18 +761,40 @@ export function useSequencer({
   const onEvent = useCallback(
     (e: SynthEvent) => {
       if (!playingRef.current) return;
+      if (
+        (e.type === 'loop' || e.type === 'patternEnd' || e.type === 'patternTick') &&
+        e.run !== undefined &&
+        e.run !== runId.current
+      )
+        return;
       if (awaiting.current) {
         if (e.type !== 'loop' || e.index !== 0 || !e.start) return;
         awaiting.current = false;
       }
-      if (e.type === 'loop') {
+      if (e.type === 'patternTick') {
+        // Time passing on a muted run: MIDI out is refilled on it.
+        outRef.current?.event(e);
+      } else if (e.type === 'loop') {
         current.current = e.index;
         playhead.current.push(e);
+        outRef.current?.event(e);
         if (e.start) queue(e.index + 1);
-      } else if (e.type === 'patternEnd') halt();
+      } else if (e.type === 'patternEnd') {
+        outRef.current?.event(e);
+        halt();
+      }
     },
     [halt, queue]
   );
+
+  // Where the pattern plays changed while it plays: the synth's notes are muted or come back from the next note.
+  const muted = out?.muted ?? false;
+  const mutedSent = useRef(muted);
+  useEffect(() => {
+    if (mutedSent.current === muted) return;
+    mutedSent.current = muted;
+    if (playingRef.current) send({ type: 'patternMute', muted });
+  }, [muted, send]);
 
   const noteTarget = useRef<NoteTarget | null>(null);
   const onNoteIn = useCallback((f: NoteTarget) => {

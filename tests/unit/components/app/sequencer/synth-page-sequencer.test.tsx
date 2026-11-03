@@ -185,6 +185,8 @@ describe('the sequencer on the synth page', () => {
       type: 'pattern',
       bpm: 90,
       loop: { notes: FAT_BASS.phrase.steps, beats: 2 },
+      run: expect.any(Number),
+      muted: false,
     });
     // One transport, on the bar: the dock has no Play of its own.
     expect(within(sequencer()).queryByRole('button', { name: /^(Play|Stop)$/ })).toBeNull();

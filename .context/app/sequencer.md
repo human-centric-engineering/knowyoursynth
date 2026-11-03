@@ -131,10 +131,11 @@ The page sends it compiled loops:
 
 | Message               | What the player does                                                                                   |
 | --------------------- | ------------------------------------------------------------------------------------------------------ |
-| `pattern` (loop, bpm) | Stops any riff or pattern and starts this loop from beat 0                                             |
+| `pattern` (loop, bpm) | Stops any riff or pattern and starts this loop from beat 0. `run` and `muted`: see below               |
 | `patternNext` (loop)  | Queues the loop after this one, swapped in on the boundary sample. `loop: null` ends the pattern there |
 | `patternEdit` (loop)  | Replaces what is still to play of this loop, from the playhead on, and drops any queued loop           |
 | `tempo`               | Moves the playhead and the notes to come, as it moves a riff                                           |
+| `patternMute`         | Mutes the synth's notes (letting go of what it holds) or unmutes them from the next note, mid-run      |
 | `stopPattern`         | Lets go of every note it holds. A `phrase` or `panic` stops it too, and a `panic` reports `patternEnd` |
 
 - **Nothing queued, the loop plays again.** A page that is late never leaves a gap.
@@ -164,6 +165,16 @@ uses each event only from its frame on. `engine.frame` is the frame being heard 
 latency (`baseLatency`) and the output device's (`outputLatency`). `beatAt` reads the beat from one event.
 `patternEnd` says the pattern stopped without the page stopping it: it was told to end and has played out, or a
 `panic` (which the engine sends on suspend) stopped it.
+
+**Runs.** Each `pattern` the page sends carries a `run` number of its own (`f-midi-out` t-88), and the player echoes it
+in every `loop` and `patternEnd` of that run. `use-sequencer.ts` drops an event whose `run` is not the run playing now:
+one already on its way from the audio thread when Stop and Play were pressed fast, even that run's loop 0. On the
+browser synth that was a misdrawn playhead for a loop; on MIDI out it would be notes sent twice or held. An event with no
+`run` (a worklet bundle older than the page) falls back on waiting for the run's first loop, as before.
+
+**Muted.** `muted` on `pattern`, or `patternMute` while it plays, keeps the player's timing and its events but sends the
+synth no notes: the pattern is heard on a MIDI output alone, and the clock MIDI out is timed by still runs. Muted, the
+player also reports `patternTick` (with its `run`) every 25 ms of audio (`TICK_SECONDS`): see MIDI out.
 
 ## The module
 
@@ -597,3 +608,76 @@ over its values.
 
 Tests: `tests/unit/components/app/sequencer/panel-buttons.test.ts` (the maps name real buttons, which presses are
 taken, the lamps), and `synth-page-panel-buttons.test.tsx` (each synth's buttons through the page).
+
+## MIDI out
+
+The pattern can play on a hardware synth over MIDI (`f-midi-out` t-88): its notes, sent to a MIDI output in time with
+the pattern player. The code is `lib/app/midi/scheduler.ts` (what to send, when), `lib/app/midi/clock.ts` (when a frame
+is heard) and `components/app/sequencer/use-midi-out.ts` (the choice, the port, the timer).
+
+**Outputs.** They come from the page's one MIDI grant (`useMidi`, which now lists `outputs` beside its inputs), so the
+browser is asked once for keyboards and outputs alike. Before MIDI is connected the module's MIDI out row offers Connect
+MIDI, which is the bar's Connect. Plugging and unplugging updates the list. The row chooses an output, its channel
+(1–16) and where the pattern plays. The choice is a screen setting (D4) under `kys.midiOut`, kept in this browser only.
+A browser without Web MIDI (Safari) says so where the output select would be, as the bar does for input.
+
+**Where it plays.**
+
+| Plays on     | MIDI output | Browser synth                       |
+| ------------ | ----------- | ----------------------------------- |
+| MIDI only    | sent        | muted (`patternMute`), still timing |
+| MIDI + synth | sent        | plays                               |
+| Synth only   | not sent    | plays, the output kept chosen       |
+
+Choosing an output where there was none sets MIDI only, so the pattern isn't heard twice. A chosen output that is
+unplugged stays chosen and listed as not connected, and the synth plays the pattern until it is back. Same single
+transport: the module's Play, the bar's Play and the panel's RUN/STOP all play it.
+
+**The clock.** The worklet has no Web MIDI, so notes are sent from the main thread, and timed by the pattern player's
+`loop` events rather than a clock of their own. A `loop` event says which loop, at what beat and tempo, from which audio
+frame. `AudioContext.getOutputTimestamp()` turns that frame into the `performance.now()` time it's heard at, which is
+the timestamp `MIDIOutput.send` takes. Before the output has started, the context's `baseLatency` and `outputLatency`
+stand in. So MIDI lands with what the browser synth is heard playing, and the playhead needs no second clock. Every
+note is placed on one count of beats from the run's start, so a let-go owed by an earlier loop lands where the player
+lands it, whatever the tempo does.
+
+**Look-ahead.** Notes are handed to the output 100 ms ahead (`LOOKAHEAD_MS`), refilled every 25 ms (`PUMP_MS`) while a
+run plays and after every message and event, never a whole loop at once. With MIDI only the tab is silent, and the
+browser slows a silent hidden tab's timers to once a second, then once a minute. Messages from the audio thread are not
+slowed, so the muted player's `patternTick` refills it then. A message sent with a timestamp can't be taken back
+(`MIDIOutput.clear()` isn't universal), so an edit, a tempo move and Stop must be within reach:
+
+- **`patternEdit`** replaces the loop the player is in from the end of what has been sent, keeping the let-go of every
+  note already down, and drops the loop queued after it, as the player does.
+- **`patternNext`** is the loop after the one the player is in. With none queued at the boundary the loop plays again;
+  `null` ends the pattern there.
+- **`tempo`** moves the clock at once, whether the sequencer's encoder or the panel's tempo knob set it, from when the
+  change is heard (now plus the output delay, `heardIn`); the player's own `loop` event for the move then places it
+  exactly.
+- **A note due more than 20 ms ago** when its turn comes (a background tab held the timer up) isn't sent. It would land
+  late, and a burst of late notes is worse than a gap.
+- **A loop the player would refuse** (`playable`: no length, or a note it can't play) is refused here too, so the two
+  never disagree about what is playing.
+
+**Held notes**, as the player has them: two overlapping notes of one pitch are let go once, when the last ends, and a
+note held over the loop's end is let go in the next loop, before that loop's own note on the same beat. A note-off is
+never timestamped before its note-on, and a note-on never before a let-go of its pitch already handed to the port for
+later, which would cut it. A note at velocity 0, which the synth plays silent, sends nothing (MIDI would play it at 1).
+
+**What lets go of everything.** Note-offs for every note sent and not let go, then All Notes Off (CC 123) on the
+channel, on: Stop, the pattern's end, a panic (through `patternEnd`), a change of output or channel, the output being
+unplugged, the page being hidden (`pagehide`) and the page going. All of it goes now, never later, where it would cut
+what the next run sends. A note-on already on its way is also let go at its own time, so it can't sound on, and a note
+of that pitch sent afterwards waits for that let-go. Only after something was sent: choosing an output sends nothing by
+itself. A change of port and `pagehide` keep the run (`silence`): notes start again from what is heard when next
+pumped, the ones in the look-ahead that were let go before they began sent again, so a page shown again from the
+back-forward cache plays on.
+
+Not in it (the feature's later tasks): MIDI clock, mod lanes as CCs, and riffs or keys played outside the sequencer.
+
+Tests: `tests/unit/lib/app/midi/scheduler.test.ts` (timing with swing, nudge, ratchet and slide against a fake clock,
+the look-ahead, tempo, late notes, overlapping pitches, boundary-held notes, edits and Stop inside the window, the end,
+a change of port); `clock.test.ts`; `tests/unit/components/app/sequencer/use-midi-out.test.tsx` (the real `useMidi`
+with a fake `requestMIDIAccess`: one grant, the choice, the channel, every release, unplugging, and the row);
+`use-midi.test.tsx` (outputs); `sequencer.test.tsx` (the run id, what MIDI out is told, the mute); and
+`pattern-player.test.ts` (run echoed, muted).

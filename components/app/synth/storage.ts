@@ -58,6 +58,11 @@ export const STORAGE_KEYS = {
    * the account.
    */
   live: 'kys.live',
+  /**
+   * MIDI out from the sequencer (`f-midi-out` t-88): the output chosen, its channel, and where the pattern plays. A
+   * screen setting (D4): kept in this browser only, never stamped or kept in the account.
+   */
+  midiOut: 'kys.midiOut',
 } as const;
 
 /** One synth's panel, as it was left. */

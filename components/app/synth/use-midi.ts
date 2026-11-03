@@ -1,7 +1,8 @@
 'use client';
 
 /**
- * Web MIDI input: note on/off from any connected keyboard (all channels) and the mod wheel (CC 1).
+ * Web MIDI input: note on/off from any connected keyboard (all channels) and the mod wheel (CC 1). And the outputs the
+ * same grant reaches (`f-midi-out` t-88), for the sequencer to play on: listed here, so the browser is asked once.
  *
  * Transliterated from the prototype file `prototype/src/lib/midi.js` (decision D3). One change: the prototype's
  * `frame` status existed for Claude's artifact viewer. The app can still be framed, so the status stays, worded for
@@ -44,10 +45,20 @@ export interface MidiHandlers {
   load: () => boolean;
 }
 
+/** A MIDI output: the browser's id for it (stable while it stays plugged in, and across visits) and its name. */
+export interface MidiPortInfo {
+  id: string;
+  name: string;
+}
+
 export interface Midi {
   status: MidiStatus;
   /** The connected inputs' names. */
   devices: string[];
+  /** The connected outputs, kept up to date as devices come and go. */
+  outputs: MidiPortInfo[];
+  /** The output with this id, while it is connected. */
+  output: (id: string) => MIDIOutput | null;
   error: string;
   connect: () => Promise<boolean>;
   disconnect: () => void;
@@ -57,6 +68,7 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
   // `off` on the server and the first client render alike; the frame check runs after mount.
   const [status, setStatus] = useState<MidiStatus>('off');
   const [devices, setDevices] = useState<string[]>([]);
+  const [outputs, setOutputs] = useState<MidiPortInfo[]>([]);
   const [error, setError] = useState('');
   const access = useRef<MIDIAccess | null>(null);
   const mounted = useRef(false);
@@ -106,7 +118,23 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
       if (input.state !== 'disconnected') names.push(input.name || 'MIDI input');
     });
     setDevices(names);
+    const outs: MidiPortInfo[] = [];
+    a.outputs.forEach((o) => {
+      if (o.state !== 'disconnected') outs.push({ id: o.id, name: o.name || 'MIDI output' });
+    });
+    // A new list only when it changed: a state change fires for every port opened, and each would re-render the page.
+    setOutputs((was) =>
+      was.length === outs.length &&
+      was.every((w, i) => w.id === outs[i].id && w.name === outs[i].name)
+        ? was
+        : outs
+    );
   }, [onMessage]);
+
+  const output = useCallback((id: string) => {
+    const o = access.current?.outputs.get(id);
+    return o && o.state !== 'disconnected' ? o : null;
+  }, []);
 
   const connect = useCallback(async () => {
     if (typeof navigator === 'undefined' || !('requestMIDIAccess' in navigator)) {
@@ -139,6 +167,7 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
       detach();
       access.current = null;
       setDevices([]);
+      setOutputs([]);
       setStatus('blocked');
       setError(err instanceof Error ? err.message : String(err));
       remember(false);
@@ -151,6 +180,7 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
     detach();
     access.current = null;
     setDevices([]);
+    setOutputs([]);
     setStatus('off');
     remember(false);
   }, [detach, remember]);
@@ -169,5 +199,5 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
     };
   }, [detach]);
 
-  return { status, devices, error, connect, disconnect };
+  return { status, devices, outputs, output, error, connect, disconnect };
 }

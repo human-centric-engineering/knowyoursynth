@@ -24,6 +24,14 @@
  *
  * It reports `loop` when a loop starts (so the page compiles the next) and when the tempo or an edit moves the playhead,
  * with the frame it applies from, so the page can draw the playhead from the audio clock ({@link createPlayhead}).
+ * Each event carries the `run` the page gave the `pattern` that started it (`f-midi-out` t-88), so an event already on
+ * its way from the run before a fast Stop and Play is told apart: on MIDI out, taking it for the new run's would send
+ * notes twice or leave one held.
+ *
+ * `muted` (on `pattern`, or `patternMute` while it plays) keeps the timing and the events but sends the synth no notes:
+ * the pattern is heard on a MIDI output alone, and the clock MIDI is locked to still runs here. Muted, it also reports a
+ * `patternTick` every {@link TICK_SECONDS}: the tab is silent then, so the browser slows the page's timers, but not
+ * messages from the audio thread, and MIDI out is refilled from those.
  */
 import type { EngineParams, PhraseNote } from '@/lib/app/synths/contract';
 import type { Synth, SynthEventHandler, SynthMessage } from '@/lib/app/synths/audio/dsp-core';
@@ -54,9 +62,10 @@ interface ParamEvent {
 
 /** What the page sends to play a pattern. */
 export type PatternMessage =
-  | { type: 'pattern'; loop: PatternLoop; bpm: number }
+  | { type: 'pattern'; loop: PatternLoop; bpm: number; run?: number; muted?: boolean }
   | { type: 'patternNext'; loop: PatternLoop | null }
   | { type: 'patternEdit'; loop: PatternLoop }
+  | { type: 'patternMute'; muted: boolean }
   | { type: 'stopPattern' };
 
 /**
@@ -72,13 +81,19 @@ export interface LoopEvent {
   bpm: number;
   /** The frame of the audio clock this applies from: the synth's own count, which the engine moves onto the context's. */
   frame: number;
+  /** The `run` of the `pattern` message that started it, if it had one. */
+  run?: number;
 }
 
 /**
  * What the player reports. `patternEnd`: the pattern has stopped without the page stopping it, because it was told to
  * end (`patternNext` with no loop) and has played out, or because of a `panic` (which the engine sends on suspend).
  */
-export type PatternEvent = LoopEvent | { type: 'patternEnd' };
+export type PatternEvent =
+  LoopEvent | { type: 'patternEnd'; run?: number } | { type: 'patternTick'; run?: number };
+
+/** How often a muted pattern reports `patternTick`. */
+export const TICK_SECONDS = 0.025;
 
 /** The beat the playhead is on at frame `now`, from the `loop` event in effect then: within the loop, so it never runs past. */
 export function beatAt(e: LoopEvent, now: number, sr: number): number {
@@ -144,7 +159,7 @@ function playableChange(x: unknown): boolean {
 }
 
 /** Whether a loop from the page can be played: a length, and notes (and settings changes) that can be played. */
-function playable(loop: PatternLoop | null | undefined): loop is PatternLoop {
+export function playable(loop: PatternLoop | null | undefined): loop is PatternLoop {
   return (
     !!loop &&
     Number.isFinite(loop.beats) &&
@@ -196,6 +211,13 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
   const down = { type: 'noteOn' as const, n: 0, v: 0 };
   const up = { type: 'noteOff' as const, n: 0 };
   let mode = '';
+  /** The page's number for the run playing, echoed in its events. */
+  let run: number | undefined;
+  /** Notes go to MIDI out alone: the synth is sent none. */
+  let muted = false;
+  /** Samples since the last `patternTick`, and how many between two. */
+  let sinceTick = 0;
+  const tickEvery = Math.max(1, Math.round(sr * TICK_SECONDS));
 
   const spb = () => (60 / bpm) * sr;
   const time = (evs: { b: number; t: number }[]) => {
@@ -208,6 +230,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
 
   /** A key goes down, or is let go once the last note holding it ends. */
   function press(e: NoteEvent) {
+    if (muted) return;
     const k = held.get(e.n) ?? 0;
     if (e.on) {
       held.set(e.n, k + 1);
@@ -263,11 +286,14 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     announce = null;
     apply(null);
     release();
-    if (!silent && onEvent) onEvent({ type: 'patternEnd' });
+    if (!silent && onEvent)
+      onEvent(run === undefined ? { type: 'patternEnd' } : { type: 'patternEnd', run });
   }
 
-  function start(loop: PatternLoop, tempo: number) {
+  function start(loop: PatternLoop, tempo: number, id: number | undefined, mute: boolean) {
     stop(true);
+    run = id;
+    muted = mute;
     synth.handle({ type: 'stopPhrase' });
     if (Number.isFinite(tempo) && tempo > 0) bpm = tempo;
     const base = noteEvents(loop.notes);
@@ -372,7 +398,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     if (cur && pos >= cur.len) turn();
     if (!cur) return;
     if (announce !== null && onEvent) {
-      onEvent({
+      const e: LoopEvent = {
         type: 'loop',
         index,
         start: announce,
@@ -380,7 +406,9 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
         beats: cur.beats,
         bpm,
         frame: frames,
-      });
+      };
+      if (run !== undefined) e.run = run;
+      onEvent(e);
     }
     announce = null;
     // Settings first, so a note on the same sample plays with them.
@@ -407,7 +435,14 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
   function handle(m: SynthMessage) {
     switch (m.type) {
       case 'pattern':
-        if (playable(m.loop)) start(m.loop, m.bpm);
+        if (playable(m.loop))
+          start(m.loop, m.bpm, Number.isFinite(m.run) ? m.run : undefined, m.muted === true);
+        return;
+      case 'patternMute':
+        // Muting lets go of what the synth holds; unmuted, it plays from the next note on.
+        if (m.muted && !muted) release();
+        muted = m.muted === true;
+        sinceTick = 0;
         return;
       case 'patternNext':
         if (cur && (m.loop === null || playable(m.loop)))
@@ -470,6 +505,11 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
       pos += k;
       frames += k;
       i += k;
+    }
+    sinceTick += n;
+    if (muted && cur && onEvent && sinceTick >= tickEvery) {
+      sinceTick = 0;
+      onEvent(run === undefined ? { type: 'patternTick' } : { type: 'patternTick', run });
     }
   }
 

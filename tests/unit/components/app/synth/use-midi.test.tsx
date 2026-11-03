@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
 /**
- * Web MIDI input.
+ * Web MIDI input, and the outputs the same grant reaches (`f-midi-out` t-88).
  *
  * @see components/app/synth/use-midi.ts
  */
@@ -18,9 +18,20 @@ interface FakeInput {
   onmidimessage: ((e: { data: number[] }) => void) | null;
 }
 
-function makeAccess(inputs: FakeInput[]) {
+interface FakeOutput {
+  id: string;
+  name: string | null;
+  state: string;
+  send: ReturnType<typeof vi.fn>;
+}
+
+function makeAccess(inputs: FakeInput[], outputs: FakeOutput[] = []) {
   return {
     inputs: { forEach: (f: (i: FakeInput) => void) => inputs.forEach(f) },
+    outputs: {
+      forEach: (f: (o: FakeOutput) => void) => outputs.forEach(f),
+      get: (id: string) => outputs.find((o) => o.id === id),
+    },
     onstatechange: null as (() => void) | null,
   };
 }
@@ -117,6 +128,59 @@ describe('useMidi', () => {
     act(() => access.onstatechange?.());
 
     expect(result.current.devices).toEqual([]);
+  });
+
+  describe('outputs', () => {
+    let synth: FakeOutput;
+    beforeEach(() => {
+      synth = { id: 'out-1', name: 'TD-3', state: 'connected', send: vi.fn() };
+      access = makeAccess(
+        [input],
+        [
+          synth,
+          { id: 'out-2', name: null, state: 'connected', send: vi.fn() },
+          { id: 'out-3', name: 'Gone', state: 'disconnected', send: vi.fn() },
+        ]
+      );
+      setNav(vi.fn().mockResolvedValue(access));
+    });
+
+    it('lists the connected outputs from the same grant, asking the browser once', async () => {
+      const { result } = renderHook(() => useMidi(handlers()));
+      await act(async () => {
+        await result.current.connect();
+      });
+      expect(navigator.requestMIDIAccess).toHaveBeenCalledTimes(1);
+      expect(result.current.outputs).toEqual([
+        { id: 'out-1', name: 'TD-3' },
+        { id: 'out-2', name: 'MIDI output' },
+      ]);
+      expect(result.current.output('out-1')).toBe(synth);
+      expect(result.current.output('out-3')).toBeNull();
+    });
+
+    it('drops an output that is unplugged, and lists none once MIDI is stopped', async () => {
+      const { result } = renderHook(() => useMidi(handlers()));
+      await act(async () => {
+        await result.current.connect();
+      });
+      synth.state = 'disconnected';
+      act(() => access.onstatechange?.());
+      expect(result.current.outputs.map((o) => o.id)).toEqual(['out-2']);
+      expect(result.current.output('out-1')).toBeNull();
+      act(() => result.current.disconnect());
+      expect(result.current.outputs).toEqual([]);
+    });
+
+    it('keeps the same list when a change leaves the outputs as they were', async () => {
+      const { result } = renderHook(() => useMidi(handlers()));
+      await act(async () => {
+        await result.current.connect();
+      });
+      const was = result.current.outputs;
+      act(() => access.onstatechange?.());
+      expect(result.current.outputs).toBe(was);
+    });
   });
 
   describe('messages', () => {
