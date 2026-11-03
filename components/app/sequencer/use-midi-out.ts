@@ -13,6 +13,9 @@
  * still runs, muted (`patternMute`): its `loop` events are the clock MIDI is timed by, so the playhead and MIDI never
  * need a clock of their own. With the chosen output gone, the synth plays it, so Play is never silent.
  *
+ * MIDI clock (t-89) is sent to an output only once it is turned on for that output, as some synths start their own
+ * sequencer on it: the outputs it is on for are kept with the choice.
+ *
  * The sequencer hands `out` everything it sends the player and every event of its own run; the scheduler is pumped on
  * each, and on a timer while a run plays. With MIDI alone the tab is silent, so the browser slows that timer (to once a
  * second, then once a minute); the muted player's `patternTick`, sent from the audio thread, pumps it instead.
@@ -46,6 +49,8 @@ const MidiOutChoiceSchema = z.object({
   output: z.object({ id: z.string().min(1).max(256), name: z.string().max(256) }).nullable(),
   channel: z.number().int().min(1).max(16),
   plays: z.enum(MIDI_PLAYS),
+  /** The outputs MIDI clock is sent to (t-89): left out by a choice kept before there was a clock. */
+  clock: z.array(z.string().min(1).max(256)).max(64).optional(),
 });
 export type MidiOutChoice = z.infer<typeof MidiOutChoiceSchema>;
 
@@ -69,9 +74,12 @@ export interface MidiOut {
   connected: boolean;
   /** Notes are being sent to it. */
   sending: boolean;
+  /** MIDI clock is on for the chosen output. */
+  clock: boolean;
   setOutput: (id: string | null) => void;
   setChannel: (channel: number) => void;
   setPlays: (plays: MidiPlays) => void;
+  setClock: (on: boolean) => void;
   out: SequencerOut;
 }
 
@@ -99,11 +107,13 @@ export function useMidiOut({
   const connected = midi.status === 'on' && id !== null && midi.outputs.some((o) => o.id === id);
   const sending = connected && choice.plays !== 'synth';
   const muted = sending && choice.plays === 'midi';
+  const clock = id !== null && (choice.clock ?? []).includes(id);
 
   const { output } = midi;
   useEffect(() => {
     s.setPort(sending && id ? output(id) : null, choice.channel - 1);
   }, [s, sending, id, output, choice.channel, midi.outputs]);
+  useEffect(() => s.setClock(clock), [s, clock]);
 
   // Whether a run is playing: the timer runs only then, and not while the muted player's ticks pump it.
   const [running, setRunning] = useState(false);
@@ -141,6 +151,14 @@ export function useMidiOut({
     (plays: MidiPlays) => setChoice({ ...choice, plays }),
     [choice, setChoice]
   );
+  const setClock = useCallback(
+    (on: boolean) => {
+      if (id === null) return;
+      const rest = (choice.clock ?? []).filter((o) => o !== id);
+      setChoice({ ...choice, clock: on ? [...rest, id].slice(-64) : rest });
+    },
+    [choice, id, setChoice]
+  );
 
   const out = useMemo<SequencerOut>(
     () => ({
@@ -168,9 +186,11 @@ export function useMidiOut({
     choice,
     connected,
     sending,
+    clock,
     setOutput,
     setChannel,
     setPlays,
+    setClock,
     out,
   };
 }

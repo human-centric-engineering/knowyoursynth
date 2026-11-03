@@ -1171,7 +1171,8 @@ const MIDI_OUT_NOTE: Partial<Record<MidiOut['status'], string>> = {
 };
 
 /**
- * MIDI out (`f-midi-out` t-88): the output the pattern plays on, its channel, and whether the browser synth plays too.
+ * MIDI out (`f-midi-out` t-88): the output the pattern plays on, its channel, whether the browser synth plays too, and
+ * whether it is sent MIDI clock (t-89).
  * Before MIDI is connected, a Connect that asks once for keyboard and outputs alike.
  */
 function MidiOutRow({ midi }: { midi: MidiOut }) {
@@ -1227,6 +1228,12 @@ function MidiOutRow({ midi }: { midi: MidiOut }) {
                   const plays = MIDI_PLAYS.find((x) => x === v);
                   if (plays) midi.setPlays(plays);
                 }}
+              />
+              <Toggle
+                label="Send clock"
+                on={midi.clock}
+                help="Sends MIDI clock at the pattern’s tempo, with Start and Stop, so the hardware’s arpeggiator, LFO sync or delay follows it. Off by default: some synths start their own sequencer on it."
+                onClick={() => midi.setClock(!midi.clock)}
               />
             </>
           )}
