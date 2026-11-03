@@ -11,6 +11,8 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { Library, LevelDots } from '@/components/app/synth/library';
 import { getSynthDetail } from '@/lib/app/catalogue/read';
 import type { CatalogueSound } from '@/lib/app/catalogue/read';
+import { defaultPatchSound } from '@/lib/app/synths/default-patch';
+import { getSynthDef } from '@/lib/app/synths/defs';
 import { modelDRows } from '@/tests/helpers/model-d-detail';
 
 vi.mock('@/lib/db/client', () => ({
@@ -110,6 +112,45 @@ describe('Library', () => {
     expect(screen.getByText('0 of 200')).toBeTruthy();
     const empty = screen.getByText(/No library patch matches that/);
     expect(empty.textContent).not.toMatch(/tutor/i);
+  });
+});
+
+describe('Library with the Default patch', () => {
+  const def = getSynthDef('model-d');
+  if (!def) throw new Error('model-d is not registered');
+  const start = defaultPatchSound(def);
+  const names = () => rows().map((r) => r.querySelector('.font-semibold')?.textContent);
+
+  function setupWithStart(currentId: string | null = null) {
+    const onSelect = vi.fn();
+    render(<Library presets={sounds} start={start} currentId={currentId} onSelect={onSelect} />);
+    return { onSelect };
+  }
+
+  it('lists it first, above the catalogue’s sounds, and counts only theirs', () => {
+    setupWithStart();
+    expect(names()).toEqual(['Default patch', ...sounds.map((s) => s.name)]);
+    expect(screen.getByText('200 of 200')).toBeTruthy();
+  });
+
+  it('keeps it first whatever the category or search', () => {
+    setupWithStart();
+    const cat = [...new Set(sounds.map((s) => s.tags[0]))][1];
+    fireEvent.click(screen.getByRole('button', { name: cat, pressed: false }));
+    expect(names()[0]).toBe('Default patch');
+    expect(names().slice(1)).toEqual(sounds.filter((s) => s.tags[0] === cat).map((s) => s.name));
+
+    fireEvent.change(search(), { target: { value: 'zzzz-no-such-sound' } });
+    expect(names()).toEqual(['Default patch']);
+  });
+
+  it('chooses it by its id, and marks it current while it is on the panel', () => {
+    const { onSelect } = setupWithStart(start.id);
+    const first = rows()[0];
+    expect(first.getAttribute('aria-current')).toBe('true');
+    expect(rows().filter((r) => r.getAttribute('aria-current') === 'true')).toHaveLength(1);
+    fireEvent.click(first);
+    expect(onSelect).toHaveBeenCalledWith('default-patch');
   });
 });
 

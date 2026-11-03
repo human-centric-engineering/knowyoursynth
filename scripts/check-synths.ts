@@ -19,6 +19,8 @@
  * - **The databank check** (`checkBank`, ported as `planBank` in `lib/app/bank/seed.ts`): every reference in the
  *   databank's seed data resolves, and every sound it names is in that synth's library. Run once, by the process that
  *   starts the others, as `check.mjs` did; a problem refuses the run.
+ * - **The Default patch** (`f-default-patch`), for a synth with one of its own: checked by `validateDefaultPatch` and
+ *   rendered playing its scale, as `(default)`. A synth without one has `init` as its Default patch, rendered already.
  * - **Parity with the prototype.** A ported definition must equal the prototype's as data: geometry, ids, help text,
  *   areas, decor, init (`definitionDrift`). The baseline only hears what a sound plays, and this catches a
  *   transliteration slip no sound would.
@@ -65,7 +67,8 @@ import { format, resolveConfig } from 'prettier';
 import { createSynth, SIGNALS, DESTS } from '@/lib/app/synths/audio/dsp-core';
 import type { EngineParams, Lineage, Preset, SynthDef } from '@/lib/app/synths/contract';
 import { getSynthDef, SYNTH_DEFS } from '@/lib/app/synths/defs';
-import { validatePreset } from '@/lib/app/synths/validate';
+import { validateDefaultPatch, validatePreset } from '@/lib/app/synths/validate';
+import { DEFAULT_PATCH_ID, defaultPatchSound } from '@/lib/app/synths/default-patch';
 import type { CatalogueSeedData } from '@/lib/app/catalogue/data';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
@@ -119,10 +122,20 @@ const isBaseline = (v: unknown): v is Baseline =>
  * changes on purpose is left out: the content it no longer carries (presets, lineage, unusual notes), its `version`,
  * the `brand` tags, what it says about a control or area (`help`, which says how the app works: the sequencer took
  * over the riff's transport in t-80, and the sequencer synths' buttons in t-85), and the buttons that drive the app's
- * sequencer (`seqButtons`), which the prototype has no sequencer for. None of these changes the sound.
+ * sequencer (`seqButtons`), which the prototype has no sequencer for, and the Default patch (`defaultPatch`), which the
+ * prototype never had. None of these changes the sound.
  */
 function definitionDrift(ported: SynthDef, prototype: SynthDef): string | null {
-  const OMIT = new Set(['presets', 'lineage', 'unusual', 'version', 'brand', 'help', 'seqButtons']);
+  const OMIT = new Set([
+    'presets',
+    'lineage',
+    'unusual',
+    'version',
+    'brand',
+    'help',
+    'seqButtons',
+    'defaultPatch',
+  ]);
   const plain = (def: SynthDef): unknown =>
     JSON.parse(
       JSON.stringify(def, (k, v: unknown) =>
@@ -621,8 +634,14 @@ async function main(): Promise<void> {
           ],
         },
       },
+      ...(def.defaultPatch ? [{ ...defaultPatchSound(def), id: '(default)' }] : []),
       ...presets,
     ];
+    for (const problem of validateDefaultPatch(def).problems)
+      E(`${def.id} Default patch ${problem.path}: ${problem.message}`);
+    // The page lists the Default patch under this id, ahead of the catalogue: a sound slugged so would be hidden by it.
+    if (presets.some((p) => p.id === DEFAULT_PATCH_ID))
+      E(`${def.id} has a sound slugged ${DEFAULT_PATCH_ID}, the Default patch's reserved id`);
     // (check.mjs's init phrase has no `loop`, which the engine reads as "loop"; `loop: true` here is the same riff.)
     console.log(`\n${def.name} — ${presets.length} sounds`);
     console.log(

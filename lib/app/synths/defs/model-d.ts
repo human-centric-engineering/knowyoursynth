@@ -1121,6 +1121,18 @@ const modelD: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // Init is already Osc 1's sawtooth alone at 8′. The Default patch opens the filter all the way and takes the
+  // contour off it, so nothing shapes the saw, and makes the loudness an organ gate with a short release.
+  defaultPatch: {
+    values: {
+      'filter.cutoff': 5,
+      'filter.emphasis': 0,
+      'filter.contour': 0,
+      'aenv.attack': 0,
+      'aenv.decay': 1,
+      'aenv.sustain': 10,
+    },
+  },
   toEngine,
 };
 

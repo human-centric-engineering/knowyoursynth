@@ -24,6 +24,7 @@ import {
   type Control,
   type ControlValue,
   type ControlValues,
+  type DefaultPatch,
   type Preset,
   type PresetStep,
   type SynthDef,
@@ -279,6 +280,19 @@ export function validateSound(def: SynthDef, input: unknown): ValidationResult<S
   const { values, problems } = checkSettings(def, parsed.data.values, 'values');
   problems.push(...checkCables(def, parsed.data.cables, 'cables'));
   return done({ values, cables: parsed.data.cables }, problems);
+}
+
+/**
+ * Validate a synth's own Default patch (`SynthDef.defaultPatch`) against it, as a sound's step is checked: every value
+ * legal for its control and every cable well-formed. A synth with none passes, since its Default patch is `init`.
+ */
+export function validateDefaultPatch(def: SynthDef): ValidationResult<DefaultPatch | null> {
+  const patch = def.defaultPatch;
+  if (!patch) return done(null, []);
+  const { values, problems } = checkSettings(def, patch.values, 'defaultPatch.values');
+  const cables = patch.cables ?? [];
+  problems.push(...checkCables(def, cables, 'defaultPatch.cables'));
+  return done<DefaultPatch>({ values, ...(patch.cables ? { cables } : {}) }, problems);
 }
 
 /**

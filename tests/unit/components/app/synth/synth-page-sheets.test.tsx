@@ -13,6 +13,7 @@
 import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { storeSound } from '@/tests/helpers/synth-session';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import type { SynthPageProps } from '@/components/app/synth/synth-page';
 import {
@@ -178,6 +179,9 @@ const detail: SynthDetail = {
 };
 
 function page(over: Partial<SynthPageProps> = {}) {
+  // Back to the library's first sound, as it came: a first visit opens on the Default patch.
+  const first = (over.detail ?? detail).sounds[0];
+  if (first && def) storeSound(def, first);
   return render(
     <SynthPage detail={detail} synths={[MODEL_D_SYNTH, OTHER_SYNTH]} viewParam={null} {...over} />
   );

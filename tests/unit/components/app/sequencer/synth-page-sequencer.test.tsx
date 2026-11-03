@@ -11,6 +11,7 @@
 
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { storeSound } from '@/tests/helpers/synth-session';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
@@ -106,7 +107,10 @@ const detail: SynthDetail = {
   notes: { unusual: {}, limits: { intro: null, items: [], shared: [] } },
 };
 
-const page = () => render(<SynthPage detail={detail} synths={[MODEL_D]} viewParam={null} />);
+const page = () => {
+  storeSound(def, FAT_BASS);
+  return render(<SynthPage detail={detail} synths={[MODEL_D]} viewParam={null} />);
+};
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
 const sent = () => engine.send.mock.calls.map((c) => c[0] as { type: string });
 const lastSent = (type: string) =>

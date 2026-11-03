@@ -67,6 +67,16 @@ definition reaches the page's up-front bundle.
   registered definition and in any module under `defs/`.
 - **A `version`**, a whole number from 1. Every stored sound records the version it was made on.
   Raise it when a control or jack id is renamed or removed, and ship a mapping from the old ids.
+- **A Default patch** (`defaultPatch`, `f-default-patch`): the plain sawtooth every patch on the synth is explained
+  from, which someone following along on hardware sets their own synth to and checks by ear. Control values over
+  `init`, and its cables, as a sound's step is. It is not `init`, which stays each control's `def` and is what every
+  sound's steps apply on top of. A synth without one has `init` with no cables as its Default patch, which is right
+  only where `init` is already a plain saw that sounds (not on a synth flagged `silentInit`). It is code, not
+  catalogue content: lessons and patch loading build on it, so nobody edits it. `validateDefaultPatch` (`validate.ts`)
+  checks it against the synth, `default-patch.test.ts` runs that over every registered definition, and
+  `check:synths` renders it as `(default)` playing its scale. `lib/app/synths/default-patch.ts` turns it into the
+  sound the page lists (`defaultPatchSound`), under the reserved id `default-patch`, with its sequencer pattern: C
+  major from C3 up to C4 and back, at 70 bpm.
 - **Panel values are `number | string | boolean`.** Read a continuous control as a number with a
   local `num(v, id)`, and narrow an enum to the engine's type explicitly
   (`v['filter.mode'] === 'hp' ? 'hp' : 'lp'`). For the values a valid sound holds, the result

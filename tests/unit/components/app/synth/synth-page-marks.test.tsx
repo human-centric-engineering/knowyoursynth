@@ -22,6 +22,7 @@ import {
   within,
 } from '@testing-library/react';
 import { APIClientError } from '@/lib/api/client';
+import { storeSound } from '@/tests/helpers/synth-session';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import { useLessonProgress } from '@/components/app/synth/progress';
 import { focusStore } from '@/components/app/synth/stores';
@@ -178,7 +179,10 @@ const entry = (slug: string, furthestStep: number, completedAt: string | null = 
   available: true,
 });
 
-const page = () => render(<SynthPage detail={detail} synths={[MODEL_D_SYNTH]} viewParam={null} />);
+const page = () => {
+  storeSound(def, FAT_BASS);
+  return render(<SynthPage detail={detail} synths={[MODEL_D_SYNTH]} viewParam={null} />);
+};
 /** The walkthrough's own button by its text: the step bar's arrows carry the same labels. */
 const walk = (text: string) => {
   openSide('Lesson');

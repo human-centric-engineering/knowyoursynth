@@ -11,15 +11,17 @@
 
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { comeBackTo } from '@/tests/helpers/synth-session';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import { MAP_OFF, findStore, focusStore, mapStore } from '@/components/app/synth/stores';
 import { getSynthDetail } from '@/lib/app/catalogue/read';
 import type { SynthDetail } from '@/lib/app/catalogue/read';
 import { getSynthDef } from '@/lib/app/synths/defs';
+import { defaultPatchState } from '@/lib/app/synths/default-patch';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { createProbe, PROBE_WORKER_URL } from '@/lib/app/synths/audio/probe';
 import type { ProbeJob, ProbeResult } from '@/lib/app/synths/audio/probe';
-import { controlMap, displayName, presetState } from '@/lib/app/synths/lib/patch';
+import { controlMap, displayName } from '@/lib/app/synths/lib/patch';
 import { modelDRows } from '@/tests/helpers/model-d-detail';
 import { logger } from '@/lib/logging';
 import { openSide, tallScreen } from '@/tests/helpers/synth-side';
@@ -110,6 +112,8 @@ beforeAll(async () => {
 
 beforeEach(() => {
   window.localStorage.clear();
+  // Coming back to Model D, as a refresh does: a synth chosen over another opens on its Default patch instead.
+  comeBackTo('model-d');
   tallScreen();
   window.location.hash = '';
   engine.send.mockReset();
@@ -433,7 +437,8 @@ describe('the harmonics strip and the big view', () => {
     const strip = within(screen.getByRole('region', { name: 'Harmonics of the sound' }));
     expect(strip.getByText('Predicted · C3')).toBeTruthy();
     expect(strip.getByText(/^Sounds at /)).toBeTruthy();
-    const { values, cables } = presetState(def, detail.sounds[0]);
+    // A first visit opens on the Default patch.
+    const { values, cables } = defaultPatchState(def);
     const patched = Object.fromEntries(
       cables.flatMap((c) => [
         [c.to, true],

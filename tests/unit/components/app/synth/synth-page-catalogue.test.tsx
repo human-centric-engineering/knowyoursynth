@@ -22,6 +22,7 @@ import { modularDef } from '@/lib/app/synths/lib/layout';
 import { faceView, isShown, presetState } from '@/lib/app/synths/lib/patch';
 import type { SynthDef } from '@/lib/app/synths/contract';
 import { importPhrase } from '@/lib/app/sequencer/import';
+import { DEFAULT_PATCH_NAME, defaultPatchSound } from '@/lib/app/synths/default-patch';
 import { patternLength } from '@/lib/app/sequencer/pattern';
 import { expectedParams, lastParams } from '@/tests/helpers/synth-engine';
 import { catalogueData, synthRows } from '@/tests/helpers/synth-detail';
@@ -150,28 +151,29 @@ describe.each(LISTED)('the %s page', (id) => {
 
   const page = () => render(<SynthPage detail={detail} synths={[detail.synth]} viewParam={null} />);
 
-  it('opens with every sound in the library and every control and jack on the panel', () => {
+  it('opens on the Default patch, with every sound in the library and every control and jack on the panel', () => {
     const { container } = page();
     expect(
       screen.getByRole('heading', { name: `About this ${def.name}`, hidden: true })
     ).toBeTruthy();
-    expect(soundRows().map((r) => r.querySelector('.font-semibold')?.textContent)).toEqual(
-      detail.sounds.map((s) => s.name)
-    );
+    expect(soundRows().map((r) => r.querySelector('.font-semibold')?.textContent)).toEqual([
+      DEFAULT_PATCH_NAME,
+      ...detail.sounds.map((s) => s.name),
+    ]);
     // A pin matrix's jacks are its row and column legends.
     const jacks = container.querySelectorAll(
       '[aria-label$=" input jack"], [aria-label$=" output jack"], [aria-label$=" matrix row"], [aria-label$=" matrix column"]'
     );
     expect(jacks).toHaveLength(def.jacks.length);
     expect(def.controls.length).toBeGreaterThan(0);
-    expect(undrawn(frontPanel(def), def, detail.sounds[0])).toEqual([]);
+    expect(undrawn(frontPanel(def), def, defaultPatchSound(def))).toEqual([]);
   });
 
-  it('opens the sequencer under the panel holding the first sound’s riff, and plays it as a pattern', async () => {
+  it('opens the sequencer under the panel holding the Default patch’s scale, and plays it as a pattern', async () => {
     page();
     fireEvent.click(screen.getByRole('button', { name: 'Sequencer' }));
     const seq = screen.getByRole('region', { name: 'Sequencer' });
-    const riff = detail.sounds[0].phrase;
+    const riff = defaultPatchSound(def).phrase;
     // Sixteen keys to a page: the first page of the riff's steps.
     const steps = patternLength(importPhrase(riff));
     expect(within(seq).getAllByRole('button', { name: /^Step \d+:/ })).toHaveLength(
@@ -224,9 +226,9 @@ describe.each(LISTED)('the %s page', (id) => {
         if (!shared.has(line)) expect(drawn.has(line), line).toBe(false);
   });
 
-  it('plays the first sound on opening, and the last when it is picked', () => {
+  it('plays the Default patch on opening, and the last sound when it is picked', () => {
     page();
-    expect(lastParams(engine.send)).toEqual(expectedParams(def, detail.sounds[0]));
+    expect(lastParams(engine.send)).toEqual(expectedParams(def, defaultPatchSound(def)));
     const last = detail.sounds[detail.sounds.length - 1];
     const row = soundRows().find(
       (b) => b.querySelector('.font-semibold')?.textContent === last.name
@@ -256,7 +258,7 @@ describe.each(MODULAR)('the %s page’s panel layout', (id) => {
     const long = viewBox(def);
     expect(modules).not.toBe(long);
     const panel = () => frontPanel(def);
-    const first = detail.sounds[0];
+    const first = defaultPatchSound(def);
     const layout = within(screen.getByRole('group', { name: 'Panel layout' }));
     const pressed = (name: string) =>
       layout.getByRole('button', { name }).getAttribute('aria-pressed');

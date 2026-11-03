@@ -46,7 +46,7 @@ export function SoundPicker({
   onCloseSounds,
   sounds,
 }: {
-  /** What is on the panel: a library sound, one of the user's, or "Blank patch". */
+  /** What is on the panel: a library sound, one of the user's, or "Default patch". */
   soundName: string;
   /** "In the style of…", where the sound has one. */
   soundRef: string | null;

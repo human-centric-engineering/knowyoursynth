@@ -53,6 +53,12 @@ import type { PublicSound, UserSoundDetail } from '@/lib/app/sounds/data';
 import type { PublicPattern } from '@/lib/app/patterns/data';
 import type { Pattern } from '@/lib/app/sequencer/pattern';
 import { lessonPreset } from '@/lib/app/sounds/lesson';
+import {
+  DEFAULT_PATCH_ID,
+  DEFAULT_PATCH_NAME,
+  defaultPatchSound,
+  isDefaultPatch,
+} from '@/lib/app/synths/default-patch';
 import { SynthPanel } from '@/components/app/panel/synth-panel';
 import type { CableEnd } from '@/components/app/panel/synth-panel';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
@@ -402,9 +408,15 @@ function Synth({
 }: SynthPageProps & { baseDef: AppSynthDef }) {
   const router = useRouter();
   const synthId = baseDef.id;
-  const sounds = detail.sounds;
+  // The Default patch (`f-default-patch`) is listed first, ahead of the catalogue's sounds, so a synth with nothing on
+  // its panel yet starts from it. It is no catalogue row: what reads or writes a library sound through the API leaves it out.
+  const defaultSound = useMemo(() => defaultPatchSound(baseDef), [baseDef]);
+  const sounds = useMemo(() => [defaultSound, ...detail.sounds], [defaultSound, detail.sounds]);
   // What a published sound on this synth may be tagged with (`libraryTags` in `lib/app/sounds/publish.ts`).
-  const libraryTags = useMemo(() => [...new Set(sounds.flatMap((p) => p.tags))].sort(), [sounds]);
+  const libraryTags = useMemo(
+    () => [...new Set(detail.sounds.flatMap((p) => p.tags))].sort(),
+    [detail.sounds]
+  );
 
   // The definition with the catalogue's unusual notes on it. The sound map, when it comes, works from this, so it
   // gives the same answers whichever layout is showing.
@@ -446,6 +458,9 @@ function Synth({
     [hereHref]
   );
 
+  // Whether this synth was chosen over another (`f-default-patch`): the last synth opened was a different one, or none.
+  // Read on arrival, before this synth is remembered; a refresh comes back to the same synth and keeps its panel.
+  const switchedTo = useRef(false);
   // On arrival: follow a prototype hash link, remember this synth, and restore the last view if the URL has none.
   // A hash link to this same synth only sets the view: a navigation to the same page keeps this component, and with
   // it the view it started with. A databank link (`#bank/…`) goes to the databank's page.
@@ -460,6 +475,9 @@ function Synth({
       router.replace(synthHref(hash.id, hash.view));
       return;
     }
+    // Kept once true: React's development remount runs this again after the synth has been remembered, and must not
+    // undo the switch (the stored panel's restore runs again too, and the Default patch has to land over it again).
+    switchedTo.current ||= readStored(STORAGE_KEYS.synth) !== synthId;
     writeStored(STORAGE_KEYS.synth, synthId);
     if (hash) {
       setView(hash.view);
@@ -504,6 +522,13 @@ function Synth({
     canRedo,
     shown: historyShown,
   } = usePanelHistory(stored, setSess, synthDef, stopUnplugging);
+  // A synth chosen over another opens on its Default patch, whatever panel it was left with (owner ruling, 2026-11-03).
+  // Set as a change the visitor made, so it is what the browser and the account keep: a refresh comes back to it, and
+  // the account's older panel does not replace it. Declared after the stored session, so it lands after the restore,
+  // and before `?sound=`, a shared sound and `?mine=`, which still open their own sound over it.
+  useEffect(() => {
+    if (switchedTo.current) setSess(() => freshSession(synthDef, defaultSound));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
   // `?sound=` loads that sound over whatever was stored, as a fresh panel, then drops out of the URL: a reload should
   // not throw away what was done on the panel since. Declared after the stored session, so it lands after the restore.
   // A sound the library does not have opens the synth as it would have opened anyway. Only `sound` is taken off: the
@@ -642,6 +667,14 @@ function Synth({
     if (m !== 'inUse' || liveOffered) setLiveOn(m === 'flow' ? 'flow' : m === 'live');
   };
   const [heatOn, setHeatOn] = settings.heat;
+  // A synth chosen over another starts with the Signal layer and the sensitive controls off: both are kept as settings,
+  // so they would otherwise carry over from the synth before (owner ruling, 2026-11-03). After the settings have read
+  // the browser, so what they read is not put back over this.
+  useEffect(() => {
+    if (!switchedTo.current) return;
+    setSignal('off');
+    setHeatOn(false);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
   const [harmOn, setHarmOn] = settings.harm;
   const [fx, setFx] = settings.fx;
 
@@ -1326,7 +1359,8 @@ function Synth({
   const soundPatterns = useSoundPatterns(librarySound, seqShown);
   // Patterns that suit the patch as it is now (t-125). A library sound is offered them once the patch has moved far
   // from how that sound came; anything else on the panel is offered them at once.
-  const startSlug = librarySound?.slug ?? null;
+  // The Default patch is no sound the suggestions can be asked to leave out, so it is no start: it is offered them at once.
+  const startSlug = librarySound && !isDefaultPatch(librarySound.slug) ? librarySound.slug : null;
   const suggestStart = useMemo(
     () =>
       startSlug && preset
@@ -1831,7 +1865,7 @@ function Synth({
   // from, while the library has it.
   const creditSound = openSound
     ? sounds.find((p) => p.id === openSound.source?.slug)
-    : sounds.find((p) => p.id === sess.presetId);
+    : sounds.find((p) => p.id === sess.presetId && !isDefaultPatch(p.id));
   const credit = creditSound ? { slug: creditSound.id, name: creditSound.name } : null;
   // A lesson step sets the panel to the sound as far as that step; `null` is the finished sound. Like choosing a
   // library sound, it replaces the panel, so one of the user's that was open is no longer what Save writes to.
@@ -1851,9 +1885,11 @@ function Synth({
       return;
     }
     leaveShared();
-    if (preset && k != null) progress.record(preset.id, k);
-    else if (preset && step != null && step === preset.steps.length - 1)
-      progress.record(preset.id, step, true);
+    // Progress is kept for the catalogue's lessons, not the Default patch's one step.
+    const kept = preset && !isDefaultPatch(preset.id) ? preset : null;
+    if (kept && k != null) progress.record(kept.id, k);
+    else if (kept && step != null && step === kept.steps.length - 1)
+      progress.record(kept.id, step, true);
     openSeq.current++;
     patch((s) => {
       const from = sounds.find((p) => p.id === s.presetId) || sounds[0];
@@ -1988,7 +2024,8 @@ function Synth({
         onStar={(id) => favourites.toggle({ kind: 'mine', soundId: id })}
       />
       <Library
-        presets={sounds}
+        presets={detail.sounds}
+        start={defaultSound}
         currentId={openSound || ownLesson ? null : (preset?.id ?? null)}
         onSelect={(id) => {
           if (small) openSheet(null);
@@ -2061,7 +2098,7 @@ function Synth({
         ? designed.name
         : preset
           ? preset.name
-          : 'Blank patch';
+          : DEFAULT_PATCH_NAME;
   // What the description says about the sound: the one on the panel, so not a library sound's words under one of the
   // user's own, or under a shared sound, that has no lesson of its own.
   const described = openSound || sharedPanel ? ownLesson : (ownLesson ?? preset ?? null);
@@ -2612,18 +2649,16 @@ function Synth({
                     </PlayerTip>
                   )}
                   <PlayerTip
-                    name="Blank patch"
-                    help="Start from nothing: every control at its starting place, and no cables."
+                    name={DEFAULT_PATCH_NAME}
+                    help="Go back to the plain sawtooth every patch here starts from, which you can set your own synth to."
                   >
                     <button
                       type="button"
-                      onClick={() =>
-                        glide((s) => ({ ...s, values: { ...synthDef.init }, cables: [] }))
-                      }
+                      onClick={() => selectPreset(DEFAULT_PATCH_ID)}
                       className="kys-layer"
                     >
                       <Eraser size={16} aria-hidden="true" />
-                      Blank patch
+                      {DEFAULT_PATCH_NAME}
                     </button>
                   </PlayerTip>
                   <span className="flex-1" />
@@ -2836,7 +2871,7 @@ function Synth({
         <Lineage
           synth={detail.synth}
           lineage={detail.lineage}
-          sounds={sounds}
+          sounds={detail.sounds}
           open={lineageOpen}
           onClose={() => setLineageOpen(false)}
           onSelect={(id) => {

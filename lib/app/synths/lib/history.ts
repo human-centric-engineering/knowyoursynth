@@ -148,7 +148,7 @@ export function tweenCables(from: PatchCable[], to: PatchCable[], t: number): Pa
 }
 
 // ── glides ──────────────────────────────────────────────────────────────────
-// A new patch on the panel (a sound opened, Blank patch, Restore patch, the synth arriving) is shown being set, as
+// A new patch on the panel (a sound opened, Default patch, Restore patch, the synth arriving) is shown being set, as
 // the lesson builds a sound: the oscillators first, then the mixer, the filter, the envelopes and so on down the voice,
 // one part at a time. The cables the new patch has not got are pulled out first, before anything turns, and its own
 // are plugged in last.

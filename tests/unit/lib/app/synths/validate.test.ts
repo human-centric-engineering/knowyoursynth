@@ -10,6 +10,7 @@ import { describe, expect, it } from 'vitest';
 import {
   checkCables,
   checkSettings,
+  validateDefaultPatch,
   validatePreset,
   validateSound,
 } from '@/lib/app/synths/validate';
@@ -327,6 +328,48 @@ describe('validatePreset', () => {
         code: 'unknown-control',
         message: 'Context names osc9.level, which mini-d does not have',
       },
+    ]);
+  });
+});
+
+describe('validateDefaultPatch', () => {
+  it('passes a synth with no Default patch of its own, which uses init', () => {
+    expect(validateDefaultPatch(def)).toEqual({ ok: true, value: null, problems: [] });
+  });
+
+  it('accepts a legal Default patch and returns it typed', () => {
+    const patch = {
+      values: { 'filter.cutoff': 5, 'osc1.wave': 'saw' },
+      cables: [['env1.out', 'pitch.in'] as [string, string]],
+    };
+
+    const r = validateDefaultPatch({ ...def, defaultPatch: patch });
+
+    expect(r).toEqual({ ok: true, value: patch, problems: [] });
+  });
+
+  it('refuses a control the synth does not have', () => {
+    const r = validateDefaultPatch({ ...def, defaultPatch: { values: { 'osc9.level': 3 } } });
+
+    expect(r.ok).toBe(false);
+    expect(r.problems).toEqual([
+      {
+        path: 'defaultPatch.values.osc9.level',
+        code: 'unknown-control',
+        message: 'mini-d has no control osc9.level',
+      },
+    ]);
+  });
+
+  it('refuses a cable that cannot be patched', () => {
+    const r = validateDefaultPatch({
+      ...def,
+      defaultPatch: { values: {}, cables: [['pitch.in', 'env1.out']] },
+    });
+
+    expect(r.ok).toBe(false);
+    expect(r.problems.map((p) => [p.path, p.code])).toEqual([
+      ['defaultPatch.cables.0', 'reversed-cable'],
     ]);
   });
 });

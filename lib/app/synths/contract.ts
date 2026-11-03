@@ -123,6 +123,12 @@ export interface SynthDef {
   /** The init patch: a plain audible tone. Built from each control's `def`. */
   init: ControlValues;
   /**
+   * The Default patch (`f-default-patch`): the plain sawtooth every patch on this synth is explained from, which someone
+   * following along on hardware sets their own synth to and checks by ear. Applied on top of `init`, as a sound's step
+   * is. Absent, the Default patch is `init` with no cables, which is right only where `init` is already a plain saw.
+   */
+  defaultPatch?: DefaultPatch;
+  /**
    * Panel values → engine parameters. Must be pure, and must keep "nothing" a
    * real `0` / `false` / absent (a level knob at 0 gives `level: 0`, not
    * `0.0001`), or the sound map cannot tell a control that is off from one that
@@ -161,6 +167,12 @@ export interface SynthDef {
    * it on the definition it returns, and the renderer draws the case in place of the long faceplate when it is there.
    */
   layout?: PanelLayout;
+}
+
+/** A synth's Default patch (`SynthDef.defaultPatch`): control values over `init`, and the cables in. */
+export interface DefaultPatch {
+  values: ControlValues;
+  cables?: CablePair[];
 }
 
 /**
