@@ -910,6 +910,10 @@ describe('MIDI out (f-midi-out t-88)', () => {
     expect(out.event).toHaveBeenCalledWith(expect.objectContaining({ type: 'loop', run }));
     // What the player was sent, in order: the pattern, then the loop queued on its first loop's start.
     expect(out.message.mock.calls.map(([m]) => m.type)).toEqual(['pattern', 'patternNext']);
+    act(() => state.onEvent({ type: 'patternTick', run: (run ?? 0) - 1 }));
+    expect(out.event).not.toHaveBeenCalledWith(expect.objectContaining({ type: 'patternTick' }));
+    act(() => state.onEvent({ type: 'patternTick', run }));
+    expect(out.event).toHaveBeenLastCalledWith({ type: 'patternTick', run });
     fire({ type: 'patternEnd', run });
     expect(out.event).toHaveBeenLastCalledWith({ type: 'patternEnd', run });
     expect(state.playing).toBe(false);

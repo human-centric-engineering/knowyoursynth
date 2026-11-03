@@ -23,15 +23,19 @@
  * the last ends, and a note held over the loop's end is let go in the next loop. Notes are placed on one count of beats
  * from the run's start, so a let-go owed by an earlier loop lands where the player lands it, whatever the tempo does.
  *
+ * A loop the player would refuse (`playable`) is refused here too, so the two never disagree about what is playing.
+ *
  * Pure: no timers, no Web MIDI. The page (`use-midi-out.ts`) gives it a port and a clock and calls `pump`.
  */
 import type { PhraseNote } from '@/lib/app/synths/contract';
 import { DEFAULT_VELOCITY } from '@/lib/app/synths/audio/note-events';
-import type {
-  PatternEvent,
-  PatternLoop,
-  PatternMessage,
+import {
+  playable,
+  type PatternEvent,
+  type PatternLoop,
+  type PatternMessage,
 } from '@/lib/app/synths/audio/pattern-player';
+import { logger } from '@/lib/logging';
 
 /** How far ahead of what is heard notes are handed to the output. */
 export const LOOKAHEAD_MS = 100;
@@ -91,6 +95,8 @@ export interface MidiScheduler {
   pump(): void;
   /** Lets go of every note sent and not yet let go, then All Notes Off, and stops placing notes until the next run. */
   release(): void;
+  /** Lets go as `release` does, but keeps the run: notes start again from what is heard when next pumped. */
+  silence(): void;
   /** Sends to `port` on `channel` (0..15) from now on, letting go of everything on the one before. `null` sends nothing. */
   setPort(port: MidiPort | null, channel: number): void;
 }
@@ -123,6 +129,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   let lastAt = 0;
   /** Something has been sent since the last release. */
   let dirty = false;
+  /** The port a failed send was last reported for: once each, not once a note. */
+  let failed: MidiPort | null = null;
 
   const msAt = (a: Anchor, g: number) => a.ms + ((g - a.g) * 60000) / a.bpm;
   const beatAt = (a: Anchor, ms: number) => a.g + ((ms - a.ms) * a.bpm) / 60000;
@@ -133,8 +141,13 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       port.send(data, at);
       lastAt = Math.max(lastAt, at);
       dirty = true;
-    } catch {
-      // A port unplugged between the list and the send: the page drops it on the state change.
+    } catch (err) {
+      // A port unplugged between the list and the send: the page drops it on the state change. Anything else would
+      // fail on every note, so it is said once.
+      if (failed !== port) {
+        failed = port;
+        logger.warn('MIDI out: a send failed', { err: String(err) });
+      }
     }
   }
 
@@ -221,7 +234,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     const a = anchor;
     if (resync) {
       resync = false;
-      sentTo = Math.max(sentTo, beatAt(a, now));
+      // From what is heard now, less the lateness any note is allowed: one due this instant still goes.
+      sentTo = Math.max(sentTo, beatAt(a, now - LATE_MS));
     }
     const to = beatAt(a, now + LOOKAHEAD_MS);
     for (;;) {
@@ -272,19 +286,23 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     }
     switch (m.type) {
       case 'pattern':
-        begin(m.loop);
+        if (playable(m.loop)) begin(m.loop);
         return;
       case 'patternNext': {
-        if (!cur) return;
+        if (!cur || (m.loop !== null && !playable(m.loop))) return;
         if (cur.index <= playing) next = m.loop;
         // Already placing notes from the loop it is for (one shorter than the look-ahead): heard from here on, or no
         // more placed if it is the end.
         else if (m.loop) replace(m.loop);
-        else cur = null;
+        else {
+          // The end comes where this loop began: what is owed past it is let go there, as the player lets go.
+          for (const off of offs) off.g = Math.min(off.g, cur.start);
+          cur = null;
+        }
         return;
       }
       case 'patternEdit':
-        if (!cur) return;
+        if (!cur || !playable(m.loop)) return;
         // The player drops the loop queued before an edit; a fresh one follows.
         if (cur.index === playing) {
           replace(m.loop);
@@ -310,7 +328,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       release();
       return;
     }
-    if (!cur && !anchor) return;
+    // A muted player's tick only says time has passed: the page pumps on it.
+    if (e.type === 'patternTick' || (!cur && !anchor)) return;
     playing = e.index;
     // The player is in a loop the notes have not reached (the timer was held up): they catch up, sending nothing
     // before where the player is.
@@ -321,24 +340,26 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     sentTo = Math.max(sentTo, anchor.g);
   }
 
-  function setPort(p: MidiPort | null, ch: number) {
-    if (p === port && ch === channel) return;
+  function silence() {
     const run = cur;
     const n = next;
     const a = anchor;
-    const at = sentTo;
     release();
-    port = p;
-    channel = Math.min(15, Math.max(0, Math.round(ch)));
-    // The run goes on, on the new port, from what is heard now.
+    // The run goes on from what is heard when next pumped.
     cur = run;
     next = n;
     anchor = a;
-    sentTo = at;
     resync = true;
   }
 
-  return { message, event, pump, release, setPort };
+  function setPort(p: MidiPort | null, ch: number) {
+    if (p === port && ch === channel) return;
+    silence();
+    port = p;
+    channel = Math.min(15, Math.max(0, Math.round(ch)));
+  }
+
+  return { message, event, pump, release, silence, setPort };
 }
 
 const PATTERN_TYPES = new Set([

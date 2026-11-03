@@ -9,7 +9,7 @@
  * @see lib/app/midi/scheduler.ts
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
   ALL_NOTES_OFF,
   LOOKAHEAD_MS,
@@ -21,6 +21,11 @@ import type { LoopEvent, PatternLoop } from '@/lib/app/synths/audio/pattern-play
 import type { PhraseNote } from '@/lib/app/synths/contract';
 import { compileLoop, seededRng } from '@/lib/app/sequencer/compile';
 import { PatternSchema, newPattern, type Pattern } from '@/lib/app/sequencer/pattern';
+import { logger } from '@/lib/logging';
+
+vi.mock('@/lib/logging', () => ({
+  logger: { warn: vi.fn(), error: vi.fn(), info: vi.fn(), debug: vi.fn() },
+}));
 
 type Sent = [at: number, data: number[]];
 
@@ -415,14 +420,14 @@ describe('messages beyond the transport', () => {
     expect(offs(t.sent)).toEqual([[200, 60]]);
   });
 
-  it('sends no note outside MIDI’s range, and none of no length', () => {
+  it('sends no note outside MIDI’s range', () => {
     const t = setup();
     start(
       t,
       loop([
         [0, 128, 0.1],
         [0, -1, 0.1],
-        [0.1, 60, 0],
+        [0.1, 60.5, 0.1],
         [0.2, 62, 0.1],
       ])
     );
@@ -507,5 +512,93 @@ describe('a loop shorter than the look-ahead', () => {
       [0, 60],
       [3500, 62],
     ]);
+  });
+});
+
+describe('what the first review found', () => {
+  it('refuses a loop the player would refuse, keeping the run it has', () => {
+    const t = setup();
+    start(t, loop([[0, 60, 0.1]]));
+    t.s.message({ type: 'pattern', loop: loop([[0, 62, 0.1]], 0), bpm: 60, run: 2 });
+    t.s.message({ type: 'patternNext', loop: loop([[0, 64, 0.1]], Number.NaN) });
+    t.s.message({ type: 'patternEdit', loop: loop([[0, 64, 0.1]], 0) });
+    // A zero-length loop would turn forever inside one pump: this returns, playing the run it had.
+    t.run(1100);
+    expect(ons(t.sent).map(([at, n]) => [at, n])).toEqual([
+      [0, 60],
+      [1000, 60],
+    ]);
+  });
+
+  it('lets go at the end of a loop already begun when its end is queued late', () => {
+    const t = setup();
+    // 50 ms loops; each 60 is held over its loop's end into the next.
+    start(t, loop([[0.04, 60, 0.03]], 0.05));
+    t.s.pump(); // the look-ahead is in loop 1 already when its end is queued
+    t.s.message({ type: 'patternNext', loop: null });
+    t.run(200);
+    // Loop 0's 60 was let go inside the window already (70 ms). Loop 1's, sent for 90 ms and owed at 120, is let go
+    // at the end instead: at 90, as no let-go may come before its own note-on.
+    expect(offs(t.sent)).toEqual([
+      [70, 60],
+      [90, 60],
+    ]);
+  });
+
+  it('keeps the run through being silenced, and plays on from what is heard when next pumped', () => {
+    const t = setup();
+    start(
+      t,
+      loop(
+        [
+          [0, 60, 0.5],
+          [0.5, 62, 0.1],
+        ],
+        1
+      )
+    );
+    t.run(100);
+    t.s.silence();
+    expect(offs(t.sent)).toEqual([[100, 60]]);
+    expect(allOff(t.sent)).toEqual([100]);
+    t.run(1100);
+    expect(ons(t.sent).map(([at, n]) => [at, n])).toEqual([
+      [0, 60],
+      [500, 62],
+      [1000, 60],
+    ]);
+  });
+
+  it('takes a tick as time passing, nothing more', () => {
+    const t = setup();
+    start(t, loop([[0, 60, 0.1]]));
+    t.s.event({ type: 'patternTick', run: 1 });
+    t.s.pump();
+    expect(ons(t.sent)).toHaveLength(1);
+  });
+
+  it('says once per port that sending failed, not once a note', () => {
+    vi.mocked(logger.warn).mockClear();
+    let now = 0;
+    const s = createMidiScheduler({ now: () => now, at: (f) => f });
+    s.setPort(
+      {
+        send: () => {
+          throw new Error('InvalidAccessError');
+        },
+      },
+      0
+    );
+    s.message({
+      type: 'pattern',
+      loop: loop([
+        [0, 60, 0.1],
+        [0.5, 62, 0.1],
+      ]),
+      bpm: 60,
+    });
+    s.event(ev());
+    for (; now < 2000; now += 25) s.pump();
+    expect(logger.warn).toHaveBeenCalledTimes(1);
   });
 });

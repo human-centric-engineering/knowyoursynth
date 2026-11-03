@@ -173,7 +173,8 @@ browser synth that was a misdrawn playhead for a loop; on MIDI out it would be n
 `run` (a worklet bundle older than the page) falls back on waiting for the run's first loop, as before.
 
 **Muted.** `muted` on `pattern`, or `patternMute` while it plays, keeps the player's timing and its events but sends the
-synth no notes: the pattern is heard on a MIDI output alone, and the clock MIDI out is timed by still runs.
+synth no notes: the pattern is heard on a MIDI output alone, and the clock MIDI out is timed by still runs. Muted, the
+player also reports `patternTick` (with its `run`) every 25 ms of audio (`TICK_SECONDS`): see MIDI out.
 
 ## The module
 
@@ -640,8 +641,10 @@ stand in. So MIDI lands with what the browser synth is heard playing, and the pl
 note is placed on one count of beats from the run's start, so a let-go owed by an earlier loop lands where the player
 lands it, whatever the tempo does.
 
-**Look-ahead.** Notes are handed to the output 100 ms ahead (`LOOKAHEAD_MS`), refilled every 25 ms (`PUMP_MS`) and
-after every message and event, never a whole loop at once. A message sent with a timestamp can't be taken back
+**Look-ahead.** Notes are handed to the output 100 ms ahead (`LOOKAHEAD_MS`), refilled every 25 ms (`PUMP_MS`) while a
+run plays and after every message and event, never a whole loop at once. With MIDI only the tab is silent, and the
+browser slows a silent hidden tab's timers to once a second, then once a minute. Messages from the audio thread are not
+slowed, so the muted player's `patternTick` refills it then. A message sent with a timestamp can't be taken back
 (`MIDIOutput.clear()` isn't universal), so an edit, a tempo move and Stop must be within reach:
 
 - **`patternEdit`** replaces the loop the player is in from the end of what has been sent, keeping the let-go of every
@@ -651,6 +654,8 @@ after every message and event, never a whole loop at once. A message sent with a
 - **`tempo`** moves the clock at once; the player's own `loop` event for the move then places it exactly.
 - **A note due more than 20 ms ago** when its turn comes (a background tab held the timer up) isn't sent. It would land
   late, and a burst of late notes is worse than a gap.
+- **A loop the player would refuse** (`playable`: no length, or a note it can't play) is refused here too, so the two
+  never disagree about what is playing.
 
 **Held notes**, as the player has them: two overlapping notes of one pitch are let go once, when the last ends, and a
 note held over the loop's end is let go in the next loop, before that loop's own note on the same beat. A note-off is
@@ -658,7 +663,9 @@ never timestamped before its note-on.
 
 **What lets go of everything.** Note-offs for every note sent and not let go, then All Notes Off (CC 123) on the
 channel, on: Stop, the pattern's end, a panic (through `patternEnd`), a change of output or channel, the output being
-unplugged, the page being hidden (`pagehide`) and the page going. Each is sent now and again after the last note-on
+unplugged, the page being hidden (`pagehide`) and the page going. A change of port and `pagehide` keep the run
+(`silence`): notes start again from what is heard when next pumped, so a page shown again from the back-forward cache
+plays on. Each is sent now and again after the last note-on
 already on its way, so it can't arrive before a note it answers, and still goes out if what was queued is dropped. Only
 after something was sent: choosing an output sends nothing by itself.
 

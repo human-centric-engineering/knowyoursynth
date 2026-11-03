@@ -220,6 +220,26 @@ describe('sending', () => {
     expect(data(td3).slice(1)).toEqual([NOTE_OFF_60, ALL_NOTES_OFF]);
   });
 
+  it('plays on after the page is shown again from the back-forward cache, the run kept', async () => {
+    const { result } = await playing();
+    act(() => void window.dispatchEvent(new Event('pagehide')));
+    td3.send.mockClear();
+    // The player plays on: its next loop starts, and MIDI out sends its notes.
+    act(() => result.current.out.out.event({ ...loopStart, index: 1, frame: 2000 }));
+    expect(data(td3)).toContainEqual([0x90, 60, 108]);
+  });
+
+  it('refills on a muted player’s tick, which a silent tab’s slowed timers would not', async () => {
+    const now = vi.spyOn(performance, 'now');
+    now.mockReturnValue(0);
+    const { result } = await playing();
+    td3.send.mockClear();
+    // Two seconds on (a loop of 4 beats at 120 BPM): no timer has fired, a tick arrives.
+    now.mockReturnValue(1990);
+    act(() => result.current.out.out.event({ type: 'patternTick', run: 1 }));
+    expect(data(td3)).toEqual([NOTE_OFF_60, [0x90, 60, 108]]);
+  });
+
   it('lets go when the page goes', async () => {
     const { unmount } = await playing();
     unmount();

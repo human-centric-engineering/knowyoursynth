@@ -760,7 +760,7 @@ export function useSequencer({
     (e: SynthEvent) => {
       if (!playingRef.current) return;
       if (
-        (e.type === 'loop' || e.type === 'patternEnd') &&
+        (e.type === 'loop' || e.type === 'patternEnd' || e.type === 'patternTick') &&
         e.run !== undefined &&
         e.run !== runId.current
       )
@@ -769,7 +769,10 @@ export function useSequencer({
         if (e.type !== 'loop' || e.index !== 0 || !e.start) return;
         awaiting.current = false;
       }
-      if (e.type === 'loop') {
+      if (e.type === 'patternTick') {
+        // Time passing on a muted run: MIDI out is refilled on it.
+        outRef.current?.event(e);
+      } else if (e.type === 'loop') {
         current.current = e.index;
         playhead.current.push(e);
         outRef.current?.event(e);

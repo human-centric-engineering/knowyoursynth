@@ -539,6 +539,24 @@ describe('MIDI out (f-midi-out t-88)', () => {
     ]);
   });
 
+  it('muted, ticks from the audio thread every 25 ms with its run, so MIDI out is refilled in a silent tab', () => {
+    const { events } = play(1000, [
+      [0, { type: 'pattern', loop: loop([[0, 60, 0.5]]), bpm: BPM, run: 3, muted: true }],
+    ]);
+    const ticks = events.filter((e) => e.type === 'patternTick');
+    // 25 samples a tick at 1 kHz, counted per 128-sample block: one a block, the last a short one.
+    expect(ticks).toHaveLength(Math.ceil(1000 / 128));
+    expect(ticks[0]).toEqual({ type: 'patternTick', run: 3 });
+  });
+
+  it('does not tick while the synth plays the notes, or with no pattern', () => {
+    const { events } = play(1000, [
+      [0, { type: 'pattern', loop: loop([[0, 60, 0.5]]), bpm: BPM }],
+      [512, { type: 'stopPattern' }],
+    ]);
+    expect(events.filter((e) => e.type === 'patternTick')).toEqual([]);
+  });
+
   it('starts a new run unmuted unless that run says otherwise', () => {
     const { notes } = play(1200, [
       [0, { type: 'pattern', loop: loop([[0, 60, 0.25]]), bpm: BPM, muted: true }],

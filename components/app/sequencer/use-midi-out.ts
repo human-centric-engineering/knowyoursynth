@@ -14,11 +14,14 @@
  * need a clock of their own. With the chosen output gone, the synth plays it, so Play is never silent.
  *
  * The sequencer hands `out` everything it sends the player and every event of its own run; the scheduler is pumped on
- * a timer while it sends. Everything sent is let go on Stop and at the end (through those), and here on a change of
- * output or channel, the output going away, the page being hidden, and the page going.
+ * each, and on a timer while a run plays. With MIDI alone the tab is silent, so the browser slows that timer (to once a
+ * second, then once a minute); the muted player's `patternTick`, sent from the audio thread, pumps it instead.
+ * Everything sent is let go on Stop and at the end (through those), and here on a change of output or channel, the
+ * output going away, the page being hidden (keeping the run, so a page shown again from the back-forward cache plays
+ * on), and the page going.
  */
 
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { z } from 'zod';
 import type { Midi, MidiPortInfo, MidiStatus } from '@/components/app/synth/use-midi';
 import { STORAGE_KEYS, useStoredPref } from '@/components/app/synth/storage';
@@ -101,15 +104,17 @@ export function useMidiOut({
     s.setPort(sending && id ? output(id) : null, choice.channel - 1);
   }, [s, sending, id, output, choice.channel, midi.outputs]);
 
+  // Whether a run is playing: the timer runs only then.
+  const [running, setRunning] = useState(false);
   useEffect(() => {
-    if (!sending) return undefined;
+    if (!sending || !running) return undefined;
     const t = setInterval(() => s.pump(), PUMP_MS);
     return () => clearInterval(t);
-  }, [s, sending]);
+  }, [s, sending, running]);
 
   // The page hidden (a tab closed, or switched away on a phone) or gone: nothing is left held on the hardware.
   useEffect(() => {
-    const hide = () => s.release();
+    const hide = () => s.silence();
     window.addEventListener('pagehide', hide);
     return () => {
       window.removeEventListener('pagehide', hide);
@@ -139,11 +144,14 @@ export function useMidiOut({
     () => ({
       muted,
       message: (m) => {
+        if (m.type === 'pattern') setRunning(true);
+        else if (m.type === 'stopPattern') setRunning(false);
         s.message(m);
         s.pump();
       },
       event: (e) => {
-        if (e.type !== 'loop' && e.type !== 'patternEnd') return;
+        if (e.type !== 'loop' && e.type !== 'patternEnd' && e.type !== 'patternTick') return;
+        if (e.type === 'patternEnd') setRunning(false);
         s.event(e);
         s.pump();
       },

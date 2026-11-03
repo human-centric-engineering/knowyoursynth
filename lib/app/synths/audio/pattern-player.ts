@@ -29,7 +29,9 @@
  * notes twice or leave one held.
  *
  * `muted` (on `pattern`, or `patternMute` while it plays) keeps the timing and the events but sends the synth no notes:
- * the pattern is heard on a MIDI output alone, and the clock MIDI is locked to still runs here.
+ * the pattern is heard on a MIDI output alone, and the clock MIDI is locked to still runs here. Muted, it also reports a
+ * `patternTick` every {@link TICK_SECONDS}: the tab is silent then, so the browser slows the page's timers, but not
+ * messages from the audio thread, and MIDI out is refilled from those.
  */
 import type { EngineParams, PhraseNote } from '@/lib/app/synths/contract';
 import type { Synth, SynthEventHandler, SynthMessage } from '@/lib/app/synths/audio/dsp-core';
@@ -87,7 +89,11 @@ export interface LoopEvent {
  * What the player reports. `patternEnd`: the pattern has stopped without the page stopping it, because it was told to
  * end (`patternNext` with no loop) and has played out, or because of a `panic` (which the engine sends on suspend).
  */
-export type PatternEvent = LoopEvent | { type: 'patternEnd'; run?: number };
+export type PatternEvent =
+  LoopEvent | { type: 'patternEnd'; run?: number } | { type: 'patternTick'; run?: number };
+
+/** How often a muted pattern reports `patternTick`. */
+export const TICK_SECONDS = 0.025;
 
 /** The beat the playhead is on at frame `now`, from the `loop` event in effect then: within the loop, so it never runs past. */
 export function beatAt(e: LoopEvent, now: number, sr: number): number {
@@ -153,7 +159,7 @@ function playableChange(x: unknown): boolean {
 }
 
 /** Whether a loop from the page can be played: a length, and notes (and settings changes) that can be played. */
-function playable(loop: PatternLoop | null | undefined): loop is PatternLoop {
+export function playable(loop: PatternLoop | null | undefined): loop is PatternLoop {
   return (
     !!loop &&
     Number.isFinite(loop.beats) &&
@@ -209,6 +215,9 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
   let run: number | undefined;
   /** Notes go to MIDI out alone: the synth is sent none. */
   let muted = false;
+  /** Samples since the last `patternTick`, and how many between two. */
+  let sinceTick = 0;
+  const tickEvery = Math.max(1, Math.round(sr * TICK_SECONDS));
 
   const spb = () => (60 / bpm) * sr;
   const time = (evs: { b: number; t: number }[]) => {
@@ -495,6 +504,11 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
       pos += k;
       frames += k;
       i += k;
+    }
+    sinceTick += n;
+    if (muted && cur && onEvent && sinceTick >= tickEvery) {
+      sinceTick = 0;
+      onEvent(run === undefined ? { type: 'patternTick' } : { type: 'patternTick', run });
     }
   }
 
