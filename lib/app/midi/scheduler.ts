@@ -208,6 +208,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   const ccSent = new Map<number, number>();
   /** Per CC, the value in effect from changes whose time has gone, still to be sent (`sendMod`). */
   const behind = new Map<number, number>();
+  /** Per CC, the latest time a value was handed to the port for, on this port and channel. */
+  const ccAt = new Map<number, number>();
 
   const msAt = (a: Anchor, g: number) => a.ms + ((g - a.g) * 60000) / a.bpm;
   const beatAt = (a: Anchor, ms: number) => a.g + ((ms - a.ms) * a.bpm) / 60000;
@@ -418,8 +420,9 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     const notes = sorted(loop);
     let i = 0;
     while (i < notes.length && c.start + notes[i][0] < sentTo) i++;
-    // The lanes from the start: what is passed sends only the value in effect.
+    // The lanes from the start: what is passed sends only the value in effect, which goes whatever was last sent.
     cur = { ...c, loop, notes, i, mods: modsOf(loop), k: 0 };
+    ccSent.clear();
   }
 
   function pump() {
@@ -497,6 +500,11 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     if (ccSent.get(cc) === v) return;
     ccSent.set(cc, v);
     out([0xb0 | channel, cc, v], at);
+    // A value handed over for later on this CC (before an edit, or a silence) can't be taken back: this one goes again
+    // at that time too, after it, so the hardware ends on this one. Changes come in time order, so the latest wins.
+    const queued = ccAt.get(cc);
+    if (queued !== undefined && queued > at) out([0xb0 | channel, cc, v], queued);
+    else ccAt.set(cc, at);
   }
 
   /**
@@ -609,6 +617,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     const same = p === port;
     silence(same);
     port = p;
+    // What was handed to another port or channel holds back nothing here.
+    ccAt.clear();
     // What was handed to another port holds nothing back on this one; what is still on its way on this one does.
     if (p && p !== timesFor) {
       startMs = stopMs = pulseMs = offMs = -Infinity;

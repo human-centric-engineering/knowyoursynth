@@ -680,6 +680,8 @@ describe('a lane’s CC (t-90)', () => {
     fireEvent.click(screen.getByRole('combobox', { name: 'CC' }));
     expect(screen.getByRole('option', { name: 'CC 119' })).toBeTruthy();
     expect(screen.queryByRole('option', { name: 'CC 120' })).toBeNull();
+    // Nor Bank Select.
+    expect(screen.queryByRole('option', { name: 'CC 0' })).toBeNull();
   });
 
   it('is not offered with no output, with Synth only, or with the output not connected', () => {

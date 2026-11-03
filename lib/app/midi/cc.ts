@@ -12,9 +12,26 @@ import type { Control, ControlValue, ControlValues, SynthDef } from '@/lib/app/s
 /** The highest CC a lane can send: 120–127 are the channel-mode messages (All Notes Off among them). */
 export const MAX_LANE_CC = 119;
 
+/**
+ * CCs that aren't a sound parameter, which a lane moving every step would turn into something else: Bank Select (0,
+ * 32) changes the bank the next program change loads, and Data Entry (6, 38), Data Increment and Decrement (96, 97)
+ * and the NRPN and RPN numbers (98–101) rewrite whichever parameter was last chosen, pitch-bend range among them.
+ */
+export const NOT_LANE_CCS: ReadonlySet<number> = new Set([0, 6, 32, 38, 96, 97, 98, 99, 100, 101]);
+
 /** A CC number a lane can be given. */
 export const validLaneCc = (cc: unknown): cc is number =>
-  typeof cc === 'number' && Number.isInteger(cc) && cc >= 0 && cc <= MAX_LANE_CC;
+  typeof cc === 'number' &&
+  Number.isInteger(cc) &&
+  cc >= 0 &&
+  cc <= MAX_LANE_CC &&
+  !NOT_LANE_CCS.has(cc);
+
+/** The CC numbers a lane can be given, in order. */
+export const LANE_CCS: readonly number[] = Array.from(
+  { length: MAX_LANE_CC + 1 },
+  (_, n) => n
+).filter(validLaneCc);
 
 /** Lane control id → CC number, for one synth. */
 export type LaneCcs = Readonly<Record<string, number>>;
@@ -23,7 +40,11 @@ export type LaneCcs = Readonly<Record<string, number>>;
 export type CcLookup = (set: ControlValues) => [cc: number, value: number][];
 
 /** A control's value as a CC value, 0..127, across its travel. */
-export const ccValue = (c: Control, v: ControlValue): number => Math.round(lanePos(c, v) * 127);
+export const ccValue = (c: Control, v: ControlValue): number => {
+  const t = lanePos(c, v);
+  // A control with no travel (min = max) has no place on it.
+  return Number.isFinite(t) ? Math.round(t * 127) : 0;
+};
 
 /**
  * What a set of lane values sends on synth `def`, with `ccs` assigned: one `[cc, value]` per lane with a CC whose

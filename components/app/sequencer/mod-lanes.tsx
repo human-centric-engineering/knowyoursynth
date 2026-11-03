@@ -48,7 +48,7 @@ import type { Control, ControlValue, ControlValues, SynthDef } from '@/lib/app/s
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { SeqPicker, SeqSelect as Select } from '@/components/app/sequencer/select';
 import type { SeqPosition } from '@/components/app/sequencer/use-sequencer';
-import { MAX_LANE_CC, type LaneCcs } from '@/lib/app/midi/cc';
+import { LANE_CCS, type LaneCcs } from '@/lib/app/midi/cc';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 
 /** The CCs a lane can be sent as, while MIDI out sends (t-90): lane control id → CC, and a change to one. */
@@ -59,7 +59,7 @@ export interface LaneCcChoice {
 
 const CC_OPTIONS: [string, string][] = [
   ['', 'No CC'],
-  ...Array.from({ length: MAX_LANE_CC + 1 }, (_, n): [string, string] => [String(n), `CC ${n}`]),
+  ...LANE_CCS.map((n): [string, string] => [String(n), `CC ${n}`]),
 ];
 
 /** How far Up and Down move a value along its lane, and Page Up and Page Down. */

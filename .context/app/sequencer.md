@@ -702,8 +702,10 @@ synths start their own sequencer when they hear clock.
 
 **Mod lanes as CCs** (t-90). A lane names one of the app's panel controls, which the hardware doesn't know, so a lane
 is sent only once it is given a CC number. While an output is sent to (not Synth only), each lane's head has a **CC**
-select, No CC or 0–119 (120–127 are the channel-mode messages, All Notes Off among them); a lane for a control this
-synth hasn't got has none. One CC goes to one lane: giving it to another takes it from the first.
+select, No CC or 1–119 (120–127 are the channel-mode messages, All Notes Off among them), less the CCs that aren't a
+sound parameter: Bank Select (0, 32), Data Entry (6, 38), Data Increment and Decrement (96, 97) and the NRPN and RPN
+numbers (98–101), which a lane moving every step would turn into bank changes or rewritten settings. A lane for a
+control this synth hasn't got has none. One CC goes to one lane: giving it to another takes it from the first.
 
 - **Where the numbers live.** Per synth, in this browser (`kys.midiCc`: synth id → lane control id → CC), not on the
   pattern: a CC map is the hardware's, not the music's, and a pattern stays synth-agnostic, as it is shared and moved
@@ -718,7 +720,11 @@ synth hasn't got has none. One CC goes to one lane: giving it to another takes i
   no value on the lane sends nothing. Changes whose time has gone (an edit, a CC given mid-run, a change of port, a
   held-up timer, across as many loops as it takes) aren't sent late one by one: each CC's value in effect goes once,
   now, as a CC is a setting, better late than left wrong. One a lane set on an earlier step and not since is among
-  them. An edit's change still to come goes at its own time.
+  them. An edit's change still to come goes at its own time. An edit sends each CC's value in effect whatever was last
+  sent. A value already handed to the port for later can't be taken back, so one sent for before it on that CC goes
+  again at its time, after it, and the hardware ends on the edit's (as a note waits for a let-go already handed over).
+- **An empty cell** sends nothing, so the hardware keeps the value before it, where the browser synth plays the
+  panel's: the panel's value is the app's knob, not the hardware's.
 - **On Stop** nothing is sent back: the hardware keeps the last value, as it has no panel value to return to.
 
 Not in it (the feature's later tasks): riffs or keys played outside the sequencer, and CCs filled in from the synth
@@ -731,7 +737,7 @@ a change of port; the clock's pulses at two tempos, a tempo move inside the look
 Stop after the last let-go, turning it on and off mid-run, a change of port, Stop never ahead of what was queued, a
 held-up timer; lane CCs ahead of the note at their beat, sent on change only, each CC's value in effect after an
 edit, a CC given mid-run, a change of port and a held-up timer across loops, an edit's change still to come at its
-time, nothing on Stop); `clock.test.ts`; `tests/unit/components/app/sequencer/use-midi-out.test.tsx` (the real `useMidi`
+time, an edit's value after one already handed over for later, nothing on Stop); `clock.test.ts`; `tests/unit/components/app/sequencer/use-midi-out.test.tsx` (the real `useMidi`
 with a fake `requestMIDIAccess`: one grant, the choice, the channel, every release, unplugging, Send clock per
 output, lane CCs per synth and sent, and the row); `mod-lanes.test.tsx` (the lane values a loop carries, the CC
 select);

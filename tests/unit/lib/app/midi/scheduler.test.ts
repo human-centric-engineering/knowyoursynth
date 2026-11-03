@@ -1297,8 +1297,10 @@ describe('mod lanes as CCs (t-90)', () => {
       ),
     });
     t.s.pump();
+    // 10, in effect, again now (an edit sends what is in effect, whatever was sent); 50 at its own time.
     expect(ccs(t.sent)).toEqual([
       [0, 'cc74=10', 0],
+      [1500, 'cc74=10', 0],
       [1560, 'cc74=50', 0],
     ]);
   });
@@ -1324,6 +1326,44 @@ describe('mod lanes as CCs (t-90)', () => {
     expect(ccs(t.sent)).toEqual([
       [0, 'cc74=10', 0],
       [3500, 'cc74=20', 0],
+    ]);
+  });
+
+  it('sends an edit’s value again after a value already handed over for later on that CC', () => {
+    const t = setup();
+    t.s.setCcs(lookup);
+    start(
+      t,
+      modded(
+        [],
+        [
+          [0, { x: 10 }],
+          [0.55, { x: 100 }],
+        ]
+      )
+    );
+    t.run(475);
+    // 100 is on its way for 550. The edit has no change there: 20 from the start.
+    t.s.message({ type: 'patternEdit', loop: modded([], [[0, { x: 20 }]]) });
+    t.s.pump();
+    expect(ccs(t.sent)).toEqual([
+      [0, 'cc74=10', 0],
+      [550, 'cc74=100', 0],
+      [475, 'cc74=20', 0],
+      [550, 'cc74=20', 0],
+    ]);
+  });
+
+  it('sends a value already sent again after an edit, as the hardware may have had another since', () => {
+    const t = setup();
+    t.s.setCcs(lookup);
+    start(t, modded([], [[0, { x: 10 }]], 4));
+    t.run(500);
+    t.s.message({ type: 'patternEdit', loop: modded([], [[0, { x: 10 }]], 4) });
+    t.s.pump();
+    expect(ccs(t.sent)).toEqual([
+      [0, 'cc74=10', 0],
+      [500, 'cc74=10', 0],
     ]);
   });
 });

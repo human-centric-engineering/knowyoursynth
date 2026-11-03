@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { MAX_LANE_CC, ccLookup, ccValue, validLaneCc } from '@/lib/app/midi/cc';
+import { LANE_CCS, MAX_LANE_CC, ccLookup, ccValue, validLaneCc } from '@/lib/app/midi/cc';
 import type { Control, SynthDef } from '@/lib/app/synths/contract';
 
 const at = { x: 0, y: 0, module: 'filter' as const, help: '' };
@@ -60,12 +60,22 @@ describe('ccValue', () => {
   it('maps a switch to 0 or 127', () => {
     expect([ccValue(SYNC, false), ccValue(SYNC, true)]).toEqual([0, 127]);
   });
+
+  it('sends 0, not NaN, for a knob with no travel', () => {
+    expect(ccValue({ ...LEVEL, min: 5, max: 5, def: 5 }, 5)).toBe(0);
+  });
 });
 
 describe('validLaneCc', () => {
-  it('takes 0 to 119, and none of the channel-mode messages above', () => {
-    expect([0, 74, MAX_LANE_CC].every(validLaneCc)).toBe(true);
+  it('takes 1 to 119, and none of the channel-mode messages above', () => {
+    expect([1, 74, MAX_LANE_CC].every(validLaneCc)).toBe(true);
     expect([120, 123, 127, -1, 1.5, '74', null].some(validLaneCc)).toBe(false);
+  });
+
+  it('takes no Bank Select, Data Entry or (N)RPN CC, which would rewrite something other than a sound', () => {
+    expect([0, 32, 6, 38, 96, 97, 98, 99, 100, 101].some(validLaneCc)).toBe(false);
+    expect(LANE_CCS).toHaveLength(110);
+    expect(LANE_CCS.slice(0, 6)).toEqual([1, 2, 3, 4, 5, 7]);
   });
 });
 

@@ -449,12 +449,13 @@ describe('lane CCs (t-90)', () => {
     expect(hook.result.current.out.ccs).toEqual({ cutoff: 74 });
   });
 
-  it('gives a CC to one lane at a time, takes one away, and refuses a channel-mode CC', async () => {
+  it('gives a CC to one lane at a time, takes one away, and refuses a channel-mode or bank CC', async () => {
     const { result } = await withSynth(synth('sh101'));
     act(() => result.current.out.setCc('cutoff', 74));
     act(() => result.current.out.setCc('res', 74));
     expect(result.current.out.ccs).toEqual({ res: 74 });
     act(() => result.current.out.setCc('res', 123));
+    act(() => result.current.out.setCc('res', 0));
     expect(result.current.out.ccs).toEqual({ res: 74 });
     act(() => result.current.out.setCc('res', null));
     expect(result.current.out.ccs).toEqual({});
@@ -463,12 +464,18 @@ describe('lane CCs (t-90)', () => {
   it('reads a stored map that doesn’t check as none for that synth', async () => {
     localStorage.setItem(
       STORAGE_KEYS.midiCc,
-      JSON.stringify({ sh101: { cutoff: 500 }, td3: { res: 71 } })
+      JSON.stringify({ sh101: { cutoff: 500 }, td3: { res: 71 }, ['x'.repeat(300)]: { res: 72 } })
     );
     const hook = await withSynth(synth('sh101'));
     expect(hook.result.current.out.ccs).toEqual({});
     hook.rerender({ d: synth('td3') });
     expect(hook.result.current.out.ccs).toEqual({ res: 71 });
+    // Changing one synth's keeps the others'.
+    act(() => hook.result.current.out.setCc('cutoff', 74));
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEYS.midiCc) ?? 'null')).toMatchObject({
+      td3: { res: 71, cutoff: 74 },
+      ['x'.repeat(300)]: { res: 72 },
+    });
   });
 
   it('sends a lane with a CC to the output on its channel, ahead of the note it shares a beat with', async () => {

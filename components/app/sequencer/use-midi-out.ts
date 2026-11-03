@@ -34,7 +34,7 @@ import type { Midi, MidiPortInfo, MidiStatus } from '@/components/app/synth/use-
 import { STORAGE_KEYS, useStoredPref } from '@/components/app/synth/storage';
 import { audioClock, type AudioClockSource } from '@/lib/app/midi/clock';
 import { createMidiScheduler } from '@/lib/app/midi/scheduler';
-import { ccLookup, MAX_LANE_CC, validLaneCc, type LaneCcs } from '@/lib/app/midi/cc';
+import { ccLookup, validLaneCc, type LaneCcs } from '@/lib/app/midi/cc';
 import type { SynthDef } from '@/lib/app/synths/contract';
 import { playable } from '@/lib/app/synths/audio/pattern-player';
 import type { SynthEvent, SynthMessage } from '@/lib/app/synths/audio/dsp-core';
@@ -62,10 +62,13 @@ export type MidiOutChoice = z.infer<typeof MidiOutChoiceSchema>;
 
 const NO_CHOICE: MidiOutChoice = { output: null, channel: 1, plays: 'midi' };
 
-/** The CCs given to lanes, per synth: synth id → lane control id → CC. A synth's map that doesn't read is dropped. */
+/**
+ * The CCs given to lanes, per synth: synth id → lane control id → CC. A synth's map that doesn't read is dropped, not
+ * every synth's: what is read back is written back on the next change.
+ */
 const MidiCcSchema = z.record(
-  z.string().max(64),
-  z.record(z.string().max(128), z.number().int().min(0).max(MAX_LANE_CC)).catch({})
+  z.string(),
+  z.record(z.string().max(128), z.number().refine(validLaneCc)).catch({})
 );
 type MidiCcs = z.infer<typeof MidiCcSchema>;
 const NO_CCS: MidiCcs = {};
