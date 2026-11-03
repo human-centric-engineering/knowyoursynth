@@ -569,6 +569,86 @@ describe('MIDI out (f-midi-out t-88)', () => {
   });
 });
 
+describe('starting part-way (f-midi-hardware-lead t-91)', () => {
+  it('starts at the beat and loop it is given, passing over what falls before', () => {
+    const { notes, loops } = play(3000, [
+      [
+        0,
+        {
+          type: 'pattern',
+          loop: loop(
+            [
+              [0, 60, 0.5],
+              [1, 62, 2],
+              [2.5, 64, 0.25],
+            ],
+            4
+          ),
+          bpm: BPM,
+          index: 3,
+          beat: 1.5,
+        },
+      ],
+    ]);
+    // 60 has gone by; 62 began before 1.5 so is not played, and its let-go finds nothing held. 64 is a beat later.
+    expect(notes).toEqual([
+      [1000, true, 64],
+      [1250, false, 64],
+      [2500, true, 60],
+    ]);
+    expect(loops.map((l) => [l.index, l.start, l.beat, l.frame])).toEqual([
+      [3, true, 1.5, 0],
+      [4, true, 0, 2500],
+    ]);
+  });
+
+  it('plays a note on the very beat it starts at', () => {
+    const { notes } = play(600, [
+      [
+        0,
+        {
+          type: 'pattern',
+          loop: loop([[0.5, 60, 0.25]], 2),
+          bpm: BPM,
+          beat: 0.5,
+        },
+      ],
+    ]);
+    expect(notes).toEqual([
+      [0, true, 60],
+      [250, false, 60],
+    ]);
+  });
+
+  it('starts with the lanes’ settings in effect at that beat', () => {
+    const lane = monoParams({ volume: 0.2 });
+    const { other } = play(300, [
+      [0, { type: 'params', p: monoParams() }],
+      [
+        0,
+        {
+          type: 'pattern',
+          loop: { notes: [], beats: 4, params: [[1, lane]] },
+          bpm: BPM,
+          beat: 2,
+        },
+      ],
+    ]);
+    const sent = other.filter((m) => m.type === 'params');
+    expect(sent[sent.length - 1]).toEqual({ type: 'params', p: lane });
+  });
+
+  it('takes a missing, negative or broken index and beat as 0', () => {
+    for (const bad of [{}, { index: -2, beat: -1 }, { index: 1.5, beat: Number.NaN }]) {
+      const { notes, loops } = play(300, [
+        [0, { type: 'pattern', loop: loop([[0, 60, 0.25]]), bpm: BPM, ...bad }],
+      ]);
+      expect(notes[0]).toEqual([0, true, 60]);
+      expect(loops[0]).toMatchObject({ index: 0, beat: 0 });
+    }
+  });
+});
+
 describe('beatAt', () => {
   const at: LoopEvent = {
     type: 'loop',

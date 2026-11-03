@@ -357,4 +357,36 @@ describe('createClockFollower', () => {
     for (let k = 0; k <= PPQN * 2; k++) f.input([CLOCK], k * gap);
     expect(tempos).toEqual([]);
   });
+
+  it('says where the clock is while a run it started plays, and holds a run rejoined there', () => {
+    const tempos: number[] = [];
+    const f: ClockFollower = createClockFollower({
+      start: () => f.started(),
+      stop: () => {},
+      tempo: (b) => tempos.push(b),
+    });
+    const gap = 60000 / (120 * PPQN);
+    expect(f.beat(0)).toBeNull();
+    f.input([START], 0);
+    // Six beats: the last pulse is beat 5 + 23/24, a pulse's length before 3,000 ms.
+    for (let k = 0; k < 6 * PPQN; k++) f.input([CLOCK], k * gap);
+    expect(f.beat(3000)).toBeCloseTo(6, 6);
+    // Another pattern while it plays starts where the clock is (loop 1, beat 2 of a 4-beat loop), and is held there:
+    // heard 40 ms late, it is sped up over the next beat.
+    f.rejoin(6);
+    f.started();
+    f.loop({ type: 'loop', index: 1, start: true, beat: 2, beats: 4, bpm: 120, frame: 0 }, 3040);
+    tempos.length = 0;
+    for (let k = 6 * PPQN; k <= 7 * PPQN; k++) f.input([CLOCK], k * gap);
+    // At beat 7 (3,500 ms) the player is 40 ms (0.08 beat) behind: 0.75 of it made up over the next beat.
+    expect(tempos[tempos.length - 1]).toBeCloseTo(120 * (1 + 0.75 * 0.08), 6);
+  });
+
+  it('a run started from the page’s own Play is not one it can say the beat of', () => {
+    const f = createClockFollower({ start: () => {}, stop: () => {}, tempo: () => {} });
+    const gap = 60000 / (120 * PPQN);
+    for (let k = 0; k < PPQN; k++) f.input([CLOCK], k * gap);
+    f.started();
+    expect(f.beat(PPQN * gap)).toBeNull();
+  });
 });

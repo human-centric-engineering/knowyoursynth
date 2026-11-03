@@ -68,6 +68,11 @@ export const STORAGE_KEYS = {
    * Kept in this browser only, as `midiOut` is.
    */
   midiCc: 'kys.midiCc',
+  /**
+   * The MIDI input whose clock the sequencer follows (`f-midi-hardware-lead` t-91), or none (its own). Kept in this
+   * browser only, as `midiOut` is.
+   */
+  midiClock: 'kys.midiClock',
 } as const;
 
 /** One synth's panel, as it was left. */

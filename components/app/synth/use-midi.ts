@@ -3,6 +3,8 @@
 /**
  * Web MIDI input: note on/off from any connected keyboard (all channels) and the mod wheel (CC 1). And the outputs the
  * same grant reaches (`f-midi-out` t-88), for the sequencer to play on: listed here, so the browser is asked once.
+ * And MIDI clock with its Start, Continue, Stop and Song Position (`f-midi-hardware-lead` t-91), handed with the input
+ * it came from to whoever `listen`s, for the sequencer to follow.
  *
  * Transliterated from the prototype file `prototype/src/lib/midi.js` (decision D3). One change: the prototype's
  * `frame` status existed for Claude's artifact viewer. The app can still be framed, so the status stays, worded for
@@ -12,6 +14,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { isClockMessage } from '@/lib/app/midi/follow';
 
 /**
  * - `frame`: the page is in a frame that does not pass MIDI permission through, so the browser refuses without
@@ -45,16 +48,21 @@ export interface MidiHandlers {
   load: () => boolean;
 }
 
-/** A MIDI output: the browser's id for it (stable while it stays plugged in, and across visits) and its name. */
+/** A MIDI port: the browser's id for it (stable while it stays plugged in, and across visits) and its name. */
 export interface MidiPortInfo {
   id: string;
   name: string;
 }
 
+/** Hears a clock message: its bytes, when it arrived (`performance.now()` time), and the id of the input it came on. */
+export type ClockListener = (data: Uint8Array, ms: number, input: string) => void;
+
 export interface Midi {
   status: MidiStatus;
   /** The connected inputs' names. */
   devices: string[];
+  /** The connected inputs. */
+  inputs: MidiPortInfo[];
   /** The connected outputs, kept up to date as devices come and go. */
   outputs: MidiPortInfo[];
   /** The output with this id, while it is connected. */
@@ -62,12 +70,19 @@ export interface Midi {
   error: string;
   connect: () => Promise<boolean>;
   disconnect: () => void;
+  /** Hears every input's clock messages until the undo it returns is called. */
+  listen: (l: ClockListener) => () => void;
 }
+
+/** A new list only when it changed: a state change fires for every port opened, and each would re-render the page. */
+const samePorts = (was: MidiPortInfo[], now: MidiPortInfo[]) =>
+  was.length === now.length && was.every((w, i) => w.id === now[i].id && w.name === now[i].name);
 
 export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandlers): Midi {
   // `off` on the server and the first client render alike; the frame check runs after mount.
   const [status, setStatus] = useState<MidiStatus>('off');
   const [devices, setDevices] = useState<string[]>([]);
+  const [inputs, setInputs] = useState<MidiPortInfo[]>([]);
   const [outputs, setOutputs] = useState<MidiPortInfo[]>([]);
   const [error, setError] = useState('');
   const access = useRef<MIDIAccess | null>(null);
@@ -84,8 +99,14 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
 
   // Notes the keyboard holds down: stopping MIDI (or leaving the page) releases them, since their key-ups never arrive.
   const held = useRef(new Set<number>());
-  const onMessage = useCallback((e: MIDIMessageEvent) => {
-    const [st = 0, d1 = 0, d2 = 0] = e.data ?? [];
+  const listeners = useRef(new Set<ClockListener>());
+  const onMessage = useCallback((e: MIDIMessageEvent, input: string) => {
+    const data = e.data;
+    const [st = 0, d1 = 0, d2 = 0] = data ?? [];
+    if (st >= 0xf0) {
+      if (data && isClockMessage(st)) listeners.current.forEach((l) => l(data, e.timeStamp, input));
+      return;
+    }
     const type = st & 0xf0;
     if (type === 0x90 && d2 > 0) {
       held.current.add(d1);
@@ -113,22 +134,20 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
     const a = access.current;
     if (!a) return;
     const names: string[] = [];
+    const ins: MidiPortInfo[] = [];
     a.inputs.forEach((input) => {
-      input.onmidimessage = onMessage;
-      if (input.state !== 'disconnected') names.push(input.name || 'MIDI input');
+      input.onmidimessage = (e) => onMessage(e, input.id);
+      if (input.state === 'disconnected') return;
+      names.push(input.name || 'MIDI input');
+      ins.push({ id: input.id, name: input.name || 'MIDI input' });
     });
     setDevices(names);
+    setInputs((was) => (samePorts(was, ins) ? was : ins));
     const outs: MidiPortInfo[] = [];
     a.outputs.forEach((o) => {
       if (o.state !== 'disconnected') outs.push({ id: o.id, name: o.name || 'MIDI output' });
     });
-    // A new list only when it changed: a state change fires for every port opened, and each would re-render the page.
-    setOutputs((was) =>
-      was.length === outs.length &&
-      was.every((w, i) => w.id === outs[i].id && w.name === outs[i].name)
-        ? was
-        : outs
-    );
+    setOutputs((was) => (samePorts(was, outs) ? was : outs));
   }, [onMessage]);
 
   const output = useCallback((id: string) => {
@@ -167,6 +186,7 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
       detach();
       access.current = null;
       setDevices([]);
+      setInputs([]);
       setOutputs([]);
       setStatus('blocked');
       setError(err instanceof Error ? err.message : String(err));
@@ -180,6 +200,7 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
     detach();
     access.current = null;
     setDevices([]);
+    setInputs([]);
     setOutputs([]);
     setStatus('off');
     remember(false);
@@ -199,5 +220,12 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
     };
   }, [detach]);
 
-  return { status, devices, outputs, output, error, connect, disconnect };
+  const listen = useCallback((l: ClockListener) => {
+    listeners.current.add(l);
+    return () => {
+      listeners.current.delete(l);
+    };
+  }, []);
+
+  return { status, devices, inputs, outputs, output, error, connect, disconnect, listen };
 }

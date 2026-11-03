@@ -654,6 +654,7 @@ describe('a lane’s CC (t-90)', () => {
     connected: true,
     sending: true,
     clock: false,
+    following: false,
     ccs: {},
     setOutput: vi.fn(),
     setChannel: vi.fn(),

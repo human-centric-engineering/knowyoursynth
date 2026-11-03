@@ -14,7 +14,8 @@
  * need a clock of their own. With the chosen output gone, the synth plays it, so Play is never silent.
  *
  * MIDI clock (t-89) is sent to an output only once it is turned on for that output, as some synths start their own
- * sequencer on it: the outputs it is on for are kept with the choice.
+ * sequencer on it: the outputs it is on for are kept with the choice. While the sequencer follows a MIDI clock
+ * (`f-midi-hardware-lead` t-91) none is sent, whatever the choice says, so the two can't go round in a loop.
  *
  * Mod lanes are sent as CCs (t-90) once a lane is given a CC number. The numbers are the hardware's, not the
  * pattern's, so they are kept per synth in this browser (`kys.midiCc`), apart from the output chosen: a pattern shared
@@ -94,6 +95,8 @@ export interface MidiOut {
   sending: boolean;
   /** MIDI clock is on for the chosen output. */
   clock: boolean;
+  /** The sequencer follows a MIDI clock, so none is sent, whatever `clock` says. */
+  following: boolean;
   /** The CCs this synth's lanes are sent as (t-90): lane control id → CC. */
   ccs: LaneCcs;
   setOutput: (id: string | null) => void;
@@ -115,6 +118,7 @@ export function useMidiOut({
   engine,
   connect,
   def = null,
+  following = false,
 }: {
   midi: Pick<Midi, 'status' | 'outputs' | 'output'>;
   engine: MidiOutEngine | null;
@@ -122,6 +126,8 @@ export function useMidiOut({
   connect: () => void;
   /** The synth on the panel: whose lane CCs are sent, and what its lanes' controls take. */
   def?: SynthDef | null;
+  /** The sequencer follows a MIDI clock (t-91): no clock is sent. */
+  following?: boolean;
 }): MidiOut {
   const [choice, setChoice] = useStoredPref(STORAGE_KEYS.midiOut, MidiOutChoiceSchema, NO_CHOICE);
   // One per engine, which is the page's for its life; the clock reads the engine's context when asked, as the context
@@ -138,8 +144,9 @@ export function useMidiOut({
   useEffect(() => {
     s.setPort(sending && id ? output(id) : null, choice.channel - 1);
   }, [s, sending, id, output, choice.channel, midi.outputs]);
-  // Only while notes are sent there: Synth only, or the output unplugged, sends it nothing.
-  useEffect(() => s.setClock(sending && clock), [s, sending, clock]);
+  // Only while notes are sent there: Synth only, or the output unplugged, sends it nothing. Nor while a clock is
+  // followed: a DAW echoing it back would have the two clocks chase each other.
+  useEffect(() => s.setClock(sending && clock && !following), [s, sending, clock, following]);
 
   const [allCcs, setAllCcs] = useStoredPref(STORAGE_KEYS.midiCc, MidiCcSchema, NO_CCS);
   const synthId = def?.id ?? null;
@@ -229,6 +236,7 @@ export function useMidiOut({
     connected,
     sending,
     clock,
+    following,
     ccs,
     setOutput,
     setChannel,

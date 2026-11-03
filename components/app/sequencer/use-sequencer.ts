@@ -36,6 +36,11 @@
  * Each start of the player is a run with a number of its own (`f-midi-out` t-88), which the player echoes in its
  * events: one from an earlier run (on its way when Stop and Play were pressed) is dropped. MIDI out (`out`) is told
  * everything sent to the player and every event of this run, and says whether the synth's own notes are muted.
+ *
+ * Following a MIDI clock (`clock`, `f-midi-hardware-lead` t-91), it is told the same, and its transport is the
+ * clock's: Start and Continue play from a beat (a loop part-way through for Continue), Stop stops, and the tempo is the
+ * clock's, sent to the player without editing the pattern. The pattern's own tempo and the panel's tempo knob are not
+ * sent meanwhile. Play pressed here still plays, at the clock's tempo.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -79,6 +84,7 @@ import {
 import { logger } from '@/lib/logging';
 import type { ChosenStep, StepButton } from '@/components/app/sequencer/panel-buttons';
 import type { SequencerOut } from '@/components/app/sequencer/use-midi-out';
+import type { SequencerClock } from '@/components/app/sequencer/use-clock-in';
 
 /** What the sequencer needs of the page's engine: `Engine` has all three. */
 export interface SequencerEngine {
@@ -278,6 +284,18 @@ function fromRiff(ph: Phrase, bpm: number | null): Pattern {
 
 const clampBpm = (bpm: number) => Math.min(MAX_BPM, Math.max(MIN_BPM, bpm));
 
+/**
+ * Where beat `beat` of `p` falls, counted across its loops: the loop (every loop is the pattern's length) and the beat
+ * in it. Null past the end of a pattern that plays once.
+ */
+function where(p: Pattern, beat: number): { index: number; beat: number } | null {
+  if (!(beat > 0)) return { index: 0, beat: 0 };
+  const len = patternLength(p) / stepsPerBeat(p);
+  const index = Math.floor(beat / len + 1e-9);
+  if (index > 0 && !p.loop) return null;
+  return { index, beat: Math.max(0, beat - index * len) };
+}
+
 /** The loop newest at or before `index`: a loop the player played again (the page was late) stands in for the next. */
 function newestBefore(loops: Map<number, LoopInfo>, index: number): LoopInfo | undefined {
   for (let k = index; k >= index - 8; k--) {
@@ -295,6 +313,7 @@ export function useSequencer({
   lanes = null,
   hold = false,
   out = null,
+  clock = null,
 }: {
   engine: SequencerEngine | null;
   /** Turns the sound on, as a press of Play on the bar does; false if it could not. */
@@ -309,6 +328,8 @@ export function useSequencer({
   hold?: boolean;
   /** MIDI out (`f-midi-out` t-88): told what the player is sent and what it reports. */
   out?: SequencerOut | null;
+  /** A MIDI clock followed (`f-midi-hardware-lead` t-91): told the same, and drives the transport and the tempo. */
+  clock?: SequencerClock | null;
 }): Sequencer {
   const [pattern, setPattern] = useState<Pattern>(() =>
     riff ? fromRiff(riff, tempo) : newPattern()
@@ -363,13 +384,18 @@ export function useSequencer({
   const playhead = useRef(createPlayhead());
 
   const outRef = useRef(out);
+  const clockRef = useRef(clock);
   useEffect(() => {
     outRef.current = out;
+    clockRef.current = clock;
   });
+  /** The loop the run playing started at: 0, but for one a MIDI Continue started part-way. */
+  const startIndex = useRef(0);
   const send = useCallback(
     (m: SynthMessage) => {
       engine?.send(m);
       outRef.current?.message(m);
+      clockRef.current?.message(m);
     },
     [engine]
   );
@@ -491,21 +517,44 @@ export function useSequencer({
     [compile, send]
   );
 
+  /**
+   * Starts `p` at loop `at.index`, beat `at.beat` of it: 0 and 0 but for a MIDI clock's Continue. At `bpm`, the clock's
+   * tempo while one is followed, or the pattern's own (`null`).
+   */
   const start = useCallback(
-    (p: Pattern) => {
+    (p: Pattern, at: { index: number; beat: number }, bpm: number | null) => {
       loops.current.clear();
       playhead.current.clear();
-      current.current = 0;
+      current.current = at.index;
+      startIndex.current = at.index;
       awaiting.current = true;
       send({
         type: 'pattern',
-        loop: compile(p, 0, newSeed(), undefined, undefined),
-        bpm: p.bpm,
+        loop: compile(p, at.index, newSeed(), undefined, undefined),
+        bpm: bpm ?? p.bpm,
         run: ++runId.current,
         muted: outRef.current?.muted ?? false,
+        ...(at.index > 0 && { index: at.index }),
+        ...(at.beat > 0 && { beat: at.beat }),
       });
     },
     [compile, send]
+  );
+
+  /**
+   * Another pattern while one plays starts from its top, or, while a MIDI clock that started the run is followed,
+   * where the clock is now, so it stays in time with the clock (from the top if the pattern plays once and the clock
+   * is past its end).
+   */
+  const restart = useCallback(
+    (p: Pattern) => {
+      const c = clockRef.current;
+      const beat = c?.following ? c.beat() : null;
+      const at = beat !== null ? where(p, beat) : null;
+      if (c && beat !== null && at) c.rejoin(beat);
+      start(p, at ?? { index: 0, beat: 0 }, c?.following ? c.bpm : null);
+    },
+    [start]
   );
 
   /**
@@ -527,7 +576,8 @@ export function useSequencer({
   /** The loop playing now, recompiled from the same draws, from the playhead on; then a fresh loop after it. */
   const resend = useCallback(
     (p: Pattern, prev: Pattern) => {
-      if (p.bpm !== prev.bpm) send({ type: 'tempo', bpm: p.bpm });
+      // Following a clock, the clock's tempo plays, not the pattern's.
+      if (p.bpm !== prev.bpm && !clockRef.current?.following) send({ type: 'tempo', bpm: p.bpm });
       const i = current.current;
       const info = loops.current.get(i);
       send({
@@ -615,8 +665,8 @@ export function useSequencer({
     past.current = edited ? [...past.current.slice(-(UNDO_DEPTH - 1)), was] : [];
     setUndoable(edited);
     lastGroup.current = null;
-    if (playingRef.current) start(p);
-  }, [riffKey, start, replaced, setLoaded, setBaseline]);
+    if (playingRef.current) restart(p);
+  }, [riffKey, restart, replaced, setLoaded, setBaseline]);
 
   const load = useCallback(
     (p: Pattern, from: LoadedPattern, o: LoadOptions = {}) => {
@@ -636,10 +686,10 @@ export function useSequencer({
       if (!o.quiet) past.current = [...past.current.slice(-(UNDO_DEPTH - 1)), was];
       setUndoable(past.current.length > 0);
       lastGroup.current = null;
-      if (playingRef.current) start(next);
+      if (playingRef.current) restart(next);
       return next;
     },
-    [start, replaced, setLoaded, setBaseline]
+    [restart, replaced, setLoaded, setBaseline]
   );
 
   const held = useCallback(() => heldRef.current, []);
@@ -669,7 +719,7 @@ export function useSequencer({
   // MIDI out is told the same here, so its look-ahead moves at once rather than when the player's next event says.
   useEffect(() => {
     if (!tempo) return;
-    outRef.current?.message({ type: 'tempo', bpm: tempo });
+    if (!clockRef.current?.following) outRef.current?.message({ type: 'tempo', bpm: tempo });
     const p = patternRef.current;
     const bpm = clampBpm(tempo);
     if (p.bpm === bpm) return;
@@ -688,18 +738,28 @@ export function useSequencer({
 
   /** A Play waiting for the sound: an arp press then joins it rather than starting a run of its own. */
   const starting = useRef(false);
-  const play = useCallback(async () => {
-    // A Stop (or a riff) while the sound is still starting cancels this Play: it is a newer run than this one.
-    const run = ++runs.current;
-    if (!engine) return false;
-    starting.current = true;
-    const ready = await ensureAudio().finally(() => (starting.current = false));
-    if (!ready || run !== runs.current) return false;
-    playingRef.current = true;
-    setPlaying(true);
-    start(patternRef.current);
-    return true;
-  }, [engine, ensureAudio, start]);
+  const playFrom = useCallback(
+    async (beat: number, bpm: number | null) => {
+      // A Stop (or a riff) while the sound is still starting cancels this Play: it is a newer run than this one.
+      const run = ++runs.current;
+      if (!engine) return false;
+      starting.current = true;
+      const ready = await ensureAudio().finally(() => (starting.current = false));
+      if (!ready || run !== runs.current) return false;
+      const p = patternRef.current;
+      const at = where(p, beat);
+      if (!at) return false;
+      playingRef.current = true;
+      setPlaying(true);
+      start(p, at, bpm);
+      return true;
+    },
+    [engine, ensureAudio, start]
+  );
+  const play = useCallback(
+    () => playFrom(0, clockRef.current?.following ? clockRef.current.bpm : null),
+    [playFrom]
+  );
 
   // The panel moving, or another synth, changes what the lanes play: the loop playing is sent again, so a control no
   // lane sets follows the panel, and a lane for a control this synth lacks stays silent. Only while lanes play here (or
@@ -755,6 +815,20 @@ export function useSequencer({
     halt();
   }, [halt, send]);
 
+  // A MIDI clock followed drives the transport: Start and Continue play from its beat, Stop stops, and its tempo moves
+  // the run without editing the pattern.
+  const attachClock = clock?.attach;
+  useEffect(() => {
+    if (!attachClock) return undefined;
+    return attachClock({
+      start: (beat, bpm) => void playFrom(beat, bpm),
+      stop,
+      tempo: (bpm) => {
+        if (playingRef.current) send({ type: 'tempo', bpm });
+      },
+    });
+  }, [attachClock, playFrom, stop, send]);
+
   // The loop after this one was queued before Fill changed: queued again, so Fill is heard from the next loop.
   const setFill = useCallback(
     (on: boolean) => {
@@ -775,7 +849,7 @@ export function useSequencer({
       )
         return;
       if (awaiting.current) {
-        if (e.type !== 'loop' || e.index !== 0 || !e.start) return;
+        if (e.type !== 'loop' || e.index !== startIndex.current || !e.start) return;
         awaiting.current = false;
       }
       if (e.type === 'patternTick') {
@@ -785,9 +859,11 @@ export function useSequencer({
         current.current = e.index;
         playhead.current.push(e);
         outRef.current?.event(e);
+        clockRef.current?.event(e);
         if (e.start) queue(e.index + 1);
       } else if (e.type === 'patternEnd') {
         outRef.current?.event(e);
+        clockRef.current?.event(e);
         halt();
       }
     },

@@ -76,6 +76,15 @@ export interface ClockFollower {
   loop(e: LoopEvent, heardMs: number): void;
   /** The clock's tempo, or null before it is known. */
   bpm(): number | null;
+  /**
+   * Where the clock is at `now`, in beats from the song's start, while a run it started plays: null otherwise. A run
+   * started again meanwhile (another pattern loaded) starts there, so it stays in time with the clock.
+   */
+  beat(now: number): number | null;
+  /** The next run to start is started from clock beat `beat`, and is held to the clock from there. */
+  rejoin(beat: number): void;
+  /** Drives `t` from now on (none: nothing is driven). */
+  drive(t: ClockTransport | null): void;
 }
 
 /** Where the player was: beat `g` of the clock's count, heard at `ms`, moving at `bpm`. */
@@ -101,7 +110,8 @@ function spacing(ys: readonly number[]): number {
   return num / den;
 }
 
-export function createClockFollower(transport: ClockTransport): ClockFollower {
+export function createClockFollower(to: ClockTransport | null = null): ClockFollower {
+  let transport = to;
   /** The last pulses' times. */
   const times: number[] = [];
   let lastPulse: number | null = null;
@@ -131,7 +141,7 @@ export function createClockFollower(transport: ClockTransport): ClockFollower {
     // Exactly the same tempo is not sent again; any other is, as a nudge is small by design.
     if (sent !== null && Math.abs(bpm - sent) < 1e-6) return;
     sent = bpm;
-    transport.tempo(bpm);
+    transport?.tempo(bpm);
   }
 
   /** The player's beat heard at `ms`, on the clock's count: from the event in effect then (the first, before it). */
@@ -162,7 +172,7 @@ export function createClockFollower(transport: ClockTransport): ClockFollower {
       state = 'running';
       asked = count / PPQN;
       nudge = 0;
-      transport.start(asked, tempo);
+      transport?.start(asked, tempo);
       count++;
       return;
     }
@@ -183,7 +193,7 @@ export function createClockFollower(transport: ClockTransport): ClockFollower {
   function halt() {
     if (state === 'stopped') return;
     state = 'stopped';
-    transport.stop();
+    transport?.stop();
   }
 
   return {
@@ -243,5 +253,16 @@ export function createClockFollower(transport: ClockTransport): ClockFollower {
       if (anchors.length > 16) anchors.shift();
     },
     bpm: () => tempo,
+    beat(now) {
+      if (state !== 'running' || lockedFrom === null || lastPulse === null) return null;
+      // The pulse last counted, and the time since it.
+      return (count - 1) / PPQN + Math.max(0, now - lastPulse) / beatMs();
+    },
+    rejoin(beat) {
+      asked = beat;
+    },
+    drive(t) {
+      transport = t;
+    },
   };
 }
