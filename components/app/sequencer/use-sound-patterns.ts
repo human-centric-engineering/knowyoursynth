@@ -7,13 +7,19 @@
  * Read the first time the sequencer is open with the sound on the panel, not with the page: most visits never open
  * it. Kept for the visit, so closing and opening the sequencer, or going back to a sound, reads nothing again. A read
  * that failed is tried again by `retry`, or the next time the sequencer opens.
+ *
+ * The Default patch (`f-default-patch`) is no catalogue sound: its one pattern, the C major scale, is in code, so it is
+ * offered without a read.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { apiClient } from '@/lib/api/client';
 // Type only: this module reaches the browser, and the library module holds the database client.
 import type { LibraryPatternView } from '@/lib/app/patterns/library';
+import { isDefaultPatch, SCALE_PATTERN_VIEW } from '@/lib/app/synths/default-patch';
 import { logger } from '@/lib/logging';
+
+const DEFAULT_PATCH_PATTERNS: LibraryPatternView[] = [SCALE_PATTERN_VIEW];
 
 /** The library sound on the panel. */
 export interface LibrarySound {
@@ -55,7 +61,7 @@ export function useSoundPatterns(
   const slug = sound?.slug;
 
   useEffect(() => {
-    if (!key || !synthId || !slug || !enabled) return undefined;
+    if (!key || !synthId || !slug || isDefaultPatch(slug) || !enabled) return undefined;
     const kept = cache.current.get(key);
     if (kept) {
       setRead({ key, patterns: kept, error: false });
@@ -91,6 +97,8 @@ export function useSoundPatterns(
   }, [key, synthId, slug, enabled, tries]);
 
   if (!sound) return null;
+  if (isDefaultPatch(sound.slug))
+    return { sound, patterns: DEFAULT_PATCH_PATTERNS, error: false, retry };
   const mine = read?.key === key ? read : null;
   return {
     sound,

@@ -12,6 +12,7 @@
 
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { storeSound } from '@/tests/helpers/synth-session';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
@@ -99,6 +100,7 @@ function page(id: (typeof IDS)[number]) {
     lineage: null,
     notes: { unusual: {}, limits: { intro: null, items: [], shared: [] } },
   };
+  storeSound(def, riff);
   return render(<SynthPage detail={detail} synths={[synth]} viewParam={null} />);
 }
 

@@ -7,6 +7,9 @@
  * the API by the page (D13). "My sounds" joins them in `f-my-sounds`, and a signed-in user's progress through each
  * lesson and their stars on the sounds (s4). A search nothing matches offers the tutor instead, as the prototype's did
  * (`f-tutor` t-56).
+ *
+ * The Default patch (`f-default-patch`) comes first, above the catalogue's sounds and outside their search, categories
+ * and count: it is the synth's own starting point, not a sound in the library's order.
  */
 
 import { useMemo, useState } from 'react';
@@ -36,6 +39,8 @@ export function LevelDots({ level }: { level: Preset['level'] }) {
 
 export interface LibraryProps {
   presets: Preset[];
+  /** The Default patch, listed first whatever the search or category. */
+  start?: Preset;
   /** The sound on the panel, if any. */
   currentId: string | null;
   onSelect: (id: string) => void;
@@ -59,6 +64,7 @@ export function markText(mark: LessonMark, steps: number): string {
 
 export function Library({
   presets,
+  start,
   currentId,
   onSelect,
   marks = null,
@@ -115,6 +121,21 @@ export function Library({
         ))}
       </div>
       <ul className="kys-scroll -mr-1 flex max-h-[560px] flex-col gap-1.5 overflow-y-auto pr-1">
+        {start && (
+          <li className="flex items-start gap-1">
+            <button
+              type="button"
+              onClick={() => onSelect(start.id)}
+              aria-current={start.id === currentId}
+              className={`min-w-0 flex-1 rounded-lg border px-3 py-2.5 text-left transition-colors ${start.id === currentId ? 'border-(--kys-accent) bg-(--kys-raised)' : 'border-dashed border-(--kys-line) bg-(--kys-surface) hover:border-(--kys-accent)'}`}
+            >
+              <span className="leading-tight font-semibold">{start.name}</span>
+              <span className="mt-0.5 block text-[13px] leading-snug text-(--kys-muted)">
+                {start.blurb}
+              </span>
+            </button>
+          </li>
+        )}
         {shown.map((p) => {
           const on = p.id === currentId;
           const mark = marks?.get(p.id);

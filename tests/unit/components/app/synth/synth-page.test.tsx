@@ -23,9 +23,11 @@ import {
 } from '@/components/app/synth/stores';
 import { SESSION_WRITE_DELAY_MS, readStored } from '@/components/app/synth/storage';
 import { getSynthDef } from '@/lib/app/synths/defs';
+import { SCALE_PHRASE } from '@/lib/app/synths/default-patch';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
+import { storeSound } from '@/tests/helpers/synth-session';
 import { glideMotion } from '@/components/app/synth/motion';
 import { getSynthRouting } from '@/lib/app/synths/routing';
 
@@ -294,7 +296,7 @@ describe('SynthPage layout', () => {
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(
       'Behringer Model D · Modelled on the 1970 Minimoog Model D'
     );
-    expect(loadedName()).toBe('Fat bass');
+    expect(loadedName()).toBe('Default patch');
     expect(screen.getByText('Loaded:')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'About ›' })).toBeTruthy();
     expect(screen.getByText(MODEL_D_SYNTH.summary)).toBeTruthy();
@@ -321,14 +323,15 @@ describe('SynthPage layout', () => {
     expect(text).toContain('behringer');
   });
 
-  it('opens on the first sound with its steps applied and nothing moved', () => {
+  it('opens on the Default patch, ahead of the library’s sounds, with nothing moved', () => {
     page();
+    expect(loadedName()).toBe('Default patch');
     expect(screen.queryByText(/controls? moved/)).toBeNull();
-    expect(button('Blank patch')).toBeTruthy();
+    expect(button('Default patch')).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'Restore patch' })).toBeNull();
-    // Fat bass closes the filter: the panel's cutoff knob reads the sound's value.
+    // Model D's Default patch opens the filter all the way, where init leaves it at 1.
     expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
-      '-2'
+      '5'
     );
   });
 
@@ -348,7 +351,8 @@ describe('SynthPage layout', () => {
     // Laid out bigger, not magnified: a knob still turns from the keyboard.
     const cutoff = screen.getAllByRole('slider', { name: /CUTOFF/ })[0];
     const before = cutoff.getAttribute('aria-valuenow');
-    fireEvent.keyDown(cutoff, { key: 'ArrowUp' });
+    // The Default patch has the cutoff all the way up.
+    fireEvent.keyDown(cutoff, { key: 'ArrowDown' });
     expect(cutoff.getAttribute('aria-valuenow')).not.toBe(before);
 
     fireEvent.click(button('Fit the panel to the page'));
@@ -416,10 +420,11 @@ describe('SynthPage engine', () => {
   });
 
   it('sends fresh parameters when the patch changes', () => {
+    storeSound(def, FAT_BASS);
     page();
     const before = paramsSent().at(-1)?.p;
 
-    fireEvent.click(button('Blank patch'));
+    fireEvent.click(button('Default patch'));
 
     const after = paramsSent().at(-1)?.p;
     expect(after).not.toEqual(before);
@@ -468,6 +473,7 @@ describe('SynthPage engine', () => {
   });
 
   it("plays the sound's riff, starting audio first, and stops it", async () => {
+    storeSound(def, FAT_BASS);
     page();
     await act(async () => {
       fireEvent.click(button('Play'));
@@ -513,6 +519,7 @@ describe('SynthPage patch', () => {
   // At `lg` and up the region these use is in its drawer (t-70).
 
   it('counts the controls moved off the sound, and restores the sound', () => {
+    storeSound(def, FAT_BASS);
     page();
     fireEvent.click(button('A-440'));
     expect(screen.getByText('1 control moved')).toBeTruthy();
@@ -586,6 +593,7 @@ describe('SynthPage patch', () => {
   });
 
   it('shows the inspector note the catalogue attached to a control', () => {
+    storeSound(def, FAT_BASS);
     page();
     openSide('Inspect');
     act(() => focusStore.set({ kind: 'control', id: 'filter.cutoff', x: 0, y: 0, tip: false }));
@@ -593,7 +601,7 @@ describe('SynthPage patch', () => {
     expect(screen.getByText('Almost shut for a dull thud.')).toBeTruthy();
   });
 
-  it('Blank patch sets every control to its init and unplugs everything, leaving the sound named', () => {
+  it('Default patch sets the Default patch and unplugs everything, naming it as what is loaded', () => {
     storeSession({
       presetId: 'wobble',
       step: null,
@@ -604,14 +612,14 @@ describe('SynthPage patch', () => {
     expect(button('Unplug all cables')).toBeTruthy();
     expect(screen.queryByText(/controls? moved/)).toBeNull();
 
-    fireEvent.click(button('Blank patch'));
+    fireEvent.click(button('Default patch'));
 
     expect(screen.queryByRole('button', { name: 'Unplug all cables' })).toBeNull();
-    expect(loadedName()).toBe('Wobble lead');
+    expect(loadedName()).toBe('Default patch');
     expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
-      String(def.init['filter.cutoff'])
+      '5'
     );
-    expect(screen.getByText('1 control moved')).toBeTruthy(); // the sound has cutoff at 2
+    expect(screen.queryByText(/controls? moved/)).toBeNull();
   });
 
   it('offers "Unplug all cables" only when there are cables, and it removes them but keeps the knobs', () => {
@@ -869,7 +877,7 @@ describe('SynthPage glides', () => {
     await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('2'), { timeout: 5000 });
   }, 10_000);
 
-  it('Blank patch pulls the cables out first, then turns the oscillators before the filter', async () => {
+  it('Default patch pulls the cables out first, then turns the oscillators before the filter', async () => {
     storeSession({
       presetId: 'wobble',
       step: null,
@@ -880,9 +888,9 @@ describe('SynthPage glides', () => {
     await waitFor(() => expect(button('Unplug all cables')).toBeTruthy(), { timeout: 5000 });
     await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('2'), { timeout: 5000 });
 
-    fireEvent.click(button('Blank patch'));
-    // Saved as blank at once (so it counts from there), shown being set meanwhile.
-    expect(screen.getByText('1 control moved')).toBeTruthy();
+    fireEvent.click(button('Default patch'));
+    // Saved as the Default patch at once (so it counts from there), shown being set meanwhile.
+    expect(screen.queryByText(/controls? moved/)).toBeNull();
     expect(valueOf(/^TUNE/)).toBe('2');
 
     await waitFor(
@@ -894,9 +902,7 @@ describe('SynthPage glides', () => {
     expect(valueOf(/^TUNE/)).toBe(String(def.init['ctl.tune']));
     // Only the controls move: nothing is lit around them.
     expect(highlightStore.get()).toEqual([]);
-    await waitFor(() => expect(valueOf(/CUTOFF/)).toBe(String(def.init['filter.cutoff'])), {
-      timeout: 3000,
-    });
+    await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('5'), { timeout: 3000 });
   }, 15_000);
 
   it('runs a whole glide without the page chaining an update onto every frame', async () => {
@@ -911,10 +917,8 @@ describe('SynthPage glides', () => {
     });
     page();
     await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('2'), { timeout: 5000 });
-    fireEvent.click(button('Blank patch'));
-    await waitFor(() => expect(valueOf(/CUTOFF/)).toBe(String(def.init['filter.cutoff'])), {
-      timeout: 5000,
-    });
+    fireEvent.click(button('Default patch'));
+    await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('5'), { timeout: 5000 });
     await new Promise((r) => setTimeout(r, 500));
     const loops = err.mock.calls.filter((c) => String(c[0]).includes('Maximum update depth'));
     expect(loops).toEqual([]);
@@ -1359,13 +1363,14 @@ describe('SynthPage session', () => {
   });
 
   it('writes the panel to kys.session.model-d once it has been still for the write delay', () => {
+    storeSound(def, FAT_BASS);
     page();
     fireEvent.click(button('A-440'));
 
     act(() => {
       vi.advanceTimersByTime(SESSION_WRITE_DELAY_MS - 1);
     });
-    expect(readStored(SESSION_KEY)).toBeNull();
+    expect(readStored(SESSION_KEY)).toMatchObject({ values: { 'out.a440': false } });
 
     act(() => {
       vi.advanceTimersByTime(1);
@@ -1445,10 +1450,10 @@ describe('SynthPage session', () => {
     expect(screen.getByText('1 control moved')).toBeTruthy(); // mix.osc1 is 3, the sound leaves it at 8
   });
 
-  it('starts from the first sound when the stored session is not usable', () => {
+  it('starts from the Default patch when the stored session is not usable', () => {
     window.localStorage.setItem(SESSION_KEY, '{"presetId": 7}');
     page();
-    expect(loadedName()).toBe('Fat bass');
+    expect(loadedName()).toBe('Default patch');
     expect(screen.queryByText(/controls? moved/)).toBeNull();
   });
 
@@ -1532,7 +1537,10 @@ describe('SynthPage player', () => {
       { title: 'Close the filter', module: 'filter', why: 'Dark.', set: { 'filter.cutoff': -2 } },
     ],
   });
-  const twoSteps = () => page({ detail: { ...detail, sounds: [TWO_STEPS] } });
+  const twoSteps = () => {
+    storeSound(def, TWO_STEPS);
+    return page({ detail: { ...detail, sounds: [TWO_STEPS] } });
+  };
   const cutoff = () =>
     screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow');
   const player = () => screen.getByRole('region', { name: 'Model D panel' });
@@ -1687,7 +1695,9 @@ describe('SynthPage player', () => {
   });
 
   it('has no chapters or step buttons for a sound with no steps', () => {
-    page({ detail: { ...detail, sounds: [{ ...FAT_BASS, steps: [] }] } });
+    const stepless = { ...FAT_BASS, steps: [] };
+    storeSound(def, stepless);
+    page({ detail: { ...detail, sounds: [stepless] } });
     expect(screen.queryByRole('list', { name: 'Lesson steps' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Start the lesson' })).toBeNull();
     expect(button('Play')).toBeTruthy();
@@ -1771,6 +1781,7 @@ describe('SynthPage riff and engine events', () => {
   });
 
   it('plays the riff again when "Restore patch" is pressed while it plays', async () => {
+    storeSound(def, FAT_BASS);
     page();
     await act(async () => {
       fireEvent.click(button('Play'));
@@ -1844,42 +1855,46 @@ describe('SynthPage sounds', () => {
 
   const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
 
-  it('with no sounds it opens on a blank patch with nothing to restore or play', () => {
+  it('with no sounds it opens on the Default patch, which plays its scale', async () => {
     page({ detail: { ...detail, sounds: [] } });
-    expect(loadedName()).toBe('Blank patch');
+    expect(loadedName()).toBe('Default patch');
     expect(screen.queryByRole('button', { name: 'Restore patch' })).toBeNull();
-    expect(screen.queryByRole('button', { name: 'Play' })).toBeNull();
     expect(screen.queryByText(/controls? moved/)).toBeNull();
+    await act(async () => {
+      fireEvent.click(button('Play'));
+    });
+    expect(engine.send).toHaveBeenCalledWith({ type: 'phrase', phrase: SCALE_PHRASE });
   });
 
-  it('with no sounds the fresh session has no sound id, a moved control counts against the init, and there is still nothing to restore', () => {
+  it('with no sounds the fresh session is the Default patch, which a moved control counts against and Restore puts back', () => {
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
     page({ detail: { ...detail, sounds: [] } });
     fireEvent.click(button('A-440'));
     act(() => {
       vi.advanceTimersByTime(SESSION_WRITE_DELAY_MS);
     });
-    expect(readStored(SESSION_KEY)).toMatchObject({ presetId: null, step: null });
+    expect(readStored(SESSION_KEY)).toMatchObject({ presetId: 'default-patch', step: null });
     expect(screen.getByText('1 control moved')).toBeTruthy();
-    expect(screen.queryByRole('button', { name: 'Restore patch' })).toBeNull();
+    fireEvent.click(button('Restore patch'));
+    expect(screen.queryByText(/controls? moved/)).toBeNull();
   });
 
-  it('falls back to the first sound when the stored sound is not in the list', () => {
+  it('falls back to the Default patch when the stored sound is not in the list', () => {
     storeSession({ presetId: 'gone', step: null, values: {}, cables: [] });
     page();
-    expect(loadedName()).toBe('Fat bass');
-    // The first sound is the target: the stored cutoff (init 1) is off its -2.
+    expect(loadedName()).toBe('Default patch');
+    // The Default patch is the target: the stored cutoff (init 1) is off its 5.
     expect(screen.getByText(/moved/)).toBeTruthy();
 
     fireEvent.click(button('Restore patch'));
 
     expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
-      '-2'
+      '5'
     );
     expect(screen.queryByText(/moved/)).toBeNull();
   });
 
-  it("puts a control back to the first sound's value when the stored sound is unknown", () => {
+  it("puts a control back to the Default patch's value when the stored sound is unknown", () => {
     storeSession({ presetId: 'gone', step: null, values: { 'filter.cutoff': 3 }, cables: [] });
     page();
     openSide('Inspect');
@@ -1888,7 +1903,7 @@ describe('SynthPage sounds', () => {
     fireEvent.click(button('Put it back'));
 
     expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
-      '-2'
+      '5'
     );
   });
 });
