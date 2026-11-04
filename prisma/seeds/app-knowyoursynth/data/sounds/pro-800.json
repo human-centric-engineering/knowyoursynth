@@ -50,7 +50,8 @@
             "aenv.sustain": 10,
             "aenv.release": 4.5,
             "vcf.cutoff": 7.4,
-            "vcf.res": 1.5
+            "vcf.res": 1.5,
+            "vcf.kbd": "half"
           }
         },
         {
@@ -187,7 +188,7 @@
           "title": "Close the filter part way",
           "module": "filter",
           "why": "The filter is closed part way so the chords are darker between stabs. That gives the filter envelope room to open it again, which is where the brass bite comes from.\n- CUTOFF 4.5 (396 Hz): the 24 dB low-pass filter now cuts a lot of the buzz. Lower gives a muted horn; higher, a brighter, harder one.\n- RESONANCE 1: a slight boost at the cutoff, just enough edge for the bite to be noticed.\n- ENVELOPE AMOUNT +2.5: how far the filter envelope pushes the cutoff up on each stab. Lower for a softer horn section, higher for more bite.\n- Listen for: a brief brightening at the front of each chord. Half keyboard tracking (the default) stops the top notes going dull.",
-          "set": { "vcf.cutoff": 4.5, "vcf.res": 1, "vcf.env": 2.5 }
+          "set": { "vcf.cutoff": 4.5, "vcf.res": 1, "vcf.env": 2.5, "vcf.kbd": "half" }
         },
         {
           "title": "Let the filter envelope open it",
@@ -255,7 +256,7 @@
           "title": "Nearly close the filter",
           "module": "filter",
           "why": "The filter is nearly closed so the bass is a dull thud at rest. The 24 dB low-pass filter cuts the highs steeply, and the filter envelope will open it on each note in the next step.\n- CUTOFF 3.6 (208 Hz): very low, so most of the sawtooth’s buzz is gone and the sub-octave dominates.\n- RESONANCE 3: a boost at the cutoff that gives each pluck a ring. More and it starts to squelch.\n- ENVELOPE AMOUNT +2.2: how far the filter envelope opens the filter on each note.\n- Listen for: a dark, thumping note with a small brightening at the start (the envelope still has its default shape).",
-          "set": { "vcf.cutoff": 3.6, "vcf.res": 3, "vcf.env": 2.2 }
+          "set": { "vcf.cutoff": 3.6, "vcf.res": 3, "vcf.env": 2.2, "vcf.kbd": "half" }
         },
         {
           "title": "Pluck each note",
@@ -422,7 +423,7 @@
           "title": "Soften the filter",
           "module": "filter",
           "why": "The filter smooths the top so the strings are soft rather than buzzy, and sit under a vocal or lead.\n- CUTOFF 6 (1.2 kHz): down from the default 2.4 kHz, taking the fizz off. Lower goes muffled; higher, brighter and more cutting.\n- Listen for: a smoother, warmer chord with the shimmer still clear.",
-          "set": { "vcf.cutoff": 6 }
+          "set": { "vcf.cutoff": 6, "vcf.kbd": "half" }
         },
         {
           "title": "Swell in, fade out",
@@ -496,7 +497,8 @@
             "fenv.attack": 0,
             "fenv.decay": 4.8,
             "fenv.sustain": 1.5,
-            "fenv.release": 4
+            "fenv.release": 4,
+            "vcf.kbd": "half"
           }
         },
         {
@@ -571,7 +573,8 @@
             "aenv.attack": 0,
             "aenv.decay": 5,
             "aenv.sustain": 7,
-            "aenv.release": 4.5
+            "aenv.release": 4.5,
+            "vcf.kbd": "half"
           }
         },
         {
@@ -650,7 +653,8 @@
             "aenv.attack": 1.5,
             "aenv.decay": 5,
             "aenv.sustain": 9,
-            "aenv.release": 4.5
+            "aenv.release": 4.5,
+            "vcf.kbd": "half"
           }
         }
       ],
@@ -704,7 +708,7 @@
           "title": "An open filter, inverted envelope",
           "module": "filter",
           "why": "The filter starts open and the envelope is turned upside down. Right of the middle, ENVELOPE AMOUNT opens the filter as the envelope rises; left of the middle, it closes it.\n- CUTOFF 7.2 (2.7 kHz): well up, so chords start bright.\n- RESONANCE 2.5: a small boost at the cutoff that makes the sweep easier to hear.\n- ENVELOPE AMOUNT −2.5: the filter envelope now pulls the cutoff down. Turn it right and the swell goes the usual way.\n- Listen for: a quick dip in brightness at the start of each chord (the envelope is still fast until the next step).",
-          "set": { "vcf.cutoff": 7.2, "vcf.res": 2.5, "vcf.env": -2.5 }
+          "set": { "vcf.cutoff": 7.2, "vcf.res": 2.5, "vcf.env": -2.5, "vcf.kbd": "half" }
         },
         {
           "title": "A slow filter envelope",
@@ -900,7 +904,7 @@
           "title": "A resonant filter",
           "module": "filter",
           "why": "A resonant filter gives the lead its vocal quality. The 24 dB low-pass filter cuts the highs, and RESONANCE boosts the band at the cutoff.\n- CUTOFF 5 (566 Hz): in the middle, so the sound is neither dull nor harsh.\n- RESONANCE 5.5: a strong peak at the cutoff. The higher it goes, the more the sweep will sound like a voice.\n- Listen for: a slightly honky, nasal note.",
-          "set": { "vcf.cutoff": 5, "vcf.res": 5.5 }
+          "set": { "vcf.cutoff": 5, "vcf.res": 5.5, "vcf.kbd": "half" }
         },
         {
           "title": "Let the LFO wah it",
@@ -947,7 +951,7 @@
           "title": "A whistling filter",
           "module": "filter",
           "why": "High resonance picks one band out of the noise and makes it whistle, so the hiss starts to sound like wind.\n- CUTOFF 5.4 (752 Hz): sets where that band sits. Lower is a deep rumble; higher, a thin whistle.\n- RESONANCE 7.5: a strong peak at the cutoff. How much the wind whistles; lower is a plain hiss.\n- Listen for: a howling tone inside the noise.",
-          "set": { "vcf.cutoff": 5.4, "vcf.res": 7.5 }
+          "set": { "vcf.cutoff": 5.4, "vcf.res": 7.5, "vcf.kbd": "half" }
         },
         {
           "title": "Gusts",
@@ -991,7 +995,7 @@
           "title": "A bright tone",
           "module": "osc",
           "why": "A bright, simple tone makes the alarm cut through.\n- OSC A sawtooth off, pulse on: a square wave, hollow and piercing.\n- CUTOFF 7.5 (3.4 kHz): open, so the tone stays bright.\n- Listen for: a harder, more electronic alarm than the sawtooth. Flip SHAPE to TRIANGLE for a wailing siren.",
-          "set": { "osc1.saw": false, "osc1.pulse": true, "vcf.cutoff": 7.5 }
+          "set": { "osc1.saw": false, "osc1.pulse": true, "vcf.cutoff": 7.5, "vcf.kbd": "half" }
         }
       ],
       "context": {
@@ -1059,7 +1063,8 @@
             "aenv.attack": 1,
             "aenv.decay": 5,
             "aenv.sustain": 10,
-            "aenv.release": 5
+            "aenv.release": 5,
+            "vcf.kbd": "half"
           }
         }
       ],
@@ -1183,7 +1188,8 @@
             "aenv.release": 4.6,
             "osc1.level": 7.5,
             "vcf.cutoff": 6.6,
-            "vcf.res": 3
+            "vcf.res": 3,
+            "vcf.kbd": "half"
           }
         }
       ],
@@ -1308,7 +1314,8 @@
             "fenv.attack": 0,
             "fenv.decay": 5,
             "fenv.sustain": 1.5,
-            "fenv.release": 4.5
+            "fenv.release": 4.5,
+            "vcf.kbd": "half"
           }
         },
         {
@@ -1364,7 +1371,8 @@
             "vcf.res": 3.5,
             "lfo.filter": true,
             "lfo.rate": 0.8,
-            "lfo.amount": 4
+            "lfo.amount": 4,
+            "vcf.kbd": "half"
           }
         },
         {
@@ -1425,7 +1433,8 @@
             "lfo.rate": 2.8,
             "lfo.amount": 4.5,
             "vcf.cutoff": 5.2,
-            "vcf.res": 3.5
+            "vcf.res": 3.5,
+            "vcf.kbd": "half"
           }
         },
         {

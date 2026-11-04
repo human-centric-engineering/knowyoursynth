@@ -48,7 +48,7 @@
           "title": "Combination mode and a little reverb",
           "module": "filter",
           "why": "Gate 1 in combination mode both opens a filter and raises the volume, so as the envelope falls the note darkens and fades together.\n- Gate 1 mode select: combination.\n- REVERBERATION 3.\n- Listen for: each note dulling as it dies, with a short spring tail.",
-          "set": { "lpg1.mode": "combo", "out.rev": 3 }
+          "set": { "lpg1.mode": "combo", "out.rev": 3, "out.a": 8 }
         }
       ],
       "context": {
@@ -119,7 +119,7 @@
           "title": "A touch of room",
           "module": "fx",
           "why": "Some spring reverberation puts the plucks in a space.\n- REVERBERATION 3.",
-          "set": { "out.rev": 3 }
+          "set": { "out.rev": 3, "out.a": 8 }
         }
       ],
       "context": {
@@ -189,7 +189,7 @@
           "title": "A slower decay",
           "module": "env",
           "why": "Pull the decay slider down so the tone takes its time to soften.\n- decay 3.5.\n- REVERBERATION 3.",
-          "set": { "env.decay": 3.5, "out.rev": 3 }
+          "set": { "env.decay": 3.5, "out.rev": 3, "out.a": 8 }
         }
       ],
       "context": {
@@ -276,7 +276,7 @@
           "title": "Rests and reverb",
           "module": "mod",
           "why": "Each stage sends a pulse to the envelope only if its PULSE SEQUENCE switch is up. Set the envelope to fire from the sequencer and switch stage 4 down for a rest.\n- Envelope trigger source sequencer.\n- PULSE SEQUENCE 4 down.\n- REVERBERATION 4.\n- Listen for: a gap where the fourth note was.",
-          "set": { "env.trig": "seq", "seq.p4": false, "out.rev": 4 }
+          "set": { "env.trig": "seq", "seq.p4": false, "out.rev": 4, "out.a": 8 }
         }
       ],
       "context": {
@@ -349,7 +349,7 @@
           "title": "The envelope on the index",
           "module": "lfo",
           "why": "A second orange jack into the black modulation jack, with its processing slider at 6. The FM is deepest at the strike and fades with the envelope.\n- Cord: envelope 1 → modulation input.\n- modulation processing 6.\n- Listen for: a bright, clangy strike that settles into a purer tone.",
-          "set": { "mosc.indexCv": 6, "out.rev": 4 },
+          "set": { "mosc.indexCv": 6, "out.rev": 4, "out.a": 8 },
           "cables": [["j.env1", "j.index"]]
         }
       ],
@@ -430,7 +430,8 @@
             "mosc.kbd": true,
             "mosc.freq": 5.2,
             "mosc.index": 10,
-            "out.rev": 3
+            "out.rev": 3,
+            "out.a": 8
           }
         }
       ],
@@ -471,7 +472,9 @@
             "pulser.trig": "self",
             "pulser.mode": "trans",
             "pulser.period": 6.8,
-            "rvs.trig": "pulser"
+            "rvs.trig": "pulser",
+            "env.attack": 9,
+            "env.decay": 5
           }
         },
         {
@@ -495,8 +498,15 @@
           "title": "Random loudness",
           "module": "filter",
           "why": "Random 3 into LEVEL 1, so each new note has its own loudness and brightness; some are almost silent.\n- Cord: random 3 → LEVEL 1, processing 9.\n- Gate 1 combination.\n- REVERBERATION 5.\n- Listen for: an endless, chattering stream of notes, each one different.",
-          "set": { "lpg1.levelCv": 9, "lpg1.level": 0, "lpg1.mode": "combo", "out.rev": 5 },
-          "cables": [["j.rnd3", "j.lvl1"]]
+          "set": {
+            "lpg1.levelCv": 9,
+            "lpg1.level": 0,
+            "lpg1.mode": "combo",
+            "out.rev": 5,
+            "out.a": 8
+          },
+          "cables": [["j.rnd3", "j.lvl1"]],
+          "unplug": [["j.env3", "j.lvl1"]]
         }
       ],
       "context": {
@@ -626,8 +636,15 @@
             "out.b": 8,
             "lpg2.mode": "lp",
             "lpg2.level": 5,
-            "mosc.mode": "fm"
-          }
+            "mosc.mode": "fm",
+            "cosc.shape": 5,
+            "cosc.timbre": 2,
+            "env.attack": 9,
+            "env.decay": 5,
+            "lpg1.mode": "combo",
+            "lpg1.levelCv": 0
+          },
+          "unplug": [["j.env3", "j.lvl1"]]
         },
         {
           "title": "A slow sweep",
@@ -720,7 +737,8 @@
             "mosc.index": 1,
             "mosc.range": "low",
             "mosc.freq": 3,
-            "out.rev": 5
+            "out.rev": 5,
+            "out.a": 8
           }
         }
       ],
@@ -792,7 +810,7 @@
           "title": "Velocity into TIMBRE",
           "module": "osc",
           "why": "The green vel. jack on the 218e carries how hard the last key was struck. Into the TIMBRE jack it folds the sine further on the harder notes.\n- Cord: vel. → TIMBRE, TIMBRE processing 4.\n- REVERBERATION 2.\n- Listen for: the accented notes of the riff coming out brighter and more knocking than the soft ones.",
-          "set": { "cosc.timbreCv": 4, "out.rev": 2 },
+          "set": { "cosc.timbreCv": 4, "out.rev": 2, "out.a": 8 },
           "cables": [["j.vel", "j.timbre"]]
         }
       ],
@@ -868,7 +886,7 @@
           "title": "The envelope, turned upside down, on the index",
           "module": "util",
           "why": "Patch a second orange jack into the INVERTER’s input and its blue output into the black modulation jack. The inverter gives 10 minus the envelope, so the modulation is lightest at the strike and deepest as the note dies.\n- Cords: envelope 1 → INVERTER input; INVERTER output → modulation input.\n- modulation processing 5.\n- REVERBERATION 5.\n- Listen for: the overtones swelling and churning a second or two after each strike.",
-          "set": { "mosc.indexCv": 5, "out.rev": 5 },
+          "set": { "mosc.indexCv": 5, "out.rev": 5, "out.a": 8 },
           "cables": [
             ["j.env1", "j.invIn"],
             ["j.invOut", "j.index"]
@@ -953,7 +971,8 @@
             "mosc.range": "low",
             "mosc.freq": 6,
             "mosc.wave": "tri",
-            "out.rev": 3
+            "out.rev": 3,
+            "out.a": 8
           }
         }
       ],
@@ -1045,7 +1064,8 @@
             "mosc.kbd": true,
             "mosc.freq": 4.7,
             "mosc.index": 0,
-            "out.rev": 4
+            "out.rev": 4,
+            "out.a": 8
           },
           "cables": [
             ["j.rnd1", "j.timbre"],
@@ -1131,7 +1151,8 @@
             "lpg2.levelCv": 6,
             "lpg2.level": 0,
             "lpg2.mode": "combo",
-            "out.rev": 5
+            "out.rev": 5,
+            "out.a": 8
           },
           "cables": [
             ["j.env1", "j.invIn"],
@@ -1192,9 +1213,12 @@
             "lpg1.mode": "combo",
             "cosc.shape": 3,
             "cosc.wave": "sq",
-            "cosc.timbre": 1
+            "cosc.timbre": 1,
+            "env.attack": 9,
+            "env.decay": 5
           },
-          "cables": [["j.prs1", "j.lvl1"]]
+          "cables": [["j.prs1", "j.lvl1"]],
+          "unplug": [["j.env3", "j.lvl1"]]
         },
         {
           "title": "Pressure on TIMBRE as well",
@@ -1214,7 +1238,8 @@
             "mosc.freq": 5.5,
             "mosc.wave": "tri",
             "kbd.porta": 4,
-            "out.rev": 3
+            "out.rev": 3,
+            "out.a": 8
           }
         }
       ],
@@ -1291,7 +1316,7 @@
           "title": "Glide through the change",
           "module": "glide",
           "why": "A long portamento makes each jump a slide, so you hear the tremolo speed up continuously until it becomes a tone of its own.\n- PORTAMENTO SLOPE 9.\n- REVERBERATION 3.\n- Listen for: a pulse that blurs into a rough, metallic hum as the pitch rises.",
-          "set": { "kbd.porta": 9, "out.rev": 3 }
+          "set": { "kbd.porta": 9, "out.rev": 3, "out.a": 8 }
         }
       ],
       "context": {
@@ -1375,7 +1400,7 @@
           "title": "Preset plates on TIMBRE",
           "module": "mode",
           "why": "Patch the blue PRESET VOLTAGE SOURCE output into TIMBRE. The four knobs are already at 0, 3, 6 and 9; touch plate 3 to start.\n- Cord: preset output → TIMBRE, processing 8.\n- Preset plates: 3.\n- REVERBERATION 4.\n- Listen for: a brighter, folded pluck. Touch plate 1 for plain sines and plate 4 for a hard buzz.",
-          "set": { "cosc.timbreCv": 8, "kbd.plate": 3, "out.rev": 4 },
+          "set": { "cosc.timbreCv": 8, "kbd.plate": 3, "out.rev": 4, "out.a": 8 },
           "cables": [["j.presetOut", "j.timbre"]]
         }
       ],
@@ -1466,7 +1491,8 @@
             "lpg2.levelCv": 5,
             "lpg2.level": 0,
             "out.b": 4,
-            "out.rev": 2
+            "out.rev": 2,
+            "out.a": 8
           },
           "cables": [["j.pul3", "j.lvl2"]]
         }
@@ -1556,7 +1582,7 @@
           "title": "An accent on the long beat",
           "module": "util",
           "why": "Sequencer 2 into the INVERTER and the inverter into TIMBRE. Stage 1 is at 0, so the inverter gives 10 there and about 5 on the short beats.\n- Cords: sequencer 2 → INVERTER input; INVERTER output → TIMBRE, processing 6.\n- REVERBERATION 3.\n- Listen for: a bright, buzzy note on the one and softer notes after it.",
-          "set": { "cosc.timbreCv": 6, "out.rev": 3 },
+          "set": { "cosc.timbreCv": 6, "out.rev": 3, "out.a": 8 },
           "cables": [
             ["j.seq2", "j.invIn"],
             ["j.invOut", "j.timbre"]

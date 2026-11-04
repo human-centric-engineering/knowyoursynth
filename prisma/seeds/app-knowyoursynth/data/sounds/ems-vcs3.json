@@ -104,6 +104,10 @@
           "cables": [
             ["r.noise", "c.vcf"],
             ["r.vcf", "c.env"]
+          ],
+          "unplug": [
+            ["r.osc1ramp", "c.env"],
+            ["r.in1", "c.osc1"]
           ]
         },
         {
@@ -190,8 +194,16 @@
             "osc1.sine": 6,
             "vcf.freq": 5.2,
             "vcf.response": 7,
-            "vcf.level": 6
-          }
+            "vcf.level": 6,
+            "osc1.ramp": 0,
+            "env.on": 2,
+            "env.decay": 4,
+            "env.sigLevel": 0
+          },
+          "unplug": [
+            ["r.osc1ramp", "c.env"],
+            ["r.in1", "c.osc1"]
+          ]
         },
         {
           "title": "Into the ring modulator",
@@ -203,6 +215,10 @@
             ["r.vcf", "c.ringB"],
             ["r.ring", "c.out1"],
             ["r.ring", "c.out2"]
+          ],
+          "unplug": [
+            ["r.envsig", "c.out1"],
+            ["r.envsig", "c.out2"]
           ]
         },
         {
@@ -252,7 +268,8 @@
             "osc1.sine": 6,
             "osc2.square": 5,
             "osc2.tri": 6,
-            "ring.level": 7
+            "ring.level": 7,
+            "osc1.ramp": 0
           },
           "cables": [
             ["r.osc1sine", "c.ringA"],
@@ -278,7 +295,8 @@
             ["r.ring", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc1ramp", "c.env"]]
         },
         {
           "title": "Reverb on the other side",
@@ -288,7 +306,8 @@
           "cables": [
             ["r.vcf", "c.rev"],
             ["r.rev", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.envsig", "c.out1"]]
         },
         {
           "title": "The joystick tunes the bell",
@@ -298,7 +317,8 @@
           "cables": [
             ["r.joyy", "c.osc1"],
             ["r.joyx", "c.osc2"]
-          ]
+          ],
+          "unplug": [["r.in1", "c.osc1"]]
         }
       ],
       "context": {
@@ -341,12 +361,21 @@
             "osc1.ramp": 5,
             "vcf.freq": 5.5,
             "vcf.response": 5.8,
-            "vcf.level": 7
+            "vcf.level": 7,
+            "env.on": 2,
+            "env.decay": 4,
+            "env.sigLevel": 0
           },
           "cables": [
             ["r.osc1ramp", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc1ramp", "c.env"],
+            ["r.envsig", "c.out1"],
+            ["r.envsig", "c.out2"],
+            ["r.in1", "c.osc1"]
           ]
         },
         {
@@ -400,13 +429,26 @@
           "title": "Oscillator 1 on both sides, from the keys",
           "module": "osc",
           "why": "Sine and ramp mixed by pinning both rows to both outputs, and the keyboard on Oscillator 1.\n- Pins B1, B2, C1, C2 and I8.\n- Oscillator 1 sine LEVEL 6, ramp LEVEL 3: mostly sine, a little edge.\n- INPUT LEVEL CHANNEL 1 at 5.\n- Listen for: a plain tone in both speakers, following the keys.",
-          "set": { "osc1.sine": 6, "osc1.ramp": 3, "osc1.freq": 6, "in.ch1": 5 },
+          "set": {
+            "osc1.sine": 6,
+            "osc1.ramp": 3,
+            "osc1.freq": 6,
+            "in.ch1": 5,
+            "env.on": 2,
+            "env.decay": 4,
+            "env.sigLevel": 0
+          },
           "cables": [
             ["r.osc1sine", "c.out1"],
             ["r.osc1ramp", "c.out1"],
             ["r.osc1sine", "c.out2"],
             ["r.osc1ramp", "c.out2"],
             ["r.in1", "c.osc1"]
+          ],
+          "unplug": [
+            ["r.osc1ramp", "c.env"],
+            ["r.envsig", "c.out1"],
+            ["r.envsig", "c.out2"]
           ]
         },
         {
@@ -484,7 +526,8 @@
             "env.off": 2.5,
             "env.sigLevel": 8
           },
-          "cables": [["r.ring", "c.env"]]
+          "cables": [["r.ring", "c.env"]],
+          "unplug": [["r.osc1ramp", "c.env"]]
         },
         {
           "title": "Through the spring reverb",
@@ -495,6 +538,10 @@
             ["r.envsig", "c.rev"],
             ["r.rev", "c.out1"],
             ["r.rev", "c.out2"]
+          ],
+          "unplug": [
+            ["r.envsig", "c.out1"],
+            ["r.envsig", "c.out2"]
           ]
         },
         {
@@ -505,7 +552,8 @@
           "cables": [
             ["r.joyx", "c.osc1"],
             ["r.joyy", "c.osc2"]
-          ]
+          ],
+          "unplug": [["r.in1", "c.osc1"]]
         }
       ],
       "context": {
@@ -553,7 +601,7 @@
           "title": "Make the filter whistle",
           "module": "filter",
           "why": "Nothing goes into the filter: RESPONSE 8 makes it oscillate on its own.\n- Filter FREQUENCY 5.2 (about middle C), RESPONSE 8, LEVEL 5.\n- Not heard yet: the filter’s row is not pinned.",
-          "set": { "vcf.freq": 5.2, "vcf.response": 8, "vcf.level": 5 }
+          "set": { "vcf.freq": 5.2, "vcf.response": 8, "vcf.level": 5, "osc1.ramp": 0 }
         },
         {
           "title": "Shape it and send it out",
@@ -570,14 +618,16 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc1ramp", "c.env"]]
         },
         {
           "title": "Play it from the keys",
           "module": "util",
           "why": "The keyboard voltage (row 8) into the filter frequency (N8).\n- Pin N8.\n- INPUT LEVEL CHANNEL 1 at 3.1: the filter moves an octave for every 0.2 V, more than the oscillators, so it needs less voltage to stay in tune.\n- Listen for: a clean melody. If it drifts out of tune going up, nudge INPUT LEVEL CHANNEL 1.",
           "set": { "in.ch1": 3.1 },
-          "cables": [["r.in1", "c.cutoff"]]
+          "cables": [["r.in1", "c.cutoff"]],
+          "unplug": [["r.in1", "c.osc1"]]
         }
       ],
       "context": {
@@ -630,14 +680,18 @@
             "in.ch1": 5,
             "vcf.freq": 5,
             "vcf.response": 5,
-            "vcf.level": 7
+            "vcf.level": 7,
+            "env.on": 2,
+            "env.decay": 4,
+            "env.sigLevel": 0
           },
           "cables": [
             ["r.osc1ramp", "c.vcf"],
             ["r.osc2sq", "c.vcf"],
             ["r.in1", "c.osc1"],
             ["r.in1", "c.osc2"]
-          ]
+          ],
+          "unplug": [["r.osc1ramp", "c.env"]]
         },
         {
           "title": "Into the reverb and out",
@@ -648,6 +702,10 @@
             ["r.vcf", "c.rev"],
             ["r.rev", "c.out1"],
             ["r.rev", "c.out2"]
+          ],
+          "unplug": [
+            ["r.envsig", "c.out1"],
+            ["r.envsig", "c.out2"]
           ]
         },
         {
@@ -710,14 +768,16 @@
             "osc1.sine": 5,
             "osc2.freq": 6,
             "osc2.square": 5,
-            "in.ch1": 5
+            "in.ch1": 5,
+            "osc1.ramp": 0
           },
           "cables": [
             ["r.osc1sine", "c.vcf"],
             ["r.osc2sq", "c.vcf"],
             ["r.in1", "c.osc1"],
             ["r.in1", "c.osc2"]
-          ]
+          ],
+          "unplug": [["r.osc1ramp", "c.env"]]
         },
         {
           "title": "A dark filter to both outputs",
@@ -727,13 +787,24 @@
           "cables": [
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.envsig", "c.out1"],
+            ["r.envsig", "c.out2"]
           ]
         },
         {
           "title": "The trapezoid pulses the filter",
           "module": "env",
           "why": "The envelope’s own voltage, row 11, into the filter frequency (N11). The envelope repeats on its own about five times a second.\n- Pin N11.\n- TRAPEZOID LEVEL 4: the knob marked 11. Turning it up both deepens the pulse and closes the filter further between pulses.\n- ATTACK 0, ON 1, DECAY 4, OFF 2: a fast rise, a short hold, a quick fall and a short rest.\n- Listen for: the organ chopped into even, bright pulses.",
-          "set": { "env.trapLevel": 4, "env.attack": 0, "env.on": 1, "env.decay": 4, "env.off": 2 },
+          "set": {
+            "env.trapLevel": 4,
+            "env.attack": 0,
+            "env.on": 1,
+            "env.decay": 4,
+            "env.off": 2,
+            "env.sigLevel": 0
+          },
           "cables": [["r.trap", "c.cutoff"]]
         }
       ],
@@ -778,12 +849,16 @@
             "osc2.square": 5,
             "vcf.freq": 6.5,
             "vcf.response": 3,
-            "vcf.level": 8
+            "vcf.level": 8,
+            "env.on": 2,
+            "env.decay": 4,
+            "env.sigLevel": 0
           },
           "cables": [
             ["r.osc1ramp", "c.vcf"],
             ["r.osc2sq", "c.vcf"]
-          ]
+          ],
+          "unplug": [["r.osc1ramp", "c.env"]]
         },
         {
           "title": "Into the reverb",
@@ -794,6 +869,10 @@
             ["r.vcf", "c.rev"],
             ["r.rev", "c.out1"],
             ["r.rev", "c.out2"]
+          ],
+          "unplug": [
+            ["r.envsig", "c.out1"],
+            ["r.envsig", "c.out2"]
           ]
         },
         {
@@ -804,7 +883,8 @@
           "cables": [
             ["r.osc3tri", "c.osc1"],
             ["r.osc3tri", "c.osc2"]
-          ]
+          ],
+          "unplug": [["r.in1", "c.osc1"]]
         }
       ],
       "context": {
@@ -841,11 +921,25 @@
           "title": "Oscillator 1 into the reverb",
           "module": "osc",
           "why": "Oscillator 1’s sine into the reverb, and the reverb to both outputs.\n- Pins G1, B14 and C14.\n- Oscillator 1 FREQUENCY 6.5 (440 Hz), sine LEVEL 6.\n- Reverb MIX 5, LEVEL 8.\n- Listen for: a plain whistle in a spring room.",
-          "set": { "osc1.freq": 6.5, "osc1.sine": 6, "rev.mix": 5, "rev.level": 8 },
+          "set": {
+            "osc1.freq": 6.5,
+            "osc1.sine": 6,
+            "rev.mix": 5,
+            "rev.level": 8,
+            "osc1.ramp": 0,
+            "env.on": 2,
+            "env.decay": 4,
+            "env.sigLevel": 0
+          },
           "cables": [
             ["r.osc1sine", "c.rev"],
             ["r.rev", "c.out1"],
             ["r.rev", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc1ramp", "c.env"],
+            ["r.envsig", "c.out1"],
+            ["r.envsig", "c.out2"]
           ]
         },
         {
@@ -853,7 +947,8 @@
           "module": "mod",
           "why": "Oscillator 2’s triangle into Oscillator 1’s frequency (I4).\n- Oscillator 2 FREQUENCY 2.5 (7 Hz), triangle LEVEL 4: a wide, fast warble.\n- Listen for: a bird-like trill.",
           "set": { "osc2.freq": 2.5, "osc2.tri": 4 },
-          "cables": [["r.osc2tri", "c.osc1"]]
+          "cables": [["r.osc2tri", "c.osc1"]],
+          "unplug": [["r.in1", "c.osc1"]]
         },
         {
           "title": "Close the loop",
@@ -913,11 +1008,12 @@
           "title": "A pulse wave from the keys",
           "module": "osc",
           "why": "Oscillator 2’s square into the filter, following the keyboard.\n- Pins H3 and J8.\n- Oscillator 2 FREQUENCY 6 (middle C on the keys), square LEVEL 6, SHAPE 3: a narrower pulse, more nasal than a square.\n- INPUT LEVEL CHANNEL 1 at 5.",
-          "set": { "osc2.freq": 6, "osc2.square": 6, "osc2.shape": 3, "in.ch1": 5 },
+          "set": { "osc2.freq": 6, "osc2.square": 6, "osc2.shape": 3, "in.ch1": 5, "osc1.ramp": 0 },
           "cables": [
             ["r.osc2sq", "c.vcf"],
             ["r.in1", "c.osc2"]
-          ]
+          ],
+          "unplug": [["r.in1", "c.osc1"]]
         },
         {
           "title": "Short notes through the envelope",
@@ -937,7 +1033,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc1ramp", "c.env"]]
         },
         {
           "title": "The trapezoid opens the filter",
@@ -986,9 +1083,17 @@
             "noise.colour": 4,
             "vcf.freq": 6.5,
             "vcf.response": 6.3,
-            "vcf.level": 7
+            "vcf.level": 7,
+            "osc1.ramp": 0,
+            "env.on": 2,
+            "env.decay": 4,
+            "env.sigLevel": 0
           },
-          "cables": [["r.noise", "c.vcf"]]
+          "cables": [["r.noise", "c.vcf"]],
+          "unplug": [
+            ["r.osc1ramp", "c.env"],
+            ["r.in1", "c.osc1"]
+          ]
         },
         {
           "title": "Into the reverb and out",
@@ -999,6 +1104,10 @@
             ["r.vcf", "c.rev"],
             ["r.rev", "c.out1"],
             ["r.rev", "c.out2"]
+          ],
+          "unplug": [
+            ["r.envsig", "c.out1"],
+            ["r.envsig", "c.out2"]
           ]
         },
         {
@@ -1061,14 +1170,16 @@
             "env.decay": 3,
             "env.off": 1.5,
             "env.sigLevel": 8,
-            "in.ch1": 5
+            "in.ch1": 5,
+            "osc1.ramp": 0
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"],
             ["r.in1", "c.osc1"]
-          ]
+          ],
+          "unplug": [["r.osc1ramp", "c.env"]]
         },
         {
           "title": "A fifth from Oscillator 2",
@@ -1210,12 +1321,14 @@
             "in.ch1": 5,
             "vcf.freq": 6.5,
             "vcf.response": 5,
-            "vcf.level": 8
+            "vcf.level": 8,
+            "osc1.ramp": 0
           },
           "cables": [
             ["r.osc2sq", "c.vcf"],
             ["r.in1", "c.osc2"]
-          ]
+          ],
+          "unplug": [["r.in1", "c.osc1"]]
         },
         {
           "title": "Shape the loudness",
@@ -1232,7 +1345,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc1ramp", "c.env"]]
         },
         {
           "title": "The trapezoid sweeps the filter",
@@ -1276,10 +1390,24 @@
           "title": "One oscillator on each side",
           "module": "osc",
           "why": "Oscillator 1’s sine to channel 1 (left), Oscillator 2’s triangle to channel 2 (right).\n- Pins B1 and C4.\n- Oscillator 1 FREQUENCY 6, sine LEVEL 6. Oscillator 2 FREQUENCY 6.4, triangle LEVEL 6: about a fifth above.\n- Listen for: two steady tones, one in each speaker.",
-          "set": { "osc1.freq": 6, "osc1.sine": 6, "osc2.freq": 6.4, "osc2.tri": 6 },
+          "set": {
+            "osc1.freq": 6,
+            "osc1.sine": 6,
+            "osc2.freq": 6.4,
+            "osc2.tri": 6,
+            "osc1.ramp": 0,
+            "env.on": 2,
+            "env.decay": 4,
+            "env.sigLevel": 0
+          },
           "cables": [
             ["r.osc1sine", "c.out1"],
             ["r.osc2tri", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc1ramp", "c.env"],
+            ["r.envsig", "c.out1"],
+            ["r.envsig", "c.out2"]
           ]
         },
         {
@@ -1290,7 +1418,8 @@
           "cables": [
             ["r.joyx", "c.osc1"],
             ["r.joyy", "c.osc2"]
-          ]
+          ],
+          "unplug": [["r.in1", "c.osc1"]]
         }
       ],
       "context": {
@@ -1342,7 +1471,8 @@
             "osc1.sine": 6,
             "osc2.freq": 7.87,
             "osc2.tri": 6,
-            "ring.level": 7
+            "ring.level": 7,
+            "osc1.ramp": 0
           },
           "cables": [
             ["r.osc1sine", "c.ringA"],
@@ -1374,7 +1504,8 @@
             ["r.ring", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc1ramp", "c.env"]]
         },
         {
           "title": "Spring reverb on the right",
@@ -1422,7 +1553,8 @@
           "title": "The filter as a sine oscillator",
           "module": "filter",
           "why": "Nothing goes into the filter: with RESPONSE 8 it whistles by itself.\n- Filter FREQUENCY 6.5 (700 Hz), RESPONSE 8, LEVEL 5.\n- Listen for: nothing yet. Row 10 is not pinned anywhere.",
-          "set": { "vcf.freq": 6.5, "vcf.response": 8, "vcf.level": 5 }
+          "set": { "vcf.freq": 6.5, "vcf.response": 8, "vcf.level": 5, "osc1.ramp": 0 },
+          "unplug": [["r.in1", "c.osc1"]]
         },
         {
           "title": "A slow repeating envelope",
@@ -1442,6 +1574,11 @@
             ["r.envsig", "c.rev"],
             ["r.rev", "c.out1"],
             ["r.rev", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc1ramp", "c.env"],
+            ["r.envsig", "c.out1"],
+            ["r.envsig", "c.out2"]
           ]
         },
         {
@@ -1506,12 +1643,16 @@
             "osc2.square": 5,
             "vcf.freq": 7,
             "vcf.response": 4,
-            "vcf.level": 8
+            "vcf.level": 8,
+            "env.on": 2,
+            "env.decay": 4,
+            "env.sigLevel": 0
           },
           "cables": [
             ["r.osc1ramp", "c.vcf"],
             ["r.osc2sq", "c.vcf"]
-          ]
+          ],
+          "unplug": [["r.osc1ramp", "c.env"]]
         },
         {
           "title": "Through the reverb to both sides",
@@ -1522,6 +1663,10 @@
             ["r.vcf", "c.rev"],
             ["r.rev", "c.out1"],
             ["r.rev", "c.out2"]
+          ],
+          "unplug": [
+            ["r.envsig", "c.out1"],
+            ["r.envsig", "c.out2"]
           ]
         },
         {
@@ -1532,7 +1677,8 @@
           "cables": [
             ["r.joyy", "c.osc1"],
             ["r.joyy", "c.osc2"]
-          ]
+          ],
+          "unplug": [["r.in1", "c.osc1"]]
         },
         {
           "title": "Left and right: the brightness",
@@ -1588,12 +1734,14 @@
             "osc2.square": 5,
             "vcf.freq": 6,
             "vcf.response": 4,
-            "vcf.level": 9
+            "vcf.level": 9,
+            "osc1.ramp": 0
           },
           "cables": [
             ["r.noise", "c.vcf"],
             ["r.osc2sq", "c.vcf"]
-          ]
+          ],
+          "unplug": [["r.in1", "c.osc1"]]
         },
         {
           "title": "The envelope is the clock",
@@ -1610,7 +1758,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc1ramp", "c.env"]]
         },
         {
           "title": "The trapezoid opens the filter",
@@ -1686,11 +1835,16 @@
             "env.on": 0,
             "env.decay": 3.5,
             "env.off": 10,
-            "env.sigLevel": 7
+            "env.sigLevel": 7,
+            "osc1.ramp": 0
           },
           "cables": [
             ["r.osc2tri", "c.env"],
             ["r.in1", "c.osc2"]
+          ],
+          "unplug": [
+            ["r.osc1ramp", "c.env"],
+            ["r.in1", "c.osc1"]
           ]
         },
         {
@@ -1703,6 +1857,10 @@
             ["r.rev", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.envsig", "c.out1"],
+            ["r.envsig", "c.out2"]
           ]
         },
         {
@@ -1759,11 +1917,16 @@
             "noise.colour": 3.5,
             "vcf.freq": 6,
             "vcf.response": 2,
-            "vcf.level": 9
+            "vcf.level": 9,
+            "osc1.ramp": 0
           },
           "cables": [
             ["r.noise", "c.vcf"],
             ["r.vcf", "c.env"]
+          ],
+          "unplug": [
+            ["r.osc1ramp", "c.env"],
+            ["r.in1", "c.osc1"]
           ]
         },
         {
@@ -1795,7 +1958,8 @@
           "cables": [
             ["r.envsig", "c.rev"],
             ["r.rev", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.envsig", "c.out2"]]
         },
         {
           "title": "Every wave a different length",
@@ -1846,19 +2010,27 @@
             "osc2.square": 6,
             "vcf.freq": 6,
             "vcf.response": 5.8,
-            "vcf.level": 7
+            "vcf.level": 7,
+            "env.on": 2,
+            "env.decay": 4,
+            "env.sigLevel": 0
           },
           "cables": [
             ["r.osc2sq", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc1ramp", "c.env"],
+            ["r.envsig", "c.out1"],
+            ["r.envsig", "c.out2"]
           ]
         },
         {
           "title": "Oscillator 1 retunes each blip",
           "module": "mod",
           "why": "Oscillator 1’s sine into the filter frequency (N1).\n- Pin N1.\n- Oscillator 1 FREQUENCY 2.25 (5.3 Hz), sine LEVEL 4: almost an octave each way.\n- Listen for: the blips going up and down in pitch in a regular pattern.",
-          "set": { "osc1.freq": 2.25, "osc1.sine": 4 },
+          "set": { "osc1.freq": 2.25, "osc1.sine": 4, "osc1.ramp": 0 },
           "cables": [["r.osc1sine", "c.cutoff"]]
         },
         {
@@ -1868,7 +2040,8 @@
           "cables": [
             ["r.osc2sq", "c.osc1"],
             ["r.osc1sine", "c.osc2"]
-          ]
+          ],
+          "unplug": [["r.in1", "c.osc1"]]
         },
         {
           "title": "Into the spring",
@@ -1964,7 +2137,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc1ramp", "c.env"]]
         },
         {
           "title": "The trapezoid moves channel 2",
@@ -2013,12 +2187,20 @@
             "vcf.response": 7.5,
             "vcf.level": 5,
             "rev.mix": 5,
-            "rev.level": 7
+            "rev.level": 7,
+            "env.on": 2,
+            "env.decay": 4,
+            "env.sigLevel": 0
           },
           "cables": [
             ["r.vcf", "c.rev"],
             ["r.rev", "c.out1"],
             ["r.rev", "c.out2"]
+          ],
+          "unplug": [
+            ["r.envsig", "c.out1"],
+            ["r.envsig", "c.out2"],
+            ["r.in1", "c.osc1"]
           ]
         },
         {
@@ -2026,7 +2208,8 @@
           "module": "osc",
           "why": "Oscillator 1’s ramp into the filter (H2), two octaves below the filter’s tone.\n- Pin H2.\n- Oscillator 1 FREQUENCY 4.67 (65 Hz), ramp LEVEL 5.\n- Listen for: a dark buzz underneath, with the sine still singing on top and wavering slightly as the ramp pulls at it.",
           "set": { "osc1.freq": 4.67, "osc1.ramp": 5 },
-          "cables": [["r.osc1ramp", "c.vcf"]]
+          "cables": [["r.osc1ramp", "c.vcf"]],
+          "unplug": [["r.osc1ramp", "c.env"]]
         },
         {
           "title": "Oscillator 2 roughens the sine",
@@ -2099,14 +2282,16 @@
             "env.on": 0,
             "env.decay": 5.5,
             "env.off": 10,
-            "env.sigLevel": 8
+            "env.sigLevel": 8,
+            "osc1.ramp": 0
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"],
             ["r.in1", "c.osc1"]
-          ]
+          ],
+          "unplug": [["r.osc1ramp", "c.env"]]
         },
         {
           "title": "The trapezoid bends the pitch",
@@ -2164,13 +2349,15 @@
             "env.on": 0,
             "env.decay": 3.5,
             "env.off": 1.8,
-            "env.sigLevel": 8
+            "env.sigLevel": 8,
+            "osc1.ramp": 0
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc1ramp", "c.env"]]
         },
         {
           "title": "Noise filtered into a slow random voltage",
@@ -2189,7 +2376,8 @@
           "title": "The random voltage plays the pitch",
           "module": "mod",
           "why": "The filtered noise (row 10) into Oscillator 1’s frequency (I10).\n- Pin I10.\n- Listen for: the blips jumping about to unrelated pitches, never repeating a phrase.",
-          "cables": [["r.vcf", "c.osc1"]]
+          "cables": [["r.vcf", "c.osc1"]],
+          "unplug": [["r.in1", "c.osc1"]]
         },
         {
           "title": "And the timing",

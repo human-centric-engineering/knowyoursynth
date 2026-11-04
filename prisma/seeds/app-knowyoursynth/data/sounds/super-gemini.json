@@ -40,7 +40,8 @@
           "why": "DDS 1 holds seven oscillators; SUPER brings in the sisters and PW/DETUNE spreads them.\n- UPPER SUPER ON: the sisters join the centre oscillator.\n- UPPER PW/DETUNE 60 %: spread far enough to beat and shimmer.\n- Listen for: one plain sawtooth turning into a wide, moving chorus of them.",
           "set": {
             "up.super": "on",
-            "up.pwDetune": 6
+            "up.pwDetune": 6,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -144,7 +145,8 @@
             "up.pwDetune": 5,
             "up.e2a": 7,
             "up.e2r": 7.5,
-            "up.lpf": 6.5
+            "up.lpf": 6.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -260,7 +262,9 @@
           "set": {
             "up.dds2Tune": 7,
             "up.mix": 4,
-            "up.res": 3
+            "up.res": 3,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -330,7 +334,9 @@
           "set": {
             "up.dds2Mode": "sync",
             "up.dds2Tune": 5,
-            "up.mix": 10
+            "up.mix": 10,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -415,7 +421,8 @@
             "up.dds1Wave": "square",
             "up.dds2Range": "lfo",
             "up.dds2Mode": "sync",
-            "up.mix": 5
+            "up.mix": 5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -493,7 +500,8 @@
             "up.dds2Mode": "ring",
             "up.dds2Range": "4",
             "up.dds2Tune": 3.7,
-            "up.mix": 9
+            "up.mix": 9,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -579,7 +587,9 @@
             "up.dds1Wave": "sine",
             "up.dds2Wave": "sine",
             "up.dds2Range": "2",
-            "up.xmod": 3.5
+            "up.xmod": 3.5,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -658,7 +668,8 @@
             "up.env1Mode": "loop",
             "up.e1a": 5,
             "up.e1d": 6,
-            "up.e1s": 0
+            "up.e1s": 0,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -747,7 +758,8 @@
             "up.e1d": 5,
             "up.e1s": 0,
             "up.e2d": 6,
-            "up.e2s": 5
+            "up.e2s": 5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -822,7 +834,8 @@
           "set": {
             "up.dds2Wave": "pulse",
             "up.mix": 10,
-            "up.pwDetune": 3
+            "up.pwDetune": 3,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -909,7 +922,8 @@
           "why": "SUPER brings in DDS 1’s sisters.\n- UPPER SUPER ON, PW / DETUNE 70 %\n- Listen for: a wide, shimmering stack.",
           "set": {
             "up.super": "on",
-            "up.pwDetune": 7
+            "up.pwDetune": 7,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -990,7 +1004,8 @@
           "set": {
             "up.super": "on",
             "up.pwDetune": 6,
-            "up.lpf": 8
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -1082,7 +1097,8 @@
           "why": "- UPPER SUPER ON, PW / DETUNE 50 %\n- Listen for: a supersaw.",
           "set": {
             "up.super": "on",
-            "up.pwDetune": 5
+            "up.pwDetune": 5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -1160,7 +1176,8 @@
             "up.mix": 5,
             "up.pwSrc": "lfo1",
             "up.pwWave": 6,
-            "up.lfoRate": 4
+            "up.lfoRate": 4,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -1252,7 +1269,8 @@
             "up.pwDetune": 6,
             "up.lpf": 8,
             "up.e2a": 5,
-            "up.e2r": 7
+            "up.e2r": 7,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -1334,7 +1352,8 @@
           "set": {
             "up.super": "on",
             "up.pwDetune": 6,
-            "up.lpf": 7.5
+            "up.lpf": 7.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -1406,7 +1425,8 @@
             "voice.unison": true,
             "perf.porta": 2,
             "up.super": "on",
-            "up.pwDetune": 8
+            "up.pwDetune": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -1485,7 +1505,8 @@
             "up.lpf": 7,
             "up.e2d": 7,
             "up.e2s": 3,
-            "up.e2r": 6.5
+            "up.e2r": 6.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -1554,7 +1575,8 @@
           "why": "- UPPER MIX 50 : 50, DDS 2 TUNE +0.1 st\n- Listen for: a thick, beating chord.",
           "set": {
             "up.mix": 5,
-            "up.dds2Tune": 0.1
+            "up.dds2Tune": 0.1,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -1634,7 +1656,9 @@
             "up.dds2Range": "4",
             "up.mix": 4,
             "up.e2a": 6.5,
-            "up.e2r": 8
+            "up.e2r": 8,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -1706,7 +1730,8 @@
             "up.mix": 10,
             "up.pwSrc": "lfo1",
             "up.pwWave": 6,
-            "up.lfoRate": 4
+            "up.lfoRate": 4,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -1785,7 +1810,8 @@
             "lo.dds1Wave": "tri",
             "lo.lpf": 5,
             "lo.e2a": 6,
-            "lo.e2r": 7
+            "lo.e2r": 7,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -1857,7 +1883,8 @@
             "lo.lpf": 6.5,
             "lo.e2a": 5,
             "lo.e2r": 6,
-            "chorus.i": true
+            "chorus.i": true,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -1918,7 +1945,8 @@
             "up.dds2Tune": 0.1,
             "up.lpf": 6,
             "up.e2a": 6.5,
-            "up.e2r": 7
+            "up.e2r": 7,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -1992,7 +2020,8 @@
             "up.lpf": 5,
             "up.res": 6,
             "up.e2a": 5,
-            "up.e2r": 6
+            "up.e2r": 6,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -2143,7 +2172,8 @@
             "lo.lpf": 4,
             "lo.drift": 4,
             "lo.e2a": 8,
-            "lo.e2r": 8
+            "lo.e2r": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -2218,7 +2248,8 @@
             "up.dds2Wave": "noise",
             "up.mix": 3,
             "up.lpf": 6,
-            "up.res": 4
+            "up.res": 4,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -2289,7 +2320,8 @@
             "lo.lpf": 5,
             "lo.res": 4,
             "lo.e2a": 7,
-            "lo.e2r": 7
+            "lo.e2r": 7,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -2372,7 +2404,8 @@
             "up.mix": 3,
             "up.lpf": 6,
             "up.e2a": 7.5,
-            "up.e2r": 8
+            "up.e2r": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -2442,7 +2475,8 @@
           "set": {
             "up.e2a": 6.5,
             "up.e2r": 7,
-            "up.lpf": 7.5
+            "up.lpf": 7.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -2516,7 +2550,8 @@
             "up.pwDetune": 4,
             "up.lpf": 6.5,
             "up.e2a": 7,
-            "up.e2r": 7.5
+            "up.e2r": 7.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -2608,7 +2643,8 @@
             "up.pwDetune": 4,
             "up.lpf": 6.5,
             "up.e2a": 7.5,
-            "up.e2r": 7.5
+            "up.e2r": 7.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -2707,7 +2743,8 @@
             "up.vcfEnv": 5,
             "up.e1a": 4,
             "up.e1d": 6,
-            "up.e1s": 3
+            "up.e1s": 3,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -2792,7 +2829,8 @@
             "up.e1a": 6,
             "up.e1d": 7,
             "up.e1s": 5,
-            "up.e2r": 5.5
+            "up.e2r": 5.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -2875,7 +2913,8 @@
             "up.vcfEnv": 4,
             "up.e1a": 4,
             "up.e1d": 6.5,
-            "up.e1s": 5
+            "up.e1s": 5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -2953,7 +2992,8 @@
             "up.e1s": 0,
             "up.e2d": 6.5,
             "up.e2s": 0,
-            "up.e2r": 6
+            "up.e2r": 6,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -3014,7 +3054,8 @@
             "up.dds1Range": "16",
             "up.lpf": 5.5,
             "up.e2a": 6.5,
-            "up.e2r": 6
+            "up.e2r": 6,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -3079,7 +3120,8 @@
             "up.pwDetune": 4,
             "up.lpf": 6.5,
             "up.e2a": 6,
-            "up.e2r": 6.5
+            "up.e2r": 6.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -3167,7 +3209,8 @@
             "lo.lpf": 5,
             "lo.e2d": 7,
             "lo.e2s": 0,
-            "lo.e2r": 7
+            "lo.e2r": 7,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -3243,7 +3286,9 @@
             "up.dds1Wave": "sine",
             "up.dds2Wave": "sine",
             "up.dds2Range": "4",
-            "up.xmod": 2
+            "up.xmod": 2,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -3322,7 +3367,9 @@
             "up.dds1Wave": "sine",
             "up.dds2Wave": "sine",
             "up.dds2Range": "4",
-            "up.xmod": 4
+            "up.xmod": 4,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -3388,7 +3435,8 @@
           "set": {
             "up.dds2Wave": "pulse",
             "up.pwDetune": 7,
-            "up.mix": 10
+            "up.mix": 10,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -3468,7 +3516,8 @@
             "up.dds2Wave": "square",
             "up.dds2Range": "4",
             "up.mix": 4,
-            "up.lpf": 7
+            "up.lpf": 7,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -3535,7 +3584,9 @@
             "lo.dds1Range": "16",
             "lo.dds1Wave": "tri",
             "lo.vcaMode": "fixed2",
-            "lo.vcaEnv": 6
+            "lo.vcaEnv": 6,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -3609,7 +3660,8 @@
             "up.lpf": 8.5,
             "up.e2d": 7,
             "up.e2s": 0,
-            "up.e2r": 6.5
+            "up.e2r": 6.5,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -3667,7 +3719,9 @@
             "up.mix": 1,
             "up.e2d": 8.5,
             "up.e2s": 0,
-            "up.e2r": 8
+            "up.e2r": 8,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -3731,7 +3785,9 @@
             "up.mix": 5,
             "up.e2d": 8.5,
             "up.e2s": 0,
-            "up.e2r": 8
+            "up.e2r": 8,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -3793,7 +3849,9 @@
             "up.dds1Range": "2",
             "up.e2d": 8,
             "up.e2s": 0,
-            "up.e2r": 7.5
+            "up.e2r": 7.5,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -3887,7 +3945,9 @@
             "up.e2r": 6,
             "up.send": 2,
             "dly.time": 8,
-            "dly.feedback": 3
+            "dly.feedback": 3,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -3949,7 +4009,9 @@
             "up.mix": 3,
             "up.e2d": 6,
             "up.e2s": 0,
-            "up.e2r": 5.5
+            "up.e2r": 5.5,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -4006,7 +4068,8 @@
             "up.dds1Range": "16",
             "up.dds2Wave": "square",
             "up.dds2Range": "16",
-            "up.mix": 4
+            "up.mix": 4,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -4079,7 +4142,8 @@
           "set": {
             "voice.mode": "legato",
             "perf.porta": 2,
-            "up.dds1Range": "16"
+            "up.dds1Range": "16",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -4140,7 +4204,9 @@
             "voice.mode": "solo",
             "up.dds1Range": "16",
             "up.dds1Wave": "sine",
-            "up.e2r": 4
+            "up.e2r": 4,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -4191,7 +4257,8 @@
             "up.super": "on",
             "up.pwDetune": 8,
             "up.lpf": 5,
-            "up.res": 2
+            "up.res": 2,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -4243,7 +4310,8 @@
             "voice.unison": true,
             "up.super": "on",
             "up.pwDetune": 5,
-            "up.drive": "1"
+            "up.drive": "1",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -4311,7 +4379,8 @@
             "up.dds2Range": "16",
             "up.dds2Mode": "sync",
             "up.dds2Tune": 5,
-            "up.mix": 10
+            "up.mix": 10,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -4383,7 +4452,8 @@
             "up.vcfEnv": 5,
             "up.e1d": 5.5,
             "up.e1s": 1,
-            "up.e2r": 3.5
+            "up.e2r": 3.5,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -4446,7 +4516,8 @@
             "up.vcfEnv": 3.5,
             "up.e1d": 5.5,
             "up.e1s": 2,
-            "up.e2r": 3.5
+            "up.e2r": 3.5,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -4497,7 +4568,9 @@
             "up.dds1Wave": "sine",
             "up.e2d": 8.5,
             "up.e2s": 3,
-            "up.e2r": 6
+            "up.e2r": 6,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -4589,7 +4662,9 @@
             "up.e2d": 8,
             "up.e2s": 2,
             "up.e2r": 6,
-            "chorus.i": true
+            "chorus.i": true,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -4641,7 +4716,8 @@
             "up.dds1Range": "16",
             "up.dds1Wave": "tri",
             "up.lpf": 4.5,
-            "up.e2r": 4
+            "up.e2r": 4,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -4697,7 +4773,8 @@
             "dly.time": 8,
             "dly.feedback": 7,
             "up.vcaEnv": 10,
-            "out.volume": 10
+            "out.volume": 10,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -4756,7 +4833,8 @@
             "up.e1s": 1,
             "up.e2d": 6.5,
             "up.e2s": 0,
-            "up.e2r": 6
+            "up.e2r": 6,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -4814,7 +4892,8 @@
             "up.dds1Wave": "sine",
             "up.dds2Wave": "sine",
             "up.dds2Range": "8",
-            "up.xmod": 6
+            "up.xmod": 6,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -4879,7 +4958,9 @@
             "voice.mode": "legato",
             "perf.porta": 2,
             "up.mix": 5,
-            "up.dds2Tune": 0.1
+            "up.dds2Tune": 0.1,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -4945,7 +5026,9 @@
             "voice.mode": "legato",
             "up.dds2Mode": "sync",
             "up.dds2Tune": 7,
-            "up.mix": 10
+            "up.mix": 10,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -5014,7 +5097,8 @@
             "up.lpf": 7,
             "up.lfoRate": 6.7,
             "up.lfoDelay": 2,
-            "up.modLfo": 0.8
+            "up.modLfo": 0.8,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -5131,7 +5215,8 @@
             "up.lpf": 7,
             "up.vcfEnv": 2,
             "up.e1d": 6,
-            "up.e1s": 4
+            "up.e1s": 4,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -5186,7 +5271,8 @@
             "up.lpf": 7.5,
             "up.send": 3,
             "dly.time": 8.5,
-            "dly.feedback": 4
+            "dly.feedback": 4,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -5238,7 +5324,8 @@
             "up.dds1Wave": "tri",
             "up.lpf": 9,
             "up.lfoRate": 7,
-            "up.modLfo": 1
+            "up.modLfo": 1,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -5292,7 +5379,8 @@
             "up.dds2Wave": "pulse",
             "up.pwDetune": 6,
             "up.mix": 10,
-            "up.lpf": 10
+            "up.lpf": 10,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -5356,7 +5444,8 @@
             "up.dds1Wave": "sine",
             "up.dds2Wave": "noise",
             "up.mix": 2,
-            "up.lpf": 7
+            "up.lpf": 7,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -5436,7 +5525,8 @@
             "up.vcfEnv": 5,
             "up.e1d": 5.5,
             "up.e1s": 0,
-            "up.drive": "1"
+            "up.drive": "1",
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -5489,7 +5579,8 @@
             "up.lpf": 7,
             "lo.dds1Range": "16",
             "lo.lpf": 5,
-            "lo.vcaEnv": 6
+            "lo.vcaEnv": 6,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -5568,7 +5659,8 @@
           "why": "DDS 2 joins DDS 1 a few cents sharp, so the two beat against each other.\n- UPPER MIX 50 : 50: both oscillators equally\n- UPPER DDS 2 TUNE +0.1 st: a touch sharp, for the slow beating that thickens brass\n- Listen for: one sawtooth growing fat and lively.",
           "set": {
             "up.mix": 5,
-            "up.dds2Tune": 0.1
+            "up.dds2Tune": 0.1,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -5641,7 +5733,8 @@
           "why": "- UPPER SUPER (DDS 1) 1/2: the sisters at half spread\n- UPPER PW / DETUNE 50 %: enough to sound like several players\n- Listen for: a section rather than one player.",
           "set": {
             "up.super": "half",
-            "up.pwDetune": 5
+            "up.pwDetune": 5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -5725,7 +5818,8 @@
           "why": "- UPPER DDS 1 WAVEFORM square: hollow and woody\n- VOICE ASSIGN MODE SOLO: one note at a time\n- Listen for: a hollow, toy-like tone.",
           "set": {
             "up.dds1Wave": "square",
-            "voice.mode": "solo"
+            "voice.mode": "solo",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -5787,7 +5881,8 @@
           "set": {
             "up.mix": 5,
             "up.dds2Tune": -0.12,
-            "up.drift": 3
+            "up.drift": 3,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -5874,7 +5969,8 @@
           "why": "- UPPER MIX 60 : 40: DDS 2 a little under DDS 1\n- UPPER DDS 2 RANGE 4′: an octave up, for shine\n- Listen for: a glowing, bright chord.",
           "set": {
             "up.mix": 4,
-            "up.dds2Range": "4"
+            "up.dds2Range": "4",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -5953,7 +6049,8 @@
             "up.pwDetune": 3,
             "up.e2a": 7,
             "up.e2r": 8,
-            "up.lpf": 5.5
+            "up.lpf": 5.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -6040,7 +6137,8 @@
             "up.e1d": 4.5,
             "up.e1s": 0,
             "up.e2d": 5.5,
-            "up.e2s": 3
+            "up.e2s": 3,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -6112,7 +6210,8 @@
             "up.e1d": 5,
             "up.e1s": 0,
             "up.e2d": 5.5,
-            "up.e2s": 2
+            "up.e2s": 2,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -6189,7 +6288,8 @@
             "up.e1d": 6,
             "up.e1s": 1,
             "up.e2d": 6.5,
-            "up.e2s": 4
+            "up.e2s": 4,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -6251,7 +6351,8 @@
             "up.dds1Range": "16",
             "up.dds2Range": "16",
             "up.mix": 5,
-            "up.dds2Tune": 0.15
+            "up.dds2Tune": 0.15,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -6323,7 +6424,8 @@
             "up.dds2Wave": "square",
             "up.mix": 4,
             "voice.mode": "legato",
-            "voice.unison": true
+            "voice.unison": true,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -6399,7 +6501,8 @@
           "why": "- UPPER SUPER 1/2, PW / DETUNE 40 %\n- Listen for: a bright, chorused saw.",
           "set": {
             "up.super": "half",
-            "up.pwDetune": 4
+            "up.pwDetune": 4,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -6480,7 +6583,8 @@
             "up.e1d": 5.5,
             "up.e1s": 2,
             "up.e2d": 6.5,
-            "up.e2s": 6
+            "up.e2s": 6,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -6550,7 +6654,8 @@
             "up.dds2Wave": "pulse",
             "up.mix": 5,
             "up.pwDetune": 4,
-            "up.xmod": 2
+            "up.xmod": 2,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -6626,7 +6731,8 @@
             "up.e1d": 5,
             "up.e1s": 0,
             "up.e2d": 5.5,
-            "up.e2s": 2
+            "up.e2s": 2,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -6687,7 +6793,8 @@
             "lo.dds1Range": "16",
             "up.dds1Wave": "square",
             "up.dds1Range": "4",
-            "up.pwDetune": 6
+            "up.pwDetune": 6,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -6752,7 +6859,8 @@
           "why": "- UPPER DDS 1 WAVEFORM triangle: soft and round\n- UPPER LPF 1.3 kHz\n- Listen for: a soft tone.",
           "set": {
             "up.dds1Wave": "tri",
-            "up.lpf": 6
+            "up.lpf": 6,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -6839,7 +6947,8 @@
             "lo.lpf": 6.5,
             "up.e2r": 4.5,
             "lo.e2r": 4.5,
-            "chorus.i": true
+            "chorus.i": true,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -6897,7 +7006,9 @@
             "up.dds1Wave": "tri",
             "up.dds2Wave": "sine",
             "up.dds2Range": "4",
-            "up.mix": 3
+            "up.mix": 3,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -6972,7 +7083,8 @@
             "up.e1d": 5.5,
             "up.e1s": 0,
             "up.e2d": 5.5,
-            "up.e2s": 2
+            "up.e2s": 2,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -7049,7 +7161,8 @@
           "set": {
             "up.mix": 4.5,
             "up.dds2Range": "4",
-            "up.dds2Tune": 0.12
+            "up.dds2Tune": 0.12,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -7111,7 +7224,8 @@
             "up.mix": 5,
             "up.dds2Tune": 0.2,
             "voice.mode": "legato",
-            "perf.porta": 3
+            "perf.porta": 3,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -7203,7 +7317,9 @@
             "up.e2d": 7.5,
             "up.e2s": 3,
             "up.e2r": 7.5,
-            "up.vcaEnv": 6
+            "up.vcaEnv": 6,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -7272,7 +7388,8 @@
           "why": "- UPPER SUPER ON, PW / DETUNE 40 %\n- Listen for: a wide stack.",
           "set": {
             "up.super": "on",
-            "up.pwDetune": 4
+            "up.pwDetune": 4,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -7341,7 +7458,8 @@
             "up.dds1Range": "16",
             "up.lfoWave": "sq",
             "up.lfoRate": 6,
-            "up.vcaLfo": 7
+            "up.vcaLfo": 7,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -7403,7 +7521,8 @@
             "up.dds2Tune": 7,
             "up.drive": "2",
             "up.lpf": 6.5,
-            "voice.mode": "legato"
+            "voice.mode": "legato",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -7488,7 +7607,8 @@
             "up.vcfEnv": 4.5,
             "up.e1d": 6.5,
             "up.e1s": 1,
-            "up.e2r": 4
+            "up.e2r": 4,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -7576,7 +7696,8 @@
             "up.dds2Wave": "square",
             "up.e2d": 6,
             "up.e2s": 2,
-            "up.e2r": 5
+            "up.e2r": 5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -7639,7 +7760,8 @@
           "set": {
             "up.dds1Range": "16",
             "up.mix": 5,
-            "up.dds2Tune": 0.1
+            "up.dds2Tune": 0.1,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -7725,7 +7847,8 @@
             "up.e1s": 0,
             "up.e2d": 6.5,
             "up.e2s": 0,
-            "up.e2r": 6
+            "up.e2r": 6,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -7792,7 +7915,8 @@
           "why": "- UPPER SUPER ON, PW / DETUNE 60 %\n- Listen for: a huge, bright stack.",
           "set": {
             "up.super": "on",
-            "up.pwDetune": 6
+            "up.pwDetune": 6,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -7859,7 +7983,8 @@
             "up.super": "on",
             "up.pwDetune": 5,
             "up.e2a": 6.5,
-            "up.e2r": 8
+            "up.e2r": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -7945,7 +8070,8 @@
             "up.e2r": 7,
             "up.mix": 4,
             "up.dds2Wave": "tri",
-            "up.dds2Range": "4"
+            "up.dds2Range": "4",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -8029,7 +8155,8 @@
             "up.lpf": 5.5,
             "up.e2d": 7.5,
             "up.e2s": 4,
-            "up.e2r": 6.5
+            "up.e2r": 6.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -8115,7 +8242,8 @@
             "lo.super": "on",
             "lo.pwDetune": 5,
             "lo.dds1Range": "16",
-            "perf.lowerDetune": 0.08
+            "perf.lowerDetune": 0.08,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -8192,7 +8320,8 @@
             "up.mix": 5,
             "up.lpf": 6,
             "voice.mode": "legato",
-            "perf.porta": 3
+            "perf.porta": 3,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -8263,7 +8392,8 @@
             "up.vcfEnv": 3.5,
             "up.e1d": 5,
             "up.e1s": 0,
-            "up.vcaEnv": 6
+            "up.vcaEnv": 6,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -8327,7 +8457,8 @@
             "up.e1d": 7,
             "up.e1s": 4,
             "up.e2a": 3,
-            "up.e2r": 5.5
+            "up.e2r": 5.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -8411,7 +8542,8 @@
           "set": {
             "up.dds2Wave": "square",
             "up.dds2Range": "4",
-            "up.mix": 4
+            "up.mix": 4,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -8477,7 +8609,9 @@
             "up.dds1Wave": "sine",
             "up.dds2Wave": "sine",
             "up.dds2Range": "2",
-            "up.xmod": 2.5
+            "up.xmod": 2.5,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -8537,7 +8671,8 @@
             "up.mix": 5,
             "up.dds2Tune": 7,
             "up.e2a": 6,
-            "up.e2r": 8
+            "up.e2r": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -8623,7 +8758,8 @@
             "up.dds2Wave": "sine",
             "up.dds2Range": "4",
             "up.mix": 3,
-            "up.lpf": 5.5
+            "up.lpf": 5.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -8695,7 +8831,8 @@
           "set": {
             "up.dds2Wave": "noise",
             "up.mix": 2,
-            "up.lpf": 4.8
+            "up.lpf": 4.8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -8759,7 +8896,8 @@
             "up.pwDetune": 3,
             "lo.super": "on",
             "lo.pwDetune": 3,
-            "lo.dds1Range": "16"
+            "lo.dds1Range": "16",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -8864,7 +9002,8 @@
             "up.dds2Wave": "sine",
             "up.dds2Range": "4",
             "up.mix": 4,
-            "up.lpf": 6.5
+            "up.lpf": 6.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -8927,7 +9066,8 @@
             "up.dds1Range": "16",
             "up.dds2Range": "lfo",
             "up.dds2Mode": "sync",
-            "up.mix": 4
+            "up.mix": 4,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -8999,7 +9139,8 @@
             "up.pwDetune": 6,
             "up.mix": 5,
             "up.dds2Tune": 0.1,
-            "voice.mode": "solo"
+            "voice.mode": "solo",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -9066,7 +9207,8 @@
             "up.mix": 3,
             "up.lpf": 7,
             "up.e2r": 4.5,
-            "voice.mode": "solo"
+            "voice.mode": "solo",
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -9127,7 +9269,8 @@
             "up.pwDetune": 3,
             "up.lpf": 6,
             "up.e2a": 6.5,
-            "up.e2r": 7.5
+            "up.e2r": 7.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -9186,7 +9329,9 @@
             "up.dds2Wave": "tri",
             "up.mix": 3,
             "up.e2a": 7.5,
-            "up.e2r": 8.5
+            "up.e2r": 8.5,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -9256,7 +9401,8 @@
             "up.dds2Wave": "pulse",
             "up.mix": 5,
             "up.pwDetune": 7,
-            "up.lpf": 6.5
+            "up.lpf": 6.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -9320,7 +9466,8 @@
             "up.res": 3,
             "up.vcfEnv": 3,
             "up.e1d": 6.5,
-            "up.e1s": 2
+            "up.e1s": 2,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -9384,7 +9531,8 @@
             "up.e1d": 7,
             "up.e1s": 3,
             "voice.mode": "legato",
-            "perf.porta": 1.5
+            "perf.porta": 1.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -9457,7 +9605,8 @@
             "up.pwDetune": 4,
             "up.lpf": 5.8,
             "up.e2r": 6,
-            "chorus.i": true
+            "chorus.i": true,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -9518,7 +9667,8 @@
             "up.dds1Range": "16",
             "up.dds2Range": "lfo",
             "up.dds2Mode": "sync",
-            "up.mix": 5
+            "up.mix": 5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -9584,7 +9734,8 @@
             "up.mix": 3,
             "up.lpf": 7,
             "voice.mode": "legato",
-            "perf.porta": 1.5
+            "perf.porta": 1.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -9668,7 +9819,8 @@
             "up.e1d": 6.5,
             "up.e1s": 3,
             "up.e2r": 4.5,
-            "chorus.i": true
+            "chorus.i": true,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -9735,7 +9887,8 @@
             "up.e2s": 2,
             "up.send": 4,
             "dly.time": 9,
-            "dly.feedback": 5
+            "dly.feedback": 5,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -9800,7 +9953,8 @@
             "up.e2d": 6,
             "up.e2s": 3,
             "up.send": 2,
-            "dly.time": 8.4
+            "dly.time": 8.4,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -9865,7 +10019,8 @@
             "up.dds1Wave": "square",
             "up.dds1Range": "4",
             "up.lpf": 6,
-            "up.vcaEnv": 5
+            "up.vcaEnv": 5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -9952,7 +10107,8 @@
             "up.e2d": 6,
             "up.e2s": 1,
             "up.e2r": 5,
-            "chorus.i": true
+            "chorus.i": true,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -10007,7 +10163,8 @@
             "up.res": 6.5,
             "up.vcfEnv": 4,
             "up.e1d": 6,
-            "up.e1s": 2
+            "up.e1s": 2,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -10076,7 +10233,8 @@
             "up.e2d": 6.5,
             "up.e2s": 4,
             "up.e2r": 5,
-            "up.lpf": 5.6
+            "up.lpf": 5.6,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -10137,7 +10295,8 @@
             "up.dds1Range": "4",
             "up.lpf": 7,
             "up.e2r": 6.5,
-            "voice.mode": "legato"
+            "voice.mode": "legato",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -10201,7 +10360,9 @@
           "why": "- UPPER DDS 1 WAVEFORM sine: the purest tone, all thump\n- UPPER DDS 1 RANGE 16′: an octave down\n- Listen for: a low hum.",
           "set": {
             "up.dds1Wave": "sine",
-            "up.dds1Range": "16"
+            "up.dds1Range": "16",
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -10274,7 +10435,8 @@
           "set": {
             "up.dds1Wave": "noise",
             "up.dds2Wave": "tri",
-            "up.mix": 3
+            "up.mix": 3,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -10346,7 +10508,8 @@
           "set": {
             "up.dds1Wave": "noise",
             "up.hpf": 8.5,
-            "up.lpf": 10
+            "up.lpf": 10,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -10412,7 +10575,8 @@
             "up.dds1Wave": "noise",
             "up.hpf": 4.5,
             "up.lpf": 8.5,
-            "up.res": 2
+            "up.res": 2,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -10479,7 +10643,9 @@
           "set": {
             "up.dds1Wave": "tri",
             "up.dds2Wave": "noise",
-            "up.mix": 2
+            "up.mix": 2,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -10549,7 +10715,8 @@
             "up.dds2Wave": "square",
             "up.mix": 5,
             "up.dds2Tune": 6.8,
-            "up.hpf": 5
+            "up.hpf": 5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -10621,7 +10788,8 @@
             "up.e2d": 5.8,
             "up.e2s": 0,
             "up.e2r": 4,
-            "up.vcaEnv": 10
+            "up.vcaEnv": 10,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -10702,7 +10870,8 @@
             "up.e2s": 0,
             "up.e2r": 5,
             "up.vcaEnv": 10,
-            "up.dyn": "on"
+            "up.dyn": "on",
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -10828,7 +10997,8 @@
             "up.e2s": 0,
             "up.e2r": 5,
             "up.lpf": 7,
-            "up.vcaEnv": 10
+            "up.vcaEnv": 10,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -10870,7 +11040,8 @@
           "set": {
             "up.dds1Wave": "noise",
             "up.lpf": 3,
-            "up.res": 6
+            "up.res": 6,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -10928,7 +11099,8 @@
             "up.dds2Wave": "noise",
             "up.mix": 6,
             "up.lpf": 5,
-            "up.res": 4
+            "up.res": 4,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -10984,7 +11156,8 @@
           "set": {
             "up.dds1Wave": "noise",
             "up.lpf": 5.8,
-            "up.vcaEnv": 10
+            "up.vcaEnv": 10,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -11039,7 +11212,8 @@
             "up.dds1Wave": "noise",
             "up.lpf": 6.5,
             "up.res": 7,
-            "up.hpf": 5
+            "up.hpf": 5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -11091,7 +11265,8 @@
           "set": {
             "up.dds1Wave": "square",
             "up.lpf": 7,
-            "up.vcaEnv": 6
+            "up.vcaEnv": 6,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -11146,7 +11321,9 @@
           "set": {
             "up.dds1Wave": "sine",
             "up.lfoRate": 7,
-            "up.modLfo": 3
+            "up.modLfo": 3,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -11201,7 +11378,8 @@
           "set": {
             "up.lfoWave": "sq",
             "up.lfoRate": 5.5,
-            "up.modLfo": 3
+            "up.modLfo": 3,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -11270,7 +11448,8 @@
             "up.e2s": 0,
             "up.e2r": 6,
             "up.lpf": 4,
-            "up.vcaEnv": 10
+            "up.vcaEnv": 10,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -11312,7 +11491,8 @@
           "set": {
             "up.dds1Wave": "noise",
             "up.lpf": 5.5,
-            "up.res": 8
+            "up.res": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -11370,7 +11550,8 @@
           "set": {
             "up.dds1Range": "16",
             "up.lpf": 4.5,
-            "up.res": 3
+            "up.res": 3,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -11431,7 +11612,8 @@
             "up.dds1Wave": "tri",
             "up.lpf": 5.5,
             "up.e2a": 7,
-            "up.e2r": 8.5
+            "up.e2r": 8.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -11492,7 +11674,8 @@
           "set": {
             "up.super": "half",
             "up.pwDetune": 4,
-            "up.lpf": 4.5
+            "up.lpf": 4.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -11554,7 +11737,8 @@
             "up.dds2Range": "lfo",
             "up.dds2Mode": "ring",
             "up.mix": 4,
-            "up.lpf": 4
+            "up.lpf": 4,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -11614,7 +11798,8 @@
             "up.pwSrc": "lfo1",
             "up.pwWave": 6,
             "up.lfoRate": 4,
-            "up.lpf": 6.5
+            "up.lpf": 6.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -11676,7 +11861,8 @@
             "up.dds2Wave": "square",
             "up.dds2Range": "4",
             "up.mix": 4,
-            "up.lpf": 6
+            "up.lpf": 6,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -11736,7 +11922,8 @@
             "up.dds2Wave": "noise",
             "up.mix": 3,
             "up.lpf": 6.5,
-            "voice.mode": "solo"
+            "voice.mode": "solo",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -11876,7 +12063,8 @@
             "up.pwDetune": 8,
             "up.hpf": 5,
             "up.lpf": 7,
-            "voice.mode": "legato"
+            "voice.mode": "legato",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -11943,7 +12131,8 @@
             "up.drive": "1",
             "up.lpf": 6.5,
             "up.e2a": 4,
-            "voice.mode": "legato"
+            "voice.mode": "legato",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -12028,7 +12217,8 @@
             "up.drive": "1",
             "up.lpf": 7,
             "up.vcaMode": "fixed2",
-            "voice.mode": "legato"
+            "voice.mode": "legato",
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -12084,7 +12274,8 @@
             "up.lpf": 7,
             "up.e2a": 4,
             "up.e2r": 4.5,
-            "voice.mode": "solo"
+            "voice.mode": "solo",
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -12138,7 +12329,8 @@
             "up.e1a": 6,
             "up.e1s": 8,
             "up.hpf": 3,
-            "voice.mode": "legato"
+            "voice.mode": "legato",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -12205,7 +12397,8 @@
             "up.lfoRate": 6,
             "up.modLfo": 0.5,
             "up.lfoDelay": 4,
-            "voice.mode": "legato"
+            "voice.mode": "legato",
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -12262,7 +12455,8 @@
             "up.e1s": 6,
             "up.dyn": "on",
             "up.e2a": 3.5,
-            "voice.mode": "legato"
+            "voice.mode": "legato",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -12337,7 +12531,8 @@
             "up.e2r": 6.5,
             "chorus.i": true,
             "up.send": 3,
-            "dly.time": 9
+            "dly.time": 9,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -12389,7 +12584,8 @@
             "up.e1s": 3,
             "up.e2a": 4,
             "up.e2r": 5,
-            "voice.mode": "solo"
+            "voice.mode": "solo",
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -12449,7 +12645,8 @@
             "up.lpf": 6,
             "up.hpf": 3,
             "up.e2a": 5.5,
-            "up.e2r": 7
+            "up.e2r": 7,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -12530,7 +12727,8 @@
             "up.lpf": 5.5,
             "up.vcfEnv": 3,
             "up.e1d": 6.5,
-            "up.e1s": 0
+            "up.e1s": 0,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -12600,7 +12798,9 @@
             "up.dds1Range": "4",
             "up.dds2Wave": "sine",
             "up.dds2Range": "2",
-            "up.mix": 4
+            "up.mix": 4,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -12667,7 +12867,9 @@
             "up.dds2Wave": "sine",
             "up.dds2Range": "2",
             "up.dds2Tune": 3.5,
-            "up.xmod": 2
+            "up.xmod": 2,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -12753,7 +12955,8 @@
             "lo.mix": 8,
             "lo.pwDetune": 6,
             "up.lpf": 6.5,
-            "lo.lpf": 6.5
+            "lo.lpf": 6.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -12820,7 +13023,9 @@
             "up.dds2Wave": "sine",
             "up.dds2Range": "2",
             "up.mix": 3,
-            "up.xmod": 1.5
+            "up.xmod": 1.5,
+            "up.lpf": 8,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -12890,7 +13095,8 @@
             "up.e1s": 0,
             "up.e2d": 8,
             "up.e2s": 0,
-            "up.e2r": 7.5
+            "up.e2r": 7.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -12960,7 +13166,8 @@
             "up.e1s": 0,
             "up.e2d": 7.5,
             "up.e2s": 0,
-            "up.e2r": 6.5
+            "up.e2r": 6.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -13111,7 +13318,8 @@
             "up.e2d": 6.5,
             "up.e2s": 0,
             "up.e2r": 5.5,
-            "up.vcaEnv": 10
+            "up.vcaEnv": 10,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -13176,7 +13384,8 @@
             "up.e2d": 6.3,
             "up.e2s": 0,
             "up.e2r": 5.5,
-            "up.vcaEnv": 10
+            "up.vcaEnv": 10,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -13226,7 +13435,8 @@
             "up.dds2Range": "16",
             "up.dds2Tune": 5,
             "up.mix": 8,
-            "up.dds1Range": "16"
+            "up.dds1Range": "16",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -13304,7 +13514,8 @@
             "up.dds2Range": "16",
             "up.mix": 6,
             "up.lpf": 4.5,
-            "up.res": 5
+            "up.res": 5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -13378,7 +13589,8 @@
             "up.e1s": 0,
             "up.e2d": 6.5,
             "up.e2s": 3,
-            "up.e2r": 4
+            "up.e2r": 4,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -13427,7 +13639,8 @@
             "up.dds1Range": "16",
             "up.lpf": 5,
             "up.res": 4,
-            "voice.mode": "solo"
+            "voice.mode": "solo",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -13504,7 +13717,8 @@
             "up.dds2Wave": "pulse",
             "up.mix": 10,
             "up.lpf": 8,
-            "voice.mode": "solo"
+            "voice.mode": "solo",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -13575,7 +13789,8 @@
             "up.lpf": 5,
             "up.res": 6,
             "up.e2d": 5.5,
-            "up.e2s": 2
+            "up.e2s": 2,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -13661,7 +13876,8 @@
             "up.pwDetune": 6,
             "up.e2d": 6.5,
             "up.e2s": 2,
-            "up.e2r": 4.5
+            "up.e2r": 4.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -13752,7 +13968,8 @@
             "up.lpf": 5.5,
             "up.vcfEnv": 4,
             "up.e1d": 6,
-            "up.e1s": 0
+            "up.e1s": 0,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -13820,7 +14037,8 @@
             "up.dds2Tune": 0.1,
             "up.lpf": 5.8,
             "up.e2a": 6,
-            "up.e2r": 7
+            "up.e2r": 7,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -13887,7 +14105,8 @@
             "up.lpf": 5.5,
             "up.res": 3,
             "up.e2a": 6.5,
-            "up.e2r": 7.5
+            "up.e2r": 7.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -13953,7 +14172,8 @@
             "up.e1s": 2,
             "up.e2d": 8,
             "up.e2s": 3,
-            "up.e2r": 6
+            "up.e2r": 6,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -14019,7 +14239,8 @@
           "set": {
             "up.lpf": 5.5,
             "up.res": 4,
-            "voice.mode": "solo"
+            "voice.mode": "solo",
+            "up.vcfKey": "half"
           }
         },
         {
@@ -14109,7 +14330,8 @@
             "up.lpf": 6,
             "up.e2d": 7.5,
             "up.e2s": 0,
-            "up.e2r": 7.5
+            "up.e2r": 7.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -14184,7 +14406,8 @@
             "voice.mode": "legato",
             "perf.porta": 1,
             "up.send": 3,
-            "dly.time": 8.7
+            "dly.time": 8.7,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -14242,7 +14465,8 @@
           "why": "- UPPER PW / WAVE source MANUAL: set by hand\n- UPPER PW / WAVE 50 %: halfway from sawtooth to square\n- Listen for: a tone between a sawtooth and a square.",
           "set": {
             "up.pwSrc": "manual",
-            "up.pwWave": 5
+            "up.pwWave": 5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -14320,7 +14544,8 @@
             "up.e1d": 7,
             "up.e1s": 4,
             "up.e2a": 3,
-            "up.e2r": 6
+            "up.e2r": 6,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -14390,7 +14615,8 @@
             "up.pwDetune": 3,
             "up.lpf": 4.5,
             "up.e2a": 6,
-            "up.e2r": 7.5
+            "up.e2r": 7.5,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -14470,7 +14696,8 @@
             "up.e2r": 7.5,
             "up.send": 5,
             "dly.time": 9,
-            "dly.feedback": 5
+            "dly.feedback": 5,
+            "up.vcfKey": "half"
           }
         }
       ],
@@ -14520,7 +14747,8 @@
           "why": "- UPPER ENV 2 ATTACK 2.5 s: a long swell\n- UPPER ENV 2 RELEASE 16 ms: and a sudden end\n- Listen for: chords swelling to a stop.",
           "set": {
             "up.e2a": 8.5,
-            "up.e2r": 3
+            "up.e2r": 3,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -14585,7 +14813,8 @@
           "set": {
             "up.dds2Mode": "sync",
             "up.mix": 8,
-            "up.dds2Tune": 3
+            "up.dds2Tune": 3,
+            "up.vcfKey": "half"
           }
         },
         {
@@ -14680,7 +14909,8 @@
             "lfo2.dds": 0.9,
             "lfo2.delay": 5,
             "perf.modLayer": "upper",
-            "chorus.i": true
+            "chorus.i": true,
+            "up.vcfKey": "half"
           }
         }
       ],

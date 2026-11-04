@@ -100,7 +100,14 @@
           "title": "A square lead",
           "module": "osc",
           "why": "A single square wave gives a hollow, reedy lead with a clear pitch. The second oscillator is switched off so there is room for the feedback that comes next.\n- OSC 1 square, WIDTH 35 %: a square at 50 % is hollow; narrowing it to 35 % makes it thinner and more nasal, a reedy edge that cuts through a mix.\n- OSC 2 off: the waveform switch has an OFF position, so the lower oscillator makes no sound whatever its mix level.\n- Mix OSC 1 7 (70 %): a little below the start of 8, leaving headroom for the fed-back signal.\n- Listen for: a plain, clean square lead. Remember how it sounds before the next step.",
-          "set": { "osc1.wave": "square", "osc1.width": 35, "osc2.wave": "off", "mix.osc1": 7 }
+          "set": {
+            "osc1.wave": "square",
+            "osc1.width": 35,
+            "osc2.wave": "off",
+            "mix.osc1": 7,
+            "vca.sustain": 8,
+            "vca.decay": 4
+          }
         },
         {
           "title": "Feed the output back",

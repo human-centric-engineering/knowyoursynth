@@ -1289,7 +1289,8 @@
           "why": "- OSC 1 SHAPE sine → saw: round, with a little edge\n- OSC 1 level 100 %: up full, since each hit is short\n- Listen for: a soft beep.",
           "set": {
             "osc1.shape": 2.5,
-            "mix.osc1": 10
+            "mix.osc1": 10,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -1365,7 +1366,8 @@
           "module": "osc",
           "why": "- OSC 1 SHAPE sine → saw: a sine with a hint of overtones\n- Listen for: a soft, round tone.",
           "set": {
-            "osc1.shape": 1.5
+            "osc1.shape": 1.5,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -11827,7 +11829,8 @@
           "why": "- OSC 1 SHAPE square\n- OSC 1 level 70 %\n- Listen for: a hollow beep.",
           "set": {
             "osc1.shape": 7.5,
-            "mix.osc1": 7
+            "mix.osc1": 7,
+            "vcf.cutoff": 7
           }
         },
         {

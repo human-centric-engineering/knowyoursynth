@@ -32,7 +32,11 @@
           "why": "The keys play VCO A, so this lesson turns its channel down first, to hear the drone alone.\n- VCO A VOL 0.\n- Patch the keyboard’s gate out to Drone 1’s GATE: Drone 1 sounds while a key is held, so the keys (and Play) start and stop it. RELEASE 8, so it rides over the gaps between notes.\n- Listen for: a dense cluster while a key is held, five saws at the middle of their ranges.",
           "set": {
             "mix.va.vol": 0,
-            "d1.rls": 8
+            "d1.rls": 8,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           },
           "cables": [["kb.gatel", "d1.gate"]]
         },
@@ -149,7 +153,10 @@
           "why": "ATT 3 for a soft strike, RLS 8 for a long fade.\n- Listen for: the chord sliding down a fifth as it fades after each key.",
           "set": {
             "d2.att": 3,
-            "d2.rls": 8
+            "d2.rls": 8,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -163,7 +170,9 @@
             "fx.cartR": "cathedral",
             "fx.progL": "3",
             "fx.progR": "3",
-            "fx.blend": 4
+            "fx.blend": 4,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -209,7 +218,10 @@
           "why": "The keys play VCO A, so this lesson turns its channel down first, to hear the drone alone.\n- VCO A VOL 0, Drone 4 centred.\n- Patch the keyboard’s gate out to Drone 4’s GATE: Drone 4 sounds while a key is held, so the keys (and Play) start and stop it.\n- Listen for: a short burst of the cluster on each key.",
           "set": {
             "mix.va.vol": 0,
-            "mix.d4.pan": 0
+            "mix.d4.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d4.gate"]]
         },
@@ -284,7 +296,11 @@
             "d1.tune3": 1.43,
             "d1.tune4": 5.0,
             "d1.tune5": 1.05,
-            "d1.rls": 8
+            "d1.rls": 8,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           },
           "cables": [["kb.gatel", "d1.gate"]]
         },
@@ -363,7 +379,10 @@
           "why": "The keys play VCO A, so this lesson turns its channel down first, to hear the drone alone.\n- VCO A VOL 0, Drone 3 centred.\n- Patch the keyboard’s gate out to Drone 3’s GATE: Drone 3 sounds while a key is held, so the keys (and Play) start and stop it. And patch the keyboard’s v/oct out to Drone 3’s cv: the Papa Srapa’s tone follows the keys, PITCH setting where middle C lands.\n- Listen for: a plain buzzy square that moves with the keys.",
           "set": {
             "mix.va.vol": 0,
-            "mix.d3.pan": 0
+            "mix.d3.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [
             ["kb.voct", "d3.cvin"],
@@ -393,7 +412,9 @@
           "why": "Both filters' FREQ to 5.5.\n- Listen for: a rounder, more distant siren.",
           "set": {
             "vcf.lfreq": 5.5,
-            "vcf.rfreq": 5.5
+            "vcf.rfreq": 5.5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -444,7 +465,14 @@
             "d6.hi": true,
             "d6.pitch": 6,
             "mix.d6.vol": 8,
-            "d6.rls": 6
+            "d6.rls": 6,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [
             ["kb.voct", "d6.cvin"],
@@ -521,7 +549,10 @@
             "d3.div": 10,
             "d3.noise": 10,
             "d3.att": 7,
-            "d3.rls": 8
+            "d3.rls": 8,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d3.gate"]]
         },
@@ -597,7 +628,11 @@
             "d1.tune3": 0.48,
             "d1.tune4": 4.0,
             "d1.tune5": 0.0,
-            "d1.rls": 8
+            "d1.rls": 8,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           },
           "cables": [["kb.gatel", "d1.gate"]]
         },
@@ -692,7 +727,9 @@
           "why": "FREQ 4 on both sides.\n- Listen for: the buzz gone, the weight left.",
           "set": {
             "vcf.lfreq": 4,
-            "vcf.rfreq": 4
+            "vcf.rfreq": 4,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -751,7 +788,11 @@
           "set": {
             "mix.va.vol": 0,
             "mix.vb.vol": 7,
-            "mix.vb.pan": 0
+            "mix.vb.pan": 0,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -780,7 +821,10 @@
             "eb.a": 0,
             "eb.d": 8,
             "eb.s": 0,
-            "eb.r": 7
+            "eb.r": 7,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         }
       ],
@@ -972,7 +1016,9 @@
           "why": "Both filters’ FREQ to 5 and RES 2.\n- Listen for: the top fifths sweeter, less buzzy.",
           "set": {
             "vcf.lfreq": 5,
-            "vcf.rfreq": 5
+            "vcf.rfreq": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -1312,7 +1358,10 @@
             "eb.a": 1,
             "eb.d": 6,
             "eb.s": 6,
-            "eb.r": 5
+            "eb.r": 5,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -1337,7 +1386,9 @@
           "why": "Both filters’ FREQ to 5.\n- Listen for: the edge off the square and the drone.",
           "set": {
             "vcf.lfreq": 5,
-            "vcf.rfreq": 5
+            "vcf.rfreq": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -1395,7 +1446,10 @@
             "vcf.lfreq": 5,
             "vcf.rfreq": 5,
             "vcf.lres": 8,
-            "vcf.rres": 8
+            "vcf.rres": 8,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -1469,7 +1523,11 @@
             "mix.d4.pan": -5,
             "mix.d5.pan": 5,
             "d4.rls": 8,
-            "d5.rls": 8
+            "d5.rls": 8,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           },
           "cables": [
             ["kb.gatel", "d4.gate"],
@@ -1669,7 +1727,11 @@
             "mix.va.vol": 6,
             "mix.vb.vol": 7,
             "mix.va.pan": -3,
-            "mix.vb.pan": 3
+            "mix.vb.pan": 3,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -1783,7 +1845,9 @@
             "eb.s": 9,
             "eb.r": 7,
             "vcf.lfreq": 5.5,
-            "vcf.rfreq": 5.5
+            "vcf.rfreq": 5.5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -1933,7 +1997,10 @@
             "d3.att": 7,
             "d3.rls": 8,
             "mix.d3.vol": 8,
-            "mix.d3.pan": 0
+            "mix.d3.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d3.gate"]]
         },
@@ -2022,7 +2089,10 @@
             "d3.att": 6,
             "d3.rls": 7,
             "mix.d3.vol": 7,
-            "mix.d3.pan": 0
+            "mix.d3.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d3.gate"]]
         },
@@ -2112,7 +2182,11 @@
             "mix.va.vol": 6,
             "mix.vb.vol": 6,
             "mix.va.pan": -2,
-            "mix.vb.pan": 2
+            "mix.vb.pan": 2,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -2190,7 +2264,10 @@
             "d1.tune2": 4.0,
             "d1.tune3": 0.95,
             "d1.tune4": 0.0,
-            "d1.tune5": 0.0
+            "d1.tune5": 0.0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d1.gate"]]
         },
@@ -2221,7 +2298,9 @@
             "vcf.rfreq": 5.5,
             "fx.cartL": "cathedral",
             "fx.cartR": "cathedral",
-            "fx.blend": 4
+            "fx.blend": 4,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -2279,7 +2358,10 @@
             "d4.tune2": 2.5,
             "d4.tune3": 3.33,
             "d4.tune4": 2.5,
-            "d4.tune5": 4.74
+            "d4.tune5": 4.74,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [
             ["kb.gatel", "d1.gate"],
@@ -2322,7 +2404,9 @@
             "fx.cartL": "cathedral",
             "fx.cartR": "cathedral",
             "fx.z": 7,
-            "fx.blend": 5
+            "fx.blend": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -2512,7 +2596,9 @@
             "fx.cartR": "cathedral",
             "fx.progL": "3",
             "fx.progR": "3",
-            "fx.blend": 3
+            "fx.blend": 3,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -2597,7 +2683,9 @@
             "fx.cartR": "time",
             "fx.x": 3,
             "fx.y": 3,
-            "fx.blend": 2
+            "fx.blend": 2,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -2720,7 +2808,11 @@
             "ea.a": 0,
             "ea.d": 7,
             "ea.s": 0,
-            "ea.r": 7
+            "ea.r": 7,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -2790,7 +2882,10 @@
             "d1.tune5": 0.0,
             "d1.mod3": true,
             "d1.mod4": true,
-            "d1.mod5": true
+            "d1.mod5": true,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d1.gate"]]
         },
@@ -2825,7 +2920,9 @@
             "joy.y": 0.4,
             "fx.cartL": "cathedral",
             "fx.cartR": "cathedral",
-            "fx.blend": 4
+            "fx.blend": 4,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           },
           "cables": [["joy.outy", "vcf.cvl"]]
         }
@@ -3131,7 +3228,8 @@
             "ea.a": 0,
             "ea.s": 10,
             "eb.a": 0,
-            "eb.s": 10
+            "eb.s": 10,
+            "ea.r": 4
           }
         },
         {
@@ -3236,7 +3334,9 @@
             "vcf.lfreq": 4,
             "vcf.rfreq": 4,
             "vcf.lmod": 4,
-            "vcf.rmod": 4
+            "vcf.rmod": 4,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           },
           "cables": [["ea.env", "vcf.cvl"]]
         },
@@ -3500,7 +3600,9 @@
             "fx.y": 2,
             "fx.blend": 6,
             "vcf.lfreq": 6,
-            "vcf.rfreq": 6
+            "vcf.rfreq": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -3561,7 +3663,10 @@
             "d1.att": 0,
             "d1.rls": 3.5,
             "mix.d1.vol": 9,
-            "mix.d1.pan": 0
+            "mix.d1.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d1.gate"]]
         },
@@ -3639,7 +3744,10 @@
             "d2.tune2": 6.5,
             "d2.tune3": 2.38,
             "d2.tune4": 4.0,
-            "d2.tune5": 0.0
+            "d2.tune5": 0.0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -3673,7 +3781,9 @@
             "fx.y": 6,
             "fx.blend": 5,
             "vcf.lfreq": 6,
-            "vcf.rfreq": 6
+            "vcf.rfreq": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -3724,7 +3834,10 @@
             "d4.tune2": 2.5,
             "d4.tune3": 4.76,
             "d4.tune4": 0.0,
-            "d4.tune5": 2.11
+            "d4.tune5": 2.11,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d4.gate"]]
         },
@@ -3737,7 +3850,9 @@
             "vcf.rfreq": 3.5,
             "vcf.lmod": 3,
             "vcf.rmod": 3,
-            "seq.pulser": 7
+            "seq.pulser": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           },
           "cables": [["seq.pulse", "vcf.cvl"]]
         },
@@ -3803,7 +3918,10 @@
             "d1.tune2": 4.0,
             "d1.on3": false,
             "d1.on4": false,
-            "d1.on5": false
+            "d1.on5": false,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d1.gate"]]
         },
@@ -3866,7 +3984,9 @@
             "fx.z": 6,
             "fx.blend": 5,
             "vcf.lfreq": 6,
-            "vcf.rfreq": 6
+            "vcf.rfreq": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -3915,7 +4035,10 @@
             "d1.tune2": 5.0,
             "d1.tune3": 1.43,
             "d1.tune4": 2.5,
-            "d1.tune5": 3.68
+            "d1.tune5": 3.68,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d1.gate"]]
         },
@@ -3963,7 +4086,9 @@
             "fx.z": 6,
             "fx.blend": 4,
             "vcf.lfreq": 6,
-            "vcf.rfreq": 6
+            "vcf.rfreq": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -4152,7 +4277,9 @@
             "fx.z": 10,
             "fx.blend": 4,
             "vcf.lfreq": 8,
-            "vcf.rfreq": 8
+            "vcf.rfreq": 8,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -4310,7 +4437,10 @@
             "d4.tune2": 4.0,
             "d4.tune3": 4.76,
             "d4.on4": false,
-            "d4.on5": false
+            "d4.on5": false,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d4.gate"]]
         },
@@ -4392,7 +4522,10 @@
             "d3.att": 4,
             "d3.rls": 6,
             "mix.d3.vol": 4,
-            "mix.d3.pan": -4
+            "mix.d3.pan": -4,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d3.gate"]]
         },
@@ -4427,7 +4560,9 @@
             "fx.z": 5,
             "fx.blend": 4,
             "vcf.lfreq": 8,
-            "vcf.rfreq": 8
+            "vcf.rfreq": 8,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -4480,7 +4615,10 @@
             "d6.pitch": 0,
             "d6.att": 0,
             "d6.rls": 3,
-            "mix.d6.pan": 0
+            "mix.d6.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d6.gate"]]
         },
@@ -4504,7 +4642,9 @@
             "fx.z": 3,
             "fx.blend": 4,
             "vcf.lfreq": 7.5,
-            "vcf.rfreq": 7.5
+            "vcf.rfreq": 7.5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -4557,7 +4697,10 @@
             "d3.rls": 1.5,
             "mix.d3.vol": 10,
             "mix.d3.pan": 0,
-            "fx.master": 9
+            "fx.master": 9,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d3.gate"]]
         },
@@ -4584,7 +4727,9 @@
             "fx.cartR": "cathedral",
             "fx.progR": "3",
             "vcf.lfreq": 6,
-            "vcf.rfreq": 6
+            "vcf.rfreq": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -4638,7 +4783,9 @@
             "ea.s": 5,
             "ea.r": 5,
             "vcf.lfreq": 5.5,
-            "vcf.rfreq": 5.5
+            "vcf.rfreq": 5.5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -4726,7 +4873,8 @@
             "vcf.lmode": "bp",
             "vcf.lfreq": 5.5,
             "vcf.lres": 5,
-            "vcf.rfreq": 6
+            "vcf.rfreq": 6,
+            "vcf.rres": 2
           }
         },
         {
@@ -4815,7 +4963,8 @@
             "ea.loop": true,
             "ea.a": 2,
             "ea.d": 5.5,
-            "ea.s": 0
+            "ea.s": 0,
+            "ea.r": 4
           }
         },
         {
@@ -4894,7 +5043,10 @@
             "d2.tune2": 5.05,
             "d2.on3": false,
             "d2.on4": false,
-            "d2.on5": false
+            "d2.on5": false,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -4990,7 +5142,11 @@
             "ea.d": 6,
             "ea.s": 8,
             "ea.r": 5,
-            "kb.glide": 4
+            "kb.glide": 4,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -5068,7 +5224,10 @@
             "mix.va.vol": 0,
             "d6.hi": true,
             "d6.pitch": 2.31,
-            "mix.d6.pan": 0
+            "mix.d6.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -5098,7 +5257,9 @@
             "fx.z": 10,
             "fx.blend": 5,
             "vcf.lfreq": 6,
-            "vcf.rfreq": 6
+            "vcf.rfreq": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -5149,7 +5310,10 @@
             "d3.mod": 4,
             "d3.att": 3,
             "d3.rls": 5,
-            "mix.d3.pan": 0
+            "mix.d3.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d3.gate"]]
         },
@@ -5344,7 +5508,9 @@
             "fx.cartR": "cathedral",
             "fx.z": 7,
             "fx.blend": 5,
-            "fx.master": 6
+            "fx.master": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -5413,7 +5579,9 @@
             "vcf.dist": 4,
             "vcf.gain": 6,
             "vcf.lfreq": 5,
-            "vcf.rfreq": 5
+            "vcf.rfreq": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -5572,7 +5740,9 @@
             "eb.s": 8,
             "eb.r": 5,
             "vcf.lfreq": 7.5,
-            "vcf.rfreq": 7.5
+            "vcf.rfreq": 7.5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -5769,7 +5939,9 @@
             "vcf.gain": 6,
             "vcf.lfreq": 6,
             "vcf.rfreq": 6,
-            "fx.master": 6
+            "fx.master": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -5910,7 +6082,9 @@
             "mix.d3.vol": 2,
             "mix.d3.pan": 0,
             "vcf.lfreq": 6,
-            "vcf.rfreq": 6
+            "vcf.rfreq": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           },
           "cables": [["kb.gatel", "d3.gate"]]
         },
@@ -5981,7 +6155,10 @@
             "d5.tune2": 2.5,
             "d5.tune3": 1.43,
             "d5.tune4": 1.0,
-            "d5.tune5": 0.0
+            "d5.tune5": 0.0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -6017,7 +6194,9 @@
             "fx.cartL": "cathedral",
             "fx.cartR": "cathedral",
             "fx.z": 8,
-            "fx.blend": 5
+            "fx.blend": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           },
           "cables": [["lfoa.out", "vcf.cvl"]]
         }
@@ -6082,7 +6261,9 @@
             "ea.s": 5,
             "ea.r": 2,
             "vcf.lfreq": 5,
-            "vcf.rfreq": 5
+            "vcf.rfreq": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -6243,7 +6424,12 @@
           "set": {
             "va.wave": "saw",
             "ea.a": 0,
-            "ea.s": 9
+            "ea.s": 9,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2,
+            "ea.r": 4
           }
         },
         {
@@ -6313,7 +6499,10 @@
             "d6.att": 0,
             "d6.rls": 3,
             "mix.d6.vol": 7,
-            "mix.d6.pan": 0
+            "mix.d6.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -6407,7 +6596,10 @@
             "d4.tune2": 6.5,
             "d4.tune3": 3.33,
             "d4.tune4": 0.0,
-            "d4.tune5": 2.63
+            "d4.tune5": 2.63,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d4.gate"]]
         },
@@ -6442,7 +6634,9 @@
             "fx.z": 7,
             "fx.blend": 5,
             "vcf.lfreq": 6,
-            "vcf.rfreq": 6
+            "vcf.rfreq": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -6497,7 +6691,9 @@
             "ea.s": 5,
             "ea.r": 4,
             "vcf.lfreq": 6,
-            "vcf.rfreq": 6
+            "vcf.rfreq": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -6606,7 +6802,9 @@
             "fx.x": 2,
             "fx.y": 3,
             "fx.z": 4,
-            "fx.blend": 3
+            "fx.blend": 3,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -6656,7 +6854,10 @@
             "d3.att": 1,
             "d3.rls": 5,
             "mix.d3.vol": 5,
-            "mix.d3.pan": 0
+            "mix.d3.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d3.gate"]]
         },
@@ -6745,7 +6946,8 @@
             "ea.loop": true,
             "ea.a": 6,
             "ea.d": 6,
-            "ea.s": 0
+            "ea.s": 0,
+            "ea.r": 4
           }
         },
         {
@@ -6769,7 +6971,9 @@
             "fx.z": 6,
             "fx.blend": 4,
             "vcf.lfreq": 6,
-            "vcf.rfreq": 6
+            "vcf.rfreq": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -6817,7 +7021,10 @@
             "d1.tune2": 2.5,
             "d1.tune3": 4.76,
             "d1.tune4": 1.5,
-            "d1.tune5": 2.11
+            "d1.tune5": 2.11,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d1.gate"]]
         },
@@ -6844,7 +7051,9 @@
             "vcf.lfreq": 3,
             "vcf.lres": 4,
             "vcf.lmod": 6,
-            "vcf.rmod": 0
+            "vcf.rmod": 0,
+            "vcf.rfreq": 7,
+            "vcf.rres": 2
           }
         },
         {
@@ -6997,7 +7206,10 @@
             "d2.tune3": 5.71,
             "d2.tune4": 1.5,
             "d2.tune5": 3.68,
-            "d2.on1": false
+            "d2.on1": false,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d2.gate"]]
         },
@@ -7082,7 +7294,10 @@
             "d4.tune2": 3.5,
             "d4.tune3": 4.76,
             "d4.on4": false,
-            "d4.on5": false
+            "d4.on5": false,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d4.gate"]]
         },
@@ -7103,7 +7318,9 @@
             "vcf.rfreq": 3.5,
             "vcf.lmod": 3,
             "vcf.rmod": 3,
-            "lfoa.rate": 5
+            "lfoa.rate": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           },
           "cables": [["lfoa.out", "vcf.cvl"]]
         },
@@ -7173,7 +7390,10 @@
             "d6.rate": 6,
             "d6.att": 2,
             "d6.rls": 5,
-            "mix.d6.pan": 0
+            "mix.d6.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d6.gate"]]
         },
@@ -7194,7 +7414,9 @@
             "vcf.lfreq": 5,
             "vcf.rfreq": 5,
             "vcf.lmod": 2,
-            "vcf.rmod": 2
+            "vcf.rmod": 2,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           },
           "cables": [["joy.outy", "vcf.cvl"]]
         },
@@ -7261,7 +7483,10 @@
             "d1.tune2": 4.0,
             "d1.tune3": 5.71,
             "d1.tune4": 0.0,
-            "d1.tune5": 2.11
+            "d1.tune5": 2.11,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d1.gate"]]
         },
@@ -7346,7 +7571,10 @@
             "d2.tune3": 7.62,
             "d2.tune4": 5.0,
             "d2.tune5": 7.37,
-            "d2.on1": false
+            "d2.on1": false,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [
             ["kb.gatel", "d1.gate"],
@@ -7374,7 +7602,9 @@
           "why": "Both FREQ to 8.\n- Listen for: more for the flanger to sweep through.",
           "set": {
             "vcf.lfreq": 8,
-            "vcf.rfreq": 8
+            "vcf.rfreq": 8,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -7424,7 +7654,11 @@
             "ea.a": 0,
             "ea.d": 7,
             "ea.s": 3,
-            "ea.r": 6
+            "ea.r": 6,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -7596,7 +7830,10 @@
             "d3.pitch": 5.5,
             "d3.att": 0,
             "d3.rls": 2,
-            "mix.d3.pan": 0
+            "mix.d3.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d3.gate"]]
         },
@@ -7631,7 +7868,9 @@
             "fx.x": 3,
             "fx.y": 2,
             "fx.z": 2,
-            "fx.blend": 2
+            "fx.blend": 2,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -7691,7 +7930,8 @@
             "ea.loop": true,
             "ea.a": 7,
             "ea.d": 8,
-            "ea.s": 0
+            "ea.s": 0,
+            "ea.r": 4
           }
         },
         {
@@ -7715,7 +7955,9 @@
             "fx.cartL": "cathedral",
             "fx.cartR": "cathedral",
             "fx.z": 8,
-            "fx.blend": 6
+            "fx.blend": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -7765,7 +8007,10 @@
             "d2.tune3": 3.371,
             "d2.tune4": 1.04,
             "d2.tune5": 4.779,
-            "d2.on1": false
+            "d2.on1": false,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -7855,7 +8100,10 @@
             "d4.tune2": 1.53,
             "d4.tune3": 9.048,
             "d4.tune4": 2.52,
-            "d4.on5": false
+            "d4.on5": false,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -7944,7 +8192,9 @@
           "why": "Both FREQ to 5.\n- Listen for: the edge of each note softened.",
           "set": {
             "vcf.lfreq": 5,
-            "vcf.rfreq": 5
+            "vcf.rfreq": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -8110,7 +8360,9 @@
             "fx.z": 5,
             "fx.blend": 4,
             "vcf.lfreq": 7,
-            "vcf.rfreq": 7
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -8279,7 +8531,10 @@
             "d5.tune4": 6.0,
             "d5.tune5": 7.368,
             "d5.on2": false,
-            "d5.on3": false
+            "d5.on3": false,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d5.gate"]]
         },
@@ -8295,7 +8550,9 @@
             "mix.d3.pan": -3,
             "vcf.lmod": 2,
             "vcf.rmod": 2,
-            "lfoa.rate": 2
+            "lfoa.rate": 2,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           },
           "cables": [
             ["kb.gatel", "d3.gate"],
@@ -8361,7 +8618,10 @@
             "d6.att": 3,
             "d6.rls": 6,
             "mix.d6.vol": 8,
-            "mix.d6.pan": 0
+            "mix.d6.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d6.gate"]]
         },
@@ -8403,7 +8663,9 @@
             "vcf.rfreq": 3.5,
             "vcf.lmod": 2,
             "vcf.rmod": 2,
-            "lfoa.rate": 3
+            "lfoa.rate": 3,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           },
           "cables": [["lfoa.out", "vcf.cvl"]]
         },
@@ -8468,7 +8730,10 @@
             "d4.tune2": 5.0,
             "d4.tune3": 6.19,
             "d4.tune4": 2.5,
-            "d4.tune5": 3.684
+            "d4.tune5": 3.684,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d4.gate"]]
         },
@@ -8562,7 +8827,10 @@
             "d2.att": 5,
             "d2.rls": 8,
             "mix.d1.pan": -2,
-            "mix.d2.pan": 2
+            "mix.d2.pan": 2,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [
             ["kb.gatel", "d1.gate"],
@@ -8578,7 +8846,9 @@
             "vcf.gain": 7,
             "fx.master": 5,
             "vcf.lfreq": 5,
-            "vcf.rfreq": 5
+            "vcf.rfreq": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -8654,7 +8924,9 @@
             "eb.s": 9,
             "eb.r": 7,
             "vcf.lfreq": 5,
-            "vcf.rfreq": 5
+            "vcf.rfreq": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -8749,7 +9021,9 @@
             "fx.cartL": "cathedral",
             "fx.cartR": "cathedral",
             "fx.z": 8,
-            "fx.blend": 5
+            "fx.blend": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -8798,7 +9072,10 @@
             "d2.tune3": 6.19,
             "d2.tune4": 1.5,
             "d2.tune5": 3.684,
-            "d2.on1": false
+            "d2.on1": false,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d2.gate"]]
         },
@@ -8832,7 +9109,9 @@
             "fx.z": 8,
             "fx.blend": 6,
             "vcf.lfreq": 5,
-            "vcf.rfreq": 5
+            "vcf.rfreq": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -8882,7 +9161,10 @@
             "d1.on2": false,
             "d1.on3": false,
             "d1.on4": false,
-            "d1.on5": false
+            "d1.on5": false,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -8914,7 +9196,9 @@
             "fx.cartL": "cathedral",
             "fx.cartR": "cathedral",
             "fx.z": 7,
-            "fx.blend": 4
+            "fx.blend": 4,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -8959,7 +9243,10 @@
             "d5.tune2": 10.0,
             "d5.tune3": 6.592,
             "d5.tune4": 2.834,
-            "d5.tune5": 0.729
+            "d5.tune5": 0.729,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -8984,7 +9271,9 @@
             "fx.cartL": "cathedral",
             "fx.cartR": "cathedral",
             "fx.z": 7,
-            "fx.blend": 5
+            "fx.blend": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -9042,7 +9331,10 @@
             "mix.d1.vol": 6,
             "mix.d4.vol": 6,
             "mix.d1.pan": -4,
-            "mix.d4.pan": 4
+            "mix.d4.pan": 4,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [
             ["kb.gatel", "d1.gate"],
@@ -9079,7 +9371,9 @@
             "fx.cartL": "cathedral",
             "fx.cartR": "cathedral",
             "fx.z": 8,
-            "fx.blend": 5
+            "fx.blend": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -9172,7 +9466,9 @@
             "fx.cartL": "cathedral",
             "fx.cartR": "cathedral",
             "fx.z": 9,
-            "fx.blend": 6
+            "fx.blend": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -9218,7 +9514,10 @@
             "d3.rls": 8,
             "mix.d3.vol": 10,
             "mix.d3.pan": -2,
-            "seq.pulser": 0
+            "seq.pulser": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["seq.pulse", "d3.gate"]]
         },
@@ -9230,7 +9529,9 @@
             "vcf.lfreq": 5,
             "vcf.rfreq": 5,
             "vcf.lmod": 2,
-            "vcf.rmod": 2
+            "vcf.rmod": 2,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           },
           "cables": [["d3.env", "vcf.cvl"]]
         },
@@ -9322,7 +9623,10 @@
             "mix.d4.vol": 7,
             "mix.d5.vol": 7,
             "mix.d4.pan": -4,
-            "mix.d5.pan": 4
+            "mix.d5.pan": 4,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [
             ["kb.gatel", "d4.gate"],
@@ -9342,7 +9646,9 @@
             "fx.z": 8,
             "fx.blend": 6,
             "vcf.lfreq": 8,
-            "vcf.rfreq": 8
+            "vcf.rfreq": 8,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -9519,7 +9825,9 @@
             "fx.cartL": "cathedral",
             "fx.cartR": "cathedral",
             "fx.z": 9,
-            "fx.blend": 7
+            "fx.blend": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -9568,7 +9876,10 @@
             "d1.tune2": 4.0,
             "d1.tune3": 4.762,
             "d1.tune4": 1.5,
-            "d1.tune5": 2.632
+            "d1.tune5": 2.632,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d1.gate"]]
         },
@@ -9615,7 +9926,9 @@
             "fx.x": 3,
             "fx.y": 4,
             "fx.z": 8,
-            "fx.blend": 5
+            "fx.blend": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -9675,7 +9988,10 @@
             "d5.on1": false,
             "d5.on2": false,
             "d5.on3": false,
-            "d5.on4": false
+            "d5.on4": false,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -9735,7 +10051,9 @@
             "fx.z": 8,
             "fx.blend": 6,
             "vcf.lfreq": 9,
-            "vcf.rfreq": 9
+            "vcf.rfreq": 9,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -9806,7 +10124,9 @@
             "fx.z": 7,
             "fx.blend": 5,
             "vcf.lfreq": 6.5,
-            "vcf.rfreq": 6.5
+            "vcf.rfreq": 6.5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -9864,7 +10184,10 @@
             "d5.tune2": 6.5,
             "d5.tune3": 3.333,
             "d5.tune4": 6.0,
-            "d5.tune5": 6.316
+            "d5.tune5": 6.316,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d5.gate"]]
         },
@@ -9951,7 +10274,10 @@
             "d1.tune2": 10.0,
             "d1.tune3": 3.884,
             "d1.tune4": 1.5,
-            "d1.tune5": 0.0
+            "d1.tune5": 0.0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -10345,7 +10671,9 @@
             "fx.y": 1,
             "fx.blend": 6,
             "vcf.lfreq": 6,
-            "vcf.rfreq": 6
+            "vcf.rfreq": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -10495,7 +10823,10 @@
             "eb.a": 0,
             "eb.d": 5,
             "eb.s": 3,
-            "eb.r": 2
+            "eb.r": 2,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -10512,7 +10843,9 @@
           "why": "Both FREQ to 7.5.\n- Listen for: all the new harmonics through.",
           "set": {
             "vcf.lfreq": 7.5,
-            "vcf.rfreq": 7.5
+            "vcf.rfreq": 7.5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -10563,7 +10896,10 @@
             "d3.att": 1,
             "d3.rls": 4,
             "d6.att": 1,
-            "d6.rls": 4
+            "d6.rls": 4,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [
             ["kb.gatel", "d3.gate"],
@@ -10645,7 +10981,11 @@
             "ea.a": 2,
             "ea.d": 6,
             "ea.s": 9,
-            "ea.r": 5
+            "ea.r": 5,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -10719,7 +11059,11 @@
             "ea.d": 6,
             "ea.s": 8,
             "ea.r": 5,
-            "kb.glide": 2.5
+            "kb.glide": 2.5,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -10818,7 +11162,9 @@
           "why": "Both FREQ to 7.\n- Listen for: an open, bouncy organ.",
           "set": {
             "vcf.lfreq": 7,
-            "vcf.rfreq": 7
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -10901,7 +11247,9 @@
             "vcf.lfreq": 4.5,
             "vcf.rfreq": 4.5,
             "vcf.dist": 2,
-            "vcf.gain": 4
+            "vcf.gain": 4,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -10985,7 +11333,9 @@
             "vcf.lfreq": 6,
             "vcf.rfreq": 6,
             "vcf.dist": 2,
-            "fx.master": 8
+            "fx.master": 8,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -11067,7 +11417,9 @@
             "fx.x": 1,
             "fx.y": 2,
             "fx.z": 3,
-            "fx.blend": 2
+            "fx.blend": 2,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -11396,7 +11748,10 @@
             "d4.on2": false,
             "d4.on3": false,
             "d4.on4": false,
-            "d4.on5": false
+            "d4.on5": false,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d4.gate"]]
         },
@@ -11553,7 +11908,10 @@
             "d1.tune2": 4.0,
             "d1.tune3": 6.19,
             "d1.tune4": 1.5,
-            "d1.tune5": 1.579
+            "d1.tune5": 1.579,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -11664,7 +12022,9 @@
             "fx.z": 3,
             "fx.blend": 5,
             "vcf.lfreq": 5.5,
-            "vcf.rfreq": 5.5
+            "vcf.rfreq": 5.5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -11724,7 +12084,10 @@
             "d4.tune2": 4.0,
             "d4.tune3": 6.667,
             "d4.tune4": 1.5,
-            "d4.tune5": 2.632
+            "d4.tune5": 2.632,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d4.gate"]]
         },
@@ -11759,7 +12122,9 @@
             "fx.cartL": "cathedral",
             "fx.cartR": "cathedral",
             "fx.z": 7,
-            "fx.blend": 4
+            "fx.blend": 4,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -11808,7 +12173,10 @@
             "d2.tune2": 4.0,
             "d2.tune3": 0.952,
             "d2.tune4": 1.5,
-            "d2.tune5": 2.632
+            "d2.tune5": 2.632,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d2.gate"]]
         },
@@ -11847,7 +12215,9 @@
             "fx.x": 4,
             "fx.y": 4,
             "fx.z": 5,
-            "fx.blend": 4
+            "fx.blend": 4,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -11896,7 +12266,10 @@
             "d5.tune2": 5.0,
             "d5.tune3": 1.905,
             "d5.tune4": 4.5,
-            "d5.tune5": 4.737
+            "d5.tune5": 4.737,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d5.gate"]]
         },
@@ -12018,7 +12391,9 @@
             "fx.cartR": "vibe",
             "fx.x": 6,
             "fx.y": 6,
-            "fx.blend": 4
+            "fx.blend": 4,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -12088,7 +12463,8 @@
             "vcf.link": true,
             "vcf.lfreq": 4,
             "vcf.lres": 6,
-            "vcf.rres": 6
+            "vcf.rres": 6,
+            "vcf.rfreq": 7
           }
         },
         {
@@ -12168,7 +12544,10 @@
             "mix.d1.vol": 10,
             "mix.d2.vol": 10,
             "mix.d1.pan": -3,
-            "mix.d2.pan": 3
+            "mix.d2.pan": 3,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [
             ["kb.gatel", "d1.gate"],
@@ -12265,7 +12644,10 @@
             "d4.tune2": 2.5,
             "d4.tune3": 4.762,
             "d4.tune4": 0.0,
-            "d4.tune5": 2.105
+            "d4.tune5": 2.105,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d4.gate"]]
         },
@@ -12649,7 +13031,10 @@
             "d2.tune2": 8.5,
             "d2.tune3": 8.1,
             "d2.tune4": 3.5,
-            "d2.on5": false
+            "d2.on5": false,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -13035,7 +13420,9 @@
             "mix.d6.vol": 2,
             "mix.d6.pan": 2,
             "vcf.lfreq": 5,
-            "vcf.rfreq": 5
+            "vcf.rfreq": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -13326,7 +13713,9 @@
             "vcf.rfreq": 5,
             "vcf.dist": 6,
             "vcf.gain": 6,
-            "fx.master": 6
+            "fx.master": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -13388,7 +13777,10 @@
             "d3.rate": 7.4,
             "d3.hold": true,
             "mix.d3.vol": 6,
-            "mix.d3.pan": -4
+            "mix.d3.pan": -4,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -13472,7 +13864,9 @@
             "ea.s": 6,
             "ea.r": 1,
             "vcf.lfreq": 6,
-            "vcf.rfreq": 6
+            "vcf.rfreq": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -13683,7 +14077,9 @@
             "va.cvamt": 0.15,
             "lfob.rate": 1,
             "vcf.lfreq": 5,
-            "vcf.rfreq": 5
+            "vcf.rfreq": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           },
           "cables": [["lfob.out", "va.cv"]]
         },
@@ -13833,7 +14229,9 @@
             "ea.s": 8,
             "ea.r": 4,
             "vcf.lfreq": 8,
-            "vcf.rfreq": 8
+            "vcf.rfreq": 8,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -13927,7 +14325,9 @@
             "vcf.rfreq": 7,
             "vcf.dist": 10,
             "vcf.gain": 9,
-            "fx.master": 5
+            "fx.master": 5,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -14000,7 +14400,11 @@
             "ea.a": 0,
             "ea.d": 5,
             "ea.s": 9,
-            "ea.r": 3
+            "ea.r": 3,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -14086,7 +14490,11 @@
             "ea.a": 4,
             "ea.d": 6,
             "ea.s": 10,
-            "ea.r": 6
+            "ea.r": 6,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -14292,7 +14700,9 @@
             "fx.x": 2,
             "fx.y": 3,
             "fx.z": 3,
-            "fx.blend": 2
+            "fx.blend": 2,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -14616,7 +15026,11 @@
             "ea.a": 0,
             "ea.d": 5,
             "ea.s": 0,
-            "ea.r": 5
+            "ea.r": 5,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -14698,7 +15112,11 @@
             "ea.a": 0,
             "ea.d": 6,
             "ea.s": 0,
-            "ea.r": 6
+            "ea.r": 6,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -14961,7 +15379,10 @@
             "d1.att": 4,
             "d1.rls": 7,
             "mix.d1.vol": 8,
-            "mix.d1.pan": 0
+            "mix.d1.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d1.gate"]]
         },
@@ -15302,7 +15723,9 @@
             "fx.x": 2,
             "fx.y": 4,
             "fx.z": 5,
-            "fx.blend": 3
+            "fx.blend": 3,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -15438,7 +15861,10 @@
             "d3.att": 0,
             "d3.rls": 1.5,
             "mix.d3.vol": 7,
-            "mix.d3.pan": 0
+            "mix.d3.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -15526,7 +15952,10 @@
             "d3.rls": 3,
             "mix.d3.vol": 10,
             "mix.d3.pan": 0,
-            "fx.master": 9
+            "fx.master": 9,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d3.gate"]]
         },
@@ -15640,7 +16069,9 @@
             "fx.x": 2,
             "fx.y": 4,
             "fx.z": 4,
-            "fx.blend": 3
+            "fx.blend": 3,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         }
       ],
@@ -15762,7 +16193,10 @@
             "d3.att": 0,
             "d3.rls": 3,
             "mix.d3.vol": 8,
-            "mix.d3.pan": 0
+            "mix.d3.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["d3.modout", "d3.gate"]]
         },
@@ -15846,7 +16280,10 @@
             "d3.att": 1,
             "d3.rls": 3.5,
             "mix.d3.vol": 9,
-            "mix.d3.pan": -4
+            "mix.d3.pan": -4,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["d3.modout", "d3.gate"]]
         },
@@ -15859,7 +16296,8 @@
             "vcf.lfreq": 5,
             "vcf.lres": 2,
             "vcf.rmode": "lp",
-            "vcf.rfreq": 7
+            "vcf.rfreq": 7,
+            "vcf.rres": 2
           }
         },
         {
@@ -15937,7 +16375,10 @@
             "d6.att": 0,
             "d6.rls": 1,
             "mix.d6.vol": 6,
-            "mix.d6.pan": 0
+            "mix.d6.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           }
         },
         {
@@ -16031,7 +16472,10 @@
             "d6.att": 0,
             "d6.rls": 2,
             "mix.d6.vol": 6,
-            "mix.d6.pan": 0
+            "mix.d6.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d6.gate"]]
         },
@@ -16126,7 +16570,9 @@
             "mix.d3.vol": 2,
             "mix.d3.pan": -3,
             "vcf.lfreq": 6,
-            "vcf.rfreq": 6
+            "vcf.rfreq": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -16214,7 +16660,9 @@
             "ea.s": 0,
             "ea.r": 8,
             "vcf.lfreq": 8,
-            "vcf.rfreq": 8
+            "vcf.rfreq": 8,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -16373,7 +16821,11 @@
             "eb.a": 3,
             "eb.d": 6,
             "eb.s": 10,
-            "eb.r": 6
+            "eb.r": 6,
+            "vcf.lfreq": 7,
+            "vcf.rfreq": 7,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -16458,7 +16910,8 @@
             "mix.d3.pan": -5,
             "vcf.lmode": "bp",
             "vcf.lfreq": 7.5,
-            "vcf.lres": 7
+            "vcf.lres": 7,
+            "vcf.rres": 2
           }
         },
         {
@@ -16566,7 +17019,9 @@
           "why": "Both FREQ to 9.\n- Listen for: the full, buzzy edge of the square.",
           "set": {
             "vcf.lfreq": 9,
-            "vcf.rfreq": 9
+            "vcf.rfreq": 9,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {
@@ -16631,7 +17086,10 @@
             "d3.att": 3,
             "d3.rls": 5,
             "mix.d3.vol": 8,
-            "mix.d3.pan": 0
+            "mix.d3.pan": 0,
+            "ea.a": 1,
+            "ea.s": 7,
+            "ea.r": 4
           },
           "cables": [["kb.gatel", "d3.gate"]]
         },
@@ -16731,7 +17189,9 @@
             "eb.s": 7,
             "eb.r": 4,
             "vcf.lfreq": 6,
-            "vcf.rfreq": 6
+            "vcf.rfreq": 6,
+            "vcf.lres": 2,
+            "vcf.rres": 2
           }
         },
         {

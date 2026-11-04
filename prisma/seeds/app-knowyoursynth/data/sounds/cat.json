@@ -147,7 +147,8 @@
             "vcf.mod2Depth": 0,
             "vca.mode": "ar",
             "ar.attack": 0.3,
-            "ar.release": 4
+            "ar.release": 4,
+            "vcf.kbd": 5
           }
         }
       ],
@@ -363,7 +364,8 @@
             "vcf.mod1Depth": 6,
             "vcf.fc": 5.4,
             "vcf.q": 7.5,
-            "lfo.rate": 6.2
+            "lfo.rate": 6.2,
+            "vcf.kbd": 5
           }
         },
         {
@@ -591,7 +593,8 @@
             "vco1.sub": 8,
             "vco1.pulse": 6,
             "vco1.pw": 0,
-            "vcf.vco1Audio": false
+            "vcf.vco1Audio": false,
+            "vcf.kbd": 5
           }
         },
         {
@@ -789,7 +792,8 @@
             "vcf.mod2Depth": 2,
             "adsr.attack": 0.5,
             "adsr.sustain": 9,
-            "adsr.release": 3.5
+            "adsr.release": 3.5,
+            "vcf.kbd": 5
           }
         }
       ],
@@ -845,7 +849,13 @@
           "title": "Swell and fade",
           "module": "amp",
           "why": "The AR envelope gives the VCA (voltage-controlled amplifier) a slow rise and fall, so the wind swells in and dies away instead of switching on and off.\n- VCA AR: the AR (attack, release) envelope sets the loudness. It rises over ATTACK, holds at full level while the key is down, and falls over RELEASE.\n- AR ATTACK 7 (680 ms): the wind fades in over most of a second.\n- AR RELEASE 8 (1.6 s): let go and it dies away slowly.\n- Listen for: tap a key briefly and you get a short puff; hold it for a sustained gust. The release carries on after you let go.",
-          "set": { "vca.mode": "ar", "ar.attack": 7, "ar.release": 8 }
+          "set": {
+            "vca.mode": "ar",
+            "ar.attack": 7,
+            "ar.release": 8,
+            "adsr.sustain": 8,
+            "adsr.release": 3
+          }
         }
       ],
       "context": {
@@ -908,7 +918,8 @@
             "vcf.fc": 4,
             "vcf.q": 3,
             "vcf.mod2Src": "adsr",
-            "vcf.mod2Depth": 5
+            "vcf.mod2Depth": 5,
+            "vcf.kbd": 5
           }
         },
         {
@@ -970,7 +981,9 @@
             "vco1.sync": "mode_a",
             "vco1.coarse": 6.2,
             "vco1.saw": 8,
-            "vco2.sub": 5
+            "vco2.sub": 5,
+            "adsr.sustain": 8,
+            "adsr.release": 3
           }
         },
         {
@@ -989,7 +1002,8 @@
             "vcf.mod2Depth": 1.5,
             "vca.mode": "ar",
             "ar.attack": 0.3,
-            "ar.release": 4
+            "ar.release": 4,
+            "vcf.kbd": 5
           }
         }
       ],
@@ -1145,7 +1159,13 @@
           "title": "A blown attack",
           "module": "amp",
           "why": "The VCA (voltage-controlled amplifier) moves to the AR envelope with a gentle attack, so each note is blown in rather than switched on.\n- VCA AR: the AR (attack, release) envelope sets the loudness and holds full level while the key is down.\n- AR ATTACK 3.6 (49 ms): a soft start, the breath before the tone. Longer is a lazier flute.\n- AR RELEASE 4 (91 ms): a short fade after you let go.\n- Listen for: notes starting with a soft push instead of a click.",
-          "set": { "vca.mode": "ar", "ar.attack": 3.6, "ar.release": 4 }
+          "set": {
+            "vca.mode": "ar",
+            "ar.attack": 3.6,
+            "ar.release": 4,
+            "adsr.sustain": 8,
+            "adsr.release": 3
+          }
         }
       ],
       "context": {
@@ -1743,7 +1763,13 @@
           "title": "Clipped by the AR",
           "module": "amp",
           "why": "The VCA (voltage-controlled amplifier) moves to the AR envelope with both times at the minimum, so notes start and stop exactly with the keys.\n- VCA AR: the AR (attack, release) envelope holds full level while the key is down.\n- AR ATTACK 0 (3 ms): each note starts at full level.\n- AR RELEASE 0 (5 ms): each note stops dead when the key comes up. Raise it and the notes get a tail and the stiffness goes.\n- Listen for: play short, even notes. The keys alone decide how clipped the line sounds.",
-          "set": { "vca.mode": "ar", "ar.attack": 0, "ar.release": 0 }
+          "set": {
+            "vca.mode": "ar",
+            "ar.attack": 0,
+            "ar.release": 0,
+            "adsr.sustain": 8,
+            "adsr.release": 3
+          }
         },
         {
           "title": "No glide, no vibrato",

@@ -11867,7 +11867,8 @@
           "why": "The square LFO, added to the loudness, cuts the sound on and off: each cut is a blade passing.\n- LFO (square) → LOUD CV: chops the loudness.\n- LFO RATE 3.5 (0.91 Hz): a slow chop, about one blade a second, to start from.\n- loudness SUSTAIN 6: holds the loudness halfway, so the square can swing it fully on and fully off.\n- Listen for: a slow \"whup... whup\".",
           "set": {
             "lfo.rate": 3.5,
-            "aenv.sustain": 6
+            "aenv.sustain": 6,
+            "aenv.decay": 3.5
           },
           "cables": [["j.lfoSq", "j.loudCv"]]
         },
@@ -12136,7 +12137,8 @@
             "env.loudDecay": false,
             "env.filterDecay": false,
             "aenv.attack": 0,
-            "aenv.sustain": 10
+            "aenv.sustain": 10,
+            "aenv.decay": 3.5
           }
         }
       ],
@@ -14716,7 +14718,8 @@
             "osc2.range": "4",
             "mix.osc2On": true,
             "mix.osc1": 8,
-            "mix.osc2": 4
+            "mix.osc2": 4,
+            "aenv.decay": 3.5
           }
         },
         {
@@ -15161,7 +15164,8 @@
             "mix.osc2": 3,
             "mix.noiseOn": true,
             "mix.noise": 4,
-            "noise.colour": "white"
+            "noise.colour": "white",
+            "aenv.decay": 3.5
           }
         },
         {
@@ -15974,7 +15978,8 @@
           "why": "The square LFO chops the sweep into separate bleeps.\n- LFO (square) → LOUD CV: chops the sound.\n- LFO RATE 6 (7.2 Hz): fast chopping.\n- loudness SUSTAIN 5: loudness held halfway so the square chops fully.\n- Listen for: bleeps and bloops that never quite repeat the same way.",
           "set": {
             "lfo.rate": 6,
-            "aenv.sustain": 5
+            "aenv.sustain": 5,
+            "aenv.decay": 3.5
           },
           "cables": [["j.lfoSq", "j.loudCv"]]
         }

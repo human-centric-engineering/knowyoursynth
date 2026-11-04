@@ -321,7 +321,8 @@
           "why": "Mono with single trigger, and a short portamento.\n- MODE Mono, single trigger: one note at a time; legato notes do not restart the envelopes.\n- PORTAMENTO TIME 130 ms: a short slide between notes.\n- Listen for: a lead line that slides from note to note.",
           "set": {
             "kbd.mode": "mono-st",
-            "kbd.porta": 3
+            "kbd.porta": 3,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -431,7 +432,8 @@
           "set": {
             "osc1.lfo3": 2.5,
             "osc2.lfo3": 2.5,
-            "vcf.lfo3": 3
+            "vcf.lfo3": 3,
+            "vcf.cutoff": 7
           }
         }
       ],
@@ -485,7 +487,8 @@
           "module": "mode",
           "why": "MODE to unison: the Unison and MT lamps light.\n- MODE Unison, multi trigger: all seven voices on each note, detuned.\n- Listen for: one note turning into a thick, wide chorus of them.",
           "set": {
-            "kbd.mode": "uni-mt"
+            "kbd.mode": "uni-mt",
+            "vcf.cutoff": 7
           }
         },
         {
@@ -1014,7 +1017,8 @@
             "osc1.wave": "tri",
             "osc2.wave": "tri",
             "osc2.transpose": 12,
-            "mix.osc2": 5
+            "mix.osc2": 5,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -4141,7 +4145,8 @@
             "osc1.wave": "tri",
             "osc2.wave": "tri",
             "osc2.transpose": 24,
-            "mix.osc2": 2
+            "mix.osc2": 2,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -4295,7 +4300,8 @@
             "osc2.pw": 3,
             "osc2.transpose": 24,
             "osc2.tune": -3,
-            "mix.osc2": 3
+            "mix.osc2": 3,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -6922,7 +6928,8 @@
             "mix.osc1": 0,
             "mix.osc2": 8,
             "osc2.sync": true,
-            "osc2.transpose": 9
+            "osc2.transpose": 9,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -7849,7 +7856,8 @@
             "osc2.transpose": 12,
             "env2.decay": 4.5,
             "env2.sustain": 0,
-            "env2.release": 4
+            "env2.release": 4,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -8088,7 +8096,8 @@
             "env1.sustain": 0,
             "env2.decay": 4.5,
             "env2.sustain": 0,
-            "env2.release": 3
+            "env2.release": 3,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -8251,7 +8260,8 @@
             "osc1.wave": "tri",
             "lfo1.mode": "mono",
             "lfo1.rate": 2.5,
-            "osc1.lfo1": 6
+            "osc1.lfo1": 6,
+            "vcf.cutoff": 7
           }
         }
       ],
@@ -8355,7 +8365,8 @@
             "osc2.tune": 5,
             "lfo1.mode": "mono",
             "lfo1.rate": 6,
-            "osc1.lfo1": 3
+            "osc1.lfo1": 3,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -8414,7 +8425,8 @@
             "lfo1.mode": "mono",
             "lfo1.shape": "sq",
             "lfo1.rate": 5.5,
-            "osc1.lfo1": 3
+            "osc1.lfo1": 3,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -8480,7 +8492,8 @@
             "env1.sustain": 0,
             "env2.decay": 4,
             "env2.sustain": 0,
-            "env2.release": 3
+            "env2.release": 3,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -9027,7 +9040,8 @@
             "env2.release": 5,
             "mix.noise": 2,
             "delay.time": 5,
-            "delay.mix": 2
+            "delay.mix": 2,
+            "vcf.cutoff": 7
           }
         }
       ],
@@ -9318,7 +9332,8 @@
             "osc2.eg1": 8,
             "env1.decay": 4,
             "env1.sustain": 0,
-            "mix.noise": 3
+            "mix.noise": 3,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -9474,7 +9489,8 @@
             "env2.sustain": 0,
             "env2.release": 6,
             "delay.time": 6,
-            "delay.mix": 2
+            "delay.mix": 2,
+            "vcf.cutoff": 7
           }
         }
       ],
@@ -9529,7 +9545,8 @@
             "mix.osc2": 2,
             "env2.decay": 6.5,
             "env2.sustain": 0,
-            "env2.release": 6.5
+            "env2.release": 6.5,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -9612,7 +9629,8 @@
             "mix.osc2": 5,
             "mix.sub1": 4,
             "env2.release": 1.5,
-            "vca.level": 8
+            "vca.level": 8,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -9997,7 +10015,8 @@
             "mix.osc1": 3,
             "mix.osc2": 7,
             "osc2.sync": true,
-            "osc2.transpose": 17
+            "osc2.transpose": 17,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -11027,7 +11046,8 @@
             "osc2.transpose": 19,
             "env2.decay": 6,
             "env2.sustain": 1,
-            "env2.release": 5
+            "env2.release": 5,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -11285,7 +11305,8 @@
             "env2.attack": 3.5,
             "env2.decay": 7,
             "env2.sustain": 3,
-            "env2.release": 7
+            "env2.release": 7,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -12007,7 +12028,8 @@
             "osc2.eg1": 3,
             "env1.decay": 5,
             "env1.sustain": 2,
-            "kbd.porta": 2
+            "kbd.porta": 2,
+            "vcf.cutoff": 7
           }
         },
         {
@@ -12278,7 +12300,8 @@
             "env2.decay": 6,
             "env2.sustain": 0,
             "env2.release": 5,
-            "delay.mix": 2
+            "delay.mix": 2,
+            "vcf.cutoff": 7
           }
         }
       ],
@@ -12471,7 +12494,8 @@
             "vca.lfo1": 2,
             "lfo1.rate": 4,
             "delay.time": 8,
-            "delay.mix": 3
+            "delay.mix": 3,
+            "vcf.cutoff": 7
           }
         }
       ],
@@ -12529,7 +12553,8 @@
             "mix.sub1": 5,
             "env2.attack": 2,
             "env2.release": 6,
-            "vca.level": 8
+            "vca.level": 8,
+            "vcf.cutoff": 7
           }
         },
         {

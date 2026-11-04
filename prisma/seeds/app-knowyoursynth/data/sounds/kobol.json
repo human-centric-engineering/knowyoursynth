@@ -131,7 +131,8 @@
             "vcf.env": 0,
             "ads1.attack": 6.5,
             "ads1.decay": 7.6,
-            "ads1.sustain": 9
+            "ads1.sustain": 9,
+            "vcf.kbd": 1
           }
         }
       ],
@@ -205,7 +206,7 @@
           "title": "Open filter",
           "module": "filter",
           "why": "The VCF (voltage-controlled filter) is left mostly open. The sync sweep already moves the tone, so the filter only has to stay out of the way.\n- VCF FREQ 8.2 (4.6 kHz): high, so the tearing top end of the sync comes through. Lower it and the lead loses its snarl.\n- RESONANCE 1: a hint of peak, barely audible this open.\n- ADS CONTROL 0 (off): the Kobol’s filter envelope amount is off at the centre, so ADS 2 only works on VCO 2 here.\n- Listen for: a brighter, harder lead than before. Pull VCF FREQ down to 5 to hear how much of the sweep lives in the top end.",
-          "set": { "vcf.freq": 8.2, "vcf.res": 1, "vcf.env": 0 }
+          "set": { "vcf.freq": 8.2, "vcf.res": 1, "vcf.env": 0, "vcf.kbd": 1 }
         },
         {
           "title": "Organ-style loudness",
@@ -361,7 +362,7 @@
           "title": "Open filter",
           "module": "filter",
           "why": "The VCF (voltage-controlled filter) is opened wide so the waveform movement is heard as it is, not smoothed over.\n- VCF FREQ 8.5 (5.7 kHz): high, so the bright pulse end of the sweep comes through in full.\n- RESONANCE 0: no peak; a resonant filter would add a colour of its own.\n- ADS CONTROL 0 (off): no filter envelope.\n- Listen for: a brighter peak to each sweep. Lower VCF FREQ to 5 and the movement gets subtler, because the filter cuts the very harmonics that are changing.",
-          "set": { "vcf.freq": 8.5, "vcf.res": 0, "vcf.env": 0 }
+          "set": { "vcf.freq": 8.5, "vcf.res": 0, "vcf.env": 0, "vcf.kbd": 1 }
         },
         {
           "title": "Slow swell",
@@ -430,7 +431,13 @@
           "title": "ADS 2 opens VCO 1’s VCA",
           "module": "env",
           "why": "ADS 2, an ADS (attack, decay, sustain) envelope, is patched to VCO 1’s VCA, so VCO 1 gets a short loudness shape of its own. The mix moves from bright to soft on every note, which a mixer knob cannot do.\n- Cable ADS 2 OUT → VCO 1 VOLUME: the envelope voltage opens VCO 1’s VCA on top of its VOLUME knob at 0.\n- ATTACK 1 (2 ms): VCO 1 is in at once.\n- DECAY 5.2 (77 ms): how long the bright buzz lasts before the triangle takes over.\n- SUSTAIN 0: VCO 1 goes fully quiet while the key is held.\n- ADS CONTROL 0 (off): ADS 2 leaves the filter alone.\n- Listen for: a bright tick on each note that melts into the soft triangle. Turn DECAY up and the buzz lingers.",
-          "set": { "ads2.attack": 1, "ads2.decay": 5.2, "ads2.sustain": 0, "vcf.env": 0 },
+          "set": {
+            "ads2.attack": 1,
+            "ads2.decay": 5.2,
+            "ads2.sustain": 0,
+            "vcf.env": 0,
+            "vcf.kbd": 1
+          },
           "cables": [["j.ads2Out", "j.vco1Vol"]]
         },
         {
@@ -803,7 +810,8 @@
             "vcf.env": 0,
             "ads1.attack": 1,
             "ads1.decay": 5,
-            "ads1.sustain": 10
+            "ads1.sustain": 10,
+            "vcf.kbd": 1
           }
         }
       ],
@@ -957,7 +965,8 @@
             "ads2.sustain": 2,
             "vcf.env": 1.5,
             "vcf.freq": 5.5,
-            "vcf.res": 1
+            "vcf.res": 1,
+            "vcf.kbd": 1
           }
         },
         {
@@ -1040,7 +1049,8 @@
             "vcf.res": 5,
             "vcf.env": 0,
             "ads1.attack": 5,
-            "ads1.sustain": 10
+            "ads1.sustain": 10,
+            "vcf.kbd": 1
           }
         }
       ],
@@ -1158,7 +1168,8 @@
             "vcf.env": 1.8,
             "ads2.attack": 1,
             "ads2.decay": 5.6,
-            "ads2.sustain": 4
+            "ads2.sustain": 4,
+            "vcf.kbd": 1
           }
         },
         {
@@ -1230,7 +1241,8 @@
             "ads2.sustain": 0,
             "vcf.env": 2,
             "vcf.freq": 7,
-            "vcf.res": 1.5
+            "vcf.res": 1.5,
+            "vcf.kbd": 1
           }
         }
       ],
@@ -1283,7 +1295,7 @@
           "title": "Open filter, negative envelope",
           "module": "filter",
           "why": "The VCF (voltage-controlled filter) rests open and the envelope amount is turned the other way, so each note pulls the cutoff down instead of up.\n- VCF FREQ 8 (4.0 kHz): high, so the resting point is bright.\n- RESONANCE 3: a small peak that makes the movement easier to hear.\n- ADS CONTROL −3 (−4.2 oct): on the Kobol this knob is off at the centre. Left of centre ADS 2 closes the filter, here by about four octaves at the peak. Right of centre would give a normal sweep.\n- Listen for: each note now starts duller. ADS 2 is still on its short starting shape, so the effect is quick.",
-          "set": { "vcf.freq": 8, "vcf.res": 3, "vcf.env": -3 }
+          "set": { "vcf.freq": 8, "vcf.res": 3, "vcf.env": -3, "vcf.kbd": 1 }
         },
         {
           "title": "A slow ADS 2",
@@ -1361,7 +1373,8 @@
             "vcf.env": 0,
             "ads1.attack": 1,
             "ads1.decay": 8,
-            "ads1.sustain": 0
+            "ads1.sustain": 0,
+            "vcf.kbd": 1
           }
         }
       ],

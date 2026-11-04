@@ -44,7 +44,7 @@
           "title": "A low ladder filter",
           "module": "filter",
           "why": "The 24 dB ladder filter takes most of the brightness away, leaving a round, dark body. The next step opens it on each note.\n- CUTOFF 3.5 (about 220 Hz): low, so the buzz is gone and you hear the body.\n- RESONANCE 3 (30 %): a little ring at the cutoff, which will give the snap an edge.\n- KBD TRACK 1:2: the cutoff follows the keys half as far as the pitch, so the high notes of the riff stay bright enough.\n- Listen for: a much darker, rounder bass.",
-          "set": { "vcf.cutoff": 3.5, "vcf.res": 3, "vcf.kbd": "half" }
+          "set": { "vcf.cutoff": 3.5, "vcf.res": 3, "vcf.kbd": "half", "hpf.cutoff": 3 }
         },
         {
           "title": "Snap it open",
@@ -120,7 +120,8 @@
             "mix.osc2": 8,
             "osc2.oct": "8",
             "osc2.wave": "saw",
-            "osc2.freq": 3.5
+            "osc2.freq": 3.5,
+            "hpf.cutoff": 3
           }
         },
         {
@@ -134,7 +135,13 @@
           "title": "Filter open, loudness held",
           "module": "amp",
           "why": "The filter opens wide so the sweep is heard in full, and the VCA holds the note at full level while the key is down.\n- CUTOFF 7.5 (about 3.6 kHz), ENVELOPE AMT 0: the filter stays open and does not move.\n- VCA MODE KB RLS: full level while the key is held, fading over RELEASE after. The envelope only does the sweep, not the loudness.\n- RELEASE 4 (60 ms): a short fade so notes do not click.\n- Listen for: every note at full level while the tone sweeps inside it.",
-          "set": { "vcf.cutoff": 7.5, "vcf.env": 0, "vca.mode": "kbrls", "env.release": 4 }
+          "set": {
+            "vcf.cutoff": 7.5,
+            "vcf.env": 0,
+            "vca.mode": "kbrls",
+            "env.release": 4,
+            "vcf.res": 2
+          }
         },
         {
           "title": "Glide and a little spring",
@@ -208,7 +215,8 @@
             "env.release": 4,
             "vcf.cutoff": 4,
             "vcf.env": 3.5,
-            "vcf.res": 4
+            "vcf.res": 4,
+            "hpf.cutoff": 3
           }
         },
         {
@@ -261,7 +269,8 @@
             "mix.osc1": 7,
             "vcf.cutoff": 4.5,
             "vcf.res": 7.5,
-            "vcf.env": 0
+            "vcf.env": 0,
+            "hpf.cutoff": 3
           }
         },
         {
@@ -326,7 +335,8 @@
             "osc2.wave": "sq",
             "osc2.freq": 7,
             "mix.osc1": 6,
-            "mix.osc2": 6
+            "mix.osc2": 6,
+            "hpf.cutoff": 3
           }
         },
         {
@@ -340,7 +350,15 @@
           "title": "Open the VCA for good",
           "module": "amp",
           "why": "VCA MODE DRONE leaves the amplifier open, so the drone sounds without a key held. Playing a key only sets the pitch.\n- VCA MODE DRONE.\n- CUTOFF 5 (about 630 Hz), RESONANCE 3, ENVELOPE AMT 0: a warm, steady filter that the envelope does not move.\n- Reverb MIX 5: the spring spreads the drone out.\n- Listen for: the drone carrying on between notes. Press a key to change its pitch.",
-          "set": { "vca.mode": "drone", "vcf.cutoff": 5, "vcf.res": 3, "vcf.env": 0, "rev.mix": 5 }
+          "set": {
+            "vca.mode": "drone",
+            "vcf.cutoff": 5,
+            "vcf.res": 3,
+            "vcf.env": 0,
+            "rev.mix": 5,
+            "env.sustain": 7,
+            "env.release": 3
+          }
         }
       ],
       "context": {
@@ -411,7 +429,7 @@
           "title": "LFO through the attenuator",
           "module": "util",
           "why": "The LFO’s WAVE OUT is at full depth, far too much for a vibrato. The ATTENUATOR turns it down.\n- Cable WAVE OUT (Modulation) → ATTENUATOR INPUT.\n- ATTENUATOR +0.15: just clockwise of 0, so only a few per cent of the LFO gets through. Anticlockwise would turn it upside down, which a vibrato does not mind.\n- LFO RATE 4.4 (about 5 Hz), WAVEFORM sine: a natural vibrato speed and shape.\n- Listen for: nothing yet. The attenuated LFO has nowhere to go.",
-          "set": { "att.amount": 0.15, "lfo.rate": 4.4, "lfo.wave": "sine" },
+          "set": { "att.amount": 0.15, "lfo.rate": 4.4, "lfo.wave": "sine", "hpf.cutoff": 3 },
           "cables": [["j.lfo_out", "j.att_in"]]
         },
         {
@@ -468,7 +486,13 @@
           "title": "Make the filter ring",
           "module": "filter",
           "why": "At full resonance the ladder filter feeds back on itself and rings at its cutoff: a pure, whistling tone.\n- RESONANCE 10: full. The filter now makes a sound with no input.\n- KBD TRACK 1:1: the cutoff moves with the keys, one octave per octave, so the whistle plays the notes.\n- CUTOFF 3.7 (about 260 Hz, near middle C): sets where the whistle sits, close to in tune with the keys.\n- ENVELOPE AMT 0: the envelope leaves the pitch alone.\n- Listen for: a clean, flute-like tone following the keys.",
-          "set": { "vcf.res": 10, "vcf.kbd": "full", "vcf.cutoff": 3.7, "vcf.env": 0 }
+          "set": {
+            "vcf.res": 10,
+            "vcf.kbd": "full",
+            "vcf.cutoff": 3.7,
+            "vcf.env": 0,
+            "hpf.cutoff": 3
+          }
         },
         {
           "title": "A soft start and a slide",
@@ -530,7 +554,8 @@
             "osc2.wave": "tri",
             "osc2.oct": "8",
             "osc1.wave": "tri",
-            "osc1.oct": "4"
+            "osc1.oct": "4",
+            "hpf.cutoff": 3
           }
         },
         {
@@ -551,7 +576,8 @@
             "env.release": 6.5,
             "vcf.cutoff": 7.5,
             "vcf.env": 1.5,
-            "rev.mix": 4
+            "rev.mix": 4,
+            "vcf.res": 2
           }
         }
       ],

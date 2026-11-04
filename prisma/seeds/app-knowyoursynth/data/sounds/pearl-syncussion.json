@@ -32,7 +32,8 @@
           "module": "osc",
           "why": "OSC MODE starts at A, one oscillator, the classic drum-synth sound. TUNE sets the pitch the drum is struck at.\n- Channel 1 TUNE 3.5 (177 Hz): a floor tom. The keys below middle C strike channel 1 at this pitch whichever key you press.\n- Listen for: a short, dull knock. It is still a click of a drum; the next steps give it length and its fall.",
           "set": {
-            "ch1.tune": 3.5
+            "ch1.tune": 3.5,
+            "ch1.sweep": "down"
           }
         },
         {
@@ -62,7 +63,8 @@
             "ch2.decay": 6,
             "ch2.width": 3,
             "ch2.sweepSpeed": 4,
-            "ch2.sweepRange": 3.5
+            "ch2.sweepRange": 3.5,
+            "ch2.sweep": "down"
           }
         }
       ],
@@ -108,7 +110,8 @@
           "module": "osc",
           "why": "A laser starts where a tom would be a bell.\n- Channel 2 TUNE 9 (1.7 kHz): high and piercing.\n- Listen for: a short high ping on the keys from middle C up.",
           "set": {
-            "ch2.tune": 9
+            "ch2.tune": 9,
+            "ch2.sweep": "down"
           }
         },
         {
@@ -117,7 +120,8 @@
           "why": "SWEEP is DOWN. Make the fall long and wide.\n- Channel 2 SWEEP RANGE 10 (+36 st): three octaves, the whole range.\n- Channel 2 SWEEP SPEED 3 (590 ms): slow enough to hear the whole dive.\n- Listen for: a “pyeeew” falling right down.",
           "set": {
             "ch2.sweepRange": 10,
-            "ch2.sweepSpeed": 3
+            "ch2.sweepSpeed": 3,
+            "ch1.sweep": "down"
           }
         },
         {
@@ -181,7 +185,8 @@
           "module": "mod",
           "why": "A bell does not fall in pitch, so turn the sweep off.\n- Channel 2 SWEEP OFF.\n- Listen for: a steady, ringing pitch.",
           "set": {
-            "ch2.sweep": "off"
+            "ch2.sweep": "off",
+            "ch1.sweep": "down"
           }
         },
         {
@@ -238,7 +243,8 @@
           "why": "Channel 1 is the drum skin.\n- Channel 1 TUNE 4.5 (268 Hz): the snare’s note.\n- Channel 1 DECAY 4.5 (91 ms): short, a knock not a tom.\n- Listen for: a woody tock on the keys below middle C.",
           "set": {
             "ch1.tune": 4.5,
-            "ch1.decay": 4.5
+            "ch1.decay": 4.5,
+            "ch1.sweep": "down"
           }
         },
         {
@@ -258,7 +264,8 @@
             "ch2.mode": "F",
             "ch2.tune": 7.5,
             "ch2.width": 6,
-            "ch2.decay": 5
+            "ch2.decay": 5,
+            "ch2.sweep": "down"
           }
         }
       ],
@@ -324,7 +331,8 @@
           "set": {
             "ch1.sh": true,
             "ch1.lfoSpeed": 7,
-            "ch1.lfoDepth": 6
+            "ch1.lfoDepth": 6,
+            "ch2.sweep": "down"
           }
         }
       ],
@@ -374,7 +382,9 @@
           "why": "OSC MODE D mixes the two oscillators, and the SWEEP faders no longer do anything: the hit sets the sweep.\n- Channel 1 OSC MODE D.\n- Channel 1 TUNE 4 (217 Hz).\n- Listen for: two tones, slightly apart, swooping up into pitch as they are struck.",
           "set": {
             "ch1.mode": "D",
-            "ch1.tune": 4
+            "ch1.tune": 4,
+            "ch1.sweep": "down",
+            "ch2.sweep": "down"
           }
         },
         {

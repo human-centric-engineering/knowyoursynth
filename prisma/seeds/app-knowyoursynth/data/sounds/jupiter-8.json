@@ -37,7 +37,7 @@
           "title": "Two sawtooths, slightly apart",
           "module": "osc",
           "why": "Both oscillators play a sawtooth, the brightest wave and the raw material of brass. Detuning one a little gives every note movement.\n- VCO-1 and VCO-2 WAVEFORM sawtooth, VCO-2 RANGE at 8’: the two play the same note.\n- FINE TUNE +0.8 (+8 cents): VCO-2 a little sharp, so each pair beats slowly. At 0 the chord sounds thinner and stiller.\n- SOURCE MIX 5: both oscillators at full level.\n- Listen for: a slow swirl in a held chord. Turn FINE TUNE back to 0 to hear it stop.",
-          "set": { "vco2.fine": 0.8 }
+          "set": { "vco2.fine": 0.8, "mix.balance": 5 }
         },
         {
           "title": "A brighter filter, part closed",
@@ -191,7 +191,7 @@
           "title": "Pulse waves on both oscillators",
           "module": "osc",
           "why": "Pulse waves are softer and hollower than sawtooths, closer to bowed strings.\n- VCO-1 WAVEFORM pulse, VCO-2 WAVEFORM pulse: both oscillators on their pulse waves.\n- FINE TUNE +1 (+10 cents): VCO-2 slightly sharp, so the chord beats gently.\n- Listen for: a reedy, organ-like chord. The next step makes it move.",
-          "set": { "vco1.wave": "pulse", "vco2.wave": "pulse", "vco2.fine": 1 }
+          "set": { "vco1.wave": "pulse", "vco2.wave": "pulse", "vco2.fine": 1, "mix.balance": 5 }
         },
         {
           "title": "Sweep the widths with the LFO",
@@ -336,7 +336,7 @@
           "title": "A sub octave",
           "module": "osc",
           "why": "VCO-1 an octave below VCO-2 puts a sub under the saw.\n- VCO-1 RANGE 16’: an octave down.\n- VCO-1 WAVEFORM square: a hollow, woody body under VCO-2’s saw.\n- Listen for: the bottom filling out.",
-          "set": { "vco1.range": "16", "vco1.wave": "square" }
+          "set": { "vco1.range": "16", "vco1.wave": "square", "mix.balance": 5 }
         },
         {
           "title": "A round thump",
@@ -541,7 +541,7 @@
           "title": "Two detuned sawtooths, an octave apart",
           "module": "osc",
           "why": "Two saws an octave apart and slightly detuned give a wide, bright source.\n- VCO-2 RANGE +12, FINE TUNE +1.2.\n- Listen for: a bright, moving chord.",
-          "set": { "vco2.range": 24, "vco2.fine": 1.2 }
+          "set": { "vco2.range": 24, "vco2.fine": 1.2, "mix.balance": 5 }
         },
         {
           "title": "Take the body away",
@@ -605,7 +605,7 @@
           "title": "A wide, open chord",
           "module": "osc",
           "why": "Two detuned saws and an open filter give a bright chord for the envelope to work on.\n- FINE TUNE −1 (−10 cents).\n- CUT OFF FREQ 7.5 (about 3.6 kHz), RES 3.\n- Listen for: a bright, slightly beating chord.",
-          "set": { "vco2.fine": -1, "vcf.cutoff": 7.5, "vcf.res": 3 }
+          "set": { "vco2.fine": -1, "vcf.cutoff": 7.5, "vcf.res": 3, "mix.balance": 5 }
         },
         {
           "title": "Turn ENV-1 upside down",
@@ -718,7 +718,7 @@
           "title": "A resonant, closed filter",
           "module": "filter",
           "why": "High resonance makes every cutoff jump ring.\n- CUT OFF FREQ 4 (about 340 Hz), RES 7.\n- Listen for: a dark note with a ringing edge.",
-          "set": { "vcf.cutoff": 4, "vcf.res": 7 }
+          "set": { "vcf.cutoff": 4, "vcf.res": 7, "mix.balance": 5 }
         },
         {
           "title": "Random steps on the cutoff",
@@ -774,7 +774,7 @@
           "title": "A soft square",
           "module": "osc",
           "why": "A square on VCO-1 and a pure sine an octave up give a woody tone.\n- VCO-1 WAVEFORM square, VCO-2 WAVEFORM sine, RANGE +12: a pure octave on top.\n- Listen for: a hollow, organ-like tone.",
-          "set": { "vco1.wave": "square", "vco2.wave": "sine", "vco2.range": 24 }
+          "set": { "vco1.wave": "square", "vco2.wave": "sine", "vco2.range": 24, "mix.balance": 5 }
         },
         {
           "title": "Pluck the filter",
@@ -952,7 +952,13 @@
           "title": "Soft waves",
           "module": "osc",
           "why": "Triangle and sine have few harmonics: a mellow, rounded tone.\n- VCO-1 WAVEFORM triangle, VCO-2 WAVEFORM sine, RANGE +12.\n- CUT OFF FREQ 6.5.\n- Listen for: a soft, bell-like chord.",
-          "set": { "vco1.wave": "tri", "vco2.wave": "sine", "vco2.range": 24, "vcf.cutoff": 6.5 }
+          "set": {
+            "vco1.wave": "tri",
+            "vco2.wave": "sine",
+            "vco2.range": 24,
+            "vcf.cutoff": 6.5,
+            "mix.balance": 5
+          }
         },
         {
           "title": "A piano-like fade",
@@ -1022,7 +1028,8 @@
             "vco1.wave": "pulse",
             "vco2.wave": "pulse",
             "vco1.range": "16",
-            "assign.mode": "solo"
+            "assign.mode": "solo",
+            "mix.balance": 5
           }
         },
         {
@@ -1112,7 +1119,8 @@
             "env2.decay": 4,
             "env2.sustain": 0,
             "env2.release": 3,
-            "vca.level": 10
+            "vca.level": 10,
+            "mix.balance": 5
           }
         },
         {
@@ -1159,7 +1167,7 @@
           "title": "Detuned saws, a resonant filter",
           "module": "filter",
           "why": "A dark, resonant starting point for the sweep.\n- FINE TUNE +1.5.\n- CUT OFF FREQ 4.5 (about 470 Hz), RES 5.\n- Listen for: a warm chord with a slight hum at the cutoff.",
-          "set": { "vco2.fine": 1.5, "vcf.cutoff": 4.5, "vcf.res": 5 }
+          "set": { "vco2.fine": 1.5, "vcf.cutoff": 4.5, "vcf.res": 5, "mix.balance": 5 }
         },
         {
           "title": "A slow sweep",
@@ -1272,7 +1280,7 @@
           "title": "Brass oscillators",
           "module": "osc",
           "why": "Two detuned saws.\n- FINE TUNE +0.8. SLOPE −12 dB.\n- Listen for: a bright, buzzy chord.",
-          "set": { "vco2.fine": 0.8, "vcf.slope": "12" }
+          "set": { "vco2.fine": 0.8, "vcf.slope": "12", "mix.balance": 5 }
         },
         {
           "title": "A slow filter swell",

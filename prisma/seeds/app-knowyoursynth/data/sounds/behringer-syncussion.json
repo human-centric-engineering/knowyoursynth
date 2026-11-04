@@ -28,7 +28,8 @@
           "module": "osc",
           "why": "- CH 1 TUNE 0.5 (51 Hz): the bottom of the kick, the boom you feel.\n- Listen for: a soft low knock below middle C.",
           "set": {
-            "ch1.tune": 0.5
+            "ch1.tune": 0.5,
+            "ch1.sweep": "down"
           }
         },
         {
@@ -37,7 +38,8 @@
           "why": "SWEEP is DOWN. A very fast sweep across more than an octave is heard as a punch rather than a fall.\n- CH 1 SWEEP SPEED 7 (85 ms).\n- CH 1 SWEEP RANGE 4 (+14.4 st).\n- Listen for: a click-thump at the front of each hit. Slow SWEEP SPEED down and it turns into a tom.",
           "set": {
             "ch1.sweepSpeed": 7,
-            "ch1.sweepRange": 4
+            "ch1.sweepRange": 4,
+            "ch2.sweep": "down"
           }
         },
         {
@@ -106,7 +108,8 @@
           "set": {
             "ch2.mode": "F",
             "ch2.tune": 9.5,
-            "ch2.sweep": "off"
+            "ch2.sweep": "off",
+            "ch1.sweep": "down"
           }
         },
         {
@@ -182,7 +185,8 @@
           "set": {
             "ch2.lfoWave": "triangle",
             "ch2.lfoSpeed": 5,
-            "ch2.lfoDepth": 2.5
+            "ch2.lfoDepth": 2.5,
+            "ch1.sweep": "down"
           }
         }
       ],
@@ -229,7 +233,8 @@
           "why": "- CH 2 OSC MODE E: oscillator 1 bends oscillator 2 for the clang, and noise is mixed in.\n- CH 2 TUNE 7 (757 Hz).\n- Listen for: a harsh, hissing clang from middle C up.",
           "set": {
             "ch2.mode": "E",
-            "ch2.tune": 7
+            "ch2.tune": 7,
+            "ch2.sweep": "down"
           }
         },
         {
@@ -238,7 +243,8 @@
           "why": "- CH 2 SWEEP SPEED 8 (53 ms), RANGE 1 (+3.6 st): a tiny, fast drop at the strike.\n- Listen for: a crisper front to each hit.",
           "set": {
             "ch2.sweepSpeed": 8,
-            "ch2.sweepRange": 1
+            "ch2.sweepRange": 1,
+            "ch1.sweep": "down"
           }
         },
         {
@@ -297,7 +303,8 @@
           "set": {
             "ch1.lfoWave": "square",
             "ch1.lfoSpeed": 6,
-            "ch1.lfoDepth": 5
+            "ch1.lfoDepth": 5,
+            "ch2.sweep": "down"
           }
         }
       ],
@@ -341,7 +348,8 @@
           "set": {
             "ch2.sweep": "up",
             "ch2.sweepSpeed": 6,
-            "ch2.sweepRange": 7
+            "ch2.sweepRange": 7,
+            "ch1.sweep": "down"
           }
         },
         {
