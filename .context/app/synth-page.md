@@ -201,6 +201,24 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   progress, the open sound's own lesson and shared sounds behave alike, and opens the lesson card
   (below). Hovered, a chapter lights its step's controls in place of whatever is lit, and leaving
   it puts back what the page had lit (`SoundDesign`'s `lit`).
+- **Next step makes the step's moves one at a time** (`f-step-moves` t-178). Pressed, the session
+  holds the next step at once (saved, recorded as progress and played from), but the panel shows the
+  step before, and then each numbered move in its order (`stepMoves`, `stepBadges`): its control, or
+  a cable's jacks, lit for `MOVE_LIGHT_MS`, then turned into place as Undo turns one
+  (`HISTORY_TURN_MS`, `tweenValues`), or the cable pulled out and the new one plugged in. The engine
+  follows the panel as shown, so each move is heard if a note or the riff is playing; nothing is held
+  while it runs, as a load holds the synth. The move being made is `moveStore`: its ① is ringed on
+  the lesson card and on the panel (`LessonBadges`), and its chip in the Lesson sheet; on a phone
+  with the sheet at half height it is scrolled into view above the sheet. A move already in place is
+  lit but does not turn. Only Next does this (the card's Next, the Lesson's Next step and its step
+  bar's ›, from step 0 too): Previous, a chapter, a dot on the step bar, a swipe and a restored step
+  set the step at once. Another press, a change on the panel, Undo, or a session landing from
+  elsewhere finishes the moves at once; with reduced motion the step is set at once.
+  **Replay changes** (beside "On the panel" on the card, under the chips on the Lesson's current
+  step) puts the panel back to the step before and makes the step's moves again. With nothing
+  playing, it plays the sound's riff while they are made and stops it once they are, unless Play
+  or Stop was pressed meanwhile (`replayRiff`). There is no Replay at the first step of a lesson
+  with no step 0 (the Default patch's own).
 - **From `lg` up the page lights the step's controls itself** while the panel is at a step, since
   the lesson is not on the page there — but only once a step has been picked on this synth since
   the page opened (`litFor`). A step restored from `kys.session.<id>` (a refresh) leaves the panel

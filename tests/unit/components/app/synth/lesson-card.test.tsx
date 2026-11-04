@@ -8,8 +8,9 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { LessonCard, stepBadges } from '@/components/app/synth/lesson-card';
-import { badgeStore, highlightStore } from '@/components/app/synth/stores';
+import { LessonCard } from '@/components/app/synth/lesson-card';
+import { stepBadges } from '@/lib/app/synths/lib/history';
+import { badgeStore, highlightStore, moveStore } from '@/components/app/synth/stores';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { START_STEP, defaultPatchSound, startStep } from '@/lib/app/synths/default-patch';
 import type { Preset } from '@/lib/app/synths/contract';
@@ -262,7 +263,7 @@ describe('LessonCard step 0', () => {
     expect(badgeStore.get()).toEqual([]);
     expect(screen.getByRole('button', { name: 'Previous lesson step' })).toBeDisabled();
     fireEvent.click(screen.getByRole('button', { name: 'Next lesson step' }));
-    expect(onStep).toHaveBeenLastCalledWith(0);
+    expect(onStep).toHaveBeenLastCalledWith(0, 'next');
   });
 
   it('is where Build it step by step and Previous from step 1 go', () => {
@@ -273,6 +274,24 @@ describe('LessonCard step 0', () => {
     const at1 = card(sound, 0);
     fireEvent.click(screen.getByRole('button', { name: 'Previous lesson step' }));
     expect(at1.onStep).toHaveBeenLastCalledWith(START_STEP);
+  });
+
+  it('offers Replay changes on each step after step 0, and rings the number of the move being made', () => {
+    const { onStep } = card(sound, 1);
+    fireEvent.click(screen.getByRole('button', { name: 'Replay changes' }));
+    expect(onStep).toHaveBeenLastCalledWith(1, 'replay');
+    const num = () => screen.getByText('Close the filter', { selector: 'h2' }).closest('aside');
+    expect(num()?.querySelector('.kys-card-num[data-now]')).toBeNull();
+    act(() => moveStore.set({ id: 'filter.cutoff', ids: ['filter.cutoff'] }));
+    expect(num()?.querySelector('.kys-card-num[data-now]')?.textContent).toBe('1');
+    act(() => moveStore.set(null));
+    cleanup();
+    // Step 1 replays from step 0, the Default patch; the Default patch's own lesson has no step before its one.
+    card(sound, 0);
+    expect(screen.getByRole('button', { name: 'Replay changes' })).toBeTruthy();
+    cleanup();
+    card(defaultPatchSound(def), 0);
+    expect(screen.queryByRole('button', { name: 'Replay changes' })).toBeNull();
   });
 
   it('is not in the Default patch’s own lesson, which starts at its one step', () => {

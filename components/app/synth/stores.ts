@@ -161,6 +161,7 @@ export const notesStore = createStore<number[]>([]); // midi notes currently sou
 export const focusStore = createStore<Focus | null>(null); // { kind: 'control' | 'jack', id, x, y, tip } or { kind: 'cable', id: 'from>to', from, to, at?, x, y, tip }
 export const highlightStore = createStore<string[]>([]); // control / jack ids the lesson is pointing at
 export const badgeStore = createStore<string[]>([]); // control / jack ids the open lesson card numbers, in its order: the first is ①
+export const moveStore = createStore<{ id: string; ids: string[] } | null>(null); // the lesson step's move being made (`f-step-moves`): its number's id, and what it lights
 export const pendingStore = createStore<string | null>(null); // jack id of a cable the player has started but not yet plugged in
 export const lensStore = createStore<PanelPoint | null>(null); // { x, y } in panel units while the magnifier is over the faceplate
 export const findStore = createStore<FindTarget | null>(null); // { kind: 'control' | 'jack' | 'area', id } the search is pointing at

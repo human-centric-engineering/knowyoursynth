@@ -12,13 +12,14 @@
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { SynthPage } from '@/components/app/synth/synth-page';
-import { findStore, focusStore, highlightStore } from '@/components/app/synth/stores';
+import { findStore, focusStore, highlightStore, moveStore } from '@/components/app/synth/stores';
 import { getSynthDetail } from '@/lib/app/catalogue/read';
 import type { CatalogueSound, SynthDetail } from '@/lib/app/catalogue/read';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { modelDRows } from '@/tests/helpers/model-d-detail';
 import { expectedParams, lastParams } from '@/tests/helpers/synth-engine';
+import { stepBadges } from '@/lib/app/synths/lib/history';
 import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
 
 const { router, engine } = vi.hoisted(() => ({
@@ -80,6 +81,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  vi.restoreAllMocks();
   act(() => {
     focusStore.set(null);
     findStore.set(null);
@@ -140,6 +142,16 @@ describe('the lesson on the page', () => {
   };
 
   it('steps the panel through a sound, one step at a time, then back to the finished sound', () => {
+    // With reduced motion, Next sets each step at once: the moves being shown one at a time are the page test's.
+    vi.spyOn(window, 'matchMedia').mockImplementation(
+      (query: string) =>
+        ({
+          matches: query === '(prefers-reduced-motion: reduce)',
+          media: query,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+        }) as unknown as MediaQueryList
+    );
     page();
     const p = pickSound();
     open(p);
@@ -166,6 +178,70 @@ describe('the lesson on the page', () => {
     expect(stepShown()).toBeNull();
     expect(lastParams(engine.send)).toEqual(expectedParams(def, p));
   });
+
+  it('shows Next step’s moves one at a time, sets Back and a jump at once, and replays a step’s moves with its riff', async () => {
+    vi.useFakeTimers({
+      toFake: [
+        'setTimeout',
+        'clearTimeout',
+        'requestAnimationFrame',
+        'cancelAnimationFrame',
+        'performance',
+      ],
+    });
+    const advance = (ms: number) => act(() => void vi.advanceTimersByTime(ms));
+    // Long enough for any step's moves to be made.
+    const all = () => advance(60_000);
+    const sent = (type: string) =>
+      engine.send.mock.calls.filter((c) => (c[0] as { type: string }).type === type).length;
+    try {
+      page();
+      const p = pickSound();
+      open(p);
+      openSide('Lesson');
+      fireEvent.click(button('Build it step by step'));
+      const next = () => {
+        const b = screen.getAllByRole('button').find((el) => el.textContent === 'Next step');
+        if (!b) throw new Error('no Next step');
+        return b;
+      };
+      fireEvent.click(next());
+      all();
+      expect(lastParams(engine.send)).toEqual(expectedParams(def, p, 0));
+
+      fireEvent.click(next());
+      // The session is at step 2 from the first moment; the panel, and the engine, at step 1 until the moves are made.
+      expect(stepShown()).toBe(`step 2 of ${p.steps.length}`);
+      expect(lastParams(engine.send)).toEqual(expectedParams(def, p, 0));
+      advance(0);
+      const first = stepBadges(p.steps[1])[0];
+      expect(moveStore.get()?.id).toBe(first);
+      all();
+      expect(moveStore.get()).toBeNull();
+      expect(lastParams(engine.send)).toEqual(expectedParams(def, p, 1));
+
+      fireEvent.click(button('Previous lesson step'));
+      expect(lastParams(engine.send)).toEqual(expectedParams(def, p, 0));
+      expect(moveStore.get()).toBeNull();
+      fireEvent.click(button(`Lesson step 3: ${p.steps[2].title}`));
+      expect(lastParams(engine.send)).toEqual(expectedParams(def, p, 2));
+      advance(0);
+      expect(moveStore.get()).toBeNull();
+
+      // Replay with nothing playing: back to step 2, the riff on for the moves, and off once they are made.
+      const phrases = sent('phrase');
+      fireEvent.click(screen.getAllByRole('button', { name: 'Replay changes' })[0]);
+      expect(lastParams(engine.send)).toEqual(expectedParams(def, p, 1));
+      await act(async () => undefined);
+      expect(sent('phrase')).toBe(phrases + 1);
+      const stops = sent('stopPhrase');
+      all();
+      expect(lastParams(engine.send)).toEqual(expectedParams(def, p, 2));
+      expect(sent('stopPhrase')).toBe(stops + 1);
+    } finally {
+      vi.useRealTimers();
+    }
+  }, 30_000);
 
   it('leaves the walkthrough when another sound is picked', () => {
     page();
