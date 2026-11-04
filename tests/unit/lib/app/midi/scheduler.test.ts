@@ -1549,3 +1549,48 @@ describe('the patch Play calls up (f-midi-hardware-lead t-92)', () => {
     expect(patch(t.sent)).toEqual([]);
   });
 });
+
+describe('muted while a patch loads (f-default-patch t-172)', () => {
+  // A note a beat at 60 BPM: one each second, each held for half of it.
+  const l = loop(
+    [
+      [0, 60, 0.5],
+      [1, 62, 0.5],
+      [2, 64, 0.5],
+      [3, 65, 0.5],
+    ],
+    4
+  );
+
+  it('sends notes before the mute, none during it, and the next to start once it is lifted', () => {
+    const t = setup();
+    start(t, l);
+    t.run(200);
+    expect(ons(t.sent).map(([, n]) => n)).toEqual([60]);
+
+    t.s.setMuted(true);
+    t.run(2400);
+    // Note 62 (at 1 s) and 64 (at 2 s) fell inside the mute.
+    expect(ons(t.sent).map(([, n]) => n)).toEqual([60]);
+
+    t.s.setMuted(false);
+    t.run(3500);
+    expect(ons(t.sent).map(([, n]) => n)).toEqual([60, 65]);
+    expect(ons(t.sent).at(-1)?.[0]).toBe(3000);
+  });
+
+  it('lets go of the note held, now, as the mute begins, keeping the clock running', () => {
+    const t = setup();
+    t.s.setClock(true);
+    start(t, l);
+    t.run(200);
+    expect(offs(t.sent)).toEqual([]);
+    t.s.setMuted(true);
+    expect(offs(t.sent)).toEqual([[200, 60]]);
+    const pulses = () => t.sent.filter(([, d]) => d[0] === CLOCK).length;
+    const before = pulses();
+    t.run(2000);
+    expect(pulses()).toBeGreaterThan(before);
+    expect(t.sent.some(([, d]) => d[0] === STOP)).toBe(false);
+  });
+});
