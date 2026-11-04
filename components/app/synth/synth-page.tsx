@@ -38,6 +38,7 @@ import {
   use,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -509,6 +510,10 @@ function Synth({
     unplugging.current.forEach(clearTimeout);
     unplugging.current = [];
   }, []);
+  // A new patch loading (`f-default-patch` t-172) silences the synth until it has loaded: set below, once what it
+  // stops and starts is.
+  const loadHandler = useRef<(loading: boolean) => void>(() => undefined);
+  const onLoad = useCallback((loading: boolean) => loadHandler.current(loading), []);
   // Every change to the panel goes through `patch`, which the undo history records (the last 20, a knob's turn as one),
   // or `glide`, which shows a new patch being set. `sess` is the panel as shown, part of the way there during a glide;
   // `stored` is where it is going, what a save sends.
@@ -521,7 +526,9 @@ function Synth({
     canUndo,
     canRedo,
     shown: historyShown,
-  } = usePanelHistory(stored, setSess, synthDef, stopUnplugging);
+    loading,
+    isLoading,
+  } = usePanelHistory(stored, setSess, synthDef, stopUnplugging, onLoad);
   // A synth chosen over another opens on its Default patch, whatever panel it was left with (owner ruling, 2026-11-03).
   // Set as a change the visitor made, so it is what the browser and the account keep: a refresh comes back to it, and
   // the account's older panel does not replace it. Declared after the stored session, so it lands after the restore,
@@ -1109,7 +1116,8 @@ function Synth({
   const seqTook = useRef(new Map<number, number>());
   const noteOn = useCallback(
     (n: number, v = 0.85) => {
-      if (!engine) return;
+      // Dropped, not queued, while a patch loads: from the keys, MIDI in and the scope's keyboard alike.
+      if (!engine || isLoading()) return;
       void ensureAudio();
       if (noteToSeq.current(n, v)) {
         seqTook.current.set(n, (seqTook.current.get(n) ?? 0) + 1);
@@ -1128,7 +1136,7 @@ function Synth({
       downRef.current.set(n, (downRef.current.get(n) ?? 0) + 1);
       engine.send({ type: 'noteOn', n, v });
     },
-    [engine, ensureAudio, hold]
+    [engine, ensureAudio, hold, isLoading]
   );
   // Hold keeps only the notes started under it: one already sounding when Hold went on still stops when released.
   const noteOff = useCallback(
@@ -1186,7 +1194,14 @@ function Synth({
   const clockIn = useClockIn({ midi, engine });
   const following = clockIn.clock.following;
   // MIDI out from the sequencer (`f-midi-out` t-88): the outputs of the same grant. No clock out while one is followed.
-  const midiOut = useMidiOut({ midi, engine, connect: connectMidi, def: synthDef, following });
+  const midiOut = useMidiOut({
+    midi,
+    engine,
+    connect: connectMidi,
+    def: synthDef,
+    following,
+    silent: loading,
+  });
 
   // SynthDef `tempo` names the control whose value is the riff's BPM (the TB-303's TEMPO knob): the riff plays at
   // that speed, and turning it while the riff plays moves the riff with it.
@@ -1236,15 +1251,22 @@ function Synth({
   useEffect(() => {
     seqEvents.current = seqOnEvent;
   }, [seqOnEvent]);
+  // What starts once a load ends: a Play pressed meanwhile, or the riff that was playing as it began.
+  const afterLoad = useRef<(() => void) | null>(null);
   const stopRiff = useCallback(() => {
+    afterLoad.current = null;
     engine?.send({ type: 'stopPhrase' });
     setPlaying(false);
     stopPattern();
   }, [engine, stopPattern]);
-  // A pattern starting stops a riff in the engine; the riff's button is told here.
-  const playPattern = useCallback(async () => {
+  // A pattern starting stops a riff in the engine; the riff's button is told here. Not while a patch loads: then once it has.
+  const patternNow = useCallback(async () => {
     if (await startPattern()) setPlaying(false);
   }, [startPattern]);
+  const playPattern = useCallback(async () => {
+    if (isLoading()) afterLoad.current = () => void patternNow();
+    else await patternNow();
+  }, [isLoading, patternNow]);
   // Open in the dock from `lg` up, in its sheet below it.
   const seqDocked = !small && seqOpen;
   const seqShown = small ? sheet === 'sequencer' : seqOpen;
@@ -1429,7 +1451,7 @@ function Synth({
     else if (small) openSheet(null);
     else setSeqOpen(false);
   };
-  const playRiff = useCallback(
+  const riffNow = useCallback(
     async (ph: Phrase) => {
       if (!engine || !(await ensureAudio())) return;
       // A riff stops a pattern in the engine, without a word: the sequencer is told here.
@@ -1442,6 +1464,50 @@ function Synth({
     },
     [engine, ensureAudio, stopPattern]
   );
+  // The riff of the sound on the panel once a load ends, which may not be the one loading when it was asked for (a
+  // second load taking over the first); with none, nothing plays. Kept before any effect runs: with reduced motion
+  // the load ends in the panel history's own effect, in the render that put the new sound on the panel.
+  const shownPhrase = useRef<Phrase | null>(null);
+  useLayoutEffect(() => {
+    shownPhrase.current = shown?.phrase ?? null;
+  });
+  const riffShown = useCallback(() => {
+    if (shownPhrase.current) void riffNow(shownPhrase.current);
+    else setPlaying(false);
+  }, [riffNow]);
+  // Not while a patch loads: then once it has.
+  const playRiff = useCallback(
+    async (ph: Phrase) => {
+      if (isLoading()) afterLoad.current = riffShown;
+      else await riffNow(ph);
+    },
+    [isLoading, riffNow, riffShown]
+  );
+  // As a load begins, what the page is sounding is let go: the keys held (and under Hold), the arp's keys in the
+  // sequencer, and the riff, which plays again once the load ends (the sound's own, by then). The sequencer runs on,
+  // muted through MIDI out's `silent`, and the player and MIDI out let go of their own notes. As it ends, what waited
+  // starts.
+  useEffect(() => {
+    loadHandler.current = (on) => {
+      if (!on) {
+        const then = afterLoad.current;
+        afterLoad.current = null;
+        then?.();
+        return;
+      }
+      new Set([...downRef.current.keys(), ...heldRef.current]).forEach((n) =>
+        engine?.send({ type: 'noteOff', n })
+      );
+      downRef.current.clear();
+      heldRef.current.clear();
+      seqTook.current.forEach((_, n) => seqNoteOut.current(n));
+      seqTook.current.clear();
+      if (playing) {
+        engine?.send({ type: 'stopPhrase' });
+        afterLoad.current = riffShown;
+      }
+    };
+  });
 
   // computer keyboard. Each key remembers the note it started, so a key held across an octave change (or a Hold
   // toggle, which re-registers these listeners) still stops the note it is sounding.
@@ -1996,6 +2062,8 @@ function Synth({
   const toggleAudio = async () => {
     if (!engine) return;
     if (audio === 'on') {
+      // A Play waiting on a load is not to turn the sound back on once it has loaded.
+      afterLoad.current = null;
       setPlaying(false);
       stopPattern();
       await engine.suspend();
@@ -2575,6 +2643,7 @@ function Synth({
 
               <div className="kys-player-bar flex flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2 text-sm sm:px-4 lg:flex-nowrap">
                 <SoundPicker
+                  loading={loading}
                   soundName={loadedName}
                   soundRef={described?.ref ?? null}
                   onChooseSound={chooseSound}

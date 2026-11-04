@@ -13,13 +13,17 @@
  * engine hearing the turn, and its cables go or come one by one through it, in the order they were plugged. Another press, or a change made meanwhile,
  * finishes it at once; with reduced motion it is done at once.
  *
- * A new patch is shown being set (`glide`, `glidePlan`): a sound opened, Default patch, Restore patch, and the synth
- * itself arriving, which starts from its blank patch. The session holds the new patch at once (saved and recorded as
- * one change); what the hook hands back as the session shows the glide meanwhile, a part of the panel at a time down
- * the voice, the old cables out first and the new ones in last, so the panel and the engine both follow it. Nothing is
- * lit: the controls and cables moving are what shows it. A session that lands
- * from elsewhere meanwhile (the stored panel, the account's) carries the glide on to it; a change made through `patch`,
- * or Undo, finishes it at once.
+ * A new patch is loaded (`glide`, `glidePlan`): a sound opened, Default patch, Restore patch, and the synth itself
+ * arriving. Every load starts from the synth's Default patch (`f-default-patch` t-172), set at once, cables and all,
+ * whatever was on the panel before, so the controls move the same way whichever sound was last. The session holds the
+ * new patch at once (saved and recorded as one change); what the hook hands back as the session shows the glide from
+ * the Default patch meanwhile, a part of the panel at a time down the voice, its cables out first and the new ones in
+ * last, so the panel and the engine both follow it. Nothing is lit: the controls and cables moving are what shows it.
+ * A session that lands from elsewhere meanwhile (the stored panel, the account's) carries the glide on to it; a change
+ * made through `patch`, or Undo, finishes it at once. A new patch loaded meanwhile starts again from the Default patch.
+ *
+ * While a load runs the synth is not to be played (`loading`, `isLoading`, `onLoad`): the page drops notes and silences
+ * the sequencer until it ends. With reduced motion there is no glide, so a load ends the moment it begins.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -39,6 +43,7 @@ import {
   type PanelSnap,
 } from '@/lib/app/synths/lib/history';
 import { glideMotion } from '@/components/app/synth/motion';
+import { defaultPatchState } from '@/lib/app/synths/default-patch';
 import { highlightStore } from '@/components/app/synth/stores';
 import type { ControlValues, PatchCable, SynthDef } from '@/lib/app/synths/contract';
 
@@ -71,7 +76,9 @@ export function usePanelHistory<S extends Panelled>(
   setSess: (fn: (s: S) => S) => void,
   def: SynthDef,
   /** Called as an undo, a redo or a new patch begins: whatever the page has under way on the panel (Unplug all) stops. */
-  onTakeOver?: () => void
+  onTakeOver?: () => void,
+  /** Called as a load begins (`true`), so the page lets go of what is sounding, and as it ends (`false`). */
+  onLoad?: (loading: boolean) => void
 ): {
   /** The session as the panel shows it: during a glide, its controls and cables part of the way there. */
   sess: S;
@@ -84,6 +91,10 @@ export function usePanelHistory<S extends Panelled>(
   canRedo: boolean;
   /** The undo or redo being shown on the panel, if one is. */
   shown: 'undo' | 'redo' | null;
+  /** A new patch is loading: nothing is to sound until it has. From the first render, as the synth arrives. */
+  loading: boolean;
+  /** `loading` as it is this moment, for a note that comes between renders. */
+  isLoading: () => boolean;
 } {
   const [history, setHistory] = useState<PanelHistory>(emptyHistory);
   const historyRef = useRef(history);
@@ -92,21 +103,42 @@ export function usePanelHistory<S extends Panelled>(
   // Set by a change made through `patch` (recorded) or by Undo and Redo (not), read by the effect after it renders.
   const made = useRef<'change' | 'glide' | 'history' | null>(null);
   const onTakeOverRef = useRef(onTakeOver);
+  const onLoadRef = useRef(onLoad);
+  // The session as last rendered: a new patch that changes nothing is no load.
+  const sessRef = useRef(sess);
 
   useEffect(() => {
     historyRef.current = history;
     onTakeOverRef.current = onTakeOver;
+    onLoadRef.current = onLoad;
+    sessRef.current = sess;
   });
+
+  // Loading from the first render: the synth arriving is a load like any other.
+  const [loading, setLoadingState] = useState(true);
+  const loadingRef = useRef(true);
+  const setLoading = useCallback((on: boolean) => {
+    if (loadingRef.current === on) return;
+    loadingRef.current = on;
+    setLoadingState(on);
+    onLoadRef.current?.(on);
+  }, []);
+  const isLoading = useCallback(() => loadingRef.current, []);
 
   // The undo or redo being shown, or the glide, which `finish` completes at once.
   const showing = useRef<{ finish: () => void } | null>(null);
   const [shown, setShown] = useState<'undo' | 'redo' | null>(null);
   const finishShowing = useCallback(() => showing.current?.finish(), []);
-  useEffect(() => finishShowing, [finishShowing]);
+  // On the way out, finished without telling the page a load has ended: it is going, and must not start its Play.
+  const leave = useCallback(() => {
+    onLoadRef.current = undefined;
+    finishShowing();
+  }, [finishShowing]);
+  useEffect(() => leave, [leave]);
 
-  // The glide: the panel as shown while it runs, from the first render on, as the synth arrives at its blank patch.
-  const blank = (): PanelSnap => ({ values: { ...def.init }, cables: [] });
-  const [frame, setFrame] = useState<PanelSnap | null>(blank);
+  // The glide: the panel as shown while it runs, from the first render on, as the synth arrives at its Default patch.
+  const fromDefault = useCallback((): PanelSnap => defaultPatchState(def), [def]);
+  const [frame, setFrame] = useState<PanelSnap | null>(fromDefault);
   const frameRef = useRef(frame);
   // The glide under way: `halt` stops it where it has got to, for the next to carry on from.
   const gliding = useRef<{ halt: () => { at: PanelSnap; delay: number } } | null>(null);
@@ -118,9 +150,12 @@ export function usePanelHistory<S extends Panelled>(
         setFrame(f);
       };
       const stages = glidePlan(def, from, to);
-      if (!glideMotion() || stages.length === 0) {
+      // With a wait first (the synth arriving), it waits even with nothing to move: what lands meanwhile, the stored
+      // panel, carries it on from the Default patch.
+      if (!glideMotion() || (stages.length === 0 && delay === 0)) {
         gliding.current = null;
         show(null);
+        setLoading(false);
         return;
       }
       const total = glideMs(stages);
@@ -134,6 +169,7 @@ export function usePanelHistory<S extends Panelled>(
       const done = () => {
         stop();
         show(null);
+        setLoading(false);
       };
       showing.current = { finish: done };
       gliding.current = {
@@ -146,6 +182,7 @@ export function usePanelHistory<S extends Panelled>(
         },
       };
       show(from);
+      setLoading(true);
       pending.timer = setTimeout(() => {
         const start = performance.now();
         const turn = (now: number) => {
@@ -160,7 +197,7 @@ export function usePanelHistory<S extends Panelled>(
         pending.frame = requestAnimationFrame(turn);
       }, delay);
     },
-    [def]
+    [def, setLoading]
   );
 
   useEffect(() => {
@@ -174,10 +211,20 @@ export function usePanelHistory<S extends Panelled>(
     made.current = null;
     if (!p) return;
     const moved = p.snap.values !== snap.values || p.snap.cables !== snap.cables;
-    if (moved && gliding.current) {
+    if (moved && by === 'glide') {
+      // A load, from the Default patch, whatever was on the panel or still gliding onto it; one landing while the synth
+      // arrives waits out the arrival's wait.
+      const delay = gliding.current?.halt().delay ?? 0;
+      runGlide(fromDefault(), snap, delay);
+    } else if (moved && gliding.current) {
       const { at, delay } = gliding.current.halt();
       runGlide(at, snap, delay);
-    } else if (moved && by === 'glide') runGlide(p.snap, snap, 0);
+    } else if (by === 'glide' && !gliding.current) {
+      // A new patch with the same panel: nothing to load after all.
+      frameRef.current = null;
+      setFrame(null);
+      setLoading(false);
+    }
     // Saved (the sound's id alone changing, through `patch`), the panel is the same one: only a different patch on it
     // starts the history afresh.
     const saved = p.ident === ident && !moved && by === 'change';
@@ -190,11 +237,11 @@ export function usePanelHistory<S extends Panelled>(
       setHistory((h) => recordChange(h, p.snap, performance.now(), by === 'glide'));
   }, [sess, def.id]); // eslint-disable-line react-hooks/exhaustive-deps -- `runGlide` follows `def`, as `def.id` does
 
-  // The synth arriving (the page is keyed by synth, so this is once per synth): its patch is set on the blank panel
+  // The synth arriving (the page is keyed by synth, so this is once per synth): its patch is set on the Default patch
   // the first render showed. Finished on the way out, and so begun again by React's development remount.
   useEffect(() => {
-    runGlide(frameRef.current ?? blank(), current.current, ARRIVE_MS);
-    return finishShowing;
+    runGlide(frameRef.current ?? fromDefault(), current.current, ARRIVE_MS);
+    return leave;
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
 
   // The change marked only when there is one: nothing changed, nothing renders, and a mark left would be read as this
@@ -220,12 +267,22 @@ export function usePanelHistory<S extends Panelled>(
 
   const glide = useCallback(
     (fn: (s: S) => S) => {
-      // An undo being shown is finished; a glide carries on to the new patch.
+      // An undo being shown is finished; a glide is taken over by the new patch's.
       if (!gliding.current) finishShowing();
       onTakeOverRef.current?.();
+      // The load begins now, before anything else this moment can sound (the page's next note, or its Play), and the
+      // panel shows the Default patch in the same render as the session takes the new one. With reduced motion it
+      // snaps straight to the new one.
+      if (fn(sessRef.current) !== sessRef.current) {
+        setLoading(true);
+        if (glideMotion()) {
+          frameRef.current = fromDefault();
+          setFrame(frameRef.current);
+        }
+      }
       setSess(marked(fn, 'glide'));
     },
-    [setSess, finishShowing, marked]
+    [setSess, finishShowing, marked, setLoading, fromDefault]
   );
 
   const step = useCallback(
@@ -333,5 +390,7 @@ export function usePanelHistory<S extends Panelled>(
     canUndo: history.past.length > 0,
     canRedo: history.future.length > 0,
     shown,
+    loading,
+    isLoading,
   };
 }

@@ -44,6 +44,10 @@
  * nothing on the channel (a note, a CC) goes before {@link PROGRAM_LEAD_MS} after it: the first note waits for it if
  * it is due sooner, and the clock's Start with it. A run started part-way (a MIDI Continue) sends none: the patch was called up at its Start.
  *
+ * Muted (`setMuted`, `f-default-patch` t-172: a new patch loading on the panel), the run goes on in time, the clock
+ * and the lanes' CCs with it, but no note is sent: what is held is let go at once, and the notes come back in from the
+ * first that starts after the mute is lifted.
+ *
  * Pure: no timers, no Web MIDI. The page (`use-midi-out.ts`) gives it a port and a clock and calls `pump`.
  */
 import type { ControlValues, PhraseNote } from '@/lib/app/synths/contract';
@@ -157,6 +161,8 @@ export interface MidiScheduler {
   setCcs(lookup: CcLookup | null): void;
   /** The patch a run from the top calls up first; `null` sends none. None to begin with. */
   setProgram(program: MidiProgram | null): void;
+  /** Sends no notes, letting go of those held, or sends them again from the next to start. Not muted to begin with. */
+  setMuted(muted: boolean): void;
 }
 
 const byStart = (a: PhraseNote, b: PhraseNote) => a[0] - b[0] || a[1] - b[1];
@@ -235,6 +241,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   let holdUntil = -Infinity;
   /** Per pitch held, how long its note-on was held back for the patch. */
   const lagOf = new Map<number, number>();
+  /** No notes are sent, the run going on without them. */
+  let muted = false;
 
   const msAt = (a: Anchor, g: number) => a.ms + ((g - a.g) * 60000) / a.bpm;
   const beatAt = (a: Anchor, ms: number) => a.g + ((ms - a.ms) * a.bpm) / 60000;
@@ -289,6 +297,20 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     offAt(n, at > down ? at : Math.max(down, at + lag));
   }
 
+  /** Lets go of every note held, now (one whose note-on is still on its way, at its own time), keeping the run. */
+  function letGo() {
+    const now = clock.now();
+    held.forEach((_, n) => {
+      out([0x80 | channel, n, 0], now);
+      const down = downAt.get(n) ?? now;
+      if (down > now) offAt(n, down);
+    });
+    held.clear();
+    downAt.clear();
+    lagOf.clear();
+    offs.length = 0;
+  }
+
   /** Lets go of everything. With `keepClock` (a change of channel: clock has none) the clock runs on. */
   function release(keepClock = false) {
     const now = clock.now();
@@ -296,13 +318,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       if (at <= now) freeAt.delete(n);
     });
     if (port && dirty) {
-      // Now, and All Notes Off now: not later, where it would cut what the next run sends. A note-on already on its
-      // way is let go at its own time as well, so it can't sound on after the release.
-      held.forEach((_, n) => {
-        out([0x80 | channel, n, 0], now);
-        const down = downAt.get(n) ?? now;
-        if (down > now) offAt(n, down);
-      });
+      // Now, and All Notes Off now: not later, where it would cut what the next run sends.
+      letGo();
       out([0xb0 | channel, ALL_NOTES_OFF, 0], now);
     }
     if (!keepClock) {
@@ -535,8 +552,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       if (on!.g < sentTo || !validByte(n) || !(len > 0)) continue;
       sentTo = on!.g;
       const at = msAt(a, on!.g);
-      // Too late, or a velocity the synth would play silent (MIDI would play it at 1).
-      if (at < now - LATE_MS || (v !== undefined && Math.round(v * 127) < 1)) continue;
+      // Muted, too late, or a velocity the synth would play silent (MIDI would play it at 1).
+      if (muted || at < now - LATE_MS || (v !== undefined && Math.round(v * 127) < 1)) continue;
       noteOn(n, v, Math.max(now, at));
       owe({ g: c.start + b + len, n });
     }
@@ -705,6 +722,12 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
         : null;
   }
 
+  function setMuted(on: boolean) {
+    if (on === muted) return;
+    muted = on;
+    if (on) letGo();
+  }
+
   function setClock(on: boolean) {
     if (on === clockOn) return;
     clockOn = on;
@@ -723,6 +746,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     setClock,
     setCcs,
     setProgram,
+    setMuted,
   };
 }
 

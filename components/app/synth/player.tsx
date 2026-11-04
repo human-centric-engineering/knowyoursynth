@@ -5,7 +5,8 @@
  * gathers its controls round the picture. BeatBreaker's drummer player is the precedent (its `studio/player/`).
  *
  * - `Wordmark`: the app's name at the right of the Sound Design strip's heading, with an LED that is lit while the sound is on.
- * - `SoundPicker`: the sound's name at the start of the bar, which opens the library.
+ * - `SoundPicker`: the sound's name at the start of the bar, which opens the library. Its LED pulses while a patch
+ *   loads, when the keys are silent (`f-default-patch` t-172), so a dead key reads as "wait", not as broken.
  * - `SoundDesign`: the strip over the bar that teaches how the sound is built: the lesson's steps as a video's
  *   chapters. Each opens the lesson card over the panel (`lesson-card.tsx`).
  * - `FullscreenButton`: the whole player full screen, where the browser allows it.
@@ -45,6 +46,7 @@ export function SoundPicker({
   soundsOpen = false,
   onCloseSounds,
   sounds,
+  loading = false,
 }: {
   /** What is on the panel: a library sound, one of the user's, or "Default patch". */
   soundName: string;
@@ -57,6 +59,8 @@ export function SoundPicker({
   onCloseSounds?: () => void;
   /** The library, shown over the bar while `soundsOpen`. */
   sounds?: ReactNode;
+  /** A patch is loading onto the panel: nothing sounds until it has. */
+  loading?: boolean;
 }) {
   const pick = useRef<HTMLButtonElement | null>(null);
   const pop = useRef<HTMLDivElement | null>(null);
@@ -100,10 +104,13 @@ export function SoundPicker({
         className="kys-sound-pick"
         onClick={onChooseSound}
         aria-expanded={soundsOpen}
-        aria-label={`Choose a patch (now: ${soundName})`}
+        aria-label={`Choose a patch (now: ${soundName}${loading ? ', loading' : ''})`}
         title={soundRef ? `${soundName}: ${soundRef}` : 'Choose a patch from the library'}
       >
-        <span className="kys-sound-pick-eyebrow">Patch</span>
+        <span className="kys-sound-pick-eyebrow">
+          {loading && <span className="kys-led is-lit kys-pulse" aria-hidden="true" />}
+          {loading ? 'Loading' : 'Patch'}
+        </span>
         <span className="kys-sound-pick-name">{soundName}</span>
         <ChevronDown size={16} className="kys-sound-pick-caret" aria-hidden="true" />
       </button>
