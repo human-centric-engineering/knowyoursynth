@@ -110,6 +110,75 @@ describe('stepBadges', () => {
     };
     expect(stepBadges(step)).toEqual(['mix.osc1', 'vcf.in', 'vca.cv']);
   });
+
+  it('numbers a cable taken out after the controls and before the cables plugged in', () => {
+    const step = {
+      title: 'Move it',
+      module: 'patch' as const,
+      why: '',
+      set: { 'mix.osc1': 9 },
+      cables: [['lfo.out', 'vca.cv']] as [string, string][],
+      unplug: [['osc1.out', 'vcf.in']] as [string, string][],
+    };
+    expect(stepBadges(step)).toEqual(['mix.osc1', 'vcf.in', 'vca.cv']);
+  });
+});
+
+describe('LessonCard unplug', () => {
+  const out = def.jacks.find((j) => j.dir === 'out' && j.signal);
+  const into = def.jacks.find((j) => j.dir === 'in' && j.dest);
+  if (!out || !into) throw new Error('model-d has no patchable jacks');
+
+  afterEach(() => {
+    act(() => {
+      badgeStore.set([]);
+      highlightStore.set([]);
+    });
+  });
+
+  it('lists a cable the step takes out as a numbered move, lit on its jacks', () => {
+    const sound: Preset = {
+      ...defaultPatchSound(def),
+      id: 'unplugged',
+      name: 'Unplugged',
+      steps: [
+        { title: 'Plug it', module: 'patch', why: 'In.', cables: [[out.id, into.id]] },
+        {
+          title: 'Take it out',
+          module: 'patch',
+          why: 'Out.',
+          set: { 'mix.osc1': 9 },
+          unplug: [[out.id, into.id]],
+        },
+      ],
+    };
+    render(
+      <LessonCard
+        def={def}
+        preset={sound}
+        step={1}
+        onStep={vi.fn()}
+        section="build"
+        onClose={vi.fn()}
+        side="right"
+        onSide={vi.fn()}
+        inspector={null}
+        effects={null}
+      />
+    );
+
+    const moves = screen.getByRole('list', { name: 'What this step sets' });
+    const item = [...moves.querySelectorAll('li')].find((li) => li.textContent?.includes('Unplug'));
+    expect(item?.textContent).toBe(`2UnplugTake out ${out.label} out → ${into.label} in`);
+    // The panel numbers its input jack as the card does, and pointing at the move lights both of its ends.
+    expect(badgeStore.get()).toEqual(['mix.osc1', into.id]);
+    const move = item?.querySelector('.kys-card-move');
+    if (!move) throw new Error('no move');
+    fireEvent.pointerEnter(move);
+    expect(highlightStore.get()).toEqual([out.id, into.id]);
+    fireEvent.pointerLeave(move);
+    expect(highlightStore.get()).toEqual(['mix.osc1', out.id, into.id]);
+  });
 });
 
 describe('LessonCard live region', () => {

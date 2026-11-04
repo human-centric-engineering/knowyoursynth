@@ -23,9 +23,10 @@ import { focusStore, highlightStore } from '@/components/app/synth/stores';
 import { LevelDots, markText, reachedStep } from '@/components/app/synth/library';
 import type { LessonMark } from '@/components/app/synth/progress';
 
-/** The controls and jacks a step touches, for the panel highlight. */
+/** The controls and jacks a step touches, for the panel highlight: a cable it takes out is lit as one it plugs in. */
 export const stepIds = (s: PresetStep): string[] => [
   ...Object.keys(s.set || {}),
+  ...(s.unplug || []).flat(),
   ...(s.cables || []).flat(),
 ];
 
@@ -150,6 +151,34 @@ function CableChip({ def, pair, base }: { def: SynthDef; pair: CablePair; base: 
         {from.label} out → {to.label} in
       </span>
     </button>
+  );
+}
+
+/**
+ * A cable the step takes out (`f-default-base` t-175). Lit on its jacks as a cable that is plugged in is, but with
+ * nothing to open in the inspector: once the step is on the panel the cable is not there.
+ */
+function UnplugChip({ def, pair, base }: { def: SynthDef; pair: CablePair; base: string[] }) {
+  const jm = jackMap(def);
+  const [a, b] = pair;
+  const from = jm[a];
+  const to = jm[b];
+  if (!from || !to) return null;
+  return (
+    <span
+      onPointerEnter={() => highlightStore.set(pair)}
+      onPointerLeave={() => highlightStore.set(base)}
+      className={chipClass}
+    >
+      <span
+        className="h-2 w-2 shrink-0 rounded-full border"
+        style={{ borderColor: moduleOf('patch').color }}
+      />
+      <span className="kys-label text-(--kys-muted)">Unplug</span>
+      <span className="font-mono text-(--kys-text)">
+        Take out {from.label} out → {to.label} in
+      </span>
+    </span>
   );
 }
 
@@ -406,6 +435,9 @@ function StepCarousel({
                 <div className="mt-2.5 flex flex-wrap gap-1.5 pl-9">
                   {Object.entries(s.set || {}).map(([id, v]) => (
                     <Chip key={id} def={def} id={id} value={v} base={base} />
+                  ))}
+                  {(s.unplug || []).map((p) => (
+                    <UnplugChip key={`-${p.join('>')}`} def={def} pair={p} base={base} />
                   ))}
                   {(s.cables || []).map((p) => (
                     <CableChip key={p.join('>')} def={def} pair={p} base={base} />

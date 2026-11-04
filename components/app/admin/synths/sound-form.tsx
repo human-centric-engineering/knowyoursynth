@@ -54,6 +54,7 @@ const StoredSoundSchema = z.object({
       why: z.string(),
       set: z.record(z.string(), z.unknown()).optional(),
       cables: z.array(z.unknown()).optional(),
+      unplug: z.array(z.unknown()).optional(),
     })
   ),
   context: z.record(z.string(), z.string()),
@@ -69,6 +70,8 @@ interface StepDraft {
   set: string;
   /** JSON text; empty for a step that patches nothing. */
   cables: string;
+  /** JSON text; empty for a step that takes no cable out. */
+  unplug: string;
 }
 interface Draft {
   id: string;
@@ -124,6 +127,7 @@ function draftOf(stored: unknown): Draft | null {
       why: step.why,
       set: step.set ? prettyJson(step.set) : '',
       cables: step.cables ? prettyJson(step.cables) : '',
+      unplug: step.unplug ? prettyJson(step.unplug) : '',
     })),
     context: Object.entries(s.context).map(([control, text]) => ({
       key: nextRowKey(),
@@ -170,6 +174,7 @@ function bodyOf(d: Draft): { body: Record<string, unknown> } | { problems: Probl
     why: s.why,
     ...(s.set.trim() ? { set: parse(s.set, `steps.${i}.set`) } : {}),
     ...(s.cables.trim() ? { cables: parse(s.cables, `steps.${i}.cables`) } : {}),
+    ...(s.unplug.trim() ? { unplug: parse(s.unplug, `steps.${i}.unplug`) } : {}),
   }));
   const seen = new Set<string>();
   for (const row of d.context) {
@@ -545,6 +550,17 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
                   step patches nothing.
                 </p>
               )}
+              {field(
+                `steps.${i}.unplug`,
+                'Unplug (JSON)',
+                json(step.unplug, setStep(i, 'unplug'), 6),
+                <p>
+                  Cables this step takes out, as <code>[output jack, input jack]</code> pairs. Each
+                  must be in at this step, from an earlier step or the patch the sound starts on.
+                  They come out before this step&apos;s cables go in. Leave empty when the step
+                  takes nothing out.
+                </p>
+              )}
             </div>
           </div>
         ))}
@@ -557,7 +573,15 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
               ...d,
               steps: [
                 ...d.steps,
-                { key: nextRowKey(), title: '', module: '', why: '', set: '', cables: '' },
+                {
+                  key: nextRowKey(),
+                  title: '',
+                  module: '',
+                  why: '',
+                  set: '',
+                  cables: '',
+                  unplug: '',
+                },
               ],
             }))
           }

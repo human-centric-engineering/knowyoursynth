@@ -54,11 +54,16 @@ export const SoundLessonSchema = z
               )
               .optional(),
             cables: z.array(CablePairSchema).max(16).optional(),
+            unplug: z.array(CablePairSchema).max(16).optional(),
           })
           .strict()
-          .refine((s) => Object.keys(s.set ?? {}).length > 0 || (s.cables ?? []).length > 0, {
-            message: 'A step must set a control or plug in a cable',
-          })
+          .refine(
+            (s) =>
+              Object.keys(s.set ?? {}).length > 0 ||
+              (s.cables ?? []).length > 0 ||
+              (s.unplug ?? []).length > 0,
+            { message: 'A step must set a control, or plug in or take out a cable' }
+          )
       )
       .min(1)
       .max(9),

@@ -77,6 +77,26 @@ describe('checkLesson', () => {
     ]);
   });
 
+  it('takes a step that only takes a cable out, and refuses one taking out a cable that is not in', () => {
+    const unplug = {
+      title: 'Unplug title',
+      module: 'patch' as const,
+      why: 'Unplug why.',
+      unplug: [[outJack.id, inJack.id]] as [string, string][],
+    };
+    const passed = checkLesson(
+      modelD,
+      SoundLessonSchema.parse({ ...lesson, steps: [...lesson.steps, unplug] })
+    );
+    expect(passed.ok).toBe(true);
+    expect(passed.value?.steps[2]).toEqual(unplug);
+
+    const refused = checkLesson(modelD, { ...lesson, steps: [lesson.steps[0], unplug] });
+    expect(refused.problems).toEqual([
+      expect.objectContaining({ path: 'steps.1.unplug.0', code: 'not-plugged-in' }),
+    ]);
+  });
+
   it('refuses a value its control cannot take', () => {
     const result = checkLesson(modelD, {
       ...lesson,

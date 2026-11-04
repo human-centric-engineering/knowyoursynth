@@ -310,6 +310,56 @@ describe('validatePreset', () => {
     ]);
   });
 
+  it('accepts taking out a cable an earlier step plugged in, and keeps the move', () => {
+    const p = goodPreset();
+    const unplug = {
+      title: 'Take the LFO out',
+      module: 'patch',
+      why: 'Steady again.',
+      unplug: [['lfo.tri', 'cutoff.in']],
+    };
+    const r = validatePreset(def, { ...p, steps: [...p.steps, unplug] });
+
+    expect(r.problems).toEqual([]);
+    expect(r.value?.steps[2]).toEqual(unplug);
+  });
+
+  it('refuses taking out a cable that is not in at that step (not-plugged-in)', () => {
+    const p = goodPreset();
+    const r = validatePreset(def, {
+      ...p,
+      steps: [
+        // Before the step that plugs it in, and in the same step as it is plugged in: not in yet, either time.
+        { ...p.steps[0], unplug: [['lfo.tri', 'cutoff.in']] },
+        { ...p.steps[1], unplug: [['lfo.tri', 'cutoff.in']] },
+        // In now, so this one passes; then it is out, so taking it out again does not.
+        { title: 'Out', module: 'patch', why: 'Off.', unplug: [['lfo.tri', 'cutoff.in']] },
+        { title: 'Out again', module: 'patch', why: 'Off.', unplug: [['lfo.tri', 'cutoff.in']] },
+      ],
+    });
+
+    expect(r.problems.map((x) => [x.path, x.code])).toEqual([
+      ['steps.0.unplug.0', 'not-plugged-in'],
+      ['steps.1.unplug.0', 'not-plugged-in'],
+      ['steps.3.unplug.0', 'not-plugged-in'],
+    ]);
+    expect(r.problems[0].message).toBe(
+      'Step 1 takes out the cable lfo.tri > cutoff.in, which is not in at that step'
+    );
+  });
+
+  it('refuses a malformed unplug as a malformed cable, not as one that is not in', () => {
+    const p = goodPreset();
+    const r = validatePreset(def, {
+      ...p,
+      steps: [...p.steps, { ...p.steps[1], cables: [], unplug: [['cutoff.in', 'lfo.tri']] }],
+    });
+
+    expect(r.problems.map((x) => [x.path, x.code])).toEqual([
+      ['steps.2.unplug.0', 'reversed-cable'],
+    ]);
+  });
+
   it('refuses tweaks and context lines that name unknown controls', () => {
     const r = validatePreset(def, {
       ...goodPreset(),

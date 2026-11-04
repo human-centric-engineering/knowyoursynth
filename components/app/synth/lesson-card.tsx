@@ -30,11 +30,16 @@ import type { LessonMark } from '@/components/app/synth/progress';
 export type CardId = 'build' | 'inspector' | 'fx';
 
 /**
- * The controls a step moves, then the input end of each cable it patches, once each (two cables can share an input):
- * the order the card numbers them in.
+ * The controls a step moves, then the input end of each cable it takes out, then of each cable it patches, once each
+ * (two cables can share an input, and a cable moved to another output keeps its input's number): the order the card
+ * numbers them in. A cable comes out before the one that replaces it goes in, as on the hardware.
  */
 export const stepBadges = (s: PresetStep): string[] => [
-  ...new Set([...Object.keys(s.set || {}), ...(s.cables || []).map(([, to]) => to)]),
+  ...new Set([
+    ...Object.keys(s.set || {}),
+    ...(s.unplug || []).map(([, to]) => to),
+    ...(s.cables || []).map(([, to]) => to),
+  ]),
 ];
 
 /** The controls a sound's tweaks are about, once each, in their order. */
@@ -178,11 +183,7 @@ export function LessonCard({
     if (drag.current?.id === e.pointerId) drag.current = null;
   };
 
-  const lit = starting
-    ? stepIds(startStep(def))
-    : current
-      ? [...Object.keys(current.set || {}), ...(current.cables || []).flat()]
-      : [];
+  const lit = starting ? stepIds(startStep(def)) : current ? stepIds(current) : [];
   const point = (ids: string[]) => () => highlightStore.set(ids);
   const back = point(lit);
 
@@ -285,6 +286,26 @@ export function LessonCard({
                       <span className="kys-label text-(--kys-muted)">{displayName(def, c)}</span>
                       <span className="ml-auto font-mono">{formatValue(c, v)}</span>
                     </button>
+                  </li>
+                );
+              })}
+              {(current.unplug || []).map(([a, b]) => {
+                const from = jm[a];
+                const to = jm[b];
+                if (!from || !to) return null;
+                return (
+                  <li key={`-${a}>${b}`}>
+                    <span
+                      className="kys-card-move"
+                      onPointerEnter={point([a, b])}
+                      onPointerLeave={back}
+                    >
+                      <Num n={moves.indexOf(b) + 1} />
+                      <span className="kys-label text-(--kys-muted)">Unplug</span>
+                      <span className="ml-auto font-mono">
+                        Take out {from.label} out → {to.label} in
+                      </span>
+                    </span>
                   </li>
                 );
               })}

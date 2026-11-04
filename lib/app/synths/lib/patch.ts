@@ -189,24 +189,31 @@ export interface PanelState {
   cables: PatchCable[];
 }
 
-/** init + steps[0..upto] → { values, cables }. `upto` omitted = the whole sound. */
+/**
+ * init + steps[0..upto] → { values, cables }. `upto` omitted = the whole sound. A step's `unplug` comes out before its
+ * `cables` go in. A cable's colour counts every cable plugged in before it, not the ones still in, so a cable taken
+ * out does not leave the next one the colour of a cable that is still there.
+ */
 export function presetState(
   def: SynthDef,
   preset?: Pick<Preset, 'steps' | 'phrase'> | null,
   upto?: number | null
 ): PanelState {
   const values: ControlValues = { ...def.init };
-  const cables: PatchCable[] = [];
-  if (!preset) return { values, cables };
+  if (!preset) return { values, cables: [] };
   // A synth whose TEMPO knob sets the riff's speed (SynthDef `tempo`) starts each sound at its own riff's BPM.
   if (def.tempo && preset.phrase && preset.phrase.bpm) values[def.tempo] = preset.phrase.bpm;
   const last = upto == null ? preset.steps.length - 1 : upto;
+  let cables: PatchCable[] = [];
+  let plugged = 0;
   preset.steps.forEach((s, i) => {
     if (i > last) return;
     Object.assign(values, s.set || {});
+    for (const [from, to] of s.unplug || [])
+      cables = cables.filter((c) => !(c.from === from && c.to === to));
     (s.cables || []).forEach(([from, to]) => {
       if (!cables.some((c) => c.from === from && c.to === to))
-        cables.push({ from, to, color: CABLE_COLORS[cables.length % CABLE_COLORS.length] });
+        cables.push({ from, to, color: CABLE_COLORS[plugged++ % CABLE_COLORS.length] });
     });
   });
   return { values, cables };
@@ -301,19 +308,27 @@ export function sanitizePreset(def: SynthDef, raw: unknown): Preset | null {
   if (!isRecord(raw) || !Array.isArray(raw.steps)) return null;
   const str = (x: unknown, max: number) => (typeof x === 'string' ? x.slice(0, max) : '');
   const rawSteps: unknown[] = raw.steps;
+  // The cables in as the steps go, so an unplug of a cable that is not in is dropped, as an unknown jack is.
+  const base = presetState(def).cables;
+  let inNow = base.map((c) => `${c.from}>${c.to}`);
   const steps: PresetStep[] = rawSteps
     .slice(0, 9)
     .map((s) => {
       const r = isRecord(s) ? s : {};
+      const unplug = sanitizeCables(def, r.unplug).filter(([a, b]) => inNow.includes(`${a}>${b}`));
+      const cables = sanitizeCables(def, r.cables);
+      const out = new Set(unplug.map(([a, b]) => `${a}>${b}`));
+      inNow = [...inNow.filter((k) => !out.has(k)), ...cables.map(([a, b]) => `${a}>${b}`)];
       return {
         title: str(r.title, 90) || 'Step',
         module: isModule(r.module) ? r.module : 'osc',
         why: str(r.why, 1500),
         set: sanitizeSet(def, r.set),
-        cables: sanitizeCables(def, r.cables),
+        cables,
+        ...(unplug.length ? { unplug } : {}),
       };
     })
-    .filter((s) => Object.keys(s.set).length || s.cables.length);
+    .filter((s) => Object.keys(s.set).length || s.cables.length || s.unplug?.length);
   if (!steps.length) return null;
   const cm = controlMap(def);
   const context: Record<string, string> = {};
