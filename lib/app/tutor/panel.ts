@@ -145,8 +145,6 @@ export interface PanelChanges {
   values: ControlValues;
   /** The Default patch's own cables, which a sound starts with. */
   defaultCables: CablePair[];
-  /** The cables in that the Default patch does not have. */
-  plugged: CablePair[];
   /** The Default patch's cables that are out. */
   unplugged: CablePair[];
 }
@@ -171,7 +169,6 @@ export function changedFromDefault(
   return {
     values: changed,
     defaultCables: baseCables,
-    plugged: cables.filter((c) => !hasCable(baseCables, c)),
     unplugged: baseCables.filter((c) => !hasCable(cables, c)),
   };
 }

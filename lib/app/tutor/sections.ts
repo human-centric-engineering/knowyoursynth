@@ -21,7 +21,8 @@ const wholeSizes = new WeakMap<SynthDef, number>();
  */
 function sizeOnDefault(def: SynthDef, members: Pick<SynthDef, 'controls' | 'jacks'>): number {
   const { values, cables } = presetState(def);
-  const ids = new Set(members.jacks.map((j) => j.id));
+  // Only the jacks `describeSynth` lists, as `describe_synth` passes it, so a cable it leaves out is not counted.
+  const ids = new Set(members.jacks.filter(modelled).map((j) => j.id));
   const shown = cables.filter((c) => ids.has(c.from) || ids.has(c.to));
   return describeSynth({ ...def, ...members }, values, shown).length;
 }

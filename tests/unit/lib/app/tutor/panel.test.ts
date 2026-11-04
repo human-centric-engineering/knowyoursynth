@@ -92,7 +92,7 @@ describe('changedFromDefault', () => {
     expect(changedFromDefault(modelD, values, [])).toEqual({
       values: { 'mix.osc2On': true, 'filter.cutoff': -2 },
       defaultCables: [],
-      plugged: [],
+
       unplugged: [],
     });
     expect(changedFromDefault(modelD, base, []).values).toEqual({});
@@ -105,7 +105,7 @@ describe('changedFromDefault', () => {
     });
   });
 
-  it("lists the cables plugged in beyond the Default patch's, and its cables taken out", () => {
+  it("lists the Default patch's cables, and those of them taken out", () => {
     const base = presetState(vcs3);
     const defaults = base.cables.map((c): [string, string] => [c.from, c.to]);
     expect(defaults).toContainEqual(['r.envsig', 'c.out2']);
@@ -116,13 +116,13 @@ describe('changedFromDefault', () => {
     expect(changedFromDefault(vcs3, base.values, cables)).toEqual({
       values: {},
       defaultCables: defaults,
-      plugged: [['r.osc2tri', 'c.out2']],
+
       unplugged: [['r.envsig', 'c.out2']],
     });
     expect(changedFromDefault(vcs3, base.values, defaults)).toEqual({
       values: {},
       defaultCables: defaults,
-      plugged: [],
+
       unplugged: [],
     });
   });

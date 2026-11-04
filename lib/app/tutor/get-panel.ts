@@ -44,10 +44,8 @@ export interface PanelData {
   changed: ChangedControl[];
   /** Every cable in, each `[output jack id, input jack id]`. */
   cables: CablePair[];
-  /** The Default patch's own cables, which a designed sound starts with. A handful at most, so never cut. */
+  /** The Default patch's own cables, which a designed sound starts with. */
   defaultCables: CablePair[];
-  /** The cables in that the Default patch does not have. */
-  plugged: CablePair[];
   /** The Default patch's cables that the learner has taken out. */
   unplugged: CablePair[];
   /** More controls differ, or more cables changed, than are listed. */
@@ -65,7 +63,7 @@ export class GetPanelCapability extends BaseCapability<Args, PanelData> {
   readonly functionDefinition: CapabilityFunctionDefinition = {
     name: 'get_panel',
     description:
-      "Read the synth panel as the learner has it now, and what they changed from the synth's Default patch (the panel step 0 of every lesson sets): the controls that differ from it (id, panel label and value), every cable in, the Default patch's own cables, the cables in that it does not have, and its cables taken out. Call it before explaining or changing the patch. Read-only.",
+      "Read the synth panel as the learner has it now, and what they changed from the synth's Default patch (the panel step 0 of every lesson sets): the controls that differ from it (id, panel label and value), every cable in, the Default patch's own cables, and those of its cables the learner has taken out. Call it before explaining or changing the patch. Read-only.",
     parameters: { type: 'object', additionalProperties: false, properties: {} },
   };
 
@@ -89,14 +87,13 @@ export class GetPanelCapability extends BaseCapability<Args, PanelData> {
         version: def.version,
         changed: changed.slice(0, MAX_CHANGED),
         cables: cables.slice(0, MAX_CABLES),
-        defaultCables: diff.defaultCables,
-        plugged: diff.plugged.slice(0, MAX_CABLES),
+        defaultCables: diff.defaultCables.slice(0, MAX_CABLES),
         unplugged: diff.unplugged.slice(0, MAX_CABLES),
+        // `unplugged` is a subset of `defaultCables`, so it is cut only when that is.
         truncated:
           changed.length > MAX_CHANGED ||
           cables.length > MAX_CABLES ||
-          diff.plugged.length > MAX_CABLES ||
-          diff.unplugged.length > MAX_CABLES,
+          diff.defaultCables.length > MAX_CABLES,
       })
     );
   }

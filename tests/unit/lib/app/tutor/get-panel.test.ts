@@ -1,6 +1,6 @@
 /**
  * `get_panel`: the panel as the route passed it, as what the learner changed from the Default patch: the controls that
- * differ from it (labelled, with the value as the panel shows it), the cables plugged in and taken out, and the
+ * differ from it (labelled, with the value as the panel shows it), every cable in, the Default patch's own and those taken out, and the
  * definition version.
  *
  * @see lib/app/tutor/get-panel.ts
@@ -29,7 +29,6 @@ describe('get_panel', () => {
       truncated: false,
       cables: [['j.lfoTri', 'j.cutCv']],
       defaultCables: [],
-      plugged: [['j.lfoTri', 'j.cutCv']],
       unplugged: [],
     });
     // A value sent at its Default patch value is not a change.
@@ -57,7 +56,6 @@ describe('get_panel', () => {
       expect(result.success).toBe(true);
       expect(result.data).toMatchObject({
         changed: [],
-        plugged: [],
         unplugged: [],
         truncated: false,
       });
@@ -71,7 +69,6 @@ describe('get_panel', () => {
     expect(cables.length).toBeGreaterThan(0);
     const result = await tool.execute({}, panelContext(vcs3, { values, cables: [] }));
     expect(result.data?.changed).toEqual([]);
-    expect(result.data?.plugged).toEqual([]);
     expect(result.data?.unplugged).toEqual(cables.map((c) => [c.from, c.to]));
     // What a design starts with is still listed, though none of it is in now.
     expect(result.data?.cables).toEqual([]);
@@ -96,7 +93,6 @@ describe('get_panel', () => {
     const s15 = synth('system-15');
     const result = await tool.execute({}, panelContext(s15, { cables: manyCables(s15, 150) }));
     expect(result.data?.cables).toHaveLength(100);
-    expect(result.data?.plugged).toHaveLength(100);
     expect(result.data?.truncated).toBe(true);
   });
 
