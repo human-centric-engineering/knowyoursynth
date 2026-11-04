@@ -475,6 +475,17 @@ svg .kys-hit:focus-visible {
     justify-content: center;
   }
 }
+/* Step 0, the Default patch: a narrower stop at the start, in the accent while it is on. */
+.kys-chapter-start {
+  flex: 0 0 auto;
+  min-width: 96px;
+  --chapter: var(--kys-accent);
+}
+@media (max-width: 639px) {
+  .kys-chapter-start {
+    min-width: 32px;
+  }
+}
 /* The finished sound: a narrower stop at the end, in the accent while it is on. */
 .kys-chapter-end {
   flex: 0 0 auto;

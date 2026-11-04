@@ -6,10 +6,13 @@
  * @see components/app/synth/lesson-card.tsx
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { LessonCard, stepBadges } from '@/components/app/synth/lesson-card';
+import { badgeStore, highlightStore } from '@/components/app/synth/stores';
 import { getSynthDef } from '@/lib/app/synths/defs';
+import { START_STEP, defaultPatchSound, startStep } from '@/lib/app/synths/default-patch';
+import type { Preset } from '@/lib/app/synths/contract';
 
 const found = getSynthDef('model-d');
 if (!found) throw new Error('model-d is not registered');
@@ -136,5 +139,79 @@ describe('LessonCard live region', () => {
       expect(body()).not.toHaveAttribute('aria-live');
       view.unmount();
     }
+  });
+});
+
+describe('LessonCard step 0', () => {
+  const sound: Preset = {
+    ...defaultPatchSound(def),
+    id: 'two-steps',
+    name: 'Two steps',
+    steps: [
+      { title: 'Open the mixer', module: 'mixer', why: 'Loud.', set: { 'mix.osc1': 9 } },
+      {
+        title: 'Close the filter',
+        module: 'filter',
+        why: 'Dark.',
+        set: { 'filter.cutoff': -2 },
+      },
+    ],
+    tweaks: [{ id: 'filter.cutoff', try: 'Open it', hear: 'Brighter.' }],
+  };
+  const card = (preset: Preset, step: number | null) => {
+    const onStep = vi.fn();
+    render(
+      <LessonCard
+        def={def}
+        preset={preset}
+        step={step}
+        onStep={onStep}
+        section="build"
+        onClose={vi.fn()}
+        side="right"
+        onSide={vi.fn()}
+        inspector={null}
+        effects={null}
+      />
+    );
+    return { onStep, el: screen.getByTestId('lesson-card') };
+  };
+
+  afterEach(() => {
+    act(() => {
+      badgeStore.set([]);
+      highlightStore.set([]);
+    });
+  });
+
+  it('asks for the Default patch on the user’s synth, numbers no moves, and Next goes to step 1', () => {
+    const { onStep, el } = card(sound, START_STEP);
+    expect(el.textContent).toMatch(/Step 0 of 2 · Start/);
+    expect(el.textContent).toContain('Set your synth to the Default patch');
+    expect(el.textContent).toContain(startStep(def).why);
+    // The whole panel is the Default patch: no ①②③, where the finished sound would number its tweaks.
+    expect(badgeStore.get()).toEqual([]);
+    expect(screen.getByRole('button', { name: 'Previous lesson step' })).toBeDisabled();
+    fireEvent.click(screen.getByRole('button', { name: 'Next lesson step' }));
+    expect(onStep).toHaveBeenLastCalledWith(0);
+  });
+
+  it('is where Build it step by step and Previous from step 1 go', () => {
+    const { onStep } = card(sound, null);
+    fireEvent.click(screen.getByRole('button', { name: /Build it step by step/ }));
+    expect(onStep).toHaveBeenLastCalledWith(START_STEP);
+    cleanup();
+    const at1 = card(sound, 0);
+    fireEvent.click(screen.getByRole('button', { name: 'Previous lesson step' }));
+    expect(at1.onStep).toHaveBeenLastCalledWith(START_STEP);
+  });
+
+  it('is not in the Default patch’s own lesson, which starts at its one step', () => {
+    const { onStep } = card(defaultPatchSound(def), null);
+    fireEvent.click(screen.getByRole('button', { name: /Build it step by step/ }));
+    expect(onStep).toHaveBeenLastCalledWith(0);
+    cleanup();
+    card(defaultPatchSound(def), 0);
+    expect(screen.getByRole('button', { name: 'Previous lesson step' })).toBeDisabled();
   });
 });

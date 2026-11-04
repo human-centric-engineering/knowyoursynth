@@ -18,6 +18,7 @@ import type {
   PresetStep,
   SynthDef,
 } from '@/lib/app/synths/contract';
+import { START_STEP, hasStartStep, startStep } from '@/lib/app/synths/default-patch';
 import { focusStore, highlightStore } from '@/components/app/synth/stores';
 import { LevelDots, markText, reachedStep } from '@/components/app/synth/library';
 import type { LessonMark } from '@/components/app/synth/progress';
@@ -231,7 +232,7 @@ const reduced = () =>
 /**
  * One step at a time in a sideways scroll-snap track, with a step bar (arrows and numbered dots) to move between
  * them. While walking through, the step in view is the step the panel is at; otherwise browsing only changes what you
- * read.
+ * read. At step 0 the first step is in view, still to do.
  */
 function StepCarousel({
   def,
@@ -250,7 +251,10 @@ function StepCarousel({
 }) {
   const n = steps.length;
   const walking = step != null;
-  const [view, setView] = useState(step ?? 0);
+  // The step in view for the panel's: step 0 is no card of the track's, so its first.
+  const starting = step === START_STEP;
+  const at = step == null || starting ? 0 : step;
+  const [view, setView] = useState(at);
   const track = useRef<HTMLOListElement>(null);
   const settle = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -269,16 +273,15 @@ function StepCarousel({
 
   // Next / Back / Finish in the header move the walkthrough; bring that step into view.
   useEffect(() => {
-    if (step != null && step !== view) {
-      setView(step);
-      scrollTo(step);
+    if (step != null && at !== view) {
+      setView(at);
+      scrollTo(at);
     }
   }, [step]); // eslint-disable-line react-hooks/exhaustive-deps -- follows the walkthrough, not the reader
   // A new sound starts at its first step.
   useEffect(() => {
-    const k = step ?? 0;
-    setView(k);
-    scrollTo(k, false);
+    setView(at);
+    scrollTo(at, false);
   }, [resetKey]); // eslint-disable-line react-hooks/exhaustive-deps -- only when the sound changes
 
   // Swiping or scrolling the track: once it comes to rest, the step in view becomes current.
@@ -314,7 +317,7 @@ function StepCarousel({
           <ol className="flex min-w-0 items-center gap-0.5 overflow-x-auto">
             {steps.map((st, i) => {
               const m = moduleOf(st.module);
-              const on = i === view;
+              const on = i === view && !starting;
               const todo = walking && i > step;
               return (
                 <li key={i} className="shrink-0">
@@ -342,8 +345,9 @@ function StepCarousel({
           </ol>
           <button
             type="button"
-            onClick={() => go(view + 1)}
-            disabled={view === n - 1}
+            // From step 0 the next step is the first, already in view.
+            onClick={() => go(starting ? view : view + 1)}
+            disabled={view === n - 1 && !starting}
             aria-label="Next step"
             className="h-7 w-7 shrink-0 rounded text-(--kys-muted) enabled:hover:text-(--kys-text) disabled:opacity-40"
           >
@@ -427,9 +431,51 @@ export interface LessonProps {
   mark?: LessonMark | null;
 }
 
+/**
+ * Step 0 (`f-default-patch` t-173): one line before the step cards asking for the Default patch on the user's own synth,
+ * with what to listen for. Choosing it sets the panel to the Default patch, to copy a control at a time.
+ */
+function StartLine({
+  def,
+  now,
+  onStep,
+  base,
+}: {
+  def: SynthDef;
+  now: boolean;
+  onStep: (k: number | null) => void;
+  /** What the panel has lit, put back when the line is left. */
+  base: string[];
+}) {
+  const s = startStep(def);
+  const ids = stepIds(s);
+  return (
+    <button
+      type="button"
+      onClick={() => onStep(START_STEP)}
+      onPointerEnter={() => highlightStore.set(ids)}
+      onPointerLeave={() => highlightStore.set(base)}
+      aria-current={now ? 'step' : undefined}
+      title={now ? undefined : 'Set the panel to the Default patch'}
+      className={`mb-3 flex w-full items-start gap-3 rounded-xl border px-3.5 py-2.5 text-left text-sm ${now ? 'border-(--kys-accent) bg-(--kys-raised)' : 'border-(--kys-line) bg-(--kys-surface) hover:border-(--kys-muted)'}`}
+    >
+      <span className="mt-px flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-(--kys-muted) font-mono text-[11px] font-semibold text-(--kys-muted)">
+        0
+      </span>
+      <span className="min-w-0 leading-snug">
+        <span className="font-semibold">Set your synth to the {s.title}.</span>{' '}
+        <span className="text-(--kys-muted)">{s.why}</span>
+      </span>
+    </button>
+  );
+}
+
 export function Lesson({ def, preset, step, onStep, mark = null }: LessonProps) {
   const n = preset.steps.length;
   const walking = step != null;
+  // Where the walkthrough starts: step 0, the Default patch, where the lesson has it.
+  const hasStart = hasStartStep(preset);
+  const begin = hasStart ? START_STEP : 0;
   const [picked, setPicked] = useState<TabId>('how');
   const hasTweaks = preset.tweaks.length > 0;
   // Starting a walkthrough jumps to the steps; a sound with no tweaks falls back to the overview.
@@ -444,7 +490,7 @@ export function Lesson({ def, preset, step, onStep, mark = null }: LessonProps) 
       ? [{ id: 'tweaks' as const, label: 'Make it yours', badge: String(preset.tweaks.length) }]
       : []),
   ];
-  const current = walking ? preset.steps[step] : undefined;
+  const current = step === START_STEP ? startStep(def) : walking ? preset.steps[step] : undefined;
   const base = current ? stepIds(current) : [];
   const baseKey = base.join('|');
   useEffect(() => {
@@ -529,7 +575,7 @@ export function Lesson({ def, preset, step, onStep, mark = null }: LessonProps) 
               </div>
               <div className="mt-4 flex flex-wrap gap-2 text-sm">
                 {n > 0 && (
-                  <button type="button" onClick={() => onStep(0)} className={primary}>
+                  <button type="button" onClick={() => onStep(begin)} className={primary}>
                     Build it step by step
                   </button>
                 )}
@@ -552,7 +598,7 @@ export function Lesson({ def, preset, step, onStep, mark = null }: LessonProps) 
                       <>
                         <button
                           type="button"
-                          disabled={step === 0}
+                          disabled={step <= begin}
                           onClick={() => onStep(step - 1)}
                           className={secondary}
                         >
@@ -573,8 +619,8 @@ export function Lesson({ def, preset, step, onStep, mark = null }: LessonProps) 
                         )}
                       </>
                     ) : (
-                      <button type="button" onClick={() => onStep(0)} className={primary}>
-                        Start from a blank patch
+                      <button type="button" onClick={() => onStep(begin)} className={primary}>
+                        {hasStart ? 'Start from the Default patch' : 'Start from a blank patch'}
                       </button>
                     )}
                   </div>
@@ -585,6 +631,9 @@ export function Lesson({ def, preset, step, onStep, mark = null }: LessonProps) 
                   ? 'The panel now shows the patch only as far as this step. Play the keys or the riff after each step and listen to what changed.'
                   : 'The panel is set to the finished patch. Step through to hear it come together from a plain tone, one module at a time.'}
               </p>
+              {n > 0 && hasStart && (
+                <StartLine def={def} now={step === START_STEP} onStep={onStep} base={base} />
+              )}
               {n > 0 && (
                 <StepCarousel
                   def={def}

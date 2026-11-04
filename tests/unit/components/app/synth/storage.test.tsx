@@ -24,6 +24,7 @@ import {
 } from '@/components/app/synth/storage';
 import type { Session } from '@/components/app/synth/storage';
 import { getSynthDef } from '@/lib/app/synths/defs';
+import { START_STEP } from '@/lib/app/sounds/preference-data';
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
 import type { SynthDef } from '@/lib/app/synths/contract';
 import { logger } from '@/lib/logging';
@@ -186,10 +187,14 @@ describe('parseSession', () => {
     ['an array', []],
     ['no preset', { step: null, values: {}, cables: [] }],
     ['a numeric preset', { presetId: 3, step: null, values: {}, cables: [] }],
-    ['a negative step', { presetId: null, step: -1, values: {}, cables: [] }],
+    ['a step before step 0', { presetId: null, step: -2, values: {}, cables: [] }],
     ['a fractional step', { presetId: null, step: 1.5, values: {}, cables: [] }],
   ])('is null for malformed input: %s', (_name, raw) => {
     expect(parseSession(def, raw)).toBeNull();
+  });
+
+  it('keeps step 0 of a lesson, the Default patch, held as the step before the first', () => {
+    expect(parseSession(def, stored({ step: START_STEP }))?.step).toBe(START_STEP);
   });
 
   it('survives values and cables of the wrong type', () => {

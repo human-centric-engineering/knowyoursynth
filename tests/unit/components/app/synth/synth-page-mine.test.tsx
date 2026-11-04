@@ -502,7 +502,7 @@ describe('My patches', () => {
 
     expect(loadedName()).toBe('Fat bass');
     expect(screen.queryByText('mine')).toBeNull();
-    expect(stepShown()).toBe('step 1 of 1');
+    expect(stepShown()).toBe('step 0 of 1');
     // Save no longer writes to Night bass: it makes a new copy of the library sound.
     expect(button('Save a copy…')).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'Save' })).toBeNull();
@@ -941,6 +941,16 @@ describe('a sound saved with its lesson', () => {
     await openIt();
     openSide('Lesson');
     fireEvent.click(button('Build it step by step'));
+    // Its own lesson starts at step 0 too, the sound still open.
+    expect(stepShown()).toBe('step 0 of 2');
+    expect(screen.getByText('mine')).toBeTruthy();
+    // the header's Next step, not the step bar's arrow of the same name
+    const next = () => {
+      const b = screen.getAllByRole('button').find((el) => el.textContent === 'Next step');
+      if (!b) throw new Error('no Next step');
+      return b;
+    };
+    fireEvent.click(next());
     expect(stepShown()).toBe('step 1 of 2');
     expect(loadedName()).toBe('Tutor bass');
     expect(screen.getByText('mine')).toBeTruthy();
@@ -951,10 +961,7 @@ describe('a sound saved with its lesson', () => {
     expect(button('Save as…')).toBeEnabled();
     expect(screen.queryByRole('button', { name: 'Save a copy…' })).toBeNull();
 
-    // the header's Next step, not the step bar's arrow of the same name
-    const next = screen.getAllByRole('button').find((b) => b.textContent === 'Next step');
-    if (!next) throw new Error('no Next step');
-    fireEvent.click(next);
+    fireEvent.click(next());
     expect(stepShown()).toBe('step 2 of 2');
     fireEvent.click(button('Finish the lesson'));
     expect(stepShown()).toBeNull();
@@ -990,6 +997,10 @@ describe('a sound saved with its lesson', () => {
     await openIt();
     openSide('Lesson');
     fireEvent.click(button('Build it step by step'));
+    expect(stepShown()).toBe('step 0 of 2');
+    const next = screen.getAllByRole('button').find((b) => b.textContent === 'Next step');
+    if (!next) throw new Error('no Next step');
+    fireEvent.click(next);
     expect(stepShown()).toBe('step 1 of 2');
     fireEvent.click(button('Delete…'));
     fireEvent.click(button('Delete it'));

@@ -25,6 +25,8 @@ import {
   pendingStore,
 } from '@/components/app/synth/stores';
 import { revealDelta, screenBox } from '@/components/app/synth/reveal';
+import { stepIds } from '@/components/app/synth/lesson';
+import { startStep } from '@/lib/app/synths/default-patch';
 import { HALF_HEIGHT } from '@/components/app/ui/bottom-sheet';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
@@ -282,7 +284,7 @@ describe('at lg and up', () => {
     page();
     const first = screen
       .getByRole('list', { name: 'Lesson steps' })
-      .querySelector<HTMLButtonElement>('button');
+      .querySelector<HTMLButtonElement>('.kys-chapter:not(.kys-chapter-start) button');
     if (!first) throw new Error('no chapter');
     fireEvent.click(first);
     expect(stepShown()).toBe('step 1 of 1');
@@ -509,12 +511,39 @@ describe('below lg', () => {
       expect(scrollBy).not.toHaveBeenCalled();
 
       fireEvent.click(within(lesson).getByRole('button', { name: 'Build it step by step' }));
+      expect(sheet('Lesson').getAttribute('data-snap')).toBe('half');
+      // Step 0 first, then the step itself, from the sheet's header.
+      fireEvent.click(within(lesson).getByRole('button', { name: 'Make Lesson taller' }));
+      const next = within(sheet('Lesson'))
+        .getAllByRole('button')
+        .find((b) => b.textContent === 'Next step');
+      if (!next) throw new Error('no Next step');
+      fireEvent.click(next);
 
       expect(sheet('Lesson').getAttribute('data-snap')).toBe('half');
       // Fat bass's first step sets CUTOFF and OSC 1's level: the box round both, brought into the band above the
       // half-height sheet, which is worked out rather than measured while the sheet is still shrinking
       const svg = screen.getByTestId('panel-frame').querySelector('svg');
       const box = svg && screenBox(svg, def, ['filter.cutoff', 'mix.osc1']);
+      expect(box).not.toBeNull();
+      const band = { start: 0, end: window.innerHeight * (1 - HALF_HEIGHT) };
+      const dy = box ? revealDelta(box.y, band) : 0;
+      expect(dy).not.toBe(0);
+      await waitFor(() => expect(scrollBy).toHaveBeenCalledWith({ top: dy, behavior: 'smooth' }));
+    });
+
+    it('scrolls step 0’s controls, the Default patch’s, above the half-height sheet as a step’s are', async () => {
+      phone();
+      vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(100);
+      const scrollBy = vi.spyOn(window, 'scrollBy').mockImplementation(() => undefined);
+      page();
+      fireEvent.click(within(bar()).getByRole('button', { name: 'Lesson' }));
+      fireEvent.click(
+        within(sheet('Lesson')).getByRole('button', { name: 'Build it step by step' })
+      );
+      expect(stepShown()).toBe('step 0 of 1');
+      const svg = screen.getByTestId('panel-frame').querySelector('svg');
+      const box = svg && screenBox(svg, def, stepIds(startStep(def)));
       expect(box).not.toBeNull();
       const band = { start: 0, end: window.innerHeight * (1 - HALF_HEIGHT) };
       const dy = box ? revealDelta(box.y, band) : 0;
@@ -552,7 +581,7 @@ describe('below lg', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Close Lesson' }));
       scrollBy.mockClear();
       // the lesson stays mounted while its sheet is closed, so the step is still lit on the panel
-      expect(stepShown()).toBe('step 1 of 1');
+      expect(stepShown()).toBe('step 0 of 1');
       await act(() => new Promise((r) => setTimeout(r, 20)));
       expect(scrollBy).not.toHaveBeenCalled();
     });

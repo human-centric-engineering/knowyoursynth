@@ -57,8 +57,12 @@ import { lessonPreset } from '@/lib/app/sounds/lesson';
 import {
   DEFAULT_PATCH_ID,
   DEFAULT_PATCH_NAME,
+  START_STEP,
   defaultPatchSound,
+  hasStartStep,
   isDefaultPatch,
+  lessonState,
+  startStep,
 } from '@/lib/app/synths/default-patch';
 import { SynthPanel } from '@/components/app/panel/synth-panel';
 import type { CableEnd } from '@/components/app/panel/synth-panel';
@@ -599,11 +603,12 @@ function Synth({
   // A stored step can outrun the sound it is read against (the stored sound was removed, or lost steps): the finished
   // sound, then. A step with one of the user's sounds open belongs to that sound's own lesson, since a library step
   // closes the sound, so it is never read against the library's: not while their list is still loading, and not once
-  // the sound or its lesson has gone.
+  // the sound or its lesson has gone. Step 0 (`START_STEP`) is only of a lesson that has it.
   const step =
     shown &&
     sess.step != null &&
     sess.step < shown.steps.length &&
+    (sess.step !== START_STEP || (hasStartStep(shown) && shown.steps.length > 0)) &&
     (!sess.soundId || ownLesson !== null)
       ? sess.step
       : null;
@@ -1386,7 +1391,7 @@ function Synth({
   const suggestStart = useMemo(
     () =>
       startSlug && preset
-        ? { slug: startSlug, panel: () => presetState(synthDef, preset, sess.step) }
+        ? { slug: startSlug, panel: () => lessonState(synthDef, preset, sess.step) }
         : null,
     [startSlug, preset, synthDef, sess.step]
   );
@@ -1933,7 +1938,8 @@ function Synth({
     ? sounds.find((p) => p.id === openSound.source?.slug)
     : sounds.find((p) => p.id === sess.presetId && !isDefaultPatch(p.id));
   const credit = creditSound ? { slug: creditSound.id, name: creditSound.name } : null;
-  // A lesson step sets the panel to the sound as far as that step; `null` is the finished sound. Like choosing a
+  // A lesson step sets the panel to the sound as far as that step; `null` is the finished sound, and step 0
+  // (`START_STEP`) the Default patch, which records no progress. Like choosing a
   // library sound, it replaces the panel, so one of the user's that was open is no longer what Save writes to.
   // Signed in, a step further than the user had got is recorded, and Finish from the last step finishes the lesson.
   // The open sound's own lesson is the exception: the sound stays open (its lesson goes with it), and nothing is
@@ -1947,14 +1953,14 @@ function Synth({
     if (small && sheet === 'lesson') setDockSnap('half');
     if (ownLesson) {
       openSeq.current++;
-      patch((s) => ({ ...s, step: k, ...presetState(synthDef, ownLesson, k) }));
+      patch((s) => ({ ...s, step: k, ...lessonState(synthDef, ownLesson, k) }));
       return;
     }
     leaveShared();
     // Progress is kept for the catalogue's lessons, not the Default patch's one step.
     const kept = preset && !isDefaultPatch(preset.id) ? preset : null;
-    if (kept && k != null) progress.record(kept.id, k);
-    else if (kept && step != null && step === kept.steps.length - 1)
+    if (kept && k != null && k !== START_STEP) progress.record(kept.id, k);
+    else if (k == null && kept && step != null && step === kept.steps.length - 1)
       progress.record(kept.id, step, true);
     openSeq.current++;
     patch((s) => {
@@ -1964,14 +1970,17 @@ function Synth({
         presetId: from?.id ?? null,
         step: k,
         soundId: null,
-        ...presetState(synthDef, from, k),
+        ...lessonState(synthDef, from, k),
       };
     });
   };
   // With the Lesson sheet open at half height, the step's controls are scrolled into the band above it: on opening, on
   // each step, and when the sheet drops back to half. Full height covers the panel, so there is nothing to scroll to.
   // The band is worked out from the half height rather than measured: dropping from full, the sheet is still shrinking.
-  const stepKey = shown && step != null ? stepIds(shown.steps[step]).join('|') : '';
+  const stepKey =
+    shown && step != null
+      ? stepIds(step === START_STEP ? startStep(synthDef) : shown.steps[step]).join('|')
+      : '';
   // From `lg` up the lesson is not on the page (it is in the card, when that is open), so the page lights the step's
   // controls itself while the panel is at a step picked here, as the lesson does in its sheet below `lg`.
   const litKey = litFor === synthId ? stepKey : '';
@@ -2171,6 +2180,8 @@ function Synth({
   // user's own, or under a shared sound, that has no lesson of its own.
   const described = openSound || sharedPanel ? ownLesson : (ownLesson ?? preset ?? null);
   const steps = shown?.steps ?? [];
+  // Step 0 of the lesson on the panel, where it has one: the Default patch, set before step 1.
+  const start = hasStartStep(shown) ? startStep(synthDef) : null;
   // What Restore puts back, when there is anything to: the shared sound, the user's as saved, the tutor's design, or
   // the library sound.
   const restoreFrom =
@@ -2624,6 +2635,7 @@ function Synth({
               {!seqDocked && (
                 <SoundDesign
                   steps={steps}
+                  start={start}
                   step={step}
                   onStep={(k) => {
                     chapterChosen.current = true;

@@ -23,7 +23,8 @@ import {
 } from '@/components/app/synth/stores';
 import { SESSION_WRITE_DELAY_MS, readStored } from '@/components/app/synth/storage';
 import { getSynthDef } from '@/lib/app/synths/defs';
-import { SCALE_PHRASE } from '@/lib/app/synths/default-patch';
+import { SCALE_PHRASE, START_STEP, defaultPatchState } from '@/lib/app/synths/default-patch';
+import { presetState } from '@/lib/app/synths/lib/patch';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
@@ -1836,7 +1837,7 @@ describe('SynthPage player', () => {
     expect(tab()).toHaveAttribute('aria-expanded', 'true');
   });
 
-  it('draws one chapter per lesson step and one for the finished sound, and goes to the one clicked', () => {
+  it('draws one chapter per lesson step, step 0 before them and the finished sound after, and goes to the one clicked', () => {
     twoSteps();
     const chapters = within(player()).getByRole('list', { name: 'Lesson steps' });
     expect(
@@ -1844,6 +1845,7 @@ describe('SynthPage player', () => {
         .getAllByRole('button')
         .map((b) => b.getAttribute('aria-label'))
     ).toEqual([
+      'Lesson step 0: Default patch',
       'Lesson step 1: Open the mixer',
       'Lesson step 2: Close the filter',
       'The finished patch',
@@ -1880,8 +1882,11 @@ describe('SynthPage player', () => {
     twoSteps();
     fireEvent.click(button('The finished patch'));
     fireEvent.click(button('Build it step by step'));
-    expect(stepShown()).toBe('step 1 of 2');
+    expect(stepShown()).toBe('step 0 of 2');
     expect(button('Previous lesson step').hasAttribute('disabled')).toBe(true);
+
+    fireEvent.click(button('Next lesson step'));
+    expect(stepShown()).toBe('step 1 of 2');
 
     fireEvent.click(button('Next lesson step'));
     expect(stepShown()).toBe('step 2 of 2');
@@ -1895,6 +1900,42 @@ describe('SynthPage player', () => {
     expect(button('Build it step by step')).toBeTruthy();
   });
 
+  it('sets the panel to the Default patch at step 0, and goes on to step 1 from there', () => {
+    twoSteps();
+    const defaultCutoff = String(defaultPatchState(def).values['filter.cutoff']);
+    // Not the cutoff the finished sound has, so the panel is seen to move.
+    expect(cutoff()).toBe('-2');
+    expect(defaultCutoff).not.toBe('-2');
+
+    fireEvent.click(button('Lesson step 0: Default patch'));
+    expect(stepShown()).toBe('step 0 of 2');
+    expect(cutoff()).toBe(defaultCutoff);
+    const card = within(player()).getByTestId('lesson-card');
+    expect(card.textContent).toMatch(/Step 0 of 2 · Start/);
+
+    fireEvent.click(within(card).getByRole('button', { name: 'Next lesson step' }));
+    expect(stepShown()).toBe('step 1 of 2');
+    expect(cutoff()).toBe(String(presetState(def, TWO_STEPS, 0).values['filter.cutoff']));
+  });
+
+  it.each([
+    ['a step of the lesson', 1, 'step 2 of 2'],
+    ['step 0', START_STEP, 'step 0 of 2'],
+  ])('opens on %s it was left at, not at the start', (_name, step, shown) => {
+    storeSound(def, TWO_STEPS);
+    window.localStorage.setItem(
+      'kys.session.model-d',
+      JSON.stringify({
+        presetId: TWO_STEPS.id,
+        step,
+        soundId: null,
+        ...presetState(def, TWO_STEPS, step),
+      })
+    );
+    page({ detail: { ...detail, sounds: [TWO_STEPS] } });
+    expect(stepShown()).toBe(shown);
+  });
+
   it('heads the steps as Sound design and labels each with the part of the synth it works on', () => {
     twoSteps();
     const strip = within(player()).getByRole('region', { name: 'Learn sound design' });
@@ -1903,6 +1944,7 @@ describe('SynthPage player', () => {
       .getAllByRole('listitem')
       .map((li) => li.textContent);
     expect(labels).toEqual([
+      '0StartDefault patch',
       '1MixerOpen the mixer',
       '2FilterClose the filter',
       'FinishedHow it works',
@@ -1915,6 +1957,9 @@ describe('SynthPage player', () => {
     const card = within(player()).getByTestId('lesson-card');
     expect(card.textContent).toMatch(/The finished patch/);
     fireEvent.click(within(card).getByRole('button', { name: /Build it step by step/ }));
+    expect(card.textContent).toMatch(/Step 0 of 2 · Start/);
+    expect(card.textContent).toMatch(/Set your synth to the Default patch/);
+    fireEvent.click(within(card).getByRole('button', { name: 'Next lesson step' }));
     expect(card.textContent).toMatch(/Step 1 of 2 · Mixer/);
     expect(card.textContent).toMatch(/Loud\./);
     expect(within(card).getByRole('button', { name: 'Previous lesson step' })).toBeTruthy();

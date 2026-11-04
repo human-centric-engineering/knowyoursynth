@@ -145,13 +145,19 @@ describe('the lesson on the page', () => {
     open(p);
     openSide('Lesson');
     fireEvent.click(button('Build it step by step'));
+    // Step 0 first: the Default patch.
+    expect(stepShown()).toBe(`step 0 of ${p.steps.length}`);
+    const next = () => {
+      const b = screen.getAllByRole('button').find((el) => el.textContent === 'Next step');
+      if (!b) throw new Error('no Next step');
+      return b;
+    };
+    fireEvent.click(next());
     expect(stepShown()).toBe(`step 1 of ${p.steps.length}`);
     expect(lastParams(engine.send)).toEqual(expectedParams(def, p, 0));
     expect(highlightStore.get().length).toBeGreaterThan(0);
 
-    const next = screen.getAllByRole('button').find((b) => b.textContent === 'Next step');
-    if (!next) throw new Error('no Next step');
-    fireEvent.click(next);
+    fireEvent.click(next());
     expect(stepShown()).toBe(`step 2 of ${p.steps.length}`);
     expect(lastParams(engine.send)).toEqual(expectedParams(def, p, 1));
 

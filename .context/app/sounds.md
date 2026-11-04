@@ -157,7 +157,8 @@ so the plan's "scope" has no row.
   - The page reads both answers through Zod schemas (`AccountSettingsSchema`,
     `PanelPrefReadSchema`), and treats one that does not fit as an account it could not read.
   - A stored panel is held to what `PUT` takes: a `presetId` that is not a library slug, or a step
-    past `MAX_STEP`, is dropped on reading, so the panel itself can always be kept.
+    past `MAX_STEP`, is dropped on reading, so the panel itself can always be kept. The step may be
+    `START_STEP` (−1), a lesson's step 0, the Default patch ([`synth-page.md`](./synth-page.md)).
   - A change made before the account answered beats both, including one made before the session
     said who is signed in. If the account cannot be read, nothing is sent to it that visit, so an
     older panel never overwrites a newer one.
@@ -208,7 +209,8 @@ and a star on a synth, a library sound or one of their own sounds. Signed out, n
 - **On the page** (`components/app/synth/progress.ts`, `favourites.tsx`; tested in
   `synth-page-marks.test.tsx`):
   - Every lesson move goes through the page's `setStep`. A step further than the user had got is
-    sent; stepping back, or to a step already reached, sends nothing. **Finish from the last step
+    sent; stepping back, or to a step already reached, sends nothing. Step 0, the Default patch, is
+    never sent. **Finish from the last step
     finishes the lesson**; nothing else does. Scrolling the step bar moves the step, so it counts.
     A step the account did not keep is forgotten, so the next one that far sends it again.
   - The library shows "Reached step k of n" or "✓ Finished" on each lesson started, and the lesson

@@ -20,8 +20,9 @@ import { ArrowLeftRight, Check, ChevronLeft, ChevronRight, X } from 'lucide-reac
 import { moduleOf } from '@/lib/app/synths/lib/modules';
 import { controlMap, displayName, formatValue, jackMap } from '@/lib/app/synths/lib/patch';
 import type { Preset, PresetStep, SynthDef } from '@/lib/app/synths/contract';
+import { START_STEP, hasStartStep, startStep } from '@/lib/app/synths/default-patch';
 import { badgeStore, focusStore, highlightStore } from '@/components/app/synth/stores';
-import { StepText } from '@/components/app/synth/lesson';
+import { StepText, stepIds } from '@/components/app/synth/lesson';
 import { markText, reachedStep } from '@/components/app/synth/library';
 import type { LessonMark } from '@/components/app/synth/progress';
 
@@ -96,11 +97,19 @@ export function LessonCard({
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
   const drag = useRef<{ id: number; dx: number; dy: number; w: number } | null>(null);
   const n = preset?.steps.length ?? 0;
-  const current = preset && step != null ? preset.steps[step] : undefined;
+  const starting = !!preset && step === START_STEP;
+  const current = preset && step != null && !starting ? preset.steps[step] : undefined;
+  // Where the walkthrough starts: step 0, the Default patch, where the lesson has it.
+  const begin = hasStartStep(preset) ? START_STEP : 0;
 
-  // The panel's numbers follow the card: the step's moves, or, with the finished sound on, the tweaks' controls.
+  // The panel's numbers follow the card: the step's moves, or, with the finished sound on, the tweaks' controls. Step 0
+  // sets the whole patch, so it has no moves to number.
   const badges =
-    section !== 'build' || !preset ? [] : current ? stepBadges(current) : tweakBadges(preset);
+    section !== 'build' || !preset || starting
+      ? []
+      : current
+        ? stepBadges(current)
+        : tweakBadges(preset);
   const badgeKey = badges.join('|');
   useEffect(() => {
     badgeStore.set(badgeKey ? badgeKey.split('|') : []);
@@ -169,7 +178,11 @@ export function LessonCard({
     if (drag.current?.id === e.pointerId) drag.current = null;
   };
 
-  const lit = current ? [...Object.keys(current.set || {}), ...(current.cables || []).flat()] : [];
+  const lit = starting
+    ? stepIds(startStep(def))
+    : current
+      ? [...Object.keys(current.set || {}), ...(current.cables || []).flat()]
+      : [];
   const point = (ids: string[]) => () => highlightStore.set(ids);
   const back = point(lit);
 
@@ -202,6 +215,36 @@ export function LessonCard({
       <p className="text-(--kys-muted)">
         Choose a library patch to learn how one is built, a step at a time.
       </p>
+    );
+  } else if (starting) {
+    // Step 0: the Default patch on the user's own synth, before step 1. The panel shows it, to copy a control at a time.
+    const s = startStep(def);
+    eyebrow = <span className="text-(--kys-accent)">Step 0 of {n} · Start</span>;
+    title = `Set your synth to the ${s.title}`;
+    body = (
+      <>
+        <StepText text={s.why} className="text-[14.5px]" />
+        <p className="mt-2 text-[13.5px] text-(--kys-muted)">
+          The panel is set to it: copy each control across to your synth.
+        </p>
+      </>
+    );
+    foot = (
+      <>
+        <button type="button" className="kys-step-btn" aria-label="Previous lesson step" disabled>
+          <ChevronLeft size={18} aria-hidden="true" />
+          Previous
+        </button>
+        <button
+          type="button"
+          className="kys-step-btn is-primary"
+          aria-label="Next lesson step"
+          onClick={() => onStep(0)}
+        >
+          Next step
+          <ChevronRight size={18} aria-hidden="true" />
+        </button>
+      </>
     );
   } else if (current && step != null) {
     const m = moduleOf(current.module);
@@ -276,7 +319,7 @@ export function LessonCard({
           type="button"
           className="kys-step-btn"
           aria-label="Previous lesson step"
-          disabled={step === 0}
+          disabled={step <= begin}
           onClick={() => onStep(step - 1)}
         >
           <ChevronLeft size={18} aria-hidden="true" />
@@ -394,7 +437,7 @@ export function LessonCard({
     foot = n > 0 && (
       <>
         <span />
-        <button type="button" className="kys-step-btn is-primary" onClick={() => onStep(0)}>
+        <button type="button" className="kys-step-btn is-primary" onClick={() => onStep(begin)}>
           Build it step by step
           <ChevronRight size={18} aria-hidden="true" />
         </button>

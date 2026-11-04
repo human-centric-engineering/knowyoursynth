@@ -18,7 +18,7 @@ import { SoundSlugSchema, UserSoundIdSchema } from '@/lib/app/sounds/data';
 import type { ControlValues, PatchCable, SynthDef } from '@/lib/app/synths/contract';
 import type { PanelView } from '@/components/app/synth/routes';
 import { useAccountPanel } from '@/components/app/synth/account-storage';
-import { MAX_STEP, type PanelPrefInput } from '@/lib/app/sounds/preference-data';
+import { MAX_STEP, START_STEP, type PanelPrefInput } from '@/lib/app/sounds/preference-data';
 
 export const STORAGE_KEYS = {
   /** The last synth opened: `/synths` reopens it. */
@@ -156,7 +156,7 @@ const StoredSessionSchema = z.object({
   step: z
     .number()
     .int()
-    .min(0)
+    .min(START_STEP)
     .nullable()
     .transform((step) => (step !== null && step <= MAX_STEP ? step : null)),
   // Stored before `f-my-sounds` without it. One that is not a sound id is dropped, not the panel with it.

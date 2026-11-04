@@ -10,7 +10,17 @@
 import { useRef } from 'react';
 import { afterEach, describe, it, expect, vi } from 'vitest';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import { FullscreenButton, SoundDesign, SoundPicker } from '@/components/app/synth/player';
+import {
+  Chapters,
+  FullscreenButton,
+  SoundDesign,
+  SoundPicker,
+} from '@/components/app/synth/player';
+import { stepIds } from '@/components/app/synth/lesson';
+import { highlightStore } from '@/components/app/synth/stores';
+import { getSynthDef } from '@/lib/app/synths/defs';
+import { START_STEP, startStep } from '@/lib/app/synths/default-patch';
+import type { PresetStep } from '@/lib/app/synths/contract';
 
 const { warn } = vi.hoisted(() => ({ warn: vi.fn() }));
 vi.mock('@/lib/logging', () => ({ logger: { warn } }));
@@ -160,5 +170,47 @@ describe('SoundDesign: the drawer', () => {
     );
     expect(tab).toHaveAttribute('aria-expanded', 'true');
     expect(document.getElementById(tab.getAttribute('aria-controls') ?? '')).not.toBeNull();
+  });
+});
+
+describe('Chapters: step 0', () => {
+  const found = getSynthDef('model-d');
+  if (!found) throw new Error('model-d is not registered');
+  const start = startStep(found);
+  const steps: PresetStep[] = [
+    { title: 'Open the mixer', module: 'mixer', why: 'Loud.', set: { 'mix.osc1': 9 } },
+  ];
+  const chapter0 = () => screen.getByRole('button', { name: 'Lesson step 0: Default patch' });
+
+  afterEach(() => act(() => highlightStore.set([])));
+
+  it('comes first, a short Start chapter that sets the Default patch and lights its controls', () => {
+    const onStep = vi.fn();
+    render(<Chapters steps={steps} start={start} step={0} onStep={onStep} lit={['mix.osc1']} />);
+    const li = chapter0().closest('li');
+    expect(li).toHaveClass('kys-chapter-start');
+    expect(li?.textContent).toBe('0StartDefault patch');
+    // Past it, it is done; the step the panel is at is current.
+    expect(li).toHaveAttribute('data-state', 'done');
+    expect(chapter0()).not.toHaveAttribute('aria-current');
+    fireEvent.pointerEnter(chapter0());
+    expect(highlightStore.get()).toEqual(stepIds(start));
+    fireEvent.pointerLeave(chapter0());
+    expect(highlightStore.get()).toEqual(['mix.osc1']);
+    fireEvent.click(chapter0());
+    expect(onStep).toHaveBeenLastCalledWith(START_STEP);
+  });
+
+  it('is the step the panel is at, with every step after it still to do', () => {
+    render(<Chapters steps={steps} start={start} step={START_STEP} onStep={vi.fn()} />);
+    expect(chapter0()).toHaveAttribute('aria-current', 'step');
+    expect(chapter0().closest('li')).toHaveAttribute('data-state', 'now');
+    const step1 = screen.getByRole('button', { name: 'Lesson step 1: Open the mixer' });
+    expect(step1.closest('li')).toHaveAttribute('data-state', 'todo');
+  });
+
+  it('is not drawn for a lesson without it, as the Sound Design strip passes none', () => {
+    render(<SoundDesign steps={steps} step={null} onStep={vi.fn()} hasLesson />);
+    expect(screen.queryByRole('button', { name: /Lesson step 0/ })).toBeNull();
   });
 });
