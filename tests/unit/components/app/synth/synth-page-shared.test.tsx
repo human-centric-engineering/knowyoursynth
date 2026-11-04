@@ -30,6 +30,7 @@ import { focusStore } from '@/components/app/synth/stores';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { presetState } from '@/lib/app/synths/lib/patch';
+import { defaultPatchState } from '@/lib/app/synths/default-patch';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { PublicSound, UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
 import type { SoundLesson } from '@/lib/app/sounds/lesson';
@@ -553,7 +554,13 @@ describe("a shared sound's lesson (f-tutor t-55)", () => {
     tweaks: [],
     phrase: { bpm: 120, steps: [[0, 60, 0.25]] },
   };
-  const WITH_LESSON: PublicSound = { ...SHARED, fromTutor: true, lesson: LESSON };
+  /** Published at -3, where the lesson leaves the filter at 2; the rest where the lesson leaves it, on the Default patch (t-176). */
+  const WITH_LESSON: PublicSound = {
+    ...SHARED,
+    fromTutor: true,
+    lesson: LESSON,
+    panel: { values: { ...defaultPatchState(def).values, 'filter.cutoff': -3 }, cables: [] },
+  };
   // The lesson card over the panel, opened from the Sound Design strip (t-74).
   const lessonPanel = () => {
     openSide('Lesson');
