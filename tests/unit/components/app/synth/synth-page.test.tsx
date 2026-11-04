@@ -198,7 +198,7 @@ function page(over: Partial<SynthPageProps> = {}) {
  * A stored session as `storedSession()` writes it: every control's value, so the ones a test leaves out are the
  * Default patch's, which every sound builds on (t-176). The page fills a missing one from `init`.
  */
-const storeSession = (s: { values?: Record<string, unknown> } & object) => {
+const storeSession = (s: { values?: Record<string, unknown>; [key: string]: unknown }) => {
   comeBackTo('model-d');
   const values = s.values && { ...defaultPatchState(def).values, ...s.values };
   window.localStorage.setItem(SESSION_KEY, JSON.stringify(values ? { ...s, values } : s));
