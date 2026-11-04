@@ -401,7 +401,10 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
 - **The lesson card floats over the panel** (`lesson-card.tsx`), opened from a chapter: one
   section of the lesson, its moves numbered ①②③ on the card and on the panel (`badgeStore`). It
   does not block the panel, since it tells you to turn the knobs under it. It can be dragged by its
-  header anywhere on the screen; ⇆ docks it on the other side (`kys.cardSide`). The inspector
+  header anywhere on the screen; ⇆ docks it on the other side (`kys.cardSide`). Docked, it stands
+  above the dock and, with a pointer, above the Sound Design drawer while that is open: the drawer
+  stands on the dock outside its height, so the page measures it into `--kys-strip-h` as it slides,
+  and the card rises with it (t-174). The inspector
   (Inspect) and the effects rack (Effects, in the bar) open in the same card, so there is one card
   at a time; below `lg` the rack stays under the keyboard.
 - **The tutor slides in over the panel** (`TutorDrawer`, `drawers.tsx`) rather than pushing the

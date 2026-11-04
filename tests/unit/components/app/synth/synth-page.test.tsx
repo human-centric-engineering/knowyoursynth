@@ -1837,6 +1837,64 @@ describe('SynthPage player', () => {
     expect(tab()).toHaveAttribute('aria-expanded', 'true');
   });
 
+  it('lifts the lesson card by the open drawer’s height while the strip floats on the dock, and not where it is in the dock (t-174)', () => {
+    // jsdom has no layout: the drawer body's height, whether the strip floats and the observer are all stood in for.
+    const observers: Array<() => void> = [];
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        constructor(private cb: () => void) {
+          observers.push(() => this.cb());
+        }
+        observe() {}
+        disconnect() {}
+      }
+    );
+    let bodyH = 0;
+    vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockImplementation(function (
+      this: HTMLElement
+    ) {
+      return this.classList.contains('kys-design-body') ? bodyH : 0;
+    });
+    let floats = true;
+    const realStyle = window.getComputedStyle.bind(window);
+    vi.spyOn(window, 'getComputedStyle').mockImplementation((el, pseudo) => {
+      const s = realStyle(el, pseudo);
+      return el instanceof HTMLElement && el.classList.contains('kys-design') && floats
+        ? { ...s, position: 'absolute' }
+        : s;
+    });
+    try {
+      const { container, unmount } = twoSteps();
+      const strip = () =>
+        (container.querySelector('.kys-synth') as HTMLElement).style.getPropertyValue(
+          '--kys-strip-h'
+        );
+      // Closed, the drawer has no height, so the card stands on the dock.
+      expect(strip()).toBe('0px');
+      // Opening it, the observer follows the drawer up, and the card with it.
+      bodyH = 96;
+      act(() => observers.forEach((o) => o()));
+      expect(strip()).toBe('96px');
+      bodyH = 0;
+      act(() => observers.forEach((o) => o()));
+      expect(strip()).toBe('0px');
+      unmount();
+
+      // In the dock's flow (no hover), the dock's own height counts the strip, so nothing is added.
+      floats = false;
+      bodyH = 96;
+      const second = twoSteps();
+      expect(
+        (second.container.querySelector('.kys-synth') as HTMLElement).style.getPropertyValue(
+          '--kys-strip-h'
+        )
+      ).toBe('0px');
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
   it('draws one chapter per lesson step, step 0 before them and the finished sound after, and goes to the one clicked', () => {
     twoSteps();
     const chapters = within(player()).getByRole('list', { name: 'Lesson steps' });
