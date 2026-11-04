@@ -622,3 +622,41 @@ describe('the patch Play calls up (f-midi-hardware-lead t-92)', () => {
     ]);
   });
 });
+
+describe('while a patch loads (f-default-patch t-172)', () => {
+  const noteOns = (o: FakeOutput) => data(o).filter((d) => d[0] === 0x90 && d[1] === 60);
+
+  it('mutes the synth and sends the output no notes, letting go of the one held, then sends the next loop’s', async () => {
+    const hook = renderHook(
+      ({ silent }) => {
+        const midi = useMidi(handlers());
+        const out = useMidiOut({ midi, engine: null, connect: () => void midi.connect(), silent });
+        return { midi, out };
+      },
+      { initialProps: { silent: false } }
+    );
+    await act(async () => {
+      await hook.result.current.midi.connect();
+    });
+    act(() => hook.result.current.out.setOutput('td3'));
+    // The synth too, so its muting is the load's alone.
+    act(() => hook.result.current.out.setPlays('both'));
+    act(() => {
+      hook.result.current.out.out.message(pattern);
+      hook.result.current.out.out.event(loopStart);
+    });
+    expect(hook.result.current.out.out.muted).toBe(false);
+    expect(noteOns(td3)).toHaveLength(1);
+
+    hook.rerender({ silent: true });
+    expect(hook.result.current.out.out.muted).toBe(true);
+    expect(data(td3).at(-1)).toEqual(NOTE_OFF_60);
+    act(() => hook.result.current.out.out.event({ ...loopStart, index: 1 }));
+    expect(noteOns(td3)).toHaveLength(1);
+
+    hook.rerender({ silent: false });
+    expect(hook.result.current.out.out.muted).toBe(false);
+    act(() => hook.result.current.out.out.event({ ...loopStart, index: 2 }));
+    expect(noteOns(td3)).toHaveLength(2);
+  });
+});

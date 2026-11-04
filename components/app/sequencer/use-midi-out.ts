@@ -25,6 +25,10 @@
  * same way (`kys.midiProgram`): which program holds which sound is the user's own hardware's business. None is set to
  * begin with, as many synths have no patch memory.
  *
+ * While a new patch loads on the panel (`silent`, `f-default-patch` t-172) the pattern runs on in time but sounds
+ * nowhere: the synth's player is muted and the output is sent no notes, what it holds let go at once. Both come back
+ * in from the first note after the load.
+ *
  * The sequencer hands `out` everything it sends the player and every event of its own run; the scheduler is pumped on
  * each, and on a timer while a run plays. With MIDI alone the tab is silent, so the browser slows that timer (to once a
  * second, then once a minute); the muted player's `patternTick`, sent from the audio thread, pumps it instead.
@@ -90,7 +94,7 @@ const NO_PROGRAMS: MidiPrograms = {};
 
 /** What the sequencer tells MIDI out, and whether the synth's own notes are muted. */
 export interface SequencerOut {
-  /** The browser synth plays no notes: the pattern is heard on the MIDI output alone. */
+  /** The browser synth plays no notes: the pattern is heard on the MIDI output alone, or nowhere while a patch loads. */
   muted: boolean;
   message: (m: SynthMessage) => void;
   event: (e: SynthEvent) => void;
@@ -136,6 +140,7 @@ export function useMidiOut({
   connect,
   def = null,
   following = false,
+  silent = false,
 }: {
   midi: Pick<Midi, 'status' | 'outputs' | 'output'>;
   engine: MidiOutEngine | null;
@@ -145,6 +150,8 @@ export function useMidiOut({
   def?: SynthDef | null;
   /** The sequencer follows a MIDI clock (t-91): no clock is sent. */
   following?: boolean;
+  /** A new patch is loading: no notes are sent, here or to the synth. */
+  silent?: boolean;
 }): MidiOut {
   const [choice, setChoice] = useStoredPref(STORAGE_KEYS.midiOut, MidiOutChoiceSchema, NO_CHOICE);
   // One per engine, which is the page's for its life; the clock reads the engine's context when asked, as the context
@@ -155,6 +162,7 @@ export function useMidiOut({
   const connected = midi.status === 'on' && id !== null && midi.outputs.some((o) => o.id === id);
   const sending = connected && choice.plays !== 'synth';
   const muted = sending && choice.plays === 'midi';
+  useEffect(() => s.setMuted(silent), [s, silent]);
   const clock = id !== null && (choice.clock ?? []).includes(id);
 
   const { output } = midi;
@@ -247,7 +255,7 @@ export function useMidiOut({
 
   const out = useMemo<SequencerOut>(
     () => ({
-      muted,
+      muted: muted || silent,
       message: (m) => {
         if (m.type === 'pattern' && playable(m.loop)) setRunning(true);
         else if (m.type === 'stopPattern') setRunning(false);
@@ -261,7 +269,7 @@ export function useMidiOut({
         s.pump();
       },
     }),
-    [s, muted]
+    [s, muted, silent]
   );
 
   return {

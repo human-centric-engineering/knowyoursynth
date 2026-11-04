@@ -322,6 +322,9 @@ svg .kys-hit:focus-visible {
 }
 .kys-sound-pick-eyebrow {
   grid-column: 1;
+  display: flex;
+  align-items: center;
+  gap: 5px;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.16em;

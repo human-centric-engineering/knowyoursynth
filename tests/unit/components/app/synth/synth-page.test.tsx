@@ -871,16 +871,28 @@ describe('SynthPage glides', () => {
   const valueOf = (name: RegExp) =>
     screen.getAllByRole('slider', { name })[0].getAttribute('aria-valuenow');
 
-  it('arrives on the blank patch and sets the sound on it', async () => {
-    storeSession({ presetId: 'wobble', step: null, values: { 'filter.cutoff': 2 }, cables: [] });
-    page();
-    expect(valueOf(/CUTOFF/)).toBe(String(def.init['filter.cutoff']));
-    // The sound is the one on the panel already: its name, and nothing to restore, as it glides.
-    expect(loadedName()).toBe('Wobble lead');
-    await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('2'), { timeout: 5000 });
-  }, 10_000);
+  /** Opens the library and chooses `name` from it. */
+  const choose = (name: string) => {
+    fireEvent.click(button(/^Choose a patch/));
+    fireEvent.click(
+      within(screen.getByRole('dialog', { name: 'Patches' }))
+        .getAllByRole('button')
+        .filter((b) => b.textContent?.includes(name))[0]
+    );
+  };
+  /** A control turned, which finishes a glide at once: the load is over. */
+  const settle = () =>
+    fireEvent.keyDown(screen.getAllByRole('slider', { name: /^TUNE/ })[0], { key: 'ArrowUp' });
+  const loadingShown = () =>
+    button(/^Choose a patch/)
+      .getAttribute('aria-label')
+      ?.endsWith(', loading)');
+  const notes = () =>
+    engine.send.mock.calls
+      .map((c) => c[0] as { type: string; n?: number })
+      .filter((m) => m.type === 'noteOn' || m.type === 'noteOff');
 
-  it('Default patch pulls the cables out first, then turns the oscillators before the filter', async () => {
+  it('arrives on the Default patch and sets the sound on it: the oscillators, then the filter, the cables last', async () => {
     storeSession({
       presetId: 'wobble',
       step: null,
@@ -888,25 +900,144 @@ describe('SynthPage glides', () => {
       cables: [['j.lfoTri', 'j.cutCv']],
     });
     page();
-    await waitFor(() => expect(button('Unplug all cables')).toBeTruthy(), { timeout: 5000 });
-    await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('2'), { timeout: 5000 });
-
-    fireEvent.click(button('Default patch'));
-    // Saved as the Default patch at once (so it counts from there), shown being set meanwhile.
-    expect(screen.queryByText(/controls? moved/)).toBeNull();
-    expect(valueOf(/^TUNE/)).toBe('2');
-
-    await waitFor(
-      () => expect(screen.queryByRole('button', { name: 'Unplug all cables' })).toBeNull(),
-      { timeout: 3000 }
-    );
-    expect(valueOf(/CUTOFF/)).toBe('2');
-    await waitFor(() => expect(valueOf(/CUTOFF/)).not.toBe('2'), { timeout: 3000 });
+    // Model D's Default patch has the filter open at 5.
+    expect(valueOf(/CUTOFF/)).toBe('5');
     expect(valueOf(/^TUNE/)).toBe(String(def.init['ctl.tune']));
+    // The sound is the one on the panel already: its name, and nothing to restore, as it glides.
+    expect(loadedName()).toBe('Wobble lead');
+    expect(loadingShown()).toBe(true);
+    await waitFor(() => expect(valueOf(/^TUNE/)).toBe('2'), { timeout: 5000 });
+    expect(valueOf(/CUTOFF/)).toBe('5');
+    await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('2'), { timeout: 3000 });
+    expect(screen.queryByRole('button', { name: 'Unplug all cables' })).toBeNull();
+    await waitFor(() => expect(button('Unplug all cables')).toBeTruthy(), { timeout: 3000 });
     // Only the controls move: nothing is lit around them.
     expect(highlightStore.get()).toEqual([]);
-    await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('5'), { timeout: 3000 });
+    await waitFor(() => expect(loadingShown()).toBe(false), { timeout: 3000 });
   }, 15_000);
+
+  it('loads a sound by setting the Default patch at once, whatever was on the panel, then the sound', async () => {
+    storeSession({
+      presetId: 'wobble',
+      step: null,
+      values: { 'ctl.tune': 2, 'filter.cutoff': 2 },
+      cables: [['j.lfoTri', 'j.cutCv']],
+    });
+    page();
+    settle();
+    expect(valueOf(/CUTOFF/)).toBe('2');
+    expect(button('Unplug all cables')).toBeTruthy();
+
+    choose('Fat bass');
+    // Saved as the new sound at once (so it counts from there), the panel at the Default patch meanwhile.
+    expect(loadedName()).toBe('Fat bass');
+    expect(screen.queryByText(/controls? moved/)).toBeNull();
+    expect(valueOf(/CUTOFF/)).toBe('5');
+    expect(valueOf(/^TUNE/)).toBe(String(def.init['ctl.tune']));
+    expect(screen.queryByRole('button', { name: 'Unplug all cables' })).toBeNull();
+    expect(loadingShown()).toBe(true);
+    await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('-2'), { timeout: 5000 });
+    await waitFor(() => expect(loadingShown()).toBe(false), { timeout: 3000 });
+  }, 15_000);
+
+  it('drops keys while a sound loads, letting go of the one held as it begins, and plays them once it has', () => {
+    page();
+    settle();
+    fireEvent.keyDown(window, { key: 'a' });
+    expect(notes()).toEqual([{ type: 'noteOn', n: 48, v: 0.85 }]);
+
+    choose('Wobble lead');
+    expect(notes().at(-1)).toEqual({ type: 'noteOff', n: 48 });
+    fireEvent.keyDown(window, { key: 's' });
+    fireEvent.keyUp(window, { key: 's' });
+    fireEvent.keyUp(window, { key: 'a' });
+    expect(notes().filter((m) => m.type === 'noteOn')).toHaveLength(1);
+
+    settle();
+    fireEvent.keyDown(window, { key: 'd' });
+    expect(notes().at(-1)).toEqual({ type: 'noteOn', n: 52, v: 0.85 });
+  });
+
+  it('drops MIDI notes while a sound loads, and plays them once it has', async () => {
+    const input: {
+      name: string;
+      state: string;
+      onmidimessage: ((e: { data: number[] }) => void) | null;
+    } = { name: 'Keystation', state: 'connected', onmidimessage: null };
+    Object.defineProperty(navigator, 'requestMIDIAccess', {
+      value: vi.fn().mockResolvedValue({
+        inputs: { forEach: (f: (i: typeof input) => void) => f(input) },
+        outputs: { forEach: () => undefined, get: () => undefined },
+        onstatechange: null,
+      }),
+      configurable: true,
+      writable: true,
+    });
+    try {
+      window.localStorage.setItem('kys.midi', 'true');
+      page();
+      settle();
+      await waitFor(() => expect(input.onmidimessage).not.toBeNull());
+      const key = (on: boolean, n: number) =>
+        act(() => input.onmidimessage?.({ data: [on ? 0x90 : 0x80, n, on ? 100 : 0] }));
+      key(true, 60);
+      key(false, 60);
+      expect(
+        notes()
+          .filter((m) => m.type === 'noteOn')
+          .map((m) => m.n)
+      ).toEqual([60]);
+
+      choose('Wobble lead');
+      key(true, 62);
+      key(false, 62);
+      expect(
+        notes()
+          .filter((m) => m.type === 'noteOn')
+          .map((m) => m.n)
+      ).toEqual([60]);
+
+      settle();
+      key(true, 64);
+      expect(
+        notes()
+          .filter((m) => m.type === 'noteOn')
+          .map((m) => m.n)
+      ).toEqual([60, 64]);
+    } finally {
+      Reflect.deleteProperty(navigator, 'requestMIDIAccess');
+    }
+  });
+
+  it('waits for the load before Play plays the riff, and plays a riff that was playing again once it has', async () => {
+    page();
+    settle();
+    choose('Wobble lead');
+    // Not awaited: the load is a glide in real time, and Play decides at once whether it waits.
+    fireEvent.click(button('Play'));
+    const sent = () => engine.send.mock.calls.map((c) => c[0] as { type: string });
+    expect(sent().filter((m) => m.type === 'phrase')).toHaveLength(0);
+    await act(async () => {
+      settle();
+    });
+    expect(sent().filter((m) => m.type === 'phrase')).toHaveLength(1);
+
+    const before = sent().length;
+    choose('Fat bass');
+    expect(sent().slice(before)).toContainEqual({ type: 'stopPhrase' });
+    expect(sent().filter((m) => m.type === 'phrase')).toHaveLength(1);
+    await act(async () => {
+      settle();
+    });
+    expect(sent().filter((m) => m.type === 'phrase')).toHaveLength(2);
+    expect(
+      sent()
+        .filter((m) => m.type === 'phrase')
+        .at(-1)
+    ).toMatchObject({
+      phrase: { steps: FAT_BASS.phrase.steps },
+    });
+  });
 
   it('runs a whole glide without the page chaining an update onto every frame', async () => {
     // An effect that sets state on each move of the panel (even to the same value) chains an update onto every frame
@@ -933,6 +1064,31 @@ describe('SynthPage glides', () => {
     const tune = screen.getAllByRole('slider', { name: /^TUNE/ })[0];
     fireEvent.keyDown(tune, { key: 'ArrowUp' });
     expect(valueOf(/CUTOFF/)).toBe('2');
+  });
+});
+
+describe('SynthPage loads with reduced motion', () => {
+  // Glides are off here (`tests/setup.ts`), as they are with reduced motion.
+  it('snaps to the sound, the silence no longer than that moment: a held key let go, the next key played', () => {
+    page();
+    const notes = () =>
+      engine.send.mock.calls
+        .map((c) => c[0] as { type: string; n?: number })
+        .filter((m) => m.type === 'noteOn' || m.type === 'noteOff');
+    fireEvent.keyDown(window, { key: 'a' });
+    fireEvent.click(button(/^Choose a patch/));
+    fireEvent.click(
+      within(screen.getByRole('dialog', { name: 'Patches' }))
+        .getAllByRole('button')
+        .filter((b) => b.textContent?.includes('Wobble lead'))[0]
+    );
+    expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
+      '2'
+    );
+    expect(notes().at(-1)).toEqual({ type: 'noteOff', n: 48 });
+    expect(button(/^Choose a patch/).getAttribute('aria-label')).not.toContain('loading');
+    fireEvent.keyDown(window, { key: 's' });
+    expect(notes().at(-1)).toEqual({ type: 'noteOn', n: 50, v: 0.85 });
   });
 });
 

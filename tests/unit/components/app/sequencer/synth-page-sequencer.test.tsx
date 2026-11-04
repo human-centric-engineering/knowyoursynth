@@ -17,6 +17,7 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import { tallScreen } from '@/tests/helpers/synth-side';
+import { glideMotion } from '@/components/app/synth/motion';
 
 const { router, engine, events } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -359,5 +360,57 @@ describe('the sequencer on the synth page', () => {
     expect(screen.getByRole('navigation', { name: 'Beside the panel' })).toBeTruthy();
     fireEvent.click(button('Sequencer'));
     expect(screen.queryByRole('dialog', { name: 'Sequencer' })).toBeNull();
+  });
+});
+
+describe('the sequencer while a sound loads (f-default-patch t-172)', () => {
+  // Off for every other test (`tests/setup.ts`), so a load there is over at once.
+  beforeEach(() => vi.mocked(glideMotion).mockReturnValue(true));
+  afterEach(() => vi.mocked(glideMotion).mockReturnValue(false));
+
+  /** A control turned, which finishes a glide at once: the load is over. */
+  const settle = () =>
+    act(() => {
+      fireEvent.keyDown(screen.getAllByRole('slider', { name: /^TUNE/ })[0], { key: 'ArrowUp' });
+    });
+  const choose = (name: string) => {
+    fireEvent.click(button(/^Choose a patch/));
+    fireEvent.click(
+      within(screen.getByRole('dialog', { name: 'Patches' }))
+        .getAllByRole('button')
+        .filter((b) => b.textContent?.includes(name))[0]
+    );
+  };
+
+  it('plays on in time but silent, and comes back in once the sound has loaded', async () => {
+    page();
+    settle();
+    fireEvent.click(button('Sequencer'));
+    await press('Play');
+    // Outside a load, the synth plays the pattern.
+    expect(lastSent('pattern')).toMatchObject({ muted: false });
+    expect(lastSent('patternMute')).toBeUndefined();
+
+    choose('Wobble lead');
+    expect(lastSent('patternMute')).toEqual({ type: 'patternMute', muted: true });
+    expect(lastSent('stopPattern')).toBeUndefined();
+    expect(button('Stop')).toBeTruthy();
+
+    settle();
+    expect(lastSent('patternMute')).toEqual({ type: 'patternMute', muted: false });
+  });
+
+  it('waits for the load before Play starts the pattern', async () => {
+    page();
+    settle();
+    fireEvent.click(button('Sequencer'));
+    choose('Wobble lead');
+    // Not awaited: the load is a glide in real time, and Play decides at once whether it waits.
+    fireEvent.click(button('Play'));
+    expect(lastSent('pattern')).toBeUndefined();
+    await act(async () => {
+      fireEvent.keyDown(screen.getAllByRole('slider', { name: /^TUNE/ })[0], { key: 'ArrowUp' });
+    });
+    expect(lastSent('pattern')).toMatchObject({ muted: false });
   });
 });
