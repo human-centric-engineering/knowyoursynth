@@ -189,6 +189,40 @@ describe('presetState', () => {
     expect(s.cables).toHaveLength(1);
   });
 
+  it('takes out a step’s unplug before its cables go in, and colours a new cable past the one taken out', () => {
+    const moved: Pick<Preset, 'phrase' | 'steps'> = {
+      ...preset,
+      steps: [
+        ...preset.steps,
+        {
+          title: 'c',
+          module: 'patch',
+          why: '',
+          // The LFO moves from the cutoff to the pitch: out of one input, into another, in one step.
+          unplug: [['lfo.tri', 'cutoff.in']],
+          cables: [['lfo.tri', 'pitch.in']],
+        },
+        // Taken out and put back in the same step: it ends in.
+        {
+          title: 'd',
+          module: 'patch',
+          why: '',
+          unplug: [['env1.out', 'pitch.in']],
+          cables: [['env1.out', 'pitch.in']],
+        },
+      ],
+    };
+
+    expect(presetState(makeMiniD(), moved, 2).cables).toEqual([
+      { from: 'env1.out', to: 'pitch.in', color: CABLE_COLORS[1] },
+      { from: 'lfo.tri', to: 'pitch.in', color: CABLE_COLORS[2] },
+    ]);
+    expect(presetState(makeMiniD(), moved).cables.map((c) => `${c.from}>${c.to}`)).toEqual([
+      'lfo.tri>pitch.in',
+      'env1.out>pitch.in',
+    ]);
+  });
+
   it('sets the tempo control from the riff when the synth has one', () => {
     const s = presetState(makeMiniD({ tempo: 'lfo.rate' }), preset);
 

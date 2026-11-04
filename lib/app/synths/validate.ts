@@ -16,7 +16,7 @@
  * and a plain-English message, and the validated value comes back typed only when there are none.
  */
 import { z } from 'zod';
-import { controlMap, jackMap } from '@/lib/app/synths/lib/patch';
+import { controlMap, jackMap, presetState } from '@/lib/app/synths/lib/patch';
 import {
   PRESET_CATEGORIES,
   SYNTH_MODULES,
@@ -56,6 +56,8 @@ export type SoundProblemCode =
   | 'input-to-input'
   /** A cable to or from a jack the sound engine does not model (no `signal` / `dest`). */
   | 'unmodelled-jack'
+  /** A step takes out a cable that is not in at that step. */
+  | 'not-plugged-in'
   /** A Default patch whose `listen` is empty: it would be described as a sawtooth. */
   | 'blank-listen';
 
@@ -115,6 +117,7 @@ const PresetStepSchema = z.object({
   why: nonEmpty,
   set: SettingsSchema.optional(),
   cables: z.array(CablePairSchema).optional(),
+  unplug: z.array(CablePairSchema).optional(),
 });
 
 /** A library sound, built step by step (`Preset` in the contract), before it is checked against the synth. */
@@ -314,7 +317,8 @@ export function validateDefaultPatch(def: SynthDef): ValidationResult<DefaultPat
 
 /**
  * Validate a library sound (a `Preset`) against a synth: its shape, then every step's settings and cables, and the
- * control ids its `tweaks` and `context` point at.
+ * control ids its `tweaks` and `context` point at. A step's `unplug` must name a cable that is in at that step: one
+ * the panel `presetState` builds from the earlier steps has in, and not one the step itself plugs in.
  */
 export function validatePreset(def: SynthDef, input: unknown): ValidationResult<Preset> {
   const parsed = PresetSchema.safeParse(input);
@@ -322,22 +326,41 @@ export function validatePreset(def: SynthDef, input: unknown): ValidationResult<
   const raw = parsed.data;
   const cm = controlMap(def);
   const problems: SoundProblem[] = [];
-  const steps: PresetStep[] = raw.steps.map((s, i) => {
+  const steps: PresetStep[] = [];
+  raw.steps.forEach((s, i) => {
     const { values, problems: setProblems } = checkSettings(
       def,
       s.set || {},
       join('steps', i, 'set')
     );
     problems.push(...setProblems);
+    const unplug = s.unplug || [];
+    const unplugProblems = checkCables(def, unplug, join('steps', i, 'unplug'));
+    problems.push(...unplugProblems);
+    const bad = new Set(unplugProblems.map((p) => p.path));
+    // The cables in before this step, as the panel has them; each one taken out is gone, so naming it twice fails.
+    const inNow = new Set(
+      presetState(def, { steps, phrase: raw.phrase }).cables.map((c) => `${c.from}>${c.to}`)
+    );
+    unplug.forEach(([from, to], k) => {
+      const at = join('steps', i, 'unplug', k);
+      if (bad.has(at) || inNow.delete(`${from}>${to}`)) return;
+      problems.push({
+        path: at,
+        code: 'not-plugged-in',
+        message: `Step ${i + 1} takes out the cable ${from} > ${to}, which is not in at that step`,
+      });
+    });
     const cables = s.cables || [];
     problems.push(...checkCables(def, cables, join('steps', i, 'cables')));
-    return {
+    steps.push({
       title: s.title,
       module: s.module,
       why: s.why,
       ...(s.set ? { set: values } : {}),
       ...(s.cables ? { cables } : {}),
-    };
+      ...(s.unplug ? { unplug } : {}),
+    });
   });
   raw.tweaks.forEach((t, i) => {
     if (!cm[t.id])

@@ -1066,6 +1066,12 @@ export interface PresetStep {
   /** Control values this step sets. */
   set?: ControlValues;
   cables?: CablePair[];
+  /**
+   * Cables this step takes out, each one that is in at this step (`f-default-base` t-175). Taken out before `cables`
+   * go in, so one step can move a cable to another input: where a sound routes differently from the Default patch's
+   * cables, it says which one comes out, as someone does on the hardware.
+   */
+  unplug?: CablePair[];
 }
 
 /** A suggested move once the sound is built. */

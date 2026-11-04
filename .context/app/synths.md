@@ -310,7 +310,14 @@ The VCS3 and Syntrx II are hand-written like the rest, their edges being what is
 ## Sounds
 
 A `Preset` is built step by step: each step's `set` and `cables` apply cumulatively on top of
-`init`, with a `why` that says what to listen for. The first tag is the category
+`init`, with a `why` that says what to listen for. A step's `unplug` takes cables out
+(`f-default-base` t-175): each must be in at that step, which today means plugged in by an
+earlier step (a sound starts on `init`, with no cables, until t-176 builds it on the Default
+patch's), and they come out before the step's `cables` go in, so one step can move a cable
+to another input. The validator refuses one that is not in, or one named twice in a step
+(`not-plugged-in`), reading the cables in from `presetState`; `check:synths` gets it through
+`validatePreset`. The lesson lists it as a numbered move under **Unplug**, lit on both its jacks. A cable's colour counts every cable plugged in before it,
+so taking one out does not give the next the colour of one still in. The first tag is the category
 (`PRESET_CATEGORIES`); `phrase` is a short riff that shows the sound off, not a copy of the song
 (TB-303-style riffs carry a velocity as a fourth item). Every control a step touches that
 matters to the sound gets a `context` line.

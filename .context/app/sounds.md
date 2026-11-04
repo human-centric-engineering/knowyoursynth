@@ -243,7 +243,8 @@ sounds keeps that lesson with it, so it opens with its steps every time (owner r
   before t-55 has none of them.
 - **One set of rules for both writers.** `design_sound` takes the lesson from the model and
   `POST /api/v1/sounds` from any client, so both use `SoundLessonSchema`: the tutor's limits,
-  refused rather than clamped (1–9 steps, each setting a control or plugging a cable; up to 16
+  refused rather than clamped (1–9 steps, each setting a control, plugging a cable or taking one
+  out with `unplug` ([`synths.md`](./synths.md#sounds)); up to 16
   controls in the context and 5 tweaks; a riff of 1–32 notes). `checkLesson` then runs
   `validatePreset` against the synth's current definition. Any problem is a 400 with every path
   under `lesson.` (`lesson.steps.0.set.filter.cutoff`), and nothing is stored.
