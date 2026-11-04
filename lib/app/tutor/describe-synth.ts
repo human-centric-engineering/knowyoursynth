@@ -41,7 +41,7 @@ const EXAMPLES = 3;
 
 /** Heads a narrowed answer, whose cable list covers only the jacks in it. */
 const NARROWED =
-  'Cables listed are only those to and from the jacks below; get_panel lists the cables plugged in or taken out since the Default patch (up to 100 each).';
+  "Cables listed are only those to and from the jacks below; get_panel lists the panel's cables (up to 100).";
 
 /**
  * `describe_synth`: the synth's controls, jacks and legal values, with the panel's current values, from the
@@ -96,7 +96,7 @@ export class DescribeSynthCapability extends BaseCapability<Args, DescribeData> 
     };
 
     if (section === undefined && prefix === undefined) {
-      // A synth too big even on the init patch is never built whole just to be measured.
+      // A synth too big even on the Default patch is never built whole just to be measured.
       const whole = describesWhole(def) ? textOf(def.controls, def.jacks.filter(modelled)) : null;
       if (whole !== null && whole.length <= DESCRIBE_MAX_CHARS)
         return this.success({ synthId, scope: 'whole', text: whole });

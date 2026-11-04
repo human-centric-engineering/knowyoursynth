@@ -17,7 +17,7 @@ import type {
  */
 const MAX_CHANGED = 100;
 /**
- * How many cables one read lists, plugged in and taken out each, for the same reason. A panel holds a handful; the panel
+ * How many cables one read lists in each list, for the same reason. A panel holds a handful; the panel
  * schema allows 500.
  */
 const MAX_CABLES = 100;
@@ -42,7 +42,11 @@ export interface PanelData {
   version: number;
   /** The controls that differ from the synth's Default patch. */
   changed: ChangedControl[];
-  /** The cables in that the Default patch does not have, each `[output jack id, input jack id]`. */
+  /** Every cable in, each `[output jack id, input jack id]`. */
+  cables: CablePair[];
+  /** The Default patch's own cables, which a designed sound starts with. A handful at most, so never cut. */
+  defaultCables: CablePair[];
+  /** The cables in that the Default patch does not have. */
   plugged: CablePair[];
   /** The Default patch's cables that the learner has taken out. */
   unplugged: CablePair[];
@@ -61,7 +65,7 @@ export class GetPanelCapability extends BaseCapability<Args, PanelData> {
   readonly functionDefinition: CapabilityFunctionDefinition = {
     name: 'get_panel',
     description:
-      "Read the synth panel as the learner has it now, as what they changed from the synth's Default patch: the controls that differ from it (id, panel label and value), the cables in that it does not have, and its cables taken out. Call it before explaining or changing the patch. Read-only.",
+      "Read the synth panel as the learner has it now, and what they changed from the synth's Default patch (the panel step 0 of every lesson sets): the controls that differ from it (id, panel label and value), every cable in, the Default patch's own cables, the cables in that it does not have, and its cables taken out. Call it before explaining or changing the patch. Read-only.",
     parameters: { type: 'object', additionalProperties: false, properties: {} },
   };
 
@@ -84,10 +88,13 @@ export class GetPanelCapability extends BaseCapability<Args, PanelData> {
         synthName: `${def.maker} ${def.name}`,
         version: def.version,
         changed: changed.slice(0, MAX_CHANGED),
+        cables: cables.slice(0, MAX_CABLES),
+        defaultCables: diff.defaultCables,
         plugged: diff.plugged.slice(0, MAX_CABLES),
         unplugged: diff.unplugged.slice(0, MAX_CABLES),
         truncated:
           changed.length > MAX_CHANGED ||
+          cables.length > MAX_CABLES ||
           diff.plugged.length > MAX_CABLES ||
           diff.unplugged.length > MAX_CABLES,
       })

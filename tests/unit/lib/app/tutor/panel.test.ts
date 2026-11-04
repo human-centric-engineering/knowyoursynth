@@ -91,6 +91,7 @@ describe('changedFromDefault', () => {
     const values = { ...base, 'filter.cutoff': -2, 'mix.osc2On': true };
     expect(changedFromDefault(modelD, values, [])).toEqual({
       values: { 'mix.osc2On': true, 'filter.cutoff': -2 },
+      defaultCables: [],
       plugged: [],
       unplugged: [],
     });
@@ -114,11 +115,13 @@ describe('changedFromDefault', () => {
     ];
     expect(changedFromDefault(vcs3, base.values, cables)).toEqual({
       values: {},
+      defaultCables: defaults,
       plugged: [['r.osc2tri', 'c.out2']],
       unplugged: [['r.envsig', 'c.out2']],
     });
     expect(changedFromDefault(vcs3, base.values, defaults)).toEqual({
       values: {},
+      defaultCables: defaults,
       plugged: [],
       unplugged: [],
     });

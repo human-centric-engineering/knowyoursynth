@@ -143,6 +143,8 @@ export function readOpenPattern(context: CapabilityContext): PatternRead {
 export interface PanelChanges {
   /** The values that differ, in the definition's control order. */
   values: ControlValues;
+  /** The Default patch's own cables, which a sound starts with. */
+  defaultCables: CablePair[];
   /** The cables in that the Default patch does not have. */
   plugged: CablePair[];
   /** The Default patch's cables that are out. */
@@ -168,6 +170,7 @@ export function changedFromDefault(
   const baseCables = base.cables.map((c): CablePair => [c.from, c.to]);
   return {
     values: changed,
+    defaultCables: baseCables,
     plugged: cables.filter((c) => !hasCable(baseCables, c)),
     unplugged: baseCables.filter((c) => !hasCable(cables, c)),
   };

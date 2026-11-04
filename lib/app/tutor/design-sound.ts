@@ -43,7 +43,7 @@ export class DesignSoundCapability extends BaseCapability<Args, DesignData> {
   readonly functionDefinition: CapabilityFunctionDefinition = {
     name: 'design_sound',
     description:
-      "Design a whole new patch on this synth from the learner's description, with its lesson. The steps are applied in order on top of the synth's Default patch, its cables included, which the learner has set at step 0. Use only control ids, jack ids and legal values that describe_synth showed you. The patch is checked against the synth; if anything is wrong the whole patch is refused with the reason, so fix what it names and call again.",
+      "Design a whole new patch on this synth from the learner's description, with its lesson. The steps are applied in order on top of the synth's Default patch, the panel step 0 of every lesson sets, its cables included (get_panel's defaultCables). Use only control ids, jack ids and legal values that describe_synth showed you. The patch is checked against the synth; if anything is wrong the whole patch is refused with the reason, so fix what it names and call again.",
     parameters: {
       type: 'object',
       additionalProperties: false,

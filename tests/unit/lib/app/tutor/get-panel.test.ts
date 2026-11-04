@@ -27,6 +27,8 @@ describe('get_panel', () => {
       synthId: 'model-d',
       version: modelD.version,
       truncated: false,
+      cables: [['j.lfoTri', 'j.cutCv']],
+      defaultCables: [],
       plugged: [['j.lfoTri', 'j.cutCv']],
       unplugged: [],
     });
@@ -59,6 +61,7 @@ describe('get_panel', () => {
         unplugged: [],
         truncated: false,
       });
+      expect(result.data?.defaultCables).toEqual(result.data?.cables);
     }
   );
 
@@ -70,6 +73,9 @@ describe('get_panel', () => {
     expect(result.data?.changed).toEqual([]);
     expect(result.data?.plugged).toEqual([]);
     expect(result.data?.unplugged).toEqual(cables.map((c) => [c.from, c.to]));
+    // What a design starts with is still listed, though none of it is in now.
+    expect(result.data?.cables).toEqual([]);
+    expect(result.data?.defaultCables).toEqual(cables.map((c) => [c.from, c.to]));
   });
 
   it('lists at most 100 changed controls, and says when there are more', async () => {
@@ -89,6 +95,7 @@ describe('get_panel', () => {
   it('lists at most 100 cables, and says when there are more', async () => {
     const s15 = synth('system-15');
     const result = await tool.execute({}, panelContext(s15, { cables: manyCables(s15, 150) }));
+    expect(result.data?.cables).toHaveLength(100);
     expect(result.data?.plugged).toHaveLength(100);
     expect(result.data?.truncated).toBe(true);
   });

@@ -93,7 +93,7 @@ export class ProposePanelChangeCapability extends BaseCapability<Args, ProposalD
         removeCables: {
           type: 'array',
           description:
-            'Cables to take out, each [output jack id, input jack id], as describe_synth and get_panel write them.',
+            'Cables to take out, each [output jack id, input jack id]: ones that are in now, as get_panel lists them under cables.',
           maxItems: MAX_CABLES,
           items: { type: 'array', items: { type: 'string' }, minItems: 2, maxItems: 2 },
         },
