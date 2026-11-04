@@ -8,7 +8,7 @@
 import { describe, expect, it } from 'vitest';
 import { DescribeSynthCapability } from '@/lib/app/tutor/describe-synth';
 import { DESCRIBE_MAX_CHARS } from '@/lib/app/tutor/sections';
-import { describeSynth } from '@/lib/app/synths/lib/patch';
+import { describeSynth, presetState } from '@/lib/app/synths/lib/patch';
 import { manyCables, panelContext, synth } from '@/tests/helpers/tutor';
 
 const tool = new DescribeSynthCapability();
@@ -28,7 +28,8 @@ describe('describe_synth on a small synth', () => {
     expect(result.data?.scope).toBe('whole');
     const text = result.data?.text ?? '';
     expect(text).toBe(
-      describeSynth(modelD, { ...modelD.init, 'filter.cutoff': -2 }, [
+      // A value the panel leaves out is the Default patch's.
+      describeSynth(modelD, { ...presetState(modelD).values, 'filter.cutoff': -2 }, [
         { from: 'j.lfoTri', to: 'j.cutCv' },
       ])
     );

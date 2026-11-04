@@ -5,13 +5,14 @@
  * @see lib/app/tutor/panel.ts
  */
 import { describe, expect, it } from 'vitest';
-import { changedFromInit, readPanel, refusal } from '@/lib/app/tutor/panel';
+import { changedFromDefault, readPanel, refusal } from '@/lib/app/tutor/panel';
+import { presetState } from '@/lib/app/synths/lib/patch';
 import { panelContext, synth } from '@/tests/helpers/tutor';
 
 const modelD = synth('model-d');
 
 describe('readPanel', () => {
-  it('merges the panel over the init and keeps its cables', () => {
+  it('merges the panel over the Default patch and keeps its cables', () => {
     const read = readPanel(
       panelContext(modelD, {
         values: { 'filter.cutoff': -2 },
@@ -23,6 +24,9 @@ describe('readPanel', () => {
     expect(read.panel.def).toBe(modelD);
     expect(read.panel.values['filter.cutoff']).toBe(-2);
     expect(read.panel.values['fenv.decay']).toBe(modelD.init['fenv.decay']);
+    // A value the panel leaves out is the Default patch's, not init's.
+    expect(modelD.init['aenv.decay']).not.toBe(modelD.defaultPatch?.values['aenv.decay']);
+    expect(read.panel.values['aenv.decay']).toBe(modelD.defaultPatch?.values['aenv.decay']);
     expect(Object.keys(read.panel.values)).toHaveLength(modelD.controls.length);
     expect(read.panel.cables).toEqual([['j.lfoTri', 'j.cutCv']]);
   });
@@ -79,11 +83,45 @@ describe('readPanel', () => {
   });
 });
 
-describe('changedFromInit', () => {
-  it('lists only the values that differ from the init', () => {
-    const values = { ...modelD.init, 'filter.cutoff': -2, 'mix.osc2On': true };
-    expect(changedFromInit(modelD, values)).toEqual({ 'mix.osc2On': true, 'filter.cutoff': -2 });
-    expect(changedFromInit(modelD, { ...modelD.init })).toEqual({});
+describe('changedFromDefault', () => {
+  const vcs3 = synth('ems-vcs3');
+
+  it('lists only the values that differ from the Default patch', () => {
+    const base = presetState(modelD).values;
+    const values = { ...base, 'filter.cutoff': -2, 'mix.osc2On': true };
+    expect(changedFromDefault(modelD, values, [])).toEqual({
+      values: { 'mix.osc2On': true, 'filter.cutoff': -2 },
+      plugged: [],
+      unplugged: [],
+    });
+    expect(changedFromDefault(modelD, base, []).values).toEqual({});
+  });
+
+  it('counts a value at init but off the Default patch as a change', () => {
+    const values = { ...presetState(modelD).values, 'filter.cutoff': modelD.init['filter.cutoff'] };
+    expect(changedFromDefault(modelD, values, []).values).toEqual({
+      'filter.cutoff': modelD.init['filter.cutoff'],
+    });
+  });
+
+  it("lists the cables plugged in beyond the Default patch's, and its cables taken out", () => {
+    const base = presetState(vcs3);
+    const defaults = base.cables.map((c): [string, string] => [c.from, c.to]);
+    expect(defaults).toContainEqual(['r.envsig', 'c.out2']);
+    const cables = [
+      ...defaults.filter(([from, to]) => !(from === 'r.envsig' && to === 'c.out2')),
+      ['r.osc2tri', 'c.out2'] as [string, string],
+    ];
+    expect(changedFromDefault(vcs3, base.values, cables)).toEqual({
+      values: {},
+      plugged: [['r.osc2tri', 'c.out2']],
+      unplugged: [['r.envsig', 'c.out2']],
+    });
+    expect(changedFromDefault(vcs3, base.values, defaults)).toEqual({
+      values: {},
+      plugged: [],
+      unplugged: [],
+    });
   });
 });
 

@@ -31,7 +31,8 @@ const STEP_LINE =
 
 /**
  * `design_sound`: a whole new sound with its lesson (build steps, what each control does in it, things to try and a
- * riff), checked by `validatePreset` against the synth: every step's control ids and values, its cables, and the ids
+ * riff), built on the synth's Default patch as every sound is (`presetState`), and checked by `validatePreset` against
+ * the synth: every step's control ids and values, its cables and the cables it takes out, and the ids
  * its context and tweaks name. Any problem refuses the whole sound, naming it. The server adds what the model does not
  * write (the id, the credit, the `ai` mark), as `sanitizePreset` did. Changes nothing: the page offers the sound.
  */
@@ -42,7 +43,7 @@ export class DesignSoundCapability extends BaseCapability<Args, DesignData> {
   readonly functionDefinition: CapabilityFunctionDefinition = {
     name: 'design_sound',
     description:
-      "Design a whole new patch on this synth from the learner's description, with its lesson. The steps are applied in order on top of the synth's init patch. Use only control ids, jack ids and legal values that describe_synth showed you. The patch is checked against the synth; if anything is wrong the whole patch is refused with the reason, so fix what it names and call again.",
+      "Design a whole new patch on this synth from the learner's description, with its lesson. The steps are applied in order on top of the synth's Default patch, its cables included, which the learner has set at step 0. Use only control ids, jack ids and legal values that describe_synth showed you. The patch is checked against the synth; if anything is wrong the whole patch is refused with the reason, so fix what it names and call again.",
     parameters: {
       type: 'object',
       additionalProperties: false,
@@ -65,7 +66,7 @@ export class DesignSoundCapability extends BaseCapability<Args, DesignData> {
           minItems: 1,
           maxItems: 9,
           description:
-            'Three to six steps in the order a person would build the patch: oscillators, mixer, filter, envelopes, modulation, cables, effects. Each sets at least one control or plugs in a cable.',
+            'Three to six steps in the order a person would build the patch: oscillators, mixer, filter, envelopes, modulation, cables, effects. Each sets at least one control, or plugs in or takes out a cable.',
           items: {
             type: 'object',
             additionalProperties: false,
@@ -82,6 +83,13 @@ export class DesignSoundCapability extends BaseCapability<Args, DesignData> {
               cables: {
                 type: 'array',
                 description: 'Cables to plug in, each [output jack id, input jack id].',
+                maxItems: 16,
+                items: { type: 'array', items: { type: 'string' }, minItems: 2, maxItems: 2 },
+              },
+              unplug: {
+                type: 'array',
+                description:
+                  "Cables to take out, each [output jack id, input jack id]: one of the Default patch's, or one an earlier step plugged in. They come out before this step's cables go in.",
                 maxItems: 16,
                 items: { type: 'array', items: { type: 'string' }, minItems: 2, maxItems: 2 },
               },

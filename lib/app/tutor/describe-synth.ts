@@ -41,7 +41,7 @@ const EXAMPLES = 3;
 
 /** Heads a narrowed answer, whose cable list covers only the jacks in it. */
 const NARROWED =
-  "Cables listed are only those to and from the jacks below; get_panel lists the panel's cables (up to 100).";
+  'Cables listed are only those to and from the jacks below; get_panel lists the cables plugged in or taken out since the Default patch (up to 100 each).';
 
 /**
  * `describe_synth`: the synth's controls, jacks and legal values, with the panel's current values, from the

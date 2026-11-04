@@ -24,7 +24,7 @@ export function testPattern(): Pattern {
   return p;
 }
 
-/** A tool's context for this panel on this synth: values over the init, and the cables in. */
+/** A tool's context for this panel on this synth: values over the Default patch, and the cables in. */
 export function panelContext(
   def: AppSynthDef,
   panel: { values?: ControlValues; cables?: CablePair[]; pattern?: Pattern } = {},
