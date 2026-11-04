@@ -1274,6 +1274,31 @@ function Synth({
   }, [isLoading, patternNow]);
   // Open in the dock from `lg` up, in its sheet below it.
   const seqDocked = !small && seqOpen;
+
+  // With a pointer, the Sound Design strip is a drawer standing on the dock, outside the dock's height, so the lesson
+  // card is lifted by the drawer's open height (`--kys-strip-h`) to stay above it rather than behind it. Observed as it
+  // slides, so the card rises with it. Where the strip is in the dock's flow, the dock's height already counts it.
+  useEffect(() => {
+    const root = rootRef.current;
+    const design = dockRef.current?.querySelector<HTMLElement>('.kys-design');
+    const body = design?.querySelector<HTMLElement>('.kys-design-body');
+    if (!root || !design || !body || small || typeof ResizeObserver === 'undefined') {
+      root?.style.removeProperty('--kys-strip-h');
+      return undefined;
+    }
+    const measure = () => {
+      const floats = getComputedStyle(design).position === 'absolute';
+      root.style.setProperty('--kys-strip-h', `${floats ? body.offsetHeight : 0}px`);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(body);
+    return () => {
+      ro.disconnect();
+      root.style.removeProperty('--kys-strip-h');
+    };
+  }, [small, seqDocked]);
+
   const seqShown = small ? sheet === 'sequencer' : seqOpen;
   const transportPlaying = playing || seq.playing;
   const { noteIn: seqNoteIn, noteOut: seqNoteOutFn } = seq;

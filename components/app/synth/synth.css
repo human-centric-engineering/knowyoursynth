@@ -1382,11 +1382,12 @@ svg .kys-hit:focus-visible {
   position: fixed;
   z-index: 35;
   right: 40px;
-  bottom: calc(var(--kys-dock-h, 0px) + 16px);
+  /* Above the dock and, with a pointer, the Sound Design drawer standing on it when open (`--kys-strip-h`). */
+  bottom: calc(var(--kys-dock-h, 0px) + var(--kys-strip-h, 0px) + 16px);
   display: flex;
   flex-direction: column;
   width: min(400px, 34vw);
-  max-height: calc(100vh - var(--kys-dock-h, 0px) - 120px);
+  max-height: calc(100vh - var(--kys-dock-h, 0px) - var(--kys-strip-h, 0px) - 120px);
   border-radius: 16px;
   color: var(--kys-text);
   background: color-mix(in srgb, var(--kys-surface) 96%, transparent);
