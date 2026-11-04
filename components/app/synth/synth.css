@@ -1333,7 +1333,8 @@ svg .kys-hit:focus-visible {
 }
 /* The strip up, or the sounds open, rise into the band the lesson card and the
    tutor's drawer stand on: the dock stacks over them meanwhile, so neither covers
-   the chapters or the library. */
+   the chapters or the library. The card and the drawer also stand on the open
+   strip (`--kys-strip-h`, t-174), so its chapters do not hide their feet. */
 @media (min-width: 1024px) {
   .kys-dock:has(.kys-design[data-open]),
   .kys-dock:has(.kys-sounds-pop:not([hidden])) {
@@ -1479,13 +1480,14 @@ svg .kys-hit:focus-visible {
   background: rgb(var(--kys-wash) / 0.05);
 }
 
-/* The tutor's drawer: slides in over the right of the panel, down to the dock. */
+/* The tutor's drawer: slides in over the right of the panel, down to the dock, or
+   to the Sound Design strip while that is open (`--kys-strip-h`). */
 .kys-drawer {
   position: fixed;
   z-index: 45;
   top: 16px;
   right: 16px;
-  bottom: calc(var(--kys-dock-h, 0px) + 16px);
+  bottom: calc(var(--kys-dock-h, 0px) + var(--kys-strip-h, 0px) + 16px);
   display: flex;
   flex-direction: column;
   width: clamp(340px, 30vw, 440px);

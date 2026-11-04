@@ -1277,7 +1277,9 @@ function Synth({
 
   // With a pointer, the Sound Design strip is a drawer standing on the dock, outside the dock's height, so the lesson
   // card is lifted by the drawer's open height (`--kys-strip-h`) to stay above it rather than behind it. Observed as it
-  // slides, so the card rises with it. Where the strip is in the dock's flow, the dock's height already counts it.
+  // slides, so the card rises with it. Where the strip is in the dock's flow (no hover), the dock's height already
+  // counts it. Whether it floats is read once a run, and the run is redone when a keyboard or trackpad comes or goes.
+  const hovers = useMediaQuery('(hover: hover)');
   useEffect(() => {
     const root = rootRef.current;
     const design = dockRef.current?.querySelector<HTMLElement>('.kys-design');
@@ -1286,9 +1288,17 @@ function Synth({
       root?.style.removeProperty('--kys-strip-h');
       return undefined;
     }
+    if (getComputedStyle(design).position !== 'absolute') {
+      root.style.setProperty('--kys-strip-h', '0px');
+      return () => root.style.removeProperty('--kys-strip-h');
+    }
+    // Written only when it changes: it is on the page's root, so every write restyles the panel.
+    let last = -1;
     const measure = () => {
-      const floats = getComputedStyle(design).position === 'absolute';
-      root.style.setProperty('--kys-strip-h', `${floats ? body.offsetHeight : 0}px`);
+      const h = body.offsetHeight;
+      if (h === last) return;
+      last = h;
+      root.style.setProperty('--kys-strip-h', `${h}px`);
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -1297,7 +1307,7 @@ function Synth({
       ro.disconnect();
       root.style.removeProperty('--kys-strip-h');
     };
-  }, [small, seqDocked]);
+  }, [small, seqDocked, hovers]);
 
   const seqShown = small ? sheet === 'sequencer' : seqOpen;
   const transportPlaying = playing || seq.playing;
