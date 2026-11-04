@@ -55,7 +55,9 @@ export type SoundProblemCode =
   /** A cable from an input to another input. */
   | 'input-to-input'
   /** A cable to or from a jack the sound engine does not model (no `signal` / `dest`). */
-  | 'unmodelled-jack';
+  | 'unmodelled-jack'
+  /** A Default patch whose `listen` is empty: it would be described as a sawtooth. */
+  | 'blank-listen';
 
 export interface SoundProblem {
   /** Where in the input, dot-separated (`steps.0.cables.1`). Empty for the input as a whole. */
@@ -292,11 +294,19 @@ export function validateDefaultPatch(def: SynthDef): ValidationResult<DefaultPat
   const { values, problems } = checkSettings(def, patch.values, 'defaultPatch.values');
   const cables = patch.cables ?? [];
   problems.push(...checkCables(def, cables, 'defaultPatch.cables'));
+  // A blank `listen` would describe the patch as a sawtooth, which it says it is not.
+  if (patch.listen !== undefined && !patch.listen.trim())
+    problems.push({
+      path: 'defaultPatch.listen',
+      code: 'blank-listen',
+      message: `${def.id}'s Default patch has a blank listen`,
+    });
   return done<DefaultPatch>(
     {
       values,
       ...(patch.cables ? { cables } : {}),
       ...(patch.listen !== undefined ? { listen: patch.listen } : {}),
+      ...(patch.category ? { category: patch.category } : {}),
     },
     problems
   );

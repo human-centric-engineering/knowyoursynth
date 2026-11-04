@@ -873,8 +873,9 @@ const td3: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
-  // Init is already the sawtooth, with the distortion off. The Default patch opens the filter all the way with no
-  // resonance and takes the envelope off it. The TD-3 has no sustain: its loudness always dies away over a held note.
+  // Init is already the sawtooth, with the distortion off. The Default patch turns the cutoff fully up, the resonance off
+  // and ENV MOD fully down, which is as plain as the filter gets: as on the hardware, its envelope still moves the filter
+  // a little on each note. The TD-3 has no sustain: its loudness always dies away over a held note.
   defaultPatch: {
     values: { 'filter.cutoff': 10, 'filter.res': 0, 'filter.envMod': 0, 'amp.accent': 0 },
   },

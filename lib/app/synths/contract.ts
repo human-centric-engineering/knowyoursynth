@@ -179,6 +179,8 @@ export interface DefaultPatch {
    * which the Default patch's step says in place of the sawtooth's bright, steady buzz.
    */
   listen?: string;
+  /** The library category the Default patch lists under; absent, `lead`. A drum synth's is `perc`. */
+  category?: PresetCategory;
 }
 
 /**

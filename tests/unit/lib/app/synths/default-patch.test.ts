@@ -7,10 +7,9 @@
  *
  * @see lib/app/synths/default-patch.ts
  */
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { compileLoop, seededRng } from '@/lib/app/sequencer/compile';
 import { PatternSchema } from '@/lib/app/sequencer/pattern';
-import { createSynth } from '@/lib/app/synths/audio/dsp-core';
 import type { CablePair, SynthDef } from '@/lib/app/synths/contract';
 import {
   DEFAULT_PATCH_ID,
@@ -24,7 +23,7 @@ import { SYNTH_DEFS } from '@/lib/app/synths/defs';
 import modelD from '@/lib/app/synths/defs/model-d';
 import { cablesToEngine } from '@/lib/app/synths/lib/patch';
 import { validateDefaultPatch, validatePreset } from '@/lib/app/synths/validate';
-import { rms, seeded } from '@/tests/unit/lib/app/synths/audio/render';
+import { render, rms } from '@/tests/unit/lib/app/synths/audio/render';
 import { makeMiniD } from '@/tests/fixtures/synths/mini-d';
 
 describe('the scale pattern', () => {
@@ -96,6 +95,22 @@ describe('defaultPatchSound', () => {
     expect(sound.steps[0].why).not.toContain('sawtooth');
   });
 
+  it('refuses a blank listen, which would describe the patch as a sawtooth', () => {
+    const def = { ...makeMiniD(), defaultPatch: { values: {}, listen: '  ' } };
+
+    expect(validateDefaultPatch(def).problems).toEqual([
+      expect.objectContaining({ path: 'defaultPatch.listen', code: 'blank-listen' }),
+    ]);
+    expect(defaultPatchSound(def).blurb).toMatch(/^A plain sawtooth on /);
+  });
+
+  it('lists under its own category where it names one, and as a lead where it does not', () => {
+    const def = { ...makeMiniD(), defaultPatch: { values: {}, category: 'perc' as const } };
+
+    expect(defaultPatchSound(def).tags).toEqual(['perc']);
+    expect(defaultPatchSound(modelD).tags).toEqual(['lead']);
+  });
+
   it('describes a sawtooth where the patch says nothing of its own', () => {
     const sound = defaultPatchSound(modelD);
 
@@ -121,21 +136,13 @@ function defaultPatchRms(def: SynthDef, seconds = 1.5): number {
   );
   const ep = def.toEngine(st.values, { wheel: 0, patched });
   ep.cables = cablesToEngine(def, st.cables, st.values);
-  const spy = vi.spyOn(Math, 'random').mockImplementation(seeded(20240919));
-  try {
-    const syn = createSynth(SR, () => {});
-    syn.handle({ type: 'params', p: structuredClone(ep) });
-    syn.handle({ type: 'phrase', phrase: SCALE_PHRASE });
-    const buf = new Float32Array(Math.floor(SR * seconds));
-    for (let at = 0; at < buf.length; at += 128)
-      syn.process(buf.subarray(at, Math.min(at + 128, buf.length)), Math.min(128, buf.length - at));
-    return rms(buf);
-  } finally {
-    spy.mockRestore();
-  }
+  const { out } = render(ep, {
+    len: Math.floor(48000 * seconds),
+    events: [[0, { type: 'phrase', phrase: SCALE_PHRASE }]],
+  });
+  return rms(out);
 }
-const SR = 48000;
-/** What `check:synths` calls silent. */
+/** What `check:synths` calls silent (its `rms < 0.004`). */
 const SILENT = 0.004;
 
 describe('every synth’s Default patch sounds', () => {

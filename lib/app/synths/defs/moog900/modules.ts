@@ -16,6 +16,7 @@ import type {
   Control,
   ControlValues,
   Decor,
+  DefaultPatch,
   EngineParams,
   Jack,
   KnobControl,
@@ -2640,3 +2641,20 @@ export function initOf(controls: Control[]): ControlValues {
   });
   return init;
 }
+
+/**
+ * The Default patch the System 15, 35 and 55 share. Nothing sounds until it is patched: it takes the keyboard's pitch
+ * to the 921 oscillator (switched to audio range) and its sawtooth through a 902 amplifier to the output, with the
+ * keyboard's trigger firing a 911 envelope into the amplifier: five cables. The filters are left out, which is as open
+ * as it gets. The envelope opens at once, holds while the key is held, and falls fast.
+ */
+export const MOOG900_DEFAULT_PATCH: DefaultPatch = {
+  values: { 'm921.coarse': 'audio', 'm911_1.t1': 0, 'm911_1.esus': 10, 'm911_1.t3': 1 },
+  cables: [
+    ['j.cm1a.cv_1', 'j.m921.freq_cv_1'],
+    ['j.m921.sawtooth', 'j.m902_1.sig_in_pos'],
+    ['j.m902_1.out_pos', 'j.out.l'],
+    ['j.cm1a.trig_upper', 'j.m911_1.strig'],
+    ['j.m911_1.out', 'j.m902_1.cv_1'],
+  ],
+};

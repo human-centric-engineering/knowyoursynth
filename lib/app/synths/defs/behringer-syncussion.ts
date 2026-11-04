@@ -19,6 +19,7 @@ import {
   drawChannel,
   outputArea,
   type PanelParts,
+  SYNCUSSION_DEFAULT_PATCH,
   syncussionEngine,
 } from '@/lib/app/synths/defs/syncussion-kit';
 import { type OmitEach } from '@/lib/app/synths/lib/def-kit';
@@ -269,13 +270,7 @@ const behringerSyncussion: SynthDef & { version: number } = {
   controls: p.controls,
   jacks,
   init,
-  // A drum synth has no sawtooth and no sustain. Its plainest tone is OSC MODE A, one oscillator, which init already
-  // has on both channels; the Default patch turns off the pitch sweep, so each hit is a plain tom at one pitch.
-  defaultPatch: {
-    values: { 'ch1.sweep': 'off', 'ch2.sweep': 'off' },
-    listen:
-      'Play a few notes and listen for a short, round drum hit, a tom, that holds one pitch as it dies away. The keys below middle C play channel 1, middle C and above channel 2.',
-  },
+  defaultPatch: SYNCUSSION_DEFAULT_PATCH,
   toEngine,
 };
 
