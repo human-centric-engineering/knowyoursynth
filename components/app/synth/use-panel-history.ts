@@ -212,9 +212,10 @@ export function usePanelHistory<S extends Panelled>(
     if (!p) return;
     const moved = p.snap.values !== snap.values || p.snap.cables !== snap.cables;
     if (moved && by === 'glide') {
-      // A load, from the Default patch, whatever was on the panel or still gliding onto it.
-      gliding.current?.halt();
-      runGlide(fromDefault(), snap, 0);
+      // A load, from the Default patch, whatever was on the panel or still gliding onto it; one landing while the synth
+      // arrives waits out the arrival's wait.
+      const delay = gliding.current?.halt().delay ?? 0;
+      runGlide(fromDefault(), snap, delay);
     } else if (moved && gliding.current) {
       const { at, delay } = gliding.current.halt();
       runGlide(at, snap, delay);

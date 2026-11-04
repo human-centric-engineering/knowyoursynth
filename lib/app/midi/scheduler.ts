@@ -318,13 +318,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       if (at <= now) freeAt.delete(n);
     });
     if (port && dirty) {
-      // Now, and All Notes Off now: not later, where it would cut what the next run sends. A note-on already on its
-      // way is let go at its own time as well, so it can't sound on after the release.
-      held.forEach((_, n) => {
-        out([0x80 | channel, n, 0], now);
-        const down = downAt.get(n) ?? now;
-        if (down > now) offAt(n, down);
-      });
+      // Now, and All Notes Off now: not later, where it would cut what the next run sends.
+      letGo();
       out([0xb0 | channel, ALL_NOTES_OFF, 0], now);
     }
     if (!keepClock) {

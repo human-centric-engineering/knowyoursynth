@@ -20,6 +20,7 @@ import { readStored } from '@/components/app/synth/storage';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { presetState } from '@/lib/app/synths/lib/patch';
+import { SCALE_PHRASE } from '@/lib/app/synths/default-patch';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
 import type { SoundLesson } from '@/lib/app/sounds/lesson';
@@ -384,6 +385,28 @@ describe('My patches', () => {
     fireEvent.click(button('Restore patch'));
     expect(screen.queryByText(/controls? moved/)).toBeNull();
     expect(cutoff()).toBe('4');
+  });
+
+  it('plays the riff of the sound it opens once it has loaded, not the one playing before', async () => {
+    engine.running = true;
+    engine.resume.mockResolvedValue(undefined);
+    serve([summary()], { cmmine1: NIGHT_BASS });
+    page();
+    await act(async () => {
+      fireEvent.click(button('Play'));
+    });
+    const phrases = () =>
+      engine.send.mock.calls
+        .map((c) => c[0] as { type: string; phrase?: unknown })
+        .filter((m) => m.type === 'phrase');
+    expect(phrases()).toHaveLength(1);
+    fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
+    await waitFor(() => expect(loadedName()).toBe('Night bass'));
+    expect(engine.send).toHaveBeenCalledWith({ type: 'stopPhrase' });
+    // A sound of the user's own plays the scale.
+    await waitFor(() => expect(phrases()).toHaveLength(2));
+    expect(phrases()[1].phrase).toEqual(SCALE_PHRASE);
+    expect(button('Stop')).toBeTruthy();
   });
 
   it('opens one the synth has moved on from with what fits, and says what did not', async () => {

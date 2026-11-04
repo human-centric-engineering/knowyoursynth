@@ -1058,6 +1058,42 @@ describe('SynthPage glides', () => {
     });
   });
 
+  it('plays the riff of the sound on the panel once the load ends, when another load took over the first', async () => {
+    page();
+    settle();
+    choose('Wobble lead');
+    fireEvent.click(button('Play'));
+    choose('Fat bass');
+    await act(async () => {
+      settle();
+    });
+    const phrases = engine.send.mock.calls
+      .map((c) => c[0] as { type: string })
+      .filter((m) => m.type === 'phrase');
+    expect(phrases).toHaveLength(1);
+    expect(phrases[0]).toMatchObject({ phrase: { steps: FAT_BASS.phrase.steps } });
+  });
+
+  it('plays nothing once a load ends when the sound was turned off while it loaded', async () => {
+    engine.running = true;
+    page();
+    settle();
+    choose('Wobble lead');
+    fireEvent.click(button('Play'));
+    await act(async () => {
+      fireEvent.click(button('Mute'));
+    });
+    engine.resume.mockClear();
+    await act(async () => {
+      settle();
+    });
+    expect(engine.send.mock.calls.map((c) => c[0] as { type: string })).not.toContainEqual(
+      expect.objectContaining({ type: 'phrase' })
+    );
+    expect(engine.resume).not.toHaveBeenCalled();
+    expect(button('Unmute')).toBeTruthy();
+  });
+
   it('runs a whole glide without the page chaining an update onto every frame', async () => {
     // An effect that sets state on each move of the panel (even to the same value) chains an update onto every frame
     // of a glide, which React reports as "Maximum update depth exceeded" a few seconds in.

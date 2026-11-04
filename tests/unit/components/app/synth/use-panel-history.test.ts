@@ -11,7 +11,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useState } from 'react';
 import { act, fireEvent, renderHook } from '@testing-library/react';
-import { usePanelHistory } from '@/components/app/synth/use-panel-history';
+import { ARRIVE_MS, usePanelHistory } from '@/components/app/synth/use-panel-history';
 import { glideMotion } from '@/components/app/synth/motion';
 import { defaultPatchState } from '@/lib/app/synths/default-patch';
 import { getSynthDef } from '@/lib/app/synths/defs';
@@ -223,6 +223,26 @@ describe('usePanelHistory loads (f-default-patch t-172)', () => {
     act(() => result.current.glide((s) => ({ ...s, values: at(7), cables: [] })));
     expect(result.current.sess.values).toEqual(DEFAULT.values);
     expect(result.current.loading).toBe(true);
+  });
+
+  it('waits out the arrival before setting a patch loaded while the synth arrives', () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    const frames = vi.spyOn(window, 'requestAnimationFrame').mockReturnValue(1);
+    try {
+      const { result } = setup();
+      // As `?sound=` does, on arrival.
+      act(() => result.current.glide((s) => ({ ...s, ...WOBBLE })));
+      act(() => {
+        vi.advanceTimersByTime(ARRIVE_MS - 1);
+      });
+      expect(frames).not.toHaveBeenCalled();
+      act(() => {
+        vi.advanceTimersByTime(1);
+      });
+      expect(frames).toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('ends a load with Undo', () => {

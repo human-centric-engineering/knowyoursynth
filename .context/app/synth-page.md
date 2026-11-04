@@ -284,7 +284,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   a new patch that changes nothing is no load. Meanwhile the page drops notes from the keys, MIDI
   in and the scope's keyboard (dropped, not queued); lets go, as the load begins, of the keys held
   (Hold's too) and the arp's keys in the sequencer; stops a riff playing, and plays the sound's riff
-  again once it has loaded; holds a Play pressed meanwhile until then; and passes `silent` to MIDI
+  again once it has loaded; holds a Play pressed meanwhile until then (the riff of the sound on the
+  panel by then, should a second load take over; Mute drops it); and passes `silent` to MIDI
   out, so a running pattern goes on in time but muted on the synth and on the output (see
   `sequencer.md`). The patch picker's eyebrow reads **Loading** with a pulsing LED, so a dead key
   reads as "wait". The synth arriving is a load too, from the Default patch: it waits `ARRIVE_MS`

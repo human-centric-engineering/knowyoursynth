@@ -38,6 +38,7 @@ import {
   use,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -1463,21 +1464,30 @@ function Synth({
     },
     [engine, ensureAudio, stopPattern]
   );
+  // The riff of the sound on the panel once a load ends, which may not be the one loading when it was asked for (a
+  // second load taking over the first); with none, nothing plays. Kept before any effect runs: with reduced motion
+  // the load ends in the panel history's own effect, in the render that put the new sound on the panel.
+  const shownPhrase = useRef<Phrase | null>(null);
+  useLayoutEffect(() => {
+    shownPhrase.current = shown?.phrase ?? null;
+  });
+  const riffShown = useCallback(() => {
+    if (shownPhrase.current) void riffNow(shownPhrase.current);
+    else setPlaying(false);
+  }, [riffNow]);
   // Not while a patch loads: then once it has.
   const playRiff = useCallback(
     async (ph: Phrase) => {
-      if (isLoading()) afterLoad.current = () => void riffNow(ph);
+      if (isLoading()) afterLoad.current = riffShown;
       else await riffNow(ph);
     },
-    [isLoading, riffNow]
+    [isLoading, riffNow, riffShown]
   );
   // As a load begins, what the page is sounding is let go: the keys held (and under Hold), the arp's keys in the
   // sequencer, and the riff, which plays again once the load ends (the sound's own, by then). The sequencer runs on,
   // muted through MIDI out's `silent`, and the player and MIDI out let go of their own notes. As it ends, what waited
   // starts.
-  const shownPhrase = useRef<Phrase | null>(null);
   useEffect(() => {
-    shownPhrase.current = shown?.phrase ?? null;
     loadHandler.current = (on) => {
       if (!on) {
         const then = afterLoad.current;
@@ -1494,9 +1504,7 @@ function Synth({
       seqTook.current.clear();
       if (playing) {
         engine?.send({ type: 'stopPhrase' });
-        afterLoad.current = () => {
-          if (shownPhrase.current) void riffNow(shownPhrase.current);
-        };
+        afterLoad.current = riffShown;
       }
     };
   });
@@ -2054,6 +2062,8 @@ function Synth({
   const toggleAudio = async () => {
     if (!engine) return;
     if (audio === 'on') {
+      // A Play waiting on a load is not to turn the sound back on once it has loaded.
+      afterLoad.current = null;
       setPlaying(false);
       stopPattern();
       await engine.suspend();
