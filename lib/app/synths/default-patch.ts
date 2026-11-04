@@ -13,8 +13,9 @@ import { patternFacts } from '@/lib/app/patterns/library-facts';
 import type { LibraryPatternView } from '@/lib/app/patterns/library';
 import { importPhrase } from '@/lib/app/sequencer/import';
 import type { Pattern } from '@/lib/app/sequencer/pattern';
-import type { Phrase, PhraseNote, SynthDef } from '@/lib/app/synths/contract';
+import type { Phrase, PhraseNote, Preset, PresetStep, SynthDef } from '@/lib/app/synths/contract';
 import { presetState, type PanelState } from '@/lib/app/synths/lib/patch';
+import { START_STEP } from '@/lib/app/sounds/preference-data';
 
 /** The Default patch's id where a library sound's slug goes: the session, the library and the sequencer. */
 export const DEFAULT_PATCH_ID = 'default-patch';
@@ -109,3 +110,24 @@ export function defaultPatchSound(def: SynthDef): CatalogueSound {
 /** The Default patch's panel: every control's value, and the cables in. */
 export const defaultPatchState = (def: SynthDef): PanelState =>
   presetState(def, defaultPatchSound(def));
+
+/**
+ * Step 0 of a lesson (`f-default-patch` t-173): the Default patch, set before step 1 so someone following along on
+ * hardware starts from the same place as the panel. It is no step of the lesson's own: the session holds it as
+ * `START_STEP`, and it counts toward no progress.
+ */
+export { START_STEP };
+
+/** Whether a lesson has step 0: every one but the Default patch's own, which is that step already. */
+export const hasStartStep = (preset: { id: string } | null | undefined): boolean =>
+  !!preset && !isDefaultPatch(preset.id);
+
+/** Step 0 as a step: what it sets, and what to listen for. */
+export const startStep = (def: SynthDef): PresetStep => defaultPatchSound(def).steps[0];
+
+/** The panel at a lesson's step: step 0 is the Default patch, the rest are the sound as far as that step. */
+export const lessonState = (
+  def: SynthDef,
+  preset: Pick<Preset, 'steps' | 'phrase'> | null | undefined,
+  step: number | null
+): PanelState => (step === START_STEP ? defaultPatchState(def) : presetState(def, preset, step));

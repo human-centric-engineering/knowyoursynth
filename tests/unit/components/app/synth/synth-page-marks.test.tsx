@@ -272,6 +272,10 @@ describe('lesson progress', () => {
       expect(api.get).toHaveBeenCalledWith('/api/v1/me/progress', expect.anything())
     );
     fireEvent.click(walk('Build it step by step'));
+    // Step 0, the Default patch, is no step of the lesson's: it records nothing.
+    expect(lesson().textContent).toContain('Set your synth to the Default patch');
+    expect(progressPuts()).toEqual([]);
+    fireEvent.click(walk('Next step'));
     fireEvent.click(walk('Next step'));
     fireEvent.click(walk('Previous'));
     fireEvent.click(walk('Next step'));
@@ -320,10 +324,12 @@ describe('lesson progress', () => {
     );
     api.put.mockRejectedValueOnce(new Error('offline'));
     fireEvent.click(walk('Build it step by step'));
+    fireEvent.click(walk('Next step'));
     await waitFor(() => expect(api.put).toHaveBeenCalledTimes(1));
     // Back to the finished sound, then the first step again: it was never kept, so it goes again.
     fireEvent.click(within(library()).getByRole('button', { name: /^Fat bass/ }));
     fireEvent.click(walk('Build it step by step'));
+    fireEvent.click(walk('Next step'));
     await waitFor(() => expect(progressPuts()).toHaveLength(2));
     expect(progressPuts().map(([, body]) => body)).toEqual([{ step: 0 }, { step: 0 }]);
   });

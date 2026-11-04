@@ -39,14 +39,18 @@ export function openSide(tab: SideTab): void {
 
 /**
  * The step the panel is at, read from the Sound Design strip's chapters as "step 2 of 3", or `null` with the finished
- * sound on (or no lesson). The last chapter is the finished sound, so it is not counted as a step.
+ * sound on (or no lesson). The last chapter is the finished sound, so it is not counted as a step; nor is the first,
+ * step 0 (the Default patch), which reads as "step 0 of 3".
  */
 export function stepShown(): string | null {
   const list = screen.queryByRole('list', { name: 'Lesson steps' });
   if (!list) return null;
-  const chapters = [...list.querySelectorAll('button')];
+  const current = (b: Element | null | undefined) => b?.getAttribute('aria-current') === 'step';
+  const start = list.querySelector('.kys-chapter-start button');
+  const chapters = [...list.querySelectorAll('.kys-chapter:not(.kys-chapter-start) button')];
   const n = chapters.length - 1;
-  const at = chapters.slice(0, n).findIndex((b) => b.getAttribute('aria-current') === 'step');
+  if (current(start)) return `step 0 of ${n}`;
+  const at = chapters.slice(0, n).findIndex(current);
   return at < 0 ? null : `step ${at + 1} of ${n}`;
 }
 

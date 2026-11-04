@@ -18,6 +18,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import type { CSSProperties, ReactNode, RefObject } from 'react';
 import { Check, ChevronDown, ChevronUp, Maximize, Minimize, Play, Square, X } from 'lucide-react';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
+import { START_STEP } from '@/lib/app/synths/default-patch';
 import type { PresetStep } from '@/lib/app/synths/contract';
 import { stepIds } from '@/components/app/synth/lesson';
 import { highlightStore } from '@/components/app/synth/stores';
@@ -156,6 +157,7 @@ export function SoundPicker({
  */
 export function SoundDesign({
   steps,
+  start = null,
   step,
   onStep,
   hasLesson,
@@ -165,6 +167,8 @@ export function SoundDesign({
   onToggle,
 }: {
   steps: readonly PresetStep[];
+  /** Step 0, the Default patch, for a lesson that has it. */
+  start?: PresetStep | null;
   /** The step the panel is at, or `null` for the finished sound. */
   step: number | null;
   onStep: (k: number | null) => void;
@@ -220,7 +224,9 @@ export function SoundDesign({
           </div>
           <div className="kys-design-row">
             {hasLesson ? (
-              n > 0 && <Chapters steps={steps} step={step} onStep={onStep} lit={lit} />
+              n > 0 && (
+                <Chapters steps={steps} start={start} step={step} onStep={onStep} lit={lit} />
+              )
             ) : (
               <p className="kys-design-sub">
                 This patch has no walkthrough. Choose a library patch to learn how one is built.
@@ -235,18 +241,20 @@ export function SoundDesign({
 
 /**
  * One chapter per step, as long as each other and labelled with its number, the part of the synth it works on and
- * its title, and a last one for the finished
- * sound. While walking, the steps up to the panel's are filled and the one it is at glows; with the finished sound on
+ * its title, and a last one for the finished sound. A lesson with step 0 opens with a short chapter for it: setting
+ * the Default patch (`f-default-patch` t-173). While walking, the steps up to the panel's are filled and the one it is at glows; with the finished sound on
  * the panel, every step is filled. Hovered, a step lights its controls on the panel in place of whatever was
  * lit, as the lesson's step cards do, and leaving it puts back what the page had lit.
  */
 export function Chapters({
   steps,
+  start = null,
   step,
   onStep,
   lit = [],
 }: {
   steps: readonly PresetStep[];
+  start?: PresetStep | null;
   step: number | null;
   onStep: (k: number | null) => void;
   lit?: readonly string[];
@@ -254,6 +262,30 @@ export function Chapters({
   const walking = step != null;
   return (
     <ol className="kys-chapters" aria-label="Lesson steps">
+      {start && (
+        <li
+          className="kys-chapter kys-chapter-start"
+          data-state={step === START_STEP ? 'now' : 'done'}
+        >
+          <button
+            type="button"
+            onClick={() => onStep(START_STEP)}
+            aria-current={step === START_STEP ? 'step' : undefined}
+            aria-label={`Lesson step 0: ${start.title}`}
+            onPointerEnter={() => highlightStore.set(stepIds(start))}
+            onPointerLeave={() => highlightStore.set([...lit])}
+          >
+            <span className="kys-chapter-track" />
+            <span className="kys-chapter-label" aria-hidden="true">
+              <span className="kys-chapter-area">
+                <span className="kys-chapter-num">0</span>
+                <span className="kys-chapter-module">Start</span>
+              </span>
+              <span className="kys-chapter-name">{start.title}</span>
+            </span>
+          </button>
+        </li>
+      )}
       {steps.map((s, i) => {
         const m = moduleOf(s.module);
         const state = !walking || i < step ? 'done' : i === step ? 'now' : 'todo';

@@ -87,6 +87,16 @@ break shared links for no visible gain. "Sound" on screen means what you hear ("
   sound leaves the walkthrough. The step is kept with the session. The lesson is the library
   sound's, or the open sound's own when it was saved with one
   ([`sounds.md`](./sounds.md#a-sounds-lesson-t-55)), which keeps that sound open while it steps.
+- **Every lesson starts at step 0, the Default patch** (`f-default-patch` t-173), so someone following on their
+  own synth starts where the panel does. It is no step of the lesson's data: the session holds it as `START_STEP`
+  (−1, in `preference-data.ts`, which the account's last panel takes too), and `lessonState()` in
+  `default-patch.ts` sets the panel to `defaultPatchState()` for it. Build it step by step, the Lesson's start and
+  Back from step 1 go to it; its Next goes to step 1. It records no lesson progress, and a step restored from the
+  session still wins over it on a refresh. It is compact: one line before the step cards in the Lesson ("Set your
+  synth to the Default patch." and what to listen for, from the Default patch's step), a short **0 · Start** chapter
+  before step 1, and a card with no numbered moves (the Default patch sets the whole panel). Its controls are lit
+  and, on a phone, revealed above the Lesson sheet as a step's are. The Default patch's own lesson has none: its one
+  step is that patch already.
 - **The sound map works from the definition, not the drawn layout**, so it answers the same
   whichever view is showing. It runs in the probe workers (`/worklets/kys-probe.js`) and falls
   back to the main thread where a host blocks workers. A new map starts 300 ms after the panel
@@ -180,7 +190,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   and puts focus in its search. Its "In the style of…" is its tooltip.
 - **The lesson's steps are the chapters**, one per step in its module's colour, each labelled with
   its number and the part of the synth it works on (`moduleOf(step.module).label`), and its title
-  from `lg` up; under `sm`, the number alone. The last is the finished sound, labelled "How it works".
+  from `lg` up; under `sm`, the number alone. The first, narrower, is step 0 ("0 · Start", the Default
+  patch); the last is the finished sound, labelled "How it works".
   There are no separate How it works or Make it yours buttons: the finished sound's card is the
   overview, with how the sound works, the parts it uses in order, and its ways to make it yours
   (numbered on the panel), so the lesson starts and ends on it.

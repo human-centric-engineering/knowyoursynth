@@ -72,12 +72,14 @@ export type SettingKey = (typeof SETTING_KEYS)[number];
 
 /** More lesson steps than any sound has. */
 export const MAX_STEP = 1000;
+/** The step before a lesson's first: step 0, the Default patch (`f-default-patch` t-173). */
+export const START_STEP = -1;
 
 /** `PUT /api/v1/me/panels/:synthId`: the panel as it was left, with the sound and step it came from. */
 export const PanelPrefInputSchema = z.object({
   /** The library sound the panel came from (its slug). */
   presetId: SoundSlugSchema.nullable(),
-  step: z.number().int().min(0).max(MAX_STEP).nullable(),
+  step: z.number().int().min(START_STEP).max(MAX_STEP).nullable(),
   /** The user's own sound open on the panel. */
   soundId: UserSoundIdSchema.nullable(),
   panel: PanelInputSchema,

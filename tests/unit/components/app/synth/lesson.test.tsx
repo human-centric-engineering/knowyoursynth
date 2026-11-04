@@ -14,6 +14,7 @@ import { focusStore, highlightStore } from '@/components/app/synth/stores';
 import { getSynthDetail } from '@/lib/app/catalogue/read';
 import type { CatalogueSound } from '@/lib/app/catalogue/read';
 import { getSynthDef } from '@/lib/app/synths/defs';
+import { START_STEP, defaultPatchSound, startStep } from '@/lib/app/synths/default-patch';
 import { controlMap, displayName, formatValue } from '@/lib/app/synths/lib/patch';
 import { modelDRows } from '@/tests/helpers/model-d-detail';
 
@@ -93,10 +94,10 @@ describe('Lesson header and overview', () => {
     expect(chain.querySelectorAll('.rounded-full')).toHaveLength(firstSeen.length);
   });
 
-  it('starts the walkthrough at step 1 from "Build it step by step"', () => {
+  it('starts the walkthrough at step 0, the Default patch, from "Build it step by step"', () => {
     const { onStep } = setup();
     fireEvent.click(screen.getByRole('button', { name: 'Build it step by step' }));
-    expect(onStep).toHaveBeenCalledWith(0);
+    expect(onStep).toHaveBeenCalledWith(START_STEP);
   });
 
   it('counts the steps and tweaks on their tabs', () => {
@@ -272,13 +273,13 @@ describe('Lesson moving between steps and tabs', () => {
     expect(within(visibleStep()).getByText(sound.steps[0].title)).toBeTruthy();
   });
 
-  it('opens Make it yours from the overview, and starts from a blank patch on Build it', () => {
+  it('opens Make it yours from the overview, and starts from the Default patch on Build it', () => {
     const { onStep } = setup();
     fireEvent.click(screen.getByRole('button', { name: 'Ways to make it yours' }));
     expect(tab(/Make it yours/).getAttribute('aria-selected')).toBe('true');
     fireEvent.click(tab(/Build it/));
-    fireEvent.click(screen.getByRole('button', { name: 'Start from a blank patch' }));
-    expect(onStep).toHaveBeenLastCalledWith(0);
+    fireEvent.click(screen.getByRole('button', { name: 'Start from the Default patch' }));
+    expect(onStep).toHaveBeenLastCalledWith(START_STEP);
   });
 
   it('ignores keys on the tabs that do not move between them', () => {
@@ -306,6 +307,47 @@ describe('Lesson moving between steps and tabs', () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+});
+
+describe('Lesson step 0', () => {
+  const startLine = () =>
+    screen.getByRole('button', { name: /^0 Set your synth to the Default patch/ });
+
+  it('is one line before step 1 saying what to set and what to hear, and choosing it sets the Default patch', () => {
+    const { onStep } = setup(1);
+    const line = startLine();
+    expect(line.textContent).toContain(startStep(def).why);
+    expect(line.getAttribute('aria-current')).toBeNull();
+    fireEvent.click(line);
+    expect(onStep).toHaveBeenLastCalledWith(START_STEP);
+  });
+
+  it('is the step the walkthrough is at, numbered 0, lighting the Default patch, and Next goes to step 1', () => {
+    const { onStep } = setup(START_STEP);
+    expect(startLine().getAttribute('aria-current')).toBe('step');
+    expect(tab(/Build it/).textContent).toContain(`0/${sound.steps.length}`);
+    expect(highlightStore.get()).toEqual(stepIds(startStep(def)));
+    expect(highlightStore.get().length).toBeGreaterThan(0);
+    expect(headerButton('Back').hasAttribute('disabled')).toBe(true);
+    // The track shows step 1, still to do.
+    expect(within(visibleStep()).getByText(sound.steps[0].title)).toBeTruthy();
+    fireEvent.click(headerButton('Next step'));
+    expect(onStep).toHaveBeenLastCalledWith(0);
+  });
+
+  it('is where Back from step 1 goes', () => {
+    const { onStep } = setup(0);
+    fireEvent.click(headerButton('Back'));
+    expect(onStep).toHaveBeenLastCalledWith(START_STEP);
+  });
+
+  it('is not in the Default patch’s own lesson, which starts at its one step', () => {
+    const own = defaultPatchSound(def);
+    const onStep = vi.fn();
+    render(<Lesson def={def} preset={own} step={0} onStep={onStep} />);
+    expect(screen.queryByRole('button', { name: /^0 Set your synth/ })).toBeNull();
+    expect(headerButton('Back').hasAttribute('disabled')).toBe(true);
   });
 });
 
