@@ -83,7 +83,9 @@ break shared links for no visible gain. "Sound" on screen means what you hear ("
   no saved copy, and is no start for the patterns that suit the patch. In the sequencer its one pattern is the C
   major scale, which `useSoundPatterns` offers without a read.
 - **A lesson step is a panel state.** Choosing step _k_ sets the panel to the sound's steps up to
-  _k_ (`presetState(def, sound, k)`); Finish sets it back to the whole sound. Picking another
+  _k_, on top of the Default patch (`presetState(def, sound, k)`, `f-default-base` t-176); Finish sets it back to the
+  whole sound. Every sound builds on the Default patch, the library's finished sound included, so moving from one
+  step to the next changes only what that step names and lights. Picking another
   sound leaves the walkthrough. The step is kept with the session. The lesson is the library
   sound's, or the open sound's own when it was saved with one
   ([`sounds.md`](./sounds.md#a-sounds-lesson-t-55)), which keeps that sound open while it steps.

@@ -248,6 +248,9 @@ sounds keeps that lesson with it, so it opens with its steps every time (owner r
   controls in the context and 5 tweaks; a riff of 1–32 notes). `checkLesson` then runs
   `validatePreset` against the synth's current definition. Any problem is a 400 with every path
   under `lesson.` (`lesson.steps.0.set.filter.cutoff`), and nothing is stored.
+- **Its steps build on the Default patch**, as a library sound's do (`presetState`, `f-default-base` t-176), so step
+  0 of its lesson is the Default patch too. A lesson stored before t-176 was written on `init` and is not migrated:
+  the app was not live, so the dev database is reseeded instead (owner ruling, 2026-11-04).
 - **Set when the sound is made, then only removed.** `PATCH` takes `lesson: null` and nothing else
   for it. Prisma's typed update writes a JSON column's NULL only with its runtime `DbNull`, which
   `lib/app/**` may not import, so the store clears it and its version in SQL inside the same locked
