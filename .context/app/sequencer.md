@@ -173,8 +173,15 @@ browser synth that was a misdrawn playhead for a loop; on MIDI out it would be n
 `run` (a worklet bundle older than the page) falls back on waiting for the run's first loop, as before.
 
 **Muted.** `muted` on `pattern`, or `patternMute` while it plays, keeps the player's timing and its events but sends the
-synth no notes: the pattern is heard on a MIDI output alone, and the clock MIDI out is timed by still runs. Muted, the
-player also reports `patternTick` (with its `run`) every 25 ms of audio (`TICK_SECONDS`): see MIDI out.
+synth no notes: the pattern is heard on a MIDI output alone, or nowhere while a patch loads (below), and the clock MIDI
+out is timed by still runs. Muted, the player also reports `patternTick` (with its `run`) every 25 ms of audio
+(`TICK_SECONDS`): see MIDI out.
+
+**While a patch loads** (`f-default-patch` t-172; the load is in `synth-page.md`) a running pattern carries on in time
+but silent, so a hardware clock lock and the loop's phase are kept: the page passes `silent` to `useMidiOut`, whose
+`out.muted` then mutes the player (`patternMute`, which lets go of what the synth holds), and the scheduler's
+`setMuted` sends the output no notes, letting go of what it holds there at once. Clock and CCs go on. Both come back in
+from the first note after the load. Play pressed meanwhile starts the pattern once the load ends.
 
 ## The module
 

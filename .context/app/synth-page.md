@@ -262,9 +262,12 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   panel: the old cables or pins out one by one, then the new in (`REPATCH_STEP_MS`), the engine
   having the new patch at once; not as the page opens, on another synth, or with reduced motion.
   A new patch from a sound opened (the library's, the user's, the tutor's, a shared one), **Default
-  patch**, **Restore patch**, or the synth arriving (from its `init` patch) is **glided** onto the
-  panel through the hook's `glide` (`glidePlan` / `glideAt` in `history.ts`): the cables the new
-  patch has not got come out first, then the controls turn a part at a time down the voice as the
+  patch**, **Restore patch**, or the synth arriving is **loaded** (`f-default-patch` t-172): the
+  panel is set to the synth's **Default patch** at once, cables and all, whatever was on it before
+  (or still gliding onto it), so the controls move the same way whichever sound was last. From
+  there it is **glided** onto the panel through the hook's `glide` (`glidePlan` / `glideAt` in
+  `history.ts`): the Default patch's cables the new patch has not got come out first, then the
+  controls turn a part at a time down the voice as the
   lessons go (`GLIDE_ORDER`: oscillators, mixer, filter, envelopes, amplifier, modulation, … effects,
   output), nothing lit around them (`GLIDE_STAGE_MS`, faster when many move, `GLIDE_KNOBS_MS`),
   and the new cables go in last. The stored session holds the new patch at once (saved, counted
@@ -272,8 +275,20 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   the engine follow the glide while a save sends `stored`. A session landing meanwhile (the stored
   panel, the account's) carries the glide on to it; a change through `patch`, or Undo, finishes it.
   Not with reduced motion (`glideMotion` in `motion.ts`, which `tests/setup.ts` turns off for every
-  test but the glides' own). The cables, changing one at a time, pass through the panel's walk-in
-  above unchanged; lesson steps still use that walk-in alone.
+  test but the glides' own): the panel snaps to the new patch. The cables, changing one at a time,
+  pass through the panel's walk-in above unchanged; lesson steps still use that walk-in alone, from
+  the step before, and do not reset to the Default patch.
+  **Nothing sounds while a patch loads.** The hook reports `loading` (and `isLoading()` for a note
+  between renders, and `onLoad` as it begins and ends) from the moment `glide` is called until the
+  glide ends, a change through `patch` or Undo finishes it, or, with reduced motion, straight away;
+  a new patch that changes nothing is no load. Meanwhile the page drops notes from the keys, MIDI
+  in and the scope's keyboard (dropped, not queued); lets go, as the load begins, of the keys held
+  (Hold's too) and the arp's keys in the sequencer; stops a riff playing, and plays the sound's riff
+  again once it has loaded; holds a Play pressed meanwhile until then; and passes `silent` to MIDI
+  out, so a running pattern goes on in time but muted on the synth and on the output (see
+  `sequencer.md`). The patch picker's eyebrow reads **Loading** with a pulsing LED, so a dead key
+  reads as "wait". The synth arriving is a load too, from the Default patch: it waits `ARRIVE_MS`
+  on it, and the stored panel landing meanwhile carries the glide on.
   Choosing another synth turns the instrument on a turntable (`ViewTransition`, transition type
   `synth-change`, `.kys-panel-turn`): the old turns away edge-on, the new turns in. The rails'
   shadows are `box-shadow`s, not filters, and they set their own `--rail-*` variables rather than
