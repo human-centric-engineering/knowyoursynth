@@ -15,6 +15,7 @@ import { z } from 'zod';
 import { PatternSchema, type Pattern } from '@/lib/app/sequencer/pattern';
 import { PanelInputSchema, SynthIdSchema } from '@/lib/app/sounds/data';
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
+import { presetState } from '@/lib/app/synths/lib/patch';
 import { validateSound } from '@/lib/app/synths/validate';
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
 import type { CapabilityContext } from '@/lib/orchestration/capabilities/types';
@@ -34,7 +35,7 @@ export type TutorEntityContext = z.input<typeof TutorEntityContextSchema>;
 /** A panel that has passed: its synth, every control's value, and the cables in. */
 export interface TutorPanel {
   def: AppSynthDef;
-  /** Every control's value: the synth's init with the panel's values over it. */
+  /** Every control's value: the synth's Default patch with the panel's values over it. */
   values: ControlValues;
   cables: CablePair[];
 }
@@ -104,7 +105,11 @@ export function readPanel(context: CapabilityContext): PanelRead {
     };
   return {
     ok: true,
-    panel: { def, values: { ...def.init, ...checked.value.values }, cables: checked.value.cables },
+    panel: {
+      def,
+      values: { ...presetState(def).values, ...checked.value.values },
+      cables: checked.value.cables,
+    },
   };
 }
 
@@ -134,14 +139,38 @@ export function readOpenPattern(context: CapabilityContext): PatternRead {
   return { ok: true, pattern: parsed.data.pattern ?? null };
 }
 
-/** The values that differ from the synth's init, in the definition's control order. */
-export function changedFromInit(def: AppSynthDef, values: ControlValues): ControlValues {
+/** What a panel changed from the synth's Default patch, the panel step 0 of every lesson sets. */
+export interface PanelChanges {
+  /** The values that differ, in the definition's control order. */
+  values: ControlValues;
+  /** The Default patch's own cables, which a sound starts with. */
+  defaultCables: CablePair[];
+  /** The Default patch's cables that are out. */
+  unplugged: CablePair[];
+}
+
+/**
+ * The panel against the synth's Default patch (`presetState` with no sound: `defaultPatch` over `init`, its cables
+ * in), which is what the learner set at step 0 and every sound builds on (`f-default-base`). A value or cable the
+ * learner has on their hardware because the Default patch put it there is not a change.
+ */
+export function changedFromDefault(
+  def: AppSynthDef,
+  values: ControlValues,
+  cables: readonly CablePair[]
+): PanelChanges {
+  const base = presetState(def);
   const changed: ControlValues = {};
   for (const c of def.controls) {
     const v = values[c.id];
-    if (v !== undefined && v !== def.init[c.id]) changed[c.id] = v;
+    if (v !== undefined && v !== base.values[c.id]) changed[c.id] = v;
   }
-  return changed;
+  const baseCables = base.cables.map((c): CablePair => [c.from, c.to]);
+  return {
+    values: changed,
+    defaultCables: baseCables,
+    unplugged: baseCables.filter((c) => !hasCable(cables, c)),
+  };
 }
 
 /** Whether the panel has this cable in, written `[output, input]`. */

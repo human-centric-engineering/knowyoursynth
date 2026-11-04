@@ -7,7 +7,7 @@
  * DeepMind 12 96,811) are the ones worth narrowing. The token counts behind it are in `.context/app/tutor.md`.
  */
 import { areaMembers } from '@/lib/app/synths/lib/areas';
-import { describeSynth } from '@/lib/app/synths/lib/patch';
+import { describeSynth, presetState } from '@/lib/app/synths/lib/patch';
 import type { Jack, SynthDef } from '@/lib/app/synths/contract';
 
 /** The most `describe_synth` returns in one call. A synth, section or prefix that describes in more gets an index. */
@@ -15,17 +15,29 @@ export const DESCRIBE_MAX_CHARS = 8000;
 
 const wholeSizes = new WeakMap<SynthDef, number>();
 
+/**
+ * How many characters these controls and jacks describe in on the Default patch, the panel every sound builds on, with
+ * its cables to and from the jacks: the panel the tutor most often sees, and as `describe_synth` would list it.
+ */
+function sizeOnDefault(def: SynthDef, members: Pick<SynthDef, 'controls' | 'jacks'>): number {
+  const { values, cables } = presetState(def);
+  // Only the jacks `describeSynth` lists, as `describe_synth` passes it, so a cable it leaves out is not counted.
+  const ids = new Set(members.jacks.filter(modelled).map((j) => j.id));
+  const shown = cables.filter((c) => ids.has(c.from) || ids.has(c.to));
+  return describeSynth({ ...def, ...members }, values, shown).length;
+}
+
 /** A jack the sound engine models, which is every jack `describeSynth` lists: an output with a signal, an input with a destination. */
 export const modelled = (j: Jack): boolean => (j.dir === 'out' ? !!j.signal : !!j.dest);
 
 /**
- * Whether the synth is small enough for `describe_synth` with no arguments to return it whole: measured on the init
+ * Whether the synth is small enough for `describe_synth` with no arguments to return it whole: measured on the Default
  * patch. On a heavily patched panel the answer can still be the section index, because the cables are part of it.
  */
 export function describesWhole(def: SynthDef): boolean {
   let size = wholeSizes.get(def);
   if (size === undefined) {
-    size = describeSynth(def, def.init, []).length;
+    size = sizeOnDefault(def, def);
     wholeSizes.set(def, size);
   }
   return size <= DESCRIBE_MAX_CHARS;
@@ -33,7 +45,7 @@ export function describesWhole(def: SynthDef): boolean {
 
 const sectionSizes = new WeakMap<SynthDef, Map<string, number>>();
 
-/** How many characters a section describes in on the init patch, cached per definition. */
+/** How many characters a section describes in on the Default patch, cached per definition. */
 function sectionSize(def: SynthDef, areaId: string): number {
   let sizes = sectionSizes.get(def);
   if (!sizes) sectionSizes.set(def, (sizes = new Map<string, number>()));
@@ -41,7 +53,7 @@ function sectionSize(def: SynthDef, areaId: string): number {
   if (size === undefined) {
     const area = def.areas.find((a) => a.id === areaId);
     const members = area ? areaMembers(def, area) : { controls: [], jacks: [] };
-    size = describeSynth({ ...def, ...members }, def.init, []).length;
+    size = sizeOnDefault(def, members);
     sizes.set(areaId, size);
   }
   return size;

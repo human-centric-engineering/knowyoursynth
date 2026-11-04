@@ -1,11 +1,13 @@
 /**
- * `get_panel`: the panel as the route passed it, as the controls that differ from the init (labelled, with the value
- * as the panel shows it), the cables and the definition version.
+ * `get_panel`: the panel as the route passed it, as what the learner changed from the Default patch: the controls that
+ * differ from it (labelled, with the value as the panel shows it), every cable in, the Default patch's own and those taken out, and the
+ * definition version.
  *
  * @see lib/app/tutor/get-panel.ts
  */
 import { describe, expect, it } from 'vitest';
 import { GetPanelCapability } from '@/lib/app/tutor/get-panel';
+import { presetState } from '@/lib/app/synths/lib/patch';
 import { manyCables, panelContext, synth } from '@/tests/helpers/tutor';
 
 const tool = new GetPanelCapability();
@@ -26,8 +28,10 @@ describe('get_panel', () => {
       version: modelD.version,
       truncated: false,
       cables: [['j.lfoTri', 'j.cutCv']],
+      defaultCables: [],
+      unplugged: [],
     });
-    // A value sent at its init is not a change.
+    // A value sent at its Default patch value is not a change.
     expect(result.data?.changed.map((c) => c.id)).toEqual(['osc1.wave', 'filter.cutoff']);
     expect(result.data?.changed[1]).toMatchObject({
       id: 'filter.cutoff',
@@ -35,6 +39,40 @@ describe('get_panel', () => {
       value: -2,
     });
     expect(result.data?.changed[0].shown).toBe('Square');
+  });
+
+  it.each(['model-d', 'ems-vcs3', 'system-15'])(
+    'reports no change on the Default patch of %s, which differs from init',
+    async (id) => {
+      const def = synth(id);
+      const { values, cables } = presetState(def);
+      // The Default patch moves values (and on a patch synth puts cables in) that init does not, so a comparison with
+      // init would report them as the learner's changes.
+      expect(def.controls.some((c) => values[c.id] !== def.init[c.id])).toBe(true);
+      const result = await tool.execute(
+        {},
+        panelContext(def, { values, cables: cables.map((c): [string, string] => [c.from, c.to]) })
+      );
+      expect(result.success).toBe(true);
+      expect(result.data).toMatchObject({
+        changed: [],
+        unplugged: [],
+        truncated: false,
+      });
+      expect(result.data?.defaultCables).toEqual(result.data?.cables);
+    }
+  );
+
+  it("lists the Default patch's cables the learner took out", async () => {
+    const vcs3 = synth('ems-vcs3');
+    const { values, cables } = presetState(vcs3);
+    expect(cables.length).toBeGreaterThan(0);
+    const result = await tool.execute({}, panelContext(vcs3, { values, cables: [] }));
+    expect(result.data?.changed).toEqual([]);
+    expect(result.data?.unplugged).toEqual(cables.map((c) => [c.from, c.to]));
+    // What a design starts with is still listed, though none of it is in now.
+    expect(result.data?.cables).toEqual([]);
+    expect(result.data?.defaultCables).toEqual(cables.map((c) => [c.from, c.to]));
   });
 
   it('lists at most 100 changed controls, and says when there are more', async () => {

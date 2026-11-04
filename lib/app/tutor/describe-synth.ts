@@ -96,7 +96,7 @@ export class DescribeSynthCapability extends BaseCapability<Args, DescribeData> 
     };
 
     if (section === undefined && prefix === undefined) {
-      // A synth too big even on the init patch is never built whole just to be measured.
+      // A synth too big even on the Default patch is never built whole just to be measured.
       const whole = describesWhole(def) ? textOf(def.controls, def.jacks.filter(modelled)) : null;
       if (whole !== null && whole.length <= DESCRIBE_MAX_CHARS)
         return this.success({ synthId, scope: 'whole', text: whole });

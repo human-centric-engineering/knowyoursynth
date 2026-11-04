@@ -8,6 +8,7 @@
 import { describe, expect, it } from 'vitest';
 import { DesignSoundCapability } from '@/lib/app/tutor/design-sound';
 import { validatePreset } from '@/lib/app/synths/validate';
+import { presetState } from '@/lib/app/synths/lib/patch';
 import { panelContext, synth } from '@/tests/helpers/tutor';
 
 const tool = new DesignSoundCapability();
@@ -27,6 +28,7 @@ interface DesignArgs {
     why: string;
     set?: Record<string, unknown>;
     cables?: string[][];
+    unplug?: string[][];
   }[];
   context?: Record<string, string>;
   tweaks?: { id: string; try: string; hear: string }[];
@@ -109,6 +111,60 @@ describe('design_sound: a good design', () => {
     ]);
     // What comes back is a sound the strict validator accepts as it is.
     expect(validatePreset(modelD, sound).ok).toBe(true);
+  });
+});
+
+describe('design_sound on a patch synth: built on the Default patch, its cables included', () => {
+  const vcs3 = synth('ems-vcs3');
+  const vcs3Ctx = panelContext(vcs3);
+  /** Output 2 carries the oscillator's triangle instead of the envelope: the Default patch's cable comes out. */
+  const rewire = (): DesignArgs => ({
+    ...design(),
+    name: 'Triangle on output 2',
+    tweaks: [],
+    context: {},
+    steps: [
+      {
+        title: 'Take the envelope off output 2',
+        module: 'patch',
+        why: 'Output 2 gets its own source.\n- Unplug the envelope from output 2.',
+        unplug: [['r.envsig', 'c.out2']],
+      },
+      {
+        title: 'Triangle to output 2',
+        module: 'patch',
+        why: 'The triangle goes straight out.\n- Patch the triangle to output 2.',
+        cables: [['r.osc2tri', 'c.out2']],
+      },
+    ],
+  });
+
+  it('passes a design that takes out a cable the Default patch has in', async () => {
+    const result = await tool.execute(tool.validate(rewire()), vcs3Ctx);
+    expect(result.success).toBe(true);
+    const sound = result.data?.sound;
+    expect(sound?.steps[0].unplug).toEqual([['r.envsig', 'c.out2']]);
+    expect(validatePreset(vcs3, sound).ok).toBe(true);
+    // Built on the Default patch: its other cables stay in, the one taken out is gone, the new one is in.
+    const cables = presetState(vcs3, sound).cables.map((c) => `${c.from}>${c.to}`);
+    expect(cables).toContain('r.envsig>c.out1');
+    expect(cables).toContain('r.osc2tri>c.out2');
+    expect(cables).not.toContain('r.envsig>c.out2');
+  });
+
+  it('refuses taking out a cable that is not in', async () => {
+    const d = rewire();
+    d.steps[0].unplug = [['r.osc3tri', 'c.out2']];
+    const result = await tool.execute(tool.validate(d), vcs3Ctx);
+    expect(result).toMatchObject({ success: false, error: { code: 'invalid_design' } });
+    expect(result.error?.message).toContain('steps.0.unplug.0');
+  });
+
+  it('advertises unplug to the model on every step', () => {
+    const { properties } = tool.functionDefinition.parameters as {
+      properties: { steps: { items: { properties: Record<string, unknown> } } };
+    };
+    expect(Object.keys(properties.steps.items.properties)).toContain('unplug');
   });
 });
 
