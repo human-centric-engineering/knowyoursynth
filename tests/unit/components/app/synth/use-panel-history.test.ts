@@ -177,7 +177,7 @@ describe('usePanelHistory loads (f-default-patch t-172)', () => {
   const DEFAULT = defaultPatchState(def);
   const WOBBLE: Pick<Sess, 'values' | 'cables'> = {
     values: at(3),
-    cables: [['j.lfoTri', 'j.cutCv']],
+    cables: [{ from: 'j.lfoTri', to: 'j.cutCv', color: '#e8b04a' }],
   };
   // Off for every other test (`tests/setup.ts`).
   beforeEach(() => vi.mocked(glideMotion).mockReturnValue(true));
