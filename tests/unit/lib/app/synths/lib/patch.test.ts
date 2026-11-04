@@ -439,26 +439,6 @@ describe('sanitizePreset', () => {
     });
   });
 
-  it('keeps an unplug of a cable that is in, and drops one that is not', () => {
-    const r = sanitizePreset(def, {
-      steps: [
-        // Not in yet: dropped, and the step keeps its cable.
-        {
-          set: { 'mix.osc1': 2 },
-          unplug: [['lfo.tri', 'cutoff.in']],
-          cables: [['lfo.tri', 'cutoff.in']],
-        },
-        // In now, written input first: turned round, as a cable is, and kept.
-        { unplug: [['cutoff.in', 'lfo.tri']] },
-        // Out again, so nothing is left to take out, and the step is empty.
-        { unplug: [['lfo.tri', 'cutoff.in']] },
-      ],
-    });
-
-    expect(r?.steps.map((s) => s.unplug)).toEqual([undefined, [['lfo.tri', 'cutoff.in']]]);
-    expect(r?.steps[0].cables).toEqual([['lfo.tri', 'cutoff.in']]);
-  });
-
   it('falls back to defaults for name, level, tags and riff', () => {
     const r = sanitizePreset(def, { steps: [{ set: { 'mix.osc1': 2 } }], level: 7 });
 

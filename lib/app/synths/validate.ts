@@ -326,8 +326,8 @@ export function validatePreset(def: SynthDef, input: unknown): ValidationResult<
   const raw = parsed.data;
   const cm = controlMap(def);
   const problems: SoundProblem[] = [];
-  let inNow = new Set(presetState(def).cables.map((c) => `${c.from}>${c.to}`));
-  const steps: PresetStep[] = raw.steps.map((s, i) => {
+  const steps: PresetStep[] = [];
+  raw.steps.forEach((s, i) => {
     const { values, problems: setProblems } = checkSettings(
       def,
       s.set || {},
@@ -338,9 +338,13 @@ export function validatePreset(def: SynthDef, input: unknown): ValidationResult<
     const unplugProblems = checkCables(def, unplug, join('steps', i, 'unplug'));
     problems.push(...unplugProblems);
     const bad = new Set(unplugProblems.map((p) => p.path));
+    // The cables in before this step, as the panel has them; each one taken out is gone, so naming it twice fails.
+    const inNow = new Set(
+      presetState(def, { steps, phrase: raw.phrase }).cables.map((c) => `${c.from}>${c.to}`)
+    );
     unplug.forEach(([from, to], k) => {
       const at = join('steps', i, 'unplug', k);
-      if (bad.has(at) || inNow.has(`${from}>${to}`)) return;
+      if (bad.has(at) || inNow.delete(`${from}>${to}`)) return;
       problems.push({
         path: at,
         code: 'not-plugged-in',
@@ -349,19 +353,14 @@ export function validatePreset(def: SynthDef, input: unknown): ValidationResult<
     });
     const cables = s.cables || [];
     problems.push(...checkCables(def, cables, join('steps', i, 'cables')));
-    const out = new Set(unplug.map(([from, to]) => `${from}>${to}`));
-    inNow = new Set([
-      ...[...inNow].filter((k) => !out.has(k)),
-      ...cables.map(([from, to]) => `${from}>${to}`),
-    ]);
-    return {
+    steps.push({
       title: s.title,
       module: s.module,
       why: s.why,
       ...(s.set ? { set: values } : {}),
       ...(s.cables ? { cables } : {}),
       ...(s.unplug ? { unplug } : {}),
-    };
+    });
   });
   raw.tweaks.forEach((t, i) => {
     if (!cm[t.id])

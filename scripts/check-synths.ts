@@ -667,8 +667,6 @@ async function main(): Promise<void> {
         if (!p.phrase || !Array.isArray(p.phrase.steps) || !p.phrase.steps.length)
           E(`${tag} has no phrase`);
       }
-      // The cables in as the steps go, from the ones the sound starts with, for each step's unplug.
-      let inNow = new Set(presetState(def).cables.map((c) => `${c.from}>${c.to}`));
       for (const s of p.steps) {
         if (p.id !== '(init)' && (!s.title || !s.why || !s.module))
           E(`${tag} step needs title, module and why`);
@@ -686,13 +684,6 @@ async function main(): Promise<void> {
             );
           if (c.kind === 'bool' && typeof v !== 'boolean') E(`${tag} ${id} must be true/false`);
         }
-        for (const [a, b] of s.unplug || [])
-          if (!inNow.has(`${a}>${b}`)) E(`${tag} unplugs ${a} > ${b}, which is not in`);
-        const out = new Set((s.unplug || []).map(([a, b]) => `${a}>${b}`));
-        inNow = new Set([
-          ...[...inNow].filter((k) => !out.has(k)),
-          ...(s.cables || []).map(([a, b]) => `${a}>${b}`),
-        ]);
         for (const [a, b] of s.cables || []) {
           const ja = jm[a],
             jb = jm[b];

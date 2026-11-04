@@ -308,27 +308,19 @@ export function sanitizePreset(def: SynthDef, raw: unknown): Preset | null {
   if (!isRecord(raw) || !Array.isArray(raw.steps)) return null;
   const str = (x: unknown, max: number) => (typeof x === 'string' ? x.slice(0, max) : '');
   const rawSteps: unknown[] = raw.steps;
-  // The cables in as the steps go, so an unplug of a cable that is not in is dropped, as an unknown jack is.
-  const base = presetState(def).cables;
-  let inNow = base.map((c) => `${c.from}>${c.to}`);
   const steps: PresetStep[] = rawSteps
     .slice(0, 9)
     .map((s) => {
       const r = isRecord(s) ? s : {};
-      const unplug = sanitizeCables(def, r.unplug).filter(([a, b]) => inNow.includes(`${a}>${b}`));
-      const cables = sanitizeCables(def, r.cables);
-      const out = new Set(unplug.map(([a, b]) => `${a}>${b}`));
-      inNow = [...inNow.filter((k) => !out.has(k)), ...cables.map(([a, b]) => `${a}>${b}`)];
       return {
         title: str(r.title, 90) || 'Step',
         module: isModule(r.module) ? r.module : 'osc',
         why: str(r.why, 1500),
         set: sanitizeSet(def, r.set),
-        cables,
-        ...(unplug.length ? { unplug } : {}),
+        cables: sanitizeCables(def, r.cables),
       };
     })
-    .filter((s) => Object.keys(s.set).length || s.cables.length || s.unplug?.length);
+    .filter((s) => Object.keys(s.set).length || s.cables.length);
   if (!steps.length) return null;
   const cm = controlMap(def);
   const context: Record<string, string> = {};

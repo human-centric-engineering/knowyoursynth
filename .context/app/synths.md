@@ -313,9 +313,9 @@ A `Preset` is built step by step: each step's `set` and `cables` apply cumulativ
 `init`, with a `why` that says what to listen for. A step's `unplug` takes cables out
 (`f-default-base` t-175): each must be in at that step, from an earlier step or the cables the
 sound starts with, and they come out before the step's `cables` go in, so one step can move a cable
-to another input. The validator refuses one that is not in (`not-plugged-in`), as `check:synths`
-does; the tutor's sanitiser drops it. The lesson lists it as a numbered move, lit on both its
-jacks, worded as taking the cable out. A cable's colour counts every cable plugged in before it,
+to another input. The validator refuses one that is not in, or one named twice in a step
+(`not-plugged-in`), reading the cables in from `presetState`; `check:synths` gets it through
+`validatePreset`. The lesson lists it as a numbered move under **Unplug**, lit on both its jacks. A cable's colour counts every cable plugged in before it,
 so taking one out does not give the next the colour of one still in. The first tag is the category
 (`PRESET_CATEGORIES`); `phrase` is a short riff that shows the sound off, not a copy of the song
 (TB-303-style riffs carry a velocity as a fourth item). Every control a step touches that

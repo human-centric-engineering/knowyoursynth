@@ -303,7 +303,7 @@ export function LessonCard({
                       <Num n={moves.indexOf(b) + 1} />
                       <span className="kys-label text-(--kys-muted)">Unplug</span>
                       <span className="ml-auto font-mono">
-                        Take out {from.label} out → {to.label} in
+                        {from.label} out → {to.label} in
                       </span>
                     </span>
                   </li>

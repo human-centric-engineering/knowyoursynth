@@ -169,7 +169,7 @@ describe('LessonCard unplug', () => {
 
     const moves = screen.getByRole('list', { name: 'What this step sets' });
     const item = [...moves.querySelectorAll('li')].find((li) => li.textContent?.includes('Unplug'));
-    expect(item?.textContent).toBe(`2UnplugTake out ${out.label} out → ${into.label} in`);
+    expect(item?.textContent).toBe(`2Unplug${out.label} out → ${into.label} in`);
     // The panel numbers its input jack as the card does, and pointing at the move lights both of its ends.
     expect(badgeStore.get()).toEqual(['mix.osc1', into.id]);
     const move = item?.querySelector('.kys-card-move');

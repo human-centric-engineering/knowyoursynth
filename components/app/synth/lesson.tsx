@@ -176,7 +176,7 @@ function UnplugChip({ def, pair, base }: { def: SynthDef; pair: CablePair; base:
       />
       <span className="kys-label text-(--kys-muted)">Unplug</span>
       <span className="font-mono text-(--kys-text)">
-        Take out {from.label} out → {to.label} in
+        {from.label} out → {to.label} in
       </span>
     </span>
   );

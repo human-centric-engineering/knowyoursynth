@@ -348,6 +348,22 @@ describe('validatePreset', () => {
     );
   });
 
+  it('refuses the same cable taken out twice in one step (not-plugged-in)', () => {
+    const p = goodPreset();
+    const twice = [
+      ['lfo.tri', 'cutoff.in'],
+      ['lfo.tri', 'cutoff.in'],
+    ];
+    const r = validatePreset(def, {
+      ...p,
+      steps: [...p.steps, { title: 'Out', module: 'patch', why: 'Off.', unplug: twice }],
+    });
+
+    expect(r.problems.map((x) => [x.path, x.code])).toEqual([
+      ['steps.2.unplug.1', 'not-plugged-in'],
+    ]);
+  });
+
   it('refuses a malformed unplug as a malformed cable, not as one that is not in', () => {
     const p = goodPreset();
     const r = validatePreset(def, {
