@@ -30,16 +30,16 @@ export interface Favourites {
 export function useFavourites(userId: string | null): Favourites {
   // Key → the favourite's id, or `null` for one still being added.
   const [stars, setStars] = useState<Map<string, string | null> | null>(null);
+  // Written with every setStars, not synced after the render: a press between the stars showing and an
+  // effect catching up would read none and be lost.
   const starsRef = useRef(stars);
-  useEffect(() => {
-    starsRef.current = stars;
-  });
   const pending = useRef(new Set<string>());
   const owner = useRef(userId);
 
   useEffect(() => {
     owner.current = userId;
     pending.current = new Set();
+    starsRef.current = null;
     setStars(null);
     if (!userId) return undefined;
     let live = true;
@@ -47,7 +47,10 @@ export function useFavourites(userId: string | null): Favourites {
       .get<unknown>('/api/v1/me/favourites')
       .then((raw) => {
         const list = z.array(FavouriteReadSchema).safeParse(raw);
-        if (live && list.success) setStars(new Map(list.data.map((f) => [favouriteKey(f), f.id])));
+        if (!live || !list.success) return;
+        const loaded = new Map(list.data.map((f) => [favouriteKey(f), f.id]));
+        starsRef.current = loaded;
+        setStars(loaded);
       })
       // No stars rather than stars that may be wrong.
       .catch(() => undefined);
