@@ -194,10 +194,14 @@ function page(over: Partial<SynthPageProps> = {}) {
   );
 }
 
-/** A stored session as `storedSession()` writes it. */
-const storeSession = (s: object) => {
+/**
+ * A stored session as `storedSession()` writes it: every control's value, so the ones a test leaves out are the
+ * Default patch's, which every sound builds on (t-176). The page fills a missing one from `init`.
+ */
+const storeSession = (s: { values?: Record<string, unknown>; [key: string]: unknown }) => {
   comeBackTo('model-d');
-  window.localStorage.setItem(SESSION_KEY, JSON.stringify(s));
+  const values = s.values && { ...defaultPatchState(def).values, ...s.values };
+  window.localStorage.setItem(SESSION_KEY, JSON.stringify(values ? { ...s, values } : s));
 };
 
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
@@ -2237,10 +2241,10 @@ describe('SynthPage sounds', () => {
   });
 
   it('falls back to the Default patch when the stored sound is not in the list', () => {
-    storeSession({ presetId: 'gone', step: null, values: {}, cables: [] });
+    storeSession({ presetId: 'gone', step: null, values: { 'filter.cutoff': 1 }, cables: [] });
     page();
     expect(loadedName()).toBe('Default patch');
-    // The Default patch is the target: the stored cutoff (init 1) is off its 5.
+    // The Default patch is the target: the stored cutoff (1, init's) is off its 5.
     expect(screen.getByText(/moved/)).toBeTruthy();
 
     fireEvent.click(button('Restore patch'));

@@ -190,31 +190,35 @@ export interface PanelState {
 }
 
 /**
- * init + steps[0..upto] → { values, cables }. `upto` omitted = the whole sound. A step's `unplug` comes out before its
- * `cables` go in. A cable's colour counts every cable plugged in before it, not the ones still in, so a cable taken
- * out does not leave the next one the colour of a cable that is still there.
+ * Default patch + steps[0..upto] → { values, cables }. `upto` omitted = the whole sound. Every sound builds on the
+ * synth's Default patch (`SynthDef.defaultPatch`, over `init`), its cables included: the panel a lesson's step 0 sets
+ * (`f-default-base` t-176), so each step changes only what it names. A step's `unplug` comes out before its `cables`
+ * go in. A cable's colour counts every cable plugged in before it, the Default patch's first, not the ones still in, so
+ * a cable taken out does not leave the next one the colour of a cable that is still there.
  */
 export function presetState(
   def: SynthDef,
   preset?: Pick<Preset, 'steps' | 'phrase'> | null,
   upto?: number | null
 ): PanelState {
-  const values: ControlValues = { ...def.init };
-  if (!preset) return { values, cables: [] };
+  const values: ControlValues = { ...def.init, ...def.defaultPatch?.values };
+  let cables: PatchCable[] = [];
+  let plugged = 0;
+  const plug = ([from, to]: CablePair) => {
+    if (!cables.some((c) => c.from === from && c.to === to))
+      cables.push({ from, to, color: CABLE_COLORS[plugged++ % CABLE_COLORS.length] });
+  };
+  (def.defaultPatch?.cables || []).forEach(plug);
+  if (!preset) return { values, cables };
   // A synth whose TEMPO knob sets the riff's speed (SynthDef `tempo`) starts each sound at its own riff's BPM.
   if (def.tempo && preset.phrase && preset.phrase.bpm) values[def.tempo] = preset.phrase.bpm;
   const last = upto == null ? preset.steps.length - 1 : upto;
-  let cables: PatchCable[] = [];
-  let plugged = 0;
   preset.steps.forEach((s, i) => {
     if (i > last) return;
     Object.assign(values, s.set || {});
     for (const [from, to] of s.unplug || [])
       cables = cables.filter((c) => !(c.from === from && c.to === to));
-    (s.cables || []).forEach(([from, to]) => {
-      if (!cables.some((c) => c.from === from && c.to === to))
-        cables.push({ from, to, color: CABLE_COLORS[plugged++ % CABLE_COLORS.length] });
-    });
+    (s.cables || []).forEach(plug);
   });
   return { values, cables };
 }

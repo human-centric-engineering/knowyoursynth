@@ -44,7 +44,7 @@
           "title": "A low ladder filter",
           "module": "filter",
           "why": "The 24 dB ladder filter takes most of the brightness away, leaving a round, dark body. The next step opens it on each note.\n- CUTOFF 3.5 (about 220 Hz): low, so the buzz is gone and you hear the body.\n- RESONANCE 3 (30 %): a little ring at the cutoff, which will give the snap an edge.\n- KEY TRACKING 1:2: the cutoff follows the keys half as far as the pitch, so the high notes of the riff stay bright enough.\n- Listen for: a much darker, rounder bass.",
-          "set": { "vcf.cutoff": 3.5, "vcf.res": 3, "vcf.kbd": "half" }
+          "set": { "vcf.cutoff": 3.5, "vcf.res": 3, "vcf.kbd": "half", "hpf.cutoff": 3 }
         },
         {
           "title": "Snap it open",
@@ -116,7 +116,8 @@
             "mix.2": 8,
             "osc2.oct": "4",
             "osc2.wave": "saw",
-            "osc2.freq": 4
+            "osc2.freq": 4,
+            "hpf.cutoff": 3
           }
         },
         {
@@ -130,7 +131,13 @@
           "title": "Filter open, loudness held",
           "module": "amp",
           "why": "The filter opens wide so the sweep is heard in full, and the VCA holds the note at full level while the key is down.\n- CUTOFF 7.5 (about 3.6 kHz), ENV AMT 0: the filter stays open and does not move.\n- VCA MODE RELEASE: full level while the key is held, fading over RELEASE after. The envelope only does the sweep, not the loudness.\n- RELEASE 4 (80 ms): a short fade so notes do not click.\n- Listen for: every note at full level while the tone sweeps inside it.",
-          "set": { "vcf.cutoff": 7.5, "vcf.env": 0, "vca.mode": "release", "env.release": 4 }
+          "set": {
+            "vcf.cutoff": 7.5,
+            "vcf.env": 0,
+            "vca.mode": "release",
+            "env.release": 4,
+            "vcf.res": 2
+          }
         },
         {
           "title": "Glide and a little room",
@@ -204,7 +211,8 @@
             "env.release": 4,
             "vcf.cutoff": 4,
             "vcf.env": 3.5,
-            "vcf.res": 4
+            "vcf.res": 4,
+            "hpf.cutoff": 3
           }
         },
         {
@@ -252,7 +260,14 @@
           "title": "A bright source and a ringing filter",
           "module": "filter",
           "why": "A sawtooth gives the filter plenty to work on, and high resonance makes the filter ring wherever its cutoff lands.\n- Oscillator 1 sawtooth, mixer 1 at 7.\n- CUTOFF 4.5 (about 450 Hz): the middle of the range, so random steps can go either way.\n- RESONANCE 7.5: strong, so each new cutoff whistles.\n- ENV AMT 0: the envelope leaves the filter alone; only the cable will move it.\n- Listen for: a held, resonant tone, ready to move.",
-          "set": { "osc1.wave": "saw", "mix.1": 7, "vcf.cutoff": 4.5, "vcf.res": 7.5, "vcf.env": 0 }
+          "set": {
+            "osc1.wave": "saw",
+            "mix.1": 7,
+            "vcf.cutoff": 4.5,
+            "vcf.res": 7.5,
+            "vcf.env": 0,
+            "hpf.cutoff": 3
+          }
         },
         {
           "title": "Random steps into the cutoff",
@@ -316,7 +331,8 @@
             "osc2.wave": "sq",
             "osc2.freq": 7,
             "mix.1": 6,
-            "mix.2": 6
+            "mix.2": 6,
+            "hpf.cutoff": 3
           }
         },
         {
@@ -329,7 +345,15 @@
           "title": "Open the VCA for good",
           "module": "amp",
           "why": "VCA MODE ON leaves the amplifier open, so the drone sounds without a key held. Playing a key only sets the pitch.\n- VCA MODE ON.\n- CUTOFF 5 (about 630 Hz), RESONANCE 3, ENV AMT 0: a warm, steady filter that the envelope does not move.\n- Reverb MIX 5: the spring spreads the drone out.\n- Listen for: the drone carrying on between notes. Press a key to change its pitch.",
-          "set": { "vca.mode": "on", "vcf.cutoff": 5, "vcf.res": 3, "vcf.env": 0, "rev.mix": 5 }
+          "set": {
+            "vca.mode": "on",
+            "vcf.cutoff": 5,
+            "vcf.res": 3,
+            "vcf.env": 0,
+            "rev.mix": 5,
+            "env.sustain": 7,
+            "env.release": 3
+          }
         }
       ],
       "context": {
@@ -404,7 +428,8 @@
             "env.decay": 5,
             "env.sustain": 6,
             "env.release": 4,
-            "vcf.kbd": "half"
+            "vcf.kbd": "half",
+            "hpf.cutoff": 3
           }
         },
         {
@@ -485,7 +510,8 @@
             "env.decay": 4.5,
             "env.sustain": 4,
             "env.release": 2,
-            "rev.mix": 0
+            "rev.mix": 0,
+            "hpf.cutoff": 3
           }
         }
       ],
@@ -539,7 +565,13 @@
           "title": "Make the filter ring",
           "module": "filter",
           "why": "At full resonance the ladder filter feeds back on itself and rings at its cutoff: a pure, whistling tone.\n- RESONANCE 10: full. The filter now makes a sound with no input.\n- KEY TRACKING 1:1: the cutoff moves with the keys, one octave per octave, so the whistle plays the notes.\n- CUTOFF 3.7 (about 260 Hz, middle C): sets where the whistle sits; here it is close to in tune with the keys.\n- ENV AMT 0: the envelope leaves the pitch alone.\n- Listen for: a clean, flute-like tone following the keys.",
-          "set": { "vcf.res": 10, "vcf.kbd": "full", "vcf.cutoff": 3.7, "vcf.env": 0 }
+          "set": {
+            "vcf.res": 10,
+            "vcf.kbd": "full",
+            "vcf.cutoff": 3.7,
+            "vcf.env": 0,
+            "hpf.cutoff": 3
+          }
         },
         {
           "title": "Shape it and add vibrato",
@@ -610,7 +642,8 @@
             "osc2.wave": "tri",
             "osc2.oct": "8",
             "osc1.wave": "tri",
-            "osc1.oct": "4"
+            "osc1.oct": "4",
+            "hpf.cutoff": 3
           }
         },
         {
@@ -631,7 +664,8 @@
             "env.release": 6,
             "vcf.cutoff": 7.5,
             "vcf.env": 1.5,
-            "rev.mix": 4
+            "rev.mix": 4,
+            "vcf.res": 2
           }
         }
       ],
@@ -675,7 +709,7 @@
           "title": "A resonant filter",
           "module": "filter",
           "why": "Resonance makes the filter boost a band of the noise, so it whistles like wind.\n- CUTOFF 4.5 (about 450 Hz), RESONANCE 7.\n- ENV AMT 0: the envelope leaves the filter alone.\n- Listen for: a hollow, whistling hiss.",
-          "set": { "vcf.cutoff": 4.5, "vcf.res": 7, "vcf.env": 0 }
+          "set": { "vcf.cutoff": 4.5, "vcf.res": 7, "vcf.env": 0, "hpf.cutoff": 3 }
         },
         {
           "title": "Slow gusts",
@@ -738,7 +772,8 @@
             "osc2.oct": "8",
             "osc2.freq": 0.1,
             "mix.1": 6,
-            "mix.2": 6
+            "mix.2": 6,
+            "hpf.cutoff": 3
           }
         },
         {
@@ -750,7 +785,8 @@
             "vcf.env": 0,
             "env.attack": 0,
             "env.decay": 6.5,
-            "env.sustain": 0
+            "env.sustain": 0,
+            "vcf.res": 2
           },
           "cables": [["j.env_inv", "j.cutoff"]]
         },

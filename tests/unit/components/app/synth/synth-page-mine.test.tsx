@@ -20,7 +20,7 @@ import { readStored } from '@/components/app/synth/storage';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { presetState } from '@/lib/app/synths/lib/patch';
-import { SCALE_PHRASE } from '@/lib/app/synths/default-patch';
+import { defaultPatchState, SCALE_PHRASE } from '@/lib/app/synths/default-patch';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
 import type { SoundLesson } from '@/lib/app/sounds/lesson';
@@ -898,8 +898,15 @@ describe('a sound saved with its lesson', () => {
     fromTutor: true,
     lesson: LESSON,
   });
-  /** Saved after a tweak: the filter at 4, where the lesson leaves it at -1. */
-  const TUTOR_BASS: UserSoundDetail = { ...NIGHT_BASS, ...tutorSummary };
+  /**
+   * Saved after a tweak: the filter at 4, where the lesson leaves it at -1. The rest is where the lesson leaves it: on
+   * the Default patch, which the tutor's lessons build on (t-176).
+   */
+  const TUTOR_BASS: UserSoundDetail = {
+    ...NIGHT_BASS,
+    ...tutorSummary,
+    panel: { values: { ...defaultPatchState(def).values, 'filter.cutoff': 4 }, cables: [] },
+  };
   // The lesson card over the panel, opened from the Sound Design strip (t-74).
   const lessonPanel = () => {
     openSide('Lesson');

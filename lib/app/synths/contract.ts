@@ -1057,7 +1057,7 @@ export interface Phrase {
   transpose?: number;
 }
 
-/** One step of a sound's build. Steps apply cumulatively on top of `init`. */
+/** One step of a sound's build. Steps apply cumulatively on top of the synth's Default patch (`presetState`). */
 export interface PresetStep {
   title: string;
   module: SynthModule;

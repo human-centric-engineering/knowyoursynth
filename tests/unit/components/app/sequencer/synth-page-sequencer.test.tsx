@@ -88,7 +88,15 @@ const FAT_BASS = sound({
     ],
   },
 });
-const WOBBLE = sound({ id: 'wobble', name: 'Wobble lead' });
+// A step of its own, as every library sound has: built on the Default patch (t-176), a sound with none would be the
+// Default patch exactly, and choosing it would load nothing.
+const WOBBLE = sound({
+  id: 'wobble',
+  name: 'Wobble lead',
+  steps: [
+    { title: 'Close the filter', module: 'filter', why: 'Darker.', set: { 'filter.cutoff': 2 } },
+  ],
+});
 
 const MODEL_D: CatalogueSynth = {
   id: 'model-d',

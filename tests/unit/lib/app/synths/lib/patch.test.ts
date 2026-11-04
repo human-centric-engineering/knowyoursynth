@@ -161,13 +161,53 @@ describe('presetState', () => {
     ],
   };
 
-  it('starts from init when there is no preset', () => {
+  it('starts from init when there is no preset and the synth has no Default patch of its own', () => {
     const def = makeMiniD();
     const s = presetState(def, null);
 
     expect(s.values).toEqual(def.init);
     expect(s.values).not.toBe(def.init);
     expect(s.cables).toEqual([]);
+  });
+
+  describe('on a synth with a Default patch of its own', () => {
+    const def = makeMiniD({
+      defaultPatch: { values: { 'filter.cutoff': 4 }, cables: [['env1.out', 'pitch.in']] },
+    });
+
+    it('starts from the Default patch, its values over init and its cables in', () => {
+      const s = presetState(def, null);
+
+      expect(s.values).toEqual({ ...def.init, 'filter.cutoff': 4 });
+      expect(s.cables).toEqual([{ from: 'env1.out', to: 'pitch.in', color: CABLE_COLORS[0] }]);
+    });
+
+    it('builds a sound on it: a value no step sets is the Default patch’s, and its cable stays in', () => {
+      const s = presetState(def, preset, 0);
+
+      expect(s.values['filter.cutoff']).toBe(4);
+      expect(s.values['mix.osc2']).toBe(5);
+      // The step's cable is coloured after the Default patch's, which was plugged first.
+      expect(s.cables).toEqual([
+        { from: 'env1.out', to: 'pitch.in', color: CABLE_COLORS[0] },
+        { from: 'lfo.tri', to: 'cutoff.in', color: CABLE_COLORS[1] },
+      ]);
+    });
+
+    it('lets a step take a Default-patch cable out, and plugs it in again only once', () => {
+      const unplugged = presetState(def, {
+        ...preset,
+        steps: [{ title: 'a', module: 'patch', why: '', unplug: [['env1.out', 'pitch.in']] }],
+      });
+      // Step b plugs in the cable the Default patch already has: it is not doubled.
+      const kept = presetState(def, preset);
+
+      expect(unplugged.cables).toEqual([]);
+      expect(kept.cables.map((c) => `${c.from}>${c.to}`)).toEqual([
+        'env1.out>pitch.in',
+        'lfo.tri>cutoff.in',
+      ]);
+    });
   });
 
   it('applies every step in order, without duplicate cables, colouring each cable in turn', () => {

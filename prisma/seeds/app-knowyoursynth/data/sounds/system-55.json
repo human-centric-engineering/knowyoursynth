@@ -66,7 +66,8 @@
             ["j.m921b_4.sawtooth", "j.cp3am_2.in1"],
             ["j.m921b_5.sawtooth", "j.cp3am_2.in2"],
             ["j.m921b_6.sawtooth", "j.cp3am_2.in3"]
-          ]
+          ],
+          "unplug": [["j.cm1a.cv_1", "j.m921.freq_cv_1"]]
         },
         {
           "title": "Two filters, two amplifiers, one clock",
@@ -102,6 +103,11 @@
             ["j.cp35.mult_a_out_2", "j.m911_2.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"],
             ["j.m911_2.out", "j.m902_2.cv_1"]
+          ],
+          "unplug": [
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"],
+            ["j.m902_1.out_pos", "j.out.l"],
+            ["j.cm1a.trig_upper", "j.m911_1.strig"]
           ]
         },
         {
@@ -208,6 +214,11 @@
             ["j.cp35.mult_a_out_2", "j.m911_2.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"],
             ["j.m911_2.out", "j.m904a.cv_1"]
+          ],
+          "unplug": [
+            ["j.cm1a.cv_1", "j.m921.freq_cv_1"],
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"],
+            ["j.cm1a.trig_upper", "j.m911_1.strig"]
           ]
         },
         {
@@ -303,7 +314,8 @@
             ["j.m921b_2.rectangular", "j.cp3am_1.in2"],
             ["j.m921.sine", "j.cp35.att_in1"],
             ["j.cp35.att_out1", "j.m921a_1.width_in_1"]
-          ]
+          ],
+          "unplug": [["j.cm1a.cv_1", "j.m921.freq_cv_1"]]
         },
         {
           "title": "The main layer: 904A",
@@ -328,6 +340,11 @@
             ["j.cp35.mult_a_out_1", "j.m911_1.strig"],
             ["j.cp35.mult_a_out_2", "j.m911_2.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"]
+          ],
+          "unplug": [
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"],
+            ["j.m902_1.out_pos", "j.out.l"],
+            ["j.cm1a.trig_upper", "j.m911_1.strig"]
           ]
         },
         {
@@ -422,7 +439,8 @@
             "cp3am_1.gain3": 6,
             "cp3am_1.master": 10,
             "cp3am_2.gain1": 8,
-            "cp3am_2.master": 8
+            "cp3am_2.master": 8,
+            "m921.coarse": "sub"
           },
           "cables": [
             ["j.cm1a.cv_1", "j.cp35.mult_b"],
@@ -443,6 +461,12 @@
             ["j.cm1a.trig_upper", "j.cp35.mult_a"],
             ["j.cp35.mult_a_out_1", "j.m911_1.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"]
+          ],
+          "unplug": [
+            ["j.cm1a.cv_1", "j.m921.freq_cv_1"],
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"],
+            ["j.m902_1.out_pos", "j.out.l"],
+            ["j.cm1a.trig_upper", "j.m911_1.strig"]
           ]
         },
         {
@@ -559,6 +583,11 @@
             ["j.cp35.mult_a_out_1", "j.m911_1.strig"],
             ["j.cp35.mult_a_out_2", "j.m911_2.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"]
+          ],
+          "unplug": [
+            ["j.cm1a.cv_1", "j.m921.freq_cv_1"],
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"],
+            ["j.cm1a.trig_upper", "j.m911_1.strig"]
           ]
         },
         {
@@ -617,7 +646,10 @@
             "m921a_1.scale": "octave",
             "m921a_1.frequency": -6,
             "cp3am_1.gain1": 9,
-            "cp3am_1.master": 9
+            "cp3am_1.master": 9,
+            "m911_1.t1": 3,
+            "m911_1.esus": 7,
+            "m911_1.t3": 3
           },
           "cables": [
             ["j.m921.sine", "j.m904a.cv_1"],
@@ -625,6 +657,13 @@
             ["j.m921b_1.sine", "j.m904a.cv_2"],
             ["j.m904a.sig_out", "j.cp3am_1.in1"],
             ["j.cp3am_1.out_pos_1", "j.out.l"]
+          ],
+          "unplug": [
+            ["j.cm1a.cv_1", "j.m921.freq_cv_1"],
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"],
+            ["j.m902_1.out_pos", "j.out.l"],
+            ["j.cm1a.trig_upper", "j.m911_1.strig"],
+            ["j.m911_1.out", "j.m902_1.cv_1"]
           ]
         },
         {
@@ -695,6 +734,10 @@
             ["j.cp3am_1.out_pos_1", "j.m904a.sig_in"],
             ["j.m904a.sig_out", "j.m902_1.sig_in_pos"],
             ["j.m902_1.out_pos", "j.out.l"]
+          ],
+          "unplug": [
+            ["j.cm1a.cv_1", "j.m921.freq_cv_1"],
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"]
           ]
         },
         {
@@ -722,7 +765,8 @@
             ["j.m911_1.out", "j.m902_1.cv_1"],
             ["j.m911_2.out", "j.m992.in1"],
             ["j.m992.out_1", "j.m904a.cv_1"]
-          ]
+          ],
+          "unplug": [["j.cm1a.trig_upper", "j.m911_1.strig"]]
         },
         {
           "title": "A slow sweep",
@@ -787,7 +831,8 @@
             "m921b_2.frequency": 0.05,
             "cp3am_1.gain1": 6,
             "cp3am_1.gain2": 6,
-            "cp3am_1.master": 8
+            "cp3am_1.master": 8,
+            "m921.coarse": "sub"
           },
           "cables": [
             ["j.m960.row_a_out_1", "j.m921a_1.freq_in_1"],
@@ -798,6 +843,10 @@
             ["j.cp3am_1.out_pos_1", "j.m904a.sig_in"],
             ["j.m904a.sig_out", "j.m902_1.sig_in_pos"],
             ["j.m902_1.out_pos", "j.out.l"]
+          ],
+          "unplug": [
+            ["j.cm1a.cv_1", "j.m921.freq_cv_1"],
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"]
           ]
         },
         {
@@ -824,7 +873,8 @@
             ["j.cp35.mult_a_out_2", "j.m911_2.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"],
             ["j.m911_2.out", "j.m904a.cv_1"]
-          ]
+          ],
+          "unplug": [["j.cm1a.trig_upper", "j.m911_1.strig"]]
         }
       ],
       "context": {
@@ -900,7 +950,8 @@
             "m911_2.t1": 0,
             "m911_2.t2": 5,
             "m911_2.esus": 2,
-            "m911_2.t3": 4.5
+            "m911_2.t3": 4.5,
+            "m921.coarse": "sub"
           },
           "cables": [
             ["j.m960.row_a_out_1", "j.m962.sig_1"],
@@ -918,6 +969,11 @@
             ["j.cp35.mult_a_out_2", "j.m911_2.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"],
             ["j.m911_2.out", "j.m904a.cv_1"]
+          ],
+          "unplug": [
+            ["j.cm1a.cv_1", "j.m921.freq_cv_1"],
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"],
+            ["j.cm1a.trig_upper", "j.m911_1.strig"]
           ]
         },
         {
@@ -978,7 +1034,8 @@
             "m911_1.t1": 0,
             "m911_1.t2": 5,
             "m911_1.esus": 0,
-            "m911_1.t3": 4.5
+            "m911_1.t3": 4.5,
+            "m921.coarse": "sub"
           },
           "cables": [
             ["j.m960.row_a_out_1", "j.m921a_1.freq_in_1"],
@@ -991,6 +1048,11 @@
             ["j.m961.strig_out_l", "j.cp35.mult_a"],
             ["j.cp35.mult_a_out_1", "j.m911_1.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"]
+          ],
+          "unplug": [
+            ["j.cm1a.cv_1", "j.m921.freq_cv_1"],
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"],
+            ["j.cm1a.trig_upper", "j.m911_1.strig"]
           ]
         },
         {
@@ -1066,7 +1128,8 @@
             "m911_1.esus": 8,
             "m911_1.t3": 6,
             "cp3am_3.gain1": 7,
-            "cp3am_3.master": 8
+            "cp3am_3.master": 8,
+            "m921.coarse": "sub"
           },
           "cables": [
             ["j.cm1a.cv_1", "j.cp35.mult_b"],
@@ -1083,6 +1146,12 @@
             ["j.cm1a.trig_upper", "j.cp35.mult_a"],
             ["j.cp35.mult_a_out_1", "j.m911_1.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"]
+          ],
+          "unplug": [
+            ["j.cm1a.cv_1", "j.m921.freq_cv_1"],
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"],
+            ["j.m902_1.out_pos", "j.out.l"],
+            ["j.cm1a.trig_upper", "j.m911_1.strig"]
           ]
         },
         {

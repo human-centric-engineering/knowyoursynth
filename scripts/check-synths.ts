@@ -697,7 +697,15 @@ async function main(): Promise<void> {
       for (const id of Object.keys(p.context || {}))
         if (!cm[id]) E(`${tag} context unknown control ${id}`);
 
-      const st = presetState(def, p);
+      // A sound builds on the Default patch (t-176); `(init)` is the synth as initialised, so it is `init` itself, with
+      // no cables and the riff's tempo, as every sound was built before.
+      const st =
+        p.id === '(init)'
+          ? {
+              values: { ...def.init, ...(def.tempo ? { [def.tempo]: p.phrase.bpm } : {}) },
+              cables: [],
+            }
+          : presetState(def, p);
       const patched = Object.fromEntries(
         st.cables.flatMap((c) => [
           [c.to, true],

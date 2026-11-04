@@ -20,7 +20,9 @@ and `LOADERS` (`defs/load.ts`); `registry.test.ts` fails if one is missing.
 - `version: 1`, and no content: no presets, lineage, unusual notes or limits
   (`registry.test.ts` refuses them).
 - **A Default patch** (`defaultPatch`): a plain sawtooth into an open filter and a gated amplifier, set out as the
-  values over `init` (and any cables) that someone could copy onto the hardware. Every lesson starts from it. Leave it
+  values over `init` (and any cables) that someone could copy onto the hardware. Every sound is built on it and every
+  lesson starts from it, so a sound states each value it relies on that the Default patch changed from `init`, and
+  unplugs each of its cables it does not keep (`default-base.test.ts` checks both). Leave it
   out only where `init` is already exactly that (never on a synth that is silent without cables). A synth with no saw
   gets its plainest tone and a `listen` line saying what to expect. The rules are in
   [`synths.md`](./synths.md#authoring-a-definition); `default-patch.test.ts` checks it and fails if it is silent, and

@@ -37,7 +37,8 @@
             "vco2.freq": 5.72,
             "vco2.pw": 35,
             "vcf.vco1": 7,
-            "vcf.vco2": 8
+            "vcf.vco2": 8,
+            "vcf.vco3": 0
           }
         },
         {
@@ -134,7 +135,8 @@
             "vcf.vco1": 8,
             "vcf.freq": 8.16,
             "vcf.res": 3,
-            "vcf.kbd": 5
+            "vcf.kbd": 5,
+            "vcf.vco3": 0
           }
         },
         {
@@ -211,7 +213,7 @@
           "title": "Noise into the filter, oscillators out",
           "module": "mixer",
           "why": "Noise replaces the oscillator as the sound source. Pink noise is the sea: a soft rush rather than a hiss.\n- VCO 1 (VCF AUDIO) 0: takes the VCO (voltage-controlled oscillator) out of the VCF (voltage-controlled filter), so no pitch is left.\n- NOISE GEN (VCF AUDIO) 8: brings noise into the filter’s own input mixer.\n- COLOR 5 (pink): the middle of the colour slider. Up towards white is hissier wind; down towards LOW FREQ is a distant rumble.\n- Listen for: a steady rush on each key, with no note. Slide COLOR to hear it go from hiss to rumble.",
-          "set": { "vcf.vco1": 0, "vcf.noise": 8, "noise.color": 5 }
+          "set": { "vcf.vco1": 0, "vcf.noise": 8, "noise.color": 5, "vcf.vco3": 0 }
         },
         {
           "title": "A resonant, part-closed filter",
@@ -294,7 +296,14 @@
           "title": "Two pulses, slightly apart",
           "module": "osc",
           "why": "Two pulse waves at almost the same pitch drift in and out of phase, giving a lively, reedy tone.\n- PULSE WIDTH 30% / 60%: VCO (voltage-controlled oscillator) 1 is narrow and reedy, like a soprano sax. VCO 2 is near a square and hollower. Towards 50% is more clarinet.\n- VCO 2 FINE TUNE +0.1 st: a hair sharp. More detune sounds wider and more out of tune.\n- VCO 1 / VCO 2 (VCF AUDIO) 7 / 6: both pulses into the VCF (voltage-controlled filter).\n- Listen for: hold a note and hear a slow beating. Pull VCO 2’s slider down and the tone goes still.",
-          "set": { "vco1.pw": 30, "vco2.pw": 60, "vco2.fine": 0.15, "vcf.vco1": 7, "vcf.vco2": 6 }
+          "set": {
+            "vco1.pw": 30,
+            "vco2.pw": 60,
+            "vco2.fine": 0.15,
+            "vcf.vco1": 7,
+            "vcf.vco2": 6,
+            "vcf.vco3": 0
+          }
         },
         {
           "title": "A filter that blooms on each note",
@@ -450,7 +459,7 @@
           "title": "Ring modulator into the filter",
           "module": "mixer",
           "why": "The ring modulator replaces the plain oscillator in the filter. It multiplies VCO 1 by VCO 2, making clangy, bell-like tones.\n- VCO 1 (VCF AUDIO) 0: removes the plain pulse from the VCF (voltage-controlled filter).\n- RING MOD (VCF AUDIO) 8: brings the ring modulator in. This is the bell.\n- RING MOD VCO 1 / VCO 2 10: full level on both inputs, VCO 1’s sawtooth and VCO 2’s sine. The output has neither pitch, only their sum and difference.\n- Listen for: a metallic, hollow tone. Both VCOs (voltage-controlled oscillators) start at the same pitch, so it is not yet very bell-like.",
-          "set": { "vcf.vco1": 0, "vcf.ring": 8, "ring.a": 10, "ring.b": 10 }
+          "set": { "vcf.vco1": 0, "vcf.ring": 8, "ring.a": 10, "ring.b": 10, "vcf.vco3": 0 }
         },
         {
           "title": "Tune VCO 2 to an odd ratio",
@@ -609,7 +618,8 @@
             "vcf.vco1": 8,
             "vcf.freq": 8.85,
             "vcf.res": 2,
-            "vcf.kbd": 5
+            "vcf.kbd": 5,
+            "vcf.vco3": 0
           }
         },
         {
@@ -685,7 +695,7 @@
           "title": "Oscillators out, resonance full",
           "module": "filter",
           "why": "The filter becomes the sound source. At full resonance the 2600’s VCF (voltage-controlled filter) rings on its own as a sine wave.\n- VCO 1 (VCF AUDIO) 0: no VCO (voltage-controlled oscillator) at all.\n- RESONANCE 10: at the top of the slider the filter self-oscillates cleanly. Back it off and the kick disappears.\n- CUTOFF 2.9 (55 Hz): the pitch the kick falls to. Tune it to the key of the track.\n- KYBD CV 0: key tracking off, so every key gives the same drum.\n- Listen for: hold the MANUAL button and you hear a low sine singing on its own.",
-          "set": { "vcf.vco1": 0, "vcf.res": 10, "vcf.freq": 2.87, "vcf.kbd": 0 }
+          "set": { "vcf.vco1": 0, "vcf.res": 10, "vcf.freq": 2.87, "vcf.kbd": 0, "vcf.vco3": 0 }
         },
         {
           "title": "Let the ADSR kick the cutoff",
@@ -763,7 +773,7 @@
           "title": "Two oscillators, same pitch",
           "module": "osc",
           "why": "Two VCOs (voltage-controlled oscillators) with matching pulse waves, both into the VCF (voltage-controlled filter). For now they play the same note.\n- PULSE WIDTH 40% / 40%: a little narrower than square on both, slightly reedy.\n- VCO 1 / VCO 2 (VCF AUDIO) 7 / 7: equal levels. Lower VCO 2 later to make the harmony quieter than the melody.\n- Listen for: one slightly thicker note. With both on middle C they reinforce each other.",
-          "set": { "vco1.pw": 40, "vco2.pw": 40, "vcf.vco1": 7, "vcf.vco2": 7 }
+          "set": { "vco1.pw": 40, "vco2.pw": 40, "vcf.vco1": 7, "vcf.vco2": 7, "vcf.vco3": 0 }
         },
         {
           "title": "VOICE MODE to DUO",
@@ -861,7 +871,9 @@
             "vcf.res": 2,
             "adsr.a": 0.5,
             "adsr.s": 9,
-            "adsr.r": 5
+            "adsr.r": 5,
+            "vcf.vco3": 0,
+            "vcf.kbd": 5
           }
         },
         {
@@ -944,7 +956,14 @@
           "title": "A narrow pulse, softly filtered",
           "module": "osc",
           "why": "A narrow pulse through a medium filter has a slightly nasal, singing tone.\n- PULSE WIDTH 30%: thinner than a square, more reedy.\n- VCO 1 (VCF AUDIO) 8: VCO (voltage-controlled oscillator) 1 into the VCF (voltage-controlled filter).\n- CUTOFF 7.1 (2 kHz), RESONANCE 2.5: a little darker than default, with a slight nasal edge.\n- KYBD CV 10: full key tracking. The cutoff follows the notes exactly, so high notes are as bright as low ones.\n- Listen for: a thin, reedy lead tone.",
-          "set": { "vco1.pw": 30, "vcf.vco1": 8, "vcf.freq": 7.08, "vcf.res": 2.5, "vcf.kbd": 10 }
+          "set": {
+            "vco1.pw": 30,
+            "vcf.vco1": 8,
+            "vcf.freq": 7.08,
+            "vcf.res": 2.5,
+            "vcf.kbd": 10,
+            "vcf.vco3": 0
+          }
         },
         {
           "title": "A bowed envelope",
@@ -1168,7 +1187,8 @@
             "vcf.freq": 6.48,
             "vcf.res": 8,
             "vcf.adsr": 4.5,
-            "vcf.kbd": 8
+            "vcf.kbd": 8,
+            "vcf.vco3": 0
           }
         },
         {
@@ -1237,7 +1257,7 @@
           "title": "Hear VCO 2 on its own",
           "module": "osc",
           "why": "VCO 2 replaces VCO 1 in the filter. VCO 1 keeps running; it will shake VCO 2’s pitch instead of being heard.\n- VCO 1 (VCF AUDIO) 0: VCO (voltage-controlled oscillator) 1 out of the VCF (voltage-controlled filter).\n- VCO 2 (VCF AUDIO) 8, PULSE WIDTH 50%: VCO 2’s square wave in its place.\n- Listen for: a plain square on middle C.",
-          "set": { "vcf.vco1": 0, "vcf.vco2": 8, "vco2.pw": 50 }
+          "set": { "vcf.vco1": 0, "vcf.vco2": 8, "vco2.pw": 50, "vcf.vco3": 0, "vcf.kbd": 5 }
         },
         {
           "title": "Tune VCO 1 to an odd ratio",
@@ -2778,7 +2798,14 @@
           "title": "A narrow pulse and a wide one",
           "module": "osc",
           "why": "Two pulse waves make the tone: a narrow one for reedy bite and a wider one to fill it out. VCO means voltage-controlled oscillator, the part that makes the pitched sound; both reach the filter as pulses.\n- VCO 1 PULSE WIDTH 28%: thin and reedy. Near 50% it turns hollow and clarinet-like; below 20% thin and buzzy.\n- VCO 1 (VCF AUDIO) 7: its level into the VCF (voltage-controlled filter).\n- VCO 2 PULSE WIDTH 45%: close to a square, fuller and rounder than VCO 1.\n- VCO 2 FINE TUNE +0.1 st: a tenth of a semitone, so the two pulses beat slowly. Keep it small or the solo sounds out of tune.\n- VCO 2 (VCF AUDIO) 6: brings VCO 2 into the filter, up from 0, a little under VCO 1.\n- Listen for: hold a note and pull VCO 2 (VCF AUDIO) to 0. The tone goes thin and static; bring it back and it thickens and moves.",
-          "set": { "vco1.pw": 28, "vcf.vco1": 7, "vco2.pw": 45, "vco2.fine": 0.15, "vcf.vco2": 6 }
+          "set": {
+            "vco1.pw": 28,
+            "vcf.vco1": 7,
+            "vco2.pw": 45,
+            "vco2.fine": 0.15,
+            "vcf.vco2": 6,
+            "vcf.vco3": 0
+          }
         },
         {
           "title": "Low and resonant",
@@ -2856,7 +2883,7 @@
           "title": "One oscillator, up an octave",
           "module": "osc",
           "why": "VCO 1 (voltage-controlled oscillator 1) is the only sound source. It is there to give the filter something to ring on, so one oscillator is enough, set an octave up to put the whistle in the right register.\n- VCO 1 FREQUENCY 5.4 (523 Hz, C5): an octave above middle C. The 2600 has no octave switch; this slider sets the pitch of middle C.\n- PULSE WIDTH 50%: a square wave, hollow and even, with only odd harmonics.\n- VCO 1 (VCF AUDIO) 6: down from 8, a little lower into the filter so the resonance in the next step can take over.\n- Listen for: a plain, bright square an octave up. For now it sounds like a basic organ tone.",
-          "set": { "vco1.freq": 5.38, "vco1.pw": 50, "vcf.vco1": 6 }
+          "set": { "vco1.freq": 5.38, "vco1.pw": 50, "vcf.vco1": 6, "vcf.vco3": 0 }
         },
         {
           "title": "Resonance near the top",
@@ -2942,7 +2969,14 @@
           "title": "Two pulses, slightly apart",
           "module": "osc",
           "why": "Two pulse waves slightly apart make a tone that is already busy before the filter touches it. VCO means voltage-controlled oscillator, the part that makes the pitched sound.\n- VCO 1 PULSE WIDTH 50%: a square, hollow and even.\n- VCO 1 (VCF AUDIO) 7: its level into the VCF (voltage-controlled filter).\n- VCO 2 PULSE WIDTH 35%: narrower, so it adds a nasal edge. Match it to VCO 1 for a rounder, more organ-like tone.\n- VCO 2 FINE TUNE +0.1 st: the two beat slowly against each other. At 0 the sound goes flat and static.\n- VCO 2 (VCF AUDIO) 6: brings VCO 2 into the filter, up from 0.\n- Listen for: hold a note. A slow wave of movement runs through it as the two pulses drift in and out of phase.",
-          "set": { "vco1.pw": 50, "vcf.vco1": 7, "vco2.pw": 35, "vco2.fine": 0.2, "vcf.vco2": 6 }
+          "set": {
+            "vco1.pw": 50,
+            "vcf.vco1": 7,
+            "vco2.pw": 35,
+            "vco2.fine": 0.2,
+            "vcf.vco2": 6,
+            "vcf.vco3": 0
+          }
         },
         {
           "title": "Keep the filter open",
@@ -3027,7 +3061,7 @@
           "title": "Ring modulator into the filter",
           "module": "mixer",
           "why": "The ring modulator multiplies VCO 1’s sawtooth by VCO 2’s sine. Its output holds the sum and difference of the two pitches rather than either one: overtones that do not belong to the note, which the ear reads as metal.\n- RING MOD (VCF AUDIO) 7: brings the ring modulator into the VCF (voltage-controlled filter). At 0 this is an ordinary pulse lead.\n- VCO 1 (VCF AUDIO) 3: down from 8. Some plain note survives under the metal so the riff keeps a pitch. Lower for a sound effect, higher for a riff.\n- RING MOD VCO 1 / VCO 2 10: both ring modulator inputs at full.\n- Listen for: play up the keyboard. Both oscillators follow the keys, so the clang moves with the notes. Lower RING MOD (VCF AUDIO) to hear the plain pulse underneath.",
-          "set": { "vcf.vco1": 3, "vcf.ring": 7, "ring.a": 10, "ring.b": 10 }
+          "set": { "vcf.vco1": 3, "vcf.ring": 7, "ring.a": 10, "ring.b": 10, "vcf.vco3": 0 }
         },
         {
           "title": "Filter it hard",
@@ -3107,7 +3141,7 @@
           "title": "A narrow pulse, loud",
           "module": "osc",
           "why": "VCO 1’s pulse is made narrow and sent in loud, so the filter has plenty of harmonics to scream on. VCO means voltage-controlled oscillator; VCF means voltage-controlled filter.\n- PULSE WIDTH 20%: thin and full of high harmonics, everything the filter needs to bite on.\n- VCO 1 (VCF AUDIO) 8: a high level into the filter. With the 4072 circuit, this is where the distortion comes from.\n- MODE 4072: the later ARP filter, driven harder in this app, so high levels distort in the filter itself. On 4012 the same settings are cleaner and thinner.\n- Listen for: flip MODE between 4012 and 4072 on a held note. The 4072 is thicker and grittier.",
-          "set": { "vco1.pw": 20, "vcf.vco1": 8, "vcf.mode": "4072" }
+          "set": { "vco1.pw": 20, "vcf.vco1": 8, "vcf.mode": "4072", "vcf.vco3": 0 }
         },
         {
           "title": "Grit from the noise generator",
@@ -3195,7 +3229,7 @@
           "title": "A square wave",
           "module": "osc",
           "why": "At 50% VCO 1’s pulse is a square: hollow, even and the most useful single waveform on the panel. VCO means voltage-controlled oscillator, the part that makes the pitched sound.\n- PULSE WIDTH 50%: exactly square, with only odd harmonics. Move it a few per cent either way and the tone thins noticeably.\n- VCO 1 (VCF AUDIO) 7: its level into the VCF (voltage-controlled filter), a touch below the default 8 to leave room for a second oscillator.\n- Listen for: a plain, hollow tone. Nudge PULSE WIDTH to 40 and back to hear how quickly it goes thinner.",
-          "set": { "vco1.pw": 50, "vcf.vco1": 7 }
+          "set": { "vco1.pw": 50, "vcf.vco1": 7, "vcf.vco3": 0 }
         },
         {
           "title": "Another one, an octave up",
@@ -3373,7 +3407,14 @@
           "title": "Two oscillators a fifth apart",
           "module": "osc",
           "why": "Tuning VCO 2 a fifth above VCO 1 gives a two-note chord from every key, the quickest route to chords on a synth that plays one note at a time. VCO means voltage-controlled oscillator.\n- VCO 1 PULSE WIDTH 50%: a square wave, hollow and even.\n- VCO 1 (VCF AUDIO) 7: VCO 1’s level into the VCF (voltage-controlled filter).\n- VCO 2 FREQUENCY 5 (391 Hz, G4): seven semitones above VCO 1’s middle C. Both follow the keyboard, so the fifth holds wherever you play. Try a fourth or an octave for something calmer.\n- VCO 2 PULSE WIDTH 50%: a second square, matching VCO 1.\n- VCO 2 (VCF AUDIO) 6: brings VCO 2 in, just under VCO 1.\n- Listen for: one key now sounds like an open, organ-like chord. Pull VCO 2 (VCF AUDIO) to 0 to hear the single note again.",
-          "set": { "vco1.pw": 50, "vcf.vco1": 7, "vco2.freq": 5.04, "vco2.pw": 50, "vcf.vco2": 6 }
+          "set": {
+            "vco1.pw": 50,
+            "vcf.vco1": 7,
+            "vco2.freq": 5.04,
+            "vco2.pw": 50,
+            "vcf.vco2": 6,
+            "vcf.vco3": 0
+          }
         },
         {
           "title": "Bright, with an edge",
@@ -3450,7 +3491,14 @@
           "title": "Two pulses, a section not a player",
           "module": "osc",
           "why": "Two pulses of different widths, detuned a little, stand in for a section rather than a single player. VCO means voltage-controlled oscillator.\n- VCO 1 PULSE WIDTH 45%: nearly square.\n- VCO 1 (VCF AUDIO) 7: VCO 1’s level into the VCF (voltage-controlled filter).\n- VCO 2 PULSE WIDTH 55%: a different width from VCO 1, so the two do not line up into one waveform.\n- VCO 2 FINE TUNE +0.1 st: the size of the section. Small amounts are two players; large amounts are out of tune.\n- VCO 2 (VCF AUDIO) 6: brings VCO 2 in, just under VCO 1.\n- Listen for: a slow, chorus-like beat on held notes, like two players not quite in unison.",
-          "set": { "vco1.pw": 45, "vcf.vco1": 7, "vco2.pw": 55, "vco2.fine": 0.25, "vcf.vco2": 6 }
+          "set": {
+            "vco1.pw": 45,
+            "vcf.vco1": 7,
+            "vco2.pw": 55,
+            "vco2.fine": 0.25,
+            "vcf.vco2": 6,
+            "vcf.vco3": 0
+          }
         },
         {
           "title": "Start the filter low",
@@ -3785,7 +3833,7 @@
           "title": "One narrow pulse",
           "module": "osc",
           "why": "The closest single waveform to a double reed is a narrow pulse, and one oscillator is right: a reed is one player. VCO means voltage-controlled oscillator.\n- PULSE WIDTH 15%: thin and slightly buzzy. Between 10% and 20% is oboe territory; near 50% it turns into a clarinet.\n- VCO 1 (VCF AUDIO) 8: VCO 1’s level into the VCF (voltage-controlled filter), the default.\n- Listen for: a thin, buzzy tone. Sweep PULSE WIDTH up to 50 to hear it turn hollow.",
-          "set": { "vco1.pw": 15, "vcf.vco1": 8 }
+          "set": { "vco1.pw": 15, "vcf.vco1": 8, "vcf.vco3": 0 }
         },
         {
           "title": "A peak in the middle",
@@ -4049,7 +4097,7 @@
           "title": "Ring modulator instead of the oscillator",
           "module": "mixer",
           "why": "The ring modulator replaces the plain oscillator as the sound source. It multiplies VCO 1’s sawtooth by VCO 2’s sine and gives the sum and difference of their pitches rather than either one. VCO means voltage-controlled oscillator; VCF, voltage-controlled filter.\n- VCO 1 (VCF AUDIO) 0: takes VCO 1’s pulse out of the filter. VCO 1 keeps running and still feeds the ring modulator.\n- RING MOD (VCF AUDIO) 8: brings the ring modulator into the filter at a high level.\n- RING MOD VCO 1 / VCO 2 10: both ring modulator inputs at full.\n- Listen for: a fairly plain, bright tone. Both oscillators are still on the same pitch, so there is no metal yet. The next step fixes that.",
-          "set": { "vcf.vco1": 0, "vcf.ring": 8, "ring.a": 10, "ring.b": 10 }
+          "set": { "vcf.vco1": 0, "vcf.ring": 8, "ring.a": 10, "ring.b": 10, "vcf.vco3": 0 }
         },
         {
           "title": "Tune the two oscillators apart",
@@ -4235,7 +4283,7 @@
           "title": "Noise and a pulse together",
           "module": "mixer",
           "why": "Noise and a pulse wave go into the filter together. The noise is what the sweep is heard on; the pulse underneath gives it a pitch, so it belongs to the note you played. VCO means voltage-controlled oscillator.\n- NOISE GEN (VCF AUDIO) 6: how much of the sweep is noise rather than tone.\n- COLOR 6: between pink and white. Darker noise sounds like wind, brighter like steam.\n- VCO 1 (VCF AUDIO) 4: down from 8, so the pulse sits under the noise in the VCF (voltage-controlled filter).\n- PULSE WIDTH 50%: a square, hollow and even.\n- Listen for: a hiss with a soft note inside it.",
-          "set": { "vcf.noise": 6, "noise.color": 6, "vcf.vco1": 4, "vco1.pw": 50 }
+          "set": { "vcf.noise": 6, "noise.color": 6, "vcf.vco1": 4, "vco1.pw": 50, "vcf.vco3": 0 }
         },
         {
           "title": "Nearly shut, very resonant",
@@ -4318,7 +4366,8 @@
             "vcf.vco1": 7,
             "vco2.freq": 5.88,
             "vco2.pw": 50,
-            "vcf.vco2": 7
+            "vcf.vco2": 7,
+            "vcf.vco3": 0
           }
         },
         {
@@ -4391,7 +4440,7 @@
           "title": "One pulse, low and round",
           "module": "osc",
           "why": "One square wave tuned low gives a hollow, drum-like body once the filter has taken the top off. VCO means voltage-controlled oscillator.\n- VCO 1 FREQUENCY 4.4 (219 Hz, A3): the pitch the tom lands on. The keyboard tunes it as you play.\n- PULSE WIDTH 50%: a square.\n- VCO 1 (VCF AUDIO) 8: the default level into the VCF (voltage-controlled filter).\n- VCO 2 (VCF AUDIO) 0: kept out.\n- Listen for: a plain, hollow note. It becomes a drum over the next steps.",
-          "set": { "vco1.freq": 4.36, "vco1.pw": 50, "vcf.vco1": 8, "vcf.vco2": 0 }
+          "set": { "vco1.freq": 4.36, "vco1.pw": 50, "vcf.vco1": 8, "vcf.vco2": 0, "vcf.vco3": 0 }
         },
         {
           "title": "Drop the pitch on each hit",
@@ -4489,7 +4538,7 @@
           "title": "A very short AR",
           "module": "amp",
           "why": "The VCA (voltage-controlled amplifier) is moved from the ADSR to the AR, a simpler attack-release envelope, and the release is cut right back. That one slider is the difference between a closed and an open hat.\n- ADSR (EXP’L) (VCA) 0: the ADSR no longer opens the VCA.\n- AR (LIN) (VCA) 10: the AR opens it fully through the linear input.\n- ATTACK TIME (AR) 0 (2 ms): instant.\n- REL TIME (AR) 2.2 (32 ms): closed or open. Around 2 is a tick; past 5 it is a wash.\n- Listen for: a quick tap gives a tick. Holding the key still holds the hat open, until the next step.",
-          "set": { "vca.adsr": 0, "vca.ar": 10, "ar.a": 0, "ar.r": 2.2 }
+          "set": { "vca.adsr": 0, "vca.ar": 10, "ar.a": 0, "ar.r": 2.2, "adsr.s": 7, "adsr.r": 3 }
         },
         {
           "title": "Fire it from TRIG IN",
@@ -4552,7 +4601,7 @@
           "title": "Noise only, in the upper middle",
           "module": "mixer",
           "why": "A handclap is mostly noise in a narrow band, so the oscillator comes out and the noise goes up.\n- VCO 1 (VCF AUDIO) 0: takes VCO 1 (voltage-controlled oscillator 1) out of the VCF (voltage-controlled filter).\n- NOISE GEN (VCF AUDIO) 9: the noise generator into the filter at a high level.\n- COLOR 9: close to white, a bright hiss.\n- Listen for: a plain burst of hiss on each key.",
-          "set": { "vcf.vco1": 0, "vcf.noise": 9, "noise.color": 9 }
+          "set": { "vcf.vco1": 0, "vcf.noise": 9, "noise.color": 9, "vcf.vco3": 0 }
         },
         {
           "title": "A resonant band",
@@ -4640,7 +4689,8 @@
             "noise.color": 9,
             "vcf.vco1": 4,
             "vco1.freq": 4.84,
-            "vco1.pw": 50
+            "vco1.pw": 50,
+            "vcf.vco3": 0
           }
         },
         {
@@ -4720,7 +4770,13 @@
           "title": "Low-frequency noise, on its own",
           "module": "mixer",
           "why": "With COLOR right down, the noise generator gives slow, heavy movement instead of hiss. That is the rumble; there is no oscillator in this sound.\n- VCO 1 (VCF AUDIO) 0: takes VCO 1 (voltage-controlled oscillator 1) out of the VCF (voltage-controlled filter).\n- NOISE GEN (VCF AUDIO) 10: noise into the filter at full level.\n- COLOR 1: near the low end. At 1 it is all rumble; past 5 it turns into rain and wind.\n- LEVEL 10: the noise generator’s own output at full.\n- Listen for: a dark, rolling rush while a key is held.",
-          "set": { "vcf.vco1": 0, "vcf.noise": 10, "noise.color": 1, "noise.level": 10 }
+          "set": {
+            "vcf.vco1": 0,
+            "vcf.noise": 10,
+            "noise.color": 1,
+            "noise.level": 10,
+            "vcf.vco3": 0
+          }
         },
         {
           "title": "Dark filter, driven hard",
@@ -4794,7 +4850,14 @@
           "title": "Ring modulator instead of the oscillators",
           "module": "mixer",
           "why": "The ring modulator replaces the oscillators as the sound source. It multiplies VCO 1’s sawtooth by VCO 2’s sine and leaves only their sum and difference. VCO means voltage-controlled oscillator; VCF, voltage-controlled filter.\n- VCO 1 (VCF AUDIO) 0: takes VCO 1’s pulse out of the filter. It still feeds the ring modulator.\n- RING MOD (VCF AUDIO) 8: brings the ring modulator into the filter.\n- RING MOD VCO 1 / VCO 2 10: both inputs at full.\n- AUDIO / DC on AUDIO: the normal ring-mod setting. DC only matters when one input is moving slowly.\n- Listen for: a plain, bright tone for now, because both oscillators are still on the same pitch.",
-          "set": { "vcf.vco1": 0, "vcf.ring": 8, "ring.a": 10, "ring.b": 10, "ring.mode": "audio" }
+          "set": {
+            "vcf.vco1": 0,
+            "vcf.ring": 8,
+            "ring.a": 10,
+            "ring.b": 10,
+            "ring.mode": "audio",
+            "vcf.vco3": 0
+          }
         },
         {
           "title": "Two low oscillators, badly matched",
@@ -4880,7 +4943,8 @@
             "vcf.vco1": 7,
             "vcf.freq": 5.46,
             "vcf.res": 7,
-            "vcf.kbd": 6
+            "vcf.kbd": 6,
+            "vcf.vco3": 0
           }
         },
         {
@@ -4961,7 +5025,7 @@
           "title": "A bright, narrow pulse",
           "module": "osc",
           "why": "A 35% pulse is thin and piercing, which is what an alarm needs to cut through. VCO means voltage-controlled oscillator.\n- VCO 1 FREQUENCY 5.4 (523 Hz, C5): an octave above middle C.\n- PULSE WIDTH 35%: narrower than a square, more piercing. At 50% it is rounder and less urgent.\n- VCO 1 (VCF AUDIO) 8: the default level into the VCF (voltage-controlled filter).\n- Listen for: a bright, slightly nasal tone an octave up.",
-          "set": { "vco1.freq": 5.38, "vco1.pw": 35, "vcf.vco1": 8 }
+          "set": { "vco1.freq": 5.38, "vco1.pw": 35, "vcf.vco1": 8, "vcf.vco3": 0 }
         },
         {
           "title": "Filter out of the way",
@@ -5054,7 +5118,8 @@
             "vco1.pw": 30,
             "vcf.vco1": 7,
             "vcf.noise": 3,
-            "noise.color": 10
+            "noise.color": 10,
+            "vcf.vco3": 0
           }
         },
         {
@@ -5145,7 +5210,7 @@
           "title": "One very low pulse",
           "module": "osc",
           "why": "A heartbeat is a very low tone with no attack at all, and one square wave supplies it. VCO means voltage-controlled oscillator.\n- VCO 1 FREQUENCY 4.5 (241 Hz, B3): the reading on middle C. The low notes this sound is played on bring it down to about 60 Hz, where a pulse is felt more than heard. Lower is a bigger body.\n- PULSE WIDTH 50%: a square.\n- VCO 1 (VCF AUDIO) 9: a little above the default into the VCF (voltage-controlled filter).\n- VCO 2 (VCF AUDIO) 0: kept out.\n- Listen for: play two octaves below middle C for a deep, buzzy note.",
-          "set": { "vco1.freq": 4.47, "vco1.pw": 50, "vcf.vco1": 9, "vcf.vco2": 0 }
+          "set": { "vco1.freq": 4.47, "vco1.pw": 50, "vcf.vco1": 9, "vcf.vco2": 0, "vcf.vco3": 0 }
         },
         {
           "title": "Shut the filter down",
@@ -5163,7 +5228,7 @@
           "title": "Fire it from TRIG IN",
           "module": "mode",
           "why": "The routing switch chooses what fires the envelopes. On TRIG IN, each press gives one identical thump, so the pairs stay even.\n- ENVELOPE ROUTING TRIG IN: the AR rises and falls on each press, however long the key is held.\n- ADSR ATTACK 0, SUS LEVEL 0: the ADSR no longer reaches the VCA or the filter here, so this only tidies it up; you will not hear a change.\n- Listen for: play pairs of notes close together, then a pause. Every thump is the same length and softness.",
-          "set": { "env.src": "trig", "adsr.a": 0, "adsr.s": 0 }
+          "set": { "env.src": "trig", "adsr.a": 0, "adsr.s": 0, "adsr.r": 3 }
         },
         {
           "title": "A little room",
@@ -5250,7 +5315,15 @@
           "title": "Let the AR envelope open the VCA",
           "module": "amp",
           "why": "The VCA (voltage-controlled amplifier) is opened by the AR envelope through its linear input instead of the ADSR. A linear fade rises and falls at an even rate, which suits a pad better than the exponential input, whose fall drops away faster at the end.\n- ADSR (EXP’L) (VCA) 0: the ADSR no longer opens the VCA.\n- AR (LIN) (VCA) 10: the AR, a simple attack-release envelope, opens it fully.\n- AR ATTACK 510 ms, REL TIME 1.8 s: how long each note takes to arrive and to leave.\n- TIME FACTOR (AR) x2: doubles both times, to about a second in and several seconds out. It is the quickest way to slow a whole envelope down.\n- Listen for: each note fades in and out evenly. The release is long enough that the VCA never closes between the notes of this phrase.",
-          "set": { "vca.adsr": 0, "vca.ar": 10, "ar.a": 6.8, "ar.r": 7.5, "ar.time": "2" }
+          "set": {
+            "vca.adsr": 0,
+            "vca.ar": 10,
+            "ar.a": 6.8,
+            "ar.r": 7.5,
+            "ar.time": "2",
+            "adsr.s": 7,
+            "adsr.r": 3
+          }
         },
         {
           "title": "Spring reverb",
@@ -5603,7 +5676,8 @@
             "vcf.freq": 3.68,
             "vcf.kbd": 0,
             "vcf.adsr": 0,
-            "out.phones": 10
+            "out.phones": 10,
+            "vcf.vco3": 0
           }
         },
         {
@@ -6188,7 +6262,7 @@
           "title": "A square wave, on its own",
           "module": "osc",
           "why": "A clarinet is a tube closed at one end, so it sounds mostly the odd harmonics, which is what a square wave is. One VCO (voltage-controlled oscillator) is all it needs.\n- VCO 1 PULSE WIDTH 50%: a square, hollow and woody. Move it away from the middle and the wood turns into a reed.\n- VCF AUDIO VCO 1 7: VCO 1’s pulse into the filter at a strong level. One oscillator, because one player.\n- Listen for: a hollow, buzzy tone that is still bright at the top. The filter will take that off next.",
-          "set": { "vco1.pw": 50, "vcf.vco1": 7 }
+          "set": { "vco1.pw": 50, "vcf.vco1": 7, "vcf.vco3": 0 }
         },
         {
           "title": "A filter that keeps out of the way",
@@ -6371,7 +6445,7 @@
           "title": "A square, filtered down to the fundamental",
           "module": "osc",
           "why": "A flute is nearly a pure tone with a puff of air on the front. The tone starts from a square wave on one VCO (voltage-controlled oscillator), and the filter will strip it down.\n- VCF AUDIO VCO 1 6.5: VCO 1’s pulse is the note itself. Everything else in this patch is the breath.\n- VCO 1 PULSE WIDTH 50%: a square, odd harmonics only. Move it off the middle and harmonics come back that the filter cannot remove, so the flute turns reedy.\n- Listen for: a hollow, reedy square for now, with a bright top.",
-          "set": { "vcf.vco1": 6.5, "vco1.pw": 50 }
+          "set": { "vcf.vco1": 6.5, "vco1.pw": 50, "vcf.vco3": 0 }
         },
         {
           "title": "The cutoff parked on the note",
@@ -6482,14 +6556,15 @@
             "vcf.freq": 4.19,
             "vcf.res": 3.5,
             "vcf.kbd": 3,
-            "vcf.adsr": 0
+            "vcf.adsr": 0,
+            "vcf.vco3": 0
           }
         },
         {
           "title": "Take both envelopes off the VCA",
           "module": "amp",
           "why": "The VCA (voltage-controlled amplifier, the volume stage) has two control inputs. Both envelopes are about to be replaced, so the sliders are set for what comes next.\n- ADSR (EXP’L) (VCA) 0: ADSR stands for attack, decay, sustain, release, the main envelope. It no longer touches the loudness.\n- AR (LIN) (VCA) 10: AR is the simpler attack-release envelope, on the linear input. For now it opens the VCA on its own; after the next cables this slider becomes the depth of whatever is patched there.\n- Listen for: notes now start and stop abruptly with a small click, because the AR is quick and square.",
-          "set": { "vca.adsr": 0, "vca.ar": 10 }
+          "set": { "vca.adsr": 0, "vca.ar": 10, "adsr.s": 7, "adsr.r": 3 }
         },
         {
           "title": "Gate into the lag processor",
@@ -6585,7 +6660,14 @@
           "title": "Switch output into the filter",
           "module": "patch",
           "why": "The switch output goes into the VCF (voltage-controlled filter) in place of VCO 1.\n- ELEC SWITCH C → VCF AUDIO (VCO 1): disconnects VCO 1’s pulse from this input.\n- VCO 1 (VCF AUDIO) 8: now the level of whichever colour the switch is passing. At 0 there is no sound.\n- INITIAL FILTER FREQUENCY 5.7 (620 Hz): how much top is left on the clank. Lower it and the two colours grow alike.\n- RESONANCE 4: a clear peak at the cutoff.\n- KYBD CV 4: some key tracking.\n- ADSR (VCF CONTROL) 2: a small lift on the front of each note, which makes it sound struck.\n- Listen for: hold a note. The tone flips between wooden and metallic a few times a second at the default clock.",
-          "set": { "vcf.vco1": 8, "vcf.freq": 5.71, "vcf.res": 4, "vcf.kbd": 4, "vcf.adsr": 2 },
+          "set": {
+            "vcf.vco1": 8,
+            "vcf.freq": 5.71,
+            "vcf.res": 4,
+            "vcf.kbd": 4,
+            "vcf.adsr": 2,
+            "vcf.vco3": 0
+          },
           "cables": [["j.eswC", "j.vcfVco1"]]
         },
         {
@@ -6680,7 +6762,8 @@
             "vcf.freq": 5.46,
             "vcf.noise": 2.5,
             "noise.color": 8,
-            "vcf.adsr": 1.5
+            "vcf.adsr": 1.5,
+            "vcf.vco3": 0
           }
         },
         {
@@ -6866,7 +6949,7 @@
           "title": "A tight burst of noise",
           "module": "mixer",
           "why": "The striker for the spring tank is a burst of noise. It only needs to be short and bright, not musical.\n- VCF AUDIO VCO 1 0: VCO 1 (voltage-controlled oscillator) comes out of the filter’s mixer.\n- NOISE GEN (VCF AUDIO) 9: loud noise into the filter. It sets how hard the tank is struck.\n- COLOR 10 (WHITE): the brightest hiss.\n- Listen for: bright hiss on each held note, like an untuned radio.",
-          "set": { "vcf.vco1": 0, "vcf.noise": 9, "noise.color": 10 }
+          "set": { "vcf.vco1": 0, "vcf.noise": 9, "noise.color": 10, "vcf.vco3": 0 }
         },
         {
           "title": "Narrow it to a crack",
@@ -6884,7 +6967,9 @@
             "ar.a": 0,
             "ar.r": 2,
             "env.src": "trig",
-            "mix.vca": 10
+            "mix.vca": 10,
+            "adsr.s": 7,
+            "adsr.r": 3
           }
         },
         {
@@ -6961,7 +7046,14 @@
           "title": "Two high oscillators into the ring modulator",
           "module": "osc",
           "why": "Two very high VCOs (voltage-controlled oscillators) go into the ring modulator, which multiplies them and gives their sums and differences.\n- VCO 1 FREQUENCY 7.8 (4 kHz): one half of the ring modulator.\n- VCO 2 FREQUENCY 8.3 (6.1 kHz): the other half. Small moves change the tick completely.\n- RING MOD VCO 1 and VCO 2 at 10: full level on both inputs.\n- VCF AUDIO VCO 1 0: VCO 1 comes out of the filter, so nothing reaches it.\n- Listen for: silence. The ring modulator’s output is not yet going anywhere you can hear.",
-          "set": { "vco1.freq": 7.77, "vco2.freq": 8.26, "ring.a": 10, "ring.b": 10, "vcf.vco1": 0 }
+          "set": {
+            "vco1.freq": 7.77,
+            "vco2.freq": 8.26,
+            "ring.a": 10,
+            "ring.b": 10,
+            "vcf.vco1": 0,
+            "vcf.vco3": 0
+          }
         },
         {
           "title": "Drive it into the preamp",
@@ -6989,7 +7081,15 @@
           "title": "Cut it to a tick",
           "module": "amp",
           "why": "The VCA (voltage-controlled amplifier) moves to the AR envelope and cuts the sound to a tick.\n- ADSR (EXP’L) (VCA) 0, AR (LIN) (VCA) 10: AR (attack and release) now sets the loudness.\n- AR ATTACK 0, RELEASE 2.6 (43 ms): very short. Past about 4 it becomes a held, glassy chord.\n- ENVELOPE ROUTING TRIG IN: each key fires once, the same length every time.\n- Listen for: crisp, airy ticks right at the top of the range, with nothing underneath.",
-          "set": { "vca.adsr": 0, "vca.ar": 10, "ar.a": 0, "ar.r": 2.6, "env.src": "trig" }
+          "set": {
+            "vca.adsr": 0,
+            "vca.ar": 10,
+            "ar.a": 0,
+            "ar.r": 2.6,
+            "env.src": "trig",
+            "adsr.s": 7,
+            "adsr.r": 3
+          }
         },
         {
           "title": "Level and a little spring",
@@ -7065,7 +7165,8 @@
             "ring.a": 10,
             "ring.b": 10,
             "vcf.vco1": 0,
-            "vcf.ring": 7
+            "vcf.ring": 7,
+            "vcf.vco3": 0
           }
         },
         {
@@ -7270,7 +7371,8 @@
             "vco1.pw": 50,
             "vco2.freq": 4.57,
             "vcf.vco1": 5.5,
-            "vcf.vco2": 7.5
+            "vcf.vco2": 7.5,
+            "vcf.vco3": 0
           },
           "cables": [
             ["j.upper", "j.vco2Kbd"],
@@ -7379,7 +7481,8 @@
             "vco2.pw": 45,
             "vco2.fine": 0.05,
             "vcf.vco1": 6,
-            "vcf.vco2": 6
+            "vcf.vco2": 6,
+            "vcf.vco3": 0
           }
         },
         {
@@ -7486,7 +7589,8 @@
             "vco2.pw": 30,
             "vco2.fine": 0.12,
             "vcf.vco1": 6,
-            "vcf.vco2": 6
+            "vcf.vco2": 6,
+            "vcf.vco3": 0
           }
         },
         {
@@ -7891,7 +7995,8 @@
             "vco2.pw": 30,
             "vco2.fine": 0.2,
             "vcf.vco1": 6,
-            "vcf.vco2": 5
+            "vcf.vco2": 5,
+            "vcf.vco3": 0
           }
         },
         {
@@ -7995,7 +8100,8 @@
             "vco2.pw": 40,
             "vco2.fine": 0.1,
             "vcf.vco1": 6,
-            "vcf.vco2": 5
+            "vcf.vco2": 5,
+            "vcf.vco3": 0
           }
         },
         {
@@ -8095,7 +8201,8 @@
             "vcf.vco1": 6,
             "vco2.sync": true,
             "vco2.freq": 5.04,
-            "vcf.vco2": 6
+            "vcf.vco2": 6,
+            "vcf.vco3": 0
           }
         },
         {
@@ -8305,7 +8412,7 @@
           "title": "Swell in with the AR envelope",
           "module": "amp",
           "why": "The VCA (voltage-controlled amplifier) moves to the AR envelope for a volume-pedal swell.\n- ADSR (EXP’L) (VCA) 0: the ADSR (attack, decay, sustain, release envelope) leaves the volume.\n- AR (LIN) (VCA) 10: AR (attack and release) opens the VCA through the linear input, which rises at an even rate.\n- AR ATTACK 7 (610 ms): each note fades in from silence with no attack.\n- AR RELEASE 7.5 (1.8 s): a slow fade after you let go.\n- Listen for: notes rise evenly out of nothing, like a steel player bringing up the volume pedal.",
-          "set": { "vca.adsr": 0, "vca.ar": 10, "ar.a": 7, "ar.r": 7.5 }
+          "set": { "vca.adsr": 0, "vca.ar": 10, "ar.a": 7, "ar.r": 7.5, "adsr.s": 7, "adsr.r": 3 }
         },
         {
           "title": "Slow bends between notes",

@@ -27,9 +27,17 @@
           "module": "osc",
           "why": "Set point A1: row 1, Oscillator 1’s pulse, into column A, Ch1 Output.\n- Oscillator 1 pulse LEVEL 6: it sets how much of the pulse reaches row 1, wherever row 1 goes.\n- Listen for: a hollow, buzzy square wave that never stops. The keys move its pitch.",
           "set": {
-            "osc1.pulse": 6
+            "osc1.pulse": 6,
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
-          "cables": [["r.osc1pulse", "c.out1"]]
+          "cables": [["r.osc1pulse", "c.out1"]],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
+          ]
         },
         {
           "title": "Add the sine",
@@ -92,11 +100,19 @@
           "why": "Set point G1 (Oscillator 1 pulse into the Filter column) and A10 (the filter, row 10, into Ch1 Output).\n- Oscillator 1 pulse LEVEL 6, filter LEVEL 8.\n- LPF is at 10 and HPF at 0, so both filters are open.\n- Listen for: the plain buzzy pulse, still a drone.",
           "set": {
             "osc1.pulse": 6,
-            "vcf.level": 8
+            "vcf.level": 8,
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.vcf", "c.out1"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -161,13 +177,15 @@
             "vcf.level": 6,
             "vcf.lpf": 5,
             "vcf.res": 3,
-            "trap.signal": 7
+            "trap.signal": 7,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Let the trapezoid loop",
@@ -232,14 +250,16 @@
             "vcf.level": 7,
             "vcf.lpf": 3,
             "vcf.res": 4,
-            "trap.signal": 7
+            "trap.signal": 7,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "The trapezoid opens the filter",
@@ -309,13 +329,15 @@
             "trap.attack": 1,
             "trap.on": 2,
             "trap.decay": 4,
-            "trap.off": 4
+            "trap.off": 4,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Oscillator 3 sweeps the filter",
@@ -388,11 +410,19 @@
             "out1.pan": -5,
             "out2.pan": 5,
             "out1.level": 5,
-            "out2.level": 5
+            "out2.level": 5,
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1pulse", "c.out1"],
             ["r.osc1pulse", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -465,12 +495,15 @@
           "set": {
             "osc1.pulse": 6,
             "trap.signal": 7,
-            "trap.decay": 3
+            "trap.decay": 3,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.env"],
             ["r.envsig", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Send it to the delay",
@@ -541,7 +574,8 @@
             ["r.ring", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "A bell’s long decay",
@@ -608,12 +642,20 @@
             "osc1.sine": 7,
             "vcf.level": 7,
             "vcf.lpf": 6,
-            "vcf.res": 6
+            "vcf.res": 6,
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1sine", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -687,14 +729,16 @@
             "vcf.lpf": 7,
             "vcf.res": 2,
             "trap.signal": 7,
-            "trap.decay": 6
+            "trap.decay": 6,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Make it super",
@@ -768,7 +812,8 @@
           "set": {
             "osc2.saw": 7,
             "trap.signal": 7,
-            "trap.decay": 6
+            "trap.decay": 6,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.env"],
@@ -845,7 +890,8 @@
             "fx.type": "reverb",
             "fx.time": 6,
             "fx.feedback": 6,
-            "fx.level": 8
+            "fx.level": 8,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.noise", "c.vcf"],
@@ -853,6 +899,10 @@
             ["r.envsig", "c.fx"],
             ["r.fx", "c.out1"],
             ["r.fx", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -920,14 +970,16 @@
             "vcf.lpf": 3.5,
             "vcf.res": 3,
             "trap.signal": 7,
-            "trap.decay": 3
+            "trap.decay": 3,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "A pluck",
@@ -983,13 +1035,16 @@
             "osc1.sine": 8,
             "osc1.octave": "-2",
             "trap.signal": 7,
-            "trap.decay": 4
+            "trap.decay": 4,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -1051,14 +1106,16 @@
             "vcf.lpf": 3,
             "vcf.res": 6.5,
             "trap.signal": 7,
-            "trap.decay": 3.5
+            "trap.decay": 3.5,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Snap",
@@ -1125,14 +1182,17 @@
             "vcf.lpf": 3.5,
             "vcf.res": 2,
             "trap.signal": 7,
-            "trap.decay": 3.5
+            "trap.decay": 3.5,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -1184,14 +1244,16 @@
             "vcf.lpf": 4,
             "vcf.res": 2,
             "trap.signal": 7,
-            "trap.decay": 4
+            "trap.decay": 4,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -1249,14 +1311,16 @@
             "vcf.lpf": 6,
             "vcf.res": 2,
             "trap.signal": 7,
-            "trap.decay": 4
+            "trap.decay": 4,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Rip",
@@ -1319,14 +1383,16 @@
             "trap.signal": 7,
             "trap.decay": 4,
             "out1.level": 5,
-            "out2.level": 5
+            "out2.level": 5,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1sine", "c.ringA"],
             ["r.ring", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -1381,13 +1447,15 @@
             "osc1.sine": 7,
             "osc1.octave": "-1",
             "trap.signal": 7,
-            "trap.decay": 3.5
+            "trap.decay": 3.5,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "FM",
@@ -1451,14 +1519,17 @@
             "vcf.res": 1,
             "trap.signal": 7,
             "trap.attack": 2,
-            "trap.decay": 4
+            "trap.decay": 4,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1sine", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -1521,7 +1592,8 @@
             "vcf.lpf": 4.5,
             "vcf.res": 3,
             "trap.signal": 7,
-            "trap.decay": 3
+            "trap.decay": 3,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
@@ -1529,7 +1601,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "A pluck",
@@ -1596,7 +1669,8 @@
             "vcf.lpf": 4,
             "vcf.res": 3,
             "trap.signal": 7,
-            "trap.decay": 3.5
+            "trap.decay": 3.5,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
@@ -1604,7 +1678,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -1655,14 +1730,16 @@
             "vcf.lpf": 3,
             "vcf.res": 5,
             "trap.signal": 7,
-            "trap.decay": 4
+            "trap.decay": 4,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Wobble",
@@ -1725,14 +1802,17 @@
             "vcf.lpf": 7,
             "vcf.res": 2,
             "trap.signal": 7,
-            "trap.decay": 4
+            "trap.decay": 4,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Vibrato",
@@ -1791,13 +1871,16 @@
             "osc1.sine": 7,
             "trap.signal": 7,
             "trap.attack": 3,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Echo",
@@ -1865,7 +1948,8 @@
             "vcf.lpf": 6.5,
             "vcf.res": 2,
             "trap.signal": 7,
-            "trap.decay": 4.5
+            "trap.decay": 4.5,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
@@ -1873,7 +1957,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -1924,14 +2009,16 @@
             "vcf.lpf": 5,
             "vcf.res": 6,
             "trap.signal": 7,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Bloom",
@@ -1993,14 +2080,16 @@
             "vcf.lpf": 7,
             "vcf.res": 1,
             "trap.signal": 7,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Sweep",
@@ -2065,7 +2154,8 @@
             "vcf.lpf": 6.5,
             "vcf.res": 2,
             "trap.signal": 7,
-            "trap.decay": 4
+            "trap.decay": 4,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
@@ -2073,7 +2163,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -2120,13 +2211,16 @@
             "vcf.res": 8,
             "trap.signal": 7,
             "trap.attack": 6,
-            "trap.decay": 7
+            "trap.decay": 7,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Echo",
@@ -2196,7 +2290,9 @@
             "vcf.lpf": 7,
             "trap.signal": 7,
             "trap.attack": 3,
-            "trap.decay": 4
+            "trap.decay": 4,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1sine", "c.env"],
@@ -2204,7 +2300,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Vibrato",
@@ -2264,14 +2361,16 @@
             "vcf.lpf": 7,
             "vcf.res": 2,
             "trap.signal": 7,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Staircase",
@@ -2348,7 +2447,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Snap",
@@ -2413,14 +2513,16 @@
             "osc1.pulse": 2,
             "trap.signal": 7,
             "trap.on": 0,
-            "trap.decay": 8
+            "trap.decay": 8,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.env"],
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "A hall",
@@ -2496,7 +2598,8 @@
             ["r.ring", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "The town",
@@ -2571,7 +2674,9 @@
             "trap.attack": 0,
             "trap.decay": 1,
             "out1.level": 5,
-            "out2.level": 5
+            "out2.level": 5,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.env"],
@@ -2638,14 +2743,16 @@
             "vcf.hpf": 2,
             "trap.signal": 7,
             "trap.on": 0,
-            "trap.decay": 3.5
+            "trap.decay": 3.5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Snap",
@@ -2710,13 +2817,15 @@
             "osc1.shape": 2,
             "trap.signal": 7,
             "trap.on": 0,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -2779,7 +2888,8 @@
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -2830,14 +2940,16 @@
             "vcf.res": 1,
             "trap.signal": 7,
             "trap.attack": 8,
-            "trap.decay": 8
+            "trap.decay": 8,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "A hall",
@@ -2907,7 +3019,8 @@
             "vcf.res": 2,
             "trap.signal": 7,
             "trap.attack": 5,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
@@ -2915,7 +3028,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Blare",
@@ -2973,13 +3087,15 @@
             "vcf.res": 1,
             "trap.signal": 7,
             "trap.attack": 9,
-            "trap.decay": 9
+            "trap.decay": 9,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Space",
@@ -3051,7 +3167,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Space",
@@ -3107,11 +3224,19 @@
           "set": {
             "osc1.pulse": 5,
             "osc1.sine": 5,
-            "out1.level": 4
+            "out1.level": 4,
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1pulse", "c.out1"],
             ["r.osc1sine", "c.out1"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -3164,12 +3289,19 @@
             "osc2.saw": 7,
             "vcf.level": 6,
             "vcf.lpf": 4,
-            "vcf.res": 6
+            "vcf.res": 6,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -3225,13 +3357,20 @@
             "vcf.hpf": 3,
             "vcf.lpf": 5,
             "vcf.res": 4,
-            "vcf.cvTarget": "both"
+            "vcf.cvTarget": "both",
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -3282,11 +3421,19 @@
           "why": "Set A1 (Oscillator 1’s pulse into Ch1 Output) and C1 (Oscillator 1’s pulse into Ch2 Output).\n- Listen for: a hollow drone.",
           "set": {
             "osc1.pulse": 7,
-            "osc1.shapeCv": "pwm"
+            "osc1.shapeCv": "pwm",
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1pulse", "c.out1"],
             ["r.osc1pulse", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -3342,12 +3489,19 @@
             "osc2.octave": "-1",
             "vcf.level": 6,
             "vcf.lpf": 4.5,
-            "vcf.res": 6.5
+            "vcf.res": 6.5,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -3414,14 +3568,16 @@
             "snh.rate": 9,
             "snh.level": 7,
             "trap.signal": 6,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.sh"],
             ["r.osc3sh", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -3466,13 +3622,15 @@
             "trap.attack": 0,
             "trap.on": 1,
             "trap.decay": 4,
-            "trap.off": 4
+            "trap.off": 4,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Random notes",
@@ -3546,13 +3704,15 @@
             "trap.attack": 0,
             "trap.on": 1,
             "trap.decay": 4,
-            "trap.off": 3.5
+            "trap.off": 3.5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "The ramp",
@@ -3622,14 +3782,16 @@
             ["r.osc1pulse", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Zap",
           "module": "osc",
           "why": "Set H11 (the trapezoid into Oscillator 1’s pitch).\n- Listen for: falling zaps.",
           "set": {
-            "trap.level": 9
+            "trap.level": 9,
+            "osc2.saw": 0
           },
           "cables": [["r.trap", "c.osc1"]]
         },
@@ -3687,11 +3849,19 @@
           "set": {
             "osc1.sine": 6,
             "osc1.shape": 3,
-            "osc1.octave": "1"
+            "osc1.octave": "1",
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1sine", "c.out1"],
             ["r.osc1sine", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -3741,11 +3911,19 @@
           "module": "patch",
           "why": "Set A2 (Oscillator 1’s sine into Ch1 Output) and C2 (Oscillator 1’s sine into Ch2 Output).\n- Listen for: a pure tone.",
           "set": {
-            "osc1.sine": 7
+            "osc1.sine": 7,
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1sine", "c.out1"],
             ["r.osc1sine", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -3815,12 +3993,20 @@
             "vcf.hpf": 3,
             "vcf.lpf": 6,
             "vcf.res": 6,
-            "vcf.cvTarget": "both"
+            "vcf.cvTarget": "both",
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.noise", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -3878,14 +4064,16 @@
             "trap.attack": 10,
             "trap.on": 3,
             "trap.decay": 10,
-            "trap.off": 7
+            "trap.off": 7,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.noise", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "The beach",
@@ -3940,14 +4128,16 @@
             "vcf.res": 2,
             "trap.signal": 8,
             "trap.on": 2,
-            "trap.decay": 10
+            "trap.decay": 10,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.noise", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "The sky",
@@ -4010,14 +4200,16 @@
             "trap.attack": 0,
             "trap.on": 0,
             "trap.decay": 3,
-            "trap.off": 3
+            "trap.off": 3,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.noise", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -4065,14 +4257,16 @@
             "trap.attack": 1,
             "trap.on": 0,
             "trap.decay": 5,
-            "trap.off": 5
+            "trap.off": 5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.noise", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -4114,12 +4308,20 @@
             "osc1.pulse": 7,
             "ring.sourceB": "osc3",
             "osc3.tune": 7,
-            "ring.level": 7
+            "ring.level": 7,
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1pulse", "c.ringA"],
             ["r.ring", "c.out1"],
             ["r.ring", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -4178,11 +4380,19 @@
             "osc1.shape": 3,
             "osc1.octave": "1",
             "out1.level": 5,
-            "out2.level": 5
+            "out2.level": 5,
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1pulse", "c.out1"],
             ["r.osc1pulse", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -4244,14 +4454,16 @@
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Sweep",
           "module": "osc",
           "why": "Set H11 (the trapezoid into Oscillator 1’s pitch).\n- Listen for: rising bird calls.",
           "set": {
-            "trap.level": 5
+            "trap.level": 5,
+            "osc2.saw": 0
           },
           "cables": [["r.trap", "c.osc1"]]
         },
@@ -4313,13 +4525,15 @@
             "trap.attack": 0,
             "trap.on": 0,
             "trap.decay": 1,
-            "trap.off": 1
+            "trap.off": 1,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Bursts",
@@ -4380,7 +4594,8 @@
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Thump",
@@ -4388,7 +4603,8 @@
           "why": "Set H11 (the trapezoid into Oscillator 1’s pitch).\n- Trapezoid SIGNAL 5: down: the drum is loud\n- Listen for: a heartbeat.",
           "set": {
             "trap.level": 4,
-            "trap.signal": 5
+            "trap.signal": 5,
+            "osc2.saw": 0
           },
           "cables": [["r.trap", "c.osc1"]]
         }
@@ -4444,7 +4660,8 @@
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Punch",
@@ -4452,7 +4669,8 @@
           "why": "Set H11 (the trapezoid into Oscillator 1’s pitch).\n- Trapezoid SIGNAL 5: down: the drum is loud\n- Listen for: a punchy kick.",
           "set": {
             "trap.level": 7,
-            "trap.signal": 5
+            "trap.signal": 5,
+            "osc2.saw": 0
           },
           "cables": [["r.trap", "c.osc1"]]
         }
@@ -4500,14 +4718,16 @@
             "noise.level": 8,
             "trap.signal": 8,
             "trap.on": 0,
-            "trap.decay": 4.5
+            "trap.decay": 4.5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.noise", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "A room",
@@ -4570,14 +4790,16 @@
             "trap.attack": 0,
             "trap.on": 0,
             "trap.decay": 2,
-            "trap.off": 4
+            "trap.off": 4,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.noise", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -4634,7 +4856,8 @@
             ["r.ring", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "A factory",
@@ -4706,7 +4929,8 @@
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Sweep",
@@ -4714,7 +4938,8 @@
           "why": "Set H11 (the trapezoid into Oscillator 1’s pitch).\n- Trapezoid SIGNAL 5: down: the drum is loud\n- Listen for: a pitch-swept fill.",
           "set": {
             "trap.level": 5,
-            "trap.signal": 5
+            "trap.signal": 5,
+            "osc2.saw": 0
           },
           "cables": [["r.trap", "c.osc1"]]
         }
@@ -4773,7 +4998,8 @@
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Echoes",
@@ -4833,12 +5059,14 @@
             "trap.attack": 0,
             "trap.on": 0,
             "trap.decay": 3,
-            "trap.off": 8
+            "trap.off": 8,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.noise", "c.env"],
             ["r.envsig", "c.fx"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Run away",
@@ -4853,7 +5081,8 @@
           "cables": [
             ["r.fx", "c.out1"],
             ["r.fx", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.envsig", "c.out1"]]
         }
       ],
       "context": {
@@ -4908,7 +5137,8 @@
             "fx.type": "reverb",
             "fx.time": 9,
             "fx.feedback": 8,
-            "fx.level": 8
+            "fx.level": 8,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
@@ -4916,6 +5146,10 @@
             ["r.envsig", "c.fx"],
             ["r.fx", "c.out1"],
             ["r.fx", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         }
       ],
@@ -4970,12 +5204,14 @@
             "trap.on": 0,
             "trap.decay": 5,
             "out1.pan": -4,
-            "out2.pan": 4
+            "out2.pan": 4,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.env"],
             ["r.envsig", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Echo right",
@@ -5041,14 +5277,16 @@
             "vcf.lpf": 4.5,
             "vcf.res": 6,
             "trap.signal": 6,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "The pedal",
@@ -5097,11 +5335,19 @@
           "module": "patch",
           "why": "Set A2 (Oscillator 1’s sine into Ch1 Output) and C2 (Oscillator 1’s sine into Ch2 Output).\n- Listen for: a pure tone.",
           "set": {
-            "osc1.sine": 7
+            "osc1.sine": 7,
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1sine", "c.out1"],
             ["r.osc1sine", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -5175,12 +5421,19 @@
             "osc2.saw": 6,
             "ring.level": 7,
             "out1.level": 5,
-            "out2.level": 5
+            "out2.level": 5,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1sine", "c.ringA"],
             ["r.ring", "c.out1"],
             ["r.ring", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -5237,12 +5490,19 @@
             "out1.level": 5,
             "out2.level": 5,
             "out1.pan": -5,
-            "out2.pan": 5
+            "out2.pan": 5,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -5316,7 +5576,8 @@
             "vcf.lpf": 6.5,
             "vcf.res": 2,
             "trap.signal": 6,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
@@ -5325,7 +5586,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -5376,14 +5638,16 @@
             "vcf.lpf": 6,
             "vcf.res": 2,
             "trap.signal": 6,
-            "trap.decay": 6
+            "trap.decay": 6,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Cross",
@@ -5436,14 +5700,16 @@
             "trap.attack": 0,
             "trap.on": 0,
             "trap.decay": 4,
-            "trap.off": 4
+            "trap.off": 4,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Random lengths",
@@ -5510,14 +5776,16 @@
             "vcf.res": 6,
             "trap.signal": 6,
             "trap.attack": 3,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Follow",
@@ -5576,7 +5844,11 @@
             "in2.gain": "mic",
             "in2.level": 10,
             "out1.level": 5,
-            "out2.level": 5
+            "out2.level": 5,
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.noise", "c.vcf"],
@@ -5584,6 +5856,10 @@
             ["r.in2", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         }
       ],
@@ -5626,12 +5902,19 @@
             "osc2.saw": 7,
             "ring.sourceB": "osc3",
             "osc3.tune": 4.2,
-            "ring.level": 7
+            "ring.level": 7,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc2", "c.ringA"],
             ["r.ring", "c.out1"],
             ["r.ring", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         }
       ],
@@ -5677,13 +5960,15 @@
             "trap.attack": 0,
             "trap.on": 0,
             "trap.decay": 2,
-            "trap.off": 2
+            "trap.off": 2,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Random",
@@ -5748,7 +6033,8 @@
             "vcf.lpf": 4.5,
             "vcf.res": 1,
             "trap.signal": 6,
-            "trap.decay": 7
+            "trap.decay": 7,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1sine", "c.vcf"],
@@ -5756,7 +6042,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Wow",
@@ -5839,7 +6126,8 @@
             "vcf.res": 5,
             "trap.signal": 6,
             "trap.on": 0,
-            "trap.decay": 3.5
+            "trap.decay": 3.5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
@@ -5847,7 +6135,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Sweep",
@@ -5918,13 +6207,20 @@
             "vcf.hpf": 3,
             "vcf.lpf": 6,
             "vcf.res": 7,
-            "vcf.cvTarget": "both"
+            "vcf.cvTarget": "both",
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.noise", "c.vcf"],
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -6012,7 +6308,8 @@
             "osc2.shape": 8,
             "trap.signal": 6,
             "trap.attack": 10,
-            "trap.decay": 10
+            "trap.decay": 10,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.env"],
@@ -6096,14 +6393,16 @@
             "vcf.res": 6,
             "trap.signal": 6,
             "trap.on": 0,
-            "trap.decay": 3.5
+            "trap.decay": 3.5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Turn the filter",
@@ -6169,7 +6468,8 @@
           "set": {
             "osc2.saw": 7,
             "trap.signal": 6,
-            "trap.decay": 6
+            "trap.decay": 6,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.env"],
@@ -6259,7 +6559,8 @@
             "trap.attack": 0,
             "trap.on": 2,
             "trap.decay": 4,
-            "trap.off": 4
+            "trap.off": 4,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
@@ -6268,7 +6569,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Pulse the filter",
@@ -6317,11 +6619,19 @@
           "why": "Set A2 (Oscillator 1’s sine into Ch1 Output) and F2 (Oscillator 1’s sine into the effects).\n- Listen for: a pure tone.",
           "set": {
             "osc1.sine": 7,
-            "osc1.octave": "1"
+            "osc1.octave": "1",
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1sine", "c.out1"],
             ["r.osc1sine", "c.fx"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -6384,12 +6694,19 @@
             "osc2.octave": "-1",
             "vcf.level": 7,
             "vcf.lpf": 5,
-            "vcf.res": 6.5
+            "vcf.res": 6.5,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -6468,7 +6785,8 @@
             ["r.ring", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "The loop",
@@ -6549,7 +6867,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -6597,13 +6916,15 @@
             "trap.attack": 0,
             "trap.on": 2,
             "trap.decay": 4,
-            "trap.off": 5
+            "trap.off": 5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Echo",
@@ -6680,7 +7001,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -6728,14 +7050,16 @@
             "trap.attack": 0,
             "trap.on": 0,
             "trap.decay": 4,
-            "trap.off": 3
+            "trap.off": 3,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Restless",
@@ -6802,7 +7126,10 @@
             "vcf.lpf": 4,
             "vcf.res": 3,
             "out1.level": 6,
-            "out2.level": 6
+            "out2.level": 6,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1sine", "c.vcf"],
@@ -6810,6 +7137,10 @@
             ["r.osc3tri", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -6873,12 +7204,15 @@
             "osc1.shape": 2,
             "trap.signal": 6,
             "trap.attack": 9,
-            "trap.decay": 9
+            "trap.decay": 9,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Accumulate",
@@ -6945,7 +7279,8 @@
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Right pulse",
@@ -7025,7 +7360,9 @@
             "osc2.pulse": 4,
             "osc2.octave": "1",
             "trap.signal": 6,
-            "trap.decay": 2
+            "trap.decay": 2,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.env"],
@@ -7095,13 +7432,20 @@
             "osc3.tune": 8.9,
             "osc3.tri": 4,
             "out1.level": 6,
-            "out2.level": 6
+            "out2.level": 6,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1sine", "c.out1"],
             ["r.osc1sine", "c.out2"],
             ["r.osc2", "c.out1"],
             ["r.osc3tri", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         }
       ],
@@ -7172,7 +7516,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Twist",
@@ -7247,7 +7592,8 @@
             ["r.osc3sh", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Glitch",
@@ -7321,7 +7667,8 @@
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Overdrive",
@@ -7412,7 +7759,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Rip",
@@ -7476,7 +7824,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Build",
@@ -7574,14 +7923,16 @@
             "vcf.res": 6,
             "trap.signal": 6,
             "trap.on": 0,
-            "trap.decay": 4
+            "trap.decay": 4,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Evolve",
@@ -7655,14 +8006,16 @@
             "snh.select": "snh",
             "snh.rate": 3.5,
             "snh.level": 4,
-            "out1.pan": -4
+            "out1.pan": -4,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.osc3sh", "c.osc1"],
             ["r.noise", "c.sh"],
             ["r.envsig", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Waves",
@@ -7737,14 +8090,16 @@
             "osc3.tri": 2,
             "trap.signal": 6,
             "trap.on": 0,
-            "trap.decay": 7
+            "trap.decay": 7,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.osc3tri", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Unfold",
@@ -7816,14 +8171,16 @@
             "vcf.lpf": 4,
             "vcf.res": 4,
             "trap.signal": 6,
-            "trap.decay": 3.5
+            "trap.decay": 3.5,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Grit",
@@ -7890,13 +8247,20 @@
             "ring.level": 7,
             "vcf.level": 7,
             "vcf.lpf": 5,
-            "vcf.res": 7.5
+            "vcf.res": 7.5,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc2", "c.ringA"],
             ["r.ring", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -7960,13 +8324,21 @@
             "vcf.hpf": 4,
             "vcf.lpf": 6,
             "vcf.res": 7,
-            "vcf.cvTarget": "both"
+            "vcf.cvTarget": "both",
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.noise", "c.vcf"],
             ["r.osc1sine", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -8032,14 +8404,16 @@
             "trap.off": 2,
             "snh.select": "snh",
             "snh.rate": 6,
-            "snh.level": 6
+            "snh.level": 6,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.noise", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"],
             ["r.osc3sh", "c.decay"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -8085,13 +8459,21 @@
             "ring.level": 8,
             "vcf.level": 8,
             "vcf.lpf": 4,
-            "vcf.res": 3
+            "vcf.res": 3,
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1pulse", "c.ringA"],
             ["r.ring", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -8150,7 +8532,8 @@
             "noise.tone": 4,
             "trap.signal": 6,
             "trap.attack": 10,
-            "trap.decay": 8
+            "trap.decay": 8,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1sine", "c.ringA"],
@@ -8158,7 +8541,8 @@
             ["r.noise", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Rise",
@@ -8169,7 +8553,8 @@
             "fx.type": "reverb",
             "fx.time": 7,
             "fx.feedback": 6,
-            "fx.level": 5
+            "fx.level": 5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.trap", "c.osc1"],
@@ -8224,14 +8609,16 @@
             ["r.osc1pulse", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Fall",
           "module": "osc",
           "why": "Set H11 (the trapezoid into Oscillator 1’s pitch).\n- Listen for: the machine winding down.",
           "set": {
-            "trap.level": 10
+            "trap.level": 10,
+            "osc2.saw": 0
           },
           "cables": [["r.trap", "c.osc1"]]
         }
@@ -8278,13 +8665,20 @@
             "out2.level": 3,
             "vcf.level": 6,
             "vcf.lpf": 6,
-            "vcf.res": 2
+            "vcf.res": 2,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.noise", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -8344,12 +8738,14 @@
             "osc1.sine": 7,
             "trap.signal": 6,
             "trap.on": 2,
-            "trap.decay": 8
+            "trap.decay": 8,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "The deep",
@@ -8413,14 +8809,17 @@
             "vcf.res": 2,
             "trap.signal": 8,
             "trap.attack": 8,
-            "trap.decay": 9
+            "trap.decay": 9,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "The harbour",
@@ -8490,7 +8889,8 @@
             ["r.ring", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Rev",
@@ -8498,7 +8898,8 @@
           "why": "Set H11 (the trapezoid into Oscillator 1’s pitch).\n- Listen for: the bike revving and pulling away.",
           "set": {
             "trap.level": 8,
-            "trap.signal": 5
+            "trap.signal": 5,
+            "osc2.saw": 0
           },
           "cables": [["r.trap", "c.osc1"]]
         }
@@ -8560,7 +8961,8 @@
             ["r.ring", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Tremolo",
@@ -8623,13 +9025,15 @@
             "trap.on": 0,
             "trap.decay": 9,
             "out1.level": 5,
-            "out2.level": 5
+            "out2.level": 5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Motor",
@@ -8697,7 +9101,8 @@
             "osc2.octave": "2",
             "trap.signal": 6,
             "trap.on": 0,
-            "trap.decay": 8
+            "trap.decay": 8,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1sine", "c.env"],
@@ -8770,13 +9175,15 @@
             "osc1.octave": "2",
             "trap.signal": 6,
             "trap.on": 0,
-            "trap.decay": 8
+            "trap.decay": 8,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Spring",
@@ -8859,7 +9266,8 @@
             ["r.ring", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -8925,7 +9333,8 @@
             ["r.ring", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -8980,14 +9389,16 @@
             "vcf.res": 5,
             "trap.signal": 6,
             "trap.on": 0,
-            "trap.decay": 7
+            "trap.decay": 7,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Twang",
@@ -9059,14 +9470,16 @@
             "vcf.res": 5,
             "trap.signal": 6,
             "trap.on": 0,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Snap",
@@ -9216,7 +9629,9 @@
             "vcf.res": 1,
             "trap.signal": 6,
             "trap.attack": 2,
-            "trap.decay": 2
+            "trap.decay": 2,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
@@ -9224,7 +9639,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -9281,7 +9697,9 @@
             "trap.attack": 3,
             "trap.decay": 4,
             "osc3.tune": 5.1,
-            "osc3.tri": 1.5
+            "osc3.tri": 1.5,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
@@ -9290,7 +9708,8 @@
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"],
             ["r.osc3tri", "c.osc1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -9345,14 +9764,16 @@
             "vcf.lpf": 7,
             "vcf.res": 3,
             "trap.signal": 6,
-            "trap.decay": 2
+            "trap.decay": 2,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "The drone",
@@ -9362,7 +9783,8 @@
             "osc3.keyFol": "free",
             "osc3.tune": 8.4,
             "osc3.shape": 9,
-            "osc3.tri": 5
+            "osc3.tri": 5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc3tri", "c.out1"],
@@ -9431,7 +9853,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Twang",
@@ -9504,14 +9927,16 @@
             "vcf.res": 2,
             "trap.signal": 6,
             "trap.attack": 7,
-            "trap.decay": 7
+            "trap.decay": 7,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Vibrato",
@@ -9582,14 +10007,16 @@
             "vcf.res": 3,
             "trap.signal": 6,
             "trap.attack": 6,
-            "trap.decay": 6
+            "trap.decay": 6,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Vibrato",
@@ -9668,7 +10095,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Pop",
@@ -9738,14 +10166,16 @@
             "vcf.res": 2,
             "trap.signal": 6,
             "trap.attack": 4,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Blare",
@@ -9810,14 +10240,16 @@
             "vcf.res": 1,
             "trap.signal": 6,
             "trap.attack": 7,
-            "trap.decay": 7
+            "trap.decay": 7,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Swell",
@@ -9886,14 +10318,17 @@
             "vcf.res": 2,
             "trap.signal": 6,
             "trap.attack": 3,
-            "trap.decay": 4
+            "trap.decay": 4,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Puff",
@@ -9956,14 +10391,16 @@
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Punch",
           "module": "osc",
           "why": "Set H11 (the trapezoid into Oscillator 1’s pitch).\n- Listen for: a punchy 808.",
           "set": {
-            "trap.level": 3
+            "trap.level": 3,
+            "osc2.saw": 0
           },
           "cables": [["r.trap", "c.osc1"]]
         }
@@ -10023,7 +10460,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Rumble",
@@ -10102,7 +10540,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Pluck",
@@ -10165,7 +10604,8 @@
             "osc2.pulse": 4,
             "trap.signal": 6,
             "trap.on": 0,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.env"],
@@ -10225,7 +10665,8 @@
             "vcf.lpf": 4,
             "vcf.res": 2,
             "trap.signal": 6,
-            "trap.decay": 4
+            "trap.decay": 4,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
@@ -10233,7 +10674,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -10300,7 +10742,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Wah",
@@ -10361,13 +10804,16 @@
             "osc1.pulse": 6,
             "osc1.shape": 3,
             "trap.signal": 6,
-            "trap.decay": 3
+            "trap.decay": 3,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Trill",
@@ -10429,14 +10875,16 @@
             "vcf.res": 5,
             "trap.signal": 6,
             "trap.attack": 4,
-            "trap.decay": 6
+            "trap.decay": 6,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Sing",
@@ -10507,14 +10955,16 @@
             "vcf.lpf": 6,
             "vcf.res": 6.5,
             "trap.signal": 6,
-            "trap.decay": 6
+            "trap.decay": 6,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Echo",
@@ -10583,14 +11033,16 @@
             "vcf.res": 5,
             "trap.signal": 6,
             "trap.attack": 5,
-            "trap.decay": 6
+            "trap.decay": 6,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Wah",
@@ -10660,7 +11112,8 @@
             ["r.ring", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Echo",
@@ -10730,7 +11183,9 @@
             "vcf.cvTarget": "both",
             "trap.signal": 6,
             "trap.attack": 3,
-            "trap.decay": 4
+            "trap.decay": 4,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1sine", "c.env"],
@@ -10738,7 +11193,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Puff",
@@ -10803,14 +11259,16 @@
             "vcf.lpf": 7,
             "trap.signal": 6,
             "trap.on": 0,
-            "trap.decay": 4.5
+            "trap.decay": 4.5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.noise", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Flam",
@@ -10878,7 +11336,8 @@
             "vcf.lpf": 7,
             "trap.signal": 6,
             "trap.on": 0,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
@@ -10886,7 +11345,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -10938,7 +11398,8 @@
             "trap.level": 5,
             "trap.signal": 8,
             "trap.on": 0,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.noise", "c.vcf"],
@@ -10946,7 +11407,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -10994,14 +11456,16 @@
             "noise.level": 5,
             "trap.signal": 6,
             "trap.on": 0,
-            "trap.decay": 2.5
+            "trap.decay": 2.5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.env"],
             ["r.noise", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -11054,14 +11518,16 @@
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Zap",
           "module": "osc",
           "why": "Set H11 (the trapezoid into Oscillator 1’s pitch).\n- Listen for: a zappy kick.",
           "set": {
-            "trap.level": 10
+            "trap.level": 10,
+            "osc2.saw": 0
           },
           "cables": [["r.trap", "c.osc1"]]
         }
@@ -11110,14 +11576,16 @@
             "trap.attack": 0,
             "trap.on": 0,
             "trap.decay": 3,
-            "trap.off": 4
+            "trap.off": 4,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.noise", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Change",
@@ -11182,13 +11650,15 @@
             "trap.on": 0,
             "trap.decay": 3,
             "trap.off": 1,
-            "out1.level": 3
+            "out1.level": 3,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.noise", "c.env"],
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Swell",
@@ -11248,7 +11718,10 @@
             "out2.level": 5,
             "vcf.level": 6,
             "vcf.lpf": 6,
-            "vcf.res": 1
+            "vcf.res": 1,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1sine", "c.vcf"],
@@ -11256,6 +11729,10 @@
             ["r.osc3tri", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         }
       ],
@@ -11302,13 +11779,20 @@
             "out2.level": 5,
             "vcf.level": 6,
             "vcf.lpf": 5,
-            "vcf.res": 2
+            "vcf.res": 2,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         }
       ],
@@ -11355,13 +11839,20 @@
             "out2.level": 5,
             "vcf.level": 6,
             "vcf.lpf": 5,
-            "vcf.res": 2
+            "vcf.res": 2,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1sine", "c.vcf"],
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         }
       ],
@@ -11407,12 +11898,20 @@
             "vcf.lpf": 5,
             "vcf.res": 6.8,
             "out1.level": 5,
-            "out2.level": 5
+            "out2.level": 5,
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.noise", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -11479,13 +11978,20 @@
             "fx.type": "reverb",
             "fx.time": 9,
             "fx.feedback": 8,
-            "fx.level": 6
+            "fx.level": 6,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.fx"],
             ["r.fx", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         }
       ],
@@ -11535,7 +12041,8 @@
             "fx.type": "reverb",
             "fx.time": 9,
             "fx.feedback": 7,
-            "fx.level": 7
+            "fx.level": 7,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.env"],
@@ -11543,7 +12050,8 @@
             ["r.envsig", "c.out1"],
             ["r.fx", "c.out1"],
             ["r.fx", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -11587,12 +12095,19 @@
             "osc2.tune": 5.6,
             "ring.level": 7,
             "out1.level": 5,
-            "out2.level": 5
+            "out2.level": 5,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1pulse", "c.ringA"],
             ["r.ring", "c.out1"],
             ["r.ring", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -11651,13 +12166,20 @@
             "out1.level": 6,
             "out2.level": 6,
             "osc3.tune": 1,
-            "osc3.tri": 4
+            "osc3.tri": 4,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.osc3tri", "c.cutoff"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -11726,14 +12248,16 @@
             "vcf.res": 3,
             "trap.signal": 6,
             "trap.attack": 7,
-            "trap.decay": 6
+            "trap.decay": 6,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Drain",
@@ -11798,13 +12322,15 @@
             "osc1.shape": 2,
             "trap.signal": 6,
             "trap.on": 0,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Stretch",
@@ -11856,11 +12382,19 @@
             "osc1.sine": 6,
             "osc1.shape": 3,
             "out1.level": 5,
-            "out2.level": 5
+            "out2.level": 5,
+            "osc2.saw": 0,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1sine", "c.out1"],
             ["r.osc1sine", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -11926,7 +12460,8 @@
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.scope"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "A pad",
@@ -12003,13 +12538,15 @@
             "vcf.lpf": 6,
             "vcf.res": 2,
             "trap.signal": 6,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Drive",
@@ -12073,7 +12610,8 @@
             "trap.off": 5,
             "snh.select": "snh",
             "snh.rate": 7.5,
-            "snh.level": 7
+            "snh.level": 7,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1sine", "c.env"],
@@ -12081,6 +12619,10 @@
             ["r.envsig", "c.sh"],
             ["r.osc3sh", "c.out1"],
             ["r.osc3sh", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         }
       ],
@@ -12134,7 +12676,8 @@
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "FM",
@@ -12203,7 +12746,8 @@
             "out1.pan": -4,
             "out1.level": 4
           },
-          "cables": [["r.osc1sine", "c.out1"]]
+          "cables": [["r.osc1sine", "c.out1"]],
+          "unplug": [["r.envsig", "c.out1"]]
         },
         {
           "title": "Right",
@@ -12268,14 +12812,16 @@
             "vcf.res": 5,
             "trap.signal": 6,
             "trap.attack": 7,
-            "trap.decay": 8
+            "trap.decay": 8,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Growl",
@@ -12332,14 +12878,16 @@
             "vcf.res": 4,
             "trap.signal": 6,
             "trap.attack": 7,
-            "trap.decay": 8
+            "trap.decay": 8,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "The stick",
@@ -12410,7 +12958,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Random",
@@ -12474,12 +13023,19 @@
             "osc2.saw": 6,
             "ring.level": 7,
             "out1.level": 5,
-            "out2.level": 5
+            "out2.level": 5,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1sine", "c.ringA"],
             ["r.ring", "c.out1"],
             ["r.ring", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -12541,14 +13097,16 @@
             "vcf.res": 2,
             "trap.signal": 6,
             "trap.attack": 10,
-            "trap.decay": 1
+            "trap.decay": 1,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Brighten",
@@ -12612,7 +13170,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Space",
@@ -12683,7 +13242,9 @@
             "fx.type": "reverb",
             "fx.time": 7,
             "fx.feedback": 6,
-            "fx.level": 4
+            "fx.level": 4,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1sine", "c.vcf"],
@@ -12692,7 +13253,8 @@
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.fx"],
             ["r.fx", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -12754,7 +13316,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Echo",
@@ -12824,7 +13387,8 @@
             "fx.type": "reverb",
             "fx.time": 5,
             "fx.feedback": 5,
-            "fx.level": 4
+            "fx.level": 4,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.vcf", "c.env"],
@@ -12832,7 +13396,8 @@
             ["r.envsig", "c.out2"],
             ["r.envsig", "c.fx"],
             ["r.fx", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -12881,14 +13446,16 @@
             "vcf.lpf": 5,
             "vcf.res": 5,
             "trap.signal": 6,
-            "trap.decay": 6
+            "trap.decay": 6,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Wobble",
@@ -12950,14 +13517,16 @@
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Drop",
           "module": "osc",
           "why": "Set H11 (the trapezoid into Oscillator 1’s pitch).\n- Listen for: a sub dropping away.",
           "set": {
-            "trap.level": 8
+            "trap.level": 8,
+            "osc2.saw": 0
           },
           "cables": [["r.trap", "c.osc1"]]
         }
@@ -13005,7 +13574,9 @@
             "trap.signal": 6,
             "trap.attack": 10,
             "trap.decay": 9,
-            "trap.level": 10
+            "trap.level": 10,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.noise", "c.vcf"],
@@ -13013,7 +13584,8 @@
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"],
             ["r.trap", "c.cutoff"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -13065,13 +13637,15 @@
             "osc1.shape": 2,
             "trap.signal": 6,
             "trap.on": 0,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1pulse", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Echoes",
@@ -13134,13 +13708,20 @@
             "vcf.lpf": 4,
             "vcf.res": 6,
             "out1.level": 6,
-            "out2.level": 6
+            "out2.level": 6,
+            "trap.on": 3,
+            "trap.decay": 4,
+            "trap.signal": 0
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.out1"],
             ["r.vcf", "c.out2"]
+          ],
+          "unplug": [
+            ["r.osc2", "c.env"],
+            ["r.envsig", "c.out1"]
           ]
         },
         {
@@ -13212,7 +13793,8 @@
             ["r.ring", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "The cathedral",
@@ -13283,7 +13865,8 @@
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Echo",
@@ -13356,14 +13939,16 @@
             "vcf.lpf": 3.5,
             "vcf.res": 5,
             "trap.signal": 6,
-            "trap.decay": 3.5
+            "trap.decay": 3.5,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc2", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "The stick",
@@ -13428,7 +14013,8 @@
             ["r.osc1sine", "c.ringA"],
             ["r.ring", "c.env"],
             ["r.envsig", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Random",
@@ -13507,14 +14093,17 @@
             "vcf.lpf": 3.5,
             "vcf.res": 1,
             "trap.signal": 6,
-            "trap.decay": 4
+            "trap.decay": 4,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1pulse", "c.vcf"],
             ["r.vcf", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         }
       ],
       "context": {
@@ -13564,13 +14153,16 @@
             "osc1.shape": 3,
             "trap.signal": 6,
             "trap.attack": 3,
-            "trap.decay": 5
+            "trap.decay": 5,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Vibrato",
@@ -13626,14 +14218,16 @@
             "noise.level": 8,
             "trap.signal": 6,
             "trap.on": 0,
-            "trap.decay": 4.5
+            "trap.decay": 4.5,
+            "osc2.saw": 0
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.noise", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "The room",
@@ -13698,14 +14292,17 @@
             "noise.level": 2,
             "trap.signal": 6,
             "trap.attack": 3,
-            "trap.decay": 4
+            "trap.decay": 4,
+            "osc2.saw": 0,
+            "trap.on": 3
           },
           "cables": [
             ["r.osc1sine", "c.env"],
             ["r.noise", "c.env"],
             ["r.envsig", "c.out1"],
             ["r.envsig", "c.out2"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "Trill",
@@ -13778,12 +14375,14 @@
           "why": "Set D13 (the ring modulator into the VCA) and A12 (the VCA into Ch1 Output).\n- Trapezoid SIGNAL 6: the VCA’s level onto row 12\n- Listen for: a pulsing, filtered note on each key.",
           "set": {
             "trap.signal": 6,
-            "trap.decay": 6
+            "trap.decay": 6,
+            "trap.on": 3
           },
           "cables": [
             ["r.ring", "c.env"],
             ["r.envsig", "c.out1"]
-          ]
+          ],
+          "unplug": [["r.osc2", "c.env"]]
         },
         {
           "title": "VCA to effects",

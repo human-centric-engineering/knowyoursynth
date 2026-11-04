@@ -107,9 +107,12 @@ export function defaultPatchSound(def: SynthDef): CatalogueSound {
   };
 }
 
-/** The Default patch's panel: every control's value, and the cables in. */
+/**
+ * The Default patch's panel: every control's value, and the cables in. It is what every sound builds on, so it is a
+ * sound of no steps, playing the scale (which sets a tempo knob to the scale's speed).
+ */
 export const defaultPatchState = (def: SynthDef): PanelState =>
-  presetState(def, defaultPatchSound(def));
+  presetState(def, { steps: [], phrase: SCALE_PHRASE });
 
 /**
  * Step 0 of a lesson (`f-default-patch` t-173): the Default patch, set before step 1 so someone following along on

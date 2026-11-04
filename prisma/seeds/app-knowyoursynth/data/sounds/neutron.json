@@ -183,7 +183,8 @@
             "env1.r": 5,
             "delay.mix": 3,
             "delay.time": 6,
-            "delay.repeats": 4.5
+            "delay.repeats": 4.5,
+            "od.drive": 1
           }
         }
       ],
@@ -416,7 +417,8 @@
           "set": {
             "delay.time": 6.5,
             "delay.repeats": 4,
-            "delay.mix": 2.5
+            "delay.mix": 2.5,
+            "od.drive": 1
           }
         }
       ],
@@ -515,7 +517,8 @@
           "set": {
             "delay.time": 8.35,
             "delay.repeats": 6.8,
-            "delay.mix": 4.5
+            "delay.mix": 4.5,
+            "od.drive": 1
           }
         },
         {
@@ -878,7 +881,8 @@
           "set": {
             "delay.time": 7.5,
             "delay.repeats": 5.5,
-            "delay.mix": 3.5
+            "delay.mix": 3.5,
+            "od.drive": 1
           }
         }
       ],
@@ -1339,7 +1343,8 @@
           "set": {
             "delay.time": 9.45,
             "delay.repeats": 4.5,
-            "delay.mix": 3
+            "delay.mix": 3,
+            "od.drive": 1
           }
         }
       ],
@@ -1458,7 +1463,8 @@
             "env2.r": 4.8,
             "delay.time": 8.35,
             "delay.repeats": 5,
-            "delay.mix": 3.5
+            "delay.mix": 3.5,
+            "od.drive": 1
           }
         }
       ],
@@ -2063,7 +2069,8 @@
           "set": {
             "delay.time": 7,
             "delay.repeats": 3.5,
-            "delay.mix": 2
+            "delay.mix": 2,
+            "od.drive": 1
           }
         }
       ],
@@ -2303,7 +2310,8 @@
           "set": {
             "delay.time": 7.92,
             "delay.repeats": 5,
-            "delay.mix": 3
+            "delay.mix": 3,
+            "od.drive": 1
           }
         }
       ],
@@ -5823,7 +5831,8 @@
           "set": {
             "delay.time": 0,
             "delay.repeats": 6.5,
-            "delay.mix": 5
+            "delay.mix": 5,
+            "od.drive": 1
           }
         },
         {
@@ -6351,7 +6360,8 @@
           "set": {
             "delay.time": 8.35,
             "delay.repeats": 4,
-            "delay.mix": 2.5
+            "delay.mix": 2.5,
+            "od.drive": 1
           }
         }
       ],
@@ -6599,7 +6609,8 @@
           "set": {
             "delay.time": 8.06,
             "delay.repeats": 3.5,
-            "delay.mix": 2.5
+            "delay.mix": 2.5,
+            "od.drive": 1
           }
         }
       ],
@@ -6713,7 +6724,8 @@
           "set": {
             "delay.time": 8,
             "delay.repeats": 3.5,
-            "delay.mix": 2
+            "delay.mix": 2,
+            "od.drive": 1
           }
         }
       ],
@@ -6818,7 +6830,8 @@
             "env1.a": 2,
             "env1.d": 6.5,
             "env1.s": 8,
-            "env1.r": 4.5
+            "env1.r": 4.5,
+            "od.drive": 1
           }
         },
         {
@@ -7064,7 +7077,8 @@
           "set": {
             "delay.time": 10,
             "delay.repeats": 7.5,
-            "delay.mix": 4.5
+            "delay.mix": 4.5,
+            "od.drive": 1
           }
         }
       ],
@@ -7555,7 +7569,8 @@
           "set": {
             "delay.time": 8.6,
             "delay.repeats": 5,
-            "delay.mix": 3.5
+            "delay.mix": 3.5,
+            "od.drive": 1
           }
         }
       ],
@@ -7886,7 +7901,8 @@
             "env1.d": 5,
             "env1.s": 9,
             "env1.r": 4,
-            "porta.time": 1.2
+            "porta.time": 1.2,
+            "od.drive": 1
           }
         },
         {
@@ -10840,7 +10856,8 @@
             "env1.r": 8.5,
             "delay.time": 8,
             "delay.repeats": 4,
-            "delay.mix": 2
+            "delay.mix": 2,
+            "od.drive": 1
           }
         }
       ],
@@ -11046,7 +11063,8 @@
           "set": {
             "delay.time": 8,
             "delay.repeats": 4,
-            "delay.mix": 2
+            "delay.mix": 2,
+            "od.drive": 1
           }
         }
       ],
@@ -11149,7 +11167,8 @@
           "set": {
             "delay.time": 8.5,
             "delay.repeats": 4,
-            "delay.mix": 2
+            "delay.mix": 2,
+            "od.drive": 1
           }
         }
       ],
@@ -11260,7 +11279,8 @@
             "porta.time": 1,
             "delay.time": 7.5,
             "delay.repeats": 3.5,
-            "delay.mix": 2
+            "delay.mix": 2,
+            "od.drive": 1
           }
         }
       ],
@@ -11352,7 +11372,8 @@
             "env1.d": 5,
             "env1.s": 9,
             "env1.r": 4.5,
-            "porta.time": 0.8
+            "porta.time": 0.8,
+            "od.drive": 1
           }
         },
         {
@@ -11465,7 +11486,8 @@
             "env1.r": 8.5,
             "delay.time": 9,
             "delay.repeats": 6,
-            "delay.mix": 3
+            "delay.mix": 3,
+            "od.drive": 1
           }
         }
       ],
@@ -11567,7 +11589,8 @@
           "set": {
             "delay.time": 9.05,
             "delay.repeats": 4,
-            "delay.mix": 2.5
+            "delay.mix": 2.5,
+            "od.drive": 1
           }
         }
       ],
@@ -12274,7 +12297,8 @@
             "env1.r": 7,
             "delay.time": 7,
             "delay.repeats": 3,
-            "delay.mix": 2
+            "delay.mix": 2,
+            "od.drive": 1
           }
         }
       ],
@@ -12432,7 +12456,8 @@
             "out.volume": 9,
             "delay.time": 9,
             "delay.repeats": 5,
-            "delay.mix": 3
+            "delay.mix": 3,
+            "od.drive": 1
           }
         }
       ],
@@ -12488,7 +12513,8 @@
             "env1.d": 3,
             "env1.s": 0,
             "env1.r": 2,
-            "out.volume": 10
+            "out.volume": 10,
+            "od.drive": 1
           }
         },
         {
@@ -12556,7 +12582,8 @@
           "set": {
             "delay.time": 0,
             "delay.repeats": 7,
-            "delay.mix": 5
+            "delay.mix": 5,
+            "od.drive": 1
           }
         },
         {
@@ -12651,7 +12678,8 @@
           "set": {
             "delay.time": 9,
             "delay.repeats": 6,
-            "delay.mix": 4
+            "delay.mix": 4,
+            "od.drive": 1
           }
         }
       ],
@@ -12729,7 +12757,8 @@
             "env1.a": 3,
             "env1.d": 6,
             "env1.s": 9,
-            "env1.r": 4
+            "env1.r": 4,
+            "od.drive": 1
           }
         }
       ],
@@ -12807,7 +12836,8 @@
             "env1.a": 0,
             "env1.d": 4.5,
             "env1.s": 2,
-            "env1.r": 2.5
+            "env1.r": 2.5,
+            "od.drive": 1
           }
         }
       ],
@@ -12892,7 +12922,8 @@
             "env1.r": 8,
             "delay.time": 8.5,
             "delay.repeats": 4,
-            "delay.mix": 3
+            "delay.mix": 3,
+            "od.drive": 1
           }
         }
       ],
@@ -13051,7 +13082,8 @@
             "env1.r": 6,
             "delay.time": 8.8,
             "delay.repeats": 4,
-            "delay.mix": 3
+            "delay.mix": 3,
+            "od.drive": 1
           }
         }
       ],
@@ -13203,7 +13235,8 @@
             "env1.r": 6,
             "delay.time": 8,
             "delay.repeats": 5,
-            "delay.mix": 3.5
+            "delay.mix": 3.5,
+            "od.drive": 1
           }
         }
       ],
@@ -13283,7 +13316,8 @@
             "env1.a": 7,
             "env1.d": 8,
             "env1.s": 10,
-            "env1.r": 8
+            "env1.r": 8,
+            "od.drive": 1
           }
         }
       ],
@@ -13354,7 +13388,8 @@
             "env1.a": 8,
             "env1.d": 8,
             "env1.s": 10,
-            "env1.r": 5
+            "env1.r": 5,
+            "od.drive": 1
           }
         }
       ],
@@ -13456,7 +13491,8 @@
             "mix.noise": 10,
             "vcf.mode": "bp",
             "vcf.freq": 7.5,
-            "vcf.reso": 1
+            "vcf.reso": 1,
+            "od.drive": 1
           }
         },
         {
@@ -13553,7 +13589,8 @@
             "env1.r": 7,
             "delay.time": 9,
             "delay.repeats": 5,
-            "delay.mix": 4
+            "delay.mix": 4,
+            "od.drive": 1
           }
         }
       ],
@@ -13600,7 +13637,8 @@
             "osc.mix": -5,
             "att.1": 6.5,
             "vcf.freq": 7.5,
-            "vcf.reso": 3
+            "vcf.reso": 3,
+            "od.drive": 1
           },
           "cables": [
             ["j.osc2", "j.att1In"],
@@ -13677,7 +13715,8 @@
             "mix.noise": 10,
             "vcf.mode": "hp",
             "vcf.freq": 8.3,
-            "vcf.reso": 5
+            "vcf.reso": 5,
+            "od.drive": 1
           }
         },
         {
@@ -13771,7 +13810,8 @@
             "env1.a": 0,
             "env1.d": 5,
             "env1.s": 0,
-            "env1.r": 4
+            "env1.r": 4,
+            "od.drive": 1
           }
         }
       ],
@@ -13818,7 +13858,8 @@
           "set": {
             "osc1.shape": 4,
             "mix.noise": 1.5,
-            "vcf.freq": 8.5
+            "vcf.freq": 8.5,
+            "od.drive": 1
           }
         },
         {
@@ -13921,7 +13962,8 @@
             "env1.a": 1,
             "env1.d": 5,
             "env1.s": 10,
-            "env1.r": 3
+            "env1.r": 3,
+            "od.drive": 1
           }
         }
       ],
@@ -14091,7 +14133,8 @@
             "env1.a": 0,
             "env1.d": 5,
             "env1.s": 4,
-            "env1.r": 3
+            "env1.r": 3,
+            "od.drive": 1
           }
         }
       ],
@@ -14238,7 +14281,8 @@
             "env1.r": 7.5,
             "delay.time": 9,
             "delay.repeats": 6,
-            "delay.mix": 3.5
+            "delay.mix": 3.5,
+            "od.drive": 1
           }
         }
       ],
@@ -14320,7 +14364,8 @@
           "set": {
             "delay.time": 9.5,
             "delay.repeats": 5,
-            "delay.mix": 3.5
+            "delay.mix": 3.5,
+            "od.drive": 1
           }
         }
       ],
@@ -14381,7 +14426,8 @@
             "env1.a": 0,
             "env1.d": 5,
             "env1.s": 10,
-            "env1.r": 4
+            "env1.r": 4,
+            "od.drive": 1
           }
         },
         {
@@ -14471,7 +14517,8 @@
           "set": {
             "delay.time": 9.2,
             "delay.repeats": 6.5,
-            "delay.mix": 4
+            "delay.mix": 4,
+            "od.drive": 1
           }
         }
       ],
@@ -14548,7 +14595,8 @@
             "env1.r": 5,
             "delay.time": 8.5,
             "delay.repeats": 3.5,
-            "delay.mix": 3
+            "delay.mix": 3,
+            "od.drive": 1
           }
         }
       ],
@@ -14628,7 +14676,8 @@
             "env1.r": 4.5,
             "delay.time": 8.4,
             "delay.repeats": 4.5,
-            "delay.mix": 3.5
+            "delay.mix": 3.5,
+            "od.drive": 1
           }
         }
       ],
@@ -14949,7 +14998,8 @@
             "env1.a": 6.5,
             "env1.d": 8,
             "env1.s": 10,
-            "env1.r": 7.5
+            "env1.r": 7.5,
+            "od.drive": 1
           }
         }
       ],
@@ -14994,7 +15044,8 @@
             "mix.noise": 10,
             "vcf.mode": "bp",
             "vcf.freq": 7,
-            "vcf.reso": 2
+            "vcf.reso": 2,
+            "od.drive": 1
           }
         },
         {
@@ -15316,7 +15367,8 @@
             "env1.r": 5,
             "delay.time": 6,
             "delay.repeats": 3,
-            "delay.mix": 2.5
+            "delay.mix": 2.5,
+            "od.drive": 1
           }
         }
       ],
@@ -15394,7 +15446,8 @@
             "env1.a": 0,
             "env1.d": 4.5,
             "env1.s": 3,
-            "env1.r": 2
+            "env1.r": 2,
+            "od.drive": 1
           }
         }
       ],
@@ -15525,7 +15578,8 @@
             "osc2.shape": 2,
             "osc.sync": true,
             "osc2.tune": 1,
-            "osc.mix": 3
+            "osc.mix": 3,
+            "od.drive": 1
           }
         },
         {
@@ -15629,7 +15683,8 @@
             "env1.d": 8,
             "env1.s": 10,
             "env1.r": 6,
-            "out.volume": 9
+            "out.volume": 9,
+            "od.drive": 1
           }
         }
       ],
@@ -15711,7 +15766,8 @@
             "env1.r": 7,
             "delay.time": 7,
             "delay.repeats": 2.5,
-            "delay.mix": 2
+            "delay.mix": 2,
+            "od.drive": 1
           }
         }
       ],
@@ -15787,7 +15843,8 @@
             "env1.d": 6,
             "env1.s": 10,
             "env1.r": 4.5,
-            "out.volume": 8.5
+            "out.volume": 8.5,
+            "od.drive": 1
           }
         }
       ],
@@ -15935,7 +15992,8 @@
           "set": {
             "delay.time": 10,
             "delay.repeats": 9.3,
-            "delay.mix": 5
+            "delay.mix": 5,
+            "od.drive": 1
           }
         },
         {
@@ -16027,7 +16085,8 @@
             "env1.r": 7.5,
             "delay.time": 8.5,
             "delay.repeats": 5,
-            "delay.mix": 3
+            "delay.mix": 3,
+            "od.drive": 1
           }
         }
       ],
@@ -16168,7 +16227,8 @@
             "env1.a": 8,
             "env1.d": 9,
             "env1.s": 10,
-            "env1.r": 9
+            "env1.r": 9,
+            "od.drive": 1
           }
         }
       ],
@@ -16237,7 +16297,8 @@
             "env1.a": 6,
             "env1.d": 8,
             "env1.s": 10,
-            "env1.r": 8
+            "env1.r": 8,
+            "od.drive": 1
           }
         }
       ],
@@ -16318,7 +16379,8 @@
             "env1.r": 3,
             "delay.time": 6,
             "delay.repeats": 2,
-            "delay.mix": 2
+            "delay.mix": 2,
+            "od.drive": 1
           }
         }
       ],
@@ -16606,7 +16668,8 @@
             "env1.a": 0,
             "env1.d": 7,
             "env1.s": 0,
-            "env1.r": 6
+            "env1.r": 6,
+            "od.drive": 1
           }
         }
       ],
@@ -16651,7 +16714,8 @@
           "set": {
             "osc1.shape": 1,
             "osc1.width": 5,
-            "vcf.freq": 9
+            "vcf.freq": 9,
+            "od.drive": 1
           }
         },
         {
@@ -16752,7 +16816,8 @@
             "env1.a": 7.5,
             "env1.d": 8,
             "env1.s": 10,
-            "env1.r": 8
+            "env1.r": 8,
+            "od.drive": 1
           }
         }
       ],
@@ -16823,7 +16888,8 @@
             "env1.d": 8,
             "env1.s": 10,
             "env1.r": 7,
-            "out.volume": 9
+            "out.volume": 9,
+            "od.drive": 1
           }
         }
       ],
@@ -16868,7 +16934,8 @@
             "env1.a": 0,
             "env1.d": 6,
             "env1.s": 0,
-            "env1.r": 4
+            "env1.r": 4,
+            "od.drive": 1
           }
         },
         {
@@ -16923,7 +16990,8 @@
             "mix.noise": 10,
             "vcf.mode": "bp",
             "vcf.freq": 8.6,
-            "vcf.reso": 6
+            "vcf.reso": 6,
+            "od.drive": 1
           }
         },
         {
@@ -17027,7 +17095,8 @@
             "env1.d": 6,
             "env1.s": 9,
             "env1.r": 5,
-            "out.volume": 9
+            "out.volume": 9,
+            "od.drive": 1
           }
         },
         {
@@ -17109,7 +17178,8 @@
             "env1.a": 3,
             "env1.d": 6,
             "env1.s": 10,
-            "env1.r": 4.5
+            "env1.r": 4.5,
+            "od.drive": 1
           }
         },
         {
@@ -17198,7 +17268,8 @@
             "env1.s": 10,
             "env1.r": 4,
             "porta.time": 0.8,
-            "out.volume": 9
+            "out.volume": 9,
+            "od.drive": 1
           }
         }
       ],
@@ -17272,7 +17343,8 @@
             "env1.a": 2.5,
             "env1.d": 6,
             "env1.s": 10,
-            "env1.r": 5
+            "env1.r": 5,
+            "od.drive": 1
           }
         },
         {
@@ -17365,7 +17437,8 @@
             "env1.a": 0,
             "env1.d": 6.5,
             "env1.s": 0,
-            "env1.r": 5
+            "env1.r": 5,
+            "od.drive": 1
           }
         }
       ],
@@ -17446,7 +17519,8 @@
             "env1.a": 0,
             "env1.d": 8,
             "env1.s": 0,
-            "env1.r": 7
+            "env1.r": 7,
+            "od.drive": 1
           }
         }
       ],
@@ -17525,7 +17599,8 @@
             "env1.a": 0,
             "env1.d": 5,
             "env1.s": 0,
-            "env1.r": 4
+            "env1.r": 4,
+            "od.drive": 1
           }
         }
       ],
@@ -17729,7 +17804,8 @@
             "env1.a": 0,
             "env1.d": 5.5,
             "env1.s": 0,
-            "env1.r": 4.5
+            "env1.r": 4.5,
+            "od.drive": 1
           }
         },
         {
@@ -17824,7 +17900,8 @@
           "set": {
             "delay.time": 7,
             "delay.repeats": 3,
-            "delay.mix": 2.5
+            "delay.mix": 2.5,
+            "od.drive": 1
           }
         }
       ],
@@ -17899,7 +17976,8 @@
             "env1.r": 5,
             "delay.time": 8,
             "delay.repeats": 3,
-            "delay.mix": 2.5
+            "delay.mix": 2.5,
+            "od.drive": 1
           }
         }
       ],
@@ -17974,7 +18052,8 @@
             "env1.a": 0,
             "env1.d": 6,
             "env1.s": 0,
-            "env1.r": 4
+            "env1.r": 4,
+            "od.drive": 1
           }
         }
       ],
@@ -18103,7 +18182,8 @@
             "osc2.shape": 2,
             "osc2.range": "16",
             "osc2.tune": 0.1,
-            "osc.mix": 0
+            "osc.mix": 0,
+            "od.drive": 1
           }
         },
         {
@@ -18199,7 +18279,8 @@
             "env1.r": 6,
             "delay.time": 8.5,
             "delay.repeats": 4,
-            "delay.mix": 3
+            "delay.mix": 3,
+            "od.drive": 1
           }
         },
         {
@@ -18397,7 +18478,8 @@
             "env1.a": 8,
             "env1.d": 9,
             "env1.s": 10,
-            "env1.r": 8.5
+            "env1.r": 8.5,
+            "od.drive": 1
           }
         },
         {
@@ -18492,7 +18574,8 @@
           "set": {
             "delay.time": 9.6,
             "delay.repeats": 6,
-            "delay.mix": 4
+            "delay.mix": 4,
+            "od.drive": 1
           }
         }
       ],
@@ -18558,7 +18641,8 @@
           "set": {
             "delay.time": 10,
             "delay.repeats": 6.5,
-            "delay.mix": 4
+            "delay.mix": 4,
+            "od.drive": 1
           }
         }
       ],
@@ -18642,7 +18726,8 @@
           "set": {
             "delay.time": 9.5,
             "delay.repeats": 6.5,
-            "delay.mix": 4
+            "delay.mix": 4,
+            "od.drive": 1
           }
         }
       ],
@@ -18716,7 +18801,8 @@
             "env1.r": 7,
             "delay.time": 9,
             "delay.repeats": 5,
-            "delay.mix": 3.5
+            "delay.mix": 3.5,
+            "od.drive": 1
           }
         }
       ],
@@ -18795,7 +18881,8 @@
             "env1.a": 0,
             "env1.d": 5,
             "env1.s": 0,
-            "env1.r": 4
+            "env1.r": 4,
+            "od.drive": 1
           }
         }
       ],
@@ -18938,7 +19025,8 @@
             "env1.d": 4,
             "env1.s": 0,
             "env1.r": 3,
-            "out.volume": 9
+            "out.volume": 9,
+            "od.drive": 1
           }
         }
       ],
@@ -19007,7 +19095,8 @@
             "env1.a": 0,
             "env1.d": 5.5,
             "env1.s": 0,
-            "env1.r": 4.5
+            "env1.r": 4.5,
+            "od.drive": 1
           }
         }
       ],
@@ -19071,7 +19160,8 @@
             "env1.a": 0,
             "env1.d": 8.5,
             "env1.s": 0,
-            "env1.r": 8
+            "env1.r": 8,
+            "od.drive": 1
           }
         }
       ],
@@ -19194,7 +19284,8 @@
             "env1.d": 6,
             "env1.s": 3,
             "env1.r": 5,
-            "out.volume": 9
+            "out.volume": 9,
+            "od.drive": 1
           }
         }
       ],
@@ -19267,7 +19358,8 @@
           "set": {
             "delay.time": 0.5,
             "delay.repeats": 7.5,
-            "delay.mix": 3.5
+            "delay.mix": 3.5,
+            "od.drive": 1
           }
         }
       ],
@@ -19320,7 +19412,8 @@
             "env1.a": 3.5,
             "env1.d": 6,
             "env1.s": 9,
-            "env1.r": 5
+            "env1.r": 5,
+            "od.drive": 1
           }
         },
         {
@@ -19406,7 +19499,8 @@
             "env1.r": 7,
             "delay.time": 9.5,
             "delay.repeats": 6.5,
-            "delay.mix": 4
+            "delay.mix": 4,
+            "od.drive": 1
           }
         }
       ],
@@ -19489,7 +19583,8 @@
           "set": {
             "delay.time": 7.5,
             "delay.repeats": 3,
-            "delay.mix": 2.5
+            "delay.mix": 2.5,
+            "od.drive": 1
           }
         }
       ],

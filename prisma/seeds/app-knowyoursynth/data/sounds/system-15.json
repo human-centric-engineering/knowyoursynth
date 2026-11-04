@@ -33,17 +33,19 @@
             ["j.m921b_1.sawtooth", "j.m904a.sig_in"],
             ["j.m904a.sig_out", "j.m902_1.sig_in_pos"],
             ["j.m902_1.out_pos", "j.out.l"]
-          ]
+          ],
+          "unplug": [["j.m921.sawtooth", "j.m902_1.sig_in_pos"]]
         },
         {
           "title": "The keyboard sets the pitch",
           "module": "mod",
           "why": "The CM1A turns each key into a voltage. It goes to the 921A Oscillator Driver, and the driver’s output to the 921B’s link input.\n- Cables: CM1A CV 1 to 921A FREQUENCY IN 1, 921A FREQUENCY TO 921B to 921B (1) LINK FREQ.\n- Listen for: the buzz now changes pitch with the keys, but it never stops.",
-          "set": {},
+          "set": { "m921.coarse": "sub" },
           "cables": [
             ["j.cm1a.cv_1", "j.m921a_1.freq_in_1"],
             ["j.m921a_1.freq_out", "j.m921b_1.freq_link"]
-          ]
+          ],
+          "unplug": [["j.cm1a.cv_1", "j.m921.freq_cv_1"]]
         },
         {
           "title": "An envelope makes notes",
@@ -60,7 +62,8 @@
             ["j.cm1a.trig_upper", "j.cp35.mult_a"],
             ["j.cp35.mult_a_out_1", "j.m911_1.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"]
-          ]
+          ],
+          "unplug": [["j.cm1a.trig_upper", "j.m911_1.strig"]]
         },
         {
           "title": "A second envelope sweeps the filter",
@@ -131,7 +134,8 @@
             ["j.cm1a.cv_1", "j.m921a_1.freq_in_1"],
             ["j.m921a_1.freq_out", "j.m921b_1.freq_link"],
             ["j.m921b_1.freq_link_thru", "j.m921b_2.freq_link"]
-          ]
+          ],
+          "unplug": [["j.cm1a.cv_1", "j.m921.freq_cv_1"]]
         },
         {
           "title": "Mixer, filter, amplifier",
@@ -150,7 +154,8 @@
             ["j.cp3am_1.out_pos_1", "j.m904a.sig_in"],
             ["j.m904a.sig_out", "j.m902_1.sig_in_pos"],
             ["j.m902_1.out_pos", "j.out.l"]
-          ]
+          ],
+          "unplug": [["j.m921.sawtooth", "j.m902_1.sig_in_pos"]]
         },
         {
           "title": "Triggers and the loudness envelope",
@@ -162,7 +167,8 @@
             ["j.cp35.mult_a_out_1", "j.m911_1.strig"],
             ["j.cp35.mult_a_out_2", "j.m911_2.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"]
-          ]
+          ],
+          "unplug": [["j.cm1a.trig_upper", "j.m911_1.strig"]]
         },
         {
           "title": "A vibrato that waits",
@@ -240,7 +246,8 @@
             ["j.m921b_1.freq_link_thru", "j.m921b_2.freq_link"],
             ["j.m921a_1.width_out", "j.m921b_1.width_link"],
             ["j.m921b_1.width_link_thru", "j.m921b_2.width_link"]
-          ]
+          ],
+          "unplug": [["j.cm1a.cv_1", "j.m921.freq_cv_1"]]
         },
         {
           "title": "Rectangular waves into the voice",
@@ -272,6 +279,10 @@
             ["j.cp35.mult_a_out_2", "j.m911_2.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"],
             ["j.m911_2.out", "j.m904a.cv_1"]
+          ],
+          "unplug": [
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"],
+            ["j.cm1a.trig_upper", "j.m911_1.strig"]
           ]
         },
         {
@@ -323,11 +334,21 @@
             "m904a.regeneration": 9.5,
             "m904a.fixed_cv": -2,
             "cp3am_1.gain1": 5,
-            "cp3am_1.master": 8
+            "cp3am_1.master": 8,
+            "m911_1.t1": 3,
+            "m911_1.esus": 7,
+            "m911_1.t3": 3
           },
           "cables": [
             ["j.m904a.sig_out", "j.cp3am_1.in1"],
             ["j.cp3am_1.out_pos_1", "j.out.l"]
+          ],
+          "unplug": [
+            ["j.cm1a.cv_1", "j.m921.freq_cv_1"],
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"],
+            ["j.m902_1.out_pos", "j.out.l"],
+            ["j.cm1a.trig_upper", "j.m911_1.strig"],
+            ["j.m911_1.out", "j.m902_1.cv_1"]
           ]
         },
         {
@@ -429,6 +450,10 @@
             ["j.cp3am_1.out_pos_1", "j.m904a.sig_in"],
             ["j.m904a.sig_out", "j.m902_1.sig_in_pos"],
             ["j.m902_1.out_pos", "j.out.l"]
+          ],
+          "unplug": [
+            ["j.cm1a.cv_1", "j.m921.freq_cv_1"],
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"]
           ]
         },
         {
@@ -441,7 +466,8 @@
             ["j.cp35.mult_a_out_1", "j.m911_1.strig"],
             ["j.cp35.mult_a_out_2", "j.m911_2.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"]
-          ]
+          ],
+          "unplug": [["j.cm1a.trig_upper", "j.m911_1.strig"]]
         },
         {
           "title": "Slow filter movement",
@@ -515,7 +541,8 @@
             "m921b_2.range": "16'",
             "cp3am_1.gain1": 7,
             "cp3am_1.gain2": 5,
-            "cp3am_1.master": 8
+            "cp3am_1.master": 8,
+            "m921.coarse": "sub"
           },
           "cables": [
             ["j.cm1a.cv_1", "j.m921a_1.freq_in_1"],
@@ -526,6 +553,10 @@
             ["j.cp3am_1.out_pos_1", "j.m904a.sig_in"],
             ["j.m904a.sig_out", "j.m902_1.sig_in_pos"],
             ["j.m902_1.out_pos", "j.out.l"]
+          ],
+          "unplug": [
+            ["j.cm1a.cv_1", "j.m921.freq_cv_1"],
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"]
           ]
         },
         {
@@ -551,7 +582,8 @@
             ["j.cp35.mult_a_out_2", "j.m911_2.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"],
             ["j.m911_2.out", "j.m904a.cv_1"]
-          ]
+          ],
+          "unplug": [["j.cm1a.trig_upper", "j.m911_1.strig"]]
         },
         {
           "title": "The filter follows the keys",
@@ -615,7 +647,8 @@
             "m911_1.t1": 1,
             "m911_1.t2": 6,
             "m911_1.esus": 8,
-            "m911_1.t3": 5
+            "m911_1.t3": 5,
+            "m921.coarse": "sub"
           },
           "cables": [
             ["j.cm1a.cv_1", "j.m921a_1.freq_in_1"],
@@ -630,6 +663,11 @@
             ["j.cp35.mult_a_out_1", "j.m911_1.strig"],
             ["j.cp35.mult_a_out_2", "j.m911_2.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"]
+          ],
+          "unplug": [
+            ["j.cm1a.cv_1", "j.m921.freq_cv_1"],
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"],
+            ["j.cm1a.trig_upper", "j.m911_1.strig"]
           ]
         },
         {
@@ -700,7 +738,8 @@
             "m911_1.t1": 4,
             "m911_1.t2": 7,
             "m911_1.esus": 8,
-            "m911_1.t3": 6
+            "m911_1.t3": 6,
+            "m921.coarse": "sub"
           },
           "cables": [
             ["j.cm1a.cv_1", "j.m921a_1.freq_in_1"],
@@ -713,6 +752,10 @@
             ["j.m902_1.out_pos", "j.out.l"],
             ["j.cm1a.trig_upper", "j.m911_1.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"]
+          ],
+          "unplug": [
+            ["j.cm1a.cv_1", "j.m921.freq_cv_1"],
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"]
           ]
         },
         {
@@ -793,14 +836,16 @@
             ["j.m902_1.out_pos", "j.out.l"],
             ["j.cm1a.trig_upper", "j.m911_1.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"]
-          ]
+          ],
+          "unplug": [["j.m921.sawtooth", "j.m902_1.sig_in_pos"]]
         },
         {
           "title": "The keys tune the whistle",
           "module": "mod",
           "why": "The CM1A CV goes straight to the filter’s cutoff, at 1 V per octave.\n- Cable: CM1A CV 1 to 904A CONTROL INPUT 1.\n- Listen for: the whistle now follows the notes.",
           "set": {},
-          "cables": [["j.cm1a.cv_1", "j.m904a.cv_1"]]
+          "cables": [["j.cm1a.cv_1", "j.m904a.cv_1"]],
+          "unplug": [["j.cm1a.cv_1", "j.m921.freq_cv_1"]]
         },
         {
           "title": "A slow sway",
@@ -863,7 +908,8 @@
             "m921b_2.frequency": 0.12,
             "cp3am_1.gain1": 6,
             "cp3am_1.gain2": 6,
-            "cp3am_1.master": 8
+            "cp3am_1.master": 8,
+            "m921.coarse": "sub"
           },
           "cables": [
             ["j.cm1a.cv_1", "j.m921a_1.freq_in_1"],
@@ -874,6 +920,10 @@
             ["j.cp3am_1.out_pos_1", "j.m904a.sig_in"],
             ["j.m904a.sig_out", "j.m902_1.sig_in_pos"],
             ["j.m902_1.out_pos", "j.out.l"]
+          ],
+          "unplug": [
+            ["j.cm1a.cv_1", "j.m921.freq_cv_1"],
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"]
           ]
         },
         {
@@ -898,7 +948,8 @@
             ["j.cp35.mult_a_out_2", "j.m911_2.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"],
             ["j.m911_2.out", "j.m904a.cv_1"]
-          ]
+          ],
+          "unplug": [["j.cm1a.trig_upper", "j.m911_1.strig"]]
         },
         {
           "title": "Even tone across the keys",
@@ -964,7 +1015,8 @@
             ["j.m902_1.out_pos", "j.out.l"],
             ["j.cm1a.trig_upper", "j.m911_1.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"]
-          ]
+          ],
+          "unplug": [["j.m921.sawtooth", "j.m902_1.sig_in_pos"]]
         },
         {
           "title": "The 921 at an odd ratio",
@@ -981,7 +1033,8 @@
             ["j.cm1a.cv_2", "j.m921.freq_cv_1"],
             ["j.m921.sine", "j.cp35.att_in1"],
             ["j.cp35.att_out1", "j.m921b_1.ac_mod"]
-          ]
+          ],
+          "unplug": [["j.cm1a.cv_1", "j.m921.freq_cv_1"]]
         }
       ],
       "context": {
@@ -1032,7 +1085,8 @@
             "m911_1.t1": 3,
             "m911_1.t2": 6,
             "m911_1.esus": 8,
-            "m911_1.t3": 6
+            "m911_1.t3": 6,
+            "m921.coarse": "sub"
           },
           "cables": [
             ["j.cm1a.cv_1", "j.m921a_1.freq_in_1"],
@@ -1042,6 +1096,10 @@
             ["j.m902_1.out_pos", "j.out.l"],
             ["j.cm1a.trig_upper", "j.m911_1.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"]
+          ],
+          "unplug": [
+            ["j.cm1a.cv_1", "j.m921.freq_cv_1"],
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"]
           ]
         },
         {
@@ -1122,6 +1180,10 @@
             ["j.m902_1.out_pos", "j.out.l"],
             ["j.cm1a.trig_upper", "j.m911_1.strig"],
             ["j.m911_1.out", "j.m902_1.cv_1"]
+          ],
+          "unplug": [
+            ["j.cm1a.cv_1", "j.m921.freq_cv_1"],
+            ["j.m921.sawtooth", "j.m902_1.sig_in_pos"]
           ]
         },
         {
