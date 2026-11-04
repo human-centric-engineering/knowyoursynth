@@ -270,11 +270,14 @@ export function usePanelHistory<S extends Panelled>(
       if (!gliding.current) finishShowing();
       onTakeOverRef.current?.();
       // The load begins now, before anything else this moment can sound (the page's next note, or its Play), and the
-      // panel shows the Default patch in the same render as the session takes the new one.
+      // panel shows the Default patch in the same render as the session takes the new one. With reduced motion it
+      // snaps straight to the new one.
       if (fn(sessRef.current) !== sessRef.current) {
         setLoading(true);
-        frameRef.current = fromDefault();
-        setFrame(frameRef.current);
+        if (glideMotion()) {
+          frameRef.current = fromDefault();
+          setFrame(frameRef.current);
+        }
       }
       setSess(marked(fn, 'glide'));
     },

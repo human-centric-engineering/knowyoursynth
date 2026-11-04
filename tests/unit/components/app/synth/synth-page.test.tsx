@@ -29,6 +29,7 @@ import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/cata
 import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
 import { comeBackTo, storeSound } from '@/tests/helpers/synth-session';
 import { glideMotion } from '@/components/app/synth/motion';
+import { ARRIVE_MS } from '@/components/app/synth/use-panel-history';
 import { getSynthRouting } from '@/lib/app/synths/routing';
 
 const { router, engine, events } = vi.hoisted(() => ({
@@ -899,6 +900,8 @@ describe('SynthPage glides', () => {
       values: { 'ctl.tune': 2, 'filter.cutoff': 2 },
       cables: [['j.lfoTri', 'j.cutCv']],
     });
+    // The arrival's wait held until the panel has been read, however slow the machine.
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
     page();
     // Model D's Default patch has the filter open at 5.
     expect(valueOf(/CUTOFF/)).toBe('5');
@@ -906,11 +909,27 @@ describe('SynthPage glides', () => {
     // The sound is the one on the panel already: its name, and nothing to restore, as it glides.
     expect(loadedName()).toBe('Wobble lead');
     expect(loadingShown()).toBe(true);
-    await waitFor(() => expect(valueOf(/^TUNE/)).toBe('2'), { timeout: 5000 });
-    expect(valueOf(/CUTOFF/)).toBe('5');
-    await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('2'), { timeout: 3000 });
-    expect(screen.queryByRole('button', { name: 'Unplug all cables' })).toBeNull();
-    await waitFor(() => expect(button('Unplug all cables')).toBeTruthy(), { timeout: 3000 });
+    act(() => {
+      vi.advanceTimersByTime(ARRIVE_MS);
+    });
+    vi.useRealTimers();
+    // The order each part first moves in, read on every change to the page.
+    const order: string[] = [];
+    const saw = (part: string, moved: boolean) => {
+      if (moved && !order.includes(part)) order.push(part);
+    };
+    await waitFor(
+      () => {
+        saw('osc', valueOf(/^TUNE/) !== String(def.init['ctl.tune']));
+        saw('filter', valueOf(/CUTOFF/) !== '5');
+        saw('cables', !!screen.queryByRole('button', { name: 'Unplug all cables' }));
+        expect(valueOf(/^TUNE/)).toBe('2');
+        expect(valueOf(/CUTOFF/)).toBe('2');
+        expect(order).toContain('cables');
+      },
+      { timeout: 8000 }
+    );
+    expect(order).toEqual(['osc', 'filter', 'cables']);
     // Only the controls move: nothing is lit around them.
     expect(highlightStore.get()).toEqual([]);
     await waitFor(() => expect(loadingShown()).toBe(false), { timeout: 3000 });
