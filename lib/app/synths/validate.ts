@@ -318,7 +318,7 @@ export function validateDefaultPatch(def: SynthDef): ValidationResult<DefaultPat
 /**
  * Validate a library sound (a `Preset`) against a synth: its shape, then every step's settings and cables, and the
  * control ids its `tweaks` and `context` point at. A step's `unplug` must name a cable that is in at that step: one
- * an earlier step plugged in, or one `presetState` starts the sound with, and not one the step itself plugs in.
+ * the panel `presetState` builds from the earlier steps has in, and not one the step itself plugs in.
  */
 export function validatePreset(def: SynthDef, input: unknown): ValidationResult<Preset> {
   const parsed = PresetSchema.safeParse(input);

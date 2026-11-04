@@ -556,9 +556,8 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
                 json(step.unplug, setStep(i, 'unplug'), 6),
                 <p>
                   Cables this step takes out, as <code>[output jack, input jack]</code> pairs. Each
-                  must be in at this step, from an earlier step or the patch the sound starts on.
-                  They come out before this step&apos;s cables go in. Leave empty when the step
-                  takes nothing out.
+                  must be in at this step: plugged in by an earlier step. They come out before this
+                  step&apos;s cables go in. Leave empty when the step takes nothing out.
                 </p>
               )}
             </div>
