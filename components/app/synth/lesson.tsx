@@ -252,7 +252,8 @@ function StepCarousel({
   const n = steps.length;
   const walking = step != null;
   // The step in view for the panel's: step 0 is no card of the track's, so its first.
-  const at = step == null || step === START_STEP ? 0 : step;
+  const starting = step === START_STEP;
+  const at = step == null || starting ? 0 : step;
   const [view, setView] = useState(at);
   const track = useRef<HTMLOListElement>(null);
   const settle = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -316,7 +317,7 @@ function StepCarousel({
           <ol className="flex min-w-0 items-center gap-0.5 overflow-x-auto">
             {steps.map((st, i) => {
               const m = moduleOf(st.module);
-              const on = i === view;
+              const on = i === view && !starting;
               const todo = walking && i > step;
               return (
                 <li key={i} className="shrink-0">
@@ -344,8 +345,9 @@ function StepCarousel({
           </ol>
           <button
             type="button"
-            onClick={() => go(view + 1)}
-            disabled={view === n - 1}
+            // From step 0 the next step is the first, already in view.
+            onClick={() => go(starting ? view : view + 1)}
+            disabled={view === n - 1 && !starting}
             aria-label="Next step"
             className="h-7 w-7 shrink-0 rounded text-(--kys-muted) enabled:hover:text-(--kys-text) disabled:opacity-40"
           >

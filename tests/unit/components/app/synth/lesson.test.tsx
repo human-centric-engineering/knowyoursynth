@@ -336,6 +336,14 @@ describe('Lesson step 0', () => {
     expect(onStep).toHaveBeenLastCalledWith(0);
   });
 
+  it('has the step bar go to step 1 from it, with no step of the bar current', () => {
+    const { onStep } = setup(START_STEP);
+    const bar = screen.getByRole('navigation', { name: 'Steps' });
+    expect(bar.querySelector('[aria-current]')).toBeNull();
+    fireEvent.click(within(bar).getByRole('button', { name: 'Next step' }));
+    expect(onStep).toHaveBeenLastCalledWith(0);
+  });
+
   it('is where Back from step 1 goes', () => {
     const { onStep } = setup(0);
     fireEvent.click(headerButton('Back'));

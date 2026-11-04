@@ -293,6 +293,21 @@ describe('lesson progress', () => {
     ]);
   });
 
+  it('does not finish the lesson when step 0 is chosen from the last step', async () => {
+    page();
+    await waitFor(() =>
+      expect(api.get).toHaveBeenCalledWith('/api/v1/me/progress', expect.anything())
+    );
+    fireEvent.click(walk('Build it step by step'));
+    fireEvent.click(walk('Next step'));
+    fireEvent.click(walk('Next step'));
+    fireEvent.click(walk('Next step'));
+    await waitFor(() => expect(progressPuts()).toHaveLength(3));
+    fireEvent.click(screen.getByRole('button', { name: 'Lesson step 0: Default patch' }));
+    expect(lesson().textContent).toContain('Step 0 of 3');
+    expect(progressPuts().map(([, body]) => body)).toEqual([{ step: 0 }, { step: 1 }, { step: 2 }]);
+  });
+
   it('keeps a lesson cut shorter since within it: the last step, and Continue goes there', async () => {
     serve({ progress: [entry('fat-bass', 7)] });
     page();

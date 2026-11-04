@@ -608,7 +608,7 @@ function Synth({
     shown &&
     sess.step != null &&
     sess.step < shown.steps.length &&
-    (sess.step !== START_STEP || hasStartStep(shown)) &&
+    (sess.step !== START_STEP || (hasStartStep(shown) && shown.steps.length > 0)) &&
     (!sess.soundId || ownLesson !== null)
       ? sess.step
       : null;
@@ -1960,7 +1960,7 @@ function Synth({
     // Progress is kept for the catalogue's lessons, not the Default patch's one step.
     const kept = preset && !isDefaultPatch(preset.id) ? preset : null;
     if (kept && k != null && k !== START_STEP) progress.record(kept.id, k);
-    else if (kept && step != null && step === kept.steps.length - 1)
+    else if (k == null && kept && step != null && step === kept.steps.length - 1)
       progress.record(kept.id, step, true);
     openSeq.current++;
     patch((s) => {
