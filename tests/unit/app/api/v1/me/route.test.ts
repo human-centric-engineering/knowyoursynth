@@ -43,6 +43,7 @@ import { GET as readSettings, PATCH as changeSettings } from '@/app/api/v1/me/se
 import { GET as readPanel, PUT as keepPanel } from '@/app/api/v1/me/panels/[synthId]/route';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { FX_DEFAULT } from '@/lib/app/synths/audio/fx';
+import { START_STEP } from '@/lib/app/sounds/preference-data';
 import type { Control } from '@/lib/app/synths/contract';
 import { createMockAuthSession } from '@/tests/helpers/auth';
 
@@ -267,6 +268,15 @@ describe('the last panel', () => {
     );
   });
 
+  it('keeps a lesson at step 0, the Default patch, held as the step before the first', async () => {
+    const res = await keepPanel(
+      request('PUT', '/api/v1/me/panels/model-d', { ...last, step: START_STEP }),
+      ctx('model-d')
+    );
+    expect(res.status).toBe(200);
+    expect(panels.rows.get('user-1/model-d')).toMatchObject({ step: START_STEP });
+  });
+
   it('is replaced by the next one, not added to', async () => {
     await keepPanel(request('PUT', '/api/v1/me/panels/model-d', last), ctx('model-d'));
     const next = { presetId: null, step: null, soundId: null, panel: { values: {}, cables: [] } };
@@ -338,7 +348,8 @@ describe('the last panel', () => {
       (await readPanel(request('GET', '/api/v1/me/panels/Bad%20Id'), ctx('Bad Id'))).status,
       (
         await keepPanel(
-          request('PUT', '/api/v1/me/panels/model-d', { ...last, step: -1 }),
+          // before step 0 (`START_STEP`, -1), which is the Default patch
+          request('PUT', '/api/v1/me/panels/model-d', { ...last, step: -2 }),
           ctx('model-d')
         )
       ).status,

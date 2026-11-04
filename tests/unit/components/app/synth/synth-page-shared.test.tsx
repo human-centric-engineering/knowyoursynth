@@ -573,6 +573,11 @@ describe("a shared sound's lesson (f-tutor t-55)", () => {
     shared({ shared: WITH_LESSON });
     openSide('Lesson');
     fireEvent.click(button('Build it step by step'));
+    expect(stepShown()).toBe('step 0 of 1');
+    // the header's Next step, not the step bar's arrow of the same name
+    const next = screen.getAllByRole('button').find((b) => b.textContent === 'Next step');
+    if (!next) throw new Error('no Next step');
+    fireEvent.click(next);
     expect(stepShown()).toBe('step 1 of 1');
     expect(loadedName()).toBe('Glass pluck');
     expect(cutoff()).toBe('2');

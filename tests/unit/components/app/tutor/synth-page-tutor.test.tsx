@@ -679,11 +679,13 @@ describe('a designed sound', () => {
 
     openSide('Lesson');
     fireEvent.click(button('Build it step by step'));
+    expect(stepShown()).toBe('step 0 of 3');
+    // the header's Next step, not the step bar's arrow of the same name
+    const next = () => screen.getAllByRole('button').find((b) => b.textContent === 'Next step');
+    fireEvent.click(next()!);
     expect(stepShown()).toBe('step 1 of 3');
     expect(loadedName()).toBe('Dark round bass');
     expect(cutoff()).not.toBe('-2'); // the filter is the second step
-    // the header's Next step, not the step bar's arrow of the same name
-    const next = () => screen.getAllByRole('button').find((b) => b.textContent === 'Next step');
     fireEvent.click(next()!);
     fireEvent.click(next()!);
     expect(stepShown()).toBe('step 3 of 3');
