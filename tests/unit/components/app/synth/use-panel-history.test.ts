@@ -8,10 +8,12 @@
  * @see components/app/synth/use-panel-history.ts
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useState } from 'react';
 import { act, fireEvent, renderHook } from '@testing-library/react';
 import { usePanelHistory } from '@/components/app/synth/use-panel-history';
+import { glideMotion } from '@/components/app/synth/motion';
+import { defaultPatchState } from '@/lib/app/synths/default-patch';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import type { ControlValues, PatchCable } from '@/lib/app/synths/contract';
 
@@ -39,9 +41,10 @@ beforeEach(() => {
 
 function setup() {
   const onTakeOver = vi.fn();
+  const onLoad = vi.fn<(loading: boolean) => void>();
   const { result } = renderHook(() => {
     const [stored, setStored] = useState<Sess>(START);
-    return { stored, setStored, ...usePanelHistory(stored, setStored, def, onTakeOver) };
+    return { stored, setStored, ...usePanelHistory(stored, setStored, def, onTakeOver, onLoad) };
   });
   const cutoff = () => result.current.stored.values['filter.cutoff'];
   /** A change through `patch`, a while after the last. */
@@ -51,7 +54,7 @@ function setup() {
   };
   /** Finishes the undo or redo being shown, as any change through `patch` does; this one changes nothing. */
   const settle = () => act(() => result.current.patch((s) => s));
-  return { result, cutoff, turn, settle, onTakeOver };
+  return { result, cutoff, turn, settle, onTakeOver, onLoad };
 }
 
 describe('usePanelHistory', () => {
@@ -167,5 +170,86 @@ describe('usePanelHistory', () => {
     });
     sheet.parentElement?.remove();
     expect(result.current.canUndo).toBe(false);
+  });
+});
+
+describe('usePanelHistory loads (f-default-patch t-172)', () => {
+  const DEFAULT = defaultPatchState(def);
+  const WOBBLE: Pick<Sess, 'values' | 'cables'> = {
+    values: at(3),
+    cables: [['j.lfoTri', 'j.cutCv']],
+  };
+  // Off for every other test (`tests/setup.ts`).
+  beforeEach(() => vi.mocked(glideMotion).mockReturnValue(true));
+  afterEach(() => vi.mocked(glideMotion).mockReturnValue(false));
+
+  it('arrives loading, on the Default patch', () => {
+    const { result, settle } = setup();
+    expect(result.current.sess.values).toEqual(DEFAULT.values);
+    expect(result.current.loading).toBe(true);
+    settle();
+    expect(result.current.loading).toBe(false);
+    expect(result.current.sess.values).toEqual(START.values);
+  });
+
+  it('sets the Default patch at once, whatever was on the panel, and is loading until the new patch is set', () => {
+    const { result, cutoff, turn, settle, onLoad } = setup();
+    settle();
+    turn(1);
+    expect(result.current.sess.values['filter.cutoff']).toBe(1);
+    onLoad.mockClear();
+
+    act(() => result.current.glide((s) => ({ ...s, ...WOBBLE })));
+    // The session holds the new patch; the panel shows the Default patch, cables and all, until the glide is done.
+    expect(cutoff()).toBe(3);
+    expect(result.current.sess.values).toEqual(DEFAULT.values);
+    expect(result.current.sess.cables).toEqual(DEFAULT.cables);
+    expect(result.current.loading).toBe(true);
+    expect(result.current.isLoading()).toBe(true);
+    expect(onLoad.mock.calls).toEqual([[true]]);
+
+    // A change through `patch` finishes it at once, and so ends the load.
+    settle();
+    expect(result.current.sess.values['filter.cutoff']).toBe(3);
+    expect(result.current.sess.cables).toEqual(WOBBLE.cables);
+    expect(result.current.loading).toBe(false);
+    expect(onLoad.mock.calls).toEqual([[true], [false]]);
+  });
+
+  it('starts again from the Default patch when another patch is loaded during a load', () => {
+    const { result, settle } = setup();
+    settle();
+    act(() => result.current.glide((s) => ({ ...s, ...WOBBLE })));
+    act(() => result.current.glide((s) => ({ ...s, values: at(7), cables: [] })));
+    expect(result.current.sess.values).toEqual(DEFAULT.values);
+    expect(result.current.loading).toBe(true);
+  });
+
+  it('ends a load with Undo', () => {
+    const { result, settle } = setup();
+    settle();
+    act(() => result.current.glide((s) => ({ ...s, ...WOBBLE })));
+    act(() => result.current.undo());
+    expect(result.current.loading).toBe(false);
+  });
+
+  it('is no load when the new patch changes nothing', () => {
+    const { result, settle, onLoad } = setup();
+    settle();
+    onLoad.mockClear();
+    act(() => result.current.glide((s) => s));
+    expect(onLoad).not.toHaveBeenCalled();
+    expect(result.current.loading).toBe(false);
+  });
+
+  it('with reduced motion, snaps to the new patch, the load beginning and ending in the same moment', () => {
+    vi.mocked(glideMotion).mockReturnValue(false);
+    const { result, onLoad } = setup();
+    expect(result.current.loading).toBe(false);
+    onLoad.mockClear();
+    act(() => result.current.glide((s) => ({ ...s, ...WOBBLE })));
+    expect(result.current.sess.values['filter.cutoff']).toBe(3);
+    expect(result.current.loading).toBe(false);
+    expect(onLoad.mock.calls).toEqual([[true], [false]]);
   });
 });
