@@ -21,6 +21,7 @@ import {
   type PanelParts,
   drawChannel,
   outputArea,
+  SYNCUSSION_DEFAULT_PATCH,
   syncussionEngine,
 } from '@/lib/app/synths/defs/syncussion-kit';
 
@@ -176,6 +177,7 @@ const pearlSyncussion: SynthDef & { version: number } = {
   controls: p.controls,
   jacks: [],
   init,
+  defaultPatch: SYNCUSSION_DEFAULT_PATCH,
   toEngine,
 };
 

@@ -2394,6 +2394,20 @@ const solar42n: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // Init is already VCO A's sawtooth alone in the mixer, played from the keyboard. The Default patch opens both filters
+  // (VCO A sits in the middle, so it goes through both) with no resonance, and makes Envelope A (its loudness) an organ
+  // gate with a short release.
+  defaultPatch: {
+    values: {
+      'vcf.lfreq': 10,
+      'vcf.rfreq': 10,
+      'vcf.lres': 0,
+      'vcf.rres': 0,
+      'ea.a': 0,
+      'ea.s': 10,
+      'ea.r': 1,
+    },
+  },
   toEngine,
 };
 

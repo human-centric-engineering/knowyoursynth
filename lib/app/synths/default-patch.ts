@@ -71,26 +71,32 @@ export const SCALE_PATTERN_VIEW: LibraryPatternView = {
 
 /**
  * The Default patch as the library lists a sound: one step, which sets the patch. A synth without a `defaultPatch` of
- * its own gets `init` with no cables.
+ * its own gets `init` with no cables. A patch that is not a sawtooth (it has `listen`) is described as the synth's
+ * plainest tone, and says what to listen for in its own words. It lists as a lead unless it names its own category.
  */
 export function defaultPatchSound(def: SynthDef): CatalogueSound {
   const patch = def.defaultPatch;
+  const listen = patch?.listen?.trim() || null;
   return {
     id: DEFAULT_PATCH_ID,
     version: def.version ?? 1,
     name: DEFAULT_PATCH_NAME,
     ref: 'The starting point every patch here is explained from',
     artist: 'Know Your Synth',
-    tags: ['lead'],
+    tags: [patch?.category ?? 'lead'],
     level: 1,
-    blurb: `A plain sawtooth on the ${def.name}: set your own synth to this, and check it sounds the same.`,
-    how: 'One oscillator’s sawtooth goes through the filter, left open, to the amplifier, which opens while a key is held. Every other patch here starts from this one.',
+    blurb: `${listen ? 'The plainest tone' : 'A plain sawtooth'} on the ${def.name}: set your own synth to this, and check it sounds the same.`,
+    how: listen
+      ? 'The plainest tone the synth makes, with no modulation and no effects. Every other patch here starts from this one.'
+      : 'One oscillator’s sawtooth goes through the filter, left open, to the amplifier, which opens while a key is held. Every other patch here starts from this one.',
     phrase: SCALE_PHRASE,
     steps: [
       {
         title: DEFAULT_PATCH_NAME,
         module: 'osc',
-        why: 'A plain sawtooth with nothing shaping it: what every patch here starts from. Play a few notes and listen for a bright, steady buzz that starts and stops with the key.',
+        why: listen
+          ? `The plainest tone this synth makes: what every patch here starts from. ${listen}`
+          : 'A plain sawtooth with nothing shaping it: what every patch here starts from. Play a few notes and listen for a bright, steady buzz that starts and stops with the key.',
         ...(patch ? { set: { ...patch.values } } : {}),
         ...(patch?.cables ? { cables: [...patch.cables] } : {}),
       },

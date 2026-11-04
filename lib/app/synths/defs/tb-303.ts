@@ -805,6 +805,12 @@ const tb303: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // Init is already the sawtooth. The Default patch turns the cutoff fully up, the resonance off and ENV MOD fully down,
+  // which is as plain as the filter gets: as on the hardware, its envelope still moves the filter a little on each note.
+  // The TB-303 has no sustain: its loudness always dies away, slowly, over a held note.
+  defaultPatch: {
+    values: { 'filter.cutoff': 10, 'filter.res': 0, 'filter.envMod': 0, 'amp.accent': 0 },
+  },
   toEngine,
 };
 

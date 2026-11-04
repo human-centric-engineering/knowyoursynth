@@ -1522,6 +1522,11 @@ const e7: SynthDef & { version: number } = {
   controls,
   jacks: [],
   init,
+  // Init is already OSC1's sawtooth alone, with EG2 (the loudness) an organ gate. The Default patch opens the filter all
+  // the way.
+  defaultPatch: {
+    values: { 'vcf.cutoff': 10 },
+  },
   toEngine,
 };
 

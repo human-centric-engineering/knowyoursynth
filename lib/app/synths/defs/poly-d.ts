@@ -1376,6 +1376,11 @@ const polyD: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // Init already plays each note on one oscillator's sawtooth: in POLY mode the four oscillators are four voices. The
+  // Default patch opens the filter all the way and gives the loudness a short release.
+  defaultPatch: {
+    values: { 'filter.cutoff': 5, 'aenv.decay': 1 },
+  },
   toEngine,
 };
 

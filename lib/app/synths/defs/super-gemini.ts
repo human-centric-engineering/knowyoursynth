@@ -2273,6 +2273,11 @@ const superGemini: SynthDef & { version: number } = {
   controls,
   jacks: [],
   init,
+  // Init is already the upper layer's DDS 1 sawtooth alone, with the loudness an organ gate. The Default patch opens
+  // its low-pass filter all the way, with no keyboard tracking.
+  defaultPatch: {
+    values: { 'up.lpf': 10, 'up.vcfKey': 'off' },
+  },
   toEngine,
   signalNames: {
     env1: 'envelope 1',

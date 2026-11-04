@@ -19,6 +19,7 @@ import {
   drawChannel,
   outputArea,
   type PanelParts,
+  SYNCUSSION_DEFAULT_PATCH,
   syncussionEngine,
 } from '@/lib/app/synths/defs/syncussion-kit';
 import { type OmitEach } from '@/lib/app/synths/lib/def-kit';
@@ -269,6 +270,7 @@ const behringerSyncussion: SynthDef & { version: number } = {
   controls: p.controls,
   jacks,
   init,
+  defaultPatch: SYNCUSSION_DEFAULT_PATCH,
   toEngine,
 };
 

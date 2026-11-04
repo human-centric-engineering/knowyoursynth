@@ -1938,6 +1938,27 @@ const buchlaEasel: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // The Easel has no sawtooth: its brightest plain wave is the complex oscillator's square, turned fully to it with no
+  // folding. Nothing opens Gate 1 until it is patched, so the Default patch takes the one cable every library sound
+  // here starts from, the envelope into Gate 1's level, with the gate as a plain VCA (no filtering) and the envelope
+  // opening fast on a key, held while the key is, and falling fast. The reverb is off and the output turned down to
+  // match the other synths' Default patches.
+  defaultPatch: {
+    values: {
+      'cosc.shape': 10,
+      'cosc.timbre': 0,
+      'env.attack': 10,
+      'env.decay': 9,
+      'lpg1.mode': 'vca',
+      'lpg1.levelCv': 10,
+      'lpg1.level': 0,
+      'out.rev': 0,
+      'out.a': 4,
+    },
+    cables: [['j.env3', 'j.lvl1']],
+    listen:
+      'Play a few notes and listen for a bright, hollow, reedy buzz, a square wave, that starts and stops with the key.',
+  },
   toEngine,
 };
 

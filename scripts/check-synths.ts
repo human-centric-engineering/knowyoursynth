@@ -20,7 +20,8 @@
  *   databank's seed data resolves, and every sound it names is in that synth's library. Run once, by the process that
  *   starts the others, as `check.mjs` did; a problem refuses the run.
  * - **The Default patch** (`f-default-patch`), for a synth with one of its own: checked by `validateDefaultPatch` and
- *   rendered playing its scale, as `(default)`. A synth without one has `init` as its Default patch, rendered already.
+ *   rendered playing its scale, as `(default)`. A synth without one has `init` as its Default patch, rendered already,
+ *   and so must not be one that is silent as initialised (`silentInit`).
  * - **Parity with the prototype.** A ported definition must equal the prototype's as data: geometry, ids, help text,
  *   areas, decor, init (`definitionDrift`). The baseline only hears what a sound plays, and this catches a
  *   transliteration slip no sound would.
@@ -639,6 +640,9 @@ async function main(): Promise<void> {
     ];
     for (const problem of validateDefaultPatch(def).problems)
       E(`${def.id} Default patch ${problem.path}: ${problem.message}`);
+    // Without a Default patch of its own a synth's Default patch is init, which a silent-by-design synth cannot be.
+    if (!def.defaultPatch && def.silentInit)
+      E(`${def.id} is silent as initialised, so it needs a Default patch of its own`);
     // The page lists the Default patch under this id, ahead of the catalogue: a sound slugged so would be hidden by it.
     if (presets.some((p) => p.id === DEFAULT_PATCH_ID))
       E(`${def.id} has a sound slugged ${DEFAULT_PATCH_ID}, the Default patch's reserved id`);

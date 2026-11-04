@@ -1800,6 +1800,20 @@ const model15: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // Init is already Oscillator 1's sawtooth alone. The Default patch opens both filters all the way, takes the
+  // resonance and the envelope off the low-pass, makes the envelope (which also sets the loudness) an organ gate with a
+  // short release, and turns the reverb down.
+  defaultPatch: {
+    values: {
+      'hpf.cutoff': 0,
+      'vcf.cutoff': 10,
+      'vcf.res': 0,
+      'vcf.env': 0,
+      'env.sustain': 10,
+      'env.release': 2,
+      'rev.mix': 0,
+    },
+  },
   toEngine,
 };
 

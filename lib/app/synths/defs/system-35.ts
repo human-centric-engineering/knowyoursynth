@@ -19,6 +19,7 @@ import {
   cp3ao,
   createRack,
   initOf,
+  MOOG900_DEFAULT_PATCH,
   m902,
   m904a,
   m904b,
@@ -98,6 +99,7 @@ const system35: SynthDef & { version: number } = {
   controls,
   jacks,
   init: initOf(controls),
+  defaultPatch: MOOG900_DEFAULT_PATCH,
   toEngine: (v) => rackToEngine(rack, v),
 };
 

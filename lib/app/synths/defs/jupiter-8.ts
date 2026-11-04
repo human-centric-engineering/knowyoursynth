@@ -1847,6 +1847,11 @@ const jupiter8: SynthDef & { version: number } = {
   controls,
   jacks: [],
   init,
+  // Init has both VCOs' sawtooths in the SOURCE MIX, VCO-2 an octave up. The Default patch turns the mix all the way to
+  // VCO-1, alone; the filter is already open, and ENV-2 (the loudness) already an organ gate.
+  defaultPatch: {
+    values: { 'mix.balance': 0 },
+  },
   toEngine,
   modular,
   signalNames: {

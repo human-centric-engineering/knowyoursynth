@@ -1025,6 +1025,11 @@ const pro800: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // Init is already Oscillator A's sawtooth alone, with the loudness an organ gate. The Default patch opens the filter
+  // all the way, with no keyboard tracking.
+  defaultPatch: {
+    values: { 'vcf.cutoff': 10, 'vcf.kbd': 'off' },
+  },
   toEngine,
   signalNames: {
     env1: 'the filter envelope',

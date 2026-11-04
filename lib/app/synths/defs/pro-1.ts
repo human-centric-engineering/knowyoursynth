@@ -1005,6 +1005,11 @@ const pro1: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // Init is already Oscillator A's sawtooth alone, with the loudness an organ gate. The Default patch opens the filter
+  // all the way, with no keyboard tracking.
+  defaultPatch: {
+    values: { 'filter.cutoff': 10, 'filter.kbd': 0 },
+  },
   toEngine,
 };
 

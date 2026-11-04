@@ -1056,6 +1056,11 @@ const kobol: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // Init is already VCO 1 alone, its WAVEFORM at the sawtooth, with the loudness an organ gate. The Default patch opens
+  // the filter all the way, with no keyboard tracking.
+  defaultPatch: {
+    values: { 'vcf.freq': 10, 'vcf.kbd': 0 },
+  },
   toEngine,
 };
 

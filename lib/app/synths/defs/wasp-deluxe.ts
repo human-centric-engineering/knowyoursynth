@@ -896,6 +896,11 @@ const waspDeluxe: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // Init is already Oscillator 1's sawtooth alone. The Default patch opens the filter all the way with no resonance and
+  // takes the contour off it, and makes the loudness an organ gate with a short release.
+  defaultPatch: {
+    values: { 'vcf.freq': 10, 'vcf.q': 0, 'vcf.envAmt': 0, 'vca.sustain': 10, 'vca.decay': 1 },
+  },
   toEngine,
 };
 

@@ -1615,6 +1615,11 @@ const take5: SynthDef & { version: number } = {
   controls,
   jacks: [],
   init,
+  // Init is already Oscillator 1's SHAPE at the sawtooth, alone, with the loudness an organ gate. The Default patch
+  // opens the filter all the way.
+  defaultPatch: {
+    values: { 'vcf.cutoff': 10 },
+  },
   toEngine,
 };
 

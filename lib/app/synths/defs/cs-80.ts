@@ -1655,6 +1655,11 @@ const cs80: SynthDef & { version: number } = {
   controls,
   jacks: [],
   init,
+  // Init is already Channel I's sawtooth alone, with its loudness an organ gate. The Default patch opens Channel I's
+  // low-pass filter all the way and takes its resonance off.
+  defaultPatch: {
+    values: { 'ch1.lpf': 10, 'ch1.resL': 0 },
+  },
   toEngine,
   signalNames: {
     env1: 'the filter envelope',

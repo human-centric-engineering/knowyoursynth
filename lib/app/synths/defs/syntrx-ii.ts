@@ -1844,6 +1844,22 @@ const syntrxII: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // Nothing sounds until it is pinned. The keyboard already plays Oscillator 2, so the Default patch turns its sawtooth
+  // up and pins it through the trapezoid's VCA to Output 1, which sits in the middle: two pins. The filter is left out,
+  // which is as open as it gets. The trapezoid opens on a key and stays up while it is held, then falls fast.
+  defaultPatch: {
+    values: {
+      'osc2.saw': 7,
+      'trap.attack': 0,
+      'trap.on': 0,
+      'trap.decay': 1,
+      'trap.signal': 7,
+    },
+    cables: [
+      ['r.osc2', 'c.env'],
+      ['r.envsig', 'c.out1'],
+    ],
+  },
   toEngine,
 };
 

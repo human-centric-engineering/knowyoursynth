@@ -1037,6 +1037,11 @@ const xm2: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  // Init is already the first Xpander voice's VCO 1 on its sawtooth alone, through the low-pass, with the loudness an
+  // organ gate. The Default patch opens the filter all the way.
+  defaultPatch: {
+    values: { 'xm1_vcf.frequency': 10 },
+  },
   toEngine,
   signalNames: {
     osc1: 'VCO 1',
