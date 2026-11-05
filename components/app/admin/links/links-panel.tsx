@@ -10,7 +10,7 @@
  * no order of theirs to set here.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useSharedSettingsReadOnly } from '@/components/admin/shared-settings-access';
 import {
@@ -40,6 +40,9 @@ function arrange(links: AdminLinkView[]): { ours: AdminLinkView[]; others: Admin
   };
 }
 
+/** The API's largest page. */
+const PAGE_SIZE = 100;
+
 export interface LinksPanelProps {
   owner: OwnerRef;
 }
@@ -53,17 +56,27 @@ export function LinksPanel({ owner: given }: LinksPanelProps) {
   const [moving, setMoving] = useState(false);
 
   const owner = useMemo<OwnerRef>(() => ({ kind, id }), [kind, id]);
+  /** Which load is newest: an older one that answers late is dropped rather than shown. */
+  const latestLoad = useRef(0);
 
   const load = useCallback(async () => {
+    const mine = ++latestLoad.current;
     try {
-      const data = await apiClient.get<unknown>(LINKS_API, {
-        params: { ...ownerQuery(owner), limit: 100 },
-      });
+      // Every page: a reorder must name each of ours, so the panel needs all of them, not the newest hundred.
+      const all: AdminLinkView[] = [];
+      for (let page = 1; ; page++) {
+        const data = await apiClient.get<unknown>(LINKS_API, {
+          params: { ...ownerQuery(owner), page, limit: PAGE_SIZE },
+        });
+        all.push(...readLinks(data));
+        if (!Array.isArray(data) || data.length < PAGE_SIZE) break;
+      }
+      if (mine !== latestLoad.current) return;
       // Only this owner's: the query asks for no other, and a row about anything else is not shown here.
-      setLinks(readLinks(data).filter((l) => l.owner.kind === kind && l.owner.id === id));
+      setLinks(all.filter((l) => l.owner.kind === kind && l.owner.id === id));
       setLoadFailed(false);
     } catch {
-      setLoadFailed(true);
+      if (mine === latestLoad.current) setLoadFailed(true);
     }
   }, [owner, kind, id]);
 

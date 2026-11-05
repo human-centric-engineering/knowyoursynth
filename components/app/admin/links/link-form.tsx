@@ -12,7 +12,7 @@
  * list page), the admin names one.
  */
 
-import { useState } from 'react';
+import { useState, type ChangeEvent } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -66,6 +66,33 @@ const EditSchema = FormSchema.refine((v) => v.title.length > 0, {
 });
 
 const ratingOf = (r: FormValues['rating']): number | null => (r === '' ? null : Number(r));
+
+/**
+ * What a refused save says about one field. The link service names the field (`{ url: '…' }`, `{ owner }`); body
+ * validation lists each issue (`{ errors: [{ path: 'url', message }] }`).
+ */
+const ServerDetailsSchema = z.object({
+  url: z.string().optional(),
+  title: z.string().optional(),
+  owner: z.unknown().optional(),
+  errors: z.array(z.object({ path: z.string(), message: z.string() })).optional(),
+});
+type ServerField = 'url' | 'title' | 'owner';
+
+function fieldProblem(error: APIClientError): { field: ServerField; message: string } | null {
+  const details = ServerDetailsSchema.safeParse(error.details ?? {});
+  if (!details.success) return null;
+  const d = details.data;
+  for (const field of ['url', 'title'] as const)
+    if (d[field] !== undefined) return { field, message: error.message };
+  if (d.owner !== undefined) return { field: 'owner', message: error.message };
+  for (const issue of d.errors ?? []) {
+    const head = issue.path.split('.')[0];
+    if (head === 'url' || head === 'title' || head === 'owner')
+      return { field: head, message: issue.message };
+  }
+  return null;
+}
 
 export interface LinkFormProps {
   /** The link to edit; null to add one. */
@@ -143,8 +170,9 @@ export function LinkForm({ link, owner, defaultOurs = false, onSaved, onCancel }
       ours: values.ours,
       rating: ratingOf(values.rating),
     };
+    let saved: unknown;
     try {
-      const saved = link
+      saved = link
         ? await apiClient.patch(`${LINKS_API}/${encodeURIComponent(link.id)}`, {
             body: { ...common, title: values.title },
           })
@@ -155,25 +183,30 @@ export function LinkForm({ link, owner, defaultOurs = false, onSaved, onCancel }
               ...(values.title ? { title: values.title } : {}),
             },
           });
-      onSaved(AdminLinkSchema.parse(saved));
     } catch (error) {
-      if (error instanceof APIClientError) {
-        const field = (['url', 'title'] as const).find(
-          (k) => typeof error.details?.[k] === 'string'
-        );
-        if (field) {
-          setError(field, { type: 'server', message: error.message }, { shouldFocus: true });
-          return;
-        }
-        if (error.details?.owner !== undefined) {
-          setError('ownerId', { type: 'server', message: error.message }, { shouldFocus: true });
-          return;
-        }
-        setServerError(error.message);
+      if (!(error instanceof APIClientError)) {
+        setServerError("That didn't save. Try again.");
         return;
       }
-      setServerError("That didn't save. Try again.");
+      const problem = fieldProblem(error);
+      if (problem?.field === 'owner' && !fixedOwner) {
+        setError('ownerId', { type: 'server', message: problem.message }, { shouldFocus: true });
+      } else if (problem && problem.field !== 'owner') {
+        setError(
+          problem.field,
+          { type: 'server', message: problem.message },
+          { shouldFocus: true }
+        );
+      } else {
+        // A fixed owner has no field to mark, so its problem is said here.
+        setServerError(problem?.message ?? error.message);
+      }
+      return;
     }
+    // It saved: a reply the browser cannot read must not read as a failure, or a retry is refused as a duplicate.
+    const parsed = AdminLinkSchema.safeParse(saved);
+    if (parsed.success) onSaved(parsed.data);
+    else setServerError('It saved, but the answer could not be read. Reload the page to see it.');
   };
 
   const id = (name: string) => `link-${link?.id ?? 'new'}-${name}`;
@@ -255,7 +288,15 @@ export function LinkForm({ link, owner, defaultOurs = false, onSaved, onCancel }
             autoComplete="off"
             placeholder="https://www.youtube.com/watch?v=…"
             aria-invalid={!!errors.url}
-            {...register('url')}
+            {...register('url', {
+              // The preview is of the address Read was given; once it changes, the preview no longer is.
+              onChange: (e: ChangeEvent<HTMLInputElement>) => {
+                if (suggestion && e.target.value !== suggestion.url) {
+                  setSuggestion(null);
+                  setReadProblem(null);
+                }
+              },
+            })}
           />
           <Button type="button" variant="outline" onClick={() => void read()} disabled={reading}>
             {reading && <Loader2 className="mr-1 h-4 w-4 animate-spin" />}

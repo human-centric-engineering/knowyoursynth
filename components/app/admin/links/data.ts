@@ -88,8 +88,9 @@ export function ownerAdminPath(owner: OwnerRef): string {
   return `/admin/synths/bank/${tab}/${encodeURIComponent(owner.id)}`;
 }
 
+const COMPACT = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 });
+
 /** A count as a person reads it: 1.2M, 34K, 950. */
 export function formatCount(n: number | null): string {
-  if (n === null) return '—';
-  return new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(n);
+  return n === null ? '—' : COMPACT.format(n);
 }

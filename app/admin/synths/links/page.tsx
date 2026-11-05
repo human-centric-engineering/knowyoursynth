@@ -1,8 +1,14 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 import { SharedSettingsReadOnlyNotice } from '@/components/admin/shared-settings-access';
-import { LINK_OWNER_KINDS, LINKS_API, readLinks } from '@/components/app/admin/links/data';
+import {
+  LINK_OWNER_KINDS,
+  LINKS_ADMIN_PATH,
+  LINKS_API,
+  readLinks,
+} from '@/components/app/admin/links/data';
 import { LinksTable, type LinkFilters } from '@/components/app/admin/links/links-table';
 import { FieldHelp } from '@/components/ui/field-help';
 import { parseApiResponse, serverFetch } from '@/lib/api/server-fetch';
@@ -51,9 +57,22 @@ export default async function LinksAdminPage({ searchParams }: Props) {
       const body = await parseApiResponse<unknown>(res);
       const meta = body.success ? MetaSchema.safeParse(body.meta) : null;
       if (body.success && meta?.success) result = { links: readLinks(body.data), meta: meta.data };
+      else logger.warn('links admin page: unreadable list answer', { query: query.toString() });
+    } else {
+      logger.warn('links admin page: list refused', {
+        status: res.status,
+        query: query.toString(),
+      });
     }
   } catch (err) {
     logger.error('links admin page: fetch failed', err);
+  }
+
+  // Past the last page (its last link was just removed, or a stale address): go to the last one there is.
+  if (result && result.meta.totalPages > 0 && page > result.meta.totalPages) {
+    query.set('page', String(result.meta.totalPages));
+    query.delete('limit');
+    redirect(`${LINKS_ADMIN_PATH}?${query.toString()}`);
   }
 
   return (

@@ -21,7 +21,13 @@ vi.mock('@/lib/api/client', () => ({
   APIClientError: class APIClientError extends Error {},
 }));
 
+const mockRedirect = vi.hoisted(() =>
+  vi.fn((to: string) => {
+    throw new Error(`NEXT_REDIRECT ${to}`);
+  })
+);
 vi.mock('next/navigation', () => ({
+  redirect: mockRedirect,
   useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
   usePathname: () => '/admin/synths/links',
   useSearchParams: () => new URLSearchParams(),
@@ -90,10 +96,21 @@ describe('LinksAdminPage', () => {
     expect(screen.getByText('No links yet.')).toBeInTheDocument();
   });
 
-  it('says so when the links could not be loaded', async () => {
+  it('goes to the last page there is when asked for one past it, keeping the filters', async () => {
+    mockServerFetch.mockResolvedValue(ok([], { page: 3, limit: 50, total: 50, totalPages: 1 }));
+
+    await expect(page({ provider: 'youtube', page: '3' })).rejects.toThrow('NEXT_REDIRECT');
+    expect(mockRedirect).toHaveBeenCalledWith('/admin/synths/links?page=1&provider=youtube');
+  });
+
+  it('says so when the links could not be loaded, and logs why', async () => {
     mockServerFetch.mockResolvedValueOnce(new Response('{}', { status: 500 }));
     const { unmount } = render(await page({}));
     expect(screen.getByRole('alert')).toHaveTextContent('could not be loaded');
+    expect(mockLogger.warn).toHaveBeenCalledWith(
+      'links admin page: list refused',
+      expect.objectContaining({ status: 500 })
+    );
     unmount();
 
     mockServerFetch.mockRejectedValueOnce(new Error('down'));

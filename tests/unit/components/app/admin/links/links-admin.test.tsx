@@ -231,6 +231,80 @@ describe('LinkForm', () => {
     expect(screen.getByLabelText('Id', INPUT)).toHaveAttribute('aria-invalid', 'true');
   });
 
+  it('says an owner’s refusal in the form when the owner is fixed, as there is no field to mark', async () => {
+    const user = userEvent.setup();
+    post.mockRejectedValueOnce(
+      new APIClientError('There is nothing with that id to link to', 'VALIDATION_ERROR', 400, {
+        owner: { kind: 'sound', id: 'model-d/gone' },
+      })
+    );
+    const onSaved = vi.fn();
+    render(
+      <LinkForm link={null} owner={{ kind: 'sound', id: 'model-d/gone' }} onSaved={onSaved} />
+    );
+
+    await user.type(screen.getByLabelText('Address', INPUT), 'https://example.com/a');
+    await user.type(screen.getByLabelText('Title', INPUT), 'A');
+    await user.click(screen.getByRole('button', { name: 'Add link' }));
+
+    expect(await screen.findByText('There is nothing with that id to link to')).toBeInTheDocument();
+    expect(onSaved).not.toHaveBeenCalled();
+  });
+
+  it('puts a body-validation issue on the field it names, with its own message', async () => {
+    const user = userEvent.setup();
+    post.mockRejectedValueOnce(
+      new APIClientError('Invalid request body', 'VALIDATION_ERROR', 400, {
+        errors: [{ path: 'url', message: 'The address must be https' }],
+      })
+    );
+    render(<LinkForm link={null} owner={MINIMOOG} onSaved={vi.fn()} />);
+
+    await user.type(screen.getByLabelText('Address', INPUT), 'http://example.com/a');
+    await user.type(screen.getByLabelText('Title', INPUT), 'A');
+    await user.click(screen.getByRole('button', { name: 'Add link' }));
+
+    expect(await screen.findByText('The address must be https')).toBeInTheDocument();
+    expect(screen.getByLabelText('Address', INPUT)).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.queryByText('Invalid request body')).not.toBeInTheDocument();
+  });
+
+  it('does not call a saved link a failure when its answer cannot be read', async () => {
+    const user = userEvent.setup();
+    post.mockResolvedValueOnce({ id: 'new', provider: 'myspace' });
+    const onSaved = vi.fn();
+    render(<LinkForm link={null} owner={MINIMOOG} onSaved={onSaved} />);
+
+    await user.type(screen.getByLabelText('Address', INPUT), 'https://example.com/a');
+    await user.type(screen.getByLabelText('Title', INPUT), 'A');
+    await user.click(screen.getByRole('button', { name: 'Add link' }));
+
+    expect(
+      await screen.findByText(/It saved, but the answer could not be read/)
+    ).toBeInTheDocument();
+    expect(screen.queryByText("That didn't save. Try again.")).not.toBeInTheDocument();
+    expect(onSaved).not.toHaveBeenCalled();
+  });
+
+  it('drops the preview once the address it was read from is changed', async () => {
+    const user = userEvent.setup();
+    post.mockResolvedValueOnce({
+      url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      provider: 'youtube',
+      title: 'Minimoog demo',
+      thumbnailUrl: null,
+    });
+    render(<LinkForm link={null} owner={MINIMOOG} onSaved={vi.fn()} />);
+
+    await user.type(screen.getByLabelText('Address', INPUT), 'https://youtu.be/dQw4w9WgXcQ');
+    await user.click(screen.getByRole('button', { name: 'Read' }));
+    expect(await screen.findByTestId('link-preview')).toBeInTheDocument();
+
+    await user.clear(screen.getByLabelText('Address', INPUT));
+    await user.type(screen.getByLabelText('Address', INPUT), 'https://vimeo.com/1');
+    expect(screen.queryByTestId('link-preview')).not.toBeInTheDocument();
+  });
+
   it('saves an edit with PATCH, never sending the owner', async () => {
     const user = userEvent.setup();
     const existing = link({ id: 'a', rating: 2 });
@@ -267,7 +341,7 @@ describe('LinksPanel', () => {
 
     const oursList = await screen.findByRole('list', { name: 'Our links' });
     expect(get).toHaveBeenCalledWith('/api/v1/admin/links', {
-      params: { instrument: 'moog-minimoog', limit: 100 },
+      params: { instrument: 'moog-minimoog', page: 1, limit: 100 },
     });
     expect(
       within(oursList)
@@ -286,7 +360,7 @@ describe('LinksPanel', () => {
 
     expect(await screen.findByText('No links yet.')).toBeInTheDocument();
     expect(get).toHaveBeenCalledWith('/api/v1/admin/links', {
-      params: { sound: 'model-d/stacked-night-bass', limit: 100 },
+      params: { sound: 'model-d/stacked-night-bass', page: 1, limit: 100 },
     });
   });
 
@@ -350,6 +424,40 @@ describe('LinksPanel', () => {
     expect(del).toHaveBeenCalledWith('/api/v1/admin/links/x1');
     expect(await screen.findByText('No links yet.')).toBeInTheDocument();
     expect(get).toHaveBeenCalledTimes(2);
+  });
+
+  it('reads every page of its links, so a reorder can name each of ours', async () => {
+    const user = userEvent.setup();
+    const many = Array.from({ length: 100 }, (_, i) => link({ id: `n${i}` }));
+    const lateOurs = link({ id: 'o9', ours: true, order: 1, title: 'Ours late' });
+    get.mockResolvedValueOnce(many).mockResolvedValueOnce([ours1, lateOurs]);
+    put.mockResolvedValueOnce({ ids: ['o9', 'o1'] });
+    render(<LinksPanel owner={MINIMOOG} />);
+
+    await user.click(await screen.findByRole('button', { name: 'Move Ours late up' }));
+
+    expect(get).toHaveBeenNthCalledWith(2, '/api/v1/admin/links', {
+      params: { instrument: 'moog-minimoog', page: 2, limit: 100 },
+    });
+    expect(put).toHaveBeenCalledWith('/api/v1/admin/links/order', {
+      body: { owner: MINIMOOG, ids: ['o9', 'o1'] },
+    });
+  });
+
+  it('keeps the newest load when an older one answers after it', async () => {
+    let answerStale: (v: unknown) => void = () => {};
+    get
+      .mockImplementationOnce(() => new Promise((resolve) => (answerStale = resolve)))
+      .mockResolvedValueOnce([elsewhere]);
+    const { rerender } = render(<LinksPanel owner={MINIMOOG} />);
+    rerender(<LinksPanel owner={{ kind: 'instrument', id: 'arp-odyssey' }} />);
+    expect(await screen.findByText('About another synth')).toBeInTheDocument();
+
+    answerStale([other]);
+    await waitFor(() => expect(get).toHaveBeenCalledTimes(2));
+    await new Promise((r) => setTimeout(r, 0));
+    expect(screen.queryByText('Someone else')).not.toBeInTheDocument();
+    expect(screen.getByText('About another synth')).toBeInTheDocument();
   });
 
   it('says so when its links could not be loaded', async () => {
