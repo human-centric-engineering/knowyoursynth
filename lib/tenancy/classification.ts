@@ -115,6 +115,8 @@ export const GLOBAL_CONFIG_MODELS = [
   'BankPartInstrument',
   'BankPartSynth',
   'BankRemoval',
+  // Know Your Synth: videos and links (same divergence row).
+  'ExternalLink',
 ] as const;
 
 export type SystemModel = (typeof SYSTEM_MODELS)[number];
