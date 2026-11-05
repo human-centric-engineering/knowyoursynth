@@ -18,6 +18,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ReactElement } from 'react';
 
+// The videos section's count is the links read layer's, tested there (`tests/unit/lib/app/links/read.test.ts`).
+vi.mock('@/lib/app/links/read', () => ({
+  summarisePublicLinks: vi.fn(async () => ({ count: 0, kinds: [] })),
+}));
 vi.mock('next/navigation', () => ({
   notFound: vi.fn(() => {
     throw new Error('NEXT_HTTP_ERROR_FALLBACK;404');

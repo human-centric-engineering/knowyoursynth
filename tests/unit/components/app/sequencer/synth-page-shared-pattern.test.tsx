@@ -133,6 +133,7 @@ const detail: SynthDetail = {
   sounds: [FAT_BASS, WOBBLE],
   lineage: null,
   notes: { unusual: {}, limits: { intro: null, items: [], shared: [] } },
+  links: { count: 0, kinds: [] },
 };
 
 const SLUG = 'abcdefghjk';

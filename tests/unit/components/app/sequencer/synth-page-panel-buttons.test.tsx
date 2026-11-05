@@ -99,6 +99,7 @@ function page(id: (typeof IDS)[number]) {
     sounds: [riff],
     lineage: null,
     notes: { unusual: {}, limits: { intro: null, items: [], shared: [] } },
+    links: { count: 0, kinds: [] },
   };
   storeSound(def, riff);
   return render(<SynthPage detail={detail} synths={[synth]} viewParam={null} />);
