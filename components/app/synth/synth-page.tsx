@@ -162,6 +162,7 @@ import { revealOnPanel } from '@/components/app/synth/reveal';
 import { BottomSheet, HALF_HEIGHT, type SheetSnap } from '@/components/app/ui/bottom-sheet';
 import { KeptSlot, useKeptNode } from '@/components/app/ui/kept';
 import { Lineage } from '@/components/app/synth/lineage';
+import { LinksSection } from '@/components/app/links/links-section';
 import { MySoundsList, SoundActions, useMySounds } from '@/components/app/synth/my-sounds';
 import { useLessonProgress } from '@/components/app/synth/progress';
 import { bankHashRoute } from '@/components/app/bank/routes';
@@ -2962,6 +2963,8 @@ function Synth({
             />
             {tourOn && <Tour def={def} notes={detail.notes.unusual} onClose={closeTour} />}
           </section>
+          {/* Under the player: its instruments' videos and links, closed until asked for (`f-videos-and-links`). */}
+          <LinksSection target="synth" id={detail.synth.id} summary={detail.links} />
         </div>
       </div>
 

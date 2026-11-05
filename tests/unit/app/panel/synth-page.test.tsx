@@ -16,6 +16,10 @@ import SynthRoute, { generateMetadata } from '@/app/(panel)/synths/[id]/page';
 import { getSynthDetail, listSynths } from '@/lib/app/catalogue/read';
 import type { CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 
+// The videos section's count is the links read layer's, tested there (`tests/unit/lib/app/links/read.test.ts`).
+vi.mock('@/lib/app/links/read', () => ({
+  summarisePublicLinks: vi.fn(async () => ({ count: 0, kinds: [] })),
+}));
 vi.mock('next/navigation', () => ({
   notFound: vi.fn(() => {
     throw new Error('NEXT_NOT_FOUND');

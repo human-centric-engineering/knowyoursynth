@@ -184,6 +184,7 @@ const detail: SynthDetail = {
     unusual: { 'filter.cutoff': UNUSUAL },
     limits: { intro: null, items: [], shared: [] },
   },
+  links: { count: 0, kinds: [] },
 };
 
 const SESSION_KEY = 'kys.session.model-d';

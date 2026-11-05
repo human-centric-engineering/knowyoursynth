@@ -10,6 +10,7 @@ import { logger } from '@/lib/logging';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import { synthRows } from '@/tests/helpers/synth-detail';
 import { bankDb } from '@/tests/helpers/bank-db';
+import { summarisePublicLinks } from '@/lib/app/links/read';
 
 vi.mock('@/lib/db/client', () => ({
   prisma: {
@@ -20,6 +21,8 @@ vi.mock('@/lib/db/client', () => ({
     bankSong: { findMany: vi.fn() },
   },
 }));
+// The links read layer has its own tests (`tests/unit/lib/app/links/read.test.ts`); here, only that it is asked.
+vi.mock('@/lib/app/links/read', () => ({ summarisePublicLinks: vi.fn() }));
 vi.mock('@/lib/logging', () => ({
   logger: { warn: vi.fn(), error: vi.fn(), info: vi.fn() },
 }));
@@ -49,6 +52,7 @@ beforeEach(() => {
   );
   vi.mocked(prisma.bankSong.findMany).mockImplementation(bank.bankSong.findMany as never);
   vi.mocked(prisma.synthNote.findMany).mockResolvedValue(notes as never);
+  vi.mocked(summarisePublicLinks).mockResolvedValue({ count: 0, kinds: [] });
 });
 
 describe('listSynths', () => {
@@ -124,6 +128,17 @@ describe('getSynthDetail', () => {
         where: { OR: [{ synthId: 'model-d' }, { synthId: null, kind: 'LIMIT' }] },
       })
     );
+  });
+
+  it("carries its instruments' videos and links, counted, for the section under the panel", async () => {
+    vi.mocked(prisma.synth.findFirst).mockResolvedValue(stored() as never);
+    const links = { count: 12, kinds: ['demo' as const, 'review' as const, 'lesson' as const] };
+    vi.mocked(summarisePublicLinks).mockResolvedValue(links);
+
+    const detail = await getSynthDetail('model-d');
+
+    expect(summarisePublicLinks).toHaveBeenCalledWith({ target: 'synth', id: 'model-d' });
+    expect(detail?.links).toEqual(links);
   });
 
   it('is null for an id no listed synth has', async () => {

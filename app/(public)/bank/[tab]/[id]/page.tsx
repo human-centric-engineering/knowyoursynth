@@ -5,6 +5,7 @@ import { ArtistPage, InstrumentPage, MakerPage, SongPage } from '@/components/ap
 import { isBankTab } from '@/components/app/bank/routes';
 import { readBank, readNames } from '@/components/app/bank/load';
 import { detailFrom } from '@/lib/app/bank/read';
+import { summarisePublicLinks } from '@/lib/app/links/read';
 import type { Bank } from '@/lib/app/bank/data';
 
 /**
@@ -50,7 +51,12 @@ export default async function BankRowRoute({ params }: Props) {
   // Ids are slugs (`BankIdSchema`), so the segment is the id as it is.
   const { tab, id } = await params;
   if (!isBankTab(tab)) notFound();
-  const [bank, names] = await Promise.all([readBank(), readNames()]);
+  // An instrument's link count is read alongside the bank rather than after it.
+  const [bank, names, links] = await Promise.all([
+    readBank(),
+    readNames(),
+    tab === 'instruments' ? summarisePublicLinks({ target: 'instrument', id }) : null,
+  ]);
 
   switch (tab) {
     case 'artists': {
@@ -70,8 +76,8 @@ export default async function BankRowRoute({ params }: Props) {
     }
     case 'instruments': {
       const d = detailFrom(bank, 'instruments', id);
-      if (!d) notFound();
-      return <InstrumentPage d={d} names={names} />;
+      if (!d || !links) notFound();
+      return <InstrumentPage d={d} names={names} links={links} />;
     }
   }
 }

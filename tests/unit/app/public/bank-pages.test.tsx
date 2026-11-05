@@ -22,6 +22,7 @@ import {
   namesFrom,
 } from '@/components/app/bank/bank-detail';
 import { readBank, readNames } from '@/components/app/bank/load';
+import { summarisePublicLinks } from '@/lib/app/links/read';
 import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
 
 vi.mock('next/navigation', () => ({
@@ -33,6 +34,7 @@ vi.mock('next/navigation', () => ({
   }),
 }));
 vi.mock('@/components/app/bank/load', () => ({ readBank: vi.fn(), readNames: vi.fn() }));
+vi.mock('@/lib/app/links/read', () => ({ summarisePublicLinks: vi.fn() }));
 
 const bank = loadBankData();
 const names = namesFrom(bank, [], {});
@@ -41,6 +43,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   vi.mocked(readBank).mockResolvedValue(bank);
   vi.mocked(readNames).mockResolvedValue(names);
+  vi.mocked(summarisePublicLinks).mockResolvedValue({ count: 0, kinds: [] });
 });
 
 const element = async (p: Promise<unknown>): Promise<ReactElement<Record<string, unknown>>> => {
@@ -93,6 +96,16 @@ describe('/bank/[tab]/[id]', () => {
     const el = await element(BankRowRoute(row(t, id)));
     expect(el.type).toBe(Page);
     expect(el.props.names).toBe(names);
+  });
+
+  it("hands an instrument's page its own videos and links, counted", async () => {
+    const links = { count: 3, kinds: ['demo' as const, 'review' as const] };
+    vi.mocked(summarisePublicLinks).mockResolvedValue(links);
+
+    const el = await element(BankRowRoute(row('instruments', 'moog-minimoog')));
+
+    expect(summarisePublicLinks).toHaveBeenCalledWith({ target: 'instrument', id: 'moog-minimoog' });
+    expect(el.props.links).toEqual(links);
   });
 
   it.each([

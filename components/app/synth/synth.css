@@ -3402,3 +3402,435 @@ button.kys-routing-card-item:focus-visible {
     transition: none;
   }
 }
+
+/* ==========================================================================
+ * Videos and links (`f-videos-and-links` t-182)
+ * ==========================================================================
+ * One frame, the head and the videos in it. The head is in the panel's own
+ * words: an LED, the name in the faceplate's capitals, the kinds in silkscreen
+ * and the count in a lit readout. Closed, the top of the first row shows through
+ * under it and fades into the frame. Each video is a small monitor: dark
+ * whatever the theme, its kind on a plate in the corner and an unlit transport
+ * button that lights under the pointer. */
+.kys-links {
+  position: relative;
+  border: 1px solid var(--kys-line);
+  border-radius: 14px;
+  background: linear-gradient(180deg, var(--kys-raised), var(--kys-surface) 120px);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.06),
+    0 1px 2px rgb(0 0 0 / 0.08);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.kys-links:hover {
+  border-color: color-mix(in srgb, var(--kys-accent) 45%, var(--kys-line));
+}
+.kys-links:has(.kys-links-bar[aria-expanded='true']) {
+  border-color: color-mix(in srgb, var(--kys-accent) 30%, var(--kys-line));
+}
+.kys-links-bar {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px 10px 18px;
+  border-radius: 13px 13px 0 0;
+  text-align: left;
+}
+.kys-links-bar:focus-visible {
+  outline: 2px solid var(--kys-accent);
+  outline-offset: -2px;
+}
+.kys-links-name {
+  font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.kys-links-kinds {
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--kys-muted);
+}
+/* The count: a recessed amber readout, dark in both themes as the panel's own windows are. */
+.kys-links-readout {
+  display: inline-flex;
+  min-width: 3.1em;
+  justify-content: center;
+  padding: 5px 9px 4px;
+  border-radius: 6px;
+  background: #0b0c0f;
+  box-shadow:
+    inset 0 1px 3px rgb(0 0 0 / 0.8),
+    0 0 0 1px color-mix(in srgb, var(--kys-line) 70%, transparent);
+  color: #ffb547;
+  font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 8px rgb(255 166 58 / 0.55);
+  font-variant-numeric: tabular-nums;
+}
+.kys-links-chev {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--kys-line);
+  background: var(--kys-surface);
+  color: var(--kys-muted);
+  transition:
+    transform 0.3s cubic-bezier(0.3, 1.4, 0.5, 1),
+    color 0.2s ease;
+}
+.kys-links:hover .kys-links-chev {
+  color: var(--kys-accent);
+}
+.kys-links-bar[aria-expanded='true'] .kys-links-chev {
+  transform: rotate(180deg);
+}
+
+.kys-links-grid {
+  display: grid;
+  gap: 28px 20px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+}
+.kys-links-body {
+  padding: 6px 18px 20px;
+}
+/* Closed, the top of the first row shows through, solid, with a short fade at its foot. The pointer over it shows
+   more: the strip grows, and the frame takes the same space back from under it (`margin-bottom`), so it lies over
+   what follows rather than pushing it down, and the page does not move. Open, all of it: `interpolate-size` lets the
+   height run to `auto` where the browser has it, and snap where not. */
+.kys-links-peek {
+  height: 100px;
+  overflow: hidden;
+  cursor: pointer;
+  interpolate-size: allow-keywords;
+  mask-image: linear-gradient(180deg, #000 calc(100% - 26px), transparent);
+  transition: height 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.kys-links:not(:has(.kys-links-peek.is-open)) {
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    margin-bottom 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.kys-links:hover:not(:has(.kys-links-peek.is-open)) {
+  z-index: 5;
+  margin-bottom: -56px;
+  box-shadow: 0 18px 36px -18px rgb(0 0 0 / 0.45);
+}
+.kys-links:hover .kys-links-peek:not(.is-open) {
+  height: 156px;
+}
+/* At rest what shows through is drained, a preview; the colour comes up under the pointer, and stays once open. */
+.kys-links-peek:not(.is-open) .kys-links-grid {
+  filter: grayscale(1) brightness(0.92) contrast(0.9);
+  transition: filter 0.4s ease;
+}
+.kys-links:hover .kys-links-peek:not(.is-open) .kys-links-grid {
+  filter: none;
+}
+.kys-links-peek.is-open {
+  height: auto;
+  overflow: visible;
+  cursor: auto;
+  mask-image: none;
+}
+/* The way in, over the fade: there at rest so it says there is more, full under the pointer. A click goes through it
+   to what shows through. */
+.kys-links-more {
+  pointer-events: none;
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px 6px 14px;
+  border: 1px solid color-mix(in srgb, var(--kys-accent) 50%, var(--kys-line));
+  border-radius: 999px;
+  background: var(--kys-raised);
+  box-shadow: 0 6px 16px -6px rgb(0 0 0 / 0.4);
+  color: var(--kys-accent);
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  transform: translate(-50%, 2px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+.kys-links:hover .kys-links-more {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* Each card comes up in turn as the list opens. */
+.kys-link-card {
+  min-width: 0;
+  animation: kys-link-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(min(var(--i, 0), 12) * 45ms);
+}
+@keyframes kys-link-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* The monitor: a bezel round the picture or the player. */
+.kys-link-screen {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #0a0b0e;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--kys-line) 80%, #000),
+    0 12px 26px -14px rgb(0 0 0 / 0.55);
+  transition:
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+.kys-link-screen.is-on {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, #ffb547 55%, #000),
+    0 0 0 4px rgb(255 166 58 / 0.12),
+    0 14px 30px -14px rgb(0 0 0 / 0.6);
+}
+.kys-link-shot:hover .kys-link-screen,
+.kys-link-shot:focus-visible .kys-link-screen {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--kys-accent) 60%, #000),
+    0 18px 32px -14px rgb(0 0 0 / 0.6);
+}
+.kys-link-shot {
+  display: block;
+  width: 100%;
+  border-radius: 10px;
+}
+.kys-link-shot:focus-visible {
+  outline: 2px solid var(--kys-accent);
+  outline-offset: 3px;
+}
+.kys-link-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.85) brightness(0.86);
+  transition:
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 0.3s ease;
+}
+.kys-link-shot:hover .kys-link-screen img,
+.kys-link-shot:focus-visible .kys-link-screen img {
+  transform: scale(1.04);
+  filter: saturate(1) brightness(0.95);
+}
+/* Scanlines and a vignette over the picture: a monitor's glass, lifting under the pointer. */
+.kys-link-screen.is-picture::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 50% 45%, transparent 55%, rgb(0 0 0 / 0.55)),
+    repeating-linear-gradient(0deg, rgb(0 0 0 / 0.16) 0 1px, transparent 1px 3px);
+  transition: opacity 0.3s ease;
+}
+.kys-link-shot:hover .kys-link-screen.is-picture::after {
+  opacity: 0.45;
+}
+.kys-link-blank {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  background:
+    radial-gradient(80% 70% at 50% 40%, rgb(255 166 58 / 0.08), transparent 70%),
+    repeating-linear-gradient(0deg, rgb(255 255 255 / 0.03) 0 1px, transparent 1px 3px);
+  color: #667083;
+  font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+/* The kind, on a plate in the top corner, with an LED lit while it plays. */
+.kys-link-plate {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px 3px 7px;
+  border-radius: 5px;
+  background: rgb(10 11 14 / 0.78);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.08);
+  backdrop-filter: blur(4px);
+  color: #ece9e2;
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.kys-link-plate .kys-led {
+  width: 6px;
+  height: 6px;
+}
+.kys-link-shot:hover .kys-link-plate .kys-led {
+  background: color-mix(in srgb, #ffb547 55%, #3a2a14);
+}
+/* Where it plays, in the bottom corner, as a broadcast bug. */
+.kys-link-bug {
+  position: absolute;
+  right: 9px;
+  bottom: 8px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: rgb(236 233 226 / 0.72);
+  font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.8);
+}
+
+/* The transport button: unlit in its socket, lit amber under the pointer. */
+.kys-link-play {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+}
+.kys-link-play > span {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  border-radius: 999px;
+  background: radial-gradient(circle at 50% 35%, #2a2d35, #121418 70%);
+  box-shadow:
+    0 0 0 5px rgb(0 0 0 / 0.35),
+    inset 0 1px 0 rgb(255 255 255 / 0.12),
+    0 6px 14px rgb(0 0 0 / 0.5);
+  color: #ffb547;
+  transition:
+    background 0.25s ease,
+    box-shadow 0.25s ease,
+    color 0.2s ease,
+    transform 0.3s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+.kys-link-shot:hover .kys-link-play > span,
+.kys-link-shot:focus-visible .kys-link-play > span {
+  transform: scale(1.08);
+  background: radial-gradient(circle at 40% 30%, #ffe2a8, #ffb547 45%, #e0861a);
+  color: #1b1204;
+  box-shadow:
+    0 0 0 5px rgb(0 0 0 / 0.3),
+    0 0 22px 4px rgb(255 166 58 / 0.55),
+    inset 0 1px 0 rgb(255 255 255 / 0.5);
+}
+
+.kys-link-title {
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.kys-link-shot:hover + .kys-link-title,
+a.kys-link-shot:hover .kys-link-title {
+  color: var(--kys-accent);
+}
+.kys-link-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin-top: 6px;
+  color: var(--kys-muted);
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.kys-link-ours {
+  padding: 1px 6px;
+  border: 1px solid var(--kys-accent);
+  border-radius: 4px;
+  color: var(--kys-accent);
+}
+.kys-link-out {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--kys-faint);
+  transition: color 0.2s ease;
+}
+.kys-link-out:hover {
+  color: var(--kys-accent);
+}
+
+/* Loading: dark monitors with a sweep across them, where the cards will be. */
+.kys-link-ghost {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  background: #0f1115;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--kys-line) 80%, #000);
+}
+.kys-link-ghost::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgb(255 166 58 / 0.08) 50%, transparent 70%);
+  animation: kys-link-sweep 1.3s ease-in-out infinite;
+}
+@keyframes kys-link-sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kys-link-card,
+  .kys-link-ghost::after {
+    animation: none;
+  }
+  .kys-links,
+  .kys-links-peek,
+  .kys-links-peek .kys-links-grid,
+  .kys-links-more,
+  .kys-links-chev,
+  .kys-link-screen,
+  .kys-link-screen img,
+  .kys-link-play > span {
+    transition: none;
+  }
+}

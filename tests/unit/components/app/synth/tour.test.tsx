@@ -20,6 +20,10 @@ import type { TourStop } from '@/lib/app/synths/lib/tour';
 import type { UnusualNotes } from '@/lib/app/synths/contract';
 import { modelDRows } from '@/tests/helpers/model-d-detail';
 
+// The videos section's count is the links read layer's, tested there (`tests/unit/lib/app/links/read.test.ts`).
+vi.mock('@/lib/app/links/read', () => ({
+  summarisePublicLinks: vi.fn(async () => ({ count: 0, kinds: [] })),
+}));
 vi.mock('@/lib/db/client', () => ({
   prisma: {
     synth: { findFirst: vi.fn() },

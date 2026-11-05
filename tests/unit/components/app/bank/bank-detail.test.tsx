@@ -119,11 +119,14 @@ describe('ArtistPage credits and groups', () => {
   });
 });
 
+/** No videos or links: the section is not drawn. */
+const NO_LINKS = { count: 0, kinds: [] };
+
 describe('InstrumentPage', () => {
   const d = must(detailFrom(bank, 'instruments', 'moog-minimoog'));
 
   it('opens the panels that model it, the people behind it, and the records it is heard on', () => {
-    render(<InstrumentPage d={d} names={names} />);
+    render(<InstrumentPage d={d} names={names} links={NO_LINKS} />);
     expect(screen.getByRole('heading', { level: 2, name: d.instrument.name })).toBeTruthy();
     expect(href('Open the Behringer Model D panel')).toBe('/synths/model-d');
     expect(d.people.length).toBeGreaterThan(0);
@@ -135,19 +138,19 @@ describe('InstrumentPage', () => {
   });
 
   it('opens no panel for a synth that is not listed', () => {
-    render(<InstrumentPage d={d} names={namesFrom(bank, [], {})} />);
+    render(<InstrumentPage d={d} names={namesFrom(bank, [], {})} links={NO_LINKS} />);
     expect(screen.queryAllByRole('link', { name: /^Open the/ })).toEqual([]);
   });
 
   it('links a recreation to its original, and the original to its recreations', () => {
     const copy = must(detailFrom(bank, 'instruments', 'behringer-model-d'));
-    const { unmount } = render(<InstrumentPage d={copy} names={names} />);
+    const { unmount } = render(<InstrumentPage d={copy} names={names} links={NO_LINKS} />);
     expect(copy.recreationOf?.id).toBe('moog-minimoog');
     expect(href(copy.recreationOf?.name ?? '')).toBe('/bank/instruments/moog-minimoog');
     expect(screen.getByText(/A recreation of the/)).toBeTruthy();
     unmount();
 
-    render(<InstrumentPage d={d} names={names} />);
+    render(<InstrumentPage d={d} names={names} links={NO_LINKS} />);
     const section = screen.getByRole('heading', { name: 'Recreations' })
       .parentElement as HTMLElement;
     const links = within(section).getAllByRole('link');
@@ -160,7 +163,7 @@ describe('InstrumentPage', () => {
   it('has no recreation lines when there are none', () => {
     const original = must(detailFrom(bank, 'instruments', 'yamaha-cs-80'));
     expect(original.recreations).toEqual([]);
-    render(<InstrumentPage d={original} names={names} />);
+    render(<InstrumentPage d={original} names={names} links={NO_LINKS} />);
     expect(screen.queryByText(/A recreation of the/)).toBeNull();
     expect(screen.queryByRole('heading', { name: 'Recreations' })).toBeNull();
   });
@@ -169,13 +172,13 @@ describe('InstrumentPage', () => {
     const listed = must(detailFrom(bank, 'instruments', 'behringer-model-d'));
     const source = listed.instrument.source ?? '';
     expect(source).toMatch(/^https:\/\//);
-    const { unmount } = render(<InstrumentPage d={listed} names={names} />);
+    const { unmount } = render(<InstrumentPage d={listed} names={names} links={NO_LINKS} />);
     const link = screen.getByRole('link', { name: new URL(source).hostname.replace(/^www\./, '') });
     expect(link.getAttribute('href')).toBe(source);
     expect(link.getAttribute('rel')).toContain('noopener');
     unmount();
 
-    render(<InstrumentPage d={d} names={names} />);
+    render(<InstrumentPage d={d} names={names} links={NO_LINKS} />);
     expect(d.instrument.source).toBeUndefined();
     expect(screen.queryByText(/^Source:/)).toBeNull();
   });

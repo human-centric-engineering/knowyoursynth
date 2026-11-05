@@ -14,7 +14,7 @@ users and links on users' own sounds are `f-link-suggestions` (§41), not here.
 | Public read                 | `lib/app/links/read.ts`                      | t-179 |
 | Titles, thumbnails, views   | `details.ts`, `stats.ts`, `fetch.ts`         | t-180 |
 | Admin pages                 | `components/app/admin/links/`                | t-181 |
-| Under the panel, `/bank`    | not built yet                                | t-182 |
+| Under the panel, `/bank`    | `components/app/links/`, `lib/app/csp.ts`    | t-182 |
 | Patches and History         | not built yet                                | t-183 |
 
 ## Don't
@@ -188,6 +188,27 @@ Admin rules (`lib/app/links/admin.ts`, each tested):
 - Audited as `external_link.create|update|delete|reorder`, recording owner, URL, kind, title, ours and rating.
 - Writes pass `writesSharedSettings: true`: links are `GLOBAL_CONFIG_MODELS` (divergence row in
   `.context/app/divergences.md`), so at `multi` only the install org's admins write them.
+
+## On the public pages
+
+- **Under the panel** of every synth page, and on a databank instrument's `/bank` page (including one with no panel):
+  a closed **Videos and links** section (`links-section.tsx`). Closed, it says how many there are and of which kinds
+  (`summarisePublicLinks`, joined into `getSynthDetail` as `links` and read by the `/bank` route): the same links the
+  list has, one per URL. It reads `GET /api/v1/links?synth=|instrument=` once, when it is drawn, so the draw is per
+  visit: closed, the top of the first row shows through in grey (`inert`, so a click opens the section rather than
+  playing), and the pointer over it brings up the colour and a little more. That read means the thumbnails load with
+  the page, from the providers' image hosts, before anything is pressed. No links, no section.
+- **Pressing Play starts it** where the provider takes a parameter for that (`playingUrl`: YouTube, Vimeo,
+  SoundCloud), so it is one press, not two; focus moves to the player that replaces the button.
+- **Click to embed** (`link-card.tsx`): until pressed, a card is its picture, title, kind and (YouTube) views. The
+  picture comes from the provider's image host with no referrer; no player, script or cookie loads. Pressed, the card
+  loads an iframe from the link's `embedUrl`, which the page checks again is on `EMBED_ORIGINS` (one off them is shown
+  as a plain link). A link with no embed opens in a new tab, `rel="noopener noreferrer"`.
+- **CSP:** `lib/app/csp.ts` exports `EMBED_ORIGINS` as `appFrameSrc`, pinned in `tests/unit/lib/app/defaults.test.ts`
+  (`HB2`) and checked in the production header by `tests/unit/lib/app/csp.test.ts`. A new provider's origin goes in
+  `EMBED_ORIGINS`, nowhere else.
+- **Privacy:** `/privacy` → "Videos and recordings" names the five players and says nothing of theirs loads before
+  play.
 
 ## Admin pages
 

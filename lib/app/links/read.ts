@@ -14,6 +14,7 @@ import { prisma } from '@/lib/db/client';
 import { orderLinks } from '@/lib/app/links/order';
 import {
   embedUrl,
+  LINK_KINDS,
   thumbnailFor,
   type LinkKind,
   type LinkProvider,
@@ -33,6 +34,13 @@ export interface PublicLink {
   embedUrl: string | null;
   ours: boolean;
   views: number | null;
+}
+
+/** What a section says before it is opened: how many links there are, and of which kinds. */
+export interface LinkSummary {
+  count: number;
+  /** The kinds among them, in `LINK_KINDS` order. */
+  kinds: LinkKind[];
 }
 
 const PUBLIC_TARGETS = ['instrument', 'synth', 'sound', 'song', 'artist'] as const;
@@ -87,6 +95,13 @@ const PUBLIC_SELECT = {
   createdAt: true,
 } as const satisfies Prisma.ExternalLinkSelect;
 
+const SUMMARY_SELECT = {
+  url: true,
+  ours: true,
+  createdAt: true,
+  kind: true,
+} as const satisfies Prisma.ExternalLinkSelect;
+
 type PublicRow = Prisma.ExternalLinkGetPayload<{ select: typeof PUBLIC_SELECT }>;
 
 /**
@@ -128,8 +143,10 @@ async function whereFor(
 }
 
 /** One per URL: our copy when there is one, else the oldest. */
-function onePerUrl(rows: PublicRow[]): PublicRow[] {
-  const byUrl = new Map<string, PublicRow>();
+function onePerUrl<Row extends { url: string; ours: boolean; createdAt: Date }>(
+  rows: Row[]
+): Row[] {
+  const byUrl = new Map<string, Row>();
   for (const row of rows) {
     const kept = byUrl.get(row.url);
     if (
@@ -177,4 +194,21 @@ export async function listPublicLinks(
       }))
     : onePerUrl(rows);
   return orderLinks(ranked, random).map(toPublicLink);
+}
+
+/**
+ * How many links a target has, and of which kinds: the same links `listPublicLinks` would list (one per URL, none for
+ * a target it does not serve), without ordering them.
+ */
+export async function summarisePublicLinks(query: PublicLinkQuery): Promise<LinkSummary> {
+  const target = await whereFor(query);
+  if (!target) return { count: 0, kinds: [] };
+  // Only what `onePerUrl` and the count read: this runs on every synth and instrument page render.
+  const rows = onePerUrl(
+    await prisma.externalLink.findMany({ where: target.where, select: SUMMARY_SELECT })
+  );
+  return {
+    count: rows.length,
+    kinds: LINK_KINDS.filter((kind) => rows.some((row) => row.kind === kind)),
+  };
 }

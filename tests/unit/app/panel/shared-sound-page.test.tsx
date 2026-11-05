@@ -22,6 +22,10 @@ import type { ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 const { imageResponse } = vi.hoisted(() => ({ imageResponse: vi.fn() }));
+// The videos section's count is the links read layer's, tested there (`tests/unit/lib/app/links/read.test.ts`).
+vi.mock('@/lib/app/links/read', () => ({
+  summarisePublicLinks: vi.fn(async () => ({ count: 0, kinds: [] })),
+}));
 vi.mock('next/og', () => ({
   ImageResponse: class {
     constructor(element: ReactElement, options: unknown) {
