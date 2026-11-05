@@ -123,6 +123,8 @@ model SynthSound {
   favourites Favourite[]
   /// Its library patterns, in order; the first is its default.
   patterns   SynthSoundPattern[]
+  /// Its videos and links (`f-videos-and-links`).
+  links      ExternalLink[]
 
   @@unique([synthId, slug])
   @@index([synthId, order])
@@ -440,6 +442,8 @@ model BankInstrument {
   parts        BankPartInstrument[]
   artists      BankArtistInstrument[]
   owners       OwnedInstrument[]
+  /// Its videos and links (`f-videos-and-links`).
+  links        ExternalLink[]
 
   @@index([recreationOfId])
   @@map("bank_instrument")
@@ -498,6 +502,8 @@ model BankArtist {
   playedParts BankSongPart[]
   /// Library patterns inspired by this artist.
   patterns    LibraryPattern[]
+  /// Its videos and links (`f-videos-and-links`).
+  links       ExternalLink[]
 
   @@map("bank_artist")
 }
@@ -550,6 +556,8 @@ model BankSong {
   parts    BankSongPart[]
   /// Library patterns that recreate a part of it.
   patterns LibraryPattern[]
+  /// Its videos and links (`f-videos-and-links`).
+  links    ExternalLink[]
 
   @@map("bank_song")
 }
@@ -1109,4 +1117,79 @@ model OwnedInstrument {
   @@index([userId, kind, position])
   @@index([instrumentId])
   @@map("owned_instrument")
+}
+
+// ─── Videos and links (f-videos-and-links t-179) ─────────────────────────────
+//
+// A video or link about a databank instrument, a library sound, a databank song or a databank artist: a demo, a
+// review, a recording, a lesson. Admin-managed content every org reads (GLOBAL_CONFIG_MODELS, as the databank is).
+// No seed writes it. Spec: .context/app/links.md.
+
+/// Where a link points. Anything https that is not one of the named providers is `other` and never embeds.
+enum LinkProvider {
+  youtube
+  vimeo
+  spotify
+  bandcamp
+  soundcloud
+  other
+}
+
+/// What a link is.
+enum LinkKind {
+  /// The thing played, to show it off.
+  demo
+  /// Someone's opinion of it.
+  review
+  /// A record or a performance made with it.
+  performance
+  /// Teaching how to use it, or how a sound is made.
+  lesson
+  /// The original record a sound or a pattern is inspired by.
+  original
+}
+
+/// A video or link about exactly one of: a databank instrument, a library sound, a databank song, a databank artist.
+/// "Exactly one" is a hand-written CHECK (`external_link_one_owner`), pinned by a drift probe (lib/app/db-drift.ts).
+model ExternalLink {
+  id           String       @id @default(cuid())
+  instrumentId String?
+  soundId      String?
+  songId       String?
+  artistId     String?
+  /// The URL as the admin gave it, after parsing (lib/app/links/providers.ts). Never used as an embed's address.
+  url          String
+  provider     LinkProvider
+  /// The provider's id for it, from which the embed address is built: a YouTube or Vimeo video id, a Spotify
+  /// `<type>/<id>`, a SoundCloud `<user>/<track>`, a Bandcamp `album=<n>` or `track=<n>` once read from its page.
+  providerId   String?
+  kind         LinkKind
+  title        String
+  /// Filled from the provider (t-180). A YouTube link's is derived from its id when this is empty.
+  thumbnailUrl String?
+  /// Made by Know Your Synth: listed first, in `order`.
+  ours         Boolean      @default(false)
+  /// Position among its owner's own videos, lowest first. Unused when `ours` is false.
+  order        Int          @default(0)
+  /// An admin's 1–5 rating: the popularity of a link whose provider gives no view count.
+  rating       Int?
+  /// From the provider (YouTube, t-180), capped at the largest Int.
+  views        Int?
+  likes        Int?
+  statsAt      DateTime?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  instrument BankInstrument? @relation(fields: [instrumentId], references: [id], onDelete: Cascade)
+  sound      SynthSound?     @relation(fields: [soundId], references: [id], onDelete: Cascade)
+  song       BankSong?       @relation(fields: [songId], references: [id], onDelete: Cascade)
+  artist     BankArtist?     @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  /// One link per URL per owner. Postgres treats NULLs as distinct, so each only binds rows of its own owner kind.
+  @@unique([instrumentId, url])
+  @@unique([soundId, url])
+  @@unique([songId, url])
+  @@unique([artistId, url])
+  @@index([provider])
+  @@map("external_link")
 }

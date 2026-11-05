@@ -265,6 +265,9 @@ describe('reserved fork tiers', () => {
       'model HeldUsername {',
       'enum OwnedInstrumentKind {',
       'model OwnedInstrument {',
+      'enum LinkProvider {',
+      'enum LinkKind {',
+      'model ExternalLink {',
     ]);
   });
 

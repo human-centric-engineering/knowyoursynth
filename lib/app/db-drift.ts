@@ -53,7 +53,8 @@
  * (`f-my-sounds` s1), a last panel's and a user's settings (s3), a lesson progress's and a favourite's (s4), a synth
  * profile's (`f-profiles` r1), an owned or wanted synth's (r2) and a user pattern's (`f-step-sequencer` t-81), each pinned to `ON DELETE CASCADE` so an erasure
  * takes them with the user; and a sound report's reporter and resolver (`f-sharing` h4), and a pattern report's
- * (`f-step-sequencer` t-83), all `ON DELETE SET NULL` so the report outlives both.
+ * (`f-step-sequencer` t-83), all `ON DELETE SET NULL` so the report outlives both. It also pins the one CHECK the app
+ * writes by hand: a video or link is about exactly one thing (`f-videos-and-links` t-179).
  */
 import { constraintExists, registerAppDriftProbe } from '@/lib/db/drift-probes';
 
@@ -147,5 +148,17 @@ export function registerAppDriftProbes(): void {
     kind: 'FK constraint',
     table: 'library_pattern_comment',
     probe: constraintExists('library_pattern_comment_authorId_fkey', 'ON DELETE SET NULL'),
+  });
+  // A video or link is about exactly one thing (`f-videos-and-links` t-179). Prisma cannot model a CHECK, so a
+  // future `migrate dev` could drop it unseen, and a row with no owner would then fail every read of it.
+  registerAppDriftProbe({
+    name: 'external_link_one_owner (hand-written CHECK: exactly one owner)',
+    kind: 'CHECK constraint',
+    table: 'external_link',
+    // The whole predicate, so a weakened one (`>= 1`, `<= 1`) fails the probe too.
+    probe: constraintExists(
+      'external_link_one_owner',
+      'num_nonnulls("instrumentId", "soundId", "songId", "artistId") = 1'
+    ),
   });
 }

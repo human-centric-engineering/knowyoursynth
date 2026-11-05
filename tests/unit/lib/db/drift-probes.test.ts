@@ -451,6 +451,7 @@ describe('shipped lib/app/db-drift.ts scaffold', () => {
       'pattern_report_resolvedById_fkey (hand-written FK → User)',
       'library_pattern_madeByUserId_fkey (hand-written FK → User)',
       'library_pattern_comment_authorId_fkey (hand-written FK → User)',
+      'external_link_one_owner (hand-written CHECK: exactly one owner)',
     ]);
   });
 });

@@ -494,6 +494,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         'BankPartInstrument',
         'BankPartSynth',
         'BankRemoval',
+        'ExternalLink',
         'HeldUsername',
       ]);
     },

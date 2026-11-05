@@ -203,6 +203,11 @@ export function initAppSubjectSources(): void {
       ...CATALOGUE_MODELS.map((model) => ({ model, reason: CATALOGUE_REASON })),
       ...BANK_MODELS.map((model) => ({ model, reason: BANK_REASON })),
       {
+        model: 'ExternalLink',
+        reason:
+          'Videos and links about synths, sounds, songs and artists (`f-videos-and-links`), added by admins and the same for every user; no user foreign key, and no row is about a user of this app.',
+      },
+      {
         model: 'HeldUsername',
         reason:
           'A username given up by a change, held for 30 days so nobody else takes it. It records a name with no link to who gave it up: no user foreign key, nothing to find a subject by.',
