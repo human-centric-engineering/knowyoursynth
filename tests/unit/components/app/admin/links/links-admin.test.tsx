@@ -16,7 +16,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import type { AdminLinkView } from '@/components/app/admin/links/data';
+import {
+  formatCount,
+  ownerAdminPath,
+  readLinks,
+  type AdminLinkView,
+} from '@/components/app/admin/links/data';
 import { LinkForm } from '@/components/app/admin/links/link-form';
 import { LinksPanel } from '@/components/app/admin/links/links-panel';
 import { LinksTable } from '@/components/app/admin/links/links-table';
@@ -418,5 +423,134 @@ describe('LinksTable', () => {
       'href',
       '/admin/synths/links?provider=youtube&page=3'
     );
+  });
+});
+
+describe('LinksTable edges', () => {
+  it('says there are none yet, or that nothing matches a filter', () => {
+    const { unmount } = render(
+      <LinksTable
+        links={[]}
+        filters={{ owner: '', provider: '', ours: '' }}
+        page={1}
+        totalPages={0}
+        total={0}
+      />
+    );
+    expect(screen.getByText('No links yet.')).toBeInTheDocument();
+    expect(screen.queryByRole('navigation', { name: 'Pages' })).not.toBeInTheDocument();
+    unmount();
+
+    render(
+      <LinksTable
+        links={[]}
+        filters={{ owner: '', provider: '', ours: 'true' }}
+        page={1}
+        totalPages={0}
+        total={0}
+      />
+    );
+    expect(screen.getByText('Nothing matches.')).toBeInTheDocument();
+  });
+
+  it('offers no page before the first or after the last', () => {
+    const { unmount } = render(
+      <LinksTable
+        links={[link({ id: 'a' })]}
+        filters={{ owner: '', provider: '', ours: '' }}
+        page={1}
+        totalPages={2}
+        total={60}
+      />
+    );
+    expect(screen.getByRole('button', { name: 'Previous' })).toBeDisabled();
+    expect(screen.getByRole('link', { name: 'Next' })).toBeInTheDocument();
+    unmount();
+
+    render(
+      <LinksTable
+        links={[link({ id: 'a' })]}
+        filters={{ owner: '', provider: '', ours: '' }}
+        page={2}
+        totalPages={2}
+        total={60}
+      />
+    );
+    expect(screen.getByRole('button', { name: 'Next' })).toBeDisabled();
+    expect(screen.getByRole('link', { name: 'Previous' })).toHaveAttribute(
+      'href',
+      '/admin/synths/links?provider=youtube&page=1'
+    );
+  });
+
+  it('edits a link in a dialog and reloads the page after it saves', async () => {
+    const user = userEvent.setup();
+    const row = link({ id: 'a', title: 'Demo A' });
+    patch.mockResolvedValueOnce({ ...row, title: 'Demo A, renamed' });
+    render(
+      <LinksTable
+        links={[row]}
+        filters={{ owner: '', provider: '', ours: '' }}
+        page={1}
+        totalPages={1}
+        total={1}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Edit Demo A' }));
+    const dialog = await screen.findByRole('dialog');
+    await user.type(within(dialog).getByLabelText('Title', INPUT), ', renamed');
+    await user.click(within(dialog).getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => expect(mockRefresh).toHaveBeenCalled());
+    expect(patch).toHaveBeenCalledWith('/api/v1/admin/links/a', {
+      body: expect.objectContaining({ title: 'Demo A, renamed' }) as unknown,
+    });
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('says why a removal failed, and keeps the row', async () => {
+    const user = userEvent.setup();
+    del.mockRejectedValueOnce(new APIClientError('Link not found', 'NOT_FOUND', 404));
+    render(
+      <LinksTable
+        links={[link({ id: 'a', title: 'Demo A' })]}
+        filters={{ owner: '', provider: '', ours: '' }}
+        page={1}
+        totalPages={1}
+        total={1}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Remove Demo A' }));
+    await user.click(
+      within(await screen.findByRole('alertdialog')).getByRole('button', { name: 'Remove' })
+    );
+
+    expect(await screen.findByText('Link not found')).toBeInTheDocument();
+    expect(mockRefresh).not.toHaveBeenCalled();
+    expect(screen.getByText('Demo A')).toBeInTheDocument();
+  });
+});
+
+describe('the links admin data', () => {
+  it('keeps each link that reads, drops one that does not, and reads anything but a list as none', () => {
+    const good = link({ id: 'a' });
+    expect(readLinks([good, { id: 'broken' }])).toEqual([good]);
+    expect(readLinks({ links: [good] })).toEqual([]);
+  });
+
+  it('points each owner at its own editor', () => {
+    expect(ownerAdminPath({ kind: 'song', id: 'kraftwerk-autobahn' })).toBe(
+      '/admin/synths/bank/songs/kraftwerk-autobahn'
+    );
+    expect(ownerAdminPath({ kind: 'artist', id: 'aphex-twin' })).toBe(
+      '/admin/synths/bank/artists/aphex-twin'
+    );
+  });
+
+  it('shows a missing count as a dash', () => {
+    expect(formatCount(null)).toBe('—');
+    expect(formatCount(950)).toBe('950');
   });
 });

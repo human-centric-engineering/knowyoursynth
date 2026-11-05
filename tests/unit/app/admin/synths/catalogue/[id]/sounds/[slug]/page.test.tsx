@@ -32,6 +32,13 @@ vi.mock('next/link', () => ({
   ),
 }));
 
+// The panel reads its own links from the API; here, only which owner the page hands it.
+vi.mock('@/components/app/admin/links/links-panel', () => ({
+  LinksPanel: ({ owner }: { owner: { kind: string; id: string } }) => (
+    <p data-testid="links-panel">{`${owner.kind}:${owner.id}`}</p>
+  ),
+}));
+
 import CatalogueSoundPage from '@/app/admin/synths/catalogue/[id]/sounds/[slug]/page';
 import { getAdminSynthDetail } from '@/app/admin/synths/catalogue/[id]/admin-synth';
 import { adminSound, adminSynthDetail } from '@/tests/helpers/admin-synth-detail';
@@ -53,6 +60,7 @@ describe('CatalogueSoundPage', () => {
     expect(heading).toHaveTextContent('Rubber Funk Bass');
     expect(heading).not.toHaveTextContent('Edited');
     expect(screen.getByRole('button', { name: 'Save patch' })).toBeInTheDocument();
+    expect(screen.getByTestId('links-panel')).toHaveTextContent('sound:model-d/funk-bass');
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Moog Model D patches/ })).toHaveAttribute(
       'href',
