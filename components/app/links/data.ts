@@ -90,10 +90,9 @@ function listOf(words: string[]): string {
   return `${words.slice(0, -1).join(', ')} and ${words[words.length - 1]}`;
 }
 
-/** What the closed section says: "12 · demos, reviews and lessons". */
-export function teaser(summary: LinkSummary): string {
-  const kinds = listOf(summary.kinds.map((k) => KIND_PLURAL[k]));
-  return kinds ? `${summary.count} · ${kinds}` : String(summary.count);
+/** The kinds the closed section names beside its count: "demos, reviews and lessons". */
+export function kindsOf(summary: LinkSummary): string {
+  return listOf(summary.kinds.map((k) => KIND_PLURAL[k]));
 }
 
 const COMPACT = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 });

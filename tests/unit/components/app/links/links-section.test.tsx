@@ -55,28 +55,49 @@ beforeEach(() => {
 });
 
 describe('LinksSection', () => {
-  it('says how many there are, and of which kinds, and reads nothing until it is opened', () => {
-    section();
+  it('says how many there are, and of which kinds, and shows the list through, inert, until opened', async () => {
+    const { container } = section();
 
     expect(opener().getAttribute('aria-expanded')).toBe('false');
-    expect(opener().textContent).toContain('6 · demos, reviews and lessons');
-    expect(get).not.toHaveBeenCalled();
-    expect(screen.queryAllByRole('listitem')).toHaveLength(0);
+    expect(within(opener()).getByText('demos, reviews and lessons')).toBeTruthy();
+    expect(within(opener()).getByText('6')).toBeTruthy();
+
+    await screen.findAllByRole('listitem');
+    const body = container.querySelector(
+      `#${CSS.escape(opener().getAttribute('aria-controls') ?? '')}`
+    );
+    expect(body?.hasAttribute('inert')).toBe(true);
+    expect(container.querySelector('.kys-links-peek')?.classList.contains('is-open')).toBe(false);
   });
 
-  it('reads the list on opening, once, for its target', async () => {
-    section();
+  it('reads the list once, when drawn, for its target, and keeps it through closing and opening', async () => {
+    const { container } = section();
 
-    fireEvent.click(opener());
     expect(await screen.findAllByRole('listitem')).toHaveLength(6);
     expect(get).toHaveBeenCalledTimes(1);
     expect(get).toHaveBeenCalledWith('/api/v1/links', { params: { synth: 'model-d' } });
 
-    // Closed and opened again, it keeps the list it read.
+    fireEvent.click(opener());
     fireEvent.click(opener());
     fireEvent.click(opener());
     expect(get).toHaveBeenCalledTimes(1);
     expect(opener().getAttribute('aria-expanded')).toBe('true');
+    const body = container.querySelector(
+      `#${CSS.escape(opener().getAttribute('aria-controls') ?? '')}`
+    );
+    expect(body?.hasAttribute('inert')).toBe(false);
+  });
+
+  it('opens on a click on what shows through, as on its head', async () => {
+    const { container } = section();
+    await screen.findAllByRole('listitem');
+
+    const peek = container.querySelector('.kys-links-peek');
+    if (!peek) throw new Error('expected the peek');
+    fireEvent.click(peek);
+    expect(opener().getAttribute('aria-expanded')).toBe('true');
+    expect(peek.classList.contains('is-open')).toBe(true);
+    expect(container.querySelector('iframe')).toBeNull();
   });
 
   it('reads an instrument’s list by its own key', async () => {

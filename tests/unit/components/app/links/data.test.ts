@@ -5,7 +5,7 @@
  * losing the link; the teaser and view count read as the section prints them.
  */
 import { describe, expect, it } from 'vitest';
-import { playingUrl, readPublicLinks, teaser, viewsLabel } from '@/components/app/links/data';
+import { kindsOf, playingUrl, readPublicLinks, viewsLabel } from '@/components/app/links/data';
 
 const row = {
   id: 'l1',
@@ -48,19 +48,19 @@ describe('readPublicLinks', () => {
   });
 });
 
-describe('teaser', () => {
-  it('names the kinds after the count', () => {
-    expect(teaser({ count: 12, kinds: ['demo', 'review', 'lesson'] })).toBe(
-      '12 · demos, reviews and lessons'
+describe('kindsOf', () => {
+  it('names the kinds in the plural, in a list', () => {
+    expect(kindsOf({ count: 12, kinds: ['demo', 'review', 'lesson'] })).toBe(
+      'demos, reviews and lessons'
     );
-    expect(teaser({ count: 2, kinds: ['performance', 'original'] })).toBe(
-      '2 · recordings and originals'
+    expect(kindsOf({ count: 2, kinds: ['performance', 'original'] })).toBe(
+      'recordings and originals'
     );
-    expect(teaser({ count: 1, kinds: ['demo'] })).toBe('1 · demos');
+    expect(kindsOf({ count: 1, kinds: ['demo'] })).toBe('demos');
   });
 
-  it('is the count alone with no kinds', () => {
-    expect(teaser({ count: 3, kinds: [] })).toBe('3');
+  it('is empty with no kinds', () => {
+    expect(kindsOf({ count: 3, kinds: [] })).toBe('');
   });
 });
 

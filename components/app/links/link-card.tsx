@@ -9,7 +9,7 @@
  * a Bandcamp one whose id has not been read) opens in a new tab instead.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { ExternalLink, Play } from 'lucide-react';
 
 import {
@@ -42,39 +42,39 @@ function Picture({ link }: { link: PublicLinkView }) {
   return link.thumbnailUrl ? (
     // A provider's picture, at its own address: `next/image` would fetch it through this server for nothing.
     // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={link.thumbnailUrl}
-      alt=""
-      loading="lazy"
-      referrerPolicy="no-referrer"
-      className="h-full w-full object-cover"
-    />
+    <img src={link.thumbnailUrl} alt="" loading="lazy" referrerPolicy="no-referrer" />
   ) : (
-    <span className="kys-label flex h-full w-full items-center justify-center text-(--kys-faint)">
-      {PROVIDER_NAME[link.provider]}
+    <span className="kys-link-blank">{PROVIDER_NAME[link.provider]}</span>
+  );
+}
+
+/** The kind on its plate in the monitor's corner. */
+function Plate({ link }: { link: PublicLinkView }) {
+  return (
+    <span className="kys-link-plate">
+      <span className="kys-led" aria-hidden="true" />
+      {KIND_LABEL[link.kind]}
     </span>
   );
 }
 
+/** Ours and the view count, in the row under the title. */
 function Meta({ link }: { link: PublicLinkView }) {
   const views = viewsLabel(link.views);
   return (
-    <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-(--kys-muted)">
-      {link.ours && (
-        <span className="rounded border border-(--kys-accent) px-1.5 py-0.5 font-semibold text-(--kys-accent)">
-          Know Your Synth
-        </span>
-      )}
-      <span>{KIND_LABEL[link.kind]}</span>
+    <>
+      {link.ours && <span className="kys-link-ours">Know Your Synth</span>}
       {views && <span>· {views}</span>}
-    </p>
+    </>
   );
 }
 
-export function LinkCard({ link }: { link: PublicLinkView }) {
+export function LinkCard({ link, index = 0 }: { link: PublicLinkView; index?: number }) {
   const [playing, setPlaying] = useState(false);
   const player = useRef<HTMLIFrameElement>(null);
   const embed = link.embedUrl;
+  // Its turn in the list's opening, read by `.kys-link-card`'s animation.
+  const turn: CSSProperties & Record<'--i', number> = { '--i': index };
 
   // The pressed button is gone once the player loads: focus moves to the player rather than falling to the page.
   useEffect(() => {
@@ -83,35 +83,30 @@ export function LinkCard({ link }: { link: PublicLinkView }) {
 
   if (!embed) {
     return (
-      <li className="min-w-0">
-        <a
-          href={link.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group block rounded-lg focus-visible:outline-2 focus-visible:outline-(--kys-accent)"
-        >
-          <span className="relative block aspect-video overflow-hidden rounded-lg border border-(--kys-line) bg-(--kys-surface)">
+      <li className="kys-link-card" style={turn}>
+        <a href={link.url} target="_blank" rel="noopener noreferrer" className="kys-link-shot">
+          <span className={`kys-link-screen aspect-video ${link.thumbnailUrl ? 'is-picture' : ''}`}>
             <Picture link={link} />
+            <Plate link={link} />
+            <span className="kys-link-bug">
+              {hostOf(link.url)}
+              <ExternalLink size={10} aria-hidden="true" />
+            </span>
           </span>
-          <span className="mt-2 line-clamp-2 block text-sm font-semibold group-hover:text-(--kys-accent)">
-            {link.title}
-          </span>
+          <span className="kys-link-title line-clamp-2 block">{link.title}</span>
         </a>
-        <Meta link={link} />
-        <p className="mt-0.5 flex items-center gap-1 text-xs text-(--kys-faint)">
-          <ExternalLink size={12} aria-hidden="true" />
-          Opens {hostOf(link.url)} in a new tab
+        <p className="kys-link-meta">
+          <Meta link={link} />
+          <span className="text-(--kys-faint)">Opens {hostOf(link.url)} in a new tab</span>
         </p>
       </li>
     );
   }
 
   return (
-    <li className="min-w-0">
+    <li className="kys-link-card" style={turn}>
       {playing ? (
-        <div
-          className={`overflow-hidden rounded-lg border border-(--kys-line) bg-(--kys-surface) ${PLAYER_BOX[link.provider]}`}
-        >
+        <div className={`kys-link-screen is-on ${PLAYER_BOX[link.provider]}`}>
           <iframe
             ref={player}
             src={playingUrl(link.provider, embed)}
@@ -127,31 +122,37 @@ export function LinkCard({ link }: { link: PublicLinkView }) {
           type="button"
           onClick={() => setPlaying(true)}
           aria-label={`Play ${link.title} (loads ${PROVIDER_NAME[link.provider]}'s player)`}
-          className="group relative block aspect-video w-full overflow-hidden rounded-lg border border-(--kys-line) bg-(--kys-surface) focus-visible:outline-2 focus-visible:outline-(--kys-accent)"
+          className="kys-link-shot"
         >
-          <Picture link={link} />
-          <span className="absolute inset-0 flex items-center justify-center">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-black/70 text-white transition-transform group-hover:scale-110">
-              <Play size={22} aria-hidden="true" className="translate-x-px" />
+          <span className={`kys-link-screen aspect-video ${link.thumbnailUrl ? 'is-picture' : ''}`}>
+            <Picture link={link} />
+            <Plate link={link} />
+            <span className="kys-link-play">
+              <span>
+                <Play size={22} aria-hidden="true" className="translate-x-px" fill="currentColor" />
+              </span>
             </span>
+            <span className="kys-link-bug">{PROVIDER_NAME[link.provider]}</span>
           </span>
         </button>
       )}
-      <p className="mt-2 line-clamp-2 text-sm font-semibold" title={link.title}>
+      <p className="kys-link-title line-clamp-2" title={link.title}>
         {link.title}
       </p>
-      <Meta link={link} />
-      <p className="mt-0.5 text-xs">
-        <a
-          href={link.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-(--kys-faint) hover:text-(--kys-accent) hover:underline"
-        >
+      <div className="kys-link-meta">
+        {/* The player covers the plate, so its kind comes down here, the LED lit: it is on. */}
+        {playing && (
+          <span className="inline-flex items-center gap-1.5 text-(--kys-text)">
+            <span className="kys-led is-lit" aria-hidden="true" />
+            {KIND_LABEL[link.kind]}
+          </span>
+        )}
+        <Meta link={link} />
+        <a href={link.url} target="_blank" rel="noopener noreferrer" className="kys-link-out">
           On {PROVIDER_NAME[link.provider]}
-          <ExternalLink size={12} aria-hidden="true" />
+          <ExternalLink size={11} aria-hidden="true" />
         </a>
-      </p>
+      </div>
     </li>
   );
 }

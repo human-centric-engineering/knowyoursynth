@@ -4,20 +4,22 @@
  * LinksSection — a synth's or databank instrument's videos and links, under its panel and on its `/bank` page
  * (`f-videos-and-links` t-182).
  *
- * Closed, it says how many there are and of which kinds, from the page's own data (`LinkSummary`). The list is read
- * from `GET /api/v1/links` the first time it is opened, not before: the order is a fresh draw on each read, and a
- * visitor who never opens it costs nothing. Closing and opening again keeps that list. Ours come first, as the API
- * orders them; each card says its kind. Nothing is shown for a target with none.
+ * Its head says how many there are and of which kinds, from the page's own data (`LinkSummary`). Under it, closed, the
+ * top of the first row of videos shows through, fading out; the pointer over it shows a little more, and a click
+ * (on the head, or on what shows through) opens the whole list. While closed, the cards are `inert`: what shows
+ * through is a preview to open, not something to play. The list is read from `GET /api/v1/links` once, when the
+ * section is drawn: the order is a fresh draw on each read, so closing and opening again keeps it. Ours come first, as
+ * the API orders them; each card says its kind. Nothing is shown for a target with none.
  */
 
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
 import { LinkCard } from '@/components/app/links/link-card';
 import {
   LINKS_API,
+  kindsOf,
   readPublicLinks,
-  teaser,
   type LinksTarget,
   type PublicLinkView,
 } from '@/components/app/links/data';
@@ -31,14 +33,13 @@ export interface LinksSectionProps {
   className?: string;
 }
 
-type Load = { state: 'idle' | 'loading' | 'failed' } | { state: 'ready'; links: PublicLinkView[] };
+type Load = { state: 'loading' | 'failed' } | { state: 'ready'; links: PublicLinkView[] };
 
 export function LinksSection({ target, id, summary, className = '' }: LinksSectionProps) {
   const [open, setOpen] = useState(false);
-  const [load, setLoad] = useState<Load>({ state: 'idle' });
+  const [load, setLoad] = useState<Load>({ state: 'loading' });
   const bodyId = useId();
-
-  if (summary.count === 0) return null;
+  const none = summary.count === 0;
 
   const read = async () => {
     setLoad({ state: 'loading' });
@@ -50,60 +51,80 @@ export function LinksSection({ target, id, summary, className = '' }: LinksSecti
     }
   };
 
-  const toggle = () => {
-    const next = !open;
-    setOpen(next);
-    if (next && load.state === 'idle') void read();
-  };
+  useEffect(() => {
+    if (!none) void read();
+    // Read once per target: the order is a fresh draw on each read.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [target, id, none]);
+
+  if (none) return null;
+
+  const kinds = kindsOf(summary);
 
   return (
-    <section aria-label="Videos and links" className={className}>
+    <section aria-label="Videos and links" className={`kys-links ${className}`}>
       <button
         type="button"
         aria-expanded={open}
         aria-controls={bodyId}
-        onClick={toggle}
-        className="flex w-full items-center justify-between gap-3 rounded-lg border border-(--kys-line) bg-(--kys-surface) px-4 py-3 text-left hover:border-(--kys-accent) focus-visible:outline-2 focus-visible:outline-(--kys-accent)"
+        onClick={() => setOpen(!open)}
+        className="kys-links-bar"
       >
-        <span className="min-w-0">
-          <span className="block font-semibold">Videos and links</span>
-          <span className="block text-sm text-(--kys-muted)">{teaser(summary)}</span>
+        <span className={`kys-led shrink-0 ${open ? 'is-lit' : ''}`} aria-hidden="true" />
+        <span className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-4 gap-y-0.5">
+          <span className="kys-links-name">Videos and links</span>
+          {kinds && <span className="kys-links-kinds min-w-0 truncate">{kinds}</span>}
         </span>
-        <ChevronDown
-          size={18}
-          aria-hidden="true"
-          className={`shrink-0 text-(--kys-muted) transition-transform ${open ? 'rotate-180' : ''}`}
-        />
+        <span className="kys-links-readout">{summary.count}</span>
+        <span className="kys-links-chev" aria-hidden="true">
+          <ChevronDown size={16} />
+        </span>
       </button>
-      <div id={bodyId} hidden={!open} className="pt-4">
-        {load.state === 'loading' && (
-          <p role="status" className="text-sm text-(--kys-muted)">
-            Loading…
-          </p>
-        )}
-        {load.state === 'failed' && (
-          <p role="alert" className="text-sm text-(--kys-warn)">
-            The videos could not be loaded.{' '}
-            <button
-              type="button"
-              onClick={() => void read()}
-              className="font-semibold underline hover:text-(--kys-accent)"
-            >
-              Try again
-            </button>
-          </p>
-        )}
-        {load.state === 'ready' &&
-          (load.links.length ? (
-            <ul className="grid gap-x-4 gap-y-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-              {load.links.map((link) => (
-                <LinkCard key={link.id} link={link} />
+      {/* Closed, a click on what shows through opens it, as the head does (the head is the way in from the keys). */}
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+      <div
+        className={`kys-links-peek ${open ? 'is-open' : ''}`}
+        onClick={open ? undefined : () => setOpen(true)}
+      >
+        <div id={bodyId} inert={!open} className="kys-links-body">
+          {load.state === 'loading' && (
+            <div role="status" className="kys-links-grid">
+              <span className="sr-only">Loading…</span>
+              {Array.from({ length: Math.min(summary.count, 3) }, (_, i) => (
+                <div key={i} className="kys-link-ghost" aria-hidden="true" />
               ))}
-            </ul>
-          ) : (
-            <p className="text-sm text-(--kys-muted)">There are none to show now.</p>
-          ))}
+            </div>
+          )}
+          {load.state === 'failed' && (
+            <p role="alert" className="text-sm text-(--kys-warn)">
+              The videos could not be loaded.{' '}
+              <button
+                type="button"
+                onClick={() => void read()}
+                className="font-semibold underline hover:text-(--kys-accent)"
+              >
+                Try again
+              </button>
+            </p>
+          )}
+          {load.state === 'ready' &&
+            (load.links.length ? (
+              <ul className="kys-links-grid">
+                {load.links.map((link, i) => (
+                  <LinkCard key={link.id} link={link} index={i} />
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-(--kys-muted)">There are none to show now.</p>
+            ))}
+        </div>
       </div>
+      {!open && (
+        <span className="kys-links-more" aria-hidden="true">
+          Show all {summary.count}
+          <ChevronDown size={13} />
+        </span>
+      )}
     </section>
   );
 }

@@ -194,8 +194,12 @@ Admin rules (`lib/app/links/admin.ts`, each tested):
 - **Under the panel** of every synth page, and on a databank instrument's `/bank` page (including one with no panel):
   a closed **Videos and links** section (`links-section.tsx`). Closed, it says how many there are and of which kinds
   (`summarisePublicLinks`, joined into `getSynthDetail` as `links` and read by the `/bank` route): the same links the
-  list has, one per URL. It reads `GET /api/v1/links?synth=|instrument=` the first time it is opened, so the draw is
-  per visit and a visitor who never opens it costs nothing. No links, no section.
+  list has, one per URL. It reads `GET /api/v1/links?synth=|instrument=` once, when it is drawn, so the draw is per
+  visit: closed, the top of the first row shows through in grey (`inert`, so a click opens the section rather than
+  playing), and the pointer over it brings up the colour and a little more. That read means the thumbnails load with
+  the page, from the providers' image hosts, before anything is pressed. No links, no section.
+- **Pressing Play starts it** where the provider takes a parameter for that (`playingUrl`: YouTube, Vimeo,
+  SoundCloud), so it is one press, not two; focus moves to the player that replaces the button.
 - **Click to embed** (`link-card.tsx`): until pressed, a card is its picture, title, kind and (YouTube) views. The
   picture comes from the provider's image host with no referrer; no player, script or cookie loads. Pressed, the card
   loads an iframe from the link's `embedUrl`, which the page checks again is on `EMBED_ORIGINS` (one off them is shown
