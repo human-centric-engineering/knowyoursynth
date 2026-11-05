@@ -208,6 +208,15 @@ describe('the sequencer on the synth page', () => {
     expect(button('Play')).toBeTruthy();
   });
 
+  it('asks the engine to run inside the click on Play, before anything is awaited (iOS refuses it after)', async () => {
+    page();
+    fireEvent.click(button('Sequencer'));
+    fireEvent.click(button('Play'));
+    expect(engine.resume).toHaveBeenCalledTimes(1);
+    await act(async () => {});
+    expect(lastSent('pattern')).toMatchObject({ type: 'pattern' });
+  });
+
   it('hands the engine’s loop events to the sequencer, which queues the next loop', async () => {
     page();
     fireEvent.click(button('Sequencer'));

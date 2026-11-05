@@ -26,6 +26,21 @@ interface WebkitWindow extends Window {
   webkitAudioContext?: typeof AudioContext;
 }
 
+/** Safari's audio session (iOS 16.4+): not yet in TypeScript's DOM types. */
+interface AudioSessionNavigator extends Navigator {
+  audioSession?: { type: string };
+}
+
+/**
+ * Tell the browser this page plays music, where it can be told: without it iOS treats Web Audio as ambient sound and
+ * the ring/silent switch mutes the synth. Elsewhere there is nothing to set.
+ */
+export function playbackSession(): void {
+  if (typeof navigator === 'undefined') return;
+  const session = (navigator as AudioSessionNavigator).audioSession;
+  if (session && session.type !== 'playback') session.type = 'playback';
+}
+
 /** How the voice is running: not yet, in an AudioWorklet, or on the main thread in a ScriptProcessor. */
 export type EngineMode = 'off' | 'worklet' | 'script';
 
@@ -48,6 +63,8 @@ export class Engine {
   rack: Rack | null;
   mode: EngineMode;
   starting: Promise<EngineMode> | null;
+  /** Turned off with `suspend`: then a gesture is not to bring the sound back (see `unlock`). */
+  muted: boolean;
 
   constructor(onEvent: (e: SynthEvent) => void) {
     this.onEvent = onEvent;
@@ -62,9 +79,11 @@ export class Engine {
     this.rack = null;
     this.mode = 'off';
     this.starting = null;
+    this.muted = false;
   }
 
   start(): Promise<EngineMode> {
+    this.muted = false;
     if (this.starting) return this.starting;
     // A failed start is forgotten, with what was queued for it: the next start (a retry) boots afresh, and nothing
     // queues behind a voice that will never come.
@@ -81,6 +100,7 @@ export class Engine {
   async boot(): Promise<EngineMode> {
     const AC = window.AudioContext || (window as WebkitWindow).webkitAudioContext;
     if (!AC) throw new Error('Web Audio is not available in this browser.');
+    playbackSession();
     const ctx = new AC({ latencyHint: 'interactive' });
     this.ctx = ctx;
     // Ask to run now, while the click that started us still counts as a user gesture: the worklet may take up to
@@ -157,7 +177,8 @@ export class Engine {
     const pending = this.pending;
     this.pending = [];
     pending.forEach((m) => this.send(m));
-    if (ctx.state !== 'running') await ctx.resume();
+    // Not if the sound was turned off while the voice loaded: that stays off.
+    if (ctx.state !== 'running' && !this.muted) await ctx.resume();
     return this.mode;
   }
 
@@ -177,15 +198,40 @@ export class Engine {
   }
 
   async suspend(): Promise<void> {
+    this.muted = true;
     this.send({ type: 'panic' });
     if (this.ctx) await this.ctx.suspend();
   }
 
   /** Running again after `suspend`. Before the voice exists, this is `start` (and waits for a start under way). */
   async resume(): Promise<EngineMode> {
-    if (!this.ctx || !this.node) return this.start();
-    await this.ctx.resume();
+    this.muted = false;
+    if (!this.ctx) return this.start();
+    // Before any await, so it is still inside the gesture: also while a start is under way, whose own resume() iOS
+    // may have refused (a touch's pointerdown is not a gesture there; its pointerup is).
+    const resumed = this.ctx.state === 'running' ? null : Promise.resolve(this.ctx.resume());
+    if (!this.node) {
+      void resumed?.catch(() => {});
+      return this.start();
+    }
+    await resumed;
     return this.mode;
+  }
+
+  /**
+   * Called from any gesture on the page, synchronously in its handler. The context is running again if something
+   * other than the user stopped it: iOS leaves it `interrupted` after a call or Siri, and `suspended` when a tab comes
+   * back or when the first tap's resume() was refused. Nothing to do before a start, or when the sound was turned off.
+   */
+  unlock(): void {
+    const ctx = this.ctx;
+    // Nor is the audio session claimed for a page that never played, or whose sound is off: on iOS it stops other music.
+    if (!ctx || this.muted) return;
+    playbackSession();
+    // `interrupted` is Safari's own state, outside the standard AudioContextState.
+    const state: string = ctx.state;
+    if (state === 'suspended' || state === 'interrupted')
+      void Promise.resolve(ctx.resume()).catch(() => {});
   }
 
   /** The outboard rack's setting: anything stored or partial (see `normalizeFx`). */

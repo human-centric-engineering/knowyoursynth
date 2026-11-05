@@ -49,13 +49,26 @@ export function toStores(e: SynthEvent): void {
 let engine: Engine | null = null;
 let listener: ((e: SynthEvent) => void) | null = null;
 
+/**
+ * The events a browser counts as a gesture that may start sound. On a touch screen that is the finger lifting, not
+ * landing: iOS refuses a resume() from a tap's pointerdown, so the key's own start can fail and the lift recovers it.
+ */
+export const GESTURES = ['pointerup', 'touchend', 'click', 'keydown'] as const;
+
 /** The engine, made on first use. Browser only: it is never called while rendering on the server. */
 export function getEngine(): Engine {
-  if (!engine)
-    engine = new Engine((e) => {
+  if (!engine) {
+    const made = new Engine((e) => {
       toStores(e);
       listener?.(e);
     });
+    engine = made;
+    // On any gesture, in the capture phase: before the handlers on the page's elements, and the window's own key handler
+    // (which bubbles). A context iOS interrupted (a call, a backgrounded tab) runs again.
+    GESTURES.forEach((type) =>
+      document.addEventListener(type, () => made.unlock(), { capture: true, passive: true })
+    );
+  }
   return engine;
 }
 
