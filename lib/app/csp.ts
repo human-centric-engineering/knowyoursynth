@@ -32,5 +32,13 @@
  * Full guide: CUSTOMIZATION.md §4 · .context/security/overview.md
  */
 
-/** Extra `frame-src` origins. Empty = platform default (`'self'` only). */
-export const appFrameSrc: string[] = [];
+import { EMBED_ORIGINS } from '@/lib/app/links/providers';
+
+/**
+ * Extra `frame-src` origins. Empty = platform default (`'self'` only).
+ *
+ * Know Your Synth: the five players a video or recording plays in when someone presses play (`f-videos-and-links`
+ * t-182). Every iframe address is built by `embedUrl` in `lib/app/links/providers.ts`, from a validated id, on one of
+ * these. See `.context/app/links.md`.
+ */
+export const appFrameSrc: string[] = [...EMBED_ORIGINS];

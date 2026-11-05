@@ -815,7 +815,16 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     risk: 'a stray origin would widen the iframe policy on every install',
     // These values are spliced straight into a response header, so an
     // accidental default here is a security change, not a cosmetic one.
-    assert: () => expect(appFrameSrc).toEqual([]),
+    // Know Your Synth fills this seam: pinned to the five embed players (`f-videos-and-links` t-182), so a stray
+    // extra origin still fails.
+    assert: () =>
+      expect(appFrameSrc).toEqual([
+        'https://www.youtube-nocookie.com',
+        'https://player.vimeo.com',
+        'https://open.spotify.com',
+        'https://bandcamp.com',
+        'https://w.soundcloud.com',
+      ]),
   },
   {
     seam: 'lib/app/ci.ts',
