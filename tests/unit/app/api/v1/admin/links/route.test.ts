@@ -244,6 +244,9 @@ describe('POST', () => {
     expect((await create(video())).status).toBe(201);
     const again = await create(video({ url: `https://www.youtube.com/watch?v=${VIDEO}&t=10s` }));
     expect(again.status).toBe(409);
+    // Refused before the provider is asked: a duplicate costs no outbound read or quota.
+    expect(mockResolve).toHaveBeenCalledTimes(1);
+    expect(mockStats).toHaveBeenCalledTimes(1);
     expect((await create(video({ owner: { kind: 'instrument', id: 'arp-odyssey' } }))).status).toBe(
       201
     );
@@ -462,6 +465,7 @@ describe('PATCH', () => {
       ctx(String(b.id))
     );
     expect(clash.status).toBe(409);
+    expect(mockResolve).not.toHaveBeenCalled();
   });
 
   it('is 404 for a link that is not there, and 400 for an id that cannot be one', async () => {

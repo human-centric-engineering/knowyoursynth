@@ -13,8 +13,8 @@
  * - **One failure is contained**: a batch the API refuses, or a row that will not write, is counted and skipped, and
  *   the rest still run. A video the API does not return (removed, private) keeps the counts it had.
  * - **Capped at the largest Int**, the column's type; the order takes a logarithm, so the cap never changes it.
- * - **The write is conditional on the link still naming that video**, so an admin's URL change mid-run is not given
- *   the old video's counts.
+ * - **The write is conditional on the link being as it was read**: an admin's URL change mid-run is not given the old
+ *   video's counts, and any other edit mid-run keeps its own `updatedAt` (the row is written on the next run).
  */
 import { z } from 'zod';
 import { env } from '@/lib/env';
@@ -110,7 +110,9 @@ export async function refreshYouTubeStats(now: Date = new Date()): Promise<Refre
   const byVideo = new Map<string, typeof rows>();
   for (const row of rows) {
     if (!row.providerId) continue;
-    byVideo.set(row.providerId, [...(byVideo.get(row.providerId) ?? []), row]);
+    const same = byVideo.get(row.providerId);
+    if (same) same.push(row);
+    else byVideo.set(row.providerId, [row]);
   }
   const videos = [...byVideo.keys()];
   const summary = { videos: videos.length, updated: 0, unchanged: 0, missing: 0, failed: 0 };
@@ -135,12 +137,18 @@ export async function refreshYouTubeStats(now: Date = new Date()): Promise<Refre
         }
         try {
           await prisma.externalLink.update({
-            where: { id: row.id, provider: 'youtube', providerId: videoId },
+            // Only the row as it was read: an admin's edit since then keeps its own updatedAt, and gets counts tomorrow.
+            where: {
+              id: row.id,
+              provider: 'youtube',
+              providerId: videoId,
+              updatedAt: row.updatedAt,
+            },
             data: { views: read.views, likes: read.likes, statsAt: now, updatedAt: row.updatedAt },
           });
           summary.updated++;
         } catch (err) {
-          // P2025: deleted, or given another URL, since the read. Either way these counts are no longer its.
+          // P2025: deleted or edited since the read. Either way these counts wait for the next run.
           if (!hasPrismaCode(err, 'P2025')) {
             summary.failed++;
             logger.warn('Links: could not write the counts for a video', {

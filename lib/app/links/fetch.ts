@@ -22,7 +22,7 @@ export interface ReadOptions {
   maxBytes: number;
   timeoutMs: number;
   accept: string;
-  /** Stop reading once the text read so far contains this (an HTML page's `</head>`). */
+  /** Stop reading once the text read so far contains this, in any case (an HTML page's `</head>`). */
   stopAt?: string;
   /** What the read is for, in the log line. Never the URL, which can carry a key. */
   purpose: string;
@@ -51,6 +51,7 @@ async function readCapped(
   if (!response.body) return '';
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
+  const stop = stopAt?.toLowerCase();
   let text = '';
   let bytes = 0;
   try {
@@ -59,8 +60,11 @@ async function readCapped(
       if (done) return text + decoder.decode();
       bytes += value.byteLength;
       if (bytes > maxBytes) return null;
-      text += decoder.decode(value, { stream: true });
-      if (stopAt && text.includes(stopAt)) return text;
+      const chunk = decoder.decode(value, { stream: true });
+      // Only the new text, and the end of the old that a match could start in, can hold a first match.
+      const from = Math.max(0, text.length - (stop?.length ?? 0) + 1);
+      text += chunk;
+      if (stop && text.slice(from).toLowerCase().includes(stop)) return text;
     }
   } finally {
     // Stops the download: a page past its head, or past the cap, is not read to the end.

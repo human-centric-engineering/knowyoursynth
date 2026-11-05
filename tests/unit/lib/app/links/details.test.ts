@@ -104,7 +104,7 @@ describe('oEmbed providers', () => {
   it.each(cases)(
     '$provider: asks its endpoint about the canonical URL and reads title and picture',
     async (c) => {
-      fetchMock.mockResolvedValue(json({ title: '  A  &amp; B ', thumbnail_url: c.thumbnail }));
+      fetchMock.mockResolvedValue(json({ title: '  A  & <B> ', thumbnail_url: c.thumbnail }));
       const details = await resolveLinkDetails(parsed(c.url));
 
       const asked = requested();
@@ -112,7 +112,7 @@ describe('oEmbed providers', () => {
       expect(asked.searchParams.get('url')).toBe(c.canonical);
       expect(fetchMock.mock.calls[0][1]).toMatchObject({ method: 'GET', redirect: 'error' });
       expect(fetchMock.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal);
-      expect(details).toEqual({ title: 'A & B', thumbnailUrl: c.thumbnail, providerId: null });
+      expect(details).toEqual({ title: 'A & <B>', thumbnailUrl: c.thumbnail, providerId: null });
     }
   );
 
@@ -213,6 +213,21 @@ describe('Bandcamp', () => {
     expect(meta.get('og:title')).toBe('One');
     expect(meta.size).toBe(1);
   });
+
+  it('reads a value holding a ">", decodes an og:image query, and keeps a title’s text', async () => {
+    fetchMock.mockResolvedValue(
+      new Response(
+        `<HEAD><meta property="og:title" content="Synths &gt; Guitars &amp; <Rev 4>">
+        <meta property="og:image" content="https://f4.bcbits.com/img/a1_10.jpg?x=1&amp;y=2">
+        </HEAD><body></body>`,
+        { status: 200 }
+      )
+    );
+    const details = await resolveLinkDetails(parsed('https://a.bandcamp.com/album/b'));
+    expect(details?.title).toBe('Synths > Guitars &');
+    expect(details?.thumbnailUrl).toBe('https://f4.bcbits.com/img/a1_10.jpg?x=1&y=2');
+    expect(metaTags('<meta property="og:title" content="A > B">').get('og:title')).toBe('A > B');
+  });
 });
 
 describe('reading from another site', () => {
@@ -270,15 +285,34 @@ describe('reading from another site', () => {
       '<head><meta></head>'
     );
   });
+
+  it('stops at stopAt in any case, even split across chunks', async () => {
+    fetchMock.mockResolvedValueOnce(streamed(['<HEAD><meta></HE', 'AD>', 'z'.repeat(500)]));
+    expect(await readText('https://www.youtube.com/a', { ...opts, stopAt: '</head>' })).toBe(
+      '<HEAD><meta></HEAD>'
+    );
+  });
 });
 
 describe('cleanTitle', () => {
-  it('decodes entities once, drops markup, collapses whitespace and cuts long titles', () => {
-    expect(cleanTitle('Caf&eacute;  <b>live</b>\n&amp;lt;')).toBe('Café live &lt;');
-    expect(cleanTitle('   ')).toBeNull();
-    expect(cleanTitle(undefined)).toBeNull();
-    const long = cleanTitle('a'.repeat(300));
-    expect(Array.from(long ?? '')).toHaveLength(200);
+  it('decodes an HTML title’s entities once and drops its markup', () => {
+    expect(cleanTitle('Caf&eacute;  <b>live</b>\n&amp;lt;', 'html')).toBe('Café live &lt;');
+  });
+
+  it('keeps a plain-text title as it is, collapsing whitespace', () => {
+    expect(cleanTitle('Prophet-5  <Rev 4>\n&amp; demo', 'text')).toBe(
+      'Prophet-5 <Rev 4> &amp; demo'
+    );
+    expect(cleanTitle('   ', 'text')).toBeNull();
+    expect(cleanTitle(undefined, 'text')).toBeNull();
+  });
+
+  it('cuts a long title to what TitleSchema takes, by UTF-16 units, never splitting a character', () => {
+    const long = cleanTitle('a'.repeat(300), 'text');
+    expect(long).toHaveLength(200);
     expect(long?.endsWith('…')).toBe(true);
+    const emoji = cleanTitle('🎹'.repeat(150), 'text') ?? '';
+    expect(emoji.length).toBeLessThanOrEqual(200);
+    expect(emoji).toBe(`${'🎹'.repeat(99)}…`);
   });
 });

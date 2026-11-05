@@ -4,7 +4,7 @@
  * The real `stats.ts` and `fetch.ts` over the stateful links fake (`tests/helpers/links-store.ts`), with `fetch`
  * stubbed as the YouTube Data API. Pins: nothing without a key; ≤50 ids a call; only changed rows written, keeping
  * their `updatedAt`; non-YouTube rows untouched; one failed batch does not stop the others; counts capped at the
- * largest Int; a link given another URL mid-run is not written.
+ * largest Int; a link given another URL, or edited, mid-run is not written.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -191,6 +191,31 @@ describe('refreshYouTubeStats', () => {
     });
     expect(await refreshYouTubeStats()).toMatchObject({ updated: 0, failed: 0 });
     expect(store.links[0].views).toBeNull();
+  });
+});
+
+describe('an edit during the run', () => {
+  it('keeps the admin’s own updatedAt, leaving the counts for the next run', async () => {
+    const row = youtube(1);
+    const edited = new Date('2026-11-06T09:00:00Z');
+    fetchMock.mockImplementation(async () => {
+      // An admin retitles the link while the call is out.
+      Object.assign(row, { title: 'Retitled', updatedAt: edited });
+      return new Response(
+        JSON.stringify({ items: [{ id: vid(1), statistics: { viewCount: '5' } }] }),
+        { status: 200 }
+      );
+    });
+    expect(await refreshYouTubeStats()).toMatchObject({ updated: 0, failed: 0 });
+    expect(store.links[0]).toMatchObject({ title: 'Retitled', updatedAt: edited, views: null });
+
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ items: [{ id: vid(1), statistics: { viewCount: '5' } }] }), {
+        status: 200,
+      })
+    );
+    expect(await refreshYouTubeStats()).toMatchObject({ updated: 1 });
+    expect(store.links[0]).toMatchObject({ updatedAt: edited, views: 5 });
   });
 });
 

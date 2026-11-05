@@ -109,7 +109,9 @@ its embed id. Server-side only; the browser never calls a provider (CSP `connect
   pages.
 - **A Bandcamp id is kept only as `album=<n>` or `track=<n>`**, from an `og:video` on `https://bandcamp.com/EmbeddedPlayer/`;
   `embedUrl` checks the shape again on read.
-- **Titles are plain text**: entities decoded once, markup dropped, whitespace collapsed, at most 200 characters.
+- **Titles are plain text**, whitespace collapsed, at most 200 characters (UTF-16 units, as an admin's title is
+  counted). oEmbed's `title` already is text and is kept as sent; Bandcamp's `og:title` is an HTML attribute, so its
+  entities are decoded once and any markup dropped.
 - **On any failure the answer is null** and nothing fails: a create with a title saves without the picture; a create
   without one is refused ("give it one").
 - **When:** on create, and on a `PATCH` that changes the URL. The provider's title is used only when the admin gave
@@ -132,8 +134,8 @@ Data API v3 enabled. Without one, no count is read, the order falls back to an a
   rest still run. A video YouTube no longer returns (removed, private) keeps the counts it had (`missing`).
 - **Capped at the largest Int** (2,147,483,647), the column's type. The order takes a logarithm, so the cap never
   changes it. A hidden like count is null.
-- **Only YouTube rows**, and only while the row still names that video: an admin's URL change during a run isn't
-  given the old video's counts.
+- **Only YouTube rows**, and only while the row is as the run read it: an admin's URL change during a run isn't
+  given the old video's counts, and any other edit keeps its own `updatedAt` (that row is written on the next run).
 - The key travels in the request's query, so no log line carries the URL.
 
 ## Kinds

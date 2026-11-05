@@ -50,17 +50,31 @@ const oEmbedSchema = z.object({
   thumbnail_url: z.string().optional(),
 });
 
-/** A title as plain text: markup and entities decoded once, whitespace collapsed, cut by characters. Null if empty. */
-export function cleanTitle(raw: string | undefined): string | null {
+/**
+ * A title as plain text, whitespace collapsed, cut to what `TitleSchema` takes. Null if empty.
+ *
+ * `format` is what the provider sent: oEmbed's `title` is JSON text, kept as it is (`<Rev 4>` is part of a name), and
+ * an HTML attribute's (`og:title`) has its markup dropped and its entities decoded, once.
+ *
+ * The cut counts UTF-16 units, as `TitleSchema`'s `.max` does, so an admin can save a read title back unchanged; it
+ * never splits a character.
+ */
+export function cleanTitle(raw: string | undefined, format: 'text' | 'html'): string | null {
   if (!raw) return null;
-  const chars = Array.from(cleanInline(extractTextFromHtml(raw)));
-  if (chars.length === 0) return null;
-  return chars.length > MAX_TITLE_LENGTH
-    ? `${chars
-        .slice(0, MAX_TITLE_LENGTH - 1)
-        .join('')
-        .trimEnd()}…`
-    : chars.join('');
+  const text = cleanInline(format === 'html' ? extractTextFromHtml(raw) : raw);
+  if (text.length === 0) return null;
+  if (text.length <= MAX_TITLE_LENGTH) return text;
+  let cut = '';
+  for (const char of text) {
+    if (cut.length + char.length > MAX_TITLE_LENGTH - 1) break;
+    cut += char;
+  }
+  return `${cut.trimEnd()}…`;
+}
+
+/** A URL from an HTML attribute: its `&amp;` is the only entity one here would carry. */
+function attributeUrl(raw: string | undefined): string | null {
+  return raw ? raw.replace(/&amp;/g, '&') : null;
 }
 
 async function fromOEmbed(
@@ -77,17 +91,20 @@ async function fromOEmbed(
   const parsed = oEmbedSchema.safeParse(body);
   if (!parsed.success) return null;
   const details: LinkDetails = {
-    title: cleanTitle(parsed.data.title),
+    title: cleanTitle(parsed.data.title, 'text'),
     thumbnailUrl: safeThumbnailUrl(provider, parsed.data.thumbnail_url ?? null),
     providerId: null,
   };
   return details.title || details.thumbnailUrl ? details : null;
 }
 
-/** Each `<meta property|name="…" content="…">` in an HTML head, by its property. The first of each wins. */
+/**
+ * Each `<meta property|name="…" content="…">` in an HTML head, by its property. The first of each wins. A tag runs to
+ * the first `>` outside a quoted value, since a value may hold one.
+ */
 export function metaTags(html: string): Map<string, string> {
   const out = new Map<string, string>();
-  for (const tag of html.match(/<meta\s[^>]*>/gi) ?? []) {
+  for (const tag of html.match(/<meta\s(?:[^>"']|"[^"]*"|'[^']*')*>/gi) ?? []) {
     const attrs = new Map<string, string>();
     for (const m of tag.matchAll(/([a-zA-Z:-]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/g))
       attrs.set(m[1].toLowerCase(), m[2] ?? m[3] ?? '');
@@ -103,11 +120,11 @@ export function metaTags(html: string): Map<string, string> {
  * `album=<n>` or `track=<n>` segment; else null.
  */
 export function bandcampIdFromEmbed(raw: string | undefined): string | null {
-  if (!raw) return null;
+  const decoded = attributeUrl(raw);
+  if (!decoded) return null;
   let url: URL;
   try {
-    // An attribute's `&amp;` is the only entity a URL here would carry.
-    url = new URL(raw.replace(/&amp;/g, '&'));
+    url = new URL(decoded);
   } catch {
     return null;
   }
@@ -133,8 +150,8 @@ async function fromBandcampPage(url: string): Promise<LinkDetails | null> {
   if (html === null) return null;
   const meta = metaTags(html);
   const details: LinkDetails = {
-    title: cleanTitle(meta.get('og:title')),
-    thumbnailUrl: safeThumbnailUrl('bandcamp', meta.get('og:image') ?? null),
+    title: cleanTitle(meta.get('og:title'), 'html'),
+    thumbnailUrl: safeThumbnailUrl('bandcamp', attributeUrl(meta.get('og:image'))),
     providerId: bandcampIdFromEmbed(meta.get('og:video') ?? meta.get('og:video:secure_url')),
   };
   return details.title || details.thumbnailUrl || details.providerId ? details : null;

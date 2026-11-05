@@ -23,7 +23,7 @@ import { prisma } from '@/lib/db/client';
 import { ConflictError, NotFoundError, ValidationError } from '@/lib/api/errors';
 import { hasPrismaCode } from '@/lib/app/synths/lib/prisma-errors';
 import { paginationQuerySchema } from '@/lib/validations/common';
-import { resolveLinkDetails } from '@/lib/app/links/details';
+import { resolveLinkDetails, type LinkDetails } from '@/lib/app/links/details';
 import { statsForVideo } from '@/lib/app/links/stats';
 import {
   embedUrl,
@@ -177,6 +177,11 @@ interface ReadFromProvider {
   };
 }
 
+/** The id a link's embed is built from: Bandcamp's is only on its page; every other provider's came from the URL. */
+function providerIdFor(link: ParsedLink, details: LinkDetails | null): string | null {
+  return link.provider === 'bandcamp' ? (details?.providerId ?? null) : link.providerId;
+}
+
 /** Ask the link's provider about it. Never throws: a provider that does not answer leaves its columns empty. */
 async function readFromProvider(link: ParsedLink): Promise<ReadFromProvider> {
   const [details, stats] = await Promise.all([
@@ -186,8 +191,7 @@ async function readFromProvider(link: ParsedLink): Promise<ReadFromProvider> {
   return {
     title: details?.title ?? null,
     columns: {
-      // Bandcamp's id is only on its page; every other provider's came from the URL.
-      providerId: link.provider === 'bandcamp' ? (details?.providerId ?? null) : link.providerId,
+      providerId: providerIdFor(link, details),
       thumbnailUrl: details?.thumbnailUrl ?? null,
       views: stats?.views ?? null,
       likes: stats?.likes ?? null,
@@ -212,6 +216,18 @@ async function nextOursOrder(where: OwnerColumns): Promise<number> {
 }
 
 const ALREADY_LINKED = 'That address is already linked here';
+
+/**
+ * Refuse an address the owner already links before asking its provider, so a duplicate costs no outbound read or
+ * quota. The unique index stays the guarantee (a race between here and the write is still a 409).
+ */
+async function refuseIfLinked(owner: OwnerColumns, url: string, exceptId?: string): Promise<void> {
+  const existing = await prisma.externalLink.findFirst({
+    where: { ...owner, url, ...(exceptId ? { id: { not: exceptId } } : {}) },
+    select: { id: true },
+  });
+  if (existing) throw new ConflictError(ALREADY_LINKED);
+}
 
 /** Every link, newest edit first, filtered. */
 export async function listAdminLinks(
@@ -248,6 +264,7 @@ export async function getAdminLink(id: string): Promise<AdminLink | null> {
 export async function createLink(input: LinkCreate): Promise<AdminLink> {
   const parsed = parseOrRefuse(input.url);
   const owner = await ownerOrRefuse(input.owner);
+  await refuseIfLinked(owner, parsed.url);
   const read = await readFromProvider(parsed);
   const title = input.title ?? read.title;
   if (!title) {
@@ -291,6 +308,7 @@ export async function updateLink(
   if (input.url !== undefined) {
     const parsed = parseOrRefuse(input.url);
     if (parsed.url !== row.url) {
+      await refuseIfLinked(columnsOf(row), parsed.url, id);
       const read = await readFromProvider(parsed);
       Object.assign(data, parsed, read.columns);
     }
@@ -391,8 +409,7 @@ export interface LinkSuggestion {
 export async function suggestLinkDetails(url: string): Promise<LinkSuggestion> {
   const parsed = parseOrRefuse(url);
   const details = await resolveLinkDetails(parsed);
-  const providerId =
-    parsed.provider === 'bandcamp' ? (details?.providerId ?? null) : parsed.providerId;
+  const providerId = providerIdFor(parsed, details);
   return {
     url: parsed.url,
     provider: parsed.provider,

@@ -101,6 +101,10 @@ export function linksStore(seed: LinksStoreSeed = {}) {
       const row = links.find((l) => l.id === args.where.id);
       return row ? project(row, args) : null;
     },
+    findFirst: async (args: { where?: Row; select?: Record<string, boolean> }) => {
+      const row = links.find((l) => matches(l, args.where));
+      return row ? project(row, args) : null;
+    },
     count: async (args: { where?: Row }) => links.filter((l) => matches(l, args.where)).length,
     aggregate: async (args: { where?: Row; _max: { order: true } }) => {
       const orders = links.filter((l) => matches(l, args.where)).map((l) => l.order as number);
