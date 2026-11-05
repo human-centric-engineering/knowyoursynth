@@ -65,7 +65,7 @@ describe('parseLinkUrl: the other providers', () => {
     for (const input of [
       'https://vimeo.com/76979871',
       'https://vimeo.com/channels/staffpicks/76979871',
-      'https://player.vimeo.com/video/76979871?h=abc',
+      'https://player.vimeo.com/video/76979871?autoplay=1',
     ])
       expect(ok(input)).toEqual({
         provider: 'vimeo',
@@ -119,6 +119,64 @@ describe('parseLinkUrl: the other providers', () => {
       providerId: null,
       url: 'https://www.soundonsound.com/reviews/moog-model-d?x=1',
     });
+  });
+});
+
+describe('parseLinkUrl: unlisted and private links, and pages that are not videos', () => {
+  it('keeps an unlisted Vimeo video’s hash, from either shape, so it plays', () => {
+    for (const input of [
+      'https://vimeo.com/123456789/abcdef1234',
+      'https://player.vimeo.com/video/123456789?h=abcdef1234',
+    ])
+      expect(ok(input)).toEqual({
+        provider: 'vimeo',
+        providerId: '123456789:abcdef1234',
+        url: 'https://vimeo.com/123456789/abcdef1234',
+      });
+    expect(embedUrl('vimeo', '123456789:abcdef1234')).toBe(
+      'https://player.vimeo.com/video/123456789?h=abcdef1234&dnt=1'
+    );
+    expect(ok('https://vimeo.com/groups/synths/videos/42').providerId).toBe('42');
+  });
+
+  it('refuses Vimeo showcases, albums, users and malformed hashes rather than guess a video', () => {
+    for (const input of [
+      'https://vimeo.com/showcase/11223344',
+      'https://vimeo.com/album/5566',
+      'https://vimeo.com/user12345',
+      'https://vimeo.com/123456789/NOT-HEX',
+      'https://player.vimeo.com/video/123?h=zz',
+      'https://player.vimeo.com/123',
+    ])
+      expect(problem(input)).toMatch(/Vimeo/);
+    expect(embedUrl('vimeo', '123:xyz')).toBeNull();
+  });
+
+  it('refuses a SoundCloud user’s own pages, and keeps a private share token exactly', () => {
+    for (const page of [
+      'likes',
+      'tracks',
+      'albums',
+      'reposts',
+      'popular-tracks',
+      'followers',
+      'sets',
+    ])
+      expect(problem(`https://soundcloud.com/artist/${page}`)).toMatch(/SoundCloud/);
+    expect(ok('https://soundcloud.com/Artist/Track/s-AbCdE12')).toEqual({
+      provider: 'soundcloud',
+      providerId: 'artist/track/s-AbCdE12',
+      url: 'https://soundcloud.com/artist/track/s-AbCdE12',
+    });
+    expect(ok('https://soundcloud.com/warp/sets/selected/s-Xy9').providerId).toBe(
+      'warp/sets/selected/s-Xy9'
+    );
+    expect(embedUrl('soundcloud', 'artist/track/s-AbCdE12')).toBe(
+      'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fartist%2Ftrack%2Fs-AbCdE12'
+    );
+    expect(problem('https://soundcloud.com/artist/track/not-a-token')).toMatch(/SoundCloud/);
+    expect(problem('https://soundcloud.com/artist/track/s-AbC/extra')).toMatch(/SoundCloud/);
+    expect(embedUrl('soundcloud', 'artist/likes')).toBeNull();
   });
 });
 

@@ -11,13 +11,15 @@
  *   a different video.
  * - **A link marked ours goes to the end of its owner's own videos**; unmarking keeps its stored position, unused.
  * - **A save that changes nothing writes nothing**, and says so, so the route audits nothing.
- * - **A reorder names every one of the owner's own videos, once**, or it is refused and nothing moves.
+ * - **A reorder names every one of the owner's own videos, once**, or it is refused and nothing moves. One deleted or
+ *   unmarked while the reorder was in flight is a 409, and nothing moves.
  */
 import { z } from 'zod';
 import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
 import { ConflictError, NotFoundError, ValidationError } from '@/lib/api/errors';
 import { hasPrismaCode } from '@/lib/app/synths/lib/prisma-errors';
+import { paginationQuerySchema } from '@/lib/validations/common';
 import {
   embedUrl,
   LINK_KINDS,
@@ -27,6 +29,7 @@ import {
 } from '@/lib/app/links/providers';
 import type { LinkKind, LinkProvider } from '@/lib/app/links/providers';
 import {
+  columnsOf,
   OWNER_INCLUDE,
   OWNER_KINDS,
   OwnerRefSchema,
@@ -78,9 +81,9 @@ export const AdminLinkQuerySchema = z
     artist: z.string().max(200).optional(),
     provider: z.enum(LINK_PROVIDERS).optional(),
     ours: z.enum(['true', 'false']).optional(),
-    page: z.coerce.number().int().positive().default(1),
-    limit: z.coerce.number().int().positive().max(100).default(50),
   })
+  .extend(paginationQuerySchema.shape)
+  .extend({ limit: paginationQuerySchema.shape.limit.unwrap().default(50) })
   .superRefine((q, ctx) => {
     const owners = OWNER_KINDS.filter((k) => q[k] !== undefined);
     if (owners.length > 1)
@@ -234,15 +237,6 @@ export async function createLink(input: LinkCreate): Promise<AdminLink> {
   }
 }
 
-/** The owner columns a stored row has set. */
-function columnsOf(row: LinkRow): OwnerColumns {
-  if (row.instrumentId) return { instrumentId: row.instrumentId };
-  if (row.soundId) return { soundId: row.soundId };
-  if (row.songId) return { songId: row.songId };
-  if (row.artistId) return { artistId: row.artistId };
-  throw new Error(`external_link ${row.id} has no owner`);
-}
-
 export async function updateLink(
   id: string,
   input: LinkUpdate
@@ -282,15 +276,12 @@ export async function updateLink(
 }
 
 export async function deleteLink(id: string): Promise<AdminLink> {
-  const row = await prisma.externalLink.findUnique({ where: { id }, include: OWNER_INCLUDE });
-  if (!row) throw new NotFoundError('Link not found');
   try {
-    await prisma.externalLink.delete({ where: { id } });
+    return toAdminLink(await prisma.externalLink.delete({ where: { id }, include: OWNER_INCLUDE }));
   } catch (err) {
     if (hasPrismaCode(err, 'P2025')) throw new NotFoundError('Link not found');
     throw err;
   }
-  return toAdminLink(row);
 }
 
 /**
@@ -319,8 +310,20 @@ export async function reorderOurLinks(
     });
   if (ids.every((id, i) => before[i] === id)) return { before, after: before, changed: false };
 
-  await prisma.$transaction(
-    ids.map((id, order) => prisma.externalLink.update({ where: { id }, data: { order } }))
-  );
+  // Each write is conditional on the link still being one of this owner's own: one deleted or unmarked since the read
+  // above fails the whole transaction (P2025), so nothing moves and nothing is written onto a link that is not ours.
+  try {
+    await prisma.$transaction(
+      ids.map((id, order) =>
+        prisma.externalLink.update({ where: { id, ...owner, ours: true }, data: { order } })
+      )
+    );
+  } catch (err) {
+    if (hasPrismaCode(err, 'P2025'))
+      throw new ConflictError(
+        'Its own videos changed while you were ordering them: reload and try again'
+      );
+    throw err;
+  }
   return { before, after: ids, changed: true };
 }

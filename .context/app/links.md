@@ -58,24 +58,28 @@ Exactly one of these, named in every API by its natural key:
 `parseLinkUrl` checks the input with `sanitizeUrl`, then requires https, no login, no port and a real host name. The
 provider is decided by the host, matched exactly or as a sub-domain, never as a substring.
 
-| Provider     | Accepted                                                          | `providerId`              | Stored URL                                    |
-| ------------ | ----------------------------------------------------------------- | ------------------------- | --------------------------------------------- |
-| `youtube`    | `watch?v=`, `youtu.be/`, `shorts/`, `live/`, `embed/`             | 11-char video id          | `https://www.youtube.com/watch?v=<id>`        |
-| `vimeo`      | `vimeo.com/<n>`, `…/channels/x/<n>`, `player.vimeo.com/video/<n>` | numeric id                | `https://vimeo.com/<id>`                      |
-| `spotify`    | `open.spotify.com/[intl-xx/\|embed/]<type>/<id>`                  | `<type>/<id>`             | `https://open.spotify.com/<type>/<id>`        |
-| `soundcloud` | `soundcloud.com/<user>/<track>`, `…/<user>/sets/<set>`            | the path, lower-case      | `https://soundcloud.com/<path>`               |
-| `bandcamp`   | `<artist>.bandcamp.com/track\|album/<slug>`                       | null until t-180 reads it | `https://<artist>.bandcamp.com/<type>/<slug>` |
-| `other`      | any other https address                                           | null                      | as given, without its fragment                |
+| Provider     | Accepted                                                                                                       | `providerId`                             | Stored URL                                    |
+| ------------ | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------- | --------------------------------------------- |
+| `youtube`    | `watch?v=`, `youtu.be/`, `shorts/`, `live/`, `embed/`                                                          | 11-char video id                         | `https://www.youtube.com/watch?v=<id>`        |
+| `vimeo`      | `vimeo.com/<n>[/<hash>]`, `…/channels/x/<n>`, `…/groups/x/videos/<n>`, `player.vimeo.com/video/<n>[?h=<hash>]` | `<n>`, or `<n>:<hash>` when unlisted     | `https://vimeo.com/<n>[/<hash>]`              |
+| `spotify`    | `open.spotify.com/[intl-xx/\|embed/]<type>/<id>`                                                               | `<type>/<id>`                            | `https://open.spotify.com/<type>/<id>`        |
+| `soundcloud` | `soundcloud.com/<user>/<track>[/s-<token>]`, `…/<user>/sets/<set>[/s-<token>]`                                 | the path lower-cased, the token as given | `https://soundcloud.com/<path>`               |
+| `bandcamp`   | `<artist>.bandcamp.com/track\|album/<slug>`                                                                    | null until t-180 reads it                | `https://<artist>.bandcamp.com/<type>/<slug>` |
+| `other`      | any other https address                                                                                        | null                                     | as given, without its fragment                |
 
 - **A named provider's URL without its id is refused**, not stored as `other`: an admin who pasted a YouTube channel
   page meant a video.
 - **The stored URL is canonical**, so the same video pasted two ways is one link: the table is unique on owner + URL
   (four unique indexes, one per owner column; Postgres treats NULLs as distinct).
 - A YouTube start time (`&t=`) is dropped. Embeds start at the beginning.
+- **An unlisted Vimeo video keeps its privacy hash** and a private SoundCloud track or set keeps its share token
+  (`s-…`, case kept): without them the embed will not play. A Vimeo showcase, album or user page, and a SoundCloud
+  user's own pages (`likes`, `tracks`, `albums`, `sets`, `reposts`, `popular-tracks`, `followers`, …), are refused,
+  not mistaken for a video.
 - **Bandcamp's embed id isn't in its URL** (`EmbeddedPlayer/album=<n>`). t-180 reads it from the page's `og:video`
   meta. Until then, and whenever that fails, a Bandcamp link opens in a new tab.
 
-`embedUrl` builds: `www.youtube-nocookie.com/embed/<id>`, `player.vimeo.com/video/<id>?dnt=1`,
+`embedUrl` builds: `www.youtube-nocookie.com/embed/<id>`, `player.vimeo.com/video/<n>?[h=<hash>&]dnt=1`,
 `open.spotify.com/embed/<type>/<id>`, `w.soundcloud.com/player/?url=<encoded canonical URL>`,
 `bandcamp.com/EmbeddedPlayer/<album|track>=<n>/…`. Those five origins are `EMBED_ORIGINS`, which t-182 puts in
 `lib/app/csp.ts` as `frame-src`. Thumbnails need no CSP change: `img-src` already allows `https:`.
@@ -116,7 +120,7 @@ Tests pass a seeded `random`.
 | `GET /api/v1/admin/links?instrument=\|sound=\|song=\|artist=&provider=&ours=&page=&limit=` | admin  | every link, newest edit first, with its owner; at most one owner filter; paginated (≤ 100)                            |
 | `POST /api/v1/admin/links`                                                                 | admin  | `{ owner: { kind, id }, url, kind, title, ours?, rating? }`. 409 when that owner already has the URL                  |
 | `GET\|PATCH\|DELETE /api/v1/admin/links/:id`                                               | admin  | `PATCH` any of `url`, `kind`, `title`, `ours`, `rating`; the owner never changes                                      |
-| `PUT /api/v1/admin/links/order`                                                            | admin  | `{ owner, ids }`: every one of the owner's own videos, once                                                           |
+| `PUT /api/v1/admin/links/order`                                                            | admin  | `{ owner, ids }`: every one of the owner's own videos, once. One unmarked or removed meanwhile: 409, nothing moves    |
 
 A public link carries `id, url, provider, kind, title, thumbnailUrl, embedUrl, ours, views`. An admin link adds
 `owner { kind, id, name }, providerId, order, rating, likes, statsAt, createdAt, updatedAt`.

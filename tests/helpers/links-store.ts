@@ -107,7 +107,7 @@ export function linksStore(seed: LinksStoreSeed = {}) {
     create: async (args: { data: Row; include?: unknown }) => {
       const at = now();
       const row: Row = {
-        id: `link${++seq}`,
+        id: `clink${String(++seq).padStart(8, '0')}`,
         instrumentId: null,
         soundId: null,
         songId: null,
@@ -129,8 +129,9 @@ export function linksStore(seed: LinksStoreSeed = {}) {
       writes.push(`create ${String(row.id)}`);
       return project(row, args);
     },
-    update: async (args: { where: { id: string }; data: Row; include?: unknown }) => {
-      const index = links.findIndex((l) => l.id === args.where.id);
+    update: async (args: { where: { id: string } & Row; data: Row; include?: unknown }) => {
+      // Every key of `where` must hold, as Prisma's update with extra filters on a unique where.
+      const index = links.findIndex((l) => matches(l, args.where));
       if (index < 0) throw prismaError('P2025', 'Record to update not found');
       const row = { ...links[index], ...args.data, updatedAt: now() };
       checkRow(row);
@@ -138,12 +139,12 @@ export function linksStore(seed: LinksStoreSeed = {}) {
       writes.push(`update ${args.where.id}`);
       return project(row, args);
     },
-    delete: async (args: { where: { id: string } }) => {
+    delete: async (args: { where: { id: string }; include?: unknown }) => {
       const index = links.findIndex((l) => l.id === args.where.id);
       if (index < 0) throw prismaError('P2025', 'Record to delete does not exist');
       const [row] = links.splice(index, 1);
       writes.push(`delete ${args.where.id}`);
-      return row;
+      return project(row, args);
     },
   };
 
@@ -196,7 +197,7 @@ export function linksStore(seed: LinksStoreSeed = {}) {
   const insert = (row: Row) => {
     const at = now();
     const full: Row = {
-      id: `link${++seq}`,
+      id: `clink${String(++seq).padStart(8, '0')}`,
       instrumentId: null,
       soundId: null,
       songId: null,

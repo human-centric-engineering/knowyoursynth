@@ -108,3 +108,18 @@ export function ownerOf(row: WithOwner): OwnerSummary {
   if (row.artist) return { kind: 'artist', id: row.artist.id, name: row.artist.name };
   throw new Error(`external_link ${row.id} has no owner`);
 }
+
+/** The owner column a stored row has set, with its value. Every row has exactly one (the table's CHECK). */
+export function columnsOf(row: {
+  id: string;
+  instrumentId: string | null;
+  soundId: string | null;
+  songId: string | null;
+  artistId: string | null;
+}): OwnerColumns {
+  if (row.instrumentId) return { instrumentId: row.instrumentId };
+  if (row.soundId) return { soundId: row.soundId };
+  if (row.songId) return { songId: row.songId };
+  if (row.artistId) return { artistId: row.artistId };
+  throw new Error(`external_link ${row.id} has no owner`);
+}

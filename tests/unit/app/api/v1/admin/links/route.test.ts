@@ -455,7 +455,8 @@ describe('PATCH', () => {
 
   it('is 404 for a link that is not there, and 400 for an id that cannot be one', async () => {
     expect(
-      (await patchLink(request('PATCH', '/missing1', { title: 'x' }), ctx('missing1'))).status
+      (await patchLink(request('PATCH', '/cmissing0001', { title: 'x' }), ctx('cmissing0001')))
+        .status
     ).toBe(404);
     expect(
       (await patchLink(request('PATCH', '/NOT_AN_ID', { title: 'x' }), ctx('NOT_AN_ID'))).status
@@ -563,6 +564,23 @@ describe('PUT /order', () => {
       expect((await putOrder(request('PUT', '/order', { owner, ids }))).status).toBe(400);
     }
     expect(store.writes).toEqual([]);
+  });
+
+  it('refuses with 409 when one of its own videos was unmarked mid-reorder, writing nothing onto it (the transaction rolls back the rest)', async () => {
+    const [a, b, c] = threeOfOurs().map((r) => String(r.id));
+    // The read passes, then another admin unmarks `b` before the writes land.
+    const findMany = store.client.externalLink.findMany;
+    store.client.externalLink.findMany = vi.fn(async (args: Parameters<typeof findMany>[0]) => {
+      const rows = await findMany(args);
+      const row = store.links.find((l) => l.id === b);
+      if (row) row.ours = false;
+      return rows;
+    });
+    const res = await putOrder(request('PUT', '/order', { owner, ids: [c, b, a] }));
+    store.client.externalLink.findMany = findMany;
+    expect(res.status).toBe(409);
+    expect(store.links.find((l) => l.id === b)).toMatchObject({ ours: false, order: 1 });
+    expect(mockLogAdminAction).not.toHaveBeenCalled();
   });
 
   it('writes and audits nothing when the order is unchanged', async () => {

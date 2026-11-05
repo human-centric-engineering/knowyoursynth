@@ -54,6 +54,10 @@ export const EMBED_ORIGINS = [
 
 const YOUTUBE_ID = /^[A-Za-z0-9_-]{11}$/;
 const VIMEO_ID = /^\d{1,12}$/;
+/** An unlisted Vimeo video's privacy hash: without it the video will not play. */
+const VIMEO_HASH = /^[0-9a-f]{6,20}$/;
+/** A Vimeo `providerId`: the video, and for an unlisted one `:<hash>`. */
+const VIMEO_PROVIDER_ID = /^(\d{1,12})(?::([0-9a-f]{6,20}))?$/;
 const SPOTIFY_TYPES = ['track', 'album', 'playlist', 'episode', 'show', 'artist'] as const;
 const SPOTIFY_ID = /^[A-Za-z0-9]{22}$/;
 const SPOTIFY_PROVIDER_ID = /^(track|album|playlist|episode|show|artist)\/[A-Za-z0-9]{22}$/;
@@ -72,6 +76,21 @@ const SOUNDCLOUD_RESERVED = new Set([
   'terms-of-use',
   'imprint',
 ]);
+/** A user's own pages, which sit where a track's slug would: never a track. */
+const SOUNDCLOUD_USER_PAGES = new Set([
+  'likes',
+  'tracks',
+  'albums',
+  'sets',
+  'reposts',
+  'popular-tracks',
+  'followers',
+  'following',
+  'comments',
+  'spotlight',
+]);
+/** A private SoundCloud track's or set's share token: case matters, and the embed fails without it. */
+const SOUNDCLOUD_TOKEN = /^s-[A-Za-z0-9]{3,40}$/;
 const BANDCAMP_PROVIDER_ID = /^(album|track)=\d{1,15}$/;
 const MAX_URL_LENGTH = 2000;
 
@@ -103,12 +122,44 @@ function parseYouTube(url: URL, host: string): ParseResult {
   };
 }
 
-function parseVimeo(url: URL, host: string): ParseResult {
+/**
+ * The video and its privacy hash, from the shapes a video's own address takes. A showcase, album or user page is
+ * not a video, even when it ends in a number, so anything else is null.
+ */
+function vimeoVideo(url: URL, host: string): { id: string; hash: string | null } | null {
   const parts = segments(url);
-  // vimeo.com/<id>, vimeo.com/channels/<name>/<id>, player.vimeo.com/video/<id>: the video is the last number.
-  const id = host === 'player.vimeo.com' ? parts[1] : parts.at(-1);
-  if (!id || !VIMEO_ID.test(id)) return { ok: false, problem: 'A Vimeo link needs a video in it.' };
-  return { ok: true, link: { provider: 'vimeo', providerId: id, url: `https://vimeo.com/${id}` } };
+  const queryHash = url.searchParams.get('h');
+  let id: string | undefined;
+  let hash: string | null | undefined = queryHash;
+  if (host === 'player.vimeo.com') {
+    if (parts[0] !== 'video' || parts.length !== 2) return null;
+    id = parts[1];
+  } else if (parts.length === 1 || (parts.length === 2 && VIMEO_ID.test(parts[0]))) {
+    // vimeo.com/<id>, or an unlisted vimeo.com/<id>/<hash>.
+    id = parts[0];
+    if (parts.length === 2) hash = parts[1];
+  } else if (parts[0] === 'channels' && parts.length === 3) {
+    id = parts[2];
+  } else if (parts[0] === 'groups' && parts[2] === 'videos' && parts.length === 4) {
+    id = parts[3];
+  } else return null;
+  if (!id || !VIMEO_ID.test(id)) return null;
+  if (hash && !VIMEO_HASH.test(hash)) return null;
+  return { id, hash: hash ?? null };
+}
+
+function parseVimeo(url: URL, host: string): ParseResult {
+  const video = vimeoVideo(url, host);
+  if (!video) return { ok: false, problem: 'A Vimeo link needs a video in it.' };
+  const { id, hash } = video;
+  return {
+    ok: true,
+    link: {
+      provider: 'vimeo',
+      providerId: hash ? `${id}:${hash}` : id,
+      url: hash ? `https://vimeo.com/${id}/${hash}` : `https://vimeo.com/${id}`,
+    },
+  };
 }
 
 function parseSpotify(url: URL): ParseResult {
@@ -137,16 +188,25 @@ function parseSpotify(url: URL): ParseResult {
   };
 }
 
+/** `<user>/<track>[/<token>]` or `<user>/sets/<set>[/<token>]`: the path lower-cased, the share token as given. */
+function soundCloudPath(parts: string[]): string | null {
+  const [user, second, third, fourth] = parts;
+  if (!user || !second || !SLUG.test(user) || SOUNDCLOUD_RESERVED.has(user.toLowerCase()))
+    return null;
+  const isSet = second.toLowerCase() === 'sets';
+  const name = isSet ? third : second;
+  const token = isSet ? fourth : third;
+  const length = (isSet ? 3 : 2) + (token ? 1 : 0);
+  if (!name || !SLUG.test(name) || parts.length !== length) return null;
+  if (!isSet && SOUNDCLOUD_USER_PAGES.has(name.toLowerCase())) return null;
+  if (token && !SOUNDCLOUD_TOKEN.test(token)) return null;
+  const path = [user, ...(isSet ? ['sets'] : []), name].join('/').toLowerCase();
+  return token ? `${path}/${token}` : path;
+}
+
 function parseSoundCloud(url: URL): ParseResult {
-  const parts = segments(url);
-  // <user>/<track>, or <user>/sets/<set>.
-  const path = parts[1] === 'sets' ? parts.slice(0, 3) : parts.slice(0, 2);
-  const valid =
-    path.length === (parts[1] === 'sets' ? 3 : 2) &&
-    path.every((p) => SLUG.test(p)) &&
-    !SOUNDCLOUD_RESERVED.has(path[0].toLowerCase());
-  if (!valid) return { ok: false, problem: 'A SoundCloud link needs a track or a set in it.' };
-  const id = path.join('/').toLowerCase();
+  const id = soundCloudPath(segments(url));
+  if (!id) return { ok: false, problem: 'A SoundCloud link needs a track or a set in it.' };
   return {
     ok: true,
     link: { provider: 'soundcloud', providerId: id, url: `https://soundcloud.com/${id}` },
@@ -223,20 +283,21 @@ export function embedUrl(provider: LinkProvider, providerId: string | null): str
       return YOUTUBE_ID.test(providerId)
         ? `https://www.youtube-nocookie.com/embed/${providerId}`
         : null;
-    case 'vimeo':
-      return VIMEO_ID.test(providerId)
-        ? `https://player.vimeo.com/video/${providerId}?dnt=1`
-        : null;
+    case 'vimeo': {
+      const match = VIMEO_PROVIDER_ID.exec(providerId);
+      if (!match) return null;
+      const [, id, hash] = match;
+      return hash
+        ? `https://player.vimeo.com/video/${id}?h=${hash}&dnt=1`
+        : `https://player.vimeo.com/video/${id}?dnt=1`;
+    }
     case 'spotify':
       return SPOTIFY_PROVIDER_ID.test(providerId)
         ? `https://open.spotify.com/embed/${providerId}`
         : null;
     case 'soundcloud': {
-      const parts = providerId.split('/');
-      const valid =
-        (parts.length === 2 || (parts.length === 3 && parts[1] === 'sets')) &&
-        parts.every((p) => SLUG.test(p));
-      return valid
+      // Re-read through the parser's own rule, so only a path it would have produced is embedded.
+      return soundCloudPath(providerId.split('/')) === providerId
         ? `https://w.soundcloud.com/player/?url=${encodeURIComponent(`https://soundcloud.com/${providerId}`)}`
         : null;
     }
