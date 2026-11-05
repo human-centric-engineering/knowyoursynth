@@ -12,7 +12,10 @@
  * - **The stored URL is canonical**, rebuilt from the provider and its id, so the same video pasted two ways is one
  *   link (the table is unique on owner + URL). An `other` link keeps its URL as given, less any fragment.
  * - **An embed address is only ever built from the provider and its id** (`embedUrl`), never taken from the stored
- *   URL. Bandcamp's id is not in its URL; until t-180 reads it from the page, a Bandcamp link opens in a new tab.
+ *   URL. Bandcamp's id is not in its URL: it is read from the page (`details.ts`), and until it is, or when that
+ *   fails, a Bandcamp link opens in a new tab.
+ * - **A picture is only ever shown from its provider's own image hosts** (`safeThumbnailUrl`), checked when it is
+ *   read from the provider and again when it is shown.
  */
 import { sanitizeUrl } from '@/lib/security/sanitize';
 
@@ -32,7 +35,7 @@ export type LinkKind = (typeof LINK_KINDS)[number];
 /** A URL an admin gave, understood. */
 export interface ParsedLink {
   provider: LinkProvider;
-  /** The provider's id, from which the embed is built. Null for `other`, and for Bandcamp until t-180. */
+  /** The provider's id, from which the embed is built. Null for `other`, and for Bandcamp until it is read. */
   providerId: string | null;
   /** The URL to store and to link to. */
   url: string;
@@ -115,6 +118,22 @@ const BANDCAMP_OWN_HOSTS = new Set([
   'blog.bandcamp.com',
 ]);
 const BANDCAMP_PROVIDER_ID = /^(album|track)=\d{1,15}$/;
+/**
+ * The hosts each provider serves its pictures from. A picture anywhere else is not stored and not shown: it is put in
+ * an `img src` on public pages, so a provider's reply must not be able to point it at any address it likes.
+ */
+const THUMBNAIL_HOSTS: Record<Exclude<LinkProvider, 'other'>, (host: string) => boolean> = {
+  youtube: (h) => h === 'i.ytimg.com',
+  vimeo: (h) => h === 'i.vimeocdn.com',
+  spotify: (h) =>
+    h === 'i.scdn.co' ||
+    h === 'mosaic.scdn.co' ||
+    h === 'image-cdn-ak.spotifycdn.com' ||
+    h === 'image-cdn-fa.spotifycdn.com',
+  soundcloud: (h) => /^i\d\.sndcdn\.com$/.test(h),
+  bandcamp: (h) => /^f\d\.bcbits\.com$/.test(h),
+};
+const MAX_THUMBNAIL_LENGTH = 1000;
 const MAX_URL_LENGTH = 2000;
 /** Query parameters that only track who shared a link. */
 const TRACKING_PARAM = /^(utm_[a-z_]+|fbclid|gclid|dclid|msclkid|mc_eid|mc_cid|igshid|yclid)$/i;
@@ -341,13 +360,38 @@ export function embedUrl(provider: LinkProvider, providerId: string | null): str
   }
 }
 
-/** A link's picture: the one read from its provider, else (YouTube only) the one its id names, else none. */
+/** A Bandcamp `providerId`: `album=<n>` or `track=<n>`, as its embed address names it. */
+export function isBandcampId(value: string): boolean {
+  return BANDCAMP_PROVIDER_ID.test(value);
+}
+
+/**
+ * A picture's address when it is https, with no login or port, on one of its provider's own image hosts; else null.
+ * Returned as parsed, so what is stored is what was checked.
+ */
+export function safeThumbnailUrl(provider: LinkProvider, raw: string | null): string | null {
+  if (!raw || provider === 'other' || raw.length > MAX_THUMBNAIL_LENGTH) return null;
+  let url: URL;
+  try {
+    url = new URL(raw);
+  } catch {
+    return null;
+  }
+  if (url.protocol !== 'https:' || url.username || url.password || url.port) return null;
+  return THUMBNAIL_HOSTS[provider](url.hostname.toLowerCase()) ? url.toString() : null;
+}
+
+/**
+ * A link's picture: the one read from its provider (checked again here, as `embedUrl` checks its id), else (YouTube
+ * only) the one its id names, else none.
+ */
 export function thumbnailFor(
   provider: LinkProvider,
   providerId: string | null,
   stored: string | null
 ): string | null {
-  if (stored) return stored;
+  const read = safeThumbnailUrl(provider, stored);
+  if (read) return read;
   if (provider === 'youtube' && providerId && YOUTUBE_ID.test(providerId))
     return `https://i.ytimg.com/vi/${providerId}/hqdefault.jpg`;
   return null;

@@ -391,12 +391,12 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
   `lib/app/auth-landing.ts` (the label only), `lib/app/data-export.ts` (synth suggestions exported;
   the catalogue and databank tables excluded), `lib/app/db-drift.ts` (the suggestion FK's probe) and
   `lib/app/admin-nav.ts` (the "Synths" admin section) and `lib/app/account-sections.ts` (the synth
-  profile and the synths owned and wanted, on settings only), `lib/app/jobs.ts` (the prune of lapsed held usernames, and the databank's projection into
-  the knowledge base, `f-tutor-knowledge` t-58),
+  profile and the synths owned and wanted, on settings only), `lib/app/jobs.ts` (the prune of lapsed held usernames, the databank's projection into
+  the knowledge base, `f-tutor-knowledge` t-58, and the links' YouTube counts, `f-videos-and-links` t-180),
   `lib/app/eslint.config.mjs` (one ignore, for the social card's generated panel renderer, t-50), and
   `lib/app/capabilities.ts`, `lib/app/context-contributors.ts` and `lib/app/platform-agents.ts` (the tutor's
   tools, synth context and agent, `f-tutor` t-53), and `lib/app/env.ts` (the tutor's daily allowance,
-  `TUTOR_DAILY_TURNS`, t-54; the tutor's web search key, `BRAVE_SEARCH_API_KEY`, t-59), and
+  `TUTOR_DAILY_TURNS`, t-54; the tutor's web search key, `BRAVE_SEARCH_API_KEY`, t-59; the links' YouTube key, `YOUTUBE_API_KEY`, t-180), and
   `lib/app/evaluations.ts` (the tutor's four eval graders, `f-tutor-knowledge` t-61), and `lib/app/footer.ts` (the
   not-affiliated notice, `f-front-door` t-63), and `lib/app/owner-classification.ts` (our user-linked models,
   personal but none enforced, and the suggestion and report queues and the pattern library not-personal, t-77 and

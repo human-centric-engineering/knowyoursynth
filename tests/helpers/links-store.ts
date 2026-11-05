@@ -27,6 +27,8 @@ function matches(row: Row, where: Row | undefined): boolean {
     if (want === undefined) return true;
     if (want && typeof want === 'object' && 'in' in (want as Row))
       return ((want as { in: unknown[] }).in ?? []).includes(row[key]);
+    if (want && typeof want === 'object' && 'not' in (want as Row))
+      return row[key] !== (want as { not: unknown }).not;
     return row[key] === want;
   });
 }
@@ -99,6 +101,10 @@ export function linksStore(seed: LinksStoreSeed = {}) {
       const row = links.find((l) => l.id === args.where.id);
       return row ? project(row, args) : null;
     },
+    findFirst: async (args: { where?: Row; select?: Record<string, boolean> }) => {
+      const row = links.find((l) => matches(l, args.where));
+      return row ? project(row, args) : null;
+    },
     count: async (args: { where?: Row }) => links.filter((l) => matches(l, args.where)).length,
     aggregate: async (args: { where?: Row; _max: { order: true } }) => {
       const orders = links.filter((l) => matches(l, args.where)).map((l) => l.order as number);
@@ -133,7 +139,8 @@ export function linksStore(seed: LinksStoreSeed = {}) {
       // Every key of `where` must hold, as Prisma's update with extra filters on a unique where.
       const index = links.findIndex((l) => matches(l, args.where));
       if (index < 0) throw prismaError('P2025', 'Record to update not found');
-      const row = { ...links[index], ...args.data, updatedAt: now() };
+      // `@updatedAt` is stamped unless the write names it, as Prisma does.
+      const row = { ...links[index], ...args.data, updatedAt: args.data.updatedAt ?? now() };
       checkRow(row);
       links[index] = row;
       writes.push(`update ${args.where.id}`);
@@ -193,7 +200,7 @@ export function linksStore(seed: LinksStoreSeed = {}) {
     $transaction: async (ops: Promise<unknown>[]) => Promise.all(ops),
   };
 
-  /** Put a row straight in, as another writer (or t-180's stats job) would. */
+  /** Put a row straight in, as another writer would. */
   const insert = (row: Row) => {
     const at = now();
     const full: Row = {

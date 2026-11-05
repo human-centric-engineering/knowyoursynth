@@ -41,6 +41,12 @@ const mockLog = vi.hoisted(() => ({
 vi.mock('@/lib/api/context', () => ({ getRouteLogger: vi.fn(async () => mockLog) }));
 vi.mock('@/lib/logging', () => ({ logger: mockLog }));
 
+// What the provider says (t-180): nothing, unless a test says otherwise. Both are tested on their own.
+const mockResolve = vi.hoisted(() => vi.fn());
+vi.mock('@/lib/app/links/details', () => ({ resolveLinkDetails: mockResolve }));
+const mockStats = vi.hoisted(() => vi.fn());
+vi.mock('@/lib/app/links/stats', () => ({ statsForVideo: mockStats }));
+
 import { GET as listLinks, POST as postLink } from '@/app/api/v1/admin/links/route';
 import {
   DELETE as deleteLink,
@@ -48,6 +54,7 @@ import {
   PATCH as patchLink,
 } from '@/app/api/v1/admin/links/[id]/route';
 import { PUT as putOrder } from '@/app/api/v1/admin/links/order/route';
+import { POST as postResolve } from '@/app/api/v1/admin/links/resolve/route';
 import { createMockAuthSession } from '@/tests/helpers/auth';
 import { linksStore, type LinksStore } from '@/tests/helpers/links-store';
 
@@ -132,6 +139,8 @@ beforeEach(() => {
     aiApiKey: { findFirst: vi.fn(async () => null), update: vi.fn() },
   });
   mockGetSession.mockResolvedValue(session('ADMIN'));
+  mockResolve.mockResolvedValue(null);
+  mockStats.mockResolvedValue(null);
 });
 
 describe('admin only', () => {
@@ -155,8 +164,10 @@ describe('admin only', () => {
       await putOrder(
         request('PUT', '/order', { owner: { kind: 'instrument', id: MINIMOOG }, ids: [] })
       ),
+      await postResolve(request('POST', '/resolve', { url: `https://youtu.be/${VIDEO}` })),
     ];
-    expect(responses.map((r) => r.status)).toEqual([403, 403, 403, 403, 403, 403]);
+    expect(responses.map((r) => r.status)).toEqual([403, 403, 403, 403, 403, 403, 403]);
+    expect(mockResolve).not.toHaveBeenCalled();
     expect(store.writes).toEqual([]);
     expect(mockLogAdminAction).not.toHaveBeenCalled();
   });
@@ -233,6 +244,9 @@ describe('POST', () => {
     expect((await create(video())).status).toBe(201);
     const again = await create(video({ url: `https://www.youtube.com/watch?v=${VIDEO}&t=10s` }));
     expect(again.status).toBe(409);
+    // Refused before the provider is asked: a duplicate costs no outbound read or quota.
+    expect(mockResolve).toHaveBeenCalledTimes(1);
+    expect(mockStats).toHaveBeenCalledTimes(1);
     expect((await create(video({ owner: { kind: 'instrument', id: 'arp-odyssey' } }))).status).toBe(
       201
     );
@@ -451,6 +465,7 @@ describe('PATCH', () => {
       ctx(String(b.id))
     );
     expect(clash.status).toBe(409);
+    expect(mockResolve).not.toHaveBeenCalled();
   });
 
   it('is 404 for a link that is not there, and 400 for an id that cannot be one', async () => {
@@ -662,5 +677,140 @@ describe('GET list', () => {
   it('refuses two owner filters at once, or an id not of its kind', async () => {
     expect((await listLinks(getRequest(`?instrument=${MINIMOOG}&song=x`))).status).toBe(400);
     expect((await listLinks(getRequest('?sound=no-slash'))).status).toBe(400);
+  });
+});
+
+describe('what the provider says (t-180)', () => {
+  const BANDCAMP = 'https://someartist.bandcamp.com/album/selected-works';
+
+  it('takes the provider’s title when none is given, and stores its picture', async () => {
+    mockResolve.mockResolvedValue({
+      title: 'Minimoog Model D demo',
+      thumbnailUrl: 'https://i.ytimg.com/vi/x/maxresdefault.jpg',
+      providerId: null,
+    });
+    const res = await create(video({ title: undefined }));
+    expect(res.status).toBe(201);
+    expect(mockResolve).toHaveBeenCalledWith(expect.objectContaining({ provider: 'youtube' }));
+    expect(store.links[0]).toMatchObject({
+      title: 'Minimoog Model D demo',
+      thumbnailUrl: 'https://i.ytimg.com/vi/x/maxresdefault.jpg',
+    });
+  });
+
+  it('keeps the admin’s title over the provider’s', async () => {
+    mockResolve.mockResolvedValue({ title: 'Theirs', thumbnailUrl: null, providerId: null });
+    expect((await create(video({ title: 'Ours' }))).status).toBe(201);
+    expect(store.links[0].title).toBe('Ours');
+  });
+
+  it('refuses a link with no title when the provider gives none, and writes nothing', async () => {
+    const res = await create(video({ title: undefined }));
+    expect(res.status).toBe(400);
+    expect((await json(res)).error?.message).toMatch(/title could not be read/);
+    expect(store.writes).toEqual([]);
+  });
+
+  it('saves a link whose provider did not answer, with the admin’s title', async () => {
+    expect((await create(video())).status).toBe(201);
+    expect(store.links[0]).toMatchObject({
+      title: 'Minimoog demo',
+      thumbnailUrl: null,
+      views: null,
+    });
+  });
+
+  it('stores a Bandcamp id read from its page, so it embeds', async () => {
+    mockResolve.mockResolvedValue({ title: null, thumbnailUrl: null, providerId: 'album=123' });
+    const res = await create(video({ url: BANDCAMP }));
+    const { data } = await json(res);
+    expect(data).toMatchObject({
+      provider: 'bandcamp',
+      providerId: 'album=123',
+      embedUrl: expect.stringMatching(/^https:\/\/bandcamp\.com\/EmbeddedPlayer\/album=123\//),
+    });
+  });
+
+  it('reads a YouTube link’s counts when it is added, and only a YouTube link’s', async () => {
+    mockStats.mockResolvedValue({ views: 1234, likes: 56 });
+    expect((await create(video())).status).toBe(201);
+    expect(mockStats).toHaveBeenCalledWith(VIDEO);
+    expect(store.links[0]).toMatchObject({ views: 1234, likes: 56, statsAt: expect.any(Date) });
+
+    mockStats.mockClear();
+    expect((await create(video({ url: 'https://vimeo.com/76979871' }))).status).toBe(201);
+    expect(mockStats).not.toHaveBeenCalled();
+    expect(store.links[1]).toMatchObject({ views: null, statsAt: null });
+  });
+
+  it('reads the provider again for a new URL, keeping the admin’s title', async () => {
+    const row = store.insert({
+      instrumentId: MINIMOOG,
+      url: `https://www.youtube.com/watch?v=${VIDEO}`,
+      provider: 'youtube',
+      providerId: VIDEO,
+      title: 'Old',
+      thumbnailUrl: 'https://i.ytimg.com/vi/old/hq.jpg',
+      views: 99,
+    });
+    mockResolve.mockResolvedValue({
+      title: 'New title',
+      thumbnailUrl: 'https://f4.bcbits.com/img/a1_5.jpg',
+      providerId: 'track=7',
+    });
+    const id = String(row.id);
+    expect((await patchLink(request('PATCH', `/${id}`, { url: BANDCAMP }), ctx(id))).status).toBe(
+      200
+    );
+    expect(store.links[0]).toMatchObject({
+      title: 'Old',
+      provider: 'bandcamp',
+      providerId: 'track=7',
+      thumbnailUrl: 'https://f4.bcbits.com/img/a1_5.jpg',
+      views: null,
+    });
+  });
+});
+
+describe('POST /resolve (t-180)', () => {
+  it('gives the stored URL, the provider’s title and picture, and the embed, writing nothing', async () => {
+    mockResolve.mockResolvedValue({
+      title: 'Selected Works',
+      thumbnailUrl: 'https://f4.bcbits.com/img/a1_5.jpg',
+      providerId: 'album=123',
+    });
+    const res = await postResolve(
+      request('POST', '/resolve', { url: 'https://SomeArtist.bandcamp.com/album/Selected-Works' })
+    );
+    expect(res.status).toBe(200);
+    expect((await json(res)).data).toEqual({
+      url: 'https://someartist.bandcamp.com/album/selected-works',
+      provider: 'bandcamp',
+      title: 'Selected Works',
+      thumbnailUrl: 'https://f4.bcbits.com/img/a1_5.jpg',
+      embedUrl: expect.stringMatching(/^https:\/\/bandcamp\.com\/EmbeddedPlayer\/album=123\//),
+    });
+    expect(store.writes).toEqual([]);
+    expect(mockLogAdminAction).not.toHaveBeenCalled();
+  });
+
+  it('gives nulls when the provider says nothing, and YouTube’s own picture', async () => {
+    const res = await postResolve(
+      request('POST', '/resolve', { url: `https://youtu.be/${VIDEO}` })
+    );
+    expect((await json(res)).data).toEqual({
+      url: `https://www.youtube.com/watch?v=${VIDEO}`,
+      provider: 'youtube',
+      title: null,
+      thumbnailUrl: `https://i.ytimg.com/vi/${VIDEO}/hqdefault.jpg`,
+      embedUrl: `https://www.youtube-nocookie.com/embed/${VIDEO}`,
+    });
+  });
+
+  it('refuses a URL the parser refuses, without asking anyone', async () => {
+    const res = await postResolve(request('POST', '/resolve', { url: 'http://youtu.be/x' }));
+    expect(res.status).toBe(400);
+    expect(mockResolve).not.toHaveBeenCalled();
+    expect((await postResolve(request('POST', '/resolve', {}))).status).toBe(400);
   });
 });

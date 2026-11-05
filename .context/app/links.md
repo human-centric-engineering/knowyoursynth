@@ -12,7 +12,7 @@ users and links on users' own sounds are `f-link-suggestions` (§41), not here.
 | Owners                      | `lib/app/links/owner.ts`                     | t-179 |
 | Admin writes                | `lib/app/links/admin.ts`, `admin-route.ts`   | t-179 |
 | Public read                 | `lib/app/links/read.ts`                      | t-179 |
-| Titles, thumbnails, views   | not built yet                                | t-180 |
+| Titles, thumbnails, views   | `details.ts`, `stats.ts`, `fetch.ts`         | t-180 |
 | Admin pages                 | not built yet                                | t-181 |
 | Under the panel, `/bank`    | not built yet                                | t-182 |
 | Patches and History         | not built yet                                | t-183 |
@@ -64,7 +64,7 @@ provider is decided by the host, matched exactly or as a sub-domain, never as a 
 | `vimeo`      | `vimeo.com/<n>[/<hash>]`, `…/channels/x/<n>`, `…/groups/x/videos/<n>`, `player.vimeo.com/video/<n>[?h=<hash>]` | `<n>`, or `<n>:<hash>` when unlisted     | `https://vimeo.com/<n>[/<hash>]`                                                    |
 | `spotify`    | `open.spotify.com/[intl-xx/\|embed/]<type>/<id>`                                                               | `<type>/<id>`                            | `https://open.spotify.com/<type>/<id>`                                              |
 | `soundcloud` | `soundcloud.com/<user>/<track>[/s-<token>]`, `…/<user>/sets/<set>[/s-<token>]`                                 | the path lower-cased, the token as given | `https://soundcloud.com/<path>`                                                     |
-| `bandcamp`   | `<artist>.bandcamp.com/track\|album/<slug>`                                                                    | null until t-180 reads it                | `https://<artist>.bandcamp.com/<type>/<slug>`                                       |
+| `bandcamp`   | `<artist>.bandcamp.com/track\|album/<slug>`                                                                    | read from its page; null until then      | `https://<artist>.bandcamp.com/<type>/<slug>`                                       |
 | `other`      | any other https address                                                                                        | null                                     | as given, less its fragment and tracking parameters (`utm_*`, `fbclid`, `gclid`, …) |
 
 - **A named provider's URL without its id is refused**, not stored as `other`: an admin who pasted a YouTube channel
@@ -76,16 +76,68 @@ provider is decided by the host, matched exactly or as a sub-domain, never as a 
   (`s-…`, case kept): without them the embed will not play. A Vimeo showcase, album or user page, and a SoundCloud
   user's own pages (`likes`, `tracks`, `albums`, `sets`, `reposts`, `popular-tracks`, `followers`, …), are refused,
   not mistaken for a video.
-- **Bandcamp's embed id isn't in its URL** (`EmbeddedPlayer/album=<n>`). t-180 reads it from the page's `og:video`
-  meta. Until then, and whenever that fails, a Bandcamp link opens in a new tab.
+- **Bandcamp's embed id isn't in its URL** (`EmbeddedPlayer/album=<n>`). It is read from the page's `og:video` meta
+  when the link is saved (see Reading from providers). Whenever that fails, a Bandcamp link opens in a new tab.
 
 `embedUrl` builds: `www.youtube-nocookie.com/embed/<id>`, `player.vimeo.com/video/<n>?[h=<hash>&]dnt=1`,
 `open.spotify.com/embed/<type>/<id>`, `w.soundcloud.com/player/?url=<encoded canonical URL>`,
 `bandcamp.com/EmbeddedPlayer/<album|track>=<n>/…`. Those five origins are `EMBED_ORIGINS`, which t-182 puts in
 `lib/app/csp.ts` as `frame-src`. Thumbnails need no CSP change: `img-src` already allows `https:`.
 
-`thumbnailFor` returns the stored thumbnail (read from the provider in t-180), or for YouTube the one its id names
-(`i.ytimg.com/vi/<id>/hqdefault.jpg`), or nothing.
+`thumbnailFor` returns the stored thumbnail (read from the provider) when `safeThumbnailUrl` still accepts it, or for
+YouTube the one its id names (`i.ytimg.com/vi/<id>/hqdefault.jpg`), or nothing.
+
+## Reading from providers
+
+`resolveLinkDetails` (`lib/app/links/details.ts`) asks a link's provider for its title, its picture and, for Bandcamp,
+its embed id. Server-side only; the browser never calls a provider (CSP `connect-src 'self'`).
+
+| Provider                            | Asked                                                                                                                     | Reads                                                        |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| YouTube, Vimeo, Spotify, SoundCloud | oEmbed, no key: `www.youtube.com/oembed`, `vimeo.com/api/oembed.json`, `open.spotify.com/oembed`, `soundcloud.com/oembed` | `title`, `thumbnail_url`                                     |
+| Bandcamp                            | the artist's own page, read only as far as `</head>`                                                                      | `og:title`, `og:image`, `og:video` → `album=<n>`/`track=<n>` |
+| `other`                             | never                                                                                                                     | —                                                            |
+
+- **Don't fetch anything else from here.** Every read goes through `readText`/`readJson` (`lib/app/links/fetch.ts`):
+  https only, each caller's hosts matched exactly, no redirects (a redirect's target is a host nobody checked), a
+  timeout and a size cap. The outbound dispatcher refuses a name resolving to a private address only where it pins (a
+  customer org); these reads run as the install org, where the exact host list is the guard. The
+  address asked about is the canonical URL `parseLinkUrl` built, so a pasted URL can't steer the server (SSRF). Hosts
+  are fixed in code, not `ORCHESTRATION_ALLOWED_HOSTS`, which is for integrations an operator configures.
+- **A picture is kept only on its provider's image hosts** (`safeThumbnailUrl`): `i.ytimg.com`; `i.vimeocdn.com`;
+  `i.scdn.co`, `mosaic.scdn.co`, `image-cdn-ak|fa.spotifycdn.com`; `i<n>.sndcdn.com`; `f<n>.bcbits.com`. https, no
+  login, no port. It is checked when read and again in `thumbnailFor`, because it goes into an `img src` on public
+  pages.
+- **A Bandcamp id is kept only as `album=<n>` or `track=<n>`**, from an `og:video` on `https://bandcamp.com/EmbeddedPlayer/`;
+  `embedUrl` checks the shape again on read.
+- **Titles are plain text**, whitespace collapsed, at most 200 characters (UTF-16 units, as an admin's title is
+  counted). oEmbed's `title` already is text and is kept as sent; Bandcamp's `og:title` is an HTML attribute, so its
+  entities are decoded once and any markup dropped.
+- **On any failure the answer is null** and nothing fails: a create with a title saves without the picture; a create
+  without one is refused ("give it one").
+- **When:** on create, and on a `PATCH` that changes the URL. The provider's title is used only when the admin gave
+  none; a new URL keeps the admin's title. `POST /api/v1/admin/links/resolve` asks without saving, for the form.
+
+## View counts
+
+YouTube's view and like counts, through the Data API's `videos.list` (`lib/app/links/stats.ts`), are the popularity
+the order weighs. They need **`YOUTUBE_API_KEY`** (optional, `lib/app/env.ts`): a Google Cloud API key with the YouTube
+Data API v3 enabled. Without one, no count is read, the order falls back to an admin's rating, and the job reports
+`skipped`.
+
+- **Read on create** for a YouTube link (one call), and **refreshed daily** by the app job `app:refresh-link-stats`
+  (`lib/app/jobs.ts`), run by the install org only: links are shared content, so one run covers everyone.
+- **Batched**: at most 50 ids a call, each video once however many owners link it. A day's refresh of a few hundred
+  videos is a handful of quota units out of the default 10,000.
+- **Idempotent**: a link whose counts didn't change isn't written. One that changed keeps its `updatedAt`, so a
+  refresh doesn't float every link to the top of the admin list. `statsAt` is when its counts last changed.
+- **Contained**: a batch the API refuses (quota, a bad key) or a row that won't write is counted as `failed` and the
+  rest still run. A video YouTube no longer returns (removed, private) keeps the counts it had (`missing`).
+- **Capped at the largest Int** (2,147,483,647), the column's type. The order takes a logarithm, so the cap never
+  changes it. A hidden like count is null.
+- **Only YouTube rows**, and only while the row is as the run read it: an admin's URL change during a run isn't
+  given the old video's counts, and any other edit keeps its own `updatedAt` (that row is written on the next run).
+- The key travels in the request's query, so no log line carries the URL.
 
 ## Kinds
 
@@ -109,7 +161,7 @@ Weight is popularity squared. Popularity:
 | else              | 3                   | about a thousand views     |
 
 So a video with ten million views comes ahead of one with a thousand about five times out of six. `views` is an
-`Int`, capped at its largest value by whoever writes it (t-180): the logarithm makes the cap irrelevant to the order.
+`Int`, capped at its largest value when it is read (see View counts): the logarithm makes the cap irrelevant to the order.
 Tests pass a seeded `random`.
 
 ## API
@@ -118,7 +170,8 @@ Tests pass a seeded `random`.
 | ------------------------------------------------------------------------------------------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `GET /api/v1/links?instrument=\|synth=\|sound=\|song=\|artist=`                            | anyone | exactly one target; ordered; `no-store`. A hidden synth, or a sound on one, has none; its databank instrument's links stay public, as the databank does. Unknown ids give an empty list. |
 | `GET /api/v1/admin/links?instrument=\|sound=\|song=\|artist=&provider=&ours=&page=&limit=` | admin  | every link, newest edit first, with its owner; at most one owner filter; paginated (≤ 100)                                                                                               |
-| `POST /api/v1/admin/links`                                                                 | admin  | `{ owner: { kind, id }, url, kind, title, ours?, rating? }`. 409 when that owner already has the URL                                                                                     |
+| `POST /api/v1/admin/links`                                                                 | admin  | `{ owner: { kind, id }, url, kind, title?, ours?, rating? }`. No title: the provider's, else 400. 409 when that owner already has the URL                                                |
+| `POST /api/v1/admin/links/resolve`                                                         | admin  | `{ url }` → `{ url, provider, title, thumbnailUrl, embedUrl }`: what the link would be saved as, and what its provider says. Writes nothing                                              |
 | `GET\|PATCH\|DELETE /api/v1/admin/links/:id`                                               | admin  | `PATCH` any of `url`, `kind`, `title`, `ours`, `rating`; the owner never changes                                                                                                         |
 | `PUT /api/v1/admin/links/order`                                                            | admin  | `{ owner, ids }`: every one of the owner's own videos, once. One unmarked or removed meanwhile: 409, nothing moves                                                                       |
 
@@ -127,7 +180,7 @@ A public link carries `id, url, provider, kind, title, thumbnailUrl, embedUrl, o
 
 Admin rules (`lib/app/links/admin.ts`, each tested):
 
-- A new URL drops what was read from the old one (thumbnail, views, likes, `statsAt`).
+- A new URL drops what was read from the old one (thumbnail, views, likes, `statsAt`) and reads its provider again.
 - Marking a link ours puts it last among the owner's own. Unmarking keeps its `order`, unused.
 - A save that changes nothing writes nothing and is not audited.
 - A reorder leaves each link at its index, writing only those not already stored there (a link left in place but
