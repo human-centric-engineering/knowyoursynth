@@ -403,13 +403,14 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
   t-136) and
   `lib/app/capability-seed-pairs.ts` (the tutor's eight tools, and the catalogue and databank seeds the parity test
   cannot run, t-77), and `lib/app/own-modules.ts` (our eight `lib/app/` directories, which are app code rather than
-  seams, so the seam-coverage guards skip them, t-136): fork-owned scaffolds, filled.
+  seams, so the seam-coverage guards skip them, t-136), and `lib/app/csp.ts` (the five embed players' origins as
+  `frame-src`, `f-videos-and-links` t-182): fork-owned scaffolds, filled.
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).
 - `tests/unit/lib/app/defaults.test.ts`: the `SEAM_DEFAULTS` rows for the filled seams (`brand`,
   `ci`, `reserved-tiers`, `protected-nav`, `public-nav`, `auth-landing`, `data-export`, `admin-nav`,
   `account-sections`, `jobs`, `eslint.config`, `capabilities`, `context-contributors`,
-  `platform-agents`, `env`, `evaluations`, `footer`, `owner-classification`, `capability-seed-pairs`) are re-pinned to
+  `platform-agents`, `env`, `evaluations`, `footer`, `owner-classification`, `capability-seed-pairs`, `csp`) are re-pinned to
   our values rather than deleted (`HB2`). CUSTOMIZATION §4 calls this the one unavoidable cost. Our eight `lib/app/`
   directories no longer need rows here, in VERSIONING.md or in CUSTOMIZATION.md: `lib/app/own-modules.ts` lists them
   (t-136). The file is platform-owned, so expect it to conflict on
