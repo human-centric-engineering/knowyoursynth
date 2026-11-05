@@ -25,7 +25,7 @@ import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/cata
 import type { UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
 import type { SoundLesson } from '@/lib/app/sounds/lesson';
 import { newPattern } from '@/lib/app/sequencer/pattern';
-import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
+import { openSide, reducedMotion, stepShown, tallScreen } from '@/tests/helpers/synth-side';
 
 const { router, engine, auth, api } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -945,6 +945,8 @@ describe('a sound saved with its lesson', () => {
   });
 
   it('steps through its lesson with the sound still open, and Finish builds the sound as designed', async () => {
+    // Next sets each step at once: its moves made one at a time are `synth-page-content`'s.
+    reducedMotion();
     await openIt();
     openSide('Lesson');
     fireEvent.click(button('Build it step by step'));

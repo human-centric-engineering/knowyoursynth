@@ -10,7 +10,7 @@
 import { describe, it, expect, vi, beforeAll, afterEach } from 'vitest';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { Lesson, stepIds } from '@/components/app/synth/lesson';
-import { focusStore, highlightStore } from '@/components/app/synth/stores';
+import { focusStore, highlightStore, moveStore } from '@/components/app/synth/stores';
 import { getSynthDetail } from '@/lib/app/catalogue/read';
 import type { CatalogueSound } from '@/lib/app/catalogue/read';
 import { getSynthDef } from '@/lib/app/synths/defs';
@@ -155,12 +155,27 @@ describe('Lesson walkthrough', () => {
     const n = sound.steps.length;
     const { onStep, rerender } = setup(1);
     fireEvent.click(headerButton('Next step'));
-    expect(onStep).toHaveBeenLastCalledWith(2);
+    expect(onStep).toHaveBeenLastCalledWith(2, 'next');
     fireEvent.click(headerButton('Back'));
     expect(onStep).toHaveBeenLastCalledWith(0);
     rerender(<Lesson def={def} preset={sound} step={n - 1} onStep={onStep} />);
     fireEvent.click(screen.getByRole('button', { name: 'Finish' }));
     expect(onStep).toHaveBeenLastCalledWith(null);
+  });
+
+  it('offers Replay changes on the step the panel is at, and marks the move being made', () => {
+    const { onStep } = setup(1);
+    fireEvent.click(within(visibleStep()).getByRole('button', { name: 'Replay changes' }));
+    expect(onStep).toHaveBeenLastCalledWith(1, 'replay');
+    const [id] = Object.keys(sound.steps[1].set || {});
+    if (!id) throw new Error('step 2 sets no control');
+    const c = controlMap(def)[id];
+    if (!c) throw new Error(`${id} is not on the Model D`);
+    const chip = () => within(visibleStep()).getByText(displayName(def, c)).closest('button');
+    expect(chip()).not.toHaveAttribute('data-now');
+    act(() => moveStore.set({ id, ids: [id] }));
+    expect(chip()).toHaveAttribute('data-now');
+    act(() => moveStore.set(null));
   });
 
   it('moves the walkthrough from the numbered step bar', () => {
@@ -211,6 +226,25 @@ describe('Lesson pointing at the panel', () => {
     expect(highlightStore.get()).toEqual(base);
     fireEvent.click(chip);
     expect(focusStore.get()).toMatchObject({ kind: 'control', id });
+  });
+
+  it('leaves the move being made on the panel lit while a chip is hovered or left', () => {
+    setup(1);
+    const [id, other] = Object.keys(sound.steps[1].set ?? {});
+    const c = controlMap(def)[id];
+    if (!c) throw new Error(`no control ${id}`);
+    const chip = within(visibleStep()).getByText(displayName(def, c)).closest('button');
+    if (!chip) throw new Error('no chip');
+    const move = [other ?? 'a.move'];
+    act(() => {
+      moveStore.set({ id: move[0], ids: move });
+      highlightStore.set(move);
+    });
+    fireEvent.pointerEnter(chip);
+    expect(highlightStore.get()).toBe(move);
+    fireEvent.pointerLeave(chip);
+    expect(highlightStore.get()).toBe(move);
+    act(() => moveStore.set(null));
   });
 
   it('rings both ends of a cable on hover and focus, back to the step on leave', () => {
@@ -333,7 +367,7 @@ describe('Lesson step 0', () => {
     // The track shows step 1, still to do.
     expect(within(visibleStep()).getByText(sound.steps[0].title)).toBeTruthy();
     fireEvent.click(headerButton('Next step'));
-    expect(onStep).toHaveBeenLastCalledWith(0);
+    expect(onStep).toHaveBeenLastCalledWith(0, 'next');
   });
 
   it('has the step bar go to step 1 from it, with no step of the bar current', () => {
@@ -341,7 +375,7 @@ describe('Lesson step 0', () => {
     const bar = screen.getByRole('navigation', { name: 'Steps' });
     expect(bar.querySelector('[aria-current]')).toBeNull();
     fireEvent.click(within(bar).getByRole('button', { name: 'Next step' }));
-    expect(onStep).toHaveBeenLastCalledWith(0);
+    expect(onStep).toHaveBeenLastCalledWith(0, 'next');
   });
 
   it('is where Back from step 1 goes', () => {

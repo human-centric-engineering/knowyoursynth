@@ -13,6 +13,11 @@
  * engine hearing the turn, and its cables go or come one by one through it, in the order they were plugged. Another press, or a change made meanwhile,
  * finishes it at once; with reduced motion it is done at once.
  *
+ * A lesson step's moves are shown being made (`walk`, `f-step-moves` t-178): the session holds the step at once, while
+ * the panel shows the step before and then each move in turn, lit (`MOVE_LIGHT_MS`, `moveStore`) and turned as Undo
+ * turns a change. Unlike a load the synth stays playable, and the engine hears each move. Another press, a change, or
+ * a session landing from elsewhere finishes it at once; with reduced motion it is set at once.
+ *
  * A new patch is loaded (`glide`, `glidePlan`): a sound opened, Default patch, Restore patch, and the synth itself
  * arriving. Every load starts from the synth's Default patch (`f-default-patch` t-172), set at once, cables and all,
  * whatever was on the panel before, so the controls move the same way whichever sound was last. The session holds the
@@ -36,6 +41,7 @@ import {
   panelChanges,
   recordChange,
   redo as redoStep,
+  type StepMove,
   tweenCables,
   tweenValues,
   undo as undoStep,
@@ -44,13 +50,31 @@ import {
 } from '@/lib/app/synths/lib/history';
 import { glideMotion } from '@/components/app/synth/motion';
 import { defaultPatchState } from '@/lib/app/synths/default-patch';
-import { highlightStore } from '@/components/app/synth/stores';
+import { highlightStore, moveStore } from '@/components/app/synth/stores';
 import type { ControlValues, PatchCable, SynthDef } from '@/lib/app/synths/contract';
 
 /** How long what an undo or redo changes is lit before it moves, in ms. */
 export const HISTORY_LIGHT_MS = 900;
 /** How long the controls take to turn to where they go, in ms. */
 export const HISTORY_TURN_MS = 600;
+/** How long each of a lesson step's moves is lit before it is made, in ms. */
+export const MOVE_LIGHT_MS = 700;
+
+// Long enough for each cable to go or come in turn (Unplug all undone plugs them back one by one).
+const turnMsFor = (from: PanelSnap, to: PanelSnap): number => {
+  const key = (c: PatchCable) => `${c.from}>${c.to}`;
+  const had = new Set(from.cables.map(key));
+  const has = new Set(to.cables.map(key));
+  const cablesMoved =
+    from.cables.filter((c) => !has.has(key(c))).length +
+    to.cables.filter((c) => !had.has(key(c))).length;
+  return Math.min(2500, Math.max(HISTORY_TURN_MS, cablesMoved * HISTORY_CABLE_MS));
+};
+
+const hasChanges = (from: PanelSnap, to: PanelSnap): boolean => {
+  const { controls, jacks } = panelChanges(from, to);
+  return controls.length > 0 || jacks.length > 0;
+};
 
 /** How long the blank panel shows before an arriving synth's patch is set on it, in ms. */
 export const ARRIVE_MS = 350;
@@ -85,6 +109,17 @@ export function usePanelHistory<S extends Panelled>(
   patch: (fn: (s: S) => S) => void;
   /** As `patch`, the new patch shown being set (and a glide under way carried on to it, rather than finished). */
   glide: (fn: (s: S) => S) => void;
+  /**
+   * As `patch`, a lesson step's moves shown being made from `from`, the step before (`stepMoves`): each lit, then turned
+   * into place, the engine hearing it. False when there is nothing to show (no moves, or reduced motion): the step is
+   * set at once. `onEnd` is called as the moves end, or are finished at once by another press or a change.
+   */
+  walk: (
+    fn: (s: S) => S,
+    from: PanelSnap,
+    moves: readonly StepMove[],
+    onEnd?: () => void
+  ) => boolean;
   undo: () => void;
   redo: () => void;
   canUndo: boolean;
@@ -101,7 +136,7 @@ export function usePanelHistory<S extends Panelled>(
   const current = useRef<PanelSnap>({ values: sess.values, cables: sess.cables });
   const prev = useRef<{ snap: PanelSnap; ident: string; sound: string | null } | null>(null);
   // Set by a change made through `patch` (recorded) or by Undo and Redo (not), read by the effect after it renders.
-  const made = useRef<'change' | 'glide' | 'history' | null>(null);
+  const made = useRef<'change' | 'glide' | 'walk' | 'history' | null>(null);
   const onTakeOverRef = useRef(onTakeOver);
   const onLoadRef = useRef(onLoad);
   // The session as last rendered: a new patch that changes nothing is no load.
@@ -129,6 +164,8 @@ export function usePanelHistory<S extends Panelled>(
   const showing = useRef<{ finish: () => void } | null>(null);
   const [shown, setShown] = useState<'undo' | 'redo' | null>(null);
   const finishShowing = useCallback(() => showing.current?.finish(), []);
+  // A lesson step's moves being shown (`walk`): a session landing from elsewhere meanwhile finishes them.
+  const walking = useRef(false);
   // On the way out, finished without telling the page a load has ended: it is going, and must not start its Play.
   const leave = useCallback(() => {
     onLoadRef.current = undefined;
@@ -219,6 +256,8 @@ export function usePanelHistory<S extends Panelled>(
     } else if (moved && gliding.current) {
       const { at, delay } = gliding.current.halt();
       runGlide(at, snap, delay);
+    } else if (moved && walking.current && by !== 'walk') {
+      finishShowing();
     } else if (by === 'glide' && !gliding.current) {
       // A new patch with the same panel: nothing to load after all.
       frameRef.current = null;
@@ -227,13 +266,15 @@ export function usePanelHistory<S extends Panelled>(
     }
     // Saved (the sound's id alone changing, through `patch`), the panel is the same one: only a different patch on it
     // starts the history afresh.
-    const saved = p.ident === ident && !moved && by === 'change';
+    const saved = p.ident === ident && !moved && (by === 'change' || by === 'walk');
     if (p.ident !== ident || (p.sound !== sound && !saved)) {
       setHistory(emptyHistory());
       return;
     }
     if (!moved) return;
-    if (by === 'change' || by === 'glide')
+    // Replay changes at the step already on the panel puts back the panel it had: nothing to undo.
+    if (by === 'walk' && !hasChanges(p.snap, snap)) return;
+    if (by === 'change' || by === 'walk' || by === 'glide')
       setHistory((h) => recordChange(h, p.snap, performance.now(), by === 'glide'));
   }, [sess, def.id]); // eslint-disable-line react-hooks/exhaustive-deps -- `runGlide` follows `def`, as `def.id` does
 
@@ -248,7 +289,7 @@ export function usePanelHistory<S extends Panelled>(
   // change by the next session that lands from elsewhere. Only ever set here, so a no-op batched after a change keeps
   // the change's mark.
   const marked = useCallback(
-    (fn: (s: S) => S, by: 'change' | 'glide') =>
+    (fn: (s: S) => S, by: 'change' | 'glide' | 'walk') =>
       (s: S): S => {
         const next = fn(s);
         if (next !== s) made.current = by;
@@ -320,14 +361,7 @@ export function usePanelHistory<S extends Panelled>(
       }
       const { controls, jacks } = panelChanges(from, to);
       highlightStore.set([...controls, ...jacks]);
-      // Long enough for each cable to go or come in turn (Unplug all undone plugs them back one by one).
-      const key = (c: PatchCable) => `${c.from}>${c.to}`;
-      const had = new Set(from.cables.map(key));
-      const has = new Set(to.cables.map(key));
-      const cablesMoved =
-        from.cables.filter((c) => !has.has(key(c))).length +
-        to.cables.filter((c) => !had.has(key(c))).length;
-      const turnMs = Math.min(2500, Math.max(HISTORY_TURN_MS, cablesMoved * HISTORY_CABLE_MS));
+      const turnMs = turnMsFor(from, to);
       showing.current = { finish: done };
       setShown(which);
       pending.timer = setTimeout(() => {
@@ -350,6 +384,76 @@ export function usePanelHistory<S extends Panelled>(
       }, HISTORY_LIGHT_MS);
     },
     [setSess, finishShowing, def]
+  );
+  const walk = useCallback(
+    (fn: (s: S) => S, from: PanelSnap, moves: readonly StepMove[], onEnd?: () => void) => {
+      finishShowing();
+      onTakeOverRef.current?.();
+      if (reducedMotion() || moves.length === 0) {
+        setSess(marked(fn, 'change'));
+        return false;
+      }
+      const show = (f: PanelSnap | null) => {
+        frameRef.current = f;
+        setFrame(f);
+      };
+      const pending: { timer?: ReturnType<typeof setTimeout>; frame: number } = { frame: 0 };
+      // What the page and the lesson light for the step, once they have lit it: put back when the moves end. Let go of
+      // (the moves lit no more) once something else lights the panel meanwhile, such as the card closing.
+      let lit: string[] | null = null;
+      let mine: string[] | null = null;
+      const light = (ids: string[]) => {
+        if (highlightStore.get() !== mine) lit = null;
+        if (!lit) return;
+        highlightStore.set(ids);
+        mine = ids;
+      };
+      const done = () => {
+        clearTimeout(pending.timer);
+        cancelAnimationFrame(pending.frame);
+        if (showing.current?.finish === done) showing.current = null;
+        walking.current = false;
+        moveStore.set(null);
+        if (lit && highlightStore.get() === mine) highlightStore.set(lit);
+        show(null);
+        onEnd?.();
+      };
+      const make = (k: number, at: PanelSnap) => {
+        const m = moves[k];
+        if (!m) {
+          done();
+          return;
+        }
+        moveStore.set({ id: m.id, ids: m.ids });
+        light(m.ids);
+        const turnMs = turnMsFor(at, m.to);
+        pending.timer = setTimeout(() => {
+          const start = performance.now();
+          const turn = (now: number) => {
+            const t = Math.min(1, (now - start) / turnMs);
+            show({
+              values: tweenValues(def, at.values, m.to.values, easeInOut(t)),
+              cables: tweenCables(at.cables, m.to.cables, t),
+            });
+            if (t >= 1) make(k + 1, m.to);
+            else pending.frame = requestAnimationFrame(turn);
+          };
+          pending.frame = requestAnimationFrame(turn);
+        }, MOVE_LIGHT_MS);
+      };
+      showing.current = { finish: done };
+      walking.current = true;
+      // The panel shows the step before in the same render as the session takes the step.
+      show(from);
+      setSess(marked(fn, 'walk'));
+      // Begun once the step's change has rendered, so the first move's light comes after what the page lights for it.
+      pending.timer = setTimeout(() => {
+        lit = mine = highlightStore.get();
+        make(0, from);
+      }, 0);
+      return true;
+    },
+    [setSess, finishShowing, marked, def]
   );
   const undo = useCallback(() => step(undoStep, 'undo'), [step]);
   const redo = useCallback(() => step(redoStep, 'redo'), [step]);
@@ -385,6 +489,7 @@ export function usePanelHistory<S extends Panelled>(
     sess: view,
     patch,
     glide,
+    walk,
     undo,
     redo,
     canUndo: history.past.length > 0,

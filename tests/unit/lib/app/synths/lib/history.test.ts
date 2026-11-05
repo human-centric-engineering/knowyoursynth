@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import type { Control, SynthDef } from '@/lib/app/synths/contract';
+import type { Control, PatchCable, PresetStep, SynthDef } from '@/lib/app/synths/contract';
 import {
   GLIDE_STAGE_MS,
   HISTORY_CABLE_MS,
@@ -22,6 +22,8 @@ import {
   tweenCables,
   tweenValues,
   redo,
+  stepFrom,
+  stepMoves,
   undo,
   type PanelSnap,
 } from '@/lib/app/synths/lib/history';
@@ -262,5 +264,102 @@ describe('a glide: a new patch set a part at a time', () => {
     expect(stages.map((s) => s.module)).toEqual(ids);
     expect(stages[0].ms).toBeLessThan(GLIDE_STAGE_MS);
     expect(glideMs(stages)).toBeLessThanOrEqual(2700);
+  });
+});
+
+describe('a lesson step made a move at a time (stepMoves)', () => {
+  const cable = (from: string, to: string, color = '#fff'): PatchCable => ({ from, to, color });
+  const step = (s: Partial<PresetStep>): PresetStep => ({
+    title: 'A step',
+    module: 'filter',
+    why: '',
+    ...s,
+  });
+
+  it('makes the moves in the order the lesson numbers them, each changing only its own control', () => {
+    const from: PanelSnap = { values: { cutoff: 5, res: 0, attack: 1 }, cables: [] };
+    const to: PanelSnap = { values: { cutoff: 2, res: 6, attack: 1 }, cables: [] };
+    const moves = stepMoves(from, to, step({ set: { res: 6, cutoff: 2 } }));
+    expect(moves.map((m) => m.id)).toEqual(['res', 'cutoff']);
+    // Made together, the first move would already have the cutoff at 2.
+    expect(moves[0].to.values).toEqual({ cutoff: 5, res: 6, attack: 1 });
+    expect(moves[0].ids).toEqual(['res']);
+    expect(moves[1].to).toBe(to);
+  });
+
+  it('takes a cable out of an input before the one that replaces it goes in, as one move numbered at the input', () => {
+    const from: PanelSnap = {
+      values: { cutoff: 5 },
+      cables: [cable('j.osc', 'j.vcf'), cable('j.lfo', 'j.cut')],
+    };
+    const to: PanelSnap = {
+      values: { cutoff: 3 },
+      cables: [cable('j.osc', 'j.vcf'), cable('j.env', 'j.cut', '#f00')],
+    };
+    const moves = stepMoves(
+      from,
+      to,
+      step({ set: { cutoff: 3 }, unplug: [['j.lfo', 'j.cut']], cables: [['j.env', 'j.cut']] })
+    );
+    expect(moves.map((m) => m.id)).toEqual(['cutoff', 'j.cut']);
+    // The cutoff turns with the old cable still in.
+    expect(moves[0].to.cables).toEqual(from.cables);
+    expect(moves[1].ids).toEqual(['j.lfo', 'j.cut', 'j.env']);
+    expect(moves[1].to).toBe(to);
+  });
+
+  it('pulls and plugs each input in its own move, in its colours, keeping the cables it does not name', () => {
+    const from: PanelSnap = { values: {}, cables: [cable('j.a', 'j.in1'), cable('j.k', 'j.keep')] };
+    const to: PanelSnap = {
+      values: {},
+      cables: [cable('j.k', 'j.keep'), cable('j.b', 'j.in2', '#0f0'), cable('j.c', 'j.in3')],
+    };
+    const moves = stepMoves(
+      from,
+      to,
+      step({
+        unplug: [['j.a', 'j.in1']],
+        cables: [
+          ['j.b', 'j.in2'],
+          ['j.c', 'j.in3'],
+        ],
+      })
+    );
+    expect(moves.map((m) => m.id)).toEqual(['j.in1', 'j.in2', 'j.in3']);
+    expect(moves[0].to.cables).toEqual([cable('j.k', 'j.keep')]);
+    expect(moves[1].to.cables).toEqual([cable('j.k', 'j.keep'), cable('j.b', 'j.in2', '#0f0')]);
+    expect(moves[2].to).toBe(to);
+  });
+
+  it('keeps a move whose control is already in place, changing nothing, and has none for a step with none', () => {
+    const from: PanelSnap = { values: { cutoff: 5, res: 0 }, cables: [] };
+    const to: PanelSnap = { values: { cutoff: 5, res: 4 }, cables: [] };
+    const moves = stepMoves(from, to, step({ set: { cutoff: 5, res: 4 } }));
+    expect(moves.map((m) => m.id)).toEqual(['cutoff', 'res']);
+    expect(moves[0].to.values).toEqual(from.values);
+    expect(stepMoves(from, from, step({}))).toEqual([]);
+  });
+
+  it('shows the moves from the step before, with what the step does not number already as the step has it', () => {
+    const from: PanelSnap = {
+      values: { cutoff: 5, tempo: 120 },
+      cables: [cable('j.lfo', 'j.cut'), cable('j.x', 'j.other')],
+    };
+    const to: PanelSnap = {
+      values: { cutoff: 3, tempo: 90 },
+      cables: [cable('j.env', 'j.cut'), cable('j.y', 'j.other')],
+    };
+    const s = step({
+      set: { cutoff: 3 },
+      unplug: [['j.lfo', 'j.cut']],
+      cables: [['j.env', 'j.cut']],
+    });
+    const start = stepFrom(from, to, s);
+    // The tempo and the unnumbered cable are the step's already; the cutoff and the numbered input are the step before's.
+    expect(start.values).toEqual({ cutoff: 5, tempo: 90 });
+    expect(start.cables).toEqual([cable('j.lfo', 'j.cut'), cable('j.y', 'j.other')]);
+    const moves = stepMoves(start, to, s);
+    // So no move but a numbered one changes anything: the first turns the cutoff alone.
+    expect(moves[0].to).toEqual({ values: { cutoff: 3, tempo: 90 }, cables: start.cables });
   });
 });

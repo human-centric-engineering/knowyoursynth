@@ -17,16 +17,19 @@ import {
   HeatLayer,
   HeatRanks,
   Lens,
+  LessonBadges,
   Locator,
   heatColor,
 } from '@/components/app/panel/layers';
 import {
   MAP_OFF,
+  badgeStore,
   findStore,
   focusStore,
   highlightStore,
   lensStore,
   mapStore,
+  moveStore,
 } from '@/components/app/synth/stores';
 import type { SoundMap } from '@/components/app/synth/stores';
 import { WHEEL } from '@/lib/app/synths/lib/soundmap';
@@ -40,6 +43,8 @@ afterEach(() => {
   lensStore.set(null);
   highlightStore.set([]);
   mapStore.set(MAP_OFF);
+  badgeStore.set([]);
+  moveStore.set(null);
 });
 
 const inSvg = (node: ReactNode) => render(<svg>{node}</svg>);
@@ -270,5 +275,20 @@ describe('DoorRings', () => {
     focusOn('knob.pro1');
     const tag = container.querySelector('rect[rx="14"]');
     expect(Number(tag?.getAttribute('y'))).toBeLessThan(330);
+  });
+});
+
+describe('LessonBadges', () => {
+  it('numbers the lesson card’s moves on the panel, and rings the one being made (f-step-moves)', () => {
+    const [a, b] = modelD.controls.filter((c) => c.type === 'knob');
+    act(() => badgeStore.set([a.id, b.id]));
+    const { container } = inSvg(<LessonBadges def={modelD} values={modelD.init} />);
+    const badges = () => [...container.querySelectorAll('[data-testid="lesson-badges"] > g')];
+    expect(badges().map((g) => g.textContent)).toEqual(['1', '2']);
+    expect(container.querySelector('[data-now]')).toBeNull();
+    act(() => moveStore.set({ id: b.id, ids: [b.id] }));
+    expect(badges()[1]).toHaveAttribute('data-now');
+    expect(badges()[1].querySelectorAll('circle')).toHaveLength(2);
+    expect(badges()[0]).not.toHaveAttribute('data-now');
   });
 });

@@ -86,6 +86,7 @@ import type { SynthEvent } from '@/lib/app/synths/audio/dsp-core';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import { HelpButton, MidiStatus, PanelSwitch } from '@/components/app/synth/bar-controls';
 import { usePanelHistory } from '@/components/app/synth/use-panel-history';
+import { stepFrom, stepMoves } from '@/lib/app/synths/lib/history';
 import {
   Activity,
   AudioWaveform,
@@ -124,7 +125,7 @@ import { useFavourites } from '@/components/app/synth/favourites';
 import { FxRack } from '@/components/app/synth/fx-rack';
 import { Inspector, Tooltip } from '@/components/app/synth/inspector';
 import { Keyboard, OCTAVE_MAX, OCTAVE_MIN, QWERTY } from '@/components/app/synth/keyboard';
-import { Lesson, stepIds } from '@/components/app/synth/lesson';
+import { Lesson, stepIds, type StepHow } from '@/components/app/synth/lesson';
 import { Library } from '@/components/app/synth/library';
 import { Limits } from '@/components/app/synth/limits';
 import { About } from '@/components/app/synth/about';
@@ -202,6 +203,7 @@ import {
   highlightStore,
   mapStore,
   meterStore,
+  moveStore,
   notesStore,
   pendingStore,
   useStore,
@@ -525,6 +527,7 @@ function Synth({
     sess,
     patch,
     glide,
+    walk,
     undo,
     redo,
     canUndo,
@@ -1258,7 +1261,10 @@ function Synth({
   }, [seqOnEvent]);
   // What starts once a load ends: a Play pressed meanwhile, or the riff that was playing as it began.
   const afterLoad = useRef<(() => void) | null>(null);
+  // The riff Replay changes started (below), stopped as the moves end: not once the riff has been played or stopped.
+  const replayRiff = useRef(false);
   const stopRiff = useCallback(() => {
+    replayRiff.current = false;
     afterLoad.current = null;
     engine?.send({ type: 'stopPhrase' });
     setPlaying(false);
@@ -1269,6 +1275,7 @@ function Synth({
     if (await startPattern()) setPlaying(false);
   }, [startPattern]);
   const playPattern = useCallback(async () => {
+    replayRiff.current = false;
     if (isLoading()) afterLoad.current = () => void patternNow();
     else await patternNow();
   }, [isLoading, patternNow]);
@@ -1492,8 +1499,9 @@ function Synth({
     else setSeqOpen(false);
   };
   const riffNow = useCallback(
-    async (ph: Phrase) => {
-      if (!engine || !(await ensureAudio())) return;
+    async (ph: Phrase, still?: () => boolean) => {
+      // Not if what asked for it is over by the time audio has started (Replay's moves ended meanwhile).
+      if (!engine || !(await ensureAudio()) || (still && !still())) return;
       // A riff stops a pattern in the engine, without a word: the sequencer is told here.
       stopPattern();
       engine.send({
@@ -1511,13 +1519,17 @@ function Synth({
   useLayoutEffect(() => {
     shownPhrase.current = shown?.phrase ?? null;
   });
-  const riffShown = useCallback(() => {
-    if (shownPhrase.current) void riffNow(shownPhrase.current);
-    else setPlaying(false);
-  }, [riffNow]);
+  const riffShown = useCallback(
+    (still?: () => boolean) => {
+      if (shownPhrase.current) void riffNow(shownPhrase.current, still);
+      else setPlaying(false);
+    },
+    [riffNow]
+  );
   // Not while a patch loads: then once it has.
   const playRiff = useCallback(
     async (ph: Phrase) => {
+      replayRiff.current = false;
       if (isLoading()) afterLoad.current = riffShown;
       else await riffNow(ph);
     },
@@ -1982,13 +1994,44 @@ function Synth({
   // The page lights a step's controls only once a step has been picked on this synth since the page opened: a step
   // restored from the stored session (on a refresh, or coming back to a synth) leaves the panel unlit.
   const [litFor, setLitFor] = useState<string | null>(null);
-  const setStep = (k: number | null) => {
+  // Next step, and Replay changes, show the step's moves being made (`f-step-moves` t-178), from the step before: each
+  // lit, then turned into place, the engine hearing it, while the session holds the step from the first moment. Any
+  // other way to a step (Back, a chapter, the step bar, a swipe) sets it at once. Replay with nothing playing plays the
+  // sound's riff for as long as the moves take (`replayRiff`).
+  const endReplayRiff = useCallback(() => {
+    if (replayRiff.current) stopRiff();
+  }, [stopRiff]);
+  const setStep = (k: number | null, how?: StepHow) => {
     setLitFor(synthId);
     // A full-height Lesson sheet would cover the step's controls: it drops to half, and they scroll into view above it.
     if (small && sheet === 'lesson') setDockSnap('half');
+    // The step before this one, to show its moves from: none before a lesson's first step without step 0.
+    const before =
+      how && shown && k != null && k !== START_STEP && shown.steps[k]
+        ? k > 0
+          ? k - 1
+          : hasStartStep(shown)
+            ? START_STEP
+            : undefined
+        : undefined;
+    const set = (fn: (s: Session) => Session) => {
+      if (before === undefined || !shown || k == null) {
+        patch(fn);
+        return;
+      }
+      const to = lessonState(synthDef, shown, k);
+      const from = stepFrom(lessonState(synthDef, shown, before), to, shown.steps[k]);
+      const moves = stepMoves(from, to, shown.steps[k]);
+      // Replay again while the riff an earlier Replay started plays starts it again, as that one's moves end.
+      const replay = how === 'replay' && (replayRiff.current || !transportPlaying);
+      if (walk(fn, from, moves, endReplayRiff) && replay) {
+        replayRiff.current = true;
+        riffShown(() => replayRiff.current);
+      }
+    };
     if (ownLesson) {
       openSeq.current++;
-      patch((s) => ({ ...s, step: k, ...lessonState(synthDef, ownLesson, k) }));
+      set((s) => ({ ...s, step: k, ...lessonState(synthDef, ownLesson, k) }));
       return;
     }
     leaveShared();
@@ -1998,7 +2041,7 @@ function Synth({
     else if (k == null && kept && step != null && step === kept.steps.length - 1)
       progress.record(kept.id, step, true);
     openSeq.current++;
-    patch((s) => {
+    set((s) => {
       const from = sounds.find((p) => p.id === s.presetId) || sounds[0];
       return {
         ...s,
@@ -2042,6 +2085,22 @@ function Synth({
     });
     return () => cancelAnimationFrame(t);
   }, [small, sheet, dockSnap, stepKey, def, scrollerRef]);
+  // As each of a step's moves is made (Next step, Replay changes), its control is revealed the same way.
+  useEffect(() => {
+    if (!small || sheet !== 'lesson' || dockSnap !== 'half') return undefined;
+    return moveStore.subscribe(() => {
+      const m = moveStore.get();
+      const svg = frameRef.current?.querySelector('svg');
+      if (m && svg)
+        revealOnPanel({
+          svg,
+          scroller: scrollerRef.current,
+          def,
+          ids: m.ids,
+          sheetTop: window.innerHeight * (1 - HALF_HEIGHT),
+        });
+    });
+  }, [small, sheet, dockSnap, def, scrollerRef]);
 
   // On a small touch screen a tap on the panel opens the Inspector on what was tapped, in place of the floating card.
   // Not while another sheet is up, and not on the first tap of a cable being plugged in, which the second tap needs.

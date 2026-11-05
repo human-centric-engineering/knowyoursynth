@@ -7,6 +7,7 @@ import { useEffect, useRef } from 'react';
 import type { PointerEvent, FocusEvent, MouseEvent } from 'react';
 import {
   badgeStore,
+  moveStore,
   findStore,
   focusStore,
   highlightStore,
@@ -492,6 +493,8 @@ export function HeatRanks({
  */
 export function LessonBadges({ def, values }: { def: SynthDef; values: ControlValues }) {
   const ids = useStore(badgeStore);
+  // The move being made (`f-step-moves`): its badge is ringed while it is lit and turned.
+  const moving = useStore(moveStore, (m) => m?.id ?? null);
   if (!ids.length) return null;
   const cm = controlMap(def);
   const jm = jackMap(def);
@@ -512,7 +515,10 @@ export function LessonBadges({ def, values }: { def: SynthDef; values: ControlVa
           y = j.y - 16;
         } else return null;
         return (
-          <g key={id}>
+          <g key={id} data-now={moving === id || undefined}>
+            {moving === id && (
+              <circle cx={x} cy={y} r="20" fill="none" stroke="#f6a63a" strokeWidth="3" />
+            )}
             <circle cx={x} cy={y} r="14" fill="#f6a63a" stroke="#1b1204" strokeWidth="2.5" />
             <text
               x={x}

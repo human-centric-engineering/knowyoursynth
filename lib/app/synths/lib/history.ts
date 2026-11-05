@@ -6,7 +6,7 @@
 
 import { lanePos, laneValueAt } from '@/lib/app/sequencer/lanes';
 import { controlMap } from '@/lib/app/synths/lib/patch';
-import type { ControlValues, PatchCable, SynthDef } from '@/lib/app/synths/contract';
+import type { ControlValues, PatchCable, PresetStep, SynthDef } from '@/lib/app/synths/contract';
 
 /** How many changes back Undo goes. */
 export const HISTORY_MAX = 20;
@@ -146,6 +146,82 @@ export function tweenCables(from: PatchCable[], to: PatchCable[], t: number): Pa
     ...coming.slice(0, Math.max(0, done - going.length)),
   ];
 }
+
+// ── a lesson step's moves ───────────────────────────────────────────────────
+// Next step (`f-step-moves` t-178) shows the step being made a move at a time, in the order the lesson numbers them: each
+// lit, then turned (or its cables pulled and plugged), as Undo shows a change.
+
+/**
+ * The controls a step moves, then the input end of each cable it takes out, then of each cable it patches, once each
+ * (two cables can share an input, and a cable moved to another output keeps its input's number): the order the lesson
+ * numbers them in, and the order they are made in. A cable comes out before the one that replaces it goes in, as on the
+ * hardware.
+ */
+export const stepBadges = (s: PresetStep): string[] => [
+  ...new Set([
+    ...Object.keys(s.set || {}),
+    ...(s.unplug || []).map(([, to]) => to),
+    ...(s.cables || []).map(([, to]) => to),
+  ]),
+];
+
+/** One of a step's numbered moves: what it is numbered at, what is lit while it is made, and the panel once it is. */
+export interface StepMove {
+  /** The control, or the input jack of the cables, the lesson numbers it at (`stepBadges`). */
+  id: string;
+  /** The control, or the jacks at either end of each cable it takes out or patches. */
+  ids: string[];
+  to: PanelSnap;
+}
+
+/**
+ * The panel after each of `step`'s moves, from `from` (the step before) to `to` (the step): each move takes its control's
+ * value from `to`, and pulls the cables into its input that `to` has not got and plugs those `to` has, in `to`'s colours.
+ * The last lands exactly on `to`. A move whose control is already where `to` has it changes nothing, but is a move: the
+ * lesson still names it. A step with no moves has none.
+ */
+export function stepMoves(from: PanelSnap, to: PanelSnap, step: PresetStep): StepMove[] {
+  const order = stepBadges(step);
+  const had = new Set(from.cables.map(cableKey));
+  const has = new Set(to.cables.map(cableKey));
+  const pairs = [...(step.unplug || []), ...(step.cables || [])];
+  let at = from;
+  return order.map((id, k) => {
+    if (k === order.length - 1) return { id, ids: idsOf(id, pairs), to };
+    let { values, cables } = at;
+    if (id in (step.set || {})) values = { ...values, [id]: to.values[id] };
+    else
+      cables = [
+        ...cables.filter((c) => c.to !== id || has.has(cableKey(c))),
+        ...to.cables.filter((c) => c.to === id && !had.has(cableKey(c))),
+      ];
+    at = { values, cables };
+    return { id, ids: idsOf(id, pairs), to: at };
+  });
+}
+
+/**
+ * The panel a step's moves are shown from: the step before (`from`), but with what the step does not number already as
+ * the step has it (`to`), such as a tempo the lesson's riff sets. Only the numbered moves are shown being made.
+ */
+export function stepFrom(from: PanelSnap, to: PanelSnap, step: PresetStep): PanelSnap {
+  const set = step.set || {};
+  const inputs = new Set(stepBadges(step).filter((id) => !(id in set)));
+  const values = { ...to.values };
+  for (const id of Object.keys(set)) if (id in from.values) values[id] = from.values[id];
+  return {
+    values,
+    cables: [
+      ...from.cables.filter((c) => inputs.has(c.to)),
+      ...to.cables.filter((c) => !inputs.has(c.to)),
+    ],
+  };
+}
+
+const idsOf = (id: string, pairs: readonly (readonly [string, string])[]): string[] => {
+  const cables = pairs.filter(([, b]) => b === id);
+  return cables.length ? [...new Set(cables.flat())] : [id];
+};
 
 // ── glides ──────────────────────────────────────────────────────────────────
 // A new patch on the panel (a sound opened, Default patch, Restore patch, the synth arriving) is shown being set, as

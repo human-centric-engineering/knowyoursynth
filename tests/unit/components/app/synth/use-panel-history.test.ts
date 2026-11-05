@@ -11,9 +11,16 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useState } from 'react';
 import { act, fireEvent, renderHook } from '@testing-library/react';
-import { ARRIVE_MS, usePanelHistory } from '@/components/app/synth/use-panel-history';
+import {
+  ARRIVE_MS,
+  HISTORY_TURN_MS,
+  MOVE_LIGHT_MS,
+  usePanelHistory,
+} from '@/components/app/synth/use-panel-history';
 import { glideMotion } from '@/components/app/synth/motion';
 import { defaultPatchState } from '@/lib/app/synths/default-patch';
+import { stepMoves, type PanelSnap } from '@/lib/app/synths/lib/history';
+import { highlightStore, moveStore } from '@/components/app/synth/stores';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import type { ControlValues, PatchCable } from '@/lib/app/synths/contract';
 
@@ -271,5 +278,177 @@ describe('usePanelHistory loads (f-default-patch t-172)', () => {
     expect(result.current.sess.values['filter.cutoff']).toBe(3);
     expect(result.current.loading).toBe(false);
     expect(onLoad.mock.calls).toEqual([[true], [false]]);
+  });
+});
+
+describe('usePanelHistory showing a lesson step’s moves (f-step-moves t-178)', () => {
+  // The step before, and the step: the cutoff opened, then the emphasis turned up, in the order the lesson numbers them.
+  const FROM: PanelSnap = { values: at(0), cables: [] };
+  const TO: PanelSnap = { values: { ...at(8), 'filter.emphasis': 7 }, cables: [] };
+  const STEP = {
+    title: 'Open the filter',
+    module: 'filter' as const,
+    why: '',
+    set: { 'filter.cutoff': 8, 'filter.emphasis': 7 },
+  };
+  const MOVES = stepMoves(FROM, TO, STEP);
+  const toStep = (s: Sess): Sess => ({ ...s, step: 1, values: TO.values, cables: TO.cables });
+  const EMPHASIS = def.init['filter.emphasis'];
+  // One move: lit, then turned, and a frame over to land.
+  const ONE_MOVE = MOVE_LIGHT_MS + HISTORY_TURN_MS + 50;
+
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    vi.useFakeTimers({
+      toFake: [
+        'setTimeout',
+        'clearTimeout',
+        'requestAnimationFrame',
+        'cancelAnimationFrame',
+        'performance',
+      ],
+    });
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+    act(() => {
+      highlightStore.set([]);
+      moveStore.set(null);
+    });
+  });
+  const advance = (ms: number) => act(() => void vi.advanceTimersByTime(ms));
+  const shown = (r: ReturnType<typeof setup>['result']) => r.current.sess.values;
+
+  it('holds the step from the first moment, and shows each move lit and then turned, one after the other', () => {
+    const { result } = setup();
+    const onEnd = vi.fn();
+    let walked = false;
+    act(() => {
+      walked = result.current.walk(toStep, FROM, MOVES, onEnd);
+    });
+    expect(walked).toBe(true);
+    // Saved, recorded and played from as the step at once; the panel shows the step before.
+    expect(result.current.stored.step).toBe(1);
+    expect(result.current.stored.values).toEqual(TO.values);
+    expect(shown(result)['filter.cutoff']).toBe(0);
+
+    advance(0);
+    // Move 1 is lit before it turns.
+    expect(moveStore.get()?.id).toBe('filter.cutoff');
+    expect(highlightStore.get()).toEqual(['filter.cutoff']);
+    advance(MOVE_LIGHT_MS - 1);
+    expect(shown(result)['filter.cutoff']).toBe(0);
+
+    advance(ONE_MOVE - MOVE_LIGHT_MS + 1);
+    // Move 1 is in place; move 2 is lit and has not moved. Made together, the emphasis would be at 7 already.
+    expect(shown(result)['filter.cutoff']).toBe(8);
+    expect(shown(result)['filter.emphasis']).toBe(EMPHASIS);
+    expect(moveStore.get()?.id).toBe('filter.emphasis');
+    expect(highlightStore.get()).toEqual(['filter.emphasis']);
+    expect(onEnd).not.toHaveBeenCalled();
+
+    advance(ONE_MOVE);
+    expect(shown(result)).toEqual(TO.values);
+    expect(moveStore.get()).toBeNull();
+    // What was lit before the moves began is put back.
+    expect(highlightStore.get()).toEqual([]);
+    expect(onEnd).toHaveBeenCalledTimes(1);
+  });
+
+  it('finishes at once on a change to the panel, or another walk, which starts again from its own step before', () => {
+    const { result } = setup();
+    const onEnd = vi.fn();
+    act(() => void result.current.walk(toStep, FROM, MOVES, onEnd));
+    advance(ONE_MOVE);
+    act(() => result.current.patch((s) => s));
+    expect(shown(result)).toEqual(TO.values);
+    expect(moveStore.get()).toBeNull();
+    expect(onEnd).toHaveBeenCalledTimes(1);
+
+    act(() => void result.current.walk(toStep, FROM, MOVES, onEnd));
+    advance(ONE_MOVE);
+    expect(shown(result)['filter.cutoff']).toBe(8);
+    // Replay pressed again: back to the step before, move 1 to come.
+    act(() => void result.current.walk(toStep, FROM, MOVES, onEnd));
+    expect(onEnd).toHaveBeenCalledTimes(2);
+    expect(shown(result)['filter.cutoff']).toBe(0);
+    advance(0);
+    expect(moveStore.get()?.id).toBe('filter.cutoff');
+  });
+
+  it('finishes at once on Undo, and when a session lands from elsewhere', () => {
+    const { result, turn } = setup();
+    turn(3);
+    // Replay on the step the panel is at puts back what was changed on it, which Undo can take back.
+    act(() => void result.current.walk((s) => ({ ...s, values: TO.values }), FROM, MOVES));
+    advance(0);
+    expect(result.current.canUndo).toBe(true);
+    act(() => result.current.undo());
+    expect(moveStore.get()).toBeNull();
+
+    act(() => void result.current.walk(toStep, FROM, MOVES));
+    advance(0);
+    act(() => result.current.setStored((s) => ({ ...s, values: at(4) })));
+    expect(moveStore.get()).toBeNull();
+    expect(shown(result)['filter.cutoff']).toBe(4);
+  });
+
+  it('sets the step at once with reduced motion, or with no moves to show', () => {
+    vi.spyOn(window, 'matchMedia').mockImplementation(
+      (query: string) =>
+        ({
+          matches: query === '(prefers-reduced-motion: reduce)',
+          media: query,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+        }) as unknown as MediaQueryList
+    );
+    const { result } = setup();
+    const onEnd = vi.fn();
+    let walked = true;
+    act(() => {
+      walked = result.current.walk(toStep, FROM, MOVES, onEnd);
+    });
+    expect(walked).toBe(false);
+    expect(shown(result)).toEqual(TO.values);
+    expect(moveStore.get()).toBeNull();
+    expect(onEnd).not.toHaveBeenCalled();
+    vi.restoreAllMocks();
+
+    const other = setup();
+    act(() => {
+      walked = other.result.current.walk(toStep, FROM, [], onEnd);
+    });
+    expect(walked).toBe(false);
+    expect(other.result.current.sess.values).toEqual(TO.values);
+  });
+
+  it('records nothing to undo for Replay on a step whose panel is already the step', () => {
+    const { result, turn } = setup();
+    act(() => void result.current.walk(toStep, FROM, MOVES));
+    advance(ONE_MOVE * 2);
+    turn(3);
+    act(() => result.current.undo());
+    advance(HISTORY_TURN_MS * 3);
+    expect(result.current.canRedo).toBe(true);
+    const undos = result.current.canUndo;
+    // The step's panel worked out afresh, as the page does: equal, not the same objects.
+    const again = (s: Sess): Sess => ({ ...toStep(s), values: { ...TO.values }, cables: [] });
+    act(() => void result.current.walk(again, FROM, MOVES));
+    advance(ONE_MOVE * 2);
+    // The panel came back as it was: Redo is still there, and Undo has nothing new.
+    expect(result.current.canRedo).toBe(true);
+    expect(result.current.canUndo).toBe(undos);
+  });
+
+  it('does not light again what the page had lit, once something else has lit the panel meanwhile', () => {
+    const { result } = setup();
+    act(() => highlightStore.set(['filter.cutoff', 'filter.emphasis']));
+    act(() => void result.current.walk(toStep, FROM, MOVES));
+    advance(0);
+    // The card closed during the moves.
+    act(() => highlightStore.set([]));
+    advance(ONE_MOVE * 2);
+    expect(highlightStore.get()).toEqual([]);
   });
 });

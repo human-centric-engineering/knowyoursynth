@@ -16,31 +16,25 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PointerEvent as ReactPointerEvent, ReactNode } from 'react';
-import { ArrowLeftRight, Check, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ArrowLeftRight, Check, ChevronLeft, ChevronRight, RotateCcw, X } from 'lucide-react';
+import { stepBadges } from '@/lib/app/synths/lib/history';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
 import { controlMap, displayName, formatValue, jackMap } from '@/lib/app/synths/lib/patch';
 import type { Preset, PresetStep, SynthDef } from '@/lib/app/synths/contract';
 import { START_STEP, hasStartStep, startStep } from '@/lib/app/synths/default-patch';
-import { badgeStore, focusStore, highlightStore } from '@/components/app/synth/stores';
-import { StepText, stepIds } from '@/components/app/synth/lesson';
+import {
+  badgeStore,
+  focusStore,
+  highlightStore,
+  moveStore,
+  useStore,
+} from '@/components/app/synth/stores';
+import { StepText, stepIds, type StepHow } from '@/components/app/synth/lesson';
 import { markText, reachedStep } from '@/components/app/synth/library';
 import type { LessonMark } from '@/components/app/synth/progress';
 
 /** What the card is showing: a lesson section, the inspector or the effects. */
 export type CardId = 'build' | 'inspector' | 'fx';
-
-/**
- * The controls a step moves, then the input end of each cable it takes out, then of each cable it patches, once each
- * (two cables can share an input, and a cable moved to another output keeps its input's number): the order the card
- * numbers them in. A cable comes out before the one that replaces it goes in, as on the hardware.
- */
-export const stepBadges = (s: PresetStep): string[] => [
-  ...new Set([
-    ...Object.keys(s.set || {}),
-    ...(s.unplug || []).map(([, to]) => to),
-    ...(s.cables || []).map(([, to]) => to),
-  ]),
-];
 
 /** The controls a sound's tweaks are about, once each, in their order. */
 const tweakBadges = (p: Preset): string[] => [...new Set(p.tweaks.map((t) => t.id))];
@@ -56,10 +50,10 @@ const clampPos = (x: number, y: number, w: number) => ({
   y: Math.min(Math.max(y, EDGE), Math.max(EDGE, window.innerHeight - KEEP)),
 });
 
-/** A move's number, as on the panel. */
-function Num({ n }: { n: number }) {
+/** A move's number; `now` while the move is being made on the panel (`f-step-moves`). */
+function Num({ n, now = false }: { n: number; now?: boolean }) {
   return (
-    <span className="kys-card-num" aria-hidden="true">
+    <span className="kys-card-num" data-now={now || undefined} aria-hidden="true">
       {n}
     </span>
   );
@@ -71,7 +65,7 @@ export interface LessonCardProps {
   preset: Preset | null;
   /** The step the panel is at, or `null` for the finished sound. */
   step: number | null;
-  onStep: (k: number | null) => void;
+  onStep: (k: number | null, how?: StepHow) => void;
   section: CardId;
   onClose: () => void;
   /** Which side of the panel the card floats on. */
@@ -106,6 +100,8 @@ export function LessonCard({
   const current = preset && step != null && !starting ? preset.steps[step] : undefined;
   // Where the walkthrough starts: step 0, the Default patch, where the lesson has it.
   const begin = hasStartStep(preset) ? START_STEP : 0;
+  // The move being made on the panel, while Next step or Replay changes shows the step's moves.
+  const moving = useStore(moveStore, (m) => m?.id ?? null);
 
   // The panel's numbers follow the card: the step's moves, or, with the finished sound on, the tweaks' controls. Step 0
   // sets the whole patch, so it has no moves to number.
@@ -240,7 +236,7 @@ export function LessonCard({
           type="button"
           className="kys-step-btn is-primary"
           aria-label="Next lesson step"
-          onClick={() => onStep(0)}
+          onClick={() => onStep(0, 'next')}
         >
           Next step
           <ChevronRight size={18} aria-hidden="true" />
@@ -264,7 +260,20 @@ export function LessonCard({
         <StepText text={current.why} className="text-[14.5px]" />
         {moves.length > 0 && (
           <>
-            <h3 className="kys-label mt-4 mb-1.5 text-(--kys-muted)">On the panel</h3>
+            <div className="mt-4 mb-1.5 flex items-center justify-between gap-2">
+              <h3 className="kys-label text-(--kys-muted)">On the panel</h3>
+              {step > begin && (
+                <button
+                  type="button"
+                  className="kys-card-replay"
+                  onClick={() => onStep(step, 'replay')}
+                  title="Put the panel back to the step before and make this step's moves again"
+                >
+                  <RotateCcw size={13} aria-hidden="true" />
+                  Replay changes
+                </button>
+              )}
+            </div>
             <ol className="flex flex-col gap-1" aria-label="What this step sets">
               {Object.entries(current.set || {}).map(([id, v]) => {
                 const c = cm[id];
@@ -282,7 +291,7 @@ export function LessonCard({
                         focusStore.set({ kind: 'control', id, x: 0, y: 0, tip: false })
                       }
                     >
-                      <Num n={moves.indexOf(id) + 1} />
+                      <Num n={moves.indexOf(id) + 1} now={moving === id} />
                       <span className="kys-label text-(--kys-muted)">{displayName(def, c)}</span>
                       <span className="ml-auto font-mono">{formatValue(c, v)}</span>
                     </button>
@@ -300,7 +309,7 @@ export function LessonCard({
                       onPointerEnter={point([a, b])}
                       onPointerLeave={back}
                     >
-                      <Num n={moves.indexOf(b) + 1} />
+                      <Num n={moves.indexOf(b) + 1} now={moving === b} />
                       <span className="kys-label text-(--kys-muted)">Unplug</span>
                       <span className="ml-auto font-mono">
                         {from.label} out → {to.label} in
@@ -320,7 +329,7 @@ export function LessonCard({
                       onPointerEnter={point([a, b])}
                       onPointerLeave={back}
                     >
-                      <Num n={moves.indexOf(b) + 1} />
+                      <Num n={moves.indexOf(b) + 1} now={moving === b} />
                       <span className="kys-label text-(--kys-muted)">Cable</span>
                       <span className="ml-auto font-mono">
                         {from.label} out → {to.label} in
@@ -350,7 +359,7 @@ export function LessonCard({
           type="button"
           className="kys-step-btn is-primary"
           aria-label={step >= n - 1 ? 'Finish the lesson' : 'Next lesson step'}
-          onClick={() => onStep(step >= n - 1 ? null : step + 1)}
+          onClick={() => onStep(step >= n - 1 ? null : step + 1, 'next')}
         >
           {step >= n - 1 ? 'Finish' : 'Next step'}
           <ChevronRight size={18} aria-hidden="true" />

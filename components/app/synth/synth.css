@@ -1479,6 +1479,24 @@ svg .kys-hit:focus-visible {
 .kys-card-move:hover {
   background: rgb(var(--kys-wash) / 0.05);
 }
+/* The move being made on the panel (`f-step-moves`): its number rings while it is lit and turned. */
+.kys-card-num[data-now] {
+  box-shadow:
+    0 0 0 3px rgb(var(--kys-wash) / 0.18),
+    0 0 0 5px var(--kys-accent);
+}
+.kys-card-replay {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  color: var(--kys-accent);
+}
+.kys-card-replay:hover {
+  background: rgb(var(--kys-wash) / 0.05);
+}
 
 /* The tutor's drawer: slides in over the right of the panel, down to the dock, or
    to the Sound Design strip while that is open (`--kys-strip-h`). */

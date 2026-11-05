@@ -21,7 +21,7 @@
  * @see components/app/sharing/shared-sound-strip.tsx
  */
 
-import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
+import { openSide, reducedMotion, stepShown, tallScreen } from '@/tests/helpers/synth-side';
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { SynthPage } from '@/components/app/synth/synth-page';
@@ -577,6 +577,8 @@ describe("a shared sound's lesson (f-tutor t-55)", () => {
   });
 
   it('steps through with the shared sound still on show, and Restore puts its panel back', () => {
+    // Next sets each step at once: its moves made one at a time are `synth-page-content`'s.
+    reducedMotion();
     shared({ shared: WITH_LESSON });
     openSide('Lesson');
     fireEvent.click(button('Build it step by step'));

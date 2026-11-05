@@ -19,9 +19,15 @@ import type {
   SynthDef,
 } from '@/lib/app/synths/contract';
 import { START_STEP, hasStartStep, startStep } from '@/lib/app/synths/default-patch';
-import { focusStore, highlightStore } from '@/components/app/synth/stores';
+import { focusStore, highlightStore, moveStore, useStore } from '@/components/app/synth/stores';
 import { LevelDots, markText, reachedStep } from '@/components/app/synth/library';
 import type { LessonMark } from '@/components/app/synth/progress';
+
+/**
+ * How a step was asked for, where it matters (`f-step-moves` t-178): Next step shows the step's moves being made, and
+ * Replay changes shows them again. Any other way to a step sets it at once.
+ */
+export type StepHow = 'next' | 'replay';
 
 /** The controls and jacks a step touches, for the panel highlight: a cable it takes out is lit as one it plugs in. */
 export const stepIds = (s: PresetStep): string[] => [
@@ -80,29 +86,39 @@ export function StepText({
 }
 
 const chipClass =
-  'inline-flex items-center gap-1.5 rounded-md border border-(--kys-line) bg-(--kys-ground) px-2 py-1 text-left text-[12.5px] hover:border-(--kys-muted)';
+  'inline-flex items-center gap-1.5 rounded-md border border-(--kys-line) bg-(--kys-ground) px-2 py-1 text-left text-[12.5px] hover:border-(--kys-muted) data-now:border-(--kys-accent) data-now:bg-(--kys-raised)';
+
+// A chip lights what it names, and back to the step's controls as it is left; not while a move is being made on the
+// panel (`f-step-moves`), which keeps the move lit.
+const light = (ids: string[]) => {
+  if (!moveStore.get()) highlightStore.set(ids);
+};
 
 function Chip({
   def,
   id,
   value,
   base,
+  now = false,
 }: {
   def: SynthDef;
   id: string;
   value: ControlValue;
   base: string[];
+  /** The move being made on the panel (`f-step-moves`). */
+  now?: boolean;
 }) {
   const c = controlMap(def)[id];
   if (!c) return null;
   return (
     <button
       type="button"
-      onPointerEnter={() => highlightStore.set([id])}
-      onPointerLeave={() => highlightStore.set(base)}
-      onFocus={() => highlightStore.set([id])}
-      onBlur={() => highlightStore.set(base)}
+      onPointerEnter={() => light([id])}
+      onPointerLeave={() => light(base)}
+      onFocus={() => light([id])}
+      onBlur={() => light(base)}
       onClick={() => focusStore.set({ kind: 'control', id, x: 0, y: 0, tip: false })}
+      data-now={now || undefined}
       className={chipClass}
     >
       <span
@@ -115,7 +131,17 @@ function Chip({
   );
 }
 
-function CableChip({ def, pair, base }: { def: SynthDef; pair: CablePair; base: string[] }) {
+function CableChip({
+  def,
+  pair,
+  base,
+  now = false,
+}: {
+  def: SynthDef;
+  pair: CablePair;
+  base: string[];
+  now?: boolean;
+}) {
   const jm = jackMap(def);
   const [a, b] = pair;
   const from = jm[a];
@@ -124,10 +150,10 @@ function CableChip({ def, pair, base }: { def: SynthDef; pair: CablePair; base: 
   return (
     <button
       type="button"
-      onPointerEnter={() => highlightStore.set(pair)}
-      onPointerLeave={() => highlightStore.set(base)}
-      onFocus={() => highlightStore.set(pair)}
-      onBlur={() => highlightStore.set(base)}
+      onPointerEnter={() => light(pair)}
+      onPointerLeave={() => light(base)}
+      onFocus={() => light(pair)}
+      onBlur={() => light(base)}
       onClick={() =>
         focusStore.set({
           kind: 'cable',
@@ -140,6 +166,7 @@ function CableChip({ def, pair, base }: { def: SynthDef; pair: CablePair; base: 
         })
       }
       title="Explain this cable in the inspector"
+      data-now={now || undefined}
       className={chipClass}
     >
       <span
@@ -158,7 +185,17 @@ function CableChip({ def, pair, base }: { def: SynthDef; pair: CablePair; base: 
  * A cable the step takes out (`f-default-base` t-175). Lit on its jacks as a cable that is plugged in is, but with
  * nothing to open in the inspector: once the step is on the panel the cable is not there.
  */
-function UnplugChip({ def, pair, base }: { def: SynthDef; pair: CablePair; base: string[] }) {
+function UnplugChip({
+  def,
+  pair,
+  base,
+  now = false,
+}: {
+  def: SynthDef;
+  pair: CablePair;
+  base: string[];
+  now?: boolean;
+}) {
   const jm = jackMap(def);
   const [a, b] = pair;
   const from = jm[a];
@@ -166,8 +203,9 @@ function UnplugChip({ def, pair, base }: { def: SynthDef; pair: CablePair; base:
   if (!from || !to) return null;
   return (
     <span
-      onPointerEnter={() => highlightStore.set(pair)}
-      onPointerLeave={() => highlightStore.set(base)}
+      onPointerEnter={() => light(pair)}
+      onPointerLeave={() => light(base)}
+      data-now={now || undefined}
       className={chipClass}
     >
       <span
@@ -270,13 +308,16 @@ function StepCarousel({
   onStep,
   base,
   resetKey,
+  replayFrom,
 }: {
   def: SynthDef;
   steps: PresetStep[];
   step: number | null;
-  onStep: (k: number | null) => void;
+  onStep: (k: number | null, how?: StepHow) => void;
   base: string[];
   resetKey: string;
+  /** The first step Replay changes is offered at: the first that has a step before it. */
+  replayFrom: number;
 }) {
   const n = steps.length;
   const walking = step != null;
@@ -293,12 +334,17 @@ function StepCarousel({
     if (t && typeof t.scrollTo === 'function')
       t.scrollTo({ left: i * t.clientWidth, behavior: smooth && !reduced() ? 'smooth' : 'auto' });
   };
-  const go = (i: number) => {
+  const go = (i: number, how?: StepHow) => {
     const k = Math.max(0, Math.min(n - 1, i));
     setView(k);
     scrollTo(k);
-    if (walking && k !== step) onStep(k);
+    if (walking && k !== step) {
+      if (how) onStep(k, how);
+      else onStep(k);
+    }
   };
+  // The move being made on the panel, while Next step or Replay changes shows the step's moves.
+  const moving = useStore(moveStore, (m) => m?.id ?? null);
 
   // Next / Back / Finish in the header move the walkthrough; bring that step into view.
   useEffect(() => {
@@ -375,7 +421,7 @@ function StepCarousel({
           <button
             type="button"
             // From step 0 the next step is the first, already in view.
-            onClick={() => go(starting ? view : view + 1)}
+            onClick={() => go(starting ? view : view + 1, 'next')}
             disabled={view === n - 1 && !starting}
             aria-label="Next step"
             className="h-7 w-7 shrink-0 rounded text-(--kys-muted) enabled:hover:text-(--kys-text) disabled:opacity-40"
@@ -434,15 +480,45 @@ function StepCarousel({
                 <StepText text={s.why} />
                 <div className="mt-2.5 flex flex-wrap gap-1.5 pl-9">
                   {Object.entries(s.set || {}).map(([id, v]) => (
-                    <Chip key={id} def={def} id={id} value={v} base={base} />
+                    <Chip
+                      key={id}
+                      def={def}
+                      id={id}
+                      value={v}
+                      base={base}
+                      now={state === 'now' && moving === id}
+                    />
                   ))}
                   {(s.unplug || []).map((p) => (
-                    <UnplugChip key={`-${p.join('>')}`} def={def} pair={p} base={base} />
+                    <UnplugChip
+                      key={`-${p.join('>')}`}
+                      def={def}
+                      pair={p}
+                      base={base}
+                      now={state === 'now' && moving === p[1]}
+                    />
                   ))}
                   {(s.cables || []).map((p) => (
-                    <CableChip key={p.join('>')} def={def} pair={p} base={base} />
+                    <CableChip
+                      key={p.join('>')}
+                      def={def}
+                      pair={p}
+                      base={base}
+                      now={state === 'now' && moving === p[1]}
+                    />
                   ))}
                 </div>
+                {state === 'now' && i >= replayFrom && ids.length > 0 && (
+                  <div className="mt-2 pl-9">
+                    <button
+                      type="button"
+                      onClick={() => onStep(i, 'replay')}
+                      className="text-[12.5px] text-(--kys-accent) underline underline-offset-2"
+                    >
+                      Replay changes
+                    </button>
+                  </div>
+                )}
               </div>
             </li>
           );
@@ -457,8 +533,8 @@ export interface LessonProps {
   preset: Preset;
   /** The step the panel is at, or `null` for the finished sound. */
   step: number | null;
-  /** Move the panel to a step, or `null` to finish. */
-  onStep: (k: number | null) => void;
+  /** Move the panel to a step, or `null` to finish; how it was asked for, where that matters. */
+  onStep: (k: number | null, how?: StepHow) => void;
   /** How far the signed-in user has got through this lesson, if they have started it. */
   mark?: LessonMark | null;
 }
@@ -485,8 +561,8 @@ function StartLine({
     <button
       type="button"
       onClick={() => onStep(START_STEP)}
-      onPointerEnter={() => highlightStore.set(ids)}
-      onPointerLeave={() => highlightStore.set(base)}
+      onPointerEnter={() => light(ids)}
+      onPointerLeave={() => light(base)}
       aria-current={now ? 'step' : undefined}
       title={now ? undefined : 'Set the panel to the Default patch'}
       className={`mb-3 flex w-full items-start gap-3 rounded-xl border px-3.5 py-2.5 text-left text-sm ${now ? 'border-(--kys-accent) bg-(--kys-raised)' : 'border-(--kys-line) bg-(--kys-surface) hover:border-(--kys-muted)'}`}
@@ -639,7 +715,7 @@ export function Lesson({ def, preset, step, onStep, mark = null }: LessonProps) 
                         {step < n - 1 ? (
                           <button
                             type="button"
-                            onClick={() => onStep(step + 1)}
+                            onClick={() => onStep(step + 1, 'next')}
                             className={primary}
                           >
                             Next step
@@ -674,6 +750,7 @@ export function Lesson({ def, preset, step, onStep, mark = null }: LessonProps) 
                   onStep={onStep}
                   base={base}
                   resetKey={preset.id}
+                  replayFrom={hasStart ? 0 : 1}
                 />
               )}
             </section>
@@ -691,8 +768,8 @@ export function Lesson({ def, preset, step, onStep, mark = null }: LessonProps) 
                     <li
                       key={i}
                       className="rounded-xl border border-(--kys-line) bg-(--kys-surface) p-3.5"
-                      onPointerEnter={() => highlightStore.set([t.id])}
-                      onPointerLeave={() => highlightStore.set(base)}
+                      onPointerEnter={() => light([t.id])}
+                      onPointerLeave={() => light(base)}
                     >
                       <button
                         type="button"

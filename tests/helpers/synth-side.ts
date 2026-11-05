@@ -6,6 +6,7 @@
  * @see components/app/synth/synth-page.tsx
  */
 
+import { vi } from 'vitest';
 import { fireEvent, screen } from '@testing-library/react';
 
 export type SideTab = 'Sounds' | 'Lesson' | 'Inspect' | 'Tutor';
@@ -64,4 +65,20 @@ export function tallScreen(height = 1000): void {
   ).happyDOM.setViewport({
     height,
   });
+}
+
+/**
+ * The visitor prefers reduced motion: loads, undos and a lesson step's moves (`f-step-moves`) are set at once. For page
+ * tests about where the panel lands rather than how it gets there. Restored by `vi.restoreAllMocks()`.
+ */
+export function reducedMotion(): void {
+  vi.spyOn(window, 'matchMedia').mockImplementation(
+    (query: string) =>
+      ({
+        matches: query === '(prefers-reduced-motion: reduce)',
+        media: query,
+        addEventListener: () => undefined,
+        removeEventListener: () => undefined,
+      }) as unknown as MediaQueryList
+  );
 }
