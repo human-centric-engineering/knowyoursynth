@@ -246,6 +246,20 @@ describe('POST', () => {
     expect(store.writes).toEqual([]);
   });
 
+  it('answers an owner removed between the check and the write with 400, and passes other errors on', async () => {
+    const create = store.client.externalLink.create;
+    store.client.externalLink.create = vi.fn(async () => {
+      throw Object.assign(new Error('fk'), { code: 'P2003' });
+    });
+    expect((await postLink(request('POST', '', video()))).status).toBe(400);
+    store.client.externalLink.create = vi.fn(async () => {
+      throw new Error('connection lost');
+    });
+    expect((await postLink(request('POST', '', video()))).status).toBe(500);
+    store.client.externalLink.create = create;
+    expect(mockLogAdminAction).not.toHaveBeenCalled();
+  });
+
   it('puts each new "ours" link last among its owner’s own', async () => {
     await create(video({ ours: true }));
     await create(video({ url: `https://youtu.be/${VIDEO2}`, ours: true }));
@@ -315,6 +329,87 @@ describe('PATCH', () => {
     expect(res.status).toBe(200);
     expect(store.writes).toEqual([]);
     expect(store.links[0].views).toBe(99);
+    expect(mockLogAdminAction).not.toHaveBeenCalled();
+  });
+
+  it('changes kind, title and rating together, and audits each', async () => {
+    const row = store.insert({
+      songId: 'kraftwerk-autobahn',
+      url: 'https://example.com/o',
+      provider: 'other',
+      title: 'Old',
+      rating: 2,
+    });
+    const id = String(row.id);
+    const res = await patchLink(
+      request('PATCH', `/${id}`, { kind: 'original', title: 'The original', rating: null }),
+      ctx(id)
+    );
+    expect(res.status).toBe(200);
+    expect(store.links[0]).toMatchObject({ kind: 'original', title: 'The original', rating: null });
+    expect(audits()[0].changes).toEqual({
+      kind: { from: 'demo', to: 'original' },
+      title: { from: 'Old', to: 'The original' },
+      rating: { from: 2, to: null },
+    });
+  });
+
+  it('marks a song’s or a patch’s link ours at the end of that owner’s own, and unmarks keeping its order', async () => {
+    store.insert({
+      songId: 'kraftwerk-autobahn',
+      url: 'https://example.com/a',
+      provider: 'other',
+      title: 'A',
+      ours: true,
+      order: 2,
+    });
+    const song = store.insert({
+      songId: 'kraftwerk-autobahn',
+      url: 'https://example.com/b',
+      provider: 'other',
+      title: 'B',
+    });
+    const sound = store.insert({
+      soundId: 'snd1',
+      url: 'https://example.com/c',
+      provider: 'other',
+      title: 'C',
+    });
+    const artist = store.insert({
+      artistId: 'aphex-twin',
+      url: 'https://example.com/d',
+      provider: 'other',
+      title: 'D',
+    });
+    for (const r of [song, sound, artist])
+      await patchLink(request('PATCH', `/${String(r.id)}`, { ours: true }), ctx(String(r.id)));
+    expect(store.links.slice(1).map((l) => [l.ours, l.order])).toEqual([
+      [true, 3],
+      [true, 0],
+      [true, 0],
+    ]);
+    await patchLink(request('PATCH', `/${String(song.id)}`, { ours: false }), ctx(String(song.id)));
+    expect(store.links[1]).toMatchObject({ ours: false, order: 3 });
+  });
+
+  it('answers a link removed mid-save with 404, and passes an unexpected database error on', async () => {
+    const row = store.insert({
+      instrumentId: MINIMOOG,
+      url: 'https://example.com/a',
+      provider: 'other',
+      title: 'A',
+    });
+    const id = String(row.id);
+    const update = store.client.externalLink.update;
+    store.client.externalLink.update = vi.fn(async () => {
+      throw Object.assign(new Error('gone'), { code: 'P2025' });
+    });
+    expect((await patchLink(request('PATCH', `/${id}`, { title: 'B' }), ctx(id))).status).toBe(404);
+    store.client.externalLink.update = vi.fn(async () => {
+      throw new Error('connection lost');
+    });
+    expect((await patchLink(request('PATCH', `/${id}`, { title: 'B' }), ctx(id))).status).toBe(500);
+    store.client.externalLink.update = update;
     expect(mockLogAdminAction).not.toHaveBeenCalled();
   });
 
@@ -395,6 +490,29 @@ describe('GET one and DELETE', () => {
     ]);
     expect((await getLink(request('GET', `/${id}`), ctx(id))).status).toBe(404);
     expect((await deleteLink(request('DELETE', `/${id}`), ctx(id))).status).toBe(404);
+  });
+});
+
+describe('DELETE races', () => {
+  it('answers a link removed by someone else first with 404, passes other errors on, and audits neither', async () => {
+    const row = store.insert({
+      instrumentId: MINIMOOG,
+      url: 'https://example.com/a',
+      provider: 'other',
+      title: 'A',
+    });
+    const id = String(row.id);
+    const remove = store.client.externalLink.delete;
+    store.client.externalLink.delete = vi.fn(async () => {
+      throw Object.assign(new Error('gone'), { code: 'P2025' });
+    });
+    expect((await deleteLink(request('DELETE', `/${id}`), ctx(id))).status).toBe(404);
+    store.client.externalLink.delete = vi.fn(async () => {
+      throw new Error('connection lost');
+    });
+    expect((await deleteLink(request('DELETE', `/${id}`), ctx(id))).status).toBe(500);
+    store.client.externalLink.delete = remove;
+    expect(mockLogAdminAction).not.toHaveBeenCalled();
   });
 });
 

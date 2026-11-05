@@ -134,8 +134,9 @@ the same PR**, and each row names what deletes it.
   `f-pattern-library` t-122), the databank's (thirteen models), the synth
   suggestions' (one model and one enum, `f-databank` t-37), user sounds' (one model,
   `f-my-sounds` s1), user patterns' (one model, `f-step-sequencer` t-81), reports about shared sounds (one model and two enums, `f-sharing` h4), user preferences' (two models, s3), lesson progress and favourites' (two
-  models, s4), synth profiles' (two models, `f-profiles` r1) and the synths owned and wanted (one
-  model and one enum, r2) instead of none, under a `FORK` comment.
+  models, s4), synth profiles' (two models, `f-profiles` r1), the synths owned and wanted (one
+  model and one enum, r2) and videos and links (one model and two enums, `f-videos-and-links`
+  t-179) instead of none, under a `FORK` comment.
 - **Why:** `app.prisma` is where CUSTOMIZATION.md tells a fork to put its models, and the test's
   own header says a fork with app models pins that row rather than deleting it, so a stray extra
   declaration still fails.
