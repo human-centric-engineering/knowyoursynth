@@ -668,6 +668,11 @@ describe('GET list', () => {
     expect(await titles('?provider=youtube')).toEqual(['2']);
     expect(await titles('?ours=false')).toEqual(['4', '3', '1']);
     expect(await titles('?instrument=unknown-synth')).toEqual([]);
+    expect(await titles('?owner=instrument')).toEqual(['2', '1']);
+    expect(await titles('?owner=song')).toEqual(['3']);
+    expect(await titles('?owner=sound&ours=false')).toEqual(['4']);
+    expect(await titles('?owner=artist')).toEqual([]);
+    expect(await titles(`?owner=instrument&instrument=${MINIMOOG}`)).toEqual(['2', '1']);
 
     const paged = await json(await listLinks(getRequest('?limit=2&page=2')));
     expect(paged.data?.map((l) => l.title)).toEqual(['2', '1']);
@@ -677,6 +682,8 @@ describe('GET list', () => {
   it('refuses two owner filters at once, or an id not of its kind', async () => {
     expect((await listLinks(getRequest(`?instrument=${MINIMOOG}&song=x`))).status).toBe(400);
     expect((await listLinks(getRequest('?sound=no-slash'))).status).toBe(400);
+    expect((await listLinks(getRequest(`?owner=song&instrument=${MINIMOOG}`))).status).toBe(400);
+    expect((await listLinks(getRequest('?owner=patch'))).status).toBe(400);
   });
 });
 
