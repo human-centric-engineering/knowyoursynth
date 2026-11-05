@@ -36,17 +36,18 @@ export interface LineageProps {
 export function Lineage({ synth, lineage: l, sounds, open, onClose, onSelect }: LineageProps) {
   const { ref, close } = useDialog(open);
   const [tab, setTab] = useState<TabId>('timeline');
-  // Records whose videos are open: their rows take the full width, so the cards have room.
+  // Records whose videos are open, by row key: their rows take the full width, so the cards have room. Keyed by synth
+  // as the rows are, so a record open on one synth's list is not drawn wide on the next before the reset below runs.
   const [watching, setWatching] = useState<ReadonlySet<string>>(new Set());
   useEffect(() => {
     setTab('timeline');
     setWatching(new Set());
   }, [synth.id]);
-  const watch = (song: string, on: boolean) =>
+  const watch = (row: string, on: boolean) =>
     setWatching((was) => {
       const next = new Set(was);
-      if (on) next.add(song);
-      else next.delete(song);
+      if (on) next.add(row);
+      else next.delete(row);
       return next;
     });
 
@@ -172,11 +173,12 @@ export function Lineage({ synth, lineage: l, sounds, open, onClose, onSelect }: 
                   {heard.map((h) => {
                     const soundId = h.sound;
                     const sound = soundName(soundId);
+                    const row = `${synth.id}:${h.song}`;
                     return (
                       <li
                         // Per synth, so a record on two synths' lists opens closed on the next.
-                        key={`${synth.id}:${h.song}`}
-                        className={`flex flex-col rounded-xl border border-(--kys-line) bg-(--kys-ground) p-3.5 ${watching.has(h.song) ? 'sm:col-span-2' : ''}`}
+                        key={row}
+                        className={`flex flex-col rounded-xl border border-(--kys-line) bg-(--kys-ground) p-3.5 ${watching.has(row) ? 'sm:col-span-2' : ''}`}
                       >
                         <div className="flex items-baseline justify-between gap-3">
                           <p className="min-w-0 leading-snug font-semibold">{h.who}</p>
@@ -227,7 +229,7 @@ export function Lineage({ synth, lineage: l, sounds, open, onClose, onSelect }: 
                           id={h.song}
                           summary={h.links}
                           label="Watch and listen"
-                          onOpenChange={(on) => watch(h.song, on)}
+                          onOpenChange={(on) => watch(row, on)}
                           className="mt-2.5"
                         />
                       </li>
