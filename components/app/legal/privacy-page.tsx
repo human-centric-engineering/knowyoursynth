@@ -21,13 +21,15 @@ import { getAppSubjectSources } from '@/lib/privacy/subject-source-registry';
  * **Who else handles it** is read from the code: the tutor's provider is whichever the admin configures (the agent has
  * none of its own, `lib/app/tutor/agent.ts`); Brave receives `web_search`'s query (`lib/app/tutor/web-search.ts`); the
  * embedding provider receives `search_databank`'s query when the meaning layer is set up (`lib/app/bank/knowledge.ts`,
- * OpenAI in `.context/app/tutor.md`'s setup); Resend sends email (`lib/email/client.ts`). Google sign-in, Sentry and
+ * OpenAI in `.context/app/tutor.md`'s setup); Resend sends email (`lib/email/client.ts`); the five embed players load
+ * only when a video is pressed (`lib/app/csp.ts`, `components/app/links/link-card.tsx`), and the pictures before them
+ * come from the providers' image hosts (`safeThumbnailUrl`, `lib/app/links/providers.ts`). Google sign-in, Sentry and
  * analytics are the platform's and switch on only when configured, so each says so and leaves the fact to the owner.
  *
  * Facts only the owner has are `<OwnerField>`s; the f-launch legal review fills them in.
  */
 
-export const PRIVACY_UPDATED = '19 October 2026';
+export const PRIVACY_UPDATED = '5 November 2026';
 
 const description = `What ${BRAND.name} keeps about you, what is public, who else handles it, and how to download or delete it.`;
 
@@ -76,6 +78,10 @@ export default function PrivacyPolicyPage() {
           <li>
             When you ask the tutor something, your message and the panel you have open go to an AI
             provider to be answered. A web search the tutor makes for you goes to Brave.
+          </li>
+          <li>
+            A video or recording on a synth&apos;s page plays from YouTube, Vimeo, Spotify, Bandcamp
+            or SoundCloud, and nothing of its player loads until you press play.
           </li>
           <li>Analytics run only if you accept optional cookies.</li>
           <li>
@@ -145,9 +151,23 @@ export default function PrivacyPolicyPage() {
           your username, your links and your published patches, and your owned and wanted synths
           only if you switch each list on as well.
         </p>
+        <p>Links to your channels open the other site in a new tab.</p>
+      </LegalSection>
+
+      <LegalSection title="Videos and recordings" id="videos">
         <p>
-          Links to your channels open the other site in a new tab. Nothing from YouTube, Spotify,
-          Instagram or Bandcamp is loaded on {BRAND.name} itself.
+          A synth&apos;s page, and its instrument&apos;s page in the databank, list videos and
+          recordings about it from YouTube, Vimeo, Spotify, Bandcamp and SoundCloud. The list stays
+          closed until you open it. Open, each shows its title and a picture, which your browser
+          fetches from that service&apos;s image server without saying which page you are on.
+        </p>
+        <p>
+          <strong>Nothing else from the service loads until you press play.</strong> Then its player
+          loads in the page, from youtube-nocookie.com (YouTube&apos;s privacy-enhanced player),
+          player.vimeo.com (asked not to track you), open.spotify.com, bandcamp.com or
+          w.soundcloud.com. From then on that service can see you are watching or listening, may set
+          its own cookies, and its own privacy policy applies to what it collects. A plain link
+          opens the other site in a new tab.
         </p>
       </LegalSection>
 
@@ -229,6 +249,10 @@ export default function PrivacyPolicyPage() {
           <li>
             <strong>Resend</strong> sends account emails (confirming your address and resetting your
             password) and passes on what you send through the contact form.
+          </li>
+          <li>
+            <strong>YouTube, Vimeo, Spotify, Bandcamp and SoundCloud</strong> play a video or
+            recording when you press play, as <a href="#videos">above</a>.
           </li>
           <li>
             <strong>Google</strong>, if you choose to sign in with it.{' '}

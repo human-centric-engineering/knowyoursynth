@@ -14,6 +14,7 @@ import { prisma } from '@/lib/db/client';
 import { orderLinks } from '@/lib/app/links/order';
 import {
   embedUrl,
+  LINK_KINDS,
   thumbnailFor,
   type LinkKind,
   type LinkProvider,
@@ -33,6 +34,13 @@ export interface PublicLink {
   embedUrl: string | null;
   ours: boolean;
   views: number | null;
+}
+
+/** What a section says before it is opened: how many links there are, and of which kinds. */
+export interface LinkSummary {
+  count: number;
+  /** The kinds among them, in `LINK_KINDS` order. */
+  kinds: LinkKind[];
 }
 
 const PUBLIC_TARGETS = ['instrument', 'synth', 'sound', 'song', 'artist'] as const;
@@ -177,4 +185,20 @@ export async function listPublicLinks(
       }))
     : onePerUrl(rows);
   return orderLinks(ranked, random).map(toPublicLink);
+}
+
+/**
+ * How many links a target has, and of which kinds: the same links `listPublicLinks` would list (one per URL, none for
+ * a target it does not serve), without ordering them.
+ */
+export async function summarisePublicLinks(query: PublicLinkQuery): Promise<LinkSummary> {
+  const target = await whereFor(query);
+  if (!target) return { count: 0, kinds: [] };
+  const rows = onePerUrl(
+    await prisma.externalLink.findMany({ where: target.where, select: PUBLIC_SELECT })
+  );
+  return {
+    count: rows.length,
+    kinds: LINK_KINDS.filter((kind) => rows.some((row) => row.kind === kind)),
+  };
 }

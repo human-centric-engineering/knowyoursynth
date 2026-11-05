@@ -19,8 +19,10 @@ import type {
   MakerDetail,
   SongDetail,
 } from '@/lib/app/bank/read';
+import type { LinkSummary } from '@/lib/app/links/read';
 import { bankHref } from '@/components/app/bank/routes';
 import { SuggestForm } from '@/components/app/bank/suggest-form';
+import { LinksSection } from '@/components/app/links/links-section';
 import { soundHref, synthHref } from '@/components/app/synth/routes';
 
 const KIND: Record<BankSong['kind'], string> = {
@@ -439,7 +441,16 @@ export function SongPage({ d, names }: { d: SongDetail; names: BankNames }) {
   );
 }
 
-export function InstrumentPage({ d, names }: { d: InstrumentDetail; names: BankNames }) {
+export function InstrumentPage({
+  d,
+  names,
+  links,
+}: {
+  d: InstrumentDetail;
+  names: BankNames;
+  /** Its videos and links, counted: the section reads the list when it is opened (`f-videos-and-links`). */
+  links: LinkSummary;
+}) {
   const i = d.instrument;
   return (
     <article>
@@ -463,6 +474,7 @@ export function InstrumentPage({ d, names }: { d: InstrumentDetail; names: BankN
           <AppLinks synths={d.synths} names={names} />
         </div>
       )}
+      <LinksSection target="instrument" id={i.id} summary={links} className="mt-6" />
       {d.people.length > 0 && (
         <Section title="The people behind it">
           <PeopleChips tab="makers" people={d.people} />

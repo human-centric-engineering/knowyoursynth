@@ -5,6 +5,7 @@ import { ArtistPage, InstrumentPage, MakerPage, SongPage } from '@/components/ap
 import { isBankTab } from '@/components/app/bank/routes';
 import { readBank, readNames } from '@/components/app/bank/load';
 import { detailFrom } from '@/lib/app/bank/read';
+import { summarisePublicLinks } from '@/lib/app/links/read';
 import type { Bank } from '@/lib/app/bank/data';
 
 /**
@@ -71,7 +72,8 @@ export default async function BankRowRoute({ params }: Props) {
     case 'instruments': {
       const d = detailFrom(bank, 'instruments', id);
       if (!d) notFound();
-      return <InstrumentPage d={d} names={names} />;
+      const links = await summarisePublicLinks({ target: 'instrument', id });
+      return <InstrumentPage d={d} names={names} links={links} />;
     }
   }
 }

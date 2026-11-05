@@ -17,6 +17,7 @@ import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
 import { designFromDb, type SynthDesign } from '@/lib/app/catalogue/designs';
 import { getHeardOn } from '@/lib/app/bank/read';
+import { summarisePublicLinks, type LinkSummary } from '@/lib/app/links/read';
 import {
   LimitSchema,
   LineageEntrySchema,
@@ -59,6 +60,11 @@ export interface SynthDetail {
     /** "What is not modelled": this synth's intro and entries, then the entries true of every panel. */
     limits: { intro: string | null; items: Limit[]; shared: Limit[] };
   };
+  /**
+   * Its databank instruments' videos and links, counted (`f-videos-and-links`): what the section under the panel
+   * says before it is opened. The list itself is `GET /api/v1/links?synth=`, read when it is.
+   */
+  links: LinkSummary;
 }
 
 const synthColumns = {
@@ -132,7 +138,7 @@ export async function listSoundNames(): Promise<Record<string, Record<string, st
 export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
   const def = getSynthDef(id);
   if (!def) return null;
-  const [row, noteRows, heardOn] = await Promise.all([
+  const [row, noteRows, heardOn, links] = await Promise.all([
     prisma.synth.findFirst({
       where: { id, listed: true },
       select: {
@@ -148,6 +154,7 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
     }),
     // "Heard on" is the databank's, joined into the lineage as the contract shapes it (`f-databank`).
     getHeardOn(id),
+    summarisePublicLinks({ target: 'synth', id }),
   ]);
   if (!row) return null;
   const { sounds: soundRows, lineage: lineageRow, ...synthRow } = row;
@@ -230,5 +237,5 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
       (n.synthId ? notes.limits.items : notes.limits.shared).push({ title: n.title, text: n.text });
   }
 
-  return { synth, sounds, lineage, notes };
+  return { synth, sounds, lineage, notes, links };
 }
