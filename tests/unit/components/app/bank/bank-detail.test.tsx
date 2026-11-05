@@ -6,7 +6,7 @@
  * @see components/app/bank/bank-detail.tsx
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import {
   ArtistPage,
@@ -19,6 +19,9 @@ import {
 import { detailFrom } from '@/lib/app/bank/read';
 import { songsOn } from '@/lib/app/bank/joins';
 import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
+
+// The section reads its list when drawn; that read is the section's own test's (`links-section.test.tsx`).
+vi.mock('@/lib/api/client', () => ({ apiClient: { get: vi.fn(async () => []) } }));
 
 const bank = loadBankData();
 const SYNTHS = [
@@ -42,11 +45,13 @@ const hrefsOf = (name: string | RegExp) => [
   ...new Set(screen.getAllByRole('link', { name }).map((l) => l.getAttribute('href'))),
 ];
 
+const NO_LINKS = { count: 0, kinds: [] };
+
 describe('ArtistPage', () => {
   const d = must(detailFrom(bank, 'artists', 'wendy-carlos'));
 
   it('heads the page with the name, and lists every record', () => {
-    render(<ArtistPage d={d} names={names} />);
+    render(<ArtistPage d={d} names={names} links={NO_LINKS} />);
     expect(screen.getByRole('heading', { level: 2, name: 'Wendy Carlos' })).toBeTruthy();
     expect(d.songs.length).toBeGreaterThan(1);
     const records = screen.getByRole('heading', { name: `Records (${d.songs.length})` });
@@ -60,7 +65,7 @@ describe('ArtistPage', () => {
   });
 
   it('links a sound in the style of a record to its synth, opening with that sound', () => {
-    render(<ArtistPage d={d} names={names} />);
+    render(<ArtistPage d={d} names={names} links={NO_LINKS} />);
     expect(hrefsOf('Load a patch in this style on the Model D: Baroque Line Voice')).toEqual([
       '/synths/model-d?sound=baroque-line-voice',
     ]);
@@ -71,12 +76,12 @@ describe('ArtistPage', () => {
 
   it('offers no sound on a synth that is not listed, or that the library does not have', () => {
     const fewer = namesFrom(bank, [SYNTHS[0]], { 'model-d': {} });
-    render(<ArtistPage d={d} names={fewer} />);
+    render(<ArtistPage d={d} names={fewer} links={NO_LINKS} />);
     expect(screen.queryAllByRole('link', { name: /^Load a patch/ })).toEqual([]);
   });
 
   it('links each instrument they used to its page', () => {
-    render(<ArtistPage d={d} names={names} />);
+    render(<ArtistPage d={d} names={names} links={NO_LINKS} />);
     const section = screen.getByRole('heading', { name: 'Synths' }).parentElement as HTMLElement;
     expect(
       within(section)
@@ -91,7 +96,7 @@ describe('ArtistPage credits and groups', () => {
     const d = must(detailFrom(bank, 'artists', 'christopher-franke'));
     const record = d.songs.find((s) => s.id === 'tangerine-dream-phaedra');
     expect(record?.artists).toEqual(['tangerine-dream']);
-    render(<ArtistPage d={d} names={names} />);
+    render(<ArtistPage d={d} names={names} links={NO_LINKS} />);
     const card = screen.getByRole('link', { name: record?.title ?? '' }).closest('li');
     expect(within(card as HTMLElement).getByRole('link', { name: 'Tangerine Dream' })).toBeTruthy();
   });
@@ -102,7 +107,7 @@ describe('ArtistPage credits and groups', () => {
       ...d,
       members: [{ id: 'kraftwerk', name: 'Kraftwerk' }],
     };
-    render(<ArtistPage d={both} names={names} />);
+    render(<ArtistPage d={both} names={names} links={NO_LINKS} />);
     const members = screen.getByRole('heading', { name: 'Members in the databank' })
       .parentElement as HTMLElement;
     const groups = screen.getByRole('heading', { name: 'Member of' }).parentElement as HTMLElement;
@@ -120,7 +125,6 @@ describe('ArtistPage credits and groups', () => {
 });
 
 /** No videos or links: the section is not drawn. */
-const NO_LINKS = { count: 0, kinds: [] };
 
 describe('InstrumentPage', () => {
   const d = must(detailFrom(bank, 'instruments', 'moog-minimoog'));
@@ -204,7 +208,7 @@ describe('MakerPage', () => {
 describe('SongPage', () => {
   it("names the work's kind and year, links its artists, and every instrument its parts name", () => {
     const d = must(detailFrom(bank, 'songs', 'donna-summer-i-feel-love'));
-    render(<SongPage d={d} names={names} />);
+    render(<SongPage d={d} names={names} links={NO_LINKS} />);
     expect(screen.getByRole('heading', { level: 2, name: d.song.title })).toBeTruthy();
     expect(d.artists.length).toBeGreaterThan(0);
     for (const a of d.artists) expect(hrefsOf(a.name)).toEqual([`/bank/artists/${a.id}`]);
@@ -235,5 +239,31 @@ describe('Welcome', () => {
     render(<Welcome tab="artists" names={without} />);
     expect(screen.queryByRole('link', { name: 'Kraftwerk' })).toBeNull();
     expect(screen.getAllByRole('link')).toHaveLength(3);
+  });
+});
+
+describe('song and artist pages: videos and links', () => {
+  const some = { count: 2, kinds: ['lesson' as const, 'original' as const] };
+  const head = () => screen.queryByRole('button', { name: /Videos and links/ });
+
+  it("shows a record's videos and links, counted, and none when it has none", () => {
+    const d = must(detailFrom(bank, 'songs', 'kraftwerk-autobahn'));
+    const { unmount } = render(<SongPage d={d} names={names} links={some} />);
+    expect(head()?.textContent).toContain('lessons and originals');
+    expect(head()?.textContent).toContain('2');
+    unmount();
+
+    render(<SongPage d={d} names={names} links={NO_LINKS} />);
+    expect(head()).toBeNull();
+  });
+
+  it("shows an artist's videos and links, counted, and none when they have none", () => {
+    const d = must(detailFrom(bank, 'artists', 'kraftwerk'));
+    const { unmount } = render(<ArtistPage d={d} names={names} links={some} />);
+    expect(head()?.textContent).toContain('2');
+    unmount();
+
+    render(<ArtistPage d={d} names={names} links={NO_LINKS} />);
+    expect(head()).toBeNull();
   });
 });

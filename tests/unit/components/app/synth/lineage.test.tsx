@@ -18,7 +18,11 @@ import { bankDb } from '@/tests/helpers/bank-db';
 // The videos section's count is the links read layer's, tested there (`tests/unit/lib/app/links/read.test.ts`).
 vi.mock('@/lib/app/links/read', () => ({
   summarisePublicLinks: vi.fn(async () => ({ count: 0, kinds: [] })),
+  summariseSoundLinks: vi.fn(async () => ({})),
+  summariseSongLinks: vi.fn(async () => new Map()),
 }));
+const get = vi.hoisted(() => vi.fn());
+vi.mock('@/lib/api/client', () => ({ apiClient: { get } }));
 vi.mock('@/lib/db/client', () => ({
   prisma: {
     synth: { findFirst: vi.fn() },
@@ -176,6 +180,42 @@ describe('Lineage', () => {
     setup({ heard: [{ ...first, sound: 'not-in-the-library' }] });
     fireEvent.click(tab(/Heard on/));
     expect(screen.queryByRole('button', { name: /^Load a patch/ })).toBeNull();
+  });
+
+  it('gives a record with links a Watch and listen button, which opens its cards across the row', async () => {
+    const [first, second] = lineage.heard ?? [];
+    get.mockResolvedValue([
+      {
+        id: 'orig',
+        url: 'https://example.com/original',
+        provider: 'other',
+        kind: 'original',
+        title: `${first.what}, the record`,
+        thumbnailUrl: null,
+        embedUrl: null,
+        ours: false,
+        views: null,
+        via: null,
+      },
+    ]);
+    setup({ heard: [{ ...first, links: { count: 1, kinds: ['original'] } }, second] });
+    fireEvent.click(tab(/Heard on/));
+    const rows = within(screen.getByRole('tabpanel')).getAllByRole('listitem');
+
+    const watch = within(rows[0]).getByRole('button', { name: /Watch and listen/ });
+    // A record with no links has no button.
+    expect(within(rows[1]).queryByRole('button', { name: /Watch and listen/ })).toBeNull();
+    expect(get).not.toHaveBeenCalled();
+
+    fireEvent.click(watch);
+
+    expect(await within(rows[0]).findByText(`${first.what}, the record`)).toBeTruthy();
+    expect(get).toHaveBeenCalledWith('/api/v1/links', { params: { song: first.song } });
+    expect(rows[0].className).toContain('sm:col-span-2');
+    expect(rows[1].className).not.toContain('sm:col-span-2');
+
+    fireEvent.click(watch);
+    expect(rows[0].className).not.toContain('sm:col-span-2');
   });
 
   it('has no Heard on tab when there are neither records nor players', () => {

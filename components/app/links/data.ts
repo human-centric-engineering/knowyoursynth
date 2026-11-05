@@ -14,8 +14,11 @@ import type { LinkSummary } from '@/lib/app/links/read';
 
 export const LINKS_API = '/api/v1/links';
 
-/** What a section lists the links of: a synth (its instruments' links together) or one databank instrument. */
-export type LinksTarget = 'synth' | 'instrument';
+/**
+ * What a list is the links of: a synth (its instruments' links together), a databank instrument, song or artist, or a
+ * library sound (`<synth>/<slug>`: its own, then its inspiration's).
+ */
+export type LinksTarget = 'synth' | 'instrument' | 'sound' | 'song' | 'artist';
 
 const https = z
   .string()
@@ -47,6 +50,11 @@ export const PublicLinkSchema = z.object({
   embedUrl: embed.nullable().catch(null),
   ours: z.boolean(),
   views: z.number().nullable(),
+  // On a library sound's list, the song or artist one is about (t-183); anything else is the target's own.
+  via: z
+    .object({ kind: z.enum(['song', 'artist']), id: z.string(), name: z.string() })
+    .nullable()
+    .catch(null),
 });
 export type PublicLinkView = z.infer<typeof PublicLinkSchema>;
 

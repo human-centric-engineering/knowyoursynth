@@ -2211,6 +2211,8 @@ function Synth({
       />
     </div>
   );
+  // A library sound's videos and links, its own and its inspiration's; none for a sound of the user's own.
+  const shownLinks = ownLesson || !shown ? undefined : detail.soundLinks[shown.id];
   const lesson = shown ? (
     <Lesson
       def={def}
@@ -2218,6 +2220,7 @@ function Synth({
       step={step}
       onStep={setStep}
       mark={ownLesson ? null : (progress.marks?.get(shown.id) ?? null)}
+      links={shownLinks}
     />
   ) : (
     <p className="text-sm text-(--kys-muted)">
@@ -2942,6 +2945,7 @@ function Synth({
                 inspector={inspector}
                 effects={<FxRack fx={fx} onChange={setFx} inCard />}
                 mark={ownLesson || !shown ? null : (progress.marks?.get(shown.id) ?? null)}
+                links={shownLinks}
               />
             )}
             {!small && (

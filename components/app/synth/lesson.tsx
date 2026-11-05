@@ -22,6 +22,8 @@ import { START_STEP, hasStartStep, startStep } from '@/lib/app/synths/default-pa
 import { focusStore, highlightStore, moveStore, useStore } from '@/components/app/synth/stores';
 import { LevelDots, markText, reachedStep } from '@/components/app/synth/library';
 import type { LessonMark } from '@/components/app/synth/progress';
+import { LinksToggle } from '@/components/app/links/links-toggle';
+import type { LinkSummary } from '@/lib/app/links/read';
 
 /**
  * How a step was asked for, where it matters (`f-step-moves` t-178): Next step shows the step's moves being made, and
@@ -537,6 +539,8 @@ export interface LessonProps {
   onStep: (k: number | null, how?: StepHow) => void;
   /** How far the signed-in user has got through this lesson, if they have started it. */
   mark?: LessonMark | null;
+  /** A library sound's videos and links, counted: its own and its inspiration's (`f-videos-and-links` t-183). */
+  links?: LinkSummary;
 }
 
 /**
@@ -578,7 +582,7 @@ function StartLine({
   );
 }
 
-export function Lesson({ def, preset, step, onStep, mark = null }: LessonProps) {
+export function Lesson({ def, preset, step, onStep, mark = null, links }: LessonProps) {
   const n = preset.steps.length;
   const walking = step != null;
   // Where the walkthrough starts: step 0, the Default patch, where the lesson has it.
@@ -693,6 +697,14 @@ export function Lesson({ def, preset, step, onStep, mark = null }: LessonProps) 
                   </button>
                 )}
               </div>
+              <LinksToggle
+                key={preset.id}
+                target="sound"
+                id={`${def.id}/${preset.id}`}
+                summary={links}
+                label="Videos and links"
+                className="mt-4"
+              />
             </section>
           )}
 
