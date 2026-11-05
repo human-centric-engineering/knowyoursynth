@@ -60,6 +60,7 @@
 export const appOwnModules: readonly string[] = [
   'lib/app/bank/',
   'lib/app/catalogue/',
+  'lib/app/links/',
   'lib/app/midi/',
   'lib/app/patterns/',
   'lib/app/profile/',
