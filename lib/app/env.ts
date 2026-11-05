@@ -58,4 +58,12 @@ export const appEnvSchema = z.object({
     (value) => (value === '' ? undefined : value),
     z.string().min(1).optional()
   ),
+  /* Know Your Synth: YouTube view and like counts for videos and links (`f-videos-and-links` t-180), the popularity
+     their order weighs. Optional: with none, links are ordered by an admin's rating and the stats job does nothing.
+     Server-side only; it needs the YouTube Data API v3 enabled on its Google Cloud project. Blank means unset, as
+     above. See .context/app/links.md. */
+  YOUTUBE_API_KEY: z.preprocess(
+    (value) => (value === '' ? undefined : value),
+    z.string().min(1).optional()
+  ),
 });

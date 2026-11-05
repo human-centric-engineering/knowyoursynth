@@ -7,8 +7,11 @@
  *   the caller, and a URL the parser refuses is refused with its reason.
  * - **One link per URL per owner.** A second is refused with 409 (the table's unique indexes decide it).
  * - **The owner is set at create and never changes.** To move a link, delete it and add it to the other owner.
+ * - **What the provider says is read on create and on a new URL** (`details.ts`, `stats.ts`): the picture, a
+ *   Bandcamp embed id, YouTube's counts. A create with no title takes the provider's; with none from there either it
+ *   is refused. A provider that does not answer fails nothing: the link is saved without what it would have said.
  * - **A new URL drops what was read from the old one** (thumbnail, views, likes, when they were read): they described
- *   a different video.
+ *   a different video. The admin's title stays.
  * - **A link marked ours goes to the end of its owner's own videos**; unmarking keeps its stored position, unused.
  * - **A save that changes nothing writes nothing**, and says so, so the route audits nothing.
  * - **A reorder names every one of the owner's own videos, once**, or it is refused and nothing moves. One deleted or
@@ -20,6 +23,8 @@ import { prisma } from '@/lib/db/client';
 import { ConflictError, NotFoundError, ValidationError } from '@/lib/api/errors';
 import { hasPrismaCode } from '@/lib/app/synths/lib/prisma-errors';
 import { paginationQuerySchema } from '@/lib/validations/common';
+import { resolveLinkDetails } from '@/lib/app/links/details';
+import { statsForVideo } from '@/lib/app/links/stats';
 import {
   embedUrl,
   LINK_KINDS,
@@ -27,7 +32,7 @@ import {
   parseLinkUrl,
   thumbnailFor,
 } from '@/lib/app/links/providers';
-import type { LinkKind, LinkProvider } from '@/lib/app/links/providers';
+import type { LinkKind, LinkProvider, ParsedLink } from '@/lib/app/links/providers';
 import {
   columnsOf,
   OWNER_INCLUDE,
@@ -49,7 +54,8 @@ export const LinkCreateSchema = z.object({
   owner: OwnerRefSchema,
   url: UrlSchema,
   kind: z.enum(LINK_KINDS),
-  title: TitleSchema,
+  /** Optional: with none, the provider's title is used. */
+  title: TitleSchema.optional(),
   ours: z.boolean().default(false),
   rating: RatingSchema.default(null),
 });
@@ -153,14 +159,41 @@ export function auditFields(link: AdminLink): Record<string, unknown> {
   };
 }
 
-function parseOrRefuse(url: string): {
-  url: string;
-  provider: LinkProvider;
-  providerId: string | null;
-} {
+function parseOrRefuse(url: string): ParsedLink {
   const parsed = parseLinkUrl(url);
   if (!parsed.ok) throw new ValidationError(parsed.problem, { url: parsed.problem });
   return parsed.link;
+}
+
+/** What is read from a link's provider and stored with it, beside the provider's title. */
+interface ReadFromProvider {
+  title: string | null;
+  columns: {
+    providerId: string | null;
+    thumbnailUrl: string | null;
+    views: number | null;
+    likes: number | null;
+    statsAt: Date | null;
+  };
+}
+
+/** Ask the link's provider about it. Never throws: a provider that does not answer leaves its columns empty. */
+async function readFromProvider(link: ParsedLink): Promise<ReadFromProvider> {
+  const [details, stats] = await Promise.all([
+    resolveLinkDetails(link),
+    link.provider === 'youtube' && link.providerId ? statsForVideo(link.providerId) : null,
+  ]);
+  return {
+    title: details?.title ?? null,
+    columns: {
+      // Bandcamp's id is only on its page; every other provider's came from the URL.
+      providerId: link.provider === 'bandcamp' ? (details?.providerId ?? null) : link.providerId,
+      thumbnailUrl: details?.thumbnailUrl ?? null,
+      views: stats?.views ?? null,
+      likes: stats?.likes ?? null,
+      statsAt: stats ? new Date() : null,
+    },
+  };
 }
 
 async function ownerOrRefuse(ref: OwnerRef): Promise<OwnerColumns> {
@@ -215,14 +248,21 @@ export async function getAdminLink(id: string): Promise<AdminLink | null> {
 export async function createLink(input: LinkCreate): Promise<AdminLink> {
   const parsed = parseOrRefuse(input.url);
   const owner = await ownerOrRefuse(input.owner);
+  const read = await readFromProvider(parsed);
+  const title = input.title ?? read.title;
+  if (!title) {
+    const problem = 'Its title could not be read from the link: give it one';
+    throw new ValidationError(problem, { title: problem });
+  }
   const order = input.ours ? await nextOursOrder(owner) : 0;
   try {
     const row = await prisma.externalLink.create({
       data: {
         ...owner,
         ...parsed,
+        ...read.columns,
         kind: input.kind,
-        title: input.title,
+        title,
         ours: input.ours,
         order,
         rating: input.rating,
@@ -251,7 +291,8 @@ export async function updateLink(
   if (input.url !== undefined) {
     const parsed = parseOrRefuse(input.url);
     if (parsed.url !== row.url) {
-      Object.assign(data, parsed, { thumbnailUrl: null, views: null, likes: null, statsAt: null });
+      const read = await readFromProvider(parsed);
+      Object.assign(data, parsed, read.columns);
     }
   }
   if (input.kind !== undefined && input.kind !== row.kind) data.kind = input.kind;
@@ -333,4 +374,30 @@ export async function reorderOurLinks(
     throw err;
   }
   return { before, after: ids, changed: true };
+}
+
+export const LinkResolveSchema = z.object({ url: UrlSchema });
+
+/** What the admin form is offered for a URL before it is saved: no counts, which are only read for a saved link. */
+export interface LinkSuggestion {
+  url: string;
+  provider: LinkProvider;
+  title: string | null;
+  thumbnailUrl: string | null;
+  embedUrl: string | null;
+}
+
+/** Parse a URL and ask its provider about it. A URL the parser refuses is refused with its reason. */
+export async function suggestLinkDetails(url: string): Promise<LinkSuggestion> {
+  const parsed = parseOrRefuse(url);
+  const details = await resolveLinkDetails(parsed);
+  const providerId =
+    parsed.provider === 'bandcamp' ? (details?.providerId ?? null) : parsed.providerId;
+  return {
+    url: parsed.url,
+    provider: parsed.provider,
+    title: details?.title ?? null,
+    thumbnailUrl: thumbnailFor(parsed.provider, providerId, details?.thumbnailUrl ?? null),
+    embedUrl: embedUrl(parsed.provider, providerId),
+  };
 }

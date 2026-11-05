@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db/client';
 import { reconcileBankKnowledge } from '@/lib/app/bank/knowledge';
+import { refreshYouTubeStats } from '@/lib/app/links/stats';
 import { registerAppJob } from '@/lib/orchestration/maintenance/app-jobs';
 import { INSTALL_ORG_ID } from '@/lib/tenancy/constants';
 import { requireOrgId } from '@/lib/tenancy/context';
@@ -65,6 +66,19 @@ export function initAppJobs(): void {
     run: async () =>
       requireOrgId() === INSTALL_ORG_ID
         ? reconcileBankKnowledge()
+        : { status: 'skipped', reason: 'not the install org' },
+  });
+
+  /* YouTube view and like counts for videos and links, the popularity their order weighs (`f-videos-and-links`
+     t-180). Daily: the order takes a logarithm of views, so a day's change rarely moves it. Batched, idempotent, and a
+     no-op without YOUTUBE_API_KEY. Links are shared content (GLOBAL_CONFIG_MODELS), so the install org's run does it
+     once for everyone, as the databank's job above. */
+  registerAppJob({
+    name: 'app:refresh-link-stats',
+    intervalMs: 24 * 60 * 60 * 1000,
+    run: async () =>
+      requireOrgId() === INSTALL_ORG_ID
+        ? refreshYouTubeStats()
         : { status: 'skipped', reason: 'not the install org' },
   });
 }

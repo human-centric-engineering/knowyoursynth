@@ -11,6 +11,7 @@ import {
   embedUrl,
   LINK_PROVIDERS,
   parseLinkUrl,
+  safeThumbnailUrl,
   thumbnailFor,
   type ParsedLink,
 } from '@/lib/app/links/providers';
@@ -263,5 +264,44 @@ describe('thumbnailFor', () => {
     );
     expect(thumbnailFor('youtube', 'bad', null)).toBeNull();
     expect(thumbnailFor('spotify', `track/${SPOTIFY}`, null)).toBeNull();
+  });
+});
+
+describe('safeThumbnailUrl (t-180)', () => {
+  it('keeps a picture on its own provider’s image hosts', () => {
+    for (const [provider, url] of [
+      ['youtube', 'https://i.ytimg.com/vi/x/hqdefault.jpg'],
+      ['vimeo', 'https://i.vimeocdn.com/video/1-640.jpg'],
+      ['spotify', 'https://i.scdn.co/image/ab67'],
+      ['spotify', 'https://image-cdn-fa.spotifycdn.com/image/ab67'],
+      ['soundcloud', 'https://i3.sndcdn.com/artworks-1-t500x500.jpg'],
+      ['bandcamp', 'https://f4.bcbits.com/img/a1_5.jpg'],
+    ] as const)
+      expect(safeThumbnailUrl(provider, url)).toBe(url);
+  });
+
+  it('refuses any other host, scheme, login or port, and every plain link', () => {
+    for (const [provider, url] of [
+      ['youtube', 'https://evil.example/x.jpg'],
+      ['youtube', 'https://i.ytimg.com.evil.example/x.jpg'],
+      ['youtube', 'http://i.ytimg.com/x.jpg'],
+      ['youtube', 'https://u:p@i.ytimg.com/x.jpg'],
+      ['youtube', 'https://i.ytimg.com:444/x.jpg'],
+      ['youtube', 'https://i.vimeocdn.com/x.jpg'],
+      ['soundcloud', 'https://i10.sndcdn.com/x.jpg'],
+      ['bandcamp', 'https://bcbits.com/x.jpg'],
+      ['vimeo', 'javascript:alert(1)'],
+      ['vimeo', `https://i.vimeocdn.com/${'a'.repeat(1000)}`],
+      ['other', 'https://i.ytimg.com/x.jpg'],
+    ] as const)
+      expect(safeThumbnailUrl(provider, url)).toBeNull();
+    expect(safeThumbnailUrl('youtube', null)).toBeNull();
+  });
+
+  it('is applied again when a stored picture is shown', () => {
+    expect(thumbnailFor('vimeo', '1', 'https://evil.example/x.jpg')).toBeNull();
+    expect(thumbnailFor('youtube', VIDEO, 'https://evil.example/x.jpg')).toBe(
+      `https://i.ytimg.com/vi/${VIDEO}/hqdefault.jpg`
+    );
   });
 });
