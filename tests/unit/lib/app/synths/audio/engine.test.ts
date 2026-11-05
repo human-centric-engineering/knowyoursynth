@@ -9,7 +9,12 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 
 import type { SynthEvent } from '@/lib/app/synths/audio/dsp-core';
-import { Engine, WORKLET_TIMEOUT_MS, WORKLET_URL } from '@/lib/app/synths/audio/engine';
+import {
+  Engine,
+  playbackSession,
+  WORKLET_TIMEOUT_MS,
+  WORKLET_URL,
+} from '@/lib/app/synths/audio/engine';
 import { logger } from '@/lib/logging';
 import { FakeContext, FakeNode } from '@/tests/unit/lib/app/synths/audio/fake-audio';
 import { monoParams } from '@/tests/unit/lib/app/synths/audio/render';
@@ -71,7 +76,9 @@ function contextClass(load: Load) {
       this.script = new FakeScriptNode();
       return this.script;
     }
+    resumes = 0;
     resume(): Promise<void> {
+      this.resumes++;
       this.state = 'running';
       return Promise.resolve();
     }
@@ -166,13 +173,108 @@ describe('Engine', () => {
     expect(engine.frame).toBe(36000);
   });
 
-  it('asks the context to run while the click still counts, before the worklet has loaded', async () => {
+  it('asks the context to run while the click still counts, before the worklet has loaded', () => {
     vi.useFakeTimers(); // the hanging load's timeout must not outlive the test
     const { Ctx, engine } = setup('hang');
     void engine.start();
-    // addModule never settles here, so the only resume() that can have run is the early one.
-    await Promise.resolve();
+    // Checked before anything is awaited: a resume() behind an await is outside the gesture, and iOS refuses it.
+    expect(Ctx.last!.resumes).toBe(1);
     expect(Ctx.last!.state).toBe('running');
+  });
+
+  it('asks the context to run synchronously when resumed: the first time, after a suspend, and while starting', async () => {
+    vi.useFakeTimers();
+    const first = setup('ok');
+    void first.engine.resume();
+    expect(first.Ctx.last!.resumes).toBe(1);
+    await vi.runAllTimersAsync();
+
+    await first.engine.suspend();
+    const resumes = first.Ctx.last!.resumes;
+    void first.engine.resume();
+    expect(first.Ctx.last!.resumes).toBe(resumes + 1);
+    expect(first.Ctx.last!.state).toBe('running');
+
+    // A start under way whose own resume() iOS refused (a touch's pointerdown): the next press asks again, at once.
+    const slow = setup('hang');
+    void slow.engine.start();
+    const ctx = slow.Ctx.last!;
+    ctx.state = 'suspended';
+    void slow.engine.resume();
+    expect(ctx.resumes).toBe(2);
+    expect(ctx.state).toBe('running');
+  });
+
+  it("sets Safari's audio session to playback before the context opens, so the silent switch does not mute it", async () => {
+    const session = { type: 'auto' };
+    vi.stubGlobal('navigator', { audioSession: session });
+    const { Ctx, engine } = setup('ok');
+    let typeWhenOpened = '';
+    vi.stubGlobal('window', {
+      AudioContext: class extends Ctx {
+        constructor(o: unknown) {
+          super(o);
+          typeWhenOpened = session.type;
+        }
+      },
+    });
+    await engine.start();
+    expect(typeWhenOpened).toBe('playback');
+    expect(session.type).toBe('playback');
+  });
+
+  it('starts as before where there is no audio session to set, or no navigator', async () => {
+    vi.stubGlobal('navigator', {});
+    const { engine } = setup('ok');
+    await expect(engine.start()).resolves.toBe('worklet');
+    vi.stubGlobal('navigator', undefined);
+    expect(() => playbackSession()).not.toThrow();
+  });
+
+  it('runs a context iOS interrupted, or suspended, again on the next gesture', async () => {
+    const session = { type: 'auto' };
+    vi.stubGlobal('navigator', { audioSession: session });
+    const { Ctx, engine } = setup('ok');
+    engine.unlock(); // before any start: nothing to run
+    expect(Ctx.last).toBeNull();
+    await engine.start();
+    const ctx = Ctx.last!;
+
+    // A phone call: Safari leaves the context interrupted, and the voice silent though the page shows it on.
+    ctx.state = 'interrupted';
+    expect(engine.running).toBe(false);
+    engine.unlock();
+    expect(ctx.state).toBe('running');
+    expect(engine.running).toBe(true);
+
+    // Back from a backgrounded tab, suspended by the browser, not the user.
+    ctx.state = 'suspended';
+    engine.unlock();
+    expect(ctx.state).toBe('running');
+
+    // Running already: not asked again.
+    const resumes = ctx.resumes;
+    engine.unlock();
+    expect(ctx.resumes).toBe(resumes);
+
+    // Something else may have put the session back: each gesture sets it again.
+    session.type = 'ambient';
+    engine.unlock();
+    expect(session.type).toBe('playback');
+  });
+
+  it('leaves the sound off when the user turned it off, until they turn it on', async () => {
+    const { Ctx, engine } = setup('ok');
+    await engine.start();
+    const ctx = Ctx.last!;
+    await engine.suspend();
+    engine.unlock();
+    expect(ctx.state).toBe('suspended');
+
+    await engine.resume();
+    ctx.state = 'interrupted';
+    engine.unlock();
+    expect(ctx.state).toBe('running');
   });
 
   it('clears the load timeout once the worklet has loaded', async () => {

@@ -1557,6 +1557,26 @@ describe('SynthPage computer keyboard', () => {
     expect(notes().at(-1)).toEqual({ type: 'noteOff', n: 48 });
   });
 
+  it('asks the engine to run inside the gesture itself, on the power switch, a note and Play', async () => {
+    // iOS only lets a resume() start sound from the event's own handler, so each is checked straight after its event,
+    // before anything is awaited: an await in front of the resume fails here.
+    storeSound(def, FAT_BASS);
+    page();
+    fireEvent.click(button('Unmute'));
+    expect(engine.resume).toHaveBeenCalledTimes(1);
+    await act(async () => {});
+
+    fireEvent.keyDown(window, { key: 'a' });
+    expect(engine.resume).toHaveBeenCalledTimes(2);
+    await act(async () => {});
+    fireEvent.keyUp(window, { key: 'a' });
+
+    fireEvent.click(button('Play'));
+    expect(engine.resume).toHaveBeenCalledTimes(3);
+    await act(async () => {});
+    expect(engine.send).toHaveBeenCalledWith({ type: 'phrase', phrase: FAT_BASS.phrase });
+  });
+
   it('starts the audio on the first note, since a browser only allows it after a gesture', async () => {
     page();
     await act(async () => {

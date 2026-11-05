@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 /**
  * The page's one audio engine and its event fan-out.
  *
@@ -9,11 +10,14 @@ import type { SynthEvent } from '@/lib/app/synths/audio/dsp-core';
 
 const made = vi.hoisted(() => ({
   callbacks: [] as Array<(e: unknown) => void>,
+  engines: [] as Array<{ unlock: () => void }>,
 }));
 
 vi.mock('@/lib/app/synths/audio/engine', () => ({
-  Engine: vi.fn(function (this: object, cb: (e: unknown) => void) {
+  Engine: vi.fn(function (this: { unlock: () => void }, cb: (e: unknown) => void) {
     made.callbacks.push(cb);
+    this.unlock = vi.fn();
+    made.engines.push(this);
   }),
 }));
 
@@ -33,6 +37,7 @@ const note = (n: number, on: boolean): SynthEvent =>
 
 beforeEach(() => {
   made.callbacks.length = 0;
+  made.engines.length = 0;
   vi.clearAllMocks();
 });
 
@@ -145,6 +150,33 @@ describe('getEngine', () => {
 
     expect(notesStore.get()).toEqual([67]);
     expect(heard).toHaveBeenCalledWith(e);
+  });
+
+  it('unlocks the engine on every gesture, before the page handles it, from the moment it is made', async () => {
+    const { getEngine, GESTURES } = await load();
+    const btn = document.createElement('button');
+    document.body.append(btn);
+    // The page's own handler, which may start a note: the engine has been asked to run by then.
+    let unlockedFirst = false;
+    btn.addEventListener('pointerup', () => {
+      const e = made.engines[0];
+      unlockedFirst = !!e && vi.mocked(e.unlock).mock.calls.length === 1;
+    });
+    btn.dispatchEvent(new Event('pointerup', { bubbles: true }));
+    expect(made.engines).toHaveLength(0); // no engine yet: nothing listening
+
+    getEngine();
+    getEngine(); // once: a second call adds no listeners
+    const unlock = vi.mocked(made.engines[0].unlock);
+    btn.dispatchEvent(new Event('pointerup', { bubbles: true }));
+    expect(unlock).toHaveBeenCalledTimes(1);
+    expect(unlockedFirst).toBe(true);
+
+    // The finger lifting is the touch gesture iOS counts; a click and a key press are the others.
+    expect(GESTURES).toEqual(['pointerup', 'touchend', 'click', 'keydown']);
+    GESTURES.forEach((type) => btn.dispatchEvent(new Event(type, { bubbles: true })));
+    expect(unlock).toHaveBeenCalledTimes(1 + GESTURES.length);
+    btn.remove();
   });
 
   it('still feeds the stores with no listener', async () => {
