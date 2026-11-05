@@ -155,6 +155,10 @@ export function registerAppDriftProbes(): void {
     name: 'external_link_one_owner (hand-written CHECK: exactly one owner)',
     kind: 'CHECK constraint',
     table: 'external_link',
-    probe: constraintExists('external_link_one_owner', 'num_nonnulls'),
+    // The whole predicate, so a weakened one (`>= 1`, `<= 1`) fails the probe too.
+    probe: constraintExists(
+      'external_link_one_owner',
+      'num_nonnulls("instrumentId", "soundId", "songId", "artistId") = 1'
+    ),
   });
 }

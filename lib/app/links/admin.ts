@@ -82,8 +82,10 @@ export const AdminLinkQuerySchema = z
     provider: z.enum(LINK_PROVIDERS).optional(),
     ours: z.enum(['true', 'false']).optional(),
   })
-  .extend(paginationQuerySchema.shape)
-  .extend({ limit: paginationQuerySchema.shape.limit.unwrap().default(50) })
+  .extend({
+    page: paginationQuerySchema.shape.page,
+    limit: paginationQuerySchema.shape.limit.unwrap().default(50),
+  })
   .superRefine((q, ctx) => {
     const owners = OWNER_KINDS.filter((k) => q[k] !== undefined);
     if (owners.length > 1)
@@ -314,8 +316,11 @@ export async function reorderOurLinks(
   // above fails the whole transaction (P2025), so nothing moves and nothing is written onto a link that is not ours.
   try {
     await prisma.$transaction(
-      ids.map((id, order) =>
-        prisma.externalLink.update({ where: { id, ...owner, ours: true }, data: { order } })
+      // Only the links that moved, so an unmoved one keeps its edit time in the admin list.
+      ids.flatMap((id, order) =>
+        before[order] === id
+          ? []
+          : [prisma.externalLink.update({ where: { id, ...owner, ours: true }, data: { order } })]
       )
     );
   } catch (err) {

@@ -110,7 +110,10 @@ describe('parseLinkUrl: the other providers', () => {
       url: 'https://boards.bandcamp.com/album/geogaddi',
     });
     expect(problem('https://boards.bandcamp.com/merch')).toMatch(/Bandcamp/);
-    expect(problem('https://www.bandcamp.com/album/x')).toMatch(/Bandcamp/);
+    expect(problem('https://boards.bandcamp.com/album/geogaddi/extra')).toMatch(/Bandcamp/);
+    // Bandcamp's own sites are plain links, not an artist's page.
+    expect(ok('https://daily.bandcamp.com/features/synth-week').provider).toBe('other');
+    expect(ok('https://www.bandcamp.com/album/x').provider).toBe('other');
   });
 
   it('keeps any other https address as given, less its fragment', () => {

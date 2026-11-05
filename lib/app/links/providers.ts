@@ -91,6 +91,13 @@ const SOUNDCLOUD_USER_PAGES = new Set([
 ]);
 /** A private SoundCloud track's or set's share token: case matters, and the embed fails without it. */
 const SOUNDCLOUD_TOKEN = /^s-[A-Za-z0-9]{3,40}$/;
+/** Bandcamp's own sites, not an artist's page: an article there is a plain link. */
+const BANDCAMP_OWN_HOSTS = new Set([
+  'www.bandcamp.com',
+  'daily.bandcamp.com',
+  'get.bandcamp.com',
+  'blog.bandcamp.com',
+]);
 const BANDCAMP_PROVIDER_ID = /^(album|track)=\d{1,15}$/;
 const MAX_URL_LENGTH = 2000;
 
@@ -215,10 +222,11 @@ function parseSoundCloud(url: URL): ParseResult {
 
 function parseBandcamp(url: URL, host: string): ParseResult {
   const artist = host.slice(0, -'.bandcamp.com'.length);
-  const [type, slug] = segments(url);
+  const parts = segments(url);
+  const [type, slug] = parts;
   if (
     !SLUG.test(artist) ||
-    artist === 'www' ||
+    parts.length !== 2 ||
     (type !== 'track' && type !== 'album') ||
     !slug ||
     !SLUG.test(slug)
@@ -266,7 +274,9 @@ export function parseLinkUrl(input: string): ParseResult {
   if (host === 'open.spotify.com') return parseSpotify(url);
   if (host === 'soundcloud.com' || host === 'www.soundcloud.com' || host === 'm.soundcloud.com')
     return parseSoundCloud(url);
-  if (host.endsWith('.bandcamp.com')) return parseBandcamp(url, host);
+  // An artist's own sub-domain; Bandcamp's own sites (its articles, its home page) are plain links.
+  if (host.endsWith('.bandcamp.com') && !BANDCAMP_OWN_HOSTS.has(host))
+    return parseBandcamp(url, host);
 
   url.hash = '';
   return { ok: true, link: { provider: 'other', providerId: null, url: url.toString() } };

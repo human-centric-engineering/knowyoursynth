@@ -576,11 +576,17 @@ describe('PUT /order', () => {
       if (row) row.ours = false;
       return rows;
     });
-    const res = await putOrder(request('PUT', '/order', { owner, ids: [c, b, a] }));
+    const res = await putOrder(request('PUT', '/order', { owner, ids: [b, c, a] }));
     store.client.externalLink.findMany = findMany;
     expect(res.status).toBe(409);
     expect(store.links.find((l) => l.id === b)).toMatchObject({ ours: false, order: 1 });
     expect(mockLogAdminAction).not.toHaveBeenCalled();
+  });
+
+  it('writes only the links that moved', async () => {
+    const [a, b, c] = threeOfOurs().map((r) => String(r.id));
+    expect((await putOrder(request('PUT', '/order', { owner, ids: [a, c, b] }))).status).toBe(200);
+    expect(store.writes).toEqual([`update ${c}`, `update ${b}`]);
   });
 
   it('writes and audits nothing when the order is unchanged', async () => {

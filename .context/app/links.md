@@ -114,13 +114,13 @@ Tests pass a seeded `random`.
 
 ## API
 
-| Route                                                                                      | Who    | What                                                                                                                  |
-| ------------------------------------------------------------------------------------------ | ------ | --------------------------------------------------------------------------------------------------------------------- |
-| `GET /api/v1/links?instrument=\|synth=\|sound=\|song=\|artist=`                            | anyone | exactly one target; ordered; `no-store`. A hidden synth, or a sound on one, has none. Unknown ids give an empty list. |
-| `GET /api/v1/admin/links?instrument=\|sound=\|song=\|artist=&provider=&ours=&page=&limit=` | admin  | every link, newest edit first, with its owner; at most one owner filter; paginated (≤ 100)                            |
-| `POST /api/v1/admin/links`                                                                 | admin  | `{ owner: { kind, id }, url, kind, title, ours?, rating? }`. 409 when that owner already has the URL                  |
-| `GET\|PATCH\|DELETE /api/v1/admin/links/:id`                                               | admin  | `PATCH` any of `url`, `kind`, `title`, `ours`, `rating`; the owner never changes                                      |
-| `PUT /api/v1/admin/links/order`                                                            | admin  | `{ owner, ids }`: every one of the owner's own videos, once. One unmarked or removed meanwhile: 409, nothing moves    |
+| Route                                                                                      | Who    | What                                                                                                                                                                                     |
+| ------------------------------------------------------------------------------------------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /api/v1/links?instrument=\|synth=\|sound=\|song=\|artist=`                            | anyone | exactly one target; ordered; `no-store`. A hidden synth, or a sound on one, has none; its databank instrument's links stay public, as the databank does. Unknown ids give an empty list. |
+| `GET /api/v1/admin/links?instrument=\|sound=\|song=\|artist=&provider=&ours=&page=&limit=` | admin  | every link, newest edit first, with its owner; at most one owner filter; paginated (≤ 100)                                                                                               |
+| `POST /api/v1/admin/links`                                                                 | admin  | `{ owner: { kind, id }, url, kind, title, ours?, rating? }`. 409 when that owner already has the URL                                                                                     |
+| `GET\|PATCH\|DELETE /api/v1/admin/links/:id`                                               | admin  | `PATCH` any of `url`, `kind`, `title`, `ours`, `rating`; the owner never changes                                                                                                         |
+| `PUT /api/v1/admin/links/order`                                                            | admin  | `{ owner, ids }`: every one of the owner's own videos, once. One unmarked or removed meanwhile: 409, nothing moves                                                                       |
 
 A public link carries `id, url, provider, kind, title, thumbnailUrl, embedUrl, ours, views`. An admin link adds
 `owner { kind, id, name }, providerId, order, rating, likes, statsAt, createdAt, updatedAt`.

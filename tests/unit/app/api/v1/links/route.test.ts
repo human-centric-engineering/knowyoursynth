@@ -123,6 +123,24 @@ describe('GET /api/v1/links', () => {
     expect(list.map((l) => l.title)).toEqual(['Ours', 'B']);
   });
 
+  it('keeps each instrument’s own videos together, in its order, never interleaved across a synth', async () => {
+    const ours = (instrumentId: string, name: string, order: number) =>
+      store.insert({
+        instrumentId,
+        url: `https://example.com/${name}`,
+        provider: 'other',
+        title: name,
+        ours: true,
+        order,
+      });
+    ours('moog-minimoog-reissue', 'b0', 0);
+    ours('moog-minimoog', 'a1', 1);
+    ours('moog-minimoog-reissue', 'b1', 1);
+    ours('moog-minimoog', 'a0', 0);
+    const { list } = await links('?synth=model-d');
+    expect(list.map((l) => l.title)).toEqual(['a0', 'a1', 'b0', 'b1']);
+  });
+
   it('serves a library patch’s own links, a song’s and an artist’s', async () => {
     store.insert({
       soundId: 'snd1',

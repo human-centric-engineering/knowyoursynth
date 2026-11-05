@@ -68,8 +68,12 @@ export const PublicLinkQuerySchema = z
   });
 export type PublicLinkQuery = { target: PublicTarget; id: string };
 
+/** Far above any one owner's count of its own videos, so ranks never overlap. */
+const RANK_STRIDE = 1_000_000;
+
 const PUBLIC_SELECT = {
   id: true,
+  instrumentId: true,
   url: true,
   provider: true,
   providerId: true,
@@ -85,22 +89,31 @@ const PUBLIC_SELECT = {
 
 type PublicRow = Prisma.ExternalLinkGetPayload<{ select: typeof PUBLIC_SELECT }>;
 
-/** The `where` for a target's links, or null when it is not served (a hidden synth, a sound that is not there). */
-async function whereFor(query: PublicLinkQuery): Promise<Prisma.ExternalLinkWhereInput | null> {
+/**
+ * The `where` for a target's links, or null when it is not served (a hidden synth, a sound that is not there). A
+ * synth's also carries its instruments' rank, so each instrument's own videos stay together in that instrument's
+ * order (each numbers its own from 0).
+ */
+async function whereFor(
+  query: PublicLinkQuery
+): Promise<{ where: Prisma.ExternalLinkWhereInput; rank?: Map<string, number> } | null> {
   switch (query.target) {
     case 'instrument':
-      return { instrumentId: query.id };
+      return { where: { instrumentId: query.id } };
     case 'song':
-      return { songId: query.id };
+      return { where: { songId: query.id } };
     case 'artist':
-      return { artistId: query.id };
+      return { where: { artistId: query.id } };
     case 'synth': {
       const synth = await prisma.synth.findFirst({
         where: { id: query.id, listed: true },
-        select: { bankInstruments: { select: { instrumentId: true } } },
+        select: {
+          bankInstruments: { select: { instrumentId: true }, orderBy: { instrumentId: 'asc' } },
+        },
       });
       if (!synth) return null;
-      return { instrumentId: { in: synth.bankInstruments.map((i) => i.instrumentId) } };
+      const ids = synth.bankInstruments.map((i) => i.instrumentId);
+      return { where: { instrumentId: { in: ids } }, rank: new Map(ids.map((id, i) => [id, i])) };
     }
     case 'sound': {
       const key = splitSoundKey(query.id);
@@ -109,7 +122,7 @@ async function whereFor(query: PublicLinkQuery): Promise<Prisma.ExternalLinkWher
         where: { synthId: key.synthId, slug: key.slug, synth: { listed: true } },
         select: { id: true },
       });
-      return sound ? { soundId: sound.id } : null;
+      return sound ? { where: { soundId: sound.id } } : null;
     }
   }
 }
@@ -148,12 +161,20 @@ export async function listPublicLinks(
   query: PublicLinkQuery,
   random: () => number = Math.random
 ): Promise<PublicLink[]> {
-  const where = await whereFor(query);
-  if (!where) return [];
+  const target = await whereFor(query);
+  if (!target) return [];
   const rows = await prisma.externalLink.findMany({
-    where,
+    where: target.where,
     select: PUBLIC_SELECT,
     orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
   });
-  return orderLinks(onePerUrl(rows), random).map(toPublicLink);
+  const { rank } = target;
+  // Across a synth's instruments, an instrument's own videos sort after the instrument before it, never interleaved.
+  const ranked = rank
+    ? onePerUrl(rows).map((row) => ({
+        ...row,
+        order: (rank.get(row.instrumentId ?? '') ?? 0) * RANK_STRIDE + row.order,
+      }))
+    : onePerUrl(rows);
+  return orderLinks(ranked, random).map(toPublicLink);
 }
