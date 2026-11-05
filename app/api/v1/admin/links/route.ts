@@ -1,8 +1,9 @@
 /**
  * Videos and links, for admins (`f-videos-and-links` t-179).
  *
- * GET  /api/v1/admin/links?instrument=|sound=|song=|artist=&provider=&ours=&page=&limit= — every link, newest edit
- *      first, with what it is about. At most one owner filter; a sound is `<synth>/<patch>`. Paginated (limit ≤ 100).
+ * GET  /api/v1/admin/links?owner=&instrument=|sound=|song=|artist=&provider=&ours=&page=&limit= — every link, newest
+ *      edit first, with what it is about. `owner` is a kind (`instrument`, `sound`, `song`, `artist`); at most one owner
+ *      filter beside it; a sound is `<synth>/<patch>`. Paginated (limit ≤ 100).
  * POST /api/v1/admin/links — add one: `{ owner: { kind, id }, url, kind, title, ours?, rating? }`. The URL is parsed
  *      for its provider; a URL already linked to that owner is a 409. Audited.
  *

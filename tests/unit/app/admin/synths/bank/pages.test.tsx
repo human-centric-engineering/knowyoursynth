@@ -37,6 +37,13 @@ vi.mock('next/link', () => ({
 
 vi.mock('@/lib/logging', () => ({ logger: { error: vi.fn(), info: vi.fn(), warn: vi.fn() } }));
 
+// The panel reads its own links from the API; here, only which owner the page hands it.
+vi.mock('@/components/app/admin/links/links-panel', () => ({
+  LinksPanel: ({ owner }: { owner: { kind: string; id: string } }) => (
+    <p data-testid="links-panel">{`${owner.kind}:${owner.id}`}</p>
+  ),
+}));
+
 import BankAdminPage from '@/app/admin/synths/bank/page';
 import BankRowPage, { generateMetadata } from '@/app/admin/synths/bank/[kind]/[id]/page';
 
@@ -107,6 +114,51 @@ describe('BankRowPage', () => {
       '/bank/makers/robert-moog'
     );
     expect(screen.getByRole('button', { name: 'Save innovator' })).toBeInTheDocument();
+    // Innovators have no videos and links.
+    expect(screen.queryByTestId('links-panel')).not.toBeInTheDocument();
+  });
+
+  it('shows the videos and links of an instrument, a record and an artist, by its id', async () => {
+    const rows = {
+      instruments: {
+        name: 'Minimoog',
+        maker: 'Moog Music',
+        year: '1970',
+        kind: 'synth',
+        people: [],
+        app: [],
+      },
+      songs: { title: 'Autobahn', kind: 'album', year: '1974', artists: [], parts: [] },
+      artists: {
+        name: 'Aphex Twin',
+        kind: 'person',
+        country: 'UK',
+        active: '1991–',
+        eras: [],
+        genres: [],
+        roles: [],
+        summary: 'S.',
+        story: 'S.',
+        innovations: [],
+      },
+    };
+    for (const [kind, owner] of [
+      ['instruments', 'instrument'],
+      ['songs', 'song'],
+      ['artists', 'artist'],
+    ] as const) {
+      mockServerFetch.mockResolvedValueOnce(
+        ok({ kind, editedAt: null, row: { id: 'some-row', ...rows[kind] } })
+      );
+      const { unmount } = render(await BankRowPage(props(kind, 'some-row')));
+      expect(screen.getByTestId('links-panel')).toHaveTextContent(`${owner}:some-row`);
+      unmount();
+    }
+  });
+
+  it('shows no links panel on the form for a new row', async () => {
+    render(await BankRowPage(props('instruments', 'new')));
+    expect(screen.queryByTestId('links-panel')).not.toBeInTheDocument();
   });
 
   it('is the empty form at new, without asking the API', async () => {

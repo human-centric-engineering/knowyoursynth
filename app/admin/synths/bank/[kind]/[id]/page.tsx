@@ -9,6 +9,7 @@ import {
 } from '@/components/admin/shared-settings-access';
 import { BankForm } from '@/components/app/admin/bank/bank-form';
 import { BANK_SINGULAR, bankAdminPath } from '@/components/app/admin/bank/paths';
+import { LinksPanel } from '@/components/app/admin/links/links-panel';
 import { bankHref, isBankTab, tabLabel } from '@/components/app/bank/routes';
 import { Badge } from '@/components/ui/badge';
 import { parseApiResponse, serverFetch } from '@/lib/api/server-fetch';
@@ -40,6 +41,13 @@ const getRow = cache(async function getRow(
     return null;
   }
 });
+
+/** The databank kinds that have videos and links (`f-videos-and-links`), as the links API names each. */
+const LINK_OWNER: Partial<Record<BankKind, 'instrument' | 'song' | 'artist'>> = {
+  instruments: 'instrument',
+  songs: 'song',
+  artists: 'artist',
+};
 
 const nameOf = (detail: AdminBankDetail): string => {
   const row: object = detail.row;
@@ -105,6 +113,7 @@ export default async function BankRowPage({ params }: Props) {
         <>
           <SharedSettingsSaveHint />
           <BankForm key={`${kind}/${id}`} kind={kind} detail={detail} />
+          {detail && LINK_OWNER[kind] && <LinksPanel owner={{ kind: LINK_OWNER[kind], id }} />}
         </>
       )}
     </div>

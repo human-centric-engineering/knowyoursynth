@@ -13,7 +13,7 @@ users and links on users' own sounds are `f-link-suggestions` (§41), not here.
 | Admin writes                | `lib/app/links/admin.ts`, `admin-route.ts`   | t-179 |
 | Public read                 | `lib/app/links/read.ts`                      | t-179 |
 | Titles, thumbnails, views   | `details.ts`, `stats.ts`, `fetch.ts`         | t-180 |
-| Admin pages                 | not built yet                                | t-181 |
+| Admin pages                 | `components/app/admin/links/`                | t-181 |
 | Under the panel, `/bank`    | not built yet                                | t-182 |
 | Patches and History         | not built yet                                | t-183 |
 
@@ -166,14 +166,14 @@ Tests pass a seeded `random`.
 
 ## API
 
-| Route                                                                                      | Who    | What                                                                                                                                                                                     |
-| ------------------------------------------------------------------------------------------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GET /api/v1/links?instrument=\|synth=\|sound=\|song=\|artist=`                            | anyone | exactly one target; ordered; `no-store`. A hidden synth, or a sound on one, has none; its databank instrument's links stay public, as the databank does. Unknown ids give an empty list. |
-| `GET /api/v1/admin/links?instrument=\|sound=\|song=\|artist=&provider=&ours=&page=&limit=` | admin  | every link, newest edit first, with its owner; at most one owner filter; paginated (≤ 100)                                                                                               |
-| `POST /api/v1/admin/links`                                                                 | admin  | `{ owner: { kind, id }, url, kind, title?, ours?, rating? }`. No title: the provider's, else 400. 409 when that owner already has the URL                                                |
-| `POST /api/v1/admin/links/resolve`                                                         | admin  | `{ url }` → `{ url, provider, title, thumbnailUrl, embedUrl }`: what the link would be saved as, and what its provider says. Writes nothing                                              |
-| `GET\|PATCH\|DELETE /api/v1/admin/links/:id`                                               | admin  | `PATCH` any of `url`, `kind`, `title`, `ours`, `rating`; the owner never changes                                                                                                         |
-| `PUT /api/v1/admin/links/order`                                                            | admin  | `{ owner, ids }`: every one of the owner's own videos, once. One unmarked or removed meanwhile: 409, nothing moves                                                                       |
+| Route                                                                                             | Who    | What                                                                                                                                                                                     |
+| ------------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /api/v1/links?instrument=\|synth=\|sound=\|song=\|artist=`                                   | anyone | exactly one target; ordered; `no-store`. A hidden synth, or a sound on one, has none; its databank instrument's links stay public, as the databank does. Unknown ids give an empty list. |
+| `GET /api/v1/admin/links?owner=&instrument=\|sound=\|song=\|artist=&provider=&ours=&page=&limit=` | admin  | every link, newest edit first, with its owner; `owner` is a kind; at most one owner filter, of that kind; paginated (≤ 100)                                                              |
+| `POST /api/v1/admin/links`                                                                        | admin  | `{ owner: { kind, id }, url, kind, title?, ours?, rating? }`. No title: the provider's, else 400. 409 when that owner already has the URL                                                |
+| `POST /api/v1/admin/links/resolve`                                                                | admin  | `{ url }` → `{ url, provider, title, thumbnailUrl, embedUrl }`: what the link would be saved as, and what its provider says. Writes nothing                                              |
+| `GET\|PATCH\|DELETE /api/v1/admin/links/:id`                                                      | admin  | `PATCH` any of `url`, `kind`, `title`, `ours`, `rating`; the owner never changes                                                                                                         |
+| `PUT /api/v1/admin/links/order`                                                                   | admin  | `{ owner, ids }`: every one of the owner's own videos, once. One unmarked or removed meanwhile: 409, nothing moves                                                                       |
 
 A public link carries `id, url, provider, kind, title, thumbnailUrl, embedUrl, ours, views`. An admin link adds
 `owner { kind, id, name }, providerId, order, rating, likes, statsAt, createdAt, updatedAt`.
@@ -188,6 +188,19 @@ Admin rules (`lib/app/links/admin.ts`, each tested):
 - Audited as `external_link.create|update|delete|reorder`, recording owner, URL, kind, title, ours and rating.
 - Writes pass `writesSharedSettings: true`: links are `GLOBAL_CONFIG_MODELS` (divergence row in
   `.context/app/divergences.md`), so at `multi` only the install org's admins write them.
+
+## Admin pages
+
+- **`/admin/synths/links`** (Synths → Videos and links): every link, newest edit first, filtered by what it is about
+  (`owner`), provider and ours, in the address. Each row links to its owner's editor and shows YouTube's counts with
+  when they last changed. Add (naming the owner) and edit open the same form in a dialog.
+- **A Videos and links panel** on the databank instrument, record and artist editors and the library patch editor:
+  that owner's links, ours first with up/down buttons (each move sends the whole order), then the rest. It reads
+  `?<kind>=<id>` once and again after each change.
+- **The form** (`link-form.tsx`): paste an address and press Read (`/resolve`). The address becomes its stored form,
+  and an empty title is filled with the provider's, for the admin to confirm. A new link may leave the title empty
+  (the server asks the provider again); an edit may not. The server parses the URL again on save, so Read is only a
+  preview.
 
 Not in the catalogue's JSON upload or download, which is content-only (owner ruling on `f-catalogue-admin`).
 Database backups cover links.

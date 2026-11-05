@@ -42,6 +42,7 @@ import {
   resolveOwner,
   validOwnerId,
   type OwnerColumns,
+  type OwnerKind,
   type OwnerRef,
   type OwnerSummary,
 } from '@/lib/app/links/owner';
@@ -78,9 +79,18 @@ export const LinkReorderSchema = z.object({
   ids: z.array(z.string().min(1).max(40)).max(500),
 });
 
-/** The admin list's filters: at most one owner, a provider, and whether ours. */
+/** The column that names an owner of each kind. */
+const OWNER_COLUMN = {
+  instrument: 'instrumentId',
+  sound: 'soundId',
+  song: 'songId',
+  artist: 'artistId',
+} as const satisfies Record<OwnerKind, keyof Prisma.ExternalLinkWhereInput>;
+
+/** The admin list's filters: what kind of thing it is about, at most one owner, a provider, and whether ours. */
 export const AdminLinkQuerySchema = z
   .object({
+    owner: z.enum(OWNER_KINDS).optional(),
     instrument: z.string().max(200).optional(),
     sound: z.string().max(200).optional(),
     song: z.string().max(200).optional(),
@@ -96,6 +106,8 @@ export const AdminLinkQuerySchema = z
     const owners = OWNER_KINDS.filter((k) => q[k] !== undefined);
     if (owners.length > 1)
       ctx.addIssue({ code: 'custom', message: 'Filter by one owner at a time' });
+    if (q.owner && owners.length === 1 && owners[0] !== q.owner)
+      ctx.addIssue({ code: 'custom', path: ['owner'], message: 'That owner is not of that kind' });
     for (const k of owners)
       if (!validOwnerId(k, q[k] ?? ''))
         ctx.addIssue({ code: 'custom', path: [k], message: 'Not an id of that kind' });
@@ -236,6 +248,7 @@ export async function listAdminLinks(
   const where: Prisma.ExternalLinkWhereInput = {};
   if (query.provider) where.provider = query.provider;
   if (query.ours) where.ours = query.ours === 'true';
+  if (query.owner) where[OWNER_COLUMN[query.owner]] = { not: null };
   const ownerKind = OWNER_KINDS.find((k) => query[k] !== undefined);
   if (ownerKind) {
     const columns = await resolveOwner({ kind: ownerKind, id: query[ownerKind] ?? '' });

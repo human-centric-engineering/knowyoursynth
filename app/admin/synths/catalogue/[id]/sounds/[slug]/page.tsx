@@ -6,6 +6,7 @@ import {
   SharedSettingsReadOnlyNotice,
   SharedSettingsSaveHint,
 } from '@/components/admin/shared-settings-access';
+import { LinksPanel } from '@/components/app/admin/links/links-panel';
 import { soundPatternsPath } from '@/components/app/admin/patterns/paths';
 import { SoundForm } from '@/components/app/admin/synths/sound-form';
 import { Badge } from '@/components/ui/badge';
@@ -71,6 +72,7 @@ export default async function CatalogueSoundPage({ params }: Props) {
           )}
           <SharedSettingsSaveHint />
           <SoundForm synthId={id} mode="edit" sound={sound.sound} />
+          <LinksPanel owner={{ kind: 'sound', id: `${id}/${slug}` }} />
         </>
       )}
     </div>
