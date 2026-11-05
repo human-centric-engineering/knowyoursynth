@@ -10,7 +10,7 @@
  * - **What the provider says is read on create and on a new URL** (`details.ts`, `stats.ts`): the picture, a
  *   Bandcamp embed id, YouTube's counts. A create with no title takes the provider's; with none from there either it
  *   is refused. A provider that does not answer fails nothing: the link is saved without what it would have said.
- * - **A new URL drops what was read from the old one** (thumbnail, views, likes, when they were read): they described
+ * - **A new URL drops what was read from the old one** (thumbnail, views, likes, when the counts last changed): they described
  *   a different video. The admin's title stays.
  * - **A link marked ours goes to the end of its owner's own videos**; unmarking keeps its stored position, unused.
  * - **A save that changes nothing writes nothing**, and says so, so the route audits nothing.

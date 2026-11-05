@@ -65,7 +65,6 @@ export async function fetchYouTubeStats(
   const query = new URLSearchParams({
     part: 'statistics',
     id: ids.slice(0, BATCH_SIZE).join(','),
-    maxResults: String(BATCH_SIZE),
     key,
   });
   const body = await readJson(`${YOUTUBE_VIDEOS_URL}?${query.toString()}`, {
@@ -94,7 +93,15 @@ export async function statsForVideo(videoId: string): Promise<VideoStats | null>
 
 export type RefreshSummary =
   | { status: 'skipped'; reason: string }
-  | { videos: number; updated: number; unchanged: number; missing: number; failed: number };
+  | {
+      videos: number;
+      updated: number;
+      unchanged: number;
+      missing: number;
+      /** Edited or deleted while the run was out: left for the next run. */
+      deferred: number;
+      failed: number;
+    };
 
 /** Read every YouTube link's counts again and write the ones that changed. The app job's body. */
 export async function refreshYouTubeStats(now: Date = new Date()): Promise<RefreshSummary> {
@@ -115,7 +122,14 @@ export async function refreshYouTubeStats(now: Date = new Date()): Promise<Refre
     else byVideo.set(row.providerId, [row]);
   }
   const videos = [...byVideo.keys()];
-  const summary = { videos: videos.length, updated: 0, unchanged: 0, missing: 0, failed: 0 };
+  const summary = {
+    videos: videos.length,
+    updated: 0,
+    unchanged: 0,
+    missing: 0,
+    deferred: 0,
+    failed: 0,
+  };
 
   for (let i = 0; i < videos.length; i += BATCH_SIZE) {
     const batch = videos.slice(i, i + BATCH_SIZE);
@@ -149,7 +163,8 @@ export async function refreshYouTubeStats(now: Date = new Date()): Promise<Refre
           summary.updated++;
         } catch (err) {
           // P2025: deleted or edited since the read. Either way these counts wait for the next run.
-          if (!hasPrismaCode(err, 'P2025')) {
+          if (hasPrismaCode(err, 'P2025')) summary.deferred++;
+          else {
             summary.failed++;
             logger.warn('Links: could not write the counts for a video', {
               linkId: row.id,

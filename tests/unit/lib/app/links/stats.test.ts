@@ -98,6 +98,8 @@ describe('refreshYouTubeStats', () => {
     expect(`${first.origin}${first.pathname}`).toBe('https://www.googleapis.com/youtube/v3/videos');
     expect(first.searchParams.get('part')).toBe('statistics');
     expect(first.searchParams.get('key')).toBe(KEY);
+    // Not supported alongside `id` (the Data API's own rule); the batch size is the cap.
+    expect(first.searchParams.has('maxResults')).toBe(false);
   });
 
   it('writes only the rows whose counts changed, to every link of that video, keeping updatedAt', async () => {
@@ -112,7 +114,14 @@ describe('refreshYouTubeStats', () => {
 
     const summary = await refreshYouTubeStats(now);
 
-    expect(summary).toEqual({ videos: 2, updated: 2, unchanged: 1, missing: 0, failed: 0 });
+    expect(summary).toEqual({
+      videos: 2,
+      updated: 2,
+      unchanged: 1,
+      missing: 0,
+      deferred: 0,
+      failed: 0,
+    });
     expect(store.writes.sort()).toEqual(
       [`update ${String(stale.id)}`, `update ${String(twin.id)}`].sort()
     );
@@ -206,7 +215,7 @@ describe('an edit during the run', () => {
         { status: 200 }
       );
     });
-    expect(await refreshYouTubeStats()).toMatchObject({ updated: 0, failed: 0 });
+    expect(await refreshYouTubeStats()).toMatchObject({ updated: 0, deferred: 1, failed: 0 });
     expect(store.links[0]).toMatchObject({ title: 'Retitled', updatedAt: edited, views: null });
 
     fetchMock.mockResolvedValue(

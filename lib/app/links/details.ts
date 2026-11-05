@@ -152,7 +152,9 @@ async function fromBandcampPage(url: string): Promise<LinkDetails | null> {
   const details: LinkDetails = {
     title: cleanTitle(meta.get('og:title'), 'html'),
     thumbnailUrl: safeThumbnailUrl('bandcamp', attributeUrl(meta.get('og:image'))),
-    providerId: bandcampIdFromEmbed(meta.get('og:video') ?? meta.get('og:video:secure_url')),
+    providerId:
+      bandcampIdFromEmbed(meta.get('og:video')) ??
+      bandcampIdFromEmbed(meta.get('og:video:secure_url')),
   };
   return details.title || details.thumbnailUrl || details.providerId ? details : null;
 }

@@ -8,7 +8,9 @@
  * - **No redirects.** A redirect's target would be a host nobody checked, so it is a failure, not a hop.
  * - **A timeout and a size cap.** A body over the cap is a failure (`stopAt` ends an HTML read early, once the part
  *   wanted has arrived, so a page's long body never counts against it).
- * - **Through the outbound dispatcher**, so a host whose name resolves to a private address is refused there too.
+ * - **Through the outbound dispatcher**, which refuses a name resolving to a private address where it pins (a
+ *   customer org). The admin routes and the refresh job run as the install org, where it does not: there the exact
+ *   host allowlist above is the guard, and every allowed host is a provider's own.
  *
  * Every failure is `null` and a log line, never a throw: what was read is a suggestion, and the admin's own words stand
  * without it.
@@ -59,12 +61,13 @@ async function readCapped(
       const { done, value } = await reader.read();
       if (done) return text + decoder.decode();
       bytes += value.byteLength;
-      if (bytes > maxBytes) return null;
       const chunk = decoder.decode(value, { stream: true });
       // Only the new text, and the end of the old that a match could start in, can hold a first match.
       const from = Math.max(0, text.length - (stop?.length ?? 0) + 1);
       text += chunk;
+      // Checked before the cap, so a head ending in the chunk that crosses it still counts (one chunk over, at most).
       if (stop && text.slice(from).toLowerCase().includes(stop)) return text;
+      if (bytes > maxBytes) return null;
     }
   } finally {
     // Stops the download: a page past its head, or past the cap, is not read to the end.

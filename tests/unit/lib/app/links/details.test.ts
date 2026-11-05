@@ -197,6 +197,18 @@ describe('Bandcamp', () => {
       expect(bandcampIdFromEmbed(video)).toBeNull();
   });
 
+  it('falls back to og:video:secure_url when og:video is there but not usable', async () => {
+    fetchMock.mockResolvedValue(
+      new Response(
+        `<head><meta property="og:video" content="http://bandcamp.com/EmbeddedPlayer/album=1/">
+        <meta property="og:video:secure_url" content="https://bandcamp.com/EmbeddedPlayer/v=2/album=123/"></head>`,
+        { status: 200 }
+      )
+    );
+    const details = await resolveLinkDetails(parsed('https://a.bandcamp.com/album/b'));
+    expect(details?.providerId).toBe('album=123');
+  });
+
   it('still gives the title and picture when the page has no usable og:video', async () => {
     fetchMock.mockResolvedValue(
       new Response(PAGE('https://evil.example/EmbeddedPlayer/album=1/'), { status: 200 })
@@ -283,6 +295,15 @@ describe('reading from another site', () => {
     );
     expect(await readText('https://www.youtube.com/a', { ...opts, stopAt: '</head>' })).toBe(
       '<head><meta></head>'
+    );
+  });
+
+  it('keeps a head that ends in the chunk crossing the cap', async () => {
+    fetchMock.mockResolvedValueOnce(
+      streamed(['<head>'.padEnd(90, 'x'), '</head>'.padEnd(40, 'z')])
+    );
+    expect(await readText('https://www.youtube.com/a', { ...opts, stopAt: '</head>' })).toBe(
+      `${'<head>'.padEnd(90, 'x')}${'</head>'.padEnd(40, 'z')}`
     );
   });
 

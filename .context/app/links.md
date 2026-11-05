@@ -100,7 +100,8 @@ its embed id. Server-side only; the browser never calls a provider (CSP `connect
 
 - **Don't fetch anything else from here.** Every read goes through `readText`/`readJson` (`lib/app/links/fetch.ts`):
   https only, each caller's hosts matched exactly, no redirects (a redirect's target is a host nobody checked), a
-  timeout and a size cap, and the outbound dispatcher, which refuses a name that resolves to a private address. The
+  timeout and a size cap. The outbound dispatcher refuses a name resolving to a private address only where it pins (a
+  customer org); these reads run as the install org, where the exact host list is the guard. The
   address asked about is the canonical URL `parseLinkUrl` built, so a pasted URL can't steer the server (SSRF). Hosts
   are fixed in code, not `ORCHESTRATION_ALLOWED_HOSTS`, which is for integrations an operator configures.
 - **A picture is kept only on its provider's image hosts** (`safeThumbnailUrl`): `i.ytimg.com`; `i.vimeocdn.com`;
