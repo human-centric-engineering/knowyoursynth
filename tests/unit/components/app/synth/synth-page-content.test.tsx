@@ -20,7 +20,7 @@ import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { modelDRows } from '@/tests/helpers/model-d-detail';
 import { expectedParams, lastParams } from '@/tests/helpers/synth-engine';
 import { stepBadges } from '@/lib/app/synths/lib/history';
-import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
+import { openSide, reducedMotion, stepShown, tallScreen } from '@/tests/helpers/synth-side';
 
 const { router, engine } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -142,16 +142,8 @@ describe('the lesson on the page', () => {
   };
 
   it('steps the panel through a sound, one step at a time, then back to the finished sound', () => {
-    // With reduced motion, Next sets each step at once: the moves being shown one at a time are the page test's.
-    vi.spyOn(window, 'matchMedia').mockImplementation(
-      (query: string) =>
-        ({
-          matches: query === '(prefers-reduced-motion: reduce)',
-          media: query,
-          addEventListener: () => undefined,
-          removeEventListener: () => undefined,
-        }) as unknown as MediaQueryList
-    );
+    // With reduced motion, Next sets each step at once: the moves made one at a time are the next test's.
+    reducedMotion();
     page();
     const p = pickSound();
     open(p);

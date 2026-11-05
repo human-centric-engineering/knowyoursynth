@@ -170,6 +170,7 @@ describe('Lesson walkthrough', () => {
     const [id] = Object.keys(sound.steps[1].set || {});
     if (!id) throw new Error('step 2 sets no control');
     const c = controlMap(def)[id];
+    if (!c) throw new Error(`${id} is not on the Model D`);
     const chip = () => within(visibleStep()).getByText(displayName(def, c)).closest('button');
     expect(chip()).not.toHaveAttribute('data-now');
     act(() => moveStore.set({ id, ids: [id] }));
