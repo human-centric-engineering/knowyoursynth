@@ -86,7 +86,7 @@ import type { SynthEvent } from '@/lib/app/synths/audio/dsp-core';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import { HelpButton, MidiStatus, PanelSwitch } from '@/components/app/synth/bar-controls';
 import { usePanelHistory } from '@/components/app/synth/use-panel-history';
-import { stepMoves } from '@/lib/app/synths/lib/history';
+import { stepFrom, stepMoves } from '@/lib/app/synths/lib/history';
 import {
   Activity,
   AudioWaveform,
@@ -1499,8 +1499,9 @@ function Synth({
     else setSeqOpen(false);
   };
   const riffNow = useCallback(
-    async (ph: Phrase) => {
-      if (!engine || !(await ensureAudio())) return;
+    async (ph: Phrase, still?: () => boolean) => {
+      // Not if what asked for it is over by the time audio has started (Replay's moves ended meanwhile).
+      if (!engine || !(await ensureAudio()) || (still && !still())) return;
       // A riff stops a pattern in the engine, without a word: the sequencer is told here.
       stopPattern();
       engine.send({
@@ -1518,10 +1519,13 @@ function Synth({
   useLayoutEffect(() => {
     shownPhrase.current = shown?.phrase ?? null;
   });
-  const riffShown = useCallback(() => {
-    if (shownPhrase.current) void riffNow(shownPhrase.current);
-    else setPlaying(false);
-  }, [riffNow]);
+  const riffShown = useCallback(
+    (still?: () => boolean) => {
+      if (shownPhrase.current) void riffNow(shownPhrase.current, still);
+      else setPlaying(false);
+    },
+    [riffNow]
+  );
   // Not while a patch loads: then once it has.
   const playRiff = useCallback(
     async (ph: Phrase) => {
@@ -2015,12 +2019,14 @@ function Synth({
         patch(fn);
         return;
       }
-      const from = lessonState(synthDef, shown, before);
-      const moves = stepMoves(from, lessonState(synthDef, shown, k), shown.steps[k]);
-      const replay = how === 'replay' && !transportPlaying;
+      const to = lessonState(synthDef, shown, k);
+      const from = stepFrom(lessonState(synthDef, shown, before), to, shown.steps[k]);
+      const moves = stepMoves(from, to, shown.steps[k]);
+      // Replay again while the riff an earlier Replay started plays starts it again, as that one's moves end.
+      const replay = how === 'replay' && (replayRiff.current || !transportPlaying);
       if (walk(fn, from, moves, endReplayRiff) && replay) {
         replayRiff.current = true;
-        riffShown();
+        riffShown(() => replayRiff.current);
       }
     };
     if (ownLesson) {

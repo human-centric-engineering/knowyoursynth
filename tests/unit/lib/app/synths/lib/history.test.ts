@@ -22,6 +22,7 @@ import {
   tweenCables,
   tweenValues,
   redo,
+  stepFrom,
   stepMoves,
   undo,
   type PanelSnap,
@@ -337,5 +338,28 @@ describe('a lesson step made a move at a time (stepMoves)', () => {
     expect(moves.map((m) => m.id)).toEqual(['cutoff', 'res']);
     expect(moves[0].to.values).toEqual(from.values);
     expect(stepMoves(from, from, step({}))).toEqual([]);
+  });
+
+  it('shows the moves from the step before, with what the step does not number already as the step has it', () => {
+    const from: PanelSnap = {
+      values: { cutoff: 5, tempo: 120 },
+      cables: [cable('j.lfo', 'j.cut'), cable('j.x', 'j.other')],
+    };
+    const to: PanelSnap = {
+      values: { cutoff: 3, tempo: 90 },
+      cables: [cable('j.env', 'j.cut'), cable('j.y', 'j.other')],
+    };
+    const s = step({
+      set: { cutoff: 3 },
+      unplug: [['j.lfo', 'j.cut']],
+      cables: [['j.env', 'j.cut']],
+    });
+    const start = stepFrom(from, to, s);
+    // The tempo and the unnumbered cable are the step's already; the cutoff and the numbered input are the step before's.
+    expect(start.values).toEqual({ cutoff: 5, tempo: 90 });
+    expect(start.cables).toEqual([cable('j.lfo', 'j.cut'), cable('j.y', 'j.other')]);
+    const moves = stepMoves(start, to, s);
+    // So no move but a numbered one changes anything: the first turns the cutoff alone.
+    expect(moves[0].to).toEqual({ values: { cutoff: 3, tempo: 90 }, cables: start.cables });
   });
 });

@@ -422,4 +422,33 @@ describe('usePanelHistory showing a lesson step’s moves (f-step-moves t-178)',
     expect(walked).toBe(false);
     expect(other.result.current.sess.values).toEqual(TO.values);
   });
+
+  it('records nothing to undo for Replay on a step whose panel is already the step', () => {
+    const { result, turn } = setup();
+    act(() => void result.current.walk(toStep, FROM, MOVES));
+    advance(ONE_MOVE * 2);
+    turn(3);
+    act(() => result.current.undo());
+    advance(HISTORY_TURN_MS * 3);
+    expect(result.current.canRedo).toBe(true);
+    const undos = result.current.canUndo;
+    // The step's panel worked out afresh, as the page does: equal, not the same objects.
+    const again = (s: Sess): Sess => ({ ...toStep(s), values: { ...TO.values }, cables: [] });
+    act(() => void result.current.walk(again, FROM, MOVES));
+    advance(ONE_MOVE * 2);
+    // The panel came back as it was: Redo is still there, and Undo has nothing new.
+    expect(result.current.canRedo).toBe(true);
+    expect(result.current.canUndo).toBe(undos);
+  });
+
+  it('does not light again what the page had lit, once something else has lit the panel meanwhile', () => {
+    const { result } = setup();
+    act(() => highlightStore.set(['filter.cutoff', 'filter.emphasis']));
+    act(() => void result.current.walk(toStep, FROM, MOVES));
+    advance(0);
+    // The card closed during the moves.
+    act(() => highlightStore.set([]));
+    advance(ONE_MOVE * 2);
+    expect(highlightStore.get()).toEqual([]);
+  });
 });

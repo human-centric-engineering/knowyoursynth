@@ -60,6 +60,22 @@ export const HISTORY_TURN_MS = 600;
 /** How long each of a lesson step's moves is lit before it is made, in ms. */
 export const MOVE_LIGHT_MS = 700;
 
+// Long enough for each cable to go or come in turn (Unplug all undone plugs them back one by one).
+const turnMsFor = (from: PanelSnap, to: PanelSnap): number => {
+  const key = (c: PatchCable) => `${c.from}>${c.to}`;
+  const had = new Set(from.cables.map(key));
+  const has = new Set(to.cables.map(key));
+  const cablesMoved =
+    from.cables.filter((c) => !has.has(key(c))).length +
+    to.cables.filter((c) => !had.has(key(c))).length;
+  return Math.min(2500, Math.max(HISTORY_TURN_MS, cablesMoved * HISTORY_CABLE_MS));
+};
+
+const hasChanges = (from: PanelSnap, to: PanelSnap): boolean => {
+  const { controls, jacks } = panelChanges(from, to);
+  return controls.length > 0 || jacks.length > 0;
+};
+
 /** How long the blank panel shows before an arriving synth's patch is set on it, in ms. */
 export const ARRIVE_MS = 350;
 
@@ -256,6 +272,8 @@ export function usePanelHistory<S extends Panelled>(
       return;
     }
     if (!moved) return;
+    // Replay changes at the step already on the panel puts back the panel it had: nothing to undo.
+    if (by === 'walk' && !hasChanges(p.snap, snap)) return;
     if (by === 'change' || by === 'walk' || by === 'glide')
       setHistory((h) => recordChange(h, p.snap, performance.now(), by === 'glide'));
   }, [sess, def.id]); // eslint-disable-line react-hooks/exhaustive-deps -- `runGlide` follows `def`, as `def.id` does
@@ -343,14 +361,7 @@ export function usePanelHistory<S extends Panelled>(
       }
       const { controls, jacks } = panelChanges(from, to);
       highlightStore.set([...controls, ...jacks]);
-      // Long enough for each cable to go or come in turn (Unplug all undone plugs them back one by one).
-      const key = (c: PatchCable) => `${c.from}>${c.to}`;
-      const had = new Set(from.cables.map(key));
-      const has = new Set(to.cables.map(key));
-      const cablesMoved =
-        from.cables.filter((c) => !has.has(key(c))).length +
-        to.cables.filter((c) => !had.has(key(c))).length;
-      const turnMs = Math.min(2500, Math.max(HISTORY_TURN_MS, cablesMoved * HISTORY_CABLE_MS));
+      const turnMs = turnMsFor(from, to);
       showing.current = { finish: done };
       setShown(which);
       pending.timer = setTimeout(() => {
@@ -387,15 +398,23 @@ export function usePanelHistory<S extends Panelled>(
         setFrame(f);
       };
       const pending: { timer?: ReturnType<typeof setTimeout>; frame: number } = { frame: 0 };
-      // What the page and the lesson light for the step, once they have lit it: put back when the moves end.
+      // What the page and the lesson light for the step, once they have lit it: put back when the moves end. Let go of
+      // (the moves lit no more) once something else lights the panel meanwhile, such as the card closing.
       let lit: string[] | null = null;
+      let mine: string[] | null = null;
+      const light = (ids: string[]) => {
+        if (highlightStore.get() !== mine) lit = null;
+        if (!lit) return;
+        highlightStore.set(ids);
+        mine = ids;
+      };
       const done = () => {
         clearTimeout(pending.timer);
         cancelAnimationFrame(pending.frame);
         if (showing.current?.finish === done) showing.current = null;
         walking.current = false;
         moveStore.set(null);
-        if (lit) highlightStore.set(lit);
+        if (lit && highlightStore.get() === mine) highlightStore.set(lit);
         show(null);
         onEnd?.();
       };
@@ -406,14 +425,8 @@ export function usePanelHistory<S extends Panelled>(
           return;
         }
         moveStore.set({ id: m.id, ids: m.ids });
-        highlightStore.set(m.ids);
-        const key = (c: PatchCable) => `${c.from}>${c.to}`;
-        const had = new Set(at.cables.map(key));
-        const has = new Set(m.to.cables.map(key));
-        const cablesMoved =
-          at.cables.filter((c) => !has.has(key(c))).length +
-          m.to.cables.filter((c) => !had.has(key(c))).length;
-        const turnMs = Math.max(HISTORY_TURN_MS, cablesMoved * HISTORY_CABLE_MS);
+        light(m.ids);
+        const turnMs = turnMsFor(at, m.to);
         pending.timer = setTimeout(() => {
           const start = performance.now();
           const turn = (now: number) => {
@@ -435,7 +448,7 @@ export function usePanelHistory<S extends Panelled>(
       setSess(marked(fn, 'walk'));
       // Begun once the step's change has rendered, so the first move's light comes after what the page lights for it.
       pending.timer = setTimeout(() => {
-        lit = highlightStore.get();
+        lit = mine = highlightStore.get();
         make(0, from);
       }, 0);
       return true;

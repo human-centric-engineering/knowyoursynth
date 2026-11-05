@@ -50,7 +50,6 @@ const clampPos = (x: number, y: number, w: number) => ({
   y: Math.min(Math.max(y, EDGE), Math.max(EDGE, window.innerHeight - KEEP)),
 });
 
-/** A move's number, as on the panel. */
 /** A move's number; `now` while the move is being made on the panel (`f-step-moves`). */
 function Num({ n, now = false }: { n: number; now?: boolean }) {
   return (

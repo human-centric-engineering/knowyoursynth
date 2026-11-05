@@ -200,6 +200,24 @@ export function stepMoves(from: PanelSnap, to: PanelSnap, step: PresetStep): Ste
   });
 }
 
+/**
+ * The panel a step's moves are shown from: the step before (`from`), but with what the step does not number already as
+ * the step has it (`to`), such as a tempo the lesson's riff sets. Only the numbered moves are shown being made.
+ */
+export function stepFrom(from: PanelSnap, to: PanelSnap, step: PresetStep): PanelSnap {
+  const set = step.set || {};
+  const inputs = new Set(stepBadges(step).filter((id) => !(id in set)));
+  const values = { ...to.values };
+  for (const id of Object.keys(set)) if (id in from.values) values[id] = from.values[id];
+  return {
+    values,
+    cables: [
+      ...from.cables.filter((c) => inputs.has(c.to)),
+      ...to.cables.filter((c) => !inputs.has(c.to)),
+    ],
+  };
+}
+
 const idsOf = (id: string, pairs: readonly (readonly [string, string])[]): string[] => {
   const cables = pairs.filter(([, b]) => b === id);
   return cables.length ? [...new Set(cables.flat())] : [id];

@@ -88,6 +88,12 @@ export function StepText({
 const chipClass =
   'inline-flex items-center gap-1.5 rounded-md border border-(--kys-line) bg-(--kys-ground) px-2 py-1 text-left text-[12.5px] hover:border-(--kys-muted) data-now:border-(--kys-accent) data-now:bg-(--kys-raised)';
 
+// A chip lights what it names, and back to the step's controls as it is left; not while a move is being made on the
+// panel (`f-step-moves`), which keeps the move lit.
+const light = (ids: string[]) => {
+  if (!moveStore.get()) highlightStore.set(ids);
+};
+
 function Chip({
   def,
   id,
@@ -107,10 +113,10 @@ function Chip({
   return (
     <button
       type="button"
-      onPointerEnter={() => highlightStore.set([id])}
-      onPointerLeave={() => highlightStore.set(base)}
-      onFocus={() => highlightStore.set([id])}
-      onBlur={() => highlightStore.set(base)}
+      onPointerEnter={() => light([id])}
+      onPointerLeave={() => light(base)}
+      onFocus={() => light([id])}
+      onBlur={() => light(base)}
       onClick={() => focusStore.set({ kind: 'control', id, x: 0, y: 0, tip: false })}
       data-now={now || undefined}
       className={chipClass}
@@ -144,10 +150,10 @@ function CableChip({
   return (
     <button
       type="button"
-      onPointerEnter={() => highlightStore.set(pair)}
-      onPointerLeave={() => highlightStore.set(base)}
-      onFocus={() => highlightStore.set(pair)}
-      onBlur={() => highlightStore.set(base)}
+      onPointerEnter={() => light(pair)}
+      onPointerLeave={() => light(base)}
+      onFocus={() => light(pair)}
+      onBlur={() => light(base)}
       onClick={() =>
         focusStore.set({
           kind: 'cable',
@@ -197,8 +203,8 @@ function UnplugChip({
   if (!from || !to) return null;
   return (
     <span
-      onPointerEnter={() => highlightStore.set(pair)}
-      onPointerLeave={() => highlightStore.set(base)}
+      onPointerEnter={() => light(pair)}
+      onPointerLeave={() => light(base)}
       data-now={now || undefined}
       className={chipClass}
     >
@@ -555,8 +561,8 @@ function StartLine({
     <button
       type="button"
       onClick={() => onStep(START_STEP)}
-      onPointerEnter={() => highlightStore.set(ids)}
-      onPointerLeave={() => highlightStore.set(base)}
+      onPointerEnter={() => light(ids)}
+      onPointerLeave={() => light(base)}
       aria-current={now ? 'step' : undefined}
       title={now ? undefined : 'Set the panel to the Default patch'}
       className={`mb-3 flex w-full items-start gap-3 rounded-xl border px-3.5 py-2.5 text-left text-sm ${now ? 'border-(--kys-accent) bg-(--kys-raised)' : 'border-(--kys-line) bg-(--kys-surface) hover:border-(--kys-muted)'}`}
@@ -762,8 +768,8 @@ export function Lesson({ def, preset, step, onStep, mark = null }: LessonProps) 
                     <li
                       key={i}
                       className="rounded-xl border border-(--kys-line) bg-(--kys-surface) p-3.5"
-                      onPointerEnter={() => highlightStore.set([t.id])}
-                      onPointerLeave={() => highlightStore.set(base)}
+                      onPointerEnter={() => light([t.id])}
+                      onPointerLeave={() => light(base)}
                     >
                       <button
                         type="button"

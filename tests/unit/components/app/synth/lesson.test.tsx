@@ -228,6 +228,25 @@ describe('Lesson pointing at the panel', () => {
     expect(focusStore.get()).toMatchObject({ kind: 'control', id });
   });
 
+  it('leaves the move being made on the panel lit while a chip is hovered or left', () => {
+    setup(1);
+    const [id, other] = Object.keys(sound.steps[1].set ?? {});
+    const c = controlMap(def)[id];
+    if (!c) throw new Error(`no control ${id}`);
+    const chip = within(visibleStep()).getByText(displayName(def, c)).closest('button');
+    if (!chip) throw new Error('no chip');
+    const move = [other ?? 'a.move'];
+    act(() => {
+      moveStore.set({ id: move[0], ids: move });
+      highlightStore.set(move);
+    });
+    fireEvent.pointerEnter(chip);
+    expect(highlightStore.get()).toBe(move);
+    fireEvent.pointerLeave(chip);
+    expect(highlightStore.get()).toBe(move);
+    act(() => moveStore.set(null));
+  });
+
   it('rings both ends of a cable on hover and focus, back to the step on leave', () => {
     const at = sound.steps.findIndex((s) => s.cables?.length);
     setup(at);
