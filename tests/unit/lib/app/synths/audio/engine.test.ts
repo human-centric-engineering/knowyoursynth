@@ -235,8 +235,9 @@ describe('Engine', () => {
     const session = { type: 'auto' };
     vi.stubGlobal('navigator', { audioSession: session });
     const { Ctx, engine } = setup('ok');
-    engine.unlock(); // before any start: nothing to run
+    engine.unlock(); // before any start: nothing to run, and the session left to whatever else is playing
     expect(Ctx.last).toBeNull();
+    expect(session.type).toBe('auto');
     await engine.start();
     const ctx = Ctx.last!;
 
@@ -264,17 +265,32 @@ describe('Engine', () => {
   });
 
   it('leaves the sound off when the user turned it off, until they turn it on', async () => {
+    const session = { type: 'auto' };
+    vi.stubGlobal('navigator', { audioSession: session });
     const { Ctx, engine } = setup('ok');
     await engine.start();
     const ctx = Ctx.last!;
     await engine.suspend();
+    session.type = 'ambient'; // another page's music took the session meanwhile
     engine.unlock();
     expect(ctx.state).toBe('suspended');
+    expect(session.type).toBe('ambient');
 
     await engine.resume();
     ctx.state = 'interrupted';
     engine.unlock();
     expect(ctx.state).toBe('running');
+  });
+
+  it('stays off when the sound is turned off while the voice is still loading', async () => {
+    vi.useFakeTimers();
+    const { Ctx, engine } = setup('hang');
+    const starting = engine.start();
+    await engine.suspend();
+    await vi.advanceTimersByTimeAsync(WORKLET_TIMEOUT_MS);
+    await expect(starting).resolves.toBe('script');
+    expect(Ctx.last!.state).toBe('suspended');
+    expect(engine.running).toBe(false);
   });
 
   it('clears the load timeout once the worklet has loaded', async () => {

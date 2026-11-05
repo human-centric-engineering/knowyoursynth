@@ -63,7 +63,8 @@ export function getEngine(): Engine {
       listener?.(e);
     });
     engine = made;
-    // On any gesture, before the page's own handlers: a context iOS interrupted (a call, a backgrounded tab) runs again.
+    // On any gesture, in the capture phase: before the handlers on the page's elements, and the window's own key handler
+    // (which bubbles). A context iOS interrupted (a call, a backgrounded tab) runs again.
     GESTURES.forEach((type) =>
       document.addEventListener(type, () => made.unlock(), { capture: true, passive: true })
     );

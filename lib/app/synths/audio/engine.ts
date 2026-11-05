@@ -177,7 +177,8 @@ export class Engine {
     const pending = this.pending;
     this.pending = [];
     pending.forEach((m) => this.send(m));
-    if (ctx.state !== 'running') await ctx.resume();
+    // Not if the sound was turned off while the voice loaded: that stays off.
+    if (ctx.state !== 'running' && !this.muted) await ctx.resume();
     return this.mode;
   }
 
@@ -223,9 +224,10 @@ export class Engine {
    * back or when the first tap's resume() was refused. Nothing to do before a start, or when the sound was turned off.
    */
   unlock(): void {
-    playbackSession();
     const ctx = this.ctx;
+    // Nor is the audio session claimed for a page that never played, or whose sound is off: on iOS it stops other music.
     if (!ctx || this.muted) return;
+    playbackSession();
     // `interrupted` is Safari's own state, outside the standard AudioContextState.
     const state: string = ctx.state;
     if (state === 'suspended' || state === 'interrupted')
