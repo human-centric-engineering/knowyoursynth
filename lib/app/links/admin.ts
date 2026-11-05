@@ -298,9 +298,10 @@ export async function reorderOurLinks(
   const current = await prisma.externalLink.findMany({
     where: { ...owner, ours: true },
     orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
-    select: { id: true },
+    select: { id: true, order: true },
   });
   const before = current.map((r) => r.id);
+  const storedOrder = new Map(current.map((r) => [r.id, r.order]));
   const known = new Set(before);
   if (
     ids.length !== before.length ||
@@ -312,13 +313,14 @@ export async function reorderOurLinks(
     });
   if (ids.every((id, i) => before[i] === id)) return { before, after: before, changed: false };
 
+  // Every link ends at its index. One already stored there is not written, so it keeps its edit time in the admin
+  // list; a link left in place but stored with a gap or a tie is, or the saved order would differ from the one asked.
   // Each write is conditional on the link still being one of this owner's own: one deleted or unmarked since the read
   // above fails the whole transaction (P2025), so nothing moves and nothing is written onto a link that is not ours.
   try {
     await prisma.$transaction(
-      // Only the links that moved, so an unmoved one keeps its edit time in the admin list.
       ids.flatMap((id, order) =>
-        before[order] === id
+        storedOrder.get(id) === order
           ? []
           : [prisma.externalLink.update({ where: { id, ...owner, ours: true }, data: { order } })]
       )

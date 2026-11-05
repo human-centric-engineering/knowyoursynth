@@ -101,6 +101,8 @@ describe('parseLinkUrl: the other providers', () => {
     expect(ok('https://m.soundcloud.com/warp/sets/selected').providerId).toBe('warp/sets/selected');
     expect(problem('https://soundcloud.com/aphex-twin')).toMatch(/SoundCloud/);
     expect(problem('https://soundcloud.com/discover/sets')).toMatch(/SoundCloud/);
+    for (const page of ['tags/house', 'people/directory', 'groups/synths', 'mobile/x'])
+      expect(problem(`https://soundcloud.com/${page}`)).toMatch(/SoundCloud/);
   });
 
   it('reads Bandcamp tracks and albums with no embed id yet, and refuses anything else there', () => {
@@ -114,6 +116,12 @@ describe('parseLinkUrl: the other providers', () => {
     // Bandcamp's own sites are plain links, not an artist's page.
     expect(ok('https://daily.bandcamp.com/features/synth-week').provider).toBe('other');
     expect(ok('https://www.bandcamp.com/album/x').provider).toBe('other');
+  });
+
+  it('drops tracking parameters from any other address, so one page is one link', () => {
+    expect(
+      ok('https://example.com/review?utm_source=a&id=7&fbclid=x&UTM_Medium=b&gclid=y').url
+    ).toBe('https://example.com/review?id=7');
   });
 
   it('keeps any other https address as given, less its fragment', () => {

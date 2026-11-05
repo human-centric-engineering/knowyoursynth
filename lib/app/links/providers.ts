@@ -57,10 +57,14 @@ const VIMEO_ID = /^\d{1,12}$/;
 /** An unlisted Vimeo video's privacy hash: without it the video will not play. */
 const VIMEO_HASH = /^[0-9a-f]{6,20}$/;
 /** A Vimeo `providerId`: the video, and for an unlisted one `:<hash>`. */
-const VIMEO_PROVIDER_ID = /^(\d{1,12})(?::([0-9a-f]{6,20}))?$/;
+const VIMEO_PROVIDER_ID = new RegExp(
+  `^(${VIMEO_ID.source.slice(1, -1)})(?::(${VIMEO_HASH.source.slice(1, -1)}))?$`
+);
 const SPOTIFY_TYPES = ['track', 'album', 'playlist', 'episode', 'show', 'artist'] as const;
 const SPOTIFY_ID = /^[A-Za-z0-9]{22}$/;
-const SPOTIFY_PROVIDER_ID = /^(track|album|playlist|episode|show|artist)\/[A-Za-z0-9]{22}$/;
+const SPOTIFY_PROVIDER_ID = new RegExp(
+  `^(${SPOTIFY_TYPES.join('|')})/${SPOTIFY_ID.source.slice(1, -1)}$`
+);
 const SLUG = /^[A-Za-z0-9_-]{1,100}$/;
 const SOUNDCLOUD_RESERVED = new Set([
   'discover',
@@ -75,6 +79,18 @@ const SOUNDCLOUD_RESERVED = new Set([
   'notifications',
   'terms-of-use',
   'imprint',
+  'tags',
+  'people',
+  'groups',
+  'mobile',
+  'popular',
+  'jobs',
+  'explore',
+  'feed',
+  'signin',
+  'logout',
+  'premium',
+  'artists',
 ]);
 /** A user's own pages, which sit where a track's slug would: never a track. */
 const SOUNDCLOUD_USER_PAGES = new Set([
@@ -100,6 +116,8 @@ const BANDCAMP_OWN_HOSTS = new Set([
 ]);
 const BANDCAMP_PROVIDER_ID = /^(album|track)=\d{1,15}$/;
 const MAX_URL_LENGTH = 2000;
+/** Query parameters that only track who shared a link. */
+const TRACKING_PARAM = /^(utm_[a-z_]+|fbclid|gclid|dclid|msclkid|mc_eid|mc_cid|igshid|yclid)$/i;
 
 /** True when `host` is `domain` or a sub-domain of it. */
 function onDomain(host: string, domain: string): boolean {
@@ -279,6 +297,9 @@ export function parseLinkUrl(input: string): ParseResult {
     return parseBandcamp(url, host);
 
   url.hash = '';
+  // Tracking parameters say who shared it, not what it is: without them one page pasted twice is one link.
+  for (const key of [...url.searchParams.keys()])
+    if (TRACKING_PARAM.test(key)) url.searchParams.delete(key);
   return { ok: true, link: { provider: 'other', providerId: null, url: url.toString() } };
 }
 

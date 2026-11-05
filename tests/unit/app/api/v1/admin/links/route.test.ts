@@ -583,6 +583,29 @@ describe('PUT /order', () => {
     expect(mockLogAdminAction).not.toHaveBeenCalled();
   });
 
+  it('saves the order asked for even when the stored orders have gaps, a link left in place included', async () => {
+    // A0, C2, D3: B (order 1) was removed. Reorder to D, C, A: C stays at index 1 but is stored as 2.
+    const [a, c, d] = [
+      ['a', 0],
+      ['c', 2],
+      ['d', 3],
+    ].map(([x, order]) =>
+      String(
+        store.insert({
+          instrumentId: MINIMOOG,
+          url: `https://example.com/${x}`,
+          provider: 'other',
+          title: String(x),
+          ours: true,
+          order,
+        }).id
+      )
+    );
+    expect((await putOrder(request('PUT', '/order', { owner, ids: [d, c, a] }))).status).toBe(200);
+    const orderOf = (id: string) => store.links.find((l) => l.id === id)?.order;
+    expect([orderOf(d), orderOf(c), orderOf(a)]).toEqual([0, 1, 2]);
+  });
+
   it('writes only the links that moved', async () => {
     const [a, b, c] = threeOfOurs().map((r) => String(r.id));
     expect((await putOrder(request('PUT', '/order', { owner, ids: [a, c, b] }))).status).toBe(200);

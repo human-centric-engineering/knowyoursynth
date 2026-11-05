@@ -58,14 +58,14 @@ Exactly one of these, named in every API by its natural key:
 `parseLinkUrl` checks the input with `sanitizeUrl`, then requires https, no login, no port and a real host name. The
 provider is decided by the host, matched exactly or as a sub-domain, never as a substring.
 
-| Provider     | Accepted                                                                                                       | `providerId`                             | Stored URL                                    |
-| ------------ | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------- | --------------------------------------------- |
-| `youtube`    | `watch?v=`, `youtu.be/`, `shorts/`, `live/`, `embed/`                                                          | 11-char video id                         | `https://www.youtube.com/watch?v=<id>`        |
-| `vimeo`      | `vimeo.com/<n>[/<hash>]`, `…/channels/x/<n>`, `…/groups/x/videos/<n>`, `player.vimeo.com/video/<n>[?h=<hash>]` | `<n>`, or `<n>:<hash>` when unlisted     | `https://vimeo.com/<n>[/<hash>]`              |
-| `spotify`    | `open.spotify.com/[intl-xx/\|embed/]<type>/<id>`                                                               | `<type>/<id>`                            | `https://open.spotify.com/<type>/<id>`        |
-| `soundcloud` | `soundcloud.com/<user>/<track>[/s-<token>]`, `…/<user>/sets/<set>[/s-<token>]`                                 | the path lower-cased, the token as given | `https://soundcloud.com/<path>`               |
-| `bandcamp`   | `<artist>.bandcamp.com/track\|album/<slug>`                                                                    | null until t-180 reads it                | `https://<artist>.bandcamp.com/<type>/<slug>` |
-| `other`      | any other https address                                                                                        | null                                     | as given, without its fragment                |
+| Provider     | Accepted                                                                                                       | `providerId`                             | Stored URL                                                                          |
+| ------------ | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------- |
+| `youtube`    | `watch?v=`, `youtu.be/`, `shorts/`, `live/`, `embed/`                                                          | 11-char video id                         | `https://www.youtube.com/watch?v=<id>`                                              |
+| `vimeo`      | `vimeo.com/<n>[/<hash>]`, `…/channels/x/<n>`, `…/groups/x/videos/<n>`, `player.vimeo.com/video/<n>[?h=<hash>]` | `<n>`, or `<n>:<hash>` when unlisted     | `https://vimeo.com/<n>[/<hash>]`                                                    |
+| `spotify`    | `open.spotify.com/[intl-xx/\|embed/]<type>/<id>`                                                               | `<type>/<id>`                            | `https://open.spotify.com/<type>/<id>`                                              |
+| `soundcloud` | `soundcloud.com/<user>/<track>[/s-<token>]`, `…/<user>/sets/<set>[/s-<token>]`                                 | the path lower-cased, the token as given | `https://soundcloud.com/<path>`                                                     |
+| `bandcamp`   | `<artist>.bandcamp.com/track\|album/<slug>`                                                                    | null until t-180 reads it                | `https://<artist>.bandcamp.com/<type>/<slug>`                                       |
+| `other`      | any other https address                                                                                        | null                                     | as given, less its fragment and tracking parameters (`utm_*`, `fbclid`, `gclid`, …) |
 
 - **A named provider's URL without its id is refused**, not stored as `other`: an admin who pasted a YouTube channel
   page meant a video.
@@ -130,6 +130,8 @@ Admin rules (`lib/app/links/admin.ts`, each tested):
 - A new URL drops what was read from the old one (thumbnail, views, likes, `statsAt`).
 - Marking a link ours puts it last among the owner's own. Unmarking keeps its `order`, unused.
 - A save that changes nothing writes nothing and is not audited.
+- A reorder leaves each link at its index, writing only those not already stored there (a link left in place but
+  stored with a gap or a tie is written).
 - Audited as `external_link.create|update|delete|reorder`, recording owner, URL, kind, title, ours and rating.
 - Writes pass `writesSharedSettings: true`: links are `GLOBAL_CONFIG_MODELS` (divergence row in
   `.context/app/divergences.md`), so at `multi` only the install org's admins write them.
