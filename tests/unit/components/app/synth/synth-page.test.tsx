@@ -185,6 +185,7 @@ const detail: SynthDetail = {
     limits: { intro: null, items: [], shared: [] },
   },
   links: { count: 0, kinds: [] },
+  soundLinks: {},
 };
 
 const SESSION_KEY = 'kys.session.model-d';

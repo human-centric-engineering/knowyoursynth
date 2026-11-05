@@ -3,7 +3,8 @@
  *
  * Real route and `lib/app/links/read.ts` over the stateful fake (`tests/helpers/links-store.ts`). Pins: signed-out
  * read; exactly one target; a synth's list is its instruments' links together, one per URL, our copy kept; a hidden
- * synth and its sounds have none; ours first; embeds built from the id; never cached.
+ * synth and its sounds have none; ours first; embeds built from the id; never cached. A library patch's own come
+ * before its inspiration's, each of those marked with where it came from (t-183).
  */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
@@ -44,12 +45,25 @@ beforeEach(() => {
       { id: 'arp-odyssey', name: 'Odyssey' },
     ],
     songs: [{ id: 'kraftwerk-autobahn', title: 'Autobahn' }],
+    artists: [{ id: 'kraftwerk', name: 'Kraftwerk' }],
     synths: [
       { id: 'model-d', listed: true, instrumentIds: ['moog-minimoog', 'moog-minimoog-reissue'] },
       { id: 'hidden-synth', listed: false, instrumentIds: ['arp-odyssey'] },
     ],
     sounds: [
       { id: 'snd1', synthId: 'model-d', slug: 'bass', name: 'Bass' },
+      {
+        id: 'snd3',
+        synthId: 'model-d',
+        slug: 'autobahn-lead',
+        name: 'Autobahn lead',
+        patterns: [
+          {
+            song: { id: 'kraftwerk-autobahn', title: 'Autobahn' },
+            artist: { id: 'kraftwerk', name: 'Kraftwerk' },
+          },
+        ],
+      },
       { id: 'snd2', synthId: 'hidden-synth', slug: 'lead', name: 'Lead' },
     ],
   });
@@ -88,6 +102,7 @@ describe('GET /api/v1/links', () => {
       embedUrl: `https://www.youtube-nocookie.com/embed/${VIDEO}`,
       ours: true,
       views: null,
+      via: null,
     });
     expect(list[1]).toMatchObject({ embedUrl: null, thumbnailUrl: null });
   });
@@ -160,6 +175,49 @@ describe('GET /api/v1/links', () => {
       'Original',
     ]);
     expect((await links('?artist=nobody')).list).toEqual([]);
+  });
+
+  it('serves a patch inspired by a song its own links, then the song’s and artist’s, marked as theirs', async () => {
+    store.insert({
+      soundId: 'snd3',
+      url: 'https://example.com/walkthrough',
+      provider: 'other',
+      title: 'Walk-through',
+      kind: 'lesson',
+    });
+    store.insert({
+      songId: 'kraftwerk-autobahn',
+      url: 'https://example.com/original',
+      provider: 'other',
+      title: 'Original',
+      kind: 'original',
+      views: 5e7,
+    });
+    store.insert({
+      artistId: 'kraftwerk',
+      url: 'https://example.com/live',
+      provider: 'other',
+      title: 'Live',
+      kind: 'performance',
+    });
+
+    const { list } = await links('?sound=model-d/autobahn-lead');
+
+    // Its own first, whatever the inspiration's popularity.
+    expect(list[0]).toMatchObject({ title: 'Walk-through', via: null });
+    expect(list.slice(1)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          title: 'Original',
+          via: { kind: 'song', id: 'kraftwerk-autobahn', name: 'Autobahn' },
+        }),
+        expect.objectContaining({
+          title: 'Live',
+          via: { kind: 'artist', id: 'kraftwerk', name: 'Kraftwerk' },
+        }),
+      ])
+    );
+    expect(list).toHaveLength(3);
   });
 
   it('serves nothing for a hidden synth or a sound on one, though the rows are there', async () => {

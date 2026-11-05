@@ -179,6 +179,7 @@ const detail: SynthDetail = {
     limits: { intro: null, items: [], shared: [] },
   },
   links: { count: 0, kinds: [] },
+  soundLinks: {},
 };
 
 function page(over: Partial<SynthPageProps> = {}) {

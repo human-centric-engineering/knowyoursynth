@@ -10,7 +10,11 @@ import { logger } from '@/lib/logging';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import { synthRows } from '@/tests/helpers/synth-detail';
 import { bankDb } from '@/tests/helpers/bank-db';
-import { summarisePublicLinks } from '@/lib/app/links/read';
+import {
+  summarisePublicLinks,
+  summariseSongLinks,
+  summariseSoundLinks,
+} from '@/lib/app/links/read';
 
 vi.mock('@/lib/db/client', () => ({
   prisma: {
@@ -22,7 +26,11 @@ vi.mock('@/lib/db/client', () => ({
   },
 }));
 // The links read layer has its own tests (`tests/unit/lib/app/links/read.test.ts`); here, only that it is asked.
-vi.mock('@/lib/app/links/read', () => ({ summarisePublicLinks: vi.fn() }));
+vi.mock('@/lib/app/links/read', () => ({
+  summarisePublicLinks: vi.fn(),
+  summariseSoundLinks: vi.fn(),
+  summariseSongLinks: vi.fn(),
+}));
 vi.mock('@/lib/logging', () => ({
   logger: { warn: vi.fn(), error: vi.fn(), info: vi.fn() },
 }));
@@ -53,6 +61,8 @@ beforeEach(() => {
   vi.mocked(prisma.bankSong.findMany).mockImplementation(bank.bankSong.findMany as never);
   vi.mocked(prisma.synthNote.findMany).mockResolvedValue(notes as never);
   vi.mocked(summarisePublicLinks).mockResolvedValue({ count: 0, kinds: [] });
+  vi.mocked(summariseSoundLinks).mockResolvedValue({});
+  vi.mocked(summariseSongLinks).mockResolvedValue(new Map());
 });
 
 describe('listSynths', () => {
@@ -141,6 +151,17 @@ describe('getSynthDetail', () => {
     expect(detail?.links).toEqual(links);
   });
 
+  it("carries each library sound's videos and links, counted, by slug", async () => {
+    vi.mocked(prisma.synth.findFirst).mockResolvedValue(stored() as never);
+    const soundLinks = { 'fat-bass': { count: 2, kinds: ['original' as const] } };
+    vi.mocked(summariseSoundLinks).mockResolvedValue(soundLinks);
+
+    const detail = await getSynthDetail('model-d');
+
+    expect(summariseSoundLinks).toHaveBeenCalledWith('model-d');
+    expect(detail?.soundLinks).toEqual(soundLinks);
+  });
+
   it('is null for an id no listed synth has', async () => {
     vi.mocked(prisma.synth.findFirst).mockResolvedValue(null);
     expect(await getSynthDetail('nope')).toBeNull();
@@ -223,6 +244,24 @@ describe('getSynthDetail heardArtists', () => {
     const credited = new Set((lineage?.heard ?? []).flatMap((h) => h.artists));
     expect(credited.size).toBeGreaterThan(0);
     expect(new Set(lineage?.heardArtists?.map((a) => a.id))).toEqual(credited);
+  });
+});
+
+describe('getSynthDetail Heard on links', () => {
+  it('counts the links of every record on the list, and puts them on the rows that have any', async () => {
+    vi.mocked(prisma.synth.findFirst).mockResolvedValue(stored() as never);
+    const baseline = (await getSynthDetail('model-d'))?.lineage?.heard ?? [];
+    expect(baseline.length).toBeGreaterThan(1);
+    const [first, second] = baseline;
+    const counted = { count: 2, kinds: ['original' as const, 'lesson' as const] };
+    vi.mocked(summariseSongLinks).mockResolvedValue(new Map([[first.song, counted]]));
+
+    const heard = (await getSynthDetail('model-d'))?.lineage?.heard ?? [];
+
+    expect(summariseSongLinks).toHaveBeenLastCalledWith(baseline.map((h) => h.song));
+    expect(heard.find((h) => h.song === first.song)?.links).toEqual(counted);
+    // A record with none carries no count, so it shows no button.
+    expect(heard.find((h) => h.song === second.song)).not.toHaveProperty('links');
   });
 });
 

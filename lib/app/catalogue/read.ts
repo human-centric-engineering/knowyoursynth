@@ -17,7 +17,12 @@ import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
 import { designFromDb, type SynthDesign } from '@/lib/app/catalogue/designs';
 import { getHeardOn } from '@/lib/app/bank/read';
-import { summarisePublicLinks, type LinkSummary } from '@/lib/app/links/read';
+import {
+  summarisePublicLinks,
+  summariseSongLinks,
+  summariseSoundLinks,
+  type LinkSummary,
+} from '@/lib/app/links/read';
 import {
   LimitSchema,
   LineageEntrySchema,
@@ -65,6 +70,11 @@ export interface SynthDetail {
    * says before it is opened. The list itself is `GET /api/v1/links?synth=`, read when it is.
    */
   links: LinkSummary;
+  /**
+   * Each library sound's videos and links, counted, by slug: its own and its inspiration's (t-183). A sound with none
+   * is not in it. The list is `GET /api/v1/links?sound=<synth>/<slug>`.
+   */
+  soundLinks: Record<string, LinkSummary>;
 }
 
 const synthColumns = {
@@ -138,7 +148,7 @@ export async function listSoundNames(): Promise<Record<string, Record<string, st
 export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
   const def = getSynthDef(id);
   if (!def) return null;
-  const [row, noteRows, heardOn, links] = await Promise.all([
+  const [row, noteRows, heardOn, links, soundLinks] = await Promise.all([
     prisma.synth.findFirst({
       where: { id, listed: true },
       select: {
@@ -152,9 +162,20 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
       orderBy: [{ order: 'asc' }, { key: 'asc' }],
       select: { kind: true, synthId: true, target: true, title: true, text: true },
     }),
-    // "Heard on" is the databank's, joined into the lineage as the contract shapes it (`f-databank`).
-    getHeardOn(id),
+    // "Heard on" is the databank's, joined into the lineage as the contract shapes it (`f-databank`), each song with
+    // its links counted (`f-videos-and-links` t-183).
+    getHeardOn(id).then(async (h) => {
+      const counted = await summariseSongLinks(h.heard.map((e) => e.song));
+      return {
+        ...h,
+        heard: h.heard.map((e) => {
+          const songLinks = counted.get(e.song);
+          return songLinks ? { ...e, links: songLinks } : e;
+        }),
+      };
+    }),
     summarisePublicLinks({ target: 'synth', id }),
+    summariseSoundLinks(id),
   ]);
   if (!row) return null;
   const { sounds: soundRows, lineage: lineageRow, ...synthRow } = row;
@@ -237,5 +258,5 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
       (n.synthId ? notes.limits.items : notes.limits.shared).push({ title: n.title, text: n.text });
   }
 
-  return { synth, sounds, lineage, notes, links };
+  return { synth, sounds, lineage, notes, links, soundLinks };
 }
