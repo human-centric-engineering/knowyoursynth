@@ -96,8 +96,15 @@ describe('LinksSection', () => {
     expect(container.querySelectorAll('iframe')).toHaveLength(0);
   });
 
+  // Pressing Play starts the player where the provider takes a parameter for it, so it is one press, not two.
+  const STARTED: Partial<Record<LinkProvider, string>> = {
+    youtube: '?autoplay=1',
+    vimeo: '&autoplay=1',
+    soundcloud: '&auto_play=true',
+  };
+
   it.each(PLAYERS.map((p) => [p.provider, p] as const))(
-    'plays %s from the address embedUrl derives',
+    'plays %s from the address embedUrl derives, started where it can be',
     async (_provider, player) => {
       const { container } = section();
       fireEvent.click(opener());
@@ -109,7 +116,9 @@ describe('LinksSection', () => {
       const frames = container.querySelectorAll('iframe');
       expect(frames).toHaveLength(1);
       expect(player.embedUrl).toBeTruthy();
-      expect(frames[0].getAttribute('src')).toBe(player.embedUrl);
+      expect(frames[0].getAttribute('src')).toBe(
+        `${player.embedUrl}${STARTED[player.provider] ?? ''}`
+      );
       expect(frames[0].getAttribute('title')).toBe(player.title);
     }
   );

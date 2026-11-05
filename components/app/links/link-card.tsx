@@ -9,12 +9,13 @@
  * a Bandcamp one whose id has not been read) opens in a new tab instead.
  */
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ExternalLink, Play } from 'lucide-react';
 
 import {
   KIND_LABEL,
   PROVIDER_NAME,
+  playingUrl,
   viewsLabel,
   type PublicLinkView,
 } from '@/components/app/links/data';
@@ -72,7 +73,13 @@ function Meta({ link }: { link: PublicLinkView }) {
 
 export function LinkCard({ link }: { link: PublicLinkView }) {
   const [playing, setPlaying] = useState(false);
+  const player = useRef<HTMLIFrameElement>(null);
   const embed = link.embedUrl;
+
+  // The pressed button is gone once the player loads: focus moves to the player rather than falling to the page.
+  useEffect(() => {
+    if (playing) player.current?.focus();
+  }, [playing]);
 
   if (!embed) {
     return (
@@ -106,7 +113,8 @@ export function LinkCard({ link }: { link: PublicLinkView }) {
           className={`overflow-hidden rounded-lg border border-(--kys-line) bg-(--kys-surface) ${PLAYER_BOX[link.provider]}`}
         >
           <iframe
-            src={embed}
+            ref={player}
+            src={playingUrl(link.provider, embed)}
             title={link.title}
             className="h-full w-full"
             allow="autoplay; encrypted-media; fullscreen; picture-in-picture; clipboard-write"

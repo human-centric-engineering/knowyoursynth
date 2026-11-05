@@ -5,7 +5,7 @@
  * losing the link; the teaser and view count read as the section prints them.
  */
 import { describe, expect, it } from 'vitest';
-import { readPublicLinks, teaser, viewsLabel } from '@/components/app/links/data';
+import { playingUrl, readPublicLinks, teaser, viewsLabel } from '@/components/app/links/data';
 
 const row = {
   id: 'l1',
@@ -70,5 +70,32 @@ describe('viewsLabel', () => {
     expect(viewsLabel(1)).toBe('1 view');
     expect(viewsLabel(0)).toBe('0 views');
     expect(viewsLabel(null)).toBeNull();
+  });
+});
+
+describe('playingUrl', () => {
+  it('starts the players that take a parameter, keeping what the address already says', () => {
+    expect(playingUrl('youtube', 'https://www.youtube-nocookie.com/embed/abc')).toBe(
+      'https://www.youtube-nocookie.com/embed/abc?autoplay=1'
+    );
+    expect(playingUrl('vimeo', 'https://player.vimeo.com/video/1?h=x&dnt=1')).toBe(
+      'https://player.vimeo.com/video/1?h=x&dnt=1&autoplay=1'
+    );
+    expect(
+      playingUrl(
+        'soundcloud',
+        'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fa%2Fb'
+      )
+    ).toBe(
+      'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fa%2Fb&auto_play=true'
+    );
+  });
+
+  it('leaves the players that take none as built', () => {
+    const spotify = 'https://open.spotify.com/embed/track/1';
+    const bandcamp =
+      'https://bandcamp.com/EmbeddedPlayer/track=1/size=large/tracklist=false/transparent=true/';
+    expect(playingUrl('spotify', spotify)).toBe(spotify);
+    expect(playingUrl('bandcamp', bandcamp)).toBe(bandcamp);
   });
 });

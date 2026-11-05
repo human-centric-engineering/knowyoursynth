@@ -95,6 +95,13 @@ const PUBLIC_SELECT = {
   createdAt: true,
 } as const satisfies Prisma.ExternalLinkSelect;
 
+const SUMMARY_SELECT = {
+  url: true,
+  ours: true,
+  createdAt: true,
+  kind: true,
+} as const satisfies Prisma.ExternalLinkSelect;
+
 type PublicRow = Prisma.ExternalLinkGetPayload<{ select: typeof PUBLIC_SELECT }>;
 
 /**
@@ -136,8 +143,10 @@ async function whereFor(
 }
 
 /** One per URL: our copy when there is one, else the oldest. */
-function onePerUrl(rows: PublicRow[]): PublicRow[] {
-  const byUrl = new Map<string, PublicRow>();
+function onePerUrl<Row extends { url: string; ours: boolean; createdAt: Date }>(
+  rows: Row[]
+): Row[] {
+  const byUrl = new Map<string, Row>();
   for (const row of rows) {
     const kept = byUrl.get(row.url);
     if (
@@ -194,8 +203,9 @@ export async function listPublicLinks(
 export async function summarisePublicLinks(query: PublicLinkQuery): Promise<LinkSummary> {
   const target = await whereFor(query);
   if (!target) return { count: 0, kinds: [] };
+  // Only what `onePerUrl` and the count read: this runs on every synth and instrument page render.
   const rows = onePerUrl(
-    await prisma.externalLink.findMany({ where: target.where, select: PUBLIC_SELECT })
+    await prisma.externalLink.findMany({ where: target.where, select: SUMMARY_SELECT })
   );
   return {
     count: rows.length,

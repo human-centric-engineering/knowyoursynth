@@ -96,11 +96,26 @@ export function teaser(summary: LinkSummary): string {
   return kinds ? `${summary.count} · ${kinds}` : String(summary.count);
 }
 
+const COMPACT = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 });
+
 /** "1.2M views". Null without a count. */
 export function viewsLabel(views: number | null): string | null {
   if (views === null) return null;
-  const n = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(
-    views
-  );
-  return `${n} view${views === 1 ? '' : 's'}`;
+  return `${COMPACT.format(views)} view${views === 1 ? '' : 's'}`;
+}
+
+/** Which providers start on their own, and by what parameter; Spotify and Bandcamp take none. */
+const AUTOPLAY: Partial<Record<PublicLinkView['provider'], [string, string]>> = {
+  youtube: ['autoplay', '1'],
+  vimeo: ['autoplay', '1'],
+  soundcloud: ['auto_play', 'true'],
+};
+
+/** The player's address once Play is pressed: started where the provider allows, so it is one press, not two. */
+export function playingUrl(provider: PublicLinkView['provider'], embed: string): string {
+  const param = AUTOPLAY[provider];
+  if (!param) return embed;
+  const url = new URL(embed);
+  url.searchParams.set(...param);
+  return url.toString();
 }
