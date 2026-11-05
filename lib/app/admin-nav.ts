@@ -12,12 +12,21 @@
  * `title` distinct from the core sections.
  *
  * Know Your Synth fills it with one "Synths" section, for the pages that look after the content: Designs
- * (`f-panel-designs`), the catalogue editor and the data page (`f-catalogue-admin`), the pattern library (`f-pattern-library`), the databank and its suggestion queue (`f-databank`), and reported sounds (`f-sharing`). Designs lives at the section's root, so it is
+ * (`f-panel-designs`), the catalogue editor and the data page (`f-catalogue-admin`), the pattern library (`f-pattern-library`), the databank and its suggestion queue (`f-databank`), videos and links (`f-videos-and-links`), and reported sounds (`f-sharing`). Designs lives at the section's root, so it is
  * `exact`: otherwise it would also light up on every catalogue page beneath it.
  *
  * Full guide + example: CUSTOMIZATION.md §4 · lib/admin-nav/registry.ts
  */
-import { BookUser, DatabaseZap, Flag, Inbox, Library, ListMusic, Palette } from 'lucide-react';
+import {
+  BookUser,
+  DatabaseZap,
+  Flag,
+  Inbox,
+  Library,
+  ListMusic,
+  Palette,
+  SquarePlay,
+} from 'lucide-react';
 
 import { registerNavSection } from '@/lib/admin-nav/registry';
 
@@ -50,6 +59,13 @@ export function initAppNav(): void {
         label: 'Databank',
         icon: BookUser,
         description: 'Create, edit and remove the artists, innovators, records and instruments',
+      },
+      {
+        href: '/admin/synths/links',
+        label: 'Videos and links',
+        icon: SquarePlay,
+        description:
+          'Demos, reviews, lessons and records on instruments, patches, records and artists',
       },
       {
         href: '/admin/synths/suggestions',
