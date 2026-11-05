@@ -64,7 +64,11 @@ async function readCapped(
     }
   } finally {
     // Stops the download: a page past its head, or past the cap, is not read to the end.
-    await reader.cancel().catch(() => undefined);
+    try {
+      await reader.cancel();
+    } catch {
+      // Already closed: nothing left to stop.
+    }
   }
 }
 
@@ -89,7 +93,8 @@ export async function readText(url: string, options: ReadOptions): Promise<strin
       })
     );
     if (!response.ok) {
-      await response.body?.cancel().catch(() => undefined);
+      // Not read: an error page is not what was asked for. Cancelling cannot fail on an unread body.
+      await response.body?.cancel();
       logger.warn('Links: provider answered with an error', {
         purpose: options.purpose,
         host,

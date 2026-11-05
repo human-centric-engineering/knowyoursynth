@@ -7,12 +7,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const mocks = vi.hoisted(() => ({
   reconcile: vi.fn(),
   deleteMany: vi.fn(),
+  refreshStats: vi.fn(),
 }));
 
 vi.mock('@/lib/db/client', () => ({
   prisma: { heldUsername: { deleteMany: mocks.deleteMany } },
 }));
 vi.mock('@/lib/app/bank/knowledge', () => ({ reconcileBankKnowledge: mocks.reconcile }));
+vi.mock('@/lib/app/links/stats', () => ({ refreshYouTubeStats: mocks.refreshStats }));
 
 import { getAppJobs, __resetAppJobsForTests } from '@/lib/orchestration/maintenance/app-jobs';
 import { INSTALL_ORG_ID } from '@/lib/tenancy/constants';
@@ -27,6 +29,22 @@ const job = (name: string) => {
 beforeEach(() => {
   vi.clearAllMocks();
   __resetAppJobsForTests();
+});
+
+describe('app:refresh-link-stats', () => {
+  it('refreshes the links’ YouTube counts in the install org, daily', async () => {
+    mocks.refreshStats.mockResolvedValue({ videos: 3, updated: 1 });
+    const result = await runAsOrg(INSTALL_ORG_ID, () => job('app:refresh-link-stats').run());
+    expect(mocks.refreshStats).toHaveBeenCalledTimes(1);
+    expect(result).toEqual({ videos: 3, updated: 1 });
+    expect(job('app:refresh-link-stats').intervalMs).toBe(24 * 60 * 60 * 1000);
+  });
+
+  it('does nothing in any other org: links are shared, so one run covers everyone', async () => {
+    const result = await runAsOrg('org-other', () => job('app:refresh-link-stats').run());
+    expect(mocks.refreshStats).not.toHaveBeenCalled();
+    expect(result).toEqual({ status: 'skipped', reason: 'not the install org' });
+  });
 });
 
 describe('app:project-databank', () => {

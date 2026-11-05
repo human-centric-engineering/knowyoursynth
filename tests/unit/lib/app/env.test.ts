@@ -53,3 +53,20 @@ describe('BRAVE_SEARCH_API_KEY', () => {
     });
   });
 });
+
+describe('YOUTUBE_API_KEY', () => {
+  const parse = (value: string | undefined) =>
+    appEnvSchema.safeParse(value === undefined ? {} : { YOUTUBE_API_KEY: value });
+
+  it('is optional: unset or blank, the server boots and the stats job does nothing', () => {
+    for (const value of [undefined, '']) {
+      const result = parse(value);
+      expect(result.success).toBe(true);
+      expect(result.data?.YOUTUBE_API_KEY).toBeUndefined();
+    }
+  });
+
+  it('is kept as it is when set', () => {
+    expect(parse('yt-key')).toMatchObject({ success: true, data: { YOUTUBE_API_KEY: 'yt-key' } });
+  });
+});
