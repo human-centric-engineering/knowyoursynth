@@ -7,41 +7,18 @@
  * row id, which survives a reseed: the catalogue seed matches a sound on its synth and slug and updates it in place
  * (`lib/app/catalogue/seed.ts`), and nothing re-creates one.
  */
-import { z } from 'zod';
 import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
-import { BankIdSchema } from '@/lib/app/bank/data';
-import { SoundSlugSchema, SynthIdSchema } from '@/lib/app/sounds/data';
+import { splitSoundKey, type OwnerRef } from '@/lib/app/links/owner-ref';
 
-export const OWNER_KINDS = ['instrument', 'sound', 'song', 'artist'] as const;
-export type OwnerKind = (typeof OWNER_KINDS)[number];
-
-/** An owner as an API names it. */
-export interface OwnerRef {
-  kind: OwnerKind;
-  id: string;
-}
-
-/** Split a library sound's key, `<synthId>/<slug>`, or null when it is not one. */
-export function splitSoundKey(key: string): { synthId: string; slug: string } | null {
-  const parts = key.split('/');
-  if (parts.length !== 2) return null;
-  const synthId = SynthIdSchema.safeParse(parts[0]);
-  const slug = SoundSlugSchema.safeParse(parts[1]);
-  return synthId.success && slug.success ? { synthId: synthId.data, slug: slug.data } : null;
-}
-
-/** An owner's id has its kind's shape. */
-export function validOwnerId(kind: OwnerKind, id: string): boolean {
-  return kind === 'sound' ? splitSoundKey(id) !== null : BankIdSchema.safeParse(id).success;
-}
-
-export const OwnerRefSchema = z
-  .object({ kind: z.enum(OWNER_KINDS), id: z.string().min(1).max(200) })
-  .refine((o) => validOwnerId(o.kind, o.id), {
-    message: 'Not an id of that kind: a databank id, or <synth>/<patch> for a library patch',
-    path: ['id'],
-  });
+export {
+  OWNER_KINDS,
+  OwnerRefSchema,
+  splitSoundKey,
+  validOwnerId,
+  type OwnerKind,
+  type OwnerRef,
+} from '@/lib/app/links/owner-ref';
 
 /** The foreign-key column a link to this owner sets, with the value: the `where` and `data` for it. */
 export type OwnerColumns =
