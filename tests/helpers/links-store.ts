@@ -185,11 +185,17 @@ export function linksStore(seed: LinksStoreSeed = {}) {
       return row ? { id: row.id } : null;
     };
 
+  /** Several rows by id, as the suggestion queue names its targets (t-185). */
+  const manyById =
+    <T extends { id: string }>(rows: T[]) =>
+    async (args: { where: { id: { in: string[] } } }) =>
+      rows.filter((r) => args.where.id.in.includes(r.id)).map((r) => ({ ...r }));
+
   const client = {
     externalLink,
-    bankInstrument: { findUnique: byId(instruments) },
-    bankSong: { findUnique: byId(songs) },
-    bankArtist: { findUnique: byId(artists) },
+    bankInstrument: { findUnique: byId(instruments), findMany: manyById(instruments) },
+    bankSong: { findUnique: byId(songs), findMany: manyById(songs) },
+    bankArtist: { findUnique: byId(artists), findMany: manyById(artists) },
     synthSound: {
       findUnique: async (args: { where: { synthId_slug: { synthId: string; slug: string } } }) => {
         const { synthId, slug } = args.where.synthId_slug;
@@ -198,8 +204,17 @@ export function linksStore(seed: LinksStoreSeed = {}) {
       },
       /** A synth's sounds, or one, with each one's patterns as `headOf` reads them (`soundSources`). */
       findMany: async (args: {
-        where: { synthId: string; slug?: string; synth?: { listed: boolean } };
+        where:
+          | { synthId: string; slug?: string; synth?: { listed: boolean } }
+          | { OR: { synthId: string; slug: string }[] };
       }) => {
+        // Several sounds by key, as the suggestion queue names its targets (t-185).
+        if ('OR' in args.where) {
+          const keys = args.where.OR;
+          return sounds
+            .filter((s) => keys.some((k) => k.synthId === s.synthId && k.slug === s.slug))
+            .map((s) => ({ synthId: s.synthId, slug: s.slug, name: s.name }));
+        }
         const { synthId, slug, synth: on } = args.where;
         const synth = synths.find((s) => s.id === synthId);
         if (on?.listed && !synth?.listed) return [];

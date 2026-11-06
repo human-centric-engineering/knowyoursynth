@@ -1193,3 +1193,53 @@ model ExternalLink {
   @@index([provider])
   @@map("external_link")
 }
+
+// ─── Link suggestions (f-link-suggestions t-185) ─────────────────────────────
+//
+// A video or link a signed-in user says belongs on an instrument, a library sound, a song or an artist, queued for an
+// admin. On SYSTEM_MODELS beside SynthSuggestion: an inbound queue decided in one place, not a shared setting.
+//
+// What it is about is a kind and the natural key the API names it by (`lib/app/links/owner.ts`), not a foreign key:
+// a removed target leaves the suggestion as history, and accepting it is refused. `userId` is a plain string, as
+// SynthSuggestion's is; its FK is written by hand in the migration, `ON DELETE SET NULL`, and pinned by a drift probe
+// (lib/app/db-drift.ts). Spec: .context/app/links.md (Suggestions).
+
+/// What a suggested link is about: the owner kinds of `lib/app/links/owner.ts`.
+enum LinkTargetKind {
+  instrument
+  sound
+  song
+  artist
+}
+
+enum LinkSuggestionStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+model LinkSuggestion {
+  id         String               @id @default(cuid())
+  /// FK to User.id, ON DELETE SET NULL (hand-written in the migration).
+  userId     String?
+  targetKind LinkTargetKind
+  /// A databank id, or `<synthId>/<slug>` for a library sound.
+  targetId   String
+  /// After parsing (`parseLinkUrl`), so it compares with the links the target already has.
+  url        String
+  kind       LinkKind
+  title      String?
+  note       String?              @db.Text
+  status     LinkSuggestionStatus @default(PENDING)
+  /// The link an accept made. Not a foreign key: it records the outcome, and does not stop the link's removal.
+  linkId     String?
+  /// Why it was declined.
+  reason     String?              @db.Text
+  decidedAt  DateTime?
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+
+  @@index([status, createdAt])
+  @@index([userId])
+  @@map("link_suggestion")
+}

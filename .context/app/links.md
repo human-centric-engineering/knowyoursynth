@@ -2,20 +2,21 @@
 
 Demos, reviews, recordings and lessons on YouTube, Vimeo, Spotify, Bandcamp and SoundCloud, plus plain web links,
 attached to the things they are about. Admin-managed. Hub feature `f-videos-and-links` (§40). Suggestions from
-users and links on users' own sounds are `f-link-suggestions` (§41), not here.
+users and links on users' own sounds are `f-link-suggestions` (§41): suggestions are below (Suggestions).
 
-| Piece                       | Where                                        | Task  |
-| --------------------------- | -------------------------------------------- | ----- |
-| Table                       | `ExternalLink` in `prisma/schema/app.prisma` | t-179 |
-| Parsing, embeds, thumbnails | `lib/app/links/providers.ts`                 | t-179 |
-| Order                       | `lib/app/links/order.ts`                     | t-179 |
-| Owners                      | `lib/app/links/owner.ts`                     | t-179 |
-| Admin writes                | `lib/app/links/admin.ts`, `admin-route.ts`   | t-179 |
-| Public read                 | `lib/app/links/read.ts`                      | t-179 |
-| Titles, thumbnails, views   | `details.ts`, `stats.ts`, `fetch.ts`         | t-180 |
-| Admin pages                 | `components/app/admin/links/`                | t-181 |
-| Under the panel, `/bank`    | `components/app/links/`, `lib/app/csp.ts`    | t-182 |
-| Patches and History         | `links-toggle.tsx`, `summariseSoundLinks`    | t-183 |
+| Piece                       | Where                                            | Task  |
+| --------------------------- | ------------------------------------------------ | ----- |
+| Table                       | `ExternalLink` in `prisma/schema/app.prisma`     | t-179 |
+| Parsing, embeds, thumbnails | `lib/app/links/providers.ts`                     | t-179 |
+| Order                       | `lib/app/links/order.ts`                         | t-179 |
+| Owners                      | `lib/app/links/owner.ts`, `owner-ref.ts`         | t-179 |
+| Admin writes                | `lib/app/links/admin.ts`, `admin-route.ts`       | t-179 |
+| Public read                 | `lib/app/links/read.ts`                          | t-179 |
+| Titles, thumbnails, views   | `details.ts`, `stats.ts`, `fetch.ts`             | t-180 |
+| Admin pages                 | `components/app/admin/links/`                    | t-181 |
+| Under the panel, `/bank`    | `components/app/links/`, `lib/app/csp.ts`        | t-182 |
+| Patches and History         | `links-toggle.tsx`, `summariseSoundLinks`        | t-183 |
+| Suggestions                 | `LinkSuggestion`, `lib/app/links/suggestions.ts` | t-185 |
 
 ## Don't
 
@@ -254,3 +255,40 @@ Admin rules (`lib/app/links/admin.ts`, each tested):
 
 Not in the catalogue's JSON upload or download, which is content-only (owner ruling on `f-catalogue-admin`).
 Database backups cover links.
+
+## Suggestions
+
+A signed-in user says a video or link belongs on an instrument, a library patch, a song or an artist; an admin
+accepts or declines it (`f-link-suggestions` t-185). The shape is the synth suggestions' (`lib/app/bank/suggestions.ts`),
+its reasoning re-derived:
+
+- **`LinkSuggestion` is on `SYSTEM_MODELS`, not `GLOBAL_CONFIG_MODELS`.** It is an inbound queue decided in one place,
+  not a shared setting, and the shared-settings guard would refuse a user's `POST` to a global-config table.
+  `not-personal` in `lib/app/owner-classification.ts`; exported to its suggester as `linkSuggestions`.
+- **What it is about is a kind and the natural key** (`targetKind`, `targetId`, as `owner-ref.ts` names owners), not a
+  foreign key. A removed target leaves the suggestion as history; accepting it is a 404, so the admin declines it.
+- **`userId` is a plain string** with a hand-written FK, `ON DELETE SET NULL`, pinned by a drift probe: an erased
+  user's suggestions stay, with nobody attached.
+- **`linkId` records which link an accept made**, as a synth suggestion's `instrumentId` does, without an FK.
+
+| Route                                      | Who       | What                                                                                                                                                                                                                                                  |
+| ------------------------------------------ | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `POST /api/v1/links/suggestions`           | signed in | `{ target: { kind, id }, url, kind, title?, note? }`. 400 for a URL the parser refuses, 404 for a target not there (or a sound on an unlisted synth), 409 for a URL it already links or that is already waiting for it. 10 an hour per user, then 429 |
+| `GET /api/v1/admin/links/suggestions`      | admin     | `?status=PENDING\|ACCEPTED\|DECLINED`, newest first, each with `target { kind, id, name }` (`name` null once removed) and `suggestedBy` (null once erased)                                                                                            |
+| `POST /api/v1/admin/links/suggestions/:id` | admin     | `{ action: 'accept', kind?, title? }` or `{ action: 'decline', reason }`. 409 once decided                                                                                                                                                            |
+
+Rules (`lib/app/links/suggestions.ts`, each tested):
+
+- **A suggestion's URL is parsed, never fetched.** It is stored in its canonical form, so it compares with the links
+  the target has. Only the accept reads the provider, through `createLink`.
+- **A sound on an unlisted synth is a 404**, as the public links reads treat it: otherwise the 404 / 409 / 201 answers
+  would say which hidden patches exist and what they link.
+- **One pending suggestion per target and URL.** A second, from anyone, is a 409 until the first is decided, so the
+  admin does not decline duplicates one by one. Checked, not a unique index: a decided one can be suggested again.
+- **A decision is made once**: a conditional update out of `PENDING`, so of two admins at once the second gets a 409.
+- **Accept goes through `createLink`**: parsed again, read from the provider, 409 on a URL linked since, audited as
+  `external_link.create`. `kind` and `title` from the admin replace the user's. With no title from either, the
+  provider's, else 400. A refused create hands the row back to `PENDING`. An accepted link is never ours; the admin
+  can mark it afterwards. The suggester is not credited publicly.
+- Audited as `link_suggestion.accept|decline`, recording status, `linkId` and reason. The decide route passes
+  `writesSharedSettings: true`, because an accept writes a link.

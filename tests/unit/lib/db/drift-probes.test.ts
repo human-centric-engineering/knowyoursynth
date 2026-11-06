@@ -437,6 +437,7 @@ describe('shipped lib/app/db-drift.ts scaffold', () => {
     // .context/app/divergences.md.
     expect(getAppDriftProbes().map((p) => p.name)).toEqual([
       'synth_suggestion_userId_fkey (hand-written FK → User)',
+      'link_suggestion_userId_fkey (hand-written FK → User)',
       'user_sound_userId_fkey (hand-written FK → User)',
       'synth_preference_userId_fkey (hand-written FK → User)',
       'user_preference_userId_fkey (hand-written FK → User)',

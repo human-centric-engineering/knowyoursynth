@@ -116,6 +116,13 @@ export function initAppSubjectSources(): void {
           'Synths you suggested for the databank, with what you wrote and what an admin decided.',
       },
       {
+        model: 'LinkSuggestion',
+        section: LINK_SUGGESTIONS_SECTION,
+        disposition: 'export',
+        description:
+          'Videos and links you suggested, with what each was for, what you wrote and what an admin decided.',
+      },
+      {
         model: 'UserSound',
         section: SOUNDS_SECTION,
         disposition: 'export',
@@ -259,6 +266,9 @@ const CATALOGUE_REASON =
 /** The export section for a user's synth suggestions (`f-databank` t-37). */
 const SUGGESTIONS_SECTION = 'synthSuggestions';
 
+/** The export section for a user's link suggestions (`f-link-suggestions` t-185). */
+const LINK_SUGGESTIONS_SECTION = 'linkSuggestions';
+
 /** The export section for a user's own sounds (`f-my-sounds` s1). */
 const SOUNDS_SECTION = 'sounds';
 
@@ -290,7 +300,8 @@ const LIBRARY_PATTERNS_SECTION = 'libraryPatternsMade';
 const LIBRARY_COMMENTS_SECTION = 'libraryPatternComments';
 
 /**
- * Collect this app's data about one subject: the synths they suggested (`f-databank` t-37), the sounds they saved
+ * Collect this app's data about one subject: the synths they suggested (`f-databank` t-37), the videos and links they
+ * suggested (`f-link-suggestions` t-185), the sounds they saved
  * (`f-my-sounds` s1), their last panels and settings (s3), their lesson progress and favourites (s4), their synth
  * profile (`f-profiles` r1), the synths they own and want (r2), the reports they filed about shared sounds
  * (`f-sharing` h4), the patterns they saved (`f-step-sequencer` t-81) and the reports they filed about shared patterns
@@ -299,6 +310,7 @@ const LIBRARY_COMMENTS_SECTION = 'libraryPatternComments';
 export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promise<AppSubjectData> {
   const [
     suggestions,
+    linkSuggestions,
     sounds,
     reports,
     panels,
@@ -313,6 +325,7 @@ export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promis
     libraryComments,
   ] = await Promise.all([
     collectSuggestions(userId),
+    collectLinkSuggestions(userId),
     collectSounds(userId),
     collectReportsFiled(userId),
     collectPanels(userId),
@@ -328,6 +341,7 @@ export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promis
   ]);
   return {
     [SUGGESTIONS_SECTION]: suggestions,
+    [LINK_SUGGESTIONS_SECTION]: linkSuggestions,
     [SOUNDS_SECTION]: sounds,
     [REPORTS_SECTION]: reports,
     [PANELS_SECTION]: panels,
@@ -592,6 +606,27 @@ function collectSuggestions(userId: string) {
       note: true,
       status: true,
       instrumentId: true,
+      reason: true,
+      decidedAt: true,
+      createdAt: true,
+    },
+  });
+}
+
+function collectLinkSuggestions(userId: string) {
+  return prisma.linkSuggestion.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'asc' },
+    select: {
+      id: true,
+      targetKind: true,
+      targetId: true,
+      url: true,
+      kind: true,
+      title: true,
+      note: true,
+      status: true,
+      linkId: true,
       reason: true,
       decidedAt: true,
       createdAt: true,

@@ -64,3 +64,19 @@ export function auditReorder(
     clientIp: getClientIP(request),
   });
 }
+
+/**
+ * The link suggestion queue's ownership decision (`f-link-suggestions` t-185). Its rows carry who suggested each, but
+ * the queue is every user's suggestions by design: it is where admins act on them. The decide route also writes a
+ * link, so it adds `writesSharedSettings: true` at its call site.
+ */
+export const LINK_SUGGESTION_ADMIN = {
+  // Ownership: no ownership decision — the admin queue of every user's link suggestions. See RouteOwnership in lib/auth/guards.ts.
+  ownership: {
+    decidedBy: 'nothing',
+    because:
+      "The link suggestion queue is every user's suggestions by design, for admins to decide; the guard already limits this to admins.",
+  },
+} as const;
+
+export const LINK_SUGGESTION_ENTITY = 'link_suggestion';
