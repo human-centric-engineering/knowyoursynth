@@ -1,0 +1,45 @@
+{
+  "synth": "malevolent",
+  "title": "From the semi-modular to the Malevolent",
+  "intro": "The Malevolent is PWM’s 2022 semi-modular keyboard synth, an original British design whose analogue circuits are by Future Sound Systems. Like the semi-modulars before it, every section is wired inside so it plays with no cables, and every wire can be replaced at the patch points: here each input prints the source it is normalled to.",
+  "timeline": [
+    {
+      "year": "1971",
+      "name": "ARP 2600",
+      "text": "A semi-modular: oscillators, filter, envelopes and amplifiers wired to one another inside, with patch cords to override any of the connections. The Malevolent’s printed normals follow the same idea."
+    },
+    {
+      "year": "2018",
+      "name": "Moog Grandmother",
+      "text": "A semi-modular keyboard synth with 32 keys, two oscillators, one filter and an arpeggiator, playable with no cables and patched at the panel."
+    },
+    {
+      "year": "2022",
+      "name": "PWM Malevolent",
+      "tag": "This synth",
+      "text": "Two VCOs whose saw, triangle and pulse are mixed by buttons, a 2-pole Sallen-Key multimode filter with separate low-pass, band-pass and high-pass inputs, two ADSRs, a VCA with drive and a drone switch, an LFO, an arpeggiator and a joystick, with 19 inputs and 19 outputs over 32 mini keys."
+    },
+    {
+      "year": "2023",
+      "name": "PWM Mantis",
+      "text": "PWM’s next instrument: a hybrid-analogue duophonic synth completing the last design concept of Chris Huggett, the designer of the EDP Wasp and the OSCar."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Moog Grandmother",
+      "years": "2018",
+      "text": "The same idea in Moog’s hands: a 32-key semi-modular with two oscillators and an arpeggiator, but a 24 dB ladder low-pass, one envelope and a spring reverb."
+    },
+    {
+      "name": "Behringer Neutron",
+      "years": "2018",
+      "text": "A desktop semi-modular with two oscillators, two envelopes, overdrive and a multimode filter whose mode is a knob, all on a large patch bay, and no keyboard."
+    },
+    {
+      "name": "PWM Mantis",
+      "years": "2023",
+      "text": "From the same maker: a keyboard synth with digital oscillators, a dual analogue filter and patch memory, where the Malevolent is all analogue with none."
+    }
+  ]
+}

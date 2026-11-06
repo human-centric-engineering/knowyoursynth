@@ -1,0 +1,1334 @@
+{
+  "synth": "malevolent",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "mal-chordal",
+      "name": "Chordal",
+      "ref": "Suren Forward’s “Chordal” patch sheet for the Malevolent",
+      "artist": "Suren Forward",
+      "tags": ["keys", "patched", "velocity"],
+      "level": 2,
+      "blurb": "A bright, shifting two-oscillator tone whose colour changes up the keyboard, with harder notes brighter.",
+      "how": "VCO 2’s pulse width follows the keys, so each note has a different hollowness, while the LFO sweeps VCO 1’s. VCO 1’s saw also goes round the mixer a second time through AUX, and velocity, not the envelope, opens the filter. The patch sheet records only the cables and the wave buttons, so the knob settings here are this lesson’s, chosen to make the patch speak.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.9, 0.7],
+          [1, 64, 0.9, 0.5],
+          [2, 67, 0.9, 0.9],
+          [3, 72, 0.9, 0.6],
+          [4, 69, 0.9, 0.8],
+          [5, 65, 0.9, 0.5],
+          [6, 62, 1.9, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two VCOs, three waves",
+          "module": "osc",
+          "why": "VCO 1 sounds its saw and pulse together, VCO 2 its saw, a fifth above.\n- VCO 1 SAW and PULSE buttons lit: the two waves mix at its OUT.\n- VCO 1 LEVEL 8, VCO 2 LEVEL 7: both into the mixer.\n- VCO 2 SAW lit, COARSE 5.7 (a fifth up): the interval gives the patch its chordal sound.\n- Listen for: a bright, buzzy fifth.",
+          "set": {
+            "vco1.pulse": true,
+            "vco1.level": 8,
+            "vco2.saw": true,
+            "vco2.level": 7,
+            "vco2.coarse": 5.73
+          }
+        },
+        {
+          "title": "Pulse widths that move",
+          "module": "osc",
+          "why": "Two cables set the pulse widths moving: the LFO on VCO 1’s, the keys on VCO 2’s.\n- LFO TRIANGLE into VCO 1 SHAPE, with SHAPE MOD at 4: the same as the normal, made visible.\n- KEYS PITCH into VCO 2 SHAPE, with SHAPE MOD at 6: higher notes give a thinner pulse.\n- LFO RATE 3: a slow sweep.\n- Listen for: a gentle movement in VCO 1, and a different colour on each key.",
+          "set": {
+            "vco1.shapeMod": 4,
+            "vco2.shapeMod": 6,
+            "lfo.rate": 3
+          },
+          "cables": [
+            ["j.lfo_tri", "j.vco1_shape"],
+            ["j.pitch", "j.vco2_shape"]
+          ]
+        },
+        {
+          "title": "The saw again, through AUX",
+          "module": "mixer",
+          "why": "VCO 1’s saw is patched into the mixer’s AUX as well, so it is heard twice, louder than its pulse.\n- VCO 1 SAW into AUX, AUX LEVEL 5.\n- Listen for: more edge in the mix.",
+          "set": {
+            "mix.aux": 5
+          },
+          "cables": [["j.vco1_saw", "j.aux"]]
+        },
+        {
+          "title": "Velocity on the filter",
+          "module": "filter",
+          "why": "With KEYS VELOCITY in the VCF’s FM 1, Envelope 1 no longer reaches the filter: how hard each key is played sets its brightness.\n- KEYS VELOCITY into VCF FM 1, FM 1 at 5.\n- CUT OFF 4, RESONANCE 3: a darker base for velocity to open.\n- Listen for: soft notes dull, hard ones bright.",
+          "set": {
+            "vcf.fm1": 5,
+            "vcf.cutoff": 4,
+            "vcf.res": 3
+          },
+          "cables": [["j.vel", "j.vcf_fm1"]]
+        },
+        {
+          "title": "A keyboard envelope",
+          "module": "env",
+          "why": "Envelope 2 shapes the loudness through AM 1.\n- ATTACK 0, SUSTAIN 10, RELEASE 4: notes start at once, hold, and ring on a little.\n- Listen for: chords that overlap gently.",
+          "set": {
+            "env2.attack": 0,
+            "env2.sustain": 10,
+            "env2.release": 4
+          }
+        }
+      ],
+      "context": {
+        "vco2.shapeMod": "In this sound: how much the key pitch changes VCO 2’s width.",
+        "vcf.fm1": "In this sound: how far velocity opens the filter.",
+        "mix.aux": "In this sound: the second copy of VCO 1’s saw."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.shapeMod",
+          "try": "Turn VCO 2 SHAPE MOD to 10",
+          "hear": "The colour changes much more from key to key, thin at the top."
+        },
+        {
+          "id": "vcf.fm1",
+          "try": "Turn the VCF’s FM 1 to 0",
+          "hear": "Every note is equally dark, however hard it is played."
+        }
+      ]
+    },
+    {
+      "id": "mal-extreme",
+      "name": "Extreme",
+      "ref": "Suren Forward’s “Extreme” patch sheet for the Malevolent",
+      "artist": "Suren Forward",
+      "tags": ["fx", "patched", "experimental"],
+      "level": 3,
+      "blurb": "A pulse that shapes itself and leaps between two pitches, getting louder up the keyboard.",
+      "how": "VCO 1’s triangle moves its own pulse width at audio rate, which roughens it, and the LFO square replaces the keys at its 1V/OCT, so it jumps between two pitches whatever is played. VCO 2’s triangle still follows the keys, and KEYS PITCH replaces Envelope 2 at the VCA, so higher notes are louder and notes below middle C are silent. The patch sheet records only the cables and the wave buttons, so the knob settings here are this lesson’s, chosen to make the patch speak.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.9],
+          [1, 76, 0.9],
+          [2, 79, 0.9],
+          [3, 84, 0.9],
+          [4, 79, 1.9],
+          [6, 76, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pulse and a triangle",
+          "module": "osc",
+          "why": "VCO 1 on its pulse alone, VCO 2 on its triangle.\n- VCO 1 SAW off, PULSE lit, LEVEL 7.\n- VCO 2 TRIANGLE lit, LEVEL 6.\n- Listen for: a hollow pulse over a soft triangle.",
+          "set": {
+            "vco1.saw": false,
+            "vco1.pulse": true,
+            "vco1.level": 7,
+            "vco2.tri": true,
+            "vco2.level": 6
+          }
+        },
+        {
+          "title": "VCO 1 shapes itself",
+          "module": "osc",
+          "why": "VCO 1’s own triangle into its SHAPE input moves its pulse width at the pitch it plays.\n- VCO 1 TRIANGLE into VCO 1 SHAPE, SHAPE MOD 6.\n- Listen for: a rougher, more nasal pulse.",
+          "set": {
+            "vco1.shapeMod": 6
+          },
+          "cables": [["j.vco1_tri", "j.vco1_shape"]]
+        },
+        {
+          "title": "The LFO plays VCO 1",
+          "module": "osc",
+          "why": "The LFO square into VCO 1’s 1V/OCT takes the keys away from it: it now jumps between two pitches at LFO RATE, whatever is played.\n- LFO SQUARE into VCO 1 1V/OCT.\n- LFO RATE 4: a few jumps a second.\n- Listen for: VCO 1 trilling on its own while VCO 2 plays the tune.",
+          "set": {
+            "lfo.rate": 4
+          },
+          "cables": [["j.lfo_sq", "j.vco1_voct"]]
+        },
+        {
+          "title": "Louder up the keyboard",
+          "module": "amp",
+          "why": "KEYS PITCH into AM 1 replaces Envelope 2: the VCA opens as far as the key is high.\n- KEYS PITCH into AM 1, AM 1 at 4.\n- CUT OFF 10, RESONANCE 0: the filter stays open.\n- Envelope 2 ATTACK 0, SUSTAIN 10, RELEASE 2: set, though the VCA no longer follows it.\n- Listen for: high notes loud, notes below middle C silent, and the sound carrying on after the keys are let go, because the pitch voltage stays at the last key.",
+          "set": {
+            "vca.am1": 4,
+            "vcf.cutoff": 10,
+            "vcf.res": 0,
+            "env2.attack": 0,
+            "env2.sustain": 10,
+            "env2.release": 2
+          },
+          "cables": [["j.pitch", "j.vca_am1"]]
+        }
+      ],
+      "context": {
+        "lfo.rate": "In this sound: how fast VCO 1 jumps.",
+        "vca.am1": "In this sound: how loud the key pitch makes the VCA."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Turn LFO RATE to 8",
+          "hear": "The jumps become a buzz, and VCO 1 turns into a rough second tone."
+        }
+      ]
+    },
+    {
+      "id": "mal-fm-phasers",
+      "name": "FM Phasers",
+      "ref": "Suren Forward’s “FM Phasers” patch sheet for the Malevolent",
+      "artist": "Suren Forward",
+      "tags": ["lead", "patched", "fm"],
+      "level": 3,
+      "blurb": "Every wave of both VCOs at once, VCO 1 shaped by its own saw, with a tremolo that speeds up the keyboard.",
+      "how": "All six wave buttons are lit, so both VCOs send their saw, triangle and pulse. VCO 1’s saw moves its own pulse width, KEYS PITCH replaces the LFO at AM 2, and velocity replaces Envelope 1 at the filter. The patch sheet records only the cables and the wave buttons, so the knob settings here are this lesson’s, chosen to make the patch speak.",
+      "phrase": {
+        "bpm": 92,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.4, 0.6],
+          [1.5, 74, 0.4, 0.8],
+          [2, 76, 1.9, 1],
+          [4, 79, 0.9, 0.7],
+          [5, 77, 0.9, 0.5],
+          [6, 76, 1.9, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Every wave",
+          "module": "osc",
+          "why": "All three buttons on both VCOs: each sends its saw, triangle and pulse together.\n- VCO 1 SAW, TRIANGLE and PULSE lit, LEVEL 6.\n- VCO 2 SAW, TRIANGLE and PULSE lit, LEVEL 6, FINE 5.3: a little sharp, so the two phase.\n- Listen for: a thick, phasing tone.",
+          "set": {
+            "vco1.tri": true,
+            "vco1.pulse": true,
+            "vco1.level": 6,
+            "vco2.saw": true,
+            "vco2.tri": true,
+            "vco2.pulse": true,
+            "vco2.level": 6,
+            "vco2.fine": 5.3
+          }
+        },
+        {
+          "title": "VCO 1 shapes itself",
+          "module": "osc",
+          "why": "VCO 1’s saw into its own SHAPE moves its pulse width at audio rate.\n- VCO 1 SAW into VCO 1 SHAPE, SHAPE MOD 5.\n- Listen for: a harder, FM-like edge.",
+          "set": {
+            "vco1.shapeMod": 5
+          },
+          "cables": [["j.vco1_saw", "j.vco1_shape"]]
+        },
+        {
+          "title": "Velocity on the filter",
+          "module": "filter",
+          "why": "KEYS VELOCITY replaces Envelope 1 at the VCF’s FM 1.\n- KEYS VELOCITY into VCF FM 1, FM 1 at 4.\n- CUT OFF 5, RESONANCE 4.\n- Listen for: harder notes brighter and more vocal.",
+          "set": {
+            "vcf.fm1": 4,
+            "vcf.cutoff": 5,
+            "vcf.res": 4
+          },
+          "cables": [["j.vel", "j.vcf_fm1"]]
+        },
+        {
+          "title": "Pitch into AM 2",
+          "module": "amp",
+          "why": "KEYS PITCH replaces the LFO at AM 2, so the VCA opens further on high notes; Envelope 2 still shapes each note through AM 1, patched here as the sheet draws it.\n- ENV 2 OUT into AM 1: the same as the normal.\n- KEYS PITCH into AM 2, AM 2 at 3.\n- Envelope 2 ATTACK 0, SUSTAIN 10, RELEASE 2.\n- Listen for: the higher notes standing out, and a quiet tone left sounding after the keys come up: the pitch voltage stays at the last key, so AM 2 keeps the VCA a little open.",
+          "set": {
+            "vca.am2": 3,
+            "env2.attack": 0,
+            "env2.sustain": 10,
+            "env2.release": 2
+          },
+          "cables": [
+            ["j.env2_out", "j.vca_am1"],
+            ["j.pitch", "j.vca_am2"]
+          ]
+        }
+      ],
+      "context": {
+        "vco1.shapeMod": "In this sound: how far VCO 1’s saw moves its own pulse width."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.shapeMod",
+          "try": "Turn VCO 1 SHAPE MOD to 10",
+          "hear": "VCO 1 turns harsh and clangy."
+        }
+      ]
+    },
+    {
+      "id": "mal-plink",
+      "name": "Plink",
+      "ref": "Suren Forward’s “Plink” patch sheet for the Malevolent",
+      "artist": "Suren Forward",
+      "tags": ["pluck", "patched", "multimode"],
+      "level": 3,
+      "blurb": "A short, glassy pluck: the mix through the low-pass and the band-pass at once, with VCO 2 rippling the cutoff.",
+      "how": "MIX OUT goes into the BAND PASS input as well as, through the normal, the LOW PASS one, so the mix is filtered both ways at once into the one output. VCO 2’s saw ripples the cutoff at audio rate, velocity sets VCO 2’s pulse width, and a short envelope makes it a pluck. The patch sheet records only the cables and the wave buttons, so the knob settings here are this lesson’s, chosen to make the patch speak.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.4, 0.9],
+          [0.5, 71, 0.4, 0.6],
+          [1, 76, 0.4, 0.8],
+          [1.5, 71, 0.4, 0.5],
+          [2, 62, 0.4, 0.9],
+          [2.5, 69, 0.4, 0.6],
+          [3, 74, 0.4, 0.8],
+          [3.5, 69, 0.4, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two saws",
+          "module": "osc",
+          "why": "VCO 1 and VCO 2 on their saws, VCO 2 an octave up.\n- VCO 1 SAW lit, LEVEL 7.\n- VCO 2 SAW lit, LEVEL 5, COARSE 6.25 (an octave up).\n- Listen for: a bright, buzzy octave.",
+          "set": {
+            "vco1.level": 7,
+            "vco2.saw": true,
+            "vco2.level": 5,
+            "vco2.coarse": 6.25
+          }
+        },
+        {
+          "title": "Two shapes",
+          "module": "osc",
+          "why": "The LFO moves VCO 1’s pulse width (as the normal does) and velocity sets VCO 2’s. Neither VCO plays its pulse here, so this is the sheet’s wiring more than something to hear.\n- LFO TRIANGLE into VCO 1 SHAPE, KEYS VELOCITY into VCO 2 SHAPE.\n- Listen for: no change yet.",
+          "set": {},
+          "cables": [
+            ["j.lfo_tri", "j.vco1_shape"],
+            ["j.vel", "j.vco2_shape"]
+          ]
+        },
+        {
+          "title": "Low-pass and band-pass at once",
+          "module": "filter",
+          "why": "MIX OUT into BAND PASS: the mix now reaches the filter twice, low-passed through the normal and band-passed through the cable, added at the one output.\n- MIX OUT into BAND PASS.\n- CUT OFF 5, RESONANCE 6: a ringing band in the middle.\n- Listen for: a vocal, nasal ring on top of the low-pass body.",
+          "set": {
+            "vcf.cutoff": 5,
+            "vcf.res": 6
+          },
+          "cables": [["j.mix_out", "j.vcf_bp"]]
+        },
+        {
+          "title": "VCO 2 ripples the cutoff",
+          "module": "filter",
+          "why": "VCO 2’s saw into the VCF’s FM 1 replaces Envelope 1: the cutoff moves at VCO 2’s pitch.\n- VCO 2 SAW into VCF FM 1, FM 1 at 2.\n- Listen for: a glassy, metallic edge.",
+          "set": {
+            "vcf.fm1": 2
+          },
+          "cables": [["j.vco2_saw", "j.vcf_fm1"]]
+        },
+        {
+          "title": "A pluck",
+          "module": "env",
+          "why": "Envelope 2 falls away quickly with no sustain.\n- ATTACK 0, DECAY 3, SUSTAIN 0, RELEASE 3.\n- Listen for: short plinks that ring off.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 3,
+            "env2.sustain": 0,
+            "env2.release": 3
+          }
+        }
+      ],
+      "context": {
+        "vcf.res": "In this sound: how glassy the band-pass rings.",
+        "vcf.fm1": "In this sound: how much VCO 2 ripples the cutoff."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.fm1",
+          "try": "Turn the VCF’s FM 1 to 5",
+          "hear": "The ripple turns into a clangy, bell-like FM tone."
+        }
+      ]
+    },
+    {
+      "id": "mal-sentient-bass",
+      "name": "Sentient Bass",
+      "ref": "Suren Forward’s “Sentient Bass” patch sheet for the Malevolent",
+      "artist": "Suren Forward",
+      "tags": ["bass", "patched", "multimode"],
+      "level": 2,
+      "blurb": "A thick, restless bass: the mix through the low-pass and the high-pass together, opened by velocity.",
+      "how": "Both VCOs send their saw and triangle, low, with VCO 1’s pulse width on the LFO. MIX OUT goes into the HIGH PASS input too, so the filter gives its low-pass and its high-pass of the same mix at once, and velocity replaces the LFO at the VCF’s FM 2. The patch sheet records only the cables and the wave buttons, so the knob settings here are this lesson’s, chosen to make the patch speak.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4, 0.9],
+          [0.5, 36, 0.4, 0.5],
+          [1, 43, 0.4, 0.7],
+          [1.5, 36, 0.4, 0.6],
+          [2, 39, 0.4, 1],
+          [2.5, 41, 0.4, 0.6],
+          [3, 43, 0.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Saws and triangles, low",
+          "module": "osc",
+          "why": "Both VCOs on their saw and triangle, two octaves down.\n- VCO 1 SAW and TRIANGLE lit, LEVEL 7, COARSE 2.5.\n- VCO 2 SAW and TRIANGLE lit, LEVEL 7, COARSE 2.5, FINE 5.2.\n- Listen for: a big, slightly beating bass.",
+          "set": {
+            "vco1.tri": true,
+            "vco1.level": 7,
+            "vco1.coarse": 2.5,
+            "vco2.saw": true,
+            "vco2.tri": true,
+            "vco2.level": 7,
+            "vco2.coarse": 2.5,
+            "vco2.fine": 5.2
+          }
+        },
+        {
+          "title": "Low-pass and high-pass at once",
+          "module": "filter",
+          "why": "MIX OUT into HIGH PASS: the filter now gives the mix low-passed and high-passed together.\n- MIX OUT into HIGH PASS.\n- LFO TRIANGLE into VCO 1 SHAPE, as the sheet draws it.\n- CUT OFF 3, RESONANCE 5: round lows, with a rasp of highs on top.\n- Listen for: a hollow, hard-edged bass.",
+          "set": {
+            "vcf.cutoff": 3,
+            "vcf.res": 5
+          },
+          "cables": [
+            ["j.mix_out", "j.vcf_hp"],
+            ["j.lfo_tri", "j.vco1_shape"]
+          ]
+        },
+        {
+          "title": "Velocity on the cutoff",
+          "module": "filter",
+          "why": "KEYS VELOCITY into the VCF’s FM 2 replaces the LFO: harder notes move the cutoff up, which darkens the high-pass and opens the low-pass.\n- KEYS VELOCITY into VCF FM 2, FM 2 at 4.\n- Listen for: each note’s character following how hard it is played.",
+          "set": {
+            "vcf.fm2": 4
+          },
+          "cables": [["j.vel", "j.vcf_fm2"]]
+        },
+        {
+          "title": "A bass envelope",
+          "module": "env",
+          "why": "- Envelope 2 ATTACK 0, DECAY 4, SUSTAIN 6, RELEASE 2.\n- Listen for: a firm start that settles.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 4,
+            "env2.sustain": 6,
+            "env2.release": 2
+          }
+        }
+      ],
+      "context": {
+        "vcf.cutoff": "In this sound: where the low-pass ends and the high-pass begins."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Sweep CUT OFF from 2 to 6",
+          "hear": "The balance moves from a rasp of highs to a full, round low end."
+        }
+      ]
+    },
+    {
+      "id": "mal-tangerine",
+      "name": "Tangerine",
+      "ref": "Suren Forward’s “Tangerine” patch sheet for the Malevolent",
+      "artist": "Suren Forward",
+      "tags": ["lead", "patched", "velocity"],
+      "level": 2,
+      "blurb": "A bright lead whose filter follows the keys, opened by firm notes and closed by soft ones.",
+      "how": "KEYS PITCH replaces Envelope 1 at the VCF’s FM 1, so the cutoff follows the keys, and KEYS VELOCITY replaces the key gate at Envelope 2. The velocity voltage holds after the key is let go, so a note played harder than half way opens the VCA and keeps it open, and one played softer closes it. VCO 1’s saw and triangle sound with VCO 2’s saw. The patch sheet records only the cables and the wave buttons, so the knob settings here are this lesson’s, chosen to make the patch speak.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 67, 1.9, 0.9],
+          [2, 72, 0.9, 0.7],
+          [3, 70, 0.9, 0.8],
+          [4, 67, 2.9, 1],
+          [7, 67, 0.9, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Three waves",
+          "module": "osc",
+          "why": "VCO 1 sends its saw and triangle, VCO 2 its saw, a touch sharp.\n- VCO 1 SAW and TRIANGLE lit, LEVEL 7.\n- VCO 2 SAW lit, LEVEL 6, FINE 5.4.\n- Listen for: a full, gently beating tone.",
+          "set": {
+            "vco1.tri": true,
+            "vco1.level": 7,
+            "vco2.saw": true,
+            "vco2.level": 6,
+            "vco2.fine": 5.4
+          }
+        },
+        {
+          "title": "The filter follows the keys",
+          "module": "filter",
+          "why": "KEYS PITCH into the VCF’s FM 1 replaces Envelope 1, so higher notes open the filter further.\n- KEYS PITCH into VCF FM 1, FM 1 at 1.25: about an octave of cutoff per octave played.\n- CUT OFF 5, RESONANCE 4.\n- LFO TRIANGLE into VCO 1 SHAPE, as the sheet draws it.\n- Listen for: the tone staying as bright across the keyboard.",
+          "set": {
+            "vcf.fm1": 1.25,
+            "vcf.cutoff": 5,
+            "vcf.res": 4
+          },
+          "cables": [
+            ["j.pitch", "j.vcf_fm1"],
+            ["j.lfo_tri", "j.vco1_shape"]
+          ]
+        },
+        {
+          "title": "Velocity gates the loudness",
+          "module": "env",
+          "why": "KEYS VELOCITY into Envelope 2’s GATE replaces the key gate: the envelope is held while the velocity voltage is past half way, and that voltage stays where the last key left it.\n- KEYS VELOCITY into ENV 2 GATE.\n- Envelope 2 ATTACK 0, SUSTAIN 9, RELEASE 3.\n- Listen for: firm notes running into one another, and the soft last note letting the sound go.",
+          "set": {
+            "env2.attack": 0,
+            "env2.sustain": 9,
+            "env2.release": 3
+          },
+          "cables": [["j.vel", "j.env2_gate"]]
+        }
+      ],
+      "context": {
+        "vcf.fm1": "In this sound: how far the cutoff follows the keys."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.fm1",
+          "try": "Turn the VCF’s FM 1 to 3",
+          "hear": "High notes turn much brighter than low ones."
+        }
+      ]
+    },
+    {
+      "id": "mal-waves",
+      "name": "Waves",
+      "ref": "Suren Forward’s “Waves” patch sheet for the Malevolent",
+      "artist": "Suren Forward",
+      "tags": ["pad", "patched", "velocity"],
+      "level": 2,
+      "blurb": "A slow-swelling, breathing tone whose filter follows the keys, swelling on firm notes and fading on soft ones.",
+      "how": "KEYS PITCH replaces Envelope 1 at the VCF’s FM 1, so the cutoff follows the keys, and KEYS VELOCITY replaces the key gate at Envelope 2. The velocity voltage holds after the key is let go, so a note played harder than half way opens the VCA and keeps it open, and one played softer closes it. VCO 1’s saw and triangle sound with VCO 2’s saw. The patch sheet records only the cables and the wave buttons, so the knob settings here are this lesson’s, chosen to make the patch speak.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.9, 0.8],
+          [4, 60, 3.9, 0.9],
+          [8, 55, 3.9, 0.8],
+          [12, 52, 3.9, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Three waves",
+          "module": "osc",
+          "why": "VCO 1 sends its saw and triangle, VCO 2 its saw, a touch sharp.\n- VCO 1 SAW and TRIANGLE lit, LEVEL 7.\n- VCO 2 SAW lit, LEVEL 6, FINE 5.4.\n- Listen for: a full, gently beating tone.",
+          "set": {
+            "vco1.tri": true,
+            "vco1.level": 7,
+            "vco2.saw": true,
+            "vco2.level": 6,
+            "vco2.fine": 5.4
+          }
+        },
+        {
+          "title": "The filter follows the keys",
+          "module": "filter",
+          "why": "KEYS PITCH into the VCF’s FM 1 replaces Envelope 1, so higher notes open the filter further.\n- KEYS PITCH into VCF FM 1, FM 1 at 1.25: about an octave of cutoff per octave played.\n- CUT OFF 4.5, RESONANCE 4.\n- LFO TRIANGLE into VCO 1 SHAPE, as the sheet draws it.\n- Listen for: the tone staying as bright across the keyboard.",
+          "set": {
+            "vcf.fm1": 1.25,
+            "vcf.cutoff": 4.5,
+            "vcf.res": 4
+          },
+          "cables": [
+            ["j.pitch", "j.vcf_fm1"],
+            ["j.lfo_tri", "j.vco1_shape"]
+          ]
+        },
+        {
+          "title": "Velocity gates the loudness",
+          "module": "env",
+          "why": "KEYS VELOCITY into Envelope 2’s GATE replaces the key gate: the envelope is held while the velocity voltage is past half way, and that voltage stays where the last key left it.\n- KEYS VELOCITY into ENV 2 GATE.\n- Envelope 2 ATTACK 6, SUSTAIN 9, RELEASE 7.\n- Listen for: firm notes running into one another, and the soft last note letting the sound go.",
+          "set": {
+            "env2.attack": 6,
+            "env2.sustain": 9,
+            "env2.release": 7
+          },
+          "cables": [["j.vel", "j.env2_gate"]]
+        }
+      ],
+      "context": {
+        "vcf.fm1": "In this sound: how far the cutoff follows the keys."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.fm1",
+          "try": "Turn the VCF’s FM 1 to 3",
+          "hear": "High notes turn much brighter than low ones."
+        }
+      ]
+    },
+    {
+      "id": "mal-twin",
+      "name": "Twin",
+      "ref": "Suren Forward’s “Twin” patch sheet for the Malevolent",
+      "artist": "Suren Forward",
+      "tags": ["lead", "patched", "fm"],
+      "level": 3,
+      "blurb": "Every wave of VCO 1 over VCO 2’s triangle, with Envelope 2 sweeping VCO 1’s pitch and a thump of velocity through the high-pass.",
+      "how": "Envelope 2 replaces the LFO at VCO 1’s FM 2, so every note starts with a pitch swoop, and KEYS VELOCITY goes into the HIGH PASS input as a sound of its own: a step that thumps at the start of each note. The sheet also draws an outside clock into Envelope 1’s GATE; that is left out here. The patch sheet records only the cables and the wave buttons, so the knob settings here are this lesson’s, chosen to make the patch speak.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.9, 0.9],
+          [1, 65, 0.9, 0.6],
+          [2, 69, 1.9, 1],
+          [4, 67, 0.9, 0.7],
+          [5, 65, 0.9, 0.6],
+          [6, 62, 1.9, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Every wave of VCO 1",
+          "module": "osc",
+          "why": "- VCO 1 SAW, TRIANGLE and PULSE lit, LEVEL 7.\n- VCO 2 TRIANGLE lit, LEVEL 6, COARSE 3.75 (an octave down).\n- LFO TRIANGLE into VCO 1 SHAPE, SHAPE MOD 3.\n- Listen for: a rich lead over a soft octave below.",
+          "set": {
+            "vco1.tri": true,
+            "vco1.pulse": true,
+            "vco1.level": 7,
+            "vco1.shapeMod": 3,
+            "vco2.tri": true,
+            "vco2.level": 6,
+            "vco2.coarse": 3.75
+          },
+          "cables": [["j.lfo_tri", "j.vco1_shape"]]
+        },
+        {
+          "title": "Envelope 2 swoops VCO 1",
+          "module": "osc",
+          "why": "ENV 2 OUT into VCO 1’s FM 2 replaces the LFO there.\n- ENV 2 OUT into VCO 1 FM 2, FM 2 at 2.\n- Envelope 2 ATTACK 0, DECAY 3, SUSTAIN 10, RELEASE 2: it rises at once, so VCO 1 starts sharp and stays there while the key is held.\n- Listen for: VCO 1 jumping up against VCO 2 on every note.",
+          "set": {
+            "vco1.fm2": 2,
+            "env2.attack": 0,
+            "env2.decay": 3,
+            "env2.sustain": 10,
+            "env2.release": 2
+          },
+          "cables": [["j.env2_out", "j.vco1_fm2"]]
+        },
+        {
+          "title": "A thump through the high-pass",
+          "module": "filter",
+          "why": "KEYS VELOCITY into HIGH PASS: a velocity step at the start of each note, high-passed, is a click.\n- KEYS VELOCITY into HIGH PASS.\n- CUT OFF 6, RESONANCE 5: the click rings a little at the cutoff.\n- Listen for: a knock at the front of every note.",
+          "set": {
+            "vcf.cutoff": 6,
+            "vcf.res": 5
+          },
+          "cables": [["j.vel", "j.vcf_hp"]]
+        }
+      ],
+      "context": {
+        "vco1.fm2": "In this sound: how far Envelope 2 lifts VCO 1."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.fm2",
+          "try": "Turn VCO 1’s FM 2 to 4",
+          "hear": "VCO 1 jumps much further: an octave and more above VCO 2."
+        }
+      ]
+    },
+    {
+      "id": "mal-nasty-bass-fx",
+      "name": "Nasty Bass FX",
+      "ref": "Paul Whittington’s “Nasty Bass FX” patch sheet for the Malevolent",
+      "artist": "Paul Whittington",
+      "tags": ["bass", "patched", "fm"],
+      "level": 3,
+      "blurb": "A snarling, self-oscillating bass: VCO 1 heard only as FM on VCO 2, through the low-pass and high-pass together.",
+      "how": "VCO 1 has no wave lit, so it is silent in the mixer, and its triangle is used only to frequency-modulate VCO 2 through FM 2. MIX OUT also goes into the HIGH PASS input, and the resonance is high enough that the filter rings on its own. The knob settings follow the sheet’s drawn pointers, which are approximate; the tuning is set by ear, because this app’s COARSE range is its own.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.9, 0.9],
+          [1, 36, 0.4, 0.6],
+          [1.5, 39, 0.4, 0.8],
+          [2, 36, 0.9, 0.9],
+          [3, 34, 0.9, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "VCO 2 alone in the mixer",
+          "module": "osc",
+          "why": "VCO 1’s saw goes off and VCO 2’s comes on, low: VCO 1 will be used only as a modulator.\n- VCO 1 SAW off, LEVEL 1.\n- VCO 2 SAW lit, LEVEL 8.3, COARSE 2.5, FINE 5.\n- Listen for: one low saw.",
+          "set": {
+            "vco1.saw": false,
+            "vco1.level": 1,
+            "vco2.saw": true,
+            "vco2.level": 8.3,
+            "vco2.coarse": 2.5,
+            "vco2.fine": 5
+          }
+        },
+        {
+          "title": "VCO 1 modulates VCO 2",
+          "module": "osc",
+          "why": "VCO 1’s triangle into VCO 2’s FM 2 replaces the LFO there, at audio rate; Envelope 1 still reaches VCO 2 through FM 1.\n- VCO 1 TRIANGLE into VCO 2 FM 2, FM 2 at 5.4.\n- VCO 1 COARSE 2.6: just off VCO 2, so the FM beats and growls.\n- VCO 2 FM 1 at 5.5, with Envelope 1 ATTACK 1, DECAY 5, SUSTAIN 0.5, RELEASE 1: a pitch drop on every note.\n- Listen for: a clangy, growling bass.",
+          "set": {
+            "vco2.fm2": 5.4,
+            "vco1.coarse": 2.6,
+            "vco2.fm1": 5.5,
+            "env1.attack": 1,
+            "env1.decay": 5,
+            "env1.sustain": 0.5,
+            "env1.release": 1
+          },
+          "cables": [["j.vco1_tri", "j.vco2_fm2"]]
+        },
+        {
+          "title": "A ringing filter, two ways",
+          "module": "filter",
+          "why": "MIX OUT into HIGH PASS adds the high-pass of the mix to the low-pass, and the resonance is high enough for the filter to ring on its own.\n- MIX OUT into HIGH PASS.\n- CUT OFF 3.3, RESONANCE 9, the VCF’s FM 1 at 3.3: Envelope 1 sweeps it on each note.\n- Listen for: a whistling, snarling edge on the bass.",
+          "set": {
+            "vcf.cutoff": 3.3,
+            "vcf.res": 9,
+            "vcf.fm1": 3.3
+          },
+          "cables": [["j.mix_out", "j.vcf_hp"]]
+        },
+        {
+          "title": "A long release",
+          "module": "env",
+          "why": "- Envelope 2 ATTACK 1, DECAY 1, SUSTAIN 9.5, RELEASE 8.3.\n- MASTER VOL 5: the ringing filter is loud, and the sheet sets the volume low too.\n- Listen for: the notes hanging on after each key.",
+          "set": {
+            "env2.attack": 1,
+            "env2.decay": 1,
+            "env2.sustain": 9.5,
+            "env2.release": 8.3,
+            "out.master": 5
+          }
+        }
+      ],
+      "context": {
+        "vco2.fm2": "In this sound: how much VCO 1 growls into VCO 2.",
+        "vcf.res": "In this sound: high enough for the filter to whistle."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.res",
+          "try": "Turn RESONANCE to 5",
+          "hear": "The whistle goes, leaving the growl."
+        }
+      ]
+    },
+    {
+      "id": "mal-reece-bass",
+      "name": "Reece Bass",
+      "ref": "Paul Whittington’s “Reece Bass” patch sheet for the Malevolent",
+      "artist": "Paul Whittington",
+      "tags": ["bass", "patched", "fm"],
+      "level": 2,
+      "blurb": "A wide, detuned bass: VCO 2’s pulse cross-modulating VCO 1’s saw, opened by velocity.",
+      "how": "VCO 1’s saw and VCO 2’s pulse play nearly in tune, so they beat, and VCO 2’s OUT replaces Envelope 1 at VCO 1’s FM 1, cross-modulating it. Velocity replaces the LFO at the VCF’s FM 2. The knob settings follow the sheet’s drawn pointers, which are approximate; the tuning is set by ear, because this app’s COARSE range is its own.",
+      "phrase": {
+        "bpm": 86,
+        "loop": true,
+        "steps": [
+          [0, 33, 1.9, 0.9],
+          [2, 33, 0.9, 0.6],
+          [3, 36, 0.9, 0.8],
+          [4, 31, 3.9, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A saw and a pulse, nearly in tune",
+          "module": "osc",
+          "why": "- VCO 1 SAW lit, LEVEL 9.4, COARSE 2.5, FINE 4.8.\n- VCO 2 PULSE lit, LEVEL 9.3, COARSE 2.5, FINE 5.5: a little sharp of VCO 1.\n- Listen for: two low tones beating against each other.",
+          "set": {
+            "vco1.level": 9.4,
+            "vco1.coarse": 2.5,
+            "vco1.fine": 4.8,
+            "vco2.pulse": true,
+            "vco2.level": 9.3,
+            "vco2.coarse": 2.5,
+            "vco2.fine": 5.5
+          }
+        },
+        {
+          "title": "Cross-modulation",
+          "module": "osc",
+          "why": "VCO 2’s OUT into VCO 1’s FM 1 replaces Envelope 1 there.\n- VCO 2 OUT into VCO 1 FM 1, FM 1 at 2.\n- Listen for: a grittier, moving texture.",
+          "set": {
+            "vco1.fm1": 2
+          },
+          "cables": [["j.vco2_out", "j.vco1_fm1"]]
+        },
+        {
+          "title": "Velocity opens it",
+          "module": "filter",
+          "why": "KEYS VELOCITY into the VCF’s FM 2 replaces the LFO.\n- KEYS VELOCITY into VCF FM 2, FM 2 at 6.7.\n- CUT OFF 1.7, RESONANCE 7: dark, with a ringing peak.\n- Listen for: soft notes a dull rumble, hard notes snarling.",
+          "set": {
+            "vcf.fm2": 6.7,
+            "vcf.cutoff": 1.7,
+            "vcf.res": 7
+          },
+          "cables": [["j.vel", "j.vcf_fm2"]]
+        },
+        {
+          "title": "Envelope 2",
+          "module": "env",
+          "why": "- ATTACK 1, DECAY 1, SUSTAIN 9.5, RELEASE 1.7.\n- DRIVE 1: a little warmth.\n- Listen for: a solid, sustained bass.",
+          "set": {
+            "env2.attack": 1,
+            "env2.decay": 1,
+            "env2.sustain": 9.5,
+            "env2.release": 1.7,
+            "vca.drive": 1
+          }
+        }
+      ],
+      "context": {
+        "vco2.fine": "In this sound: the detune that makes the Reece beat."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.fine",
+          "try": "Turn VCO 2 FINE to 6",
+          "hear": "The beating speeds up into a fast, nervous shimmer."
+        }
+      ]
+    },
+    {
+      "id": "mal-sweet-lead",
+      "name": "Sweet Lead",
+      "ref": "Paul Whittington’s “Sweet Lead” patch sheet for the Malevolent",
+      "artist": "Paul Whittington",
+      "tags": ["lead", "patched", "velocity"],
+      "level": 2,
+      "blurb": "Two triangles and VCO 1’s pulse through AUX, into a resonant filter that velocity opens.",
+      "how": "Both VCOs play their triangles, and VCO 1’s pulse is added through the AUX input as a third voice. The resonance is high, and velocity replaces the LFO at the VCF’s FM 2, so harder notes sing. The knob settings follow the sheet’s drawn pointers, which are approximate; the tuning is set by ear, because this app’s COARSE range is its own.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.9, 0.8],
+          [1, 74, 0.4, 0.6],
+          [1.5, 76, 1.4, 1],
+          [3, 79, 0.9, 0.7],
+          [4, 76, 1.9, 0.9],
+          [6, 74, 1.9, 0.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two triangles",
+          "module": "osc",
+          "why": "- VCO 1 SAW off and TRIANGLE lit, LEVEL 6.9, FINE 4.6.\n- VCO 2 TRIANGLE lit, LEVEL 8.3, COARSE 6.25 (an octave up), FINE 5.2.\n- Listen for: a soft, flute-like pair.",
+          "set": {
+            "vco1.saw": false,
+            "vco1.tri": true,
+            "vco1.level": 6.9,
+            "vco1.fine": 4.6,
+            "vco2.tri": true,
+            "vco2.level": 8.3,
+            "vco2.coarse": 6.25,
+            "vco2.fine": 5.2
+          }
+        },
+        {
+          "title": "VCO 1’s pulse through AUX",
+          "module": "mixer",
+          "why": "VCO 1’s pulse jack works whatever its buttons say: patched into AUX it is a third voice.\n- VCO 1 PULSE into AUX, AUX LEVEL 5.\n- Listen for: more body and edge.",
+          "set": {
+            "mix.aux": 5
+          },
+          "cables": [["j.vco1_pulse", "j.aux"]]
+        },
+        {
+          "title": "A singing filter",
+          "module": "filter",
+          "why": "KEYS VELOCITY into the VCF’s FM 2 replaces the LFO.\n- KEYS VELOCITY into VCF FM 2, FM 2 at 7.2.\n- CUT OFF 3.5, RESONANCE 7.5.\n- Listen for: harder notes brighter and ringing.",
+          "set": {
+            "vcf.fm2": 7.2,
+            "vcf.cutoff": 3.5,
+            "vcf.res": 7.5
+          },
+          "cables": [["j.vel", "j.vcf_fm2"]]
+        },
+        {
+          "title": "A lead envelope",
+          "module": "env",
+          "why": "- Envelope 2 ATTACK 0.6, DECAY 1, SUSTAIN 9.5, RELEASE 1.5.\n- Listen for: a soft start and a quick stop.",
+          "set": {
+            "env2.attack": 0.6,
+            "env2.decay": 1,
+            "env2.sustain": 9.5,
+            "env2.release": 1.5
+          }
+        }
+      ],
+      "context": {
+        "vcf.fm2": "In this sound: how far velocity opens the filter."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.res",
+          "try": "Turn RESONANCE to 9.5",
+          "hear": "The filter starts to whistle on its own, as the sheet has it."
+        }
+      ]
+    },
+    {
+      "id": "mal-acid-line",
+      "name": "Acid Line",
+      "ref": "In the style of acid house",
+      "artist": "Acid house",
+      "tags": ["bass", "acid", "filter"],
+      "level": 1,
+      "blurb": "A squelchy, resonant saw bass with a quick filter snap and a little drive.",
+      "how": "One saw into the low-pass with the resonance up. Envelope 1 reaches the filter through the VCF’s FM 1 with no cable, so a short decay gives each note its squelch; DRIVE roughens it. No cables at all.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.2, 1],
+          [0.5, 36, 0.2, 0.6],
+          [0.75, 48, 0.2, 0.8],
+          [1, 36, 0.2, 0.6],
+          [1.5, 39, 0.2, 1],
+          [2, 36, 0.2, 0.6],
+          [2.5, 43, 0.2, 0.8],
+          [3, 41, 0.2, 0.6],
+          [3.5, 36, 0.2, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One low saw",
+          "module": "osc",
+          "why": "- VCO 1 SAW lit (as the Default patch has it), LEVEL 8, COARSE 2.5.\n- Listen for: a bright, low buzz.",
+          "set": {
+            "vco1.level": 8,
+            "vco1.coarse": 2.5
+          }
+        },
+        {
+          "title": "A resonant low-pass",
+          "module": "filter",
+          "why": "- CUT OFF 2.5, RESONANCE 7.5.\n- Listen for: a dark, ringing bass.",
+          "set": {
+            "vcf.cutoff": 2.5,
+            "vcf.res": 7.5
+          }
+        },
+        {
+          "title": "The squelch",
+          "module": "env",
+          "why": "Envelope 1 is wired to the VCF’s FM 1 inside; its knob sets how far.\n- VCF FM 1 at 4.\n- Envelope 1 ATTACK 0, DECAY 3, SUSTAIN 0, RELEASE 2.\n- Envelope 2 ATTACK 0, SUSTAIN 10, RELEASE 2.\n- Listen for: a quick “yow” on each note.",
+          "set": {
+            "vcf.fm1": 4,
+            "env1.attack": 0,
+            "env1.decay": 3,
+            "env1.sustain": 0,
+            "env1.release": 2,
+            "env2.attack": 0,
+            "env2.sustain": 10,
+            "env2.release": 2
+          }
+        },
+        {
+          "title": "Some drive",
+          "module": "amp",
+          "why": "- DRIVE 4.\n- Listen for: a harder, buzzier edge.",
+          "set": {
+            "vca.drive": 4
+          }
+        }
+      ],
+      "context": {
+        "vcf.fm1": "In this sound: the depth of the squelch.",
+        "env1.decay": "In this sound: its length."
+      },
+      "tweaks": [
+        {
+          "id": "env1.decay",
+          "try": "Turn Envelope 1 DECAY to 5",
+          "hear": "The squelch turns into a slower wah."
+        },
+        {
+          "id": "vcf.res",
+          "try": "Turn RESONANCE to 9",
+          "hear": "The filter screams and starts to whistle on its own."
+        }
+      ]
+    },
+    {
+      "id": "mal-two-filters",
+      "name": "Two Filters",
+      "ref": "In the style of ambient music",
+      "artist": "Ambient",
+      "tags": ["pad", "patched", "multimode"],
+      "level": 2,
+      "blurb": "VCO 1 low-passed and VCO 2 high-passed at the same time, through the one filter.",
+      "how": "VCO 1 reaches the LOW PASS input through the mixer as usual, while VCO 2’s OUT is patched straight into the HIGH PASS input, its mixer LEVEL down. One CUT OFF then darkens VCO 1 and thins VCO 2 at once: turning it crossfades the two.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.9, 0.8],
+          [4, 53, 3.9, 0.8],
+          [8, 60, 3.9, 0.8],
+          [12, 55, 3.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "VCO 1 into the low-pass",
+          "module": "osc",
+          "why": "- VCO 1 SAW lit, LEVEL 7.\n- CUT OFF 4, RESONANCE 3.\n- Listen for: a warm, dark saw.",
+          "set": {
+            "vco1.level": 7,
+            "vcf.cutoff": 4,
+            "vcf.res": 3
+          }
+        },
+        {
+          "title": "VCO 2 into the high-pass",
+          "module": "filter",
+          "why": "VCO 2’s OUT goes straight into HIGH PASS, not through the mixer, so only the high-pass hears it.\n- VCO 2 SAW and PULSE lit, LEVEL 0, COARSE 6.25 (an octave up).\n- VCO 2 OUT into HIGH PASS.\n- Listen for: a thin, bright octave above the dark one.",
+          "set": {
+            "vco2.saw": true,
+            "vco2.pulse": true,
+            "vco2.level": 0,
+            "vco2.coarse": 6.25
+          },
+          "cables": [["j.vco2_out", "j.vcf_hp"]]
+        },
+        {
+          "title": "The LFO moves the cutoff",
+          "module": "filter",
+          "why": "The LFO triangle is wired to the VCF’s FM 2 inside.\n- VCF FM 2 at 2, LFO RATE 2.\n- Listen for: the two voices slowly trading places.",
+          "set": {
+            "vcf.fm2": 2,
+            "lfo.rate": 2
+          }
+        },
+        {
+          "title": "A slow pad envelope",
+          "module": "env",
+          "why": "- Envelope 2 ATTACK 6, DECAY 5, SUSTAIN 9, RELEASE 7.\n- Listen for: chords that swell and fade.",
+          "set": {
+            "env2.attack": 6,
+            "env2.decay": 5,
+            "env2.sustain": 9,
+            "env2.release": 7
+          }
+        }
+      ],
+      "context": {
+        "vcf.cutoff": "In this sound: the balance between the two VCOs."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Turn CUT OFF to 8",
+          "hear": "VCO 1 opens up and VCO 2 thins to almost nothing."
+        }
+      ]
+    },
+    {
+      "id": "mal-drone",
+      "name": "Beating Drone",
+      "ref": "In the style of drone music",
+      "artist": "Drone music",
+      "tags": ["drone", "pwm", "ambient"],
+      "level": 1,
+      "blurb": "Two slowly beating saws that never stop, with the LFO sweeping the pulse and the filter.",
+      "how": "DRONE holds the VCA open, so the sound goes on with no key. VCO 2 sits a hair off VCO 1 for a slow beat, and the LFO triangle, wired inside to the SHAPE and FM 2 inputs, moves VCO 1’s pulse and the cutoff.",
+      "phrase": {
+        "bpm": 40,
+        "loop": true,
+        "steps": [[0, 45, 15.9, 0.8]]
+      },
+      "steps": [
+        {
+          "title": "Two waves, beating",
+          "module": "osc",
+          "why": "- VCO 1 SAW and PULSE lit, LEVEL 6, COARSE 3.75 (an octave down).\n- VCO 2 SAW lit, LEVEL 6, COARSE 3.75, FINE 5.1: slowly beating against VCO 1.\n- Listen for: a low, rolling drone.",
+          "set": {
+            "vco1.pulse": true,
+            "vco1.level": 6,
+            "vco1.coarse": 3.75,
+            "vco2.saw": true,
+            "vco2.level": 6,
+            "vco2.coarse": 3.75,
+            "vco2.fine": 5.1
+          }
+        },
+        {
+          "title": "The LFO on the shape and filter",
+          "module": "lfo",
+          "why": "- VCO 1 SHAPE MOD 5, VCF FM 2 at 1.5, LFO RATE 1.5: a slow sweep.\n- CUT OFF 4, RESONANCE 4.\n- Listen for: the drone slowly opening and closing.",
+          "set": {
+            "vco1.shapeMod": 5,
+            "vcf.fm2": 1.5,
+            "lfo.rate": 1.5,
+            "vcf.cutoff": 4,
+            "vcf.res": 4
+          }
+        },
+        {
+          "title": "Drone",
+          "module": "amp",
+          "why": "- DRONE / GATED to DRONE: the VCA stays open.\n- Envelope 2 ATTACK 0, SUSTAIN 10, RELEASE 2 (it no longer decides the loudness).\n- Listen for: the sound carrying on after the key comes up.",
+          "set": {
+            "vca.mode": "drone",
+            "env2.attack": 0,
+            "env2.sustain": 10,
+            "env2.release": 2
+          }
+        }
+      ],
+      "context": {
+        "vca.mode": "In this sound: DRONE, so the VCA never closes."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.fine",
+          "try": "Turn VCO 2 FINE to 5.5",
+          "hear": "The slow beat becomes a fast flutter."
+        }
+      ]
+    },
+    {
+      "id": "mal-berlin-arp",
+      "name": "Berlin Arp",
+      "ref": "In the style of Berlin-school sequencer music",
+      "artist": "Berlin school",
+      "tags": ["seq", "arp", "filter"],
+      "level": 1,
+      "blurb": "A held chord arpeggiated into a bright, plucky sequence, with the filter breathing on the LFO.",
+      "how": "ARP plays the held keys upwards at ARP RATE. A short Envelope 1 through the VCF’s FM 1 plucks each note, and the LFO through FM 2 slowly moves the filter.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 57, 7.9, 0.8],
+          [0, 60, 7.9, 0.8],
+          [0, 64, 7.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A plucky saw",
+          "module": "filter",
+          "why": "- VCO 1 SAW lit, LEVEL 8.\n- CUT OFF 3, RESONANCE 5, VCF FM 1 at 4.\n- Envelope 1 ATTACK 0, DECAY 3, SUSTAIN 0.\n- Listen for: a short, bright pluck on each key.",
+          "set": {
+            "vco1.level": 8,
+            "vcf.cutoff": 3,
+            "vcf.res": 5,
+            "vcf.fm1": 4,
+            "env1.attack": 0,
+            "env1.decay": 3,
+            "env1.sustain": 0
+          }
+        },
+        {
+          "title": "A short loudness envelope",
+          "module": "env",
+          "why": "- Envelope 2 ATTACK 0, DECAY 3, SUSTAIN 3, RELEASE 2.\n- Listen for: separate, detached notes.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 3,
+            "env2.sustain": 3,
+            "env2.release": 2
+          }
+        },
+        {
+          "title": "Arpeggiate",
+          "module": "mode",
+          "why": "- ARP on, ARP RATE 5.\n- Listen for: the held chord playing as a rising sequence.",
+          "set": {
+            "keys.arp": true,
+            "keys.arpRate": 5
+          }
+        },
+        {
+          "title": "Let the filter breathe",
+          "module": "lfo",
+          "why": "- VCF FM 2 at 1.5, LFO RATE 2.\n- Listen for: the sequence slowly brightening and darkening.",
+          "set": {
+            "vcf.fm2": 1.5,
+            "lfo.rate": 2
+          }
+        }
+      ],
+      "context": {
+        "keys.arpRate": "In this sound: the speed of the sequence."
+      },
+      "tweaks": [
+        {
+          "id": "env1.decay",
+          "try": "Turn Envelope 1 DECAY to 5",
+          "hear": "The plucks turn into longer, wah-like notes."
+        }
+      ]
+    },
+    {
+      "id": "mal-whistle",
+      "name": "Filter Whistle",
+      "ref": "In the style of the BBC Radiophonic Workshop",
+      "artist": "BBC Radiophonic Workshop",
+      "tags": ["lead", "filter", "sine"],
+      "level": 2,
+      "blurb": "The filter played as an instrument: self-oscillating, following the keys, with no oscillator at all.",
+      "how": "With both VCOs out of the mixer and the RESONANCE up, the filter rings on its own as a pure tone. KEYS PITCH into the VCF’s FM 1 makes that tone follow the keys.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 64, 1.9],
+          [2, 67, 0.9],
+          [3, 72, 0.9],
+          [4, 71, 1.9],
+          [6, 67, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "No oscillators",
+          "module": "osc",
+          "why": "- VCO 1 SAW off, LEVEL 0.\n- Listen for: silence.",
+          "set": {
+            "vco1.saw": false,
+            "vco1.level": 0
+          }
+        },
+        {
+          "title": "The filter rings",
+          "module": "filter",
+          "why": "- RESONANCE 9: the filter oscillates on its own, as a sine.\n- CUT OFF 5.3: its pitch.\n- Listen for: a pure whistle on each note.",
+          "set": {
+            "vcf.res": 9,
+            "vcf.cutoff": 5.3
+          }
+        },
+        {
+          "title": "Keys play it",
+          "module": "filter",
+          "why": "KEYS PITCH into the VCF’s FM 1 replaces Envelope 1, so the whistle follows the keys.\n- KEYS PITCH into VCF FM 1, FM 1 at 1.25: about an octave per octave.\n- Listen for: a tune, roughly in pitch.",
+          "set": {
+            "vcf.fm1": 1.25
+          },
+          "cables": [["j.pitch", "j.vcf_fm1"]]
+        },
+        {
+          "title": "A soft envelope",
+          "module": "env",
+          "why": "- Envelope 2 ATTACK 2, SUSTAIN 10, RELEASE 4.\n- Listen for: notes that fade in and out.",
+          "set": {
+            "env2.attack": 2,
+            "env2.sustain": 10,
+            "env2.release": 4
+          }
+        }
+      ],
+      "context": {
+        "vcf.res": "In this sound: high enough for the filter to sing alone."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.fm2",
+          "try": "Turn the VCF’s FM 2 to 0.3",
+          "hear": "The LFO adds a wobbly vibrato to the whistle."
+        }
+      ]
+    },
+    {
+      "id": "mal-vibrato-lead",
+      "name": "Vibrato Lead",
+      "ref": "In the style of 1970s synth soloists",
+      "artist": "70s synth soloists",
+      "tags": ["lead", "vibrato", "joystick"],
+      "level": 1,
+      "blurb": "A bright two-saw lead with vibrato from the joystick.",
+      "how": "Two saws a hair apart, a medium filter, and VIBRATO lit with the joystick pushed up, so its own 5 Hz LFO adds vibrato to every note.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 69, 1.4],
+          [1.5, 72, 0.4],
+          [2, 74, 1.9],
+          [4, 76, 0.9],
+          [5, 74, 0.9],
+          [6, 72, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two saws",
+          "module": "osc",
+          "why": "- VCO 1 SAW lit, LEVEL 7.\n- VCO 2 SAW lit, LEVEL 7, FINE 5.3.\n- Listen for: a thick, bright tone.",
+          "set": {
+            "vco1.level": 7,
+            "vco2.saw": true,
+            "vco2.level": 7,
+            "vco2.fine": 5.3
+          }
+        },
+        {
+          "title": "Some filter",
+          "module": "filter",
+          "why": "- CUT OFF 6, RESONANCE 3, VCF FM 1 at 2 with Envelope 1 DECAY 4, SUSTAIN 4.\n- Listen for: a softer start to each note.",
+          "set": {
+            "vcf.cutoff": 6,
+            "vcf.res": 3,
+            "vcf.fm1": 2,
+            "env1.decay": 4,
+            "env1.sustain": 4
+          }
+        },
+        {
+          "title": "Vibrato from the joystick",
+          "module": "mod",
+          "why": "- VIBRATO lit, and the joystick pushed half way up.\n- Listen for: a steady vibrato. Without VIBRATO the same push would add glide.",
+          "set": {
+            "keys.vibrato": true,
+            "joy.y": 0.5
+          }
+        },
+        {
+          "title": "A lead envelope",
+          "module": "env",
+          "why": "- Envelope 2 ATTACK 0.5, SUSTAIN 10, RELEASE 3.\n- Listen for: notes that ring on a little.",
+          "set": {
+            "env2.attack": 0.5,
+            "env2.sustain": 10,
+            "env2.release": 3
+          }
+        }
+      ],
+      "context": {
+        "joy.y": "In this sound: the vibrato depth."
+      },
+      "tweaks": [
+        {
+          "id": "keys.vibrato",
+          "try": "Turn VIBRATO off",
+          "hear": "The vibrato stops and the notes glide into each other instead."
+        }
+      ]
+    }
+  ]
+}

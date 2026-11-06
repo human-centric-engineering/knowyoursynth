@@ -857,6 +857,16 @@
       "app": ["solar-42n"],
       "text": "An analogue microtonal drone machine from Riga: four classic drone voices of five tuned saws and two Papa Srapa noise voices on push-buttons, two AS3340 VCOs on a touch keyboard, a ten-channel stereo mixer, a dual Polivoks filter with distortion after it, two cartridge effects, LFOs, a 5-step sequencer, a joystick and a contact microphone.",
       "source": "https://www.perfectcircuit.com/signal/elta-solar-42n-review"
+    },
+    {
+      "id": "pwm-malevolent",
+      "name": "PWM Malevolent",
+      "maker": "PWM",
+      "year": "2022",
+      "kind": "semi-modular",
+      "app": ["malevolent"],
+      "text": "A British semi-modular analogue mono synth with 32 velocity-sensitive mini keys: two VCOs with button-mixed saw, triangle and pulse, a 2-pole Sallen-Key multimode filter with separate low-pass, band-pass and high-pass inputs, two ADSRs, a VCA with drive, an LFO, an arpeggiator and a joystick, with 19 inputs and 19 outputs. Its analogue circuits are by Future Sound Systems.",
+      "source": "https://www.1pwm.com/malevolentspecifications"
     }
   ]
 }
