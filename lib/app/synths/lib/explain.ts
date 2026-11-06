@@ -189,6 +189,8 @@ for (const n of [1, 2, 3]) for (const w of Object.keys(WAVE_WORD)) AUDIO_STAGE[`
 const IN_STAGE: Record<string, number | undefined> = {
   extIn: 1,
   vcfIn: 2,
+  vcfBpIn: 2,
+  vcfHpIn: 2,
   odIn: 3,
   vcaIn: 4,
   delayIn: 5,
@@ -235,6 +237,8 @@ const GROUP: Record<string, string | undefined> = {
   lvl2: 'level',
   extIn: 'audioIn',
   vcfIn: 'audioIn',
+  vcfBpIn: 'audioIn',
+  vcfHpIn: 'audioIn',
   odIn: 'audioIn',
   vcaIn: 'audioIn',
   delayIn: 'audioIn',
@@ -243,6 +247,8 @@ const GROUP: Record<string, string | undefined> = {
 /** Inside-the-synth destinations, in running text, for routes that no single jack names. A SynthDef may override with `destNames`. */
 const DEST_NAMES: Record<string, string | undefined> = {
   vcfIn: 'the filter input',
+  vcfBpIn: 'the filter’s band-pass input',
+  vcfHpIn: 'the filter’s high-pass input',
   vcaIn: 'the amplifier input',
   delayIn: 'the delay input',
   cutoff: 'the filter cutoff',
@@ -906,7 +912,7 @@ function hearAudioIn(ctx: Ctx, _a: OutputJack, b: InputJack, x: JackHearContext)
     return `${cap(x.src)} is a slow control signal, not a sound, and this input only adds to the mixer, so the oscillators carry on as normal. What you get is a click or thump each time the signal jumps: an envelope with an instant attack puts a thump on the front of every note. The level knob for this input sets how hard.${lost}`;
   }
   if (x.kind !== 'audio' && x.kind !== 'noise' && x.kind !== 'fast') {
-    const res = dest === 'vcfIn' ? ep.filter.res : 0;
+    const res = dest === 'vcfIn' || dest === 'vcfBpIn' || dest === 'vcfHpIn' ? ep.filter.res : 0;
     const rings =
       res >= 0.98
         ? ' With resonance this high the filter rings on its own, and each click sets it ringing, so the filter itself becomes the sound source.'

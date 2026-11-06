@@ -397,6 +397,8 @@ export const DESTS: string[] = [
   'fmIn',
   'inv10In',
   'hp6In',
+  'vcfBpIn',
+  'vcfHpIn',
   ...MOOG_DESTS,
   ...SOLAR_DESTS,
 ];
@@ -462,6 +464,8 @@ function createVoice(
   const normSig = new Int32Array(ND).fill(-1);
   const normAmt = new Float64Array(ND).fill(1);
   const cabled = new Uint8Array(ND);
+  // The SVF's band-pass and high-pass inputs (`vcfBpIn`, `vcfHpIn`) have a source: the filter runs their states too
+  let mmOn = false;
   // Each oscillator's own output signal and pitch destination (the fourth was added later, so they are not contiguous).
   const OSC_SI = [SI.osc1, SI.osc2, SI.osc3, SI.osc4];
   const PITCH_DI = [DI.pitch1, DI.pitch2, DI.pitch3, DI.pitch4];
@@ -602,6 +606,20 @@ function createVoice(
     ic1 = 0,
     ic2 = 0,
     fPrevIn = 0;
+  // The band-pass and high-pass inputs' own SVF states, sharing the main filter's coefficients: [ic1, ic2, previous
+  // input] for `vcfBpIn`, then the same for `vcfHpIn`. `mmBp` / `mmLp` hand back the last step's taps.
+  const mmSt = new Float64Array(6);
+  let mmBp = 0,
+    mmLp = 0;
+  function mmStep(o: number, x: number, a1: number, a2: number, a3: number): void {
+    const v3 = x - mmSt[o + 1];
+    mmBp = a1 * mmSt[o] + a2 * v3;
+    mmLp = mmSt[o + 1] + a2 * mmSt[o] + a3 * v3;
+    const c1 = 2 * mmBp - mmSt[o],
+      c2 = 2 * mmLp - mmSt[o + 1];
+    mmSt[o] = c1 > 1.6 ? 1.6 : c1 < -1.6 ? -1.6 : c1;
+    mmSt[o + 1] = c2 > 1.6 ? 1.6 : c2 < -1.6 ? -1.6 : c2;
+  }
   // Optional 24 dB high-pass stage in front of the main filter (EngineParams `hpf`). Two SVF sections in series.
   let hpLog = Math.log(20),
     hpLogT = hpLog,
@@ -777,6 +795,9 @@ function createVoice(
       // `by`: the route's depth is scaled by a second signal (Jupiter-6 CROSS MOD ENV-1: Envelope 1 opens the cross mod)
       destBy[DI[r.dst]].push(r.by && r.by in SI ? SI[r.by] : -1);
     }
+    const fed = (d: number): boolean => normSig[d] >= 0 || destSrc[d].length > 0;
+    mmOn = fed(DI.vcfBpIn) || fed(DI.vcfHpIn);
+    if (!mmOn) mmSt.fill(0);
   }
 
   function setParams(p: VoiceParams) {
@@ -2195,7 +2216,19 @@ function createVoice(
           const a1 = 1 / (1 + g * (g + kq)),
             a2 = g * a1,
             a3 = g * a2;
+          // Multimode inputs (PWM Malevolent): what is at `vcfBpIn` comes out band-passed and what is at `vcfHpIn`
+          // high-passed, at the same cutoff and resonance, summed into `vcf1` with the low-pass of `vcfIn`
+          const fBp = mmOn ? ev(DI.vcfBpIn) : 0,
+            fHp = mmOn ? ev(DI.vcfHpIn) : 0;
+          let mmOut = 0;
           for (let os = 0; os < 2; os++) {
+            if (mmOn) {
+              mmStep(0, Math.tanh((os ? fBp : (fBp + mmSt[2]) * 0.5) * 0.8), a1, a2, a3);
+              const bpOut = mmBp;
+              const xh = Math.tanh((os ? fHp : (fHp + mmSt[5]) * 0.5) * 0.8);
+              mmStep(3, xh, a1, a2, a3);
+              if (os) mmOut = (bpOut + xh - kq * mmBp - mmLp) * 1.25;
+            }
             const x = Math.tanh(
               ((os ? fin : (fin + fPrevIn) * 0.5) + (Math.random() - 0.5) * 2e-5) * 0.8
             );
@@ -2218,6 +2251,11 @@ function createVoice(
               const m2 = f.mode2 || 'lp';
               v2o = (m2 === 'hp' ? hp : m2 === 'bp' ? bp : lp) * 1.25;
             }
+          }
+          if (mmOn) {
+            v1o += mmOut;
+            mmSt[2] = fBp;
+            mmSt[5] = fHp;
           }
         }
         fPrevIn = fin;

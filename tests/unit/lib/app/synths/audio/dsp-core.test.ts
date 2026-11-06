@@ -735,6 +735,78 @@ describe.each(FEATURES)('voice feature: %s', (_name, p) => {
   });
 });
 
+describe('the SVF’s band-pass and high-pass inputs (vcfBpIn, vcfHpIn)', () => {
+  // Sines at fixed pitches, at level 0 into the mixer, so the only sound is what the cables bring to the filter. The
+  // VCA is held open and nothing moves the cutoff, so the filter's response is all that shapes the output.
+  const filterOnly = (
+    mode: 'lp' | 'bp' | 'hp',
+    cables: EngineCable[],
+    type: 'svf' | 'ladder' = 'svf'
+  ): EngineParams =>
+    monoParams({
+      osc: [
+        { level: 0, mix: { sine: 1 }, semi: 0, kbd: false, fixedNote: 33 }, // 55 Hz
+        { level: 0, mix: { sine: 1 }, semi: 0, kbd: false, fixedNote: 69 }, // 440 Hz
+        { level: 0, mix: { sine: 1 }, semi: 0, kbd: false, fixedNote: 105 }, // 3.5 kHz
+      ],
+      filter: { type, mode, cutoff: 440, res: 0.2, envAmt: 0, envSrc: 'env1', kbd: 0 },
+      vca: { envSrc: 'none', bias: 1 },
+      volume: 0.3,
+      cables,
+    });
+  const out = (p: EngineParams): Float32Array => render(p, { len: 9600 }).out;
+  // Past the first 50 ms, once the filter has settled.
+  const tail = (b: Float32Array): number => rms(b, 2400);
+  const maxDiff = (a: Float32Array, b: Float32Array): number =>
+    a.reduce((m, x, i) => Math.max(m, Math.abs(x - b[i])), 0);
+
+  it('passes what reaches the high-pass input high-passed: a low tone is cut, a high one kept', () => {
+    const low = tail(out(filterOnly('lp', [cable('osc1', 'vcfHpIn', 0.3)])));
+    const high = tail(out(filterOnly('lp', [cable('osc3', 'vcfHpIn', 0.3)])));
+    expect(high).toBeGreaterThan(0.01);
+    expect(low).toBeLessThan(high * 0.05);
+  });
+
+  it('passes what reaches the band-pass input band-passed: the cutoff tone kept, both far ones cut', () => {
+    const mid = tail(out(filterOnly('lp', [cable('osc2', 'vcfBpIn', 0.3)])));
+    const low = tail(out(filterOnly('lp', [cable('osc1', 'vcfBpIn', 0.3)])));
+    const high = tail(out(filterOnly('lp', [cable('osc3', 'vcfBpIn', 0.3)])));
+    expect(mid).toBeGreaterThan(0.01);
+    expect(low).toBeLessThan(mid * 0.25);
+    expect(high).toBeLessThan(mid * 0.25);
+  });
+
+  it('filters each input as the main input would in that mode, and sums the three into one output', () => {
+    const lp = out(filterOnly('lp', [cable('osc3', 'vcfIn', 0.3)]));
+    const bp = out(filterOnly('bp', [cable('osc1', 'vcfIn', 0.3)]));
+    const hp = out(filterOnly('hp', [cable('osc2', 'vcfIn', 0.3)]));
+    expect(maxDiff(out(filterOnly('lp', [cable('osc1', 'vcfBpIn', 0.3)])), bp)).toBeLessThan(1e-3);
+    expect(maxDiff(out(filterOnly('lp', [cable('osc2', 'vcfHpIn', 0.3)])), hp)).toBeLessThan(1e-3);
+    const all = out(
+      filterOnly('lp', [
+        cable('osc3', 'vcfIn', 0.3),
+        cable('osc1', 'vcfBpIn', 0.3),
+        cable('osc2', 'vcfHpIn', 0.3),
+      ])
+    );
+    const sum = lp.map((x, i) => x + bp[i] + hp[i]);
+    expect(tail(all)).toBeGreaterThan(0.01);
+    expect(maxDiff(all, sum)).toBeLessThan(2e-3);
+  });
+
+  it('takes a route as well as a cable, and the ladder ignores both inputs', () => {
+    const routed = out({
+      ...filterOnly('lp', []),
+      routes: [{ src: 'osc3', dst: 'vcfHpIn', amt: 0.3 }],
+    });
+    expect(tail(routed)).toBeGreaterThan(0.01);
+    // only the ladder's own dither is left
+    expect(tail(out(filterOnly('lp', [cable('osc3', 'vcfHpIn', 0.3)], 'ladder')))).toBeLessThan(
+      1e-5
+    );
+  });
+});
+
 describe('a note per oscillator (oscAssign)', () => {
   const chord: Timed[] = [
     [0, { type: 'noteOn', n: 48 }],
