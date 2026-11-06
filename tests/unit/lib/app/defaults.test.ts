@@ -31,10 +31,12 @@ import path from 'node:path';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { ownModuleProblems, scaffoldsOnDisk, unlistedSeams } from '@/tests/helpers/app-scaffolds';
 
-// FORK (Know Your Synth): the data-export collector reads the synth suggestions table (`f-databank` t-37).
+// FORK (Know Your Synth): the data-export collector reads the synth suggestions table (`f-databank` t-37), the link
+// suggestions table (`f-link-suggestions` t-185) and the rest below.
 vi.mock('@/lib/db/client', () => ({
   prisma: {
     synthSuggestion: { findMany: vi.fn() },
+    linkSuggestion: { findMany: vi.fn() },
     userSound: { findMany: vi.fn() },
     soundReport: { findMany: vi.fn() },
     synthPreference: { findMany: vi.fn() },
@@ -381,13 +383,15 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     seam: 'lib/app/data-export.ts',
     risk: 'a stray collector would leak app rows into every install’s subject-access export, and a stray declaration would pre-account for a table nobody decided about',
     assert: async () => {
-      // Know Your Synth collects eleven sections, a user's synth suggestions (`f-databank` t-37), their sounds
+      // Know Your Synth collects its sections: a user's synth suggestions (`f-databank` t-37), their link suggestions
+      // (`f-link-suggestions` t-185), their sounds
       // (`f-my-sounds` s1), the reports they filed about shared sounds (`f-sharing` h4), their last panels and
       // settings (s3), their lesson progress and favourites (s4), their synth profile (`f-profiles` r1), the synths
       // they own and want (r2), their patterns (`f-step-sequencer` t-81) and the reports they filed about shared
       // patterns (t-83), the library patterns they made and the comments they wrote on them (`f-pattern-library`
       // t-156), and asks only for theirs.
       vi.mocked(prisma.synthSuggestion.findMany).mockResolvedValue([]);
+      vi.mocked(prisma.linkSuggestion.findMany).mockResolvedValue([]);
       vi.mocked(prisma.userSound.findMany).mockResolvedValue([]);
       vi.mocked(prisma.soundReport.findMany).mockResolvedValue([]);
       vi.mocked(prisma.synthPreference.findMany).mockResolvedValue([]);
@@ -402,6 +406,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       vi.mocked(prisma.libraryPatternComment.findMany).mockResolvedValue([]);
       expect(await collectAppSubjectData({ userId: 'user-1', email: 'user@example.com' })).toEqual({
         synthSuggestions: [],
+        linkSuggestions: [],
         sounds: [],
         soundReportsFiled: [],
         synthPanels: [],
@@ -416,6 +421,9 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         libraryPatternComments: [],
       });
       expect(prisma.synthSuggestion.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { userId: 'user-1' } })
+      );
+      expect(prisma.linkSuggestion.findMany).toHaveBeenCalledWith(
         expect.objectContaining({ where: { userId: 'user-1' } })
       );
       expect(prisma.userSound.findMany).toHaveBeenCalledWith(
@@ -458,10 +466,11 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       // exercises the REAL seam. A stray source here would also silence the
       // fork-accounting rule in export-sources.test.ts for that model.
       __resetAppSubjectSourceRegistryForTests();
-      // Know Your Synth exports a user's synth suggestions, sounds, reports filed, last panels, settings, lesson progress, favourites, profile, owned and wanted synths and patterns, and declares its catalogue (pattern library included) and databank tables
+      // Know Your Synth exports a user's synth and link suggestions, sounds, reports filed, last panels, settings, lesson progress, favourites, profile, owned and wanted synths and patterns, and declares its catalogue (pattern library included) and databank tables
       // and its held usernames as excluded: no row of theirs is about a user.
       expect(getAppSubjectSources().map((s) => [s.model, s.section, s.disposition])).toEqual([
         ['SynthSuggestion', 'synthSuggestions', 'export'],
+        ['LinkSuggestion', 'linkSuggestions', 'export'],
         ['UserSound', 'sounds', 'export'],
         ['UserPattern', 'patterns', 'export'],
         ['PatternReport', 'patternReportsFiled', 'export'],
@@ -530,6 +539,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         LessonProgress: own,
         Favourite: own,
         SynthSuggestion: { kind: 'not-personal', because: expect.any(String) },
+        LinkSuggestion: { kind: 'not-personal', because: expect.any(String) },
         SoundReport: { kind: 'not-personal', because: expect.any(String) },
         PatternReport: { kind: 'not-personal', because: expect.any(String) },
         LibraryPattern: { kind: 'not-personal', because: expect.any(String) },

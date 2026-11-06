@@ -15,6 +15,7 @@ import { describe, it, expect, vi } from 'vitest';
 vi.mock('@/lib/db/client', () => ({
   prisma: {
     synthSuggestion: { findMany: vi.fn(async () => []) },
+    linkSuggestion: { findMany: vi.fn(async () => []) },
     userSound: { findMany: vi.fn(async () => []) },
     soundReport: { findMany: vi.fn(async () => []) },
     synthPreference: { findMany: vi.fn(async () => []) },

@@ -52,11 +52,12 @@ export const SYSTEM_MODELS = [
   'AuthBootstrap',
   'SeedHistory',
   'ContactSubmission',
-  // Know Your Synth: users' synth suggestions, an inbound queue like the one above, and users' own sounds, last panels,
+  // Know Your Synth: users' synth and link suggestions, inbound queues like the one above, and users' own sounds, last panels,
   // settings, lesson progress, favourites, profiles, patterns and the synths they own and want, theirs in every org, with the
   // usernames held after a change and the reports about shared sounds and patterns (divergence row in
   // .context/app/divergences.md).
   'SynthSuggestion',
+  'LinkSuggestion',
   'UserSound',
   'UserPattern',
   'SoundReport',

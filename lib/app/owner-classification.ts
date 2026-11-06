@@ -84,6 +84,11 @@ export function initAppOwnerClassification(): void {
         because:
           'An inbound suggestion for the shared databank, decided from one admin queue; userId is who suggested it.',
       },
+      LinkSuggestion: {
+        kind: 'not-personal',
+        because:
+          'An inbound suggestion for the shared videos and links, decided from one admin queue; userId is who suggested it.',
+      },
       SoundReport: {
         kind: 'not-personal',
         because:
