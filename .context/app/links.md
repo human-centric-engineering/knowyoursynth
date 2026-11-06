@@ -271,16 +271,20 @@ its reasoning re-derived:
   user's suggestions stay, with nobody attached.
 - **`linkId` records which link an accept made**, as a synth suggestion's `instrumentId` does, without an FK.
 
-| Route                                      | Who       | What                                                                                                                                                                              |
-| ------------------------------------------ | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POST /api/v1/links/suggestions`           | signed in | `{ target: { kind, id }, url, kind, title?, note? }`. 400 for a URL the parser refuses, 404 for a target not there, 409 for a URL it already links. 10 an hour per user, then 429 |
-| `GET /api/v1/admin/links/suggestions`      | admin     | `?status=PENDING\|ACCEPTED\|DECLINED`, newest first, each with `target { kind, id, name }` (`name` null once removed) and `suggestedBy` (null once erased)                        |
-| `POST /api/v1/admin/links/suggestions/:id` | admin     | `{ action: 'accept', kind?, title? }` or `{ action: 'decline', reason }`. 409 once decided                                                                                        |
+| Route                                      | Who       | What                                                                                                                                                                                                                                                  |
+| ------------------------------------------ | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `POST /api/v1/links/suggestions`           | signed in | `{ target: { kind, id }, url, kind, title?, note? }`. 400 for a URL the parser refuses, 404 for a target not there (or a sound on an unlisted synth), 409 for a URL it already links or that is already waiting for it. 10 an hour per user, then 429 |
+| `GET /api/v1/admin/links/suggestions`      | admin     | `?status=PENDING\|ACCEPTED\|DECLINED`, newest first, each with `target { kind, id, name }` (`name` null once removed) and `suggestedBy` (null once erased)                                                                                            |
+| `POST /api/v1/admin/links/suggestions/:id` | admin     | `{ action: 'accept', kind?, title? }` or `{ action: 'decline', reason }`. 409 once decided                                                                                                                                                            |
 
 Rules (`lib/app/links/suggestions.ts`, each tested):
 
 - **A suggestion's URL is parsed, never fetched.** It is stored in its canonical form, so it compares with the links
   the target has. Only the accept reads the provider, through `createLink`.
+- **A sound on an unlisted synth is a 404**, as the public links reads treat it: otherwise the 404 / 409 / 201 answers
+  would say which hidden patches exist and what they link.
+- **One pending suggestion per target and URL.** A second, from anyone, is a 409 until the first is decided, so the
+  admin does not decline duplicates one by one. Checked, not a unique index: a decided one can be suggested again.
 - **A decision is made once**: a conditional update out of `PENDING`, so of two admins at once the second gets a 409.
 - **Accept goes through `createLink`**: parsed again, read from the provider, 409 on a URL linked since, audited as
   `external_link.create`. `kind` and `title` from the admin replace the user's. With no title from either, the

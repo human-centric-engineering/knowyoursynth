@@ -114,6 +114,10 @@ function suggestionTable() {
         const row = rows.find((r) => matches(r, where));
         return row ? { ...row } : null;
       }),
+      findFirst: vi.fn(async ({ where }: { where: Row }) => {
+        const row = rows.find((r) => matches(r, where));
+        return row ? { ...row } : null;
+      }),
       findMany: vi.fn(async ({ where }: { where?: Row } = {}) =>
         rows
           .filter((r) => matches(r, where))
@@ -172,8 +176,13 @@ beforeEach(() => {
   store = linksStore({
     instruments,
     songs: [{ id: 'kraftwerk-autobahn', title: 'Autobahn' }],
+    synths: [
+      { id: 'model-d', listed: true, instrumentIds: [] },
+      { id: 'hidden-synth', listed: false, instrumentIds: [] },
+    ],
     sounds: [
       { id: 'snd1', synthId: 'model-d', slug: 'stacked-night-bass', name: 'Stacked night bass' },
+      { id: 'snd2', synthId: 'hidden-synth', slug: 'secret-pad', name: 'Secret pad' },
     ],
   });
   suggestions = suggestionTable();
@@ -241,6 +250,42 @@ describe('POST /api/v1/links/suggestions', () => {
     expect(suggestions.rows).toEqual([]);
   });
 
+  it('is a 404 for a sound on an unlisted synth, even one whose URL it links, and stores nothing', async () => {
+    const target = { kind: 'sound', id: 'hidden-synth/secret-pad' };
+    const fresh = await post(body({ target }));
+    store.insert({
+      soundId: 'snd2',
+      url: `https://www.youtube.com/watch?v=${VIDEO}`,
+      provider: 'youtube',
+      providerId: VIDEO,
+      kind: 'demo',
+      title: 'Hidden',
+    });
+    const linked = await post(body({ target }));
+    expect([fresh.status, linked.status]).toEqual([404, 404]);
+    expect(suggestions.rows).toEqual([]);
+
+    // The same sound's synth listed is suggestable: the 404 was the listing, not the sound.
+    const listed = await post(
+      body({ target: { kind: 'sound', id: 'model-d/stacked-night-bass' } })
+    );
+    expect(listed.status).toBe(201);
+  });
+
+  it('is a 409 for a URL already waiting as a suggestion for the target, from anyone, until it is decided', async () => {
+    const first = await suggestOne({ url: `https://youtu.be/${VIDEO}` });
+    mockGetSession.mockResolvedValue(session('USER', 'user-2'));
+    const again = await post(body());
+    expect(again.status).toBe(409);
+    expect(suggestions.rows).toHaveLength(1);
+
+    mockGetSession.mockResolvedValue(session('ADMIN'));
+    await decision(first, { action: 'decline', reason: 'Not this one' });
+    mockGetSession.mockResolvedValue(session('USER', 'user-2'));
+    const afterDecline = await post(body());
+    expect(afterDecline.status).toBe(201);
+  });
+
   it('is a 409 for a URL the target already links, however it was pasted, and stores nothing', async () => {
     store.insert({
       instrumentId: MINIMOOG,
@@ -261,7 +306,8 @@ describe('POST /api/v1/links/suggestions', () => {
 
   it('caps a user at ten an hour: the eleventh is a 429 with rate-limit headers and is not stored', async () => {
     for (let i = 0; i < 10; i++) {
-      const res = await post(body({ note: `Suggestion ${i}` }));
+      // A video each, as the same one twice is a 409 while it waits.
+      const res = await post(body({ url: `https://youtu.be/dQw4w9WgXc${i}` }));
       expect(res.status).toBe(201);
     }
     const res = await post(body());

@@ -6,7 +6,8 @@
  * The rules, each tested:
  *
  * - **A suggestion's URL is parsed, never fetched** (`parseLinkUrl`): only an admin's accept reads its provider.
- * - **Its target must exist**, or it is a 404, and **a URL the target already links is refused** with a 409.
+ * - **Its target must exist**, and be one the public reads serve (a sound on a listed synth), or it is a 404. **A URL
+ *   the target already links, or that is already waiting as a suggestion for it, is refused** with a 409.
  * - **A decision is made once.** Each one moves the row out of `PENDING` with a conditional update, so two admins
  *   deciding the same suggestion cannot both win: the second gets a 409.
  * - **An accept makes the link through `createLink`**, so it is parsed, read from its provider, refused as a
@@ -21,7 +22,13 @@ import { ConflictError, NotFoundError, ValidationError } from '@/lib/api/errors'
 import { createRateLimiter } from '@/lib/security/rate-limit';
 import { createLink, type AdminLink } from '@/lib/app/links/admin';
 import { parseLinkUrl } from '@/lib/app/links/providers';
-import { resolveOwner, splitSoundKey, type OwnerKind, type OwnerRef } from '@/lib/app/links/owner';
+import {
+  resolveOwner,
+  splitSoundKey,
+  type OwnerColumns,
+  type OwnerKind,
+  type OwnerRef,
+} from '@/lib/app/links/owner';
 import type {
   AdminLinkSuggestion,
   LinkSuggestionDecision,
@@ -43,6 +50,23 @@ export const linkSuggestionLimitKey = (userId: string): string => `link-suggest:
 
 const targetOf = (row: LinkSuggestion): OwnerRef => ({ kind: row.targetKind, id: row.targetId });
 
+/**
+ * The owner a user may suggest for: as `resolveOwner`, but a sound only on a listed synth, as the public reads serve
+ * it. Otherwise the answers to suggesting would say what a hidden synth's sounds are and what they link.
+ */
+async function suggestableOwner(ref: OwnerRef): Promise<OwnerColumns | null> {
+  const owner = await resolveOwner(ref);
+  if (!owner || ref.kind !== 'sound') return owner;
+  const key = splitSoundKey(ref.id);
+  const synth = key
+    ? await prisma.synth.findFirst({
+        where: { id: key.synthId, listed: true },
+        select: { id: true },
+      })
+    : null;
+  return synth ? owner : null;
+}
+
 /** Record a user's suggestion, pending an admin. */
 export async function createLinkSuggestion(
   userId: string,
@@ -50,13 +74,25 @@ export async function createLinkSuggestion(
 ): Promise<LinkSuggestion> {
   const parsed = parseLinkUrl(input.url);
   if (!parsed.ok) throw new ValidationError(parsed.problem, { url: parsed.problem });
-  const owner = await resolveOwner(input.target);
+  const owner = await suggestableOwner(input.target);
   if (!owner) throw new NotFoundError('There is nothing with that id to suggest a link for');
-  const listed = await prisma.externalLink.findFirst({
-    where: { ...owner, url: parsed.link.url },
-    select: { id: true },
-  });
+  const [listed, waiting] = await Promise.all([
+    prisma.externalLink.findFirst({
+      where: { ...owner, url: parsed.link.url },
+      select: { id: true },
+    }),
+    prisma.linkSuggestion.findFirst({
+      where: {
+        targetKind: input.target.kind,
+        targetId: input.target.id,
+        url: parsed.link.url,
+        status: 'PENDING',
+      },
+      select: { id: true },
+    }),
+  ]);
   if (listed) throw new ConflictError('That link is already listed here');
+  if (waiting) throw new ConflictError('That link has already been suggested here');
   return prisma.linkSuggestion.create({
     data: {
       userId,
