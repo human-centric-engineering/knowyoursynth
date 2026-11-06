@@ -413,6 +413,35 @@ describe('the moderation queue', () => {
     expect(body).not.toContain('owner-1');
   });
 
+  it("shows a sound's links as its page serves them (f-link-suggestions t-187), and none that no longer parse", async () => {
+    signIn('admin-1', 'ADMIN');
+    const video = 'dQw4w9WgXcQ';
+    const stored = {
+      url: `https://www.youtube.com/watch?v=${video}`,
+      provider: 'youtube',
+      providerId: video,
+      title: 'Their demo',
+      thumbnailUrl: null,
+    };
+    const linked = addSound({
+      links: [stored, { ...stored, url: 'https://example.com/elsewhere', title: 'Gone' }],
+    });
+    addReport(linked);
+    addReport(addSound({ name: 'No links', links: [] }));
+
+    const data = (await json(await queue())).data!;
+    expect(data[0].links).toEqual([
+      {
+        url: stored.url,
+        provider: 'youtube',
+        title: 'Their demo',
+        thumbnailUrl: `https://i.ytimg.com/vi/${video}/hqdefault.jpg`,
+        embedUrl: `https://www.youtube-nocookie.com/embed/${video}`,
+      },
+    ]);
+    expect(data[1].links).toEqual([]);
+  });
+
   it('lists unlisted sounds, the most recent first, with the reports that unlisted them', async () => {
     signIn('admin-1', 'ADMIN');
     const old = addSound({ name: 'Old', unlistedAt: at(1) });
