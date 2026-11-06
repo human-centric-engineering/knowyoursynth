@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { z } from 'zod';
 
 import { Byline } from '@/components/app/sharing/byline';
+import { LinkCard } from '@/components/app/links/link-card';
+import { soundLinkViews } from '@/components/app/links/data';
 import { ReportButton } from '@/components/app/sharing/report-button';
 import { APIClientError } from '@/lib/api/client';
 import { sharedSoundHref } from '@/components/app/synth/routes';
@@ -22,6 +24,9 @@ import type { PublicSound } from '@/lib/app/sounds/data';
  *   name or notes (t-52), and the strip says so.
  * - **Their own:** open it as one of theirs instead, where Save writes to it.
  * - **Report** (h4), for a signed-in visitor whose sound it is not: never on their own, and not signed out.
+ *
+ * Under the notes and tags, its owner's videos and recordings (`f-link-suggestions` t-187), as `LinkCard`s: click to
+ * embed, from the address the server built (`embedUrl`), never the stored one.
  *
  * Who it belongs to is the visitor's own sounds list's answer (it carries each sound's address): the public read never
  * says, so it cannot leak whose a sound is. Until that list arrives, no action is offered.
@@ -96,6 +101,7 @@ export function SharedSoundStrip({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<{ note: string | null } | null>(null);
+  const links = soundLinkViews(sound.links);
   const copy = async () => {
     setBusy(true);
     setError(null);
@@ -189,6 +195,16 @@ export function SharedSoundStrip({
             </li>
           ))}
         </ul>
+      )}
+      {links.length > 0 && (
+        <section aria-label="Videos and recordings" className="mt-3">
+          <h3 className="kys-label text-(--kys-muted)">Videos and recordings</h3>
+          <ul className="kys-links-grid mt-2">
+            {links.map((link, i) => (
+              <LinkCard key={link.id} link={link} index={i} />
+            ))}
+          </ul>
+        </section>
       )}
       {copied && (
         <p role="status" className="mt-2 text-sm text-(--kys-good)">
