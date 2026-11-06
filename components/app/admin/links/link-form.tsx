@@ -10,6 +10,12 @@
  *
  * A link's owner is set when it is added and never changes. Given an `owner`, the form links to it; given none (the
  * list page), the admin names one.
+ *
+ * Given a user's `suggestion` (`f-link-suggestions` t-186), it is the approve form: filled in from the suggestion, its
+ * owner and address fixed (Read still previews it), and saving accepts it
+ * (`POST /api/v1/admin/links/suggestions/:id`), which makes the link through the same create path. An accepted link is
+ * never ours, so there is no Ours or Rating: the admin edits it afterwards. Editing a link that came from a suggestion
+ * says who suggested it.
  */
 
 import { useState, type ChangeEvent } from 'react';
@@ -26,8 +32,10 @@ import {
   OWNER_LABEL,
   PROVIDER_LABEL,
   AdminLinkSchema,
+  LINK_SUGGESTIONS_API,
   type AdminLinkView,
   type LinkSuggestionView,
+  type SuggestedLinkView,
 } from '@/components/app/admin/links/data';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -101,12 +109,29 @@ export interface LinkFormProps {
   owner?: OwnerRef;
   /** A new link starts marked as ours. */
   defaultOurs?: boolean;
-  onSaved: (link: AdminLinkView) => void;
+  /** A user's suggestion to approve: the form accepts it rather than adding a link of its own. */
+  suggestion?: SuggestedLinkView;
+  onSaved?: (link: AdminLinkView) => void;
+  /** Told when the suggestion has been accepted. */
+  onAccepted?: () => void;
   onCancel?: () => void;
 }
 
-export function LinkForm({ link, owner, defaultOurs = false, onSaved, onCancel }: LinkFormProps) {
-  const fixedOwner = link ? link.owner : (owner ?? null);
+export function LinkForm({
+  link,
+  owner,
+  defaultOurs = false,
+  suggestion: suggested,
+  onSaved,
+  onAccepted,
+  onCancel,
+}: LinkFormProps) {
+  const fixedOwner = link
+    ? link.owner
+    : suggested
+      ? { kind: suggested.target.kind, id: suggested.target.id }
+      : (owner ?? null);
+  const ownerName = link?.owner.name ?? suggested?.target.name ?? fixedOwner?.id;
   const [suggestion, setSuggestion] = useState<LinkSuggestionView | null>(null);
   const [reading, setReading] = useState(false);
   const [readProblem, setReadProblem] = useState<string | null>(null);
@@ -126,9 +151,9 @@ export function LinkForm({ link, owner, defaultOurs = false, onSaved, onCancel }
     defaultValues: {
       ownerKind: fixedOwner?.kind ?? 'instrument',
       ownerId: fixedOwner?.id ?? '',
-      url: link?.url ?? '',
-      kind: link?.kind ?? 'demo',
-      title: link?.title ?? '',
+      url: link?.url ?? suggested?.url ?? '',
+      kind: link?.kind ?? suggested?.kind ?? 'demo',
+      title: link?.title ?? suggested?.title ?? '',
       ours: link?.ours ?? defaultOurs,
       rating: RATINGS.find((r) => r !== '' && Number(r) === link?.rating) ?? '',
     },
@@ -164,6 +189,7 @@ export function LinkForm({ link, owner, defaultOurs = false, onSaved, onCancel }
 
   const onSubmit = async (values: FormValues) => {
     setServerError(null);
+    if (suggested) return accept(suggested, values);
     const common = {
       url: values.url,
       kind: values.kind,
@@ -205,20 +231,48 @@ export function LinkForm({ link, owner, defaultOurs = false, onSaved, onCancel }
     }
     // It saved: a reply the browser cannot read must not read as a failure, or a retry is refused as a duplicate.
     const parsed = AdminLinkSchema.safeParse(saved);
-    if (parsed.success) onSaved(parsed.data);
+    if (parsed.success) onSaved?.(parsed.data);
     else setServerError('It saved, but the answer could not be read. Reload the page to see it.');
   };
 
-  const id = (name: string) => `link-${link?.id ?? 'new'}-${name}`;
+  // A refusal of an accept names the title (none to be had) or is about the suggestion as a whole: decided by another
+  // admin, its target gone, the address linked since.
+  const accept = async (s: SuggestedLinkView, values: FormValues) => {
+    try {
+      await apiClient.post(`${LINK_SUGGESTIONS_API}/${encodeURIComponent(s.id)}`, {
+        body: {
+          action: 'accept',
+          kind: values.kind,
+          ...(values.title ? { title: values.title } : {}),
+        },
+      });
+    } catch (error) {
+      if (!(error instanceof APIClientError)) {
+        setServerError("That didn't save. Try again.");
+        return;
+      }
+      const problem = fieldProblem(error);
+      if (problem?.field === 'title')
+        setError('title', { type: 'server', message: problem.message }, { shouldFocus: true });
+      else setServerError(problem?.message ?? error.message);
+      return;
+    }
+    onAccepted?.();
+  };
+
+  const id = (name: string) => `link-${link?.id ?? suggested?.id ?? 'new'}-${name}`;
   const selectClass = 'border-input bg-background h-9 w-full rounded-md border px-3 text-sm';
 
   return (
     <form onSubmit={(e) => void handleSubmit(onSubmit)(e)} className="space-y-4" noValidate>
       {fixedOwner ? (
-        <p className="text-muted-foreground text-sm">
-          About the {OWNER_LABEL[fixedOwner.kind].toLowerCase()}{' '}
-          <span className="text-foreground font-medium">{link?.owner.name ?? fixedOwner.id}</span>
-        </p>
+        <div className="text-muted-foreground space-y-0.5 text-sm">
+          <p>
+            About the {OWNER_LABEL[fixedOwner.kind].toLowerCase()}{' '}
+            <span className="text-foreground font-medium">{ownerName}</span>
+          </p>
+          {link?.suggestedBy && <p>Suggested by {link.suggestedBy.name ?? 'an erased account'}</p>}
+        </div>
       ) : (
         <div className="grid gap-3 sm:grid-cols-[10rem_1fr]">
           <div className="space-y-1">
@@ -287,6 +341,8 @@ export function LinkForm({ link, owner, defaultOurs = false, onSaved, onCancel }
             spellCheck={false}
             autoComplete="off"
             placeholder="https://www.youtube.com/watch?v=…"
+            // A suggestion is accepted as it was suggested; a different address is a link of the admin's own.
+            readOnly={!!suggested}
             aria-invalid={!!errors.url}
             {...register('url', {
               // The preview is of the address Read was given; once it changes, the preview no longer is.
@@ -362,50 +418,58 @@ export function LinkForm({ link, owner, defaultOurs = false, onSaved, onCancel }
             ))}
           </select>
         </div>
-        <div className="space-y-1">
-          <Label htmlFor={id('rating')} className="flex items-center gap-1">
-            Rating
-            <FieldHelp title="Rating">
+        {!suggested && (
+          <div className="space-y-1">
+            <Label htmlFor={id('rating')} className="flex items-center gap-1">
+              Rating
+              <FieldHelp title="Rating">
+                <p>
+                  How good it is, 1 to 5. Used to order it only when there is no view count
+                  (anything but YouTube, or no YouTube key). Links that aren&apos;t ours are shown
+                  in a random order that favours the popular ones.
+                </p>
+              </FieldHelp>
+            </Label>
+            <select id={id('rating')} className={selectClass} {...register('rating')}>
+              {RATINGS.map((r) => (
+                <option key={r} value={r}>
+                  {r === '' ? 'None' : r}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </div>
+
+      {suggested ? (
+        <p className="text-muted-foreground text-sm">
+          It is added as not ours, unrated. Edit it afterwards to change that.
+        </p>
+      ) : (
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id={id('ours')}
+            defaultChecked={link?.ours ?? defaultOurs}
+            onCheckedChange={(v) => setValue('ours', v === true, { shouldDirty: true })}
+          />
+          <Label htmlFor={id('ours')} className="flex items-center gap-1">
+            Ours
+            <FieldHelp title="Ours">
               <p>
-                How good it is, 1 to 5. Used to order it only when there is no view count (anything
-                but YouTube, or no YouTube key). Links that aren&apos;t ours are shown in a random
-                order that favours the popular ones.
+                One of Know Your Synth&apos;s own. Ours come first, in the order you set; a link
+                newly marked ours goes last among them.
               </p>
             </FieldHelp>
           </Label>
-          <select id={id('rating')} className={selectClass} {...register('rating')}>
-            {RATINGS.map((r) => (
-              <option key={r} value={r}>
-                {r === '' ? 'None' : r}
-              </option>
-            ))}
-          </select>
         </div>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <Checkbox
-          id={id('ours')}
-          defaultChecked={link?.ours ?? defaultOurs}
-          onCheckedChange={(v) => setValue('ours', v === true, { shouldDirty: true })}
-        />
-        <Label htmlFor={id('ours')} className="flex items-center gap-1">
-          Ours
-          <FieldHelp title="Ours">
-            <p>
-              One of Know Your Synth&apos;s own. Ours come first, in the order you set; a link newly
-              marked ours goes last among them.
-            </p>
-          </FieldHelp>
-        </Label>
-      </div>
+      )}
 
       <FormError message={serverError ?? undefined} />
 
       <div className="flex gap-2">
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting && <Loader2 className="mr-1 h-4 w-4 animate-spin" />}
-          {link ? 'Save' : 'Add link'}
+          {link ? 'Save' : suggested ? 'Accept and add' : 'Add link'}
         </Button>
         {onCancel && (
           <Button type="button" variant="ghost" onClick={onCancel}>
