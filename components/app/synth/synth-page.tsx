@@ -2213,7 +2213,10 @@ function Synth({
   );
   // A library sound's videos and links, its own and its inspiration's; none for a sound of the user's own, a shared one
   // or the Default patch, and only a library sound can have one suggested (`f-link-suggestions` t-186).
-  const inLibrary = !ownLesson && !!shown && detail.sounds.some((s) => s.id === shown.id);
+  const suggestForSound =
+    !ownLesson && shown && detail.sounds.some((s) => s.id === shown.id)
+      ? [{ kind: 'sound' as const, id: `${synthId}/${shown.id}`, name: shown.name }]
+      : undefined;
   const shownLinks = ownLesson || !shown ? undefined : detail.soundLinks[shown.id];
   // A synth's videos belong to its databank instruments, so a link suggested under its panel is about one of them.
   const suggestForSynth = detail.instruments.map((i) => ({ kind: 'instrument' as const, ...i }));
@@ -2225,7 +2228,7 @@ function Synth({
       onStep={setStep}
       mark={ownLesson ? null : (progress.marks?.get(shown.id) ?? null)}
       links={shownLinks}
-      librarySound={inLibrary}
+      suggestLink={suggestForSound}
     />
   ) : (
     <p className="text-sm text-(--kys-muted)">
@@ -2951,7 +2954,7 @@ function Synth({
                 effects={<FxRack fx={fx} onChange={setFx} inCard />}
                 mark={ownLesson || !shown ? null : (progress.marks?.get(shown.id) ?? null)}
                 links={shownLinks}
-                librarySound={inLibrary}
+                suggestLink={suggestForSound}
               />
             )}
             {!small && (

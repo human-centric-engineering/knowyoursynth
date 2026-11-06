@@ -236,6 +236,10 @@ describe('LinkSuggestionQueue', () => {
     expect(await screen.findByText('That link is already on this owner')).toBeInTheDocument();
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(mockRefresh).not.toHaveBeenCalled();
+
+    // Closed, the queue is read again, so a row decided elsewhere shows as it now is.
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(mockRefresh).toHaveBeenCalled());
   });
 
   it('puts a refused title on the title field', async () => {
@@ -269,7 +273,7 @@ describe('LinkSuggestionQueue', () => {
     });
   });
 
-  it('shows a decline the server refused', async () => {
+  it('shows a decline refused as already decided, and refreshes the row', async () => {
     const user = userEvent.setup();
     post.mockRejectedValue(
       new APIClientError('This suggestion has already been decided (accepted)', 'CONFLICT', 409)
@@ -281,7 +285,7 @@ describe('LinkSuggestionQueue', () => {
     expect(
       await screen.findByText('This suggestion has already been decided (accepted)')
     ).toBeInTheDocument();
-    expect(mockRefresh).not.toHaveBeenCalled();
+    expect(mockRefresh).toHaveBeenCalled();
   });
 
   it('shows a decided suggestion’s outcome, and nothing to decide', () => {
@@ -299,7 +303,8 @@ describe('LinkSuggestionQueue', () => {
       />
     );
     const accepted = row('Minimoog bass demo');
-    expect(accepted).toHaveTextContent('Accepted · suggested by Dana Owner');
+    // The day as the API wrote it, the same on the server and in any browser.
+    expect(accepted).toHaveTextContent('Accepted · suggested by Dana Owner on 2026-11-06');
     expect(accepted).toHaveTextContent('Added to Minimoog Model D');
     expect(row('Wrong synth')).toHaveTextContent('Declined: That is a Prophet-5');
     expect(screen.queryByRole('button', { name: /Approve|Decline/ })).toBeNull();

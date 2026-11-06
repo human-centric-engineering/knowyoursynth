@@ -38,6 +38,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { APIClientError, apiClient } from '@/lib/api/client';
 
+/** The day, as the server and the browser both write it: no locale or time zone of either's. */
+const dayOf = (iso: string) => iso.slice(0, 10);
+
 const STATUS_LABEL: Record<SuggestedLinkView['status'], string> = {
   PENDING: 'Pending',
   ACCEPTED: 'Accepted',
@@ -74,7 +77,7 @@ function SuggestionCard({ suggestion: s }: { suggestion: SuggestedLinkView }) {
         </h2>
         <span className="text-muted-foreground text-xs">
           {STATUS_LABEL[s.status]} · suggested by {s.suggestedBy ?? 'an erased account'} on{' '}
-          {new Date(s.createdAt).toLocaleDateString()}
+          {dayOf(s.createdAt)}
         </span>
       </header>
       <p className="mt-1 text-sm">
@@ -115,7 +118,14 @@ function SuggestionCard({ suggestion: s }: { suggestion: SuggestedLinkView }) {
         <DeclineForm suggestion={s} onCancel={() => setDeclining(false)} />
       ) : (
         <div className="mt-3 flex flex-wrap gap-2">
-          <Dialog open={approving} onOpenChange={setApproving}>
+          <Dialog
+            open={approving}
+            onOpenChange={(next) => {
+              setApproving(next);
+              // Closed after a refusal (decided by another admin, its target gone): show the row as it now is.
+              if (!next) router.refresh();
+            }}
+          >
             <DialogTrigger asChild>
               <Button size="sm" disabled={readOnly || s.target.name === null}>
                 Approve…
@@ -187,6 +197,8 @@ function DeclineForm({
         err instanceof APIClientError ? err.message : 'Could not save the decision. Try again.'
       );
       setSaving(false);
+      // Decided by another admin meanwhile: show the row as it now is.
+      if (err instanceof APIClientError && err.status === 409) router.refresh();
     }
   }
 

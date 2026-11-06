@@ -67,8 +67,10 @@ function refusalOf(err: unknown): { field?: Field; message: string } {
   // "That link is already listed here", "That link has already been suggested here".
   if (err.status === 409) return { field: 'url', message: err.message };
   if (err.status === 404) return { message: 'This is no longer here to suggest a link for.' };
-  // A URL the parser refuses names the field, with the parser's reason.
-  if (err.status === 400) return { field: 'url', message: err.message };
+  // A URL the parser refuses names the field, with the parser's reason; anything else is said under the form.
+  if (err.status === 400 && err.details?.url !== undefined)
+    return { field: 'url', message: err.message };
+  if (err.status === 400) return { message: err.message };
   return { message: 'Your suggestion could not be sent. Try again.' };
 }
 
@@ -324,7 +326,13 @@ function Suggest({
         <button
           type="button"
           className="text-sm text-(--kys-muted)"
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            // Opened again, it starts afresh, not with this attempt's address and refusal.
+            setDraft(empty());
+            setProblems({});
+            setFailure(null);
+            setOpen(false);
+          }}
           disabled={sending}
         >
           Cancel

@@ -331,7 +331,11 @@ describe('LessonCard videos and links', () => {
         inspector={null}
         effects={null}
         links={links}
-        librarySound={librarySound}
+        suggestLink={
+          librarySound
+            ? [{ kind: 'sound', id: 'model-d/autobahn-lead', name: sound().name }]
+            : undefined
+        }
       />
     );
 

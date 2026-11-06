@@ -388,8 +388,15 @@ export function LinkForm({
               Shown on the card. Read fills it from the provider when it is empty; change it to
               whatever reads best.
             </p>
-            {!link && (
-              <p className="mt-2">Left empty, the provider&apos;s title is used when it saves.</p>
+            {suggested ? (
+              <p className="mt-2">
+                Left empty, the suggester&apos;s own title is kept, or the provider&apos;s if they
+                gave none. Empty it and press Read to use the provider&apos;s.
+              </p>
+            ) : (
+              !link && (
+                <p className="mt-2">Left empty, the provider&apos;s title is used when it saves.</p>
+              )
             )}
           </FieldHelp>
         </Label>

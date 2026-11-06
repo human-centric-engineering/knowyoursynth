@@ -23,6 +23,7 @@ import { focusStore, highlightStore, moveStore, useStore } from '@/components/ap
 import { LevelDots, markText, reachedStep } from '@/components/app/synth/library';
 import type { LessonMark } from '@/components/app/synth/progress';
 import { LinksToggle } from '@/components/app/links/links-toggle';
+import type { SuggestTarget } from '@/components/app/links/suggest-link';
 import type { LinkSummary } from '@/lib/app/links/read';
 
 /**
@@ -541,8 +542,8 @@ export interface LessonProps {
   mark?: LessonMark | null;
   /** A library sound's videos and links, counted: its own and its inspiration's (`f-videos-and-links` t-183). */
   links?: LinkSummary;
-  /** It is a library sound, so a link can be suggested for it (`f-link-suggestions` t-186); not one of a user's own. */
-  librarySound?: boolean;
+  /** What a link suggested for it is about: a library sound, never one of a user's own (`f-link-suggestions` t-186). */
+  suggestLink?: readonly SuggestTarget[];
 }
 
 /**
@@ -591,7 +592,7 @@ export function Lesson({
   onStep,
   mark = null,
   links,
-  librarySound = false,
+  suggestLink,
 }: LessonProps) {
   const n = preset.steps.length;
   const walking = step != null;
@@ -712,11 +713,7 @@ export function Lesson({
                 target="sound"
                 id={`${def.id}/${preset.id}`}
                 summary={links}
-                suggest={
-                  librarySound
-                    ? [{ kind: 'sound', id: `${def.id}/${preset.id}`, name: preset.name }]
-                    : undefined
-                }
+                suggest={suggestLink}
                 label="Videos and links"
                 className="mt-4"
               />

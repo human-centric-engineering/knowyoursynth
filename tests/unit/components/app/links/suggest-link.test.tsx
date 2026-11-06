@@ -141,7 +141,9 @@ describe('SuggestLink', () => {
     [409, 'That link has already been suggested here'],
     [400, 'Give a YouTube video, not a channel'],
   ])('shows a %i on the address, in its own words', async (status, message) => {
-    post.mockRejectedValue(new APIClientError(message, 'X', status));
+    post.mockRejectedValue(
+      new APIClientError(message, 'X', status, status === 400 ? { url: message } : undefined)
+    );
     render(<SuggestLink targets={[MINIMOOG]} />);
     openForm();
     fill(/^Address/, VIDEO);
@@ -150,6 +152,33 @@ describe('SuggestLink', () => {
     expect(field(/^Address/)).toHaveAttribute('aria-invalid', 'true');
     // Still open, with what was typed, to change it.
     expect(field(/^Address/)).toHaveValue(VIDEO);
+  });
+
+  it('says a 400 about anything but the address under the form, not on the address', async () => {
+    post.mockRejectedValue(
+      new APIClientError('Invalid request body', 'VALIDATION_ERROR', 400, {
+        errors: [{ path: 'note', message: 'Too long' }],
+      })
+    );
+    render(<SuggestLink targets={[MINIMOOG]} />);
+    openForm();
+    fill(/^Address/, VIDEO);
+    send();
+    expect(await screen.findByRole('alert')).toHaveTextContent('Invalid request body');
+    expect(field(/^Address/)).not.toHaveAttribute('aria-invalid');
+  });
+
+  it('starts afresh when cancelled and opened again', async () => {
+    post.mockRejectedValue(new APIClientError('That link is already listed here', 'X', 409));
+    render(<SuggestLink targets={[MINIMOOG]} />);
+    openForm();
+    fill(/^Address/, VIDEO);
+    send();
+    await screen.findByRole('alert');
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    openForm();
+    expect(field(/^Address/)).toHaveValue('');
+    expect(screen.queryByRole('alert')).toBeNull();
   });
 
   it('says to wait after a 429', async () => {
