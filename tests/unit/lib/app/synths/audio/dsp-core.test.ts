@@ -817,6 +817,10 @@ describe('the SVF’s band-pass and high-pass inputs (vcfBpIn, vcfHpIn)', () => 
       routes: [{ src: 'osc3', dst: 'vcfHpIn', amt: 0.3 }],
     });
     expect(tail(routed)).toBeGreaterThan(0.01);
+    // a route at zero depth leaves the filter as it was, its mode included
+    const hp = filterOnly('hp', [cable('osc2', 'vcfIn', 0.3)]);
+    const zero = out({ ...hp, routes: [{ src: 'osc3', dst: 'vcfBpIn', amt: 0 }] });
+    expect(sameSamples(zero, out(hp))).toBe(true);
     // only the ladder's own dither is left
     expect(tail(out(filterOnly('lp', [cable('osc3', 'vcfHpIn', 0.3)], 'ladder')))).toBeLessThan(
       1e-5

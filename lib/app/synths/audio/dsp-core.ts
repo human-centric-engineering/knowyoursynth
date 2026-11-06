@@ -784,7 +784,9 @@ function createVoice(
       // `by`: the route's depth is scaled by a second signal (Jupiter-6 CROSS MOD ENV-1: Envelope 1 opens the cross mod)
       destBy[DI[r.dst]].push(r.by && r.by in SI ? SI[r.by] : -1);
     }
-    const fed = (d: number): boolean => normSig[d] >= 0 || destSrc[d].length > 0;
+    // a source at zero depth does not count: it would only take the filter's modes away
+    const fed = (d: number): boolean =>
+      (normSig[d] >= 0 && normAmt[d] !== 0) || destAmt[d].some((a) => a !== 0);
     mmOn = fed(DI.vcfBpIn) || fed(DI.vcfHpIn);
     if (!mmOn) fPrevBp = fPrevHp = 0;
   }
@@ -2166,6 +2168,9 @@ function createVoice(
         const g = Math.tan((Math.PI * fc) / (sr * 2));
         let v1o = 0,
           v2o = 0;
+        // the SVF's band-pass and high-pass inputs, read for either filter type so the previous samples stay current
+        const fBp = mmOn ? ev(DI.vcfBpIn) : 0,
+          fHp = mmOn ? ev(DI.vcfHpIn) : 0;
         if (ladder) {
           const G = g / (1 + g),
             b = 1 / (1 + g),
@@ -2209,8 +2214,6 @@ function createVoice(
           // and c at `vcfHpIn`. With q fed into the low-pass integrator as well as its usual input u, the core's
           // low-pass is LP(u + k·q) + BP(q); and HP(c) = c − LP(c) − k·BP(c). So q = b − k·c, u = a − c − k·q, and
           // the output is c + the low-pass.
-          const fBp = mmOn ? ev(DI.vcfBpIn) : 0,
-            fHp = mmOn ? ev(DI.vcfHpIn) : 0;
           let mmY = 0;
           for (let os = 0; os < 2; os++) {
             const x = Math.tanh(
@@ -2250,10 +2253,10 @@ function createVoice(
               v2o = (m2 === 'hp' ? hp : m2 === 'bp' ? bp : lp) * 1.25;
             }
           }
-          fPrevBp = fBp;
-          fPrevHp = fHp;
         }
         fPrevIn = fin;
+        fPrevBp = fBp;
+        fPrevHp = fHp;
         S[SI.vcf1] = v1o;
         S[SI.vcf2] = v2o;
 
