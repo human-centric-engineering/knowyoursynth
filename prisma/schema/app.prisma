@@ -763,6 +763,10 @@ model UserSound {
   unlistedAt        DateTime?
   /// The user pattern the sequencer opens on with this sound (`f-step-sequencer` t-81), always one of the owner's own.
   patternId         String?
+  /// Its owner's videos and recordings (`f-link-suggestions` t-187): at most five `StoredSoundLink`s
+  /// (lib/app/sounds/links.ts), in their order, each on one of the five named providers. A JSON column rather than
+  /// `ExternalLink` rows, which are catalogue-owned shared settings. Never carried by a copy.
+  links             Json            @default("[]")
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
 

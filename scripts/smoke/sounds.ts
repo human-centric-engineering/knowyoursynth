@@ -30,6 +30,8 @@
  *    and the export holds with the tutor's mark. Another user's request to remove it is refused (the store's owner
  *    check, before any SQL runs). Its owner's removal is one statement in SQL (`store.ts`): it leaves the lesson and its
  *    version NULL and the mark as it was, and moves `updatedAt`.
+ * 7. Links (`f-link-suggestions` t-187): an owner's link on the published sound is stored in the real `links` column,
+ *    served on its public read with the embed built from the video id, not carried by a copy, and exported.
  *
  * Skips cleanly (exit 0) when no database is reachable. Self-cleaning: creates only `smoke-test-sounds-*` users, whose
  * sounds go with them, and removes whatever it created on every path. Printing goes through `console`, not `logger` —
@@ -63,6 +65,8 @@ import { listProgress, recordProgress } from '@/lib/app/sounds/progress';
 import { addFavourite, listFavourites } from '@/lib/app/sounds/favourites';
 
 const PREFIX = 'smoke-test-sounds';
+/** A YouTube video id, as the parser takes them: eleven characters. */
+const SMOKE_VIDEO = 'dQw4w9WgXcQ';
 const stamp = Date.now();
 
 const failures: string[] = [];
@@ -170,6 +174,24 @@ async function main(): Promise<void> {
       'the credit goes when the source is no longer published'
     );
     await publishUserSound(subject.id, scratch.id, { confirm: true, tags: [] });
+
+    // 7. Links (`f-link-suggestions` t-187): saved on the published sound through the real column, served on its page
+    // with the embed built from the id, and not carried by a copy. The title is given, so a provider that does not
+    // answer from here changes nothing.
+    await updateUserSound(subject.id, scratch.id, {
+      links: [{ url: `https://youtu.be/${SMOKE_VIDEO}`, title: 'Smoke demo' }],
+    });
+    const linked = published.slug ? await getSharedSound(published.slug) : null;
+    check(
+      linked?.links.length === 1 &&
+        linked.links[0].embedUrl === `https://www.youtube-nocookie.com/embed/${SMOKE_VIDEO}`,
+      "the public read serves the sound's link, its embed built from the video id"
+    );
+    const linkCopy = await createUserSound(other.id, {
+      synthId: 'model-d',
+      source: { shared: published.slug ?? '' },
+    });
+    check(linkCopy.links.length === 0, "a copy does not carry the sound's links");
 
     // The cap under the owner's lock: one place left, three publishes at once, and exactly one gets it. Then deleting
     // the one that did does not give its place back. Deleted after, so the export below sees only the two sounds.
@@ -320,6 +342,10 @@ async function main(): Promise<void> {
       JSON.stringify(exported).includes(`"blurb":"${lesson.blurb}"`) &&
         JSON.stringify(exported).includes('"fromTutor":true'),
       "the export carries a sound's lesson and the tutor's mark"
+    );
+    check(
+      JSON.stringify(exported).includes('"title":"Smoke demo"'),
+      "the export carries a sound's links"
     );
 
     // 6. Removing the lesson, in SQL: not by another user, and then by its owner.

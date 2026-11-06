@@ -15,11 +15,15 @@
  * restore is exact, and the owner learns from My sounds rather than by email (planning ruling on `f-sharing`).
  *
  * **The queue never names a reporter.** It reads reports' reasons, notes, statuses and dates, never `reporterId`.
+ *
+ * **It shows a sound's links** (`f-link-suggestions` t-187), as its page serves them, so an admin sees what a report
+ * about them is about.
  */
 import type { SoundReportStatus } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
 import { ConflictError, NotFoundError } from '@/lib/api/errors';
 import { usernamesOf } from '@/lib/app/sounds/sharing';
+import { servedSoundLinks } from '@/lib/app/sounds/links';
 import type { ModerationAction, ModerationView, QueueSound } from '@/lib/app/sounds/report-data';
 
 /**
@@ -68,6 +72,7 @@ export async function listModerationQueue(view: ModerationView): Promise<QueueSo
       visibility: true,
       slug: true,
       unlistedAt: true,
+      links: true,
       reports: {
         where: { status: { in: statuses } },
         orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
@@ -100,6 +105,7 @@ export async function listModerationQueue(view: ModerationView): Promise<QueueSo
         slug: s.slug,
         owner: owners.get(s.userId)?.username ?? null,
         unlistedAt: s.unlistedAt?.toISOString() ?? null,
+        links: servedSoundLinks(s.links),
         reports: s.reports.map((r) => ({
           reason: r.reason,
           note: r.note,

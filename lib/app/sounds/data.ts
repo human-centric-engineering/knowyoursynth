@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { CablePairSchema, SettingsSchema } from '@/lib/app/synths/validate';
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
 import { SoundLessonSchema, type SoundLesson } from '@/lib/app/sounds/lesson';
+import type { LinkProvider } from '@/lib/app/links/providers';
 
 /**
  * A user pattern's id, as Prisma's `cuid()` writes them (`f-step-sequencer` t-81). Here rather than in
@@ -49,6 +50,20 @@ export const MAX_SOUND_TAGS = 3;
 /** A sound's name and notes, as the API takes them. Exported so the save dialog checks them the same way. */
 export const NameSchema = z.string().trim().min(1, 'Name the patch').max(120);
 export const NotesSchema = z.string().trim().max(2000);
+
+/**
+ * The videos and recordings an owner puts on their sound (`f-link-suggestions` t-187): at most five, each an address on
+ * one of the five providers a link card plays, and a title. With no title, the provider's is used. Checked here for
+ * shape only; `lib/app/sounds/links.ts` parses each address and reads its provider.
+ */
+export const MAX_SOUND_LINKS = 5;
+export const SoundLinkInputSchema = z
+  .object({
+    url: z.string().trim().min(1, 'Paste the address').max(2000),
+    title: z.string().trim().max(200).optional(),
+  })
+  .strict();
+export type SoundLinkInput = z.infer<typeof SoundLinkInputSchema>;
 
 /** A panel as the page sends it: control values and the cables in, before they are checked against the synth. */
 export const PanelInputSchema = z.object({
@@ -95,7 +110,7 @@ export type CreateUserSound = z.infer<typeof CreateUserSoundSchema>;
  * `notes: null` clears them, and `lesson: null` removes the lesson: a lesson cannot be changed, so removing it is how a
  * sound whose lesson cannot be published is published without it. `visibility` is `private` or `link` only.
  * `patternId` is the user pattern the sequencer opens on with the sound (`f-step-sequencer` t-81), one of the caller's
- * own; `null` clears it.
+ * own; `null` clears it. `links` replaces the sound's links (`f-link-suggestions` t-187).
  */
 export const UpdateUserSoundSchema = z
   .object({
@@ -106,10 +121,16 @@ export const UpdateUserSoundSchema = z
     /** Share by link, or stop sharing. Publishing has its own route; this unpublishes a published sound. */
     visibility: z.enum(['private', 'link']).optional(),
     patternId: UserPatternIdSchema.nullable().optional(),
+    /** The sound's links, in the order to show them: the whole list, replacing the one it had. `[]` removes them all. */
+    links: z
+      .array(SoundLinkInputSchema)
+      .max(MAX_SOUND_LINKS, `At most ${MAX_SOUND_LINKS} links`)
+      .optional(),
   })
   .refine(
     (v) =>
       v.name !== undefined ||
+      v.links !== undefined ||
       v.notes !== undefined ||
       v.panel !== undefined ||
       v.lesson !== undefined ||
@@ -158,6 +179,19 @@ export interface SharedSource {
   slug: string;
 }
 
+/**
+ * One of a sound's links as it is served, to its owner and on its public page: the card `LinkCard` draws. The embed is
+ * built from the provider and its id (`embedUrl`), never taken from the stored address.
+ */
+export interface SoundLink {
+  url: string;
+  provider: Exclude<LinkProvider, 'other'>;
+  title: string;
+  thumbnailUrl: string | null;
+  /** The address to load in an iframe when someone presses play; null when the link only opens in a new tab. */
+  embedUrl: string | null;
+}
+
 /** A user's sound as their list shows it. */
 export interface UserSoundSummary {
   id: string;
@@ -190,6 +224,8 @@ export interface UserSoundSummary {
   unlisted: boolean;
   /** The user pattern the sequencer opens on with this sound (`f-step-sequencer` t-81), or null for the sound's riff. */
   patternId: string | null;
+  /** Its videos and recordings (`f-link-suggestions` t-187), in its owner's order. */
+  links: SoundLink[];
   /**
    * Whether the panel can be played on the synth as it is now. False when it was saved on a definition version the
    * synth has moved on from with no mapping between them (D1), or when it no longer passes the definition.
@@ -238,6 +274,8 @@ export interface PublicSound {
   fromTutor: boolean;
   /** Its lesson, which the sound's page shows, as its owner's does. */
   lesson: SoundLesson | null;
+  /** Its owner's videos and recordings, in their order. */
+  links: SoundLink[];
   definitionVersion: number;
   playable: boolean;
   panel: UserSoundDetail['panel'];

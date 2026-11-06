@@ -2,7 +2,7 @@
 
 /**
  * The user's own sounds on the synth page (`f-my-sounds` s2): the list beside the library, and Save, Save as, Rename,
- * Delete and Save a copy over the panel. Every one goes through the sounds API (`/api/v1/sounds`, s1), which checks the
+ * Links (`f-link-suggestions` t-187, `sound-links-form.tsx`), Delete and Save a copy over the panel. Every one goes through the sounds API (`/api/v1/sounds`, s1), which checks the
  * panel against the synth; this file only sends the panel and keeps the list in step with what each call returns.
  *
  * Signed out, the same buttons lead to sign-in and back to this synth. The panel survives the trip because the page
@@ -21,6 +21,7 @@ import { StarButton } from '@/components/app/synth/favourites';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 import { sharedSoundHref, synthHref } from '@/components/app/synth/routes';
 import { SoundSharing } from '@/components/app/sharing/sound-sharing';
+import { SoundLinksForm } from '@/components/app/synth/sound-links-form';
 import { soundStateLabel } from '@/components/app/sharing/visibility';
 import { NameSchema, NotesSchema } from '@/lib/app/sounds/data';
 import type { UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
@@ -246,10 +247,13 @@ export interface SoundActionsProps {
   /** The panel as it is now. */
   panel: () => PanelInput;
   /**
-   * A sound was saved as a new one, saved over with the panel, renamed, or shared, published or unpublished (its panel
-   * left as it was in those last two).
+   * A sound was saved as a new one, saved over with the panel, renamed, given links, or shared, published or
+   * unpublished (its panel left as it was in all but the first two).
    */
-  onSaved: (sound: UserSoundDetail, how: 'created' | 'saved' | 'renamed' | 'shared') => void;
+  onSaved: (
+    sound: UserSoundDetail,
+    how: 'created' | 'saved' | 'renamed' | 'links' | 'shared'
+  ) => void;
   /** The tags that synth's library sounds use, which a published sound may carry (`f-sharing` h3). */
   libraryTags: string[];
   onDeleted: (id: string) => void;
@@ -272,6 +276,7 @@ export function SoundActions({
   buttonClass,
 }: SoundActionsProps) {
   const [form, setForm] = useState<FormMode | null>(null);
+  const [editingLinks, setEditingLinks] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
@@ -281,6 +286,7 @@ export function SoundActions({
   const openId = open?.id ?? null;
   useEffect(() => {
     setForm(null);
+    setEditingLinks(false);
     setConfirmDelete(false);
     setFailure(null);
   }, [openId]);
@@ -368,6 +374,7 @@ export function SoundActions({
     );
 
   const toggle = (mode: FormMode) => {
+    setEditingLinks(false);
     setConfirmDelete(false);
     setStatus(null);
     setFailure(null);
@@ -410,9 +417,24 @@ export function SoundActions({
             </button>
             <button
               type="button"
+              aria-expanded={editingLinks}
+              onClick={() => {
+                setForm(null);
+                setConfirmDelete(false);
+                setStatus(null);
+                setFailure(null);
+                setEditingLinks((e) => !e);
+              }}
+              className={buttonClass}
+            >
+              Links…
+            </button>
+            <button
+              type="button"
               aria-expanded={confirmDelete}
               onClick={() => {
                 setForm(null);
+                setEditingLinks(false);
                 setStatus(null);
                 setConfirmDelete((c) => !c);
               }}
@@ -464,6 +486,23 @@ export function SoundActions({
           busy={busy}
           onSubmit={(name, notes) => void submit(form, name, notes)}
           onCancel={() => setForm(null)}
+          buttonClass={buttonClass}
+        />
+      )}
+      {editingLinks && open && (
+        <SoundLinksForm
+          key={openId ?? ''}
+          sound={open}
+          onSaved={(d) => {
+            onSaved(d, 'links');
+            setEditingLinks(false);
+            setStatus(
+              d.links.length === 0
+                ? `Removed the links from ${d.name}.`
+                : `Saved ${d.links.length === 1 ? 'the link' : `${d.links.length} links`} on ${d.name}.`
+            );
+          }}
+          onCancel={() => setEditingLinks(false)}
           buttonClass={buttonClass}
         />
       )}

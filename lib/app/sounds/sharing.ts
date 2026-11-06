@@ -177,9 +177,12 @@ export function assertNotUnlisted(row: { unlistedAt: Date | null }): void {
 }
 
 /**
- * What a public sound's name, notes and lesson may not say: a blocked word (`NOT_ALLOWED`, 422). Run at publish, and on
- * any change to a published sound's name or notes, so an edit after publishing cannot put up what publishing refuses.
- * None of it is HTML-sanitised: every surface renders it as text.
+ * What a public sound's name, notes, link titles and lesson may not say: a blocked word (`NOT_ALLOWED`, 422). Run at
+ * publish, and on any change to a published sound's name, notes or links, so an edit after publishing cannot put up what
+ * publishing refuses. None of it is HTML-sanitised: every surface renders it as text.
+ *
+ * A link's title (`f-link-suggestions` t-187) is checked as stored, whether its owner wrote it or its provider did: it
+ * shows on the sound's page either way.
  *
  * The lesson (`f-tutor` t-55) is checked at publish only, since it cannot change after. Its refusal has its own code,
  * `LESSON_NOT_ALLOWED`: a lesson cannot be reworded, only removed, so the page offers to remove it, and the sound can
@@ -188,6 +191,7 @@ export function assertNotUnlisted(row: { unlistedAt: Date | null }): void {
 export function assertPublishableText(text: {
   name: string;
   notes: string | null;
+  linkTitles?: string[];
   lesson?: SoundLessonInput | null;
 }): void {
   if (textIsBlocked(text.name) || (text.notes !== null && textIsBlocked(text.notes)))
@@ -195,6 +199,12 @@ export function assertPublishableText(text: {
       'NOT_ALLOWED',
       422,
       "That name or those notes can't be published. Change the wording and try again."
+    );
+  if (text.linkTitles?.some(textIsBlocked))
+    refuse(
+      'NOT_ALLOWED',
+      422,
+      "A link's title can't be published. Change the title, or remove the link, and try again."
     );
   if (text.lesson && lessonText(text.lesson).some(textIsBlocked))
     refuse(

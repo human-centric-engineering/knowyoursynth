@@ -49,6 +49,7 @@ const SOUND = {
   slug: 'abcdefghjk',
   owner: 'patchwork',
   unlistedAt: null,
+  links: [],
   reports: [{ reason: 'spam', note: null, status: 'open', createdAt: '2026-10-17T10:00:00.000Z' }],
 };
 

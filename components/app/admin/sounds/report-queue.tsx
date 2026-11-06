@@ -7,6 +7,9 @@
  * unlisted), **Dismiss** (one with open reports). The owner is named by their username; **who reported a sound is
  * never shown**, and the queue's data does not carry it.
  *
+ * A sound's links (`f-link-suggestions` t-187) are listed under its notes, each by its title and provider, opening in a
+ * new tab, so an admin sees what a report about one is about without its player loading here.
+ *
  * Reported patterns (`f-step-sequencer` t-83) are the same queue, `patterns` in place of `sounds`, acted on with
  * `POST /api/v1/admin/patterns/[id]`.
  */
@@ -15,6 +18,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { PROVIDER_NAME } from '@/components/app/links/data';
 import { VISIBILITY_LABELS } from '@/components/app/sharing/visibility';
 import { patternHref, sharedSoundHref } from '@/components/app/synth/routes';
 import { Button } from '@/components/ui/button';
@@ -29,7 +33,7 @@ import type { QueuePattern } from '@/lib/app/patterns/report-data';
 /** A queued sound or pattern, as its card shows it. */
 interface QueueItem extends Pick<
   QueueSound,
-  'id' | 'name' | 'visibility' | 'slug' | 'owner' | 'unlistedAt' | 'reports'
+  'id' | 'name' | 'visibility' | 'slug' | 'owner' | 'unlistedAt' | 'reports' | 'links'
 > {
   /** The synth it is on, or a pattern was made on. */
   context: string | null;
@@ -51,6 +55,7 @@ const patternItem = (p: QueuePattern): QueueItem => ({
   ...p,
   context: p.synthName ? `pattern made on the ${p.synthName}` : 'pattern',
   notes: null,
+  links: [],
   href: p.slug ? patternHref(p.slug) : null,
   action: `/api/v1/admin/patterns/${encodeURIComponent(p.id)}`,
 });
@@ -115,6 +120,23 @@ function QueueCard({ sound: s }: { sound: QueueItem }) {
         </span>
       </header>
       {s.notes && <p className="mt-2 text-sm whitespace-pre-line">{s.notes}</p>}
+      {s.links.length > 0 && (
+        <ul className="mt-2 space-y-0.5 text-sm" aria-label="Its links">
+          {s.links.map((l) => (
+            <li key={l.url}>
+              <a
+                href={l.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline-offset-2 hover:underline"
+              >
+                {l.title}
+              </a>
+              <span className="text-muted-foreground"> · {PROVIDER_NAME[l.provider]}</span>
+            </li>
+          ))}
+        </ul>
+      )}
 
       {s.reports.length > 0 && (
         <ul className="mt-3 space-y-1 text-sm" aria-label="Reports">

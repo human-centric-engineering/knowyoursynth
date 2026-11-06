@@ -75,6 +75,7 @@ const SOUND: PublicSound = {
   basedOn: null,
   fromTutor: false,
   lesson: null,
+  links: [],
   definitionVersion: 1,
   playable: true,
   panel: { values: {}, cables: [] },

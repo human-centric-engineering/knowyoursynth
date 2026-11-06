@@ -1908,10 +1908,13 @@ function Synth({
       cables: stored.cables.map((c): [string, string] => [c.from, c.to]),
     };
   };
-  const onSaved = (d: UserSoundDetail, how: 'created' | 'saved' | 'renamed' | 'shared') => {
+  const onSaved = (
+    d: UserSoundDetail,
+    how: 'created' | 'saved' | 'renamed' | 'links' | 'shared'
+  ) => {
     mine.put(d);
     setMineNotice(null);
-    if (how === 'renamed' || how === 'shared') return;
+    if (how === 'renamed' || how === 'links' || how === 'shared') return;
     if (sentRef.current) setSaved({ id: d.id, ...sentRef.current });
     if (how === 'created') {
       leaveShared();

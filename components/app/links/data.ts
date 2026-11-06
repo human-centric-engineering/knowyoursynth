@@ -11,6 +11,7 @@ import {
   type LinkKind,
 } from '@/lib/app/links/providers';
 import type { LinkSummary } from '@/lib/app/links/read';
+import type { SoundLink } from '@/lib/app/sounds/data';
 
 export const LINKS_API = '/api/v1/links';
 
@@ -65,6 +66,17 @@ export function readPublicLinks(data: unknown): PublicLinkView[] {
     const parsed = PublicLinkSchema.safeParse(row);
     return parsed.success ? [parsed.data] : [];
   });
+}
+
+/**
+ * A user's sound's links (`f-link-suggestions` t-187) as cards: each a demo, never ours, with no view count, keyed by its
+ * address (one sound has each once). Through the same check as a list from the API, so an embed is only ever on one of
+ * the embed origins here too.
+ */
+export function soundLinkViews(links: readonly SoundLink[]): PublicLinkView[] {
+  return readPublicLinks(
+    links.map((l) => ({ ...l, id: l.url, kind: 'demo', ours: false, views: null, via: null }))
+  );
 }
 
 export const KIND_LABEL: Record<LinkKind, string> = {
