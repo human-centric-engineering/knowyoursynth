@@ -49,7 +49,7 @@ describe('Malevolent toEngine at the init patch', () => {
     expect(p.osc[0]).toMatchObject({ mix: { saw: 0.8 }, pw: 0.5, semi: 0, kbd: true });
     expect(p.osc[0].level).toBeCloseTo(level(8, 1), 10);
     expect(p.osc[1]).toMatchObject({ level: 0, mix: {}, pw: 0.5, semi: 0, kbd: true });
-    expect(p.oscOuts).toBe(true);
+    expect(p.oscOuts).toBe(false);
   });
 
   it('runs the SVF low-pass, the cutoff 0.7 of the way up 20 Hz–20 kHz, with no envelope of its own', () => {
@@ -57,9 +57,12 @@ describe('Malevolent toEngine at the init patch', () => {
     expect(p.filter.cutoff).toBeCloseTo(exp(0.7, 20, 20000), 6);
   });
 
-  it('opens the VCA from Envelope 2 through AM 1 at full, and nothing else', () => {
+  it('opens the VCA from Envelope 2 through AM 1 at full, with only the bend beside it', () => {
     expect(p.vca).toEqual({ envSrc: 'none', bias: 0 });
-    expect(p.routes).toEqual([{ src: 'env2', dst: 'amp', amt: 1 }]);
+    expect(p.routes).toEqual([
+      { src: 'env2', dst: 'amp', amt: 1 },
+      { src: 'joyX', dst: 'pitchAll', amt: 2 },
+    ]);
     expect(p.od).toEqual({ on: false });
   });
 
@@ -123,6 +126,11 @@ describe('Malevolent toEngine, control by control', () => {
     ).toBeCloseTo(12, 10);
   });
 
+  it('works out the separate wave outputs only while one of their jacks is patched', () => {
+    expect(run({}, { 'j.vco2_pulse': true }).oscOuts).toBe(true);
+    expect(run({}, { 'j.vco1_out': true }).oscOuts).toBe(false);
+  });
+
   it('takes the keys away from a VCO while its 1V/OCT is patched', () => {
     const p = run({}, { 'j.vco2_voct': true });
     expect(p.osc[0].kbd).toBe(true);
@@ -133,12 +141,15 @@ describe('Malevolent toEngine, control by control', () => {
     const p = run({ 'vcf.fm1': 5, 'vcf.fm2': 10, 'vcf.res': 10 });
     expect(route(p.routes, 'env1', 'cutoff')?.amt).toBeCloseTo(4, 10);
     expect(route(p.routes, 'lfoTri', 'cutoff')?.amt).toBeCloseTo(8, 10);
-    expect(p.filter.res).toBeCloseTo(1.15, 10);
+    // 1.25 at full: the SVF rings on its own from 1, at RESONANCE 8
+    expect(p.filter.res).toBeCloseTo(1.25, 10);
   });
 
   it('holds the VCA open on DRONE, adds the LFO at AM 2 and drives on DRIVE', () => {
     const p = run({ 'vca.mode': 'drone', 'vca.am2': 5, 'vca.drive': 5 });
     expect(p.vca).toEqual({ envSrc: 'none', bias: 1 });
+    // held fully open, so Envelope 2 no longer opens it further
+    expect(route(p.routes, 'env2', 'amp')).toBeUndefined();
     expect(route(p.routes, 'lfoUni', 'amp')?.amt).toBeCloseTo(0.5, 10);
     expect(p.od).toEqual({ on: true, drive: 0.5, tone: 0.5, level: 1 });
   });

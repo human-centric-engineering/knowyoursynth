@@ -171,9 +171,9 @@ const button = (
   id: string,
   x: number,
   y: number,
-  rest: Omit<ControlCommon, 'id' | 'x' | 'y'> & { def?: boolean; w?: number }
+  rest: Omit<ControlCommon, 'id' | 'x' | 'y'> & { def?: boolean; w?: number; lamp?: boolean }
 ): void => {
-  const { def = false, w = 19, ...common } = rest;
+  const { def = false, w = 19, lamp = true, ...common } = rest;
   controls.push({
     id,
     type: 'button',
@@ -181,7 +181,7 @@ const button = (
     y: Y(y),
     w,
     h: w,
-    lamp: 'blue',
+    ...(lamp ? { lamp: 'blue' as const } : {}),
     kind: 'bool',
     def,
     labelPos: 'none',
@@ -634,7 +634,7 @@ controls.push({
   name: 'DRONE / GATED',
   tip: '#b23a2e',
   labelPos: 'none',
-  help: 'GATED: the VCA opens only as far as its AM inputs say (Envelope 2 with nothing patched), so notes start and stop. DRONE: the VCA stays open and the sound never stops.',
+  help: 'GATED: the VCA opens only as far as its AM inputs say (Envelope 2 with nothing patched), so notes start and stop. DRONE: the VCA stays fully open, whatever Envelope 2 does, and the sound never stops.',
 });
 text(1475, 838, 'Drone', 9.5);
 text(1475, 889, 'Gated', 9.5);
@@ -713,12 +713,14 @@ button('keys.octDown', 290, 1240, {
   module: 'mode',
   w: 34,
   name: 'OCTAVE −',
+  lamp: false,
   help: 'Moves the keyboard down an octave, as far as four. The on-screen keyboard has its own octave buttons here.',
 });
 button('keys.octUp', 380, 1240, {
   module: 'mode',
   w: 34,
   name: 'OCTAVE +',
+  lamp: false,
   help: 'Moves the keyboard up an octave, as far as four. The on-screen keyboard has its own octave buttons here.',
 });
 text(335, 1240, 'Octave', 9.5);
@@ -742,7 +744,7 @@ controls.push(
     labelPos: 'none',
     name: 'Joystick (left-right)',
     fmt: joyFmt,
-    help: 'The joystick. Left and right bend the pitch. Up glides between notes, slower the further it goes, or with VIBRATO lit adds vibrato. Down holds the notes. Drag the stick; double-click to centre it.',
+    help: 'The joystick. Left and right bend the pitch. Up glides between notes, slower the further it goes, or with VIBRATO lit adds vibrato. Down holds the arpeggio. Drag the stick; double-click to centre it.',
   },
   {
     id: 'joy.y',
@@ -759,7 +761,7 @@ controls.push(
     labelPos: 'none',
     name: 'Joystick (up-down)',
     fmt: joyFmt,
-    help: 'The joystick’s up-down movement: up glides (or with VIBRATO lit, adds vibrato), down holds the notes.',
+    help: 'The joystick’s up-down movement: up glides (or with VIBRATO lit, adds vibrato), down holds the arpeggio.',
   }
 );
 button('keys.hold', 328, 1385, {
@@ -897,11 +899,12 @@ const areas: Area[] = [
     module: 'mod',
     keywords: 'joystick bend glide portamento vibrato hold latch octave arpeggiator',
     rects: [R(170, 1090, 500, 1410)],
-    help: 'Beside the keys: ARP starts the arpeggiator, OCTAVE moves the keys, and the joystick bends the pitch (left and right), glides or with VIBRATO adds vibrato (up), and holds the notes (down, or click to latch).',
+    help: 'Beside the keys: ARP starts the arpeggiator, OCTAVE moves the keys, and the joystick bends the pitch (left and right), glides or with VIBRATO adds vibrato (up), and holds the arpeggio (down, or click to latch).',
   },
 ];
 
 // ── Engine mapping ────────────────────────────────────────────────────────
+const WAVE_JACKS = [1, 2].flatMap((n) => ['saw', 'tri', 'pulse'].map((w) => `j.vco${n}_${w}`));
 function toEngine(v: ControlValues, ctx: EngineContext): EngineParams {
   const patched = ctx.patched;
   const routes: EngineRoute[] = [];
@@ -932,13 +935,16 @@ function toEngine(v: ControlValues, ctx: EngineContext): EngineParams {
   });
   norm('j.vcf_fm1', 'env1', 'cutoff', vcfFmOct(num(v, 'vcf.fm1')));
   norm('j.vcf_fm2', 'lfoTri', 'cutoff', vcfFmOct(num(v, 'vcf.fm2')));
-  norm('j.vca_am1', 'env2', 'amp', amGain(num(v, 'vca.am1')));
+  const drone = v['vca.mode'] === 'drone';
+  // DRONE holds the VCA fully open, so Envelope 2 no longer opens it further
+  if (!drone) norm('j.vca_am1', 'env2', 'amp', amGain(num(v, 'vca.am1')));
   // the VCA's gain must not go below closed, so the triangle reaches AM 2 as 0..1
   norm('j.vca_am2', 'lfoUni', 'amp', amGain(num(v, 'vca.am2')));
   const jx = clamp(num(v, 'joy.x'), -1, 1),
     jy = clamp(num(v, 'joy.y'), -1, 1);
   const vib = !!v['keys.vibrato'];
-  if (jx) routes.push({ src: 'joyX', dst: 'pitchAll', amt: BEND_SEMI });
+  // always routed, so the pitch eases back with the stick rather than snapping when it reaches the centre
+  routes.push({ src: 'joyX', dst: 'pitchAll', amt: BEND_SEMI });
   if (vib && jy > 0) routes.push({ src: 'lfo2', dst: 'pitchAll', amt: jy * VIB_SEMI });
   const drive = num(v, 'vca.drive') / 10;
   return {
@@ -949,8 +955,8 @@ function toEngine(v: ControlValues, ctx: EngineContext): EngineParams {
       type: 'svf',
       mode: 'lp',
       cutoff: cutoffHz(num(v, 'vcf.cutoff')),
-      // self-oscillates from about 8
-      res: (num(v, 'vcf.res') / 10) * 1.15,
+      // self-oscillates from 8 (the engine's SVF rings on its own from 1, and stops at 1.15)
+      res: (num(v, 'vcf.res') / 10) * 1.25,
       envAmt: 0,
       envSrc: 'env1',
       kbd: 0,
@@ -967,8 +973,8 @@ function toEngine(v: ControlValues, ctx: EngineContext): EngineParams {
       s: num(v, 'env2.sustain') / 10,
       r: relTime(num(v, 'env2.release')),
     },
-    // the loudness is AM 1 and AM 2 (routes and cables into `amp`); DRONE holds the VCA open as well
-    vca: { envSrc: 'none', bias: v['vca.mode'] === 'drone' ? 1 : 0 },
+    // the loudness is AM 1 and AM 2 (routes and cables into `amp`); DRONE holds the VCA open in place of AM 1's normal
+    vca: { envSrc: 'none', bias: drone ? 1 : 0 },
     lfo: { rate: lfoHz(num(v, 'lfo.rate')), mix: { tri: 1 }, keySync: false },
     lfo2: { rate: VIB_HZ, mix: { sine: 1 } },
     glide: { time: vib ? 0 : glideTime(jy), legato: false },
@@ -976,7 +982,8 @@ function toEngine(v: ControlValues, ctx: EngineContext): EngineParams {
     routes,
     od: drive > 0 ? { on: true, drive, tone: 0.5, level: 1 } : { on: false },
     delay: { on: false },
-    oscOuts: true,
+    // the separate wave outputs are worked out only while one of their jacks is patched
+    oscOuts: WAVE_JACKS.some((j) => patched[j]),
     joy: [jx, jy],
     poly: { voices: 1, stack: 1, mono: true },
     arp: {
@@ -1006,7 +1013,7 @@ const malevolent: SynthDef & { version: number } = {
   year: 2022,
   heritage: 'An original British design, its analogue circuits by Future Sound Systems',
   summary:
-    'A semi-modular analogue mono synth with 32 mini keys: two VCOs whose saw, triangle and pulse can be mixed by three buttons each, noise and an aux input, a 2-pole multimode filter with separate low-pass, band-pass and high-pass inputs, two ADSRs, a VCA with drive and a drone switch, an LFO, an arpeggiator and a joystick, and 38 patch points normalled so it plays with no cables.',
+    'A semi-modular analogue mono synth with 32 mini keys: two VCOs whose saw, triangle and pulse can be mixed by three buttons each, noise and an aux input, a 2-pole multimode filter with separate low-pass, band-pass and high-pass inputs, two ADSRs, a VCA with drive and a drone switch, an LFO, an arpeggiator and a joystick, and 38 patch points, most of the inputs normalled so it plays with no cables.',
   view: { w: 1800 - OX, h: 1410 - OY },
   theme: {
     panel: PANEL,
