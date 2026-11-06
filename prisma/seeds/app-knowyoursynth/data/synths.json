@@ -33,6 +33,7 @@
     { "id": "behringer-syncussion", "order": 30, "listed": true },
     { "id": "e7", "order": 31, "listed": true },
     { "id": "syntrx-ii", "order": 32, "listed": true },
-    { "id": "solar-42n", "order": 33, "listed": true }
+    { "id": "solar-42n", "order": 33, "listed": true },
+    { "id": "malevolent", "order": 34, "listed": true }
   ]
 }

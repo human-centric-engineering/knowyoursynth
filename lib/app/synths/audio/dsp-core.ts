@@ -397,6 +397,8 @@ export const DESTS: string[] = [
   'fmIn',
   'inv10In',
   'hp6In',
+  'vcfBpIn',
+  'vcfHpIn',
   ...MOOG_DESTS,
   ...SOLAR_DESTS,
 ];
@@ -462,6 +464,8 @@ function createVoice(
   const normSig = new Int32Array(ND).fill(-1);
   const normAmt = new Float64Array(ND).fill(1);
   const cabled = new Uint8Array(ND);
+  // The SVF's band-pass and high-pass inputs (`vcfBpIn`, `vcfHpIn`) have a source: the filter runs their states too
+  let mmOn = false;
   // Each oscillator's own output signal and pitch destination (the fourth was added later, so they are not contiguous).
   const OSC_SI = [SI.osc1, SI.osc2, SI.osc3, SI.osc4];
   const PITCH_DI = [DI.pitch1, DI.pitch2, DI.pitch3, DI.pitch4];
@@ -602,6 +606,9 @@ function createVoice(
     ic1 = 0,
     ic2 = 0,
     fPrevIn = 0;
+  // The previous sample at the SVF's band-pass and high-pass inputs, for the oversampler's half step
+  let fPrevBp = 0,
+    fPrevHp = 0;
   // Optional 24 dB high-pass stage in front of the main filter (EngineParams `hpf`). Two SVF sections in series.
   let hpLog = Math.log(20),
     hpLogT = hpLog,
@@ -777,6 +784,11 @@ function createVoice(
       // `by`: the route's depth is scaled by a second signal (Jupiter-6 CROSS MOD ENV-1: Envelope 1 opens the cross mod)
       destBy[DI[r.dst]].push(r.by && r.by in SI ? SI[r.by] : -1);
     }
+    // a source at zero depth does not count: it would only take the filter's modes away
+    const fed = (d: number): boolean =>
+      (normSig[d] >= 0 && normAmt[d] !== 0) || destAmt[d].some((a) => a !== 0);
+    mmOn = fed(DI.vcfBpIn) || fed(DI.vcfHpIn);
+    if (!mmOn) fPrevBp = fPrevHp = 0;
   }
 
   function setParams(p: VoiceParams) {
@@ -2156,6 +2168,9 @@ function createVoice(
         const g = Math.tan((Math.PI * fc) / (sr * 2));
         let v1o = 0,
           v2o = 0;
+        // the SVF's band-pass and high-pass inputs, read for either filter type so the previous samples stay current
+        const fBp = mmOn ? ev(DI.vcfBpIn) : 0,
+          fHp = mmOn ? ev(DI.vcfHpIn) : 0;
         if (ladder) {
           const G = g / (1 + g),
             b = 1 / (1 + g),
@@ -2195,20 +2210,39 @@ function createVoice(
           const a1 = 1 / (1 + g * (g + kq)),
             a2 = g * a1,
             a3 = g * a2;
+          // Multimode inputs (PWM Malevolent): one core gives LP(a) + BP(b) + HP(c) for a at `vcfIn`, b at `vcfBpIn`
+          // and c at `vcfHpIn`. With q fed into the low-pass integrator as well as its usual input u, the core's
+          // low-pass is LP(u + k·q) + BP(q); and HP(c) = c − LP(c) − k·BP(c). So q = b − k·c, u = a − c − k·q, and
+          // the output is c + the low-pass.
+          let mmY = 0;
           for (let os = 0; os < 2; os++) {
             const x = Math.tanh(
               ((os ? fin : (fin + fPrevIn) * 0.5) + (Math.random() - 0.5) * 2e-5) * 0.8
             );
-            const v3 = x - ic2;
-            const bp = a1 * ic1 + a2 * v3;
-            const lp = ic2 + a2 * ic1 + a3 * v3;
+            let bp: number, lp: number;
+            if (mmOn) {
+              const xb = Math.tanh((os ? fBp : (fBp + fPrevBp) * 0.5) * 0.8);
+              const xc = Math.tanh((os ? fHp : (fHp + fPrevHp) * 0.5) * 0.8);
+              const q = xb - kq * xc,
+                u = x - xc - kq * q;
+              bp = a1 * ic1 + a2 * (u - ic2 - g * q);
+              lp = ic2 + g * (bp + q);
+              mmY = xc + lp;
+            } else {
+              const v3 = x - ic2;
+              bp = a1 * ic1 + a2 * v3;
+              lp = ic2 + a2 * ic1 + a3 * v3;
+            }
             ic1 = 2 * bp - ic1;
             ic2 = 2 * lp - ic2;
             if (ic1 > 1.6) ic1 = 1.6;
             else if (ic1 < -1.6) ic1 = -1.6;
             if (ic2 > 1.6) ic2 = 1.6;
             else if (ic2 < -1.6) ic2 = -1.6;
-            if (os) {
+            if (os && mmOn) {
+              // the core's taps are of the combined input now, so both outputs carry the sum
+              v1o = v2o = mmY * 1.25;
+            } else if (os) {
               const hp = x - kq * bp - lp;
               // `morph` (0..1, the SEM's NOTCH knob): low-pass fading into high-pass, with a notch where they meet halfway
               v1o =
@@ -2221,6 +2255,8 @@ function createVoice(
           }
         }
         fPrevIn = fin;
+        fPrevBp = fBp;
+        fPrevHp = fHp;
         S[SI.vcf1] = v1o;
         S[SI.vcf2] = v2o;
 

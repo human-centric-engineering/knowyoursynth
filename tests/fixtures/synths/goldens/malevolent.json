@@ -1,0 +1,2711 @@
+{
+  "id": "malevolent",
+  "readouts": {
+    "keys.arpRate": [
+      "30 BPM",
+      "38 BPM",
+      "48 BPM",
+      "60 BPM",
+      "75 BPM",
+      "95 BPM",
+      "119 BPM",
+      "150 BPM",
+      "189 BPM",
+      "238 BPM",
+      "300 BPM"
+    ],
+    "lfo.rate": [
+      "0.05 Hz",
+      "0.11 Hz",
+      "0.23 Hz",
+      "0.49 Hz",
+      "1.05 Hz",
+      "2.24 Hz",
+      "4.78 Hz",
+      "10 Hz",
+      "22 Hz",
+      "47 Hz",
+      "100 Hz"
+    ],
+    "vco1.coarse": [
+      "-48 st",
+      "-38.4 st",
+      "-28.8 st",
+      "-19.2 st",
+      "-9.6 st",
+      "0 st",
+      "+9.6 st",
+      "+19.2 st",
+      "+28.8 st",
+      "+38.4 st",
+      "+48 st"
+    ],
+    "vco1.fine": [
+      "-1 st",
+      "-0.8 st",
+      "-0.6 st",
+      "-0.4 st",
+      "-0.2 st",
+      "0 st",
+      "+0.2 st",
+      "+0.4 st",
+      "+0.6 st",
+      "+0.8 st",
+      "+1 st"
+    ],
+    "vco1.shape": ["5%", "14%", "23%", "32%", "41%", "50%", "59%", "68%", "77%", "86%", "95%"],
+    "env1.attack": [
+      "1 ms",
+      "3 ms",
+      "6 ms",
+      "16 ms",
+      "40 ms",
+      "100 ms",
+      "250 ms",
+      "630 ms",
+      "1.6 s",
+      "4.0 s",
+      "10 s"
+    ],
+    "env1.decay": [
+      "3 ms",
+      "7 ms",
+      "15 ms",
+      "34 ms",
+      "77 ms",
+      "170 ms",
+      "390 ms",
+      "880 ms",
+      "2.0 s",
+      "4.4 s",
+      "10 s"
+    ],
+    "env1.release": [
+      "3 ms",
+      "7 ms",
+      "15 ms",
+      "34 ms",
+      "77 ms",
+      "170 ms",
+      "390 ms",
+      "880 ms",
+      "2.0 s",
+      "4.4 s",
+      "10 s"
+    ],
+    "vco2.coarse": [
+      "-48 st",
+      "-38.4 st",
+      "-28.8 st",
+      "-19.2 st",
+      "-9.6 st",
+      "0 st",
+      "+9.6 st",
+      "+19.2 st",
+      "+28.8 st",
+      "+38.4 st",
+      "+48 st"
+    ],
+    "vco2.fine": [
+      "-1 st",
+      "-0.8 st",
+      "-0.6 st",
+      "-0.4 st",
+      "-0.2 st",
+      "0 st",
+      "+0.2 st",
+      "+0.4 st",
+      "+0.6 st",
+      "+0.8 st",
+      "+1 st"
+    ],
+    "vco2.shape": ["5%", "14%", "23%", "32%", "41%", "50%", "59%", "68%", "77%", "86%", "95%"],
+    "env2.attack": [
+      "1 ms",
+      "3 ms",
+      "6 ms",
+      "16 ms",
+      "40 ms",
+      "100 ms",
+      "250 ms",
+      "630 ms",
+      "1.6 s",
+      "4.0 s",
+      "10 s"
+    ],
+    "env2.decay": [
+      "3 ms",
+      "7 ms",
+      "15 ms",
+      "34 ms",
+      "77 ms",
+      "170 ms",
+      "390 ms",
+      "880 ms",
+      "2.0 s",
+      "4.4 s",
+      "10 s"
+    ],
+    "env2.release": [
+      "3 ms",
+      "7 ms",
+      "15 ms",
+      "34 ms",
+      "77 ms",
+      "170 ms",
+      "390 ms",
+      "880 ms",
+      "2.0 s",
+      "4.4 s",
+      "10 s"
+    ],
+    "vcf.cutoff": [
+      "20 Hz",
+      "40 Hz",
+      "80 Hz",
+      "159 Hz",
+      "317 Hz",
+      "632 Hz",
+      "1.3 kHz",
+      "2.5 kHz",
+      "5.0 kHz",
+      "10 kHz",
+      "20 kHz"
+    ],
+    "joy.x": [
+      "−100%",
+      "−80%",
+      "−60%",
+      "−40%",
+      "−20%",
+      "+0%",
+      "+20%",
+      "+40%",
+      "+60%",
+      "+80%",
+      "+100%"
+    ],
+    "joy.y": [
+      "−100%",
+      "−80%",
+      "−60%",
+      "−40%",
+      "−20%",
+      "+0%",
+      "+20%",
+      "+40%",
+      "+60%",
+      "+80%",
+      "+100%"
+    ]
+  },
+  "engine": {
+    "init": {
+      "arp": {
+        "bpm": 94.86832980505139,
+        "gate": 0.5,
+        "hold": false,
+        "mode": "up",
+        "octaves": 1,
+        "on": false
+      },
+      "delay": { "on": false },
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 },
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 },
+      "ext": { "level": 1 },
+      "filter": {
+        "cutoff": 2517.8508235883337,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      },
+      "glide": { "legato": false, "time": 0 },
+      "joy": [0, 0],
+      "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 2.23606797749979 },
+      "lfo2": { "mix": { "sine": 1 }, "rate": 5 },
+      "noise": { "color": "white", "level": 0 },
+      "od": { "on": false },
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ],
+      "oscOuts": false,
+      "poly": { "mono": true, "stack": 1, "voices": 1 },
+      "routes": [
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ],
+      "trig": { "drone": false, "repeat": false, "retrig": true },
+      "tune": 0,
+      "vca": { "bias": 0, "envSrc": "none" },
+      "volume": 0.5453391388693143
+    },
+    "keys.arpRate=0": {
+      "arp": { "bpm": 30, "gate": 0.5, "hold": false, "mode": "up", "octaves": 1, "on": false }
+    },
+    "keys.arpRate=2.5": {
+      "arp": {
+        "bpm": 53.34838230116768,
+        "gate": 0.5,
+        "hold": false,
+        "mode": "up",
+        "octaves": 1,
+        "on": false
+      }
+    },
+    "keys.arpRate=7.5": {
+      "arp": {
+        "bpm": 168.70239755710475,
+        "gate": 0.5,
+        "hold": false,
+        "mode": "up",
+        "octaves": 1,
+        "on": false
+      }
+    },
+    "keys.arpRate=10": {
+      "arp": { "bpm": 300, "gate": 0.5, "hold": false, "mode": "up", "octaves": 1, "on": false }
+    },
+    "lfo.rate=0": { "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.05 } },
+    "lfo.rate=2.5": { "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.334370152488211 } },
+    "lfo.rate=7.5": {
+      "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 14.953487812212206 }
+    },
+    "lfo.rate=10": { "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 100 } },
+    "vco1.coarse=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": -48,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.coarse=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": -24,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.coarse=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 24,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.coarse=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 48,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.shapeMod=2.5": {
+      "routes": [
+        { "amt": 0.1125, "dst": "pw1", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco1.shapeMod=5": {
+      "routes": [
+        { "amt": 0.225, "dst": "pw1", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco1.shapeMod=7.5": {
+      "routes": [
+        { "amt": 0.3375, "dst": "pw1", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco1.shapeMod=10": {
+      "routes": [
+        { "amt": 0.45, "dst": "pw1", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco1.fm1=2.5": {
+      "routes": [
+        { "amt": 3, "dst": "pitch1", "src": "env1" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco1.fm1=5": {
+      "routes": [
+        { "amt": 12, "dst": "pitch1", "src": "env1" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco1.fm1=7.5": {
+      "routes": [
+        { "amt": 27, "dst": "pitch1", "src": "env1" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco1.fm1=10": {
+      "routes": [
+        { "amt": 48, "dst": "pitch1", "src": "env1" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco1.fm2=2.5": {
+      "routes": [
+        { "amt": 3, "dst": "pitch1", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco1.fm2=5": {
+      "routes": [
+        { "amt": 12, "dst": "pitch1", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco1.fm2=7.5": {
+      "routes": [
+        { "amt": 27, "dst": "pitch1", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco1.fm2=10": {
+      "routes": [
+        { "amt": 48, "dst": "pitch1", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco1.fine=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": -1,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.fine=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": -0.5,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.fine=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0.5,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.fine=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 1,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.shape=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.04999999999999999,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.shape=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.275,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.shape=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.725,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.shape=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.95,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.level=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.level=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.09473228540689989,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.level=5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.3077861033362291,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.level=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.61320282613276,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.level=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 1,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.saw=false": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": {},
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.tri=true": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8, "tri": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco1.pulse=true": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "pulse": 0.8, "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "env1.attack=2.5": {
+      "env1": { "a": 0.01, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "env1.attack=5": {
+      "env1": { "a": 0.1, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "env1.attack=7.5": {
+      "env1": { "a": 1, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "env1.attack=10": {
+      "env1": { "a": 10, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "env1.decay=0": { "env1": { "a": 0.001, "d": 0.003, "r": 0.015194870523363546, "s": 0.7 } },
+    "env1.decay=2.5": {
+      "env1": { "a": 0.001, "d": 0.022795070569547778, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "env1.decay=7.5": {
+      "env1": { "a": 0.001, "d": 1.3160740129524926, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "env1.decay=10": { "env1": { "a": 0.001, "d": 10, "r": 0.015194870523363546, "s": 0.7 } },
+    "env1.sustain=0": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0 }
+    },
+    "env1.sustain=2.5": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.25 }
+    },
+    "env1.sustain=5": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.5 }
+    },
+    "env1.sustain=7.5": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.75 }
+    },
+    "env1.sustain=10": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 1 }
+    },
+    "env1.release=0": { "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 0.003, "s": 0.7 } },
+    "env1.release=2.5": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 0.022795070569547778, "s": 0.7 }
+    },
+    "env1.release=5": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 0.17320508075688773, "s": 0.7 }
+    },
+    "env1.release=7.5": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 1.3160740129524926, "s": 0.7 }
+    },
+    "env1.release=10": { "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 10, "s": 0.7 } },
+    "vco2.coarse=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": {},
+          "pw": 0.5,
+          "semi": -48,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.coarse=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": {},
+          "pw": 0.5,
+          "semi": -24,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.coarse=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 24, "syncTo": -1 }
+      ]
+    },
+    "vco2.coarse=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 48, "syncTo": -1 }
+      ]
+    },
+    "vco2.shapeMod=2.5": {
+      "routes": [
+        { "amt": 0.1125, "dst": "pw2", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco2.shapeMod=5": {
+      "routes": [
+        { "amt": 0.225, "dst": "pw2", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco2.shapeMod=7.5": {
+      "routes": [
+        { "amt": 0.3375, "dst": "pw2", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco2.shapeMod=10": {
+      "routes": [
+        { "amt": 0.45, "dst": "pw2", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco2.fm1=2.5": {
+      "routes": [
+        { "amt": 3, "dst": "pitch2", "src": "env1" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco2.fm1=5": {
+      "routes": [
+        { "amt": 12, "dst": "pitch2", "src": "env1" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco2.fm1=7.5": {
+      "routes": [
+        { "amt": 27, "dst": "pitch2", "src": "env1" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco2.fm1=10": {
+      "routes": [
+        { "amt": 48, "dst": "pitch2", "src": "env1" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco2.fm2=2.5": {
+      "routes": [
+        { "amt": 3, "dst": "pitch2", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco2.fm2=5": {
+      "routes": [
+        { "amt": 12, "dst": "pitch2", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco2.fm2=7.5": {
+      "routes": [
+        { "amt": 27, "dst": "pitch2", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco2.fm2=10": {
+      "routes": [
+        { "amt": 48, "dst": "pitch2", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vco2.fine=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": -1, "syncTo": -1 }
+      ]
+    },
+    "vco2.fine=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": {},
+          "pw": 0.5,
+          "semi": -0.5,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.fine=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": {},
+          "pw": 0.5,
+          "semi": 0.5,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.fine=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 1, "syncTo": -1 }
+      ]
+    },
+    "vco2.shape=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": {},
+          "pw": 0.04999999999999999,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.shape=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": {},
+          "pw": 0.275,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.shape=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": {},
+          "pw": 0.725,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.shape=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.95, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco2.level=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.09473228540689989,
+          "mix": {},
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.level=5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.3077861033362291,
+          "mix": {},
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.level=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.61320282613276,
+          "mix": {},
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.level=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 1, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco2.saw=true": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.tri=true": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "tri": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.pulse=true": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "pulse": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "env2.attack=2.5": {
+      "env2": { "a": 0.01, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "env2.attack=5": {
+      "env2": { "a": 0.1, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "env2.attack=7.5": {
+      "env2": { "a": 1, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "env2.attack=10": {
+      "env2": { "a": 10, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "env2.decay=0": { "env2": { "a": 0.001, "d": 0.003, "r": 0.015194870523363546, "s": 0.7 } },
+    "env2.decay=2.5": {
+      "env2": { "a": 0.001, "d": 0.022795070569547778, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "env2.decay=7.5": {
+      "env2": { "a": 0.001, "d": 1.3160740129524926, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "env2.decay=10": { "env2": { "a": 0.001, "d": 10, "r": 0.015194870523363546, "s": 0.7 } },
+    "env2.sustain=0": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0 }
+    },
+    "env2.sustain=2.5": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.25 }
+    },
+    "env2.sustain=5": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.5 }
+    },
+    "env2.sustain=7.5": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.75 }
+    },
+    "env2.sustain=10": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 1 }
+    },
+    "env2.release=0": { "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 0.003, "s": 0.7 } },
+    "env2.release=2.5": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 0.022795070569547778, "s": 0.7 }
+    },
+    "env2.release=5": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 0.17320508075688773, "s": 0.7 }
+    },
+    "env2.release=7.5": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 1.3160740129524926, "s": 0.7 }
+    },
+    "env2.release=10": { "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 10, "s": 0.7 } },
+    "mix.aux=2.5": {},
+    "mix.aux=5": {},
+    "mix.aux=7.5": {},
+    "mix.aux=10": {},
+    "mix.noise=2.5": { "noise": { "color": "white", "level": 0.06631259978482992 } },
+    "mix.noise=5": { "noise": { "color": "white", "level": 0.21545027233536035 } },
+    "mix.noise=7.5": { "noise": { "color": "white", "level": 0.429241978292932 } },
+    "mix.noise=10": { "noise": { "color": "white", "level": 0.7 } },
+    "vcf.fm1=2.5": {
+      "routes": [
+        { "amt": 2, "dst": "cutoff", "src": "env1" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vcf.fm1=5": {
+      "routes": [
+        { "amt": 4, "dst": "cutoff", "src": "env1" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vcf.fm1=7.5": {
+      "routes": [
+        { "amt": 6, "dst": "cutoff", "src": "env1" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vcf.fm1=10": {
+      "routes": [
+        { "amt": 8, "dst": "cutoff", "src": "env1" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vcf.fm2=2.5": {
+      "routes": [
+        { "amt": 2, "dst": "cutoff", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vcf.fm2=5": {
+      "routes": [
+        { "amt": 4, "dst": "cutoff", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vcf.fm2=7.5": {
+      "routes": [
+        { "amt": 6, "dst": "cutoff", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vcf.fm2=10": {
+      "routes": [
+        { "amt": 8, "dst": "cutoff", "src": "lfoTri" },
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vcf.cutoff=0": {
+      "filter": {
+        "cutoff": 20,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "vcf.cutoff=2.5": {
+      "filter": {
+        "cutoff": 112.46826503806983,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "vcf.cutoff=5": {
+      "filter": {
+        "cutoff": 632.4555320336758,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "vcf.cutoff=7.5": {
+      "filter": {
+        "cutoff": 3556.5588200778457,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "vcf.cutoff=10": {
+      "filter": {
+        "cutoff": 20000,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "vcf.res=2.5": {
+      "filter": {
+        "cutoff": 2517.8508235883337,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.3125,
+        "type": "svf"
+      }
+    },
+    "vcf.res=5": {
+      "filter": {
+        "cutoff": 2517.8508235883337,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.625,
+        "type": "svf"
+      }
+    },
+    "vcf.res=7.5": {
+      "filter": {
+        "cutoff": 2517.8508235883337,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.9375,
+        "type": "svf"
+      }
+    },
+    "vcf.res=10": {
+      "filter": {
+        "cutoff": 2517.8508235883337,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 1.25,
+        "type": "svf"
+      }
+    },
+    "vca.mode=\"drone\"": {
+      "routes": [{ "amt": 2, "dst": "pitchAll", "src": "joyX" }],
+      "vca": { "bias": 1, "envSrc": "none" }
+    },
+    "vca.drive=2.5": { "od": { "drive": 0.25, "level": 1, "on": true, "tone": 0.5 } },
+    "vca.drive=5": { "od": { "drive": 0.5, "level": 1, "on": true, "tone": 0.5 } },
+    "vca.drive=7.5": { "od": { "drive": 0.75, "level": 1, "on": true, "tone": 0.5 } },
+    "vca.drive=10": { "od": { "drive": 1, "level": 1, "on": true, "tone": 0.5 } },
+    "vca.am1=0": { "routes": [{ "amt": 2, "dst": "pitchAll", "src": "joyX" }] },
+    "vca.am1=2.5": {
+      "routes": [
+        { "amt": 0.25, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vca.am1=5": {
+      "routes": [
+        { "amt": 0.5, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vca.am1=7.5": {
+      "routes": [
+        { "amt": 0.75, "dst": "amp", "src": "env2" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vca.am2=2.5": {
+      "routes": [
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 0.25, "dst": "amp", "src": "lfoUni" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vca.am2=5": {
+      "routes": [
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 0.5, "dst": "amp", "src": "lfoUni" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vca.am2=7.5": {
+      "routes": [
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 0.75, "dst": "amp", "src": "lfoUni" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "vca.am2=10": {
+      "routes": [
+        { "amt": 1, "dst": "amp", "src": "env2" },
+        { "amt": 1, "dst": "amp", "src": "lfoUni" },
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+      ]
+    },
+    "out.master=0": { "volume": 0 },
+    "out.master=2.5": { "volume": 0.09473228540689989 },
+    "out.master=5": { "volume": 0.3077861033362291 },
+    "out.master=7.5": { "volume": 0.61320282613276 },
+    "out.master=10": { "volume": 1 },
+    "keys.arp=true": {
+      "arp": {
+        "bpm": 94.86832980505139,
+        "gate": 0.5,
+        "hold": false,
+        "mode": "up",
+        "octaves": 1,
+        "on": true
+      }
+    },
+    "keys.vibrato=true": {},
+    "keys.octDown=true": {},
+    "keys.octUp=true": {},
+    "joy.x=-1": { "joy": [-1, 0] },
+    "joy.x=-0.5": { "joy": [-0.5, 0] },
+    "joy.x=0.5": { "joy": [0.5, 0] },
+    "joy.x=1": { "joy": [1, 0] },
+    "joy.y=-1": {
+      "arp": {
+        "bpm": 94.86832980505139,
+        "gate": 0.5,
+        "hold": true,
+        "mode": "up",
+        "octaves": 1,
+        "on": false
+      },
+      "joy": [0, -1]
+    },
+    "joy.y=-0.5": { "joy": [0, -0.5] },
+    "joy.y=0.5": { "glide": { "legato": false, "time": 0.1414213562373095 }, "joy": [0, 0.5] },
+    "joy.y=1": { "glide": { "legato": false, "time": 2 }, "joy": [0, 1] },
+    "keys.hold=true": {
+      "arp": {
+        "bpm": 94.86832980505139,
+        "gate": 0.5,
+        "hold": true,
+        "mode": "up",
+        "octaves": 1,
+        "on": false
+      }
+    },
+    "wheel=1": {},
+    "patched:j.pitch": {},
+    "patched:j.vel": {},
+    "patched:j.gate": {},
+    "patched:j.lfo_tri": {},
+    "patched:j.lfo_sq": {},
+    "patched:j.vco1_saw": { "oscOuts": true },
+    "patched:j.vco1_tri": { "oscOuts": true },
+    "patched:j.vco1_pulse": { "oscOuts": true },
+    "patched:j.vco1_out": {},
+    "patched:j.vco1_voct": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:j.vco1_shape": {},
+    "patched:j.vco1_fm1": {},
+    "patched:j.vco1_fm2": {},
+    "patched:j.vco2_saw": { "oscOuts": true },
+    "patched:j.vco2_tri": { "oscOuts": true },
+    "patched:j.vco2_pulse": { "oscOuts": true },
+    "patched:j.vco2_out": {},
+    "patched:j.vco2_voct": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:j.vco2_shape": {},
+    "patched:j.vco2_fm1": {},
+    "patched:j.vco2_fm2": {},
+    "patched:j.noise": {},
+    "patched:j.mix_out": {},
+    "patched:j.aux": {},
+    "patched:j.vcf_out": {},
+    "patched:j.vcf_lp": {},
+    "patched:j.vcf_bp": {},
+    "patched:j.vcf_hp": {},
+    "patched:j.vcf_fm1": {},
+    "patched:j.vcf_fm2": {},
+    "patched:j.env1_out": {},
+    "patched:j.env2_out": {},
+    "patched:j.vca_in": {},
+    "patched:j.env1_gate": {},
+    "patched:j.env2_gate": {},
+    "patched:j.vca_am1": { "routes": [{ "amt": 2, "dst": "pitchAll", "src": "joyX" }] },
+    "patched:j.vca_am2": {},
+    "patched:j.out": {},
+    "patched:*": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ],
+      "oscOuts": true,
+      "routes": [{ "amt": 2, "dst": "pitchAll", "src": "joyX" }]
+    },
+    "patched:* keys.arpRate=0": {
+      "arp": { "bpm": 30, "gate": 0.5, "hold": false, "mode": "up", "octaves": 1, "on": false }
+    },
+    "patched:* keys.arpRate=2.5": {
+      "arp": {
+        "bpm": 53.34838230116768,
+        "gate": 0.5,
+        "hold": false,
+        "mode": "up",
+        "octaves": 1,
+        "on": false
+      }
+    },
+    "patched:* keys.arpRate=7.5": {
+      "arp": {
+        "bpm": 168.70239755710475,
+        "gate": 0.5,
+        "hold": false,
+        "mode": "up",
+        "octaves": 1,
+        "on": false
+      }
+    },
+    "patched:* keys.arpRate=10": {
+      "arp": { "bpm": 300, "gate": 0.5, "hold": false, "mode": "up", "octaves": 1, "on": false }
+    },
+    "patched:* lfo.rate=0": { "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.05 } },
+    "patched:* lfo.rate=2.5": {
+      "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.334370152488211 }
+    },
+    "patched:* lfo.rate=7.5": {
+      "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 14.953487812212206 }
+    },
+    "patched:* lfo.rate=10": { "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 100 } },
+    "patched:* vco1.coarse=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": -48,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.coarse=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": -24,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.coarse=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 24,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.coarse=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 48,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.shapeMod=2.5": {},
+    "patched:* vco1.shapeMod=5": {},
+    "patched:* vco1.shapeMod=7.5": {},
+    "patched:* vco1.shapeMod=10": {},
+    "patched:* vco1.fm1=2.5": {},
+    "patched:* vco1.fm1=5": {},
+    "patched:* vco1.fm1=7.5": {},
+    "patched:* vco1.fm1=10": {},
+    "patched:* vco1.fm2=2.5": {},
+    "patched:* vco1.fm2=5": {},
+    "patched:* vco1.fm2=7.5": {},
+    "patched:* vco1.fm2=10": {},
+    "patched:* vco1.fine=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": -1,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.fine=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": -0.5,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.fine=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0.5,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.fine=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 1,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.shape=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.04999999999999999,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.shape=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.275,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.shape=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.725,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.shape=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.95,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.level=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.level=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.09473228540689989,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.level=5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.3077861033362291,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.level=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.61320282613276,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.level=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 1,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.saw=false": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": {},
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.tri=true": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8, "tri": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco1.pulse=true": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "pulse": 0.8, "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* env1.attack=2.5": {
+      "env1": { "a": 0.01, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "patched:* env1.attack=5": {
+      "env1": { "a": 0.1, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "patched:* env1.attack=7.5": {
+      "env1": { "a": 1, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "patched:* env1.attack=10": {
+      "env1": { "a": 10, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "patched:* env1.decay=0": {
+      "env1": { "a": 0.001, "d": 0.003, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "patched:* env1.decay=2.5": {
+      "env1": { "a": 0.001, "d": 0.022795070569547778, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "patched:* env1.decay=7.5": {
+      "env1": { "a": 0.001, "d": 1.3160740129524926, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "patched:* env1.decay=10": {
+      "env1": { "a": 0.001, "d": 10, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "patched:* env1.sustain=0": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0 }
+    },
+    "patched:* env1.sustain=2.5": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.25 }
+    },
+    "patched:* env1.sustain=5": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.5 }
+    },
+    "patched:* env1.sustain=7.5": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.75 }
+    },
+    "patched:* env1.sustain=10": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 1 }
+    },
+    "patched:* env1.release=0": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 0.003, "s": 0.7 }
+    },
+    "patched:* env1.release=2.5": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 0.022795070569547778, "s": 0.7 }
+    },
+    "patched:* env1.release=5": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 0.17320508075688773, "s": 0.7 }
+    },
+    "patched:* env1.release=7.5": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 1.3160740129524926, "s": 0.7 }
+    },
+    "patched:* env1.release=10": {
+      "env1": { "a": 0.001, "d": 0.17320508075688773, "r": 10, "s": 0.7 }
+    },
+    "patched:* vco2.coarse=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0,
+          "mix": {},
+          "pw": 0.5,
+          "semi": -48,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.coarse=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0,
+          "mix": {},
+          "pw": 0.5,
+          "semi": -24,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.coarse=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0,
+          "mix": {},
+          "pw": 0.5,
+          "semi": 24,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.coarse=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0,
+          "mix": {},
+          "pw": 0.5,
+          "semi": 48,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.shapeMod=2.5": {},
+    "patched:* vco2.shapeMod=5": {},
+    "patched:* vco2.shapeMod=7.5": {},
+    "patched:* vco2.shapeMod=10": {},
+    "patched:* vco2.fm1=2.5": {},
+    "patched:* vco2.fm1=5": {},
+    "patched:* vco2.fm1=7.5": {},
+    "patched:* vco2.fm1=10": {},
+    "patched:* vco2.fm2=2.5": {},
+    "patched:* vco2.fm2=5": {},
+    "patched:* vco2.fm2=7.5": {},
+    "patched:* vco2.fm2=10": {},
+    "patched:* vco2.fine=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0,
+          "mix": {},
+          "pw": 0.5,
+          "semi": -1,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.fine=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0,
+          "mix": {},
+          "pw": 0.5,
+          "semi": -0.5,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.fine=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0,
+          "mix": {},
+          "pw": 0.5,
+          "semi": 0.5,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.fine=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 0, "mix": {}, "pw": 0.5, "semi": 1, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco2.shape=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0,
+          "mix": {},
+          "pw": 0.04999999999999999,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.shape=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0,
+          "mix": {},
+          "pw": 0.275,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.shape=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0,
+          "mix": {},
+          "pw": 0.725,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.shape=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0,
+          "mix": {},
+          "pw": 0.95,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.level=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.09473228540689989,
+          "mix": {},
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.level=5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.3077861033362291,
+          "mix": {},
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.level=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.61320282613276,
+          "mix": {},
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.level=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": false, "level": 1, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco2.saw=true": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.tri=true": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.pulse=true": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": false,
+          "level": 0,
+          "mix": { "pulse": 0.8 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* env2.attack=2.5": {
+      "env2": { "a": 0.01, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "patched:* env2.attack=5": {
+      "env2": { "a": 0.1, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "patched:* env2.attack=7.5": {
+      "env2": { "a": 1, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "patched:* env2.attack=10": {
+      "env2": { "a": 10, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "patched:* env2.decay=0": {
+      "env2": { "a": 0.001, "d": 0.003, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "patched:* env2.decay=2.5": {
+      "env2": { "a": 0.001, "d": 0.022795070569547778, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "patched:* env2.decay=7.5": {
+      "env2": { "a": 0.001, "d": 1.3160740129524926, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "patched:* env2.decay=10": {
+      "env2": { "a": 0.001, "d": 10, "r": 0.015194870523363546, "s": 0.7 }
+    },
+    "patched:* env2.sustain=0": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0 }
+    },
+    "patched:* env2.sustain=2.5": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.25 }
+    },
+    "patched:* env2.sustain=5": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.5 }
+    },
+    "patched:* env2.sustain=7.5": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 0.75 }
+    },
+    "patched:* env2.sustain=10": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 0.015194870523363546, "s": 1 }
+    },
+    "patched:* env2.release=0": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 0.003, "s": 0.7 }
+    },
+    "patched:* env2.release=2.5": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 0.022795070569547778, "s": 0.7 }
+    },
+    "patched:* env2.release=5": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 0.17320508075688773, "s": 0.7 }
+    },
+    "patched:* env2.release=7.5": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 1.3160740129524926, "s": 0.7 }
+    },
+    "patched:* env2.release=10": {
+      "env2": { "a": 0.001, "d": 0.17320508075688773, "r": 10, "s": 0.7 }
+    },
+    "patched:* mix.aux=2.5": {},
+    "patched:* mix.aux=5": {},
+    "patched:* mix.aux=7.5": {},
+    "patched:* mix.aux=10": {},
+    "patched:* mix.noise=2.5": { "noise": { "color": "white", "level": 0.06631259978482992 } },
+    "patched:* mix.noise=5": { "noise": { "color": "white", "level": 0.21545027233536035 } },
+    "patched:* mix.noise=7.5": { "noise": { "color": "white", "level": 0.429241978292932 } },
+    "patched:* mix.noise=10": { "noise": { "color": "white", "level": 0.7 } },
+    "patched:* vcf.fm1=2.5": {},
+    "patched:* vcf.fm1=5": {},
+    "patched:* vcf.fm1=7.5": {},
+    "patched:* vcf.fm1=10": {},
+    "patched:* vcf.fm2=2.5": {},
+    "patched:* vcf.fm2=5": {},
+    "patched:* vcf.fm2=7.5": {},
+    "patched:* vcf.fm2=10": {},
+    "patched:* vcf.cutoff=0": {
+      "filter": {
+        "cutoff": 20,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.cutoff=2.5": {
+      "filter": {
+        "cutoff": 112.46826503806983,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.cutoff=5": {
+      "filter": {
+        "cutoff": 632.4555320336758,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.cutoff=7.5": {
+      "filter": {
+        "cutoff": 3556.5588200778457,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.cutoff=10": {
+      "filter": {
+        "cutoff": 20000,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.res=2.5": {
+      "filter": {
+        "cutoff": 2517.8508235883337,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.3125,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.res=5": {
+      "filter": {
+        "cutoff": 2517.8508235883337,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.625,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.res=7.5": {
+      "filter": {
+        "cutoff": 2517.8508235883337,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.9375,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.res=10": {
+      "filter": {
+        "cutoff": 2517.8508235883337,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 1.25,
+        "type": "svf"
+      }
+    },
+    "patched:* vca.mode=\"drone\"": { "vca": { "bias": 1, "envSrc": "none" } },
+    "patched:* vca.drive=2.5": { "od": { "drive": 0.25, "level": 1, "on": true, "tone": 0.5 } },
+    "patched:* vca.drive=5": { "od": { "drive": 0.5, "level": 1, "on": true, "tone": 0.5 } },
+    "patched:* vca.drive=7.5": { "od": { "drive": 0.75, "level": 1, "on": true, "tone": 0.5 } },
+    "patched:* vca.drive=10": { "od": { "drive": 1, "level": 1, "on": true, "tone": 0.5 } },
+    "patched:* vca.am1=0": {},
+    "patched:* vca.am1=2.5": {},
+    "patched:* vca.am1=5": {},
+    "patched:* vca.am1=7.5": {},
+    "patched:* vca.am2=2.5": {},
+    "patched:* vca.am2=5": {},
+    "patched:* vca.am2=7.5": {},
+    "patched:* vca.am2=10": {},
+    "patched:* out.master=0": { "volume": 0 },
+    "patched:* out.master=2.5": { "volume": 0.09473228540689989 },
+    "patched:* out.master=5": { "volume": 0.3077861033362291 },
+    "patched:* out.master=7.5": { "volume": 0.61320282613276 },
+    "patched:* out.master=10": { "volume": 1 },
+    "patched:* keys.arp=true": {
+      "arp": {
+        "bpm": 94.86832980505139,
+        "gate": 0.5,
+        "hold": false,
+        "mode": "up",
+        "octaves": 1,
+        "on": true
+      }
+    },
+    "patched:* keys.vibrato=true": {},
+    "patched:* keys.octDown=true": {},
+    "patched:* keys.octUp=true": {},
+    "patched:* joy.x=-1": { "joy": [-1, 0] },
+    "patched:* joy.x=-0.5": { "joy": [-0.5, 0] },
+    "patched:* joy.x=0.5": { "joy": [0.5, 0] },
+    "patched:* joy.x=1": { "joy": [1, 0] },
+    "patched:* joy.y=-1": {
+      "arp": {
+        "bpm": 94.86832980505139,
+        "gate": 0.5,
+        "hold": true,
+        "mode": "up",
+        "octaves": 1,
+        "on": false
+      },
+      "joy": [0, -1]
+    },
+    "patched:* joy.y=-0.5": { "joy": [0, -0.5] },
+    "patched:* joy.y=0.5": {
+      "glide": { "legato": false, "time": 0.1414213562373095 },
+      "joy": [0, 0.5]
+    },
+    "patched:* joy.y=1": { "glide": { "legato": false, "time": 2 }, "joy": [0, 1] },
+    "patched:* keys.hold=true": {
+      "arp": {
+        "bpm": 94.86832980505139,
+        "gate": 0.5,
+        "hold": true,
+        "mode": "up",
+        "octaves": 1,
+        "on": false
+      }
+    }
+  },
+  "checks": {
+    "j.vco1_shape": {
+      "init": "VCO 1’s SHAPE MOD is at 0, so nothing here moves the shape. Turn it up.",
+      "vco1.shapeMod=2.5": null,
+      "vco1.shapeMod=5": null,
+      "vco1.shapeMod=7.5": null,
+      "vco1.shapeMod=10": null
+    },
+    "j.vco1_fm1": {
+      "init": "VCO 1’s FM 1 knob is at 0, so nothing here moves its pitch. Turn it up.",
+      "vco1.fm1=2.5": null,
+      "vco1.fm1=5": null,
+      "vco1.fm1=7.5": null,
+      "vco1.fm1=10": null
+    },
+    "j.vco1_fm2": {
+      "init": "VCO 1’s FM 2 knob is at 0, so nothing here moves its pitch. Turn it up.",
+      "vco1.fm2=2.5": null,
+      "vco1.fm2=5": null,
+      "vco1.fm2=7.5": null,
+      "vco1.fm2=10": null
+    },
+    "j.vco2_shape": {
+      "init": "VCO 2’s SHAPE MOD is at 0, so nothing here moves the shape. Turn it up.",
+      "vco2.shapeMod=2.5": null,
+      "vco2.shapeMod=5": null,
+      "vco2.shapeMod=7.5": null,
+      "vco2.shapeMod=10": null
+    },
+    "j.vco2_fm1": {
+      "init": "VCO 2’s FM 1 knob is at 0, so nothing here moves its pitch. Turn it up.",
+      "vco2.fm1=2.5": null,
+      "vco2.fm1=5": null,
+      "vco2.fm1=7.5": null,
+      "vco2.fm1=10": null
+    },
+    "j.vco2_fm2": {
+      "init": "VCO 2’s FM 2 knob is at 0, so nothing here moves its pitch. Turn it up.",
+      "vco2.fm2=2.5": null,
+      "vco2.fm2=5": null,
+      "vco2.fm2=7.5": null,
+      "vco2.fm2=10": null
+    },
+    "j.aux": {
+      "init": "AUX LEVEL is at 0, so nothing patched here is heard. Turn it up.",
+      "mix.aux=2.5": null,
+      "mix.aux=5": null,
+      "mix.aux=7.5": null,
+      "mix.aux=10": null
+    },
+    "j.vcf_fm1": {
+      "init": "The VCF’s FM 1 knob is at 0, so nothing here moves the cutoff. Turn it up.",
+      "vcf.fm1=2.5": null,
+      "vcf.fm1=5": null,
+      "vcf.fm1=7.5": null,
+      "vcf.fm1=10": null
+    },
+    "j.vcf_fm2": {
+      "init": "The VCF’s FM 2 knob is at 0, so nothing here moves the cutoff. Turn it up.",
+      "vcf.fm2=2.5": null,
+      "vcf.fm2=5": null,
+      "vcf.fm2=7.5": null,
+      "vcf.fm2=10": null
+    },
+    "j.vca_am1": {
+      "init": null,
+      "vca.am1=0": "The VCA’s AM 1 knob is at 0, so nothing here opens the VCA. Turn it up."
+    },
+    "j.vca_am2": {
+      "init": "The VCA’s AM 2 knob is at 0, so nothing here opens the VCA. Turn it up.",
+      "vca.am2=2.5": null,
+      "vca.am2=5": null,
+      "vca.am2=7.5": null,
+      "vca.am2=10": null
+    }
+  },
+  "depths": {
+    "j.vco1_shape": {
+      "init": 0,
+      "vco1.shapeMod=2.5": 0.1125,
+      "vco1.shapeMod=5": 0.225,
+      "vco1.shapeMod=7.5": 0.3375,
+      "vco1.shapeMod=10": 0.45
+    },
+    "j.vco1_fm1": {
+      "init": 0,
+      "vco1.fm1=2.5": 3,
+      "vco1.fm1=5": 12,
+      "vco1.fm1=7.5": 27,
+      "vco1.fm1=10": 48
+    },
+    "j.vco1_fm2": {
+      "init": 0,
+      "vco1.fm2=2.5": 3,
+      "vco1.fm2=5": 12,
+      "vco1.fm2=7.5": 27,
+      "vco1.fm2=10": 48
+    },
+    "j.vco2_shape": {
+      "init": 0,
+      "vco2.shapeMod=2.5": 0.1125,
+      "vco2.shapeMod=5": 0.225,
+      "vco2.shapeMod=7.5": 0.3375,
+      "vco2.shapeMod=10": 0.45
+    },
+    "j.vco2_fm1": {
+      "init": 0,
+      "vco2.fm1=2.5": 3,
+      "vco2.fm1=5": 12,
+      "vco2.fm1=7.5": 27,
+      "vco2.fm1=10": 48
+    },
+    "j.vco2_fm2": {
+      "init": 0,
+      "vco2.fm2=2.5": 3,
+      "vco2.fm2=5": 12,
+      "vco2.fm2=7.5": 27,
+      "vco2.fm2=10": 48
+    },
+    "j.aux": {
+      "init": 0,
+      "mix.aux=2.5": 0.09473228540689989,
+      "mix.aux=5": 0.3077861033362291,
+      "mix.aux=7.5": 0.61320282613276,
+      "mix.aux=10": 1
+    },
+    "j.vcf_fm1": { "init": 0, "vcf.fm1=2.5": 2, "vcf.fm1=5": 4, "vcf.fm1=7.5": 6, "vcf.fm1=10": 8 },
+    "j.vcf_fm2": { "init": 0, "vcf.fm2=2.5": 2, "vcf.fm2=5": 4, "vcf.fm2=7.5": 6, "vcf.fm2=10": 8 },
+    "j.vca_am1": {
+      "init": 1,
+      "vca.am1=0": 0,
+      "vca.am1=2.5": 0.25,
+      "vca.am1=5": 0.5,
+      "vca.am1=7.5": 0.75
+    },
+    "j.vca_am2": {
+      "init": 0,
+      "vca.am2=2.5": 0.25,
+      "vca.am2=5": 0.5,
+      "vca.am2=7.5": 0.75,
+      "vca.am2=10": 1
+    }
+  },
+  "hears": {}
+}

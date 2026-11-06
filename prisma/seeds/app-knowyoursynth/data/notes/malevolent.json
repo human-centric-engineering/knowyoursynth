@@ -1,0 +1,50 @@
+{
+  "synth": "malevolent",
+  "unusual": [
+    {
+      "target": "vco1",
+      "text": "There is no waveform switch: three buttons add the VCO’s saw, triangle and pulse to its OUT and to the mixer, in any mix. The VCO’s mixer LEVEL sits in its own section, and the MIXER has only the noise and AUX."
+    },
+    {
+      "target": "vcf",
+      "text": "In place of a mode switch the filter has three inputs, LOW PASS, BAND PASS and HIGH PASS, into one output. Different sources can be filtered differently at once, and one source into two inputs gives a blend of the two responses."
+    },
+    {
+      "target": "j.vco1_fm1",
+      "text": "Every input prints, in green, the source it is normalled to, and each has its own depth knob. With no cables the LFO and the envelopes already reach almost everything, at those knobs; a cable replaces the printed source."
+    },
+    {
+      "target": "vca.am1",
+      "text": "There is no VCA envelope switch: the loudness is Envelope 2 through AM 1 and its knob. With AM 1 at 0 and the switch on GATED, nothing is heard."
+    },
+    {
+      "target": "joy.x",
+      "text": "The joystick stands in for both wheels: left and right bend, up is glide or, with VIBRATO lit, vibrato from a 5 Hz LFO of its own, and down holds; a click latches the hold."
+    },
+    {
+      "target": "j.out",
+      "text": "The OUT on the top panel is the VCA at full level for modular gear. MASTER VOL sets only the line and headphone outputs on the back."
+    },
+    {
+      "target": "vcf.res",
+      "text": "The resonance makes the filter whistle on its own early in the knob’s travel, so the filter can be played as a sine with the VCOs turned down."
+    }
+  ],
+  "limits": {
+    "intro": "The voice is modelled as it is wired: both VCOs with their three wave buttons, separate wave outputs, SHAPE and SHAPE MOD and both FM inputs; the noise and AUX; the filter with its three inputs, both FM inputs, CUT OFF and RESONANCE; both ADSRs with their own gates; the VCA with DRIVE, AM 1, AM 2 and DRONE / GATED; the LFO; every normal printed on the panel; the keyboard’s pitch, velocity and gate outputs; the arpeggiator; and the joystick’s bend, glide, vibrato and hold.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "The arpeggiator’s six orders and its range, set on the hardware by holding ARP and circling the joystick or pressing OCTAVE: here it always plays upwards over one octave. The OCTAVE buttons: use the on-screen keyboard’s own. HOLD and the joystick held down hold the arpeggio only, not played notes. CLOCK IN and CLOCK OUT, MIDI, the MIDI channel, local off, the octave-stretch tuning routine and the reset. The FILTER, ENV 2 and octave lights."
+      },
+      {
+        "title": "Simplified here",
+        "text": "SHAPE changes the pulse width only; the guide calls it pulse width or wave shape and says no more. DRIVE is the app’s overdrive in front of the VCA, so VCA INPUT is patched in ahead of it. The vibrato LFO is a 5 Hz sine, and the reviews’ observation that bend stops working with VIBRATO on is not copied. The pitch bend reaches ±2 semitones: how the hardware’s bend range is set is not documented."
+      },
+      {
+        "title": "The circuit is approximated",
+        "text": "PWM documents no voltage ranges, envelope or LFO times or knob laws, so every range here is this app’s estimate: COARSE ±4 octaves and FINE ±1 semitone, SHAPE from a 5 % to a 95 % pulse, FM up to 4 octaves on the VCOs and 8 on the filter, the LFO 0.05 Hz to 100 Hz, ATTACK 1 ms to 10 s, DECAY and RELEASE 3 ms to 10 s, CUT OFF 20 Hz to 20 kHz, and glide up to 2 s. The filter is the app’s 2-pole state-variable filter, not the opto-FET Sallen-Key circuit."
+      }
+    ]
+  }
+}

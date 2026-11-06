@@ -1472,6 +1472,15 @@ export interface NoiseParams {
 /** An envelope signal a filter or VCA can follow; `env1v` / `env2v` are scaled by key velocity. */
 export type EnvSignal = 'env1' | 'env2' | 'env1v' | 'env2v';
 
+/**
+ * The main filter. Its input is dest `vcfIn`; its outputs are signals `vcf1` (`mode`) and `vcf2` (`mode2`).
+ *
+ * The SVF also has a band-pass and a high-pass input, dests `vcfBpIn` and `vcfHpIn`, with no normal (the PWM
+ * Malevolent's three filter inputs). Once either has a source, the one filter core takes all three, and `vcf1` and
+ * `vcf2` both carry LP(`vcfIn`) + BP(`vcfBpIn`) + HP(`vcfHpIn`), whatever `mode` and `mode2` say: one resonance, which
+ * self-oscillates once, at one level. Each input is soft-clipped on its way in, as `vcfIn` always is, and the `hpf`
+ * stage stays in front of `vcfIn` only. With neither in use the filter is exactly as before. The ladder ignores both.
+ */
 export interface FilterParams {
   type: 'ladder' | 'svf';
   /** `'morph'` (SVF only): low-pass fading into high-pass by `morph`, notch halfway. */

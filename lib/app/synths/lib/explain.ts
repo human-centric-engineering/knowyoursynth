@@ -189,6 +189,8 @@ for (const n of [1, 2, 3]) for (const w of Object.keys(WAVE_WORD)) AUDIO_STAGE[`
 const IN_STAGE: Record<string, number | undefined> = {
   extIn: 1,
   vcfIn: 2,
+  vcfBpIn: 2,
+  vcfHpIn: 2,
   odIn: 3,
   vcaIn: 4,
   delayIn: 5,
@@ -235,6 +237,8 @@ const GROUP: Record<string, string | undefined> = {
   lvl2: 'level',
   extIn: 'audioIn',
   vcfIn: 'audioIn',
+  vcfBpIn: 'audioIn',
+  vcfHpIn: 'audioIn',
   odIn: 'audioIn',
   vcaIn: 'audioIn',
   delayIn: 'audioIn',
@@ -243,6 +247,8 @@ const GROUP: Record<string, string | undefined> = {
 /** Inside-the-synth destinations, in running text, for routes that no single jack names. A SynthDef may override with `destNames`. */
 const DEST_NAMES: Record<string, string | undefined> = {
   vcfIn: 'the filter input',
+  vcfBpIn: 'the filter’s band-pass input',
+  vcfHpIn: 'the filter’s high-pass input',
   vcaIn: 'the amplifier input',
   delayIn: 'the delay input',
   cutoff: 'the filter cutoff',
@@ -902,11 +908,14 @@ function hearAudioIn(ctx: Ctx, _a: OutputJack, b: InputJack, x: JackHearContext)
       ? ` ${cap(x.normal)} is disconnected from ${into} while the cable is in.`
       : '';
   if (x.kind === 'none') return `Nothing: no signal is on this cable yet.${lost}`;
+  const mmIn = dest === 'vcfBpIn' ? 'band-pass' : dest === 'vcfHpIn' ? 'high-pass' : null;
+  if (mmIn && ep.filter.type !== 'svf')
+    return `Nothing: this filter has no separate ${mmIn} input, so the cable changes nothing.`;
   if (x.kind !== 'audio' && x.kind !== 'noise' && x.kind !== 'fast' && dest === 'extIn') {
     return `${cap(x.src)} is a slow control signal, not a sound, and this input only adds to the mixer, so the oscillators carry on as normal. What you get is a click or thump each time the signal jumps: an envelope with an instant attack puts a thump on the front of every note. The level knob for this input sets how hard.${lost}`;
   }
   if (x.kind !== 'audio' && x.kind !== 'noise' && x.kind !== 'fast') {
-    const res = dest === 'vcfIn' ? ep.filter.res : 0;
+    const res = dest === 'vcfIn' || mmIn ? ep.filter.res : 0;
     const rings =
       res >= 0.98
         ? ' With resonance this high the filter rings on its own, and each click sets it ringing, so the filter itself becomes the sound source.'
@@ -939,7 +948,14 @@ function hearAudioIn(ctx: Ctx, _a: OutputJack, b: InputJack, x: JackHearContext)
     skipped.length && !mixIn && !b.add
       ? ` The signal skips ${list(skipped)}, so ${skipped.length > 1 ? 'their' : 'its'} controls no longer affect it.`
       : '';
-  const after = dest === 'vcaIn' ? ' It is still shaped by the loudness envelope.' : '';
+  const after =
+    dest === 'vcaIn'
+      ? ' It is still shaped by the loudness envelope.'
+      : mmIn === 'band-pass'
+        ? ' It comes out band-passed, only the band around the cutoff, added to what the filter’s other inputs give.'
+        : mmIn === 'high-pass'
+          ? ' It comes out high-passed, its low end cut below the cutoff, added to what the filter’s other inputs give.'
+          : '';
   return `${first}${skip}${after}`;
 }
 

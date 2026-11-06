@@ -612,6 +612,53 @@ describe('explainCable: audio-reroute group and feedback detection', () => {
   });
 });
 
+describe('explainCable: the SVF’s band-pass and high-pass inputs', () => {
+  /** The Mini D with BP IN and HP IN jacks beside VCF IN, and its filter an SVF (`type`) or its own ladder. */
+  const withMmInputs = (type: 'svf' | 'ladder'): SynthDef => {
+    const base = makeMiniD();
+    const vcfIn = base.jacks.find((j) => j.id === 'vcf.in');
+    if (!vcfIn || vcfIn.dir !== 'in') throw new Error('the Mini D has no VCF IN');
+    const mm = (id: string, dest: string, label: string): Jack => ({ ...vcfIn, id, dest, label });
+    return makeMiniD({
+      jacks: [
+        ...base.jacks,
+        mm('vcfbp.in', 'vcfBpIn', 'BP IN'),
+        mm('vcfhp.in', 'vcfHpIn', 'HP IN'),
+      ],
+      toEngine: (v) => {
+        const e = miniToEngine(v);
+        return { ...e, filter: { ...e.filter, type } };
+      },
+    });
+  };
+
+  it('says the signal reaches the filter and comes out band-passed or high-passed, on top of the other inputs', () => {
+    const def = withMmInputs('svf');
+    const bp = explainCable(def, 'noise.out', 'vcfbp.in', def.init, []);
+    expect(bp?.kind).toBe('Audio re-route');
+    expect(bp?.hear).toContain('The filter now hears noise.');
+    expect(bp?.hear).toContain('It comes out band-passed, only the band around the cutoff');
+    const hp = explainCable(def, 'noise.out', 'vcfhp.in', def.init, []);
+    expect(hp?.hear).toContain('It comes out high-passed, its low end cut below the cutoff');
+  });
+
+  it('warns that a slow signal only pings the resonant filter, as at its main input', () => {
+    const def = withMmInputs('svf');
+    const v = { ...def.init, 'filter.emphasis': 10 };
+    const r = explainCable(def, 'lfo.tri', 'vcfhp.in', v, []);
+    expect(r?.hear).toContain('is a slow control signal, not a sound. Fed into the filter');
+    expect(r?.hear).toContain('With resonance this high the filter rings on its own');
+  });
+
+  it('says a cable changes nothing on a ladder, which has no such inputs', () => {
+    const def = withMmInputs('ladder');
+    const r = explainCable(def, 'noise.out', 'vcfbp.in', def.init, []);
+    expect(r?.hear).toBe(
+      'Nothing: this filter has no separate band-pass input, so the cable changes nothing.'
+    );
+  });
+});
+
 describe('explainCable: utility group (self-loop through an attenuator)', () => {
   it('a utility output fed back into its own input reads as a loop, with an empty "does"', () => {
     const def = makeMiniD();
