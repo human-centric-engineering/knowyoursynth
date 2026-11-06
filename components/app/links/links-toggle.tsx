@@ -7,13 +7,17 @@
  * History → Heard on. The button says how many there are, from the page's own data (`LinkSummary`). Pressed, the list
  * is read from `GET /api/v1/links`, once (the order is a fresh draw on each read, so closing and opening again keeps
  * it), and the cards open under it: `LinkCard`'s, click to embed. It reads on the press rather than when drawn, so a
- * Heard on list of many records makes no request until one is asked for. Nothing is shown for a target with none.
+ * Heard on list of many records makes no request until one is asked for.
+ *
+ * Under the cards, **Suggest a link** (`f-link-suggestions` t-186) for whatever `suggest` names. A target with no links
+ * shows only that, so the first one can be suggested; with nothing to suggest for either, nothing is shown.
  */
 
 import { useId, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
 import { LinkCard } from '@/components/app/links/link-card';
+import { SuggestLink, type SuggestTarget } from '@/components/app/links/suggest-link';
 import {
   LINKS_API,
   kindsOf,
@@ -27,8 +31,10 @@ import type { LinkSummary } from '@/lib/app/links/read';
 export interface LinksToggleProps {
   target: LinksTarget;
   id: string;
-  /** Its links, counted; absent or none, nothing is drawn. */
+  /** Its links, counted; absent or none, only the suggestion is drawn, if there is one. */
   summary: LinkSummary | undefined;
+  /** What a link suggested here is about: the target itself. */
+  suggest?: readonly SuggestTarget[];
   /** What the button says before the count: "Watch and listen". */
   label: string;
   /** Told when it opens and closes, for a container that makes room for the cards. */
@@ -43,6 +49,7 @@ export function LinksToggle({
   id,
   summary,
   label,
+  suggest = [],
   onOpenChange,
   className = '',
 }: LinksToggleProps) {
@@ -50,7 +57,8 @@ export function LinksToggle({
   const [load, setLoad] = useState<Load>({ state: 'idle' });
   const bodyId = useId();
 
-  if (!summary?.count) return null;
+  if (!summary?.count)
+    return <SuggestLink targets={suggest} onOpenChange={onOpenChange} className={className} />;
 
   const read = async () => {
     setLoad({ state: 'loading' });
@@ -119,6 +127,7 @@ export function LinksToggle({
           ) : (
             <p className="text-sm text-(--kys-muted)">There are none to show now.</p>
           ))}
+        <SuggestLink targets={suggest} className="mt-3" />
       </div>
     </div>
   );

@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 import { SharedSettingsReadOnlyNotice } from '@/components/admin/shared-settings-access';
 import {
   LINK_OWNER_KINDS,
+  LINK_SUGGESTIONS_PATH,
   LINKS_ADMIN_PATH,
   LINKS_API,
   readLinks,
@@ -92,7 +94,12 @@ export default async function LinksAdminPage({ searchParams }: Props) {
             </p>
           </FieldHelp>
         </h1>
-        <p className="text-muted-foreground text-sm">Newest edit first. Filter, add or edit one.</p>
+        <p className="text-muted-foreground text-sm">
+          Newest edit first. Filter, add or edit one.{' '}
+          <Link href={LINK_SUGGESTIONS_PATH} className="underline">
+            Links users suggested ›
+          </Link>
+        </p>
       </header>
 
       <SharedSettingsReadOnlyNotice />

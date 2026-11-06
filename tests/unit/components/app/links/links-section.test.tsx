@@ -11,7 +11,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 
 const get = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api/client', () => ({ apiClient: { get } }));
+const post = vi.hoisted(() => vi.fn());
+vi.mock('@/lib/api/client', () => ({ apiClient: { get, post } }));
+// Suggest a link (`f-link-suggestions` t-186) asks whether someone is signed in.
+vi.mock('@/lib/auth/client', () => ({
+  useSession: () => ({ data: { user: { id: 'user-1' } }, isPending: false }),
+}));
 
 import { LinksSection } from '@/components/app/links/links-section';
 import { embedUrl, type LinkProvider } from '@/lib/app/links/providers';
@@ -198,5 +203,49 @@ describe('LinksSection', () => {
       <LinksSection target="synth" id="model-d" summary={{ count: 0, kinds: [] }} />
     );
     expect(container.innerHTML).toBe('');
+  });
+
+  describe('Suggest a link', () => {
+    const MINIMOOG = { kind: 'instrument' as const, id: 'moog-minimoog', name: 'Minimoog Model D' };
+    const VIDEO = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+    const sendFor = async () => {
+      fireEvent.change(screen.getByLabelText(/^Address/, { selector: 'input' }), {
+        target: { value: VIDEO },
+      });
+      fireEvent.click(screen.getByRole('button', { name: 'Send suggestion' }));
+      await screen.findByRole('status');
+      return post.mock.calls[0]?.[1];
+    };
+
+    beforeEach(() => {
+      post.mockReset();
+      post.mockResolvedValue({ id: 'lsug-1' });
+    });
+
+    it("is all that is drawn under a panel with no links, for the synth's instrument", async () => {
+      render(
+        <LinksSection
+          target="synth"
+          id="model-d"
+          summary={{ count: 0, kinds: [] }}
+          suggest={[MINIMOOG]}
+        />
+      );
+      expect(screen.queryByRole('button', { name: /Videos and links/ })).toBeNull();
+      expect(get).not.toHaveBeenCalled();
+      fireEvent.click(screen.getByRole('button', { name: 'Suggest a link' }));
+      expect(await sendFor()).toEqual({
+        body: { target: { kind: 'instrument', id: 'moog-minimoog' }, url: VIDEO, kind: 'demo' },
+      });
+    });
+
+    it('sits under the list, inert with it until the section is opened', async () => {
+      render(<LinksSection target="synth" id="model-d" summary={summary} suggest={[MINIMOOG]} />);
+      await waitFor(() => expect(get).toHaveBeenCalled());
+      const suggest = screen.getByRole('button', { name: 'Suggest a link', hidden: true });
+      expect(suggest.closest('[inert]')).not.toBeNull();
+      fireEvent.click(screen.getByRole('button', { name: /Videos and links/ }));
+      expect(suggest.closest('[inert]')).toBeNull();
+    });
   });
 });

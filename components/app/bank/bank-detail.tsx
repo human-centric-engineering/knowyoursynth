@@ -338,7 +338,13 @@ export function ArtistPage({
       <p className="mt-4 max-w-[70ch] text-[15px] leading-relaxed text-(--kys-text)/90">
         {a.story}
       </p>
-      <LinksSection target="artist" id={a.id} summary={links} className="mt-6" />
+      <LinksSection
+        target="artist"
+        id={a.id}
+        summary={links}
+        suggest={[{ kind: 'artist', id: a.id, name: a.name }]}
+        className="mt-6"
+      />
       <Innovations title="What they did differently" items={a.innovations} />
       {/* The prototype put both under one heading, which mislabels a group that is also in a group. */}
       {d.members.length > 0 && (
@@ -451,7 +457,13 @@ export function SongPage({
         {s.credit && <span className="text-(--kys-muted)">{s.credit} — </span>}
         <Credits ids={s.artists} names={names} strong />
       </p>
-      <LinksSection target="song" id={s.id} summary={links} className="mt-6" />
+      <LinksSection
+        target="song"
+        id={s.id}
+        summary={links}
+        suggest={[{ kind: 'song', id: s.id, name: s.title }]}
+        className="mt-6"
+      />
       <div className="mt-4 max-w-[70ch]">
         {s.parts.map((p, k) => (
           <Part key={k} p={p} names={names} />
@@ -494,7 +506,13 @@ export function InstrumentPage({
           <AppLinks synths={d.synths} names={names} />
         </div>
       )}
-      <LinksSection target="instrument" id={i.id} summary={links} className="mt-6" />
+      <LinksSection
+        target="instrument"
+        id={i.id}
+        summary={links}
+        suggest={[{ kind: 'instrument', id: i.id, name: i.name }]}
+        className="mt-6"
+      />
       {d.people.length > 0 && (
         <Section title="The people behind it">
           <PeopleChips tab="makers" people={d.people} />

@@ -4,19 +4,20 @@ Demos, reviews, recordings and lessons on YouTube, Vimeo, Spotify, Bandcamp and 
 attached to the things they are about. Admin-managed. Hub feature `f-videos-and-links` (§40). Suggestions from
 users and links on users' own sounds are `f-link-suggestions` (§41): suggestions are below (Suggestions).
 
-| Piece                       | Where                                            | Task  |
-| --------------------------- | ------------------------------------------------ | ----- |
-| Table                       | `ExternalLink` in `prisma/schema/app.prisma`     | t-179 |
-| Parsing, embeds, thumbnails | `lib/app/links/providers.ts`                     | t-179 |
-| Order                       | `lib/app/links/order.ts`                         | t-179 |
-| Owners                      | `lib/app/links/owner.ts`, `owner-ref.ts`         | t-179 |
-| Admin writes                | `lib/app/links/admin.ts`, `admin-route.ts`       | t-179 |
-| Public read                 | `lib/app/links/read.ts`                          | t-179 |
-| Titles, thumbnails, views   | `details.ts`, `stats.ts`, `fetch.ts`             | t-180 |
-| Admin pages                 | `components/app/admin/links/`                    | t-181 |
-| Under the panel, `/bank`    | `components/app/links/`, `lib/app/csp.ts`        | t-182 |
-| Patches and History         | `links-toggle.tsx`, `summariseSoundLinks`        | t-183 |
-| Suggestions                 | `LinkSuggestion`, `lib/app/links/suggestions.ts` | t-185 |
+| Piece                       | Where                                                  | Task  |
+| --------------------------- | ------------------------------------------------------ | ----- |
+| Table                       | `ExternalLink` in `prisma/schema/app.prisma`           | t-179 |
+| Parsing, embeds, thumbnails | `lib/app/links/providers.ts`                           | t-179 |
+| Order                       | `lib/app/links/order.ts`                               | t-179 |
+| Owners                      | `lib/app/links/owner.ts`, `owner-ref.ts`               | t-179 |
+| Admin writes                | `lib/app/links/admin.ts`, `admin-route.ts`             | t-179 |
+| Public read                 | `lib/app/links/read.ts`                                | t-179 |
+| Titles, thumbnails, views   | `details.ts`, `stats.ts`, `fetch.ts`                   | t-180 |
+| Admin pages                 | `components/app/admin/links/`                          | t-181 |
+| Under the panel, `/bank`    | `components/app/links/`, `lib/app/csp.ts`              | t-182 |
+| Patches and History         | `links-toggle.tsx`, `summariseSoundLinks`              | t-183 |
+| Suggestions                 | `LinkSuggestion`, `lib/app/links/suggestions.ts`       | t-185 |
+| Suggest a link, the queue   | `suggest-link.tsx`, `admin/links/suggestion-queue.tsx` | t-186 |
 
 ## Don't
 
@@ -195,7 +196,9 @@ Tests pass a seeded `random`.
 
 A public link carries `id, url, provider, kind, title, thumbnailUrl, embedUrl, ours, views, via` (`via` is null except
 on a patch's inherited links). An admin link adds
-`owner { kind, id, name }, providerId, order, rating, likes, statsAt, createdAt, updatedAt`.
+`owner { kind, id, name }, providerId, order, rating, likes, statsAt, createdAt, updatedAt, suggestedBy`.
+`suggestedBy` is `{ name }` for a link an accepted suggestion made (`name` null once that account is erased), else null
+(`withSuggesters`, t-186). The list, one link and a `PATCH` read it; a create, a delete and a reorder answer null.
 
 Admin rules (`lib/app/links/admin.ts`, each tested):
 
@@ -251,7 +254,9 @@ Admin rules (`lib/app/links/admin.ts`, each tested):
 - **The form** (`link-form.tsx`): paste an address and press Read (`/resolve`). The address becomes its stored form,
   and an empty title is filled with the provider's, for the admin to confirm. A new link may leave the title empty
   (the server asks the provider again); an edit may not. The server parses the URL again on save, so Read is only a
-  preview.
+  preview. Editing a link that came from a suggestion says "Suggested by <name>".
+- **`/admin/synths/links/suggestions`** (t-186), linked from the Videos and links page, which keeps its sidebar item
+  lit: the suggestion queue. See Suggestions.
 
 Not in the catalogue's JSON upload or download, which is content-only (owner ruling on `f-catalogue-admin`).
 Database backups cover links.
@@ -292,3 +297,20 @@ Rules (`lib/app/links/suggestions.ts`, each tested):
   can mark it afterwards. The suggester is not credited publicly.
 - Audited as `link_suggestion.accept|decline`, recording status, `linkId` and reason. The decide route passes
   `writesSharedSettings: true`, because an accept writes a link.
+
+### Where users suggest, and where admins decide (t-186)
+
+- **Suggest a link** (`components/app/links/suggest-link.tsx`): under the list in the section under the panel and on
+  `/bank` instrument, record and artist pages (`LinksSection`), and under the cards of a library patch's lesson and
+  of each History → Heard on row (`LinksToggle`). **Where there are none yet it is shown on its own**, so the first
+  link can be suggested; a sound of the user's own, a shared one or the Default patch has none to suggest for.
+- **Under a panel it is about the databank instrument**, since a synth's videos are its instruments'
+  (`SynthDetail.instruments`, from the synth's `bankInstruments`). A synth modelling several asks which.
+- Signed out, it offers **sign-in back to this page, its query included** (`window.location`, read after hydration:
+  the server renders plain `/login`). Checked in the browser with `LinkSuggestionInputSchema` first. A 409 and a 400
+  are shown on the address in the server's words; a 429 says to wait; a 404 says it is no longer there.
+- **The queue** (`/admin/synths/links/suggestions`, `suggestion-queue.tsx`): tabs per status (`?status=`, pending by
+  default). Each row names its suggester (or "an erased account") and its target, linked to the target's editor
+  (`ownerAdminPath`). **Approve** opens `LinkForm` with the suggestion: owner and address fixed (Read still previews
+  it), kind and title from the user, no Ours or Rating (an accepted link is never ours); saving is the decide route's
+  `accept`. A target since removed cannot be approved, only declined. **Decline** asks for a reason.

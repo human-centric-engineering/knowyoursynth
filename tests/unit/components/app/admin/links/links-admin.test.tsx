@@ -75,6 +75,7 @@ function link(over: Partial<AdminLinkView> & { id: string }): AdminLinkView {
     statsAt: null,
     createdAt: '2026-11-01T00:00:00.000Z',
     updatedAt: '2026-11-01T00:00:00.000Z',
+    suggestedBy: null,
     ...over,
   };
 }

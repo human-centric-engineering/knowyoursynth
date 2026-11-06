@@ -14,7 +14,13 @@ import { successResponse } from '@/lib/api/responses';
 import { validatePathParam, validateRequestBody } from '@/lib/api/validation';
 import { cuidSchema } from '@/lib/validations/common';
 import { getRouteLogger } from '@/lib/api/context';
-import { deleteLink, getAdminLink, LinkUpdateSchema, updateLink } from '@/lib/app/links/admin';
+import {
+  deleteLink,
+  getAdminLink,
+  LinkUpdateSchema,
+  updateLink,
+  withSuggesters,
+} from '@/lib/app/links/admin';
 import { auditLink, LINKS_ADMIN } from '@/lib/app/links/admin-route';
 
 export const GET = withAdminAuth<{ id: string }>(async (_request, _session, { params }) => {
@@ -32,7 +38,9 @@ export const PATCH = withAdminAuth<{ id: string }>(
     const { before, after, changed } = await updateLink(id, body);
     if (changed) auditLink(request, session.user.id, { action: 'update', before, after });
     log.info('Link saved by admin', { linkId: id, changed, actorUserId: session.user.id });
-    return successResponse(after);
+    // The edited link is shown in place of the one the editor had, so it keeps saying who suggested it.
+    const [shown] = await withSuggesters([after]);
+    return successResponse(shown ?? after);
   },
   { ...LINKS_ADMIN, writesSharedSettings: true }
 );

@@ -7,11 +7,15 @@
 import { z } from 'zod';
 
 import { LINK_KINDS, LINK_PROVIDERS, type LinkProvider } from '@/lib/app/links/providers';
+import { LINK_SUGGESTION_STATUSES } from '@/lib/app/links/suggestion-data';
 // Type only: `owner.ts` holds the database client.
 import type { OwnerKind, OwnerRef } from '@/lib/app/links/owner';
 
 export const LINKS_ADMIN_PATH = '/admin/synths/links';
 export const LINKS_API = '/api/v1/admin/links';
+/** The queue of links users suggested (`f-link-suggestions` t-186), under Videos and links. */
+export const LINK_SUGGESTIONS_PATH = `${LINKS_ADMIN_PATH}/suggestions`;
+export const LINK_SUGGESTIONS_API = `${LINKS_API}/suggestions`;
 
 export const LINK_OWNER_KINDS = [
   'instrument',
@@ -53,6 +57,9 @@ export const AdminLinkSchema = z.object({
   statsAt: z.string().nullable(),
   createdAt: z.string(),
   updatedAt: z.string(),
+  // From an accepted suggestion (t-186): who made it, `name` null once their account is erased. One that does not read
+  // is left off rather than hiding the link.
+  suggestedBy: z.object({ name: z.string().nullable() }).nullable().catch(null),
 });
 export type AdminLinkView = z.infer<typeof AdminLinkSchema>;
 
@@ -72,6 +79,36 @@ export const LinkSuggestionSchema = z.object({
   thumbnailUrl: z.string().nullable(),
 });
 export type LinkSuggestionView = z.infer<typeof LinkSuggestionSchema>;
+
+/** One suggestion in the queue (`GET /api/v1/admin/links/suggestions`, t-185). */
+export const SuggestedLinkSchema = z.object({
+  id: z.string(),
+  target: z.object({
+    kind: z.enum(LINK_OWNER_KINDS),
+    id: z.string(),
+    name: z.string().nullable(),
+  }),
+  url: z.string(),
+  kind: z.enum(LINK_KINDS),
+  title: z.string().nullable(),
+  note: z.string().nullable(),
+  status: z.enum(LINK_SUGGESTION_STATUSES),
+  linkId: z.string().nullable(),
+  reason: z.string().nullable(),
+  decidedAt: z.string().nullable(),
+  createdAt: z.string(),
+  suggestedBy: z.string().nullable(),
+});
+export type SuggestedLinkView = z.infer<typeof SuggestedLinkSchema>;
+
+/** A queue answer, keeping each suggestion that reads and dropping any that does not. */
+export function readSuggestedLinks(data: unknown): SuggestedLinkView[] {
+  if (!Array.isArray(data)) return [];
+  return data.flatMap((row) => {
+    const parsed = SuggestedLinkSchema.safeParse(row);
+    return parsed.success ? [parsed.data] : [];
+  });
+}
 
 /** The query that lists one owner's links: `?instrument=moog-minimoog`, `?sound=model-d/stacked-night-bass`. */
 export function ownerQuery(owner: OwnerRef): Record<string, string> {

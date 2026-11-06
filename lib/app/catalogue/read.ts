@@ -75,6 +75,11 @@ export interface SynthDetail {
    * is not in it. The list is `GET /api/v1/links?sound=<synth>/<slug>`.
    */
   soundLinks: Record<string, LinkSummary>;
+  /**
+   * The databank instruments it models, by id: what a link suggested from under its panel is about, since its videos
+   * are theirs (`f-link-suggestions` t-186). Every synth has at least one.
+   */
+  instruments: { id: string; name: string }[];
 }
 
 const synthColumns = {
@@ -155,6 +160,10 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
         ...synthColumns,
         sounds: { orderBy: [{ order: 'asc' }, { slug: 'asc' }] },
         lineage: true,
+        bankInstruments: {
+          select: { instrument: { select: { id: true, name: true } } },
+          orderBy: { instrumentId: 'asc' },
+        },
       },
     }),
     prisma.synthNote.findMany({
@@ -178,7 +187,7 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
     summariseSoundLinks(id),
   ]);
   if (!row) return null;
-  const { sounds: soundRows, lineage: lineageRow, ...synthRow } = row;
+  const { sounds: soundRows, lineage: lineageRow, bankInstruments, ...synthRow } = row;
   const synth = toCatalogueSynth(synthRow, def);
 
   const sounds: CatalogueSound[] = [];
@@ -258,5 +267,6 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
       (n.synthId ? notes.limits.items : notes.limits.shared).push({ title: n.title, text: n.text });
   }
 
-  return { synth, sounds, lineage, notes, links, soundLinks };
+  const instruments = bankInstruments.map((b) => b.instrument);
+  return { synth, sounds, lineage, notes, links, soundLinks, instruments };
 }

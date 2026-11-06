@@ -45,6 +45,7 @@ const stored = (overrides: Record<string, unknown> = {}) => ({
   ...synthRow,
   sounds: storedSounds,
   lineage: storedLineage,
+  bankInstruments: [{ instrument: { id: 'moog-minimoog', name: 'Minimoog Model D' } }],
   ...overrides,
 });
 const firstModelDSound = () => {
@@ -160,6 +161,34 @@ describe('getSynthDetail', () => {
 
     expect(summariseSoundLinks).toHaveBeenCalledWith('model-d');
     expect(detail?.soundLinks).toEqual(soundLinks);
+  });
+
+  it('names the databank instruments it models, for a link suggested under its panel', async () => {
+    vi.mocked(prisma.synth.findFirst).mockResolvedValue(
+      stored({
+        bankInstruments: [
+          { instrument: { id: 'arp-odyssey', name: 'ARP Odyssey' } },
+          { instrument: { id: 'moog-minimoog', name: 'Minimoog Model D' } },
+        ],
+      }) as never
+    );
+
+    const detail = await getSynthDetail('model-d');
+
+    expect(prisma.synth.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        select: expect.objectContaining({
+          bankInstruments: {
+            select: { instrument: { select: { id: true, name: true } } },
+            orderBy: { instrumentId: 'asc' },
+          },
+        }),
+      })
+    );
+    expect(detail?.instruments).toEqual([
+      { id: 'arp-odyssey', name: 'ARP Odyssey' },
+      { id: 'moog-minimoog', name: 'Minimoog Model D' },
+    ]);
   });
 
   it('is null for an id no listed synth has', async () => {

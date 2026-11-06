@@ -16,7 +16,12 @@ import { START_STEP, defaultPatchSound, startStep } from '@/lib/app/synths/defau
 import type { Preset } from '@/lib/app/synths/contract';
 
 const get = vi.hoisted(() => vi.fn(async () => []));
-vi.mock('@/lib/api/client', () => ({ apiClient: { get } }));
+const post = vi.hoisted(() => vi.fn());
+vi.mock('@/lib/api/client', () => ({ apiClient: { get, post } }));
+// Suggest a link on a library patch (`f-link-suggestions` t-186) asks whether someone is signed in.
+vi.mock('@/lib/auth/client', () => ({
+  useSession: () => ({ data: { user: { id: 'user-1' } }, isPending: false }),
+}));
 
 const found = getSynthDef('model-d');
 if (!found) throw new Error('model-d is not registered');
@@ -309,7 +314,10 @@ describe('LessonCard step 0', () => {
 
 describe('LessonCard videos and links', () => {
   const sound = (): Preset => ({ ...defaultPatchSound(def), id: 'autobahn-lead' });
-  const card = (links?: { count: number; kinds: ('lesson' | 'original')[] }) =>
+  const card = (
+    links?: { count: number; kinds: ('lesson' | 'original')[] },
+    librarySound = false
+  ) =>
     render(
       <LessonCard
         def={def}
@@ -323,6 +331,11 @@ describe('LessonCard videos and links', () => {
         inspector={null}
         effects={null}
         links={links}
+        suggestLink={
+          librarySound
+            ? [{ kind: 'sound', id: 'model-d/autobahn-lead', name: sound().name }]
+            : undefined
+        }
       />
     );
 
@@ -342,5 +355,40 @@ describe('LessonCard videos and links', () => {
   it('offers none without links', () => {
     card();
     expect(screen.queryByRole('button', { name: /Videos and links/ })).toBeNull();
+  });
+
+  it('lets a library patch with no links be suggested one, for that patch', async () => {
+    post.mockResolvedValue({ id: 'lsug-1' });
+    card(undefined, true);
+    fireEvent.click(screen.getByRole('button', { name: 'Suggest a link' }));
+    expect(
+      screen.getByRole('heading', { name: `Suggest a link for ${sound().name}` })
+    ).toBeTruthy();
+    fireEvent.change(screen.getByLabelText(/^Address/, { selector: 'input' }), {
+      target: { value: 'https://vimeo.com/123456' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Send suggestion' }));
+
+    await screen.findByRole('status');
+    expect(post).toHaveBeenCalledWith('/api/v1/links/suggestions', {
+      body: {
+        target: { kind: 'sound', id: 'model-d/autobahn-lead' },
+        url: 'https://vimeo.com/123456',
+        kind: 'demo',
+      },
+    });
+  });
+
+  it('offers a suggestion under the cards of a library patch with links', async () => {
+    card({ count: 2, kinds: ['lesson', 'original'] }, true);
+    expect(screen.queryByRole('button', { name: 'Suggest a link' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: /Videos and links/ }));
+    await screen.findByText('There are none to show now.');
+    expect(screen.getByRole('button', { name: 'Suggest a link' })).toBeTruthy();
+  });
+
+  it('offers no suggestion for a sound that is not a library patch', () => {
+    card();
+    expect(screen.queryByRole('button', { name: 'Suggest a link' })).toBeNull();
   });
 });

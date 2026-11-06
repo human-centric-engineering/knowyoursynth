@@ -13,7 +13,7 @@
  * - decline needs a reason; a suggestion is decided once, including when two admins decide it at the same moment.
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import type { NextRequest } from 'next/server';
+import { NextRequest } from 'next/server';
 import { INSTALL_ORG_ID } from '@/lib/tenancy/constants';
 
 const mockEnv = vi.hoisted(() => ({ TENANCY_MODE: 'single' }));
@@ -50,6 +50,8 @@ vi.mock('@/lib/app/links/stats', () => ({ statsForVideo: mockStats }));
 import { POST as suggest } from '@/app/api/v1/links/suggestions/route';
 import { GET as listQueue } from '@/app/api/v1/admin/links/suggestions/route';
 import { POST as decide } from '@/app/api/v1/admin/links/suggestions/[id]/route';
+import { GET as listLinks } from '@/app/api/v1/admin/links/route';
+import { GET as getLink, PATCH as patchLink } from '@/app/api/v1/admin/links/[id]/route';
 import { linkSuggestionLimiter, linkSuggestionLimitKey } from '@/lib/app/links/suggestions';
 import { createMockAuthSession } from '@/tests/helpers/auth';
 import { linksStore, type LinksStore } from '@/tests/helpers/links-store';
@@ -90,8 +92,13 @@ const auditActions = () =>
 /** The suggestions table in memory: what `lib/app/links/suggestions.ts` calls, with `updateMany` honouring its filter. */
 function suggestionTable() {
   const rows: Row[] = [];
+  // Equality, or `{ in: [...] }` as the admin links read asks for the links' suggestions (t-186).
   const matches = (row: Row, where: Row = {}) =>
-    Object.entries(where).every(([k, v]) => row[k] === v);
+    Object.entries(where).every(([k, v]) =>
+      v !== null && typeof v === 'object' && 'in' in v && Array.isArray(v.in)
+        ? v.in.includes(row[k])
+        : row[k] === v
+    );
   let n = 0;
   return {
     rows,
@@ -473,6 +480,58 @@ describe('accept', () => {
       handBack,
       { suggestionId: id }
     );
+  });
+});
+
+describe('the admin link names who suggested it (t-186)', () => {
+  // The list reads its query from `nextUrl`, so it takes a real NextRequest.
+  const listAll = async () =>
+    (await json(await listLinks(new NextRequest('http://localhost/api/v1/admin/links')))).data;
+  const readOne = async (linkId: string) =>
+    (await json(await getLink(request('GET', `/api/v1/admin/links/${linkId}`), ctx(linkId)))).data;
+
+  it('in the list, one link and an edit; an admin’s own link says nobody', async () => {
+    const id = await suggestOne();
+    await decision(id, { action: 'accept' });
+    const linkId = store.links[0].id as string;
+    await suggestOne({
+      target: { kind: 'instrument', id: 'arp-odyssey' },
+      url: 'https://vimeo.com/123456',
+    });
+    // Declined: no link came from it, so nothing names its suggester.
+    await decision(suggestions.rows[1].id as string, { action: 'decline', reason: 'Not this' });
+
+    const list = await listAll();
+    expect(list).toHaveLength(1);
+    expect(list?.[0]).toMatchObject({ id: linkId, suggestedBy: { name: 'Dana Owner' } });
+    expect(await readOne(linkId)).toMatchObject({ suggestedBy: { name: 'Dana Owner' } });
+
+    const edited = await patchLink(
+      request('PATCH', `/api/v1/admin/links/${linkId}`, { title: 'Renamed' }),
+      ctx(linkId)
+    );
+    expect((await json(edited)).data).toMatchObject({
+      title: 'Renamed',
+      suggestedBy: { name: 'Dana Owner' },
+    });
+  });
+
+  it('says the suggester has no name once their account is erased', async () => {
+    const id = await suggestOne();
+    await decision(id, { action: 'accept' });
+    const row = suggestion(id);
+    if (row) row.userId = null;
+    expect(await readOne(store.links[0].id as string)).toMatchObject({
+      suggestedBy: { name: null },
+    });
+  });
+
+  it('names nobody for a link an admin added', async () => {
+    const id = await suggestOne();
+    await decision(id, { action: 'decline', reason: 'Not this' });
+    expect(store.links).toHaveLength(0);
+    const list = await listAll();
+    expect(list).toEqual([]);
   });
 });
 

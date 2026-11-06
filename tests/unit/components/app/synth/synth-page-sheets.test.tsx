@@ -180,6 +180,7 @@ const detail: SynthDetail = {
   },
   links: { count: 0, kinds: [] },
   soundLinks: {},
+  instruments: [],
 };
 
 function page(over: Partial<SynthPageProps> = {}) {

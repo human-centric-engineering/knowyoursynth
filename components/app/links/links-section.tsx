@@ -9,13 +9,17 @@
  * (on the head, or on what shows through) opens the whole list. While closed, the cards are `inert`: what shows
  * through is a preview to open, not something to play. The list is read from `GET /api/v1/links` once, when the
  * section is drawn: the order is a fresh draw on each read, so closing and opening again keeps it. Ours come first, as
- * the API orders them; each card says its kind. Nothing is shown for a target with none.
+ * the API orders them; each card says its kind.
+ *
+ * Under the list, **Suggest a link** (`f-link-suggestions` t-186) for whatever `suggest` names. A target with no links
+ * shows only that, so the first one can be suggested; with nothing to suggest for either, nothing is shown.
  */
 
 import { useEffect, useId, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
 import { LinkCard } from '@/components/app/links/link-card';
+import { SuggestLink, type SuggestTarget } from '@/components/app/links/suggest-link';
 import {
   LINKS_API,
   kindsOf,
@@ -30,12 +34,20 @@ export interface LinksSectionProps {
   target: LinksTarget;
   id: string;
   summary: LinkSummary;
+  /** What a link suggested here is about: the target itself, or a synth's databank instruments. */
+  suggest?: readonly SuggestTarget[];
   className?: string;
 }
 
 type Load = { state: 'loading' | 'failed' } | { state: 'ready'; links: PublicLinkView[] };
 
-export function LinksSection({ target, id, summary, className = '' }: LinksSectionProps) {
+export function LinksSection({
+  target,
+  id,
+  summary,
+  suggest = [],
+  className = '',
+}: LinksSectionProps) {
   const [open, setOpen] = useState(false);
   const [load, setLoad] = useState<Load>({ state: 'loading' });
   const bodyId = useId();
@@ -57,7 +69,12 @@ export function LinksSection({ target, id, summary, className = '' }: LinksSecti
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target, id, none]);
 
-  if (none) return null;
+  if (none)
+    return suggest.length ? (
+      <section aria-label="Videos and links" className={className}>
+        <SuggestLink targets={suggest} />
+      </section>
+    ) : null;
 
   const kinds = kindsOf(summary);
 
@@ -117,6 +134,7 @@ export function LinksSection({ target, id, summary, className = '' }: LinksSecti
             ) : (
               <p className="text-sm text-(--kys-muted)">There are none to show now.</p>
             ))}
+          <SuggestLink targets={suggest} className="mt-4" />
         </div>
       </div>
       {!open && (
