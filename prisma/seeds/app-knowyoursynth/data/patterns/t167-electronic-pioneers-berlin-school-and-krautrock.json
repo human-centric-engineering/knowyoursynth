@@ -12,6 +12,10 @@
       "reason": "An effect: a crack and a rumbling roll made from noise. There is no part to write."
     },
     {
+      "sound": "malevolent/mal-whistle",
+      "reason": "A technique: the self-oscillating filter played from the keys, with no oscillator. It names no work, and the tune is the lesson’s own."
+    },
+    {
       "sound": "syntrx-ii/syntrx-robot",
       "reason": "An effect: a buzzing, ring-modulated tone that wavers like speech. There is no part to write."
     },
