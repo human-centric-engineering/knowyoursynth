@@ -6,7 +6,10 @@
  *        the current definition, and leaves the lesson as it was. `lesson: null` removes the lesson, the one change a
  *        lesson takes. `visibility` is `private` or `link`: share by link, stop sharing, or unpublish. Publishing is
  *        `POST /api/v1/sounds/:id/publish`. `patternId` points the sound at one of the caller's patterns,
- *        which the sequencer opens on with it, and `null` clears it (`f-step-sequencer` t-81).
+ *        which the sequencer opens on with it, and `null` clears it (`f-step-sequencer` t-81). `links` replaces the
+ *        sound's videos and recordings (`f-link-suggestions` t-187): at most five, on the five named providers, each
+ *        read from its provider. A request that sends them is capped per user on top of the proxy's section cap
+ *        (`soundLinksLimiter`): over it, a 429 with the standard rate-limit headers.
  * DELETE /api/v1/sounds/:id
  *
  * Another user's sound is a 404, the same as one that does not exist, never a 403. See `lib/app/sounds/store.ts`.
@@ -15,8 +18,10 @@ import { withAuth } from '@/lib/auth/guards';
 import { getRouteLogger } from '@/lib/api/context';
 import { errorResponse, successResponse } from '@/lib/api/responses';
 import { validateRequestBody } from '@/lib/api/validation';
+import { createRateLimitResponse } from '@/lib/security/rate-limit';
 import { UpdateUserSoundSchema, UserSoundIdSchema } from '@/lib/app/sounds/data';
 import { deleteUserSound, getUserSound, updateUserSound } from '@/lib/app/sounds/store';
+import { soundLinksLimiter, soundLinksLimitKey } from '@/lib/app/sounds/links';
 
 type Params = { id: string };
 
@@ -42,6 +47,14 @@ export const PATCH = withAuth<Params>(
     if (!id.success) return notFound();
     const log = await getRouteLogger(request);
     const input = await validateRequestBody(request, UpdateUserSoundSchema);
+    // saving links reads their providers, so it has its own cap; any other change does not spend it
+    if (input.links !== undefined) {
+      const limit = soundLinksLimiter.check(soundLinksLimitKey(session.user.id));
+      if (!limit.success) {
+        log.warn('Sound links rate limit exceeded', { userId: session.user.id });
+        return createRateLimitResponse(limit);
+      }
+    }
     const sound = await updateUserSound(session.user.id, id.data, input);
     log.info('User sound changed', {
       soundId: sound.id,
@@ -49,6 +62,7 @@ export const PATCH = withAuth<Params>(
       lessonRemoved: input.lesson === null,
       visibility: input.visibility ?? null,
       patternId: input.patternId,
+      links: input.links?.length,
     });
     return successResponse(sound);
   },

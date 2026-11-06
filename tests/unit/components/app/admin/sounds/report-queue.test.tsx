@@ -43,6 +43,7 @@ const REPORTED: QueueSound = {
   slug: 'abcdefghjk',
   owner: 'patchwork',
   unlistedAt: null,
+  links: [],
   reports: [
     {
       reason: 'offensive',

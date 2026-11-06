@@ -3,9 +3,12 @@
  * Shapes only, with no database client, so the report button and the admin queue validate with the same schemas.
  */
 import { z } from 'zod';
-import type { SoundVisibility } from '@/lib/app/sounds/data';
+import type { SoundLink, SoundVisibility } from '@/lib/app/sounds/data';
 
-/** Why someone reports a sound. BeatBreaker's `bad-link` is left out: a sound carries no links. */
+/**
+ * Why someone reports a sound. BeatBreaker's `bad-link` is left out: a sound's links (`f-link-suggestions` t-187) are
+ * only ever on the five named providers, so one is reported as what it shows (offensive, someone else's, spam).
+ */
 export const SOUND_REPORT_REASONS = ['offensive', 'not_theirs', 'spam', 'other'] as const;
 export type SoundReportReason = (typeof SOUND_REPORT_REASONS)[number];
 
@@ -59,6 +62,8 @@ export interface QueueSound {
   /** The owner's username, or null when they have none (a link share needs none). */
   owner: string | null;
   unlistedAt: string | null;
+  /** Its links, as its page shows them, so the admin sees what a report about one is about. */
+  links: SoundLink[];
   /** In the reported view, its open reports; in the unlisted view, the open and actioned ones. Oldest first. */
   reports: QueueReport[];
 }

@@ -28,6 +28,10 @@
  * the sound leaves it as it was, so it goes on teaching the sound as it was designed. It keeps the definition version it
  * was checked against (`lessonVersion`), which a new panel does not move, and on read it is checked again and served
  * only while that is the synth's current version, as the panel is.
+ *
+ * **Links** (`f-link-suggestions` t-187, `links.ts`): PATCH replaces the sound's videos and recordings, each parsed and
+ * read from its provider before the transaction, so no provider is waited on under the owner's lock. A copy never
+ * carries them.
  */
 import type { Prisma, UserSound } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
@@ -60,6 +64,7 @@ import {
   withFreshSlug,
 } from '@/lib/app/sounds/sharing';
 import { assertOwnPattern } from '@/lib/app/patterns/store';
+import { resolveSoundLinks, servedSoundLinks, storedSoundLinks } from '@/lib/app/sounds/links';
 
 function refuse(message: string, problems: { path: string; message: string }[]): never {
   throw new ValidationError(message, { errors: problems });
@@ -214,6 +219,7 @@ function toDetail(row: UserSound, basedOn: SharedSource | null, log: boolean): U
     tags: row.tags,
     unlisted: row.unlistedAt !== null,
     patternId: row.patternId,
+    links: servedSoundLinks(row.links),
     playable: panel !== null,
     panel,
     problems,
@@ -389,6 +395,17 @@ export async function updateUserSound(
   id: string,
   input: UpdateUserSound
 ): Promise<UserSoundDetail> {
+  // Links are read from their providers here, outside the transaction, against the ones the sound has now.
+  let links: ReturnType<typeof storedSoundLinks> | undefined;
+  if (input.links !== undefined) {
+    const current = await prisma.userSound.findFirst({
+      where: { id, userId },
+      select: { links: true },
+    });
+    if (!current) return notFound();
+    links = await resolveSoundLinks(input.links, storedSoundLinks(current.links));
+  }
+
   // The slug is minted inside the transaction, so a retry after a clash mints another.
   await withFreshSlug(() =>
     prisma.$transaction(async (tx) => {
@@ -416,11 +433,14 @@ export async function updateUserSound(
       if (input.notes !== undefined) data.notes = input.notes || null;
       // Still published after this change: held to what publishing is.
       const published = existing.visibility === 'published' && input.visibility === undefined;
-      if (published && (input.name !== undefined || input.notes !== undefined))
+      if (published && (input.name !== undefined || input.notes !== undefined || links))
         assertPublishableText({
           name: input.name ?? existing.name,
           notes: input.notes !== undefined ? input.notes || null : existing.notes,
+          // the links only when they change, as the lesson is checked only at publish: a rename is not held to them
+          linkTitles: links?.map((l) => l.title),
         });
+      if (links) data.links = toJson(links);
       if (input.panel !== undefined) {
         // The same rule as a new sound: a panel is only saved on a listed synth the app can play.
         const def = await playableSynth(existing.synthId);

@@ -127,7 +127,7 @@ export function initAppSubjectSources(): void {
         section: SOUNDS_SECTION,
         disposition: 'export',
         description:
-          'Patches you saved: the synth, the name and notes, the panel settings and cables, the lesson saved with a patch and whether the tutor designed it, the library patch each copy credits, whether and when you shared or published each, with its address and tags, when moderators unlisted one, and the pattern each plays by default.',
+          'Patches you saved: the synth, the name and notes, the panel settings and cables, the lesson saved with a patch and whether the tutor designed it, the library patch each copy credits, whether and when you shared or published each, with its address and tags, the videos and recordings you linked on each, when moderators unlisted one, and the pattern each plays by default.',
       },
       {
         model: 'UserPattern',
@@ -546,6 +546,7 @@ function collectSounds(userId: string) {
       slug: true,
       publishedAt: true,
       tags: true,
+      links: true,
       unlistedAt: true,
       patternId: true,
       createdAt: true,

@@ -57,6 +57,7 @@ export async function getSharedSound(slug: string): Promise<PublicSound | null> 
     basedOn: sound.basedOn,
     fromTutor: sound.fromTutor,
     lesson: sound.lesson,
+    links: sound.links,
     definitionVersion: sound.definitionVersion,
     playable: sound.playable,
     panel: sound.panel,
