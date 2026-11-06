@@ -31,6 +31,8 @@ export function synthRows(id: string) {
       _count: { sounds: sounds.length },
       sounds: sounds.map((s, i) => ({ id: `row-${i}`, editedAt: null, ...s })),
       lineage: { ...lineage, editedAt: null },
+      // The databank instrument it models (`f-link-suggestions` t-186): one, as most synths have.
+      bankInstruments: [{ instrument: { id: `${id}-instrument`, name: synth.name } }],
     },
     /** What `prisma.synthNote.findMany` returns for the synth: its own notes and the shared limits. */
     noteRows: rows.notes

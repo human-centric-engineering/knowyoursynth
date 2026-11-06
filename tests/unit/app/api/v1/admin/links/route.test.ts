@@ -133,6 +133,8 @@ beforeEach(() => {
   });
   for (const k of Object.keys(mockPrisma)) delete mockPrisma[k];
   Object.assign(mockPrisma, store.client, {
+    // No link here came from a user's suggestion (that is the suggestions' own test, t-186).
+    linkSuggestion: { findMany: vi.fn(async () => []) },
     orgMembership: {
       findUnique: vi.fn(async () => ({ role: 'OWNER', org: { status: 'ACTIVE' } })),
     },

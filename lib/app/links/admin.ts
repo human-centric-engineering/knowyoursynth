@@ -133,6 +133,12 @@ export interface AdminLink {
   statsAt: string | null;
   createdAt: string;
   updatedAt: string;
+  /**
+   * The user whose suggestion it came from (`f-link-suggestions` t-186): null when an admin added it. `name` is null
+   * once their account is erased. Read by `withSuggesters` for the list, one link and an edit; a create, a
+   * delete and a reorder say null.
+   */
+  suggestedBy: { name: string | null } | null;
 }
 
 type LinkRow = Prisma.ExternalLinkGetPayload<{ include: typeof OWNER_INCLUDE }>;
@@ -156,7 +162,32 @@ export function toAdminLink(row: LinkRow): AdminLink {
     statsAt: row.statsAt?.toISOString() ?? null,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
+    suggestedBy: null,
   };
+}
+
+/** The links, each with who suggested it when it came from an accepted suggestion: two reads however many links. */
+export async function withSuggesters(links: AdminLink[]): Promise<AdminLink[]> {
+  if (links.length === 0) return links;
+  const accepted = await prisma.linkSuggestion.findMany({
+    where: { linkId: { in: links.map((l) => l.id) }, status: 'ACCEPTED' },
+    select: { linkId: true, userId: true },
+  });
+  if (accepted.length === 0) return links;
+  const userIds = [...new Set(accepted.flatMap((s) => (s.userId ? [s.userId] : [])))];
+  const users = userIds.length
+    ? await prisma.user.findMany({
+        where: { id: { in: userIds } },
+        select: { id: true, name: true },
+      })
+    : [];
+  const names = new Map(users.map((u) => [u.id, u.name]));
+  const by = new Map(
+    accepted.map((s) => [s.linkId, s.userId ? (names.get(s.userId) ?? null) : null])
+  );
+  return links.map((l) =>
+    by.has(l.id) ? { ...l, suggestedBy: { name: by.get(l.id) ?? null } } : l
+  );
 }
 
 /** What an audit entry records of a link: the fields an admin sets, and what it is about. */
@@ -266,12 +297,17 @@ export async function listAdminLinks(
     }),
     prisma.externalLink.count({ where }),
   ]);
-  return { links: rows.map(toAdminLink), page: query.page, limit: query.limit, total };
+  return {
+    links: await withSuggesters(rows.map(toAdminLink)),
+    page: query.page,
+    limit: query.limit,
+    total,
+  };
 }
 
 export async function getAdminLink(id: string): Promise<AdminLink | null> {
   const row = await prisma.externalLink.findUnique({ where: { id }, include: OWNER_INCLUDE });
-  return row ? toAdminLink(row) : null;
+  return row ? ((await withSuggesters([toAdminLink(row)]))[0] ?? null) : null;
 }
 
 export async function createLink(input: LinkCreate): Promise<AdminLink> {
