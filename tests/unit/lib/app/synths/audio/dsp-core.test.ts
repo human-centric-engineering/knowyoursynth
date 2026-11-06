@@ -794,6 +794,23 @@ describe('the SVF’s band-pass and high-pass inputs (vcfBpIn, vcfHpIn)', () => 
     expect(maxDiff(all, sum)).toBeLessThan(2e-3);
   });
 
+  it('is one core: self-oscillating, it rings once at one level, however many inputs are patched', () => {
+    // A second of sound, the key held throughout, measured over its second half once the ringing has settled. Separate
+    // cores, each set ringing by its own input, would beat against each other: louder or quieter than one.
+    const len = 48000;
+    const ringing = (main: string, cables: EngineCable[]): number => {
+      const p = filterOnly('lp', [cable(main, 'vcfIn', 0.05), ...cables]);
+      p.filter.res = 1.1;
+      return rms(render(p, { len, events: [[0, { type: 'noteOn', n: 60, v: 0.9 }]] }).out, len / 2);
+    };
+    const extra = [cable('osc1', 'vcfBpIn', 0.05), cable('osc3', 'vcfHpIn', 0.05)];
+    for (const main of ['osc1', 'osc2']) {
+      const one = ringing(main, []);
+      expect(one).toBeGreaterThan(0.1);
+      expect(Math.abs(ringing(main, extra) / one - 1)).toBeLessThan(0.05);
+    }
+  });
+
   it('takes a route as well as a cable, and the ladder ignores both inputs', () => {
     const routed = out({
       ...filterOnly('lp', []),

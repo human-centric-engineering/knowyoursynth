@@ -196,7 +196,7 @@ when absent**, added synth by synth:
 | Split layers                           | `layer.split`                                                            | UDO Super Gemini   |
 | Third LFO, LFOs shared by the voices   | `lfo3`, `common` on `lfo` / `lfo2` / `lfo3`                              | GS Music e7        |
 | Eight-voice drone machine, in stereo   | `solar` (replaces the fixed voice)                                       | Elta SOLAR 42N     |
-| Band-pass and high-pass filter inputs  | dests `vcfBpIn`, `vcfHpIn` (SVF only, summed into `vcf1`)                | PWM Malevolent     |
+| Band-pass and high-pass filter inputs  | dests `vcfBpIn`, `vcfHpIn` (SVF only, one core, summed into `vcf1`)      | PWM Malevolent     |
 
 A synth whose sound path is `easel`, `moog` or `solar` still returns the core stubs (`osc: []` etc.).
 `solar` runs eight voices of three kinds (`drone`, `srapa`, `vco`), each with its own gate and envelope, into
