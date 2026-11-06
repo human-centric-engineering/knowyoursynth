@@ -80,6 +80,8 @@ export interface LessonCardProps {
   mark?: LessonMark | null;
   /** A library sound's videos and links, counted: its own and its inspiration's (`f-videos-and-links` t-183). */
   links?: LinkSummary;
+  /** It is a library sound, so a link can be suggested for it (`f-link-suggestions` t-186); not one of a user's own. */
+  librarySound?: boolean;
 }
 
 export function LessonCard({
@@ -95,6 +97,7 @@ export function LessonCard({
   effects,
   mark = null,
   links,
+  librarySound = false,
 }: LessonCardProps) {
   const ref = useRef<HTMLElement | null>(null);
   // Where the card has been dragged to, or `null` while it is docked at its side.
@@ -430,6 +433,11 @@ export function LessonCard({
           target="sound"
           id={`${def.id}/${preset.id}`}
           summary={links}
+          suggest={
+            librarySound
+              ? [{ kind: 'sound', id: `${def.id}/${preset.id}`, name: preset.name }]
+              : undefined
+          }
           label="Videos and links"
           className="mt-4"
         />

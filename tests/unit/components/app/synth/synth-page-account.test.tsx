@@ -117,6 +117,7 @@ const detail: SynthDetail = {
   notes: { unusual: {}, limits: { intro: null, items: [], shared: [] } },
   links: { count: 0, kinds: [] },
   soundLinks: {},
+  instruments: [],
 };
 
 const SESSION_KEY = 'kys.session.model-d';
@@ -724,5 +725,40 @@ describe('signed in, guarding the account', () => {
     expect(api.put).not.toHaveBeenCalled();
     expect(api.patch).not.toHaveBeenCalled();
     expect(readStored('kys.dim')).toBe(true);
+  });
+});
+
+describe('signed in, suggesting a link under the panel', () => {
+  it("suggests it for the synth's databank instrument (`f-link-suggestions` t-186)", async () => {
+    auth.signedIn = true;
+    api.post.mockResolvedValue({ id: 'lsug-1' });
+    render(
+      <SynthPage
+        detail={{
+          ...detail,
+          instruments: [{ id: 'moog-minimoog', name: 'Minimoog Model D' }],
+        }}
+        synths={[MODEL_D_SYNTH]}
+        viewParam={null}
+      />
+    );
+    const section = screen.getByRole('region', { name: 'Videos and links' });
+    fireEvent.click(within(section).getByRole('button', { name: 'Suggest a link' }));
+    expect(
+      within(section).getByRole('heading', { name: 'Suggest a link for Minimoog Model D' })
+    ).toBeTruthy();
+    fireEvent.change(within(section).getByLabelText(/^Address/, { selector: 'input' }), {
+      target: { value: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' },
+    });
+    fireEvent.click(within(section).getByRole('button', { name: 'Send suggestion' }));
+
+    await within(section).findByRole('status');
+    expect(api.post).toHaveBeenCalledWith('/api/v1/links/suggestions', {
+      body: {
+        target: { kind: 'instrument', id: 'moog-minimoog' },
+        url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        kind: 'demo',
+      },
+    });
   });
 });

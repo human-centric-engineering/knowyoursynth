@@ -22,7 +22,12 @@ vi.mock('@/lib/app/links/read', () => ({
   summariseSongLinks: vi.fn(async () => new Map()),
 }));
 const get = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api/client', () => ({ apiClient: { get } }));
+const post = vi.hoisted(() => vi.fn());
+vi.mock('@/lib/api/client', () => ({ apiClient: { get, post } }));
+// Suggest a link on each record (`f-link-suggestions` t-186) asks whether someone is signed in.
+vi.mock('@/lib/auth/client', () => ({
+  useSession: () => ({ data: { user: { id: 'user-1' } }, isPending: false }),
+}));
 vi.mock('@/lib/db/client', () => ({
   prisma: {
     synth: { findFirst: vi.fn() },
@@ -215,6 +220,34 @@ describe('Lineage', () => {
     expect(rows[1].className).not.toContain('sm:col-span-2');
 
     fireEvent.click(watch);
+    expect(rows[0].className).not.toContain('sm:col-span-2');
+  });
+
+  it('lets a record be suggested a link, with none yet, and the row takes the width for the form', async () => {
+    const [first, second] = lineage.heard ?? [];
+    post.mockResolvedValue({ id: 'lsug-1' });
+    setup({ heard: [first, { ...second, links: { count: 1, kinds: ['original'] } }] });
+    fireEvent.click(tab(/Heard on/));
+    const rows = within(screen.getByRole('tabpanel')).getAllByRole('listitem');
+
+    // A record with links offers it under its cards; one with none offers it in the row.
+    expect(within(rows[1]).queryByRole('button', { name: 'Suggest a link' })).toBeNull();
+    fireEvent.click(within(rows[0]).getByRole('button', { name: 'Suggest a link' }));
+    expect(rows[0].className).toContain('sm:col-span-2');
+
+    fireEvent.change(within(rows[0]).getByLabelText(/^Address/, { selector: 'input' }), {
+      target: { value: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' },
+    });
+    fireEvent.click(within(rows[0]).getByRole('button', { name: 'Send suggestion' }));
+
+    expect(await within(rows[0]).findByRole('status')).toBeTruthy();
+    expect(post).toHaveBeenCalledWith('/api/v1/links/suggestions', {
+      body: {
+        target: { kind: 'song', id: first.song },
+        url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        kind: 'demo',
+      },
+    });
     expect(rows[0].className).not.toContain('sm:col-span-2');
   });
 

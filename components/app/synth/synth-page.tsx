@@ -2211,8 +2211,12 @@ function Synth({
       />
     </div>
   );
-  // A library sound's videos and links, its own and its inspiration's; none for a sound of the user's own.
+  // A library sound's videos and links, its own and its inspiration's; none for a sound of the user's own, a shared one
+  // or the Default patch, and only a library sound can have one suggested (`f-link-suggestions` t-186).
+  const inLibrary = !ownLesson && !!shown && detail.sounds.some((s) => s.id === shown.id);
   const shownLinks = ownLesson || !shown ? undefined : detail.soundLinks[shown.id];
+  // A synth's videos belong to its databank instruments, so a link suggested under its panel is about one of them.
+  const suggestForSynth = detail.instruments.map((i) => ({ kind: 'instrument' as const, ...i }));
   const lesson = shown ? (
     <Lesson
       def={def}
@@ -2221,6 +2225,7 @@ function Synth({
       onStep={setStep}
       mark={ownLesson ? null : (progress.marks?.get(shown.id) ?? null)}
       links={shownLinks}
+      librarySound={inLibrary}
     />
   ) : (
     <p className="text-sm text-(--kys-muted)">
@@ -2946,6 +2951,7 @@ function Synth({
                 effects={<FxRack fx={fx} onChange={setFx} inCard />}
                 mark={ownLesson || !shown ? null : (progress.marks?.get(shown.id) ?? null)}
                 links={shownLinks}
+                librarySound={inLibrary}
               />
             )}
             {!small && (
@@ -2968,7 +2974,12 @@ function Synth({
             {tourOn && <Tour def={def} notes={detail.notes.unusual} onClose={closeTour} />}
           </section>
           {/* Under the player: its instruments' videos and links, closed until asked for (`f-videos-and-links`). */}
-          <LinksSection target="synth" id={detail.synth.id} summary={detail.links} />
+          <LinksSection
+            target="synth"
+            id={detail.synth.id}
+            summary={detail.links}
+            suggest={suggestForSynth}
+          />
         </div>
       </div>
 

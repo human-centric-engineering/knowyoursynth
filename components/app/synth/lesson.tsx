@@ -541,6 +541,8 @@ export interface LessonProps {
   mark?: LessonMark | null;
   /** A library sound's videos and links, counted: its own and its inspiration's (`f-videos-and-links` t-183). */
   links?: LinkSummary;
+  /** It is a library sound, so a link can be suggested for it (`f-link-suggestions` t-186); not one of a user's own. */
+  librarySound?: boolean;
 }
 
 /**
@@ -582,7 +584,15 @@ function StartLine({
   );
 }
 
-export function Lesson({ def, preset, step, onStep, mark = null, links }: LessonProps) {
+export function Lesson({
+  def,
+  preset,
+  step,
+  onStep,
+  mark = null,
+  links,
+  librarySound = false,
+}: LessonProps) {
   const n = preset.steps.length;
   const walking = step != null;
   // Where the walkthrough starts: step 0, the Default patch, where the lesson has it.
@@ -702,6 +712,11 @@ export function Lesson({ def, preset, step, onStep, mark = null, links }: Lesson
                 target="sound"
                 id={`${def.id}/${preset.id}`}
                 summary={links}
+                suggest={
+                  librarySound
+                    ? [{ kind: 'sound', id: `${def.id}/${preset.id}`, name: preset.name }]
+                    : undefined
+                }
                 label="Videos and links"
                 className="mt-4"
               />

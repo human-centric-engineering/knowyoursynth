@@ -228,6 +228,7 @@ export function Lineage({ synth, lineage: l, sounds, open, onClose, onSelect }: 
                           target="song"
                           id={h.song}
                           summary={h.links}
+                          suggest={[{ kind: 'song', id: h.song, name: h.what }]}
                           label="Watch and listen"
                           onOpenChange={(on) => watch(row, on)}
                           className="mt-2.5"

@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import {
   ArtistPage,
   InstrumentPage,
@@ -21,7 +21,13 @@ import { songsOn } from '@/lib/app/bank/joins';
 import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
 
 // The section reads its list when drawn; that read is the section's own test's (`links-section.test.tsx`).
-vi.mock('@/lib/api/client', () => ({ apiClient: { get: vi.fn(async () => []) } }));
+const post = vi.hoisted(() => vi.fn());
+vi.mock('@/lib/api/client', () => ({ apiClient: { get: vi.fn(async () => []), post } }));
+// Suggest a link (`f-link-suggestions` t-186) asks whether someone is signed in.
+const mockSession = vi.hoisted(() =>
+  vi.fn(() => ({ data: { user: { id: 'user-1' } }, isPending: false }))
+);
+vi.mock('@/lib/auth/client', () => ({ useSession: () => mockSession() }));
 
 const bank = loadBankData();
 const SYNTHS = [
@@ -265,5 +271,53 @@ describe('song and artist pages: videos and links', () => {
 
     render(<ArtistPage d={d} names={names} links={NO_LINKS} />);
     expect(head()).toBeNull();
+  });
+});
+
+describe('Suggest a link on a /bank page', () => {
+  const VIDEO = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+  const suggestFrom = async (page: React.ReactElement) => {
+    post.mockReset();
+    post.mockResolvedValue({ id: 'lsug-1' });
+    render(page);
+    fireEvent.click(screen.getByRole('button', { name: 'Suggest a link' }));
+    fireEvent.change(screen.getByLabelText(/^Address/, { selector: 'input' }), {
+      target: { value: VIDEO },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Send suggestion' }));
+    await screen.findByRole('status');
+    return post.mock.calls[0]?.[1];
+  };
+
+  it('suggests for the artist, the record or the instrument the page is about', async () => {
+    const artist = must(detailFrom(bank, 'artists', 'wendy-carlos'));
+    expect(await suggestFrom(<ArtistPage d={artist} names={names} links={NO_LINKS} />)).toEqual({
+      body: { target: { kind: 'artist', id: 'wendy-carlos' }, url: VIDEO, kind: 'demo' },
+    });
+    cleanup();
+
+    const song = must(detailFrom(bank, 'songs', 'kraftwerk-autobahn'));
+    expect(await suggestFrom(<SongPage d={song} names={names} links={NO_LINKS} />)).toEqual({
+      body: { target: { kind: 'song', id: song.song.id }, url: VIDEO, kind: 'demo' },
+    });
+    cleanup();
+
+    const instrument = must(detailFrom(bank, 'instruments', 'moog-minimoog'));
+    expect(
+      await suggestFrom(<InstrumentPage d={instrument} names={names} links={NO_LINKS} />)
+    ).toEqual({
+      body: { target: { kind: 'instrument', id: 'moog-minimoog' }, url: VIDEO, kind: 'demo' },
+    });
+  });
+
+  it('offers a signed-out visitor sign-in back to the page', () => {
+    mockSession.mockReturnValue({ data: null, isPending: false });
+    window.history.pushState({}, '', '/bank/artists/wendy-carlos');
+    const artist = must(detailFrom(bank, 'artists', 'wendy-carlos'));
+    render(<ArtistPage d={artist} names={names} links={NO_LINKS} />);
+    expect(href('Sign in to suggest a link')).toBe(
+      `/login?callbackUrl=${encodeURIComponent('/bank/artists/wendy-carlos')}`
+    );
+    mockSession.mockReturnValue({ data: { user: { id: 'user-1' } }, isPending: false });
   });
 });
