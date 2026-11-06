@@ -25,7 +25,10 @@ const post = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api/client', () => ({ apiClient: { get: vi.fn(async () => []), post } }));
 // Suggest a link (`f-link-suggestions` t-186) asks whether someone is signed in.
 const mockSession = vi.hoisted(() =>
-  vi.fn(() => ({ data: { user: { id: 'user-1' } }, isPending: false }))
+  vi.fn((): { data: { user: { id: string } } | null; isPending: boolean } => ({
+    data: { user: { id: 'user-1' } },
+    isPending: false,
+  }))
 );
 vi.mock('@/lib/auth/client', () => ({ useSession: () => mockSession() }));
 

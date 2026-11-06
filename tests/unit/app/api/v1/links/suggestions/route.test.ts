@@ -503,7 +503,7 @@ describe('the admin link names who suggested it (t-186)', () => {
 
     const list = await listAll();
     expect(list).toHaveLength(1);
-    expect(list[0]).toMatchObject({ id: linkId, suggestedBy: { name: 'Dana Owner' } });
+    expect(list?.[0]).toMatchObject({ id: linkId, suggestedBy: { name: 'Dana Owner' } });
     expect(await readOne(linkId)).toMatchObject({ suggestedBy: { name: 'Dana Owner' } });
 
     const edited = await patchLink(
