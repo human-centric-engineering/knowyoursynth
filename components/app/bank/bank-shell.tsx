@@ -124,10 +124,15 @@ export function BankShell({ lists, children }: BankShellProps) {
                 key={t}
                 href={bankHref(t)}
                 aria-current={tab === t ? 'page' : undefined}
-                className={`flex shrink-0 items-baseline gap-1.5 border-b-2 px-3 py-2 text-sm font-semibold ${tab === t ? 'border-(--kys-accent) text-(--kys-text)' : 'border-transparent text-(--kys-muted) hover:text-(--kys-text)'}`}
+                className={`flex shrink-0 items-baseline gap-1.5 border-b-2 px-2 py-2 text-sm font-semibold sm:px-3 ${tab === t ? 'border-(--kys-accent) text-(--kys-text)' : 'border-transparent text-(--kys-muted) hover:text-(--kys-text)'}`}
               >
                 {label}
-                <span className="font-mono text-xs text-(--kys-faint)">{matches[t].length}</span>
+                {/* Dropped on a phone, so all four tabs fit, unless a search is on: then they say which tab holds the matches. */}
+                <span
+                  className={`font-mono text-xs text-(--kys-faint) ${fq ? '' : 'max-sm:hidden'}`}
+                >
+                  {matches[t].length}
+                </span>
               </Link>
             ))}
           </nav>
