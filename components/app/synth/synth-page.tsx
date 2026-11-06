@@ -2772,8 +2772,8 @@ function Synth({
                   onCloseSounds={closeSounds}
                   sounds={small ? undefined : library}
                 />
-                {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach. */}
-                <div className="kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">
+                {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach; on a phone they take a row of their own under the patch. */}
+                <div className="kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 max-sm:basis-full lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">
                   {/* Always there while something plays, so a pattern can be stopped with the sequencer closed. */}
                   {(shown || seqShown || transportPlaying) && (
                     <PlayButton
@@ -2852,7 +2852,8 @@ function Synth({
                     </button>
                   </PlayerTip>
                   <span className="flex-1" />
-                  <div className="kys-autohide flex flex-wrap items-center gap-2 lg:flex-nowrap">
+                  {/* Capped below `lg`, so the row wraps its own buttons rather than run off a phone. */}
+                  <div className="kys-autohide flex flex-wrap items-center gap-2 max-lg:max-w-full lg:flex-nowrap">
                     {!small && (
                       <LayerToggle
                         label="Piano"

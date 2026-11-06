@@ -153,7 +153,7 @@ export function SynthPicker({
           ref={list}
           role="listbox"
           aria-label="Choose a synth"
-          className="kys-scroll absolute top-[calc(100%+6px)] left-0 z-40 max-h-[min(70vh,520px)] w-[min(360px,calc(100vw-32px))] overflow-y-auto rounded-xl border border-(--kys-line) bg-(--kys-raised) p-1 shadow-2xl"
+          className="kys-scroll absolute top-[calc(100%+6px)] left-0 z-40 max-h-[min(70vh,520px)] w-[min(360px,calc(100vw-64px))] overflow-y-auto rounded-xl border border-(--kys-line) bg-(--kys-raised) p-1 shadow-2xl"
         >
           {synths.map((s) => (
             <button
