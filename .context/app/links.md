@@ -2,7 +2,8 @@
 
 Demos, reviews, recordings and lessons on YouTube, Vimeo, Spotify, Bandcamp and SoundCloud, plus plain web links,
 attached to the things they are about. Admin-managed. Hub feature `f-videos-and-links` (§40). Suggestions from
-users and links on users' own sounds are `f-link-suggestions` (§41): suggestions are below (Suggestions).
+users and links on users' own sounds are `f-link-suggestions` (§41): both are below (Suggestions, Links on your own
+sounds).
 
 | Piece                       | Where                                                  | Task  |
 | --------------------------- | ------------------------------------------------------ | ----- |
@@ -18,6 +19,7 @@ users and links on users' own sounds are `f-link-suggestions` (§41): suggestion
 | Patches and History         | `links-toggle.tsx`, `summariseSoundLinks`              | t-183 |
 | Suggestions                 | `LinkSuggestion`, `lib/app/links/suggestions.ts`       | t-185 |
 | Suggest a link, the queue   | `suggest-link.tsx`, `admin/links/suggestion-queue.tsx` | t-186 |
+| Links on your own sounds    | `UserSound.links`, `lib/app/sounds/links.ts`           | t-187 |
 
 ## Don't
 
@@ -314,3 +316,37 @@ Rules (`lib/app/links/suggestions.ts`, each tested):
   (`ownerAdminPath`). **Approve** opens `LinkForm` with the suggestion: owner and address fixed (Read still previews
   it), kind and title from the user, no Ours or Rating (an accepted link is never ours); saving is the decide route's
   `accept`. A target since removed cannot be approved, only declined. **Decline** asks for a reason.
+
+## Links on your own sounds
+
+An owner puts their own demo of a patch, or a recording made with it, on the sound (`f-link-suggestions` t-187). Edited
+from My patches (**Links…** under the open sound, `components/app/synth/sound-links-form.tsx`), shown on the sound's
+shared page under its notes as `LinkCard`s (`shared-sound-strip.tsx`), and listed by title and provider in the
+moderation queue beside a report.
+
+- **Not `ExternalLink` rows.** That table is shared settings (`GLOBAL_CONFIG_MODELS`) with a one-owner CHECK over
+  catalogue owners: a user's row there would break the classification and the shared-settings guard. So they are a
+  `links` JSON column on `UserSound`, as `lesson` is: they cascade with the sound, are exported with it (`app.sounds`),
+  and are moderated with it (report, unlist). No new export source: `export-sources.test.ts` reads `User` FKs, not
+  columns.
+- **At most five, in the owner's order.** No draw, no `ours`, no view counts: they are not ranked and do not feed the
+  YouTube stats job. Each card says Demo.
+- **Only the five named providers.** A plain web address is a 400: on a public page, a user's link to anywhere is a
+  spam or phishing surface no admin has looked at. (A suggestion may be a plain link, because an admin decides it.)
+- **Parsed and read on save** (`resolveSoundLinks`): the canonical address, the provider's id (Bandcamp's from its
+  page), its picture and a title, the owner's or else the provider's (none from either is a 400 on that row). An
+  address the sound already had is not read again. The same address twice is a 400. Providers are read before the
+  write's transaction, so none is waited on under the owner's lock. **Checked again on read** (`storedSoundLinks`): an
+  entry that no longer parses to its provider and address is not served.
+- **Served with `embedUrl` built from the provider and id**, and `thumbnailFor` checked again, as every link is. The
+  card list goes through `readPublicLinks` on the page too (`soundLinkViews`), so an embed off `EMBED_ORIGINS` is dropped
+  where it is used.
+- **The word check covers the titles** at publish and on a PATCH that changes a published sound's links
+  ([`sharing.md`](./sharing.md#publishing)).
+- **A copy never carries them.** Someone's demo of their sound isn't the copier's.
+- **Sub-cap:** a PATCH that sends `links` is 20 an hour per user (`soundLinksLimiter`, on top of the proxy's section
+  cap), since each may read five providers. A PATCH without them does not spend it.
+
+Tests: `tests/unit/app/api/v1/sounds/links.test.ts`, the queue in `reports.test.ts`,
+`tests/unit/components/app/sharing/shared-sound-links.test.tsx`, `tests/unit/components/app/synth/sound-links-form.test.tsx`;
+the real column and the export in `npm run smoke:sounds`.

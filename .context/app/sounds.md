@@ -11,7 +11,8 @@ to another device. s4 keeps how far they got through each lesson, and what they 
 `UserSound` (`prisma/schema/app.prisma`): the synth, the definition version the panel was saved
 on, a name and notes, the panel's control values and cables, and, for a copy, the library sound
 it was copied from. A sound can also keep the lesson it was saved with and a mark that the tutor
-designed it (`lesson`, `fromTutor`, [below](#a-sounds-lesson-t-55)).
+designed it (`lesson`, `fromTutor`, [below](#a-sounds-lesson-t-55)), and up to five videos or
+recordings its owner links on it (`links`, a JSON column; [`links.md`](./links.md#links-on-your-own-sounds)).
 
 - **The credit is a link and a snapshot.** `sourceSoundId` points at the `SynthSound` row,
   `ON DELETE SET NULL`. `sourceSlug`, `sourceName` and `sourceRef` keep what that sound read when
@@ -46,10 +47,12 @@ the same as one that does not exist, never a 403.
   sound.
 - `GET /api/v1/sounds/:id`: the sound with its panel. One that is not `playable` has no `panel`,
   but carries `fitted`: as much of it as fits the synth now, which the page opens.
-- `PATCH /api/v1/sounds/:id`: `{ name?, notes?, panel?, lesson?, visibility?, patternId? }`. `notes: null`
+- `PATCH /api/v1/sounds/:id`: `{ name?, notes?, panel?, lesson?, visibility?, patternId?, links? }`. `notes: null`
   clears them, and `lesson: null` removes the lesson, the only change a lesson takes; `visibility`
   is `private` or `link` ([`sharing.md`](./sharing.md)); `patternId` is the pattern the sequencer opens on with the
-  sound, one of the caller's own, or `null` ([`sequencer.md`](./sequencer.md#my-patterns)).
+  sound, one of the caller's own, or `null` ([`sequencer.md`](./sequencer.md#my-patterns)); `links`
+  replaces the sound's links ([`links.md`](./links.md#links-on-your-own-sounds)), and a request that
+  sends them has its own cap, 20 an hour per user.
 - `POST /api/v1/sounds/:id/publish`: [`sharing.md`](./sharing.md).
 - `DELETE /api/v1/sounds/:id`
 

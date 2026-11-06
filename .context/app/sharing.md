@@ -86,7 +86,7 @@ Patterns are shared the same way (`f-step-sequencer` t-83). What carried over an
 | `USERNAME_REQUIRED`  | 409    | No synth profile (`f-profiles`).                                                                         |
 | (validation)         | 400    | The synth is not listed.                                                                                 |
 | `NOT_PLAYABLE`       | 409    | Saved on a definition version the synth has moved on from, or its panel no longer passes. Save it again. |
-| `NOT_ALLOWED`        | 422    | A blocked word in the name or notes (`textIsBlocked`, `lib/app/profile/words.ts`): see below.            |
+| `NOT_ALLOWED`        | 422    | A blocked word in the name, notes or a link's title (`textIsBlocked`, `lib/app/profile/words.ts`).       |
 | `LESSON_NOT_ALLOWED` | 422    | A blocked word in the sound's lesson (`f-tutor` t-55): see below.                                        |
 | `DUPLICATE`          | 409    | It plays the same as the library sound or the shared sound it was copied from (`assertChanged`).         |
 | (validation)         | 400    | A tag that synth's library does not use, or the same tag twice.                                          |
@@ -106,6 +106,10 @@ no longer fit.
   it now, so one that starts to pass later has been checked. Its refusal has its own code because
   a lesson cannot be reworded, only removed: the publish dialog offers **Remove the lesson**
   (`PATCH` with `lesson: null`), and the sound then publishes without it.
+- **It covers the sound's link titles** ([`links.md`](./links.md#links-on-your-own-sounds)), as
+  stored, whether the owner wrote one or its provider did: the sound's page shows them either way.
+  Same code as the name and notes, in its own words, since a title can be changed or the link
+  removed.
 - **The daily cap is kept on the profile** (`SynthProfile.recentPublishes`, pruned to the last
   24 hours at each publish), not counted from the sounds, so deleting a published sound does not
   give its place back.
@@ -118,8 +122,8 @@ no longer fit.
 - **"Plays the same"** is `panelKey`: every control at its value or its `init`, and the cables
   sorted, so two panels stored differently but sounding alike compare equal. A source that has
   gone, or that the synth can no longer play, has nothing to compare with.
-- **A published sound stays held to it.** A PATCH that changes its name or notes runs the word
-  check; one that changes its panel runs `assertChanged`. A rename never runs `assertChanged`: the
+- **A published sound stays held to it.** A PATCH that changes its name, notes or links runs the
+  word check (the link titles only when the links change, as a rename does not check the lesson); one that changes its panel runs `assertChanged`. A rename never runs `assertChanged`: the
   source can change after the copy was published, and that must not lock the copy out of its own
   name. Nor does it check the lesson again, which cannot change after publishing, so a word added
   to the list later does not lock a sound out of its name. An edit that also unpublishes
@@ -154,7 +158,8 @@ with a lesson of its own does not take the source's mark.
 `GET /api/v1/public/sounds/:slug`. No session (the section rate cap applies). A link or published
 sound: slug, synth, visibility, name, notes, tags, `publishedAt` (published only), `author`,
 `authorProfile`, the library `source` (without its row id), `basedOn`, the `lesson` and the
-`fromTutor` mark as the owner's read serves them, and the panel exactly as the owner's read checks
+`fromTutor` mark as the owner's read serves them, its owner's `links` (each with the `embedUrl`
+built from its provider's id; [`links.md`](./links.md#links-on-your-own-sounds)), and the panel exactly as the owner's read checks
 and fits it (`playable`, `panel`, `problems`, `fitted`). Private, unknown
 and malformed are one 404. A panel that no longer passes is served unplayable and not logged, so
 anyone holding the address cannot fill the error log. ETag and `304`; the platform's `private, no-cache`, so a sound made
@@ -320,14 +325,14 @@ divergence ledger records.
 
 `SoundReport` (h4): `soundId` (a relation, `Cascade`), `reporterId` and `resolvedById`
 (hand-written FKs to `user`, `SET NULL`, probed in `lib/app/db-drift.ts`), `reason`
-(`offensive` · `not_theirs` · `spam` · `other`; BeatBreaker's `bad-link` is left out, as a sound
-carries no links), `note`, `status` (`open` · `dismissed` · `actioned`), `resolvedAt`. A report
+(`offensive` · `not_theirs` · `spam` · `other`; BeatBreaker's `bad-link` is left out: a sound's
+links are only ever on the five named providers, so one is reported as what it shows), `note`, `status` (`open` · `dismissed` · `actioned`), `resolvedAt`. A report
 outlives the person who filed it and the admin who resolved it: it is the record about the sound.
 
 | Route                                     | Does                                                                                                                                                                                                                |
 | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `POST /api/v1/public/sounds/:slug/report` | Signed in. `{ reason, note? }`. One open report per person per sound: a second updates it (200; new is 201). Your own is a 400 (`OWN_SOUND`); one nobody else can open is the public read's 404. 20 a day per user. |
-| `GET /api/v1/admin/sounds?view=`          | Admin. `reported`: sounds with open reports, the longest-waiting first. `unlisted`: unlisted sounds, the most recent first. The owner's username, never a reporter.                                                 |
+| `GET /api/v1/admin/sounds?view=`          | Admin. `reported`: sounds with open reports, the longest-waiting first. `unlisted`: unlisted sounds, the most recent first. The owner's username, never a reporter. Each sound's `links`, as its page serves them.  |
 | `POST /api/v1/admin/sounds/:id`           | Admin. `{ action: unlist \| restore \| dismiss }`. Audited as `user_sound.<action>`. Nothing to change is a 409.                                                                                                    |
 
 - **Unlist** sets `UserSound.unlistedAt` and actions the open reports. The sound leaves its page,
@@ -358,7 +363,7 @@ count badge in the nav either.
   stay, with `sourceUserSoundId` null and no credit. Reports they filed or resolved stay, with
   `reporterId` or `resolvedById` null.
 - The export (`app.sounds`) carries `visibility`, `slug`, `publishedAt`, `tags` and `unlistedAt`,
-  and each sound's `lesson` and `fromTutor` (t-55).
+  each sound's `lesson` and `fromTutor` (t-55), and its `links` (`f-link-suggestions` t-187).
   Not `sourceUserSoundId`: that is the row id of a sound someone else shared, about them. The
   profile section (`app.synthProfile`) carries `recentPublishes`. `app.soundReportsFiled` is the
   reports the user filed, the sound named by its synth and address; never who resolved one.
@@ -370,6 +375,8 @@ count badge in the nav either.
 refusal, the cap kept through deletes, the owner's lock, kept tags, the checks on a published
 sound, the public read and its 404, the byline, copies and their credit, a lesson on the public
 read, on a copy and at publish);
+`tests/unit/app/api/v1/sounds/links.test.ts` (a sound's links: saving, each refusal, the word
+check, copies, the public read, the sub-cap);
 `tests/unit/lib/app/profile/words.test.ts` (the word check); `npm run smoke:sounds` (the `SetNull` FK and the export, against a real database).
 
 h2: `tests/unit/app/api/v1/public/published-sounds.test.ts` (Explore's read: published only,
