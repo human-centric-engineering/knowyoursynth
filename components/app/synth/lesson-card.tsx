@@ -32,6 +32,8 @@ import {
 import { StepText, stepIds, type StepHow } from '@/components/app/synth/lesson';
 import { markText, reachedStep } from '@/components/app/synth/library';
 import type { LessonMark } from '@/components/app/synth/progress';
+import { LinksToggle } from '@/components/app/links/links-toggle';
+import type { LinkSummary } from '@/lib/app/links/read';
 
 /** What the card is showing: a lesson section, the inspector or the effects. */
 export type CardId = 'build' | 'inspector' | 'fx';
@@ -76,6 +78,8 @@ export interface LessonCardProps {
   /** The effects rack. */
   effects: ReactNode;
   mark?: LessonMark | null;
+  /** A library sound's videos and links, counted: its own and its inspiration's (`f-videos-and-links` t-183). */
+  links?: LinkSummary;
 }
 
 export function LessonCard({
@@ -90,6 +94,7 @@ export function LessonCard({
   inspector,
   effects,
   mark = null,
+  links,
 }: LessonCardProps) {
   const ref = useRef<HTMLElement | null>(null);
   // Where the card has been dragged to, or `null` while it is docked at its side.
@@ -420,6 +425,14 @@ export function LessonCard({
             </span>
           ))}
         </div>
+        <LinksToggle
+          key={preset.id}
+          target="sound"
+          id={`${def.id}/${preset.id}`}
+          summary={links}
+          label="Videos and links"
+          className="mt-4"
+        />
         {preset.tweaks.length > 0 && (
           <>
             <h3 className="kys-label mt-5 mb-1.5 text-(--kys-muted)">

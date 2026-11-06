@@ -147,6 +147,7 @@ const detail: SynthDetail = {
   lineage: null,
   notes: { unusual: {}, limits: { intro: null, items: [], shared: [] } },
   links: { count: 0, kinds: [] },
+  soundLinks: {},
 };
 
 const SESSION_KEY = 'kys.session.model-d';

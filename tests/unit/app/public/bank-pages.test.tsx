@@ -109,6 +109,25 @@ describe('/bank/[tab]/[id]', () => {
   });
 
   it.each([
+    ['songs', 'kraftwerk-autobahn', 'song'],
+    ['artists', 'kraftwerk', 'artist'],
+  ] as const)("hands a %s page its own videos and links, counted", async (t, id, target) => {
+    const links = { count: 2, kinds: ['original' as const] };
+    vi.mocked(summarisePublicLinks).mockResolvedValue(links);
+
+    const el = await element(BankRowRoute(row(t, id)));
+
+    expect(summarisePublicLinks).toHaveBeenCalledWith({ target, id });
+    expect(el.props.links).toEqual(links);
+  });
+
+  it('reads no links for a maker, whose page has none', async () => {
+    const maker = bank.makers[0];
+    await element(BankRowRoute(row('makers', maker.id)));
+    expect(summarisePublicLinks).not.toHaveBeenCalled();
+  });
+
+  it.each([
     ['artists', 'no-such-artist'],
     ['instruments', 'kraftwerk'],
     ['synths', 'model-d'],

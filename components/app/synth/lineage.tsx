@@ -8,12 +8,15 @@
  *
  * "Heard on" is joined from the databank by the read layer (`getHeardOn`, `f-databank`). A record with a library
  * sound in its style loads it, and each of its artists the databank has links to their page ("About <artist>"). In the
- * prototype that opened the databank dialog over the synth; here it is a page of its own, so it is a link.
+ * prototype that opened the databank dialog over the synth; here it is a page of its own, so it is a link. A record
+ * with videos or links has a "Watch and listen" button that opens their cards in its row, which then takes the full
+ * width (`f-videos-and-links` t-183).
  */
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { bankHref } from '@/components/app/bank/routes';
+import { LinksToggle } from '@/components/app/links/links-toggle';
 import type { Lineage as LineageData } from '@/lib/app/synths/contract';
 import { useDialog } from '@/components/app/synth/use-dialog';
 
@@ -33,9 +36,20 @@ export interface LineageProps {
 export function Lineage({ synth, lineage: l, sounds, open, onClose, onSelect }: LineageProps) {
   const { ref, close } = useDialog(open);
   const [tab, setTab] = useState<TabId>('timeline');
+  // Records whose videos are open, by row key: their rows take the full width, so the cards have room. Keyed by synth
+  // as the rows are, so a record open on one synth's list is not drawn wide on the next before the reset below runs.
+  const [watching, setWatching] = useState<ReadonlySet<string>>(new Set());
   useEffect(() => {
     setTab('timeline');
+    setWatching(new Set());
   }, [synth.id]);
+  const watch = (row: string, on: boolean) =>
+    setWatching((was) => {
+      const next = new Set(was);
+      if (on) next.add(row);
+      else next.delete(row);
+      return next;
+    });
 
   const heard = l.heard ?? [];
   const artistNames = new Map((l.heardArtists ?? []).map((a) => [a.id, a.name]));
@@ -159,10 +173,12 @@ export function Lineage({ synth, lineage: l, sounds, open, onClose, onSelect }: 
                   {heard.map((h) => {
                     const soundId = h.sound;
                     const sound = soundName(soundId);
+                    const row = `${synth.id}:${h.song}`;
                     return (
                       <li
-                        key={h.song}
-                        className="flex flex-col rounded-xl border border-(--kys-line) bg-(--kys-ground) p-3.5"
+                        // Per synth, so a record on two synths' lists opens closed on the next.
+                        key={row}
+                        className={`flex flex-col rounded-xl border border-(--kys-line) bg-(--kys-ground) p-3.5 ${watching.has(row) ? 'sm:col-span-2' : ''}`}
                       >
                         <div className="flex items-baseline justify-between gap-3">
                           <p className="min-w-0 leading-snug font-semibold">{h.who}</p>
@@ -208,6 +224,14 @@ export function Lineage({ synth, lineage: l, sounds, open, onClose, onSelect }: 
                             <span className="text-(--kys-text)">{sound}</span>
                           </button>
                         )}
+                        <LinksToggle
+                          target="song"
+                          id={h.song}
+                          summary={h.links}
+                          label="Watch and listen"
+                          onOpenChange={(on) => watch(row, on)}
+                          className="mt-2.5"
+                        />
                       </li>
                     );
                   })}

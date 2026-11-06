@@ -18,6 +18,8 @@
  * clockwise positive.
  */
 
+import type { LinkSummary } from '@/lib/app/links/read';
+
 // ─── Shared vocabularies ─────────────────────────────────────────────────────
 
 /**
@@ -1149,6 +1151,8 @@ export interface HeardEntry {
   song: string;
   /** Artist ids. */
   artists: string[];
+  /** The song's videos and links, counted, when it has any (`f-videos-and-links` t-183): joined by the catalogue read. */
+  links?: LinkSummary;
 }
 
 /** The history section shown under the lesson. */

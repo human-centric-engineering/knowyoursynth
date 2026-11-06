@@ -15,6 +15,9 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import { START_STEP, defaultPatchSound, startStep } from '@/lib/app/synths/default-patch';
 import type { Preset } from '@/lib/app/synths/contract';
 
+const get = vi.hoisted(() => vi.fn(async () => []));
+vi.mock('@/lib/api/client', () => ({ apiClient: { get } }));
+
 const found = getSynthDef('model-d');
 if (!found) throw new Error('model-d is not registered');
 const def = found;
@@ -301,5 +304,43 @@ describe('LessonCard step 0', () => {
     cleanup();
     card(defaultPatchSound(def), 0);
     expect(screen.getByRole('button', { name: 'Previous lesson step' })).toBeDisabled();
+  });
+});
+
+describe('LessonCard videos and links', () => {
+  const sound = (): Preset => ({ ...defaultPatchSound(def), id: 'autobahn-lead' });
+  const card = (links?: { count: number; kinds: ('lesson' | 'original')[] }) =>
+    render(
+      <LessonCard
+        def={def}
+        preset={sound()}
+        step={null}
+        onStep={vi.fn()}
+        section="build"
+        onClose={vi.fn()}
+        side="right"
+        onSide={vi.fn()}
+        inspector={null}
+        effects={null}
+        links={links}
+      />
+    );
+
+  it("offers a library patch's videos and links on its overview, read for that patch when pressed", async () => {
+    card({ count: 2, kinds: ['lesson', 'original'] });
+    const button = screen.getByRole('button', { name: /Videos and links/ });
+    expect(button.textContent).toContain('lessons and originals');
+
+    fireEvent.click(button);
+
+    await screen.findByText('There are none to show now.');
+    expect(get).toHaveBeenCalledWith('/api/v1/links', {
+      params: { sound: 'model-d/autobahn-lead' },
+    });
+  });
+
+  it('offers none without links', () => {
+    card();
+    expect(screen.queryByRole('button', { name: /Videos and links/ })).toBeNull();
   });
 });

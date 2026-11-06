@@ -302,7 +302,16 @@ function Part({ p, names }: { p: BankPart; names: BankNames }) {
   );
 }
 
-export function ArtistPage({ d, names }: { d: ArtistDetail; names: BankNames }) {
+export function ArtistPage({
+  d,
+  names,
+  links,
+}: {
+  d: ArtistDetail;
+  names: BankNames;
+  /** Their videos and links, counted (`f-videos-and-links` t-183). */
+  links: LinkSummary;
+}) {
   const a = d.artist;
   const over = line([a.kind === 'group' ? 'Group' : a.roles.join(', '), a.country, a.active]);
   return (
@@ -329,6 +338,7 @@ export function ArtistPage({ d, names }: { d: ArtistDetail; names: BankNames }) 
       <p className="mt-4 max-w-[70ch] text-[15px] leading-relaxed text-(--kys-text)/90">
         {a.story}
       </p>
+      <LinksSection target="artist" id={a.id} summary={links} className="mt-6" />
       <Innovations title="What they did differently" items={a.innovations} />
       {/* The prototype put both under one heading, which mislabels a group that is also in a group. */}
       {d.members.length > 0 && (
@@ -423,7 +433,16 @@ export function MakerPage({
   );
 }
 
-export function SongPage({ d, names }: { d: SongDetail; names: BankNames }) {
+export function SongPage({
+  d,
+  names,
+  links,
+}: {
+  d: SongDetail;
+  names: BankNames;
+  /** The record's videos and links, counted (`f-videos-and-links` t-183): the original, and how its sound is made. */
+  links: LinkSummary;
+}) {
   const s = d.song;
   return (
     <article>
@@ -432,6 +451,7 @@ export function SongPage({ d, names }: { d: SongDetail; names: BankNames }) {
         {s.credit && <span className="text-(--kys-muted)">{s.credit} — </span>}
         <Credits ids={s.artists} names={names} strong />
       </p>
+      <LinksSection target="song" id={s.id} summary={links} className="mt-6" />
       <div className="mt-4 max-w-[70ch]">
         {s.parts.map((p, k) => (
           <Part key={k} p={p} names={names} />

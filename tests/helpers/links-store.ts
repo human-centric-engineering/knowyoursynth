@@ -4,15 +4,37 @@
  * one link per URL per owner (a P2002), and exactly one owner (an error, as the CHECK would raise).
  *
  * Only the calls the links code makes are implemented; anything else is absent, so a new call fails loudly.
+ *
+ * A sound's library patterns (t-183) are seeded with it, default first: each a real riff pattern (or `riff: false`, one
+ * that cannot be a default), its status and what it is inspired by. The code under test picks the default from them
+ * (`headOf`), so a disabled head or one that is not a riff passes it to the next, as on the real tables.
  */
+import { importPhrase } from '@/lib/app/sequencer/import';
+import { RIFF } from '@/tests/helpers/admin-library-pattern';
+
 type Row = Record<string, unknown>;
+
+export interface SeedPattern {
+  status?: 'enabled' | 'disabled';
+  /** False for one that cannot be a riff, so cannot be a default. */
+  riff?: boolean;
+  song?: { id: string; title: string };
+  artist?: { id: string; name: string };
+}
 
 export interface LinksStoreSeed {
   instruments?: { id: string; name: string }[];
   songs?: { id: string; title: string }[];
   artists?: { id: string; name: string }[];
   synths?: { id: string; listed: boolean; instrumentIds: string[] }[];
-  sounds?: { id: string; synthId: string; slug: string; name: string }[];
+  sounds?: {
+    id: string;
+    synthId: string;
+    slug: string;
+    name: string;
+    /** Its library patterns, default first. */
+    patterns?: SeedPattern[];
+  }[];
 }
 
 const OWNER_COLUMNS = ['instrumentId', 'soundId', 'songId', 'artistId'] as const;
@@ -25,6 +47,7 @@ function matches(row: Row, where: Row | undefined): boolean {
   if (!where) return true;
   return Object.entries(where).every(([key, want]) => {
     if (want === undefined) return true;
+    if (key === 'OR') return (want as Row[]).some((w) => matches(row, w));
     if (want && typeof want === 'object' && 'in' in (want as Row))
       return ((want as { in: unknown[] }).in ?? []).includes(row[key]);
     if (want && typeof want === 'object' && 'not' in (want as Row))
@@ -173,16 +196,27 @@ export function linksStore(seed: LinksStoreSeed = {}) {
         const row = sounds.find((s) => s.synthId === synthId && s.slug === slug);
         return row ? { id: row.id } : null;
       },
-      findFirst: async (args: {
-        where: { synthId: string; slug: string; synth?: { listed: boolean } };
+      /** A synth's sounds, or one, with each one's patterns as `headOf` reads them (`soundSources`). */
+      findMany: async (args: {
+        where: { synthId: string; slug?: string; synth?: { listed: boolean } };
       }) => {
-        const row = sounds.find(
-          (s) => s.synthId === args.where.synthId && s.slug === args.where.slug
-        );
-        if (!row) return null;
-        const synth = synths.find((s) => s.id === row.synthId);
-        if (args.where.synth?.listed && !synth?.listed) return null;
-        return { id: row.id };
+        const { synthId, slug, synth: on } = args.where;
+        const synth = synths.find((s) => s.id === synthId);
+        if (on?.listed && !synth?.listed) return [];
+        return sounds
+          .filter((s) => s.synthId === synthId && (slug === undefined || s.slug === slug))
+          .map((s) => ({
+            id: s.id,
+            slug: s.slug,
+            patterns: (s.patterns ?? []).map((p) => ({
+              pattern: {
+                status: p.status ?? 'enabled',
+                pattern: p.riff === false ? { not: 'a pattern' } : importPhrase(RIFF),
+                inspiredSong: p.song ?? null,
+                inspiredArtist: p.artist ?? null,
+              },
+            })),
+          }));
       },
     },
     synth: {

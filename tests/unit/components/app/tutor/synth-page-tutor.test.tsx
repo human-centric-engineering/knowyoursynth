@@ -150,6 +150,7 @@ const detail: SynthDetail = {
   lineage: null,
   notes: { unusual: {}, limits: { intro: null, items: [], shared: [] } },
   links: { count: 0, kinds: [] },
+  soundLinks: {},
 };
 
 const ALLOWANCE = { limit: 30, used: 4, remaining: 26, resetsAt: '2026-10-19T00:00:00.000Z' };

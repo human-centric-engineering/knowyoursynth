@@ -15,7 +15,7 @@ users and links on users' own sounds are `f-link-suggestions` (§41), not here.
 | Titles, thumbnails, views   | `details.ts`, `stats.ts`, `fetch.ts`         | t-180 |
 | Admin pages                 | `components/app/admin/links/`                | t-181 |
 | Under the panel, `/bank`    | `components/app/links/`, `lib/app/csp.ts`    | t-182 |
-| Patches and History         | not built yet                                | t-183 |
+| Patches and History         | `links-toggle.tsx`, `summariseSoundLinks`    | t-183 |
 
 ## Don't
 
@@ -37,7 +37,7 @@ Exactly one of these, named in every API by its natural key:
 | Kind         | Key                | Example                      | Shown (when built)                                       |
 | ------------ | ------------------ | ---------------------------- | -------------------------------------------------------- |
 | `instrument` | databank id        | `moog-minimoog`              | beneath the panel of every synth that models it; `/bank` |
-| `sound`      | `<synthId>/<slug>` | `model-d/stacked-night-bass` | the library patch                                        |
+| `sound`      | `<synthId>/<slug>` | `model-d/stacked-night-bass` | the library patch's lesson                               |
 | `song`       | databank id        | `kraftwerk-autobahn`         | History → Heard on; `/bank`; patches inspired by it      |
 | `artist`     | databank id        | `aphex-twin`                 | `/bank`; patches inspired by them                        |
 
@@ -50,8 +50,25 @@ Exactly one of these, named in every API by its natural key:
 - **Links go with their owner** (`onDelete: Cascade`). A databank removal (`removeBankRow`) takes them along with the
   row's own joins, and its refusal list doesn't count them: a link about a removed song has nothing left to describe.
 - **History links belong to the song or artist** (owner ruling). A patch reaches its inspiration through its default
-  library pattern's `inspiredSongId` / `inspiredArtistId` (t-183), so the same Spotify link is never typed onto
-  several patches.
+  library pattern's `inspiredSongId` / `inspiredArtistId`, so the same Spotify link is never typed onto several
+  patches. See A patch's list.
+
+## A patch's list
+
+`?sound=` serves a library patch's own links and then its **inspiration's** (`lib/app/links/read.ts`):
+
+- **Its inspiration is its default pattern's**: the pattern its riff plays, `headOf` (the first enabled pattern on its
+  list that can be a riff; `pattern-library.md`). Its `inspiredSongId` and `inspiredArtistId`, both when both are set.
+  A pattern inspired by a genre or a synth gives nothing, so a genre-only patch has only its own. Nothing is stored on
+  the patch: change the default pattern, or its inspiration, and the list follows.
+- **Own first**, ordered as any list is (`orderLinks`); **then the inspiration's**, ordered again on their own, ours
+  of the song before ours of the artist. A popular original never jumps the patch's own walk-through.
+- **One per URL**: a URL the patch has too is the patch's, not repeated. Within the inspiration's, ours or the oldest.
+- **Marked**: an inherited link carries `via: { kind: 'song' | 'artist', id, name }`; the card says "From <name>". Own
+  links have `via: null`.
+- **Counted the same**: `summariseSoundLinks(synthId)` counts every patch on the synth in two reads (sounds with their
+  patterns, then every link they could show), by slug, only those with any. `getSynthDetail` serves it as
+  `soundLinks`; `summarisePublicLinks({ target: 'sound' })` counts one patch the same way.
 
 ## Providers and parsing
 
@@ -166,16 +183,17 @@ Tests pass a seeded `random`.
 
 ## API
 
-| Route                                                                                             | Who    | What                                                                                                                                                                                     |
-| ------------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GET /api/v1/links?instrument=\|synth=\|sound=\|song=\|artist=`                                   | anyone | exactly one target; ordered; `no-store`. A hidden synth, or a sound on one, has none; its databank instrument's links stay public, as the databank does. Unknown ids give an empty list. |
-| `GET /api/v1/admin/links?owner=&instrument=\|sound=\|song=\|artist=&provider=&ours=&page=&limit=` | admin  | every link, newest edit first, with its owner; `owner` is a kind; at most one owner filter, of that kind; paginated (≤ 100)                                                              |
-| `POST /api/v1/admin/links`                                                                        | admin  | `{ owner: { kind, id }, url, kind, title?, ours?, rating? }`. No title: the provider's, else 400. 409 when that owner already has the URL                                                |
-| `POST /api/v1/admin/links/resolve`                                                                | admin  | `{ url }` → `{ url, provider, title, thumbnailUrl, embedUrl }`: what the link would be saved as, and what its provider says. Writes nothing                                              |
-| `GET\|PATCH\|DELETE /api/v1/admin/links/:id`                                                      | admin  | `PATCH` any of `url`, `kind`, `title`, `ours`, `rating`; the owner never changes                                                                                                         |
-| `PUT /api/v1/admin/links/order`                                                                   | admin  | `{ owner, ids }`: every one of the owner's own videos, once. One unmarked or removed meanwhile: 409, nothing moves                                                                       |
+| Route                                                                                             | Who    | What                                                                                                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /api/v1/links?instrument=\|synth=\|sound=\|song=\|artist=`                                   | anyone | exactly one target; ordered; `no-store`. A sound's are its own then its inspiration's (A patch's list). A hidden synth, or a sound on one, has none; its databank instrument's links stay public, as the databank does. Unknown ids give an empty list. |
+| `GET /api/v1/admin/links?owner=&instrument=\|sound=\|song=\|artist=&provider=&ours=&page=&limit=` | admin  | every link, newest edit first, with its owner; `owner` is a kind; at most one owner filter, of that kind; paginated (≤ 100)                                                                                                                             |
+| `POST /api/v1/admin/links`                                                                        | admin  | `{ owner: { kind, id }, url, kind, title?, ours?, rating? }`. No title: the provider's, else 400. 409 when that owner already has the URL                                                                                                               |
+| `POST /api/v1/admin/links/resolve`                                                                | admin  | `{ url }` → `{ url, provider, title, thumbnailUrl, embedUrl }`: what the link would be saved as, and what its provider says. Writes nothing                                                                                                             |
+| `GET\|PATCH\|DELETE /api/v1/admin/links/:id`                                                      | admin  | `PATCH` any of `url`, `kind`, `title`, `ours`, `rating`; the owner never changes                                                                                                                                                                        |
+| `PUT /api/v1/admin/links/order`                                                                   | admin  | `{ owner, ids }`: every one of the owner's own videos, once. One unmarked or removed meanwhile: 409, nothing moves                                                                                                                                      |
 
-A public link carries `id, url, provider, kind, title, thumbnailUrl, embedUrl, ours, views`. An admin link adds
+A public link carries `id, url, provider, kind, title, thumbnailUrl, embedUrl, ours, views, via` (`via` is null except
+on a patch's inherited links). An admin link adds
 `owner { kind, id, name }, providerId, order, rating, likes, statsAt, createdAt, updatedAt`.
 
 Admin rules (`lib/app/links/admin.ts`, each tested):
@@ -207,6 +225,17 @@ Admin rules (`lib/app/links/admin.ts`, each tested):
 - **CSP:** `lib/app/csp.ts` exports `EMBED_ORIGINS` as `appFrameSrc`, pinned in `tests/unit/lib/app/defaults.test.ts`
   (`HB2`) and checked in the production header by `tests/unit/lib/app/csp.test.ts`. A new provider's origin goes in
   `EMBED_ORIGINS`, nowhere else.
+- **A library patch's lesson** (t-183): on its overview, in the lesson card from `lg` up and on the Lesson sheet's How it
+  works tab below it, a **Videos and links** button (`links-toggle.tsx`) with the count and kinds from `soundLinks`.
+  Pressed, it reads `?sound=` once and opens the cards under it. A sound of the user's own, a shared one or the Default
+  patch has none. The lesson, not the library row: the row is a list to scan, and the lesson is where a walk-through
+  and the original are read beside the panel.
+- **History → Heard on** (t-183): a record with links has a **Watch and listen** button in its row; pressed, it reads
+  `?song=` and its row takes the dialog's full width for the cards. The counts come with the lineage
+  (`HeardEntry.links`, `summariseSongLinks` in `getSynthDetail`), one read for the whole list; no row reads anything
+  until pressed.
+- **`/bank` record and artist pages** (t-183): the same section as an instrument's, from `?song=` / `?artist=`, counted
+  by the `/bank` route.
 - **Privacy:** `/privacy` → "Videos and recordings" names the five players and says nothing of theirs loads before
   play.
 

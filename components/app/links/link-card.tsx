@@ -1,7 +1,8 @@
 'use client';
 
 /**
- * LinkCard — one video, recording or web page about a synth (`f-videos-and-links` t-182).
+ * LinkCard — one video, recording or web page about a synth, a patch, a record or an artist (`f-videos-and-links`
+ * t-182, t-183). On a patch's list, one about the song or artist it is inspired by says so ("From …").
  *
  * Click to embed: until it is pressed, a card that plays is its picture and title only, so no player, script or
  * cookie of the provider's loads. Pressed, it loads the player from `embedUrl`, the address the server built from the
@@ -58,12 +59,20 @@ function Plate({ link }: { link: PublicLinkView }) {
   );
 }
 
-/** Ours and the view count, in the row under the title. */
+/** Ours, the view count and, on a patch's list, the song or artist it came from, in the row under the title. */
 function Meta({ link }: { link: PublicLinkView }) {
   const views = viewsLabel(link.views);
   return (
     <>
       {link.ours && <span className="kys-link-ours">Know Your Synth</span>}
+      {link.via && (
+        <span
+          className="kys-link-via"
+          title={`About ${link.via.name}, which this patch is inspired by`}
+        >
+          From {link.via.name}
+        </span>
+      )}
       {views && <span>· {views}</span>}
     </>
   );

@@ -25,6 +25,8 @@ const { imageResponse } = vi.hoisted(() => ({ imageResponse: vi.fn() }));
 // The videos section's count is the links read layer's, tested there (`tests/unit/lib/app/links/read.test.ts`).
 vi.mock('@/lib/app/links/read', () => ({
   summarisePublicLinks: vi.fn(async () => ({ count: 0, kinds: [] })),
+  summariseSoundLinks: vi.fn(async () => ({})),
+  summariseSongLinks: vi.fn(async () => new Map()),
 }));
 vi.mock('next/og', () => ({
   ImageResponse: class {

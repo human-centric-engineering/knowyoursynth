@@ -21,7 +21,11 @@ import { modelDRows } from '@/tests/helpers/model-d-detail';
 // The videos section's count is the links read layer's, tested there (`tests/unit/lib/app/links/read.test.ts`).
 vi.mock('@/lib/app/links/read', () => ({
   summarisePublicLinks: vi.fn(async () => ({ count: 0, kinds: [] })),
+  summariseSoundLinks: vi.fn(async () => ({})),
+  summariseSongLinks: vi.fn(async () => new Map()),
 }));
+const get = vi.hoisted(() => vi.fn(async () => []));
+vi.mock('@/lib/api/client', () => ({ apiClient: { get } }));
 vi.mock('@/lib/db/client', () => ({
   prisma: {
     synth: { findFirst: vi.fn() },
@@ -124,6 +128,36 @@ describe('Lesson header and overview', () => {
     render(<Lesson def={def} preset={{ ...sound, tweaks: [] }} step={null} onStep={vi.fn()} />);
     expect(screen.queryByRole('tab', { name: /Make it yours/ })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Ways to make it yours' })).toBeNull();
+  });
+});
+
+describe('Lesson videos and links', () => {
+  it("offers a library patch's videos and links on How it works, read for that patch when pressed", async () => {
+    render(
+      <Lesson
+        def={def}
+        preset={sound}
+        step={null}
+        onStep={vi.fn()}
+        links={{ count: 3, kinds: ['lesson', 'original'] }}
+      />
+    );
+    const button = within(screen.getByRole('tabpanel')).getByRole('button', {
+      name: /Videos and links/,
+    });
+    expect(button.textContent).toContain('3');
+
+    fireEvent.click(button);
+
+    await screen.findByText('There are none to show now.');
+    expect(get).toHaveBeenCalledWith('/api/v1/links', {
+      params: { sound: `model-d/${sound.id}` },
+    });
+  });
+
+  it('offers none for a sound without links', () => {
+    setup();
+    expect(screen.queryByRole('button', { name: /Videos and links/ })).toBeNull();
   });
 });
 
