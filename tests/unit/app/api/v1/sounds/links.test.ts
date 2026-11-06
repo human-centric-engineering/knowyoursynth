@@ -319,7 +319,11 @@ describe('saving links', () => {
     const sound = await mine();
     await setLinks(sound.id, [{ url: youtube }]);
     mockResolve.mockClear();
-    const res = await setLinks(sound.id, [{ url: VIMEO, title: 'New one' }, { url: youtube }]);
+    // sent back with its title, as the form sends it
+    const res = await setLinks(sound.id, [
+      { url: VIMEO, title: 'New one' },
+      { url: youtube, title: 'From the provider' },
+    ]);
     expect(res.status).toBe(200);
     expect(mockResolve).toHaveBeenCalledTimes(1);
     expect(mockResolve.mock.calls[0][0]).toMatchObject({ provider: 'vimeo' });
@@ -332,6 +336,44 @@ describe('saving links', () => {
     const cleared = await setLinks(sound.id, []);
     expect((await json(cleared)).data!.links).toEqual([]);
     expect(rowOf(sound.id).links).toEqual([]);
+  });
+
+  it("gives a link the provider's title back when the owner clears theirs, and keeps it if the provider says nothing", async () => {
+    const sound = await mine();
+    await setLinks(sound.id, [{ url: youtube, title: 'My rough demo' }]);
+    const cleared = await setLinks(sound.id, [{ url: youtube }]);
+    expect(((await json(cleared)).data!.links as Row[])[0].title).toBe('From the provider');
+
+    await setLinks(sound.id, [{ url: youtube, title: 'Mine again' }]);
+    mockResolve.mockResolvedValue(null);
+    const unanswered = await setLinks(sound.id, [{ url: youtube }]);
+    expect(((await json(unanswered)).data!.links as Row[])[0]).toMatchObject({
+      title: 'Mine again',
+      thumbnailUrl: `https://i.ytimg.com/vi/${VIDEO}/maxresdefault.jpg`,
+    });
+  });
+
+  it('reads a Bandcamp link again until its page gives the id its embed needs', async () => {
+    const bandcamp = 'https://artist.bandcamp.com/album/night-drive';
+    mockResolve.mockResolvedValue(null);
+    const sound = await mine();
+    const first = await setLinks(sound.id, [{ url: bandcamp, title: 'Night drive' }]);
+    expect(((await json(first)).data!.links as Row[])[0].embedUrl).toBeNull();
+
+    mockResolve.mockResolvedValue({
+      title: 'Night Drive',
+      thumbnailUrl: null,
+      providerId: 'album=123',
+    });
+    const again = await setLinks(sound.id, [{ url: bandcamp, title: 'Night drive' }]);
+    expect(mockResolve).toHaveBeenCalledTimes(2);
+    expect(((await json(again)).data!.links as Row[])[0]).toMatchObject({
+      title: 'Night drive',
+      embedUrl: expect.stringContaining('https://bandcamp.com/EmbeddedPlayer/album=123/'),
+    });
+    // with its id read, it is kept as it is
+    await setLinks(sound.id, [{ url: bandcamp, title: 'Night drive' }]);
+    expect(mockResolve).toHaveBeenCalledTimes(2);
   });
 
   it('refuses more than five, and stores nothing', async () => {

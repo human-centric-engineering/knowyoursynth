@@ -72,8 +72,15 @@ export function SoundLinksForm({ sound, onSaved, onCancel, buttonClass }: SoundL
   const [failure, setFailure] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const setRow = (i: number, change: Partial<Row>) =>
+  const setRow = (i: number, change: Partial<Row>) => {
     setRows((rs) => rs.map((r, j) => (j === i ? { ...r, ...change } : r)));
+    // what was said about the field being changed is over
+    setProblems((ps) => {
+      const field = 'url' in change ? 'url' : 'title';
+      if (!ps[i]?.[field]) return ps;
+      return { ...ps, [i]: { ...ps[i], [field]: undefined } };
+    });
+  };
   const removeRow = (i: number) => {
     setRows((rs) => rs.filter((_, j) => j !== i));
     setProblems({});
@@ -93,7 +100,11 @@ export function SoundLinksForm({ sound, onSaved, onCancel, buttonClass }: SoundL
     const found: RowProblems = {};
     const links = rows.map((r, i) => {
       const parsed = SoundLinkInputSchema.safeParse({ url: r.url, title: r.title || undefined });
-      if (!parsed.success) found[i] = { url: parsed.error.issues[0]?.message };
+      if (!parsed.success)
+        for (const issue of parsed.error.issues) {
+          const field = issue.path[0] === 'title' ? 'title' : 'url';
+          found[i] = { ...found[i], [field]: found[i]?.[field] ?? issue.message };
+        }
       return parsed.success ? parsed.data : null;
     });
     setProblems(found);

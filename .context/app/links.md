@@ -335,7 +335,8 @@ moderation queue beside a report.
   spam or phishing surface no admin has looked at. (A suggestion may be a plain link, because an admin decides it.)
 - **Parsed and read on save** (`resolveSoundLinks`): the canonical address, the provider's id (Bandcamp's from its
   page), its picture and a title, the owner's or else the provider's (none from either is a 400 on that row). An
-  address the sound already had is not read again. The same address twice is a 400. Providers are read before the
+  address the sound already had is not read again, unless its title was cleared (the provider's comes back) or it
+  is a Bandcamp link still without its id. The same address twice is a 400. Providers are read before the
   write's transaction, so none is waited on under the owner's lock. **Checked again on read** (`storedSoundLinks`): an
   entry that no longer parses to its provider and address is not served.
 - **Served with `embedUrl` built from the provider and id**, and `thumbnailFor` checked again, as every link is. The

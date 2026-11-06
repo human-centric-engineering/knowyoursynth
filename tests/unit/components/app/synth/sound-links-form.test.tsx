@@ -128,6 +128,17 @@ describe('the links form', () => {
     expect(screen.getByRole('textbox', { name: /^Address/ }).getAttribute('aria-invalid')).toBe(
       'true'
     );
+
+    // changing the address takes what was said about it away
+    await userEvent.type(screen.getByRole('textbox', { name: /^Address/ }), 'x');
+    expect(
+      screen.queryByText(
+        'Only YouTube, Vimeo, Spotify, Bandcamp and SoundCloud links can go on a patch.'
+      )
+    ).toBeNull();
+    expect(screen.getByRole('textbox', { name: /^Address/ }).getAttribute('aria-invalid')).toBe(
+      'false'
+    );
     expect(onSaved).not.toHaveBeenCalled();
   });
 
