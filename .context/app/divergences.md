@@ -135,8 +135,9 @@ the same PR**, and each row names what deletes it.
   suggestions' (one model and one enum, `f-databank` t-37), user sounds' (one model,
   `f-my-sounds` s1), user patterns' (one model, `f-step-sequencer` t-81), reports about shared sounds (one model and two enums, `f-sharing` h4), user preferences' (two models, s3), lesson progress and favourites' (two
   models, s4), synth profiles' (two models, `f-profiles` r1), the synths owned and wanted (one
-  model and one enum, r2) and videos and links (one model and two enums, `f-videos-and-links`
-  t-179) instead of none, under a `FORK` comment.
+  model and one enum, r2), videos and links (one model and two enums, `f-videos-and-links`
+  t-179) and link suggestions (one model and two enums, `f-link-suggestions` t-185) instead of none, under a `FORK`
+  comment.
 - **Why:** `app.prisma` is where CUSTOMIZATION.md tells a fork to put its models, and the test's
   own header says a fork with app models pins that row rather than deleting it, so a stray extra
   declaration still fails.
@@ -146,7 +147,7 @@ the same PR**, and each row names what deletes it.
 - **Delete when:** never, while the fork has app models, unless upstream makes the case read a
   fork-owned declaration.
 
-### The catalogue and databank tables on the global-config list, and synth suggestions and users' own rows on the system list
+### The catalogue and databank tables on the global-config list, and synth and link suggestions and users' own rows on the system list
 
 - **Files:** `lib/tenancy/classification.ts`
 - **Change:** `Synth`, `SynthSound`, `SynthLineage`, `SynthNote` and `CatalogueSeedRecord` (the
@@ -154,7 +155,7 @@ the same PR**, and each row names what deletes it.
   `GLOBAL_CONFIG_MODELS`, under a one-line comment. The pattern library's `LibraryPattern` and
   `SynthSoundPattern` (`f-pattern-library` t-122), with `LibraryPatternComment` (t-156), follow under a second, and the thirteen databank
   tables (`BankMaker` … `BankRemoval`, `f-databank` t-34 and t-36) under a third, and `ExternalLink`
-  (`f-videos-and-links` t-179) under a fourth. `SynthSuggestion` (t-37),
+  (`f-videos-and-links` t-179) under a fourth. `SynthSuggestion` (t-37), `LinkSuggestion` (`f-link-suggestions` t-185),
   `UserSound` (`f-my-sounds` s1), `UserPattern` (`f-step-sequencer` t-81), `SynthPreference` and `UserPreference` (s3), `LessonProgress` and
   `Favourite` (s4), `SynthProfile` and `HeldUsername` (`f-profiles` r1), `OwnedInstrument` (r2), `SoundReport`
   (`f-sharing` h4) and `PatternReport` (`f-step-sequencer` t-83) are appended to `SYSTEM_MODELS` after `ContactSubmission`, under their own comment.
@@ -165,23 +166,25 @@ the same PR**, and each row names what deletes it.
   decided from one queue, so scoping it to an org would hide it from the admins who act on it. It
   is not a shared setting, which is what `GLOBAL_CONFIG_MODELS` means to the shared-settings guard
   (`scripts/ci/shared-settings-writes.ts`). That guard would refuse the signed-in user's `POST`.
-  So it joins `ContactSubmission`, the same shape of inbound queue, on `SYSTEM_MODELS`. A user's
+  So it joins `ContactSubmission`, the same shape of inbound queue, on `SYSTEM_MODELS`, and a link
+  suggestion, which feeds the shared videos and links the same way, sits beside it. A user's
   own sounds are theirs whichever org they act in, and are never a shared setting either, so
   `UserSound` joins it there with no `orgId` (owner ruling on `f-my-sounds`, 2026-10-15). Their last
   panels, settings, lesson progress, favourites, profiles, patterns and owned synths follow the same ruling, and so do the
   usernames held after a change, which record a name and no person. Reports about shared sounds and patterns are an inbound
   queue about them, decided from one place, so they sit beside them.
 - **On conflict:** take theirs, re-append our twenty-two names (and the four comments) to the end
-  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion`, `UserSound`, `UserPattern`, `SoundReport`, `PatternReport`, `SynthPreference`, `UserPreference`, `LessonProgress`, `Favourite`, `SynthProfile`, `HeldUsername` and `OwnedInstrument` (and their comment) after
+  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion`, `LinkSuggestion`, `UserSound`, `UserPattern`, `SoundReport`, `PatternReport`, `SynthPreference`, `UserPreference`, `LessonProgress`, `Favourite`, `SynthProfile`, `HeldUsername` and `OwnedInstrument` (and their comment) after
   `ContactSubmission` in `SYSTEM_MODELS`.
 - **Upstream:** sunrise#964 asks for a fork seam for classification.
-- **Delete when:** sunrise#964 lands. Move the thirty-four names (twenty-two global, twelve system) into the new seam's scaffold.
+- **Delete when:** sunrise#964 lands. Move the thirty-five names (twenty-two global, thirteen system) into the new seam's scaffold.
 
 ### The drift-probe scaffold test, pinned to our probe
 
 - **Files:** `tests/unit/lib/db/drift-probes.test.ts`
 - **Change:** the `shipped lib/app/db-drift.ts scaffold` case expects our probes' names (the
-  hand-written `synth_suggestion_userId_fkey`, `f-databank` t-37, `user_sound_userId_fkey`,
+  hand-written `synth_suggestion_userId_fkey`, `f-databank` t-37, `link_suggestion_userId_fkey`,
+  `f-link-suggestions` t-185, `user_sound_userId_fkey`,
   `f-my-sounds` s1, `synth_preference_userId_fkey` and `user_preference_userId_fkey`, s3, and
   `lesson_progress_userId_fkey` and `favourite_userId_fkey`, s4, and `synth_profile_userId_fkey`
   and `owned_instrument_userId_fkey`, `f-profiles` r1 and r2, `user_pattern_userId_fkey`,
