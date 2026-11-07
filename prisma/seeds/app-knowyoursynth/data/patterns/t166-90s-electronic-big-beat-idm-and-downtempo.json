@@ -14,6 +14,42 @@
     {
       "sound": "k2/burial-rain-bed",
       "reason": "An effect: rain made from noise bursts that the sample and hold opens and shuts at random. On Burial’s records the rain and crackle are recorded sounds under the track, not a line; there is no part to write."
+    },
+    {
+      "sound": "mantis/mantis-awake-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Awake: melody”, “Awake: chords, held” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "mantis/mantis-bloom-bells",
+      "reason": "The batch has the work’s held notes (“Two Thousand and Seventeen: chords, held”), not the part this pluck plays; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "mantis/mantis-strobe-pluck",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Strobe: organ figure” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "mantis/mantis-rave-organ-stab",
+      "reason": "The batch has no pattern from The Prodigy — “Everybody in the Place”; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "mantis/mantis-glitch-scatter",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; it names a style, not one work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "mantis/mantis-xtal-pad",
+      "reason": "The batch has no pattern from Aphex Twin — Selected Ambient Works 85–92; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "mantis/mantis-pulsing-pad",
+      "reason": "The batch has no pattern from Bonobo — “Cirrus”; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "mantis/mantis-emerald-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-bubblebath-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
     }
   ],
   "patterns": [
@@ -4720,7 +4756,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-garage-bass"],
+      "sounds": ["take-5/t5-garage-bass", "malevolent/mal-garage-bass"],
       "research": {
         "work": "Artful Dodger featuring Craig David, “Re-Rewind (The Crowd Say Bo Selecta)”, 1999",
         "part": "A two-step sub bass on A: a pushed root, a slide up to C and back, and a walk down to E.",
@@ -5716,7 +5752,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-archangel-pad"],
+      "sounds": ["take-5/t5-archangel-pad", "mantis/mantis-untrue-pad"],
       "research": {
         "work": "Burial, “Archangel”, Untrue, 2007",
         "part": "Dark minor sevenths, a bar each, falling from A♭ to G to F.",
@@ -8427,7 +8463,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/horizons-liquid-pad"],
+      "sounds": ["neutron/horizons-liquid-pad", "mantis/mantis-liquid-pad"],
       "research": {
         "work": "LTJ Bukem, “Horizons”, 1995",
         "part": "Soft fourths, a bar each, moving down and back: E–A, D–G, C–F, D–G.",
@@ -10244,7 +10280,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/unison-lead"],
+      "sounds": ["deepmind-12d/unison-lead", "mantis/mantis-anthem-supersaw"],
       "research": {
         "work": "Paul van Dyk, “For an Angel”, 45 RPM, 1994",
         "part": "The slow line over the breakdown: A, then B into C twice, G into F.",
@@ -11387,7 +11423,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-mysterons-theremin"],
+      "sounds": ["take-5/t5-mysterons-theremin", "malevolent/mal-mysterons-theremin"],
       "research": {
         "work": "Portishead, “Mysterons”, Dummy, 1994",
         "part": "The eerie line: F up to B♭, F to B, then up to E♭ and A♭.",
@@ -13357,7 +13393,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/scary-monsters-growl"],
+      "sounds": ["neutron/scary-monsters-growl", "malevolent/mal-growl-bass"],
       "research": {
         "work": "Skrillex, “Scary Monsters and Nice Sprites”, 2010",
         "part": "The drop’s bass: a held B♭, then G hammered in the rhythm of the drop.",
@@ -16487,7 +16523,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-eskimo-bass"],
+      "sounds": ["take-5/t5-eskimo-bass", "mantis/mantis-grime-square"],
       "research": {
         "work": "Wiley, “Eskimo”, 2002",
         "part": "A sparse, cold square bass on E, with a step up to G and F♯.",

@@ -22,6 +22,26 @@
     {
       "sound": "mantis/mantis-talk-lead",
       "reason": "A technique: a narrow filter band opened and closed by the joystick so the lead talks. It names no work, and the line is the lesson’s own."
+    },
+    {
+      "sound": "mantis/mantis-kalimba",
+      "reason": "The batch has no pattern from Earth, Wind & Fire — Maurice White’s kalimba; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "mantis/mantis-talkbox-funk",
+      "reason": "The batch has the work’s bass line (“More Bounce to the Ounce: bass”), not the part this lead plays; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "malevolent/mal-regulate-slide",
+      "reason": "The batch has no pattern from Dr. Dre — “Let Me Ride”; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "malevolent/mal-boogie-lead",
+      "reason": "The batch has the work’s bass line (“Boogie On Reggae Woman: bass”), not the part this lead plays; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "malevolent/mal-high-whistle-lead",
+      "reason": "The batch has the work’s bass line (“Aqua Boogie: bass figure”), not the part this lead plays; the riff is written to the style and taken from no record."
     }
   ],
   "patterns": [
@@ -253,7 +273,8 @@
         "poly-d/pd-funk-bass",
         "take-5/t5-flash-light-bass",
         "neutron/env-res-bubble-bass",
-        "pro-1/bubble-lofreq-bass"
+        "pro-1/bubble-lofreq-bass",
+        "malevolent/mal-pfunk-bass"
       ],
       "research": {
         "work": "Parliament, “Flash Light”, Funkentelechy vs. the Placebo Syndrome, 1977",
@@ -4538,7 +4559,8 @@
       "sounds": [
         "super-gemini/sg-chameleon-bass",
         "take-5/t5-chameleon-bass",
-        "neutron/jazz-funk-dry-bass"
+        "neutron/jazz-funk-dry-bass",
+        "mantis/mantis-chameleon-bass"
       ],
       "research": {
         "work": "Herbie Hancock, “Chameleon”, Head Hunters, 1973",
@@ -4774,7 +4796,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/staccato-quack-bass"],
+      "sounds": ["model-d/staccato-quack-bass", "mantis/mantis-chameleon-bass"],
       "research": {
         "work": "Herbie Hancock, “Chameleon”, Head Hunters, 1973",
         "part": "The same two bars of the bass, an octave up, where the Staccato Quack Bass plays.",
@@ -6248,7 +6270,8 @@
         "e7/e7-minneapolis-stab",
         "super-gemini/sg-minneapolis-stab",
         "take-5/t5-1999-stabs",
-        "ub-xa-d/minneapolis-stab"
+        "ub-xa-d/minneapolis-stab",
+        "mantis/mantis-minneapolis-stab"
       ],
       "research": {
         "work": "Prince, “1999”, 1999, 1982",
@@ -6380,7 +6403,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["pro-1/minneapolis-brass-stab", "neutron/smeared-brass-stab"],
+      "sounds": [
+        "pro-1/minneapolis-brass-stab",
+        "neutron/smeared-brass-stab",
+        "mantis/mantis-minneapolis-stab"
+      ],
       "research": {
         "work": "Prince, “1999”, 1999, 1982",
         "part": "The top note of each stab in the same two bars: A, B♭, A, B♭, A, B♭.",
@@ -7057,7 +7084,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/clav-funk"],
+      "sounds": ["ub-xa-d/clav-funk", "malevolent/mal-superstition-clav"],
       "research": {
         "work": "Stevie Wonder, “Superstition”, Talking Book, 1972",
         "part": "Two bars of the clavinet’s left hand: E♭, then E♭, C♯, E♭, F♯, C♯, B♭, and the second time A♭, B♭, C♯ up to F♯.",
@@ -7306,7 +7333,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-superstition-clav"],
+      "sounds": ["take-5/t5-superstition-clav", "malevolent/mal-superstition-clav"],
       "research": {
         "work": "Stevie Wonder, “Superstition”, Talking Book, 1972",
         "part": "The same two bars of the clavinet riff, an octave up, where the Funk Clavinet plays.",
@@ -10327,7 +10354,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/chorus-rhodes"],
+      "sounds": ["deepmind-12d/chorus-rhodes", "malevolent/mal-angela-rhodes"],
       "research": {
         "work": "Bob James, “Angela (Theme from Taxi)”, Touchdown, 1978",
         "part": "The first four bars of the theme: G, A♭, B♭ held, up to E♭ and down through C and B♭, then E♭, F, G, B♭ to the held F.",
@@ -11076,7 +11103,8 @@
         "model-d/gfunk-whistle",
         "solar-42n/solar-g-funk-whine",
         "super-gemini/sg-gfunk",
-        "super-gemini/sg-whistle"
+        "super-gemini/sg-whistle",
+        "mantis/mantis-gfunk-whistle"
       ],
       "research": {
         "work": "Dr. Dre featuring Snoop Doggy Dogg, “Nuthin’ but a ‘G’ Thang”, The Chronic, 1992",
@@ -13431,7 +13459,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-angel-bass"],
+      "sounds": ["take-5/t5-angel-bass", "malevolent/mal-trip-hop-bass"],
       "research": {
         "work": "Massive Attack, “Angel”, Mezzanine, 1998",
         "part": "The one-bar bass: C in eighths, with the sixteenth pair and the D at the end.",

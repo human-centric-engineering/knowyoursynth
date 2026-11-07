@@ -2,7 +2,32 @@
   "task": "t-161",
   "researchedBy": "Claude Opus 5.5 (Claude Code), for the owner",
   "researchedAt": "2026-11-02",
-  "notRecreated": [],
+  "notRecreated": [
+    {
+      "sound": "mantis/mantis-vox-humana",
+      "reason": "The batch has the work’s lead line and arpeggio (“Are ‘Friends’ Electric?: intro riff”, “Are ‘Friends’ Electric?: instrumental riff”), not the part this pad plays; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "mantis/mantis-rydeen-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Rydeen: theme”, “Rydeen: bridge melody” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "mantis/mantis-hyperpop-zap",
+      "reason": "The batch has no pattern from SOPHIE — “Immaterial”; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "mantis/mantis-isolation-lead",
+      "reason": "The batch has no pattern from Joy Division — “Isolation”; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "malevolent/mal-just-cant-bass",
+      "reason": "It names the player’s style, not one work, and the riff is the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-whip-it-bass",
+      "reason": "The batch has the work’s lead line (“Whip It: synth riff”), not the part this bass plays; the riff is written to the style and taken from no record."
+    }
+  ],
   "patterns": [
     {
       "key": "researched:gary-numan/cars-bass",
@@ -1195,7 +1220,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/square-lead"],
+      "sounds": ["ub-xa-d/square-lead", "malevolent/mal-cars-lead"],
       "research": {
         "work": "Gary Numan, “Cars”, The Pleasure Principle, 1979",
         "part": "Four bars of the bridge’s synth melody: D, D an octave up, A, B, C, B, with the turn to F and E in the second bar.",
@@ -1458,7 +1483,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/two-speed-pwm-strings"],
+      "sounds": ["neutron/two-speed-pwm-strings", "malevolent/mal-cars-lead"],
       "research": {
         "work": "Gary Numan, “Cars”, The Pleasure Principle, 1979",
         "part": "The high line over the riff: A held for four bars, then G, D, B and G falling in the last two.",
@@ -1721,7 +1746,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-cars-vox"],
+      "sounds": ["take-5/t5-cars-vox", "malevolent/mal-cars-lead"],
       "research": {
         "work": "Gary Numan, “Cars”, The Pleasure Principle, 1979",
         "part": "The high line over the riff: A held for four bars, then G, D, B and G falling in the last two.",

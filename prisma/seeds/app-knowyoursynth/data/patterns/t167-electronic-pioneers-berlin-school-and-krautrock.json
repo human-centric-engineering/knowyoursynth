@@ -106,6 +106,62 @@
     {
       "sound": "mantis/mantis-ring-bells",
       "reason": "An effect: bell tones from two sines ring-modulated. It names no work, and the tune is the lesson’s own."
+    },
+    {
+      "sound": "mantis/mantis-says-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Says: the arpeggio” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "mantis/mantis-howling-wind",
+      "reason": "An effect: a cold wind whistling and gusting round a lonely house. There is no part to write."
+    },
+    {
+      "sound": "mantis/mantis-o-superman-pulse",
+      "reason": "The batch has no pattern from Laurie Anderson — “O Superman”; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "mantis/mantis-mirror-keys",
+      "reason": "The batch has no pattern from Raymond Scott — Manhattan Research; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "malevolent/mal-mindphaser-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-ciani-bubbles",
+      "reason": "An effect: a cascade of liquid, pinging bubbles, the West Coast synthesis sound. There is no part to write."
+    },
+    {
+      "sound": "malevolent/mal-west-coast-ping",
+      "reason": "The batch has no pattern from Morton Subotnick — Silver Apples of the Moon; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "malevolent/mal-whistling-wind",
+      "reason": "An effect: a cold wind whistling and moaning round a lonely tower. There is no part to write."
+    },
+    {
+      "sound": "malevolent/mal-whale-song",
+      "reason": "An effect: long, mournful, sliding calls echoing through deep water. There is no part to write."
+    },
+    {
+      "sound": "malevolent/mal-dalek-voice",
+      "reason": "An effect: a grating, metallic, robotic voice, amplitude modulation at audio rate. There is no part to write."
+    },
+    {
+      "sound": "malevolent/mal-oramics-tones",
+      "reason": "An effect: pure, slowly gliding tones with a shimmering, inharmonic edge, as if drawn by hand. There is no part to write."
+    },
+    {
+      "sound": "malevolent/mal-steam-train",
+      "reason": "An effect: a steam locomotive chuffing steadily along. There is no part to write."
+    },
+    {
+      "sound": "malevolent/mal-kosmische-lullaby",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Sowiesoso: a gentle melody” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-space-is-the-place",
+      "reason": "The batch has no pattern from Sun Ra — “Space Is the Place”; the riff is written to the style and taken from no record."
     }
   ],
   "patterns": [
@@ -501,7 +557,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/baroque-line-voice", "solar-42n/solar-switched-on-bach"],
+      "sounds": [
+        "model-d/baroque-line-voice",
+        "solar-42n/solar-switched-on-bach",
+        "malevolent/mal-switched-on-bach"
+      ],
       "research": {
         "work": "Wendy Carlos, “Two-Part Invention in F Major” (J. S. Bach, BWV 779), Switched-On Bach, 1968",
         "part": "The right hand’s first four bars: the leaping subject, its run down, the subject an octave up, and the trill-like figure on A, C and B♭.",
@@ -909,7 +969,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["solar-42n/solar-switched-on-bach"],
+      "sounds": ["solar-42n/solar-switched-on-bach", "malevolent/mal-switched-on-bach"],
       "research": {
         "work": "Wendy Carlos, “Two-Part Invention in F Major” (J. S. Bach, BWV 779), Switched-On Bach, 1968",
         "part": "The left hand’s answer, bars 2–5: the subject an octave below the right hand, here two octaves below.",
@@ -1357,7 +1417,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["super-gemini/sg-switched-on-lead"],
+      "sounds": ["super-gemini/sg-switched-on-lead", "malevolent/mal-switched-on-bach"],
       "research": {
         "work": "Wendy Carlos, “Two-Part Invention in D Minor” (J. S. Bach, BWV 775), Switched-On Bach, 1968",
         "part": "The right hand’s first eight bars of 3/8: the scale up and the leap down through C♯, the broken chords, and the same an octave up.",
@@ -1854,7 +1914,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-carlos-baroque"],
+      "sounds": ["take-5/t5-carlos-baroque", "malevolent/mal-switched-on-bach"],
       "research": {
         "work": "Wendy Carlos, “Two-Part Invention in B-flat Major” (J. S. Bach, BWV 785), Switched-On Bach, 1968",
         "part": "The right hand’s first two bars: the turn and broken chord on B♭, then the same a step down on E♭.",
@@ -2037,7 +2097,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["system-15/s15-brass"],
+      "sounds": ["system-15/s15-brass", "malevolent/mal-switched-on-bach"],
       "research": {
         "work": "Wendy Carlos, “Chorale Prelude ‘Wachet auf, ruft uns die Stimme’” (J. S. Bach, BWV 645), Switched-On Bach, 1968",
         "part": "The chorale tune’s first line, in long notes under the counter-melody: E♭ and G, four B♭s, C and B♭, and the rest before the next line.",
@@ -3004,7 +3064,8 @@
       "sounds": [
         "model-d/thin-high-strings",
         "solar-42n/solar-tomita-whistle",
-        "take-5/t5-tomita-whistle"
+        "take-5/t5-tomita-whistle",
+        "malevolent/mal-tomita-whistle"
       ],
       "research": {
         "work": "Isao Tomita, “Clair de Lune” (Claude Debussy), Snowflakes Are Dancing, 1974",
@@ -4174,7 +4235,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/radiophonic-gallop-bass", "solar-42n/solar-galloping-bass"],
+      "sounds": [
+        "model-d/radiophonic-gallop-bass",
+        "solar-42n/solar-galloping-bass",
+        "mantis/mantis-gallop-bass"
+      ],
       "research": {
         "work": "Ron Grainer, realised by Delia Derbyshire at the BBC Radiophonic Workshop, “Doctor Who” theme, 1963",
         "part": "The galloping bass on E, four bars: the plain gallop, the turn up to G, the sixteenths, and the G, F and D that lead back.",
@@ -5023,7 +5088,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["syntrx-ii/syntrx-suicide"],
+      "sounds": ["syntrx-ii/syntrx-suicide", "malevolent/mal-ghost-rider-pulse"],
       "research": {
         "work": "Suicide, “Ghost Rider”, Suicide, 1977",
         "part": "The riff’s root, C, held for four bars.",
@@ -5880,7 +5945,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/plantasia-lead", "take-5/t5-plantasia-lead"],
+      "sounds": [
+        "model-d/plantasia-lead",
+        "take-5/t5-plantasia-lead",
+        "malevolent/mal-plantasia-lead"
+      ],
       "research": {
         "work": "Mort Garson, “Plantasia”, Mother Earth’s Plantasia, 1976",
         "part": "The tune’s first six bars, around B♭: up to D♭ and back, the falls to A♭ and F, home on B♭.",
@@ -9889,7 +9958,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/expanding-universe-pluck", "syntrx-ii/syntrx-spiegel"],
+      "sounds": [
+        "model-d/expanding-universe-pluck",
+        "syntrx-ii/syntrx-spiegel",
+        "malevolent/mal-expanding-universe"
+      ],
       "research": {
         "work": "Laurie Spiegel, The Expanding Universe, 1980",
         "part": "Up and down a pentatonic shape on C, then the same with A for G.",
@@ -10673,7 +10746,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-reich-marimba"],
+      "sounds": ["take-5/t5-reich-marimba", "mantis/mantis-reich-marimba"],
       "research": {
         "work": "Steve Reich, Music for 18 Musicians, 1978",
         "part": "A three-beat figure in sixteenths with gaps, for a second part to fill.",
@@ -10857,7 +10930,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/baroque-hoedown-pluck", "take-5/t5-baroque-hoedown"],
+      "sounds": [
+        "model-d/baroque-hoedown-pluck",
+        "take-5/t5-baroque-hoedown",
+        "malevolent/mal-hoedown-blip"
+      ],
       "research": {
         "work": "Perrey and Kingsley, “Baroque Hoedown”, Kaleidoscopic Vibrations: Spotlight on the Moog, 1967",
         "part": "A jaunty G major tune in eighths, up the chord and back down the scale.",

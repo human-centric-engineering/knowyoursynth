@@ -30,6 +30,50 @@
     {
       "sound": "solar-42n/solar-just-intonation",
       "reason": "The sound is a Solar classic drone: its pitches are set on the generators’ TUNE knobs, and the keyboard only opens its GATE, so a pattern can change when it sounds but not what. There is no part to write."
+    },
+    {
+      "sound": "mantis/mantis-pearl-piano",
+      "reason": "The batch has the work’s held notes (“The Pearl: chords for the falling notes”), not the part this keyboard sound plays; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "mantis/mantis-zeroes-and-ones",
+      "reason": "It names the player’s style, not one work, and the riff is the lesson’s own."
+    },
+    {
+      "sound": "mantis/mantis-daylight-strings",
+      "reason": "The batch has no pattern from Max Richter — “On the Nature of Daylight”; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "mantis/mantis-vibraphone",
+      "reason": "It names the player’s style, not one work, and the riff is the lesson’s own."
+    },
+    {
+      "sound": "mantis/mantis-postcard-piano",
+      "reason": "The batch has no pattern from Hiroshi Yoshimura — Music for Nine Post Cards; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "mantis/mantis-orinoco-pizzicato",
+      "reason": "The batch has the work’s chords (“Orinoco Flow: the chords, held”), not the part this pluck plays; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "malevolent/mal-muted-trumpet",
+      "reason": "The batch has the work’s bass line (“So What: the bass call”), not the part this brass sound plays; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "malevolent/mal-blues-harp",
+      "reason": "It names the player’s style, not one work, and the riff is the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-just-fifth-drone",
+      "reason": "It names the player’s style, not one work, and the riff is the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-sacrificial-organ",
+      "reason": "The batch’s “The Sacrificial Code: slow organ chords” is chords, which one voice cannot play; the riff is the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-looking-glass-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Through the Looking Glass: a repeating marimba figure” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
     }
   ],
   "patterns": [
@@ -1274,7 +1318,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/sugar-plum-celesta", "super-gemini/sg-celesta"],
+      "sounds": ["model-d/sugar-plum-celesta", "super-gemini/sg-celesta", "mantis/mantis-celesta"],
       "research": {
         "work": "P. I. Tchaikovsky, “Dance of the Sugar Plum Fairy”, The Nutcracker, 1892",
         "part": "The celesta’s first phrase, four bars of 2/4: G E G F♯, D♯ E and three Ds, three C♯s, three Cs, then B E C E B.",
@@ -1488,7 +1532,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-pizzicato"],
+      "sounds": ["take-5/t5-pizzicato", "mantis/mantis-celesta"],
       "research": {
         "work": "P. I. Tchaikovsky, “Dance of the Sugar Plum Fairy”, The Nutcracker, 1892",
         "part": "The plucked strings before the celesta comes in: E and F♯, G and E♭ off the beat, twice.",
@@ -9220,7 +9264,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/sakamoto-bell-lead", "take-5/t5-mr-lawrence-bell"],
+      "sounds": [
+        "neutron/sakamoto-bell-lead",
+        "take-5/t5-mr-lawrence-bell",
+        "malevolent/mal-mr-lawrence-bell"
+      ],
       "research": {
         "work": "Ryuichi Sakamoto, “Merry Christmas Mr. Lawrence”, Merry Christmas Mr. Lawrence, 1983",
         "part": "The opening figure in eighth notes, six bars: E and D rocking under A and G, then the same on D and C, falling to B and A.",
@@ -9603,7 +9651,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/jester-fusion-lead"],
+      "sounds": ["model-d/jester-fusion-lead", "mantis/mantis-duo-thirds"],
       "research": {
         "work": "Return to Forever, “Duel of the Jester and the Tyrant”, Romantic Warrior, 1976",
         "part": "The opening theme in half notes, eight bars: B G, F♯ E, G D, D C, twice, the second time turning to F and F♯.",
@@ -12421,7 +12469,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["k2/biosphere-filter-tones"],
+      "sounds": ["k2/biosphere-filter-tones", "malevolent/mal-substrata-pulse"],
       "research": {
         "work": "Biosphere, “Poa Alpina”, Substrata, 1997",
         "part": "A G held for two bars, then a C, for the tone that follows the keys.",
@@ -13393,7 +13441,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/overtone-sweep-drone"],
+      "sounds": ["neutron/overtone-sweep-drone", "malevolent/mal-radigue-drone"],
       "research": {
         "work": "Éliane Radigue, “Kyema”, Trilogie de la Mort, 1988",
         "part": "A low A held for two bars, then a G.",
@@ -14371,7 +14419,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/atmospheres-cluster"],
+      "sounds": ["neutron/atmospheres-cluster", "mantis/mantis-cluster-pad"],
       "research": {
         "work": "György Ligeti, Atmosphères, 1961",
         "part": "A and B♭ held for two bars, then G and A♭: two notes, the most the sound holds.",
@@ -16797,7 +16845,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/plink-plank-pizzicato"],
+      "sounds": ["model-d/plink-plank-pizzicato", "malevolent/mal-pizzicato"],
       "research": {
         "work": "Leroy Anderson, “Plink, Plank, Plunk!”, 1951",
         "part": "Plucked eighths up a C chord to G and down, then up to E and home to C.",
@@ -20296,7 +20344,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["b2600/roach-swaying-pad"],
+      "sounds": ["b2600/roach-swaying-pad", "malevolent/mal-roach-swell"],
       "research": {
         "work": "Steve Roach, Structures from Silence, 1984",
         "part": "A C held for two bars, then an F; the sound sways its fifth itself.",
@@ -20484,7 +20532,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/triangle-swell-pad"],
+      "sounds": ["model-d/triangle-swell-pad", "malevolent/mal-roach-swell"],
       "research": {
         "work": "Steve Roach, Structures from Silence, 1984",
         "part": "G, E, A and D, a bar each, each left to swell.",

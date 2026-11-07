@@ -62,6 +62,26 @@
     {
       "sound": "solar-42n/solar-kosmische-drift",
       "reason": "The sound is a Solar classic drone: its pitches are set on the generators’ TUNE knobs, and the keyboard only opens its GATE, so a pattern can change when it sounds but not what. There is no part to write."
+    },
+    {
+      "sound": "mantis/mantis-phaedra-sequence",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Phaedra: sequence”, “Phaedra: pulse keys”, “Phaedra: sequence keys”, “Phaedra and Rubycon: opening sequence”, “Phaedra: flute melody”, “Phaedra: filter whistle”, “Mysterious Semblance: drifting strings” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "mantis/mantis-filter-house-chords",
+      "reason": "The batch has the work’s percussion part (“Revolution 909: bass pulse”), not the part this keyboard sound plays; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "mantis/mantis-magnetic-fields",
+      "reason": "The batch has no pattern from Jean-Michel Jarre — “Les Chants Magnétiques”; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "malevolent/mal-rubycon-sequence",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Phaedra and Rubycon: opening sequence”, “Rubycon: gliding lead”, “Rubycon: ostinato keys”, “Rubycon: sync drone” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-equinoxe-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Équinoxe 5: octave bass” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
     }
   ],
   "patterns": [
@@ -207,7 +227,8 @@
         "neutron/funk-drive-lead",
         "pro-1/rasp-filter-riff",
         "take-5/t5-da-funk-lead",
-        "td-3/td-high-lead"
+        "td-3/td-high-lead",
+        "malevolent/mal-da-funk-lead"
       ],
       "research": {
         "work": "Daft Punk, “Da Funk”, Homework, 1995",
@@ -744,7 +765,8 @@
         "neutron/funk-drive-lead",
         "pro-1/rasp-filter-riff",
         "take-5/t5-da-funk-lead",
-        "td-3/td-high-lead"
+        "td-3/td-high-lead",
+        "malevolent/mal-da-funk-lead"
       ],
       "research": {
         "work": "Daft Punk, “Da Funk”, Homework, 1995",
@@ -7739,7 +7761,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/choir-pad", "super-gemini/sg-oxygene-wash", "take-5/t5-oxygene-pad"],
+      "sounds": [
+        "ub-xa-d/choir-pad",
+        "super-gemini/sg-oxygene-wash",
+        "take-5/t5-oxygene-pad",
+        "mantis/mantis-oxygene-swirl"
+      ],
       "research": {
         "work": "Jean-Michel Jarre, “Oxygène (Part IV)”, Oxygène, 1976",
         "part": "The string pad’s chords under the melody: C minor for four bars, then G minor over D and F over C. Eight bars.",
@@ -8631,7 +8658,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/oxygene-lead", "e7/e7-jarre-lead", "b2600/jarre-oxygene-whistle"],
+      "sounds": [
+        "model-d/oxygene-lead",
+        "e7/e7-jarre-lead",
+        "b2600/jarre-oxygene-whistle",
+        "malevolent/mal-oxygene-lead"
+      ],
       "research": {
         "work": "Jean-Michel Jarre, “Oxygène (Part IV)”, Oxygène, 1976",
         "part": "Six bars of the melody: C falling to G, E♭, G and a held C, twice, then B♭ falling to A, G, A and a held D.",
@@ -11029,7 +11061,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["b2600/td-soaring-lead"],
+      "sounds": ["b2600/td-soaring-lead", "malevolent/mal-stratosfear-lead"],
       "research": {
         "work": "Tangerine Dream, “Stratosfear”, Stratosfear, 1976",
         "part": "The first four bars of the theme: B rising to C and falling to F♯, then G, A, G, E.",
@@ -16606,7 +16638,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/cosmic-drone"],
+      "sounds": ["deepmind-12d/cosmic-drone", "malevolent/mal-zeit-drone"],
       "research": {
         "work": "Tangerine Dream, Zeit, 1972",
         "part": "Eight bars of a held low A.",

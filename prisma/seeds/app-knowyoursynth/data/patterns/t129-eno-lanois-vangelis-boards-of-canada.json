@@ -22,6 +22,18 @@
     {
       "sound": "syntrx-ii/syntrx-eno-treatment",
       "reason": "The sound is a treatment effect made by the patch, and its credit names no work, so there is nothing to transcribe."
+    },
+    {
+      "sound": "mantis/mantis-pulstar",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-music-is-math-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-spiral-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
     }
   ],
   "patterns": [
@@ -357,7 +369,8 @@
         "k2/ms20-lead",
         "solar-42n/solar-tears-in-rain",
         "super-gemini/sg-blade-brass",
-        "take-5/t5-blade-runner-brass"
+        "take-5/t5-blade-runner-brass",
+        "mantis/mantis-blade-runner-brass"
       ],
       "research": {
         "work": "Vangelis, “End Titles”, Blade Runner, 1982 (released 1994)",
@@ -4118,7 +4131,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-conquest-choir"],
+      "sounds": ["take-5/t5-conquest-choir", "mantis/mantis-choir-aah"],
       "research": {
         "work": "Vangelis, “Conquest of Paradise”, 1492: Conquest of Paradise, 1992",
         "part": "The string line under the first eight bars of the choir, in three octaves: D, C♯, D, E, F, E, F, E, a bar each, in 3/4.",
@@ -4496,7 +4509,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/ascent-swell-pad", "model-d/ascent-swell-pad"],
+      "sounds": [
+        "deepmind-12d/ascent-swell-pad",
+        "model-d/ascent-swell-pad",
+        "mantis/mantis-ascent-swell"
+      ],
       "research": {
         "work": "Brian Eno, “An Ending (Ascent)”, Apollo: Atmospheres and Soundtracks, 1983",
         "part": "The six bars of melody the transcription has: E, B, D; C, B, A; then the rise to G and the fall back to G and A.",
@@ -6881,7 +6898,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/para-keys", "solar-42n/solar-hazy-nostalgia"],
+      "sounds": [
+        "neutron/para-keys",
+        "solar-42n/solar-hazy-nostalgia",
+        "mantis/mantis-tape-wobble-keys"
+      ],
       "research": {
         "work": "Boards of Canada, “Roygbiv”, Music Has the Right to Children, 1998",
         "part": "Eight bars of the melody: E, A, F♯; B, D, A; the fall to D; then the same rising higher, to E and down to A.",
@@ -8113,7 +8134,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/brass-swell"],
+      "sounds": ["neutron/brass-swell", "mantis/mantis-blade-runner-brass"],
       "research": {
         "work": "Vangelis, “Main Titles”, Blade Runner, 1982",
         "part": "Eight bars of slow swells in D: A held for two bars, rising to D and E, then falling back to A.",
@@ -8309,7 +8330,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/blade-runner-blues-lead"],
+      "sounds": ["neutron/blade-runner-blues-lead", "mantis/mantis-blade-runner-brass"],
       "research": {
         "work": "Vangelis, “Blade Runner Blues”, Blade Runner, 1982",
         "part": "Four slow bars in E minor: G bending down to E, then A sliding to G and back to E.",
@@ -8634,7 +8655,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["pro-1/pedal-glide-drone"],
+      "sounds": ["pro-1/pedal-glide-drone", "mantis/mantis-blade-runner-brass"],
       "research": {
         "work": "Vangelis, “Blade Runner Blues”, Blade Runner, 1982",
         "part": "Eight slow bars of a voice gliding over the patch’s fixed C: C, E♭, F and G, and back.",
@@ -9296,7 +9317,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["k2/eno-soft-bell-keys", "neutron/airports-tones"],
+      "sounds": ["k2/eno-soft-bell-keys", "neutron/airports-tones", "mantis/mantis-airport-pad"],
       "research": {
         "work": "Brian Eno, “1/1”, Ambient 1: Music for Airports, 1978",
         "part": "Eight sparse bars in F minor: a rising F, A♭, C, answered by E♭ and D♭ falling to C, with long rests.",
@@ -9622,7 +9643,8 @@
         "e7/e7-airport",
         "super-gemini/sg-airports-pad",
         "take-5/t5-airports-pad",
-        "solar-42n/solar-airport-loops"
+        "solar-42n/solar-airport-loops",
+        "mantis/mantis-airport-pad"
       ],
       "research": {
         "work": "Brian Eno, “2/1”, Ambient 1: Music for Airports, 1978",
@@ -9939,7 +9961,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["b2600/eno-triangle-pad"],
+      "sounds": ["b2600/eno-triangle-pad", "mantis/mantis-airport-pad"],
       "research": {
         "work": "Brian Eno, “2/2”, Ambient 1: Music for Airports, 1978",
         "part": "Eight bars of four long tones: A, C, E and F, two bars each.",
@@ -13222,7 +13244,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["pro-800/p8-slow-soft-bells"],
+      "sounds": ["pro-800/p8-slow-soft-bells", "malevolent/mal-thursday-swell"],
       "research": {
         "work": "Brian Eno, “Thursday Afternoon”, Thursday Afternoon, 1985",
         "part": "Eight sparse bars in A minor: single bell notes on A, E, G and C, with long gaps.",
