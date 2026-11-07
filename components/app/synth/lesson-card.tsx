@@ -11,8 +11,10 @@
  * The card can be dragged by its header to anywhere on the screen, so it can be put over whatever part of the panel is
  * not in use. The ⇆ button docks it again, on the other side.
  *
- * The lesson is drawn in the faceplate's colours, as the Sound Design strip it opens from is (`face`, t-201); the
- * inspector and the effects keep the stage's.
+ * The lesson hangs from a strip of the faceplate (`face`, t-201): its header is the panel's colour and silkscreen
+ * ink, as the rails along the panel's head and foot are, so the card reads as part of the instrument; its body is the
+ * stage's, so the text stands off any faceplate the card is over. The inspector and the effects are the stage's
+ * throughout.
  *
  * Below `lg` the lesson stays in its bottom sheet (`lesson.tsx`), and this is not drawn.
  */
@@ -86,11 +88,11 @@ export interface LessonCardProps {
   links?: LinkSummary;
   /** What a link suggested for it is about: a library sound, never one of a user's own (`f-link-suggestions` t-186). */
   suggestLink?: readonly SuggestTarget[];
-  /** The player's colour roles in the faceplate's colours (`faceRoles`), for the lesson. */
+  /** The player's colour roles in the faceplate's colours (`faceRoles`), for the lesson's header. */
   face?: CSSProperties;
 }
 
-/** A module's colour, kept as far off the face as the face's roles allow (`--kys-module-mix`; all of it without). */
+/** A module's colour, kept as far off the face as the face's roles allow (`--kys-module-mix`; all of it on the stage). */
 const moduleInk = (colour: string) =>
   `color-mix(in srgb, ${colour} var(--kys-module-mix, 100%), var(--kys-text))`;
 
@@ -432,10 +434,7 @@ export function LessonCard({
               {i > 0 && <span className="text-(--kys-faint)">→</span>}
               <span
                 className="rounded-full border px-2 py-0.5 text-xs font-semibold"
-                style={{
-                  borderColor: moduleInk(moduleOf(m).color),
-                  color: moduleInk(moduleOf(m).color),
-                }}
+                style={{ borderColor: moduleOf(m).color, color: moduleOf(m).color }}
               >
                 {moduleOf(m).label}
               </span>
@@ -476,7 +475,7 @@ export function LessonCard({
                           focusStore.set({ kind: 'control', id: t.id, x: 0, y: 0, tip: false })
                         }
                         className="kys-label"
-                        style={{ color: moduleInk(moduleOf(c.module).color) }}
+                        style={{ color: moduleOf(c.module).color }}
                       >
                         {displayName(def, c)}
                       </button>
@@ -510,26 +509,26 @@ export function LessonCard({
   return (
     <aside
       ref={ref}
-      className={`kys-card ${lesson ? 'kys-face' : ''}`}
+      className="kys-card"
       data-side={side}
       data-detached={pos ? '' : undefined}
       style={
         pos
           ? {
-              ...lesson,
               left: pos.x,
               top: pos.y,
               right: 'auto',
               bottom: 'auto',
               maxHeight: `calc(100vh - ${pos.y + EDGE}px)`,
             }
-          : lesson
+          : undefined
       }
       aria-labelledby="kys-card-h"
       data-testid="lesson-card"
     >
       <header
-        className="kys-card-head"
+        className={`kys-card-head ${lesson ? 'kys-face' : ''}`}
+        style={lesson}
         title="Drag to move the card"
         onPointerDown={onDragStart}
         onPointerMove={onDragMove}

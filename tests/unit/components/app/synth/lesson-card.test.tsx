@@ -209,9 +209,9 @@ describe('LessonCard live region', () => {
       />
     );
 
-  it("draws the lesson in the face's colours, and not the inspector or the effects (t-201)", () => {
+  it("hangs the lesson from a strip of the face, its body the stage's, and not the inspector or the effects (t-201)", () => {
     const face = faceRoles(PAPER, PAPER, INK);
-    const shown = () => screen.getByTestId('lesson-card');
+    const head = () => screen.getByTestId('lesson-card').querySelector('header');
     const view = (section: 'build' | 'inspector' | 'fx') =>
       render(
         <LessonCard
@@ -229,40 +229,16 @@ describe('LessonCard live region', () => {
         />
       );
     const { unmount } = view('build');
-    expect(shown()).toHaveClass('kys-face');
-    expect(shown().style.getPropertyValue('--kys-text')).toBe(INK);
+    expect(head()).toHaveClass('kys-face');
+    expect(head()?.style.getPropertyValue('--kys-text')).toBe(INK);
+    expect(screen.getByTestId('lesson-card').style.getPropertyValue('--kys-text')).toBe('');
     unmount();
     for (const section of ['inspector', 'fx'] as const) {
       const v = view(section);
-      expect(shown()).not.toHaveClass('kys-face');
-      expect(shown().style.getPropertyValue('--kys-text')).toBe('');
+      expect(head()).not.toHaveClass('kys-face');
+      expect(head()?.style.getPropertyValue('--kys-text')).toBe('');
       v.unmount();
     }
-  });
-
-  it('keeps the face while the card is dragged', () => {
-    render(
-      <LessonCard
-        def={def}
-        preset={null}
-        step={null}
-        onStep={vi.fn()}
-        section="build"
-        onClose={vi.fn()}
-        side="right"
-        onSide={vi.fn()}
-        inspector={null}
-        effects={null}
-        face={faceRoles(PAPER, PAPER, INK)}
-      />
-    );
-    const card = screen.getByTestId('lesson-card');
-    card.getBoundingClientRect = () => new DOMRect(960, 300, 400, 500);
-    const head = card.querySelector('header');
-    if (!head) throw new Error('no header');
-    drag(head, [1000, 310], [600, 200]);
-    expect(card.style.left).toBe('560px');
-    expect(card.style.getPropertyValue('--kys-surface')).toBe(PAPER);
   });
 
   it('announces the lesson as it moves on, and not the inspector or the effects', () => {
