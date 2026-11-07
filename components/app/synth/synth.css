@@ -1378,6 +1378,24 @@ svg .kys-hit:focus-visible {
     border-radius: 0;
   }
 }
+/* The drawer in the faceplate's colours is set in the lesson card's bezel (t-206), so the tab and the drawer lift off
+   a panel of their own colour above them: the desk tone round their top and sides, open at the foot, where they join
+   the dock, which is the desk tone already. Open, the tab is the drawer's title, and its edge goes with its shape. */
+@media (hover: hover) and (min-width: 1024px) {
+  .kys-dock .kys-design.kys-face .kys-design-tab,
+  .kys-dock .kys-design.kys-face .kys-design-body {
+    border: 3px solid var(--kys-desk);
+    border-bottom: 0;
+  }
+  /* The drawer's head starts under its 3px edge: the tab settles that much further, its own top edge dropped, so it
+     stays level with the wordmark. */
+  .kys-dock .kys-design.kys-face[data-open] .kys-design-tab {
+    translate: 0 31px;
+    border-color: transparent;
+    border-top-width: 0;
+  }
+}
+
 /* The strip up, or the sounds open, rise into the band the lesson card and the
    tutor's drawer stand on: the dock stacks over them meanwhile, so neither covers
    the chapters or the library. The card and the drawer also stand on the open
