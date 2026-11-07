@@ -78,6 +78,7 @@ describe('heardFor for a native synth', () => {
     'syntrx-ii': [],
     'solar-42n': [],
     malevolent: [],
+    mantis: [],
   };
   const records = (list: HeardEntry[]): [string, string?][] =>
     list.map((e) => (e.sound === undefined ? [e.song ?? ''] : [e.song ?? '', e.sound]));

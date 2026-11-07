@@ -58,6 +58,7 @@ const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {
   'syntrx-ii': () => import('@/lib/app/synths/defs/syntrx-ii'),
   'solar-42n': () => import('@/lib/app/synths/defs/solar-42n'),
   malevolent: () => import('@/lib/app/synths/defs/malevolent'),
+  mantis: () => import('@/lib/app/synths/defs/mantis'),
 };
 
 /** Every id a loader exists for. */

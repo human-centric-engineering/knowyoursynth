@@ -867,6 +867,17 @@
       "app": ["malevolent"],
       "text": "A British semi-modular analogue mono synth with 32 velocity-sensitive mini keys: two VCOs with button-mixed saw, triangle and pulse, a 2-pole Sallen-Key multimode filter with separate low-pass, band-pass and high-pass inputs, two ADSRs, a VCA with drive, an LFO, an arpeggiator and a joystick, with 19 inputs and 19 outputs. Its analogue circuits are by Future Sound Systems.",
       "source": "https://www.1pwm.com/malevolentspecifications"
+    },
+    {
+      "id": "pwm-mantis",
+      "name": "PWM Mantis",
+      "maker": "PWM",
+      "year": "2023",
+      "kind": "poly",
+      "people": ["chris-huggett"],
+      "app": ["mantis"],
+      "text": "A British hybrid-analogue synth with 37 keys, completing the last design concept of Chris Huggett (EDP Wasp, OSCar): two mathematically generated oscillators per voice with OSCar wavetables, a sub and a density oscillator, a dual analogue state-variable filter with Wide Band and Wide Notch, two envelopes, two LFOs, six mod routes, Mono, Duophonic or four-voice Quad playing, an arpeggiator, a joystick, chorus and reverb, and 200 patches.",
+      "source": "https://www.1pwm.com/mantisspecifications"
     }
   ]
 }

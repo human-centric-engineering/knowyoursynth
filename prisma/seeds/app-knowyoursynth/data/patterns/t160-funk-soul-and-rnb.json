@@ -18,6 +18,10 @@
     {
       "sound": "take-5/t5-hip-hop-siren",
       "reason": "The siren on “Rebel Without a Pause” is a sample of a recorded horn squeal (from the J.B.’s “The Grunt”), not a part anyone played as notes. There is no part to write."
+    },
+    {
+      "sound": "mantis/mantis-talk-lead",
+      "reason": "A technique: a narrow filter band opened and closed by the joystick so the lead talks. It names no work, and the line is the lesson’s own."
     }
   ],
   "patterns": [

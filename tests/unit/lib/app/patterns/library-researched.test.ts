@@ -128,7 +128,7 @@ describe('the research batches', () => {
         'Public Enemy',
         'Whitney Houston',
       ],
-      92,
+      93,
     ],
     [
       't-161',
@@ -199,7 +199,7 @@ describe('the research batches', () => {
         'Wham!',
         'Yello',
       ],
-      83,
+      84,
     ],
     [
       't-163',
@@ -237,7 +237,7 @@ describe('the research batches', () => {
         'Walter Murch',
         'Yann Tiersen',
       ],
-      78,
+      79,
     ],
     [
       't-164',
@@ -327,7 +327,7 @@ describe('the research batches', () => {
         'Robin S',
         'Second Phase',
       ],
-      78,
+      80,
     ],
     [
       't-166',
@@ -407,7 +407,7 @@ describe('the research batches', () => {
         'Popol Vuh',
         'Roger Payne',
       ],
-      80,
+      81,
     ],
     [
       't-168',

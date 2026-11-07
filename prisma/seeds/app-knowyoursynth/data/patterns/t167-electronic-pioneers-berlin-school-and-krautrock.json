@@ -102,6 +102,10 @@
     {
       "sound": "syntrx-ii/syntrx-reich",
       "reason": "An effect of the patch: two pulses on one pitch drift out of step and back. It names no work, and there is no line, only the phasing."
+    },
+    {
+      "sound": "mantis/mantis-ring-bells",
+      "reason": "An effect: bell tones from two sines ring-modulated. It names no work, and the tune is the lesson’s own."
     }
   ],
   "patterns": [

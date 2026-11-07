@@ -1,0 +1,40 @@
+{
+  "synth": "mantis",
+  "title": "From the Wasp and the OSCar to the Mantis",
+  "intro": "The Mantis is the last design concept of Chris Huggett, who designed the EDP Wasp and the OSCar, completed by Paul Whittington and his team at PWM in 2023. It joins a Wasp-style engine, with oscillators worked out by numbers, to an OSCar-style dual analogue filter, and adds the voices, patch memory and effects of a modern instrument.",
+  "timeline": [
+    {
+      "year": "1978",
+      "name": "EDP Wasp",
+      "text": "Chris Huggett’s first synth, made with Adrian Wagner: a cheap, loud monosynth with digital oscillators, a CMOS filter and a flat touch keyboard. The Mantis’s engine is described as Wasp-style."
+    },
+    {
+      "year": "1983",
+      "name": "OSC OSCar",
+      "text": "Huggett’s next design: two digital oscillators with editable harmonics into two analogue filters that could be combined, with a WIDTH control between them. The Mantis’s dual filter and its nine OSCar wavetables come from it."
+    },
+    {
+      "year": "2023",
+      "name": "PWM Mantis",
+      "tag": "This synth",
+      "text": "Two mathematically generated oscillators per voice with a sub and a density oscillator, a dual state-variable filter with eight types, two envelopes with sustain fall and repeat, two LFOs, six mod routes, Mono, Duophonic or Quad playing over 37 keys, an arpeggiator, a joystick, chorus, reverb and 200 patches."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Behringer WASP Deluxe",
+      "years": "2020",
+      "text": "A recreation of the Wasp’s engine: the same digital oscillators and CMOS filter as a two-oscillator mono synth, where the Mantis builds on them for four voices and two filters."
+    },
+    {
+      "name": "PWM Malevolent",
+      "years": "2022",
+      "text": "From the same maker the year before: an all-analogue semi-modular mono synth with patch points and no memory, where the Mantis is hybrid, polyphonic and stores its patches."
+    },
+    {
+      "name": "OSC OSCar",
+      "years": "1983",
+      "text": "The Mantis’s filter follows the OSCar’s: two filters a WIDTH apart, run in a row for a band or side by side for a notch."
+    }
+  ]
+}

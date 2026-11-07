@@ -1,0 +1,54 @@
+{
+  "synth": "mantis",
+  "unusual": [
+    {
+      "target": "osc1.wave",
+      "text": "The waves are worked out by numbers rather than by an analogue circuit (Chris Huggett’s last design), and the WT position steps into wavetables, among them nine from his OSCar. Here organ is a sine folded towards its octave, and WT sweeps one morphing wave from triangle to a thin pulse, not the OSCar’s tables."
+    },
+    {
+      "target": "vcf.mode",
+      "text": "An OSCar-style dual filter: two state-variable filters on each voice path. At 12 dB each voice gets one of them, which is what makes Duophonic two separate synths; at 24 dB they run in a row; Wide Band runs a low-pass and a high-pass in a row with WIDTH between them, and Wide Notch side by side."
+    },
+    {
+      "target": "route.edit",
+      "text": "Instead of a matrix, each of six controls has one route: a SOURCE multiplied by a SCALE, at the depth of the control’s own bipolar MOD knob. A SCALE of Full On leaves the source as it is; Joystick Y or Velocity makes it a performance control."
+    },
+    {
+      "target": "kbd.voicing",
+      "text": "There are two analogue signal paths. Duophonic gives each of two notes a path, and so a filter, of its own; Quad shares the paths between four voices."
+    },
+    {
+      "target": "mix",
+      "text": "No level per oscillator: three balance knobs in a row, Oscillator 1 against 2, the oscillators against noise, then everything against the ring modulator."
+    },
+    {
+      "target": "osc2.density",
+      "text": "DENSITY adds a detuned copy of Oscillator 2, a thickening oscillator of its own, with DENSITY RATE setting how far apart the two are."
+    },
+    {
+      "target": "env1.sustFall",
+      "text": "Each envelope has SUST FALL, which makes the sustain sink while the key is held, and REPEAT, which loops it. Its VELOCITY knob is bipolar: harder notes can make the envelope smaller as well as bigger."
+    },
+    {
+      "target": "lfo1.fade",
+      "text": "FADE is bipolar: one way the LFO fades in after each note, the other way it fades out."
+    }
+  ],
+  "limits": {
+    "intro": "The voice is modelled as the spec describes it: both oscillators with their six waves, SHAPE, OCTAVE and the sub, Oscillator 2’s SEMITONE, CENT and density copy, drift, the three balances with noise and the ring modulator, the eight filter types with FREQUENCY, RESONANCE, WIDTH, DRIVE and KEY TRACK, both envelopes with VELOCITY and REPEAT, both LFOs with their waves, FADE in, SYNC and KEYTRIG, the six mod routes with every SOURCE and SCALE, Mono, Duophonic and Quad, glide, the arpeggiator, the joystick, and the chorus and reverb.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "SUST FALL: the sustain holds. FADE towards OUT, and the LFOs’ one-shot setting, which runs free here. VOICE SPREAD: the voices sit in the middle, though the chorus and reverb are stereo. ARP SWING. TAP TEMPO and MODE / SET ARP: set the tempo with BPM and the arpeggiator with its knobs. The patch memory, banks, SAVE, INIT, COMPARE and RANDOM: the app keeps sounds in its own list. The noise’s density (decimation) and the level trim, which are reached only over MIDI. MIDI, clock sync, the MIDI channel, local off and the power-on resets."
+      },
+      {
+        "title": "Simplified here",
+        "text": "The app has no aftertouch or expression pedal: as a SCALE, both are the mod wheel. ENV 2 LEGATO follows ENV 1 LEGATO, as the engine fires both envelopes together. SHAPE on the sawtooth does nothing, since the guide does not say what it does, and SHAPE MOD reaches only the pulse, the triangle and the wavetable, and only on the oscillator itself: the sub and the density copy keep its SHAPE. On the pulse, the sub is a plain square an octave down. Organ is a folded sine and WT a single morphing wave: the guide does not say how WT chooses among the Mantis and OSCar tables. Wide Notch is a single filter’s notch, which WIDTH does not widen, and in the 12 dB types WIDTH does not set the two paths’ filters apart. OSC DRIFT moves the whole voice. DRIVE is an overdrive just after the filter rather than on its input. Quad gives each of its four voices a filter and VCA of its own, rather than sharing the two analogue paths. The guide does not say how UpDown 2 differs from UpDown 1, so both go up and then down. The four chorus types are this app’s, from slow and gentle to fast and deep, and the reverb a chamber with LPF and HPF as filters on it: the reverb types over MIDI are not documented. The joystick’s vibrato is its own 5.5 Hz sine, left out while a mod route uses Joystick Y, and its bend reaches ±2 semitones."
+      },
+      {
+        "title": "The circuit is approximated",
+        "text": "Only a getting started guide is published, so every range here is this app’s estimate: FREQUENCY 20 Hz to 20 kHz, WIDTH up to four octaves, ATTACK 1 ms to 10 s, DECAY and RELEASE 3 ms to 10 s, the LFOs 0.05 Hz to 50 Hz, FADE up to 8 s, glide up to 3 s, BPM 40 to 240, PITCH MOD up to two octaves, FREQ MOD up to six, DENSITY RATE up to half a semitone and MASTER TUNE a semitone either way. The filters are the app’s state-variable filter, its ladder and its resonant high-pass, not the SSI2164 circuits."
+      }
+    ]
+  }
+}

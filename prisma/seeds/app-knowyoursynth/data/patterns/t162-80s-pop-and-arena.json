@@ -2,7 +2,12 @@
   "task": "t-162",
   "researchedBy": "Claude Opus 5.5 (Claude Code), for the owner",
   "researchedAt": "2026-11-02",
-  "notRecreated": [],
+  "notRecreated": [
+    {
+      "sound": "mantis/mantis-wavetable",
+      "reason": "A technique: each note sweeping through a wavetable on an envelope. It names no work, and the tune is the lesson’s own."
+    }
+  ],
   "patterns": [
     {
       "key": "researched:a-ha/take-on-me-riff",

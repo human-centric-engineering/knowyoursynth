@@ -44,6 +44,7 @@ describe('nativeSynthProblems', () => {
       'native synth syntrx-ii is not registered',
       'native synth solar-42n is not registered',
       'native synth malevolent is not registered',
+      'native synth mantis is not registered',
     ]);
   });
 
