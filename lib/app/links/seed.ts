@@ -179,7 +179,8 @@ async function ownerRows(prisma: TenancyClient, owners: OwnerRef[]): Promise<Map
 }
 
 /** One owner's link, as a record and the export's dropped list name it: `<kind>:<id> <url>`. */
-const linkKey = (owner: OwnerRef, url: string): string => `${ownerKey(owner)} ${url}`;
+const keyedLink = (key: string, url: string): string => `${key} ${url}`;
+const linkKey = (owner: OwnerRef, url: string): string => keyedLink(ownerKey(owner), url);
 
 /**
  * Create the links the data lists that this database has never had from the seed, and record each as applied. A link
@@ -192,41 +193,28 @@ export async function seedLinks(
   const plan = planLinks(data);
   if (plan.problems.length) throw new LinkDataError(plan.problems);
 
-  // Only the records of owners the data names: the table only grows, since a record outlives its link and its owner.
-  const named = plan.owners.filter((o) => o.links.length).map((o) => o.owner);
-  const recorded = named.length
-    ? await prisma.linkSeedRecord.findMany({
-        where: { OR: named.map((o) => ({ ownerKind: o.kind, ownerId: o.id })) },
-        select: { ownerKind: true, ownerId: true, url: true },
-      })
-    : [];
-  const applied = new Set(
-    recorded.map((r) => linkKey({ kind: r.ownerKind, id: r.ownerId }, r.url))
-  );
-  // A link already applied here is done with: dropped from the plan before anything is looked up.
-  const pending = plan.owners.map(({ owner, links }) => ({
-    owner,
-    links: links.filter(({ parsed }) => !applied.has(linkKey(owner, parsed.url))),
-  }));
-  const linksIn = (owners: { links: unknown[] }[]) =>
-    owners.reduce((n, o) => n + o.links.length, 0);
-  const alreadyApplied = linksIn(plan.owners) - linksIn(pending);
+  // Every owner the data gives links is looked up, recorded or not, so one this database lacks is always reported.
+  // An owner whose file lists none has nothing to apply, and is neither looked up nor reported.
+  const named = plan.owners.filter((o) => o.links.length);
+  const owners = named.map((o) => o.owner);
+  const [recorded, found] = await Promise.all([
+    recordsOf(prisma, owners),
+    ownerRows(prisma, owners),
+  ]);
+  const missingOwners = owners.map(ownerKey).filter((k) => !found.has(k));
 
-  // An owner with nothing left to apply is neither looked up nor reported missing.
-  const withLinks = pending.filter((o) => o.links.length);
-  const found = await ownerRows(
-    prisma,
-    withLinks.map((o) => o.owner)
-  );
-  const missingOwners = withLinks.map((o) => ownerKey(o.owner)).filter((k) => !found.has(k));
-
+  let alreadyApplied = 0;
   const rows: Prisma.ExternalLinkCreateManyInput[] = [];
   const records: Prisma.LinkSeedRecordCreateManyInput[] = [];
-  for (const { owner, links } of withLinks) {
+  for (const { owner, links } of named) {
     const rowId = found.get(ownerKey(owner));
-    // No record for a missing owner's links, so they are applied once it exists.
-    if (!rowId) continue;
     for (const { link, parsed } of links) {
+      if (recorded.has(linkKey(owner, parsed.url))) {
+        alreadyApplied++;
+        continue;
+      }
+      // No record for a missing owner's links, so they are applied once it exists.
+      if (!rowId) continue;
       records.push({ ownerKind: owner.kind, ownerId: owner.id, url: parsed.url });
       rows.push({
         [OWNER_COLUMN[owner.kind]]: rowId,
@@ -243,15 +231,34 @@ export async function seedLinks(
     }
   }
 
+  if (!rows.length) return { created: 0, existing: 0, alreadyApplied, missingOwners };
   // The unique index on owner + URL decides what an owner already has, so a link created meanwhile is skipped too.
-  // Links first, then their records: a run that stops between the two finds the links there next time and records
-  // them, where records first could mark a link applied that was never written.
-  const { count } = rows.length
-    ? await prisma.externalLink.createMany({ data: rows, skipDuplicates: true })
-    : { count: 0 };
-  if (records.length)
-    await prisma.linkSeedRecord.createMany({ data: records, skipDuplicates: true });
-  return { created: count, existing: rows.length - count, alreadyApplied, missingOwners };
+  // The links and their records commit together, so no link is ever written without its record, or recorded unwritten.
+  const [created] = await prisma.$transaction([
+    prisma.externalLink.createMany({ data: rows, skipDuplicates: true }),
+    prisma.linkSeedRecord.createMany({ data: records, skipDuplicates: true }),
+  ]);
+  return {
+    created: created.count,
+    existing: rows.length - created.count,
+    alreadyApplied,
+    missingOwners,
+  };
+}
+
+/**
+ * The links already applied to these owners, as `linkKey`s. One branch per owner kind, each an `in` list on the
+ * record's id prefix, so the query stays four branches however many owners the data names.
+ */
+async function recordsOf(prisma: TenancyClient, owners: OwnerRef[]): Promise<Set<string>> {
+  const ids = new Map<OwnerKind, string[]>();
+  for (const o of owners) ids.set(o.kind, [...(ids.get(o.kind) ?? []), o.id]);
+  if (!ids.size) return new Set();
+  const rows = await prisma.linkSeedRecord.findMany({
+    where: { OR: [...ids].map(([kind, in_]) => ({ ownerKind: kind, ownerId: { in: in_ } })) },
+    select: { ownerKind: true, ownerId: true, url: true },
+  });
+  return new Set(rows.map((r) => linkKey({ kind: r.ownerKind, id: r.ownerId }, r.url)));
 }
 
 /** A stored link, as the columns the export reads. */
@@ -338,10 +345,11 @@ export function exportLinkData(
     committed.map(({ owner, links }) => [ownerKey(owner), links.map((l) => l.url)])
   );
 
+  // From the de-duplicated view, as the files are built, so an owner listed twice is counted once.
   const dropped: string[] = [];
-  for (const { owner, links } of committed)
-    for (const { url } of links)
-      if (!byOwner.get(ownerKey(owner))?.links.has(url)) dropped.push(linkKey(owner, url));
+  for (const [key, urls] of committedUrls)
+    for (const url of urls)
+      if (!byOwner.get(key)?.links.has(url)) dropped.push(keyedLink(key, url));
   if (dropped.length && !prune) throw new LinkDropError(dropped);
 
   const files: LinkFile[] = [...byOwner.entries()]
