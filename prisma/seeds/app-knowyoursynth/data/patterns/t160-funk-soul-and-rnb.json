@@ -42,6 +42,26 @@
     {
       "sound": "malevolent/mal-high-whistle-lead",
       "reason": "The batch has the work’s bass line (“Aqua Boogie: bass figure”), not the part this lead plays; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "jupiter-8/jp8-human-nature",
+      "reason": "Names “Human Nature”, which no pattern in this batch has yet; the chords are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jupiter-8/jp8-rockit-stab",
+      "reason": "Names “Rockit”, which no pattern in this batch has yet; the stabs are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jupiter-6/jp6-cant-go-bass",
+      "reason": "The batch’s “I Can’t Go for That: electric piano” is another part of the work; this sound plays the bass line under it, a part that is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jupiter-4/j4-sexual-healing-keys",
+      "reason": "The batch’s “Sexual Healing: clap” is another part of the work; this sound plays the keyboard chords, a part that is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jupiter-4/j4-green-onions-organ",
+      "reason": "The batch’s “Green Onions: organ” is another part of the work; this sound plays the riff as a single line, a part that is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -6289,6 +6309,185 @@
       }
     },
     {
+      "key": "researched:prince/1999-stabs-high",
+      "name": "1999: synth stabs, an octave up",
+      "role": "chord_stabs",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "prince-1999",
+        "part": 0
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 119,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 81,
+                    "gate": 2.75
+                  },
+                  {
+                    "note": 77,
+                    "gate": 2.75
+                  },
+                  {
+                    "note": 74,
+                    "gate": 2.75
+                  },
+                  {
+                    "note": 72,
+                    "gate": 2.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 82,
+                    "gate": 1
+                  },
+                  {
+                    "note": 79,
+                    "gate": 1
+                  },
+                  {
+                    "note": 74,
+                    "gate": 1
+                  },
+                  {
+                    "note": 72,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 81,
+                    "gate": 0.75
+                  },
+                  {
+                    "note": 77,
+                    "gate": 0.75
+                  },
+                  {
+                    "note": 74,
+                    "gate": 0.75
+                  },
+                  {
+                    "note": 72,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 82,
+                    "gate": 3.25
+                  },
+                  {
+                    "note": 79,
+                    "gate": 3.25
+                  },
+                  {
+                    "note": 74,
+                    "gate": 3.25
+                  },
+                  {
+                    "note": 72,
+                    "gate": 3.25
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-8/jp8-minneapolis-stab"],
+      "research": {
+        "work": "Prince, “1999”, 1999, 1982",
+        "part": "Two bars of the OB-Xa stabs: D minor over C, then G minor over C, pushed ahead of the beat: the same part an octave up.",
+        "originalKey": null,
+        "originalBpm": 119,
+        "leads": [
+          {
+            "citation": "Prince — “1999”, fan transcription by Adam Musulin on Songsterr (revision 6004121, 2026-03-30)",
+            "url": "https://www.songsterr.com/a/wsa/prince-1999-tab-s50873",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "This copy is moved an octave up from researched:prince/1999-stabs, whose notes give the research. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:prince/1999-stabs-top-line",
       "name": "1999: synth stabs, top line",
       "role": "lead_line",
@@ -9055,7 +9254,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/reach-for-it-lead"],
+      "sounds": ["model-d/reach-for-it-lead", "jupiter-8/jp8-george-duke"],
       "research": {
         "work": "George Duke, “Reach for It”, Reach for It, 1977",
         "part": "Two bars of the riff: the high A, then E, G, E, A, E, C, A.",
@@ -9068,7 +9267,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s first guitar track, bars 17–18, moved up an octave to sit where the sound plays. No synth part was found; this is the riff the guitar plays. _In the style of_: the notes come from a transcription Songsterr generated by machine, a weaker starting point than a fan’s. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s first guitar track, bars 17–18, moved up an octave to sit where its sounds play. No synth part was found; this is the riff the guitar plays. _In the style of_: the notes come from a transcription Songsterr generated by machine, a weaker starting point than a fan’s. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -9805,7 +10004,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["e7/e7-choir-pad", "super-gemini/sg-choir-pad", "super-gemini/sg-dual-octave-pad"],
+      "sounds": [
+        "e7/e7-choir-pad",
+        "super-gemini/sg-choir-pad",
+        "super-gemini/sg-dual-octave-pad",
+        "jupiter-8/jp8-pwm-strings-lush"
+      ],
       "research": {
         "work": "1980s pop ballads, the synth choir and pad",
         "part": "Two bars of held chords: A minor, then F.",
@@ -11363,14 +11567,14 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/neosoul-rhodes"],
+      "sounds": ["deepmind-12d/neosoul-rhodes", "jupiter-8/jp8-neo-soul"],
       "research": {
         "work": "D’Angelo, Voodoo, 2000",
         "part": "Two bars of lazy, late chords: E♭ major 9, F minor 7, C minor 7 add 11, D minor 7.",
         "originalKey": null,
         "originalBpm": 80,
         "leads": [],
-        "notes": "The sound names the album, not a song, and nothing from Voodoo was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "Its sounds name the album or D’Angelo, not a song, and nothing from Voodoo was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -12564,14 +12768,14 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/sliding-round-sub"],
+      "sounds": ["model-d/sliding-round-sub", "jupiter-4/j4-dilla-wobble-bass"],
       "research": {
         "work": "J Dilla, Minimoog Voyager bass lines, 2001–06",
         "part": "Two bars of a round, sliding sub bass in F minor.",
         "originalKey": null,
         "originalBpm": 88,
         "leads": [],
-        "notes": "The sound names no song, and nothing of J Dilla’s was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "Its sounds name no song, and nothing of J Dilla’s was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -14322,22 +14526,120 @@
         "parts": [
           {
             "steps": [
-              { "on": true, "notes": [{ "note": 71, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 69, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 71, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 73, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 71, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 69, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 66, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 66, "gate": 5 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] }
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 73,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
             ]
           }
         ],
@@ -14365,7 +14667,10 @@
       "name": "Sliding sub bass, low",
       "role": "bass_line",
       "tempo": null,
-      "inspiredBy": { "kind": "work", "songId": "j-dilla-welcome-2-detroit-and-later-productions" },
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "j-dilla-welcome-2-detroit-and-later-productions"
+      },
       "fidelity": "in_the_style_of",
       "sources": [],
       "pattern": {
@@ -14381,38 +14686,173 @@
         "parts": [
           {
             "steps": [
-              { "on": true, "notes": [{ "note": 29, "gate": 6 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 32, "gate": 3 }], "slide": true },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 34, "gate": 4 }], "slide": true },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 31, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 29, "gate": 8 }], "slide": true },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 36, "gate": 4 }], "slide": true },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 34, "gate": 4 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] }
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 29,
+                    "gate": 6
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 32,
+                    "gate": 3
+                  }
+                ],
+                "slide": true
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 4
+                  }
+                ],
+                "slide": true
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 29,
+                    "gate": 8
+                  }
+                ],
+                "slide": true
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 4
+                  }
+                ],
+                "slide": true
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 4
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
             ]
           }
         ],

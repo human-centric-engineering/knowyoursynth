@@ -170,6 +170,18 @@
     {
       "sound": "td-3/td-silver-apples",
       "reason": "In the style of Silver Apples: it names no work, and the batch’s Silver Apples pattern of its kind is a held drone for a patch that makes its own pulse, while this sound spells its pulse note by note, so the line is the lesson’s own."
+    },
+    {
+      "sound": "jupiter-6/jp6-electronic-birdsong",
+      "reason": "An effect: chirping, warbling birdsong made from a high triangle, a pitch envelope and cross mod. There is no part to write."
+    },
+    {
+      "sound": "jupiter-6/jp6-e2-e4-pulse",
+      "reason": "The batch’s “E2-E4: the chords, broken” is another part of the work; this sound plays the two chords it is drawn from, pulsing, a part that is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jupiter-4/j4-hosianna-drone",
+      "reason": "Names “Hosianna Mantra”, which no pattern in this batch has yet; the drone is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -2691,7 +2703,10 @@
       "name": "Arabesque No. 1: the opening figure, high",
       "role": "arp",
       "tempo": null,
-      "inspiredBy": { "kind": "work", "songId": "isao-tomita-snowflakes-are-dancing" },
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "isao-tomita-snowflakes-are-dancing"
+      },
       "fidelity": "in_the_style_of",
       "sources": [],
       "pattern": {
@@ -2707,30 +2722,182 @@
         "parts": [
           {
             "steps": [
-              { "on": true, "notes": [{ "note": 73, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 85, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 88, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 90, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 92, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 87, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 83, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 71, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 69, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 81, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 85, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 87, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 88, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 83, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 80, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 68, "gate": 1 }] }
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 73,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 85,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 88,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 90,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 92,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 87,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 83,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 81,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 85,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 87,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 88,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 83,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 80,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 68,
+                    "gate": 1
+                  }
+                ]
+              }
             ]
           }
         ],
@@ -7073,6 +7240,216 @@
       }
     },
     {
+      "key": "researched:klaus-schulze/kosmische-chords-high",
+      "name": "Berlin school: a drone and two chords, an octave up",
+      "role": "chord_changes",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "klaus-schulze"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 50,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 16
+                  },
+                  {
+                    "note": 57,
+                    "gate": 16
+                  },
+                  {
+                    "note": 62,
+                    "gate": 16
+                  },
+                  {
+                    "note": 65,
+                    "gate": 16
+                  },
+                  {
+                    "note": 69,
+                    "gate": 16
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 16
+                  },
+                  {
+                    "note": 57,
+                    "gate": 16
+                  },
+                  {
+                    "note": 60,
+                    "gate": 16
+                  },
+                  {
+                    "note": 67,
+                    "gate": 16
+                  },
+                  {
+                    "note": 72,
+                    "gate": 16
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-8/jp8-schulze-arp"],
+      "research": {
+        "work": "Klaus Schulze, the long improvisations of his 1970s records",
+        "part": "D minor over a D drone, then C over the same D: the same part an octave up.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave up from researched:klaus-schulze/kosmische-chords, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:klaus-schulze/crystal-lake-arpeggio",
       "name": "Crystal Lake: a rising arpeggio",
       "role": "arp",
@@ -8579,6 +8956,216 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Nothing by Riley was found on Songsterr or BitMIDI. One sound arpeggiates what is held and the other pulses it, so both get chords held. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:terry-riley/rainbow-chords-high",
+      "name": "A Rainbow in Curved Air: held chords, an octave up",
+      "role": "held",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Terry Riley"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 90,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 16
+                  },
+                  {
+                    "note": 69,
+                    "gate": 16
+                  },
+                  {
+                    "note": 74,
+                    "gate": 16
+                  },
+                  {
+                    "note": 76,
+                    "gate": 16
+                  },
+                  {
+                    "note": 81,
+                    "gate": 16
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 16
+                  },
+                  {
+                    "note": 67,
+                    "gate": 16
+                  },
+                  {
+                    "note": 72,
+                    "gate": 16
+                  },
+                  {
+                    "note": 77,
+                    "gate": 16
+                  },
+                  {
+                    "note": 79,
+                    "gate": 16
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-6/jp6-curved-air"],
+      "research": {
+        "work": "Terry Riley, “A Rainbow in Curved Air”, 1969",
+        "part": "D with an added E, then C with the fourth, two bars each: the same part an octave up.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave up from researched:terry-riley/rainbow-chords, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -11165,6 +11752,150 @@
       }
     },
     {
+      "key": "researched:silver-apples/oscillations-melody-low",
+      "name": "Oscillations: the oscillator tune, an octave down",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Silver Apples"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 140,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 4
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-4/j4-oscillations"],
+      "research": {
+        "work": "Silver Apples, “Oscillations”, Silver Apples, 1968",
+        "part": "A short tune on A, up to D and down to E: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave down from researched:silver-apples/oscillations-melody, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:silver-apples/oscillations-drone-and-tune",
       "name": "Oscillations: drone and tune",
       "role": "lead_line",
@@ -11683,7 +12414,10 @@
       "name": "Ghost Rider: the riff, low",
       "role": "bass_line",
       "tempo": null,
-      "inspiredBy": { "kind": "genre", "label": "Suicide" },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Suicide"
+      },
       "fidelity": "in_the_style_of",
       "sources": [],
       "pattern": {
@@ -11699,22 +12433,130 @@
         "parts": [
           {
             "steps": [
-              { "on": true, "notes": [{ "note": 36, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 39, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 36, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 39, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 36, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 39, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 36, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 39, "gate": 1 }] }
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 39,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 39,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 39,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 39,
+                    "gate": 1
+                  }
+                ]
+              }
             ]
           }
         ],
@@ -11742,7 +12584,10 @@
       "name": "E2-E4: the chords, broken, low",
       "role": "arp",
       "tempo": null,
-      "inspiredBy": { "kind": "genre", "label": "Manuel Göttsching" },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Manuel Göttsching"
+      },
       "fidelity": "in_the_style_of",
       "sources": [],
       "pattern": {
@@ -11758,38 +12603,294 @@
         "parts": [
           {
             "steps": [
-              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 44, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 44, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 44, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 44, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 49, "gate": 1 }] }
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 49,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 56,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 49,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 56,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 49,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 56,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 49,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 56,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 44,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 49,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 49,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 44,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 49,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 49,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 44,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 49,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 49,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 44,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 49,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 49,
+                    "gate": 1
+                  }
+                ]
+              }
             ]
           }
         ],
@@ -11817,7 +12918,10 @@
       "name": "Music for 18 Musicians: a marimba pattern, low",
       "role": "arp",
       "tempo": null,
-      "inspiredBy": { "kind": "genre", "label": "Steve Reich" },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Steve Reich"
+      },
       "fidelity": "in_the_style_of",
       "sources": [],
       "pattern": {
@@ -11833,18 +12937,94 @@
         "parts": [
           {
             "steps": [
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 54, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 54, "gate": 1 }] }
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 54,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 54,
+                    "gate": 1
+                  }
+                ]
+              }
             ]
           }
         ],

@@ -82,6 +82,38 @@
     {
       "sound": "donner-b1/b1-invention",
       "reason": "Its own riff already plays the theme of the eighth Invention, from Bach’s public-domain score, so a batch pattern would only repeat it."
+    },
+    {
+      "sound": "jupiter-8/jp8-prelude-in-c",
+      "reason": "Its own riff already plays the opening figure of the Prelude in C major, from Bach’s public-domain score, so a batch pattern would only repeat it."
+    },
+    {
+      "sound": "jupiter-8/jp8-zawinul-pad",
+      "reason": "In the style of Joe Zawinul: it names no work, and the batch’s “Birdland: the theme”, “Black Market: the ARP theme, on the upside-down keys” and “A Remark You Made: the synthesizer lead” are other kinds of part than its chords, so the chords are the lesson’s own."
+    },
+    {
+      "sound": "jupiter-8/jp8-max-richter",
+      "reason": "In the style of Max Richter: it names no work, and the batch’s “Sleep: a slow melody over the drone” is another kind of part than its chords, so the chords are the lesson’s own."
+    },
+    {
+      "sound": "jupiter-6/jp6-cosmic-harp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; it names a style, not one work, and the batch’s “Journey in Satchidananda: a harp cascade” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "jupiter-6/jp6-bandoneon",
+      "reason": "In the style of Astor Piazzolla: it names no work, and the batch’s “Libertango: the theme” is another kind of part than its chords, so the chords are the lesson’s own."
+    },
+    {
+      "sound": "jupiter-6/jp6-phasing-felt",
+      "reason": "In the style of Ólafur Arnalds: it names no work, and the batch’s “Near Light: the pad chords” and “Saman: two hushed chords” are other kinds of part than its single five-note line, so the line is the lesson’s own."
+    },
+    {
+      "sound": "jupiter-4/j4-aquarium-glass",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "jupiter-4/j4-qawwali-harmonium",
+      "reason": "In the style of Nusrat Fateh Ali Khan: it names no work, and the batch’s “Mustt Mustt: drone and harmonium line” is another kind of part than its held chords, so the chords are the lesson’s own."
     }
   ],
   "patterns": [
@@ -7504,7 +7536,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/are-you-going-lead", "take-5/t5-mays-lead"],
+      "sounds": ["model-d/are-you-going-lead", "take-5/t5-mays-lead", "jupiter-8/jp8-lyle-mays"],
       "research": {
         "work": "Pat Metheny Group, “Are You Going with Me?”, Offramp, 1982",
         "part": "The melody’s first eight bars: C D E♭ F climbing to a long G, falling F E♭ to a long C, then B♭.",
@@ -8447,6 +8479,258 @@
       }
     },
     {
+      "key": "researched:enya/orinoco-flow-chords-high",
+      "name": "Orinoco Flow: the chords, held, an octave up",
+      "role": "chord_changes",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "enya"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 117,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 8
+                  },
+                  {
+                    "note": 74,
+                    "gate": 8
+                  },
+                  {
+                    "note": 79,
+                    "gate": 8
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 4
+                  },
+                  {
+                    "note": 72,
+                    "gate": 4
+                  },
+                  {
+                    "note": 77,
+                    "gate": 4
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 4
+                  },
+                  {
+                    "note": 72,
+                    "gate": 4
+                  },
+                  {
+                    "note": 76,
+                    "gate": 4
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 8
+                  },
+                  {
+                    "note": 74,
+                    "gate": 8
+                  },
+                  {
+                    "note": 79,
+                    "gate": 8
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 4
+                  },
+                  {
+                    "note": 72,
+                    "gate": 4
+                  },
+                  {
+                    "note": 77,
+                    "gate": 4
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 4
+                  },
+                  {
+                    "note": 72,
+                    "gate": 4
+                  },
+                  {
+                    "note": 76,
+                    "gate": 4
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-8/jp8-enya-pizz"],
+      "research": {
+        "work": "Enya, “Orinoco Flow”, Watermark, 1988",
+        "part": "The verse’s two bars, twice: G for a bar, then F and C: the same part an octave up.",
+        "originalKey": "G major",
+        "originalBpm": 117,
+        "leads": [
+          {
+            "citation": "Enya — “Orinoco Flow”, fan transcription by Leonard on Songsterr (revision 85156, 2011-02-13)",
+            "checkedAt": "2026-11-02",
+            "url": "https://www.songsterr.com/a/wsa/enya-orinoco-flow-tab-s67906"
+          }
+        ],
+        "notes": "This copy is moved an octave up from researched:enya/orinoco-flow-chords, whose notes give the research. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:enya/storms-in-africa-chords",
       "name": "Storms in Africa: the chords for the arpeggio",
       "role": "held",
@@ -9276,7 +9560,8 @@
         "neutron/sakamoto-bell-lead",
         "take-5/t5-mr-lawrence-bell",
         "malevolent/mal-mr-lawrence-bell",
-        "donner-b1/b1-sakamoto"
+        "donner-b1/b1-sakamoto",
+        "jupiter-6/jp6-mr-lawrence-bells"
       ],
       "research": {
         "work": "Ryuichi Sakamoto, “Merry Christmas Mr. Lawrence”, Merry Christmas Mr. Lawrence, 1983",
@@ -9660,7 +9945,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/jester-fusion-lead", "mantis/mantis-duo-thirds"],
+      "sounds": [
+        "model-d/jester-fusion-lead",
+        "mantis/mantis-duo-thirds",
+        "jupiter-8/jp8-fusion-lead"
+      ],
       "research": {
         "work": "Return to Forever, “Duel of the Jester and the Tyrant”, Romantic Warrior, 1976",
         "part": "The opening theme in half notes, eight bars: B G, F♯ E, G D, D C, twice, the second time turning to F and F♯.",
@@ -9673,7 +9962,7 @@
             "url": "https://www.songsterr.com/a/wsa/return-to-forever-duel-of-the-jester-and-the-tyrant-tab-s914514"
           }
         ],
-        "notes": "From the transcription’s guitar track, bars 13–20, an octave down where the sound’s riff plays. The transcription has guitar, bass and drums only; the theme is taken from the guitar, the nearest it has to Corea’s lead. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s guitar track, bars 13–20, an octave down where its sounds’ riffs play. The transcription has guitar, bass and drums only; the theme is taken from the guitar, the nearest it has to Corea’s lead. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -10636,7 +10925,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/lagging-brightness-keys", "solar-42n/solar-soft-pedal-piano"],
+      "sounds": [
+        "neutron/lagging-brightness-keys",
+        "solar-42n/solar-soft-pedal-piano",
+        "jupiter-8/jp8-harold-budd"
+      ],
       "research": {
         "work": "Harold Budd and Brian Eno, “First Light”, Ambient 2: The Plateaux of Mirror, 1980",
         "part": "Three bars of the melody: B falling to E, a long G, then D and back to G.",
@@ -11758,7 +12051,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/pablo-melodica", "donner-b1/b1-melodica-dub"],
+      "sounds": [
+        "neutron/pablo-melodica",
+        "donner-b1/b1-melodica-dub",
+        "jupiter-4/j4-far-east-melodica"
+      ],
       "research": {
         "work": "Augustus Pablo, “East of the River Nile”, East of the River Nile, 1977",
         "part": "A minor-key line up to D and back to a long E, four bars.",
@@ -15255,7 +15552,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["solar-42n/solar-water-garden"],
+      "sounds": ["solar-42n/solar-water-garden", "jupiter-8/jp8-yoshimura"],
       "research": {
         "work": "Hiroshi Yoshimura, Music for Nine Postcards, 1982",
         "part": "Two short pentatonic phrases with air between them.",
@@ -15372,6 +15669,115 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Nothing for Huun-Huur-Tu was found on Songsterr, BitMIDI or the Mutopia Project. Khoomei is sung over one held note, and the sound makes the overtone itself. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:huun-huur-tu/khoomei-drone-low",
+      "name": "Khoomei: the held fundamental, an octave down",
+      "role": "held",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Huun-Huur-Tu"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 50,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 28,
+                    "gate": 16
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-6/jp6-overtone-singer"],
+      "research": {
+        "work": "Huun-Huur-Tu, “Prayer”",
+        "part": "One low E held for two bars; the sound sweeps the overtone above it: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave down from researched:huun-huur-tu/khoomei-drone, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -17236,7 +17642,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/looking-glass-marimba"],
+      "sounds": ["model-d/looking-glass-marimba", "jupiter-8/jp8-midori-takada"],
       "research": {
         "work": "Midori Takada, Through the Looking Glass, 1983",
         "part": "A figure of threes against the bar: E G B twice and C B, then D G A twice and B A.",
@@ -18657,6 +19063,184 @@
       }
     },
     {
+      "key": "researched:pauline-oliveros/deep-listening-tones-low",
+      "name": "Deep Listening: two long tones, an octave down",
+      "role": "held",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Pauline Oliveros"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 30,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 15
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 47,
+                    "gate": 15
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-6/jp6-deep-listening-drone"],
+      "research": {
+        "work": "Pauline Oliveros, Deep Listening, 1989",
+        "part": "An E held for two bars, then a B, each left to bloom: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave down from researched:pauline-oliveros/deep-listening-tones, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:pauline-oliveros/delay-tones",
       "name": "Oliveros: slow tones for the delay",
       "role": "slow_melody",
@@ -19972,14 +20556,14 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/slow-bloom"],
+      "sounds": ["deepmind-12d/slow-bloom", "jupiter-8/jp8-stars-of-the-lid"],
       "research": {
         "work": "Stars of the Lid, the slowly opening drones",
         "part": "C with the ninth for two bars, then A minor.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
-        "notes": "The sound names no work, and nothing by Stars of the Lid was found. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "Its sounds name no work, and nothing by Stars of the Lid was found. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -21046,7 +21630,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["solar-42n/solar-fourth-world-horn"],
+      "sounds": ["solar-42n/solar-fourth-world-horn", "jupiter-4/j4-fourth-world-trumpet"],
       "research": {
         "work": "Jon Hassell, Fourth World, Vol. 1: Possible Musics, 1980",
         "part": "A slow line around D, up to G and down to C.",
@@ -21062,7 +21646,10 @@
       "name": "Foggy Mountain Breakdown: the first break, low",
       "role": "lead_line",
       "tempo": null,
-      "inspiredBy": { "kind": "genre", "label": "Earl Scruggs" },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Earl Scruggs"
+      },
       "fidelity": "in_the_style_of",
       "sources": [],
       "pattern": {
@@ -21078,134 +21665,1063 @@
         "parts": [
           {
             "steps": [
-              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 58, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 51, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 52, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 64, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 59, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 55, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 50, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 51, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 52, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 64, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 59, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 55, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 50, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 50, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 62, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 62, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 58, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 67, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 59, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 67, "gate": 2 }] },
-              { "on": true, "notes": [] }
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 51,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 51,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              }
             ]
           }
         ],
@@ -21233,7 +22749,10 @@
       "name": "Juke: the harp riff, low",
       "role": "lead_line",
       "tempo": null,
-      "inspiredBy": { "kind": "genre", "label": "Little Walter" },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Little Walter"
+      },
       "fidelity": "in_the_style_of",
       "sources": [],
       "pattern": {
@@ -21249,30 +22768,162 @@
         "parts": [
           {
             "steps": [
-              { "on": true, "notes": [{ "note": 64, "gate": 1.5 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 64, "gate": 1.5 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 61, "gate": 1 }] }
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 56,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 56,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 1
+                  }
+                ]
+              }
             ]
           }
         ],
@@ -21300,7 +22951,10 @@
       "name": "It Took the Night to Believe: the drone, low",
       "role": "held",
       "tempo": null,
-      "inspiredBy": { "kind": "genre", "label": "Sunn O)))" },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Sunn O)))"
+      },
       "fidelity": "in_the_style_of",
       "sources": [],
       "pattern": {
@@ -21316,24 +22970,93 @@
         "parts": [
           {
             "steps": [
-              { "on": true, "notes": [{ "note": 21, "gate": 8 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 27, "gate": 4 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 23, "gate": 6 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] }
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 21,
+                    "gate": 8
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 27,
+                    "gate": 4
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 23,
+                    "gate": 6
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
             ]
           }
         ],
@@ -21361,7 +23084,10 @@
       "name": "Journey in Satchidananda: a harp cascade, low",
       "role": "arp",
       "tempo": null,
-      "inspiredBy": { "kind": "genre", "label": "Alice Coltrane" },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Alice Coltrane"
+      },
       "fidelity": "in_the_style_of",
       "sources": [],
       "pattern": {
@@ -21377,38 +23103,224 @@
         "parts": [
           {
             "steps": [
-              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 50, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 58, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 8 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 58, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 50, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 48, "gate": 8 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] }
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 8
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 8
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
             ]
           }
         ],
@@ -21430,7 +23342,10 @@
       "name": "(No Pussyfooting): slow notes for the loop, low",
       "role": "slow_melody",
       "tempo": null,
-      "inspiredBy": { "kind": "genre", "label": "Fripp & Eno" },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Fripp & Eno"
+      },
       "fidelity": "in_the_style_of",
       "sources": [],
       "pattern": {
@@ -21446,38 +23361,159 @@
         "parts": [
           {
             "steps": [
-              { "on": true, "notes": [{ "note": 52, "gate": 6 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 59, "gate": 6 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 57, "gate": 3 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 55, "gate": 3 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 50, "gate": 7 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] }
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 6
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 6
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 3
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 3
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 7
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
             ]
           }
         ],
@@ -21499,7 +23535,10 @@
       "name": "Sugar Plum Fairy: the celesta theme, low",
       "role": "lead_line",
       "tempo": null,
-      "inspiredBy": { "kind": "genre", "label": "Tchaikovsky" },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Tchaikovsky"
+      },
       "fidelity": "in_the_style_of",
       "sources": [],
       "pattern": {
@@ -21515,38 +23554,234 @@
         "parts": [
           {
             "steps": [
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 66, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 63, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 64, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 62, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 61, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 60, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 59, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] }
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
             ]
           }
         ],

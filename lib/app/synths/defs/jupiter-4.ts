@@ -296,6 +296,7 @@ text(1110, 108, 'VOLUME', 10);
 knob('out.volume', 1110, 138, 17, {
   def: 7,
   module: 'out',
+  name: 'Volume',
   fmt: pct,
   help: 'Master volume for the whole synth. On the hardware it is not stored with a sound.',
 });
@@ -305,6 +306,7 @@ knob('kbd.tuning', 1180, 138, 17, {
   max: 5,
   def: 0,
   module: 'out',
+  name: 'Tuning',
   fmt: (v) => `${v > 0 ? '+' : ''}${Math.round(v * 10)} cents`,
   help: 'Tunes the whole synth up or down by up to half a semitone.',
 });
@@ -315,6 +317,7 @@ cap(138, 'RATE');
 fader('lfo.rate', 138, {
   def: 5,
   module: 'lfo',
+  name: 'LFO rate',
   fmt: (v) => fmtHz(lfoHz(v)),
   help: 'Speed of the LFO, from one cycle every ten seconds up to 80 Hz. Up near the top it reaches audio rate, where it roughens the tone instead of wobbling it. The lamp flashes at the rate.',
 });
@@ -382,6 +385,7 @@ cap(530, 'PW');
 fader('vco.pw', 530, {
   def: 0,
   module: 'osc',
+  name: 'Pulse width',
   fmt: (v) => `${Math.round(pwStep(v) * 100)} % / ${pct(v)}`,
   help: 'Pulse width, for the PULSE waveform. With the switch beside it at MAN it steps through four fixed widths, 50, 40, 20 and 10 %: narrower is thinner and more nasal. At MOD it sets how far the LFO sweeps the width instead.',
 });

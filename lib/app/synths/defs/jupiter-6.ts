@@ -456,6 +456,7 @@ T(120, LBL, 'VOLUME', 13.5);
 knob('out.volume', X(113), Y(KN), {
   def: 7,
   module: 'out',
+  name: 'Volume',
   fmt: pct,
   help: 'Master output level. It is not stored with a patch.',
 });
