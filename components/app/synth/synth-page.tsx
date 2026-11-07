@@ -648,11 +648,15 @@ function Synth({
   const scrollerRef = useKeepCentre(scale);
   const [areasOn, setAreasOn] = useState(false);
   const [tourOn, setTourOn] = useState(false);
+  // The card over the panel from `lg` up: the lesson, the inspector or the effects (t-74).
+  const [card, setCard] = useState<CardId | null>(null);
   // The routing view on the back of the panel (t-142), for a synth that has a routing. The flip is a view transition
   // (`routing-flip`, `.kys-panel-flip`), so nothing that holds the panel carries a transform; reduced motion swaps.
   const routing = useMemo(() => getSynthRouting(synthDef), [synthDef]);
   const [routingOn, setRoutingOn] = useState(false);
   const flipPanel = useCallback((on: boolean) => {
+    // The card over the panel is about the panel: turned over to another view, it goes (t-205).
+    if (on) setCard(null);
     startTransition(() => {
       addTransitionType('routing-flip');
       setRoutingOn(on);
@@ -712,8 +716,8 @@ function Synth({
     setDockSnap('half');
   };
   // From `lg` up (t-74): the lesson card over the panel, the sounds in a drawer on the left, the tutor's drawer over the panel,
-  // and the dock's piano. The card's side and the piano are remembered in this browser.
-  const [card, setCard] = useState<CardId | null>(null);
+  // and the dock's piano. The card's side and the piano are remembered in this browser. The card is declared with the
+  // routing view, which closes it.
   // What works on the panel itself turns it face up again from the routing view: a find (a new one too), a lesson
   // step, the tour, Explain sections or the Inspector coming on. Turning one off leaves the view be, and so does Undo
   // (it lights what it changes, which the view follows). Dim unused and Sensitive are left out: they point at nothing,
@@ -745,6 +749,11 @@ function Synth({
   // Whether a chapter has been chosen since the drawer opened: then the panel is where the lesson is being followed,
   // and a press on it leaves the drawer up; before, a press on the panel is other work, and puts it away.
   const chapterChosen = useRef(false);
+  // Put away, the drawer takes the lesson it opened with it (t-205); the inspector and the effects, from the bar, stay.
+  const closeDesign = useCallback(() => {
+    setDesignOpen(false);
+    setCard((c) => (c === 'build' ? null : c));
+  }, []);
 
   // Unplug all takes the cables out one by one, in the order they were plugged, each dropping away from its jack: the
   // first at once, then every `UNPLUG_GAP_MS` (closer for many, so all are out in `UNPLUG_ALL_MS`). They come out within
@@ -783,11 +792,11 @@ function Synth({
       // The strip handles its own presses (its tab, its head, its chapters), and the lesson card is the lesson's.
       if (t.closest('.kys-design, .kys-card')) return;
       if (scrollerRef.current?.contains(t) && chapterChosen.current) return;
-      setDesignOpen(false);
+      closeDesign();
     };
     document.addEventListener('pointerdown', onDown, true);
     return () => document.removeEventListener('pointerdown', onDown, true);
-  }, [designOpen, small, scrollerRef]);
+  }, [designOpen, small, scrollerRef, closeDesign]);
   const [tutorOpen, setTutorOpen] = useState(false);
   // On a phone the panel settings are behind a button by the sound's name; from `md` up they are always on show.
   // The piano is out by default on a tall screen and put away on a short one, until the Piano button says otherwise.
@@ -2764,7 +2773,8 @@ function Synth({
                   face={face}
                   onToggle={() => {
                     chapterChosen.current = false;
-                    setDesignOpen((o) => !o);
+                    if (designOpen) closeDesign();
+                    else setDesignOpen(true);
                   }}
                 />
               )}

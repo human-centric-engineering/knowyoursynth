@@ -1864,6 +1864,37 @@ describe('SynthPage player', () => {
     expect(tab()).toHaveAttribute('aria-expanded', 'true');
   });
 
+  it('takes the lesson card away with the drawer, leaving the inspector; turning the panel over takes either (t-205)', () => {
+    twoSteps();
+    const tab = () => button('Learn sound design');
+    const card = () => within(player()).queryByTestId('lesson-card');
+
+    // The lesson, opened from a chapter, goes when the drawer is put away.
+    fireEvent.click(tab());
+    fireEvent.click(button('Lesson step 1: Open the mixer'));
+    expect(card()).not.toBeNull();
+    fireEvent.click(tab());
+    expect(tab()).toHaveAttribute('aria-expanded', 'false');
+    expect(card()).toBeNull();
+
+    // So it does when a press elsewhere puts the drawer away.
+    fireEvent.click(tab());
+    fireEvent.click(button('Lesson step 1: Open the mixer'));
+    fireEvent.pointerDown(document.body);
+    expect(card()).toBeNull();
+
+    // The inspector, from the panel's rail, is not the drawer's: it stays.
+    fireEvent.click(tab());
+    fireEvent.click(button('Inspector'));
+    fireEvent.click(tab());
+    expect(card()?.textContent).toMatch(/What is under the pointer/);
+
+    // Turned over to the routing view, the panel's card goes, whatever it shows.
+    fireEvent.click(button('Signal routing'));
+    expect(button('Signal routing')).toHaveAttribute('aria-pressed', 'true');
+    expect(card()).toBeNull();
+  });
+
   it('lifts the lesson card by the open drawer’s height while the strip floats on the dock, and not where it is in the dock (t-174)', () => {
     // jsdom has no layout: the drawer body's height, whether the strip floats and the observer are all stood in for.
     const observers: Array<() => void> = [];
