@@ -88,21 +88,15 @@ describe('LessonCard dragging', () => {
     expect(card.style.top).toBe('8px');
   });
 
-  it('stays above the dock and the open drawer, its height reaching down to them (t-202)', () => {
+  it("goes anywhere on the screen, over the dock, its height down to the screen's foot (t-202)", () => {
     document.documentElement.style.setProperty('--kys-dock-h', '180px');
-    document.documentElement.style.setProperty('--kys-strip-h', '70px');
     try {
       const { card, head } = setup();
       drag(head, [1000, 320], [1000, 5000]);
-      expect(card.style.top).toBe(`${900 - 180 - 70 - 120}px`);
-      // The height ends at the band, read live, with a header's worth kept.
-      expect(card.style.maxHeight).toContain('var(--kys-dock-h, 0px)');
-      expect(card.style.maxHeight).toContain('var(--kys-strip-h, 0px)');
-      expect(card.style.maxHeight).toContain(`${900 - 180 - 70 - 120 + 8}px`);
-      expect(card.style.maxHeight).toMatch(/^max\(120px,/);
+      expect(card.style.top).toBe(`${900 - 120}px`);
+      expect(card.style.maxHeight).toBe(`calc(100vh - ${900 - 120 + 8}px)`);
     } finally {
       document.documentElement.style.removeProperty('--kys-dock-h');
-      document.documentElement.style.removeProperty('--kys-strip-h');
     }
   });
 
@@ -121,6 +115,54 @@ describe('LessonCard dragging', () => {
     expect(onSide).toHaveBeenCalledTimes(1);
     expect(card).not.toHaveAttribute('data-detached');
     expect(card.style.left).toBe('');
+  });
+});
+
+describe('LessonCard sizing (t-203)', () => {
+  const grip = () => screen.getByRole('button', { name: 'Resize the card' });
+  const size = (el: Element, from: [number, number], to: [number, number]) => {
+    fireEvent.pointerDown(el, { pointerId: 2, button: 0, clientX: from[0], clientY: from[1] });
+    fireEvent.pointerMove(el, { pointerId: 2, clientX: to[0], clientY: to[1] });
+    fireEvent.pointerUp(el, { pointerId: 2, clientX: to[0], clientY: to[1] });
+  };
+
+  it('sizes from the grip, lifting a docked card out where it is so its top stays put', () => {
+    const { card } = setup();
+    size(grip(), [1355, 795], [1305, 745]);
+    expect(card).toHaveAttribute('data-detached');
+    expect(card.style.left).toBe('960px');
+    expect(card.style.top).toBe('300px');
+    expect(card.style.width).toBe('350px');
+    expect(card.style.height).toBe('450px');
+  });
+
+  it('goes no smaller than the least size, and no further than the screen', () => {
+    const { card } = setup();
+    size(grip(), [1355, 795], [0, 0]);
+    expect(card.style.width).toBe('280px');
+    expect(card.style.height).toBe('180px');
+    size(grip(), [1355, 795], [5000, 5000]);
+    expect(card.style.width).toBe(`${1400 - 960 - 8}px`);
+    expect(card.style.height).toBe(`${900 - 300 - 8}px`);
+  });
+
+  it('sizes by the arrow keys, four times as far with Shift', () => {
+    const { card } = setup();
+    fireEvent.keyDown(grip(), { key: 'ArrowLeft' });
+    expect(card.style.width).toBe('384px');
+    expect(card.style.height).toBe('500px');
+    fireEvent.keyDown(grip(), { key: 'ArrowUp', shiftKey: true });
+    expect(card.style.height).toBe('436px');
+    fireEvent.keyDown(grip(), { key: 'Enter' });
+    expect(card.style.height).toBe('436px');
+  });
+
+  it('keeps its size when docked again by ⇆', () => {
+    const { card } = setup();
+    size(grip(), [1355, 795], [1305, 745]);
+    fireEvent.click(screen.getByRole('button', { name: 'Move the card to the left' }));
+    expect(card).not.toHaveAttribute('data-detached');
+    expect(card.style.width).toBe('350px');
   });
 });
 

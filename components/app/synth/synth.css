@@ -1441,6 +1441,34 @@ svg .kys-hit:focus-visible {
   right: auto;
   left: 40px;
 }
+/* Moved, the card can go anywhere on the screen, so it floats over the dock and the tutor's drawer (t-202), still
+   under the sounds and the player's menus and tips. */
+.kys-card[data-detached] {
+  z-index: 47;
+}
+/* The grip that sizes the card (t-203), in its bottom-right corner: quiet until the pointer or focus comes to it. */
+.kys-card-grip {
+  position: absolute;
+  z-index: 1;
+  right: 2px;
+  bottom: 2px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 0 0 12px 4px;
+  color: var(--kys-faint);
+  touch-action: none;
+  transition: color 0.15s ease;
+}
+/* Over the instrument's own pointer cursor for buttons. */
+.kys-synth .kys-card-grip {
+  cursor: nwse-resize;
+}
+.kys-card-grip:hover,
+.kys-card-grip:focus-visible {
+  color: var(--kys-accent);
+}
 .kys-card-head {
   display: flex;
   align-items: flex-start;

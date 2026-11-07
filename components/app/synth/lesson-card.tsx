@@ -9,7 +9,8 @@
  * player bar, and so do the effects, so there is one card at a time.
  *
  * The card can be dragged by its header to anywhere on the screen, so it can be put over whatever part of the panel is
- * not in use. The ⇆ button docks it again, on the other side.
+ * not in use; moved, it floats over the dock too (t-202). The ⇆ button docks it again, on the other side. Its grip at
+ * the bottom right sizes it, by pointer or by the arrow keys (t-203), and the size is kept when it is docked again.
  *
  * The lesson hangs from a strip of the faceplate (`face`, t-201): its header is the panel's colour and silkscreen
  * ink, as the rails along the panel's head and foot are, so the card reads as part of the instrument; its body is the
@@ -20,7 +21,12 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from 'react';
+import type {
+  CSSProperties,
+  KeyboardEvent as ReactKeyboardEvent,
+  PointerEvent as ReactPointerEvent,
+  ReactNode,
+} from 'react';
 import { ArrowLeftRight, Check, ChevronLeft, ChevronRight, RotateCcw, X } from 'lucide-react';
 import { stepBadges } from '@/lib/app/synths/lib/history';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
@@ -49,24 +55,39 @@ const tweakBadges = (p: Preset): string[] => [...new Set(p.tweaks.map((t) => t.i
 
 /** How close a dragged card may come to the screen's edges, in px. */
 const EDGE = 8;
-/** How much of a dragged card stays above the dock: the header and a little of the body, in px. */
+/** How much of a dragged card stays on screen at the bottom: the header and a little of the body, in px. */
 const KEEP = 120;
+/** The smallest the card can be sized to, in px: room for the header's title and a few lines of the lesson. */
+const MIN_W = 280;
+const MIN_H = 180;
+/** How far an arrow key sizes the card, in px; with Shift, four times as far. */
+const NUDGE = 16;
 
-/**
- * The height of the band at the foot of the screen the card stands on: the dock, and the Sound Design drawer while it
- * is open, which stack over the card (`--kys-dock-h`, `--kys-strip-h`, set on the root by the page). 0 without them.
- */
-const dockBand = (): number => {
-  const s = getComputedStyle(document.documentElement);
-  const px = (name: string) => Number.parseFloat(s.getPropertyValue(name)) || 0;
-  return px('--kys-dock-h') + px('--kys-strip-h');
-};
-
-/** Where a dragged card's top-left corner may go, kept on screen and above the dock (t-202). */
+/** Where a dragged card's top-left corner may go, kept on screen. */
 const clampPos = (x: number, y: number, w: number) => ({
   x: Math.min(Math.max(x, EDGE), Math.max(EDGE, window.innerWidth - w - EDGE)),
-  y: Math.min(Math.max(y, EDGE), Math.max(EDGE, window.innerHeight - dockBand() - KEEP)),
+  y: Math.min(Math.max(y, EDGE), Math.max(EDGE, window.innerHeight - KEEP)),
 });
+
+/** A size for a card whose top-left corner is at `x`, `y`: no smaller than the least, no further than the screen. */
+const clampSize = (w: number, h: number, x: number, y: number) => ({
+  w: Math.round(Math.min(Math.max(w, MIN_W), Math.max(MIN_W, window.innerWidth - x - EDGE))),
+  h: Math.round(Math.min(Math.max(h, MIN_H), Math.max(MIN_H, window.innerHeight - y - EDGE))),
+});
+
+/** The grip's mark: two diagonal strokes in the corner, as a window's resize corner has. */
+function GripMark() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+      <path
+        d="M11 4 4 11M11 8.5 8.5 11"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
 
 /** A move's number; `now` while the move is being made on the panel (`f-step-moves`). */
 function Num({ n, now = false }: { n: number; now?: boolean }) {
@@ -126,6 +147,17 @@ export function LessonCard({
   // Where the card has been dragged to, or `null` while it is docked at its side.
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
   const drag = useRef<{ id: number; dx: number; dy: number; w: number } | null>(null);
+  // The size the card has been given by its grip, or `null` for the stylesheet's.
+  const [size, setSize] = useState<{ w: number; h: number } | null>(null);
+  const sizing = useRef<{
+    id: number;
+    x0: number;
+    y0: number;
+    w: number;
+    h: number;
+    x: number;
+    y: number;
+  } | null>(null);
   const n = preset?.steps.length ?? 0;
   const starting = !!preset && step === START_STEP;
   const current = preset && step != null && !starting ? preset.steps[step] : undefined;
@@ -180,17 +212,23 @@ export function LessonCard({
     return () => el.removeEventListener('keydown', onKey);
   }, [close]);
 
-  // A dragged card stays on screen when the window shrinks.
+  // A dragged or sized card stays on screen when the window shrinks.
   const dragged = pos != null;
+  const sized = size != null;
   useEffect(() => {
-    if (!dragged) return undefined;
+    if (!dragged && !sized) return undefined;
     const onResize = () => {
       const w = ref.current?.offsetWidth ?? 0;
       setPos((p) => (p ? clampPos(p.x, p.y, w) : p));
+      setSize((z) => {
+        if (!z) return z;
+        const r = ref.current?.getBoundingClientRect();
+        return clampSize(z.w, z.h, r?.left ?? EDGE, r?.top ?? EDGE);
+      });
     };
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
-  }, [dragged]);
+  }, [dragged, sized]);
 
   // Dragged by the header, but not by its buttons.
   const onDragStart = (e: ReactPointerEvent<HTMLElement>) => {
@@ -208,6 +246,55 @@ export function LessonCard({
   };
   const onDragEnd = (e: ReactPointerEvent<HTMLElement>) => {
     if (drag.current?.id === e.pointerId) drag.current = null;
+  };
+
+  // Sized by the grip at its bottom right, its top-left corner staying put. A docked card stands on the dock by its
+  // foot, so it is first lifted out where it is, or its top would move instead of its foot.
+  const fromHere = () => {
+    const el = ref.current;
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    if (!pos) setPos({ x: r.left, y: r.top });
+    return r;
+  };
+  const onSizeStart = (e: ReactPointerEvent<HTMLElement>) => {
+    if (e.button !== 0) return;
+    const r = fromHere();
+    if (!r) return;
+    sizing.current = {
+      id: e.pointerId,
+      x0: e.clientX,
+      y0: e.clientY,
+      w: r.width,
+      h: r.height,
+      x: r.left,
+      y: r.top,
+    };
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+    e.preventDefault();
+  };
+  const onSizeMove = (e: ReactPointerEvent<HTMLElement>) => {
+    const z = sizing.current;
+    if (!z || z.id !== e.pointerId) return;
+    setSize(clampSize(z.w + e.clientX - z.x0, z.h + e.clientY - z.y0, z.x, z.y));
+  };
+  const onSizeEnd = (e: ReactPointerEvent<HTMLElement>) => {
+    if (sizing.current?.id === e.pointerId) sizing.current = null;
+  };
+  const onSizeKey = (e: ReactKeyboardEvent<HTMLElement>) => {
+    const step = e.shiftKey ? NUDGE * 4 : NUDGE;
+    const by: Partial<Record<string, [number, number]>> = {
+      ArrowRight: [step, 0],
+      ArrowLeft: [-step, 0],
+      ArrowDown: [0, step],
+      ArrowUp: [0, -step],
+    };
+    const d = by[e.key];
+    if (!d) return;
+    e.preventDefault();
+    const r = fromHere();
+    if (!r) return;
+    setSize(clampSize(r.width + d[0], r.height + d[1], r.left, r.top));
   };
 
   const lit = starting ? stepIds(startStep(def)) : current ? stepIds(current) : [];
@@ -522,19 +609,16 @@ export function LessonCard({
       className={`kys-card ${lesson ? 'is-faced' : ''}`}
       data-side={side}
       data-detached={pos ? '' : undefined}
-      style={
-        pos
-          ? {
-              left: pos.x,
-              top: pos.y,
-              right: 'auto',
-              bottom: 'auto',
-              // Down to the dock, as the docked card stands on it, so the end of the lesson can be scrolled to
-              // wherever the card is put; the band is read live, for a drawer opened after the drag (t-202).
-              maxHeight: `max(${KEEP}px, calc(100vh - var(--kys-dock-h, 0px) - var(--kys-strip-h, 0px) - ${pos.y + EDGE}px))`,
-            }
-          : undefined
-      }
+      style={{
+        ...(size && { width: size.w, height: size.h }),
+        ...(pos && {
+          left: pos.x,
+          top: pos.y,
+          right: 'auto',
+          bottom: 'auto',
+          maxHeight: `calc(100vh - ${pos.y + EDGE}px)`,
+        }),
+      }}
       aria-labelledby="kys-card-h"
       data-testid="lesson-card"
     >
@@ -580,6 +664,19 @@ export function LessonCard({
         {body}
       </div>
       {foot && <footer className="kys-card-foot">{foot}</footer>}
+      <button
+        type="button"
+        className="kys-card-grip"
+        aria-label="Resize the card"
+        title="Drag to resize the card (or use the arrow keys)"
+        onPointerDown={onSizeStart}
+        onPointerMove={onSizeMove}
+        onPointerUp={onSizeEnd}
+        onPointerCancel={onSizeEnd}
+        onKeyDown={onSizeKey}
+      >
+        <GripMark />
+      </button>
     </aside>
   );
 }
