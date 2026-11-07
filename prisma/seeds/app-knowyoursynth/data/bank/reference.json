@@ -7795,15 +7795,6 @@
       "kind": "semi-modular",
       "text": "The second SOLAR 42, with a new, stable filter circuit, sub-oscillators on its two VCOs and renumbered voices.",
       "source": "https://sonicstate.com/news/2024/07/31/elta-music-solar-42f"
-    },
-    {
-      "id": "pwm-mantis",
-      "name": "PWM Mantis",
-      "maker": "PWM",
-      "year": "2023",
-      "kind": "poly",
-      "text": "A hybrid-analogue duophonic synth with 37 keys, completing the last design concept of Chris Huggett (EDP Wasp, OSCar): digital oscillators with OSCar wavetables into a dual analogue state-variable filter, two envelopes, two LFOs, patch memory, an arpeggiator and a joystick.",
-      "source": "https://www.1pwm.com/mantisspecifications"
     }
   ]
 }

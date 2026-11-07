@@ -33,6 +33,7 @@ const NOTHING_MORE: Record<string, string> = {
   'Serge Modular Music Systems':
     'Its one line, the modular, is listed; later production is Sound Transform Systems’.',
   Lowrey: 'It sold no synth apart from the String Symphonizer, listed; the rest are organs.',
+  PWM: 'Its synths, the Malevolent and the Mantis, are both listed.',
 };
 
 /** The Behringer recreations behind the app's panels, and the original each copies. */

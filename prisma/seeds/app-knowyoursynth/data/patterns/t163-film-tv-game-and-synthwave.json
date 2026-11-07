@@ -42,6 +42,10 @@
     {
       "sound": "ub-xa-d/sh-computer",
       "reason": "An effect: the patch turns one held note into random sample-and-hold blips, the computer “thinking” in 1970s science fiction. The Close Encounters transcription on Songsterr has no tuning, so its notes can’t be read as pitches, and the five-tone motif is a different sound from this one."
+    },
+    {
+      "sound": "mantis/mantis-hammer-lead",
+      "reason": "A playing style: a gliding lead with vibrato brought in under the wheel. It names no work, and the line is the lesson’s own."
     }
   ],
   "patterns": [

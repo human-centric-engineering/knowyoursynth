@@ -6,6 +6,10 @@
     {
       "sound": "ub-xa-d/siren",
       "reason": "An effect: a held note the patch’s LFO swings up and down like a siren. The rave sirens over Lil Louis’s “French Kiss” are effects over the track, not a line; there is no part to write."
+    },
+    {
+      "sound": "mantis/mantis-noise-hats",
+      "reason": "A technique: hi-hats made from noise through a steep high-pass. It names no work, and the rhythm is the lesson’s own."
     }
   ],
   "patterns": [
@@ -8230,6 +8234,7 @@
         "syntrx-ii/syntrx-joy-bass",
         "solar-42n/solar-polivoks-acid",
         "malevolent/mal-acid-line",
+        "mantis/mantis-acid-line",
         "k2/acid-303-line"
       ],
       "research": {
