@@ -74,6 +74,14 @@
     {
       "sound": "malevolent/mal-looking-glass-arp",
       "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Through the Looking Glass: a repeating marimba figure” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "td-3/td-air-bass",
+      "reason": "Names the “Air” from the third Orchestral Suite, which no pattern in this batch has yet; the bass line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "donner-b1/b1-invention",
+      "reason": "Its own riff already plays the theme of the eighth Invention, from Bach’s public-domain score, so a batch pattern would only repeat it."
     }
   ],
   "patterns": [
@@ -422,7 +430,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/toccata-pedal-organ"],
+      "sounds": ["model-d/toccata-pedal-organ", "td-3/td-toccata-organ"],
       "research": {
         "work": "J. S. Bach, Toccata and Fugue in D minor, BWV 565",
         "part": "The first bar: the long A, the run down to C♯ and D, then the A again and its answer, E, F, C♯ and D.",
@@ -1044,7 +1052,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/cello-prelude"],
+      "sounds": ["neutron/cello-prelude", "tb-303/tb-cello-prelude"],
       "research": {
         "work": "Yo-Yo Ma, “Prelude”, Cello Suite No. 1 in G major (J. S. Bach, BWV 1007)",
         "part": "The first four bars: the broken chords on the open G, over G, C, D and G again.",
@@ -1532,7 +1540,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-pizzicato", "mantis/mantis-celesta"],
+      "sounds": ["take-5/t5-pizzicato"],
       "research": {
         "work": "P. I. Tchaikovsky, “Dance of the Sugar Plum Fairy”, The Nutcracker, 1892",
         "part": "The plucked strings before the celesta comes in: E and F♯, G and E♭ off the beat, twice.",
@@ -4507,7 +4515,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/motor-vibraphone", "take-5/t5-vibes"],
+      "sounds": ["model-d/motor-vibraphone", "take-5/t5-vibes", "donner-b1/b1-vibraphone"],
       "research": {
         "work": "Miles Davis, “Bags’ Groove”, Bags’ Groove, 1957, with Milt Jackson on vibraphone",
         "part": "The first four bars of the blues head: a long C, then B♭ and A♭ turning down through F to E♭, and the F pickup into the next chorus.",
@@ -9267,7 +9275,8 @@
       "sounds": [
         "neutron/sakamoto-bell-lead",
         "take-5/t5-mr-lawrence-bell",
-        "malevolent/mal-mr-lawrence-bell"
+        "malevolent/mal-mr-lawrence-bell",
+        "donner-b1/b1-sakamoto"
       ],
       "research": {
         "work": "Ryuichi Sakamoto, “Merry Christmas Mr. Lawrence”, Merry Christmas Mr. Lawrence, 1983",
@@ -11749,7 +11758,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/pablo-melodica"],
+      "sounds": ["neutron/pablo-melodica", "donner-b1/b1-melodica-dub"],
       "research": {
         "work": "Augustus Pablo, “East of the River Nile”, East of the River Nile, 1977",
         "part": "A minor-key line up to D and back to a long E, four bars.",
@@ -18458,7 +18467,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/turangalila-ondes"],
+      "sounds": ["neutron/turangalila-ondes", "donner-b1/b1-ondes"],
       "research": {
         "work": "Olivier Messiaen, Turangalîla-Symphonie, 1948",
         "part": "A slow, swooping line from G up to D and down to E.",
@@ -21045,6 +21054,732 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Nothing for Possible Musics was found on Songsterr, BitMIDI or the Mutopia Project. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:earl-scruggs/foggy-mountain-breakdown-roll-low",
+      "name": "Foggy Mountain Breakdown: the first break, low",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Earl Scruggs" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 160,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 58, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 51, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 52, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 64, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 59, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 55, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 50, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 51, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 52, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 64, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 59, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 55, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 50, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 62, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 62, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 58, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 67, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 59, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 67, "gate": 2 }] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["tb-303/tb-banjo-roll"],
+      "research": {
+        "work": "Flatt & Scruggs, “Foggy Mountain Breakdown”, 1949",
+        "part": "The banjo’s first eight bars: the rolls on G with the C♯ to D slides, the drop to E minor, and the forward rolls back to G: the same part an octave down, where the TB-303’s “Banjo Roll” plays.",
+        "originalKey": "G major",
+        "originalBpm": 160,
+        "leads": [
+          {
+            "citation": "Earl Scruggs — “Foggy Mountain Breakdown”, fan transcription by Herman on Songsterr (revision 8226202, 2026-08-01)",
+            "checkedAt": "2026-11-02",
+            "url": "https://www.songsterr.com/a/wsa/earl-scruggs-foggy-mountain-breakdown-tab-s33641"
+          }
+        ],
+        "notes": "From the transcription’s banjo track, bars 2–9, an octave up where the sound’s riff plays. Where the banjo strikes two strings at once the pattern keeps the top note, and where two strings sound the same D it keeps one, because the sound plays one note at a time. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:earl-scruggs/foggy-mountain-breakdown-roll.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:little-walter/juke-riff-low",
+      "name": "Juke: the harp riff, low",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Little Walter" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 145,
+        "stepSize": "1/8t",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 64, "gate": 1.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["td-3/td-blues-harp"],
+      "research": {
+        "work": "Little Walter, “Juke”, 1952",
+        "part": "The riff, two bars: a shuffled E on the beat, and the E G♯ B C♯ climb back up to it: the same part an octave down, where the TD-3’s “Amplified Blues Harp” plays.",
+        "originalKey": "E major",
+        "originalBpm": 145,
+        "leads": [
+          {
+            "citation": "Little Walter, “Juke”, fan MIDI file on BitMIDI (juke.mid, harp, bass, piano and drum tracks)",
+            "checkedAt": "2026-11-02",
+            "url": "https://bitmidi.com/uploads/63854.mid"
+          }
+        ],
+        "notes": "From the file’s harp track, bars 3–4, rounded to the eighth-note triplet: its timing is played in. Where the harp plays B and E together the pattern keeps the E, because the sound plays one note at a time. The file is Jim Beebe’s sequence. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:little-walter/juke-riff.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:sunn-o/it-took-the-night-to-believe-drone-low",
+      "name": "It Took the Night to Believe: the drone, low",
+      "role": "held",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Sunn O)))" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 162,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 21, "gate": 8 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 27, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 23, "gate": 6 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["td-3/td-doom-drone"],
+      "research": {
+        "work": "Sunn O))), “It Took the Night to Believe”, Black One, 2005",
+        "part": "The drone bass’s two bars: A held, then E♭ and B: the same part an octave down, where the TD-3’s “Doom Drone” plays.",
+        "originalKey": null,
+        "originalBpm": 162,
+        "leads": [
+          {
+            "citation": "Sunn O))) — “It Took the Night to Believe”, fan transcription by BiRDiE on Songsterr (revision 1896922, 2025-05-02)",
+            "checkedAt": "2026-11-02",
+            "url": "https://www.songsterr.com/a/wsa/sunn-o-it-took-the-night-to-believe-tab-s399746"
+          }
+        ],
+        "notes": "From the transcription’s drone-bass track, bars 3–4, an octave up where the sound’s riff plays. The second bar is 5/4, so the loop is nine beats. The sound gives each held note its own fifth. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:sunn-o/it-took-the-night-to-believe-drone.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:alice-coltrane/satchidananda-cascade-low",
+      "name": "Journey in Satchidananda: a harp cascade, low",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Alice Coltrane" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 100,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 58, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 67, "gate": 8 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 58, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 8 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["td-3/td-cosmic-harp"],
+      "research": {
+        "work": "Alice Coltrane, “Journey in Satchidananda”, Journey in Satchidananda, 1971",
+        "part": "A cascade up through C with a flat seventh to a held G, and back down to C: the same part an octave down, where the TD-3’s “Cosmic Harp” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "Nothing for “Journey in Satchidananda” was found on Songsterr, BitMIDI or the Mutopia Project. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:alice-coltrane/satchidananda-cascade.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:fripp-and-eno/no-pussyfooting-notes-low",
+      "name": "(No Pussyfooting): slow notes for the loop, low",
+      "role": "slow_melody",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Fripp & Eno" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 60,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 52, "gate": 6 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 59, "gate": 6 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 57, "gate": 3 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 55, "gate": 3 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 50, "gate": 7 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-frippertronics"],
+      "research": {
+        "work": "Fripp & Eno, “The Heavenly Music Corporation”, (No Pussyfooting), 1973",
+        "part": "Five long notes with space between them, E, B, A, G and D, for the echo to pile up: the same part an octave down, where the B1’s “Tape Loop Swells” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "Nothing for (No Pussyfooting) was found on Songsterr, BitMIDI or the Mutopia Project. All three sounds name the album and loop what is played into a long echo, so they share one guess. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:fripp-and-eno/no-pussyfooting-notes.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:tchaikovsky/sugar-plum-fairy-theme-low",
+      "name": "Sugar Plum Fairy: the celesta theme, low",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Tchaikovsky" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 60,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 67, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 66, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 63, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 64, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 62, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 60, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-celesta"],
+      "research": {
+        "work": "P. I. Tchaikovsky, “Dance of the Sugar Plum Fairy”, The Nutcracker, 1892",
+        "part": "The celesta’s first phrase, four bars of 2/4: G E G F♯, D♯ E and three Ds, three C♯s, three Cs, then B E C E B: the same part an octave down, where the B1’s “Celesta Sparkle” plays.",
+        "originalKey": "E minor",
+        "originalBpm": null,
+        "leads": [
+          {
+            "citation": "P. I. Tchaikovsky, “Dance of the Sugar Plum Fairy”, fan MIDI file on BitMIDI (dance-of-the-sugar-plum-fairy.mid, an orchestral sequence with celesta and string tracks)",
+            "checkedAt": "2026-11-02",
+            "url": "https://bitmidi.com/uploads/37483.mid"
+          }
+        ],
+        "notes": "From the file’s celesta track, bars 6–9: the top note of its chords, which is the tune, two octaves down to sit where the sounds’ riffs play it. The file voices the celesta in three- and four-note chords; the tune alone suits both sounds. The file plays the notes short; the pattern keeps their written values. The tempo is the file’s, about 60. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:tchaikovsky/sugar-plum-fairy-theme.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:tchaikovsky/sugar-plum-fairy-pizzicato-high",
+      "name": "Sugar Plum Fairy: the pizzicato introduction, high",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Tchaikovsky"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 60,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 78,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 75,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 78,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 75,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["mantis/mantis-celesta"],
+      "research": {
+        "work": "P. I. Tchaikovsky, “Dance of the Sugar Plum Fairy”, The Nutcracker, 1892",
+        "part": "The plucked strings before the celesta comes in: E and F♯, G and E♭ off the beat, twice: the same part an octave up, where the Mantis’s “Celesta” plays.",
+        "originalKey": "E minor",
+        "originalBpm": null,
+        "leads": [
+          {
+            "citation": "P. I. Tchaikovsky, “Dance of the Sugar Plum Fairy”, fan MIDI file on BitMIDI (dance-of-the-sugar-plum-fairy.mid, an orchestral sequence with celesta and string tracks)",
+            "checkedAt": "2026-11-02",
+            "url": "https://bitmidi.com/uploads/37483.mid"
+          }
+        ],
+        "notes": "From the file’s first-violin track, bars 2–5, plucked short as the file plays them. The violas and seconds fill in chords under it; the sound plays one note at a time, so it gets the top line. The sound names the ballet, not a number; this is its best-known pizzicato. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave up from researched:tchaikovsky/sugar-plum-fairy-pizzicato.",
         "listenedAt": null
       }
     }

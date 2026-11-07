@@ -89,6 +89,12 @@ export function initAppOwnerClassification(): void {
         because:
           'An inbound suggestion for the shared videos and links, decided from one admin queue; userId is who suggested it.',
       },
+      // Named for its column only: ownerId is the link owner's natural key, not a user (t-200).
+      LinkSeedRecord: {
+        kind: 'not-personal',
+        because:
+          'A record of a link the seed applied to this database; ownerId is the instrument, sound, song or artist the link is on, not a user.',
+      },
       SoundReport: {
         kind: 'not-personal',
         because:

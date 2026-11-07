@@ -162,6 +162,14 @@
     {
       "sound": "malevolent/mal-space-is-the-place",
       "reason": "The batch has no pattern from Sun Ra — “Space Is the Place”; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "tb-303/tb-moondawn-pulse",
+      "reason": "Names Moondawn, which no pattern in this batch has yet; the pulse is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "td-3/td-silver-apples",
+      "reason": "In the style of Silver Apples: it names no work, and the batch’s Silver Apples pattern of its kind is a held drone for a patch that makes its own pulse, while this sound spells its pulse note by note, so the line is the lesson’s own."
     }
   ],
   "patterns": [
@@ -969,7 +977,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["solar-42n/solar-switched-on-bach", "malevolent/mal-switched-on-bach"],
+      "sounds": ["solar-42n/solar-switched-on-bach"],
       "research": {
         "work": "Wendy Carlos, “Two-Part Invention in F Major” (J. S. Bach, BWV 779), Switched-On Bach, 1968",
         "part": "The left hand’s answer, bars 2–5: the subject an octave below the right hand, here two octaves below.",
@@ -1417,7 +1425,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["super-gemini/sg-switched-on-lead", "malevolent/mal-switched-on-bach"],
+      "sounds": ["super-gemini/sg-switched-on-lead"],
       "research": {
         "work": "Wendy Carlos, “Two-Part Invention in D Minor” (J. S. Bach, BWV 775), Switched-On Bach, 1968",
         "part": "The right hand’s first eight bars of 3/8: the scale up and the leap down through C♯, the broken chords, and the same an octave up.",
@@ -2097,7 +2105,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["system-15/s15-brass", "malevolent/mal-switched-on-bach"],
+      "sounds": ["system-15/s15-brass"],
       "research": {
         "work": "Wendy Carlos, “Chorale Prelude ‘Wachet auf, ruft uns die Stimme’” (J. S. Bach, BWV 645), Switched-On Bach, 1968",
         "part": "The chorale tune’s first line, in long notes under the counter-melody: E♭ and G, four B♭s, C and B♭, and the rest before the next line.",
@@ -2675,6 +2683,73 @@
           }
         ],
         "notes": "From the edition’s upper part, bars 1–2, as written; from bar 3 the part holds notes under the line, which a single line can’t carry. The tempo is the file’s playback tempo, not Debussy’s marking (Andantino con moto). The score is a tier-1 source for Debussy’s notes, but not for Tomita’s part: the record’s octaves, ornaments, tempo and registration are his, and only a listen can say how far they differ. So it is a starting point like any other lead here, and the pattern is _In the style of_. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:isao-tomita/arabesque-figure-high",
+      "name": "Arabesque No. 1: the opening figure, high",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": { "kind": "work", "songId": "isao-tomita-snowflakes-are-dancing" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 144,
+        "stepSize": "1/8t",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 73, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 85, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 88, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 90, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 92, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 87, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 83, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 71, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 69, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 81, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 85, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 87, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 88, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 83, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 80, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 68, "gate": 1 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-snowflakes"],
+      "research": {
+        "work": "Isao Tomita, “Arabesque No. 1” (Claude Debussy), Snowflakes Are Dancing, 1974",
+        "part": "The first two bars’ triplet figure: up through E major and back down, then the same from A: the same part an octave up, where the B1’s “Snowflakes Dancing” plays.",
+        "originalKey": "E major",
+        "originalBpm": null,
+        "leads": [
+          {
+            "citation": "Claude Debussy, Arabesque No. 1, L. 66: the Mutopia Project’s typeset edition of the score (public domain), its MIDI file",
+            "checkedAt": "2026-11-02",
+            "url": "https://www.mutopiaproject.org/ftp/DebussyC/L66/debussy_Arabesque_1/debussy_Arabesque_1.mid"
+          }
+        ],
+        "notes": "From the edition’s upper part, bars 1–2, as written; from bar 3 the part holds notes under the line, which a single line can’t carry. The tempo is the file’s playback tempo, not Debussy’s marking (Andantino con moto). The score is a tier-1 source for Debussy’s notes, but not for Tomita’s part: the record’s octaves, ornaments, tempo and registration are his, and only a listen can say how far they differ. So it is a starting point like any other lead here, and the pattern is _In the style of_. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave up from researched:isao-tomita/arabesque-figure.",
         "listenedAt": null
       }
     },
@@ -5278,7 +5353,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-motorik-pulse"],
+      "sounds": ["take-5/t5-motorik-pulse", "tb-303/tb-motorik"],
       "research": {
         "work": "Neu!, “Hallogallo”, Neu!, 1972",
         "part": "The low E in straight eighths that runs under the whole track, two bars.",
@@ -8282,7 +8357,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/rainbow-organ-arp", "syntrx-ii/syntrx-riley"],
+      "sounds": [
+        "model-d/rainbow-organ-arp",
+        "syntrx-ii/syntrx-riley",
+        "donner-b1/b1-rainbow-curved"
+      ],
       "research": {
         "work": "Terry Riley, “A Rainbow in Curved Air”, 1969",
         "part": "Broken chords in sixteenths on D, E, F and E, rising and falling, for the echo to pile up.",
@@ -9958,11 +10037,7 @@
         ],
         "chain": [0]
       },
-      "sounds": [
-        "model-d/expanding-universe-pluck",
-        "syntrx-ii/syntrx-spiegel",
-        "malevolent/mal-expanding-universe"
-      ],
+      "sounds": ["model-d/expanding-universe-pluck", "syntrx-ii/syntrx-spiegel"],
       "research": {
         "work": "Laurie Spiegel, The Expanding Universe, 1980",
         "part": "Up and down a pentatonic shape on C, then the same with A for G.",
@@ -10290,7 +10365,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/says-swelling-arp"],
+      "sounds": ["neutron/says-swelling-arp", "donner-b1/b1-nils-frahm"],
       "research": {
         "work": "Nils Frahm, “Says”, Spaces, 2013",
         "part": "A minor broken in sixteenths for a bar, then F over A, for the sound to swell.",
@@ -11600,6 +11675,1412 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Nothing for Aguirre was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:suicide/ghost-rider-riff-low",
+      "name": "Ghost Rider: the riff, low",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Suicide" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 100,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 36, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 39, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 39, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 39, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 39, "gate": 1 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["td-3/td-suicide-pulse"],
+      "research": {
+        "work": "Suicide, “Ghost Rider”, Suicide, 1977",
+        "part": "The riff under the whole song: C, then F and E♭, on every beat, one bar: the same part an octave down, where the TD-3’s “Ghost Rider Pulse” plays.",
+        "originalKey": "C minor",
+        "originalBpm": 100,
+        "leads": [
+          {
+            "citation": "Suicide — “Ghost Rider”, fan transcription by ДРЭНЧ [YT] on Songsterr (revision 602174, 2023-08-06)",
+            "checkedAt": "2026-11-02",
+            "url": "https://www.songsterr.com/a/wsa/suicide-ghost-rider-tab-s557639"
+          }
+        ],
+        "notes": "From the transcription’s “Bass” track, bar 1, an octave up for the sounds; Martin Rev plays it on his organ and the transcription gives it to the bass. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:suicide/ghost-rider-riff.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:manuel-gottsching/e2-e4-arpeggio-low",
+      "name": "E2-E4: the chords, broken, low",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Manuel Göttsching" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 112,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 44, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 44, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 44, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 44, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-e2-e4"],
+      "research": {
+        "work": "Manuel Göttsching, E2-E4, 1984",
+        "part": "The two chords the piece turns on, C♯ minor and its inversion, one bar each, broken into sixteenths: the same part an octave down, where the B1’s “E2-E4 Echo” plays.",
+        "originalKey": null,
+        "originalBpm": 112,
+        "leads": [
+          {
+            "citation": "Manuel Göttsching — “E2-E4 Ansatz”, transcription by ゆっぴ“yuppi_kun” on Songsterr, every track marked “regenerated” (revision 5717750, 2026-03-14)",
+            "checkedAt": "2026-11-02",
+            "url": "https://www.songsterr.com/a/wsa/manuel-gottsching-e2-e4-ansatz-tab-s1472295"
+          }
+        ],
+        "notes": "The only lead is a regenerated transcription, two guitars, which has the chords as off-beat stabs (bars 1–5) and not the sequencer pattern. So the notes are its chord tones, in an order of the pattern’s own; the arpeggio itself is not from a lead. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:manuel-gottsching/e2-e4-arpeggio.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:steve-reich/eighteen-marimba-low",
+      "name": "Music for 18 Musicians: a marimba pattern, low",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Steve Reich" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 138,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 54, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 54, "gate": 1 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["tb-303/tb-pulse-ensemble"],
+      "research": {
+        "work": "Steve Reich, Music for 18 Musicians, 1978",
+        "part": "A three-beat figure in sixteenths with gaps, for a second part to fill: the same part an octave down, where the TB-303’s “Pulse for Ensemble” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "Nothing for this work was found on Songsterr or BitMIDI; there are transcriptions of Electric Counterpoint and Clapping Music, which no sound names. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:steve-reich/eighteen-marimba.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:wendy-carlos/invention-in-f-answer-high",
+      "name": "Invention in F: the answer, two octaves down, high",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "wendy-carlos-switched-on-bach"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 90,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1.0
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["malevolent/mal-switched-on-bach"],
+      "research": {
+        "work": "Wendy Carlos, “Two-Part Invention in F Major” (J. S. Bach, BWV 779), Switched-On Bach, 1968",
+        "part": "The left hand’s answer, bars 2–5: the subject an octave below the right hand, here two octaves below: the same part an octave up, where the Malevolent’s “Switched-On Lead” plays.",
+        "originalKey": "F major",
+        "originalBpm": null,
+        "leads": [
+          {
+            "citation": "J. S. Bach, Two-Part Invention No. 8 in F major, BWV 779: the Mutopia Project’s typeset edition of the score (public domain), its MIDI file",
+            "checkedAt": "2026-11-02",
+            "url": "https://www.mutopiaproject.org/ftp/BachJS/BWV779/bach-invention-08/bach-invention-08.mid"
+          }
+        ],
+        "notes": "From the edition’s lower part, bars 2–5, as written: it is the right hand’s bars 1–4 an octave down. This pattern is that one 24 semitones lower, so all of it falls below the Solar’s split at F♯4 and plays on the left plates, where the split sound plays its bass, as its own riff’s bass does; it gets this as its own pattern, not merged with the right hand, because the rights rule takes one part of a work at a time. The score is a tier-1 source for Bach’s notes, but not for Carlos’s part: the record’s octaves, ornaments, tempo and registration are hers, and only a listen can say how far they differ. So it is a starting point like any other lead here, and the pattern is _In the style of_. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave up from researched:wendy-carlos/invention-in-f-answer.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:wendy-carlos/invention-in-d-minor-low",
+      "name": "Invention in D minor: the subject, low",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "wendy-carlos-switched-on-bach"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 90,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 49,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["malevolent/mal-switched-on-bach"],
+      "research": {
+        "work": "Wendy Carlos, “Two-Part Invention in D Minor” (J. S. Bach, BWV 775), Switched-On Bach, 1968",
+        "part": "The right hand’s first eight bars of 3/8: the scale up and the leap down through C♯, the broken chords, and the same an octave up: the same part an octave down, where the Malevolent’s “Switched-On Lead” plays.",
+        "originalKey": "D minor",
+        "originalBpm": null,
+        "leads": [
+          {
+            "citation": "J. S. Bach, Two-Part Invention No. 4 in D minor, BWV 775: the Mutopia Project’s typeset edition of the score (public domain), its MIDI file",
+            "checkedAt": "2026-11-02",
+            "url": "https://www.mutopiaproject.org/ftp/BachJS/BWV775/bach-invention-04/bach-invention-04.mid"
+          }
+        ],
+        "notes": "From the edition’s upper part, bars 1–8, as written. The score is a tier-1 source for Bach’s notes, but not for Carlos’s part: the record’s octaves, ornaments, tempo and registration are hers, and only a listen can say how far they differ. So it is a starting point like any other lead here, and the pattern is _In the style of_. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:wendy-carlos/invention-in-d-minor.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:wendy-carlos/wachet-auf-chorale-high",
+      "name": "Wachet auf: the chorale, high",
+      "role": "slow_melody",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "wendy-carlos-switched-on-bach",
+        "part": 0
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 60,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["malevolent/mal-switched-on-bach"],
+      "research": {
+        "work": "Wendy Carlos, “Chorale Prelude ‘Wachet auf, ruft uns die Stimme’” (J. S. Bach, BWV 645), Switched-On Bach, 1968",
+        "part": "The chorale tune’s first line, in long notes under the counter-melody: E♭ and G, four B♭s, C and B♭, and the rest before the next line: the same part an octave up, where the Malevolent’s “Switched-On Lead” plays.",
+        "originalKey": "E♭ major",
+        "originalBpm": null,
+        "leads": [
+          {
+            "citation": "J. S. Bach, Chorale Prelude “Wachet auf, ruft uns die Stimme”, BWV 645: the Mutopia Project’s typeset edition of the score (public domain), its MIDI file",
+            "checkedAt": "2026-11-02",
+            "url": "https://www.mutopiaproject.org/ftp/BachJS/BWV645/bwv645/bwv645.mid"
+          }
+        ],
+        "notes": "From the edition’s middle part (the tune, in the tenor), bars 13–16, as written, starting where the line does. The score is a tier-1 source for Bach’s notes, but not for Carlos’s part: the record’s octaves, ornaments, tempo and registration are hers, and only a listen can say how far they differ. So it is a starting point like any other lead here, and the pattern is _In the style of_. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave up from researched:wendy-carlos/wachet-auf-chorale.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:laurie-spiegel/expanding-universe-pattern-low",
+      "name": "The Expanding Universe: a slow pattern, low",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Laurie Spiegel"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 90,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["malevolent/mal-expanding-universe"],
+      "research": {
+        "work": "Laurie Spiegel, The Expanding Universe, 1980",
+        "part": "Up and down a pentatonic shape on C, then the same with A for G: the same part an octave down, where the Malevolent’s “Self-Playing Pings” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "Nothing by Spiegel was found on Songsterr or BitMIDI. The SynTrx sound names no work and got this one. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:laurie-spiegel/expanding-universe-pattern.",
         "listenedAt": null
       }
     }

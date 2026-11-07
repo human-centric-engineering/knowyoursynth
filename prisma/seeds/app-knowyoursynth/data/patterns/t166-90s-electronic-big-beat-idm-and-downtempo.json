@@ -50,6 +50,46 @@
     {
       "sound": "malevolent/mal-bubblebath-arp",
       "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "tb-303/tb-chemical-beats",
+      "reason": "Names “Chemical Beats”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "td-3/td-leave-home",
+      "reason": "Names “Leave Home”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "td-3/td-analogue-bubblebath",
+      "reason": "Names “Analogue Bubblebath”, which no pattern in this batch has yet; the sequence is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "donner-b1/b1-global-comm",
+      "reason": "In the style of Global Communication: it names no work, and the batch has no Global Communication pattern of the part it plays, so the pulse is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-fsol",
+      "reason": "In the style of The Future Sound of London: it names no work, and the batch has no The Future Sound of London pattern of the part it plays, so the pulse is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-autechre",
+      "reason": "In the style of early Autechre: it names no work, and the batch has no early Autechre pattern of the part it plays, so the sequence is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-squarepusher",
+      "reason": "In the style of Squarepusher: it names no work, and the batch has no Squarepusher pattern of the part it plays, so the bass run is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-bonobo",
+      "reason": "In the style of Bonobo: it names no work, and the batch has no Bonobo pattern of the part it plays, so the melody is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-four-tet",
+      "reason": "In the style of Four Tet: it names no work, and the batch has no Four Tet pattern of the part it plays, so the loop is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-bicep",
+      "reason": "In the style of Bicep: it names no work, and the batch has no Bicep pattern of the part it plays, so the loop is the lesson’s own."
     }
   ],
   "patterns": [
@@ -738,7 +778,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/round-melodic-bass"],
+      "sounds": ["model-d/round-melodic-bass", "donner-b1/b1-air-moon"],
       "research": {
         "work": "Air, “La Femme d’Argent”, Moon Safari, 1998",
         "part": "The bass of the main theme, which carries the tune: B, up to A and B, down through F♯, E and D to A.",
@@ -4513,7 +4553,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["syntrx-ii/syntrx-aphex-acid"],
+      "sounds": ["syntrx-ii/syntrx-aphex-acid", "tb-303/tb-analord"],
       "research": {
         "work": "Aphex Twin, the acid tracks of the Analord series, 2005",
         "part": "A restless 303 line on B♭, leaping up the octave and sliding back, with accents off the beat.",
@@ -4756,7 +4796,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-garage-bass", "malevolent/mal-garage-bass"],
+      "sounds": ["take-5/t5-garage-bass"],
       "research": {
         "work": "Artful Dodger featuring Craig David, “Re-Rewind (The Crowd Say Bo Selecta)”, 1999",
         "part": "A two-step sub bass on A: a pushed root, a slide up to C and back, and a walk down to E.",
@@ -5752,7 +5792,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-archangel-pad", "mantis/mantis-untrue-pad"],
+      "sounds": ["take-5/t5-archangel-pad"],
       "research": {
         "work": "Burial, “Archangel”, Untrue, 2007",
         "part": "Dark minor sevenths, a bar each, falling from A♭ to G to F.",
@@ -9660,6 +9700,73 @@
       }
     },
     {
+      "key": "researched:orbital/belfast-arpeggio-low",
+      "name": "Belfast: arpeggio, as written",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": { "kind": "artist", "artistId": "orbital" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 124,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 60, "gate": 1 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-halcyon-arp"],
+      "research": {
+        "work": "Orbital, “Belfast”, Orbital (the Green Album), 1991",
+        "part": "The three-note figure E, B, C in eighths, which crosses the bar line: at the octave the lead writes it, where the B1’s “Halcyon Arpeggio” plays.",
+        "originalKey": null,
+        "originalBpm": 124,
+        "leads": [
+          {
+            "citation": "“Orbital - Belfast psymes.mid”, fan-made MIDI file on BitMIDI, uploader unknown",
+            "url": "https://bitmidi.com/orbital-belfast-psymes-mid",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the file’s “Piano Arp” track, beats 0–12 (eight turns of the figure), an octave up, where the sound sits. The file’s name calls it a version (“psymes”). The sound names Orbital’s plucked sequence lines rather than a work, so it took this one. _In the style of_: the notes come from a fan-made MIDI file, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down, back to the octave the lead writes, from researched:orbital/belfast-arpeggio.",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:orbital/halcyon-chords",
       "name": "Halcyon + On + On: chords, held",
       "role": "held",
@@ -10280,7 +10387,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/unison-lead", "mantis/mantis-anthem-supersaw"],
+      "sounds": ["deepmind-12d/unison-lead"],
       "research": {
         "work": "Paul van Dyk, “For an Angel”, 45 RPM, 1994",
         "part": "The slow line over the breakdown: A, then B into C twice, G into F.",
@@ -11423,7 +11530,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-mysterons-theremin", "malevolent/mal-mysterons-theremin"],
+      "sounds": [
+        "take-5/t5-mysterons-theremin",
+        "malevolent/mal-mysterons-theremin",
+        "donner-b1/b1-portishead"
+      ],
       "research": {
         "work": "Portishead, “Mysterons”, Dummy, 1994",
         "part": "The eerie line: F up to B♭, F to B, then up to E♭ and A♭.",
@@ -15033,7 +15144,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/tycho-awake-pluck"],
+      "sounds": ["model-d/tycho-awake-pluck", "donner-b1/b1-tycho"],
       "research": {
         "work": "Tycho, “Awake”, Awake, 2014",
         "part": "The guitar melody over C♯: up to B♭, then F, A♭ and back to C♯.",
@@ -18193,6 +18304,976 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Nothing for this work was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:burial/archangel-bass-low",
+      "name": "Archangel: bass, as written",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Burial" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 135,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 32, "gate": 8 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 31, "gate": 8 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 29, "gate": 8 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 29, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-burial"],
+      "research": {
+        "work": "Burial, “Archangel”, Untrue, 2007",
+        "part": "The held bass: A♭, G and F a bar each, with a short F to end: at the octave the lead writes it, where the B1’s “Night Bus Sub” plays.",
+        "originalKey": null,
+        "originalBpm": 135,
+        "leads": [
+          {
+            "citation": "Burial — “Archangel”, transcription generated by Songsterr AI on Songsterr (revision 5564584, 2026-03-05)",
+            "url": "https://www.songsterr.com/a/wsa/burial-archangel-tab-s4250989",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s “Synth Bass 1” track, bars 36–39, an octave up, where the sound sits. The sound names Untrue, the album “Archangel” is on. _In the style of_: the notes come from a transcription Songsterr generated by machine, a weaker starting point than a fan’s. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down, back to the octave the lead writes, from researched:burial/archangel-bass.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:underworld/born-slippy-bass-low",
+      "name": "Born Slippy .NUXX: bass, low",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "work", "songId": "underworld-born-slippy-nuxx" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 136,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }], "accent": true },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 31, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }], "accent": true },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 33, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }], "accent": true },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 31, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 26, "gate": 0.5 }], "accent": true },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-underworld"],
+      "research": {
+        "work": "Underworld, “Born Slippy .NUXX”, 1995",
+        "part": "A rolling sixteenth-note bass on E, flicking up to G and A: the same part an octave down, where the B1’s “Rolling Lager Line” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "The one “Born Slippy” transcription with notes has piano, choir, the chords and drums, and no bass. The rolling house bass names no work and shares the guess. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:underworld/born-slippy-bass.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:wiley/eskimo-bass-low",
+      "name": "Eskimo: bass, low",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Wiley" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 140,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }], "accent": true },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 31, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 30, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }], "accent": true },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 35, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 33, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 31, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 30, "gate": 0.5 }] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["tb-303/tb-grime-square"],
+      "research": {
+        "work": "Wiley, “Eskimo”, 2002",
+        "part": "A sparse, cold square bass on E, with a step up to G and F♯: the same part an octave down, where the TB-303’s “Eski Square” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "Nothing for this work was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:wiley/eskimo-bass.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:jon-hopkins/open-eye-signal-bass-low",
+      "name": "Open Eye Signal: bass, low",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "work", "songId": "jon-hopkins-open-eye-signal", "part": 0 },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 122,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }], "accent": true },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 27, "gate": 0.5 }], "accent": true },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 19, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }], "accent": true },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 22, "gate": 0.5 }], "accent": true },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 31, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 27, "gate": 0.5 }] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-jon-hopkins"],
+      "research": {
+        "work": "Jon Hopkins, “Open Eye Signal”, Immunity, 2013",
+        "part": "A driving sixteenth-note bass on C, pushed up to E♭ and down to B♭ and G every other beat: the same part an octave down, where the B1’s “Emotional Pulse” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "Nothing for this work was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:jon-hopkins/open-eye-signal-bass.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:artful-dodger/re-rewind-bass-high",
+      "name": "Re-Rewind: bass, high",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Artful Dodger"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 132,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 58,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 0.5
+                  }
+                ],
+                "accent": true
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 0.5
+                  }
+                ],
+                "slide": true
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 0.5
+                  }
+                ],
+                "accent": true
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 0.5
+                  }
+                ],
+                "slide": true
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 0.5
+                  }
+                ],
+                "slide": true
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["malevolent/mal-garage-bass"],
+      "research": {
+        "work": "Artful Dodger featuring Craig David, “Re-Rewind (The Crowd Say Bo Selecta)”, 1999",
+        "part": "A two-step sub bass on A: a pushed root, a slide up to C and back, and a walk down to E: the same part an octave up, where the Malevolent’s “Two-Step Bass” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "Nothing for this work was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave up from researched:artful-dodger/re-rewind-bass.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:burial/archangel-pad-high",
+      "name": "Archangel: pad, high",
+      "role": "chord_changes",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Burial"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 68,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 8.0
+                  },
+                  {
+                    "note": 63,
+                    "gate": 8.0
+                  },
+                  {
+                    "note": 59,
+                    "gate": 8.0
+                  },
+                  {
+                    "note": 56,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 8.0
+                  },
+                  {
+                    "note": 62,
+                    "gate": 8.0
+                  },
+                  {
+                    "note": 58,
+                    "gate": 8.0
+                  },
+                  {
+                    "note": 55,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 8.0
+                  },
+                  {
+                    "note": 60,
+                    "gate": 8.0
+                  },
+                  {
+                    "note": 56,
+                    "gate": 8.0
+                  },
+                  {
+                    "note": 53,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 8.0
+                  },
+                  {
+                    "note": 60,
+                    "gate": 8.0
+                  },
+                  {
+                    "note": 56,
+                    "gate": 8.0
+                  },
+                  {
+                    "note": 53,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["mantis/mantis-untrue-pad"],
+      "research": {
+        "work": "Burial, “Archangel”, Untrue, 2007",
+        "part": "Dark minor sevenths, a bar each, falling from A♭ to G to F: the same part an octave up, where the Mantis’s “Rain-Soaked Pad” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "The one transcription of “Archangel” has the bass, the drums and the vocal, and no pad. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave up from researched:burial/archangel-pad.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:paul-van-dyk/for-an-angel-top-low",
+      "name": "For an Angel: top line, low",
+      "role": "slow_melody",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Paul van Dyk"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 137,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 5.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 5.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 5.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["mantis/mantis-anthem-supersaw"],
+      "research": {
+        "work": "Paul van Dyk, “For an Angel”, 45 RPM, 1994",
+        "part": "The slow line over the breakdown: A, then B into C twice, G into F: the same part an octave down, where the Mantis’s “Anthem Saws” plays.",
+        "originalKey": null,
+        "originalBpm": 137,
+        "leads": [
+          {
+            "citation": "“Paul van Dyk - For An Angel.mid”, fan-made MIDI file on BitMIDI, uploader unknown",
+            "url": "https://bitmidi.com/paul-van-dyk-for-an-angel-mid",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the file’s only track, beats 0–16: the top of its two-note chords, for a sound that plays one note at a time. The first chord doubles A at the octave; the lower A is kept. _In the style of_: the notes come from a fan-made MIDI file, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:paul-van-dyk/for-an-angel-top.",
         "listenedAt": null
       }
     }

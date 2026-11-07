@@ -90,9 +90,9 @@ describe('the research batches', () => {
 
   /** Each batch's artists and how many of their sounds the catalogue held when it was researched. */
   const rosters: [string, string[], number][] = [
-    ['t-127', ['Kraftwerk', 'Depeche Mode'], 48],
-    ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 85],
-    ['t-129', ['Brian Eno', 'Daniel Lanois', 'Vangelis', 'Boards of Canada'], 86],
+    ['t-127', ['Kraftwerk', 'Depeche Mode'], 52],
+    ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 89],
+    ['t-129', ['Brian Eno', 'Daniel Lanois', 'Vangelis', 'Boards of Canada'], 88],
     [
       't-160',
       [
@@ -128,7 +128,7 @@ describe('the research batches', () => {
         'Public Enemy',
         'Whitney Houston',
       ],
-      105,
+      111,
     ],
     [
       't-161',
@@ -163,7 +163,7 @@ describe('the research batches', () => {
         'The Cure',
         'Tubeway Army',
       ],
-      80,
+      87,
     ],
     [
       't-162',
@@ -199,7 +199,7 @@ describe('the research batches', () => {
         'Wham!',
         'Yello',
       ],
-      90,
+      92,
     ],
     [
       't-163',
@@ -237,7 +237,7 @@ describe('the research batches', () => {
         'Walter Murch',
         'Yann Tiersen',
       ],
-      95,
+      100,
     ],
     [
       't-164',
@@ -286,7 +286,7 @@ describe('the research batches', () => {
         'Thom Yorke',
         'U2',
       ],
-      95,
+      100,
     ],
     [
       't-165',
@@ -315,6 +315,8 @@ describe('the research batches', () => {
         'Fatboy Slim',
         'Front 242',
         'Front 242 / Nitzer Ebb',
+        // Credited alone as well as with Front 242.
+        'Nitzer Ebb',
         'Jeff Mills',
         'Joey Beltram',
         'LFO',
@@ -327,7 +329,7 @@ describe('the research batches', () => {
         'Robin S',
         'Second Phase',
       ],
-      97,
+      119,
     ],
     [
       't-166',
@@ -368,7 +370,7 @@ describe('the research batches', () => {
         'Ulrich Schnauss',
         'Wiley',
       ],
-      98,
+      117,
     ],
     [
       't-167',
@@ -407,7 +409,7 @@ describe('the research batches', () => {
         'Popol Vuh',
         'Roger Payne',
       ],
-      103,
+      112,
     ],
     [
       't-168',
@@ -467,7 +469,7 @@ describe('the research batches', () => {
         'Yo-Yo Ma',
         'Yoshida Brothers',
       ],
-      109,
+      123,
     ],
   ];
 
@@ -660,6 +662,82 @@ describe('the research batches', () => {
     expect(pitches('researched:yazoo/only-you-arpeggio-high')).toEqual(
       shifted('researched:yazoo/only-you-arpeggio', 12)
     );
+  });
+
+  it('moves every -low and -high copy evenly from the pattern it copies, and changes nothing else', () => {
+    // A copy carries its pattern to a sound that plays lower or higher, by whole octaves (t-191 made 40), except the one
+    // retuned on purpose, named here. Its key makes it a copy, so a pattern cannot leave itself out of this check.
+    const retuned: Record<string, number> = { 'researched:kraftwerk/numbers-kick-low': -7 };
+    // Copies that play their part in another role (a riff as a bass line) or credit another part of the work.
+    const recast = new Set([
+      'researched:daft-punk/da-funk-breakdown-figure-low',
+      'researched:daft-punk/da-funk-riff-low',
+      'researched:acid-house/acid-line-high',
+      'researched:yazoo/dont-go-riff-low',
+      'researched:jon-hopkins/open-eye-signal-roots-high',
+    ]);
+    const byKey = new Map(patterns.map((p) => [p.key, p]));
+    const baseOf = (key: string) => key.replace(/-(low|high)(-2)?$/, '');
+    const copies = patterns.filter((p) => p.key !== baseOf(p.key));
+    expect(copies.length).toBeGreaterThan(50);
+    // The lists name live copies, and each still differs from its pattern the way it is listed for.
+    for (const key of [...Object.keys(retuned), ...recast]) expect(byKey.has(key), key).toBe(true);
+    for (const key of Object.keys(retuned)) expect(retuned[key] % 12, key).not.toBe(0);
+    for (const key of recast) {
+      const [c, b] = [byKey.get(key)!, byKey.get(baseOf(key))!];
+      expect(JSON.stringify([c.role, c.inspiredBy]), key).not.toBe(
+        JSON.stringify([b.role, b.inspiredBy])
+      );
+    }
+    const shape = (p: (typeof patterns)[number]) => ({
+      notes: compileLoop(PatternSchema.parse(p.pattern), { loop: 0, rng: seededRng(1) }).notes.map(
+        ([beat, , len, velocity]) => [beat, len, velocity]
+      ),
+      grid: [p.pattern.bpm, p.pattern.stepSize, p.pattern.swing, p.pattern.loop, p.pattern.chain],
+      kept: [p.tempo, p.fidelity, p.research.work, p.research.leads],
+      cast: recast.has(p.key) ? null : [p.role, p.inspiredBy],
+    });
+    for (const copy of copies) {
+      const base = byKey.get(baseOf(copy.key));
+      expect(base, `${copy.key} copies no pattern`).toBeDefined();
+      const by = pitches(copy.key)[0] - pitches(base!.key)[0];
+      if (copy.key in retuned) expect(by, copy.key).toBe(retuned[copy.key]);
+      else expect([-24, -12, 12, 24], copy.key).toContain(by);
+      expect(by < 0, copy.key).toBe(/-low(-2)?$/.test(copy.key));
+      expect(pitches(copy.key), copy.key).toEqual(pitches(base!.key).map((n) => n + by));
+      const [mine, theirs] = [shape(copy), shape(base!)];
+      expect({ ...mine, cast: null }, copy.key).toEqual({ ...theirs, cast: null });
+      if (mine.cast) expect(mine.cast, copy.key).toEqual(theirs.cast);
+    }
+  });
+
+  it('never puts a sound on both a pattern and its -low or -high copy', () => {
+    const baseOf = (key: string) => key.replace(/-(low|high)(-2)?$/, '');
+    const families = new Map<string, string[]>();
+    for (const p of patterns)
+      for (const s of p.sounds) {
+        const at = `${s} in ${baseOf(p.key)}`;
+        families.set(at, [...(families.get(at) ?? []), p.key]);
+      }
+    expect([...families].filter(([, keys]) => keys.length > 1)).toEqual([]);
+  });
+
+  it('adds no pattern far from where its sound plays', () => {
+    // A pattern's median note within six semitones of its sound's riff (pattern-library.md, Sounds added after the
+    // batches). The earlier batches left 131 placements further away; this holds them there until they are revisited.
+    const median = (xs: number[]) => {
+      const s = [...xs].sort((a, b) => a - b);
+      const m = s.length / 2;
+      return s.length % 2 ? s[Math.floor(m)] : (s[m - 1] + s[m]) / 2;
+    };
+    const far = patterns.flatMap((p) =>
+      p.sounds.filter(
+        (s) =>
+          Math.abs(median(pitches(p.key)) - median(sounds.get(s)!.phrase.steps.map(([, n]) => n))) >
+          6
+      )
+    );
+    expect(far.length).toBeLessThanOrEqual(131);
   });
 
   it('plays the notes its lead gives: the riff of “Take On Me”', () => {

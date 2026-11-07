@@ -51,10 +51,10 @@ const EXPORTED: {
   { id: 'pro-800', sounds: 27, timeline: 4, relatives: 3, unusual: 21, limits: 5 },
   { id: 'ems-vcs3', sounds: 29, timeline: 6, relatives: 3, unusual: 19, limits: 6 },
   { id: 'buchla-easel', sounds: 21, timeline: 5, relatives: 4, unusual: 16, limits: 6 },
-  { id: 'tb-303', sounds: 20, timeline: 5, relatives: 3, unusual: 9, limits: 4 },
-  { id: 'td-3', sounds: 20, timeline: 4, relatives: 3, unusual: 9, limits: 4 },
+  { id: 'tb-303', sounds: 150, timeline: 5, relatives: 3, unusual: 9, limits: 4 },
+  { id: 'td-3', sounds: 150, timeline: 4, relatives: 3, unusual: 9, limits: 4 },
   // Written straight into the app (`scripts/native-synths.ts`), not exported: these counts are its own files'.
-  { id: 'donner-b1', sounds: 10, timeline: 4, relatives: 3, unusual: 9, limits: 3 },
+  { id: 'donner-b1', sounds: 150, timeline: 4, relatives: 3, unusual: 9, limits: 3 },
   { id: 'take-5', sounds: 200, timeline: 3, relatives: 3, unusual: 9, limits: 3 },
   { id: 'cs-80', sounds: 13, timeline: 3, relatives: 3, unusual: 11, limits: 3 },
   { id: 'super-gemini', sounds: 208, timeline: 3, relatives: 3, unusual: 11, limits: 3 },
