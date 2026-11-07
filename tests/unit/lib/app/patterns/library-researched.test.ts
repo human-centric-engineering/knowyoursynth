@@ -850,49 +850,44 @@ describe('the research batches', () => {
 
   /** The `library-150` sweep's octave copies (t-192 on): their notes open “This copy is moved …”. */
   const sweepCopies = patterns.filter((p) => p.research.notes.startsWith('This copy is moved'));
-  const MOVED: Record<string, number> = {
-    'an octave down': -12,
-    'two octaves down': -24,
-    'an octave up': 12,
-    'two octaves up': 24,
-  };
+  /** How far the sweep's copies move. All of them so far move one octave; a wider move is added here. */
+  const MOVED: Record<string, number> = { 'an octave down': -12, 'an octave up': 12 };
   /** The passage every pattern's notes close with: about the part, never about its sounds. */
-  const closing = (notes: string) => notes.slice(notes.indexOf('_In the style of_'));
+  const CLOSING = '_In the style of_';
 
-  it('has the sweep’s octave copies, or the copy checks below are vacuous', () => {
-    expect(sweepCopies.length).toBeGreaterThanOrEqual(24);
+  it('has the sweep’s octave copies, or the copy check below is vacuous', () => {
+    expect(sweepCopies.length).toBeGreaterThanOrEqual(26);
   });
 
-  it('holds each of the sweep’s octave copies to the pattern it copies', () => {
+  it('makes each of the sweep’s octave copies from the pattern it copies, and from nothing else', () => {
     for (const copy of sweepCopies) {
       const said =
-        /^This copy is moved (an octave down|two octaves down|an octave up|two octaves up)(, back to the octave the lead writes,)? from (researched:\S+), whose notes give the research\. /.exec(
+        /^This copy is moved (an octave down|an octave up) from (researched:\S+), whose notes give the research\. /.exec(
           copy.research.notes
         );
       expect(said, copy.key).not.toBeNull();
-      const [opening, phrase, , sourceKey] = said!;
+      const [opening, phrase, sourceKey] = said!;
       const source = patterns.find((p) => p.key === sourceKey);
       expect(source, copy.key).toBeDefined();
+      expect(source!.research.notes, sourceKey).toContain(CLOSING);
       const by = MOVED[phrase];
-      // Notes derived from the source's: where it moved, then the source's closing passage, and none of the
-      // source's sentences about its own sounds.
-      expect(copy.research.notes, copy.key).toBe(opening + closing(source!.research.notes));
-      expect(copy.key.startsWith(`${sourceKey}-${by < 0 ? 'low' : 'high'}`), copy.key).toBe(true);
-      // The same part moved evenly by what it says, with the same timing, grid, work, leads, role and credit.
-      const play = (p: Pattern) =>
-        compileLoop(PatternSchema.parse(p), { loop: 0, rng: seededRng(1) }).notes.map(
-          ([t, n, len]) => [t, n, len]
-        );
-      expect(
-        play(copy.pattern).map(([t, n, len]) => [t, n - by, len]),
-        copy.key
-      ).toEqual(play(source!.pattern));
-      expect(copy.pattern.stepSize, copy.key).toBe(source!.pattern.stepSize);
-      expect(copy.research.work, copy.key).toBe(source!.research.work);
-      expect(copy.research.leads, copy.key).toEqual(source!.research.leads);
-      expect(copy.role, copy.key).toBe(source!.role);
-      expect(copy.fidelity, copy.key).toBe(source!.fidelity);
-      expect(copy.inspiredBy, copy.key).toEqual(source!.inspiredBy);
+      const pattern = structuredClone(source!.pattern);
+      for (const part of pattern.parts)
+        for (const step of part.steps) for (const n of step.notes) n.note += by;
+      // Every field the source's: its notes moved evenly, the name and part saying where to, and the notes
+      // pointing to the source for the research, keeping only its closing passage.
+      expect(copy, copy.key).toEqual({
+        ...source!,
+        key: `${sourceKey}-${by < 0 ? 'low' : 'high'}`,
+        name: `${source!.name}, ${phrase}`,
+        sounds: copy.sounds,
+        pattern,
+        research: {
+          ...source!.research,
+          part: `${source!.research.part.replace(/\.$/, '')}: the same part ${phrase}.`,
+          notes: opening + source!.research.notes.slice(source!.research.notes.indexOf(CLOSING)),
+        },
+      });
       // A sound plays the copy instead of the pattern, never both.
       for (const sound of copy.sounds) expect(source!.sounds, copy.key).not.toContain(sound);
     }

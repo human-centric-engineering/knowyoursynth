@@ -3185,7 +3185,7 @@
     {
       "id": "jp6-tangerine-seq",
       "name": "Tangram Sequence",
-      "ref": "In the style of Tangerine Dream",
+      "ref": "In the style of Tangerine Dream — Tangram",
       "artist": "Tangerine Dream",
       "tags": ["seq", "berlin school", "electronic", "80s"],
       "level": 2,
@@ -4774,7 +4774,7 @@
     {
       "id": "jp6-moon-safari-lead",
       "name": "Moon Safari Lead",
-      "ref": "In the style of Air",
+      "ref": "In the style of Air — Moon Safari",
       "artist": "Air",
       "tags": ["lead", "downtempo", "chill-out", "90s"],
       "level": 2,
@@ -5902,7 +5902,7 @@
     {
       "id": "jp6-deep-listening-drone",
       "name": "Deep Listening Drone",
-      "ref": "In the style of Pauline Oliveros",
+      "ref": "In the style of Pauline Oliveros — Deep Listening",
       "artist": "Pauline Oliveros",
       "tags": ["drone", "ambient", "experimental", "minimalism"],
       "level": 3,

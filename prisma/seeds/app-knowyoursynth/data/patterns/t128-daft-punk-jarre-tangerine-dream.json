@@ -86,10 +86,6 @@
     {
       "sound": "jupiter-8/jp8-tron-arp",
       "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Derezzed: fifth stabs”, “Derezzed: arpeggiated riff” and “Derezzed: bass riff” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
-    },
-    {
-      "sound": "jupiter-8/jp8-jarre-equinox",
-      "reason": "Its arpeggiator plays the line from the chords its riff holds; it names a style, not one work, and the chords are the lesson’s own."
     }
   ],
   "patterns": [
@@ -7773,7 +7769,8 @@
         "ub-xa-d/choir-pad",
         "super-gemini/sg-oxygene-wash",
         "take-5/t5-oxygene-pad",
-        "mantis/mantis-oxygene-swirl"
+        "mantis/mantis-oxygene-swirl",
+        "jupiter-8/jp8-jarre-equinox"
       ],
       "research": {
         "work": "Jean-Michel Jarre, “Oxygène (Part IV)”, Oxygène, 1976",

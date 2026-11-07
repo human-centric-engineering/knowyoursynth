@@ -13,7 +13,7 @@
     },
     {
       "sound": "jupiter-8/jp8-synthpop-arp-updown",
-      "reason": "Its arpeggiator plays the line from the chords its riff holds; it names a style, not one work, and the chords are the lesson’s own."
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; it names a style, not one work, and the batch’s “What Is Love?: bass”, “What Is Love?: chord stabs”, “New Song: pulse lead” and “New Song: bass” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
     },
     {
       "sound": "jupiter-8/jp8-africa-mallet",
@@ -33,7 +33,7 @@
     },
     {
       "sound": "jupiter-6/jp6-west-end-stabs",
-      "reason": "The batch’s “West End Girls: bass” is another part of the work; this sound plays the chords above it, which is the lesson’s own, written to the style rather than taken from the record."
+      "reason": "The batch’s “West End Girls: bass” is another part of the work; this sound plays the chords above it, a part that is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -633,7 +633,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Keyboard” track, bars 13–16, an octave down for the two sounds voiced there. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Keyboard” track, bars 13–16, an octave down for the sounds voiced there. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -1100,7 +1100,7 @@
       "sounds": ["jupiter-8/jp8-jump-stab"],
       "research": {
         "work": "Van Halen, “Jump”, 1984, 1984",
-        "part": "The four-bar intro riff in triads: G, C over G, F twice, G and G held; then C over G, F, F over C, C and the held Csus2: the same part an octave down, where the Jupiter-8’s “Jump Stabs” plays.",
+        "part": "The four-bar intro riff in triads: G, C over G, F twice, G and G held; then C over G, F, F over C, C and the held Csus2: the same part an octave down.",
         "originalKey": null,
         "originalBpm": 130,
         "leads": [
@@ -3178,7 +3178,7 @@
       "sounds": ["jupiter-6/jp6-sweet-dreams-seq"],
       "research": {
         "work": "Eurythmics, “Sweet Dreams (Are Made of This)”, Sweet Dreams (Are Made of This), 1983",
-        "part": "The two-bar riff in eighths: C, C, the C and C above, E♭ and its octave, C and C; then A♭, A♭, A♭, C, G, G, G, C: the same part an octave down, where the Jupiter-6’s “Sweet Dreams Sequence” plays.",
+        "part": "The two-bar riff in eighths: C, C, the C and C above, E♭ and its octave, C and C; then A♭, A♭, A♭, C, G, G, G, C: the same part an octave down.",
         "originalKey": null,
         "originalBpm": 126,
         "leads": [
@@ -4429,7 +4429,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s bass guitar track (John Taylor), bars 21–24, as written. The record’s bass is a bass guitar; this is the line, which the sound’s octave bass can carry. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s bass guitar track (John Taylor), bars 21–24, as written. The record’s bass is a bass guitar; this is the line, which a synth bass can carry. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -6590,7 +6590,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “David Byrne | Sequential Circuits Prophet-5 | Synth Lead” track, bars 6–13: the top note of each two- and three-note chord, as written. Both sounds are single-voiced. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “David Byrne | Sequential Circuits Prophet-5 | Synth Lead” track, bars 6–13: the top note of each two- and three-note chord, as written. Its sounds play it one note at a time. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -9222,7 +9222,7 @@
       "sounds": ["jupiter-6/jp6-lets-go-sync"],
       "research": {
         "work": "The Cars, “Let’s Go”, Candy-O, 1979",
-        "part": "The four-bar intro riff: F♯, D, the high B, D♯, B, then E, C♯, A falling to the low E; and a run down from the high C♯ to G♯ in the third bar: the same part an octave down, where the Jupiter-6’s “Wowing Sync Lead” plays.",
+        "part": "The four-bar intro riff: F♯, D, the high B, D♯, B, then E, C♯, A falling to the low E; and a run down from the high C♯ to G♯ in the third bar: the same part an octave down.",
         "originalKey": null,
         "originalBpm": 132,
         "leads": [
@@ -14254,7 +14254,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Andy Richards | Jupiter-8 Bass” track, bars 34–35: the upper note of the opening octave, as written. The sound is single-voiced. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Andy Richards | Jupiter-8 Bass” track, bars 34–35: the upper note of the opening octave, as written. Its sounds play it one note at a time. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -15107,7 +15107,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Rock Organ” track, bars 10–13, with every note moved down an octave to sit where the sound plays; nothing else changed. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Rock Organ” track, bars 10–13, with every note moved down an octave to sit where its sounds play; nothing else changed. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -16145,7 +16145,7 @@
       "sounds": ["jupiter-4/j4-roboto-riff"],
       "research": {
         "work": "Styx, “Mr. Roboto”, Kilroy Was Here, 1983",
-        "part": "Four bars of the intro melody: B♭, A♭; C♯, C; A♭ and a long F♯: the same part an octave down, where the Jupiter-4’s “Robot Rock Riff” plays.",
+        "part": "Four bars of the intro melody: B♭, A♭; C♯, C; A♭ and a long F♯: the same part an octave down.",
         "originalKey": null,
         "originalBpm": 120,
         "leads": [

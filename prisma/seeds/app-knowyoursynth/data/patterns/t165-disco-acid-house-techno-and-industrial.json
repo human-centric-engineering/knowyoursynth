@@ -3327,7 +3327,7 @@
       "sounds": ["jupiter-6/jp6-strings-of-life"],
       "research": {
         "work": "Rhythim Is Rhythim (Derrick May), “Strings of Life”, 1987",
-        "part": "The piano riff’s three-note chords in syncopated stabs: F♯ major and F♯–B–C♯ in turn, then F♯–B–F♯ at the end of the second bar: the same part an octave up, where the Jupiter-6’s “Strings of Life Stabs” plays.",
+        "part": "The piano riff’s three-note chords in syncopated stabs: F♯ major and F♯–B–C♯ in turn, then F♯–B–F♯ at the end of the second bar: the same part an octave up.",
         "originalKey": null,
         "originalBpm": 124,
         "leads": [
@@ -11618,7 +11618,7 @@
       "sounds": ["jupiter-6/jp6-reese-bass"],
       "research": {
         "work": "Reese (Kevin Saunderson), “Just Want Another Chance”, 1988",
-        "part": "A slow four-bar bass: long notes on D, C and B♭, the last bar turning up to G: the same part an octave down, where the Jupiter-6’s “Reese Bass” plays.",
+        "part": "A slow four-bar bass: long notes on D, C and B♭, the last bar turning up to G: the same part an octave down.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
@@ -14436,7 +14436,7 @@
       "sounds": ["jupiter-6/jp6-electro-zap"],
       "research": {
         "work": "Afrika Bambaataa & the Soulsonic Force, “Planet Rock”, 1982",
-        "part": "A bar of zaps on C, with G and E answering: the same part an octave down, where the Jupiter-6’s “Electro Zaps” plays.",
+        "part": "A bar of zaps on C, with G and E answering: the same part an octave down.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],

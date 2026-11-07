@@ -89,7 +89,7 @@
     },
     {
       "sound": "jupiter-6/jp6-cosmic-harp",
-      "reason": "Its arpeggiator plays the line from the chords its riff holds; it names a style, not one work, and the chords are the lesson’s own."
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; it names a style, not one work, and the batch’s “Journey in Satchidananda: a harp cascade” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
     },
     {
       "sound": "jupiter-6/jp6-bandoneon",
@@ -8573,7 +8573,7 @@
       "sounds": ["jupiter-8/jp8-enya-pizz"],
       "research": {
         "work": "Enya, “Orinoco Flow”, Watermark, 1988",
-        "part": "The verse’s two bars, twice: G for a bar, then F and C: the same part an octave up, where the Jupiter-8’s “Sail Away Plucks” plays.",
+        "part": "The verse’s two bars, twice: G for a bar, then F and C: the same part an octave up.",
         "originalKey": "G major",
         "originalBpm": 117,
         "leads": [
@@ -9818,7 +9818,7 @@
             "url": "https://www.songsterr.com/a/wsa/return-to-forever-duel-of-the-jester-and-the-tyrant-tab-s914514"
           }
         ],
-        "notes": "From the transcription’s guitar track, bars 13–20, an octave down where the sound’s riff plays. The transcription has guitar, bass and drums only; the theme is taken from the guitar, the nearest it has to Corea’s lead. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s guitar track, bars 13–20, an octave down where its sounds’ riffs play. The transcription has guitar, bass and drums only; the theme is taken from the guitar, the nearest it has to Corea’s lead. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -15569,7 +15569,7 @@
       "sounds": ["jupiter-6/jp6-overtone-singer"],
       "research": {
         "work": "Huun-Huur-Tu, “Prayer”",
-        "part": "One low E held for two bars; the sound sweeps the overtone above it: the same part an octave down, where the Jupiter-6’s “Overtone Singer” plays.",
+        "part": "One low E held for two bars; the sound sweeps the overtone above it: the same part an octave down.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
@@ -18919,7 +18919,7 @@
       "sounds": ["jupiter-6/jp6-deep-listening-drone"],
       "research": {
         "work": "Pauline Oliveros, Deep Listening, 1989",
-        "part": "An E held for two bars, then a B, each left to bloom: the same part an octave down, where the Jupiter-6’s “Deep Listening Drone” plays.",
+        "part": "An E held for two bars, then a B, each left to bloom: the same part an octave down.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
@@ -20250,7 +20250,7 @@
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
-        "notes": "The sound names no work, and nothing by Stars of the Lid was found. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "Its sounds name no work, and nothing by Stars of the Lid was found. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },

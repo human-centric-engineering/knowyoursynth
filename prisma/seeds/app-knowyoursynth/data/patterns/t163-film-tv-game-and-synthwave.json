@@ -77,7 +77,7 @@
     },
     {
       "sound": "jupiter-8/jp8-chromatics-arp",
-      "reason": "Its arpeggiator plays the line from the chords its riff holds; it names a style, not one work, and the chords are the lesson’s own."
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; it names a style, not one work, and the batch’s “Tick of the Clock: held line” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
     },
     {
       "sound": "jupiter-8/jp8-perturbator-bass",
@@ -89,11 +89,11 @@
     },
     {
       "sound": "jupiter-8/jp8-upside-down-pad",
-      "reason": "In the style of Kyle Dixon & Michael Stein: it names no work. The batch’s “Stranger Things: the arpeggio’s chord” is held for a patch’s arpeggiator to play, and its “Stranger Things: arpeggio” and “Stranger Things: held swell” are single lines; this pad has no arpeggiator and holds its own chords under them, so the chords are the lesson’s own."
+      "reason": "The batch’s “Stranger Things: the arpeggio’s chord” is held for a patch’s arpeggiator to play, and its “Stranger Things: arpeggio” and “Stranger Things: held swell” are single lines; this pad has no arpeggiator and holds its own chords under them, a part that is the lesson’s own, written to the style rather than taken from the record."
     },
     {
       "sound": "jupiter-8/jp8-organ-cathedral",
-      "reason": "The batch’s “Interstellar: opening figure” is another part of the work; this sound plays the organ chords, which is the lesson’s own, written to the style rather than taken from the record."
+      "reason": "The batch’s “Interstellar: opening figure” is another part of the work; this sound plays the organ chords, a part that is the lesson’s own, written to the style rather than taken from the record."
     },
     {
       "sound": "jupiter-6/jp6-arrival-drone",
@@ -1087,7 +1087,7 @@
       "sounds": ["jupiter-8/jp8-fog-pad"],
       "research": {
         "work": "John Carpenter, “Halloween” (main title), Halloween, 1978",
-        "part": "The low notes held under the piano figure from its second bar, two bars of 5/4 each: F♯, then F, then E, the E cut to one bar where the loop ends: the same part an octave up, where the Jupiter-8’s “Fog Bank” plays.",
+        "part": "The low notes held under the piano figure from its second bar, two bars of 5/4 each: F♯, then F, then E, the E cut to one bar where the loop ends: the same part an octave up.",
         "originalKey": null,
         "originalBpm": 134,
         "leads": [
@@ -3124,7 +3124,7 @@
       "sounds": ["jupiter-8/jp8-axel-lead"],
       "research": {
         "work": "Harold Faltermeyer, “Axel F”, Beverly Hills Cop, 1984",
-        "part": "The theme’s first phrase: F, A♭, F, F, B♭, F, E♭; F, C, F, F, D♭, C, A♭; F, C, F, F, E♭, E♭, C, G, F; then a bar’s rest: the same part an octave down, where the Jupiter-8’s “Detroit Cop Lead” plays.",
+        "part": "The theme’s first phrase: F, A♭, F, F, B♭, F, E♭; F, C, F, F, D♭, C, A♭; F, C, F, F, E♭, E♭, C, G, F; then a bar’s rest: the same part an octave down.",
         "originalKey": null,
         "originalBpm": 117,
         "leads": [
@@ -7566,7 +7566,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Synth Pad 2” track, bars 1–4, as written. Two sounds name no work, only M83, and the wall-of-light pad names the album; this is its single. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Synth Pad 2” track, bars 1–4, as written. The wall-of-light pad names the album, and this is its single. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -8961,7 +8961,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Track 1” lead, bars 1–4, an octave up to sit where the sound plays. On the record the call is a recorder and voices; this is its line. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Track 1” lead, bars 1–4, an octave up to sit where its sounds play. On the record the call is a recorder and voices; this is its line. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -9917,7 +9917,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Synth (Theme)” track, bars 58–61, an octave down for the sound voiced there. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Synth (Theme)” track, bars 58–61, an octave down for the sounds voiced there. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -10926,7 +10926,7 @@
       "sounds": ["jupiter-8/jp8-koji-kondo"],
       "research": {
         "work": "Koji Kondo, “Song of Storms”, The Legend of Zelda: Ocarina of Time, 1998",
-        "part": "Eight bars of 3/4: D, F, D held, twice; E, F, E, F, E, C, A; A, D, F, G, A held; A, D, F, G, E held: the same part an octave down, where the Jupiter-8’s “Adventure Theme” plays.",
+        "part": "Eight bars of 3/4: D, F, D held, twice; E, F, E, F, E, C, A; A, D, F, G, A held; A, D, F, G, E held: the same part an octave down.",
         "originalKey": null,
         "originalBpm": 201,
         "leads": [
@@ -13264,7 +13264,7 @@
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
-        "notes": "The “Tech Noir” transcriptions on Songsterr have the bass, the drums and the vocal, and no pad or brass. The brass sound names only Gunship and gets the same chords. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "The “Tech Noir” transcriptions on Songsterr have the bass, the drums and the vocal, and no pad or brass. The brass sounds name only Gunship and get the same chords. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -13557,7 +13557,7 @@
       "sounds": ["jupiter-6/jp6-mid-fi-lead"],
       "research": {
         "work": "Com Truise, “Brokendate”, Galactic Melt, 2011",
-        "part": "A slow four-bar line in G minor, ending on a held G: the same part an octave down, where the Jupiter-6’s “Mid-Fi Wonk Lead” plays.",
+        "part": "A slow four-bar line in G minor, ending on a held G: the same part an octave down.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
@@ -14261,7 +14261,7 @@
       "sounds": ["jupiter-8/jp8-drive-pad"],
       "research": {
         "work": "Cliff Martinez, Drive (score), 2011",
-        "part": "Two chords held two bars each: E minor ninth, then C major seventh: the same part an octave up, where the Jupiter-8’s “Night City Pad” plays.",
+        "part": "Two chords held two bars each: E minor ninth, then C major seventh: the same part an octave up.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],

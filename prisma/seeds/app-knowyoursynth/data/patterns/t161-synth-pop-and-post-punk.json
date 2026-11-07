@@ -33,11 +33,11 @@
     },
     {
       "sound": "jupiter-8/jp8-yazoo-arp",
-      "reason": "Its arpeggiator plays the line from the chords its riff holds; it names a style, not one work, and the chords are the lesson’s own."
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; it names a style, not one work, and the batch’s “Don’t Go: riff”, “Don’t Go: bass”, “Only You: arpeggio” and “Situation: synth bass” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
     },
     {
       "sound": "jupiter-6/jp6-league-bass",
-      "reason": "The batch’s “Don’t You Want Me: synth riff” and “Don’t You Want Me: riff, top line” are other parts of the work; this sound plays the bass line, which is the lesson’s own, written to the style rather than taken from the record."
+      "reason": "The batch’s “Don’t You Want Me: synth riff” and “Don’t You Want Me: riff, top line” are other parts of the work; this sound plays the bass line, a part that is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -4425,7 +4425,7 @@
       "sounds": ["jupiter-6/jp6-blue-monday-bass"],
       "research": {
         "work": "New Order, “Blue Monday”, single, 1983",
-        "part": "The four-bar sequenced bass: each note and two sixteenths an octave up, on F and C, D, G and C, D: the same part an octave down, where the Jupiter-6’s “Galloping Monday Bass” plays.",
+        "part": "The four-bar sequenced bass: each note and two sixteenths an octave up, on F and C, D, G and C, D: the same part an octave down.",
         "originalKey": null,
         "originalBpm": 130,
         "leads": [
@@ -6973,7 +6973,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Main Synth” track, bars 13–16: its lower octave, as written. The track doubles the theme at the octave; the sound is single-voiced, so it takes the lower one. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Main Synth” track, bars 13–16: its lower octave, as written. The track doubles the theme at the octave; its sounds play it one note at a time, so it takes the lower one. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },

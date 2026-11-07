@@ -3591,7 +3591,7 @@
     {
       "id": "jp8-relax-bass",
       "name": "Relax Sequence Bass",
-      "ref": "In the style of Frankie Goes to Hollywood",
+      "ref": "In the style of Frankie Goes to Hollywood — “Relax”",
       "artist": "Frankie Goes to Hollywood",
       "tags": ["bass", "synth-pop", "hi-nrg", "80s"],
       "level": 2,
@@ -4371,7 +4371,7 @@
     {
       "id": "jp8-m83-swell",
       "name": "Midnight Swell",
-      "ref": "In the style of M83",
+      "ref": "In the style of M83 — “Midnight City”",
       "artist": "M83",
       "tags": ["pad", "synthwave", "shoegaze", "10s"],
       "level": 2,
@@ -9995,7 +9995,7 @@
     {
       "id": "jp8-midori-takada",
       "name": "Looking-Glass Marimba",
-      "ref": "In the style of Midori Takada",
+      "ref": "In the style of Midori Takada — Through the Looking Glass",
       "artist": "Midori Takada",
       "tags": ["perc", "ambient", "minimalism", "80s"],
       "level": 2,
@@ -10394,7 +10394,7 @@
     {
       "id": "jp8-royksopp",
       "name": "Melody A.M. Keys",
-      "ref": "In the style of Röyksopp",
+      "ref": "In the style of Röyksopp — Melody A.M.",
       "artist": "Röyksopp",
       "tags": ["keys", "downtempo", "electronica", "00s"],
       "level": 2,
@@ -11188,7 +11188,7 @@
     {
       "id": "jp8-vangelis-brass",
       "name": "Bladed Brass",
-      "ref": "In the style of Vangelis",
+      "ref": "In the style of Vangelis — Blade Runner",
       "artist": "Vangelis",
       "tags": ["brass", "film", "electronic", "80s"],
       "level": 2,
@@ -11422,7 +11422,7 @@
     {
       "id": "jp8-aphex-ambient",
       "name": "Selected Ambient Pad",
-      "ref": "In the style of Aphex Twin",
+      "ref": "In the style of Aphex Twin — Selected Ambient Works Volume II",
       "artist": "Aphex Twin",
       "tags": ["pad", "ambient", "idm", "90s"],
       "level": 2,

@@ -37,7 +37,7 @@
     },
     {
       "sound": "jupiter-6/jp6-an-ending",
-      "reason": "The batch’s “An Ending (Ascent): melody” is another part of the work; this sound plays the chords under it, which is the lesson’s own, written to the style rather than taken from the record."
+      "reason": "The batch’s “An Ending (Ascent): melody” is another part of the work; this sound plays the chords under it, a part that is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -865,7 +865,7 @@
       "sounds": ["jupiter-8/jp8-vangelis-brass"],
       "research": {
         "work": "Vangelis, “End Titles”, Blade Runner, 1982 (released 1994)",
-        "part": "The held chords under the first eight bars of the theme: C minor for four bars, B♭ for two, D minor over A for two: the same part an octave down, where the Jupiter-8’s “Bladed Brass” plays.",
+        "part": "The held chords under the first eight bars of the theme: C minor for four bars, B♭ for two, D minor over A for two: the same part an octave down.",
         "originalKey": "C minor",
         "originalBpm": 110,
         "leads": [
