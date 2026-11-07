@@ -34,6 +34,14 @@
     {
       "sound": "malevolent/mal-spiral-arp",
       "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "tb-303/tb-hazy-melody",
+      "reason": "In the style of Boards of Canada: it names no work, and the melody is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-vangelis-triplets",
+      "reason": "In the style of Vangelis: it names no work, and the arpeggio is the lesson’s own."
     }
   ],
   "patterns": [

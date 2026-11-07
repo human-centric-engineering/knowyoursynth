@@ -50,6 +50,62 @@
     {
       "sound": "malevolent/mal-bubblebath-arp",
       "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "tb-303/tb-chemical-beats",
+      "reason": "Names “Chemical Beats”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "td-3/td-leave-home",
+      "reason": "Names “Leave Home”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "td-3/td-analogue-bubblebath",
+      "reason": "Names “Analogue Bubblebath”, which no pattern in this batch has yet; the sequence is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "donner-b1/b1-global-comm",
+      "reason": "In the style of Global Communication: it names no work, and the pulse is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-halcyon-arp",
+      "reason": "Named for the mood of Orbital’s “Halcyon”, not its part: the batch’s Halcyon pattern is chords, which this monophonic synth can’t play, and the arpeggio is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-fsol",
+      "reason": "In the style of The Future Sound of London: it names no work, and the pulse is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-autechre",
+      "reason": "In the style of early Autechre: it names no work, and the sequence is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-squarepusher",
+      "reason": "In the style of Squarepusher: it names no work, and the bass run is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-bonobo",
+      "reason": "In the style of Bonobo: it names no work, and the melody is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-tycho",
+      "reason": "In the style of Tycho: it names no work, and the melody is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-jon-hopkins",
+      "reason": "In the style of Jon Hopkins: it names no work, and the pulse is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-four-tet",
+      "reason": "In the style of Four Tet: it names no work, and the loop is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-burial",
+      "reason": "In the style of Burial: it names no work, and the bass line is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-bicep",
+      "reason": "In the style of Bicep: it names no work, and the loop is the lesson’s own."
     }
   ],
   "patterns": [
@@ -738,7 +794,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/round-melodic-bass"],
+      "sounds": ["model-d/round-melodic-bass", "donner-b1/b1-air-moon"],
       "research": {
         "work": "Air, “La Femme d’Argent”, Moon Safari, 1998",
         "part": "The bass of the main theme, which carries the tune: B, up to A and B, down through F♯, E and D to A.",
@@ -4513,7 +4569,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["syntrx-ii/syntrx-aphex-acid"],
+      "sounds": ["syntrx-ii/syntrx-aphex-acid", "tb-303/tb-analord"],
       "research": {
         "work": "Aphex Twin, the acid tracks of the Analord series, 2005",
         "part": "A restless 303 line on B♭, leaping up the octave and sliding back, with accents off the beat.",
@@ -11423,7 +11479,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-mysterons-theremin", "malevolent/mal-mysterons-theremin"],
+      "sounds": [
+        "take-5/t5-mysterons-theremin",
+        "malevolent/mal-mysterons-theremin",
+        "donner-b1/b1-portishead"
+      ],
       "research": {
         "work": "Portishead, “Mysterons”, Dummy, 1994",
         "part": "The eerie line: F up to B♭, F to B, then up to E♭ and A♭.",
@@ -16308,7 +16368,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/born-slippy-bass", "b2600/underworld-roll-bass"],
+      "sounds": [
+        "neutron/born-slippy-bass",
+        "b2600/underworld-roll-bass",
+        "donner-b1/b1-underworld"
+      ],
       "research": {
         "work": "Underworld, “Born Slippy .NUXX”, 1995",
         "part": "A rolling sixteenth-note bass on E, flicking up to G and A.",
@@ -16523,7 +16587,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-eskimo-bass", "mantis/mantis-grime-square"],
+      "sounds": ["take-5/t5-eskimo-bass", "mantis/mantis-grime-square", "tb-303/tb-grime-square"],
       "research": {
         "work": "Wiley, “Eskimo”, 2002",
         "part": "A sparse, cold square bass on E, with a step up to G and F♯.",

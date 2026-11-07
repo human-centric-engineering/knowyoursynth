@@ -74,6 +74,50 @@
     {
       "sound": "malevolent/mal-looking-glass-arp",
       "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Through the Looking Glass: a repeating marimba figure” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "tb-303/tb-cello-prelude",
+      "reason": "Its own riff already plays the opening bars of the Prelude, from Bach’s public-domain score, so a batch pattern would only repeat it."
+    },
+    {
+      "sound": "tb-303/tb-banjo-roll",
+      "reason": "In the style of Earl Scruggs: it names no work, and the roll is the lesson’s own."
+    },
+    {
+      "sound": "td-3/td-doom-drone",
+      "reason": "In the style of Sunn O))): it names no work, and the drone is the lesson’s own."
+    },
+    {
+      "sound": "td-3/td-blues-harp",
+      "reason": "In the style of Little Walter: it names no work, and the melody is the lesson’s own."
+    },
+    {
+      "sound": "td-3/td-cosmic-harp",
+      "reason": "In the style of Alice Coltrane: it names no work, and the glissando is the lesson’s own."
+    },
+    {
+      "sound": "td-3/td-air-bass",
+      "reason": "Names the “Air” from the third Orchestral Suite, which no pattern in this batch has yet; the bass line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "donner-b1/b1-melodica-dub",
+      "reason": "In the style of Augustus Pablo: it names no work, and the melody is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-sakamoto",
+      "reason": "In the style of Ryuichi Sakamoto: it names no work, and the melody is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-invention",
+      "reason": "Its own riff already plays the theme of the eighth Invention, from Bach’s public-domain score, so a batch pattern would only repeat it."
+    },
+    {
+      "sound": "donner-b1/b1-celesta",
+      "reason": "In the style of Tchaikovsky’s celesta writing: it names no work, and the melody is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-vibraphone",
+      "reason": "In the style of Milt Jackson: it names no work, and the line is the lesson’s own."
     }
   ],
   "patterns": [
@@ -422,7 +466,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/toccata-pedal-organ"],
+      "sounds": ["model-d/toccata-pedal-organ", "td-3/td-toccata-organ"],
       "research": {
         "work": "J. S. Bach, Toccata and Fugue in D minor, BWV 565",
         "part": "The first bar: the long A, the run down to C♯ and D, then the A again and its answer, E, F, C♯ and D.",
@@ -14232,7 +14276,8 @@
       "sounds": [
         "deepmind-12d/fripp-loop",
         "neutron/pussyfooting-loop",
-        "solar-42n/solar-frippertronics"
+        "solar-42n/solar-frippertronics",
+        "donner-b1/b1-frippertronics"
       ],
       "research": {
         "work": "Fripp & Eno, “The Heavenly Music Corporation”, (No Pussyfooting), 1973",
@@ -18458,7 +18503,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/turangalila-ondes"],
+      "sounds": ["neutron/turangalila-ondes", "donner-b1/b1-ondes"],
       "research": {
         "work": "Olivier Messiaen, Turangalîla-Symphonie, 1948",
         "part": "A slow, swooping line from G up to D and down to E.",

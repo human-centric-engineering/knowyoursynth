@@ -7162,7 +7162,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["wasp-deluxe/wasp-filter-house-bass"],
+      "sounds": ["wasp-deluxe/wasp-filter-house-bass", "tb-303/tb-revolution-909"],
       "research": {
         "work": "Daft Punk, “Revolution 909”, Homework, 1997",
         "part": "Two bars of the off-beat bass on B, the second with its push.",
@@ -8249,7 +8249,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/oxygene-lead", "e7/e7-jarre-lead"],
+      "sounds": ["model-d/oxygene-lead", "e7/e7-jarre-lead", "td-3/td-oxygene-sequence"],
       "research": {
         "work": "Jean-Michel Jarre, “Oxygène (Part IV)”, Oxygène, 1976",
         "part": "Four bars of the triplet arpeggio under the melody: F, then C minor.",
@@ -11967,7 +11967,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/cutoff-feedback-screech"],
+      "sounds": ["neutron/cutoff-feedback-screech", "td-3/td-rollin-scratchin"],
       "research": {
         "work": "Daft Punk, “Rollin’ & Scratchin’”, Homework, 1997",
         "part": "Two bars of a sixteenth-note riff on C: the first pushed up to E♭, the second dropping to B♭ and leaping to G at its end.",
@@ -14346,7 +14346,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["system-55/s55-berlin"],
+      "sounds": ["system-55/s55-berlin", "tb-303/tb-berlin-sequence"],
       "research": {
         "work": "Tangerine Dream, “Phaedra”, Phaedra, 1974",
         "part": "Eight bars of held keys for the sequencer’s bass line: A for four bars, F for two and G for two.",

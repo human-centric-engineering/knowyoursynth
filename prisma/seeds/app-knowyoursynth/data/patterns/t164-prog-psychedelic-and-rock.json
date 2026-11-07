@@ -50,6 +50,22 @@
     {
       "sound": "malevolent/mal-tubular-bells",
       "reason": "A tubular bell, struck at the end of the work, not the ostinato the batch’s pattern holds: there is no bell part to write, and the riff is the lesson’s own."
+    },
+    {
+      "sound": "td-3/td-fuzz-bass-60s",
+      "reason": "Names “Think for Yourself”, which no pattern in this batch has yet; the bass line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "td-3/td-space-rock",
+      "reason": "In the style of Hawkwind: it names no work, and the bass line is the lesson’s own."
+    },
+    {
+      "sound": "td-3/td-fuzz-solo",
+      "reason": "In the style of Jimi Hendrix: it names no work, and the solo is the lesson’s own."
+    },
+    {
+      "sound": "td-3/td-dream-pop-bass",
+      "reason": "In the style of Cocteau Twins: it names no work, and the bass line is the lesson’s own."
     }
   ],
   "patterns": [
@@ -14965,7 +14981,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/misirlou-tremolo"],
+      "sounds": ["neutron/misirlou-tremolo", "td-3/td-tremolo-pick"],
       "research": {
         "work": "Dick Dale and His Del-Tones, “Misirlou”, Surfers’ Choice, 1962",
         "part": "The first verse melody: B held, a chromatic slide down from B♭ to F, E, F, G♯, A, B, C, D♯, C, E.",

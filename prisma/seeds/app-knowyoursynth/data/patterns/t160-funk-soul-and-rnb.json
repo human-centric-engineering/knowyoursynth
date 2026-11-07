@@ -42,6 +42,18 @@
     {
       "sound": "malevolent/mal-high-whistle-lead",
       "reason": "The batch has the work’s bass line (“Aqua Boogie: bass figure”), not the part this lead plays; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "td-3/td-zapp-bass",
+      "reason": "In the style of Zapp: it names no work, and the bass line is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-dilla-bass",
+      "reason": "In the style of J Dilla: it names no work, and the bass line is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-teardrop",
+      "reason": "In the style of Massive Attack: it names no work, and the bass line is the lesson’s own."
     }
   ],
   "patterns": [
@@ -7084,7 +7096,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/clav-funk", "malevolent/mal-superstition-clav"],
+      "sounds": ["ub-xa-d/clav-funk", "malevolent/mal-superstition-clav", "tb-303/tb-clav-funk"],
       "research": {
         "work": "Stevie Wonder, “Superstition”, Talking Book, 1972",
         "part": "Two bars of the clavinet’s left hand: E♭, then E♭, C♯, E♭, F♯, C♯, B♭, and the second time A♭, B♭, C♯ up to F♯.",
@@ -11104,7 +11116,8 @@
         "solar-42n/solar-g-funk-whine",
         "super-gemini/sg-gfunk",
         "super-gemini/sg-whistle",
-        "mantis/mantis-gfunk-whistle"
+        "mantis/mantis-gfunk-whistle",
+        "td-3/td-g-funk-whine"
       ],
       "research": {
         "work": "Dr. Dre featuring Snoop Doggy Dogg, “Nuthin’ but a ‘G’ Thang”, The Chronic, 1992",
@@ -12352,7 +12365,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-shaft-wah"],
+      "sounds": ["take-5/t5-shaft-wah", "tb-303/tb-shaft-wah"],
       "research": {
         "work": "Isaac Hayes, “Theme from Shaft”, Shaft, 1971",
         "part": "Two bars of the wah guitar: the sixteenth-note G, then the run up A, B, D, E, F♯, G, and the chromatic A♭, A, B♭.",

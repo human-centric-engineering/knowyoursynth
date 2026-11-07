@@ -162,6 +162,22 @@
     {
       "sound": "malevolent/mal-space-is-the-place",
       "reason": "The batch has no pattern from Sun Ra — “Space Is the Place”; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "tb-303/tb-moondawn-pulse",
+      "reason": "Names Moondawn, which no pattern in this batch has yet; the pulse is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "tb-303/tb-motorik",
+      "reason": "In the style of Neu!: it names no work, and the pulse is the lesson’s own."
+    },
+    {
+      "sound": "td-3/td-silver-apples",
+      "reason": "In the style of Silver Apples: it names no work, and the pulse is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-nils-frahm",
+      "reason": "In the style of Nils Frahm: it names no work, and the pulse is the lesson’s own."
     }
   ],
   "patterns": [
@@ -2661,7 +2677,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["b2600/tomita-soft-pluck"],
+      "sounds": ["b2600/tomita-soft-pluck", "donner-b1/b1-snowflakes"],
       "research": {
         "work": "Isao Tomita, “Arabesque No. 1” (Claude Debussy), Snowflakes Are Dancing, 1974",
         "part": "The first two bars’ triplet figure: up through E major and back down, then the same from A.",
@@ -4909,7 +4925,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/ghost-rider-pulse", "take-5/t5-ghost-rider-organ"],
+      "sounds": [
+        "neutron/ghost-rider-pulse",
+        "take-5/t5-ghost-rider-organ",
+        "td-3/td-suicide-pulse"
+      ],
       "research": {
         "work": "Suicide, “Ghost Rider”, Suicide, 1977",
         "part": "The riff under the whole song: C, then F and E♭, on every beat, one bar.",
@@ -5612,7 +5632,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/self-fading-arp"],
+      "sounds": ["neutron/self-fading-arp", "donner-b1/b1-e2-e4"],
       "research": {
         "work": "Manuel Göttsching, E2-E4, 1984",
         "part": "The two chords the piece turns on, C♯ minor and its inversion, one bar each, broken into sixteenths.",
@@ -8282,7 +8302,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/rainbow-organ-arp", "syntrx-ii/syntrx-riley"],
+      "sounds": [
+        "model-d/rainbow-organ-arp",
+        "syntrx-ii/syntrx-riley",
+        "donner-b1/b1-rainbow-curved"
+      ],
       "research": {
         "work": "Terry Riley, “A Rainbow in Curved Air”, 1969",
         "part": "Broken chords in sixteenths on D, E, F and E, rising and falling, for the echo to pile up.",
@@ -10746,7 +10770,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-reich-marimba", "mantis/mantis-reich-marimba"],
+      "sounds": [
+        "take-5/t5-reich-marimba",
+        "mantis/mantis-reich-marimba",
+        "tb-303/tb-pulse-ensemble"
+      ],
       "research": {
         "work": "Steve Reich, Music for 18 Musicians, 1978",
         "part": "A three-beat figure in sixteenths with gaps, for a second part to fill.",

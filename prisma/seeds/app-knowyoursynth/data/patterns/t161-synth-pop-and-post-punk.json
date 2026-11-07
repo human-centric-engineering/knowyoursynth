@@ -26,6 +26,30 @@
     {
       "sound": "malevolent/mal-whip-it-bass",
       "reason": "The batch has the work’s lead line (“Whip It: synth riff”), not the part this bass plays; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "tb-303/tb-synth-pop-pulse",
+      "reason": "In the style of Vince Clarke: it names no work, and the sequence is the lesson’s own."
+    },
+    {
+      "sound": "tb-303/tb-new-wave-robot",
+      "reason": "In the style of Devo: it names no work, and the bass line is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-ymo",
+      "reason": "In the style of Yellow Magic Orchestra: it names no work, and the sequence is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-omd",
+      "reason": "In the style of Orchestral Manoeuvres in the Dark: it names no work, and the sequence is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-numan",
+      "reason": "In the style of Gary Numan: it names no work, and the riff is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-human-league",
+      "reason": "In the style of The Human League: it names no work, and the bass line is the lesson’s own."
     }
   ],
   "patterns": [
@@ -4302,7 +4326,8 @@
         "model-d/octave-seq-bass",
         "super-gemini/sg-blue-monday-bass",
         "take-5/t5-blue-monday-bass",
-        "e7/e7-sixteenth-octave-bass"
+        "e7/e7-sixteenth-octave-bass",
+        "donner-b1/b1-blue-monday"
       ],
       "research": {
         "work": "New Order, “Blue Monday”, single, 1983",

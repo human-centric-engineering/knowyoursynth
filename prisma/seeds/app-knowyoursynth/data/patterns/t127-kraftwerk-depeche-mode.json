@@ -30,6 +30,10 @@
     {
       "sound": "malevolent/mal-geiger-ticks",
       "reason": "An effect: the dry, ticking clicks of a Geiger counter. There is no part to write."
+    },
+    {
+      "sound": "donner-b1/b1-depeche",
+      "reason": "In the style of Depeche Mode: it names no work, and the sequence is the lesson’s own."
     }
   ],
   "patterns": [
@@ -780,7 +784,8 @@
       "sounds": [
         "model-d/round-staccato-bass",
         "poly-d/pd-autobahn-bass",
-        "malevolent/mal-autobahn-bass"
+        "malevolent/mal-autobahn-bass",
+        "donner-b1/b1-autobahn"
       ],
       "research": {
         "work": "Kraftwerk, “Autobahn”, Autobahn, 1974",
@@ -1342,7 +1347,8 @@
         "model-d/computer-love-melody",
         "poly-d/pd-clean-melody",
         "super-gemini/sg-computer-love",
-        "e7/e7-computer-melody"
+        "e7/e7-computer-melody",
+        "tb-303/tb-computer-world"
       ],
       "research": {
         "work": "Kraftwerk, “Computer Love”, Computer World, 1981",
@@ -1671,7 +1677,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["k2/clipped-count-bass"],
+      "sounds": ["k2/clipped-count-bass", "donner-b1/b1-numbers"],
       "research": {
         "work": "Kraftwerk, “Numbers”, Computer World, 1981",
         "part": "The syncopated one-note bass from bar 36: one bar, repeated.",

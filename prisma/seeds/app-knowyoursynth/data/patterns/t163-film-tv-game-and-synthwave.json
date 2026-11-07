@@ -70,6 +70,26 @@
     {
       "sound": "malevolent/mal-droid-chirps",
       "reason": "An effect: excited, burbling, whistling robot chatter. There is no part to write."
+    },
+    {
+      "sound": "tb-303/tb-carpenter-five",
+      "reason": "In the style of John Carpenter: it names no work, and the ostinato is the lesson’s own."
+    },
+    {
+      "sound": "tb-303/tb-synthwave-pulse",
+      "reason": "In the style of Kavinsky: it names no work, and the bass line is the lesson’s own."
+    },
+    {
+      "sound": "tb-303/tb-droid-chatter",
+      "reason": "An effect: whistles and burbles in the manner of Ben Burtt’s droid voices, which were made from a synthesizer and his own voice rather than played as notes. There is no part to write."
+    },
+    {
+      "sound": "td-3/td-western-whistle",
+      "reason": "In the style of Ennio Morricone: it names no work, and the melody is the lesson’s own."
+    },
+    {
+      "sound": "td-3/td-survive-arp",
+      "reason": "In the style of S U R V I V E: it names no work, and the arpeggio is the lesson’s own."
     }
   ],
   "patterns": [

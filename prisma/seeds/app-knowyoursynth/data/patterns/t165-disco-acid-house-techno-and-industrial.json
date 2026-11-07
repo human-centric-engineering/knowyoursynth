@@ -34,6 +34,66 @@
     {
       "sound": "malevolent/mal-bells-arp",
       "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “The Bells: riff” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "tb-303/tb-washing-machine",
+      "reason": "Names “Washing Machine”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "tb-303/tb-spank-spank",
+      "reason": "Names “Spank Spank”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "tb-303/tb-dissin",
+      "reason": "Names “100% of Dissin’ You”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "tb-303/tb-into-the-nature",
+      "reason": "Names “Into the Nature”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "tb-303/tb-dont-laugh",
+      "reason": "Names “Don’t Laugh”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "tb-303/tb-ebm-drive",
+      "reason": "In the style of DAF: it names no work, and the bass line is the lesson’s own."
+    },
+    {
+      "sound": "tb-303/tb-detroit-electro",
+      "reason": "In the style of Drexciya: it names no work, and the bass line is the lesson’s own."
+    },
+    {
+      "sound": "tb-303/tb-tom-fill",
+      "reason": "In the style of 1980s electro: it names no work, and the fill is the lesson’s own."
+    },
+    {
+      "sound": "tb-303/tb-cowbell",
+      "reason": "In the style of 1980s electro: it names no work, and the cowbell figure is the lesson’s own."
+    },
+    {
+      "sound": "tb-303/tb-808-state",
+      "reason": "In the style of 808 State: it names no work, and the riff is the lesson’s own."
+    },
+    {
+      "sound": "td-3/td-justice-bass",
+      "reason": "In the style of Justice: it names no work, and the riff is the lesson’s own."
+    },
+    {
+      "sound": "td-3/td-electro-funk-acid",
+      "reason": "In the style of early-1980s New York electro: it names no work, and the bass line is the lesson’s own."
+    },
+    {
+      "sound": "td-3/td-electro-industrial",
+      "reason": "In the style of Skinny Puppy: it names no work, and the bass line is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-rhythim",
+      "reason": "In the style of Rhythim Is Rhythim: it names no work, and the sequence is the lesson’s own."
+    },
+    {
+      "sound": "donner-b1/b1-consumed",
+      "reason": "Names Consumed, which no pattern in this batch has yet; the pulse is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -355,7 +415,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-i-feel-love-bass", "model-d/seq-pulse"],
+      "sounds": ["take-5/t5-i-feel-love-bass", "model-d/seq-pulse", "tb-303/tb-feel-love-bass"],
       "research": {
         "work": "Donna Summer, “I Feel Love”, I Remember Yesterday, 1977 (Giorgio Moroder and Pete Bellotte)",
         "part": "The sequenced bass through the chord change: root, root, fifth and flat seventh in eighths, twice a bar, on C, E♭, F and G, a bar each.",
@@ -8267,7 +8327,8 @@
         "solar-42n/solar-polivoks-acid",
         "malevolent/mal-acid-line",
         "mantis/mantis-acid-line",
-        "k2/acid-303-line"
+        "k2/acid-303-line",
+        "td-3/td-talking-filter"
       ],
       "research": {
         "work": "Acid house, late 1980s",
@@ -9604,7 +9665,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["tb-303/tb-raga-line"],
+      "sounds": ["tb-303/tb-raga-line", "tb-303/tb-raga-bhupali"],
       "research": {
         "work": "Charanjit Singh, Synthesizing: Ten Ragas to a Disco Beat, 1982",
         "part": "A two-bar line in sixteenths in the notes of raga Bhairav (C, D♭, E, F, G, A♭, B), over a pulsing C.",
@@ -10445,7 +10506,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["td-3/td-square-line"],
+      "sounds": ["td-3/td-square-line", "tb-303/tb-needs-a-303"],
       "research": {
         "work": "Fatboy Slim, “Everybody Needs a 303”, Better Living Through Chemistry, 1996",
         "part": "A two-bar 303 line on D, with slides and accents.",
@@ -12429,7 +12490,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-plastikman-ping", "mantis/mantis-minimal-blip"],
+      "sounds": ["take-5/t5-plastikman-ping", "mantis/mantis-minimal-blip", "tb-303/tb-sheet-one"],
       "research": {
         "work": "Plastikman, “Spastik”, Sheet One, 1993",
         "part": "A bar of pinging sixteenths on C, rolling at the end.",
@@ -14150,7 +14211,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["super-gemini/sg-zap-perc"],
+      "sounds": ["super-gemini/sg-zap-perc", "td-3/td-zap-snare"],
       "research": {
         "work": "Afrika Bambaataa & the Soulsonic Force, “Planet Rock”, 1982",
         "part": "A bar of zaps on C, with G and E answering.",
