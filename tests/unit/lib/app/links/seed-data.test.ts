@@ -2,7 +2,7 @@
  * The links seed data (t-199): the loader (`link-data.ts`), the unit (`006-links.ts`), and the committed files under
  * `prisma/seeds/app-knowyoursynth/data/links/`. The seed's rules are `seed.test.ts`'s.
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -133,5 +133,33 @@ describe('the committed data', () => {
         return !sounds.get(synth ?? '')?.has(slug ?? '');
       });
     expect(missing).toEqual([]);
+  });
+});
+
+describe('the seed unit run', () => {
+  it('seeds the committed data and warns only when an owner is missing', async () => {
+    const seed = await import('@/lib/app/links/seed');
+    const spy = vi.spyOn(seed, 'seedLinks');
+    const unit = (await import('@/prisma/seeds/app-knowyoursynth/006-links')).default;
+    const logger = { info: vi.fn(), warn: vi.fn() };
+
+    spy.mockResolvedValueOnce({ created: 3, existing: 1, missingOwners: [] });
+    await unit.run({ prisma: {}, logger } as never);
+    expect(spy).toHaveBeenCalledWith({}, loadLinkData());
+    expect(logger.info).toHaveBeenCalledWith('Links seeded', {
+      created: 3,
+      existing: 1,
+      missingOwners: 0,
+    });
+    expect(logger.warn).not.toHaveBeenCalled();
+
+    spy.mockResolvedValueOnce({ created: 0, existing: 0, missingOwners: ['instrument:gone'] });
+    await unit.run({ prisma: {}, logger } as never);
+    expect(logger.warn).toHaveBeenCalledWith(
+      'Links skipped: their owners are not in this database',
+      {
+        owners: ['instrument:gone'],
+      }
+    );
   });
 });

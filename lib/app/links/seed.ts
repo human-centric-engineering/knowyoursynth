@@ -106,6 +106,38 @@ export function toSeedLink(row: StoredLink): z.input<typeof SeedLinkSchema> {
   };
 }
 
+/** One owner's links, as its data file holds them. */
+export interface LinkFile {
+  owner: OwnerRef;
+  links: z.input<typeof SeedLinkSchema>[];
+}
+
+/**
+ * The data files a table's links make (`npm run links:export`): one per owner, in the order each owner's links come in
+ * (the export reads them oldest first). Throws, as the seed would, on data the seed would refuse, so a bad table
+ * never replaces good data.
+ */
+export function exportLinkData(rows: (StoredLink & { owner: OwnerRef })[]): LinkFile[] {
+  const files = new Map<string, LinkFile>();
+  for (const row of rows) {
+    const key = ownerKey(row.owner);
+    const file = files.get(key) ?? { owner: { kind: row.owner.kind, id: row.owner.id }, links: [] };
+    file.links.push(toSeedLink(row));
+    files.set(key, file);
+  }
+  const out = [...files.values()];
+  const problems: string[] = [];
+  const data: LinkSeedData = [];
+  for (const { owner, links } of out) {
+    const parsed = LinkSeedFileSchema.safeParse(links);
+    if (parsed.success) data.push({ owner, links: parsed.data });
+    else problems.push(`${ownerKey(owner)}: ${parsed.error.message}`);
+  }
+  problems.push(...checkLinkData(data));
+  if (problems.length) throw new LinkDataError(problems);
+  return out;
+}
+
 /** Every problem in the data. Pure: the seed runs it first, and the data test over the committed files. */
 export function checkLinkData(data: LinkSeedData): string[] {
   const problems: string[] = [];

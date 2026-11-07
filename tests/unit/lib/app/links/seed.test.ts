@@ -6,6 +6,7 @@ import { describe, it, expect, vi } from 'vitest';
 import type { TenancyClient } from '@/lib/db/tenancy-extension';
 import {
   checkLinkData,
+  exportLinkData,
   LinkDataError,
   LinkSeedFileSchema,
   seedLinks,
@@ -367,5 +368,68 @@ describe('seedLinks', () => {
     });
     expect(db.bankInstrument.findMany).not.toHaveBeenCalled();
     expect(db.externalLink.createMany).not.toHaveBeenCalled();
+  });
+});
+
+describe('exportLinkData', () => {
+  const row = (
+    url: string,
+    owner: { kind: 'instrument' | 'sound'; id: string },
+    extra: Partial<StoredLink> = {}
+  ) => ({
+    url,
+    provider: 'youtube',
+    providerId: url.split('v=')[1] ?? null,
+    kind: 'demo' as const,
+    title: 'A video',
+    thumbnailUrl: null,
+    ours: false,
+    order: 0,
+    rating: null,
+    owner,
+    ...extra,
+  });
+  const minimoog = { kind: 'instrument' as const, id: 'moog-minimoog' };
+  const sound = { kind: 'sound' as const, id: 'model-d/stacked-night-bass' };
+
+  it('makes one file per owner, each in the order its links came in, and owners in first-seen order', () => {
+    expect(
+      exportLinkData([
+        row(YT2, minimoog),
+        row(YT, sound),
+        row(YT, minimoog, { ours: true, order: 1 }),
+      ])
+    ).toEqual([
+      {
+        owner: minimoog,
+        links: [
+          { url: YT2, kind: 'demo', title: 'A video' },
+          { url: YT, kind: 'demo', title: 'A video', ours: true, order: 1 },
+        ],
+      },
+      { owner: sound, links: [{ url: YT, kind: 'demo', title: 'A video' }] },
+    ]);
+  });
+
+  it('makes nothing from an empty table', () => {
+    expect(exportLinkData([])).toEqual([]);
+  });
+
+  it('refuses a table the seed would refuse, naming every problem', () => {
+    const bad = () =>
+      exportLinkData([
+        row(YT, minimoog),
+        row(YT, minimoog),
+        row(YT2, sound, { title: 'x'.repeat(201) }),
+      ]);
+    expect(bad).toThrow(LinkDataError);
+    try {
+      bad();
+    } catch (error) {
+      expect((error as LinkDataError).problems).toEqual([
+        expect.stringMatching(/^sound:model-d\/stacked-night-bass: /),
+        `instrument:moog-minimoog: ${YT} listed twice`,
+      ]);
+    }
   });
 });

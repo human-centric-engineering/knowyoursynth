@@ -5,7 +5,9 @@
  *   npm run links:export
  *
  * The folder is rewritten whole: a link deleted here drops out of the data, and the next seed elsewhere does not bring
- * it back. Each owner's links are in the order they were added, then by URL, so a second run changes nothing.
+ * it back. Each owner's links are in the order they were added, then by URL, so a second run changes nothing. What
+ * the files hold, and the check that refuses a table the seed would refuse, is `exportLinkData`
+ * (`lib/app/links/seed.ts`); this is only the read and the writes.
  */
 import { mkdirSync, rmSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
@@ -14,11 +16,8 @@ import { logger } from '@/lib/logging';
 import { runAsOrg } from '@/lib/tenancy/context';
 import { INSTALL_ORG_ID } from '@/lib/tenancy/constants';
 import { OWNER_INCLUDE, ownerOf } from '@/lib/app/links/owner';
-import { checkLinkData, LinkSeedFileSchema, toSeedLink } from '@/lib/app/links/seed';
-import type { LinkSeedData } from '@/lib/app/links/seed';
+import { exportLinkData } from '@/lib/app/links/seed';
 import { fileOfOwner, LINK_DATA_DIR } from '@/prisma/seeds/app-knowyoursynth/link-data';
-
-type SeedFileLink = ReturnType<typeof toSeedLink>;
 
 async function main(): Promise<void> {
   const rows = await prisma.externalLink.findMany({
@@ -26,32 +25,16 @@ async function main(): Promise<void> {
     // Ids break a tie on both, so the order never depends on how Postgres returns equal rows.
     orderBy: [{ createdAt: 'asc' }, { url: 'asc' }, { id: 'asc' }],
   });
-
-  // Each owner's file, as the seed will read it back.
-  const files = new Map<string, { owner: LinkSeedData[number]['owner']; links: SeedFileLink[] }>();
-  for (const row of rows) {
-    const owner = ownerOf(row);
-    const rel = fileOfOwner(owner);
-    const file = files.get(rel) ?? { owner: { kind: owner.kind, id: owner.id }, links: [] };
-    file.links.push(toSeedLink(row));
-    files.set(rel, file);
-  }
-
-  // What the seed would refuse is refused here, before the old data is touched.
-  const data: LinkSeedData = [...files.values()].map(({ owner, links }) => ({
-    owner,
-    links: LinkSeedFileSchema.parse(links),
-  }));
-  const problems = checkLinkData(data);
-  if (problems.length) throw new Error(`The links would not seed:\n- ${problems.join('\n- ')}`);
+  // Checked before the old data is touched.
+  const files = exportLinkData(rows.map((row) => ({ ...row, owner: ownerOf(row) })));
 
   rmSync(LINK_DATA_DIR, { recursive: true, force: true });
-  for (const [rel, { links }] of files) {
-    const file = join(LINK_DATA_DIR, rel);
+  for (const { owner, links } of files) {
+    const file = join(LINK_DATA_DIR, fileOfOwner(owner));
     mkdirSync(dirname(file), { recursive: true });
     writeFileSync(file, `${JSON.stringify(links, null, 2)}\n`);
   }
-  logger.info('Links exported', { links: rows.length, owners: files.size });
+  logger.info('Links exported', { links: rows.length, owners: files.length });
 }
 
 runAsOrg(INSTALL_ORG_ID, main, { source: 'job' })
