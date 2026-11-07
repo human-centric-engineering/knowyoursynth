@@ -5,21 +5,23 @@ attached to the things they are about. Admin-managed. Hub feature `f-videos-and-
 users and links on users' own sounds are `f-link-suggestions` (§41): both are below (Suggestions, Links on your own
 sounds).
 
-| Piece                       | Where                                                  | Task  |
-| --------------------------- | ------------------------------------------------------ | ----- |
-| Table                       | `ExternalLink` in `prisma/schema/app.prisma`           | t-179 |
-| Parsing, embeds, thumbnails | `lib/app/links/providers.ts`                           | t-179 |
-| Order                       | `lib/app/links/order.ts`                               | t-179 |
-| Owners                      | `lib/app/links/owner.ts`, `owner-ref.ts`               | t-179 |
-| Admin writes                | `lib/app/links/admin.ts`, `admin-route.ts`             | t-179 |
-| Public read                 | `lib/app/links/read.ts`                                | t-179 |
-| Titles, thumbnails, views   | `details.ts`, `stats.ts`, `fetch.ts`                   | t-180 |
-| Admin pages                 | `components/app/admin/links/`                          | t-181 |
-| Under the panel, `/bank`    | `components/app/links/`, `lib/app/csp.ts`              | t-182 |
-| Patches and History         | `links-toggle.tsx`, `summariseSoundLinks`              | t-183 |
-| Suggestions                 | `LinkSuggestion`, `lib/app/links/suggestions.ts`       | t-185 |
-| Suggest a link, the queue   | `suggest-link.tsx`, `admin/links/suggestion-queue.tsx` | t-186 |
-| Links on your own sounds    | `UserSound.links`, `lib/app/sounds/links.ts`           | t-187 |
+| Piece                       | Where                                                   | Task  |
+| --------------------------- | ------------------------------------------------------- | ----- |
+| Table                       | `ExternalLink` in `prisma/schema/app.prisma`            | t-179 |
+| Parsing, embeds, thumbnails | `lib/app/links/providers.ts`                            | t-179 |
+| Order                       | `lib/app/links/order.ts`                                | t-179 |
+| Owners                      | `lib/app/links/owner.ts`, `owner-ref.ts`                | t-179 |
+| Admin writes                | `lib/app/links/admin.ts`, `admin-route.ts`              | t-179 |
+| Public read                 | `lib/app/links/read.ts`                                 | t-179 |
+| Titles, thumbnails, views   | `details.ts`, `stats.ts`, `fetch.ts`                    | t-180 |
+| Admin pages                 | `components/app/admin/links/`                           | t-181 |
+| Under the panel, `/bank`    | `components/app/links/`, `lib/app/csp.ts`               | t-182 |
+| Patches and History         | `links-toggle.tsx`, `summariseSoundLinks`               | t-183 |
+| Suggestions                 | `LinkSuggestion`, `lib/app/links/suggestions.ts`        | t-185 |
+| Suggest a link, the queue   | `suggest-link.tsx`, `admin/links/suggestion-queue.tsx`  | t-186 |
+| Links on your own sounds    | `UserSound.links`, `lib/app/sounds/links.ts`            | t-187 |
+| Seed data and its export    | `006-links.ts`, `lib/app/links/seed.ts`, `links:export` | t-199 |
+| Applied once per database   | `LinkSeedRecord`, `seedLinks`                           | t-200 |
 
 ## Don't
 
@@ -31,8 +33,14 @@ sounds).
 - **Don't add a second owner column without the CHECK.** `external_link_one_owner` requires exactly one of
   `instrumentId`, `soundId`, `songId`, `artistId`. Prisma can't model it, so it is hand-written in the migration and
   pinned by a drift probe (`lib/app/db-drift.ts`). A new owner kind means a new column, a new CHECK, a new unique
-  index on it plus `url`, and a case in `owner.ts`.
-- **Don't seed links.** No seed writes this table, so a reseed can never overwrite or drop an admin's links.
+  index on it plus `url`, a case in `owner.ts`, an entry in `OWNER_COLUMN` (`owner-ref.ts`), a lookup in the
+  seed's `ownerRows` (`seed.ts`), and a value in `LinkTargetKind`, which `LinkSeedRecord.ownerKind` and the suggestions
+  share.
+- **Don't expect a reseed to change a link.** The seed only creates links this database has never had from it (Seeded links). To
+  change a seeded link anywhere it already exists, edit it there; to change the data, edit it in dev and re-export. A
+  changed URL reaches a database that had the old one as an extra link (Seeded links, Accepted costs).
+- **Don't add a link to the seed data by hand.** Add it in dev through the admin pages, so it is parsed and titled the
+  way every link is, then run `npm run links:export`.
 
 ## What a link is about
 
@@ -261,7 +269,95 @@ Admin rules (`lib/app/links/admin.ts`, each tested):
   lit: the suggestion queue. See Suggestions.
 
 Not in the catalogue's JSON upload or download, which is content-only (owner ruling on `f-catalogue-admin`).
-Database backups cover links.
+Database backups cover links, and so does the seed data (Seeded links).
+
+## Seeded links
+
+Every link we have curated is seed data, so a new or deployed database gets them on `npm run db:seed` (owner ruling,
+2026-11-07, t-199; it replaced "links aren't seeded"). One JSON file per owner under
+`prisma/seeds/app-knowyoursynth/data/links/`, at `<kind>/<id>.json`; a sound's is `sound/<synthId>/<slug>.json`.
+
+```json
+{
+  "kind": "instrument",
+  "id": "pwm-mantis",
+  "links": [
+    {
+      "url": "https://www.youtube.com/watch?v=FCqoMIKfv04",
+      "kind": "review",
+      "title": "Review: PWM Mantis"
+    }
+  ]
+}
+```
+
+**A file names its owner inside it as well as in its path**, and the loader refuses one where they differ. The runner
+hashes a unit's inputs by their contents only, so a file moved to another owner (a renamed databank id) would
+otherwise leave the hash alone and the unit wouldn't re-run.
+
+A link may also carry `ours`, `order` and `rating` (left out at their defaults), Bandcamp's `providerId` and another
+provider's `thumbnailUrl`: only what the URL can't give back (`SeedLinkSchema`). Views and likes are never seeded;
+the daily stats job fills them.
+
+**The seed** (`006-links`, after the catalogue and the databank, which write the owners; rules in
+`lib/app/links/seed.ts`, each tested):
+
+- **Checked before anything is written.** Every URL must parse to itself, once per owner, with a kind and a title. A
+  problem anywhere throws with the whole list and writes nothing.
+- **Once per database** (owner ruling, t-200). Each link it applies, created or found already there, gets a
+  `LinkSeedRecord` (owner kind, owner's natural key, URL), and a link with a record is never applied again. So a seeded
+  link an admin deletes, or moves to another URL, stays gone through every reseed, however often the unit re-runs; links
+  new to the data still arrive. The links and their records commit in one transaction, so neither is ever written
+  without the other. The record has no foreign key, so it outlives its link and its owner.
+- **Create only.** A link its owner already has (owner + URL, the unique index, so `createMany` skips it) is left as
+  it is: an admin's title, kind, ours, order and rating, and YouTube's counts, survive every reseed.
+- **Never deletes.** A link an admin added that isn't in the data stays.
+- **Reads no provider.** It runs offline. A YouTube picture is derived from the id when shown (`thumbnailFor`).
+- **An owner the database doesn't have is skipped and logged**, so a removed databank row stops nothing. The data
+  test fails on an owner the seed data itself doesn't write, so on a fresh database nothing is skipped.
+
+**Adding links:** add them in dev through the admin pages, run `npm run links:export`, and commit the files. The
+export (logic in `exportLinkData`):
+
+- **Keeps each owner's committed order**, with links new to the data after it, oldest first. A reseed gives every row
+  the same `createdAt`, so ordering by it alone would re-sort every file.
+- **Refuses to drop a committed link** the table doesn't have, naming each, and writes nothing. So exporting from the
+  wrong database (an empty one, or one missing a databank row) can't wipe or shrink the data. To drop links on
+  purpose (you deleted them in dev), run `npm run links:export -- --prune`.
+- **Refuses data the seed would refuse**, and changes nothing when run twice.
+- **Writes every file before it removes any**, and removes only the `.json` files no owner has any more; anything else
+  in the folder stays.
+
+**Changing how `parseLinkUrl` writes a URL is a data migration.** Seed and export both require every URL to be in
+its stored form, so the committed data test, the seed and the export all fail until the stored rows and the data are
+rewritten to the new form, together. That refusal is deliberate: accepting the new form quietly would create it beside
+the old one on every database that already has the link. The same migration must rewrite `link_seed_record`'s URLs too: otherwise a seeded
+link an admin had deleted comes back under its new form, and the old-form records are left behind.
+
+**When the unit re-runs:** whenever any of its `hashInputs` changes: the data, the loader, the links code it runs
+(`seed.ts`, `providers.ts`, `owner-ref.ts`), and what decides a URL's stored form and an owner's shape
+(`lib/security/sanitize.ts`, an upstream file; `lib/app/bank/data.ts`; `lib/app/sounds/data.ts`). A re-run applies only
+links it has no record of, so an unrelated edit to one of those files re-runs it harmlessly.
+
+**Accepted costs** (journal, 2026-11-07):
+
+- **A URL changed in the data is a new link to a database that had the old one.** The data says nothing of what B
+  replaced, so the old link stays and the new one is added beside it; an admin there deletes the old one.
+- **A link removed from the data and added back later isn't applied again** on a database that had it: its record
+  remains. Add it there through the admin pages.
+- **An owner removed and later re-created doesn't get its seeded links again.** Its links went with it (cascade),
+  and their records stay, keyed by the owner's natural key. Add them there through the admin pages.
+- **The records start when this lands.** A database whose links were seeded before `LinkSeedRecord` existed has
+  none, so its first run after the migration treats every link as new: it re-creates any seeded link an admin had
+  deleted in between, then records them all. No database but dev had run the links seed by then, and dev was
+  recorded on the day, so t-199 and t-200 deploy together.
+- **An owner missing when the unit runs gets its links only on its next run.** Its links get no record, so they apply
+  then; but the runner has no way to force a run, and restoring the owner doesn't change the unit's hash.
+- **Seeded `ours` links keep their `order`**, so on a database whose admin already has their own `ours` links on that
+  owner, two can share a position (the tie falls to `createdAt`) until one reorder. No seeded link is `ours` today.
+
+**Removing a link everywhere:** deleting it in dev and re-exporting with `--prune` keeps it out of databases that
+haven't seeded it yet. One that already has it keeps it until an admin there deletes it, and then it stays deleted.
 
 ## Suggestions
 

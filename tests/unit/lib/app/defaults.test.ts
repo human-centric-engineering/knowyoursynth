@@ -505,6 +505,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         'BankPartSynth',
         'BankRemoval',
         'ExternalLink',
+        'LinkSeedRecord',
         'HeldUsername',
       ]);
     },
@@ -848,6 +849,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         'scripts/record-synth-goldens.ts',
         'scripts/fit-soundkind.ts',
         'scripts/soundkind-sweep-worker.ts',
+        'scripts/app/export-links.ts',
         'scripts/prototype-synths.ts',
       ]);
       // Know Your Synth fills this seam: pinned to its entries, so a stray extra one still fails.
