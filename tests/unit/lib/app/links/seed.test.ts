@@ -1,6 +1,6 @@
 /**
  * The links seed's rules (`lib/app/links/seed.ts`, t-199): what the data check refuses, what a stored link is saved as,
- * and what a run writes. The committed data and the loader are `seed-data.test.ts`'s.
+ * what an export writes, and what a run writes. The committed data and the loader are `seed-data.test.ts`'s.
  */
 import { describe, it, expect, vi } from 'vitest';
 import type { TenancyClient } from '@/lib/db/tenancy-extension';
@@ -9,25 +9,25 @@ import {
   exportLinkData,
   LinkDataError,
   LinkSeedFileSchema,
+  SeedLinkSchema,
   seedLinks,
   toSeedLink,
   type LinkSeedData,
   type StoredLink,
 } from '@/lib/app/links/seed';
+import type { OwnerKind } from '@/lib/app/links/owner-ref';
 
 const YT = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
 const YT2 = 'https://www.youtube.com/watch?v=FCqoMIKfv04';
+const YT3 = 'https://www.youtube.com/watch?v=EmbVaQfEWS8';
 const BANDCAMP = 'https://artist.bandcamp.com/album/some-record';
 const VIMEO = 'https://vimeo.com/123456';
 
 const link = (url: string, extra: Record<string, unknown> = {}) =>
-  LinkSeedFileSchema.parse([{ url, kind: 'demo', title: 'A video', ...extra }])[0];
+  SeedLinkSchema.parse({ url, kind: 'demo', title: 'A video', ...extra });
 
-const data = (...entries: [string, string, ReturnType<typeof link>[]][]): LinkSeedData =>
-  entries.map(([kind, id, links]) => ({
-    owner: { kind: kind as LinkSeedData[number]['owner']['kind'], id },
-    links,
-  }));
+const data = (...entries: [OwnerKind, string, ReturnType<typeof link>[]][]): LinkSeedData =>
+  entries.map(([kind, id, links]) => ({ owner: { kind, id }, links }));
 
 describe('SeedLinkSchema', () => {
   it('fills the defaults a file leaves out', () => {
@@ -50,6 +50,29 @@ describe('SeedLinkSchema', () => {
     ['a negative order', { order: -1 }],
   ])('refuses %s', (_, extra) => {
     expect(() => link(YT, extra)).toThrow();
+  });
+});
+
+describe('LinkSeedFileSchema', () => {
+  it('is an owner and its links', () => {
+    expect(
+      LinkSeedFileSchema.parse({
+        kind: 'sound',
+        id: 'model-d/x',
+        links: [{ url: YT, kind: 'demo', title: 'T' }],
+      })
+    ).toEqual({ kind: 'sound', id: 'model-d/x', links: [link(YT, { title: 'T' })] });
+  });
+
+  it.each([
+    [
+      'a bare list, the shape before the owner was named in the file',
+      [{ url: YT, kind: 'demo', title: 'T' }],
+    ],
+    ['an owner kind that is not one', { kind: 'synth', id: 'x', links: [] }],
+    ['an unknown key', { kind: 'song', id: 'x', links: [], extra: 1 }],
+  ])('refuses %s', (_, file) => {
+    expect(LinkSeedFileSchema.safeParse(file).success).toBe(false);
   });
 });
 
@@ -130,19 +153,19 @@ describe('checkLinkData', () => {
   });
 });
 
-describe('toSeedLink', () => {
-  const stored: StoredLink = {
-    url: YT,
-    provider: 'youtube',
-    providerId: 'dQw4w9WgXcQ',
-    kind: 'review',
-    title: 'A review',
-    thumbnailUrl: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
-    ours: false,
-    order: 0,
-    rating: null,
-  };
+const stored: StoredLink = {
+  url: YT,
+  provider: 'youtube',
+  providerId: 'dQw4w9WgXcQ',
+  kind: 'review',
+  title: 'A review',
+  thumbnailUrl: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
+  ours: false,
+  order: 0,
+  rating: null,
+};
 
+describe('toSeedLink', () => {
   it('leaves out the defaults, the YouTube id and its picture, which the URL gives back', () => {
     expect(toSeedLink(stored)).toEqual({ url: YT, kind: 'review', title: 'A review' });
   });
@@ -177,9 +200,9 @@ describe('toSeedLink', () => {
   });
 
   it('reads back as the link it was', () => {
-    const row = { ...stored, ours: true, order: 1, rating: 3 };
-    const back = LinkSeedFileSchema.parse([toSeedLink(row)])[0];
-    expect(back).toEqual({
+    expect(
+      SeedLinkSchema.parse(toSeedLink({ ...stored, ours: true, order: 1, rating: 3 }))
+    ).toEqual({
       url: YT,
       kind: 'review',
       title: 'A review',
@@ -190,7 +213,98 @@ describe('toSeedLink', () => {
   });
 });
 
-/** A client with the five reads and the one write the seed makes. `have` is what each owner table holds. */
+describe('exportLinkData', () => {
+  const minimoog = { kind: 'instrument' as const, id: 'moog-minimoog' };
+  const sound = { kind: 'sound' as const, id: 'model-d/stacked-night-bass' };
+  const row = (
+    url: string,
+    owner: typeof minimoog | typeof sound,
+    extra: Partial<StoredLink> = {}
+  ) => ({
+    ...stored,
+    kind: 'demo' as const,
+    title: 'A video',
+    url,
+    providerId: url.split('v=')[1] ?? null,
+    owner,
+    ...extra,
+  });
+
+  it('makes one file per owner, sorted by owner, each naming its owner, links in the order they came in', () => {
+    expect(
+      exportLinkData(
+        [row(YT2, sound), row(YT2, minimoog), row(YT, minimoog, { ours: true, order: 1 })],
+        []
+      )
+    ).toEqual({
+      files: [
+        {
+          kind: 'instrument',
+          id: 'moog-minimoog',
+          links: [
+            { url: YT2, kind: 'demo', title: 'A video' },
+            { url: YT, kind: 'demo', title: 'A video', ours: true, order: 1 },
+          ],
+        },
+        {
+          kind: 'sound',
+          id: 'model-d/stacked-night-bass',
+          links: [{ url: YT2, kind: 'demo', title: 'A video' }],
+        },
+      ],
+      dropped: [],
+    });
+  });
+
+  it('keeps the committed order, with new links after it, however the table returns them', () => {
+    // As after a reseed: every row has the same createdAt, so the table comes back by URL.
+    const committed = data(['instrument', 'moog-minimoog', [link(YT3), link(YT)]]);
+    const { files } = exportLinkData(
+      [row(YT, minimoog), row(YT2, minimoog), row(YT3, minimoog)],
+      committed
+    );
+    expect(files[0]?.links.map((l) => l.url)).toEqual([YT3, YT, YT2]);
+  });
+
+  it('takes what the table says about a committed link', () => {
+    const committed = data(['instrument', 'moog-minimoog', [link(YT, { title: 'Old title' })]]);
+    const { files } = exportLinkData([row(YT, minimoog, { title: 'New title' })], committed);
+    expect(files[0]?.links).toEqual([{ url: YT, kind: 'demo', title: 'New title' }]);
+  });
+
+  it('names every committed link the table lacks, by owner', () => {
+    const committed = data(
+      ['instrument', 'moog-minimoog', [link(YT), link(YT2)]],
+      ['sound', 'model-d/stacked-night-bass', [link(YT)]]
+    );
+    expect(exportLinkData([row(YT2, minimoog)], committed).dropped).toEqual([
+      `instrument:moog-minimoog ${YT}`,
+      `sound:model-d/stacked-night-bass ${YT}`,
+    ]);
+  });
+
+  it('names every committed link as dropped from an empty table, and writes no file', () => {
+    expect(exportLinkData([], data(['instrument', 'moog-minimoog', [link(YT)]]))).toEqual({
+      files: [],
+      dropped: [`instrument:moog-minimoog ${YT}`],
+    });
+  });
+
+  it('refuses a table the seed would refuse, naming every problem', () => {
+    const bad = () =>
+      exportLinkData([row(YT, minimoog), row(YT2, sound, { title: 'x'.repeat(201) })], []);
+    expect(bad).toThrow(LinkDataError);
+    try {
+      bad();
+    } catch (error) {
+      expect((error as LinkDataError).problems).toEqual([
+        expect.stringMatching(/^sound:model-d\/stacked-night-bass: /),
+      ]);
+    }
+  });
+});
+
+/** A client with the reads and the one write the seed makes. `have` is what each owner table holds. */
 function fakeDb(have: {
   instruments?: string[];
   songs?: string[];
@@ -210,8 +324,8 @@ function fakeDb(have: {
         Promise.resolve(
           (have.sounds ?? [])
             .map((key) => {
-              const [synthId, slug] = key.split('/');
-              return { id: `row-${slug}`, synthId: synthId, slug: slug };
+              const [synthId = '', slug = ''] = key.split('/');
+              return { id: `row-${slug}`, synthId, slug };
             })
             .filter((s) => where.OR.some((w) => w.synthId === s.synthId && w.slug === s.slug))
         )
@@ -251,56 +365,44 @@ describe('seedLinks', () => {
     );
     expect(report).toEqual({ created: 4, existing: 0, missingOwners: [] });
     expect(db.externalLink.createMany).toHaveBeenCalledTimes(1);
+    const base = { thumbnailUrl: null, ours: false, order: 0, rating: null, title: 'A video' };
     expect(db.externalLink.createMany).toHaveBeenCalledWith({
       skipDuplicates: true,
       data: [
         {
+          ...base,
           instrumentId: 'moog-minimoog',
           url: YT,
           provider: 'youtube',
           providerId: 'dQw4w9WgXcQ',
           kind: 'demo',
-          title: 'A video',
-          thumbnailUrl: null,
           ours: true,
           order: 1,
           rating: 5,
         },
         {
+          ...base,
           instrumentId: 'moog-minimoog',
           url: YT2,
           provider: 'youtube',
           providerId: 'FCqoMIKfv04',
           kind: 'lesson',
-          title: 'A video',
-          thumbnailUrl: null,
-          ours: false,
-          order: 0,
-          rating: null,
         },
         {
+          ...base,
           soundId: 'row-stacked-night-bass',
           url: YT,
           provider: 'youtube',
           providerId: 'dQw4w9WgXcQ',
           kind: 'demo',
-          title: 'A video',
-          thumbnailUrl: null,
-          ours: false,
-          order: 0,
-          rating: null,
         },
         {
+          ...base,
           songId: 'kraftwerk-autobahn',
           url: BANDCAMP,
           provider: 'bandcamp',
           providerId: 'album=123',
           kind: 'demo',
-          title: 'A video',
-          thumbnailUrl: null,
-          ours: false,
-          order: 0,
-          rating: null,
         },
       ],
     });
@@ -336,9 +438,12 @@ describe('seedLinks', () => {
     });
   });
 
-  it('does not ask the sound table anything when no sound has links', async () => {
+  it('asks only the tables of the kinds the data names', async () => {
     const db = fakeDb({ instruments: ['moog-minimoog'] });
     await seedLinks(asClient(db), data(['instrument', 'moog-minimoog', [link(YT)]]));
+    expect(db.bankInstrument.findMany).toHaveBeenCalledTimes(1);
+    expect(db.bankSong.findMany).not.toHaveBeenCalled();
+    expect(db.bankArtist.findMany).not.toHaveBeenCalled();
     expect(db.synthSound.findMany).not.toHaveBeenCalled();
   });
 
@@ -364,72 +469,14 @@ describe('seedLinks', () => {
     );
     await expect(run).rejects.toBeInstanceOf(LinkDataError);
     await expect(run).rejects.toMatchObject({
-      problems: expect.arrayContaining([expect.stringMatching(/listed twice/)]),
+      // The short address is the same video, so it is both not in stored form and a third copy.
+      problems: [
+        `instrument:moog-minimoog: ${YT} listed twice`,
+        `instrument:moog-minimoog: https://youtu.be/dQw4w9WgXcQ is stored as ${YT}`,
+        'instrument:moog-minimoog: https://youtu.be/dQw4w9WgXcQ listed twice',
+      ],
     });
     expect(db.bankInstrument.findMany).not.toHaveBeenCalled();
     expect(db.externalLink.createMany).not.toHaveBeenCalled();
-  });
-});
-
-describe('exportLinkData', () => {
-  const row = (
-    url: string,
-    owner: { kind: 'instrument' | 'sound'; id: string },
-    extra: Partial<StoredLink> = {}
-  ) => ({
-    url,
-    provider: 'youtube',
-    providerId: url.split('v=')[1] ?? null,
-    kind: 'demo' as const,
-    title: 'A video',
-    thumbnailUrl: null,
-    ours: false,
-    order: 0,
-    rating: null,
-    owner,
-    ...extra,
-  });
-  const minimoog = { kind: 'instrument' as const, id: 'moog-minimoog' };
-  const sound = { kind: 'sound' as const, id: 'model-d/stacked-night-bass' };
-
-  it('makes one file per owner, each in the order its links came in, and owners in first-seen order', () => {
-    expect(
-      exportLinkData([
-        row(YT2, minimoog),
-        row(YT, sound),
-        row(YT, minimoog, { ours: true, order: 1 }),
-      ])
-    ).toEqual([
-      {
-        owner: minimoog,
-        links: [
-          { url: YT2, kind: 'demo', title: 'A video' },
-          { url: YT, kind: 'demo', title: 'A video', ours: true, order: 1 },
-        ],
-      },
-      { owner: sound, links: [{ url: YT, kind: 'demo', title: 'A video' }] },
-    ]);
-  });
-
-  it('makes nothing from an empty table', () => {
-    expect(exportLinkData([])).toEqual([]);
-  });
-
-  it('refuses a table the seed would refuse, naming every problem', () => {
-    const bad = () =>
-      exportLinkData([
-        row(YT, minimoog),
-        row(YT, minimoog),
-        row(YT2, sound, { title: 'x'.repeat(201) }),
-      ]);
-    expect(bad).toThrow(LinkDataError);
-    try {
-      bad();
-    } catch (error) {
-      expect((error as LinkDataError).problems).toEqual([
-        expect.stringMatching(/^sound:model-d\/stacked-night-bass: /),
-        `instrument:moog-minimoog: ${YT} listed twice`,
-      ]);
-    }
   });
 });

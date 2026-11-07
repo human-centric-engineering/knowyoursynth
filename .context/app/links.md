@@ -32,7 +32,8 @@ sounds).
 - **Don't add a second owner column without the CHECK.** `external_link_one_owner` requires exactly one of
   `instrumentId`, `soundId`, `songId`, `artistId`. Prisma can't model it, so it is hand-written in the migration and
   pinned by a drift probe (`lib/app/db-drift.ts`). A new owner kind means a new column, a new CHECK, a new unique
-  index on it plus `url`, and a case in `owner.ts`.
+  index on it plus `url`, a case in `owner.ts`, an entry in `OWNER_COLUMN` (`owner-ref.ts`), and a lookup in the
+  seed's `ownerRows` (`seed.ts`).
 - **Don't expect a reseed to change a link.** The seed only creates what an owner doesn't have yet (Seeded links). To
   change a seeded link anywhere it already exists, edit it there; to change the data, edit it in dev and re-export.
 - **Don't add a link to the seed data by hand.** Add it in dev through the admin pages, so it is parsed and titled the
@@ -274,14 +275,22 @@ Every link we have curated is seed data, so a new or deployed database gets them
 `prisma/seeds/app-knowyoursynth/data/links/`, at `<kind>/<id>.json`; a sound's is `sound/<synthId>/<slug>.json`.
 
 ```json
-[
-  {
-    "url": "https://www.youtube.com/watch?v=FCqoMIKfv04",
-    "kind": "review",
-    "title": "Review: PWM Mantis"
-  }
-]
+{
+  "kind": "instrument",
+  "id": "pwm-mantis",
+  "links": [
+    {
+      "url": "https://www.youtube.com/watch?v=FCqoMIKfv04",
+      "kind": "review",
+      "title": "Review: PWM Mantis"
+    }
+  ]
+}
 ```
+
+**A file names its owner inside it as well as in its path**, and the loader refuses one where they differ. The runner
+hashes a unit's inputs by their contents only, so a file moved to another owner (a renamed databank id) would
+otherwise leave the hash alone and the unit wouldn't re-run.
 
 A link may also carry `ours`, `order` and `rating` (left out at their defaults), Bandcamp's `providerId` and another
 provider's `thumbnailUrl`: only what the URL can't give back (`SeedLinkSchema`). Views and likes are never seeded;
@@ -300,13 +309,27 @@ the daily stats job fills them.
   test fails on an owner the seed data itself doesn't write, so on a fresh database nothing is skipped.
 
 **Adding links:** add them in dev through the admin pages, run `npm run links:export`, and commit the files. The
-export rewrites the folder from the table, oldest first per owner, refuses to write data the seed would refuse,
-and changes nothing when run twice.
+export (logic in `exportLinkData`):
 
-**Accepted cost:** a seeded link an admin deletes comes back the next time the unit runs, which is whenever the data
-or the links code changes. To remove one for good, delete it in dev and re-export, which drops it from the data. A
-tombstone (as the databank's `BankRemoval` is) would stop that; it waits until admins curate links on a deployed
-database. The admin audit log can't stand in for one, because the retention job prunes it.
+- **Keeps each owner's committed order**, with links new to the data after it, oldest first. A reseed gives every row
+  the same `createdAt`, so ordering by it alone would re-sort every file.
+- **Refuses to drop a committed link** the table doesn't have, naming each, and writes nothing. So exporting from the
+  wrong database (an empty one, or one missing a databank row) can't wipe or shrink the data. To drop links on
+  purpose (you deleted them in dev), run `npm run links:export -- --prune`.
+- **Refuses data the seed would refuse**, and changes nothing when run twice.
+
+**Accepted costs**, all because the seed can see what an owner has, not what it once had (journal, 2026-11-07):
+
+- **A seeded link an admin deletes, or moves to another URL, comes back** the next time the unit runs, which is
+  whenever the data or the links code changes. To remove or replace one for good, do it in dev and re-export with
+  `--prune`.
+- **An owner missing when the unit runs gets its links only on its next run.** The runner has no way to force one;
+  restoring the owner doesn't change the unit's hash.
+- **Seeded `ours` links keep their `order`**, so on a database whose admin already has their own `ours` links on that
+  owner, two can share a position (the tie falls to `createdAt`) until one reorder. No seeded link is `ours` today.
+
+A tombstone (as the databank's `BankRemoval` is) would answer the first two; it waits until admins curate links on a
+deployed database. The admin audit log can't stand in for one, because the retention job prunes it.
 
 ## Suggestions
 

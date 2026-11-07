@@ -9,6 +9,14 @@ import { SoundSlugSchema, SynthIdSchema } from '@/lib/app/sounds/data';
 export const OWNER_KINDS = ['instrument', 'sound', 'song', 'artist'] as const;
 export type OwnerKind = (typeof OWNER_KINDS)[number];
 
+/** The `external_link` column that names an owner of each kind. A new kind means a new column (`links.md`). */
+export const OWNER_COLUMN = {
+  instrument: 'instrumentId',
+  sound: 'soundId',
+  song: 'songId',
+  artist: 'artistId',
+} as const satisfies Record<OwnerKind, string>;
+
 /** An owner as an API names it. */
 export interface OwnerRef {
   kind: OwnerKind;

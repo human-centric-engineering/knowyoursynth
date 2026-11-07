@@ -50,8 +50,16 @@ describe('the data layout', () => {
 describe('loadLinkData', () => {
   it('reads every file under the folder, nested ones too, in path order', () => {
     const dir = folder({
-      'sound/model-d/stacked-night-bass.json': [{ url: YT, kind: 'lesson', title: 'Walk-through' }],
-      'instrument/moog-minimoog.json': [{ url: YT, kind: 'demo', title: 'Demo', ours: true }],
+      'sound/model-d/stacked-night-bass.json': {
+        kind: 'sound',
+        id: 'model-d/stacked-night-bass',
+        links: [{ url: YT, kind: 'lesson', title: 'Walk-through' }],
+      },
+      'instrument/moog-minimoog.json': {
+        kind: 'instrument',
+        id: 'moog-minimoog',
+        links: [{ url: YT, kind: 'demo', title: 'Demo', ours: true }],
+      },
       'notes.txt': 'not data',
     });
     expect(linkDataFiles(dir)).toEqual([
@@ -83,8 +91,19 @@ describe('loadLinkData', () => {
     ['a file that is not JSON', { 'instrument/x.json': '{' }, /links\/instrument\/x\.json: /],
     [
       'a link of the wrong shape',
-      { 'instrument/x.json': [{ url: YT }] },
+      { 'instrument/x.json': { kind: 'instrument', id: 'x', links: [{ url: YT }] } },
       /links\/instrument\/x\.json: /,
+    ],
+    [
+      'a bare list, the shape before the owner was named in the file',
+      { 'instrument/x.json': [{ url: YT, kind: 'demo', title: 'T' }] },
+      /links\/instrument\/x\.json: /,
+    ],
+    [
+      // A file moved to another owner keeps its contents, and the runner hashes only contents: so it must say who.
+      'a file naming another owner than its path does',
+      { 'instrument/new-id.json': { kind: 'instrument', id: 'old-id', links: [] } },
+      /links\/instrument\/new-id\.json: names instrument:old-id, not instrument:new-id/,
     ],
   ])('names the file with %s', (_, files, problem) => {
     expect(() => loadLinkData(folder(files))).toThrow(problem);

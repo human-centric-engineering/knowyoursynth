@@ -42,10 +42,10 @@ import {
   resolveOwner,
   validOwnerId,
   type OwnerColumns,
-  type OwnerKind,
   type OwnerRef,
   type OwnerSummary,
 } from '@/lib/app/links/owner';
+import { OWNER_COLUMN } from '@/lib/app/links/owner-ref';
 
 const TitleSchema = z.string().trim().min(1, 'A link needs a title').max(200);
 const RatingSchema = z.number().int().min(1).max(5).nullable();
@@ -78,14 +78,6 @@ export const LinkReorderSchema = z.object({
   owner: OwnerRefSchema,
   ids: z.array(z.string().min(1).max(40)).max(500),
 });
-
-/** The column that names an owner of each kind. */
-const OWNER_COLUMN = {
-  instrument: 'instrumentId',
-  sound: 'soundId',
-  song: 'songId',
-  artist: 'artistId',
-} as const satisfies Record<OwnerKind, keyof Prisma.ExternalLinkWhereInput>;
 
 /** The admin list's filters: what kind of thing it is about, at most one owner, a provider, and whether ours. */
 export const AdminLinkQuerySchema = z

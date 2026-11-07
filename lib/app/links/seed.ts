@@ -15,8 +15,10 @@
  * - **An owner the database does not have is skipped and reported**, not thrown: a databank row an admin removed
  *   should not stop the rest.
  *
- * Accepted cost (journal, 2026-11-07): a seeded link an admin deletes comes back when the unit next re-runs. To
- * remove one for good, delete it in dev and re-export (`npm run links:export`), which drops it from the data.
+ * Accepted costs (journal, 2026-11-07), all because the seed can only tell what an owner has, not what it once had:
+ * a seeded link an admin deletes, or moves to another URL, comes back when the unit next re-runs; and an owner that
+ * was missing gets its links only on that next re-run. To remove a link for good, delete it in dev and re-export
+ * (`npm run links:export -- --prune`), which drops it from the data.
  */
 import { z } from 'zod';
 import type { Prisma } from '@prisma/client';
@@ -26,8 +28,11 @@ import {
   LINK_KINDS,
   parseLinkUrl,
   safeThumbnailUrl,
+  type ParsedLink,
 } from '@/lib/app/links/providers';
 import {
+  OWNER_COLUMN,
+  OWNER_KINDS,
   splitSoundKey,
   validOwnerId,
   type OwnerKind,
@@ -51,8 +56,19 @@ export const SeedLinkSchema = z
   .strict();
 export type SeedLink = z.infer<typeof SeedLinkSchema>;
 
-/** A data file: one owner's links. */
-export const LinkSeedFileSchema = z.array(SeedLinkSchema);
+/**
+ * A data file: one owner's links, naming the owner inside it as well as in its path. The runner hashes a unit's inputs
+ * by their contents only, so a file that moved to another owner without this would not re-run the seed.
+ */
+export const LinkSeedFileSchema = z
+  .object({
+    kind: z.enum(OWNER_KINDS),
+    id: z.string().min(1).max(200),
+    links: z.array(SeedLinkSchema),
+  })
+  .strict();
+/** A data file as it is written: defaults left out. */
+export type LinkFile = z.input<typeof LinkSeedFileSchema>;
 
 /** The seed data: every owner's links. */
 export type LinkSeedData = { owner: OwnerRef; links: SeedLink[] }[];
@@ -75,6 +91,124 @@ export interface LinkSeedReport {
 }
 
 const ownerKey = (o: OwnerRef): string => `${o.kind}:${o.id}`;
+
+/** The data with each link's URL parsed once, and every problem found on the way. */
+interface LinkPlan {
+  problems: string[];
+  owners: { owner: OwnerRef; links: { link: SeedLink; parsed: ParsedLink }[] }[];
+}
+
+function planLinks(data: LinkSeedData): LinkPlan {
+  const problems: string[] = [];
+  const seen = new Set<string>();
+  const owners: LinkPlan['owners'] = [];
+  for (const { owner, links } of data) {
+    const at = ownerKey(owner);
+    if (!validOwnerId(owner.kind, owner.id)) problems.push(`${at}: not an id of that kind`);
+    if (seen.has(at)) problems.push(`${at}: listed twice`);
+    seen.add(at);
+    const urls = new Set<string>();
+    const planned: LinkPlan['owners'][number]['links'] = [];
+    for (const link of links) {
+      const result = parseLinkUrl(link.url);
+      if (!result.ok) {
+        problems.push(`${at}: ${link.url}: ${result.problem}`);
+        continue;
+      }
+      const parsed = result.link;
+      if (parsed.url !== link.url) problems.push(`${at}: ${link.url} is stored as ${parsed.url}`);
+      if (urls.has(parsed.url)) problems.push(`${at}: ${link.url} listed twice`);
+      urls.add(parsed.url);
+      if (link.providerId !== undefined && parsed.provider !== 'bandcamp')
+        problems.push(`${at}: ${link.url}: only a Bandcamp link carries its provider id`);
+      if (link.providerId !== undefined && !isBandcampId(link.providerId))
+        problems.push(`${at}: ${link.url}: not a Bandcamp embed id: ${link.providerId}`);
+      if (
+        link.thumbnailUrl !== undefined &&
+        (parsed.provider === 'youtube' ||
+          safeThumbnailUrl(parsed.provider, link.thumbnailUrl) !== link.thumbnailUrl)
+      )
+        problems.push(`${at}: ${link.url}: a picture not on its provider's image hosts`);
+      planned.push({ link, parsed });
+    }
+    owners.push({ owner, links: planned });
+  }
+  return { problems, owners };
+}
+
+/** Every problem in the data. Pure: the seed runs it first, and the data test over the committed files. */
+export function checkLinkData(data: LinkSeedData): string[] {
+  return planLinks(data).problems;
+}
+
+/** Each owner the database has, by `<kind>:<id>`, mapped to its row id (a sound's is its `SynthSound.id`). */
+async function ownerRows(prisma: TenancyClient, owners: OwnerRef[]): Promise<Map<string, string>> {
+  const ids = (kind: OwnerKind) => owners.filter((o) => o.kind === kind).map((o) => o.id);
+  const sounds = ids('sound').flatMap((id) => splitSoundKey(id) ?? []);
+  const select = { id: true } as const;
+  const byId = (kind: OwnerKind, find: (ids: string[]) => Promise<{ id: string }[]>) =>
+    ids(kind).length ? find(ids(kind)) : Promise.resolve([]);
+  const [instruments, songs, artists, soundRows] = await Promise.all([
+    byId('instrument', (in_) =>
+      prisma.bankInstrument.findMany({ where: { id: { in: in_ } }, select })
+    ),
+    byId('song', (in_) => prisma.bankSong.findMany({ where: { id: { in: in_ } }, select })),
+    byId('artist', (in_) => prisma.bankArtist.findMany({ where: { id: { in: in_ } }, select })),
+    sounds.length
+      ? prisma.synthSound.findMany({
+          where: { OR: sounds },
+          select: { id: true, synthId: true, slug: true },
+        })
+      : Promise.resolve([]),
+  ]);
+  const found = new Map<string, string>();
+  for (const r of instruments) found.set(`instrument:${r.id}`, r.id);
+  for (const r of songs) found.set(`song:${r.id}`, r.id);
+  for (const r of artists) found.set(`artist:${r.id}`, r.id);
+  for (const r of soundRows) found.set(`sound:${r.synthId}/${r.slug}`, r.id);
+  return found;
+}
+
+/** Create the links the data lists that their owners do not have yet. */
+export async function seedLinks(
+  prisma: TenancyClient,
+  data: LinkSeedData
+): Promise<LinkSeedReport> {
+  const plan = planLinks(data);
+  if (plan.problems.length) throw new LinkDataError(plan.problems);
+
+  const found = await ownerRows(
+    prisma,
+    data.map((d) => d.owner)
+  );
+  const missingOwners = data.map((d) => ownerKey(d.owner)).filter((k) => !found.has(k));
+
+  const rows: Prisma.ExternalLinkCreateManyInput[] = [];
+  for (const { owner, links } of plan.owners) {
+    const rowId = found.get(ownerKey(owner));
+    if (!rowId) continue;
+    for (const { link, parsed } of links) {
+      rows.push({
+        [OWNER_COLUMN[owner.kind]]: rowId,
+        url: parsed.url,
+        provider: parsed.provider,
+        providerId: parsed.provider === 'bandcamp' ? (link.providerId ?? null) : parsed.providerId,
+        kind: link.kind,
+        title: link.title,
+        thumbnailUrl: link.thumbnailUrl ?? null,
+        ours: link.ours,
+        order: link.order,
+        rating: link.rating,
+      });
+    }
+  }
+
+  // The unique index on owner + URL decides what an owner already has, so a link created meanwhile is skipped too.
+  const { count } = rows.length
+    ? await prisma.externalLink.createMany({ data: rows, skipDuplicates: true })
+    : { count: 0 };
+  return { created: count, existing: rows.length - count, missingOwners };
+}
 
 /** A stored link, as the columns the export reads. */
 export interface StoredLink {
@@ -106,146 +240,64 @@ export function toSeedLink(row: StoredLink): z.input<typeof SeedLinkSchema> {
   };
 }
 
-/** One owner's links, as its data file holds them. */
-export interface LinkFile {
-  owner: OwnerRef;
-  links: z.input<typeof SeedLinkSchema>[];
+/** What an export would write, and the committed links it would drop. */
+export interface LinkExport {
+  /** One per owner, by owner. */
+  files: LinkFile[];
+  /** Committed links the table no longer has, as `<kind>:<id> <url>`: the export refuses these unless told to prune. */
+  dropped: string[];
 }
 
 /**
- * The data files a table's links make (`npm run links:export`): one per owner, in the order each owner's links come in
- * (the export reads them oldest first). Throws, as the seed would, on data the seed would refuse, so a bad table
- * never replaces good data.
+ * The data files a table's links make (`npm run links:export`), given what is committed now. Each owner's links keep
+ * their committed order, and links new to the data follow in the order they come in (the export reads them oldest
+ * first). So a re-export after a reseed, which gives every row the same `createdAt`, does not re-sort anything.
+ *
+ * Throws, as the seed would, on data the seed would refuse, so a bad table never replaces good data.
  */
-export function exportLinkData(rows: (StoredLink & { owner: OwnerRef })[]): LinkFile[] {
-  const files = new Map<string, LinkFile>();
+export function exportLinkData(
+  rows: (StoredLink & { owner: OwnerRef })[],
+  committed: LinkSeedData
+): LinkExport {
+  const byOwner = new Map<string, { owner: OwnerRef; links: Map<string, StoredLink> }>();
   for (const row of rows) {
     const key = ownerKey(row.owner);
-    const file = files.get(key) ?? { owner: { kind: row.owner.kind, id: row.owner.id }, links: [] };
-    file.links.push(toSeedLink(row));
-    files.set(key, file);
+    const entry = byOwner.get(key) ?? {
+      owner: { kind: row.owner.kind, id: row.owner.id },
+      links: new Map(),
+    };
+    entry.links.set(row.url, row);
+    byOwner.set(key, entry);
   }
-  const out = [...files.values()];
+  const committedUrls = new Map(
+    committed.map(({ owner, links }) => [ownerKey(owner), links.map((l) => l.url)])
+  );
+
+  const dropped: string[] = [];
+  for (const [key, urls] of committedUrls)
+    for (const url of urls) if (!byOwner.get(key)?.links.has(url)) dropped.push(`${key} ${url}`);
+
+  const files: LinkFile[] = [...byOwner.entries()]
+    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+    .map(([key, { owner, links }]) => {
+      const before = committedUrls.get(key) ?? [];
+      const kept = before.flatMap((url) => links.get(url) ?? []);
+      const added = [...links.values()].filter((l) => !before.includes(l.url));
+      return { kind: owner.kind, id: owner.id, links: [...kept, ...added].map(toSeedLink) };
+    });
+
   const problems: string[] = [];
   const data: LinkSeedData = [];
-  for (const { owner, links } of out) {
-    const parsed = LinkSeedFileSchema.safeParse(links);
-    if (parsed.success) data.push({ owner, links: parsed.data });
-    else problems.push(`${ownerKey(owner)}: ${parsed.error.message}`);
+  for (const file of files) {
+    const parsed = LinkSeedFileSchema.safeParse(file);
+    if (parsed.success)
+      data.push({
+        owner: { kind: parsed.data.kind, id: parsed.data.id },
+        links: parsed.data.links,
+      });
+    else problems.push(`${file.kind}:${file.id}: ${parsed.error.message}`);
   }
   problems.push(...checkLinkData(data));
   if (problems.length) throw new LinkDataError(problems);
-  return out;
-}
-
-/** Every problem in the data. Pure: the seed runs it first, and the data test over the committed files. */
-export function checkLinkData(data: LinkSeedData): string[] {
-  const problems: string[] = [];
-  const owners = new Set<string>();
-  for (const { owner, links } of data) {
-    const at = ownerKey(owner);
-    if (!validOwnerId(owner.kind, owner.id)) problems.push(`${at}: not an id of that kind`);
-    if (owners.has(at)) problems.push(`${at}: listed twice`);
-    owners.add(at);
-    const urls = new Set<string>();
-    for (const link of links) {
-      const parsed = parseLinkUrl(link.url);
-      if (!parsed.ok) {
-        problems.push(`${at}: ${link.url}: ${parsed.problem}`);
-        continue;
-      }
-      if (parsed.link.url !== link.url)
-        problems.push(`${at}: ${link.url} is stored as ${parsed.link.url}`);
-      if (urls.has(parsed.link.url)) problems.push(`${at}: ${link.url} listed twice`);
-      urls.add(parsed.link.url);
-      if (link.providerId !== undefined && parsed.link.provider !== 'bandcamp')
-        problems.push(`${at}: ${link.url}: only a Bandcamp link carries its provider id`);
-      if (link.providerId !== undefined && !isBandcampId(link.providerId))
-        problems.push(`${at}: ${link.url}: not a Bandcamp embed id: ${link.providerId}`);
-      if (
-        link.thumbnailUrl !== undefined &&
-        (parsed.link.provider === 'youtube' ||
-          safeThumbnailUrl(parsed.link.provider, link.thumbnailUrl) !== link.thumbnailUrl)
-      )
-        problems.push(`${at}: ${link.url}: a picture not on its provider's image hosts`);
-    }
-  }
-  return problems;
-}
-
-type OwnerColumn = 'instrumentId' | 'soundId' | 'songId' | 'artistId';
-const OWNER_COLUMN: Record<OwnerKind, OwnerColumn> = {
-  instrument: 'instrumentId',
-  sound: 'soundId',
-  song: 'songId',
-  artist: 'artistId',
-};
-
-/** Each owner the database has, by `<kind>:<id>`, mapped to its row id (a sound's is its `SynthSound.id`). */
-async function ownerRows(prisma: TenancyClient, owners: OwnerRef[]): Promise<Map<string, string>> {
-  const ids = (kind: OwnerKind) => owners.filter((o) => o.kind === kind).map((o) => o.id);
-  const sounds = ids('sound').flatMap((id) => splitSoundKey(id) ?? []);
-  const select = { id: true } as const;
-  const [instruments, songs, artists, soundRows] = await Promise.all([
-    prisma.bankInstrument.findMany({ where: { id: { in: ids('instrument') } }, select }),
-    prisma.bankSong.findMany({ where: { id: { in: ids('song') } }, select }),
-    prisma.bankArtist.findMany({ where: { id: { in: ids('artist') } }, select }),
-    sounds.length
-      ? prisma.synthSound.findMany({
-          where: { OR: sounds },
-          select: { id: true, synthId: true, slug: true },
-        })
-      : Promise.resolve([]),
-  ]);
-  const found = new Map<string, string>();
-  for (const r of instruments) found.set(`instrument:${r.id}`, r.id);
-  for (const r of songs) found.set(`song:${r.id}`, r.id);
-  for (const r of artists) found.set(`artist:${r.id}`, r.id);
-  for (const r of soundRows) found.set(`sound:${r.synthId}/${r.slug}`, r.id);
-  return found;
-}
-
-/** Create the links the data lists that their owners do not have yet. */
-export async function seedLinks(
-  prisma: TenancyClient,
-  data: LinkSeedData
-): Promise<LinkSeedReport> {
-  const problems = checkLinkData(data);
-  if (problems.length) throw new LinkDataError(problems);
-
-  const found = await ownerRows(
-    prisma,
-    data.map((d) => d.owner)
-  );
-  const missingOwners = data.map((d) => ownerKey(d.owner)).filter((k) => !found.has(k));
-
-  const rows: Prisma.ExternalLinkCreateManyInput[] = [];
-  for (const { owner, links } of data) {
-    const rowId = found.get(ownerKey(owner));
-    if (!rowId) continue;
-    for (const link of links) {
-      // Checked above: every URL parses, to itself.
-      const parsed = parseLinkUrl(link.url);
-      if (!parsed.ok) continue;
-      const { provider, providerId, url } = parsed.link;
-      rows.push({
-        [OWNER_COLUMN[owner.kind]]: rowId,
-        url,
-        provider,
-        providerId: provider === 'bandcamp' ? (link.providerId ?? null) : providerId,
-        kind: link.kind,
-        title: link.title,
-        thumbnailUrl: link.thumbnailUrl ?? null,
-        ours: link.ours,
-        order: link.order,
-        rating: link.rating,
-      });
-    }
-  }
-
-  // The unique index on owner + URL decides what an owner already has, so a link created meanwhile is skipped too.
-  const { count } = rows.length
-    ? await prisma.externalLink.createMany({ data: rows, skipDuplicates: true })
-    : { count: 0 };
-  return { created: count, existing: rows.length - count, missingOwners };
+  return { files, dropped };
 }

@@ -48,6 +48,11 @@ export function loadLinkData(dir = LINK_DATA_DIR): LinkSeedData {
     }
     const parsed = LinkSeedFileSchema.safeParse(json);
     if (!parsed.success) throw new Error(`links/${rel}: ${parsed.error.message}`);
-    return { owner, links: parsed.data };
+    // The owner is named twice so a moved file changes its contents, which is all the runner hashes.
+    if (parsed.data.kind !== owner.kind || parsed.data.id !== owner.id)
+      throw new Error(
+        `links/${rel}: names ${parsed.data.kind}:${parsed.data.id}, not ${owner.kind}:${owner.id} as its path does`
+      );
+    return { owner, links: parsed.data.links };
   });
 }
