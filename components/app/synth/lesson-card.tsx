@@ -217,14 +217,11 @@ export function LessonCard({
   const sized = size != null;
   useEffect(() => {
     if (!dragged && !sized) return undefined;
+    // The size first, to the screen alone (so a card that only needs moving keeps it), then the place, for that width.
     const onResize = () => {
-      const w = ref.current?.offsetWidth ?? 0;
+      const w = Math.min(ref.current?.offsetWidth ?? 0, window.innerWidth - 2 * EDGE);
+      setSize((z) => (z ? clampSize(z.w, z.h, EDGE, EDGE) : z));
       setPos((p) => (p ? clampPos(p.x, p.y, w) : p));
-      setSize((z) => {
-        if (!z) return z;
-        const r = ref.current?.getBoundingClientRect();
-        return clampSize(z.w, z.h, r?.left ?? EDGE, r?.top ?? EDGE);
-      });
     };
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);

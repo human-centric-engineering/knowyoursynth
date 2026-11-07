@@ -157,6 +157,21 @@ describe('LessonCard sizing (t-203)', () => {
     expect(card.style.height).toBe('436px');
   });
 
+  it('moves rather than narrows when the window shrinks, if it still fits', () => {
+    const { card } = setup();
+    size(grip(), [1355, 795], [1355, 795]);
+    expect(card.style.width).toBe('400px');
+    // The window narrows to 1200: the card, 400 wide at x 960, has to move left to stay on screen, and keeps its width.
+    card.getBoundingClientRect = () => new DOMRect(960, 300, 400, 500);
+    Object.defineProperty(card, 'offsetWidth', { configurable: true, value: 400 });
+    window.innerWidth = 1200;
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+    expect(card.style.width).toBe('400px');
+    expect(card.style.left).toBe(`${1200 - 400 - 8}px`);
+  });
+
   it('keeps its size when docked again by ⇆', () => {
     const { card } = setup();
     size(grip(), [1355, 795], [1305, 745]);

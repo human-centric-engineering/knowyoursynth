@@ -9,12 +9,14 @@
  * the pointer without moving the page.
  */
 
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useEffect, useId, useLayoutEffect, useRef } from 'react';
 import type { CSSProperties, RefObject } from 'react';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 
 /** The sizes, as multiples of the fitted width: 90%, then fitted (100%), then up in tenths to 200%. */
 export const PANEL_SCALES = [0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2] as const;
+/** What the zoom's name says on hover, and describes each of its keys by. */
+const ZOOM_HELP = 'How big the panel is drawn. Bigger, it scrolls sideways.';
 /** The fitted size, which the middle of the zoom control goes back to. */
 const FIT: PanelScale = 1;
 export type PanelScale = (typeof PANEL_SCALES)[number];
@@ -112,15 +114,21 @@ export function PanelZoom({
   className?: string;
 }) {
   const i = PANEL_SCALES.indexOf(scale);
+  // The name cannot take focus, so what it says on hover is also each key's description, as the rail's settings do.
+  const helpId = useId();
   return (
     <div className={`kys-rail-zoom ${className}`} role="group" aria-label="Panel size">
-      <PlayerTip name="Zoom" help="How big the panel is drawn. Bigger, it scrolls sideways.">
+      <PlayerTip name="Zoom" help={ZOOM_HELP}>
         <span className="kys-setting-name">Zoom</span>
       </PlayerTip>
+      <span id={helpId} className="sr-only">
+        {ZOOM_HELP}
+      </span>
       <PlayerTip name="Zoom out" help="Draw the panel smaller.">
         <button
           type="button"
           aria-label="Zoom out"
+          aria-describedby={helpId}
           disabled={i === 0}
           onClick={() => onScale(PANEL_SCALES[i - 1])}
           className="kys-zoom-step"
@@ -139,6 +147,7 @@ export function PanelZoom({
         <button
           type="button"
           aria-label="Fit the panel to the page"
+          aria-describedby={helpId}
           aria-pressed={scale === FIT}
           onClick={() => onScale(FIT)}
           className="kys-zoom-read"
@@ -153,6 +162,7 @@ export function PanelZoom({
         <button
           type="button"
           aria-label="Zoom in"
+          aria-describedby={helpId}
           disabled={i === PANEL_SCALES.length - 1}
           onClick={() => onScale(PANEL_SCALES[i + 1])}
           className="kys-zoom-step"

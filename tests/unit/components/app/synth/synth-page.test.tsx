@@ -1894,14 +1894,15 @@ describe('SynthPage player', () => {
     expect(tab()).toHaveAttribute('aria-expanded', 'false');
     expect(card()).toBeNull();
 
-    // While the lesson is followed, a press in the player (Play, to hear the step) leaves both up; a press off the
-    // player puts the drawer away, and the lesson with it.
+    // While the lesson is followed, a press anywhere else (Play, to hear the step, or a dialog over the page) leaves
+    // both up: only the drawer's tab puts it away, and the lesson with it.
     fireEvent.click(tab());
     fireEvent.click(button('Lesson step 1: Open the mixer'));
     fireEvent.pointerDown(button('Play'));
+    fireEvent.pointerDown(document.body);
     expect(tab()).toHaveAttribute('aria-expanded', 'true');
     expect(card()).not.toBeNull();
-    fireEvent.pointerDown(document.body);
+    fireEvent.click(tab());
     expect(card()).toBeNull();
 
     // The lamp is the lesson's only while it is on show: put away, it is the sound's again, though the step is kept.

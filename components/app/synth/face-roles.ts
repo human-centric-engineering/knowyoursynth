@@ -12,8 +12,12 @@
 
 import type { CSSProperties } from 'react';
 import { MODULES } from '@/lib/app/synths/lib/modules';
-import { luminance } from '@/lib/app/synths/lib/patch';
+import { hexChannels, luminance } from '@/lib/app/synths/lib/patch';
 
+/*
+ * The player's own colours, from its roles in `synth.css` (`.kys-player` by night, then by day): read here because the
+ * choice between them is worked out from their contrast, which the stylesheet cannot do. Keep them in step.
+ */
 /** The player's accent on the dark stage, then on the light one: the first that stands off the face is used. */
 const ACCENTS = ['#f6a63a', '#b85f06'] as const;
 /** The ink on the accent: dark on the amber, white on a darker accent. */
@@ -23,7 +27,7 @@ const GOODS = ['#7ed267', '#2f8a1d'] as const;
 const WARNS = ['#ff7d54', '#c2451f'] as const;
 /** How far an accent, the faint text and a module's colour must stand off the face (WCAG's, for large text). */
 export const MIN_CONTRAST = 3;
-/** How far the muted text must, as body text (WCAG's AA). */
+/** How far the muted text, and a chapter's number on its disc, must, as body text (WCAG's AA). */
 export const BODY_CONTRAST = 4.5;
 
 /** The roles a faceplate redeclares. */
@@ -41,21 +45,14 @@ export type FaceRole =
   | '--kys-good'
   | '--kys-warn'
   | '--kys-wash'
-  | '--kys-module-mix';
-
-/** A `#rgb` / `#rrggbb` colour as its three channels, 0–255; null for anything else. */
-function channels(hex: string): [number, number, number] | null {
-  const m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(hex.trim());
-  if (!m) return null;
-  const h = m[1].length === 3 ? [...m[1]].map((c) => c + c).join('') : m[1];
-  const at = (i: number) => parseInt(h.slice(i, i + 2), 16);
-  return [at(0), at(2), at(4)];
-}
+  | '--kys-module-mix'
+  | '--kys-chapter-num'
+  | '--kys-chapter-disc-mix';
 
 /** `p` (0–1) of `a` and the rest `b`, as CSS's `color-mix(in srgb, a p, b)`; `a` where either is not hex. */
 export function mix(a: string, p: number, b: string): string {
-  const ca = channels(a);
-  const cb = channels(b);
+  const ca = hexChannels(a);
+  const cb = hexChannels(b);
   if (!ca || !cb) return a;
   return `#${ca
     .map((v, i) => Math.round(v * p + cb[i] * (1 - p)))
@@ -112,6 +109,29 @@ function moduleMix(face: string, ink: string): number {
 }
 
 /**
+ * The disc of the chapter the panel is at, and the number on it: as much of each module's colour as the strip keeps
+ * (`p`, a percentage), less where no ink reads `BODY_CONTRAST` on every disc so mixed (a cream face's discs are
+ * mid-tones), the rest the ink. The number is whichever of the player's two inks, the ink and the face reads best.
+ */
+function chapterDisc(
+  face: string,
+  ink: string,
+  accent: string,
+  p: number
+): { q: number; num: string } {
+  const colours = [...new Set([...Object.values(MODULES).map((m) => m.color), accent])];
+  const inks = [...ON_ACCENT, ink, face];
+  const want = Math.min(BODY_CONTRAST, contrast(ink, face));
+  for (let q = p; q >= 0; q -= 5) {
+    const discs = colours.map((c) => mix(c, q / 100, ink));
+    const worst = (n: string) => Math.min(...discs.map((d) => contrast(n, d)));
+    const num = inks.reduce((x, y) => (worst(y) > worst(x) ? y : x));
+    if (worst(num) >= want) return { q, num };
+  }
+  return { q: 0, num: face };
+}
+
+/**
  * The `--kys-*` roles in a faceplate's colours. `face2` is the darker shade the strip's gradient ends on. A face or
  * ink that is not hex has none (`undefined`), so the pieces keep the player's roles and are not drawn as faced.
  */
@@ -120,10 +140,12 @@ export function faceRoles(
   face2: string,
   ink: string
 ): (CSSProperties & Partial<Record<FaceRole, string>>) | undefined {
-  const c = channels(ink);
-  if (!c || !channels(face)) return undefined;
-  const shade = channels(face2) ? face2 : face;
+  const c = hexChannels(ink);
+  if (!c || !hexChannels(face)) return undefined;
+  const shade = hexChannels(face2) ? face2 : face;
   const { accent, on } = accentFor(face, ink);
+  const p = moduleMix(face, ink);
+  const disc = chapterDisc(face, ink, accent, p);
   return {
     '--kys-surface': face,
     '--kys-raised': mix(ink, 0.1, face),
@@ -138,6 +160,8 @@ export function faceRoles(
     '--kys-good': first(GOODS, face, ink),
     '--kys-warn': first(WARNS, face, ink),
     '--kys-wash': c.join(' '),
-    '--kys-module-mix': `${String(moduleMix(face, ink))}%`,
+    '--kys-module-mix': `${String(p)}%`,
+    '--kys-chapter-num': disc.num,
+    '--kys-chapter-disc-mix': `${String(disc.q)}%`,
   };
 }

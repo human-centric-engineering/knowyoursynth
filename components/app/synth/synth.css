@@ -541,8 +541,13 @@ svg .kys-hit:focus-visible {
   color: var(--chapter-ink);
 }
 .kys-face .kys-chapter[data-state='now'] .kys-chapter-num {
-  color: var(--kys-surface);
-  background: var(--chapter-ink);
+  /* Small digits want body text's contrast: the disc keeps less of its module's colour where the number needs it. */
+  color: var(--kys-chapter-num, var(--kys-surface));
+  background: color-mix(
+    in srgb,
+    var(--chapter) var(--kys-chapter-disc-mix, var(--kys-module-mix, 100%)),
+    var(--kys-text)
+  );
 }
 
 /* The lesson card's Previous and Next. */
@@ -645,7 +650,6 @@ svg .kys-hit:focus-visible {
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.25),
     inset 0 2px 6px rgb(0 0 0 / 0.25),
-    0 0 0 1px var(--play-rim),
     0 0 0 1px var(--play-rim),
     0 3px 8px -4px rgb(29 130 54 / 0.6);
 }
@@ -1138,6 +1142,13 @@ svg .kys-hit:focus-visible {
   .kys-rail-end > button:last-child {
     width: 40px;
   }
+  .kys-zoom-step,
+  .kys-zoom-read {
+    height: 40px;
+  }
+  .kys-zoom-step {
+    width: 40px;
+  }
 }
 
 /* The zoom on the foot rail (t-209): its name in the rail's print, − and + as the rail's keys, and between them a
@@ -1195,6 +1206,10 @@ svg .kys-hit:focus-visible {
 .kys-rail:hover .kys-rail-zoom .kys-zoom-step:enabled,
 .kys-rail:focus-within .kys-rail-zoom .kys-zoom-step:enabled {
   color: var(--rail-ink-hi);
+}
+/* The key under the pointer lit, over the rail's brightening above, which a hover on it always sets too. */
+.kys-rail:hover .kys-rail-zoom .kys-zoom-step:hover:enabled {
+  color: var(--rail-on);
 }
 
 /* The search: a recessed amber readout at the rail's right, as the sequencer's. */
@@ -1693,7 +1708,8 @@ svg .kys-hit:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 10px 12px;
+  /* Clear of the sizing grip in the card's corner (t-203), so a press on Next's corner is Next's. */
+  padding: 10px 24px 10px 12px;
   border-top: 1px solid rgb(var(--kys-wash) / 0.07);
 }
 .kys-card-foot .kys-step-btn {

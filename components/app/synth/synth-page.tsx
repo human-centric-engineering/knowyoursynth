@@ -790,10 +790,10 @@ function Synth({
       if (!(t instanceof Element)) return;
       // The strip handles its own presses (its tab, its head, its chapters), and the lesson card is the lesson's.
       if (t.closest('.kys-design, .kys-card')) return;
-      // Before a chapter, a press on the panel is other work. Once one is chosen, the whole player is where the lesson
-      // is followed: the panel, the keys and Play that sound the step, the rails. Putting the drawer away there would
-      // take the lesson card with it (t-205), so only a press off the player does.
-      if (chapterChosen.current && playerRef.current?.contains(t)) return;
+      // Once a chapter is chosen the lesson is being followed, and putting the drawer away takes its card with it
+      // (t-205): then only its tab or its head does, whatever is pressed meanwhile (the keys, Play, a dialog over the
+      // page). Before, a press anywhere else is other work, and puts it away.
+      if (chapterChosen.current) return;
       closeDesign();
     };
     document.addEventListener('pointerdown', onDown, true);

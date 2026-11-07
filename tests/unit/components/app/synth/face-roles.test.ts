@@ -103,6 +103,14 @@ describe('faceRoles', () => {
         Math.min(MIN_CONTRAST, print)
       );
     }
+    // The number on the chapter the panel is at, on its disc as the CSS mixes it, reads as body text does.
+    const q = Number.parseInt(r['--kys-chapter-disc-mix'] ?? '', 10) / 100;
+    expect(q).toBeLessThanOrEqual(p);
+    for (const c of [...Object.values(MODULES).map((m) => m.color), r['--kys-accent'] ?? '']) {
+      expect(contrast(r['--kys-chapter-num'] ?? '', mix(c, q, ink))).toBeGreaterThanOrEqual(
+        Math.min(BODY_CONTRAST, print)
+      );
+    }
     for (const k of ['--kys-good', '--kys-warn'] as const) {
       expect(contrast(r[k] ?? '', face)).toBeGreaterThanOrEqual(Math.min(MIN_CONTRAST, print));
     }
