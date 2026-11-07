@@ -26,6 +26,30 @@
     {
       "sound": "model-d/time-clocks",
       "reason": "A recorded sound: the clocks that open “Time” were recorded in an antique shop by Alan Parsons. The sound ticks on its own while a key is held; there is no part to write."
+    },
+    {
+      "sound": "mantis/mantis-glacier-pad",
+      "reason": "It names the player’s style, not one work, and the riff is the lesson’s own."
+    },
+    {
+      "sound": "mantis/mantis-on-the-run",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “On the Run: sequence”, “On the Run: sequence, three octaves up” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "mantis/mantis-baba-organ-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Baba O’Riley: organ loop” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-breathy-flute",
+      "reason": "The batch has no pattern from Jethro Tull — Ian Anderson; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "malevolent/mal-silver-machine",
+      "reason": "An effect: huge, swooping oscillator sweeps, up and down, like a rocket passing overhead. There is no part to write."
+    },
+    {
+      "sound": "malevolent/mal-tubular-bells",
+      "reason": "A tubular bell, struck at the end of the work, not the ostinato the batch’s pattern holds: there is no bell part to write, and the riff is the lesson’s own."
     }
   ],
   "patterns": [
@@ -1695,7 +1719,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/shine-lead"],
+      "sounds": ["model-d/shine-lead", "malevolent/mal-wright-solo"],
       "research": {
         "work": "Pink Floyd, “Shine On You Crazy Diamond (Parts I–V)”, Wish You Were Here, 1975",
         "part": "Richard Wright’s Minimoog line in Part I: G held, then B♭, A, G, D; C held; B♭, F and G held two bars; then B♭ falling to A, twice.",
@@ -2049,7 +2073,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/rotary-drone"],
+      "sounds": ["deepmind-12d/rotary-drone", "mantis/mantis-crazy-diamond-pad"],
       "research": {
         "work": "Pink Floyd, “Shine On You Crazy Diamond (Parts I–V)”, Wish You Were Here, 1975",
         "part": "Three held Solina chords from Part I: D minor for three bars, C minor for four, then G minor.",
@@ -2403,7 +2427,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-shine-on-strings"],
+      "sounds": ["take-5/t5-shine-on-strings", "mantis/mantis-crazy-diamond-pad"],
       "research": {
         "work": "Pink Floyd, “Shine On You Crazy Diamond (Parts I–V)”, Wish You Were Here, 1975",
         "part": "Three held Solina chords from Part I: D minor for three bars, C minor for four, then G minor.",
@@ -2598,7 +2622,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/resonant-sweep-growl", "super-gemini/sg-sawyer-growl"],
+      "sounds": [
+        "neutron/resonant-sweep-growl",
+        "super-gemini/sg-sawyer-growl",
+        "mantis/mantis-sinking-growl"
+      ],
       "research": {
         "work": "Rush, “Tom Sawyer”, Moving Pictures, 1981",
         "part": "The OB-X growl: E, D, A and C, each held three beats from the second beat of its bar.",
@@ -8518,7 +8546,13 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/lucky-lead", "take-5/t5-lucky-man-lead", "e7/e7-lucky-lead"],
+      "sounds": [
+        "model-d/lucky-lead",
+        "take-5/t5-lucky-man-lead",
+        "e7/e7-lucky-lead",
+        "mantis/mantis-lucky-man-lead",
+        "malevolent/mal-lucky-man-glide"
+      ],
       "research": {
         "work": "Emerson, Lake & Palmer, “Lucky Man”, Emerson, Lake & Palmer, 1970",
         "part": "Eight bars of the closing Moog solo in 6/8: a leap from D to high D, a fast run down, then held A, E and D, a climb and two pairs of repeated notes.",
@@ -11429,7 +11463,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-shoegaze-noise-pad"],
+      "sounds": ["take-5/t5-shoegaze-noise-pad", "mantis/mantis-shoegaze-wall"],
       "research": {
         "work": "My Bloody Valentine, “Only Shallow”, Loveless, 1991",
         "part": "The chorus guitar’s held dyads a second apart, B with C♯ then F♯ with G♯, each bar.",

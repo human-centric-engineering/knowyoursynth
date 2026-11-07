@@ -6,6 +6,10 @@
     {
       "sound": "mantis/mantis-wavetable",
       "reason": "A technique: each note sweeping through a wavetable on an envelope. It names no work, and the tune is the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-shout-bass",
+      "reason": "The batch has no pattern from Tears for Fears — “Shout”; the riff is written to the style and taken from no record."
     }
   ],
   "patterns": [
@@ -290,7 +294,8 @@
       "sounds": [
         "take-5/t5-take-on-me-lead",
         "deepmind-12d/bouncy-pop-keys",
-        "neutron/staccato-pulse-lead"
+        "neutron/staccato-pulse-lead",
+        "mantis/mantis-take-on-me-lead"
       ],
       "research": {
         "work": "a-ha, “Take On Me”, Hunting High and Low, 1985",
@@ -586,7 +591,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["super-gemini/sg-take-on-me", "e7/e7-new-wave-riff"],
+      "sounds": [
+        "super-gemini/sg-take-on-me",
+        "e7/e7-new-wave-riff",
+        "mantis/mantis-take-on-me-lead"
+      ],
       "research": {
         "work": "a-ha, “Take On Me”, Hunting High and Low, 1985",
         "part": "The four-bar keyboard riff in eighths: F♯, F♯, D, B, B, E, E, E, G♯, G♯, A, B; then A, A, A, E, D, F♯, F♯, F♯, E, E, F♯, E.",
@@ -909,7 +918,8 @@
         "deepmind-12d/jump-brass",
         "e7/e7-jump-brass",
         "super-gemini/sg-jump-brass",
-        "take-5/t5-poly-brass"
+        "take-5/t5-poly-brass",
+        "mantis/mantis-jump-brass"
       ],
       "research": {
         "work": "Van Halen, “Jump”, 1984, 1984",
@@ -12513,7 +12523,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["pro-1/lfo-sync-lead"],
+      "sounds": ["pro-1/lfo-sync-lead", "mantis/mantis-wavetable-pluck"],
       "research": {
         "work": "Thomas Dolby, “She Blinded Me with Science”, single, 1982",
         "part": "The two-bar intro line: B, D, A, G♯, F♯, E; then D, F♯, C♯ up to a held B.",
@@ -13245,7 +13255,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-bad-guy-bass"],
+      "sounds": ["take-5/t5-bad-guy-bass", "mantis/mantis-bad-guy-bass"],
       "research": {
         "work": "Billie Eilish, “bad guy”, When We All Fall Asleep, Where Do We Go?, 2019",
         "part": "The two-bar verse bass: G with a B♭ in each bar, falling to F at the end.",
@@ -13752,7 +13762,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-spin-me-bass"],
+      "sounds": ["take-5/t5-spin-me-bass", "malevolent/mal-spin-me-bass"],
       "research": {
         "work": "Dead or Alive, “You Spin Me Round (Like a Record)”, Youthquake, 1985",
         "part": "The four-bar octave bass: F♯ for two bars, the second turning up to A; then B, turning up through C♯.",

@@ -22,6 +22,14 @@
     {
       "sound": "neutron/metal-clank",
       "reason": "The early-80s Depeche Mode metal percussion its credit names was sampled metal: a recorded sound, not a synth part. There is no part to write."
+    },
+    {
+      "sound": "malevolent/mal-europe-endless",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Europe Endless: swelling chords” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-geiger-ticks",
+      "reason": "An effect: the dry, ticking clicks of a Geiger counter. There is no part to write."
     }
   ],
   "patterns": [
@@ -769,7 +777,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/round-staccato-bass", "poly-d/pd-autobahn-bass"],
+      "sounds": [
+        "model-d/round-staccato-bass",
+        "poly-d/pd-autobahn-bass",
+        "malevolent/mal-autobahn-bass"
+      ],
       "research": {
         "work": "Kraftwerk, “Autobahn”, Autobahn, 1974",
         "part": "The octave pulse on C under the opening section: one bar, repeated.",
@@ -1554,7 +1566,8 @@
         "model-d/computer-love-melody",
         "poly-d/pd-clean-melody",
         "super-gemini/sg-computer-love",
-        "e7/e7-computer-melody"
+        "e7/e7-computer-melody",
+        "mantis/mantis-computer-love"
       ],
       "research": {
         "work": "Kraftwerk, “Computer Love”, Computer World, 1981",
@@ -3166,7 +3179,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/stately-swell-lead"],
+      "sounds": ["model-d/stately-swell-lead", "malevolent/mal-tee-lead"],
       "research": {
         "work": "Kraftwerk, “Trans-Europe Express”, Trans-Europe Express, 1977",
         "part": "The slow lead after the opening chord: F♯, E, then a long D♯. Four bars.",
@@ -5379,7 +5392,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["pro-1/nasal-reed-lead"],
+      "sounds": ["pro-1/nasal-reed-lead", "mantis/mantis-metal-bell-lead"],
       "research": {
         "work": "Depeche Mode, “Everything Counts”, Construction Time Again, 1983",
         "part": "A held line from the verse, Songsterr “Synth III”, bars 10–13: B rising to C, then B falling to A, each followed by a bar’s rest.",
@@ -6057,7 +6070,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["pro-1/nasal-reed-lead"],
+      "sounds": ["pro-1/nasal-reed-lead", "mantis/mantis-metal-bell-lead"],
       "research": {
         "work": "Depeche Mode, “Everything Counts”, Construction Time Again, 1983",
         "part": "Eight bars of the reed-like hook, Songsterr “Synth IV”: A, E, C over A minor, then E, B, D over E minor.",

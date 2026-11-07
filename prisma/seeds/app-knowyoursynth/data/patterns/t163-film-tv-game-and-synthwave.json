@@ -46,6 +46,30 @@
     {
       "sound": "mantis/mantis-hammer-lead",
       "reason": "A playing style: a gliding lead with vibrato brought in under the wheel. It names no work, and the line is the lesson’s own."
+    },
+    {
+      "sound": "mantis/mantis-upside-down-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Stranger Things: arpeggio”, “Stranger Things: the arpeggio’s chord”, “Stranger Things: held swell” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "mantis/mantis-8bit-bass",
+      "reason": "The batch has no pattern from Koji Kondo — Super Mario Bros.; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "mantis/mantis-film-horns",
+      "reason": "It names the player’s style, not one work, and the riff is the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-schindler-violin",
+      "reason": "The batch has no pattern from John Williams — Schindler’s List; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "malevolent/mal-suspiria-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Suspiria: theme”, “Suspiria: theme, an octave down”, “Suspiria: drone” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-droid-chirps",
+      "reason": "An effect: excited, burbling, whistling robot chatter. There is no part to write."
     }
   ],
   "patterns": [
@@ -619,7 +643,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-halloween-bell"],
+      "sounds": ["take-5/t5-halloween-bell", "mantis/mantis-five-four-ostinato"],
       "research": {
         "work": "John Carpenter, “Halloween” (main title), Halloween, 1978",
         "part": "Six bars of the 5/4 piano figure in eighths: C♯ over F♯ for three bars, C over F for two, then B over E, each bar ending on the note a semitone above its top.",
@@ -921,7 +945,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["super-gemini/sg-halloween-pulse"],
+      "sounds": ["super-gemini/sg-halloween-pulse", "mantis/mantis-five-four-ostinato"],
       "research": {
         "work": "John Carpenter, “Halloween” (main title), Halloween, 1978",
         "part": "The low notes held under the piano figure from its second bar, two bars of 5/4 each: F♯, then F, then E, the E cut to one bar where the loop ends.",
@@ -1517,7 +1541,8 @@
         "pro-800/p8-carpenter-bass",
         "pro-1/dark-eighths-bass",
         "solar-42n/solar-carpenter-ostinato",
-        "e7/e7-horror-ostinato"
+        "e7/e7-horror-ostinato",
+        "malevolent/mal-escape-ostinato"
       ],
       "research": {
         "work": "John Carpenter and Alan Howarth, “Escape from New York” (main title), Escape from New York, 1981",
@@ -2109,7 +2134,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-escape-ny-bass"],
+      "sounds": ["take-5/t5-escape-ny-bass", "malevolent/mal-escape-ostinato"],
       "research": {
         "work": "John Carpenter and Alan Howarth, “Escape from New York” (main title), Escape from New York, 1981",
         "part": "The three-bar ostinato in dotted sixteenths on E, G and B, which comes back to the bar line every third bar.",
@@ -5443,7 +5468,8 @@
       "sounds": [
         "model-d/nightcall-bass",
         "super-gemini/sg-nightcall-bass",
-        "take-5/t5-nightcall-bass"
+        "take-5/t5-nightcall-bass",
+        "mantis/mantis-nightcall-bass"
       ],
       "research": {
         "work": "Kavinsky, “Nightcall”, 2010 (later on OutRun, 2013)",
@@ -6116,7 +6142,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-interstellar-organ", "super-gemini/sg-hans-organ"],
+      "sounds": [
+        "take-5/t5-interstellar-organ",
+        "super-gemini/sg-hans-organ",
+        "mantis/mantis-cornfield-organ"
+      ],
       "research": {
         "work": "Hans Zimmer, main theme, Interstellar, 2014",
         "part": "Eight bars of 3/4 in eighths, swinging between two notes: E and C for two bars, then E and D for six.",
@@ -7022,7 +7052,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/midnight-city-lead", "take-5/t5-midnight-city-lead"],
+      "sounds": [
+        "neutron/midnight-city-lead",
+        "take-5/t5-midnight-city-lead",
+        "mantis/mantis-midnight-city"
+      ],
       "research": {
         "work": "M83, “Midnight City”, Hurry Up, We’re Dreaming, 2011",
         "part": "The four-bar hook: F♯, D, B, F♯ in each bar, the last bar’s F♯ repeated in sixteenths.",
@@ -7526,7 +7560,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["e7/e7-blinding-riff", "super-gemini/sg-blinding-riff", "take-5/t5-blinding-arp"],
+      "sounds": [
+        "e7/e7-blinding-riff",
+        "super-gemini/sg-blinding-riff",
+        "take-5/t5-blinding-arp",
+        "mantis/mantis-blinding-lead"
+      ],
       "research": {
         "work": "The Weeknd, “Blinding Lights”, After Hours, 2019",
         "part": "The four-bar synth riff: F, F, E♭; F, G, C, E♭; B♭, G, F, E♭; B♭, G, F, E♭, and the F held into the next bar.",
@@ -8061,7 +8100,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/mission-oboe"],
+      "sounds": ["model-d/mission-oboe", "mantis/mantis-gabriels-oboe"],
       "research": {
         "work": "Ennio Morricone, “Gabriel’s Oboe”, The Mission, 1986",
         "part": "Four bars of the oboe melody: B♭, A♭, B♭ held, B♭; G, F, F, E♭ held, B♭; G, F, F, E♭ held, then D, E♭, D, E♭; C held, then C, E♭, A♭.",
@@ -8657,7 +8696,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-morricone-whistle"],
+      "sounds": ["take-5/t5-morricone-whistle", "malevolent/mal-western-whistle"],
       "research": {
         "work": "Ennio Morricone, main title, The Good, the Bad and the Ugly, 1966",
         "part": "The four-bar call: A, D, A, D, A held, F; G, D held; then again, ending G, C.",
@@ -10188,7 +10227,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/octave-bloom-strings"],
+      "sounds": ["neutron/octave-bloom-strings", "mantis/mantis-twin-peaks-pad"],
       "research": {
         "work": "Angelo Badalamenti, “Laura Palmer’s Theme”, Soundtrack from Twin Peaks, 1990",
         "part": "Eight bars of the string line: G♯, G; B♭, D; C and B held; then the climb G♯, B♭, B, C♯, D♯, E, G, G♯, B♭ and again.",
@@ -13512,7 +13551,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/solaris-shimmer"],
+      "sounds": ["neutron/solaris-shimmer", "mantis/mantis-solaris-glass"],
       "research": {
         "work": "Cliff Martinez, Solaris (score), 2002",
         "part": "A slow three-note figure, four times, falling at its end.",

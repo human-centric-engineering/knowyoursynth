@@ -10,6 +10,30 @@
     {
       "sound": "mantis/mantis-noise-hats",
       "reason": "A technique: hi-hats made from noise through a steep high-pass. It names no work, and the rhythm is the lesson’s own."
+    },
+    {
+      "sound": "mantis/mantis-feel-love-sequence",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “I Feel Love: bass”, “I Feel Love: roots, held”, “I Feel Love: roots, held, two octaves up” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-feel-love-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “I Feel Love: bass”, “I Feel Love: roots, held”, “I Feel Love: roots, held, two octaves up” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-headhunter-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Headhunter: bass”, “Headhunter: bass, an octave up” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-chase-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Chase: bass”, “Chase: chords, held” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-electro-snare",
+      "reason": "It names the player’s style, not one work, and the riff is the lesson’s own."
+    },
+    {
+      "sound": "malevolent/mal-bells-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “The Bells: riff” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
     }
   ],
   "patterns": [
@@ -1814,7 +1838,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-popcorn", "model-d/popping-pluck"],
+      "sounds": ["take-5/t5-popcorn", "model-d/popping-pluck", "malevolent/mal-popcorn-pluck"],
       "research": {
         "work": "Hot Butter, “Popcorn”, 1972 (Gershon Kingsley’s tune)",
         "part": "The theme’s first four bars: B, A, B, F♯, D, F♯, B twice, then the run up to D and back down to B.",
@@ -2217,7 +2241,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["super-gemini/sg-justice-bass", "take-5/t5-justice-bass"],
+      "sounds": [
+        "super-gemini/sg-justice-bass",
+        "take-5/t5-justice-bass",
+        "mantis/mantis-genesis-bass"
+      ],
       "research": {
         "work": "Justice, “Genesis”, †, 2007",
         "part": "A held D, then the riff around D, F and E in sixteenths, twice.",
@@ -3136,7 +3164,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-strings-of-life-stab"],
+      "sounds": ["take-5/t5-strings-of-life-stab", "mantis/mantis-strings-of-life"],
       "research": {
         "work": "Rhythim Is Rhythim (Derrick May), “Strings of Life”, 1987",
         "part": "The piano riff’s three-note chords in syncopated stabs: F♯ major and F♯–B–C♯ in turn, then F♯–B–F♯ at the end of the second bar.",
@@ -3409,7 +3437,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/strings-of-life-stab"],
+      "sounds": ["neutron/strings-of-life-stab", "mantis/mantis-strings-of-life"],
       "research": {
         "work": "Rhythim Is Rhythim (Derrick May), “Strings of Life”, 1987",
         "part": "The piano riff’s three-note chords in syncopated stabs: F♯ major and F♯–B–C♯ in turn, then F♯–B–F♯ at the end of the second bar.",
@@ -6273,7 +6301,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-show-me-love-organ"],
+      "sounds": ["take-5/t5-show-me-love-organ", "mantis/mantis-organ-house-bass"],
       "research": {
         "work": "Robin S, “Show Me Love” (StoneBridge mix), 1992",
         "part": "The organ bass: D into A, then B♭, syncopated in sixteenths, twice.",
@@ -6755,7 +6783,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/industrial-pump-bass", "b2600/nin-grind-bass"],
+      "sounds": [
+        "model-d/industrial-pump-bass",
+        "b2600/nin-grind-bass",
+        "mantis/mantis-industrial-clang"
+      ],
       "research": {
         "work": "Nine Inch Nails, “Closer”, The Downward Spiral, 1994",
         "part": "The verse bass on C: C, low C, C, the octave above, B♭, then a turn up to B♭ and E♭, the second bar ending on G and low C.",
@@ -7592,7 +7624,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["k2/nin-mechanical-bass"],
+      "sounds": ["k2/nin-mechanical-bass", "malevolent/mal-head-like-a-hole"],
       "research": {
         "work": "Nine Inch Nails, “Head Like a Hole”, Pretty Hate Machine, 1989",
         "part": "The sequenced synth bass on low E in eighths, jumping up to E, F, D, A and G♯.",
@@ -9230,7 +9262,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["td-3/td-rolling-sixteenths", "tb-303/tb-slide-acid"],
+      "sounds": [
+        "td-3/td-rolling-sixteenths",
+        "tb-303/tb-slide-acid",
+        "malevolent/mal-accent-acid"
+      ],
       "research": {
         "work": "Hardfloor, “Acperience 1”, 1992",
         "part": "Two bars of rolling sixteenths on A, with slides up to the octave and accents off the beat.",
@@ -10905,7 +10941,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/deep-house-bass"],
+      "sounds": ["deepmind-12d/deep-house-bass", "malevolent/mal-deep-house-bass"],
       "research": {
         "work": "Mr. Fingers (Larry Heard), “Can You Feel It”, 1986",
         "part": "A two-bar bass, F rising to C, then E♭ rising to B♭.",
@@ -11771,7 +11807,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/hoover-lead", "deepmind-12d/rave-hoover"],
+      "sounds": ["neutron/hoover-lead", "deepmind-12d/rave-hoover", "mantis/mantis-hoover"],
       "research": {
         "work": "Second Phase (Joey Beltram and Mundo Muzique), “Mentasm”, 1991",
         "part": "A two-bar hoover figure on A, sliding down through G and F.",
@@ -12393,7 +12429,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-plastikman-ping"],
+      "sounds": ["take-5/t5-plastikman-ping", "mantis/mantis-minimal-blip"],
       "research": {
         "work": "Plastikman, “Spastik”, Sheet One, 1993",
         "part": "A bar of pinging sixteenths on C, rolling at the end.",
@@ -13312,7 +13348,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-electro-kick"],
+      "sounds": ["take-5/t5-electro-kick", "mantis/mantis-boom-kick"],
       "research": {
         "work": "Afrika Bambaataa & the Soulsonic Force, “Planet Rock”, 1982",
         "part": "Two bars of 808 kick: the beat, then syncopations ahead of the third and fourth beats.",
