@@ -88,6 +88,24 @@ describe('LessonCard dragging', () => {
     expect(card.style.top).toBe('8px');
   });
 
+  it('stays above the dock and the open drawer, its height reaching down to them (t-202)', () => {
+    document.documentElement.style.setProperty('--kys-dock-h', '180px');
+    document.documentElement.style.setProperty('--kys-strip-h', '70px');
+    try {
+      const { card, head } = setup();
+      drag(head, [1000, 320], [1000, 5000]);
+      expect(card.style.top).toBe(`${900 - 180 - 70 - 120}px`);
+      // The height ends at the band, read live, with a header's worth kept.
+      expect(card.style.maxHeight).toContain('var(--kys-dock-h, 0px)');
+      expect(card.style.maxHeight).toContain('var(--kys-strip-h, 0px)');
+      expect(card.style.maxHeight).toContain(`${900 - 180 - 70 - 120 + 8}px`);
+      expect(card.style.maxHeight).toMatch(/^max\(120px,/);
+    } finally {
+      document.documentElement.style.removeProperty('--kys-dock-h');
+      document.documentElement.style.removeProperty('--kys-strip-h');
+    }
+  });
+
   it('does not drag from the header buttons', () => {
     const { card } = setup();
     drag(screen.getByRole('button', { name: 'Close the card' }), [1300, 320], [300, 120]);
@@ -232,11 +250,14 @@ describe('LessonCard live region', () => {
     expect(head()).toHaveClass('kys-face');
     expect(head()?.style.getPropertyValue('--kys-text')).toBe(INK);
     expect(screen.getByTestId('lesson-card').style.getPropertyValue('--kys-text')).toBe('');
+    // Set in a bezel, so the header lifts off a panel of its own colour.
+    expect(screen.getByTestId('lesson-card')).toHaveClass('is-faced');
     unmount();
     for (const section of ['inspector', 'fx'] as const) {
       const v = view(section);
       expect(head()).not.toHaveClass('kys-face');
       expect(head()?.style.getPropertyValue('--kys-text')).toBe('');
+      expect(screen.getByTestId('lesson-card')).not.toHaveClass('is-faced');
       v.unmount();
     }
   });

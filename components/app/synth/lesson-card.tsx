@@ -49,13 +49,23 @@ const tweakBadges = (p: Preset): string[] => [...new Set(p.tweaks.map((t) => t.i
 
 /** How close a dragged card may come to the screen's edges, in px. */
 const EDGE = 8;
-/** How much of a dragged card stays on screen at the bottom: the header and a little of the body, in px. */
+/** How much of a dragged card stays above the dock: the header and a little of the body, in px. */
 const KEEP = 120;
 
-/** Where a dragged card's top-left corner may go, kept on screen. */
+/**
+ * The height of the band at the foot of the screen the card stands on: the dock, and the Sound Design drawer while it
+ * is open, which stack over the card (`--kys-dock-h`, `--kys-strip-h`, set on the root by the page). 0 without them.
+ */
+const dockBand = (): number => {
+  const s = getComputedStyle(document.documentElement);
+  const px = (name: string) => Number.parseFloat(s.getPropertyValue(name)) || 0;
+  return px('--kys-dock-h') + px('--kys-strip-h');
+};
+
+/** Where a dragged card's top-left corner may go, kept on screen and above the dock (t-202). */
 const clampPos = (x: number, y: number, w: number) => ({
   x: Math.min(Math.max(x, EDGE), Math.max(EDGE, window.innerWidth - w - EDGE)),
-  y: Math.min(Math.max(y, EDGE), Math.max(EDGE, window.innerHeight - KEEP)),
+  y: Math.min(Math.max(y, EDGE), Math.max(EDGE, window.innerHeight - dockBand() - KEEP)),
 });
 
 /** A move's number; `now` while the move is being made on the panel (`f-step-moves`). */
@@ -509,7 +519,7 @@ export function LessonCard({
   return (
     <aside
       ref={ref}
-      className="kys-card"
+      className={`kys-card ${lesson ? 'is-faced' : ''}`}
       data-side={side}
       data-detached={pos ? '' : undefined}
       style={
@@ -519,7 +529,9 @@ export function LessonCard({
               top: pos.y,
               right: 'auto',
               bottom: 'auto',
-              maxHeight: `calc(100vh - ${pos.y + EDGE}px)`,
+              // Down to the dock, as the docked card stands on it, so the end of the lesson can be scrolled to
+              // wherever the card is put; the band is read live, for a drawer opened after the drag (t-202).
+              maxHeight: `max(${KEEP}px, calc(100vh - var(--kys-dock-h, 0px) - var(--kys-strip-h, 0px) - ${pos.y + EDGE}px))`,
             }
           : undefined
       }

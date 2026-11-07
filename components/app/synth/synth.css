@@ -1456,6 +1456,20 @@ svg .kys-hit:focus-visible {
 .kys-card-head:active {
   cursor: grabbing;
 }
+/* The lesson card, over a panel its header shares a colour with: set in a bezel of the desk, the player's darkest
+   (by day its palest) tone, with a hard edge and a deep shadow, so it lifts off the faceplate whatever its colour.
+   Opaque, so the panel's print does not show through the lesson. */
+.kys-card.is-faced {
+  border: 3px solid var(--kys-desk);
+  background: var(--kys-surface);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.5),
+    0 28px 56px -16px rgb(0 0 0 / 0.7),
+    0 10px 20px -8px rgb(0 0 0 / 0.45);
+}
+.kys-card.is-faced .kys-card-head.kys-face {
+  border-radius: 13px 13px 0 0;
+}
 /* The lesson's header: a strip of the faceplate the card hangs from (t-201), lit from above and lipped below as the
    rail along the panel's head is, its eyebrow in the panel's silkscreen lettering. The body under it is the stage's,
    so the lesson reads as part of the instrument without its text sitting on the faceplate. */
