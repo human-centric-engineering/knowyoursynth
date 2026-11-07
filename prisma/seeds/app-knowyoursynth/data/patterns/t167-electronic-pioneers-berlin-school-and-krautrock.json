@@ -168,16 +168,8 @@
       "reason": "Names Moondawn, which no pattern in this batch has yet; the pulse is the lesson’s own, written to the style rather than taken from the record."
     },
     {
-      "sound": "tb-303/tb-motorik",
-      "reason": "In the style of Neu!: it names no work, and the pulse is the lesson’s own."
-    },
-    {
       "sound": "td-3/td-silver-apples",
-      "reason": "In the style of Silver Apples: it names no work, and the pulse is the lesson’s own."
-    },
-    {
-      "sound": "donner-b1/b1-nils-frahm",
-      "reason": "In the style of Nils Frahm: it names no work, and the pulse is the lesson’s own."
+      "reason": "In the style of Silver Apples: it names no work, and the batch has no Silver Apples pattern of the part it plays, so the pulse is the lesson’s own."
     }
   ],
   "patterns": [
@@ -4925,11 +4917,7 @@
         ],
         "chain": [0]
       },
-      "sounds": [
-        "neutron/ghost-rider-pulse",
-        "take-5/t5-ghost-rider-organ",
-        "td-3/td-suicide-pulse"
-      ],
+      "sounds": ["neutron/ghost-rider-pulse", "take-5/t5-ghost-rider-organ"],
       "research": {
         "work": "Suicide, “Ghost Rider”, Suicide, 1977",
         "part": "The riff under the whole song: C, then F and E♭, on every beat, one bar.",
@@ -5298,7 +5286,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-motorik-pulse"],
+      "sounds": ["take-5/t5-motorik-pulse", "tb-303/tb-motorik"],
       "research": {
         "work": "Neu!, “Hallogallo”, Neu!, 1972",
         "part": "The low E in straight eighths that runs under the whole track, two bars.",
@@ -5632,7 +5620,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/self-fading-arp", "donner-b1/b1-e2-e4"],
+      "sounds": ["neutron/self-fading-arp"],
       "research": {
         "work": "Manuel Göttsching, E2-E4, 1984",
         "part": "The two chords the piece turns on, C♯ minor and its inversion, one bar each, broken into sixteenths.",
@@ -10314,7 +10302,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/says-swelling-arp"],
+      "sounds": ["neutron/says-swelling-arp", "donner-b1/b1-nils-frahm"],
       "research": {
         "work": "Nils Frahm, “Says”, Spaces, 2013",
         "part": "A minor broken in sixteenths for a bar, then F over A, for the sound to swell.",
@@ -10770,11 +10758,7 @@
         ],
         "chain": [0]
       },
-      "sounds": [
-        "take-5/t5-reich-marimba",
-        "mantis/mantis-reich-marimba",
-        "tb-303/tb-pulse-ensemble"
-      ],
+      "sounds": ["take-5/t5-reich-marimba", "mantis/mantis-reich-marimba"],
       "research": {
         "work": "Steve Reich, Music for 18 Musicians, 1978",
         "part": "A three-beat figure in sixteenths with gaps, for a second part to fill.",
@@ -11628,6 +11612,189 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Nothing for Aguirre was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:suicide/ghost-rider-riff-low",
+      "name": "Ghost Rider: the riff, an octave down",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Suicide" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 100,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 36, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 39, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 39, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 39, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 39, "gate": 1 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["td-3/td-suicide-pulse"],
+      "research": {
+        "work": "Suicide, “Ghost Rider”, Suicide, 1977",
+        "part": "The riff under the whole song: C, then F and E♭, on every beat, one bar: the same part an octave down, where the TD-3’s “Ghost Rider Pulse” plays.",
+        "originalKey": "C minor",
+        "originalBpm": 100,
+        "leads": [
+          {
+            "citation": "Suicide — “Ghost Rider”, fan transcription by ДРЭНЧ [YT] on Songsterr (revision 602174, 2023-08-06)",
+            "checkedAt": "2026-11-02",
+            "url": "https://www.songsterr.com/a/wsa/suicide-ghost-rider-tab-s557639"
+          }
+        ],
+        "notes": "From the transcription’s “Bass” track, bar 1, an octave up for the sounds; Martin Rev plays it on his organ and the transcription gives it to the bass. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:suicide/ghost-rider-riff, as written there.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:manuel-gottsching/e2-e4-arpeggio-low",
+      "name": "E2-E4: the chords, broken, an octave down",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Manuel Göttsching" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 112,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 44, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 44, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 44, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 44, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-e2-e4"],
+      "research": {
+        "work": "Manuel Göttsching, E2-E4, 1984",
+        "part": "The two chords the piece turns on, C♯ minor and its inversion, one bar each, broken into sixteenths: the same part an octave down, where the B1’s “E2-E4 Echo” plays.",
+        "originalKey": null,
+        "originalBpm": 112,
+        "leads": [
+          {
+            "citation": "Manuel Göttsching — “E2-E4 Ansatz”, transcription by ゆっぴ“yuppi_kun” on Songsterr, every track marked “regenerated” (revision 5717750, 2026-03-14)",
+            "checkedAt": "2026-11-02",
+            "url": "https://www.songsterr.com/a/wsa/manuel-gottsching-e2-e4-ansatz-tab-s1472295"
+          }
+        ],
+        "notes": "The only lead is a regenerated transcription, two guitars, which has the chords as off-beat stabs (bars 1–5) and not the sequencer pattern. So the notes are its chord tones, in an order of the pattern’s own; the arpeggio itself is not from a lead. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:manuel-gottsching/e2-e4-arpeggio, as written there.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:steve-reich/eighteen-marimba-low",
+      "name": "Music for 18 Musicians: a marimba pattern, an octave down",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Steve Reich" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 138,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 54, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 54, "gate": 1 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["tb-303/tb-pulse-ensemble"],
+      "research": {
+        "work": "Steve Reich, Music for 18 Musicians, 1978",
+        "part": "A three-beat figure in sixteenths with gaps, for a second part to fill: the same part an octave down, where the TB-303’s “Pulse for Ensemble” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "Nothing for this work was found on Songsterr or BitMIDI; there are transcriptions of Electric Counterpoint and Clapping Music, which no sound names. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:steve-reich/eighteen-marimba, as written there.",
         "listenedAt": null
       }
     }

@@ -34,14 +34,6 @@
     {
       "sound": "malevolent/mal-spiral-arp",
       "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
-    },
-    {
-      "sound": "tb-303/tb-hazy-melody",
-      "reason": "In the style of Boards of Canada: it names no work, and the melody is the lesson’s own."
-    },
-    {
-      "sound": "donner-b1/b1-vangelis-triplets",
-      "reason": "In the style of Vangelis: it names no work, and the arpeggio is the lesson’s own."
     }
   ],
   "patterns": [
@@ -1936,7 +1928,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["super-gemini/sg-blush-arp"],
+      "sounds": ["super-gemini/sg-blush-arp", "donner-b1/b1-vangelis-triplets"],
       "research": {
         "work": "Vangelis, “End Titles”, Blade Runner, 1982 (released 1994)",
         "part": "The sixteenth-note sequence under the first eight bars of the theme: C, C, D, E♭ for four bars, then on G for two and D for two.",
@@ -6001,7 +5993,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["k2/boc-drifting-pad", "model-d/tape-wow-keys", "pro-1/hazy-drift-pad"],
+      "sounds": [
+        "k2/boc-drifting-pad",
+        "model-d/tape-wow-keys",
+        "pro-1/hazy-drift-pad",
+        "tb-303/tb-hazy-melody"
+      ],
       "research": {
         "work": "Boards of Canada, “Olson”, Music Has the Right to Children, 1998",
         "part": "Eight bars of the melody: each bar holds a note and then falls by two, F♯ to E♭ and C♯, then B♭ and A♭.",

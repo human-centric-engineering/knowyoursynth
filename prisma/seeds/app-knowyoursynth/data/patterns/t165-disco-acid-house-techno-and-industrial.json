@@ -56,40 +56,20 @@
       "reason": "Names “Don’t Laugh”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
     },
     {
-      "sound": "tb-303/tb-ebm-drive",
-      "reason": "In the style of DAF: it names no work, and the bass line is the lesson’s own."
-    },
-    {
-      "sound": "tb-303/tb-detroit-electro",
-      "reason": "In the style of Drexciya: it names no work, and the bass line is the lesson’s own."
-    },
-    {
       "sound": "tb-303/tb-tom-fill",
-      "reason": "In the style of 1980s electro: it names no work, and the fill is the lesson’s own."
+      "reason": "In the style of 1980s electro: it names no work, and the batch has no 1980s electro pattern of the part it plays, so the fill is the lesson’s own."
     },
     {
       "sound": "tb-303/tb-cowbell",
-      "reason": "In the style of 1980s electro: it names no work, and the cowbell figure is the lesson’s own."
-    },
-    {
-      "sound": "tb-303/tb-808-state",
-      "reason": "In the style of 808 State: it names no work, and the riff is the lesson’s own."
-    },
-    {
-      "sound": "td-3/td-justice-bass",
-      "reason": "In the style of Justice: it names no work, and the riff is the lesson’s own."
+      "reason": "In the style of 1980s electro: it names no work, and the batch has no 1980s electro pattern of the part it plays, so the cowbell figure is the lesson’s own."
     },
     {
       "sound": "td-3/td-electro-funk-acid",
-      "reason": "In the style of early-1980s New York electro: it names no work, and the bass line is the lesson’s own."
-    },
-    {
-      "sound": "td-3/td-electro-industrial",
-      "reason": "In the style of Skinny Puppy: it names no work, and the bass line is the lesson’s own."
+      "reason": "In the style of early-1980s New York electro: it names no work, and the batch has no early-1980s New York electro pattern of the part it plays, so the bass line is the lesson’s own."
     },
     {
       "sound": "donner-b1/b1-rhythim",
-      "reason": "In the style of Rhythim Is Rhythim: it names no work, and the sequence is the lesson’s own."
+      "reason": "In the style of Rhythim Is Rhythim: it names no work, and the batch has no Rhythim Is Rhythim pattern of the part it plays, so the sequence is the lesson’s own."
     },
     {
       "sound": "donner-b1/b1-consumed",
@@ -2304,7 +2284,8 @@
       "sounds": [
         "super-gemini/sg-justice-bass",
         "take-5/t5-justice-bass",
-        "mantis/mantis-genesis-bass"
+        "mantis/mantis-genesis-bass",
+        "td-3/td-justice-bass"
       ],
       "research": {
         "work": "Justice, “Genesis”, †, 2007",
@@ -4060,7 +4041,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["b2600/state808-acid-bass"],
+      "sounds": ["b2600/state808-acid-bass", "tb-303/tb-808-state"],
       "research": {
         "work": "808 State, “Pacific 707”, 90, 1989 (the album version of “Pacific State”)",
         "part": "The snaking sixteenth-note bass around D, G and C, four bars.",
@@ -4250,7 +4231,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/mussolini-bass"],
+      "sounds": ["neutron/mussolini-bass", "tb-303/tb-ebm-drive"],
       "research": {
         "work": "DAF, “Der Mussolini”, Alles ist gut, 1981",
         "part": "The sequenced bass in eighths on B, jumping to the octave, with E and D at the top of the first bar.",
@@ -5732,7 +5713,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/assimilate-grind"],
+      "sounds": ["neutron/assimilate-grind", "td-3/td-electro-industrial"],
       "research": {
         "work": "Skinny Puppy, “Assimilate”, Bites, 1985",
         "part": "The bass pulsing in triplet eighths: G♯ for six beats, B for two, F♯ for six, B♭ for two.",
@@ -12490,7 +12471,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-plastikman-ping", "mantis/mantis-minimal-blip", "tb-303/tb-sheet-one"],
+      "sounds": ["take-5/t5-plastikman-ping", "mantis/mantis-minimal-blip"],
       "research": {
         "work": "Plastikman, “Spastik”, Sheet One, 1993",
         "part": "A bar of pinging sixteenths on C, rolling at the end.",
@@ -12978,7 +12959,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/drexciya-bubble-bass"],
+      "sounds": ["neutron/drexciya-bubble-bass", "tb-303/tb-detroit-electro"],
       "research": {
         "work": "Drexciya, “Bubble Metropolis”, 1993",
         "part": "A two-bar electro bass on C.",
@@ -14211,7 +14192,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["super-gemini/sg-zap-perc", "td-3/td-zap-snare"],
+      "sounds": ["super-gemini/sg-zap-perc"],
       "research": {
         "work": "Afrika Bambaataa & the Soulsonic Force, “Planet Rock”, 1982",
         "part": "A bar of zaps on C, with G and E answering.",
@@ -14219,6 +14200,112 @@
         "originalBpm": null,
         "leads": [],
         "notes": "The sound names electro and Miami bass rather than a work, and nothing for “Planet Rock” was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:plastikman/spastik-pings-low-2",
+      "name": "Spastik: pings, two octaves down",
+      "role": "percussive",
+      "tempo": null,
+      "inspiredBy": { "kind": "artist", "artistId": "plastikman" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 128,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 31, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 27, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }], "accent": true }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["tb-303/tb-sheet-one"],
+      "research": {
+        "work": "Plastikman, “Spastik”, Sheet One, 1993",
+        "part": "A bar of pinging sixteenths on C, rolling at the end: the same part two octaves down, where the TB-303’s “Minimal Plastic” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "Nothing for “Spastik” was found on Songsterr or BitMIDI. The record is almost all percussion, so the pattern is a rhythm on two or three pitches. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved two octaves down from researched:plastikman/spastik-pings, as written there.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:electro/zap-percussion-low",
+      "name": "Electro: zaps, an octave down",
+      "role": "percussive",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Electro" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 127,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 60, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 60, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 67, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 60, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 64, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 60, "gate": 0.5 }] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["td-3/td-zap-snare"],
+      "research": {
+        "work": "Afrika Bambaataa & the Soulsonic Force, “Planet Rock”, 1982",
+        "part": "A bar of zaps on C, with G and E answering: the same part an octave down, where the TD-3’s “Zap Snare” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "The sound names electro and Miami bass rather than a work, and nothing for “Planet Rock” was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:electro/zap-percussion, as written there.",
         "listenedAt": null
       }
     }

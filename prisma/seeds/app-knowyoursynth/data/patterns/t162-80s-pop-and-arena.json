@@ -2933,8 +2933,7 @@
         "super-gemini/sg-sweet-dreams",
         "take-5/t5-sweet-dreams-riff",
         "e7/e7-sweet-dreams-bass",
-        "pro-1/octave-stack-bass",
-        "donner-b1/b1-sweet-dreams"
+        "pro-1/octave-stack-bass"
       ],
       "research": {
         "work": "Eurythmics, “Sweet Dreams (Are Made of This)”, Sweet Dreams (Are Made of This), 1983",
@@ -2949,6 +2948,65 @@
           }
         ],
         "notes": "From the transcription’s “Bass Synth (Right)” SH-101 track, bars 1–2, as written. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:eurythmics/sweet-dreams-riff-low",
+      "name": "Sweet Dreams: riff, an octave down",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "work", "songId": "eurythmics-sweet-dreams", "part": 0 },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 126,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 24, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 39, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 51, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 32, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 32, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 44, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 31, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 31, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 43, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 1 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-sweet-dreams"],
+      "research": {
+        "work": "Eurythmics, “Sweet Dreams (Are Made of This)”, Sweet Dreams (Are Made of This), 1983",
+        "part": "The two-bar riff in eighths: C, C, the C and C above, E♭ and its octave, C and C; then A♭, A♭, A♭, C, G, G, G, C: the same part an octave down, where the B1’s “Sweet Dreams Sequence” plays.",
+        "originalKey": null,
+        "originalBpm": 126,
+        "leads": [
+          {
+            "citation": "Eurythmics — “Sweet Dreams (Are Made of This) (12\" Version)”, fan transcription by Ian Meyer on Songsterr (revision 10051435, 2026-10-29)",
+            "url": "https://www.songsterr.com/a/wsa/eurythmics-sweet-dreams-are-made-of-this-12-version-tab-s34493",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s “Bass Synth (Right)” SH-101 track, bars 1–2, as written. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:eurythmics/sweet-dreams-riff, as written there.",
         "listenedAt": null
       }
     },

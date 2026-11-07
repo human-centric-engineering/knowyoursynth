@@ -57,15 +57,11 @@
     },
     {
       "sound": "td-3/td-space-rock",
-      "reason": "In the style of Hawkwind: it names no work, and the bass line is the lesson’s own."
-    },
-    {
-      "sound": "td-3/td-fuzz-solo",
-      "reason": "In the style of Jimi Hendrix: it names no work, and the solo is the lesson’s own."
+      "reason": "In the style of Hawkwind: it names no work, and the batch has no Hawkwind pattern of the part it plays, so the bass line is the lesson’s own."
     },
     {
       "sound": "td-3/td-dream-pop-bass",
-      "reason": "In the style of Cocteau Twins: it names no work, and the bass line is the lesson’s own."
+      "reason": "In the style of Cocteau Twins: it names no work, and the batch has no Cocteau Twins pattern of the part it plays, so the bass line is the lesson’s own."
     }
   ],
   "patterns": [
@@ -14981,7 +14977,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/misirlou-tremolo", "td-3/td-tremolo-pick"],
+      "sounds": ["neutron/misirlou-tremolo"],
       "research": {
         "work": "Dick Dale and His Del-Tones, “Misirlou”, Surfers’ Choice, 1962",
         "part": "The first verse melody: B held, a chromatic slide down from B♭ to F, E, F, G♯, A, B, C, D♯, C, E.",
@@ -14995,6 +14991,113 @@
           }
         ],
         "notes": "From the transcription’s “Lead Guitar” track, bars 6–9, two octaves up to sit where the sound plays. The tremolo picking is the patch’s; the transcription writes the notes it picks. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:dick-dale/misirlou-melody-low",
+      "name": "Misirlou: melody, an octave down",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Dick Dale" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 172,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 59, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 59, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 59, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 59, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 59, "gate": 6 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 59, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 59, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 59, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 58, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 54, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 52, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 53, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 56, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 57, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 59, "gate": 6 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 60, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 63, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 60, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 52, "gate": 2 }] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["td-3/td-tremolo-pick"],
+      "research": {
+        "work": "Dick Dale and His Del-Tones, “Misirlou”, Surfers’ Choice, 1962",
+        "part": "The first verse melody: B held, a chromatic slide down from B♭ to F, E, F, G♯, A, B, C, D♯, C, E: the same part an octave down, where the TD-3’s “Tremolo Picking” plays.",
+        "originalKey": null,
+        "originalBpm": 172,
+        "leads": [
+          {
+            "citation": "Dick Dale — “Misirlou”, fan transcription by The one who tabs on Songsterr (revision 9509031, 2026-10-04)",
+            "url": "https://www.songsterr.com/a/wsa/dick-dale-misirlou-tab-s6534",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s “Lead Guitar” track, bars 6–9, two octaves up to sit where the sound plays. The tremolo picking is the patch’s; the transcription writes the notes it picks. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:dick-dale/misirlou-melody, as written there.",
         "listenedAt": null
       }
     },
@@ -16529,7 +16632,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/machine-gun-stutter"],
+      "sounds": ["model-d/machine-gun-stutter", "td-3/td-fuzz-solo"],
       "research": {
         "work": "Band of Gypsys, “Machine Gun”, Band of Gypsys, 1970",
         "part": "The riff: G three times, F, and a quick D, C, D; then G twice, F, C.",

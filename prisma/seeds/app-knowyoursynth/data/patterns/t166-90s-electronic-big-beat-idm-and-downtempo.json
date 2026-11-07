@@ -65,7 +65,7 @@
     },
     {
       "sound": "donner-b1/b1-global-comm",
-      "reason": "In the style of Global Communication: it names no work, and the pulse is the lesson’s own."
+      "reason": "In the style of Global Communication: it names no work, and the batch has no Global Communication pattern of the part it plays, so the pulse is the lesson’s own."
     },
     {
       "sound": "donner-b1/b1-halcyon-arp",
@@ -73,39 +73,27 @@
     },
     {
       "sound": "donner-b1/b1-fsol",
-      "reason": "In the style of The Future Sound of London: it names no work, and the pulse is the lesson’s own."
+      "reason": "In the style of The Future Sound of London: it names no work, and the batch has no The Future Sound of London pattern of the part it plays, so the pulse is the lesson’s own."
     },
     {
       "sound": "donner-b1/b1-autechre",
-      "reason": "In the style of early Autechre: it names no work, and the sequence is the lesson’s own."
+      "reason": "In the style of early Autechre: it names no work, and the batch has no early Autechre pattern of the part it plays, so the sequence is the lesson’s own."
     },
     {
       "sound": "donner-b1/b1-squarepusher",
-      "reason": "In the style of Squarepusher: it names no work, and the bass run is the lesson’s own."
+      "reason": "In the style of Squarepusher: it names no work, and the batch has no Squarepusher pattern of the part it plays, so the bass run is the lesson’s own."
     },
     {
       "sound": "donner-b1/b1-bonobo",
-      "reason": "In the style of Bonobo: it names no work, and the melody is the lesson’s own."
-    },
-    {
-      "sound": "donner-b1/b1-tycho",
-      "reason": "In the style of Tycho: it names no work, and the melody is the lesson’s own."
-    },
-    {
-      "sound": "donner-b1/b1-jon-hopkins",
-      "reason": "In the style of Jon Hopkins: it names no work, and the pulse is the lesson’s own."
+      "reason": "In the style of Bonobo: it names no work, and the batch has no Bonobo pattern of the part it plays, so the melody is the lesson’s own."
     },
     {
       "sound": "donner-b1/b1-four-tet",
-      "reason": "In the style of Four Tet: it names no work, and the loop is the lesson’s own."
-    },
-    {
-      "sound": "donner-b1/b1-burial",
-      "reason": "In the style of Burial: it names no work, and the bass line is the lesson’s own."
+      "reason": "In the style of Four Tet: it names no work, and the batch has no Four Tet pattern of the part it plays, so the loop is the lesson’s own."
     },
     {
       "sound": "donner-b1/b1-bicep",
-      "reason": "In the style of Bicep: it names no work, and the loop is the lesson’s own."
+      "reason": "In the style of Bicep: it names no work, and the batch has no Bicep pattern of the part it plays, so the loop is the lesson’s own."
     }
   ],
   "patterns": [
@@ -7741,7 +7729,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["k2/hopkins-driving-bass", "take-5/t5-open-eye-pulse"],
+      "sounds": ["k2/hopkins-driving-bass", "take-5/t5-open-eye-pulse", "donner-b1/b1-jon-hopkins"],
       "research": {
         "work": "Jon Hopkins, “Open Eye Signal”, Immunity, 2013",
         "part": "A driving sixteenth-note bass on C, pushed up to E♭ and down to B♭ and G every other beat.",
@@ -15093,7 +15081,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/tycho-awake-pluck"],
+      "sounds": ["model-d/tycho-awake-pluck", "donner-b1/b1-tycho"],
       "research": {
         "work": "Tycho, “Awake”, Awake, 2014",
         "part": "The guitar melody over C♯: up to B♭, then F, A♭ and back to C♯.",
@@ -16368,11 +16356,7 @@
         ],
         "chain": [0]
       },
-      "sounds": [
-        "neutron/born-slippy-bass",
-        "b2600/underworld-roll-bass",
-        "donner-b1/b1-underworld"
-      ],
+      "sounds": ["neutron/born-slippy-bass", "b2600/underworld-roll-bass"],
       "research": {
         "work": "Underworld, “Born Slippy .NUXX”, 1995",
         "part": "A rolling sixteenth-note bass on E, flicking up to G and A.",
@@ -16587,7 +16571,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-eskimo-bass", "mantis/mantis-grime-square", "tb-303/tb-grime-square"],
+      "sounds": ["take-5/t5-eskimo-bass", "mantis/mantis-grime-square"],
       "research": {
         "work": "Wiley, “Eskimo”, 2002",
         "part": "A sparse, cold square bass on E, with a step up to G and F♯.",
@@ -18257,6 +18241,219 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Nothing for this work was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:burial/archangel-bass-low",
+      "name": "Archangel: bass, an octave up, an octave down",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Burial" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 135,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 32, "gate": 8 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 31, "gate": 8 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 29, "gate": 8 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 29, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-burial"],
+      "research": {
+        "work": "Burial, “Archangel”, Untrue, 2007",
+        "part": "The held bass: A♭, G and F a bar each, with a short F to end: the same part an octave down, where the B1’s “Night Bus Sub” plays.",
+        "originalKey": null,
+        "originalBpm": 135,
+        "leads": [
+          {
+            "citation": "Burial — “Archangel”, transcription generated by Songsterr AI on Songsterr (revision 5564584, 2026-03-05)",
+            "url": "https://www.songsterr.com/a/wsa/burial-archangel-tab-s4250989",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s “Synth Bass 1” track, bars 36–39, an octave up, where the sound sits. The sound names Untrue, the album “Archangel” is on. _In the style of_: the notes come from a transcription Songsterr generated by machine, a weaker starting point than a fan’s. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:burial/archangel-bass, as written there.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:underworld/born-slippy-bass-low",
+      "name": "Born Slippy .NUXX: bass, an octave down",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "work", "songId": "underworld-born-slippy-nuxx" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 136,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }], "accent": true },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 31, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }], "accent": true },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 33, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }], "accent": true },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 31, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 26, "gate": 0.5 }], "accent": true },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-underworld"],
+      "research": {
+        "work": "Underworld, “Born Slippy .NUXX”, 1995",
+        "part": "A rolling sixteenth-note bass on E, flicking up to G and A: the same part an octave down, where the B1’s “Rolling Lager Line” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "The one “Born Slippy” transcription with notes has piano, choir, the chords and drums, and no bass. The rolling house bass names no work and shares the guess. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:underworld/born-slippy-bass, as written there.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:wiley/eskimo-bass-low",
+      "name": "Eskimo: bass, an octave down",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Wiley" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 140,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }], "accent": true },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 31, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 30, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 28, "gate": 0.5 }], "accent": true },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 35, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 33, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 31, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 30, "gate": 0.5 }] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["tb-303/tb-grime-square"],
+      "research": {
+        "work": "Wiley, “Eskimo”, 2002",
+        "part": "A sparse, cold square bass on E, with a step up to G and F♯: the same part an octave down, where the TB-303’s “Eski Square” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "Nothing for this work was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:wiley/eskimo-bass, as written there.",
         "listenedAt": null
       }
     }

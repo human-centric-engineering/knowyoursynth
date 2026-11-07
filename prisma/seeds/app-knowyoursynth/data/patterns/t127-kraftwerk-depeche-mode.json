@@ -30,10 +30,6 @@
     {
       "sound": "malevolent/mal-geiger-ticks",
       "reason": "An effect: the dry, ticking clicks of a Geiger counter. There is no part to write."
-    },
-    {
-      "sound": "donner-b1/b1-depeche",
-      "reason": "In the style of Depeche Mode: it names no work, and the sequence is the lesson’s own."
     }
   ],
   "patterns": [
@@ -784,8 +780,7 @@
       "sounds": [
         "model-d/round-staccato-bass",
         "poly-d/pd-autobahn-bass",
-        "malevolent/mal-autobahn-bass",
-        "donner-b1/b1-autobahn"
+        "malevolent/mal-autobahn-bass"
       ],
       "research": {
         "work": "Kraftwerk, “Autobahn”, Autobahn, 1974",
@@ -1347,8 +1342,7 @@
         "model-d/computer-love-melody",
         "poly-d/pd-clean-melody",
         "super-gemini/sg-computer-love",
-        "e7/e7-computer-melody",
-        "tb-303/tb-computer-world"
+        "e7/e7-computer-melody"
       ],
       "research": {
         "work": "Kraftwerk, “Computer Love”, Computer World, 1981",
@@ -10508,6 +10502,284 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Its credit names no work, and nothing ties it to one Depeche Mode lead over another, so it is written to the band’s mid-80s style rather than taken from a song. Written by t-169 on 2026-11-02. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:kraftwerk/autobahn-octave-pulse-low",
+      "name": "Autobahn: octave pulse, an octave down",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "work", "songId": "kraftwerk-autobahn" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 120,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 24, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 0.5 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-autobahn"],
+      "research": {
+        "work": "Kraftwerk, “Autobahn”, Autobahn, 1974",
+        "part": "The octave pulse on C under the opening section: one bar, repeated: the same part an octave down, where the B1’s “Autobahn Drive” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [
+          {
+            "citation": "“kraftwerk-autobahn.mid”, fan-made MIDI file on BitMIDI, uploader unknown",
+            "url": "https://bitmidi.com/kraftwerk-autobahn-mid",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "From the MIDI file’s bass channel, bars 6–14, which repeat one bar of sixteenths between C2 and C3. The file starts every note a sixteenth late, and that offset is dropped. Gear write-ups describe a Minimoog octave riff with tape echo here; some of the file’s off-beat notes may be echoes written as notes, which a pattern should not carry, and only a listen can tell. The file is at 120 bpm; audio analysers put the record nearer 85 and disagree, so the tempo is left unset. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:kraftwerk/autobahn-octave-pulse, as written there.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:kraftwerk/computer-love-sequence-low-2",
+      "name": "Computer Love: sixteenth-note sequence, two octaves down",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": { "kind": "artist", "artistId": "kraftwerk" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 128,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 48, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 46, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 0.68 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 48, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 46, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 43, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 46, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 43, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 46, "gate": 0.68 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 43, "gate": 0.68 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 50, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 46, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 0.68 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 48, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 46, "gate": 0.68 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 43, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 0.68 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 41, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 43, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 0.68 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 46, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 43, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 46, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 0.68 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 48, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 46, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 43, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 0.68 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 41, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 43, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 46, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 0.68 }] },
+              { "on": true, "notes": [{ "note": 43, "gate": 0.68 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["tb-303/tb-computer-world"],
+      "research": {
+        "work": "Kraftwerk, “Computer Love”, Computer World, 1981",
+        "part": "The sixteenth-note sequence of F, G, B♭, C and D that runs under the verse. Four bars: the same part two octaves down, where the TB-303’s “Computer Pulse” plays.",
+        "originalKey": null,
+        "originalBpm": 128,
+        "leads": [
+          {
+            "citation": "“kraftwerk-computer_love.mid”, fan-made MIDI file on BitMIDI, uploader unknown",
+            "url": "https://bitmidi.com/kraftwerk-computer_love-mid",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "The lead melody is its own pattern (researched:kraftwerk/computer-love-melody). From the MIDI file’s track 5, bars 21–24, moved up an octave to sit in a lead’s register. The Songsterr transcription (2025) has guitar, bass and drums only, so nothing confirms it. The Casio-style melody sound credited on e7-computer-melody names no work; this is the nearest Kraftwerk computer melody found. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved two octaves down from researched:kraftwerk/computer-love-sequence, as written there.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:depeche-mode/behind-the-wheel-pulse-low-2",
+      "name": "Behind the Wheel: sixteenth pulse, two octaves down",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "artist", "artistId": "depeche-mode" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 122,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 26, "gate": 1 }] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-depeche"],
+      "research": {
+        "work": "Depeche Mode, “Behind the Wheel”, Music for the Masses, 1987",
+        "part": "The driving sixteenth-note bass of the intro: two bars on B, two on D, with a gap near the end of each bar: the same part two octaves down, where the B1’s “Basildon Sequence” plays.",
+        "originalKey": null,
+        "originalBpm": 122,
+        "leads": [
+          {
+            "citation": "Depeche Mode — “Behind The Wheel”, fan transcription by Leonard on Songsterr (revision 39417, 2009-08-24)",
+            "url": "https://www.songsterr.com/a/wsa/depeche-mode-behind-the-wheel-tab-s29299",
+            "checkedAt": "2026-11-01"
+          },
+          {
+            "citation": "“Depeche Mode - Behind The Wheel.mid”, fan-made MIDI file on BitMIDI, uploader unknown",
+            "url": "https://bitmidi.com/depeche-mode-behind-the-wheel-mid",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "From Songsterr track 3, bars 2–5. The MIDI file has the same notes, B for two bars then D for two, but in a sparser rhythm, so the two leads agree on the notes and not on every sixteenth. This sound chops its notes with an LFO, so the pulse may want fewer notes on it; the owner’s listen will say. Not linked to a databank work: the song is not in the databank. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved two octaves down from researched:depeche-mode/behind-the-wheel-pulse, as written there.",
         "listenedAt": null
       }
     }

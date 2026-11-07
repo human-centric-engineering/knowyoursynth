@@ -72,24 +72,12 @@
       "reason": "An effect: excited, burbling, whistling robot chatter. There is no part to write."
     },
     {
-      "sound": "tb-303/tb-carpenter-five",
-      "reason": "In the style of John Carpenter: it names no work, and the ostinato is the lesson’s own."
-    },
-    {
-      "sound": "tb-303/tb-synthwave-pulse",
-      "reason": "In the style of Kavinsky: it names no work, and the bass line is the lesson’s own."
-    },
-    {
       "sound": "tb-303/tb-droid-chatter",
       "reason": "An effect: whistles and burbles in the manner of Ben Burtt’s droid voices, which were made from a synthesizer and his own voice rather than played as notes. There is no part to write."
     },
     {
-      "sound": "td-3/td-western-whistle",
-      "reason": "In the style of Ennio Morricone: it names no work, and the melody is the lesson’s own."
-    },
-    {
       "sound": "td-3/td-survive-arp",
-      "reason": "In the style of S U R V I V E: it names no work, and the arpeggio is the lesson’s own."
+      "reason": "In the style of S U R V I V E: it names no work, and the batch has no S U R V I V E pattern of the part it plays, so the arpeggio is the lesson’s own."
     }
   ],
   "patterns": [
@@ -1562,7 +1550,8 @@
         "pro-1/dark-eighths-bass",
         "solar-42n/solar-carpenter-ostinato",
         "e7/e7-horror-ostinato",
-        "malevolent/mal-escape-ostinato"
+        "malevolent/mal-escape-ostinato",
+        "tb-303/tb-carpenter-five"
       ],
       "research": {
         "work": "John Carpenter and Alan Howarth, “Escape from New York” (main title), Escape from New York, 1981",
@@ -5489,7 +5478,8 @@
         "model-d/nightcall-bass",
         "super-gemini/sg-nightcall-bass",
         "take-5/t5-nightcall-bass",
-        "mantis/mantis-nightcall-bass"
+        "mantis/mantis-nightcall-bass",
+        "tb-303/tb-synthwave-pulse"
       ],
       "research": {
         "work": "Kavinsky, “Nightcall”, 2010 (later on OutRun, 2013)",
@@ -8716,7 +8706,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-morricone-whistle", "malevolent/mal-western-whistle"],
+      "sounds": [
+        "take-5/t5-morricone-whistle",
+        "malevolent/mal-western-whistle",
+        "td-3/td-western-whistle"
+      ],
       "research": {
         "work": "Ennio Morricone, main title, The Good, the Bad and the Ugly, 1966",
         "part": "The four-bar call: A, D, A, D, A held, F; G, D held; then again, ending G, C.",
