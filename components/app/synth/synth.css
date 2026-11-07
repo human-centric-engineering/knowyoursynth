@@ -304,35 +304,53 @@ svg .kys-hit:focus-visible {
   color: var(--kys-muted);
 }
 
-/* The patch picker (t-207): the patch's name under the panel, as a button that opens the library. The name keeps its
-   title's type; a caret beside it, and a wash and the accent's edge under the pointer or focus, say it opens. */
+/* The patch picker (t-207): the patch's name under the panel, boxed as a select is, so it reads as the place the patch
+   is chosen: a field in the raised surface with the caret in its own segment at the right. It is at least 360px wide
+   (less only on a screen too narrow for it), so the name is not squeezed to an ellipsis by the actions beside it,
+   which wrap under it instead. A wash and the accent's edge under the pointer, on focus and while the drawer is open. */
 .kys-title-pick {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  min-width: min(360px, calc(100vw - 48px));
   max-width: 100%;
-  min-width: 0;
-  margin: -4px -8px;
-  padding: 4px 8px;
+  height: 46px;
+  padding: 0 0 0 14px;
   border-radius: 10px;
   color: var(--kys-text);
   text-align: left;
+  background: var(--kys-surface);
+  box-shadow:
+    inset 0 0 0 1px var(--kys-line),
+    0 1px 2px rgb(0 0 0 / 0.12);
   transition:
     background-color 0.15s ease,
     box-shadow 0.15s ease;
 }
+.kys-title-pick .kys-sound-title {
+  flex: 1 1 auto;
+  min-width: 0;
+}
 .kys-title-pick:hover,
 .kys-title-pick:focus-visible,
 .kys-title-pick[aria-expanded='true'] {
-  background: rgb(246 166 58 / 0.08);
-  box-shadow: inset 0 0 0 1px rgb(246 166 58 / 0.55);
+  background: color-mix(in srgb, var(--kys-surface) 92%, rgb(246 166 58));
+  box-shadow:
+    inset 0 0 0 1px rgb(246 166 58 / 0.6),
+    0 1px 2px rgb(0 0 0 / 0.12);
 }
 .kys-title-pick-caret {
   flex: none;
+  box-sizing: content-box;
+  align-self: stretch;
+  height: auto;
+  padding: 0 12px;
+  border-left: 1px solid var(--kys-line);
   color: var(--kys-muted);
   transition: color 0.15s ease;
 }
-.kys-title-pick:hover .kys-title-pick-caret {
+.kys-title-pick:hover .kys-title-pick-caret,
+.kys-title-pick[aria-expanded='true'] .kys-title-pick-caret {
   color: var(--kys-accent);
 }
 

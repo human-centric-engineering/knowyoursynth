@@ -2660,7 +2660,7 @@ function Synth({
                   >
                     {/* The sound's name, and beside it what can be done with it: keep it. */}
                     <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
-                      <p className="flex max-w-full min-w-0 items-baseline gap-x-2.5">
+                      <p className="flex max-w-full min-w-0 items-center gap-x-2.5">
                         <span className="sr-only">Loaded:</span>
                         {/* The patch is chosen from its name (t-207): the Play deck's bar is for playing. */}
                         <SoundPicker
