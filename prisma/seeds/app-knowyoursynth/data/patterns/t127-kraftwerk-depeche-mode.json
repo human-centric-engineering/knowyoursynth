@@ -10237,7 +10237,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["pro-1/noise-tick-pluck", "jupiter-8/jp8-depeche-pluck"],
+      "sounds": ["pro-1/noise-tick-pluck"],
       "research": {
         "work": "Depeche Mode, “Any Second Now (Voices)”, Speak & Spell, 1981",
         "part": "Four bars of a gentle eighth-note pluck through C, F, Am and G.",
@@ -10503,6 +10503,75 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Its credit names no work, and nothing ties it to one Depeche Mode lead over another, so it is written to the band’s mid-80s style rather than taken from a song. Written by t-169 on 2026-11-02. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:depeche-mode/metal-bell-lead-low",
+      "name": "Depeche Mode: metal bell lead, an octave down",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "artist", "artistId": "depeche-mode" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 110,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 55, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 51, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 48, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 51, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 58, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 55, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 58, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 58, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 53, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 51, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 51, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 6 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-8/jp8-depeche-pluck"],
+      "research": {
+        "work": "Depeche Mode, in the style of the mid-1980s records (no work named)",
+        "part": "Four bars of a C-minor lead in eighths: a falling figure from G to C, answered from B♭: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave down from researched:depeche-mode/metal-bell-lead, whose notes give the research. Written by t-169 on 2026-11-02. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     }

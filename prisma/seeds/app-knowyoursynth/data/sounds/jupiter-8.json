@@ -1738,7 +1738,7 @@
       ]
     },
     {
-      "id": "jp8-kitaro-silk",
+      "id": "jp8-kitaro-desert-pad",
       "name": "Desert Drift Pad",
       "ref": "In the style of Kitaro",
       "artist": "Kitaro",
@@ -1811,7 +1811,7 @@
       ]
     },
     {
-      "id": "jp8-jarre-equinox",
+      "id": "jp8-jarre-gallop-seq",
       "name": "Galloping Up-Down Sequence",
       "ref": "In the style of Jean-Michel Jarre",
       "artist": "Jean-Michel Jarre",
@@ -3514,7 +3514,7 @@
       ]
     },
     {
-      "id": "jp8-mad-world-pad",
+      "id": "jp8-cold-new-wave-pad",
       "name": "Cold New-Wave Pad",
       "ref": "In the style of Tears for Fears",
       "artist": "Tears for Fears",
@@ -3929,10 +3929,10 @@
     },
     {
       "id": "jp8-separate-ways",
-      "name": "Arena Arpeggio",
-      "ref": "In the style of Journey",
+      "name": "Arena Chord Pulse",
+      "ref": "In the style of Journey — “Separate Ways (Worlds Apart)”",
       "artist": "Journey",
-      "tags": ["seq", "arena rock", "rock", "arpeggio", "80s"],
+      "tags": ["seq", "arena rock", "rock", "80s"],
       "level": 2,
       "blurb": "A driving, pulsing eighth-note synth riff under a big rock chorus.",
       "how": "Eighties arena rock drove its songs with pulsing synth riffs. Eighths repeating on a minor chord with a bright, punchy pulse.",
@@ -5385,7 +5385,7 @@
       ]
     },
     {
-      "id": "jp8-hungry-sequence",
+      "id": "jp8-nervous-new-wave-seq",
       "name": "Nervous New-Wave Sequence",
       "ref": "In the style of Duran Duran",
       "artist": "Duran Duran",
@@ -7079,7 +7079,7 @@
       ]
     },
     {
-      "id": "jp8-twin-peaks-pad",
+      "id": "jp8-dreamy-small-town-pad",
       "name": "Dreamy Small-Town Pad",
       "ref": "In the style of Angelo Badalamenti",
       "artist": "Angelo Badalamenti",
@@ -11560,8 +11560,8 @@
       ]
     },
     {
-      "id": "jp8-acid-poly",
-      "name": "Polyphonic Acid",
+      "id": "jp8-solo-acid-squelch",
+      "name": "Solo Acid Squelch",
       "ref": "In the style of acid house",
       "artist": "Acid house",
       "tags": ["bass", "acid", "house"],

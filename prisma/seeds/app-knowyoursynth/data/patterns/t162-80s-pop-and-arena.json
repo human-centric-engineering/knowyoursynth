@@ -4416,7 +4416,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/synth-pop-bass", "jupiter-8/jp8-hungry-sequence"],
+      "sounds": ["ub-xa-d/synth-pop-bass", "jupiter-8/jp8-nervous-new-wave-seq"],
       "research": {
         "work": "Duran Duran, “Rio”, Rio, 1982",
         "part": "The four-bar verse bass: low E jumping to its octave, D, G, G♯, A, twice; then A and C with their fifths.",
@@ -11859,7 +11859,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/lush-pad", "deepmind-12d/poly-pluck", "jupiter-8/jp8-mad-world-pad"],
+      "sounds": ["ub-xa-d/lush-pad", "deepmind-12d/poly-pluck", "jupiter-8/jp8-cold-new-wave-pad"],
       "research": {
         "work": "Tears for Fears, “Everybody Wants to Rule the World”, Songs from the Big Chair, 1985",
         "part": "Four bars of held chorus chords, a bar each: E minor over B, F♯ minor over C♯, G over D, F♯ minor over C♯.",

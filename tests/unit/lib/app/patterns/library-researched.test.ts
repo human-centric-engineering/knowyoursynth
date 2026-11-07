@@ -1,5 +1,5 @@
 /**
- * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162, t-163, t-164, t-165, t-166, t-167, t-168, t-169): the research batches under the seed's `data/patterns/`, and
+ * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162, t-163, t-164, t-165, t-166, t-167, t-168, t-169, t-192): the research batches under the seed's `data/patterns/`, and
  * the seed that puts them on their sounds.
  *
  * First the real batches, against the real catalogue and databank data: every pattern parses and plays, every sound a
@@ -848,48 +848,83 @@ describe('the research batches', () => {
     ]);
   });
 
-  /** The `library-150` sweep's octave copies (t-192 on): their notes open “This copy is moved …”. */
-  const sweepCopies = patterns.filter((p) => p.research.notes.startsWith('This copy is moved'));
-  /** How far the sweep's copies move. All of them so far move one octave; a wider move is added here. */
+  /** The batches' own octave copies, written by hand before the `library-150` sweep and held by the tests above. */
+  const EARLIER_COPIES = new Set([
+    'researched:daft-punk/da-funk-breakdown-figure-low',
+    'researched:daft-punk/da-funk-riff-low',
+    'researched:herbie-hancock/chameleon-bass-high',
+    'researched:stevie-wonder/superstition-clavinet-high',
+    'researched:gary-numan/cars-strings-line-low',
+    'researched:ultravox/vienna-strings-low',
+    'researched:yazoo/dont-go-riff-low',
+    'researched:yazoo/only-you-arpeggio-high',
+    'researched:a-ha/take-on-me-riff-low',
+    'researched:pet-shop-boys/west-end-girls-bass-low',
+    'researched:john-carpenter/escape-from-new-york-ostinato-low',
+    'researched:goblin/suspiria-theme-low',
+    'researched:pink-floyd/on-the-run-sequence-high',
+    'researched:pink-floyd/shine-on-solina-low',
+    'researched:the-who/wont-get-fooled-again-organ-top-low',
+    'researched:giorgio-moroder/i-feel-love-roots-high',
+    'researched:kraftwerk/numbers-kick-low',
+    'researched:front-242/headhunter-bass-high',
+    'researched:acid-house/acid-line-high',
+    'researched:alabama-3/woke-up-this-morning-bass-high',
+    'researched:jon-hopkins/open-eye-signal-roots-high',
+  ]);
+  /** The pattern a `-low` or `-high` key copies, when there is one. */
+  const copied = (key: string) => {
+    const base = key.replace(/-(low|high)(-2)?$/, '');
+    return base !== key && patterns.some((p) => p.key === base) ? base : null;
+  };
+  /** Every other octave copy: the sweep's (t-192 on), made from their source by `place.ts`. */
+  const sweepCopies = patterns.filter((p) => copied(p.key) && !EARLIER_COPIES.has(p.key));
+  /** How far a sweep copy moves, as its notes say it. */
   const MOVED: Record<string, number> = { 'an octave down': -12, 'an octave up': 12 };
   /** The passage every pattern's notes close with: about the part, never about its sounds. */
   const CLOSING = '_In the style of_';
+  /** What a copy keeps of its source's notes: who wrote a best guess and when, then the closing passage. */
+  const kept = (notes: string) => {
+    const written = /Written by t-\d+ on \d{4}-\d{2}-\d{2}\./.exec(notes)?.[0];
+    return `${written ? `${written} ` : ''}${notes.slice(notes.indexOf(CLOSING))}`;
+  };
+  const SAID = new RegExp(
+    `^This copy is moved (${Object.keys(MOVED).join('|')}) from (researched:\\S+), whose notes give the research\\. `
+  );
 
   it('has the sweep’s octave copies, or the copy check below is vacuous', () => {
-    expect(sweepCopies.length).toBeGreaterThanOrEqual(26);
+    expect(sweepCopies.length).toBeGreaterThanOrEqual(27);
+    for (const key of EARLIER_COPIES) expect(copied(key), key).not.toBeNull();
   });
 
   it('makes each of the sweep’s octave copies from the pattern it copies, and from nothing else', () => {
     for (const copy of sweepCopies) {
-      const said =
-        /^This copy is moved (an octave down|an octave up) from (researched:\S+), whose notes give the research\. /.exec(
-          copy.research.notes
-        );
+      const said = SAID.exec(copy.research.notes);
       expect(said, copy.key).not.toBeNull();
       const [opening, phrase, sourceKey] = said!;
-      const source = patterns.find((p) => p.key === sourceKey);
-      expect(source, copy.key).toBeDefined();
-      expect(source!.research.notes, sourceKey).toContain(CLOSING);
+      expect(sourceKey, copy.key).toBe(copied(copy.key));
+      const source = patterns.find((p) => p.key === sourceKey)!;
+      expect(source.research.notes, sourceKey).toContain(CLOSING);
       const by = MOVED[phrase];
-      const pattern = structuredClone(source!.pattern);
+      const pattern = structuredClone(source.pattern);
       for (const part of pattern.parts)
         for (const step of part.steps) for (const n of step.notes) n.note += by;
       // Every field the source's: its notes moved evenly, the name and part saying where to, and the notes
-      // pointing to the source for the research, keeping only its closing passage.
+      // pointing to the source for the research, keeping only who wrote it and its closing passage.
       expect(copy, copy.key).toEqual({
-        ...source!,
+        ...source,
         key: `${sourceKey}-${by < 0 ? 'low' : 'high'}`,
-        name: `${source!.name}, ${phrase}`,
+        name: `${source.name}, ${phrase}`,
         sounds: copy.sounds,
         pattern,
         research: {
-          ...source!.research,
-          part: `${source!.research.part.replace(/\.$/, '')}: the same part ${phrase}.`,
-          notes: opening + source!.research.notes.slice(source!.research.notes.indexOf(CLOSING)),
+          ...source.research,
+          part: `${source.research.part.replace(/\.$/, '')}: the same part ${phrase}.`,
+          notes: opening + kept(source.research.notes),
         },
       });
       // A sound plays the copy instead of the pattern, never both.
-      for (const sound of copy.sounds) expect(source!.sounds, copy.key).not.toContain(sound);
+      for (const sound of copy.sounds) expect(source.sounds, copy.key).not.toContain(sound);
     }
   });
 

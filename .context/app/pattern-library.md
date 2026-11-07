@@ -810,6 +810,26 @@ batch files they were already in, and left 25 reasons: the sounds with no part t
   the four patches above, the two random Jarre sounds, the "Boing Boom Tschak" voices, the "Computer World" vocoder,
   the "Tour de France" breath and the two Depeche Mode metal-percussion sounds, which were sampled metal.
 
+**Sounds added after the batches (t-192).** The `library-150` sweep takes every synth's library to 150 sounds, and a
+new sound by an artist a batch covers fails the roster test until that batch looks at it. The Jupiter-8, Jupiter-6 and
+Jupiter-4 added 131 such sounds:
+
+- **86 sit on a pattern**: the work the sound names, or, for a sound naming no work, a part of the same kind that its
+  artist or a peer with the same credit already has. The part comes first and the register second: within six
+  semitones of the riff, median to median. A sound whose arpeggiator plays from held chords takes held chords, never a
+  part written out, which the arpeggiator would play over again; a sound without one never takes chords written for an
+  arpeggiator.
+- **27 octave copies** carry patterns that would otherwise sit out of a sound's register. Each is made from its source
+  and nothing else: its name and part are the source's plus where it moved ("…, an octave down"), and its
+  notes say where it moved from and point to the source for the research, keeping only the source's "Written by" line
+  and its closing _In the style of_ passage. A copy never carries what its source says about the source's own sounds.
+- **45 keep a reason**, saying which applies: its arpeggiator plays the line from the chords it holds, and the work or
+  artist has only parts written out; the work's pattern is another part; the work has no pattern yet; the artist's
+  patterns are other kinds of part; it is an effect; or its riff already plays Bach's score.
+- **Shared patterns' notes now hold for every sound on them.** 27 sentences that counted or described only their first
+  sounds ("Both sounds are single-voiced", "The sound names the album") were reworded, and two say which sound they
+  were written for.
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on
@@ -1064,7 +1084,7 @@ Electric? riff, the Take On Me riff, the Sweet Dreams riff, the Axel F theme, th
 Run sequence, the Tom Sawyer growl, the I Feel Love bass, the Popcorn theme, the Sexy Boy bass, the Levels riff, the subject of Bach's Invention in F (from the score), the
 Ghost Rider riff, the Birdland theme and the Prelude of Bach's first cello suite (from the score) play theirs, that the
 Black Market theme holds the keys that play it on the upside-down-keys sound (each the transcription's pitch mirrored
-around middle C), and that t-161's, t-162's, t-163's, t-164's, t-165's, t-166's and t-167's octave copies sit one or two octaves from the part they copy, as each copy's check says. A pattern with no lead must say it is a best guess. A sound can be on more
+around middle C), and that t-161's, t-162's, t-163's, t-164's, t-165's, t-166's and t-167's octave copies sit one or two octaves from the part they copy, as each copy's check says, and that every later copy (the `library-150` sweep's, t-192 on) is its source rebuilt, field by field, moved by what its notes say. A pattern with no lead must say it is a best guess. A sound can be on more
 than one pattern of a batch, but a sound with a pattern never also has a reason.
 
 The catalogue unit's hash leaves the `patterns/` folder out, as it does `bank/`, so a batch edit re-runs only this
