@@ -186,7 +186,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   pointer is within `STRIP_REACH` px of the dock (`stripNear`, `data-near` on the dock, set without a
   render), but not while the panel is being worked (a drag, or a press or wheel on it in the last
   `PANEL_QUIET_MS`). A press on the tab slides the strip up (`data-open`, the page's `designOpen`), the tab settling into the strip's head (the wordmark at its left) with an × that closes it,
-  and it stays up, whatever the pointer does, until its tab or its head is pressed, or a press lands outside the strip, the lesson card and the panel; a press on the panel puts it away too unless a chapter has been chosen since it opened (`chapterChosen`), when the panel is where the lesson is followed; closed it is
+  and it stays up until its tab or its head is pressed. Before a chapter has been chosen since it opened (`chapterChosen`), a press anywhere outside the strip and the lesson card puts it away too; once one has, the lesson is being followed, and only its tab or head does, whatever is pressed meanwhile (the panel, the keys, Play, a dialog); closed it is
   `visibility: hidden`, so Tab passes it. On touch and below `lg` there is no tab and the strip sits
   in the dock's flow. Putting it away closes the lesson card it opened; the inspector and the effects, from the bar,
   stay (`closeDesign`, t-205).
