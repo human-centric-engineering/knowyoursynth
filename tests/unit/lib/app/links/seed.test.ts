@@ -550,8 +550,16 @@ describe('seedLinks', () => {
           { ownerKind: 'sound', ownerId: 'model-d/stacked-night-bass', url: YT2 },
         ],
       });
+      // The transaction is handed exactly the two writes, so neither runs outside it.
       expect(db.$transaction).toHaveBeenCalledTimes(1);
-      expect(db.writes).toEqual(['externalLink', 'linkSeedRecord', 'transaction']);
+      const [ops] = db.$transaction.mock.calls[0] ?? [[]];
+      expect(ops).toEqual([
+        db.externalLink.createMany.mock.results[0]?.value,
+        db.linkSeedRecord.createMany.mock.results[0]?.value,
+      ]);
+      expect(ops).toHaveLength(2);
+      expect(ops[0]).toBe(db.externalLink.createMany.mock.results[0]?.value);
+      expect(ops[1]).toBe(db.linkSeedRecord.createMany.mock.results[0]?.value);
     });
 
     it('a second run against the same database applies nothing the first did, though an admin deleted it', async () => {

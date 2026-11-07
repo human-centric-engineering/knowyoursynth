@@ -148,10 +148,16 @@ export function checkLinkData(data: LinkSeedData): string[] {
   return planLinks(data).problems;
 }
 
-/** Each owner the database has, by `<kind>:<id>`, mapped to its row id (a sound's is its `SynthSound.id`). */
-async function ownerRows(prisma: TenancyClient, owners: OwnerRef[]): Promise<Map<string, string>> {
+/** The owners' ids, by kind: one pass, shared by the owner lookup and the record read so they group alike. */
+function idsByKind(owners: OwnerRef[]): Record<OwnerKind, string[]> {
   const ids: Record<OwnerKind, string[]> = { instrument: [], sound: [], song: [], artist: [] };
   for (const o of owners) ids[o.kind].push(o.id);
+  return ids;
+}
+
+/** Each owner the database has, by `<kind>:<id>`, mapped to its row id (a sound's is its `SynthSound.id`). */
+async function ownerRows(prisma: TenancyClient, owners: OwnerRef[]): Promise<Map<string, string>> {
+  const ids = idsByKind(owners);
   const sounds = ids.sound.flatMap((id) => splitSoundKey(id) ?? []);
   const select = { id: true } as const;
   // A kind the data names no owner of is not asked about.
@@ -247,15 +253,18 @@ export async function seedLinks(
 }
 
 /**
- * The links already applied to these owners, as `linkKey`s. One branch per owner kind, each an `in` list on the
- * record's id prefix, so the query stays four branches however many owners the data names.
+ * The links already applied to these owners, as `linkKey`s. One branch per owner kind, each an `in` list of exact
+ * owner ids, so the query stays at most four branches however many owners the data names.
  */
 async function recordsOf(prisma: TenancyClient, owners: OwnerRef[]): Promise<Set<string>> {
-  const ids = new Map<OwnerKind, string[]>();
-  for (const o of owners) ids.set(o.kind, [...(ids.get(o.kind) ?? []), o.id]);
-  if (!ids.size) return new Set();
+  const ids = idsByKind(owners);
+  const branches = OWNER_KINDS.flatMap((kind) => {
+    const in_ = ids[kind];
+    return in_.length ? [{ ownerKind: kind, ownerId: { in: in_ } }] : [];
+  });
+  if (!branches.length) return new Set();
   const rows = await prisma.linkSeedRecord.findMany({
-    where: { OR: [...ids].map(([kind, in_]) => ({ ownerKind: kind, ownerId: { in: in_ } })) },
+    where: { OR: branches },
     select: { ownerKind: true, ownerId: true, url: true },
   });
   return new Set(rows.map((r) => linkKey({ kind: r.ownerKind, id: r.ownerId }, r.url)));

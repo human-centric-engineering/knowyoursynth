@@ -33,10 +33,12 @@ sounds).
 - **Don't add a second owner column without the CHECK.** `external_link_one_owner` requires exactly one of
   `instrumentId`, `soundId`, `songId`, `artistId`. Prisma can't model it, so it is hand-written in the migration and
   pinned by a drift probe (`lib/app/db-drift.ts`). A new owner kind means a new column, a new CHECK, a new unique
-  index on it plus `url`, a case in `owner.ts`, an entry in `OWNER_COLUMN` (`owner-ref.ts`), and a lookup in the
-  seed's `ownerRows` (`seed.ts`).
+  index on it plus `url`, a case in `owner.ts`, an entry in `OWNER_COLUMN` (`owner-ref.ts`), a lookup in the
+  seed's `ownerRows` (`seed.ts`), and a value in `LinkTargetKind`, which `LinkSeedRecord.ownerKind` and the suggestions
+  share.
 - **Don't expect a reseed to change a link.** The seed only creates links this database has never had from it (Seeded links). To
-  change a seeded link anywhere it already exists, edit it there; to change the data, edit it in dev and re-export.
+  change a seeded link anywhere it already exists, edit it there; to change the data, edit it in dev and re-export. A
+  changed URL reaches a database that had the old one as an extra link (Seeded links, Accepted costs).
 - **Don't add a link to the seed data by hand.** Add it in dev through the admin pages, so it is parsed and titled the
   way every link is, then run `npm run links:export`.
 
@@ -305,8 +307,8 @@ the daily stats job fills them.
 - **Once per database** (owner ruling, t-200). Each link it applies, created or found already there, gets a
   `LinkSeedRecord` (owner kind, owner's natural key, URL), and a link with a record is never applied again. So a seeded
   link an admin deletes, or moves to another URL, stays gone through every reseed, however often the unit re-runs; links
-  new to the data still arrive. Links are written before their records, so a run stopped between the two records
-  nothing it didn't write. The record has no foreign key, so it outlives its link and its owner.
+  new to the data still arrive. The links and their records commit in one transaction, so neither is ever written
+  without the other. The record has no foreign key, so it outlives its link and its owner.
 - **Create only.** A link its owner already has (owner + URL, the unique index, so `createMany` skips it) is left as
   it is: an admin's title, kind, ours, order and rating, and YouTube's counts, survive every reseed.
 - **Never deletes.** A link an admin added that isn't in the data stays.
@@ -329,8 +331,8 @@ export (logic in `exportLinkData`):
 **Changing how `parseLinkUrl` writes a URL is a data migration.** Seed and export both require every URL to be in
 its stored form, so the committed data test, the seed and the export all fail until the stored rows and the data are
 rewritten to the new form, together. That refusal is deliberate: accepting the new form quietly would create it beside
-the old one on every database that already has the link. The same migration must rewrite `link_seed_record`'s URLs, or every link in a
-new form would be applied again as if new.
+the old one on every database that already has the link. The same migration must rewrite `link_seed_record`'s URLs too: otherwise a seeded
+link an admin had deleted comes back under its new form, and the old-form records are left behind.
 
 **When the unit re-runs:** whenever any of its `hashInputs` changes: the data, the loader, the links code it runs
 (`seed.ts`, `providers.ts`, `owner-ref.ts`), and what decides a URL's stored form and an owner's shape
@@ -339,6 +341,8 @@ links it has no record of, so an unrelated edit to one of those files re-runs it
 
 **Accepted costs** (journal, 2026-11-07):
 
+- **A URL changed in the data is a new link to a database that had the old one.** The data says nothing of what B
+  replaced, so the old link stays and the new one is added beside it; an admin there deletes the old one.
 - **A link removed from the data and added back later isn't applied again** on a database that had it: its record
   remains. Add it there through the admin pages.
 - **An owner removed and later re-created doesn't get its seeded links again.** Its links went with it (cascade),
