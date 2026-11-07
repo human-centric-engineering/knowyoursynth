@@ -34,6 +34,14 @@
     {
       "sound": "malevolent/mal-bells-arp",
       "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “The Bells: riff” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "jupiter-6/jp6-808-state-pad",
+      "reason": "In the style of 808 State: it names no work, and the batch’s “Pacific: bass” is another kind of part than its held chords, so the chords are the lesson’s own."
+    },
+    {
+      "sound": "jupiter-4/j4-french-kiss-riff",
+      "reason": "Names “French Kiss”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -3178,6 +3186,158 @@
           }
         ],
         "notes": "From the fan-made MIDI file’s “Griff House” track, its first two bars: the right hand’s chords. The left hand’s E♭ between them is left out, so the sound plays only the stabs. The file’s played-in note lengths are rounded to whole sixteenths. _In the style of_: the notes come from a fan-made MIDI file, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:derrick-may/strings-of-life-stabs-high",
+      "name": "Strings of Life: piano stabs, an octave up",
+      "role": "chord_stabs",
+      "tempo": null,
+      "inspiredBy": { "kind": "artist", "artistId": "derrick-may" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 124,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 73, "gate": 2 },
+                  { "note": 70, "gate": 2 },
+                  { "note": 66, "gate": 2 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 73, "gate": 1 },
+                  { "note": 70, "gate": 2 },
+                  { "note": 66, "gate": 2 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 73, "gate": 2 },
+                  { "note": 71, "gate": 2 },
+                  { "note": 66, "gate": 2 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 73, "gate": 2 },
+                  { "note": 71, "gate": 2 },
+                  { "note": 66, "gate": 2 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 73, "gate": 2 },
+                  { "note": 70, "gate": 2 },
+                  { "note": 66, "gate": 2 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 73, "gate": 2 },
+                  { "note": 70, "gate": 2 },
+                  { "note": 66, "gate": 2 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 73, "gate": 1 },
+                  { "note": 70, "gate": 2 },
+                  { "note": 66, "gate": 2 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 78, "gate": 1 },
+                  { "note": 71, "gate": 1 },
+                  { "note": 66, "gate": 1 }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 78, "gate": 1 },
+                  { "note": 71, "gate": 1 },
+                  { "note": 66, "gate": 1 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 78, "gate": 2 },
+                  { "note": 71, "gate": 2 },
+                  { "note": 66, "gate": 2 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 78, "gate": 1 },
+                  { "note": 71, "gate": 1 },
+                  { "note": 66, "gate": 2 }
+                ]
+              },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-6/jp6-strings-of-life"],
+      "research": {
+        "work": "Rhythim Is Rhythim (Derrick May), “Strings of Life”, 1987",
+        "part": "The piano riff’s three-note chords in syncopated stabs: F♯ major and F♯–B–C♯ in turn, then F♯–B–F♯ at the end of the second bar: the same part an octave up, where the Jupiter-6’s “Strings of Life Stabs” plays.",
+        "originalKey": null,
+        "originalBpm": 124,
+        "leads": [
+          {
+            "citation": "“Rhythm Is Rhythm - Strings Of Life.mid”, fan-made MIDI file on BitMIDI, uploader unknown",
+            "url": "https://bitmidi.com/rhythm-is-rhythm-strings-of-life-mid",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "This copy is moved an octave up from researched:derrick-may/strings-of-life-stabs, whose notes give the research. _In the style of_: the notes come from a fan-made MIDI file, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -8267,7 +8427,8 @@
         "solar-42n/solar-polivoks-acid",
         "malevolent/mal-acid-line",
         "mantis/mantis-acid-line",
-        "k2/acid-303-line"
+        "k2/acid-303-line",
+        "jupiter-8/jp8-acid-poly"
       ],
       "research": {
         "work": "Acid house, late 1980s",
@@ -11177,7 +11338,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-can-you-feel-pad"],
+      "sounds": ["take-5/t5-can-you-feel-pad", "jupiter-6/jp6-can-you-feel-it"],
       "research": {
         "work": "Mr. Fingers (Larry Heard), “Can You Feel It”, 1986",
         "part": "Four held seventh chords, a bar each: F minor, E♭ major, D♭ major and C minor.",
@@ -11393,6 +11554,75 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Nothing for “Just Want Another Chance” was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:kevin-saunderson/reese-bass-low",
+      "name": "Just Want Another Chance: Reese bass, an octave down",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Kevin Saunderson" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 120,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 26, "gate": 6 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 29, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 22, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 26, "gate": 6 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 29, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 31, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 29, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-6/jp6-reese-bass"],
+      "research": {
+        "work": "Reese (Kevin Saunderson), “Just Want Another Chance”, 1988",
+        "part": "A slow four-bar bass: long notes on D, C and B♭, the last bar turning up to G: the same part an octave down, where the Jupiter-6’s “Reese Bass” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave down from researched:kevin-saunderson/reese-bass, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -12917,7 +13147,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/drexciya-bubble-bass"],
+      "sounds": ["neutron/drexciya-bubble-bass", "jupiter-6/jp6-aquatic-electro"],
       "research": {
         "work": "Drexciya, “Bubble Metropolis”, 1993",
         "part": "A two-bar electro bass on C.",
@@ -14158,6 +14388,59 @@
         "originalBpm": null,
         "leads": [],
         "notes": "The sound names electro and Miami bass rather than a work, and nothing for “Planet Rock” was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:electro/zap-percussion-low",
+      "name": "Electro: zaps, an octave down",
+      "role": "percussive",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Electro" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 127,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 60, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 60, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 67, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 60, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 64, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 60, "gate": 0.5 }] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-6/jp6-electro-zap"],
+      "research": {
+        "work": "Afrika Bambaataa & the Soulsonic Force, “Planet Rock”, 1982",
+        "part": "A bar of zaps on C, with G and E answering: the same part an octave down, where the Jupiter-6’s “Electro Zaps” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave down from researched:electro/zap-percussion, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     }

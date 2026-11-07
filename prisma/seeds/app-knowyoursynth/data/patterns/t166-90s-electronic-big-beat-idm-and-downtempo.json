@@ -50,6 +50,22 @@
     {
       "sound": "malevolent/mal-bubblebath-arp",
       "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "jupiter-8/jp8-deadmau5-pluck",
+      "reason": "In the style of deadmau5: it names no work, and the batch’s “Ghosts ’n’ Stuff: chords” and “Strobe: organ figure” are other kinds of part than its single plucked line, so the line is the lesson’s own."
+    },
+    {
+      "sound": "jupiter-6/jp6-orbital-chime",
+      "reason": "The batch’s “Chime: riff” is another part of the work; this sound plays chord stabs, which is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jupiter-6/jp6-rave-ripple",
+      "reason": "The batch’s “Born Slippy .NUXX: chord stabs” and “Born Slippy .NUXX: bass” are other parts of the work; this sound plays the rippling lead line, which is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jupiter-4/j4-destiny-pad",
+      "reason": "The batch’s “Destiny: lead” is another part of the work; this sound plays the chords under it, which is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -967,6 +983,81 @@
           }
         ],
         "notes": "From the transcription’s “Synth III” track (written for whistle), bars 60–63, two octaves down to suit the sound. The databank credits Jean-Benoît Dunckel with the Minimoog on this track. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:air/kelly-watch-the-stars-melody-high",
+      "name": "Kelly Watch the Stars: melody, an octave up",
+      "role": "slow_melody",
+      "tempo": null,
+      "inspiredBy": { "kind": "work", "songId": "air-moon-safari", "part": 0 },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 110,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 79, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 78, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 76, "gate": 6 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 69, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 79, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 78, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 76, "gate": 6 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 69, "gate": 2 }] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-6/jp6-moon-safari-lead"],
+      "research": {
+        "work": "Air, “Kelly Watch the Stars”, Moon Safari, 1998",
+        "part": "The high synth melody: G, F♯, then E held with A under it, twice: the same part an octave up, where the Jupiter-6’s “Moon Safari Lead” plays.",
+        "originalKey": null,
+        "originalBpm": 110,
+        "leads": [
+          {
+            "citation": "Air — “Kelly Watch The Stars”, fan transcription by Leonard on Songsterr (revision 34902, 2009-08-11)",
+            "url": "https://www.songsterr.com/a/wsa/air-kelly-watch-the-stars-tab-s24885",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "This copy is moved an octave up from researched:air/kelly-watch-the-stars-melody, whose notes give the research. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -4057,7 +4148,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/frozen-wash", "k2/aphex-glass-pad"],
+      "sounds": ["deepmind-12d/frozen-wash", "k2/aphex-glass-pad", "jupiter-8/jp8-aphex-ambient"],
       "research": {
         "work": "Aphex Twin, “#3” (known as “Rhubarb”), Selected Ambient Works Volume II, 1994",
         "part": "The slow chord cycle, two bars of 5/4: D, F♯ minor and A, then E and a long D.",
@@ -5140,14 +5231,14 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/glue-rave-pad"],
+      "sounds": ["neutron/glue-rave-pad", "jupiter-4/j4-haunting-rave-pad"],
       "research": {
         "work": "Bicep, “Glue”, Bicep, 2017",
         "part": "Slow two-note chords, a bar each: G minor, F, E♭, F.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
-        "notes": "Nothing for this work was found on Songsterr or BitMIDI. The sound plays two notes at a time, so the guess is fifths. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "Nothing for this work was found on Songsterr or BitMIDI. The sound it was written for plays two notes at a time, so the guess is fifths. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -6318,7 +6409,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-sandstorm-lead"],
+      "sounds": ["take-5/t5-sandstorm-lead", "jupiter-6/jp6-sandstorm-lead"],
       "research": {
         "work": "Darude, “Sandstorm”, Before the Storm, 1999",
         "part": "The sixteenth-note riff on B, the jump to E and D, and back to B.",
@@ -7412,7 +7503,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/quadraverb-pad"],
+      "sounds": ["deepmind-12d/quadraverb-pad", "jupiter-6/jp6-1431-pad"],
       "research": {
         "work": "Global Communication, 76:14, 1994",
         "part": "Two slow chords, two bars each: C major seventh and A minor seventh.",
@@ -8719,7 +8810,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["super-gemini/sg-deep-sub-bass"],
+      "sounds": ["super-gemini/sg-deep-sub-bass", "jupiter-8/jp8-moderat"],
       "research": {
         "work": "Moderat, “A New Error”, Moderat, 2009",
         "part": "The pulsing bass in 6/8: D for three bars, then E.",
@@ -13078,6 +13169,113 @@
       }
     },
     {
+      "key": "researched:royksopp/eple-melody-low",
+      "name": "Eple: melody, an octave down",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Röyksopp" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 106,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 68, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 65, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 63, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 63, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 66, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 58, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 63, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 58, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 63, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 63, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 66, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 58, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 63, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 58, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 63, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-8/jp8-royksopp"],
+      "research": {
+        "work": "Röyksopp, “Eple”, Melody A.M., 2001",
+        "part": "The melody: four bars falling from A♭ through F♯ and E to D♯: the same part an octave down, where the Jupiter-8’s “Melody A.M. Keys” plays.",
+        "originalKey": null,
+        "originalBpm": 106,
+        "leads": [
+          {
+            "citation": "“Royksopp - Eple.mid”, fan-made MIDI file on BitMIDI, uploader unknown",
+            "url": "https://bitmidi.com/royksopp-eple-mid",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "This copy is moved an octave down from researched:royksopp/eple-melody, whose notes give the research. _In the style of_: the notes come from a fan-made MIDI file, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:royksopp/vision-one-bass",
       "name": "Vision One: bass, held",
       "role": "held",
@@ -14383,7 +14581,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["syntrx-ii/syntrx-chemical-squelch"],
+      "sounds": ["syntrx-ii/syntrx-chemical-squelch", "jupiter-6/jp6-big-beat-squelch"],
       "research": {
         "work": "The Chemical Brothers, “Hey Boy Hey Girl”, Surrender, 1999",
         "part": "The riff on D: D, A, E♭, then D and its octave, off the beat.",
@@ -15477,7 +15675,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/aurora-pad"],
+      "sounds": ["deepmind-12d/aurora-pad", "jupiter-8/jp8-schnauss"],
       "research": {
         "work": "Ulrich Schnauss, A Strangely Isolated Place, 2003",
         "part": "Two bright chords, two bars each: C♯ minor seventh and A major seventh.",

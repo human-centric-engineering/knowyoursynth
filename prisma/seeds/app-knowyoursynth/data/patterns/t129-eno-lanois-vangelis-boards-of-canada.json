@@ -34,6 +34,10 @@
     {
       "sound": "malevolent/mal-spiral-arp",
       "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "jupiter-6/jp6-an-ending",
+      "reason": "The batch’s “An Ending (Ascent): melody” is another part of the work; this sound plays the chords under it, which is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -744,6 +748,139 @@
           }
         ],
         "notes": "From the transcription’s fourth keys track, bars 13–20, as written; ties merged. The BitMIDI file has the same notes, at 119 bpm against the transcription’s 110. Two leads that agree are still not two sources. The Swelling Film Brass sound names no work; this is the one Vangelis brass part the free web has in readable notes. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:vangelis/blade-runner-end-titles-chords-low",
+      "name": "Blade Runner: End Titles chords, an octave down",
+      "role": "chord_changes",
+      "tempo": null,
+      "inspiredBy": { "kind": "work", "songId": "vangelis-blade-runner", "part": 0 },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 110,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  { "note": 48, "gate": 32 },
+                  { "note": 51, "gate": 32 },
+                  { "note": 55, "gate": 32 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 46, "gate": 16 },
+                  { "note": 50, "gate": 16 },
+                  { "note": 53, "gate": 16 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 45, "gate": 16 },
+                  { "note": 50, "gate": 16 },
+                  { "note": 53, "gate": 16 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-8/jp8-vangelis-brass"],
+      "research": {
+        "work": "Vangelis, “End Titles”, Blade Runner, 1982 (released 1994)",
+        "part": "The held chords under the first eight bars of the theme: C minor for four bars, B♭ for two, D minor over A for two: the same part an octave down, where the Jupiter-8’s “Bladed Brass” plays.",
+        "originalKey": "C minor",
+        "originalBpm": 110,
+        "leads": [
+          {
+            "citation": "Vangelis — “Blade Runner”, fan transcription by Leonard on Songsterr (revision 24453, 2009-02-04)",
+            "url": "https://www.songsterr.com/a/wsa/vangelis-blade-runner-tab-s21557",
+            "checkedAt": "2026-11-01"
+          },
+          {
+            "citation": "“VANGELIS.Blade runner.MID”, fan-made MIDI file on BitMIDI, uploader unknown",
+            "url": "https://bitmidi.com/vangelis-blade-runner-mid",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "This copy is moved an octave down from researched:vangelis/blade-runner-end-titles-chords, whose notes give the research. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -7329,7 +7466,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-roygbiv-pad", "deepmind-12d/tape-drift", "super-gemini/sg-hazy-keys"],
+      "sounds": [
+        "take-5/t5-roygbiv-pad",
+        "deepmind-12d/tape-drift",
+        "super-gemini/sg-hazy-keys",
+        "jupiter-8/jp8-boc-pad"
+      ],
       "research": {
         "work": "Boards of Canada, “Roygbiv”, Music Has the Right to Children, 1998",
         "part": "The four bars of chords under the melody, with the falling F♯, E, D on top of the second.",
@@ -9961,7 +10103,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["b2600/eno-triangle-pad", "mantis/mantis-airport-pad"],
+      "sounds": [
+        "b2600/eno-triangle-pad",
+        "mantis/mantis-airport-pad",
+        "jupiter-8/jp8-eno-shimmer"
+      ],
       "research": {
         "work": "Brian Eno, “2/2”, Ambient 1: Music for Airports, 1978",
         "part": "Eight bars of four long tones: A, C, E and F, two bars each.",

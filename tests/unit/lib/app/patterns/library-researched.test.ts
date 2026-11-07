@@ -90,9 +90,9 @@ describe('the research batches', () => {
 
   /** Each batch's artists and how many of their sounds the catalogue held when it was researched. */
   const rosters: [string, string[], number][] = [
-    ['t-127', ['Kraftwerk', 'Depeche Mode'], 48],
-    ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 85],
-    ['t-129', ['Brian Eno', 'Daniel Lanois', 'Vangelis', 'Boards of Canada'], 86],
+    ['t-127', ['Kraftwerk', 'Depeche Mode'], 50],
+    ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 90],
+    ['t-129', ['Brian Eno', 'Daniel Lanois', 'Vangelis', 'Boards of Canada'], 90],
     [
       't-160',
       [
@@ -128,7 +128,7 @@ describe('the research batches', () => {
         'Public Enemy',
         'Whitney Houston',
       ],
-      105,
+      115,
     ],
     [
       't-161',
@@ -163,7 +163,7 @@ describe('the research batches', () => {
         'The Cure',
         'Tubeway Army',
       ],
-      80,
+      88,
     ],
     [
       't-162',
@@ -199,7 +199,7 @@ describe('the research batches', () => {
         'Wham!',
         'Yello',
       ],
-      90,
+      112,
     ],
     [
       't-163',
@@ -237,7 +237,7 @@ describe('the research batches', () => {
         'Walter Murch',
         'Yann Tiersen',
       ],
-      95,
+      116,
     ],
     [
       't-164',
@@ -286,7 +286,7 @@ describe('the research batches', () => {
         'Thom Yorke',
         'U2',
       ],
-      95,
+      107,
     ],
     [
       't-165',
@@ -327,7 +327,7 @@ describe('the research batches', () => {
         'Robin S',
         'Second Phase',
       ],
-      97,
+      105,
     ],
     [
       't-166',
@@ -368,7 +368,7 @@ describe('the research batches', () => {
         'Ulrich Schnauss',
         'Wiley',
       ],
-      98,
+      111,
     ],
     [
       't-167',
@@ -407,7 +407,7 @@ describe('the research batches', () => {
         'Popol Vuh',
         'Roger Payne',
       ],
-      103,
+      109,
     ],
     [
       't-168',
@@ -467,7 +467,7 @@ describe('the research batches', () => {
         'Yo-Yo Ma',
         'Yoshida Brothers',
       ],
-      109,
+      129,
     ],
   ];
 
@@ -846,6 +846,56 @@ describe('the research batches', () => {
       ...bar([43, 54, 60, 59, 60, 54, 60, 54]),
       ...fourth,
     ]);
+  });
+
+  /** The `library-150` sweep's octave copies (t-192 on): their notes open “This copy is moved …”. */
+  const sweepCopies = patterns.filter((p) => p.research.notes.startsWith('This copy is moved'));
+  const MOVED: Record<string, number> = {
+    'an octave down': -12,
+    'two octaves down': -24,
+    'an octave up': 12,
+    'two octaves up': 24,
+  };
+  /** The passage every pattern's notes close with: about the part, never about its sounds. */
+  const closing = (notes: string) => notes.slice(notes.indexOf('_In the style of_'));
+
+  it('has the sweep’s octave copies, or the copy checks below are vacuous', () => {
+    expect(sweepCopies.length).toBeGreaterThanOrEqual(24);
+  });
+
+  it('holds each of the sweep’s octave copies to the pattern it copies', () => {
+    for (const copy of sweepCopies) {
+      const said =
+        /^This copy is moved (an octave down|two octaves down|an octave up|two octaves up)(, back to the octave the lead writes,)? from (researched:\S+), whose notes give the research\. /.exec(
+          copy.research.notes
+        );
+      expect(said, copy.key).not.toBeNull();
+      const [opening, phrase, , sourceKey] = said!;
+      const source = patterns.find((p) => p.key === sourceKey);
+      expect(source, copy.key).toBeDefined();
+      const by = MOVED[phrase];
+      // Notes derived from the source's: where it moved, then the source's closing passage, and none of the
+      // source's sentences about its own sounds.
+      expect(copy.research.notes, copy.key).toBe(opening + closing(source!.research.notes));
+      expect(copy.key.startsWith(`${sourceKey}-${by < 0 ? 'low' : 'high'}`), copy.key).toBe(true);
+      // The same part moved evenly by what it says, with the same timing, grid, work, leads, role and credit.
+      const play = (p: Pattern) =>
+        compileLoop(PatternSchema.parse(p), { loop: 0, rng: seededRng(1) }).notes.map(
+          ([t, n, len]) => [t, n, len]
+        );
+      expect(
+        play(copy.pattern).map(([t, n, len]) => [t, n - by, len]),
+        copy.key
+      ).toEqual(play(source!.pattern));
+      expect(copy.pattern.stepSize, copy.key).toBe(source!.pattern.stepSize);
+      expect(copy.research.work, copy.key).toBe(source!.research.work);
+      expect(copy.research.leads, copy.key).toEqual(source!.research.leads);
+      expect(copy.role, copy.key).toBe(source!.role);
+      expect(copy.fidelity, copy.key).toBe(source!.fidelity);
+      expect(copy.inspiredBy, copy.key).toEqual(source!.inspiredBy);
+      // A sound plays the copy instead of the pattern, never both.
+      for (const sound of copy.sounds) expect(source!.sounds, copy.key).not.toContain(sound);
+    }
   });
 
   it('holds the keys that play “Black Market” on the upside-down keyboard, mirrored around middle C', () => {
