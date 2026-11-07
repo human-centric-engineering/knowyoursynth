@@ -8265,6 +8265,2056 @@
           "hear": "Undamped strings ringing together."
         }
       ]
+    },
+    {
+      "id": "b1-omd",
+      "name": "Electric Pop Sequence",
+      "ref": "In the style of Orchestral Manoeuvres in the Dark",
+      "artist": "Orchestral Manoeuvres in the Dark",
+      "tags": ["seq", "synth-pop", "new wave", "80s"],
+      "level": 1,
+      "blurb": "A bright, bouncy, hooky synth-pop sequence.",
+      "how": "OMD built bright synth-pop around simple, catchy sequenced hooks. A bright square with a short echo.",
+      "phrase": {
+        "bpm": 138,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.1375, 0.8],
+          [0.25, 60, 0.1375, 0.8],
+          [0.5, 55, 0.1375, 0.8],
+          [0.75, 60, 0.1375, 0.8],
+          [1, 48, 0.1375, 0.8],
+          [1.25, 60, 0.1375, 0.8],
+          [1.5, 58, 0.1375, 0.8],
+          [1.75, 60, 0.1375, 0.8],
+          [2, 44, 0.1375, 0.8],
+          [2.25, 56, 0.1375, 0.8],
+          [2.5, 51, 0.1375, 0.8],
+          [2.75, 56, 0.1375, 0.8],
+          [3, 44, 0.1375, 0.8],
+          [3.25, 56, 0.1375, 0.8],
+          [3.5, 55, 0.1375, 0.8],
+          [3.75, 56, 0.1375, 0.8],
+          [4, 46, 0.1375, 0.8],
+          [4.25, 58, 0.1375, 0.8],
+          [4.5, 53, 0.1375, 0.8],
+          [4.75, 58, 0.1375, 0.8],
+          [5, 46, 0.1375, 0.8],
+          [5.25, 58, 0.1375, 0.8],
+          [5.5, 57, 0.1375, 0.8],
+          [5.75, 58, 0.1375, 0.8],
+          [6, 43, 0.1375, 0.8],
+          [6.25, 55, 0.1375, 0.8],
+          [6.5, 50, 0.1375, 0.8],
+          [6.75, 55, 0.1375, 0.8],
+          [7, 43, 0.1375, 0.8],
+          [7.25, 55, 0.1375, 0.8],
+          [7.5, 59, 0.1375, 0.8],
+          [7.75, 62, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A square with a bright cutoff, a quick DEPTH; a short decay.\n- WAVE Square\n- CUTOFF 5 · 917 Hz\n- RESONANCE 2\n- DEPTH (envelope to filter) 3\n- DECAY 1 · 160 ms\n- ACCENT 0\n- Listen for: a bright, bouncy square.",
+          "set": {
+            "vco.wave": "sq",
+            "vcf.cutoff": 5,
+            "vcf.resonance": 2,
+            "vcf.depth": 3,
+            "env.decay": 1,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "A short echo, about 110 ms.\n- DELAY ON/OFF On\n- Delay TIME 4 · 110 ms\n- Delay FEEDBACK 2.5\n- Delay LEVEL 3.5\n- Listen for: a hooky synth-pop sequence.",
+          "set": {
+            "dly.on": true,
+            "dly.time": 4,
+            "dly.feedback": 2.5,
+            "dly.level": 3.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco.wave",
+          "try": "Switch to Sawtooth",
+          "hear": "Brassier, more anthemic."
+        }
+      ]
+    },
+    {
+      "id": "b1-depeche",
+      "name": "Basildon Sequence",
+      "ref": "In the style of Depeche Mode",
+      "artist": "Depeche Mode",
+      "tags": ["bass", "synth-pop", "new wave", "80s"],
+      "level": 2,
+      "blurb": "A dark, driving, sequenced bass with a metallic edge.",
+      "how": "Depeche Mode’s mid-1980s records ran dark, driving sequenced basslines with metallic, industrial edges. A gritty, saturated sequence.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 28, 0.1375, 0.8],
+          [0.25, 28, 0.1375, 0.8],
+          [0.5, 40, 0.1375, 0.8],
+          [0.75, 28, 0.1375, 0.8],
+          [1, 31, 0.1375, 0.8],
+          [1.25, 28, 0.1375, 0.8],
+          [1.5, 33, 0.1375, 0.8],
+          [1.75, 28, 0.1375, 0.8],
+          [2, 28, 0.1375, 0.8],
+          [2.25, 28, 0.1375, 0.8],
+          [2.5, 40, 0.1375, 0.8],
+          [2.75, 28, 0.1375, 0.8],
+          [3, 35, 0.1375, 0.8],
+          [3.25, 33, 0.1375, 0.8],
+          [3.5, 31, 0.1375, 0.8],
+          [3.75, 28, 0.1375, 0.8],
+          [4, 24, 0.1375, 0.8],
+          [4.25, 24, 0.1375, 0.8],
+          [4.5, 36, 0.1375, 0.8],
+          [4.75, 24, 0.1375, 0.8],
+          [5, 28, 0.1375, 0.8],
+          [5.25, 24, 0.1375, 0.8],
+          [5.5, 31, 0.1375, 0.8],
+          [5.75, 24, 0.1375, 0.8],
+          [6, 26, 0.1375, 0.8],
+          [6.25, 26, 0.1375, 0.8],
+          [6.5, 38, 0.1375, 0.8],
+          [6.75, 26, 0.1375, 0.8],
+          [7, 30, 0.1375, 0.8],
+          [7.25, 26, 0.1375, 0.8],
+          [7.5, 33, 0.1375, 0.8],
+          [7.75, 26, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A saw with a low cutoff, a medium DEPTH and resonance; a short decay.\n- WAVE Sawtooth\n- CUTOFF 2.5 · 358 Hz\n- RESONANCE 4.5\n- DEPTH (envelope to filter) 4\n- DECAY 1 · 160 ms\n- ACCENT 0\n- Listen for: a dark, driving sequence.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 2.5,
+            "vcf.resonance": 4.5,
+            "vcf.depth": 4,
+            "env.decay": 1,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "Saturation with a bright tone for a metallic edge.\n- SATURATION ON/OFF On\n- Saturation DRIVE 5\n- Saturation TONE 7\n- Listen for: a dark, metallic synth-pop bass.",
+          "set": {
+            "sat.on": true,
+            "sat.drive": 5,
+            "sat.tone": 7
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco.wave",
+          "try": "Switch to Square",
+          "hear": "A hollower, earlier Depeche sound."
+        }
+      ]
+    },
+    {
+      "id": "b1-blue-monday",
+      "name": "Manchester Octaves",
+      "ref": "In the style of New Order",
+      "artist": "New Order",
+      "tags": ["bass", "synth-pop", "new wave", "80s"],
+      "level": 2,
+      "blurb": "A pumping, sixteenth-note octave sequence under a dance-floor anthem.",
+      "how": "New Order’s 1980s dance records ran pumping, sequenced octave basslines in sixteenths.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 29, 0.1375, 0.8],
+          [0.25, 41, 0.1375, 0.8],
+          [0.5, 29, 0.1375, 0.8],
+          [0.75, 41, 0.1375, 0.8],
+          [1, 29, 0.1375, 0.8],
+          [1.25, 41, 0.1375, 0.8],
+          [1.5, 29, 0.1375, 0.8],
+          [1.75, 41, 0.1375, 0.8],
+          [2, 29, 0.1375, 0.8],
+          [2.25, 41, 0.1375, 0.8],
+          [2.5, 29, 0.1375, 0.8],
+          [2.75, 41, 0.1375, 0.8],
+          [3, 29, 0.1375, 0.8],
+          [3.25, 41, 0.1375, 0.8],
+          [3.5, 29, 0.1375, 0.8],
+          [3.75, 41, 0.1375, 0.8],
+          [4, 24, 0.1375, 0.8],
+          [4.25, 36, 0.1375, 0.8],
+          [4.5, 24, 0.1375, 0.8],
+          [4.75, 36, 0.1375, 0.8],
+          [5, 24, 0.1375, 0.8],
+          [5.25, 36, 0.1375, 0.8],
+          [5.5, 24, 0.1375, 0.8],
+          [5.75, 36, 0.1375, 0.8],
+          [6, 26, 0.1375, 0.8],
+          [6.25, 38, 0.1375, 0.8],
+          [6.5, 26, 0.1375, 0.8],
+          [6.75, 38, 0.1375, 0.8],
+          [7, 26, 0.1375, 0.8],
+          [7.25, 38, 0.1375, 0.8],
+          [7.5, 26, 0.1375, 0.8],
+          [7.75, 38, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A square with a low-mid cutoff, a quick DEPTH; a short decay.\n- WAVE Square\n- CUTOFF 3 · 432 Hz\n- RESONANCE 2\n- DEPTH (envelope to filter) 3.5\n- DECAY 1 · 160 ms\n- ACCENT 0\n- Listen for: a pumping octave sequence.",
+          "set": {
+            "vco.wave": "sq",
+            "vcf.cutoff": 3,
+            "vcf.resonance": 2,
+            "vcf.depth": 3.5,
+            "env.decay": 1,
+            "vca.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "dly.on",
+          "try": "Switch on",
+          "hear": "An echoing, spacier pump."
+        }
+      ]
+    },
+    {
+      "id": "b1-pet-shop",
+      "name": "West End Bass",
+      "ref": "In the style of Pet Shop Boys",
+      "artist": "Pet Shop Boys",
+      "tags": ["bass", "synth-pop", "dance-pop", "80s"],
+      "level": 1,
+      "blurb": "A punchy, glossy, syncopated dance-pop bass.",
+      "how": "Pet Shop Boys’ glossy dance-pop runs punchy, syncopated sequenced bass under big chords.",
+      "phrase": {
+        "bpm": 116,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.1375, 0.8],
+          [0.5, 36, 0.1375, 0.8],
+          [0.75, 48, 0.1375, 0.8],
+          [1.25, 36, 0.1375, 0.8],
+          [1.75, 34, 0.1375, 0.8],
+          [2.25, 36, 0.1375, 0.8],
+          [2.75, 39, 0.1375, 0.8],
+          [3.25, 36, 0.1375, 0.8],
+          [3.5, 31, 0.1375, 0.8],
+          [4, 32, 0.1375, 0.8],
+          [4.5, 32, 0.1375, 0.8],
+          [4.75, 44, 0.1375, 0.8],
+          [5.25, 32, 0.1375, 0.8],
+          [5.75, 31, 0.1375, 0.8],
+          [6.25, 32, 0.1375, 0.8],
+          [6.75, 34, 0.1375, 0.8],
+          [7.25, 36, 0.1375, 0.8],
+          [7.5, 34, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A saw with a low-mid cutoff, a medium DEPTH and a little resonance; a short decay.\n- WAVE Sawtooth\n- CUTOFF 3 · 432 Hz\n- RESONANCE 2.5\n- DEPTH (envelope to filter) 4\n- DECAY 1.5 · 190 ms\n- ACCENT 0\n- Listen for: a punchy, glossy bass.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 3,
+            "vcf.resonance": 2.5,
+            "vcf.depth": 4,
+            "env.decay": 1.5,
+            "vca.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcf.depth",
+          "try": "Raise to 7",
+          "hear": "A rubberier, more Hi-NRG bass."
+        }
+      ]
+    },
+    {
+      "id": "b1-sweet-dreams",
+      "name": "Sweet Dreams Sequence",
+      "ref": "In the style of Eurythmics",
+      "artist": "Eurythmics",
+      "tags": ["bass", "synth-pop", "new wave", "80s"],
+      "level": 2,
+      "blurb": "A cool, hypnotic, minor sequenced bass riff that rises and falls.",
+      "how": "Eurythmics’ early hits were built on cool, hypnotic sequenced bass riffs. A minor sixteenth figure with a short echo.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.1375, 0.8],
+          [0.25, 36, 0.1375, 0.8],
+          [0.5, 48, 0.1375, 0.8],
+          [0.75, 36, 0.1375, 0.8],
+          [1, 51, 0.1375, 0.8],
+          [1.25, 36, 0.1375, 0.8],
+          [1.5, 48, 0.1375, 0.8],
+          [1.75, 36, 0.1375, 0.8],
+          [2, 32, 0.1375, 0.8],
+          [2.25, 32, 0.1375, 0.8],
+          [2.5, 44, 0.1375, 0.8],
+          [2.75, 32, 0.1375, 0.8],
+          [3, 48, 0.1375, 0.8],
+          [3.25, 32, 0.1375, 0.8],
+          [3.5, 44, 0.1375, 0.8],
+          [3.75, 32, 0.1375, 0.8],
+          [4, 31, 0.1375, 0.8],
+          [4.25, 31, 0.1375, 0.8],
+          [4.5, 43, 0.1375, 0.8],
+          [4.75, 31, 0.1375, 0.8],
+          [5, 46, 0.1375, 0.8],
+          [5.25, 31, 0.1375, 0.8],
+          [5.5, 43, 0.1375, 0.8],
+          [5.75, 31, 0.1375, 0.8],
+          [6, 31, 0.1375, 0.8],
+          [6.25, 31, 0.1375, 0.8],
+          [6.5, 43, 0.1375, 0.8],
+          [6.75, 31, 0.1375, 0.8],
+          [7, 47, 0.1375, 0.8],
+          [7.25, 31, 0.1375, 0.8],
+          [7.5, 43, 0.1375, 0.8],
+          [7.75, 31, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A saw with a low-mid cutoff, a medium DEPTH and resonance; a short decay.\n- WAVE Sawtooth\n- CUTOFF 3 · 432 Hz\n- RESONANCE 4\n- DEPTH (envelope to filter) 4\n- DECAY 1 · 160 ms\n- ACCENT 0\n- Listen for: a cool, ticking bass.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 3,
+            "vcf.resonance": 4,
+            "vcf.depth": 4,
+            "env.decay": 1,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "A short echo at a low LEVEL.\n- DELAY ON/OFF On\n- Delay TIME 4.5 · 120 ms\n- Delay FEEDBACK 2\n- Delay LEVEL 3\n- Listen for: a hypnotic sequenced riff.",
+          "set": {
+            "dly.on": true,
+            "dly.time": 4.5,
+            "dly.feedback": 2,
+            "dly.level": 3
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 8",
+          "hear": "A glassier, more acid riff."
+        }
+      ]
+    },
+    {
+      "id": "b1-numan",
+      "name": "Cold Machine Riff",
+      "ref": "In the style of Gary Numan",
+      "artist": "Gary Numan",
+      "tags": ["lead", "synth-pop", "new wave", "70s"],
+      "level": 2,
+      "blurb": "A cold, heavy, saturated synth riff played like a rock guitar.",
+      "how": "Gary Numan played heavy, cold synth riffs like a rock band would play guitars. A saturated saw riff with a little echo.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.1375, 0.8],
+          [0.5, 48, 0.1375, 0.8],
+          [1, 51, 0.1375, 0.8],
+          [1.5, 53, 0.1375, 0.8],
+          [2, 55, 0.1375, 0.8],
+          [2.75, 53, 0.1375, 0.8],
+          [3.25, 51, 0.1375, 0.8],
+          [4, 48, 0.1375, 0.8],
+          [4.5, 48, 0.1375, 0.8],
+          [5, 51, 0.1375, 0.8],
+          [5.5, 53, 0.1375, 0.8],
+          [6, 58, 0.1375, 0.8],
+          [6.75, 55, 0.1375, 0.8],
+          [7.25, 53, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A saw with a middle cutoff, a little resonance; a medium decay.\n- WAVE Sawtooth\n- CUTOFF 4 · 629 Hz\n- RESONANCE 3\n- DEPTH (envelope to filter) 2\n- DECAY 4 · 380 ms\n- ACCENT 0\n- Listen for: a cold, plain riff.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 4,
+            "vcf.resonance": 3,
+            "vcf.depth": 2,
+            "env.decay": 4,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "Saturation with a middle tone, and a short echo.\n- SATURATION ON/OFF On\n- Saturation DRIVE 6\n- Saturation TONE 5\n- DELAY ON/OFF On\n- Delay TIME 5 · 140 ms\n- Delay FEEDBACK 2\n- Delay LEVEL 3\n- Listen for: a cold, heavy machine riff.",
+          "set": {
+            "sat.on": true,
+            "sat.drive": 6,
+            "sat.tone": 5,
+            "dly.on": true,
+            "dly.time": 5,
+            "dly.feedback": 2,
+            "dly.level": 3
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "sat.drive",
+          "try": "Raise to 10",
+          "hear": "An even heavier, guitar-like riff."
+        }
+      ]
+    },
+    {
+      "id": "b1-human-league",
+      "name": "Sheffield Synth-Pop",
+      "ref": "In the style of The Human League",
+      "artist": "The Human League",
+      "tags": ["bass", "synth-pop", "new wave", "80s"],
+      "level": 1,
+      "blurb": "A crisp, bouncy, early-1980s synth-pop bass.",
+      "how": "The Human League’s synth-pop used crisp, bouncy sequenced bass. A square with a quick pluck.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.1375, 0.8],
+          [0.5, 45, 0.1375, 0.8],
+          [1, 33, 0.1375, 0.8],
+          [1.5, 43, 0.1375, 0.8],
+          [2, 29, 0.1375, 0.8],
+          [2.5, 41, 0.1375, 0.8],
+          [3, 29, 0.1375, 0.8],
+          [3.5, 40, 0.1375, 0.8],
+          [4, 26, 0.1375, 0.8],
+          [4.5, 38, 0.1375, 0.8],
+          [5, 26, 0.1375, 0.8],
+          [5.5, 36, 0.1375, 0.8],
+          [6, 28, 0.1375, 0.8],
+          [6.5, 40, 0.1375, 0.8],
+          [7, 28, 0.1375, 0.8],
+          [7.5, 32, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A square with a middle cutoff, a quick DEPTH; a short decay.\n- WAVE Square\n- CUTOFF 3.5 · 522 Hz\n- RESONANCE 2\n- DEPTH (envelope to filter) 3.5\n- DECAY 1.5 · 190 ms\n- ACCENT 0\n- Listen for: a crisp, bouncy bass.",
+          "set": {
+            "vco.wave": "sq",
+            "vcf.cutoff": 3.5,
+            "vcf.resonance": 2,
+            "vcf.depth": 3.5,
+            "env.decay": 1.5,
+            "vca.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco.wave",
+          "try": "Switch to Sawtooth",
+          "hear": "Buzzier, more like a Pro-One."
+        }
+      ]
+    },
+    {
+      "id": "b1-autobahn",
+      "name": "Autobahn Drive",
+      "ref": "In the style of Kraftwerk — Autobahn",
+      "artist": "Kraftwerk",
+      "tags": ["bass", "krautrock", "electronic", "70s"],
+      "level": 2,
+      "blurb": "A relaxed, rolling, motoring bass like a long drive on the autobahn.",
+      "how": "Kraftwerk’s Autobahn rolls along on a relaxed, bouncing synth bass. A round tone and a steady, cheerful line.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 29, 0.1375, 0.8],
+          [0.5, 36, 0.1375, 0.8],
+          [1, 29, 0.1375, 0.8],
+          [1.5, 33, 0.1375, 0.8],
+          [2, 34, 0.1375, 0.8],
+          [2.5, 29, 0.1375, 0.8],
+          [3, 36, 0.1375, 0.8],
+          [3.5, 33, 0.1375, 0.8],
+          [4, 29, 0.1375, 0.8],
+          [4.5, 36, 0.1375, 0.8],
+          [5, 29, 0.1375, 0.8],
+          [5.5, 33, 0.1375, 0.8],
+          [6, 36, 0.1375, 0.8],
+          [6.5, 34, 0.1375, 0.8],
+          [7, 33, 0.1375, 0.8],
+          [7.5, 31, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A square with a low-mid cutoff and a little DEPTH; a medium decay.\n- WAVE Square\n- CUTOFF 3 · 432 Hz\n- RESONANCE 1.5\n- DEPTH (envelope to filter) 2.5\n- DECAY 2.5 · 250 ms\n- ACCENT 0\n- Listen for: a round, bouncy bass.",
+          "set": {
+            "vco.wave": "sq",
+            "vcf.cutoff": 3,
+            "vcf.resonance": 1.5,
+            "vcf.depth": 2.5,
+            "env.decay": 2.5,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "A short echo, about 140 ms.\n- DELAY ON/OFF On\n- Delay TIME 5 · 140 ms\n- Delay FEEDBACK 2\n- Delay LEVEL 3\n- Listen for: a relaxed, rolling drive.",
+          "set": {
+            "dly.on": true,
+            "dly.time": 5,
+            "dly.feedback": 2,
+            "dly.level": 3
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco.pitch",
+          "try": "Turn to +2",
+          "hear": "A brighter key."
+        }
+      ]
+    },
+    {
+      "id": "b1-eurodance",
+      "name": "Eurodance Bass",
+      "ref": "In the style of 1990s Eurodance",
+      "artist": "Eurodance",
+      "tags": ["bass", "eurodance", "dance-pop", "90s"],
+      "level": 1,
+      "blurb": "A pumping offbeat bass for a 1990s chart dance anthem.",
+      "how": "Eurodance runs a pumping offbeat bass under big chords and a rap. Short notes on every “and”.",
+      "phrase": {
+        "bpm": 136,
+        "loop": true,
+        "steps": [
+          [0.5, 33, 0.1375, 0.8],
+          [1.5, 33, 0.1375, 0.8],
+          [2.5, 33, 0.1375, 0.8],
+          [3.5, 33, 0.1375, 0.8],
+          [4.5, 29, 0.1375, 0.8],
+          [5.5, 29, 0.1375, 0.8],
+          [6.5, 31, 0.1375, 0.8],
+          [7.5, 31, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A saw with a low-mid cutoff, a medium DEPTH; a short decay.\n- WAVE Sawtooth\n- CUTOFF 3 · 432 Hz\n- RESONANCE 2.5\n- DEPTH (envelope to filter) 4\n- DECAY 1.5 · 190 ms\n- ACCENT 0\n- Listen for: a pumping offbeat bass.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 3,
+            "vcf.resonance": 2.5,
+            "vcf.depth": 4,
+            "env.decay": 1.5,
+            "vca.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 6",
+          "hear": "A slightly squelchier pump."
+        }
+      ]
+    },
+    {
+      "id": "b1-eurobeat",
+      "name": "Eurobeat Octaves",
+      "ref": "In the style of 1990s Eurobeat",
+      "artist": "Eurobeat",
+      "tags": ["bass", "eurobeat", "dance", "90s"],
+      "level": 2,
+      "blurb": "A breakneck, galloping octave bass for a high-speed race.",
+      "how": "Eurobeat, famous from Japanese racing anime, runs a breakneck octave bass at around 155 BPM.",
+      "phrase": {
+        "bpm": 155,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.1375, 0.8],
+          [0.25, 50, 0.1375, 0.8],
+          [0.5, 38, 0.1375, 0.8],
+          [0.75, 50, 0.1375, 0.8],
+          [1, 38, 0.1375, 0.8],
+          [1.25, 50, 0.1375, 0.8],
+          [1.5, 38, 0.1375, 0.8],
+          [1.75, 50, 0.1375, 0.8],
+          [2, 34, 0.1375, 0.8],
+          [2.25, 46, 0.1375, 0.8],
+          [2.5, 34, 0.1375, 0.8],
+          [2.75, 46, 0.1375, 0.8],
+          [3, 34, 0.1375, 0.8],
+          [3.25, 46, 0.1375, 0.8],
+          [3.5, 34, 0.1375, 0.8],
+          [3.75, 46, 0.1375, 0.8],
+          [4, 36, 0.1375, 0.8],
+          [4.25, 48, 0.1375, 0.8],
+          [4.5, 36, 0.1375, 0.8],
+          [4.75, 48, 0.1375, 0.8],
+          [5, 36, 0.1375, 0.8],
+          [5.25, 48, 0.1375, 0.8],
+          [5.5, 36, 0.1375, 0.8],
+          [5.75, 48, 0.1375, 0.8],
+          [6, 33, 0.1375, 0.8],
+          [6.25, 45, 0.1375, 0.8],
+          [6.5, 33, 0.1375, 0.8],
+          [6.75, 45, 0.1375, 0.8],
+          [7, 33, 0.1375, 0.8],
+          [7.25, 45, 0.1375, 0.8],
+          [7.5, 37, 0.1375, 0.8],
+          [7.75, 49, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A saw with a middle cutoff, a quick DEPTH; a short decay.\n- WAVE Sawtooth\n- CUTOFF 3.5 · 522 Hz\n- RESONANCE 2.5\n- DEPTH (envelope to filter) 3.5\n- DECAY 1 · 160 ms\n- ACCENT 0\n- Listen for: a bright, galloping bass.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 3.5,
+            "vcf.resonance": 2.5,
+            "vcf.depth": 3.5,
+            "env.decay": 1,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "Light saturation for punch.\n- SATURATION ON/OFF On\n- Saturation DRIVE 3\n- Saturation TONE 6\n- Listen for: a breakneck Eurobeat octave bass.",
+          "set": {
+            "sat.on": true,
+            "sat.drive": 3,
+            "sat.tone": 6
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "env.decay",
+          "try": "Drop to 0",
+          "hear": "Even tighter and faster."
+        }
+      ]
+    },
+    {
+      "id": "b1-game-boy",
+      "name": "Pocket Chiptune",
+      "ref": "In the style of Game Boy chiptune",
+      "artist": "Chiptune",
+      "tags": ["lead", "chiptune", "game"],
+      "level": 2,
+      "blurb": "A cheerful, square-wave pocket-console melody with a tiny echo.",
+      "how": "Chiptune musicians write on old handheld consoles: square waves, fast notes and fake echoes. The B1’s square with the filter open and a short echo gets close.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.1375, 0.8],
+          [0.25, 64, 0.1375, 0.8],
+          [0.5, 67, 0.1375, 0.8],
+          [0.75, 72, 0.1375, 0.8],
+          [1.25, 67, 0.1375, 0.8],
+          [1.5, 64, 0.1375, 0.8],
+          [2, 62, 0.1375, 0.8],
+          [2.25, 65, 0.1375, 0.8],
+          [2.5, 69, 0.1375, 0.8],
+          [2.75, 74, 0.1375, 0.8],
+          [3.25, 69, 0.1375, 0.8],
+          [3.5, 65, 0.1375, 0.8],
+          [4, 64, 0.1375, 0.8],
+          [4.25, 67, 0.1375, 0.8],
+          [4.5, 71, 0.1375, 0.8],
+          [4.75, 76, 0.1375, 0.8],
+          [5.25, 74, 0.1375, 0.8],
+          [5.5, 72, 0.1375, 0.8],
+          [5.75, 71, 0.1375, 0.8],
+          [6, 72, 0.1375, 0.8],
+          [6.5, 67, 0.1375, 0.8],
+          [7, 64, 0.1375, 0.8],
+          [7.5, 60, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A square with the filter almost open, no resonance or DEPTH; a short decay.\n- WAVE Square\n- CUTOFF 9 · 4.1 kHz\n- RESONANCE 0\n- DEPTH (envelope to filter) 0\n- DECAY 1.5 · 190 ms\n- ACCENT 0\n- Listen for: a raw, bright square.",
+          "set": {
+            "vco.wave": "sq",
+            "vcf.cutoff": 9,
+            "vcf.resonance": 0,
+            "vcf.depth": 0,
+            "env.decay": 1.5,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "A short echo at a low LEVEL, like a chiptune’s fake echo channel.\n- DELAY ON/OFF On\n- Delay TIME 4.5 · 120 ms\n- Delay FEEDBACK 1\n- Delay LEVEL 3\n- Listen for: a cheerful pocket-console melody.",
+          "set": {
+            "dly.on": true,
+            "dly.time": 4.5,
+            "dly.feedback": 1,
+            "dly.level": 3
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Drop to 5",
+          "hear": "Softer, like a speaker inside the console."
+        }
+      ]
+    },
+    {
+      "id": "b1-overworld",
+      "name": "Overworld Theme",
+      "ref": "In the style of 8-bit adventure-game music",
+      "artist": "Video game music",
+      "tags": ["lead", "game", "chiptune"],
+      "level": 2,
+      "blurb": "A bold, heroic, marching 8-bit melody for exploring a map.",
+      "how": "Eight-bit adventure games had bold, heroic marching themes for the overworld map. A bright square with punchy notes.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 55, 0.1375, 0.8],
+          [0.75, 55, 0.1375, 0.8],
+          [1, 60, 0.1375, 0.8],
+          [1.5, 64, 0.1375, 0.8],
+          [2, 67, 0.6375, 0.8],
+          [3, 65, 0.1375, 0.8],
+          [3.25, 64, 0.1375, 0.8],
+          [3.5, 62, 0.1375, 0.8],
+          [4, 64, 0.1375, 0.8],
+          [4.75, 64, 0.1375, 0.8],
+          [5, 69, 0.1375, 0.8],
+          [5.5, 72, 0.1375, 0.8],
+          [6, 71, 0.6375, 0.8],
+          [7, 69, 0.1375, 0.8],
+          [7.25, 67, 0.1375, 0.8],
+          [7.5, 66, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A square with a bright cutoff, no resonance, a little DEPTH; a medium decay.\n- WAVE Square\n- CUTOFF 7 · 1.9 kHz\n- RESONANCE 0\n- DEPTH (envelope to filter) 1\n- DECAY 3 · 290 ms\n- ACCENT 0\n- Listen for: a bold, heroic 8-bit melody.",
+          "set": {
+            "vco.wave": "sq",
+            "vcf.cutoff": 7,
+            "vcf.resonance": 0,
+            "vcf.depth": 1,
+            "env.decay": 3,
+            "vca.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco.pitch",
+          "try": "Turn to −5",
+          "hear": "A darker, dungeon version."
+        }
+      ]
+    },
+    {
+      "id": "b1-wah-echo",
+      "name": "Wah Echo Funk",
+      "ref": "In the style of 1970s blaxploitation soundtracks",
+      "artist": "Blaxploitation soundtracks",
+      "tags": ["lead", "funk", "soul", "film", "70s"],
+      "level": 2,
+      "blurb": "A scratchy, chicken-pickin’ wah guitar with an echo bouncing behind.",
+      "how": "Seventies crime-film soundtracks were full of scratchy wah guitar and echo. A big filter sweep on short notes, and an echo.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 50, 0.1375, 0.8],
+          [0.25, 50, 0.1375, 0.55],
+          [0.5, 50, 0.1375, 0.55],
+          [0.75, 50, 0.1375, 0.8],
+          [1.25, 50, 0.1375, 0.55],
+          [1.5, 50, 0.1375, 0.8],
+          [1.75, 50, 0.1375, 0.55],
+          [2, 53, 0.1375, 0.8],
+          [2.25, 50, 0.1375, 0.55],
+          [2.5, 50, 0.1375, 0.55],
+          [2.75, 50, 0.1375, 0.8],
+          [3.25, 50, 0.1375, 0.55],
+          [3.5, 48, 0.1375, 0.8],
+          [3.75, 50, 0.1375, 0.55],
+          [4, 50, 0.1375, 0.8],
+          [4.25, 50, 0.1375, 0.55],
+          [4.5, 50, 0.1375, 0.55],
+          [4.75, 50, 0.1375, 0.8],
+          [5.25, 50, 0.1375, 0.55],
+          [5.5, 50, 0.1375, 0.8],
+          [5.75, 50, 0.1375, 0.55],
+          [6, 57, 0.1375, 0.8],
+          [6.25, 55, 0.1375, 0.55],
+          [6.5, 53, 0.1375, 0.8],
+          [6.75, 50, 0.1375, 0.55],
+          [7.25, 48, 0.1375, 0.8],
+          [7.5, 50, 0.1375, 0.55]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A saw with a low cutoff, a big DEPTH and medium-high resonance; a short decay.\n- WAVE Sawtooth\n- CUTOFF 2.5 · 358 Hz\n- RESONANCE 7\n- DEPTH (envelope to filter) 6.5\n- DECAY 1 · 160 ms\n- ACCENT 0\n- Listen for: a scratchy “wacka” on every note.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 2.5,
+            "vcf.resonance": 7,
+            "vcf.depth": 6.5,
+            "env.decay": 1,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "An eighth echo of about 290 ms.\n- DELAY ON/OFF On\n- Delay TIME 7.9 · 290 ms\n- Delay FEEDBACK 3\n- Delay LEVEL 3.5\n- Listen for: scratchy wah funk with an echo.",
+          "set": {
+            "dly.on": true,
+            "dly.time": 7.9,
+            "dly.feedback": 3,
+            "dly.level": 3.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcf.resonance",
+          "try": "Drop to 3",
+          "hear": "Less wah, more muted chicken-pickin’."
+        }
+      ]
+    },
+    {
+      "id": "b1-afrobeats",
+      "name": "Afrobeats Bass",
+      "ref": "In the style of 2010s Afrobeats",
+      "artist": "Afrobeats",
+      "tags": ["bass", "afrobeats", "african", "10s"],
+      "level": 1,
+      "blurb": "A warm, bouncy, syncopated bass under a Lagos dance groove.",
+      "how": "Afrobeats rolls a warm, syncopated bass under a swaying groove. A round tone with a quick bounce.",
+      "phrase": {
+        "bpm": 106,
+        "loop": true,
+        "steps": [
+          [0, 31, 0.1375, 0.8],
+          [0.75, 31, 0.1375, 0.8],
+          [1.5, 34, 0.1375, 0.8],
+          [2.25, 36, 0.1375, 0.8],
+          [3, 34, 0.1375, 0.8],
+          [3.5, 31, 0.1375, 0.8],
+          [4, 27, 0.1375, 0.8],
+          [4.75, 27, 0.1375, 0.8],
+          [5.5, 31, 0.1375, 0.8],
+          [6.25, 29, 0.1375, 0.8],
+          [7, 26, 0.1375, 0.8],
+          [7.5, 29, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A square into a low cutoff, a quick DEPTH; a medium decay.\n- WAVE Square\n- CUTOFF 2 · 297 Hz\n- RESONANCE 1\n- DEPTH (envelope to filter) 3\n- DECAY 2.5 · 250 ms\n- ACCENT 0\n- Listen for: a warm, bouncy bass.",
+          "set": {
+            "vco.wave": "sq",
+            "vcf.cutoff": 2,
+            "vcf.resonance": 1,
+            "vcf.depth": 3,
+            "env.decay": 2.5,
+            "vca.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco.wave",
+          "try": "Switch to Sawtooth",
+          "hear": "A brighter, more synthy bass."
+        }
+      ]
+    },
+    {
+      "id": "b1-highlife",
+      "name": "Highlife Guitar",
+      "ref": "In the style of Ghanaian highlife",
+      "artist": "Highlife",
+      "tags": ["pluck", "highlife", "african", "60s"],
+      "level": 2,
+      "blurb": "A bright, sweet, interlocking guitar figure from a Ghanaian dance band.",
+      "how": "Highlife guitarists play sweet, interlocking, cyclical figures. A bright pluck on a major-key cycle.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.1375, 0.8],
+          [0.25, 64, 0.1375, 0.8],
+          [0.5, 67, 0.1375, 0.8],
+          [0.75, 64, 0.1375, 0.8],
+          [1, 65, 0.1375, 0.8],
+          [1.25, 69, 0.1375, 0.8],
+          [1.5, 72, 0.1375, 0.8],
+          [1.75, 69, 0.1375, 0.8],
+          [2, 67, 0.1375, 0.8],
+          [2.25, 71, 0.1375, 0.8],
+          [2.5, 74, 0.1375, 0.8],
+          [2.75, 71, 0.1375, 0.8],
+          [3, 72, 0.1375, 0.8],
+          [3.25, 67, 0.1375, 0.8],
+          [3.5, 64, 0.1375, 0.8],
+          [3.75, 67, 0.1375, 0.8],
+          [4, 60, 0.1375, 0.8],
+          [4.25, 64, 0.1375, 0.8],
+          [4.5, 67, 0.1375, 0.8],
+          [4.75, 64, 0.1375, 0.8],
+          [5, 65, 0.1375, 0.8],
+          [5.25, 69, 0.1375, 0.8],
+          [5.5, 72, 0.1375, 0.8],
+          [5.75, 69, 0.1375, 0.8],
+          [6, 67, 0.1375, 0.8],
+          [6.25, 71, 0.1375, 0.8],
+          [6.5, 74, 0.1375, 0.8],
+          [6.75, 71, 0.1375, 0.8],
+          [7, 67, 0.1375, 0.8],
+          [7.25, 65, 0.1375, 0.8],
+          [7.5, 64, 0.1375, 0.8],
+          [7.75, 62, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A saw with a brighter cutoff, a quick DEPTH and a little resonance; a short decay.\n- WAVE Sawtooth\n- CUTOFF 5 · 917 Hz\n- RESONANCE 2\n- DEPTH (envelope to filter) 3\n- DECAY 1 · 160 ms\n- ACCENT 0\n- Listen for: a sweet, bright guitar figure.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 5,
+            "vcf.resonance": 2,
+            "vcf.depth": 3,
+            "env.decay": 1,
+            "vca.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "dly.on",
+          "try": "Switch on",
+          "hear": "A dance-hall echo."
+        }
+      ]
+    },
+    {
+      "id": "b1-soukous",
+      "name": "Soukous Sebene",
+      "ref": "In the style of Congolese soukous",
+      "artist": "Soukous",
+      "tags": ["pluck", "soukous", "african", "80s"],
+      "level": 3,
+      "blurb": "A fast, sparkling, cascading guitar line from the sebene of a soukous song.",
+      "how": "In the sebene, the dance section of a soukous song, the lead guitar plays fast, sparkling, cascading lines high up the neck.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 76, 0.1375, 0.8],
+          [0.25, 74, 0.1375, 0.8],
+          [0.5, 71, 0.1375, 0.8],
+          [0.75, 67, 0.1375, 0.8],
+          [1, 71, 0.1375, 0.8],
+          [1.25, 74, 0.1375, 0.8],
+          [1.5, 76, 0.1375, 0.8],
+          [1.75, 79, 0.1375, 0.8],
+          [2, 76, 0.1375, 0.8],
+          [2.25, 74, 0.1375, 0.8],
+          [2.5, 71, 0.1375, 0.8],
+          [2.75, 69, 0.1375, 0.8],
+          [3, 71, 0.1375, 0.8],
+          [3.25, 69, 0.1375, 0.8],
+          [3.5, 67, 0.1375, 0.8],
+          [3.75, 64, 0.1375, 0.8],
+          [4, 74, 0.1375, 0.8],
+          [4.25, 72, 0.1375, 0.8],
+          [4.5, 69, 0.1375, 0.8],
+          [4.75, 66, 0.1375, 0.8],
+          [5, 69, 0.1375, 0.8],
+          [5.25, 72, 0.1375, 0.8],
+          [5.5, 74, 0.1375, 0.8],
+          [5.75, 78, 0.1375, 0.8],
+          [6, 74, 0.1375, 0.8],
+          [6.25, 72, 0.1375, 0.8],
+          [6.5, 69, 0.1375, 0.8],
+          [6.75, 67, 0.1375, 0.8],
+          [7, 69, 0.1375, 0.8],
+          [7.25, 67, 0.1375, 0.8],
+          [7.5, 66, 0.1375, 0.8],
+          [7.75, 62, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A saw with a bright cutoff, a quick DEPTH and a little resonance; a short decay.\n- WAVE Sawtooth\n- CUTOFF 5.5 · 1.1 kHz\n- RESONANCE 2.5\n- DEPTH (envelope to filter) 3\n- DECAY 0.5 · 140 ms\n- ACCENT 0\n- Listen for: a sparkling, bright pluck.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 5.5,
+            "vcf.resonance": 2.5,
+            "vcf.depth": 3,
+            "env.decay": 0.5,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "A short echo of about 110 ms.\n- DELAY ON/OFF On\n- Delay TIME 4 · 110 ms\n- Delay FEEDBACK 2\n- Delay LEVEL 3\n- Listen for: a sparkling, cascading sebene.",
+          "set": {
+            "dly.on": true,
+            "dly.time": 4,
+            "dly.feedback": 2,
+            "dly.level": 3
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco.pitch",
+          "try": "Turn to −5",
+          "hear": "A lower, rhythm-guitar version."
+        }
+      ]
+    },
+    {
+      "id": "b1-samba",
+      "name": "Samba Surdo Bass",
+      "ref": "In the style of Brazilian samba",
+      "artist": "Samba",
+      "tags": ["bass", "samba", "brazilian", "latin"],
+      "level": 1,
+      "blurb": "A deep, bouncing bass on the samba’s surdo pulse.",
+      "how": "Samba is driven by the surdo drum’s deep pulse, strongest on the second beat. The bass follows it with root and fifth.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.175, 0.8],
+          [0.75, 33, 0.175, 0.8],
+          [1, 38, 0.175, 0.8],
+          [1.75, 33, 0.175, 0.8],
+          [2, 38, 0.175, 0.8],
+          [2.75, 33, 0.175, 0.8],
+          [3.25, 33, 0.175, 0.8],
+          [3.5, 38, 0.175, 0.8],
+          [4, 31, 0.175, 0.8],
+          [4.75, 38, 0.175, 0.8],
+          [5, 31, 0.175, 0.8],
+          [5.75, 38, 0.175, 0.8],
+          [6, 33, 0.175, 0.8],
+          [6.75, 40, 0.175, 0.8],
+          [7.25, 40, 0.175, 0.8],
+          [7.5, 33, 0.175, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A square into a low cutoff with a quick DEPTH; a short decay.\n- WAVE Square\n- CUTOFF 2 · 297 Hz\n- RESONANCE 1\n- DEPTH (envelope to filter) 3.5\n- DECAY 2 · 210 ms\n- ACCENT 0\n- Listen for: a deep, bouncing samba bass.",
+          "set": {
+            "vco.wave": "sq",
+            "vcf.cutoff": 2,
+            "vcf.resonance": 1,
+            "vcf.depth": 3.5,
+            "env.decay": 2,
+            "vca.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Raise to 4",
+          "hear": "More like a bass guitar than a surdo."
+        }
+      ]
+    },
+    {
+      "id": "b1-tango",
+      "name": "Tango Marcato",
+      "ref": "In the style of Argentine tango",
+      "artist": "Tango",
+      "tags": ["bass", "tango", "argentine", "traditional"],
+      "level": 2,
+      "blurb": "A stomping, dramatic tango bass with the marcato on every beat.",
+      "how": "Argentine tango bass stomps on every beat in marcato, with dramatic pushes before the bar. A punchy, saturated tone.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.2, 0.8],
+          [1, 33, 0.2, 0.8],
+          [2, 33, 0.2, 0.8],
+          [3, 33, 0.2, 0.8],
+          [3.5, 40, 0.2, 0.8],
+          [4, 33, 0.2, 0.8],
+          [5, 33, 0.2, 0.8],
+          [6, 32, 0.2, 0.8],
+          [7, 33, 0.2, 0.8],
+          [8, 38, 0.2, 0.8],
+          [9, 38, 0.2, 0.8],
+          [10, 38, 0.2, 0.8],
+          [11, 38, 0.2, 0.8],
+          [11.5, 45, 0.2, 0.8],
+          [12, 40, 0.2, 0.8],
+          [13, 40, 0.2, 0.8],
+          [14, 28, 1.7, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A saw with a low-mid cutoff, a quick DEPTH; a short decay.\n- WAVE Sawtooth\n- CUTOFF 3 · 432 Hz\n- RESONANCE 2\n- DEPTH (envelope to filter) 4\n- DECAY 1 · 160 ms\n- ACCENT 0\n- Listen for: a punchy, stomping bass.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 3,
+            "vcf.resonance": 2,
+            "vcf.depth": 4,
+            "env.decay": 1,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "Light saturation, like a bowed bass dug in hard.\n- SATURATION ON/OFF On\n- Saturation DRIVE 3\n- Saturation TONE 4\n- Listen for: a dramatic tango marcato.",
+          "set": {
+            "sat.on": true,
+            "sat.drive": 3,
+            "sat.tone": 4
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "env.decay",
+          "try": "Raise to 4",
+          "hear": "Legato, more like a slow milonga."
+        }
+      ]
+    },
+    {
+      "id": "b1-second-line",
+      "name": "Second Line Tuba",
+      "ref": "In the style of a New Orleans brass band",
+      "artist": "New Orleans brass band",
+      "tags": ["brass", "new orleans", "jazz", "funk"],
+      "level": 2,
+      "blurb": "A funky, strutting sousaphone line for a second-line parade.",
+      "how": "New Orleans brass bands parade behind a funky, strutting sousaphone. A brassy, saturated low line with syncopation.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [
+          [0, 29, 0.1375, 0.8],
+          [0.75, 29, 0.1375, 0.8],
+          [1.25, 33, 0.1375, 0.8],
+          [1.5, 36, 0.1375, 0.8],
+          [2, 39, 0.1375, 0.8],
+          [2.5, 38, 0.1375, 0.8],
+          [3, 36, 0.1375, 0.8],
+          [3.5, 33, 0.1375, 0.8],
+          [4, 34, 0.1375, 0.8],
+          [4.75, 34, 0.1375, 0.8],
+          [5.25, 38, 0.1375, 0.8],
+          [5.5, 41, 0.1375, 0.8],
+          [6, 36, 0.1375, 0.8],
+          [6.5, 34, 0.1375, 0.8],
+          [7, 33, 0.1375, 0.8],
+          [7.5, 31, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A saw with a low-mid cutoff, a little DEPTH; a medium decay.\n- WAVE Sawtooth\n- CUTOFF 3 · 432 Hz\n- RESONANCE 1.5\n- DEPTH (envelope to filter) 2.5\n- DECAY 3 · 290 ms\n- ACCENT 0\n- Listen for: a round, brassy tone.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 3,
+            "vcf.resonance": 1.5,
+            "vcf.depth": 2.5,
+            "env.decay": 3,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "Saturation with a middle tone for the blat.\n- SATURATION ON/OFF On\n- Saturation DRIVE 4.5\n- Saturation TONE 5\n- Listen for: a strutting second-line sousaphone.",
+          "set": {
+            "sat.on": true,
+            "sat.drive": 4.5,
+            "sat.tone": 5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "sat.drive",
+          "try": "Raise to 8",
+          "hear": "A louder, rougher blat."
+        }
+      ]
+    },
+    {
+      "id": "b1-continuo",
+      "name": "Handel Continuo",
+      "ref": "In the style of Handel’s basso continuo",
+      "artist": "George Frideric Handel",
+      "tags": ["bass", "baroque", "classical"],
+      "level": 2,
+      "blurb": "A steady, walking baroque bass line, like a harpsichord’s left hand.",
+      "how": "Baroque music rests on a basso continuo: a steady walking bass played by harpsichord and cello. Steady eighths stepping through the chords.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.425, 0.8],
+          [0.5, 40, 0.425, 0.8],
+          [1, 41, 0.425, 0.8],
+          [1.5, 38, 0.425, 0.8],
+          [2, 45, 0.425, 0.8],
+          [2.5, 43, 0.425, 0.8],
+          [3, 41, 0.425, 0.8],
+          [3.5, 40, 0.425, 0.8],
+          [4, 38, 0.425, 0.8],
+          [4.5, 37, 0.425, 0.8],
+          [5, 38, 0.425, 0.8],
+          [5.5, 40, 0.425, 0.8],
+          [6, 41, 0.425, 0.8],
+          [6.5, 43, 0.425, 0.8],
+          [7, 45, 0.425, 0.8],
+          [7.5, 33, 0.425, 0.8],
+          [8, 34, 0.425, 0.8],
+          [8.5, 36, 0.425, 0.8],
+          [9, 38, 0.425, 0.8],
+          [9.5, 34, 0.425, 0.8],
+          [10, 31, 0.425, 0.8],
+          [10.5, 33, 0.425, 0.8],
+          [11, 34, 0.425, 0.8],
+          [11.5, 31, 0.425, 0.8],
+          [12, 33, 0.425, 0.8],
+          [12.5, 35, 0.425, 0.8],
+          [13, 37, 0.425, 0.8],
+          [13.5, 33, 0.425, 0.8],
+          [14, 38, 0.425, 0.8],
+          [14.5, 33, 0.425, 0.8],
+          [15, 26, 0.425, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A square with a middle cutoff, a quick DEPTH; a short-medium decay, like a harpsichord.\n- WAVE Square\n- CUTOFF 4 · 629 Hz\n- RESONANCE 1.5\n- DEPTH (envelope to filter) 3\n- DECAY 2 · 210 ms\n- ACCENT 0\n- Listen for: a steady, walking baroque bass.",
+          "set": {
+            "vco.wave": "sq",
+            "vcf.cutoff": 4,
+            "vcf.resonance": 1.5,
+            "vcf.depth": 3,
+            "env.decay": 2,
+            "vca.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco.wave",
+          "try": "Switch to Sawtooth",
+          "hear": "More like a bowed cello."
+        }
+      ]
+    },
+    {
+      "id": "b1-stride",
+      "name": "Stride Left Hand",
+      "ref": "In the style of 1920s stride piano",
+      "artist": "Stride piano",
+      "tags": ["keys", "jazz", "stride", "20s"],
+      "level": 2,
+      "blurb": "The oom-pah left hand of stride piano: a low note, then a jump up.",
+      "how": "Stride pianists like James P. Johnson and Fats Waller swung their left hand between a low bass note and a chord. Here the chord is its root an octave and a half up.",
+      "phrase": {
+        "bpm": 150,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.25, 0.8],
+          [1, 55, 0.25, 0.8],
+          [2, 31, 0.25, 0.8],
+          [3, 55, 0.25, 0.8],
+          [4, 29, 0.25, 0.8],
+          [5, 57, 0.25, 0.8],
+          [6, 36, 0.25, 0.8],
+          [7, 57, 0.25, 0.8],
+          [8, 31, 0.25, 0.8],
+          [9, 59, 0.25, 0.8],
+          [10, 38, 0.25, 0.8],
+          [11, 59, 0.25, 0.8],
+          [12, 36, 0.25, 0.8],
+          [13, 55, 0.25, 0.8],
+          [14, 40, 0.25, 0.8],
+          [15, 48, 0.25, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A saw with a middle cutoff, a quick DEPTH; a short decay.\n- WAVE Sawtooth\n- CUTOFF 4 · 629 Hz\n- RESONANCE 1.5\n- DEPTH (envelope to filter) 3.5\n- DECAY 1.5 · 190 ms\n- ACCENT 0\n- Listen for: a bouncing stride left hand.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 4,
+            "vcf.resonance": 1.5,
+            "vcf.depth": 3.5,
+            "env.decay": 1.5,
+            "vca.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "dly.on",
+          "try": "Switch on",
+          "hear": "An old recording in a big room."
+        }
+      ]
+    },
+    {
+      "id": "b1-acid-jazz",
+      "name": "Acid Jazz Bass",
+      "ref": "In the style of early-1990s acid jazz",
+      "artist": "Acid jazz",
+      "tags": ["bass", "acid jazz", "funk", "90s"],
+      "level": 2,
+      "blurb": "A fluid, funky, melodic bass line from the London acid-jazz scene.",
+      "how": "London acid jazz mixed jazz-funk with club beats over fluid, melodic basslines. A round tone and a busy, syncopated line.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [
+          [0, 28, 0.1375, 0.8],
+          [0.5, 31, 0.1375, 0.8],
+          [0.75, 33, 0.1375, 0.8],
+          [1.25, 35, 0.1375, 0.8],
+          [1.75, 38, 0.1375, 0.8],
+          [2.25, 40, 0.1375, 0.8],
+          [2.75, 38, 0.1375, 0.8],
+          [3, 35, 0.1375, 0.8],
+          [3.5, 33, 0.1375, 0.8],
+          [3.75, 31, 0.1375, 0.8],
+          [4, 33, 0.1375, 0.8],
+          [4.5, 36, 0.1375, 0.8],
+          [4.75, 38, 0.1375, 0.8],
+          [5.25, 40, 0.1375, 0.8],
+          [5.75, 43, 0.1375, 0.8],
+          [6.25, 45, 0.1375, 0.8],
+          [6.75, 43, 0.1375, 0.8],
+          [7, 40, 0.1375, 0.8],
+          [7.5, 38, 0.1375, 0.8],
+          [7.75, 35, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A square with a low-mid cutoff, a medium DEPTH; a short decay.\n- WAVE Square\n- CUTOFF 3 · 432 Hz\n- RESONANCE 1.5\n- DEPTH (envelope to filter) 3.5\n- DECAY 1.5 · 190 ms\n- ACCENT 0\n- Listen for: a fluid, funky bass.",
+          "set": {
+            "vco.wave": "sq",
+            "vcf.cutoff": 3,
+            "vcf.resonance": 1.5,
+            "vcf.depth": 3.5,
+            "env.decay": 1.5,
+            "vca.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco.wave",
+          "try": "Switch to Sawtooth",
+          "hear": "A brighter, synth-funk version."
+        }
+      ]
+    },
+    {
+      "id": "b1-disco-echo",
+      "name": "Disco Echo Octaves",
+      "ref": "In the style of late-1970s disco",
+      "artist": "Disco",
+      "tags": ["bass", "disco", "70s"],
+      "level": 1,
+      "blurb": "A bouncing octave bass whose echo turns eighths into sixteenths.",
+      "how": "Disco loved bouncing octave basslines. An eighth-note octave bass with a sixteenth echo doubles the bounce.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.1375, 0.8],
+          [0.5, 45, 0.1375, 0.8],
+          [1, 33, 0.1375, 0.8],
+          [1.5, 45, 0.1375, 0.8],
+          [2, 38, 0.1375, 0.8],
+          [2.5, 50, 0.1375, 0.8],
+          [3, 38, 0.1375, 0.8],
+          [3.5, 50, 0.1375, 0.8],
+          [4, 31, 0.1375, 0.8],
+          [4.5, 43, 0.1375, 0.8],
+          [5, 31, 0.1375, 0.8],
+          [5.5, 43, 0.1375, 0.8],
+          [6, 36, 0.1375, 0.8],
+          [6.5, 48, 0.1375, 0.8],
+          [7, 40, 0.1375, 0.8],
+          [7.5, 52, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A saw with a low-mid cutoff, a quick DEPTH; a short decay.\n- WAVE Sawtooth\n- CUTOFF 3 · 432 Hz\n- RESONANCE 2\n- DEPTH (envelope to filter) 3.5\n- DECAY 1.5 · 190 ms\n- ACCENT 0\n- Listen for: a bouncing octave bass.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 3,
+            "vcf.resonance": 2,
+            "vcf.depth": 3.5,
+            "env.decay": 1.5,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "A sixteenth echo at 120 BPM, about 125 ms; no feedback.\n- DELAY ON/OFF On\n- Delay TIME 4.7 · 130 ms\n- Delay FEEDBACK 0\n- Delay LEVEL 4.5\n- Listen for: a doubled, bouncing disco bass.",
+          "set": {
+            "dly.on": true,
+            "dly.time": 4.7,
+            "dly.feedback": 0,
+            "dly.level": 4.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "dly.on",
+          "try": "Switch off",
+          "hear": "A plainer eighth-note bass."
+        }
+      ]
+    },
+    {
+      "id": "b1-moonrise-arp",
+      "name": "Moonrise Arpeggio",
+      "ref": "In the style of ambient electronica",
+      "artist": "Ambient electronica",
+      "tags": ["seq", "ambient", "chill-out", "arpeggio"],
+      "level": 1,
+      "blurb": "A soft minor arpeggio rising slowly, with a dotted echo like moonlight on water.",
+      "how": "A soft minor-seventh arpeggio at a slow tempo, with an echo set to a dotted eighth so the repeats ripple between the notes.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 52, 0.4],
+          [0.5, 55, 0.4],
+          [1, 59, 0.4],
+          [1.5, 62, 0.4],
+          [2, 52, 0.4],
+          [2.5, 55, 0.4],
+          [3, 59, 0.4],
+          [3.5, 62, 0.4],
+          [4, 48, 0.4],
+          [4.5, 52, 0.4],
+          [5, 55, 0.4],
+          [5.5, 59, 0.4],
+          [6, 48, 0.4],
+          [6.5, 52, 0.4],
+          [7, 55, 0.4],
+          [7.5, 59, 0.4],
+          [8, 45, 0.4],
+          [8.5, 48, 0.4],
+          [9, 52, 0.4],
+          [9.5, 55, 0.4],
+          [10, 45, 0.4],
+          [10.5, 48, 0.4],
+          [11, 52, 0.4],
+          [11.5, 55, 0.4],
+          [12, 47, 0.4],
+          [12.5, 51, 0.4],
+          [13, 54, 0.4],
+          [13.5, 57, 0.4],
+          [14, 47, 0.4],
+          [14.5, 51, 0.4],
+          [15, 54, 0.4],
+          [15.5, 57, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A square with a middle cutoff, gentle resonance and DEPTH; a medium decay.\n- WAVE Square\n- CUTOFF 3.5 · 522 Hz\n- RESONANCE 3.5\n- DEPTH (envelope to filter) 2.5\n- DECAY 3 · 290 ms\n- ACCENT 0\n- Listen for: a soft, round arpeggio.",
+          "set": {
+            "vco.wave": "sq",
+            "vcf.cutoff": 3.5,
+            "vcf.resonance": 3.5,
+            "vcf.depth": 2.5,
+            "env.decay": 3,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "At 84 BPM a dotted eighth is about 535 ms, just past the B1’s longest; the longest TIME is close. Medium feedback.\n- DELAY ON/OFF On\n- Delay TIME 10 · 500 ms\n- Delay FEEDBACK 5\n- Delay LEVEL 5\n- Listen for: a soft arpeggio rippling like moonlight.",
+          "set": {
+            "dly.on": true,
+            "dly.time": 10,
+            "dly.feedback": 5,
+            "dly.level": 5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "dly.feedback",
+          "try": "Raise to 7.5",
+          "hear": "A thicker, hazier ripple."
+        }
+      ]
+    },
+    {
+      "id": "b1-lullaby-echo",
+      "name": "Echoing Lullaby",
+      "ref": "In the style of lullabies",
+      "artist": "Lullaby",
+      "tags": ["lead", "lullaby", "ambient"],
+      "level": 1,
+      "blurb": "A soft, slow lullaby in three that echoes gently.",
+      "how": "A lullaby rocks slowly in three. A soft, round tone with a gentle echo.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 67, 1.9],
+          [2, 64, 0.95],
+          [3, 65, 1.9],
+          [5, 62, 0.95],
+          [6, 64, 0.95],
+          [7, 60, 0.95],
+          [8, 62, 0.95],
+          [9, 55, 2.9],
+          [12, 60, 1.9],
+          [14, 64, 0.95],
+          [15, 62, 1.9],
+          [17, 59, 0.95],
+          [18, 60, 5.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A square into a middle-low cutoff, no resonance, a small DEPTH; a long decay.\n- WAVE Square\n- CUTOFF 3.5 · 522 Hz\n- RESONANCE 0\n- DEPTH (envelope to filter) 1.5\n- DECAY 8 · 1.2 s\n- ACCENT 0\n- Listen for: a soft, round tone.",
+          "set": {
+            "vco.wave": "sq",
+            "vcf.cutoff": 3.5,
+            "vcf.resonance": 0,
+            "vcf.depth": 1.5,
+            "env.decay": 8,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "A long echo, gentle feedback, low LEVEL.\n- DELAY ON/OFF On\n- Delay TIME 10 · 500 ms\n- Delay FEEDBACK 3.5\n- Delay LEVEL 3.5\n- Listen for: a soft lullaby echoing gently.",
+          "set": {
+            "dly.on": true,
+            "dly.time": 10,
+            "dly.feedback": 3.5,
+            "dly.level": 3.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco.pitch",
+          "try": "Turn to +5",
+          "hear": "A brighter, music-box key."
+        }
+      ]
+    },
+    {
+      "id": "b1-aurora",
+      "name": "Aurora",
+      "ref": "In the style of Nordic ambient music",
+      "artist": "Nordic ambient",
+      "tags": ["lead", "ambient", "meditation"],
+      "level": 1,
+      "blurb": "Slow, glowing pentatonic notes drifting like northern lights.",
+      "how": "A slow pentatonic line with a glowing resonance and a long echo, like the northern lights shifting.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.9875, 0.8],
+          [1, 67, 0.9875, 0.8],
+          [2, 69, 1.7375, 0.8],
+          [4, 71, 0.9875, 0.8],
+          [5, 69, 0.9875, 0.8],
+          [6, 67, 0.9875, 0.8],
+          [7, 64, 0.9875, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A saw with a middle-low cutoff, a glow of resonance, no DEPTH; the longest decay.\n- WAVE Sawtooth\n- CUTOFF 3 · 432 Hz\n- RESONANCE 5\n- DEPTH (envelope to filter) 0\n- DECAY 10 · 2.2 s\n- ACCENT 0\n- Listen for: a soft, glowing tone.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 3,
+            "vcf.resonance": 5,
+            "vcf.depth": 0,
+            "env.decay": 10,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "The longest TIME with medium-high feedback.\n- DELAY ON/OFF On\n- Delay TIME 10 · 500 ms\n- Delay FEEDBACK 6\n- Delay LEVEL 4.5\n- Listen for: slow, glowing notes drifting like northern lights.",
+          "set": {
+            "dly.on": true,
+            "dly.time": 10,
+            "dly.feedback": 6,
+            "dly.level": 4.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 8.5",
+          "hear": "A brighter, singing glow."
+        }
+      ]
+    },
+    {
+      "id": "b1-tide",
+      "name": "Tide",
+      "ref": "In the style of ambient music",
+      "artist": "Ambient",
+      "tags": ["bass", "ambient", "drone"],
+      "level": 1,
+      "blurb": "A slow, deep bass that rises and falls like the tide.",
+      "how": "Long, low notes rising and falling slowly, with echoes washing back like waves.",
+      "phrase": {
+        "bpm": 56,
+        "loop": true,
+        "steps": [
+          [0, 38, 1.7375, 0.8],
+          [2, 40, 1.7375, 0.8],
+          [4, 41, 1.7375, 0.8],
+          [6, 40, 1.9875, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A square into a low cutoff, a little resonance, no DEPTH; the longest decay.\n- WAVE Square\n- CUTOFF 2 · 297 Hz\n- RESONANCE 2\n- DEPTH (envelope to filter) 0\n- DECAY 10 · 2.2 s\n- ACCENT 0\n- Listen for: a deep, slow tone.",
+          "set": {
+            "vco.wave": "sq",
+            "vcf.cutoff": 2,
+            "vcf.resonance": 2,
+            "vcf.depth": 0,
+            "env.decay": 10,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "A long echo with high feedback.\n- DELAY ON/OFF On\n- Delay TIME 10 · 500 ms\n- Delay FEEDBACK 7\n- Delay LEVEL 4.5\n- Listen for: a bass rising and falling like the tide.",
+          "set": {
+            "dly.on": true,
+            "dly.time": 10,
+            "dly.feedback": 7,
+            "dly.level": 4.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco.pitch",
+          "try": "Turn to −7",
+          "hear": "A deeper ocean."
+        }
+      ]
+    },
+    {
+      "id": "b1-lantern",
+      "name": "Paper Lantern",
+      "ref": "In the style of East Asian pentatonic melody",
+      "artist": "Pentatonic folk melody",
+      "tags": ["pluck", "ambient", "folk"],
+      "level": 1,
+      "blurb": "A gentle plucked pentatonic melody, warm and glowing.",
+      "how": "A simple plucked melody on a pentatonic scale, warm and glowing with a gentle echo.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.1375, 0.8],
+          [0.5, 64, 0.1375, 0.8],
+          [1, 67, 0.1375, 0.8],
+          [2, 69, 0.1375, 0.8],
+          [2.5, 67, 0.1375, 0.8],
+          [3, 64, 0.1375, 0.8],
+          [4, 62, 0.1375, 0.8],
+          [4.5, 64, 0.1375, 0.8],
+          [5, 67, 0.1375, 0.8],
+          [5.5, 69, 0.1375, 0.8],
+          [6, 71, 0.1375, 0.8],
+          [6.5, 69, 0.1375, 0.8],
+          [7, 67, 0.1375, 0.8],
+          [7.75, 64, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A saw with a middle cutoff, a quick DEPTH and a little resonance; a medium decay.\n- WAVE Sawtooth\n- CUTOFF 4 · 629 Hz\n- RESONANCE 3\n- DEPTH (envelope to filter) 3\n- DECAY 3.5 · 330 ms\n- ACCENT 0\n- Listen for: a warm, plucked tone.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 4,
+            "vcf.resonance": 3,
+            "vcf.depth": 3,
+            "env.decay": 3.5,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "An eighth echo of about 375 ms.\n- DELAY ON/OFF On\n- Delay TIME 8.8 · 370 ms\n- Delay FEEDBACK 3.5\n- Delay LEVEL 4\n- Listen for: a warm, glowing plucked melody.",
+          "set": {
+            "dly.on": true,
+            "dly.time": 8.8,
+            "dly.feedback": 3.5,
+            "dly.level": 4
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco.wave",
+          "try": "Switch to Square",
+          "hear": "Softer, more like a koto."
+        }
+      ]
+    },
+    {
+      "id": "b1-fireflies",
+      "name": "Fireflies",
+      "ref": "In the style of ambient soundscapes",
+      "artist": "Ambient",
+      "tags": ["fx", "ambient", "nature"],
+      "level": 1,
+      "blurb": "Tiny, high blips winking on and off in a summer field.",
+      "how": "High, short, soft blips at random, each with a small echo, like fireflies.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0.25, 91, 0.1, 0.5],
+          [1.5, 86, 0.1, 0.45],
+          [2.25, 95, 0.1, 0.5],
+          [3.75, 88, 0.1, 0.45],
+          [4.5, 93, 0.1, 0.5],
+          [5.75, 98, 0.1, 0.4],
+          [6.5, 91, 0.1, 0.45],
+          [7.5, 96, 0.1, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A square with a bright cutoff, a little resonance; the shortest decay.\n- WAVE Square\n- CUTOFF 7 · 1.9 kHz\n- RESONANCE 3\n- DEPTH (envelope to filter) 1\n- DECAY 0 · 120 ms\n- ACCENT 0\n- Listen for: tiny, high blips.",
+          "set": {
+            "vco.wave": "sq",
+            "vcf.cutoff": 7,
+            "vcf.resonance": 3,
+            "vcf.depth": 1,
+            "env.decay": 0,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "A short echo with moderate feedback, and MASTER up because the blips are tiny.\n- DELAY ON/OFF On\n- Delay TIME 5 · 140 ms\n- Delay FEEDBACK 4.5\n- Delay LEVEL 5\n- MASTER 10\n- Listen for: fireflies winking in a summer field.",
+          "set": {
+            "dly.on": true,
+            "dly.time": 5,
+            "dly.feedback": 4.5,
+            "dly.level": 5,
+            "out.master": 10
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "dly.time",
+          "try": "Raise to 10",
+          "hear": "Fireflies spread across a wider field."
+        }
+      ]
+    },
+    {
+      "id": "b1-dusk-swell",
+      "name": "Dusk Swell",
+      "ref": "In the style of ambient drone music",
+      "artist": "Ambient drone",
+      "tags": ["drone", "ambient", "meditation"],
+      "level": 2,
+      "blurb": "Slow notes that pile up in a feeding-back echo into a soft, glowing chord.",
+      "how": "The B1 is monophonic, but a long echo with high feedback keeps each note sounding under the next, so slow notes pile up into a chord.",
+      "phrase": {
+        "bpm": 48,
+        "loop": true,
+        "steps": [
+          [0, 45, 3.475, 0.8],
+          [4, 52, 3.475, 0.8],
+          [8, 48, 3.475, 0.8],
+          [12, 55, 3.975, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A saw into a low cutoff, gentle resonance, no DEPTH; the longest decay.\n- WAVE Sawtooth\n- CUTOFF 2.5 · 358 Hz\n- RESONANCE 3\n- DEPTH (envelope to filter) 0\n- DECAY 10 · 2.2 s\n- ACCENT 0\n- Listen for: a soft, low tone.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 2.5,
+            "vcf.resonance": 3,
+            "vcf.depth": 0,
+            "env.decay": 10,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "The longest TIME with high feedback: each note keeps returning under the next.\n- DELAY ON/OFF On\n- Delay TIME 10 · 500 ms\n- Delay FEEDBACK 8\n- Delay LEVEL 5\n- Listen for: slow notes piling into a soft, glowing chord.",
+          "set": {
+            "dly.on": true,
+            "dly.time": 10,
+            "dly.feedback": 8,
+            "dly.level": 5
+          }
+        }
+      ],
+      "context": {
+        "dly.feedback": "High, so the echoes make the chord."
+      },
+      "tweaks": [
+        {
+          "id": "sat.on",
+          "try": "Switch on",
+          "hear": "A warmer, dirtier swell."
+        }
+      ]
+    },
+    {
+      "id": "b1-meadow",
+      "name": "Meadow",
+      "ref": "In the style of English pastoral folk",
+      "artist": "English pastoral folk",
+      "tags": ["pluck", "folk", "pastoral"],
+      "level": 1,
+      "blurb": "A light, pastoral, plucked tune in a gently rolling six-eight.",
+      "how": "A light pastoral tune rolling in six-eight, plucked like a guitar or lute with a soft echo.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.283333, 0.8],
+          [0.333333, 64, 0.283333, 0.8],
+          [0.666667, 66, 0.283333, 0.8],
+          [1, 67, 0.283333, 0.8],
+          [1.333333, 66, 0.283333, 0.8],
+          [1.666667, 64, 0.283333, 0.8],
+          [2, 62, 0.283333, 0.8],
+          [2.666667, 69, 0.95, 0.8],
+          [4, 71, 0.283333, 0.8],
+          [4.333333, 69, 0.283333, 0.8],
+          [4.666667, 67, 0.283333, 0.8],
+          [5, 66, 0.283333, 0.8],
+          [5.333333, 64, 0.283333, 0.8],
+          [5.666667, 62, 0.283333, 0.8],
+          [6, 64, 1.616667, 0.8],
+          [8, 62, 0.283333, 0.8],
+          [8.333333, 64, 0.283333, 0.8],
+          [8.666667, 66, 0.283333, 0.8],
+          [9, 67, 0.283333, 0.8],
+          [9.333333, 69, 0.283333, 0.8],
+          [9.666667, 71, 0.283333, 0.8],
+          [10, 69, 0.283333, 0.8],
+          [10.666667, 66, 0.283333, 0.8],
+          [11.333333, 62, 0.283333, 0.8],
+          [12, 64, 0.283333, 0.8],
+          [12.333333, 66, 0.283333, 0.8],
+          [12.666667, 67, 0.283333, 0.8],
+          [13, 66, 0.283333, 0.8],
+          [13.333333, 64, 0.283333, 0.8],
+          [13.666667, 61, 0.283333, 0.8],
+          [14, 62, 1.95, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "filter",
+          "why": "A saw with a middle cutoff, a quick DEPTH and a little resonance; a medium decay.\n- WAVE Sawtooth\n- CUTOFF 4.5 · 760 Hz\n- RESONANCE 2\n- DEPTH (envelope to filter) 3\n- DECAY 3 · 290 ms\n- ACCENT 0\n- Listen for: a light, plucked tone.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 4.5,
+            "vcf.resonance": 2,
+            "vcf.depth": 3,
+            "env.decay": 3,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Effects",
+          "module": "fx",
+          "why": "A gentle echo of about 310 ms.\n- DELAY ON/OFF On\n- Delay TIME 8.2 · 320 ms\n- Delay FEEDBACK 3\n- Delay LEVEL 3.5\n- Listen for: a light pastoral tune in six-eight.",
+          "set": {
+            "dly.on": true,
+            "dly.time": 8.2,
+            "dly.feedback": 3,
+            "dly.level": 3.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco.wave",
+          "try": "Switch to Square",
+          "hear": "More like a recorder."
+        }
+      ]
     }
   ]
 }
