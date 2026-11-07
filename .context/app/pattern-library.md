@@ -830,6 +830,10 @@ added 99 such sounds:
 - **A reason otherwise**, saying which: the batch has no pattern of the part the sound plays, the work it names has no
   pattern yet, it is an effect, or its riff already plays the public-domain score. 25 of the 99.
 
+The Mantis and Malevolent sounds of t-190 were placed before these rules, and merged first. Held to them: six that
+were on both a pattern and its copy keep the one in their register, the five-four Mantis ostinato keeps the Halloween
+figure and leaves the held low strings, and 25 more placements move to 24 copies (the two Lucky Man sounds share one).
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on

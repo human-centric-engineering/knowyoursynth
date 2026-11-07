@@ -1540,7 +1540,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-pizzicato", "mantis/mantis-celesta"],
+      "sounds": ["take-5/t5-pizzicato"],
       "research": {
         "work": "P. I. Tchaikovsky, “Dance of the Sugar Plum Fairy”, The Nutcracker, 1892",
         "part": "The plucked strings before the celesta comes in: E and F♯, G and E♭ off the beat, twice.",
@@ -21566,6 +21566,220 @@
           }
         ],
         "notes": "From the file’s celesta track, bars 6–9: the top note of its chords, which is the tune, two octaves down to sit where the sounds’ riffs play it. The file voices the celesta in three- and four-note chords; the tune alone suits both sounds. The file plays the notes short; the pattern keeps their written values. The tempo is the file’s, about 60. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:tchaikovsky/sugar-plum-fairy-theme.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:tchaikovsky/sugar-plum-fairy-pizzicato-high",
+      "name": "Sugar Plum Fairy: the pizzicato introduction, high",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Tchaikovsky"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 60,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 78,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 75,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 78,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 75,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["mantis/mantis-celesta"],
+      "research": {
+        "work": "P. I. Tchaikovsky, “Dance of the Sugar Plum Fairy”, The Nutcracker, 1892",
+        "part": "The plucked strings before the celesta comes in: E and F♯, G and E♭ off the beat, twice: the same part an octave up, where the Mantis’s “Celesta” plays.",
+        "originalKey": "E minor",
+        "originalBpm": null,
+        "leads": [
+          {
+            "citation": "P. I. Tchaikovsky, “Dance of the Sugar Plum Fairy”, fan MIDI file on BitMIDI (dance-of-the-sugar-plum-fairy.mid, an orchestral sequence with celesta and string tracks)",
+            "checkedAt": "2026-11-02",
+            "url": "https://bitmidi.com/uploads/37483.mid"
+          }
+        ],
+        "notes": "From the file’s first-violin track, bars 2–5, plucked short as the file plays them. The violas and seconds fill in chords under it; the sound plays one note at a time, so it gets the top line. The sound names the ballet, not a number; this is its best-known pizzicato. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave up from researched:tchaikovsky/sugar-plum-fairy-pizzicato.",
         "listenedAt": null
       }
     }
