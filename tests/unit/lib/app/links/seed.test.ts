@@ -408,13 +408,17 @@ function fakeDb(have: {
       }),
     },
     linkSeedRecord: {
-      findMany: vi.fn(() =>
+      findMany: vi.fn(({ where }: { where: { OR: { ownerKind: string; ownerId: string }[] } }) =>
         Promise.resolve(
-          (have.recorded ?? []).map((r) => {
-            const [owner = '', url = ''] = r.split(' ');
-            const at = owner.indexOf(':');
-            return { ownerKind: owner.slice(0, at), ownerId: owner.slice(at + 1), url };
-          })
+          (have.recorded ?? [])
+            .map((r) => {
+              const [owner = '', url = ''] = r.split(' ');
+              const at = owner.indexOf(':');
+              return { ownerKind: owner.slice(0, at), ownerId: owner.slice(at + 1), url };
+            })
+            .filter((r) =>
+              where.OR.some((w) => w.ownerKind === r.ownerKind && w.ownerId === r.ownerId)
+            )
         )
       ),
       createMany: vi.fn(({ data: rows }: { data: unknown[] }) => {
@@ -564,6 +568,24 @@ describe('seedLinks', () => {
         data(['instrument', 'moog-minimoog', [link(YT)]], ['instrument', 'arp-2600', [link(YT)]])
       );
       expect(report).toEqual({ created: 1, existing: 0, alreadyApplied: 1, missingOwners: [] });
+    });
+
+    it('reads only the records of owners the data names, and none when no owner has links', async () => {
+      const db = fakeDb({
+        instruments: ['moog-minimoog'],
+        recorded: [`instrument:arp-2600 ${YT}`],
+      });
+      await seedLinks(
+        asClient(db),
+        data(['instrument', 'moog-minimoog', [link(YT)]], ['song', 'empty', []])
+      );
+      expect(db.linkSeedRecord.findMany).toHaveBeenCalledWith({
+        where: { OR: [{ ownerKind: 'instrument', ownerId: 'moog-minimoog' }] },
+        select: { ownerKind: true, ownerId: true, url: true },
+      });
+      const none = fakeDb({});
+      await seedLinks(asClient(none), data(['song', 'empty', []]));
+      expect(none.linkSeedRecord.findMany).not.toHaveBeenCalled();
     });
 
     it('when everything is recorded, looks up no owner and writes nothing', async () => {

@@ -4,7 +4,7 @@
 
 -- CreateTable
 CREATE TABLE "link_seed_record" (
-    "ownerKind" TEXT NOT NULL,
+    "ownerKind" "LinkTargetKind" NOT NULL,
     "ownerId" TEXT NOT NULL,
     "url" TEXT NOT NULL,
     "appliedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

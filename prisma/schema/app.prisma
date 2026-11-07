@@ -1203,13 +1203,13 @@ model ExternalLink {
 /// links new to the data still arrive. Written by the seed alone. Natural keys and no foreign key, as
 /// `CatalogueSeedRecord` has: a record describes the seed, and outlives its link and its owner.
 model LinkSeedRecord {
-  /// The owner's kind, as the APIs name it: instrument | sound | song | artist.
-  ownerKind String
+  /// The owner's kind, as the APIs name it (the suggestions' enum, which has exactly the four).
+  ownerKind LinkTargetKind
   /// The owner's natural key: a databank id, or `<synthId>/<slug>` for a library sound.
   ownerId   String
   /// The link's canonical URL, as stored (`parseLinkUrl`).
   url       String
-  appliedAt DateTime @default(now())
+  appliedAt DateTime       @default(now())
 
   @@id([ownerKind, ownerId, url])
   @@map("link_seed_record")

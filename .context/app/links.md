@@ -329,7 +329,8 @@ export (logic in `exportLinkData`):
 **Changing how `parseLinkUrl` writes a URL is a data migration.** Seed and export both require every URL to be in
 its stored form, so the committed data test, the seed and the export all fail until the stored rows and the data are
 rewritten to the new form, together. That refusal is deliberate: accepting the new form quietly would create it beside
-the old one on every database that already has the link.
+the old one on every database that already has the link. The same migration must rewrite `link_seed_record`'s URLs, or every link in a
+new form would be applied again as if new.
 
 **When the unit re-runs:** whenever any of its `hashInputs` changes: the data, the loader, the links code it runs
 (`seed.ts`, `providers.ts`, `owner-ref.ts`), and what decides a URL's stored form and an owner's shape
@@ -340,6 +341,12 @@ links it has no record of, so an unrelated edit to one of those files re-runs it
 
 - **A link removed from the data and added back later isn't applied again** on a database that had it: its record
   remains. Add it there through the admin pages.
+- **An owner removed and later re-created doesn't get its seeded links again.** Its links went with it (cascade),
+  and their records stay, keyed by the owner's natural key. Add them there through the admin pages.
+- **The records start when this lands.** A database whose links were seeded before `LinkSeedRecord` existed has
+  none, so its first run after the migration treats every link as new: it re-creates any seeded link an admin had
+  deleted in between, then records them all. No database but dev had run the links seed by then, and dev was
+  recorded on the day, so t-199 and t-200 deploy together.
 - **An owner missing when the unit runs gets its links only on its next run.** Its links get no record, so they apply
   then; but the runner has no way to force a run, and restoring the owner doesn't change the unit's hash.
 - **Seeded `ours` links keep their `order`**, so on a database whose admin already has their own `ours` links on that

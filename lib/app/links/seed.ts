@@ -178,7 +178,8 @@ async function ownerRows(prisma: TenancyClient, owners: OwnerRef[]): Promise<Map
   return found;
 }
 
-const recordKey = (kind: string, id: string, url: string): string => `${kind}:${id} ${url}`;
+/** One owner's link, as a record and the export's dropped list name it: `<kind>:<id> <url>`. */
+const linkKey = (owner: OwnerRef, url: string): string => `${ownerKey(owner)} ${url}`;
 
 /**
  * Create the links the data lists that this database has never had from the seed, and record each as applied. A link
@@ -191,23 +192,25 @@ export async function seedLinks(
   const plan = planLinks(data);
   if (plan.problems.length) throw new LinkDataError(plan.problems);
 
-  const applied = new Set(
-    (
-      await prisma.linkSeedRecord.findMany({
+  // Only the records of owners the data names: the table only grows, since a record outlives its link and its owner.
+  const named = plan.owners.filter((o) => o.links.length).map((o) => o.owner);
+  const recorded = named.length
+    ? await prisma.linkSeedRecord.findMany({
+        where: { OR: named.map((o) => ({ ownerKind: o.kind, ownerId: o.id })) },
         select: { ownerKind: true, ownerId: true, url: true },
       })
-    ).map((r) => recordKey(r.ownerKind, r.ownerId, r.url))
+    : [];
+  const applied = new Set(
+    recorded.map((r) => linkKey({ kind: r.ownerKind, id: r.ownerId }, r.url))
   );
   // A link already applied here is done with: dropped from the plan before anything is looked up.
-  let alreadyApplied = 0;
   const pending = plan.owners.map(({ owner, links }) => ({
     owner,
-    links: links.filter(({ parsed }) => {
-      const done = applied.has(recordKey(owner.kind, owner.id, parsed.url));
-      if (done) alreadyApplied++;
-      return !done;
-    }),
+    links: links.filter(({ parsed }) => !applied.has(linkKey(owner, parsed.url))),
   }));
+  const linksIn = (owners: { links: unknown[] }[]) =>
+    owners.reduce((n, o) => n + o.links.length, 0);
+  const alreadyApplied = linksIn(plan.owners) - linksIn(pending);
 
   // An owner with nothing left to apply is neither looked up nor reported missing.
   const withLinks = pending.filter((o) => o.links.length);
@@ -336,8 +339,9 @@ export function exportLinkData(
   );
 
   const dropped: string[] = [];
-  for (const [key, urls] of committedUrls)
-    for (const url of urls) if (!byOwner.get(key)?.links.has(url)) dropped.push(`${key} ${url}`);
+  for (const { owner, links } of committed)
+    for (const { url } of links)
+      if (!byOwner.get(ownerKey(owner))?.links.has(url)) dropped.push(linkKey(owner, url));
   if (dropped.length && !prune) throw new LinkDropError(dropped);
 
   const files: LinkFile[] = [...byOwner.entries()]
