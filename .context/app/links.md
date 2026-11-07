@@ -317,6 +317,13 @@ export (logic in `exportLinkData`):
   wrong database (an empty one, or one missing a databank row) can't wipe or shrink the data. To drop links on
   purpose (you deleted them in dev), run `npm run links:export -- --prune`.
 - **Refuses data the seed would refuse**, and changes nothing when run twice.
+- **Writes every file before it removes any**, and removes only the `.json` files no owner has any more; anything else
+  in the folder stays.
+
+**Changing how `parseLinkUrl` writes a URL is a data migration.** Seed and export both require every URL to be in
+its stored form, so the committed data test, the seed and the export all fail until the stored rows and the data are
+rewritten to the new form, together. That refusal is deliberate: accepting the new form quietly would create it beside
+the old one on every database that already has the link.
 
 **Accepted costs**, all because the seed can see what an owner has, not what it once had (journal, 2026-11-07):
 

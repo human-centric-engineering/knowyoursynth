@@ -27,6 +27,7 @@ import {
   isBandcampId,
   LINK_KINDS,
   parseLinkUrl,
+  providerIdFor,
   safeThumbnailUrl,
   type ParsedLink,
 } from '@/lib/app/links/providers';
@@ -143,11 +144,13 @@ export function checkLinkData(data: LinkSeedData): string[] {
 
 /** Each owner the database has, by `<kind>:<id>`, mapped to its row id (a sound's is its `SynthSound.id`). */
 async function ownerRows(prisma: TenancyClient, owners: OwnerRef[]): Promise<Map<string, string>> {
-  const ids = (kind: OwnerKind) => owners.filter((o) => o.kind === kind).map((o) => o.id);
-  const sounds = ids('sound').flatMap((id) => splitSoundKey(id) ?? []);
+  const ids: Record<OwnerKind, string[]> = { instrument: [], sound: [], song: [], artist: [] };
+  for (const o of owners) ids[o.kind].push(o.id);
+  const sounds = ids.sound.flatMap((id) => splitSoundKey(id) ?? []);
   const select = { id: true } as const;
+  // A kind the data names no owner of is not asked about.
   const byId = (kind: OwnerKind, find: (ids: string[]) => Promise<{ id: string }[]>) =>
-    ids(kind).length ? find(ids(kind)) : Promise.resolve([]);
+    ids[kind].length ? find(ids[kind]) : Promise.resolve([]);
   const [instruments, songs, artists, soundRows] = await Promise.all([
     byId('instrument', (in_) =>
       prisma.bankInstrument.findMany({ where: { id: { in: in_ } }, select })
@@ -177,14 +180,16 @@ export async function seedLinks(
   const plan = planLinks(data);
   if (plan.problems.length) throw new LinkDataError(plan.problems);
 
+  // An owner whose file lists no links has nothing to write, so it is neither looked up nor reported missing.
+  const withLinks = plan.owners.filter((o) => o.links.length);
   const found = await ownerRows(
     prisma,
-    data.map((d) => d.owner)
+    withLinks.map((o) => o.owner)
   );
-  const missingOwners = data.map((d) => ownerKey(d.owner)).filter((k) => !found.has(k));
+  const missingOwners = withLinks.map((o) => ownerKey(o.owner)).filter((k) => !found.has(k));
 
   const rows: Prisma.ExternalLinkCreateManyInput[] = [];
-  for (const { owner, links } of plan.owners) {
+  for (const { owner, links } of withLinks) {
     const rowId = found.get(ownerKey(owner));
     if (!rowId) continue;
     for (const { link, parsed } of links) {
@@ -192,7 +197,7 @@ export async function seedLinks(
         [OWNER_COLUMN[owner.kind]]: rowId,
         url: parsed.url,
         provider: parsed.provider,
-        providerId: parsed.provider === 'bandcamp' ? (link.providerId ?? null) : parsed.providerId,
+        providerId: providerIdFor(parsed, link.providerId ?? null),
         kind: link.kind,
         title: link.title,
         thumbnailUrl: link.thumbnailUrl ?? null,
@@ -240,12 +245,25 @@ export function toSeedLink(row: StoredLink): z.input<typeof SeedLinkSchema> {
   };
 }
 
-/** What an export would write, and the committed links it would drop. */
+/** What an export writes, and the committed links it drops (only ever with `prune`). */
 export interface LinkExport {
   /** One per owner, by owner. */
   files: LinkFile[];
-  /** Committed links the table no longer has, as `<kind>:<id> <url>`: the export refuses these unless told to prune. */
+  /** Committed links the table no longer has, as `<kind>:<id> <url>`. */
   dropped: string[];
+}
+
+/** The export would drop committed links, and was not told to. Nothing was written. */
+export class LinkDropError extends Error {
+  constructor(readonly dropped: string[]) {
+    const shown = dropped.slice(0, 20);
+    super(
+      `This database lacks ${dropped.length} committed link(s), so the export would drop them. Check DATABASE_URL ` +
+        `points at the database you curate in; to drop them on purpose, run it with -- --prune.\n- ` +
+        [...shown, ...(dropped.length > shown.length ? ['…'] : [])].join('\n- ')
+    );
+    this.name = 'LinkDropError';
+  }
 }
 
 /**
@@ -253,11 +271,14 @@ export interface LinkExport {
  * their committed order, and links new to the data follow in the order they come in (the export reads them oldest
  * first). So a re-export after a reseed, which gives every row the same `createdAt`, does not re-sort anything.
  *
- * Throws, as the seed would, on data the seed would refuse, so a bad table never replaces good data.
+ * Throws before anything is written: `LinkDropError` when a committed link is missing from the table and `prune` is
+ * not set, so the wrong database (an empty one, or one missing a databank row) cannot wipe or shrink the data; and
+ * `LinkDataError` on data the seed would refuse, so a bad table never replaces good data.
  */
 export function exportLinkData(
   rows: (StoredLink & { owner: OwnerRef })[],
-  committed: LinkSeedData
+  committed: LinkSeedData,
+  { prune = false }: { prune?: boolean } = {}
 ): LinkExport {
   const byOwner = new Map<string, { owner: OwnerRef; links: Map<string, StoredLink> }>();
   for (const row of rows) {
@@ -276,13 +297,15 @@ export function exportLinkData(
   const dropped: string[] = [];
   for (const [key, urls] of committedUrls)
     for (const url of urls) if (!byOwner.get(key)?.links.has(url)) dropped.push(`${key} ${url}`);
+  if (dropped.length && !prune) throw new LinkDropError(dropped);
 
   const files: LinkFile[] = [...byOwner.entries()]
     .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
     .map(([key, { owner, links }]) => {
       const before = committedUrls.get(key) ?? [];
+      const isBefore = new Set(before);
       const kept = before.flatMap((url) => links.get(url) ?? []);
-      const added = [...links.values()].filter((l) => !before.includes(l.url));
+      const added = [...links.values()].filter((l) => !isBefore.has(l.url));
       return { kind: owner.kind, id: owner.id, links: [...kept, ...added].map(toSeedLink) };
     });
 

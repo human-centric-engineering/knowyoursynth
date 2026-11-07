@@ -323,6 +323,14 @@ export function parseLinkUrl(input: string): ParseResult {
 }
 
 /**
+ * The id a link's embed is built from: Bandcamp's is only on its page (`pageId`, read from it or kept from an earlier
+ * read); every other provider's came from the URL. Used by every write: an admin's, and the seed's.
+ */
+export function providerIdFor(link: ParsedLink, pageId: string | null): string | null {
+  return link.provider === 'bandcamp' ? pageId : link.providerId;
+}
+
+/**
  * The address to load in an iframe for a link, built from its provider and id only. Null when it does not embed: an
  * `other` link, a Bandcamp link whose id has not been read yet, or an id that does not have its provider's shape.
  */

@@ -27,6 +27,10 @@ const unit: SeedUnit = {
     '../../../lib/app/links/seed.ts',
     '../../../lib/app/links/providers.ts',
     '../../../lib/app/links/owner-ref.ts',
+    // What a URL is cleaned to before it is parsed, and the id shapes an owner must have.
+    '../../../lib/security/sanitize.ts',
+    '../../../lib/app/bank/data.ts',
+    '../../../lib/app/sounds/data.ts',
   ],
   async run({ prisma, logger }) {
     const report = await seedLinks(prisma, loadLinkData());

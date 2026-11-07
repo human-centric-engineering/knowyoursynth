@@ -120,6 +120,9 @@ describe('the seed unit', () => {
       '../../../lib/app/links/seed.ts',
       '../../../lib/app/links/providers.ts',
       '../../../lib/app/links/owner-ref.ts',
+      '../../../lib/security/sanitize.ts',
+      '../../../lib/app/bank/data.ts',
+      '../../../lib/app/sounds/data.ts',
     ]);
   });
 });

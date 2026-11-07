@@ -8,6 +8,7 @@ import {
   checkLinkData,
   exportLinkData,
   LinkDataError,
+  LinkDropError,
   LinkSeedFileSchema,
   SeedLinkSchema,
   seedLinks,
@@ -272,21 +273,58 @@ describe('exportLinkData', () => {
     expect(files[0]?.links).toEqual([{ url: YT, kind: 'demo', title: 'New title' }]);
   });
 
-  it('names every committed link the table lacks, by owner', () => {
+  it('refuses to drop a committed link the table lacks, naming each by owner', () => {
     const committed = data(
       ['instrument', 'moog-minimoog', [link(YT), link(YT2)]],
       ['sound', 'model-d/stacked-night-bass', [link(YT)]]
     );
-    expect(exportLinkData([row(YT2, minimoog)], committed).dropped).toEqual([
-      `instrument:moog-minimoog ${YT}`,
-      `sound:model-d/stacked-night-bass ${YT}`,
-    ]);
+    const run = () => exportLinkData([row(YT2, minimoog)], committed);
+    expect(run).toThrow(LinkDropError);
+    expect(run).toThrow(/lacks 2 committed link\(s\).*-- --prune/s);
+    try {
+      run();
+    } catch (error) {
+      expect((error as LinkDropError).dropped).toEqual([
+        `instrument:moog-minimoog ${YT}`,
+        `sound:model-d/stacked-night-bass ${YT}`,
+      ]);
+    }
   });
 
-  it('names every committed link as dropped from an empty table, and writes no file', () => {
-    expect(exportLinkData([], data(['instrument', 'moog-minimoog', [link(YT)]]))).toEqual({
-      files: [],
+  it('refuses an empty table, as from the wrong database, rather than wipe the data', () => {
+    expect(() => exportLinkData([], data(['instrument', 'moog-minimoog', [link(YT)]]))).toThrow(
+      LinkDropError
+    );
+  });
+
+  it('shows the first twenty it would drop, and says there are more', () => {
+    const many = Array.from({ length: 25 }, (_, i) =>
+      link(`https://www.youtube.com/watch?v=${String(i).padStart(11, 'a')}`)
+    );
+    try {
+      exportLinkData([], data(['instrument', 'moog-minimoog', many]));
+      expect.unreachable();
+    } catch (error) {
+      expect((error as Error).message.split('\n- ')).toHaveLength(22);
+      expect((error as Error).message.endsWith('\n- …')).toBe(true);
+    }
+  });
+
+  it('drops them when told to prune, and says which', () => {
+    const committed = data(['instrument', 'moog-minimoog', [link(YT), link(YT2)]]);
+    expect(exportLinkData([row(YT2, minimoog)], committed, { prune: true })).toEqual({
+      files: [
+        {
+          kind: 'instrument',
+          id: 'moog-minimoog',
+          links: [{ url: YT2, kind: 'demo', title: 'A video' }],
+        },
+      ],
       dropped: [`instrument:moog-minimoog ${YT}`],
+    });
+    expect(exportLinkData([], committed, { prune: true })).toEqual({
+      files: [],
+      dropped: [`instrument:moog-minimoog ${YT}`, `instrument:moog-minimoog ${YT2}`],
     });
   });
 
@@ -436,6 +474,24 @@ describe('seedLinks', () => {
       existing: 0,
       missingOwners: ['instrument:removed-synth', 'artist:nobody', 'sound:model-d/gone'],
     });
+  });
+
+  it('neither looks up nor reports an owner whose file lists no links', async () => {
+    const db = fakeDb({ instruments: ['moog-minimoog'] });
+    const report = await seedLinks(
+      asClient(db),
+      data(
+        ['instrument', 'moog-minimoog', [link(YT)]],
+        ['instrument', 'emptied', []],
+        ['song', 'nothing-here', []]
+      )
+    );
+    expect(report).toEqual({ created: 1, existing: 0, missingOwners: [] });
+    expect(db.bankInstrument.findMany).toHaveBeenCalledWith({
+      where: { id: { in: ['moog-minimoog'] } },
+      select: { id: true },
+    });
+    expect(db.bankSong.findMany).not.toHaveBeenCalled();
   });
 
   it('asks only the tables of the kinds the data names', async () => {

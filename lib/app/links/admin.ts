@@ -23,13 +23,14 @@ import { prisma } from '@/lib/db/client';
 import { ConflictError, NotFoundError, ValidationError } from '@/lib/api/errors';
 import { hasPrismaCode } from '@/lib/app/synths/lib/prisma-errors';
 import { paginationQuerySchema } from '@/lib/validations/common';
-import { resolveLinkDetails, type LinkDetails } from '@/lib/app/links/details';
+import { resolveLinkDetails } from '@/lib/app/links/details';
 import { statsForVideo } from '@/lib/app/links/stats';
 import {
   embedUrl,
   LINK_KINDS,
   LINK_PROVIDERS,
   parseLinkUrl,
+  providerIdFor,
   thumbnailFor,
 } from '@/lib/app/links/providers';
 import type { LinkKind, LinkProvider, ParsedLink } from '@/lib/app/links/providers';
@@ -212,11 +213,6 @@ interface ReadFromProvider {
   };
 }
 
-/** The id a link's embed is built from: Bandcamp's is only on its page; every other provider's came from the URL. */
-function providerIdFor(link: ParsedLink, details: LinkDetails | null): string | null {
-  return link.provider === 'bandcamp' ? (details?.providerId ?? null) : link.providerId;
-}
-
 /** Ask the link's provider about it. Never throws: a provider that does not answer leaves its columns empty. */
 async function readFromProvider(link: ParsedLink): Promise<ReadFromProvider> {
   const [details, stats] = await Promise.all([
@@ -226,7 +222,7 @@ async function readFromProvider(link: ParsedLink): Promise<ReadFromProvider> {
   return {
     title: details?.title ?? null,
     columns: {
-      providerId: providerIdFor(link, details),
+      providerId: providerIdFor(link, details?.providerId ?? null),
       thumbnailUrl: details?.thumbnailUrl ?? null,
       views: stats?.views ?? null,
       likes: stats?.likes ?? null,
@@ -450,7 +446,7 @@ export interface LinkSuggestion {
 export async function suggestLinkDetails(url: string): Promise<LinkSuggestion> {
   const parsed = parseOrRefuse(url);
   const details = await resolveLinkDetails(parsed);
-  const providerId = providerIdFor(parsed, details);
+  const providerId = providerIdFor(parsed, details?.providerId ?? null);
   return {
     url: parsed.url,
     provider: parsed.provider,
