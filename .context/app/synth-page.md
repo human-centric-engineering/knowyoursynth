@@ -11,38 +11,39 @@ break shared links for no visible gain. "Sound" on screen means what you hear ("
 
 ## Where things are
 
-| File                                     | What it is                                                                |
-| ---------------------------------------- | ------------------------------------------------------------------------- |
-| `app/(panel)/synths/[id]/page.tsx`       | The route: 404s an id the registry lacks, reads the API, renders the page |
-| `app/(panel)/synths/page.tsx`            | `/synths`: reopens the last synth opened, or the first listed             |
-| `components/app/synth/synth-page.tsx`    | Holds the page state (`App.jsx`'s) and lays out the regions               |
-| `components/app/synth/synth.css`         | The instrument's classes: `kys-label`, `kys-player`, `kys-pulse`, …       |
-| `components/app/synth/player.tsx`        | The player's pieces: wordmark, the Sound Design strip, play, full screen  |
-| `components/app/synth/player-tools.tsx`  | The bar's layer toggles and the panel settings on the panel's rail        |
-| `components/app/synth/drawers.tsx`       | The tutor's drawer, sliding over the panel from `lg` up                   |
-| `components/app/synth/lesson-card.tsx`   | The card over the panel from `lg` up: lesson, inspector or effects        |
-| `components/app/synth/routing-view.tsx`  | The back of the panel: how the synth's parts are wired, the live path lit |
-| `components/app/synth/engine.ts`         | One audio engine for the visit                                            |
-| `components/app/synth/storage.ts`        | What a signed-out visitor's browser keeps                                 |
-| `components/app/synth/routes.ts`         | `?view=`, `?sound=` and the prototype's hash links                        |
-| `components/app/synth/my-sounds.tsx`     | My patches, and Save / Save as / Rename / Delete / Save a copy            |
-| `components/app/synth/with-notes.ts`     | Puts the API's "Unusual on…" notes back on the definition                 |
-| `components/app/synth/library.tsx`       | The sound library: search, categories, the loaded sound                   |
-| `components/app/tutor/tutor-panel.tsx`   | The tutor, in its drawer ([`tutor.md`](./tutor.md#the-panel))             |
-| `components/app/synth/lesson.tsx`        | The lesson: how it works, build it step by step, make it yours            |
-| `components/app/synth/tour.tsx`          | The orientation tour, docked under the panel                              |
-| `components/app/synth/lineage.tsx`       | The lineage dialog (History)                                              |
-| `components/app/synth/limits.tsx`        | The "What is not modelled" dialog                                         |
-| `components/app/synth/about.tsx`         | The About dialog: the synth's summary                                     |
-| `components/app/synth/use-dialog.ts`     | Opens and closes a native `<dialog>` from an `open` prop                  |
-| `components/app/synth/scope.tsx`         | The scope strip, the harmonics strip and the big scope view               |
-| `components/app/synth/sound-map.tsx`     | The sound map's legend, its "why is it dark?" line and its card note      |
-| `components/app/synth/panel-zoom.tsx`    | The panel's size: 90% to 200%, zoomed in its scroller                     |
-| `components/app/synth/rotate-prompt.tsx` | The note on a small screen that the panel wants a bigger one              |
-| `components/app/synth/reveal.ts`         | Scrolls a lesson step's controls into view above the Lesson sheet         |
-| `components/app/ui/bottom-sheet.tsx`     | The bottom sheet the regions beside the panel open in under `lg`          |
-| `components/app/ui/kept.tsx`             | Keeps a region mounted while its sheet is closed                          |
-| `components/app/synth/*.tsx` (the rest)  | Picker, search, inspector and info cards, keyboard, effects rack, bar     |
+| File                                     | What it is                                                                                                |
+| ---------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `app/(panel)/synths/[id]/page.tsx`       | The route: 404s an id the registry lacks, reads the API, renders the page                                 |
+| `app/(panel)/synths/page.tsx`            | `/synths`: reopens the last synth opened, or the first listed                                             |
+| `components/app/synth/synth-page.tsx`    | Holds the page state (`App.jsx`'s) and lays out the regions                                               |
+| `components/app/synth/synth.css`         | The instrument's classes: `kys-label`, `kys-player`, `kys-pulse`, …                                       |
+| `components/app/synth/player.tsx`        | The player's pieces: wordmark, the Sound Design strip, the patch picker and its drawer, play, full screen |
+| `components/app/synth/face-roles.ts`     | The player's colour roles in a faceplate's colours, for the strip and the lesson card's header            |
+| `components/app/synth/player-tools.tsx`  | The bar's layer toggles and the panel settings on the panel's rail                                        |
+| `components/app/synth/drawers.tsx`       | The tutor's drawer, sliding over the panel from `lg` up                                                   |
+| `components/app/synth/lesson-card.tsx`   | The card over the panel from `lg` up: lesson, inspector or effects                                        |
+| `components/app/synth/routing-view.tsx`  | The back of the panel: how the synth's parts are wired, the live path lit                                 |
+| `components/app/synth/engine.ts`         | One audio engine for the visit                                                                            |
+| `components/app/synth/storage.ts`        | What a signed-out visitor's browser keeps                                                                 |
+| `components/app/synth/routes.ts`         | `?view=`, `?sound=` and the prototype's hash links                                                        |
+| `components/app/synth/my-sounds.tsx`     | My patches, and Save / Save as / Rename / Delete / Save a copy                                            |
+| `components/app/synth/with-notes.ts`     | Puts the API's "Unusual on…" notes back on the definition                                                 |
+| `components/app/synth/library.tsx`       | The sound library: search, categories, the loaded sound                                                   |
+| `components/app/tutor/tutor-panel.tsx`   | The tutor, in its drawer ([`tutor.md`](./tutor.md#the-panel))                                             |
+| `components/app/synth/lesson.tsx`        | The lesson: how it works, build it step by step, make it yours                                            |
+| `components/app/synth/tour.tsx`          | The orientation tour, docked under the panel                                                              |
+| `components/app/synth/lineage.tsx`       | The lineage dialog (History)                                                                              |
+| `components/app/synth/limits.tsx`        | The "What is not modelled" dialog                                                                         |
+| `components/app/synth/about.tsx`         | The About dialog: the synth's summary                                                                     |
+| `components/app/synth/use-dialog.ts`     | Opens and closes a native `<dialog>` from an `open` prop                                                  |
+| `components/app/synth/scope.tsx`         | The scope strip, the harmonics strip and the big scope view                                               |
+| `components/app/synth/sound-map.tsx`     | The sound map's legend, its "why is it dark?" line and its card note                                      |
+| `components/app/synth/panel-zoom.tsx`    | The panel's size: 90% to 200%, zoomed in its scroller                                                     |
+| `components/app/synth/rotate-prompt.tsx` | The note on a small screen that the panel wants a bigger one                                              |
+| `components/app/synth/reveal.ts`         | Scrolls a lesson step's controls into view above the Lesson sheet                                         |
+| `components/app/ui/bottom-sheet.tsx`     | The bottom sheet the regions beside the panel open in under `lg`                                          |
+| `components/app/ui/kept.tsx`             | Keeps a region mounted while its sheet is closed                                                          |
+| `components/app/synth/*.tsx` (the rest)  | Picker, search, inspector and info cards, keyboard, effects rack, bar                                     |
 
 ## Rules that are not obvious from the code
 
@@ -138,7 +139,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
 │ │ BEHRINGER · Model D ▾ ☆ · heritage · ABOUT › · HISTORY › · …  │ │ My patches    │ │Lssn│ │
 │ │               ┌──────────── the panel ────────────┐           │ │ Patch library │ │Insp│ │
 │ │               └───────────────────────────────────┘           │ │  …            │ │Tutr│ │
-│ │ ● KNOW YOUR SYNTH  DRAWN AS·MAGNIFIER·HOVER HELP [🔍 Find…]    │ │               │ └────┘ │
+│ │ DRAWN AS·MAGNIFIER·HOVER HELP · ZOOM −[FIT]+  [🔍 Find…]      │ │               │ └────┘ │
 │ │ map legend · why is it dark? · engine error                   │ │               │        │
 │ ├───────────────────────────────────────────────────────────────┤ │               │        │
 │ │ LEARN SOUND DESIGN              (chapters, shown on approach)  │
@@ -148,12 +149,12 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
 │ │   (‹ Previous)  ┌ Step 2 of 4 · FILTER ──────┐  (Next step ›)  │ │               │        │
 │ │                 │ title · why, ≤68ch          │                 │ │               │        │
 │ ├───────────────────────────────────────────────────────────────┤ │               │        │
-│ │ [SOUND <name> ▾] (▶ Play)      [🔊 Mute] [Restore] [Default]   │ │               │        │
-│ │         [Piano] [Harmonics] [Effects] MIDI [?] [−Zoom+] [⛶]   │ │               │        │
+│ │ [▶ PLAY] [Sequencer] [🔊 Mute] [Restore]                        │ │               │        │
+│ │         [Piano] [Harmonics] [Effects] MIDI [?]            [⛶]   │ │               │        │
 │ ├───────────────────────────────────────────────────────────────┤ │               │        │
 │ │ harmonics strip · keyboard │ scope · [Harmonics] MIDI · rack  │ │               │        │
 │ └───────────────────────────────────────────────────────────────┘ │               │        │
-│ <name> [mine] 3 controls moved                                    │
+│ [<name>                ▾] [mine] 3 controls moved                │
 │ IN THE STYLE OF… · blurb                                          │               │        │
 │ Save / Save as / Rename / Share …                                 └───────────────┘        │
 └─────────────────────────────────────────────────────────────────────────────────────────────┘
@@ -165,7 +166,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   same value here. Nothing that holds the panel may carry `transform`, `filter` (other than the
   faceplate's own shadow) or `backdrop-filter`: the info cards, the magnifier and the
   tooltips are `fixed`.
-- **The caption is the synth.** The wordmark's LED is lit while the sound is on. The synth's name
+- **The caption is the synth.** The wordmark's LED is lit amber while the sound is on, and yellow while a lesson is
+  being walked (a step chosen, step 0 included; `Wordmark lesson`, t-204). The synth's name
   is the picker (`SynthPicker variant="caption"`). The page's `h1` is visually hidden, since the
   picker shows the name, on one line. Beside it the description (up to two lines from `lg`), with
   About (the synth's summary, in a dialog), History and What is not modelled under it. On the right of the header are the layers (Sections,
@@ -186,10 +188,23 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   `PANEL_QUIET_MS`). A press on the tab slides the strip up (`data-open`, the page's `designOpen`), the tab settling into the strip's head (the wordmark at its left) with an × that closes it,
   and it stays up, whatever the pointer does, until its tab or its head is pressed, or a press lands outside the strip, the lesson card and the panel; a press on the panel puts it away too unless a chapter has been chosen since it opened (`chapterChosen`), when the panel is where the lesson is followed; closed it is
   `visibility: hidden`, so Tab passes it. On touch and below `lg` there is no tab and the strip sits
-  in the dock's flow.
-- **The patch picker opens the bar** (`SoundPicker`), next to Play, with Restore patch and
-  Default patch, which chooses the Default patch as the library does: the sound's name opens the library as a drawer down the left of the screen (or the Library sheet below `lg`)
-  and puts focus in its search. Its "In the style of…" is its tooltip.
+  in the dock's flow. Putting it away closes the lesson card it opened; the inspector and the effects, from the bar,
+  stay (`closeDesign`, t-205).
+- **The strip is drawn in the faceplate's colours** (t-201), as the rails are: `faceRoles(face, face2, ink)`
+  (`face-roles.ts`) redeclares the player's `--kys-*` roles from the rails' three colours (or the outline drawing's
+  paper and ink), keeping text, accent and module colours at least 3:1 off the face (4.5:1 for muted text) where the
+  print allows; the accent falls from amber to the day amber to the ink. With a pointer, the closed tab carries the
+  lesson card's desk-tone bezel round its top and sides, and the open drawer along its top (an inset shadow, so the
+  closed drawer takes no height; t-206).
+- **The patch is chosen from its name under the panel** (`SoundPicker`, t-207), boxed as a select (at least 360px
+  wide, the caret in its own segment): it opens the library as a drawer down the left of the screen (`SoundsDrawer`,
+  rendered in the player outside its stage, so it stacks over the dock), or the Library sheet below `lg`, and puts
+  focus in its search. Its "In the style of…" is its tooltip. The Default patch is first in the library; the bar has
+  no button of its own for it (t-208).
+- **The foot of the player is the Play deck**: the bar, the piano and scope, MIDI and the docked sequencer, where the
+  synth is played from (owner ruling, 2026-11-07). **Play is its first control** (`PlayButton`, t-210), outside the
+  bar's scrolling row so nothing clips it, drawn as a lit green transport key at the bar's 44px; it glows from inside
+  while it runs. A pattern picker is to take the bar's first place beside it (`f-pattern-picker`).
 - **The lesson's steps are the chapters**, one per step in its module's colour, each labelled with
   its number and the part of the synth it works on (`moduleOf(step.module).label`), and its title
   from `lg` up; under `sm`, the number alone. The first, narrower, is step 0 ("0 · Start", the Default
@@ -318,7 +333,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   again once it has loaded; holds a Play pressed meanwhile until then (the riff of the sound on the
   panel by then, should a second load take over; Mute drops it); and passes `silent` to MIDI
   out, so a running pattern goes on in time but muted on the synth and on the output (see
-  `sequencer.md`). The patch picker's eyebrow reads **Loading** with a pulsing LED, so a dead key
+  `sequencer.md`). The patch picker's LED pulses and its label says it is loading, so a dead key
   reads as "wait". The synth arriving is a load too, from the Default patch: it waits `ARRIVE_MS`
   on it, and the stored panel landing meanwhile carries the glide on.
   Choosing another synth turns the instrument on a turntable (`ViewTransition`, transition type
@@ -395,9 +410,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   screen. The info cards and the tour are rendered inside the player so they still show there.
   The stage, not the player, isolates its stacking, so they still stack over the page's bottom
   nav, and they read the player's dark roles.
-- **Under the panel, on the stage,** is the title row, as under a video: the loaded sound (on one
-  line in the panel's label face, `.kys-sound-title`, truncated with its full name as the
-  `title`), its marks, the save actions (Save a copy…, with a tooltip on what it keeps) and Unplug
+- **Under the panel, on the stage,** is the title row, as under a video: the loaded sound (the patch picker, its
+  name on one line in the panel's label face, `.kys-sound-title`), its marks, the save actions (Save a copy…, with a tooltip on what it keeps) and Unplug
   all. The sound's "In
   the style of…" and blurb run the whole width under both, as a video's description is under its
   title.
@@ -421,7 +435,11 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
 - **The lesson card floats over the panel** (`lesson-card.tsx`), opened from a chapter: one
   section of the lesson, its moves numbered ①②③ on the card and on the panel (`badgeStore`). It
   does not block the panel, since it tells you to turn the knobs under it. It can be dragged by its
-  header anywhere on the screen; ⇆ docks it on the other side (`kys.cardSide`). Docked, it stands
+  header anywhere on the screen, and once moved it floats over the dock and the tutor's drawer (t-202); its grip at the
+  bottom right sizes it, by pointer or the arrow keys, down to 280×180, the size kept when ⇆ docks it again (t-203).
+  ⇆ docks it on the other side (`kys.cardSide`). Turning the panel over to Signal routing closes it, whatever it shows
+  (t-205). Showing the lesson, its header is a strip of the faceplate (the face roles above) and the card sits in a
+  desk-tone bezel, opaque, so it lifts off a panel of its own colour (t-201). Docked, it stands
   above the dock and, with a pointer, above the Sound Design drawer while that is open: the drawer
   stands on the dock outside its height, so the page measures it into `--kys-strip-h` as it slides,
   and the card rises with it (t-174). The inspector
@@ -439,7 +457,7 @@ D10: playing the full panel needs a landscape tablet or a computer. Everything e
 phone. `f-phone-and-tablet` t-65 made the panel and keyboard work on touch:
 
 - **The panel fits the page by default, at every width.** There is no minimum width any more. The
-  zoom group (−, Zoom, +) draws the panel at 90% of the fitted width, or up from it in tenths to
+  zoom on the panel's foot rail (−, a readout reading Fit or the size, +; t-209) draws the panel at 90% of the fitted width, or up from it in tenths to
   200%, inside its
   horizontal scroller, and keeps the middle of the view in the middle. The panel is drawn bigger,
   not magnified, so every control still works, and a drag on bare panel scrolls the page. Only the
@@ -461,7 +479,7 @@ phone. `f-phone-and-tablet` t-65 made the panel and keyboard work on touch:
   closed) has its note let go at once. Under `sm`, the octave buttons and Hold go under the keys,
   so more keys show.
 - **The lens switches over the panel and the player's bar scroll sideways on one line** under
-  `sm`, with the zoom group first in the bar, instead of wrapping into a wall.
+  `sm`, instead of wrapping into a wall.
 - **Nothing may make the page wider than the screen.** A grid item grows to its content's width
   unless it has `min-w-0` or a `minmax(0, …)` track, so the keyboard (whose keys scroll) and the
   regions under the panel carry one. Anything new that scrolls sideways inside a grid needs the
