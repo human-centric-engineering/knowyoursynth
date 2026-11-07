@@ -1349,7 +1349,10 @@ Measured on 2026-11-07 over the library's 2,998 sounds:
   `pro-1/filter-clave` and `malevolent/mal-extreme`. `check:synths` hears each one play its riff, so they do make sound, but not on a held G3 within
   the probe's 0.85 s. Why has not been looked into. They count as disagreements.
 
-`soundkind-library.test.ts` pins the 48.9%, so a change to the probe, the engine, the features or the library can't
+On CI's Linux x64 one fx sound reads as lead instead, so 1,465 agree there: the renders are seeded, but the platforms'
+maths can differ in the last bit, and a sound near a feature's threshold can tip. The figures here are the macOS ones.
+
+`soundkind-library.test.ts` pins the 48.9% (its floor is the Linux count, the lower), so a change to the probe, the engine, the features or the library can't
 make the detector worse without someone deciding it should. It renders the whole library, about three minutes of CPU,
 so it is the slowest test in the app. It sweeps on two worker threads rather than one per core: a sweep across every
 core starved the tests vitest runs alongside it into timeouts. It runs when something it imports changes (the probe
