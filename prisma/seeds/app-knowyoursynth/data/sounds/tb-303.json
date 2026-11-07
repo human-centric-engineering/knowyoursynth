@@ -2769,7 +2769,7 @@
       "tags": ["bass", "acid", "house", "chill-out", "10s"],
       "level": 2,
       "blurb": "A slow, sad, beautiful acid melody in a minor key.",
-      "how": "Acid does not have to be aggressive. Tin Man’s records use the 303 for wistful, minor-key melodies: soft accents, a low ENV MOD and long notes, so it sings rather than shrieks.",
+      "how": "Acid does not have to be aggressive. Tin Man’s records use the 303 for wistful, minor-key melodies: no accents, a low ENV MOD and long notes, so it sings rather than shrieks.",
       "phrase": {
         "bpm": 112,
         "loop": true,
@@ -3862,15 +3862,15 @@
         "bpm": 72,
         "loop": true,
         "steps": [
-          [1, 66, 0.95],
-          [2, 69, 0.95],
-          [3, 67, 0.95],
-          [4, 66, 0.95],
-          [5, 61, 0.95],
-          [6, 59, 0.95],
-          [7, 61, 0.95],
-          [8, 62, 0.95],
-          [9, 57, 2.9]
+          [0, 66, 0.95],
+          [1, 69, 0.95],
+          [2, 67, 0.95],
+          [3, 66, 0.95],
+          [4, 61, 0.95],
+          [5, 59, 0.95],
+          [6, 61, 0.95],
+          [7, 62, 0.95],
+          [8, 57, 3.9]
         ]
       },
       "steps": [
@@ -3920,30 +3920,30 @@
       "artist": "English folk tradition",
       "tags": ["lead", "folk", "traditional"],
       "level": 2,
-      "blurb": "The old English tune in three-four, with slides standing in for a lute’s bends.",
-      "how": "Greensleeves is a 16th-century tune in a minor key. The 303’s slide gives its long notes a gentle bend, like a singer or a lute player sliding into a note.",
+      "blurb": "The old English tune in three-four, on a reedy, recorder-like tone.",
+      "how": "Greensleeves is a 16th-century tune in a minor key, in a lilting three. A reedy tone and a long decay let its long notes sing, as a recorder or a voice would.",
       "phrase": {
         "bpm": 96,
         "loop": true,
         "steps": [
-          [2, 57, 0.9],
-          [3, 60, 1.9],
-          [5, 62, 0.9],
-          [6, 64, 1.4],
-          [7.5, 65, 0.45],
-          [8, 64, 0.9],
-          [9, 62, 1.9],
-          [11, 59, 0.9],
-          [12, 55, 1.4],
-          [13.5, 57, 0.45],
-          [14, 59, 0.9],
-          [15, 60, 1.9],
-          [17, 57, 0.9],
-          [18, 57, 1.4],
-          [19.5, 56, 0.45],
-          [20, 57, 0.9],
-          [21, 59, 1.9],
-          [23, 56, 0.9]
+          [0, 57, 0.9],
+          [1, 60, 1.9],
+          [3, 62, 0.9],
+          [4, 64, 1.4],
+          [5.5, 65, 0.45],
+          [6, 64, 0.9],
+          [7, 62, 1.9],
+          [9, 59, 0.9],
+          [10, 55, 1.4],
+          [11.5, 57, 0.45],
+          [12, 59, 0.9],
+          [13, 60, 1.9],
+          [15, 57, 0.9],
+          [16, 57, 1.4],
+          [17.5, 56, 0.45],
+          [18, 57, 0.9],
+          [19, 59, 1.9],
+          [21, 56, 2.9]
         ]
       },
       "steps": [
@@ -5188,7 +5188,7 @@
         {
           "title": "Soft bounce",
           "module": "env",
-          "why": "A medium decay and a light accent.\n- DECAY 3.5 · 450 ms\n- ACCENT 2\n- Listen for: a rolling, bouncing deep-house groove.",
+          "why": "A medium decay. ACCENT is set light for any step you mark in the sequencer; this riff marks none, so every note is even.\n- DECAY 3.5 · 450 ms\n- ACCENT 2\n- Listen for: a rolling, bouncing deep-house groove.",
           "set": {
             "env.decay": 3.5,
             "amp.accent": 2
@@ -5385,7 +5385,7 @@
         {
           "title": "Bounce",
           "module": "env",
-          "why": "A short decay and a light accent.\n- DECAY 2.5 · 360 ms\n- ACCENT 2\n- Listen for: a bouncing, syncopated octave line.",
+          "why": "A short decay. ACCENT is set light for any step you mark in the sequencer; this riff marks none, so every note is even.\n- DECAY 2.5 · 360 ms\n- ACCENT 2\n- Listen for: a bouncing, syncopated octave line.",
           "set": {
             "env.decay": 2.5,
             "amp.accent": 2
@@ -5920,7 +5920,7 @@
         {
           "title": "Gallop",
           "module": "env",
-          "why": "A short decay and a light accent.\n- DECAY 1.5 · 280 ms\n- ACCENT 2\n- Listen for: a galloping octave bass.",
+          "why": "A short decay. ACCENT is set light for any step you mark in the sequencer; this riff marks none, so every note is even.\n- DECAY 1.5 · 280 ms\n- ACCENT 2\n- Listen for: a galloping octave bass.",
           "set": {
             "env.decay": 1.5,
             "amp.accent": 2
@@ -6059,7 +6059,7 @@
         {
           "title": "Funky",
           "module": "env",
-          "why": "A short-medium decay and a light accent.\n- DECAY 3 · 400 ms\n- ACCENT 3\n- Listen for: a syncopated electro-funk bass.",
+          "why": "A short-medium decay. ACCENT is set light for any step you mark in the sequencer; this riff marks none, so every note is even.\n- DECAY 3 · 400 ms\n- ACCENT 3\n- Listen for: a syncopated electro-funk bass.",
           "set": {
             "env.decay": 3,
             "amp.accent": 3
@@ -6170,7 +6170,7 @@
         {
           "title": "Skippy",
           "module": "env",
-          "why": "A medium decay and a light accent.\n- DECAY 3 · 400 ms\n- ACCENT 2\n- Listen for: a skippy, syncopated garage line.",
+          "why": "A medium decay. ACCENT is set light for any step you mark in the sequencer; this riff marks none, so every note is even.\n- DECAY 3 · 400 ms\n- ACCENT 2\n- Listen for: a skippy, syncopated garage line.",
           "set": {
             "env.decay": 3,
             "amp.accent": 2
@@ -6785,7 +6785,7 @@
         {
           "title": "Deep",
           "module": "env",
-          "why": "A medium decay, a light accent.\n- DECAY 3 · 400 ms\n- ACCENT 2\n- Listen for: a deep, mysterious electro line.",
+          "why": "A medium decay. ACCENT is set light for any step you mark in the sequencer; this riff marks none, so every note is even.\n- DECAY 3 · 400 ms\n- ACCENT 2\n- Listen for: a deep, mysterious electro line.",
           "set": {
             "env.decay": 3,
             "amp.accent": 2
@@ -8765,7 +8765,7 @@
         {
           "title": "Short",
           "module": "env",
-          "why": "A short decay and a light accent.\n- DECAY 1.5 · 280 ms\n- ACCENT 3\n- Listen for: a bouncy, syncopated log-drum pattern.",
+          "why": "A short decay. ACCENT is set light for any step you mark in the sequencer; this riff marks none, so every note is even.\n- DECAY 1.5 · 280 ms\n- ACCENT 3\n- Listen for: a bouncy, syncopated log-drum pattern.",
           "set": {
             "env.decay": 1.5,
             "amp.accent": 3
@@ -9121,7 +9121,7 @@
         {
           "title": "Glossy",
           "module": "env",
-          "why": "A short decay and a light accent.\n- DECAY 2 · 320 ms\n- ACCENT 2\n- Listen for: a busy, glossy city-pop bass.",
+          "why": "A short decay. ACCENT is set light for any step you mark in the sequencer; this riff marks none, so every note is even.\n- DECAY 2 · 320 ms\n- ACCENT 2\n- Listen for: a busy, glossy city-pop bass.",
           "set": {
             "env.decay": 2,
             "amp.accent": 2
@@ -9315,7 +9315,7 @@
         {
           "title": "Bounce",
           "module": "env",
-          "why": "A short decay and a light accent.\n- DECAY 1 · 250 ms\n- ACCENT 2\n- Listen for: a bouncing tumbi riff.",
+          "why": "A short decay. ACCENT is set light for any step you mark in the sequencer; this riff marks none, so every note is even.\n- DECAY 1 · 250 ms\n- ACCENT 2\n- Listen for: a bouncing tumbi riff.",
           "set": {
             "env.decay": 1,
             "amp.accent": 2
@@ -10199,7 +10199,7 @@
         {
           "title": "Stripped",
           "module": "env",
-          "why": "A medium decay and a light accent.\n- DECAY 4 · 500 ms\n- ACCENT 3\n- Listen for: a sparse, eerie Chicago track line.",
+          "why": "A medium decay. ACCENT is set light for any step you mark in the sequencer; this riff marks none, so every note is even.\n- DECAY 4 · 500 ms\n- ACCENT 3\n- Listen for: a sparse, eerie Chicago track line.",
           "set": {
             "env.decay": 4,
             "amp.accent": 3
@@ -10449,7 +10449,7 @@
         {
           "title": "Gallop",
           "module": "env",
-          "why": "A short decay and a light accent.\n- DECAY 2 · 320 ms\n- ACCENT 2\n- Listen for: a galloping, cosmic arpeggio.",
+          "why": "A short decay. ACCENT is set light for any step you mark in the sequencer; this riff marks none, so every note is even.\n- DECAY 2 · 320 ms\n- ACCENT 2\n- Listen for: a galloping, cosmic arpeggio.",
           "set": {
             "env.decay": 2,
             "amp.accent": 2

@@ -975,8 +975,8 @@
       "artist": "Lee “Scratch” Perry",
       "tags": ["bass", "dub", "reggae", "70s"],
       "level": 2,
-      "blurb": "A deep, warm dub bass whose accents throw long echoes into the room.",
-      "how": "Lee Perry’s Black Ark studio soaked everything in tape echo and saturation. A round, saturated bass with a long echo that keeps feeding back, so the accents hang in the air.",
+      "blurb": "A deep, warm dub bass whose notes throw long echoes into the room.",
+      "how": "Lee Perry’s Black Ark studio soaked everything in tape echo and saturation. A round, saturated bass with a long echo that keeps feeding back, so each note hangs in the air.",
       "phrase": {
         "bpm": 72,
         "loop": true,
@@ -2159,7 +2159,7 @@
       "artist": "Dub",
       "tags": ["bass", "dub", "reggae", "70s"],
       "level": 2,
-      "blurb": "A deep bass line with its accented notes echoing in the background.",
+      "blurb": "A deep bass line with its echoes far behind it.",
       "how": "Dub mixers send only a few notes to the echo so the bass stays clean. On the B1 the echo is on everything, so a low LEVEL keeps it in the background.",
       "phrase": {
         "bpm": 72,
