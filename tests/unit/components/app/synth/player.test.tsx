@@ -15,8 +15,11 @@ import {
   FullscreenButton,
   SoundDesign,
   SoundPicker,
+  SoundsDrawer,
+  Wordmark,
 } from '@/components/app/synth/player';
 import { stepIds } from '@/components/app/synth/lesson';
+import { faceRoles } from '@/components/app/synth/face-roles';
 import { highlightStore } from '@/components/app/synth/stores';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { START_STEP, startStep } from '@/lib/app/synths/default-patch';
@@ -25,21 +28,29 @@ import type { PresetStep } from '@/lib/app/synths/contract';
 const { warn } = vi.hoisted(() => ({ warn: vi.fn() }));
 vi.mock('@/lib/logging', () => ({ logger: { warn } }));
 
-function picker(open = true) {
-  const onClose = vi.fn();
-  render(
+/** The patch picker and the drawer it opens, sharing the picker's button as the page does (t-207). */
+function PickerWithDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const pickRef = useRef<HTMLButtonElement | null>(null);
+  return (
     <>
       <SoundPicker
+        buttonRef={pickRef}
         soundName="Night bass"
         soundRef={null}
         onChooseSound={vi.fn()}
         soundsOpen={open}
-        onCloseSounds={onClose}
-        sounds={<input type="search" aria-label="Search sounds" />}
       />
+      <SoundsDrawer open={open} onClose={onClose} pickRef={pickRef}>
+        <input type="search" aria-label="Search sounds" />
+      </SoundsDrawer>
       <button type="button">Elsewhere</button>
     </>
   );
+}
+
+function picker(open = true) {
+  const onClose = vi.fn();
+  render(<PickerWithDrawer open={open} onClose={onClose} />);
   const search = screen.getByRole('searchbox', { name: 'Search sounds', hidden: true });
   const pop = search.closest('[role="dialog"]');
   if (!(pop instanceof HTMLElement)) throw new Error('the library is in a dialog');
@@ -53,6 +64,37 @@ function picker(open = true) {
 }
 
 describe('SoundPicker', () => {
+  it("is the patch's name, saying whether the drawer is open and when a patch is loading (t-207)", () => {
+    const onChoose = vi.fn();
+    const { rerender } = render(
+      <SoundPicker
+        soundName="Night bass"
+        soundRef="In the style of a 303"
+        onChooseSound={onChoose}
+      />
+    );
+    const pick = screen.getByRole('button', { name: 'Choose a patch (now: Night bass)' });
+    expect(pick.textContent).toBe('Night bass');
+    expect(pick).toHaveAttribute('aria-expanded', 'false');
+    expect(pick).toHaveAttribute('title', 'Night bass: In the style of a 303');
+    fireEvent.click(pick);
+    expect(onChoose).toHaveBeenCalledTimes(1);
+    rerender(
+      <SoundPicker
+        soundName="Night bass"
+        soundRef={null}
+        onChooseSound={onChoose}
+        soundsOpen
+        loading
+      />
+    );
+    expect(pick).toHaveAttribute('aria-label', 'Choose a patch (now: Night bass, loading)');
+    expect(pick).toHaveAttribute('aria-expanded', 'true');
+    expect(pick.querySelector('.kys-led.kys-pulse')).not.toBeNull();
+    // Without an "In the style of…", the tooltip is the whole name, which the box may cut short.
+    expect(pick).toHaveAttribute('title', 'Night bass');
+  });
+
   it('closes the library on a press outside it', () => {
     const { onClose, elsewhere } = picker();
     fireEvent.pointerDown(elsewhere);
@@ -170,6 +212,45 @@ describe('SoundDesign: the drawer', () => {
     );
     expect(tab).toHaveAttribute('aria-expanded', 'true');
     expect(document.getElementById(tab.getAttribute('aria-controls') ?? '')).not.toBeNull();
+  });
+});
+
+describe('Wordmark: its lamp (t-204)', () => {
+  const lamp = (lit: boolean, lesson?: boolean) => {
+    const { container, unmount } = render(<Wordmark lit={lit} lesson={lesson} />);
+    const led = container.querySelector('.kys-led');
+    const cls = [led?.classList.contains('is-lit'), led?.classList.contains('is-lesson')];
+    unmount();
+    return cls;
+  };
+
+  it("is the sound's amber while it is on, and dark while it is off", () => {
+    expect(lamp(true)).toEqual([true, false]);
+    expect(lamp(false)).toEqual([false, false]);
+  });
+
+  it('is yellow while a lesson is being walked, whether the sound is on or not', () => {
+    expect(lamp(true, true)).toEqual([false, true]);
+    expect(lamp(false, true)).toEqual([false, true]);
+  });
+});
+
+describe('SoundDesign: the faceplate (t-201)', () => {
+  const strip = () =>
+    screen.getByRole('heading', { name: 'Learn sound design' }).closest('section');
+
+  it("is drawn in the face's colours when the page gives them", () => {
+    const face = faceRoles('#f2b21c', '#e3a40f', '#2b2213');
+    render(<SoundDesign steps={[]} step={null} onStep={vi.fn()} hasLesson={false} face={face} />);
+    expect(strip()).toHaveClass('kys-face');
+    expect(strip()?.style.getPropertyValue('--kys-surface')).toBe('#f2b21c');
+    expect(strip()?.style.getPropertyValue('--kys-accent')).toBe('#2b2213');
+  });
+
+  it("keeps the stage's colours without them", () => {
+    render(<SoundDesign steps={[]} step={null} onStep={vi.fn()} hasLesson={false} />);
+    expect(strip()).not.toHaveClass('kys-face');
+    expect(strip()?.style.getPropertyValue('--kys-surface')).toBe('');
   });
 });
 

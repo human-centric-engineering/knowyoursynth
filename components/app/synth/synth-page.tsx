@@ -46,6 +46,7 @@ import {
 } from 'react';
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
 import { INK, PAPER } from '@/components/app/panel/parts';
+import { faceRoles } from '@/components/app/synth/face-roles';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { apiClient } from '@/lib/api/client';
@@ -55,7 +56,6 @@ import type { PublicPattern } from '@/lib/app/patterns/data';
 import type { Pattern } from '@/lib/app/sequencer/pattern';
 import { lessonPreset } from '@/lib/app/sounds/lesson';
 import {
-  DEFAULT_PATCH_ID,
   DEFAULT_PATCH_NAME,
   START_STEP,
   defaultPatchSound,
@@ -92,7 +92,6 @@ import {
   AudioWaveform,
   Columns4,
   Flame,
-  Eraser,
   Piano,
   Play,
   Redo2,
@@ -154,6 +153,7 @@ import {
   PlayButton,
   SoundDesign,
   SoundPicker,
+  SoundsDrawer,
   Wordmark,
 } from '@/components/app/synth/player';
 import type { PanelScale } from '@/components/app/synth/panel-zoom';
@@ -647,11 +647,15 @@ function Synth({
   const scrollerRef = useKeepCentre(scale);
   const [areasOn, setAreasOn] = useState(false);
   const [tourOn, setTourOn] = useState(false);
+  // The card over the panel from `lg` up: the lesson, the inspector or the effects (t-74).
+  const [card, setCard] = useState<CardId | null>(null);
   // The routing view on the back of the panel (t-142), for a synth that has a routing. The flip is a view transition
   // (`routing-flip`, `.kys-panel-flip`), so nothing that holds the panel carries a transform; reduced motion swaps.
   const routing = useMemo(() => getSynthRouting(synthDef), [synthDef]);
   const [routingOn, setRoutingOn] = useState(false);
   const flipPanel = useCallback((on: boolean) => {
+    // The card over the panel is about the panel: turned over to another view, it goes (t-205).
+    if (on) setCard(null);
     startTransition(() => {
       addTransitionType('routing-flip');
       setRoutingOn(on);
@@ -711,8 +715,8 @@ function Synth({
     setDockSnap('half');
   };
   // From `lg` up (t-74): the lesson card over the panel, the sounds in a drawer on the left, the tutor's drawer over the panel,
-  // and the dock's piano. The card's side and the piano are remembered in this browser.
-  const [card, setCard] = useState<CardId | null>(null);
+  // and the dock's piano. The card's side and the piano are remembered in this browser. The card is declared with the
+  // routing view, which closes it.
   // What works on the panel itself turns it face up again from the routing view: a find (a new one too), a lesson
   // step, the tour, Explain sections or the Inspector coming on. Turning one off leaves the view be, and so does Undo
   // (it lights what it changes, which the view follows). Dim unused and Sensitive are left out: they point at nothing,
@@ -744,6 +748,12 @@ function Synth({
   // Whether a chapter has been chosen since the drawer opened: then the panel is where the lesson is being followed,
   // and a press on it leaves the drawer up; before, a press on the panel is other work, and puts it away.
   const chapterChosen = useRef(false);
+  // Put away, the drawer takes the lesson it opened with it (t-205); the inspector and the effects, from the bar, stay.
+  const closeDesign = useCallback(() => {
+    chapterChosen.current = false;
+    setDesignOpen(false);
+    setCard((c) => (c === 'build' ? null : c));
+  }, []);
 
   // Unplug all takes the cables out one by one, in the order they were plugged, each dropping away from its jack: the
   // first at once, then every `UNPLUG_GAP_MS` (closer for many, so all are out in `UNPLUG_ALL_MS`). They come out within
@@ -781,12 +791,15 @@ function Synth({
       if (!(t instanceof Element)) return;
       // The strip handles its own presses (its tab, its head, its chapters), and the lesson card is the lesson's.
       if (t.closest('.kys-design, .kys-card')) return;
-      if (scrollerRef.current?.contains(t) && chapterChosen.current) return;
-      setDesignOpen(false);
+      // Once a chapter is chosen the lesson is being followed, and putting the drawer away takes its card with it
+      // (t-205): then only its tab or its head does, whatever is pressed meanwhile (the keys, Play, a dialog over the
+      // page). Before, a press anywhere else is other work, and puts it away.
+      if (chapterChosen.current) return;
+      closeDesign();
     };
     document.addEventListener('pointerdown', onDown, true);
     return () => document.removeEventListener('pointerdown', onDown, true);
-  }, [designOpen, small, scrollerRef]);
+  }, [designOpen, small, closeDesign]);
   const [tutorOpen, setTutorOpen] = useState(false);
   // On a phone the panel settings are behind a button by the sound's name; from `md` up they are always on show.
   // The piano is out by default on a tall screen and put away on a short one, until the Piano button says otherwise.
@@ -800,6 +813,7 @@ function Synth({
   }, []);
   const closeCard = useCallback(() => setCard(null), []);
   const closeSounds = useCallback(() => setSoundsOpen(false), []);
+  const soundPickRef = useRef<HTMLButtonElement | null>(null);
   // The Sound Design strip's sound picker: the library, wherever it is at this width.
   const libraryRef = useRef<HTMLDivElement | null>(null);
   const chooseSound = () => {
@@ -1490,7 +1504,12 @@ function Synth({
   // Opened by the bar's Sequencer button or a panel button (t-85).
   const openSequencer = () => {
     if (small) openSheet('sequencer');
-    else setSeqOpen(true);
+    else {
+      setSeqOpen(true);
+      // The docked sequencer takes the strip's place: the drawer is put away, the lesson with it, rather than left
+      // open behind it to come back up when the sequencer closes.
+      closeDesign();
+    }
     // Opened while the riff plays, the pattern takes over: it is the riff, until it is edited.
     if (playing) void playPattern();
   };
@@ -2118,13 +2137,18 @@ function Synth({
   // drawing's paper and ink. The width of the panel, zoomed with it, up to the screen's.
   // A light faceplate takes a softer shadow on the light stage: the dark one a black panel casts reads as a smudge.
   const lightFace = !view.outline && isLightFace(def.theme.panel);
+  const plate = view.outline ? PAPER : def.theme.panel;
+  const plate2 = view.outline ? PAPER : def.theme.panel2 || def.theme.panel;
+  const print = view.outline ? INK : def.theme.ink;
   const railStyle: CSSProperties & Record<'--rail-face' | '--rail-face2' | '--rail-print', string> =
     {
       ...panelRailStyle(faceView(def), scale),
-      '--rail-face': view.outline ? PAPER : def.theme.panel,
-      '--rail-face2': view.outline ? PAPER : def.theme.panel2 || def.theme.panel,
-      '--rail-print': view.outline ? INK : def.theme.ink,
+      '--rail-face': plate,
+      '--rail-face2': plate2,
+      '--rail-print': print,
     };
+  // The Sound Design strip and the lesson card are of the faceplate too, in its colours (t-201).
+  const face = useMemo(() => faceRoles(plate, plate2, print), [plate, plate2, print]);
   const panelTaps = small
     ? {
         onPointerOverCapture: (e: ReactPointerEvent) => {
@@ -2609,6 +2633,8 @@ function Synth({
                         tipsOn={tipsOn}
                         onTips={setTipsOn}
                       />
+                      {/* How big the panel is drawn is the panel's, with how it is drawn (t-209). */}
+                      <PanelZoom scale={scale} onScale={setScale} />
                       <Search
                         def={def}
                         up
@@ -2643,11 +2669,17 @@ function Synth({
                   >
                     {/* The sound's name, and beside it what can be done with it: keep it. */}
                     <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
-                      <p className="flex max-w-full min-w-0 items-baseline gap-x-2.5">
+                      <p className="flex max-w-full min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1.5">
                         <span className="sr-only">Loaded:</span>
-                        <span className="kys-sound-title truncate" title={loadedName}>
-                          {loadedName}
-                        </span>
+                        {/* The patch is chosen from its name (t-207): the Play deck's bar is for playing. */}
+                        <SoundPicker
+                          buttonRef={soundPickRef}
+                          loading={loading}
+                          soundName={loadedName}
+                          soundRef={described?.ref ?? null}
+                          onChooseSound={chooseSound}
+                          soundsOpen={!small && soundsOpen}
+                        />
                         {openSound && (
                           <span className="shrink-0 rounded border border-(--kys-line) px-1.5 py-0.5 font-mono text-xs text-(--kys-muted)">
                             mine
@@ -2752,41 +2784,42 @@ function Synth({
                     openSection('build');
                   }}
                   hasLesson={!!shown}
-                  mark={<Wordmark lit={audio === 'on'} />}
+                  mark={
+                    <Wordmark
+                      lit={audio === 'on'}
+                      lesson={
+                        step != null && (card === 'build' || designOpen || sheet === 'lesson')
+                      }
+                    />
+                  }
                   lit={chapterLit ? chapterLit.split('|') : []}
                   open={designOpen}
+                  face={face}
                   onToggle={() => {
                     chapterChosen.current = false;
-                    setDesignOpen((o) => !o);
+                    if (designOpen) closeDesign();
+                    else setDesignOpen(true);
                   }}
                 />
               )}
 
               <div className="kys-player-bar flex flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2 text-sm sm:px-4 lg:flex-nowrap">
-                <SoundPicker
-                  loading={loading}
-                  soundName={loadedName}
-                  soundRef={described?.ref ?? null}
-                  onChooseSound={chooseSound}
-                  soundsOpen={!small && soundsOpen}
-                  onCloseSounds={closeSounds}
-                  sounds={small ? undefined : library}
-                />
-                {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach; on a phone they take a row of their own under the patch, leaving the fullscreen button beside it. */}
+                {/* Always there while something plays, so a pattern can be stopped with the sequencer closed. The Play
+                deck's first and biggest control, outside the scrolling row so nothing clips its glow (t-210). */}
+                {(shown || seqShown || transportPlaying) && (
+                  <PlayButton
+                    playing={transportPlaying}
+                    onClick={() =>
+                      transportPlaying
+                        ? stopRiff()
+                        : seqShown || !shown
+                          ? void playPattern()
+                          : void playRiff(shown.phrase)
+                    }
+                  />
+                )}
+                {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach; on a phone they take a row of their own under Play, leaving the fullscreen button beside it. */}
                 <div className="kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 max-sm:order-last max-sm:basis-full lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">
-                  {/* Always there while something plays, so a pattern can be stopped with the sequencer closed. */}
-                  {(shown || seqShown || transportPlaying) && (
-                    <PlayButton
-                      playing={transportPlaying}
-                      onClick={() =>
-                        transportPlaying
-                          ? stopRiff()
-                          : seqShown || !shown
-                            ? void playPattern()
-                            : void playRiff(shown.phrase)
-                      }
-                    />
-                  )}
                   <LayerToggle
                     label="Sequencer"
                     short="Sequencer"
@@ -2838,19 +2871,6 @@ function Synth({
                       </button>
                     </PlayerTip>
                   )}
-                  <PlayerTip
-                    name={DEFAULT_PATCH_NAME}
-                    help="Go back to the plain sawtooth every patch here starts from, which you can set your own synth to."
-                  >
-                    <button
-                      type="button"
-                      onClick={() => selectPreset(DEFAULT_PATCH_ID)}
-                      className="kys-layer"
-                    >
-                      <Eraser size={16} aria-hidden="true" />
-                      {DEFAULT_PATCH_NAME}
-                    </button>
-                  </PlayerTip>
                   <span className="flex-1" />
                   {/* Capped below `lg`, so the row wraps its own buttons rather than run off a phone. */}
                   <div className="kys-autohide flex flex-wrap items-center gap-2 max-lg:max-w-full lg:flex-nowrap">
@@ -2885,7 +2905,6 @@ function Synth({
                     )}
                     <MidiStatus midi={midi} onConnect={connectMidi} />
                     <HelpButton title="How to play sounds" items={PLAY_HELP} />
-                    <PanelZoom scale={scale} onScale={setScale} className="max-sm:order-first" />
                   </div>
                 </div>
                 <div className="kys-autohide flex items-center lg:shrink-0">
@@ -2944,6 +2963,13 @@ function Synth({
               </div>
             </div>
 
+            {/* The library's drawer, opened by the patch's name: in the player but outside its stage, so it stacks over
+            the Play deck. */}
+            {!small && (
+              <SoundsDrawer open={soundsOpen} onClose={closeSounds} pickRef={soundPickRef}>
+                {library}
+              </SoundsDrawer>
+            )}
             {!small && card && (
               <LessonCard
                 def={def}
@@ -2959,6 +2985,7 @@ function Synth({
                 mark={ownLesson || !shown ? null : (progress.marks?.get(shown.id) ?? null)}
                 links={shownLinks}
                 suggestLink={suggestForSound}
+                face={face}
               />
             )}
             {!small && (

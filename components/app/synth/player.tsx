@@ -4,9 +4,10 @@
  * The player's own pieces (`f-player`): what turns the panel into something you watch and play, as a video player
  * gathers its controls round the picture. BeatBreaker's drummer player is the precedent (its `studio/player/`).
  *
- * - `Wordmark`: the app's name at the right of the Sound Design strip's heading, with an LED that is lit while the sound is on.
- * - `SoundPicker`: the sound's name at the start of the bar, which opens the library. Its LED pulses while a patch
- *   loads, when the keys are silent (`f-default-patch` t-172), so a dead key reads as "wait", not as broken.
+ * - `Wordmark`: the app's name at the right of the Sound Design strip's heading, with an LED that is lit while the sound is on,
+ *   and lit yellow while a lesson is being walked (t-204).
+ * - `SoundPicker`: the patch's name under the panel, which opens the library (`SoundsDrawer`). Its LED pulses while a
+ *   patch loads, when the keys are silent (`f-default-patch` t-172), so a dead key reads as "wait", not as broken.
  * - `SoundDesign`: the strip over the bar that teaches how the sound is built: the lesson's steps as a video's
  *   chapters. Each opens the lesson card over the panel (`lesson-card.tsx`).
  * - `FullscreenButton`: the whole player full screen, where the browser allows it.
@@ -25,29 +26,34 @@ import { highlightStore } from '@/components/app/synth/stores';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 import { logger } from '@/lib/logging';
 
-/** The app's name over the panel. The LED is the sound's: lit while it is on. */
-export function Wordmark({ lit }: { lit: boolean }) {
+/**
+ * The app's name over the panel. The LED is the sound's, lit while it is on, except while a lesson is being walked
+ * (`lesson`), when it is lit yellow: the strip's sign that a lesson is under way (t-204).
+ */
+export function Wordmark({ lit, lesson = false }: { lit: boolean; lesson?: boolean }) {
   return (
     <p className="kys-player-mark" aria-hidden="true">
-      <span className={`kys-led ${lit ? 'is-lit' : ''}`} />
+      <span className={`kys-led ${lesson ? 'is-lesson' : lit ? 'is-lit' : ''}`} />
       Know Your Synth
     </p>
   );
 }
 
 /**
- * The sound picker (t-74): the sound's name as a button at the start of the player bar, next to the riff, as a video's
- * title opens its list. It opens the library as a drawer down the left of the screen, over the panel and the dock, so it
- * has the screen's height whatever the dock holds (a bottom sheet below `lg`).
+ * The patch picker (t-74): the patch's name under the panel, as a button that opens the library (t-207, from the start
+ * of the player bar before). It opens the library as a drawer down the left of the screen (`SoundsDrawer`), over the
+ * panel and the Play deck, so it has the screen's height whatever the deck holds (a bottom sheet below `lg`). Its LED
+ * pulses while a patch loads, when the keys are silent (`f-default-patch` t-172), so a dead key reads as "wait", not as
+ * broken. Its text is the name alone, which a long one can run past: its tooltip is the whole name, with its "In the
+ * style of…" where it has one. What is loading is said in its label.
  */
 export function SoundPicker({
   soundName,
   soundRef,
   onChooseSound,
   soundsOpen = false,
-  onCloseSounds,
-  sounds,
   loading = false,
+  buttonRef,
 }: {
   /** What is on the panel: a library sound, one of the user's, or "Default patch". */
   soundName: string;
@@ -55,37 +61,70 @@ export function SoundPicker({
   soundRef: string | null;
   /** Opens (or closes) the sound library. */
   onChooseSound: () => void;
-  /** Whether the library is open over the bar. Below `lg` it is a sheet instead, and this stays false. */
+  /** Whether the library's drawer is open. Below `lg` it is a sheet instead, and this stays false. */
   soundsOpen?: boolean;
-  onCloseSounds?: () => void;
-  /** The library, shown over the bar while `soundsOpen`. */
-  sounds?: ReactNode;
   /** A patch is loading onto the panel: nothing sounds until it has. */
   loading?: boolean;
+  /** The button, for the drawer: a press on it toggles the drawer rather than closing it, and focus comes back to it. */
+  buttonRef?: RefObject<HTMLButtonElement | null>;
 }) {
-  const pick = useRef<HTMLButtonElement | null>(null);
+  return (
+    <button
+      ref={buttonRef}
+      type="button"
+      className="kys-title-pick"
+      onClick={onChooseSound}
+      aria-expanded={soundsOpen}
+      aria-label={`Choose a patch (now: ${soundName}${loading ? ', loading' : ''})`}
+      title={soundRef ? `${soundName}: ${soundRef}` : soundName}
+    >
+      {loading && <span className="kys-led is-lit kys-pulse" aria-hidden="true" />}
+      <span className="kys-sound-title truncate">{soundName}</span>
+      <ChevronDown size={18} className="kys-title-pick-caret" aria-hidden="true" />
+    </button>
+  );
+}
+
+/**
+ * The library's drawer down the left of the screen, opened by the patch picker. In the player, outside its stage, so it
+ * stacks over the Play deck and still shows with the player full screen. It closes on a press outside it (not on the
+ * picker, which toggles it), on Escape inside it, and when focus leaves it for anything but the picker, by Tab or moved
+ * by script.
+ */
+export function SoundsDrawer({
+  open,
+  onClose,
+  pickRef,
+  children,
+}: {
+  open: boolean;
+  onClose: () => void;
+  /** The patch picker that opens it. */
+  pickRef: RefObject<HTMLButtonElement | null>;
+  /** The library. */
+  children: ReactNode;
+}) {
   const pop = useRef<HTMLDivElement | null>(null);
-  // The library closes on a press outside it (not on the picker, which toggles it), on Escape inside it, and when
-  // focus leaves it for anything but the picker, by Tab or moved by script.
   useEffect(() => {
-    if (!soundsOpen || !onCloseSounds) return undefined;
+    if (!open) return undefined;
     const onDown = (e: PointerEvent) => {
       const t = e.target;
       if (!(t instanceof Node)) return;
-      if (pop.current?.contains(t) || pick.current?.contains(t)) return;
-      onCloseSounds();
+      if (pop.current?.contains(t) || pickRef.current?.contains(t)) return;
+      onClose();
     };
+    // Focus goes back to the picker without scrolling to it: it is under the panel, which may be well off screen.
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape' || e.defaultPrevented) return;
-      onCloseSounds();
-      pick.current?.focus();
+      onClose();
+      pickRef.current?.focus({ preventScroll: true });
     };
-    // Only for focus that lands somewhere else: a press on the popover's own padding leaves focus nowhere.
+    // Only for focus that lands somewhere else: a press on the drawer's own padding leaves focus nowhere.
     const onFocusOut = (e: FocusEvent) => {
       const t = e.relatedTarget;
       if (!(t instanceof Node)) return;
-      if (pop.current?.contains(t) || pick.current?.contains(t)) return;
-      onCloseSounds();
+      if (pop.current?.contains(t) || pickRef.current?.contains(t)) return;
+      onClose();
     };
     const el = pop.current;
     document.addEventListener('pointerdown', onDown);
@@ -96,51 +135,25 @@ export function SoundPicker({
       el?.removeEventListener('keydown', onKey);
       el?.removeEventListener('focusout', onFocusOut);
     };
-  }, [soundsOpen, onCloseSounds]);
+  }, [open, onClose, pickRef]);
   return (
-    <div className="relative min-w-0 shrink">
-      <button
-        ref={pick}
-        type="button"
-        className="kys-sound-pick"
-        onClick={onChooseSound}
-        aria-expanded={soundsOpen}
-        aria-label={`Choose a patch (now: ${soundName}${loading ? ', loading' : ''})`}
-        title={soundRef ? `${soundName}: ${soundRef}` : 'Choose a patch from the library'}
-      >
-        <span className="kys-sound-pick-eyebrow">
-          {loading && <span className="kys-led is-lit kys-pulse" aria-hidden="true" />}
-          {loading ? 'Loading' : 'Patch'}
-        </span>
-        <span className="kys-sound-pick-name">{soundName}</span>
-        <ChevronDown size={16} className="kys-sound-pick-caret" aria-hidden="true" />
-      </button>
-      {sounds !== undefined && (
-        <div
-          ref={pop}
-          className="kys-sounds-pop"
-          role="dialog"
-          aria-label="Patches"
-          hidden={!soundsOpen}
+    <div ref={pop} className="kys-sounds-pop" role="dialog" aria-label="Patches" hidden={!open}>
+      <div className="kys-drawer-head">
+        <p className="kys-drawer-title">Patches</p>
+        {/* The drawer covers the picker, so it carries its own way out. */}
+        <button
+          type="button"
+          className="kys-pbtn"
+          aria-label="Close the patches"
+          onClick={() => {
+            onClose();
+            pickRef.current?.focus({ preventScroll: true });
+          }}
         >
-          <div className="kys-drawer-head">
-            <p className="kys-drawer-title">Patches</p>
-            {/* The drawer covers the picker, so it carries its own way out. */}
-            <button
-              type="button"
-              className="kys-pbtn"
-              aria-label="Close the patches"
-              onClick={() => {
-                onCloseSounds?.();
-                pick.current?.focus();
-              }}
-            >
-              <X size={17} aria-hidden="true" />
-            </button>
-          </div>
-          <div className="kys-sounds-pop-body kys-scroll">{sounds}</div>
-        </div>
-      )}
+          <X size={17} aria-hidden="true" />
+        </button>
+      </div>
+      <div className="kys-sounds-pop-body kys-scroll">{children}</div>
     </div>
   );
 }
@@ -153,7 +166,7 @@ export function SoundPicker({
  * of the dock's top, lifting a little as the pointer comes near (`data-near` on the dock, set by the page), and a
  * press on it slides the strip up, the tab settling into the strip's head with an × that closes it again. The
  * wordmark is at the head's left. Below that, the tab is not drawn and the strip is in
- * the dock's flow.
+ * the dock's flow. It is drawn in the faceplate's colours (`face`, t-201), as part of the instrument.
  */
 export function SoundDesign({
   steps,
@@ -165,6 +178,7 @@ export function SoundDesign({
   lit = [],
   open = false,
   onToggle,
+  face,
 }: {
   steps: readonly PresetStep[];
   /** Step 0, the Default patch, for a lesson that has it. */
@@ -181,11 +195,18 @@ export function SoundDesign({
   /** Whether the drawer is up (from `lg` up, with a pointer). */
   open?: boolean;
   onToggle?: () => void;
+  /** The player's colour roles in the faceplate's colours (`faceRoles`); the stage's without it. */
+  face?: CSSProperties;
 }) {
   const n = steps.length;
   const bodyId = useId();
   return (
-    <section aria-labelledby="kys-design-h" className="kys-design" data-open={open || undefined}>
+    <section
+      aria-labelledby="kys-design-h"
+      className={`kys-design ${face ? 'kys-face' : ''}`}
+      style={face}
+      data-open={open || undefined}
+    >
       <button
         type="button"
         className="kys-design-tab"
@@ -352,12 +373,12 @@ export function PlayButton({ playing, onClick }: { playing: boolean; onClick: ()
       <button type="button" onClick={onClick} className={`kys-play ${playing ? 'is-playing' : ''}`}>
         <span className="kys-play-dot" aria-hidden="true">
           {playing ? (
-            <Square size={13} fill="currentColor" />
+            <Square size={14} fill="currentColor" />
           ) : (
-            <Play size={16} fill="currentColor" className="translate-x-px" />
+            <Play size={19} fill="currentColor" className="translate-x-px" />
           )}
         </span>
-        {playing ? 'Stop' : 'Play'}
+        <span className="kys-play-word">{playing ? 'Stop' : 'Play'}</span>
       </button>
     </PlayerTip>
   );

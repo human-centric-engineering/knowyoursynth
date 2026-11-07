@@ -238,6 +238,13 @@ svg .kys-hit:focus-visible {
     0 0 6px 1px rgb(255 166 58 / 0.75),
     0 0 14px 2px rgb(255 166 58 / 0.35);
 }
+/* A lesson under way (t-204): the wordmark's lamp lit yellow, apart from the sound's amber. */
+.kys-led.is-lesson {
+  background: #ffe14d;
+  box-shadow:
+    0 0 6px 1px rgb(255 221 61 / 0.8),
+    0 0 14px 2px rgb(255 221 61 / 0.4);
+}
 
 /* The Sound Design strip: over the bar, where a video's chapters are. One row,
    the lesson's steps. A hairline of the accent along its top. */
@@ -297,54 +304,54 @@ svg .kys-hit:focus-visible {
   color: var(--kys-muted);
 }
 
-/* The sound picker: the sound's name as a button at the start of the bar, as a
-   video's title opens its list. */
-.kys-sound-pick {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+/* The patch picker (t-207): the patch's name under the panel, boxed as a select is, so it reads as the place the patch
+   is chosen: a field in the raised surface with the caret in its own segment at the right. It is at least 360px wide
+   (less only on a screen too narrow for it), so the name is not squeezed to an ellipsis by the actions beside it,
+   which wrap under it instead. A wash and the accent's edge under the pointer, on focus and while the drawer is open. */
+.kys-title-pick {
+  display: inline-flex;
   align-items: center;
-  column-gap: 12px;
-  min-width: min(100%, 180px);
-  max-width: min(100%, 260px);
-  padding: 3px 10px 4px 12px;
-  border-radius: 12px;
+  gap: 12px;
+  min-width: min(360px, calc(100vw - 48px));
+  max-width: 100%;
+  height: 46px;
+  padding: 0 0 0 14px;
+  border-radius: 10px;
+  color: var(--kys-text);
   text-align: left;
-  background: rgb(var(--kys-wash) / 0.04);
-  box-shadow: inset 0 0 0 1px rgb(var(--kys-wash) / 0.09);
+  background: var(--kys-surface);
+  box-shadow:
+    inset 0 0 0 1px var(--kys-line),
+    0 1px 2px rgb(0 0 0 / 0.12);
   transition:
     background-color 0.15s ease,
     box-shadow 0.15s ease;
 }
-.kys-sound-pick:hover,
-.kys-sound-pick:focus-visible {
-  background: rgb(246 166 58 / 0.08);
-  box-shadow: inset 0 0 0 1px rgb(246 166 58 / 0.55);
+.kys-title-pick .kys-sound-title {
+  flex: 1 1 auto;
+  min-width: 0;
 }
-.kys-sound-pick-eyebrow {
-  grid-column: 1;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--kys-accent);
+.kys-title-pick:hover,
+.kys-title-pick:focus-visible,
+.kys-title-pick[aria-expanded='true'] {
+  background: color-mix(in srgb, var(--kys-surface) 92%, rgb(246 166 58));
+  box-shadow:
+    inset 0 0 0 1px rgb(246 166 58 / 0.6),
+    0 1px 2px rgb(0 0 0 / 0.12);
 }
-.kys-sound-pick-name {
-  grid-column: 1;
-  overflow: hidden;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.25;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  color: var(--kys-text);
-}
-.kys-sound-pick-caret {
-  grid-column: 2;
-  grid-row: 1 / span 2;
+.kys-title-pick-caret {
+  flex: none;
+  box-sizing: content-box;
+  align-self: stretch;
+  height: auto;
+  padding: 0 12px;
+  border-left: 1px solid var(--kys-line);
   color: var(--kys-muted);
+  transition: color 0.15s ease;
+}
+.kys-title-pick:hover .kys-title-pick-caret,
+.kys-title-pick[aria-expanded='true'] .kys-title-pick-caret {
+  color: var(--kys-accent);
 }
 
 /* The chapters: one labelled segment per step, filled to where the panel is. */
@@ -501,6 +508,48 @@ svg .kys-hit:focus-visible {
   box-shadow: none;
 }
 
+/* The strip and the lesson card's header in the faceplate's colours (t-201): `faceRoles` redeclares the `--kys-*`
+   roles on them, so the strip is the face to its foot, with no stage light over it. A module's colour keeps as much of itself
+   as stands off the face (`--kys-module-mix`), the rest the ink: all of it on a black face, less on a cream one. */
+.kys-design.kys-face {
+  background: linear-gradient(var(--kys-stage-hi), var(--kys-stage));
+}
+.kys-design.kys-face::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--kys-accent) 55%, transparent),
+    transparent
+  );
+}
+.kys-face .kys-chapter > button {
+  --chapter-ink: color-mix(in srgb, var(--chapter) var(--kys-module-mix, 100%), var(--kys-text));
+}
+.kys-face .kys-chapter[data-state='done'] .kys-chapter-track {
+  background: color-mix(in srgb, var(--chapter-ink) 70%, var(--kys-stage));
+}
+.kys-face .kys-chapter[data-state='now'] .kys-chapter-track,
+.kys-face .kys-chapter > button:hover .kys-chapter-track,
+.kys-face .kys-chapter > button:focus-visible .kys-chapter-track {
+  background: var(--chapter-ink);
+}
+.kys-face .kys-chapter[data-state='now'] .kys-chapter-track {
+  box-shadow: 0 0 10px color-mix(in srgb, var(--chapter-ink) 60%, transparent);
+}
+.kys-face .kys-chapter[data-state='done'] .kys-chapter-area,
+.kys-face .kys-chapter[data-state='now'] .kys-chapter-area {
+  color: var(--chapter-ink);
+}
+.kys-face .kys-chapter[data-state='now'] .kys-chapter-num {
+  /* Small digits want body text's contrast: the disc keeps less of its module's colour where the number needs it. */
+  color: var(--kys-chapter-num, var(--kys-surface));
+  background: color-mix(
+    in srgb,
+    var(--chapter) var(--kys-chapter-disc-mix, var(--kys-module-mix, 100%)),
+    var(--kys-text)
+  );
+}
+
 /* The lesson card's Previous and Next. */
 .kys-step-btn {
   display: inline-flex;
@@ -560,35 +609,90 @@ svg .kys-hit:focus-visible {
 .kys-pbtn:disabled {
   opacity: 0.35;
 }
+/* Play: the Play deck's most prominent control (t-210), drawn as a hardware transport key rather than made bigger, so
+   the bar keeps its 44px. A squared-off key of deep emerald lit from within (lighter at the top, deeper below, a lit
+   lip along its top and a dark rim), standing on a 2px skirt so it reads as a key to press, and sinking onto it when
+   pressed. Its arrow is engraved in pale green-white, a groove parts it from the word, and the word is in the panel's
+   silkscreen lettering. While it runs, the key glows from inside, slowly. The same on the night and the day stage;
+   the word is 4.5:1 on the key's middle. */
 .kys-play {
+  --play-hi: #33b552;
+  --play-mid: #1d8236;
+  --play-lo: #136a2a;
+  --play-rim: #0c4a1c;
+  --play-ink: #effff2;
+  position: relative;
   display: inline-flex;
   flex: none;
   align-items: center;
-  gap: 10px;
-  padding: 4px 16px 4px 4px;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--kys-text);
-  background: rgb(var(--kys-wash) / 0.06);
-  box-shadow: inset 0 0 0 1px rgb(var(--kys-wash) / 0.08);
+  height: 42px;
+  margin-bottom: 2px;
+  padding: 0 18px 0 0;
+  border-radius: 10px;
+  color: var(--play-ink);
+  background: linear-gradient(180deg, var(--play-hi) 0%, var(--play-mid) 52%, var(--play-lo) 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.38),
+    inset 0 -1px 0 rgb(0 0 0 / 0.22),
+    0 0 0 1px var(--play-rim),
+    0 2px 0 1px var(--play-rim),
+    0 8px 16px -6px rgb(29 130 54 / 0.7);
+  transition:
+    translate 0.08s ease,
+    box-shadow 0.08s ease,
+    filter 0.15s ease;
 }
 .kys-play:hover {
-  background: rgb(var(--kys-wash) / 0.1);
+  filter: brightness(1.08) saturate(1.05);
+}
+.kys-play:active {
+  translate: 0 2px;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.25),
+    inset 0 2px 6px rgb(0 0 0 / 0.25),
+    0 0 0 1px var(--play-rim),
+    0 3px 8px -4px rgb(29 130 54 / 0.6);
 }
 .kys-play-dot {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 999px;
-  color: var(--kys-accent-ink);
-  background: var(--kys-accent);
-  box-shadow: 0 4px 16px -4px rgb(246 166 58 / 0.7);
+  align-self: stretch;
+  width: 44px;
+  margin-right: 14px;
+  color: var(--play-ink);
+  /* The groove between the arrow and the word: a dark line with a lit one beside it. */
+  box-shadow:
+    1px 0 0 rgb(0 0 0 / 0.22),
+    2px 0 0 rgb(255 255 255 / 0.14);
+  filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.35));
 }
-.kys-play.is-playing .kys-play-dot {
-  animation: kys-pulse 1.3s ease-in-out infinite;
+.kys-play-word {
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgb(0 0 0 / 0.35);
+}
+/* Running: the key lit from inside, breathing. */
+@keyframes kys-play-run {
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.38),
+      inset 0 -1px 0 rgb(0 0 0 / 0.22),
+      inset 0 0 14px rgb(170 255 190 / 0.55),
+      0 0 0 1px var(--play-rim),
+      0 2px 0 1px var(--play-rim),
+      0 8px 22px -4px rgb(47 191 74 / 0.85);
+  }
+}
+.kys-play.is-playing {
+  animation: kys-play-run 1.6s ease-in-out infinite;
+}
+/* Pressed while it runs, the glow stops for the press, so Stop sinks onto its skirt as Play does. */
+.kys-play.is-playing:active {
+  animation: none;
 }
 
 /* The learning layers on the bar: lit in the accent while they are over the panel. */
@@ -1044,6 +1148,77 @@ svg .kys-hit:focus-visible {
   }
 }
 
+/* The zoom on the foot rail (t-209): its name in the rail's print, − and + as the rail's keys, and between them a
+   readout in the find's recessed amber that fits the panel to the page again. A hairline parts it from the settings. */
+.kys-rail-zoom {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-left: 14px;
+  border-left: 1px solid var(--rail-rule);
+}
+.kys-rail-zoom .kys-setting-name {
+  margin-right: 4px;
+}
+.kys-zoom-step {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--rail-ink);
+  transition: color 0.2s ease;
+}
+.kys-zoom-step:hover:enabled {
+  color: var(--rail-on);
+}
+.kys-zoom-step:disabled {
+  opacity: 0.35;
+}
+.kys-zoom-read {
+  min-width: 52px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 5px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #ffb547;
+  background:
+    repeating-linear-gradient(0deg, rgb(255 255 255 / 0.018) 0 1px, transparent 1px 3px), #0b0b0d;
+  box-shadow:
+    inset 0 1px 3px rgb(0 0 0 / 0.8),
+    inset 0 0 0 1px rgb(255 181 71 / 0.1);
+  transition: box-shadow 0.15s ease;
+}
+.kys-zoom-read:hover {
+  box-shadow:
+    inset 0 1px 3px rgb(0 0 0 / 0.8),
+    inset 0 0 0 1px rgb(255 181 71 / 0.28);
+}
+.kys-rail:hover .kys-rail-zoom .kys-zoom-step:enabled,
+.kys-rail:focus-within .kys-rail-zoom .kys-zoom-step:enabled {
+  color: var(--rail-ink-hi);
+}
+/* The key under the pointer lit, over the rail's brightening above, which a hover on it always sets too. */
+.kys-rail:hover .kys-rail-zoom .kys-zoom-step:hover:enabled {
+  color: var(--rail-on);
+}
+/* A finger needs a bigger target, as the rail's other keys get: after the keys' own sizes, so it wins. */
+@media (pointer: coarse) {
+  .kys-zoom-step,
+  .kys-zoom-read {
+    height: 40px;
+  }
+  .kys-zoom-step {
+    width: 40px;
+  }
+}
+
 /* The search: a recessed amber readout at the rail's right, as the sequencer's. */
 .kys-rail-find {
   flex: 1 1 200px;
@@ -1139,13 +1314,14 @@ svg .kys-hit:focus-visible {
   .kys-sounds-pop,
   .kys-led-dot,
   .kys-tip,
-  .kys-play.is-playing .kys-play-dot {
+  .kys-play.is-playing {
     animation: none;
   }
   .kys-chapter-track,
   .kys-design-tab,
   .kys-dock .kys-design-body,
-  .kys-sound-pick,
+  .kys-title-pick,
+  .kys-play,
   .kys-step-btn,
   .kys-autohide,
   .kys-layer,
@@ -1289,6 +1465,9 @@ svg .kys-hit:focus-visible {
       grid-template-rows 0.25s ease,
       visibility 0s linear 0.25s;
   }
+  .kys-dock .kys-design.kys-face .kys-design-body {
+    background: linear-gradient(var(--kys-stage-hi), var(--kys-stage));
+  }
   .kys-dock .kys-design[data-open] .kys-design-body {
     grid-template-rows: 1fr;
     visibility: visible;
@@ -1331,13 +1510,35 @@ svg .kys-hit:focus-visible {
     border-radius: 0;
   }
 }
-/* The strip up, or the sounds open, rise into the band the lesson card and the
-   tutor's drawer stand on: the dock stacks over them meanwhile, so neither covers
-   the chapters or the library. The card and the drawer also stand on the open
-   strip (`--kys-strip-h`, t-174), so its chapters do not hide their feet. */
+/* The drawer in the faceplate's colours takes the lesson card's bezel along its top (t-206), so it lifts off a panel
+   of its own colour above it: the closed tab is edged round its top and sides, sitting straight on the dock, and the
+   open drawer along its top only. The drawer's edge is an inset shadow, not a border: a border would hold the closed
+   drawer 3px tall, a gap between the tab and the dock. Open, the tab is the drawer's title, and its edge goes with
+   its shape. */
+@media (hover: hover) and (min-width: 1024px) {
+  .kys-dock .kys-design.kys-face .kys-design-tab {
+    border: 3px solid var(--kys-desk);
+    border-bottom: 0;
+  }
+  .kys-dock .kys-design.kys-face[data-open] .kys-design-body {
+    box-shadow:
+      inset 0 3px 0 var(--kys-desk),
+      0 -16px 32px -16px var(--kys-shadow);
+  }
+  /* Its top edge dropped, so its title is the full row the wordmark is centred in. */
+  .kys-dock .kys-design.kys-face[data-open] .kys-design-tab {
+    border-color: transparent;
+    border-top-width: 0;
+  }
+}
+
+/* The strip up rises into the band the lesson card and the tutor's drawer stand
+   on: the dock stacks over them meanwhile, so neither covers the chapters. The
+   card and the drawer also stand on the open strip (`--kys-strip-h`, t-174), so
+   its chapters do not hide their feet. The library's drawer is the player's own
+   now, outside the dock (t-207), and stacks over all of them by itself. */
 @media (min-width: 1024px) {
-  .kys-dock:has(.kys-design[data-open]),
-  .kys-dock:has(.kys-sounds-pop:not([hidden])) {
+  .kys-dock:has(.kys-design[data-open]) {
     z-index: 46;
   }
 }
@@ -1401,6 +1602,43 @@ svg .kys-hit:focus-visible {
   right: auto;
   left: 40px;
 }
+/* With no foot (the inspector, the effects), the body stops short of the sizing grip, so the grip is not over the
+   foot of its scrollbar. */
+.kys-card:not(:has(> .kys-card-foot)) .kys-card-body {
+  margin-bottom: 20px;
+}
+/* Docked, a card sized by its grip while it was moved stays inside the screen's sides (t-203). */
+.kys-card:not([data-detached]) {
+  max-width: calc(100vw - 80px);
+}
+/* Moved, the card can go anywhere on the screen, so it floats over the dock and the tutor's drawer (t-202), still
+   under the sounds and the player's menus and tips. */
+.kys-card[data-detached] {
+  z-index: 47;
+}
+/* The grip that sizes the card (t-203), in its bottom-right corner: quiet until the pointer or focus comes to it. */
+.kys-card-grip {
+  position: absolute;
+  z-index: 1;
+  right: 2px;
+  bottom: 2px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 0 0 12px 4px;
+  color: var(--kys-faint);
+  touch-action: none;
+  transition: color 0.15s ease;
+}
+/* Over the instrument's own pointer cursor for buttons. */
+.kys-synth .kys-card-grip {
+  cursor: nwse-resize;
+}
+.kys-card-grip:hover,
+.kys-card-grip:focus-visible {
+  color: var(--kys-accent);
+}
 .kys-card-head {
   display: flex;
   align-items: flex-start;
@@ -1415,6 +1653,43 @@ svg .kys-hit:focus-visible {
 }
 .kys-card-head:active {
   cursor: grabbing;
+}
+/* The lesson card, over a panel its header shares a colour with: set in a bezel of the desk, the player's darkest
+   (by day its palest) tone, with a hard edge and a deep shadow, so it lifts off the faceplate whatever its colour.
+   Opaque, so the panel's print does not show through the lesson. */
+.kys-card.is-faced {
+  border: 3px solid var(--kys-desk);
+  background: var(--kys-surface);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.5),
+    0 28px 56px -16px rgb(0 0 0 / 0.7),
+    0 10px 20px -8px rgb(0 0 0 / 0.45);
+}
+.kys-card.is-faced .kys-card-head.kys-face {
+  border-radius: 13px 13px 0 0;
+}
+/* The lesson's header: a strip of the faceplate the card hangs from (t-201), lit from above and lipped below as the
+   rail along the panel's head is, its eyebrow in the panel's silkscreen lettering. The body under it is the stage's,
+   so the lesson reads as part of the instrument without its text sitting on the faceplate. */
+.kys-card-head.kys-face {
+  border-radius: 16px 16px 0 0;
+  border-bottom: 0;
+  color: var(--kys-text);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--kys-surface) 90%, #fff),
+    var(--kys-surface)
+  );
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.12),
+    inset 0 -2px 2px -1px rgb(0 0 0 / 0.3),
+    0 3px 6px -2px rgb(0 0 0 / 0.35);
+}
+.kys-card-head.kys-face .kys-card-eyebrow {
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
 }
 .kys-card-head button {
   cursor: pointer;
@@ -1445,7 +1720,8 @@ svg .kys-hit:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 10px 12px;
+  /* Clear of the sizing grip in the card's corner (t-203), so a press on Next's corner is Next's. */
+  padding: 10px 24px 10px 12px;
   border-top: 1px solid rgb(var(--kys-wash) / 0.07);
 }
 .kys-card-foot .kys-step-btn {

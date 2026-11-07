@@ -9,6 +9,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { LessonCard } from '@/components/app/synth/lesson-card';
+import { faceRoles } from '@/components/app/synth/face-roles';
+import { INK, PAPER } from '@/components/app/panel/parts';
 import { stepBadges } from '@/lib/app/synths/lib/history';
 import { badgeStore, highlightStore, moveStore } from '@/components/app/synth/stores';
 import { getSynthDef } from '@/lib/app/synths/defs';
@@ -86,6 +88,18 @@ describe('LessonCard dragging', () => {
     expect(card.style.top).toBe('8px');
   });
 
+  it("goes anywhere on the screen, over the dock, its height down to the screen's foot (t-202)", () => {
+    document.documentElement.style.setProperty('--kys-dock-h', '180px');
+    try {
+      const { card, head } = setup();
+      drag(head, [1000, 320], [1000, 5000]);
+      expect(card.style.top).toBe(`${900 - 120}px`);
+      expect(card.style.maxHeight).toBe(`calc(100vh - ${900 - 120 + 8}px)`);
+    } finally {
+      document.documentElement.style.removeProperty('--kys-dock-h');
+    }
+  });
+
   it('does not drag from the header buttons', () => {
     const { card } = setup();
     drag(screen.getByRole('button', { name: 'Close the card' }), [1300, 320], [300, 120]);
@@ -101,6 +115,69 @@ describe('LessonCard dragging', () => {
     expect(onSide).toHaveBeenCalledTimes(1);
     expect(card).not.toHaveAttribute('data-detached');
     expect(card.style.left).toBe('');
+  });
+});
+
+describe('LessonCard sizing (t-203)', () => {
+  const grip = () => screen.getByRole('button', { name: 'Resize the card' });
+  const size = (el: Element, from: [number, number], to: [number, number]) => {
+    fireEvent.pointerDown(el, { pointerId: 2, button: 0, clientX: from[0], clientY: from[1] });
+    fireEvent.pointerMove(el, { pointerId: 2, clientX: to[0], clientY: to[1] });
+    fireEvent.pointerUp(el, { pointerId: 2, clientX: to[0], clientY: to[1] });
+  };
+
+  it('sizes from the grip, lifting a docked card out where it is so its top stays put', () => {
+    const { card } = setup();
+    size(grip(), [1355, 795], [1305, 745]);
+    expect(card).toHaveAttribute('data-detached');
+    expect(card.style.left).toBe('960px');
+    expect(card.style.top).toBe('300px');
+    expect(card.style.width).toBe('350px');
+    expect(card.style.height).toBe('450px');
+  });
+
+  it('goes no smaller than the least size, and no further than the screen', () => {
+    const { card } = setup();
+    size(grip(), [1355, 795], [0, 0]);
+    expect(card.style.width).toBe('280px');
+    expect(card.style.height).toBe('180px');
+    size(grip(), [1355, 795], [5000, 5000]);
+    expect(card.style.width).toBe(`${1400 - 960 - 8}px`);
+    expect(card.style.height).toBe(`${900 - 300 - 8}px`);
+  });
+
+  it('sizes by the arrow keys, four times as far with Shift', () => {
+    const { card } = setup();
+    fireEvent.keyDown(grip(), { key: 'ArrowLeft' });
+    expect(card.style.width).toBe('384px');
+    expect(card.style.height).toBe('500px');
+    fireEvent.keyDown(grip(), { key: 'ArrowUp', shiftKey: true });
+    expect(card.style.height).toBe('436px');
+    fireEvent.keyDown(grip(), { key: 'Enter' });
+    expect(card.style.height).toBe('436px');
+  });
+
+  it('moves rather than narrows when the window shrinks, if it still fits', () => {
+    const { card } = setup();
+    size(grip(), [1355, 795], [1355, 795]);
+    expect(card.style.width).toBe('400px');
+    // The window narrows to 1200: the card, 400 wide at x 960, has to move left to stay on screen, and keeps its width.
+    card.getBoundingClientRect = () => new DOMRect(960, 300, 400, 500);
+    Object.defineProperty(card, 'offsetWidth', { configurable: true, value: 400 });
+    window.innerWidth = 1200;
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+    expect(card.style.width).toBe('400px');
+    expect(card.style.left).toBe(`${1200 - 400 - 8}px`);
+  });
+
+  it('keeps its size when docked again by ⇆', () => {
+    const { card } = setup();
+    size(grip(), [1355, 795], [1305, 745]);
+    fireEvent.click(screen.getByRole('button', { name: 'Move the card to the left' }));
+    expect(card).not.toHaveAttribute('data-detached');
+    expect(card.style.width).toBe('350px');
   });
 });
 
@@ -206,6 +283,41 @@ describe('LessonCard live region', () => {
         effects={<p>rack</p>}
       />
     );
+
+  it("hangs the lesson from a strip of the face, its body the stage's, and not the inspector or the effects (t-201)", () => {
+    const face = faceRoles(PAPER, PAPER, INK);
+    const head = () => screen.getByTestId('lesson-card').querySelector('header');
+    const view = (section: 'build' | 'inspector' | 'fx') =>
+      render(
+        <LessonCard
+          def={def}
+          preset={null}
+          step={null}
+          onStep={vi.fn()}
+          section={section}
+          onClose={vi.fn()}
+          side="right"
+          onSide={vi.fn()}
+          inspector={<p>inspector</p>}
+          effects={<p>rack</p>}
+          face={face}
+        />
+      );
+    const { unmount } = view('build');
+    expect(head()).toHaveClass('kys-face');
+    expect(head()?.style.getPropertyValue('--kys-text')).toBe(INK);
+    expect(screen.getByTestId('lesson-card').style.getPropertyValue('--kys-text')).toBe('');
+    // Set in a bezel, so the header lifts off a panel of its own colour.
+    expect(screen.getByTestId('lesson-card')).toHaveClass('is-faced');
+    unmount();
+    for (const section of ['inspector', 'fx'] as const) {
+      const v = view(section);
+      expect(head()).not.toHaveClass('kys-face');
+      expect(head()?.style.getPropertyValue('--kys-text')).toBe('');
+      expect(screen.getByTestId('lesson-card')).not.toHaveClass('is-faced');
+      v.unmount();
+    }
+  });
 
   it('announces the lesson as it moves on, and not the inspector or the effects', () => {
     const body = () => screen.getByTestId('lesson-card').querySelector('.kys-card-body');

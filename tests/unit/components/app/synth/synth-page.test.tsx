@@ -208,6 +208,15 @@ const storeSession = (s: { values?: Record<string, unknown>; [key: string]: unkn
 };
 
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
+/** The Default patch, chosen from the patches drawer, where it is first (the bar's button is gone, t-208). */
+const chooseDefaultPatch = () => {
+  fireEvent.click(button(/^Choose a patch/));
+  fireEvent.click(
+    within(screen.getByRole('dialog', { name: 'Patches' }))
+      .getAllByRole('button')
+      .filter((b) => b.textContent?.includes('Default patch'))[0]
+  );
+};
 /** A control in the panel settings on the panel's foot rail (t-72). */
 const setting = (name: string | RegExp) =>
   within(screen.getByRole('group', { name: 'Panel settings' })).getByRole('button', { name });
@@ -339,7 +348,12 @@ describe('SynthPage layout', () => {
     page();
     expect(loadedName()).toBe('Default patch');
     expect(screen.queryByText(/controls? moved/)).toBeNull();
-    expect(button('Default patch')).toBeTruthy();
+    // Chosen from the patches drawer, where it is first: the bar has no button of its own for it (t-208).
+    expect(screen.queryByRole('button', { name: 'Default patch' })).toBeNull();
+    // The patch is chosen from its name under the panel, not from the Play deck's bar (t-207).
+    const pick = button(/^Choose a patch/);
+    expect(pick.closest('section[aria-label="The patch on the panel"]')).not.toBeNull();
+    expect(pick.closest('.kys-player-bar')).toBeNull();
     expect(screen.queryByRole('button', { name: 'Restore patch' })).toBeNull();
     // Model D's Default patch opens the filter all the way, where init leaves it at 1.
     expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
@@ -353,6 +367,9 @@ describe('SynthPage layout', () => {
     // The width the screen gives it, capped at 1560px and by the screen's height (see `panelFrameStyle`), times the scale.
     expect(frame.style.width).toMatch(/^calc\(1 \* min\(100%, min\(var\(--kys-fit-max, 1560px\), /);
     expect(frame.className).not.toContain('min-w-');
+    // On the panel's foot rail, with how it is drawn, not in the bar (t-209).
+    expect(button('Zoom in').closest('.kys-rail')).toHaveClass('is-foot');
+    expect(button('Zoom in').closest('.kys-player-bar')).toBeNull();
 
     fireEvent.click(button('Zoom in'));
     fireEvent.click(button('Zoom in'));
@@ -436,7 +453,7 @@ describe('SynthPage engine', () => {
     page();
     const before = paramsSent().at(-1)?.p;
 
-    fireEvent.click(button('Default patch'));
+    chooseDefaultPatch();
 
     const after = paramsSent().at(-1)?.p;
     expect(after).not.toEqual(before);
@@ -624,7 +641,7 @@ describe('SynthPage patch', () => {
     expect(button('Unplug all cables')).toBeTruthy();
     expect(screen.queryByText(/controls? moved/)).toBeNull();
 
-    fireEvent.click(button('Default patch'));
+    chooseDefaultPatch();
 
     expect(screen.queryByRole('button', { name: 'Unplug all cables' })).toBeNull();
     expect(loadedName()).toBe('Default patch');
@@ -1114,7 +1131,7 @@ describe('SynthPage glides', () => {
     });
     page();
     await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('2'), { timeout: 5000 });
-    fireEvent.click(button('Default patch'));
+    chooseDefaultPatch();
     await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('5'), { timeout: 5000 });
     await new Promise((r) => setTimeout(r, 500));
     const loops = err.mock.calls.filter((c) => String(c[0]).includes('Maximum update depth'));
@@ -1862,6 +1879,59 @@ describe('SynthPage player', () => {
     fireEvent.click(button('Lesson step 1: Open the mixer'));
     fireEvent.pointerDown(panel());
     expect(tab()).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('takes the lesson card away with the drawer, leaving the inspector; turning the panel over takes either (t-205)', () => {
+    twoSteps();
+    const tab = () => button('Learn sound design');
+    const card = () => within(player()).queryByTestId('lesson-card');
+
+    // The lesson, opened from a chapter, goes when the drawer is put away.
+    fireEvent.click(tab());
+    fireEvent.click(button('Lesson step 1: Open the mixer'));
+    expect(card()).not.toBeNull();
+    fireEvent.click(tab());
+    expect(tab()).toHaveAttribute('aria-expanded', 'false');
+    expect(card()).toBeNull();
+
+    // While the lesson is followed, a press anywhere else (Play, to hear the step, or a dialog over the page) leaves
+    // both up: only the drawer's tab puts it away, and the lesson with it.
+    fireEvent.click(tab());
+    fireEvent.click(button('Lesson step 1: Open the mixer'));
+    fireEvent.pointerDown(button('Play'));
+    fireEvent.pointerDown(document.body);
+    expect(tab()).toHaveAttribute('aria-expanded', 'true');
+    expect(card()).not.toBeNull();
+    fireEvent.click(tab());
+    expect(card()).toBeNull();
+
+    // The docked sequencer takes the strip's place: the drawer is put away and the lesson with it, so the strip does
+    // not come back up open when the sequencer closes.
+    fireEvent.click(tab());
+    fireEvent.click(button('Lesson step 1: Open the mixer'));
+    fireEvent.click(button('Sequencer'));
+    expect(card()).toBeNull();
+    fireEvent.click(button('Sequencer'));
+    expect(tab()).toHaveAttribute('aria-expanded', 'false');
+
+    // The lamp is the lesson's only while it is on show: put away, it is the sound's again, though the step is kept.
+    const lamp = () => player().querySelector('.kys-player-mark .kys-led');
+    expect(lamp()).not.toHaveClass('is-lesson');
+    fireEvent.click(tab());
+    expect(lamp()).toHaveClass('is-lesson');
+    fireEvent.click(tab());
+    expect(lamp()).not.toHaveClass('is-lesson');
+
+    // The inspector, from the panel's rail, is not the drawer's: it stays.
+    fireEvent.click(tab());
+    fireEvent.click(button('Inspector'));
+    fireEvent.click(tab());
+    expect(card()?.textContent).toMatch(/What is under the pointer/);
+
+    // Turned over to the routing view, the panel's card goes, whatever it shows.
+    fireEvent.click(button('Signal routing'));
+    expect(button('Signal routing')).toHaveAttribute('aria-pressed', 'true');
+    expect(card()).toBeNull();
   });
 
   it('lifts the lesson card by the open drawer’s height while the strip floats on the dock, and not where it is in the dock (t-174)', () => {
