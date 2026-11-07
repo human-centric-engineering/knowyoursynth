@@ -3656,70 +3656,70 @@
         "bpm": 84,
         "loop": true,
         "steps": [
-          [0, 43, 0.275, 0.8],
-          [0.25, 50, 0.275, 0.8],
-          [0.5, 59, 0.275, 0.8],
-          [0.75, 57, 0.275, 0.8],
-          [1, 59, 0.275, 0.8],
-          [1.25, 50, 0.275, 0.8],
-          [1.5, 59, 0.275, 0.8],
-          [1.75, 50, 0.275, 0.8],
-          [2, 43, 0.275, 0.8],
-          [2.25, 50, 0.275, 0.8],
-          [2.5, 59, 0.275, 0.8],
-          [2.75, 57, 0.275, 0.8],
-          [3, 59, 0.275, 0.8],
-          [3.25, 50, 0.275, 0.8],
-          [3.5, 59, 0.275, 0.8],
-          [3.75, 50, 0.275, 0.8],
-          [4, 43, 0.275, 0.8],
-          [4.25, 52, 0.275, 0.8],
-          [4.5, 60, 0.275, 0.8],
-          [4.75, 59, 0.275, 0.8],
-          [5, 60, 0.275, 0.8],
-          [5.25, 52, 0.275, 0.8],
-          [5.5, 60, 0.275, 0.8],
-          [5.75, 52, 0.275, 0.8],
-          [6, 43, 0.275, 0.8],
-          [6.25, 52, 0.275, 0.8],
-          [6.5, 60, 0.275, 0.8],
-          [6.75, 59, 0.275, 0.8],
-          [7, 60, 0.275, 0.8],
-          [7.25, 52, 0.275, 0.8],
-          [7.5, 60, 0.275, 0.8],
-          [7.75, 52, 0.275, 0.8],
-          [8, 43, 0.275, 0.8],
-          [8.25, 54, 0.275, 0.8],
-          [8.5, 60, 0.275, 0.8],
-          [8.75, 59, 0.275, 0.8],
-          [9, 60, 0.275, 0.8],
-          [9.25, 54, 0.275, 0.8],
-          [9.5, 60, 0.275, 0.8],
-          [9.75, 54, 0.275, 0.8],
-          [10, 43, 0.275, 0.8],
-          [10.25, 54, 0.275, 0.8],
-          [10.5, 60, 0.275, 0.8],
-          [10.75, 59, 0.275, 0.8],
-          [11, 60, 0.275, 0.8],
-          [11.25, 54, 0.275, 0.8],
-          [11.5, 60, 0.275, 0.8],
-          [11.75, 54, 0.275, 0.8],
-          [12, 43, 0.275, 0.8],
-          [12.25, 55, 0.275, 0.8],
-          [12.5, 59, 0.275, 0.8],
-          [12.75, 57, 0.275, 0.8],
-          [13, 59, 0.275, 0.8],
-          [13.25, 55, 0.275, 0.8],
-          [13.5, 59, 0.275, 0.8],
-          [13.75, 54, 0.275, 0.8],
-          [14, 43, 0.275, 0.8],
-          [14.25, 55, 0.275, 0.8],
-          [14.5, 59, 0.275, 0.8],
-          [14.75, 57, 0.275, 0.8],
-          [15, 59, 0.275, 0.8],
-          [15.25, 55, 0.275, 0.8],
-          [15.5, 59, 0.275, 0.8],
-          [15.75, 54, 0.25, 0.8]
+          [0, 43, 0.2375, 0.8],
+          [0.25, 50, 0.2375, 0.8],
+          [0.5, 59, 0.2375, 0.8],
+          [0.75, 57, 0.2375, 0.8],
+          [1, 59, 0.2375, 0.8],
+          [1.25, 50, 0.2375, 0.8],
+          [1.5, 59, 0.2375, 0.8],
+          [1.75, 50, 0.2375, 0.8],
+          [2, 43, 0.2375, 0.8],
+          [2.25, 50, 0.2375, 0.8],
+          [2.5, 59, 0.2375, 0.8],
+          [2.75, 57, 0.2375, 0.8],
+          [3, 59, 0.2375, 0.8],
+          [3.25, 50, 0.2375, 0.8],
+          [3.5, 59, 0.2375, 0.8],
+          [3.75, 50, 0.2375, 0.8],
+          [4, 43, 0.2375, 0.8],
+          [4.25, 52, 0.2375, 0.8],
+          [4.5, 60, 0.2375, 0.8],
+          [4.75, 59, 0.2375, 0.8],
+          [5, 60, 0.2375, 0.8],
+          [5.25, 52, 0.2375, 0.8],
+          [5.5, 60, 0.2375, 0.8],
+          [5.75, 52, 0.2375, 0.8],
+          [6, 43, 0.2375, 0.8],
+          [6.25, 52, 0.2375, 0.8],
+          [6.5, 60, 0.2375, 0.8],
+          [6.75, 59, 0.2375, 0.8],
+          [7, 60, 0.2375, 0.8],
+          [7.25, 52, 0.2375, 0.8],
+          [7.5, 60, 0.2375, 0.8],
+          [7.75, 52, 0.2375, 0.8],
+          [8, 43, 0.2375, 0.8],
+          [8.25, 54, 0.2375, 0.8],
+          [8.5, 60, 0.2375, 0.8],
+          [8.75, 59, 0.2375, 0.8],
+          [9, 60, 0.2375, 0.8],
+          [9.25, 54, 0.2375, 0.8],
+          [9.5, 60, 0.2375, 0.8],
+          [9.75, 54, 0.2375, 0.8],
+          [10, 43, 0.2375, 0.8],
+          [10.25, 54, 0.2375, 0.8],
+          [10.5, 60, 0.2375, 0.8],
+          [10.75, 59, 0.2375, 0.8],
+          [11, 60, 0.2375, 0.8],
+          [11.25, 54, 0.2375, 0.8],
+          [11.5, 60, 0.2375, 0.8],
+          [11.75, 54, 0.2375, 0.8],
+          [12, 43, 0.2375, 0.8],
+          [12.25, 55, 0.2375, 0.8],
+          [12.5, 59, 0.2375, 0.8],
+          [12.75, 57, 0.2375, 0.8],
+          [13, 59, 0.2375, 0.8],
+          [13.25, 55, 0.2375, 0.8],
+          [13.5, 59, 0.2375, 0.8],
+          [13.75, 54, 0.2375, 0.8],
+          [14, 43, 0.2375, 0.8],
+          [14.25, 55, 0.2375, 0.8],
+          [14.5, 59, 0.2375, 0.8],
+          [14.75, 57, 0.2375, 0.8],
+          [15, 59, 0.2375, 0.8],
+          [15.25, 55, 0.2375, 0.8],
+          [15.5, 59, 0.2375, 0.8],
+          [15.75, 54, 0.2375, 0.8]
         ]
       },
       "steps": [
@@ -3744,7 +3744,7 @@
         {
           "title": "Ringing strings",
           "module": "env",
-          "why": "A long decay lets each note ring under the next, and the notes are written slightly longer than a step so they join up. No accent.\n- DECAY 6.5 · 890 ms\n- ACCENT 0\n- Listen for: the prelude rippling up and down, each low G ringing under the chord.",
+          "why": "A long decay lets each note ring as long as it is held, and each note is held for almost its whole step, so the line is smooth but every note still starts fresh. No accent.\n- DECAY 6.5 · 890 ms\n- ACCENT 0\n- Listen for: the prelude rippling up and down, each low G ringing under the chord.",
           "set": {
             "env.decay": 6.5,
             "amp.accent": 0
@@ -4420,70 +4420,70 @@
         "bpm": 96,
         "loop": true,
         "steps": [
-          [0, 48, 0.3],
-          [0.25, 52, 0.3],
-          [0.5, 55, 0.3],
-          [0.75, 59, 0.3],
-          [1, 55, 0.3],
-          [1.25, 52, 0.3],
-          [1.5, 48, 0.3],
-          [1.75, 52, 0.3],
-          [2, 55, 0.3],
-          [2.25, 59, 0.3],
-          [2.5, 55, 0.3],
-          [2.75, 52, 0.3],
-          [3, 48, 0.3],
-          [3.25, 52, 0.3],
-          [3.5, 55, 0.3],
-          [3.75, 59, 0.25],
-          [4, 41, 0.3],
-          [4.25, 45, 0.3],
-          [4.5, 48, 0.3],
-          [4.75, 52, 0.3],
-          [5, 48, 0.3],
-          [5.25, 45, 0.3],
-          [5.5, 41, 0.3],
-          [5.75, 45, 0.3],
-          [6, 48, 0.3],
-          [6.25, 52, 0.3],
-          [6.5, 48, 0.3],
-          [6.75, 45, 0.3],
-          [7, 41, 0.3],
-          [7.25, 45, 0.3],
-          [7.5, 48, 0.3],
-          [7.75, 52, 0.25],
-          [8, 45, 0.3],
-          [8.25, 48, 0.3],
-          [8.5, 52, 0.3],
-          [8.75, 55, 0.3],
-          [9, 52, 0.3],
-          [9.25, 48, 0.3],
-          [9.5, 45, 0.3],
-          [9.75, 48, 0.3],
-          [10, 52, 0.3],
-          [10.25, 55, 0.3],
-          [10.5, 52, 0.3],
-          [10.75, 48, 0.3],
-          [11, 45, 0.3],
-          [11.25, 48, 0.3],
-          [11.5, 52, 0.3],
-          [11.75, 55, 0.25],
-          [12, 43, 0.3],
-          [12.25, 47, 0.3],
-          [12.5, 50, 0.3],
-          [12.75, 54, 0.3],
-          [13, 50, 0.3],
-          [13.25, 47, 0.3],
-          [13.5, 43, 0.3],
-          [13.75, 47, 0.3],
-          [14, 50, 0.3],
-          [14.25, 54, 0.3],
-          [14.5, 50, 0.3],
-          [14.75, 47, 0.3],
-          [15, 43, 0.3],
-          [15.25, 47, 0.3],
-          [15.5, 50, 0.3],
-          [15.75, 54, 0.25]
+          [0, 48, 0.2375],
+          [0.25, 52, 0.2375],
+          [0.5, 55, 0.2375],
+          [0.75, 59, 0.2375],
+          [1, 55, 0.2375],
+          [1.25, 52, 0.2375],
+          [1.5, 48, 0.2375],
+          [1.75, 52, 0.2375],
+          [2, 55, 0.2375],
+          [2.25, 59, 0.2375],
+          [2.5, 55, 0.2375],
+          [2.75, 52, 0.2375],
+          [3, 48, 0.2375],
+          [3.25, 52, 0.2375],
+          [3.5, 55, 0.2375],
+          [3.75, 59, 0.2375],
+          [4, 41, 0.2375],
+          [4.25, 45, 0.2375],
+          [4.5, 48, 0.2375],
+          [4.75, 52, 0.2375],
+          [5, 48, 0.2375],
+          [5.25, 45, 0.2375],
+          [5.5, 41, 0.2375],
+          [5.75, 45, 0.2375],
+          [6, 48, 0.2375],
+          [6.25, 52, 0.2375],
+          [6.5, 48, 0.2375],
+          [6.75, 45, 0.2375],
+          [7, 41, 0.2375],
+          [7.25, 45, 0.2375],
+          [7.5, 48, 0.2375],
+          [7.75, 52, 0.2375],
+          [8, 45, 0.2375],
+          [8.25, 48, 0.2375],
+          [8.5, 52, 0.2375],
+          [8.75, 55, 0.2375],
+          [9, 52, 0.2375],
+          [9.25, 48, 0.2375],
+          [9.5, 45, 0.2375],
+          [9.75, 48, 0.2375],
+          [10, 52, 0.2375],
+          [10.25, 55, 0.2375],
+          [10.5, 52, 0.2375],
+          [10.75, 48, 0.2375],
+          [11, 45, 0.2375],
+          [11.25, 48, 0.2375],
+          [11.5, 52, 0.2375],
+          [11.75, 55, 0.2375],
+          [12, 43, 0.2375],
+          [12.25, 47, 0.2375],
+          [12.5, 50, 0.2375],
+          [12.75, 54, 0.2375],
+          [13, 50, 0.2375],
+          [13.25, 47, 0.2375],
+          [13.5, 43, 0.2375],
+          [13.75, 47, 0.2375],
+          [14, 50, 0.2375],
+          [14.25, 54, 0.2375],
+          [14.5, 50, 0.2375],
+          [14.75, 47, 0.2375],
+          [15, 43, 0.2375],
+          [15.25, 47, 0.2375],
+          [15.5, 50, 0.2375],
+          [15.75, 54, 0.2375]
         ]
       },
       "steps": [
@@ -4501,7 +4501,7 @@
         {
           "title": "Shimmer",
           "module": "env",
-          "why": "Notes written a little longer than their step so the decay overlaps. No accent.\n- DECAY 6 · 800 ms\n- ACCENT 0\n- Listen for: a calm, shimmering rising arpeggio.",
+          "why": "A longer decay and notes held almost their whole step, so the arpeggio is smooth but each note still starts fresh. No accent.\n- DECAY 6 · 800 ms\n- ACCENT 0\n- Listen for: a calm, shimmering rising arpeggio.",
           "set": {
             "env.decay": 6,
             "amp.accent": 0
@@ -5201,6 +5201,3336 @@
           "id": "filter.envMod",
           "try": "Raise to 7",
           "hear": "A rubbery “bow” on each note."
+        }
+      ]
+    },
+    {
+      "id": "tb-motown-walk",
+      "name": "Motown Walk",
+      "ref": "In the style of James Jamerson",
+      "artist": "James Jamerson",
+      "tags": ["bass", "soul", "motown", "60s"],
+      "level": 2,
+      "blurb": "A busy, melodic soul bass line that walks around the chords.",
+      "how": "Jamerson’s Motown bass lines never sat still: chromatic walk-ups, octave pops and syncopated pickups. Roland pitched the 303 as a bass-guitar stand-in, and with a round square wave and no squelch it can walk like one.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.1375, 0.8],
+          [0.75, 36, 0.1375, 0.8],
+          [1, 40, 0.1375, 0.8],
+          [1.5, 43, 0.1375, 0.8],
+          [1.75, 45, 0.1375, 0.8],
+          [2, 46, 0.1375, 0.8],
+          [2.5, 45, 0.1375, 0.8],
+          [3, 43, 0.1375, 0.8],
+          [3.25, 40, 0.1375, 0.8],
+          [3.75, 37, 0.1375, 0.8],
+          [4, 38, 0.1375, 0.8],
+          [4.75, 38, 0.1375, 0.8],
+          [5, 41, 0.1375, 0.8],
+          [5.5, 45, 0.1375, 0.8],
+          [5.75, 47, 0.1375, 0.8],
+          [6, 31, 0.1375, 0.8],
+          [6.5, 43, 0.1375, 0.8],
+          [7, 41, 0.1375, 0.8],
+          [7.25, 38, 0.1375, 0.8],
+          [7.5, 35, 0.1375, 0.8],
+          [7.75, 31, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Finger-bass tone",
+          "module": "filter",
+          "why": "A square with a low cutoff and a little envelope sounds like a flatwound bass played with a finger.\n- WAVEFORM Square\n- CUT OFF FREQ 3 · 455 Hz\n- ENV MOD 2.5\n- RESONANCE 1\n- Listen for: a round, thumpy tone.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 3,
+            "filter.envMod": 2.5,
+            "filter.res": 1
+          }
+        },
+        {
+          "title": "Plucked",
+          "module": "env",
+          "why": "A medium decay like a plucked string. No accent.\n- DECAY 4 · 500 ms\n- ACCENT 0\n- Listen for: a busy, walking soul bass.",
+          "set": {
+            "env.decay": 4,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {
+        "filter.res": "Nearly off: a bass guitar has no resonant whistle."
+      },
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Raise to 5",
+          "hear": "More like a pick than a finger."
+        }
+      ]
+    },
+    {
+      "id": "tb-one-drop",
+      "name": "One-Drop Bass",
+      "ref": "In the style of Aston “Family Man” Barrett",
+      "artist": "Aston Barrett",
+      "tags": ["bass", "reggae", "roots", "70s"],
+      "level": 1,
+      "blurb": "A deep, round reggae bass that leaves the first beat empty.",
+      "how": "Roots reggae bass is deep and melodic, with gaps where the drop lands. The filter is pulled right down so the line is more felt than heard.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0.5, 33, 0.4, 0.8],
+          [1, 36, 0.4, 0.8],
+          [1.5, 40, 0.4, 0.8],
+          [2, 38, 0.4, 0.8],
+          [3, 36, 0.4, 0.8],
+          [3.5, 33, 0.4, 0.8],
+          [4.5, 29, 0.4, 0.8],
+          [5, 33, 0.4, 0.8],
+          [5.5, 36, 0.4, 0.8],
+          [6, 35, 0.4, 0.8],
+          [7, 31, 0.4, 0.8],
+          [7.5, 28, 0.4, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Deep and round",
+          "module": "filter",
+          "why": "A square into a very low cutoff, no resonance, almost no envelope.\n- WAVEFORM Square\n- CUT OFF FREQ 1.5 · 270 Hz\n- ENV MOD 1\n- RESONANCE 0\n- Listen for: a deep, round boom.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 1.5,
+            "filter.envMod": 1,
+            "filter.res": 0
+          }
+        },
+        {
+          "title": "Long notes",
+          "module": "env",
+          "why": "A longish decay so each note blooms. No accent.\n- DECAY 5.5 · 710 ms\n- ACCENT 0\n- Listen for: a deep, melodic reggae bass with space on the one.",
+          "set": {
+            "env.decay": 5.5,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {
+        "filter.cutoff": "Very low: reggae bass lives in the sub frequencies."
+      },
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Raise to 4",
+          "hear": "The bass comes forward and loses its depth."
+        }
+      ]
+    },
+    {
+      "id": "tb-disco-octave",
+      "name": "Disco Octaves",
+      "ref": "In the style of Bernard Edwards",
+      "artist": "Bernard Edwards",
+      "tags": ["bass", "disco", "funk", "70s"],
+      "level": 2,
+      "blurb": "A bouncing, syncopated disco bass that jumps between octaves.",
+      "how": "Chic’s bass lines bounced between octaves with syncopated pushes. A brighter saw with a quick envelope gives each note a pluck.",
+      "phrase": {
+        "bpm": 116,
+        "loop": true,
+        "steps": [
+          [0, 28, 0.1375, 0.8],
+          [0.25, 40, 0.1375, 0.8],
+          [0.75, 28, 0.1375, 0.8],
+          [1, 40, 0.1375, 0.8],
+          [1.5, 38, 0.1375, 0.8],
+          [1.75, 40, 0.1375, 0.8],
+          [2.25, 28, 0.1375, 0.8],
+          [2.5, 40, 0.1375, 0.8],
+          [3, 43, 0.1375, 0.8],
+          [3.5, 45, 0.1375, 0.8],
+          [3.75, 35, 0.1375, 0.8],
+          [4, 33, 0.1375, 0.8],
+          [4.25, 45, 0.1375, 0.8],
+          [4.75, 33, 0.1375, 0.8],
+          [5, 45, 0.1375, 0.8],
+          [5.5, 43, 0.1375, 0.8],
+          [5.75, 45, 0.1375, 0.8],
+          [6.25, 33, 0.1375, 0.8],
+          [6.5, 45, 0.1375, 0.8],
+          [7, 48, 0.1375, 0.8],
+          [7.5, 47, 0.1375, 0.8],
+          [7.75, 43, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Plucky saw",
+          "module": "filter",
+          "why": "A middle cutoff with a quick envelope gives a pluck on every note.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 3.5 · 541 Hz\n- ENV MOD 4.5\n- RESONANCE 2\n- Listen for: a bright, plucky bass.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 3.5,
+            "filter.envMod": 4.5,
+            "filter.res": 2
+          }
+        },
+        {
+          "title": "Bounce",
+          "module": "env",
+          "why": "A short decay and a light accent.\n- DECAY 2.5 · 360 ms\n- ACCENT 2\n- Listen for: a bouncing, syncopated octave line.",
+          "set": {
+            "env.decay": 2.5,
+            "amp.accent": 2
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.envMod",
+          "try": "Raise to 8",
+          "hear": "A rubbery funk “bow”."
+        }
+      ]
+    },
+    {
+      "id": "tb-afrobeat",
+      "name": "Afrobeat Groove",
+      "ref": "In the style of Fela Kuti",
+      "artist": "Fela Kuti",
+      "tags": ["bass", "afrobeat", "funk", "70s"],
+      "level": 2,
+      "blurb": "A circling, hypnotic bass figure that locks with the drums for twenty minutes.",
+      "how": "Afrobeat bass lines are short, repeating figures that interlock with the guitars and drums. A round, mid tone with a little bite keeps it hypnotic.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.1375, 0.8],
+          [0.75, 38, 0.1375, 0.8],
+          [1.25, 41, 0.1375, 0.8],
+          [1.75, 43, 0.1375, 0.8],
+          [2.25, 45, 0.1375, 0.8],
+          [2.75, 43, 0.1375, 0.8],
+          [3, 41, 0.1375, 0.8],
+          [3.5, 38, 0.1375, 0.8],
+          [4, 38, 0.1375, 0.8],
+          [4.75, 38, 0.1375, 0.8],
+          [5.25, 41, 0.1375, 0.8],
+          [5.75, 43, 0.1375, 0.8],
+          [6.25, 48, 0.1375, 0.8],
+          [6.75, 45, 0.1375, 0.8],
+          [7, 43, 0.1375, 0.8],
+          [7.5, 41, 0.1375, 0.8],
+          [7.75, 38, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Mid tone",
+          "module": "filter",
+          "why": "A middle-low cutoff with a modest envelope.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 3 · 455 Hz\n- ENV MOD 3.5\n- RESONANCE 3\n- Listen for: a warm, mid-range bass.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 3,
+            "filter.envMod": 3.5,
+            "filter.res": 3
+          }
+        },
+        {
+          "title": "Locked in",
+          "module": "env",
+          "why": "A short decay keeps the figure tight against the drums.\n- DECAY 2.5 · 360 ms\n- ACCENT 0\n- Listen for: a circling, hypnotic figure.",
+          "set": {
+            "env.decay": 2.5,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Switch to Square",
+          "hear": "Rounder and more like a bass guitar."
+        }
+      ]
+    },
+    {
+      "id": "tb-bossa-bass",
+      "name": "Bossa Nova Bass",
+      "ref": "In the style of 1960s bossa nova",
+      "artist": "Bossa nova",
+      "tags": ["bass", "bossa nova", "jazz", "latin", "60s"],
+      "level": 1,
+      "blurb": "A soft root-and-fifth bass with the gentle push of bossa nova.",
+      "how": "Bossa nova bass plays root and fifth with a push before the third beat. The 303 needs to be soft: a square, a low cutoff and no accent.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.4, 0.8],
+          [1.5, 33, 0.9, 0.8],
+          [3, 38, 0.4, 0.8],
+          [4, 38, 0.4, 0.8],
+          [5.5, 33, 0.9, 0.8],
+          [7, 38, 0.4, 0.8],
+          [8, 31, 0.4, 0.8],
+          [9.5, 38, 0.9, 0.8],
+          [11, 31, 0.4, 0.8],
+          [12, 36, 0.4, 0.8],
+          [13.5, 31, 0.9, 0.8],
+          [15, 36, 0.4, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Soft upright",
+          "module": "filter",
+          "why": "A square into a low cutoff with no resonance.\n- WAVEFORM Square\n- CUT OFF FREQ 2.5 · 382 Hz\n- ENV MOD 1.5\n- RESONANCE 0\n- Listen for: a soft, round upright-bass tone.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 2.5,
+            "filter.envMod": 1.5,
+            "filter.res": 0
+          }
+        },
+        {
+          "title": "Gentle",
+          "module": "env",
+          "why": "A medium decay. No accent.\n- DECAY 4.5 · 560 ms\n- ACCENT 0\n- Listen for: a gentle root-and-fifth sway.",
+          "set": {
+            "env.decay": 4.5,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "env.decay",
+          "try": "Raise to 8",
+          "hear": "The notes sustain like a bowed bass."
+        }
+      ]
+    },
+    {
+      "id": "tb-cumbia",
+      "name": "Cumbia Bounce",
+      "ref": "In the style of Colombian cumbia",
+      "artist": "Cumbia",
+      "tags": ["bass", "cumbia", "latin"],
+      "level": 1,
+      "blurb": "A loping, two-step cumbia bass that rocks back and forth.",
+      "how": "Cumbia bass rocks between root and fifth on a loping two-beat feel. A round tone and short notes keep it dancing.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.175, 0.8],
+          [0.75, 40, 0.175, 0.8],
+          [1, 33, 0.175, 0.8],
+          [1.5, 40, 0.175, 0.8],
+          [2, 33, 0.175, 0.8],
+          [2.75, 40, 0.175, 0.8],
+          [3, 33, 0.175, 0.8],
+          [3.5, 40, 0.175, 0.8],
+          [4, 38, 0.175, 0.8],
+          [4.75, 33, 0.175, 0.8],
+          [5, 38, 0.175, 0.8],
+          [5.5, 33, 0.175, 0.8],
+          [6, 28, 0.175, 0.8],
+          [6.75, 35, 0.175, 0.8],
+          [7, 28, 0.175, 0.8],
+          [7.5, 32, 0.175, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Round tone",
+          "module": "filter",
+          "why": "A square at a lowish cutoff with a little envelope.\n- WAVEFORM Square\n- CUT OFF FREQ 3 · 455 Hz\n- ENV MOD 2.5\n- RESONANCE 1\n- Listen for: a round, bouncy tone.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 3,
+            "filter.envMod": 2.5,
+            "filter.res": 1
+          }
+        },
+        {
+          "title": "Loping",
+          "module": "env",
+          "why": "A short decay and no accent.\n- DECAY 2.5 · 360 ms\n- ACCENT 0\n- Listen for: a loping cumbia two-step.",
+          "set": {
+            "env.decay": 2.5,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Switch to Sawtooth",
+          "hear": "Brighter, more like a cumbia rebajada synth bass."
+        }
+      ]
+    },
+    {
+      "id": "tb-boom-chicka",
+      "name": "Boom-Chicka Country",
+      "ref": "In the style of Johnny Cash and the Tennessee Two",
+      "artist": "Johnny Cash",
+      "tags": ["bass", "country", "rockabilly", "50s"],
+      "level": 1,
+      "blurb": "The alternating root-fifth country bass the 303 was originally sold to play.",
+      "how": "Roland meant the TB-303 as a bass partner for guitarists practising alone. A plain country bass, root and fifth on every beat, is exactly that job.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.2, 0.8],
+          [0.5, 35, 0.2, 0.8],
+          [1, 40, 0.2, 0.8],
+          [1.5, 35, 0.2, 0.8],
+          [2, 33, 0.2, 0.8],
+          [2.5, 40, 0.2, 0.8],
+          [3, 33, 0.2, 0.8],
+          [3.5, 40, 0.2, 0.8],
+          [4, 35, 0.2, 0.8],
+          [4.5, 42, 0.2, 0.8],
+          [5, 35, 0.2, 0.8],
+          [5.5, 42, 0.2, 0.8],
+          [6, 40, 0.2, 0.8],
+          [6.5, 35, 0.2, 0.8],
+          [7, 40, 0.2, 0.8],
+          [7.25, 32, 0.2, 0.8],
+          [7.5, 33, 0.2, 0.8],
+          [7.75, 35, 0.2, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Plain bass",
+          "module": "filter",
+          "why": "A square with a low-mid cutoff and almost no envelope: a plain electric bass.\n- WAVEFORM Square\n- CUT OFF FREQ 3 · 455 Hz\n- ENV MOD 1\n- RESONANCE 0\n- Listen for: a plain, solid bass tone.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 3,
+            "filter.envMod": 1,
+            "filter.res": 0
+          }
+        },
+        {
+          "title": "Root and fifth",
+          "module": "env",
+          "why": "A short decay so each beat is clean.\n- DECAY 2.5 · 360 ms\n- ACCENT 0\n- Listen for: boom-chicka root and fifth on every beat.",
+          "set": {
+            "env.decay": 2.5,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.envMod",
+          "try": "Raise to 6",
+          "hear": "The country bass turns into acid country."
+        }
+      ]
+    },
+    {
+      "id": "tb-punk-eighths",
+      "name": "Punk Eighths",
+      "ref": "In the style of the Ramones",
+      "artist": "Ramones",
+      "tags": ["bass", "punk", "rock", "70s"],
+      "level": 1,
+      "blurb": "Straight, relentless downstroke eighths on the root.",
+      "how": "Punk bass hammers straight eighths on the root of each chord. A bright saw and no accent make a hard, even drive.",
+      "phrase": {
+        "bpm": 170,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.35, 0.8],
+          [0.5, 33, 0.35, 0.8],
+          [1, 33, 0.35, 0.8],
+          [1.5, 33, 0.35, 0.8],
+          [2, 33, 0.35, 0.8],
+          [2.5, 33, 0.35, 0.8],
+          [3, 33, 0.35, 0.8],
+          [3.5, 33, 0.35, 0.8],
+          [4, 38, 0.35, 0.8],
+          [4.5, 38, 0.35, 0.8],
+          [5, 38, 0.35, 0.8],
+          [5.5, 38, 0.35, 0.8],
+          [6, 38, 0.35, 0.8],
+          [6.5, 38, 0.35, 0.8],
+          [7, 38, 0.35, 0.8],
+          [7.5, 38, 0.35, 0.8],
+          [8, 40, 0.35, 0.8],
+          [8.5, 40, 0.35, 0.8],
+          [9, 40, 0.35, 0.8],
+          [9.5, 40, 0.35, 0.8],
+          [10, 40, 0.35, 0.8],
+          [10.5, 40, 0.35, 0.8],
+          [11, 40, 0.35, 0.8],
+          [11.5, 40, 0.35, 0.8],
+          [12, 38, 0.35, 0.8],
+          [12.5, 38, 0.35, 0.8],
+          [13, 38, 0.35, 0.8],
+          [13.5, 38, 0.35, 0.8],
+          [14, 33, 0.35, 0.8],
+          [14.5, 33, 0.35, 0.8],
+          [15, 33, 0.35, 0.8],
+          [15.5, 33, 0.35, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Hard saw",
+          "module": "filter",
+          "why": "A saw at a middle cutoff with a quick envelope for pick attack.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 4 · 644 Hz\n- ENV MOD 3\n- RESONANCE 1\n- Listen for: a hard, picked bass.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 4,
+            "filter.envMod": 3,
+            "filter.res": 1
+          }
+        },
+        {
+          "title": "Relentless",
+          "module": "env",
+          "why": "A short decay, no accent.\n- DECAY 2 · 320 ms\n- ACCENT 0\n- Listen for: straight, relentless eighths.",
+          "set": {
+            "env.decay": 2,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Raise to 7",
+          "hear": "More like a distorted bass amp."
+        }
+      ]
+    },
+    {
+      "id": "tb-high-bass-melody",
+      "name": "High Bass Melody",
+      "ref": "In the style of Peter Hook",
+      "artist": "Peter Hook",
+      "tags": ["lead", "post-punk", "new wave", "80s"],
+      "level": 2,
+      "blurb": "A melodic bass played high up the neck, carrying the tune.",
+      "how": "Peter Hook played bass high and melodic, so it became the lead. Played an octave up with a bright, slightly resonant tone and a medium decay, the 303 does the same.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 50, 0.4, 0.8],
+          [1, 50, 0.4, 0.8],
+          [2, 53, 0.4, 0.8],
+          [3, 52, 0.4, 0.8],
+          [3.5, 50, 0.4, 0.8],
+          [4, 48, 0.4, 0.8],
+          [5, 45, 0.4, 0.8],
+          [6, 48, 0.4, 0.8],
+          [7, 50, 0.4, 0.8],
+          [8, 50, 0.4, 0.8],
+          [9, 50, 0.4, 0.8],
+          [10, 53, 0.4, 0.8],
+          [11, 57, 0.4, 0.8],
+          [11.5, 55, 0.4, 0.8],
+          [12, 53, 0.4, 0.8],
+          [13, 52, 0.4, 0.8],
+          [14, 48, 0.4, 0.8],
+          [15, 50, 0.4, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bright and twangy",
+          "module": "filter",
+          "why": "A bright cutoff with a little resonance and envelope gives a chorused-bass twang.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 5 · 912 Hz\n- ENV MOD 3\n- RESONANCE 4\n- Listen for: a bright, twangy high bass.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 5,
+            "filter.envMod": 3,
+            "filter.res": 4
+          }
+        },
+        {
+          "title": "Singing",
+          "module": "env",
+          "why": "A medium decay. No accent.\n- DECAY 4.5 · 560 ms\n- ACCENT 0\n- Listen for: a bass line that carries the melody.",
+          "set": {
+            "env.decay": 4.5,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Switch to Square",
+          "hear": "Hollower, less like a bass guitar."
+        }
+      ]
+    },
+    {
+      "id": "tb-synth-pop-pulse",
+      "name": "Synth-Pop Pulse",
+      "ref": "In the style of Vince Clarke",
+      "artist": "Vince Clarke",
+      "tags": ["bass", "synth-pop", "80s"],
+      "level": 1,
+      "blurb": "A bright, bubbling eighth-note sequence under a pop chorus.",
+      "how": "Early synth-pop ran sequenced bass lines in bouncy eighths. A square with a bright cutoff and a little resonance bubbles along.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.3, 0.8],
+          [0.5, 48, 0.3, 0.8],
+          [1, 43, 0.3, 0.8],
+          [1.5, 48, 0.3, 0.8],
+          [2, 36, 0.3, 0.8],
+          [2.5, 48, 0.3, 0.8],
+          [3, 43, 0.3, 0.8],
+          [3.5, 48, 0.3, 0.8],
+          [4, 29, 0.3, 0.8],
+          [4.5, 41, 0.3, 0.8],
+          [5, 36, 0.3, 0.8],
+          [5.5, 41, 0.3, 0.8],
+          [6, 29, 0.3, 0.8],
+          [6.5, 41, 0.3, 0.8],
+          [7, 36, 0.3, 0.8],
+          [7.5, 41, 0.3, 0.8],
+          [8, 32, 0.3, 0.8],
+          [8.5, 44, 0.3, 0.8],
+          [9, 39, 0.3, 0.8],
+          [9.5, 44, 0.3, 0.8],
+          [10, 32, 0.3, 0.8],
+          [10.5, 44, 0.3, 0.8],
+          [11, 39, 0.3, 0.8],
+          [11.5, 44, 0.3, 0.8],
+          [12, 31, 0.3, 0.8],
+          [12.5, 43, 0.3, 0.8],
+          [13, 38, 0.3, 0.8],
+          [13.5, 43, 0.3, 0.8],
+          [14, 31, 0.3, 0.8],
+          [14.5, 43, 0.3, 0.8],
+          [15, 35, 0.3, 0.8],
+          [15.5, 38, 0.3, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bubbly",
+          "module": "filter",
+          "why": "A square with a medium-bright cutoff, a little resonance and a quick envelope.\n- WAVEFORM Square\n- CUT OFF FREQ 4.5 · 766 Hz\n- ENV MOD 3.5\n- RESONANCE 4\n- Listen for: a bright, bubbly tone.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 4.5,
+            "filter.envMod": 3.5,
+            "filter.res": 4
+          }
+        },
+        {
+          "title": "Even eighths",
+          "module": "env",
+          "why": "A short decay, no accent.\n- DECAY 2 · 320 ms\n- ACCENT 0\n- Listen for: a bubbling synth-pop sequence.",
+          "set": {
+            "env.decay": 2,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Raise to 8",
+          "hear": "More bubble, closer to acid."
+        }
+      ]
+    },
+    {
+      "id": "tb-hi-nrg",
+      "name": "Hi-NRG Octaves",
+      "ref": "In the style of Patrick Cowley",
+      "artist": "Patrick Cowley",
+      "tags": ["bass", "hi-nrg", "disco", "80s"],
+      "level": 2,
+      "blurb": "A fast, bright, galloping octave bass for the dance floor.",
+      "how": "Hi-NRG pushed disco faster and more electronic: galloping sixteenths, octave jumps and a bright, buzzy tone.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.1375, 0.8],
+          [0.5, 45, 0.1375, 0.8],
+          [0.75, 33, 0.1375, 0.8],
+          [1.25, 45, 0.1375, 0.8],
+          [1.5, 33, 0.1375, 0.8],
+          [2, 33, 0.1375, 0.8],
+          [2.5, 45, 0.1375, 0.8],
+          [2.75, 33, 0.1375, 0.8],
+          [3.25, 45, 0.1375, 0.8],
+          [3.5, 43, 0.1375, 0.8],
+          [3.75, 40, 0.1375, 0.8],
+          [4, 29, 0.1375, 0.8],
+          [4.5, 41, 0.1375, 0.8],
+          [4.75, 29, 0.1375, 0.8],
+          [5.25, 41, 0.1375, 0.8],
+          [5.5, 29, 0.1375, 0.8],
+          [6, 31, 0.1375, 0.8],
+          [6.5, 43, 0.1375, 0.8],
+          [6.75, 31, 0.1375, 0.8],
+          [7.25, 43, 0.1375, 0.8],
+          [7.5, 35, 0.1375, 0.8],
+          [7.75, 38, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Buzzy",
+          "module": "filter",
+          "why": "A saw with a medium-bright cutoff and a quick envelope.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 4.5 · 766 Hz\n- ENV MOD 4\n- RESONANCE 3\n- Listen for: a bright, buzzy tone.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 4.5,
+            "filter.envMod": 4,
+            "filter.res": 3
+          }
+        },
+        {
+          "title": "Gallop",
+          "module": "env",
+          "why": "A short decay and a light accent.\n- DECAY 1.5 · 280 ms\n- ACCENT 2\n- Listen for: a galloping octave bass.",
+          "set": {
+            "env.decay": 1.5,
+            "amp.accent": 2
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "env.decay",
+          "try": "Raise to 4",
+          "hear": "Fatter, less galloping."
+        }
+      ]
+    },
+    {
+      "id": "tb-ebm-drive",
+      "name": "Body Music Drive",
+      "ref": "In the style of DAF",
+      "artist": "DAF",
+      "tags": ["bass", "ebm", "industrial", "80s"],
+      "level": 2,
+      "blurb": "A hard, driving sixteenth bass for electronic body music.",
+      "how": "Electronic body music hammers a sequenced bass in sixteenths with hard, accented notes. Square, short and aggressive.",
+      "phrase": {
+        "bpm": 122,
+        "loop": true,
+        "steps": [
+          [0, 28, 0.1375, 0.8],
+          [0.25, 28, 0.1375, 0.8],
+          [0.5, 40, 0.1375, 1],
+          [0.75, 28, 0.1375, 0.8],
+          [1, 28, 0.1375, 0.8],
+          [1.25, 28, 0.1375, 0.8],
+          [1.5, 40, 0.1375, 1],
+          [1.75, 28, 0.1375, 0.8],
+          [2, 28, 0.1375, 0.8],
+          [2.25, 28, 0.1375, 0.8],
+          [2.5, 40, 0.1375, 1],
+          [2.75, 28, 0.1375, 0.8],
+          [3, 31, 0.1375, 0.8],
+          [3.25, 31, 0.1375, 0.8],
+          [3.5, 43, 0.1375, 1],
+          [3.75, 31, 0.1375, 0.8],
+          [4, 28, 0.1375, 0.8],
+          [4.25, 28, 0.1375, 0.8],
+          [4.5, 40, 0.1375, 1],
+          [4.75, 28, 0.1375, 0.8],
+          [5, 28, 0.1375, 0.8],
+          [5.25, 28, 0.1375, 0.8],
+          [5.5, 40, 0.1375, 1],
+          [5.75, 28, 0.1375, 0.8],
+          [6, 26, 0.1375, 0.8],
+          [6.25, 26, 0.1375, 0.8],
+          [6.5, 38, 0.1375, 1],
+          [6.75, 26, 0.1375, 0.8],
+          [7, 29, 0.1375, 0.8],
+          [7.25, 29, 0.1375, 0.8],
+          [7.5, 41, 0.1375, 1],
+          [7.75, 29, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Hard square",
+          "module": "filter",
+          "why": "A square with a middle cutoff, a strong envelope and moderate resonance.\n- WAVEFORM Square\n- CUT OFF FREQ 3 · 455 Hz\n- ENV MOD 6\n- RESONANCE 5\n- Listen for: a hard, punchy square bass.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 3,
+            "filter.envMod": 6,
+            "filter.res": 5
+          }
+        },
+        {
+          "title": "Aggressive",
+          "module": "env",
+          "why": "A very short decay and strong accents.\n- DECAY 1 · 250 ms\n- ACCENT 8\n- Listen for: a hard, militant sixteenth drive.",
+          "set": {
+            "env.decay": 1,
+            "amp.accent": 8
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Switch to Sawtooth",
+          "hear": "Even harsher."
+        }
+      ]
+    },
+    {
+      "id": "tb-electro-funk",
+      "name": "Electro-Funk",
+      "ref": "In the style of the Egyptian Lover",
+      "artist": "The Egyptian Lover",
+      "tags": ["bass", "electro", "hip hop", "80s"],
+      "level": 2,
+      "blurb": "A syncopated, rubbery electro bass for an 808 groove.",
+      "how": "LA electro paired a syncopated synth bass with the TR-808. The 303 makes a rubbery funk line with an envelope bow on each note.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.1375, 0.8],
+          [0.75, 36, 0.1375, 0.8],
+          [1.5, 39, 0.1375, 0.8],
+          [2, 36, 0.1375, 0.8],
+          [2.5, 31, 0.1375, 0.8],
+          [3, 34, 0.1375, 0.8],
+          [3.5, 36, 0.1375, 0.8],
+          [4, 36, 0.1375, 0.8],
+          [4.75, 36, 0.1375, 0.8],
+          [5.5, 39, 0.1375, 0.8],
+          [6, 41, 0.1375, 0.8],
+          [6.5, 39, 0.1375, 0.8],
+          [7, 36, 0.1375, 0.8],
+          [7.25, 34, 0.1375, 0.8],
+          [7.5, 31, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Rubbery",
+          "module": "filter",
+          "why": "A low cutoff with a big envelope and modest resonance gives a rubbery bow.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 2.5 · 382 Hz\n- ENV MOD 6\n- RESONANCE 4\n- Listen for: a rubbery bow on every note.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 2.5,
+            "filter.envMod": 6,
+            "filter.res": 4
+          }
+        },
+        {
+          "title": "Funky",
+          "module": "env",
+          "why": "A short-medium decay and a light accent.\n- DECAY 3 · 400 ms\n- ACCENT 3\n- Listen for: a syncopated electro-funk bass.",
+          "set": {
+            "env.decay": 3,
+            "amp.accent": 3
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Raise to 8",
+          "hear": "The bow turns into an acid squelch."
+        }
+      ]
+    },
+    {
+      "id": "tb-miami-bass",
+      "name": "Miami Bass Boom",
+      "ref": "In the style of 1980s Miami bass",
+      "artist": "Miami bass",
+      "tags": ["bass", "miami bass", "hip hop", "80s"],
+      "level": 1,
+      "blurb": "Deep, booming long notes that rattle the trunk.",
+      "how": "Miami bass was all about long, booming low notes. The 303 can’t hold a note for ever, but with the filter shut and the decay long, its low notes boom.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [
+          [0, 28, 0.6375, 0.8],
+          [1.5, 28, 0.1375, 0.8],
+          [2.5, 31, 0.6375, 0.8],
+          [3.5, 33, 0.1375, 0.8],
+          [4, 28, 0.6375, 0.8],
+          [5.5, 28, 0.1375, 0.8],
+          [6.5, 26, 0.6375, 0.8],
+          [7.5, 23, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Boom",
+          "module": "filter",
+          "why": "A square into the lowest cutoff with no resonance and a touch of envelope for a thump.\n- WAVEFORM Square\n- CUT OFF FREQ 1 · 227 Hz\n- ENV MOD 2\n- RESONANCE 0\n- Listen for: a deep, thumping boom.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 1,
+            "filter.envMod": 2,
+            "filter.res": 0
+          }
+        },
+        {
+          "title": "Long tail",
+          "module": "env",
+          "why": "A long decay, no accent.\n- DECAY 7 · 1.0 s\n- ACCENT 0\n- Listen for: long, booming low notes.",
+          "set": {
+            "env.decay": 7,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Raise to 3",
+          "hear": "More punch, less boom."
+        }
+      ]
+    },
+    {
+      "id": "tb-two-step",
+      "name": "Two-Step Garage",
+      "ref": "In the style of UK garage",
+      "artist": "UK garage",
+      "tags": ["bass", "uk garage", "2-step", "90s"],
+      "level": 2,
+      "blurb": "A skippy, swung garage bass with a warm, subby tone.",
+      "how": "UK garage bass skips around a broken 2-step beat. A warm square with a quick envelope and syncopated notes.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 29, 0.1375, 0.8],
+          [0.75, 29, 0.1375, 0.8],
+          [1.75, 32, 0.1375, 0.8],
+          [2.5, 29, 0.1375, 0.8],
+          [3.25, 36, 0.1375, 0.8],
+          [4, 37, 0.1375, 0.8],
+          [4.75, 37, 0.1375, 0.8],
+          [5.75, 39, 0.1375, 0.8],
+          [6.5, 36, 0.1375, 0.8],
+          [7, 34, 0.1375, 0.8],
+          [7.5, 32, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Warm sub",
+          "module": "filter",
+          "why": "A square with a low cutoff and a quick envelope.\n- WAVEFORM Square\n- CUT OFF FREQ 2.5 · 382 Hz\n- ENV MOD 4\n- RESONANCE 2\n- Listen for: a warm, subby bass with a little bite.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 2.5,
+            "filter.envMod": 4,
+            "filter.res": 2
+          }
+        },
+        {
+          "title": "Skippy",
+          "module": "env",
+          "why": "A medium decay and a light accent.\n- DECAY 3 · 400 ms\n- ACCENT 2\n- Listen for: a skippy, syncopated garage line.",
+          "set": {
+            "env.decay": 3,
+            "amp.accent": 2
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.envMod",
+          "try": "Raise to 7",
+          "hear": "A wobblier, speed-garage bass."
+        }
+      ]
+    },
+    {
+      "id": "tb-grime-square",
+      "name": "Eski Square",
+      "ref": "In the style of Wiley — “Eskimo”",
+      "artist": "Wiley",
+      "tags": ["bass", "grime", "00s"],
+      "level": 2,
+      "blurb": "A cold, bare square-wave bass for early grime.",
+      "how": "Early grime used raw square waves, cold and bare, at 140 BPM. With the filter open and no envelope the 303’s square is exactly that.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 28, 0.35, 0.8],
+          [1, 28, 0.35, 0.8],
+          [1.75, 31, 0.35, 0.8],
+          [2.5, 28, 0.35, 0.8],
+          [3.5, 35, 0.35, 0.8],
+          [4, 28, 0.35, 0.8],
+          [5, 28, 0.35, 0.8],
+          [5.75, 31, 0.35, 0.8],
+          [6.5, 33, 0.35, 0.8],
+          [7, 31, 0.35, 0.8],
+          [7.5, 26, 0.35, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bare square",
+          "module": "filter",
+          "why": "A square with the filter almost fully open and no envelope or resonance.\n- WAVEFORM Square\n- CUT OFF FREQ 8 · 2.6 kHz\n- ENV MOD 0\n- RESONANCE 0\n- Listen for: a raw, cold square wave.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 8,
+            "filter.envMod": 0,
+            "filter.res": 0
+          }
+        },
+        {
+          "title": "Cold",
+          "module": "env",
+          "why": "A medium decay, no accent.\n- DECAY 4 · 500 ms\n- ACCENT 0\n- Listen for: a bare, icy grime bass.",
+          "set": {
+            "env.decay": 4,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {
+        "filter.cutoff": "Nearly open, so the square stays raw and cold."
+      },
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Drop to 3",
+          "hear": "Warmer and more like a sub bass."
+        }
+      ]
+    },
+    {
+      "id": "tb-jazz-walk",
+      "name": "Jazz Walking Bass",
+      "ref": "In the style of jazz walking bass",
+      "artist": "Jazz",
+      "tags": ["bass", "jazz", "swing"],
+      "level": 2,
+      "blurb": "A walking bass line, one note on every beat, through a ii–V–I.",
+      "how": "A walking bass plays a note on every beat, moving through the chords with passing notes. The 303 plays it with a round, woody tone and no squelch.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.85, 0.8],
+          [1, 41, 0.85, 0.8],
+          [2, 45, 0.85, 0.8],
+          [3, 48, 0.85, 0.8],
+          [4, 47, 0.85, 0.8],
+          [5, 43, 0.85, 0.8],
+          [6, 41, 0.85, 0.8],
+          [7, 38, 0.85, 0.8],
+          [8, 36, 0.85, 0.8],
+          [9, 40, 0.85, 0.8],
+          [10, 43, 0.85, 0.8],
+          [11, 47, 0.85, 0.8],
+          [12, 45, 0.85, 0.8],
+          [13, 43, 0.85, 0.8],
+          [14, 40, 0.85, 0.8],
+          [15, 37, 0.85, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Woody",
+          "module": "filter",
+          "why": "A square into a low cutoff with a little envelope, like an upright bass.\n- WAVEFORM Square\n- CUT OFF FREQ 2.5 · 382 Hz\n- ENV MOD 2\n- RESONANCE 1\n- Listen for: a woody, round tone.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 2.5,
+            "filter.envMod": 2,
+            "filter.res": 1
+          }
+        },
+        {
+          "title": "Walking",
+          "module": "env",
+          "why": "A medium decay. No accent.\n- DECAY 4 · 500 ms\n- ACCENT 0\n- Listen for: a walking bass through Dm7, G7 and Cmaj7.",
+          "set": {
+            "env.decay": 4,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "env.decay",
+          "try": "Raise to 7",
+          "hear": "More like a fretless bass."
+        }
+      ]
+    },
+    {
+      "id": "tb-boogie-woogie",
+      "name": "Boogie-Woogie Bass",
+      "ref": "In the style of boogie-woogie piano",
+      "artist": "Boogie-woogie",
+      "tags": ["bass", "blues", "boogie-woogie", "40s"],
+      "level": 2,
+      "blurb": "A rolling left-hand boogie figure in swung eighths.",
+      "how": "Boogie-woogie pianists rolled a walking eighth-note figure in the left hand. Written with a swing (long-short pairs), it bounces.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.3, 0.8],
+          [0.666667, 40, 0.3, 0.8],
+          [1, 43, 0.3, 0.8],
+          [1.666667, 45, 0.3, 0.8],
+          [2, 46, 0.3, 0.8],
+          [2.666667, 45, 0.3, 0.8],
+          [3, 43, 0.3, 0.8],
+          [3.666667, 40, 0.3, 0.8],
+          [4, 36, 0.3, 0.8],
+          [4.666667, 40, 0.3, 0.8],
+          [5, 43, 0.3, 0.8],
+          [5.666667, 45, 0.3, 0.8],
+          [6, 46, 0.3, 0.8],
+          [6.666667, 45, 0.3, 0.8],
+          [7, 43, 0.3, 0.8],
+          [7.666667, 40, 0.3, 0.8],
+          [8, 41, 0.3, 0.8],
+          [8.666667, 45, 0.3, 0.8],
+          [9, 48, 0.3, 0.8],
+          [9.666667, 50, 0.3, 0.8],
+          [10, 51, 0.3, 0.8],
+          [10.666667, 50, 0.3, 0.8],
+          [11, 48, 0.3, 0.8],
+          [11.666667, 45, 0.3, 0.8],
+          [12, 36, 0.3, 0.8],
+          [12.666667, 40, 0.3, 0.8],
+          [13, 43, 0.3, 0.8],
+          [13.666667, 45, 0.3, 0.8],
+          [14, 46, 0.3, 0.8],
+          [14.666667, 45, 0.3, 0.8],
+          [15, 43, 0.3, 0.8],
+          [15.666667, 40, 0.3, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Piano-ish",
+          "module": "filter",
+          "why": "A saw with a middle cutoff and a quick envelope: a percussive, piano-like attack.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 3.5 · 541 Hz\n- ENV MOD 4\n- RESONANCE 1\n- Listen for: a percussive, piano-ish attack.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 3.5,
+            "filter.envMod": 4,
+            "filter.res": 1
+          }
+        },
+        {
+          "title": "Rolling",
+          "module": "env",
+          "why": "A short decay, no accent.\n- DECAY 2.5 · 360 ms\n- ACCENT 0\n- Listen for: a rolling, swung boogie bass.",
+          "set": {
+            "env.decay": 2.5,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Switch to Square",
+          "hear": "More like an organ’s pedal bass."
+        }
+      ]
+    },
+    {
+      "id": "tb-surf-bass",
+      "name": "Surf Bass",
+      "ref": "In the style of 1960s surf rock",
+      "artist": "Surf rock",
+      "tags": ["bass", "surf", "rock", "60s"],
+      "level": 1,
+      "blurb": "A bouncy, galloping surf bass line in a minor key.",
+      "how": "Surf rock bass gallops under the twangy guitar. A bright square with a pluck and a dotted rhythm.",
+      "phrase": {
+        "bpm": 150,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.1375, 0.8],
+          [0.5, 40, 0.1375, 0.8],
+          [0.75, 40, 0.1375, 0.8],
+          [1.25, 40, 0.1375, 0.8],
+          [1.5, 40, 0.1375, 0.8],
+          [2, 43, 0.1375, 0.8],
+          [2.5, 43, 0.1375, 0.8],
+          [2.75, 43, 0.1375, 0.8],
+          [3.25, 43, 0.1375, 0.8],
+          [3.5, 43, 0.1375, 0.8],
+          [4, 45, 0.1375, 0.8],
+          [4.5, 45, 0.1375, 0.8],
+          [4.75, 45, 0.1375, 0.8],
+          [5.25, 45, 0.1375, 0.8],
+          [5.5, 45, 0.1375, 0.8],
+          [6, 47, 0.1375, 0.8],
+          [6.5, 47, 0.1375, 0.8],
+          [6.75, 47, 0.1375, 0.8],
+          [7.25, 45, 0.1375, 0.8],
+          [7.5, 43, 0.1375, 0.8],
+          [7.75, 42, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Twangy",
+          "module": "filter",
+          "why": "A square at a medium cutoff with a little envelope and resonance.\n- WAVEFORM Square\n- CUT OFF FREQ 4 · 644 Hz\n- ENV MOD 3\n- RESONANCE 3\n- Listen for: a bright, twangy tone.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 4,
+            "filter.envMod": 3,
+            "filter.res": 3
+          }
+        },
+        {
+          "title": "Gallop",
+          "module": "env",
+          "why": "A short decay, no accent.\n- DECAY 2 · 320 ms\n- ACCENT 0\n- Listen for: a galloping surf bass.",
+          "set": {
+            "env.decay": 2,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Raise to 7",
+          "hear": "A wetter, reverb-tank twang."
+        }
+      ]
+    },
+    {
+      "id": "tb-motorik",
+      "name": "Motorik Root",
+      "ref": "In the style of Neu!",
+      "artist": "Neu!",
+      "tags": ["bass", "krautrock", "motorik", "70s"],
+      "level": 1,
+      "blurb": "A steady, endless eighth-note root that drives forward like a car on the autobahn.",
+      "how": "The motorik beat of Neu! and early Kraftwerk drives forward relentlessly. The bass plays steady eighths on one or two notes for minutes at a time.",
+      "phrase": {
+        "bpm": 146,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.375, 0.8],
+          [0.5, 38, 0.375, 0.8],
+          [1, 38, 0.375, 0.8],
+          [1.5, 38, 0.375, 0.8],
+          [2, 38, 0.375, 0.8],
+          [2.5, 38, 0.375, 0.8],
+          [3, 38, 0.375, 0.8],
+          [3.5, 38, 0.375, 0.8],
+          [4, 38, 0.375, 0.8],
+          [4.5, 38, 0.375, 0.8],
+          [5, 38, 0.375, 0.8],
+          [5.5, 38, 0.375, 0.8],
+          [6, 38, 0.375, 0.8],
+          [6.5, 38, 0.375, 0.8],
+          [7, 36, 0.375, 0.8],
+          [7.5, 36, 0.375, 0.8],
+          [8, 38, 0.375, 0.8],
+          [8.5, 38, 0.375, 0.8],
+          [9, 38, 0.375, 0.8],
+          [9.5, 38, 0.375, 0.8],
+          [10, 38, 0.375, 0.8],
+          [10.5, 38, 0.375, 0.8],
+          [11, 38, 0.375, 0.8],
+          [11.5, 38, 0.375, 0.8],
+          [12, 31, 0.375, 0.8],
+          [12.5, 31, 0.375, 0.8],
+          [13, 31, 0.375, 0.8],
+          [13.5, 31, 0.375, 0.8],
+          [14, 33, 0.375, 0.8],
+          [14.5, 33, 0.375, 0.8],
+          [15, 36, 0.375, 0.8],
+          [15.5, 36, 0.375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Steady tone",
+          "module": "filter",
+          "why": "A saw with a middle-low cutoff and a little envelope.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 3.5 · 541 Hz\n- ENV MOD 2\n- RESONANCE 2\n- Listen for: a steady, warm tone.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 3.5,
+            "filter.envMod": 2,
+            "filter.res": 2
+          }
+        },
+        {
+          "title": "Drive",
+          "module": "env",
+          "why": "A short decay, no accent.\n- DECAY 2 · 320 ms\n- ACCENT 0\n- Listen for: a relentless, forward-driving pulse.",
+          "set": {
+            "env.decay": 2,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Raise to 6",
+          "hear": "Brighter, more like a buzzing guitar."
+        }
+      ]
+    },
+    {
+      "id": "tb-synthwave-pulse",
+      "name": "Night Drive Pulse",
+      "ref": "In the style of Kavinsky",
+      "artist": "Kavinsky",
+      "tags": ["bass", "synthwave", "retrowave", "10s"],
+      "level": 1,
+      "blurb": "A pulsing sixteenth bass for a neon night drive.",
+      "how": "Synthwave borrows the 1980s film-score pulse: steady sixteenths on the root, a bright saw and a short decay.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.1375, 0.8],
+          [0.25, 33, 0.1375, 0.8],
+          [0.5, 33, 0.1375, 0.8],
+          [0.75, 33, 0.1375, 0.8],
+          [1, 33, 0.1375, 0.8],
+          [1.25, 33, 0.1375, 0.8],
+          [1.5, 33, 0.1375, 0.8],
+          [1.75, 33, 0.1375, 0.8],
+          [2, 33, 0.1375, 0.8],
+          [2.25, 33, 0.1375, 0.8],
+          [2.5, 33, 0.1375, 0.8],
+          [2.75, 33, 0.1375, 0.8],
+          [3, 33, 0.1375, 0.8],
+          [3.25, 33, 0.1375, 0.8],
+          [3.5, 33, 0.1375, 0.8],
+          [3.75, 33, 0.1375, 0.8],
+          [4, 29, 0.1375, 0.8],
+          [4.25, 29, 0.1375, 0.8],
+          [4.5, 29, 0.1375, 0.8],
+          [4.75, 29, 0.1375, 0.8],
+          [5, 29, 0.1375, 0.8],
+          [5.25, 29, 0.1375, 0.8],
+          [5.5, 29, 0.1375, 0.8],
+          [5.75, 29, 0.1375, 0.8],
+          [6, 31, 0.1375, 0.8],
+          [6.25, 31, 0.1375, 0.8],
+          [6.5, 31, 0.1375, 0.8],
+          [6.75, 31, 0.1375, 0.8],
+          [7, 31, 0.1375, 0.8],
+          [7.25, 31, 0.1375, 0.8],
+          [7.5, 31, 0.1375, 0.8],
+          [7.75, 31, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bright saw",
+          "module": "filter",
+          "why": "A saw with a medium cutoff, a quick envelope and a touch of resonance.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 3.5 · 541 Hz\n- ENV MOD 4\n- RESONANCE 3\n- Listen for: a bright, ticking tone.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 3.5,
+            "filter.envMod": 4,
+            "filter.res": 3
+          }
+        },
+        {
+          "title": "Pulse",
+          "module": "env",
+          "why": "A very short decay, no accent.\n- DECAY 1 · 250 ms\n- ACCENT 0\n- Listen for: a pulsing night-drive bass.",
+          "set": {
+            "env.decay": 1,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "env.decay",
+          "try": "Raise to 4",
+          "hear": "Softer and more like a pad pulse."
+        }
+      ]
+    },
+    {
+      "id": "tb-trance-offbeat",
+      "name": "Offbeat Trance Bass",
+      "ref": "In the style of late-1990s trance",
+      "artist": "Trance",
+      "tags": ["bass", "trance", "90s"],
+      "level": 1,
+      "blurb": "A rolling offbeat bass that bounces between the kicks.",
+      "how": "Trance bass sits on the offbeats, out of the kick’s way. Short, bright notes on the “and” of every beat, often with an octave.",
+      "phrase": {
+        "bpm": 138,
+        "loop": true,
+        "steps": [
+          [0.5, 33, 0.1375, 0.8],
+          [0.75, 45, 0.1375, 0.8],
+          [1.5, 33, 0.1375, 0.8],
+          [1.75, 45, 0.1375, 0.8],
+          [2.5, 33, 0.1375, 0.8],
+          [2.75, 45, 0.1375, 0.8],
+          [3.5, 33, 0.1375, 0.8],
+          [3.75, 45, 0.1375, 0.8],
+          [4.5, 29, 0.1375, 0.8],
+          [4.75, 41, 0.1375, 0.8],
+          [5.5, 29, 0.1375, 0.8],
+          [5.75, 41, 0.1375, 0.8],
+          [6.5, 31, 0.1375, 0.8],
+          [6.75, 43, 0.1375, 0.8],
+          [7.5, 31, 0.1375, 0.8],
+          [7.75, 43, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Punchy",
+          "module": "filter",
+          "why": "A saw with a middle cutoff and a quick envelope.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 3.5 · 541 Hz\n- ENV MOD 4.5\n- RESONANCE 2\n- Listen for: a punchy, bright bass.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 3.5,
+            "filter.envMod": 4.5,
+            "filter.res": 2
+          }
+        },
+        {
+          "title": "Offbeat",
+          "module": "env",
+          "why": "A short decay, no accent.\n- DECAY 1.5 · 280 ms\n- ACCENT 0\n- Listen for: a bass that bounces between the kicks.",
+          "set": {
+            "env.decay": 1.5,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Raise to 7",
+          "hear": "A squelchier, acid-trance bass."
+        }
+      ]
+    },
+    {
+      "id": "tb-psy-gallop",
+      "name": "Psytrance Gallop",
+      "ref": "In the style of 2000s psytrance",
+      "artist": "Psytrance",
+      "tags": ["bass", "psytrance", "trance", "00s"],
+      "level": 2,
+      "blurb": "A fast rolling bass, three notes between every kick.",
+      "how": "Psytrance bass fills the three sixteenths after each kick with the same note, a rolling gallop. Short, tight and filtered.",
+      "phrase": {
+        "bpm": 145,
+        "loop": true,
+        "steps": [
+          [0.25, 28, 0.1375, 0.8],
+          [0.5, 28, 0.1375, 0.8],
+          [0.75, 28, 0.1375, 0.8],
+          [1.25, 28, 0.1375, 0.8],
+          [1.5, 28, 0.1375, 0.8],
+          [1.75, 28, 0.1375, 0.8],
+          [2.25, 28, 0.1375, 0.8],
+          [2.5, 28, 0.1375, 0.8],
+          [2.75, 28, 0.1375, 0.8],
+          [3.25, 28, 0.1375, 0.8],
+          [3.5, 28, 0.1375, 0.8],
+          [3.75, 28, 0.1375, 0.8],
+          [4.25, 28, 0.1375, 0.8],
+          [4.5, 28, 0.1375, 0.8],
+          [4.75, 28, 0.1375, 0.8],
+          [5.25, 28, 0.1375, 0.8],
+          [5.5, 28, 0.1375, 0.8],
+          [5.75, 28, 0.1375, 0.8],
+          [6.25, 31, 0.1375, 0.8],
+          [6.5, 31, 0.1375, 0.8],
+          [6.75, 31, 0.1375, 0.8],
+          [7.25, 29, 0.1375, 0.8],
+          [7.5, 29, 0.1375, 0.8],
+          [7.75, 29, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Tight",
+          "module": "filter",
+          "why": "A saw with a low-mid cutoff and a quick envelope.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 2.5 · 382 Hz\n- ENV MOD 5\n- RESONANCE 3\n- Listen for: a tight, clicky low bass.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 2.5,
+            "filter.envMod": 5,
+            "filter.res": 3
+          }
+        },
+        {
+          "title": "Rolling",
+          "module": "env",
+          "why": "The shortest decay, no accent.\n- DECAY 0.5 · 220 ms\n- ACCENT 0\n- Listen for: a rolling gallop of sixteenths.",
+          "set": {
+            "env.decay": 0.5,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {
+        "env.decay": "Very short, so the three notes stay separate at this speed."
+      },
+      "tweaks": [
+        {
+          "id": "env.decay",
+          "try": "Raise to 3",
+          "hear": "The gallop blurs into a drone."
+        }
+      ]
+    },
+    {
+      "id": "tb-detroit-electro",
+      "name": "Deep-Sea Electro",
+      "ref": "In the style of Drexciya",
+      "artist": "Drexciya",
+      "tags": ["bass", "electro", "detroit", "90s"],
+      "level": 2,
+      "blurb": "A cold, syncopated electro bass from the deep.",
+      "how": "Detroit electro is cold and mysterious. A square bass with a quick bow and syncopated notes, a little resonance for chill.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 26, 0.1375, 0.8],
+          [0.75, 26, 0.1375, 0.8],
+          [1.25, 38, 0.1375, 0.8],
+          [2.25, 26, 0.1375, 0.8],
+          [3, 29, 0.1375, 0.8],
+          [3.5, 31, 0.1375, 0.8],
+          [4, 26, 0.1375, 0.8],
+          [4.75, 26, 0.1375, 0.8],
+          [5.25, 38, 0.1375, 0.8],
+          [6.25, 33, 0.1375, 0.8],
+          [6.75, 31, 0.1375, 0.8],
+          [7.25, 29, 0.1375, 0.8],
+          [7.75, 24, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Cold square",
+          "module": "filter",
+          "why": "A square with a low cutoff, a strong envelope and some resonance.\n- WAVEFORM Square\n- CUT OFF FREQ 2 · 321 Hz\n- ENV MOD 5.5\n- RESONANCE 5\n- Listen for: a cold, bowed square bass.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 2,
+            "filter.envMod": 5.5,
+            "filter.res": 5
+          }
+        },
+        {
+          "title": "Deep",
+          "module": "env",
+          "why": "A medium decay, a light accent.\n- DECAY 3 · 400 ms\n- ACCENT 2\n- Listen for: a deep, mysterious electro line.",
+          "set": {
+            "env.decay": 3,
+            "amp.accent": 2
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Raise to 9",
+          "hear": "A sonar ping rides each note."
+        }
+      ]
+    },
+    {
+      "id": "tb-house-organ-bass",
+      "name": "Organ Bass Stab",
+      "ref": "In the style of early-1990s house",
+      "artist": "House music",
+      "tags": ["bass", "house", "90s"],
+      "level": 1,
+      "blurb": "A short, punchy organ-like bass stab under a piano house track.",
+      "how": "Early-1990s house used short organ-like bass stabs. A square with a bright cutoff and a very short decay gives a punchy, organ-ish pop.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.1375, 0.8],
+          [0.75, 33, 0.1375, 0.8],
+          [1.5, 33, 0.1375, 0.8],
+          [2.5, 33, 0.1375, 0.8],
+          [3, 36, 0.1375, 0.8],
+          [3.5, 38, 0.1375, 0.8],
+          [4, 29, 0.1375, 0.8],
+          [4.75, 29, 0.1375, 0.8],
+          [5.5, 29, 0.1375, 0.8],
+          [6.5, 31, 0.1375, 0.8],
+          [7, 33, 0.1375, 0.8],
+          [7.5, 36, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Organ pop",
+          "module": "filter",
+          "why": "A square with a bright cutoff, a little envelope and no resonance.\n- WAVEFORM Square\n- CUT OFF FREQ 5.5 · 1.1 kHz\n- ENV MOD 2\n- RESONANCE 0\n- Listen for: a bright, organ-ish tone.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 5.5,
+            "filter.envMod": 2,
+            "filter.res": 0
+          }
+        },
+        {
+          "title": "Stab",
+          "module": "env",
+          "why": "A very short decay, no accent.\n- DECAY 1 · 250 ms\n- ACCENT 0\n- Listen for: short, punchy organ bass stabs.",
+          "set": {
+            "env.decay": 1,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Drop to 3",
+          "hear": "Rounder, more like a sub stab."
+        }
+      ]
+    },
+    {
+      "id": "tb-laser-zap",
+      "name": "Laser Zaps",
+      "ref": "In the style of 1980s arcade sound effects",
+      "artist": "Arcade games",
+      "tags": ["fx", "sci-fi", "game", "80s"],
+      "level": 2,
+      "blurb": "Pew-pew laser shots: high, resonant zaps that fall fast.",
+      "how": "A laser zap is a resonant filter sweeping down very fast. Very high notes, the envelope fully up and a very short decay make the resonance dive on every note.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.1375, 1],
+          [0.5, 72, 0.1375, 0.8],
+          [1.25, 79, 0.1375, 1],
+          [2, 72, 0.1375, 0.8],
+          [2.75, 72, 0.1375, 1],
+          [4, 76, 0.1375, 1],
+          [4.5, 76, 0.1375, 0.8],
+          [5.25, 84, 0.1375, 1],
+          [6, 72, 0.1375, 0.8],
+          [6.5, 67, 0.1375, 0.8],
+          [7, 72, 0.1375, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Dive",
+          "module": "filter",
+          "why": "Cutoff low, envelope full and resonance near the top: the filter shoots up and dives back on each note.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 2 · 321 Hz\n- ENV MOD 10: full, so the sweep is as big as it gets\n- RESONANCE 9.5\n- Listen for: a resonant “pew” on every note.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 2,
+            "filter.envMod": 10,
+            "filter.res": 9.5
+          }
+        },
+        {
+          "title": "Fast and sharp",
+          "module": "env",
+          "why": "The shortest decay makes the dive quick. Accent makes some shots louder and faster.\n- DECAY 0 · 200 ms\n- ACCENT 8\n- Listen for: quick laser shots, some bigger than others.",
+          "set": {
+            "env.decay": 0,
+            "amp.accent": 8
+          }
+        }
+      ],
+      "context": {
+        "env.decay": "At zero the sweep is over in a flash, which is what makes it a zap."
+      },
+      "tweaks": [
+        {
+          "id": "env.decay",
+          "try": "Raise to 6",
+          "hear": "The zaps slow into whistling bombs."
+        }
+      ]
+    },
+    {
+      "id": "tb-droid-chatter",
+      "name": "Droid Chatter",
+      "ref": "In the style of Ben Burtt’s droid voices",
+      "artist": "Ben Burtt",
+      "tags": ["fx", "sci-fi", "film", "robot"],
+      "level": 3,
+      "blurb": "A little robot burbling and whistling to itself.",
+      "how": "Ben Burtt built a famous droid voice partly from a synthesizer: fast, high, whistling burbles with sudden jumps. Short, high notes that slide into each other and very high resonance get close.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.28, 0.8],
+          [0.25, 79, 0.1375, 0.8],
+          [0.75, 76, 0.05, 0.8],
+          [0.833333, 76, 0.05, 0.8],
+          [0.916667, 76, 0.05, 0.8],
+          [1.5, 86, 0.28, 0.8],
+          [1.75, 81, 0.1375, 0.8],
+          [2.5, 77, 0.28, 0.8],
+          [2.75, 84, 0.1375, 0.8],
+          [3, 76, 0.1375, 0.8],
+          [4, 79, 0.075, 0.8],
+          [4.125, 79, 0.075, 0.8],
+          [4.5, 84, 0.28, 0.8],
+          [4.75, 76, 0.1375, 0.8],
+          [5.25, 83, 0.1375, 0.8],
+          [6, 88, 0.28, 0.8],
+          [6.25, 72, 0.1375, 0.8],
+          [7, 81, 0.05, 0.8],
+          [7.083333, 81, 0.05, 0.8],
+          [7.166667, 81, 0.05, 0.8],
+          [7.25, 79, 0.28, 0.8],
+          [7.5, 72, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Whistle",
+          "module": "filter",
+          "why": "A middle cutoff with a big envelope and near-top resonance: every note whistles.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 4 · 644 Hz\n- ENV MOD 7\n- RESONANCE 9.5\n- Listen for: a whistling, chirping tone.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 4,
+            "filter.envMod": 7,
+            "filter.res": 9.5
+          }
+        },
+        {
+          "title": "Burble",
+          "module": "env",
+          "why": "A short decay. The ratchets (two or three quick hits in one step) make the burbles.\n- DECAY 1.5 · 280 ms\n- ACCENT 5\n- Listen for: a chattering robot voice, whistles and burbles.",
+          "set": {
+            "env.decay": 1.5,
+            "amp.accent": 5
+          }
+        }
+      ],
+      "context": {
+        "filter.res": "The whistle is all resonance."
+      },
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Switch to Square",
+          "hear": "A buzzier, more electronic droid."
+        }
+      ]
+    },
+    {
+      "id": "tb-klaxon",
+      "name": "Klaxon",
+      "ref": "In the style of alarm and siren sound effects",
+      "artist": "Sound effects",
+      "tags": ["fx", "alarm", "siren"],
+      "level": 1,
+      "blurb": "A two-tone alarm that won’t stop.",
+      "how": "An alarm alternates two notes, a tritone or a fourth apart, in a hard, buzzy tone. A saw with the filter open and long notes.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.9875, 0.8],
+          [1, 75, 0.9875, 0.8],
+          [2, 69, 0.9875, 0.8],
+          [3, 75, 0.9875, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Harsh",
+          "module": "filter",
+          "why": "The filter open with some resonance makes a harsh, buzzy tone.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 8 · 2.6 kHz\n- ENV MOD 0\n- RESONANCE 5\n- Listen for: a harsh, buzzy tone.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 8,
+            "filter.envMod": 0,
+            "filter.res": 5
+          }
+        },
+        {
+          "title": "Hold",
+          "module": "env",
+          "why": "A long decay holds each tone.\n- DECAY 7 · 1.0 s\n- ACCENT 0\n- Listen for: a two-tone alarm.",
+          "set": {
+            "env.decay": 7,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Switch to Square",
+          "hear": "More like an old electronic buzzer."
+        }
+      ]
+    },
+    {
+      "id": "tb-kick",
+      "name": "303 Kick",
+      "ref": "In the style of minimal techno percussion",
+      "artist": "Minimal techno",
+      "tags": ["perc", "techno", "minimal"],
+      "level": 2,
+      "blurb": "A punchy kick drum made from a low note and a fast filter thump.",
+      "how": "A very low note with the filter snapping open and shut makes a thump, close to a kick drum. The square wave gives a rounder kick than the saw.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 24, 0.1375, 1],
+          [1, 24, 0.1375, 0.8],
+          [2, 24, 0.1375, 1],
+          [3, 24, 0.1375, 0.8],
+          [3.75, 24, 0.1375, 0.8],
+          [4, 24, 0.1375, 1],
+          [5, 24, 0.1375, 0.8],
+          [6, 24, 0.1375, 1],
+          [7, 24, 0.1375, 0.8],
+          [7.5, 24, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Thump",
+          "module": "filter",
+          "why": "Cutoff low with a big envelope: the filter flicks open for the click and shuts for the boom.\n- WAVEFORM Square\n- CUT OFF FREQ 1 · 227 Hz\n- ENV MOD 8\n- RESONANCE 4\n- Listen for: a thump with a click on the front.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 1,
+            "filter.envMod": 8,
+            "filter.res": 4
+          }
+        },
+        {
+          "title": "Tight",
+          "module": "env",
+          "why": "The shortest decay and a strong accent on the downbeats.\n- DECAY 0 · 200 ms\n- ACCENT 7\n- Listen for: a punchy kick pattern.",
+          "set": {
+            "env.decay": 0,
+            "amp.accent": 7
+          }
+        }
+      ],
+      "context": {
+        "filter.envMod": "The fast flick of the filter is the kick’s click."
+      },
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Raise to 8",
+          "hear": "The kick gets a tuned, boomy ring."
+        }
+      ]
+    },
+    {
+      "id": "tb-tom-fill",
+      "name": "Electro Tom Fill",
+      "ref": "In the style of 1980s electro drum fills",
+      "artist": "Electro",
+      "tags": ["perc", "electro", "80s"],
+      "level": 2,
+      "blurb": "Resonant, tuned tom hits tumbling down.",
+      "how": "High resonance and a fast envelope give each note a tuned, drum-like pitch drop. Played as a descending fill, it sounds like electronic toms.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.1375, 1],
+          [5, 55, 0.1375, 0.8],
+          [5.5, 52, 0.1375, 0.8],
+          [6, 48, 0.1375, 0.8],
+          [6.5, 45, 0.1375, 0.8],
+          [7, 43, 0.1375, 0.8],
+          [7.25, 40, 0.1375, 0.8],
+          [7.5, 36, 0.1375, 0.8],
+          [7.75, 35, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Tuned drum",
+          "module": "filter",
+          "why": "Low cutoff, high resonance and a big envelope give a tuned drop on each note.\n- WAVEFORM Square\n- CUT OFF FREQ 1.5 · 270 Hz\n- ENV MOD 7\n- RESONANCE 8.5\n- Listen for: a tuned “doom” on each note.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 1.5,
+            "filter.envMod": 7,
+            "filter.res": 8.5
+          }
+        },
+        {
+          "title": "Short hits",
+          "module": "env",
+          "why": "A short decay so each hit dies quickly.\n- DECAY 1 · 250 ms\n- ACCENT 6\n- Listen for: a tom fill tumbling down.",
+          "set": {
+            "env.decay": 1,
+            "amp.accent": 6
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Drop to 3",
+          "hear": "The toms lose their tune and turn into thuds."
+        }
+      ]
+    },
+    {
+      "id": "tb-cowbell",
+      "name": "Electro Cowbell",
+      "ref": "In the style of 1980s electro",
+      "artist": "Electro",
+      "tags": ["perc", "electro", "hip hop", "80s"],
+      "level": 2,
+      "blurb": "A clanky, metallic cowbell figure.",
+      "how": "A drum machine cowbell is two square waves a fifth apart. The 303 has only one, but a high square with a bright, resonant filter and a short decay is a clanky stand-in.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0.5, 81, 0.1375, 0.8],
+          [1.5, 81, 0.1375, 0.8],
+          [2, 76, 0.1375, 0.8],
+          [2.75, 81, 0.1375, 0.8],
+          [3.5, 76, 0.1375, 0.8],
+          [4.5, 81, 0.1375, 0.8],
+          [5.5, 81, 0.1375, 0.8],
+          [6, 76, 0.1375, 0.8],
+          [6.5, 81, 0.1375, 0.8],
+          [7.25, 81, 0.1375, 0.8],
+          [7.5, 76, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Clank",
+          "module": "filter",
+          "why": "A bright cutoff, a quick envelope and resonance for a metallic clank.\n- WAVEFORM Square\n- CUT OFF FREQ 6.5 · 1.5 kHz\n- ENV MOD 4\n- RESONANCE 7\n- Listen for: a metallic, clanky tone.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 6.5,
+            "filter.envMod": 4,
+            "filter.res": 7
+          }
+        },
+        {
+          "title": "Short",
+          "module": "env",
+          "why": "The shortest decay.\n- DECAY 0 · 200 ms\n- ACCENT 0\n- Listen for: a cowbell figure.",
+          "set": {
+            "env.decay": 0,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Raise to 9.5",
+          "hear": "More like a hit on a metal pipe."
+        }
+      ]
+    },
+    {
+      "id": "tb-bubbles",
+      "name": "Bubbles",
+      "ref": "In the style of cartoon and radiophonic sound effects",
+      "artist": "Radiophonic sound effects",
+      "tags": ["fx", "cartoon"],
+      "level": 2,
+      "blurb": "Bubbles rising and popping in a fish tank.",
+      "how": "A bubble is a quick resonant upward chirp. Rising notes that slide, with very high resonance and a fast envelope, bubble up.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.28, 0.8],
+          [0.25, 67, 0.1375, 0.8],
+          [0.75, 64, 0.28, 0.8],
+          [1, 72, 0.1375, 0.8],
+          [1.75, 69, 0.28, 0.8],
+          [2, 76, 0.1375, 0.8],
+          [2.5, 62, 0.28, 0.8],
+          [2.75, 69, 0.1375, 0.8],
+          [3.5, 65, 0.28, 0.8],
+          [3.75, 72, 0.1375, 0.8],
+          [4.25, 60, 0.28, 0.8],
+          [4.5, 67, 0.1375, 0.8],
+          [5.25, 64, 0.28, 0.8],
+          [5.5, 71, 0.1375, 0.8],
+          [6, 74, 0.1375, 0.8],
+          [6.5, 67, 0.28, 0.8],
+          [6.75, 74, 0.1375, 0.8],
+          [7.25, 69, 0.28, 0.8],
+          [7.5, 76, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bubble",
+          "module": "filter",
+          "why": "Low cutoff, near-top resonance and a big envelope.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 2.5 · 382 Hz\n- ENV MOD 7\n- RESONANCE 9.5\n- Listen for: a watery, bubbling tone.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 2.5,
+            "filter.envMod": 7,
+            "filter.res": 9.5
+          }
+        },
+        {
+          "title": "Pop",
+          "module": "env",
+          "why": "A short decay so each bubble pops.\n- DECAY 1 · 250 ms\n- ACCENT 0\n- Listen for: bubbles rising and popping.",
+          "set": {
+            "env.decay": 1,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Raise to 6",
+          "hear": "The bubbles become chirps."
+        }
+      ]
+    },
+    {
+      "id": "tb-morse",
+      "name": "Telegraph",
+      "ref": "In the style of Morse code and radio signals",
+      "artist": "Radio signals",
+      "tags": ["fx", "radio"],
+      "level": 1,
+      "blurb": "Dots and dashes beeping over a radio.",
+      "how": "Morse code is one pitch, on and off, in short and long beeps. A square with the filter open and no envelope beeps cleanly.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 81, 0.1375, 0.8],
+          [0.5, 81, 0.1375, 0.8],
+          [1, 81, 0.1375, 0.8],
+          [2, 81, 0.6375, 0.8],
+          [3, 81, 0.6375, 0.8],
+          [4, 81, 0.6375, 0.8],
+          [6, 81, 0.1375, 0.8],
+          [6.5, 81, 0.1375, 0.8],
+          [7, 81, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Clean beep",
+          "module": "filter",
+          "why": "A square, filter open, no envelope, no resonance.\n- WAVEFORM Square\n- CUT OFF FREQ 7 · 1.8 kHz\n- ENV MOD 0\n- RESONANCE 0\n- Listen for: a clean electronic beep.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 7,
+            "filter.envMod": 0,
+            "filter.res": 0
+          }
+        },
+        {
+          "title": "Dots and dashes",
+          "module": "env",
+          "why": "A long decay so the dashes hold. The pattern spells S-O-S.\n- DECAY 6 · 800 ms\n- ACCENT 0\n- Listen for: dot-dot-dot, dash-dash-dash, dot-dot-dot.",
+          "set": {
+            "env.decay": 6,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Drop to 3",
+          "hear": "Like a signal heard through static and distance."
+        }
+      ]
+    },
+    {
+      "id": "tb-heartbeat",
+      "name": "Heartbeat",
+      "ref": "In the style of film-score heartbeats",
+      "artist": "Film scoring",
+      "tags": ["perc", "film", "ambient"],
+      "level": 1,
+      "blurb": "A slow, deep heartbeat thump, lub-dub.",
+      "how": "A heartbeat is two low thumps close together, then a gap. A very low square with a quick filter thump.",
+      "phrase": {
+        "bpm": 64,
+        "loop": true,
+        "steps": [
+          [0, 21, 0.1375, 0.8],
+          [3.5, 21, 0.1375, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Thump",
+          "module": "filter",
+          "why": "A very low cutoff and a quick envelope.\n- WAVEFORM Square\n- CUT OFF FREQ 0.5 · 190 Hz\n- ENV MOD 6\n- RESONANCE 3\n- Listen for: a soft, deep thump.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 0.5,
+            "filter.envMod": 6,
+            "filter.res": 3
+          }
+        },
+        {
+          "title": "Lub-dub",
+          "module": "env",
+          "why": "A short decay. The louder “lub” is accented and falls just before the loop comes round, so the “dub” lands on the beat.\n- DECAY 1 · 250 ms\n- ACCENT 5\n- Listen for: a slow lub-dub heartbeat.",
+          "set": {
+            "env.decay": 1,
+            "amp.accent": 5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Raise to 3",
+          "hear": "More like knocking on a door."
+        }
+      ]
+    },
+    {
+      "id": "tb-night-insects",
+      "name": "Night Insects",
+      "ref": "In the style of nature recordings",
+      "artist": "Nature recordings",
+      "tags": ["fx", "nature", "ambient"],
+      "level": 2,
+      "blurb": "Crickets and cicadas chirping on a warm night.",
+      "how": "Insect chirps are very high, very fast repeated clicks. Ratchets of high notes with a short decay and some resonance chirp like crickets.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 88, 0.0375, 0.8],
+          [0.0625, 88, 0.0375, 0.8],
+          [0.125, 88, 0.0375, 0.8],
+          [0.1875, 88, 0.0375, 0.8],
+          [1, 88, 0.0375, 0.8],
+          [1.0625, 88, 0.0375, 0.8],
+          [1.125, 88, 0.0375, 0.8],
+          [1.1875, 88, 0.0375, 0.8],
+          [2.5, 91, 0.05, 0.55],
+          [2.583333, 91, 0.05, 0.55],
+          [2.666667, 91, 0.05, 0.55],
+          [3.5, 91, 0.05, 0.55],
+          [3.583333, 91, 0.05, 0.55],
+          [3.666667, 91, 0.05, 0.55],
+          [4, 88, 0.0375, 0.8],
+          [4.0625, 88, 0.0375, 0.8],
+          [4.125, 88, 0.0375, 0.8],
+          [4.1875, 88, 0.0375, 0.8],
+          [5, 88, 0.0375, 0.8],
+          [5.0625, 88, 0.0375, 0.8],
+          [5.125, 88, 0.0375, 0.8],
+          [5.1875, 88, 0.0375, 0.8],
+          [6.75, 93, 0.05, 0.55],
+          [6.833333, 93, 0.05, 0.55],
+          [6.916667, 93, 0.05, 0.55],
+          [7.5, 88, 0.0375, 0.8],
+          [7.5625, 88, 0.0375, 0.8],
+          [7.625, 88, 0.0375, 0.8],
+          [7.6875, 88, 0.0375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Chirp",
+          "module": "filter",
+          "why": "A bright cutoff with resonance and a quick envelope.\n- WAVEFORM Square\n- CUT OFF FREQ 6 · 1.3 kHz\n- ENV MOD 3\n- RESONANCE 6\n- Listen for: a high, chirping tone.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 6,
+            "filter.envMod": 3,
+            "filter.res": 6
+          }
+        },
+        {
+          "title": "Clicks",
+          "module": "env",
+          "why": "The shortest decay; each step is a ratchet of three or four clicks.\n- DECAY 0 · 200 ms\n- ACCENT 0\n- Listen for: crickets chirping in the dark.",
+          "set": {
+            "env.decay": 0,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Drop to 3",
+          "hear": "Distant insects, far across a field."
+        }
+      ]
+    },
+    {
+      "id": "tb-shaft-wah",
+      "name": "Wah-Wah Guitar",
+      "ref": "In the style of Isaac Hayes — “Theme from Shaft”",
+      "artist": "Isaac Hayes",
+      "tags": ["lead", "funk", "soul", "film", "70s"],
+      "level": 2,
+      "blurb": "A choppy, scratchy wah-wah guitar in sixteenths.",
+      "how": "A wah pedal sweeps a resonant filter. The 303 does that on every note: a big envelope with resonance, short decay and choppy sixteenths with soft ghost notes.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [
+          [0, 52, 0.1375, 0.8],
+          [0.25, 52, 0.1375, 0.55],
+          [0.5, 52, 0.1375, 0.55],
+          [0.75, 52, 0.1375, 0.8],
+          [1, 52, 0.1375, 0.55],
+          [1.25, 52, 0.1375, 0.55],
+          [1.5, 52, 0.1375, 0.8],
+          [1.75, 52, 0.1375, 0.55],
+          [2, 52, 0.1375, 0.8],
+          [2.25, 52, 0.1375, 0.55],
+          [2.5, 52, 0.1375, 0.55],
+          [2.75, 52, 0.1375, 0.8],
+          [3, 52, 0.1375, 0.55],
+          [3.25, 52, 0.1375, 0.8],
+          [3.5, 52, 0.1375, 0.55],
+          [3.75, 52, 0.1375, 0.55],
+          [4, 52, 0.1375, 0.8],
+          [4.25, 52, 0.1375, 0.55],
+          [4.5, 52, 0.1375, 0.55],
+          [4.75, 52, 0.1375, 0.8],
+          [5, 52, 0.1375, 0.55],
+          [5.25, 52, 0.1375, 0.55],
+          [5.5, 52, 0.1375, 0.8],
+          [5.75, 52, 0.1375, 0.55],
+          [6, 55, 0.1375, 0.8],
+          [6.25, 55, 0.1375, 0.55],
+          [6.5, 55, 0.1375, 0.55],
+          [6.75, 57, 0.1375, 0.8],
+          [7, 57, 0.1375, 0.55],
+          [7.25, 57, 0.1375, 0.55],
+          [7.5, 59, 0.1375, 0.8],
+          [7.75, 59, 0.1375, 0.55]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Wah",
+          "module": "filter",
+          "why": "Low cutoff, big envelope and medium-high resonance: each note says “wah”.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 2.5 · 382 Hz\n- ENV MOD 6.5\n- RESONANCE 7\n- Listen for: a “wacka” on every note.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 2.5,
+            "filter.envMod": 6.5,
+            "filter.res": 7
+          }
+        },
+        {
+          "title": "Choppy",
+          "module": "env",
+          "why": "A short decay keeps it scratchy; the softer ghost notes are written quieter.\n- DECAY 1 · 250 ms\n- ACCENT 0\n- Listen for: a choppy, scratching wah guitar.",
+          "set": {
+            "env.decay": 1,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {
+        "filter.envMod": "The wah: a filter sweep on every pick stroke."
+      },
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Drop to 3",
+          "hear": "Less wah, more plain muted guitar."
+        }
+      ]
+    },
+    {
+      "id": "tb-clav-funk",
+      "name": "Funky Clav",
+      "ref": "In the style of Stevie Wonder — “Superstition”",
+      "artist": "Stevie Wonder",
+      "tags": ["keys", "funk", "soul", "70s"],
+      "level": 2,
+      "blurb": "A biting, percussive clavinet riff.",
+      "how": "The clavinet is a struck string with a bright, twangy bite and a fast decay. A square through a bright, slightly resonant filter with a short decay gets the snap.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 51, 0.1375, 0.8],
+          [0.5, 51, 0.1375, 0.55],
+          [0.75, 51, 0.1375, 0.8],
+          [1.25, 51, 0.1375, 0.55],
+          [1.75, 54, 0.1375, 0.8],
+          [2, 51, 0.1375, 0.8],
+          [2.5, 46, 0.1375, 0.8],
+          [3, 49, 0.1375, 0.8],
+          [3.25, 51, 0.1375, 0.8],
+          [4, 51, 0.1375, 0.8],
+          [4.5, 51, 0.1375, 0.55],
+          [4.75, 51, 0.1375, 0.8],
+          [5.25, 51, 0.1375, 0.55],
+          [5.75, 54, 0.1375, 0.8],
+          [6, 56, 0.1375, 0.8],
+          [6.5, 54, 0.1375, 0.8],
+          [7, 51, 0.1375, 0.8],
+          [7.25, 49, 0.1375, 0.8],
+          [7.75, 46, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bite",
+          "module": "filter",
+          "why": "A square with a bright cutoff, a quick envelope and some resonance for twang.\n- WAVEFORM Square\n- CUT OFF FREQ 5 · 912 Hz\n- ENV MOD 4\n- RESONANCE 5\n- Listen for: a twangy, biting tone.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 5,
+            "filter.envMod": 4,
+            "filter.res": 5
+          }
+        },
+        {
+          "title": "Snap",
+          "module": "env",
+          "why": "A short decay, no accent.\n- DECAY 1 · 250 ms\n- ACCENT 0\n- Listen for: a snappy, funky clav riff.",
+          "set": {
+            "env.decay": 1,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Switch to Sawtooth",
+          "hear": "Brighter and buzzier, like a clav through a fuzz."
+        }
+      ]
+    },
+    {
+      "id": "tb-jaw-harp",
+      "name": "Jaw Harp",
+      "ref": "In the style of the Sicilian marranzano",
+      "artist": "Sicilian folk music",
+      "tags": ["pluck", "folk", "traditional"],
+      "level": 2,
+      "blurb": "The twanging “boing” of a jaw harp, its tone shaped by the mouth.",
+      "how": "A jaw harp plays one low note, and the player changes the shape of their mouth to pick out overtones. High resonance at a low note gives the twang, and the accents stand in for the mouth opening.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.1375, 1],
+          [0.5, 38, 0.1375, 0.55],
+          [0.75, 38, 0.1375, 0.8],
+          [1, 38, 0.1375, 1],
+          [1.5, 38, 0.1375, 0.55],
+          [1.75, 38, 0.1375, 0.8],
+          [2, 38, 0.1375, 1],
+          [2.5, 38, 0.1375, 0.55],
+          [2.75, 38, 0.1375, 0.8],
+          [3, 38, 0.1375, 1],
+          [3.25, 38, 0.1375, 0.55],
+          [3.5, 38, 0.1375, 0.8],
+          [3.75, 38, 0.1375, 0.55],
+          [4, 38, 0.1375, 1],
+          [4.5, 38, 0.1375, 0.55],
+          [4.75, 38, 0.1375, 0.8],
+          [5, 38, 0.1375, 1],
+          [5.5, 38, 0.1375, 0.55],
+          [5.75, 38, 0.1375, 0.8],
+          [6, 38, 0.1375, 1],
+          [6.25, 38, 0.1375, 0.55],
+          [6.5, 38, 0.1375, 1],
+          [6.75, 38, 0.1375, 0.55],
+          [7, 38, 0.1375, 1],
+          [7.5, 38, 0.1375, 0.8],
+          [7.75, 38, 0.1375, 0.55]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Twang",
+          "module": "filter",
+          "why": "Low cutoff, high resonance and a big envelope: a twangy “boing”.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 2.5 · 382 Hz\n- ENV MOD 6\n- RESONANCE 9\n- Listen for: a twanging boing.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 2.5,
+            "filter.envMod": 6,
+            "filter.res": 9
+          }
+        },
+        {
+          "title": "Mouth shapes",
+          "module": "env",
+          "why": "A short decay; the accents open the filter further, like a wider mouth.\n- DECAY 2 · 320 ms\n- ACCENT 7\n- Listen for: a jaw harp twanging in rhythm.",
+          "set": {
+            "env.decay": 2,
+            "amp.accent": 7
+          }
+        }
+      ],
+      "context": {
+        "amp.accent": "Accents open the filter more, like the player’s mouth opening."
+      },
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Drop to 5",
+          "hear": "The twang goes and it becomes a plain bass."
+        }
+      ]
+    },
+    {
+      "id": "tb-didgeridoo",
+      "name": "Didgeridoo Drone",
+      "ref": "In the style of the didgeridoo (yidaki)",
+      "artist": "Aboriginal Australian music",
+      "tags": ["wind", "drone", "traditional"],
+      "level": 2,
+      "blurb": "A low, buzzing drone with a throaty wah in it.",
+      "how": "The didgeridoo is one low buzzing note, its tone changed by the player’s throat and breath. Very low notes with high resonance and a long decay make the buzz; accented notes add the throaty pushes.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 28, 0.7375, 0.8],
+          [0.75, 28, 0.4875, 1],
+          [1.25, 28, 0.7375, 0.8],
+          [2, 28, 0.4875, 0.8],
+          [2.5, 28, 0.7375, 1],
+          [3.25, 28, 0.4875, 0.8],
+          [3.75, 28, 0.2375, 1],
+          [4, 28, 0.7375, 0.8],
+          [4.75, 28, 0.4875, 1],
+          [5.25, 28, 0.7375, 0.8],
+          [6, 28, 0.4875, 1],
+          [6.5, 28, 0.4875, 0.8],
+          [7, 28, 0.4875, 1],
+          [7.5, 28, 0.4875, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Buzz",
+          "module": "filter",
+          "why": "A saw with a low cutoff and high resonance: a buzzy, nasal drone.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 2 · 321 Hz\n- ENV MOD 3.5\n- RESONANCE 8\n- Listen for: a low, buzzing drone.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 2,
+            "filter.envMod": 3.5,
+            "filter.res": 8
+          }
+        },
+        {
+          "title": "Throat",
+          "module": "env",
+          "why": "A long decay so it barely stops; accents push the filter up like a vocal shout.\n- DECAY 8 · 1.3 s\n- ACCENT 6\n- Listen for: a buzzing drone with throaty pushes.",
+          "set": {
+            "env.decay": 8,
+            "amp.accent": 6
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Raise to 10",
+          "hear": "More vocal, almost talking."
+        }
+      ]
+    },
+    {
+      "id": "tb-tanpura",
+      "name": "Tanpura Drone",
+      "ref": "In the style of the Hindustani tanpura",
+      "artist": "Hindustani classical music",
+      "tags": ["drone", "indian", "classical"],
+      "level": 2,
+      "blurb": "A shimmering, endlessly cycling drone of a fifth and two octaves.",
+      "how": "The tanpura is plucked slowly, string after string (Pa, Sa, Sa, low Sa), and never stops. A soft saw with resonance and a long decay rings like its buzzing bridge.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 43, 0.475, 0.8],
+          [1, 48, 0.475, 0.8],
+          [2, 48, 0.475, 0.8],
+          [3, 36, 0.475, 0.8],
+          [4, 43, 0.475, 0.8],
+          [5, 48, 0.475, 0.8],
+          [6, 48, 0.475, 0.8],
+          [7, 36, 0.475, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Buzzing bridge",
+          "module": "filter",
+          "why": "A middle cutoff and some resonance give the jivari, the tanpura’s buzzing shimmer.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 4 · 644 Hz\n- ENV MOD 2\n- RESONANCE 6\n- Listen for: a buzzy, shimmering tone.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 4,
+            "filter.envMod": 2,
+            "filter.res": 6
+          }
+        },
+        {
+          "title": "Ring on",
+          "module": "env",
+          "why": "The longest decay so every pluck rings for as long as it is held.\n- DECAY 10 · 2.0 s\n- ACCENT 0\n- Listen for: a cycling drone of fifth and octaves.",
+          "set": {
+            "env.decay": 10,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Raise to 9",
+          "hear": "A brighter, buzzier shimmer."
+        }
+      ]
+    },
+    {
+      "id": "tb-banjo-roll",
+      "name": "Banjo Roll",
+      "ref": "In the style of Earl Scruggs",
+      "artist": "Earl Scruggs",
+      "tags": ["pluck", "bluegrass", "country", "folk"],
+      "level": 3,
+      "blurb": "A fast, twangy bluegrass forward roll.",
+      "how": "Scruggs-style banjo rolls three fingers over the strings in fast eighths. A bright square with a pluck and a short decay twangs like a banjo.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 55, 0.175, 0.8],
+          [0.25, 59, 0.175, 0.8],
+          [0.5, 62, 0.175, 0.8],
+          [0.75, 55, 0.175, 0.8],
+          [1, 59, 0.175, 0.8],
+          [1.25, 62, 0.175, 0.8],
+          [1.5, 55, 0.175, 0.8],
+          [1.75, 59, 0.175, 0.8],
+          [2, 55, 0.175, 0.8],
+          [2.25, 60, 0.175, 0.8],
+          [2.5, 64, 0.175, 0.8],
+          [2.75, 55, 0.175, 0.8],
+          [3, 60, 0.175, 0.8],
+          [3.25, 64, 0.175, 0.8],
+          [3.5, 55, 0.175, 0.8],
+          [3.75, 60, 0.175, 0.8],
+          [4, 55, 0.175, 0.8],
+          [4.25, 59, 0.175, 0.8],
+          [4.5, 62, 0.175, 0.8],
+          [4.75, 55, 0.175, 0.8],
+          [5, 59, 0.175, 0.8],
+          [5.25, 62, 0.175, 0.8],
+          [5.5, 55, 0.175, 0.8],
+          [5.75, 59, 0.175, 0.8],
+          [6, 54, 0.175, 0.8],
+          [6.25, 57, 0.175, 0.8],
+          [6.5, 62, 0.175, 0.8],
+          [6.75, 54, 0.175, 0.8],
+          [7, 57, 0.175, 0.8],
+          [7.25, 62, 0.175, 0.8],
+          [7.5, 54, 0.175, 0.8],
+          [7.75, 57, 0.175, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Twang",
+          "module": "filter",
+          "why": "A square with a bright cutoff, a quick envelope and a touch of resonance.\n- WAVEFORM Square\n- CUT OFF FREQ 6 · 1.3 kHz\n- ENV MOD 4\n- RESONANCE 3\n- Listen for: a bright, twangy pluck.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 6,
+            "filter.envMod": 4,
+            "filter.res": 3
+          }
+        },
+        {
+          "title": "Roll",
+          "module": "env",
+          "why": "A short decay, no accent.\n- DECAY 1.5 · 280 ms\n- ACCENT 0\n- Listen for: a fast, rolling banjo pattern.",
+          "set": {
+            "env.decay": 1.5,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "env.decay",
+          "try": "Raise to 5",
+          "hear": "More like a harp."
+        }
+      ]
+    },
+    {
+      "id": "tb-koto",
+      "name": "Koto",
+      "ref": "In the style of Japanese koto music",
+      "artist": "Japanese traditional music",
+      "tags": ["pluck", "japanese", "traditional"],
+      "level": 2,
+      "blurb": "A plucked melody in the hirajōshi scale, with bends.",
+      "how": "The koto is a long zither, plucked and often bent. The hirajōshi scale gives the Japanese colour; slides between notes stand in for the bends.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.45],
+          [0.5, 59, 0.45],
+          [1, 60, 0.9],
+          [2, 64, 0.45],
+          [2.5, 65, 1.4],
+          [4, 64, 0.45],
+          [4.5, 60, 0.45],
+          [5, 59, 0.9],
+          [6, 57, 1.9],
+          [8, 64, 0.45],
+          [8.5, 65, 0.45],
+          [9, 69, 0.9],
+          [10, 65, 0.3],
+          [10.25, 64, 1.5],
+          [12, 60, 0.45],
+          [12.5, 59, 0.45],
+          [13, 57, 2.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Plucked string",
+          "module": "filter",
+          "why": "A saw with a medium-bright cutoff, a quick envelope and some resonance gives a plucked, twangy string.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 4.5 · 766 Hz\n- ENV MOD 4\n- RESONANCE 5\n- Listen for: a twangy, plucked tone.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 4.5,
+            "filter.envMod": 4,
+            "filter.res": 5
+          }
+        },
+        {
+          "title": "Ringing",
+          "module": "env",
+          "why": "A medium decay so plucks ring a little. No accent.\n- DECAY 4.5 · 560 ms\n- ACCENT 0\n- Listen for: a koto melody with gentle bends.",
+          "set": {
+            "env.decay": 4.5,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Switch to Square",
+          "hear": "More hollow, more like a shamisen."
+        }
+      ]
+    },
+    {
+      "id": "tb-steelpan",
+      "name": "Steelpan",
+      "ref": "In the style of Trinidadian steelpan",
+      "artist": "Steelpan",
+      "tags": ["pluck", "calypso", "caribbean"],
+      "level": 2,
+      "blurb": "A bright, bell-like calypso melody.",
+      "how": "A steelpan note is bright and metallic with a quick ring. A square through a bright, resonant filter with a medium decay gets close.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.1375, 0.8],
+          [0.5, 64, 0.1375, 0.8],
+          [0.75, 67, 0.1375, 0.8],
+          [1.25, 64, 0.1375, 0.8],
+          [1.75, 67, 0.1375, 0.8],
+          [2, 69, 0.1375, 0.8],
+          [2.5, 67, 0.1375, 0.8],
+          [3, 64, 0.1375, 0.8],
+          [3.5, 60, 0.1375, 0.8],
+          [4, 62, 0.1375, 0.8],
+          [4.5, 65, 0.1375, 0.8],
+          [4.75, 69, 0.1375, 0.8],
+          [5.25, 65, 0.1375, 0.8],
+          [5.75, 69, 0.1375, 0.8],
+          [6, 71, 0.1375, 0.8],
+          [6.5, 69, 0.1375, 0.8],
+          [7, 67, 0.1375, 0.8],
+          [7.75, 67, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Metal",
+          "module": "filter",
+          "why": "A square with a bright cutoff, resonance and a quick envelope.\n- WAVEFORM Square\n- CUT OFF FREQ 5.5 · 1.1 kHz\n- ENV MOD 3.5\n- RESONANCE 6.5\n- Listen for: a bright, metallic tone.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 5.5,
+            "filter.envMod": 3.5,
+            "filter.res": 6.5
+          }
+        },
+        {
+          "title": "Ring",
+          "module": "env",
+          "why": "A medium decay, no accent.\n- DECAY 3.5 · 450 ms\n- ACCENT 0\n- Listen for: a sunny steelpan melody.",
+          "set": {
+            "env.decay": 3.5,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Raise to 9",
+          "hear": "More of a ping, like a bell."
+        }
+      ]
+    },
+    {
+      "id": "tb-oompah",
+      "name": "Oom-Pah Tuba",
+      "ref": "In the style of a Bavarian oom-pah band",
+      "artist": "Oom-pah band",
+      "tags": ["brass", "folk", "polka"],
+      "level": 1,
+      "blurb": "A bouncing tuba line, root and fifth on the beat.",
+      "how": "A tuba’s oom-pah bounces root and fifth on the beat. A saw with the filter half closed sounds brassy and round.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 29, 0.3, 0.8],
+          [1, 36, 0.3, 0.8],
+          [2, 29, 0.3, 0.8],
+          [3, 36, 0.3, 0.8],
+          [4, 36, 0.3, 0.8],
+          [5, 31, 0.3, 0.8],
+          [6, 36, 0.3, 0.8],
+          [7, 31, 0.3, 0.8],
+          [8, 29, 0.3, 0.8],
+          [9, 36, 0.3, 0.8],
+          [10, 29, 0.3, 0.8],
+          [11, 36, 0.3, 0.8],
+          [12, 36, 0.3, 0.8],
+          [13, 31, 0.3, 0.8],
+          [14, 29, 0.3, 0.8],
+          [15, 36, 0.3, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Brassy",
+          "module": "filter",
+          "why": "A saw with a middle-low cutoff and a little envelope for a brassy blat.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 3 · 455 Hz\n- ENV MOD 3\n- RESONANCE 1\n- Listen for: a round, brassy tone.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 3,
+            "filter.envMod": 3,
+            "filter.res": 1
+          }
+        },
+        {
+          "title": "Bounce",
+          "module": "env",
+          "why": "A short decay, no accent.\n- DECAY 2 · 320 ms\n- ACCENT 0\n- Listen for: a bouncing oom-pah.",
+          "set": {
+            "env.decay": 2,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Raise to 5",
+          "hear": "More like a trombone."
+        }
+      ]
+    },
+    {
+      "id": "tb-acid-trance",
+      "name": "Acid Trance Riser",
+      "ref": "In the style of early-1990s acid trance",
+      "artist": "Acid trance",
+      "tags": ["lead", "acid", "trance", "90s"],
+      "level": 2,
+      "blurb": "A soaring, euphoric acid line that climbs through the scale.",
+      "how": "Early trance put the 303 on top as a lead: a climbing, euphoric pattern with slides, bright and resonant.",
+      "phrase": {
+        "bpm": 138,
+        "loop": true,
+        "steps": [
+          [0, 45, 0.1375, 0.8],
+          [0.25, 48, 0.1375, 0.8],
+          [0.5, 52, 0.1375, 0.8],
+          [0.75, 57, 0.1375, 1],
+          [1, 52, 0.1375, 0.8],
+          [1.25, 48, 0.1375, 0.8],
+          [1.5, 45, 0.1375, 0.8],
+          [1.75, 52, 0.1375, 0.8],
+          [2, 47, 0.1375, 0.8],
+          [2.25, 50, 0.1375, 0.8],
+          [2.5, 53, 0.1375, 0.8],
+          [2.75, 59, 0.1375, 1],
+          [3, 53, 0.1375, 0.8],
+          [3.25, 50, 0.28, 0.8],
+          [3.5, 47, 0.1375, 0.8],
+          [3.75, 53, 0.1375, 0.8],
+          [4, 48, 0.1375, 0.8],
+          [4.25, 52, 0.1375, 0.8],
+          [4.5, 55, 0.1375, 0.8],
+          [4.75, 60, 0.1375, 1],
+          [5, 55, 0.1375, 0.8],
+          [5.25, 52, 0.1375, 0.8],
+          [5.5, 48, 0.1375, 0.8],
+          [5.75, 55, 0.1375, 0.8],
+          [6, 50, 0.1375, 0.8],
+          [6.25, 53, 0.1375, 0.8],
+          [6.5, 57, 0.1375, 0.8],
+          [6.75, 62, 0.1375, 1],
+          [7, 57, 0.1375, 0.8],
+          [7.25, 53, 0.28, 0.8],
+          [7.5, 52, 0.1375, 0.8],
+          [7.75, 48, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bright and resonant",
+          "module": "filter",
+          "why": "A middle cutoff with a strong envelope and high resonance.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 4.5 · 766 Hz\n- ENV MOD 6\n- RESONANCE 8\n- Listen for: a bright, singing squelch.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 4.5,
+            "filter.envMod": 6,
+            "filter.res": 8
+          }
+        },
+        {
+          "title": "Soaring",
+          "module": "env",
+          "why": "A medium decay and strong accents on the tops of the arpeggios.\n- DECAY 3 · 400 ms\n- ACCENT 8\n- Listen for: a climbing, euphoric acid line.",
+          "set": {
+            "env.decay": 3,
+            "amp.accent": 8
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Drop to 2",
+          "hear": "A brooding, filtered build."
+        }
+      ]
+    },
+    {
+      "id": "tb-hydraulix",
+      "name": "Hard Acid Hammer",
+      "ref": "In the style of D.A.V.E. The Drummer",
+      "artist": "D.A.V.E. The Drummer",
+      "tags": ["bass", "acid", "acid techno", "90s"],
+      "level": 2,
+      "blurb": "A relentless, hammering acid techno riff.",
+      "how": "London acid techno is hard, fast and full of squelch: a one-note pattern hammered with accents and slides at 140 BPM.",
+      "phrase": {
+        "bpm": 142,
+        "loop": true,
+        "steps": [
+          [0, 29, 0.1375, 0.8],
+          [0.25, 29, 0.1375, 0.8],
+          [0.5, 41, 0.1375, 1],
+          [0.75, 29, 0.1375, 0.8],
+          [1, 29, 0.28, 0.8],
+          [1.25, 32, 0.1375, 0.8],
+          [1.5, 29, 0.1375, 0.8],
+          [1.75, 41, 0.1375, 1],
+          [2, 29, 0.1375, 0.8],
+          [2.25, 29, 0.1375, 0.8],
+          [2.5, 39, 0.1375, 1],
+          [2.75, 29, 0.1375, 0.8],
+          [3, 29, 0.28, 0.8],
+          [3.25, 36, 0.1375, 0.8],
+          [3.5, 29, 0.1375, 0.8],
+          [3.75, 41, 0.1375, 1],
+          [4, 29, 0.1375, 0.8],
+          [4.25, 29, 0.1375, 0.8],
+          [4.5, 41, 0.1375, 1],
+          [4.75, 29, 0.1375, 0.8],
+          [5, 29, 0.28, 0.8],
+          [5.25, 32, 0.1375, 0.8],
+          [5.5, 29, 0.1375, 0.8],
+          [5.75, 41, 0.1375, 1],
+          [6, 29, 0.1375, 0.8],
+          [6.25, 30, 0.28, 0.8],
+          [6.5, 29, 0.1375, 0.8],
+          [6.75, 39, 0.1375, 1],
+          [7, 29, 0.1375, 0.8],
+          [7.25, 36, 0.1375, 1],
+          [7.5, 34, 0.28, 0.8],
+          [7.75, 32, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Hard squelch",
+          "module": "filter",
+          "why": "Low cutoff, big envelope, high resonance.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 2.5 · 382 Hz\n- ENV MOD 8\n- RESONANCE 9\n- Listen for: a hard, wet squelch.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 2.5,
+            "filter.envMod": 8,
+            "filter.res": 9
+          }
+        },
+        {
+          "title": "Hammer",
+          "module": "env",
+          "why": "A short decay and full accent.\n- DECAY 2 · 320 ms\n- ACCENT 10\n- Listen for: a relentless, hammering acid line.",
+          "set": {
+            "env.decay": 2,
+            "amp.accent": 10
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "amp.accent",
+          "try": "Drop to 4",
+          "hear": "Less hammer, more roll."
+        }
+      ]
+    },
+    {
+      "id": "tb-wild-pitch",
+      "name": "Wild Pitch",
+      "ref": "In the style of DJ Pierre",
+      "artist": "DJ Pierre",
+      "tags": ["bass", "acid", "house", "90s"],
+      "level": 2,
+      "blurb": "A long, hypnotic acid figure made for a slow, endless build.",
+      "how": "DJ Pierre’s “wild pitch” style built tracks slowly over many minutes around one hypnotic loop. The line here is long and patient, so you can play with CUT OFF FREQ and RESONANCE over it as the build.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.1375, 0.8],
+          [0.5, 33, 0.1375, 0.8],
+          [0.75, 45, 0.1375, 0.8],
+          [1.25, 33, 0.1375, 0.8],
+          [1.75, 43, 0.1375, 0.8],
+          [2.25, 33, 0.1375, 0.8],
+          [2.5, 36, 0.1375, 0.8],
+          [3, 33, 0.1375, 0.8],
+          [3.5, 40, 0.1375, 0.8],
+          [4, 33, 0.1375, 0.8],
+          [4.5, 33, 0.1375, 0.8],
+          [4.75, 45, 0.1375, 0.8],
+          [5.25, 33, 0.1375, 0.8],
+          [5.75, 43, 0.1375, 0.8],
+          [6.25, 48, 0.1375, 1],
+          [6.75, 45, 0.1375, 0.8],
+          [7.25, 43, 0.28, 0.8],
+          [7.5, 40, 0.1375, 0.8],
+          [8, 33, 0.1375, 0.8],
+          [8.5, 33, 0.1375, 0.8],
+          [8.75, 45, 0.1375, 0.8],
+          [9.25, 33, 0.1375, 0.8],
+          [9.75, 43, 0.1375, 0.8],
+          [10.25, 33, 0.1375, 0.8],
+          [10.5, 36, 0.1375, 0.8],
+          [11, 33, 0.1375, 0.8],
+          [11.5, 40, 0.1375, 0.8],
+          [12, 33, 0.1375, 0.8],
+          [12.5, 33, 0.1375, 0.8],
+          [12.75, 45, 0.1375, 0.8],
+          [13.25, 33, 0.1375, 0.8],
+          [13.75, 43, 0.1375, 0.8],
+          [14.25, 52, 0.1375, 1],
+          [14.5, 50, 0.28, 0.8],
+          [14.75, 48, 0.1375, 0.8],
+          [15.25, 45, 0.1375, 0.8],
+          [15.5, 43, 0.1375, 0.8],
+          [15.75, 40, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Closed to start",
+          "module": "filter",
+          "why": "The filter starts low so there is room to build.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 2 · 321 Hz\n- ENV MOD 5\n- RESONANCE 7\n- Listen for: a dark, patient loop.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 2,
+            "filter.envMod": 5,
+            "filter.res": 7
+          }
+        },
+        {
+          "title": "Hypnotic",
+          "module": "env",
+          "why": "A medium decay and moderate accent.\n- DECAY 4 · 500 ms\n- ACCENT 6\n- Listen for: a long, hypnotic line; now turn CUT OFF FREQ up slowly as it plays.",
+          "set": {
+            "env.decay": 4,
+            "amp.accent": 6
+          }
+        }
+      ],
+      "context": {
+        "filter.cutoff": "Low to begin with: the build is you turning it up."
+      },
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Turn slowly to 7 while it plays",
+          "hear": "The classic long acid build."
+        }
+      ]
+    },
+    {
+      "id": "tb-acid-thunder",
+      "name": "Acid Thunder",
+      "ref": "In the style of Fast Eddie — “Acid Thunder”",
+      "artist": "Fast Eddie",
+      "tags": ["bass", "acid", "house", "80s"],
+      "level": 2,
+      "blurb": "A rumbling, low acid line that rolls like thunder.",
+      "how": "A low line with long slides and a long decay rumbles. Accents lift it now and then like a crack of thunder.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 24, 0.1375, 0.8],
+          [0.5, 24, 0.28, 0.8],
+          [0.75, 27, 0.1375, 0.8],
+          [1.25, 24, 0.1375, 0.8],
+          [2, 24, 0.28, 0.8],
+          [2.25, 31, 0.1375, 0.8],
+          [2.75, 24, 0.1375, 0.8],
+          [3.25, 22, 0.1375, 0.8],
+          [3.75, 36, 0.1375, 1],
+          [4, 24, 0.1375, 0.8],
+          [4.5, 24, 0.28, 0.8],
+          [4.75, 27, 0.1375, 0.8],
+          [5.25, 24, 0.1375, 0.8],
+          [6, 24, 0.28, 0.8],
+          [6.25, 29, 0.1375, 0.8],
+          [6.75, 31, 0.28, 0.8],
+          [7, 34, 0.1375, 0.8],
+          [7.5, 36, 0.1375, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Rumble",
+          "module": "filter",
+          "why": "A low cutoff, a strong envelope and high resonance.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 2 · 321 Hz\n- ENV MOD 6\n- RESONANCE 8\n- Listen for: a rumbling low squelch.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 2,
+            "filter.envMod": 6,
+            "filter.res": 8
+          }
+        },
+        {
+          "title": "Thunder",
+          "module": "env",
+          "why": "A long decay and a strong accent.\n- DECAY 6.5 · 890 ms\n- ACCENT 8\n- Listen for: a rolling, rumbling acid line with cracks of thunder.",
+          "set": {
+            "env.decay": 6.5,
+            "amp.accent": 8
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "env.decay",
+          "try": "Drop to 2",
+          "hear": "Tighter, more like a jacking line."
+        }
+      ]
+    },
+    {
+      "id": "tb-dmx-electro-acid",
+      "name": "Electro Acid",
+      "ref": "In the style of DMX Krew",
+      "artist": "DMX Krew",
+      "tags": ["bass", "acid", "electro", "00s"],
+      "level": 2,
+      "blurb": "A funky, retro electro line with acid bite.",
+      "how": "DMX Krew mixes 1980s electro with acid. A syncopated line with a square tone and an acid squelch on the accents.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [
+          [0, 28, 0.1375, 0.8],
+          [0.75, 28, 0.1375, 0.8],
+          [1.5, 40, 0.1375, 1],
+          [2.25, 28, 0.1375, 0.8],
+          [2.75, 31, 0.1375, 0.8],
+          [3.25, 33, 0.1375, 0.8],
+          [4, 28, 0.1375, 0.8],
+          [4.75, 28, 0.1375, 0.8],
+          [5.5, 40, 0.1375, 1],
+          [6.25, 35, 0.1375, 0.8],
+          [6.75, 33, 0.1375, 0.8],
+          [7, 31, 0.28, 0.8],
+          [7.25, 28, 0.1375, 0.8],
+          [7.5, 26, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Square squelch",
+          "module": "filter",
+          "why": "A square with a low cutoff, big envelope and high resonance.\n- WAVEFORM Square\n- CUT OFF FREQ 2 · 321 Hz\n- ENV MOD 6.5\n- RESONANCE 8\n- Listen for: a hollow squelch.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 2,
+            "filter.envMod": 6.5,
+            "filter.res": 8
+          }
+        },
+        {
+          "title": "Funky",
+          "module": "env",
+          "why": "A medium decay and strong accent.\n- DECAY 3 · 400 ms\n- ACCENT 8\n- Listen for: a funky, retro electro-acid line.",
+          "set": {
+            "env.decay": 3,
+            "amp.accent": 8
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Switch to Sawtooth",
+          "hear": "Buzzier, more house than electro."
+        }
+      ]
+    },
+    {
+      "id": "tb-ambient-acid-drift",
+      "name": "Ambient Acid Drift",
+      "ref": "In the style of The Irresistible Force",
+      "artist": "The Irresistible Force",
+      "tags": ["bass", "acid", "ambient", "chill-out", "90s"],
+      "level": 2,
+      "blurb": "A slow, floating acid line drifting through a chill-out room.",
+      "how": "In the chill-out rooms acid was slowed and softened until it floated. Long notes, long slides, low envelope and a glowing resonance.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.975, 0.8],
+          [1, 47, 0.28, 0.8],
+          [1.25, 52, 0.725, 0.8],
+          [2, 50, 0.975, 0.8],
+          [3, 47, 0.28, 0.8],
+          [3.25, 45, 0.725, 0.8],
+          [4, 48, 0.975, 0.8],
+          [5, 43, 0.28, 0.8],
+          [5.25, 40, 0.725, 0.8],
+          [6, 38, 0.975, 0.8],
+          [7, 45, 0.28, 0.8],
+          [7.25, 47, 0.725, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Glow",
+          "module": "filter",
+          "why": "A middle-low cutoff, little envelope and high-ish resonance.\n- WAVEFORM Sawtooth\n- CUT OFF FREQ 3 · 455 Hz\n- ENV MOD 2.5\n- RESONANCE 7.5\n- Listen for: a soft, glowing tone.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 3,
+            "filter.envMod": 2.5,
+            "filter.res": 7.5
+          }
+        },
+        {
+          "title": "Drift",
+          "module": "env",
+          "why": "The longest decay, no accent.\n- DECAY 10 · 2.0 s\n- ACCENT 0\n- Listen for: a slow, drifting acid line.",
+          "set": {
+            "env.decay": 10,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Raise to 10",
+          "hear": "A whistling, singing drift."
+        }
+      ]
+    },
+    {
+      "id": "tb-dub-siren",
+      "name": "Sound-System Siren",
+      "ref": "In the style of Jamaican sound-system dub sirens",
+      "artist": "Dub",
+      "tags": ["fx", "dub", "reggae", "siren"],
+      "level": 2,
+      "blurb": "A rising and falling siren wail over a dub plate.",
+      "how": "Dub sound systems use a siren box: a pitch that swoops up and down. Long slides between a low and high note, with a bright, resonant tone, make the wail.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.78, 0.8],
+          [0.75, 72, 0.78, 0.8],
+          [1.5, 60, 0.78, 0.8],
+          [2.25, 72, 0.78, 0.8],
+          [3, 60, 0.78, 0.8],
+          [3.75, 72, 0.78, 0.8],
+          [4.5, 60, 0.78, 0.8],
+          [5.25, 72, 0.78, 0.8],
+          [6, 60, 0.78, 0.8],
+          [6.75, 72, 0.78, 0.8],
+          [7.5, 60, 0.4875, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Wail",
+          "module": "filter",
+          "why": "A bright cutoff with resonance and no envelope keeps the wail steady.\n- WAVEFORM Square\n- CUT OFF FREQ 6 · 1.3 kHz\n- ENV MOD 0\n- RESONANCE 6\n- Listen for: a steady, buzzing wail.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 6,
+            "filter.envMod": 0,
+            "filter.res": 6
+          }
+        },
+        {
+          "title": "Swoop",
+          "module": "env",
+          "why": "A long decay. Slid notes don’t restart the envelope, so the wail holds through the swoops.\n- DECAY 9 · 1.6 s\n- ACCENT 0\n- Listen for: a siren swooping up and down an octave.",
+          "set": {
+            "env.decay": 9,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {
+        "env.decay": "Long, and the slides keep the envelope from restarting."
+      },
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Switch to Sawtooth",
+          "hear": "A harsher, more urgent siren."
         }
       ]
     }
