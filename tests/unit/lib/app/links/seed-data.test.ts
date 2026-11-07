@@ -9,7 +9,6 @@ import { dirname, join } from 'node:path';
 import { checkLinkData } from '@/lib/app/links/seed';
 import {
   fileOfOwner,
-  LINK_DATA_DIR,
   linkDataFiles,
   loadLinkData,
   ownerOfFile,
@@ -130,9 +129,13 @@ describe('the seed unit', () => {
 describe('the committed data', () => {
   const data = loadLinkData();
 
-  it('is there: every video curated in dev, 2026-11-07', () => {
-    expect(linkDataFiles(LINK_DATA_DIR).length).toBeGreaterThanOrEqual(31);
-    expect(data.reduce((n, d) => n + d.links.length, 0)).toBeGreaterThanOrEqual(1087);
+  // Not a count to keep in step: removing a link is the documented `--prune` flow, and an accidental wipe is the
+  // export's to refuse (`LinkDropError`). 1,087 links on 31 instruments at t-199.
+  it('is there, with links in every file', () => {
+    expect(data.length).toBeGreaterThan(0);
+    expect(
+      data.filter((d) => d.links.length === 0).map((d) => `${d.owner.kind}:${d.owner.id}`)
+    ).toEqual([]);
   });
 
   it('checks: every URL in its stored form, once per owner, with a kind and a title', () => {

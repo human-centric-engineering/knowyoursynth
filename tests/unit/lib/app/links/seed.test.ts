@@ -182,6 +182,32 @@ describe('toSeedLink', () => {
     });
   });
 
+  it('leaves out a picture its provider check no longer accepts, which the app would not show', () => {
+    expect(
+      toSeedLink({
+        ...stored,
+        url: VIMEO,
+        provider: 'vimeo',
+        providerId: '123456',
+        thumbnailUrl: 'https://evil.example/x.jpg',
+      })
+    ).toEqual({ url: VIMEO, kind: 'review', title: 'A review' });
+    expect(
+      toSeedLink({
+        ...stored,
+        url: VIMEO,
+        provider: 'vimeo',
+        providerId: '123456',
+        thumbnailUrl: 'https://i.vimeocdn.com/video/1-640.jpg',
+      })
+    ).toEqual({
+      url: VIMEO,
+      kind: 'review',
+      title: 'A review',
+      thumbnailUrl: 'https://i.vimeocdn.com/video/1-640.jpg',
+    });
+  });
+
   it("keeps a Bandcamp id and another provider's picture, which the URL cannot give", () => {
     expect(
       toSeedLink({

@@ -328,8 +328,11 @@ the old one on every database that already has the link.
 **Accepted costs**, all because the seed can see what an owner has, not what it once had (journal, 2026-11-07):
 
 - **A seeded link an admin deletes, or moves to another URL, comes back** the next time the unit runs, which is
-  whenever the data or the links code changes. To remove or replace one for good, do it in dev and re-export with
-  `--prune`.
+  whenever any of its `hashInputs` changes: the data, the loader, the links code it runs (`seed.ts`, `providers.ts`,
+  `owner-ref.ts`), and what decides a URL's stored form and an owner's shape (`lib/security/sanitize.ts`, an upstream
+  file; `lib/app/bank/data.ts`; `lib/app/sounds/data.ts`). Those are hashed so a change to what the seed accepts
+  always re-runs it; the cost is that an unrelated edit to one of them re-runs it too. To remove or replace a link for
+  good, do it in dev and re-export with `--prune`.
 - **An owner missing when the unit runs gets its links only on its next run.** The runner has no way to force one;
   restoring the owner doesn't change the unit's hash.
 - **Seeded `ours` links keep their `order`**, so on a database whose admin already has their own `ours` links on that

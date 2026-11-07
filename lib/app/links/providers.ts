@@ -133,8 +133,8 @@ const THUMBNAIL_HOSTS: Record<Exclude<LinkProvider, 'other'>, (host: string) => 
   soundcloud: (h) => /^i\d\.sndcdn\.com$/.test(h),
   bandcamp: (h) => /^f\d\.bcbits\.com$/.test(h),
 };
-const MAX_THUMBNAIL_LENGTH = 1000;
-const MAX_URL_LENGTH = 2000;
+export const MAX_THUMBNAIL_LENGTH = 1000;
+export const MAX_URL_LENGTH = 2000;
 /** Query parameters that only track who shared a link. */
 const TRACKING_PARAM = /^(utm_[a-z_]+|fbclid|gclid|dclid|msclkid|mc_eid|mc_cid|igshid|yclid)$/i;
 

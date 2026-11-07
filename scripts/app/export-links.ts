@@ -10,7 +10,7 @@
  * only the reads and the writes: every file is written first, and only then are the data files no owner has any more
  * removed. Anything else kept in the folder stays.
  */
-import { mkdirSync, rmSync, writeFileSync } from 'fs';
+import { mkdirSync, readdirSync, rmdirSync, rmSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { prisma } from '@/lib/db/client';
 import { logger } from '@/lib/logging';
@@ -46,7 +46,13 @@ async function main(): Promise<void> {
     writeFileSync(path, `${JSON.stringify(file, null, 2)}\n`);
     written.add(rel);
   }
-  for (const rel of before) if (!written.has(rel)) rmSync(join(LINK_DATA_DIR, rel));
+  for (const rel of before) {
+    if (written.has(rel)) continue;
+    rmSync(join(LINK_DATA_DIR, rel));
+    // A sound's file sits in its synth's folder: remove the folder once its last file has gone.
+    const folder = dirname(join(LINK_DATA_DIR, rel));
+    if (folder !== LINK_DATA_DIR && readdirSync(folder).length === 0) rmdirSync(folder);
+  }
   logger.info('Links exported', {
     links: rows.length,
     owners: files.length,

@@ -26,6 +26,9 @@ import type { TenancyClient } from '@/lib/db/tenancy-extension';
 import {
   isBandcampId,
   LINK_KINDS,
+  LINK_PROVIDERS,
+  MAX_THUMBNAIL_LENGTH,
+  MAX_URL_LENGTH,
   parseLinkUrl,
   providerIdFor,
   safeThumbnailUrl,
@@ -43,7 +46,7 @@ import {
 /** One link in a data file. What an admin sets, and what a URL cannot say for itself. */
 export const SeedLinkSchema = z
   .object({
-    url: z.string().min(1).max(2000),
+    url: z.string().min(1).max(MAX_URL_LENGTH),
     kind: z.enum(LINK_KINDS),
     title: z.string().trim().min(1).max(200),
     ours: z.boolean().default(false),
@@ -52,7 +55,7 @@ export const SeedLinkSchema = z
     /** Bandcamp's embed id (`album=<n>` / `track=<n>`), which is on its page, not in its URL. */
     providerId: z.string().min(1).max(200).optional(),
     /** A picture read from a provider other than YouTube, whose is derived from its id. */
-    thumbnailUrl: z.string().min(1).max(2000).optional(),
+    thumbnailUrl: z.string().min(1).max(MAX_THUMBNAIL_LENGTH).optional(),
   })
   .strict();
 export type SeedLink = z.infer<typeof SeedLinkSchema>;
@@ -230,9 +233,14 @@ export interface StoredLink {
 
 /**
  * A stored link as its data file holds it: what an admin set, with each default left out so a file reads as the
- * links in it. A provider id and a picture are kept only where the URL cannot give them back (`SeedLinkSchema`).
+ * links in it. A provider id and a picture are kept only where the URL cannot give them back (`SeedLinkSchema`), and a
+ * picture only while `safeThumbnailUrl` still accepts it: the app would not show one it refuses (`thumbnailFor`), so
+ * leaving it out loses nothing, where writing it would stop the seed.
  */
 export function toSeedLink(row: StoredLink): z.input<typeof SeedLinkSchema> {
+  const provider = LINK_PROVIDERS.find((p) => p === row.provider);
+  const picture =
+    provider && provider !== 'youtube' ? safeThumbnailUrl(provider, row.thumbnailUrl) : null;
   return {
     url: row.url,
     kind: row.kind,
@@ -241,7 +249,7 @@ export function toSeedLink(row: StoredLink): z.input<typeof SeedLinkSchema> {
     ...(row.order !== 0 ? { order: row.order } : {}),
     ...(row.rating !== null ? { rating: row.rating } : {}),
     ...(row.provider === 'bandcamp' && row.providerId ? { providerId: row.providerId } : {}),
-    ...(row.provider !== 'youtube' && row.thumbnailUrl ? { thumbnailUrl: row.thumbnailUrl } : {}),
+    ...(picture === row.thumbnailUrl && picture ? { thumbnailUrl: picture } : {}),
   };
 }
 
