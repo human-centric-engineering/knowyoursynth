@@ -1564,7 +1564,7 @@
         {
           "title": "Waiting vibrato",
           "module": "lfo",
-          "why": "The low-pass bright; LFO on the VCO with DELAY.\n- LPF cutoff 6.5 · 1.5 kHz\n- Resonance 2 · 20 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 2 · +0.5 st\n- LFO waveform Sine\n- lfo.rate 6 · 5.48 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: vibrato blooming on held notes.",
+          "why": "The low-pass bright; LFO on the VCO with DELAY.\n- LPF cutoff 6.5 · 1.5 kHz\n- Resonance 2 · 20 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 2 · +0.5 st\n- LFO waveform Sine\n- LFO rate 6 · 5.48 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: vibrato blooming on held notes.",
           "set": {
             "vcf.cutoff": 6.5,
             "vcf.res": 2,
@@ -1877,7 +1877,7 @@
         {
           "title": "Clang",
           "module": "lfo",
-          "why": "A square; the LFO near its top speed, square, on the VCO.\n- VCO waveform square\n- VCO range 8'\n- LFO waveform square\n- lfo.rate 9 · 41 Hz\n- VCO LFO mod 5 · +3 st\n- Listen for: a clanging, metallic tone.",
+          "why": "A square; the LFO near its top speed, square, on the VCO.\n- VCO waveform square\n- VCO range 8'\n- LFO waveform square\n- LFO rate 9 · 41 Hz\n- VCO LFO mod 5 · +3 st\n- Listen for: a clanging, metallic tone.",
           "set": {
             "vco.waveform": "square",
             "vco.range": "8",
@@ -2116,7 +2116,7 @@
         {
           "title": "Warm",
           "module": "osc",
-          "why": "A pulse with PW MOD, a slow LFO.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- vco.pw 5 · 20 % / 50 %\n- LFO waveform Sine\n- lfo.rate 3.1 · 0.80 Hz\n- Listen for: a warm, slowly moving tone.",
+          "why": "A pulse with PW MOD, a slow LFO.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- Pulse width 5 · 20 % / 50 %\n- LFO waveform Sine\n- LFO rate 3.1 · 0.80 Hz\n- Listen for: a warm, slowly moving tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -2208,7 +2208,7 @@
         {
           "title": "Bright",
           "module": "filter",
-          "why": "The low-pass bright with resonance; LFO vibrato with DELAY.\n- LPF cutoff 6 · 1.1 kHz\n- Resonance 3 · 30 %\n- VCF envelope amount 3 · 30 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 3.5 · 140 ms\n- Filter envelope sustain 6 · 60 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 2 · +0.5 st\n- lfo.rate 6 · 5.48 Hz\n- LFO delay time 3.5 · 1.2 s\n- Listen for: a bright, singing tone.",
+          "why": "The low-pass bright with resonance; LFO vibrato with DELAY.\n- LPF cutoff 6 · 1.1 kHz\n- Resonance 3 · 30 %\n- VCF envelope amount 3 · 30 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 3.5 · 140 ms\n- Filter envelope sustain 6 · 60 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 2 · +0.5 st\n- LFO rate 6 · 5.48 Hz\n- LFO delay time 3.5 · 1.2 s\n- Listen for: a bright, singing tone.",
           "set": {
             "vcf.cutoff": 6,
             "vcf.res": 3,
@@ -2292,7 +2292,7 @@
         {
           "title": "Motor",
           "module": "filter",
-          "why": "The low-pass with full key follow, a quick envelope; the LFO gently on the cutoff.\n- LPF cutoff 5 · 537 Hz\n- Resonance 1 · 10 %\n- VCF envelope amount 2.5 · 25 %\n- Keyboard follow 100\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 2 · 20 %\n- Filter envelope release 4 · 200 ms\n- VCF LFO mod 1.5 · 15 %\n- LFO waveform Sine\n- lfo.rate 5.9 · 4.99 Hz\n- Listen for: a shimmering, motor-like ring.",
+          "why": "The low-pass with full key follow, a quick envelope; the LFO gently on the cutoff.\n- LPF cutoff 5 · 537 Hz\n- Resonance 1 · 10 %\n- VCF envelope amount 2.5 · 25 %\n- Keyboard follow 100\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 2 · 20 %\n- Filter envelope release 4 · 200 ms\n- VCF LFO mod 1.5 · 15 %\n- LFO waveform Sine\n- LFO rate 5.9 · 4.99 Hz\n- Listen for: a shimmering, motor-like ring.",
           "set": {
             "vcf.cutoff": 5,
             "vcf.res": 1,
@@ -2379,7 +2379,7 @@
         {
           "title": "Nasal",
           "module": "osc",
-          "why": "A pulse at its narrowest.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 8 · 10 % / 80 %\n- Listen for: a thin, nasal tone.",
+          "why": "A pulse at its narrowest.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 8 · 10 % / 80 %\n- Listen for: a thin, nasal tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -2460,7 +2460,7 @@
         {
           "title": "Metal",
           "module": "lfo",
-          "why": "A square and noise; the LFO near its top, LFO BEND to WIDE and turned up, deep on the VCO.\n- VCO waveform square\n- VCO range 8'\n- Noise On\n- LFO waveform square\n- lfo.rate 9.5 · 57 Hz\n- LFO BEND range WIDE\n- LFO BEND 5 · ×2.00 (normal)\n- VCO LFO mod 6 · +4.3 st\n- Listen for: a hard, metallic ring.",
+          "why": "A square and noise; the LFO near its top, LFO BEND to WIDE and turned up, deep on the VCO.\n- VCO waveform square\n- VCO range 8'\n- Noise On\n- LFO waveform square\n- LFO rate 9.5 · 57 Hz\n- LFO BEND range WIDE\n- LFO BEND 5 · ×2.00 (normal)\n- VCO LFO mod 6 · +4.3 st\n- Listen for: a hard, metallic ring.",
           "set": {
             "vco.waveform": "square",
             "vco.range": "8",
@@ -2545,7 +2545,7 @@
         {
           "title": "Whistle",
           "module": "lfo",
-          "why": "The low-pass low with full key follow; LFO vibrato with DELAY.\n- LPF cutoff 4 · 266 Hz\n- Resonance 1 · 10 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 100\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 1.8 · +0.4 st\n- lfo.rate 6 · 5.48 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: a pure, whistled tone with a late vibrato.",
+          "why": "The low-pass low with full key follow; LFO vibrato with DELAY.\n- LPF cutoff 4 · 266 Hz\n- Resonance 1 · 10 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 100\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 1.8 · +0.4 st\n- LFO rate 6 · 5.48 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: a pure, whistled tone with a late vibrato.",
           "set": {
             "vcf.cutoff": 4,
             "vcf.res": 1,
@@ -2715,7 +2715,7 @@
         {
           "title": "Soft",
           "module": "lfo",
-          "why": "The low-pass soft with full key follow; LFO vibrato with DELAY.\n- LPF cutoff 5 · 537 Hz\n- Resonance 1 · 10 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 100\n- Filter envelope attack 1 · 2 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 1.8 · +0.4 st\n- lfo.rate 5.9 · 4.99 Hz\n- LFO delay time 4.5 · 2.0 s\n- Listen for: a soft, singing flute.",
+          "why": "The low-pass soft with full key follow; LFO vibrato with DELAY.\n- LPF cutoff 5 · 537 Hz\n- Resonance 1 · 10 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 100\n- Filter envelope attack 1 · 2 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 1.8 · +0.4 st\n- LFO rate 5.9 · 4.99 Hz\n- LFO delay time 4.5 · 2.0 s\n- Listen for: a soft, singing flute.",
           "set": {
             "vcf.cutoff": 5,
             "vcf.res": 1,
@@ -2870,7 +2870,7 @@
         {
           "title": "Bright",
           "module": "osc",
-          "why": "A pulse at 20 %.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 5 · 20 % / 50 %\n- Listen for: a bright, glassy tone.",
+          "why": "A pulse at 20 %.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 5 · 20 % / 50 %\n- Listen for: a bright, glassy tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -3144,7 +3144,7 @@
         {
           "title": "Breathy horn",
           "module": "osc",
-          "why": "A pulse at 40 % with noise.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 3 · 40 % / 30 %\n- Noise On\n- Listen for: a breathy, horn-like tone.",
+          "why": "A pulse at 40 % with noise.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 3 · 40 % / 30 %\n- Noise On\n- Listen for: a breathy, horn-like tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -3155,7 +3155,7 @@
         {
           "title": "Blown",
           "module": "filter",
-          "why": "The low-pass low with a soft envelope attack; LFO vibrato with DELAY.\n- LPF cutoff 4.5 · 378 Hz\n- Resonance 2 · 20 %\n- VCF envelope amount 3 · 30 %\n- Keyboard follow 40\n- Filter envelope attack 3 · 24 ms\n- Filter envelope decay 5 · 400 ms\n- Filter envelope sustain 6 · 60 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 2 · +0.5 st\n- lfo.rate 5.7 · 4.49 Hz\n- LFO delay time 5 · 2.5 s\n- Listen for: a blown, smeared tone.",
+          "why": "The low-pass low with a soft envelope attack; LFO vibrato with DELAY.\n- LPF cutoff 4.5 · 378 Hz\n- Resonance 2 · 20 %\n- VCF envelope amount 3 · 30 %\n- Keyboard follow 40\n- Filter envelope attack 3 · 24 ms\n- Filter envelope decay 5 · 400 ms\n- Filter envelope sustain 6 · 60 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 2 · +0.5 st\n- LFO rate 5.7 · 4.49 Hz\n- LFO delay time 5 · 2.5 s\n- Listen for: a blown, smeared tone.",
           "set": {
             "vcf.cutoff": 4.5,
             "vcf.res": 2,
@@ -3230,7 +3230,7 @@
         {
           "title": "Shimmer",
           "module": "osc",
-          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- vco.pw 6 · 20 % / 60 %\n- LFO waveform Sine\n- lfo.rate 2.1 · 0.40 Hz\n- Listen for: a shimmering tone.",
+          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- Pulse width 6 · 20 % / 60 %\n- LFO waveform Sine\n- LFO rate 2.1 · 0.40 Hz\n- Listen for: a shimmering tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -3315,7 +3315,7 @@
         {
           "title": "Blown",
           "module": "filter",
-          "why": "The low-pass with resonance and a slow envelope attack; a wide vibrato with DELAY.\n- LPF cutoff 5 · 537 Hz\n- Resonance 3 · 30 %\n- VCF envelope amount 3 · 30 %\n- Keyboard follow 40\n- Filter envelope attack 2 · 10 ms\n- Filter envelope decay 5 · 400 ms\n- Filter envelope sustain 7 · 70 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 2.5 · +0.8 st\n- lfo.rate 6 · 5.48 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: a blown swell and a wide vibrato.",
+          "why": "The low-pass with resonance and a slow envelope attack; a wide vibrato with DELAY.\n- LPF cutoff 5 · 537 Hz\n- Resonance 3 · 30 %\n- VCF envelope amount 3 · 30 %\n- Keyboard follow 40\n- Filter envelope attack 2 · 10 ms\n- Filter envelope decay 5 · 400 ms\n- Filter envelope sustain 7 · 70 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 2.5 · +0.8 st\n- LFO rate 6 · 5.48 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: a blown swell and a wide vibrato.",
           "set": {
             "vcf.cutoff": 5,
             "vcf.res": 3,
@@ -3485,7 +3485,7 @@
         {
           "title": "Trill",
           "module": "lfo",
-          "why": "A SQUARE LFO on the VCO, fast.\n- VCO LFO mod 3 · +1.1 st\n- LFO waveform square\n- lfo.rate 6.4 · 7.02 Hz\n- LPF cutoff 6 · 1.1 kHz\n- Resonance 2 · 20 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 3 · 100 ms\n- Listen for: every note trilling between two pitches.",
+          "why": "A SQUARE LFO on the VCO, fast.\n- VCO LFO mod 3 · +1.1 st\n- LFO waveform square\n- LFO rate 6.4 · 7.02 Hz\n- LPF cutoff 6 · 1.1 kHz\n- Resonance 2 · 20 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 3 · 100 ms\n- Listen for: every note trilling between two pitches.",
           "set": {
             "vco.lfoMod": 3,
             "lfo.waveform": "square",
@@ -3659,7 +3659,7 @@
         {
           "title": "Pulse",
           "module": "osc",
-          "why": "A pulse at 20 %.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 5 · 20 % / 50 %\n- Listen for: a bright, nasal tone.",
+          "why": "A pulse at 20 %.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 5 · 20 % / 50 %\n- Listen for: a bright, nasal tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -3977,7 +3977,7 @@
         {
           "title": "Swoosh",
           "module": "filter",
-          "why": "The low-pass low with resonance and envelope; the LFO a SAW on the cutoff, once every two beats.\n- LPF cutoff 4 · 266 Hz\n- Resonance 4 · 40 %\n- VCF envelope amount 4.5 · 45 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 3 · 100 ms\n- Filter envelope sustain 3 · 30 %\n- Filter envelope release 3 · 100 ms\n- VCF LFO mod 2 · 20 %\n- LFO waveform Sawtooth\n- lfo.rate 3.6 · 1.08 Hz\n- Listen for: chords that swoosh open and closed.",
+          "why": "The low-pass low with resonance and envelope; the LFO a SAW on the cutoff, once every two beats.\n- LPF cutoff 4 · 266 Hz\n- Resonance 4 · 40 %\n- VCF envelope amount 4.5 · 45 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 3 · 100 ms\n- Filter envelope sustain 3 · 30 %\n- Filter envelope release 3 · 100 ms\n- VCF LFO mod 2 · 20 %\n- LFO waveform Sawtooth\n- LFO rate 3.6 · 1.08 Hz\n- Listen for: chords that swoosh open and closed.",
           "set": {
             "vcf.cutoff": 4,
             "vcf.res": 4,
@@ -4145,7 +4145,7 @@
         {
           "title": "Thin",
           "module": "osc",
-          "why": "A pulse at 40 %; the high-pass up.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 3 · 40 % / 30 %\n- HPF cutoff 2.5 · 134 Hz\n- Listen for: a bright, thin tone.",
+          "why": "A pulse at 40 %; the high-pass up.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 3 · 40 % / 30 %\n- HPF cutoff 2.5 · 134 Hz\n- Listen for: a bright, thin tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -4408,7 +4408,7 @@
         {
           "title": "Sultry",
           "module": "filter",
-          "why": "The low-pass soft, a slow swell, the LFO swaying it gently.\n- LPF cutoff 4.5 · 378 Hz\n- Resonance 2 · 20 %\n- VCF envelope amount 2 · 20 %\n- Keyboard follow 70\n- Filter envelope attack 3 · 24 ms\n- Filter envelope decay 5 · 400 ms\n- Filter envelope sustain 7 · 70 %\n- Filter envelope release 5 · 400 ms\n- VCF LFO mod 1 · 10 %\n- LFO waveform Sine\n- lfo.rate 1.6 · 0.30 Hz\n- Listen for: a warm, swaying top.",
+          "why": "The low-pass soft, a slow swell, the LFO swaying it gently.\n- LPF cutoff 4.5 · 378 Hz\n- Resonance 2 · 20 %\n- VCF envelope amount 2 · 20 %\n- Keyboard follow 70\n- Filter envelope attack 3 · 24 ms\n- Filter envelope decay 5 · 400 ms\n- Filter envelope sustain 7 · 70 %\n- Filter envelope release 5 · 400 ms\n- VCF LFO mod 1 · 10 %\n- LFO waveform Sine\n- LFO rate 1.6 · 0.30 Hz\n- Listen for: a warm, swaying top.",
           "set": {
             "vcf.cutoff": 4.5,
             "vcf.res": 2,
@@ -4750,7 +4750,7 @@
         {
           "title": "Pulse and sub",
           "module": "osc",
-          "why": "A pulse at 20 % with the sub-oscillator.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 5 · 20 % / 50 %\n- Sub-oscillator On\n- Listen for: a buzzy, deep tone.",
+          "why": "A pulse at 20 % with the sub-oscillator.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 5 · 20 % / 50 %\n- Sub-oscillator On\n- Listen for: a buzzy, deep tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -4990,7 +4990,7 @@
         {
           "title": "Buzz",
           "module": "lfo",
-          "why": "A fast SQUARE LFO on the VCO.\n- VCO LFO mod 4 · +1.9 st\n- LFO waveform square\n- lfo.rate 7.8 · 18 Hz\n- LPF cutoff 6 · 1.1 kHz\n- Resonance 5 · 50 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 3 · 100 ms\n- Listen for: a mechanical, drilling buzz.",
+          "why": "A fast SQUARE LFO on the VCO.\n- VCO LFO mod 4 · +1.9 st\n- LFO waveform square\n- LFO rate 7.8 · 18 Hz\n- LPF cutoff 6 · 1.1 kHz\n- Resonance 5 · 50 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 3 · 100 ms\n- Listen for: a mechanical, drilling buzz.",
           "set": {
             "vco.lfoMod": 4,
             "lfo.waveform": "square",
@@ -5232,7 +5232,7 @@
         {
           "title": "Breathing",
           "module": "osc",
-          "why": "A pulse with PW MOD and the sub-oscillator.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- vco.pw 6 · 20 % / 60 %\n- Sub-oscillator On\n- LFO waveform Sine\n- lfo.rate 1 · 0.20 Hz\n- Listen for: a slowly breathing tone.",
+          "why": "A pulse with PW MOD and the sub-oscillator.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- Pulse width 6 · 20 % / 60 %\n- Sub-oscillator On\n- LFO waveform Sine\n- LFO rate 1 · 0.20 Hz\n- Listen for: a slowly breathing tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -5476,7 +5476,7 @@
         {
           "title": "Sing",
           "module": "lfo",
-          "why": "The low-pass warm with a little resonance; LFO vibrato with DELAY.\n- LPF cutoff 5.5 · 763 Hz\n- Resonance 2 · 20 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 1.8 · +0.4 st\n- lfo.rate 5.9 · 4.99 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: a singing tone with a late vibrato.",
+          "why": "The low-pass warm with a little resonance; LFO vibrato with DELAY.\n- LPF cutoff 5.5 · 763 Hz\n- Resonance 2 · 20 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 1.8 · +0.4 st\n- LFO rate 5.9 · 4.99 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: a singing tone with a late vibrato.",
           "set": {
             "vcf.cutoff": 5.5,
             "vcf.res": 2,
@@ -5549,7 +5549,7 @@
         {
           "title": "Metal",
           "module": "mod",
-          "why": "A square; the LFO near its top on the VCO; the sample-and-hold on the filter.\n- VCO waveform square\n- VCO range 8'\n- LFO waveform square\n- lfo.rate 9 · 41 Hz\n- VCO LFO mod 4 · +1.9 st\n- LPF cutoff 4.5 · 378 Hz\n- Resonance 6 · 60 %\n- VCF envelope amount 3 · 30 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 2.5 · 71 ms\n- Filter envelope sustain 0 · 0 %\n- Filter envelope release 2 · 50 ms\n- Sample-and-hold depth 4 · 40 %\n- Listen for: metallic blips at random brightness.",
+          "why": "A square; the LFO near its top on the VCO; the sample-and-hold on the filter.\n- VCO waveform square\n- VCO range 8'\n- LFO waveform square\n- LFO rate 9 · 41 Hz\n- VCO LFO mod 4 · +1.9 st\n- LPF cutoff 4.5 · 378 Hz\n- Resonance 6 · 60 %\n- VCF envelope amount 3 · 30 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 2.5 · 71 ms\n- Filter envelope sustain 0 · 0 %\n- Filter envelope release 2 · 50 ms\n- Sample-and-hold depth 4 · 40 %\n- Listen for: metallic blips at random brightness.",
           "set": {
             "vco.waveform": "square",
             "vco.range": "8",
@@ -5630,7 +5630,7 @@
         {
           "title": "Wobble",
           "module": "lfo",
-          "why": "The low-pass bright; a quick LFO vibrato.\n- LPF cutoff 7 · 2.2 kHz\n- Resonance 1 · 10 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.5 · +0.3 st\n- LFO waveform Sine\n- lfo.rate 6.4 · 7.02 Hz\n- Listen for: a wobbly, cheerful tone.",
+          "why": "The low-pass bright; a quick LFO vibrato.\n- LPF cutoff 7 · 2.2 kHz\n- Resonance 1 · 10 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.5 · +0.3 st\n- LFO waveform Sine\n- LFO rate 6.4 · 7.02 Hz\n- Listen for: a wobbly, cheerful tone.",
           "set": {
             "vcf.cutoff": 7,
             "vcf.res": 1,
@@ -5701,7 +5701,7 @@
         {
           "title": "Tine",
           "module": "lfo",
-          "why": "A square; the LFO near audio rate, a little on the VCO.\n- VCO waveform square\n- VCO range 8'\n- LFO waveform Sine\n- lfo.rate 9.2 · 47 Hz\n- VCO LFO mod 2 · +0.5 st\n- Listen for: a bright, buzzing tine.",
+          "why": "A square; the LFO near audio rate, a little on the VCO.\n- VCO waveform square\n- VCO range 8'\n- LFO waveform Sine\n- LFO rate 9.2 · 47 Hz\n- VCO LFO mod 2 · +0.5 st\n- Listen for: a bright, buzzing tine.",
           "set": {
             "vco.waveform": "square",
             "vco.range": "8",
@@ -5791,7 +5791,7 @@
         {
           "title": "Waver",
           "module": "lfo",
-          "why": "The low-pass bright with full key follow; a quick vibrato.\n- LPF cutoff 6.5 · 1.5 kHz\n- Resonance 0.5 · 5 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 100\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.3 · +0.2 st\n- LFO waveform Sine\n- lfo.rate 6.2 · 6.48 Hz\n- Listen for: a bright, wavering organ.",
+          "why": "The low-pass bright with full key follow; a quick vibrato.\n- LPF cutoff 6.5 · 1.5 kHz\n- Resonance 0.5 · 5 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 100\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.3 · +0.2 st\n- LFO waveform Sine\n- LFO rate 6.2 · 6.48 Hz\n- Listen for: a bright, wavering organ.",
           "set": {
             "vcf.cutoff": 6.5,
             "vcf.res": 0.5,
@@ -5887,7 +5887,7 @@
         {
           "title": "Pulse",
           "module": "osc",
-          "why": "A pulse at 40 %.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 3 · 40 % / 30 %\n- Listen for: a bright, round tone.",
+          "why": "A pulse at 40 %.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 3 · 40 % / 30 %\n- Listen for: a bright, round tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -5958,7 +5958,7 @@
         {
           "title": "Glow",
           "module": "lfo",
-          "why": "A saw wave; LFO vibrato with DELAY.\n- VCO waveform Sawtooth\n- VCO range 8'\n- VCO LFO mod 1.2 · +0.2 st\n- LFO waveform Sine\n- lfo.rate 5.7 · 4.49 Hz\n- LFO delay time 5 · 2.5 s\n- Listen for: a glowing tone with a late vibrato.",
+          "why": "A saw wave; LFO vibrato with DELAY.\n- VCO waveform Sawtooth\n- VCO range 8'\n- VCO LFO mod 1.2 · +0.2 st\n- LFO waveform Sine\n- LFO rate 5.7 · 4.49 Hz\n- LFO delay time 5 · 2.5 s\n- Listen for: a glowing tone with a late vibrato.",
           "set": {
             "vco.waveform": "saw",
             "vco.range": "8",
@@ -6288,7 +6288,7 @@
         {
           "title": "Slow sweep",
           "module": "filter",
-          "why": "A saw; the low-pass with resonance, the LFO very slowly on the cutoff.\n- VCO waveform Sawtooth\n- VCO range 8'\n- LPF cutoff 4.5 · 378 Hz\n- Resonance 5 · 50 %\n- VCF envelope amount 2 · 20 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 3 · 100 ms\n- Filter envelope sustain 1 · 10 %\n- Filter envelope release 3 · 100 ms\n- VCF LFO mod 2 · 20 %\n- LFO waveform Sine\n- lfo.rate 0 · 0.10 Hz\n- Listen for: a pattern slowly brightening and darkening.",
+          "why": "A saw; the low-pass with resonance, the LFO very slowly on the cutoff.\n- VCO waveform Sawtooth\n- VCO range 8'\n- LPF cutoff 4.5 · 378 Hz\n- Resonance 5 · 50 %\n- VCF envelope amount 2 · 20 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 3 · 100 ms\n- Filter envelope sustain 1 · 10 %\n- Filter envelope release 3 · 100 ms\n- VCF LFO mod 2 · 20 %\n- LFO waveform Sine\n- LFO rate 0 · 0.10 Hz\n- Listen for: a pattern slowly brightening and darkening.",
           "set": {
             "vco.waveform": "saw",
             "vco.range": "8",
@@ -6358,7 +6358,7 @@
         {
           "title": "Shimmer",
           "module": "osc",
-          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- vco.pw 6 · 20 % / 60 %\n- LFO waveform Sine\n- lfo.rate 3.4 · 1.00 Hz\n- Listen for: a shimmering tone.",
+          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- Pulse width 6 · 20 % / 60 %\n- LFO waveform Sine\n- LFO rate 3.4 · 1.00 Hz\n- Listen for: a shimmering tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -6434,7 +6434,7 @@
         {
           "title": "Voice",
           "module": "lfo",
-          "why": "A pulse at 40 %; LFO vibrato with DELAY.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 3 · 40 % / 30 %\n- VCO LFO mod 1.5 · +0.3 st\n- LFO waveform Sine\n- lfo.rate 5.9 · 4.99 Hz\n- LFO delay time 5 · 2.5 s\n- Listen for: a voice-like tone with a late vibrato.",
+          "why": "A pulse at 40 %; LFO vibrato with DELAY.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 3 · 40 % / 30 %\n- VCO LFO mod 1.5 · +0.3 st\n- LFO waveform Sine\n- LFO rate 5.9 · 4.99 Hz\n- LFO delay time 5 · 2.5 s\n- Listen for: a voice-like tone with a late vibrato.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -6604,7 +6604,7 @@
         {
           "title": "Tender",
           "module": "lfo",
-          "why": "The low-pass soft with full key follow; LFO vibrato with DELAY.\n- LPF cutoff 6 · 1.1 kHz\n- Resonance 0.5 · 5 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 100\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.5 · +0.3 st\n- lfo.rate 5.9 · 4.99 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: a tender tone with a late vibrato.",
+          "why": "The low-pass soft with full key follow; LFO vibrato with DELAY.\n- LPF cutoff 6 · 1.1 kHz\n- Resonance 0.5 · 5 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 100\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.5 · +0.3 st\n- LFO rate 5.9 · 4.99 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: a tender tone with a late vibrato.",
           "set": {
             "vcf.cutoff": 6,
             "vcf.res": 0.5,
@@ -6694,7 +6694,7 @@
         {
           "title": "Strings",
           "module": "osc",
-          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- vco.pw 6 · 20 % / 60 %\n- LFO waveform Sine\n- lfo.rate 5.5 · 4.00 Hz\n- Listen for: a shimmering string tone.",
+          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- Pulse width 6 · 20 % / 60 %\n- LFO waveform Sine\n- LFO rate 5.5 · 4.00 Hz\n- Listen for: a shimmering string tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -6930,7 +6930,7 @@
         {
           "title": "Breathe",
           "module": "filter",
-          "why": "A pulse at 20 %; the low-pass with resonance, the LFO slowly on it.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 5 · 20 % / 50 %\n- LPF cutoff 5 · 537 Hz\n- Resonance 4 · 40 %\n- VCF envelope amount 2 · 20 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 3 · 100 ms\n- Filter envelope sustain 2 · 20 %\n- Filter envelope release 3 · 100 ms\n- VCF LFO mod 1.5 · 15 %\n- LFO waveform Sine\n- lfo.rate 0.6 · 0.15 Hz\n- Listen for: a slowly breathing brightness.",
+          "why": "A pulse at 20 %; the low-pass with resonance, the LFO slowly on it.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 5 · 20 % / 50 %\n- LPF cutoff 5 · 537 Hz\n- Resonance 4 · 40 %\n- VCF envelope amount 2 · 20 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 3 · 100 ms\n- Filter envelope sustain 2 · 20 %\n- Filter envelope release 3 · 100 ms\n- VCF LFO mod 1.5 · 15 %\n- LFO waveform Sine\n- LFO rate 0.6 · 0.15 Hz\n- Listen for: a slowly breathing brightness.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -7174,7 +7174,7 @@
         {
           "title": "Warm",
           "module": "lfo",
-          "why": "A saw; a little LFO vibrato with DELAY.\n- VCO waveform Sawtooth\n- VCO range 8'\n- VCO LFO mod 1 · +0.1 st\n- LFO waveform Sine\n- lfo.rate 5.7 · 4.49 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: a warm tone with a late shimmer.",
+          "why": "A saw; a little LFO vibrato with DELAY.\n- VCO waveform Sawtooth\n- VCO range 8'\n- VCO LFO mod 1 · +0.1 st\n- LFO waveform Sine\n- LFO rate 5.7 · 4.49 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: a warm tone with a late shimmer.",
           "set": {
             "vco.waveform": "saw",
             "vco.range": "8",
@@ -7248,7 +7248,7 @@
         {
           "title": "Warm",
           "module": "lfo",
-          "why": "A square with the sub-oscillator; a slow LFO on the VCO.\n- VCO waveform square\n- VCO range 8'\n- Sub-oscillator On\n- VCO LFO mod 1.5 · +0.3 st\n- LFO waveform Sine\n- lfo.rate 5.1 · 3.00 Hz\n- Listen for: a warm, wobbling tone.",
+          "why": "A square with the sub-oscillator; a slow LFO on the VCO.\n- VCO waveform square\n- VCO range 8'\n- Sub-oscillator On\n- VCO LFO mod 1.5 · +0.3 st\n- LFO waveform Sine\n- LFO rate 5.1 · 3.00 Hz\n- Listen for: a warm, wobbling tone.",
           "set": {
             "vco.waveform": "square",
             "vco.range": "8",
@@ -7341,7 +7341,7 @@
         {
           "title": "Strings",
           "module": "osc",
-          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- vco.pw 5 · 20 % / 50 %\n- LFO waveform Sine\n- lfo.rate 5.3 · 3.50 Hz\n- Listen for: a shimmering string tone.",
+          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- Pulse width 5 · 20 % / 50 %\n- LFO waveform Sine\n- LFO rate 5.3 · 3.50 Hz\n- Listen for: a shimmering string tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -7429,7 +7429,7 @@
         {
           "title": "Glass",
           "module": "osc",
-          "why": "A pulse at its narrowest; the high-pass up.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 8 · 10 % / 80 %\n- HPF cutoff 3 · 170 Hz\n- Listen for: a thin, glassy tone.",
+          "why": "A pulse at its narrowest; the high-pass up.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 8 · 10 % / 80 %\n- HPF cutoff 3 · 170 Hz\n- Listen for: a thin, glassy tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -7504,7 +7504,7 @@
         {
           "title": "Reed",
           "module": "osc",
-          "why": "A pulse at its narrowest; the high-pass a little up.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 8 · 10 % / 80 %\n- HPF cutoff 2 · 105 Hz\n- Listen for: a thin, reedy tone.",
+          "why": "A pulse at its narrowest; the high-pass a little up.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 8 · 10 % / 80 %\n- HPF cutoff 2 · 105 Hz\n- Listen for: a thin, reedy tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -7515,7 +7515,7 @@
         {
           "title": "Blown",
           "module": "lfo",
-          "why": "The low-pass soft with a slow envelope attack; LFO vibrato with DELAY.\n- LPF cutoff 5 · 537 Hz\n- Resonance 1.5 · 15 %\n- VCF envelope amount 2 · 20 %\n- Keyboard follow 70\n- Filter envelope attack 1.5 · 5 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.5 · +0.3 st\n- lfo.rate 5.9 · 4.99 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: a blown reed with a late vibrato.",
+          "why": "The low-pass soft with a slow envelope attack; LFO vibrato with DELAY.\n- LPF cutoff 5 · 537 Hz\n- Resonance 1.5 · 15 %\n- VCF envelope amount 2 · 20 %\n- Keyboard follow 70\n- Filter envelope attack 1.5 · 5 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.5 · +0.3 st\n- LFO rate 5.9 · 4.99 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: a blown reed with a late vibrato.",
           "set": {
             "vcf.cutoff": 5,
             "vcf.res": 1.5,
@@ -7579,7 +7579,7 @@
         {
           "title": "Reed",
           "module": "osc",
-          "why": "A pulse at 40 % with noise; the high-pass a little up.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 3 · 40 % / 30 %\n- Noise On\n- HPF cutoff 2 · 105 Hz\n- Listen for: a reedy, breathy tone.",
+          "why": "A pulse at 40 % with noise; the high-pass a little up.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 3 · 40 % / 30 %\n- Noise On\n- HPF cutoff 2 · 105 Hz\n- Listen for: a reedy, breathy tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -7656,7 +7656,7 @@
         {
           "title": "Falling",
           "module": "lfo",
-          "why": "The LFO on RSAW, deep on the VCO.\n- VCO LFO mod 6 · +4.3 st\n- LFO waveform Reverse saw\n- lfo.rate 4.8 · 2.51 Hz\n- LPF cutoff 6.5 · 1.5 kHz\n- Resonance 4 · 40 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 4 · 200 ms\n- Listen for: a pitch falling again and again.",
+          "why": "The LFO on RSAW, deep on the VCO.\n- VCO LFO mod 6 · +4.3 st\n- LFO waveform Reverse saw\n- LFO rate 4.8 · 2.51 Hz\n- LPF cutoff 6.5 · 1.5 kHz\n- Resonance 4 · 40 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 4 · 200 ms\n- Listen for: a pitch falling again and again.",
           "set": {
             "vco.lfoMod": 6,
             "lfo.waveform": "rsaw",
@@ -7724,7 +7724,7 @@
         {
           "title": "Cheap",
           "module": "osc",
-          "why": "A pulse at 20 %.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 5 · 20 % / 50 %\n- Listen for: a thin, cheap tone.",
+          "why": "A pulse at 20 %.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 5 · 20 % / 50 %\n- Listen for: a thin, cheap tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -7805,7 +7805,7 @@
         {
           "title": "Eerie",
           "module": "lfo",
-          "why": "The low-pass warm with resonance; a wide vibrato with DELAY.\n- LPF cutoff 5 · 537 Hz\n- Resonance 3 · 30 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 2.5 · +0.8 st\n- lfo.rate 5.9 · 4.99 Hz\n- LFO delay time 3 · 900 ms\n- Listen for: an eerie, wavering wail.",
+          "why": "The low-pass warm with resonance; a wide vibrato with DELAY.\n- LPF cutoff 5 · 537 Hz\n- Resonance 3 · 30 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 2.5 · +0.8 st\n- LFO rate 5.9 · 4.99 Hz\n- LFO delay time 3 · 900 ms\n- Listen for: an eerie, wavering wail.",
           "set": {
             "vcf.cutoff": 5,
             "vcf.res": 3,
@@ -7870,7 +7870,7 @@
         {
           "title": "Reed",
           "module": "osc",
-          "why": "A pulse at 20 % with the sub-oscillator; the high-pass a little up.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 5 · 20 % / 50 %\n- Sub-oscillator On\n- HPF cutoff 2 · 105 Hz\n- Listen for: a reedy, droning tone.",
+          "why": "A pulse at 20 % with the sub-oscillator; the high-pass a little up.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 5 · 20 % / 50 %\n- Sub-oscillator On\n- HPF cutoff 2 · 105 Hz\n- Listen for: a reedy, droning tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -7882,7 +7882,7 @@
         {
           "title": "Bellows",
           "module": "filter",
-          "why": "The low-pass half-open; the LFO slowly on the cutoff.\n- LPF cutoff 5.5 · 763 Hz\n- Resonance 1 · 10 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 70\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 3 · 100 ms\n- VCF LFO mod 1 · 10 %\n- LFO waveform Sine\n- lfo.rate 3.7 · 1.20 Hz\n- Listen for: a pumping, breathing reed.",
+          "why": "The low-pass half-open; the LFO slowly on the cutoff.\n- LPF cutoff 5.5 · 763 Hz\n- Resonance 1 · 10 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 70\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 3 · 100 ms\n- VCF LFO mod 1 · 10 %\n- LFO waveform Sine\n- LFO rate 3.7 · 1.20 Hz\n- Listen for: a pumping, breathing reed.",
           "set": {
             "vcf.cutoff": 5.5,
             "vcf.res": 1,
@@ -7962,7 +7962,7 @@
         {
           "title": "Soft",
           "module": "osc",
-          "why": "A pulse at 20 %.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 5 · 20 % / 50 %\n- Listen for: a soft, glassy tone.",
+          "why": "A pulse at 20 %.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 5 · 20 % / 50 %\n- Listen for: a soft, glassy tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -8026,7 +8026,7 @@
         {
           "title": "Thin",
           "module": "osc",
-          "why": "A pulse with PW MOD; the high-pass up.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- vco.pw 6 · 20 % / 60 %\n- LFO waveform Sine\n- lfo.rate 2.4 · 0.50 Hz\n- HPF cutoff 3.5 · 217 Hz\n- Listen for: a thin, cool tone.",
+          "why": "A pulse with PW MOD; the high-pass up.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- Pulse width 6 · 20 % / 60 %\n- LFO waveform Sine\n- LFO rate 2.4 · 0.50 Hz\n- HPF cutoff 3.5 · 217 Hz\n- Listen for: a thin, cool tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -8176,7 +8176,7 @@
         {
           "title": "Lush",
           "module": "osc",
-          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- vco.pw 6 · 20 % / 60 %\n- LFO waveform Sine\n- lfo.rate 4.1 · 1.50 Hz\n- Listen for: a lush, shimmering tone.",
+          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- Pulse width 6 · 20 % / 60 %\n- LFO waveform Sine\n- LFO rate 4.1 · 1.50 Hz\n- Listen for: a lush, shimmering tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -8405,7 +8405,7 @@
         {
           "title": "Glassy",
           "module": "osc",
-          "why": "A pulse at 40 %.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 3 · 40 % / 30 %\n- Listen for: a soft, glassy tone.",
+          "why": "A pulse at 40 %.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 3 · 40 % / 30 %\n- Listen for: a soft, glassy tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -8415,7 +8415,7 @@
         {
           "title": "Float",
           "module": "lfo",
-          "why": "The low-pass soft with a little resonance; LFO vibrato with DELAY.\n- LPF cutoff 5.5 · 763 Hz\n- Resonance 2 · 20 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 70\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 1.5 · +0.3 st\n- lfo.rate 5.9 · 4.99 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: a floating tone with a late vibrato.",
+          "why": "The low-pass soft with a little resonance; LFO vibrato with DELAY.\n- LPF cutoff 5.5 · 763 Hz\n- Resonance 2 · 20 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 70\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 1.5 · +0.3 st\n- LFO rate 5.9 · 4.99 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: a floating tone with a late vibrato.",
           "set": {
             "vcf.cutoff": 5.5,
             "vcf.res": 2,
@@ -8795,7 +8795,7 @@
         {
           "title": "Pulse",
           "module": "osc",
-          "why": "A pulse at 20 %.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 5 · 20 % / 50 %\n- Listen for: a bright, thin tone.",
+          "why": "A pulse at 20 %.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 5 · 20 % / 50 %\n- Listen for: a bright, thin tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -8998,7 +8998,7 @@
         {
           "title": "Strings",
           "module": "osc",
-          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- vco.pw 5 · 20 % / 50 %\n- LFO waveform Sine\n- lfo.rate 5.7 · 4.49 Hz\n- Listen for: a shimmering string tone.",
+          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- Pulse width 5 · 20 % / 50 %\n- LFO waveform Sine\n- LFO rate 5.7 · 4.49 Hz\n- Listen for: a shimmering string tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -9165,7 +9165,7 @@
         {
           "title": "Bright",
           "module": "lfo",
-          "why": "The low-pass bright with full key follow; LFO vibrato with DELAY.\n- LPF cutoff 6 · 1.1 kHz\n- Resonance 1 · 10 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 100\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.5 · +0.3 st\n- lfo.rate 6 · 5.48 Hz\n- LFO delay time 3.5 · 1.2 s\n- Listen for: a bright, breathy flute.",
+          "why": "The low-pass bright with full key follow; LFO vibrato with DELAY.\n- LPF cutoff 6 · 1.1 kHz\n- Resonance 1 · 10 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 100\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.5 · +0.3 st\n- LFO rate 6 · 5.48 Hz\n- LFO delay time 3.5 · 1.2 s\n- Listen for: a bright, breathy flute.",
           "set": {
             "vcf.cutoff": 6,
             "vcf.res": 1,
@@ -9237,7 +9237,7 @@
         {
           "title": "Strings",
           "module": "osc",
-          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- vco.pw 5 · 20 % / 50 %\n- LFO waveform Sine\n- lfo.rate 5.1 · 3.00 Hz\n- Listen for: a soft, shimmering tone.",
+          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- Pulse width 5 · 20 % / 50 %\n- LFO waveform Sine\n- LFO rate 5.1 · 3.00 Hz\n- Listen for: a soft, shimmering tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -9327,7 +9327,7 @@
         {
           "title": "Nylon",
           "module": "osc",
-          "why": "A pulse at 40 %; the high-pass a little up.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 3 · 40 % / 30 %\n- HPF cutoff 1.5 · 83 Hz\n- Listen for: a warm, nylon-like tone.",
+          "why": "A pulse at 40 %; the high-pass a little up.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 3 · 40 % / 30 %\n- HPF cutoff 1.5 · 83 Hz\n- Listen for: a warm, nylon-like tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -9402,7 +9402,7 @@
         {
           "title": "Thin",
           "module": "osc",
-          "why": "A pulse at its narrowest.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 8 · 10 % / 80 %\n- Listen for: a thin, nasal tone.",
+          "why": "A pulse at its narrowest.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 8 · 10 % / 80 %\n- Listen for: a thin, nasal tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -9412,7 +9412,7 @@
         {
           "title": "Quaver",
           "module": "lfo",
-          "why": "The low-pass bright; a quick LFO vibrato with no delay.\n- LPF cutoff 6 · 1.1 kHz\n- Resonance 1 · 10 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.8 · +0.4 st\n- LFO waveform Sine\n- lfo.rate 6.1 · 6.02 Hz\n- LFO delay time 0 · off\n- Listen for: a quavering, futuristic tone.",
+          "why": "The low-pass bright; a quick LFO vibrato with no delay.\n- LPF cutoff 6 · 1.1 kHz\n- Resonance 1 · 10 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.8 · +0.4 st\n- LFO waveform Sine\n- LFO rate 6.1 · 6.02 Hz\n- LFO delay time 0 · off\n- Listen for: a quavering, futuristic tone.",
           "set": {
             "vcf.cutoff": 6,
             "vcf.res": 1,
@@ -9659,7 +9659,7 @@
         {
           "title": "Siren",
           "module": "lfo",
-          "why": "A slow LFO SINE deep on the VCO.\n- VCO LFO mod 4.5 · +2.4 st\n- LFO waveform Sine\n- lfo.rate 3.1 · 0.80 Hz\n- LPF cutoff 6 · 1.1 kHz\n- Resonance 3 · 30 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 3 · 100 ms\n- Listen for: a pitch wailing up and down.",
+          "why": "A slow LFO SINE deep on the VCO.\n- VCO LFO mod 4.5 · +2.4 st\n- LFO waveform Sine\n- LFO rate 3.1 · 0.80 Hz\n- LPF cutoff 6 · 1.1 kHz\n- Resonance 3 · 30 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 3 · 100 ms\n- Listen for: a pitch wailing up and down.",
           "set": {
             "vco.lfoMod": 4.5,
             "lfo.waveform": "sine",
@@ -9810,7 +9810,7 @@
         {
           "title": "Whoosh",
           "module": "lfo",
-          "why": "The low-pass with resonance; a slow LFO SAW sweeping it, and a little on the VCO.\n- LPF cutoff 5 · 537 Hz\n- Resonance 6 · 60 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 40\n- Filter envelope attack 2 · 10 ms\n- Filter envelope decay 5 · 400 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 6 · 800 ms\n- VCF LFO mod 4 · 40 %\n- VCO LFO mod 2.5 · +0.8 st\n- LFO waveform Sawtooth\n- lfo.rate 2.4 · 0.50 Hz\n- Listen for: a sweep whooshing round and round.",
+          "why": "The low-pass with resonance; a slow LFO SAW sweeping it, and a little on the VCO.\n- LPF cutoff 5 · 537 Hz\n- Resonance 6 · 60 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 40\n- Filter envelope attack 2 · 10 ms\n- Filter envelope decay 5 · 400 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 6 · 800 ms\n- VCF LFO mod 4 · 40 %\n- VCO LFO mod 2.5 · +0.8 st\n- LFO waveform Sawtooth\n- LFO rate 2.4 · 0.50 Hz\n- Listen for: a sweep whooshing round and round.",
           "set": {
             "vcf.cutoff": 5,
             "vcf.res": 6,
@@ -9884,7 +9884,7 @@
         {
           "title": "Sweep",
           "module": "filter",
-          "why": "A saw; the low-pass with resonance, an LFO SAW sweeping it once a bar.\n- VCO waveform Sawtooth\n- VCO range 8'\n- LPF cutoff 4 · 266 Hz\n- Resonance 5 · 50 %\n- VCF envelope amount 2 · 20 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 2.5 · 71 ms\n- Filter envelope sustain 1 · 10 %\n- Filter envelope release 2 · 50 ms\n- VCF LFO mod 3 · 30 %\n- LFO waveform Sawtooth\n- lfo.rate 2.6 · 0.55 Hz\n- Listen for: a sweep rising every bar.",
+          "why": "A saw; the low-pass with resonance, an LFO SAW sweeping it once a bar.\n- VCO waveform Sawtooth\n- VCO range 8'\n- LPF cutoff 4 · 266 Hz\n- Resonance 5 · 50 %\n- VCF envelope amount 2 · 20 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 2.5 · 71 ms\n- Filter envelope sustain 1 · 10 %\n- Filter envelope release 2 · 50 ms\n- VCF LFO mod 3 · 30 %\n- LFO waveform Sawtooth\n- LFO rate 2.6 · 0.55 Hz\n- Listen for: a sweep rising every bar.",
           "set": {
             "vco.waveform": "saw",
             "vco.range": "8",
@@ -9960,7 +9960,7 @@
         {
           "title": "Vibrato",
           "module": "lfo",
-          "why": "The low-pass warm with full key follow; a quick vibrato.\n- LPF cutoff 5.5 · 763 Hz\n- Resonance 0.5 · 5 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 100\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.3 · +0.2 st\n- LFO waveform Sine\n- lfo.rate 6.1 · 6.02 Hz\n- Listen for: a gently wavering tone.",
+          "why": "The low-pass warm with full key follow; a quick vibrato.\n- LPF cutoff 5.5 · 763 Hz\n- Resonance 0.5 · 5 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 100\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.3 · +0.2 st\n- LFO waveform Sine\n- LFO rate 6.1 · 6.02 Hz\n- Listen for: a gently wavering tone.",
           "set": {
             "vcf.cutoff": 5.5,
             "vcf.res": 0.5,
@@ -10038,7 +10038,7 @@
         {
           "title": "Warp",
           "module": "lfo",
-          "why": "The low-pass soft; a slow LFO on the VCO.\n- LPF cutoff 5 · 537 Hz\n- Resonance 1 · 10 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 70\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.8 · +0.4 st\n- LFO waveform Sine\n- lfo.rate 2.9 · 0.70 Hz\n- Listen for: a warped, seasick pitch.",
+          "why": "The low-pass soft; a slow LFO on the VCO.\n- LPF cutoff 5 · 537 Hz\n- Resonance 1 · 10 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 70\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.8 · +0.4 st\n- LFO waveform Sine\n- LFO rate 2.9 · 0.70 Hz\n- Listen for: a warped, seasick pitch.",
           "set": {
             "vcf.cutoff": 5,
             "vcf.res": 1,
@@ -10100,7 +10100,7 @@
         {
           "title": "Pale",
           "module": "osc",
-          "why": "A pulse with PW MOD; the high-pass up.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- vco.pw 5 · 20 % / 50 %\n- HPF cutoff 2.5 · 134 Hz\n- Listen for: a pale, thin tone.",
+          "why": "A pulse with PW MOD; the high-pass up.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- Pulse width 5 · 20 % / 50 %\n- HPF cutoff 2.5 · 134 Hz\n- Listen for: a pale, thin tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -10112,7 +10112,7 @@
         {
           "title": "Flick",
           "module": "lfo",
-          "why": "The low-pass with resonance; a slow SQUARE LFO on it.\n- LPF cutoff 5 · 537 Hz\n- Resonance 3.5 · 35 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 70\n- Filter envelope attack 3 · 24 ms\n- Filter envelope decay 5 · 400 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 6 · 800 ms\n- VCF LFO mod 1.5 · 15 %\n- LFO waveform square\n- lfo.rate 2.4 · 0.50 Hz\n- Listen for: a tone flicking between bright and dark.",
+          "why": "The low-pass with resonance; a slow SQUARE LFO on it.\n- LPF cutoff 5 · 537 Hz\n- Resonance 3.5 · 35 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 70\n- Filter envelope attack 3 · 24 ms\n- Filter envelope decay 5 · 400 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 6 · 800 ms\n- VCF LFO mod 1.5 · 15 %\n- LFO waveform square\n- LFO rate 2.4 · 0.50 Hz\n- Listen for: a tone flicking between bright and dark.",
           "set": {
             "vcf.cutoff": 5,
             "vcf.res": 3.5,
@@ -10193,7 +10193,7 @@
         {
           "title": "Pump",
           "module": "lfo",
-          "why": "The low-pass low with resonance; the LFO an RSAW at one beat, deep on the cutoff.\n- LPF cutoff 4 · 266 Hz\n- Resonance 3 · 30 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 3 · 100 ms\n- VCF LFO mod 4 · 40 %\n- LFO waveform Reverse saw\n- lfo.rate 3.8 · 1.25 Hz\n- Listen for: chords that pump on every beat.",
+          "why": "The low-pass low with resonance; the LFO an RSAW at one beat, deep on the cutoff.\n- LPF cutoff 4 · 266 Hz\n- Resonance 3 · 30 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 3 · 100 ms\n- VCF LFO mod 4 · 40 %\n- LFO waveform Reverse saw\n- LFO rate 3.8 · 1.25 Hz\n- Listen for: chords that pump on every beat.",
           "set": {
             "vcf.cutoff": 4,
             "vcf.res": 3,
@@ -10263,7 +10263,7 @@
         {
           "title": "Pulse",
           "module": "osc",
-          "why": "A pulse at 20 %.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 5 · 20 % / 50 %\n- Listen for: a bright, soft tone.",
+          "why": "A pulse at 20 %.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 5 · 20 % / 50 %\n- Listen for: a bright, soft tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -10420,7 +10420,7 @@
         {
           "title": "Glow",
           "module": "filter",
-          "why": "A pulse at 40 %; the low-pass soft with resonance, a slow LFO on it.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 3 · 40 % / 30 %\n- LPF cutoff 5 · 537 Hz\n- Resonance 3 · 30 %\n- VCF envelope amount 1.5 · 15 %\n- Keyboard follow 70\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 3 · 30 %\n- Filter envelope release 4 · 200 ms\n- VCF LFO mod 1 · 10 %\n- LFO waveform Sine\n- lfo.rate 0.3 · 0.12 Hz\n- Listen for: a soft, slowly glowing tone.",
+          "why": "A pulse at 40 %; the low-pass soft with resonance, a slow LFO on it.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 3 · 40 % / 30 %\n- LPF cutoff 5 · 537 Hz\n- Resonance 3 · 30 %\n- VCF envelope amount 1.5 · 15 %\n- Keyboard follow 70\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 3 · 30 %\n- Filter envelope release 4 · 200 ms\n- VCF LFO mod 1 · 10 %\n- LFO waveform Sine\n- LFO rate 0.3 · 0.12 Hz\n- Listen for: a soft, slowly glowing tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -10495,7 +10495,7 @@
         {
           "title": "Haunting",
           "module": "osc",
-          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- vco.pw 6 · 20 % / 60 %\n- LFO waveform Sine\n- lfo.rate 3.7 · 1.20 Hz\n- Listen for: a haunting, shimmering tone.",
+          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- Pulse width 6 · 20 % / 60 %\n- LFO waveform Sine\n- LFO rate 3.7 · 1.20 Hz\n- Listen for: a haunting, shimmering tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -10575,7 +10575,7 @@
         {
           "title": "Shades",
           "module": "mod",
-          "why": "A pulse at 20 %; a resonant filter; the sample-and-hold on it.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 5 · 20 % / 50 %\n- LPF cutoff 5.5 · 763 Hz\n- Resonance 4 · 40 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 2 · 50 ms\n- Filter envelope sustain 2 · 20 %\n- Filter envelope release 2 · 50 ms\n- Sample-and-hold depth 3 · 30 %\n- Listen for: every note a different shade.",
+          "why": "A pulse at 20 %; a resonant filter; the sample-and-hold on it.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 5 · 20 % / 50 %\n- LPF cutoff 5.5 · 763 Hz\n- Resonance 4 · 40 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 2 · 50 ms\n- Filter envelope sustain 2 · 20 %\n- Filter envelope release 2 · 50 ms\n- Sample-and-hold depth 3 · 30 %\n- Listen for: every note a different shade.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -10648,7 +10648,7 @@
         {
           "title": "Warm",
           "module": "lfo",
-          "why": "A saw; the high-pass a little up; a gentle vibrato with DELAY.\n- VCO waveform Sawtooth\n- VCO range 8'\n- HPF cutoff 1.5 · 83 Hz\n- VCO LFO mod 1.2 · +0.2 st\n- LFO waveform Sine\n- lfo.rate 5.9 · 4.99 Hz\n- LFO delay time 3 · 900 ms\n- Listen for: a warm tone with a late waver.",
+          "why": "A saw; the high-pass a little up; a gentle vibrato with DELAY.\n- VCO waveform Sawtooth\n- VCO range 8'\n- HPF cutoff 1.5 · 83 Hz\n- VCO LFO mod 1.2 · +0.2 st\n- LFO waveform Sine\n- LFO rate 5.9 · 4.99 Hz\n- LFO delay time 3 · 900 ms\n- Listen for: a warm tone with a late waver.",
           "set": {
             "vco.waveform": "saw",
             "vco.range": "8",
@@ -10748,7 +10748,7 @@
         {
           "title": "Fresh",
           "module": "lfo",
-          "why": "The low-pass soft with full key follow; LFO vibrato with DELAY.\n- LPF cutoff 5 · 537 Hz\n- Resonance 0.5 · 5 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 100\n- Filter envelope attack 0.5 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.5 · +0.3 st\n- lfo.rate 5.9 · 4.99 Hz\n- LFO delay time 3 · 900 ms\n- Listen for: a fresh, singing flute.",
+          "why": "The low-pass soft with full key follow; LFO vibrato with DELAY.\n- LPF cutoff 5 · 537 Hz\n- Resonance 0.5 · 5 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 100\n- Filter envelope attack 0.5 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.5 · +0.3 st\n- LFO rate 5.9 · 4.99 Hz\n- LFO delay time 3 · 900 ms\n- Listen for: a fresh, singing flute.",
           "set": {
             "vcf.cutoff": 5,
             "vcf.res": 0.5,
@@ -10919,7 +10919,7 @@
         {
           "title": "Strings",
           "module": "lfo",
-          "why": "A saw; a gentle vibrato with DELAY.\n- VCO waveform Sawtooth\n- VCO range 8'\n- VCO LFO mod 1.2 · +0.2 st\n- LFO waveform Sine\n- lfo.rate 5.9 · 4.99 Hz\n- LFO delay time 5 · 2.5 s\n- Listen for: a rich string tone with a late vibrato.",
+          "why": "A saw; a gentle vibrato with DELAY.\n- VCO waveform Sawtooth\n- VCO range 8'\n- VCO LFO mod 1.2 · +0.2 st\n- LFO waveform Sine\n- LFO rate 5.9 · 4.99 Hz\n- LFO delay time 5 · 2.5 s\n- Listen for: a rich string tone with a late vibrato.",
           "set": {
             "vco.waveform": "saw",
             "vco.range": "8",
@@ -11083,7 +11083,7 @@
         {
           "title": "Cool",
           "module": "lfo",
-          "why": "The low-pass bright with full key follow; a quick vibrato.\n- LPF cutoff 6.5 · 1.5 kHz\n- Resonance 0.5 · 5 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 100\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 2 · 50 ms\n- VCO LFO mod 1.3 · +0.2 st\n- LFO waveform Sine\n- lfo.rate 6.2 · 6.48 Hz\n- Listen for: a cool, wavering organ.",
+          "why": "The low-pass bright with full key follow; a quick vibrato.\n- LPF cutoff 6.5 · 1.5 kHz\n- Resonance 0.5 · 5 %\n- VCF envelope amount 0 · 0 %\n- Keyboard follow 100\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 10 · 100 %\n- Filter envelope release 2 · 50 ms\n- VCO LFO mod 1.3 · +0.2 st\n- LFO waveform Sine\n- LFO rate 6.2 · 6.48 Hz\n- Listen for: a cool, wavering organ.",
           "set": {
             "vcf.cutoff": 6.5,
             "vcf.res": 0.5,
@@ -11238,7 +11238,7 @@
         {
           "title": "Clean",
           "module": "osc",
-          "why": "A pulse at 40 %; the high-pass a little up.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 3 · 40 % / 30 %\n- HPF cutoff 2 · 105 Hz\n- Listen for: a clean, bright tone.",
+          "why": "A pulse at 40 %; the high-pass a little up.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 3 · 40 % / 30 %\n- HPF cutoff 2 · 105 Hz\n- Listen for: a clean, bright tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -11480,7 +11480,7 @@
         {
           "title": "Strings",
           "module": "osc",
-          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- vco.pw 5 · 20 % / 50 %\n- LFO waveform Sine\n- lfo.rate 5.7 · 4.49 Hz\n- Listen for: a shimmering string tone.",
+          "why": "A pulse with PW MOD.\n- VCO waveform Pulse\n- VCO range 8'\n- PW switch MOD\n- Pulse width 5 · 20 % / 50 %\n- LFO waveform Sine\n- LFO rate 5.7 · 4.49 Hz\n- Listen for: a shimmering string tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -11565,7 +11565,7 @@
         {
           "title": "Lyrical",
           "module": "lfo",
-          "why": "The low-pass warm with a little resonance; LFO vibrato with DELAY.\n- LPF cutoff 5.5 · 763 Hz\n- Resonance 2 · 20 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 1.8 · +0.4 st\n- lfo.rate 6 · 5.48 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: a lyrical tone with a late vibrato.",
+          "why": "The low-pass warm with a little resonance; LFO vibrato with DELAY.\n- LPF cutoff 5.5 · 763 Hz\n- Resonance 2 · 20 %\n- VCF envelope amount 1 · 10 %\n- Keyboard follow 40\n- Filter envelope attack 0 · 1 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 8 · 80 %\n- Filter envelope release 4 · 200 ms\n- VCO LFO mod 1.8 · +0.4 st\n- LFO rate 6 · 5.48 Hz\n- LFO delay time 4 · 1.6 s\n- Listen for: a lyrical tone with a late vibrato.",
           "set": {
             "vcf.cutoff": 5.5,
             "vcf.res": 2,
@@ -11639,7 +11639,7 @@
         {
           "title": "Pulse",
           "module": "osc",
-          "why": "A pulse at 40 %.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 3 · 40 % / 30 %\n- Listen for: a firm, bright tone.",
+          "why": "A pulse at 40 %.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 3 · 40 % / 30 %\n- Listen for: a firm, bright tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -11713,7 +11713,7 @@
         {
           "title": "Breathy reed",
           "module": "osc",
-          "why": "A pulse at 40 % with noise.\n- VCO waveform Pulse\n- VCO range 8'\n- vco.pw 3 · 40 % / 30 %\n- Noise On\n- Listen for: a breathy, reedy tone.",
+          "why": "A pulse at 40 % with noise.\n- VCO waveform Pulse\n- VCO range 8'\n- Pulse width 3 · 40 % / 30 %\n- Noise On\n- Listen for: a breathy, reedy tone.",
           "set": {
             "vco.waveform": "pulse",
             "vco.range": "8",
@@ -11724,7 +11724,7 @@
         {
           "title": "Blown",
           "module": "filter",
-          "why": "The low-pass low with a slow envelope attack; LFO vibrato with DELAY.\n- LPF cutoff 4.5 · 378 Hz\n- Resonance 2 · 20 %\n- VCF envelope amount 4 · 40 %\n- Keyboard follow 40\n- Filter envelope attack 1 · 2 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 6 · 60 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.8 · +0.4 st\n- lfo.rate 6 · 5.48 Hz\n- LFO delay time 3.5 · 1.2 s\n- Listen for: a blown, sax-like tone.",
+          "why": "The low-pass low with a slow envelope attack; LFO vibrato with DELAY.\n- LPF cutoff 4.5 · 378 Hz\n- Resonance 2 · 20 %\n- VCF envelope amount 4 · 40 %\n- Keyboard follow 40\n- Filter envelope attack 1 · 2 ms\n- Filter envelope decay 4 · 200 ms\n- Filter envelope sustain 6 · 60 %\n- Filter envelope release 3 · 100 ms\n- VCO LFO mod 1.8 · +0.4 st\n- LFO rate 6 · 5.48 Hz\n- LFO delay time 3.5 · 1.2 s\n- Listen for: a blown, sax-like tone.",
           "set": {
             "vcf.cutoff": 4.5,
             "vcf.res": 2,

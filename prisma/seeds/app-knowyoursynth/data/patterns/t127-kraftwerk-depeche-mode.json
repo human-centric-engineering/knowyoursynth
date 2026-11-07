@@ -1567,8 +1567,7 @@
         "poly-d/pd-clean-melody",
         "super-gemini/sg-computer-love",
         "e7/e7-computer-melody",
-        "mantis/mantis-computer-love",
-        "jupiter-6/jp6-computer-love"
+        "mantis/mantis-computer-love"
       ],
       "research": {
         "work": "Kraftwerk, “Computer Love”, Computer World, 1981",
@@ -10237,7 +10236,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["pro-1/noise-tick-pluck", "jupiter-8/jp8-depeche-pluck"],
+      "sounds": ["pro-1/noise-tick-pluck"],
       "research": {
         "work": "Depeche Mode, “Any Second Now (Voices)”, Speak & Spell, 1981",
         "part": "Four bars of a gentle eighth-note pluck through C, F, Am and G.",

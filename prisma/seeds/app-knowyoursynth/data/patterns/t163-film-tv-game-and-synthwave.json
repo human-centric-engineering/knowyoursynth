@@ -70,38 +70,6 @@
     {
       "sound": "malevolent/mal-droid-chirps",
       "reason": "An effect: excited, burbling, whistling robot chatter. There is no part to write."
-    },
-    {
-      "sound": "jupiter-8/jp8-kitaro-silk",
-      "reason": "In the style of Kitaro: it names no work, and the batch has no Kitaro pattern of the part it plays, so the chords is the lesson’s own."
-    },
-    {
-      "sound": "jupiter-8/jp8-chromatics-arp",
-      "reason": "Its arpeggiator plays the line from the chords its riff holds; it names a style, not one work, and the chords are the lesson’s own."
-    },
-    {
-      "sound": "jupiter-8/jp8-perturbator-bass",
-      "reason": "In the style of Perturbator: it names no work, and the batch has no Perturbator pattern of the part it plays, so the bass line is the lesson’s own."
-    },
-    {
-      "sound": "jupiter-8/jp8-twin-peaks-pad",
-      "reason": "In the style of Angelo Badalamenti: it names no work, and the batch has no Angelo Badalamenti pattern of the part it plays, so the chords is the lesson’s own."
-    },
-    {
-      "sound": "jupiter-8/jp8-organ-cathedral",
-      "reason": "The batch’s “Interstellar: opening figure” is another part of the work; this sound plays the organ chords, which is the lesson’s own, written to the style rather than taken from the record."
-    },
-    {
-      "sound": "jupiter-6/jp6-arrival-drone",
-      "reason": "Names the “Arrival” score, which no pattern in this batch has yet; the drone is the lesson’s own, written to the style rather than taken from the record."
-    },
-    {
-      "sound": "jupiter-6/jp6-reactor-groan",
-      "reason": "Names the “Chernobyl” score, which no pattern in this batch has yet; the drone is the lesson’s own, written to the style rather than taken from the record."
-    },
-    {
-      "sound": "jupiter-4/j4-pixel-dream-arp",
-      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
     }
   ],
   "patterns": [
@@ -991,109 +959,6 @@
           }
         ],
         "notes": "From the transcription’s “Contrabass I” track, bars 1–6, an octave down to sit where the sound plays. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
-        "listenedAt": null
-      }
-    },
-    {
-      "key": "researched:john-carpenter/halloween-low-strings-high",
-      "name": "Halloween: low held notes, high",
-      "role": "held",
-      "tempo": null,
-      "inspiredBy": { "kind": "work", "songId": "john-carpenter-halloween", "part": 0 },
-      "fidelity": "in_the_style_of",
-      "sources": [],
-      "pattern": {
-        "version": 1,
-        "bpm": 134,
-        "stepSize": "1/8",
-        "loop": true,
-        "direction": "forward",
-        "swing": 50,
-        "transpose": 0,
-        "root": 0,
-        "scale": "chromatic",
-        "parts": [
-          {
-            "steps": [
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 42, "gate": 20 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 41, "gate": 20 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 40, "gate": 10 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] }
-            ]
-          }
-        ],
-        "chain": [0]
-      },
-      "sounds": ["jupiter-8/jp8-fog-pad"],
-      "research": {
-        "work": "John Carpenter, “Halloween” (main title), Halloween, 1978",
-        "part": "The low notes held under the piano figure from its second bar, two bars of 5/4 each: F♯, then F, then E, the E cut to one bar where the loop ends: the same part an octave up, where the Jupiter-8’s “Fog Bank” plays.",
-        "originalKey": null,
-        "originalBpm": 134,
-        "leads": [
-          {
-            "citation": "John Carpenter — “Halloween Theme”, fan transcription by femboy.gardevoir on Songsterr (revision 3651747, 2025-11-01)",
-            "url": "https://www.songsterr.com/a/wsa/john-carpenter-halloween-theme-tab-s39618",
-            "checkedAt": "2026-11-02"
-          }
-        ],
-        "notes": "From the transcription’s “Contrabass I” track, bars 1–6, an octave down to sit where the sound plays. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave up from researched:john-carpenter/halloween-low-strings.",
         "listenedAt": null
       }
     },
@@ -3028,113 +2893,6 @@
       }
     },
     {
-      "key": "researched:harold-faltermeyer/axel-f-theme-low",
-      "name": "Axel F: theme, low",
-      "role": "lead_line",
-      "tempo": null,
-      "inspiredBy": { "kind": "work", "songId": "harold-faltermeyer-axel-f", "part": 0 },
-      "fidelity": "in_the_style_of",
-      "sources": [],
-      "pattern": {
-        "version": 1,
-        "bpm": 117,
-        "stepSize": "1/16",
-        "loop": true,
-        "direction": "forward",
-        "swing": 50,
-        "transpose": 0,
-        "root": 0,
-        "scale": "chromatic",
-        "parts": [
-          {
-            "steps": [
-              { "on": true, "notes": [{ "note": 53, "gate": 3 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 56, "gate": 3 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 58, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 51, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 53, "gate": 3 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 60, "gate": 3 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 60, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 65, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 51, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 51, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 55, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 53, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] }
-            ]
-          }
-        ],
-        "chain": [0]
-      },
-      "sounds": ["jupiter-8/jp8-axel-lead"],
-      "research": {
-        "work": "Harold Faltermeyer, “Axel F”, Beverly Hills Cop, 1984",
-        "part": "The theme’s first phrase: F, A♭, F, F, B♭, F, E♭; F, C, F, F, D♭, C, A♭; F, C, F, F, E♭, E♭, C, G, F; then a bar’s rest: the same part an octave down, where the Jupiter-8’s “Detroit Cop Lead” plays.",
-        "originalKey": null,
-        "originalBpm": 117,
-        "leads": [
-          {
-            "citation": "Harold Faltermeyer — “Axel F”, fan transcription by KAG333 on Songsterr (revision 1570667, 2025-03-21)",
-            "url": "https://www.songsterr.com/a/wsa/harold-faltermeyer-axel-f-tab-s1177206",
-            "checkedAt": "2026-11-02"
-          }
-        ],
-        "notes": "From the transcription’s “Synth Brass 1” track, bars 1–4, as written. Its “Lead 2 (sawtooth)” track has the theme only later, in three-note chords. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:harold-faltermeyer/axel-f-theme.",
-        "listenedAt": null
-      }
-    },
-    {
       "key": "researched:harold-faltermeyer/top-gun-anthem-chords",
       "name": "Top Gun Anthem: chords",
       "role": "chord_changes",
@@ -4511,7 +4269,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-miami-pad", "jupiter-8/jp8-vice-pad"],
+      "sounds": ["take-5/t5-miami-pad"],
       "research": {
         "work": "Jan Hammer, “Miami Vice Theme”, Miami Vice, 1985",
         "part": "Four bars of held pad chords: F, its A and C held over a low C; E♭ over B♭; then C and E♭ moving to G minor.",
@@ -6712,12 +6470,7 @@
         ],
         "chain": [0]
       },
-      "sounds": [
-        "take-5/t5-stranger-arp",
-        "super-gemini/sg-upside-down-arp",
-        "ub-xa-d/dark-arp",
-        "jupiter-8/jp8-upside-down-pad"
-      ],
+      "sounds": ["take-5/t5-stranger-arp", "super-gemini/sg-upside-down-arp", "ub-xa-d/dark-arp"],
       "research": {
         "work": "Kyle Dixon and Michael Stein, “Stranger Things” (main title), Stranger Things, 2016",
         "part": "The arpeggio’s four notes, C, E, G and B, held as one chord for the sound’s own arpeggiator to play.",
@@ -7552,8 +7305,7 @@
       "sounds": [
         "super-gemini/sg-midnight-pad",
         "e7/e7-midnight-pad",
-        "deepmind-12d/wall-of-light",
-        "jupiter-8/jp8-m83-swell"
+        "deepmind-12d/wall-of-light"
       ],
       "research": {
         "work": "M83, “Midnight City”, Hurry Up, We’re Dreaming, 2011",
@@ -7812,8 +7564,7 @@
         "e7/e7-blinding-riff",
         "super-gemini/sg-blinding-riff",
         "take-5/t5-blinding-arp",
-        "mantis/mantis-blinding-lead",
-        "jupiter-8/jp8-blinding-synth"
+        "mantis/mantis-blinding-lead"
       ],
       "research": {
         "work": "The Weeknd, “Blinding Lights”, After Hours, 2019",
@@ -8945,11 +8696,7 @@
         ],
         "chain": [0]
       },
-      "sounds": [
-        "take-5/t5-morricone-whistle",
-        "malevolent/mal-western-whistle",
-        "jupiter-6/jp6-western-whistle"
-      ],
+      "sounds": ["take-5/t5-morricone-whistle", "malevolent/mal-western-whistle"],
       "research": {
         "work": "Ennio Morricone, main title, The Good, the Bad and the Ugly, 1966",
         "part": "The four-bar call: A, D, A, D, A held, F; G, D held; then again, ending G, C.",
@@ -9905,7 +9652,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["e7/e7-giallo-arp", "jupiter-8/jp8-goblin-organ"],
+      "sounds": ["e7/e7-giallo-arp"],
       "research": {
         "work": "Goblin, “Suspiria”, Suspiria, 1977",
         "part": "The theme in triplet eighths, each note struck then repeated an octave down: D, E, E, F, A, A; G, G, F, G, G, G; F, G, G, A, A, D; E, E, E, D, D, D.",
@@ -10847,97 +10594,6 @@
           }
         ],
         "notes": "From the transcription’s “Ocarina” track, bars 9–16, an octave down to sit where the sound plays. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
-        "listenedAt": null
-      }
-    },
-    {
-      "key": "researched:koji-kondo/song-of-storms-melody-low",
-      "name": "Song of Storms: melody, low",
-      "role": "lead_line",
-      "tempo": null,
-      "inspiredBy": { "kind": "genre", "label": "Koji Kondo" },
-      "fidelity": "in_the_style_of",
-      "sources": [],
-      "pattern": {
-        "version": 1,
-        "bpm": 201,
-        "stepSize": "1/8",
-        "loop": true,
-        "direction": "forward",
-        "swing": 50,
-        "transpose": 0,
-        "root": 0,
-        "scale": "chromatic",
-        "parts": [
-          {
-            "steps": [
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 65, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 74, "gate": 4 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 62, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 65, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 74, "gate": 4 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 76, "gate": 3 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 77, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 76, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 77, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 76, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 72, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 69, "gate": 4 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 69, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 62, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 65, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 69, "gate": 6 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 69, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 62, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 65, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 67, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 64, "gate": 6 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] }
-            ]
-          }
-        ],
-        "chain": [0]
-      },
-      "sounds": ["jupiter-8/jp8-koji-kondo"],
-      "research": {
-        "work": "Koji Kondo, “Song of Storms”, The Legend of Zelda: Ocarina of Time, 1998",
-        "part": "Eight bars of 3/4: D, F, D held, twice; E, F, E, F, E, C, A; A, D, F, G, A held; A, D, F, G, E held: the same part an octave down, where the Jupiter-8’s “Adventure Theme” plays.",
-        "originalKey": null,
-        "originalBpm": 201,
-        "leads": [
-          {
-            "citation": "Koji Kondo — “Song of Storms (Windmill Hut)”, fan transcription by Awita on Songsterr (revision 2966303, 2025-09-06)",
-            "url": "https://www.songsterr.com/a/wsa/koji-kondo-song-of-storms-windmill-hut-tab-s269118",
-            "checkedAt": "2026-11-02"
-          }
-        ],
-        "notes": "From the transcription’s “Ocarina” track, bars 9–16, an octave down to sit where the sound plays. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:koji-kondo/song-of-storms-melody.",
         "listenedAt": null
       }
     },
@@ -12289,11 +11945,7 @@
         ],
         "chain": [0]
       },
-      "sounds": [
-        "model-d/paris-musette",
-        "take-5/t5-amelie-toy-piano",
-        "jupiter-6/jp6-amelie-waltz"
-      ],
+      "sounds": ["model-d/paris-musette", "take-5/t5-amelie-toy-piano"],
       "research": {
         "work": "Yann Tiersen, “La Valse d’Amélie”, Le Fabuleux Destin d’Amélie Poulain, 2001",
         "part": "Eight bars of the waltz’s melody in 3/4, from its pickup: A, B, C, B, C, D held, C, B, A, then the turns on D and C.",
@@ -13254,11 +12906,7 @@
         ],
         "chain": [0]
       },
-      "sounds": [
-        "take-5/t5-gunship-pad",
-        "super-gemini/sg-synthwave-brass",
-        "jupiter-4/j4-synthwave-brass"
-      ],
+      "sounds": ["take-5/t5-gunship-pad", "super-gemini/sg-synthwave-brass"],
       "research": {
         "work": "Gunship, “Tech Noir”, Gunship, 2015",
         "part": "Four bars of held chords, a bar each: A minor, F, C, G.",
@@ -13494,75 +13142,6 @@
         "originalBpm": null,
         "leads": [],
         "notes": "The one “Broken Date” transcription was made by Songsterr’s machine and has only a synth bass in triplet eighths and the drums. The plain Com Truise lead gets the same line. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
-        "listenedAt": null
-      }
-    },
-    {
-      "key": "researched:com-truise/brokendate-lead-low",
-      "name": "Brokendate: lead, low",
-      "role": "slow_melody",
-      "tempo": null,
-      "inspiredBy": { "kind": "genre", "label": "Com Truise" },
-      "fidelity": "in_the_style_of",
-      "sources": [],
-      "pattern": {
-        "version": 1,
-        "bpm": 96,
-        "stepSize": "1/8",
-        "loop": true,
-        "direction": "forward",
-        "swing": 50,
-        "transpose": 0,
-        "root": 0,
-        "scale": "chromatic",
-        "parts": [
-          {
-            "steps": [
-              { "on": true, "notes": [{ "note": 55, "gate": 3 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 58, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 60, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 62, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 60, "gate": 3 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 58, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 4 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 53, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 55, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 58, "gate": 3 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 55, "gate": 8 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] }
-            ]
-          }
-        ],
-        "chain": [0]
-      },
-      "sounds": ["jupiter-6/jp6-mid-fi-lead"],
-      "research": {
-        "work": "Com Truise, “Brokendate”, Galactic Melt, 2011",
-        "part": "A slow four-bar line in G minor, ending on a held G: the same part an octave down, where the Jupiter-6’s “Mid-Fi Wonk Lead” plays.",
-        "originalKey": null,
-        "originalBpm": null,
-        "leads": [],
-        "notes": "The one “Broken Date” transcription was made by Songsterr’s machine and has only a synth bass in triplet eighths and the drums. The plain Com Truise lead gets the same line. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:com-truise/brokendate-lead.",
         "listenedAt": null
       }
     },
@@ -14182,91 +13761,6 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Nothing from the Drive score was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
-        "listenedAt": null
-      }
-    },
-    {
-      "key": "researched:cliff-martinez/drive-pad-high",
-      "name": "Drive: pad, high",
-      "role": "chord_changes",
-      "tempo": null,
-      "inspiredBy": { "kind": "genre", "label": "Cliff Martinez" },
-      "fidelity": "in_the_style_of",
-      "sources": [],
-      "pattern": {
-        "version": 1,
-        "bpm": 66,
-        "stepSize": "1/8",
-        "loop": true,
-        "direction": "forward",
-        "swing": 50,
-        "transpose": 0,
-        "root": 0,
-        "scale": "chromatic",
-        "parts": [
-          {
-            "steps": [
-              {
-                "on": true,
-                "notes": [
-                  { "note": 66, "gate": 16 },
-                  { "note": 62, "gate": 16 },
-                  { "note": 59, "gate": 16 },
-                  { "note": 52, "gate": 16 }
-                ]
-              },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              {
-                "on": true,
-                "notes": [
-                  { "note": 64, "gate": 16 },
-                  { "note": 59, "gate": 16 },
-                  { "note": 55, "gate": 16 },
-                  { "note": 48, "gate": 16 }
-                ]
-              },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] }
-            ]
-          }
-        ],
-        "chain": [0]
-      },
-      "sounds": ["jupiter-8/jp8-drive-pad"],
-      "research": {
-        "work": "Cliff Martinez, Drive (score), 2011",
-        "part": "Two chords held two bars each: E minor ninth, then C major seventh: the same part an octave up, where the Jupiter-8’s “Night City Pad” plays.",
-        "originalKey": null,
-        "originalBpm": null,
-        "leads": [],
-        "notes": "Nothing from the Drive score was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave up from researched:cliff-martinez/drive-pad.",
         "listenedAt": null
       }
     },

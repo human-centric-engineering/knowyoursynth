@@ -1739,7 +1739,7 @@
     },
     {
       "id": "jp8-kitaro-silk",
-      "name": "Silk Road Pad",
+      "name": "Desert Drift Pad",
       "ref": "In the style of Kitaro",
       "artist": "Kitaro",
       "tags": ["pad", "new age", "ambient", "80s"],
@@ -1812,7 +1812,7 @@
     },
     {
       "id": "jp8-jarre-equinox",
-      "name": "Equinox Sequence",
+      "name": "Galloping Up-Down Sequence",
       "ref": "In the style of Jean-Michel Jarre",
       "artist": "Jean-Michel Jarre",
       "tags": ["seq", "electronic", "80s", "arpeggio"],
@@ -3275,7 +3275,7 @@
     },
     {
       "id": "jp8-depeche-pluck",
-      "name": "Construction Pluck",
+      "name": "Metallic Minor Pluck",
       "ref": "In the style of Depeche Mode",
       "artist": "Depeche Mode",
       "tags": ["pluck", "synth-pop", "new wave", "80s"],
@@ -3515,7 +3515,7 @@
     },
     {
       "id": "jp8-mad-world-pad",
-      "name": "Mad World Pad",
+      "name": "Cold New-Wave Pad",
       "ref": "In the style of Tears for Fears",
       "artist": "Tears for Fears",
       "tags": ["pad", "new wave", "synth-pop", "80s"],
@@ -4526,7 +4526,7 @@
     },
     {
       "id": "jp8-chromatics-arp",
-      "name": "Night Drive Arp",
+      "name": "Italo Night Arpeggio",
       "ref": "In the style of Chromatics",
       "artist": "Chromatics",
       "tags": ["seq", "synthwave", "italo", "arpeggio", "10s"],
@@ -5386,7 +5386,7 @@
     },
     {
       "id": "jp8-hungry-sequence",
-      "name": "Wolf Sequence",
+      "name": "Nervous New-Wave Sequence",
       "ref": "In the style of Duran Duran",
       "artist": "Duran Duran",
       "tags": ["bass", "new wave", "synth-pop", "80s"],
@@ -7080,7 +7080,7 @@
     },
     {
       "id": "jp8-twin-peaks-pad",
-      "name": "Falling Pad",
+      "name": "Dreamy Small-Town Pad",
       "ref": "In the style of Angelo Badalamenti",
       "artist": "Angelo Badalamenti",
       "tags": ["pad", "tv", "dream pop", "90s"],
@@ -8971,7 +8971,7 @@
     },
     {
       "id": "jp8-genesis-pad",
-      "name": "Mama Pad",
+      "name": "Brooding Drum-Machine Pad",
       "ref": "In the style of Genesis",
       "artist": "Genesis",
       "tags": ["pad", "prog", "rock", "80s"],
@@ -9136,7 +9136,7 @@
     },
     {
       "id": "jp8-emerson-brass",
-      "name": "Fanfare Brass",
+      "name": "Regal Prog Brass",
       "ref": "In the style of Keith Emerson",
       "artist": "Keith Emerson",
       "tags": ["brass", "prog", "rock", "70s"],
@@ -9233,7 +9233,7 @@
     },
     {
       "id": "jp8-floyd-pad",
-      "name": "Great Gig Pad",
+      "name": "Sad Slow Keyboard Pad",
       "ref": "In the style of Richard Wright",
       "artist": "Richard Wright",
       "tags": ["pad", "psychedelic", "prog", "70s"],
@@ -9474,7 +9474,7 @@
     },
     {
       "id": "jp8-japan-pad",
-      "name": "Ghosts Pad",
+      "name": "Cold Eastern Pad",
       "ref": "In the style of Japan",
       "artist": "Japan",
       "tags": ["pad", "art pop", "new wave", "80s"],
@@ -9546,7 +9546,7 @@
     },
     {
       "id": "jp8-yazoo-arp",
-      "name": "Only You Arpeggio",
+      "name": "Tender Ballad Arpeggio",
       "ref": "In the style of Yazoo",
       "artist": "Yazoo",
       "tags": ["seq", "synth-pop", "arpeggio", "80s"],
@@ -9622,7 +9622,7 @@
     },
     {
       "id": "jp8-soft-cell",
-      "name": "Tainted Riff",
+      "name": "Clipped Synth Riff",
       "ref": "In the style of Soft Cell",
       "artist": "Soft Cell",
       "tags": ["lead", "synth-pop", "new wave", "80s"],
@@ -9691,7 +9691,7 @@
     },
     {
       "id": "jp8-alphaville-pad",
-      "name": "Forever Pad",
+      "name": "Wistful Synth-Pop Pad",
       "ref": "In the style of Alphaville",
       "artist": "Alphaville",
       "tags": ["pad", "synth-pop", "80s"],
@@ -9924,7 +9924,7 @@
     },
     {
       "id": "jp8-yoshimura",
-      "name": "Green Water",
+      "name": "Water Garden Keys",
       "ref": "In the style of Hiroshi Yoshimura",
       "artist": "Hiroshi Yoshimura",
       "tags": ["keys", "ambient", "kankyō ongaku", "80s"],
@@ -10470,7 +10470,7 @@
     },
     {
       "id": "jp8-moderat",
-      "name": "Bad Kingdom Bass",
+      "name": "Melancholy Gliding Bass",
       "ref": "In the style of Moderat",
       "artist": "Moderat",
       "tags": ["bass", "electronica", "techno", "10s"],

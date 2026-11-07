@@ -90,9 +90,9 @@ describe('the research batches', () => {
 
   /** Each batch's artists and how many of their sounds the catalogue held when it was researched. */
   const rosters: [string, string[], number][] = [
-    ['t-127', ['Kraftwerk', 'Depeche Mode'], 50],
-    ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 90],
-    ['t-129', ['Brian Eno', 'Daniel Lanois', 'Vangelis', 'Boards of Canada'], 90],
+    ['t-127', ['Kraftwerk', 'Depeche Mode'], 48],
+    ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 85],
+    ['t-129', ['Brian Eno', 'Daniel Lanois', 'Vangelis', 'Boards of Canada'], 86],
     [
       't-160',
       [
@@ -128,7 +128,7 @@ describe('the research batches', () => {
         'Public Enemy',
         'Whitney Houston',
       ],
-      115,
+      105,
     ],
     [
       't-161',
@@ -163,7 +163,7 @@ describe('the research batches', () => {
         'The Cure',
         'Tubeway Army',
       ],
-      88,
+      80,
     ],
     [
       't-162',
@@ -199,7 +199,7 @@ describe('the research batches', () => {
         'Wham!',
         'Yello',
       ],
-      112,
+      90,
     ],
     [
       't-163',
@@ -237,7 +237,7 @@ describe('the research batches', () => {
         'Walter Murch',
         'Yann Tiersen',
       ],
-      116,
+      95,
     ],
     [
       't-164',
@@ -286,7 +286,7 @@ describe('the research batches', () => {
         'Thom Yorke',
         'U2',
       ],
-      107,
+      95,
     ],
     [
       't-165',
@@ -327,7 +327,7 @@ describe('the research batches', () => {
         'Robin S',
         'Second Phase',
       ],
-      105,
+      97,
     ],
     [
       't-166',
@@ -368,7 +368,7 @@ describe('the research batches', () => {
         'Ulrich Schnauss',
         'Wiley',
       ],
-      111,
+      98,
     ],
     [
       't-167',
@@ -407,7 +407,7 @@ describe('the research batches', () => {
         'Popol Vuh',
         'Roger Payne',
       ],
-      109,
+      103,
     ],
     [
       't-168',
@@ -467,7 +467,7 @@ describe('the research batches', () => {
         'Yo-Yo Ma',
         'Yoshida Brothers',
       ],
-      129,
+      109,
     ],
   ];
 

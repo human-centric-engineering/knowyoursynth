@@ -2464,7 +2464,7 @@
     },
     {
       "id": "jp6-808-state-pad",
-      "name": "Pacific Pad",
+      "name": "Acid-Summer Pad",
       "ref": "In the style of 808 State",
       "artist": "808 State",
       "tags": ["pad", "acid house", "ambient house", "80s"],
@@ -9701,7 +9701,7 @@
         {
           "title": "Swell",
           "module": "amp",
-          "why": "The same LFO on the VCA; a slow attack and release; the VCA and the volume up.\n- ENV-2 attack 4 · 120 ms\n- ENV-2 decay 5 · 320 ms\n- ENV-2 sustain 10 · 100 %\n- ENV-2 release 6 · 700 ms\n- VCA LFO depth (tremolo) 3 · 30 %\n- VCA level 10 · 100 %\n- out.volume 9.5 · 95 %\n- Listen for: waves rolling in and washing out.",
+          "why": "The same LFO on the VCA; a slow attack and release; the VCA and the volume up.\n- ENV-2 attack 4 · 120 ms\n- ENV-2 decay 5 · 320 ms\n- ENV-2 sustain 10 · 100 %\n- ENV-2 release 6 · 700 ms\n- VCA LFO depth (tremolo) 3 · 30 %\n- VCA level 10 · 100 %\n- Volume 9.5 · 95 %\n- Listen for: waves rolling in and washing out.",
           "set": {
             "env2.attack": 4,
             "env2.decay": 5,
