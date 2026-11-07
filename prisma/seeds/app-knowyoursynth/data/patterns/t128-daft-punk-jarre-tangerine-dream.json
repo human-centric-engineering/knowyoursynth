@@ -82,6 +82,14 @@
     {
       "sound": "malevolent/mal-equinoxe-arp",
       "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Équinoxe 5: octave bass” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "jupiter-8/jp8-tron-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Derezzed: fifth stabs”, “Derezzed: arpeggiated riff” and “Derezzed: bass riff” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "jupiter-8/jp8-jarre-equinox",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; it names a style, not one work, and the chords are the lesson’s own."
     }
   ],
   "patterns": [
@@ -13394,7 +13402,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["super-gemini/sg-jarre-laser-harp"],
+      "sounds": ["super-gemini/sg-jarre-laser-harp", "jupiter-8/jp8-laser-harp"],
       "research": {
         "work": "Jean-Michel Jarre, “Second Rendez-Vous”, Rendez-Vous, 1986",
         "part": "Four bars of a plucked melody in A minor, rising from A to E and stepping back down.",
@@ -16976,7 +16984,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/white-eagle"],
+      "sounds": ["deepmind-12d/white-eagle", "jupiter-8/jp8-tangerine-pad"],
       "research": {
         "work": "Tangerine Dream, “White Eagle”, White Eagle, 1982",
         "part": "Eight bars of chords for the arpeggiator to pick from: Em9 for four bars, Cmaj9 for four.",
@@ -17592,7 +17600,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/sequence-pulse"],
+      "sounds": ["ub-xa-d/sequence-pulse", "jupiter-6/jp6-tangerine-seq"],
       "research": {
         "work": "Tangerine Dream, Tangram, 1980",
         "part": "Four bars of a sixteenth-note sequence on E, its third bar moved to D and its fourth to G and A.",

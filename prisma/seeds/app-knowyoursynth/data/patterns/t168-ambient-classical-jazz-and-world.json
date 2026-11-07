@@ -74,6 +74,42 @@
     {
       "sound": "malevolent/mal-looking-glass-arp",
       "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Through the Looking Glass: a repeating marimba figure” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "jupiter-8/jp8-prelude-in-c",
+      "reason": "Its own riff already plays the opening figure of the Prelude in C major, from Bach’s public-domain score, so a batch pattern would only repeat it."
+    },
+    {
+      "sound": "jupiter-8/jp8-zawinul-pad",
+      "reason": "In the style of Joe Zawinul: it names no work, and the batch has no Joe Zawinul pattern of the part it plays, so the chords is the lesson’s own."
+    },
+    {
+      "sound": "jupiter-8/jp8-max-richter",
+      "reason": "In the style of Max Richter: it names no work, and the batch has no Max Richter pattern of the part it plays, so the chords is the lesson’s own."
+    },
+    {
+      "sound": "jupiter-8/jp8-enya-pizz",
+      "reason": "In the style of Enya: it names no work, and the batch has no Enya pattern of the part it plays, so the pizzicato chords is the lesson’s own."
+    },
+    {
+      "sound": "jupiter-6/jp6-cosmic-harp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; it names a style, not one work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "jupiter-6/jp6-bandoneon",
+      "reason": "In the style of Astor Piazzolla: it names no work, and the batch has no Astor Piazzolla pattern of the part it plays, so the chords is the lesson’s own."
+    },
+    {
+      "sound": "jupiter-6/jp6-phasing-felt",
+      "reason": "In the style of Ólafur Arnalds: it names no work, and the batch has no Ólafur Arnalds pattern of the part it plays, so the pattern is the lesson’s own."
+    },
+    {
+      "sound": "jupiter-4/j4-aquarium-glass",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "jupiter-4/j4-qawwali-harmonium",
+      "reason": "In the style of Nusrat Fateh Ali Khan: it names no work, and the batch has no Nusrat Fateh Ali Khan pattern of the part it plays, so the chords is the lesson’s own."
     }
   ],
   "patterns": [
@@ -7496,7 +7532,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/are-you-going-lead", "take-5/t5-mays-lead"],
+      "sounds": ["model-d/are-you-going-lead", "take-5/t5-mays-lead", "jupiter-8/jp8-lyle-mays"],
       "research": {
         "work": "Pat Metheny Group, “Are You Going with Me?”, Offramp, 1982",
         "part": "The melody’s first eight bars: C D E♭ F climbing to a long G, falling F E♭ to a long C, then B♭.",
@@ -9267,7 +9303,8 @@
       "sounds": [
         "neutron/sakamoto-bell-lead",
         "take-5/t5-mr-lawrence-bell",
-        "malevolent/mal-mr-lawrence-bell"
+        "malevolent/mal-mr-lawrence-bell",
+        "jupiter-6/jp6-mr-lawrence-bells"
       ],
       "research": {
         "work": "Ryuichi Sakamoto, “Merry Christmas Mr. Lawrence”, Merry Christmas Mr. Lawrence, 1983",
@@ -9651,7 +9688,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/jester-fusion-lead", "mantis/mantis-duo-thirds"],
+      "sounds": [
+        "model-d/jester-fusion-lead",
+        "mantis/mantis-duo-thirds",
+        "jupiter-8/jp8-fusion-lead"
+      ],
       "research": {
         "work": "Return to Forever, “Duel of the Jester and the Tyrant”, Romantic Warrior, 1976",
         "part": "The opening theme in half notes, eight bars: B G, F♯ E, G D, D C, twice, the second time turning to F and F♯.",
@@ -10627,7 +10668,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/lagging-brightness-keys", "solar-42n/solar-soft-pedal-piano"],
+      "sounds": [
+        "neutron/lagging-brightness-keys",
+        "solar-42n/solar-soft-pedal-piano",
+        "jupiter-8/jp8-harold-budd"
+      ],
       "research": {
         "work": "Harold Budd and Brian Eno, “First Light”, Ambient 2: The Plateaux of Mirror, 1980",
         "part": "Three bars of the melody: B falling to E, a long G, then D and back to G.",
@@ -11749,7 +11794,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/pablo-melodica"],
+      "sounds": ["neutron/pablo-melodica", "jupiter-4/j4-far-east-melodica"],
       "research": {
         "work": "Augustus Pablo, “East of the River Nile”, East of the River Nile, 1977",
         "part": "A minor-key line up to D and back to a long E, four bars.",
@@ -15246,7 +15291,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["solar-42n/solar-water-garden"],
+      "sounds": ["solar-42n/solar-water-garden", "jupiter-8/jp8-yoshimura"],
       "research": {
         "work": "Hiroshi Yoshimura, Music for Nine Postcards, 1982",
         "part": "Two short pentatonic phrases with air between them.",
@@ -15363,6 +15408,59 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Nothing for Huun-Huur-Tu was found on Songsterr, BitMIDI or the Mutopia Project. Khoomei is sung over one held note, and the sound makes the overtone itself. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:huun-huur-tu/khoomei-drone-low",
+      "name": "Khoomei: the held fundamental, low",
+      "role": "held",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Huun-Huur-Tu" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 50,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 28, "gate": 16 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-6/jp6-overtone-singer"],
+      "research": {
+        "work": "Huun-Huur-Tu, “Prayer”",
+        "part": "One low E held for two bars; the sound sweeps the overtone above it: the same part an octave down, where the Jupiter-6’s “Overtone Singer” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "Nothing for Huun-Huur-Tu was found on Songsterr, BitMIDI or the Mutopia Project. Khoomei is sung over one held note, and the sound makes the overtone itself. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:huun-huur-tu/khoomei-drone.",
         "listenedAt": null
       }
     },
@@ -17227,7 +17325,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/looking-glass-marimba"],
+      "sounds": ["model-d/looking-glass-marimba", "jupiter-8/jp8-midori-takada"],
       "research": {
         "work": "Midori Takada, Through the Looking Glass, 1983",
         "part": "A figure of threes against the bar: E G B twice and C B, then D G A twice and B A.",
@@ -18648,6 +18746,75 @@
       }
     },
     {
+      "key": "researched:pauline-oliveros/deep-listening-tones-low",
+      "name": "Deep Listening: two long tones, low",
+      "role": "held",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Pauline Oliveros" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 30,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 40, "gate": 15 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 47, "gate": 15 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-6/jp6-deep-listening-drone"],
+      "research": {
+        "work": "Pauline Oliveros, Deep Listening, 1989",
+        "part": "An E held for two bars, then a B, each left to bloom: the same part an octave down, where the Jupiter-6’s “Deep Listening Drone” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "Nothing for Deep Listening was found on Songsterr, BitMIDI or the Mutopia Project. The pieces are improvised. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:pauline-oliveros/deep-listening-tones.",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:pauline-oliveros/delay-tones",
       "name": "Oliveros: slow tones for the delay",
       "role": "slow_melody",
@@ -19963,7 +20130,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/slow-bloom"],
+      "sounds": ["deepmind-12d/slow-bloom", "jupiter-8/jp8-stars-of-the-lid"],
       "research": {
         "work": "Stars of the Lid, the slowly opening drones",
         "part": "C with the ninth for two bars, then A minor.",
@@ -21037,7 +21204,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["solar-42n/solar-fourth-world-horn"],
+      "sounds": ["solar-42n/solar-fourth-world-horn", "jupiter-4/j4-fourth-world-trumpet"],
       "research": {
         "work": "Jon Hassell, Fourth World, Vol. 1: Possible Musics, 1980",
         "part": "A slow line around D, up to G and down to C.",

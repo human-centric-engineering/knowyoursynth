@@ -10,6 +10,34 @@
     {
       "sound": "malevolent/mal-shout-bass",
       "reason": "The batch has no pattern from Tears for Fears — “Shout”; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "jupiter-8/jp8-synthpop-arp-updown",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; it names a style, not one work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "jupiter-8/jp8-africa-mallet",
+      "reason": "Names “Africa”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jupiter-8/jp8-simple-minds-keys",
+      "reason": "In the style of Simple Minds: it names no work, and the batch has no Simple Minds pattern of the part it plays, so the chord stabs is the lesson’s own."
+    },
+    {
+      "sound": "jupiter-8/jp8-genesis-pad",
+      "reason": "In the style of Genesis: it names no work, and the batch has no Genesis pattern of the part it plays, so the chords is the lesson’s own."
+    },
+    {
+      "sound": "jupiter-8/jp8-alphaville-pad",
+      "reason": "In the style of Alphaville: it names no work, and the batch has no Alphaville pattern of the part it plays, so the chords is the lesson’s own."
+    },
+    {
+      "sound": "jupiter-6/jp6-reverse-sync",
+      "reason": "In the style of new wave: it names no work, and the batch has no new wave pattern of the part it plays, so the line is the lesson’s own."
+    },
+    {
+      "sound": "jupiter-6/jp6-west-end-stabs",
+      "reason": "The batch’s “West End Girls: bass” is another part of the work; this sound plays the chords above it, which is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -594,7 +622,8 @@
       "sounds": [
         "super-gemini/sg-take-on-me",
         "e7/e7-new-wave-riff",
-        "mantis/mantis-take-on-me-lead"
+        "mantis/mantis-take-on-me-lead",
+        "jupiter-8/jp8-aha-riff"
       ],
       "research": {
         "work": "a-ha, “Take On Me”, Hunting High and Low, 1985",
@@ -934,6 +963,158 @@
           }
         ],
         "notes": "From the transcription’s “Synths (RH)” OB-X track, bars 1–4, as written. The left hand’s held C octaves are a part of their own and are left out. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:van-halen/jump-riff-low",
+      "name": "Jump: synth riff, low",
+      "role": "chord_stabs",
+      "tempo": null,
+      "inspiredBy": { "kind": "work", "songId": "van-halen-jump", "part": 0 },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 130,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 62, "gate": 1 },
+                  { "note": 59, "gate": 1 },
+                  { "note": 55, "gate": 1 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 64, "gate": 1 },
+                  { "note": 60, "gate": 1 },
+                  { "note": 55, "gate": 1 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 60, "gate": 1 },
+                  { "note": 57, "gate": 1 },
+                  { "note": 53, "gate": 1 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 60, "gate": 1 },
+                  { "note": 57, "gate": 1 },
+                  { "note": 53, "gate": 1 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 62, "gate": 1 },
+                  { "note": 59, "gate": 1 },
+                  { "note": 55, "gate": 1 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 62, "gate": 3 },
+                  { "note": 59, "gate": 3 },
+                  { "note": 55, "gate": 3 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 64, "gate": 1 },
+                  { "note": 60, "gate": 1 },
+                  { "note": 55, "gate": 1 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 60, "gate": 1 },
+                  { "note": 57, "gate": 1 },
+                  { "note": 53, "gate": 1 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 57, "gate": 2 },
+                  { "note": 53, "gate": 2 },
+                  { "note": 48, "gate": 2 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 55, "gate": 1 },
+                  { "note": 52, "gate": 1 },
+                  { "note": 48, "gate": 1 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": [
+                  { "note": 55, "gate": 5 },
+                  { "note": 50, "gate": 5 },
+                  { "note": 48, "gate": 5 }
+                ]
+              },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-8/jp8-jump-stab"],
+      "research": {
+        "work": "Van Halen, “Jump”, 1984, 1984",
+        "part": "The four-bar intro riff in triads: G, C over G, F twice, G and G held; then C over G, F, F over C, C and the held Csus2: the same part an octave down, where the Jupiter-8’s “Jump Stabs” plays.",
+        "originalKey": null,
+        "originalBpm": 130,
+        "leads": [
+          {
+            "citation": "Van Halen — “Jump”, fan transcription by Rafael sousa Sousa on Songsterr (revision 9118962, 2026-09-16)",
+            "url": "https://www.songsterr.com/a/wsa/van-halen-jump-tab-s21889",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s “Synths (RH)” OB-X track, bars 1–4, as written. The left hand’s held C octaves are a part of their own and are left out. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:van-halen/jump-riff.",
         "listenedAt": null
       }
     },
@@ -2482,7 +2663,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["super-gemini/sg-countdown-fanfare", "e7/e7-final-brass", "ub-xa-d/stab-brass"],
+      "sounds": [
+        "super-gemini/sg-countdown-fanfare",
+        "e7/e7-final-brass",
+        "ub-xa-d/stab-brass",
+        "jupiter-8/jp8-final-brass"
+      ],
       "research": {
         "work": "Europe, “The Final Countdown”, The Final Countdown, 1986",
         "part": "The four-bar brass riff: A held, the turn C♯, B to C♯ and F♯; D, C♯, D, C♯, B; D, C♯, D, F♯; B, A, B, A, G♯, B.",
@@ -2948,6 +3134,65 @@
           }
         ],
         "notes": "From the transcription’s “Bass Synth (Right)” SH-101 track, bars 1–2, as written. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:eurythmics/sweet-dreams-riff-low",
+      "name": "Sweet Dreams: riff, low",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "work", "songId": "eurythmics-sweet-dreams", "part": 0 },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 126,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 24, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 39, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 51, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 32, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 32, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 44, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 31, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 31, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 43, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 1 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-6/jp6-sweet-dreams-seq"],
+      "research": {
+        "work": "Eurythmics, “Sweet Dreams (Are Made of This)”, Sweet Dreams (Are Made of This), 1983",
+        "part": "The two-bar riff in eighths: C, C, the C and C above, E♭ and its octave, C and C; then A♭, A♭, A♭, C, G, G, G, C: the same part an octave down, where the Jupiter-6’s “Sweet Dreams Sequence” plays.",
+        "originalKey": null,
+        "originalBpm": 126,
+        "leads": [
+          {
+            "citation": "Eurythmics — “Sweet Dreams (Are Made of This) (12\" Version)”, fan transcription by Ian Meyer on Songsterr (revision 10051435, 2026-10-29)",
+            "url": "https://www.songsterr.com/a/wsa/eurythmics-sweet-dreams-are-made-of-this-12-version-tab-s34493",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s “Bass Synth (Right)” SH-101 track, bars 1–2, as written. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:eurythmics/sweet-dreams-riff.",
         "listenedAt": null
       }
     },
@@ -4175,7 +4420,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/synth-pop-bass"],
+      "sounds": ["ub-xa-d/synth-pop-bass", "jupiter-8/jp8-hungry-sequence"],
       "research": {
         "work": "Duran Duran, “Rio”, Rio, 1982",
         "part": "The four-bar verse bass: low E jumping to its octave, D, G, G♯, A, twice; then A and C with their fifths.",
@@ -6336,7 +6581,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["pro-1/wobbly-sweet-lead", "ub-xa-d/marimba-pluck"],
+      "sounds": ["pro-1/wobbly-sweet-lead", "ub-xa-d/marimba-pluck", "jupiter-4/j4-naive-melody"],
       "research": {
         "work": "Talking Heads, “This Must Be the Place (Naive Melody)”, Speaking in Tongues, 1983",
         "part": "Eight bars of the intro melody’s top line: D repeated with E flicks, down to C; twice; then C, B and the walk to B held.",
@@ -8888,6 +9133,113 @@
       }
     },
     {
+      "key": "researched:the-cars/lets-go-riff-low",
+      "name": "Let’s Go: synth riff, low",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "work", "songId": "the-cars-lets-go", "part": 0 },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 132,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 66, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 62, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 71, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 63, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 59, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 57, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 52, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 57, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 57, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 66, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 62, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 57, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 52, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 66, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 62, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 71, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 73, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 71, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 69, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 68, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 66, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 59, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 57, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 56, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 57, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 64, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 61, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 57, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 66, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 62, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 57, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 52, "gate": 2 }] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-6/jp6-lets-go-sync"],
+      "research": {
+        "work": "The Cars, “Let’s Go”, Candy-O, 1979",
+        "part": "The four-bar intro riff: F♯, D, the high B, D♯, B, then E, C♯, A falling to the low E; and a run down from the high C♯ to G♯ in the third bar: the same part an octave down, where the Jupiter-6’s “Wowing Sync Lead” plays.",
+        "originalKey": null,
+        "originalBpm": 132,
+        "leads": [
+          {
+            "citation": "The Cars — “Let's Go Drum Correct”, transcription generated by Songsterr AI on Songsterr (revision 9923132, 2026-10-23)",
+            "url": "https://www.songsterr.com/a/wsa/the-cars-let-s-go-drum-correct-tab-s2210616",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s “Synth” track, bars 6–9, as written. _In the style of_: the notes come from a transcription Songsterr generated by machine, a weaker starting point than a fan’s. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:the-cars/lets-go-riff.",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:the-cars/just-what-i-needed-outro",
       "name": "Just What I Needed: outro line",
       "role": "lead_line",
@@ -10374,7 +10726,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["pro-800/p8-air-pad", "take-5/t5-air-tonight-pad"],
+      "sounds": [
+        "pro-800/p8-air-pad",
+        "take-5/t5-air-tonight-pad",
+        "jupiter-8/jp8-air-tonight-pad"
+      ],
       "research": {
         "work": "Phil Collins, “In the Air Tonight”, Face Value, 1981",
         "part": "Four bars of held triads, a bar each: D minor, C, B♭, C.",
@@ -11506,7 +11862,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/lush-pad", "deepmind-12d/poly-pluck"],
+      "sounds": ["ub-xa-d/lush-pad", "deepmind-12d/poly-pluck", "jupiter-8/jp8-mad-world-pad"],
       "research": {
         "work": "Tears for Fears, “Everybody Wants to Rule the World”, Songs from the Big Chair, 1985",
         "part": "Four bars of held chorus chords, a bar each: E minor over B, F♯ minor over C♯, G over D, F♯ minor over C♯.",
@@ -12362,7 +12718,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/arena-riff", "ub-xa-d/swell-brass"],
+      "sounds": ["deepmind-12d/arena-riff", "ub-xa-d/swell-brass", "jupiter-8/jp8-separate-ways"],
       "research": {
         "work": "Journey, “Separate Ways (Worlds Apart)”, Frontiers, 1983",
         "part": "The two-bar intro riff: E, F♯ and G rung out over pulsing eighths on E and B.",
@@ -13888,7 +14244,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/unison-bass"],
+      "sounds": ["ub-xa-d/unison-bass", "jupiter-8/jp8-relax-bass"],
       "research": {
         "work": "Frankie Goes to Hollywood, “Relax”, single, 1983",
         "part": "Two bars of the post-chorus figure: E, C♯, D, then a bar’s rest.",
@@ -14741,7 +15097,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-what-is-love-stab"],
+      "sounds": ["take-5/t5-what-is-love-stab", "jupiter-4/j4-what-is-love-stabs"],
       "research": {
         "work": "Haddaway, “What Is Love”, The Album, 1993",
         "part": "Four bars of the stabbed chords: G minor, B♭, D minor, F, each bar ending with a push into the next.",
@@ -15728,6 +16084,81 @@
           }
         ],
         "notes": "From the transcription’s “Dennis DeYoung (Synths I)” track, bars 6–9, as written. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:styx/mr-roboto-intro-low",
+      "name": "Mr. Roboto: synth intro, low",
+      "role": "slow_melody",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Styx" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 120,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 58, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 56, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 61, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 60, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 56, "gate": 2 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 54, "gate": 14 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jupiter-4/j4-roboto-riff"],
+      "research": {
+        "work": "Styx, “Mr. Roboto”, Kilroy Was Here, 1983",
+        "part": "Four bars of the intro melody: B♭, A♭; C♯, C; A♭ and a long F♯: the same part an octave down, where the Jupiter-4’s “Robot Rock Riff” plays.",
+        "originalKey": null,
+        "originalBpm": 120,
+        "leads": [
+          {
+            "citation": "Styx — “Mr. Roboto”, fan transcription by BelovedProblemChild on Songsterr (revision 7164252, 2026-06-03)",
+            "url": "https://www.songsterr.com/a/wsa/styx-mr-roboto-tab-s19271",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s “Dennis DeYoung (Synths I)” track, bars 6–9, as written. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:styx/mr-roboto-intro.",
         "listenedAt": null
       }
     },
@@ -16814,7 +17245,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/soft-chorus-keys"],
+      "sounds": ["deepmind-12d/soft-chorus-keys", "jupiter-6/jp6-last-christmas-keys"],
       "research": {
         "work": "Wham!, “Last Christmas”, single, 1984",
         "part": "Four bars of the pulsing Juno chords: F♯ minor seventh to B minor over F♯, with the rocking A between.",
@@ -17004,7 +17435,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/oh-yeah-bow-bass"],
+      "sounds": ["neutron/oh-yeah-bow-bass", "jupiter-4/j4-oh-yeah-bass"],
       "research": {
         "work": "Yello, “Oh Yeah”, Stella, 1985",
         "part": "The two-bar bass: E♭, E♭, then up through F♯, G♯, A, B♭ and back down.",
