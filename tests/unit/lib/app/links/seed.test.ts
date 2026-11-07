@@ -374,7 +374,11 @@ function fakeDb(have: {
   songs?: string[];
   artists?: string[];
   sounds?: string[];
+  /** Links this database has had from the seed, as `<kind>:<id> <url>`. */
+  recorded?: string[];
 }) {
+  /** The writes in the order they were made. */
+  const writes: string[] = [];
   const ids = (list: string[] = []) =>
     vi.fn(({ where }: { where: { id: { in: string[] } } }) =>
       Promise.resolve(list.filter((id) => where.id.in.includes(id)).map((id) => ({ id })))
@@ -398,10 +402,27 @@ function fakeDb(have: {
     externalLink: {
       // Postgres skips a duplicate of the unique owner + URL; here, `existing` stands for those already stored.
       existing: 0,
-      createMany: vi.fn(({ data: rows }: { data: unknown[] }) =>
-        Promise.resolve({ count: rows.length - db.externalLink.existing })
-      ),
+      createMany: vi.fn(({ data: rows }: { data: unknown[] }) => {
+        writes.push('externalLink');
+        return Promise.resolve({ count: rows.length - db.externalLink.existing });
+      }),
     },
+    linkSeedRecord: {
+      findMany: vi.fn(() =>
+        Promise.resolve(
+          (have.recorded ?? []).map((r) => {
+            const [owner = '', url = ''] = r.split(' ');
+            const at = owner.indexOf(':');
+            return { ownerKind: owner.slice(0, at), ownerId: owner.slice(at + 1), url };
+          })
+        )
+      ),
+      createMany: vi.fn(({ data: rows }: { data: unknown[] }) => {
+        writes.push('linkSeedRecord');
+        return Promise.resolve({ count: rows.length });
+      }),
+    },
+    writes,
   };
   return db;
 }
@@ -427,7 +448,7 @@ describe('seedLinks', () => {
         ['song', 'kraftwerk-autobahn', [link(BANDCAMP, { providerId: 'album=123' })]]
       )
     );
-    expect(report).toEqual({ created: 4, existing: 0, missingOwners: [] });
+    expect(report).toEqual({ created: 4, existing: 0, alreadyApplied: 0, missingOwners: [] });
     expect(db.externalLink.createMany).toHaveBeenCalledTimes(1);
     const base = { thumbnailUrl: null, ours: false, order: 0, rating: null, title: 'A video' };
     expect(db.externalLink.createMany).toHaveBeenCalledWith({
@@ -479,9 +500,95 @@ describe('seedLinks', () => {
       asClient(db),
       data(['instrument', 'moog-minimoog', [link(YT), link(YT2)]])
     );
-    expect(report).toEqual({ created: 0, existing: 2, missingOwners: [] });
+    expect(report).toEqual({ created: 0, existing: 2, alreadyApplied: 0, missingOwners: [] });
     // Only a create is ever asked for, never an update or a delete: the client has no other write to call.
     expect(Object.keys(db.externalLink)).toEqual(['existing', 'createMany']);
+    // They were there all along, so they count as applied, and a later delete sticks.
+    expect(db.linkSeedRecord.createMany).toHaveBeenCalledWith({
+      skipDuplicates: true,
+      data: [
+        { ownerKind: 'instrument', ownerId: 'moog-minimoog', url: YT },
+        { ownerKind: 'instrument', ownerId: 'moog-minimoog', url: YT2 },
+      ],
+    });
+  });
+
+  describe('once per database', () => {
+    it('records every link it applies, after writing the links', async () => {
+      const db = fakeDb({ instruments: ['moog-minimoog'], sounds: ['model-d/stacked-night-bass'] });
+      await seedLinks(
+        asClient(db),
+        data(
+          ['instrument', 'moog-minimoog', [link(YT)]],
+          ['sound', 'model-d/stacked-night-bass', [link(YT2)]]
+        )
+      );
+      expect(db.linkSeedRecord.createMany).toHaveBeenCalledWith({
+        skipDuplicates: true,
+        data: [
+          { ownerKind: 'instrument', ownerId: 'moog-minimoog', url: YT },
+          // A sound is recorded by its natural key, not its row id, so the record outlives a re-created row.
+          { ownerKind: 'sound', ownerId: 'model-d/stacked-night-bass', url: YT2 },
+        ],
+      });
+      // Links first: a run that stops between the two records nothing it did not write.
+      expect(db.writes).toEqual(['externalLink', 'linkSeedRecord']);
+    });
+
+    it('never applies a recorded link again, though its owner no longer has it', async () => {
+      // As after an admin deleted YT, or changed its URL to another: the owner lacks it, and the record remains.
+      const db = fakeDb({
+        instruments: ['moog-minimoog'],
+        recorded: [`instrument:moog-minimoog ${YT}`],
+      });
+      const report = await seedLinks(
+        asClient(db),
+        data(['instrument', 'moog-minimoog', [link(YT), link(YT2)]])
+      );
+      expect(report).toEqual({ created: 1, existing: 0, alreadyApplied: 1, missingOwners: [] });
+      const created = db.externalLink.createMany.mock.calls[0]?.[0] as { data: { url: string }[] };
+      expect(created.data.map((r) => r.url)).toEqual([YT2]);
+      expect(db.linkSeedRecord.createMany).toHaveBeenCalledWith({
+        skipDuplicates: true,
+        data: [{ ownerKind: 'instrument', ownerId: 'moog-minimoog', url: YT2 }],
+      });
+    });
+
+    it('a record is for its owner only: the same URL on another owner still applies', async () => {
+      const db = fakeDb({
+        instruments: ['moog-minimoog', 'arp-2600'],
+        recorded: [`instrument:moog-minimoog ${YT}`],
+      });
+      const report = await seedLinks(
+        asClient(db),
+        data(['instrument', 'moog-minimoog', [link(YT)]], ['instrument', 'arp-2600', [link(YT)]])
+      );
+      expect(report).toEqual({ created: 1, existing: 0, alreadyApplied: 1, missingOwners: [] });
+    });
+
+    it('when everything is recorded, looks up no owner and writes nothing', async () => {
+      const db = fakeDb({
+        instruments: ['moog-minimoog'],
+        recorded: [`instrument:moog-minimoog ${YT}`, `instrument:moog-minimoog ${YT2}`],
+      });
+      const report = await seedLinks(
+        asClient(db),
+        data(['instrument', 'moog-minimoog', [link(YT), link(YT2)]])
+      );
+      expect(report).toEqual({ created: 0, existing: 0, alreadyApplied: 2, missingOwners: [] });
+      expect(db.bankInstrument.findMany).not.toHaveBeenCalled();
+      expect(db.writes).toEqual([]);
+    });
+
+    it("gives a missing owner's links no record, so they apply once the owner exists", async () => {
+      const db = fakeDb({});
+      await seedLinks(asClient(db), data(['instrument', 'not-yet', [link(YT)]]));
+      expect(db.linkSeedRecord.createMany).not.toHaveBeenCalled();
+
+      const later = fakeDb({ instruments: ['not-yet'] });
+      const report = await seedLinks(asClient(later), data(['instrument', 'not-yet', [link(YT)]]));
+      expect(report).toEqual({ created: 1, existing: 0, alreadyApplied: 0, missingOwners: [] });
+    });
   });
 
   it('skips the links of an owner the database does not have, and names it', async () => {
@@ -498,6 +605,7 @@ describe('seedLinks', () => {
     expect(report).toEqual({
       created: 1,
       existing: 0,
+      alreadyApplied: 0,
       missingOwners: ['instrument:removed-synth', 'artist:nobody', 'sound:model-d/gone'],
     });
   });
@@ -512,7 +620,7 @@ describe('seedLinks', () => {
         ['song', 'nothing-here', []]
       )
     );
-    expect(report).toEqual({ created: 1, existing: 0, missingOwners: [] });
+    expect(report).toEqual({ created: 1, existing: 0, alreadyApplied: 0, missingOwners: [] });
     expect(db.bankInstrument.findMany).toHaveBeenCalledWith({
       where: { id: { in: ['moog-minimoog'] } },
       select: { id: true },
@@ -534,9 +642,10 @@ describe('seedLinks', () => {
     expect(await seedLinks(asClient(db), [])).toEqual({
       created: 0,
       existing: 0,
+      alreadyApplied: 0,
       missingOwners: [],
     });
-    expect(db.externalLink.createMany).not.toHaveBeenCalled();
+    expect(db.writes).toEqual([]);
   });
 
   it('throws with every problem and writes nothing when the data does not check', async () => {

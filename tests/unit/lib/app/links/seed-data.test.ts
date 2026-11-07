@@ -168,17 +168,23 @@ describe('the seed unit run', () => {
     const unit = (await import('@/prisma/seeds/app-knowyoursynth/006-links')).default;
     const logger = { info: vi.fn(), warn: vi.fn() };
 
-    spy.mockResolvedValueOnce({ created: 3, existing: 1, missingOwners: [] });
+    spy.mockResolvedValueOnce({ created: 3, existing: 1, alreadyApplied: 5, missingOwners: [] });
     await unit.run({ prisma: {}, logger } as never);
     expect(spy).toHaveBeenCalledWith({}, loadLinkData());
     expect(logger.info).toHaveBeenCalledWith('Links seeded', {
       created: 3,
       existing: 1,
+      alreadyApplied: 5,
       missingOwners: 0,
     });
     expect(logger.warn).not.toHaveBeenCalled();
 
-    spy.mockResolvedValueOnce({ created: 0, existing: 0, missingOwners: ['instrument:gone'] });
+    spy.mockResolvedValueOnce({
+      created: 0,
+      existing: 0,
+      alreadyApplied: 0,
+      missingOwners: ['instrument:gone'],
+    });
     await unit.run({ prisma: {}, logger } as never);
     expect(logger.warn).toHaveBeenCalledWith(
       'Links skipped: their owners are not in this database',

@@ -21,6 +21,7 @@ sounds).
 | Suggest a link, the queue   | `suggest-link.tsx`, `admin/links/suggestion-queue.tsx`  | t-186 |
 | Links on your own sounds    | `UserSound.links`, `lib/app/sounds/links.ts`            | t-187 |
 | Seed data and its export    | `006-links.ts`, `lib/app/links/seed.ts`, `links:export` | t-199 |
+| Applied once per database   | `LinkSeedRecord`, `seedLinks`                           | t-200 |
 
 ## Don't
 
@@ -34,7 +35,7 @@ sounds).
   pinned by a drift probe (`lib/app/db-drift.ts`). A new owner kind means a new column, a new CHECK, a new unique
   index on it plus `url`, a case in `owner.ts`, an entry in `OWNER_COLUMN` (`owner-ref.ts`), and a lookup in the
   seed's `ownerRows` (`seed.ts`).
-- **Don't expect a reseed to change a link.** The seed only creates what an owner doesn't have yet (Seeded links). To
+- **Don't expect a reseed to change a link.** The seed only creates links this database has never had from it (Seeded links). To
   change a seeded link anywhere it already exists, edit it there; to change the data, edit it in dev and re-export.
 - **Don't add a link to the seed data by hand.** Add it in dev through the admin pages, so it is parsed and titled the
   way every link is, then run `npm run links:export`.
@@ -301,6 +302,11 @@ the daily stats job fills them.
 
 - **Checked before anything is written.** Every URL must parse to itself, once per owner, with a kind and a title. A
   problem anywhere throws with the whole list and writes nothing.
+- **Once per database** (owner ruling, t-200). Each link it applies, created or found already there, gets a
+  `LinkSeedRecord` (owner kind, owner's natural key, URL), and a link with a record is never applied again. So a seeded
+  link an admin deletes, or moves to another URL, stays gone through every reseed, however often the unit re-runs; links
+  new to the data still arrive. Links are written before their records, so a run stopped between the two records
+  nothing it didn't write. The record has no foreign key, so it outlives its link and its owner.
 - **Create only.** A link its owner already has (owner + URL, the unique index, so `createMany` skips it) is left as
   it is: an admin's title, kind, ours, order and rating, and YouTube's counts, survive every reseed.
 - **Never deletes.** A link an admin added that isn't in the data stays.
@@ -325,21 +331,22 @@ its stored form, so the committed data test, the seed and the export all fail un
 rewritten to the new form, together. That refusal is deliberate: accepting the new form quietly would create it beside
 the old one on every database that already has the link.
 
-**Accepted costs**, all because the seed can see what an owner has, not what it once had (journal, 2026-11-07):
+**When the unit re-runs:** whenever any of its `hashInputs` changes: the data, the loader, the links code it runs
+(`seed.ts`, `providers.ts`, `owner-ref.ts`), and what decides a URL's stored form and an owner's shape
+(`lib/security/sanitize.ts`, an upstream file; `lib/app/bank/data.ts`; `lib/app/sounds/data.ts`). A re-run applies only
+links it has no record of, so an unrelated edit to one of those files re-runs it harmlessly.
 
-- **A seeded link an admin deletes, or moves to another URL, comes back** the next time the unit runs, which is
-  whenever any of its `hashInputs` changes: the data, the loader, the links code it runs (`seed.ts`, `providers.ts`,
-  `owner-ref.ts`), and what decides a URL's stored form and an owner's shape (`lib/security/sanitize.ts`, an upstream
-  file; `lib/app/bank/data.ts`; `lib/app/sounds/data.ts`). Those are hashed so a change to what the seed accepts
-  always re-runs it; the cost is that an unrelated edit to one of them re-runs it too. To remove or replace a link for
-  good, do it in dev and re-export with `--prune`.
-- **An owner missing when the unit runs gets its links only on its next run.** The runner has no way to force one;
-  restoring the owner doesn't change the unit's hash.
+**Accepted costs** (journal, 2026-11-07):
+
+- **A link removed from the data and added back later isn't applied again** on a database that had it: its record
+  remains. Add it there through the admin pages.
+- **An owner missing when the unit runs gets its links only on its next run.** Its links get no record, so they apply
+  then; but the runner has no way to force a run, and restoring the owner doesn't change the unit's hash.
 - **Seeded `ours` links keep their `order`**, so on a database whose admin already has their own `ours` links on that
   owner, two can share a position (the tie falls to `createdAt`) until one reorder. No seeded link is `ours` today.
 
-A tombstone (as the databank's `BankRemoval` is) would answer the first two; it waits until admins curate links on a
-deployed database. The admin audit log can't stand in for one, because the retention job prunes it.
+**Removing a link everywhere:** deleting it in dev and re-exporting with `--prune` keeps it out of databases that
+haven't seeded it yet. One that already has it keeps it until an admin there deletes it, and then it stays deleted.
 
 ## Suggestions
 
