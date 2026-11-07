@@ -74,10 +74,6 @@
     {
       "sound": "tb-303/tb-droid-chatter",
       "reason": "An effect: whistles and burbles in the manner of Ben Burtt’s droid voices, which were made from a synthesizer and his own voice rather than played as notes. There is no part to write."
-    },
-    {
-      "sound": "td-3/td-survive-arp",
-      "reason": "In the style of S U R V I V E: it names no work, and the batch has no S U R V I V E pattern of the part it plays, so the arpeggio is the lesson’s own."
     }
   ],
   "patterns": [
@@ -6351,7 +6347,8 @@
         "neutron/dark-arp",
         "2-xm/duo-counterpoint",
         "solar-42n/solar-eighties-arp",
-        "e7/e7-eighties-arp"
+        "e7/e7-eighties-arp",
+        "td-3/td-survive-arp"
       ],
       "research": {
         "work": "Kyle Dixon and Michael Stein, “Stranger Things” (main title), Stranger Things, 2016",
@@ -8706,11 +8703,7 @@
         ],
         "chain": [0]
       },
-      "sounds": [
-        "take-5/t5-morricone-whistle",
-        "malevolent/mal-western-whistle",
-        "td-3/td-western-whistle"
-      ],
+      "sounds": ["take-5/t5-morricone-whistle", "malevolent/mal-western-whistle"],
       "research": {
         "work": "Ennio Morricone, main title, The Good, the Bad and the Ugly, 1966",
         "part": "The four-bar call: A, D, A, D, A held, F; G, D held; then again, ending G, C.",
@@ -14775,6 +14768,113 @@
         "originalBpm": null,
         "leads": [],
         "notes": "The one “Silk Road” transcription was made by Songsterr’s machine, as a nylon-guitar arrangement in arpeggios with no line that can be told apart as the melody. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:ennio-morricone/good-bad-ugly-theme-low",
+      "name": "The Good, the Bad and the Ugly: theme, low",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Ennio Morricone" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 130,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 69, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 74, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 69, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 74, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 69, "gate": 8 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 65, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 67, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 62, "gate": 8 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 69, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 74, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 69, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 74, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 69, "gate": 8 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 65, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 67, "gate": 4 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 72, "gate": 8 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["td-3/td-western-whistle"],
+      "research": {
+        "work": "Ennio Morricone, main title, The Good, the Bad and the Ugly, 1966",
+        "part": "The four-bar call: A, D, A, D, A held, F; G, D held; then again, ending G, C: the same part an octave down, where the TD-3’s “Western Whistle” plays.",
+        "originalKey": null,
+        "originalBpm": 130,
+        "leads": [
+          {
+            "citation": "Ennio Morricone — “The Good, The Bad and the Ugly”, fan transcription by femboy.gardevoir on Songsterr (revision 3245622, 2025-09-30)",
+            "url": "https://www.songsterr.com/a/wsa/ennio-morricone-the-good-the-bad-and-the-ugly-tab-s12989",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s “Track 1” lead, bars 1–4, an octave up to sit where the sound plays. On the record the call is a recorder and voices; this is its line. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:ennio-morricone/good-bad-ugly-theme.",
         "listenedAt": null
       }
     }

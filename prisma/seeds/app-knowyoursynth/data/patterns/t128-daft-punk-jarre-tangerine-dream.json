@@ -7181,7 +7181,7 @@
     },
     {
       "key": "researched:daft-punk/revolution-909-bass-low",
-      "name": "Revolution 909: bass pulse, an octave down",
+      "name": "Revolution 909: bass pulse, low",
       "role": "percussive",
       "tempo": null,
       "inspiredBy": { "kind": "artist", "artistId": "daft-punk" },
@@ -7250,7 +7250,7 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "From the transcription’s bass track, bars 35–36, moved up an octave. The transcription writes the bass as one pitch throughout. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:daft-punk/revolution-909-bass, as written there.",
+        "notes": "From the transcription’s bass track, bars 35–36, moved up an octave. The transcription writes the bass as one pitch throughout. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:daft-punk/revolution-909-bass.",
         "listenedAt": null
       }
     },
@@ -8343,7 +8343,7 @@
     },
     {
       "key": "researched:jean-michel-jarre/oxygene-iv-arpeggio-low",
-      "name": "Oxygène IV: triplet arpeggio, an octave down",
+      "name": "Oxygène IV: triplet arpeggio, low",
       "role": "arp",
       "tempo": null,
       "inspiredBy": { "kind": "work", "songId": "jean-michel-jarre-oxygene" },
@@ -8428,7 +8428,7 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "The melody is its own pattern (researched:jean-michel-jarre/oxygene-iv-melody). From the transcription’s lower piano staff, bars 17–20, moved up an octave to sit in a lead’s register. It plays at the transcription’s 125 bpm; the MIDI file has the work at 123, so the original tempo is left unset. The laser-harp lead on the E7 names no work. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:jean-michel-jarre/oxygene-iv-arpeggio, as written there.",
+        "notes": "The melody is its own pattern (researched:jean-michel-jarre/oxygene-iv-melody). From the transcription’s lower piano staff, bars 17–20, moved up an octave to sit in a lead’s register. It plays at the transcription’s 125 bpm; the MIDI file has the work at 123, so the original tempo is left unset. The laser-harp lead on the E7 names no work. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:jean-michel-jarre/oxygene-iv-arpeggio.",
         "listenedAt": null
       }
     },
@@ -12146,7 +12146,7 @@
     },
     {
       "key": "researched:daft-punk/rollin-and-scratchin-screech-low",
-      "name": "Rollin’ & Scratchin’: screech riff, an octave down",
+      "name": "Rollin’ & Scratchin’: screech riff, low",
       "role": "bass_line",
       "tempo": null,
       "inspiredBy": { "kind": "artist", "artistId": "daft-punk" },
@@ -12209,7 +12209,7 @@
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
-        "notes": "Nothing for “Rollin’ & Scratchin’” was found on Songsterr, BitMIDI, Hooktheory, MuseScore or Noteflight. Written by t-169 on 2026-11-02. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:daft-punk/rollin-and-scratchin-screech, as written there.",
+        "notes": "Nothing for “Rollin’ & Scratchin’” was found on Songsterr, BitMIDI, Hooktheory, MuseScore or Noteflight. Written by t-169 on 2026-11-02. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:daft-punk/rollin-and-scratchin-screech.",
         "listenedAt": null
       }
     },
@@ -14594,7 +14594,7 @@
     },
     {
       "key": "researched:tangerine-dream/phaedra-sequence-keys-low",
-      "name": "Phaedra: sequence keys, an octave down",
+      "name": "Phaedra: sequence keys, low",
       "role": "held",
       "tempo": null,
       "inspiredBy": { "kind": "work", "songId": "tangerine-dream-phaedra" },
@@ -14689,7 +14689,7 @@
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
-        "notes": "Nothing from Phaedra was found on Songsterr, BitMIDI, Hooktheory, MuseScore or Noteflight. Written by t-169 on 2026-11-02. The 960 sequencer plays the line, so the pattern only holds the key it is transposed to. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:tangerine-dream/phaedra-sequence-keys, as written there.",
+        "notes": "Nothing from Phaedra was found on Songsterr, BitMIDI, Hooktheory, MuseScore or Noteflight. Written by t-169 on 2026-11-02. The 960 sequencer plays the line, so the pattern only holds the key it is transposed to. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:tangerine-dream/phaedra-sequence-keys.",
         "listenedAt": null
       }
     },

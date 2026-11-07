@@ -2953,7 +2953,7 @@
     },
     {
       "key": "researched:eurythmics/sweet-dreams-riff-low",
-      "name": "Sweet Dreams: riff, an octave down",
+      "name": "Sweet Dreams: riff, low",
       "role": "bass_line",
       "tempo": null,
       "inspiredBy": { "kind": "work", "songId": "eurythmics-sweet-dreams", "part": 0 },
@@ -3006,7 +3006,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Bass Synth (Right)” SH-101 track, bars 1–2, as written. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:eurythmics/sweet-dreams-riff, as written there.",
+        "notes": "From the transcription’s “Bass Synth (Right)” SH-101 track, bars 1–2, as written. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:eurythmics/sweet-dreams-riff.",
         "listenedAt": null
       }
     },
@@ -7990,8 +7990,7 @@
         "model-d/soft-front-deep-bass",
         "neutron/deep-rounded-glide-bass",
         "pro-1/deep-round-bass",
-        "super-gemini/sg-west-end-bass",
-        "donner-b1/b1-pet-shop"
+        "super-gemini/sg-west-end-bass"
       ],
       "research": {
         "work": "Pet Shop Boys, “West End Girls”, single, 1985",
@@ -8410,7 +8409,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-west-end-bass"],
+      "sounds": ["take-5/t5-west-end-bass", "donner-b1/b1-pet-shop"],
       "research": {
         "work": "Pet Shop Boys, “West End Girls”, single, 1985",
         "part": "The four-bar verse bass: D and E in a syncopated figure, twice, the second ending on G; then the same on A and G, ending on B.",

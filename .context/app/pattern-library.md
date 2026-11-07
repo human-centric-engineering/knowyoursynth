@@ -810,6 +810,21 @@ batch files they were already in, and left 25 reasons: the sounds with no part t
   the four patches above, the two random Jarre sounds, the "Boing Boom Tschak" voices, the "Computer World" vocoder,
   the "Tour de France" breath and the two Depeche Mode metal-percussion sounds, which were sampled metal.
 
+**Sounds added after the batches (t-191 on).** A library that grows (the `library-150` sweep) adds sounds by artists a
+batch already covers, and the roster test fails until the batch looks at each one. The TB-303, TD-3 and Donner B1
+added 99 such sounds:
+
+- **A pattern where the batch has one of the part the sound plays**: the work it names, or for a sound naming no work,
+  the artist's part of the same kind (a bass line for a bass), as peer sounds with the same credit already carry. 68 of
+  the 99.
+- **In the sound's register**: within a fifth of its riff's middle note. Where the closest of a pattern and its copies
+  is further, a `-low` or `-high` copy carries it, written as the batches' own copies are: the same leads, its part
+  saying where it plays, and its notes saying it was moved from the pattern and by how much. 34 copies, each an octave
+  or two; the batch test now holds every copy to its pattern, moved evenly in the direction its key says. No sound is
+  on both a pattern and its copy.
+- **A reason otherwise**, saying which: the batch has no pattern of the part the sound plays, the work it names has no
+  pattern yet, it is an effect, or its riff already plays the public-domain score. 31 of the 99.
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on

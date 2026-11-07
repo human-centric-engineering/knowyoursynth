@@ -74,6 +74,10 @@
     {
       "sound": "donner-b1/b1-consumed",
       "reason": "Names Consumed, which no pattern in this batch has yet; the pulse is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "td-3/td-body-music",
+      "reason": "In the style of Nitzer Ebb: it names no work, and the batch has no Nitzer Ebb pattern of the part it plays, so the bass line is the lesson’s own."
     }
   ],
   "patterns": [
@@ -395,7 +399,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-i-feel-love-bass", "model-d/seq-pulse", "tb-303/tb-feel-love-bass"],
+      "sounds": ["take-5/t5-i-feel-love-bass", "model-d/seq-pulse"],
       "research": {
         "work": "Donna Summer, “I Feel Love”, I Remember Yesterday, 1977 (Giorgio Moroder and Pete Bellotte)",
         "part": "The sequenced bass through the chord change: root, root, fifth and flat seventh in eighths, twice a bar, on C, E♭, F and G, a bar each.",
@@ -4231,7 +4235,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/mussolini-bass", "tb-303/tb-ebm-drive"],
+      "sounds": ["neutron/mussolini-bass"],
       "research": {
         "work": "DAF, “Der Mussolini”, Alles ist gut, 1981",
         "part": "The sequenced bass in eighths on B, jumping to the octave, with E and D at the top of the first bar.",
@@ -12959,7 +12963,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/drexciya-bubble-bass", "tb-303/tb-detroit-electro"],
+      "sounds": ["neutron/drexciya-bubble-bass"],
       "research": {
         "work": "Drexciya, “Bubble Metropolis”, 1993",
         "part": "A two-bar electro bass on C.",
@@ -14204,61 +14208,8 @@
       }
     },
     {
-      "key": "researched:plastikman/spastik-pings-low-2",
-      "name": "Spastik: pings, two octaves down",
-      "role": "percussive",
-      "tempo": null,
-      "inspiredBy": { "kind": "artist", "artistId": "plastikman" },
-      "fidelity": "in_the_style_of",
-      "sources": [],
-      "pattern": {
-        "version": 1,
-        "bpm": 128,
-        "stepSize": "1/16",
-        "loop": true,
-        "direction": "forward",
-        "swing": 50,
-        "transpose": 0,
-        "root": 0,
-        "scale": "chromatic",
-        "parts": [
-          {
-            "steps": [
-              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
-              { "on": true, "notes": [{ "note": 31, "gate": 0.5 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
-              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
-              { "on": true, "notes": [{ "note": 27, "gate": 0.5 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
-              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
-              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }], "accent": true }
-            ]
-          }
-        ],
-        "chain": [0]
-      },
-      "sounds": ["tb-303/tb-sheet-one"],
-      "research": {
-        "work": "Plastikman, “Spastik”, Sheet One, 1993",
-        "part": "A bar of pinging sixteenths on C, rolling at the end: the same part two octaves down, where the TB-303’s “Minimal Plastic” plays.",
-        "originalKey": null,
-        "originalBpm": null,
-        "leads": [],
-        "notes": "Nothing for “Spastik” was found on Songsterr or BitMIDI. The record is almost all percussion, so the pattern is a rhythm on two or three pitches. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved two octaves down from researched:plastikman/spastik-pings, as written there.",
-        "listenedAt": null
-      }
-    },
-    {
       "key": "researched:electro/zap-percussion-low",
-      "name": "Electro: zaps, an octave down",
+      "name": "Electro: zaps, low",
       "role": "percussive",
       "tempo": null,
       "inspiredBy": { "kind": "genre", "label": "Electro" },
@@ -14305,7 +14256,268 @@
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
-        "notes": "The sound names electro and Miami bass rather than a work, and nothing for “Planet Rock” was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:electro/zap-percussion, as written there.",
+        "notes": "The sound names electro and Miami bass rather than a work, and nothing for “Planet Rock” was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:electro/zap-percussion.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:giorgio-moroder/i-feel-love-bass-low",
+      "name": "I Feel Love: bass, low",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "work", "songId": "donna-summer-i-feel-love", "part": 0 },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 128,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 24, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 31, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 34, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 31, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 34, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 27, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 27, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 34, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 37, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 27, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 27, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 34, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 37, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 29, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 29, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 39, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 29, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 29, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 39, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 31, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 31, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 31, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 31, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["tb-303/tb-feel-love-bass"],
+      "research": {
+        "work": "Donna Summer, “I Feel Love”, I Remember Yesterday, 1977 (Giorgio Moroder and Pete Bellotte)",
+        "part": "The sequenced bass through the chord change: root, root, fifth and flat seventh in eighths, twice a bar, on C, E♭, F and G, a bar each: the same part an octave down, where the TB-303’s “Euro Disco Pulse” plays.",
+        "originalKey": null,
+        "originalBpm": 128,
+        "leads": [
+          {
+            "citation": "Donna Summer — “I Feel Love”, fan transcription by Aro Mosley on Songsterr (revision 2487161, 2025-07-18)",
+            "url": "https://www.songsterr.com/a/wsa/donna-summer-i-feel-love-tab-s1867855",
+            "checkedAt": "2026-11-02"
+          },
+          {
+            "citation": "“I-Feel-Love.mid”, fan-made MIDI file on BitMIDI, uploader unknown",
+            "url": "https://bitmidi.com/i-feel-love-mid",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s “Synth Bass 1” track, bars 41–44, as written. A fan-made MIDI file (“I-Feel-Love.mid” on BitMIDI) has the same root, root, fifth, seventh shape in A, and writes the record’s echo as a second track a sixteenth behind; the echo is the patch’s, so it is left out. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:giorgio-moroder/i-feel-love-bass.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:daf/der-mussolini-bass-low",
+      "name": "Der Mussolini: bass, low",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "DAF" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 157,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 28, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 35, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 35, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 35, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 35, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 35, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 23, "gate": 1 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["tb-303/tb-ebm-drive"],
+      "research": {
+        "work": "DAF, “Der Mussolini”, Alles ist gut, 1981",
+        "part": "The sequenced bass in eighths on B, jumping to the octave, with E and D at the top of the first bar: the same part an octave down, where the TB-303’s “Body Music Drive” plays.",
+        "originalKey": null,
+        "originalBpm": 157,
+        "leads": [
+          {
+            "citation": "Daf — “Der Mussolini”, transcription generated by Songsterr AI on Songsterr (revision 6197194, 2026-04-10)",
+            "url": "https://www.songsterr.com/a/wsa/daf-der-mussolini-tab-s4737926",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s “Synth Bass 1” track, bars 8–9, as written. _In the style of_: the notes come from a transcription Songsterr generated by machine, a weaker starting point than a fan’s. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:daf/der-mussolini-bass.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:plastikman/spastik-pings-low",
+      "name": "Spastik: pings, low",
+      "role": "percussive",
+      "tempo": null,
+      "inspiredBy": { "kind": "artist", "artistId": "plastikman" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 128,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 31, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 27, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }], "accent": true }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["tb-303/tb-sheet-one"],
+      "research": {
+        "work": "Plastikman, “Spastik”, Sheet One, 1993",
+        "part": "A bar of pinging sixteenths on C, rolling at the end: the same part two octaves down, where the TB-303’s “Minimal Plastic” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "Nothing for “Spastik” was found on Songsterr or BitMIDI. The record is almost all percussion, so the pattern is a rhythm on two or three pitches. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved two octaves down from researched:plastikman/spastik-pings.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:drexciya/bubble-metropolis-bass-low",
+      "name": "Bubble Metropolis: bass, low",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Drexciya" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 128,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 27, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 31, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 29, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 27, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [{ "note": 36, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 27, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 22, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 24, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 19, "gate": 0.5 }] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["tb-303/tb-detroit-electro"],
+      "research": {
+        "work": "Drexciya, “Bubble Metropolis”, 1993",
+        "part": "A two-bar electro bass on C: the same part an octave down, where the TB-303’s “Deep-Sea Electro” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "Nothing for “Bubble Metropolis” was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:drexciya/bubble-metropolis-bass.",
         "listenedAt": null
       }
     }

@@ -315,6 +315,8 @@ describe('the research batches', () => {
         'Fatboy Slim',
         'Front 242',
         'Front 242 / Nitzer Ebb',
+        // Credited alone as well as with Front 242.
+        'Nitzer Ebb',
         'Jeff Mills',
         'Joey Beltram',
         'LFO',
@@ -327,7 +329,7 @@ describe('the research batches', () => {
         'Robin S',
         'Second Phase',
       ],
-      118,
+      119,
     ],
     [
       't-166',
@@ -660,6 +662,30 @@ describe('the research batches', () => {
     expect(pitches('researched:yazoo/only-you-arpeggio-high')).toEqual(
       shifted('researched:yazoo/only-you-arpeggio', 12)
     );
+  });
+
+  it('moves every -low and -high copy evenly from the pattern it copies, and nothing else', () => {
+    // A -low or -high copy carries its pattern to a sound that plays lower or higher (t-191 added 34, each an octave or two).
+    const byKey = new Map(patterns.map((p) => [p.key, p]));
+    const baseOf = (key: string) => key.replace(/-(low|high)(-2)?$/, '');
+    const copies = patterns.filter((p) => p.key !== baseOf(p.key) && byKey.has(baseOf(p.key)));
+    expect(copies.length).toBeGreaterThan(50);
+    const shape = (p: (typeof patterns)[number]) =>
+      compileLoop(PatternSchema.parse(p.pattern), { loop: 0, rng: seededRng(1) }).notes.map(
+        ([beat, , len, velocity]) => [beat, len, velocity]
+      );
+    for (const copy of copies) {
+      const base = byKey.get(baseOf(copy.key))!;
+      const by = pitches(copy.key)[0] - pitches(base.key)[0];
+      expect(by, copy.key).not.toBe(0);
+      expect(by < 0, copy.key).toBe(/-low(-2)?$/.test(copy.key));
+      // An octave copy says so in its notes; the rest (the Numbers kick, a fifth down) are retuned on purpose.
+      if (/This copy is moved/.test(copy.research.notes))
+        expect([-24, -12, 12, 24], copy.key).toContain(by);
+      expect(pitches(copy.key), copy.key).toEqual(pitches(base.key).map((n) => n + by));
+      expect(shape(copy), copy.key).toEqual(shape(base));
+      expect(copy.research.leads, copy.key).toEqual(base.research.leads);
+    }
   });
 
   it('plays the notes its lead gives: the riff of “Take On Me”', () => {

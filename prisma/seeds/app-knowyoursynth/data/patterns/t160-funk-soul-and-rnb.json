@@ -14300,7 +14300,7 @@
     },
     {
       "key": "researched:dr-dre/nuthin-but-a-g-thang-lead-low",
-      "name": "Nuthin’ but a ‘G’ Thang: lead, an octave down",
+      "name": "Nuthin’ but a ‘G’ Thang: lead, low",
       "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
@@ -14357,13 +14357,13 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Lead Synth” track, bars 3–4, moved down an octave to sit where the sounds play. The six G-funk sounds name the style, not a work; this is the lead that defined it. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:dr-dre/nuthin-but-a-g-thang-lead, as written there.",
+        "notes": "From the transcription’s “Lead Synth” track, bars 3–4, moved down an octave to sit where the sounds play. The six G-funk sounds name the style, not a work; this is the lead that defined it. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:dr-dre/nuthin-but-a-g-thang-lead.",
         "listenedAt": null
       }
     },
     {
       "key": "researched:j-dilla/sliding-sub-bass-low",
-      "name": "Sliding sub bass, an octave down",
+      "name": "Sliding sub bass, low",
       "role": "bass_line",
       "tempo": null,
       "inspiredBy": { "kind": "work", "songId": "j-dilla-welcome-2-detroit-and-later-productions" },
@@ -14426,7 +14426,7 @@
         "originalKey": null,
         "originalBpm": 88,
         "leads": [],
-        "notes": "The sound names no song, and nothing of J Dilla’s was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). Moved an octave down from researched:j-dilla/sliding-sub-bass, as written there.",
+        "notes": "The sound names no song, and nothing of J Dilla’s was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:j-dilla/sliding-sub-bass.",
         "listenedAt": null
       }
     }
