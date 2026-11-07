@@ -2622,6 +2622,8 @@ function Synth({
                         tipsOn={tipsOn}
                         onTips={setTipsOn}
                       />
+                      {/* How big the panel is drawn is the panel's, with how it is drawn (t-209). */}
+                      <PanelZoom scale={scale} onScale={setScale} />
                       <Search
                         def={def}
                         up
@@ -2887,7 +2889,6 @@ function Synth({
                     )}
                     <MidiStatus midi={midi} onConnect={connectMidi} />
                     <HelpButton title="How to play sounds" items={PLAY_HELP} />
-                    <PanelZoom scale={scale} onScale={setScale} className="max-sm:order-first" />
                   </div>
                 </div>
                 <div className="kys-autohide flex items-center lg:shrink-0">

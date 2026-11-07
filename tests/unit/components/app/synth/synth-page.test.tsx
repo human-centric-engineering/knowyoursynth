@@ -363,6 +363,9 @@ describe('SynthPage layout', () => {
     // The width the screen gives it, capped at 1560px and by the screen's height (see `panelFrameStyle`), times the scale.
     expect(frame.style.width).toMatch(/^calc\(1 \* min\(100%, min\(var\(--kys-fit-max, 1560px\), /);
     expect(frame.className).not.toContain('min-w-');
+    // On the panel's foot rail, with how it is drawn, not in the bar (t-209).
+    expect(button('Zoom in').closest('.kys-rail')).toHaveClass('is-foot');
+    expect(button('Zoom in').closest('.kys-player-bar')).toBeNull();
 
     fireEvent.click(button('Zoom in'));
     fireEvent.click(button('Zoom in'));

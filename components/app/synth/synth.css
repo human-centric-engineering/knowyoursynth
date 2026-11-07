@@ -1088,6 +1088,63 @@ svg .kys-hit:focus-visible {
   }
 }
 
+/* The zoom on the foot rail (t-209): its name in the rail's print, − and + as the rail's keys, and between them a
+   readout in the find's recessed amber that fits the panel to the page again. A hairline parts it from the settings. */
+.kys-rail-zoom {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-left: 14px;
+  border-left: 1px solid var(--rail-rule);
+}
+.kys-rail-zoom .kys-setting-name {
+  margin-right: 4px;
+}
+.kys-zoom-step {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--rail-ink);
+  transition: color 0.2s ease;
+}
+.kys-zoom-step:hover:enabled {
+  color: var(--rail-on);
+}
+.kys-zoom-step:disabled {
+  opacity: 0.35;
+}
+.kys-zoom-read {
+  min-width: 52px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 5px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #ffb547;
+  background:
+    repeating-linear-gradient(0deg, rgb(255 255 255 / 0.018) 0 1px, transparent 1px 3px), #0b0b0d;
+  box-shadow:
+    inset 0 1px 3px rgb(0 0 0 / 0.8),
+    inset 0 0 0 1px rgb(255 181 71 / 0.1);
+  transition: box-shadow 0.15s ease;
+}
+.kys-zoom-read:hover {
+  box-shadow:
+    inset 0 1px 3px rgb(0 0 0 / 0.8),
+    inset 0 0 0 1px rgb(255 181 71 / 0.28);
+}
+.kys-rail:hover .kys-rail-zoom .kys-zoom-step:enabled,
+.kys-rail:focus-within .kys-rail-zoom .kys-zoom-step:enabled {
+  color: var(--rail-ink-hi);
+}
+
 /* The search: a recessed amber readout at the rail's right, as the sequencer's. */
 .kys-rail-find {
   flex: 1 1 200px;

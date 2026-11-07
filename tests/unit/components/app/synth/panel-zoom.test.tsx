@@ -67,10 +67,10 @@ function Zoom({ start = 1 as PanelScale, onScale = vi.fn() }) {
 const btn = (name: string) => screen.getByRole('button', { name });
 
 describe('PanelZoom', () => {
-  it('starts fitted, reading Zoom, and steps in by tenths and back out', () => {
+  it('starts fitted, reading Fit, and steps in by tenths and back out', () => {
     const onScale = vi.fn();
     render(<Zoom onScale={onScale} />);
-    expect(btn('Fit the panel to the page').textContent).toBe('Zoom');
+    expect(btn('Fit the panel to the page').textContent).toBe('Fit');
     expect(btn('Fit the panel to the page').getAttribute('aria-pressed')).toBe('true');
 
     fireEvent.click(btn('Zoom in'));
@@ -107,7 +107,7 @@ describe('PanelZoom', () => {
     render(<Zoom start={2} onScale={onScale} />);
     fireEvent.click(btn('Fit the panel to the page'));
     expect(onScale).toHaveBeenCalledExactlyOnceWith(1);
-    expect(btn('Fit the panel to the page').textContent).toBe('Zoom');
+    expect(btn('Fit the panel to the page').textContent).toBe('Fit');
   });
 });
 

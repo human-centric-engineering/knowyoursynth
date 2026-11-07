@@ -97,7 +97,11 @@ export function useKeepCentre(scale: PanelScale): RefObject<HTMLDivElement | nul
 /** A scale as a percentage, rounded, so 1.1 reads 110% rather than 110.00000000000001%. */
 const percent = (s: PanelScale) => `${Math.round(s * 100)}%`;
 
-/** Zoom out, back to fit, and zoom in, a tenth at a time. */
+/**
+ * How big the panel is drawn, on the panel's foot rail with the other ways it is drawn (t-209): its name in the rail's
+ * print, − and +, and between them a readout in the rail's recessed amber, as the find's, that fits the panel to the
+ * page again. "Fit" while it is fitted, the size otherwise.
+ */
 export function PanelZoom({
   scale,
   onScale,
@@ -108,27 +112,24 @@ export function PanelZoom({
   className?: string;
 }) {
   const i = PANEL_SCALES.indexOf(scale);
-  const btn =
-    'flex h-8 min-w-8 items-center justify-center rounded px-2 font-semibold text-(--kys-muted) hover:text-(--kys-text) disabled:opacity-40 disabled:hover:text-(--kys-muted)';
   return (
-    <div
-      className={`flex shrink-0 items-center rounded-md border border-(--kys-line) bg-(--kys-surface) p-0.5 ${className}`}
-      role="group"
-      aria-label="Panel size"
-    >
+    <div className={`kys-rail-zoom ${className}`} role="group" aria-label="Panel size">
+      <PlayerTip name="Zoom" help="How big the panel is drawn. Bigger, it scrolls sideways.">
+        <span className="kys-setting-name">Zoom</span>
+      </PlayerTip>
       <PlayerTip name="Zoom out" help="Draw the panel smaller.">
         <button
           type="button"
           aria-label="Zoom out"
           disabled={i === 0}
           onClick={() => onScale(PANEL_SCALES[i - 1])}
-          className={btn}
+          className="kys-zoom-step"
         >
           −
         </button>
       </PlayerTip>
       <PlayerTip
-        name="Zoom"
+        name={scale === FIT ? 'Fitted' : 'Fit to the page'}
         help={
           scale === FIT
             ? 'The panel is fitted to the page. Use − and + to draw it smaller or bigger.'
@@ -140,9 +141,9 @@ export function PanelZoom({
           aria-label="Fit the panel to the page"
           aria-pressed={scale === FIT}
           onClick={() => onScale(FIT)}
-          className={`${btn} min-w-14 font-mono text-xs`}
+          className="kys-zoom-read"
         >
-          {scale === FIT ? 'Zoom' : percent(scale)}
+          {scale === FIT ? 'Fit' : percent(scale)}
         </button>
       </PlayerTip>
       <PlayerTip
@@ -154,7 +155,7 @@ export function PanelZoom({
           aria-label="Zoom in"
           disabled={i === PANEL_SCALES.length - 1}
           onClick={() => onScale(PANEL_SCALES[i + 1])}
-          className={btn}
+          className="kys-zoom-step"
         >
           +
         </button>
