@@ -114,10 +114,16 @@ export function PanelZoom({
   className?: string;
 }) {
   const i = PANEL_SCALES.indexOf(scale);
-  // The name cannot take focus, so what it says on hover is also each key's description, as the rail's settings do.
+  // The name cannot take focus, so what it says on hover describes the group, for a keyboard or a screen reader. Not
+  // each key: their tooltips describe them while open, and a description of their own would replace that.
   const helpId = useId();
   return (
-    <div className={`kys-rail-zoom ${className}`} role="group" aria-label="Panel size">
+    <div
+      className={`kys-rail-zoom ${className}`}
+      role="group"
+      aria-label="Panel size"
+      aria-describedby={helpId}
+    >
       <PlayerTip name="Zoom" help={ZOOM_HELP}>
         <span className="kys-setting-name">Zoom</span>
       </PlayerTip>
@@ -128,7 +134,6 @@ export function PanelZoom({
         <button
           type="button"
           aria-label="Zoom out"
-          aria-describedby={helpId}
           disabled={i === 0}
           onClick={() => onScale(PANEL_SCALES[i - 1])}
           className="kys-zoom-step"
@@ -147,7 +152,6 @@ export function PanelZoom({
         <button
           type="button"
           aria-label="Fit the panel to the page"
-          aria-describedby={helpId}
           aria-pressed={scale === FIT}
           onClick={() => onScale(FIT)}
           className="kys-zoom-read"
@@ -162,7 +166,6 @@ export function PanelZoom({
         <button
           type="button"
           aria-label="Zoom in"
-          aria-describedby={helpId}
           disabled={i === PANEL_SCALES.length - 1}
           onClick={() => onScale(PANEL_SCALES[i + 1])}
           className="kys-zoom-step"

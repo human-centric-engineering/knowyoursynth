@@ -113,10 +113,11 @@ export function SoundsDrawer({
       if (pop.current?.contains(t) || pickRef.current?.contains(t)) return;
       onClose();
     };
+    // Focus goes back to the picker without scrolling to it: it is under the panel, which may be well off screen.
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape' || e.defaultPrevented) return;
       onClose();
-      pickRef.current?.focus();
+      pickRef.current?.focus({ preventScroll: true });
     };
     // Only for focus that lands somewhere else: a press on the drawer's own padding leaves focus nowhere.
     const onFocusOut = (e: FocusEvent) => {
@@ -146,7 +147,7 @@ export function SoundsDrawer({
           aria-label="Close the patches"
           onClick={() => {
             onClose();
-            pickRef.current?.focus();
+            pickRef.current?.focus({ preventScroll: true });
           }}
         >
           <X size={17} aria-hidden="true" />

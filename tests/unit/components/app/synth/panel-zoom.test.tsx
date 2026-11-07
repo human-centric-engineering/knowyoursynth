@@ -70,11 +70,14 @@ describe('PanelZoom', () => {
   it('starts fitted, reading Fit, and steps in by tenths and back out', () => {
     const onScale = vi.fn();
     render(<Zoom onScale={onScale} />);
-    // The name's hover help describes each key, for a keyboard or a screen reader (t-209).
-    for (const name of ['Zoom out', 'Fit the panel to the page', 'Zoom in']) {
-      const help = document.getElementById(btn(name).getAttribute('aria-describedby') ?? '');
-      expect(help?.textContent).toBe('How big the panel is drawn. Bigger, it scrolls sideways.');
-    }
+    // The name's hover help describes the group, for a keyboard or a screen reader (t-209); the keys keep their own
+    // tooltips' descriptions.
+    const group = screen.getByRole('group', { name: 'Panel size' });
+    const help = document.getElementById(group.getAttribute('aria-describedby') ?? '');
+    expect(help?.textContent).toBe('How big the panel is drawn. Bigger, it scrolls sideways.');
+    expect(btn('Zoom in').getAttribute('aria-describedby')).not.toBe(
+      group.getAttribute('aria-describedby')
+    );
     expect(btn('Fit the panel to the page').textContent).toBe('Fit');
     expect(btn('Fit the panel to the page').getAttribute('aria-pressed')).toBe('true');
 

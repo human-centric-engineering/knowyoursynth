@@ -690,6 +690,10 @@ svg .kys-hit:focus-visible {
 .kys-play.is-playing {
   animation: kys-play-run 1.6s ease-in-out infinite;
 }
+/* Pressed while it runs, the glow stops for the press, so Stop sinks onto its skirt as Play does. */
+.kys-play.is-playing:active {
+  animation: none;
+}
 
 /* The learning layers on the bar: lit in the accent while they are over the panel. */
 .kys-layer {
@@ -1142,13 +1146,6 @@ svg .kys-hit:focus-visible {
   .kys-rail-end > button:last-child {
     width: 40px;
   }
-  .kys-zoom-step,
-  .kys-zoom-read {
-    height: 40px;
-  }
-  .kys-zoom-step {
-    width: 40px;
-  }
 }
 
 /* The zoom on the foot rail (t-209): its name in the rail's print, − and + as the rail's keys, and between them a
@@ -1210,6 +1207,16 @@ svg .kys-hit:focus-visible {
 /* The key under the pointer lit, over the rail's brightening above, which a hover on it always sets too. */
 .kys-rail:hover .kys-rail-zoom .kys-zoom-step:hover:enabled {
   color: var(--rail-on);
+}
+/* A finger needs a bigger target, as the rail's other keys get: after the keys' own sizes, so it wins. */
+@media (pointer: coarse) {
+  .kys-zoom-step,
+  .kys-zoom-read {
+    height: 40px;
+  }
+  .kys-zoom-step {
+    width: 40px;
+  }
 }
 
 /* The search: a recessed amber readout at the rail's right, as the sequencer's. */
@@ -1594,6 +1601,11 @@ svg .kys-hit:focus-visible {
 .kys-card[data-side='left'] {
   right: auto;
   left: 40px;
+}
+/* With no foot (the inspector, the effects), the body stops short of the sizing grip, so the grip is not over the
+   foot of its scrollbar. */
+.kys-card:not(:has(> .kys-card-foot)) .kys-card-body {
+  margin-bottom: 20px;
 }
 /* Docked, a card sized by its grip while it was moved stays inside the screen's sides (t-203). */
 .kys-card:not([data-detached]) {

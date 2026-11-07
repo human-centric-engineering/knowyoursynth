@@ -750,6 +750,7 @@ function Synth({
   const chapterChosen = useRef(false);
   // Put away, the drawer takes the lesson it opened with it (t-205); the inspector and the effects, from the bar, stay.
   const closeDesign = useCallback(() => {
+    chapterChosen.current = false;
     setDesignOpen(false);
     setCard((c) => (c === 'build' ? null : c));
   }, []);
@@ -1503,7 +1504,12 @@ function Synth({
   // Opened by the bar's Sequencer button or a panel button (t-85).
   const openSequencer = () => {
     if (small) openSheet('sequencer');
-    else setSeqOpen(true);
+    else {
+      setSeqOpen(true);
+      // The docked sequencer takes the strip's place: the drawer is put away, the lesson with it, rather than left
+      // open behind it to come back up when the sequencer closes.
+      closeDesign();
+    }
     // Opened while the riff plays, the pattern takes over: it is the riff, until it is edited.
     if (playing) void playPattern();
   };
@@ -2663,7 +2669,7 @@ function Synth({
                   >
                     {/* The sound's name, and beside it what can be done with it: keep it. */}
                     <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
-                      <p className="flex max-w-full min-w-0 items-center gap-x-2.5">
+                      <p className="flex max-w-full min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1.5">
                         <span className="sr-only">Loaded:</span>
                         {/* The patch is chosen from its name (t-207): the Play deck's bar is for playing. */}
                         <SoundPicker

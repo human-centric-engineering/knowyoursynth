@@ -1905,6 +1905,15 @@ describe('SynthPage player', () => {
     fireEvent.click(tab());
     expect(card()).toBeNull();
 
+    // The docked sequencer takes the strip's place: the drawer is put away and the lesson with it, so the strip does
+    // not come back up open when the sequencer closes.
+    fireEvent.click(tab());
+    fireEvent.click(button('Lesson step 1: Open the mixer'));
+    fireEvent.click(button('Sequencer'));
+    expect(card()).toBeNull();
+    fireEvent.click(button('Sequencer'));
+    expect(tab()).toHaveAttribute('aria-expanded', 'false');
+
     // The lamp is the lesson's only while it is on show: put away, it is the sound's again, though the step is kept.
     const lamp = () => player().querySelector('.kys-player-mark .kys-led');
     expect(lamp()).not.toHaveClass('is-lesson');
