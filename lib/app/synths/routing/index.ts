@@ -40,6 +40,7 @@ import { routing as behringerSyncussion } from '@/lib/app/synths/routing/behring
 import { routing as e7 } from '@/lib/app/synths/routing/e7';
 import { routing as solar42n } from '@/lib/app/synths/routing/solar-42n';
 import { routing as malevolent } from '@/lib/app/synths/routing/malevolent';
+import { routing as mantis } from '@/lib/app/synths/routing/mantis';
 import { routing as emsVcs3 } from '@/lib/app/synths/routing/ems-vcs3';
 import { routing as syntrxIi } from '@/lib/app/synths/routing/syntrx-ii';
 
@@ -74,6 +75,7 @@ export const SYNTH_ROUTINGS: SynthRouting[] = [
   e7,
   solar42n,
   malevolent,
+  mantis,
   emsVcs3,
   syntrxIi,
 ];
