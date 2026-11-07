@@ -293,8 +293,7 @@
         "poly-d/pd-funk-bass",
         "take-5/t5-flash-light-bass",
         "neutron/env-res-bubble-bass",
-        "pro-1/bubble-lofreq-bass",
-        "malevolent/mal-pfunk-bass"
+        "pro-1/bubble-lofreq-bass"
       ],
       "research": {
         "work": "Parliament, “Flash Light”, Funkentelechy vs. the Placebo Syndrome, 1977",
@@ -4816,7 +4815,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/staccato-quack-bass", "mantis/mantis-chameleon-bass"],
+      "sounds": ["model-d/staccato-quack-bass"],
       "research": {
         "work": "Herbie Hancock, “Chameleon”, Head Hunters, 1973",
         "part": "The same two bars of the bass, an octave up, where the Staccato Quack Bass plays.",
@@ -6314,7 +6313,11 @@
       "name": "1999: synth stabs, an octave up",
       "role": "chord_stabs",
       "tempo": null,
-      "inspiredBy": { "kind": "work", "songId": "prince-1999", "part": 0 },
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "prince-1999",
+        "part": 0
+      },
       "fidelity": "in_the_style_of",
       "sources": [],
       "pattern": {
@@ -6333,51 +6336,135 @@
               {
                 "on": true,
                 "notes": [
-                  { "note": 81, "gate": 2.75 },
-                  { "note": 77, "gate": 2.75 },
-                  { "note": 74, "gate": 2.75 },
-                  { "note": 72, "gate": 2.75 }
+                  {
+                    "note": 81,
+                    "gate": 2.75
+                  },
+                  {
+                    "note": 77,
+                    "gate": 2.75
+                  },
+                  {
+                    "note": 74,
+                    "gate": 2.75
+                  },
+                  {
+                    "note": 72,
+                    "gate": 2.75
+                  }
                 ]
               },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
               {
                 "on": true,
                 "notes": [
-                  { "note": 82, "gate": 1 },
-                  { "note": 79, "gate": 1 },
-                  { "note": 74, "gate": 1 },
-                  { "note": 72, "gate": 1 }
+                  {
+                    "note": 82,
+                    "gate": 1
+                  },
+                  {
+                    "note": 79,
+                    "gate": 1
+                  },
+                  {
+                    "note": 74,
+                    "gate": 1
+                  },
+                  {
+                    "note": 72,
+                    "gate": 1
+                  }
                 ]
               },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
               {
                 "on": true,
                 "notes": [
-                  { "note": 81, "gate": 0.75 },
-                  { "note": 77, "gate": 0.75 },
-                  { "note": 74, "gate": 0.75 },
-                  { "note": 72, "gate": 0.75 }
+                  {
+                    "note": 81,
+                    "gate": 0.75
+                  },
+                  {
+                    "note": 77,
+                    "gate": 0.75
+                  },
+                  {
+                    "note": 74,
+                    "gate": 0.75
+                  },
+                  {
+                    "note": 72,
+                    "gate": 0.75
+                  }
                 ]
               },
-              { "on": true, "notes": [] },
+              {
+                "on": true,
+                "notes": []
+              },
               {
                 "on": true,
                 "notes": [
-                  { "note": 82, "gate": 3.25 },
-                  { "note": 79, "gate": 3.25 },
-                  { "note": 74, "gate": 3.25 },
-                  { "note": 72, "gate": 3.25 }
+                  {
+                    "note": 82,
+                    "gate": 3.25
+                  },
+                  {
+                    "note": 79,
+                    "gate": 3.25
+                  },
+                  {
+                    "note": 74,
+                    "gate": 3.25
+                  },
+                  {
+                    "note": 72,
+                    "gate": 3.25
+                  }
                 ]
               },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [] }
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
             ]
           }
         ],
@@ -7195,7 +7282,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/clav-funk", "malevolent/mal-superstition-clav"],
+      "sounds": ["ub-xa-d/clav-funk", "tb-303/tb-clav-funk"],
       "research": {
         "work": "Stevie Wonder, “Superstition”, Talking Book, 1972",
         "part": "Two bars of the clavinet’s left hand: E♭, then E♭, C♯, E♭, F♯, C♯, B♭, and the second time A♭, B♭, C♯ up to F♯.",
@@ -8719,7 +8806,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/funk-sync-bass", "deepmind-12d/funk-bow-bass"],
+      "sounds": ["ub-xa-d/funk-sync-bass", "deepmind-12d/funk-bow-bass", "td-3/td-zapp-bass"],
       "research": {
         "work": "Zapp, “More Bounce to the Ounce”, Zapp, 1980",
         "part": "The one-bar synth bass: D, the D, D, D pickup, then F, F.",
@@ -12468,7 +12555,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-shaft-wah"],
+      "sounds": ["take-5/t5-shaft-wah", "tb-303/tb-shaft-wah"],
       "research": {
         "work": "Isaac Hayes, “Theme from Shaft”, Shaft, 1971",
         "part": "Two bars of the wah guitar: the sixteenth-note G, then the run up A, B, D, E, F♯, G, and the chromatic A♭, A, B♭.",
@@ -13575,7 +13662,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-angel-bass", "malevolent/mal-trip-hop-bass"],
+      "sounds": ["take-5/t5-angel-bass", "malevolent/mal-trip-hop-bass", "donner-b1/b1-teardrop"],
       "research": {
         "work": "Massive Attack, “Angel”, Mezzanine, 1998",
         "part": "The one-bar bass: C in eighths, with the sixteenth pair and the D at the end.",
@@ -14411,6 +14498,614 @@
           }
         ],
         "notes": "From the transcription’s Rhodes track, bars 4–7, as written, but for one note: the last chord has six, and the upper of its two Es is left out so the Take 5’s five voices play it. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:dr-dre/nuthin-but-a-g-thang-lead-low",
+      "name": "Nuthin’ but a ‘G’ Thang: lead, low",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "dr-dre-the-chronic-nuthin-but-a-g-thang",
+        "part": 0
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 90,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 73,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["td-3/td-g-funk-whine"],
+      "research": {
+        "work": "Dr. Dre featuring Snoop Doggy Dogg, “Nuthin’ but a ‘G’ Thang”, The Chronic, 1992",
+        "part": "The two-bar lead: B, A, B, C♯, B, A, G, then F♯, E and the held F♯: the same part an octave down, where the TD-3’s “G-Funk Whine” plays.",
+        "originalKey": null,
+        "originalBpm": 90,
+        "leads": [
+          {
+            "citation": "Dr. Dre ft. Snoop Dogg — “Nuthin' But A \"G\" Thang”, fan transcription by bassist15 on Songsterr (revision 9110213, 2026-09-15)",
+            "url": "https://www.songsterr.com/a/wsa/dr-dre-ft-snoop-dogg-nuthin-but-a-g-thang-tab-s570943",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s “Lead Synth” track, bars 3–4, moved down an octave to sit where the sounds play. The six G-funk sounds name the style, not a work; this is the lead that defined it. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:dr-dre/nuthin-but-a-g-thang-lead.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:j-dilla/sliding-sub-bass-low",
+      "name": "Sliding sub bass, low",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "j-dilla-welcome-2-detroit-and-later-productions"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 88,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 29,
+                    "gate": 6
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 32,
+                    "gate": 3
+                  }
+                ],
+                "slide": true
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 4
+                  }
+                ],
+                "slide": true
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 29,
+                    "gate": 8
+                  }
+                ],
+                "slide": true
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 4
+                  }
+                ],
+                "slide": true
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 4
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-dilla-bass"],
+      "research": {
+        "work": "J Dilla, Minimoog Voyager bass lines, 2001–06",
+        "part": "Two bars of a round, sliding sub bass in F minor: the same part an octave down, where the B1’s “Behind-the-Beat Bass” plays.",
+        "originalKey": null,
+        "originalBpm": 88,
+        "leads": [],
+        "notes": "The sound names no song, and nothing of J Dilla’s was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:j-dilla/sliding-sub-bass.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:parliament/flash-light-bass-high",
+      "name": "Flash Light: bass, high",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "parliament-flash-light",
+        "part": 0
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 105,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 46,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 46,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 42,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 42,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 46,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 47,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["malevolent/mal-pfunk-bass"],
+      "research": {
+        "work": "Parliament, “Flash Light”, Funkentelechy vs. the Placebo Syndrome, 1977",
+        "part": "The two-bar Minimoog bass under the chant: C down through B♭, G and F♯ to F, then up A, B♭, B: the same part an octave up, where the Malevolent’s “P-Funk Synth Bass” plays.",
+        "originalKey": null,
+        "originalBpm": 105,
+        "leads": [
+          {
+            "citation": "Parliament — “Flashlight”, fan transcription by luke on Songsterr (revision 9898385, 2026-10-21)",
+            "url": "https://www.songsterr.com/a/wsa/parliament-flashlight-tab-s78020",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s “Bernie Worrell” synth-bass track, bars 5–6, as written; bars 7–8 repeat them. The two Parliament sounds name the record too, and the Second-LFO Bass names its era. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave up from researched:parliament/flash-light-bass.",
         "listenedAt": null
       }
     }

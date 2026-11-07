@@ -157,6 +157,14 @@ export const appCoverageExclusions: AppCoverageExclusion[] = [
       '`tests/unit/scripts/soundkind-sweep.test.ts`; `soundkind-library.test.ts` runs it for real.',
   },
   {
+    pattern: 'scripts/app/export-links.ts',
+    reason:
+      'a standalone tsx CLI run by hand (`npm run links:export`): it reads `external_link` and ' +
+      'rewrites the links seed data. Nothing imports it, so vitest never executes it. What it ' +
+      'writes, and the check that refuses a table the seed would refuse, is `exportLinkData` in ' +
+      '`lib/app/links/seed.ts`, which stays gated and is tested in `tests/unit/lib/app/links/seed.test.ts`.',
+  },
+  {
     pattern: 'scripts/prototype-synths.ts',
     reason:
       'the esbuild bundle-and-load of the reference definitions shared by `scripts/check-synths.ts` ' +

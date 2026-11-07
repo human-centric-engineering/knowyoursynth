@@ -810,19 +810,45 @@ batch files they were already in, and left 25 reasons: the sounds with no part t
   the four patches above, the two random Jarre sounds, the "Boing Boom Tschak" voices, the "Computer World" vocoder,
   the "Tour de France" breath and the two Depeche Mode metal-percussion sounds, which were sampled metal.
 
-**Sounds added after the batches (t-192).** The `library-150` sweep takes every synth's library to 150 sounds, and a
-new sound by an artist a batch covers fails the roster test until that batch looks at it. The Jupiter-8, Jupiter-6 and
-Jupiter-4 added 131 such sounds:
+**Sounds added after the batches (t-191 on).** A library that grows (the `library-150` sweep) adds sounds by artists a
+batch already covers, and the roster test fails until the batch looks at each one. The TB-303, TD-3 and Donner B1
+added 99 such sounds:
+
+- **A pattern where the batch has one of the part the sound plays**: the work it names, or for a sound naming no work,
+  a part of the same kind (a bass line for a bass, an arpeggio for a sequence, percussion for percussion) by its
+  artist or carried by peer sounds with the same credit. The part comes first and the register second: a riff in five
+  takes the five-four Halloween figure, not an ostinato in four that sits nearer, and a sequence takes a sequence, not
+  the held keys written for a patch that sequences itself. 74 of the 99.
+- **In the sound's register**: the pattern's median note (the middle note, or halfway between the two middle notes)
+  within six semitones of the riff's. Where the closest of a pattern and its copies is further, a `-low` or `-high`
+  copy carries it, written as the batches' own copies are: the same leads, its part saying where it plays, and its
+  notes saying it was moved from the pattern and by how much. 40 copies, each an octave or two. The batch tests hold
+  this: no sound is on both a pattern and its copy; the earlier batches' 131 placements further than six semitones
+  can't grow; and every copy is held to its pattern, moved evenly the way its key says, by whole octaves unless the
+  test names it as retuned, with the same timing, grid, leads and work, and the same role and credit unless the test
+  names it as recast.
+- **A reason otherwise**, saying which: the batch has no pattern of the part the sound plays, the work it names has no
+  pattern yet, it is an effect, or its riff already plays the public-domain score. 25 of the 99.
+
+The Mantis and Malevolent sounds of t-190 were placed before these rules, and merged first. Held to them: six that
+were on both a pattern and its copy keep the one in their register, the five-four Mantis ostinato keeps the Halloween
+figure and leaves the held low strings, and 25 more placements move to 24 copies (the two Lucky Man sounds share one).
+
+**The Jupiters' sounds (t-192)**, placed by the same rules after t-191 merged. The Jupiter-8, Jupiter-6 and Jupiter-4
+added 131 sounds by artists a batch covers:
 
 - **86 sit on a pattern**: the work the sound names, or, for a sound naming no work, a part of the same kind that its
   artist or a peer with the same credit already has. The part comes first and the register second: within six
   semitones of the riff, median to median. A sound whose arpeggiator plays from held chords takes held chords, never a
   part written out, which the arpeggiator would play over again; a sound without one never takes chords written for an
   arpeggiator.
-- **27 octave copies** carry patterns that would otherwise sit out of a sound's register. Each is made from its source
+- **27 of those 86 sit on an octave copy**, carrying a pattern that would otherwise sit out of the sound's register: 22
+  copies are new, and 5 sounds join a copy t-191 had made of the same pattern by the same move. Each copy is made from its source
   and nothing else: its name and part are the source's plus where it moved ("…, an octave down"), and its
   notes say where it moved from and point to the source for the research, keeping only the source's "Written by" line
   and its closing _In the style of_ passage. A copy never carries what its source says about the source's own sounds.
+  The five shared copies were written this way too, since the part each gave as where t-191's sound plays now carries
+  two.
 - **45 keep a reason**, saying which applies: its arpeggiator plays the line from the chords it holds, and the work or
   artist has only parts written out; the work's pattern is another part; the work has no pattern yet; the artist's
   patterns are other kinds of part; it is an effect; or its riff already plays Bach's score.
@@ -1336,16 +1362,20 @@ octave above its key, or is thin at the bottom (the low note 9 dB or more below 
 
 #### Agreement with the library
 
-Measured on 2026-11-07 over the library's 2,991 sounds:
+Measured on 2026-11-07 over the library's 3,391 sounds:
 
-- **The detector reads the sound's own category for 1,512 of them (50.6%).** Picking the commonest category, lead, every
-  time would get 16.4%.
-- **Cross-validated: 1,480 (49.5%).** Each fifth of the library is measured on a model fitted to the other four fifths.
+- **The detector reads the sound's own category for 1,676 of them (49.4%).** Picking the commonest category, bass, every
+  time would get 18.3%.
+- **Cross-validated: 1,655 (48.8%).** Each fifth of the library is measured on a model fitted to the other four fifths.
 - **4 sounds are silent on the probe notes**: `model-d/just-intonation-drone`, `model-d/slow-breaking-waves`,
   `pro-1/filter-clave` and `malevolent/mal-extreme`. `check:synths` hears each one play its riff, so they do make sound, but not on a held G3 within
   the probe's 0.85 s. Why has not been looked into. They count as disagreements.
 
-`soundkind-library.test.ts` pins the 50.6%, so a change to the probe, the engine, the features or the library can't
+When it was last measured there (t-191), CI's Linux x64 read one fx sound as lead instead: the renders are seeded, but
+the platforms' maths can differ in the last bit, and a sound near a feature's threshold can tip. The figures here are
+the macOS ones.
+
+`soundkind-library.test.ts` pins the 49.4% (its floor is one sound below the macOS count, for that tip), so a change to the probe, the engine, the features or the library can't
 make the detector worse without someone deciding it should. It renders the whole library, about three minutes of CPU,
 so it is the slowest test in the app. It sweeps on two worker threads rather than one per core: a sweep across every
 core starved the tests vitest runs alongside it into timeouts. It runs when something it imports changes (the probe
@@ -1356,18 +1386,18 @@ sound was read as strings or wind, so those columns are left out.
 
 | Label   |    bass |    lead |     pad |  pluck |    keys |      fx |  drone |    perc |    seq | brass | silent | Agree |
 | ------- | ------: | ------: | ------: | -----: | ------: | ------: | -----: | ------: | -----: | ----: | -----: | ----: |
-| bass    | **333** |      31 |       2 |      · |      24 |       2 |      6 |      12 |     16 |     1 |      · |   78% |
-| lead    |      40 | **344** |      32 |      1 |      47 |      18 |      2 |       4 |      4 |     · |      · |   70% |
-| pad     |       · |      19 | **249** |      · |      19 |      11 |     11 |       1 |     12 |     · |      · |   77% |
-| pluck   |      12 |      15 |       6 | **12** |      78 |       2 |      · |      11 |     13 |     · |      · |    8% |
-| keys    |      35 |      55 |      22 |      7 | **220** |       7 |      2 |      13 |     23 |     4 |      · |   57% |
-| fx      |      23 |      75 |      23 |      1 |      18 | **120** |      9 |      31 |     21 |     · |      2 |   37% |
-| drone   |       6 |      30 |      40 |      · |       5 |      15 | **35** |       · |      6 |     · |      1 |   25% |
-| perc    |      31 |      11 |       · |      2 |      37 |      17 |      2 | **116** |      9 |     · |      1 |   51% |
-| seq     |      35 |      22 |      18 |      5 |      44 |      21 |      5 |       9 | **78** |     · |      · |   33% |
-| brass   |       8 |      22 |      28 |      · |      33 |       · |      · |       · |      1 | **5** |      · |    5% |
-| strings |       3 |      21 |      60 |      · |      13 |       1 |      1 |       · |      2 |     · |      · |    0% |
-| wind    |       4 |      68 |       6 |      · |       5 |       6 |      1 |       · |      1 |     · |      · |    0% |
+| bass    | **508** |      32 |       4 |      2 |      28 |       4 |      6 |      11 |     24 |     · |      · |   82% |
+| lead    |      80 | **348** |      33 |      4 |      43 |      22 |      2 |       4 |      6 |     · |      · |   64% |
+| pad     |       · |      20 | **248** |      · |      18 |      11 |     11 |       1 |     13 |     · |      · |   77% |
+| pluck   |      31 |      20 |       6 | **20** |      79 |       2 |      · |      14 |     13 |     · |      · |   11% |
+| keys    |      51 |      60 |      23 |     14 | **205** |       5 |      3 |      10 |     27 |     3 |      · |   51% |
+| fx      |      42 |      83 |      22 |      5 |      17 | **121** |      9 |      29 |     27 |     · |      2 |   34% |
+| drone   |      14 |      33 |      38 |      · |       4 |      14 | **35** |       · |      6 |     · |      1 |   24% |
+| perc    |      44 |      14 |       · |      4 |      35 |      18 |      2 | **109** |     13 |     · |      1 |   45% |
+| seq     |      60 |      24 |      18 |     15 |      50 |      20 |      5 |      10 | **77** |     · |      · |   28% |
+| brass   |      11 |      22 |      28 |      · |      32 |       · |      · |       · |      1 | **5** |      · |    5% |
+| strings |       5 |      22 |      60 |      · |      13 |       1 |      1 |       · |      2 |     · |      · |    0% |
+| wind    |      12 |      67 |       6 |      · |       4 |       6 |      1 |       · |      2 |     · |      · |    0% |
 
 #### The disagreements
 
@@ -1375,7 +1405,7 @@ The review on 2026-10-31 sorted the disagreements by how sure the detector was. 
 are not a wrong detector. They are a label on a different axis from the sound:
 
 - **Orchestral names.** _Strings_, _wind_ and _brass_ name the instrument a patch imitates, not how it behaves. A string
-  ensemble swells and holds like a pad (60 of 101 read as pad), and a synth flute plays like a lead (68 of 91). The
+  ensemble swells and holds like a pad (60 of 104 read as pad), and a synth flute plays like a lead (67 of 98). The
   detector hears timbre the way a filter shapes it, and none of its features can hear formants. These three
   categories are where it is weakest, and suggestions lose almost nothing by it, because the roles that suit a string
   pad are the roles that suit a pad.
@@ -1384,7 +1414,7 @@ are not a wrong detector. They are a label on a different axis from the sound:
   and a bass clarinet (`neutron/bitches-brew-bass-clarinet`, wind) read as bass too.
 - **Drones that are pads.** A slow-attack, held, polyphonic drone (`deepmind-12d/cosmic-drone`, `pro-800/p8-drone`)
   reads as pad. Drone and pad suit much the same roles, led by _Held_ (see [Category to role](#category-to-role)).
-- **Pluck against keys.** 78 of the 149 plucks read as keys. A pluck and an electric piano both start at once and decay
+- **Pluck against keys.** 79 of the 185 plucks read as keys. A pluck and an electric piano both start at once and decay
   while held, and the probe can't tell a decay that is the sound from one that is the player's.
 
 The detector is plainly wrong on a few kinds:

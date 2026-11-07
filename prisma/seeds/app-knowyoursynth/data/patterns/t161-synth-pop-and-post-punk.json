@@ -1758,7 +1758,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-cars-vox", "malevolent/mal-cars-lead"],
+      "sounds": ["take-5/t5-cars-vox"],
       "research": {
         "work": "Gary Numan, “Cars”, The Pleasure Principle, 1979",
         "part": "The high line over the riff: A held for four bars, then G, D, B and G falling in the last two.",
@@ -3767,7 +3767,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["pro-1/smooth-layer-line"],
+      "sounds": ["pro-1/smooth-layer-line", "donner-b1/b1-numan"],
       "research": {
         "work": "Gary Numan, “This Wreckage”, Telekon, 1980",
         "part": "Four bars of the falling arpeggio: D, B, A♭, E twice a bar, then C, A, F♯ and a held D.",
@@ -4329,113 +4329,6 @@
           }
         ],
         "notes": "From the transcription’s “Synthesised Bass” track, bars 17–20, moved up an octave to sit where the sounds play. The E7’s sixteenth octave bass names only the band; this is its best-known octave line. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
-        "listenedAt": null
-      }
-    },
-    {
-      "key": "researched:new-order/blue-monday-bass-low",
-      "name": "Blue Monday: sequenced bass, an octave down",
-      "role": "arp",
-      "tempo": null,
-      "inspiredBy": { "kind": "work", "songId": "new-order-blue-monday", "part": 0 },
-      "fidelity": "in_the_style_of",
-      "sources": [],
-      "pattern": {
-        "version": 1,
-        "bpm": 130,
-        "stepSize": "1/16",
-        "loop": true,
-        "direction": "forward",
-        "swing": 50,
-        "transpose": 0,
-        "root": 0,
-        "scale": "chromatic",
-        "parts": [
-          {
-            "steps": [
-              { "on": true, "notes": [{ "note": 29, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 29, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 24, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 36, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 36, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 24, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 36, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 36, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 26, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 26, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 26, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 26, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 31, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 43, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 43, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 31, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 43, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 43, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 24, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 36, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 36, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 24, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 36, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 36, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 26, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 26, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 26, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 26, "gate": 2 }] },
-              { "on": true, "notes": [] },
-              { "on": true, "notes": [{ "note": 38, "gate": 1 }] },
-              { "on": true, "notes": [{ "note": 38, "gate": 1 }] }
-            ]
-          }
-        ],
-        "chain": [0]
-      },
-      "sounds": ["jupiter-6/jp6-blue-monday-bass"],
-      "research": {
-        "work": "New Order, “Blue Monday”, single, 1983",
-        "part": "The four-bar sequenced bass: each note and two sixteenths an octave up, on F and C, D, G and C, D: the same part an octave down.",
-        "originalKey": null,
-        "originalBpm": 130,
-        "leads": [
-          {
-            "citation": "New Order — “Blue Monday”, fan transcription by Anthony Swart on Songsterr (revision 8942415, 2026-09-07)",
-            "url": "https://www.songsterr.com/a/wsa/new-order-blue-monday-tab-s48464",
-            "checkedAt": "2026-11-02"
-          }
-        ],
-        "notes": "This copy is moved an octave down from researched:new-order/blue-monday-bass, whose notes give the research. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -8206,7 +8099,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/heavy-slow-bass"],
+      "sounds": ["model-d/heavy-slow-bass", "donner-b1/b1-human-league"],
       "research": {
         "work": "The Human League, “Being Boiled”, single, 1978",
         "part": "Four bars of the slow bass: a grace from G into a held A for two bars, then C and E a bar each.",
@@ -17421,6 +17314,1498 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Nothing from the score was found on Songsterr or BitMIDI. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:new-order/blue-monday-bass-low",
+      "name": "Blue Monday: sequenced bass, an octave down",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "new-order-blue-monday",
+        "part": 0
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 130,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 29,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 29,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 24,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 24,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 26,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 26,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 26,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 26,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 24,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 24,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 26,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 26,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 26,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 26,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-blue-monday", "jupiter-6/jp6-blue-monday-bass"],
+      "research": {
+        "work": "New Order, “Blue Monday”, single, 1983",
+        "part": "The four-bar sequenced bass: each note and two sixteenths an octave up, on F and C, D, G and C, D: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": 130,
+        "leads": [
+          {
+            "citation": "New Order — “Blue Monday”, fan transcription by Anthony Swart on Songsterr (revision 8942415, 2026-09-07)",
+            "url": "https://www.songsterr.com/a/wsa/new-order-blue-monday-tab-s48464",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "This copy is moved an octave down from researched:new-order/blue-monday-bass, whose notes give the research. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:vince-clarke/new-life-bass-low",
+      "name": "New Life: sequenced bass, low",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "vince-clarke-erasure-and-depeche-mode-work"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 165,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["tb-303/tb-synth-pop-pulse"],
+      "research": {
+        "work": "Depeche Mode, “New Life”, Speak & Spell, 1981",
+        "part": "Four bars of eighths: two on D, one on C and G, one on D: the same part an octave down, where the TB-303’s “Synth-Pop Pulse” plays.",
+        "originalKey": null,
+        "originalBpm": 165,
+        "leads": [
+          {
+            "citation": "Depeche Mode — “New Life”, fan transcription by Darr on Songsterr (revision 616549, 2023-09-11)",
+            "url": "https://www.songsterr.com/a/wsa/depeche-mode-new-life-tab-s409316",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s synth-bass track, bars 19–22, moved up an octave to sit where the sound plays. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:vince-clarke/new-life-bass.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:yellow-magic-orchestra/technopolis-bass-high",
+      "name": "Technopolis: synth bass, high",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "yellow-magic-orchestra"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 148,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-ymo"],
+      "research": {
+        "work": "Yellow Magic Orchestra, “Technopolis”, Solid State Survivor, 1979",
+        "part": "Four bars of the bass jumping the octave: two on G, two on D: the same part an octave up, where the B1’s “Tokyo Sequence” plays.",
+        "originalKey": null,
+        "originalBpm": 148,
+        "leads": [
+          {
+            "citation": "TECHNOPOLIS — “YMO 1980”, transcription generated by Songsterr AI on Songsterr (revision 2829426, 2025-08-25)",
+            "url": "https://www.songsterr.com/a/wsa/technopolis-ymo-1980-tab-s2129177",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s synth-bass track, bars 1–4, as written. The sound names no work; this is the tight YMO bass the free web has in readable notes. _In the style of_: the notes come from a transcription Songsterr generated by machine, a weaker starting point than a fan’s. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave up from researched:yellow-magic-orchestra/technopolis-bass.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:devo/whip-it-riff-low",
+      "name": "Whip It: synth riff, low",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "devo-late-70s-and-early-80s-records",
+        "part": 0
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 158,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 2
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["tb-303/tb-new-wave-robot"],
+      "research": {
+        "work": "Devo, “Whip It”, Freedom of Choice, 1980",
+        "part": "Two bars of the riff: D, A, then E held: the same part an octave down, where the TB-303’s “Robot New Wave” plays.",
+        "originalKey": null,
+        "originalBpm": 158,
+        "leads": [
+          {
+            "citation": "Devo — “Whip It”, fan transcription by BelovedProblemChild on Songsterr (revision 3258107, 2025-10-01)",
+            "url": "https://www.songsterr.com/a/wsa/devo-whip-it-tab-s5423",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s “Bob 2” sawtooth track, bars 6–7: its lower octave, moved down an octave to sit where the sound plays. The track doubles the riff at the octave; the sound is single-voiced. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:devo/whip-it-riff.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:omd/enola-gay-pre-theme-low",
+      "name": "Enola Gay: pre-theme line, low",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "omd-enola-gay"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 140,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-omd"],
+      "research": {
+        "work": "Orchestral Manoeuvres in the Dark, “Enola Gay”, Organisation, 1980",
+        "part": "Two bars of the eighth-note line before the theme: F, D, F, E, with G for the last F in the second bar: the same part an octave down, where the B1’s “Electric Pop Sequence” plays.",
+        "originalKey": null,
+        "originalBpm": 140,
+        "leads": [
+          {
+            "citation": "Orchestral Manoeuvres in the Dark — “Enola Gay”, fan transcription by ChessPiece99 on Songsterr (revision 605037, 2023-08-13)",
+            "url": "https://www.songsterr.com/a/wsa/orchestral-manoeuvres-in-the-dark-enola-gay-tab-s77831",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s “Lead Synth” track, bars 5–6, as written. Neither sound names a work (one names OMD, the other early synth-pop); this is the plainest synth-pop line the free web has in readable notes. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:omd/enola-gay-pre-theme.",
         "listenedAt": null
       }
     }

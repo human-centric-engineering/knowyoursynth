@@ -22,8 +22,12 @@ import { agreement, confusionMarkdown } from '@/lib/app/synths/lib/soundkind-fit
 import { KIND_MODEL } from '@/lib/app/synths/lib/soundkind-model';
 import { sweepLibrary, sweepShard } from '@/scripts/soundkind-sweep';
 
-/** Measured 2026-11-07 over the library's 2,991 sounds: 1,512 agree (50.55%). */
-const MEASURED = 0.5055;
+/**
+ * Measured 2026-11-07 over the library's 3,391 sounds: 1,676 agree (49.43%) on macOS arm64. At the last measure there
+ * (2,998 sounds), CI's Linux x64 read one fx sound as lead: renders are seeded, but the platforms' maths can differ in
+ * the last bit. So the floor is one sound below, 1,675 (49.39%).
+ */
+const MEASURED = 0.4939;
 
 /** Threads for the sweep (see above). */
 const SWEEP_THREADS = 2;
