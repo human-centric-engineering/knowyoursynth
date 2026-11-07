@@ -471,7 +471,7 @@ for (const n of [1, 2]) {
     module: 'osc',
     def: 5,
     name: `OSC ${n} SHAPE`,
-    help: `Changes Oscillator ${n}’s wave. On the pulse it is the width, a square at the centre and thinner either way; on the triangle it leans it into a ramp; on the sine and organ it adds harmonics; on WT it sweeps through the table. On the sawtooth the guide does not say what it does, and here it does nothing.`,
+    help: `Changes Oscillator ${n}’s wave. On the pulse it is the width, a square at the centre and thinner either way; on the triangle it leans it into a ramp; on the sine and organ it adds harmonics; on WT it sweeps one wave from triangle through sawtooth and square to a thin pulse, the app’s stand-in for the wavetables. On the sawtooth the guide does not say what it does, and here it does nothing.`,
   });
   knob(`${o}.shapeMod`, 990, y, 'Shape\nMod', {
     module: 'mod',
@@ -1042,7 +1042,7 @@ knob('arp.bpm', 2520, 1238, 'BPM', {
   fmt: (v) => `${Math.round(bpmOf(v))} BPM`,
   help: 'The tempo for the arpeggiator and for the LFOs when they are synced (here 40 to 240 BPM). On the hardware it follows MIDI or USB clock when one is playing.',
 });
-led(2518, 1303, 'lfo');
+led(2518, 1303);
 
 // ── TRIGGERING ────────────────────────────────────────────────────────────
 const TRIG: [id: string, x: number, l1: string, l2: string, help: string][] = [
@@ -1197,7 +1197,7 @@ controls.push(
     labelPos: 'none',
     name: 'Joystick (left-right)',
     fmt: joyFmt,
-    help: 'The joystick. Left and right bend the pitch; up adds vibrato. Both directions are also SCALE choices for the mod routes (Joystick X and Y). Drag the stick; double-click to centre it.',
+    help: 'The joystick. Left and right bend the pitch; up adds vibrato, unless a mod route uses Joystick Y as its SCALE. Both directions are also SCALE choices for the mod routes (Joystick X and Y). Drag the stick; double-click to centre it.',
   },
   {
     id: 'joy.y',
@@ -1214,7 +1214,7 @@ controls.push(
     labelPos: 'none',
     name: 'Joystick (up-down)',
     fmt: joyFmt,
-    help: 'The joystick’s up-down movement: up adds vibrato, and it is Joystick Y for the mod routes.',
+    help: 'The joystick’s up-down movement: up adds vibrato, or, once a mod route uses Joystick Y as its SCALE, drives that route instead.',
   }
 );
 button('kbd.hold', 275, 2105, {
@@ -1474,10 +1474,11 @@ function toEngine(v: ControlValues, _ctx: EngineContext): EngineParams {
         [`env${n}`, 1 - vel],
         [`env${n}v`, vel],
       ];
+    // turned left, a hard note is quieter but never silent: at full it keeps a fifth of its height
     if (vel < 0)
       return [
         [`env${n}`, 1],
-        [`env${n}v`, vel],
+        [`env${n}v`, vel * 0.8],
       ];
     return [[`env${n}`, 1]];
   };
@@ -1610,8 +1611,13 @@ function toEngine(v: ControlValues, _ctx: EngineContext): EngineParams {
     { level: g1, semi: oct(1), ...w1 },
     { level: g2, semi: semi2, ...w2 },
     { level: g2 * density, semi: semi2 + densitySemi(num(v, 'osc2.densityRate')), ...w2 },
-    { level: g1 * level10(num(v, 'sub.level'), 1), semi: oct(1) - 12, ...w1 },
+    { level: 0, semi: oct(1) - 12, ...w1 },
   ];
+  // The sub is Oscillator 1's wave an octave down. On the pulse it is Oscillator 1's own sub square instead, because the
+  // engine's fourth oscillator takes its pulse width from Oscillator 2's.
+  const subG = g1 * level10(num(v, 'sub.level'), 1);
+  if (v['osc1.wave'] === 'pulse') osc[0].subLevel = subG;
+  else osc[3].level = subG;
 
   // ── the loudness: Envelope 1, its height set by VELOCITY ──
   for (const [sig, k] of envParts(1)) routes.push({ src: sig, dst: 'amp', amt: k });
@@ -1621,7 +1627,9 @@ function toEngine(v: ControlValues, _ctx: EngineContext): EngineParams {
     jy = clamp(num(v, 'joy.y'), -1, 1);
   // always routed, so the pitch eases back with the stick rather than snapping when it reaches the centre
   routes.push({ src: 'joyX', dst: 'pitchAll', amt: BEND_SEMI });
-  if (jy > 0) routes.push({ src: 'lfo3', dst: 'pitchAll', amt: jy * VIB_SEMI });
+  // Y up is vibrato, unless a mod route already uses it as its SCALE
+  const yScales = ROUTES.some((r) => v[`route.${r.v}.scale`] === 'joy_y');
+  if (jy > 0 && !yScales) routes.push({ src: 'lfo3', dst: 'pitchAll', amt: jy * VIB_SEMI });
 
   // ── tempo, LFOs and the arpeggiator ──
   const bpm = bpmOf(num(v, 'arp.bpm'));

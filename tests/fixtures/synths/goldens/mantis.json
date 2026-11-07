@@ -400,7 +400,7 @@
     },
     "osc1.wave=\"pulse\"": {
       "osc": [
-        { "level": 0.55, "mix": { "pulse": 1 }, "pw": 0.5, "semi": 0 },
+        { "level": 0.55, "mix": { "pulse": 1 }, "pw": 0.5, "semi": 0, "subLevel": 0 },
         { "level": 0, "mix": { "saw": 1 }, "semi": 0 },
         { "level": 0, "mix": { "saw": 1 }, "semi": 0.045 },
         { "level": 0, "mix": { "pulse": 1 }, "pw": 0.5, "semi": -12 }
@@ -1358,14 +1358,14 @@
     "env1.velocity=-5": {
       "routes": [
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": -1, "dst": "amp", "src": "env1v" },
+        { "amt": -0.8, "dst": "amp", "src": "env1v" },
         { "amt": 2, "dst": "pitchAll", "src": "joyX" }
       ]
     },
     "env1.velocity=-2.5": {
       "routes": [
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": -0.5, "dst": "amp", "src": "env1v" },
+        { "amt": -0.4, "dst": "amp", "src": "env1v" },
         { "amt": 2, "dst": "pitchAll", "src": "joyX" }
       ]
     },
@@ -1996,7 +1996,7 @@
     },
     "patched:* osc1.wave=\"pulse\"": {
       "osc": [
-        { "level": 0.55, "mix": { "pulse": 1 }, "pw": 0.5, "semi": 0 },
+        { "level": 0.55, "mix": { "pulse": 1 }, "pw": 0.5, "semi": 0, "subLevel": 0 },
         { "level": 0, "mix": { "saw": 1 }, "semi": 0 },
         { "level": 0, "mix": { "saw": 1 }, "semi": 0.045 },
         { "level": 0, "mix": { "pulse": 1 }, "pw": 0.5, "semi": -12 }
@@ -2954,14 +2954,14 @@
     "patched:* env1.velocity=-5": {
       "routes": [
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": -1, "dst": "amp", "src": "env1v" },
+        { "amt": -0.8, "dst": "amp", "src": "env1v" },
         { "amt": 2, "dst": "pitchAll", "src": "joyX" }
       ]
     },
     "patched:* env1.velocity=-2.5": {
       "routes": [
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": -0.5, "dst": "amp", "src": "env1v" },
+        { "amt": -0.4, "dst": "amp", "src": "env1v" },
         { "amt": 2, "dst": "pitchAll", "src": "joyX" }
       ]
     },

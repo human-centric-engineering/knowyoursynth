@@ -95,7 +95,7 @@ describe('Mantis oscillators', () => {
 
   it('gives the sub Oscillator 1’s wave an octave down, and the density copy Oscillator 2’s, detuned', () => {
     const p = run({
-      'osc1.wave': 'pulse',
+      'osc1.wave': 'saw',
       'osc1.octave': '-1',
       'osc2.wave': 'triangle',
       'osc2.octave': '+1',
@@ -103,10 +103,20 @@ describe('Mantis oscillators', () => {
       'osc2.cent': 2,
       'osc2.densityRate': 10,
     });
-    expect(p.osc[3]).toMatchObject({ semi: -24, mix: { pulse: 1 } });
+    expect(p.osc[3]).toMatchObject({ semi: -24, mix: { saw: 1 } });
     expect(p.osc[1].semi).toBeCloseTo(12 + 7 + 0.2, 10);
     expect(p.osc[2].semi).toBeCloseTo(12 + 7 + 0.2 + 0.5, 10);
     expect(p.osc[2].morph).toBe(p.osc[1].morph);
+  });
+
+  it('plays the sub level on the fourth oscillator, or as Oscillator 1’s own sub square under a pulse', () => {
+    const saw = run({ 'sub.level': 10 });
+    expect(saw.osc[3].level).toBeCloseTo(0.55, 10);
+    expect(saw.osc[0].subLevel).toBeUndefined();
+    // the fourth oscillator's pulse width is Oscillator 2's, so a pulse sub would follow the wrong route
+    const pulse = run({ 'sub.level': 10, 'osc1.wave': 'pulse' });
+    expect(pulse.osc[3].level).toBe(0);
+    expect(pulse.osc[0].subLevel).toBeCloseTo(0.55, 10);
   });
 
   it('balances Oscillator 1 (and sub) against 2 (and density), then against noise and the ring modulator', () => {
@@ -261,8 +271,11 @@ describe('Mantis mod routes', () => {
     const down = run({ 'vcf.cutoffMod': 5, 'route.cutoff.source': 'env2', 'env2.velocity': -5 });
     expect(routesTo(down.routes, 'cutoff')).toEqual([
       { src: 'env2', dst: 'cutoff', amt: 6 },
-      { src: 'env2v', dst: 'cutoff', amt: -6 },
+      { src: 'env2v', dst: 'cutoff', amt: expect.closeTo(-4.8, 10) },
     ]);
+    // turned fully left, a hard note keeps a fifth of the loudness rather than cancelling to silence
+    const quiet = routesTo(run({ 'env1.velocity': -5 }).routes, 'amp');
+    expect(quiet.reduce((sum, r) => sum + r.amt, 0)).toBeCloseTo(0.2, 10);
     // Envelope 1 is the loudness: harder notes louder with VELOCITY right
     expect(routesTo(run({ 'env1.velocity': 5 }).routes, 'amp')).toEqual([
       { src: 'env1v', dst: 'amp', amt: 1 },
@@ -368,6 +381,11 @@ describe('Mantis switches', () => {
       { src: 'lfo3', dst: 'pitchAll', amt: 0.5 },
     ]);
     expect(run({ 'joy.x': -0.5 }).joy).toEqual([-0.5, 0]);
+  });
+
+  it('leaves the vibrato out while a mod route uses Joystick Y as its SCALE', () => {
+    const p = run({ 'joy.y': 1, 'route.width.scale': 'joy_y' });
+    expect(routesTo(p.routes, 'pitchAll')).toEqual([{ src: 'joyX', dst: 'pitchAll', amt: 2 }]);
   });
 
   it('runs the chorus then the reverb, by their levels, type and filters', () => {

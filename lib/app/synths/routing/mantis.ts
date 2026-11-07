@@ -10,6 +10,7 @@
 import type {
   RoutingBlock,
   RoutingEdge,
+  RoutingLevel,
   RoutingWhen,
   SynthRouting,
 } from '@/lib/app/synths/contract';
@@ -110,6 +111,11 @@ const route = (
       levels: [{ id: knob, off: 0 }],
     };
   });
+/** The oscillators are silent with NOISE BALANCE or RM BALANCE fully up. */
+const OSC_HEARD: RoutingLevel[] = [
+  { id: 'mix.noise', off: 10 },
+  { id: 'mix.ring', off: 10 },
+];
 const SHAPED = (n: number): RoutingWhen => ({
   id: `osc${n}.wave`,
   in: ['pulse', 'triangle', 'wavetable'],
@@ -256,16 +262,34 @@ export const routing: SynthRouting = {
     { id: 'c02', from: 'kbd', to: 'osc1', signal: 'cv', label: 'pitch' },
     { id: 'c03', from: 'kbd', to: 'osc2', signal: 'cv', label: 'pitch' },
     { id: 'c04', from: 'kbd', to: 'sub', signal: 'cv', label: 'pitch' },
-    { id: 'c07', from: 'osc1', to: 'mix', signal: 'audio', levels: [{ id: 'mix.osc', off: 5 }] },
-    { id: 'c08', from: 'osc2', to: 'mix', signal: 'audio', levels: [{ id: 'mix.osc', off: -5 }] },
+    {
+      id: 'c07',
+      from: 'osc1',
+      to: 'mix',
+      signal: 'audio',
+      levels: [{ id: 'mix.osc', off: 5 }, ...OSC_HEARD],
+    },
+    {
+      id: 'c08',
+      from: 'osc2',
+      to: 'mix',
+      signal: 'audio',
+      levels: [{ id: 'mix.osc', off: -5 }, ...OSC_HEARD],
+    },
     {
       id: 'c09',
       from: 'sub',
       to: 'mix',
       signal: 'audio',
-      levels: ['sub.level', { id: 'mix.osc', off: 5 }],
+      levels: ['sub.level', { id: 'mix.osc', off: 5 }, ...OSC_HEARD],
     },
-    { id: 'c10', from: 'noise', to: 'mix', signal: 'audio', levels: ['mix.noise'] },
+    {
+      id: 'c10',
+      from: 'noise',
+      to: 'mix',
+      signal: 'audio',
+      levels: ['mix.noise', { id: 'mix.ring', off: 10 }],
+    },
     { id: 'c11', from: 'osc1', to: 'ring', signal: 'audio', levels: ['mix.ring'] },
     { id: 'c12', from: 'osc2', to: 'ring', signal: 'audio', levels: ['mix.ring'] },
     { id: 'c13', from: 'ring', to: 'mix', signal: 'audio', levels: ['mix.ring'] },
