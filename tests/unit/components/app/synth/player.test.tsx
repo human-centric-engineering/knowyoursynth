@@ -17,6 +17,7 @@ import {
   SoundPicker,
 } from '@/components/app/synth/player';
 import { stepIds } from '@/components/app/synth/lesson';
+import { faceRoles } from '@/components/app/synth/face-roles';
 import { highlightStore } from '@/components/app/synth/stores';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { START_STEP, startStep } from '@/lib/app/synths/default-patch';
@@ -170,6 +171,25 @@ describe('SoundDesign: the drawer', () => {
     );
     expect(tab).toHaveAttribute('aria-expanded', 'true');
     expect(document.getElementById(tab.getAttribute('aria-controls') ?? '')).not.toBeNull();
+  });
+});
+
+describe('SoundDesign: the faceplate (t-201)', () => {
+  const strip = () =>
+    screen.getByRole('heading', { name: 'Learn sound design' }).closest('section');
+
+  it("is drawn in the face's colours when the page gives them", () => {
+    const face = faceRoles('#f2b21c', '#e3a40f', '#2b2213');
+    render(<SoundDesign steps={[]} step={null} onStep={vi.fn()} hasLesson={false} face={face} />);
+    expect(strip()).toHaveClass('kys-face');
+    expect(strip()?.style.getPropertyValue('--kys-surface')).toBe('#f2b21c');
+    expect(strip()?.style.getPropertyValue('--kys-accent')).toBe('#2b2213');
+  });
+
+  it("keeps the stage's colours without them", () => {
+    render(<SoundDesign steps={[]} step={null} onStep={vi.fn()} hasLesson={false} />);
+    expect(strip()).not.toHaveClass('kys-face');
+    expect(strip()?.style.getPropertyValue('--kys-surface')).toBe('');
   });
 });
 

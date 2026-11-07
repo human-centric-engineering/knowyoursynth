@@ -153,7 +153,7 @@ export function SoundPicker({
  * of the dock's top, lifting a little as the pointer comes near (`data-near` on the dock, set by the page), and a
  * press on it slides the strip up, the tab settling into the strip's head with an × that closes it again. The
  * wordmark is at the head's left. Below that, the tab is not drawn and the strip is in
- * the dock's flow.
+ * the dock's flow. It is drawn in the faceplate's colours (`face`, t-201), as part of the instrument.
  */
 export function SoundDesign({
   steps,
@@ -165,6 +165,7 @@ export function SoundDesign({
   lit = [],
   open = false,
   onToggle,
+  face,
 }: {
   steps: readonly PresetStep[];
   /** Step 0, the Default patch, for a lesson that has it. */
@@ -181,11 +182,18 @@ export function SoundDesign({
   /** Whether the drawer is up (from `lg` up, with a pointer). */
   open?: boolean;
   onToggle?: () => void;
+  /** The player's colour roles in the faceplate's colours (`faceRoles`); the stage's without it. */
+  face?: CSSProperties;
 }) {
   const n = steps.length;
   const bodyId = useId();
   return (
-    <section aria-labelledby="kys-design-h" className="kys-design" data-open={open || undefined}>
+    <section
+      aria-labelledby="kys-design-h"
+      className={`kys-design ${face ? 'kys-face' : ''}`}
+      style={face}
+      data-open={open || undefined}
+    >
       <button
         type="button"
         className="kys-design-tab"

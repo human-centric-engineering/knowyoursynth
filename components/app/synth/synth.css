@@ -501,6 +501,54 @@ svg .kys-hit:focus-visible {
   box-shadow: none;
 }
 
+/* The strip and the lesson card in the faceplate's colours (t-201): `faceRoles` redeclares the `--kys-*` roles on
+   them, so they are the face to its foot, with no stage light over it. A module's colour keeps as much of itself
+   as stands off the face (`--kys-module-mix`), the rest the ink: all of it on a black face, less on a cream one. */
+.kys-design.kys-face {
+  background: linear-gradient(var(--kys-stage-hi), var(--kys-stage));
+}
+.kys-design.kys-face::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--kys-accent) 55%, transparent),
+    transparent
+  );
+}
+.kys-face .kys-chapter > button {
+  --chapter-ink: color-mix(in srgb, var(--chapter) var(--kys-module-mix, 100%), var(--kys-text));
+}
+.kys-face .kys-chapter[data-state='done'] .kys-chapter-track {
+  background: color-mix(in srgb, var(--chapter-ink) 70%, var(--kys-stage));
+}
+.kys-face .kys-chapter[data-state='now'] .kys-chapter-track,
+.kys-face .kys-chapter > button:hover .kys-chapter-track,
+.kys-face .kys-chapter > button:focus-visible .kys-chapter-track {
+  background: var(--chapter-ink);
+}
+.kys-face .kys-chapter[data-state='now'] .kys-chapter-track {
+  box-shadow: 0 0 10px color-mix(in srgb, var(--chapter-ink) 60%, transparent);
+}
+.kys-face .kys-chapter[data-state='done'] .kys-chapter-area,
+.kys-face .kys-chapter[data-state='now'] .kys-chapter-area {
+  color: var(--chapter-ink);
+}
+.kys-face .kys-chapter[data-state='now'] .kys-chapter-num {
+  color: var(--kys-surface);
+  background: var(--chapter-ink);
+}
+.kys-face .kys-step-btn.is-primary {
+  box-shadow: 0 6px 18px -8px color-mix(in srgb, var(--kys-accent) 80%, transparent);
+}
+.kys-face .kys-step-btn.is-primary:hover {
+  background: color-mix(in srgb, var(--kys-accent) 85%, var(--kys-surface));
+}
+/* A move's number stays the amber of the badge on the panel, whatever the face, so the two are read together. */
+.kys-face .kys-card-num {
+  color: #1b1204;
+  background: #f6a63a;
+}
+
 /* The lesson card's Previous and Next. */
 .kys-step-btn {
   display: inline-flex;
@@ -1288,6 +1336,9 @@ svg .kys-hit:focus-visible {
     transition:
       grid-template-rows 0.25s ease,
       visibility 0s linear 0.25s;
+  }
+  .kys-dock .kys-design.kys-face .kys-design-body {
+    background: linear-gradient(var(--kys-stage-hi), var(--kys-stage));
   }
   .kys-dock .kys-design[data-open] .kys-design-body {
     grid-template-rows: 1fr;

@@ -46,6 +46,7 @@ import {
 } from 'react';
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
 import { INK, PAPER } from '@/components/app/panel/parts';
+import { faceRoles } from '@/components/app/synth/face-roles';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { apiClient } from '@/lib/api/client';
@@ -2118,13 +2119,18 @@ function Synth({
   // drawing's paper and ink. The width of the panel, zoomed with it, up to the screen's.
   // A light faceplate takes a softer shadow on the light stage: the dark one a black panel casts reads as a smudge.
   const lightFace = !view.outline && isLightFace(def.theme.panel);
+  const plate = view.outline ? PAPER : def.theme.panel;
+  const plate2 = view.outline ? PAPER : def.theme.panel2 || def.theme.panel;
+  const print = view.outline ? INK : def.theme.ink;
   const railStyle: CSSProperties & Record<'--rail-face' | '--rail-face2' | '--rail-print', string> =
     {
       ...panelRailStyle(faceView(def), scale),
-      '--rail-face': view.outline ? PAPER : def.theme.panel,
-      '--rail-face2': view.outline ? PAPER : def.theme.panel2 || def.theme.panel,
-      '--rail-print': view.outline ? INK : def.theme.ink,
+      '--rail-face': plate,
+      '--rail-face2': plate2,
+      '--rail-print': print,
     };
+  // The Sound Design strip and the lesson card are of the faceplate too, in its colours (t-201).
+  const face = faceRoles(plate, plate2, print);
   const panelTaps = small
     ? {
         onPointerOverCapture: (e: ReactPointerEvent) => {
@@ -2755,6 +2761,7 @@ function Synth({
                   mark={<Wordmark lit={audio === 'on'} />}
                   lit={chapterLit ? chapterLit.split('|') : []}
                   open={designOpen}
+                  face={face}
                   onToggle={() => {
                     chapterChosen.current = false;
                     setDesignOpen((o) => !o);
@@ -2959,6 +2966,7 @@ function Synth({
                 mark={ownLesson || !shown ? null : (progress.marks?.get(shown.id) ?? null)}
                 links={shownLinks}
                 suggestLink={suggestForSound}
+                face={face}
               />
             )}
             {!small && (

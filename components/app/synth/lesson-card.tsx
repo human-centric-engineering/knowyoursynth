@@ -11,11 +11,14 @@
  * The card can be dragged by its header to anywhere on the screen, so it can be put over whatever part of the panel is
  * not in use. The ⇆ button docks it again, on the other side.
  *
+ * The lesson is drawn in the faceplate's colours, as the Sound Design strip it opens from is (`face`, t-201); the
+ * inspector and the effects keep the stage's.
+ *
  * Below `lg` the lesson stays in its bottom sheet (`lesson.tsx`), and this is not drawn.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { PointerEvent as ReactPointerEvent, ReactNode } from 'react';
+import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from 'react';
 import { ArrowLeftRight, Check, ChevronLeft, ChevronRight, RotateCcw, X } from 'lucide-react';
 import { stepBadges } from '@/lib/app/synths/lib/history';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
@@ -83,7 +86,13 @@ export interface LessonCardProps {
   links?: LinkSummary;
   /** What a link suggested for it is about: a library sound, never one of a user's own (`f-link-suggestions` t-186). */
   suggestLink?: readonly SuggestTarget[];
+  /** The player's colour roles in the faceplate's colours (`faceRoles`), for the lesson. */
+  face?: CSSProperties;
 }
+
+/** A module's colour, kept as far off the face as the face's roles allow (`--kys-module-mix`; all of it without). */
+const moduleInk = (colour: string) =>
+  `color-mix(in srgb, ${colour} var(--kys-module-mix, 100%), var(--kys-text))`;
 
 export function LessonCard({
   def,
@@ -99,6 +108,7 @@ export function LessonCard({
   mark = null,
   links,
   suggestLink,
+  face,
 }: LessonCardProps) {
   const ref = useRef<HTMLElement | null>(null);
   // Where the card has been dragged to, or `null` while it is docked at its side.
@@ -258,7 +268,7 @@ export function LessonCard({
     const jm = jackMap(def);
     const moves = stepBadges(current);
     eyebrow = (
-      <span style={{ color: m.color }}>
+      <span style={{ color: moduleInk(m.color) }}>
         Step {step + 1} of {n} · {m.label}
       </span>
     );
@@ -422,7 +432,10 @@ export function LessonCard({
               {i > 0 && <span className="text-(--kys-faint)">→</span>}
               <span
                 className="rounded-full border px-2 py-0.5 text-xs font-semibold"
-                style={{ borderColor: moduleOf(m).color, color: moduleOf(m).color }}
+                style={{
+                  borderColor: moduleInk(moduleOf(m).color),
+                  color: moduleInk(moduleOf(m).color),
+                }}
               >
                 {moduleOf(m).label}
               </span>
@@ -463,7 +476,7 @@ export function LessonCard({
                           focusStore.set({ kind: 'control', id: t.id, x: 0, y: 0, tip: false })
                         }
                         className="kys-label"
-                        style={{ color: moduleOf(c.module).color }}
+                        style={{ color: moduleInk(moduleOf(c.module).color) }}
                       >
                         {displayName(def, c)}
                       </button>
@@ -493,22 +506,24 @@ export function LessonCard({
     );
   }
 
+  const lesson = section === 'build' ? face : undefined;
   return (
     <aside
       ref={ref}
-      className="kys-card"
+      className={`kys-card ${lesson ? 'kys-face' : ''}`}
       data-side={side}
       data-detached={pos ? '' : undefined}
       style={
         pos
           ? {
+              ...lesson,
               left: pos.x,
               top: pos.y,
               right: 'auto',
               bottom: 'auto',
               maxHeight: `calc(100vh - ${pos.y + EDGE}px)`,
             }
-          : undefined
+          : lesson
       }
       aria-labelledby="kys-card-h"
       data-testid="lesson-card"
