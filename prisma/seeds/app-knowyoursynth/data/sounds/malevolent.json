@@ -1428,11 +1428,12 @@
         {
           "title": "A triangle",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 9.\n- Listen for: a round, deep sub.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 9.\n- Listen for: a round, deep sub. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
-            "vco1.level": 9
+            "vco1.level": 9,
+            "vcf.cutoff": 10
           }
         },
         {
@@ -1500,13 +1501,14 @@
         {
           "title": "VCO 1 modulates VCO 2",
           "module": "osc",
-          "why": "- VCO 1 LEVEL 6 with its SAW lit, COARSE 3.75: an octave down.\n- VCO 2 SAW lit, LEVEL 8.\n- VCO 1 SAW into VCO 2 FM 2, VCO 2 FM 2 at 4.\n- Listen for: a clangy, snarling tone.",
+          "why": "- VCO 1 LEVEL 6 with its SAW lit, COARSE 3.75: an octave down.\n- VCO 2 SAW lit, LEVEL 8.\n- VCO 1 SAW into VCO 2 FM 2, VCO 2 FM 2 at 4.\n- Listen for: a clangy, snarling tone. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.level": 6,
             "vco1.coarse": 3.75,
             "vco2.saw": true,
             "vco2.level": 8,
-            "vco2.fm2": 4
+            "vco2.fm2": 4,
+            "env2.sustain": 10
           },
           "cables": [["j.vco1_saw", "j.vco2_fm2"]]
         },
@@ -1640,11 +1642,12 @@
         {
           "title": "One saw, ringing",
           "module": "filter",
-          "why": "- VCO 1 LEVEL 8 with its SAW lit.\n- CUT OFF 2.5, RESONANCE 7.8: just under self-oscillation.\n- Listen for: a sharp, ringing saw.",
+          "why": "- VCO 1 LEVEL 8 with its SAW lit.\n- CUT OFF 2.5, RESONANCE 7.8: just under self-oscillation.\n- Listen for: a sharp, ringing saw. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.level": 8,
             "vcf.cutoff": 2.5,
-            "vcf.res": 7.8
+            "vcf.res": 7.8,
+            "env2.sustain": 10
           }
         },
         {
@@ -2398,9 +2401,10 @@
         {
           "title": "A low saw",
           "module": "osc",
-          "why": "- VCO 1 LEVEL 9 with its SAW lit.\n- Listen for: a plain, deep saw.",
+          "why": "- VCO 1 LEVEL 9 with its SAW lit.\n- Listen for: a plain, deep saw. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
-            "vco1.level": 9
+            "vco1.level": 9,
+            "env2.sustain": 10
           }
         },
         {
@@ -2467,14 +2471,15 @@
         {
           "title": "Every wave",
           "module": "osc",
-          "why": "- VCO 1 LEVEL 7 with its SAW, TRIANGLE and PULSE lit.\n- VCO 2 SAW lit, LEVEL 6, FINE 5.4.\n- Listen for: a dense, buzzing tone.",
+          "why": "- VCO 1 LEVEL 7 with its SAW, TRIANGLE and PULSE lit.\n- VCO 2 SAW lit, LEVEL 6, FINE 5.4.\n- Listen for: a dense, buzzing tone. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.level": 7,
             "vco1.tri": true,
             "vco1.pulse": true,
             "vco2.saw": true,
             "vco2.level": 6,
-            "vco2.fine": 5.4
+            "vco2.fine": 5.4,
+            "env2.sustain": 10
           }
         },
         {
@@ -2772,11 +2777,12 @@
         {
           "title": "A triangle",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 10.\n- Listen for: a deep, round tone.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 10.\n- Listen for: a deep, round tone. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
-            "vco1.level": 10
+            "vco1.level": 10,
+            "vcf.cutoff": 10
           }
         },
         {
@@ -2858,12 +2864,13 @@
         {
           "title": "Vibrato",
           "module": "osc",
-          "why": "The LFO triangle reaches both VCOs’ FM 2 inside.\n- VCO 1 FM 2 0.8, VCO 2 FM 2 0.8: about a third of a semitone.\n- LFO RATE 6: about five times a second.\n- Envelope 2 RELEASE 3.\n- Listen for: long notes singing.",
+          "why": "The LFO triangle reaches both VCOs’ FM 2 inside.\n- VCO 1 FM 2 0.8, VCO 2 FM 2 0.8: about a third of a semitone.\n- LFO RATE 6: about five times a second.\n- Envelope 2 RELEASE 3.\n- Listen for: long notes singing. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.fm2": 0.8,
             "vco2.fm2": 0.8,
             "lfo.rate": 6,
-            "env2.release": 3
+            "env2.release": 3,
+            "env2.sustain": 10
           }
         }
       ],
@@ -2913,7 +2920,7 @@
         {
           "title": "Gently vocal",
           "module": "filter",
-          "why": "- CUT OFF 5, RESONANCE 3, VCF FM 1 2.\n- Envelope 1 ATTACK 3, DECAY 6, SUSTAIN 5.\n- Envelope 2 ATTACK 2, RELEASE 4.\n- Listen for: notes that open as they start.",
+          "why": "- CUT OFF 5, RESONANCE 3, VCF FM 1 2.\n- Envelope 1 ATTACK 3, DECAY 6, SUSTAIN 5.\n- Envelope 2 ATTACK 2, RELEASE 4.\n- Listen for: notes that open as they start. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vcf.cutoff": 5,
             "vcf.res": 3,
@@ -2922,7 +2929,8 @@
             "env1.decay": 6,
             "env1.sustain": 5,
             "env2.attack": 2,
-            "env2.release": 4
+            "env2.release": 4,
+            "env2.sustain": 10
           }
         },
         {
@@ -3151,22 +3159,24 @@
         {
           "title": "A high triangle",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 8.\n- Listen for: a pure, whistling tone.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 8.\n- Listen for: a pure, whistling tone. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
-            "vco1.level": 8
+            "vco1.level": 8,
+            "vcf.cutoff": 10
           }
         },
         {
           "title": "A wide vibrato",
           "module": "mod",
-          "why": "- VIBRATO lit, joystick up to 0.6.\n- Envelope 2 ATTACK 2, RELEASE 3.\n- Listen for: a deep, quick wobble.",
+          "why": "- VIBRATO lit, joystick up to 0.6.\n- Envelope 2 ATTACK 2, RELEASE 3.\n- Listen for: a deep, quick wobble. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "keys.vibrato": true,
             "joy.y": 0.6,
             "env2.attack": 2,
-            "env2.release": 3
+            "env2.release": 3,
+            "env2.sustain": 10
           }
         }
       ],
@@ -3215,7 +3225,7 @@
         {
           "title": "A slow opening",
           "module": "filter",
-          "why": "- CUT OFF 3.5, RESONANCE 5, VCF FM 1 3.5.\n- Envelope 1 ATTACK 7, DECAY 7, SUSTAIN 6.\n- Envelope 2 ATTACK 3, RELEASE 5.\n- Listen for: each long note blooming.",
+          "why": "- CUT OFF 3.5, RESONANCE 5, VCF FM 1 3.5.\n- Envelope 1 ATTACK 7, DECAY 7, SUSTAIN 6.\n- Envelope 2 ATTACK 3, RELEASE 5.\n- Listen for: each long note blooming. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vcf.cutoff": 3.5,
             "vcf.res": 5,
@@ -3224,7 +3234,8 @@
             "env1.decay": 7,
             "env1.sustain": 6,
             "env2.attack": 3,
-            "env2.release": 5
+            "env2.release": 5,
+            "env2.sustain": 10
           }
         },
         {
@@ -3287,12 +3298,13 @@
         {
           "title": "A soft waver",
           "module": "mod",
-          "why": "- VIBRATO lit, joystick up to 0.25.\n- Envelope 2 ATTACK 2, RELEASE 4.\n- Listen for: a wistful, gently wavering line.",
+          "why": "- VIBRATO lit, joystick up to 0.25.\n- Envelope 2 ATTACK 2, RELEASE 4.\n- Listen for: a wistful, gently wavering line. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "keys.vibrato": true,
             "joy.y": 0.25,
             "env2.attack": 2,
-            "env2.release": 4
+            "env2.release": 4,
+            "env2.sustain": 10
           }
         }
       ],
@@ -3330,14 +3342,15 @@
         {
           "title": "Two triangles",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 7.\n- VCO 2 TRIANGLE lit, LEVEL 5, FINE 5.2.\n- Listen for: a pure, slightly beating tone.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 7.\n- VCO 2 TRIANGLE lit, LEVEL 5, FINE 5.2.\n- Listen for: a pure, slightly beating tone. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
             "vco1.level": 7,
             "vco2.tri": true,
             "vco2.level": 5,
-            "vco2.fine": 5.2
+            "vco2.fine": 5.2,
+            "vcf.cutoff": 10
           }
         },
         {
@@ -3351,13 +3364,14 @@
         {
           "title": "Nervous vibrato",
           "module": "osc",
-          "why": "The LFO triangle reaches both VCOs’ FM 2 inside.\n- VCO 1 FM 2 1.2, VCO 2 FM 2 1.2, LFO RATE 6.2.\n- Envelope 2 ATTACK 4, RELEASE 5.\n- Listen for: a deep, eerie waver.",
+          "why": "The LFO triangle reaches both VCOs’ FM 2 inside.\n- VCO 1 FM 2 1.2, VCO 2 FM 2 1.2, LFO RATE 6.2.\n- Envelope 2 ATTACK 4, RELEASE 5.\n- Listen for: a deep, eerie waver. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.fm2": 1.2,
             "vco2.fm2": 1.2,
             "lfo.rate": 6.2,
             "env2.attack": 4,
-            "env2.release": 5
+            "env2.release": 5,
+            "env2.sustain": 10
           }
         }
       ],
@@ -3403,12 +3417,14 @@
         {
           "title": "A thin pulse",
           "module": "osc",
-          "why": "- VCO 1 SAW off, PULSE lit, SHAPE 1, LEVEL 8.\n- Listen for: a thin, buzzy chip tone.",
+          "why": "- VCO 1 SAW off, PULSE lit, SHAPE 1, LEVEL 8.\n- Listen for: a thin, buzzy chip tone. Envelope 2’s SUSTAIN stays at 10. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.pulse": true,
             "vco1.shape": 1,
-            "vco1.level": 8
+            "vco1.level": 8,
+            "env2.sustain": 10,
+            "vcf.cutoff": 10
           }
         },
         {
@@ -3473,12 +3489,13 @@
         {
           "title": "Cutting",
           "module": "amp",
-          "why": "- DRIVE 3, MASTER VOL 6.\n- Joystick up to 0.3: a hint of glide.\n- Envelope 2 RELEASE 3.\n- Listen for: a lead that cuts through.",
+          "why": "- DRIVE 3, MASTER VOL 6.\n- Joystick up to 0.3: a hint of glide.\n- Envelope 2 RELEASE 3.\n- Listen for: a lead that cuts through. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vca.drive": 3,
             "out.master": 6,
             "joy.y": 0.3,
-            "env2.release": 3
+            "env2.release": 3,
+            "env2.sustain": 10
           }
         }
       ],
@@ -3521,12 +3538,13 @@
         {
           "title": "Saw and pulse",
           "module": "osc",
-          "why": "- VCO 1 LEVEL 7 with its SAW lit.\n- VCO 2 PULSE lit, LEVEL 6, COARSE 6.25.\n- Listen for: a bright, buzzy tone.",
+          "why": "- VCO 1 LEVEL 7 with its SAW lit.\n- VCO 2 PULSE lit, LEVEL 6, COARSE 6.25.\n- Listen for: a bright, buzzy tone. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.level": 7,
             "vco2.pulse": true,
             "vco2.level": 6,
-            "vco2.coarse": 6.25
+            "vco2.coarse": 6.25,
+            "env2.sustain": 10
           }
         },
         {
@@ -3665,12 +3683,13 @@
         {
           "title": "Flutter",
           "module": "osc",
-          "why": "The LFO triangle reaches VCO 1’s FM 2 inside.\n- VCO 1 FM 2 0.8, LFO RATE 6.\n- Envelope 2 ATTACK 3, RELEASE 2.\n- Listen for: a breathy, fluttering flute.",
+          "why": "The LFO triangle reaches VCO 1’s FM 2 inside.\n- VCO 1 FM 2 0.8, LFO RATE 6.\n- Envelope 2 ATTACK 3, RELEASE 2.\n- Listen for: a breathy, fluttering flute. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.fm2": 0.8,
             "lfo.rate": 6,
             "env2.attack": 3,
-            "env2.release": 2
+            "env2.release": 2,
+            "env2.sustain": 10
           }
         }
       ],
@@ -3733,12 +3752,13 @@
         {
           "title": "Singing",
           "module": "osc",
-          "why": "The LFO triangle reaches VCO 1’s FM 2 inside.\n- VCO 1 FM 2 0.6, LFO RATE 6.\n- Envelope 2 ATTACK 3, RELEASE 3.\n- Listen for: a gentle vibrato.",
+          "why": "The LFO triangle reaches VCO 1’s FM 2 inside.\n- VCO 1 FM 2 0.6, LFO RATE 6.\n- Envelope 2 ATTACK 3, RELEASE 3.\n- Listen for: a gentle vibrato. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.fm2": 0.6,
             "lfo.rate": 6,
             "env2.attack": 3,
-            "env2.release": 3
+            "env2.release": 3,
+            "env2.sustain": 10
           }
         }
       ],
@@ -3791,13 +3811,14 @@
         {
           "title": "Sobbing slides",
           "module": "mod",
-          "why": "- Joystick up to 0.5: a short glide on every note.\n- VCO 1 FM 2 0.8, LFO RATE 6.2: a crying vibrato.\n- Envelope 2 ATTACK 2, RELEASE 3.\n- Listen for: notes that slide and weep.",
+          "why": "- Joystick up to 0.5: a short glide on every note.\n- VCO 1 FM 2 0.8, LFO RATE 6.2: a crying vibrato.\n- Envelope 2 ATTACK 2, RELEASE 3.\n- Listen for: notes that slide and weep. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "joy.y": 0.5,
             "vco1.fm2": 0.8,
             "lfo.rate": 6.2,
             "env2.attack": 2,
-            "env2.release": 3
+            "env2.release": 3,
+            "env2.sustain": 10
           }
         }
       ],
@@ -4057,11 +4078,12 @@
         {
           "title": "Bends",
           "module": "mod",
-          "why": "- Joystick up to 0.45.\n- Envelope 2 ATTACK 1.5, RELEASE 2.\n- Listen for: notes bending into place.",
+          "why": "- Joystick up to 0.45.\n- Envelope 2 ATTACK 1.5, RELEASE 2.\n- Listen for: notes bending into place. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "joy.y": 0.45,
             "env2.attack": 1.5,
-            "env2.release": 2
+            "env2.release": 2,
+            "env2.sustain": 10
           }
         }
       ],
@@ -4112,12 +4134,13 @@
         {
           "title": "Lazy wobble",
           "module": "mod",
-          "why": "- VIBRATO lit, joystick up to 0.45.\n- Envelope 2 ATTACK 2, RELEASE 3.\n- Listen for: a lazy, whining waver.",
+          "why": "- VIBRATO lit, joystick up to 0.45.\n- Envelope 2 ATTACK 2, RELEASE 3.\n- Listen for: a lazy, whining waver. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "keys.vibrato": true,
             "joy.y": 0.45,
             "env2.attack": 2,
-            "env2.release": 3
+            "env2.release": 3,
+            "env2.sustain": 10
           }
         }
       ],
@@ -4244,7 +4267,7 @@
         {
           "title": "Dreamy",
           "module": "env",
-          "why": "- VCF FM 1 1, Envelope 1 ATTACK 5, DECAY 7, SUSTAIN 5.\n- Envelope 2 ATTACK 4, RELEASE 6.\n- VIBRATO lit, joystick up to 0.2.\n- Listen for: soft swells with a gentle waver.",
+          "why": "- VCF FM 1 1, Envelope 1 ATTACK 5, DECAY 7, SUSTAIN 5.\n- Envelope 2 ATTACK 4, RELEASE 6.\n- VIBRATO lit, joystick up to 0.2.\n- Listen for: soft swells with a gentle waver. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vcf.fm1": 1,
             "env1.attack": 5,
@@ -4253,7 +4276,8 @@
             "env2.attack": 4,
             "env2.release": 6,
             "keys.vibrato": true,
-            "joy.y": 0.2
+            "joy.y": 0.2,
+            "env2.sustain": 10
           }
         }
       ],
@@ -4297,7 +4321,7 @@
         {
           "title": "Pulse and saw",
           "module": "osc",
-          "why": "- VCO 1 SAW off, PULSE lit, SHAPE 3.5, LEVEL 7.\n- VCO 2 SAW lit, LEVEL 4, COARSE 6.25.\n- Listen for: a bright, glossy tone.",
+          "why": "- VCO 1 SAW off, PULSE lit, SHAPE 3.5, LEVEL 7.\n- VCO 2 SAW lit, LEVEL 4, COARSE 6.25.\n- Listen for: a bright, glossy tone. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.pulse": true,
@@ -4305,7 +4329,8 @@
             "vco1.level": 7,
             "vco2.saw": true,
             "vco2.level": 4,
-            "vco2.coarse": 6.25
+            "vco2.coarse": 6.25,
+            "vcf.cutoff": 10
           }
         },
         {
@@ -5255,13 +5280,14 @@
         {
           "title": "Two VCOs, barely apart",
           "module": "osc",
-          "why": "- VCO 1 LEVEL 4 with its SAW lit, TRIANGLE lit.\n- VCO 2 TRIANGLE lit, LEVEL 7, FINE 5.1.\n- Listen for: a deep tone that beats very slowly.",
+          "why": "- VCO 1 LEVEL 4 with its SAW lit, TRIANGLE lit.\n- VCO 2 TRIANGLE lit, LEVEL 7, FINE 5.1.\n- Listen for: a deep tone that beats very slowly. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.level": 4,
             "vco1.tri": true,
             "vco2.tri": true,
             "vco2.level": 7,
-            "vco2.fine": 5.1
+            "vco2.fine": 5.1,
+            "env2.sustain": 10
           }
         },
         {
@@ -5314,14 +5340,15 @@
         {
           "title": "A fifth",
           "module": "osc",
-          "why": "- VCO 1 SAW off, PULSE lit, LEVEL 6.\n- VCO 2 TRIANGLE lit, LEVEL 7, COARSE 5.73.\n- Listen for: a pure, open fifth.",
+          "why": "- VCO 1 SAW off, PULSE lit, LEVEL 6.\n- VCO 2 TRIANGLE lit, LEVEL 7, COARSE 5.73.\n- Listen for: a pure, open fifth. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.pulse": true,
             "vco1.level": 6,
             "vco2.tri": true,
             "vco2.level": 7,
-            "vco2.coarse": 5.73
+            "vco2.coarse": 5.73,
+            "env2.sustain": 10
           }
         },
         {
@@ -5373,10 +5400,11 @@
         {
           "title": "Noise only",
           "module": "mixer",
-          "why": "- VCO 1 LEVEL 0, NOISE LEVEL 10.\n- Listen for: a plain hiss.",
+          "why": "- VCO 1 LEVEL 0, NOISE LEVEL 10.\n- Listen for: a plain hiss. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.level": 0,
-            "mix.noise": 10
+            "mix.noise": 10,
+            "env2.sustain": 10
           }
         },
         {
@@ -5429,12 +5457,13 @@
         {
           "title": "Whistling noise",
           "module": "filter",
-          "why": "- VCO 1 LEVEL 0, NOISE LEVEL 8.\n- CUT OFF 6, RESONANCE 7.5.\n- Listen for: a whistling hiss.",
+          "why": "- VCO 1 LEVEL 0, NOISE LEVEL 8.\n- CUT OFF 6, RESONANCE 7.5.\n- Listen for: a whistling hiss. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.level": 0,
             "mix.noise": 8,
             "vcf.cutoff": 6,
-            "vcf.res": 7.5
+            "vcf.res": 7.5,
+            "env2.sustain": 10
           }
         },
         {
@@ -5477,14 +5506,15 @@
         {
           "title": "Two low saws",
           "module": "osc",
-          "why": "- VCO 1 LEVEL 6 with its SAW lit.\n- VCO 2 SAW lit, LEVEL 6, COARSE 5.73.\n- CUT OFF 3.5, RESONANCE 5.\n- Listen for: a dark, buzzing fifth.",
+          "why": "- VCO 1 LEVEL 6 with its SAW lit.\n- VCO 2 SAW lit, LEVEL 6, COARSE 5.73.\n- CUT OFF 3.5, RESONANCE 5.\n- Listen for: a dark, buzzing fifth. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.level": 6,
             "vco2.saw": true,
             "vco2.level": 6,
             "vco2.coarse": 5.73,
             "vcf.cutoff": 3.5,
-            "vcf.res": 5
+            "vcf.res": 5,
+            "env2.sustain": 10
           }
         },
         {
@@ -5717,14 +5747,15 @@
         {
           "title": "Bowl partials",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 8.\n- VCO 2 TRIANGLE lit, LEVEL 5, COARSE 6.6: an inharmonic interval above.\n- Listen for: a clashing, metallic chord.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 8.\n- VCO 2 TRIANGLE lit, LEVEL 5, COARSE 6.6: an inharmonic interval above.\n- Listen for: a clashing, metallic chord. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
             "vco1.level": 8,
             "vco2.tri": true,
             "vco2.level": 5,
-            "vco2.coarse": 6.6
+            "vco2.coarse": 6.6,
+            "vcf.cutoff": 10
           }
         },
         {
@@ -5777,7 +5808,7 @@
         {
           "title": "Organ pipes",
           "module": "osc",
-          "why": "- VCO 1 SAW off, PULSE lit, TRIANGLE lit, LEVEL 6.\n- VCO 2 PULSE lit, TRIANGLE lit, LEVEL 5, COARSE 5.73, FINE 5.1.\n- CUT OFF 5.5.\n- Listen for: a reedy, slowly beating chord.",
+          "why": "- VCO 1 SAW off, PULSE lit, TRIANGLE lit, LEVEL 6.\n- VCO 2 PULSE lit, TRIANGLE lit, LEVEL 5, COARSE 5.73, FINE 5.1.\n- CUT OFF 5.5.\n- Listen for: a reedy, slowly beating chord. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.pulse": true,
@@ -5788,7 +5819,8 @@
             "vco2.level": 5,
             "vco2.coarse": 5.73,
             "vco2.fine": 5.1,
-            "vcf.cutoff": 5.5
+            "vcf.cutoff": 5.5,
+            "env2.sustain": 10
           }
         },
         {
@@ -5849,14 +5881,15 @@
         {
           "title": "Warped",
           "module": "osc",
-          "why": "The LFO triangle reaches both VCOs’ FM 2 inside.\n- VCO 1 FM 2 1.3, VCO 2 FM 2 1.3, LFO RATE 3.5.\n- DRIVE 3.\n- Envelope 2 ATTACK 4, RELEASE 6.\n- Listen for: a hazy, wobbling line.",
+          "why": "The LFO triangle reaches both VCOs’ FM 2 inside.\n- VCO 1 FM 2 1.3, VCO 2 FM 2 1.3, LFO RATE 3.5.\n- DRIVE 3.\n- Envelope 2 ATTACK 4, RELEASE 6.\n- Listen for: a hazy, wobbling line. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.fm2": 1.3,
             "vco2.fm2": 1.3,
             "lfo.rate": 3.5,
             "vca.drive": 3,
             "env2.attack": 4,
-            "env2.release": 6
+            "env2.release": 6,
+            "env2.sustain": 10
           }
         }
       ],
@@ -5889,12 +5922,14 @@
         {
           "title": "Saw and pulse",
           "module": "osc",
-          "why": "- VCO 1 LEVEL 6 with its SAW lit.\n- VCO 2 PULSE lit, LEVEL 5, FINE 5.5.\n- Listen for: a raw, buzzing tone.",
+          "why": "- VCO 1 LEVEL 6 with its SAW lit.\n- VCO 2 PULSE lit, LEVEL 5, FINE 5.5.\n- Listen for: a raw, buzzing tone. Envelope 2’s SUSTAIN stays at 10. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.level": 6,
             "vco2.pulse": true,
             "vco2.level": 5,
-            "vco2.fine": 5.5
+            "vco2.fine": 5.5,
+            "env2.sustain": 10,
+            "vcf.cutoff": 10
           }
         },
         {
@@ -6143,13 +6178,14 @@
         {
           "title": "Steel partials",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 9.\n- VCO 2 COARSE 6.25: an octave up.\n- VCO 2 TRIANGLE into VCO 1 FM 2, VCO 1 FM 2 at 2.5.\n- Listen for: a hollow, bright tone.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 9.\n- VCO 2 COARSE 6.25: an octave up.\n- VCO 2 TRIANGLE into VCO 1 FM 2, VCO 1 FM 2 at 2.5.\n- Listen for: a hollow, bright tone. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
             "vco1.level": 9,
             "vco2.coarse": 6.25,
-            "vco1.fm2": 2.5
+            "vco1.fm2": 2.5,
+            "vcf.cutoff": 10
           },
           "cables": [["j.vco2_tri", "j.vco1_fm2"]]
         },
@@ -6257,14 +6293,15 @@
         {
           "title": "Tiny tines",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 8.\n- VCO 2 TRIANGLE lit, LEVEL 3, COARSE 7.5: two octaves up.\n- Listen for: a high, glassy tinkle.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 8.\n- VCO 2 TRIANGLE lit, LEVEL 3, COARSE 7.5: two octaves up.\n- Listen for: a high, glassy tinkle. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
             "vco1.level": 8,
             "vco2.tri": true,
             "vco2.level": 3,
-            "vco2.coarse": 7.5
+            "vco2.coarse": 7.5,
+            "vcf.cutoff": 10
           }
         },
         {
@@ -6669,7 +6706,7 @@
         {
           "title": "The chanter",
           "module": "osc",
-          "why": "- VCO 1 SAW off, PULSE lit, SHAPE 1.5, LEVEL 7.\n- CUT OFF 7, DRIVE 4, MASTER VOL 6.\n- Envelope 2 RELEASE 1.\n- Listen for: a piercing, reedy skirl.",
+          "why": "- VCO 1 SAW off, PULSE lit, SHAPE 1.5, LEVEL 7.\n- CUT OFF 7, DRIVE 4, MASTER VOL 6.\n- Envelope 2 RELEASE 1.\n- Listen for: a piercing, reedy skirl. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.pulse": true,
@@ -6678,7 +6715,8 @@
             "vcf.cutoff": 7,
             "vca.drive": 4,
             "out.master": 6,
-            "env2.release": 1
+            "env2.release": 1,
+            "env2.sustain": 10
           }
         }
       ],
@@ -6721,12 +6759,13 @@
         {
           "title": "The drone",
           "module": "osc",
-          "why": "- VCO 2 SAW lit, PULSE lit, LEVEL 4, COARSE 3.23.\n- KEYS GATE into VCO 2 1V/OCT: G below middle C while a key is held.\n- Listen for: a buzzing drone.",
+          "why": "- VCO 2 SAW lit, PULSE lit, LEVEL 4, COARSE 3.23.\n- KEYS GATE into VCO 2 1V/OCT: G below middle C while a key is held.\n- Listen for: a buzzing drone. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco2.saw": true,
             "vco2.pulse": true,
             "vco2.level": 4,
-            "vco2.coarse": 3.23
+            "vco2.coarse": 3.23,
+            "env2.sustain": 10
           },
           "cables": [["j.gate", "j.vco2_voct"]]
         },
@@ -6857,11 +6896,12 @@
         {
           "title": "A low triangle",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 10.\n- Listen for: a low hum.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 10.\n- Listen for: a low hum. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
-            "vco1.level": 10
+            "vco1.level": 10,
+            "vcf.cutoff": 10
           }
         },
         {
@@ -6921,12 +6961,13 @@
         {
           "title": "Body and snares",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 7.\n- NOISE LEVEL 8.\n- Listen for: a tone and a hiss.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 7.\n- NOISE LEVEL 8.\n- Listen for: a tone and a hiss. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
             "vco1.level": 7,
-            "mix.noise": 8
+            "mix.noise": 8,
+            "vcf.cutoff": 10
           }
         },
         {
@@ -7093,12 +7134,13 @@
         {
           "title": "Triangle and noise",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 9.\n- NOISE LEVEL 1.\n- Listen for: a round tone with a little hiss.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 9.\n- NOISE LEVEL 1.\n- Listen for: a round tone with a little hiss. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
             "vco1.level": 9,
-            "mix.noise": 1
+            "mix.noise": 1,
+            "vcf.cutoff": 10
           }
         },
         {
@@ -7265,7 +7307,7 @@
         {
           "title": "The dive",
           "module": "osc",
-          "why": "Envelope 1 reaches VCO 1’s FM 1 inside.\n- VCO 1 SAW off, TRIANGLE lit, LEVEL 9.\n- VCO 1 FM 1 5: an octave at the top.\n- Envelope 1 ATTACK 0, DECAY 6, SUSTAIN 0.\n- Listen for: each hit swooping down.",
+          "why": "Envelope 1 reaches VCO 1’s FM 1 inside.\n- VCO 1 SAW off, TRIANGLE lit, LEVEL 9.\n- VCO 1 FM 1 5: an octave at the top.\n- Envelope 1 ATTACK 0, DECAY 6, SUSTAIN 0.\n- Listen for: each hit swooping down. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
@@ -7273,7 +7315,8 @@
             "vco1.fm1": 5,
             "env1.attack": 0,
             "env1.decay": 6,
-            "env1.sustain": 0
+            "env1.sustain": 0,
+            "vcf.cutoff": 10
           }
         },
         {
@@ -7322,7 +7365,7 @@
         {
           "title": "Zap",
           "module": "osc",
-          "why": "Envelope 1 reaches VCO 1’s FM 1 inside.\n- VCO 1 SAW lit, PULSE lit, LEVEL 7.\n- VCO 1 FM 1 8: nearly three octaves.\n- Envelope 1 ATTACK 0, DECAY 4.5, SUSTAIN 0.\n- Envelope 2 ATTACK 0, DECAY 5, SUSTAIN 0, RELEASE 4.\n- MASTER VOL 9.\n- Listen for: “pew pew”.",
+          "why": "Envelope 1 reaches VCO 1’s FM 1 inside.\n- VCO 1 SAW lit, PULSE lit, LEVEL 7.\n- VCO 1 FM 1 8: nearly three octaves.\n- Envelope 1 ATTACK 0, DECAY 4.5, SUSTAIN 0.\n- Envelope 2 ATTACK 0, DECAY 5, SUSTAIN 0, RELEASE 4.\n- MASTER VOL 9.\n- Listen for: “pew pew”. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.pulse": true,
             "vco1.level": 7,
@@ -7334,7 +7377,8 @@
             "env2.decay": 5,
             "env2.sustain": 0,
             "env2.release": 4,
-            "out.master": 9
+            "out.master": 9,
+            "vcf.cutoff": 10
           }
         }
       ],
@@ -7367,11 +7411,12 @@
         {
           "title": "A horn",
           "module": "osc",
-          "why": "- VCO 1 LEVEL 7 with its SAW lit, TRIANGLE lit.\n- CUT OFF 6.\n- Listen for: a buzzy, horn-like tone.",
+          "why": "- VCO 1 LEVEL 7 with its SAW lit, TRIANGLE lit.\n- CUT OFF 6.\n- Listen for: a buzzy, horn-like tone. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.level": 7,
             "vco1.tri": true,
-            "vcf.cutoff": 6
+            "vcf.cutoff": 6,
+            "env2.sustain": 10
           }
         },
         {
@@ -7486,11 +7531,12 @@
         {
           "title": "A whistle",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 8.\n- Listen for: a pure, high whistle.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 8.\n- Listen for: a pure, high whistle. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
-            "vco1.level": 8
+            "vco1.level": 8,
+            "vcf.cutoff": 10
           }
         },
         {
@@ -7549,14 +7595,16 @@
         {
           "title": "Two tones",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 7.\n- VCO 2 PULSE lit, LEVEL 3, COARSE 5.73.\n- Listen for: a humming fifth.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 7.\n- VCO 2 PULSE lit, LEVEL 3, COARSE 5.73.\n- Listen for: a humming fifth. Envelope 2’s SUSTAIN stays at 10. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
             "vco1.level": 7,
             "vco2.pulse": true,
             "vco2.level": 3,
-            "vco2.coarse": 5.73
+            "vco2.coarse": 5.73,
+            "env2.sustain": 10,
+            "vcf.cutoff": 10
           }
         },
         {
@@ -7605,13 +7653,14 @@
         {
           "title": "A shimmering tone",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 8.\n- VCO 2 COARSE 5.95.\n- VCO 2 TRIANGLE into VCO 1 FM 2, VCO 1 FM 2 at 1.5.\n- Listen for: a pure tone with a faint, strange shimmer.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 8.\n- VCO 2 COARSE 5.95.\n- VCO 2 TRIANGLE into VCO 1 FM 2, VCO 1 FM 2 at 1.5.\n- Listen for: a pure tone with a faint, strange shimmer. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
             "vco1.level": 8,
             "vco2.coarse": 5.95,
-            "vco1.fm2": 1.5
+            "vco1.fm2": 1.5,
+            "vcf.cutoff": 10
           },
           "cables": [["j.vco2_tri", "j.vco1_fm2"]]
         },
@@ -7761,13 +7810,14 @@
         {
           "title": "Rumble and air",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 5.\n- NOISE LEVEL 8.\n- CUT OFF 4.\n- Listen for: a dull, airy roar.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 5.\n- NOISE LEVEL 8.\n- CUT OFF 4.\n- Listen for: a dull, airy roar. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
             "vco1.level": 5,
             "mix.noise": 8,
-            "vcf.cutoff": 4
+            "vcf.cutoff": 4,
+            "env2.sustain": 10
           }
         },
         {
@@ -7870,14 +7920,16 @@
         {
           "title": "Chatter",
           "module": "mode",
-          "why": "- VCO 1 SAW off, PULSE lit, SHAPE 2, LEVEL 7.\n- ARP on, ARP RATE 9: about 240 BPM sixteenths.\n- Listen for: a fast, beeping chatter.",
+          "why": "- VCO 1 SAW off, PULSE lit, SHAPE 2, LEVEL 7.\n- ARP on, ARP RATE 9: about 240 BPM sixteenths.\n- Listen for: a fast, beeping chatter. Envelope 2’s SUSTAIN stays at 10. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.pulse": true,
             "vco1.shape": 2,
             "vco1.level": 7,
             "keys.arp": true,
-            "keys.arpRate": 9
+            "keys.arpRate": 9,
+            "env2.sustain": 10,
+            "vcf.cutoff": 10
           }
         },
         {
@@ -7927,12 +7979,13 @@
         {
           "title": "A round tone",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 9.\n- CUT OFF 6.\n- Listen for: a soft, round tone.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 9.\n- CUT OFF 6.\n- Listen for: a soft, round tone. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
             "vco1.level": 9,
-            "vcf.cutoff": 6
+            "vcf.cutoff": 6,
+            "env2.sustain": 10
           }
         },
         {
@@ -7978,12 +8031,13 @@
         {
           "title": "Noise and saw",
           "module": "osc",
-          "why": "- VCO 1 LEVEL 6 with its SAW lit.\n- NOISE LEVEL 6.\n- CUT OFF 2, RESONANCE 4.\n- Listen for: a dark hiss.",
+          "why": "- VCO 1 LEVEL 6 with its SAW lit.\n- NOISE LEVEL 6.\n- CUT OFF 2, RESONANCE 4.\n- Listen for: a dark hiss. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.level": 6,
             "mix.noise": 6,
             "vcf.cutoff": 2,
-            "vcf.res": 4
+            "vcf.res": 4,
+            "env2.sustain": 10
           }
         },
         {
@@ -8032,11 +8086,12 @@
         {
           "title": "Saw and pulse",
           "module": "osc",
-          "why": "- VCO 1 LEVEL 6 with its SAW lit, PULSE lit.\n- CUT OFF 6.5.\n- Listen for: a bright, plain tone.",
+          "why": "- VCO 1 LEVEL 6 with its SAW lit, PULSE lit.\n- CUT OFF 6.5.\n- Listen for: a bright, plain tone. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.level": 6,
             "vco1.pulse": true,
-            "vcf.cutoff": 6.5
+            "vcf.cutoff": 6.5,
+            "env2.sustain": 10
           }
         },
         {
@@ -8082,9 +8137,10 @@
         {
           "title": "The loop",
           "module": "mixer",
-          "why": "- VCF OUT into AUX, AUX LEVEL 6.\n- Listen for: the tone growing harsher as it feeds itself.",
+          "why": "- VCF OUT into AUX, AUX LEVEL 6.\n- Listen for: the tone growing harsher as it feeds itself. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
-            "mix.aux": 6
+            "mix.aux": 6,
+            "env2.sustain": 10
           },
           "cables": [["j.vcf_out", "j.aux"]]
         },
@@ -8133,12 +8189,13 @@
         {
           "title": "Two saws",
           "module": "osc",
-          "why": "- VCO 1 LEVEL 6 with its SAW lit.\n- VCO 2 SAW lit, LEVEL 6, COARSE 5.63.\n- Listen for: a sour, buzzing tritone.",
+          "why": "- VCO 1 LEVEL 6 with its SAW lit.\n- VCO 2 SAW lit, LEVEL 6, COARSE 5.63.\n- Listen for: a sour, buzzing tritone. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "vco1.level": 6,
             "vco2.saw": true,
             "vco2.level": 6,
-            "vco2.coarse": 5.63
+            "vco2.coarse": 5.63,
+            "env2.sustain": 10
           }
         },
         {
@@ -8269,12 +8326,13 @@
         {
           "title": "A plain square",
           "module": "osc",
-          "why": "- VCO 1 SAW off, PULSE lit, SHAPE 5, LEVEL 7.\n- Listen for: a hollow, bright beep.",
+          "why": "- VCO 1 SAW off, PULSE lit, SHAPE 5, LEVEL 7.\n- Listen for: a hollow, bright beep. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.pulse": true,
             "vco1.shape": 5,
-            "vco1.level": 7
+            "vco1.level": 7,
+            "vcf.cutoff": 10
           }
         },
         {
@@ -8401,12 +8459,13 @@
         {
           "title": "A gentle waver",
           "module": "mod",
-          "why": "- VIBRATO lit, joystick up to 0.2.\n- Envelope 2 ATTACK 3, RELEASE 4.\n- Listen for: a warm, wobbly, cheerful line.",
+          "why": "- VIBRATO lit, joystick up to 0.2.\n- Envelope 2 ATTACK 3, RELEASE 4.\n- Listen for: a warm, wobbly, cheerful line. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "keys.vibrato": true,
             "joy.y": 0.2,
             "env2.attack": 3,
-            "env2.release": 4
+            "env2.release": 4,
+            "env2.sustain": 10
           }
         }
       ],
@@ -8573,23 +8632,25 @@
         {
           "title": "A high triangle",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 8.\n- Listen for: a pure whistle.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 8.\n- Listen for: a pure whistle. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
-            "vco1.level": 8
+            "vco1.level": 8,
+            "vcf.cutoff": 10
           }
         },
         {
           "title": "Slides and waver",
           "module": "mod",
-          "why": "The LFO triangle reaches VCO 1’s FM 2 inside.\n- Joystick up to 0.45: a short slide on every note.\n- VCO 1 FM 2 0.9, LFO RATE 6.2.\n- Envelope 2 ATTACK 2, RELEASE 4.\n- Listen for: a lonely, wavering whistle.",
+          "why": "The LFO triangle reaches VCO 1’s FM 2 inside.\n- Joystick up to 0.45: a short slide on every note.\n- VCO 1 FM 2 0.9, LFO RATE 6.2.\n- Envelope 2 ATTACK 2, RELEASE 4.\n- Listen for: a lonely, wavering whistle. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "joy.y": 0.45,
             "vco1.fm2": 0.9,
             "lfo.rate": 6.2,
             "env2.attack": 2,
-            "env2.release": 4
+            "env2.release": 4,
+            "env2.sustain": 10
           }
         }
       ],
@@ -8889,13 +8950,14 @@
         {
           "title": "Bells",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 9.\n- VCO 2 COARSE 6.98: an octave and a fifth up.\n- VCO 2 TRIANGLE into VCO 1 FM 2, VCO 1 FM 2 at 3.\n- Listen for: a bright, bell-like tone.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 9.\n- VCO 2 COARSE 6.98: an octave and a fifth up.\n- VCO 2 TRIANGLE into VCO 1 FM 2, VCO 1 FM 2 at 3.\n- Listen for: a bright, bell-like tone. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
             "vco1.level": 9,
             "vco2.coarse": 6.98,
-            "vco1.fm2": 3
+            "vco1.fm2": 3,
+            "vcf.cutoff": 10
           },
           "cables": [["j.vco2_tri", "j.vco1_fm2"]]
         },
@@ -9011,13 +9073,14 @@
         {
           "title": "Metallic strings",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 9.\n- VCO 2 COARSE 7.5: two octaves up.\n- VCO 2 TRIANGLE into VCO 1 FM 2, VCO 1 FM 2 at 1.5.\n- Listen for: a bright, shimmering tone.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 9.\n- VCO 2 COARSE 7.5: two octaves up.\n- VCO 2 TRIANGLE into VCO 1 FM 2, VCO 1 FM 2 at 1.5.\n- Listen for: a bright, shimmering tone. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
             "vco1.level": 9,
             "vco2.coarse": 7.5,
-            "vco1.fm2": 1.5
+            "vco1.fm2": 1.5,
+            "vcf.cutoff": 10
           },
           "cables": [["j.vco2_tri", "j.vco1_fm2"]]
         },
@@ -9333,13 +9396,14 @@
         {
           "title": "A soft bell",
           "module": "osc",
-          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 9.\n- VCO 2 COARSE 7.98.\n- VCO 2 TRIANGLE into VCO 1 FM 2, VCO 1 FM 2 at 2.\n- Listen for: a delicate bell tone.",
+          "why": "- VCO 1 SAW off, TRIANGLE lit, LEVEL 9.\n- VCO 2 COARSE 7.98.\n- VCO 2 TRIANGLE into VCO 1 FM 2, VCO 1 FM 2 at 2.\n- Listen for: a delicate bell tone. Leave the filter’s CUTOFF fully open at 10.",
           "set": {
             "vco1.saw": false,
             "vco1.tri": true,
             "vco1.level": 9,
             "vco2.coarse": 7.98,
-            "vco1.fm2": 2
+            "vco1.fm2": 2,
+            "vcf.cutoff": 10
           },
           "cables": [["j.vco2_tri", "j.vco1_fm2"]]
         },
@@ -9583,7 +9647,7 @@
         {
           "title": "Swooping and howling",
           "module": "mod",
-          "why": "- Joystick up to 0.7.\n- CUT OFF 6, RESONANCE 5, DRIVE 6, MASTER VOL 5.\n- Envelope 2 ATTACK 1, RELEASE 3.\n- Listen for: wild, squealing swoops.",
+          "why": "- Joystick up to 0.7.\n- CUT OFF 6, RESONANCE 5, DRIVE 6, MASTER VOL 5.\n- Envelope 2 ATTACK 1, RELEASE 3.\n- Listen for: wild, squealing swoops. Envelope 2’s SUSTAIN stays at 10.",
           "set": {
             "joy.y": 0.7,
             "vcf.cutoff": 6,
@@ -9591,7 +9655,8 @@
             "vca.drive": 6,
             "out.master": 5,
             "env2.attack": 1,
-            "env2.release": 3
+            "env2.release": 3,
+            "env2.sustain": 10
           }
         }
       ],
