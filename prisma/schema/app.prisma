@@ -1198,6 +1198,23 @@ model ExternalLink {
   @@map("external_link")
 }
 
+/// A link the seed has applied in this database (`f-videos-and-links` t-200): created, or found already there. The
+/// seed never applies a link with a record again, so one an admin deletes or moves to another URL stays gone, while
+/// links new to the data still arrive. Written by the seed alone. Natural keys and no foreign key, as
+/// `CatalogueSeedRecord` has: a record describes the seed, and outlives its link and its owner.
+model LinkSeedRecord {
+  /// The owner's kind, as the APIs name it: instrument | sound | song | artist.
+  ownerKind String
+  /// The owner's natural key: a databank id, or `<synthId>/<slug>` for a library sound.
+  ownerId   String
+  /// The link's canonical URL, as stored (`parseLinkUrl`).
+  url       String
+  appliedAt DateTime @default(now())
+
+  @@id([ownerKind, ownerId, url])
+  @@map("link_seed_record")
+}
+
 // ─── Link suggestions (f-link-suggestions t-185) ─────────────────────────────
 //
 // A video or link a signed-in user says belongs on an instrument, a library sound, a song or an artist, queued for an
