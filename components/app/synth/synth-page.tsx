@@ -2788,21 +2788,22 @@ function Synth({
               )}
 
               <div className="kys-player-bar flex flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2 text-sm sm:px-4 lg:flex-nowrap">
-                {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach; on a phone they take a row of their own under the patch, leaving the fullscreen button beside it. */}
+                {/* Always there while something plays, so a pattern can be stopped with the sequencer closed. The Play
+                deck's first and biggest control, outside the scrolling row so nothing clips its glow (t-210). */}
+                {(shown || seqShown || transportPlaying) && (
+                  <PlayButton
+                    playing={transportPlaying}
+                    onClick={() =>
+                      transportPlaying
+                        ? stopRiff()
+                        : seqShown || !shown
+                          ? void playPattern()
+                          : void playRiff(shown.phrase)
+                    }
+                  />
+                )}
+                {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach; on a phone they take a row of their own under Play, leaving the fullscreen button beside it. */}
                 <div className="kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 max-sm:order-last max-sm:basis-full lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">
-                  {/* Always there while something plays, so a pattern can be stopped with the sequencer closed. */}
-                  {(shown || seqShown || transportPlaying) && (
-                    <PlayButton
-                      playing={transportPlaying}
-                      onClick={() =>
-                        transportPlaying
-                          ? stopRiff()
-                          : seqShown || !shown
-                            ? void playPattern()
-                            : void playRiff(shown.phrase)
-                      }
-                    />
-                  )}
                   <LayerToggle
                     label="Sequencer"
                     short="Sequencer"
