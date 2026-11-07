@@ -727,7 +727,7 @@ text(1648, 1268, 'Mode', 7);
 knob('vcf.drive', 1762, 1078, 'Drive', {
   module: 'filter',
   name: 'DRIVE',
-  help: 'Drives the filter’s input harder, from a little warmth to a thick, saturated sound.',
+  help: 'Drives the filter harder, from a little warmth to a thick, saturated sound. Here it is an overdrive just after the filter.',
 });
 knob('vcf.width', 1870, 1078, 'Width', {
   module: 'filter',
@@ -1483,6 +1483,8 @@ function toEngine(v: ControlValues, _ctx: EngineContext): EngineParams {
     return [[`env${n}`, 1]];
   };
   /** One mod route: its SOURCE (times its SCALE) into each destination at its amount. */
+  /** The SCALE signals a route is using: a joystick axis that is one gives up its own job. */
+  const scaled = new Set<string>();
   const modRoute = (r: string, dsts: [dst: string, amt: number][]): void => {
     const src = String(v[`route.${r}.source`]);
     const by = SCALE_SIG[String(v[`route.${r}.scale`])] ?? undefined;
@@ -1490,7 +1492,10 @@ function toEngine(v: ControlValues, _ctx: EngineContext): EngineParams {
       src === 'env1' ? envParts(1) : src === 'env2' ? envParts(2) : [[SOURCE_SIG[src], 1]];
     for (const [dst, amt] of dsts)
       for (const [sig, k] of parts)
-        if (amt * k) routes.push({ src: sig, dst, amt: amt * k, ...(by ? { by } : {}) });
+        if (amt * k) {
+          routes.push({ src: sig, dst, amt: amt * k, ...(by ? { by } : {}) });
+          if (by) scaled.add(by);
+        }
   };
   // SHAPE MOD reaches the pulse width or the morph, whichever the wave uses
   for (const n of [1, 2]) {
@@ -1517,7 +1522,8 @@ function toEngine(v: ControlValues, _ctx: EngineContext): EngineParams {
   const f = cutoffHz(num(v, 'vcf.cutoff'));
   const res10 = clamp(num(v, 'vcf.res'), 0, 10) / 10;
   const kbd = clamp(num(v, 'vcf.keytrack'), 0, 10) / 10;
-  const drive = 0.8 + (clamp(num(v, 'vcf.drive'), 0, 10) / 10) * 3.2;
+  // DRIVE is the engine's overdrive after the filter: its SVF has no input drive, only its ladder
+  const drive = clamp(num(v, 'vcf.drive'), 0, 10) / 10;
   const w = widthOct(num(v, 'vcf.width'));
   const cutAmt = cutModOct(num(v, 'vcf.cutoffMod'));
   const widthAmt = widthModOct(num(v, 'vcf.widthMod'));
@@ -1530,7 +1536,6 @@ function toEngine(v: ControlValues, _ctx: EngineContext): EngineParams {
     envAmt: 0,
     envSrc: 'env1',
     kbd,
-    drive,
     ...(m === 'morph' ? { morph: 0.5 } : {}),
   });
   const OPEN = 20000;
@@ -1613,23 +1618,21 @@ function toEngine(v: ControlValues, _ctx: EngineContext): EngineParams {
     { level: g2 * density, semi: semi2 + densitySemi(num(v, 'osc2.densityRate')), ...w2 },
     { level: 0, semi: oct(1) - 12, ...w1 },
   ];
-  // The sub is Oscillator 1's wave an octave down. On the pulse it is Oscillator 1's own sub square instead, because the
-  // engine's fourth oscillator takes its pulse width from Oscillator 2's.
+  // The sub is Oscillator 1's wave an octave down. On the pulse and the wavetable (whose last third narrows a pulse) it
+  // is Oscillator 1's own sub square instead, because the engine's fourth oscillator takes its width from Oscillator 2's.
   const subG = g1 * level10(num(v, 'sub.level'), 1);
-  if (v['osc1.wave'] === 'pulse') osc[0].subLevel = subG;
+  if (v['osc1.wave'] === 'pulse' || v['osc1.wave'] === 'wavetable') osc[0].subLevel = subG;
   else osc[3].level = subG;
 
   // ── the loudness: Envelope 1, its height set by VELOCITY ──
   for (const [sig, k] of envParts(1)) routes.push({ src: sig, dst: 'amp', amt: k });
 
-  // ── the joystick: X bends, Y up adds vibrato ──
+  // ── the joystick: X bends, Y adds vibrato, each unless a mod route is using it as its SCALE ──
   const jx = clamp(num(v, 'joy.x'), -1, 1),
     jy = clamp(num(v, 'joy.y'), -1, 1);
-  // always routed, so the pitch eases back with the stick rather than snapping when it reaches the centre
-  routes.push({ src: 'joyX', dst: 'pitchAll', amt: BEND_SEMI });
-  // Y up is vibrato, unless a mod route already uses it as its SCALE
-  const yScales = ROUTES.some((r) => v[`route.${r.v}.scale`] === 'joy_y');
-  if (jy > 0 && !yScales) routes.push({ src: 'lfo3', dst: 'pitchAll', amt: jy * VIB_SEMI });
+  // always routed through the stick's own signals, so the pitch eases back with it rather than snapping at the centre
+  if (!scaled.has('joyX')) routes.push({ src: 'joyX', dst: 'pitchAll', amt: BEND_SEMI });
+  if (!scaled.has('joyY')) routes.push({ src: 'lfo3', dst: 'pitchAll', amt: VIB_SEMI, by: 'joyY' });
 
   // ── tempo, LFOs and the arpeggiator ──
   const bpm = bpmOf(num(v, 'arp.bpm'));
@@ -1637,6 +1640,15 @@ function toEngine(v: ControlValues, _ctx: EngineContext): EngineParams {
     v[`lfo${n}.sync`] === 'sync'
       ? bpm / 60 / lfoDiv(num(v, `lfo${n}.rate`))[1]
       : lfoHz(num(v, `lfo${n}.rate`));
+  const lfoOf = (n: number): EngineParams['lfo'] => {
+    const fade = fadeTime(num(v, `lfo${n}.fade`));
+    return {
+      rate: lfoRate(n),
+      mix: LFO_MIX[String(v[`lfo${n}.wave`])] ?? { tri: 1 },
+      keySync: !!v[`lfo${n}.keytrig`],
+      ...(fade ? { delay: fade } : {}),
+    };
+  };
   const voicing = String(v['kbd.voicing']);
   const legato = !!v['env1.legato'];
 
@@ -1717,22 +1729,13 @@ function toEngine(v: ControlValues, _ctx: EngineContext): EngineParams {
     },
     // the loudness is Envelope 1 through routes into `amp`, so VELOCITY can set its height either way
     vca: { envSrc: 'none', bias: 0 },
-    lfo: {
-      rate: lfoRate(1),
-      mix: LFO_MIX[String(v['lfo1.wave'])] ?? { tri: 1 },
-      keySync: !!v['lfo1.keytrig'],
-      ...(fadeTime(num(v, 'lfo1.fade')) ? { delay: fadeTime(num(v, 'lfo1.fade')) } : {}),
-    },
-    lfo2: {
-      rate: lfoRate(2),
-      mix: LFO_MIX[String(v['lfo2.wave'])] ?? { tri: 1 },
-      keySync: !!v['lfo2.keytrig'],
-      ...(fadeTime(num(v, 'lfo2.fade')) ? { delay: fadeTime(num(v, 'lfo2.fade')) } : {}),
-    },
+    lfo: lfoOf(1),
+    lfo2: lfoOf(2),
     lfo3: { rate: VIB_HZ, mix: { sine: 1 } },
     glide: { time: glideTime(num(v, 'kbd.glide')), legato: !!v['kbd.glideAuto'] },
     trig: { retrig: !legato, drone: false, repeat: false },
     routes,
+    od: drive > 0 ? { on: true, drive: drive * 0.6, tone: 0.6, level: 1 } : { on: false },
     drift: { depth: driftSemi(num(v, 'drift.amount')), rate: 0.7 },
     joy: [jx, jy],
     poly:

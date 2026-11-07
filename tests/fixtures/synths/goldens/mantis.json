@@ -331,7 +331,6 @@
       "ext": { "level": 0 },
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -346,6 +345,7 @@
       "lfo2": { "keySync": false, "mix": { "tri": 1 }, "rate": 1.5811388300841898 },
       "lfo3": { "mix": { "sine": 1 }, "rate": 5.5 },
       "noise": { "color": "white", "level": 0 },
+      "od": { "on": false },
       "osc": [
         { "level": 0.55, "mix": { "saw": 1 }, "semi": 0 },
         { "level": 0, "mix": { "saw": 1 }, "semi": 0 },
@@ -355,7 +355,8 @@
       "poly": { "mono": false, "stack": 1, "voices": 4 },
       "routes": [
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ],
       "trig": { "drone": false, "repeat": false, "retrig": true },
       "tune": 0,
@@ -416,7 +417,7 @@
     },
     "osc1.wave=\"wavetable\"": {
       "osc": [
-        { "level": 0.55, "morph": 0.5, "semi": 0 },
+        { "level": 0.55, "morph": 0.5, "semi": 0, "subLevel": 0 },
         { "level": 0, "mix": { "saw": 1 }, "semi": 0 },
         { "level": 0, "mix": { "saw": 1 }, "semi": 0.045 },
         { "level": 0, "morph": 0.5, "semi": -12 }
@@ -435,7 +436,8 @@
         { "amt": -24, "dst": "pitch1", "src": "lfo" },
         { "amt": -24, "dst": "pitch4", "src": "lfo" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "osc1.pitchMod=-2.5": {
@@ -443,7 +445,8 @@
         { "amt": -6, "dst": "pitch1", "src": "lfo" },
         { "amt": -6, "dst": "pitch4", "src": "lfo" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "osc1.pitchMod=2.5": {
@@ -451,7 +454,8 @@
         { "amt": 6, "dst": "pitch1", "src": "lfo" },
         { "amt": 6, "dst": "pitch4", "src": "lfo" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "osc1.pitchMod=5": {
@@ -459,7 +463,8 @@
         { "amt": 24, "dst": "pitch1", "src": "lfo" },
         { "amt": 24, "dst": "pitch4", "src": "lfo" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "osc1.octave=\"-3\"": {
@@ -555,7 +560,8 @@
         { "amt": -24, "dst": "pitch2", "src": "lfo" },
         { "amt": -24, "dst": "pitch3", "src": "lfo" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "osc2.pitchMod=-2.5": {
@@ -563,7 +569,8 @@
         { "amt": -6, "dst": "pitch2", "src": "lfo" },
         { "amt": -6, "dst": "pitch3", "src": "lfo" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "osc2.pitchMod=2.5": {
@@ -571,7 +578,8 @@
         { "amt": 6, "dst": "pitch2", "src": "lfo" },
         { "amt": 6, "dst": "pitch3", "src": "lfo" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "osc2.pitchMod=5": {
@@ -579,7 +587,8 @@
         { "amt": 24, "dst": "pitch2", "src": "lfo" },
         { "amt": 24, "dst": "pitch3", "src": "lfo" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "osc2.octave=\"-3\"": {
@@ -846,7 +855,8 @@
         { "amt": 1, "dst": "ringB", "src": "osc2" },
         { "amt": 0.33676142048127905, "dst": "vcfIn", "src": "ring" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "mix.ring=5": {
@@ -861,7 +871,8 @@
         { "amt": 1, "dst": "ringB", "src": "osc2" },
         { "amt": 0.6222539674441618, "dst": "vcfIn", "src": "ring" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "mix.ring=7.5": {
@@ -876,7 +887,8 @@
         { "amt": 1, "dst": "ringB", "src": "osc2" },
         { "amt": 0.8130139886099323, "dst": "vcfIn", "src": "ring" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "mix.ring=10": {
@@ -891,7 +903,8 @@
         { "amt": 1, "dst": "ringB", "src": "osc2" },
         { "amt": 0.8800000000000001, "dst": "vcfIn", "src": "ring" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "lfo1.fade=-5": {
@@ -977,7 +990,6 @@
     "vcf.keytrack=2.5": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0.25,
@@ -989,7 +1001,6 @@
     "vcf.keytrack=5": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0.5,
@@ -1001,7 +1012,6 @@
     "vcf.keytrack=7.5": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0.75,
@@ -1013,7 +1023,6 @@
     "vcf.keytrack=10": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 1,
@@ -1026,28 +1035,32 @@
       "routes": [
         { "amt": -6, "dst": "cutoff", "src": "env2" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "vcf.cutoffMod=-2.5": {
       "routes": [
         { "amt": -3, "dst": "cutoff", "src": "env2" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "vcf.cutoffMod=2.5": {
       "routes": [
         { "amt": 3, "dst": "cutoff", "src": "env2" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "vcf.cutoffMod=5": {
       "routes": [
         { "amt": 6, "dst": "cutoff", "src": "env2" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "vcf.widthMod=-5": {},
@@ -1057,7 +1070,6 @@
     "vcf.mode=\"BP12\"": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -1069,7 +1081,6 @@
     "vcf.mode=\"HP12\"": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -1081,7 +1092,6 @@
     "vcf.mode=\"LP24\"": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -1093,7 +1103,6 @@
     "vcf.mode=\"BP24\"": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -1109,7 +1118,6 @@
     "vcf.mode=\"wide_band\"": {
       "filter": {
         "cutoff": 30314.33133020796,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -1122,7 +1130,6 @@
     "vcf.mode=\"wide_notch\"": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -1132,54 +1139,12 @@
         "type": "svf"
       }
     },
-    "vcf.drive=2.5": {
-      "filter": {
-        "cutoff": 20000,
-        "drive": 1.6,
-        "envAmt": 0,
-        "envSrc": "env1",
-        "kbd": 0,
-        "mode": "lp",
-        "res": 0,
-        "type": "svf"
-      }
-    },
-    "vcf.drive=5": {
-      "filter": {
-        "cutoff": 20000,
-        "drive": 2.4000000000000004,
-        "envAmt": 0,
-        "envSrc": "env1",
-        "kbd": 0,
-        "mode": "lp",
-        "res": 0,
-        "type": "svf"
-      }
-    },
+    "vcf.drive=2.5": { "od": { "drive": 0.15, "level": 1, "on": true, "tone": 0.6 } },
+    "vcf.drive=5": { "od": { "drive": 0.3, "level": 1, "on": true, "tone": 0.6 } },
     "vcf.drive=7.5": {
-      "filter": {
-        "cutoff": 20000,
-        "drive": 3.2,
-        "envAmt": 0,
-        "envSrc": "env1",
-        "kbd": 0,
-        "mode": "lp",
-        "res": 0,
-        "type": "svf"
-      }
+      "od": { "drive": 0.44999999999999996, "level": 1, "on": true, "tone": 0.6 }
     },
-    "vcf.drive=10": {
-      "filter": {
-        "cutoff": 20000,
-        "drive": 4,
-        "envAmt": 0,
-        "envSrc": "env1",
-        "kbd": 0,
-        "mode": "lp",
-        "res": 0,
-        "type": "svf"
-      }
-    },
+    "vcf.drive=10": { "od": { "drive": 0.6, "level": 1, "on": true, "tone": 0.6 } },
     "vcf.width=0": {},
     "vcf.width=2.5": {},
     "vcf.width=5": {},
@@ -1188,7 +1153,6 @@
     "vcf.res=2.5": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -1200,7 +1164,6 @@
     "vcf.res=5": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -1212,7 +1175,6 @@
     "vcf.res=7.5": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -1224,7 +1186,6 @@
     "vcf.res=10": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -1236,7 +1197,6 @@
     "vcf.cutoff=0": {
       "filter": {
         "cutoff": 20,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -1248,7 +1208,6 @@
     "vcf.cutoff=2.5": {
       "filter": {
         "cutoff": 112.46826503806983,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -1260,7 +1219,6 @@
     "vcf.cutoff=5": {
       "filter": {
         "cutoff": 632.4555320336758,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -1272,7 +1230,6 @@
     "vcf.cutoff=7.5": {
       "filter": {
         "cutoff": 3556.5588200778457,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -1359,27 +1316,31 @@
       "routes": [
         { "amt": 1, "dst": "amp", "src": "env1" },
         { "amt": -0.8, "dst": "amp", "src": "env1v" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "env1.velocity=-2.5": {
       "routes": [
         { "amt": 1, "dst": "amp", "src": "env1" },
         { "amt": -0.4, "dst": "amp", "src": "env1v" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "env1.velocity=2.5": {
       "routes": [
         { "amt": 0.5, "dst": "amp", "src": "env1" },
         { "amt": 0.5, "dst": "amp", "src": "env1v" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "env1.velocity=5": {
       "routes": [
         { "amt": 1, "dst": "amp", "src": "env1v" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "env1.sustFall=2.5": {},
@@ -1930,22 +1891,8 @@
     "joy.x=1": { "joy": [1, 0] },
     "joy.y=-1": { "joy": [0, -1] },
     "joy.y=-0.5": { "joy": [0, -0.5] },
-    "joy.y=0.5": {
-      "joy": [0, 0.5],
-      "routes": [
-        { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
-        { "amt": 0.25, "dst": "pitchAll", "src": "lfo3" }
-      ]
-    },
-    "joy.y=1": {
-      "joy": [0, 1],
-      "routes": [
-        { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
-        { "amt": 0.5, "dst": "pitchAll", "src": "lfo3" }
-      ]
-    },
+    "joy.y=0.5": { "joy": [0, 0.5] },
+    "joy.y=1": { "joy": [0, 1] },
     "kbd.hold=true": {
       "arp": {
         "bpm": 97.97958971132712,
@@ -2012,7 +1959,7 @@
     },
     "patched:* osc1.wave=\"wavetable\"": {
       "osc": [
-        { "level": 0.55, "morph": 0.5, "semi": 0 },
+        { "level": 0.55, "morph": 0.5, "semi": 0, "subLevel": 0 },
         { "level": 0, "mix": { "saw": 1 }, "semi": 0 },
         { "level": 0, "mix": { "saw": 1 }, "semi": 0.045 },
         { "level": 0, "morph": 0.5, "semi": -12 }
@@ -2031,7 +1978,8 @@
         { "amt": -24, "dst": "pitch1", "src": "lfo" },
         { "amt": -24, "dst": "pitch4", "src": "lfo" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* osc1.pitchMod=-2.5": {
@@ -2039,7 +1987,8 @@
         { "amt": -6, "dst": "pitch1", "src": "lfo" },
         { "amt": -6, "dst": "pitch4", "src": "lfo" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* osc1.pitchMod=2.5": {
@@ -2047,7 +1996,8 @@
         { "amt": 6, "dst": "pitch1", "src": "lfo" },
         { "amt": 6, "dst": "pitch4", "src": "lfo" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* osc1.pitchMod=5": {
@@ -2055,7 +2005,8 @@
         { "amt": 24, "dst": "pitch1", "src": "lfo" },
         { "amt": 24, "dst": "pitch4", "src": "lfo" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* osc1.octave=\"-3\"": {
@@ -2151,7 +2102,8 @@
         { "amt": -24, "dst": "pitch2", "src": "lfo" },
         { "amt": -24, "dst": "pitch3", "src": "lfo" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* osc2.pitchMod=-2.5": {
@@ -2159,7 +2111,8 @@
         { "amt": -6, "dst": "pitch2", "src": "lfo" },
         { "amt": -6, "dst": "pitch3", "src": "lfo" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* osc2.pitchMod=2.5": {
@@ -2167,7 +2120,8 @@
         { "amt": 6, "dst": "pitch2", "src": "lfo" },
         { "amt": 6, "dst": "pitch3", "src": "lfo" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* osc2.pitchMod=5": {
@@ -2175,7 +2129,8 @@
         { "amt": 24, "dst": "pitch2", "src": "lfo" },
         { "amt": 24, "dst": "pitch3", "src": "lfo" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* osc2.octave=\"-3\"": {
@@ -2442,7 +2397,8 @@
         { "amt": 1, "dst": "ringB", "src": "osc2" },
         { "amt": 0.33676142048127905, "dst": "vcfIn", "src": "ring" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* mix.ring=5": {
@@ -2457,7 +2413,8 @@
         { "amt": 1, "dst": "ringB", "src": "osc2" },
         { "amt": 0.6222539674441618, "dst": "vcfIn", "src": "ring" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* mix.ring=7.5": {
@@ -2472,7 +2429,8 @@
         { "amt": 1, "dst": "ringB", "src": "osc2" },
         { "amt": 0.8130139886099323, "dst": "vcfIn", "src": "ring" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* mix.ring=10": {
@@ -2487,7 +2445,8 @@
         { "amt": 1, "dst": "ringB", "src": "osc2" },
         { "amt": 0.8800000000000001, "dst": "vcfIn", "src": "ring" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* lfo1.fade=-5": {
@@ -2573,7 +2532,6 @@
     "patched:* vcf.keytrack=2.5": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0.25,
@@ -2585,7 +2543,6 @@
     "patched:* vcf.keytrack=5": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0.5,
@@ -2597,7 +2554,6 @@
     "patched:* vcf.keytrack=7.5": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0.75,
@@ -2609,7 +2565,6 @@
     "patched:* vcf.keytrack=10": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 1,
@@ -2622,28 +2577,32 @@
       "routes": [
         { "amt": -6, "dst": "cutoff", "src": "env2" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* vcf.cutoffMod=-2.5": {
       "routes": [
         { "amt": -3, "dst": "cutoff", "src": "env2" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* vcf.cutoffMod=2.5": {
       "routes": [
         { "amt": 3, "dst": "cutoff", "src": "env2" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* vcf.cutoffMod=5": {
       "routes": [
         { "amt": 6, "dst": "cutoff", "src": "env2" },
         { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* vcf.widthMod=-5": {},
@@ -2653,7 +2612,6 @@
     "patched:* vcf.mode=\"BP12\"": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -2665,7 +2623,6 @@
     "patched:* vcf.mode=\"HP12\"": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -2677,7 +2634,6 @@
     "patched:* vcf.mode=\"LP24\"": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -2689,7 +2645,6 @@
     "patched:* vcf.mode=\"BP24\"": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -2705,7 +2660,6 @@
     "patched:* vcf.mode=\"wide_band\"": {
       "filter": {
         "cutoff": 30314.33133020796,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -2718,7 +2672,6 @@
     "patched:* vcf.mode=\"wide_notch\"": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -2728,54 +2681,12 @@
         "type": "svf"
       }
     },
-    "patched:* vcf.drive=2.5": {
-      "filter": {
-        "cutoff": 20000,
-        "drive": 1.6,
-        "envAmt": 0,
-        "envSrc": "env1",
-        "kbd": 0,
-        "mode": "lp",
-        "res": 0,
-        "type": "svf"
-      }
-    },
-    "patched:* vcf.drive=5": {
-      "filter": {
-        "cutoff": 20000,
-        "drive": 2.4000000000000004,
-        "envAmt": 0,
-        "envSrc": "env1",
-        "kbd": 0,
-        "mode": "lp",
-        "res": 0,
-        "type": "svf"
-      }
-    },
+    "patched:* vcf.drive=2.5": { "od": { "drive": 0.15, "level": 1, "on": true, "tone": 0.6 } },
+    "patched:* vcf.drive=5": { "od": { "drive": 0.3, "level": 1, "on": true, "tone": 0.6 } },
     "patched:* vcf.drive=7.5": {
-      "filter": {
-        "cutoff": 20000,
-        "drive": 3.2,
-        "envAmt": 0,
-        "envSrc": "env1",
-        "kbd": 0,
-        "mode": "lp",
-        "res": 0,
-        "type": "svf"
-      }
+      "od": { "drive": 0.44999999999999996, "level": 1, "on": true, "tone": 0.6 }
     },
-    "patched:* vcf.drive=10": {
-      "filter": {
-        "cutoff": 20000,
-        "drive": 4,
-        "envAmt": 0,
-        "envSrc": "env1",
-        "kbd": 0,
-        "mode": "lp",
-        "res": 0,
-        "type": "svf"
-      }
-    },
+    "patched:* vcf.drive=10": { "od": { "drive": 0.6, "level": 1, "on": true, "tone": 0.6 } },
     "patched:* vcf.width=0": {},
     "patched:* vcf.width=2.5": {},
     "patched:* vcf.width=5": {},
@@ -2784,7 +2695,6 @@
     "patched:* vcf.res=2.5": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -2796,7 +2706,6 @@
     "patched:* vcf.res=5": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -2808,7 +2717,6 @@
     "patched:* vcf.res=7.5": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -2820,7 +2728,6 @@
     "patched:* vcf.res=10": {
       "filter": {
         "cutoff": 20000,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -2832,7 +2739,6 @@
     "patched:* vcf.cutoff=0": {
       "filter": {
         "cutoff": 20,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -2844,7 +2750,6 @@
     "patched:* vcf.cutoff=2.5": {
       "filter": {
         "cutoff": 112.46826503806983,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -2856,7 +2761,6 @@
     "patched:* vcf.cutoff=5": {
       "filter": {
         "cutoff": 632.4555320336758,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -2868,7 +2772,6 @@
     "patched:* vcf.cutoff=7.5": {
       "filter": {
         "cutoff": 3556.5588200778457,
-        "drive": 0.8,
         "envAmt": 0,
         "envSrc": "env1",
         "kbd": 0,
@@ -2955,27 +2858,31 @@
       "routes": [
         { "amt": 1, "dst": "amp", "src": "env1" },
         { "amt": -0.8, "dst": "amp", "src": "env1v" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* env1.velocity=-2.5": {
       "routes": [
         { "amt": 1, "dst": "amp", "src": "env1" },
         { "amt": -0.4, "dst": "amp", "src": "env1v" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* env1.velocity=2.5": {
       "routes": [
         { "amt": 0.5, "dst": "amp", "src": "env1" },
         { "amt": 0.5, "dst": "amp", "src": "env1v" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* env1.velocity=5": {
       "routes": [
         { "amt": 1, "dst": "amp", "src": "env1v" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" }
+        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
+        { "amt": 0.5, "by": "joyY", "dst": "pitchAll", "src": "lfo3" }
       ]
     },
     "patched:* env1.sustFall=2.5": {},
@@ -3542,22 +3449,8 @@
     "patched:* joy.x=1": { "joy": [1, 0] },
     "patched:* joy.y=-1": { "joy": [0, -1] },
     "patched:* joy.y=-0.5": { "joy": [0, -0.5] },
-    "patched:* joy.y=0.5": {
-      "joy": [0, 0.5],
-      "routes": [
-        { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
-        { "amt": 0.25, "dst": "pitchAll", "src": "lfo3" }
-      ]
-    },
-    "patched:* joy.y=1": {
-      "joy": [0, 1],
-      "routes": [
-        { "amt": 1, "dst": "amp", "src": "env1" },
-        { "amt": 2, "dst": "pitchAll", "src": "joyX" },
-        { "amt": 0.5, "dst": "pitchAll", "src": "lfo3" }
-      ]
-    },
+    "patched:* joy.y=0.5": { "joy": [0, 0.5] },
+    "patched:* joy.y=1": { "joy": [0, 1] },
     "patched:* kbd.hold=true": {
       "arp": {
         "bpm": 97.97958971132712,
