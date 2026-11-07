@@ -1746,7 +1746,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-cars-vox", "malevolent/mal-cars-lead"],
+      "sounds": ["take-5/t5-cars-vox"],
       "research": {
         "work": "Gary Numan, “Cars”, The Pleasure Principle, 1979",
         "part": "The high line over the riff: A held for four bars, then G, D, B and G falling in the last two.",

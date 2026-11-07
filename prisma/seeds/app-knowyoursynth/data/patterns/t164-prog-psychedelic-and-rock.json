@@ -2085,7 +2085,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/rotary-drone", "mantis/mantis-crazy-diamond-pad"],
+      "sounds": ["deepmind-12d/rotary-drone"],
       "research": {
         "work": "Pink Floyd, “Shine On You Crazy Diamond (Parts I–V)”, Wish You Were Here, 1975",
         "part": "Three held Solina chords from Part I: D minor for three bars, C minor for four, then G minor.",

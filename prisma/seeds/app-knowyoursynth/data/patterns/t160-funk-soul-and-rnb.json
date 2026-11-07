@@ -4796,7 +4796,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/staccato-quack-bass", "mantis/mantis-chameleon-bass"],
+      "sounds": ["model-d/staccato-quack-bass"],
       "research": {
         "work": "Herbie Hancock, “Chameleon”, Head Hunters, 1973",
         "part": "The same two bars of the bass, an octave up, where the Staccato Quack Bass plays.",
@@ -7084,7 +7084,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/clav-funk", "malevolent/mal-superstition-clav", "tb-303/tb-clav-funk"],
+      "sounds": ["ub-xa-d/clav-funk", "tb-303/tb-clav-funk"],
       "research": {
         "work": "Stevie Wonder, “Superstition”, Talking Book, 1972",
         "part": "Two bars of the clavinet’s left hand: E♭, then E♭, C♯, E♭, F♯, C♯, B♭, and the second time A♭, B♭, C♯ up to F♯.",

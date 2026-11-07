@@ -2138,7 +2138,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-escape-ny-bass", "malevolent/mal-escape-ostinato"],
+      "sounds": ["take-5/t5-escape-ny-bass"],
       "research": {
         "work": "John Carpenter and Alan Howarth, “Escape from New York” (main title), Escape from New York, 1981",
         "part": "The three-bar ostinato in dotted sixteenths on E, G and B, which comes back to the bar line every third bar.",
