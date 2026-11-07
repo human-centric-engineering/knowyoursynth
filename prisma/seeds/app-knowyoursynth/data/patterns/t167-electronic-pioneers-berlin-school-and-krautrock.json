@@ -166,6 +166,10 @@
     {
       "sound": "tb-303/tb-moondawn-pulse",
       "reason": "Names Moondawn, which no pattern in this batch has yet; the pulse is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "td-3/td-silver-apples",
+      "reason": "In the style of Silver Apples: it names no work, and the batch’s Silver Apples pattern of its kind is a held drone for a patch that makes its own pulse, while this sound spells its pulse note by note, so the line is the lesson’s own."
     }
   ],
   "patterns": [
@@ -2665,7 +2669,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["b2600/tomita-soft-pluck", "donner-b1/b1-snowflakes"],
+      "sounds": ["b2600/tomita-soft-pluck"],
       "research": {
         "work": "Isao Tomita, “Arabesque No. 1” (Claude Debussy), Snowflakes Are Dancing, 1974",
         "part": "The first two bars’ triplet figure: up through E major and back down, then the same from A.",
@@ -2679,6 +2683,73 @@
           }
         ],
         "notes": "From the edition’s upper part, bars 1–2, as written; from bar 3 the part holds notes under the line, which a single line can’t carry. The tempo is the file’s playback tempo, not Debussy’s marking (Andantino con moto). The score is a tier-1 source for Debussy’s notes, but not for Tomita’s part: the record’s octaves, ornaments, tempo and registration are his, and only a listen can say how far they differ. So it is a starting point like any other lead here, and the pattern is _In the style of_. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:isao-tomita/arabesque-figure-high",
+      "name": "Arabesque No. 1: the opening figure, high",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": { "kind": "work", "songId": "isao-tomita-snowflakes-are-dancing" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 144,
+        "stepSize": "1/8t",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 73, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 85, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 88, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 90, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 92, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 87, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 83, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 71, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 69, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 81, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 85, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 87, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 88, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 83, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 80, "gate": 1 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 68, "gate": 1 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-snowflakes"],
+      "research": {
+        "work": "Isao Tomita, “Arabesque No. 1” (Claude Debussy), Snowflakes Are Dancing, 1974",
+        "part": "The first two bars’ triplet figure: up through E major and back down, then the same from A: the same part an octave up, where the B1’s “Snowflakes Dancing” plays.",
+        "originalKey": "E major",
+        "originalBpm": null,
+        "leads": [
+          {
+            "citation": "Claude Debussy, Arabesque No. 1, L. 66: the Mutopia Project’s typeset edition of the score (public domain), its MIDI file",
+            "checkedAt": "2026-11-02",
+            "url": "https://www.mutopiaproject.org/ftp/DebussyC/L66/debussy_Arabesque_1/debussy_Arabesque_1.mid"
+          }
+        ],
+        "notes": "From the edition’s upper part, bars 1–2, as written; from bar 3 the part holds notes under the line, which a single line can’t carry. The tempo is the file’s playback tempo, not Debussy’s marking (Andantino con moto). The score is a tier-1 source for Debussy’s notes, but not for Tomita’s part: the record’s octaves, ornaments, tempo and registration are his, and only a listen can say how far they differ. So it is a starting point like any other lead here, and the pattern is _In the style of_. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave up from researched:isao-tomita/arabesque-figure.",
         "listenedAt": null
       }
     },
@@ -11407,7 +11478,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["syntrx-ii/syntrx-silver-apples", "td-3/td-silver-apples"],
+      "sounds": ["syntrx-ii/syntrx-silver-apples"],
       "research": {
         "work": "Silver Apples, the oscillator drones of their records",
         "part": "One C held for four bars.",

@@ -665,7 +665,7 @@ describe('the research batches', () => {
   });
 
   it('moves every -low and -high copy evenly from the pattern it copies, and changes nothing else', () => {
-    // A copy carries its pattern to a sound that plays lower or higher, by whole octaves (t-191 made 37), except the one
+    // A copy carries its pattern to a sound that plays lower or higher, by whole octaves (t-191 made 40), except the one
     // retuned on purpose, named here. Its key makes it a copy, so a pattern cannot leave itself out of this check.
     const retuned: Record<string, number> = { 'researched:kraftwerk/numbers-kick-low': -7 };
     // Copies that play their part in another role (a riff as a bass line) or credit another part of the work.
@@ -680,6 +680,15 @@ describe('the research batches', () => {
     const baseOf = (key: string) => key.replace(/-(low|high)(-2)?$/, '');
     const copies = patterns.filter((p) => p.key !== baseOf(p.key));
     expect(copies.length).toBeGreaterThan(50);
+    // The lists name live copies, and each still differs from its pattern the way it is listed for.
+    for (const key of [...Object.keys(retuned), ...recast]) expect(byKey.has(key), key).toBe(true);
+    for (const key of Object.keys(retuned)) expect(retuned[key] % 12, key).not.toBe(0);
+    for (const key of recast) {
+      const [c, b] = [byKey.get(key)!, byKey.get(baseOf(key))!];
+      expect(JSON.stringify([c.role, c.inspiredBy]), key).not.toBe(
+        JSON.stringify([b.role, b.inspiredBy])
+      );
+    }
     const shape = (p: (typeof patterns)[number]) => ({
       notes: compileLoop(PatternSchema.parse(p.pattern), { loop: 0, rng: seededRng(1) }).notes.map(
         ([beat, , len, velocity]) => [beat, len, velocity]
@@ -700,6 +709,35 @@ describe('the research batches', () => {
       expect({ ...mine, cast: null }, copy.key).toEqual({ ...theirs, cast: null });
       if (mine.cast) expect(mine.cast, copy.key).toEqual(theirs.cast);
     }
+  });
+
+  it('never puts a sound on both a pattern and its -low or -high copy', () => {
+    const baseOf = (key: string) => key.replace(/-(low|high)(-2)?$/, '');
+    const families = new Map<string, string[]>();
+    for (const p of patterns)
+      for (const s of p.sounds) {
+        const at = `${s} in ${baseOf(p.key)}`;
+        families.set(at, [...(families.get(at) ?? []), p.key]);
+      }
+    expect([...families].filter(([, keys]) => keys.length > 1)).toEqual([]);
+  });
+
+  it('adds no pattern far from where its sound plays', () => {
+    // A pattern's median note within six semitones of its sound's riff (pattern-library.md, Sounds added after the
+    // batches). The earlier batches left 131 placements further away; this holds them there until they are revisited.
+    const median = (xs: number[]) => {
+      const s = [...xs].sort((a, b) => a - b);
+      const m = s.length / 2;
+      return s.length % 2 ? s[Math.floor(m)] : (s[m - 1] + s[m]) / 2;
+    };
+    const far = patterns.flatMap((p) =>
+      p.sounds.filter(
+        (s) =>
+          Math.abs(median(pitches(p.key)) - median(sounds.get(s)!.phrase.steps.map(([, n]) => n))) >
+          6
+      )
+    );
+    expect(far.length).toBeLessThanOrEqual(131);
   });
 
   it('plays the notes its lead gives: the riff of “Take On Me”', () => {

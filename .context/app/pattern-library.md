@@ -817,15 +817,18 @@ added 99 such sounds:
 - **A pattern where the batch has one of the part the sound plays**: the work it names, or for a sound naming no work,
   a part of the same kind (a bass line for a bass, an arpeggio for a sequence, percussion for percussion) by its
   artist or carried by peer sounds with the same credit. The part comes first and the register second: a riff in five
-  takes the five-four Halloween figure, not an ostinato in four that sits nearer. 73 of the 99.
-- **In the sound's register**: the pattern's median note within six semitones of the riff's median note. Where the
-  closest of a pattern and its copies is further, a `-low` or `-high` copy carries it, written as the batches' own
-  copies are: the same leads, its part saying where it plays, and its notes saying it was moved from the pattern and
-  by how much. 39 copies, each an octave or two. No sound is on both a pattern and its copy, and a batch test holds
-  every copy to its pattern: moved evenly the way its key says, by whole octaves unless the test names it as retuned,
-  with the same timing, grid, leads and work, and the same role and credit unless the test names it as recast.
+  takes the five-four Halloween figure, not an ostinato in four that sits nearer, and a sequence takes a sequence, not
+  the held keys written for a patch that sequences itself. 74 of the 99.
+- **In the sound's register**: the pattern's median note (the middle note, or halfway between the two middle notes)
+  within six semitones of the riff's. Where the closest of a pattern and its copies is further, a `-low` or `-high`
+  copy carries it, written as the batches' own copies are: the same leads, its part saying where it plays, and its
+  notes saying it was moved from the pattern and by how much. 40 copies, each an octave or two. The batch tests hold
+  this: no sound is on both a pattern and its copy; the earlier batches' 131 placements further than six semitones
+  can't grow; and every copy is held to its pattern, moved evenly the way its key says, by whole octaves unless the
+  test names it as retuned, with the same timing, grid, leads and work, and the same role and credit unless the test
+  names it as recast.
 - **A reason otherwise**, saying which: the batch has no pattern of the part the sound plays, the work it names has no
-  pattern yet, it is an effect, or its riff already plays the public-domain score. 26 of the 99.
+  pattern yet, it is an effect, or its riff already plays the public-domain score. 25 of the 99.
 
 ## Rights
 
