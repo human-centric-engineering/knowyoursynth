@@ -1379,20 +1379,22 @@ svg .kys-hit:focus-visible {
   }
 }
 /* The drawer in the faceplate's colours takes the lesson card's bezel along its top (t-206), so it lifts off a panel
-   of its own colour above it: the closed tab is edged round its top and sides, the open drawer along its top only.
-   Open, the tab is the drawer's title, and its edge goes with its shape. */
+   of its own colour above it: the closed tab is edged round its top and sides, sitting straight on the dock, and the
+   open drawer along its top only. The drawer's edge is an inset shadow, not a border: a border would hold the closed
+   drawer 3px tall, a gap between the tab and the dock. Open, the tab is the drawer's title, and its edge goes with
+   its shape. */
 @media (hover: hover) and (min-width: 1024px) {
   .kys-dock .kys-design.kys-face .kys-design-tab {
     border: 3px solid var(--kys-desk);
     border-bottom: 0;
   }
-  .kys-dock .kys-design.kys-face .kys-design-body {
-    border-top: 3px solid var(--kys-desk);
+  .kys-dock .kys-design.kys-face[data-open] .kys-design-body {
+    box-shadow:
+      inset 0 3px 0 var(--kys-desk),
+      0 -16px 32px -16px var(--kys-shadow);
   }
-  /* The drawer's head starts under its 3px edge: the tab settles that much further, its own top edge dropped, so it
-     stays level with the wordmark. */
+  /* Its top edge dropped, so its title is the full row the wordmark is centred in. */
   .kys-dock .kys-design.kys-face[data-open] .kys-design-tab {
-    translate: 0 31px;
     border-color: transparent;
     border-top-width: 0;
   }
