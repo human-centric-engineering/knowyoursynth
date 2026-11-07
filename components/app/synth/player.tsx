@@ -6,8 +6,8 @@
  *
  * - `Wordmark`: the app's name at the right of the Sound Design strip's heading, with an LED that is lit while the sound is on,
  *   and lit yellow while a lesson is being walked (t-204).
- * - `SoundPicker`: the sound's name at the start of the bar, which opens the library. Its LED pulses while a patch
- *   loads, when the keys are silent (`f-default-patch` t-172), so a dead key reads as "wait", not as broken.
+ * - `SoundPicker`: the patch's name under the panel, which opens the library (`SoundsDrawer`). Its LED pulses while a
+ *   patch loads, when the keys are silent (`f-default-patch` t-172), so a dead key reads as "wait", not as broken.
  * - `SoundDesign`: the strip over the bar that teaches how the sound is built: the lesson's steps as a video's
  *   chapters. Each opens the lesson card over the panel (`lesson-card.tsx`).
  * - `FullscreenButton`: the whole player full screen, where the browser allows it.
@@ -40,18 +40,19 @@ export function Wordmark({ lit, lesson = false }: { lit: boolean; lesson?: boole
 }
 
 /**
- * The sound picker (t-74): the sound's name as a button at the start of the player bar, next to the riff, as a video's
- * title opens its list. It opens the library as a drawer down the left of the screen, over the panel and the dock, so it
- * has the screen's height whatever the dock holds (a bottom sheet below `lg`).
+ * The patch picker (t-74): the patch's name under the panel, as a button that opens the library (t-207, from the start
+ * of the player bar before). It opens the library as a drawer down the left of the screen (`SoundsDrawer`), over the
+ * panel and the Play deck, so it has the screen's height whatever the deck holds (a bottom sheet below `lg`). Its LED
+ * pulses while a patch loads, when the keys are silent (`f-default-patch` t-172), so a dead key reads as "wait", not as
+ * broken. Its text is the name alone: what is loading is said in its label.
  */
 export function SoundPicker({
   soundName,
   soundRef,
   onChooseSound,
   soundsOpen = false,
-  onCloseSounds,
-  sounds,
   loading = false,
+  buttonRef,
 }: {
   /** What is on the panel: a library sound, one of the user's, or "Default patch". */
   soundName: string;
@@ -59,37 +60,69 @@ export function SoundPicker({
   soundRef: string | null;
   /** Opens (or closes) the sound library. */
   onChooseSound: () => void;
-  /** Whether the library is open over the bar. Below `lg` it is a sheet instead, and this stays false. */
+  /** Whether the library's drawer is open. Below `lg` it is a sheet instead, and this stays false. */
   soundsOpen?: boolean;
-  onCloseSounds?: () => void;
-  /** The library, shown over the bar while `soundsOpen`. */
-  sounds?: ReactNode;
   /** A patch is loading onto the panel: nothing sounds until it has. */
   loading?: boolean;
+  /** The button, for the drawer: a press on it toggles the drawer rather than closing it, and focus comes back to it. */
+  buttonRef?: RefObject<HTMLButtonElement | null>;
 }) {
-  const pick = useRef<HTMLButtonElement | null>(null);
+  return (
+    <button
+      ref={buttonRef}
+      type="button"
+      className="kys-title-pick"
+      onClick={onChooseSound}
+      aria-expanded={soundsOpen}
+      aria-label={`Choose a patch (now: ${soundName}${loading ? ', loading' : ''})`}
+      title={soundRef ? `${soundName}: ${soundRef}` : 'Choose a patch from the library'}
+    >
+      {loading && <span className="kys-led is-lit kys-pulse" aria-hidden="true" />}
+      <span className="kys-sound-title truncate">{soundName}</span>
+      <ChevronDown size={18} className="kys-title-pick-caret" aria-hidden="true" />
+    </button>
+  );
+}
+
+/**
+ * The library's drawer down the left of the screen, opened by the patch picker. In the player, outside its stage, so it
+ * stacks over the Play deck and still shows with the player full screen. It closes on a press outside it (not on the
+ * picker, which toggles it), on Escape inside it, and when focus leaves it for anything but the picker, by Tab or moved
+ * by script.
+ */
+export function SoundsDrawer({
+  open,
+  onClose,
+  pickRef,
+  children,
+}: {
+  open: boolean;
+  onClose: () => void;
+  /** The patch picker that opens it. */
+  pickRef: RefObject<HTMLButtonElement | null>;
+  /** The library. */
+  children: ReactNode;
+}) {
   const pop = useRef<HTMLDivElement | null>(null);
-  // The library closes on a press outside it (not on the picker, which toggles it), on Escape inside it, and when
-  // focus leaves it for anything but the picker, by Tab or moved by script.
   useEffect(() => {
-    if (!soundsOpen || !onCloseSounds) return undefined;
+    if (!open) return undefined;
     const onDown = (e: PointerEvent) => {
       const t = e.target;
       if (!(t instanceof Node)) return;
-      if (pop.current?.contains(t) || pick.current?.contains(t)) return;
-      onCloseSounds();
+      if (pop.current?.contains(t) || pickRef.current?.contains(t)) return;
+      onClose();
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape' || e.defaultPrevented) return;
-      onCloseSounds();
-      pick.current?.focus();
+      onClose();
+      pickRef.current?.focus();
     };
-    // Only for focus that lands somewhere else: a press on the popover's own padding leaves focus nowhere.
+    // Only for focus that lands somewhere else: a press on the drawer's own padding leaves focus nowhere.
     const onFocusOut = (e: FocusEvent) => {
       const t = e.relatedTarget;
       if (!(t instanceof Node)) return;
-      if (pop.current?.contains(t) || pick.current?.contains(t)) return;
-      onCloseSounds();
+      if (pop.current?.contains(t) || pickRef.current?.contains(t)) return;
+      onClose();
     };
     const el = pop.current;
     document.addEventListener('pointerdown', onDown);
@@ -100,51 +133,25 @@ export function SoundPicker({
       el?.removeEventListener('keydown', onKey);
       el?.removeEventListener('focusout', onFocusOut);
     };
-  }, [soundsOpen, onCloseSounds]);
+  }, [open, onClose, pickRef]);
   return (
-    <div className="relative min-w-0 shrink">
-      <button
-        ref={pick}
-        type="button"
-        className="kys-sound-pick"
-        onClick={onChooseSound}
-        aria-expanded={soundsOpen}
-        aria-label={`Choose a patch (now: ${soundName}${loading ? ', loading' : ''})`}
-        title={soundRef ? `${soundName}: ${soundRef}` : 'Choose a patch from the library'}
-      >
-        <span className="kys-sound-pick-eyebrow">
-          {loading && <span className="kys-led is-lit kys-pulse" aria-hidden="true" />}
-          {loading ? 'Loading' : 'Patch'}
-        </span>
-        <span className="kys-sound-pick-name">{soundName}</span>
-        <ChevronDown size={16} className="kys-sound-pick-caret" aria-hidden="true" />
-      </button>
-      {sounds !== undefined && (
-        <div
-          ref={pop}
-          className="kys-sounds-pop"
-          role="dialog"
-          aria-label="Patches"
-          hidden={!soundsOpen}
+    <div ref={pop} className="kys-sounds-pop" role="dialog" aria-label="Patches" hidden={!open}>
+      <div className="kys-drawer-head">
+        <p className="kys-drawer-title">Patches</p>
+        {/* The drawer covers the picker, so it carries its own way out. */}
+        <button
+          type="button"
+          className="kys-pbtn"
+          aria-label="Close the patches"
+          onClick={() => {
+            onClose();
+            pickRef.current?.focus();
+          }}
         >
-          <div className="kys-drawer-head">
-            <p className="kys-drawer-title">Patches</p>
-            {/* The drawer covers the picker, so it carries its own way out. */}
-            <button
-              type="button"
-              className="kys-pbtn"
-              aria-label="Close the patches"
-              onClick={() => {
-                onCloseSounds?.();
-                pick.current?.focus();
-              }}
-            >
-              <X size={17} aria-hidden="true" />
-            </button>
-          </div>
-          <div className="kys-sounds-pop-body kys-scroll">{sounds}</div>
-        </div>
-      )}
+          <X size={17} aria-hidden="true" />
+        </button>
+      </div>
+      <div className="kys-sounds-pop-body kys-scroll">{children}</div>
     </div>
   );
 }

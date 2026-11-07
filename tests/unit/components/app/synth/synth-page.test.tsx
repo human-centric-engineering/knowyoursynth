@@ -350,6 +350,10 @@ describe('SynthPage layout', () => {
     expect(screen.queryByText(/controls? moved/)).toBeNull();
     // Chosen from the patches drawer, where it is first: the bar has no button of its own for it (t-208).
     expect(screen.queryByRole('button', { name: 'Default patch' })).toBeNull();
+    // The patch is chosen from its name under the panel, not from the Play deck's bar (t-207).
+    const pick = button(/^Choose a patch/);
+    expect(pick.closest('section[aria-label="The patch on the panel"]')).not.toBeNull();
+    expect(pick.closest('.kys-player-bar')).toBeNull();
     expect(screen.queryByRole('button', { name: 'Restore patch' })).toBeNull();
     // Model D's Default patch opens the filter all the way, where init leaves it at 1.
     expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(

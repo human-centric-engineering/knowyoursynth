@@ -15,6 +15,7 @@ import {
   FullscreenButton,
   SoundDesign,
   SoundPicker,
+  SoundsDrawer,
   Wordmark,
 } from '@/components/app/synth/player';
 import { stepIds } from '@/components/app/synth/lesson';
@@ -27,21 +28,29 @@ import type { PresetStep } from '@/lib/app/synths/contract';
 const { warn } = vi.hoisted(() => ({ warn: vi.fn() }));
 vi.mock('@/lib/logging', () => ({ logger: { warn } }));
 
-function picker(open = true) {
-  const onClose = vi.fn();
-  render(
+/** The patch picker and the drawer it opens, sharing the picker's button as the page does (t-207). */
+function PickerWithDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const pickRef = useRef<HTMLButtonElement | null>(null);
+  return (
     <>
       <SoundPicker
+        buttonRef={pickRef}
         soundName="Night bass"
         soundRef={null}
         onChooseSound={vi.fn()}
         soundsOpen={open}
-        onCloseSounds={onClose}
-        sounds={<input type="search" aria-label="Search sounds" />}
       />
+      <SoundsDrawer open={open} onClose={onClose} pickRef={pickRef}>
+        <input type="search" aria-label="Search sounds" />
+      </SoundsDrawer>
       <button type="button">Elsewhere</button>
     </>
   );
+}
+
+function picker(open = true) {
+  const onClose = vi.fn();
+  render(<PickerWithDrawer open={open} onClose={onClose} />);
   const search = screen.getByRole('searchbox', { name: 'Search sounds', hidden: true });
   const pop = search.closest('[role="dialog"]');
   if (!(pop instanceof HTMLElement)) throw new Error('the library is in a dialog');
@@ -55,6 +64,35 @@ function picker(open = true) {
 }
 
 describe('SoundPicker', () => {
+  it("is the patch's name, saying whether the drawer is open and when a patch is loading (t-207)", () => {
+    const onChoose = vi.fn();
+    const { rerender } = render(
+      <SoundPicker
+        soundName="Night bass"
+        soundRef="In the style of a 303"
+        onChooseSound={onChoose}
+      />
+    );
+    const pick = screen.getByRole('button', { name: 'Choose a patch (now: Night bass)' });
+    expect(pick.textContent).toBe('Night bass');
+    expect(pick).toHaveAttribute('aria-expanded', 'false');
+    expect(pick).toHaveAttribute('title', 'Night bass: In the style of a 303');
+    fireEvent.click(pick);
+    expect(onChoose).toHaveBeenCalledTimes(1);
+    rerender(
+      <SoundPicker
+        soundName="Night bass"
+        soundRef={null}
+        onChooseSound={onChoose}
+        soundsOpen
+        loading
+      />
+    );
+    expect(pick).toHaveAttribute('aria-label', 'Choose a patch (now: Night bass, loading)');
+    expect(pick).toHaveAttribute('aria-expanded', 'true');
+    expect(pick.querySelector('.kys-led.kys-pulse')).not.toBeNull();
+  });
+
   it('closes the library on a press outside it', () => {
     const { onClose, elsewhere } = picker();
     fireEvent.pointerDown(elsewhere);

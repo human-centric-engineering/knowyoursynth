@@ -153,6 +153,7 @@ import {
   PlayButton,
   SoundDesign,
   SoundPicker,
+  SoundsDrawer,
   Wordmark,
 } from '@/components/app/synth/player';
 import type { PanelScale } from '@/components/app/synth/panel-zoom';
@@ -808,6 +809,7 @@ function Synth({
   }, []);
   const closeCard = useCallback(() => setCard(null), []);
   const closeSounds = useCallback(() => setSoundsOpen(false), []);
+  const soundPickRef = useRef<HTMLButtonElement | null>(null);
   // The Sound Design strip's sound picker: the library, wherever it is at this width.
   const libraryRef = useRef<HTMLDivElement | null>(null);
   const chooseSound = () => {
@@ -2660,9 +2662,15 @@ function Synth({
                     <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
                       <p className="flex max-w-full min-w-0 items-baseline gap-x-2.5">
                         <span className="sr-only">Loaded:</span>
-                        <span className="kys-sound-title truncate" title={loadedName}>
-                          {loadedName}
-                        </span>
+                        {/* The patch is chosen from its name (t-207): the Play deck's bar is for playing. */}
+                        <SoundPicker
+                          buttonRef={soundPickRef}
+                          loading={loading}
+                          soundName={loadedName}
+                          soundRef={described?.ref ?? null}
+                          onChooseSound={chooseSound}
+                          soundsOpen={!small && soundsOpen}
+                        />
                         {openSound && (
                           <span className="shrink-0 rounded border border-(--kys-line) px-1.5 py-0.5 font-mono text-xs text-(--kys-muted)">
                             mine
@@ -2780,15 +2788,6 @@ function Synth({
               )}
 
               <div className="kys-player-bar flex flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2 text-sm sm:px-4 lg:flex-nowrap">
-                <SoundPicker
-                  loading={loading}
-                  soundName={loadedName}
-                  soundRef={described?.ref ?? null}
-                  onChooseSound={chooseSound}
-                  soundsOpen={!small && soundsOpen}
-                  onCloseSounds={closeSounds}
-                  sounds={small ? undefined : library}
-                />
                 {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach; on a phone they take a row of their own under the patch, leaving the fullscreen button beside it. */}
                 <div className="kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 max-sm:order-last max-sm:basis-full lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">
                   {/* Always there while something plays, so a pattern can be stopped with the sequencer closed. */}
@@ -2947,6 +2946,13 @@ function Synth({
               </div>
             </div>
 
+            {/* The library's drawer, opened by the patch's name: in the player but outside its stage, so it stacks over
+            the Play deck. */}
+            {!small && (
+              <SoundsDrawer open={soundsOpen} onClose={closeSounds} pickRef={soundPickRef}>
+                {library}
+              </SoundsDrawer>
+            )}
             {!small && card && (
               <LessonCard
                 def={def}
