@@ -371,9 +371,9 @@ export function PlayButton({ playing, onClick }: { playing: boolean; onClick: ()
       <button type="button" onClick={onClick} className={`kys-play ${playing ? 'is-playing' : ''}`}>
         <span className="kys-play-dot" aria-hidden="true">
           {playing ? (
-            <Square size={16} fill="currentColor" />
+            <Square size={15} fill="currentColor" />
           ) : (
-            <Play size={21} fill="currentColor" className="translate-x-0.5" />
+            <Play size={22} fill="currentColor" className="translate-x-0.5" />
           )}
         </span>
         {playing ? 'Stop' : 'Play'}
