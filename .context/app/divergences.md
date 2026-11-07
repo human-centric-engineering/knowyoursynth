@@ -155,7 +155,7 @@ the same PR**, and each row names what deletes it.
   `GLOBAL_CONFIG_MODELS`, under a one-line comment. The pattern library's `LibraryPattern` and
   `SynthSoundPattern` (`f-pattern-library` t-122), with `LibraryPatternComment` (t-156), follow under a second, and the thirteen databank
   tables (`BankMaker` … `BankRemoval`, `f-databank` t-34 and t-36) under a third, and `ExternalLink`
-  (`f-videos-and-links` t-179) under a fourth. `SynthSuggestion` (t-37), `LinkSuggestion` (`f-link-suggestions` t-185),
+  (`f-videos-and-links` t-179), with the seed's record of the links it has applied, `LinkSeedRecord` (t-200), under a fourth. `SynthSuggestion` (t-37), `LinkSuggestion` (`f-link-suggestions` t-185),
   `UserSound` (`f-my-sounds` s1), `UserPattern` (`f-step-sequencer` t-81), `SynthPreference` and `UserPreference` (s3), `LessonProgress` and
   `Favourite` (s4), `SynthProfile` and `HeldUsername` (`f-profiles` r1), `OwnedInstrument` (r2), `SoundReport`
   (`f-sharing` h4) and `PatternReport` (`f-step-sequencer` t-83) are appended to `SYSTEM_MODELS` after `ContactSubmission`, under their own comment.

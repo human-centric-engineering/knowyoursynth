@@ -7,6 +7,9 @@
  *
  * - **Checked before anything is written.** Every URL must parse to itself (`parseLinkUrl`), once per owner, with a
  *   valid kind and title. One problem anywhere and the seed throws with the whole list, having written nothing.
+ * - **Once per database** (owner ruling, t-200). Each link applied is recorded (`LinkSeedRecord`, owner and URL), and
+ *   a recorded link is never applied again: one an admin deletes, or moves to another URL, stays gone through every
+ *   reseed. Links new to the data still arrive.
  * - **Create only.** A link its owner already has (the owner and the canonical URL, the table's unique key) is left
  *   exactly as it is: an admin's title, kind, ours, order and rating, and YouTube's counts, are never overwritten.
  * - **Never deletes.** A link the data does not list stays, so an admin's own links and a partial source are safe.
@@ -15,10 +18,8 @@
  * - **An owner the database does not have is skipped and reported**, not thrown: a databank row an admin removed
  *   should not stop the rest.
  *
- * Accepted costs (journal, 2026-11-07), all because the seed can only tell what an owner has, not what it once had:
- * a seeded link an admin deletes, or moves to another URL, comes back when the unit next re-runs; and an owner that
- * was missing gets its links only on that next re-run. To remove a link for good, delete it in dev and re-export
- * (`npm run links:export -- --prune`), which drops it from the data.
+ * Accepted costs (journal, 2026-11-07): a link removed from the data and added back later is not applied again on a
+ * database that had it; and an owner that was missing gets its links only when the unit next runs.
  */
 import { z } from 'zod';
 import type { Prisma } from '@prisma/client';
@@ -88,8 +89,10 @@ export class LinkDataError extends Error {
 /** What one run did. */
 export interface LinkSeedReport {
   created: number;
-  /** Links their owner already had, left as they are. */
+  /** Links their owner already had, left as they are, and now recorded as applied. */
   existing: number;
+  /** Links this database has had from the seed before (`LinkSeedRecord`): never applied again. */
+  alreadyApplied: number;
   /** Owners the database does not have, as `<kind>:<id>`, whose links were skipped. */
   missingOwners: string[];
 }
@@ -145,10 +148,16 @@ export function checkLinkData(data: LinkSeedData): string[] {
   return planLinks(data).problems;
 }
 
-/** Each owner the database has, by `<kind>:<id>`, mapped to its row id (a sound's is its `SynthSound.id`). */
-async function ownerRows(prisma: TenancyClient, owners: OwnerRef[]): Promise<Map<string, string>> {
+/** The owners' ids, by kind: one pass, shared by the owner lookup and the record read so they group alike. */
+function idsByKind(owners: OwnerRef[]): Record<OwnerKind, string[]> {
   const ids: Record<OwnerKind, string[]> = { instrument: [], sound: [], song: [], artist: [] };
   for (const o of owners) ids[o.kind].push(o.id);
+  return ids;
+}
+
+/** Each owner the database has, by `<kind>:<id>`, mapped to its row id (a sound's is its `SynthSound.id`). */
+async function ownerRows(prisma: TenancyClient, owners: OwnerRef[]): Promise<Map<string, string>> {
+  const ids = idsByKind(owners);
   const sounds = ids.sound.flatMap((id) => splitSoundKey(id) ?? []);
   const select = { id: true } as const;
   // A kind the data names no owner of is not asked about.
@@ -175,7 +184,14 @@ async function ownerRows(prisma: TenancyClient, owners: OwnerRef[]): Promise<Map
   return found;
 }
 
-/** Create the links the data lists that their owners do not have yet. */
+/** One owner's link, as a record and the export's dropped list name it: `<kind>:<id> <url>`. */
+const keyedLink = (key: string, url: string): string => `${key} ${url}`;
+const linkKey = (owner: OwnerRef, url: string): string => keyedLink(ownerKey(owner), url);
+
+/**
+ * Create the links the data lists that this database has never had from the seed, and record each as applied. A link
+ * with a record (`LinkSeedRecord`) is never applied again, whether or not its owner still has it.
+ */
 export async function seedLinks(
   prisma: TenancyClient,
   data: LinkSeedData
@@ -183,19 +199,29 @@ export async function seedLinks(
   const plan = planLinks(data);
   if (plan.problems.length) throw new LinkDataError(plan.problems);
 
-  // An owner whose file lists no links has nothing to write, so it is neither looked up nor reported missing.
-  const withLinks = plan.owners.filter((o) => o.links.length);
-  const found = await ownerRows(
-    prisma,
-    withLinks.map((o) => o.owner)
-  );
-  const missingOwners = withLinks.map((o) => ownerKey(o.owner)).filter((k) => !found.has(k));
+  // Every owner the data gives links is looked up, recorded or not, so one this database lacks is always reported.
+  // An owner whose file lists none has nothing to apply, and is neither looked up nor reported.
+  const named = plan.owners.filter((o) => o.links.length);
+  const owners = named.map((o) => o.owner);
+  const [recorded, found] = await Promise.all([
+    recordsOf(prisma, owners),
+    ownerRows(prisma, owners),
+  ]);
+  const missingOwners = owners.map(ownerKey).filter((k) => !found.has(k));
 
+  let alreadyApplied = 0;
   const rows: Prisma.ExternalLinkCreateManyInput[] = [];
-  for (const { owner, links } of withLinks) {
+  const records: Prisma.LinkSeedRecordCreateManyInput[] = [];
+  for (const { owner, links } of named) {
     const rowId = found.get(ownerKey(owner));
-    if (!rowId) continue;
     for (const { link, parsed } of links) {
+      if (recorded.has(linkKey(owner, parsed.url))) {
+        alreadyApplied++;
+        continue;
+      }
+      // No record for a missing owner's links, so they are applied once it exists.
+      if (!rowId) continue;
+      records.push({ ownerKind: owner.kind, ownerId: owner.id, url: parsed.url });
       rows.push({
         [OWNER_COLUMN[owner.kind]]: rowId,
         url: parsed.url,
@@ -211,11 +237,37 @@ export async function seedLinks(
     }
   }
 
+  if (!rows.length) return { created: 0, existing: 0, alreadyApplied, missingOwners };
   // The unique index on owner + URL decides what an owner already has, so a link created meanwhile is skipped too.
-  const { count } = rows.length
-    ? await prisma.externalLink.createMany({ data: rows, skipDuplicates: true })
-    : { count: 0 };
-  return { created: count, existing: rows.length - count, missingOwners };
+  // The links and their records commit together, so no link is ever written without its record, or recorded unwritten.
+  const [created] = await prisma.$transaction([
+    prisma.externalLink.createMany({ data: rows, skipDuplicates: true }),
+    prisma.linkSeedRecord.createMany({ data: records, skipDuplicates: true }),
+  ]);
+  return {
+    created: created.count,
+    existing: rows.length - created.count,
+    alreadyApplied,
+    missingOwners,
+  };
+}
+
+/**
+ * The links already applied to these owners, as `linkKey`s. One branch per owner kind, each an `in` list of exact
+ * owner ids, so the query stays at most four branches however many owners the data names.
+ */
+async function recordsOf(prisma: TenancyClient, owners: OwnerRef[]): Promise<Set<string>> {
+  const ids = idsByKind(owners);
+  const branches = OWNER_KINDS.flatMap((kind) => {
+    const in_ = ids[kind];
+    return in_.length ? [{ ownerKind: kind, ownerId: { in: in_ } }] : [];
+  });
+  if (!branches.length) return new Set();
+  const rows = await prisma.linkSeedRecord.findMany({
+    where: { OR: branches },
+    select: { ownerKind: true, ownerId: true, url: true },
+  });
+  return new Set(rows.map((r) => linkKey({ kind: r.ownerKind, id: r.ownerId }, r.url)));
 }
 
 /** A stored link, as the columns the export reads. */
@@ -302,9 +354,11 @@ export function exportLinkData(
     committed.map(({ owner, links }) => [ownerKey(owner), links.map((l) => l.url)])
   );
 
+  // From the de-duplicated view, as the files are built, so an owner listed twice is counted once.
   const dropped: string[] = [];
   for (const [key, urls] of committedUrls)
-    for (const url of urls) if (!byOwner.get(key)?.links.has(url)) dropped.push(`${key} ${url}`);
+    for (const url of urls)
+      if (!byOwner.get(key)?.links.has(url)) dropped.push(keyedLink(key, url));
   if (dropped.length && !prune) throw new LinkDropError(dropped);
 
   const files: LinkFile[] = [...byOwner.entries()]

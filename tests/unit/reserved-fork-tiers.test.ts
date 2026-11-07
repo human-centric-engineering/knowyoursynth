@@ -268,6 +268,7 @@ describe('reserved fork tiers', () => {
       'enum LinkProvider {',
       'enum LinkKind {',
       'model ExternalLink {',
+      'model LinkSeedRecord {',
       'enum LinkTargetKind {',
       'enum LinkSuggestionStatus {',
       'model LinkSuggestion {',

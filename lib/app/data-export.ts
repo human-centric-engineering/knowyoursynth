@@ -215,6 +215,11 @@ export function initAppSubjectSources(): void {
           'Videos and links about synths, sounds, songs and artists (`f-videos-and-links`), added by admins and the same for every user; no user foreign key, and no row is about a user of this app.',
       },
       {
+        model: 'LinkSeedRecord',
+        reason:
+          "The seed's record of which links it has applied to this database (`f-videos-and-links` t-200), so it never applies one twice; written by the seed alone, no user foreign key, and no row is about a user of this app.",
+      },
+      {
         model: 'HeldUsername',
         reason:
           'A username given up by a change, held for 30 days so nobody else takes it. It records a name with no link to who gave it up: no user foreign key, nothing to find a subject by.',

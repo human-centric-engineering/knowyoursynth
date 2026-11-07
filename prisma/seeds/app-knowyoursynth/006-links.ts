@@ -11,11 +11,12 @@ import {
 /**
  * Videos and links (`f-videos-and-links` t-199): every link in `./data/links/`, on the databank instruments, library
  * sounds, songs and artists they are about. After `001-catalogue` and `002-bank`, which write those owners. The rules
- * it keeps (checked first, create only, never overwrites an admin's edit, never deletes, reads no provider) are
- * `seedLinks`'s, in `lib/app/links/seed.ts`.
+ * it keeps (checked first, each link applied once per database through `LinkSeedRecord` (t-200), create only, never
+ * overwrites an admin's edit, never deletes, reads no provider) are `seedLinks`'s, in `lib/app/links/seed.ts`.
  *
- * The runner re-runs a unit only when its hash changes, so the hash takes in the data files, the loader, and the
- * links code that decides what a URL is stored as.
+ * The runner re-runs a unit only when its hash changes, so the hash takes in the data files, the loader, and what
+ * decides how a URL is stored and an owner is named. A re-run applies only links this database has no record of, so a
+ * deleted seeded link stays deleted however often it runs.
  */
 const here = dirname(fileURLToPath(import.meta.url));
 
