@@ -6194,6 +6194,2620 @@
           "hear": "Harsher, more like a gamelan."
         }
       ]
+    },
+    {
+      "id": "jp8-prelude-in-c",
+      "name": "Prelude in C",
+      "ref": "Bach — Prelude in C major, The Well-Tempered Clavier, Book I",
+      "artist": "Johann Sebastian Bach",
+      "tags": ["keys", "baroque", "classical", "arpeggio"],
+      "level": 2,
+      "blurb": "Bach’s famous rippling prelude, each chord broken into a figure of eight notes.",
+      "how": "The first prelude of the Well-Tempered Clavier breaks each chord into the same rippling figure, twice a bar. A soft, harpsichord-bright pluck with key follow, so the top notes ring a little shorter.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.225, 0.8],
+          [0.25, 64, 0.225, 0.8],
+          [0.5, 67, 0.225, 0.8],
+          [0.75, 72, 0.225, 0.8],
+          [1, 76, 0.225, 0.8],
+          [1.25, 67, 0.225, 0.8],
+          [1.5, 72, 0.225, 0.8],
+          [1.75, 76, 0.225, 0.8],
+          [2, 60, 0.225, 0.8],
+          [2.25, 64, 0.225, 0.8],
+          [2.5, 67, 0.225, 0.8],
+          [2.75, 72, 0.225, 0.8],
+          [3, 76, 0.225, 0.8],
+          [3.25, 67, 0.225, 0.8],
+          [3.5, 72, 0.225, 0.8],
+          [3.75, 76, 0.225, 0.8],
+          [4, 60, 0.225, 0.8],
+          [4.25, 62, 0.225, 0.8],
+          [4.5, 69, 0.225, 0.8],
+          [4.75, 74, 0.225, 0.8],
+          [5, 77, 0.225, 0.8],
+          [5.25, 69, 0.225, 0.8],
+          [5.5, 74, 0.225, 0.8],
+          [5.75, 77, 0.225, 0.8],
+          [6, 60, 0.225, 0.8],
+          [6.25, 62, 0.225, 0.8],
+          [6.5, 69, 0.225, 0.8],
+          [6.75, 74, 0.225, 0.8],
+          [7, 77, 0.225, 0.8],
+          [7.25, 69, 0.225, 0.8],
+          [7.5, 74, 0.225, 0.8],
+          [7.75, 77, 0.225, 0.8],
+          [8, 59, 0.225, 0.8],
+          [8.25, 62, 0.225, 0.8],
+          [8.5, 67, 0.225, 0.8],
+          [8.75, 74, 0.225, 0.8],
+          [9, 77, 0.225, 0.8],
+          [9.25, 67, 0.225, 0.8],
+          [9.5, 74, 0.225, 0.8],
+          [9.75, 77, 0.225, 0.8],
+          [10, 59, 0.225, 0.8],
+          [10.25, 62, 0.225, 0.8],
+          [10.5, 67, 0.225, 0.8],
+          [10.75, 74, 0.225, 0.8],
+          [11, 77, 0.225, 0.8],
+          [11.25, 67, 0.225, 0.8],
+          [11.5, 74, 0.225, 0.8],
+          [11.75, 77, 0.225, 0.8],
+          [12, 60, 0.225, 0.8],
+          [12.25, 64, 0.225, 0.8],
+          [12.5, 67, 0.225, 0.8],
+          [12.75, 72, 0.225, 0.8],
+          [13, 76, 0.225, 0.8],
+          [13.25, 67, 0.225, 0.8],
+          [13.5, 72, 0.225, 0.8],
+          [13.75, 76, 0.225, 0.8],
+          [14, 60, 0.225, 0.8],
+          [14.25, 64, 0.225, 0.8],
+          [14.5, 67, 0.225, 0.8],
+          [14.75, 72, 0.225, 0.8],
+          [15, 76, 0.225, 0.8],
+          [15.25, 67, 0.225, 0.8],
+          [15.5, 72, 0.225, 0.8],
+          [15.75, 76, 0.225, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Plucked",
+          "module": "osc",
+          "why": "A triangle and a pulse an octave up, mostly the triangle.\n- VCO-1 waveform Triangle\n- VCO-2 waveform Pulse\n- VCO-2 range 24 · +12 st\n- Source mix 3 · more VCO-1\n- Listen for: a soft, bright tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco2.wave": "pulse",
+            "vco2.range": 24,
+            "mix.balance": 3
+          }
+        },
+        {
+          "title": "Key follow",
+          "module": "filter",
+          "why": "A gentle cutoff that follows the keys, a soft pluck.\n- Filter cutoff 4.5 · 472 Hz\n- Resonance 0 · 0 %\n- Filter envelope depth 3 · 30 %\n- Filter key follow 6 · 72 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 4.5 · 220 ms\n- ENV-1 sustain 2 · 20 %\n- ENV-1 release 4 · 150 ms\n- Listen for: brighter high notes.",
+          "set": {
+            "vcf.cutoff": 4.5,
+            "vcf.res": 0,
+            "vcf.env": 3,
+            "vcf.kbd": 6,
+            "env1.attack": 0,
+            "env1.decay": 4.5,
+            "env1.sustain": 2,
+            "env1.release": 4
+          }
+        },
+        {
+          "title": "Ring",
+          "module": "amp",
+          "why": "A decay with a little sustain and key follow on the time.\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 5.5 · 480 ms\n- ENV-2 sustain 3 · 30 %\n- ENV-2 release 5 · 320 ms\n- ENV-2 key follow On\n- Listen for: Bach’s prelude rippling.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 5.5,
+            "env2.sustain": 3,
+            "env2.release": 5,
+            "env2.kf": true
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "env2.release",
+          "try": "Raise to 8",
+          "hear": "The notes ring together like a piano with the pedal down."
+        }
+      ]
+    },
+    {
+      "id": "jp8-mars-ostinato",
+      "name": "Mars in Five",
+      "ref": "Holst — The Planets, “Mars, the Bringer of War”",
+      "artist": "Gustav Holst",
+      "tags": ["seq", "classical", "orchestral", "film"],
+      "level": 2,
+      "blurb": "The relentless five-four rhythm of “Mars”, hammered on one low note.",
+      "how": "“Mars” is driven by a rhythm in five beats played on one note: three short, two long, a short one, and again. A dark, punchy brass tone in UNISON.",
+      "phrase": {
+        "bpm": 150,
+        "loop": true,
+        "steps": [
+          [0, 43, 0.35, 0.8],
+          [0.5, 43, 0.35, 0.8],
+          [1, 43, 0.85, 0.8],
+          [2, 43, 0.85, 0.8],
+          [3, 43, 0.85, 0.8],
+          [4, 43, 0.35, 0.8],
+          [4.5, 43, 0.35, 0.8],
+          [5, 43, 0.35, 0.8],
+          [5.5, 43, 0.35, 0.8],
+          [6, 43, 0.85, 0.8],
+          [7, 43, 0.85, 0.8],
+          [8, 43, 0.85, 0.8],
+          [9, 43, 0.35, 0.8],
+          [9.5, 43, 0.35, 0.8],
+          [10, 43, 0.35, 0.8],
+          [10.5, 43, 0.35, 0.8],
+          [11, 43, 0.85, 0.8],
+          [12, 43, 0.85, 0.8],
+          [13, 43, 0.85, 0.8],
+          [14, 43, 0.35, 0.8],
+          [14.5, 43, 0.35, 0.8],
+          [15, 44, 0.35, 0.8],
+          [15.5, 44, 0.35, 0.8],
+          [16, 44, 0.85, 0.8],
+          [17, 44, 0.85, 0.8],
+          [18, 44, 0.85, 0.8],
+          [19, 44, 0.35, 0.8],
+          [19.5, 44, 0.35, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Dark brass",
+          "module": "osc",
+          "why": "Two saws, detuned a little.\n- VCO-1 waveform Sawtooth\n- VCO-2 waveform Sawtooth\n- VCO-2 range 12 · 0 st\n- VCO-2 fine tune 0.6 · +6 cents\n- Source mix 5 · both\n- Listen for: a dark, brassy tone.",
+          "set": {
+            "vco1.wave": "saw",
+            "vco2.wave": "saw",
+            "vco2.range": 12,
+            "vco2.fine": 0.6,
+            "mix.balance": 5
+          }
+        },
+        {
+          "title": "Punch",
+          "module": "filter",
+          "why": "A low cutoff with a quick envelope.\n- Filter cutoff 3.5 · 239 Hz\n- Resonance 1.5 · 15 %\n- Filter envelope depth 5 · 50 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 3 · 67 ms\n- ENV-1 sustain 4 · 40 %\n- ENV-1 release 2 · 30 ms\n- Listen for: a punchy, dark front.",
+          "set": {
+            "vcf.cutoff": 3.5,
+            "vcf.res": 1.5,
+            "vcf.env": 5,
+            "vcf.kbd": 0,
+            "env1.attack": 0,
+            "env1.decay": 3,
+            "env1.sustain": 4,
+            "env1.release": 2
+          }
+        },
+        {
+          "title": "Unison",
+          "module": "mode",
+          "why": "UNISON for weight, a short release.\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 3 · 67 ms\n- ENV-2 sustain 9 · 90 %\n- ENV-2 release 2 · 30 ms\n- Assign mode UNISON\n- Listen for: the relentless rhythm of Mars.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 3,
+            "env2.sustain": 9,
+            "env2.release": 2,
+            "assign.mode": "unison"
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Raise to 6",
+          "hear": "Brighter, nearer the brass section’s climax."
+        }
+      ]
+    },
+    {
+      "id": "jp8-fusion-lead",
+      "name": "Fusion Lead",
+      "ref": "In the style of Chick Corea",
+      "artist": "Chick Corea",
+      "tags": ["lead", "jazz fusion", "fusion", "70s"],
+      "level": 3,
+      "blurb": "A fast, bright, singing jazz-fusion synth line with a bend in its voice.",
+      "how": "Jazz-fusion players ran fast, bright synth lines with a little portamento and vibrato. A square and saw, SOLO, a short glide.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.1375, 0.8],
+          [0.25, 64, 0.1375, 0.8],
+          [0.5, 65, 0.1375, 0.8],
+          [0.75, 69, 0.1375, 0.8],
+          [1, 72, 0.1375, 0.8],
+          [1.25, 69, 0.1375, 0.8],
+          [1.5, 67, 0.1375, 0.8],
+          [1.75, 65, 0.1375, 0.8],
+          [2, 64, 0.1375, 0.8],
+          [2.25, 62, 0.1375, 0.8],
+          [2.5, 61, 0.1375, 0.8],
+          [2.75, 62, 0.1375, 0.8],
+          [3, 64, 0.1375, 0.8],
+          [3.25, 67, 0.1375, 0.8],
+          [3.5, 70, 0.1375, 0.8],
+          [3.75, 69, 0.1375, 0.8],
+          [4, 65, 0.3875, 0.8],
+          [4.5, 64, 0.3875, 0.8],
+          [5, 62, 0.1375, 0.8],
+          [5.25, 57, 0.1375, 0.8],
+          [5.5, 60, 0.1375, 0.8],
+          [5.75, 62, 2.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bright",
+          "module": "osc",
+          "why": "A square and a saw an octave apart.\n- VCO-1 waveform square\n- VCO-2 waveform Sawtooth\n- VCO-2 range 24 · +12 st\n- Source mix 5 · both\n- Listen for: a bright, singing tone.",
+          "set": {
+            "vco1.wave": "square",
+            "vco2.wave": "saw",
+            "vco2.range": 24,
+            "mix.balance": 5
+          }
+        },
+        {
+          "title": "Voice",
+          "module": "lfo",
+          "why": "A middle-bright filter and a delayed vibrato.\n- Filter cutoff 6 · 1.3 kHz\n- Resonance 2 · 20 %\n- Filter envelope depth 1.5 · 15 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 4 · 150 ms\n- ENV-1 sustain 8 · 80 %\n- ENV-1 release 3 · 67 ms\n- LFO waveform Sine\n- LFO rate 5.5 · 1.98 Hz\n- LFO delay time 3 · 660 ms\n- VCO modulator LFO depth 0.4 · +0.1 st\n- VCO modulator destination BOTH\n- Listen for: a singing voice with vibrato.",
+          "set": {
+            "vcf.cutoff": 6,
+            "vcf.res": 2,
+            "vcf.env": 1.5,
+            "vcf.kbd": 0,
+            "env1.attack": 0,
+            "env1.decay": 4,
+            "env1.sustain": 8,
+            "env1.release": 3,
+            "lfo.wave": "sine",
+            "lfo.rate": 5.5,
+            "lfo.delay": 3,
+            "vcomod.lfo": 0.4,
+            "vcomod.target": "both"
+          }
+        },
+        {
+          "title": "Solo",
+          "module": "glide",
+          "why": "SOLO with a short portamento.\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 4 · 150 ms\n- ENV-2 sustain 10 · 100 %\n- ENV-2 release 3 · 67 ms\n- Assign mode SOLO\n- Portamento switch ON\n- Portamento time 1 · 30 ms\n- Listen for: a fast jazz-fusion line.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 4,
+            "env2.sustain": 10,
+            "env2.release": 3,
+            "assign.mode": "solo",
+            "glide.mode": "on",
+            "glide.time": 1
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "glide.time",
+          "try": "Raise to 3",
+          "hear": "A sloppier, bluesier slide."
+        }
+      ]
+    },
+    {
+      "id": "jp8-zawinul-pad",
+      "name": "Weather Pad",
+      "ref": "In the style of Joe Zawinul",
+      "artist": "Joe Zawinul",
+      "tags": ["pad", "jazz fusion", "fusion", "80s"],
+      "level": 2,
+      "blurb": "A warm, rich, exotic pad of stacked fourths with a gentle swell.",
+      "how": "Joe Zawinul’s synth writing loves rich, open voicings. Chords in fourths with a soft, horn-like swell.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 50, 3.9],
+          [0, 55, 3.9],
+          [0, 60, 3.9],
+          [0, 65, 3.9],
+          [4, 52, 3.9],
+          [4, 57, 3.9],
+          [4, 62, 3.9],
+          [4, 67, 3.9],
+          [8, 53, 3.9],
+          [8, 58, 3.9],
+          [8, 63, 3.9],
+          [8, 68, 3.9],
+          [12, 50, 3.9],
+          [12, 55, 3.9],
+          [12, 60, 3.9],
+          [12, 65, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Horn-like",
+          "module": "osc",
+          "why": "Two saws, detuned, mostly VCO-1.\n- VCO-1 waveform Sawtooth\n- VCO-2 waveform Sawtooth\n- VCO-2 range 12 · 0 st\n- VCO-2 fine tune 0.8 · +8 cents\n- Source mix 4 · more VCO-1\n- Listen for: a warm, full tone.",
+          "set": {
+            "vco1.wave": "saw",
+            "vco2.wave": "saw",
+            "vco2.range": 12,
+            "vco2.fine": 0.8,
+            "mix.balance": 4
+          }
+        },
+        {
+          "title": "Swell",
+          "module": "filter",
+          "why": "A lowish cutoff with a slow swell.\n- Filter cutoff 4 · 336 Hz\n- Resonance 1 · 10 %\n- Filter envelope depth 3 · 30 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 2.5 · 19 ms\n- ENV-1 decay 5 · 320 ms\n- ENV-1 sustain 7 · 70 %\n- ENV-1 release 5 · 320 ms\n- Listen for: a soft, swelling horn.",
+          "set": {
+            "vcf.cutoff": 4,
+            "vcf.res": 1,
+            "vcf.env": 3,
+            "vcf.kbd": 0,
+            "env1.attack": 2.5,
+            "env1.decay": 5,
+            "env1.sustain": 7,
+            "env1.release": 5
+          }
+        },
+        {
+          "title": "Sustain",
+          "module": "amp",
+          "why": "A gentle attack, long release.\n- ENV-2 attack 2 · 12 ms\n- ENV-2 decay 5 · 320 ms\n- ENV-2 sustain 9 · 90 %\n- ENV-2 release 5.5 · 480 ms\n- Listen for: rich, open fourths.",
+          "set": {
+            "env2.attack": 2,
+            "env2.decay": 5,
+            "env2.sustain": 9,
+            "env2.release": 5.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcf.env",
+          "try": "Raise to 6",
+          "hear": "A brighter, more brass-like swell."
+        }
+      ]
+    },
+    {
+      "id": "jp8-lyle-mays",
+      "name": "Open Sky Lead",
+      "ref": "In the style of Lyle Mays",
+      "artist": "Lyle Mays",
+      "tags": ["lead", "jazz", "fusion", "80s"],
+      "level": 2,
+      "blurb": "A soft, flute-like, wide-open synth melody over a pastoral groove.",
+      "how": "Lyle Mays played soft, singing synth melodies on Pat Metheny Group records. A triangle with a breath of noise is not available here, so a soft triangle and sine with vibrato.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 67, 1.475, 0.8],
+          [1.5, 69, 0.475, 0.8],
+          [2, 71, 0.975, 0.8],
+          [3, 74, 1.975, 0.8],
+          [5, 72, 0.475, 0.8],
+          [5.5, 71, 0.475, 0.8],
+          [6, 69, 1.475, 0.8],
+          [7.5, 67, 0.475, 0.8],
+          [8, 64, 1.475, 0.8],
+          [9.5, 67, 0.475, 0.8],
+          [10, 69, 0.975, 0.8],
+          [11, 71, 4.975, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Soft",
+          "module": "osc",
+          "why": "A triangle and a sine an octave up.\n- VCO-1 waveform Triangle\n- VCO-2 waveform Sine\n- VCO-2 range 24 · +12 st\n- Source mix 4 · more VCO-1\n- Listen for: a soft, flute-like tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco2.wave": "sine",
+            "vco2.range": 24,
+            "mix.balance": 4
+          }
+        },
+        {
+          "title": "Breath",
+          "module": "lfo",
+          "why": "A gentle filter and a slow vibrato.\n- Filter cutoff 5.5 · 933 Hz\n- Resonance 1 · 10 %\n- Filter envelope depth 1 · 10 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 0.5 · 2 ms\n- ENV-1 decay 4 · 150 ms\n- ENV-1 sustain 8 · 80 %\n- ENV-1 release 4 · 150 ms\n- LFO waveform Sine\n- LFO rate 5 · 1.41 Hz\n- LFO delay time 3 · 660 ms\n- VCO modulator LFO depth 0.4 · +0.1 st\n- VCO modulator destination BOTH\n- Listen for: a breathing, singing tone.",
+          "set": {
+            "vcf.cutoff": 5.5,
+            "vcf.res": 1,
+            "vcf.env": 1,
+            "vcf.kbd": 0,
+            "env1.attack": 0.5,
+            "env1.decay": 4,
+            "env1.sustain": 8,
+            "env1.release": 4,
+            "lfo.wave": "sine",
+            "lfo.rate": 5,
+            "lfo.delay": 3,
+            "vcomod.lfo": 0.35,
+            "vcomod.target": "both"
+          }
+        },
+        {
+          "title": "Solo",
+          "module": "glide",
+          "why": "SOLO with a little glide.\n- ENV-2 attack 0.5 · 2 ms\n- ENV-2 decay 5 · 320 ms\n- ENV-2 sustain 10 · 100 %\n- ENV-2 release 4 · 150 ms\n- Assign mode SOLO\n- Portamento switch ON\n- Portamento time 1.5 · 68 ms\n- Listen for: a soft, open-sky melody.",
+          "set": {
+            "env2.attack": 0.5,
+            "env2.decay": 5,
+            "env2.sustain": 10,
+            "env2.release": 4,
+            "assign.mode": "solo",
+            "glide.mode": "on",
+            "glide.time": 1.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco2.range",
+          "try": "Set to 31",
+          "hear": "A twelfth up: a more organ-like flute."
+        }
+      ]
+    },
+    {
+      "id": "jp8-rockit-stab",
+      "name": "Rockit Stab",
+      "ref": "In the style of Herbie Hancock — “Rockit”",
+      "artist": "Herbie Hancock",
+      "tags": ["keys", "electro", "hip hop", "80s"],
+      "level": 2,
+      "blurb": "A punchy, robotic, syncopated electro stab riff.",
+      "how": "“Rockit” paired turntable scratching with punchy, robotic synth stabs. Square and saw, a quick blat, syncopated minor stabs.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.15],
+          [0, 67, 0.15],
+          [0, 71, 0.15],
+          [0.75, 64, 0.15],
+          [0.75, 67, 0.15],
+          [0.75, 71, 0.15],
+          [1.5, 67, 0.15],
+          [1.5, 71, 0.15],
+          [1.5, 74, 0.15],
+          [2.5, 64, 0.15],
+          [2.5, 67, 0.15],
+          [2.5, 71, 0.15],
+          [3.25, 69, 0.15],
+          [3.25, 73, 0.15],
+          [3.25, 76, 0.15],
+          [4, 64, 0.15],
+          [4, 67, 0.15],
+          [4, 71, 0.15],
+          [4.75, 64, 0.15],
+          [4.75, 67, 0.15],
+          [4.75, 71, 0.15],
+          [5.5, 67, 0.15],
+          [5.5, 71, 0.15],
+          [5.5, 74, 0.15],
+          [6.5, 62, 0.15],
+          [6.5, 66, 0.15],
+          [6.5, 69, 0.15],
+          [7.25, 71, 0.15],
+          [7.25, 75, 0.15],
+          [7.25, 78, 0.15]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Punchy",
+          "module": "osc",
+          "why": "A square and a saw, blended.\n- VCO-1 waveform square\n- VCO-2 waveform Sawtooth\n- VCO-2 range 12 · 0 st\n- Source mix 5 · both\n- Listen for: a punchy tone.",
+          "set": {
+            "vco1.wave": "square",
+            "vco2.wave": "saw",
+            "vco2.range": 12,
+            "mix.balance": 5
+          }
+        },
+        {
+          "title": "Blat",
+          "module": "filter",
+          "why": "A middle cutoff, a quick envelope.\n- Filter cutoff 5 · 663 Hz\n- Resonance 2 · 20 %\n- Filter envelope depth 4.5 · 45 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 3 · 67 ms\n- ENV-1 sustain 2 · 20 %\n- ENV-1 release 2 · 30 ms\n- Listen for: a quick robotic blat.",
+          "set": {
+            "vcf.cutoff": 5,
+            "vcf.res": 2,
+            "vcf.env": 4.5,
+            "vcf.kbd": 0,
+            "env1.attack": 0,
+            "env1.decay": 3,
+            "env1.sustain": 2,
+            "env1.release": 2
+          }
+        },
+        {
+          "title": "Stab",
+          "module": "amp",
+          "why": "A short decay, short release.\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 3.5 · 100 ms\n- ENV-2 sustain 3 · 30 %\n- ENV-2 release 2 · 30 ms\n- Listen for: robotic electro stabs.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 3.5,
+            "env2.sustain": 3,
+            "env2.release": 2
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcf.res",
+          "try": "Raise to 6",
+          "hear": "A more vocal, talk-box-like stab."
+        }
+      ]
+    },
+    {
+      "id": "jp8-george-duke",
+      "name": "Funk Synth Solo",
+      "ref": "In the style of George Duke",
+      "artist": "George Duke",
+      "tags": ["lead", "funk", "jazz funk", "70s"],
+      "level": 3,
+      "blurb": "A fat, bending, funky synth solo with a vocal filter.",
+      "how": "George Duke played fat, funky synth solos full of slides. A detuned saw lead with resonance and portamento.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.4875, 0.8],
+          [0.5, 60, 0.2375, 0.8],
+          [0.75, 62, 0.4875, 0.8],
+          [1.25, 63, 0.2375, 0.8],
+          [1.5, 64, 0.4875, 0.8],
+          [2, 67, 0.4875, 0.8],
+          [2.5, 64, 0.2375, 0.8],
+          [2.75, 62, 0.2375, 0.8],
+          [3, 60, 0.2375, 0.8],
+          [3.25, 57, 0.7375, 0.8],
+          [4, 57, 0.4875, 0.8],
+          [4.5, 60, 0.2375, 0.8],
+          [4.75, 62, 0.4875, 0.8],
+          [5.25, 64, 0.2375, 0.8],
+          [5.5, 67, 0.4875, 0.8],
+          [6, 69, 0.7375, 0.8],
+          [6.75, 67, 0.2375, 0.8],
+          [7, 64, 0.4875, 0.8],
+          [7.5, 62, 0.4875, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Fat",
+          "module": "osc",
+          "why": "Two saws, detuned.\n- VCO-1 waveform Sawtooth\n- VCO-2 waveform Sawtooth\n- VCO-2 range 12 · 0 st\n- VCO-2 fine tune 0.8 · +8 cents\n- Source mix 5 · both\n- Listen for: a fat, buzzy tone.",
+          "set": {
+            "vco1.wave": "saw",
+            "vco2.wave": "saw",
+            "vco2.range": 12,
+            "vco2.fine": 0.8,
+            "mix.balance": 5
+          }
+        },
+        {
+          "title": "Vocal",
+          "module": "filter",
+          "why": "A middle cutoff, resonance and a medium envelope.\n- Filter cutoff 4.5 · 472 Hz\n- Resonance 4.5 · 45 %\n- Filter envelope depth 3 · 30 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 4 · 150 ms\n- ENV-1 sustain 5 · 50 %\n- ENV-1 release 3 · 67 ms\n- Listen for: a vocal, singing filter.",
+          "set": {
+            "vcf.cutoff": 4.5,
+            "vcf.res": 4.5,
+            "vcf.env": 3,
+            "vcf.kbd": 0,
+            "env1.attack": 0,
+            "env1.decay": 4,
+            "env1.sustain": 5,
+            "env1.release": 3
+          }
+        },
+        {
+          "title": "Solo",
+          "module": "glide",
+          "why": "SOLO with portamento.\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 4 · 150 ms\n- ENV-2 sustain 10 · 100 %\n- ENV-2 release 3 · 67 ms\n- Assign mode SOLO\n- Portamento switch ON\n- Portamento time 1.5 · 68 ms\n- Listen for: a fat, funky, sliding solo.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 4,
+            "env2.sustain": 10,
+            "env2.release": 3,
+            "assign.mode": "solo",
+            "glide.mode": "on",
+            "glide.time": 1.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcf.res",
+          "try": "Raise to 7",
+          "hear": "A wilder, more talking lead."
+        }
+      ]
+    },
+    {
+      "id": "jp8-rpg-town",
+      "name": "Village Theme",
+      "ref": "In the style of 16-bit role-playing game music",
+      "artist": "Video game music",
+      "tags": ["keys", "game", "chiptune", "90s"],
+      "level": 1,
+      "blurb": "A gentle, cheerful village melody with plucked chords.",
+      "how": "Sixteen-bit RPG town themes are gentle and cheerful, with plucked, harp-like keys. A soft pluck melody over simple chords.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 48, 3],
+          [0, 52, 3],
+          [0, 55, 3],
+          [0, 76, 0.9],
+          [1, 79, 0.9],
+          [2, 84, 1.4],
+          [3.5, 83, 0.45],
+          [4, 53, 3],
+          [4, 57, 3],
+          [4, 60, 3],
+          [4, 81, 0.9],
+          [5, 84, 0.9],
+          [6, 81, 1.9],
+          [8, 55, 3],
+          [8, 59, 3],
+          [8, 62, 3],
+          [8, 79, 0.9],
+          [9, 77, 0.9],
+          [10, 74, 1.9],
+          [12, 48, 3],
+          [12, 52, 3],
+          [12, 55, 3],
+          [12, 76, 0.9],
+          [13, 74, 0.9],
+          [14, 72, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Pluck",
+          "module": "osc",
+          "why": "A triangle and a pulse an octave up.\n- VCO-1 waveform Triangle\n- VCO-2 waveform Pulse\n- VCO-2 range 24 · +12 st\n- Source mix 3 · more VCO-1\n- Listen for: a soft, bright pluck.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco2.wave": "pulse",
+            "vco2.range": 24,
+            "mix.balance": 3
+          }
+        },
+        {
+          "title": "Bright",
+          "module": "filter",
+          "why": "A middle-bright filter with key follow.\n- Filter cutoff 5.5 · 933 Hz\n- Resonance 0 · 0 %\n- Filter envelope depth 2 · 20 %\n- Filter key follow 4 · 48 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 4 · 150 ms\n- ENV-1 sustain 3 · 30 %\n- ENV-1 release 3 · 67 ms\n- Listen for: a bright, harp-like top.",
+          "set": {
+            "vcf.cutoff": 5.5,
+            "vcf.res": 0,
+            "vcf.env": 2,
+            "vcf.kbd": 4,
+            "env1.attack": 0,
+            "env1.decay": 4,
+            "env1.sustain": 3,
+            "env1.release": 3
+          }
+        },
+        {
+          "title": "Ring",
+          "module": "amp",
+          "why": "A medium decay, a little sustain.\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 5 · 320 ms\n- ENV-2 sustain 2 · 20 %\n- ENV-2 release 4 · 150 ms\n- Listen for: a cheerful village theme.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 5,
+            "env2.sustain": 2,
+            "env2.release": 4
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco1.wave",
+          "try": "Switch to square",
+          "hear": "Chippier, more like an 8-bit console."
+        }
+      ]
+    },
+    {
+      "id": "jp8-news-fanfare",
+      "name": "Newsroom Fanfare",
+      "ref": "In the style of 1980s TV news themes",
+      "artist": "TV themes",
+      "tags": ["brass", "tv", "fanfare", "80s"],
+      "level": 1,
+      "blurb": "A bright, urgent, pulsing brass fanfare for the top of the hour.",
+      "how": "Eighties news themes paired urgent pulses with bright brass. Driving eighths and a big chord on top.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.3],
+          [0, 66, 0.3],
+          [0, 69, 0.3],
+          [0.5, 62, 0.3],
+          [0.5, 66, 0.3],
+          [0.5, 69, 0.3],
+          [1, 62, 0.3],
+          [1, 66, 0.3],
+          [1, 69, 0.3],
+          [1.5, 62, 0.3],
+          [1.5, 66, 0.3],
+          [1.5, 69, 0.3],
+          [2, 62, 0.3],
+          [2, 66, 0.3],
+          [2, 69, 0.3],
+          [2.5, 62, 0.3],
+          [2.5, 66, 0.3],
+          [2.5, 69, 0.3],
+          [3, 62, 0.3],
+          [3, 66, 0.3],
+          [3, 69, 0.3],
+          [3.5, 62, 0.3],
+          [3.5, 66, 0.3],
+          [3.5, 69, 0.3],
+          [4, 70, 0.3],
+          [4, 74, 0.3],
+          [4, 77, 0.3],
+          [4.5, 70, 0.3],
+          [4.5, 74, 0.3],
+          [4.5, 77, 0.3],
+          [5, 70, 0.3],
+          [5, 74, 0.3],
+          [5, 77, 0.3],
+          [5.5, 70, 0.3],
+          [5.5, 74, 0.3],
+          [5.5, 77, 0.3],
+          [6, 70, 0.3],
+          [6, 74, 0.3],
+          [6, 77, 0.3],
+          [6.5, 70, 0.3],
+          [6.5, 74, 0.3],
+          [6.5, 77, 0.3],
+          [7, 70, 0.3],
+          [7, 74, 0.3],
+          [7, 77, 0.3],
+          [7.5, 70, 0.3],
+          [7.5, 74, 0.3],
+          [7.5, 77, 0.3],
+          [8, 60, 0.3],
+          [8, 64, 0.3],
+          [8, 67, 0.3],
+          [8.5, 60, 0.3],
+          [8.5, 64, 0.3],
+          [8.5, 67, 0.3],
+          [9, 60, 0.3],
+          [9, 64, 0.3],
+          [9, 67, 0.3],
+          [9.5, 60, 0.3],
+          [9.5, 64, 0.3],
+          [9.5, 67, 0.3],
+          [10, 60, 0.3],
+          [10, 64, 0.3],
+          [10, 67, 0.3],
+          [10.5, 60, 0.3],
+          [10.5, 64, 0.3],
+          [10.5, 67, 0.3],
+          [11, 60, 0.3],
+          [11, 64, 0.3],
+          [11, 67, 0.3],
+          [11.5, 60, 0.3],
+          [11.5, 64, 0.3],
+          [11.5, 67, 0.3],
+          [12, 62, 3.8],
+          [12, 66, 3.8],
+          [12, 69, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bright brass",
+          "module": "osc",
+          "why": "Two saws, VCO-2 an octave up.\n- VCO-1 waveform Sawtooth\n- VCO-2 waveform Sawtooth\n- VCO-2 range 24 · +12 st\n- VCO-2 fine tune 0.6 · +6 cents\n- Source mix 5 · both\n- Listen for: a bright brassy stack.",
+          "set": {
+            "vco1.wave": "saw",
+            "vco2.wave": "saw",
+            "vco2.range": 24,
+            "vco2.fine": 0.6,
+            "mix.balance": 5
+          }
+        },
+        {
+          "title": "Urgent",
+          "module": "filter",
+          "why": "A bright cutoff, a quick blat.\n- Filter cutoff 6 · 1.3 kHz\n- Resonance 1 · 10 %\n- Filter envelope depth 3.5 · 35 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 3 · 67 ms\n- ENV-1 sustain 6 · 60 %\n- ENV-1 release 3 · 67 ms\n- Listen for: an urgent, bright blat.",
+          "set": {
+            "vcf.cutoff": 6,
+            "vcf.res": 1,
+            "vcf.env": 3.5,
+            "vcf.kbd": 0,
+            "env1.attack": 0,
+            "env1.decay": 3,
+            "env1.sustain": 6,
+            "env1.release": 3
+          }
+        },
+        {
+          "title": "Pulse",
+          "module": "amp",
+          "why": "Full sustain, short release.\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 4 · 150 ms\n- ENV-2 sustain 10 · 100 %\n- ENV-2 release 3 · 67 ms\n- Listen for: an urgent news fanfare.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 4,
+            "env2.sustain": 10,
+            "env2.release": 3
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Drop to 4",
+          "hear": "A softer, late-night bulletin."
+        }
+      ]
+    },
+    {
+      "id": "jp8-twin-peaks-pad",
+      "name": "Falling Pad",
+      "ref": "In the style of Angelo Badalamenti",
+      "artist": "Angelo Badalamenti",
+      "tags": ["pad", "tv", "dream pop", "90s"],
+      "level": 2,
+      "blurb": "A dreamy, melancholy, slow pad full of yearning.",
+      "how": "Badalamenti’s TV themes float slow, dreamy, melancholy chords. A soft, warm stack with a slow swell and a gentle vibrato.",
+      "phrase": {
+        "bpm": 64,
+        "loop": true,
+        "steps": [
+          [0, 53, 3.9],
+          [0, 57, 3.9],
+          [0, 60, 3.9],
+          [4, 50, 3.9],
+          [4, 53, 3.9],
+          [4, 57, 3.9],
+          [8, 58, 3.9],
+          [8, 62, 3.9],
+          [8, 65, 3.9],
+          [12, 48, 3.9],
+          [12, 52, 3.9],
+          [12, 55, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Warm",
+          "module": "osc",
+          "why": "Two saws, detuned, mostly VCO-1.\n- VCO-1 waveform Sawtooth\n- VCO-2 waveform Sawtooth\n- VCO-2 range 12 · 0 st\n- VCO-2 fine tune 0.8 · +8 cents\n- Source mix 4 · more VCO-1\n- Listen for: a warm tone.",
+          "set": {
+            "vco1.wave": "saw",
+            "vco2.wave": "saw",
+            "vco2.range": 12,
+            "vco2.fine": 0.8,
+            "mix.balance": 4
+          }
+        },
+        {
+          "title": "Dreamy",
+          "module": "filter",
+          "why": "A soft cutoff and a slow vibrato.\n- Filter cutoff 4.5 · 472 Hz\n- Resonance 1 · 10 %\n- Filter envelope depth 1 · 10 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 3 · 29 ms\n- ENV-1 decay 5 · 320 ms\n- ENV-1 sustain 8 · 80 %\n- ENV-1 release 6 · 700 ms\n- LFO waveform Sine\n- LFO rate 4.5 · 1.01 Hz\n- LFO delay time 4 · 1.0 s\n- VCO modulator LFO depth 0.3 · 0 st\n- VCO modulator destination BOTH\n- Listen for: a soft, dreamy tone.",
+          "set": {
+            "vcf.cutoff": 4.5,
+            "vcf.res": 1,
+            "vcf.env": 1,
+            "vcf.kbd": 0,
+            "env1.attack": 3,
+            "env1.decay": 5,
+            "env1.sustain": 8,
+            "env1.release": 6,
+            "lfo.wave": "sine",
+            "lfo.rate": 4.5,
+            "lfo.delay": 4,
+            "vcomod.lfo": 0.25,
+            "vcomod.target": "both"
+          }
+        },
+        {
+          "title": "Yearning",
+          "module": "amp",
+          "why": "A slow attack and a long release.\n- ENV-2 attack 4 · 70 ms\n- ENV-2 decay 5 · 320 ms\n- ENV-2 sustain 9 · 90 %\n- ENV-2 release 7 · 1.3 s\n- Listen for: a slow, yearning pad.",
+          "set": {
+            "env2.attack": 4,
+            "env2.decay": 5,
+            "env2.sustain": 9,
+            "env2.release": 7
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcomod.lfo",
+          "try": "Raise to 0.8",
+          "hear": "A woozier, dream-sequence wobble."
+        }
+      ]
+    },
+    {
+      "id": "jp8-upside-down-pad",
+      "name": "Upside-Down Pad",
+      "ref": "In the style of Kyle Dixon & Michael Stein",
+      "artist": "Kyle Dixon & Michael Stein",
+      "tags": ["pad", "tv", "synthwave", "10s"],
+      "level": 2,
+      "blurb": "A dark, slowly swelling, sinister pad under a small-town mystery.",
+      "how": "The Stranger Things score swells dark, slow pads under its arpeggios. A dark saw pad with a slow filter swell.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 48, 7.9],
+          [0, 52, 7.9],
+          [0, 55, 7.9],
+          [0, 59, 7.9],
+          [8, 52, 7.9],
+          [8, 55, 7.9],
+          [8, 59, 7.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Dark saws",
+          "module": "osc",
+          "why": "Two saws, detuned.\n- VCO-1 waveform Sawtooth\n- VCO-2 waveform Sawtooth\n- VCO-2 range 12 · 0 st\n- VCO-2 fine tune 1 · +10 cents\n- Source mix 5 · both\n- Listen for: a thick saw stack.",
+          "set": {
+            "vco1.wave": "saw",
+            "vco2.wave": "saw",
+            "vco2.range": 12,
+            "vco2.fine": 1,
+            "mix.balance": 5
+          }
+        },
+        {
+          "title": "Swell",
+          "module": "filter",
+          "why": "A low cutoff with a slow filter swell and resonance.\n- Filter cutoff 3 · 170 Hz\n- Resonance 3 · 30 %\n- Filter envelope depth 4 · 40 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 6 · 350 ms\n- ENV-1 decay 6 · 700 ms\n- ENV-1 sustain 6 · 60 %\n- ENV-1 release 6 · 700 ms\n- Listen for: a dark tone that swells.",
+          "set": {
+            "vcf.cutoff": 3,
+            "vcf.res": 3,
+            "vcf.env": 4,
+            "vcf.kbd": 0,
+            "env1.attack": 6,
+            "env1.decay": 6,
+            "env1.sustain": 6,
+            "env1.release": 6
+          }
+        },
+        {
+          "title": "Sinister",
+          "module": "amp",
+          "why": "A slow attack and long release.\n- ENV-2 attack 4 · 70 ms\n- ENV-2 decay 5 · 320 ms\n- ENV-2 sustain 9 · 90 %\n- ENV-2 release 7 · 1.3 s\n- Listen for: a sinister, swelling pad.",
+          "set": {
+            "env2.attack": 4,
+            "env2.decay": 5,
+            "env2.sustain": 9,
+            "env2.release": 7
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcf.res",
+          "try": "Raise to 7",
+          "hear": "A singing, eerier swell."
+        }
+      ]
+    },
+    {
+      "id": "jp8-fog-pad",
+      "name": "Fog Bank",
+      "ref": "In the style of John Carpenter",
+      "artist": "John Carpenter",
+      "tags": ["pad", "horror", "film", "80s"],
+      "level": 2,
+      "blurb": "A cold, low, creeping pad that rolls in like fog.",
+      "how": "Carpenter’s horror scores are cold and minimal. A low, held fifth swelling slowly, with a slow pitch drift.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 38, 7.9],
+          [0, 45, 7.9],
+          [8, 39, 7.9],
+          [8, 46, 7.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Cold",
+          "module": "osc",
+          "why": "A pulse and a saw an octave up.\n- VCO-1 waveform Pulse\n- Pulse width 2 · 20 %\n- VCO-2 waveform Sawtooth\n- VCO-2 range 24 · +12 st\n- Source mix 4 · more VCO-1\n- Listen for: a cold, hollow tone.",
+          "set": {
+            "vco1.wave": "pulse",
+            "pwm.amount": 2,
+            "vco2.wave": "saw",
+            "vco2.range": 24,
+            "mix.balance": 4
+          }
+        },
+        {
+          "title": "Creep",
+          "module": "filter",
+          "why": "A low cutoff, a slow swell and a slow random drift.\n- Filter cutoff 3 · 170 Hz\n- Resonance 2 · 20 %\n- Filter envelope depth 3 · 30 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 7 · 700 ms\n- ENV-1 decay 6 · 700 ms\n- ENV-1 sustain 7 · 70 %\n- ENV-1 release 6 · 700 ms\n- LFO waveform random\n- LFO rate 2.5 · 0.27 Hz\n- Filter LFO depth 1.5 · 15 %\n- Listen for: a slowly creeping tone.",
+          "set": {
+            "vcf.cutoff": 3,
+            "vcf.res": 2,
+            "vcf.env": 3,
+            "vcf.kbd": 0,
+            "env1.attack": 7,
+            "env1.decay": 6,
+            "env1.sustain": 7,
+            "env1.release": 6,
+            "lfo.wave": "random",
+            "lfo.rate": 2.5,
+            "vcf.lfo": 1.5
+          }
+        },
+        {
+          "title": "Roll in",
+          "module": "amp",
+          "why": "A slow attack, long release.\n- ENV-2 attack 6 · 350 ms\n- ENV-2 decay 6 · 700 ms\n- ENV-2 sustain 10 · 100 %\n- ENV-2 release 7 · 1.3 s\n- Listen for: a cold fog rolling in.",
+          "set": {
+            "env2.attack": 6,
+            "env2.decay": 6,
+            "env2.sustain": 10,
+            "env2.release": 7
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcf.lfo",
+          "try": "Raise to 4",
+          "hear": "A more unsettled, flickering fog."
+        }
+      ]
+    },
+    {
+      "id": "jp8-organ-cathedral",
+      "name": "Cosmic Organ",
+      "ref": "In the style of Hans Zimmer — Interstellar",
+      "artist": "Hans Zimmer",
+      "tags": ["keys", "film", "organ", "10s"],
+      "level": 2,
+      "blurb": "A vast, slow, pipe-organ-like chord that fills a cathedral.",
+      "how": "The Interstellar score is built on a pipe organ. Two squares a fifth and octave apart give an organ’s stacked pipes; no filter movement, a slow attack.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.9],
+          [0, 60, 3.9],
+          [0, 64, 3.9],
+          [4, 43, 3.9],
+          [4, 57, 3.9],
+          [4, 60, 3.9],
+          [4, 64, 3.9],
+          [8, 53, 3.9],
+          [8, 57, 3.9],
+          [8, 60, 3.9],
+          [12, 52, 3.9],
+          [12, 56, 3.9],
+          [12, 59, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Pipes",
+          "module": "osc",
+          "why": "A square on VCO-1, a square-ish pulse on VCO-2 an octave and a fifth up.\n- VCO-1 waveform square\n- VCO-2 waveform Pulse\n- VCO-2 range 31 · +19 st\n- Source mix 4 · more VCO-1\n- Listen for: a stacked, pipe-organ tone.",
+          "set": {
+            "vco1.wave": "square",
+            "vco2.wave": "pulse",
+            "vco2.range": 31,
+            "mix.balance": 4
+          }
+        },
+        {
+          "title": "Steady",
+          "module": "filter",
+          "why": "The filter fairly open, no envelope.\n- Filter cutoff 6.5 · 1.8 kHz\n- Resonance 0 · 0 %\n- Filter envelope depth 0 · 0 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 4 · 150 ms\n- ENV-1 sustain 10 · 100 %\n- ENV-1 release 4 · 150 ms\n- Listen for: a steady, bright tone.",
+          "set": {
+            "vcf.cutoff": 6.5,
+            "vcf.res": 0,
+            "vcf.env": 0,
+            "vcf.kbd": 0,
+            "env1.attack": 0,
+            "env1.decay": 4,
+            "env1.sustain": 10,
+            "env1.release": 4
+          }
+        },
+        {
+          "title": "Cathedral",
+          "module": "amp",
+          "why": "A slow attack and a long release.\n- ENV-2 attack 4 · 70 ms\n- ENV-2 decay 5 · 320 ms\n- ENV-2 sustain 10 · 100 %\n- ENV-2 release 7 · 1.3 s\n- Listen for: a vast organ chord.",
+          "set": {
+            "env2.attack": 4,
+            "env2.decay": 5,
+            "env2.sustain": 10,
+            "env2.release": 7
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco2.range",
+          "try": "Set to 24",
+          "hear": "A plainer octave stop."
+        }
+      ]
+    },
+    {
+      "id": "jp8-drive-pad",
+      "name": "Night City Pad",
+      "ref": "In the style of Cliff Martinez",
+      "artist": "Cliff Martinez",
+      "tags": ["pad", "film", "ambient", "10s"],
+      "level": 2,
+      "blurb": "A cool, shimmering, slowly pulsing pad for a night drive through a city.",
+      "how": "Cliff Martinez’s film scores shimmer with cool, slowly moving pads. A soft stack with a slow tremolo.",
+      "phrase": {
+        "bpm": 86,
+        "loop": true,
+        "steps": [
+          [0, 57, 7.9],
+          [0, 60, 7.9],
+          [0, 64, 7.9],
+          [0, 67, 7.9],
+          [0, 71, 7.9],
+          [8, 53, 7.9],
+          [8, 57, 7.9],
+          [8, 60, 7.9],
+          [8, 64, 7.9],
+          [8, 67, 7.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Cool",
+          "module": "osc",
+          "why": "A triangle and a saw an octave up.\n- VCO-1 waveform Triangle\n- VCO-2 waveform Sawtooth\n- VCO-2 range 24 · +12 st\n- Source mix 4 · more VCO-1\n- Listen for: a cool, soft tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco2.wave": "saw",
+            "vco2.range": 24,
+            "mix.balance": 4
+          }
+        },
+        {
+          "title": "Shimmer",
+          "module": "amp",
+          "why": "A soft cutoff; TREMOLO at 1 on a slow LFO.\n- Filter cutoff 5 · 663 Hz\n- Resonance 1 · 10 %\n- Filter envelope depth 1 · 10 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 3 · 29 ms\n- ENV-1 decay 5 · 320 ms\n- ENV-1 sustain 8 · 80 %\n- ENV-1 release 5 · 320 ms\n- Tremolo depth 1\n- LFO waveform Sine\n- LFO rate 3.5 · 0.52 Hz\n- Listen for: a slow shimmer.",
+          "set": {
+            "vcf.cutoff": 5,
+            "vcf.res": 1,
+            "vcf.env": 1,
+            "vcf.kbd": 0,
+            "env1.attack": 3,
+            "env1.decay": 5,
+            "env1.sustain": 8,
+            "env1.release": 5,
+            "vca.lfo": 1,
+            "lfo.wave": "sine",
+            "lfo.rate": 3.5
+          }
+        },
+        {
+          "title": "Slow",
+          "module": "amp",
+          "why": "A slow attack and long release.\n- ENV-2 attack 4 · 70 ms\n- ENV-2 decay 5 · 320 ms\n- ENV-2 sustain 9 · 90 %\n- ENV-2 release 6.5 · 970 ms\n- Listen for: a cool night-city pad.",
+          "set": {
+            "env2.attack": 4,
+            "env2.decay": 5,
+            "env2.sustain": 9,
+            "env2.release": 6.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vca.lfo",
+          "try": "Set to 3",
+          "hear": "A strong, pulsing tremolo."
+        }
+      ]
+    },
+    {
+      "id": "jp8-gamelan",
+      "name": "Bronze Gamelan",
+      "ref": "In the style of Balinese gamelan",
+      "artist": "Gamelan",
+      "tags": ["perc", "gamelan", "indonesian", "traditional"],
+      "level": 2,
+      "blurb": "Shimmering, interlocking bronze tones with a beating, metallic ring.",
+      "how": "Balinese gamelan pairs instruments tuned slightly apart so they shimmer. Cross mod gives the bronze ring; VCO-2 detuned adds the beating.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.1375, 0.8],
+          [0.25, 65, 0.1375, 0.8],
+          [0.75, 71, 0.1375, 0.8],
+          [1, 72, 0.1375, 0.8],
+          [1.5, 76, 0.1375, 0.8],
+          [2, 72, 0.1375, 0.8],
+          [2.25, 71, 0.1375, 0.8],
+          [2.75, 65, 0.1375, 0.8],
+          [3, 64, 0.1375, 0.8],
+          [3.75, 65, 0.1375, 0.8],
+          [4, 64, 0.1375, 0.8],
+          [4.25, 65, 0.1375, 0.8],
+          [4.75, 71, 0.1375, 0.8],
+          [5, 72, 0.1375, 0.8],
+          [5.5, 77, 0.1375, 0.8],
+          [6, 76, 0.1375, 0.8],
+          [6.25, 72, 0.1375, 0.8],
+          [6.75, 71, 0.1375, 0.8],
+          [7, 65, 0.1375, 0.8],
+          [7.5, 64, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bronze",
+          "module": "osc",
+          "why": "A triangle with CROSS MOD from a sine a ninth up.\n- VCO-1 waveform Triangle\n- VCO-2 waveform Sine\n- VCO-2 range 26 · +14 st\n- VCO-2 fine tune 0.6 · +6 cents\n- Cross mod 2.5 · 25 %\n- Source mix 0 · more VCO-1\n- Listen for: a metallic bronze ring.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco2.wave": "sine",
+            "vco2.range": 26,
+            "vco2.fine": 0.6,
+            "vco1.xmod": 2.5,
+            "mix.balance": 0
+          }
+        },
+        {
+          "title": "Open",
+          "module": "filter",
+          "why": "The filter open with key follow.\n- Filter cutoff 7.5 · 3.6 kHz\n- Resonance 0 · 0 %\n- Filter envelope depth 0 · 0 %\n- Filter key follow 3 · 36 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 4 · 150 ms\n- ENV-1 sustain 5 · 50 %\n- ENV-1 release 3 · 67 ms\n- Listen for: a bright, ringing tone.",
+          "set": {
+            "vcf.cutoff": 7.5,
+            "vcf.res": 0,
+            "vcf.env": 0,
+            "vcf.kbd": 3,
+            "env1.attack": 0,
+            "env1.decay": 4,
+            "env1.sustain": 5,
+            "env1.release": 3
+          }
+        },
+        {
+          "title": "Strike",
+          "module": "amp",
+          "why": "A medium decay with no sustain.\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 5 · 320 ms\n- ENV-2 sustain 0 · 0 %\n- ENV-2 release 5 · 320 ms\n- Listen for: shimmering bronze gamelan.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 5,
+            "env2.sustain": 0,
+            "env2.release": 5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco1.xmod",
+          "try": "Raise to 5",
+          "hear": "A harsher, gong-like clang."
+        }
+      ]
+    },
+    {
+      "id": "jp8-koto",
+      "name": "Koto Pluck",
+      "ref": "In the style of Japanese koto music",
+      "artist": "Japanese traditional music",
+      "tags": ["pluck", "japanese", "traditional"],
+      "level": 2,
+      "blurb": "A plucked, twangy koto melody in a Japanese scale.",
+      "how": "The koto is a long zither with a twangy pluck. A narrow pulse with a resonant filter snap and key follow, in the in scale.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.1375, 0.8],
+          [0.5, 65, 0.1375, 0.8],
+          [1, 69, 0.1375, 0.8],
+          [1.5, 71, 0.1375, 0.8],
+          [1.75, 72, 0.1375, 0.8],
+          [2.25, 71, 0.1375, 0.8],
+          [2.5, 69, 0.1375, 0.8],
+          [3, 65, 0.1375, 0.8],
+          [3.5, 64, 0.1375, 0.8],
+          [4, 64, 0.1375, 0.8],
+          [4.5, 65, 0.1375, 0.8],
+          [5, 69, 0.1375, 0.8],
+          [5.5, 71, 0.1375, 0.8],
+          [5.75, 76, 0.1375, 0.8],
+          [6.25, 72, 0.1375, 0.8],
+          [6.5, 71, 0.1375, 0.8],
+          [7, 69, 0.1375, 0.8],
+          [7.25, 65, 0.1375, 0.8],
+          [7.5, 64, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Twang",
+          "module": "osc",
+          "why": "A narrow pulse on VCO-1.\n- VCO-1 waveform Pulse\n- Pulse width 6 · 60 %\n- Source mix 0 · more VCO-1\n- Listen for: a thin, twangy tone.",
+          "set": {
+            "vco1.wave": "pulse",
+            "pwm.amount": 6,
+            "mix.balance": 0
+          }
+        },
+        {
+          "title": "Snap",
+          "module": "filter",
+          "why": "A middle cutoff, resonance and a fast envelope with key follow.\n- Filter cutoff 4 · 336 Hz\n- Resonance 4 · 40 %\n- Filter envelope depth 4.5 · 45 %\n- Filter key follow 5 · 60 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 3 · 67 ms\n- ENV-1 sustain 1 · 10 %\n- ENV-1 release 3 · 67 ms\n- Listen for: a twangy snap.",
+          "set": {
+            "vcf.cutoff": 4,
+            "vcf.res": 4,
+            "vcf.env": 4.5,
+            "vcf.kbd": 5,
+            "env1.attack": 0,
+            "env1.decay": 3,
+            "env1.sustain": 1,
+            "env1.release": 3
+          }
+        },
+        {
+          "title": "Ring",
+          "module": "amp",
+          "why": "A medium decay, no sustain.\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 5 · 320 ms\n- ENV-2 sustain 0 · 0 %\n- ENV-2 release 4.5 · 220 ms\n- Listen for: a plucked koto melody.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 5,
+            "env2.sustain": 0,
+            "env2.release": 4.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "glide.mode",
+          "try": "Switch ON",
+          "hear": "Each note slides like a pressed string."
+        }
+      ]
+    },
+    {
+      "id": "jp8-steelpan",
+      "name": "Steelpan",
+      "ref": "In the style of Trinidadian steelpan",
+      "artist": "Steelpan",
+      "tags": ["perc", "calypso", "caribbean"],
+      "level": 2,
+      "blurb": "A bright, singing, metallic pan melody.",
+      "how": "A steelpan note has a bright attack and a metallic ring an octave and a bit above. A soft cross mod from a sine two octaves up gives it.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.1375, 0.8],
+          [0.5, 76, 0.1375, 0.8],
+          [0.75, 79, 0.1375, 0.8],
+          [1.25, 76, 0.1375, 0.8],
+          [1.75, 79, 0.1375, 0.8],
+          [2, 81, 0.1375, 0.8],
+          [2.5, 79, 0.1375, 0.8],
+          [3, 76, 0.1375, 0.8],
+          [3.5, 72, 0.1375, 0.8],
+          [4, 74, 0.1375, 0.8],
+          [4.5, 77, 0.1375, 0.8],
+          [4.75, 81, 0.1375, 0.8],
+          [5.25, 77, 0.1375, 0.8],
+          [5.75, 81, 0.1375, 0.8],
+          [6, 83, 0.1375, 0.8],
+          [6.5, 81, 0.1375, 0.8],
+          [7, 79, 0.1375, 0.8],
+          [7.75, 79, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Metal",
+          "module": "osc",
+          "why": "A triangle with a little CROSS MOD from a sine two octaves up.\n- VCO-1 waveform Triangle\n- VCO-2 waveform Sine\n- VCO-2 range 36 · +24 st\n- Cross mod 1.5 · 15 %\n- Source mix 0 · more VCO-1\n- Listen for: a metallic, ringing tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco2.wave": "sine",
+            "vco2.range": 36,
+            "vco1.xmod": 1.5,
+            "mix.balance": 0
+          }
+        },
+        {
+          "title": "Bright",
+          "module": "filter",
+          "why": "The filter open.\n- Filter cutoff 8 · 5.1 kHz\n- Resonance 0 · 0 %\n- Filter envelope depth 0 · 0 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 4 · 150 ms\n- ENV-1 sustain 5 · 50 %\n- ENV-1 release 3 · 67 ms\n- Listen for: a bright tone.",
+          "set": {
+            "vcf.cutoff": 8,
+            "vcf.res": 0,
+            "vcf.env": 0,
+            "vcf.kbd": 0,
+            "env1.attack": 0,
+            "env1.decay": 4,
+            "env1.sustain": 5,
+            "env1.release": 3
+          }
+        },
+        {
+          "title": "Ring",
+          "module": "amp",
+          "why": "A medium decay, no sustain.\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 4.5 · 220 ms\n- ENV-2 sustain 0 · 0 %\n- ENV-2 release 4 · 150 ms\n- Listen for: a singing steelpan melody.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 4.5,
+            "env2.sustain": 0,
+            "env2.release": 4
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco1.xmod",
+          "try": "Raise to 3",
+          "hear": "A more clangy pan."
+        }
+      ]
+    },
+    {
+      "id": "jp8-marimba",
+      "name": "Marimba",
+      "ref": "In the style of marimba music",
+      "artist": "Marimba",
+      "tags": ["perc", "marimba", "world"],
+      "level": 1,
+      "blurb": "A warm, woody, round marimba pattern.",
+      "how": "A marimba is a warm wooden bar: a round tone with a quick knock and a short ring.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.1375, 0.8],
+          [0.25, 67, 0.1375, 0.8],
+          [0.5, 76, 0.1375, 0.8],
+          [0.75, 67, 0.1375, 0.8],
+          [1, 60, 0.1375, 0.8],
+          [1.25, 67, 0.1375, 0.8],
+          [1.5, 76, 0.1375, 0.8],
+          [1.75, 67, 0.1375, 0.8],
+          [2, 57, 0.1375, 0.8],
+          [2.25, 64, 0.1375, 0.8],
+          [2.5, 72, 0.1375, 0.8],
+          [2.75, 64, 0.1375, 0.8],
+          [3, 57, 0.1375, 0.8],
+          [3.25, 64, 0.1375, 0.8],
+          [3.5, 72, 0.1375, 0.8],
+          [3.75, 64, 0.1375, 0.8],
+          [4, 53, 0.1375, 0.8],
+          [4.25, 60, 0.1375, 0.8],
+          [4.5, 69, 0.1375, 0.8],
+          [4.75, 60, 0.1375, 0.8],
+          [5, 53, 0.1375, 0.8],
+          [5.25, 60, 0.1375, 0.8],
+          [5.5, 69, 0.1375, 0.8],
+          [5.75, 60, 0.1375, 0.8],
+          [6, 55, 0.1375, 0.8],
+          [6.25, 62, 0.1375, 0.8],
+          [6.5, 71, 0.1375, 0.8],
+          [6.75, 62, 0.1375, 0.8],
+          [7, 55, 0.1375, 0.8],
+          [7.25, 62, 0.1375, 0.8],
+          [7.5, 71, 0.1375, 0.8],
+          [7.75, 62, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Wood",
+          "module": "osc",
+          "why": "A triangle on VCO-1.\n- VCO-1 waveform Triangle\n- Source mix 0 · more VCO-1\n- Listen for: a round, soft tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "mix.balance": 0
+          }
+        },
+        {
+          "title": "Knock",
+          "module": "filter",
+          "why": "A middle cutoff with a fast envelope and key follow.\n- Filter cutoff 4.5 · 472 Hz\n- Resonance 1 · 10 %\n- Filter envelope depth 4 · 40 %\n- Filter key follow 5 · 60 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 2 · 30 ms\n- ENV-1 sustain 0 · 0 %\n- ENV-1 release 2 · 30 ms\n- Listen for: a woody knock.",
+          "set": {
+            "vcf.cutoff": 4.5,
+            "vcf.res": 1,
+            "vcf.env": 4,
+            "vcf.kbd": 5,
+            "env1.attack": 0,
+            "env1.decay": 2,
+            "env1.sustain": 0,
+            "env1.release": 2
+          }
+        },
+        {
+          "title": "Short ring",
+          "module": "amp",
+          "why": "A short decay, no sustain.\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 4 · 150 ms\n- ENV-2 sustain 0 · 0 %\n- ENV-2 release 3.5 · 100 ms\n- Listen for: a warm marimba pattern.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 4,
+            "env2.sustain": 0,
+            "env2.release": 3.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "env2.decay",
+          "try": "Raise to 7",
+          "hear": "A longer, vibraphone-like ring."
+        }
+      ]
+    },
+    {
+      "id": "jp8-vibes",
+      "name": "Motor Vibes",
+      "ref": "In the style of jazz vibraphone",
+      "artist": "Jazz",
+      "tags": ["perc", "jazz", "vibraphone"],
+      "level": 2,
+      "blurb": "A soft, ringing vibraphone with its motor tremolo spinning.",
+      "how": "A vibraphone rings long, and its motor spins fans that make the tremolo. A soft bell tone with TREMOLO.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 65, 0.1375, 0.8],
+          [0.5, 69, 0.1375, 0.8],
+          [0.75, 72, 0.1375, 0.8],
+          [1.25, 76, 0.1375, 0.8],
+          [1.75, 74, 0.1375, 0.8],
+          [2, 72, 0.1375, 0.8],
+          [2.5, 69, 0.1375, 0.8],
+          [3, 67, 0.1375, 0.8],
+          [3.5, 65, 0.1375, 0.8],
+          [4, 64, 0.1375, 0.8],
+          [4.5, 67, 0.1375, 0.8],
+          [4.75, 70, 0.1375, 0.8],
+          [5.25, 74, 0.1375, 0.8],
+          [5.75, 72, 0.1375, 0.8],
+          [6, 70, 0.1375, 0.8],
+          [6.5, 67, 0.1375, 0.8],
+          [7, 65, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bell",
+          "module": "osc",
+          "why": "A triangle with a touch of CROSS MOD from a sine two octaves up.\n- VCO-1 waveform Triangle\n- VCO-2 waveform Sine\n- VCO-2 range 36 · +24 st\n- Cross mod 0.8 · 8 %\n- Source mix 0 · more VCO-1\n- Listen for: a soft bell tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco2.wave": "sine",
+            "vco2.range": 36,
+            "vco1.xmod": 0.8,
+            "mix.balance": 0
+          }
+        },
+        {
+          "title": "Motor",
+          "module": "amp",
+          "why": "TREMOLO at 2 on a medium LFO; the filter open.\n- Filter cutoff 7 · 2.6 kHz\n- Resonance 0 · 0 %\n- Filter envelope depth 0 · 0 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 4 · 150 ms\n- ENV-1 sustain 5 · 50 %\n- ENV-1 release 4 · 150 ms\n- Tremolo depth 2\n- LFO waveform Sine\n- LFO rate 5.5 · 1.98 Hz\n- Listen for: a spinning tremolo.",
+          "set": {
+            "vcf.cutoff": 7,
+            "vcf.res": 0,
+            "vcf.env": 0,
+            "vcf.kbd": 0,
+            "env1.attack": 0,
+            "env1.decay": 4,
+            "env1.sustain": 5,
+            "env1.release": 4,
+            "vca.lfo": 2,
+            "lfo.wave": "sine",
+            "lfo.rate": 5.5
+          }
+        },
+        {
+          "title": "Ring",
+          "module": "amp",
+          "why": "A long decay with no sustain.\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 6.5 · 970 ms\n- ENV-2 sustain 0 · 0 %\n- ENV-2 release 6 · 700 ms\n- Listen for: a ringing jazz vibraphone.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 6.5,
+            "env2.sustain": 0,
+            "env2.release": 6
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vca.lfo",
+          "try": "Set to 0",
+          "hear": "The motor off: a still, pure ring."
+        }
+      ]
+    },
+    {
+      "id": "jp8-harpsichord",
+      "name": "Harpsichord",
+      "ref": "In the style of Baroque harpsichord",
+      "artist": "Baroque",
+      "tags": ["keys", "baroque", "classical", "harpsichord"],
+      "level": 2,
+      "blurb": "A bright, jangling, plucked harpsichord.",
+      "how": "A harpsichord plucks its strings with quills: bright, jangly and quick to fade. Two narrow pulses an octave apart, a fast decay and key follow.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.1375, 0.8],
+          [0.25, 65, 0.1375, 0.8],
+          [0.5, 69, 0.1375, 0.8],
+          [0.75, 74, 0.1375, 0.8],
+          [1, 72, 0.1375, 0.8],
+          [1.25, 69, 0.1375, 0.8],
+          [1.5, 65, 0.1375, 0.8],
+          [1.75, 69, 0.1375, 0.8],
+          [2, 58, 0.1375, 0.8],
+          [2.25, 62, 0.1375, 0.8],
+          [2.5, 65, 0.1375, 0.8],
+          [2.75, 70, 0.1375, 0.8],
+          [3, 69, 0.1375, 0.8],
+          [3.25, 65, 0.1375, 0.8],
+          [3.5, 62, 0.1375, 0.8],
+          [3.75, 65, 0.1375, 0.8],
+          [4, 55, 0.1375, 0.8],
+          [4.25, 58, 0.1375, 0.8],
+          [4.5, 62, 0.1375, 0.8],
+          [4.75, 67, 0.1375, 0.8],
+          [5, 65, 0.1375, 0.8],
+          [5.25, 62, 0.1375, 0.8],
+          [5.5, 58, 0.1375, 0.8],
+          [5.75, 62, 0.1375, 0.8],
+          [6, 57, 0.1375, 0.8],
+          [6.25, 61, 0.1375, 0.8],
+          [6.5, 64, 0.1375, 0.8],
+          [6.75, 69, 0.1375, 0.8],
+          [7, 67, 0.1375, 0.8],
+          [7.25, 64, 0.1375, 0.8],
+          [7.5, 61, 0.1375, 0.8],
+          [7.75, 57, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Jangle",
+          "module": "osc",
+          "why": "Narrow pulses on both VCOs an octave apart.\n- VCO-1 waveform Pulse\n- Pulse width 7 · 70 %\n- VCO-2 waveform Pulse\n- VCO-2 range 24 · +12 st\n- Source mix 5 · both\n- Listen for: a bright, jangly tone.",
+          "set": {
+            "vco1.wave": "pulse",
+            "pwm.amount": 7,
+            "vco2.wave": "pulse",
+            "vco2.range": 24,
+            "mix.balance": 5
+          }
+        },
+        {
+          "title": "Quill",
+          "module": "filter",
+          "why": "A bright cutoff with key follow and a quick envelope.\n- Filter cutoff 6 · 1.3 kHz\n- Resonance 1 · 10 %\n- Filter envelope depth 3 · 30 %\n- Filter key follow 6 · 72 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 3 · 67 ms\n- ENV-1 sustain 2 · 20 %\n- ENV-1 release 3 · 67 ms\n- Listen for: a bright pluck.",
+          "set": {
+            "vcf.cutoff": 6,
+            "vcf.res": 1,
+            "vcf.env": 3,
+            "vcf.kbd": 6,
+            "env1.attack": 0,
+            "env1.decay": 3,
+            "env1.sustain": 2,
+            "env1.release": 3
+          }
+        },
+        {
+          "title": "Fade",
+          "module": "amp",
+          "why": "A medium decay with no sustain and envelope key follow.\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 5 · 320 ms\n- ENV-2 sustain 0 · 0 %\n- ENV-2 release 4 · 150 ms\n- ENV-2 key follow On\n- Listen for: a jangling harpsichord.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 5,
+            "env2.sustain": 0,
+            "env2.release": 4,
+            "env2.kf": true
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco2.range",
+          "try": "Set to 12",
+          "hear": "A darker, eight-foot-only harpsichord."
+        }
+      ]
+    },
+    {
+      "id": "jp8-flute",
+      "name": "Breathy Flute",
+      "ref": "In the style of synthesized flutes",
+      "artist": "Wind instruments",
+      "tags": ["wind", "flute"],
+      "level": 2,
+      "blurb": "A soft, breathy flute with a gentle vibrato.",
+      "how": "A flute is a soft, pure tone with breath and vibrato. A triangle with a breath of noise from VCO-2 and a delayed vibrato.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 69, 1.475, 0.8],
+          [1.5, 71, 0.475, 0.8],
+          [2, 72, 0.975, 0.8],
+          [3, 76, 0.975, 0.8],
+          [4, 74, 0.975, 0.8],
+          [5, 72, 0.975, 0.8],
+          [6, 71, 1.975, 0.8],
+          [8, 69, 1.475, 0.8],
+          [9.5, 67, 0.475, 0.8],
+          [10, 69, 0.975, 0.8],
+          [11, 72, 0.975, 0.8],
+          [12, 71, 1.975, 0.8],
+          [14, 69, 1.975, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Pure and breathy",
+          "module": "osc",
+          "why": "A triangle on VCO-1, noise on VCO-2, mostly the triangle.\n- VCO-1 waveform Triangle\n- VCO-2 waveform noise\n- Source mix 2 · more VCO-1\n- Listen for: a soft tone with breath.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco2.wave": "noise",
+            "mix.balance": 2
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "lfo",
+          "why": "A gentle cutoff, a slow attack and a delayed vibrato.\n- Filter cutoff 5.5 · 933 Hz\n- Resonance 0 · 0 %\n- Filter envelope depth 1 · 10 %\n- Filter key follow 3 · 36 %\n- ENV-1 attack 1 · 3 ms\n- ENV-1 decay 4 · 150 ms\n- ENV-1 sustain 8 · 80 %\n- ENV-1 release 3 · 67 ms\n- LFO waveform Sine\n- LFO rate 5.5 · 1.98 Hz\n- LFO delay time 3 · 660 ms\n- VCO modulator LFO depth 0.3 · 0 st\n- VCO modulator destination BOTH\n- Listen for: a breathing, singing flute.",
+          "set": {
+            "vcf.cutoff": 5.5,
+            "vcf.res": 0,
+            "vcf.env": 1,
+            "vcf.kbd": 3,
+            "env1.attack": 1,
+            "env1.decay": 4,
+            "env1.sustain": 8,
+            "env1.release": 3,
+            "lfo.wave": "sine",
+            "lfo.rate": 5.5,
+            "lfo.delay": 3,
+            "vcomod.lfo": 0.3,
+            "vcomod.target": "both"
+          }
+        },
+        {
+          "title": "Solo",
+          "module": "mode",
+          "why": "SOLO, a soft attack.\n- ENV-2 attack 1 · 3 ms\n- ENV-2 decay 4 · 150 ms\n- ENV-2 sustain 10 · 100 %\n- ENV-2 release 3 · 67 ms\n- Assign mode SOLO\n- Listen for: a breathy flute melody.",
+          "set": {
+            "env2.attack": 1,
+            "env2.decay": 4,
+            "env2.sustain": 10,
+            "env2.release": 3,
+            "assign.mode": "solo"
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "mix.balance",
+          "try": "Raise to 4",
+          "hear": "More breath, more like a shakuhachi."
+        }
+      ]
+    },
+    {
+      "id": "jp8-oboe",
+      "name": "Oboe",
+      "ref": "In the style of orchestral oboe solos",
+      "artist": "Orchestral",
+      "tags": ["wind", "oboe", "classical"],
+      "level": 2,
+      "blurb": "A nasal, reedy, singing oboe melody.",
+      "how": "The oboe is nasal and reedy. A narrow pulse through a resonant, gentle 12 dB filter gives the honk.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 64, 1.475, 0.8],
+          [1.5, 66, 0.475, 0.8],
+          [2, 67, 0.975, 0.8],
+          [3, 69, 0.975, 0.8],
+          [4, 71, 1.975, 0.8],
+          [6, 69, 0.475, 0.8],
+          [6.5, 67, 0.475, 0.8],
+          [7, 66, 0.975, 0.8],
+          [8, 64, 1.475, 0.8],
+          [9.5, 62, 0.475, 0.8],
+          [10, 64, 0.975, 0.8],
+          [11, 67, 0.975, 0.8],
+          [12, 66, 3.975, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Reed",
+          "module": "osc",
+          "why": "A narrow pulse on VCO-1.\n- VCO-1 waveform Pulse\n- Pulse width 6.5 · 65 %\n- Source mix 0 · more VCO-1\n- Listen for: a thin, nasal tone.",
+          "set": {
+            "vco1.wave": "pulse",
+            "pwm.amount": 6.5,
+            "mix.balance": 0
+          }
+        },
+        {
+          "title": "Honk",
+          "module": "filter",
+          "why": "A 12 dB filter with resonance, a gentle vibrato.\n- Filter cutoff 5 · 663 Hz\n- Resonance 4 · 40 %\n- Filter envelope depth 1 · 10 %\n- Filter key follow 4 · 48 %\n- Filter slope -12dB/OCT\n- ENV-1 attack 0.5 · 2 ms\n- ENV-1 decay 4 · 150 ms\n- ENV-1 sustain 8 · 80 %\n- ENV-1 release 3 · 67 ms\n- LFO waveform Sine\n- LFO rate 5.5 · 1.98 Hz\n- LFO delay time 2.5 · 500 ms\n- VCO modulator LFO depth 0.3 · 0 st\n- VCO modulator destination BOTH\n- Listen for: a nasal, honking reed.",
+          "set": {
+            "vcf.cutoff": 5,
+            "vcf.res": 4,
+            "vcf.env": 1,
+            "vcf.kbd": 4,
+            "vcf.slope": "12",
+            "env1.attack": 0.5,
+            "env1.decay": 4,
+            "env1.sustain": 8,
+            "env1.release": 3,
+            "lfo.wave": "sine",
+            "lfo.rate": 5.5,
+            "lfo.delay": 2.5,
+            "vcomod.lfo": 0.25,
+            "vcomod.target": "both"
+          }
+        },
+        {
+          "title": "Solo",
+          "module": "mode",
+          "why": "SOLO, a soft attack.\n- ENV-2 attack 0.8 · 3 ms\n- ENV-2 decay 4 · 150 ms\n- ENV-2 sustain 10 · 100 %\n- ENV-2 release 3 · 67 ms\n- Assign mode SOLO\n- Listen for: a singing oboe line.",
+          "set": {
+            "env2.attack": 0.8,
+            "env2.decay": 4,
+            "env2.sustain": 10,
+            "env2.release": 3,
+            "assign.mode": "solo"
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "pwm.amount",
+          "try": "Drop to 3",
+          "hear": "Rounder, more like a clarinet."
+        }
+      ]
+    },
+    {
+      "id": "jp8-cello",
+      "name": "Solo Cello",
+      "ref": "In the style of solo cello",
+      "artist": "Classical",
+      "tags": ["strings", "cello", "classical"],
+      "level": 2,
+      "blurb": "A rich, bowed cello line with a slow bow attack and vibrato.",
+      "how": "A cello bows slowly into each note and sings with vibrato. A saw, a slow attack, a woody filter and a delayed vibrato.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 43, 1.985, 0.8],
+          [2, 50, 1.985, 0.8],
+          [4, 47, 1.485, 0.8],
+          [5.5, 45, 0.485, 0.8],
+          [6, 47, 1.985, 0.8],
+          [8, 48, 1.985, 0.8],
+          [10, 52, 0.985, 0.8],
+          [11, 50, 0.985, 0.8],
+          [12, 47, 3.985, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bowed",
+          "module": "osc",
+          "why": "Two saws, detuned a little.\n- VCO-1 waveform Sawtooth\n- VCO-2 waveform Sawtooth\n- VCO-2 range 12 · 0 st\n- VCO-2 fine tune 0.4 · +4 cents\n- Source mix 5 · both\n- Listen for: a rich, bowed tone.",
+          "set": {
+            "vco1.wave": "saw",
+            "vco2.wave": "saw",
+            "vco2.range": 12,
+            "vco2.fine": 0.4,
+            "mix.balance": 5
+          }
+        },
+        {
+          "title": "Woody",
+          "module": "filter",
+          "why": "A warm cutoff and a delayed vibrato.\n- Filter cutoff 4.5 · 472 Hz\n- Resonance 1 · 10 %\n- Filter envelope depth 1 · 10 %\n- Filter key follow 3 · 36 %\n- ENV-1 attack 1 · 3 ms\n- ENV-1 decay 4 · 150 ms\n- ENV-1 sustain 8 · 80 %\n- ENV-1 release 4 · 150 ms\n- LFO waveform Sine\n- LFO rate 5 · 1.41 Hz\n- LFO delay time 3 · 660 ms\n- VCO modulator LFO depth 0.4 · +0.1 st\n- VCO modulator destination BOTH\n- Listen for: a woody, singing tone.",
+          "set": {
+            "vcf.cutoff": 4.5,
+            "vcf.res": 1,
+            "vcf.env": 1,
+            "vcf.kbd": 3,
+            "env1.attack": 1,
+            "env1.decay": 4,
+            "env1.sustain": 8,
+            "env1.release": 4,
+            "lfo.wave": "sine",
+            "lfo.rate": 5,
+            "lfo.delay": 3,
+            "vcomod.lfo": 0.35,
+            "vcomod.target": "both"
+          }
+        },
+        {
+          "title": "Bow",
+          "module": "mode",
+          "why": "SOLO with a slow attack.\n- ENV-2 attack 2 · 12 ms\n- ENV-2 decay 4 · 150 ms\n- ENV-2 sustain 10 · 100 %\n- ENV-2 release 4 · 150 ms\n- Assign mode SOLO\n- Portamento switch ON\n- Portamento time 0.8 · 19 ms\n- Listen for: a rich solo cello line.",
+          "set": {
+            "env2.attack": 2,
+            "env2.decay": 4,
+            "env2.sustain": 10,
+            "env2.release": 4,
+            "assign.mode": "solo",
+            "glide.mode": "on",
+            "glide.time": 0.8
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "env2.attack",
+          "try": "Drop to 0",
+          "hear": "A plucked, pizzicato cello."
+        }
+      ]
+    },
+    {
+      "id": "jp8-ooh-choir",
+      "name": "Ooh Choir",
+      "ref": "In the style of choir pads",
+      "artist": "Choir",
+      "tags": ["pad", "choir"],
+      "level": 2,
+      "blurb": "A soft, rounded “ooh” choir.",
+      "how": "An “ooh” vowel is darker than “ahh”. A soft pulse through a low, resonant 12 dB filter with a gentle vibrato.",
+      "phrase": {
+        "bpm": 64,
+        "loop": true,
+        "steps": [
+          [0, 48, 3.9],
+          [0, 52, 3.9],
+          [0, 55, 3.9],
+          [4, 47, 3.9],
+          [4, 55, 3.9],
+          [4, 59, 3.9],
+          [4, 62, 3.9],
+          [8, 57, 3.9],
+          [8, 60, 3.9],
+          [8, 64, 3.9],
+          [12, 53, 3.9],
+          [12, 57, 3.9],
+          [12, 60, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Soft",
+          "module": "osc",
+          "why": "A pulse and a saw, detuned.\n- VCO-1 waveform Pulse\n- Pulse width 1 · 10 %\n- VCO-2 waveform Sawtooth\n- VCO-2 range 12 · 0 st\n- VCO-2 fine tune 1.2 · +12 cents\n- Source mix 4 · more VCO-1\n- Listen for: a soft, beating tone.",
+          "set": {
+            "vco1.wave": "pulse",
+            "pwm.amount": 1,
+            "vco2.wave": "saw",
+            "vco2.range": 12,
+            "vco2.fine": 1.2,
+            "mix.balance": 4
+          }
+        },
+        {
+          "title": "Ooh",
+          "module": "filter",
+          "why": "A low 12 dB cutoff with resonance.\n- High-pass cutoff 2 · 73 Hz\n- Filter cutoff 3.5 · 239 Hz\n- Resonance 4.5 · 45 %\n- Filter envelope depth 0.5 · 5 %\n- Filter key follow 0 · 0 %\n- Filter slope -12dB/OCT\n- ENV-1 attack 4 · 70 ms\n- ENV-1 decay 5 · 320 ms\n- ENV-1 sustain 8 · 80 %\n- ENV-1 release 6 · 700 ms\n- LFO waveform Sine\n- LFO rate 5 · 1.41 Hz\n- LFO delay time 3 · 660 ms\n- VCO modulator LFO depth 0.2 · 0 st\n- VCO modulator destination BOTH\n- Listen for: a dark “ooh” vowel.",
+          "set": {
+            "hpf.cutoff": 2,
+            "vcf.cutoff": 3.5,
+            "vcf.res": 4.5,
+            "vcf.env": 0.5,
+            "vcf.kbd": 0,
+            "vcf.slope": "12",
+            "env1.attack": 4,
+            "env1.decay": 5,
+            "env1.sustain": 8,
+            "env1.release": 6,
+            "lfo.wave": "sine",
+            "lfo.rate": 5,
+            "lfo.delay": 3,
+            "vcomod.lfo": 0.2,
+            "vcomod.target": "both"
+          }
+        },
+        {
+          "title": "Breath",
+          "module": "amp",
+          "why": "A slow attack, long release.\n- ENV-2 attack 4.5 · 100 ms\n- ENV-2 decay 5 · 320 ms\n- ENV-2 sustain 9 · 90 %\n- ENV-2 release 6.5 · 970 ms\n- Listen for: a soft “ooh” choir.",
+          "set": {
+            "env2.attack": 4.5,
+            "env2.decay": 5,
+            "env2.sustain": 9,
+            "env2.release": 6.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Raise to 5",
+          "hear": "Opens towards an “ahh”."
+        }
+      ]
+    },
+    {
+      "id": "jp8-thunder",
+      "name": "Thunder",
+      "ref": "In the style of storm sound effects",
+      "artist": "Sound effects",
+      "tags": ["fx", "nature", "storm"],
+      "level": 2,
+      "blurb": "A low, rumbling thunder roll that crackles and fades.",
+      "how": "Noise through a low filter shaken by the RANDOM LFO crackles and rumbles. A slow decay lets it roll away.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 48, 7.9]]
+      },
+      "steps": [
+        {
+          "title": "Noise",
+          "module": "osc",
+          "why": "VCO-2 on noise, all VCO-2.\n- VCO-2 waveform noise\n- Source mix 10 · more VCO-2\n- Listen for: a hiss.",
+          "set": {
+            "vco2.wave": "noise",
+            "mix.balance": 10
+          }
+        },
+        {
+          "title": "Rumble",
+          "module": "lfo",
+          "why": "A low cutoff shaken by the RANDOM LFO.\n- Filter cutoff 3.5 · 239 Hz\n- Resonance 3 · 30 %\n- Filter envelope depth 4 · 40 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 7 · 1.3 s\n- ENV-1 sustain 5 · 50 %\n- ENV-1 release 7 · 1.3 s\n- LFO waveform random\n- LFO rate 6 · 2.76 Hz\n- Filter LFO depth 4 · 40 %\n- Listen for: a crackling rumble.",
+          "set": {
+            "vcf.cutoff": 3.5,
+            "vcf.res": 3,
+            "vcf.env": 4,
+            "vcf.kbd": 0,
+            "env1.attack": 0,
+            "env1.decay": 7,
+            "env1.sustain": 5,
+            "env1.release": 7,
+            "lfo.wave": "random",
+            "lfo.rate": 6,
+            "vcf.lfo": 4
+          }
+        },
+        {
+          "title": "Roll away",
+          "module": "amp",
+          "why": "A long decay to a held rumble, the VCA and VOLUME up.\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 8 · 2.6 s\n- ENV-2 sustain 5 · 50 %\n- ENV-2 release 8 · 2.6 s\n- VCA level 10 · 100 %\n- VOLUME 10 · 100 %\n- Listen for: a thunder roll that crackles on.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 8,
+            "env2.sustain": 5,
+            "env2.release": 8,
+            "vca.level": 10,
+            "out.volume": 10
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Raise to 5",
+          "hear": "A closer, sharper crack."
+        }
+      ]
+    },
+    {
+      "id": "jp8-ufo",
+      "name": "Flying Saucer",
+      "ref": "In the style of 1950s science-fiction films",
+      "artist": "Science-fiction films",
+      "tags": ["fx", "sci-fi", "film", "50s"],
+      "level": 2,
+      "blurb": "A wobbling, warbling saucer hovering overhead.",
+      "how": "A fast sine LFO on the pitch with cross mod gives a warbling, eerie saucer.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 69, 7.9]]
+      },
+      "steps": [
+        {
+          "title": "Warble",
+          "module": "osc",
+          "why": "A triangle with CROSS MOD from a sine, VCO-2 low.\n- VCO-1 waveform Triangle\n- VCO-2 waveform Sine\n- VCO-2 range 5 · -7 st\n- Cross mod 2 · 20 %\n- Source mix 0 · more VCO-1\n- Listen for: a warbling tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco2.wave": "sine",
+            "vco2.range": 5,
+            "vco1.xmod": 2,
+            "mix.balance": 0
+          }
+        },
+        {
+          "title": "Wobble",
+          "module": "lfo",
+          "why": "A fast sine LFO on both VCOs.\n- Filter cutoff 7 · 2.6 kHz\n- Resonance 2 · 20 %\n- Filter envelope depth 0 · 0 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 4 · 150 ms\n- ENV-1 sustain 10 · 100 %\n- ENV-1 release 4 · 150 ms\n- LFO waveform Sine\n- LFO rate 6 · 2.76 Hz\n- VCO modulator LFO depth 1.2 · +0.7 st\n- VCO modulator destination BOTH\n- Listen for: an eerie wobble.",
+          "set": {
+            "vcf.cutoff": 7,
+            "vcf.res": 2,
+            "vcf.env": 0,
+            "vcf.kbd": 0,
+            "env1.attack": 0,
+            "env1.decay": 4,
+            "env1.sustain": 10,
+            "env1.release": 4,
+            "lfo.wave": "sine",
+            "lfo.rate": 6,
+            "vcomod.lfo": 1.2,
+            "vcomod.target": "both"
+          }
+        },
+        {
+          "title": "Hover",
+          "module": "amp",
+          "why": "A slow attack, full sustain, long release.\n- ENV-2 attack 3 · 29 ms\n- ENV-2 decay 4 · 150 ms\n- ENV-2 sustain 10 · 100 %\n- ENV-2 release 6 · 700 ms\n- Listen for: a saucer hovering overhead.",
+          "set": {
+            "env2.attack": 3,
+            "env2.decay": 4,
+            "env2.sustain": 10,
+            "env2.release": 6
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Drop to 4",
+          "hear": "A slower, landing saucer."
+        }
+      ]
+    },
+    {
+      "id": "jp8-simmons-toms",
+      "name": "Electronic Toms",
+      "ref": "In the style of 1980s electronic drum kits",
+      "artist": "Electronic drums",
+      "tags": ["perc", "electronic", "drums", "80s"],
+      "level": 2,
+      "blurb": "A big pitch-dropping electronic tom, then a tumbling fill back to it.",
+      "how": "Eighties electronic toms drop in pitch as they decay. ENV-1 on the VCO modulator pushes the pitch up at the start and lets it fall; noise adds the stick.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.1375, 1],
+          [5, 60, 0.1375, 0.8],
+          [5.5, 57, 0.1375, 0.8],
+          [6, 53, 0.1375, 0.8],
+          [6.5, 50, 0.1375, 0.8],
+          [7, 48, 0.1375, 0.8],
+          [7.25, 45, 0.1375, 0.8],
+          [7.5, 41, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Pitch drop",
+          "module": "osc",
+          "why": "A triangle, with ENV-1 on the VCO modulator.\n- VCO-1 waveform Triangle\n- VCO-2 waveform noise\n- Source mix 2 · more VCO-1\n- VCO modulator ENV-1 depth 2.5 · +3.8 st\n- VCO modulator destination VCO-1\n- Listen for: a tone that drops.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco2.wave": "noise",
+            "mix.balance": 2,
+            "vcomod.env": 2.5,
+            "vcomod.target": "vco1"
+          }
+        },
+        {
+          "title": "Thump",
+          "module": "filter",
+          "why": "A middle cutoff, a fast envelope with no sustain.\n- Filter cutoff 5 · 663 Hz\n- Resonance 1 · 10 %\n- Filter envelope depth 3 · 30 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 3.5 · 100 ms\n- ENV-1 sustain 0 · 0 %\n- ENV-1 release 3 · 67 ms\n- Listen for: a thumping hit.",
+          "set": {
+            "vcf.cutoff": 5,
+            "vcf.res": 1,
+            "vcf.env": 3,
+            "vcf.kbd": 0,
+            "env1.attack": 0,
+            "env1.decay": 3.5,
+            "env1.sustain": 0,
+            "env1.release": 3
+          }
+        },
+        {
+          "title": "Decay",
+          "module": "amp",
+          "why": "A medium decay, no sustain, the VCA and VOLUME up.\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 4.5 · 220 ms\n- ENV-2 sustain 0 · 0 %\n- ENV-2 release 4 · 150 ms\n- VCA level 10 · 100 %\n- VOLUME 9 · 90 %\n- Listen for: a big hit, then a tumbling fill back to it.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 4.5,
+            "env2.sustain": 0,
+            "env2.release": 4,
+            "vca.level": 10,
+            "out.volume": 9
+          }
+        }
+      ],
+      "context": {
+        "vcomod.env": "The pitch drop is the electronic tom."
+      },
+      "tweaks": [
+        {
+          "id": "vcomod.env",
+          "try": "Raise to 5",
+          "hear": "A bigger, laser-like drop."
+        }
+      ]
+    },
+    {
+      "id": "jp8-singing-bowl-drone",
+      "name": "Bowl Drone",
+      "ref": "In the style of Himalayan singing bowls",
+      "artist": "Singing bowls",
+      "tags": ["drone", "meditation", "ambient"],
+      "level": 2,
+      "blurb": "Two struck bowls ringing together, beating slowly.",
+      "how": "Two bowls a little out of tune beat against each other. Cross mod for the metal, VCO-2 detuned, and the longest release.",
+      "phrase": {
+        "bpm": 40,
+        "loop": true,
+        "steps": [
+          [0, 62, 3.9],
+          [4, 57, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Metal",
+          "module": "osc",
+          "why": "A triangle with CROSS MOD from a sine an octave and a little up.\n- VCO-1 waveform Triangle\n- VCO-2 waveform Sine\n- VCO-2 range 27 · +15 st\n- VCO-2 fine tune 1.5 · +15 cents\n- Cross mod 1.5 · 15 %\n- Source mix 0 · more VCO-1\n- Listen for: a ringing metal tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco2.wave": "sine",
+            "vco2.range": 27,
+            "vco2.fine": 1.5,
+            "vco1.xmod": 1.5,
+            "mix.balance": 0
+          }
+        },
+        {
+          "title": "Open",
+          "module": "filter",
+          "why": "The filter open.\n- Filter cutoff 7 · 2.6 kHz\n- Resonance 0 · 0 %\n- Filter envelope depth 0 · 0 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 4 · 150 ms\n- ENV-1 sustain 10 · 100 %\n- ENV-1 release 6 · 700 ms\n- Listen for: a pure ring.",
+          "set": {
+            "vcf.cutoff": 7,
+            "vcf.res": 0,
+            "vcf.env": 0,
+            "vcf.kbd": 0,
+            "env1.attack": 0,
+            "env1.decay": 4,
+            "env1.sustain": 10,
+            "env1.release": 6
+          }
+        },
+        {
+          "title": "Ring on",
+          "module": "amp",
+          "why": "A long decay, no sustain, the longest release.\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 9 · 5.1 s\n- ENV-2 sustain 0 · 0 %\n- ENV-2 release 10 · 10 s\n- Listen for: singing bowls ringing together.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 9,
+            "env2.sustain": 0,
+            "env2.release": 10
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vco1.xmod",
+          "try": "Raise to 3",
+          "hear": "A brighter, gong-like bowl."
+        }
+      ]
+    },
+    {
+      "id": "jp8-laser-harp",
+      "name": "Laser Harp",
+      "ref": "In the style of Jean-Michel Jarre — Rendez-vous",
+      "artist": "Jean-Michel Jarre",
+      "tags": ["lead", "electronic", "80s"],
+      "level": 2,
+      "blurb": "A bright, singing lead that rings out like light being plucked.",
+      "how": "Jarre’s laser harp plays bright, ringing notes that hang in the air. A saw and pulse with a long release and portamento.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.95, 0.8],
+          [1, 76, 0.95, 0.8],
+          [2, 74, 0.95, 0.8],
+          [3, 72, 0.95, 0.8],
+          [4, 71, 1.95, 0.8],
+          [6, 67, 0.95, 0.8],
+          [7, 69, 0.95, 0.8],
+          [8, 69, 0.95, 0.8],
+          [9, 76, 0.95, 0.8],
+          [10, 74, 0.95, 0.8],
+          [11, 72, 0.95, 0.8],
+          [12, 76, 3.95, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bright",
+          "module": "osc",
+          "why": "A saw and a pulse an octave up.\n- VCO-1 waveform Sawtooth\n- VCO-2 waveform Pulse\n- VCO-2 range 24 · +12 st\n- Source mix 5 · both\n- Listen for: a bright, ringing tone.",
+          "set": {
+            "vco1.wave": "saw",
+            "vco2.wave": "pulse",
+            "vco2.range": 24,
+            "mix.balance": 5
+          }
+        },
+        {
+          "title": "Ring",
+          "module": "filter",
+          "why": "A bright cutoff, a pluck that settles.\n- Filter cutoff 6 · 1.3 kHz\n- Resonance 2 · 20 %\n- Filter envelope depth 2 · 20 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 4 · 150 ms\n- ENV-1 sustain 6 · 60 %\n- ENV-1 release 6 · 700 ms\n- Listen for: a ringing top.",
+          "set": {
+            "vcf.cutoff": 6,
+            "vcf.res": 2,
+            "vcf.env": 2,
+            "vcf.kbd": 0,
+            "env1.attack": 0,
+            "env1.decay": 4,
+            "env1.sustain": 6,
+            "env1.release": 6
+          }
+        },
+        {
+          "title": "Hang",
+          "module": "glide",
+          "why": "A long release and a little glide.\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 5 · 320 ms\n- ENV-2 sustain 8 · 80 %\n- ENV-2 release 7.5 · 1.9 s\n- Portamento switch ON\n- Portamento time 1 · 30 ms\n- Listen for: notes hanging like light.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 5,
+            "env2.sustain": 8,
+            "env2.release": 7.5,
+            "glide.mode": "on",
+            "glide.time": 1
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "env2.release",
+          "try": "Drop to 3",
+          "hear": "Shorter, more like a plucked string."
+        }
+      ]
+    },
+    {
+      "id": "jp8-lullaby-pad",
+      "name": "Cradle Song",
+      "ref": "In the style of lullabies",
+      "artist": "Lullaby",
+      "tags": ["pad", "lullaby", "ambient"],
+      "level": 1,
+      "blurb": "A soft, rocking lullaby of gentle chords in three.",
+      "how": "A lullaby rocks in a slow three. Soft, round chords that swell gently each bar.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 53, 2.9],
+          [0, 57, 2.9],
+          [0, 60, 2.9],
+          [3, 40, 2.9],
+          [3, 48, 2.9],
+          [3, 52, 2.9],
+          [3, 55, 2.9],
+          [6, 50, 2.9],
+          [6, 53, 2.9],
+          [6, 57, 2.9],
+          [9, 58, 2.9],
+          [9, 62, 2.9],
+          [9, 65, 2.9],
+          [12, 53, 2.9],
+          [12, 57, 2.9],
+          [12, 60, 2.9],
+          [15, 48, 2.9],
+          [15, 52, 2.9],
+          [15, 55, 2.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Soft",
+          "module": "osc",
+          "why": "A triangle and a sine an octave up.\n- VCO-1 waveform Triangle\n- VCO-2 waveform Sine\n- VCO-2 range 24 · +12 st\n- Source mix 4 · more VCO-1\n- Listen for: a soft, round tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco2.wave": "sine",
+            "vco2.range": 24,
+            "mix.balance": 4
+          }
+        },
+        {
+          "title": "Warm",
+          "module": "filter",
+          "why": "A warm cutoff.\n- Filter cutoff 5 · 663 Hz\n- Resonance 0 · 0 %\n- Filter envelope depth 1 · 10 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 1.5 · 6 ms\n- ENV-1 decay 5 · 320 ms\n- ENV-1 sustain 8 · 80 %\n- ENV-1 release 5 · 320 ms\n- Listen for: a warm, soft top.",
+          "set": {
+            "vcf.cutoff": 5,
+            "vcf.res": 0,
+            "vcf.env": 1,
+            "vcf.kbd": 0,
+            "env1.attack": 1.5,
+            "env1.decay": 5,
+            "env1.sustain": 8,
+            "env1.release": 5
+          }
+        },
+        {
+          "title": "Rock",
+          "module": "amp",
+          "why": "A gentle attack and a long release.\n- ENV-2 attack 2 · 12 ms\n- ENV-2 decay 5 · 320 ms\n- ENV-2 sustain 8 · 80 %\n- ENV-2 release 6 · 700 ms\n- Listen for: a soft, rocking lullaby.",
+          "set": {
+            "env2.attack": 2,
+            "env2.decay": 5,
+            "env2.sustain": 8,
+            "env2.release": 6
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Raise to 7",
+          "hear": "A brighter, music-box lullaby."
+        }
+      ]
+    },
+    {
+      "id": "jp8-italo-bass-arp",
+      "name": "Space Disco Bass",
+      "ref": "In the style of late-1970s space disco",
+      "artist": "Space disco",
+      "tags": ["bass", "space disco", "disco", "70s"],
+      "level": 2,
+      "blurb": "A bubbling, octave-bouncing arpeggiated bass for a cosmic disco.",
+      "how": "Space disco ran bubbling octave basses. The arpeggiator over two octaves on held bass notes, SOLO, a resonant pluck.",
+      "phrase": {
+        "bpm": 122,
+        "loop": true,
+        "steps": [
+          [0, 33, 3.9],
+          [4, 29, 3.9],
+          [8, 31, 3.9],
+          [12, 28, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Octave arpeggio",
+          "module": "mode",
+          "why": "U&D over two octaves at sixteenths on held single notes: the arpeggiator bounces between octaves.\n- Arpeggio mode U&D\n- Arpeggio range 2 octaves\n- Arpeggio rate 7 · 8.14 Hz\n- Listen for: a bass bouncing between octaves.",
+          "set": {
+            "arp.mode": "updown",
+            "arp.range": 2,
+            "arp.rate": 7
+          }
+        },
+        {
+          "title": "Bass",
+          "module": "osc",
+          "why": "Two saws, detuned a little.\n- VCO-1 waveform Sawtooth\n- VCO-2 waveform Sawtooth\n- VCO-2 range 12 · 0 st\n- VCO-2 fine tune 0.5 · +5 cents\n- Source mix 5 · both\n- Listen for: a fat bass.",
+          "set": {
+            "vco1.wave": "saw",
+            "vco2.wave": "saw",
+            "vco2.range": 12,
+            "vco2.fine": 0.5,
+            "mix.balance": 5
+          }
+        },
+        {
+          "title": "Bubble",
+          "module": "filter",
+          "why": "A low cutoff, resonance and a quick pluck.\n- Filter cutoff 3 · 170 Hz\n- Resonance 4.5 · 45 %\n- Filter envelope depth 4.5 · 45 %\n- Filter key follow 0 · 0 %\n- ENV-1 attack 0 · 1 ms\n- ENV-1 decay 2.5 · 45 ms\n- ENV-1 sustain 1 · 10 %\n- ENV-1 release 2 · 30 ms\n- ENV-2 attack 0 · 1 ms\n- ENV-2 decay 3 · 67 ms\n- ENV-2 sustain 4 · 40 %\n- ENV-2 release 2 · 30 ms\n- Listen for: a bubbling space-disco bass.",
+          "set": {
+            "vcf.cutoff": 3,
+            "vcf.res": 4.5,
+            "vcf.env": 4.5,
+            "vcf.kbd": 0,
+            "env1.attack": 0,
+            "env1.decay": 2.5,
+            "env1.sustain": 1,
+            "env1.release": 2,
+            "env2.attack": 0,
+            "env2.decay": 3,
+            "env2.sustain": 4,
+            "env2.release": 2
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "arp.range",
+          "try": "Set to 3 octaves",
+          "hear": "A wider, more cosmic bounce."
+        }
+      ]
     }
   ]
 }
