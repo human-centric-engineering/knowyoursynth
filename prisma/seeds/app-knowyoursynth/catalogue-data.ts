@@ -62,9 +62,9 @@ export function loadCatalogueData(dir = CATALOGUE_DATA_DIR): CatalogueSeedData {
 }
 
 /**
- * Every data file, relative to `dir`, for the seed unit's `hashInputs`. The databank's and the pattern library's folders
- * and the tutor's eval set are left out: they are other units' data (`bank-data.ts`, `pattern-data.ts`,
- * `004-tutor-evals.ts`), and hashing them here would re-run the catalogue for their edits.
+ * Every data file, relative to `dir`, for the seed unit's `hashInputs`. The databank's, the pattern library's and the
+ * links' folders and the tutor's eval set are left out: they are other units' data (`bank-data.ts`, `pattern-data.ts`,
+ * `link-data.ts`, `004-tutor-evals.ts`), and hashing them here would re-run the catalogue for their edits.
  */
 export function catalogueDataFiles(dir = CATALOGUE_DATA_DIR): string[] {
   const walk = (folder: string): string[] =>
@@ -74,7 +74,7 @@ export function catalogueDataFiles(dir = CATALOGUE_DATA_DIR): string[] {
           !(
             folder === dir &&
             (e.isDirectory()
-              ? ['bank', 'patterns'].includes(e.name)
+              ? ['bank', 'patterns', 'links'].includes(e.name)
               : e.name === 'tutor-evals.json')
           )
       )

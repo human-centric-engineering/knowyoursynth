@@ -11,6 +11,7 @@ import {
   embedUrl,
   LINK_PROVIDERS,
   parseLinkUrl,
+  providerIdFor,
   safeThumbnailUrl,
   thumbnailFor,
   type ParsedLink,
@@ -303,5 +304,28 @@ describe('safeThumbnailUrl (t-180)', () => {
     expect(thumbnailFor('youtube', VIDEO, 'https://evil.example/x.jpg')).toBe(
       `https://i.ytimg.com/vi/${VIDEO}/hqdefault.jpg`
     );
+  });
+});
+
+describe('providerIdFor', () => {
+  const youtube: ParsedLink = {
+    provider: 'youtube',
+    providerId: VIDEO,
+    url: `https://www.youtube.com/watch?v=${VIDEO}`,
+  };
+  const bandcamp: ParsedLink = {
+    provider: 'bandcamp',
+    providerId: null,
+    url: 'https://a.bandcamp.com/album/x',
+  };
+
+  it("takes a Bandcamp link's id from its page, which its URL does not carry", () => {
+    expect(providerIdFor(bandcamp, 'album=123')).toBe('album=123');
+    expect(providerIdFor(bandcamp, null)).toBeNull();
+  });
+
+  it("takes every other provider's id from its URL, whatever the page said", () => {
+    expect(providerIdFor(youtube, 'album=123')).toBe(VIDEO);
+    expect(providerIdFor(youtube, null)).toBe(VIDEO);
   });
 });

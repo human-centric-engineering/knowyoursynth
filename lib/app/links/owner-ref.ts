@@ -3,11 +3,21 @@
  * only, with no database client, so a form can validate with them. Looking an owner up is `owner.ts`.
  */
 import { z } from 'zod';
+import type { Prisma } from '@prisma/client';
 import { BankIdSchema } from '@/lib/app/bank/data';
 import { SoundSlugSchema, SynthIdSchema } from '@/lib/app/sounds/data';
 
 export const OWNER_KINDS = ['instrument', 'sound', 'song', 'artist'] as const;
 export type OwnerKind = (typeof OWNER_KINDS)[number];
+
+/** The `external_link` column that names an owner of each kind. A new kind means a new column (`links.md`). */
+export const OWNER_COLUMN = {
+  instrument: 'instrumentId',
+  sound: 'soundId',
+  song: 'songId',
+  artist: 'artistId',
+  // A type-only import: the check that each is a real column costs no database client here.
+} as const satisfies Record<OwnerKind, keyof Prisma.ExternalLinkWhereInput>;
 
 /** An owner as an API names it. */
 export interface OwnerRef {

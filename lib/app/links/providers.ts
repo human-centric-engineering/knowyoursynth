@@ -133,8 +133,8 @@ const THUMBNAIL_HOSTS: Record<Exclude<LinkProvider, 'other'>, (host: string) => 
   soundcloud: (h) => /^i\d\.sndcdn\.com$/.test(h),
   bandcamp: (h) => /^f\d\.bcbits\.com$/.test(h),
 };
-const MAX_THUMBNAIL_LENGTH = 1000;
-const MAX_URL_LENGTH = 2000;
+export const MAX_THUMBNAIL_LENGTH = 1000;
+export const MAX_URL_LENGTH = 2000;
 /** Query parameters that only track who shared a link. */
 const TRACKING_PARAM = /^(utm_[a-z_]+|fbclid|gclid|dclid|msclkid|mc_eid|mc_cid|igshid|yclid)$/i;
 
@@ -320,6 +320,14 @@ export function parseLinkUrl(input: string): ParseResult {
   for (const key of [...url.searchParams.keys()])
     if (TRACKING_PARAM.test(key)) url.searchParams.delete(key);
   return { ok: true, link: { provider: 'other', providerId: null, url: url.toString() } };
+}
+
+/**
+ * The id a link's embed is built from: Bandcamp's is only on its page (`pageId`, read from it or kept from an earlier
+ * read); every other provider's came from the URL. Used by every write: an admin's, and the seed's.
+ */
+export function providerIdFor(link: ParsedLink, pageId: string | null): string | null {
+  return link.provider === 'bandcamp' ? pageId : link.providerId;
 }
 
 /**

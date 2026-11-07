@@ -28,6 +28,8 @@ const ALLOWED = (path: string) =>
   path === 'scripts/smoke/bank.ts' ||
   // Dev-only: renders every library sound through the sound detector, for its fit and its library test (t-124).
   path === 'scripts/soundkind-sweep.ts' ||
+  // Dev-only: writes a database's links into the links seed data, which the seed then reads (t-199).
+  path === 'scripts/app/export-links.ts' ||
   // Names the seed units as keys for Sunrise's capability parity test, and reads nothing (t-77).
   path === 'lib/app/capability-seed-pairs.ts';
 

@@ -1,0 +1,251 @@
+{
+  "kind": "instrument",
+  "id": "moog-modular",
+  "links": [
+    {
+      "url": "https://www.youtube.com/watch?v=n3K_fZDvINs",
+      "kind": "demo",
+      "title": "Moog System 55 Modular Synth Demo — Daniel Fisher"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=4SBDH5uhs4Q",
+      "kind": "demo",
+      "title": "Wendy Carlos demonstrates her Moog Synthesizer in 1970"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=nIRQbIckYPo",
+      "kind": "performance",
+      "title": "Lisa Bella Donna | The Mothership"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=G7TJyPAyTiQ",
+      "kind": "review",
+      "title": "50th Anniversary of the Moog Modular Synthesizer"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=LlIAT8EmH2k",
+      "kind": "demo",
+      "title": "Moog System 55 Modular Synth At Dublin Science Gallery"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=bnC9pu65pa0",
+      "kind": "performance",
+      "title": "Suzanne Ciani | System 55"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=_J2UiyKIQdM",
+      "kind": "performance",
+      "title": "Mike Dean, StarPowerDrummer & 2 Vintage Moog Modulars"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=XofTuxGghuM",
+      "kind": "demo",
+      "title": "NAMM 2020 – Introducing: System 55 Modular Synthesizer"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=okQA_qLErIE",
+      "kind": "demo",
+      "title": "Introducing the Behringer SYSTEM-15/35/55"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=uG8tx8BXed0",
+      "kind": "review",
+      "title": "Behringer System 55"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=7eaX45pjlj4",
+      "kind": "review",
+      "title": "Exploring The Original R.A. MOOG Modular Synthesizer System"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=tO56WoX0Gkw",
+      "kind": "demo",
+      "title": "Moog Model 15 Modular Synth Demo (Direct Out Audio)"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=x0caZHe_4Og",
+      "kind": "lesson",
+      "title": "System 55 – Technical Details, Important Details, Compatibility with Eurorack"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=qCmL5OeBgm8",
+      "kind": "demo",
+      "title": "Behringer System 55 Modular Analog Synthesizer – Daniel Fisher"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=QrrYDjO1FTM",
+      "kind": "demo",
+      "title": "Behringer System 55 Demo (by synthpro)"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=ABWe6IsgXw8",
+      "kind": "demo",
+      "title": "Behringer System 55 (Moog clone) - Only Sounds / Sólo Sonidos"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=Q5tTYBGKuBc",
+      "kind": "performance",
+      "title": "Theme for 2017 - Moog System 55, Ben Crook - drums, Novation Peak, Digitakt, Eurorack Modular"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=GLqyTzaIGBA",
+      "kind": "performance",
+      "title": "Behringer System 55 Modular TECHNO SYNTH Monster"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=nOycb1GJrDM",
+      "kind": "lesson",
+      "title": "Behringer System 55 Oscillators"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=Sc6aabhGWHM",
+      "kind": "review",
+      "title": "Behringer System 55 unboxing/assembly"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=xuspcdcDMig",
+      "kind": "review",
+      "title": "Synth Wizards Episode 13: The Moog Modular Mission"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=smVWhQdC0b4",
+      "kind": "demo",
+      "title": "Moog Modular System Manufactured in 1969 Demo"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=8oLUhDhq07g",
+      "kind": "demo",
+      "title": "Behringer System 55 Sound Demo (no talking)"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=4r6z8QMhU94",
+      "kind": "demo",
+      "title": "Let's play with the Behringer System 35 Modular Synthesizer"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=zoD4eGvB1V8",
+      "kind": "demo",
+      "title": "Moog Modular System 55"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=G6YNayjdfIg",
+      "kind": "review",
+      "title": "SOS Exclusive - Moog Modular First Look at NAMM 2015"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=pCrN1q3iAOc",
+      "kind": "lesson",
+      "title": "Starting to Patch the Behringer System 55"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=OYf941en_iI",
+      "kind": "lesson",
+      "title": "MESS (Melbourne Electronic Sound Studio): How A Moog 55 Works"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=K1oVjeUsaTk",
+      "kind": "demo",
+      "title": "Moog Model 15 Modular Synthesizer"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=c-rZNxRsIiU",
+      "kind": "lesson",
+      "title": "An Exercise for the Moog Model 15"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=urpJAQZ5rNM",
+      "kind": "demo",
+      "title": "NAMM 2015 - Moog Model 15 Modular Synth"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=6iOLb_rhUQM",
+      "kind": "lesson",
+      "title": "System 55 Patching for Absolute Beginners"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=TaS-KyK5UTo",
+      "kind": "demo",
+      "title": "Ty Unwin's Massive Moog System 55 Modular Synth"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=VC-vZq3NLZg",
+      "kind": "demo",
+      "title": "Enrico Cosimi meets Moog System 15"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=9QM3T97anZU",
+      "kind": "review",
+      "title": "Behringer v Moog System 55 Comparison"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=HGvvA6ezXfE",
+      "kind": "performance",
+      "title": "System 35 Leaving Orbit"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=OUJP7i_oHoc",
+      "kind": "review",
+      "title": "System 55 - Top 5 Missing Features"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=AIsorA2fi-M",
+      "kind": "review",
+      "title": "Modular Behringer System 15 Eurorack Go unboxing and first patch and simple demo"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=ZEiN-WRnVXk",
+      "kind": "demo",
+      "title": "Moog Modular System 55 Demonstration - Sweetwater at Winter NAMM"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=iAU4JwtTzms",
+      "kind": "lesson",
+      "title": "Moog Modular Deep Dive : Vintage Filters on the Model 12"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=Mm7pMfBuFuM",
+      "kind": "demo",
+      "title": "Behringer System 55 - Sound Demo (no talking)"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=2Ibc9dv5BaQ",
+      "kind": "demo",
+      "title": "Behringer System 55: 902, 904A, 921 & CP3A (No Talking)"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=EGZzpGPFStc",
+      "kind": "demo",
+      "title": "NAMM 2015 - MOOG MODEL 15 by Moog Music's Rosser Douglas."
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=O09g_wZWRck",
+      "kind": "lesson",
+      "title": "Pt 1 System 55 Example Patches from the Quick Start Guide"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=Zh7CwgQdGTk",
+      "kind": "demo",
+      "title": "[NAMM] Moog System 55"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=hfG6N61mDag",
+      "kind": "lesson",
+      "title": "Moog System 55 - MESS INGREDIENTS"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=xcaMe_qo9Ks",
+      "kind": "performance",
+      "title": "Behringer System 55 - Monday afternoon jam"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=KBilLvDUqOc",
+      "kind": "demo",
+      "title": "Moog System 35 with Sequencer"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=cxrgHNHSglA",
+      "kind": "lesson",
+      "title": "Vintage Moog Modular Synthesizer Repair - Synthchaser #167"
+    }
+  ]
+}
