@@ -15,6 +15,7 @@ import {
   FullscreenButton,
   SoundDesign,
   SoundPicker,
+  Wordmark,
 } from '@/components/app/synth/player';
 import { stepIds } from '@/components/app/synth/lesson';
 import { faceRoles } from '@/components/app/synth/face-roles';
@@ -171,6 +172,26 @@ describe('SoundDesign: the drawer', () => {
     );
     expect(tab).toHaveAttribute('aria-expanded', 'true');
     expect(document.getElementById(tab.getAttribute('aria-controls') ?? '')).not.toBeNull();
+  });
+});
+
+describe('Wordmark: its lamp (t-204)', () => {
+  const lamp = (lit: boolean, lesson?: boolean) => {
+    const { container, unmount } = render(<Wordmark lit={lit} lesson={lesson} />);
+    const led = container.querySelector('.kys-led');
+    const cls = [led?.classList.contains('is-lit'), led?.classList.contains('is-lesson')];
+    unmount();
+    return cls;
+  };
+
+  it("is the sound's amber while it is on, and dark while it is off", () => {
+    expect(lamp(true)).toEqual([true, false]);
+    expect(lamp(false)).toEqual([false, false]);
+  });
+
+  it('is yellow while a lesson is being walked, whether the sound is on or not', () => {
+    expect(lamp(true, true)).toEqual([false, true]);
+    expect(lamp(false, true)).toEqual([false, true]);
   });
 });
 

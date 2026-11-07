@@ -4,7 +4,8 @@
  * The player's own pieces (`f-player`): what turns the panel into something you watch and play, as a video player
  * gathers its controls round the picture. BeatBreaker's drummer player is the precedent (its `studio/player/`).
  *
- * - `Wordmark`: the app's name at the right of the Sound Design strip's heading, with an LED that is lit while the sound is on.
+ * - `Wordmark`: the app's name at the right of the Sound Design strip's heading, with an LED that is lit while the sound is on,
+ *   and lit yellow while a lesson is being walked (t-204).
  * - `SoundPicker`: the sound's name at the start of the bar, which opens the library. Its LED pulses while a patch
  *   loads, when the keys are silent (`f-default-patch` t-172), so a dead key reads as "wait", not as broken.
  * - `SoundDesign`: the strip over the bar that teaches how the sound is built: the lesson's steps as a video's
@@ -25,11 +26,14 @@ import { highlightStore } from '@/components/app/synth/stores';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 import { logger } from '@/lib/logging';
 
-/** The app's name over the panel. The LED is the sound's: lit while it is on. */
-export function Wordmark({ lit }: { lit: boolean }) {
+/**
+ * The app's name over the panel. The LED is the sound's, lit while it is on, except while a lesson is being walked
+ * (`lesson`), when it is lit yellow: the strip's sign that a lesson is under way (t-204).
+ */
+export function Wordmark({ lit, lesson = false }: { lit: boolean; lesson?: boolean }) {
   return (
     <p className="kys-player-mark" aria-hidden="true">
-      <span className={`kys-led ${lit ? 'is-lit' : ''}`} />
+      <span className={`kys-led ${lesson ? 'is-lesson' : lit ? 'is-lit' : ''}`} />
       Know Your Synth
     </p>
   );

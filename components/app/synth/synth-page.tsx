@@ -2758,7 +2758,7 @@ function Synth({
                     openSection('build');
                   }}
                   hasLesson={!!shown}
-                  mark={<Wordmark lit={audio === 'on'} />}
+                  mark={<Wordmark lit={audio === 'on'} lesson={step != null} />}
                   lit={chapterLit ? chapterLit.split('|') : []}
                   open={designOpen}
                   face={face}
