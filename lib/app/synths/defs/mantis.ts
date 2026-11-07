@@ -18,6 +18,7 @@
  */
 import type {
   Area,
+  ArpMode,
   Control,
   ControlCommon,
   ControlValues,
@@ -1407,6 +1408,15 @@ const SOURCE_SIG: Record<string, string> = {
   lfo2: 'lfo2',
   full_on: 'one',
 };
+/** ARP MODE in the engine's orders: the guide does not say how UpDown 2 differs, so both go up and then down. */
+const ARP_MODE: Record<string, ArpMode> = {
+  up: 'up',
+  down: 'down',
+  updown1: 'updown',
+  updown2: 'updown',
+  play: 'played',
+  random: 'random',
+};
 /** The engine has no aftertouch or pedal: the app's mod wheel stands in for both. */
 const SCALE_SIG: Record<string, string | null> = {
   joy_x: 'joyX',
@@ -1728,17 +1738,7 @@ function toEngine(v: ControlValues, _ctx: EngineContext): EngineParams {
       // the engine steps in sixteenths: a SYNC division plays at the tempo that makes its notes that long
       bpm: (bpm * arpDiv(num(v, 'arp.sync'))) / 16,
       gate: 0.5,
-      mode:
-        (
-          {
-            up: 'up',
-            down: 'down',
-            updown1: 'updown',
-            updown2: 'updown',
-            play: 'played',
-            random: 'random',
-          } as const
-        )[String(v['arp.mode']) as 'up'] ?? 'up',
+      mode: ARP_MODE[String(v['arp.mode'])] ?? 'up',
       octaves: Number(v['arp.octaves']) || 1,
       hold: !!v['kbd.hold'],
     },
