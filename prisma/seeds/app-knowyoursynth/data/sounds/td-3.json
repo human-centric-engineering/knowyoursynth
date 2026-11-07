@@ -8822,6 +8822,2111 @@
           "hear": "A rounder, fretless sound."
         }
       ]
+    },
+    {
+      "id": "td-planetary-assault",
+      "name": "Planetary Assault",
+      "ref": "In the style of Luke Slater",
+      "artist": "Luke Slater",
+      "tags": ["bass", "techno", "90s"],
+      "level": 2,
+      "blurb": "A relentless, driving, gritty techno loop that never lets up.",
+      "how": "Luke Slater’s Planetary Assault Systems records are relentless, functional techno. A short, hypnotic loop with a hard edge.",
+      "phrase": {
+        "bpm": 135,
+        "loop": true,
+        "steps": [
+          [0, 31, 0.1375, 0.8],
+          [0.25, 31, 0.1375, 0.8],
+          [0.75, 31, 0.1375, 0.8],
+          [1, 34, 0.1375, 0.8],
+          [1.5, 31, 0.1375, 0.8],
+          [1.75, 31, 0.1375, 0.8],
+          [2.25, 31, 0.1375, 0.8],
+          [2.5, 29, 0.1375, 0.8],
+          [3, 31, 0.1375, 0.8],
+          [3.5, 36, 0.1375, 0.8],
+          [4, 31, 0.1375, 0.8],
+          [4.25, 31, 0.1375, 0.8],
+          [4.75, 31, 0.1375, 0.8],
+          [5, 34, 0.1375, 0.8],
+          [5.5, 31, 0.1375, 0.8],
+          [5.75, 31, 0.1375, 0.8],
+          [6.25, 38, 0.1375, 0.8],
+          [6.75, 36, 0.1375, 0.8],
+          [7.25, 34, 0.1375, 0.8],
+          [7.5, 31, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Hard loop",
+          "module": "filter",
+          "why": "A saw with a low cutoff, a medium envelope and resonance; a short decay.\n- WAVEFORM Sawtooth\n- CUTOFF 2.5 · 382 Hz\n- ENVELOPE (env mod) 5\n- RESONANCE 6\n- DECAY 1.5 · 280 ms\n- ACCENT 0\n- Listen for: a hard, hypnotic loop.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 2.5,
+            "filter.envMod": 5,
+            "filter.res": 6,
+            "env.decay": 1.5,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Edge",
+          "module": "fx",
+          "why": "Moderate drive with a middle tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 5\n- Distortion TONE 5\n- Distortion LEVEL 5.5\n- Listen for: a relentless techno loop.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 5,
+            "dist.tone": 5,
+            "dist.level": 5.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Raise to 5",
+          "hear": "Brighter and more urgent."
+        }
+      ]
+    },
+    {
+      "id": "td-surgeon",
+      "name": "Birmingham Hammer",
+      "ref": "In the style of Surgeon",
+      "artist": "Surgeon",
+      "tags": ["bass", "techno", "hard techno", "90s"],
+      "level": 2,
+      "blurb": "A raw, tough, Birmingham-style techno stab pattern.",
+      "how": "The Birmingham techno sound is raw, tough and minimal. Short stabs with a lot of drive and a bright, abrasive tone.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.1375, 0.8],
+          [0.75, 38, 0.1375, 0.8],
+          [1.5, 38, 0.1375, 0.8],
+          [2.25, 38, 0.1375, 0.8],
+          [3, 39, 0.1375, 0.8],
+          [3.75, 38, 0.1375, 0.8],
+          [4, 38, 0.1375, 0.8],
+          [4.75, 38, 0.1375, 0.8],
+          [5.5, 38, 0.1375, 0.8],
+          [6.25, 33, 0.1375, 0.8],
+          [7, 36, 0.1375, 0.8],
+          [7.5, 38, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Stab",
+          "module": "filter",
+          "why": "A square with a middle cutoff, a strong envelope and resonance; a short decay.\n- WAVEFORM Square\n- CUTOFF 3 · 455 Hz\n- ENVELOPE (env mod) 6\n- RESONANCE 6\n- DECAY 1 · 250 ms\n- ACCENT 0\n- Listen for: a hard, short stab.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 3,
+            "filter.envMod": 6,
+            "filter.res": 6,
+            "env.decay": 1,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Abrasive",
+          "module": "fx",
+          "why": "High drive with a bright tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 8.5\n- Distortion TONE 7.5\n- Distortion LEVEL 4\n- Listen for: raw, abrasive techno stabs.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 8.5,
+            "dist.tone": 7.5,
+            "dist.level": 4
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Switch to Sawtooth",
+          "hear": "Even rawer."
+        }
+      ]
+    },
+    {
+      "id": "td-red-techno",
+      "name": "Red Techno",
+      "ref": "In the style of Dave Clarke",
+      "artist": "Dave Clarke",
+      "tags": ["bass", "techno", "acid", "90s"],
+      "level": 2,
+      "blurb": "A punchy, funky, acidic techno line made for hard mixing.",
+      "how": "Dave Clarke’s “Red” records mixed funky techno with acid. A tight line with accents and a gritty edge.",
+      "phrase": {
+        "bpm": 136,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.1375, 0.8],
+          [0.5, 45, 0.1375, 1],
+          [1, 33, 0.1375, 0.8],
+          [1.25, 33, 0.1375, 0.8],
+          [1.75, 43, 0.1375, 0.8],
+          [2.25, 33, 0.1375, 0.8],
+          [2.75, 36, 0.1375, 1],
+          [3.25, 33, 0.1375, 0.8],
+          [3.5, 40, 0.1375, 0.8],
+          [4, 33, 0.1375, 0.8],
+          [4.5, 45, 0.1375, 1],
+          [5, 33, 0.1375, 0.8],
+          [5.25, 33, 0.1375, 0.8],
+          [5.75, 43, 0.1375, 0.8],
+          [6.25, 40, 0.1375, 1],
+          [6.75, 38, 0.1375, 0.8],
+          [7, 36, 0.1375, 0.8],
+          [7.5, 33, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Funky acid",
+          "module": "filter",
+          "why": "A saw with a low cutoff, a wide envelope and high resonance; a short decay.\n- WAVEFORM Sawtooth\n- CUTOFF 2.5 · 382 Hz\n- ENVELOPE (env mod) 6.5\n- RESONANCE 8\n- DECAY 2 · 320 ms\n- ACCENT 8\n- Listen for: a tight, funky squelch.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 2.5,
+            "filter.envMod": 6.5,
+            "filter.res": 8,
+            "env.decay": 2,
+            "amp.accent": 8
+          }
+        },
+        {
+          "title": "Grit",
+          "module": "fx",
+          "why": "Moderate drive with a middle tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 5.5\n- Distortion TONE 5.5\n- Distortion LEVEL 5\n- Listen for: a punchy, gritty techno-acid line.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 5.5,
+            "dist.tone": 5.5,
+            "dist.level": 5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "amp.accent",
+          "try": "Drop to 3",
+          "hear": "Smoother, less funky."
+        }
+      ]
+    },
+    {
+      "id": "td-analogue-bubblebath",
+      "name": "Analogue Bubblebath",
+      "ref": "In the style of Aphex Twin — “Analogue Bubblebath”",
+      "artist": "Aphex Twin",
+      "tags": ["seq", "acid", "ambient techno", "idm", "90s"],
+      "level": 2,
+      "blurb": "A gentle, bubbling, melodic acid sequence that sounds like warm water.",
+      "how": "Early Aphex Twin made acid gentle: soft, bubbling melodic sequences with a lot of resonance and no aggression.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 52, 0.1375, 0.8],
+          [0.25, 59, 0.1375, 0.8],
+          [0.5, 64, 0.1375, 0.8],
+          [0.75, 59, 0.1375, 0.8],
+          [1, 55, 0.1375, 0.8],
+          [1.25, 59, 0.1375, 0.8],
+          [1.5, 64, 0.1375, 0.8],
+          [1.75, 66, 0.1375, 0.8],
+          [2, 52, 0.1375, 0.8],
+          [2.25, 59, 0.1375, 0.8],
+          [2.5, 64, 0.1375, 0.8],
+          [2.75, 59, 0.1375, 0.8],
+          [3, 55, 0.1375, 0.8],
+          [3.25, 57, 0.1375, 0.8],
+          [3.5, 59, 0.1375, 0.8],
+          [3.75, 62, 0.1375, 0.8],
+          [4, 48, 0.1375, 0.8],
+          [4.25, 55, 0.1375, 0.8],
+          [4.5, 60, 0.1375, 0.8],
+          [4.75, 55, 0.1375, 0.8],
+          [5, 52, 0.1375, 0.8],
+          [5.25, 55, 0.1375, 0.8],
+          [5.5, 60, 0.1375, 0.8],
+          [5.75, 62, 0.1375, 0.8],
+          [6, 50, 0.1375, 0.8],
+          [6.25, 57, 0.1375, 0.8],
+          [6.5, 62, 0.1375, 0.8],
+          [6.75, 57, 0.1375, 0.8],
+          [7, 54, 0.1375, 0.8],
+          [7.25, 57, 0.1375, 0.8],
+          [7.5, 59, 0.1375, 0.8],
+          [7.75, 57, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bubbles",
+          "module": "filter",
+          "why": "A square with a low-mid cutoff, a medium envelope and high resonance; a medium decay.\n- WAVEFORM Square\n- CUTOFF 2.5 · 382 Hz\n- ENVELOPE (env mod) 4.5\n- RESONANCE 8.5\n- DECAY 3 · 400 ms\n- ACCENT 0\n- Listen for: soft, bubbling notes.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 2.5,
+            "filter.envMod": 4.5,
+            "filter.res": 8.5,
+            "env.decay": 3,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Clean",
+          "module": "fx",
+          "why": "No distortion: this one should stay gentle.\n- DISTORTION OFF/ON Off\n- Listen for: a warm, bubbling acid sequence.",
+          "set": {
+            "dist.on": false
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Raise to 10",
+          "hear": "Wetter, more like water drops."
+        }
+      ]
+    },
+    {
+      "id": "td-acid-revival",
+      "name": "Acid Revival",
+      "ref": "In the style of 2010s acid house revival",
+      "artist": "Acid house revival",
+      "tags": ["bass", "acid", "house", "10s"],
+      "level": 2,
+      "blurb": "A crisp, modern acid house line with a clean bite.",
+      "how": "The acid revival of the 2010s brought back the 303 sound with crisp production. Classic slides and accents, a cleaner edge.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 29, 0.1375, 0.8],
+          [0.25, 29, 0.1375, 0.8],
+          [0.5, 41, 0.1375, 1],
+          [0.75, 29, 0.1375, 0.8],
+          [1.25, 32, 0.28, 0.8],
+          [1.5, 34, 0.1375, 0.8],
+          [1.75, 29, 0.1375, 0.8],
+          [2.25, 29, 0.1375, 0.8],
+          [2.5, 39, 0.1375, 1],
+          [2.75, 29, 0.1375, 0.8],
+          [3, 36, 0.1375, 0.8],
+          [3.5, 29, 0.1375, 0.8],
+          [4, 29, 0.1375, 0.8],
+          [4.25, 29, 0.1375, 0.8],
+          [4.5, 41, 0.1375, 1],
+          [4.75, 29, 0.1375, 0.8],
+          [5.25, 32, 0.28, 0.8],
+          [5.5, 34, 0.1375, 0.8],
+          [5.75, 29, 0.1375, 0.8],
+          [6.25, 36, 0.1375, 1],
+          [6.5, 34, 0.28, 0.8],
+          [6.75, 32, 0.1375, 0.8],
+          [7, 29, 0.1375, 0.8],
+          [7.25, 27, 0.1375, 0.8],
+          [7.5, 29, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Classic",
+          "module": "filter",
+          "why": "A saw with a low cutoff, a wide envelope and high resonance; a medium decay.\n- WAVEFORM Sawtooth\n- CUTOFF 2.5 · 382 Hz\n- ENVELOPE (env mod) 6.5\n- RESONANCE 8.5\n- DECAY 3 · 400 ms\n- ACCENT 8\n- Listen for: a classic, crisp squelch.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 2.5,
+            "filter.envMod": 6.5,
+            "filter.res": 8.5,
+            "env.decay": 3,
+            "amp.accent": 8
+          }
+        },
+        {
+          "title": "Crisp",
+          "module": "fx",
+          "why": "Low drive with a bright tone for crispness.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 2\n- Distortion TONE 7\n- Distortion LEVEL 6.5\n- Listen for: a crisp, modern acid line.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 2,
+            "dist.tone": 7,
+            "dist.level": 6.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "dist.drive",
+          "try": "Raise to 7",
+          "hear": "A dirtier, more 1990s acid."
+        }
+      ]
+    },
+    {
+      "id": "td-hard-trance",
+      "name": "Hard Trance Drive",
+      "ref": "In the style of late-1990s hard trance",
+      "artist": "Hard trance",
+      "tags": ["bass", "trance", "hard trance", "90s"],
+      "level": 2,
+      "blurb": "A fast, driving, distorted rolling bass for hard trance.",
+      "how": "Hard trance was fast and driving, with rolling, distorted basslines. Offbeat rolls with heavy drive.",
+      "phrase": {
+        "bpm": 148,
+        "loop": true,
+        "steps": [
+          [0.25, 33, 0.1375, 0.8],
+          [0.5, 33, 0.1375, 0.8],
+          [0.75, 33, 0.1375, 0.8],
+          [1.25, 33, 0.1375, 0.8],
+          [1.5, 33, 0.1375, 0.8],
+          [1.75, 33, 0.1375, 0.8],
+          [2.25, 33, 0.1375, 0.8],
+          [2.5, 33, 0.1375, 0.8],
+          [2.75, 33, 0.1375, 0.8],
+          [3.25, 33, 0.1375, 0.8],
+          [3.5, 33, 0.1375, 0.8],
+          [3.75, 33, 0.1375, 0.8],
+          [4.25, 29, 0.1375, 0.8],
+          [4.5, 29, 0.1375, 0.8],
+          [4.75, 29, 0.1375, 0.8],
+          [5.25, 29, 0.1375, 0.8],
+          [5.5, 29, 0.1375, 0.8],
+          [5.75, 29, 0.1375, 0.8],
+          [6.25, 31, 0.1375, 0.8],
+          [6.5, 31, 0.1375, 0.8],
+          [6.75, 31, 0.1375, 0.8],
+          [7.25, 31, 0.1375, 0.8],
+          [7.5, 31, 0.1375, 0.8],
+          [7.75, 31, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Rolling",
+          "module": "filter",
+          "why": "A saw with a low cutoff and a quick envelope; the shortest decay.\n- WAVEFORM Sawtooth\n- CUTOFF 2.5 · 382 Hz\n- ENVELOPE (env mod) 5\n- RESONANCE 4\n- DECAY 0 · 200 ms\n- ACCENT 0\n- Listen for: a tight, rolling bass.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 2.5,
+            "filter.envMod": 5,
+            "filter.res": 4,
+            "env.decay": 0,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Hard",
+          "module": "fx",
+          "why": "High drive with a middle tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 8\n- Distortion TONE 5\n- Distortion LEVEL 4.5\n- Listen for: a hard, driving trance bass.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 8,
+            "dist.tone": 5,
+            "dist.level": 4.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Raise to 8",
+          "hear": "An acidic hard trance roll."
+        }
+      ]
+    },
+    {
+      "id": "td-goa-astral",
+      "name": "Astral Lead",
+      "ref": "In the style of Astral Projection",
+      "artist": "Astral Projection",
+      "tags": ["lead", "goa trance", "trance", "90s"],
+      "level": 3,
+      "blurb": "A soaring, twisting Goa trance lead in a Phrygian scale.",
+      "how": "Goa trance leads twist through exotic scales with a squelchy, resonant tone. An octave up, Phrygian, with slides and accents.",
+      "phrase": {
+        "bpm": 142,
+        "loop": true,
+        "steps": [
+          [0, 52, 0.1375, 0.8],
+          [0.25, 53, 0.1375, 0.8],
+          [0.5, 55, 0.1375, 0.8],
+          [0.75, 59, 0.1375, 1],
+          [1, 57, 0.1375, 0.8],
+          [1.25, 55, 0.1375, 0.8],
+          [1.5, 53, 0.28, 0.8],
+          [1.75, 52, 0.1375, 0.8],
+          [2, 52, 0.1375, 0.8],
+          [2.25, 53, 0.1375, 0.8],
+          [2.5, 55, 0.1375, 0.8],
+          [2.75, 60, 0.1375, 1],
+          [3, 59, 0.1375, 0.8],
+          [3.25, 57, 0.1375, 0.8],
+          [3.5, 55, 0.28, 0.8],
+          [3.75, 53, 0.1375, 0.8],
+          [4, 52, 0.1375, 0.8],
+          [4.25, 53, 0.1375, 0.8],
+          [4.5, 55, 0.1375, 0.8],
+          [4.75, 59, 0.1375, 1],
+          [5, 57, 0.1375, 0.8],
+          [5.25, 55, 0.1375, 0.8],
+          [5.5, 53, 0.28, 0.8],
+          [5.75, 52, 0.1375, 0.8],
+          [6, 64, 0.1375, 1],
+          [6.25, 62, 0.1375, 0.8],
+          [6.5, 60, 0.1375, 0.8],
+          [6.75, 59, 0.1375, 0.8],
+          [7, 57, 0.28, 0.8],
+          [7.25, 55, 0.1375, 0.8],
+          [7.5, 53, 0.1375, 0.8],
+          [7.75, 52, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Up an octave",
+          "module": "osc",
+          "why": "TUNE up twelve semitones.\n- WAVEFORM Sawtooth\n- TUNE 12 · +12 st\n- Listen for: a high lead register.",
+          "set": {
+            "osc.wave": "saw",
+            "osc.tune": 12
+          }
+        },
+        {
+          "title": "Twisting",
+          "module": "filter",
+          "why": "A middle cutoff, strong envelope and high resonance; a short decay.\n- CUTOFF 3.5 · 541 Hz\n- ENVELOPE (env mod) 6\n- RESONANCE 8.5\n- DECAY 2 · 320 ms\n- ACCENT 7\n- Listen for: a twisting, squelchy lead.",
+          "set": {
+            "filter.cutoff": 3.5,
+            "filter.envMod": 6,
+            "filter.res": 8.5,
+            "env.decay": 2,
+            "amp.accent": 7
+          }
+        },
+        {
+          "title": "Bite",
+          "module": "fx",
+          "why": "Low-moderate drive with a bright tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 4\n- Distortion TONE 7\n- Distortion LEVEL 5.5\n- Listen for: a soaring Goa trance lead.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 4,
+            "dist.tone": 7,
+            "dist.level": 5.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.tune",
+          "try": "Set to 0",
+          "hear": "Down to a rolling bass."
+        }
+      ]
+    },
+    {
+      "id": "td-freestyle",
+      "name": "Freestyle Bass",
+      "ref": "In the style of 1980s Latin freestyle",
+      "artist": "Freestyle",
+      "tags": ["bass", "freestyle", "latin", "80s"],
+      "level": 1,
+      "blurb": "A punchy, syncopated electro-pop bass from 1980s New York.",
+      "how": "Latin freestyle mixed electro beats with pop melodies over syncopated synth bass. A round tone with a quick bow.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.1375, 0.8],
+          [0.75, 33, 0.1375, 0.8],
+          [1.25, 33, 0.1375, 0.8],
+          [1.5, 36, 0.1375, 0.8],
+          [2.25, 33, 0.1375, 0.8],
+          [2.75, 31, 0.1375, 0.8],
+          [3.25, 28, 0.1375, 0.8],
+          [3.75, 31, 0.1375, 0.8],
+          [4, 33, 0.1375, 0.8],
+          [4.75, 33, 0.1375, 0.8],
+          [5.25, 33, 0.1375, 0.8],
+          [5.5, 36, 0.1375, 0.8],
+          [6.25, 38, 0.1375, 0.8],
+          [6.75, 36, 0.1375, 0.8],
+          [7.25, 33, 0.1375, 0.8],
+          [7.5, 31, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Punchy",
+          "module": "filter",
+          "why": "A saw with a low-mid cutoff, a medium envelope; a short decay.\n- WAVEFORM Sawtooth\n- CUTOFF 3 · 455 Hz\n- ENVELOPE (env mod) 4.5\n- RESONANCE 2\n- DECAY 2 · 320 ms\n- ACCENT 0\n- Listen for: a punchy, bowed bass.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 3,
+            "filter.envMod": 4.5,
+            "filter.res": 2,
+            "env.decay": 2,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Polish",
+          "module": "fx",
+          "why": "Very low drive with a middle tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 1.5\n- Distortion TONE 5\n- Distortion LEVEL 7\n- Listen for: a syncopated freestyle bass.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 1.5,
+            "dist.tone": 5,
+            "dist.level": 7
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Switch to Square",
+          "hear": "Rounder, more like a DX bass."
+        }
+      ]
+    },
+    {
+      "id": "td-suicide-pulse",
+      "name": "Ghost Rider Pulse",
+      "ref": "In the style of Suicide",
+      "artist": "Suicide",
+      "tags": ["bass", "synth punk", "proto-punk", "70s"],
+      "level": 2,
+      "blurb": "A raw, menacing, distorted pulse on one chord, over and over.",
+      "how": "Suicide’s Martin Rev played cheap, distorted keyboards and drum machines as raw, repeating pulses. One note pounded in eighths through a cheap, distorted amp.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.3, 0.8],
+          [0.5, 33, 0.3, 0.8],
+          [1, 33, 0.3, 0.8],
+          [1.5, 33, 0.3, 0.8],
+          [2, 33, 0.3, 0.8],
+          [2.5, 33, 0.3, 0.8],
+          [3, 33, 0.3, 0.8],
+          [3.5, 33, 0.3, 0.8],
+          [4, 33, 0.3, 0.8],
+          [4.5, 33, 0.3, 0.8],
+          [5, 33, 0.3, 0.8],
+          [5.5, 33, 0.3, 0.8],
+          [6, 33, 0.3, 0.8],
+          [6.5, 33, 0.3, 0.8],
+          [7, 33, 0.3, 0.8],
+          [7.5, 33, 0.3, 0.8],
+          [8, 38, 0.3, 0.8],
+          [8.5, 38, 0.3, 0.8],
+          [9, 38, 0.3, 0.8],
+          [9.5, 38, 0.3, 0.8],
+          [10, 38, 0.3, 0.8],
+          [10.5, 38, 0.3, 0.8],
+          [11, 38, 0.3, 0.8],
+          [11.5, 38, 0.3, 0.8],
+          [12, 33, 0.3, 0.8],
+          [12.5, 33, 0.3, 0.8],
+          [13, 33, 0.3, 0.8],
+          [13.5, 33, 0.3, 0.8],
+          [14, 40, 0.3, 0.8],
+          [14.5, 40, 0.3, 0.8],
+          [15, 40, 0.3, 0.8],
+          [15.5, 40, 0.3, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Cheap organ",
+          "module": "filter",
+          "why": "A square with a middle cutoff, a little envelope; a short decay.\n- WAVEFORM Square\n- CUTOFF 4 · 644 Hz\n- ENVELOPE (env mod) 2\n- RESONANCE 1\n- DECAY 1.5 · 280 ms\n- ACCENT 0\n- Listen for: a plain, cheap pulse.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 4,
+            "filter.envMod": 2,
+            "filter.res": 1,
+            "env.decay": 1.5,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Menace",
+          "module": "fx",
+          "why": "High drive with a dark tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 8\n- Distortion TONE 3\n- Distortion LEVEL 4.5\n- Listen for: a raw, menacing synth-punk pulse.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 8,
+            "dist.tone": 3,
+            "dist.level": 4.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "dist.tone",
+          "try": "Raise to 8",
+          "hear": "A harsher, trashier pulse."
+        }
+      ]
+    },
+    {
+      "id": "td-coldwave",
+      "name": "Coldwave Line",
+      "ref": "In the style of early-1980s French coldwave",
+      "artist": "Coldwave",
+      "tags": ["bass", "coldwave", "minimal wave", "80s"],
+      "level": 1,
+      "blurb": "A cold, minimal, melancholy synth bass.",
+      "how": "French coldwave and minimal wave used cheap synths for cold, melancholy songs. A plain, minimal line with a cold tone.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.1375, 0.8],
+          [0.5, 40, 0.1375, 0.8],
+          [1, 43, 0.1375, 0.8],
+          [1.5, 40, 0.1375, 0.8],
+          [2, 38, 0.1375, 0.8],
+          [2.5, 38, 0.1375, 0.8],
+          [3, 35, 0.1375, 0.8],
+          [3.5, 38, 0.1375, 0.8],
+          [4, 36, 0.1375, 0.8],
+          [4.5, 36, 0.1375, 0.8],
+          [5, 40, 0.1375, 0.8],
+          [5.5, 36, 0.1375, 0.8],
+          [6, 35, 0.1375, 0.8],
+          [6.5, 35, 0.1375, 0.8],
+          [7, 38, 0.1375, 0.8],
+          [7.5, 42, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Cold",
+          "module": "filter",
+          "why": "A square with a middle cutoff, little envelope and a touch of resonance; a medium decay.\n- WAVEFORM Square\n- CUTOFF 3.5 · 541 Hz\n- ENVELOPE (env mod) 2\n- RESONANCE 3\n- DECAY 3 · 400 ms\n- ACCENT 0\n- Listen for: a cold, plain bass.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 3.5,
+            "filter.envMod": 2,
+            "filter.res": 3,
+            "env.decay": 3,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "dist.on",
+          "try": "Switch on",
+          "hear": "A gritty, post-punk coldwave."
+        }
+      ]
+    },
+    {
+      "id": "td-hyperpop",
+      "name": "Hyperpop Crunch",
+      "ref": "In the style of 2010s hyperpop",
+      "artist": "Hyperpop",
+      "tags": ["bass", "hyperpop", "pop", "10s"],
+      "level": 2,
+      "blurb": "A bright, crunchy, pitched-up bass that sounds deliberately overblown.",
+      "how": "Hyperpop pushes everything to excess: pitched-up, distorted and bright. TUNE up, full drive and a bouncy riff.",
+      "phrase": {
+        "bpm": 150,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.1375, 0.8],
+          [0.5, 48, 0.1375, 0.8],
+          [0.75, 55, 0.1375, 0.8],
+          [1.25, 48, 0.1375, 0.8],
+          [1.5, 58, 0.1375, 0.8],
+          [2, 57, 0.1375, 0.8],
+          [2.5, 53, 0.1375, 0.8],
+          [3, 55, 0.1375, 0.8],
+          [3.5, 48, 0.1375, 0.8],
+          [4, 48, 0.1375, 0.8],
+          [4.5, 48, 0.1375, 0.8],
+          [4.75, 55, 0.1375, 0.8],
+          [5.25, 48, 0.1375, 0.8],
+          [5.5, 58, 0.1375, 0.8],
+          [6, 62, 0.1375, 0.8],
+          [6.5, 60, 0.1375, 0.8],
+          [7, 57, 0.1375, 0.8],
+          [7.25, 55, 0.1375, 0.8],
+          [7.5, 53, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Pitched up",
+          "module": "osc",
+          "why": "TUNE up seven semitones.\n- WAVEFORM Sawtooth\n- TUNE 7 · +7 st\n- Listen for: a higher, brighter riff.",
+          "set": {
+            "osc.wave": "saw",
+            "osc.tune": 7
+          }
+        },
+        {
+          "title": "Bright",
+          "module": "filter",
+          "why": "A bright cutoff, a quick envelope; a short decay.\n- CUTOFF 5.5 · 1.1 kHz\n- ENVELOPE (env mod) 4\n- RESONANCE 3\n- DECAY 1.5 · 280 ms\n- ACCENT 0\n- Listen for: a bright, bouncy tone.",
+          "set": {
+            "filter.cutoff": 5.5,
+            "filter.envMod": 4,
+            "filter.res": 3,
+            "env.decay": 1.5,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Overblown",
+          "module": "fx",
+          "why": "Full drive with the brightest tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 10\n- Distortion TONE 10\n- Distortion LEVEL 3.5\n- Listen for: an overblown, crunchy hyperpop bass.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 10,
+            "dist.tone": 10,
+            "dist.level": 3.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.tune",
+          "try": "Set to 0",
+          "hear": "Lower and heavier."
+        }
+      ]
+    },
+    {
+      "id": "td-trap-metal",
+      "name": "Trap Metal 808",
+      "ref": "In the style of trap metal",
+      "artist": "Trap metal",
+      "tags": ["bass", "trap", "metal", "10s"],
+      "level": 2,
+      "blurb": "A booming sub bass driven so hard it roars.",
+      "how": "Trap metal distorts its 808 basses until they roar like guitars. Long, low, sliding notes into full drive.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 30, 1.2375, 0.8],
+          [2.5, 30, 0.4875, 0.8],
+          [3, 33, 0.28, 0.8],
+          [3.25, 37, 0.4875, 0.8],
+          [4, 30, 1.2375, 0.8],
+          [6.5, 28, 0.7375, 0.8],
+          [7.5, 26, 0.2375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sub",
+          "module": "filter",
+          "why": "A square into a low cutoff with a small knock; a long decay.\n- WAVEFORM Square\n- CUTOFF 1.5 · 270 Hz\n- ENVELOPE (env mod) 2\n- RESONANCE 0\n- DECAY 8 · 1.3 s\n- ACCENT 0\n- Listen for: a deep sub.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 1.5,
+            "filter.envMod": 2,
+            "filter.res": 0,
+            "env.decay": 8,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Roar",
+          "module": "fx",
+          "why": "Full drive with a middle tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 10\n- Distortion TONE 5\n- Distortion LEVEL 4\n- Listen for: a roaring, distorted 808.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 10,
+            "dist.tone": 5,
+            "dist.level": 4
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "dist.tone",
+          "try": "Drop to 1",
+          "hear": "A darker, rumbling roar."
+        }
+      ]
+    },
+    {
+      "id": "td-phonk-bass",
+      "name": "Drift Phonk Bass",
+      "ref": "In the style of drift phonk",
+      "artist": "Phonk",
+      "tags": ["bass", "phonk", "hip hop", "20s"],
+      "level": 2,
+      "blurb": "A distorted, sliding 808 that thumps under a phonk cowbell.",
+      "how": "Drift phonk runs a distorted, sliding bass under its cowbell melodies. Low notes with slides and heavy, dark drive.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 25, 0.7375, 0.8],
+          [1, 25, 0.4875, 0.8],
+          [2, 28, 0.28, 0.8],
+          [2.25, 25, 0.4875, 0.8],
+          [3.5, 23, 0.2375, 0.8],
+          [4, 25, 0.7375, 0.8],
+          [5, 25, 0.4875, 0.8],
+          [6, 32, 0.28, 0.8],
+          [6.25, 30, 0.4875, 0.8],
+          [7, 28, 0.2375, 0.8],
+          [7.5, 25, 0.2375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Thump",
+          "module": "filter",
+          "why": "A square with a low cutoff and a knock; a long decay.\n- WAVEFORM Square\n- CUTOFF 1.5 · 270 Hz\n- ENVELOPE (env mod) 3\n- RESONANCE 1\n- DECAY 6 · 800 ms\n- ACCENT 0\n- Listen for: a thumping sub.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 1.5,
+            "filter.envMod": 3,
+            "filter.res": 1,
+            "env.decay": 6,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Distort",
+          "module": "fx",
+          "why": "High drive with a dark tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 8.5\n- Distortion TONE 3\n- Distortion LEVEL 4.5\n- Listen for: a distorted, sliding phonk bass.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 8.5,
+            "dist.tone": 3,
+            "dist.level": 4.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.tune",
+          "try": "Turn to +5",
+          "hear": "A higher, punchier phonk bass."
+        }
+      ]
+    },
+    {
+      "id": "td-early-dubstep",
+      "name": "Halftime Sub",
+      "ref": "In the style of mid-2000s South London dubstep",
+      "artist": "Dubstep",
+      "tags": ["bass", "dubstep", "uk bass", "00s"],
+      "level": 2,
+      "blurb": "A dark, deep, halftime sub bass with a hint of growl.",
+      "how": "Early dubstep was dark and spacious: a halftime beat at 140 BPM and a deep, rolling sub. Long, low notes with a little grit.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 28, 1.4875, 0.8],
+          [3, 31, 0.7375, 0.8],
+          [4, 28, 1.4875, 0.8],
+          [7, 22, 0.4875, 0.8],
+          [7.5, 26, 0.4875, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Deep",
+          "module": "filter",
+          "why": "A square with a very low cutoff, no resonance; a long decay.\n- WAVEFORM Square\n- CUTOFF 1.5 · 270 Hz\n- ENVELOPE (env mod) 1\n- RESONANCE 0\n- DECAY 8 · 1.3 s\n- ACCENT 0\n- Listen for: a deep, rolling sub.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 1.5,
+            "filter.envMod": 1,
+            "filter.res": 0,
+            "env.decay": 8,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Growl",
+          "module": "fx",
+          "why": "Low-moderate drive with a dark tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 4\n- Distortion TONE 2.5\n- Distortion LEVEL 6\n- Listen for: a dark halftime sub with a hint of growl.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 4,
+            "dist.tone": 2.5,
+            "dist.level": 6
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Raise to 3.5",
+          "hear": "More growl, less sub."
+        }
+      ]
+    },
+    {
+      "id": "td-bassline-house",
+      "name": "Bassline Bounce",
+      "ref": "In the style of 2000s UK bassline",
+      "artist": "Bassline",
+      "tags": ["bass", "bassline", "uk garage", "00s"],
+      "level": 2,
+      "blurb": "A bouncy, warbling, distorted bass that leads the whole track.",
+      "how": "Northern English bassline house made the bass the lead: bouncy, catchy and distorted. Octave jumps and slides with grit.",
+      "phrase": {
+        "bpm": 138,
+        "loop": true,
+        "steps": [
+          [0, 29, 0.1375, 0.8],
+          [0.5, 41, 0.1375, 0.8],
+          [1, 29, 0.1375, 0.8],
+          [1.25, 41, 0.1375, 0.8],
+          [1.75, 39, 0.28, 0.8],
+          [2, 41, 0.1375, 0.8],
+          [2.5, 36, 0.1375, 0.8],
+          [3, 32, 0.1375, 0.8],
+          [3.5, 29, 0.1375, 0.8],
+          [4, 29, 0.1375, 0.8],
+          [4.5, 41, 0.1375, 0.8],
+          [5, 29, 0.1375, 0.8],
+          [5.25, 41, 0.1375, 0.8],
+          [5.75, 44, 0.28, 0.8],
+          [6, 43, 0.1375, 0.8],
+          [6.5, 39, 0.1375, 0.8],
+          [7, 36, 0.1375, 0.8],
+          [7.5, 34, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bouncy",
+          "module": "filter",
+          "why": "A saw with a low-mid cutoff, a quick envelope and resonance; a short decay.\n- WAVEFORM Sawtooth\n- CUTOFF 3 · 455 Hz\n- ENVELOPE (env mod) 5\n- RESONANCE 5\n- DECAY 2 · 320 ms\n- ACCENT 0\n- Listen for: a bouncy, squelchy bass.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 3,
+            "filter.envMod": 5,
+            "filter.res": 5,
+            "env.decay": 2,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Warble",
+          "module": "fx",
+          "why": "High drive with a middle tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 7\n- Distortion TONE 5\n- Distortion LEVEL 5\n- Listen for: a bouncing, distorted bassline lead.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 7,
+            "dist.tone": 5,
+            "dist.level": 5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Raise to 8.5",
+          "hear": "A wetter, more organ-like warble."
+        }
+      ]
+    },
+    {
+      "id": "td-speed-garage",
+      "name": "Speed Garage Wob",
+      "ref": "In the style of late-1990s speed garage",
+      "artist": "Speed garage",
+      "tags": ["bass", "speed garage", "uk garage", "90s"],
+      "level": 2,
+      "blurb": "A deep, bowed, filthy bass that drops in after the snare.",
+      "how": "Speed garage had a famous bowed, filthy bass that dropped in between the beats. A big filter bow on long notes and heavy drive.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0.5, 31, 0.6375, 0.8],
+          [3, 31, 0.3875, 0.8],
+          [3.5, 34, 0.1375, 0.8],
+          [4.5, 31, 0.6375, 0.8],
+          [7, 29, 0.3875, 0.8],
+          [7.5, 26, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bow",
+          "module": "filter",
+          "why": "A saw with a low cutoff, a wide envelope and resonance; a medium decay.\n- WAVEFORM Sawtooth\n- CUTOFF 2 · 321 Hz\n- ENVELOPE (env mod) 7\n- RESONANCE 6\n- DECAY 4 · 500 ms\n- ACCENT 0\n- Listen for: a deep “bwow” on each note.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 2,
+            "filter.envMod": 7,
+            "filter.res": 6,
+            "env.decay": 4,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Filthy",
+          "module": "fx",
+          "why": "High drive with a dark tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 8\n- Distortion TONE 3\n- Distortion LEVEL 4.5\n- Listen for: a filthy speed-garage bass.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 8,
+            "dist.tone": 3,
+            "dist.level": 4.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.envMod",
+          "try": "Drop to 3",
+          "hear": "Less bow, more plain sub."
+        }
+      ]
+    },
+    {
+      "id": "td-nu-skool-breaks",
+      "name": "Nu Skool Breaks",
+      "ref": "In the style of early-2000s nu skool breaks",
+      "artist": "Breakbeat",
+      "tags": ["bass", "breakbeat", "breaks", "00s"],
+      "level": 2,
+      "blurb": "A chunky, gnarly, mid-range breaks bassline.",
+      "how": "Nu skool breaks put chunky, distorted mid-range basslines over breakbeats at 130 BPM. Syncopated, with grit and a bit of squelch.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 28, 0.1375, 0.8],
+          [0.75, 28, 0.1375, 0.8],
+          [1.25, 31, 0.1375, 0.8],
+          [1.75, 28, 0.1375, 0.8],
+          [2.5, 35, 0.1375, 0.8],
+          [3, 33, 0.1375, 0.8],
+          [3.5, 31, 0.1375, 0.8],
+          [4, 28, 0.1375, 0.8],
+          [4.75, 28, 0.1375, 0.8],
+          [5.25, 31, 0.1375, 0.8],
+          [5.75, 28, 0.1375, 0.8],
+          [6.5, 38, 0.1375, 0.8],
+          [7, 35, 0.1375, 0.8],
+          [7.5, 33, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Chunky",
+          "module": "filter",
+          "why": "A saw with a low-mid cutoff, a strong envelope and resonance; a short decay.\n- WAVEFORM Sawtooth\n- CUTOFF 3 · 455 Hz\n- ENVELOPE (env mod) 6\n- RESONANCE 5\n- DECAY 2 · 320 ms\n- ACCENT 0\n- Listen for: a chunky, bowed bass.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 3,
+            "filter.envMod": 6,
+            "filter.res": 5,
+            "env.decay": 2,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Gnarl",
+          "module": "fx",
+          "why": "High drive with a middle tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 7.5\n- Distortion TONE 5\n- Distortion LEVEL 5\n- Listen for: a gnarly breaks bassline.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 7.5,
+            "dist.tone": 5,
+            "dist.level": 5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Switch to Square",
+          "hear": "A hollower, more electro breaks bass."
+        }
+      ]
+    },
+    {
+      "id": "td-electro-industrial",
+      "name": "Electro-Industrial",
+      "ref": "In the style of Skinny Puppy",
+      "artist": "Skinny Puppy",
+      "tags": ["bass", "electro-industrial", "industrial", "80s"],
+      "level": 2,
+      "blurb": "A dark, harsh, sequenced bass line from the electro-industrial underground.",
+      "how": "Electro-industrial bands ran harsh, sequenced bass lines under abrasive textures. A dark sequence with heavy, abrasive drive.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.1375, 0.8],
+          [0.25, 36, 0.1375, 0.8],
+          [0.5, 37, 0.1375, 0.8],
+          [0.75, 36, 0.1375, 0.8],
+          [1.25, 36, 0.1375, 0.8],
+          [1.5, 31, 0.1375, 0.8],
+          [2, 36, 0.1375, 0.8],
+          [2.25, 36, 0.1375, 0.8],
+          [2.5, 37, 0.1375, 0.8],
+          [2.75, 36, 0.1375, 0.8],
+          [3.25, 39, 0.1375, 0.8],
+          [3.5, 37, 0.1375, 0.8],
+          [4, 36, 0.1375, 0.8],
+          [4.25, 36, 0.1375, 0.8],
+          [4.5, 37, 0.1375, 0.8],
+          [4.75, 36, 0.1375, 0.8],
+          [5.25, 36, 0.1375, 0.8],
+          [5.5, 31, 0.1375, 0.8],
+          [6, 34, 0.1375, 0.8],
+          [6.5, 32, 0.1375, 0.8],
+          [7, 31, 0.1375, 0.8],
+          [7.5, 37, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Dark",
+          "module": "filter",
+          "why": "A saw with a low cutoff, a medium envelope and resonance; a short decay.\n- WAVEFORM Sawtooth\n- CUTOFF 2.5 · 382 Hz\n- ENVELOPE (env mod) 5\n- RESONANCE 6\n- DECAY 1.5 · 280 ms\n- ACCENT 0\n- Listen for: a dark, tight sequence.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 2.5,
+            "filter.envMod": 5,
+            "filter.res": 6,
+            "env.decay": 1.5,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Abrasive",
+          "module": "fx",
+          "why": "High drive with a bright tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 8.5\n- Distortion TONE 7\n- Distortion LEVEL 4\n- Listen for: a harsh electro-industrial bass.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 8.5,
+            "dist.tone": 7,
+            "dist.level": 4
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "dist.tone",
+          "try": "Drop to 2",
+          "hear": "A muffled, darker grind."
+        }
+      ]
+    },
+    {
+      "id": "td-chicago-blues",
+      "name": "Electric Blues Riff",
+      "ref": "In the style of Chicago electric blues",
+      "artist": "Chicago blues",
+      "tags": ["lead", "blues", "chicago blues", "50s"],
+      "level": 2,
+      "blurb": "A swaggering, overdriven stop-time blues riff.",
+      "how": "Chicago electric blues is built on swaggering riffs played through overdriven amps, with stops for the singer. A plucky tone into a warm, cranked amp.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 43, 0.2, 0.8],
+          [0.75, 46, 0.2, 0.8],
+          [1.25, 43, 0.2, 0.8],
+          [4, 43, 0.2, 0.8],
+          [4.75, 46, 0.2, 0.8],
+          [5.25, 48, 0.2, 0.8],
+          [5.75, 46, 0.2, 0.8],
+          [6, 43, 0.2, 0.8],
+          [6.5, 41, 0.2, 0.8],
+          [7.25, 43, 0.2, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Pluck",
+          "module": "filter",
+          "why": "A saw with a middle cutoff, a quick envelope and a little resonance; a medium decay.\n- WAVEFORM Sawtooth\n- CUTOFF 4 · 644 Hz\n- ENVELOPE (env mod) 3.5\n- RESONANCE 2\n- DECAY 3.5 · 450 ms\n- ACCENT 0\n- Listen for: a plucked, guitar-like tone.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 4,
+            "filter.envMod": 3.5,
+            "filter.res": 2,
+            "env.decay": 3.5,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Cranked amp",
+          "module": "fx",
+          "why": "Moderate drive with a warm, darker tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 6\n- Distortion TONE 4\n- Distortion LEVEL 5.5\n- Listen for: a swaggering, overdriven blues riff.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 6,
+            "dist.tone": 4,
+            "dist.level": 5.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "dist.drive",
+          "try": "Raise to 9",
+          "hear": "Blues rock, louder and dirtier."
+        }
+      ]
+    },
+    {
+      "id": "td-funk-rock",
+      "name": "Funk-Rock Slap",
+      "ref": "In the style of 1990s funk rock",
+      "artist": "Funk rock",
+      "tags": ["bass", "funk rock", "rock", "90s"],
+      "level": 2,
+      "blurb": "A snapping, slap-style funk-rock bass with octave pops and ghost notes.",
+      "how": "Funk-rock bass slaps the low note with the thumb and pops the octave with a finger, filling gaps with ghost notes. A bright pluck and soft ghost notes.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 28, 0.1375, 0.8],
+          [0.25, 28, 0.1375, 0.55],
+          [0.5, 40, 0.1375, 0.8],
+          [0.75, 28, 0.1375, 0.55],
+          [1.25, 28, 0.1375, 0.8],
+          [1.5, 40, 0.1375, 0.8],
+          [1.75, 38, 0.1375, 0.8],
+          [2, 28, 0.1375, 0.8],
+          [2.25, 28, 0.1375, 0.55],
+          [2.5, 31, 0.1375, 0.8],
+          [2.75, 33, 0.1375, 0.8],
+          [3.25, 40, 0.1375, 0.8],
+          [3.5, 28, 0.1375, 0.55],
+          [4, 28, 0.1375, 0.8],
+          [4.25, 28, 0.1375, 0.55],
+          [4.5, 40, 0.1375, 0.8],
+          [4.75, 28, 0.1375, 0.55],
+          [5.25, 28, 0.1375, 0.8],
+          [5.5, 40, 0.1375, 0.8],
+          [5.75, 38, 0.1375, 0.8],
+          [6, 33, 0.1375, 0.8],
+          [6.5, 35, 0.1375, 0.8],
+          [7, 38, 0.1375, 0.8],
+          [7.25, 40, 0.1375, 0.8],
+          [7.75, 28, 0.1375, 0.55]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Slap",
+          "module": "filter",
+          "why": "A saw with a brighter cutoff and a quick envelope; a short decay.\n- WAVEFORM Sawtooth\n- CUTOFF 4.5 · 766 Hz\n- ENVELOPE (env mod) 5\n- RESONANCE 2\n- DECAY 1.5 · 280 ms\n- ACCENT 0\n- Listen for: a snappy, slap-like tone.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 4.5,
+            "filter.envMod": 5,
+            "filter.res": 2,
+            "env.decay": 1.5,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Punch",
+          "module": "fx",
+          "why": "Low drive with a bright tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 2.5\n- Distortion TONE 7\n- Distortion LEVEL 6.5\n- Listen for: a snapping funk-rock bass.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 2.5,
+            "dist.tone": 7,
+            "dist.level": 6.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Drop to 2.5",
+          "hear": "A thumb-only, rounder groove."
+        }
+      ]
+    },
+    {
+      "id": "td-grunge",
+      "name": "Grunge Riff",
+      "ref": "In the style of early-1990s grunge",
+      "artist": "Grunge",
+      "tags": ["lead", "grunge", "rock", "90s"],
+      "level": 2,
+      "blurb": "A sludgy, dropped-D power riff with a big, dirty fuzz.",
+      "how": "Grunge guitarists tuned down to drop D and played sludgy riffs through big fuzz pedals. TUNE down two semitones and heavy, dark drive.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.3875, 0.8],
+          [0.75, 38, 0.1375, 0.8],
+          [1, 41, 0.1375, 0.8],
+          [1.5, 43, 0.3875, 0.8],
+          [2.25, 44, 0.1375, 0.8],
+          [2.5, 43, 0.1375, 0.8],
+          [2.75, 41, 0.1375, 0.8],
+          [3, 38, 0.3875, 0.8],
+          [4, 38, 0.3875, 0.8],
+          [4.75, 38, 0.1375, 0.8],
+          [5, 41, 0.1375, 0.8],
+          [5.5, 43, 0.3875, 0.8],
+          [6.25, 48, 0.1375, 0.8],
+          [6.5, 46, 0.1375, 0.8],
+          [6.75, 43, 0.1375, 0.8],
+          [7, 41, 0.3875, 0.8],
+          [7.5, 38, 0.3875, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Drop D",
+          "module": "osc",
+          "why": "TUNE down two semitones, like a guitar in drop D.\n- WAVEFORM Sawtooth\n- TUNE −2 · -2 st\n- Listen for: the riff a little lower and heavier.",
+          "set": {
+            "osc.wave": "saw",
+            "osc.tune": -2
+          }
+        },
+        {
+          "title": "Sludge",
+          "module": "filter",
+          "why": "A middle cutoff, a little envelope; a medium decay.\n- CUTOFF 3.5 · 541 Hz\n- ENVELOPE (env mod) 2\n- RESONANCE 2\n- DECAY 4 · 500 ms\n- ACCENT 0\n- Listen for: a thick, sludgy tone.",
+          "set": {
+            "filter.cutoff": 3.5,
+            "filter.envMod": 2,
+            "filter.res": 2,
+            "env.decay": 4,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Big fuzz",
+          "module": "fx",
+          "why": "High drive with a dark tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 9\n- Distortion TONE 3.5\n- Distortion LEVEL 4.5\n- Listen for: a sludgy grunge riff.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 9,
+            "dist.tone": 3.5,
+            "dist.level": 4.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.tune",
+          "try": "Turn to −7",
+          "hear": "Heavier still, nearly sludge metal."
+        }
+      ]
+    },
+    {
+      "id": "td-math-rock",
+      "name": "Math Rock in Seven",
+      "ref": "In the style of math rock",
+      "artist": "Math rock",
+      "tags": ["lead", "math rock", "rock", "00s"],
+      "level": 3,
+      "blurb": "An intricate, tapping riff that counts in seven.",
+      "how": "Math rock loves odd time signatures and intricate, tapped guitar riffs. This one counts seven eighths to the bar, two bars to the loop, with a clean pluck.",
+      "phrase": {
+        "bpm": 150,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.35, 0.8],
+          [0.5, 64, 0.35, 0.8],
+          [1, 60, 0.35, 0.8],
+          [1.5, 64, 0.35, 0.8],
+          [2, 57, 0.35, 0.8],
+          [2.5, 64, 0.35, 0.8],
+          [3, 59, 0.35, 0.8],
+          [3.5, 57, 0.35, 0.8],
+          [4, 64, 0.35, 0.8],
+          [4.5, 60, 0.35, 0.8],
+          [5, 64, 0.35, 0.8],
+          [5.5, 67, 0.35, 0.8],
+          [6, 66, 0.35, 0.8],
+          [6.5, 64, 0.35, 0.8],
+          [7, 53, 0.35, 0.8],
+          [7.5, 60, 0.35, 0.8],
+          [8, 57, 0.35, 0.8],
+          [8.5, 60, 0.35, 0.8],
+          [9, 53, 0.35, 0.8],
+          [9.5, 60, 0.35, 0.8],
+          [10, 55, 0.35, 0.8],
+          [10.5, 53, 0.35, 0.8],
+          [11, 60, 0.35, 0.8],
+          [11.5, 57, 0.35, 0.8],
+          [12, 60, 0.35, 0.8],
+          [12.5, 64, 0.35, 0.8],
+          [13, 62, 0.35, 0.8],
+          [13.5, 60, 0.35, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Clean pluck",
+          "module": "filter",
+          "why": "A saw with a brighter cutoff, a quick pluck; a short decay.\n- WAVEFORM Sawtooth\n- CUTOFF 5 · 912 Hz\n- ENVELOPE (env mod) 3.5\n- RESONANCE 2\n- DECAY 1.5 · 280 ms\n- ACCENT 0\n- Listen for: a clean, tapped tone.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 5,
+            "filter.envMod": 3.5,
+            "filter.res": 2,
+            "env.decay": 1.5,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Clean",
+          "module": "fx",
+          "why": "No distortion: math rock is usually played clean.\n- DISTORTION OFF/ON Off\n- Listen for: an intricate riff counting in seven.",
+          "set": {
+            "dist.on": false
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Switch to Square",
+          "hear": "A softer, marimba-like riff."
+        }
+      ]
+    },
+    {
+      "id": "td-two-tone-ska",
+      "name": "Two-Tone Ska Bass",
+      "ref": "In the style of 1970s and 80s 2 Tone ska",
+      "artist": "2 Tone ska",
+      "tags": ["bass", "ska", "2 tone", "80s"],
+      "level": 1,
+      "blurb": "A bouncing, walking ska bass that runs up and down the scale.",
+      "how": "Ska bass walks up and down in quarter notes under the offbeat guitar. A round, plucky tone with every beat played.",
+      "phrase": {
+        "bpm": 160,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4, 0.8],
+          [0.5, 40, 0.4, 0.8],
+          [1, 43, 0.4, 0.8],
+          [1.5, 45, 0.4, 0.8],
+          [2, 46, 0.4, 0.8],
+          [2.5, 45, 0.4, 0.8],
+          [3, 43, 0.4, 0.8],
+          [3.5, 40, 0.4, 0.8],
+          [4, 41, 0.4, 0.8],
+          [4.5, 45, 0.4, 0.8],
+          [5, 48, 0.4, 0.8],
+          [5.5, 50, 0.4, 0.8],
+          [6, 51, 0.4, 0.8],
+          [6.5, 50, 0.4, 0.8],
+          [7, 48, 0.4, 0.8],
+          [7.5, 45, 0.4, 0.8],
+          [8, 36, 0.4, 0.8],
+          [8.5, 40, 0.4, 0.8],
+          [9, 43, 0.4, 0.8],
+          [9.5, 45, 0.4, 0.8],
+          [10, 46, 0.4, 0.8],
+          [10.5, 45, 0.4, 0.8],
+          [11, 43, 0.4, 0.8],
+          [11.5, 40, 0.4, 0.8],
+          [12, 43, 0.4, 0.8],
+          [12.5, 47, 0.4, 0.8],
+          [13, 50, 0.4, 0.8],
+          [13.5, 47, 0.4, 0.8],
+          [14, 41, 0.4, 0.8],
+          [14.5, 40, 0.4, 0.8],
+          [15, 38, 0.4, 0.8],
+          [15.5, 35, 0.4, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Round",
+          "module": "filter",
+          "why": "A square with a low-mid cutoff, a small envelope; a short decay.\n- WAVEFORM Square\n- CUTOFF 3 · 455 Hz\n- ENVELOPE (env mod) 3\n- RESONANCE 1\n- DECAY 2 · 320 ms\n- ACCENT 0\n- Listen for: a round, plucky bass.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 3,
+            "filter.envMod": 3,
+            "filter.res": 1,
+            "env.decay": 2,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Switch to Sawtooth",
+          "hear": "A brighter, punkier ska."
+        }
+      ]
+    },
+    {
+      "id": "td-northern-soul",
+      "name": "Northern Soul Stomp",
+      "ref": "In the style of Northern soul",
+      "artist": "Northern soul",
+      "tags": ["bass", "soul", "northern soul", "60s"],
+      "level": 2,
+      "blurb": "A fast, stomping, four-to-the-floor soul bass line.",
+      "how": "Northern soul DJs played fast, stomping Motown-style records. The bass drives on every beat with walking pickups.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.2, 0.8],
+          [0.5, 40, 0.2, 0.8],
+          [1, 40, 0.2, 0.8],
+          [1.5, 43, 0.2, 0.8],
+          [1.75, 44, 0.2, 0.8],
+          [2, 45, 0.2, 0.8],
+          [2.5, 45, 0.2, 0.8],
+          [3, 45, 0.2, 0.8],
+          [3.5, 49, 0.2, 0.8],
+          [3.75, 47, 0.2, 0.8],
+          [4, 40, 0.2, 0.8],
+          [4.5, 40, 0.2, 0.8],
+          [5, 40, 0.2, 0.8],
+          [5.5, 43, 0.2, 0.8],
+          [5.75, 44, 0.2, 0.8],
+          [6, 47, 0.2, 0.8],
+          [6.5, 47, 0.2, 0.8],
+          [7, 45, 0.2, 0.8],
+          [7.25, 44, 0.2, 0.8],
+          [7.5, 42, 0.2, 0.8],
+          [7.75, 40, 0.2, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Stomp",
+          "module": "filter",
+          "why": "A square with a low-mid cutoff and a little envelope; a short decay.\n- WAVEFORM Square\n- CUTOFF 3 · 455 Hz\n- ENVELOPE (env mod) 2.5\n- RESONANCE 1\n- DECAY 2 · 320 ms\n- ACCENT 0\n- Listen for: a round, stomping bass.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 3,
+            "filter.envMod": 2.5,
+            "filter.res": 1,
+            "env.decay": 2,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Raise to 5",
+          "hear": "A brighter, picked bass."
+        }
+      ]
+    },
+    {
+      "id": "td-ambient-drone",
+      "name": "Fifths Drone",
+      "ref": "In the style of ambient drone music",
+      "artist": "Ambient drone",
+      "tags": ["drone", "ambient", "meditation"],
+      "level": 1,
+      "blurb": "A calm, glowing drone of a root and fifth, softly warmed.",
+      "how": "A drone of a root and fifth is the calmest sound in music. Long, slow notes alternating root and fifth with a soft tone and a touch of warmth.",
+      "phrase": {
+        "bpm": 50,
+        "loop": true,
+        "steps": [
+          [0, 38, 3.475, 0.8],
+          [4, 45, 3.475, 0.8],
+          [8, 38, 3.475, 0.8],
+          [12, 33, 3.975, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Soft",
+          "module": "filter",
+          "why": "A saw with a low cutoff, no envelope and gentle resonance; the longest decay.\n- WAVEFORM Sawtooth\n- CUTOFF 2.5 · 382 Hz\n- ENVELOPE (env mod) 0\n- RESONANCE 4\n- DECAY 10 · 2.0 s\n- ACCENT 0\n- Listen for: a soft, glowing tone.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 2.5,
+            "filter.envMod": 0,
+            "filter.res": 4,
+            "env.decay": 10,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Warmth",
+          "module": "fx",
+          "why": "The lowest drive with a dark tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 1\n- Distortion TONE 2\n- Distortion LEVEL 7\n- Listen for: a calm root-and-fifth drone.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 1,
+            "dist.tone": 2,
+            "dist.level": 7
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Raise to 8",
+          "hear": "A singing overtone hovers over the drone."
+        }
+      ]
+    },
+    {
+      "id": "td-film-ostinato",
+      "name": "Film-Score Ostinato",
+      "ref": "In the style of 2010s blockbuster film scores",
+      "artist": "Film scoring",
+      "tags": ["seq", "film", "cinematic", "10s"],
+      "level": 2,
+      "blurb": "A tense, driving, low string-like ostinato for a chase scene.",
+      "how": "Blockbuster scores drive tension with low, repeating ostinatos. Steady sixteenths with accents, a dark tone and some grit.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.1375, 0.8],
+          [0.25, 38, 0.1375, 0.8],
+          [0.5, 38, 0.1375, 1],
+          [0.75, 38, 0.1375, 0.8],
+          [1, 38, 0.1375, 0.8],
+          [1.25, 38, 0.1375, 1],
+          [1.5, 38, 0.1375, 0.8],
+          [1.75, 38, 0.1375, 0.8],
+          [2, 38, 0.1375, 0.8],
+          [2.25, 38, 0.1375, 1],
+          [2.5, 38, 0.1375, 0.8],
+          [2.75, 38, 0.1375, 0.8],
+          [3, 41, 0.1375, 1],
+          [3.25, 38, 0.1375, 0.8],
+          [3.5, 40, 0.1375, 0.8],
+          [3.75, 38, 0.1375, 0.8],
+          [4, 34, 0.1375, 0.8],
+          [4.25, 34, 0.1375, 0.8],
+          [4.5, 34, 0.1375, 1],
+          [4.75, 34, 0.1375, 0.8],
+          [5, 34, 0.1375, 0.8],
+          [5.25, 34, 0.1375, 1],
+          [5.5, 34, 0.1375, 0.8],
+          [5.75, 34, 0.1375, 0.8],
+          [6, 36, 0.1375, 0.8],
+          [6.25, 36, 0.1375, 1],
+          [6.5, 36, 0.1375, 0.8],
+          [6.75, 36, 0.1375, 0.8],
+          [7, 40, 0.1375, 1],
+          [7.25, 36, 0.1375, 0.8],
+          [7.5, 38, 0.1375, 0.8],
+          [7.75, 36, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Low strings",
+          "module": "filter",
+          "why": "A saw with a low-mid cutoff, a small envelope and a little resonance; a short decay.\n- WAVEFORM Sawtooth\n- CUTOFF 3 · 455 Hz\n- ENVELOPE (env mod) 3\n- RESONANCE 2\n- DECAY 1.5 · 280 ms\n- ACCENT 5\n- Listen for: a tense, low string-like tone.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 3,
+            "filter.envMod": 3,
+            "filter.res": 2,
+            "env.decay": 1.5,
+            "amp.accent": 5
+          }
+        },
+        {
+          "title": "Grit",
+          "module": "fx",
+          "why": "Low-moderate drive with a dark tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 4\n- Distortion TONE 3\n- Distortion LEVEL 6\n- Listen for: a driving chase-scene ostinato.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 4,
+            "dist.tone": 3,
+            "dist.level": 6
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "amp.accent",
+          "try": "Raise to 9",
+          "hear": "Harder, more percussive accents."
+        }
+      ]
+    },
+    {
+      "id": "td-survive-arp",
+      "name": "Upside-Down Arpeggio",
+      "ref": "In the style of S U R V I V E",
+      "artist": "S U R V I V E",
+      "tags": ["seq", "synthwave", "film", "tv", "arpeggio", "10s"],
+      "level": 2,
+      "blurb": "A brooding, pulsing minor arpeggio from a 1980s-style TV score.",
+      "how": "S U R V I V E’s TV scores pulse with brooding, sequenced arpeggios. A minor chord in steady sixteenths, warm and slightly gritty.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.2],
+          [0.25, 52, 0.2],
+          [0.5, 55, 0.2],
+          [0.75, 59, 0.2],
+          [1, 60, 0.2],
+          [1.25, 48, 0.2],
+          [1.5, 52, 0.2],
+          [1.75, 55, 0.2],
+          [2, 59, 0.2],
+          [2.25, 60, 0.2],
+          [2.5, 48, 0.2],
+          [2.75, 52, 0.2],
+          [3, 55, 0.2],
+          [3.25, 59, 0.2],
+          [3.5, 60, 0.2],
+          [3.75, 48, 0.2],
+          [4, 48, 0.2],
+          [4.25, 52, 0.2],
+          [4.5, 55, 0.2],
+          [4.75, 59, 0.2],
+          [5, 60, 0.2],
+          [5.25, 48, 0.2],
+          [5.5, 52, 0.2],
+          [5.75, 55, 0.2],
+          [6, 59, 0.2],
+          [6.25, 60, 0.2],
+          [6.5, 48, 0.2],
+          [6.75, 52, 0.2],
+          [7, 55, 0.2],
+          [7.25, 59, 0.2],
+          [7.5, 60, 0.2],
+          [7.75, 48, 0.2],
+          [8, 45, 0.2],
+          [8.25, 48, 0.2],
+          [8.5, 52, 0.2],
+          [8.75, 55, 0.2],
+          [9, 57, 0.2],
+          [9.25, 45, 0.2],
+          [9.5, 48, 0.2],
+          [9.75, 52, 0.2],
+          [10, 55, 0.2],
+          [10.25, 57, 0.2],
+          [10.5, 45, 0.2],
+          [10.75, 48, 0.2],
+          [11, 52, 0.2],
+          [11.25, 55, 0.2],
+          [11.5, 57, 0.2],
+          [11.75, 45, 0.2],
+          [12, 41, 0.2],
+          [12.25, 45, 0.2],
+          [12.5, 48, 0.2],
+          [12.75, 52, 0.2],
+          [13, 53, 0.2],
+          [13.25, 41, 0.2],
+          [13.5, 45, 0.2],
+          [13.75, 48, 0.2],
+          [14, 52, 0.2],
+          [14.25, 53, 0.2],
+          [14.5, 41, 0.2],
+          [14.75, 45, 0.2],
+          [15, 48, 0.2],
+          [15.25, 52, 0.2],
+          [15.5, 53, 0.2],
+          [15.75, 41, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Brooding",
+          "module": "filter",
+          "why": "A saw with a middle cutoff, a small envelope and gentle resonance; a short decay.\n- WAVEFORM Sawtooth\n- CUTOFF 3.5 · 541 Hz\n- ENVELOPE (env mod) 3\n- RESONANCE 4\n- DECAY 1.5 · 280 ms\n- ACCENT 0\n- Listen for: a warm, ticking arpeggio.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 3.5,
+            "filter.envMod": 3,
+            "filter.res": 4,
+            "env.decay": 1.5,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Warm grit",
+          "module": "fx",
+          "why": "Low drive with a dark tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 2.5\n- Distortion TONE 3\n- Distortion LEVEL 6.5\n- Listen for: a brooding, pulsing TV-score arpeggio.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 2.5,
+            "dist.tone": 3,
+            "dist.level": 6.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "Drop to 2",
+          "hear": "Darker, more menacing."
+        }
+      ]
+    },
+    {
+      "id": "td-sunset-acid",
+      "name": "Sunset Acid",
+      "ref": "In the style of Balearic acid",
+      "artist": "Balearic",
+      "tags": ["bass", "acid", "balearic", "chill-out"],
+      "level": 1,
+      "blurb": "A slow, warm, gently squelching acid line for watching the sun go down.",
+      "how": "Acid can be gentle: a slow tempo, soft accents, warm drive and slides, like a sunset set in Ibiza.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.1375, 0.8],
+          [0.75, 40, 0.1375, 0.8],
+          [1.5, 43, 0.28, 0.8],
+          [1.75, 45, 0.1375, 0.8],
+          [2.5, 40, 0.1375, 0.8],
+          [3.25, 38, 0.1375, 0.8],
+          [4, 29, 0.1375, 0.8],
+          [4.75, 36, 0.1375, 0.8],
+          [5.5, 40, 0.28, 0.8],
+          [5.75, 41, 0.1375, 0.8],
+          [6.5, 36, 0.1375, 0.8],
+          [7.25, 35, 0.1375, 0.8],
+          [7.75, 32, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Gentle squelch",
+          "module": "filter",
+          "why": "A saw with a low-mid cutoff, a moderate envelope and resonance; a long decay.\n- WAVEFORM Sawtooth\n- CUTOFF 3 · 455 Hz\n- ENVELOPE (env mod) 4\n- RESONANCE 7\n- DECAY 6 · 800 ms\n- ACCENT 2\n- Listen for: a soft, gentle squelch.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 3,
+            "filter.envMod": 4,
+            "filter.res": 7,
+            "env.decay": 6,
+            "amp.accent": 2
+          }
+        },
+        {
+          "title": "Warm",
+          "module": "fx",
+          "why": "Low drive with a dark tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 2\n- Distortion TONE 2.5\n- Distortion LEVEL 7\n- Listen for: a warm, slow sunset acid line.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 2,
+            "dist.tone": 2.5,
+            "dist.level": 7
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "filter.res",
+          "try": "Raise to 9.5",
+          "hear": "A singing, whistling sunset."
+        }
+      ]
+    },
+    {
+      "id": "td-silver-apples",
+      "name": "Oscillator Pulse",
+      "ref": "In the style of Silver Apples",
+      "artist": "Silver Apples",
+      "tags": ["seq", "psychedelic", "proto-electronic", "60s"],
+      "level": 2,
+      "blurb": "A buzzing, hand-played oscillator pulse from 1960s psychedelia.",
+      "how": "Silver Apples played banks of oscillators by hand over drums in the late 1960s. A buzzing, slightly distorted, repeating pulse.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 43, 0.1375, 0.8],
+          [0.25, 43, 0.1375, 0.8],
+          [0.5, 50, 0.1375, 0.8],
+          [0.75, 43, 0.1375, 0.8],
+          [1, 43, 0.1375, 0.8],
+          [1.25, 43, 0.1375, 0.8],
+          [1.5, 53, 0.1375, 0.8],
+          [1.75, 43, 0.1375, 0.8],
+          [2, 43, 0.1375, 0.8],
+          [2.25, 43, 0.1375, 0.8],
+          [2.5, 50, 0.1375, 0.8],
+          [2.75, 43, 0.1375, 0.8],
+          [3, 46, 0.1375, 0.8],
+          [3.25, 46, 0.1375, 0.8],
+          [3.5, 48, 0.1375, 0.8],
+          [3.75, 50, 0.1375, 0.8],
+          [4, 43, 0.1375, 0.8],
+          [4.25, 43, 0.1375, 0.8],
+          [4.5, 50, 0.1375, 0.8],
+          [4.75, 43, 0.1375, 0.8],
+          [5, 43, 0.1375, 0.8],
+          [5.25, 43, 0.1375, 0.8],
+          [5.5, 53, 0.1375, 0.8],
+          [5.75, 43, 0.1375, 0.8],
+          [6, 41, 0.1375, 0.8],
+          [6.25, 41, 0.1375, 0.8],
+          [6.5, 48, 0.1375, 0.8],
+          [6.75, 41, 0.1375, 0.8],
+          [7, 38, 0.1375, 0.8],
+          [7.25, 38, 0.1375, 0.8],
+          [7.5, 45, 0.1375, 0.8],
+          [7.75, 38, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Buzz",
+          "module": "filter",
+          "why": "A square with a brighter cutoff, no envelope and a little resonance; a short decay.\n- WAVEFORM Square\n- CUTOFF 5 · 912 Hz\n- ENVELOPE (env mod) 0\n- RESONANCE 3\n- DECAY 1 · 250 ms\n- ACCENT 0\n- Listen for: a buzzy, plain oscillator.",
+          "set": {
+            "osc.wave": "sq",
+            "filter.cutoff": 5,
+            "filter.envMod": 0,
+            "filter.res": 3,
+            "env.decay": 1,
+            "amp.accent": 0
+          }
+        },
+        {
+          "title": "Dirty",
+          "module": "fx",
+          "why": "Moderate drive with a middle tone.\n- DISTORTION OFF/ON On\n- DISTORTION (drive) 5\n- Distortion TONE 5\n- Distortion LEVEL 5.5\n- Listen for: a buzzing, psychedelic oscillator pulse.",
+          "set": {
+            "dist.on": true,
+            "dist.drive": 5,
+            "dist.tone": 5,
+            "dist.level": 5.5
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Switch to Sawtooth",
+          "hear": "A harsher, brighter buzz."
+        }
+      ]
+    },
+    {
+      "id": "td-acid-waltz",
+      "name": "Acid Waltz",
+      "ref": "In the style of melodic acid",
+      "artist": "Melodic acid",
+      "tags": ["lead", "acid", "waltz", "chill-out"],
+      "level": 2,
+      "blurb": "A gentle, lilting acid melody in three, soft and sweet.",
+      "how": "The 303 sound in a waltz: a gentle melody in three-four with soft slides and a warm, squelchy tone.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 50, 0.35, 0.8],
+          [1, 57, 0.35, 0.8],
+          [2, 53, 0.53, 0.8],
+          [2.5, 55, 0.35, 0.8],
+          [3, 57, 0.35, 0.8],
+          [5, 55, 0.35, 0.8],
+          [6, 53, 0.35, 0.8],
+          [7, 52, 0.35, 0.8],
+          [8, 50, 0.53, 0.8],
+          [8.5, 52, 0.35, 0.8],
+          [9, 48, 0.35, 0.8],
+          [11, 45, 0.35, 0.8],
+          [12, 50, 0.35, 0.8],
+          [13, 57, 0.35, 0.8],
+          [14, 53, 0.53, 0.8],
+          [14.5, 55, 0.35, 0.8],
+          [15, 57, 0.35, 0.8],
+          [16, 60, 0.35, 0.8],
+          [17, 58, 0.35, 0.8],
+          [18, 57, 0.35, 0.8],
+          [19, 55, 0.35, 0.8],
+          [20, 53, 0.53, 0.8],
+          [20.5, 52, 0.35, 0.8],
+          [21, 50, 2.85, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sweet squelch",
+          "module": "filter",
+          "why": "A saw with a middle cutoff, a moderate envelope and resonance; a medium decay.\n- WAVEFORM Sawtooth\n- CUTOFF 3.5 · 541 Hz\n- ENVELOPE (env mod) 3.5\n- RESONANCE 6.5\n- DECAY 4.5 · 560 ms\n- ACCENT 0\n- Listen for: a soft, singing squelch.",
+          "set": {
+            "osc.wave": "saw",
+            "filter.cutoff": 3.5,
+            "filter.envMod": 3.5,
+            "filter.res": 6.5,
+            "env.decay": 4.5,
+            "amp.accent": 0
+          }
+        }
+      ],
+      "context": {},
+      "tweaks": [
+        {
+          "id": "dist.on",
+          "try": "Switch on",
+          "hear": "A warm, slightly broken waltz."
+        }
+      ]
     }
   ]
 }
