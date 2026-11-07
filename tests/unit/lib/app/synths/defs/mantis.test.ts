@@ -66,7 +66,6 @@ describe('Mantis toEngine at the init patch', () => {
     expect(p.routes).toEqual([
       { src: 'env1', dst: 'amp', amt: 1 },
       { src: 'joyX', dst: 'pitchAll', amt: 2 },
-      { src: 'lfo3', dst: 'pitchAll', amt: 0.5, by: 'joyY' },
     ]);
     expect(p.env1).toMatchObject({ a: 0.001, s: 1 });
     expect(p.env1.r).toBeCloseTo(exp(0.2, 0.003, 10), 10);
@@ -119,10 +118,10 @@ describe('Mantis oscillators', () => {
     const pulse = run({ 'sub.level': 10, 'osc1.wave': 'pulse' });
     expect(pulse.osc[3].level).toBe(0);
     expect(pulse.osc[0].subLevel).toBeCloseTo(0.55, 10);
-    expect(run({ 'sub.level': 10, 'osc1.wave': 'wavetable' }).osc[0].subLevel).toBeCloseTo(
-      0.55,
-      10
-    );
+    // the engine plays no sub square under a morphing wave, so the wavetable keeps the copy
+    const wt = run({ 'sub.level': 10, 'osc1.wave': 'wavetable' });
+    expect(wt.osc[0].subLevel).toBeUndefined();
+    expect(wt.osc[3]).toMatchObject({ level: expect.closeTo(0.55, 10), morph: wt.osc[0].morph });
   });
 
   it('balances Oscillator 1 (and sub) against 2 (and density), then against noise and the ring modulator', () => {
@@ -383,24 +382,30 @@ describe('Mantis switches', () => {
     expect(p.arp?.bpm).toBeCloseTo(exp(0.5, 40, 240) / 8, 10);
   });
 
-  it('bends from the joystick’s X and adds vibrato scaled by its Y, through the stick’s own signals', () => {
-    const p = run({ 'joy.x': -0.5, 'joy.y': 1 });
+  it('bends from the joystick’s X, and adds vibrato from it pushed up but not pulled down', () => {
+    const p = run({ 'joy.x': -0.5, 'joy.y': 0.6 });
     expect(routesTo(p.routes, 'pitchAll')).toEqual([
       { src: 'joyX', dst: 'pitchAll', amt: 2 },
-      { src: 'lfo3', dst: 'pitchAll', amt: 0.5, by: 'joyY' },
+      { src: 'lfo3', dst: 'pitchAll', amt: expect.closeTo(0.3, 10) },
     ]);
-    expect(p.joy).toEqual([-0.5, 1]);
+    expect(p.joy).toEqual([-0.5, 0.6]);
+    expect(routesTo(run({ 'joy.y': -1 }).routes, 'pitchAll')).toEqual([
+      { src: 'joyX', dst: 'pitchAll', amt: 2 },
+    ]);
   });
 
   it('gives an axis up to a mod route that uses it as its SCALE, and only while that route is live', () => {
-    const y = run({ 'vcf.mode': 'wide_band', 'vcf.widthMod': 4, 'route.width.scale': 'joy_y' });
+    const y = run({
+      'vcf.mode': 'wide_band',
+      'vcf.widthMod': 4,
+      'route.width.scale': 'joy_y',
+      'joy.y': 1,
+    });
     expect(routesTo(y.routes, 'pitchAll')).toEqual([{ src: 'joyX', dst: 'pitchAll', amt: 2 }]);
-    const x = run({ 'vcf.cutoffMod': 3, 'route.cutoff.scale': 'joy_x' });
-    expect(routesTo(x.routes, 'pitchAll')).toEqual([
-      { src: 'lfo3', dst: 'pitchAll', amt: 0.5, by: 'joyY' },
-    ]);
+    const x = run({ 'vcf.cutoffMod': 3, 'route.cutoff.scale': 'joy_x', 'joy.y': 1 });
+    expect(routesTo(x.routes, 'pitchAll')).toEqual([{ src: 'lfo3', dst: 'pitchAll', amt: 0.5 }]);
     // a route on Joystick Y with its MOD knob at the centre sends nothing, so the vibrato stays
-    const idle = run({ 'route.width.scale': 'joy_y' });
+    const idle = run({ 'route.width.scale': 'joy_y', 'joy.y': 1 });
     expect(routesTo(idle.routes, 'pitchAll')).toHaveLength(2);
   });
 

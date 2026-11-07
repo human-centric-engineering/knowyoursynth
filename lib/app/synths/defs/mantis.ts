@@ -1482,9 +1482,9 @@ function toEngine(v: ControlValues, _ctx: EngineContext): EngineParams {
       ];
     return [[`env${n}`, 1]];
   };
-  /** One mod route: its SOURCE (times its SCALE) into each destination at its amount. */
   /** The SCALE signals a route is using: a joystick axis that is one gives up its own job. */
   const scaled = new Set<string>();
+  /** One mod route: its SOURCE (times its SCALE) into each destination at its amount. */
   const modRoute = (r: string, dsts: [dst: string, amt: number][]): void => {
     const src = String(v[`route.${r}.source`]);
     const by = SCALE_SIG[String(v[`route.${r}.scale`])] ?? undefined;
@@ -1580,9 +1580,16 @@ function toEngine(v: ControlValues, _ctx: EngineContext): EngineParams {
     default:
       filter = svf('lp', f);
   }
-  const cutDsts: [string, number][] = [['cutoff', cutAmt]];
-  if (hpf && mode !== 'HP24') cutDsts.push(['cutoffHp', cutAmt]);
-  if (mode === 'HP24') cutDsts[0] = ['cutoffHp', cutAmt];
+  // the route moves every filter that is shaping the sound: HP24's main filter is held open
+  const cutDsts: [string, number][] =
+    mode === 'HP24'
+      ? [['cutoffHp', cutAmt]]
+      : hpf
+        ? [
+            ['cutoff', cutAmt],
+            ['cutoffHp', cutAmt],
+          ]
+        : [['cutoff', cutAmt]];
   modRoute('cutoff', cutDsts);
   if (mode === 'wide_band')
     modRoute('width', [
@@ -1618,10 +1625,11 @@ function toEngine(v: ControlValues, _ctx: EngineContext): EngineParams {
     { level: g2 * density, semi: semi2 + densitySemi(num(v, 'osc2.densityRate')), ...w2 },
     { level: 0, semi: oct(1) - 12, ...w1 },
   ];
-  // The sub is Oscillator 1's wave an octave down. On the pulse and the wavetable (whose last third narrows a pulse) it
-  // is Oscillator 1's own sub square instead, because the engine's fourth oscillator takes its width from Oscillator 2's.
+  // The sub is Oscillator 1's wave an octave down. On the pulse it is Oscillator 1's own sub square instead, because the
+  // engine's fourth oscillator takes its width from Oscillator 2's. The wavetable keeps the copy (the engine plays no sub
+  // square under a morph), so in its last third the copy's pulse narrows at Oscillator 2's width.
   const subG = g1 * level10(num(v, 'sub.level'), 1);
-  if (v['osc1.wave'] === 'pulse' || v['osc1.wave'] === 'wavetable') osc[0].subLevel = subG;
+  if (v['osc1.wave'] === 'pulse') osc[0].subLevel = subG;
   else osc[3].level = subG;
 
   // ── the loudness: Envelope 1, its height set by VELOCITY ──
@@ -1630,9 +1638,11 @@ function toEngine(v: ControlValues, _ctx: EngineContext): EngineParams {
   // ── the joystick: X bends, Y adds vibrato, each unless a mod route is using it as its SCALE ──
   const jx = clamp(num(v, 'joy.x'), -1, 1),
     jy = clamp(num(v, 'joy.y'), -1, 1);
-  // always routed through the stick's own signals, so the pitch eases back with it rather than snapping at the centre
+  // the bend is always routed, so the pitch eases back with the stick rather than snapping at the centre; the vibrato
+  // is up only, so it takes the stick's position as its depth
   if (!scaled.has('joyX')) routes.push({ src: 'joyX', dst: 'pitchAll', amt: BEND_SEMI });
-  if (!scaled.has('joyY')) routes.push({ src: 'lfo3', dst: 'pitchAll', amt: VIB_SEMI, by: 'joyY' });
+  if (jy > 0 && !scaled.has('joyY'))
+    routes.push({ src: 'lfo3', dst: 'pitchAll', amt: jy * VIB_SEMI });
 
   // ── tempo, LFOs and the arpeggiator ──
   const bpm = bpmOf(num(v, 'arp.bpm'));
