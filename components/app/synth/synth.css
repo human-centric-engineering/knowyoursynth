@@ -1510,13 +1510,13 @@ svg .kys-hit:focus-visible {
   }
 }
 
-/* The strip up, or the sounds open, rise into the band the lesson card and the
-   tutor's drawer stand on: the dock stacks over them meanwhile, so neither covers
-   the chapters or the library. The card and the drawer also stand on the open
-   strip (`--kys-strip-h`, t-174), so its chapters do not hide their feet. */
+/* The strip up rises into the band the lesson card and the tutor's drawer stand
+   on: the dock stacks over them meanwhile, so neither covers the chapters. The
+   card and the drawer also stand on the open strip (`--kys-strip-h`, t-174), so
+   its chapters do not hide their feet. The library's drawer is the player's own
+   now, outside the dock (t-207), and stacks over all of them by itself. */
 @media (min-width: 1024px) {
-  .kys-dock:has(.kys-design[data-open]),
-  .kys-dock:has(.kys-sounds-pop:not([hidden])) {
+  .kys-dock:has(.kys-design[data-open]) {
     z-index: 46;
   }
 }
@@ -1579,6 +1579,10 @@ svg .kys-hit:focus-visible {
 .kys-card[data-side='left'] {
   right: auto;
   left: 40px;
+}
+/* Docked, a card sized by its grip while it was moved stays inside the screen's sides (t-203). */
+.kys-card:not([data-detached]) {
+  max-width: calc(100vw - 80px);
 }
 /* Moved, the card can go anywhere on the screen, so it floats over the dock and the tutor's drawer (t-202), still
    under the sounds and the player's menus and tips. */
@@ -2644,7 +2648,7 @@ svg .kys-hit:focus-visible {
 }
 .kys-seq-menu-caret {
   color: var(--kys-faint);
-  transition: color 0.15s ease;
+  transition: rotate 0.15s ease;
 }
 .kys-seq-tool.is-open .kys-seq-menu-caret {
   rotate: 180deg;

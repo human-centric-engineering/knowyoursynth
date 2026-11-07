@@ -91,6 +91,8 @@ describe('SoundPicker', () => {
     expect(pick).toHaveAttribute('aria-label', 'Choose a patch (now: Night bass, loading)');
     expect(pick).toHaveAttribute('aria-expanded', 'true');
     expect(pick.querySelector('.kys-led.kys-pulse')).not.toBeNull();
+    // Without an "In the style of…", the tooltip is the whole name, which the box may cut short.
+    expect(pick).toHaveAttribute('title', 'Night bass');
   });
 
   it('closes the library on a press outside it', () => {

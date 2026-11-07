@@ -44,7 +44,8 @@ export function Wordmark({ lit, lesson = false }: { lit: boolean; lesson?: boole
  * of the player bar before). It opens the library as a drawer down the left of the screen (`SoundsDrawer`), over the
  * panel and the Play deck, so it has the screen's height whatever the deck holds (a bottom sheet below `lg`). Its LED
  * pulses while a patch loads, when the keys are silent (`f-default-patch` t-172), so a dead key reads as "wait", not as
- * broken. Its text is the name alone: what is loading is said in its label.
+ * broken. Its text is the name alone, which a long one can run past: its tooltip is the whole name, with its "In the
+ * style of…" where it has one. What is loading is said in its label.
  */
 export function SoundPicker({
   soundName,
@@ -75,7 +76,7 @@ export function SoundPicker({
       onClick={onChooseSound}
       aria-expanded={soundsOpen}
       aria-label={`Choose a patch (now: ${soundName}${loading ? ', loading' : ''})`}
-      title={soundRef ? `${soundName}: ${soundRef}` : 'Choose a patch from the library'}
+      title={soundRef ? `${soundName}: ${soundRef}` : soundName}
     >
       {loading && <span className="kys-led is-lit kys-pulse" aria-hidden="true" />}
       <span className="kys-sound-title truncate">{soundName}</span>

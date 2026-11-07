@@ -790,12 +790,15 @@ function Synth({
       if (!(t instanceof Element)) return;
       // The strip handles its own presses (its tab, its head, its chapters), and the lesson card is the lesson's.
       if (t.closest('.kys-design, .kys-card')) return;
-      if (scrollerRef.current?.contains(t) && chapterChosen.current) return;
+      // Before a chapter, a press on the panel is other work. Once one is chosen, the whole player is where the lesson
+      // is followed: the panel, the keys and Play that sound the step, the rails. Putting the drawer away there would
+      // take the lesson card with it (t-205), so only a press off the player does.
+      if (chapterChosen.current && playerRef.current?.contains(t)) return;
       closeDesign();
     };
     document.addEventListener('pointerdown', onDown, true);
     return () => document.removeEventListener('pointerdown', onDown, true);
-  }, [designOpen, small, scrollerRef, closeDesign]);
+  }, [designOpen, small, closeDesign]);
   const [tutorOpen, setTutorOpen] = useState(false);
   // On a phone the panel settings are behind a button by the sound's name; from `md` up they are always on show.
   // The piano is out by default on a tall screen and put away on a short one, until the Piano button says otherwise.
@@ -2139,7 +2142,7 @@ function Synth({
       '--rail-print': print,
     };
   // The Sound Design strip and the lesson card are of the faceplate too, in its colours (t-201).
-  const face = faceRoles(plate, plate2, print);
+  const face = useMemo(() => faceRoles(plate, plate2, print), [plate, plate2, print]);
   const panelTaps = small
     ? {
         onPointerOverCapture: (e: ReactPointerEvent) => {
@@ -2775,7 +2778,14 @@ function Synth({
                     openSection('build');
                   }}
                   hasLesson={!!shown}
-                  mark={<Wordmark lit={audio === 'on'} lesson={step != null} />}
+                  mark={
+                    <Wordmark
+                      lit={audio === 'on'}
+                      lesson={
+                        step != null && (card === 'build' || designOpen || sheet === 'lesson')
+                      }
+                    />
+                  }
                   lit={chapterLit ? chapterLit.split('|') : []}
                   open={designOpen}
                   face={face}

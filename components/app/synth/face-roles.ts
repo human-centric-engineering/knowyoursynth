@@ -112,16 +112,16 @@ function moduleMix(face: string, ink: string): number {
 }
 
 /**
- * The `--kys-*` roles in a faceplate's colours. `face2` is the darker shade the strip's gradient ends on. A colour
- * that is not hex leaves the roles to the player's (an empty style).
+ * The `--kys-*` roles in a faceplate's colours. `face2` is the darker shade the strip's gradient ends on. A face or
+ * ink that is not hex has none (`undefined`), so the pieces keep the player's roles and are not drawn as faced.
  */
 export function faceRoles(
   face: string,
   face2: string,
   ink: string
-): CSSProperties & Partial<Record<FaceRole, string>> {
+): (CSSProperties & Partial<Record<FaceRole, string>>) | undefined {
   const c = channels(ink);
-  if (!c || !channels(face)) return {};
+  if (!c || !channels(face)) return undefined;
   const shade = channels(face2) ? face2 : face;
   const { accent, on } = accentFor(face, ink);
   return {

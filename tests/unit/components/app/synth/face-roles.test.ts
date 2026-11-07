@@ -41,9 +41,16 @@ describe('mix and contrast', () => {
   });
 });
 
+/** The roles for a face that has them: every face below is hex. */
+const roles = (face: string, face2: string, ink: string) => {
+  const r = faceRoles(face, face2, ink);
+  if (!r) throw new Error(`no roles for ${face} / ${ink}`);
+  return r;
+};
+
 describe('faceRoles', () => {
   it('keeps the player amber on a black face', () => {
-    const r = faceRoles('#1b1c1e', '#121314', '#ecebe6');
+    const r = roles('#1b1c1e', '#121314', '#ecebe6');
     expect(r['--kys-surface']).toBe('#1b1c1e');
     expect(r['--kys-stage']).toBe('#121314');
     expect(r['--kys-text']).toBe('#ecebe6');
@@ -54,7 +61,7 @@ describe('faceRoles', () => {
   });
 
   it('takes the day amber on the outline drawing, with white on it', () => {
-    const r = faceRoles(PAPER, PAPER, INK);
+    const r = roles(PAPER, PAPER, INK);
     expect(r['--kys-accent']).toBe('#b85f06');
     expect(r['--kys-accent-ink']).toBe('#ffffff');
     expect(r['--kys-wash']).toBe('28 37 48');
@@ -62,22 +69,22 @@ describe('faceRoles', () => {
 
   it('falls back to the ink where no amber stands off the face, with the face on it', () => {
     // A yellow face (TD-3): neither amber is 3:1 off it.
-    const r = faceRoles('#f2b21c', '#e3a40f', '#2b2213');
+    const r = roles('#f2b21c', '#e3a40f', '#2b2213');
     expect(r['--kys-accent']).toBe('#2b2213');
     expect(r['--kys-accent-ink']).toBe('#f2b21c');
   });
 
-  it('leaves the roles to the player for a colour that is not hex', () => {
-    expect(faceRoles('pink noise', '#000000', '#ffffff')).toEqual({});
-    expect(faceRoles('#000000', '#000000', 'pink noise')).toEqual({});
+  it('has no roles for a colour that is not hex, so the pieces are not drawn as faced', () => {
+    expect(faceRoles('pink noise', '#000000', '#ffffff')).toBeUndefined();
+    expect(faceRoles('#000000', '#000000', 'pink noise')).toBeUndefined();
   });
 
   it('ends the gradient on the face where its shade is not hex', () => {
-    expect(faceRoles('#1b1c1e', '', '#ecebe6')['--kys-stage']).toBe('#1b1c1e');
+    expect(roles('#1b1c1e', '', '#ecebe6')['--kys-stage']).toBe('#1b1c1e');
   });
 
   it.each(FACES)('stands everything off the %s face', (_id, face, face2, ink) => {
-    const r = faceRoles(face, face2, ink);
+    const r = roles(face, face2, ink);
     const off = (k: '--kys-text' | '--kys-muted' | '--kys-faint' | '--kys-accent') =>
       contrast(r[k] ?? '', face);
     // As far as the print itself, where even that is not as far as wanted (a red face's white print is 5:1).
