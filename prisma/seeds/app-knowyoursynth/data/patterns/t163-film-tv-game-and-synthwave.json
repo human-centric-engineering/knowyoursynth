@@ -1546,8 +1546,7 @@
         "pro-1/dark-eighths-bass",
         "solar-42n/solar-carpenter-ostinato",
         "e7/e7-horror-ostinato",
-        "malevolent/mal-escape-ostinato",
-        "tb-303/tb-carpenter-five"
+        "malevolent/mal-escape-ostinato"
       ],
       "research": {
         "work": "John Carpenter and Alan Howarth, “Escape from New York” (main title), Escape from New York, 1981",
@@ -14875,6 +14874,109 @@
           }
         ],
         "notes": "From the transcription’s “Track 1” lead, bars 1–4, an octave up to sit where the sound plays. On the record the call is a recorder and voices; this is its line. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:ennio-morricone/good-bad-ugly-theme.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:john-carpenter/halloween-piano-figure-low",
+      "name": "Halloween: piano figure, low",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": { "kind": "work", "songId": "john-carpenter-halloween", "part": 0 },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 134,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 42, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 49, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 41, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 47, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 40, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 40, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 47, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 40, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 40, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 47, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 40, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 48, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 40, "gate": 1 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["tb-303/tb-carpenter-five"],
+      "research": {
+        "work": "John Carpenter, “Halloween” (main title), Halloween, 1978",
+        "part": "Six bars of the 5/4 piano figure in eighths: C♯ over F♯ for three bars, C over F for two, then B over E, each bar ending on the note a semitone above its top: the same part two octaves down, where the TB-303’s “Five-Four Dread” plays.",
+        "originalKey": null,
+        "originalBpm": 134,
+        "leads": [
+          {
+            "citation": "John Carpenter — “Halloween Theme”, fan transcription by femboy.gardevoir on Songsterr (revision 3651747, 2025-11-01)",
+            "url": "https://www.songsterr.com/a/wsa/john-carpenter-halloween-theme-tab-s39618",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s “Acoustic Piano” track, bars 1–6, an octave down to sit where the sound plays. Six bars of 5/4 are 30 beats, inside the 8-bar limit, so the figure loops whole rather than cut to 4/4. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved two octaves down from researched:john-carpenter/halloween-piano-figure.",
         "listenedAt": null
       }
     }

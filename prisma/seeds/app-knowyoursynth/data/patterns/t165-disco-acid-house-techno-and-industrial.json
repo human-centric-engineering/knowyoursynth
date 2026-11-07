@@ -60,14 +60,6 @@
       "reason": "In the style of 1980s electro: it names no work, and the batch has no 1980s electro pattern of the part it plays, so the fill is the lesson’s own."
     },
     {
-      "sound": "tb-303/tb-cowbell",
-      "reason": "In the style of 1980s electro: it names no work, and the batch has no 1980s electro pattern of the part it plays, so the cowbell figure is the lesson’s own."
-    },
-    {
-      "sound": "td-3/td-electro-funk-acid",
-      "reason": "In the style of early-1980s New York electro: it names no work, and the batch has no early-1980s New York electro pattern of the part it plays, so the bass line is the lesson’s own."
-    },
-    {
       "sound": "donner-b1/b1-rhythim",
       "reason": "In the style of Rhythim Is Rhythim: it names no work, and the batch has no Rhythim Is Rhythim pattern of the part it plays, so the sequence is the lesson’s own."
     },
@@ -13748,6 +13740,75 @@
       }
     },
     {
+      "key": "researched:afrika-bambaataa/planet-rock-cowbell-high",
+      "name": "Planet Rock: cowbell, high",
+      "role": "percussive",
+      "tempo": null,
+      "inspiredBy": { "kind": "genre", "label": "Afrika Bambaataa" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 127,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 79, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 79, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 79, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 79, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 79, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 79, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 79, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 79, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 79, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 79, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [{ "note": 79, "gate": 0.5 }] },
+              { "on": true, "notes": [] },
+              { "on": true, "notes": [] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["tb-303/tb-cowbell"],
+      "research": {
+        "work": "Afrika Bambaataa & the Soulsonic Force, “Planet Rock”, 1982",
+        "part": "Two bars of 808 cowbell in a dotted, off-beat rhythm: the same part an octave up, where the TB-303’s “Electro Cowbell” plays.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "Nothing for “Planet Rock” was found on Songsterr or BitMIDI. The sound names the 808 cowbell of electro, not a work. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave up from researched:afrika-bambaataa/planet-rock-cowbell.",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:afrika-bambaataa/planet-rock-cowbell-a",
       "name": "Planet Rock: cowbell, on A",
       "role": "percussive",
@@ -14056,7 +14117,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["super-gemini/sg-sync-bass", "syntrx-ii/syntrx-sync-bass", "e7/e7-sync-bass"],
+      "sounds": [
+        "super-gemini/sg-sync-bass",
+        "syntrx-ii/syntrx-sync-bass",
+        "e7/e7-sync-bass",
+        "td-3/td-electro-funk-acid"
+      ],
       "research": {
         "work": "Kraftwerk, “Numbers”, Computer World, 1981",
         "part": "The syncopated one-note bass on G♯: the first beat, the second and its “and”, then the “and” of three and the fourth.",

@@ -664,27 +664,41 @@ describe('the research batches', () => {
     );
   });
 
-  it('moves every -low and -high copy evenly from the pattern it copies, and nothing else', () => {
-    // A -low or -high copy carries its pattern to a sound that plays lower or higher (t-191 added 34, each an octave or two).
+  it('moves every -low and -high copy evenly from the pattern it copies, and changes nothing else', () => {
+    // A copy carries its pattern to a sound that plays lower or higher, by whole octaves (t-191 made 37), except the one
+    // retuned on purpose, named here. Its key makes it a copy, so a pattern cannot leave itself out of this check.
+    const retuned: Record<string, number> = { 'researched:kraftwerk/numbers-kick-low': -7 };
+    // Copies that play their part in another role (a riff as a bass line) or credit another part of the work.
+    const recast = new Set([
+      'researched:daft-punk/da-funk-breakdown-figure-low',
+      'researched:daft-punk/da-funk-riff-low',
+      'researched:acid-house/acid-line-high',
+      'researched:yazoo/dont-go-riff-low',
+      'researched:jon-hopkins/open-eye-signal-roots-high',
+    ]);
     const byKey = new Map(patterns.map((p) => [p.key, p]));
     const baseOf = (key: string) => key.replace(/-(low|high)(-2)?$/, '');
-    const copies = patterns.filter((p) => p.key !== baseOf(p.key) && byKey.has(baseOf(p.key)));
+    const copies = patterns.filter((p) => p.key !== baseOf(p.key));
     expect(copies.length).toBeGreaterThan(50);
-    const shape = (p: (typeof patterns)[number]) =>
-      compileLoop(PatternSchema.parse(p.pattern), { loop: 0, rng: seededRng(1) }).notes.map(
+    const shape = (p: (typeof patterns)[number]) => ({
+      notes: compileLoop(PatternSchema.parse(p.pattern), { loop: 0, rng: seededRng(1) }).notes.map(
         ([beat, , len, velocity]) => [beat, len, velocity]
-      );
+      ),
+      grid: [p.pattern.bpm, p.pattern.stepSize, p.pattern.swing, p.pattern.loop, p.pattern.chain],
+      kept: [p.tempo, p.fidelity, p.research.work, p.research.leads],
+      cast: recast.has(p.key) ? null : [p.role, p.inspiredBy],
+    });
     for (const copy of copies) {
-      const base = byKey.get(baseOf(copy.key))!;
-      const by = pitches(copy.key)[0] - pitches(base.key)[0];
-      expect(by, copy.key).not.toBe(0);
+      const base = byKey.get(baseOf(copy.key));
+      expect(base, `${copy.key} copies no pattern`).toBeDefined();
+      const by = pitches(copy.key)[0] - pitches(base!.key)[0];
+      if (copy.key in retuned) expect(by, copy.key).toBe(retuned[copy.key]);
+      else expect([-24, -12, 12, 24], copy.key).toContain(by);
       expect(by < 0, copy.key).toBe(/-low(-2)?$/.test(copy.key));
-      // An octave copy says so in its notes; the rest (the Numbers kick, a fifth down) are retuned on purpose.
-      if (/This copy is moved/.test(copy.research.notes))
-        expect([-24, -12, 12, 24], copy.key).toContain(by);
-      expect(pitches(copy.key), copy.key).toEqual(pitches(base.key).map((n) => n + by));
-      expect(shape(copy), copy.key).toEqual(shape(base));
-      expect(copy.research.leads, copy.key).toEqual(base.research.leads);
+      expect(pitches(copy.key), copy.key).toEqual(pitches(base!.key).map((n) => n + by));
+      const [mine, theirs] = [shape(copy), shape(base!)];
+      expect({ ...mine, cast: null }, copy.key).toEqual({ ...theirs, cast: null });
+      if (mine.cast) expect(mine.cast, copy.key).toEqual(theirs.cast);
     }
   });
 

@@ -166,10 +166,6 @@
     {
       "sound": "tb-303/tb-moondawn-pulse",
       "reason": "Names Moondawn, which no pattern in this batch has yet; the pulse is the lesson’s own, written to the style rather than taken from the record."
-    },
-    {
-      "sound": "td-3/td-silver-apples",
-      "reason": "In the style of Silver Apples: it names no work, and the batch has no Silver Apples pattern of the part it plays, so the pulse is the lesson’s own."
     }
   ],
   "patterns": [
@@ -11411,7 +11407,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["syntrx-ii/syntrx-silver-apples"],
+      "sounds": ["syntrx-ii/syntrx-silver-apples", "td-3/td-silver-apples"],
       "research": {
         "work": "Silver Apples, the oscillator drones of their records",
         "part": "One C held for four bars.",

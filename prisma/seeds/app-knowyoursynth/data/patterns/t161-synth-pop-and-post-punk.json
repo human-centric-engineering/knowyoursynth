@@ -26,10 +26,6 @@
     {
       "sound": "malevolent/mal-whip-it-bass",
       "reason": "The batch has the work’s lead line (“Whip It: synth riff”), not the part this bass plays; the riff is written to the style and taken from no record."
-    },
-    {
-      "sound": "donner-b1/b1-omd",
-      "reason": "In the style of Orchestral Manoeuvres in the Dark: it names no work, and the batch has no Orchestral Manoeuvres in the Dark pattern of the part it plays, so the sequence is the lesson’s own."
     }
   ],
   "patterns": [
@@ -17621,6 +17617,65 @@
           }
         ],
         "notes": "From the transcription’s “Bob 2” sawtooth track, bars 6–7: its lower octave, moved down an octave to sit where the sound plays. The track doubles the riff at the octave; the sound is single-voiced. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:devo/whip-it-riff.",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:omd/enola-gay-pre-theme-low",
+      "name": "Enola Gay: pre-theme line, low",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": { "kind": "work", "songId": "omd-enola-gay" },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 140,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 53, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 50, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 55, "gate": 1 }] },
+              { "on": true, "notes": [{ "note": 52, "gate": 1 }] }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["donner-b1/b1-omd"],
+      "research": {
+        "work": "Orchestral Manoeuvres in the Dark, “Enola Gay”, Organisation, 1980",
+        "part": "Two bars of the eighth-note line before the theme: F, D, F, E, with G for the last F in the second bar: the same part an octave down, where the B1’s “Electric Pop Sequence” plays.",
+        "originalKey": null,
+        "originalBpm": 140,
+        "leads": [
+          {
+            "citation": "Orchestral Manoeuvres in the Dark — “Enola Gay”, fan transcription by ChessPiece99 on Songsterr (revision 605037, 2023-08-13)",
+            "url": "https://www.songsterr.com/a/wsa/orchestral-manoeuvres-in-the-dark-enola-gay-tab-s77831",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "From the transcription’s “Lead Synth” track, bars 5–6, as written. Neither sound names a work (one names OMD, the other early synth-pop); this is the plainest synth-pop line the free web has in readable notes. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:omd/enola-gay-pre-theme.",
         "listenedAt": null
       }
     }
