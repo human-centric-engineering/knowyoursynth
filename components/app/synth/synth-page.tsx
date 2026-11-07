@@ -56,7 +56,6 @@ import type { PublicPattern } from '@/lib/app/patterns/data';
 import type { Pattern } from '@/lib/app/sequencer/pattern';
 import { lessonPreset } from '@/lib/app/sounds/lesson';
 import {
-  DEFAULT_PATCH_ID,
   DEFAULT_PATCH_NAME,
   START_STEP,
   defaultPatchSound,
@@ -93,7 +92,6 @@ import {
   AudioWaveform,
   Columns4,
   Flame,
-  Eraser,
   Piano,
   Play,
   Redo2,
@@ -2855,19 +2853,6 @@ function Synth({
                       </button>
                     </PlayerTip>
                   )}
-                  <PlayerTip
-                    name={DEFAULT_PATCH_NAME}
-                    help="Go back to the plain sawtooth every patch here starts from, which you can set your own synth to."
-                  >
-                    <button
-                      type="button"
-                      onClick={() => selectPreset(DEFAULT_PATCH_ID)}
-                      className="kys-layer"
-                    >
-                      <Eraser size={16} aria-hidden="true" />
-                      {DEFAULT_PATCH_NAME}
-                    </button>
-                  </PlayerTip>
                   <span className="flex-1" />
                   {/* Capped below `lg`, so the row wraps its own buttons rather than run off a phone. */}
                   <div className="kys-autohide flex flex-wrap items-center gap-2 max-lg:max-w-full lg:flex-nowrap">

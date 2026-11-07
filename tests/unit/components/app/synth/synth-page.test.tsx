@@ -208,6 +208,15 @@ const storeSession = (s: { values?: Record<string, unknown>; [key: string]: unkn
 };
 
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
+/** The Default patch, chosen from the patches drawer, where it is first (the bar's button is gone, t-208). */
+const chooseDefaultPatch = () => {
+  fireEvent.click(button(/^Choose a patch/));
+  fireEvent.click(
+    within(screen.getByRole('dialog', { name: 'Patches' }))
+      .getAllByRole('button')
+      .filter((b) => b.textContent?.includes('Default patch'))[0]
+  );
+};
 /** A control in the panel settings on the panel's foot rail (t-72). */
 const setting = (name: string | RegExp) =>
   within(screen.getByRole('group', { name: 'Panel settings' })).getByRole('button', { name });
@@ -339,7 +348,8 @@ describe('SynthPage layout', () => {
     page();
     expect(loadedName()).toBe('Default patch');
     expect(screen.queryByText(/controls? moved/)).toBeNull();
-    expect(button('Default patch')).toBeTruthy();
+    // Chosen from the patches drawer, where it is first: the bar has no button of its own for it (t-208).
+    expect(screen.queryByRole('button', { name: 'Default patch' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Restore patch' })).toBeNull();
     // Model D's Default patch opens the filter all the way, where init leaves it at 1.
     expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
@@ -436,7 +446,7 @@ describe('SynthPage engine', () => {
     page();
     const before = paramsSent().at(-1)?.p;
 
-    fireEvent.click(button('Default patch'));
+    chooseDefaultPatch();
 
     const after = paramsSent().at(-1)?.p;
     expect(after).not.toEqual(before);
@@ -624,7 +634,7 @@ describe('SynthPage patch', () => {
     expect(button('Unplug all cables')).toBeTruthy();
     expect(screen.queryByText(/controls? moved/)).toBeNull();
 
-    fireEvent.click(button('Default patch'));
+    chooseDefaultPatch();
 
     expect(screen.queryByRole('button', { name: 'Unplug all cables' })).toBeNull();
     expect(loadedName()).toBe('Default patch');
@@ -1114,7 +1124,7 @@ describe('SynthPage glides', () => {
     });
     page();
     await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('2'), { timeout: 5000 });
-    fireEvent.click(button('Default patch'));
+    chooseDefaultPatch();
     await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('5'), { timeout: 5000 });
     await new Promise((r) => setTimeout(r, 500));
     const loops = err.mock.calls.filter((c) => String(c[0]).includes('Maximum update depth'));
