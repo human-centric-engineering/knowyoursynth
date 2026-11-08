@@ -13,7 +13,7 @@ export const ACKNOWLEDGE_PATH = 'acknowledge';
 
 export const ROLE_LABELS: Record<PatternRole, string> = {
   lead_line: 'Lead line',
-  held: 'Held',
+  held: 'Drone',
   bass_line: 'Bass line',
   slow_melody: 'Slow melody',
   percussive: 'Percussive',

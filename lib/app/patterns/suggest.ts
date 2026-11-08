@@ -116,7 +116,7 @@ export interface Suggestion {
   role: PatternRole;
   /** The role's share for this sound times how well the pattern fits it: comparable only within one call. */
   score: number;
-  /** Why, in words: `slow attack, holds → held`. */
+  /** Why, in words: `slow attack, holds → drone`. */
   reason: string;
 }
 
@@ -154,7 +154,7 @@ export function suitedRoles(kind: SoundKind): PatternRole[] {
   );
 }
 
-/** `slow attack, low register → held, slow melody`: the sound's traits, and the roles that suit it most. */
+/** `slow attack, low register → drone, slow melody`: the sound's traits, and the roles that suit it most. */
 export function kindSummary(kind: SoundKind): string {
   const roles = suitedRoles(kind)
     .slice(0, 3)

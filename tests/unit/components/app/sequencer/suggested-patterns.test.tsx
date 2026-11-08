@@ -27,6 +27,7 @@ import { apiClient } from '@/lib/api/client';
 import { importPhrase } from '@/lib/app/sequencer/import';
 import { patternFacts } from '@/lib/app/patterns/library-facts';
 import type { LibraryPatternView } from '@/lib/app/patterns/library';
+import { ROLE_LABELS } from '@/lib/app/patterns/library-labels';
 import type { SuggestResult } from '@/lib/app/patterns/suggest-read';
 import type { Phrase, Preset, SynthDef } from '@/lib/app/synths/contract';
 import { getSynthDef } from '@/lib/app/synths/defs';
@@ -52,13 +53,13 @@ vi.mock('@/lib/api/client', () => ({
           role: 'held',
           register: 'mid',
           traits: ['slow attack', 'holds'],
-          summary: 'slow attack, holds → held, chord changes',
+          summary: 'slow attack, holds → drone, chord changes',
         },
         suggestions: (server.suits as LibraryPatternView[]).map((pattern) => ({
           id: pattern.id,
           role: pattern.role,
           score: 0.4,
-          reason: `slow attack, holds → ${pattern.role}`,
+          reason: `slow attack, holds → ${ROLE_LABELS[pattern.role].toLowerCase()}`,
           pattern,
         })),
       };
@@ -212,9 +213,9 @@ describe('Suits this sound', () => {
     expect(groups).toEqual([`${BASS.name}’s patterns`, 'Suits this sound']);
     const suits = within(screen.getByRole('list', { name: 'Suits this sound' }));
     expect(suits.getByRole('button', { name: /Long note/ }).getAttribute('title')).toBe(
-      'Slow attack, holds → held'
+      'Slow attack, holds → drone'
     );
-    expect(screen.getByText('Slow attack, holds → held, chord changes')).toBeTruthy();
+    expect(screen.getByText('Slow attack, holds → drone, chord changes')).toBeTruthy();
     expect(post()).toHaveBeenCalledTimes(1);
     const [, options] = post().mock.calls[0] as [string, { body: Record<string, unknown> }];
     expect(options.body).toMatchObject({ synthId: 'model-d', sound: BASS.id });

@@ -250,6 +250,7 @@ describe('soundTraits and kindSummary', () => {
     expect(soundTraits(PAD)).toEqual(['slow attack', 'holds', 'plays chords']);
     expect(soundTraits(BASS)).toEqual(['sharp attack', 'dies away', 'low register']);
     expect(kindSummary(BASS)).toMatch(/^sharp attack, dies away, low register → bass line, /);
+    expect(kindSummary(PAD)).toMatch(/^slow attack, holds, plays chords → drone, /);
   });
 });
 
