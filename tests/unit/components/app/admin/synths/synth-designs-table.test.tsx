@@ -206,6 +206,27 @@ describe('switching to faithful', () => {
     expect(within(row('model-d')).getByText('Neutral')).toBeInTheDocument();
   });
 
+  it('refuses an approval dated after today before sending it', async () => {
+    const user = userEvent.setup();
+    render(<SynthDesignsTable synths={[synth()]} />);
+
+    await user.click(screen.getByRole('button', { name: 'Switch Moog Model D to faithful' }));
+    const dialog = screen.getByRole('dialog');
+    await user.type(
+      within(dialog).getByLabelText(/Approved by/, { selector: 'input' }),
+      'Jane Doe'
+    );
+    const date = within(dialog).getByLabelText(/Date approved/, { selector: 'input' });
+    await user.type(date, '2999-01-01');
+    await user.click(within(dialog).getByRole('button', { name: 'Switch to faithful' }));
+
+    expect(patch).not.toHaveBeenCalled();
+    expect(within(dialog).getByRole('alert')).toHaveTextContent(
+      'The approval date cannot be in the future.'
+    );
+    expect(date).toHaveFocus();
+  });
+
   it("shows the approval rule's refusal by its field message", async () => {
     const user = userEvent.setup();
     patch.mockRejectedValue(

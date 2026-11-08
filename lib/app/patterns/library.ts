@@ -78,7 +78,11 @@ export const PatternSourceSchema = z
     type: z.enum(PATTERN_SOURCE_TYPES),
     /** Author, title, publisher or site, and date: enough to find it again. */
     citation: z.string().trim().min(1).max(500),
-    url: z.string().url().max(2000).optional(),
+    /** A web address only: it becomes a link on the admin page, so no other scheme gets in (`javascript:`, `data:`). */
+    url: z
+      .url({ protocol: /^https?$/ })
+      .max(2000)
+      .optional(),
     /** When it was checked, `YYYY-MM-DD`. */
     checkedAt: z.string().date(),
   })
@@ -86,6 +90,23 @@ export const PatternSourceSchema = z
 export type PatternSource = z.infer<typeof PatternSourceSchema>;
 
 export const PatternSourcesSchema = z.array(PatternSourceSchema).max(20);
+
+/**
+ * Sources as a row stores them. A row saved before a link had to be a web address keeps its source and loses only that
+ * link, rather than the whole pattern leaving every read.
+ */
+const StoredPatternSourcesSchema = z
+  .array(
+    PatternSourceSchema.extend({
+      url: z
+        .string()
+        .optional()
+        .transform((url) =>
+          PatternSourceSchema.shape.url.safeParse(url).success ? url : undefined
+        ),
+    })
+  )
+  .max(20);
 
 /** Who made the riffs every sound came with (owner ruling, 2026-10-31: every one is _AI-generated_). */
 export const RIFF_MADE_BY = 'An AI agent, writing the sound library';
@@ -582,7 +603,7 @@ export const ENABLED = { status: 'enabled' } as const satisfies Prisma.LibraryPa
  */
 export function toView(row: LibraryPattern): LibraryPatternView | null {
   const pattern = PatternSchema.safeParse(row.pattern);
-  const sources = PatternSourcesSchema.safeParse(row.sources);
+  const sources = StoredPatternSourcesSchema.safeParse(row.sources);
   if (!pattern.success || !sources.success) return null;
   return {
     id: row.id,

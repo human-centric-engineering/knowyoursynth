@@ -24,7 +24,7 @@ only from them (D13).
 | `BankRemoval`          | A row an admin removed (kind and id), so the seed does not re-create it.                                                          |
 
 The schema is in `prisma/schema/app.prisma`. Like the catalogue, the tables are on
-`GLOBAL_CONFIG_MODELS` (a divergence, sunrise#964) and hold nothing about a person. Users'
+classified global config (`lib/app/tenancy-classification.ts`) and hold nothing about a person. Users'
 suggestions are a separate table, `SynthSuggestion` ([below](#suggestions)).
 
 Things the files did that the tables do differently:
@@ -242,9 +242,9 @@ since a Prisma relation would need a field on the platform's `User`. The foreign
 hand in the migration, `ON DELETE SET NULL`, so an erased user's suggestions stay as history with
 nobody attached. A drift probe in `lib/app/db-drift.ts` pins it. The table is declared in
 `lib/app/data-export.ts`, so a subject-access export includes the user's own suggestions. It is
-on `SYSTEM_MODELS`, beside `ContactSubmission`: like a contact message it is an inbound
+classified system, like core's `ContactSubmission`: like a contact message it is an inbound
 submission decided from one queue, so scoping it to an org would hide it from the admins who act
-on it. It is not on `GLOBAL_CONFIG_MODELS` because a suggestion is not a shared setting. That list
+on it. It is not global config because a suggestion is not a shared setting. That class
 is what the shared-settings guard reads, and it would refuse the signed-in user's `POST`.
 
 ## Don't

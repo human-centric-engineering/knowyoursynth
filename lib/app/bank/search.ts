@@ -18,7 +18,7 @@
  * the tutor's tool merges its results in: this file never calls a model.
  *
  * Tenancy posture: shared by decision. The one cached index is the databank's, which is global config
- * (`GLOBAL_CONFIG_MODELS`) and the same for every org; it would be wrong only if the bank became per-org.
+ * (`lib/app/tenancy-classification.ts`) and the same for every org; it would be wrong only if the bank became per-org.
  */
 import { computeETag } from '@/lib/api/etag';
 import type { Bank } from '@/lib/app/bank/data';

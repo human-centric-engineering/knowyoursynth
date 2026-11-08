@@ -25,8 +25,8 @@ recordings its owner links on it (`links`, a JSON column; [`links.md`](./links.m
   them. A drift probe in `lib/app/db-drift.ts` pins it.
 - **It is declared for export.** `lib/app/data-export.ts` returns a user's sounds, panels
   included, under `app.sounds` in their subject-access export.
-- **It is on `SYSTEM_MODELS`, with no `orgId`.** A user's sounds are theirs whichever org they act
-  in (owner ruling, 2026-10-15). Ledger row in [`divergences.md`](./divergences.md).
+- **It is user-owned, with no `orgId`** (`lib/app/tenancy-classification.ts`). A user's sounds are theirs
+  whichever org they act in (owner ruling, 2026-10-15).
 - **The synth is `Restrict`.** Nothing deletes a `Synth` row; if something ever does, it has to
   decide what happens to the sounds made on it first.
 
@@ -116,7 +116,7 @@ What the page keeps in browser storage as `kys.tips`, `dim`, `heat`, `harm`, `fx
 (`kys.synth`, `view`, `fxOpen`, `midi`) stay in the browser (D4). There is no stored scope setting,
 so the plan's "scope" has no row.
 
-- **Two tables**, beside `UserSound` on `SYSTEM_MODELS` with no `orgId`, each with a hand-written
+- **Two tables**, user-owned beside `UserSound` with no `orgId`, each with a hand-written
   `ON DELETE CASCADE` user FK pinned by a drift probe, and each declared for export
   (`app.synthPanels`, `app.synthSettings`). `SynthPreference` is keyed on user and synth, and holds
   the `kys.session` shape with the definition version. `UserPreference` is one row per user: a
@@ -183,7 +183,7 @@ sections.
 What the prototype did not have: how far a signed-in user got through each library sound's lesson,
 and a star on a synth, a library sound or one of their own sounds. Signed out, neither shows.
 
-- **Two tables**, beside the others on `SYSTEM_MODELS` with no `orgId`, each with a hand-written
+- **Two tables**, user-owned beside the others with no `orgId`, each with a hand-written
   `ON DELETE CASCADE` user FK pinned by a drift probe, and each declared for export
   (`app.lessonProgress`, `app.favourites`, which name the library sound by synth and slug, not by
   row id). What a row points at is a real `Cascade` relation: progress on a library sound, or a

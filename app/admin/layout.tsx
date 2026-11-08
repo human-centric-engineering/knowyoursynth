@@ -15,6 +15,7 @@ import {
   requestSupportSession,
 } from '@/lib/auth/admin-page-viewer';
 import { SupportBanner } from '@/components/admin/support-banner';
+import { isWaitlistEnabled } from '@/lib/waitlist/config';
 import { isMultiTenant } from '@/lib/tenancy/context';
 import { logger } from '@/lib/logging';
 import {
@@ -144,14 +145,21 @@ export default async function AdminLayout({
 
   return (
     <div className="bg-background flex h-screen overflow-hidden">
-      <AdminSidebar viewerTier={viewerTier} multiTenant={multiTenant} orgTierPages={orgTierPages} />
+      <AdminSidebar
+        viewerTier={viewerTier}
+        multiTenant={multiTenant}
+        orgTierPages={orgTierPages}
+        waitlistEnabled={isWaitlistEnabled()}
+      />
       <div className="flex flex-1 flex-col overflow-hidden">
         {supportSession && <SupportBanner view={supportSession} />}
         {/* Every page of one org's rows, closed sections included: a platform
             admin there is still looking at the entered org's. */}
         <AdminHeader orgName={actingOrg?.name} orgTierPages={orgScopedAdminPages()} />
         <InFlightExecutionBanner />
-        <main className="flex-1 overflow-y-auto overscroll-contain">
+        {/* Scroll padding: a field brought into view by focus clears the
+            sticky Save bars forms pin to the top or bottom of this area. */}
+        <main className="flex-1 scroll-py-32 overflow-y-auto overscroll-contain">
           <div className="p-6">
             <SharedSettingsAccessProvider
               readOnly={sharedSettings.readOnly}

@@ -19,6 +19,7 @@ import {
   SharedSettingsSaveHint,
   useSharedSettingsReadOnly,
 } from '@/components/admin/shared-settings-access';
+import { SaveError } from '@/components/forms/form-error';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -43,6 +44,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { apiClient, APIClientError } from '@/lib/api/client';
 import type { AdminSynthDesign, SynthDesignInput } from '@/lib/app/catalogue/designs';
+import { useSaveFailure } from '@/lib/hooks/use-save-failure';
 
 export interface SynthDesignsTableProps {
   synths: AdminSynthDesign[];
@@ -237,15 +239,23 @@ function ApprovalDialog({ synth, onClose, onSubmit }: ApprovalDialogProps) {
   const [approvedAt, setApprovedAt] = useState(synth.approval?.approvedAt ?? '');
   const [note, setNote] = useState(synth.approval?.note ?? '');
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const save = useSaveFailure({ fallback: 'The approval could not be saved.' });
 
   const complete = approvedBy.trim() !== '' && approvedAt !== '';
 
-  const submit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const submit = async (event?: React.BaseSyntheticEvent) => {
+    event?.preventDefault();
     if (!complete) return;
+    // The browser's `max` is off under noValidate, and the server allows the day ahead of most admins (UTC+14).
+    if (
+      save.block(
+        approvedAt > today()
+          ? [{ field: 'approved-at', message: 'The approval date cannot be in the future.' }]
+          : []
+      )
+    )
+      return;
     setSaving(true);
-    setError(null);
     const message = await onSubmit({
       approvedBy: approvedBy.trim(),
       approvedAt,
@@ -253,7 +263,7 @@ function ApprovalDialog({ synth, onClose, onSubmit }: ApprovalDialogProps) {
     });
     // On success the dialog is closed by its owner; only a refusal comes back here.
     if (message) {
-      setError(message);
+      save.show(message);
       setSaving(false);
     }
   };
@@ -261,7 +271,7 @@ function ApprovalDialog({ synth, onClose, onSubmit }: ApprovalDialogProps) {
   return (
     <Dialog open onOpenChange={(open) => !open && !saving && onClose()}>
       <DialogContent>
-        <form onSubmit={(event) => void submit(event)} className="space-y-4">
+        <form noValidate onSubmit={save.submit(submit)} className="space-y-4">
           <DialogHeader>
             <DialogTitle>
               Show {synth.maker}&apos;s marks on the {synth.name}
@@ -335,11 +345,7 @@ function ApprovalDialog({ synth, onClose, onSubmit }: ApprovalDialogProps) {
             />
           </div>
 
-          {error && (
-            <p role="alert" className="text-destructive text-sm">
-              {error}
-            </p>
-          )}
+          <SaveError failure={save.failure} />
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose} disabled={saving}>

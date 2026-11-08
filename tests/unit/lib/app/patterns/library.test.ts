@@ -27,6 +27,7 @@ import {
   type InspirationContext,
   type LibraryDb,
   RIFF_MADE_BY,
+  PatternSourceSchema,
 } from '@/lib/app/patterns/library';
 import { defaultRole, patternFacts } from '@/lib/app/patterns/library-facts';
 import { seedCatalogue } from '@/lib/app/catalogue/seed';
@@ -531,5 +532,42 @@ describe('the view', () => {
     expect(view?.facts.voices).toBeGreaterThan(0);
     expect(view?.name).toBe(soundRow(0).name);
     expect(toView({ ...row, pattern: { version: 99 } })).toBeNull();
+  });
+
+  it('keeps a stored source whose link is not a web address, without the link', async () => {
+    await syncRiffPatterns(lib());
+    const row = structuredClone(patternOf(0)) as Parameters<typeof toView>[0];
+    const source = { type: 'video', citation: 'A lesson, a site, 2024', checkedAt: '2026-10-31' };
+    const view = toView({
+      ...row,
+      sources: [
+        { ...source, url: 'javascript:alert(1)' },
+        { ...source, url: 'https://example.com/lesson' },
+      ],
+    });
+    expect(view?.sources.map((s) => s.url)).toEqual([undefined, 'https://example.com/lesson']);
+    expect(view?.sources[0].citation).toBe(source.citation);
+  });
+});
+
+describe("a pattern's source", () => {
+  const source = {
+    type: 'video',
+    citation: 'A lesson, a site, 2024',
+    checkedAt: '2026-10-31',
+  } as const;
+
+  it('takes a web address', () => {
+    for (const url of ['https://example.com/lesson', 'http://example.com/lesson'])
+      expect(PatternSourceSchema.parse({ ...source, url }).url).toBe(url);
+  });
+
+  it('refuses any other scheme, since the address becomes a link', () => {
+    for (const url of [
+      'javascript:alert(1)',
+      'data:text/html,<p>hi</p>',
+      'ftp://example.com/lesson',
+    ])
+      expect(PatternSourceSchema.safeParse({ ...source, url }).success).toBe(false);
   });
 });

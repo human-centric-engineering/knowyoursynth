@@ -19,8 +19,8 @@ shown to anyone else.
 - **The user's foreign key is written by hand**, `synth_profile_userId_fkey`, `ON DELETE CASCADE`,
   as every user table here has it ([`sounds.md`](./sounds.md)), with a drift probe in
   `lib/app/db-drift.ts`. `lib/app/data-export.ts` returns the profile under `app.synthProfile`.
-- **It is on `SYSTEM_MODELS`, with no `orgId`**, under the ruling that covers users' own rows.
-  Ledger row in [`divergences.md`](./divergences.md).
+- **It is user-owned, with no `orgId`** (`lib/app/tenancy-classification.ts`), under the ruling that covers
+  users' own rows.
 
 `OwnedInstrument`: one databank instrument on one of a user's two lists, `owned` or `wishlist`,
 with its `position` in that list.
@@ -32,7 +32,7 @@ with its `position` in that list.
   removing a duplicate.
 - **The user's foreign key is written by hand**, `owned_instrument_userId_fkey`, `ON DELETE
 CASCADE`, with a drift probe; exported under `app.ownedSynths`, each entry named by the
-  instrument's databank id and name; on `SYSTEM_MODELS` with no `orgId`, as `SynthProfile` is.
+  instrument's databank id and name; user-owned with no `orgId`, as `SynthProfile` is.
 
 `HeldUsername`: a name someone gave up by changing it, and when the hold ends. It has no user
 foreign key and records no person, so it is excluded from the export with that reason. **A name

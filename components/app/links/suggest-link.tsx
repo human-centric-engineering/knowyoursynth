@@ -16,9 +16,11 @@ import { useId, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 
 import { KIND_LABEL } from '@/components/app/links/data';
+import { SaveError } from '@/components/forms/form-error';
 import { FieldHelp } from '@/components/ui/field-help';
 import { APIClientError, apiClient } from '@/lib/api/client';
 import { useSession } from '@/lib/auth/client';
+import { useSaveFailure } from '@/lib/hooks/use-save-failure';
 import { LINK_KINDS } from '@/lib/app/links/providers';
 import { LinkSuggestionInputSchema } from '@/lib/app/links/suggestion-data';
 // Type only: `owner.ts` holds the database client.
@@ -100,7 +102,7 @@ function Suggest({
   const [open, setOpenState] = useState(false);
   const [draft, setDraft] = useState<Draft>(empty);
   const [problems, setProblems] = useState<Partial<Record<Field, string>>>({});
-  const [failure, setFailure] = useState<string | null>(null);
+  const save = useSaveFailure({ fallback: 'Your suggestion could not be sent. Try again.' });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
 
@@ -162,7 +164,7 @@ function Suggest({
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
-    setFailure(null);
+    save.clear();
     // Empty optional fields are left out rather than sent as empty text.
     const parsed = LinkSuggestionInputSchema.safeParse({
       target: { kind: target.kind, id: target.id },
@@ -189,7 +191,7 @@ function Suggest({
     } catch (err) {
       const refusal = refusalOf(err);
       if (refusal.field) setProblems({ [refusal.field]: refusal.message });
-      else setFailure(refusal.message);
+      else save.show(refusal.message);
     } finally {
       setSending(false);
     }
@@ -310,11 +312,7 @@ function Suggest({
         <textarea {...field('note')} rows={3} />
         {problem('note')}
       </div>
-      {failure && (
-        <p role="alert" className="text-sm text-red-400">
-          {failure}
-        </p>
-      )}
+      <SaveError failure={save.failure} />
       <div className="flex gap-3">
         <button
           type="submit"
@@ -330,7 +328,7 @@ function Suggest({
             // Opened again, it starts afresh, not with this attempt's address and refusal.
             setDraft(empty());
             setProblems({});
-            setFailure(null);
+            save.clear();
             setOpen(false);
           }}
           disabled={sending}

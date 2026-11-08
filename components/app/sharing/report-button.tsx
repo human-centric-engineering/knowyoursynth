@@ -107,6 +107,7 @@ export function ReportButton({
           <DialogContent className="w-[min(480px,calc(100vw-32px))] rounded-xl border-(--kys-line) bg-(--kys-raised) p-5 text-(--kys-text)">
             <DialogTitle className="text-base font-semibold">Report {soundName}</DialogTitle>
             <form
+              noValidate
               onSubmit={(e) => {
                 e.preventDefault();
                 void send();

@@ -118,7 +118,7 @@ export function SynthDetailsForm({ synth }: { synth: Synth }) {
   };
 
   return (
-    <form onSubmit={(e) => void submit(e)} className="max-w-2xl space-y-4">
+    <form noValidate onSubmit={(e) => void submit(e)} className="max-w-2xl space-y-4">
       <RefusalSummary refusal={refusal} unplaced={placed.unplaced} />
       <div className="grid gap-4 sm:grid-cols-2">
         {field(

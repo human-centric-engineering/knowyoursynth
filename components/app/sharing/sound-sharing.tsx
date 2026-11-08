@@ -413,6 +413,7 @@ export function PublishDialog({
           </>
         ) : (
           <form
+            noValidate
             onSubmit={(e) => {
               e.preventDefault();
               if (ticked) void publish();
