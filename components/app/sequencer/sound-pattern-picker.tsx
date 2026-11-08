@@ -11,6 +11,7 @@
  * sequencer's sheet, as the rest of the module is.
  */
 
+import type { PatternFidelity } from '@prisma/client';
 import type { LibraryPatternView } from '@/lib/app/patterns/library';
 import { FIDELITY_LABELS, ROLE_LABELS } from '@/lib/app/patterns/library-labels';
 import { bankHref } from '@/components/app/bank/routes';
@@ -47,7 +48,7 @@ export function inspiredHref(by: LibraryPatternView['inspiredBy'], synthId: stri
 }
 
 /** How long it is: in bars, or in beats when it is shorter than one. */
-const length = (bars: number) => {
+export const patternLength = (bars: number) => {
   const r = (n: number) => Math.round(n * 10) / 10;
   if (bars < 1) return r(bars * 4) === 1 ? '1 beat' : `${r(bars * 4)} beats`;
   return r(bars) === 1 ? '1 bar' : `${r(bars)} bars`;
@@ -61,52 +62,67 @@ export function SoundPatternPicker({ groups, current, synthId, onPick }: SoundPa
           <h3 className="kys-seq-lib-label">{g.title}</h3>
           {g.note && <p className="kys-seq-pat-note">{g.note}</p>}
           <ul className="kys-seq-lib-list is-patterns" aria-label={g.title}>
-            {g.patterns.map((p, i) => {
-              const by = p.inspiredBy.label.trim();
-              const href = by ? inspiredHref(p.inspiredBy, synthId) : null;
-              const fidelity = FIDELITY_LABELS[p.fidelity];
-              return (
-                <li key={p.id} className="kys-seq-pat">
-                  <button
-                    type="button"
-                    className="kys-seq-lib-item"
-                    aria-current={p.id === current ? 'true' : undefined}
-                    title={g.reasons?.get(p.id)}
-                    onClick={() => onPick(p)}
-                  >
-                    <span className="kys-seq-lib-item-name">
-                      {p.name}
-                      {g.leadIsDefault && i === 0 && (
-                        <span className="kys-seq-pat-default">Default</span>
-                      )}
-                    </span>
-                    <span className="kys-seq-lib-item-meta">
-                      {ROLE_LABELS[p.role]} · {length(p.facts.bars)}
-                    </span>
-                  </button>
-                  {by && (
-                    <p className="kys-seq-pat-credit">
-                      Inspired by{' '}
-                      {href ? (
-                        <a href={href} className="kys-seq-pat-link">
-                          {by}
-                        </a>
-                      ) : (
-                        <span>{by}</span>
-                      )}
-                      {fidelity && (
-                        <span className="kys-seq-pat-fidelity" title={fidelity.means}>
-                          {fidelity.label}
-                        </span>
-                      )}
-                    </p>
-                  )}
-                </li>
-              );
-            })}
+            {g.patterns.map((p, i) => (
+              <li key={p.id} className="kys-seq-pat">
+                <button
+                  type="button"
+                  className="kys-seq-lib-item"
+                  aria-current={p.id === current ? 'true' : undefined}
+                  title={g.reasons?.get(p.id)}
+                  onClick={() => onPick(p)}
+                >
+                  <span className="kys-seq-lib-item-name">
+                    {p.name}
+                    {g.leadIsDefault && i === 0 && (
+                      <span className="kys-seq-pat-default">Default</span>
+                    )}
+                  </span>
+                  <span className="kys-seq-lib-item-meta">
+                    {ROLE_LABELS[p.role]} · {patternLength(p.facts.bars)}
+                  </span>
+                </button>
+                <PatternCredit by={p.inspiredBy} fidelity={p.fidelity} synthId={synthId} />
+              </li>
+            ))}
           </ul>
         </section>
       ))}
     </div>
+  );
+}
+
+/**
+ * A pattern's credit, under its row: _Inspired by_ and the label (linked where `inspiredHref` has a page for it), then
+ * its fidelity, with what that means as the tooltip. Nothing for a pattern with no Inspired by label.
+ */
+export function PatternCredit({
+  by,
+  fidelity,
+  synthId,
+}: {
+  by: LibraryPatternView['inspiredBy'];
+  fidelity: PatternFidelity;
+  synthId: string;
+}) {
+  const label = by.label.trim();
+  if (!label) return null;
+  const href = inspiredHref(by, synthId);
+  const f = FIDELITY_LABELS[fidelity];
+  return (
+    <p className="kys-seq-pat-credit">
+      Inspired by{' '}
+      {href ? (
+        <a href={href} className="kys-seq-pat-link">
+          {label}
+        </a>
+      ) : (
+        <span>{label}</span>
+      )}
+      {f && (
+        <span className="kys-seq-pat-fidelity" title={f.means}>
+          {f.label}
+        </span>
+      )}
+    </p>
   );
 }

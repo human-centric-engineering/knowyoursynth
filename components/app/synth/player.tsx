@@ -357,8 +357,8 @@ export function Chapters({
 }
 
 /**
- * The player's play button: the sound's riff, or the sequencer's pattern while the sequencer is open (one transport).
- * Named for what it will do.
+ * The player's play button: the sound's riff, or the sequencer's pattern while the sequencer is open or holds a pattern
+ * chosen beside Play (one transport, t-213). Named for what it will do.
  */
 export function PlayButton({ playing, onClick }: { playing: boolean; onClick: () => void }) {
   return (
@@ -367,7 +367,7 @@ export function PlayButton({ playing, onClick }: { playing: boolean; onClick: ()
       help={
         playing
           ? undefined
-          : 'A short phrase that suits the patch, played through the panel. With the sequencer open, its pattern.'
+          : 'The pattern named beside it, played through the panel: the patch’s riff, unless another is chosen there or in the sequencer.'
       }
     >
       <button type="button" onClick={onClick} className={`kys-play ${playing ? 'is-playing' : ''}`}>
