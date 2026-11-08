@@ -1256,7 +1256,7 @@
     {
       "key": "researched:gary-numan/cars-strings-line",
       "name": "Cars: string line",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -1519,7 +1519,7 @@
     {
       "key": "researched:gary-numan/cars-strings-line-low",
       "name": "Cars: string line, an octave down",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -5457,7 +5457,7 @@
     {
       "key": "researched:ultravox/vienna-intro-melody",
       "name": "Vienna: intro melody",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -10774,7 +10774,7 @@
     {
       "key": "researched:erasure/a-little-respect-brass",
       "name": "A Little Respect: synth line",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -12043,7 +12043,7 @@
     {
       "key": "researched:japan/ghosts-tones",
       "name": "Ghosts: sparse tones",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -13510,7 +13510,7 @@
     {
       "key": "researched:goldfrapp/pilots-cello",
       "name": "Pilots: low string line",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -13777,7 +13777,7 @@
     {
       "key": "researched:joy-division/love-will-tear-us-apart-synth",
       "name": "Love Will Tear Us Apart: synth line",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -14845,7 +14845,7 @@
     {
       "key": "researched:the-cure/a-forest-synth",
       "name": "A Forest: synth",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",

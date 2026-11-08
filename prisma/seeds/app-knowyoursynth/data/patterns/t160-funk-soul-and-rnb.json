@@ -3014,7 +3014,7 @@
     {
       "key": "researched:talking-heads/once-in-a-lifetime-synth",
       "name": "Once in a Lifetime: synth line",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -10342,7 +10342,7 @@
     {
       "key": "researched:bob-james/angela-theme",
       "name": "Angela: theme",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -10581,7 +10581,7 @@
     {
       "key": "researched:chuck-mangione/feels-so-good-melody",
       "name": "Feels So Good: flugelhorn melody",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -11933,7 +11933,7 @@
     {
       "key": "researched:herb-alpert/rise-melody",
       "name": "Rise: trumpet melody",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",

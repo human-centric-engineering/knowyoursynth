@@ -15,7 +15,7 @@ export const ROLE_LABELS: Record<PatternRole, string> = {
   lead_line: 'Lead line',
   held: 'Drone',
   bass_line: 'Bass line',
-  slow_melody: 'Slow melody',
+  ambient: 'Ambient',
   percussive: 'Percussive',
   chord_changes: 'Chord changes',
   arp: 'Arp / sequence',

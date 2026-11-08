@@ -1,7 +1,7 @@
 /**
  * What a library pattern plays, read from its notes (`f-pattern-library` t-122): the role the default role rule gives
  * it, and the facts matching weighs. The rules are in `.context/app/pattern-library.md` (Roles), with the exact terms
- * this file implements.
+ * this file implements. Only the role reads anything else: a slow line's sounds decide Ambient or Lead line (t-215).
  *
  * Everything here is read from the pattern's first loop, as `compileLoop` plays it, so a fact can never disagree with
  * the notes. Pure, so the seed, the API and the tests read a pattern with the same code.
@@ -58,11 +58,30 @@ function onsets(notes: PhraseNote[]): PhraseNote[][] {
   return groups;
 }
 
+/** The categories whose sounds are ambient-type whatever their other tags: a slow line on a pad or a drone is ambient. */
+const AMBIENT_CATEGORIES: readonly string[] = ['pad', 'drone'];
+
+/** Whether a sound, by its tags (its category first), is ambient-type: tagged `ambient`, or a pad or a drone. */
+export const isAmbientSound = (tags: readonly string[]): boolean =>
+  tags.includes('ambient') || AMBIENT_CATEGORIES.includes(tags[0]);
+
 /**
- * The role the default role rule gives these notes, over a loop of `beats`. The first rule that fits wins; a loop
- * with no notes is held, since nothing in it moves.
+ * Whether a slow line placed on these sounds (each by its tags) is Ambient rather than a Lead line: at least half of
+ * them are ambient-type. The one rule that reads past the notes, because a slow Eno line and a slow chorale have the
+ * same shape (`.context/app/pattern-library.md`, The review).
  */
-export function defaultRole(notes: PhraseNote[], beats: number): PatternRole {
+export const ambientPlacement = (sounds: readonly (readonly string[])[]): boolean =>
+  sounds.length > 0 && sounds.filter(isAmbientSound).length * 2 >= sounds.length;
+
+/**
+ * The role the default role rule gives these notes, over a loop of `beats`, placed on `sounds` (each by its tags). The
+ * first rule that fits wins; a loop with no notes is held, since nothing in it moves.
+ */
+export function defaultRole(
+  notes: PhraseNote[],
+  beats: number,
+  sounds: readonly (readonly string[])[]
+): PatternRole {
   if (!notes.length) return 'held';
   const groups = onsets(notes);
   const average = notes.reduce((sum, [, , len]) => sum + len, 0) / notes.length;
@@ -74,7 +93,7 @@ export function defaultRole(notes: PhraseNote[], beats: number): PatternRole {
   if (chords * 2 >= groups.length) return average <= 1 ? 'chord_stabs' : 'chord_changes';
   if (median(notes.map(([, note]) => note)) < BASS_BELOW) return 'bass_line';
   if (groups.length >= 2 * beats && average <= 0.5) return 'arp';
-  if (average >= 1.5) return 'slow_melody';
+  if (average >= 1.5 && ambientPlacement(sounds)) return 'ambient';
   return 'lead_line';
 }
 

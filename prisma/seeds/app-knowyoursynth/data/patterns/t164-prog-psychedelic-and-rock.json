@@ -1139,7 +1139,7 @@
     {
       "key": "researched:richard-wright/shine-on-minimoog",
       "name": "Shine On You Crazy Diamond: Minimoog line",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -4845,7 +4845,7 @@
     {
       "key": "researched:radiohead/the-national-anthem-ondes",
       "name": "The National Anthem: ondes Martenot",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -19125,7 +19125,7 @@
     {
       "key": "researched:neutral-milk-hotel/aeroplane-singing-saw",
       "name": "In the Aeroplane Over the Sea: singing saw",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -22430,7 +22430,7 @@
     {
       "key": "researched:gary-wright/dream-weaver-lead",
       "name": "Dream Weaver: lead",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -23211,7 +23211,7 @@
     {
       "key": "researched:richard-wright/shine-on-minimoog-high",
       "name": "Shine On You Crazy Diamond: Minimoog line, high",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",

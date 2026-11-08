@@ -2698,7 +2698,7 @@
     {
       "key": "researched:joe-zawinul/a-remark-you-made-synth-lead",
       "name": "A Remark You Made: the synthesizer lead",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -3371,7 +3371,7 @@
     {
       "key": "researched:jaco-pastorius/continuum-melody",
       "name": "Continuum: the melody",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -6952,7 +6952,7 @@
     {
       "key": "researched:lyle-mays/are-you-going-with-me-melody",
       "name": "Are You Going with Me?: the melody",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -10782,7 +10782,7 @@
     {
       "key": "researched:harold-budd/first-light-melody",
       "name": "First Light: the melody",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -11089,7 +11089,7 @@
     {
       "key": "researched:abing/erquan-yingyue-line",
       "name": "Erquan Yingyue: a slow erhu line",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -11708,7 +11708,7 @@
     {
       "key": "researched:augustus-pablo/east-of-the-river-nile-line",
       "name": "East of the River Nile: a melodica line",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -13063,7 +13063,7 @@
     {
       "key": "researched:djivan-gasparyan/duduk-lament",
       "name": "I Will Not Be Sad in This World: a duduk lament",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -14360,7 +14360,7 @@
     {
       "key": "researched:fripp-and-eno/no-pussyfooting-notes",
       "name": "(No Pussyfooting): slow notes for the loop",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -15134,7 +15134,7 @@
     {
       "key": "researched:hiroshi-yoshimura/creek-line",
       "name": "Creek: a soft pentatonic line",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -15347,7 +15347,7 @@
     {
       "key": "researched:hiroshi-yoshimura/nine-postcards-phrase",
       "name": "Music for Nine Postcards: a floating phrase",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -17278,7 +17278,7 @@
     {
       "key": "researched:max-richter/sleep-melody",
       "name": "Sleep: a slow melody over the drone",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -17660,7 +17660,7 @@
     {
       "key": "researched:miles-davis/it-never-entered-my-mind-line",
       "name": "It Never Entered My Mind: a muted ballad line",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -18688,7 +18688,7 @@
     {
       "key": "researched:olivier-messiaen/turangalila-ondes",
       "name": "Turangalîla: an ondes Martenot line",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -19247,7 +19247,7 @@
     {
       "key": "researched:pauline-oliveros/delay-tones",
       "name": "Oliveros: slow tones for the delay",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -19435,7 +19435,7 @@
     {
       "key": "researched:perotin/viderunt-omnes-organum",
       "name": "Viderunt omnes: drone and organum voice",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -19652,7 +19652,7 @@
     {
       "key": "researched:mozart/glass-harmonica-adagio",
       "name": "Adagio for Glass Harmonica: a slow line",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -20574,7 +20574,7 @@
     {
       "key": "researched:stars-of-the-lid/requiem-line",
       "name": "Requiem for Dying Mothers: a slow string line",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -20955,7 +20955,7 @@
     {
       "key": "researched:steve-roach/structures-from-silence-line",
       "name": "Structures from Silence: slow swells",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -21321,7 +21321,7 @@
     {
       "key": "researched:william-basinski/disintegration-loop-phrase",
       "name": "The Disintegration Loops: a short phrase",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -21440,7 +21440,7 @@
     {
       "key": "researched:jon-hassell/fourth-world-line",
       "name": "Fourth World: a slow modal horn line",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -23344,7 +23344,7 @@
     {
       "key": "researched:fripp-and-eno/no-pussyfooting-notes-low",
       "name": "(No Pussyfooting): slow notes for the loop, low",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",

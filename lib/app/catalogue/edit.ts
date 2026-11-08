@@ -442,9 +442,13 @@ export async function editSound(
       where: { synthId_slug: { synthId, slug } },
       data: { ...columns, editedAt: new Date() },
     });
-    // Only the riff, the name and the credit reach the riff pattern.
+    // Only the riff, the name, the credit and the tags reach the riff pattern: the tags decide whether a slow riff is
+    // Ambient or a Lead line (t-215).
     const library =
-      riffChanged || columns.name !== stored.name || columns.artist !== stored.artist
+      riffChanged ||
+      columns.name !== stored.name ||
+      columns.artist !== stored.artist ||
+      !sameValue(columns.tags, stored.tags)
         ? await followSoundRiff(tx, row.id)
         : [];
     return { before, after: soundOf(after), library };

@@ -45,7 +45,7 @@ export function sweepShard(shard: number, of: number): KindRow[] {
         synth: file.synth,
         id: sound.id,
         category,
-        role: defaultRole(notes, beats),
+        role: defaultRole(notes, beats, [sound.tags]),
         features: soundFeatures(engineOf(def, values, cables, 0)),
       });
     }

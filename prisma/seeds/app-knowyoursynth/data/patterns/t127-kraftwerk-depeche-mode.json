@@ -36,7 +36,7 @@
     {
       "key": "researched:kraftwerk/the-model-counter-line",
       "name": "The Model: chorus counter-line",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -3209,7 +3209,7 @@
     {
       "key": "researched:kraftwerk/trans-europe-express-descent",
       "name": "Trans-Europe Express: slow descent",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -5417,7 +5417,7 @@
     {
       "key": "researched:depeche-mode/everything-counts-held-line",
       "name": "Everything Counts: held line",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",

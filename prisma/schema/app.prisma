@@ -198,7 +198,8 @@ enum PatternRole {
   /// One held note or chord: the patch does the moving.
   held
   bass_line
-  slow_melody
+  /// A slow line on ambient-type sounds (t-215): what was Slow melody's, where the sounds are ambient.
+  ambient
   percussive
   chord_changes
   /// An arpeggio, sequence or ostinato: a fast repeating figure of single notes.

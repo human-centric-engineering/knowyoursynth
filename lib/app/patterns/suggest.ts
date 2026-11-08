@@ -155,7 +155,7 @@ export function suitedRoles(kind: SoundKind): PatternRole[] {
   );
 }
 
-/** `slow attack, low register → drone, slow melody`: the sound's traits, and the roles that suit it most. */
+/** `slow attack, low register → drone, ambient`: the sound's traits, and the roles that suit it most. */
 export function kindSummary(kind: SoundKind): string {
   const roles = suitedRoles(kind)
     .slice(0, 3)

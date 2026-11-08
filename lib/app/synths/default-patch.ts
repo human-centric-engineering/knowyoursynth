@@ -54,7 +54,7 @@ export const SCALE_PATTERN_VIEW: LibraryPatternView = {
   key: `${DEFAULT_PATCH_ID}:scale`,
   name: 'C major scale',
   pattern: SCALE_PATTERN,
-  role: 'slow_melody',
+  role: 'lead_line',
   tempo: null,
   inspiredBy: {
     kind: 'genre',

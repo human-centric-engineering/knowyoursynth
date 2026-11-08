@@ -6255,7 +6255,7 @@
     {
       "key": "researched:kavinsky/nightcall-chorus-lead",
       "name": "Nightcall: chorus lead",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -7252,7 +7252,7 @@
     {
       "key": "researched:kyle-dixon-michael-stein/stranger-things-swell",
       "name": "Stranger Things: held swell",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -8467,7 +8467,7 @@
     {
       "key": "researched:ennio-morricone/gabriels-oboe-melody",
       "name": "Gabriel’s Oboe: melody",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -8884,7 +8884,7 @@
     {
       "key": "researched:ennio-morricone/ecstasy-of-gold-strings",
       "name": "The Ecstasy of Gold: string line",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -10623,7 +10623,7 @@
     {
       "key": "researched:angelo-badalamenti/laura-palmers-theme-strings",
       "name": "Laura Palmer’s Theme: strings",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -12208,7 +12208,7 @@
     {
       "key": "researched:ry-cooder/paris-texas-melody",
       "name": "Paris, Texas: slide melody",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -14049,7 +14049,7 @@
     {
       "key": "researched:com-truise/brokendate-lead",
       "name": "Brokendate: lead",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -14277,7 +14277,7 @@
     {
       "key": "researched:com-truise/brokendate-lead-low",
       "name": "Brokendate: lead, an octave down",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -14694,7 +14694,7 @@
     {
       "key": "researched:cliff-martinez/solaris-figure",
       "name": "Solaris: figure",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -15723,7 +15723,7 @@
     {
       "key": "researched:johann-johannsson/flight-from-the-city-strings",
       "name": "Flight from the City: strings",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -16112,7 +16112,7 @@
     {
       "key": "researched:kitaro/silk-road-melody",
       "name": "Silk Road: melody",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",

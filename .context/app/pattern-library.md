@@ -43,27 +43,25 @@ A sound's category (its first tag, `PRESET_CATEGORIES`) says what the patch soun
 
 The data shows how far apart they are. By the rule below, 73 of the 149 `seq` sounds hold one note or chord and leave
 the synth's own sequencer or arpeggiator to move. So do 187 of the 273 `fx` sounds. So the role is read from the notes, never
-copied from the category.
+copied from the category. The one exception is Ambient, which the notes alone can't tell from a slow chorale: there
+the sounds a slow line is on decide ([Ambient](#ambient)).
 
 ### The vocabulary
 
-Signed off by the owner on 2026-11-08 (t-211), with the changes in [The review](#the-review) below. There are eight
-roles. The counts are the library's enabled patterns, measured on 2026-11-08: 4,471 in all.
+Signed off by the owner on 2026-11-08 (t-211), with the changes in [The review](#the-review) below; t-215 then put
+Ambient in Slow melody's place. There are eight roles. The counts are the library's enabled patterns, measured on
+2026-11-08 after t-215: 4,471 in all.
 
-| Role               | What the part does                                                               | Patterns |
-| ------------------ | -------------------------------------------------------------------------------- | -------: |
-| **Lead line**      | A melody or riff of single notes, about a note a beat or faster                  |    1,089 |
-| **Bass line**      | A low line of single notes                                                       |      893 |
-| **Drone**          | One held note or chord. The patch does the moving: drones, fx, a synth's own seq |      784 |
-| **Arp / sequence** | A fast repeating figure of single notes: an arpeggio or an ostinato              |      457 |
-| **Slow melody**    | Single notes held for a beat and a half or more                                  |      454 |
-| **Chord changes**  | Chords that are held and move: pad and string parts                              |      343 |
-| **Percussive**     | One or two pitches, short: hits and rhythms                                      |      261 |
-| **Chord stabs**    | Short chords on the beat or off it                                               |      190 |
-
-**Slow melody is going.** t-215 replaces it with **Ambient**: the slow parts on ambient-type sounds become Ambient,
-and slow lines on lead, brass, wind and strings sounds join Lead line. Until it lands, the rule and the tables say Slow
-melody.
+| Role               | What the part does                                                                   | Patterns |
+| ------------------ | ------------------------------------------------------------------------------------ | -------: |
+| **Lead line**      | A melody or riff of single notes, slow ones included where the sounds aren't ambient |    1,337 |
+| **Bass line**      | A low line of single notes                                                           |      893 |
+| **Drone**          | One held note or chord. The patch does the moving: drones, fx, a synth's own seq     |      784 |
+| **Arp / sequence** | A fast repeating figure of single notes: an arpeggio or an ostinato                  |      457 |
+| **Chord changes**  | Chords that are held and move: pad and string parts                                  |      343 |
+| **Percussive**     | One or two pitches, short: hits and rhythms                                          |      261 |
+| **Ambient**        | A slow line of single notes, held a beat and a half or more, on ambient-type sounds  |      206 |
+| **Chord stabs**    | Short chords on the beat or off it                                                   |      190 |
 
 Of the names suggested in 2026-10:
 
@@ -89,7 +87,8 @@ The rules are checked in order, and the first that fits wins:
 4. Half the onsets or more are chords → **Chord changes**.
 5. The median pitch is below C3 (MIDI 48) → **Bass line**.
 6. At least 2 onsets per beat of the loop, with an average note of half a beat or less → **Arp / sequence**.
-7. An average note of 1.5 beats or more → **Slow melody**.
+7. An average note of 1.5 beats or more, on sounds at least half of which are ambient-type → **Ambient**
+   ([below](#ambient)).
 8. Anything else → **Lead line**.
 
 ### The review
@@ -99,16 +98,16 @@ player browses by: _what part do I want under this patch?_ The owner reviewed th
 each heading: **it is a word players actually use, for the part as they hear it.** The spec's own terms don't count.
 The ruling:
 
-| Role           | Ruling                  | Why                                                                                       |
-| -------------- | ----------------------- | ----------------------------------------------------------------------------------------- |
-| Held           | **Renamed Drone**       | "Held" isn't a word players use; "Drone" is. Applied in `ROLE_LABELS`, the enum is `held` |
-| Slow melody    | **Replaced by Ambient** | "Slow melody" doesn't mean much to a player; "Ambient" does. A role change, so t-215      |
-| Percussive     | Kept                    | A word people relate to. "Hits & rhythms" was proposed and rejected                       |
-| Lead line      | Kept                    | The biggest section (24%), but see below                                                  |
-| Bass line      | Kept                    |                                                                                           |
-| Arp / sequence | Kept                    |                                                                                           |
-| Chord changes  | Kept                    | Held chords that move, distinct from stabs                                                |
-| Chord stabs    | Kept                    |                                                                                           |
+| Role           | Ruling                  | Why                                                                                             |
+| -------------- | ----------------------- | ----------------------------------------------------------------------------------------------- |
+| Held           | **Renamed Drone**       | "Held" isn't a word players use; "Drone" is. Applied in `ROLE_LABELS`, the enum is `held`       |
+| Slow melody    | **Replaced by Ambient** | "Slow melody" doesn't mean much to a player; "Ambient" does. Done in t-215: [Ambient](#ambient) |
+| Percussive     | Kept                    | A word people relate to. "Hits & rhythms" was proposed and rejected                             |
+| Lead line      | Kept                    | The biggest section (24%), but see below                                                        |
+| Bass line      | Kept                    |                                                                                                 |
+| Arp / sequence | Kept                    |                                                                                                 |
+| Chord changes  | Kept                    | Held chords that move, distinct from stabs                                                      |
+| Chord stabs    | Kept                    |                                                                                                 |
 
 **Ambient is a style, not a shape of notes.** On the 423 sounds tagged `ambient`, the patterns are 195 Drone, 156 Slow
 melody, 58 Chord changes, 56 Lead line, 42 Arp / sequence, 22 Bass line, 11 Percussive and 3 Chord stabs. Slow
@@ -117,9 +116,8 @@ Budd, William Basinski and Stars of the Lid. But only 156 of its 454 patterns ar
 category they are on lead (168), pad (98), keys (63), strings (34), fx (30), drone (22), wind (21) and brass (18)
 sounds, and 21 more on the other four categories. The rest include "Wachet auf: the chorale", "Rise: trumpet melody" and "Symphonic Prog Lead".
 
-So the notes alone can't tell an ambient line from a chorale. Ambient's rule reads something besides the notes, such as
-the sounds a pattern is placed on or what it is inspired by. That reverses [Roles](#roles)' "never copied from the
-category" for this one role, and t-215 designs it.
+So the notes alone can't tell an ambient line from a chorale. Ambient's rule reads something besides the notes, which
+reverses [Roles](#roles)' "never copied from the category" for this one role. t-215 designed it: [Ambient](#ambient).
 
 Considered and not done:
 
@@ -131,28 +129,71 @@ Considered and not done:
 - **Splitting Drone into a held note and a held chord.** The patch does the moving either way, and the voices filter
   already marks a chord a mono synth can't play.
 
+### Ambient
+
+t-215 replaced Slow melody with Ambient (the `PatternRole` value `slow_melody` is now `ambient`). Slow melody's 454
+patterns split by the sounds they are on: 206 became Ambient and 248 joined Lead line.
+
+**The rule.** A slow line (rule 7's average note of 1.5 beats or more) is Ambient when at least half the sounds it is
+on are **ambient-type**: tagged `ambient`, or in the pad or drone category (`isAmbientSound` and `ambientPlacement` in
+`lib/app/patterns/library-facts.ts`). Otherwise it is a Lead line. A riff is on its own sound. A research batch
+pattern is on the sounds its batch names, and a `-low` or `-high` copy takes its pattern's role, since it plays the same
+part on another sound.
+
+**The hypothesis, and the check.** The hypothesis is that an ambient line is told by where it is played: on a sound
+tagged ambient, or on a pad or a drone, a slow line is a texture; on a lead, brass, wind, strings or keys sound it is a
+tune. It was checked by reading every one of the 454 by name and credit under each candidate rule:
+
+- **Pads and drones count without the tag.** Tagged sounds alone give 156 and miss Tears in Rain, Max Richter's Sleep
+  and Boards of Canada's Hazy Nostalgia, all on untagged pads.
+- **Fx sounds count only when tagged.** With fx in, dub sirens, laser zaps, cartoon bloops and a bomb drop became
+  Ambient.
+- **Keys count only when tagged.** Eno's, Harold Budd's and Hiroshi Yoshimura's piano and bell lines are on tagged
+  keys sounds and are Ambient. Bach on a church organ, Mozart on a glass harmonica and the jazz vibraphones are Lead
+  lines.
+- **What it gets wrong.** A few ambient lines are on untagged sounds and are Lead lines: Basinski's Disintegrating Loop
+  and Underwater on keys, and Bowed Lead on a lead. Reading an "ambient" credit as well would catch only Underwater and
+  Bowed Lead, so the credit is not read. A slow trance lead on a pad (For an Angel's low copy) would be Ambient, but the
+  copy rule keeps it its pattern's Lead line.
+
+Over the library now, Ambient's 206 are on pad (93), lead (45), keys (30), drone (22), strings (9), fx (6), wind (5),
+brass (4) and pluck (3) sounds, 154 of them on ambient-tagged ones. The test that holds it: a batch pattern called
+Ambient is always on ambient-type sounds (`library-researched.test.ts`).
+
+**What did not move.** On the 423 ambient-tagged sounds the other parts stay as their shapes say: 195 Drone, 58 Chord
+changes, 58 Lead line, 42 Arp / sequence and the rest. A held chord on an ambient pad is still what "Drone" names, and
+the picker ranks the Drone and Chord changes sections high for an ambient patch anyway. Moving them would make Ambient a
+style section of every shape, and take a quarter of the Drone section with it.
+
+**A role a person set.** The migration renames the value and then splits its rows by the same placement rule, so a
+role an admin set to Slow melody becomes Ambient or Lead line by the sounds it is on. It said "a slow line", which is
+still true under either name. It reads "the sounds it is on" as the seed does: a riff pattern by its own sound, a -low
+or -high copy by the pattern it copies, any other pattern by its placements. A research pattern's role is its batch's,
+which the migration can't read; the seed sets it on every unedited one. The dev database had none (every Slow melody
+row was the seed's).
+
 ### Category to role
 
 This shows which roles suit which kind of sound. It comes from the cross-tab of the library's categories and roles:
 each pattern counted once for each category of sound it is placed on, measured on 2026-11-08, listing the roles with
-5% or more of a category's patterns, at most three. Suggestions (t-125) use the same pairing, measured rather than read
+5% or more of a category's patterns, at most three; remeasured after t-215. Suggestions (t-125) use the same pairing, measured rather than read
 off this table: the detector's role shares are how often library sounds of each category carry each role (see
 [The scores](#the-scores)). A change to the patterns' roles moves them at the next refit.
 
 | Sound category | Roles that suit it, most common first  |
 | -------------- | -------------------------------------- |
 | bass           | Bass line                              |
-| lead           | Lead line, Slow melody, Arp / sequence |
+| lead           | Lead line, Arp / sequence, Ambient     |
 | keys           | Lead line, Chord stabs, Chord changes  |
-| pad            | Drone, Chord changes, Slow melody      |
+| pad            | Drone, Chord changes, Ambient          |
 | pluck          | Lead line, Arp / sequence, Chord stabs |
 | perc           | Percussive, Lead line, Arp / sequence  |
 | seq            | Drone, Arp / sequence, Bass line       |
-| drone          | Drone, Slow melody                     |
+| drone          | Drone, Ambient                         |
 | fx             | Drone, Lead line, Percussive           |
-| strings        | Chord changes, Slow melody, Lead line  |
-| brass          | Chord stabs, Lead line, Chord changes  |
-| wind           | Lead line, Slow melody, Arp / sequence |
+| strings        | Lead line, Chord changes, Drone        |
+| brass          | Lead line, Chord stabs, Chord changes  |
+| wind           | Lead line, Arp / sequence              |
 
 ### The facts a pattern carries for matching
 
@@ -1548,7 +1589,7 @@ it is kept for a minute: an admin's edit, or a pattern disabled (t-156), reaches
 2. **Roles take places in proportion to their share.** A role with less than 5% of the sound's role shares isn't
    offered. Each place goes to the role with the highest quotient: its share times its next pattern's fit, over the
    places it already has plus one (D'Hondt). So the best-suited role leads, and the others come in as its quotient
-   falls. A bass gets mostly bass lines, a pad a mix of drones, chord changes and slow melodies.
+   falls. A bass gets mostly bass lines, a pad a mix of drones, chord changes and ambient lines.
 3. **Within a role, fit orders them**, from 0 to 1:
    - **Register.** How far the pattern's median note is from the register's centre (D2, D4, E5 for low, mid, high), as
      a bell curve one octave wide: 0.61 an octave away, 0.14 two.
@@ -1617,7 +1658,7 @@ patch's chords last and marked, and the order with no reading. The endpoint is t
 library kept with suggestions', the section cap).
 
 Tested in `tests/unit/lib/app/patterns/suggest.test.ts`, over every library riff and hand-built patches: a bass patch
-gets bass lines first, a pad drones, chord changes and slow melodies, a noise hit percussive patterns, and a mono
+gets bass lines first, a pad drones, chord changes and ambient lines, a noise hit percussive patterns, and a mono
 patch no pattern with chords, of 200 asked for. Also the lift, the threshold on a real Model D sound, and the schema.
 The endpoint is tested in `tests/unit/app/api/v1/library-patterns-suggest.test.ts` (validation, the reads, the kept
 library, the section cap), the picker group in `tests/unit/components/app/sequencer/suggested-patterns.test.tsx` (as it

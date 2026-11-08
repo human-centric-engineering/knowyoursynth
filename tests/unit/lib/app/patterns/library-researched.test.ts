@@ -20,7 +20,7 @@ import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-da
 import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
 import { loadPatternData } from '@/prisma/seeds/app-knowyoursynth/pattern-data';
 import { riffKey, syncRiffPatterns, type LibraryDb } from '@/lib/app/patterns/library';
-import { firstLoop } from '@/lib/app/patterns/library-facts';
+import { ambientPlacement, firstLoop } from '@/lib/app/patterns/library-facts';
 import {
   ResearchBatchSchema,
   syncResearchedPatterns,
@@ -709,6 +709,16 @@ describe('the research batches', () => {
       expect({ ...mine, cast: null }, copy.key).toEqual({ ...theirs, cast: null });
       if (mine.cast) expect(mine.cast, copy.key).toEqual(theirs.cast);
     }
+  });
+
+  it('calls a pattern Ambient only where its sounds are ambient-type (t-215)', () => {
+    // One way only: a batch's role is the researcher's, so a slow line on a pad may still be a Lead line. A -low or
+    // -high copy plays its pattern's part, so it takes that pattern's role (checked above) whatever its sounds.
+    const originals = patterns.filter((p) => p.key === p.key.replace(/-(low|high)(-2)?$/, ''));
+    const ambient = originals.filter((p) => p.role === 'ambient');
+    expect(ambient.length).toBeGreaterThan(40);
+    for (const p of ambient)
+      expect(ambientPlacement(p.sounds.map((s) => sounds.get(s)!.tags)), p.key).toBe(true);
   });
 
   it('never puts a sound on both a pattern and its -low or -high copy', () => {

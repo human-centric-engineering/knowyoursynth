@@ -8,7 +8,7 @@ export const PATTERN_ROLES = [
   'lead_line',
   'held',
   'bass_line',
-  'slow_melody',
+  'ambient',
   'percussive',
   'chord_changes',
   'arp',

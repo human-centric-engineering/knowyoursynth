@@ -37,7 +37,7 @@ const RIFFS: RankCandidate[] = CATALOGUE.sounds.flatMap((file) => {
     return {
       id: `${file.synth}/${sound.id}`,
       name: sound.name,
-      role: defaultRole(notes, beats),
+      role: defaultRole(notes, beats, [sound.tags]),
       fidelity: 'in_the_style_of' as const,
       facts: patternFacts(pattern),
       inspiredBy: {
