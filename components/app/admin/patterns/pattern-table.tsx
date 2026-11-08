@@ -57,6 +57,7 @@ export function PatternTable({ rows, total, page, limit, filters, choices }: Pat
   return (
     <div className="space-y-4">
       <form
+        noValidate
         method="get"
         action={PATTERNS_ADMIN_ROOT}
         aria-label="Filter patterns"

@@ -78,7 +78,12 @@ export default async function ExploreRoute({ searchParams }: Props) {
         <ExploreTabs current="sounds" />
       </header>
 
-      <form method="get" action="/explore" className="mt-5 flex flex-wrap items-end gap-3">
+      <form
+        noValidate
+        method="get"
+        action="/explore"
+        className="mt-5 flex flex-wrap items-end gap-3"
+      >
         <label className="flex flex-col gap-1">
           <span className="kys-label text-[11px] text-(--kys-muted)">Synth</span>
           <select name="synth" defaultValue={applied.synth ?? ''} className={select}>

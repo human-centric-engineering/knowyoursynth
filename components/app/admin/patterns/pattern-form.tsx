@@ -307,7 +307,12 @@ export function PatternForm({ pattern, choices }: PatternFormProps) {
   );
 
   return (
-    <form onSubmit={(e) => void submit(e)} className="space-y-6" aria-label="Edit pattern">
+    <form
+      noValidate
+      onSubmit={(e) => void submit(e)}
+      className="space-y-6"
+      aria-label="Edit pattern"
+    >
       <div className="grid max-w-3xl gap-5 sm:grid-cols-2">
         {field(
           'pattern-name',

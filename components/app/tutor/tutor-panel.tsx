@@ -237,6 +237,7 @@ function SignedInTutor({
       )}
 
       <form
+        noValidate
         onSubmit={(e) => {
           e.preventDefault();
           submit();

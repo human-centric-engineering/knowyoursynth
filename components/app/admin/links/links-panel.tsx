@@ -24,11 +24,13 @@ import {
 } from '@/components/app/admin/links/data';
 import { LinkDialog, RemoveLinkButton } from '@/components/app/admin/links/link-dialogs';
 import { MoveButtons, move } from '@/components/app/admin/synths/order-controls';
+import { SaveError } from '@/components/forms/form-error';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { FieldHelp } from '@/components/ui/field-help';
 import { APIClientError, apiClient } from '@/lib/api/client';
 import type { OwnerRef } from '@/lib/app/links/owner';
+import { useSaveFailure } from '@/lib/hooks/use-save-failure';
 
 /** Ours first by their order (oldest first on a tie), then the rest by newest edit. */
 function arrange(links: AdminLinkView[]): { ours: AdminLinkView[]; others: AdminLinkView[] } {
@@ -52,7 +54,7 @@ export function LinksPanel({ owner: given }: LinksPanelProps) {
   const readOnly = useSharedSettingsReadOnly();
   const [links, setLinks] = useState<AdminLinkView[] | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
-  const [problem, setProblem] = useState<string | null>(null);
+  const save = useSaveFailure({ fallback: 'The new order could not be saved.' });
   const [moving, setMoving] = useState(false);
 
   const owner = useMemo<OwnerRef>(() => ({ kind, id }), [kind, id]);
@@ -85,20 +87,20 @@ export function LinksPanel({ owner: given }: LinksPanelProps) {
   }, [load]);
 
   const changed = () => {
-    setProblem(null);
+    save.clear();
     void load();
   };
 
   const reorder = async (ids: string[], next: AdminLinkView[]) => {
     const previous = links;
     setMoving(true);
-    setProblem(null);
+    save.clear();
     setLinks(next);
     try {
       await apiClient.put(`${LINKS_API}/order`, { body: { owner, ids } });
     } catch (error) {
       setLinks(previous);
-      setProblem(
+      save.show(
         error instanceof APIClientError ? error.message : 'The new order could not be saved.'
       );
       void load();
@@ -159,7 +161,7 @@ export function LinksPanel({ owner: given }: LinksPanelProps) {
           </Button>
         }
       />
-      <RemoveLinkButton link={link} disabled={readOnly} onRemoved={changed} onError={setProblem} />
+      <RemoveLinkButton link={link} disabled={readOnly} onRemoved={changed} onError={save.show} />
     </li>
   );
 
@@ -192,11 +194,7 @@ export function LinksPanel({ owner: given }: LinksPanelProps) {
         />
       </div>
 
-      {problem && (
-        <p role="alert" className="text-destructive text-sm">
-          {problem}
-        </p>
-      )}
+      <SaveError failure={save.failure} />
 
       {loadFailed ? (
         <p role="alert" className="text-destructive text-sm">

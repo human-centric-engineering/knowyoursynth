@@ -230,7 +230,12 @@ function Comments({ id, comments }: { id: string; comments: PatternComment[] | n
           ))}
         </ol>
       )}
-      <form onSubmit={(e) => void submit(e)} aria-label="Add a comment" className="space-y-2">
+      <form
+        noValidate
+        onSubmit={(e) => void submit(e)}
+        aria-label="Add a comment"
+        className="space-y-2"
+      >
         <Label htmlFor="pattern-comment" className="text-xs">
           Add a comment{' '}
           <FieldHelp title="Comments" ariaLabel="About comments">

@@ -145,6 +145,7 @@ function NoteForm({ note, label, shared }: { note: AdminNote; label: string; sha
 
   return (
     <form
+      noValidate
       onSubmit={(e) => void submit(e)}
       className="space-y-2 rounded-md border p-3"
       data-testid={`note-${note.id}`}
@@ -237,6 +238,7 @@ function NewUnusualNote({
 
   return (
     <form
+      noValidate
       onSubmit={(e) => void submit(e)}
       className="space-y-2 rounded-md border border-dashed p-3"
     >

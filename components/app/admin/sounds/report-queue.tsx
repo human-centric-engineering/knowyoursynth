@@ -21,6 +21,7 @@ import { useRouter } from 'next/navigation';
 import { PROVIDER_NAME } from '@/components/app/links/data';
 import { VISIBILITY_LABELS } from '@/components/app/sharing/visibility';
 import { patternHref, sharedSoundHref } from '@/components/app/synth/routes';
+import { SaveError } from '@/components/forms/form-error';
 import { Button } from '@/components/ui/button';
 import { APIClientError, apiClient } from '@/lib/api/client';
 import {
@@ -29,6 +30,7 @@ import {
   type QueueSound,
 } from '@/lib/app/sounds/report-data';
 import type { QueuePattern } from '@/lib/app/patterns/report-data';
+import { useSaveFailure } from '@/lib/hooks/use-save-failure';
 
 /** A queued sound or pattern, as its card shows it. */
 interface QueueItem extends Pick<
@@ -83,19 +85,19 @@ export function ReportQueue({
 function QueueCard({ sound: s }: { sound: QueueItem }) {
   const router = useRouter();
   const [busy, setBusy] = useState<ModerationAction | null>(null);
-  const [failure, setFailure] = useState<string | null>(null);
+  const save = useSaveFailure({ fallback: 'Could not save that. Try again.' });
   const open = s.reports.filter((r) => r.status === 'open');
   const live = s.unlistedAt === null && s.visibility !== 'private' && s.href;
 
   const act = async (action: ModerationAction) => {
     setBusy(action);
-    setFailure(null);
+    save.clear();
     try {
       await apiClient.post(s.action, { body: { action } });
       // Stays busy until the refresh moves this card, so an action cannot be sent twice.
       router.refresh();
     } catch (err) {
-      setFailure(err instanceof APIClientError ? err.message : 'Could not save that. Try again.');
+      save.show(err instanceof APIClientError ? err.message : 'Could not save that. Try again.');
       setBusy(null);
     }
   };
@@ -177,11 +179,9 @@ function QueueCard({ sound: s }: { sound: QueueItem }) {
           </Button>
         )}
       </div>
-      {failure && (
-        <p role="alert" className="text-destructive mt-2 text-sm">
-          {failure}
-        </p>
-      )}
+      <div className="mt-2">
+        <SaveError failure={save.failure} />
+      </div>
     </article>
   );
 }

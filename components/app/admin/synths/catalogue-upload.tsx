@@ -122,7 +122,11 @@ export function CatalogueUpload({ synths }: CatalogueUploadProps) {
       {synths.length === 0 ? (
         <p className="text-muted-foreground text-sm">The catalogue has no synths yet.</p>
       ) : (
-        <form className="flex flex-wrap items-end gap-3" onSubmit={(e) => void submit(e)}>
+        <form
+          noValidate
+          className="flex flex-wrap items-end gap-3"
+          onSubmit={(e) => void submit(e)}
+        >
           <div className="space-y-1">
             <Label htmlFor="catalogue-upload-synth">Synth</Label>
             <select

@@ -60,7 +60,12 @@ export default async function ExplorePatternsRoute({ searchParams }: Props) {
         <ExploreTabs current="patterns" />
       </header>
 
-      <form method="get" action="/explore/patterns" className="mt-5 flex flex-wrap items-end gap-3">
+      <form
+        noValidate
+        method="get"
+        action="/explore/patterns"
+        className="mt-5 flex flex-wrap items-end gap-3"
+      >
         <label className="flex flex-col gap-1">
           <span className="kys-label text-[11px] text-(--kys-muted)">Sort</span>
           <select name="sort" defaultValue={query.sort} className={select}>

@@ -261,7 +261,7 @@ function ApprovalDialog({ synth, onClose, onSubmit }: ApprovalDialogProps) {
   return (
     <Dialog open onOpenChange={(open) => !open && !saving && onClose()}>
       <DialogContent>
-        <form onSubmit={(event) => void submit(event)} className="space-y-4">
+        <form noValidate onSubmit={(event) => void submit(event)} className="space-y-4">
           <DialogHeader>
             <DialogTitle>
               Show {synth.maker}&apos;s marks on the {synth.name}

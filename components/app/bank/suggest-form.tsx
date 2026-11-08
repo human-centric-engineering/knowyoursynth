@@ -11,9 +11,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
+import { SaveError } from '@/components/forms/form-error';
 import { FieldHelp } from '@/components/ui/field-help';
 import { APIClientError, apiClient } from '@/lib/api/client';
 import { useSession } from '@/lib/auth/client';
+import { useSaveFailure } from '@/lib/hooks/use-save-failure';
 import { SuggestionInputSchema, type SuggestionInput } from '@/lib/app/bank/suggestion-data';
 
 type Draft = Record<keyof SuggestionInput, string>;
@@ -30,7 +32,7 @@ export function SuggestForm() {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<Draft>(EMPTY);
   const [problems, setProblems] = useState<Partial<Record<keyof Draft, string>>>({});
-  const [failure, setFailure] = useState<string | null>(null);
+  const save = useSaveFailure({ fallback: 'Your suggestion could not be sent. Try again.' });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState<string | null>(null);
 
@@ -86,7 +88,7 @@ export function SuggestForm() {
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
-    setFailure(null);
+    save.clear();
     // Empty optional fields are left out rather than sent as empty text.
     const parsed = SuggestionInputSchema.safeParse({
       name: draft.name,
@@ -111,7 +113,7 @@ export function SuggestForm() {
       setSent(parsed.data.name);
       setOpen(false);
     } catch (err) {
-      setFailure(
+      save.show(
         err instanceof APIClientError && err.status === 429
           ? 'You have sent a lot of suggestions in the last hour. Try again later.'
           : 'Your suggestion could not be sent. Try again.'
@@ -190,11 +192,7 @@ export function SuggestForm() {
         <textarea {...field('note')} rows={3} />
         {problem('note')}
       </div>
-      {failure && (
-        <p role="alert" className="text-sm text-red-400">
-          {failure}
-        </p>
-      )}
+      <SaveError failure={save.failure} />
       <div className="flex gap-3">
         <button
           type="submit"

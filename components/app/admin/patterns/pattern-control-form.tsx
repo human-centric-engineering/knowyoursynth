@@ -70,7 +70,7 @@ export function PatternControlForm({ ids, idPrefix, noneHint }: PatternControlFo
 
   const id = (k: string) => `${idPrefix}-${k}`;
   return (
-    <form onSubmit={submit} aria-label="Rights risk and status" className="space-y-3">
+    <form noValidate onSubmit={submit} aria-label="Rights risk and status" className="space-y-3">
       <div className="flex flex-wrap items-end gap-3">
         <div className="grid gap-1">
           <Label htmlFor={id('rights')} className="text-xs">
