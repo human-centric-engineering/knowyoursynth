@@ -107,7 +107,9 @@ export function PatternPicker(props: PatternPickerProps) {
           Plays
         </span>
         <span className="kys-patpick-name">{plays}</span>
-        <ChevronUp size={16} className="kys-patpick-caret" aria-hidden="true" />
+        <span className="kys-patpick-caret" aria-hidden="true">
+          <ChevronUp size={16} />
+        </span>
       </button>
       {sheet ? (
         <BottomSheet

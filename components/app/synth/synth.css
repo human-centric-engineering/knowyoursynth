@@ -703,9 +703,13 @@ svg .kys-hit:focus-visible {
   flex: 0 1 280px;
   min-width: 0;
 }
+/* On a phone the name needs the room: the button's label still says what it is. */
 @media (max-width: 639px) {
   .kys-patpick {
     flex: 1 1 0;
+  }
+  .kys-patpick-kicker {
+    display: none;
   }
 }
 .kys-patpick-btn {
@@ -752,8 +756,9 @@ svg .kys-hit:focus-visible {
   white-space: nowrap;
 }
 .kys-patpick-caret {
+  display: flex;
   flex: none;
-  box-sizing: content-box;
+  align-items: center;
   align-self: stretch;
   padding: 0 10px;
   color: var(--kys-muted);
