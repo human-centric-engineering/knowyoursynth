@@ -48,7 +48,7 @@ const RIFFS: SuggestCandidate[] = CATALOGUE.sounds.flatMap((file) => {
     return {
       id: `${file.synth}/${sound.id}`,
       name: sound.name,
-      role: defaultRole(notes, beats),
+      role: defaultRole(notes, beats, [sound.tags]),
       fidelity: 'in_the_style_of' as const,
       facts: patternFacts(pattern),
       inspiredBy: { artistId: null, synthId: null },
@@ -152,10 +152,10 @@ describe('rankPatterns', () => {
       expect(byId.get(s.id)?.facts.register?.median).toBeLessThan(48);
   });
 
-  it('offers a pad held parts, chord changes and slow melodies', () => {
+  it('offers a pad held parts, chord changes and ambient lines', () => {
     const list = roles(PAD);
-    expect(['held', 'chord_changes', 'slow_melody']).toContain(list[0]);
-    expect(share(list, ['held', 'chord_changes', 'slow_melody'])).toBeGreaterThanOrEqual(0.75);
+    expect(['held', 'chord_changes', 'ambient']).toContain(list[0]);
+    expect(share(list, ['held', 'chord_changes', 'ambient'])).toBeGreaterThanOrEqual(0.75);
     expect(list).toContain('chord_changes'); // six voices: chords are on offer
   });
 
@@ -163,7 +163,8 @@ describe('rankPatterns', () => {
     const picks = rank(HIT);
     expect(picks[0].role).toBe('percussive');
     expect(share(roles(HIT), ['percussive', 'arp', 'lead_line'])).toBeGreaterThanOrEqual(0.6);
-    expect(picks.filter((p) => p.role === 'slow_melody')).toEqual([]);
+    // A slow line is Ambient or a Lead line by its sounds (t-215), so the notes say what a long held line is.
+    expect(picks.filter((p) => (byId.get(p.id)?.facts.noteLength ?? 0) >= 1.5)).toEqual([]);
   });
 
   it('never offers a mono patch a pattern that plays more notes at once than it can, however many are asked for', () => {

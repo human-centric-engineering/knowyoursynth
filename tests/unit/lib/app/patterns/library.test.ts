@@ -103,7 +103,20 @@ describe('every seeded riff, as a library pattern', () => {
 });
 
 describe('the default role rule', () => {
-  const role = (steps: PhraseNote[]) => defaultRole(steps, phraseBeats({ steps }));
+  /** A lead sound, a pad, an fx sound tagged ambient, a keys sound and a brass sound: each by its tags. */
+  const LEAD = ['lead', 'mono'];
+  const PAD = ['pad', 'poly'];
+  const AMBIENT_FX = ['fx', 'ambient'];
+  const KEYS = ['keys'];
+  const BRASS = ['brass'];
+  const role = (steps: PhraseNote[], sounds: string[][] = [LEAD]) =>
+    defaultRole(steps, phraseBeats({ steps }), sounds);
+  const SLOW_LINE: PhraseNote[] = [
+    [0, 60, 2],
+    [2, 62, 2],
+    [4, 64, 2],
+    [6, 65, 2],
+  ];
 
   it('reads each role from the notes, in the design order', () => {
     expect(role([[0, 60, 4]])).toBe('held');
@@ -153,14 +166,7 @@ describe('the default role rule', () => {
     expect(
       role([0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5].map((b, i): PhraseNote => [b, 60 + (i % 4) * 3, 0.25]))
     ).toBe('arp');
-    expect(
-      role([
-        [0, 60, 2],
-        [2, 62, 2],
-        [4, 64, 2],
-        [6, 65, 2],
-      ])
-    ).toBe('slow_melody');
+    expect(role(SLOW_LINE, [PAD])).toBe('ambient');
     expect(
       role([
         [0, 60, 0.75],
@@ -171,8 +177,41 @@ describe('the default role rule', () => {
     ).toBe('lead_line');
   });
 
+  it('calls a slow line on an ambient-type sound Ambient: a pad, a drone, or any sound tagged ambient', () => {
+    expect(role(SLOW_LINE, [PAD])).toBe('ambient');
+    expect(role(SLOW_LINE, [['drone']])).toBe('ambient');
+    expect(role(SLOW_LINE, [AMBIENT_FX])).toBe('ambient');
+    expect(role(SLOW_LINE, [['lead', 'ambient']])).toBe('ambient');
+  });
+
+  it('calls a slow line on a lead, brass, wind, strings or keys sound a Lead line', () => {
+    for (const tags of [LEAD, BRASS, ['wind'], ['strings'], KEYS, ['fx']])
+      expect(role(SLOW_LINE, [tags]), tags[0]).toBe('lead_line');
+  });
+
+  it('calls a slow line Ambient when at least half the sounds it is on are ambient-type, and on no sound a Lead line', () => {
+    expect(role(SLOW_LINE, [PAD, BRASS])).toBe('ambient');
+    expect(role(SLOW_LINE, [PAD, BRASS, KEYS])).toBe('lead_line');
+    expect(role(SLOW_LINE, [])).toBe('lead_line');
+  });
+
+  it('reads only a slow line by its sounds: a held chord on a pad is still a Drone, a quick line still a Lead line', () => {
+    expect(role([[0, 60, 4]], [PAD])).toBe('held');
+    expect(
+      role(
+        [
+          [0, 60, 0.75],
+          [1, 62, 0.75],
+          [2, 64, 0.75],
+          [3, 67, 0.75],
+        ],
+        [PAD]
+      )
+    ).toBe('lead_line');
+  });
+
   it('calls a loop with no notes held, since nothing in it moves', () => {
-    expect(defaultRole([], 4)).toBe('held');
+    expect(defaultRole([], 4, [PAD])).toBe('held');
   });
 });
 

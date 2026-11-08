@@ -186,7 +186,7 @@ describe('soundKind', () => {
   it('reads a long-attack pad as a pad, for held or slow parts', () => {
     const k = soundKind(slowPad());
     expect(k?.category).toBe('pad');
-    expect(['held', 'slow_melody', 'chord_changes']).toContain(k?.role);
+    expect(['held', 'ambient', 'chord_changes']).toContain(k?.role);
     expect(k?.register).toBe('mid');
   });
 

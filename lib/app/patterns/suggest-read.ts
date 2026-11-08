@@ -45,7 +45,7 @@ export interface SoundReading {
   role: PatternRole;
   register: KindRegister;
   traits: string[];
-  /** `slow attack, low register → drone, slow melody`. */
+  /** `slow attack, low register → drone, ambient`. */
   summary: string;
 }
 
