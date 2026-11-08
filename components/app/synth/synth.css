@@ -772,7 +772,7 @@ svg .kys-hit:focus-visible {
   display: flex;
   flex-direction: column;
   width: min(560px, calc(100vw - 48px));
-  max-height: min(70vh, 640px);
+  max-height: min(60vh, 560px);
   border: 1px solid var(--kys-line);
   border-radius: 14px;
   color: var(--kys-text);
@@ -790,6 +790,7 @@ svg .kys-hit:focus-visible {
 }
 .kys-patpick-search {
   display: flex;
+  flex: none;
   align-items: center;
   gap: 8px;
   margin: 0 14px;
