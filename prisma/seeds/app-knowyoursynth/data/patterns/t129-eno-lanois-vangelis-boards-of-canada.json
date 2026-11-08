@@ -44,7 +44,7 @@
     {
       "key": "researched:vangelis/blade-runner-end-titles-theme",
       "name": "Blade Runner: End Titles theme",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -4501,7 +4501,7 @@
     {
       "key": "researched:brian-eno/an-ending-ascent-melody",
       "name": "An Ending (Ascent): melody",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -5575,7 +5575,7 @@
     {
       "key": "researched:daniel-lanois/frozen-melody",
       "name": "Frozen: melody",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -5992,7 +5992,7 @@
     {
       "key": "researched:boards-of-canada/olson-melody",
       "name": "Olson: melody",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -8183,7 +8183,7 @@
     {
       "key": "researched:vangelis/blade-runner-main-titles-swell",
       "name": "Blade Runner: main-title brass swell",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -8504,7 +8504,7 @@
     {
       "key": "researched:vangelis/blade-runner-blues-lead",
       "name": "Blade Runner Blues: lead",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -8700,7 +8700,7 @@
     {
       "key": "researched:vangelis/blade-runner-blues-glide",
       "name": "Blade Runner Blues: gliding voice",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -9025,7 +9025,7 @@
     {
       "key": "researched:brian-eno/warszawa-line",
       "name": "Warszawa: sombre line",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -9351,7 +9351,7 @@
     {
       "key": "researched:brian-eno/airports-1-1-figure",
       "name": "Music for Airports 1/1: piano figure",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -9687,7 +9687,7 @@
     {
       "key": "researched:brian-eno/airports-2-1-tones",
       "name": "Music for Airports 2/1: looped tones",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -10015,7 +10015,7 @@
     {
       "key": "researched:brian-eno/airports-2-2-tones",
       "name": "Music for Airports 2/2: slow tones",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -10691,7 +10691,7 @@
     {
       "key": "researched:brian-eno/discreet-music-tones",
       "name": "Discreet Music: drifting tones",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -11688,7 +11688,7 @@
     {
       "key": "researched:brian-eno/zawinul-lava-line",
       "name": "Zawinul/Lava: dark drift",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -12655,7 +12655,7 @@
     {
       "key": "researched:brian-eno/becalmed-swell",
       "name": "Becalmed: slow swell",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -13282,7 +13282,7 @@
     {
       "key": "researched:brian-eno/thursday-afternoon-bells",
       "name": "Thursday Afternoon: soft bells",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -13978,7 +13978,7 @@
     {
       "key": "researched:brian-eno/apollo-pedal-steel",
       "name": "Apollo: pedal steel line",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -15395,7 +15395,7 @@
     {
       "key": "researched:daniel-lanois/the-maker-steel",
       "name": "The Maker: steel swell over a drone",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -15927,7 +15927,7 @@
     {
       "key": "researched:daniel-lanois/two-worlds-steel",
       "name": "Two Worlds: steel melody",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -16255,7 +16255,7 @@
     {
       "key": "researched:daniel-lanois/transmitter-steel",
       "name": "Transmitter: sliding steel",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -16590,7 +16590,7 @@
     {
       "key": "researched:daniel-lanois/sioux-lookout-steel",
       "name": "Sioux Lookout: bending steel",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -16914,7 +16914,7 @@
     {
       "key": "researched:daniel-lanois/deep-blue-day-steel",
       "name": "Deep Blue Day: steel lead",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -17247,7 +17247,7 @@
     {
       "key": "researched:daniel-lanois/rocco-steel",
       "name": "Rocco: volume-swell lead",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -17917,7 +17917,7 @@
     {
       "key": "researched:daniel-lanois/still-water-steel",
       "name": "Still Water: swell and bend",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -18118,7 +18118,7 @@
     {
       "key": "researched:daniel-lanois/carla-steel",
       "name": "Carla: swelling steel",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -18439,7 +18439,7 @@
     {
       "key": "researched:daniel-lanois/silver-morning-slide",
       "name": "Silver Morning: slide lead",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -18774,7 +18774,7 @@
     {
       "key": "researched:daniel-lanois/aquatic-steel",
       "name": "Aquatic: steel swell",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -19100,7 +19100,7 @@
     {
       "key": "researched:vangelis/blade-runner-end-titles-theme-low",
       "name": "Blade Runner: End Titles theme, low",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -19790,7 +19790,7 @@
     {
       "key": "researched:brian-eno/an-ending-ascent-melody-low",
       "name": "An Ending (Ascent): melody, low",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -20168,7 +20168,7 @@
     {
       "key": "researched:vangelis/blade-runner-blues-lead-low",
       "name": "Blade Runner Blues: lead, low",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -20364,7 +20364,7 @@
     {
       "key": "researched:vangelis/blade-runner-blues-glide-high",
       "name": "Blade Runner Blues: gliding voice, high",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -20689,7 +20689,7 @@
     {
       "key": "researched:brian-eno/airports-1-1-figure-low",
       "name": "Music for Airports 1/1: piano figure, low",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",

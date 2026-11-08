@@ -814,7 +814,7 @@
     {
       "key": "researched:air/kelly-watch-the-stars-melody",
       "name": "Kelly Watch the Stars: melody",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -1029,7 +1029,7 @@
     {
       "key": "researched:air/kelly-watch-the-stars-melody-high",
       "name": "Kelly Watch the Stars: melody, an octave up",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -4348,7 +4348,7 @@
     {
       "key": "researched:aphex-twin/rhubarb-top-line",
       "name": "Rhubarb: line over the chords",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -10624,7 +10624,7 @@
     {
       "key": "researched:paul-van-dyk/for-an-angel-top",
       "name": "For an Angel: top line",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -11747,7 +11747,7 @@
     {
       "key": "researched:portishead/mysterons-line",
       "name": "Mysterons: theremin line",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -17958,7 +17958,7 @@
     {
       "key": "researched:zero-7/destiny-lead",
       "name": "Destiny: lead",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -20616,7 +20616,7 @@
     {
       "key": "researched:paul-van-dyk/for-an-angel-top-low",
       "name": "For an Angel: top line, low",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",

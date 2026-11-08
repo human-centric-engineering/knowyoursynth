@@ -4868,7 +4868,7 @@
     {
       "key": "researched:duran-duran/save-a-prayer-lead",
       "name": "Save a Prayer: lead",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -15498,7 +15498,7 @@
     {
       "key": "researched:roxy-music/editions-of-you-solo",
       "name": "Editions of You: VCS3 solo",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -16267,7 +16267,7 @@
     {
       "key": "researched:styx/mr-roboto-intro",
       "name": "Mr. Roboto: synth intro",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -16471,7 +16471,7 @@
     {
       "key": "researched:styx/mr-roboto-intro-low",
       "name": "Mr. Roboto: synth intro, an octave down",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",

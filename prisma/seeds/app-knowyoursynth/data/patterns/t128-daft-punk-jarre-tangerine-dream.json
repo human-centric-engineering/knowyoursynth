@@ -8980,7 +8980,7 @@
     {
       "key": "researched:jean-michel-jarre/oxygene-iv-melody",
       "name": "Oxygène IV: melody",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -11558,7 +11558,7 @@
     {
       "key": "researched:tangerine-dream/stratosfear-theme",
       "name": "Stratosfear: theme",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -13778,7 +13778,7 @@
     {
       "key": "researched:jean-michel-jarre/oxygene-string-line",
       "name": "Oxygène: string line",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -14124,7 +14124,7 @@
     {
       "key": "researched:jean-michel-jarre/rendez-vous-laser-harp",
       "name": "Rendez-Vous: laser harp",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -15632,7 +15632,7 @@
     {
       "key": "researched:tangerine-dream/phaedra-flute",
       "name": "Phaedra: flute melody",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -16146,7 +16146,7 @@
     {
       "key": "researched:tangerine-dream/mysterious-semblance-strings",
       "name": "Mysterious Semblance: drifting strings",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -16477,7 +16477,7 @@
     {
       "key": "researched:tangerine-dream/rubycon-lead",
       "name": "Rubycon: gliding lead",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",

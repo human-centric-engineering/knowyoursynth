@@ -1954,7 +1954,7 @@
     {
       "key": "researched:wendy-carlos/wachet-auf-chorale",
       "name": "Wachet auf: the chorale",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -2137,7 +2137,7 @@
     {
       "key": "researched:wendy-carlos/clockwork-orange-march",
       "name": "A Clockwork Orange: the march",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -2923,7 +2923,7 @@
     {
       "key": "researched:isao-tomita/clair-de-lune-melody",
       "name": "Clair de Lune: the melody",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -3534,7 +3534,7 @@
     {
       "key": "researched:isao-tomita/jupiter-tune",
       "name": "Jupiter: the big tune",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -6211,7 +6211,7 @@
     {
       "key": "researched:clara-rockmore/the-swan-melody",
       "name": "The Swan: the melody",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -6544,7 +6544,7 @@
     {
       "key": "researched:patrick-gleeson/sextant-lead",
       "name": "Sextant: a sliding lead",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -8017,7 +8017,7 @@
     {
       "key": "researched:kaitlyn-aurelia-smith/ears-slow-line",
       "name": "EARS: a slow line",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -9590,7 +9590,7 @@
     {
       "key": "researched:cluster/sowiesoso-melody",
       "name": "Sowiesoso: a gentle melody",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
@@ -12219,7 +12219,7 @@
     {
       "key": "researched:popol-vuh/aguirre-choir",
       "name": "Aguirre: a slow choir line",
-      "role": "slow_melody",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "artist",
@@ -13900,7 +13900,7 @@
     {
       "key": "researched:wendy-carlos/wachet-auf-chorale-high",
       "name": "Wachet auf: the chorale, high",
-      "role": "slow_melody",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
