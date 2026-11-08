@@ -52,7 +52,7 @@ vi.mock('@/lib/api/client', () => ({
           role: 'held',
           register: 'mid',
           traits: ['slow attack', 'holds'],
-          summary: 'slow attack, holds → held, chord changes',
+          summary: 'slow attack, holds → drone, chord changes',
         },
         suggestions: (server.suits as LibraryPatternView[]).map((pattern) => ({
           id: pattern.id,
@@ -214,7 +214,7 @@ describe('Suits this sound', () => {
     expect(suits.getByRole('button', { name: /Long note/ }).getAttribute('title')).toBe(
       'Slow attack, holds → held'
     );
-    expect(screen.getByText('Slow attack, holds → held, chord changes')).toBeTruthy();
+    expect(screen.getByText('Slow attack, holds → drone, chord changes')).toBeTruthy();
     expect(post()).toHaveBeenCalledTimes(1);
     const [, options] = post().mock.calls[0] as [string, { body: Record<string, unknown> }];
     expect(options.body).toMatchObject({ synthId: 'model-d', sound: BASS.id });
