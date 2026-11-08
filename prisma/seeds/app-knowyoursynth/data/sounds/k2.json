@@ -8994,6 +8994,4917 @@
           "hear": "A brighter, more metallic tone, closer to a steel guitar through a clean amp."
         }
       ]
+    },
+    {
+      "id": "k2-warm-leatherette-drone-bass",
+      "name": "Cold Two-Note Drone Bass",
+      "ref": "In the style of The Normal — \"Warm Leatherette\" (1978)",
+      "artist": "The Normal",
+      "tags": ["bass", "minimal wave", "post-punk", "70s"],
+      "level": 1,
+      "blurb": "A stark, buzzing bass that rocks between two notes a semitone apart, with a hard edge from the high-pass peak.",
+      "how": "One reverse sawtooth, a low-pass left fairly open and a little high-pass peak, which gives the low notes a hard, nasal edge rather than a round thump. Envelope 2 cuts each note off short, so the line is a run of stabs rather than a hum. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.4],
+          [0.5, 40, 0.4],
+          [1, 41, 0.4],
+          [1.5, 40, 0.4],
+          [2, 40, 0.4],
+          [2.5, 40, 0.4],
+          [3, 41, 0.4],
+          [3.5, 43, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One raw sawtooth",
+          "module": "osc",
+          "why": "A single oscillator: the bareness is the point.\n- VCO1 WAVE FORM Reverse saw: bright and buzzy.\n- VCO1 SCALE 16′: an octave below the keys.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 0: Oscillator 2 stays out.\n- Listen for: a plain, loud buzz.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "16",
+            "mix.vco1": 8,
+            "mix.vco2": 0
+          }
+        },
+        {
+          "title": "A hard edge",
+          "module": "filter",
+          "why": "The low-pass takes off a little of the top, and the high-pass peak puts a nasal edge on the bottom.\n- CUTOFF (LPF) 6.2 · 1.4 kHz: fairly open.\n- PEAK (LPF) 2.\n- CUTOFF (HPF) 2.8 · 83 Hz.\n- PEAK (HPF) 4.5: PEAK is Korg’s word for resonance: here a hard ring just above the lowest notes.\n- Listen for: the bass gets thinner and harder, with a honk in it.",
+          "set": {
+            "lpf.cutoff": 6.2,
+            "lpf.peak": 2,
+            "hpf.cutoff": 2.8,
+            "hpf.peak": 4.5
+          }
+        },
+        {
+          "title": "Short stabs",
+          "module": "env",
+          "why": "Envelope 2 (EG2) shapes the loudness: up at once, a short fall, nothing held.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4.5 · 200 ms.\n- SUSTAIN (EG2) 2: a little left while the key is down.\n- RELEASE (EG2) 2 · 140 ms.\n- VOLUME 8.\n- Listen for: each note is a short, buzzing stab with a gap after it.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4.5,
+            "eg2.sustain": 2,
+            "eg2.release": 2,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "hpf.peak": "In this sound: the hard, nasal edge. At 0 the bass is round and plain.",
+        "eg2.decay": "In this sound: the length of each stab."
+      },
+      "tweaks": [
+        {
+          "id": "hpf.peak",
+          "try": "Raise to 7",
+          "hear": "The edge turns into a whistle that rings over every note."
+        },
+        {
+          "id": "eg2.sustain",
+          "try": "Raise to 7",
+          "hear": "The stabs join up into a droning, held bass."
+        }
+      ]
+    },
+    {
+      "id": "k2-los-ninos-ebm-bass",
+      "name": "Marching Sequencer Bass",
+      "ref": "In the style of Liaisons Dangereuses — \"Los Niños del Parque\" (1981)",
+      "artist": "Liaisons Dangereuses",
+      "tags": ["bass", "ebm", "electronic body music", "80s"],
+      "level": 2,
+      "blurb": "A driving sixteenth-note bass with a rubbery snap on every note, the engine room of early EBM.",
+      "how": "A pulse wave into a resonant FILTER 2 low-pass that envelope 2 snaps open and shut on every note, so even a held run of sixteenths has a pluck on each one. A sawtooth an octave up on Oscillator 2 adds bite. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.2],
+          [0.25, 36, 0.2],
+          [0.5, 48, 0.2],
+          [0.75, 36, 0.2],
+          [1, 36, 0.2],
+          [1.25, 39, 0.2],
+          [1.5, 36, 0.2],
+          [1.75, 48, 0.2],
+          [2, 36, 0.2],
+          [2.25, 36, 0.2],
+          [2.5, 46, 0.2],
+          [2.75, 36, 0.2],
+          [3, 34, 0.2],
+          [3.25, 34, 0.2],
+          [3.5, 46, 0.2],
+          [3.75, 34, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Pulse and sawtooth",
+          "module": "osc",
+          "why": "Oscillator 1 gives a hollow pulse for the body; Oscillator 2 a sawtooth an octave up for the bite.\n- VCO1 WAVE FORM Pulse.\n- VCO1 PW 3.5: a little off square, so it buzzes.\n- VCO1 SCALE 16′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 8′: an octave above Oscillator 1, as Oscillator 2’s range sits an octave higher.\n- VCO2 PITCH 0 · 0 st.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 4.\n- Listen for: a full, buzzy bass tone.",
+          "set": {
+            "vco1.wave": "pulse",
+            "vco1.pw": 3.5,
+            "vco1.scale": "16",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "8",
+            "vco2.pitch": 0,
+            "mix.vco1": 8,
+            "mix.vco2": 4
+          }
+        },
+        {
+          "title": "A resonant, aggressive filter",
+          "module": "filter",
+          "why": "FILTER 2 is the harder of the two circuits; with PEAK up it bites as it opens.\n- LPF type FILTER 2.\n- CUTOFF (LPF) 3.6 · 232 Hz.\n- PEAK (LPF) 6.\n- EG2/EXT (LPF mod) 5: how far each note snaps the filter open.\n- CUTOFF (HPF) 0 · 12 Hz.\n- PEAK (HPF) 0.\n- Listen for: a dark, ringing tone.",
+          "set": {
+            "lpf.type": "2",
+            "lpf.cutoff": 3.6,
+            "lpf.peak": 6,
+            "lpmod.eg2": 5,
+            "hpf.cutoff": 0,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "A snap on every note",
+          "module": "env",
+          "why": "Envelope 2 opens the filter and the amplifier at once. A short decay is the snap.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 3.6 · 97 ms: short: the filter is shut again before the next sixteenth.\n- SUSTAIN (EG2) 3.\n- RELEASE (EG2) 1.5 · 100 ms.\n- VOLUME 8.\n- Listen for: a rubbery “tock” on every sixteenth, and the octave jumps cutting through.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 3.6,
+            "eg2.sustain": 3,
+            "eg2.release": 1.5,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "lpmod.eg2": "In this sound: the size of the snap.",
+        "lpf.peak": "In this sound: the rubber in the snap. Past 8 it whistles."
+      },
+      "tweaks": [
+        {
+          "id": "eg2.decay",
+          "try": "Raise to 5",
+          "hear": "The snap turns into a wah that runs into the next note."
+        },
+        {
+          "id": "lpf.type",
+          "try": "Switch to FILTER 1",
+          "hear": "A rounder, politer bass with less bite."
+        }
+      ]
+    },
+    {
+      "id": "k2-ricky-hand-buzz-bass",
+      "name": "Buzzsaw Ring Bass",
+      "ref": "In the style of Fad Gadget — \"Ricky’s Hand\" (1980)",
+      "artist": "Fad Gadget",
+      "tags": ["bass", "post-punk", "industrial", "80s"],
+      "level": 2,
+      "blurb": "A harsh, droning bass with a metallic rasp: the ring position on Oscillator 2 grinding against a sawtooth.",
+      "how": "Oscillator 2’s RING position replaces it with both oscillators multiplied together. Tuned a fifth off Oscillator 1 the product is a clangy, inharmonic rasp, and mixed in under a plain sawtooth it turns an ordinary bass into a buzzsaw. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.7],
+          [1, 38, 0.4],
+          [1.5, 38, 0.4],
+          [2, 41, 0.9],
+          [3, 36, 0.9],
+          [4, 38, 0.7],
+          [5, 38, 0.4],
+          [5.5, 43, 0.4],
+          [6, 41, 0.9],
+          [7, 40, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth with the ring position under it",
+          "module": "osc",
+          "why": "RING on Oscillator 2 is not a wave: it is Oscillator 1 times Oscillator 2.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 16′.\n- VCO2 WAVE FORM RING.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 2.9 · +7 st: a fifth up, so the product clangs.\n- VCO1 LEVEL 7.5.\n- VCO2 LEVEL 5: with RING selected, the level of the ring modulation.\n- Listen for: a metallic rasp riding on the bass.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "16",
+            "vco2.wave": "ring",
+            "vco2.scale": "8",
+            "vco2.pitch": 2.9,
+            "mix.vco1": 7.5,
+            "mix.vco2": 5
+          }
+        },
+        {
+          "title": "Keep it rough",
+          "module": "filter",
+          "why": "The low-pass only shaves the very top; a little high-pass keeps the mud out.\n- LPF type FILTER 2.\n- CUTOFF (LPF) 6.8 · 2.0 kHz.\n- PEAK (LPF) 3.\n- EG2/EXT (LPF mod) 1.5.\n- CUTOFF (HPF) 2 · 48 Hz.\n- PEAK (HPF) 2.\n- Listen for: harsh, but not shrill.",
+          "set": {
+            "lpf.type": "2",
+            "lpf.cutoff": 6.8,
+            "lpf.peak": 3,
+            "lpmod.eg2": 1.5,
+            "hpf.cutoff": 2,
+            "hpf.peak": 2
+          }
+        },
+        {
+          "title": "Droning notes",
+          "module": "env",
+          "why": "A held, full level, so each note drones until the next.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 5 · 300 ms.\n- SUSTAIN (EG2) 8.\n- RELEASE (EG2) 2 · 140 ms.\n- VOLUME 7.\n- Listen for: a grinding, unbroken bass line.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 5,
+            "eg2.sustain": 8,
+            "eg2.release": 2,
+            "out.volume": 7
+          }
+        }
+      ],
+      "context": {
+        "vco2.pitch": "In this sound: the colour of the rasp. Each setting gives a different clang.",
+        "mix.vco2": "In this sound: how much rasp."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.pitch",
+          "try": "Move between 1 and 4",
+          "hear": "The clang changes from a growl to a bell and back."
+        },
+        {
+          "id": "mix.vco2",
+          "try": "Turn to 0",
+          "hear": "A plain sawtooth bass: hear how much the ring adds."
+        }
+      ]
+    },
+    {
+      "id": "k2-silent-shout-pulse-bass",
+      "name": "Haunted Pulse Bass",
+      "ref": "In the style of The Knife — \"Silent Shout\" (2006)",
+      "artist": "The Knife",
+      "tags": ["bass", "electronic", "dark", "00s"],
+      "level": 2,
+      "blurb": "A dark, pumping bass where the filter wobbles in time, trance-like and eerie.",
+      "how": "Two sawtooths an octave apart through the low-pass. The modulation generator (MG, Korg’s LFO) is set to a sawtooth at about the riff’s eighth notes and moves the cutoff, so the bass pumps. It runs freely rather than from the keys, so the two do not quite line up, which gives the slightly seasick feel. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 41, 0.45],
+          [0.5, 41, 0.45],
+          [1, 41, 0.45],
+          [1.5, 41, 0.45],
+          [2, 44, 0.45],
+          [2.5, 44, 0.45],
+          [3, 39, 0.45],
+          [3.5, 39, 0.45]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths an octave apart",
+          "module": "osc",
+          "why": "Octaves rather than unison: a hollow, organ-like weight.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 16′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 4′: an octave above Oscillator 1.\n- VCO2 PITCH 0.1 · +0.2 st: a hair sharp.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 4.5.\n- Listen for: a full, slightly beating tone.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "16",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "4",
+            "vco2.pitch": 0.1,
+            "mix.vco1": 7,
+            "mix.vco2": 4.5
+          }
+        },
+        {
+          "title": "A dark filter",
+          "module": "filter",
+          "why": "The low-pass sits low with some peak, so the movement to come is heard.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 3.8 · 265 Hz.\n- PEAK (LPF) 5.\n- EG2/EXT (LPF mod) 1.5.\n- CUTOFF (HPF) 0 · 12 Hz.\n- PEAK (HPF) 0.\n- Listen for: a muffled bass with a ring in it.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 3.8,
+            "lpf.peak": 5,
+            "lpmod.eg2": 1.5,
+            "hpf.cutoff": 0,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "The modulation generator on the cutoff",
+          "module": "lfo",
+          "why": "A sawtooth from the MG drags the cutoff down over each eighth note.\n- WAVE FORM (MG) 10 · saw: a sawtooth: the cutoff jumps once a cycle and ramps back.\n- FREQUENCY (MG) 6.7 · 3.71 Hz: about eighth notes at this tempo.\n- MG/T.EXT (LPF mod) 4.5.\n- MG/T.EXT (HPF mod) 0.\n- MG/T.EXT (pitch) 0: the pitch stays still.\n- Listen for: each note opens bright and darkens, pumping in time.",
+          "set": {
+            "mg.wave": 10,
+            "mg.freq": 6.7,
+            "lpmod.mg": 4.5,
+            "hpmod.mg": 0,
+            "fmod.mg": 0
+          }
+        },
+        {
+          "title": "Full, held notes",
+          "module": "env",
+          "why": "The MG does the shaping, so envelope 2 just holds the note.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4 · 130 ms.\n- SUSTAIN (EG2) 9.\n- RELEASE (EG2) 1.5 · 100 ms.\n- VOLUME 8.\n- Listen for: an even, pumping pulse.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4,
+            "eg2.sustain": 9,
+            "eg2.release": 1.5,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "mg.freq": "In this sound: the pump. Near 6.7 it moves with the eighth notes.",
+        "lpmod.mg": "In this sound: how deep the pump is."
+      },
+      "tweaks": [
+        {
+          "id": "mg.freq",
+          "try": "Lower to 3",
+          "hear": "A slow, seasick drift instead of a pump."
+        },
+        {
+          "id": "mg.wave",
+          "try": "Turn to 5 for a triangle",
+          "hear": "The filter rises and falls evenly: a wah, not a pump."
+        }
+      ]
+    },
+    {
+      "id": "k2-pursuit-dark-techno-bass",
+      "name": "Grinding Dark-Techno Bass",
+      "ref": "In the style of Gesaffelstein — \"Pursuit\" (Aleph, 2013)",
+      "artist": "Gesaffelstein",
+      "tags": ["bass", "techno", "dark", "10s"],
+      "level": 3,
+      "blurb": "A menacing, distorted off-beat bass, its own output fed back in for grit.",
+      "how": "SIGNAL OUT patched back into EXT SIGNAL IN feeds the synth’s output into its own filters. A little of it thickens and distorts the tone; with FILTER 2’s harder circuit it snarls. The notes sit off the beat, leaving room for a kick. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 125,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.3],
+          [0.5, 33, 0.3],
+          [1, 33, 0.3],
+          [1.5, 45, 0.3],
+          [2, 33, 0.3],
+          [2.5, 33, 0.3],
+          [3, 36, 0.3],
+          [3.5, 33, 0.3]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths, slightly apart",
+          "module": "osc",
+          "why": "A detuned pair is thick enough to distort well.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 16′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 8′.\n- VCO2 PITCH −0.1 · -0.3 st.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 6.\n- Listen for: a thick, slowly churning saw.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "16",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "8",
+            "vco2.pitch": -0.12,
+            "mix.vco1": 7,
+            "mix.vco2": 6
+          }
+        },
+        {
+          "title": "A hard, closed filter",
+          "module": "filter",
+          "why": "FILTER 2 with PEAK up, closed down so each note is a short snarl.\n- LPF type FILTER 2.\n- CUTOFF (LPF) 3.4 · 202 Hz.\n- PEAK (LPF) 5.5.\n- EG2/EXT (LPF mod) 4.5.\n- CUTOFF (HPF) 1.5 · 34 Hz.\n- PEAK (HPF) 3.\n- Listen for: a dark, ringing growl.",
+          "set": {
+            "lpf.type": "2",
+            "lpf.cutoff": 3.4,
+            "lpf.peak": 5.5,
+            "lpmod.eg2": 4.5,
+            "hpf.cutoff": 1.5,
+            "hpf.peak": 3
+          }
+        },
+        {
+          "title": "Short notes",
+          "module": "env",
+          "why": "Envelope 2 opens the filter and closes it before the next note.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 3.8 · 110 ms.\n- SUSTAIN (EG2) 2.\n- RELEASE (EG2) 1.5 · 100 ms.\n- VOLUME 6.5: lower than usual: the feedback in the next step adds level.\n- Listen for: tight, growling stabs.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 3.8,
+            "eg2.sustain": 2,
+            "eg2.release": 1.5,
+            "out.volume": 6.5
+          }
+        },
+        {
+          "title": "Feed the output back in",
+          "module": "patch",
+          "why": "One cable sends the finished sound back into the start of the filters.\n- Cable SIGNAL OUT → EXT SIGNAL IN: the output joins the oscillators at the high-pass input.\n- Listen for: the stabs thicken and grind. Pull the cable and they go clean again.",
+          "cables": [["j.signalOut", "j.extIn"]]
+        }
+      ],
+      "context": {
+        "out.volume": "In this sound: also how hard the feedback drives. Higher is dirtier.",
+        "lpf.peak": "In this sound: the snarl."
+      },
+      "tweaks": [
+        {
+          "id": "out.volume",
+          "try": "Raise to 8",
+          "hear": "More feedback: the bass starts to howl between notes."
+        },
+        {
+          "id": "hpf.cutoff",
+          "try": "Raise to 3",
+          "hear": "A thinner, more nasal snarl that leaves more room for a kick."
+        }
+      ]
+    },
+    {
+      "id": "k2-la-rock-overdrive-bass",
+      "name": "Overdriven Rave Bass",
+      "ref": "In the style of Vitalic — \"La Rock 01\" (OK Cowboy, 2005)",
+      "artist": "Vitalic",
+      "tags": ["bass", "electro", "rave", "00s"],
+      "level": 3,
+      "blurb": "A huge, saturated bass riff that sounds like a synth turned up until it breaks.",
+      "how": "The feedback cable from SIGNAL OUT into EXT SIGNAL IN overdrives the filters. FILTER 2 and a high-pass peak give it a nasal, fuzzy edge, and a slow envelope 2 decay gives every note a long, bright snarl. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.7],
+          [1, 40, 0.2],
+          [1.5, 43, 0.4],
+          [2, 45, 0.7],
+          [3, 43, 0.4],
+          [3.5, 40, 0.4],
+          [4, 40, 0.7],
+          [5, 40, 0.2],
+          [5.5, 43, 0.4],
+          [6, 47, 0.7],
+          [7, 45, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Saw and square",
+          "module": "osc",
+          "why": "A sawtooth and a square at the same pitch: plenty to drive.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 16′.\n- VCO2 WAVE FORM Square.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 0.1 · +0.1 st.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 6.\n- Listen for: a bright, chunky tone.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "16",
+            "vco2.wave": "sq",
+            "vco2.scale": "8",
+            "vco2.pitch": 0.06,
+            "mix.vco1": 7,
+            "mix.vco2": 6
+          }
+        },
+        {
+          "title": "A nasal filter",
+          "module": "filter",
+          "why": "The high-pass peak gives the fuzz its honk; the low-pass opens on each note.\n- LPF type FILTER 2.\n- CUTOFF (LPF) 4.6 · 457 Hz.\n- PEAK (LPF) 4.\n- EG2/EXT (LPF mod) 4.\n- CUTOFF (HPF) 2.6 · 72 Hz.\n- PEAK (HPF) 5.\n- Listen for: a honking, mid-heavy bass.",
+          "set": {
+            "lpf.type": "2",
+            "lpf.cutoff": 4.6,
+            "lpf.peak": 4,
+            "lpmod.eg2": 4,
+            "hpf.cutoff": 2.6,
+            "hpf.peak": 5
+          }
+        },
+        {
+          "title": "A long snarl",
+          "module": "env",
+          "why": "Envelope 2 decays slowly, so the brightness lasts the length of the note.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 1.5 · 30 ms: a moment at full before the fall.\n- DECAY (EG2) 5.5 · 460 ms.\n- SUSTAIN (EG2) 5.\n- RELEASE (EG2) 2 · 140 ms.\n- VOLUME 7.\n- Listen for: every note snarls for its whole length.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 1.5,
+            "eg2.decay": 5.5,
+            "eg2.sustain": 5,
+            "eg2.release": 2,
+            "out.volume": 7
+          }
+        },
+        {
+          "title": "Overdrive by feedback",
+          "module": "patch",
+          "why": "The output goes back into the filters and drives them.\n- Cable SIGNAL OUT → EXT SIGNAL IN.\n- Listen for: a saturated, fuzzy riff. VOLUME now sets the drive as well as the level.",
+          "cables": [["j.signalOut", "j.extIn"]]
+        }
+      ],
+      "context": {
+        "hpf.peak": "In this sound: the honk in the fuzz.",
+        "eg2.hold": "In this sound: keeps each note at full brightness a moment before it falls."
+      },
+      "tweaks": [
+        {
+          "id": "hpf.peak",
+          "try": "Lower to 1",
+          "hear": "A rounder, heavier fuzz."
+        },
+        {
+          "id": "out.volume",
+          "try": "Lower to 5",
+          "hear": "Less drive: a cleaner, punchier bass."
+        }
+      ]
+    },
+    {
+      "id": "k2-wormhole-reese-bass",
+      "name": "Neurofunk Reese Bass",
+      "ref": "In the style of Ed Rush & Optical — \"Wormhole\" (1998)",
+      "artist": "Ed Rush & Optical",
+      "tags": ["bass", "drum and bass", "neurofunk", "90s"],
+      "level": 2,
+      "blurb": "A long, churning bass of two detuned sawtooths, its filter breathing slowly under a drum-and-bass beat.",
+      "how": "Two sawtooths a fraction of a semitone apart phase against each other, which is the Reese sound. The low-pass takes off the fizz, and a slow triangle from the modulation generator moves it so the bass breathes. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 172,
+        "loop": true,
+        "steps": [
+          [0, 34, 3.8],
+          [4, 34, 1.4],
+          [5.5, 37, 0.4],
+          [6, 36, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths, detuned",
+          "module": "osc",
+          "why": "The slower the beat between them, the slower the churn.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 16′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 0.2 · +0.5 st.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 7.\n- Listen for: a churning, phasing bass.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "16",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "8",
+            "vco2.pitch": 0.2,
+            "mix.vco1": 7,
+            "mix.vco2": 7
+          }
+        },
+        {
+          "title": "Round off the fizz",
+          "module": "filter",
+          "why": "The low-pass sits low with a little peak; the high-pass stays open for the sub.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 4.2 · 348 Hz.\n- PEAK (LPF) 2.5.\n- EG2/EXT (LPF mod) 0.\n- CUTOFF (HPF) 0 · 12 Hz.\n- PEAK (HPF) 0.\n- Listen for: a darker, heavier churn.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 4.2,
+            "lpf.peak": 2.5,
+            "lpmod.eg2": 0,
+            "hpf.cutoff": 0,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Let it breathe",
+          "module": "lfo",
+          "why": "A slow triangle opens and closes the low-pass.\n- WAVE FORM (MG) 5 · triangle: triangle.\n- FREQUENCY (MG) 2.6 · 0.41 Hz.\n- MG/T.EXT (LPF mod) 2.5.\n- MG/T.EXT (HPF mod) 0.\n- MG/T.EXT (pitch) 0.\n- Listen for: the bass slowly brightening and darkening.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 2.6,
+            "lpmod.mg": 2.5,
+            "hpmod.mg": 0,
+            "fmod.mg": 0
+          }
+        },
+        {
+          "title": "Held notes",
+          "module": "env",
+          "why": "Full level while held, with a short release.\n- ATTACK (EG2) 0.5 · 8 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4 · 130 ms.\n- SUSTAIN (EG2) 10.\n- RELEASE (EG2) 2 · 140 ms.\n- VOLUME 8.\n- Listen for: long, rolling notes.",
+          "set": {
+            "eg2.attack": 0.5,
+            "eg2.hold": 0,
+            "eg2.decay": 4,
+            "eg2.sustain": 10,
+            "eg2.release": 2,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "vco2.pitch": "In this sound: the speed of the churn.",
+        "mg.freq": "In this sound: how fast the bass breathes."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.pitch",
+          "try": "Raise to 0.5",
+          "hear": "A faster, nastier churn."
+        },
+        {
+          "id": "lpf.peak",
+          "try": "Raise to 6",
+          "hear": "A growling, vocal edge on the sweep."
+        }
+      ]
+    },
+    {
+      "id": "k2-trap-sliding-808",
+      "name": "Sliding 808 Bass",
+      "ref": "In the style of trap",
+      "artist": "Trap",
+      "tags": ["bass", "trap", "hip hop", "10s"],
+      "level": 2,
+      "blurb": "A deep, booming sub bass that slides between notes and drops in pitch at its start, like a tuned 808 kick.",
+      "how": "A triangle an octave down is nearly a sine. Envelope 1 (EG1) starts each note a little sharp: with its attack at 0 and a short release, short notes fall back to pitch as the key lets go, and the punch is in that drop. PORTAMENTO slides from note to note, which the riff uses on its jumps.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.9],
+          [1, 36, 0.4],
+          [1.5, 43, 0.4],
+          [2, 41, 1.4],
+          [3.5, 39, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A near-sine",
+          "module": "osc",
+          "why": "A triangle low down is soft and round, nearly a sine.\n- VCO1 WAVE FORM Triangle.\n- VCO1 SCALE 16′.\n- VCO1 LEVEL 9.\n- VCO2 LEVEL 0.\n- Listen for: a deep, round boom.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco1.scale": "16",
+            "mix.vco1": 9,
+            "mix.vco2": 0
+          }
+        },
+        {
+          "title": "Warm it a little",
+          "module": "filter",
+          "why": "The low-pass takes off the last of the triangle’s edge.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 4.5 · 427 Hz.\n- PEAK (LPF) 0.\n- EG2/EXT (LPF mod) 0.\n- CUTOFF (HPF) 0 · 12 Hz.\n- PEAK (HPF) 0.\n- Listen for: pure sub, with no buzz.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 4.5,
+            "lpf.peak": 0,
+            "lpmod.eg2": 0,
+            "hpf.cutoff": 0,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "A slide between notes",
+          "module": "glide",
+          "why": "Portamento slides every note from the one before.\n- PORTAMENTO TIME 2.5: short enough that the notes still land on the beat.\n- Listen for: the jumps in the riff become swoops.",
+          "set": {
+            "porta.time": 2.5
+          }
+        },
+        {
+          "title": "A long boom",
+          "module": "env",
+          "why": "Envelope 2 holds each note full and lets it ring after the key.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 6 · 690 ms.\n- SUSTAIN (EG2) 9.\n- RELEASE (EG2) 4.5 · 630 ms.\n- VOLUME 9.\n- Listen for: notes that boom and hang.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 6,
+            "eg2.sustain": 9,
+            "eg2.release": 4.5,
+            "out.volume": 9
+          }
+        }
+      ],
+      "context": {
+        "porta.time": "In this sound: the slide. Above 4 it drags behind the beat.",
+        "eg2.release": "In this sound: how long the boom hangs."
+      },
+      "tweaks": [
+        {
+          "id": "porta.time",
+          "try": "Lower to 0",
+          "hear": "Clean steps between notes, no slides."
+        },
+        {
+          "id": "lpf.cutoff",
+          "try": "Raise to 7",
+          "hear": "More of the triangle’s edge: the bass cuts through on small speakers."
+        }
+      ]
+    },
+    {
+      "id": "k2-hi-nrg-octave-bass",
+      "name": "Hi-NRG Octave Bass",
+      "ref": "In the style of Bobby Orlando — \"She Has a Way\" (1983)",
+      "artist": "Bobby Orlando",
+      "tags": ["bass", "hi-nrg", "disco", "80s"],
+      "level": 1,
+      "blurb": "A bouncing bass that jumps up and down an octave on every eighth note, bright and plucky.",
+      "how": "A sawtooth plucked by envelope 2 through a slightly resonant low-pass. The octave jumps are the whole riff: the low note on the beat, the high note off it. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4],
+          [0.5, 48, 0.4],
+          [1, 36, 0.4],
+          [1.5, 48, 0.4],
+          [2, 41, 0.4],
+          [2.5, 53, 0.4],
+          [3, 43, 0.4],
+          [3.5, 55, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth",
+          "module": "osc",
+          "why": "One bright oscillator is enough.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 16′.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 0.\n- Listen for: a bright buzz.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "16",
+            "mix.vco1": 8,
+            "mix.vco2": 0
+          }
+        },
+        {
+          "title": "A plucked filter",
+          "module": "filter",
+          "why": "Envelope 2 opens the low-pass at the start of each note.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 4 · 304 Hz.\n- PEAK (LPF) 3.\n- EG2/EXT (LPF mod) 4.5.\n- CUTOFF (HPF) 0.5 · 17 Hz.\n- PEAK (HPF) 0.\n- Listen for: a dark tone that will pluck.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 4,
+            "lpf.peak": 3,
+            "lpmod.eg2": 4.5,
+            "hpf.cutoff": 0.5,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "A short pluck",
+          "module": "env",
+          "why": "A short decay and low sustain give each eighth its own pluck.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4 · 130 ms.\n- SUSTAIN (EG2) 3.\n- RELEASE (EG2) 2 · 140 ms.\n- VOLUME 8.\n- Listen for: a bouncing, plucked octave bass.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4,
+            "eg2.sustain": 3,
+            "eg2.release": 2,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "lpmod.eg2": "In this sound: how bright each pluck is."
+      },
+      "tweaks": [
+        {
+          "id": "lpf.peak",
+          "try": "Raise to 6",
+          "hear": "A squelchier, more electronic pluck."
+        },
+        {
+          "id": "eg2.decay",
+          "try": "Lower to 3",
+          "hear": "Shorter, tighter plucks."
+        }
+      ]
+    },
+    {
+      "id": "k2-i-luv-u-square-bass",
+      "name": "Grime Square Bass",
+      "ref": "In the style of Dizzee Rascal — \"I Luv U\" (Boy in da Corner, 2003)",
+      "artist": "Dizzee Rascal",
+      "tags": ["bass", "grime", "uk", "00s"],
+      "level": 2,
+      "blurb": "A raw, hollow square-wave bass with a nasty edge, hitting in stark, syncopated bursts.",
+      "how": "A square from Oscillator 2 and a pulse from Oscillator 1 at the same pitch, with the high-pass peak giving it a cheap, nasty bite. Short notes and gaps are the riff: grime basses are as much rhythm as tone. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.6],
+          [0.75, 38, 0.2],
+          [1.5, 41, 0.4],
+          [2, 38, 0.6],
+          [3, 36, 0.3],
+          [3.5, 37, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Square and pulse",
+          "module": "osc",
+          "why": "Hollow, video-game tones.\n- VCO1 WAVE FORM Pulse.\n- VCO1 PW 0: a hollow square.\n- VCO1 SCALE 16′.\n- VCO2 WAVE FORM Square.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 0 · 0 st.\n- VCO1 LEVEL 6.\n- VCO2 LEVEL 6.\n- Listen for: a hollow, reedy bass.",
+          "set": {
+            "vco1.wave": "pulse",
+            "vco1.pw": 0,
+            "vco1.scale": "16",
+            "vco2.wave": "sq",
+            "vco2.scale": "8",
+            "vco2.pitch": 0,
+            "mix.vco1": 6,
+            "mix.vco2": 6
+          }
+        },
+        {
+          "title": "A nasty edge",
+          "module": "filter",
+          "why": "The high-pass peak rings above the fundamental; the low-pass stays open.\n- LPF type FILTER 2.\n- CUTOFF (LPF) 6.5 · 1.7 kHz.\n- PEAK (LPF) 2.\n- EG2/EXT (LPF mod) 1.\n- CUTOFF (HPF) 3 · 95 Hz.\n- PEAK (HPF) 6.\n- Listen for: the square turns harsh and nasal.",
+          "set": {
+            "lpf.type": "2",
+            "lpf.cutoff": 6.5,
+            "lpf.peak": 2,
+            "lpmod.eg2": 1,
+            "hpf.cutoff": 3,
+            "hpf.peak": 6
+          }
+        },
+        {
+          "title": "Bursts",
+          "module": "env",
+          "why": "Full while held, cut off fast.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4 · 130 ms.\n- SUSTAIN (EG2) 9.\n- RELEASE (EG2) 1 · 74 ms.\n- VOLUME 8.\n- Listen for: hard-edged bursts with silence between.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4,
+            "eg2.sustain": 9,
+            "eg2.release": 1,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "hpf.peak": "In this sound: the nastiness. Past 8 it whistles."
+      },
+      "tweaks": [
+        {
+          "id": "hpf.cutoff",
+          "try": "Lower to 1",
+          "hear": "More weight, less bite: closer to a sub bass."
+        },
+        {
+          "id": "vco1.pw",
+          "try": "Turn to 7",
+          "hear": "A thinner, buzzier pulse under the square."
+        }
+      ]
+    },
+    {
+      "id": "k2-chicago-deep-house-bass",
+      "name": "Deep Chicago Bass",
+      "ref": "In the style of Legowelt — \"Disco Rout\" (2002)",
+      "artist": "Legowelt",
+      "tags": ["bass", "deep house", "chicago", "00s"],
+      "level": 1,
+      "blurb": "A warm, round house bass with a soft pluck and a gentle bounce.",
+      "how": "A triangle and a sawtooth an octave apart, the saw kept low. The low-pass is mostly closed, and envelope 2 just lets a little brightness in on each note. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 122,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.7],
+          [1, 36, 0.2],
+          [1.5, 39, 0.4],
+          [2, 41, 0.7],
+          [3, 43, 0.4],
+          [3.5, 41, 0.4],
+          [4, 36, 0.7],
+          [5, 36, 0.2],
+          [5.5, 39, 0.4],
+          [6, 34, 0.9],
+          [7, 36, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Triangle and a little saw",
+          "module": "osc",
+          "why": "The triangle is the body; the saw an octave up gives the note a face.\n- VCO1 WAVE FORM Triangle.\n- VCO1 SCALE 16′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 0 · 0 st.\n- VCO1 LEVEL 9.\n- VCO2 LEVEL 3.\n- Listen for: a round bass with a soft buzz on top.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco1.scale": "16",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "8",
+            "vco2.pitch": 0,
+            "mix.vco1": 9,
+            "mix.vco2": 3
+          }
+        },
+        {
+          "title": "Mostly closed",
+          "module": "filter",
+          "why": "Only a little of the saw gets through, and only at the start of each note.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 3.6 · 232 Hz.\n- PEAK (LPF) 2.\n- EG2/EXT (LPF mod) 3.\n- CUTOFF (HPF) 0 · 12 Hz.\n- PEAK (HPF) 0.\n- Listen for: a warm, soft pluck.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 3.6,
+            "lpf.peak": 2,
+            "lpmod.eg2": 3,
+            "hpf.cutoff": 0,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "A gentle bounce",
+          "module": "env",
+          "why": "A medium decay with some sustain keeps the notes round.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4.6 · 220 ms.\n- SUSTAIN (EG2) 6.\n- RELEASE (EG2) 2.5 · 180 ms.\n- VOLUME 8.5.\n- Listen for: a bouncing, warm groove.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4.6,
+            "eg2.sustain": 6,
+            "eg2.release": 2.5,
+            "out.volume": 8.5
+          }
+        }
+      ],
+      "context": {
+        "mix.vco2": "In this sound: how much face the bass has. At 0 it is a pure sub."
+      },
+      "tweaks": [
+        {
+          "id": "lpf.peak",
+          "try": "Raise to 5",
+          "hear": "A rubbery, acid-tinged bounce."
+        }
+      ]
+    },
+    {
+      "id": "k2-metal-fingers-scream-lead",
+      "name": "Screaming High-Pass Lead",
+      "ref": "In the style of Add N to (X) — \"Metal Fingers in My Body\" (Avant Hard, 1999)",
+      "artist": "Add N to (X)",
+      "tags": ["lead", "electronic", "noise", "90s"],
+      "level": 2,
+      "blurb": "A wild, screaming lead with both filters peaking at once, so it shrieks and whistles over a pounding riff.",
+      "how": "Both PEAK knobs high, with the high-pass and low-pass cutoffs close together, leaves a narrow band that rings hard. FILTER 2 distorts it. The modulation generator sweeps both cutoffs so the scream moves. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.4],
+          [0.5, 57, 0.4],
+          [1, 60, 0.9],
+          [2, 57, 0.4],
+          [2.5, 55, 0.4],
+          [3, 57, 0.9],
+          [4, 57, 0.4],
+          [4.5, 57, 0.4],
+          [5, 62, 0.9],
+          [6, 60, 0.4],
+          [6.5, 57, 0.4],
+          [7, 55, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A buzzing pair",
+          "module": "osc",
+          "why": "A pulse and a sawtooth at the same pitch.\n- VCO1 WAVE FORM Pulse.\n- VCO1 PW 6.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 0.1 · +0.2 st.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 6.\n- Listen for: a thin, harsh buzz.",
+          "set": {
+            "vco1.wave": "pulse",
+            "vco1.pw": 6,
+            "vco1.scale": "8",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "8",
+            "vco2.pitch": 0.1,
+            "mix.vco1": 7,
+            "mix.vco2": 6
+          }
+        },
+        {
+          "title": "Both filters peaking",
+          "module": "filter",
+          "why": "The two cutoffs close together leave a narrow band; both peaks make it scream.\n- LPF type FILTER 2.\n- CUTOFF (HPF) 5.5 · 536 Hz.\n- PEAK (HPF) 7.\n- CUTOFF (LPF) 6.4 · 1.6 kHz.\n- PEAK (LPF) 7.5.\n- EG2/EXT (LPF mod) 2.\n- Listen for: a shrill, ringing scream.",
+          "set": {
+            "lpf.type": "2",
+            "hpf.cutoff": 5.5,
+            "hpf.peak": 7,
+            "lpf.cutoff": 6.4,
+            "lpf.peak": 7.5,
+            "lpmod.eg2": 2
+          }
+        },
+        {
+          "title": "Move the scream",
+          "module": "lfo",
+          "why": "A slow triangle sweeps both cutoffs together.\n- WAVE FORM (MG) 5 · triangle.\n- FREQUENCY (MG) 4.5 · 1.13 Hz.\n- MG/T.EXT (HPF mod) 2.5.\n- MG/T.EXT (LPF mod) 2.5.\n- MG/T.EXT (pitch) 0.\n- Listen for: the scream wailing up and down.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 4.5,
+            "hpmod.mg": 2.5,
+            "lpmod.mg": 2.5,
+            "fmod.mg": 0
+          }
+        },
+        {
+          "title": "Held notes",
+          "module": "env",
+          "why": "Full while held.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4 · 130 ms.\n- SUSTAIN (EG2) 9.\n- RELEASE (EG2) 2 · 140 ms.\n- VOLUME 6.5: the peaks are loud: keep it down.\n- Listen for: a pounding, wailing riff.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4,
+            "eg2.sustain": 9,
+            "eg2.release": 2,
+            "out.volume": 6.5
+          }
+        }
+      ],
+      "context": {
+        "hpf.peak": "In this sound: half of the scream.",
+        "lpf.peak": "In this sound: the other half. Past 8 the filter sings on its own."
+      },
+      "tweaks": [
+        {
+          "id": "hpf.cutoff",
+          "try": "Lower to 3",
+          "hear": "A wider band: a fatter, less shrill lead."
+        },
+        {
+          "id": "mg.freq",
+          "try": "Raise to 7",
+          "hear": "A fast, frantic wobble."
+        }
+      ]
+    },
+    {
+      "id": "k2-come-on-lets-go-wobble-lead",
+      "name": "Wobbly Library-Music Lead",
+      "ref": "In the style of Broadcast — \"Come On Let’s Go\" (The Noise Made by People, 2000)",
+      "artist": "Broadcast",
+      "tags": ["lead", "indie", "retro", "00s"],
+      "level": 1,
+      "blurb": "A soft, slightly seasick square lead with a slow vibrato, like an old library-music record.",
+      "how": "A square through a warm low-pass, with a slow, wide vibrato from the modulation generator. The wobble is a little too slow and too deep to be polite, which is the charm. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [
+          [0, 67, 0.9],
+          [1, 69, 0.4],
+          [1.5, 71, 0.4],
+          [2, 72, 1.4],
+          [3.5, 71, 0.4],
+          [4, 69, 0.9],
+          [5, 67, 0.4],
+          [5.5, 64, 0.4],
+          [6, 67, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A square",
+          "module": "osc",
+          "why": "Oscillator 2’s square on its own: soft and hollow.\n- VCO2 WAVE FORM Square.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 0 · 0 st.\n- VCO1 LEVEL 0.\n- VCO2 LEVEL 8.\n- Listen for: a hollow, clarinet-like tone.",
+          "set": {
+            "vco2.wave": "sq",
+            "vco2.scale": "8",
+            "vco2.pitch": 0,
+            "mix.vco1": 0,
+            "mix.vco2": 8
+          }
+        },
+        {
+          "title": "Warm it",
+          "module": "filter",
+          "why": "The low-pass rounds the square off.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 5.4 · 788 Hz.\n- PEAK (LPF) 1.5.\n- EG2/EXT (LPF mod) 1.\n- CUTOFF (HPF) 1 · 24 Hz.\n- PEAK (HPF) 0.\n- Listen for: a soft, warm square.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 5.4,
+            "lpf.peak": 1.5,
+            "lpmod.eg2": 1,
+            "hpf.cutoff": 1,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "A seasick vibrato",
+          "module": "lfo",
+          "why": "Slower and deeper than a singer’s vibrato.\n- WAVE FORM (MG) 5 · triangle.\n- FREQUENCY (MG) 4.2 · 0.96 Hz.\n- MG/T.EXT (pitch) 1.8.\n- MG/T.EXT (HPF mod) 0.\n- MG/T.EXT (LPF mod) 0.\n- Listen for: the pitch swaying slowly on every note.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 4.2,
+            "fmod.mg": 1.8,
+            "hpmod.mg": 0,
+            "lpmod.mg": 0
+          }
+        },
+        {
+          "title": "Soft edges",
+          "module": "env",
+          "why": "A slight swell in, a gentle release.\n- ATTACK (EG2) 2.5 · 35 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 5 · 300 ms.\n- SUSTAIN (EG2) 9.\n- RELEASE (EG2) 4 · 460 ms.\n- VOLUME 8.\n- Listen for: notes that ease in and out.",
+          "set": {
+            "eg2.attack": 2.5,
+            "eg2.hold": 0,
+            "eg2.decay": 5,
+            "eg2.sustain": 9,
+            "eg2.release": 4,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "fmod.mg": "In this sound: how seasick the vibrato is. Above 3 it sounds out of tune."
+      },
+      "tweaks": [
+        {
+          "id": "mg.freq",
+          "try": "Raise to 6",
+          "hear": "A faster, more nervous vibrato."
+        }
+      ]
+    },
+    {
+      "id": "k2-electroclash-stiff-lead",
+      "name": "Stiff Electroclash Lead",
+      "ref": "In the style of Miss Kittin & The Hacker — \"Frank Sinatra\" (1998)",
+      "artist": "Miss Kittin & The Hacker",
+      "tags": ["lead", "electroclash", "electro", "90s"],
+      "level": 1,
+      "blurb": "A cold, deadpan lead of short, clipped notes, deliberately stiff and cheap-sounding.",
+      "how": "A narrow pulse through a mostly open filter, with a quick decay so the notes are clipped. No vibrato and no glide: the stiffness is the style. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.3],
+          [0.5, 64, 0.3],
+          [1, 67, 0.3],
+          [1.5, 64, 0.3],
+          [2, 62, 0.3],
+          [2.5, 60, 0.3],
+          [3, 62, 0.7],
+          [4, 64, 0.3],
+          [4.5, 64, 0.3],
+          [5, 67, 0.3],
+          [5.5, 69, 0.3],
+          [6, 67, 0.3],
+          [6.5, 64, 0.3],
+          [7, 62, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A narrow pulse",
+          "module": "osc",
+          "why": "Oscillator 2’s narrow pulse: thin and reedy.\n- VCO2 WAVE FORM npulse.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 0 · 0 st.\n- VCO1 LEVEL 0.\n- VCO2 LEVEL 8.\n- Listen for: a thin, nasal tone.",
+          "set": {
+            "vco2.wave": "npulse",
+            "vco2.scale": "8",
+            "vco2.pitch": 0,
+            "mix.vco1": 0,
+            "mix.vco2": 8
+          }
+        },
+        {
+          "title": "Mostly open",
+          "module": "filter",
+          "why": "Only a little rounding.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 6.6 · 1.8 kHz.\n- PEAK (LPF) 1.\n- EG2/EXT (LPF mod) 1.5.\n- CUTOFF (HPF) 1.5 · 34 Hz.\n- PEAK (HPF) 0.\n- Listen for: a bright, plain lead.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 6.6,
+            "lpf.peak": 1,
+            "lpmod.eg2": 1.5,
+            "hpf.cutoff": 1.5,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Clipped notes",
+          "module": "env",
+          "why": "A short decay to a low level: each note is a blip.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4.2 · 160 ms.\n- SUSTAIN (EG2) 3.\n- RELEASE (EG2) 1.5 · 100 ms.\n- VOLUME 8.\n- Listen for: a stiff, deadpan line.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4.2,
+            "eg2.sustain": 3,
+            "eg2.release": 1.5,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "eg2.decay": "In this sound: how clipped the notes are."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.wave",
+          "try": "Switch to Square",
+          "hear": "A rounder, hollower lead."
+        }
+      ]
+    },
+    {
+      "id": "k2-turbo-killer-glide-lead",
+      "name": "Synthwave Glide Lead",
+      "ref": "In the style of Carpenter Brut — \"Turbo Killer\" (Leather Teeth, 2018)",
+      "artist": "Carpenter Brut",
+      "tags": ["lead", "synthwave", "darksynth", "10s"],
+      "level": 2,
+      "blurb": "A huge, gliding sawtooth lead with a slight snarl, built for a rising, heroic melody.",
+      "how": "Two sawtooths an octave apart, detuned a touch, through a low-pass with some peak. Portamento glides each note into the next, and a delayed vibrato comes in on the long notes through the patch panel: the modulation generator goes through the spare VCA, opened late by envelope 1, and into TOTAL. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.9],
+          [1, 67, 0.9],
+          [2, 71, 1.9],
+          [4, 72, 0.9],
+          [5, 71, 0.9],
+          [6, 67, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths, an octave apart",
+          "module": "osc",
+          "why": "The upper one a little sharp, for width.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 4′.\n- VCO2 PITCH 0.1 · +0.3 st.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 5.\n- Listen for: a big, wide saw.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "8",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "4",
+            "vco2.pitch": 0.12,
+            "mix.vco1": 7,
+            "mix.vco2": 5
+          }
+        },
+        {
+          "title": "A slight snarl",
+          "module": "filter",
+          "why": "Some peak, and the filter opens a little on each note.\n- LPF type FILTER 2.\n- CUTOFF (LPF) 6 · 1.2 kHz.\n- PEAK (LPF) 3.5.\n- EG2/EXT (LPF mod) 2.\n- CUTOFF (HPF) 1.5 · 34 Hz.\n- PEAK (HPF) 0.\n- Listen for: a bright lead with an edge.",
+          "set": {
+            "lpf.type": "2",
+            "lpf.cutoff": 6,
+            "lpf.peak": 3.5,
+            "lpmod.eg2": 2,
+            "hpf.cutoff": 1.5,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Glide",
+          "module": "glide",
+          "why": "Every note slides from the last.\n- PORTAMENTO TIME 2.5.\n- Listen for: the leaps in the melody swoop.",
+          "set": {
+            "porta.time": 2.5
+          }
+        },
+        {
+          "title": "A vibrato that arrives late",
+          "module": "patch",
+          "why": "Three cables route the modulation generator through the spare VCA and into TOTAL, where it moves the pitch. Envelope 1 opens that VCA after a delay.\n- Cable MG OUT (reverse saw / triangle / saw) → VCA IN.\n- Cable EG 1 OUT → CONTROL INPUT.\n- Cable VCA OUT → TOTAL: TOTAL now feeds every MG/T.EXT knob.\n- WAVE FORM (MG) 5 · triangle.\n- FREQUENCY (MG) 7 · 4.36 Hz: a singer’s vibrato.\n- MG/T.EXT (pitch) 1.5.\n- MG/T.EXT (HPF mod) 0: kept at 0, so only the pitch moves.\n- MG/T.EXT (LPF mod) 0.\n- DELAY TIME (EG1) 6 · 440 ms.\n- ATTACK (EG1) 5 · 220 ms.\n- RELEASE (EG1) 2 · 110 ms.\n- EG1/EXT (pitch) 0: envelope 1 stays off the pitch directly.\n- Listen for: short notes stay straight; the long ones start to wobble.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 7,
+            "fmod.mg": 1.5,
+            "hpmod.mg": 0,
+            "lpmod.mg": 0,
+            "eg1.delay": 6,
+            "eg1.attack": 5,
+            "eg1.release": 2,
+            "fmod.eg1": 0
+          },
+          "cables": [
+            ["j.mgTri", "j.vcaIn"],
+            ["j.eg1Out", "j.vcaCtrl"],
+            ["j.vcaOut", "j.total"]
+          ]
+        },
+        {
+          "title": "Held, with a short tail",
+          "module": "env",
+          "why": "Envelope 2 holds the note full.\n- ATTACK (EG2) 0.5 · 8 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 5 · 300 ms.\n- SUSTAIN (EG2) 9.\n- RELEASE (EG2) 3.5 · 340 ms.\n- VOLUME 7.5.\n- Listen for: a soaring, heroic line.",
+          "set": {
+            "eg2.attack": 0.5,
+            "eg2.hold": 0,
+            "eg2.decay": 5,
+            "eg2.sustain": 9,
+            "eg2.release": 3.5,
+            "out.volume": 7.5
+          }
+        }
+      ],
+      "context": {
+        "eg1.delay": "In this sound: how long a note stays straight before the vibrato.",
+        "porta.time": "In this sound: the swoop between notes."
+      },
+      "tweaks": [
+        {
+          "id": "eg1.delay",
+          "try": "Lower to 0",
+          "hear": "The vibrato comes in at once, on every note."
+        },
+        {
+          "id": "lpf.peak",
+          "try": "Raise to 6",
+          "hear": "A harder, more aggressive snarl."
+        }
+      ]
+    },
+    {
+      "id": "k2-number-one-song-lead",
+      "name": "Falsetto Disco Lead",
+      "ref": "In the style of Sparks — \"The Number One Song in Heaven\" (1979)",
+      "artist": "Sparks",
+      "tags": ["lead", "disco", "synth-pop", "70s"],
+      "level": 2,
+      "blurb": "A bright, singing lead that climbs high over a pulsing disco line, with a quick vibrato and a little glide.",
+      "how": "A pulse wave with its width set narrow, a band from both filters that keeps it bright but not fizzy, and a quick vibrato. A touch of portamento makes the high melody sound sung. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.9],
+          [1, 74, 0.4],
+          [1.5, 76, 1.4],
+          [3, 74, 0.9],
+          [4, 72, 0.4],
+          [4.5, 71, 0.4],
+          [5, 69, 1.4],
+          [6.5, 71, 0.4],
+          [7, 72, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A narrow pulse",
+          "module": "osc",
+          "why": "Oscillator 1 as a pulse, a little narrow.\n- VCO1 WAVE FORM Pulse.\n- VCO1 PW 7.\n- VCO1 SCALE 8′.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 0.\n- Listen for: a thin, reedy tone.",
+          "set": {
+            "vco1.wave": "pulse",
+            "vco1.pw": 7,
+            "vco1.scale": "8",
+            "mix.vco1": 8,
+            "mix.vco2": 0
+          }
+        },
+        {
+          "title": "A singing band",
+          "module": "filter",
+          "why": "The high-pass takes away the low body and the low-pass the fizz, leaving a vocal band.\n- LPF type FILTER 1.\n- CUTOFF (HPF) 4 · 190 Hz.\n- PEAK (HPF) 3.\n- CUTOFF (LPF) 7 · 2.3 kHz.\n- PEAK (LPF) 2.\n- EG2/EXT (LPF mod) 0.\n- Listen for: a bright, nasal, singing lead.",
+          "set": {
+            "lpf.type": "1",
+            "hpf.cutoff": 4,
+            "hpf.peak": 3,
+            "lpf.cutoff": 7,
+            "lpf.peak": 2,
+            "lpmod.eg2": 0
+          }
+        },
+        {
+          "title": "Vibrato and glide",
+          "module": "lfo",
+          "why": "A shallow vibrato and a small glide make it sound sung.\n- WAVE FORM (MG) 5 · triangle.\n- FREQUENCY (MG) 7 · 4.36 Hz.\n- MG/T.EXT (pitch) 1.\n- MG/T.EXT (HPF mod) 0.\n- MG/T.EXT (LPF mod) 0.\n- PORTAMENTO TIME 1.5.\n- Listen for: a falsetto-like warble and small slides.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 7,
+            "fmod.mg": 1,
+            "hpmod.mg": 0,
+            "lpmod.mg": 0,
+            "porta.time": 1.5
+          }
+        },
+        {
+          "title": "Held",
+          "module": "env",
+          "why": "Full while held.\n- ATTACK (EG2) 0.5 · 8 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4 · 130 ms.\n- SUSTAIN (EG2) 9.\n- RELEASE (EG2) 3 · 250 ms.\n- VOLUME 7.5.\n- Listen for: a soaring, high melody.",
+          "set": {
+            "eg2.attack": 0.5,
+            "eg2.hold": 0,
+            "eg2.decay": 4,
+            "eg2.sustain": 9,
+            "eg2.release": 3,
+            "out.volume": 7.5
+          }
+        }
+      ],
+      "context": {
+        "hpf.cutoff": "In this sound: how thin and vocal the lead is."
+      },
+      "tweaks": [
+        {
+          "id": "hpf.cutoff",
+          "try": "Lower to 1",
+          "hear": "A fuller, rounder lead with its body back."
+        }
+      ]
+    },
+    {
+      "id": "k2-1950s-saucer-theremin",
+      "name": "Flying-Saucer Theremin",
+      "ref": "In the style of 1950s science-fiction film scores",
+      "artist": "1950s science-fiction films",
+      "tags": ["lead", "sci-fi", "retro", "soundtrack"],
+      "level": 3,
+      "blurb": "An eerie, gliding triangle with a deep vibrato that only comes in once the note is held, like a theremin.",
+      "how": "A theremin is a pure, sliding tone with a player’s hand adding vibrato. A triangle through a soft low-pass is close to that tone; a long portamento gives the slides. The vibrato is routed through the spare VCA, which envelope 1 opens after a delay, and into TOTAL, so each note starts still and starts to waver.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 67, 1.9],
+          [2, 74, 1.9],
+          [4, 72, 0.9],
+          [5, 70, 0.9],
+          [6, 67, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A soft triangle",
+          "module": "osc",
+          "why": "Almost a sine.\n- VCO1 WAVE FORM Triangle.\n- VCO1 SCALE 8′.\n- VCO1 LEVEL 9.\n- VCO2 LEVEL 0.\n- Listen for: a pure, soft tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco1.scale": "8",
+            "mix.vco1": 9,
+            "mix.vco2": 0
+          }
+        },
+        {
+          "title": "Round it off",
+          "module": "filter",
+          "why": "The low-pass removes the last of the edge.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 5.6 · 902 Hz.\n- PEAK (LPF) 0.\n- EG2/EXT (LPF mod) 0.\n- CUTOFF (HPF) 1.5 · 34 Hz.\n- PEAK (HPF) 0.\n- Listen for: an eerie, hollow whistle.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 5.6,
+            "lpf.peak": 0,
+            "lpmod.eg2": 0,
+            "hpf.cutoff": 1.5,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Long slides",
+          "module": "glide",
+          "why": "The hand moving through the air.\n- PORTAMENTO TIME 4.5.\n- Listen for: each note slides slowly from the last.",
+          "set": {
+            "porta.time": 4.5
+          }
+        },
+        {
+          "title": "A late, deep vibrato",
+          "module": "patch",
+          "why": "The modulation generator goes into the spare VCA; envelope 1 opens that VCA after a delay; its output feeds TOTAL.\n- Cable MG OUT (reverse saw / triangle / saw) → VCA IN.\n- Cable EG 1 OUT → CONTROL INPUT.\n- Cable VCA OUT → TOTAL.\n- WAVE FORM (MG) 5 · triangle.\n- FREQUENCY (MG) 6.5 · 3.33 Hz.\n- MG/T.EXT (pitch) 2.5: deep.\n- MG/T.EXT (HPF mod) 0.\n- MG/T.EXT (LPF mod) 0.\n- DELAY TIME (EG1) 6.5 · 600 ms.\n- ATTACK (EG1) 6.5 · 790 ms.\n- RELEASE (EG1) 4 · 370 ms.\n- EG1/EXT (pitch) 0.\n- Listen for: each long note starts still and begins to waver.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 6.5,
+            "fmod.mg": 2.5,
+            "hpmod.mg": 0,
+            "lpmod.mg": 0,
+            "eg1.delay": 6.5,
+            "eg1.attack": 6.5,
+            "eg1.release": 4,
+            "fmod.eg1": 0
+          },
+          "cables": [
+            ["j.mgTri", "j.vcaIn"],
+            ["j.eg1Out", "j.vcaCtrl"],
+            ["j.vcaOut", "j.total"]
+          ]
+        },
+        {
+          "title": "Fade in and out",
+          "module": "env",
+          "why": "A soft swell and a slow fade, like a hand approaching and leaving.\n- ATTACK (EG2) 4 · 100 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 5 · 300 ms.\n- SUSTAIN (EG2) 10.\n- RELEASE (EG2) 5 · 850 ms.\n- VOLUME 8.\n- Listen for: a ghostly, sliding melody.",
+          "set": {
+            "eg2.attack": 4,
+            "eg2.hold": 0,
+            "eg2.decay": 5,
+            "eg2.sustain": 10,
+            "eg2.release": 5,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "porta.time": "In this sound: the theremin’s slide.",
+        "fmod.mg": "In this sound: how deep the vibrato gets once it arrives."
+      },
+      "tweaks": [
+        {
+          "id": "porta.time",
+          "try": "Raise to 6",
+          "hear": "Slower, more wailing slides."
+        },
+        {
+          "id": "eg1.delay",
+          "try": "Lower to 2",
+          "hear": "The vibrato arrives almost at once."
+        }
+      ]
+    },
+    {
+      "id": "k2-zombie-zombie-road-lead",
+      "name": "Night-Drive Lead",
+      "ref": "In the style of Zombie Zombie — \"Driving This Road Until Death Sets You Free\" (2008)",
+      "artist": "Zombie Zombie",
+      "tags": ["lead", "krautrock", "horror", "00s"],
+      "level": 2,
+      "blurb": "A dark, repeating lead with a pulsing filter, like a horror-film score played by a krautrock band.",
+      "how": "A sawtooth through a resonant low-pass that the modulation generator’s square output opens and closes in time, so each held note pulses. The melody is a slow, minor figure over that pulse. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 57, 1.9],
+          [2, 60, 1.9],
+          [4, 59, 1.9],
+          [6, 55, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth",
+          "module": "osc",
+          "why": "One sawtooth, a little bright.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 8′.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 0.\n- Listen for: a bright buzz.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "8",
+            "mix.vco1": 8,
+            "mix.vco2": 0
+          }
+        },
+        {
+          "title": "A ringing filter",
+          "module": "filter",
+          "why": "Peak up, cutoff in the middle.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 4.8 · 524 Hz.\n- PEAK (LPF) 5.5.\n- EG2/EXT (LPF mod) 0.\n- CUTOFF (HPF) 1 · 24 Hz.\n- PEAK (HPF) 0.\n- Listen for: a dark, vocal tone.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 4.8,
+            "lpf.peak": 5.5,
+            "lpmod.eg2": 0,
+            "hpf.cutoff": 1,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Pulse the filter",
+          "module": "patch",
+          "why": "The MG’s pulse output is a square that never goes below zero. Patched to the low-pass CUTOFF FREQ jack, it replaces envelope 2 at the EG2/EXT knob and opens the filter in time.\n- Cable MG OUT (pulse) → CUTOFF FREQ (low-pass).\n- WAVE FORM (MG) 5 · triangle: square at the pulse output.\n- FREQUENCY (MG) 6.9 · 4.02 Hz: about eighth notes at this tempo.\n- EG2/EXT (LPF mod) 4: now the depth of the pulse.\n- Listen for: every held note pulsing in eighths.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 6.85,
+            "lpmod.eg2": 4
+          },
+          "cables": [["j.mgPulse", "j.cutoffLp"]]
+        },
+        {
+          "title": "Held notes",
+          "module": "env",
+          "why": "Envelope 2 now only shapes the loudness.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4 · 130 ms.\n- SUSTAIN (EG2) 9.\n- RELEASE (EG2) 2.5 · 180 ms.\n- VOLUME 7.5.\n- Listen for: a dark, pulsing melody.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4,
+            "eg2.sustain": 9,
+            "eg2.release": 2.5,
+            "out.volume": 7.5
+          }
+        }
+      ],
+      "context": {
+        "mg.freq": "In this sound: the speed of the pulse."
+      },
+      "tweaks": [
+        {
+          "id": "mg.wave",
+          "try": "Turn to 8",
+          "hear": "A narrower pulse: shorter, stabbier flashes of brightness."
+        }
+      ]
+    },
+    {
+      "id": "k2-northern-wasteland-ostinato",
+      "name": "Berlin-School Ostinato",
+      "ref": "In the style of Michael Hoenig — \"Departure from the Northern Wasteland\" (1978)",
+      "artist": "Michael Hoenig",
+      "tags": ["seq", "berlin school", "ambient", "70s"],
+      "level": 2,
+      "blurb": "A rippling sixteenth-note sequence whose filter opens and closes over many bars, slow as a tide.",
+      "how": "A pulse wave through a resonant low-pass, each note plucked by envelope 2. A very slow triangle from the modulation generator moves the cutoff over about seven seconds, so the sequence keeps changing colour while the notes stay the same. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.2],
+          [0.25, 55, 0.2],
+          [0.5, 60, 0.2],
+          [0.75, 63, 0.2],
+          [1, 48, 0.2],
+          [1.25, 55, 0.2],
+          [1.5, 60, 0.2],
+          [1.75, 62, 0.2],
+          [2, 48, 0.2],
+          [2.25, 55, 0.2],
+          [2.5, 58, 0.2],
+          [2.75, 63, 0.2],
+          [3, 48, 0.2],
+          [3.25, 55, 0.2],
+          [3.5, 60, 0.2],
+          [3.75, 67, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pulse",
+          "module": "osc",
+          "why": "A slightly narrow pulse has plenty for a resonant filter to pick out.\n- VCO1 WAVE FORM Pulse.\n- VCO1 PW 4.\n- VCO1 SCALE 8′.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 0.\n- Listen for: a hollow, reedy tone.",
+          "set": {
+            "vco1.wave": "pulse",
+            "vco1.pw": 4,
+            "vco1.scale": "8",
+            "mix.vco1": 8,
+            "mix.vco2": 0
+          }
+        },
+        {
+          "title": "A resonant pluck",
+          "module": "filter",
+          "why": "Envelope 2 flicks the low-pass open on every sixteenth.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 4.2 · 348 Hz.\n- PEAK (LPF) 6.\n- EG2/EXT (LPF mod) 3.5.\n- CUTOFF (HPF) 1.5 · 34 Hz.\n- PEAK (HPF) 0.\n- Listen for: a ringing, liquid pluck on each note.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 4.2,
+            "lpf.peak": 6,
+            "lpmod.eg2": 3.5,
+            "hpf.cutoff": 1.5,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Short notes",
+          "module": "env",
+          "why": "A quick decay with nothing held.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4 · 130 ms.\n- SUSTAIN (EG2) 0.\n- RELEASE (EG2) 2 · 140 ms.\n- VOLUME 8.5.\n- Listen for: each note a short drop.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4,
+            "eg2.sustain": 0,
+            "eg2.release": 2,
+            "out.volume": 8.5
+          }
+        },
+        {
+          "title": "A tide on the filter",
+          "module": "lfo",
+          "why": "A very slow triangle from the modulation generator (MG) sweeps the low-pass.\n- WAVE FORM (MG) 5 · triangle: triangle.\n- FREQUENCY (MG) 0.6 · 0.14 Hz: one sweep every seven seconds or so.\n- MG/T.EXT (LPF mod) 4.5.\n- MG/T.EXT (HPF mod) 0.\n- MG/T.EXT (pitch) 0.\n- Listen for: the sequence slowly brightening, then sinking back.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 0.6,
+            "lpmod.mg": 4.5,
+            "hpmod.mg": 0,
+            "fmod.mg": 0
+          }
+        }
+      ],
+      "context": {
+        "mg.freq": "In this sound: the length of the tide.",
+        "lpf.peak": "In this sound: how liquid each pluck is."
+      },
+      "tweaks": [
+        {
+          "id": "mg.freq",
+          "try": "Raise to 3",
+          "hear": "A sweep every couple of seconds: livelier, less hypnotic."
+        },
+        {
+          "id": "eg2.decay",
+          "try": "Raise to 5",
+          "hear": "Longer notes that blur into one another."
+        }
+      ]
+    },
+    {
+      "id": "k2-rainbow-dome-glass-arp",
+      "name": "Glassy Meditation Arpeggio",
+      "ref": "In the style of Steve Hillage — Rainbow Dome Musick (1979)",
+      "artist": "Steve Hillage",
+      "tags": ["seq", "ambient", "gentle", "calm", "70s"],
+      "level": 1,
+      "blurb": "A soft, glassy arpeggio that circles round a chord, gentle enough to listen to for an hour.",
+      "how": "A triangle with a quiet square an octave above it, plucked softly by envelope 2 with a long release. The high-pass takes away the low end so the notes float. A slow, slight vibrato keeps them shimmering.",
+      "phrase": {
+        "bpm": 92,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.45],
+          [0.5, 69, 0.45],
+          [1, 71, 0.45],
+          [1.5, 76, 0.45],
+          [2, 71, 0.45],
+          [2.5, 69, 0.45],
+          [3, 64, 0.45],
+          [3.5, 69, 0.45],
+          [4, 62, 0.45],
+          [4.5, 69, 0.45],
+          [5, 71, 0.45],
+          [5.5, 74, 0.45],
+          [6, 71, 0.45],
+          [6.5, 69, 0.45],
+          [7, 62, 0.45],
+          [7.5, 69, 0.45]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A triangle and a quiet square",
+          "module": "osc",
+          "why": "The square, an octave up and low in the mix, adds a glassy top.\n- VCO1 WAVE FORM Triangle.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Square.\n- VCO2 SCALE 4′.\n- VCO2 PITCH 0.1 · +0.1 st.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 2.5.\n- Listen for: a soft, bell-like tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco1.scale": "8",
+            "vco2.wave": "sq",
+            "vco2.scale": "4",
+            "vco2.pitch": 0.05,
+            "mix.vco1": 8,
+            "mix.vco2": 2.5
+          }
+        },
+        {
+          "title": "Float it",
+          "module": "filter",
+          "why": "The high-pass trims the bottom; the low-pass rounds the top.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 6.2 · 1.4 kHz.\n- PEAK (LPF) 1.\n- EG2/EXT (LPF mod) 1.5.\n- CUTOFF (HPF) 3 · 95 Hz.\n- PEAK (HPF) 1.\n- Listen for: a light, airy tone.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 6.2,
+            "lpf.peak": 1,
+            "lpmod.eg2": 1.5,
+            "hpf.cutoff": 3,
+            "hpf.peak": 1
+          }
+        },
+        {
+          "title": "Soft plucks",
+          "module": "env",
+          "why": "A short swell in and a long decay.\n- ATTACK (EG2) 1.5 · 16 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 6 · 690 ms.\n- SUSTAIN (EG2) 3.\n- RELEASE (EG2) 5 · 850 ms.\n- VOLUME 8.\n- Listen for: gentle notes that ring into each other.",
+          "set": {
+            "eg2.attack": 1.5,
+            "eg2.hold": 0,
+            "eg2.decay": 6,
+            "eg2.sustain": 3,
+            "eg2.release": 5,
+            "out.volume": 8
+          }
+        },
+        {
+          "title": "A slight shimmer",
+          "module": "lfo",
+          "why": "A small, slow vibrato.\n- WAVE FORM (MG) 5 · triangle.\n- FREQUENCY (MG) 5 · 1.48 Hz: about one and a half wobbles a second.\n- MG/T.EXT (pitch) 1.2.\n- MG/T.EXT (HPF mod) 0.\n- MG/T.EXT (LPF mod) 0.\n- Listen for: the notes shimmering softly.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 5,
+            "fmod.mg": 1.2,
+            "hpmod.mg": 0,
+            "lpmod.mg": 0
+          }
+        }
+      ],
+      "context": {
+        "hpf.cutoff": "In this sound: how much the notes float. Lower it for a warmer, fuller arpeggio."
+      },
+      "tweaks": [
+        {
+          "id": "mix.vco2",
+          "try": "Raise to 5",
+          "hear": "More glass on top, like a celesta."
+        },
+        {
+          "id": "eg2.release",
+          "try": "Lower to 2",
+          "hear": "Drier, more separate notes."
+        }
+      ]
+    },
+    {
+      "id": "k2-harmonia-motorik-seq",
+      "name": "Motorik Sequence",
+      "ref": "In the style of Harmonia — \"Deluxe (Immer Wieder)\" (Deluxe, 1975)",
+      "artist": "Harmonia",
+      "tags": ["seq", "krautrock", "motorik", "70s"],
+      "level": 1,
+      "blurb": "A bright, steady eighth-note figure that drives forward like a car on an empty road.",
+      "how": "A sawtooth and a square a fifth above it, short and bright, repeating a simple major figure. The fifth gives each note the open, organ-like sound of early German electronic rock. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 50, 0.4],
+          [0.5, 57, 0.4],
+          [1, 62, 0.4],
+          [1.5, 57, 0.4],
+          [2, 50, 0.4],
+          [2.5, 57, 0.4],
+          [3, 64, 0.4],
+          [3.5, 57, 0.4],
+          [4, 48, 0.4],
+          [4.5, 55, 0.4],
+          [5, 60, 0.4],
+          [5.5, 55, 0.4],
+          [6, 48, 0.4],
+          [6.5, 55, 0.4],
+          [7, 62, 0.4],
+          [7.5, 55, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth and a fifth",
+          "module": "osc",
+          "why": "Oscillator 2 a fifth above Oscillator 1.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Square.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 2.9 · +7 st: seven semitones up: a fifth.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 5.\n- Listen for: an open, two-note tone on every key.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "8",
+            "vco2.wave": "sq",
+            "vco2.scale": "8",
+            "vco2.pitch": 2.92,
+            "mix.vco1": 7,
+            "mix.vco2": 5
+          }
+        },
+        {
+          "title": "Bright, with a little bite",
+          "module": "filter",
+          "why": "Mostly open, with a short flick from envelope 2.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 5.6 · 902 Hz.\n- PEAK (LPF) 2.\n- EG2/EXT (LPF mod) 2.5.\n- CUTOFF (HPF) 1.5 · 34 Hz.\n- PEAK (HPF) 0.\n- Listen for: a bright tone with a small click on each note.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 5.6,
+            "lpf.peak": 2,
+            "lpmod.eg2": 2.5,
+            "hpf.cutoff": 1.5,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Steady eighths",
+          "module": "env",
+          "why": "Short, even notes.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4.5 · 200 ms.\n- SUSTAIN (EG2) 4.\n- RELEASE (EG2) 2 · 140 ms.\n- VOLUME 7.5.\n- Listen for: a steady, driving figure.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4.5,
+            "eg2.sustain": 4,
+            "eg2.release": 2,
+            "out.volume": 7.5
+          }
+        }
+      ],
+      "context": {
+        "vco2.pitch": "In this sound: the fifth above every note. Try 2.08 for a fourth."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.pitch",
+          "try": "Turn to 0",
+          "hear": "A plain unison: the figure loses its open, organ-like colour."
+        }
+      ]
+    },
+    {
+      "id": "k2-flaming-june-trance-gate",
+      "name": "Trance-Gate Fifth",
+      "ref": "In the style of BT — \"Flaming June\" (ESCM, 1997)",
+      "artist": "BT",
+      "tags": ["seq", "trance", "gated", "90s"],
+      "level": 3,
+      "blurb": "A held fifth chopped into rapid sixteenths by the modulation generator, the shimmering gate of 90s trance.",
+      "how": "The modulation generator’s pulse output, patched into TRIG IN, takes over from the keyboard as the trigger for both envelopes. Each pulse fires envelope 2, so a held note is chopped into a run of short notes at the MG’s rate. The two oscillators a fifth apart make each chop a power chord.",
+      "phrase": {
+        "bpm": 136,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.9],
+          [4, 53, 3.9],
+          [8, 55, 3.9],
+          [12, 52, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A fifth",
+          "module": "osc",
+          "why": "Two sawtooths, the second a fifth up.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 3 · +7.1 st: a fifth, a hair wide so it shimmers.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 6.\n- Listen for: a bright, open chord.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "8",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "8",
+            "vco2.pitch": 2.95,
+            "mix.vco1": 7,
+            "mix.vco2": 6
+          }
+        },
+        {
+          "title": "A bright filter",
+          "module": "filter",
+          "why": "Opened a little on each chop.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 5.4 · 788 Hz.\n- PEAK (LPF) 3.\n- EG2/EXT (LPF mod) 3.\n- CUTOFF (HPF) 2 · 48 Hz.\n- PEAK (HPF) 0.\n- Listen for: a bright chord with a pluck.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 5.4,
+            "lpf.peak": 3,
+            "lpmod.eg2": 3,
+            "hpf.cutoff": 2,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Short chops",
+          "module": "env",
+          "why": "Envelope 2 falls fast to nothing, so each trigger is a short stab.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 3.6 · 97 ms.\n- SUSTAIN (EG2) 0.\n- RELEASE (EG2) 2 · 140 ms.\n- VOLUME 8.\n- Listen for: one short stab at the start of each held note.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 3.6,
+            "eg2.sustain": 0,
+            "eg2.release": 2,
+            "out.volume": 8
+          }
+        },
+        {
+          "title": "Let the MG fire the envelopes",
+          "module": "patch",
+          "why": "One cable makes the modulation generator’s pulse the trigger.\n- Cable MG OUT (pulse) → TRIG IN: both envelopes now follow the MG, not the keys.\n- WAVE FORM (MG) 5 · triangle: an even square at the pulse output.\n- FREQUENCY (MG) 8.4 · 9.28 Hz: about sixteenth notes at this tempo.\n- MG/T.EXT (pitch) 0.\n- MG/T.EXT (HPF mod) 0.\n- MG/T.EXT (LPF mod) 0.\n- Listen for: each held chord chopped into a rapid, shimmering gate.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 8.4,
+            "fmod.mg": 0,
+            "hpmod.mg": 0,
+            "lpmod.mg": 0
+          },
+          "cables": [["j.mgPulse", "j.trigIn"]]
+        }
+      ],
+      "context": {
+        "mg.freq": "In this sound: the speed of the gate. It runs freely, so it drifts against the beat.",
+        "eg2.decay": "In this sound: the length of each chop."
+      },
+      "tweaks": [
+        {
+          "id": "eg2.decay",
+          "try": "Raise to 4.5",
+          "hear": "Longer chops that almost join up."
+        },
+        {
+          "id": "mg.freq",
+          "try": "Lower to 7.1",
+          "hear": "Eighth-note chops instead of sixteenths."
+        }
+      ]
+    },
+    {
+      "id": "k2-cybernaut-sampled-staircase",
+      "name": "Sampled-Triangle Staircase",
+      "ref": "In the style of Tonto’s Expanding Head Band — \"Cybernaut\" (Zero Time, 1971)",
+      "artist": "Tonto’s Expanding Head Band",
+      "tags": ["seq", "electronic", "modular", "70s"],
+      "level": 3,
+      "blurb": "A melody that climbs and descends by itself in little steps, made by sampling a slow triangle.",
+      "how": "The sample and hold takes a reading of whatever is at its IN jack on every tick of its own clock and holds it. Fed the modulation generator’s slow triangle instead of noise, it turns the smooth rise and fall into a staircase. Patched into FREQ, the staircase moves the pitch of both oscillators, at the depth set by the EG1/EXT knob, so a single held note plays a rising and falling run.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 55, 7.9],
+          [8, 53, 7.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A soft square",
+          "module": "osc",
+          "why": "Oscillator 2’s square on its own.\n- VCO2 WAVE FORM Square.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 0 · 0 st.\n- VCO1 LEVEL 0.\n- VCO2 LEVEL 8.\n- Listen for: a hollow, clear note.",
+          "set": {
+            "vco2.wave": "sq",
+            "vco2.scale": "8",
+            "vco2.pitch": 0,
+            "mix.vco1": 0,
+            "mix.vco2": 8
+          }
+        },
+        {
+          "title": "Pluck each step",
+          "module": "filter",
+          "why": "A resonant low-pass, steady.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 5.6 · 902 Hz.\n- PEAK (LPF) 4.\n- EG2/EXT (LPF mod) 0.\n- CUTOFF (HPF) 1.5 · 34 Hz.\n- PEAK (HPF) 0.\n- Listen for: a clear, slightly ringing tone.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 5.6,
+            "lpf.peak": 4,
+            "lpmod.eg2": 0,
+            "hpf.cutoff": 1.5,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Sample the triangle",
+          "module": "patch",
+          "why": "The MG’s triangle into S&H IN, and the held output into FREQ.\n- Cable MG OUT (reverse saw / triangle / saw) → S&H IN: replaces the noise the sample and hold normally reads.\n- Cable S&H OUT → FREQ: replaces envelope 1 at the EG1/EXT knob.\n- WAVE FORM (MG) 5 · triangle: triangle.\n- FREQUENCY (MG) 2.2 · 0.33 Hz: one rise and fall every three seconds or so.\n- MG/T.EXT (pitch) 0: the triangle reaches the pitch only through the staircase.\n- MG/T.EXT (HPF mod) 0.\n- MG/T.EXT (LPF mod) 0.\n- EG1/EXT (pitch) 5.4: the height of the staircase: about a fifth either way.\n- Listen for: a held note now climbs and falls in steps.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 2.2,
+            "fmod.mg": 0,
+            "hpmod.mg": 0,
+            "lpmod.mg": 0,
+            "fmod.eg1": 5.4
+          },
+          "cables": [
+            ["j.mgTri", "j.shIn"],
+            ["j.shOut", "j.freq"]
+          ]
+        },
+        {
+          "title": "Held",
+          "module": "env",
+          "why": "The note holds; the steps do the work.\n- ATTACK (EG2) 0.5 · 8 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 5 · 300 ms.\n- SUSTAIN (EG2) 9.\n- RELEASE (EG2) 3 · 250 ms.\n- VOLUME 7.5.\n- Listen for: a burbling, automatic melody.",
+          "set": {
+            "eg2.attack": 0.5,
+            "eg2.hold": 0,
+            "eg2.decay": 5,
+            "eg2.sustain": 9,
+            "eg2.release": 3,
+            "out.volume": 7.5
+          }
+        }
+      ],
+      "context": {
+        "fmod.eg1": "In this sound: how far the staircase climbs.",
+        "mg.freq": "In this sound: how fast it climbs and falls, and so how many steps there are."
+      },
+      "tweaks": [
+        {
+          "id": "mg.freq",
+          "try": "Raise to 4",
+          "hear": "Fewer, bigger steps: a quicker zig-zag."
+        },
+        {
+          "id": "fmod.eg1",
+          "try": "Raise to 7",
+          "hear": "A staircase over an octave either way."
+        }
+      ]
+    },
+    {
+      "id": "k2-martyr-minimal-wave-arp",
+      "name": "Cold Minimal-Wave Arpeggio",
+      "ref": "In the style of Oppenheimer Analysis — \"Martyr\" (New Mexico, 1982)",
+      "artist": "Oppenheimer Analysis",
+      "tags": ["seq", "minimal wave", "synth-pop", "80s"],
+      "level": 1,
+      "blurb": "A cold, clipped arpeggio in a minor key, the bedroom sound of early-80s minimal synth.",
+      "how": "A thin pulse, plucked short, with a high-pass taking off the warmth. Nothing moves but the notes: the coldness comes from how plain it is. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.3],
+          [0.5, 60, 0.3],
+          [1, 64, 0.3],
+          [1.5, 69, 0.3],
+          [2, 57, 0.3],
+          [2.5, 60, 0.3],
+          [3, 64, 0.3],
+          [3.5, 67, 0.3],
+          [4, 53, 0.3],
+          [4.5, 57, 0.3],
+          [5, 60, 0.3],
+          [5.5, 65, 0.3],
+          [6, 55, 0.3],
+          [6.5, 59, 0.3],
+          [7, 62, 0.3],
+          [7.5, 67, 0.3]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A thin pulse",
+          "module": "osc",
+          "why": "Narrow and nasal.\n- VCO1 WAVE FORM Pulse.\n- VCO1 PW 7.5.\n- VCO1 SCALE 8′.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 0.\n- Listen for: a thin, reedy tone.",
+          "set": {
+            "vco1.wave": "pulse",
+            "vco1.pw": 7.5,
+            "vco1.scale": "8",
+            "mix.vco1": 8,
+            "mix.vco2": 0
+          }
+        },
+        {
+          "title": "Take away the warmth",
+          "module": "filter",
+          "why": "The high-pass removes the body.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 6.5 · 1.7 kHz.\n- PEAK (LPF) 1.\n- EG2/EXT (LPF mod) 1.\n- CUTOFF (HPF) 3.5 · 135 Hz.\n- PEAK (HPF) 2.\n- Listen for: a cold, small sound.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 6.5,
+            "lpf.peak": 1,
+            "lpmod.eg2": 1,
+            "hpf.cutoff": 3.5,
+            "hpf.peak": 2
+          }
+        },
+        {
+          "title": "Clipped notes",
+          "module": "env",
+          "why": "A short decay and little sustain.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4 · 130 ms.\n- SUSTAIN (EG2) 2.\n- RELEASE (EG2) 1.5 · 100 ms.\n- VOLUME 8.\n- Listen for: a clipped, chilly arpeggio.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4,
+            "eg2.sustain": 2,
+            "eg2.release": 1.5,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "hpf.cutoff": "In this sound: the chill. Lower it for a warmer, rounder arpeggio."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.pw",
+          "try": "Turn to 2",
+          "hear": "A rounder, squarer arpeggio."
+        }
+      ]
+    },
+    {
+      "id": "k2-eyen-ring-bell-seq",
+      "name": "Ring-Mod Bell Sequence",
+      "ref": "In the style of Plaid — \"Eyen\" (Not for Threes, 1997)",
+      "artist": "Plaid",
+      "tags": ["seq", "idm", "bell", "gentle", "90s"],
+      "level": 2,
+      "blurb": "A delicate, chiming sequence of bell tones that do not quite sit on the scale, playful and a little strange.",
+      "how": "Oscillator 2’s RING position multiplies the two oscillators. Tuned a little over an octave apart, the product rings with clangy overtones like a small bell or a toy glockenspiel. A quick pluck from envelope 2 and a long tail make each note chime. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.4],
+          [0.5, 79, 0.4],
+          [1, 76, 0.9],
+          [2, 74, 0.4],
+          [2.5, 79, 0.4],
+          [3, 72, 0.9],
+          [4, 71, 0.4],
+          [4.5, 76, 0.4],
+          [5, 79, 0.9],
+          [6, 76, 0.4],
+          [6.5, 74, 0.4],
+          [7, 71, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A ringing product",
+          "module": "osc",
+          "why": "Only the ring modulation is heard: Oscillator 1’s own level is down.\n- VCO1 WAVE FORM Triangle.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM RING.\n- VCO2 SCALE 4′.\n- VCO2 PITCH 1.2 · +2.9 st: a little over an octave up: the bell’s overtone.\n- VCO1 LEVEL 1.5: a little of the plain note under the bell, so it sounds in tune.\n- VCO2 LEVEL 7.\n- Listen for: a clangy, chiming tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco1.scale": "8",
+            "vco2.wave": "ring",
+            "vco2.scale": "4",
+            "vco2.pitch": 1.2,
+            "mix.vco1": 1.5,
+            "mix.vco2": 7
+          }
+        },
+        {
+          "title": "Soften the clang",
+          "module": "filter",
+          "why": "The low-pass rounds the top so the bells are sweet rather than harsh.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 6.4 · 1.6 kHz.\n- PEAK (LPF) 0.5.\n- EG2/EXT (LPF mod) 1.5.\n- CUTOFF (HPF) 2 · 48 Hz.\n- PEAK (HPF) 0.\n- Listen for: a soft, glassy chime.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 6.4,
+            "lpf.peak": 0.5,
+            "lpmod.eg2": 1.5,
+            "hpf.cutoff": 2,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "A bell’s pluck",
+          "module": "env",
+          "why": "Struck at once, then a long fall.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 6.2 · 820 ms.\n- SUSTAIN (EG2) 0.\n- RELEASE (EG2) 5 · 850 ms.\n- VOLUME 8.\n- Listen for: a chiming, playful sequence.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 6.2,
+            "eg2.sustain": 0,
+            "eg2.release": 5,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "vco2.pitch": "In this sound: the bell’s colour. Every setting is a different bell."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.pitch",
+          "try": "Try 2.9",
+          "hear": "A fifth: a sweeter, more tuned bell."
+        },
+        {
+          "id": "mix.vco1",
+          "try": "Raise to 6",
+          "hear": "More of the plain note: closer to a vibraphone."
+        }
+      ]
+    },
+    {
+      "id": "k2-sun-swelling-sequence",
+      "name": "Swelling Repetition",
+      "ref": "In the style of Caribou — \"Sun\" (Swim, 2010)",
+      "artist": "Caribou",
+      "tags": ["seq", "electronic", "psychedelic", "10s"],
+      "level": 2,
+      "blurb": "A hypnotic, repeating figure whose filter slowly swells open, the kind of loop a dancefloor can lose itself in.",
+      "how": "A sawtooth plucked through a resonant low-pass, repeating one short figure. The modulation generator, set to a slow sawtooth, opens the cutoff gradually and drops it back once a cycle, so the loop builds and resets. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.4],
+          [0.5, 62, 0.2],
+          [0.75, 65, 0.2],
+          [1, 69, 0.4],
+          [1.5, 67, 0.4],
+          [2, 62, 0.4],
+          [2.5, 62, 0.2],
+          [2.75, 65, 0.2],
+          [3, 67, 0.4],
+          [3.5, 64, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth",
+          "module": "osc",
+          "why": "One bright sawtooth.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 8′.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 0.\n- Listen for: a bright buzz.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "8",
+            "mix.vco1": 8,
+            "mix.vco2": 0
+          }
+        },
+        {
+          "title": "A resonant pluck",
+          "module": "filter",
+          "why": "The low-pass sits low and rings.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 3.8 · 265 Hz.\n- PEAK (LPF) 5.5.\n- EG2/EXT (LPF mod) 3.\n- CUTOFF (HPF) 1.5 · 34 Hz.\n- PEAK (HPF) 0.\n- Listen for: a dark, plucked, ringing figure.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 3.8,
+            "lpf.peak": 5.5,
+            "lpmod.eg2": 3,
+            "hpf.cutoff": 1.5,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Short notes",
+          "module": "env",
+          "why": "A short decay, a little sustain.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4.2 · 160 ms.\n- SUSTAIN (EG2) 2.\n- RELEASE (EG2) 2 · 140 ms.\n- VOLUME 8.5.\n- Listen for: tight, dark plucks.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4.2,
+            "eg2.sustain": 2,
+            "eg2.release": 2,
+            "out.volume": 8.5
+          }
+        },
+        {
+          "title": "A slow swell",
+          "module": "lfo",
+          "why": "A sawtooth from the MG opens the cutoff over several bars and drops it.\n- WAVE FORM (MG) 10 · saw: a sawtooth.\n- FREQUENCY (MG) 0.5 · 0.13 Hz: one cycle every eight seconds or so.\n- MG/T.EXT (LPF mod) 4.\n- MG/T.EXT (HPF mod) 0.\n- MG/T.EXT (pitch) 0.\n- Listen for: the loop slowly brightening, then snapping dark again.",
+          "set": {
+            "mg.wave": 10,
+            "mg.freq": 0.5,
+            "lpmod.mg": 4,
+            "hpmod.mg": 0,
+            "fmod.mg": 0
+          }
+        }
+      ],
+      "context": {
+        "lpmod.mg": "In this sound: how far the swell opens."
+      },
+      "tweaks": [
+        {
+          "id": "mg.wave",
+          "try": "Turn to 5 for a triangle",
+          "hear": "The swell rises and falls evenly instead of dropping."
+        }
+      ]
+    },
+    {
+      "id": "k2-lsd-goa-rolling-seq",
+      "name": "Rolling Goa Sequence",
+      "ref": "In the style of Hallucinogen — \"LSD\" (Twisted, 1995)",
+      "artist": "Hallucinogen",
+      "tags": ["seq", "goa trance", "psychedelic", "90s"],
+      "level": 2,
+      "blurb": "A relentless, squelching sixteenth-note line with both filters sweeping, the acid engine of Goa trance.",
+      "how": "A sawtooth through FILTER 2 with both PEAK knobs up. The modulation generator moves the high-pass and the low-pass at once, so the squelch twists rather than just opening and closing. Envelope 2 snaps each sixteenth. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 145,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.2],
+          [0.25, 52, 0.2],
+          [0.5, 40, 0.2],
+          [0.75, 47, 0.2],
+          [1, 40, 0.2],
+          [1.25, 52, 0.2],
+          [1.5, 50, 0.2],
+          [1.75, 40, 0.2],
+          [2, 43, 0.2],
+          [2.25, 52, 0.2],
+          [2.5, 40, 0.2],
+          [2.75, 47, 0.2],
+          [3, 40, 0.2],
+          [3.25, 55, 0.2],
+          [3.5, 52, 0.2],
+          [3.75, 40, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth",
+          "module": "osc",
+          "why": "One sawtooth.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 8′.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 0.\n- Listen for: a bright buzz.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "8",
+            "mix.vco1": 8,
+            "mix.vco2": 0
+          }
+        },
+        {
+          "title": "Two peaks",
+          "module": "filter",
+          "why": "FILTER 2, with both filters resonant.\n- LPF type FILTER 2.\n- CUTOFF (LPF) 4.2 · 348 Hz.\n- PEAK (LPF) 6.5.\n- EG2/EXT (LPF mod) 4.\n- CUTOFF (HPF) 2.5 · 67 Hz.\n- PEAK (HPF) 4.\n- Listen for: a rubbery, nasal squelch.",
+          "set": {
+            "lpf.type": "2",
+            "lpf.cutoff": 4.2,
+            "lpf.peak": 6.5,
+            "lpmod.eg2": 4,
+            "hpf.cutoff": 2.5,
+            "hpf.peak": 4
+          }
+        },
+        {
+          "title": "Snap each sixteenth",
+          "module": "env",
+          "why": "A short decay.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 3.6 · 97 ms.\n- SUSTAIN (EG2) 1.\n- RELEASE (EG2) 1.5 · 100 ms.\n- VOLUME 8.\n- Listen for: a squelching, rolling line.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 3.6,
+            "eg2.sustain": 1,
+            "eg2.release": 1.5,
+            "out.volume": 8
+          }
+        },
+        {
+          "title": "Twist the squelch",
+          "module": "lfo",
+          "why": "A slow triangle moves both cutoffs together.\n- WAVE FORM (MG) 5 · triangle.\n- FREQUENCY (MG) 2.6 · 0.41 Hz: a sweep about every two and a half seconds.\n- MG/T.EXT (LPF mod) 3.\n- MG/T.EXT (HPF mod) 2.\n- MG/T.EXT (pitch) 0.\n- Listen for: the squelch twisting and rising.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 2.6,
+            "lpmod.mg": 3,
+            "hpmod.mg": 2,
+            "fmod.mg": 0
+          }
+        }
+      ],
+      "context": {
+        "hpf.peak": "In this sound: the nasal twist in the squelch."
+      },
+      "tweaks": [
+        {
+          "id": "lpf.peak",
+          "try": "Raise to 8",
+          "hear": "The squelch starts to scream."
+        }
+      ]
+    },
+    {
+      "id": "k2-song-to-the-siren-swell",
+      "name": "Siren-Song Swell",
+      "ref": "In the style of This Mortal Coil — \"Song to the Siren\" (It’ll End in Tears, 1984)",
+      "artist": "This Mortal Coil",
+      "tags": ["pad", "ambient", "gentle", "soft", "80s"],
+      "level": 2,
+      "blurb": "A slow, haunting swell that blooms out of silence and fades away, like a voice heard across water.",
+      "how": "Two sawtooths an octave apart, slightly detuned, through a low-pass kept warm. Envelope 2 takes nearly two seconds to swell in and fades over several more, so the notes rise out of nothing. The high-pass and low-pass together leave a soft band, and a slow MG on the low-pass makes it breathe. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 62, 3.6],
+          [4, 65, 3.6],
+          [8, 60, 3.6],
+          [12, 57, 3.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths an octave apart",
+          "module": "osc",
+          "why": "Detuned slightly for a slow beat.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 4′.\n- VCO2 PITCH 0.1 · +0.2 st.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 4.\n- Listen for: a warm, slowly beating tone.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "8",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "4",
+            "vco2.pitch": 0.08,
+            "mix.vco1": 7,
+            "mix.vco2": 4
+          }
+        },
+        {
+          "title": "A soft band",
+          "module": "filter",
+          "why": "The two filters leave a warm, vocal band.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 5 · 600 Hz.\n- PEAK (LPF) 1.5.\n- EG2/EXT (LPF mod) 1.5.\n- CUTOFF (HPF) 2.5 · 67 Hz.\n- PEAK (HPF) 1.5.\n- Listen for: a soft, rounded tone.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 5,
+            "lpf.peak": 1.5,
+            "lpmod.eg2": 1.5,
+            "hpf.cutoff": 2.5,
+            "hpf.peak": 1.5
+          }
+        },
+        {
+          "title": "Swell and fade",
+          "module": "env",
+          "why": "A slow attack and a long release.\n- ATTACK (EG2) 7.8 · 1.8 s.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 7 · 1.6 s.\n- SUSTAIN (EG2) 9.\n- RELEASE (EG2) 7 · 2.9 s.\n- VOLUME 8.5.\n- Listen for: notes rising out of silence and melting away.",
+          "set": {
+            "eg2.attack": 7.8,
+            "eg2.hold": 0,
+            "eg2.decay": 7,
+            "eg2.sustain": 9,
+            "eg2.release": 7,
+            "out.volume": 8.5
+          }
+        },
+        {
+          "title": "Let it breathe",
+          "module": "lfo",
+          "why": "A very slow triangle on the low-pass.\n- WAVE FORM (MG) 5 · triangle.\n- FREQUENCY (MG) 1.5 · 0.22 Hz.\n- MG/T.EXT (LPF mod) 2.5.\n- MG/T.EXT (HPF mod) 0.\n- MG/T.EXT (pitch) 0.\n- Listen for: the swell slowly breathing.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 1.5,
+            "lpmod.mg": 2.5,
+            "hpmod.mg": 0,
+            "fmod.mg": 0
+          }
+        }
+      ],
+      "context": {
+        "eg2.attack": "In this sound: how slowly each note rises. Lower it and the notes start sooner.",
+        "eg2.release": "In this sound: the long fade."
+      },
+      "tweaks": [
+        {
+          "id": "eg2.attack",
+          "try": "Lower to 6",
+          "hear": "A quicker bloom, more like a bowed string."
+        },
+        {
+          "id": "hpf.cutoff",
+          "try": "Lower to 0",
+          "hear": "A fuller, darker swell."
+        }
+      ]
+    },
+    {
+      "id": "k2-niblock-beating-drone",
+      "name": "Beating Unison Drone",
+      "ref": "In the style of Phill Niblock — Touch Three (2006)",
+      "artist": "Phill Niblock",
+      "tags": ["drone", "minimal", "ambient", "calm", "00s"],
+      "level": 1,
+      "blurb": "Two nearly identical tones, held so long that their slow beating becomes the music.",
+      "how": "Two oscillators a fraction of a semitone apart make the sound swell and fade as they drift in and out of phase. Held for a long time, the beating and the overtones it moves are what you listen to. The filters stay still so nothing distracts from it.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 50, 15.9]]
+      },
+      "steps": [
+        {
+          "title": "Two tones, almost the same",
+          "module": "osc",
+          "why": "The smaller the offset, the slower the beat.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 0 · +0.1 st: a tiny offset: a slow beat.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 7.\n- Listen for: a tone that swells and fades by itself.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "8",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "8",
+            "vco2.pitch": 0.03,
+            "mix.vco1": 7,
+            "mix.vco2": 7
+          }
+        },
+        {
+          "title": "A still, warm filter",
+          "module": "filter",
+          "why": "No envelope, no movement.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 5 · 600 Hz.\n- PEAK (LPF) 2.\n- EG2/EXT (LPF mod) 0.\n- CUTOFF (HPF) 1 · 24 Hz.\n- PEAK (HPF) 0.\n- Listen for: a warm, steady tone with the beating inside it.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 5,
+            "lpf.peak": 2,
+            "lpmod.eg2": 0,
+            "hpf.cutoff": 1,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Fade in, hold, fade out",
+          "module": "env",
+          "why": "A slow start and end.\n- ATTACK (EG2) 8 · 2.0 s.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 5 · 300 ms.\n- SUSTAIN (EG2) 10.\n- RELEASE (EG2) 7 · 2.9 s.\n- VOLUME 8.\n- Listen for: a long drone, beating slowly, the overtones shifting as it does.",
+          "set": {
+            "eg2.attack": 8,
+            "eg2.hold": 0,
+            "eg2.decay": 5,
+            "eg2.sustain": 10,
+            "eg2.release": 7,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "vco2.pitch": "In this sound: the speed of the beating."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.pitch",
+          "try": "Raise to 0.15",
+          "hear": "A faster, more restless beat."
+        },
+        {
+          "id": "lpf.peak",
+          "try": "Raise to 5",
+          "hear": "The beating overtones ring out more clearly."
+        }
+      ]
+    },
+    {
+      "id": "k2-still-way-kankyo-swell",
+      "name": "Still-Water Tones",
+      "ref": "In the style of Satoshi Ashikawa — \"Still Way\" (Still Way (Wave Notation 2), 1982)",
+      "artist": "Satoshi Ashikawa",
+      "tags": ["keys", "ambient", "gentle", "calm", "80s"],
+      "level": 1,
+      "blurb": "Soft, rounded tones that appear and fade like ripples, with space between each one.",
+      "how": "A triangle through a gently filtered path: almost a sine. A soft attack and a long, even fade, and a melody with long gaps. Japanese environmental music of the early 80s, kankyō ongaku, was made to sit in a room rather than fill it.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 69, 1.9],
+          [3, 76, 1.4],
+          [5, 74, 1.9],
+          [8, 72, 1.9],
+          [11, 69, 4.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A soft triangle",
+          "module": "osc",
+          "why": "With a whisper of square an octave up.\n- VCO1 WAVE FORM Triangle.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Square.\n- VCO2 SCALE 4′.\n- VCO2 PITCH 0 · 0 st.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 1.\n- Listen for: a soft, round tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco1.scale": "8",
+            "vco2.wave": "sq",
+            "vco2.scale": "4",
+            "vco2.pitch": 0,
+            "mix.vco1": 8,
+            "mix.vco2": 1
+          }
+        },
+        {
+          "title": "Round it",
+          "module": "filter",
+          "why": "The low-pass smooths the last of the edge.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 5.4 · 788 Hz.\n- PEAK (LPF) 0.\n- EG2/EXT (LPF mod) 1.\n- CUTOFF (HPF) 1.5 · 34 Hz.\n- PEAK (HPF) 0.\n- Listen for: a gentle, flute-like tone.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 5.4,
+            "lpf.peak": 0,
+            "lpmod.eg2": 1,
+            "hpf.cutoff": 1.5,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Appear and fade",
+          "module": "env",
+          "why": "A soft start and a long decay into nothing.\n- ATTACK (EG2) 4.5 · 150 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 7.5 · 2.3 s.\n- SUSTAIN (EG2) 3.\n- RELEASE (EG2) 6.5 · 2.1 s.\n- VOLUME 8.5.\n- Listen for: tones rippling out and fading, with space between them.",
+          "set": {
+            "eg2.attack": 4.5,
+            "eg2.hold": 0,
+            "eg2.decay": 7.5,
+            "eg2.sustain": 3,
+            "eg2.release": 6.5,
+            "out.volume": 8.5
+          }
+        }
+      ],
+      "context": {
+        "eg2.release": "In this sound: how long each tone lingers."
+      },
+      "tweaks": [
+        {
+          "id": "eg2.attack",
+          "try": "Lower to 1",
+          "hear": "A struck tone, more like a vibraphone."
+        }
+      ]
+    },
+    {
+      "id": "k2-psychologically-ultimate-seashore",
+      "name": "Synthesised Seashore",
+      "ref": "In the style of Irv Teibel — Environments: \"The Psychologically Ultimate Seashore\" (1969)",
+      "artist": "Irv Teibel",
+      "tags": ["fx", "ambient", "nature", "calm", "60s"],
+      "level": 2,
+      "blurb": "Waves rolling in and drawing back, made from noise and a slowly moving filter.",
+      "how": "Oscillator 1’s fourth position swaps it for the noise generator. The two filters leave a band of the noise, and a slow triangle from the modulation generator sweeps both cutoffs up and down together, which the ear hears as surf building and falling back. One long held note keeps it going.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 60, 15.9]]
+      },
+      "steps": [
+        {
+          "title": "Noise",
+          "module": "osc",
+          "why": "VCO1 LEVEL becomes the noise level.\n- VCO1 WAVE FORM noise.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 0.\n- Listen for: a bright hiss.",
+          "set": {
+            "vco1.wave": "noise",
+            "mix.vco1": 8,
+            "mix.vco2": 0
+          }
+        },
+        {
+          "title": "A soft band of noise",
+          "module": "filter",
+          "why": "The high-pass removes the rumble, the low-pass the hiss.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 5.5 · 843 Hz.\n- PEAK (LPF) 1.\n- EG2/EXT (LPF mod) 0.\n- CUTOFF (HPF) 3 · 95 Hz.\n- PEAK (HPF) 0.\n- Listen for: a soft rush.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 5.5,
+            "lpf.peak": 1,
+            "lpmod.eg2": 0,
+            "hpf.cutoff": 3,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Waves",
+          "module": "lfo",
+          "why": "A slow triangle sweeps both filters together.\n- WAVE FORM (MG) 5 · triangle.\n- FREQUENCY (MG) 0.9 · 0.16 Hz: a wave every six seconds or so.\n- MG/T.EXT (LPF mod) 5.5.\n- MG/T.EXT (HPF mod) 3.\n- MG/T.EXT (pitch) 0.\n- Listen for: the rush building to a crash and drawing back.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 0.9,
+            "lpmod.mg": 5.5,
+            "hpmod.mg": 3,
+            "fmod.mg": 0
+          }
+        },
+        {
+          "title": "Fade in and out",
+          "module": "env",
+          "why": "A slow start and end.\n- ATTACK (EG2) 7 · 970 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 5 · 300 ms.\n- SUSTAIN (EG2) 10.\n- RELEASE (EG2) 7 · 2.9 s.\n- VOLUME 8.5.\n- Listen for: surf rolling in and out.",
+          "set": {
+            "eg2.attack": 7,
+            "eg2.hold": 0,
+            "eg2.decay": 5,
+            "eg2.sustain": 10,
+            "eg2.release": 7,
+            "out.volume": 8.5
+          }
+        }
+      ],
+      "context": {
+        "mg.freq": "In this sound: how often a wave comes in."
+      },
+      "tweaks": [
+        {
+          "id": "mg.wave",
+          "try": "Turn to 1, near reverse saw",
+          "hear": "Each wave rises slowly and drops at once, like one breaking."
+        },
+        {
+          "id": "lpf.cutoff",
+          "try": "Lower to 4",
+          "hear": "Distant surf, heard from up the beach."
+        }
+      ]
+    },
+    {
+      "id": "k2-day-of-radiance-follower-bloom",
+      "name": "Self-Brightening Bloom",
+      "ref": "In the style of Laraaji — \"Meditation #1\" (Ambient 3: Day of Radiance, 1980)",
+      "artist": "Laraaji",
+      "tags": ["pad", "ambient", "gentle", "calm", "80s"],
+      "level": 3,
+      "blurb": "A tone that grows brighter as it grows louder, opening like a flower each time a note swells.",
+      "how": "The external signal processor’s envelope follower turns the loudness of whatever reaches SIGNAL IN into a voltage. Fed the synth’s own output and patched into the low-pass CUTOFF FREQ jack, it opens the filter as each note swells in and lets it close as the note fades. The slow attack makes every note bloom.",
+      "phrase": {
+        "bpm": 63,
+        "loop": true,
+        "steps": [
+          [0, 64, 3.6],
+          [4, 69, 3.6],
+          [8, 71, 1.6],
+          [10, 68, 1.6],
+          [12, 64, 3.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A soft saw and triangle",
+          "module": "osc",
+          "why": "A triangle, with a sawtooth an octave up for the follower to open.\n- VCO1 WAVE FORM Triangle.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 4′.\n- VCO2 PITCH 0.1 · +0.1 st.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 4.\n- Listen for: a soft tone with a little shine.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco1.scale": "8",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "4",
+            "vco2.pitch": 0.06,
+            "mix.vco1": 7,
+            "mix.vco2": 4
+          }
+        },
+        {
+          "title": "A closed filter",
+          "module": "filter",
+          "why": "The low-pass starts dark.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 3.8 · 265 Hz.\n- PEAK (LPF) 2.5.\n- CUTOFF (HPF) 1 · 24 Hz.\n- PEAK (HPF) 0.\n- Listen for: a dark, muffled tone.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 3.8,
+            "lpf.peak": 2.5,
+            "hpf.cutoff": 1,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Slow swells",
+          "module": "env",
+          "why": "Each note swells in over a second or more.\n- ATTACK (EG2) 7.2 · 1.1 s.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 7 · 1.6 s.\n- SUSTAIN (EG2) 9.\n- RELEASE (EG2) 6.5 · 2.1 s.\n- VOLUME 8.\n- Listen for: slow swells, still dark.",
+          "set": {
+            "eg2.attack": 7.2,
+            "eg2.hold": 0,
+            "eg2.decay": 7,
+            "eg2.sustain": 9,
+            "eg2.release": 6.5,
+            "out.volume": 8
+          }
+        },
+        {
+          "title": "Let the loudness open the filter",
+          "module": "patch",
+          "why": "The output goes round to the signal processor; its envelope follower goes to the low-pass.\n- Cable SIGNAL OUT → SIGNAL IN: the synth listens to itself.\n- Cable ENV OUT → CUTOFF FREQ (low-pass): replaces envelope 2 at the EG2/EXT (LPF mod) knob.\n- SIGNAL LEVEL (ESP) 6: how strongly the follower reacts.\n- EG2/EXT (LPF mod) 4: now how far the follower opens the filter.\n- Listen for: each swell brightening as it grows, and darkening as it fades.",
+          "set": {
+            "esp.level": 6,
+            "lpmod.eg2": 4
+          },
+          "cables": [
+            ["j.signalOut", "j.espIn"],
+            ["j.espEnvOut", "j.cutoffLp"]
+          ]
+        }
+      ],
+      "context": {
+        "esp.level": "In this sound: how much the loudness opens the filter.",
+        "lpmod.eg2": "In this sound: the depth of the bloom."
+      },
+      "tweaks": [
+        {
+          "id": "esp.level",
+          "try": "Raise to 9",
+          "hear": "A brighter, more dramatic bloom."
+        },
+        {
+          "id": "lpf.peak",
+          "try": "Raise to 5",
+          "hear": "The bloom sings as it opens."
+        }
+      ]
+    },
+    {
+      "id": "k2-summer-breath-flute",
+      "name": "Breathy Summer Flute",
+      "ref": "In the style of Joe Hisaishi — \"Summer\" (Kikujiro, 1999)",
+      "artist": "Joe Hisaishi",
+      "tags": ["wind", "gentle", "soft", "soundtrack", "90s"],
+      "level": 2,
+      "blurb": "A light, breathy flute that plays a simple, sunny melody, with a little air on every note.",
+      "how": "Oscillator 1 on its noise position gives the breath; Oscillator 2’s square, filtered soft, gives the tone. The high-pass keeps the noise light, so it sits on top of the note like air across a mouthpiece. A slight vibrato makes it sound played. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.9],
+          [1, 74, 0.4],
+          [1.5, 76, 0.9],
+          [2.5, 79, 0.4],
+          [3, 76, 0.9],
+          [4, 74, 0.9],
+          [5, 72, 0.4],
+          [5.5, 69, 0.4],
+          [6, 72, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Tone and breath",
+          "module": "osc",
+          "why": "A soft square for the note and a little noise for the air.\n- VCO1 WAVE FORM noise.\n- VCO2 WAVE FORM Square.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 0 · 0 st.\n- VCO1 LEVEL 1.5: with the noise position chosen, the noise level.\n- VCO2 LEVEL 8.\n- Listen for: a hollow tone with a hiss.",
+          "set": {
+            "vco1.wave": "noise",
+            "vco2.wave": "sq",
+            "vco2.scale": "8",
+            "vco2.pitch": 0,
+            "mix.vco1": 1.5,
+            "mix.vco2": 8
+          }
+        },
+        {
+          "title": "Soften it",
+          "module": "filter",
+          "why": "The low-pass rounds the square; the high-pass keeps the breath airy.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 5.8 · 1.0 kHz.\n- PEAK (LPF) 0.5.\n- EG2/EXT (LPF mod) 1.5.\n- CUTOFF (HPF) 2.5 · 67 Hz.\n- PEAK (HPF) 0.\n- Listen for: a soft, airy flute.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 5.8,
+            "lpf.peak": 0.5,
+            "lpmod.eg2": 1.5,
+            "hpf.cutoff": 2.5,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "A blown start",
+          "module": "env",
+          "why": "A quick swell in, as breath takes a moment to sound the note.\n- ATTACK (EG2) 2.5 · 35 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 5 · 300 ms.\n- SUSTAIN (EG2) 9.\n- RELEASE (EG2) 3 · 250 ms.\n- VOLUME 8.\n- Listen for: notes that start with a breath.",
+          "set": {
+            "eg2.attack": 2.5,
+            "eg2.hold": 0,
+            "eg2.decay": 5,
+            "eg2.sustain": 9,
+            "eg2.release": 3,
+            "out.volume": 8
+          }
+        },
+        {
+          "title": "A slight vibrato",
+          "module": "lfo",
+          "why": "Gentle and quick.\n- WAVE FORM (MG) 5 · triangle.\n- FREQUENCY (MG) 7.2 · 4.86 Hz.\n- MG/T.EXT (pitch) 1.\n- MG/T.EXT (HPF mod) 0.\n- MG/T.EXT (LPF mod) 0.\n- Listen for: a lightly fluttering, sunny melody.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 7.2,
+            "fmod.mg": 1,
+            "hpmod.mg": 0,
+            "lpmod.mg": 0
+          }
+        }
+      ],
+      "context": {
+        "mix.vco1": "In this sound: the breath. Above 3 it sounds like a pan pipe."
+      },
+      "tweaks": [
+        {
+          "id": "mix.vco1",
+          "try": "Raise to 3.5",
+          "hear": "A breathier, pan-pipe tone."
+        }
+      ]
+    },
+    {
+      "id": "k2-feel-it-all-around-haze",
+      "name": "Chillwave Haze",
+      "ref": "In the style of Washed Out — \"Feel It All Around\" (Life of Leisure, 2009)",
+      "artist": "Washed Out",
+      "tags": ["pad", "chillwave", "warm", "soft", "00s"],
+      "level": 2,
+      "blurb": "A warm, hazy synth with a slow pitch wobble, like a cassette that has been left in the sun.",
+      "how": "Two detuned sawtooths through a low, warm filter, with a slow swell. A slow triangle from the modulation generator bends the pitch slightly, the way a stretched tape wavers. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.6],
+          [4, 60, 3.6],
+          [8, 55, 3.6],
+          [12, 53, 3.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two detuned sawtooths",
+          "module": "osc",
+          "why": "Warm and wide.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 0.2 · +0.4 st.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 7.\n- Listen for: a thick, chorused saw.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "8",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "8",
+            "vco2.pitch": 0.15,
+            "mix.vco1": 7,
+            "mix.vco2": 7
+          }
+        },
+        {
+          "title": "Warm and low",
+          "module": "filter",
+          "why": "The low-pass takes off most of the brightness.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 4.4 · 399 Hz.\n- PEAK (LPF) 1.5.\n- EG2/EXT (LPF mod) 1.\n- CUTOFF (HPF) 1.5 · 34 Hz.\n- PEAK (HPF) 0.\n- Listen for: a muffled, cosy tone.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 4.4,
+            "lpf.peak": 1.5,
+            "lpmod.eg2": 1,
+            "hpf.cutoff": 1.5,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "A soft swell",
+          "module": "env",
+          "why": "Notes fade in and linger.\n- ATTACK (EG2) 6 · 460 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 6 · 690 ms.\n- SUSTAIN (EG2) 9.\n- RELEASE (EG2) 6 · 1.6 s.\n- VOLUME 8.5.\n- Listen for: soft, overlapping swells.",
+          "set": {
+            "eg2.attack": 6,
+            "eg2.hold": 0,
+            "eg2.decay": 6,
+            "eg2.sustain": 9,
+            "eg2.release": 6,
+            "out.volume": 8.5
+          }
+        },
+        {
+          "title": "Tape wobble",
+          "module": "lfo",
+          "why": "A slow, shallow pitch bend.\n- WAVE FORM (MG) 5 · triangle.\n- FREQUENCY (MG) 3.2 · 0.56 Hz: about one wobble every two seconds.\n- MG/T.EXT (pitch) 1.6.\n- MG/T.EXT (HPF mod) 0.\n- MG/T.EXT (LPF mod) 0.\n- Listen for: the pitch wavering like warm tape.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 3.2,
+            "fmod.mg": 1.6,
+            "hpmod.mg": 0,
+            "lpmod.mg": 0
+          }
+        }
+      ],
+      "context": {
+        "fmod.mg": "In this sound: how worn the tape sounds."
+      },
+      "tweaks": [
+        {
+          "id": "fmod.mg",
+          "try": "Raise to 2.6",
+          "hear": "A seasick, badly stretched tape."
+        }
+      ]
+    },
+    {
+      "id": "k2-aruarian-soft-keys",
+      "name": "Lo-Fi Soft Keys",
+      "ref": "In the style of Nujabes — \"Aruarian Dance\" (Samurai Champloo, 2004)",
+      "artist": "Nujabes",
+      "tags": ["keys", "lo-fi", "hip hop", "gentle", "00s"],
+      "level": 1,
+      "blurb": "A soft, round electric-piano-like tone playing a lazy, jazzy line.",
+      "how": "A triangle with a quiet square an octave up, plucked softly by the filter, with a medium decay. The result is somewhere between a Rhodes and a vibraphone, warm and unhurried. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 88,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.9],
+          [1, 65, 0.4],
+          [1.5, 69, 0.9],
+          [2.5, 67, 0.4],
+          [3, 65, 0.9],
+          [4, 64, 0.9],
+          [5, 60, 0.4],
+          [5.5, 62, 1.4],
+          [7, 57, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Triangle and a little square",
+          "module": "osc",
+          "why": "The square an octave up gives a soft bell on top.\n- VCO1 WAVE FORM Triangle.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Square.\n- VCO2 SCALE 4′.\n- VCO2 PITCH 0 · 0 st.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 2.5.\n- Listen for: a soft, round tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco1.scale": "8",
+            "vco2.wave": "sq",
+            "vco2.scale": "4",
+            "vco2.pitch": 0,
+            "mix.vco1": 8,
+            "mix.vco2": 2.5
+          }
+        },
+        {
+          "title": "A soft pluck",
+          "module": "filter",
+          "why": "Envelope 2 opens the filter a little on each note.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 4.6 · 457 Hz.\n- PEAK (LPF) 1.\n- EG2/EXT (LPF mod) 3.\n- CUTOFF (HPF) 1 · 24 Hz.\n- PEAK (HPF) 0.\n- Listen for: a soft, struck tone.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 4.6,
+            "lpf.peak": 1,
+            "lpmod.eg2": 3,
+            "hpf.cutoff": 1,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "A medium decay",
+          "module": "env",
+          "why": "Like a key struck and left.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 6 · 690 ms.\n- SUSTAIN (EG2) 3.\n- RELEASE (EG2) 4 · 460 ms.\n- VOLUME 8.5.\n- Listen for: a lazy, jazzy line of soft keys.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 6,
+            "eg2.sustain": 3,
+            "eg2.release": 4,
+            "out.volume": 8.5
+          }
+        }
+      ],
+      "context": {
+        "mix.vco2": "In this sound: the bell on top. At 0 the tone is plainer and duller."
+      },
+      "tweaks": [
+        {
+          "id": "lpmod.eg2",
+          "try": "Raise to 5",
+          "hear": "A brighter, more Rhodes-like bark on each note."
+        }
+      ]
+    },
+    {
+      "id": "k2-ever-new-glass-arp",
+      "name": "Gentle Glass Arpeggio",
+      "ref": "In the style of Beverly Glenn-Copeland — \"Ever New\" (Keyboard Fantasies, 1986)",
+      "artist": "Beverly Glenn-Copeland",
+      "tags": ["seq", "ambient", "gentle", "soft", "80s"],
+      "level": 2,
+      "blurb": "A shimmering, hopeful arpeggio of bell-like tones, gentle and bright.",
+      "how": "The ring position on Oscillator 2, tuned an octave and a fifth up and kept low under a triangle, adds a faint bell shimmer to each note. Notes are plucked softly with a long tail. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.45],
+          [0.5, 64, 0.45],
+          [1, 67, 0.45],
+          [1.5, 72, 0.45],
+          [2, 67, 0.45],
+          [2.5, 64, 0.45],
+          [3, 65, 0.45],
+          [3.5, 69, 0.45],
+          [4, 72, 0.45],
+          [4.5, 77, 0.45],
+          [5, 72, 0.45],
+          [5.5, 69, 0.45],
+          [6, 67, 0.45],
+          [6.5, 71, 0.45],
+          [7, 74, 0.45],
+          [7.5, 79, 0.45]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A triangle with a bell inside",
+          "module": "osc",
+          "why": "Ring modulation kept low gives a shimmer without the clang.\n- VCO1 WAVE FORM Triangle.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM RING.\n- VCO2 SCALE 4′.\n- VCO2 PITCH 2.9 · +7 st: a fifth up within the octave above: a tuned shimmer.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 3.\n- Listen for: a soft tone with a bell in it.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco1.scale": "8",
+            "vco2.wave": "ring",
+            "vco2.scale": "4",
+            "vco2.pitch": 2.92,
+            "mix.vco1": 7,
+            "mix.vco2": 3
+          }
+        },
+        {
+          "title": "Keep it sweet",
+          "module": "filter",
+          "why": "The low-pass rounds off the shimmer.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 6.2 · 1.4 kHz.\n- PEAK (LPF) 0.5.\n- EG2/EXT (LPF mod) 1.5.\n- CUTOFF (HPF) 2 · 48 Hz.\n- PEAK (HPF) 0.\n- Listen for: a sweet, glassy tone.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 6.2,
+            "lpf.peak": 0.5,
+            "lpmod.eg2": 1.5,
+            "hpf.cutoff": 2,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Plucked, with a long tail",
+          "module": "env",
+          "why": "Soft at the start and lingering.\n- ATTACK (EG2) 0.5 · 8 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 6.5 · 1.1 s.\n- SUSTAIN (EG2) 2.\n- RELEASE (EG2) 5 · 850 ms.\n- VOLUME 8.\n- Listen for: a hopeful, shimmering arpeggio.",
+          "set": {
+            "eg2.attack": 0.5,
+            "eg2.hold": 0,
+            "eg2.decay": 6.5,
+            "eg2.sustain": 2,
+            "eg2.release": 5,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "mix.vco2": "In this sound: the shimmer. Higher turns it into a clangy bell."
+      },
+      "tweaks": [
+        {
+          "id": "mix.vco2",
+          "try": "Raise to 6",
+          "hear": "More bell, like a music box."
+        }
+      ]
+    },
+    {
+      "id": "k2-silence-is-the-answer-drone",
+      "name": "Meditation Fifth Drone",
+      "ref": "In the style of Deuter — Silence Is the Answer (1980)",
+      "artist": "Deuter",
+      "tags": ["drone", "new age", "calm", "soft", "80s"],
+      "level": 1,
+      "blurb": "A calm, open drone of a root and a fifth, breathing slowly through a soft filter.",
+      "how": "Two oscillators a fifth apart make an open drone, the sound of a tanpura or a harmonium held down. A slow sweep from the modulation generator on the low-pass keeps it breathing.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 50, 15.9]]
+      },
+      "steps": [
+        {
+          "title": "A root and a fifth",
+          "module": "osc",
+          "why": "Oscillator 2 a fifth above Oscillator 1.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Square.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 2.9 · +7 st.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 5.\n- Listen for: an open, two-note drone.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "8",
+            "vco2.wave": "sq",
+            "vco2.scale": "8",
+            "vco2.pitch": 2.92,
+            "mix.vco1": 7,
+            "mix.vco2": 5
+          }
+        },
+        {
+          "title": "A soft filter",
+          "module": "filter",
+          "why": "Warm and a little resonant.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 4.4 · 399 Hz.\n- PEAK (LPF) 3.\n- EG2/EXT (LPF mod) 0.\n- CUTOFF (HPF) 1 · 24 Hz.\n- PEAK (HPF) 0.\n- Listen for: a warm, dark drone.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 4.4,
+            "lpf.peak": 3,
+            "lpmod.eg2": 0,
+            "hpf.cutoff": 1,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Breathing",
+          "module": "lfo",
+          "why": "A slow triangle opens and closes the filter.\n- WAVE FORM (MG) 5 · triangle.\n- FREQUENCY (MG) 1.3 · 0.20 Hz: one breath every five seconds or so.\n- MG/T.EXT (LPF mod) 2.5.\n- MG/T.EXT (HPF mod) 0.\n- MG/T.EXT (pitch) 0.\n- Listen for: the drone slowly breathing.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 1.3,
+            "lpmod.mg": 2.5,
+            "hpmod.mg": 0,
+            "fmod.mg": 0
+          }
+        },
+        {
+          "title": "Fade in and out",
+          "module": "env",
+          "why": "Slow at both ends.\n- ATTACK (EG2) 8 · 2.0 s.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 5 · 300 ms.\n- SUSTAIN (EG2) 10.\n- RELEASE (EG2) 7.5 · 3.9 s.\n- VOLUME 8.\n- Listen for: a calm, breathing drone.",
+          "set": {
+            "eg2.attack": 8,
+            "eg2.hold": 0,
+            "eg2.decay": 5,
+            "eg2.sustain": 10,
+            "eg2.release": 7.5,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "lpf.peak": "In this sound: brings out overtones as the filter breathes."
+      },
+      "tweaks": [
+        {
+          "id": "lpf.peak",
+          "try": "Raise to 6",
+          "hear": "Overtones singing out on each breath, like a throat singer."
+        }
+      ]
+    },
+    {
+      "id": "k2-solaris-ocean-twinkle",
+      "name": "Ocean-Planet Twinkle",
+      "ref": "In the style of Eduard Artemyev — Solaris (1972)",
+      "artist": "Eduard Artemyev",
+      "tags": ["fx", "soundtrack", "sci-fi", "calm", "70s"],
+      "level": 3,
+      "blurb": "A held, glassy tone scattered with slow, random resonant twinkles, eerie and calm.",
+      "how": "The sample and hold, clocked slowly by the modulation generator’s pulse, picks a random voltage every half second or so from its normal source, noise. Patched to the high-pass CUTOFF FREQ jack with the high-pass peak up, each new value makes the resonance ring at a different pitch, like stars appearing over a dark sea.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 57, 7.9],
+          [8, 52, 7.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A soft held tone",
+          "module": "osc",
+          "why": "A triangle and a quiet sawtooth.\n- VCO1 WAVE FORM Triangle.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 0.1 · +0.1 st.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 4.\n- Listen for: a soft, slightly beating tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco1.scale": "8",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "8",
+            "vco2.pitch": 0.05,
+            "mix.vco1": 7,
+            "mix.vco2": 4
+          }
+        },
+        {
+          "title": "A ringing high-pass",
+          "module": "filter",
+          "why": "The high-pass peak high, so the cutoff rings.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 6.8 · 2.0 kHz.\n- PEAK (LPF) 0.\n- EG2/EXT (LPF mod) 0.\n- CUTOFF (HPF) 4.5 · 269 Hz.\n- PEAK (HPF) 7.\n- Listen for: a thin tone with a glassy whistle.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 6.8,
+            "lpf.peak": 0,
+            "lpmod.eg2": 0,
+            "hpf.cutoff": 4.5,
+            "hpf.peak": 7
+          }
+        },
+        {
+          "title": "Random steps on the high-pass",
+          "module": "patch",
+          "why": "The MG clocks the sample and hold; its output moves the high-pass cutoff.\n- Cable MG OUT (pulse) → CLOCK: a new random value on each pulse.\n- Cable S&H OUT → CUTOFF FREQ (high-pass): replaces envelope 2 at the EG2/EXT (HPF mod) knob.\n- WAVE FORM (MG) 5 · triangle.\n- FREQUENCY (MG) 4.3 · 1.02 Hz: a new step about every second.\n- EG2/EXT (HPF mod) 3.5: now the size of the random steps.\n- MG/T.EXT (HPF mod) 0.\n- MG/T.EXT (LPF mod) 0.\n- MG/T.EXT (pitch) 0.\n- Listen for: the whistle jumping to a new pitch every second.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 4.3,
+            "hpmod.eg2": 3.5,
+            "hpmod.mg": 0,
+            "lpmod.mg": 0,
+            "fmod.mg": 0
+          },
+          "cables": [
+            ["j.mgPulse", "j.shClock"],
+            ["j.shOut", "j.cutoffHp"]
+          ]
+        },
+        {
+          "title": "Fade in and out",
+          "module": "env",
+          "why": "Slow at both ends.\n- ATTACK (EG2) 7 · 970 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 5 · 300 ms.\n- SUSTAIN (EG2) 10.\n- RELEASE (EG2) 7 · 2.9 s.\n- VOLUME 7.\n- Listen for: a calm, eerie field of twinkles.",
+          "set": {
+            "eg2.attack": 7,
+            "eg2.hold": 0,
+            "eg2.decay": 5,
+            "eg2.sustain": 10,
+            "eg2.release": 7,
+            "out.volume": 7
+          }
+        }
+      ],
+      "context": {
+        "hpf.peak": "In this sound: how clearly each twinkle rings.",
+        "mg.freq": "In this sound: how often a new twinkle comes."
+      },
+      "tweaks": [
+        {
+          "id": "mg.freq",
+          "try": "Raise to 6",
+          "hear": "A busy, chattering shimmer."
+        },
+        {
+          "id": "hpmod.eg2",
+          "try": "Lower to 1.5",
+          "hear": "Smaller steps: a gently wavering whistle."
+        }
+      ]
+    },
+    {
+      "id": "k2-heavy-water-haze-pad",
+      "name": "Foggy Lullaby Pad",
+      "ref": "In the style of Grouper — \"Heavy Water/I’d Rather Be Sleeping\" (Dragging a Dead Deer Up a Hill, 2008)",
+      "artist": "Grouper",
+      "tags": ["pad", "ambient", "dream pop", "soft", "00s"],
+      "level": 1,
+      "blurb": "A dim, foggy pad that drifts in under a lullaby, all softness and no edges.",
+      "how": "A square and a triangle through a low-pass turned well down, with a slow swell and a long fade. Most of the sound is removed: what is left is warm, muffled and far away. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 55, 3.6],
+          [4, 59, 3.6],
+          [8, 57, 3.6],
+          [12, 52, 3.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Square and triangle",
+          "module": "osc",
+          "why": "Hollow and soft.\n- VCO1 WAVE FORM Triangle.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Square.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 0.1 · +0.2 st.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 5.\n- Listen for: a soft, hollow tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco1.scale": "8",
+            "vco2.wave": "sq",
+            "vco2.scale": "8",
+            "vco2.pitch": 0.1,
+            "mix.vco1": 7,
+            "mix.vco2": 5
+          }
+        },
+        {
+          "title": "Muffle it",
+          "module": "filter",
+          "why": "The low-pass well down.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 3.6 · 232 Hz.\n- PEAK (LPF) 1.\n- EG2/EXT (LPF mod) 1.\n- CUTOFF (HPF) 1.5 · 34 Hz.\n- PEAK (HPF) 0.\n- Listen for: a dim, foggy tone.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 3.6,
+            "lpf.peak": 1,
+            "lpmod.eg2": 1,
+            "hpf.cutoff": 1.5,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Drift in and out",
+          "module": "env",
+          "why": "A slow swell and a long fade.\n- ATTACK (EG2) 6.5 · 670 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 6 · 690 ms.\n- SUSTAIN (EG2) 9.\n- RELEASE (EG2) 6.5 · 2.1 s.\n- VOLUME 9.\n- Listen for: a soft, foggy pad drifting under the melody.",
+          "set": {
+            "eg2.attack": 6.5,
+            "eg2.hold": 0,
+            "eg2.decay": 6,
+            "eg2.sustain": 9,
+            "eg2.release": 6.5,
+            "out.volume": 9
+          }
+        }
+      ],
+      "context": {
+        "lpf.cutoff": "In this sound: how far away it sounds."
+      },
+      "tweaks": [
+        {
+          "id": "lpf.cutoff",
+          "try": "Raise to 5",
+          "hear": "Closer and clearer, as if the fog lifted."
+        }
+      ]
+    },
+    {
+      "id": "k2-miami-bass-cowbell",
+      "name": "Miami Bass Cowbell",
+      "ref": "In the style of Miami bass",
+      "artist": "Miami bass",
+      "tags": ["perc", "miami bass", "electro", "80s"],
+      "level": 2,
+      "blurb": "A clanking, two-tone cowbell playing a syncopated pattern, the ring of a Miami bass party record.",
+      "how": "A drum machine’s cowbell is two square waves a little over a fifth apart, through a band-pass, cut short. Here the two oscillators give the two squares, the high-pass and low-pass together make the band, and envelope 2 decays quickly with nothing held.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 73, 0.2],
+          [0.75, 73, 0.2],
+          [1.5, 73, 0.2],
+          [2, 73, 0.2],
+          [2.75, 73, 0.2],
+          [3.5, 73, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two squares, not quite a fifth apart",
+          "module": "osc",
+          "why": "The odd interval is what makes it clank rather than chord.\n- VCO1 WAVE FORM Pulse.\n- VCO1 PW 0: a square.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Square.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 2.8 · +6.8 st: just under seven semitones up.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 7.\n- Listen for: a hollow, clashing pair of tones.",
+          "set": {
+            "vco1.wave": "pulse",
+            "vco1.pw": 0,
+            "vco1.scale": "8",
+            "vco2.wave": "sq",
+            "vco2.scale": "8",
+            "vco2.pitch": 2.83,
+            "mix.vco1": 7,
+            "mix.vco2": 7
+          }
+        },
+        {
+          "title": "A band",
+          "module": "filter",
+          "why": "The high-pass and low-pass together keep only the middle.\n- LPF type FILTER 1.\n- CUTOFF (HPF) 5 · 379 Hz.\n- PEAK (HPF) 2.\n- CUTOFF (LPF) 7 · 2.3 kHz.\n- PEAK (LPF) 2.\n- EG2/EXT (LPF mod) 0.\n- Listen for: a thin, metallic clank.",
+          "set": {
+            "lpf.type": "1",
+            "hpf.cutoff": 5,
+            "hpf.peak": 2,
+            "lpf.cutoff": 7,
+            "lpf.peak": 2,
+            "lpmod.eg2": 0
+          }
+        },
+        {
+          "title": "Cut it short",
+          "module": "env",
+          "why": "A quick decay with nothing held.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4.2 · 160 ms.\n- SUSTAIN (EG2) 0.\n- RELEASE (EG2) 2 · 140 ms.\n- VOLUME 8.\n- Listen for: a short, ringing cowbell.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4.2,
+            "eg2.sustain": 0,
+            "eg2.release": 2,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "vco2.pitch": "In this sound: the clank. On an exact fifth it sounds like a chord."
+      },
+      "tweaks": [
+        {
+          "id": "eg2.decay",
+          "try": "Raise to 5",
+          "hear": "A longer ring, more like an agogo bell."
+        }
+      ]
+    },
+    {
+      "id": "k2-neubauten-scrap-metal-hit",
+      "name": "Scrap-Metal Hit",
+      "ref": "In the style of Einstürzende Neubauten — \"Yü-Gung\" (Halber Mensch, 1985)",
+      "artist": "Einstürzende Neubauten",
+      "tags": ["perc", "industrial", "metallic", "80s"],
+      "level": 2,
+      "blurb": "Harsh, clanging hits like struck sheet metal, each at a different, unmusical pitch.",
+      "how": "The ring position multiplies the two oscillators at an awkward ratio, giving clangorous partials that belong to no scale. FILTER 2 and a high-pass peak make them harsh, and a short envelope makes each a hit. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.2],
+          [1, 55, 0.2],
+          [1.5, 46, 0.2],
+          [2.5, 52, 0.2],
+          [3, 49, 0.2],
+          [3.75, 58, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Clanging partials",
+          "module": "osc",
+          "why": "Ring modulation at a ratio that is not an interval.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM RING.\n- VCO2 SCALE 4′.\n- VCO2 PITCH 1.7 · +4.1 st.\n- VCO1 LEVEL 2.\n- VCO2 LEVEL 8.\n- Listen for: a jangling, metallic tone.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "8",
+            "vco2.wave": "ring",
+            "vco2.scale": "4",
+            "vco2.pitch": 1.7,
+            "mix.vco1": 2,
+            "mix.vco2": 8
+          }
+        },
+        {
+          "title": "Make it harsh",
+          "module": "filter",
+          "why": "FILTER 2 and a peaked high-pass.\n- LPF type FILTER 2.\n- CUTOFF (HPF) 3.5 · 135 Hz.\n- PEAK (HPF) 5.\n- CUTOFF (LPF) 7.5 · 3.3 kHz.\n- PEAK (LPF) 3.\n- EG2/EXT (LPF mod) 1.5.\n- Listen for: a harsh, ringing clang.",
+          "set": {
+            "lpf.type": "2",
+            "hpf.cutoff": 3.5,
+            "hpf.peak": 5,
+            "lpf.cutoff": 7.5,
+            "lpf.peak": 3,
+            "lpmod.eg2": 1.5
+          }
+        },
+        {
+          "title": "A hit",
+          "module": "env",
+          "why": "Instant attack, a short fall.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4.8 · 260 ms.\n- SUSTAIN (EG2) 0.\n- RELEASE (EG2) 3 · 250 ms.\n- VOLUME 7.5.\n- Listen for: struck metal, each hit a different clang.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4.8,
+            "eg2.sustain": 0,
+            "eg2.release": 3,
+            "out.volume": 7.5
+          }
+        }
+      ],
+      "context": {
+        "vco2.pitch": "In this sound: what the metal is. Move it a little and the clang changes."
+      },
+      "tweaks": [
+        {
+          "id": "eg2.decay",
+          "try": "Raise to 6",
+          "hear": "A long, ringing sheet of metal."
+        }
+      ]
+    },
+    {
+      "id": "k2-scarlatti-sonata-harpsichord",
+      "name": "Baroque Harpsichord",
+      "ref": "In the style of Domenico Scarlatti — the keyboard sonatas",
+      "artist": "Domenico Scarlatti",
+      "tags": ["pluck", "baroque", "classical", "harpsichord"],
+      "level": 1,
+      "blurb": "A bright, plucked harpsichord tone playing a busy baroque figure.",
+      "how": "A harpsichord plucks its strings with a quill, so every note starts bright and dies away without a held level. A sawtooth with a narrow pulse an octave up, a high-pass to thin the body, and envelope 2 falling to nothing give the same plucked brilliance.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 74, 0.22],
+          [0.25, 73, 0.22],
+          [0.5, 74, 0.22],
+          [0.75, 76, 0.22],
+          [1, 78, 0.22],
+          [1.25, 76, 0.22],
+          [1.5, 74, 0.22],
+          [1.75, 73, 0.22],
+          [2, 71, 0.22],
+          [2.25, 73, 0.22],
+          [2.5, 74, 0.22],
+          [2.75, 71, 0.22],
+          [3, 69, 0.22],
+          [3.25, 71, 0.22],
+          [3.5, 73, 0.22],
+          [3.75, 69, 0.22],
+          [4, 67, 0.22],
+          [4.25, 69, 0.22],
+          [4.5, 71, 0.22],
+          [4.75, 67, 0.22],
+          [5, 66, 0.22],
+          [5.25, 67, 0.22],
+          [5.5, 69, 0.22],
+          [5.75, 66, 0.22],
+          [6, 64, 0.22],
+          [6.25, 66, 0.22],
+          [6.5, 67, 0.22],
+          [6.75, 69, 0.22],
+          [7, 71, 0.22],
+          [7.25, 73, 0.22],
+          [7.5, 74, 0.22],
+          [7.75, 69, 0.22]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Saw and a narrow pulse",
+          "module": "osc",
+          "why": "The pulse an octave up adds the quill’s brightness.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM npulse.\n- VCO2 SCALE 4′.\n- VCO2 PITCH 0 · 0 st.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 4.\n- Listen for: a bright, nasal tone.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "8",
+            "vco2.wave": "npulse",
+            "vco2.scale": "4",
+            "vco2.pitch": 0,
+            "mix.vco1": 7,
+            "mix.vco2": 4
+          }
+        },
+        {
+          "title": "Thin and bright",
+          "module": "filter",
+          "why": "A harpsichord has little low body.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 7.5 · 3.3 kHz.\n- PEAK (LPF) 0.\n- EG2/EXT (LPF mod) 1.5.\n- CUTOFF (HPF) 3.2 · 109 Hz.\n- PEAK (HPF) 1.\n- Listen for: a thin, jangling tone.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 7.5,
+            "lpf.peak": 0,
+            "lpmod.eg2": 1.5,
+            "hpf.cutoff": 3.2,
+            "hpf.peak": 1
+          }
+        },
+        {
+          "title": "Plucked",
+          "module": "env",
+          "why": "Up at once, then a fall to nothing.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 5 · 300 ms.\n- SUSTAIN (EG2) 0.\n- RELEASE (EG2) 2.5 · 180 ms.\n- VOLUME 8.\n- Listen for: a bright, plucked run.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 5,
+            "eg2.sustain": 0,
+            "eg2.release": 2.5,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "hpf.cutoff": "In this sound: how thin the harpsichord is."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.wave",
+          "try": "Switch to Reverse saw",
+          "hear": "A fuller, buzzier tone, like a lute stop."
+        }
+      ]
+    },
+    {
+      "id": "k2-invader-march-bass",
+      "name": "Invader March Bass",
+      "ref": "In the style of late-1970s arcade games",
+      "artist": "Arcade games",
+      "tags": ["bass", "games", "retro", "70s"],
+      "level": 1,
+      "blurb": "A plodding, descending four-note bass in square waves, the march of an alien fleet.",
+      "how": "A square, a little filtered, cut short so each note is a thud. Early arcade machines had a few tone generators and no more; the menace is in the slow descending steps.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 43, 0.3],
+          [1, 42, 0.3],
+          [2, 41, 0.3],
+          [3, 40, 0.3]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A square",
+          "module": "osc",
+          "why": "Oscillator 2’s square, alone.\n- VCO2 WAVE FORM Square.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 0 · 0 st.\n- VCO1 LEVEL 0.\n- VCO2 LEVEL 8.\n- Listen for: a hollow, buzzy tone.",
+          "set": {
+            "vco2.wave": "sq",
+            "vco2.scale": "8",
+            "vco2.pitch": 0,
+            "mix.vco1": 0,
+            "mix.vco2": 8
+          }
+        },
+        {
+          "title": "A little softer",
+          "module": "filter",
+          "why": "Take off the harshest top.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 5.5 · 843 Hz.\n- PEAK (LPF) 0.\n- EG2/EXT (LPF mod) 0.\n- CUTOFF (HPF) 1 · 24 Hz.\n- PEAK (HPF) 0.\n- Listen for: a soft, hollow bass.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 5.5,
+            "lpf.peak": 0,
+            "lpmod.eg2": 0,
+            "hpf.cutoff": 1,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Thuds",
+          "module": "env",
+          "why": "Short and dry.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4 · 130 ms.\n- SUSTAIN (EG2) 0.\n- RELEASE (EG2) 1 · 74 ms.\n- VOLUME 9.\n- Listen for: a slow, menacing march.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4,
+            "eg2.sustain": 0,
+            "eg2.release": 1,
+            "out.volume": 9
+          }
+        }
+      ],
+      "context": {
+        "eg2.decay": "In this sound: the length of each step."
+      },
+      "tweaks": [
+        {
+          "id": "eg2.decay",
+          "try": "Raise to 5",
+          "hear": "Longer, droning steps."
+        }
+      ]
+    },
+    {
+      "id": "k2-do-you-feel-talkbox-lead",
+      "name": "Talk-Box Lead",
+      "ref": "In the style of Peter Frampton — \"Do You Feel Like We Do\" (Frampton Comes Alive!, 1976)",
+      "artist": "Peter Frampton",
+      "tags": ["lead", "rock", "talk box", "70s"],
+      "level": 3,
+      "blurb": "A buzzing lead that says “wow” on every note, like a guitar played through a tube into a singer’s mouth.",
+      "how": "A talk box shapes a guitar with the player’s mouth, so each note opens like a vowel. Here envelope 1, patched into the low-pass CUTOFF FREQ jack, opens the filter over a fifth of a second while envelope 2 keeps the note itself instant. The high-pass peak adds the nasal formant of a mouth.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.9],
+          [1, 67, 0.4],
+          [1.5, 69, 1.4],
+          [3, 67, 0.9],
+          [4, 64, 0.4],
+          [4.5, 62, 0.4],
+          [5, 64, 1.9],
+          [7, 59, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A buzzy sawtooth",
+          "module": "osc",
+          "why": "Two sawtooths an octave apart, like a fuzzy guitar.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 4′.\n- VCO2 PITCH 0.1 · +0.2 st.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 4.\n- Listen for: a bright buzz.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "8",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "4",
+            "vco2.pitch": 0.08,
+            "mix.vco1": 7,
+            "mix.vco2": 4
+          }
+        },
+        {
+          "title": "A mouth-shaped filter",
+          "module": "filter",
+          "why": "A resonant low-pass, closed, with a nasal high-pass peak.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 3.6 · 232 Hz.\n- PEAK (LPF) 5.5.\n- CUTOFF (HPF) 3 · 95 Hz.\n- PEAK (HPF) 4.\n- EG2/EXT (LPF mod) 5: how far each “wow” opens.\n- Listen for: a closed, nasal “oo”.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 3.6,
+            "lpf.peak": 5.5,
+            "hpf.cutoff": 3,
+            "hpf.peak": 4,
+            "lpmod.eg2": 5
+          }
+        },
+        {
+          "title": "Envelope 1 opens the mouth",
+          "module": "patch",
+          "why": "EG1 OUT into the low-pass CUTOFF FREQ jack takes envelope 2’s place at the EG2/EXT knob.\n- Cable EG 1 OUT → CUTOFF FREQ (low-pass).\n- DELAY TIME (EG1) 0 · none.\n- ATTACK (EG1) 5 · 220 ms: the vowel opening.\n- RELEASE (EG1) 3 · 200 ms.\n- EG1/EXT (pitch) 0: envelope 1 stays off the pitch.\n- Listen for: “oo” turning to “ah” on every note.",
+          "set": {
+            "eg1.delay": 0,
+            "eg1.attack": 5,
+            "eg1.release": 3,
+            "fmod.eg1": 0
+          },
+          "cables": [["j.eg1Out", "j.cutoffLp"]]
+        },
+        {
+          "title": "Instant notes",
+          "module": "env",
+          "why": "Envelope 2 now only shapes the loudness, so the note starts at once.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 5 · 300 ms.\n- SUSTAIN (EG2) 9.\n- RELEASE (EG2) 2.5 · 180 ms.\n- VOLUME 7.5.\n- Listen for: a talking, crying lead.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 5,
+            "eg2.sustain": 9,
+            "eg2.release": 2.5,
+            "out.volume": 7.5
+          }
+        }
+      ],
+      "context": {
+        "eg1.attack": "In this sound: how slowly the mouth opens.",
+        "hpf.peak": "In this sound: the nasal mouth."
+      },
+      "tweaks": [
+        {
+          "id": "eg1.attack",
+          "try": "Raise to 7",
+          "hear": "A slow, drawn-out “wah”."
+        },
+        {
+          "id": "lpf.peak",
+          "try": "Raise to 8",
+          "hear": "A screaming, vocal talk box."
+        }
+      ]
+    },
+    {
+      "id": "k2-trinidad-steelpan",
+      "name": "Ring-Mod Steelpan",
+      "ref": "In the style of Trinidad steelpan bands",
+      "artist": "Trinidad steelpan",
+      "tags": ["pluck", "caribbean", "world", "gentle"],
+      "level": 2,
+      "blurb": "A bright, ringing steel drum playing a sunny calypso line.",
+      "how": "A steelpan note rings at its pitch and at overtones tuned an octave and a twelfth above. The ring position, with Oscillator 2 an octave up, multiplies a triangle by a sawtooth at twice its pitch: the product rings at the note and three times it. Struck by envelope 2, it rings like a pan.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 67, 0.4],
+          [0.5, 72, 0.4],
+          [1, 76, 0.9],
+          [2, 74, 0.4],
+          [2.5, 72, 0.4],
+          [3, 71, 0.4],
+          [3.5, 72, 0.9],
+          [4.5, 69, 0.4],
+          [5, 67, 0.9],
+          [6, 72, 0.4],
+          [6.5, 74, 0.4],
+          [7, 72, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A tuned ring",
+          "module": "osc",
+          "why": "The triangle and the ring product, an octave up.\n- VCO1 WAVE FORM Triangle.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM RING.\n- VCO2 SCALE 4′.\n- VCO2 PITCH 0 · 0 st.\n- VCO1 LEVEL 6.\n- VCO2 LEVEL 5.\n- Listen for: a bright, chiming tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco1.scale": "8",
+            "vco2.wave": "ring",
+            "vco2.scale": "4",
+            "vco2.pitch": 0,
+            "mix.vco1": 6,
+            "mix.vco2": 5
+          }
+        },
+        {
+          "title": "Round it",
+          "module": "filter",
+          "why": "Keep the shine, lose the buzz.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 6.4 · 1.6 kHz.\n- PEAK (LPF) 0.5.\n- EG2/EXT (LPF mod) 2.\n- CUTOFF (HPF) 2.5 · 67 Hz.\n- PEAK (HPF) 0.\n- Listen for: a clear, metallic ring.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 6.4,
+            "lpf.peak": 0.5,
+            "lpmod.eg2": 2,
+            "hpf.cutoff": 2.5,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Struck",
+          "module": "env",
+          "why": "A strike and a ringing fall.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 5.6 · 500 ms.\n- SUSTAIN (EG2) 1.\n- RELEASE (EG2) 4 · 460 ms.\n- VOLUME 8.\n- Listen for: a sunny steel drum.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 5.6,
+            "eg2.sustain": 1,
+            "eg2.release": 4,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "mix.vco2": "In this sound: the pan’s metallic ring."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.pitch",
+          "try": "Try 2.9",
+          "hear": "A stranger, more gamelan-like ring."
+        }
+      ]
+    },
+    {
+      "id": "k2-raga-yaman-sitar",
+      "name": "Bending Sitar",
+      "ref": "In the style of Ravi Shankar — raga Yaman",
+      "artist": "Ravi Shankar",
+      "tags": ["pluck", "indian classical", "world", "60s"],
+      "level": 3,
+      "blurb": "A buzzing, plucked sitar line whose notes bend up after they are struck.",
+      "how": "A sitar’s bridge makes its strings buzz, and the player pulls the string sideways to bend into the next note (meend). Here a sawtooth through a sharply peaked high-pass gives the buzz. Envelope 1, delayed, raises the pitch a little after each note starts, which is the bend. The line climbs through raga Yaman, with its raised fourth.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.9],
+          [1, 64, 0.4],
+          [1.5, 66, 0.4],
+          [2, 67, 1.4],
+          [3.5, 69, 0.4],
+          [4, 71, 0.9],
+          [5, 69, 0.4],
+          [5.5, 67, 0.4],
+          [6, 66, 0.9],
+          [7, 64, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth",
+          "module": "osc",
+          "why": "One bright oscillator.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 8′.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 0.\n- Listen for: a bright buzz.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "8",
+            "mix.vco1": 8,
+            "mix.vco2": 0
+          }
+        },
+        {
+          "title": "The bridge’s buzz",
+          "module": "filter",
+          "why": "A peaked high-pass gives the jangle.\n- LPF type FILTER 2.\n- CUTOFF (LPF) 7.5 · 3.3 kHz.\n- PEAK (LPF) 1.\n- EG2/EXT (LPF mod) 1.5.\n- CUTOFF (HPF) 4 · 190 Hz.\n- PEAK (HPF) 6.5.\n- Listen for: a thin, jangling, buzzing tone.",
+          "set": {
+            "lpf.type": "2",
+            "lpf.cutoff": 7.5,
+            "lpf.peak": 1,
+            "lpmod.eg2": 1.5,
+            "hpf.cutoff": 4,
+            "hpf.peak": 6.5
+          }
+        },
+        {
+          "title": "A plucked string",
+          "module": "env",
+          "why": "Struck, and ringing down.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 6 · 690 ms.\n- SUSTAIN (EG2) 2.\n- RELEASE (EG2) 4 · 460 ms.\n- VOLUME 7.5.\n- Listen for: a plucked, ringing note.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 6,
+            "eg2.sustain": 2,
+            "eg2.release": 4,
+            "out.volume": 7.5
+          }
+        },
+        {
+          "title": "Bend after the pluck",
+          "module": "mod",
+          "why": "Envelope 1 waits, then pushes the pitch up a little.\n- DELAY TIME (EG1) 6 · 440 ms: the note is heard straight first.\n- ATTACK (EG1) 6 · 520 ms.\n- RELEASE (EG1) 2 · 110 ms.\n- EG1/EXT (pitch) 2.5: about a semitone and a half.\n- Listen for: long notes bending upwards as they ring.",
+          "set": {
+            "eg1.delay": 6,
+            "eg1.attack": 6,
+            "eg1.release": 2,
+            "fmod.eg1": 2.5
+          }
+        }
+      ],
+      "context": {
+        "fmod.eg1": "In this sound: how far the bend goes.",
+        "hpf.peak": "In this sound: the buzz of the bridge."
+      },
+      "tweaks": [
+        {
+          "id": "fmod.eg1",
+          "try": "Raise to 3",
+          "hear": "A wider bend, about a whole tone."
+        },
+        {
+          "id": "eg1.delay",
+          "try": "Lower to 3",
+          "hear": "The bend starts sooner, on shorter notes too."
+        }
+      ]
+    },
+    {
+      "id": "k2-jah-shaka-dub-siren",
+      "name": "Sound-System Dub Siren",
+      "ref": "In the style of Jah Shaka sound system",
+      "artist": "Jah Shaka",
+      "tags": ["fx", "dub", "reggae", "sound system"],
+      "level": 2,
+      "blurb": "A rising, warbling siren that sweeps up while the button is held and falls when it lets go.",
+      "how": "A dub siren is an oscillator with a fast wobble and a sweep. The modulation generator’s triangle shakes the pitch quickly, and envelope 1, with a long attack and release, slides the pitch up while the key is held and down after.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 57, 1.9],
+          [4, 57, 0.9],
+          [6, 57, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A buzzy pulse",
+          "module": "osc",
+          "why": "A cutting tone that carries over a sound system.\n- VCO1 WAVE FORM Pulse.\n- VCO1 PW 4.\n- VCO1 SCALE 8′.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 0.\n- Listen for: a buzzy, nasal tone.",
+          "set": {
+            "vco1.wave": "pulse",
+            "vco1.pw": 4,
+            "vco1.scale": "8",
+            "mix.vco1": 8,
+            "mix.vco2": 0
+          }
+        },
+        {
+          "title": "Bright, with a little peak",
+          "module": "filter",
+          "why": "Mostly open.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 6.5 · 1.7 kHz.\n- PEAK (LPF) 3.\n- EG2/EXT (LPF mod) 0.\n- CUTOFF (HPF) 2 · 48 Hz.\n- PEAK (HPF) 0.\n- Listen for: a bright, cutting tone.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 6.5,
+            "lpf.peak": 3,
+            "lpmod.eg2": 0,
+            "hpf.cutoff": 2,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "The warble",
+          "module": "lfo",
+          "why": "A fast, deep triangle on the pitch.\n- WAVE FORM (MG) 5 · triangle.\n- FREQUENCY (MG) 7.5 · 5.71 Hz: about six warbles a second.\n- MG/T.EXT (pitch) 5: about three semitones each way.\n- MG/T.EXT (HPF mod) 0.\n- MG/T.EXT (LPF mod) 0.\n- Listen for: a frantic warble.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 7.5,
+            "fmod.mg": 5,
+            "hpmod.mg": 0,
+            "lpmod.mg": 0
+          }
+        },
+        {
+          "title": "The sweep",
+          "module": "mod",
+          "why": "Envelope 1 slides the pitch up while held and down after.\n- DELAY TIME (EG1) 0 · none.\n- ATTACK (EG1) 7.5 · 1.9 s: about two seconds up.\n- RELEASE (EG1) 7 · 2.4 s: and slower down.\n- EG1/EXT (pitch) 7: about an octave up at the top.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 5 · 300 ms.\n- SUSTAIN (EG2) 10.\n- RELEASE (EG2) 7 · 2.9 s.\n- VOLUME 7.\n- Listen for: the siren climbing while held and sinking when let go.",
+          "set": {
+            "eg1.delay": 0,
+            "eg1.attack": 7.5,
+            "eg1.release": 7,
+            "fmod.eg1": 7,
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 5,
+            "eg2.sustain": 10,
+            "eg2.release": 7,
+            "out.volume": 7
+          }
+        }
+      ],
+      "context": {
+        "eg1.attack": "In this sound: how slowly the siren climbs.",
+        "mg.freq": "In this sound: the speed of the warble."
+      },
+      "tweaks": [
+        {
+          "id": "mg.wave",
+          "try": "Turn to 0 for a reverse saw",
+          "hear": "A laser-like, zapping warble."
+        },
+        {
+          "id": "fmod.eg1",
+          "try": "Raise to 8",
+          "hear": "A siren that climbs well over an octave."
+        }
+      ]
+    },
+    {
+      "id": "k2-javanese-bonang",
+      "name": "Gamelan Bonang",
+      "ref": "In the style of Javanese gamelan",
+      "artist": "Javanese gamelan",
+      "tags": ["keys", "gamelan", "world", "gentle"],
+      "level": 2,
+      "blurb": "Bright, bell-like gongs in a five-note pelog scale, interlocking in a busy pattern.",
+      "how": "The bonang is a row of small kettle gongs. Their overtones are not tuned to the note, which the ring position gives: Oscillator 2 a little off an octave and a half above makes partials that ring against the note. The line uses a five-note pelog-like scale, close to C, D♭, E♭, G and A♭.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.45],
+          [0.5, 75, 0.45],
+          [1, 73, 0.45],
+          [1.5, 72, 0.45],
+          [2, 67, 0.45],
+          [2.5, 68, 0.45],
+          [3, 67, 0.45],
+          [3.5, 63, 0.45],
+          [4, 72, 0.45],
+          [4.5, 75, 0.45],
+          [5, 79, 0.45],
+          [5.5, 75, 0.45],
+          [6, 73, 0.45],
+          [6.5, 72, 0.45],
+          [7, 68, 0.45],
+          [7.5, 67, 0.45]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A gong-like ring",
+          "module": "osc",
+          "why": "A triangle and an inharmonic ring.\n- VCO1 WAVE FORM Triangle.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM RING.\n- VCO2 SCALE 4′.\n- VCO2 PITCH 3.2 · +7.7 st.\n- VCO1 LEVEL 6.\n- VCO2 LEVEL 5.\n- Listen for: a ringing, gong-like tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco1.scale": "8",
+            "vco2.wave": "ring",
+            "vco2.scale": "4",
+            "vco2.pitch": 3.2,
+            "mix.vco1": 6,
+            "mix.vco2": 5
+          }
+        },
+        {
+          "title": "A soft top",
+          "module": "filter",
+          "why": "Round off the clang.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 6.2 · 1.4 kHz.\n- PEAK (LPF) 0.5.\n- EG2/EXT (LPF mod) 1.5.\n- CUTOFF (HPF) 2 · 48 Hz.\n- PEAK (HPF) 0.\n- Listen for: a warm, bright gong.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 6.2,
+            "lpf.peak": 0.5,
+            "lpmod.eg2": 1.5,
+            "hpf.cutoff": 2,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Struck gongs",
+          "module": "env",
+          "why": "A strike and a long ring.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 6.4 · 970 ms.\n- SUSTAIN (EG2) 1.\n- RELEASE (EG2) 5 · 850 ms.\n- VOLUME 8.\n- Listen for: an interlocking, shimmering gong pattern.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 6.4,
+            "eg2.sustain": 1,
+            "eg2.release": 5,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "vco2.pitch": "In this sound: the gong’s metal. Move it for a different gong."
+      },
+      "tweaks": [
+        {
+          "id": "eg2.decay",
+          "try": "Raise to 7.5",
+          "hear": "Long, washing gongs, like a large gamelan."
+        }
+      ]
+    },
+    {
+      "id": "k2-forest-nativity-sanza",
+      "name": "Electric Sanza",
+      "ref": "In the style of Francis Bebey — \"Forest Nativity\" (Akwaaba, 1984)",
+      "artist": "Francis Bebey",
+      "tags": ["pluck", "african", "world", "gentle", "80s"],
+      "level": 1,
+      "blurb": "A soft, woody thumb piano playing a gentle, circling pattern.",
+      "how": "A sanza, or thumb piano, is a row of tuned metal tongues plucked with the thumbs. A triangle with a touch of ring modulation gives the soft, slightly metallic tone, and a short pluck with a little ring after gives the tongue’s twang. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 67, 0.4],
+          [0.5, 72, 0.4],
+          [1, 64, 0.4],
+          [1.5, 69, 0.4],
+          [2, 67, 0.4],
+          [2.5, 72, 0.4],
+          [3, 62, 0.4],
+          [3.5, 67, 0.4],
+          [4, 65, 0.4],
+          [4.5, 72, 0.4],
+          [5, 64, 0.4],
+          [5.5, 69, 0.4],
+          [6, 62, 0.4],
+          [6.5, 67, 0.4],
+          [7, 60, 0.4],
+          [7.5, 64, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Soft and slightly metallic",
+          "module": "osc",
+          "why": "The ring kept low.\n- VCO1 WAVE FORM Triangle.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM RING.\n- VCO2 SCALE 4′.\n- VCO2 PITCH 3.8 · +9.1 st.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 2.5.\n- Listen for: a soft tone with a metallic glint.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco1.scale": "8",
+            "vco2.wave": "ring",
+            "vco2.scale": "4",
+            "vco2.pitch": 3.8,
+            "mix.vco1": 8,
+            "mix.vco2": 2.5
+          }
+        },
+        {
+          "title": "Woody",
+          "module": "filter",
+          "why": "The low-pass rounds it; a little high-pass takes the boom.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 5.6 · 902 Hz.\n- PEAK (LPF) 1.\n- EG2/EXT (LPF mod) 2.5.\n- CUTOFF (HPF) 2.5 · 67 Hz.\n- PEAK (HPF) 0.\n- Listen for: a soft, woody pluck.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 5.6,
+            "lpf.peak": 1,
+            "lpmod.eg2": 2.5,
+            "hpf.cutoff": 2.5,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "A short twang",
+          "module": "env",
+          "why": "Struck, and gone quickly.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 5 · 300 ms.\n- SUSTAIN (EG2) 0.\n- RELEASE (EG2) 3 · 250 ms.\n- VOLUME 8.5.\n- Listen for: a gentle, circling thumb piano.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 5,
+            "eg2.sustain": 0,
+            "eg2.release": 3,
+            "out.volume": 8.5
+          }
+        }
+      ],
+      "context": {
+        "mix.vco2": "In this sound: the metal in the tongues."
+      },
+      "tweaks": [
+        {
+          "id": "eg2.decay",
+          "try": "Raise to 6",
+          "hear": "A longer ring, more like a kalimba."
+        }
+      ]
+    },
+    {
+      "id": "k2-chiptune-octave-flicker",
+      "name": "Chiptune Octave Flicker",
+      "ref": "In the style of 8-bit chiptune",
+      "artist": "Chiptune",
+      "tags": ["lead", "chiptune", "games", "retro"],
+      "level": 3,
+      "blurb": "A thin pulse that flickers between each note and its octave so fast it sounds like one bright, buzzing tone.",
+      "how": "Old game consoles had too few voices for chords, so their music flicked one voice between notes faster than the ear can follow. Patched into TOTAL, the modulation generator’s pulse output jumps the pitch up an octave and back at about fifteen times a second, with the MG/T.EXT (pitch) knob at full. A narrow pulse wave gives the console’s thin tone.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.4],
+          [0.5, 72, 0.4],
+          [1, 76, 0.4],
+          [1.5, 79, 0.9],
+          [2.5, 76, 0.4],
+          [3, 72, 0.9],
+          [4, 74, 0.4],
+          [4.5, 74, 0.4],
+          [5, 77, 0.4],
+          [5.5, 81, 0.9],
+          [6.5, 79, 0.4],
+          [7, 77, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A thin pulse",
+          "module": "osc",
+          "why": "A quarter-width pulse, like a console’s.\n- VCO1 WAVE FORM Pulse.\n- VCO1 PW 6.\n- VCO1 SCALE 8′.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 0.\n- Listen for: a thin, reedy tone.",
+          "set": {
+            "vco1.wave": "pulse",
+            "vco1.pw": 6,
+            "vco1.scale": "8",
+            "mix.vco1": 8,
+            "mix.vco2": 0
+          }
+        },
+        {
+          "title": "Open filters",
+          "module": "filter",
+          "why": "Nothing taken away.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 9 · 9.1 kHz.\n- PEAK (LPF) 0.\n- EG2/EXT (LPF mod) 0.\n- CUTOFF (HPF) 1 · 24 Hz.\n- PEAK (HPF) 0.\n- Listen for: a bright, raw pulse.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 9,
+            "lpf.peak": 0,
+            "lpmod.eg2": 0,
+            "hpf.cutoff": 1,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Flick an octave",
+          "module": "patch",
+          "why": "The MG’s pulse output goes into TOTAL, which feeds every MG/T.EXT knob.\n- Cable MG OUT (pulse) → TOTAL.\n- WAVE FORM (MG) 5 · triangle: an even square at the pulse output.\n- FREQUENCY (MG) 9.3 · 15 Hz: about fifteen flicks a second.\n- MG/T.EXT (pitch) 10: at full, the pulse raises the pitch exactly an octave.\n- MG/T.EXT (HPF mod) 0: kept at 0: only the pitch should flick.\n- MG/T.EXT (LPF mod) 0.\n- Listen for: every note shimmering between itself and its octave.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 9.3,
+            "fmod.mg": 10,
+            "hpmod.mg": 0,
+            "lpmod.mg": 0
+          },
+          "cables": [["j.mgPulse", "j.total"]]
+        },
+        {
+          "title": "Even notes",
+          "module": "env",
+          "why": "Full while held, cut cleanly.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4 · 130 ms.\n- SUSTAIN (EG2) 9.\n- RELEASE (EG2) 1 · 74 ms.\n- VOLUME 7.5.\n- Listen for: a bright, 8-bit melody.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4,
+            "eg2.sustain": 9,
+            "eg2.release": 1,
+            "out.volume": 7.5
+          }
+        }
+      ],
+      "context": {
+        "mg.freq": "In this sound: the speed of the flicker. Slower and it turns into a trill.",
+        "fmod.mg": "In this sound: the interval. At 10 it is an octave; near 7.6 a fifth."
+      },
+      "tweaks": [
+        {
+          "id": "fmod.mg",
+          "try": "Lower to 7.6",
+          "hear": "A flicker to the fifth instead: a power-chord shimmer."
+        },
+        {
+          "id": "mg.freq",
+          "try": "Lower to 7",
+          "hear": "A slow trill you can hear as two notes."
+        }
+      ]
+    },
+    {
+      "id": "k2-branca-feedback-guitar",
+      "name": "Feedback Guitar Army",
+      "ref": "In the style of Glenn Branca — \"The Ascension\" (1981)",
+      "artist": "Glenn Branca",
+      "tags": ["lead", "no wave", "noise rock", "80s"],
+      "level": 3,
+      "blurb": "A roaring, tremolo-picked fifth that feeds back into a howl, like a wall of electric guitars.",
+      "how": "Two sawtooths a fifth apart are a power chord. The output fed back into EXT SIGNAL IN overdrives the filters, and the peaked low-pass picks out a ringing overtone that sings above the roar. Fast repeated notes are the tremolo picking. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 45, 0.22],
+          [0.25, 45, 0.22],
+          [0.5, 45, 0.22],
+          [0.75, 45, 0.22],
+          [1, 45, 0.22],
+          [1.25, 45, 0.22],
+          [1.5, 45, 0.22],
+          [1.75, 45, 0.22],
+          [2, 48, 0.22],
+          [2.25, 48, 0.22],
+          [2.5, 48, 0.22],
+          [2.75, 48, 0.22],
+          [3, 43, 0.22],
+          [3.25, 43, 0.22],
+          [3.5, 43, 0.22],
+          [3.75, 43, 0.22]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A power chord",
+          "module": "osc",
+          "why": "Two sawtooths a fifth apart.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 2.9 · +7 st.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 7.\n- Listen for: a raw, open fifth.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "8",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "8",
+            "vco2.pitch": 2.92,
+            "mix.vco1": 7,
+            "mix.vco2": 7
+          }
+        },
+        {
+          "title": "A singing filter",
+          "module": "filter",
+          "why": "FILTER 2, peaked, so an overtone rings out.\n- LPF type FILTER 2.\n- CUTOFF (LPF) 6 · 1.2 kHz.\n- PEAK (LPF) 6.5.\n- EG2/EXT (LPF mod) 1.\n- CUTOFF (HPF) 2 · 48 Hz.\n- PEAK (HPF) 2.\n- Listen for: a ringing, metallic roar.",
+          "set": {
+            "lpf.type": "2",
+            "lpf.cutoff": 6,
+            "lpf.peak": 6.5,
+            "lpmod.eg2": 1,
+            "hpf.cutoff": 2,
+            "hpf.peak": 2
+          }
+        },
+        {
+          "title": "Picked notes",
+          "module": "env",
+          "why": "Each sixteenth a pick stroke.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4.6 · 220 ms.\n- SUSTAIN (EG2) 6.\n- RELEASE (EG2) 3 · 250 ms.\n- VOLUME 6.5.\n- Listen for: a churning tremolo.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4.6,
+            "eg2.sustain": 6,
+            "eg2.release": 3,
+            "out.volume": 6.5
+          }
+        },
+        {
+          "title": "Feedback",
+          "module": "patch",
+          "why": "The output back into the filters.\n- Cable SIGNAL OUT → EXT SIGNAL IN.\n- Listen for: the roar thickening and howling. Turn VOLUME up for more.",
+          "cables": [["j.signalOut", "j.extIn"]]
+        }
+      ],
+      "context": {
+        "lpf.peak": "In this sound: the overtone that sings over the roar.",
+        "out.volume": "In this sound: also how hard it feeds back."
+      },
+      "tweaks": [
+        {
+          "id": "out.volume",
+          "try": "Raise to 8",
+          "hear": "A howling, uncontrolled wall."
+        }
+      ]
+    },
+    {
+      "id": "k2-the-bottle-soul-jazz-lead",
+      "name": "Soul-Jazz Synth Flute",
+      "ref": "In the style of Brian Jackson — \"The Bottle\" (Gil Scott-Heron & Brian Jackson, Winter in America, 1974)",
+      "artist": "Brian Jackson",
+      "tags": ["lead", "soul jazz", "funk", "70s"],
+      "level": 1,
+      "blurb": "A soft, flute-like synth playing a bluesy line with a gentle vibrato.",
+      "how": "A triangle with a little square, through a soft low-pass, with a vibrato from the modulation generator. Early-70s soul jazz often put a synth or a flute on the hook; this is between the two. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 67, 0.4],
+          [0.5, 70, 0.4],
+          [1, 72, 0.9],
+          [2, 70, 0.4],
+          [2.5, 67, 0.4],
+          [3, 65, 0.9],
+          [4, 67, 0.4],
+          [4.5, 70, 0.4],
+          [5, 72, 0.4],
+          [5.5, 75, 0.9],
+          [6.5, 72, 0.4],
+          [7, 70, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Triangle and square",
+          "module": "osc",
+          "why": "Soft with a little body.\n- VCO1 WAVE FORM Triangle.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Square.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 0 · 0 st.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 3.\n- Listen for: a soft, flute-like tone.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco1.scale": "8",
+            "vco2.wave": "sq",
+            "vco2.scale": "8",
+            "vco2.pitch": 0,
+            "mix.vco1": 8,
+            "mix.vco2": 3
+          }
+        },
+        {
+          "title": "Soften",
+          "module": "filter",
+          "why": "A gentle low-pass.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 5.6 · 902 Hz.\n- PEAK (LPF) 1.\n- EG2/EXT (LPF mod) 1.5.\n- CUTOFF (HPF) 1.5 · 34 Hz.\n- PEAK (HPF) 0.\n- Listen for: a warm, breathy lead.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 5.6,
+            "lpf.peak": 1,
+            "lpmod.eg2": 1.5,
+            "hpf.cutoff": 1.5,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "lfo",
+          "why": "A steady, gentle vibrato.\n- WAVE FORM (MG) 5 · triangle.\n- FREQUENCY (MG) 6.8 · 3.92 Hz.\n- MG/T.EXT (pitch) 1.6.\n- MG/T.EXT (HPF mod) 0.\n- MG/T.EXT (LPF mod) 0.\n- Listen for: a lightly singing line.",
+          "set": {
+            "mg.wave": 5,
+            "mg.freq": 6.8,
+            "fmod.mg": 1.6,
+            "hpmod.mg": 0,
+            "lpmod.mg": 0
+          }
+        },
+        {
+          "title": "Soft notes",
+          "module": "env",
+          "why": "A gentle start and end.\n- ATTACK (EG2) 2 · 24 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 5 · 300 ms.\n- SUSTAIN (EG2) 9.\n- RELEASE (EG2) 3 · 250 ms.\n- VOLUME 8.\n- Listen for: a bluesy, singing hook.",
+          "set": {
+            "eg2.attack": 2,
+            "eg2.hold": 0,
+            "eg2.decay": 5,
+            "eg2.sustain": 9,
+            "eg2.release": 3,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "fmod.mg": "In this sound: the vibrato depth."
+      },
+      "tweaks": [
+        {
+          "id": "mix.vco2",
+          "try": "Raise to 6",
+          "hear": "A reedier tone, closer to a clarinet."
+        }
+      ]
+    },
+    {
+      "id": "k2-at-les-detroit-dyad-stab",
+      "name": "Detroit Minor-Seventh Stab",
+      "ref": "In the style of Carl Craig — \"At Les\" (More Songs About Food and Revolutionary Art, 1997)",
+      "artist": "Carl Craig",
+      "tags": ["keys", "detroit techno", "stab", "90s"],
+      "level": 2,
+      "blurb": "A soft, resonant two-note stab on a minor seventh, hanging over a deep groove.",
+      "how": "Two oscillators a minor seventh apart give the open, unresolved colour of Detroit chords. A resonant filter plucked by envelope 2 with a medium decay makes each stab bloom and fade. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.6],
+          [1.5, 57, 0.4],
+          [2.5, 55, 0.6],
+          [4, 57, 0.6],
+          [5.5, 60, 0.4],
+          [6.5, 55, 1.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A minor seventh",
+          "module": "osc",
+          "why": "Oscillator 2 ten semitones above Oscillator 1.\n- VCO1 WAVE FORM Reverse saw.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 4.2 · +10 st: ten semitones: a minor seventh.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 6.\n- Listen for: an open, unresolved two-note chord.",
+          "set": {
+            "vco1.wave": "rsaw",
+            "vco1.scale": "8",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "8",
+            "vco2.pitch": 4.17,
+            "mix.vco1": 7,
+            "mix.vco2": 6
+          }
+        },
+        {
+          "title": "A resonant bloom",
+          "module": "filter",
+          "why": "Envelope 2 opens the resonant low-pass on each stab.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 4.2 · 348 Hz.\n- PEAK (LPF) 5.\n- EG2/EXT (LPF mod) 4.\n- CUTOFF (HPF) 2 · 48 Hz.\n- PEAK (HPF) 0.\n- Listen for: a dark chord with a ringing pluck.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 4.2,
+            "lpf.peak": 5,
+            "lpmod.eg2": 4,
+            "hpf.cutoff": 2,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Bloom and fade",
+          "module": "env",
+          "why": "A medium decay so the stab rings a moment.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 5.6 · 500 ms.\n- SUSTAIN (EG2) 2.\n- RELEASE (EG2) 4 · 460 ms.\n- VOLUME 8.\n- Listen for: deep, hanging stabs.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 5.6,
+            "eg2.sustain": 2,
+            "eg2.release": 4,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "vco2.pitch": "In this sound: the chord. 2.92 is a fifth; 1.25 a minor third."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.pitch",
+          "try": "Try 1.25",
+          "hear": "A minor third: a darker, sadder stab."
+        }
+      ]
+    },
+    {
+      "id": "k2-flesh-new-beat-bass",
+      "name": "Slow New-Beat Bass",
+      "ref": "In the style of A Split-Second — \"Flesh\" (1986)",
+      "artist": "A Split-Second",
+      "tags": ["bass", "new beat", "ebm", "80s"],
+      "level": 2,
+      "blurb": "A heavy, slow, menacing bass, EBM pitched down to a crawl the way Belgian clubs played it.",
+      "how": "Belgian new beat began with EBM records played slower than they were cut. A sawtooth and a square an octave down, through a resonant FILTER 2, plucked so each note snarls, at a slow, heavy tempo. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4],
+          [0.5, 36, 0.4],
+          [1, 39, 0.4],
+          [1.5, 36, 0.4],
+          [2, 36, 0.4],
+          [2.5, 41, 0.4],
+          [3, 39, 0.4],
+          [3.5, 34, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Saw over a square",
+          "module": "osc",
+          "why": "Weight and bite.\n- VCO1 WAVE FORM Pulse.\n- VCO1 PW 0.\n- VCO1 SCALE 16′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 0 · 0 st.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 6.\n- Listen for: a heavy, buzzing tone.",
+          "set": {
+            "vco1.wave": "pulse",
+            "vco1.pw": 0,
+            "vco1.scale": "16",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "8",
+            "vco2.pitch": 0,
+            "mix.vco1": 7,
+            "mix.vco2": 6
+          }
+        },
+        {
+          "title": "A snarling filter",
+          "module": "filter",
+          "why": "FILTER 2 with peak, plucked by envelope 2.\n- LPF type FILTER 2.\n- CUTOFF (LPF) 3.6 · 232 Hz.\n- PEAK (LPF) 5.5.\n- EG2/EXT (LPF mod) 4.5.\n- CUTOFF (HPF) 1.5 · 34 Hz.\n- PEAK (HPF) 2.\n- Listen for: a snarling, dark bass.",
+          "set": {
+            "lpf.type": "2",
+            "lpf.cutoff": 3.6,
+            "lpf.peak": 5.5,
+            "lpmod.eg2": 4.5,
+            "hpf.cutoff": 1.5,
+            "hpf.peak": 2
+          }
+        },
+        {
+          "title": "Heavy notes",
+          "module": "env",
+          "why": "A medium decay and some sustain.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4.4 · 190 ms.\n- SUSTAIN (EG2) 4.\n- RELEASE (EG2) 2 · 140 ms.\n- VOLUME 8.\n- Listen for: a slow, menacing crawl.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4.4,
+            "eg2.sustain": 4,
+            "eg2.release": 2,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "lpf.peak": "In this sound: the snarl."
+      },
+      "tweaks": [
+        {
+          "id": "eg2.decay",
+          "try": "Lower to 3.6",
+          "hear": "Tighter, more mechanical notes."
+        }
+      ]
+    },
+    {
+      "id": "k2-satie-gymnopedie-keys",
+      "name": "Gymnopédie Keys",
+      "ref": "Erik Satie — Gymnopédie No. 1 (1888)",
+      "artist": "Erik Satie",
+      "tags": ["keys", "classical", "gentle", "soft", "calm"],
+      "level": 1,
+      "blurb": "The calm, drifting opening melody of Satie’s first Gymnopédie, on a soft, bell-like tone.",
+      "how": "The riff is the melody’s first phrase from Satie’s score, which is in the public domain, played as one line in three-four time without its accompaniment, and moved to start on the beat rather than after the score’s opening rest. A triangle with a quiet square an octave below gives a soft, round tone, struck gently and left to ring.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 78, 0.9],
+          [1, 81, 0.9],
+          [2, 79, 0.9],
+          [3, 78, 0.9],
+          [4, 73, 0.9],
+          [5, 71, 0.9],
+          [6, 73, 0.9],
+          [7, 74, 0.9],
+          [8, 69, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A soft, round tone",
+          "module": "osc",
+          "why": "A triangle, with a square an octave below for warmth.\n- VCO1 WAVE FORM Triangle.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Square.\n- VCO2 SCALE 16′: an octave below Oscillator 1.\n- VCO2 PITCH 0 · 0 st.\n- VCO1 LEVEL 8.\n- VCO2 LEVEL 2.\n- Listen for: a soft tone with a little warmth underneath.",
+          "set": {
+            "vco1.wave": "tri",
+            "vco1.scale": "8",
+            "vco2.wave": "sq",
+            "vco2.scale": "16",
+            "vco2.pitch": 0,
+            "mix.vco1": 8,
+            "mix.vco2": 2
+          }
+        },
+        {
+          "title": "Gentle",
+          "module": "filter",
+          "why": "A soft low-pass, opened slightly as each note is struck.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 5 · 600 Hz.\n- PEAK (LPF) 0.\n- EG2/EXT (LPF mod) 2.\n- CUTOFF (HPF) 1 · 24 Hz.\n- PEAK (HPF) 0.\n- Listen for: a mellow, rounded tone.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 5,
+            "lpf.peak": 0,
+            "lpmod.eg2": 2,
+            "hpf.cutoff": 1,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Struck gently, left to ring",
+          "module": "env",
+          "why": "A soft start and a long fade.\n- ATTACK (EG2) 1.5 · 16 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 7 · 1.6 s.\n- SUSTAIN (EG2) 4.\n- RELEASE (EG2) 6 · 1.6 s.\n- VOLUME 8.5.\n- Listen for: a calm, drifting melody.",
+          "set": {
+            "eg2.attack": 1.5,
+            "eg2.hold": 0,
+            "eg2.decay": 7,
+            "eg2.sustain": 4,
+            "eg2.release": 6,
+            "out.volume": 8.5
+          }
+        }
+      ],
+      "context": {
+        "eg2.release": "In this sound: how long each note lingers after the next begins."
+      },
+      "tweaks": [
+        {
+          "id": "mix.vco2",
+          "try": "Raise to 5",
+          "hear": "A fuller, organ-like tone."
+        }
+      ]
+    },
+    {
+      "id": "k2-mittoo-bubble-organ",
+      "name": "Reggae Bubble Organ",
+      "ref": "In the style of Jackie Mittoo — \"Ram Jam\" (1967)",
+      "artist": "Jackie Mittoo",
+      "tags": ["keys", "reggae", "organ", "60s"],
+      "level": 1,
+      "blurb": "A bouncing, hollow organ “bubble”, the shuffling eighth-note pattern under a reggae groove.",
+      "how": "The bubble is an organ part that bounces between low and high notes in eighths. Two squares an octave apart sound like drawbar organ, with no filter movement and a quick cut-off between notes, so it bounces rather than drones. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 55, 0.35],
+          [0.5, 67, 0.35],
+          [1, 59, 0.35],
+          [1.5, 67, 0.35],
+          [2, 55, 0.35],
+          [2.5, 67, 0.35],
+          [3, 59, 0.35],
+          [3.5, 67, 0.35],
+          [4, 53, 0.35],
+          [4.5, 65, 0.35],
+          [5, 57, 0.35],
+          [5.5, 65, 0.35],
+          [6, 53, 0.35],
+          [6.5, 65, 0.35],
+          [7, 57, 0.35],
+          [7.5, 65, 0.35]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two squares an octave apart",
+          "module": "osc",
+          "why": "Like two organ drawbars.\n- VCO1 WAVE FORM Pulse.\n- VCO1 PW 0.\n- VCO1 SCALE 8′.\n- VCO2 WAVE FORM Square.\n- VCO2 SCALE 4′.\n- VCO2 PITCH 0 · 0 st.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 5.\n- Listen for: a hollow organ tone.",
+          "set": {
+            "vco1.wave": "pulse",
+            "vco1.pw": 0,
+            "vco1.scale": "8",
+            "vco2.wave": "sq",
+            "vco2.scale": "4",
+            "vco2.pitch": 0,
+            "mix.vco1": 7,
+            "mix.vco2": 5
+          }
+        },
+        {
+          "title": "A still filter",
+          "module": "filter",
+          "why": "Rounded, and not moving.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 5.8 · 1.0 kHz.\n- PEAK (LPF) 0.\n- EG2/EXT (LPF mod) 0.\n- CUTOFF (HPF) 2 · 48 Hz.\n- PEAK (HPF) 0.\n- Listen for: a mellow organ.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 5.8,
+            "lpf.peak": 0,
+            "lpmod.eg2": 0,
+            "hpf.cutoff": 2,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "Organ notes",
+          "module": "env",
+          "why": "Full at once, cut at once.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4 · 130 ms.\n- SUSTAIN (EG2) 10.\n- RELEASE (EG2) 1 · 74 ms.\n- VOLUME 8.\n- Listen for: a bouncing, shuffling bubble.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4,
+            "eg2.sustain": 10,
+            "eg2.release": 1,
+            "out.volume": 8
+          }
+        }
+      ],
+      "context": {
+        "mix.vco2": "In this sound: the upper drawbar."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.scale",
+          "try": "Switch to 2′",
+          "hear": "A higher, whistling drawbar on top."
+        }
+      ]
+    },
+    {
+      "id": "k2-egypt-egypt-zap-bass",
+      "name": "Electro Zap Bass",
+      "ref": "In the style of Egyptian Lover — \"Egypt, Egypt\" (1984)",
+      "artist": "Egyptian Lover",
+      "tags": ["bass", "electro", "west coast", "80s"],
+      "level": 2,
+      "blurb": "A punchy bass whose every note zaps down into place, the sound of early West Coast electro.",
+      "how": "Envelope 1 lifts the pitch at the start of each note, and with the riff’s short notes it falls straight back down over its release. The quick fall is the zap. A square and a sawtooth give it body, and a pluck from envelope 2 keeps it tight. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.2],
+          [0.75, 38, 0.2],
+          [1.5, 41, 0.2],
+          [2, 38, 0.2],
+          [2.75, 36, 0.2],
+          [3.25, 38, 0.2],
+          [3.5, 43, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Square and saw",
+          "module": "osc",
+          "why": "Body and edge.\n- VCO1 WAVE FORM Pulse.\n- VCO1 PW 0.\n- VCO1 SCALE 16′.\n- VCO2 WAVE FORM Reverse saw.\n- VCO2 SCALE 8′.\n- VCO2 PITCH 0 · 0 st.\n- VCO1 LEVEL 7.\n- VCO2 LEVEL 5.\n- Listen for: a buzzy bass tone.",
+          "set": {
+            "vco1.wave": "pulse",
+            "vco1.pw": 0,
+            "vco1.scale": "16",
+            "vco2.wave": "rsaw",
+            "vco2.scale": "8",
+            "vco2.pitch": 0,
+            "mix.vco1": 7,
+            "mix.vco2": 5
+          }
+        },
+        {
+          "title": "A plucked filter",
+          "module": "filter",
+          "why": "Plucked by envelope 2.\n- LPF type FILTER 1.\n- CUTOFF (LPF) 3.8 · 265 Hz.\n- PEAK (LPF) 3.5.\n- EG2/EXT (LPF mod) 4.\n- CUTOFF (HPF) 1 · 24 Hz.\n- PEAK (HPF) 0.\n- Listen for: a punchy, dark pluck.",
+          "set": {
+            "lpf.type": "1",
+            "lpf.cutoff": 3.8,
+            "lpf.peak": 3.5,
+            "lpmod.eg2": 4,
+            "hpf.cutoff": 1,
+            "hpf.peak": 0
+          }
+        },
+        {
+          "title": "The zap",
+          "module": "mod",
+          "why": "Envelope 1 jumps the pitch up and lets it fall when the key is let go.\n- DELAY TIME (EG1) 0 · none.\n- ATTACK (EG1) 0 · 3 ms.\n- RELEASE (EG1) 2.5 · 140 ms: the speed of the fall.\n- EG1/EXT (pitch) 5: how far up the zap starts.\n- Listen for: every note zapping down into place.",
+          "set": {
+            "eg1.delay": 0,
+            "eg1.attack": 0,
+            "eg1.release": 2.5,
+            "fmod.eg1": 5
+          }
+        },
+        {
+          "title": "A tight note",
+          "module": "env",
+          "why": "A short pluck that rings past the short key press.\n- ATTACK (EG2) 0 · 5 ms.\n- HOLD (EG2) 0 · none.\n- DECAY (EG2) 4.6 · 220 ms.\n- SUSTAIN (EG2) 0.\n- RELEASE (EG2) 4 · 460 ms.\n- VOLUME 8.5.\n- Listen for: a tight, zapping electro bass.",
+          "set": {
+            "eg2.attack": 0,
+            "eg2.hold": 0,
+            "eg2.decay": 4.6,
+            "eg2.sustain": 0,
+            "eg2.release": 4,
+            "out.volume": 8.5
+          }
+        }
+      ],
+      "context": {
+        "fmod.eg1": "In this sound: the size of the zap.",
+        "eg1.release": "In this sound: how fast it falls."
+      },
+      "tweaks": [
+        {
+          "id": "eg1.release",
+          "try": "Raise to 4",
+          "hear": "A slow, laser-like fall."
+        },
+        {
+          "id": "fmod.eg1",
+          "try": "Lower to 3",
+          "hear": "A small blip rather than a zap."
+        }
+      ]
     }
   ]
 }
