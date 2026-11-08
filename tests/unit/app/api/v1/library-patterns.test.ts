@@ -820,7 +820,33 @@ describe("a sound's riff edited directly", () => {
     expect(riff(2).pattern).toMatchObject({ swing: 60 });
   });
 
-  it('leaves the riff pattern alone when an edit touches neither the riff, the name nor the credit', async () => {
+  it("re-makes its unedited riff pattern's role when only its tags change, since they split a slow riff (t-215)", async () => {
+    const patch = (body: unknown) =>
+      patchSound(
+        request('PATCH', `admin/synths/model-d/sounds/${slug(2)}`, body),
+        ctx({ id: 'model-d', slug: slug(2) })
+      );
+    const slow: Phrase = {
+      bpm: 100,
+      loop: true,
+      steps: [
+        [0, 60, 2],
+        [2, 62, 2],
+        [4, 64, 2],
+        [6, 65, 2],
+      ],
+    };
+    expect((await patch({ phrase: slow, tags: ['lead'] })).status).toBe(200);
+    expect(riff(2).role).toBe('lead_line');
+
+    expect((await patch({ tags: ['pad'] })).status).toBe(200);
+    expect(riff(2)).toMatchObject({ role: 'ambient', editedAt: null });
+
+    expect((await patch({ tags: ['lead'] })).status).toBe(200);
+    expect(riff(2).role).toBe('lead_line');
+  });
+
+  it('leaves the riff pattern alone when an edit touches neither the riff, the name, the credit nor the tags', async () => {
     db.bankArtist.findMany.mockClear();
     const res = await patchSound(
       request('PATCH', `admin/synths/model-d/sounds/${slug(2)}`, { blurb: 'A new blurb' }),
