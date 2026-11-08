@@ -218,8 +218,8 @@ Admin rules (`lib/app/links/admin.ts`, each tested):
 - A reorder leaves each link at its index, writing only those not already stored there (a link left in place but
   stored with a gap or a tie is written).
 - Audited as `external_link.create|update|delete|reorder`, recording owner, URL, kind, title, ours and rating.
-- Writes pass `writesSharedSettings: true`: links are `GLOBAL_CONFIG_MODELS` (divergence row in
-  `.context/app/divergences.md`), so at `multi` only the install org's admins write them.
+- Writes pass `writesSharedSettings: true`: links are global config
+  (`lib/app/tenancy-classification.ts`), so at `multi` only the install org's admins write them.
 
 ## On the public pages
 
@@ -365,7 +365,7 @@ A signed-in user says a video or link belongs on an instrument, a library patch,
 accepts or declines it (`f-link-suggestions` t-185). The shape is the synth suggestions' (`lib/app/bank/suggestions.ts`),
 its reasoning re-derived:
 
-- **`LinkSuggestion` is on `SYSTEM_MODELS`, not `GLOBAL_CONFIG_MODELS`.** It is an inbound queue decided in one place,
+- **`LinkSuggestion` is classified system, not global config.** It is an inbound queue decided in one place,
   not a shared setting, and the shared-settings guard would refuse a user's `POST` to a global-config table.
   `not-personal` in `lib/app/owner-classification.ts`; exported to its suggester as `linkSuggestions`.
 - **What it is about is a kind and the natural key** (`targetKind`, `targetId`, as `owner-ref.ts` names owners), not a
@@ -420,7 +420,7 @@ from My patches (**Links…** under the open sound, `components/app/synth/sound-
 shared page under its notes as `LinkCard`s (`shared-sound-strip.tsx`), and listed by title and provider in the
 moderation queue beside a report.
 
-- **Not `ExternalLink` rows.** That table is shared settings (`GLOBAL_CONFIG_MODELS`) with a one-owner CHECK over
+- **Not `ExternalLink` rows.** That table is shared settings (global config) with a one-owner CHECK over
   catalogue owners: a user's row there would break the classification and the shared-settings guard. So they are a
   `links` JSON column on `UserSound`, as `lesson` is: they cascade with the sound, are exported with it (`app.sounds`),
   and are moderated with it (report, unlist). No new export source: `export-sources.test.ts` reads `User` FKs, not

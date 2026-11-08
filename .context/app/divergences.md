@@ -5,9 +5,9 @@ otherwise rediscover these as conflicts, or clobber them. The rule is `sunrise.d
 the Hub's `hub://process/sunrise-fork`: **an edit to a platform-owned file gets a row here in
 the same PR**, and each row names what deletes it.
 
-- **Base:** Sunrise `v0.16.0` (`737ab0cf`). `lib/sunrise-version.ts` reads `0.16.0`. The fork
+- **Base:** Sunrise `v0.17.1` (`3d178457`). `lib/sunrise-version.ts` reads `0.17.1`. The fork
   was cut from `main` at `0e685744` (`v0.13.0-29`), took `v0.14.0` in t-16, `v0.15.0` in
-  t-77 and `v0.16.0` in t-136. The next sync
+  t-77, `v0.16.0` in t-136 and `v0.17.0` with `v0.17.1` in t-188. The next sync
   target is the next Sunrise tag. After a sync, move the base to the commit merged.
 - **Not rows:**
   - new files (but see "New files in platform directories" below);
@@ -18,7 +18,7 @@ the same PR**, and each row names what deletes it.
   Those are listed under "Excluded".
 
 - **Re-derive the list (modified and deleted files) with:**
-  `git diff --diff-filter=MD --name-only 737ab0cf HEAD -- . ':!lib/app' ':!components/app' ':!.context/app' ':!prisma/schema/app*.prisma' ':!prototype'`
+  `git diff --diff-filter=MD --name-only 3d178457 HEAD -- . ':!lib/app' ':!components/app' ':!.context/app' ':!prisma/schema/app*.prisma' ':!prototype'`
 - **Row fields:** files · change · why · on conflict · upstream status · **delete when**.
 - **At a sync:** read the rows before you merge, not after. Read the release's changelog against
   the "Delete when" lines, and delete every row the release discharges. For each conflict in a
@@ -29,7 +29,7 @@ the same PR**, and each row names what deletes it.
 
 ### Fork identity, package manifest and repo hygiene
 
-- **Files:** `package.json`, `package-lock.json`, `README.md`, `.env.development`
+- **Files:** `package.json`, `package-lock.json`, `README.md`, `.env.development`, `.env.example`
 - **Change:**
   - `package.json`: renamed to `knowyoursynth@0.1.0`, with its own description, keywords and
     repository URLs. Adds the `predev`, `prebuild`, `build:audio-workers`, `build:panel-renderer`,
@@ -39,6 +39,8 @@ the same PR**, and each row names what deletes it.
     patches it carried (#8) are all in upstream's lockfile from 0.16.0 (t-136).
   - `README.md`: rewritten as Know Your Synth's.
   - `.env.development`: `PORT=3024`.
+  - `.env.example`: a commented `YOUTUBE_API_KEY` block after `BRAVE_SEARCH_API_KEY` (`f-videos-and-links`
+    t-180, which added it without a row; t-188 records it).
 - **Why:**
   - This is an application fork, and `APP_VERSION` comes from `package.json` (VERSIONING.md).
   - `predev` and `prebuild` bundle the AudioWorklet and the probe worker into `public/worklets/`
@@ -48,6 +50,8 @@ the same PR**, and each row names what deletes it.
   - The `@fontsource/*` packages self-host the prototype's faces under their real family names,
     which the ported panel names literally (`app/(panel)/layout.tsx`).
   - Port 3024 lets the app run beside the other HCE checkouts (3010–3022, listed in the file).
+  - `.env.example` is where an operator finds every variable, and `lib/app/env.ts` declares the key but cannot
+    document it there.
 - **On conflict:**
   - `package.json`: keep ours for name, version, description, keywords and URLs. Take the union
     of the script blocks, `dependencies` and `devDependencies`.
@@ -55,9 +59,11 @@ the same PR**, and each row names what deletes it.
     changes, then run `npm install --package-lock-only` and `npm run fix:lockfile-libc`. Local
     npm strips every `libc` field.
   - README and `.env.development`: keep ours.
+  - `.env.example`: take theirs, and re-add our block after the Brave key's.
 - **Upstream:** app-specific, never going upstream.
 - **Delete when:** never. This is the fork's permanent identity. The `predev`/`prebuild` lines go
-  only if the worklet and worker stop being built bundles.
+  only if the worklet and worker stop being built bundles. The `.env.example` block goes when the links stop
+  reading YouTube counts, or Sunrise gains a seam for app variables' documentation.
 
 ### The authenticated nav test, pinned to our nav
 
@@ -146,38 +152,6 @@ the same PR**, and each row names what deletes it.
 - **Upstream:** working as designed upstream; nothing to raise.
 - **Delete when:** never, while the fork has app models, unless upstream makes the case read a
   fork-owned declaration.
-
-### The catalogue and databank tables on the global-config list, and synth and link suggestions and users' own rows on the system list
-
-- **Files:** `lib/tenancy/classification.ts`
-- **Change:** `Synth`, `SynthSound`, `SynthLineage`, `SynthNote` and `CatalogueSeedRecord` (the
-  seed's record of what it planned, `f-catalogue-admin` t-32) are appended to
-  `GLOBAL_CONFIG_MODELS`, under a one-line comment. The pattern library's `LibraryPattern` and
-  `SynthSoundPattern` (`f-pattern-library` t-122), with `LibraryPatternComment` (t-156), follow under a second, and the thirteen databank
-  tables (`BankMaker` … `BankRemoval`, `f-databank` t-34 and t-36) under a third, and `ExternalLink`
-  (`f-videos-and-links` t-179), with the seed's record of the links it has applied, `LinkSeedRecord` (t-200), under a fourth. `SynthSuggestion` (t-37), `LinkSuggestion` (`f-link-suggestions` t-185),
-  `UserSound` (`f-my-sounds` s1), `UserPattern` (`f-step-sequencer` t-81), `SynthPreference` and `UserPreference` (s3), `LessonProgress` and
-  `Favourite` (s4), `SynthProfile` and `HeldUsername` (`f-profiles` r1), `OwnedInstrument` (r2), `SoundReport`
-  (`f-sharing` h4) and `PatternReport` (`f-step-sequencer` t-83) are appended to `SYSTEM_MODELS` after `ContactSubmission`, under their own comment.
-- **Why:** `model-classification.test.ts` fails on any model that is neither tenant-owned nor on
-  one of the two lists, and the lists have no fork seam. The catalogue, the pattern library and the databank are
-  product content every org shares, and so are the videos and links about them, so they are global config (owner ruling on `f-model-d`,
-  2026-10-07). A synth suggestion carries its user, but it feeds that shared databank and is
-  decided from one queue, so scoping it to an org would hide it from the admins who act on it. It
-  is not a shared setting, which is what `GLOBAL_CONFIG_MODELS` means to the shared-settings guard
-  (`scripts/ci/shared-settings-writes.ts`). That guard would refuse the signed-in user's `POST`.
-  So it joins `ContactSubmission`, the same shape of inbound queue, on `SYSTEM_MODELS`, and a link
-  suggestion, which feeds the shared videos and links the same way, sits beside it. A user's
-  own sounds are theirs whichever org they act in, and are never a shared setting either, so
-  `UserSound` joins it there with no `orgId` (owner ruling on `f-my-sounds`, 2026-10-15). Their last
-  panels, settings, lesson progress, favourites, profiles, patterns and owned synths follow the same ruling, and so do the
-  usernames held after a change, which record a name and no person. Reports about shared sounds and patterns are an inbound
-  queue about them, decided from one place, so they sit beside them.
-- **On conflict:** take theirs, re-append our twenty-two names (and the four comments) to the end
-  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion`, `LinkSuggestion`, `UserSound`, `UserPattern`, `SoundReport`, `PatternReport`, `SynthPreference`, `UserPreference`, `LessonProgress`, `Favourite`, `SynthProfile`, `HeldUsername` and `OwnedInstrument` (and their comment) after
-  `ContactSubmission` in `SYSTEM_MODELS`.
-- **Upstream:** sunrise#964 asks for a fork seam for classification.
-- **Delete when:** sunrise#964 lands. Move the thirty-five names (twenty-two global, thirteen system) into the new seam's scaffold.
 
 ### The drift-probe scaffold test, pinned to our probe
 
@@ -286,32 +260,22 @@ the same PR**, and each row names what deletes it.
   server externals (`next/dist/lib/server-external-packages.jsonc`), or Sunrise gains a seam for
   app server externals.
 
-### Eval graders see what each tool call returned
+### Eval graders see a turn's parallel tool calls
 
-- **Files:** `lib/orchestration/evaluations/run-worker.ts`,
-  `lib/orchestration/evaluations/graders/types.ts`,
-  `lib/orchestration/evaluations/drain-stream-chat.ts`,
+- **Files:** `lib/orchestration/evaluations/drain-stream-chat.ts`,
   `tests/unit/lib/orchestration/evaluations/drain-stream-chat.test.ts`
-- **Change:** `GraderInput.toolCalls` items gain optional `success`, `errorCode` and
-  `resultPreview`, and `processOneCase` fills them from each agent subject's tool-call trace, under
-  `FORK` comments (`f-tutor-knowledge` t-61). The stored `subjectMetadata.toolCalls` keeps
-  `{ slug, args }` only. `drainStreamChat` also collects the traces of a `capability_results` frame
-  (a turn's parallel tool calls), which it dropped, so a turn that searched the databank and the
-  web at once reached the graders with no tool calls. Its test gains one `FORK` case for the
-  `capability_results` batch.
-- **Why:** the tutor's eval graders check what its searches found (owner ruling, 2026-10-19,
-  journaled on `f-tutor-knowledge`), and core passed graders only each call's name and arguments.
-  Behaviour-neutral at rest: nothing stored changes, and core's graders ignore the new fields.
-  `tests/unit/lib/app/tutor/evals/worker-seam.test.ts` fails if the fields are dropped.
-- **On conflict:** take theirs, and re-apply the three fields where `processOneCase` maps the
-  trace, the `{ slug, args }` map where it stores `subjectMetadata`, and the `capability_results`
-  case in `drainStreamChat` unless upstream now handles it. Keep the field names: the
-  graders read them. In the test, keep the `FORK` case beside upstream's, and drop it with the
-  `capability_results` case if upstream now covers it.
-- **Upstream:** raised as
-  [sunrise#1044](https://github.com/human-centric-engineering/sunrise/issues/1044).
-- **Delete when:** upstream passes graders each call's result (switch the graders to its field
-  names if they differ), or the fork drops its tutor graders.
+- **Change:** `drainStreamChat` also collects the traces of a `capability_results` frame (a turn's
+  parallel tool calls), under a `FORK` comment. Its test gains one `FORK` case for the batch.
+- **Why:** a turn that searched the databank and the web at once reached the tutor's graders with no
+  tool calls (`f-tutor-knowledge` t-61). Core passes graders each call's outcome since 0.17.0 (#1044,
+  which discharged the rest of this row in t-188), but only for the single-call `capability_result`
+  frame.
+- **On conflict:** take theirs, and re-add the `capability_results` case beside `capability_result`
+  unless upstream now handles it. In the test, keep the `FORK` case beside upstream's, and drop both
+  if upstream now covers the batch.
+- **Upstream:** not yet raised; #1044 named only the outcome fields.
+- **Delete when:** upstream collects a `capability_results` frame's traces, or the fork drops its
+  tutor graders.
 
 ### The home, about and contact pages, as thin shims
 
@@ -407,13 +371,16 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
   `lib/app/capability-seed-pairs.ts` (the tutor's eight tools, and the catalogue and databank seeds the parity test
   cannot run, t-77), and `lib/app/own-modules.ts` (our eight `lib/app/` directories, which are app code rather than
   seams, so the seam-coverage guards skip them, t-136), and `lib/app/csp.ts` (the five embed players' origins as
-  `frame-src`, `f-videos-and-links` t-182): fork-owned scaffolds, filled.
+  `frame-src`, `f-videos-and-links` t-182; `appFrameSrc` stays last in the file), and
+  `lib/app/tenancy-classification.ts` (our thirty-five models without `orgId`: users' own rows as user-owned,
+  the catalogue, pattern library, databank and links as global config, the suggestion and report queues and
+  held usernames as system; moved out of core's lists in t-188): fork-owned scaffolds, filled.
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).
 - `tests/unit/lib/app/defaults.test.ts`: the `SEAM_DEFAULTS` rows for the filled seams (`brand`,
   `ci`, `reserved-tiers`, `protected-nav`, `public-nav`, `auth-landing`, `data-export`, `admin-nav`,
   `account-sections`, `jobs`, `eslint.config`, `capabilities`, `context-contributors`,
-  `platform-agents`, `env`, `evaluations`, `footer`, `owner-classification`, `capability-seed-pairs`, `csp`) are re-pinned to
+  `platform-agents`, `env`, `evaluations`, `footer`, `owner-classification`, `capability-seed-pairs`, `csp`, `tenancy-classification`) are re-pinned to
   our values rather than deleted (`HB2`). CUSTOMIZATION §4 calls this the one unavoidable cost. Our eight `lib/app/`
   directories no longer need rows here, in VERSIONING.md or in CUSTOMIZATION.md: `lib/app/own-modules.ts` lists them
   (t-136). The file is platform-owned, so expect it to conflict on

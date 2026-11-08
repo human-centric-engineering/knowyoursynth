@@ -71,7 +71,7 @@ export function initAppJobs(): void {
 
   /* YouTube view and like counts for videos and links, the popularity their order weighs (`f-videos-and-links`
      t-180). Daily: the order takes a logarithm of views, so a day's change rarely moves it. Batched, idempotent, and a
-     no-op without YOUTUBE_API_KEY. Links are shared content (GLOBAL_CONFIG_MODELS), so the install org's run does it
+     no-op without YOUTUBE_API_KEY. Links are shared content (global config), so the install org's run does it
      once for everyone, as the databank's job above. */
   registerAppJob({
     name: 'app:refresh-link-stats',

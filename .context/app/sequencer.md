@@ -361,7 +361,7 @@ the TB-303 opens on the Model D as it was. The synth it was made on is kept besi
 
 **Stored** in `user_pattern` (`prisma/schema/app.prisma`): the owner (a hand-written `ON DELETE CASCADE` FK to the user,
 pinned by a drift probe), a name, the pattern JSON, its shape version (`PATTERN_VERSION`, beside the JSON so a mapping
-can find the rows it owes), and the synth it was made on (not a foreign key). It is on `SYSTEM_MODELS` with no `orgId`,
+can find the rows it owes), and the synth it was made on (not a foreign key). It is user-owned with no `orgId`,
 as a user's sounds are, and is exported as its own section, `patterns`.
 
 **The API** (`app/api/v1/patterns`, `lib/app/patterns/store.ts`) lists, creates, reads, renames or saves over, and

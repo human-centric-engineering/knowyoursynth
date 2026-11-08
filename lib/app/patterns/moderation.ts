@@ -20,7 +20,7 @@ import type { ModerationAction, ModerationView } from '@/lib/app/sounds/report-d
 import type { ModerationResult } from '@/lib/app/sounds/moderation';
 import type { QueuePattern } from '@/lib/app/patterns/report-data';
 
-/** What the moderation routes pass their admin guard. A user's pattern and its reports are on `SYSTEM_MODELS`. */
+/** What the moderation routes pass their admin guard. A user's pattern is user-owned and its reports are system rows (`lib/app/tenancy-classification.ts`). */
 export const PATTERN_MODERATION_ADMIN = {
   // Ownership: no ownership decision — the admin queue of every user's shared patterns. See RouteOwnership in lib/auth/guards.ts.
   ownership: {

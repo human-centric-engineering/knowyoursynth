@@ -376,6 +376,44 @@ down every core `withAuth` route** — the arm exists precisely so "the route
 declared no resource" is answerable without being confused for "the row has no
 owner". Permit `'nothing'` unless you have migrated every route to a resolver.
 
+### Outside the seam by design: the maintenance cron
+
+One admin route answers a credential the policy is never asked about. The
+maintenance tick's `GET` (`app/api/v1/admin/orchestration/maintenance/tick/route.ts`)
+runs the tick for `Authorization: Bearer $CRON_SECRET` before `withAdminAuth`,
+so `canAdminister` never sees that request (#1130). In Sunrise the secret opens
+that one route, and every other credential on it goes through the guard as
+before. A fork that also checks `CRON_SECRET` on its own cron routes has
+widened that: there the same value opens those routes too.
+
+This is a decision, not a gap waiting to close (owner ruling, 2026-10-31):
+
+- **The tick is system work, not an administrative act by a person.** It acts
+  for no one (`lib/auth/subject-context.ts` gives it no subject), the dev
+  ticker runs it with no guard, and each task scopes itself. Who may trigger
+  maintenance is an operational question, like who holds the deploy key.
+- **Safe mode must not stop maintenance.** A fork policy whose registration
+  throws puts the process in safe mode for the rest of its life, where nobody
+  administers anything ([What a failure does](#what-a-failure-does)). Asked
+  through the policy, the cron would stop too: schedules, retries, recovery,
+  and `processPendingErasures`, which owes account erasures on a legal clock.
+- **No userless principal on the seam.** A principal's `credential` is
+  `'session' | 'api-key'`, and fork policies branch on it. A `'cron'` kind with
+  no user behind it would be a breaking change for every one of them.
+- **The check has to come first anyway.** The guard reads the database, and
+  the point of the secret is an idle tick that does not.
+
+A fork that wants its policy to decide who runs the tick sets `CRON_SECRET` to
+an admin API key (`sk_…`). The secret check never matches an `sk_` value, so
+the request goes through the guard, which checks the key and asks the policy.
+This works on Vercel, whose cron can send nothing but `Bearer $CRON_SECRET`;
+unsetting `CRON_SECRET` there leaves the cron no credential at all, and every
+tick gets a `401`. It costs what the secret was added to avoid: the key is
+looked up on every tick, so an idle tick queries the database (#1130). And it
+brings back the outage above, knowingly: in safe mode the policy refuses the
+key, and maintenance stops, erasures included, until the policy is fixed and
+the process restarts.
+
 ### Registering a policy
 
 `getAuthorizationPolicy()` runs `initAppAuthorizationPolicy()` once, lazily,
@@ -611,6 +649,10 @@ all. A fork's own files land
 in the roster the moment they exist, and a fork declares its exceptions in
 `appOwnerlessSurfaceExceptions` (`lib/app/ci.ts`) rather than editing the core
 list.
+
+**One admin route is outside the seam on purpose, not yet to be closed:** the
+maintenance tick's `GET` runs for `CRON_SECRET` without asking `canAdminister`.
+See [Outside the seam by design](#outside-the-seam-by-design-the-maintenance-cron).
 
 ---
 
@@ -1168,6 +1210,9 @@ that reads them ([The owner chokepoint](#the-owner-chokepoint), t-801):
     (`UNATTRIBUTED_READ_KINDS`), each the policy's answer for one core model's
     orphans; a fork row carrying one is dropped. A fork model whose owner can be
     missing has its ownerless rows readable by no narrowed caller.
+  - **A read rule where no column decides** (t-985): `owner: { reader }`, for
+    rows read by a space, a team or a grant rather than by one owner. Fork
+    models only. See [A fork's read rule](#a-forks-read-rule).
   - **A throwing init is rolled back** and every fork model is left
     unclassified — unchecked by the data layer, guarded by the fork's routes as
     before, and named by the test. Do not import `@/lib/db` from the seam: it
@@ -1245,6 +1290,87 @@ prisma.aiUserMemory.findMany({ where: { AND: [{ agentId }, { ...session.subjectF
 prisma.aiUserMemory.findMany({ where: { agentId } });
 prisma.aiUserMemory.findMany({ where: { OR: [{ userId: me }, { agentId }] } });
 ```
+
+#### A fork's read rule
+
+Core's personal rows each have one owner, so a filter can prove a read is
+confined and the table above refuses one that is not. A fork's rows can be read
+by a rule instead — Resparkable's by the space's owner, its group's members and
+its grantees (#1145). For those the fork registers the rule, and the layer
+**narrows by it rather than refusing** (§115 ruling, 2026-11-05):
+
+```ts
+registerAppOwnerClassification({
+  tier: 'app',
+  models: {
+    SpaceNote: {
+      kind: 'personal',
+      owner: {
+        reader: ({ userId }) => ({
+          space: {
+            OR: [
+              { ownerUserId: userId },
+              { members: { some: { userId } } },
+              { grants: { some: { granteeUserId: userId, revokedAt: null } } },
+            ],
+          },
+        }),
+      },
+      enforced: true,
+    },
+    // Owned through a ruled parent: inherits the rule.
+    SpaceNoteRevision: {
+      kind: 'personal',
+      owner: { through: { field: 'note', parent: 'SpaceNote' } },
+      enforced: true,
+    },
+  },
+});
+```
+
+The rule is a Prisma `where` for its model, built from the `OwnerReader` (the
+caller's `userId`) alone: pure, no I/O. Relation filters are how it reaches the
+membership tables. For a narrowed caller, on an enforced ruled model or a
+`through` child of one:
+
+| Operation                                              | What the layer does                                                                                                                 |
+| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `findMany`, `count`, `aggregate`, `groupBy`            | The rule is ANDed into the `where`. Never refused.                                                                                  |
+| `findFirst`, `findUnique` (and `OrThrow`)              | The narrowed paths above: the first readable match; a row by key that exists outside the rule is refused.                           |
+| `update`, `delete`                                     | The `where` is narrowed, so a row outside the rule is not written; that miss is refused when the row exists.                        |
+| `upsert`                                               | Refused before it runs when the row exists outside the rule — narrowed, it would create a second row beside it. Otherwise narrowed. |
+| `updateManyAndReturn`                                  | The `where` is narrowed: rows outside the rule are left alone.                                                                      |
+| A to-many `include` / `select` / `_count` of the model | The rule is ANDed into that relation's `where`.                                                                                     |
+| A to-one `include` / `select` of the model             | Refused: it cannot carry a `where`, and no column on the row decides. Read the row on its own.                                      |
+
+**What it costs: narrowing is silent.** A query meant to read every row of a
+ruled model — an org-wide total, an export, a job that runs under a member's
+request — gets only the rows the caller may read, with no error. Wrap a read
+that must see every row in `runAcrossOwners(reason, fn)`, as core's crossings
+are. Refusing instead would have taxed every fork query with restating the rule
+verbatim and refused correct ones; the protection is identical either way.
+
+The rule fails closed. One that throws, returns a non-object, or returns a
+`where` that matches every row by its top-level shape — `{}`, a key left `undefined`
+(`{ ownerUserId: undefined }`, which Prisma drops), an empty `AND` or `NOT` —
+refuses the read as `read-rule-failed`, logged by model (with a thrown error's
+message, which never goes into the refusal) and answered 404 like any refusal.
+That check is a backstop, not a proof: a nested no-op
+(`space: { members: { some: { userId: undefined } } }`) or a rule that admits
+every row some other way (`{ id: { not: '' } }`) is not caught, and a model
+with no owner is `not-personal`.
+
+An `upsert`'s check runs outside the caller's interactive transaction, as a
+miss on a read by key does. Rows the transaction has written and not committed
+are not seen, so an upsert whose rule depends on them (a membership created
+earlier in the same transaction) is refused. Commit the membership first, or
+write the row with `create` / `update`.
+
+A
+ruled model takes no `ownerless` or `alsoVisible` arm, so write an ownerless
+row's readability into the rule itself. A filter never proves the rule, not
+even the rule repeated, so a route's own narrowing is kept and the rule is
+added beside it. Raw SQL is not checked, as for core.
 
 **A refusal throws `OwnerReadRefusedError`, in every environment.** There is no
 log-only mode: that records a leak rather than stopping it. `handleAPIError`

@@ -27,8 +27,8 @@ import { servedSoundLinks } from '@/lib/app/sounds/links';
 import type { ModerationAction, ModerationView, QueueSound } from '@/lib/app/sounds/report-data';
 
 /**
- * What the moderation routes pass their admin guard. Not `writesSharedSettings`: a user's sound and a report about it
- * are on `SYSTEM_MODELS`, not shared settings.
+ * What the moderation routes pass their admin guard. Not `writesSharedSettings`: a user's sound is user-owned and a report about it
+ * a system row (`lib/app/tenancy-classification.ts`), neither a shared setting.
  */
 export const SOUND_MODERATION_ADMIN = {
   // Ownership: no ownership decision — the admin queue of every user's shared sounds. See RouteOwnership in lib/auth/guards.ts.

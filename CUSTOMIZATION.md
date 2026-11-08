@@ -27,7 +27,8 @@ Two principles keep an upgrade from upstream a clean merge instead of a fight:
    capabilities/agents/workflows in the orchestration layer, declare your env
    vars in `lib/app/env.ts`, register app-scoped rate-limit tiers/rules, swap
    email/storage/analytics providers via their adapters ([§4](#4-configuration--environment--the-libapp-surface)).
-   The fewer existing Sunrise files you modify, the smaller every future merge conflict.
+   The fewer existing Sunrise files you modify, the smaller every future merge conflict,
+   and each one you do modify gets a row in your [divergence ledger](#the-divergence-ledger).
 
 2. **Depend on the public surface, not internals.** Build against Sunrise's
    stable helpers rather than reaching into their implementations:
@@ -444,52 +445,56 @@ the export name and signature; everything inside is free to change. (Detailed
 examples live here in this guide, not in the files, precisely so the files stay
 small and conflict-free.)
 
-| Edit this file                             | To register                                                           | Auto-wired by (runtime)                                                                                               |
-| ------------------------------------------ | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `lib/app/env.ts`                           | server env vars (`appEnvSchema`)                                      | `lib/env.ts` startup parse (server)                                                                                   |
-| `lib/app/rate-limit.ts`                    | rate-limit tiers / rules                                              | rate-limit middleware (middleware runtime)                                                                            |
-| `lib/app/protected-routes.ts`              | extra authed route prefixes (append)                                  | `proxy.ts` edge redirect-to-login (proxy runtime)                                                                     |
-| `lib/app/credential-paths.ts`              | route patterns whose segments are credentials (`[param]` in logs)     | `collapseDynamicSegments()` → proxy, guards, error reports, Sentry, analytics (every runtime)                         |
-| `lib/app/capabilities.ts`                  | agent capabilities (tools)                                            | the capability registry (server route-handler)                                                                        |
-| `lib/app/context-contributors.ts`          | prompt-context loaders (`buildContext` types)                         | the chat context builder (server route-handler)                                                                       |
-| `lib/app/admin-nav.ts`                     | admin sidebar sections                                                | `admin-sidebar.tsx` (client)                                                                                          |
-| `lib/app/admin-tier.ts`                    | the fork's admin pages an org admin may open                          | `orgTierAdminPages()` → the admin layout (server), which hands the list to `<AdminTierGate>`                          |
-| `lib/app/admin-tier-routes.ts`             | the fork's admin API routes an org admin may call (`path#NAME`)       | `tests/unit/scripts/ci/admin-tier-roster.test.ts` (CI / `/pre-pr`); the guard reads the call site                     |
-| `lib/app/admin-landing.ts`                 | where an org admin lands at `/admin`                                  | `orgAdminLanding()` → `app/admin/page.tsx` (server)                                                                   |
-| `lib/app/db-drift.ts`                      | Prisma-unmodelled DB objects                                          | `scripts/db/check-drift.ts` (CI / `/pre-pr`)                                                                          |
-| `lib/app/ci.ts`                            | coverage exclusions / always-run tests / ownerless-surface exceptions | `vitest.config.ts` + `scripts/ci/scoped-tests.ts` + `lib/orchestration/access/ownerless-surfaces.ts` (CI / `/pre-pr`) |
-| `lib/app/llm-providers.ts`                 | which LLM providers may be used                                       | `resolveEligibleProviders` on first use (server)                                                                      |
-| `lib/app/public-nav.ts`                    | public nav / footer link lists                                        | `public-nav.tsx`, `public-footer.tsx` (client)                                                                        |
-| `lib/app/protected-nav.ts`                 | authenticated nav link list                                           | `protected-nav.tsx` (client)                                                                                          |
-| `lib/app/footer.ts`                        | the footer's attribution / copyright line (`footerCopyright`)         | `public-footer.tsx`, `protected-footer.tsx` (client)                                                                  |
-| `lib/app/auth-landing.ts`                  | where a signed-in user lands, and its label                           | `lib/auth-landing/route.ts` → a dozen sites (proxy + server + client)                                                 |
-| `lib/app/emails.ts`                        | auth email template overrides                                         | `lib/email/registry.ts` (server)                                                                                      |
-| `lib/app/bootstrap.ts`                     | one-time server boot work (`initApp`)                                 | `instrumentation.ts` `register()` (server, all envs)                                                                  |
-| `lib/app/user-created.ts`                  | react to a new account (`initAppUserCreatedHooks`)                    | better-auth `user.create.after` (server)                                                                              |
-| `lib/app/erasure.ts`                       | erasure cleanup for your data (`initAppErasureHooks`)                 | `eraseUser()` via `getErasureCleanupHooks()` (server)                                                                 |
-| `lib/app/jobs.ts`                          | recurring background work (`initAppJobs`)                             | the maintenance tick (server)                                                                                         |
-| `lib/app/eslint.config.mjs`                | ESLint import-boundary blocks (fork tiers)                            | root `eslint.config.mjs` spread (lint)                                                                                |
-| `lib/app/knowledge-access-contributors.ts` | extra docs for a restricted agent                                     | `resolveAgentDocumentAccess()` (server route-handler)                                                                 |
-| `lib/app/guard-floor-contributors.ts`      | per-turn minimum for inline chat guards                               | the chat handler's `collectGuardFloors()` (server route-handler)                                                      |
-| `lib/app/guard-event-contributors.ts`      | observe an inline chat guard firing                                   | the chat handler's `emitGuardEvent()` (server route-handler)                                                          |
-| `lib/app/csp.ts`                           | extra CSP `frame-src` origins                                         | `lib/security/headers.ts` → `proxy.ts` (middleware runtime)                                                           |
-| `lib/app/agent-fields.ts`                  | extra `AiAgent` config fields                                         | the agent field registry (server + agent form)                                                                        |
-| `lib/app/surface.ts`                       | which URLs count as `admin` vs `consumer`                             | `proxy.ts` classification + `<SurfaceSync>` (proxy + client)                                                          |
-| `lib/app/data-export.ts`                   | subject-access export: tables + declarations                          | `exportUserData()` + the coverage guard (server + test)                                                               |
-| `lib/app/org-export.ts`                    | a fork's own `orgId` tables in the org export (`initAppOrgSources`)   | `exportOrgData()` + the org-manifest coverage guard (server + test)                                                   |
-| `lib/app/owner-classification.ts`          | which of a fork's models are private to one person                    | `enforcedModels()` → the owner layer + the classification coverage guard (server + test)                              |
-| `lib/app/mcp-resources.ts`                 | app-owned MCP resource types + URI scheme                             | the MCP resource registry (server route-handler)                                                                      |
-| `lib/app/evaluations.ts`                   | app evaluation graders (`initAppGraders`)                             | the grader registry (server route-handler)                                                                            |
-| `lib/app/account-sections.ts`              | extra sections on `/profile` + `/settings`                            | `<AccountSections/>` on both account pages (server)                                                                   |
-| `lib/app/api-key-scopes.ts`                | extra API-key scopes (`APP_API_KEY_SCOPES`)                           | `lib/auth/api-key-scopes.ts` + `createApiKeySchema` (server + client)                                                 |
-| `lib/app/brand.ts`                         | product name, legal entity, meta description                          | `lib/brand.ts` → metadata, footers, `<BrandMark>`, emails (server + client)                                           |
-| `lib/app/reserved-tiers.ts`                | which reserved tiers THIS checkout occupies                           | `tests/unit/reserved-fork-tiers.test.ts` + the metadata guard (test)                                                  |
-| `lib/app/own-modules.ts`                   | a leaf fork's own `lib/app/` modules, which are not seams             | `tests/helpers/app-scaffolds.ts` → the seam-coverage guards (test)                                                    |
-| `lib/app/capability-seed-pairs.ts`         | capability class per seeded slug; seeds the parity mock cannot run    | `tests/unit/prisma/seeds/capability-class-seed-parity.test.ts` (test)                                                 |
-| `lib/app/authorization.ts`                 | who may administer, and over whose data                               | `withAuth` / `withAdminAuth` / the admin layout (server)                                                              |
-| `lib/app/tenant-resolver.ts`               | which org a request is acting in (`registerAppTenantResolver`)        | `proxy.ts` at module load → the `x-sunrise-org` header (proxy runtime)                                                |
-| `lib/app/platform-agents.ts`               | agents every org gets its own instance of (`initAppPlatformAgents`)   | the platform-agent registry → its reconcile (org creation, seed, maintenance tick)                                    |
-| `lib/app/provider-credentials.ts`          | where a provider's API key comes from (`initAppProviderCredentials`)  | the provider manager, every time a provider is fetched (server)                                                       |
+| Edit this file                             | To register                                                            | Auto-wired by (runtime)                                                                                               |
+| ------------------------------------------ | ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `lib/app/env.ts`                           | server env vars (`appEnvSchema`)                                       | `lib/env.ts` startup parse (server)                                                                                   |
+| `lib/app/rate-limit.ts`                    | rate-limit tiers / rules                                               | rate-limit middleware (middleware runtime)                                                                            |
+| `lib/app/protected-routes.ts`              | extra authed route prefixes (append)                                   | `proxy.ts` edge redirect-to-login (proxy runtime)                                                                     |
+| `lib/app/credential-paths.ts`              | route patterns whose segments are credentials (`[param]` in logs)      | `collapseDynamicSegments()` → proxy, guards, error reports, Sentry, analytics (every runtime)                         |
+| `lib/app/capabilities.ts`                  | agent capabilities (tools)                                             | the capability registry (server route-handler)                                                                        |
+| `lib/app/context-contributors.ts`          | prompt-context loaders (`buildContext` types)                          | the chat context builder (server route-handler)                                                                       |
+| `lib/app/admin-nav.ts`                     | admin sidebar sections                                                 | `admin-sidebar.tsx` (client)                                                                                          |
+| `lib/app/admin-tier.ts`                    | the fork's admin pages an org admin may open                           | `orgTierAdminPages()` → the admin layout (server), which hands the list to `<AdminTierGate>`                          |
+| `lib/app/admin-tier-routes.ts`             | the fork's admin API routes an org admin may call (`path#NAME`)        | `tests/unit/scripts/ci/admin-tier-roster.test.ts` (CI / `/pre-pr`); the guard reads the call site                     |
+| `lib/app/admin-landing.ts`                 | where an org admin lands at `/admin`                                   | `orgAdminLanding()` → `app/admin/page.tsx` (server)                                                                   |
+| `lib/app/db-drift.ts`                      | Prisma-unmodelled DB objects                                           | `scripts/db/check-drift.ts` (CI / `/pre-pr`)                                                                          |
+| `lib/app/ci.ts`                            | coverage exclusions / always-run tests / ownerless-surface exceptions  | `vitest.config.ts` + `scripts/ci/scoped-tests.ts` + `lib/orchestration/access/ownerless-surfaces.ts` (CI / `/pre-pr`) |
+| `lib/app/llm-providers.ts`                 | which LLM providers may be used                                        | `resolveEligibleProviders` on first use (server)                                                                      |
+| `lib/app/public-nav.ts`                    | public nav / footer link lists                                         | `public-nav.tsx`, `public-footer.tsx` (client)                                                                        |
+| `lib/app/protected-nav.ts`                 | authenticated nav link list                                            | `protected-nav.tsx` (client)                                                                                          |
+| `lib/app/footer.ts`                        | the footer's attribution / copyright line (`footerCopyright`)          | `public-footer.tsx`, `protected-footer.tsx` (client)                                                                  |
+| `lib/app/auth-landing.ts`                  | where a signed-in user lands, and its label                            | `lib/auth-landing/route.ts` → a dozen sites (proxy + server + client)                                                 |
+| `lib/app/emails.ts`                        | auth email template overrides                                          | `lib/email/registry.ts` (server)                                                                                      |
+| `lib/app/waitlist-config.ts`               | whether the app has a waitlist, and its fields, lists and screening    | `getWaitlistConfig()` → the waitlist routes, page and erasure step (server)                                           |
+| `lib/app/bootstrap.ts`                     | one-time server boot work (`initApp`)                                  | `instrumentation.ts` `register()` (server, all envs)                                                                  |
+| `lib/app/user-created.ts`                  | react to a new account (`initAppUserCreatedHooks`)                     | better-auth `user.create.after` (server)                                                                              |
+| `lib/app/erasure.ts`                       | erasure cleanup for your data (`initAppErasureHooks`)                  | `eraseUser()` via `getErasureCleanupHooks()` (server)                                                                 |
+| `lib/app/jobs.ts`                          | recurring background work (`initAppJobs`)                              | the maintenance tick (server)                                                                                         |
+| `lib/app/eslint.config.mjs`                | ESLint import-boundary blocks (fork tiers)                             | root `eslint.config.mjs` spread (lint)                                                                                |
+| `lib/app/knowledge-access-contributors.ts` | extra docs for a restricted agent                                      | `resolveAgentDocumentAccess()` (server route-handler)                                                                 |
+| `lib/app/guard-floor-contributors.ts`      | per-turn minimum for inline chat guards                                | the chat handler's `collectGuardFloors()` (server route-handler)                                                      |
+| `lib/app/guard-event-contributors.ts`      | observe an inline chat guard firing                                    | the chat handler's `emitGuardEvent()` (server route-handler)                                                          |
+| `lib/app/csp.ts`                           | extra CSP frame, script, connect and media origins                     | `lib/security/headers.ts` → `proxy.ts` (middleware runtime)                                                           |
+| `lib/app/frame-ancestors.ts`               | sites allowed to frame a page, per request                             | `proxy.ts` → `setSecurityHeaders()` (middleware runtime)                                                              |
+| `lib/app/frameable-paths.json`             | path prefixes left out of the static `DENY`                            | `next.config.js` `headers()` (build/config)                                                                           |
+| `lib/app/agent-fields.ts`                  | extra `AiAgent` config fields                                          | the agent field registry (server + agent form)                                                                        |
+| `lib/app/surface.ts`                       | which URLs count as `admin` vs `consumer`                              | `proxy.ts` classification + `<SurfaceSync>` (proxy + client)                                                          |
+| `lib/app/data-export.ts`                   | subject-access export: tables + declarations                           | `exportUserData()` + the coverage guard (server + test)                                                               |
+| `lib/app/org-export.ts`                    | a fork's own `orgId` tables in the org export (`initAppOrgSources`)    | `exportOrgData()` + the org-manifest coverage guard (server + test)                                                   |
+| `lib/app/owner-classification.ts`          | which of a fork's models are private to one person                     | `enforcedModels()` → the owner layer + the classification coverage guard (server + test)                              |
+| `lib/app/tenancy-classification.ts`        | a fork's models with no `orgId`: system, shared settings or user-owned | `classifyModels()` → the chokepoint, the scanners + the coverage guard (server + test)                                |
+| `lib/app/mcp-resources.ts`                 | app-owned MCP resource types + URI scheme                              | the MCP resource registry (server route-handler)                                                                      |
+| `lib/app/evaluations.ts`                   | app evaluation graders (`initAppGraders`)                              | the grader registry (server route-handler)                                                                            |
+| `lib/app/account-sections.ts`              | extra sections on `/profile` + `/settings`                             | `<AccountSections/>` on both account pages (server)                                                                   |
+| `lib/app/api-key-scopes.ts`                | extra API-key scopes (`APP_API_KEY_SCOPES`)                            | `lib/auth/api-key-scopes.ts` + `createApiKeySchema` (server + client)                                                 |
+| `lib/app/brand.ts`                         | product name, legal entity, meta description                           | `lib/brand.ts` → metadata, footers, `<BrandMark>`, emails (server + client)                                           |
+| `lib/app/reserved-tiers.ts`                | which reserved tiers THIS checkout occupies                            | `tests/unit/reserved-fork-tiers.test.ts` + the metadata guard (test)                                                  |
+| `lib/app/own-modules.ts`                   | a leaf fork's own `lib/app/` modules, which are not seams              | `tests/helpers/app-scaffolds.ts` → the seam-coverage guards (test)                                                    |
+| `lib/app/capability-seed-pairs.ts`         | capability class per seeded slug; seeds the parity mock cannot run     | `tests/unit/prisma/seeds/capability-class-seed-parity.test.ts` (test)                                                 |
+| `lib/app/authorization.ts`                 | who may administer, and over whose data                                | `withAuth` / `withAdminAuth` / the admin layout (server)                                                              |
+| `lib/app/tenant-resolver.ts`               | which org a request is acting in (`registerAppTenantResolver`)         | `proxy.ts` at module load → the `x-sunrise-org` header (proxy runtime)                                                |
+| `lib/app/platform-agents.ts`               | agents every org gets its own instance of (`initAppPlatformAgents`)    | the platform-agent registry → its reconcile (org creation, seed, maintenance tick)                                    |
+| `lib/app/provider-credentials.ts`          | where a provider's API key comes from (`initAppProviderCredentials`)   | the provider manager, every time a provider is fetched (server)                                                       |
 
 > **Filling a seam is expected to fail one row of a core test.**
 > `tests/unit/lib/app/defaults.test.ts` asserts every seam ships empty — that
@@ -579,9 +584,14 @@ export function initAppUserCreatedHooks(): void {
 
 better-auth's `user.create.after` hook calls the initializer once, then
 dispatches every registered hook. The context is
-`{ userId, email, name, signupMethod, viaInvitation }` — `signupMethod`
-distinguishes OAuth (address already verified) from email/password (not yet),
-and `viaInvitation` tells you the address was already proven.
+`{ userId, email, name, signupMethod, viaInvitation, invitation }` —
+`signupMethod` distinguishes OAuth (address already verified) from
+email/password (not yet), `viaInvitation` tells you the address was already
+proven, and `invitation` says which invitation was redeemed:
+`{ invitedAt, invitedBy, orgId }`, where `orgId` is the install org when the
+invitation named none, or `null` when none was. Match your own rows on it
+rather than on the address: on the Google path the invitation token is
+consumed before the account exists, so this is the only record of it (#1136).
 
 Hooks run **after** the user row exists, so one **cannot reject a signup**: a
 throw is logged and ignored rather than failing account creation, because the
@@ -1014,16 +1024,33 @@ The admin create form's type dropdown still lists core types only — an app typ
 goes in through a seed or the API. See
 [`.context/orchestration/mcp.md`](./.context/orchestration/mcp.md).
 
-**Third-party iframes — `lib/app/csp.ts`.** `frame-src` is `'self'` in both the
-dev and prod CSP. If your app embeds a third-party iframe (an onboarding or
-marketing video is the usual case), list the hosts in `appFrameSrc` rather than
-editing `lib/security/headers.ts`; the platform folds them into the global CSP.
-Only exact `https://` origins are accepted (a left-most wildcard and a port are
-fine) — anything else is dropped and logged at warn, because these values are
-spliced into a response header. Keep the list exactly as broad as the feature:
-build iframe `src`s only on these hosts from a **validated id**, never from an
-admin's raw input, so a hostile stored value yields no iframe at all. See
-[`.context/security/overview.md`](./.context/security/overview.md#third-party-iframes--the-frame-src-seam).
+**Third-party hosts — `lib/app/csp.ts`.** `frame-src`, `script-src`,
+`connect-src` and `media-src` are fixed in the platform CSP. If your app embeds a
+third-party iframe (an onboarding video), loads a vendor's script (a bot check),
+calls a service from the browser, or plays externally hosted audio or video, list
+the hosts in `appFrameSrc`, `appScriptSrc`, `appConnectSrc` or `appMediaSrc`
+rather than editing `lib/security/headers.ts`; the platform folds them into the
+global CSP and into `getCSPConfig()`. Only exact `https://` origins are accepted
+(a left-most wildcard and a port are fine) — anything else is dropped and logged
+at warn, because these values are spliced into a response header, and
+`appScriptSrc` takes no wildcard. Keep each list exactly as broad as the feature: build iframe `src`s only on listed hosts from a
+**validated id**, never from an admin's raw input, and name a vendor's exact
+script host, since a listed script host runs code with your app's privileges.
+See
+[`.context/security/overview.md`](./.context/security/overview.md#third-party-hosts--the-libappcspts-seam).
+
+**Pages other sites may frame — `lib/app/frameable-paths.json` and
+`lib/app/frame-ancestors.ts`.** Every response refuses framing. To let a
+customer's own site embed one family of your pages (an embeddable form, a
+booking widget), list those pages' path prefixes (`"/embed/"`) in
+`frameable-paths.json`, and return the sites allowed to frame each request from
+`resolveAppFrameAncestors(request)`. The proxy asks the resolver only for paths
+under a listed prefix, and `next.config.js` leaves those prefixes out of its
+static `DENY`; a listed prefix frames nothing until the resolver names a site.
+Return exact `https://` origins (no wildcard, no path) and cache any lookup — it
+runs on every request under a listed prefix. A framed page on another site gets
+no session cookie, so frame pages that work signed out. See
+[`.context/security/overview.md`](./.context/security/overview.md#letting-named-sites-frame-a-page--the-frame-ancestors-seam).
 
 **Database drift probes — `lib/app/db-drift.ts`.** Register the Prisma-_unmodelled_
 DB objects your app adds — hand-written FK constraints, custom indexes (GIN/HNSW),
@@ -1538,6 +1565,111 @@ For the full version contract and how Sunrise releases are produced, see
 
 ## 9. Staying in sync with upstream Sunrise
 
+### Pulling a release
+
+In this order. Retiring rows comes **before** resolving conflicts: resolve
+first and a row's "keep mine" puts your edit back over the upstream fix that
+made it unnecessary.
+
+1. **Read your [divergence ledger](#the-divergence-ledger) first.** It lists
+   every upstream file you have edited and what to keep when it conflicts, so
+   you know which conflicts are yours before git shows them to you. Read the
+   release's CHANGELOG range too ([§8](#what-to-do-when-you-upgrade)).
+2. **Merge the release tag** from the tier you sync from — Sunrise for a
+   direct fork (`git fetch upstream --tags && git merge vX.Y.Z`), your
+   framework for a fork built on one.
+3. **Retire the rows the release made unnecessary.** For every row, ask
+   whether its **Delete when** has happened. For a row carried for an issue,
+   check the issue, not just the CHANGELOG, which lists only what shipped —
+   and ask the repo the issue was filed in, which for a `<framework>#N` row is
+   not Sunrise: `gh issue view N --repo <owner>/<repo> --json state,stateReason`.
+   - **Closed as completed:** retire the row only if the release you are taking
+     carries the fix in the shape you carry. An approved ask can be reshaped,
+     and retiring on the issue number alone can drop an edit the release does
+     not replace. On a leaf built on a framework, the release you are taking
+     is the framework's, so a `sunrise#N` fix is there only once the
+     framework has taken the Sunrise release that carries it — check the
+     `lib/sunrise-version.ts` it brings, not the date the issue closed.
+   - **Closed as not planned:** the trigger will never fire. Rewrite the row as
+     permanent, or plan the move to the alternative the decline named.
+   - **Closed as a duplicate:** check the original issue instead.
+   - **Still open:** keep the row, and keep its edit applied.
+
+   **Retiring a row means taking upstream's change in place of that row's
+   edit** (any other row's edit to the same file stays), then deleting the
+   row, all in the sync PR.
+
+4. **Resolve the remaining conflicts by each row's merge action.** A conflict
+   in an upstream file that no row names, other than the
+   [routine ones](#the-divergence-ledger) the ledger leaves out, is an edit
+   nobody recorded: resolve it, then add its row.
+5. **Apply the release's migrations** ([below](#migrations)).
+6. **Merge the sync PR with a merge commit** ([next](#merge-the-sync-pr--never-squash-it)).
+
+### The divergence ledger
+
+Every edit your fork carries to a file an upstream tier owns (Sunrise, or the
+framework you build on) can conflict at the next sync. Record each one in a
+**divergence ledger, in the same PR as the edit**. An edit nobody recorded is rediscovered at the next merge, and possibly
+resolved the wrong way.
+
+**Where it lives — one path per tier:**
+
+| You are                                       | Your ledger                                  |
+| --------------------------------------------- | -------------------------------------------- |
+| a leaf fork (including a leaf on a framework) | `.context/app/platform-divergences.md`       |
+| a framework-tier fork (e.g. Daybreak)         | `.context/framework/platform-divergences.md` |
+
+Both paths sit inside the [reserved tiers](#the-appplatform-model), so the
+ledger itself never conflicts. **Sunrise ships neither file**: create yours on
+your first divergence, and add its tier to `lib/app/reserved-tiers.ts` if it is
+the first file you have put there. A leaf on a framework keeps its own
+app-tier ledger for the edits it carries to both upstreams' files; the
+framework's ledger belongs to the framework, and arrives in your tree with it.
+
+**What goes in it:** edits to files an upstream tier owns and keeps evolving —
+core `lib/`, `app/api/v1/`, core `components/`, `proxy.ts`, platform tests,
+root config, Sunrise's docs, a deleted platform page. **What does not:**
+filling a `lib/app/*` scaffold your upstream shipped empty, adding a model to
+`prisma/schema/app.prisma`, or any new file of your own. Those ship empty to
+be filled, and merge cleanly. **On a leaf built on a framework, a scaffold the
+framework has filled is the framework's file**: fill the hook it gives you
+(Daybreak's are the `lib/app/leaf-*` files), and an edit to the framework's
+copy is a row. Also left out are the edits every fork makes that this guide
+already tells you how to merge: branding ([§2](#2-branding--theming)), the
+marketing-page shims ([§6](#6-landing-page--routes)), your name, version and
+dependencies in `package.json` ([§7](#7-adding-dependencies--scripts)), and a
+Hub bootstrap committed to `CLAUDE.md` ([§1](#1-first-steps)).
+
+**One row per carried edit**, numbered. Retiring a row deletes it, so keep a
+`Next row: N` line under the table and take numbers from it; a number another
+PR or note cited then never comes to mean a different edit:
+
+```markdown
+| #   | File                     | Change                    | Why no seam could carry it      | Merge action                | Upstream       | Delete when                     |
+| --- | ------------------------ | ------------------------- | ------------------------------- | --------------------------- | -------------- | ------------------------------- |
+| 1   | `lib/example/feature.ts` | Pass `orgId` to `build()` | `build()` has no context option | Keep mine, re-apply the arg | `sunrise#1234` | `build()` accepts a context arg |
+```
+
+- **Change** — what you did, kept minimal. A one-line edit is a cheap merge;
+  a rewritten platform file is not.
+- **Merge action** — what to do when the file conflicts: keep mine, take
+  theirs and re-apply, keep mine (deleted).
+- **Upstream** — the issue the row is carried for, as `sunrise#N` (or
+  `<framework>#N` for a file your framework owns). `none` is allowed only for
+  an edit no upstream change should remove, such as deleting a platform page
+  you do not want — say why in **Why**. An edit an upstream ought to make
+  possible through a seam is an issue to file with the tier that owns the
+  file, and filing it is part of the same PR.
+  There is no "landed" state: once a release carries the fix, the row is
+  retired (step 3 above), not kept.
+- **Delete when** — the specific event that makes the row removable, checked
+  at every sync whether or not the row cites an issue. Without one, the ledger
+  only grows.
+
+The rows that cite an issue are also the list of places your fork was forced
+off the seams — which is exactly what Sunrise needs to hear about.
+
 ### Merge the sync PR — never squash it
 
 **"Squash and merge" on a sync PR keeps every file and silently breaks your next
@@ -1618,7 +1750,9 @@ files that _can_ conflict are the ones both you and upstream edit (the migration
 directory above, the marketing-page route shims ([§6](#6-landing-page--routes)) —
 a one-line "keep mine" when your content lives in app-owned files — branding, and
 `package.json` — see [§7](#7-adding-dependencies--scripts)); resolve those keeping
-your version, and add a follow-up rather than rewriting Sunrise's.
+your version rather than rewriting Sunrise's. Any other edit to a Sunrise file
+that you carry from sync to sync is a row in your
+[divergence ledger](#the-divergence-ledger).
 
 - **One shared history.** App and Sunrise migrations both live in
   `prisma/migrations/` and are applied in timestamp order. On an upstream

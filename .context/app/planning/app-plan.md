@@ -360,8 +360,8 @@ and this plan's decisions.
   - an `onDelete` policy: `Cascade` for personal data, `SetNull` for retained content;
   - a declaration in `lib/app/data-export.ts`: a source if it holds data about a person,
     otherwise `excluded` with a reason (`export-sources.test.ts` fails on a model with neither);
-  - a tenancy classification. A table every org shares goes on `GLOBAL_CONFIG_MODELS` (the
-    divergence row for `lib/tenancy/classification.ts`).
+  - a tenancy classification. A table every org shares is classified global config in
+    `lib/app/tenancy-classification.ts`.
 
   A drift probe in `lib/app/db-drift.ts` is only for an object Prisma cannot model: a
   hand-written foreign key, a partial or vector index, a check constraint. A table Prisma models

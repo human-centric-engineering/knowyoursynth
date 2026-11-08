@@ -20,7 +20,7 @@ columns it would write, placement left out, keyed by table and the row's natural
 the seed writes it, and nothing but the Data page reads it.
 
 The schema is in `prisma/schema/app.prisma`. The tables are product content every org shares, so
-they are on `GLOBAL_CONFIG_MODELS` (a divergence, sunrise#964), and they hold nothing about a
+they are classified global config (`lib/app/tenancy-classification.ts`), and they hold nothing about a
 person, so `lib/app/data-export.ts` declares them excluded.
 
 ## How content gets in
