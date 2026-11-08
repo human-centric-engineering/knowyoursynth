@@ -289,6 +289,39 @@ describe('the pattern picker beside Play', () => {
     expect(load.mock.calls[0][1]).toEqual({ id: null, name: 'Big stab', libraryId: CHORD.id });
   });
 
+  it('loads through the page as it is once a read lands, not as it was when the row was pressed', async () => {
+    let answer: (v: LibraryPatternView) => void = () => undefined;
+    get.mockImplementationOnce(() => new Promise((r) => (answer = r)));
+    const before = vi.fn();
+    const after = vi.fn();
+    const { rerender } = render(<Picker onPicked={before} />);
+    fireEvent.click(within(dialog()).getByRole('button', { name: /Long note/ }));
+    // the riff stopped (or started) while the pattern was read
+    rerender(<Picker onPicked={after} />);
+    await act(async () => answer(view(HELD.id, 'Long note')));
+    expect(before).not.toHaveBeenCalled();
+    expect(after).toHaveBeenCalledTimes(1);
+  });
+
+  it('lets go of the row being read when one of the sound’s own is picked meanwhile', async () => {
+    get.mockImplementationOnce(() => new Promise(() => undefined));
+    const load = vi.fn<LoadFn>(() => null);
+    render(<Picker load={load} />);
+    const long = within(dialog()).getByRole('button', { name: /Long note/ });
+    fireEvent.click(long);
+    expect(long.getAttribute('aria-busy')).toBe('true');
+    await act(async () => {
+      fireEvent.click(within(dialog()).getByRole('button', { name: /Octave walk/ }));
+    });
+    expect(within(dialog()).getByRole('alert').textContent).toBe('Octave walk cannot be played.');
+    expect(long.getAttribute('aria-busy')).toBeNull();
+  });
+
+  it('says it is waiting while the sound on the panel is still loading', () => {
+    render(<Picker own={null} ranked={{ state: 'off', result: null }} />);
+    expect(within(dialog()).getByRole('status').textContent).toMatch(/Waiting for the sound/);
+  });
+
   it('shows the sound’s own at once while the patch is read, and a line saying so', () => {
     render(<Picker ranked={{ state: 'reading', result: null }} />);
     expect(sectionNames()).toEqual(['Fat bass’s patterns']);
@@ -330,6 +363,17 @@ describe('the pattern picker beside Play', () => {
     expect(dialog()).toBeTruthy();
     fireEvent.pointerDown(document.body);
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+  });
+
+  it('clears the search on Escape first, and closes on the next', () => {
+    render(<Picker />);
+    search('walk');
+    fireEvent.keyDown(screen.getByRole('searchbox'), { key: 'Escape' });
+    expect(dialog()).toBeTruthy();
+    expect(screen.getByRole<HTMLInputElement>('searchbox').value).toBe('');
+    expect(sectionNames()).toEqual(['Fat bass’s patterns', 'Lead line', 'Held', 'Chord stabs']);
+    fireEvent.keyDown(screen.getByRole('searchbox'), { key: 'Escape' });
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 
   it('is a bottom sheet below lg', () => {

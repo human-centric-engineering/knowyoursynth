@@ -1481,6 +1481,13 @@ function Synth({
   // one a sound of the user's plays), and with no sound's riff to play; otherwise the riff. A new patch puts back its
   // riff in the sequencer, and Play with it.
   const playsPattern = seqShown || !!seqLoaded || !shown;
+  // The library pattern held as it came, marked in the picker. The riff as it came is the sound's default pattern (the
+  // sequencer's library puts the one in the other's place), so with nothing loaded the default is what plays.
+  const pickerCurrent = seq.edited
+    ? null
+    : seqLoaded
+      ? (seqLoaded.libraryId ?? null)
+      : (soundPatterns?.patterns?.[0]?.id ?? null);
   const playsName = playsPattern
     ? `${seqLoaded?.name ?? 'The patch’s riff'}${seq.edited ? ' (edited)' : ''}`
     : 'The patch’s riff';
@@ -2826,7 +2833,7 @@ function Synth({
               <div className="kys-player-bar flex flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2 text-sm sm:px-4 lg:flex-nowrap">
                 {/* Always there while something plays, so a pattern can be stopped with the sequencer closed. The Play
                 deck's first and biggest control, outside the scrolling row so nothing clips its glow (t-210). */}
-                {(shown || seqShown || transportPlaying) && (
+                {(shown || seqShown || seqLoaded || transportPlaying) && (
                   <PlayButton
                     playing={transportPlaying}
                     onClick={() =>
@@ -2847,7 +2854,7 @@ function Synth({
                   sheet={small}
                   own={soundPatterns}
                   ranked={ranked}
-                  current={seq.edited ? null : (seqLoaded?.libraryId ?? null)}
+                  current={pickerCurrent}
                   load={loadPattern}
                   // Picked while the riff plays, the pattern takes over, as it does when the sequencer opens.
                   onPicked={() => {

@@ -10,8 +10,8 @@
  * picker anyway, so the library is ranked under them whatever the patch.
  *
  * The answer holds while the picker is open, so nothing jumps under the pointer: a knob turned meanwhile is read the
- * next time it opens. The answer for each reading is kept for the visit, so a patch that comes back to where it was is
- * not asked about again. A reading that fails (the detector could not run, the panel could not be worked out) asks for
+ * next time it opens. A panel unchanged since it was last read is not read again, and the answer for each reading is
+ * kept for the visit, so a patch that comes back to where it was is not asked about again. A reading that fails (the detector could not run, the panel could not be worked out) asks for
  * the library without features, which the endpoint lists by role and name, so the picker is never empty.
  */
 
@@ -61,6 +61,10 @@ export function useRankedPatterns(input: RankInput): RankedPatterns {
   const [status, setStatus] = useState<RankedPatterns>(OFF);
   const reader = useRef<KindReader | null>(null);
   const answers = useRef(new Map<string, Promise<RankResult>>());
+  // The last panel the detector read, and what it heard.
+  const lastRead = useRef<
+    (PanelState & { def: SynthDef; features: Promise<SoundFeatures | null> }) | null
+  >(null);
   useEffect(
     () => () => {
       reader.current?.dispose();
@@ -87,21 +91,38 @@ export function useRankedPatterns(input: RankInput): RankedPatterns {
     }
     let live = true;
     setStatus(READING);
-    const wait = Math.max(0, SETTLE_MS - (Date.now() - changedAt.current));
-    const t = setTimeout(() => {
-      const read = (reader.current ??= createKindReader());
+    const rank = () => {
       const now = panelRef.current;
-      // Working out the panel's sound (engineOf) can throw: that is a reading that failed, ranked without features.
-      Promise.resolve()
-        .then(() => read.read(engineOf(def, now.values, now.cables, 0)))
-        .catch((err: unknown): SoundFeatures | null => {
-          if (live)
+      // The panel read last time, unchanged since, is not read again; one that could not be read is tried again.
+      let heard = lastRead.current;
+      if (
+        !heard ||
+        heard.def !== def ||
+        heard.values !== now.values ||
+        heard.cables !== now.cables
+      ) {
+        const read = (reader.current ??= createKindReader());
+        const entry = {
+          def,
+          values: now.values,
+          cables: now.cables,
+          features: Promise.resolve<SoundFeatures | null>(null),
+        };
+        // Working out the panel's sound (engineOf) can throw: that is a reading that failed, ranked without features.
+        entry.features = Promise.resolve()
+          .then(() => read.read(engineOf(def, now.values, now.cables, 0)))
+          .catch((err: unknown): SoundFeatures | null => {
+            if (lastRead.current === entry) lastRead.current = null;
             logger.warn('pattern picker: the patch could not be read', {
               synthId,
               err: String(err),
             });
-          return null;
-        })
+            return null;
+          });
+        heard = entry;
+        lastRead.current = entry;
+      }
+      heard.features
         .then((features) => {
           if (!live) return null;
           const key = `${synthId}|${sound ?? ''}|${features ? JSON.stringify(features) : ''}`;
@@ -135,7 +156,14 @@ export function useRankedPatterns(input: RankInput): RankedPatterns {
             setStatus({ state: 'error', result: null });
           }
         );
-    }, wait);
+    };
+    // Still settling when the wait is up (a patch's glide, a knob turned as it opened): wait again from its last change.
+    const left = () => SETTLE_MS - (Date.now() - changedAt.current);
+    const settle = () => {
+      if (left() > 0) t = setTimeout(settle, left());
+      else rank();
+    };
+    let t = setTimeout(settle, Math.max(0, left()));
     return () => {
       live = false;
       clearTimeout(t);

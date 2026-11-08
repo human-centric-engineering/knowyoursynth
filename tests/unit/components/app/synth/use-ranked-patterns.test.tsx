@@ -130,7 +130,45 @@ describe('useRankedPatterns', () => {
     });
   });
 
-  it('keeps the answer for a reading, so a patch that reads the same is not asked about again', async () => {
+  it('does not read a panel again that has not changed, and asks nothing new of a patch that reads the same', async () => {
+    const { result, rerender } = renderHook((p: RankInput) => useRankedPatterns(p), {
+      initialProps: base({ open: true }),
+    });
+    await settle();
+    rerender(base());
+    rerender(base({ open: true }));
+    await settle();
+    expect(detector.read).toHaveBeenCalledTimes(1);
+    expect(post).toHaveBeenCalledTimes(1);
+    expect(result.current).toEqual({ state: 'ready', result: RESULT });
+
+    // a panel that changed is read again, and when it reads the same its answer is the one already kept
+    const same = { values: { ...def.init }, cables: [] };
+    rerender(base({ panel: same }));
+    rerender(base({ open: true, panel: same }));
+    await settle();
+    expect(detector.read).toHaveBeenCalledTimes(2);
+    expect(post).toHaveBeenCalledTimes(1);
+  });
+
+  it('waits again when the panel changes before it has settled, then reads it as it settled', async () => {
+    const moved = { values: { ...def.init, 'filter.cutoff': 3 }, cables: [] };
+    const { rerender } = renderHook((p: RankInput) => useRankedPatterns(p), {
+      initialProps: base(),
+    });
+    rerender(base({ open: true }));
+    await settle(SETTLE_MS - 100);
+    // a patch's glide, still moving the panel as the picker opened
+    rerender(base({ open: true, panel: moved }));
+    await settle(100);
+    expect(detector.read).not.toHaveBeenCalled();
+    await settle(SETTLE_MS - 100);
+    expect(detector.read).toHaveBeenCalledTimes(1);
+    expect(post).toHaveBeenCalledTimes(1);
+  });
+
+  it('reads the panel again on the next opening when it could not be read', async () => {
+    detector.read.mockRejectedValueOnce(new Error('no audio'));
     const { rerender } = renderHook((p: RankInput) => useRankedPatterns(p), {
       initialProps: base({ open: true }),
     });
@@ -139,7 +177,9 @@ describe('useRankedPatterns', () => {
     rerender(base({ open: true }));
     await settle();
     expect(detector.read).toHaveBeenCalledTimes(2);
-    expect(post).toHaveBeenCalledTimes(1);
+    expect(post.mock.calls[1][1]).toEqual({
+      body: { synthId: 'model-d', sound: 'fat-bass', features: FEATURES },
+    });
   });
 
   it('asks for the library without features when the patch could not be read', async () => {

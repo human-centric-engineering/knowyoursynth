@@ -1292,25 +1292,32 @@ the sequencer closed (`components/app/synth/pattern-picker.tsx`; where it sits a
   is shown, so they show at once, default marked, before anything is ranked.
 - **Then the whole library**, from [`/rank`](#the-whole-library), in its sections. `useRankedPatterns`
   (`components/app/synth/use-ranked-patterns.ts`) reads the patch once the panel has settled (`SETTLE_MS` since it
-  last changed), in the probe worker (`createKindReader`), and asks `/rank` with the features and the library sound
+  last changed, waiting again if it changes before then, as a patch's glide does), in the probe worker
+  (`createKindReader`), and asks `/rank` with the features and the library sound
   the patch started as, which leaves that sound's own out. There is no `movedFar` gate: the sound's own lead the list
-  anyway. Each reading's answer is kept for the visit (up to 50).
+  anyway. A panel unchanged since it was last read is not read again, and each reading's answer is kept for the
+  visit (up to 50).
 - **While it is read**, the sound's own show and a line says the patch is being listened to. A reading that fails is
   asked for without features, which `/rank` lists by role and name, so the sections always come. A read of `/rank`
-  that fails says so; closing and opening the picker tries again.
+  that fails says so; closing and opening the picker tries again. While one of the user's sounds is still loading, a
+  line says the picker is waiting for it.
 - **The order holds while it is open.** The panel is read when the picker opens, not as it changes, so nothing moves
   under the pointer. Opened again after the patch has moved, it is ranked again.
 - **Each section shows its best five** (`SECTION_FEW`), its count in its heading, and **Show all N**. An empty section
   is not drawn. Above the sections, a line says what the patch was heard as (the reading's summary).
 - **The search** filters the sound's own and every section by name and Inspired by: every word typed has to be in
-  one or the other. A section with no match is not drawn, and Show all counts the matches.
+  one or the other. A section with no match is not drawn, and Show all counts the matches. Escape with words in it
+  clears them; the next Escape closes the popover.
 - **A row** is the strip's (`PatternCredit` and `patternLength`, shared from `sound-pattern-picker.tsx`): name,
   length, and its Inspired by, linked, with its fidelity. A library row's reason (`why`) is its tooltip, and one that
   needs more voices than the patch says so.
 - **Picking** a library row reads its one pattern (`GET /api/v1/library-patterns/:id`); one of the sound's own
   carries its notes already. It loads with `seq.load` as the strip's picker does (named, `libraryId` set, Undo back),
   and the picker closes. Only the latest of two picks loads. A pattern that could not be read says so and stays open.
-  The row held as it came is marked, and picking it again only closes the picker.
+  A pick that waits on a read starts the pattern if the riff is playing when the read lands, not when the row was
+  pressed. The row held as it came is marked, and picking it again only closes the picker. With nothing loaded, the
+  riff as it came is the sound's default pattern (the sequencer's library puts the one in the other's place), so the
+  default is the row marked. Play shows whenever the sequencer holds a loaded pattern, so a picked one can be played.
 
 Tested in `tests/unit/components/app/synth/pattern-picker.test.tsx` (own first, sections, Show all, search, picks, the
 lines while reading and on failure, closing, the sheet) and `tests/unit/components/app/synth/synth-page-pattern-picker.test.tsx`

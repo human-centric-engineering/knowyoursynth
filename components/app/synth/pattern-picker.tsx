@@ -165,6 +165,11 @@ function PickerBody({
   onPicked,
   onDone,
 }: PatternPickerProps & { onDone: () => void }) {
+  // A pick that waits on a read loads through the page as it is once the read lands, not as it was when it was pressed.
+  const page = useRef({ load, onPicked });
+  useEffect(() => {
+    page.current = { load, onPicked };
+  }, [load, onPicked]);
   const [query, setQuery] = useState('');
   const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set());
   const [status, setStatus] = useState<string | null>(null);
@@ -181,6 +186,18 @@ function PickerBody({
       live.current = false;
     };
   }, []);
+  // Escape in a search with words in it clears them, rather than closing the list. Listened for on the field itself,
+  // so the popover's own Escape (on its element, ahead of React's) sees it handled.
+  useEffect(() => {
+    const el = search.current;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || !el?.value) return;
+      e.preventDefault();
+      setQuery('');
+    };
+    el?.addEventListener('keydown', onKey);
+    return () => el?.removeEventListener('keydown', onKey);
+  }, []);
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
 
   const pick = async (row: Row) => {
@@ -191,8 +208,9 @@ function PickerBody({
     const n = ++pickN.current;
     setStatus(null);
     let view = row.view;
+    // A newer pick lets an earlier read go, and its row with it.
+    setReading(view ? null : row.id);
     if (!view) {
-      setReading(row.id);
       try {
         view = await apiClient.get<LibraryPatternView>(
           `/api/v1/library-patterns/${encodeURIComponent(row.id)}`
@@ -211,11 +229,11 @@ function PickerBody({
       if (!live.current || n !== pickN.current) return;
       setReading(null);
     }
-    if (!load(view.pattern, { id: null, name: view.name, libraryId: view.id })) {
+    if (!page.current.load(view.pattern, { id: null, name: view.name, libraryId: view.id })) {
       setStatus(`${row.name} cannot be played.`);
       return;
     }
-    onPicked?.();
+    page.current.onPicked?.();
     onDone();
   };
 
@@ -302,6 +320,7 @@ function PickerBody({
             )}
           </section>
         )}
+        {ranked.state === 'off' && line('Waiting for the sound on the panel to load…', 'status')}
         {ranked.state === 'reading' &&
           line('Listening to the patch to put the library in order for it…', 'status')}
         {ranked.state === 'error' &&

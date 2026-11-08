@@ -311,6 +311,22 @@ describe('the pattern picker beside Play', () => {
     expect(button('Stop')).toBeTruthy();
   });
 
+  it('marks the sound’s default as what plays while the riff is held, and picking it loads nothing', async () => {
+    serve({ '/api/v1/synths/model-d/sounds/fat-bass/patterns': [ROLLING] });
+    page();
+    fireEvent.click(picker());
+    const own = await screen.findByRole('list', { name: 'Fat bass’s patterns' }, { timeout: 3000 });
+    const dflt = within(own).getByRole('button', { name: /Rolling eighths/ });
+    expect(dflt.getAttribute('aria-current')).toBe('true');
+    await act(async () => {
+      fireEvent.click(dflt);
+    });
+    expect(screen.queryByRole('dialog', { name: 'Patterns' })).toBeNull();
+    expect(picker().getAttribute('aria-label')).toBe(
+      'Choose what Play plays (now: The patch’s riff)'
+    );
+  });
+
   it('goes back to the new patch’s riff when another patch is chosen', async () => {
     page();
     fireEvent.click(picker());
