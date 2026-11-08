@@ -92,6 +92,10 @@
       "reason": "In the style of Joe Zawinul: it names no work, and the batch’s “Birdland: the theme”, “Black Market: the ARP theme, on the upside-down keys” and “A Remark You Made: the synthesizer lead” are other kinds of part than its chords, so the chords are the lesson’s own."
     },
     {
+      "sound": "b2600/b2600-birdland-duo-line",
+      "reason": "In the style of Joe Zawinul on “Birdland”: the batch’s “Birdland: the theme” is one line, and the sound is a DUO patch whose riff plays every note as a pair a fifth or sixth apart, one key for each oscillator. On one line both oscillators would play the same note and the pairs that make the sound would be gone."
+    },
+    {
       "sound": "jupiter-8/jp8-max-richter",
       "reason": "In the style of Max Richter: it names no work, and the batch’s “Sleep: a slow melody over the drone” is another kind of part than its chords, so the chords are the lesson’s own."
     },
@@ -2236,12 +2240,7 @@
         ],
         "chain": [0]
       },
-      "sounds": [
-        "b2600/jazz-funk-line",
-        "super-gemini/sg-zawinul-lead",
-        "take-5/t5-zawinul-lead",
-        "b2600/b2600-birdland-duo-line"
-      ],
+      "sounds": ["b2600/jazz-funk-line", "super-gemini/sg-zawinul-lead", "take-5/t5-zawinul-lead"],
       "research": {
         "work": "Weather Report, “Birdland”, Heavy Weather, 1977",
         "part": "The main theme, eight bars: the held D and its two short Ds, the fall C B A G, the turn on B, D and G, and back up to D.",
@@ -2254,7 +2253,7 @@
             "url": "https://www.songsterr.com/a/wsa/weather-report-birdland-tab-s20757"
           }
         ],
-        "notes": "From the transcription’s tenor track, bars 76–83, ties merged; it ends where the theme starts again, so the loop leads into itself. On the record Zawinul’s synthesizer and Shorter’s saxophone play the theme together, and the transcription’s own synthesizer tracks have the counter-line there, so the tenor’s is the one taken. The sounds on it name the work or Zawinul with it. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s tenor track, bars 76–83, ties merged; it ends where the theme starts again, so the loop leads into itself. On the record Zawinul’s synthesizer and Shorter’s saxophone play the theme together, and the transcription’s own synthesizer tracks have the counter-line there, so the tenor’s is the one taken. The two Birdland sounds name the work; the Super Gemini one names Zawinul and Birdland too. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },

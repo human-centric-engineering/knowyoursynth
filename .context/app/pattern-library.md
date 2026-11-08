@@ -856,14 +856,15 @@ added 131 sounds by artists a batch covers:
   sounds ("Both sounds are single-voiced", "The sound names the album") were reworded, and two say which sound they
   were written for.
 
-**The K-2, 2600, Kobol and WASP Deluxe sounds (t-196)**, placed by the same rules. Of their 344 new sounds, 4 are by
-artists a batch covers, all on the 2600; the rest name artists, genres and traditions no batch lists.
+**The K-2, 2600, Kobol and WASP Deluxe sounds (t-196)**, placed by the same rules. Of their 344 new sounds, 5 are by
+artists a batch covers, four on the 2600 and one on the WASP Deluxe; the rest name artists, genres and traditions no
+batch lists.
 
-- **1 sits on a pattern**: the DUO line naming "Birdland" is on Birdland's theme, within six semitones of its riff.
-  Its riff plays pairs of notes, so a mono pattern is allowed. The pattern's note that counted its two Birdland sounds
-  now holds for all of them.
-- **3 keep a reason**: two name works that have no pattern yet ("Blue Wind", "Oxygène (Part II)"), and the third is
-  a sample-and-hold effect whose riff only holds a key.
+- **None sits on a pattern.** The DUO line naming "Birdland" would fit Birdland's theme by register, but it plays
+  every note as a pair, one key for each oscillator, and on the theme's single line both would play the same note.
+- **5 keep a reason**: the DUO line, for that; the WASP Deluxe's Vince Clarke arpeggio naming "Oh L'amour", whose work
+  has only its bass line; two name works that have no pattern yet ("Blue Wind", "Oxygène (Part II)"); and the fifth is
+  a sample-and-hold effect whose riff only holds two long keys in turn.
 
 ## Rights
 

@@ -8997,12 +8997,12 @@
     },
     {
       "id": "k2-warm-leatherette-drone-bass",
-      "name": "Cold Two-Note Drone Bass",
+      "name": "Cold Semitone Stab Bass",
       "ref": "In the style of The Normal — \"Warm Leatherette\" (1978)",
       "artist": "The Normal",
       "tags": ["bass", "minimal wave", "post-punk", "70s"],
       "level": 1,
-      "blurb": "A stark, buzzing bass that rocks between two notes a semitone apart, with a hard edge from the high-pass peak.",
+      "blurb": "A stark, buzzing bass that stabs back and forth across a semitone, then lifts to a third note at the end of the bar, with a hard edge from the high-pass peak.",
       "how": "One reverse sawtooth, a low-pass left fairly open and a little high-pass peak, which gives the low notes a hard, nasal edge rather than a round thump. Envelope 2 cuts each note off short, so the line is a run of stabs rather than a hum. This describes the style of playing, not the exact sound on the record.",
       "phrase": {
         "bpm": 132,

@@ -36,6 +36,10 @@
       "reason": "Its arpeggiator plays the line from the chords its riff holds; it names a style, not one work, and the batch’s “Don’t Go: riff”, “Don’t Go: bass”, “Only You: arpeggio” and “Situation: synth bass” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
     },
     {
+      "sound": "wasp-deluxe/wasp-oh-lamour-pop-arp",
+      "reason": "The batch has the work’s bass line (“Oh L’amour: bass”), not the part this arpeggio plays; the riff is written to the style and taken from no record."
+    },
+    {
       "sound": "jupiter-6/jp6-league-bass",
       "reason": "The batch’s “Don’t You Want Me: synth riff” and “Don’t You Want Me: riff, top line” are other parts of the work; this sound plays the bass line, a part that is the lesson’s own, written to the style rather than taken from the record."
     }
