@@ -27,6 +27,7 @@ import { apiClient } from '@/lib/api/client';
 import { importPhrase } from '@/lib/app/sequencer/import';
 import { patternFacts } from '@/lib/app/patterns/library-facts';
 import type { LibraryPatternView } from '@/lib/app/patterns/library';
+import { ROLE_LABELS } from '@/lib/app/patterns/library-labels';
 import type { SuggestResult } from '@/lib/app/patterns/suggest-read';
 import type { Phrase, Preset, SynthDef } from '@/lib/app/synths/contract';
 import { getSynthDef } from '@/lib/app/synths/defs';
@@ -58,7 +59,7 @@ vi.mock('@/lib/api/client', () => ({
           id: pattern.id,
           role: pattern.role,
           score: 0.4,
-          reason: `slow attack, holds → ${pattern.role}`,
+          reason: `slow attack, holds → ${ROLE_LABELS[pattern.role].toLowerCase()}`,
           pattern,
         })),
       };
@@ -212,7 +213,7 @@ describe('Suits this sound', () => {
     expect(groups).toEqual([`${BASS.name}’s patterns`, 'Suits this sound']);
     const suits = within(screen.getByRole('list', { name: 'Suits this sound' }));
     expect(suits.getByRole('button', { name: /Long note/ }).getAttribute('title')).toBe(
-      'Slow attack, holds → held'
+      'Slow attack, holds → drone'
     );
     expect(screen.getByText('Slow attack, holds → drone, chord changes')).toBeTruthy();
     expect(post()).toHaveBeenCalledTimes(1);

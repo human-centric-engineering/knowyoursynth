@@ -45,7 +45,7 @@ export interface SuggestResult {
     role: PatternRole;
     register: KindRegister;
     traits: string[];
-    /** `slow attack, low register → held, slow melody`. */
+    /** `slow attack, low register → drone, slow melody`. */
     summary: string;
   } | null;
   /** Best first, each with the pattern, so the picker reads nothing more. */

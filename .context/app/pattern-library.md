@@ -74,7 +74,7 @@ Of the names suggested in 2026-10:
 - **Fx** is not a role. An fx sound's riff is a trigger: a held note, or a few hits.
 
 The **default role rule** proposes a role for a pattern and for each current riff. A person can always override it.
-The terms are exact, so t-122 could implement the rule and reproduce the 2,293 migrated riffs' counts:
+The terms are exact, so t-122 could implement the rule from them:
 
 - The **loop** is `phraseBeats`: the last note's end, rounded up to a whole beat.
 - An **onset** is a distinct start time, so a chord is one onset. A **chord** is an onset with two or more notes.
@@ -115,7 +115,7 @@ melody, 58 Chord changes, 56 Lead line, 42 Arp / sequence, 22 Bass line, 11 Perc
 melody's inspirations lead with Brian Eno (31), Daniel Lanois (20), Blade Runner, Vangelis, Tangerine Dream, Harold
 Budd, William Basinski and Stars of the Lid. But only 156 of its 454 patterns are on ambient-tagged sounds; by
 category they are on lead (168), pad (98), keys (63), strings (34), fx (30), drone (22), wind (21) and brass (18)
-sounds. The rest include "Wachet auf: the chorale", "Rise: trumpet melody" and "Symphonic Prog Lead".
+sounds, and 21 more on the other four categories. The rest include "Wachet auf: the chorale", "Rise: trumpet melody" and "Symphonic Prog Lead".
 
 So the notes alone can't tell an ambient line from a chorale. Ambient's rule reads something besides the notes, such as
 the sounds a pattern is placed on or what it is inspired by. That reverses [Roles](#roles)' "never copied from the
@@ -1491,7 +1491,7 @@ The model records the inputs it was fitted to. If the features change without a 
 the agreement test does.
 
 Tested in `tests/unit/lib/app/synths/lib/soundkind.test.ts`, on hand-built patches the model was never fitted to: a
-plucked bass reads as bass for a bass line in the low register, a long-attack pad as pad for held parts, a noise sweep
+plucked bass reads as bass for a bass line in the low register, a long-attack pad as pad for drones, a noise sweep
 as fx. Also tested there: the same patch twice, a pad edited into a pluck, and silence. The fit is tested in
 `soundkind-fit.test.ts`, and the library in `soundkind-library.test.ts`.
 
@@ -1547,7 +1547,7 @@ it is kept for a minute: an admin's edit, or a pattern disabled (t-156), reaches
 2. **Roles take places in proportion to their share.** A role with less than 5% of the sound's role shares isn't
    offered. Each place goes to the role with the highest quotient: its share times its next pattern's fit, over the
    places it already has plus one (D'Hondt). So the best-suited role leads, and the others come in as its quotient
-   falls. A bass gets mostly bass lines, a pad a mix of held parts, chord changes and slow melodies.
+   falls. A bass gets mostly bass lines, a pad a mix of drones, chord changes and slow melodies.
 3. **Within a role, fit orders them**, from 0 to 1:
    - **Register.** How far the pattern's median note is from the register's centre (D2, D4, E5 for low, mid, high), as
      a bell curve one octave wide: 0.61 an octave away, 0.14 two.
@@ -1569,7 +1569,7 @@ What it doesn't weigh yet: tempo range, and slides against a synth with no glide
 patch glides).
 
 Tested in `tests/unit/lib/app/patterns/suggest.test.ts`, over every library riff and hand-built patches: a bass patch
-gets bass lines first, a pad held parts, chord changes and slow melodies, a noise hit percussive patterns, and a mono
+gets bass lines first, a pad drones, chord changes and slow melodies, a noise hit percussive patterns, and a mono
 patch no pattern with chords, of 200 asked for. Also the lift, the threshold on a real Model D sound, and the schema.
 The endpoint is tested in `tests/unit/app/api/v1/library-patterns-suggest.test.ts` (validation, the reads, the kept
 library, the section cap), the picker group in `tests/unit/components/app/sequencer/suggested-patterns.test.tsx` (as it
