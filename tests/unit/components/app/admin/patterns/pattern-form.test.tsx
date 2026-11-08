@@ -189,6 +189,39 @@ describe('PatternForm', () => {
     expect(sent()).toEqual({ tempo: null, sources: [] });
   });
 
+  it('refuses a source link that is not a web address before sending, naming the source', async () => {
+    const user = userEvent.setup();
+    const source = { type: 'by_ear' as const, citation: 'By ear', checkedAt: '2026-10-31' };
+    render(
+      <PatternForm pattern={adminLibraryPattern({ sources: [source, source] })} choices={CHOICES} />
+    );
+
+    await user.type(
+      within(screen.getByRole('group', { name: 'Source 2' })).getByLabelText('Link'),
+      'example.com/lesson'
+    );
+    await user.click(save());
+
+    expect(patch).not.toHaveBeenCalled();
+    const sources = screen.getByRole('group', { name: /^Sources/ });
+    expect(
+      within(sources).getByText('Source 2: the link must start with https:// or http://.')
+    ).toBeInTheDocument();
+
+    await user.clear(
+      within(screen.getByRole('group', { name: 'Source 2' })).getByLabelText('Link')
+    );
+    await user.type(
+      within(screen.getByRole('group', { name: 'Source 2' })).getByLabelText('Link'),
+      'https://example.com/lesson'
+    );
+    await user.click(save());
+
+    expect(sent()).toEqual({
+      sources: [source, { ...source, url: 'https://example.com/lesson' }],
+    });
+  });
+
   it('shows each problem the server names on its field, and the refusal’s message', async () => {
     const user = userEvent.setup();
     patch.mockRejectedValueOnce(

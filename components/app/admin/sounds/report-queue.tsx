@@ -23,7 +23,7 @@ import { VISIBILITY_LABELS } from '@/components/app/sharing/visibility';
 import { patternHref, sharedSoundHref } from '@/components/app/synth/routes';
 import { SaveError } from '@/components/forms/form-error';
 import { Button } from '@/components/ui/button';
-import { APIClientError, apiClient } from '@/lib/api/client';
+import { apiClient } from '@/lib/api/client';
 import {
   SOUND_REPORT_REASON_LABELS,
   type ModerationAction,
@@ -97,7 +97,7 @@ function QueueCard({ sound: s }: { sound: QueueItem }) {
       // Stays busy until the refresh moves this card, so an action cannot be sent twice.
       router.refresh();
     } catch (err) {
-      save.show(err instanceof APIClientError ? err.message : 'Could not save that. Try again.');
+      save.report(err);
       setBusy(null);
     }
   };
@@ -179,9 +179,11 @@ function QueueCard({ sound: s }: { sound: QueueItem }) {
           </Button>
         )}
       </div>
-      <div className="mt-2">
-        <SaveError failure={save.failure} />
-      </div>
+      {save.failure && (
+        <div className="mt-2">
+          <SaveError failure={save.failure} />
+        </div>
+      )}
     </article>
   );
 }

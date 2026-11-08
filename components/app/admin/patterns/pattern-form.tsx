@@ -161,6 +161,15 @@ const sourcesInput = (sources: SourceDraft[]): PatternSource[] =>
     checkedAt: s.checkedAt,
   }));
 
+/** Whether a source's link is one the server takes (`PatternSourceSchema`): an http(s) address. */
+function isWebAddress(url: string): boolean {
+  try {
+    return ['http:', 'https:'].includes(new URL(url).protocol);
+  } catch {
+    return false;
+  }
+}
+
 /** Today in the admin's own calendar, `YYYY-MM-DD`: a new source's checked date. */
 function today(): string {
   const now = new Date();
@@ -256,6 +265,22 @@ export function PatternForm({ pattern, choices }: PatternFormProps) {
   async function submit(e: FormEvent) {
     e.preventDefault();
     if (!changed || readOnly) return;
+    // The browser's `type="url"` check is off under noValidate; this one names the source, which the server's cannot.
+    const badLinks = draft.sources.flatMap((s, i) =>
+      s.url.trim() && !isWebAddress(s.url.trim())
+        ? [
+            {
+              path: `sources.${i}.url`,
+              message: `Source ${i + 1}: the link must start with https:// or http://.`,
+            },
+          ]
+        : []
+    );
+    if (badLinks.length > 0) {
+      setRefusal({ message: 'Check the sources before saving.', problems: badLinks });
+      setStatus(null);
+      return;
+    }
     setSaving(true);
     setRefusal(null);
     setStatus(null);

@@ -28,7 +28,7 @@ import { SaveError } from '@/components/forms/form-error';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { FieldHelp } from '@/components/ui/field-help';
-import { APIClientError, apiClient } from '@/lib/api/client';
+import { apiClient } from '@/lib/api/client';
 import type { OwnerRef } from '@/lib/app/links/owner';
 import { useSaveFailure } from '@/lib/hooks/use-save-failure';
 
@@ -100,9 +100,7 @@ export function LinksPanel({ owner: given }: LinksPanelProps) {
       await apiClient.put(`${LINKS_API}/order`, { body: { owner, ids } });
     } catch (error) {
       setLinks(previous);
-      save.show(
-        error instanceof APIClientError ? error.message : 'The new order could not be saved.'
-      );
+      save.report(error);
       void load();
     } finally {
       setMoving(false);
