@@ -240,7 +240,14 @@ export interface RiffPatternRow extends Inspiration {
  * them, _In the style of_ (no riff was researched), and _AI-generated_ (owner ruling, 2026-10-31). Pure.
  */
 export function planRiffPattern(
-  sound: { synthId: string; slug: string; name: string; artist: string; phrase: Phrase },
+  sound: {
+    synthId: string;
+    slug: string;
+    name: string;
+    artist: string;
+    tags: string[];
+    phrase: Phrase;
+  },
   ctx: InspirationContext
 ): RiffPatternRow {
   const pattern = importPhrase(sound.phrase);
@@ -250,7 +257,7 @@ export function planRiffPattern(
     name: sound.name,
     pattern: toJson(pattern),
     version: PATTERN_VERSION,
-    role: defaultRole(notes, beats),
+    role: defaultRole(notes, beats, [sound.tags]),
     fidelity: 'in_the_style_of',
     origin: 'ai_generated',
     madeBy: RIFF_MADE_BY,
@@ -335,6 +342,7 @@ export async function syncRiffPatterns(
       slug: true,
       name: true,
       artist: true,
+      tags: true,
       phrase: true,
       patterns: PLACES,
     },
