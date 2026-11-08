@@ -4,6 +4,10 @@
   "researchedAt": "2026-11-02",
   "notRecreated": [
     {
+      "sound": "b2600/b2600-rain-dance-sh-burble",
+      "reason": "The patch plays itself: the sample and hold throws a new random pitch and brightness on every tick of its clock, which also fires the envelopes, and the riff only holds two long keys, one after the other, to set the base pitch. There is no part to write."
+    },
+    {
       "sound": "neutron/delay-time-scratch",
       "reason": "The sound imitates the turntable scratches on “Rockit”, which are Grand Mixer D.ST’s, made with a record rather than played as notes. There is no part to write."
     },

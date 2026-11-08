@@ -92,6 +92,10 @@
       "reason": "In the style of Joe Zawinul: it names no work, and the batch’s “Birdland: the theme”, “Black Market: the ARP theme, on the upside-down keys” and “A Remark You Made: the synthesizer lead” are other kinds of part than its chords, so the chords are the lesson’s own."
     },
     {
+      "sound": "b2600/b2600-birdland-duo-line",
+      "reason": "In the style of Joe Zawinul on “Birdland”: the batch’s “Birdland: the theme” is one line, and the sound is a DUO patch whose riff plays every note as a pair a fifth or sixth apart, one key for each oscillator. On one line both oscillators would play the same note and the pairs that make the sound would be gone."
+    },
+    {
       "sound": "jupiter-8/jp8-max-richter",
       "reason": "In the style of Max Richter: it names no work, and the batch’s “Sleep: a slow melody over the drone” is another kind of part than its chords, so the chords are the lesson’s own."
     },

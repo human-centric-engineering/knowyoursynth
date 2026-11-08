@@ -214,10 +214,10 @@ unusual-notes file.
 | Behringer Model D        | `model-d`      |       48 |    15 |    200 | dsp-core                     | m1, m2    | The pattern for the rest                                        |
 | Behringer Neutron        | `neutron`      |       43 |    56 |    200 | dsp-core                     | p1        | Uses every optional faceplate look                              |
 | Behringer Pro-1          | `pro1`         |       55 |    15 |     98 | dsp-core                     | p1        |                                                                 |
-| Behringer K-2            | `k2`           |       38 |    34 |     93 | dsp-core                     | p1        | Two filters in series                                           |
-| Behringer 2600           | `b2600`        |       81 |    92 |     93 | dsp-core                     | p1        | Most functions of any synth (134); added engine features        |
-| Behringer Kobol Expander | `kobol`        |       29 |    33 |     40 | dsp-core                     | p1        | Has a manual extract                                            |
-| Behringer WASP Deluxe    | `wasp-deluxe`  |       30 |     5 |     30 | dsp-core                     | p1        | Has a manual extract                                            |
+| Behringer K-2            | `k2`           |       38 |    34 |    150 | dsp-core                     | p1        | Two filters in series                                           |
+| Behringer 2600           | `b2600`        |       81 |    92 |    150 | dsp-core                     | p1        | Most functions of any synth (134); added engine features        |
+| Behringer Kobol Expander | `kobol`        |       29 |    33 |    150 | dsp-core                     | p1        | Has a manual extract                                            |
+| Behringer WASP Deluxe    | `wasp-deluxe`  |       30 |     5 |    150 | dsp-core                     | p1        | Has a manual extract                                            |
 | Roland TB-303            | `tb-303`       |       35 |     6 |     20 | dsp-core                     | p1        | Fewest functions (5)                                            |
 | Behringer TD-3           | `td-3`         |       39 |     5 |     20 | dsp-core                     | p1        |                                                                 |
 | Moog Grandmother         | `grandmother`  |       35 |    35 |      8 | dsp-core                     | p1        | Has a manual extract                                            |

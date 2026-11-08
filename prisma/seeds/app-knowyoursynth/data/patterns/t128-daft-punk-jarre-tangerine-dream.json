@@ -4,6 +4,10 @@
   "researchedAt": "2026-11-01",
   "notRecreated": [
     {
+      "sound": "b2600/b2600-oxygene-ii-soaring-lead",
+      "reason": "The sound names “Oxygène (Part II)”, which has no pattern yet. The batch’s Oxygène patterns are from Part IV, and a string line credited to the album, which is another part."
+    },
+    {
       "sound": "b2600/daftpunk-rising-siren",
       "reason": "The siren on “Contact” is a riser swept by the patch, not a part with notes. The Songsterr transcription (Christian Ciro M., 2026) writes its synths as held notes that a sweep starts from, so there is nothing to recreate."
     },

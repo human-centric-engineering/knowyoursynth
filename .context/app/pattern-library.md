@@ -856,6 +856,16 @@ added 131 sounds by artists a batch covers:
   sounds ("Both sounds are single-voiced", "The sound names the album") were reworded, and two say which sound they
   were written for.
 
+**The K-2, 2600, Kobol and WASP Deluxe sounds (t-196)**, placed by the same rules. Of their 344 new sounds, 5 are by
+artists a batch covers, four on the 2600 and one on the WASP Deluxe; the rest name artists, genres and traditions no
+batch lists.
+
+- **None sits on a pattern.** The DUO line naming "Birdland" would fit Birdland's theme by register, but it plays
+  every note as a pair, one key for each oscillator, and on the theme's single line both would play the same note.
+- **5 keep a reason**: the DUO line, for that; the WASP Deluxe's Vince Clarke arpeggio naming "Oh L'amour", whose work
+  has only its bass line; two name works that have no pattern yet ("Blue Wind", "Oxygène (Part II)"); and the fifth is
+  a sample-and-hold effect whose riff only holds two long keys in turn.
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on
@@ -1362,11 +1372,11 @@ octave above its key, or is thin at the bottom (the low note 9 dB or more below 
 
 #### Agreement with the library
 
-Measured on 2026-11-07 over the library's 3,391 sounds:
+Measured on 2026-11-08 over the library's 3,735 sounds:
 
-- **The detector reads the sound's own category for 1,676 of them (49.4%).** Picking the commonest category, bass, every
+- **The detector reads the sound's own category for 1,861 of them (49.8%).** Picking the commonest category, bass, every
   time would get 18.3%.
-- **Cross-validated: 1,655 (48.8%).** Each fifth of the library is measured on a model fitted to the other four fifths.
+- **Cross-validated: 1,819 (48.7%).** Each fifth of the library is measured on a model fitted to the other four fifths.
 - **4 sounds are silent on the probe notes**: `model-d/just-intonation-drone`, `model-d/slow-breaking-waves`,
   `pro-1/filter-clave` and `malevolent/mal-extreme`. `check:synths` hears each one play its riff, so they do make sound, but not on a held G3 within
   the probe's 0.85 s. Why has not been looked into. They count as disagreements.
@@ -1375,7 +1385,7 @@ When it was last measured there (t-191), CI's Linux x64 read one fx sound as lea
 the platforms' maths can differ in the last bit, and a sound near a feature's threshold can tip. The figures here are
 the macOS ones.
 
-`soundkind-library.test.ts` pins the 49.4% (its floor is one sound below the macOS count, for that tip), so a change to the probe, the engine, the features or the library can't
+`soundkind-library.test.ts` pins the 49.8% (its floor is one sound below the macOS count, for that tip), so a change to the probe, the engine, the features or the library can't
 make the detector worse without someone deciding it should. It renders the whole library, about three minutes of CPU,
 so it is the slowest test in the app. It sweeps on two worker threads rather than one per core: a sweep across every
 core starved the tests vitest runs alongside it into timeouts. It runs when something it imports changes (the probe
@@ -1386,18 +1396,18 @@ sound was read as strings or wind, so those columns are left out.
 
 | Label   |    bass |    lead |     pad |  pluck |    keys |      fx |  drone |    perc |    seq | brass | silent | Agree |
 | ------- | ------: | ------: | ------: | -----: | ------: | ------: | -----: | ------: | -----: | ----: | -----: | ----: |
-| bass    | **508** |      32 |       4 |      2 |      28 |       4 |      6 |      11 |     24 |     · |      · |   82% |
-| lead    |      80 | **348** |      33 |      4 |      43 |      22 |      2 |       4 |      6 |     · |      · |   64% |
-| pad     |       · |      20 | **248** |      · |      18 |      11 |     11 |       1 |     13 |     · |      · |   77% |
-| pluck   |      31 |      20 |       6 | **20** |      79 |       2 |      · |      14 |     13 |     · |      · |   11% |
-| keys    |      51 |      60 |      23 |     14 | **205** |       5 |      3 |      10 |     27 |     3 |      · |   51% |
-| fx      |      42 |      83 |      22 |      5 |      17 | **121** |      9 |      29 |     27 |     · |      2 |   34% |
-| drone   |      14 |      33 |      38 |      · |       4 |      14 | **35** |       · |      6 |     · |      1 |   24% |
-| perc    |      44 |      14 |       · |      4 |      35 |      18 |      2 | **109** |     13 |     · |      1 |   45% |
-| seq     |      60 |      24 |      18 |     15 |      50 |      20 |      5 |      10 | **77** |     · |      · |   28% |
-| brass   |      11 |      22 |      28 |      · |      32 |       · |      · |       · |      1 | **5** |      · |    5% |
-| strings |       5 |      22 |      60 |      · |      13 |       1 |      1 |       · |      2 |     · |      · |    0% |
-| wind    |      12 |      67 |       6 |      · |       4 |       6 |      1 |       · |      2 |     · |      · |    0% |
+| bass    | **563** |      36 |       4 |      5 |      26 |       5 |      6 |       9 |     28 |     · |      · |   83% |
+| lead    |      80 | **394** |      33 |      8 |      49 |      24 |      3 |       3 |      8 |     · |      · |   65% |
+| pad     |       · |      23 | **277** |      · |      19 |      11 |     10 |       1 |     13 |     · |      · |   78% |
+| pluck   |      41 |      18 |       6 | **39** |      82 |       3 |      · |      11 |     14 |     · |      · |   18% |
+| keys    |      60 |      63 |      24 |     18 | **216** |       5 |      3 |      12 |     33 |     4 |      · |   49% |
+| fx      |      39 |      92 |      23 |      5 |      17 | **133** |     10 |      29 |     29 |     · |      2 |   35% |
+| drone   |      15 |      34 |      46 |      · |       4 |      14 | **34** |       · |      6 |     · |      1 |   22% |
+| perc    |      48 |      14 |       · |      8 |      34 |      18 |      2 | **117** |     15 |     · |      1 |   46% |
+| seq     |      82 |      25 |      21 |     23 |      52 |      21 |      5 |      11 | **84** |     · |      · |   26% |
+| brass   |      13 |      27 |      30 |      · |      33 |       · |      · |       · |      · | **4** |      · |    4% |
+| strings |       7 |      27 |      63 |      · |      13 |       1 |      1 |       · |      2 |     · |      · |    0% |
+| wind    |      12 |      75 |       6 |      · |       5 |      11 |      1 |       · |      · |     · |      · |    0% |
 
 #### The disagreements
 
@@ -1405,7 +1415,7 @@ The review on 2026-10-31 sorted the disagreements by how sure the detector was. 
 are not a wrong detector. They are a label on a different axis from the sound:
 
 - **Orchestral names.** _Strings_, _wind_ and _brass_ name the instrument a patch imitates, not how it behaves. A string
-  ensemble swells and holds like a pad (60 of 104 read as pad), and a synth flute plays like a lead (67 of 98). The
+  ensemble swells and holds like a pad (63 of 114 read as pad), and a synth flute plays like a lead (75 of 110). The
   detector hears timbre the way a filter shapes it, and none of its features can hear formants. These three
   categories are where it is weakest, and suggestions lose almost nothing by it, because the roles that suit a string
   pad are the roles that suit a pad.
@@ -1414,7 +1424,7 @@ are not a wrong detector. They are a label on a different axis from the sound:
   and a bass clarinet (`neutron/bitches-brew-bass-clarinet`, wind) read as bass too.
 - **Drones that are pads.** A slow-attack, held, polyphonic drone (`deepmind-12d/cosmic-drone`, `pro-800/p8-drone`)
   reads as pad. Drone and pad suit much the same roles, led by _Held_ (see [Category to role](#category-to-role)).
-- **Pluck against keys.** 79 of the 185 plucks read as keys. A pluck and an electric piano both start at once and decay
+- **Pluck against keys.** 82 of the 214 plucks read as keys. A pluck and an electric piano both start at once and decay
   while held, and the probe can't tell a decay that is the sound from one that is the player's.
 
 The detector is plainly wrong on a few kinds:

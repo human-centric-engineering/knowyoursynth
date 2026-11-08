@@ -91,7 +91,7 @@ describe('the research batches', () => {
   /** Each batch's artists and how many of their sounds the catalogue held when it was researched. */
   const rosters: [string, string[], number][] = [
     ['t-127', ['Kraftwerk', 'Depeche Mode'], 54],
-    ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 94],
+    ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 95],
     ['t-129', ['Brian Eno', 'Daniel Lanois', 'Vangelis', 'Boards of Canada'], 92],
     [
       't-160',
@@ -128,7 +128,7 @@ describe('the research batches', () => {
         'Public Enemy',
         'Whitney Houston',
       ],
-      121,
+      122,
     ],
     [
       't-161',
@@ -163,7 +163,7 @@ describe('the research batches', () => {
         'The Cure',
         'Tubeway Army',
       ],
-      95,
+      96,
     ],
     [
       't-162',
@@ -237,7 +237,7 @@ describe('the research batches', () => {
         'Walter Murch',
         'Yann Tiersen',
       ],
-      121,
+      122,
     ],
     [
       't-164',
@@ -469,7 +469,7 @@ describe('the research batches', () => {
         'Yo-Yo Ma',
         'Yoshida Brothers',
       ],
-      143,
+      144,
     ],
   ];
 

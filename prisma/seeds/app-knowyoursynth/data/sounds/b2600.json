@@ -8464,6 +8464,4748 @@
           "hear": "Both voices follow one key, so the harmony goes and every change slides the whole sound."
         }
       ]
+    },
+    {
+      "id": "b2600-supernature-octave-bass",
+      "name": "Cosmic Disco Sequencer Bass",
+      "ref": "In the style of Cerrone — \"Supernature\" (Supernature (Cerrone III), 1977)",
+      "artist": "Cerrone",
+      "tags": ["bass", "disco", "space disco", "70s"],
+      "level": 2,
+      "blurb": "A dark, resonant bass pulsing in eighths, with a pulse wave an octave below giving it a deep floor.",
+      "how": "VCO 3’s sawtooth plays the notes and VCO 1’s pulse sits an octave under it, both into the filter through their own sliders. The resonant filter is opened briefly by the ADSR on every note, so the line pulses with a liquid edge. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 45, 0.4],
+          [0.5, 45, 0.4],
+          [1, 57, 0.4],
+          [1.5, 45, 0.4],
+          [2, 43, 0.4],
+          [2.5, 43, 0.4],
+          [3, 55, 0.4],
+          [3.5, 43, 0.4],
+          [4, 41, 0.4],
+          [4.5, 41, 0.4],
+          [5, 53, 0.4],
+          [5.5, 41, 0.4],
+          [6, 43, 0.4],
+          [6.5, 43, 0.4],
+          [7, 55, 0.4],
+          [7.5, 47, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth and a pulse an octave down",
+          "module": "osc",
+          "why": "Each VCO reaches the filter through its own slider in the VCF AUDIO row.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz: in tune with the keys.\n- VCF AUDIO VCO 3 7 · 70%.\n- VCO 1 FREQUENCY 3.8 · 131 Hz (C3) · LF 0.39 Hz: an octave below VCO 3.\n- VCO 1 PULSE WIDTH 50 · 50% duty: a square.\n- VCF AUDIO VCO 1 6 · 60%.\n- Listen for: a thick, low bass with a hollow floor.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 7,
+            "vco1.freq": 3.755,
+            "vco1.pw": 50,
+            "vcf.vco1": 6
+          }
+        },
+        {
+          "title": "A resonant filter",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) sits low with some resonance, opened a little on each note by the ADSR (attack, decay, sustain, release envelope).\n- VCF FREQUENCY 4.2 · 171 Hz.\n- VCF RESONANCE 5 · 50%.\n- VCF CONTROL KYBD CV 5 · 50%: higher notes open it a little more.\n- VCF CONTROL ADSR 4.5 · 45%.\n- Listen for: a dark bass with a ringing pluck.",
+          "set": {
+            "vcf.freq": 4.2,
+            "vcf.res": 5,
+            "vcf.kbd": 5,
+            "vcf.adsr": 4.5
+          }
+        },
+        {
+          "title": "Pulsing notes",
+          "module": "env",
+          "why": "The ADSR opens the filter and, through the VCA’s exponential input, the loudness.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 4 · 130 ms.\n- ADSR SUSTAIN 3 · 30%.\n- ADSR RELEASE 2 · 27 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: a pulsing, liquid disco bass.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 4,
+            "adsr.s": 3,
+            "adsr.r": 2,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        }
+      ],
+      "context": {
+        "vcf.res": "In this sound: the liquid ring. Past 8 it whistles.",
+        "vcf.vco1": "In this sound: the floor under the line."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.adsr",
+          "try": "Raise to 7",
+          "hear": "A squelchier, more electronic pulse."
+        },
+        {
+          "id": "vcf.vco1",
+          "try": "Lower to 0",
+          "hear": "Only the sawtooth: a lighter, brighter bass."
+        }
+      ]
+    },
+    {
+      "id": "b2600-bootzilla-envelope-filter-bass",
+      "name": "Envelope-Filter Funk Bass",
+      "ref": "In the style of Bootsy Collins — \"Bootzilla\" (Bootsy? Player of the Year, 1978)",
+      "artist": "Bootsy Collins",
+      "tags": ["bass", "funk", "p-funk", "70s"],
+      "level": 3,
+      "blurb": "A rubbery funk bass whose filter opens wider the harder each note hits, like a bass through an envelope-filter pedal.",
+      "how": "An envelope-filter pedal follows how loud the bass is and opens a filter with it. The 2600 has the parts: the VCA’s output patched into the PREAMP INPUT, and the ENV FOLLOWER OUTPUT patched into the filter’s ADSR control jack, which takes the ADSR’s place. Each note’s own loudness now opens the resonant filter, and the “wow” follows the playing. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.4],
+          [0.75, 40, 0.2],
+          [1, 52, 0.4],
+          [1.5, 50, 0.2],
+          [1.75, 47, 0.2],
+          [2.5, 40, 0.4],
+          [3, 43, 0.2],
+          [3.25, 45, 0.4],
+          [3.75, 47, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bright pulse",
+          "module": "osc",
+          "why": "VCO 1’s pulse, a little narrow, so the filter has plenty to work with.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 35 · 35% duty.\n- VCF AUDIO VCO 1 8 · 80%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a buzzy, nasal tone.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vco1.pw": 35,
+            "vcf.vco1": 8,
+            "vcf.vco3": 0
+          }
+        },
+        {
+          "title": "A closed, resonant filter",
+          "module": "filter",
+          "why": "The VCF starts low with a strong peak. No ADSR yet: the follower will move it.\n- VCF FREQUENCY 3.8 · 122 Hz.\n- VCF RESONANCE 6.5 · 65%.\n- VCF CONTROL KYBD CV 4 · 40%.\n- VCF CONTROL ADSR 6 · 60%: this slider will set the follower’s depth once its jack is patched.\n- Listen for: a muffled, ringing bass.",
+          "set": {
+            "vcf.freq": 3.8,
+            "vcf.res": 6.5,
+            "vcf.kbd": 4,
+            "vcf.adsr": 6
+          }
+        },
+        {
+          "title": "Tight notes",
+          "module": "env",
+          "why": "The ADSR shapes only the loudness here.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 4.5 · 180 ms.\n- ADSR SUSTAIN 6 · 60%.\n- ADSR RELEASE 2 · 27 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: punchy, dark notes.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 4.5,
+            "adsr.s": 6,
+            "adsr.r": 2,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        },
+        {
+          "title": "Let the loudness open the filter",
+          "module": "patch",
+          "why": "The VCA’s output goes into the preamp, which feeds the envelope follower; the follower goes to the filter.\n- Cable VCA OUTPUT → PREAMP INPUT: the bass listens to itself.\n- Cable ENV FOLLOWER OUTPUT → VCF CONTROL (ADSR): replaces the ADSR at the VCF CONTROL ADSR slider.\n- PREAMP RANGE x10.\n- PREAMP GAIN 6 · 60%.\n- ENV FOLLOWER 7 · 70%: how hard the loudness opens the filter.\n- Listen for: every note saying “wow”, wider on the loud ones.",
+          "set": {
+            "pre.range": "x10",
+            "pre.gain": 6,
+            "envf.sens": 7
+          },
+          "cables": [
+            ["j.vcaOut", "j.preIn"],
+            ["j.envfOut", "j.vcfAdsr"]
+          ]
+        }
+      ],
+      "context": {
+        "envf.sens": "In this sound: the pedal’s sensitivity.",
+        "vcf.res": "In this sound: the rubber in the “wow”."
+      },
+      "tweaks": [
+        {
+          "id": "envf.sens",
+          "try": "Raise to 9",
+          "hear": "A huge, quacking sweep on every note."
+        },
+        {
+          "id": "vcf.freq",
+          "try": "Raise to 5",
+          "hear": "A brighter bass that quacks less."
+        }
+      ]
+    },
+    {
+      "id": "b2600-running-away-synth-bass",
+      "name": "Jazz-Funk Synth Bass",
+      "ref": "In the style of Roy Ayers — \"Running Away\" (Lifeline, 1977)",
+      "artist": "Roy Ayers",
+      "tags": ["bass", "jazz-funk", "soul", "70s"],
+      "level": 1,
+      "blurb": "A warm, round synth bass with a little bite, bouncing through a sunny jazz-funk groove.",
+      "how": "VCO 3’s sawtooth through a filter that is mostly closed, opened a little on each note. The bass sits low and round, the way late-70s jazz-funk records doubled or replaced the bass guitar. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 41, 0.7],
+          [1, 41, 0.2],
+          [1.5, 44, 0.4],
+          [2, 46, 0.4],
+          [2.5, 48, 0.4],
+          [3, 46, 0.4],
+          [3.5, 44, 0.4],
+          [4, 41, 0.7],
+          [5, 41, 0.2],
+          [5.5, 39, 0.4],
+          [6, 41, 0.9],
+          [7, 48, 0.4],
+          [7.5, 46, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth",
+          "module": "osc",
+          "why": "VCO 3’s sawtooth, alone.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 8 · 80%.\n- VCF AUDIO VCO 1 0 · 0%.\n- Listen for: a bright buzz.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 8,
+            "vcf.vco1": 0
+          }
+        },
+        {
+          "title": "Warm and round",
+          "module": "filter",
+          "why": "The filter mostly closed, opened a little by the ADSR.\n- VCF FREQUENCY 3.6 · 103 Hz.\n- VCF RESONANCE 2.5 · 25%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 3.5 · 35%.\n- Listen for: a warm bass with a soft pluck.",
+          "set": {
+            "vcf.freq": 3.6,
+            "vcf.res": 2.5,
+            "vcf.kbd": 5,
+            "vcf.adsr": 3.5
+          }
+        },
+        {
+          "title": "Bouncing notes",
+          "module": "env",
+          "why": "A medium decay with some held level.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 4.5 · 180 ms.\n- ADSR SUSTAIN 5 · 50%.\n- ADSR RELEASE 2.5 · 40 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: a bouncing, warm groove.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 4.5,
+            "adsr.s": 5,
+            "adsr.r": 2.5,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        }
+      ],
+      "context": {
+        "vcf.adsr": "In this sound: the bite at the front of each note."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.res",
+          "try": "Raise to 5",
+          "hear": "A rubberier, more electronic bass."
+        }
+      ]
+    },
+    {
+      "id": "b2600-hot-on-the-heels-random-filter-bass",
+      "name": "Random-Colour Sequencer Bass",
+      "ref": "In the style of Throbbing Gristle — \"Hot on the Heels of Love\" (20 Jazz Funk Greats, 1979)",
+      "artist": "Throbbing Gristle",
+      "tags": ["bass", "industrial", "electronic", "70s"],
+      "level": 3,
+      "blurb": "A cool, mechanical sixteenth-note bass whose filter jumps to a new, random colour on every step.",
+      "how": "The sample-and-hold takes a reading of noise on each tick of its clock and holds it. Its output, patched into the filter’s VCO 2 control jack, replaces VCO 2’s sine there, so the cutoff jumps to a new random place on each tick, set by the slider above. With the clock running at about the riff’s sixteenths, every note has its own colour. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.2],
+          [0.25, 38, 0.2],
+          [0.5, 50, 0.2],
+          [0.75, 38, 0.2],
+          [1, 41, 0.2],
+          [1.25, 38, 0.2],
+          [1.5, 48, 0.2],
+          [1.75, 38, 0.2],
+          [2, 36, 0.2],
+          [2.25, 36, 0.2],
+          [2.5, 48, 0.2],
+          [2.75, 36, 0.2],
+          [3, 43, 0.2],
+          [3.25, 41, 0.2],
+          [3.5, 38, 0.2],
+          [3.75, 36, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pulse",
+          "module": "osc",
+          "why": "VCO 1’s pulse, alone.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 40 · 40% duty.\n- VCF AUDIO VCO 1 8 · 80%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a hollow, buzzy tone.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vco1.pw": 40,
+            "vcf.vco1": 8,
+            "vcf.vco3": 0
+          }
+        },
+        {
+          "title": "A resonant filter",
+          "module": "filter",
+          "why": "Fairly low, with peak, plucked by the ADSR.\n- VCF FREQUENCY 4 · 144 Hz.\n- VCF RESONANCE 6 · 60%.\n- VCF CONTROL KYBD CV 4 · 40%.\n- VCF CONTROL ADSR 3 · 30%.\n- Listen for: a ringing, plucked bass.",
+          "set": {
+            "vcf.freq": 4,
+            "vcf.res": 6,
+            "vcf.kbd": 4,
+            "vcf.adsr": 3
+          }
+        },
+        {
+          "title": "Short notes",
+          "module": "env",
+          "why": "Short and even.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 3.8 · 110 ms.\n- ADSR SUSTAIN 2 · 20%.\n- ADSR RELEASE 2 · 27 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: a tight, mechanical line.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 3.8,
+            "adsr.s": 2,
+            "adsr.r": 2,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        },
+        {
+          "title": "A random colour on each step",
+          "module": "patch",
+          "why": "The sample-and-hold into the filter’s control input.\n- Cable S/H OUT → VCF CONTROL (VCO 2): replaces VCO 2’s sine at the VCF CONTROL VCO 2 slider.\n- VCF CONTROL VCO 2 4 · 40%: the size of the jumps.\n- S&H RATE 7.1 · 7.48 Hz: about sixteenth notes at this tempo.\n- S&H LEVEL 7 · 70%.\n- VCO 1 FM S/H OUT 0 · 0%: the sample-and-hold stays off the pitch.\n- VCO 2 FM S/H OUT 0 · 0%.\n- Listen for: each sixteenth a different brightness, chattering like a machine.",
+          "set": {
+            "vcf.vco2cv": 4,
+            "sh.rate": 7.1,
+            "sh.level": 7,
+            "vco1.fmSh": 0,
+            "vco2.fmSh": 0
+          },
+          "cables": [["j.shOut", "j.vcfVco2Cv"]]
+        }
+      ],
+      "context": {
+        "vcf.vco2cv": "In this sound: how far the colour jumps.",
+        "sh.rate": "In this sound: how often it changes. It runs freely, so it drifts against the beat."
+      },
+      "tweaks": [
+        {
+          "id": "sh.rate",
+          "try": "Lower to 5",
+          "hear": "A new colour every few notes."
+        },
+        {
+          "id": "vcf.res",
+          "try": "Raise to 8",
+          "hear": "Each jump rings like a struck pipe."
+        }
+      ]
+    },
+    {
+      "id": "b2600-vampires-dub-sine-bass",
+      "name": "Deep Dub Sine Bass",
+      "ref": "In the style of Scientist — Scientist Rids the World of the Evil Curse of the Vampires (1981)",
+      "artist": "Scientist",
+      "tags": ["bass", "dub", "reggae", "80s"],
+      "level": 2,
+      "blurb": "A huge, round sine bass that you feel more than hear, with long gaps between its notes.",
+      "how": "VCO 2 has a sine output, but the filter’s VCO 2 input is pre-wired from its pulse. One cable swaps the sine in. A sine has no overtones for the filter to shape, so the filter is left open and the ADSR does the work: a soft start and a slow fade.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.9],
+          [1.5, 38, 0.4],
+          [2, 45, 0.9],
+          [3, 43, 0.4],
+          [3.5, 41, 0.4],
+          [4, 38, 0.9],
+          [6, 36, 0.9],
+          [7, 36, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Swap in the sine",
+          "module": "patch",
+          "why": "VCO 2’s sine into the filter in place of its pulse.\n- Cable VCO 2 SINE → VCF AUDIO (VCO 2): replaces the pulse at the VCF AUDIO VCO 2 slider.\n- VCO 2 FREQUENCY 3.8 · 131 Hz (C3) · LF 0.39 Hz: an octave down.\n- VCF AUDIO VCO 2 9 · 90%.\n- VCF AUDIO VCO 1 0 · 0%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a deep, pure boom.",
+          "set": {
+            "vco2.freq": 3.755,
+            "vcf.vco2": 9,
+            "vcf.vco1": 0,
+            "vcf.vco3": 0
+          },
+          "cables": [["j.vco2sine", "j.vcfVco2"]]
+        },
+        {
+          "title": "Leave the filter open",
+          "module": "filter",
+          "why": "A sine has nothing above it to take away.\n- VCF FREQUENCY 6 · 794 Hz.\n- VCF RESONANCE 0 · 0%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: nothing changes: the sine is already pure.",
+          "set": {
+            "vcf.freq": 6,
+            "vcf.res": 0,
+            "vcf.kbd": 5,
+            "vcf.adsr": 0
+          }
+        },
+        {
+          "title": "A soft, round note",
+          "module": "env",
+          "why": "A short swell and a slow fade.\n- ADSR ATTACK 4.5 · 71 ms.\n- ADSR DECAY 6 · 570 ms.\n- ADSR SUSTAIN 7 · 70%.\n- ADSR RELEASE 6.5 · 840 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 9 · 90%.\n- Listen for: a soft, enormous dub bass.",
+          "set": {
+            "adsr.a": 4.5,
+            "adsr.d": 6,
+            "adsr.s": 7,
+            "adsr.r": 6.5,
+            "vca.adsr": 10,
+            "mix.vca": 9
+          }
+        }
+      ],
+      "context": {
+        "adsr.r": "In this sound: how long the boom hangs after each note."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.vco3",
+          "try": "Raise to 3",
+          "hear": "A little sawtooth over the sine, so the bass speaks on small speakers."
+        }
+      ]
+    },
+    {
+      "id": "b2600-your-love-house-bass",
+      "name": "Warehouse Pulse Bass",
+      "ref": "In the style of Frankie Knuckles — \"Your Love\" (1987)",
+      "artist": "Frankie Knuckles",
+      "tags": ["bass", "house", "chicago", "80s"],
+      "level": 1,
+      "blurb": "A soft, warm pulse of a bass, eighth notes rolling under a deep house record.",
+      "how": "VCO 1’s square, filtered warm, with a soft pluck. The notes are short so the line rolls rather than drones. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 41, 0.3],
+          [0.5, 41, 0.3],
+          [1, 53, 0.3],
+          [1.5, 41, 0.3],
+          [2, 44, 0.3],
+          [2.5, 44, 0.3],
+          [3, 56, 0.3],
+          [3.5, 46, 0.3]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A square",
+          "module": "osc",
+          "why": "VCO 1’s pulse at 50%, a square.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 50 · 50% duty.\n- VCF AUDIO VCO 1 8 · 80%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a hollow tone.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vco1.pw": 50,
+            "vcf.vco1": 8,
+            "vcf.vco3": 0
+          }
+        },
+        {
+          "title": "Warm it",
+          "module": "filter",
+          "why": "Low, with a gentle pluck.\n- VCF FREQUENCY 3.8 · 122 Hz.\n- VCF RESONANCE 3 · 30%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 3 · 30%.\n- Listen for: a warm, soft pluck.",
+          "set": {
+            "vcf.freq": 3.8,
+            "vcf.res": 3,
+            "vcf.kbd": 5,
+            "vcf.adsr": 3
+          }
+        },
+        {
+          "title": "Short and rolling",
+          "module": "env",
+          "why": "Short notes.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 4 · 130 ms.\n- ADSR SUSTAIN 4 · 40%.\n- ADSR RELEASE 2 · 27 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: a soft, rolling bass.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 4,
+            "adsr.s": 4,
+            "adsr.r": 2,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        }
+      ],
+      "context": {
+        "vcf.freq": "In this sound: how warm the bass is."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.pw",
+          "try": "Lower to 20",
+          "hear": "A thinner, more nasal pulse."
+        }
+      ]
+    },
+    {
+      "id": "b2600-acid-slide-single-trig",
+      "name": "Sliding Acid Line",
+      "ref": "In the style of Luke Vibert’s acid records",
+      "artist": "Luke Vibert",
+      "tags": ["bass", "acid", "breaks", "00s"],
+      "level": 2,
+      "blurb": "A squelching acid line where overlapping notes slide without restarting the envelope, as a 303 does.",
+      "how": "TRIG MODE on SINGLE restarts the envelopes only when a key is played with no other held, so overlapping notes glide on the envelope already running. With portamento on, those overlaps become the slides of an acid line, and the notes between them get a fresh squelch. The 4072 filter, driven harder, gives the bite.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.2],
+          [0.5, 36, 0.3],
+          [0.75, 48, 0.4],
+          [1.25, 46, 0.2],
+          [1.5, 36, 0.2],
+          [2, 39, 0.6],
+          [2.5, 41, 0.2],
+          [3, 36, 0.2],
+          [3.5, 48, 0.3],
+          [3.75, 43, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth",
+          "module": "osc",
+          "why": "VCO 3’s sawtooth.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 8 · 80%.\n- VCF AUDIO VCO 1 0 · 0%.\n- Listen for: a bright buzz.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 8,
+            "vcf.vco1": 0
+          }
+        },
+        {
+          "title": "A squelchy filter",
+          "module": "filter",
+          "why": "The 4072 with plenty of resonance, plucked by the ADSR.\n- VCF MODE 4072.\n- VCF FREQUENCY 3.8 · 122 Hz.\n- VCF RESONANCE 7 · 70%.\n- VCF CONTROL KYBD CV 4 · 40%.\n- VCF CONTROL ADSR 5.5 · 55%.\n- Listen for: a rubbery squelch.",
+          "set": {
+            "vcf.mode": "4072",
+            "vcf.freq": 3.8,
+            "vcf.res": 7,
+            "vcf.kbd": 4,
+            "vcf.adsr": 5.5
+          }
+        },
+        {
+          "title": "Short squelches",
+          "module": "env",
+          "why": "A short decay with little held.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 4.3 · 160 ms.\n- ADSR SUSTAIN 1.5 · 15%.\n- ADSR RELEASE 2 · 27 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: a squelch on every note.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 4.3,
+            "adsr.s": 1.5,
+            "adsr.r": 2,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        },
+        {
+          "title": "Slides on overlaps",
+          "module": "glide",
+          "why": "Single triggering, and a short portamento for the glide.\n- TRIG MODE SINGLE: an overlapping note does not restart the envelope.\n- PORTAMENTO ON On.\n- PORTAMENTO 2.5 · 190 ms: every note glides, briefly.\n- Listen for: the overlapping notes slur on one squelch, like a 303’s slides; the others squelch anew.",
+          "set": {
+            "kbd.trig": "single",
+            "porta.on": true,
+            "porta.amount": 2.5
+          }
+        }
+      ],
+      "context": {
+        "kbd.trig": "In this sound: the slides. On MULT every note squelches anew.",
+        "vcf.res": "In this sound: the squelch."
+      },
+      "tweaks": [
+        {
+          "id": "kbd.trig",
+          "try": "Switch to MULT",
+          "hear": "Every note re-squelches, slides and all."
+        },
+        {
+          "id": "vcf.adsr",
+          "try": "Raise to 7.5",
+          "hear": "A screaming, wide-open squelch."
+        }
+      ]
+    },
+    {
+      "id": "b2600-machine-gun-fm-growl",
+      "name": "Neurofunk FM Growl",
+      "ref": "In the style of Noisia — \"Machine Gun\" (Split the Atom, 2010)",
+      "artist": "Noisia",
+      "tags": ["bass", "drum and bass", "neurofunk", "10s"],
+      "level": 2,
+      "blurb": "A snarling, metallic bass made by shaking one oscillator with another at audio speed.",
+      "how": "VCO 1’s pulse is pre-wired to VCO 2’s pitch through the VCO 1 (FM) slider. At audio speed that is frequency modulation: VCO 2’s pulse grows a cloud of clashing overtones that growl. The resonant 4072 filter, plucked by the ADSR, moves through them. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 174,
+        "loop": true,
+        "steps": [
+          [0, 31, 0.9],
+          [1.5, 31, 0.4],
+          [2, 34, 0.9],
+          [3.5, 29, 0.4],
+          [4, 31, 1.4],
+          [6, 36, 0.4],
+          [6.5, 34, 0.4],
+          [7, 31, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two pulses, one shaking the other",
+          "module": "osc",
+          "why": "VCO 2 is heard; VCO 1 only modulates it.\n- VCO 2 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 2 PULSE WIDTH 50 · 50% duty.\n- VCF AUDIO VCO 2 8 · 80%.\n- VCF AUDIO VCO 1 0 · 0%.\n- VCF AUDIO VCO 3 0 · 0%.\n- VCO 1 FREQUENCY 5 · 392 Hz (G4) · LF 1.18 Hz: a fifth above VCO 2.\n- VCO 2 FM VCO 1 4.5 · 45%: audio-rate FM: the growl.\n- Listen for: a gnarly, metallic snarl.",
+          "set": {
+            "vco2.freq": 4.568,
+            "vco2.pw": 50,
+            "vcf.vco2": 8,
+            "vcf.vco1": 0,
+            "vcf.vco3": 0,
+            "vco1.freq": 5.042,
+            "vco2.fmVco1": 4.5
+          }
+        },
+        {
+          "title": "A driven, resonant filter",
+          "module": "filter",
+          "why": "The 4072, low, with peak.\n- VCF MODE 4072.\n- VCF FREQUENCY 3.6 · 103 Hz.\n- VCF RESONANCE 5.5 · 55%.\n- VCF CONTROL KYBD CV 3 · 30%.\n- VCF CONTROL ADSR 5 · 50%.\n- Listen for: a dark, rolling growl.",
+          "set": {
+            "vcf.mode": "4072",
+            "vcf.freq": 3.6,
+            "vcf.res": 5.5,
+            "vcf.kbd": 3,
+            "vcf.adsr": 5
+          }
+        },
+        {
+          "title": "Long, snarling notes",
+          "module": "env",
+          "why": "A slow decay so each note snarls through its length.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 6 · 570 ms.\n- ADSR SUSTAIN 4 · 40%.\n- ADSR RELEASE 2.5 · 40 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: a heavy, growling neurofunk bass.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 6,
+            "adsr.s": 4,
+            "adsr.r": 2.5,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        }
+      ],
+      "context": {
+        "vco2.fmVco1": "In this sound: the growl. Higher is harsher.",
+        "vco1.freq": "In this sound: the colour of the growl. Each setting is different."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.freq",
+          "try": "Move it slowly up and down",
+          "hear": "The growl changes vowel, like a tearing mouth."
+        },
+        {
+          "id": "vco2.fmVco1",
+          "try": "Raise to 7",
+          "hear": "A hard, metallic roar."
+        }
+      ]
+    },
+    {
+      "id": "b2600-blue-wind-bending-lead",
+      "name": "Fusion Bending Lead",
+      "ref": "In the style of Jan Hammer — \"Blue Wind\" (Jeff Beck, Wired, 1976)",
+      "artist": "Jan Hammer",
+      "tags": ["lead", "fusion", "jazz rock", "70s"],
+      "level": 2,
+      "blurb": "A screaming, guitar-like lead that slides into its notes and sings with vibrato.",
+      "how": "A sawtooth and a pulse together, the 4072 filter open with some resonance and a quick bite from the ADSR. Portamento makes the slides that a guitarist would bend, and VCO 1’s LFO slider adds vibrato. Jan Hammer played lines like a guitar on the keyboard, bending with the pitch wheel; here the slides do that job. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.9],
+          [1, 72, 0.4],
+          [1.5, 74, 1.4],
+          [3, 76, 0.9],
+          [4, 74, 0.4],
+          [4.5, 72, 0.4],
+          [5, 69, 0.4],
+          [5.5, 67, 0.4],
+          [6, 69, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sawtooth and pulse",
+          "module": "osc",
+          "why": "VCO 3’s sawtooth and VCO 1’s pulse, a hair apart.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 7 · 70%.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 FINE TUNE 0.2 · +0.1 st.\n- VCO 1 PULSE WIDTH 40 · 40% duty.\n- VCF AUDIO VCO 1 6 · 60%.\n- Listen for: a thick, bright, slightly moving tone.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 7,
+            "vco1.freq": 4.568,
+            "vco1.fine": 0.15,
+            "vco1.pw": 40,
+            "vcf.vco1": 6
+          }
+        },
+        {
+          "title": "Open, with bite",
+          "module": "filter",
+          "why": "Fairly open, with a quick flick from the ADSR.\n- VCF MODE 4072.\n- VCF FREQUENCY 5.8 · 670 Hz.\n- VCF RESONANCE 4 · 40%.\n- VCF CONTROL KYBD CV 7 · 70%.\n- VCF CONTROL ADSR 3 · 30%.\n- Listen for: a bright, singing tone.",
+          "set": {
+            "vcf.mode": "4072",
+            "vcf.freq": 5.8,
+            "vcf.res": 4,
+            "vcf.kbd": 7,
+            "vcf.adsr": 3
+          }
+        },
+        {
+          "title": "Held notes",
+          "module": "env",
+          "why": "Full while held.\n- ADSR ATTACK 0.5 · 2 ms.\n- ADSR DECAY 5 · 270 ms.\n- ADSR SUSTAIN 8 · 80%.\n- ADSR RELEASE 3 · 59 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: a sustained lead.",
+          "set": {
+            "adsr.a": 0.5,
+            "adsr.d": 5,
+            "adsr.s": 8,
+            "adsr.r": 3,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        },
+        {
+          "title": "Bends and vibrato",
+          "module": "glide",
+          "why": "Portamento for the bends, the LFO for vibrato.\n- PORTAMENTO ON On.\n- PORTAMENTO 2.8 · 240 ms.\n- LFO SPEED 5.6 · 3.30 Hz: about three and a half wobbles a second.\n- VCO 1 FM LFO 3 · 30%: only VCO 1 has an LFO slider, so only it wobbles: a slight chorus.\n- REVERB LEFT 2 · 20%.\n- REVERB RIGHT 2 · 20%.\n- Listen for: a singing, bending fusion lead.",
+          "set": {
+            "porta.on": true,
+            "porta.amount": 2.8,
+            "lfo.speed": 5.6,
+            "vco1.fmLfo": 3,
+            "rev.left": 2,
+            "rev.right": 2
+          }
+        }
+      ],
+      "context": {
+        "porta.amount": "In this sound: the bend. Above 4 it lags behind the line.",
+        "vco1.fmLfo": "In this sound: the vibrato on VCO 1, which also makes the two VCOs chorus."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.res",
+          "try": "Raise to 7",
+          "hear": "A screaming, wah-like edge."
+        }
+      ]
+    },
+    {
+      "id": "b2600-birdland-duo-line",
+      "name": "Duophonic Fusion Line",
+      "ref": "In the style of Joe Zawinul — Weather Report, \"Birdland\" (Heavy Weather, 1977)",
+      "artist": "Joe Zawinul",
+      "tags": ["lead", "fusion", "duophonic", "70s"],
+      "level": 3,
+      "blurb": "A bright, singing two-voice line: hold two keys and each plays its own oscillator.",
+      "how": "Zawinul played the ARP 2600 on Heavy Weather, and its keyboard could play two notes at once. With VOICE MODE on DUO, the lower key plays through the normal keyboard CV and the higher one appears at UPPER VOICE. A cable from there into VCO 2’s KYBD CV jack gives VCO 2 the upper note, so the riff’s pairs of notes sound as pairs. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.9],
+          [0, 71, 0.9],
+          [1, 66, 0.4],
+          [1, 74, 0.4],
+          [1.5, 67, 1.4],
+          [1.5, 76, 1.4],
+          [3, 66, 0.9],
+          [3, 74, 0.9],
+          [4, 64, 0.4],
+          [4, 71, 0.4],
+          [4.5, 62, 0.4],
+          [4.5, 69, 0.4],
+          [5, 64, 2.9],
+          [5, 71, 2.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two pulses",
+          "module": "osc",
+          "why": "VCO 1 and VCO 2, both through their pulse sliders.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 40 · 40% duty.\n- VCF AUDIO VCO 1 7 · 70%.\n- VCO 2 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 2 PULSE WIDTH 40 · 40% duty.\n- VCF AUDIO VCO 2 7 · 70%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: one bright tone, both VCOs on the same note for now.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vco1.pw": 40,
+            "vcf.vco1": 7,
+            "vco2.freq": 4.568,
+            "vco2.pw": 40,
+            "vcf.vco2": 7,
+            "vcf.vco3": 0
+          }
+        },
+        {
+          "title": "Two notes at once",
+          "module": "patch",
+          "why": "DUO mode, and the upper key patched to VCO 2.\n- Cable UPPER VOICE → VCO 2 KYBD CV: VCO 2 now plays the higher of two held keys.\n- VOICE MODE DUO.\n- Listen for: hold two keys and hear both.",
+          "set": {
+            "kbd.voice": "duo"
+          },
+          "cables": [["j.upper", "j.vco2Kbd"]]
+        },
+        {
+          "title": "A bright, singing filter",
+          "module": "filter",
+          "why": "Fairly open, a small flick from the ADSR.\n- VCF FREQUENCY 6 · 794 Hz.\n- VCF RESONANCE 3 · 30%.\n- VCF CONTROL KYBD CV 7 · 70%.\n- VCF CONTROL ADSR 2.5 · 25%.\n- Listen for: a bright, reedy pair of voices.",
+          "set": {
+            "vcf.freq": 6,
+            "vcf.res": 3,
+            "vcf.kbd": 7,
+            "vcf.adsr": 2.5
+          }
+        },
+        {
+          "title": "Held notes",
+          "module": "env",
+          "why": "A quick start, held, with a short tail.\n- ADSR ATTACK 0.5 · 2 ms.\n- ADSR DECAY 5 · 270 ms.\n- ADSR SUSTAIN 8 · 80%.\n- ADSR RELEASE 3 · 59 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 2.5 · 25%.\n- REVERB RIGHT 2.5 · 25%.\n- Listen for: a bright, two-voice line in fifths and sixths.",
+          "set": {
+            "adsr.a": 0.5,
+            "adsr.d": 5,
+            "adsr.s": 8,
+            "adsr.r": 3,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 2.5,
+            "rev.right": 2.5
+          }
+        }
+      ],
+      "context": {
+        "kbd.voice": "In this sound: DUO, so two held keys make two notes.",
+        "vcf.vco2": "In this sound: the level of the upper voice."
+      },
+      "tweaks": [
+        {
+          "id": "kbd.voice",
+          "try": "Switch to MONO",
+          "hear": "Only the lower note of each pair plays."
+        },
+        {
+          "id": "vcf.vco2",
+          "try": "Lower to 4",
+          "hear": "The upper voice sits behind the lower one."
+        }
+      ]
+    },
+    {
+      "id": "b2600-warriors-rock-orchestra-lead",
+      "name": "Synth-Orchestra Lead",
+      "ref": "In the style of Synergy — \"Warriors\" (Electronic Realizations for Rock Orchestra, 1975)",
+      "artist": "Synergy",
+      "tags": ["lead", "prog", "electronic", "70s"],
+      "level": 2,
+      "blurb": "A bold, brassy lead with a slow-opening filter and a delayed vibrato, playing a heroic theme.",
+      "how": "Larry Fast built rock-orchestra records from synthesisers alone. Three oscillators slightly apart give the width of a section; the ADSR opens the filter with a slight attack, as brass speaks; and the LFO’s delayed sine comes in on the long notes through VCO 1’s LFO jack. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.9],
+          [1, 69, 0.9],
+          [2, 67, 0.4],
+          [2.5, 65, 0.4],
+          [3, 67, 1.9],
+          [5, 65, 0.9],
+          [6, 62, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Three oscillators",
+          "module": "osc",
+          "why": "Each a little apart, like a section.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 6 · 60%.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 FINE TUNE 0.1 · 0 st.\n- VCO 1 PULSE WIDTH 45 · 45% duty.\n- VCF AUDIO VCO 1 5 · 50%.\n- VCO 2 FREQUENCY 3.8 · 131 Hz (C3) · LF 0.39 Hz.\n- VCO 2 FINE TUNE −0.1 · 0 st.\n- VCO 2 PULSE WIDTH 50 · 50% duty.\n- VCF AUDIO VCO 2 4 · 40%.\n- Listen for: a wide, rich tone.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 6,
+            "vco1.freq": 4.568,
+            "vco1.fine": 0.12,
+            "vco1.pw": 45,
+            "vcf.vco1": 5,
+            "vco2.freq": 3.755,
+            "vco2.fine": -0.1,
+            "vco2.pw": 50,
+            "vcf.vco2": 4
+          }
+        },
+        {
+          "title": "A brassy opening",
+          "module": "filter",
+          "why": "The ADSR opens the filter over a moment.\n- VCF FREQUENCY 4.2 · 171 Hz.\n- VCF RESONANCE 2 · 20%.\n- VCF CONTROL KYBD CV 6 · 60%.\n- VCF CONTROL ADSR 5 · 50%.\n- Listen for: a dark tone, waiting to open.",
+          "set": {
+            "vcf.freq": 4.2,
+            "vcf.res": 2,
+            "vcf.kbd": 6,
+            "vcf.adsr": 5
+          }
+        },
+        {
+          "title": "Brass speaks slowly",
+          "module": "env",
+          "why": "A short attack, a fall to a bright held level.\n- ADSR ATTACK 5.5 · 170 ms.\n- ADSR DECAY 5.5 · 390 ms.\n- ADSR SUSTAIN 7 · 70%.\n- ADSR RELEASE 3.5 · 86 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: each note blooming open like a horn.",
+          "set": {
+            "adsr.a": 5.5,
+            "adsr.d": 5.5,
+            "adsr.s": 7,
+            "adsr.r": 3.5,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        },
+        {
+          "title": "A late vibrato",
+          "module": "patch",
+          "why": "The delayed sine into VCO 1’s LFO jack, in place of the plain LFO.\n- Cable LFO SINE DELAYED → VCO 1 FM (LFO).\n- VCO 1 FM LFO 4 · 40%.\n- LFO SPEED 5.4 · 3.01 Hz.\n- VIB DELAY 2.5 · 750 ms: about three quarters of a second.\n- VIB DEPTH 7 · 70%.\n- REVERB LEFT 2.5 · 25%.\n- REVERB RIGHT 2.5 · 25%.\n- Listen for: the long notes starting to sing.",
+          "set": {
+            "vco1.fmLfo": 4,
+            "lfo.speed": 5.4,
+            "lfo.vibDelay": 2.5,
+            "lfo.vibDepth": 7,
+            "rev.left": 2.5,
+            "rev.right": 2.5
+          },
+          "cables": [["j.lfoDelayed", "j.vco1Lfo"]]
+        }
+      ],
+      "context": {
+        "adsr.a": "In this sound: how slowly the brass speaks.",
+        "lfo.vibDelay": "In this sound: how long before the vibrato."
+      },
+      "tweaks": [
+        {
+          "id": "adsr.a",
+          "try": "Lower to 1",
+          "hear": "A punchier, stabbing brass."
+        }
+      ]
+    },
+    {
+      "id": "b2600-dead-of-night-prog-lead",
+      "name": "Odd-Metre Prog Lead",
+      "ref": "In the style of UK — \"In the Dead of Night\" (UK, 1978)",
+      "artist": "UK",
+      "tags": ["lead", "prog", "rock", "70s"],
+      "level": 2,
+      "blurb": "A biting, synced lead tearing through a riff in seven, the sound of late-70s progressive rock.",
+      "how": "VCO 2 is hard-synced to VCO 1, so it plays VCO 1’s pitch and its own slider changes its tone. The ADSR sweeps VCO 2’s pitch through the VCO 2 FM ADSR slider; with sync on, that sweeps the tone, the tearing “yow” at the start of each note. The riff runs in seven: a bar of four, then a bar of three. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.4],
+          [0.5, 65, 0.4],
+          [1, 67, 0.9],
+          [2, 69, 0.4],
+          [2.5, 67, 0.4],
+          [3, 65, 0.9],
+          [4, 62, 0.4],
+          [4.5, 60, 0.4],
+          [5, 62, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A synced pulse",
+          "module": "osc",
+          "why": "VCO 1 sets the note; VCO 2, synced, sets the tone.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 50 · 50% duty.\n- VCF AUDIO VCO 1 4 · 40%.\n- VCO 2 SYNC On.\n- VCO 2 FREQUENCY 5.2 · 440 Hz (A4) · LF 1.32 Hz: higher than VCO 1: brighter and more nasal.\n- VCO 2 PULSE WIDTH 40 · 40% duty.\n- VCF AUDIO VCO 2 7 · 70%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a hard, nasal tone.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vco1.pw": 50,
+            "vcf.vco1": 4,
+            "vco2.sync": true,
+            "vco2.freq": 5.178,
+            "vco2.pw": 40,
+            "vcf.vco2": 7,
+            "vcf.vco3": 0
+          }
+        },
+        {
+          "title": "Sweep the sync",
+          "module": "mod",
+          "why": "The ADSR on VCO 2’s pitch: with sync, a sweep of tone.\n- VCO 2 FM ADSR 4 · 40%: the size of the tear.\n- Listen for: a tearing “yow” on each note.",
+          "set": {
+            "vco2.fmAdsr": 4
+          }
+        },
+        {
+          "title": "Bright filter",
+          "module": "filter",
+          "why": "Open with a little peak.\n- VCF FREQUENCY 6.5 · 1.2 kHz.\n- VCF RESONANCE 2.5 · 25%.\n- VCF CONTROL KYBD CV 6 · 60%.\n- VCF CONTROL ADSR 2 · 20%.\n- Listen for: a biting lead.",
+          "set": {
+            "vcf.freq": 6.5,
+            "vcf.res": 2.5,
+            "vcf.kbd": 6,
+            "vcf.adsr": 2
+          }
+        },
+        {
+          "title": "Envelope",
+          "module": "env",
+          "why": "The ADSR sweeps the sync and shapes the loudness.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 5.2 · 310 ms.\n- ADSR SUSTAIN 5 · 50%.\n- ADSR RELEASE 3 · 59 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 2 · 20%.\n- REVERB RIGHT 2 · 20%.\n- Listen for: a snarling riff in seven.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 5.2,
+            "adsr.s": 5,
+            "adsr.r": 3,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 2,
+            "rev.right": 2
+          }
+        }
+      ],
+      "context": {
+        "vco2.fmAdsr": "In this sound: how far the tone tears at the start of a note.",
+        "vco2.freq": "In this sound: the resting tone of the sync."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.fmAdsr",
+          "try": "Raise to 6",
+          "hear": "A wilder, longer tear."
+        }
+      ]
+    },
+    {
+      "id": "b2600-ra-utopia-whistle-lead",
+      "name": "Space-Rock Whistle Lead",
+      "ref": "In the style of Roger Powell — Todd Rundgren’s Utopia, Ra (1977)",
+      "artist": "Roger Powell",
+      "tags": ["lead", "prog", "space rock", "70s"],
+      "level": 2,
+      "blurb": "A high, whistling lead from a filter set ringing, played like a voice from space.",
+      "how": "With RESONANCE near the top, the filter rings as a sine of its own at the cutoff. KYBD CV at 10 makes that ring follow the keys exactly, so the filter itself plays the melody. A quiet sawtooth underneath gives it a body, and the LFO’s delayed sine adds a late vibrato.",
+      "phrase": {
+        "bpm": 92,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.4],
+          [1.5, 76, 0.4],
+          [2, 79, 1.9],
+          [4, 77, 0.9],
+          [5, 76, 0.4],
+          [5.5, 74, 0.4],
+          [6, 72, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A quiet sawtooth",
+          "module": "osc",
+          "why": "Just enough to excite the filter.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 3 · 30%.\n- VCF AUDIO VCO 1 0 · 0%.\n- Listen for: a soft buzz.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 3,
+            "vcf.vco1": 0
+          }
+        },
+        {
+          "title": "A filter that sings",
+          "module": "filter",
+          "why": "Resonance near the top; the cutoff tracks the keys fully.\n- VCF FREQUENCY 5.5 · 523 Hz: the ring sits about an octave above the keys.\n- VCF FINE TUNE 0 · +0.00 oct: trims the ring’s tuning; set it by ear against the sawtooth.\n- VCF RESONANCE 9.2 · 92%.\n- VCF CONTROL KYBD CV 10 · 100%: the ring plays in tune across the keys.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: a pure, high whistle over the saw.",
+          "set": {
+            "vcf.freq": 5.51,
+            "vcf.fine": 0,
+            "vcf.res": 9.2,
+            "vcf.kbd": 10,
+            "vcf.adsr": 0
+          }
+        },
+        {
+          "title": "Held",
+          "module": "env",
+          "why": "A soft start.\n- ADSR ATTACK 5 · 110 ms.\n- ADSR DECAY 5 · 270 ms.\n- ADSR SUSTAIN 9 · 90%.\n- ADSR RELEASE 5.5 · 390 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 7 · 70%.\n- Listen for: a whistling, singing melody.",
+          "set": {
+            "adsr.a": 5,
+            "adsr.d": 5,
+            "adsr.s": 9,
+            "adsr.r": 5.5,
+            "vca.adsr": 10,
+            "mix.vca": 7
+          }
+        },
+        {
+          "title": "A late vibrato",
+          "module": "patch",
+          "why": "The delayed sine to VCO 3’s pitch, through its spare FM jack.\n- Cable LFO SINE DELAYED → VCO 3 FM (VCO 2): replaces VCO 2’s sine at the VCO 3 FM VCO 2 slider.\n- VCO 3 FM VCO 2 2.5 · 25%.\n- LFO SPEED 5.5 · 3.15 Hz.\n- VIB DELAY 4 · 1.2 s.\n- VIB DEPTH 8 · 80%.\n- REVERB LEFT 3.5 · 35%.\n- REVERB RIGHT 3.5 · 35%.\n- Listen for: the long notes waver once settled.",
+          "set": {
+            "vco3.fmVco2": 2.5,
+            "lfo.speed": 5.5,
+            "lfo.vibDelay": 4,
+            "lfo.vibDepth": 8,
+            "rev.left": 3.5,
+            "rev.right": 3.5
+          },
+          "cables": [["j.lfoDelayed", "j.vco3Vco2"]]
+        }
+      ],
+      "context": {
+        "vcf.res": "In this sound: the whistle. Below about 8 it stops ringing on its own.",
+        "vcf.kbd": "In this sound: keeps the whistle in tune."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.vco3",
+          "try": "Raise to 6",
+          "hear": "More saw: a buzzier, less pure lead."
+        }
+      ]
+    },
+    {
+      "id": "b2600-im-the-one-ring-voice",
+      "name": "Ring-Modulated Voice Lead",
+      "ref": "In the style of Annette Peacock — \"I’m the One\" (I’m the One, 1972)",
+      "artist": "Annette Peacock",
+      "tags": ["lead", "avant-garde", "jazz", "70s"],
+      "level": 2,
+      "blurb": "An eerie, metallic lead where a plain tone and its clangy ring-modulated shadow sing together.",
+      "how": "The ring modulator multiplies VCO 1’s sawtooth by VCO 2’s sine, pre-wired. Tuned an odd interval apart, the product clangs rather than sings, and mixed with a plain tone through the filter it sounds like a voice through broken electronics. Annette Peacock put her own voice through a synthesiser; this is the instrument’s half of that. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 64, 1.4],
+          [1.5, 67, 0.4],
+          [2, 69, 1.9],
+          [4, 67, 0.9],
+          [5, 64, 0.4],
+          [5.5, 62, 0.4],
+          [6, 64, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A plain tone and a ring",
+          "module": "osc",
+          "why": "VCO 3’s sawtooth, and the ring modulator through its own VCF AUDIO slider.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 5 · 50%.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 2 FREQUENCY 4.9 · 362 Hz (F♯4) · LF 1.08 Hz: an awkward interval above.\n- RING MOD VCO 1 10 · 100%.\n- RING MOD VCO 2 10 · 100%.\n- VCF AUDIO RING MOD 6 · 60%.\n- VCF AUDIO VCO 1 0 · 0%.\n- VCF AUDIO VCO 2 0 · 0%.\n- Listen for: a note shadowed by a metallic clang.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 5,
+            "vco1.freq": 4.568,
+            "vco2.freq": 4.947,
+            "ring.a": 10,
+            "ring.b": 10,
+            "vcf.ring": 6,
+            "vcf.vco1": 0,
+            "vcf.vco2": 0
+          }
+        },
+        {
+          "title": "Soften the edges",
+          "module": "filter",
+          "why": "A gentle low-pass.\n- VCF FREQUENCY 5.8 · 670 Hz.\n- VCF RESONANCE 2 · 20%.\n- VCF CONTROL KYBD CV 6 · 60%.\n- VCF CONTROL ADSR 2 · 20%.\n- Listen for: an eerie, vocal tone.",
+          "set": {
+            "vcf.freq": 5.8,
+            "vcf.res": 2,
+            "vcf.kbd": 6,
+            "vcf.adsr": 2
+          }
+        },
+        {
+          "title": "Sung notes",
+          "module": "env",
+          "why": "A soft start and a long tail.\n- ADSR ATTACK 5 · 110 ms.\n- ADSR DECAY 5 · 270 ms.\n- ADSR SUSTAIN 8 · 80%.\n- ADSR RELEASE 6.5 · 840 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 3 · 30%.\n- REVERB RIGHT 3 · 30%.\n- Listen for: a strange, singing line.",
+          "set": {
+            "adsr.a": 5,
+            "adsr.d": 5,
+            "adsr.s": 8,
+            "adsr.r": 6.5,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 3,
+            "rev.right": 3
+          }
+        }
+      ],
+      "context": {
+        "vco2.freq": "In this sound: the clang’s colour. Each interval gives a different metal."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.ring",
+          "try": "Raise to 9",
+          "hear": "The clang takes over from the note."
+        }
+      ]
+    },
+    {
+      "id": "b2600-space-race-synth-lead",
+      "name": "Gospel-Funk Synth Lead",
+      "ref": "In the style of Billy Preston — \"Space Race\" (Everybody Likes Some Kind of Music, 1973)",
+      "artist": "Billy Preston",
+      "tags": ["lead", "funk", "soul", "70s"],
+      "level": 1,
+      "blurb": "A fat, joyful synth lead that whoops between notes over a funk groove.",
+      "how": "A sawtooth and a pulse together through a fairly open filter, with a short portamento so the leaps whoop. Billy Preston played the ARP on his early-70s instrumentals like a gospel organist, with the same swing and shout. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 116,
+        "loop": true,
+        "steps": [
+          [0, 67, 0.4],
+          [0.5, 70, 0.4],
+          [1, 72, 0.9],
+          [2, 79, 0.4],
+          [2.5, 77, 0.4],
+          [3, 75, 0.4],
+          [3.5, 72, 0.4],
+          [4, 70, 0.9],
+          [5, 67, 0.4],
+          [5.5, 70, 0.4],
+          [6, 72, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Saw and pulse",
+          "module": "osc",
+          "why": "VCO 3’s sawtooth and VCO 1’s pulse.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 7 · 70%.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 35 · 35% duty.\n- VCF AUDIO VCO 1 5 · 50%.\n- Listen for: a fat, bright tone.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 7,
+            "vco1.freq": 4.568,
+            "vco1.pw": 35,
+            "vcf.vco1": 5
+          }
+        },
+        {
+          "title": "Fairly open",
+          "module": "filter",
+          "why": "A small bite on each note.\n- VCF FREQUENCY 5.6 · 565 Hz.\n- VCF RESONANCE 3 · 30%.\n- VCF CONTROL KYBD CV 6 · 60%.\n- VCF CONTROL ADSR 3 · 30%.\n- Listen for: a bright, punchy lead.",
+          "set": {
+            "vcf.freq": 5.6,
+            "vcf.res": 3,
+            "vcf.kbd": 6,
+            "vcf.adsr": 3
+          }
+        },
+        {
+          "title": "Whoops",
+          "module": "glide",
+          "why": "A short portamento.\n- PORTAMENTO ON On.\n- PORTAMENTO 2.2 · 150 ms.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 5 · 270 ms.\n- ADSR SUSTAIN 8 · 80%.\n- ADSR RELEASE 2.5 · 40 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: the leaps whooping up into place.",
+          "set": {
+            "porta.on": true,
+            "porta.amount": 2.2,
+            "adsr.a": 0,
+            "adsr.d": 5,
+            "adsr.s": 8,
+            "adsr.r": 2.5,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        }
+      ],
+      "context": {
+        "porta.amount": "In this sound: the whoop."
+      },
+      "tweaks": [
+        {
+          "id": "porta.amount",
+          "try": "Raise to 4",
+          "hear": "Lazy, sliding whoops."
+        }
+      ]
+    },
+    {
+      "id": "b2600-dancer-italo-sync-lead",
+      "name": "Disco Sync Lead",
+      "ref": "In the style of Gino Soccio — \"Dancer\" (Outline, 1979)",
+      "artist": "Gino Soccio",
+      "tags": ["lead", "disco", "italo", "70s"],
+      "level": 2,
+      "blurb": "A tight, buzzy synced lead playing a bouncing disco hook in sixteenths.",
+      "how": "VCO 3 hard-synced to VCO 1 gives a nasal, metallic edge; its slider sets how bright. Short notes and a quick pluck keep the hook bouncing. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.2],
+          [0.25, 69, 0.2],
+          [0.5, 72, 0.2],
+          [0.75, 69, 0.2],
+          [1, 76, 0.2],
+          [1.25, 69, 0.2],
+          [1.5, 72, 0.2],
+          [1.75, 69, 0.2],
+          [2, 67, 0.2],
+          [2.25, 67, 0.2],
+          [2.5, 71, 0.2],
+          [2.75, 67, 0.2],
+          [3, 74, 0.2],
+          [3.25, 67, 0.2],
+          [3.5, 71, 0.2],
+          [3.75, 67, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A synced sawtooth",
+          "module": "osc",
+          "why": "VCO 3’s sawtooth, synced to VCO 1, which is silent here.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 1 0 · 0%.\n- VCO 3 SYNC On.\n- VCO 3 FREQUENCY 5 · 392 Hz (G4) · LF 1.18 Hz: above VCO 1: the brightness of the sync.\n- VCF AUDIO VCO 3 7 · 70%.\n- Listen for: a nasal, buzzing tone at VCO 1’s pitch.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vcf.vco1": 0,
+            "vco3.sync": true,
+            "vco3.freq": 5.042,
+            "vcf.vco3": 7
+          }
+        },
+        {
+          "title": "A quick pluck",
+          "module": "filter",
+          "why": "Fairly open, plucked.\n- VCF FREQUENCY 5.4 · 476 Hz.\n- VCF RESONANCE 3 · 30%.\n- VCF CONTROL KYBD CV 6 · 60%.\n- VCF CONTROL ADSR 3.5 · 35%.\n- Listen for: a bright pluck.",
+          "set": {
+            "vcf.freq": 5.4,
+            "vcf.res": 3,
+            "vcf.kbd": 6,
+            "vcf.adsr": 3.5
+          }
+        },
+        {
+          "title": "Short notes",
+          "module": "env",
+          "why": "Short and bouncy.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 4 · 130 ms.\n- ADSR SUSTAIN 3 · 30%.\n- ADSR RELEASE 2 · 27 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: a bouncing disco hook.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 4,
+            "adsr.s": 3,
+            "adsr.r": 2,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        }
+      ],
+      "context": {
+        "vco3.freq": "In this sound: the brightness of the sync, not the note."
+      },
+      "tweaks": [
+        {
+          "id": "vco3.freq",
+          "try": "Raise slowly while the hook plays",
+          "hear": "The sync tears brighter and brighter."
+        }
+      ]
+    },
+    {
+      "id": "b2600-electric-lucifer-switch-trill",
+      "name": "Electronic-Switch Trill",
+      "ref": "In the style of Bruce Haack — \"Electric to Me Turn\" (The Electric Lucifer, 1970)",
+      "artist": "Bruce Haack",
+      "tags": ["seq", "psychedelic", "modular", "70s"],
+      "level": 3,
+      "blurb": "Each held note bubbles between itself and a fifth above, flipped by the 2600’s electronic switch.",
+      "how": "The electronic switch passes its A input to C for half of each sample-and-hold clock cycle and its B input for the other half. With VCO 3’s sawtooth on A and VCO 2’s pulse, tuned a fifth up, on B, its output flips between the two. Patched into the filter’s ring-mod input in place of the ring modulator, that flipping is what you hear: a trill made by a switch, not by playing.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 57, 1.9],
+          [2, 60, 1.9],
+          [4, 55, 1.9],
+          [6, 53, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two oscillators a fifth apart",
+          "module": "osc",
+          "why": "Neither goes to the filter through its own slider; the switch will choose between them.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 2 FREQUENCY 5 · 392 Hz (G4) · LF 1.18 Hz: a fifth up.\n- VCO 2 PULSE WIDTH 40 · 40% duty.\n- VCF AUDIO VCO 3 0 · 0%.\n- VCF AUDIO VCO 2 0 · 0%.\n- VCF AUDIO VCO 1 0 · 0%.\n- Listen for: silence, for now.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vco2.freq": 5.042,
+            "vco2.pw": 40,
+            "vcf.vco3": 0,
+            "vcf.vco2": 0,
+            "vcf.vco1": 0
+          }
+        },
+        {
+          "title": "Through the switch",
+          "module": "patch",
+          "why": "Both into the switch, and its output into the filter.\n- Cable VCO 3 SAW → ELEC SWITCH A.\n- Cable VCO 2 PULSE → ELEC SWITCH B.\n- Cable ELEC SWITCH C → VCF AUDIO (RING MOD): replaces the ring modulator at the VCF AUDIO RING MOD slider.\n- VCF AUDIO RING MOD 8 · 80%.\n- S&H RATE 5.5 · 3.48 Hz: the speed of the flip, about three and a half a second.\n- Listen for: each note bubbling between its root and fifth.",
+          "set": {
+            "vcf.ring": 8,
+            "sh.rate": 5.5
+          },
+          "cables": [
+            ["j.vco3saw", "j.eswA"],
+            ["j.vco2pulse", "j.eswB"],
+            ["j.eswC", "j.vcfRing"]
+          ]
+        },
+        {
+          "title": "A warm filter",
+          "module": "filter",
+          "why": "A little resonance.\n- VCF FREQUENCY 5.4 · 476 Hz.\n- VCF RESONANCE 3.5 · 35%.\n- VCF CONTROL KYBD CV 6 · 60%.\n- VCF CONTROL ADSR 1.5 · 15%.\n- Listen for: a warm, bubbling tone.",
+          "set": {
+            "vcf.freq": 5.4,
+            "vcf.res": 3.5,
+            "vcf.kbd": 6,
+            "vcf.adsr": 1.5
+          }
+        },
+        {
+          "title": "Held notes",
+          "module": "env",
+          "why": "Full while held.\n- ADSR ATTACK 0.5 · 2 ms.\n- ADSR DECAY 5 · 270 ms.\n- ADSR SUSTAIN 9 · 90%.\n- ADSR RELEASE 5 · 270 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 3 · 30%.\n- REVERB RIGHT 3 · 30%.\n- Listen for: a strange, burbling melody.",
+          "set": {
+            "adsr.a": 0.5,
+            "adsr.d": 5,
+            "adsr.s": 9,
+            "adsr.r": 5,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 3,
+            "rev.right": 3
+          }
+        }
+      ],
+      "context": {
+        "sh.rate": "In this sound: the speed of the switch, and so of the trill.",
+        "vco2.freq": "In this sound: the other note of the trill."
+      },
+      "tweaks": [
+        {
+          "id": "sh.rate",
+          "try": "Raise to 8",
+          "hear": "A flutter too fast to hear as two notes."
+        },
+        {
+          "id": "vco2.freq",
+          "try": "Move it to an octave up",
+          "hear": "An octave trill instead of a fifth."
+        }
+      ]
+    },
+    {
+      "id": "b2600-magic-fly-repeat-pulse",
+      "name": "Repeating Space-Disco Melody",
+      "ref": "In the style of Space — \"Magic Fly\" (Magic Fly, 1977)",
+      "artist": "Space",
+      "tags": ["seq", "space disco", "disco", "70s"],
+      "level": 2,
+      "blurb": "A melody of long notes, each one broken into a stream of sixteenth-note blips as it is held.",
+      "how": "REPEAT on KYBD re-fires the envelopes at the LFO’s speed for as long as a key is held. With the LFO set to sixteenths and an ADSR that falls to nothing, every held note becomes a run of short blips at its pitch. The melody is played as long notes; the repeat does the rest.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 64, 1.9],
+          [2, 67, 1.9],
+          [4, 71, 0.9],
+          [5, 69, 0.9],
+          [6, 67, 1.9],
+          [8, 64, 1.9],
+          [10, 62, 1.9],
+          [12, 64, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth and a square",
+          "module": "osc",
+          "why": "VCO 3’s sawtooth and VCO 1’s square.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 6 · 60%.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 50 · 50% duty.\n- VCF AUDIO VCO 1 5 · 50%.\n- Listen for: a bright, full tone.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 6,
+            "vco1.freq": 4.568,
+            "vco1.pw": 50,
+            "vcf.vco1": 5
+          }
+        },
+        {
+          "title": "A bright filter",
+          "module": "filter",
+          "why": "Opened a little on each blip.\n- VCF FREQUENCY 5.4 · 476 Hz.\n- VCF RESONANCE 3 · 30%.\n- VCF CONTROL KYBD CV 6 · 60%.\n- VCF CONTROL ADSR 3 · 30%.\n- Listen for: a bright pluck.",
+          "set": {
+            "vcf.freq": 5.4,
+            "vcf.res": 3,
+            "vcf.kbd": 6,
+            "vcf.adsr": 3
+          }
+        },
+        {
+          "title": "Short blips",
+          "module": "env",
+          "why": "The ADSR falls to nothing, so each firing is a blip.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 4 · 130 ms.\n- ADSR SUSTAIN 0 · 0%.\n- ADSR RELEASE 3 · 59 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: one blip at the start of each long note.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 4,
+            "adsr.s": 0,
+            "adsr.r": 3,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        },
+        {
+          "title": "Repeat while held",
+          "module": "mode",
+          "why": "REPEAT re-fires the envelopes at LFO SPEED.\n- REPEAT KYBD.\n- LFO SPEED 7.5 · 7.91 Hz: about eight times a second: sixteenths at this tempo.\n- VCO 1 FM LFO 0 · 0%: the LFO stays off the pitch.\n- REVERB LEFT 2.5 · 25%.\n- REVERB RIGHT 2.5 · 25%.\n- Listen for: every held note turning into a stream of sixteenths.",
+          "set": {
+            "kbd.repeat": "kybd",
+            "lfo.speed": 7.5,
+            "vco1.fmLfo": 0,
+            "rev.left": 2.5,
+            "rev.right": 2.5
+          }
+        }
+      ],
+      "context": {
+        "kbd.repeat": "In this sound: turns each held note into a stream.",
+        "lfo.speed": "In this sound: the speed of the stream."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.speed",
+          "try": "Lower to 6",
+          "hear": "Eighth-note blips."
+        },
+        {
+          "id": "adsr.d",
+          "try": "Raise to 5.5",
+          "hear": "Longer blips that run into each other."
+        }
+      ]
+    },
+    {
+      "id": "b2600-einstein-organ-arpeggio",
+      "name": "Minimalist Organ Arpeggio",
+      "ref": "In the style of Philip Glass — Einstein on the Beach (1976)",
+      "artist": "Philip Glass",
+      "tags": ["seq", "minimalism", "classical", "70s"],
+      "level": 1,
+      "blurb": "A bright, organ-like arpeggio cycling over and over, the steady machine of minimalist music.",
+      "how": "A square and a sawtooth an octave apart sound like an electric organ. Nothing in the patch moves: the music is the repetition, and how the figure shifts between chords.",
+      "phrase": {
+        "bpm": 144,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.45],
+          [0.5, 60, 0.45],
+          [1, 64, 0.45],
+          [1.5, 60, 0.45],
+          [2, 57, 0.45],
+          [2.5, 60, 0.45],
+          [3, 64, 0.45],
+          [3.5, 60, 0.45],
+          [4, 57, 0.45],
+          [4.5, 62, 0.45],
+          [5, 65, 0.45],
+          [5.5, 62, 0.45],
+          [6, 57, 0.45],
+          [6.5, 62, 0.45],
+          [7, 65, 0.45],
+          [7.5, 62, 0.45]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Organ drawbars",
+          "module": "osc",
+          "why": "A square and a sawtooth an octave up.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 50 · 50% duty.\n- VCF AUDIO VCO 1 7 · 70%.\n- VCO 3 FREQUENCY 5.4 · 523 Hz (C5) · LF 1.57 Hz.\n- VCF AUDIO VCO 3 3 · 30%.\n- Listen for: a hollow, organ-like tone.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vco1.pw": 50,
+            "vcf.vco1": 7,
+            "vco3.freq": 5.381,
+            "vcf.vco3": 3
+          }
+        },
+        {
+          "title": "A still filter",
+          "module": "filter",
+          "why": "Fairly open and not moving.\n- VCF FREQUENCY 6.2 · 942 Hz.\n- VCF RESONANCE 0 · 0%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: a plain, bright organ.",
+          "set": {
+            "vcf.freq": 6.2,
+            "vcf.res": 0,
+            "vcf.kbd": 5,
+            "vcf.adsr": 0
+          }
+        },
+        {
+          "title": "Organ notes",
+          "module": "env",
+          "why": "Full at once, cut at once.\n- ADSR ATTACK 0.5 · 2 ms.\n- ADSR DECAY 5 · 270 ms.\n- ADSR SUSTAIN 10 · 100%.\n- ADSR RELEASE 2 · 27 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: a steady, cycling arpeggio.",
+          "set": {
+            "adsr.a": 0.5,
+            "adsr.d": 5,
+            "adsr.s": 10,
+            "adsr.r": 2,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        }
+      ],
+      "context": {
+        "vcf.vco3": "In this sound: the upper drawbar."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.vco3",
+          "try": "Raise to 7",
+          "hear": "A brighter, reedier organ."
+        }
+      ]
+    },
+    {
+      "id": "b2600-iceland-lfo-saw-filter-seq",
+      "name": "Rising-Filter Sequence",
+      "ref": "In the style of Richard Pinhas — Iceland (1979)",
+      "artist": "Richard Pinhas",
+      "tags": ["seq", "electronic", "cold", "70s"],
+      "level": 3,
+      "blurb": "A cold, steady sequence whose filter rises again and again, every few seconds, like wind over ice.",
+      "how": "The LFO’s sawtooth output, patched into the filter’s ADSR control jack, takes the ADSR’s place there: the slider above it now sets how far the LFO moves the cutoff. A slow sawtooth rises and drops back, so the sequence brightens over a few seconds and falls dark again, over and over.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 52, 0.2],
+          [0.25, 59, 0.2],
+          [0.5, 64, 0.2],
+          [0.75, 59, 0.2],
+          [1, 52, 0.2],
+          [1.25, 59, 0.2],
+          [1.5, 62, 0.2],
+          [1.75, 59, 0.2],
+          [2, 52, 0.2],
+          [2.25, 59, 0.2],
+          [2.5, 64, 0.2],
+          [2.75, 67, 0.2],
+          [3, 52, 0.2],
+          [3.25, 59, 0.2],
+          [3.5, 62, 0.2],
+          [3.75, 59, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sawtooth and pulse",
+          "module": "osc",
+          "why": "VCO 3’s sawtooth, and VCO 2’s pulse an octave below.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 7 · 70%.\n- VCO 2 FREQUENCY 3.8 · 131 Hz (C3) · LF 0.39 Hz.\n- VCO 2 PULSE WIDTH 50 · 50% duty.\n- VCF AUDIO VCO 2 4 · 40%.\n- VCF AUDIO VCO 1 0 · 0%.\n- Listen for: a full, buzzy tone.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 7,
+            "vco2.freq": 3.755,
+            "vco2.pw": 50,
+            "vcf.vco2": 4,
+            "vcf.vco1": 0
+          }
+        },
+        {
+          "title": "A resonant filter",
+          "module": "filter",
+          "why": "Low, with plenty of peak.\n- VCF FREQUENCY 3.8 · 122 Hz.\n- VCF RESONANCE 6 · 60%.\n- VCF CONTROL KYBD CV 4 · 40%.\n- Listen for: a dark, ringing sequence.",
+          "set": {
+            "vcf.freq": 3.8,
+            "vcf.res": 6,
+            "vcf.kbd": 4
+          }
+        },
+        {
+          "title": "Short notes",
+          "module": "env",
+          "why": "The ADSR shapes only the loudness now.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 4 · 130 ms.\n- ADSR SUSTAIN 4 · 40%.\n- ADSR RELEASE 3 · 59 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: short, even notes.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 4,
+            "adsr.s": 4,
+            "adsr.r": 3,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        },
+        {
+          "title": "The LFO raises the filter",
+          "module": "patch",
+          "why": "The LFO sawtooth into the filter’s ADSR control jack.\n- Cable LFO SAW → VCF CONTROL (ADSR): replaces the ADSR at the VCF CONTROL ADSR slider.\n- VCF CONTROL ADSR 4 · 40%: now how far the LFO sweeps.\n- LFO SPEED 0.8 · 0.36 Hz: one rise every three seconds or so.\n- VCO 1 FM LFO 0 · 0%.\n- REVERB LEFT 3 · 30%.\n- REVERB RIGHT 3 · 30%.\n- Listen for: the sequence brightening, then dropping dark, again and again.",
+          "set": {
+            "vcf.adsr": 4,
+            "lfo.speed": 0.8,
+            "vco1.fmLfo": 0,
+            "rev.left": 3,
+            "rev.right": 3
+          },
+          "cables": [["j.lfoSaw", "j.vcfAdsr"]]
+        }
+      ],
+      "context": {
+        "lfo.speed": "In this sound: how often the filter rises.",
+        "vcf.adsr": "In this sound: how far it rises."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.speed",
+          "try": "Raise to 3",
+          "hear": "A rise every bar or so: busier, more urgent."
+        },
+        {
+          "id": "vcf.res",
+          "try": "Raise to 8",
+          "hear": "Each rise screams."
+        }
+      ]
+    },
+    {
+      "id": "b2600-wheres-your-child-eerie-acid",
+      "name": "Eerie Ring-Mod Acid",
+      "ref": "In the style of Bam Bam — \"Where’s Your Child?\" (1988)",
+      "artist": "Bam Bam",
+      "tags": ["seq", "acid", "dark", "80s"],
+      "level": 2,
+      "blurb": "A dark, squelching acid line with a ghostly, clanging shadow from the ring modulator.",
+      "how": "VCO 3’s sawtooth into the resonant 4072 filter, plucked by the ADSR, plays the acid line. The ring modulator, mixed quietly into the filter, adds a metallic, out-of-tune shadow on every note, which makes it unsettling rather than fun. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.2],
+          [0.5, 40, 0.2],
+          [0.75, 52, 0.2],
+          [1.5, 43, 0.2],
+          [2, 40, 0.2],
+          [2.5, 46, 0.2],
+          [3, 40, 0.2],
+          [3.25, 41, 0.2],
+          [3.5, 52, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth and a ring",
+          "module": "osc",
+          "why": "The ring modulator kept low under the saw.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 8 · 80%.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 2 FREQUENCY 5 · 370 Hz (F♯4) · LF 1.11 Hz.\n- RING MOD VCO 1 10 · 100%.\n- RING MOD VCO 2 10 · 100%.\n- VCF AUDIO RING MOD 3 · 30%.\n- VCF AUDIO VCO 1 0 · 0%.\n- Listen for: a buzz with a metallic shadow.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 8,
+            "vco1.freq": 4.568,
+            "vco2.freq": 4.974,
+            "ring.a": 10,
+            "ring.b": 10,
+            "vcf.ring": 3,
+            "vcf.vco1": 0
+          }
+        },
+        {
+          "title": "Squelch",
+          "module": "filter",
+          "why": "The 4072, resonant, plucked.\n- VCF MODE 4072.\n- VCF FREQUENCY 3.6 · 103 Hz.\n- VCF RESONANCE 7.5 · 75%.\n- VCF CONTROL KYBD CV 4 · 40%.\n- VCF CONTROL ADSR 5 · 50%.\n- Listen for: a dark, squelching line.",
+          "set": {
+            "vcf.mode": "4072",
+            "vcf.freq": 3.6,
+            "vcf.res": 7.5,
+            "vcf.kbd": 4,
+            "vcf.adsr": 5
+          }
+        },
+        {
+          "title": "Short notes",
+          "module": "env",
+          "why": "A short decay.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 4.2 · 150 ms.\n- ADSR SUSTAIN 1 · 10%.\n- ADSR RELEASE 2 · 27 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 2 · 20%.\n- REVERB RIGHT 2 · 20%.\n- Listen for: an eerie, dark acid line.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 4.2,
+            "adsr.s": 1,
+            "adsr.r": 2,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 2,
+            "rev.right": 2
+          }
+        }
+      ],
+      "context": {
+        "vcf.ring": "In this sound: the ghost under the line."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.ring",
+          "try": "Raise to 6",
+          "hear": "The ghost takes over: a clanging, broken line."
+        }
+      ]
+    },
+    {
+      "id": "b2600-trans-millenia-lagged-random",
+      "name": "Gliding Random Melody",
+      "ref": "In the style of Pauline Anna Strom — Trans-Millenia Consort (1982)",
+      "artist": "Pauline Anna Strom",
+      "tags": ["seq", "ambient", "new age", "calm", "80s"],
+      "level": 3,
+      "blurb": "A held note that wanders by itself to a new pitch every second or so, gliding softly between them.",
+      "how": "The sample-and-hold, pre-wired to VCO 1’s pitch, picks a new random voltage on each tick of its slow clock. On its own it would jump. Patched through the lag processor first, each jump becomes a glide, and LAG OUT goes to VCO 1’s S/H OUT jack in its place. With a long attack and reverb, the random wandering sounds calm, not computer-like.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 57, 7.9],
+          [8, 52, 7.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A soft pulse",
+          "module": "osc",
+          "why": "VCO 1’s pulse, alone.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 45 · 45% duty.\n- VCF AUDIO VCO 1 7 · 70%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a hollow, soft tone.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vco1.pw": 45,
+            "vcf.vco1": 7,
+            "vcf.vco3": 0
+          }
+        },
+        {
+          "title": "Soft filter",
+          "module": "filter",
+          "why": "Warm.\n- VCF FREQUENCY 5 · 339 Hz.\n- VCF RESONANCE 2 · 20%.\n- VCF CONTROL KYBD CV 6 · 60%.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: a warm, round tone.",
+          "set": {
+            "vcf.freq": 5,
+            "vcf.res": 2,
+            "vcf.kbd": 6,
+            "vcf.adsr": 0
+          }
+        },
+        {
+          "title": "Random notes that glide",
+          "module": "patch",
+          "why": "The sample-and-hold into the lag, and the lag into VCO 1’s S/H OUT jack.\n- Cable S/H OUT → LAG IN (7): replaces the envelope follower at LAG IN.\n- Cable LAG OUT → VCO 1 FM (S/H OUT): replaces the sample-and-hold at the VCO 1 FM S/H OUT slider.\n- VCO 1 FM S/H OUT 5 · 50%: how far it wanders: about six semitones.\n- S&H RATE 2 · 0.65 Hz: a new note every second and a half.\n- S&H LEVEL 8 · 80%.\n- LAG TIME 7 · 200 ms: the glide between notes.\n- Listen for: the note drifting from pitch to pitch.",
+          "set": {
+            "vco1.fmSh": 5,
+            "sh.rate": 2,
+            "sh.level": 8,
+            "vp.lag": 7
+          },
+          "cables": [
+            ["j.shOut", "j.vp7"],
+            ["j.lagOut", "j.vco1Sh"]
+          ]
+        },
+        {
+          "title": "Slow and spacious",
+          "module": "env",
+          "why": "A slow swell, a long fade, and reverb.\n- ADSR ATTACK 7 · 610 ms.\n- ADSR DECAY 5 · 270 ms.\n- ADSR SUSTAIN 10 · 100%.\n- ADSR RELEASE 7.5 · 1.8 s.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 5 · 50%.\n- REVERB RIGHT 5 · 50%.\n- Listen for: a calm, wandering melody.",
+          "set": {
+            "adsr.a": 7,
+            "adsr.d": 5,
+            "adsr.s": 10,
+            "adsr.r": 7.5,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 5,
+            "rev.right": 5
+          }
+        }
+      ],
+      "context": {
+        "vp.lag": "In this sound: the glide. At 0 the notes jump.",
+        "sh.rate": "In this sound: how often a new note comes."
+      },
+      "tweaks": [
+        {
+          "id": "vp.lag",
+          "try": "Lower to 2",
+          "hear": "Clean jumps between notes: the classic computer burble."
+        },
+        {
+          "id": "vco1.fmSh",
+          "try": "Raise to 7",
+          "hear": "Wider wanderings, over an octave."
+        }
+      ]
+    },
+    {
+      "id": "b2600-go-straight-game-arp",
+      "name": "Beat-’em-Up Arpeggio",
+      "ref": "In the style of Yuzo Koshiro — Streets of Rage 2, \"Go Straight\" (1992)",
+      "artist": "Yuzo Koshiro",
+      "tags": ["seq", "games", "house", "90s"],
+      "level": 1,
+      "blurb": "A punchy, house-flavoured arpeggio of short, bright pulses, from a 16-bit fighting game.",
+      "how": "A thin pulse with a quick pluck. Koshiro wrote club music for the Mega Drive’s FM chip; this takes the arpeggio side of it, quick and bright.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.2],
+          [0.25, 63, 0.2],
+          [0.5, 67, 0.2],
+          [0.75, 72, 0.2],
+          [1, 67, 0.2],
+          [1.25, 63, 0.2],
+          [1.5, 60, 0.2],
+          [1.75, 63, 0.2],
+          [2, 58, 0.2],
+          [2.25, 62, 0.2],
+          [2.5, 65, 0.2],
+          [2.75, 70, 0.2],
+          [3, 65, 0.2],
+          [3.25, 62, 0.2],
+          [3.5, 58, 0.2],
+          [3.75, 62, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A thin pulse",
+          "module": "osc",
+          "why": "VCO 1’s pulse at a quarter width.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 25 · 25% duty.\n- VCF AUDIO VCO 1 8 · 80%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a thin, nasal tone.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vco1.pw": 25,
+            "vcf.vco1": 8,
+            "vcf.vco3": 0
+          }
+        },
+        {
+          "title": "Bright pluck",
+          "module": "filter",
+          "why": "Fairly open.\n- VCF FREQUENCY 6 · 794 Hz.\n- VCF RESONANCE 2 · 20%.\n- VCF CONTROL KYBD CV 6 · 60%.\n- VCF CONTROL ADSR 3 · 30%.\n- Listen for: a bright, plucky tone.",
+          "set": {
+            "vcf.freq": 6,
+            "vcf.res": 2,
+            "vcf.kbd": 6,
+            "vcf.adsr": 3
+          }
+        },
+        {
+          "title": "Short",
+          "module": "env",
+          "why": "A short decay.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 4 · 130 ms.\n- ADSR SUSTAIN 2 · 20%.\n- ADSR RELEASE 2.5 · 40 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: a punchy game arpeggio.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 4,
+            "adsr.s": 2,
+            "adsr.r": 2.5,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        }
+      ],
+      "context": {
+        "vco1.pw": "In this sound: how thin the pulse is."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.pw",
+          "try": "Raise to 50",
+          "hear": "A rounder, squarer arpeggio."
+        }
+      ]
+    },
+    {
+      "id": "b2600-mahadeva-lf-vco-sweep",
+      "name": "Psytrance Rolling Sequence",
+      "ref": "In the style of Astral Projection — \"Mahadeva\" (Trust in Trance, 1996)",
+      "artist": "Astral Projection",
+      "tags": ["seq", "psytrance", "goa trance", "90s"],
+      "level": 3,
+      "blurb": "A rolling sixteenth-note line whose filter is swept slowly by an oscillator turned into an LFO.",
+      "how": "Any of the 2600’s three VCOs can be switched to LF and become a slow modulation source. VCO 2, in LF, still reaches the filter through its pre-wired VCF CONTROL VCO 2 slider, so its slow sine sweeps the cutoff with no cable. VCO 3 and VCO 1 play the line, an octave apart. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 145,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.2],
+          [0.25, 40, 0.2],
+          [0.5, 52, 0.2],
+          [0.75, 40, 0.2],
+          [1, 40, 0.2],
+          [1.25, 50, 0.2],
+          [1.5, 40, 0.2],
+          [1.75, 40, 0.2],
+          [2, 52, 0.2],
+          [2.25, 40, 0.2],
+          [2.5, 40, 0.2],
+          [2.75, 47, 0.2],
+          [3, 40, 0.2],
+          [3.25, 40, 0.2],
+          [3.5, 52, 0.2],
+          [3.75, 43, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two VCOs an octave apart",
+          "module": "osc",
+          "why": "VCO 3’s sawtooth and VCO 1’s pulse.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 7 · 70%.\n- VCO 1 FREQUENCY 5.4 · 523 Hz (C5) · LF 1.57 Hz.\n- VCO 1 PULSE WIDTH 35 · 35% duty.\n- VCF AUDIO VCO 1 4 · 40%.\n- Listen for: a bright, buzzy line.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 7,
+            "vco1.freq": 5.381,
+            "vco1.pw": 35,
+            "vcf.vco1": 4
+          }
+        },
+        {
+          "title": "A resonant pluck",
+          "module": "filter",
+          "why": "Low, resonant, plucked by the ADSR.\n- VCF MODE 4072.\n- VCF FREQUENCY 3.8 · 122 Hz.\n- VCF RESONANCE 6.5 · 65%.\n- VCF CONTROL KYBD CV 4 · 40%.\n- VCF CONTROL ADSR 4 · 40%.\n- Listen for: a squelching, rolling line.",
+          "set": {
+            "vcf.mode": "4072",
+            "vcf.freq": 3.8,
+            "vcf.res": 6.5,
+            "vcf.kbd": 4,
+            "vcf.adsr": 4
+          }
+        },
+        {
+          "title": "Short notes",
+          "module": "env",
+          "why": "A short decay.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 3.8 · 110 ms.\n- ADSR SUSTAIN 1 · 10%.\n- ADSR RELEASE 2 · 27 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: tight sixteenths.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 3.8,
+            "adsr.s": 1,
+            "adsr.r": 2,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        },
+        {
+          "title": "VCO 2 as an LFO",
+          "module": "lfo",
+          "why": "VCO 2 switched to LF, out of the audio and onto the cutoff.\n- VCO 2 RANGE LF (KYBD OFF).\n- VCO 2 FREQUENCY 3 · 67 Hz (C2) · LF 0.20 Hz: about one sweep every five seconds.\n- VCF AUDIO VCO 2 0 · 0%: VCO 2 is not heard.\n- VCF CONTROL VCO 2 4 · 40%: how far it sweeps the filter.\n- Listen for: the line slowly opening and closing as it rolls.",
+          "set": {
+            "vco2.range": "lf",
+            "vco2.freq": 2.97,
+            "vcf.vco2": 0,
+            "vcf.vco2cv": 4
+          }
+        }
+      ],
+      "context": {
+        "vco2.range": "In this sound: LF, so VCO 2 is a slow sweep instead of a note.",
+        "vcf.vco2cv": "In this sound: the depth of the sweep."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.freq",
+          "try": "Raise to 5",
+          "hear": "A fast wobble of the filter."
+        },
+        {
+          "id": "vco2.range",
+          "try": "Switch to AUDIO",
+          "hear": "VCO 2 sweeps at audio speed: the line turns into a rasping growl."
+        }
+      ]
+    },
+    {
+      "id": "b2600-angelic-music-spring-swell",
+      "name": "Angelic Spring Swell",
+      "ref": "In the style of Iasos — Angelic Music (1978)",
+      "artist": "Iasos",
+      "tags": ["pad", "new age", "ambient", "soft", "70s"],
+      "level": 2,
+      "blurb": "A soft, shimmering swell of three oscillators washed in spring reverb, slow and luminous.",
+      "how": "Three VCOs a few cents apart beat gently against each other. A slow attack and a long release let each note swell up and hang, and the spring reverb, up high, turns the swells into a wash of light.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 64, 3.6],
+          [4, 69, 3.6],
+          [8, 67, 3.6],
+          [12, 64, 3.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Three oscillators, slightly apart",
+          "module": "osc",
+          "why": "Two pulses and a sawtooth.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 5 · 50%.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 FINE TUNE 0.1 · 0 st.\n- VCO 1 PULSE WIDTH 50 · 50% duty.\n- VCF AUDIO VCO 1 5 · 50%.\n- VCO 2 FREQUENCY 5.4 · 523 Hz (C5) · LF 1.57 Hz.\n- VCO 2 FINE TUNE −0.1 · 0 st.\n- VCO 2 PULSE WIDTH 50 · 50% duty.\n- VCF AUDIO VCO 2 3 · 30%.\n- Listen for: a gently beating, shimmering tone.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 5,
+            "vco1.freq": 4.568,
+            "vco1.fine": 0.12,
+            "vco1.pw": 50,
+            "vcf.vco1": 5,
+            "vco2.freq": 5.381,
+            "vco2.fine": -0.1,
+            "vco2.pw": 50,
+            "vcf.vco2": 3
+          }
+        },
+        {
+          "title": "Soft and warm",
+          "module": "filter",
+          "why": "The filter rounds it.\n- VCF FREQUENCY 5 · 339 Hz.\n- VCF RESONANCE 1.5 · 15%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 1 · 10%.\n- Listen for: a soft, warm shimmer.",
+          "set": {
+            "vcf.freq": 5,
+            "vcf.res": 1.5,
+            "vcf.kbd": 5,
+            "vcf.adsr": 1
+          }
+        },
+        {
+          "title": "Swell and hang",
+          "module": "env",
+          "why": "Nearly a second to swell, two to fade.\n- ADSR ATTACK 7.5 · 940 ms.\n- ADSR DECAY 6 · 570 ms.\n- ADSR SUSTAIN 10 · 100%.\n- ADSR RELEASE 7.8 · 2.3 s.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: slow swells that overlap.",
+          "set": {
+            "adsr.a": 7.5,
+            "adsr.d": 6,
+            "adsr.s": 10,
+            "adsr.r": 7.8,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        },
+        {
+          "title": "A wash of reverb",
+          "module": "fx",
+          "why": "The spring reverb hears the mixer.\n- REVERB LEFT 7 · 70%.\n- REVERB RIGHT 7 · 70%.\n- Listen for: a luminous wash.",
+          "set": {
+            "rev.left": 7,
+            "rev.right": 7
+          }
+        }
+      ],
+      "context": {
+        "rev.left": "In this sound: half of the wash. The two reverb sliders add together here."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.fine",
+          "try": "Raise to 0.4",
+          "hear": "A faster, more chorus-like shimmer."
+        }
+      ]
+    },
+    {
+      "id": "b2600-sacred-space-wandering-fifth",
+      "name": "Breathing Fifth Pad",
+      "ref": "In the style of Constance Demby — Sacred Space Music (1986)",
+      "artist": "Constance Demby",
+      "tags": ["pad", "new age", "ambient", "calm", "80s"],
+      "level": 3,
+      "blurb": "A wide, open fifth that slowly breathes in brightness while its upper note wavers gently.",
+      "how": "VCO 1 plays the root and VCO 3 the fifth above. VCO 2, switched to LF, is a slow sine that reaches two places through pre-wired sliders: VCO 3’s pitch (the VCO 3 FM VCO 2 slider), where it makes the fifth waver, and the filter (VCF CONTROL VCO 2), where it makes the whole sound breathe. No cables, two movements from one source.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 50, 7.9],
+          [8, 48, 7.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A root and a fifth",
+          "module": "osc",
+          "why": "VCO 1’s pulse on the note, VCO 3’s sawtooth a fifth above.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 50 · 50% duty.\n- VCF AUDIO VCO 1 6 · 60%.\n- VCO 3 FREQUENCY 5 · 392 Hz (G4) · LF 1.18 Hz.\n- VCF AUDIO VCO 3 5 · 50%.\n- Listen for: an open, two-note drone.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vco1.pw": 50,
+            "vcf.vco1": 6,
+            "vco3.freq": 5.042,
+            "vcf.vco3": 5
+          }
+        },
+        {
+          "title": "VCO 2 as a slow sine",
+          "module": "lfo",
+          "why": "Switched to LF, VCO 2 is out of the audio and becomes a modulator.\n- VCO 2 RANGE LF (KYBD OFF).\n- VCO 2 FREQUENCY 3.3 · 89 Hz (F2) · LF 0.27 Hz: about one cycle every four seconds.\n- VCF AUDIO VCO 2 0 · 0%.\n- VCO 3 FM VCO 2 1 · 10%: a gentle waver on the fifth.\n- VCF CONTROL VCO 2 2.5 · 25%: a slow breath on the filter.\n- Listen for: the fifth wavering and the sound breathing.",
+          "set": {
+            "vco2.range": "lf",
+            "vco2.freq": 3.3,
+            "vcf.vco2": 0,
+            "vco3.fmVco2": 1,
+            "vcf.vco2cv": 2.5
+          }
+        },
+        {
+          "title": "A soft filter",
+          "module": "filter",
+          "why": "Warm, with a little peak.\n- VCF FREQUENCY 4.6 · 241 Hz.\n- VCF RESONANCE 3 · 30%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: a warm, breathing pad.",
+          "set": {
+            "vcf.freq": 4.6,
+            "vcf.res": 3,
+            "vcf.kbd": 5,
+            "vcf.adsr": 0
+          }
+        },
+        {
+          "title": "Slow at both ends",
+          "module": "env",
+          "why": "A slow swell, a long fade, and reverb.\n- ADSR ATTACK 8 · 1.4 s.\n- ADSR DECAY 6 · 570 ms.\n- ADSR SUSTAIN 10 · 100%.\n- ADSR RELEASE 8 · 2.6 s.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 6 · 60%.\n- REVERB RIGHT 6 · 60%.\n- Listen for: a wide, calm, breathing fifth.",
+          "set": {
+            "adsr.a": 8,
+            "adsr.d": 6,
+            "adsr.s": 10,
+            "adsr.r": 8,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 6,
+            "rev.right": 6
+          }
+        }
+      ],
+      "context": {
+        "vco3.fmVco2": "In this sound: how much the fifth wavers.",
+        "vcf.vco2cv": "In this sound: how deep the breath is."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.freq",
+          "try": "Lower to 2.5",
+          "hear": "A slower, longer breath."
+        }
+      ]
+    },
+    {
+      "id": "b2600-tibetan-bells-ring",
+      "name": "Ring-Modulated Temple Bells",
+      "ref": "In the style of Henry Wolff & Nancy Hennings — Tibetan Bells (1972)",
+      "artist": "Henry Wolff & Nancy Hennings",
+      "tags": ["keys", "ambient", "bell", "calm", "70s"],
+      "level": 2,
+      "blurb": "Deep, shimmering bells that ring and fade slowly, each with overtones that drift against the note.",
+      "how": "The ring modulator multiplies VCO 1’s sawtooth and VCO 2’s sine. Tuned well apart at an odd ratio, the product is a bell’s inharmonic overtones. Sent straight into the VCA through its own slider, it skips the filter. A long, falling ADSR and plenty of reverb let each strike ring out.",
+      "phrase": {
+        "bpm": 54,
+        "loop": true,
+        "steps": [
+          [0, 48, 3.9],
+          [4, 55, 1.9],
+          [6, 53, 1.9],
+          [8, 48, 3.9],
+          [12, 43, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bell from the ring modulator",
+          "module": "osc",
+          "why": "Two oscillators at an inharmonic ratio, multiplied.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 2 FREQUENCY 5.7 · 711 Hz (F5) · LF 2.13 Hz: just over an octave and a fourth above.\n- RING MOD VCO 1 10 · 100%.\n- RING MOD VCO 2 10 · 100%.\n- VCA AUDIO RING MOD 8 · 80%: straight into the VCA, past the filter.\n- VCF AUDIO VCO 1 0 · 0%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a deep, clanging bell tone.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vco2.freq": 5.74,
+            "ring.a": 10,
+            "ring.b": 10,
+            "vca.ring": 8,
+            "vcf.vco1": 0,
+            "vcf.vco3": 0
+          }
+        },
+        {
+          "title": "The filter is not in the path",
+          "module": "filter",
+          "why": "It is set, but nothing reaches it.\n- VCF FREQUENCY 6 · 794 Hz.\n- VCF CONTROL KYBD CV 5 · 50%.\n- Listen for: no change.",
+          "set": {
+            "vcf.freq": 6,
+            "vcf.kbd": 5
+          }
+        },
+        {
+          "title": "Strike and ring",
+          "module": "env",
+          "why": "Up at once, then a long fall to nothing.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 8 · 2.6 s: about two and a half seconds.\n- ADSR SUSTAIN 0 · 0%.\n- ADSR RELEASE 8 · 2.6 s.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: each bell struck and slowly dying.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 8,
+            "adsr.s": 0,
+            "adsr.r": 8,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        },
+        {
+          "title": "A temple",
+          "module": "fx",
+          "why": "Plenty of spring reverb.\n- REVERB LEFT 6 · 60%.\n- REVERB RIGHT 6 · 60%.\n- Listen for: deep, shimmering bells in a large room.",
+          "set": {
+            "rev.left": 6,
+            "rev.right": 6
+          }
+        }
+      ],
+      "context": {
+        "vco2.freq": "In this sound: the bell’s metal. Small moves change its whole character."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.freq",
+          "try": "Move it to an exact octave above VCO 1",
+          "hear": "A sweeter, more tuned bell, like a chime."
+        }
+      ]
+    },
+    {
+      "id": "b2600-circles-organ-drone",
+      "name": "Slow Organ Drone",
+      "ref": "In the style of Sarah Davachi — All My Circles Run (2017)",
+      "artist": "Sarah Davachi",
+      "tags": ["drone", "ambient", "minimal", "calm", "10s"],
+      "level": 1,
+      "blurb": "A long, still organ-like drone that swells in so slowly you notice it only once it is there.",
+      "how": "A pulse and a sawtooth an octave apart, through a soft filter, with an attack of a couple of seconds and an even longer release. The sound is plain on purpose: held long enough, its overtones become the thing you listen to.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 55, 7.9],
+          [8, 53, 7.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Pulse and sawtooth an octave apart",
+          "module": "osc",
+          "why": "Two organ ranks.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 30 · 30% duty.\n- VCF AUDIO VCO 1 6 · 60%.\n- VCO 3 FREQUENCY 5.4 · 523 Hz (C5) · LF 1.57 Hz.\n- VCF AUDIO VCO 3 3 · 30%.\n- Listen for: a reedy, organ-like tone.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vco1.pw": 30,
+            "vcf.vco1": 6,
+            "vco3.freq": 5.381,
+            "vcf.vco3": 3
+          }
+        },
+        {
+          "title": "Soft",
+          "module": "filter",
+          "why": "A gentle low-pass.\n- VCF FREQUENCY 4.8 · 285 Hz.\n- VCF RESONANCE 1 · 10%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: a soft, warm drone.",
+          "set": {
+            "vcf.freq": 4.8,
+            "vcf.res": 1,
+            "vcf.kbd": 5,
+            "vcf.adsr": 0
+          }
+        },
+        {
+          "title": "So slow",
+          "module": "env",
+          "why": "Two seconds to swell, four to fade.\n- ADSR ATTACK 8.5 · 2.2 s.\n- ADSR DECAY 6 · 570 ms.\n- ADSR SUSTAIN 10 · 100%.\n- ADSR RELEASE 8.6 · 4.1 s.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 4 · 40%.\n- REVERB RIGHT 4 · 40%.\n- Listen for: a drone that seems to appear from nowhere.",
+          "set": {
+            "adsr.a": 8.5,
+            "adsr.d": 6,
+            "adsr.s": 10,
+            "adsr.r": 8.6,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 4,
+            "rev.right": 4
+          }
+        }
+      ],
+      "context": {
+        "adsr.a": "In this sound: how slowly it appears."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.pw",
+          "try": "Move slowly between 10 and 50",
+          "hear": "The reed of the drone changes colour."
+        }
+      ]
+    },
+    {
+      "id": "b2600-mother-mallard-gentle-seq",
+      "name": "Gentle Triangle Sequence",
+      "ref": "In the style of Mother Mallard’s Portable Masterpiece Co. (1973)",
+      "artist": "Mother Mallard’s Portable Masterpiece Co.",
+      "tags": ["seq", "ambient", "gentle", "soft", "70s"],
+      "level": 2,
+      "blurb": "A soft, flowing sequence of rounded triangle tones that ripple gently into one another.",
+      "how": "VCO 2’s triangle, patched into the filter in place of its pulse, gives a soft, flute-like tone. A short pluck and a long release let each note ring under the next, and the reverb blurs them into a flowing ripple. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.45],
+          [0.5, 67, 0.45],
+          [1, 71, 0.45],
+          [1.5, 74, 0.45],
+          [2, 71, 0.45],
+          [2.5, 67, 0.45],
+          [3, 64, 0.45],
+          [3.5, 62, 0.45],
+          [4, 60, 0.45],
+          [4.5, 64, 0.45],
+          [5, 67, 0.45],
+          [5.5, 71, 0.45],
+          [6, 67, 0.45],
+          [6.5, 64, 0.45],
+          [7, 62, 0.45],
+          [7.5, 59, 0.45]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A triangle",
+          "module": "patch",
+          "why": "VCO 2’s triangle into the filter, in place of its pulse.\n- Cable VCO 2 TRI → VCF AUDIO (VCO 2).\n- VCO 2 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 2 9 · 90%.\n- VCF AUDIO VCO 1 0 · 0%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a soft, flute-like tone.",
+          "set": {
+            "vco2.freq": 4.568,
+            "vcf.vco2": 9,
+            "vcf.vco1": 0,
+            "vcf.vco3": 0
+          },
+          "cables": [["j.vco2tri", "j.vcfVco2"]]
+        },
+        {
+          "title": "Gentle",
+          "module": "filter",
+          "why": "Open, just smoothing.\n- VCF FREQUENCY 6 · 794 Hz.\n- VCF RESONANCE 0 · 0%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 1 · 10%.\n- Listen for: a gentle tone.",
+          "set": {
+            "vcf.freq": 6,
+            "vcf.res": 0,
+            "vcf.kbd": 5,
+            "vcf.adsr": 1
+          }
+        },
+        {
+          "title": "Ripple",
+          "module": "env",
+          "why": "A soft pluck and a long release.\n- ADSR ATTACK 2 · 8 ms.\n- ADSR DECAY 6 · 570 ms.\n- ADSR SUSTAIN 3 · 30%.\n- ADSR RELEASE 7 · 1.2 s.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 4.5 · 45%.\n- REVERB RIGHT 4.5 · 45%.\n- Listen for: a soft, flowing ripple.",
+          "set": {
+            "adsr.a": 2,
+            "adsr.d": 6,
+            "adsr.s": 3,
+            "adsr.r": 7,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 4.5,
+            "rev.right": 4.5
+          }
+        }
+      ],
+      "context": {
+        "adsr.r": "In this sound: how much each note rings into the next."
+      },
+      "tweaks": [
+        {
+          "id": "rev.left",
+          "try": "Raise to 8",
+          "hear": "A wash in which the notes dissolve."
+        }
+      ]
+    },
+    {
+      "id": "b2600-vapor-drawings-lagged-follower",
+      "name": "Smoothed Self-Swell",
+      "ref": "In the style of Mark Isham — Vapor Drawings (1983)",
+      "artist": "Mark Isham",
+      "tags": ["pad", "ambient", "jazz", "soft", "80s"],
+      "level": 3,
+      "blurb": "A soft lead whose brightness follows its own loudness, smoothed so it blooms slowly like breath.",
+      "how": "The envelope follower turns loudness into a voltage, and the lag processor’s input is pre-wired from it. Feed the VCA’s output into the PREAMP INPUT and take LAG OUT to the filter’s ADSR control jack: the filter now opens as the sound gets louder, but slowly, as the lag smooths the follower. Each note blooms a moment after it sounds.",
+      "phrase": {
+        "bpm": 68,
+        "loop": true,
+        "steps": [
+          [0, 67, 2.9],
+          [3, 72, 0.9],
+          [4, 71, 2.9],
+          [7, 67, 0.9],
+          [8, 69, 3.9],
+          [12, 64, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A soft pulse and sawtooth",
+          "module": "osc",
+          "why": "Two VCOs, a hair apart.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 45 · 45% duty.\n- VCF AUDIO VCO 1 5 · 50%.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 3 FINE TUNE 0.1 · 0 st.\n- VCF AUDIO VCO 3 5 · 50%.\n- Listen for: a soft, slightly moving tone.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vco1.pw": 45,
+            "vcf.vco1": 5,
+            "vco3.freq": 4.568,
+            "vco3.fine": 0.1,
+            "vcf.vco3": 5
+          }
+        },
+        {
+          "title": "A dark filter",
+          "module": "filter",
+          "why": "Fairly low, waiting to be opened further.\n- VCF FREQUENCY 5 · 339 Hz.\n- VCF RESONANCE 3 · 30%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 5 · 50%: once its jack is patched, how far the follower opens it.\n- Listen for: a soft, rounded tone.",
+          "set": {
+            "vcf.freq": 5,
+            "vcf.res": 3,
+            "vcf.kbd": 5,
+            "vcf.adsr": 5
+          }
+        },
+        {
+          "title": "Soft swells",
+          "module": "env",
+          "why": "The ADSR shapes only the loudness.\n- ADSR ATTACK 6 · 260 ms.\n- ADSR DECAY 6 · 570 ms.\n- ADSR SUSTAIN 9 · 90%.\n- ADSR RELEASE 7 · 1.2 s.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: soft swells.",
+          "set": {
+            "adsr.a": 6,
+            "adsr.d": 6,
+            "adsr.s": 9,
+            "adsr.r": 7,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        },
+        {
+          "title": "The sound opens itself, slowly",
+          "module": "patch",
+          "why": "The VCA into the preamp; the lag, which hears the follower, into the filter.\n- Cable VCA OUTPUT → PREAMP INPUT.\n- Cable LAG OUT → VCF CONTROL (ADSR): replaces the ADSR at the VCF CONTROL ADSR slider.\n- PREAMP RANGE x10.\n- PREAMP GAIN 6 · 60%.\n- ENV FOLLOWER 7 · 70%.\n- LAG TIME 8 · 440 ms: how slowly the brightness follows.\n- REVERB LEFT 4 · 40%.\n- REVERB RIGHT 4 · 40%.\n- Listen for: each note blooming open a moment after it swells.",
+          "set": {
+            "pre.range": "x10",
+            "pre.gain": 6,
+            "envf.sens": 7,
+            "vp.lag": 8,
+            "rev.left": 4,
+            "rev.right": 4
+          },
+          "cables": [
+            ["j.vcaOut", "j.preIn"],
+            ["j.lagOut", "j.vcfAdsr"]
+          ]
+        }
+      ],
+      "context": {
+        "vp.lag": "In this sound: how slowly the bloom follows the loudness.",
+        "envf.sens": "In this sound: how bright the bloom gets."
+      },
+      "tweaks": [
+        {
+          "id": "vp.lag",
+          "try": "Lower to 3",
+          "hear": "The bloom follows at once, more like a wah."
+        },
+        {
+          "id": "vcf.res",
+          "try": "Raise to 6",
+          "hear": "The bloom sings as it opens."
+        }
+      ]
+    },
+    {
+      "id": "b2600-clouds-duo-thirds",
+      "name": "Soft Duophonic Thirds",
+      "ref": "In the style of Gigi Masin — \"Clouds\" (Wind, 1986)",
+      "artist": "Gigi Masin",
+      "tags": ["keys", "ambient", "gentle", "soft", "80s"],
+      "level": 3,
+      "blurb": "Two soft triangle voices moving together in thirds, gentle as drifting cloud.",
+      "how": "In DUO mode the 2600 plays two held keys: the lower through the keyboard CV, the higher at UPPER VOICE. VCO 3 plays the lower note and VCO 2, patched from UPPER VOICE, the higher. Both are swapped to their triangle outputs, so the pair is soft and round. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 64, 3.6],
+          [0, 67, 3.6],
+          [4, 62, 3.6],
+          [4, 65, 3.6],
+          [8, 60, 3.6],
+          [8, 64, 3.6],
+          [12, 59, 3.6],
+          [12, 62, 3.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two triangles",
+          "module": "patch",
+          "why": "Both VCOs’ triangles into the filter, in place of the saw and pulse.\n- Cable VCO 3 TRI → VCF AUDIO (VCO 3).\n- Cable VCO 2 TRI → VCF AUDIO (VCO 2).\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 7 · 70%.\n- VCO 2 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 2 7 · 70%.\n- VCF AUDIO VCO 1 0 · 0%.\n- Listen for: a soft, round tone.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 7,
+            "vco2.freq": 4.568,
+            "vcf.vco2": 7,
+            "vcf.vco1": 0
+          },
+          "cables": [
+            ["j.vco3tri", "j.vcfVco3"],
+            ["j.vco2tri", "j.vcfVco2"]
+          ]
+        },
+        {
+          "title": "Two voices",
+          "module": "patch",
+          "why": "DUO, and the upper key to VCO 2.\n- Cable UPPER VOICE → VCO 2 KYBD CV.\n- VOICE MODE DUO.\n- Listen for: two keys, two soft notes.",
+          "set": {
+            "kbd.voice": "duo"
+          },
+          "cables": [["j.upper", "j.vco2Kbd"]]
+        },
+        {
+          "title": "Gentle",
+          "module": "filter",
+          "why": "Open, smoothing only.\n- VCF FREQUENCY 6 · 794 Hz.\n- VCF RESONANCE 0 · 0%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: a gentle pair.",
+          "set": {
+            "vcf.freq": 6,
+            "vcf.res": 0,
+            "vcf.kbd": 5,
+            "vcf.adsr": 0
+          }
+        },
+        {
+          "title": "Drifting",
+          "module": "env",
+          "why": "A soft swell, a long release, reverb.\n- ADSR ATTACK 6.5 · 400 ms.\n- ADSR DECAY 6 · 570 ms.\n- ADSR SUSTAIN 9 · 90%.\n- ADSR RELEASE 7.5 · 1.8 s.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 5 · 50%.\n- REVERB RIGHT 5 · 50%.\n- Listen for: soft thirds drifting by.",
+          "set": {
+            "adsr.a": 6.5,
+            "adsr.d": 6,
+            "adsr.s": 9,
+            "adsr.r": 7.5,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 5,
+            "rev.right": 5
+          }
+        }
+      ],
+      "context": {
+        "kbd.voice": "In this sound: DUO, so each pair of keys sounds as a pair."
+      },
+      "tweaks": [
+        {
+          "id": "kbd.voice",
+          "try": "Switch to MONO",
+          "hear": "Only the lower note of each third."
+        }
+      ]
+    },
+    {
+      "id": "b2600-wild-sanctuary-crickets",
+      "name": "Evening Crickets",
+      "ref": "In the style of Beaver & Krause — In a Wild Sanctuary (1970)",
+      "artist": "Beaver & Krause",
+      "tags": ["fx", "nature", "ambient", "calm", "70s"],
+      "level": 3,
+      "blurb": "A field of high, chirping crickets, each chirp a slightly different pitch, on a warm evening.",
+      "how": "ENVELOPE ROUTING on S/H CLOCK fires the envelopes from the sample-and-hold clock, over and over, keys or no keys. At about twelve ticks a second with a very short ADSR, a high pulse becomes a chirp. The sample-and-hold is also pre-wired to VCO 1’s pitch, so each chirp lands on a slightly different note.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 72, 7.9],
+          [8, 72, 7.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A high pulse",
+          "module": "osc",
+          "why": "VCO 1 two octaves up.\n- VCO 1 FREQUENCY 6.2 · 1.0 kHz (C6) · LF 3.14 Hz.\n- VCO 1 PULSE WIDTH 20 · 20% duty.\n- VCF AUDIO VCO 1 7 · 70%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a high, thin whistle.",
+          "set": {
+            "vco1.freq": 6.194,
+            "vco1.pw": 20,
+            "vcf.vco1": 7,
+            "vcf.vco3": 0
+          }
+        },
+        {
+          "title": "Bright",
+          "module": "filter",
+          "why": "Open.\n- VCF FREQUENCY 8 · 4.4 kHz.\n- VCF RESONANCE 2 · 20%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: a bright, piercing tone.",
+          "set": {
+            "vcf.freq": 8,
+            "vcf.res": 2,
+            "vcf.kbd": 5,
+            "vcf.adsr": 0
+          }
+        },
+        {
+          "title": "Chirps from the clock",
+          "module": "env",
+          "why": "The sample-and-hold clock fires the envelopes; each firing is short.\n- ENVELOPE ROUTING S/H CLOCK.\n- S&H RATE 8 · 12 Hz: about twelve chirps a second.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 2.5 · 40 ms.\n- ADSR SUSTAIN 0 · 0%.\n- ADSR RELEASE 1 · 13 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 7 · 70%.\n- Listen for: a fast, chirping trill.",
+          "set": {
+            "env.src": "sh",
+            "sh.rate": 8,
+            "adsr.a": 0,
+            "adsr.d": 2.5,
+            "adsr.s": 0,
+            "adsr.r": 1,
+            "vca.adsr": 10,
+            "mix.vca": 7
+          }
+        },
+        {
+          "title": "Each chirp a little different",
+          "module": "mod",
+          "why": "The sample-and-hold nudges VCO 1’s pitch on each tick.\n- VCO 1 FM S/H OUT 1.5 · 15%: half a semitone or so.\n- S&H LEVEL 8 · 80%.\n- REVERB LEFT 4 · 40%.\n- REVERB RIGHT 4 · 40%.\n- Listen for: a field of crickets on a warm evening.",
+          "set": {
+            "vco1.fmSh": 1.5,
+            "sh.level": 8,
+            "rev.left": 4,
+            "rev.right": 4
+          }
+        }
+      ],
+      "context": {
+        "env.src": "In this sound: the clock, not the keys, fires each chirp.",
+        "sh.rate": "In this sound: how fast the crickets chirp."
+      },
+      "tweaks": [
+        {
+          "id": "sh.rate",
+          "try": "Lower to 6",
+          "hear": "Slower chirps, like a lone cricket."
+        },
+        {
+          "id": "vco1.fmSh",
+          "try": "Raise to 4",
+          "hear": "Wildly different pitches: a dawn chorus of birds."
+        }
+      ]
+    },
+    {
+      "id": "b2600-world-of-echo-cello",
+      "name": "Bowed Cello with Late Vibrato",
+      "ref": "In the style of Arthur Russell — World of Echo (1986)",
+      "artist": "Arthur Russell",
+      "tags": ["strings", "cello", "gentle", "soft", "80s"],
+      "level": 3,
+      "blurb": "A warm, bowed cello tone with a vibrato that arrives once each note has settled.",
+      "how": "A sawtooth and a pulse a little apart, with an attack of a quarter of a second, give a bowed string. The delayed vibrato from the LFO goes into a mult, so one cable from it can reach both VCO 1 and VCO 3. Each has its own FM slider, scaled differently, so the two are set to give the same width.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 55, 2.9],
+          [3, 57, 0.9],
+          [4, 59, 1.9],
+          [6, 55, 1.9],
+          [8, 52, 3.9],
+          [12, 50, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bowed tone",
+          "module": "osc",
+          "why": "VCO 3’s sawtooth and VCO 1’s pulse.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 6 · 60%.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 FINE TUNE 0.1 · 0 st.\n- VCO 1 PULSE WIDTH 30 · 30% duty.\n- VCF AUDIO VCO 1 4 · 40%.\n- Listen for: a rich, buzzing tone.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 6,
+            "vco1.freq": 4.568,
+            "vco1.fine": 0.08,
+            "vco1.pw": 30,
+            "vcf.vco1": 4
+          }
+        },
+        {
+          "title": "Warm",
+          "module": "filter",
+          "why": "The filter takes the rasp off.\n- VCF FREQUENCY 4.6 · 241 Hz.\n- VCF RESONANCE 2 · 20%.\n- VCF CONTROL KYBD CV 6 · 60%.\n- VCF CONTROL ADSR 2 · 20%.\n- Listen for: a warm, woody string.",
+          "set": {
+            "vcf.freq": 4.6,
+            "vcf.res": 2,
+            "vcf.kbd": 6,
+            "vcf.adsr": 2
+          }
+        },
+        {
+          "title": "Bowed",
+          "module": "env",
+          "why": "A quarter-second attack, held, a gentle release.\n- ADSR ATTACK 6 · 260 ms.\n- ADSR DECAY 6 · 570 ms.\n- ADSR SUSTAIN 9 · 90%.\n- ADSR RELEASE 6 · 570 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 3.5 · 35%.\n- REVERB RIGHT 3.5 · 35%.\n- Listen for: notes bowed in, not struck.",
+          "set": {
+            "adsr.a": 6,
+            "adsr.d": 6,
+            "adsr.s": 9,
+            "adsr.r": 6,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 3.5,
+            "rev.right": 3.5
+          }
+        },
+        {
+          "title": "A late vibrato on both",
+          "module": "patch",
+          "why": "The delayed sine into a mult, and from the mult to both VCOs.\n- Cable LFO SINE DELAYED → MULT 1 (in).\n- Cable MULT 3 (out) → VCO 1 FM (LFO): replaces the plain LFO at the VCO 1 FM LFO slider.\n- Cable MULT 4 (out) → VCO 3 FM (VCO 2): replaces VCO 2’s sine at the VCO 3 FM VCO 2 slider.\n- VCO 1 FM LFO 2.5 · 25%.\n- VCO 3 FM VCO 2 1.5 · 15%: the same width as VCO 1’s: this slider goes three times as far.\n- LFO SPEED 5.3 · 2.87 Hz.\n- VIB DELAY 2.5 · 750 ms.\n- VIB DEPTH 8 · 80%.\n- Listen for: long notes starting to sing after a moment.",
+          "set": {
+            "vco1.fmLfo": 2.5,
+            "vco3.fmVco2": 1.45,
+            "lfo.speed": 5.3,
+            "lfo.vibDelay": 2.5,
+            "lfo.vibDepth": 8
+          },
+          "cables": [
+            ["j.lfoDelayed", "j.mult1"],
+            ["j.mult3", "j.vco1Lfo"],
+            ["j.mult4", "j.vco3Vco2"]
+          ]
+        }
+      ],
+      "context": {
+        "lfo.vibDelay": "In this sound: how long the bow is held straight.",
+        "adsr.a": "In this sound: the bow catching the string."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.vibDelay",
+          "try": "Lower to 0",
+          "hear": "Vibrato from the start of each note, more like a violin."
+        },
+        {
+          "id": "adsr.a",
+          "try": "Lower to 3",
+          "hear": "A plucked start: pizzicato."
+        }
+      ]
+    },
+    {
+      "id": "b2600-marble-index-harmonium",
+      "name": "Wheezing Harmonium",
+      "ref": "In the style of Nico — The Marble Index (1968)",
+      "artist": "Nico",
+      "tags": ["keys", "harmonium", "dark", "drone", "60s"],
+      "level": 2,
+      "blurb": "A cold, reedy harmonium tone with a breath of air in it, playing a slow, solemn line.",
+      "how": "Two narrow pulses an octave apart make the reedy tone of a pump organ, and a little noise through the filter is the wheeze of its bellows. A slow attack lets each note breathe in. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 62, 1.9],
+          [2, 65, 1.9],
+          [4, 64, 0.9],
+          [5, 62, 0.9],
+          [6, 60, 1.9],
+          [8, 62, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Reeds",
+          "module": "osc",
+          "why": "Two narrow pulses an octave apart.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 20 · 20% duty.\n- VCF AUDIO VCO 1 6 · 60%.\n- VCO 2 FREQUENCY 3.8 · 131 Hz (C3) · LF 0.39 Hz.\n- VCO 2 PULSE WIDTH 30 · 30% duty.\n- VCF AUDIO VCO 2 5 · 50%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a reedy, nasal pair.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vco1.pw": 20,
+            "vcf.vco1": 6,
+            "vco2.freq": 3.755,
+            "vco2.pw": 30,
+            "vcf.vco2": 5,
+            "vcf.vco3": 0
+          }
+        },
+        {
+          "title": "Bellows",
+          "module": "mixer",
+          "why": "A breath of noise into the filter.\n- VCF AUDIO NOISE GEN 1.5 · 15%.\n- NOISE COLOR 5 · pink: pink.\n- NOISE LEVEL 10 · 100%.\n- Listen for: a faint wheeze under the reeds.",
+          "set": {
+            "vcf.noise": 1.5,
+            "noise.color": 5,
+            "noise.level": 10
+          }
+        },
+        {
+          "title": "Soft",
+          "module": "filter",
+          "why": "A gentle low-pass.\n- VCF FREQUENCY 5.2 · 402 Hz.\n- VCF RESONANCE 0 · 0%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 1 · 10%.\n- Listen for: a soft, reedy tone.",
+          "set": {
+            "vcf.freq": 5.2,
+            "vcf.res": 0,
+            "vcf.kbd": 5,
+            "vcf.adsr": 1
+          }
+        },
+        {
+          "title": "Breathing in",
+          "module": "env",
+          "why": "A slow attack, as the bellows fill.\n- ADSR ATTACK 6.5 · 400 ms.\n- ADSR DECAY 6 · 570 ms.\n- ADSR SUSTAIN 10 · 100%.\n- ADSR RELEASE 6 · 570 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 3 · 30%.\n- REVERB RIGHT 3 · 30%.\n- Listen for: a cold, solemn harmonium.",
+          "set": {
+            "adsr.a": 6.5,
+            "adsr.d": 6,
+            "adsr.s": 10,
+            "adsr.r": 6,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 3,
+            "rev.right": 3
+          }
+        }
+      ],
+      "context": {
+        "vcf.noise": "In this sound: the wheeze of the bellows."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.noise",
+          "try": "Raise to 4",
+          "hear": "A wheezier, older instrument."
+        }
+      ]
+    },
+    {
+      "id": "b2600-brahms-lullaby-music-box",
+      "name": "Lullaby Bells",
+      "ref": "Johannes Brahms — \"Wiegenlied\" (Lullaby), Op. 49 No. 4 (1868)",
+      "artist": "Johannes Brahms",
+      "tags": ["keys", "classical", "gentle", "soft", "calm"],
+      "level": 2,
+      "blurb": "The first phrase of Brahms’s lullaby on soft, ringing bell tones.",
+      "how": "The riff is the notes of the lullaby’s first phrase, from Brahms’s score, which is in the public domain, in a simplified rhythm that starts on the beat rather than on the opening pickup. VCO 2’s sine and VCO 3’s triangle an octave above it, both patched into the filter, make a soft, bell-like tone. Each note is struck and left to ring.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.45],
+          [0.5, 64, 0.45],
+          [1, 67, 1.4],
+          [2.5, 64, 0.45],
+          [3, 64, 0.9],
+          [4, 67, 1.9],
+          [6, 64, 0.45],
+          [6.5, 67, 0.45],
+          [7, 72, 0.9],
+          [8, 71, 1.4],
+          [9.5, 69, 0.45],
+          [10, 69, 0.9],
+          [11, 67, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sine and a triangle",
+          "module": "patch",
+          "why": "VCO 2’s sine and VCO 3’s triangle, an octave up, into the filter.\n- Cable VCO 2 SINE → VCF AUDIO (VCO 2).\n- Cable VCO 3 TRI → VCF AUDIO (VCO 3).\n- VCO 2 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 2 8 · 80%.\n- VCO 3 FREQUENCY 5.4 · 523 Hz (C5) · LF 1.57 Hz.\n- VCF AUDIO VCO 3 3 · 30%.\n- VCF AUDIO VCO 1 0 · 0%.\n- Listen for: a soft, pure tone with a glint above.",
+          "set": {
+            "vco2.freq": 4.568,
+            "vcf.vco2": 8,
+            "vco3.freq": 5.381,
+            "vcf.vco3": 3,
+            "vcf.vco1": 0
+          },
+          "cables": [
+            ["j.vco2sine", "j.vcfVco2"],
+            ["j.vco3tri", "j.vcfVco3"]
+          ]
+        },
+        {
+          "title": "Open",
+          "module": "filter",
+          "why": "Nothing to take away.\n- VCF FREQUENCY 7 · 1.9 kHz.\n- VCF RESONANCE 0 · 0%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: no change.",
+          "set": {
+            "vcf.freq": 7,
+            "vcf.res": 0,
+            "vcf.kbd": 5,
+            "vcf.adsr": 0
+          }
+        },
+        {
+          "title": "Struck and ringing",
+          "module": "env",
+          "why": "Up at once, a long fall, a long tail.\n- ADSR ATTACK 0.5 · 2 ms.\n- ADSR DECAY 7 · 1.2 s.\n- ADSR SUSTAIN 2 · 20%.\n- ADSR RELEASE 7 · 1.2 s.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 4 · 40%.\n- REVERB RIGHT 4 · 40%.\n- Listen for: a gentle lullaby on soft bells.",
+          "set": {
+            "adsr.a": 0.5,
+            "adsr.d": 7,
+            "adsr.s": 2,
+            "adsr.r": 7,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 4,
+            "rev.right": 4
+          }
+        }
+      ],
+      "context": {
+        "vcf.vco3": "In this sound: the glint on top."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.vco3",
+          "try": "Raise to 6",
+          "hear": "A brighter, music-box tone."
+        }
+      ]
+    },
+    {
+      "id": "b2600-fur-elise-music-box",
+      "name": "Für Elise Music Box",
+      "ref": "Ludwig van Beethoven — \"Für Elise\" (Bagatelle No. 25 in A minor, c. 1810)",
+      "artist": "Ludwig van Beethoven",
+      "tags": ["keys", "classical", "music box", "gentle"],
+      "level": 2,
+      "blurb": "The opening of “Für Elise” on a tinkling music-box tone.",
+      "how": "The riff is the opening phrase from Beethoven’s score, which is in the public domain, with its first two notes on the beat. A music box’s comb rings with a pure tone and a bright tinkle. VCO 2’s sine, patched into the filter in place of its pulse, is the tone; VCO 1’s thin pulse two octaves up, kept quiet, is the tinkle. Each note is struck and left to fade.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 76, 0.45],
+          [0.5, 75, 0.45],
+          [1, 76, 0.45],
+          [1.5, 75, 0.45],
+          [2, 76, 0.45],
+          [2.5, 71, 0.45],
+          [3, 74, 0.45],
+          [3.5, 72, 0.45],
+          [4, 69, 0.9],
+          [5, 60, 0.45],
+          [5.5, 64, 0.45],
+          [6, 69, 0.45],
+          [6.5, 71, 0.9],
+          [7.5, 64, 0.45],
+          [8, 68, 0.45],
+          [8.5, 71, 0.45],
+          [9, 72, 2.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sine and a tinkle",
+          "module": "patch",
+          "why": "VCO 2’s sine into the filter, and VCO 1’s narrow pulse two octaves up.\n- Cable VCO 2 SINE → VCF AUDIO (VCO 2).\n- VCO 2 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 2 8 · 80%.\n- VCO 1 FREQUENCY 6.2 · 1.0 kHz (C6) · LF 3.14 Hz.\n- VCO 1 PULSE WIDTH 10 · 10% duty.\n- VCF AUDIO VCO 1 2 · 20%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a pure tone with a faint glassy glint.",
+          "set": {
+            "vco2.freq": 4.568,
+            "vcf.vco2": 8,
+            "vco1.freq": 6.194,
+            "vco1.pw": 10,
+            "vcf.vco1": 2,
+            "vcf.vco3": 0
+          },
+          "cables": [["j.vco2sine", "j.vcfVco2"]]
+        },
+        {
+          "title": "Open",
+          "module": "filter",
+          "why": "Nothing to take away.\n- VCF FREQUENCY 8 · 4.4 kHz.\n- VCF RESONANCE 0 · 0%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: no change.",
+          "set": {
+            "vcf.freq": 8,
+            "vcf.res": 0,
+            "vcf.kbd": 5,
+            "vcf.adsr": 0
+          }
+        },
+        {
+          "title": "Plucked tines",
+          "module": "env",
+          "why": "Up at once, a fall to nothing.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 6 · 570 ms.\n- ADSR SUSTAIN 0 · 0%.\n- ADSR RELEASE 6 · 570 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 3 · 30%.\n- REVERB RIGHT 3 · 30%.\n- Listen for: a little music box playing Beethoven.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 6,
+            "adsr.s": 0,
+            "adsr.r": 6,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 3,
+            "rev.right": 3
+          }
+        }
+      ],
+      "context": {
+        "vcf.vco1": "In this sound: the tinkle of the comb."
+      },
+      "tweaks": [
+        {
+          "id": "adsr.d",
+          "try": "Raise to 7.5",
+          "hear": "Longer, ringing tines, more like a celesta."
+        }
+      ]
+    },
+    {
+      "id": "b2600-pachelbel-ground-bass",
+      "name": "Canon Ground Bass",
+      "ref": "Johann Pachelbel — Canon in D (c. 1680–1706)",
+      "artist": "Johann Pachelbel",
+      "tags": ["strings", "baroque", "classical", "bass"],
+      "level": 1,
+      "blurb": "The eight-note ground bass of Pachelbel’s Canon, bowed on a warm, cello-like tone.",
+      "how": "The riff is the ground bass from Pachelbel’s score, which is in the public domain: eight notes that repeat under the whole piece. A sawtooth and a pulse give a bowed string, with an attack of a tenth of a second so each note is drawn rather than struck.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 50, 0.9],
+          [1, 45, 0.9],
+          [2, 47, 0.9],
+          [3, 42, 0.9],
+          [4, 43, 0.9],
+          [5, 38, 0.9],
+          [6, 43, 0.9],
+          [7, 45, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bowed string",
+          "module": "osc",
+          "why": "VCO 3’s sawtooth with VCO 1’s pulse, a hair apart.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 6 · 60%.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 FINE TUNE 0.1 · 0 st.\n- VCO 1 PULSE WIDTH 35 · 35% duty.\n- VCF AUDIO VCO 1 4 · 40%.\n- Listen for: a rich, buzzing tone.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 6,
+            "vco1.freq": 4.568,
+            "vco1.fine": 0.08,
+            "vco1.pw": 35,
+            "vcf.vco1": 4
+          }
+        },
+        {
+          "title": "Warm",
+          "module": "filter",
+          "why": "The filter takes the rasp off.\n- VCF FREQUENCY 4.4 · 203 Hz.\n- VCF RESONANCE 1.5 · 15%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 2 · 20%.\n- Listen for: a warm, woody string.",
+          "set": {
+            "vcf.freq": 4.4,
+            "vcf.res": 1.5,
+            "vcf.kbd": 5,
+            "vcf.adsr": 2
+          }
+        },
+        {
+          "title": "Drawn, not struck",
+          "module": "env",
+          "why": "A tenth of a second to speak.\n- ADSR ATTACK 5 · 110 ms.\n- ADSR DECAY 6 · 570 ms.\n- ADSR SUSTAIN 9 · 90%.\n- ADSR RELEASE 5.5 · 390 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 3 · 30%.\n- REVERB RIGHT 3 · 30%.\n- Listen for: the ground bass bowed slowly.",
+          "set": {
+            "adsr.a": 5,
+            "adsr.d": 6,
+            "adsr.s": 9,
+            "adsr.r": 5.5,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 3,
+            "rev.right": 3
+          }
+        }
+      ],
+      "context": {
+        "adsr.a": "In this sound: the bow catching the string."
+      },
+      "tweaks": [
+        {
+          "id": "adsr.a",
+          "try": "Lower to 0",
+          "hear": "A plucked continuo bass, like a theorbo."
+        }
+      ]
+    },
+    {
+      "id": "b2600-dawn-chorus-birds",
+      "name": "Synthetic Dawn Chorus",
+      "ref": "In the style of the dawn chorus",
+      "artist": "Dawn chorus",
+      "tags": ["fx", "nature", "birds", "calm"],
+      "level": 3,
+      "blurb": "A flock of high, falling chirps, each starting on a different note, like birds at sunrise.",
+      "how": "ENVELOPE ROUTING on S/H CLOCK fires the envelopes from the sample-and-hold clock. The ADSR, pre-wired to VCO 1’s pitch through its FM slider, makes each chirp fall as it decays. The sample-and-hold, pre-wired to the same pitch, moves each chirp to a new random starting note.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 72, 7.9],
+          [8, 72, 7.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A high pulse",
+          "module": "osc",
+          "why": "VCO 1, two octaves up.\n- VCO 1 FREQUENCY 6.2 · 1.0 kHz (C6) · LF 3.14 Hz.\n- VCO 1 PULSE WIDTH 40 · 40% duty.\n- VCF AUDIO VCO 1 9 · 90%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a high whistle.",
+          "set": {
+            "vco1.freq": 6.194,
+            "vco1.pw": 40,
+            "vcf.vco1": 9,
+            "vcf.vco3": 0
+          }
+        },
+        {
+          "title": "Soft",
+          "module": "filter",
+          "why": "Rounded a little.\n- VCF FREQUENCY 7.5 · 2.9 kHz.\n- VCF RESONANCE 0 · 0%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: a soft, high tone.",
+          "set": {
+            "vcf.freq": 7.5,
+            "vcf.res": 0,
+            "vcf.kbd": 5,
+            "vcf.adsr": 0
+          }
+        },
+        {
+          "title": "Chirps from the clock",
+          "module": "env",
+          "why": "Short envelopes, fired by the clock.\n- ENVELOPE ROUTING S/H CLOCK.\n- S&H RATE 6 · 4.42 Hz: about four chirps a second.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 3.5 · 86 ms.\n- ADSR SUSTAIN 0 · 0%.\n- ADSR RELEASE 2 · 27 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 10 · 100%.\n- Listen for: a steady run of whistles.",
+          "set": {
+            "env.src": "sh",
+            "sh.rate": 6,
+            "adsr.a": 0,
+            "adsr.d": 3.5,
+            "adsr.s": 0,
+            "adsr.r": 2,
+            "vca.adsr": 10,
+            "mix.vca": 10
+          }
+        },
+        {
+          "title": "Falling, and each from a new note",
+          "module": "mod",
+          "why": "The ADSR bends each chirp; the sample-and-hold picks where it starts.\n- VCO 1 FM ADSR 4 · 40%: each chirp falls about seven semitones.\n- VCO 1 FM S/H OUT 5 · 50%: a random start, up to six semitones away.\n- S&H LEVEL 8 · 80%.\n- REVERB LEFT 4 · 40%.\n- REVERB RIGHT 4 · 40%.\n- Listen for: a chattering, falling flock of chirps.",
+          "set": {
+            "vco1.fmAdsr": 4,
+            "vco1.fmSh": 5,
+            "sh.level": 8,
+            "rev.left": 4,
+            "rev.right": 4
+          }
+        }
+      ],
+      "context": {
+        "vco1.fmAdsr": "In this sound: how far each chirp falls.",
+        "vco1.fmSh": "In this sound: how different the birds are."
+      },
+      "tweaks": [
+        {
+          "id": "adsr.d",
+          "try": "Raise to 5",
+          "hear": "Slower, swooping calls, like a gull."
+        },
+        {
+          "id": "sh.rate",
+          "try": "Raise to 8",
+          "hear": "A frantic, crowded chorus."
+        }
+      ]
+    },
+    {
+      "id": "b2600-in-the-bush-syndrum-tom",
+      "name": "Disco Syndrum Tom",
+      "ref": "In the style of Musique — \"In the Bush\" (Keep On Jumpin’, 1978)",
+      "artist": "Musique",
+      "tags": ["perc", "disco", "drums", "70s"],
+      "level": 2,
+      "blurb": "A booming electronic tom that drops in pitch, the “pew” of a late-70s disco fill.",
+      "how": "The ADSR is pre-wired to VCO 3’s pitch through its FM slider. Turned up, each hit starts high and falls as the ADSR decays to nothing, the pitch drop of an electronic drum. A touch of noise adds the stick.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.2],
+          [2, 48, 0.2],
+          [2.5, 45, 0.2],
+          [3, 43, 0.2],
+          [3.5, 40, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth that drops",
+          "module": "osc",
+          "why": "VCO 3’s sawtooth, bent down by the ADSR.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 8 · 80%.\n- VCF AUDIO VCO 1 0 · 0%.\n- VCO 3 FM ADSR 5 · 50%: about an octave of drop.\n- Listen for: a falling, buzzing tone.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 8,
+            "vcf.vco1": 0,
+            "vco3.fmAdsr": 5
+          }
+        },
+        {
+          "title": "A stick",
+          "module": "mixer",
+          "why": "A little white noise.\n- VCF AUDIO NOISE GEN 2 · 20%.\n- NOISE COLOR 10 · white.\n- NOISE LEVEL 10 · 100%.\n- Listen for: a crisp edge on each hit.",
+          "set": {
+            "vcf.noise": 2,
+            "noise.color": 10,
+            "noise.level": 10
+          }
+        },
+        {
+          "title": "Round off the top",
+          "module": "filter",
+          "why": "A drum is mostly body.\n- VCF FREQUENCY 4.6 · 241 Hz.\n- VCF RESONANCE 3 · 30%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 3 · 30%.\n- Listen for: a round, booming tone.",
+          "set": {
+            "vcf.freq": 4.6,
+            "vcf.res": 3,
+            "vcf.kbd": 5,
+            "vcf.adsr": 3
+          }
+        },
+        {
+          "title": "A hit",
+          "module": "env",
+          "why": "Instant, falling to nothing over a third of a second.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 5.5 · 390 ms.\n- ADSR SUSTAIN 0 · 0%.\n- ADSR RELEASE 5 · 270 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 2.5 · 25%.\n- REVERB RIGHT 2.5 · 25%.\n- Listen for: a disco tom: “pew, pew”.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 5.5,
+            "adsr.s": 0,
+            "adsr.r": 5,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 2.5,
+            "rev.right": 2.5
+          }
+        }
+      ],
+      "context": {
+        "vco3.fmAdsr": "In this sound: how far each hit drops."
+      },
+      "tweaks": [
+        {
+          "id": "vco3.fmAdsr",
+          "try": "Raise to 7",
+          "hear": "A laser-like, wide drop."
+        }
+      ]
+    },
+    {
+      "id": "b2600-use-me-clavinet",
+      "name": "Funky Pulse Clavinet",
+      "ref": "In the style of Bill Withers — \"Use Me\" (Still Bill, 1972)",
+      "artist": "Bill Withers",
+      "tags": ["keys", "funk", "soul", "70s"],
+      "level": 1,
+      "blurb": "A snappy, nasal clavinet-like tone for a choppy funk riff.",
+      "how": "A clavinet is a struck string with a pickup: nasal, percussive and short. A narrow pulse through a resonant filter that the ADSR flicks open and shuts gives the same snap. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 52, 0.2],
+          [0.25, 52, 0.2],
+          [0.75, 55, 0.2],
+          [1, 57, 0.2],
+          [1.5, 52, 0.2],
+          [1.75, 55, 0.2],
+          [2, 52, 0.2],
+          [2.5, 50, 0.2],
+          [2.75, 52, 0.2],
+          [3.25, 55, 0.2],
+          [3.5, 57, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A narrow pulse",
+          "module": "osc",
+          "why": "Thin and nasal.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 15 · 15% duty.\n- VCF AUDIO VCO 1 8 · 80%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a thin, reedy tone.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vco1.pw": 15,
+            "vcf.vco1": 8,
+            "vcf.vco3": 0
+          }
+        },
+        {
+          "title": "A snap",
+          "module": "filter",
+          "why": "Resonant, flicked open by the ADSR.\n- VCF FREQUENCY 4.5 · 221 Hz.\n- VCF RESONANCE 5 · 50%.\n- VCF CONTROL KYBD CV 6 · 60%.\n- VCF CONTROL ADSR 5 · 50%.\n- Listen for: a snapping, nasal pluck.",
+          "set": {
+            "vcf.freq": 4.5,
+            "vcf.res": 5,
+            "vcf.kbd": 6,
+            "vcf.adsr": 5
+          }
+        },
+        {
+          "title": "Short",
+          "module": "env",
+          "why": "A very short decay, nothing held.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 3.6 · 93 ms.\n- ADSR SUSTAIN 0 · 0%.\n- ADSR RELEASE 2 · 27 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: a choppy funk clav.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 3.6,
+            "adsr.s": 0,
+            "adsr.r": 2,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        }
+      ],
+      "context": {
+        "vcf.res": "In this sound: the quack in the snap."
+      },
+      "tweaks": [
+        {
+          "id": "adsr.d",
+          "try": "Raise to 4.5",
+          "hear": "A longer pluck, more like a harpsichord."
+        }
+      ]
+    },
+    {
+      "id": "b2600-taboo-exotica-marimba",
+      "name": "Exotica Marimba",
+      "ref": "In the style of Arthur Lyman — \"Taboo\" (Taboo, 1958)",
+      "artist": "Arthur Lyman",
+      "tags": ["keys", "exotica", "mallets", "50s"],
+      "level": 2,
+      "blurb": "A warm, woody marimba playing a lazy tropical line.",
+      "how": "A marimba bar rings with its note and a bright overtone about two octaves up. VCO 3’s triangle, patched into the filter, is the note; VCO 2’s sine two octaves above, kept quiet, is the overtone. A short, falling envelope with a little reverb makes it woody. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 92,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.4],
+          [0.5, 65, 0.4],
+          [1, 69, 0.9],
+          [2, 67, 0.4],
+          [2.5, 65, 0.4],
+          [3, 62, 0.9],
+          [4, 60, 0.4],
+          [4.5, 62, 0.4],
+          [5, 65, 0.4],
+          [5.5, 67, 0.4],
+          [6, 65, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A note and its overtone",
+          "module": "patch",
+          "why": "VCO 3’s triangle and VCO 2’s sine into the filter.\n- Cable VCO 3 TRI → VCF AUDIO (VCO 3).\n- Cable VCO 2 SINE → VCF AUDIO (VCO 2).\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 8 · 80%.\n- VCO 2 FREQUENCY 6.2 · 1.0 kHz (C6) · LF 3.14 Hz: two octaves up.\n- VCF AUDIO VCO 2 2 · 20%.\n- VCF AUDIO VCO 1 0 · 0%.\n- Listen for: a soft tone with a ring above it.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 8,
+            "vco2.freq": 6.194,
+            "vcf.vco2": 2,
+            "vcf.vco1": 0
+          },
+          "cables": [
+            ["j.vco3tri", "j.vcfVco3"],
+            ["j.vco2sine", "j.vcfVco2"]
+          ]
+        },
+        {
+          "title": "Open",
+          "module": "filter",
+          "why": "Nothing to take away.\n- VCF FREQUENCY 7 · 1.9 kHz.\n- VCF RESONANCE 0 · 0%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: no change.",
+          "set": {
+            "vcf.freq": 7,
+            "vcf.res": 0,
+            "vcf.kbd": 5,
+            "vcf.adsr": 0
+          }
+        },
+        {
+          "title": "Struck wood",
+          "module": "env",
+          "why": "A short fall to nothing.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 5.2 · 310 ms.\n- ADSR SUSTAIN 0 · 0%.\n- ADSR RELEASE 4.5 · 180 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 3 · 30%.\n- REVERB RIGHT 3 · 30%.\n- Listen for: a warm, woody marimba.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 5.2,
+            "adsr.s": 0,
+            "adsr.r": 4.5,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 3,
+            "rev.right": 3
+          }
+        }
+      ],
+      "context": {
+        "vcf.vco2": "In this sound: the bar’s bright overtone."
+      },
+      "tweaks": [
+        {
+          "id": "adsr.d",
+          "try": "Raise to 7",
+          "hear": "A long ring: a vibraphone instead."
+        }
+      ]
+    },
+    {
+      "id": "b2600-haru-no-umi-koto",
+      "name": "Settling Koto Pluck",
+      "ref": "In the style of Michio Miyagi — \"Haru no Umi\" (1929)",
+      "artist": "Michio Miyagi",
+      "tags": ["pluck", "japanese", "world", "gentle"],
+      "level": 2,
+      "blurb": "A bright, plucked koto tone that starts a little sharp and settles onto its note, in a pentatonic line.",
+      "how": "A koto string is plucked hard, so it sounds a fraction sharp before settling. The ADSR is pre-wired to VCO 1’s pitch: a little of it starts each note sharp and lets it fall to pitch as the envelope decays. A narrow pulse and a quick pluck give the bright twang.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.9],
+          [1, 65, 0.4],
+          [1.5, 69, 0.4],
+          [2, 71, 0.9],
+          [3, 72, 0.9],
+          [4, 71, 0.4],
+          [4.5, 69, 0.4],
+          [5, 65, 0.9],
+          [6, 64, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bright pulse",
+          "module": "osc",
+          "why": "VCO 1’s narrow pulse.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 20 · 20% duty.\n- VCF AUDIO VCO 1 8 · 80%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a bright, nasal tone.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vco1.pw": 20,
+            "vcf.vco1": 8,
+            "vcf.vco3": 0
+          }
+        },
+        {
+          "title": "A twang",
+          "module": "filter",
+          "why": "Plucked open by the ADSR.\n- VCF FREQUENCY 5 · 339 Hz.\n- VCF RESONANCE 3 · 30%.\n- VCF CONTROL KYBD CV 6 · 60%.\n- VCF CONTROL ADSR 4 · 40%.\n- Listen for: a bright twang.",
+          "set": {
+            "vcf.freq": 5,
+            "vcf.res": 3,
+            "vcf.kbd": 6,
+            "vcf.adsr": 4
+          }
+        },
+        {
+          "title": "Plucked",
+          "module": "env",
+          "why": "A fall to nothing.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 5.8 · 490 ms.\n- ADSR SUSTAIN 0 · 0%.\n- ADSR RELEASE 5 · 270 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 2.5 · 25%.\n- REVERB RIGHT 2.5 · 25%.\n- Listen for: a plucked, ringing string.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 5.8,
+            "adsr.s": 0,
+            "adsr.r": 5,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 2.5,
+            "rev.right": 2.5
+          }
+        },
+        {
+          "title": "Settle onto the note",
+          "module": "mod",
+          "why": "A little ADSR on VCO 1’s pitch.\n- VCO 1 FM ADSR 1.5 · 15%: about a semitone sharp at the pluck.\n- Listen for: each note starting sharp and settling, like a koto.",
+          "set": {
+            "vco1.fmAdsr": 1.5
+          }
+        }
+      ],
+      "context": {
+        "vco1.fmAdsr": "In this sound: how sharp the pluck starts."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.fmAdsr",
+          "try": "Raise to 3",
+          "hear": "A twangy, wide settle, like a shamisen."
+        }
+      ]
+    },
+    {
+      "id": "b2600-taqsim-oud",
+      "name": "Maqam Oud",
+      "ref": "In the style of Munir Bashir — a taqsim in maqam Hijaz",
+      "artist": "Munir Bashir",
+      "tags": ["pluck", "arabic", "world", "oud"],
+      "level": 2,
+      "blurb": "A warm, plucked oud tone wandering through maqam Hijaz, with its augmented second.",
+      "how": "The oud is a fretless lute, plucked with a quill, warm and round. A sawtooth and a pulse through a resonant filter, plucked by the ADSR, give the tone; a very short portamento lets notes slide a little, as a fretless string does. The line is in maqam Hijaz on D: D, E♭, F♯, G, A, B♭, C.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.9],
+          [1, 63, 0.4],
+          [1.5, 66, 0.4],
+          [2, 67, 0.9],
+          [3, 69, 0.4],
+          [3.5, 70, 0.4],
+          [4, 69, 0.9],
+          [5, 67, 0.4],
+          [5.5, 66, 0.4],
+          [6, 63, 0.4],
+          [6.5, 62, 1.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sawtooth and pulse",
+          "module": "osc",
+          "why": "Body and bite.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 6 · 60%.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 40 · 40% duty.\n- VCF AUDIO VCO 1 4 · 40%.\n- Listen for: a full, buzzy tone.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 6,
+            "vco1.freq": 4.568,
+            "vco1.pw": 40,
+            "vcf.vco1": 4
+          }
+        },
+        {
+          "title": "Warm pluck",
+          "module": "filter",
+          "why": "Resonant, plucked.\n- VCF FREQUENCY 4.6 · 241 Hz.\n- VCF RESONANCE 4 · 40%.\n- VCF CONTROL KYBD CV 6 · 60%.\n- VCF CONTROL ADSR 4 · 40%.\n- Listen for: a warm, round pluck.",
+          "set": {
+            "vcf.freq": 4.6,
+            "vcf.res": 4,
+            "vcf.kbd": 6,
+            "vcf.adsr": 4
+          }
+        },
+        {
+          "title": "A plucked string",
+          "module": "env",
+          "why": "A medium fall with little held.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 6 · 570 ms.\n- ADSR SUSTAIN 1 · 10%.\n- ADSR RELEASE 5 · 270 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 3 · 30%.\n- REVERB RIGHT 3 · 30%.\n- Listen for: a ringing, plucked line.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 6,
+            "adsr.s": 1,
+            "adsr.r": 5,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 3,
+            "rev.right": 3
+          }
+        },
+        {
+          "title": "A fretless slide",
+          "module": "glide",
+          "why": "A very short portamento.\n- PORTAMENTO ON On.\n- PORTAMENTO 1.5 · 68 ms.\n- Listen for: notes sliding slightly into place.",
+          "set": {
+            "porta.on": true,
+            "porta.amount": 1.5
+          }
+        }
+      ],
+      "context": {
+        "porta.amount": "In this sound: the fretless slide. Above 3 it smears."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.res",
+          "try": "Raise to 6",
+          "hear": "A nasal, twangier tone, nearer a saz."
+        }
+      ]
+    },
+    {
+      "id": "b2600-red-october-sonar-ping",
+      "name": "Submarine Sonar Ping",
+      "ref": "In the style of Basil Poledouris — The Hunt for Red October (1990)",
+      "artist": "Basil Poledouris",
+      "tags": ["fx", "soundtrack", "sonar", "tension"],
+      "level": 1,
+      "blurb": "A single, pure ping that rings out and fades into a cavernous echo.",
+      "how": "A sonar ping is a pure tone with a long, echoing tail. VCO 2’s sine, patched into the filter, struck and left to die over four seconds, with the spring reverb high.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 72, 3.9],
+          [4, 72, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sine",
+          "module": "patch",
+          "why": "VCO 2’s sine into the filter.\n- Cable VCO 2 SINE → VCF AUDIO (VCO 2).\n- VCO 2 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 2 9 · 90%.\n- VCF AUDIO VCO 1 0 · 0%.\n- VCF AUDIO VCO 3 0 · 0%.\n- VCF FREQUENCY 8 · 4.4 kHz.\n- VCF RESONANCE 0 · 0%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: a pure tone.",
+          "set": {
+            "vco2.freq": 4.568,
+            "vcf.vco2": 9,
+            "vcf.vco1": 0,
+            "vcf.vco3": 0,
+            "vcf.freq": 8,
+            "vcf.res": 0,
+            "vcf.kbd": 5,
+            "vcf.adsr": 0
+          },
+          "cables": [["j.vco2sine", "j.vcfVco2"]]
+        },
+        {
+          "title": "Ping and fade",
+          "module": "env",
+          "why": "Up at once, four seconds to fade.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 8.6 · 4.1 s.\n- ADSR SUSTAIN 0 · 0%.\n- ADSR RELEASE 8.6 · 4.1 s.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- Listen for: a ringing ping.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 8.6,
+            "adsr.s": 0,
+            "adsr.r": 8.6,
+            "vca.adsr": 10,
+            "mix.vca": 8
+          }
+        },
+        {
+          "title": "Deep water",
+          "module": "fx",
+          "why": "The spring reverb high.\n- REVERB LEFT 8 · 80%.\n- REVERB RIGHT 8 · 80%.\n- Listen for: a ping echoing through the deep.",
+          "set": {
+            "rev.left": 8,
+            "rev.right": 8
+          }
+        }
+      ],
+      "context": {
+        "rev.left": "In this sound: the size of the ocean."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.freq",
+          "try": "Raise by an octave",
+          "hear": "A higher, more piercing ping."
+        }
+      ]
+    },
+    {
+      "id": "b2600-earth-stood-still-theremin",
+      "name": "Saucer Theremin",
+      "ref": "In the style of Bernard Herrmann — The Day the Earth Stood Still (1951)",
+      "artist": "Bernard Herrmann",
+      "tags": ["lead", "soundtrack", "sci-fi", "50s"],
+      "level": 3,
+      "blurb": "A wailing, sliding sine with a vibrato that swells in, the sound of a 1950s flying saucer.",
+      "how": "Herrmann scored the film for two theremins, a pure tone the player slides and shakes by hand. VCO 2’s sine, patched into the filter, is the tone; a slow portamento is the slide. The delayed vibrato from the LFO goes to VCO 2’s pitch through its S/H OUT jack, in place of the sample-and-hold, so each note starts still and begins to waver.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 67, 1.9],
+          [2, 74, 1.9],
+          [4, 72, 0.9],
+          [5, 70, 0.9],
+          [6, 67, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sine",
+          "module": "patch",
+          "why": "VCO 2’s sine into the filter.\n- Cable VCO 2 SINE → VCF AUDIO (VCO 2).\n- VCO 2 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 2 9 · 90%.\n- VCF AUDIO VCO 1 0 · 0%.\n- VCF AUDIO VCO 3 0 · 0%.\n- VCF FREQUENCY 7 · 1.9 kHz.\n- VCF RESONANCE 0 · 0%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: a pure, eerie tone.",
+          "set": {
+            "vco2.freq": 4.568,
+            "vcf.vco2": 9,
+            "vcf.vco1": 0,
+            "vcf.vco3": 0,
+            "vcf.freq": 7,
+            "vcf.res": 0,
+            "vcf.kbd": 5,
+            "vcf.adsr": 0
+          },
+          "cables": [["j.vco2sine", "j.vcfVco2"]]
+        },
+        {
+          "title": "Slides",
+          "module": "glide",
+          "why": "A slow portamento.\n- PORTAMENTO ON On.\n- PORTAMENTO 5 · 750 ms: about three quarters of a second.\n- Listen for: each note sliding slowly from the last.",
+          "set": {
+            "porta.on": true,
+            "porta.amount": 5
+          }
+        },
+        {
+          "title": "A vibrato that swells in",
+          "module": "patch",
+          "why": "The delayed sine to VCO 2’s pitch.\n- Cable LFO SINE DELAYED → VCO 2 FM (S/H OUT): replaces the sample-and-hold at the VCO 2 FM S/H OUT slider.\n- VCO 2 FM S/H OUT 1.3 · 13%: the width of the vibrato.\n- LFO SPEED 6 · 3.96 Hz: about four wobbles a second.\n- VIB DELAY 3 · 900 ms.\n- VIB DEPTH 8 · 80%.\n- Listen for: long notes beginning to waver.",
+          "set": {
+            "vco2.fmSh": 1.3,
+            "lfo.speed": 6,
+            "lfo.vibDelay": 3,
+            "lfo.vibDepth": 8
+          },
+          "cables": [["j.lfoDelayed", "j.vco2Sh"]]
+        },
+        {
+          "title": "Fade in and out",
+          "module": "env",
+          "why": "A soft start and end.\n- ADSR ATTACK 6 · 260 ms.\n- ADSR DECAY 6 · 570 ms.\n- ADSR SUSTAIN 10 · 100%.\n- ADSR RELEASE 6.5 · 840 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 4 · 40%.\n- REVERB RIGHT 4 · 40%.\n- Listen for: a ghostly, wailing melody.",
+          "set": {
+            "adsr.a": 6,
+            "adsr.d": 6,
+            "adsr.s": 10,
+            "adsr.r": 6.5,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 4,
+            "rev.right": 4
+          }
+        }
+      ],
+      "context": {
+        "porta.amount": "In this sound: the hand moving through the air.",
+        "lfo.vibDelay": "In this sound: how long before the hand starts to shake."
+      },
+      "tweaks": [
+        {
+          "id": "porta.amount",
+          "try": "Raise to 7",
+          "hear": "Slower, more wailing slides."
+        }
+      ]
+    },
+    {
+      "id": "b2600-freestyle-noise-snare",
+      "name": "Freestyle Snare",
+      "ref": "In the style of Latin freestyle",
+      "artist": "Latin freestyle",
+      "tags": ["perc", "freestyle", "electro", "80s"],
+      "level": 2,
+      "blurb": "A bright, snappy electronic snare with a tone that drops under the noise.",
+      "how": "An electronic snare is noise for the wires and a short tone for the shell. White noise through the filter is the wires; VCO 3’s sawtooth, bent down by the ADSR through its FM slider, is the shell. Both fall to nothing quickly.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 55, 0.2],
+          [2, 55, 0.2],
+          [3.5, 55, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Noise and a tone",
+          "module": "mixer",
+          "why": "White noise and VCO 3’s sawtooth into the filter.\n- VCF AUDIO NOISE GEN 9 · 90%.\n- NOISE COLOR 10 · white.\n- NOISE LEVEL 10 · 100%.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 4 · 40%.\n- VCF AUDIO VCO 1 0 · 0%.\n- VCO 3 FM ADSR 3 · 30%: the shell’s drop.\n- Listen for: a hiss with a tone in it.",
+          "set": {
+            "vcf.noise": 9,
+            "noise.color": 10,
+            "noise.level": 10,
+            "vco3.freq": 4.568,
+            "vcf.vco3": 4,
+            "vcf.vco1": 0,
+            "vco3.fmAdsr": 3
+          }
+        },
+        {
+          "title": "Bright",
+          "module": "filter",
+          "why": "Fairly open.\n- VCF FREQUENCY 7 · 1.9 kHz.\n- VCF RESONANCE 1 · 10%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 2 · 20%.\n- Listen for: a bright crack.",
+          "set": {
+            "vcf.freq": 7,
+            "vcf.res": 1,
+            "vcf.kbd": 5,
+            "vcf.adsr": 2
+          }
+        },
+        {
+          "title": "Snap",
+          "module": "env",
+          "why": "Instant, falling fast to nothing.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 4.5 · 180 ms.\n- ADSR SUSTAIN 0 · 0%.\n- ADSR RELEASE 4 · 130 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 10 · 100%.\n- REVERB LEFT 2.5 · 25%.\n- REVERB RIGHT 2.5 · 25%.\n- Listen for: a snappy electronic snare.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 4.5,
+            "adsr.s": 0,
+            "adsr.r": 4,
+            "vca.adsr": 10,
+            "mix.vca": 10,
+            "rev.left": 2.5,
+            "rev.right": 2.5
+          }
+        }
+      ],
+      "context": {
+        "vcf.noise": "In this sound: the snare wires."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.vco3",
+          "try": "Lower to 0",
+          "hear": "Only noise: a clap-like snare."
+        }
+      ]
+    },
+    {
+      "id": "b2600-black-ark-noise-crash",
+      "name": "Dub Noise Crash",
+      "ref": "In the style of Lee “Scratch” Perry — the Black Ark productions (1970s)",
+      "artist": "Lee “Scratch” Perry",
+      "tags": ["fx", "dub", "reggae", "70s"],
+      "level": 2,
+      "blurb": "A crash of noise whose filter falls as it fades, the kind of hit a dub engineer drops into a mix.",
+      "how": "Dub engineers threw sudden sounds into their mixes: a crash, a kick of the spring reverb, a burst of noise. White noise through a resonant filter that the ADSR opens and lets fall makes a “pshhh” that darkens as it dies, and the spring reverb gives its tail a ring.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.2],
+          [3, 60, 0.2],
+          [3.5, 60, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Noise",
+          "module": "mixer",
+          "why": "White noise into the filter.\n- VCF AUDIO NOISE GEN 10 · 100%.\n- NOISE COLOR 10 · white.\n- NOISE LEVEL 10 · 100%.\n- VCF AUDIO VCO 1 0 · 0%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a hiss.",
+          "set": {
+            "vcf.noise": 10,
+            "noise.color": 10,
+            "noise.level": 10,
+            "vcf.vco1": 0,
+            "vcf.vco3": 0
+          }
+        },
+        {
+          "title": "A falling filter",
+          "module": "filter",
+          "why": "Resonant, swept down by the ADSR.\n- VCF FREQUENCY 4.5 · 221 Hz.\n- VCF RESONANCE 4 · 40%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 5 · 50%.\n- Listen for: a hiss with a ringing edge.",
+          "set": {
+            "vcf.freq": 4.5,
+            "vcf.res": 4,
+            "vcf.kbd": 5,
+            "vcf.adsr": 5
+          }
+        },
+        {
+          "title": "A crash",
+          "module": "env",
+          "why": "Up at once, falling to nothing over half a second or so.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 6.5 · 840 ms.\n- ADSR SUSTAIN 0 · 0%.\n- ADSR RELEASE 6.5 · 840 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 10 · 100%.\n- PHONES 9.\n- Listen for: a “pshhh” that darkens as it dies.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 6.5,
+            "adsr.s": 0,
+            "adsr.r": 6.5,
+            "vca.adsr": 10,
+            "mix.vca": 10,
+            "out.phones": 9
+          }
+        },
+        {
+          "title": "Into the springs",
+          "module": "fx",
+          "why": "The reverb sliders up.\n- REVERB LEFT 8 · 80%.\n- REVERB RIGHT 8 · 80%.\n- Listen for: a ring on the tail of each crash.",
+          "set": {
+            "rev.left": 8,
+            "rev.right": 8
+          }
+        }
+      ],
+      "context": {
+        "vcf.adsr": "In this sound: how far the crash falls."
+      },
+      "tweaks": [
+        {
+          "id": "adsr.d",
+          "try": "Raise to 8",
+          "hear": "A long, rolling crash like thunder."
+        }
+      ]
+    },
+    {
+      "id": "b2600-king-of-the-beats-boom-bass",
+      "name": "Booming Electro Bass",
+      "ref": "In the style of Mantronix — \"King of the Beats\" (In Full Effect, 1988)",
+      "artist": "Mantronix",
+      "tags": ["bass", "electro", "hip hop", "80s"],
+      "level": 2,
+      "blurb": "A booming bass that thumps at the start of each note and settles, like a tuned 808 under a hip-hop break.",
+      "how": "VCO 2’s sine, patched into the filter, gives the boom. The ADSR, pre-wired to VCO 2’s pitch, starts each note a few semitones high and lets it fall as it decays, which gives the thump. A little of VCO 3’s sawtooth keeps it audible on small speakers.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.9],
+          [1.5, 36, 0.4],
+          [2, 39, 0.9],
+          [3, 34, 0.4],
+          [3.5, 36, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sine, and a little sawtooth",
+          "module": "patch",
+          "why": "VCO 2’s sine into the filter, with VCO 3’s sawtooth low.\n- Cable VCO 2 SINE → VCF AUDIO (VCO 2).\n- VCO 2 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 2 9 · 90%.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 2 · 20%.\n- VCF AUDIO VCO 1 0 · 0%.\n- Listen for: a deep boom with a faint buzz.",
+          "set": {
+            "vco2.freq": 4.568,
+            "vcf.vco2": 9,
+            "vco3.freq": 4.568,
+            "vcf.vco3": 2,
+            "vcf.vco1": 0
+          },
+          "cables": [["j.vco2sine", "j.vcfVco2"]]
+        },
+        {
+          "title": "A thump",
+          "module": "mod",
+          "why": "The ADSR on VCO 2’s pitch.\n- VCO 2 FM ADSR 3 · 30%: about four semitones of drop.\n- Listen for: each note thumping in from above.",
+          "set": {
+            "vco2.fmAdsr": 3
+          }
+        },
+        {
+          "title": "Warm",
+          "module": "filter",
+          "why": "Rounded.\n- VCF FREQUENCY 4.5 · 221 Hz.\n- VCF RESONANCE 0 · 0%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: a round, deep bass.",
+          "set": {
+            "vcf.freq": 4.5,
+            "vcf.res": 0,
+            "vcf.kbd": 5,
+            "vcf.adsr": 0
+          }
+        },
+        {
+          "title": "Boom and settle",
+          "module": "env",
+          "why": "A fall to a held level.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 6 · 570 ms.\n- ADSR SUSTAIN 4 · 40%.\n- ADSR RELEASE 5 · 270 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 9 · 90%.\n- Listen for: a booming electro bass.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 6,
+            "adsr.s": 4,
+            "adsr.r": 5,
+            "vca.adsr": 10,
+            "mix.vca": 9
+          }
+        }
+      ],
+      "context": {
+        "vco2.fmAdsr": "In this sound: the thump."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.fmAdsr",
+          "try": "Raise to 5",
+          "hear": "A huge, kick-like thump."
+        }
+      ]
+    },
+    {
+      "id": "b2600-pineapple-crush-sync-pluck",
+      "name": "Sunny Sync Pluck",
+      "ref": "In the style of Lone — \"Pineapple Crush\" (Galaxy Garden, 2012)",
+      "artist": "Lone",
+      "tags": ["pluck", "electronic", "bright", "10s"],
+      "level": 2,
+      "blurb": "A bright, sparkling plucked arpeggio with a tearing edge on every note.",
+      "how": "VCO 3 hard-synced to VCO 1. The ADSR, pre-wired to VCO 3’s pitch through its FM slider, sweeps it on each note; with sync on, that sweeps the tone, so every pluck starts bright and tearing and settles to a softer buzz. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.2],
+          [0.25, 76, 0.2],
+          [0.5, 72, 0.2],
+          [0.75, 79, 0.2],
+          [1, 69, 0.2],
+          [1.25, 76, 0.2],
+          [1.5, 72, 0.2],
+          [1.75, 81, 0.2],
+          [2, 67, 0.2],
+          [2.25, 74, 0.2],
+          [2.5, 71, 0.2],
+          [2.75, 79, 0.2],
+          [3, 67, 0.2],
+          [3.25, 74, 0.2],
+          [3.5, 71, 0.2],
+          [3.75, 78, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A synced sawtooth",
+          "module": "osc",
+          "why": "VCO 3 synced to VCO 1, which is silent.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 1 0 · 0%.\n- VCO 3 SYNC On.\n- VCO 3 FREQUENCY 4.9 · 349 Hz (F4) · LF 1.05 Hz.\n- VCF AUDIO VCO 3 8 · 80%.\n- Listen for: a nasal buzz.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vcf.vco1": 0,
+            "vco3.sync": true,
+            "vco3.freq": 4.907,
+            "vcf.vco3": 8
+          }
+        },
+        {
+          "title": "Sweep the sync",
+          "module": "mod",
+          "why": "The ADSR on VCO 3’s pitch.\n- VCO 3 FM ADSR 3.5 · 35%.\n- Listen for: a tearing start on each note.",
+          "set": {
+            "vco3.fmAdsr": 3.5
+          }
+        },
+        {
+          "title": "Bright",
+          "module": "filter",
+          "why": "Fairly open.\n- VCF FREQUENCY 6.4 · 1.1 kHz.\n- VCF RESONANCE 1 · 10%.\n- VCF CONTROL KYBD CV 6 · 60%.\n- VCF CONTROL ADSR 2 · 20%.\n- Listen for: a bright, sparkling tone.",
+          "set": {
+            "vcf.freq": 6.4,
+            "vcf.res": 1,
+            "vcf.kbd": 6,
+            "vcf.adsr": 2
+          }
+        },
+        {
+          "title": "Plucks",
+          "module": "env",
+          "why": "Short.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 4.5 · 180 ms.\n- ADSR SUSTAIN 1 · 10%.\n- ADSR RELEASE 3 · 59 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 3 · 30%.\n- REVERB RIGHT 3 · 30%.\n- Listen for: a sunny, sparkling arpeggio.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 4.5,
+            "adsr.s": 1,
+            "adsr.r": 3,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 3,
+            "rev.right": 3
+          }
+        }
+      ],
+      "context": {
+        "vco3.fmAdsr": "In this sound: how much each pluck tears."
+      },
+      "tweaks": [
+        {
+          "id": "vco3.fmAdsr",
+          "try": "Lower to 0",
+          "hear": "A plain, steady sync buzz."
+        }
+      ]
+    },
+    {
+      "id": "b2600-get-at-the-wave-fm-bells",
+      "name": "Water-Glass FM Bells",
+      "ref": "In the style of Takashi Kokubo — Get at the Wave (1987)",
+      "artist": "Takashi Kokubo",
+      "tags": ["keys", "ambient", "kankyo ongaku", "gentle", "80s"],
+      "level": 2,
+      "blurb": "Clear, glassy bells with shimmering overtones, chiming slowly in a calm space.",
+      "how": "VCO 2’s sine is pre-wired to VCO 3’s pitch through its FM slider. With VCO 2 at audio speed, at an unusual ratio above VCO 3, that is frequency modulation, and VCO 3 grows bright, glassy overtones. VCO 3’s triangle, patched into the filter, carries them. Struck and left to ring, with reverb, it chimes like a glass.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.9],
+          [2, 79, 1.9],
+          [4, 76, 0.9],
+          [5, 74, 0.9],
+          [6, 72, 1.9],
+          [8, 69, 1.9],
+          [10, 72, 1.9],
+          [12, 67, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "FM from VCO 2",
+          "module": "osc",
+          "why": "VCO 2 well above VCO 3, and shaking its pitch.\n- Cable VCO 3 TRI → VCF AUDIO (VCO 3).\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 8 · 80%.\n- VCO 2 FREQUENCY 5.9 · 793 Hz (G5) · LF 2.38 Hz: a little over an octave and a fifth above.\n- VCF AUDIO VCO 2 0 · 0%.\n- VCO 3 FM VCO 2 3 · 30%: the overtones.\n- VCF AUDIO VCO 1 0 · 0%.\n- Listen for: a clear, glassy bell tone.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 8,
+            "vco2.freq": 5.868,
+            "vcf.vco2": 0,
+            "vco3.fmVco2": 3,
+            "vcf.vco1": 0
+          },
+          "cables": [["j.vco3tri", "j.vcfVco3"]]
+        },
+        {
+          "title": "Open",
+          "module": "filter",
+          "why": "Let the shimmer through.\n- VCF FREQUENCY 7.5 · 2.9 kHz.\n- VCF RESONANCE 0 · 0%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: no change.",
+          "set": {
+            "vcf.freq": 7.5,
+            "vcf.res": 0,
+            "vcf.kbd": 5,
+            "vcf.adsr": 0
+          }
+        },
+        {
+          "title": "Struck and ringing",
+          "module": "env",
+          "why": "A strike and a long fall.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 7.5 · 1.8 s.\n- ADSR SUSTAIN 0 · 0%.\n- ADSR RELEASE 7.5 · 1.8 s.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 5 · 50%.\n- REVERB RIGHT 5 · 50%.\n- Listen for: calm, chiming glass bells.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 7.5,
+            "adsr.s": 0,
+            "adsr.r": 7.5,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 5,
+            "rev.right": 5
+          }
+        }
+      ],
+      "context": {
+        "vco3.fmVco2": "In this sound: how glassy the bell is.",
+        "vco2.freq": "In this sound: the bell’s metal. Small moves change it."
+      },
+      "tweaks": [
+        {
+          "id": "vco3.fmVco2",
+          "try": "Raise to 5",
+          "hear": "A harsher, gong-like bell."
+        }
+      ]
+    },
+    {
+      "id": "b2600-uk-drill-sliding-808",
+      "name": "Drill Sliding Sub",
+      "ref": "In the style of UK drill",
+      "artist": "UK drill",
+      "tags": ["bass", "drill", "uk", "10s"],
+      "level": 2,
+      "blurb": "A long, dark sub bass that slides between notes, the moving 808 under a UK drill beat.",
+      "how": "VCO 2’s sine, patched into the filter, with a little of VCO 3’s sawtooth for presence. Portamento makes it slide, and TRIG MODE on SINGLE keeps the envelope running through the overlapping notes, so they slide without a new attack. Drill bass lines move more than they repeat.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 37, 1.6],
+          [1.5, 44, 0.6],
+          [2, 42, 1.9],
+          [4, 37, 0.9],
+          [5, 37, 0.4],
+          [5.5, 40, 0.9],
+          [6.25, 42, 1.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sine with a little edge",
+          "module": "patch",
+          "why": "VCO 2’s sine into the filter, VCO 3’s sawtooth low.\n- Cable VCO 2 SINE → VCF AUDIO (VCO 2).\n- VCO 2 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 2 9 · 90%.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 1.5 · 15%.\n- VCF AUDIO VCO 1 0 · 0%.\n- VCF FREQUENCY 5 · 339 Hz.\n- VCF RESONANCE 0 · 0%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: a deep, dark sub.",
+          "set": {
+            "vco2.freq": 4.568,
+            "vcf.vco2": 9,
+            "vco3.freq": 4.568,
+            "vcf.vco3": 1.5,
+            "vcf.vco1": 0,
+            "vcf.freq": 5,
+            "vcf.res": 0,
+            "vcf.kbd": 5,
+            "vcf.adsr": 0
+          },
+          "cables": [["j.vco2sine", "j.vcfVco2"]]
+        },
+        {
+          "title": "Slides",
+          "module": "glide",
+          "why": "Portamento, and single triggering on the overlaps.\n- PORTAMENTO ON On.\n- PORTAMENTO 2.5 · 190 ms.\n- TRIG MODE SINGLE.\n- Listen for: the overlapping notes sliding into each other.",
+          "set": {
+            "porta.on": true,
+            "porta.amount": 2.5,
+            "kbd.trig": "single"
+          }
+        },
+        {
+          "title": "Long notes",
+          "module": "env",
+          "why": "Held and long.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 8 · 2.6 s.\n- ADSR SUSTAIN 8 · 80%.\n- ADSR RELEASE 5 · 270 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 9 · 90%.\n- Listen for: a dark, sliding drill bass.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 8,
+            "adsr.s": 8,
+            "adsr.r": 5,
+            "vca.adsr": 10,
+            "mix.vca": 9
+          }
+        }
+      ],
+      "context": {
+        "porta.amount": "In this sound: the slide."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.vco3",
+          "try": "Raise to 4",
+          "hear": "A grittier bass that cuts through."
+        }
+      ]
+    },
+    {
+      "id": "b2600-oxygene-ii-soaring-lead",
+      "name": "Soaring Oxygène Lead",
+      "ref": "In the style of Jean-Michel Jarre — \"Oxygène (Part II)\" (Oxygène, 1976)",
+      "artist": "Jean-Michel Jarre",
+      "tags": ["lead", "electronic", "space", "70s"],
+      "level": 2,
+      "blurb": "A soaring, gliding lead with a late vibrato and a wash of spring reverb, high over a slow rhythm.",
+      "how": "Jarre used an ARP 2600 for leads and effects on Oxygène. A sawtooth and a pulse together, a short portamento between notes, and the delayed vibrato from the LFO into VCO 1’s LFO jack, so long notes start to sing. The spring reverb gives the sense of space. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 69, 1.9],
+          [2, 72, 0.9],
+          [3, 74, 0.9],
+          [4, 76, 2.9],
+          [7, 74, 0.9],
+          [8, 72, 1.9],
+          [10, 69, 0.9],
+          [11, 67, 0.9],
+          [12, 69, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sawtooth and pulse",
+          "module": "osc",
+          "why": "VCO 3’s sawtooth and VCO 1’s pulse.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 6 · 60%.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 FINE TUNE 0.1 · 0 st.\n- VCO 1 PULSE WIDTH 40 · 40% duty.\n- VCF AUDIO VCO 1 5 · 50%.\n- Listen for: a rich, bright tone.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 6,
+            "vco1.freq": 4.568,
+            "vco1.fine": 0.1,
+            "vco1.pw": 40,
+            "vcf.vco1": 5
+          }
+        },
+        {
+          "title": "A singing filter",
+          "module": "filter",
+          "why": "Fairly open, with some resonance.\n- VCF FREQUENCY 5.6 · 565 Hz.\n- VCF RESONANCE 3.5 · 35%.\n- VCF CONTROL KYBD CV 7 · 70%.\n- VCF CONTROL ADSR 2 · 20%.\n- Listen for: a singing lead.",
+          "set": {
+            "vcf.freq": 5.6,
+            "vcf.res": 3.5,
+            "vcf.kbd": 7,
+            "vcf.adsr": 2
+          }
+        },
+        {
+          "title": "Glide and a late vibrato",
+          "module": "patch",
+          "why": "A short portamento, and the delayed sine into VCO 1’s LFO jack.\n- Cable LFO SINE DELAYED → VCO 1 FM (LFO).\n- PORTAMENTO ON On.\n- PORTAMENTO 3 · 270 ms.\n- VCO 1 FM LFO 3.5 · 35%.\n- LFO SPEED 5.6 · 3.30 Hz.\n- VIB DELAY 3 · 900 ms.\n- VIB DEPTH 8 · 80%.\n- Listen for: notes sliding into each other, then singing.",
+          "set": {
+            "porta.on": true,
+            "porta.amount": 3,
+            "vco1.fmLfo": 3.5,
+            "lfo.speed": 5.6,
+            "lfo.vibDelay": 3,
+            "lfo.vibDepth": 8
+          },
+          "cables": [["j.lfoDelayed", "j.vco1Lfo"]]
+        },
+        {
+          "title": "Held, in a big space",
+          "module": "env",
+          "why": "A soft start, held, a long tail, and reverb.\n- ADSR ATTACK 5 · 110 ms.\n- ADSR DECAY 6 · 570 ms.\n- ADSR SUSTAIN 9 · 90%.\n- ADSR RELEASE 6.5 · 840 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 6 · 60%.\n- REVERB RIGHT 6 · 60%.\n- Listen for: a soaring, spacious melody.",
+          "set": {
+            "adsr.a": 5,
+            "adsr.d": 6,
+            "adsr.s": 9,
+            "adsr.r": 6.5,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 6,
+            "rev.right": 6
+          }
+        }
+      ],
+      "context": {
+        "lfo.vibDelay": "In this sound: how long a note stays straight.",
+        "rev.left": "In this sound: the space."
+      },
+      "tweaks": [
+        {
+          "id": "porta.amount",
+          "try": "Raise to 5",
+          "hear": "Long, swooping slides between notes."
+        }
+      ]
+    },
+    {
+      "id": "b2600-rain-dance-sh-burble",
+      "name": "Random Pitch-and-Filter Burble",
+      "ref": "In the style of Herbie Hancock — \"Rain Dance\" (Sextant, 1973)",
+      "artist": "Herbie Hancock",
+      "tags": ["seq", "jazz", "electronic", "70s"],
+      "level": 3,
+      "blurb": "A fast, glittering burble of random notes, each with its own random brightness.",
+      "how": "Hancock’s Sextant opens with ARP 2600 sample-and-hold patterns. Here the sample-and-hold moves VCO 1’s pitch through its pre-wired slider and, patched into the filter’s VCO 2 control jack, the cutoff too. With ENVELOPE ROUTING on S/H CLOCK the envelopes fire on each tick, so every random step is a separate, plucked note. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 64, 7.9],
+          [8, 60, 7.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pulse",
+          "module": "osc",
+          "why": "VCO 1’s pulse.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 30 · 30% duty.\n- VCF AUDIO VCO 1 8 · 80%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a hollow, nasal tone.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vco1.pw": 30,
+            "vcf.vco1": 8,
+            "vcf.vco3": 0
+          }
+        },
+        {
+          "title": "A resonant filter",
+          "module": "filter",
+          "why": "Resonant, plucked.\n- VCF FREQUENCY 5 · 339 Hz.\n- VCF RESONANCE 6 · 60%.\n- VCF CONTROL KYBD CV 6 · 60%.\n- VCF CONTROL ADSR 3 · 30%.\n- Listen for: a ringing tone.",
+          "set": {
+            "vcf.freq": 5,
+            "vcf.res": 6,
+            "vcf.kbd": 6,
+            "vcf.adsr": 3
+          }
+        },
+        {
+          "title": "Random notes and colours",
+          "module": "patch",
+          "why": "The sample-and-hold on the pitch (pre-wired) and on the filter (by cable).\n- Cable S/H OUT → VCF CONTROL (VCO 2): replaces VCO 2’s sine at the VCF CONTROL VCO 2 slider.\n- VCO 1 FM S/H OUT 6 · 60%: random steps up to about nine semitones.\n- VCF CONTROL VCO 2 3.5 · 35%.\n- S&H RATE 7 · 7.13 Hz: about seven steps a second.\n- S&H LEVEL 8 · 80%.\n- Listen for: a held note now burbling randomly.",
+          "set": {
+            "vco1.fmSh": 6,
+            "vcf.vco2cv": 3.5,
+            "sh.rate": 7,
+            "sh.level": 8
+          },
+          "cables": [["j.shOut", "j.vcfVco2Cv"]]
+        },
+        {
+          "title": "A pluck on every step",
+          "module": "env",
+          "why": "The clock fires the envelopes.\n- ENVELOPE ROUTING S/H CLOCK.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 4 · 130 ms.\n- ADSR SUSTAIN 0 · 0%.\n- ADSR RELEASE 3 · 59 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 3.5 · 35%.\n- REVERB RIGHT 3.5 · 35%.\n- Listen for: a glittering stream of random plucks.",
+          "set": {
+            "env.src": "sh",
+            "adsr.a": 0,
+            "adsr.d": 4,
+            "adsr.s": 0,
+            "adsr.r": 3,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 3.5,
+            "rev.right": 3.5
+          }
+        }
+      ],
+      "context": {
+        "sh.rate": "In this sound: how fast it burbles.",
+        "vco1.fmSh": "In this sound: how far the notes leap."
+      },
+      "tweaks": [
+        {
+          "id": "sh.rate",
+          "try": "Lower to 4",
+          "hear": "A slower, dripping burble."
+        },
+        {
+          "id": "vcf.vco2cv",
+          "try": "Raise to 6",
+          "hear": "Wild jumps in brightness from note to note."
+        }
+      ]
+    },
+    {
+      "id": "b2600-funky-worm-whine-lead",
+      "name": "Whining Funk Lead",
+      "ref": "In the style of Ohio Players — \"Funky Worm\" (Pleasure, 1972)",
+      "artist": "Ohio Players",
+      "tags": ["lead", "funk", "soul", "70s"],
+      "level": 2,
+      "blurb": "A high, nasal, whining lead that slides and wobbles all over a funk groove.",
+      "how": "A thin pulse, high up, through a fairly open, resonant filter. A long portamento makes every note whine from the last, and VCO 1’s LFO slider adds a wide vibrato. Its silliness is the point. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 79, 0.9],
+          [1, 84, 0.4],
+          [1.5, 82, 0.9],
+          [2.5, 79, 0.4],
+          [3, 77, 0.9],
+          [4, 79, 0.4],
+          [4.5, 82, 0.4],
+          [5, 84, 1.4],
+          [6.5, 79, 1.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A thin pulse",
+          "module": "osc",
+          "why": "VCO 1’s narrow pulse.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 PULSE WIDTH 15 · 15% duty.\n- VCF AUDIO VCO 1 8 · 80%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a thin, nasal whine.",
+          "set": {
+            "vco1.freq": 4.568,
+            "vco1.pw": 15,
+            "vcf.vco1": 8,
+            "vcf.vco3": 0
+          }
+        },
+        {
+          "title": "Bright, with a peak",
+          "module": "filter",
+          "why": "Open, resonant.\n- VCF FREQUENCY 6.5 · 1.2 kHz.\n- VCF RESONANCE 4.5 · 45%.\n- VCF CONTROL KYBD CV 7 · 70%.\n- VCF CONTROL ADSR 1.5 · 15%.\n- Listen for: a piercing tone.",
+          "set": {
+            "vcf.freq": 6.5,
+            "vcf.res": 4.5,
+            "vcf.kbd": 7,
+            "vcf.adsr": 1.5
+          }
+        },
+        {
+          "title": "Whine and wobble",
+          "module": "glide",
+          "why": "A long portamento and a wide vibrato.\n- PORTAMENTO ON On.\n- PORTAMENTO 4 · 480 ms: about half a second.\n- VCO 1 FM LFO 3.5 · 35%.\n- LFO SPEED 5.8 · 3.61 Hz.\n- Listen for: every note whining from the last, wobbling as it goes.",
+          "set": {
+            "porta.on": true,
+            "porta.amount": 4,
+            "vco1.fmLfo": 3.5,
+            "lfo.speed": 5.8
+          }
+        },
+        {
+          "title": "Held",
+          "module": "env",
+          "why": "Full while held.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 5 · 270 ms.\n- ADSR SUSTAIN 9 · 90%.\n- ADSR RELEASE 4 · 130 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 7.5 · 75%.\n- Listen for: a whining, wobbling funk lead.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 5,
+            "adsr.s": 9,
+            "adsr.r": 4,
+            "vca.adsr": 10,
+            "mix.vca": 7.5
+          }
+        }
+      ],
+      "context": {
+        "porta.amount": "In this sound: the whine."
+      },
+      "tweaks": [
+        {
+          "id": "porta.amount",
+          "try": "Lower to 1.5",
+          "hear": "A tighter, more polite lead."
+        }
+      ]
+    },
+    {
+      "id": "b2600-silver-cloud-motorik-seq",
+      "name": "Bright Motorik Figure",
+      "ref": "In the style of La Düsseldorf — \"Silver Cloud\" (La Düsseldorf, 1976)",
+      "artist": "La Düsseldorf",
+      "tags": ["seq", "krautrock", "motorik", "70s"],
+      "level": 1,
+      "blurb": "A bright, chiming eighth-note figure that rides a steady motorik beat with joy.",
+      "how": "A sawtooth with a pulse an octave above, plucked bright. The figure is simple and major, repeated over and over, which is the point of motorik music: forward motion without hurry. This describes the style of playing, not the exact sound on the record.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.45],
+          [0.5, 71, 0.45],
+          [1, 76, 0.45],
+          [1.5, 71, 0.45],
+          [2, 64, 0.45],
+          [2.5, 71, 0.45],
+          [3, 78, 0.45],
+          [3.5, 71, 0.45],
+          [4, 62, 0.45],
+          [4.5, 69, 0.45],
+          [5, 74, 0.45],
+          [5.5, 69, 0.45],
+          [6, 62, 0.45],
+          [6.5, 69, 0.45],
+          [7, 76, 0.45],
+          [7.5, 69, 0.45]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sawtooth and an octave pulse",
+          "module": "osc",
+          "why": "VCO 3’s sawtooth and VCO 1’s pulse an octave up.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 7 · 70%.\n- VCO 1 FREQUENCY 5.4 · 523 Hz (C5) · LF 1.57 Hz.\n- VCO 1 PULSE WIDTH 40 · 40% duty.\n- VCF AUDIO VCO 1 3 · 30%.\n- Listen for: a bright, chiming tone.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 7,
+            "vco1.freq": 5.381,
+            "vco1.pw": 40,
+            "vcf.vco1": 3
+          }
+        },
+        {
+          "title": "Bright",
+          "module": "filter",
+          "why": "Open with a small pluck.\n- VCF FREQUENCY 6 · 794 Hz.\n- VCF RESONANCE 1.5 · 15%.\n- VCF CONTROL KYBD CV 6 · 60%.\n- VCF CONTROL ADSR 2.5 · 25%.\n- Listen for: a bright pluck.",
+          "set": {
+            "vcf.freq": 6,
+            "vcf.res": 1.5,
+            "vcf.kbd": 6,
+            "vcf.adsr": 2.5
+          }
+        },
+        {
+          "title": "Eighths",
+          "module": "env",
+          "why": "Medium length.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 4.8 · 230 ms.\n- ADSR SUSTAIN 4 · 40%.\n- ADSR RELEASE 3.5 · 86 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 2.5 · 25%.\n- REVERB RIGHT 2.5 · 25%.\n- Listen for: a joyful, driving figure.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 4.8,
+            "adsr.s": 4,
+            "adsr.r": 3.5,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 2.5,
+            "rev.right": 2.5
+          }
+        }
+      ],
+      "context": {
+        "vcf.vco1": "In this sound: the chime on top."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.vco1",
+          "try": "Raise to 6",
+          "hear": "A brighter, more organ-like chime."
+        }
+      ]
+    },
+    {
+      "id": "b2600-alison-shoegaze-swell",
+      "name": "Shoegaze Swell",
+      "ref": "In the style of Slowdive — \"Alison\" (Souvlaki, 1993)",
+      "artist": "Slowdive",
+      "tags": ["pad", "shoegaze", "dream pop", "soft", "90s"],
+      "level": 2,
+      "blurb": "A blurred, shimmering wall of sound that swells in slowly and hangs in a haze of reverb.",
+      "how": "Shoegaze guitars are smeared by effects until they are more texture than notes. Two oscillators slightly apart, a breath of noise, a slow swell and the spring reverb near the top give that blur; a slow, shallow vibrato on VCO 1 makes it shimmer against VCO 3.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 64, 3.6],
+          [4, 62, 3.6],
+          [8, 59, 3.6],
+          [12, 57, 3.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two oscillators and a breath of noise",
+          "module": "osc",
+          "why": "VCO 3’s sawtooth, VCO 1’s pulse, and pink noise.\n- VCO 3 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 3 6 · 60%.\n- VCO 1 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCO 1 FINE TUNE 0.2 · +0.1 st.\n- VCO 1 PULSE WIDTH 45 · 45% duty.\n- VCF AUDIO VCO 1 5 · 50%.\n- VCF AUDIO NOISE GEN 1.5 · 15%.\n- NOISE COLOR 5 · pink.\n- NOISE LEVEL 10 · 100%.\n- Listen for: a thick, hazy tone.",
+          "set": {
+            "vco3.freq": 4.568,
+            "vcf.vco3": 6,
+            "vco1.freq": 4.568,
+            "vco1.fine": 0.15,
+            "vco1.pw": 45,
+            "vcf.vco1": 5,
+            "vcf.noise": 1.5,
+            "noise.color": 5,
+            "noise.level": 10
+          }
+        },
+        {
+          "title": "Blurred",
+          "module": "filter",
+          "why": "Soft and warm.\n- VCF FREQUENCY 4.8 · 285 Hz.\n- VCF RESONANCE 1 · 10%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 1.5 · 15%.\n- Listen for: a soft blur.",
+          "set": {
+            "vcf.freq": 4.8,
+            "vcf.res": 1,
+            "vcf.kbd": 5,
+            "vcf.adsr": 1.5
+          }
+        },
+        {
+          "title": "Shimmer",
+          "module": "lfo",
+          "why": "A slow, shallow vibrato on VCO 1 only.\n- VCO 1 FM LFO 1.5 · 15%.\n- LFO SPEED 4.5 · 1.99 Hz: about two wobbles a second.\n- Listen for: the two oscillators shimmering against each other.",
+          "set": {
+            "vco1.fmLfo": 1.5,
+            "lfo.speed": 4.5
+          }
+        },
+        {
+          "title": "Swell into haze",
+          "module": "env",
+          "why": "A slow swell, a long fade, lots of reverb.\n- ADSR ATTACK 7 · 610 ms.\n- ADSR DECAY 6 · 570 ms.\n- ADSR SUSTAIN 10 · 100%.\n- ADSR RELEASE 7.5 · 1.8 s.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 8 · 80%.\n- REVERB LEFT 8 · 80%.\n- REVERB RIGHT 8 · 80%.\n- Listen for: a hazy, shimmering wall.",
+          "set": {
+            "adsr.a": 7,
+            "adsr.d": 6,
+            "adsr.s": 10,
+            "adsr.r": 7.5,
+            "vca.adsr": 10,
+            "mix.vca": 8,
+            "rev.left": 8,
+            "rev.right": 8
+          }
+        }
+      ],
+      "context": {
+        "rev.left": "In this sound: half of the haze."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.noise",
+          "try": "Raise to 4",
+          "hear": "A noisier, more distorted wall."
+        }
+      ]
+    },
+    {
+      "id": "b2600-surgeon-industrial-kick",
+      "name": "Industrial Techno Kick",
+      "ref": "In the style of Surgeon — Basictonalvocabulary (1997)",
+      "artist": "Surgeon",
+      "tags": ["perc", "techno", "industrial", "90s"],
+      "level": 2,
+      "blurb": "A hard, distorted kick that punches and drops, four to the floor.",
+      "how": "VCO 2’s sine, patched into the filter, is the body. The ADSR, pre-wired to VCO 2’s pitch, starts each hit well over an octave high and drops it fast, which is the punch. The 4072 filter and its input slider pushed high drive it harder.",
+      "phrase": {
+        "bpm": 136,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.2],
+          [1, 36, 0.2],
+          [2, 36, 0.2],
+          [3, 36, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sine, pushed",
+          "module": "patch",
+          "why": "VCO 2’s sine into the filter, hard.\n- Cable VCO 2 SINE → VCF AUDIO (VCO 2).\n- VCO 2 FREQUENCY 4.6 · 262 Hz (C4) · LF 0.79 Hz.\n- VCF AUDIO VCO 2 10 · 100%: driving the filter’s input.\n- VCF AUDIO VCO 1 0 · 0%.\n- VCF AUDIO VCO 3 0 · 0%.\n- Listen for: a thick, low thud.",
+          "set": {
+            "vco2.freq": 4.568,
+            "vcf.vco2": 10,
+            "vcf.vco1": 0,
+            "vcf.vco3": 0
+          },
+          "cables": [["j.vco2sine", "j.vcfVco2"]]
+        },
+        {
+          "title": "The punch",
+          "module": "mod",
+          "why": "The ADSR on VCO 2’s pitch.\n- VCO 2 FM ADSR 6 · 60%: a drop of well over an octave.\n- Listen for: each hit punching down.",
+          "set": {
+            "vco2.fmAdsr": 6
+          }
+        },
+        {
+          "title": "A driven filter",
+          "module": "filter",
+          "why": "The 4072, fairly open.\n- VCF MODE 4072.\n- VCF FREQUENCY 6 · 794 Hz.\n- VCF RESONANCE 1.5 · 15%.\n- VCF CONTROL KYBD CV 5 · 50%.\n- VCF CONTROL ADSR 0 · 0%.\n- Listen for: a hard, distorted kick.",
+          "set": {
+            "vcf.mode": "4072",
+            "vcf.freq": 6,
+            "vcf.res": 1.5,
+            "vcf.kbd": 5,
+            "vcf.adsr": 0
+          }
+        },
+        {
+          "title": "A short hit",
+          "module": "env",
+          "why": "Instant, falling quickly to nothing.\n- ADSR ATTACK 0 · 2 ms.\n- ADSR DECAY 4.6 · 200 ms.\n- ADSR SUSTAIN 0 · 0%.\n- ADSR RELEASE 4 · 130 ms.\n- VCA CNTRL ADSR 10 · 100%.\n- MIXER VCA 9 · 90%.\n- Listen for: a pounding, industrial kick.",
+          "set": {
+            "adsr.a": 0,
+            "adsr.d": 4.6,
+            "adsr.s": 0,
+            "adsr.r": 4,
+            "vca.adsr": 10,
+            "mix.vca": 9
+          }
+        }
+      ],
+      "context": {
+        "vco2.fmAdsr": "In this sound: the punch."
+      },
+      "tweaks": [
+        {
+          "id": "adsr.d",
+          "try": "Raise to 6",
+          "hear": "A long, booming kick."
+        }
+      ]
     }
   ]
 }
