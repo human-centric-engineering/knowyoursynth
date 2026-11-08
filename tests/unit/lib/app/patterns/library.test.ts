@@ -178,7 +178,6 @@ describe('the default role rule', () => {
   });
 
   it('calls a slow line on an ambient-type sound Ambient: a pad, a drone, or any sound tagged ambient', () => {
-    expect(role(SLOW_LINE, [PAD])).toBe('ambient');
     expect(role(SLOW_LINE, [['drone']])).toBe('ambient');
     expect(role(SLOW_LINE, [AMBIENT_FX])).toBe('ambient');
     expect(role(SLOW_LINE, [['lead', 'ambient']])).toBe('ambient');

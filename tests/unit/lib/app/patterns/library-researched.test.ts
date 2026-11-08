@@ -711,8 +711,9 @@ describe('the research batches', () => {
     }
   });
 
-  it('calls a pattern Ambient only where its sounds are ambient-type, as the default role rule does (t-215)', () => {
-    // A -low or -high copy plays its pattern's part, so it takes that pattern's role (checked above) whatever its sounds.
+  it('calls a pattern Ambient only where its sounds are ambient-type (t-215)', () => {
+    // One way only: a batch's role is the researcher's, so a slow line on a pad may still be a Lead line. A -low or
+    // -high copy plays its pattern's part, so it takes that pattern's role (checked above) whatever its sounds.
     const originals = patterns.filter((p) => p.key === p.key.replace(/-(low|high)(-2)?$/, ''));
     const ambient = originals.filter((p) => p.role === 'ambient');
     expect(ambient.length).toBeGreaterThan(40);

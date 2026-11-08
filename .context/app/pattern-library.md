@@ -167,7 +167,10 @@ style section of every shape, and take a quarter of the Drone section with it.
 
 **A role a person set.** The migration renames the value and then splits its rows by the same placement rule, so a
 role an admin set to Slow melody becomes Ambient or Lead line by the sounds it is on. It said "a slow line", which is
-still true under either name. The dev database had none (every Slow melody row was the seed's).
+still true under either name. It reads "the sounds it is on" as the seed does: a riff pattern by its own sound, a -low
+or -high copy by the pattern it copies, any other pattern by its placements. A research pattern's role is its batch's,
+which the migration can't read; the seed sets it on every unedited one. The dev database had none (every Slow melody
+row was the seed's).
 
 ### Category to role
 
@@ -1586,7 +1589,7 @@ it is kept for a minute: an admin's edit, or a pattern disabled (t-156), reaches
 2. **Roles take places in proportion to their share.** A role with less than 5% of the sound's role shares isn't
    offered. Each place goes to the role with the highest quotient: its share times its next pattern's fit, over the
    places it already has plus one (D'Hondt). So the best-suited role leads, and the others come in as its quotient
-   falls. A bass gets mostly bass lines, a pad a mix of drones, chord changes and slow melodies.
+   falls. A bass gets mostly bass lines, a pad a mix of drones, chord changes and ambient lines.
 3. **Within a role, fit orders them**, from 0 to 1:
    - **Register.** How far the pattern's median note is from the register's centre (D2, D4, E5 for low, mid, high), as
      a bell curve one octave wide: 0.61 an octave away, 0.14 two.
@@ -1655,7 +1658,7 @@ patch's chords last and marked, and the order with no reading. The endpoint is t
 library kept with suggestions', the section cap).
 
 Tested in `tests/unit/lib/app/patterns/suggest.test.ts`, over every library riff and hand-built patches: a bass patch
-gets bass lines first, a pad drones, chord changes and slow melodies, a noise hit percussive patterns, and a mono
+gets bass lines first, a pad drones, chord changes and ambient lines, a noise hit percussive patterns, and a mono
 patch no pattern with chords, of 200 asked for. Also the lift, the threshold on a real Model D sound, and the schema.
 The endpoint is tested in `tests/unit/app/api/v1/library-patterns-suggest.test.ts` (validation, the reads, the kept
 library, the section cap), the picker group in `tests/unit/components/app/sequencer/suggested-patterns.test.tsx` (as it
