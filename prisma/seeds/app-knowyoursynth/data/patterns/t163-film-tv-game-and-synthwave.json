@@ -4,6 +4,10 @@
   "researchedAt": "2026-11-02",
   "notRecreated": [
     {
+      "sound": "b2600/b2600-blue-wind-bending-lead",
+      "reason": "The sound names “Blue Wind”, which no batch has a pattern for yet. The artist’s patterns here are the Miami Vice themes, which it does not name."
+    },
+    {
       "sound": "b2600/droid-chatter",
       "reason": "An effect: R2-D2’s chatter is random bleeps and whistles made by the patch, blended on the record with Ben Burtt’s voice. There is no part to write."
     },

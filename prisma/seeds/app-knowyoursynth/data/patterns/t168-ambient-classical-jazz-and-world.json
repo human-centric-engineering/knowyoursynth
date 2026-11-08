@@ -2236,7 +2236,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["b2600/jazz-funk-line", "super-gemini/sg-zawinul-lead", "take-5/t5-zawinul-lead"],
+      "sounds": [
+        "b2600/jazz-funk-line",
+        "super-gemini/sg-zawinul-lead",
+        "take-5/t5-zawinul-lead",
+        "b2600/b2600-birdland-duo-line"
+      ],
       "research": {
         "work": "Weather Report, “Birdland”, Heavy Weather, 1977",
         "part": "The main theme, eight bars: the held D and its two short Ds, the fall C B A G, the turn on B, D and G, and back up to D.",
@@ -2249,7 +2254,7 @@
             "url": "https://www.songsterr.com/a/wsa/weather-report-birdland-tab-s20757"
           }
         ],
-        "notes": "From the transcription’s tenor track, bars 76–83, ties merged; it ends where the theme starts again, so the loop leads into itself. On the record Zawinul’s synthesizer and Shorter’s saxophone play the theme together, and the transcription’s own synthesizer tracks have the counter-line there, so the tenor’s is the one taken. The two Birdland sounds name the work; the Super Gemini one names Zawinul and Birdland too. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s tenor track, bars 76–83, ties merged; it ends where the theme starts again, so the loop leads into itself. On the record Zawinul’s synthesizer and Shorter’s saxophone play the theme together, and the transcription’s own synthesizer tracks have the counter-line there, so the tenor’s is the one taken. The sounds on it name the work or Zawinul with it. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
