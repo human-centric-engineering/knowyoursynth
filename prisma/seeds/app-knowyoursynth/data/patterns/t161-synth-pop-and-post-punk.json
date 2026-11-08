@@ -1519,7 +1519,7 @@
     {
       "key": "researched:gary-numan/cars-strings-line-low",
       "name": "Cars: string line, an octave down",
-      "role": "ambient",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",

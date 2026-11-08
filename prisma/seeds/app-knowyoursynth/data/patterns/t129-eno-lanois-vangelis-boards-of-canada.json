@@ -20168,7 +20168,7 @@
     {
       "key": "researched:vangelis/blade-runner-blues-lead-low",
       "name": "Blade Runner Blues: lead, low",
-      "role": "lead_line",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",
@@ -20364,7 +20364,7 @@
     {
       "key": "researched:vangelis/blade-runner-blues-glide-high",
       "name": "Blade Runner Blues: gliding voice, high",
-      "role": "lead_line",
+      "role": "ambient",
       "tempo": null,
       "inspiredBy": {
         "kind": "work",

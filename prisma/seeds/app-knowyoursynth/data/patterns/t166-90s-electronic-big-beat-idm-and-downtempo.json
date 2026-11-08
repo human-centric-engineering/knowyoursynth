@@ -20616,7 +20616,7 @@
     {
       "key": "researched:paul-van-dyk/for-an-angel-top-low",
       "name": "For an Angel: top line, low",
-      "role": "ambient",
+      "role": "lead_line",
       "tempo": null,
       "inspiredBy": {
         "kind": "genre",
