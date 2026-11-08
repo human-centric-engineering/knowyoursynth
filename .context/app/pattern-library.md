@@ -1176,12 +1176,13 @@ Public, no session needed, in `lib/app/patterns/library-read.ts`. A pattern is s
 a synth the catalogue serves (listed, and in the registry). So hiding a synth hides its riffs, and a pattern on no
 sound yet (an admin's, still being written) is admin only.
 
-| Route                                             | Does                                                                                |
-| ------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `GET /api/v1/synths/:id/sounds/:slug/patterns`    | A sound's patterns, default first, with their facts.                                |
-| `GET /api/v1/library-patterns?role=&page=&limit=` | A page of the library by name, optionally one role.                                 |
-| `GET /api/v1/library-patterns/:id`                | One pattern.                                                                        |
-| `POST /api/v1/library-patterns/suggest`           | Patterns that suit a reading of a patch, with why. See [Suggestions](#suggestions). |
+| Route                                             | Does                                                                                    |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `GET /api/v1/synths/:id/sounds/:slug/patterns`    | A sound's patterns, default first, with their facts.                                    |
+| `GET /api/v1/library-patterns?role=&page=&limit=` | A page of the library by name, optionally one role.                                     |
+| `GET /api/v1/library-patterns/:id`                | One pattern.                                                                            |
+| `POST /api/v1/library-patterns/suggest`           | Patterns that suit a reading of a patch, with why. See [Suggestions](#suggestions).     |
+| `POST /api/v1/library-patterns/rank`              | Every pattern, by role, best suited first. See [The whole library](#the-whole-library). |
 
 Admin, in `lib/app/patterns/library-edit.ts`, over the catalogue's guard and audit (`lib/app/catalogue/admin-route.ts`).
 Every write is `writesSharedSettings` and audited: a pattern as `library_pattern`, a sound's list or riff as
@@ -1567,6 +1568,53 @@ title (the traits and the three roles that suit it most) and each reason as its 
 
 What it doesn't weigh yet: tempo range, and slides against a synth with no glide (the features don't say whether the
 patch glides).
+
+#### The whole library
+
+t-212 (`f-pattern-picker`). The Play deck's pattern picker lists the patch's own patterns, then every other public
+pattern, in a section per role, best suited first. `/suggest` returns at most 20, so the whole library has its own
+endpoint, `POST /api/v1/library-patterns/rank`.
+
+It takes `{ synthId, sound?, features? }`, validated as `/suggest`'s are (`RankBodySchema`, `rank-read.ts`).
+`features` is optional, because the picker asks before the detector has read the patch. An unknown synth, or a sound
+not on a listed synth, is a 404. It writes nothing, and sits under the `/api/v1/**` section cap with no handler cap.
+It shares `/suggest`'s reads (`suggest-read.ts`): the sound, if one is named, and the public library kept for a minute
+(`publicLibrary`). So one read serves both, and `forgetSuggestLibrary` clears it for both.
+
+It returns the reading, as `/suggest` gives it (null with no features, or a silent patch), and **every role's section**,
+empty or not. A section has its role, its label (`ROLE_LABELS`), the patch's share of the role (null with no reading)
+and its patterns. A pattern is a lean row, without its notes, which a pick reads from
+`GET /api/v1/library-patterns/:id`:
+
+| Field           | What                                                                                                   |
+| --------------- | ------------------------------------------------------------------------------------------------------ |
+| `id`, `name`    |                                                                                                        |
+| `role`          | The section it is in.                                                                                  |
+| `bars`          | Its length, in bars of four beats (`facts.bars`).                                                      |
+| `inspiredBy`    | The label and the link ids, as a view has them, so the picker links it as the strip's does.            |
+| `fidelity`      |                                                                                                        |
+| `why`           | The reason `/suggest` would give it: `slow attack, holds → drone · same artist`. Null with no reading. |
+| `tooManyVoices` | It starts more notes together than the patch can play.                                                 |
+
+The order, in `rankLibrary` (`lib/app/patterns/rank.ts`):
+
+1. **Every enabled public pattern once**, except the sound's own, which the picker lists first. Nothing else is left
+   out: where `/suggest` drops a role under 5% and a pattern needing more voices, the whole library lists both.
+2. **Sections by the patch's share** of each role, largest first. A role the patch barely suits comes last, still
+   listed.
+3. **Within a section, by fit** with the researched lift, the order `rankPatterns` gives a role
+   (`liftedFit`, `byFit`, shared from `suggest.ts`). A pattern needing more voices than the patch has comes after
+   every one it can play, marked, in fit order among themselves.
+4. **With no reading** (no features yet, or a silent patch), the sections are in `PATTERN_ROLES` order and each by name,
+   so the picker is never empty.
+
+Measured against the dev DB on 2026-11-08: 4,469 patterns, about 1.3 MB of JSON, 160 KB gzipped.
+
+Tested in `tests/unit/lib/app/patterns/rank.test.ts`, over every library riff: every candidate once, the sections in
+share order, the same order and reasons as `rankPatterns` within a role, the lift, the sound's own left out, a mono
+patch's chords last and marked, and the order with no reading. The endpoint is tested in
+`tests/unit/app/api/v1/library-patterns-rank.test.ts` (validation, the 404s, the lean rows, no features and silent, the
+library kept with suggestions', the section cap).
 
 Tested in `tests/unit/lib/app/patterns/suggest.test.ts`, over every library riff and hand-built patches: a bass patch
 gets bass lines first, a pad drones, chord changes and slow melodies, a noise hit percussive patterns, and a mono

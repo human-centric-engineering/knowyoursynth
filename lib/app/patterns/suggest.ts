@@ -7,7 +7,8 @@
  * and ranks the library against them here, because only the server has the whole library. The design, the weights and
  * the threshold are in `.context/app/pattern-library.md` (Suggestions).
  *
- * Pure and client-safe: the hook decides whether to ask with `movedFar`, and the server ranks with `rankPatterns`.
+ * Pure and client-safe: the hook decides whether to ask with `movedFar`, and the server ranks with `rankPatterns`. The
+ * whole library's ranking for the Play deck's picker (`rank.ts`) orders by the same fit and gives the same reasons.
  */
 import { z } from 'zod';
 import type { PatternFidelity, PatternRole } from '@prisma/client';
@@ -191,6 +192,35 @@ function liftNote(p: SuggestCandidate, ctx: SuggestContext): string {
     : ' · this synth';
 }
 
+/** How well a pattern suits the sound: its fit, lifted where it is a researched pattern of the same artist or synth. */
+export function liftedFit(kind: SoundKind, p: SuggestCandidate, ctx: SuggestContext): number {
+  return fit(kind, p) * (related(p, ctx) ? RESEARCHED_LIFT : 1);
+}
+
+/** The order within a role: best fit first, then a researched pattern, then by name. */
+export function byFit<P extends SuggestCandidate>(
+  a: { p: P; fit: number },
+  b: { p: P; fit: number }
+): number {
+  return (
+    b.fit - a.fit ||
+    Number(researched(b.p)) - Number(researched(a.p)) ||
+    a.p.name.localeCompare(b.p.name) ||
+    a.p.id.localeCompare(b.p.id)
+  );
+}
+
+/** What starts every reason for a sound: its traits, `slow attack, holds → `, or nothing when it has none. */
+export function reasonLead(kind: SoundKind): string {
+  const traits = soundTraits(kind);
+  return traits.length ? `${traits.join(', ')} → ` : '';
+}
+
+/** Why a pattern was offered: `slow attack, holds, plays chords → drone · same artist`. */
+export function reasonFor(lead: string, p: SuggestCandidate, ctx: SuggestContext): string {
+  return `${lead}${ROLE_LABELS[p.role].toLowerCase()}${liftNote(p, ctx)}`;
+}
+
 /**
  * The library's patterns that suit a sound, best first, at most `limit`.
  *
@@ -205,24 +235,16 @@ export function rankPatterns(
   ctx: SuggestContext,
   limit: number
 ): Suggestion[] {
-  const traits = soundTraits(kind);
-  const lead = traits.length ? `${traits.join(', ')} → ` : '';
+  const lead = reasonLead(kind);
   const byRole = new Map<PatternRole, { p: SuggestCandidate; fit: number }[]>();
   for (const role of suitedRoles(kind)) byRole.set(role, []);
   for (const p of candidates) {
     const list = byRole.get(p.role);
     if (!list || ctx.exclude.has(p.id) || !p.facts.register) continue;
     if (p.facts.voices > kind.features.voices) continue;
-    list.push({ p, fit: fit(kind, p) * (related(p, ctx) ? RESEARCHED_LIFT : 1) });
+    list.push({ p, fit: liftedFit(kind, p, ctx) });
   }
-  for (const list of byRole.values())
-    list.sort(
-      (a, b) =>
-        b.fit - a.fit ||
-        Number(researched(b.p)) - Number(researched(a.p)) ||
-        a.p.name.localeCompare(b.p.name) ||
-        a.p.id.localeCompare(b.p.id)
-    );
+  for (const list of byRole.values()) list.sort(byFit);
 
   // Places go by the highest quotient: a role's share times its next pattern's fit, over the places it already has.
   // So the best-suited role leads, and the others come in as its quotient falls below theirs.
@@ -245,7 +267,7 @@ export function rankPatterns(
       id: p.id,
       role: p.role,
       score: Math.round(kind.roles[p.role] * f * 1000) / 1000,
-      reason: `${lead}${ROLE_LABELS[p.role].toLowerCase()}${liftNote(p, ctx)}`,
+      reason: reasonFor(lead, p, ctx),
     });
   }
   return out;
