@@ -120,6 +120,8 @@ import { useMyPatterns } from '@/components/app/sequencer/use-my-patterns';
 import type { PatternLibraryProps } from '@/components/app/sequencer/pattern-library';
 import { useSoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
 import { useSuggestedPatterns } from '@/components/app/sequencer/use-suggested-patterns';
+import { PatternPicker } from '@/components/app/synth/pattern-picker';
+import { useRankedPatterns } from '@/components/app/synth/use-ranked-patterns';
 import { useFavourites } from '@/components/app/synth/favourites';
 import { FxRack } from '@/components/app/synth/fx-rack';
 import { Inspector, Tooltip } from '@/components/app/synth/inspector';
@@ -1440,7 +1442,9 @@ function Synth({
     !sharedPattern && !openSound && !ownSoundPending && !sharedPanel && !ownLesson && preset
       ? { synthId, slug: preset.id, name: preset.name }
       : null;
-  const soundPatterns = useSoundPatterns(librarySound, seqShown);
+  // The Play deck's pattern picker (`f-pattern-picker` t-213) lists them too, so they are read while it is open.
+  const [patternsOpen, setPatternsOpen] = useState(false);
+  const soundPatterns = useSoundPatterns(librarySound, seqShown || patternsOpen);
   // Patterns that suit the patch as it is now (t-125). A library sound is offered them once the patch has moved far
   // from how that sound came; anything else on the panel is offered them at once.
   // The Default patch is no sound the suggestions can be asked to leave out, so it is no start: it is offered them at once.
@@ -1464,6 +1468,29 @@ function Synth({
     ownPatterns: soundPatterns?.patterns?.length ?? null,
     enabled: !ownSoundPending,
   });
+  // Under the sound's own, the whole library ranked for the patch, read while the picker is open.
+  const ranked = useRankedPatterns({
+    synthId,
+    def: synthDef,
+    panel: suggestPanel,
+    sound: startSlug,
+    open: patternsOpen,
+    enabled: !ownSoundPending,
+  });
+  // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked beside Play, the
+  // one a sound of the user's plays), and with no sound's riff to play; otherwise the riff. A new patch puts back its
+  // riff in the sequencer, and Play with it.
+  const playsPattern = seqShown || !!seqLoaded || !shown;
+  // The library pattern held as it came, marked in the picker. The riff as it came is the sound's default pattern (the
+  // sequencer's library puts the one in the other's place), so with nothing loaded the default is what plays.
+  const pickerCurrent = seq.edited
+    ? null
+    : seqLoaded
+      ? (seqLoaded.libraryId ?? null)
+      : (soundPatterns?.patterns?.[0]?.id ?? null);
+  const playsName = playsPattern
+    ? `${seqLoaded?.name ?? 'The patch’s riff'}${seq.edited ? ' (edited)' : ''}`
+    : 'The patch’s riff';
   const seqLibrary: PatternLibraryProps = {
     signedIn: authPending ? null : signedIn,
     // Save a copy is offered to someone else's pattern only; its owner saves it as any pattern of theirs.
@@ -2806,18 +2833,34 @@ function Synth({
               <div className="kys-player-bar flex flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2 text-sm sm:px-4 lg:flex-nowrap">
                 {/* Always there while something plays, so a pattern can be stopped with the sequencer closed. The Play
                 deck's first and biggest control, outside the scrolling row so nothing clips its glow (t-210). */}
-                {(shown || seqShown || transportPlaying) && (
+                {(shown || seqShown || seqLoaded || transportPlaying) && (
                   <PlayButton
                     playing={transportPlaying}
                     onClick={() =>
                       transportPlaying
                         ? stopRiff()
-                        : seqShown || !shown
+                        : playsPattern || !shown
                           ? void playPattern()
                           : void playRiff(shown.phrase)
                     }
                   />
                 )}
+                {/* What Play plays, beside it (t-213): the patch's own patterns, then the whole library. */}
+                <PatternPicker
+                  synthId={synthId}
+                  plays={playsName}
+                  open={patternsOpen}
+                  onOpenChange={setPatternsOpen}
+                  sheet={small}
+                  own={soundPatterns}
+                  ranked={ranked}
+                  current={pickerCurrent}
+                  load={loadPattern}
+                  // Picked while the riff plays, the pattern takes over, as it does when the sequencer opens.
+                  onPicked={() => {
+                    if (playing) void playPattern();
+                  }}
+                />
                 {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach; on a phone they take a row of their own under Play, leaving the fullscreen button beside it. */}
                 <div className="kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 max-sm:order-last max-sm:basis-full lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">
                   <LayerToggle
@@ -3124,8 +3167,8 @@ function Synth({
         cables={sess.cables}
         phrase={shown?.phrase ?? null}
         playing={transportPlaying}
-        // One transport: with the sequencer open, the scope's Play plays its pattern too.
-        onPlay={(ph) => void (seqShown ? playPattern() : playRiff(ph))}
+        // One transport: what the bar's Play plays, the scope's plays too.
+        onPlay={(ph) => void (playsPattern ? playPattern() : playRiff(ph))}
         onStop={stopRiff}
         wheel={wheel}
         onWheel={setWheel}
