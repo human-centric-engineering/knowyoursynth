@@ -207,7 +207,7 @@ describe('opening on the default', () => {
     expect(list.map((li) => within(li).getByRole('button').textContent)).toEqual([
       'Fat bassDefaultBass line · 2 beats',
       'The Model, verseArp / sequence · 2 beats',
-      'PlainHeld · 2 beats',
+      'PlainDrone · 2 beats',
     ]);
   });
 
