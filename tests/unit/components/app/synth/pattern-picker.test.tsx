@@ -12,7 +12,11 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { useState } from 'react';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import { PatternPicker, SECTION_FEW } from '@/components/app/synth/pattern-picker';
+import {
+  PatternPicker,
+  SECTION_FEW,
+  type PatternPickerProps,
+} from '@/components/app/synth/pattern-picker';
 import type { RankedPatterns } from '@/components/app/synth/use-ranked-patterns';
 import type { SoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
 import { apiClient } from '@/lib/api/client';
@@ -27,6 +31,7 @@ vi.mock('@/lib/logging', () => ({
 vi.mock('@/lib/api/client', () => ({ apiClient: { get: vi.fn() } }));
 
 const get = apiClient.get as Mock;
+type LoadFn = PatternPickerProps['load'];
 
 const NO_CREDIT: LibraryPatternView['inspiredBy'] = {
   kind: 'genre',
@@ -117,14 +122,14 @@ const READY: RankedPatterns = {
 function Picker({
   own = OWN,
   ranked = READY,
-  load = vi.fn(() => newPattern(8)),
+  load = vi.fn<LoadFn>(() => newPattern(8)),
   onPicked,
   sheet = false,
   startOpen = true,
 }: {
   own?: SoundPatterns | null;
   ranked?: RankedPatterns;
-  load?: Mock;
+  load?: Mock<LoadFn>;
   onPicked?: () => void;
   sheet?: boolean;
   startOpen?: boolean;
@@ -224,7 +229,7 @@ describe('the pattern picker beside Play', () => {
   });
 
   it('picks a library pattern by reading its notes and loading them, and closes', async () => {
-    const load = vi.fn(() => newPattern(8));
+    const load = vi.fn<LoadFn>(() => newPattern(8));
     const onPicked = vi.fn();
     const picked = view(HELD.id, 'Long note', { role: 'held' });
     get.mockResolvedValue(picked);
@@ -243,7 +248,7 @@ describe('the pattern picker beside Play', () => {
   });
 
   it('picks one of the sound’s own without a read: it carries its notes', async () => {
-    const load = vi.fn(() => newPattern(8));
+    const load = vi.fn<LoadFn>(() => newPattern(8));
     render(<Picker load={load} />);
     await act(async () => {
       fireEvent.click(within(dialog()).getByRole('button', { name: /Octave walk/ }));
@@ -257,7 +262,7 @@ describe('the pattern picker beside Play', () => {
   });
 
   it('says so when a pattern could not be read, loads nothing and stays open', async () => {
-    const load = vi.fn(() => newPattern(8));
+    const load = vi.fn<LoadFn>(() => newPattern(8));
     get.mockRejectedValue(new Error('Server error'));
     render(<Picker load={load} />);
     await act(async () => {
@@ -270,7 +275,7 @@ describe('the pattern picker beside Play', () => {
   });
 
   it('loads only the last of two picks made while the first was being read', async () => {
-    const load = vi.fn(() => newPattern(8));
+    const load = vi.fn<LoadFn>(() => newPattern(8));
     let first: (v: LibraryPatternView) => void = () => undefined;
     get.mockImplementationOnce(() => new Promise((r) => (first = r)));
     get.mockResolvedValueOnce(view(CHORD.id, 'Big stab'));
