@@ -46,6 +46,22 @@
     {
       "sound": "jupiter-6/jp6-league-bass",
       "reason": "The batch’s “Don’t You Want Me: synth riff” and “Don’t You Want Me: riff, top line” are other parts of the work; this sound plays the bass line, a part that is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-firecracker-woodblock",
+      "reason": "Names “Firecracker”, which no pattern in this batch has yet; the rhythm is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "pro-1/p1-seventeen-bass",
+      "reason": "The batch has the work’s synth line (“Seventeen: synth line”), not the bass this sound plays; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "pro-1/p1-vienna-solo",
+      "reason": "The batch’s “Vienna: intro melody”, “Vienna: strings” are other parts of the work; this sound plays the synth solo, a part that is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "pro-1/p1-crimewave-chip",
+      "reason": "Names “Crimewave”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -6861,7 +6877,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/enola-gay-lead", "jupiter-6/jp6-enola-hook"],
+      "sounds": ["model-d/enola-gay-lead", "jupiter-6/jp6-enola-hook", "grandmother/gm-enola-lead"],
       "research": {
         "work": "Orchestral Manoeuvres in the Dark, “Enola Gay”, Organisation, 1980",
         "part": "Four bars of the main synth theme: F, F, A, B♭, C, B♭, A, F; then the same shape from D.",
@@ -8107,7 +8123,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/heavy-slow-bass", "donner-b1/b1-human-league"],
+      "sounds": [
+        "model-d/heavy-slow-bass",
+        "donner-b1/b1-human-league",
+        "grandmother/gm-being-boiled"
+      ],
       "research": {
         "work": "The Human League, “Being Boiled”, single, 1978",
         "part": "Four bars of the slow bass: a grace from G into a held A for two bars, then C and E a bar each.",
@@ -9376,6 +9396,240 @@
           }
         ],
         "notes": "From the transcription’s bass track, bars 5–6, moved up an octave to sit where the sound plays. The sound names the album; this is its most sequencer-like bass. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:yazoo/dont-go-bass-low",
+      "name": "Don’t Go: bass, an octave down",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "vince-clarke"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 124,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 6.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 32,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 32,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 7.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 32,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["cat/cat-dont-go-bass"],
+      "research": {
+        "work": "Yazoo, “Don’t Go”, Upstairs at Eric’s, 1982",
+        "part": "Two bars of the bass on B♭, pushed across the beat, with the A♭ at the end of each: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": 124,
+        "leads": [
+          {
+            "citation": "Yazoo — “Don't Go”, fan transcription by UseUmYmW on Songsterr (revision 6442538, 2026-04-23)",
+            "url": "https://www.songsterr.com/a/wsa/yazoo-dont-go-tab-s1058241",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "This copy is moved an octave down from researched:yazoo/dont-go-bass, whose notes give the research. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -12583,7 +12837,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/rydeen-lead"],
+      "sounds": ["neutron/rydeen-lead", "grandmother/gm-rydeen-lead"],
       "research": {
         "work": "Yellow Magic Orchestra, “Rydeen”, Solid State Survivor, 1979",
         "part": "Four bars of the theme: D, E rising to a held F, the turn F, G, F, E, F, E, D, C, then D held.",
@@ -12596,7 +12850,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s Sakamoto sawtooth-lead track, bars 3–6: its lower octave, as written. The track doubles the theme at the octave; the sound is single-voiced, so it takes the lower one. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s Sakamoto sawtooth-lead track, bars 3–6: its lower octave, as written. The track doubles the theme at the octave; the sounds are single-voiced, so it takes the lower one. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -14702,7 +14956,8 @@
         "take-5/t5-mother-share-pluck",
         "e7/e7-indie-pluck",
         "super-gemini/sg-bright-pluck-pop",
-        "jupiter-8/jp8-chvrches-pluck"
+        "jupiter-8/jp8-chvrches-pluck",
+        "pro-1/p1-mother-we-share"
       ],
       "research": {
         "work": "CHVRCHES, “The Mother We Share”, The Bones of What You Believe, 2013",
@@ -15023,7 +15278,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/neg-lfo-flange-keys"],
+      "sounds": ["neutron/neg-lfo-flange-keys", "cat/cat-a-forest-strings"],
       "research": {
         "work": "The Cure, “A Forest”, Seventeen Seconds, 1980",
         "part": "Four bars of held notes, a bar each: A, C, F, D.",
@@ -15036,7 +15291,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Matthieu Hartley | Roland RS-09 | Synths” track, bars 2–5, moved up an octave to sit where the sound plays. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Matthieu Hartley | Roland RS-09 | Synths” track, bars 2–5, moved up an octave to sit where the sounds play. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -17851,7 +18106,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["donner-b1/b1-blue-monday", "jupiter-6/jp6-blue-monday-bass"],
+      "sounds": [
+        "donner-b1/b1-blue-monday",
+        "jupiter-6/jp6-blue-monday-bass",
+        "cat/cat-blue-monday-bass"
+      ],
       "research": {
         "work": "New Order, “Blue Monday”, single, 1983",
         "part": "The four-bar sequenced bass: each note and two sixteenths an octave up, on F and C, D, G and C, D: the same part an octave down.",

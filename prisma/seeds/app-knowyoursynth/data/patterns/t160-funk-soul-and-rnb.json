@@ -66,6 +66,38 @@
     {
       "sound": "jupiter-4/j4-green-onions-organ",
       "reason": "The batch’s “Green Onions: organ” is another part of the work; this sound plays the riff as a single line, a part that is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-talkbox-vowel",
+      "reason": "The batch has the work’s bass line (“More Bounce to the Ounce: bass”), not the part this lead plays; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "grandmother/gm-key-tracked-lfo",
+      "reason": "Names “Living for the City”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-lovely-harmonica",
+      "reason": "Names “Isn’t She Lovely”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-september-stabs",
+      "reason": "Names “September”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "cat/cat-green-onions",
+      "reason": "The batch’s “Green Onions: organ” holds three-note chords, and the CAT plays two notes at once; the bass and licks are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-the-cat-organ",
+      "reason": "Names “The Cat”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "pro-1/p1-rockit-scratch",
+      "reason": "Names “Rockit”, which no pattern in this batch has yet; the stabs are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "pro-1/p1-cant-go-for-that",
+      "reason": "The batch has the work’s chords (“I Can’t Go for That: electric piano”), and this sound plays one line; the riff is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -4583,7 +4615,8 @@
         "super-gemini/sg-chameleon-bass",
         "take-5/t5-chameleon-bass",
         "neutron/jazz-funk-dry-bass",
-        "mantis/mantis-chameleon-bass"
+        "mantis/mantis-chameleon-bass",
+        "grandmother/gm-chameleon-velocity"
       ],
       "research": {
         "work": "Herbie Hancock, “Chameleon”, Head Hunters, 1973",
@@ -6789,7 +6822,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/thin-plucked-keys", "take-5/t5-doves-lead"],
+      "sounds": ["model-d/thin-plucked-keys", "take-5/t5-doves-lead", "pro-1/p1-doves-cry-keys"],
       "research": {
         "work": "Prince, “When Doves Cry”, Purple Rain, 1984",
         "part": "Two bars of the eighth-note figure: A, E, G, E, twice, then with the second half left open.",
@@ -7535,7 +7568,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-superstition-clav", "malevolent/mal-superstition-clav"],
+      "sounds": [
+        "take-5/t5-superstition-clav",
+        "malevolent/mal-superstition-clav",
+        "grandmother/gm-superstition-clav"
+      ],
       "research": {
         "work": "Stevie Wonder, “Superstition”, Talking Book, 1972",
         "part": "The same two bars of the clavinet riff, an octave up, where the Funk Clavinet plays.",
@@ -8474,7 +8511,8 @@
       "sounds": [
         "model-d/squelch-clav-bass",
         "super-gemini/sg-boogie-bass",
-        "take-5/t5-boogie-bass"
+        "take-5/t5-boogie-bass",
+        "grandmother/gm-boogie-bass"
       ],
       "research": {
         "work": "Stevie Wonder, “Boogie On Reggae Woman”, Fulfillingness’ First Finale, 1974",
@@ -9258,7 +9296,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/reach-for-it-lead", "jupiter-8/jp8-george-duke"],
+      "sounds": ["model-d/reach-for-it-lead", "jupiter-8/jp8-george-duke", "cat/cat-reach-for-it"],
       "research": {
         "work": "George Duke, “Reach for It”, Reach for It, 1977",
         "part": "Two bars of the riff: the high A, then E, G, E, A, E, C, A.",
@@ -10340,6 +10378,98 @@
       }
     },
     {
+      "key": "researched:anita-ward/ring-my-bell-syndrum-low",
+      "name": "Ring My Bell: syndrum, an octave down",
+      "role": "percussive",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Anita Ward"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 125,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 0.5
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["grandmother/gm-ring-my-bell-tom"],
+      "research": {
+        "work": "Anita Ward, “Ring My Bell”, Songs of Love, 1979",
+        "part": "One bar of syndrum hits on the offbeats: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": 125,
+        "leads": [],
+        "notes": "This copy is moved an octave down from researched:anita-ward/ring-my-bell-syndrum, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:bob-james/angela-theme",
       "name": "Angela: theme",
       "role": "lead_line",
@@ -10561,7 +10691,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/chorus-rhodes", "malevolent/mal-angela-rhodes"],
+      "sounds": [
+        "deepmind-12d/chorus-rhodes",
+        "malevolent/mal-angela-rhodes",
+        "2-xm/xm-angela-rhodes"
+      ],
       "research": {
         "work": "Bob James, “Angela (Theme from Taxi)”, Touchdown, 1978",
         "part": "The first four bars of the theme: G, A♭, B♭ held, up to E♭ and down through C and B♭, then E♭, F, G, B♭ to the held F.",
@@ -10574,7 +10708,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s guitar track, bars 1–4, moved down an octave to sit where the sound plays. On the record the theme is on Rhodes; the transcription gives it to guitar. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s guitar track, bars 1–4, moved down an octave to sit where the sounds play. On the record the theme is on Rhodes; the transcription gives it to guitar. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -11311,7 +11445,8 @@
         "solar-42n/solar-g-funk-whine",
         "super-gemini/sg-gfunk",
         "super-gemini/sg-whistle",
-        "mantis/mantis-gfunk-whistle"
+        "mantis/mantis-gfunk-whistle",
+        "grandmother/gm-g-funk-whine"
       ],
       "research": {
         "work": "Dr. Dre featuring Snoop Doggy Dogg, “Nuthin’ but a ‘G’ Thang”, The Chronic, 1992",
@@ -12265,7 +12400,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-alpert-trumpet"],
+      "sounds": ["take-5/t5-alpert-trumpet", "grandmother/gm-rise-trumpet"],
       "research": {
         "work": "Herb Alpert, “Rise”, Rise, 1979",
         "part": "Four bars of the melody: F, G, A♭, B♭ up to the held C, then C, C, C, C♯ falling to B♭.",
@@ -12772,7 +12907,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/sliding-round-sub", "jupiter-4/j4-dilla-wobble-bass"],
+      "sounds": [
+        "model-d/sliding-round-sub",
+        "jupiter-4/j4-dilla-wobble-bass",
+        "grandmother/gm-donuts-bass"
+      ],
       "research": {
         "work": "J Dilla, Minimoog Voyager bass lines, 2001–06",
         "part": "Two bars of a round, sliding sub bass in F minor.",
@@ -13666,7 +13805,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-angel-bass", "malevolent/mal-trip-hop-bass", "donner-b1/b1-teardrop"],
+      "sounds": [
+        "take-5/t5-angel-bass",
+        "malevolent/mal-trip-hop-bass",
+        "donner-b1/b1-teardrop",
+        "2-xm/xm-angel-dub-bass"
+      ],
       "research": {
         "work": "Massive Attack, “Angel”, Mezzanine, 1998",
         "part": "The one-bar bass: C in eighths, with the sixteenth pair and the D at the end.",
@@ -13812,7 +13956,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/stacked-night-bass"],
+      "sounds": ["model-d/stacked-night-bass", "pro-1/p1-thriller-bass"],
       "research": {
         "work": "Michael Jackson, “Thriller”, Thriller, 1982",
         "part": "The one-bar synth bass: B, C♯, E, F♯, then C♯ and the low C♯.",

@@ -39,14 +39,14 @@ const EXPORTED: {
 }[] = [
   { id: 'model-d', sounds: 200, timeline: 9, relatives: 5, unusual: 38, limits: 2 },
   { id: 'neutron', sounds: 200, timeline: 11, relatives: 5, unusual: 42, limits: 3 },
-  { id: 'pro-1', sounds: 98, timeline: 7, relatives: 5, unusual: 33, limits: 4 },
+  { id: 'pro-1', sounds: 150, timeline: 7, relatives: 5, unusual: 33, limits: 4 },
   { id: 'k2', sounds: 150, timeline: 8, relatives: 5, unusual: 30, limits: 5 },
   { id: 'b2600', sounds: 150, timeline: 7, relatives: 5, unusual: 45, limits: 4 },
   { id: 'deepmind-12d', sounds: 150, timeline: 8, relatives: 3, unusual: 13, limits: 9 },
   { id: 'ub-xa-d', sounds: 150, timeline: 7, relatives: 3, unusual: 14, limits: 9 },
-  { id: '2-xm', sounds: 38, timeline: 7, relatives: 3, unusual: 21, limits: 5 },
+  { id: '2-xm', sounds: 150, timeline: 7, relatives: 3, unusual: 21, limits: 5 },
   { id: 'kobol', sounds: 150, timeline: 5, relatives: 3, unusual: 16, limits: 4 },
-  { id: 'cat', sounds: 25, timeline: 4, relatives: 2, unusual: 20, limits: 5 },
+  { id: 'cat', sounds: 150, timeline: 4, relatives: 2, unusual: 20, limits: 5 },
   { id: 'wasp-deluxe', sounds: 150, timeline: 4, relatives: 2, unusual: 17, limits: 5 },
   { id: 'poly-d', sounds: 150, timeline: 5, relatives: 5, unusual: 29, limits: 5 },
   { id: 'pro-800', sounds: 150, timeline: 4, relatives: 3, unusual: 21, limits: 5 },
@@ -75,7 +75,7 @@ const EXPORTED: {
   { id: 'system-35', sounds: 9, timeline: 7, relatives: 4, unusual: 27, limits: 5 },
   { id: 'system-55', sounds: 11, timeline: 7, relatives: 4, unusual: 38, limits: 8 },
   { id: 'model-15', sounds: 12, timeline: 5, relatives: 4, unusual: 14, limits: 5 },
-  { id: 'grandmother', sounds: 8, timeline: 5, relatives: 3, unusual: 15, limits: 4 },
+  { id: 'grandmother', sounds: 150, timeline: 5, relatives: 3, unusual: 15, limits: 4 },
 ];
 
 describe('the exported content', () => {

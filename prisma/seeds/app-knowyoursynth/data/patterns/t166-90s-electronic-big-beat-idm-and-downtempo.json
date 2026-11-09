@@ -106,6 +106,58 @@
     {
       "sound": "jupiter-4/j4-destiny-pad",
       "reason": "The batch’s “Destiny: lead” is another part of the work; this sound plays the chords under it, a part that is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-ringing-ladder-ping",
+      "reason": "Names “Rae”, which no pattern in this batch has yet; the pings are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-tape-wobble-keys",
+      "reason": "Names “A Walk”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-sh-filter-burble",
+      "reason": "Names “Polynomial-C”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-reverse-swell",
+      "reason": "Names “On My Own”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-kerala-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Kerala: keys” is a part written out as stabs, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "grandmother/gm-for-an-angel-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “For an Angel: top line”, “For an Angel: pluck figure, an octave up”, “For an Angel: top line, low” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "grandmother/gm-music-bukem-pluck",
+      "reason": "Names “Music”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-archangel-pad",
+      "reason": "The batch has the work’s pad chords and bass (“Archangel: pad”, “Archangel: bass, an octave up”), not the single line this pad plays; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-emerald-rush-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "cat/cat-rez-seq",
+      "reason": "Names “Rez”, which no pattern in this batch has yet; the sequence is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "cat/cat-papua-seq",
+      "reason": "Names “Papua New Guinea”, which no pattern in this batch has yet; the sequence is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "pro-1/p1-14-31-pad",
+      "reason": "Names “14:31”, which no pattern in this batch has yet; the pad is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "pro-1/p1-xtal-pad",
+      "reason": "Names “Xtal”, which no pattern in this batch has yet; the pad is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -9657,7 +9709,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/orbital-chime"],
+      "sounds": ["neutron/orbital-chime", "cat/cat-chime-seq"],
       "research": {
         "work": "Orbital, “Chime”, 1989",
         "part": "A bright riff up the C major chord, answered from E and G.",
@@ -13597,7 +13649,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/eple-pluck", "take-5/t5-eple-bell", "super-gemini/sg-nordic-bells"],
+      "sounds": [
+        "neutron/eple-pluck",
+        "take-5/t5-eple-bell",
+        "super-gemini/sg-nordic-bells",
+        "pro-1/p1-eple-lead"
+      ],
       "research": {
         "work": "Röyksopp, “Eple”, Melody A.M., 2001",
         "part": "The melody: four bars falling from A♭ through F♯ and E to D♯.",
@@ -20366,7 +20423,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["malevolent/mal-garage-bass"],
+      "sounds": ["malevolent/mal-garage-bass", "grandmother/gm-garage-organ-bass"],
       "research": {
         "work": "Artful Dodger featuring Craig David, “Re-Rewind (The Crowd Say Bo Selecta)”, 1999",
         "part": "A two-step sub bass on A: a pushed root, a slide up to C and back, and a walk down to E: the same part an octave up, where the Malevolent’s “Two-Step Bass” plays.",
