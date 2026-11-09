@@ -951,9 +951,10 @@ batch lists.
   has only its bass line; two name works that have no pattern yet ("Blue Wind", "Oxygène (Part II)"); and the fifth is
   a sample-and-hold effect whose riff only holds two long keys in turn.
 
-**The DeepMind 12D, UB-Xa D, PRO-800 and Poly D sounds (t-194).** Of their 358 new sounds, none is by an artist a
-batch covers, so no batch looks at them and the rosters' counts do not move. One comes close: the Poly D's sequence
-naming Erasure's "Oh L'amour" is credited to Erasure, not to Vince Clarke, whose batch has that work's bass line.
+**The DeepMind 12D, UB-Xa D, PRO-800 and Poly D sounds (t-194).** Of their 358 new sounds, one is by an artist a batch
+covers: the Poly D's Vince Clarke sequence naming "Oh L'amour". It keeps a reason, as the WASP Deluxe's arpeggio does,
+because the work has only its bass line; t-161's count moves to 97. The rest name artists, genres and traditions no
+batch lists.
 
 ## Rights
 

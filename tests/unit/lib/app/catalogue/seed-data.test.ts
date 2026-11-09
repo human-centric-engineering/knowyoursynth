@@ -2,7 +2,8 @@
  * The committed seed data, as exported from the prototype (`prototype/tools/export-content.mjs`), and the loader and
  * seed unit that read it.
  *
- * The counts are the prototype's own (`EXPORTED` below). An export that dropped or doubled anything fails here.
+ * The counts are the prototype's own (`EXPORTED` below), except where the app has written a synth's library past it to
+ * 150 sounds. An export that dropped or doubled anything fails here.
  */
 import { describe, it, expect, vi } from 'vitest';
 import { mkdtempSync, mkdirSync, writeFileSync, existsSync } from 'node:fs';

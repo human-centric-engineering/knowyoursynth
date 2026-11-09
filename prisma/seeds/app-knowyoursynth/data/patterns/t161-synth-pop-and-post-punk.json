@@ -40,6 +40,10 @@
       "reason": "The batch has the work’s bass line (“Oh L’amour: bass”), not the part this arpeggio plays; the riff is written to the style and taken from no record."
     },
     {
+      "sound": "poly-d/pd-oh-lamour-seq",
+      "reason": "The batch has the work’s bass line (“Oh L’amour: bass”), not the part this sequence plays; the riff is written to the style and taken from no record."
+    },
+    {
       "sound": "jupiter-6/jp6-league-bass",
       "reason": "The batch’s “Don’t You Want Me: synth riff” and “Don’t You Want Me: riff, top line” are other parts of the work; this sound plays the bass line, a part that is the lesson’s own, written to the style rather than taken from the record."
     }

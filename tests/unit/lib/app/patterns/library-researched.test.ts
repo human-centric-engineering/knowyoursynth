@@ -163,7 +163,7 @@ describe('the research batches', () => {
         'The Cure',
         'Tubeway Army',
       ],
-      96,
+      97,
     ],
     [
       't-162',
