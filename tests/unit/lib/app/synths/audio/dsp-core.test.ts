@@ -735,6 +735,77 @@ describe.each(FEATURES)('voice feature: %s', (_name, p) => {
   });
 });
 
+describe('key priority (keyPriority)', () => {
+  // one sine through an open filter at full sustain, so the pitch can be read off the zero crossings
+  const sineParams = (keyPriority?: 'last' | 'high') =>
+    monoParams({
+      osc: [
+        { level: 0.8, mix: { sine: 1 }, semi: 0 },
+        { level: 0, mix: { saw: 1 }, semi: 0 },
+        { level: 0, mix: { saw: 1 }, semi: 0 },
+      ],
+      filter: {
+        type: 'ladder',
+        mode: 'lp',
+        cutoff: 20000,
+        res: 0,
+        envAmt: 0,
+        envSrc: 'env1',
+        kbd: 0,
+      },
+      env2: { a: 0.003, d: 0.1, s: 1, r: 0.05 },
+      ...(keyPriority ? { keyPriority } : {}),
+    });
+  /** Hz from the upward zero crossings between two sample positions. */
+  const hz = (b: Float32Array, from: number, to: number, sr = 48000): number => {
+    const ups: number[] = [];
+    for (let i = from + 1; i < to; i++) if (b[i - 1] < 0 && b[i] >= 0) ups.push(i);
+    return ((ups.length - 1) * sr) / (ups[ups.length - 1] - ups[0]);
+  };
+  const midiHz = (n: number) => 440 * 2 ** ((n - 69) / 12);
+  const C4 = 60,
+    E4 = 64,
+    G4 = 67;
+  const on = (at: number, n: number): Timed => [at, { type: 'noteOn', n, v: 0.8 }];
+  const off = (at: number, n: number): Timed => [at, { type: 'noteOff', n }];
+
+  it("'high' plays a key pressed above the held one, and falls back to the held one when it is let go", () => {
+    const { out } = renderStable(sineParams('high'), {
+      len: 19200,
+      events: [on(0, C4), on(4800, E4), off(9600, E4)],
+    });
+    expect(hz(out, 2400, 4800)).toBeCloseTo(midiHz(C4), -1);
+    expect(hz(out, 6000, 9600)).toBeCloseTo(midiHz(E4), -1);
+    expect(hz(out, 12000, 19200)).toBeCloseTo(midiHz(C4), -1);
+  });
+
+  it("'high' ignores a key pressed below the one sounding: no new pitch and no retrigger", () => {
+    const len = 14400;
+    const alone = render(sineParams('high'), { len, events: [on(0, E4)] });
+    const under = renderStable(sineParams('high'), { len, events: [on(0, E4), on(4800, C4)] });
+    expect(hz(under.out, 6000, 14400)).toBeCloseTo(midiHz(E4), -1);
+    // sample for sample the same as E4 alone: the lower key neither took the voice nor restarted the envelopes
+    expect(sameSamples(under.out, alone.out)).toBe(true);
+  });
+
+  it("'high' falls back to the next highest key held, not the one pressed last", () => {
+    const { out } = renderStable(sineParams('high'), {
+      len: 24000,
+      events: [on(0, E4), on(2400, G4), on(4800, C4), off(9600, G4)],
+    });
+    expect(hz(out, 6000, 9600)).toBeCloseTo(midiHz(G4), -1);
+    expect(hz(out, 12000, 24000)).toBeCloseTo(midiHz(E4), -1);
+  });
+
+  it('without it the voice plays the last key pressed, as before', () => {
+    const events = [on(0, E4), on(4800, C4)];
+    const unset = renderStable(sineParams(), { len: 14400, events });
+    const last = renderStable(sineParams('last'), { len: 14400, events });
+    expect(hz(unset.out, 6000, 14400)).toBeCloseTo(midiHz(C4), -1);
+    expect(sameSamples(unset.out, last.out)).toBe(true);
+  });
+});
+
 describe('the SVF’s band-pass and high-pass inputs (vcfBpIn, vcfHpIn)', () => {
   // Sines at fixed pitches, at level 0 into the mixer, so the only sound is what the cables bring to the filter. The
   // VCA is held open and nothing moves the cutoff, so the filter's response is all that shapes the output.

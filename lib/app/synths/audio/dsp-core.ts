@@ -990,12 +990,14 @@ function createVoice(
     const i = held.indexOf(n);
     if (i >= 0) held.splice(i, 1);
     const wasHeld = held.length > 0;
+    // with top-note priority a key pressed below the one sounding does not take the voice, so it does not retrigger
+    const under = wasHeld && P.keyPriority === 'high' && !P.duo && n < Math.max(...held);
     held.push(n);
     vel = v == null ? 0.8 : v;
     if (P.acid) accOn = vel >= (P.acid.thresh || 0.9) || !!P.acid.force;
     if (P.oscAssign) assignOscs(n);
     assignNotes(wasHeld);
-    if (!wasHeld || P.trig.retrig) retrigFlag = true;
+    if (!wasHeld || (P.trig.retrig && !under)) retrigFlag = true;
     // the key timing pulse comes from every key, legato or not
     velpFire = true;
     gate = 1;
@@ -1013,8 +1015,10 @@ function createVoice(
     if (!part && onEvent) onEvent({ type: 'note', n, on: false });
   }
   function assignNotes(legato: boolean) {
-    const top = held[held.length - 1];
-    const second = held.length > 1 ? held[held.length - 2] : top;
+    // `held` is in the order pressed; with top-note priority the voice reads it highest last instead
+    const keys = P!.keyPriority === 'high' ? held.slice().sort((a, b) => a - b) : held;
+    const top = keys[keys.length - 1];
+    const second = keys.length > 1 ? keys[keys.length - 2] : top;
     if (P!.duo) {
       // duophonic keyboard: the main pitch is the lowest key held, `kbd2` the highest
       noteT = top;

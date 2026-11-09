@@ -2185,6 +2185,14 @@ export interface EngineParams {
   pwSplit?: boolean;
   /** Duophonic keyboard: `kbd` is the lowest key held, `kbd2` the highest. */
   duo?: boolean;
+  /**
+   * Which held key the voice plays. `'last'` (the default): the key pressed most recently, and letting go of it falls
+   * back to the one pressed before. `'high'`: the highest key held (the Selmer Clavioline's top-note priority), so a
+   * key pressed below it changes nothing and does not retrigger the envelopes, and letting go of the top key falls
+   * back to the next highest held, gliding if glide is on. With `paraphonic` the second note is the next key in the
+   * same order. Ignored with `duo`, which has its own rule.
+   */
+  keyPriority?: 'last' | 'high';
   /** Signal `ring` = `ringA` × `ringB`; `ac` / `acB` block DC on A / B. */
   ring?: { ac?: boolean; acB?: boolean };
   /** Signal `preamp` = tanh(`preampIn` × gain). */
