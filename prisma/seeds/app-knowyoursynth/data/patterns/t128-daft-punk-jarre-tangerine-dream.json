@@ -17605,7 +17605,7 @@
       "sounds": ["model-d/two-note-ostinato", "grandmother/gm-clocked-sh"],
       "research": {
         "work": "Tangerine Dream, Rubycon, 1975",
-        "part": "Eight bars of held keys for a two-note pattern the patch plays itself: A for four bars, then G for four.",
+        "part": "Eight bars of held keys for a patch that plays its own line from them: A for four bars, then G for four.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],

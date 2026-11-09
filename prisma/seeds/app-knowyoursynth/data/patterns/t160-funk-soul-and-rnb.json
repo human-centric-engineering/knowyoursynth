@@ -84,6 +84,10 @@
       "reason": "Names “September”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
     },
     {
+      "sound": "cat/cat-green-onions",
+      "reason": "The batch’s “Green Onions: organ” holds three-note chords, and the CAT plays two notes at once; the bass and licks are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
       "sound": "2-xm/xm-the-cat-organ",
       "reason": "Names “The Cat”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
     },
@@ -93,7 +97,7 @@
     },
     {
       "sound": "pro-1/p1-cant-go-for-that",
-      "reason": "Names “I Can’t Go for That (No Can Do)”, which no pattern in this batch has yet; the riff is the lesson’s own, written to the style rather than taken from the record."
+      "reason": "The batch has the work’s chords (“I Can’t Go for That: electric piano”), and this sound plays one line; the riff is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [

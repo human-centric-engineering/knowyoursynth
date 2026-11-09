@@ -956,20 +956,25 @@ covers: the Poly D's Vince Clarke sequence naming "Oh L'amour". It keeps a reaso
 because the work has only its bass line; t-161's count moves to 97. The rest name artists, genres and traditions no
 batch lists.
 
-**The Grandmother, 2-XM, CAT and PRO-1 sounds (t-195)**, placed by the same rules. Of their 431 new sounds, 186 are by
-artists a batch covers, in all twelve batches:
+**The Grandmother, 2-XM, CAT and PRO-1 sounds (t-195)**, placed by the same rules. Of their 431 new sounds, 188 are by
+artists a batch covers, in all twelve batches. A sound's artist is spelled as its batch's roster spells it ("Booker T. &
+the M.G.’s", "CHVRCHES"), since the roster test matches names exactly and a variant spelling leaves the sound unchecked.
 
-- **94 sit on a pattern**: the work the sound names, the part first and the register second. A Grandmother sound whose
-  arpeggiator plays from held chords takes held chords ("Oxygène IV: pad chords", "A Rainbow in Curved Air: held
-  chords"); a patch that steps by itself from one held key takes the held keys written for one ("Rubycon: ostinato
-  keys" on the sample-and-hold sound).
-- **20 of those sit on an octave copy**, all new and written as the sweep's are. One is `spastik-pings-high-2`, an
-  octave up, because the plain `-high` is t-191's copy two octaves up.
+- **96 sit on a pattern**: the work the sound names (or, for one naming an album, that album's part: "Creek" for
+  Green), the part first and the register second. A Grandmother sound whose arpeggiator plays from held chords takes
+  held chords ("Oxygène IV: pad chords", "A Rainbow in Curved Air: held chords"); a patch that steps by itself from
+  one held key takes the held keys written for one ("Rubycon: ostinato keys" on the sample-and-hold sound).
+- **31 of those sit on an octave copy**: 21 copies are new, one sound each, written as the sweep's are, and 10 sounds
+  join a copy the batches already had. One new copy is `spastik-pings-high-2`, an octave up, because the plain `-high`
+  is t-191's copy two octaves up.
 - **92 keep a reason**: the work has no pattern yet; the work's pattern is another part; the batch has the part as
-  chords and the sound plays one line, or as three-note chords and the CAT or 2-XM plays two; its arpeggiator would
-  play a written part over again; its sample and hold or LFO plays the line from one held key; or it is an effect.
-- Twelve patterns' notes that spoke of "the sound" or "both sounds" now say "the sounds", and two say which patch a
-  sentence was written for.
+  chords and the sound plays one line, or as three-note chords and the CAT or 2-XM plays two, or rings two notes at
+  once and the 2-XM plays in unison; the work's pattern holds one root for a patch that tunes its own fifth, and the
+  CAT holds its fifth as a second key; its arpeggiator would play a written part over again; its sample and hold or
+  LFO plays the line from one held key; or it is an effect.
+- Thirteen patterns' notes that spoke of "the sound" or "both sounds" now say "the sounds", and two say which patch a
+  sentence was written for. Rubycon's part no longer describes one patch's line, and Clair de Lune's closing passage
+  now opens "_In the style of_:", so its octave copy keeps a whole sentence.
 
 ## Rights
 

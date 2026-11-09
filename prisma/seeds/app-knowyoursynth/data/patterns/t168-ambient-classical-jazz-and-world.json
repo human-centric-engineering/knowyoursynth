@@ -124,10 +124,6 @@
       "reason": "The batch has the work’s bass line (“So What: the bass call”), not the trumpet line this sound plays; the riff is written to the style and taken from no record."
     },
     {
-      "sound": "grandmother/gm-green-sine-swell",
-      "reason": "Names “Green”, which no pattern in this batch has yet; the tones are the lesson’s own, written to the style rather than taken from the record."
-    },
-    {
       "sound": "grandmother/gm-lid-fifth-drone",
       "reason": "The batch’s “Requiem for Dying Mothers: a slow string line” is another part of the work; this sound holds one open fifth under it, a drone that is the lesson’s own, written to the style rather than taken from the record."
     },
@@ -170,6 +166,10 @@
     {
       "sound": "cat/cat-doom-drone",
       "reason": "Names “Aghartha”, which no pattern in this batch has yet; the drone is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "cat/cat-dream-house-drone",
+      "reason": "The batch’s “Dream House: a held root” holds one key for a patch that tunes its fifth above it, and this sound holds its fifth as a second key; the interval is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -16189,6 +16189,219 @@
       }
     },
     {
+      "key": "researched:hiroshi-yoshimura/creek-line-low",
+      "name": "Creek: a soft pentatonic line, an octave down",
+      "role": "ambient",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Hiroshi Yoshimura"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 66,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["grandmother/gm-green-sine-swell"],
+      "research": {
+        "work": "Hiroshi Yoshimura, “Creek”, Green, 1986",
+        "part": "A pentatonic phrase on G, up to D and back, then a bar’s rest: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave down from researched:hiroshi-yoshimura/creek-line, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:hiroshi-yoshimura/nine-postcards-phrase",
       "name": "Music for Nine Postcards: a floating phrase",
       "role": "ambient",
@@ -17521,7 +17734,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/just-intonation-drone", "cat/cat-dream-house-drone"],
+      "sounds": ["model-d/just-intonation-drone"],
       "research": {
         "work": "La Monte Young, the Dream House drones",
         "part": "One G held for four bars; the sound tunes its fifth and octave above.",

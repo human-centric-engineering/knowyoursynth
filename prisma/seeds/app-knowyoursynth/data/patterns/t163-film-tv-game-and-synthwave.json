@@ -176,10 +176,6 @@
       "reason": "Names the “Chernobyl” score, which no pattern in this batch has yet; the drone is the lesson’s own, written to the style rather than taken from the record."
     },
     {
-      "sound": "cat/cat-zelda-ocarina",
-      "reason": "Names “The Legend of Zelda”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
-    },
-    {
       "sound": "cat/cat-close-encounters",
       "reason": "Names “Close Encounters of the Third Kind”, which no pattern in this batch has yet; the riff plays the film’s five-note motif, written into the lesson rather than taken from a lead."
     },
@@ -12497,7 +12493,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/clay-ocarina"],
+      "sounds": ["model-d/clay-ocarina", "cat/cat-zelda-ocarina"],
       "research": {
         "work": "Koji Kondo, “Song of Storms”, The Legend of Zelda: Ocarina of Time, 1998",
         "part": "Eight bars of 3/4: D, F, D held, twice; E, F, E, F, E, C, A; A, D, F, G, A held; A, D, F, G, E held.",
@@ -12510,7 +12506,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Ocarina” track, bars 9–16, an octave down to sit where the sound plays. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Ocarina” track, bars 9–16, an octave down to sit where the sounds play. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },

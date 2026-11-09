@@ -128,7 +128,7 @@ describe('the research batches', () => {
         'Public Enemy',
         'Whitney Houston',
       ],
-      141,
+      142,
     ],
     [
       't-161',
@@ -163,7 +163,7 @@ describe('the research batches', () => {
         'The Cure',
         'Tubeway Army',
       ],
-      107,
+      108,
     ],
     [
       't-162',
