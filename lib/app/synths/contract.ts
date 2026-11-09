@@ -1428,6 +1428,27 @@ export interface OscMix {
   notch?: number;
   /** A square an octave below, from a flip-flop on each cycle restart (follows sync resets). */
   sub?: number;
+  /**
+   * JP-8080 SUPER SAW: seven band-limited saws, a centre one and six detuned around it by `ssDetune`, the six
+   * at `ssMix` against the centre. Hard sync resets the centre saw only.
+   */
+  ssaw?: number;
+  /**
+   * JP-8080 FEEDBACK OSC: a saw with one harmonic added by a sine that phase-modulates itself, the "guitar feedback"
+   * tone. `fbHarm` picks the harmonic, `fbAmt` its level; at `fbAmt` 0 it is the plain saw.
+   */
+  fbk?: number;
+  /**
+   * JP-8080 TRIANGLE MOD: a triangle amplified by `fold` and folded back at the rails, so the fundamental gives way to
+   * overtones (at `fold` 1 the wave is mostly its third harmonic). At `fold` 0 it is the plain triangle.
+   */
+  tfold?: number;
+  /**
+   * JP-8080 NOISE on an oscillator: white noise through a resonant low-pass tuned `nCut` semitones from this
+   * oscillator's pitch (so it tracks the key when the oscillator does), with resonance `nRes`; at `nRes` 1 it rings as
+   * a near-sine at that pitch.
+   */
+  fnoise?: number;
 }
 
 /** One oscillator (up to four; the fourth has signal `osc4`, dest `pitch4` and shares `pw2`). */
@@ -1455,6 +1476,23 @@ export interface OscParams {
   sineShape?: number;
   /** Level of the sub-octave square straight into the mixer, on a channel of its own (Model 15). */
   subLevel?: number;
+  /**
+   * `mix.ssaw` spread 0..1 (CONTROL 1): the outer saws sit about ±11 % from the centre at 1. The oscillator's
+   * pulse-width destination adds to it. These JP-8080 shapes are reasoned from the sound, not measured.
+   */
+  ssDetune?: number;
+  /** `mix.ssaw` 0..1 (CONTROL 2): the six side saws against the centre one; at 0 only the centre saw sounds. */
+  ssMix?: number;
+  /** `mix.fbk` 0..1 (CONTROL 1): which harmonic the feedback adds, the 2nd at 0 up to the 8th at 1. The pulse-width destination adds to it. */
+  fbHarm?: number;
+  /** `mix.fbk` 0..1 (CONTROL 2): the level of the fed-back harmonic and how hard it drives itself. */
+  fbAmt?: number;
+  /** `mix.tfold` 0..1 (CONTROL 1, OFFSET): how far the triangle is folded. The pulse-width destination adds to it. */
+  fold?: number;
+  /** `mix.fnoise` cutoff in semitones from the oscillator's pitch (default 0): −48..+48. */
+  nCut?: number;
+  /** `mix.fnoise` resonance 0..1 (default 0). */
+  nRes?: number;
 }
 
 export interface NoiseParams {

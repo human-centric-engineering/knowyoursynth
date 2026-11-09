@@ -148,6 +148,35 @@ interface VoiceOsc {
   sineShape: number;
   /** Set by setParams once the oscillator is in use. */
   subL?: number;
+  // JP-8080 OSC 1 waveforms (`mix.ssaw`, `mix.fbk`, `mix.tfold`, `mix.fnoise`) and their controls, smoothed like `pw`
+  ssaw: number;
+  fbk: number;
+  tfold: number;
+  fnoise: number;
+  ssDet: number;
+  ssDetT: number;
+  ssMx: number;
+  ssMxT: number;
+  fbH: number;
+  fbHT: number;
+  fbA: number;
+  fbAT: number;
+  fold: number;
+  foldT: number;
+  nCut: number;
+  nCutT: number;
+  nRes: number;
+  nResT: number;
+  /** The filtered noise's SVF coefficients, and the pitch, cutoff and resonance they were worked out for. */
+  nKey: Float64Array;
+  nCo: Float64Array;
+  /** The six side saws' phases. */
+  ssPh: Float64Array;
+  /** The feedback harmonic's last output, which phase-modulates it. */
+  fbY: number;
+  /** The filtered noise's SVF state. */
+  nIc1: number;
+  nIc2: number;
 }
 
 /** One envelope's running state. The optional fields are set by setParams and the stage changes. */
@@ -418,6 +447,13 @@ const TWO_PI = Math.PI * 2;
 /** How near its sustain level a decaying RC envelope is said to be sustaining (`envStage()`). */
 const SUSTAIN_NEAR = 0.01;
 const LN2_12 = Math.LN2 / 12;
+/**
+ * The super saw's six side saws, as frequency offsets at full DETUNE: a fit to the JP-8000's measured spread (Szabo,
+ * "How to Emulate the Super Saw", 2010), uneven so they never beat in step.
+ */
+const SS_DETUNE = [-0.11002313, -0.06288439, -0.01952356, 0.01991221, 0.06216538, 0.10745242];
+/** Where the side saws start. */
+const SS_PHASE0 = [0.13, 0.71, 0.37, 0.89, 0.52, 0.26];
 
 /**
  * −1..1 from an LFO's cycle count: a `common` LFO's sample and hold, the same value in every voice on the same cycle.
@@ -514,6 +550,31 @@ function createVoice(
     skew: -1,
     skewT: -1,
     sineShape: 0,
+    ssaw: 0,
+    fbk: 0,
+    tfold: 0,
+    fnoise: 0,
+    ssDet: 0,
+    ssDetT: 0,
+    ssMx: 0,
+    ssMxT: 0,
+    fbH: 0,
+    fbHT: 0,
+    fbA: 0,
+    fbAT: 0,
+    fold: 0,
+    foldT: 0,
+    nCut: 0,
+    nCutT: 0,
+    nRes: 0,
+    nResT: 0,
+    nKey: Float64Array.of(-1, 0, 0),
+    nCo: new Float64Array(4),
+    // fixed, spread starting phases: the side saws run free, so a fixed start keeps renders repeatable
+    ssPh: Float64Array.from(SS_PHASE0),
+    fbY: 0,
+    nIc1: 0,
+    nIc2: 0,
   }));
   let nOsc = 0;
   const held: number[] = [];
@@ -816,6 +877,26 @@ function createVoice(
       o.tmod = m.tmod || 0;
       o.notch = m.notch || 0;
       o.sub = m.sub || 0;
+      o.ssaw = m.ssaw || 0;
+      o.fbk = m.fbk || 0;
+      o.tfold = m.tfold || 0;
+      o.fnoise = m.fnoise || 0;
+      o.ssDetT = q.ssDetune || 0;
+      o.ssMxT = q.ssMix || 0;
+      o.fbHT = q.fbHarm || 0;
+      o.fbAT = q.fbAmt || 0;
+      o.foldT = q.fold || 0;
+      o.nCutT = q.nCut || 0;
+      o.nResT = q.nRes || 0;
+      if (first) {
+        o.ssDet = o.ssDetT;
+        o.ssMx = o.ssMxT;
+        o.fbH = o.fbHT;
+        o.fbA = o.fbAT;
+        o.fold = o.foldT;
+        o.nCut = o.nCutT;
+        o.nRes = o.nResT;
+      }
       // `subLevel` (Model 15): the sub square goes straight into the mixer at this level, not into the oscillator's own output
       o.subL = q.subLevel || 0;
       o.on = true;
@@ -1129,6 +1210,112 @@ function createVoice(
     }
     return 0;
   };
+
+  /**
+   * The JP-8080's OSC 1 waveforms, summed at their `mix` gains: super saw, feedback osc, triangle mod and filtered
+   * noise. `saw` and `tri` are this oscillator's own, already computed, and `pwDest` its pulse-width input. The spec
+   * describes these only by their sound (its `modelling_gaps`), so each shape is a reasoned approximation.
+   */
+  function jpWaves(o: VoiceOsc, pwDest: number, saw: number, tri: number): number {
+    const dt = o.inc;
+    // the oscillator's pulse-width destination moves CONTROL 1, as the JP-8080's shape modulation does
+    const ctl1 = o.ssaw || o.fbk || o.tfold ? ev(pwDest) : 0;
+    let y = 0;
+    if (o.ssaw) {
+      o.ssDet += (o.ssDetT - o.ssDet) * sm;
+      o.ssMx += (o.ssMxT - o.ssMx) * sm;
+      let d = o.ssDet + ctl1;
+      d = d < 0 ? 0 : d > 1 ? 1 : d;
+      const m = o.ssMx < 0 ? 0 : o.ssMx > 1 ? 1 : o.ssMx;
+      // the centre falls and the sides rise as MIX goes up, a fit to the JP-8000's levels; at 0 only the centre sounds
+      let side = 0;
+      for (let i = 0; i < 6; i++) {
+        let sd = dt * (1 + SS_DETUNE[i] * d);
+        if (sd > 0.49) sd = 0.49;
+        let sp = o.ssPh[i] + sd;
+        if (sp >= 1) sp -= 1;
+        o.ssPh[i] = sp;
+        side += 2 * sp - 1 - blep(sp, sd);
+      }
+      y += (saw * (1 - 0.55366 * m) + side * (1.2841 * m - 0.73764 * m * m)) * o.ssaw;
+    }
+    if (o.fbk) {
+      o.fbH += (o.fbHT - o.fbH) * sm;
+      o.fbA += (o.fbAT - o.fbA) * sm;
+      let h = o.fbH + ctl1;
+      h = h < 0 ? 0 : h > 1 ? 1 : h;
+      const a = o.fbA < 0 ? 0 : o.fbA > 1 ? 1 : o.fbA;
+      // harmonic 2..8, crossfaded between the two nearest whole harmonics so a sweep never jumps the phase
+      const hn = 2 + h * 6;
+      const n = Math.floor(hn);
+      const w = hn - n;
+      // each harmonic fades out between 0.40 and 0.45 of the sample rate rather than switching off at the band edge
+      let g0 = (0.45 - n * dt) * 20;
+      g0 = g0 < 0 ? 0 : g0 > 1 ? 1 : g0;
+      let g1 = w > 0 ? (0.45 - (n + 1) * dt) * 20 : 0;
+      g1 = g1 < 0 ? 0 : g1 > 1 ? 1 : g1;
+      g0 *= 1 - w;
+      g1 *= w;
+      let fb = 0;
+      // a sine on the harmonic that phase-modulates itself (harder as the amount rises)
+      if (a > 0 && g0 + g1 > 0) {
+        const pm = 1.3 * a * o.fbY;
+        if (g0) {
+          const hp = o.phase * n;
+          fb += g0 * Math.sin(TWO_PI * (hp - Math.floor(hp)) + pm);
+        }
+        if (g1) {
+          const hp = o.phase * (n + 1);
+          fb += g1 * Math.sin(TWO_PI * (hp - Math.floor(hp)) + pm);
+        }
+        o.fbY = fb;
+      } else o.fbY = 0;
+      // the saw's own harmonics are negative sines, so the fed-back one is subtracted to reinforce its harmonic
+      y += (saw - a * fb) * o.fbk;
+    }
+    if (o.tfold) {
+      o.fold += (o.foldT - o.fold) * sm;
+      let f = o.fold + ctl1;
+      f = f < 0 ? 0 : f > 1 ? 1 : f;
+      // the triangle scaled up to three times and folded back at ±1: a triangle wave of the scaled value
+      let u = (tri * (1 + 2 * f) + 1) * 0.25;
+      u -= Math.floor(u);
+      y += (u < 0.5 ? 4 * u - 1 : 3 - 4 * u) * o.tfold;
+    }
+    if (o.fnoise) {
+      // white noise through a resonant low-pass (a trapezoidal SVF) tuned from the oscillator's own pitch
+      o.nCut += (o.nCutT - o.nCut) * sm;
+      o.nRes += (o.nResT - o.nRes) * sm;
+      const key = o.nKey,
+        co = o.nCo;
+      // the coefficients are worked out again only when the pitch, cutoff or resonance has moved
+      if (key[0] !== dt || key[1] !== o.nCut || key[2] !== o.nRes) {
+        key[0] = dt;
+        key[1] = o.nCut;
+        key[2] = o.nRes;
+        let fc = dt * sr * Math.exp(o.nCut * LN2_12);
+        if (fc > sr * 0.45) fc = sr * 0.45;
+        const g = Math.tan((Math.PI * fc) / sr);
+        const r = o.nRes < 0 ? 0 : o.nRes > 1 ? 1 : o.nRes;
+        const kd = 2 * (1 - r) + 0.02;
+        co[0] = 1 / (1 + g * (g + kd));
+        co[1] = g * co[0];
+        co[2] = g * co[1];
+        co[3] = Math.sqrt(kd);
+      }
+      const a1 = co[0],
+        a2 = co[1],
+        a3 = co[2];
+      const v3 = Math.random() * 2 - 1 - o.nIc2;
+      const v1 = a1 * o.nIc1 + a2 * v3;
+      const v2 = o.nIc2 + a2 * o.nIc1 + a3 * v3;
+      o.nIc1 = 2 * v1 - o.nIc1;
+      o.nIc2 = 2 * v2 - o.nIc2;
+      // the resonant peak rises as 1/kd; scaling by the square root keeps a ringing filter near a full-scale sine
+      y += v2 * co[3] * o.fnoise;
+    }
+    return y;
+  }
 
   /** Timed stages with a shaped curve: each stage runs from where the level is to its target in exactly its time. */
   function runEnvC(e: VoiceEnv, g: boolean) {
@@ -1997,12 +2184,13 @@ function createVoice(
             mixSum += y * Math.max(0, o.level + (k < 2 ? ev(DI.lvl1 + k) : 0));
             continue;
           }
-          if (outs || o.saw || o.rsaw || o.shark || o.tmod) saw = 2 * ph - 1 - blep(ph, dt);
+          if (outs || o.saw || o.rsaw || o.shark || o.tmod || o.ssaw || o.fbk)
+            saw = 2 * ph - 1 - blep(ph, dt);
           if (o.saw) y += saw * o.saw;
           if (o.rsaw) y -= saw * o.rsaw;
           let tri = 0;
           if (o.skew >= 0) o.skew += (o.skewT - o.skew) * sm;
-          if (outs || o.tri || o.shark)
+          if (outs || o.tri || o.shark || o.tfold)
             tri =
               o.skew >= 0
                 ? ph < o.skew
@@ -2059,6 +2247,8 @@ function createVoice(
             if (o.subL) mixSum += sq * o.subL;
             if (k === 1) S[SI.sub] = sq;
           }
+          if (o.ssaw || o.fbk || o.tfold || o.fnoise)
+            y += jpWaves(o, k === 2 && pwSplit ? DI.pw3 : DI.pw1 + (k > 1 ? 1 : k), saw, tri);
           if (o.syncGate && o.syncTo >= 0 && o.syncTo < nOsc && osc[o.syncTo].phase >= 0.5) y = 0;
           if (outs && k < 3) {
             const w = OW[k];
