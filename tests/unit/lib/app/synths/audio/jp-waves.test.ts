@@ -125,6 +125,13 @@ describe('feedback osc (mix.fbk)', () => {
       expect(allFinite(hi)).toBe(true);
     }
   });
+
+  it('between two harmonics, crossfades them rather than jumping to the nearer one', () => {
+    // fbHarm 0.25 sits halfway between the 3rd and the 4th harmonic
+    const mid = play({ level: 0.4, mix: { fbk: 1 }, semi: 0, fbHarm: 0.25, fbAmt: 1 });
+    expect(power(mid, F0 * 3)).toBeGreaterThan(power(saw, F0 * 3) * 2);
+    expect(power(mid, F0 * 4)).toBeGreaterThan(power(saw, F0 * 4) * 2);
+  });
 });
 
 describe('triangle mod (mix.tfold)', () => {
@@ -169,6 +176,34 @@ describe('triangle mod (mix.tfold)', () => {
     ).out;
     const folded = play(p(1));
     expect(maxDiff(moved, folded)).toBeLessThan(1e-5);
+  });
+
+  it('on osc 3 with a split pulse width, listens to pw3 and not pw2', () => {
+    const off = { level: 0, mix: { saw: 1 }, semi: 0 };
+    const third = (fold: number) =>
+      monoParams({
+        osc: [off, off, { level: 0.4, mix: { tfold: 1 }, semi: 0, fold }],
+        pwSplit: true,
+        filter: {
+          type: 'svf',
+          mode: 'lp',
+          cutoff: 20000,
+          res: 0,
+          envAmt: 0,
+          envSrc: 'env1',
+          kbd: 0,
+        },
+        vca: { envSrc: 'none', bias: 1 },
+      });
+    const ev = { sr: SR, len: LEN, events: [[0, { type: 'noteOn' as const, n: NOTE, v: 0.9 }]] };
+    const opts = ev as Parameters<typeof render>[1];
+    const viaPw3 = render({ ...third(0), routes: [{ src: 'one', dst: 'pw3', amt: 1 }] }, opts).out;
+    const viaPw2 = render({ ...third(0), routes: [{ src: 'one', dst: 'pw2', amt: 1 }] }, opts).out;
+    const folded = render(third(1), opts).out;
+    const plain = render(third(0), opts).out;
+    expect(rms(plain)).toBeGreaterThan(0.05);
+    expect(maxDiff(viaPw3, folded)).toBeLessThan(1e-5);
+    expect(maxDiff(viaPw2, plain)).toBeLessThan(1e-5);
   });
 });
 
