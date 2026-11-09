@@ -11905,6 +11905,2033 @@
           "hear": "The echoes build into a wash under the melody."
         }
       ]
+    },
+    {
+      "id": "fireflies-glow-lead",
+      "name": "Firefly Glow Lead",
+      "ref": "In the style of Owl City — \"Fireflies\"",
+      "artist": "Owl City",
+      "tags": ["lead", "electropop", "00s"],
+      "level": 2,
+      "blurb": "A bright, sweet, twinkling lead with a soft echo, for a wide-eyed melody.",
+      "how": "A sawtooth with OSC 2 an octave up and a little quieter gives a bright, sweet tone. A short stereo delay repeats each note softly, and a plate reverb adds sparkle.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 74, 0.45],
+          [0.5, 76, 0.45],
+          [1, 79, 0.9],
+          [2, 81, 0.45],
+          [2.5, 79, 0.45],
+          [3, 76, 0.9],
+          [4, 74, 0.45],
+          [4.5, 72, 0.45],
+          [5, 74, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sweet and bright",
+          "module": "osc",
+          "why": "OSC 2 adds a sawtooth an octave up.\n- OSC 2 LEVEL 7.5 (-12.0 dB): a little under OSC 1.\n- OSC 2 PITCH 12 (+12 st): an octave up.\n- VCF FREQ 7 (3.3 kHz): bright.\n- VCF KYBD 6 (60 %): the filter follows the melody.\n- Listen for: a bright, sweet tone.",
+          "set": { "osc2.level": 7.5, "osc2.pitch": 12, "vcf.freq": 7, "vcf.kybd": 6 }
+        },
+        {
+          "title": "A soft echo",
+          "module": "fx",
+          "why": "Slot 1 echoes each note softly.\n- SLOT 1 TYPE Delay: the stereo delay.\n- TIME 500 ms: about a dotted eighth at this tempo.\n- MIX 25 %: a soft echo behind the melody.\n- Listen for: each note repeating softly.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "delay",
+            "fx1.delay.tim": 500,
+            "fx1.delay.mix": 25
+          }
+        },
+        {
+          "title": "Sparkle",
+          "module": "fx",
+          "why": "Slot 2 adds a plate reverb.\n- SLOT 2 TYPE PlateRev: a plate reverb, bright.\n- DECAY 2.5 s: a medium tail.\n- MIX 25 %: a little sparkle.\n- Listen for: a twinkling lead.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "2",
+            "ui.fxPart": "a",
+            "fx2.type": "platerev",
+            "fx2.platerev.dcy": 2.5,
+            "fx2.platerev.mix": 25
+          }
+        }
+      ],
+      "context": { "fx1.delay.mix": "In this sound: how loud the echo is." },
+      "tweaks": [
+        {
+          "id": "fx1.delay.mix",
+          "try": "Move between 10 and 50",
+          "hear": "From a hint of echo to a cascade."
+        },
+        { "id": "osc2.pitch", "try": "Set to 7", "hear": "A fifth up: a sweeter, chiming tone." }
+      ]
+    },
+    {
+      "id": "such-great-heights-bleep",
+      "name": "Bleeping Indie Lead",
+      "ref": "In the style of The Postal Service — \"Such Great Heights\"",
+      "artist": "The Postal Service",
+      "tags": ["lead", "indietronica", "00s"],
+      "level": 2,
+      "blurb": "A short, chirpy, bleeping lead that dances over a glitchy beat.",
+      "how": "A square wave plucked short by the filter envelope bleeps. A ping-pong delay bounces the bleeps from side to side, and a little Decimator crunch makes them sound like a home computer.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 76, 0.2],
+          [0.25, 79, 0.2],
+          [0.5, 76, 0.2],
+          [1, 74, 0.2],
+          [1.5, 72, 0.2],
+          [2, 76, 0.2],
+          [2.5, 79, 0.2],
+          [3, 81, 0.2],
+          [3.5, 79, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A square",
+          "module": "osc",
+          "why": "OSC 1 plays a square.\n- OSC 1 Sawtooth off, Square on: the square in place of the sawtooth.\n- Listen for: a hollow tone.",
+          "set": { "osc1.saw": false, "osc1.pulse": true }
+        },
+        {
+          "title": "Bleep",
+          "module": "filter",
+          "why": "A short filter envelope makes each note a bleep.\n- VCF FREQ 4.5 (741 Hz): lowish.\n- VCF ENV 6 (60 %): a quick opening.\n- VCF KYBD 7 (70 %): high notes stay bright.\n- VCF envelope A 0 (1 ms), D 3.5 (120 ms), S 0 %: snaps open and shut.\n- VCA envelope D 4 (180 ms), S 0 %: short notes.\n- Listen for: chirpy bleeps.",
+          "set": {
+            "env.select": "vcf",
+            "vcf.freq": 4.5,
+            "vcf.env": 6,
+            "vcf.kybd": 7,
+            "vcfEnv.attack": 0,
+            "vcfEnv.decay": 3.5,
+            "vcfEnv.sustain": 0,
+            "vcaEnv.decay": 4,
+            "vcaEnv.sustain": 0
+          }
+        },
+        {
+          "title": "Bounce and crunch",
+          "module": "fx",
+          "why": "A ping-pong delay, crunched a little.\n- SLOT 1 TYPE DecimDelay: the Decimator delay.\n- TIME 254 ms: an eighth note.\n- MIX 35 %: clearly heard.\n- BIT-REDUCE 10 bit: a little crunch.\n- Listen for: bleeps bouncing and crunching.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "decimdelay",
+            "fx1.decimdelay.tim": 254,
+            "fx1.decimdelay.mix": 35,
+            "fx1.decimdelay.brc": 10
+          }
+        }
+      ],
+      "context": {
+        "fx1.decimdelay.brc": "In this sound: how crunchy the echoes are. Fewer bits is crunchier."
+      },
+      "tweaks": [
+        {
+          "id": "fx1.decimdelay.brc",
+          "try": "Move between 4 and 20",
+          "hear": "From a gritty, broken echo to a clean one."
+        },
+        { "id": "vcfEnv.decay", "try": "Raise to 5", "hear": "Rounder, longer bleeps." }
+      ]
+    },
+    {
+      "id": "sun-and-moon-lead",
+      "name": "Euphoric Trance Lead",
+      "ref": "In the style of Above & Beyond — \"Sun & Moon\"",
+      "artist": "Above & Beyond",
+      "tags": ["lead", "trance", "10s"],
+      "level": 2,
+      "blurb": "A huge, wide, soaring trance lead drenched in hall reverb.",
+      "how": "UNISON-6 stacks six detuned voices on one note for a huge, wide lead. A hall reverb and a long delay put it in a stadium, and a short portamento joins the notes.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 76, 0.9],
+          [1, 79, 0.45],
+          [1.5, 81, 0.45],
+          [2, 83, 1.4],
+          [3.5, 81, 0.45],
+          [4, 79, 0.9],
+          [5, 76, 0.9],
+          [6, 74, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Six voices on one note",
+          "module": "mode",
+          "why": "Six detuned voices stacked on one note.\n- POLYPHONY UNISON-6: six voices per note.\n- UNISON DETUNE 3 (±15.0 cents): a wide spread.\n- PORTAMENTO 0.8 (64 ms): a short slide.\n- OSC 2 LEVEL 8 (-9.6 dB): OSC 2’s sawtooth too.\n- Listen for: a huge, wide lead.",
+          "set": {
+            "ui.page": "poly",
+            "voice.mode": "uni6",
+            "voice.detune": 3,
+            "glide.time": 0.8,
+            "osc2.level": 8
+          }
+        },
+        {
+          "title": "A stadium",
+          "module": "fx",
+          "why": "A delay into a hall.\n- SLOT 1 TYPE Delay: the stereo delay.\n- TIME 341 ms: a dotted eighth.\n- MIX 22 %: behind the lead.\n- SLOT 2 TYPE HallRev: a hall reverb.\n- DECAY 3.8 s: long.\n- MIX 35 %: big.\n- Listen for: a soaring lead in a vast space.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "2",
+            "ui.fxPart": "a",
+            "fx1.type": "delay",
+            "fx1.delay.tim": 341,
+            "fx1.delay.mix": 22,
+            "fx2.type": "hallrev",
+            "fx2.hallrev.dcy": 3.8,
+            "fx2.hallrev.mix": 35
+          }
+        }
+      ],
+      "context": { "voice.detune": "In this sound: how wide the stack is." },
+      "tweaks": [
+        {
+          "id": "voice.detune",
+          "try": "Move between 1 and 6",
+          "hear": "From a thick lead to a huge, chorused wall."
+        },
+        { "id": "voice.mode", "try": "Set to UNISON-12", "hear": "Twelve voices: even bigger." }
+      ]
+    },
+    {
+      "id": "clarity-pluck-lead",
+      "name": "Bright EDM Pluck Lead",
+      "ref": "In the style of Zedd — \"Clarity\"",
+      "artist": "Zedd",
+      "tags": ["lead", "electro house", "10s"],
+      "level": 2,
+      "blurb": "A bright, punchy, plucked lead that rings into a wide reverb.",
+      "how": "Two sawtooths an octave apart, plucked by the filter envelope with a curved, snappy decay, ring into a plate reverb. UNISON-2 thickens each note.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.4],
+          [0.5, 76, 0.4],
+          [1, 79, 0.4],
+          [1.5, 84, 0.4],
+          [2, 83, 0.4],
+          [2.5, 79, 0.4],
+          [3, 76, 0.4],
+          [3.5, 74, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Thick and bright",
+          "module": "osc",
+          "why": "Two voices per note, and OSC 2 an octave up.\n- POLYPHONY UNISON-2: two voices per note.\n- UNISON DETUNE 1.5 (±7.5 cents): a little spread.\n- OSC 2 LEVEL 7 (-14.4 dB): OSC 2 joins.\n- OSC 2 PITCH 12 (+12 st): an octave up.\n- Listen for: a thick, bright tone.",
+          "set": {
+            "ui.page": "poly",
+            "voice.mode": "uni2",
+            "voice.detune": 1.5,
+            "osc2.level": 7,
+            "osc2.pitch": 12
+          }
+        },
+        {
+          "title": "A snappy pluck",
+          "module": "filter",
+          "why": "The filter envelope plucks, with a curve for snap.\n- VCF FREQ 4 (549 Hz): lowish.\n- VCF ENV 6.5 (65 %): a big opening.\n- VCF KYBD 6 (60 %): high notes stay bright.\n- VCF envelope A 0 (1 ms), D 4.5 (260 ms), S 2 (20 %): quick.\n- CURVES on: shows the curve faders.\n- VCF envelope D 1 (fast start): falls fast at first, for snap.\n- Listen for: a punchy pluck on every note.",
+          "set": {
+            "env.select": "vcf",
+            "vcf.freq": 4,
+            "vcf.env": 6.5,
+            "vcf.kybd": 6,
+            "vcfEnv.attack": 0,
+            "vcfEnv.decay": 4.5,
+            "vcfEnv.sustain": 2,
+            "env.curves": true,
+            "vcfEnv.decayCurve": 1
+          }
+        },
+        {
+          "title": "Ring",
+          "module": "fx",
+          "why": "A plate reverb.\n- SLOT 1 TYPE PlateRev: a plate reverb.\n- DECAY 2.2 s: a medium tail.\n- MIX 30 %: a bright ring.\n- Listen for: plucks ringing into a wide space.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "platerev",
+            "fx1.platerev.dcy": 2.2,
+            "fx1.platerev.mix": 30
+          }
+        }
+      ],
+      "context": { "vcfEnv.decayCurve": "In this sound: the snap: lower falls faster at first." },
+      "tweaks": [
+        {
+          "id": "vcfEnv.decayCurve",
+          "try": "Move between 0 and 5",
+          "hear": "From a snappy pluck to a softer, rounder one."
+        },
+        {
+          "id": "vcf.env",
+          "try": "Move between 4 and 8",
+          "hear": "From a soft pluck to a bright, biting one."
+        }
+      ]
+    },
+    {
+      "id": "watercolour-lead",
+      "name": "Rolling Drum-and-Bass Lead",
+      "ref": "In the style of Pendulum — \"Watercolour\"",
+      "artist": "Pendulum",
+      "tags": ["lead", "drum and bass", "10s"],
+      "level": 3,
+      "blurb": "A bright, gritty, heavily driven lead that rips over fast breakbeats.",
+      "how": "UNISON-4 with OSC 2 synced makes a thick, tearing lead, and the MultiBandDist distortion in slot 1 drives it hard. The high-pass filter thins the bottom so it sits above the bass.",
+      "phrase": {
+        "bpm": 174,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.45],
+          [0.5, 72, 0.45],
+          [1, 76, 0.9],
+          [2, 74, 0.45],
+          [2.5, 72, 0.45],
+          [3, 69, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Thick and tearing",
+          "module": "osc",
+          "why": "Four voices per note, with OSC 2 synced and a fifth up.\n- POLYPHONY UNISON-4: four voices per note.\n- UNISON DETUNE 2.5 (±12.5 cents): a spread.\n- OSC 2 SYNC on: OSC 2 restarts with OSC 1.\n- OSC 2 PITCH 7 (+7 st): a fifth up, for a tearing edge.\n- OSC 2 LEVEL 8 (-9.6 dB): OSC 2 joins.\n- Listen for: a thick, nasal, tearing lead.",
+          "set": {
+            "ui.page": "poly",
+            "voice.mode": "uni4",
+            "voice.detune": 2.5,
+            "osc2.sync": true,
+            "osc2.pitch": 7,
+            "osc2.level": 8
+          }
+        },
+        {
+          "title": "Thin the bottom",
+          "module": "filter",
+          "why": "The high-pass filter takes away the lows.\n- HPF FREQ 4 (126 Hz): the lows below this go.\n- Listen for: a lead sitting above the bass.",
+          "set": { "hpf.freq": 4 }
+        },
+        {
+          "title": "Drive",
+          "module": "fx",
+          "why": "Slot 1 drives the lead hard.\n- SLOT 1 TYPE MulBndDist: the multiband distortion.\n- Listen for: a bright, gritty, ripping lead.",
+          "set": { "ui.page": "fx", "ui.fxSlot": "1", "ui.fxPart": "a", "fx1.type": "mulbnddist" }
+        }
+      ],
+      "context": { "hpf.freq": "In this sound: how much of the bottom is cut away." },
+      "tweaks": [
+        {
+          "id": "osc2.pitch",
+          "try": "Move between 0 and 12",
+          "hear": "Each place a different sync colour."
+        },
+        {
+          "id": "hpf.freq",
+          "try": "Move between 2 and 6",
+          "hear": "From a full lead to a thin, piercing one."
+        }
+      ]
+    },
+    {
+      "id": "cosmic-girl-lead",
+      "name": "Acid-Jazz Synth Lead",
+      "ref": "In the style of Jamiroquai — \"Cosmic Girl\"",
+      "artist": "Jamiroquai",
+      "tags": ["lead", "acid jazz", "90s"],
+      "level": 2,
+      "blurb": "A warm, round, swooping lead with a filter bloom, for a disco-funk solo.",
+      "how": "MONO with a sawtooth and a square an octave down gives a round lead, portamento swoops between notes, and the filter blooms a little on each one. A chorus widens it.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.45],
+          [0.5, 72, 0.45],
+          [1, 74, 0.45],
+          [1.5, 76, 0.9],
+          [2.5, 74, 0.45],
+          [3, 72, 0.45],
+          [3.5, 69, 0.45],
+          [4, 67, 0.9],
+          [5, 69, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Round",
+          "module": "osc",
+          "why": "One note at a time, a square an octave down under the sawtooth.\n- POLYPHONY MONO: one note, one voice.\n- PORTAMENTO 2 (400 ms): a swoop between notes.\n- OSC 2 LEVEL 7.5 (-12.0 dB): OSC 2 joins.\n- OSC 2 PITCH -12 st: an octave down.\n- Listen for: a round, swooping lead.",
+          "set": {
+            "ui.page": "poly",
+            "voice.mode": "mono",
+            "glide.time": 2,
+            "osc2.level": 7.5,
+            "osc2.pitch": -12
+          }
+        },
+        {
+          "title": "Bloom",
+          "module": "filter",
+          "why": "The filter blooms on each note.\n- VCF FREQ 5 (1.0 kHz): middling.\n- VCF RES 3 (30 %): a little peak.\n- VCF ENV 4 (40 %): a bloom.\n- VCF KYBD 7 (70 %): the filter follows the melody.\n- VCF envelope A 2 (30 ms), D 5 (380 ms), S 5 (50 %): a quick bloom that settles.\n- Listen for: each note opening up.",
+          "set": {
+            "env.select": "vcf",
+            "vcf.freq": 5,
+            "vcf.res": 3,
+            "vcf.env": 4,
+            "vcf.kybd": 7,
+            "vcfEnv.attack": 2,
+            "vcfEnv.decay": 5,
+            "vcfEnv.sustain": 5
+          }
+        },
+        {
+          "title": "Wide",
+          "module": "fx",
+          "why": "A stereo chorus.\n- SLOT 1 TYPE Chorus: the stereo chorus.\n- MIX 35 %: a gentle widening.\n- Listen for: a wide, warm lead.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "chorus",
+            "fx1.chorus.mix": 35
+          }
+        }
+      ],
+      "context": { "glide.time": "In this sound: how much the lead swoops." },
+      "tweaks": [
+        {
+          "id": "glide.time",
+          "try": "Move between 1 and 3.5",
+          "hear": "From a quick scoop to long, lazy swoops."
+        },
+        {
+          "id": "vcf.res",
+          "try": "Move between 1 and 6",
+          "hear": "From smooth to a vocal, wah-like lead."
+        }
+      ]
+    },
+    {
+      "id": "pursuit-dark-bass",
+      "name": "Dark Techno Bass",
+      "ref": "In the style of Gesaffelstein — \"Pursuit\"",
+      "artist": "Gesaffelstein",
+      "tags": ["bass", "techno", "10s"],
+      "level": 2,
+      "blurb": "A hard, dark, distorted bass that stalks in a menacing pulse.",
+      "how": "A sawtooth and a square an octave down, through a dark filter with a short pluck, pulse in a menacing rhythm, and the RackAmp in slot 1 overdrives them into a dark snarl.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.2],
+          [0.5, 36, 0.2],
+          [0.75, 36, 0.2],
+          [1.5, 39, 0.2],
+          [2, 36, 0.2],
+          [2.5, 36, 0.2],
+          [2.75, 34, 0.2],
+          [3.5, 36, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Weight",
+          "module": "osc",
+          "why": "A square an octave down, one note at a time.\n- POLYPHONY MONO: one note, one voice.\n- OSC 1 Square on: the square joins the sawtooth.\n- OSC 2 LEVEL 7 (-14.4 dB): OSC 2 joins.\n- OSC 2 PITCH -12 st: an octave down.\n- Listen for: a heavy, buzzing note.",
+          "set": {
+            "ui.page": "poly",
+            "voice.mode": "mono",
+            "osc1.pulse": true,
+            "osc2.level": 7,
+            "osc2.pitch": -12
+          }
+        },
+        {
+          "title": "Stalk",
+          "module": "filter",
+          "why": "A dark filter and a short pluck.\n- VCF FREQ 3 (302 Hz): dark.\n- VCF RES 3 (30 %): a little ring.\n- VCF ENV 4 (40 %): a pluck.\n- VCF envelope A 0 (1 ms), D 4 (180 ms), S 1 (10 %): short.\n- VCA envelope D 4.5 (260 ms), S 4 (40 %): short notes.\n- Listen for: a dark, stalking pulse.",
+          "set": {
+            "env.select": "vcf",
+            "vcf.freq": 3,
+            "vcf.res": 3,
+            "vcf.env": 4,
+            "vcfEnv.attack": 0,
+            "vcfEnv.decay": 4,
+            "vcfEnv.sustain": 1,
+            "vcaEnv.decay": 4.5,
+            "vcaEnv.sustain": 4
+          }
+        },
+        {
+          "title": "Snarl",
+          "module": "fx",
+          "why": "Slot 1 overdrives the bass.\n- SLOT 1 TYPE RackAmp: the rack amp.\n- Listen for: a menacing, distorted snarl.",
+          "set": { "ui.page": "fx", "ui.fxSlot": "1", "ui.fxPart": "a", "fx1.type": "rackamp" }
+        }
+      ],
+      "context": { "vcf.freq": "In this sound: how dark the bass is." },
+      "tweaks": [
+        {
+          "id": "vcf.freq",
+          "try": "Move between 2 and 4.5",
+          "hear": "From a sub growl to a buzzing snarl."
+        },
+        { "id": "fx1.type", "try": "Set to NONE", "hear": "The clean bass, without the amp." }
+      ]
+    },
+    {
+      "id": "cockney-thug-wobble",
+      "name": "Wobbling Dubstep Bass",
+      "ref": "In the style of Rusko — \"Cockney Thug\"",
+      "artist": "Rusko",
+      "tags": ["bass", "dubstep", "00s"],
+      "level": 3,
+      "blurb": "A deep, rubbery bass whose filter wobbles in time.",
+      "how": "LFO 1 on SQUARE moves the filter between dark and open, so held notes wobble. LFO 1 is chosen with LFO SELECT on the VCF EDIT page, and resonance makes each wobble talk.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 31, 1.9],
+          [2, 31, 0.9],
+          [3, 34, 0.9],
+          [4, 29, 1.9],
+          [6, 36, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A fat bass",
+          "module": "osc",
+          "why": "One note, two sawtooths an octave apart.\n- POLYPHONY MONO-2: one note, two voices.\n- OSC 2 LEVEL 7 (-14.4 dB): OSC 2 joins.\n- OSC 2 PITCH -12 st: an octave down.\n- Listen for: a fat, deep note.",
+          "set": { "ui.page": "poly", "voice.mode": "mono2", "osc2.level": 7, "osc2.pitch": -12 }
+        },
+        {
+          "title": "The wobble",
+          "module": "lfo",
+          "why": "LFO 1 on SQUARE moves the filter.\n- VCF LFO SELECT LFO 1: the filter listens to LFO 1.\n- LFO 1 SHAPE SQUARE: jumps between two places.\n- LFO 1 RATE 4.5 (1.13 Hz): a few wobbles a second.\n- VCF LFO 6 (60 %): a big sweep.\n- VCF FREQ 3 (302 Hz): dark.\n- VCF RES 5 (50 %): a talking peak.\n- Listen for: a deep, wobbling bass.",
+          "set": {
+            "ui.page": "vcf",
+            "vcf.lfoSel": "lfo1",
+            "lfo1.shape": "sq",
+            "lfo1.rate": 4.5,
+            "vcf.lfo": 6,
+            "vcf.freq": 3,
+            "vcf.res": 5
+          }
+        },
+        {
+          "title": "Weight and grit",
+          "module": "fx",
+          "why": "A little drive.\n- SLOT 1 TYPE MulBndDist: the multiband distortion.\n- SLOT 1 LEVEL 7 (-2.3 dB): a little lower, to keep the wobble in hand.\n- Listen for: a gritty, rubbery wobble.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "mulbnddist",
+            "fx1.level": 7
+          }
+        }
+      ],
+      "context": { "lfo1.rate": "In this sound: how fast the bass wobbles." },
+      "tweaks": [
+        {
+          "id": "lfo1.rate",
+          "try": "Move between 3.5 and 5.5",
+          "hear": "From a slow “wub” to a fast stutter."
+        },
+        {
+          "id": "lfo1.shape",
+          "try": "Set to TRIANGLE",
+          "hear": "A smooth sweep in place of the jumps."
+        }
+      ]
+    },
+    {
+      "id": "poney-distorted-bass",
+      "name": "Distorted Electro Riff Bass",
+      "ref": "In the style of Vitalic — \"Poney Part 1\"",
+      "artist": "Vitalic",
+      "tags": ["bass", "electroclash", "00s"],
+      "level": 2,
+      "blurb": "A brash, fuzzy, overdriven synth riff that pounds like a rock guitar.",
+      "how": "UNISON-2 sawtooths with a short filter bark, driven through the MultiBandDist, give a brash, fuzzy riff that pounds like a distorted guitar.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.4],
+          [0.5, 40, 0.4],
+          [1, 43, 0.4],
+          [1.5, 40, 0.4],
+          [2, 45, 0.4],
+          [2.5, 43, 0.4],
+          [3, 40, 0.4],
+          [3.5, 38, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Thick",
+          "module": "mode",
+          "why": "Two voices per note.\n- POLYPHONY UNISON-2: two voices per note.\n- UNISON DETUNE 2 (±10.0 cents): a spread.\n- Listen for: a thick sawtooth.",
+          "set": { "ui.page": "poly", "voice.mode": "uni2", "voice.detune": 2 }
+        },
+        {
+          "title": "Bark",
+          "module": "filter",
+          "why": "A short bark.\n- VCF FREQ 4.5 (741 Hz): middling.\n- VCF ENV 4 (40 %): a bark.\n- VCF envelope A 0 (1 ms), D 4.5 (260 ms), S 4 (40 %): quick, settling fairly open.\n- Listen for: a barking riff.",
+          "set": {
+            "env.select": "vcf",
+            "vcf.freq": 4.5,
+            "vcf.env": 4,
+            "vcfEnv.attack": 0,
+            "vcfEnv.decay": 4.5,
+            "vcfEnv.sustain": 4
+          }
+        },
+        {
+          "title": "Fuzz",
+          "module": "fx",
+          "why": "The multiband distortion.\n- SLOT 1 TYPE MulBndDist: the multiband distortion.\n- Listen for: a brash, fuzzy riff.",
+          "set": { "ui.page": "fx", "ui.fxSlot": "1", "ui.fxPart": "a", "fx1.type": "mulbnddist" }
+        }
+      ],
+      "context": { "vcf.env": "In this sound: how hard the riff barks." },
+      "tweaks": [
+        {
+          "id": "vcf.freq",
+          "try": "Move between 3.5 and 6",
+          "hear": "From a muffled fuzz to a ripping one."
+        },
+        { "id": "voice.detune", "try": "Raise to 4", "hear": "A wider, more chorused riff." }
+      ]
+    },
+    {
+      "id": "pull-up-bumper-bass",
+      "name": "Compass Point Bass",
+      "ref": "In the style of Grace Jones — \"Pull Up to the Bumper\"",
+      "artist": "Grace Jones",
+      "tags": ["bass", "post-disco", "80s"],
+      "level": 2,
+      "blurb": "A deep, springy, dub-flavoured synth bass with an echo.",
+      "how": "A square and a sawtooth an octave down, through a dark filter with resonance and a springy envelope, give a deep, rubbery bass, and a dark delay adds a dub echo.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.4],
+          [0.75, 38, 0.2],
+          [1, 41, 0.4],
+          [2, 43, 0.4],
+          [2.5, 41, 0.2],
+          [3, 38, 0.4],
+          [3.5, 36, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Deep",
+          "module": "osc",
+          "why": "A square with a sawtooth an octave down.\n- POLYPHONY MONO: one note, one voice.\n- OSC 1 Sawtooth off, Square on: OSC 1 on its square.\n- OSC 2 LEVEL 7 (-14.4 dB): OSC 2 joins.\n- OSC 2 PITCH -12 st: an octave down.\n- Listen for: a deep, hollow bass.",
+          "set": {
+            "ui.page": "poly",
+            "voice.mode": "mono",
+            "osc1.saw": false,
+            "osc1.pulse": true,
+            "osc2.level": 7,
+            "osc2.pitch": -12
+          }
+        },
+        {
+          "title": "Spring",
+          "module": "filter",
+          "why": "Resonance and a springy envelope.\n- VCF FREQ 3.2 (340 Hz): dark.\n- VCF RES 5 (50 %): a ring.\n- VCF ENV 4.5 (45 %): a spring.\n- VCF envelope A 0 (1 ms), D 4.8 (330 ms), S 1 (10 %): quick.\n- Listen for: a rubbery bass.",
+          "set": {
+            "env.select": "vcf",
+            "vcf.freq": 3.2,
+            "vcf.res": 5,
+            "vcf.env": 4.5,
+            "vcfEnv.attack": 0,
+            "vcfEnv.decay": 4.8,
+            "vcfEnv.sustain": 1
+          }
+        },
+        {
+          "title": "Dub echo",
+          "module": "fx",
+          "why": "A dark delay.\n- SLOT 1 TYPE Delay: the stereo delay.\n- TIME 402 ms: a dotted eighth.\n- MIX 18 %: a quiet echo.\n- FEED HC 1500 (1.5 kHz): on page 8-12, the echoes darken.\n- Listen for: a deep, springy bass with a dub echo.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "b",
+            "fx1.type": "delay",
+            "fx1.delay.tim": 402,
+            "fx1.delay.mix": 18,
+            "fx1.delay.fhc": 1500
+          }
+        }
+      ],
+      "context": { "vcf.res": "In this sound: how rubbery the bass is." },
+      "tweaks": [
+        {
+          "id": "fx1.delay.mix",
+          "try": "Move between 0 and 40",
+          "hear": "From dry to a deep dub echo."
+        },
+        {
+          "id": "vcf.res",
+          "try": "Move between 3 and 7",
+          "hear": "From a firm thump to a wet squelch."
+        }
+      ]
+    },
+    {
+      "id": "feel-so-real-bass",
+      "name": "Boogie Slap-Synth Bass",
+      "ref": "In the style of Steve Arrington — \"Feel So Real\"",
+      "artist": "Steve Arrington",
+      "tags": ["bass", "boogie", "80s"],
+      "level": 2,
+      "blurb": "A bright, snapping synth bass that pops like a slapped string.",
+      "how": "A sawtooth with OSC 2’s square an octave up, plucked by a fast, curved filter envelope with resonance, snaps like a slapped bass for a busy boogie line.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4],
+          [0.5, 48, 0.2],
+          [0.75, 46, 0.2],
+          [1, 43, 0.4],
+          [1.75, 36, 0.2],
+          [2, 39, 0.4],
+          [2.5, 41, 0.4],
+          [3, 43, 0.4],
+          [3.5, 48, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bright",
+          "module": "osc",
+          "why": "OSC 2 an octave up for a bright top.\n- POLYPHONY MONO: one note, one voice.\n- OSC 2 LEVEL 6 (-19.2 dB): quieter.\n- OSC 2 PITCH 12 (+12 st): an octave up.\n- OSC 2 TONE MOD 5 (75 %): OSC 2 closer to a square.\n- Listen for: a bright bass.",
+          "set": {
+            "ui.page": "poly",
+            "voice.mode": "mono",
+            "osc2.level": 6,
+            "osc2.pitch": 12,
+            "osc2.toneMod": 5
+          }
+        },
+        {
+          "title": "Snap",
+          "module": "filter",
+          "why": "A fast, curved filter envelope with resonance.\n- VCF FREQ 3.5 (407 Hz): lowish.\n- VCF RES 4 (40 %): a ring.\n- VCF ENV 5.5 (55 %): a strong snap.\n- VCF KYBD 5 (50 %): the filter follows the line.\n- VCF envelope A 0 (1 ms), D 4.5 (260 ms), S 1 (10 %): quick.\n- CURVES on: shows the curve faders.\n- VCF envelope D 0.5 (fast start): fast at first, for a snap.\n- Listen for: a snapping, slap-like bass.",
+          "set": {
+            "env.select": "vcf",
+            "vcf.freq": 3.5,
+            "vcf.res": 4,
+            "vcf.env": 5.5,
+            "vcf.kybd": 5,
+            "vcfEnv.attack": 0,
+            "vcfEnv.decay": 4.5,
+            "vcfEnv.sustain": 1,
+            "env.curves": true,
+            "vcfEnv.decayCurve": 0.5
+          }
+        },
+        {
+          "title": "Room",
+          "module": "fx",
+          "why": "A small room.\n- SLOT 1 TYPE RoomRev: a room reverb, dry by default.\n- Listen for: a busy, popping bass line.",
+          "set": { "ui.page": "fx", "ui.fxSlot": "1", "ui.fxPart": "a", "fx1.type": "roomrev" }
+        }
+      ],
+      "context": { "vcfEnv.decayCurve": "In this sound: the snap: lower is a sharper slap." },
+      "tweaks": [
+        {
+          "id": "vcfEnv.decayCurve",
+          "try": "Move between 0 and 5",
+          "hear": "From a slap to a soft pluck."
+        },
+        {
+          "id": "osc2.level",
+          "try": "Move between 0 and 8",
+          "hear": "From a round bass to a bright, clanky one."
+        }
+      ]
+    },
+    {
+      "id": "rock-it-bass",
+      "name": "Snarling Drum-and-Bass Bass",
+      "ref": "In the style of Sub Focus — \"Rock It\"",
+      "artist": "Sub Focus",
+      "tags": ["bass", "drum and bass", "00s"],
+      "level": 3,
+      "blurb": "A snarling, sweeping bass that tears open and shut on every note.",
+      "how": "The MOD envelope sweeps OSC 2’s tone on every note, set with TMOD SRC on the OSC EDIT page, while a resonant filter barks; a phaser in slot 1 makes the snarl swirl.",
+      "phrase": {
+        "bpm": 174,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.9],
+          [1, 33, 0.4],
+          [1.5, 36, 0.4],
+          [2, 31, 0.9],
+          [3, 33, 0.4],
+          [3.5, 38, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sweeping tone",
+          "module": "osc",
+          "why": "The MOD envelope moves OSC 2’s tone.\n- POLYPHONY MONO-2: one note, two voices.\n- OSC 2 LEVEL 9 (-4.8 dB): OSC 2 loud.\n- OSC 2 TMOD SRC MOD ENV: OSC 2’s tone follows the MOD envelope.\n- OSC 2 TONE MOD 9 (95 %): a big sweep.\n- MOD envelope A 0 (1 ms), D 4.5 (260 ms), S 2 (20 %): a quick sweep.\n- Listen for: a tone that tears on each note.",
+          "set": {
+            "ui.page": "osc",
+            "voice.mode": "mono2",
+            "osc2.level": 9,
+            "osc2.tmSrc": "modEnv",
+            "osc2.toneMod": 9,
+            "env.select": "mod",
+            "modEnv.attack": 0,
+            "modEnv.decay": 4.5,
+            "modEnv.sustain": 2
+          }
+        },
+        {
+          "title": "Bark",
+          "module": "filter",
+          "why": "A resonant bark.\n- VCF FREQ 3.5 (407 Hz): low.\n- VCF RES 4 (40 %): a peak.\n- VCF ENV 4 (40 %): a bark.\n- Listen for: a barking, snarling bass.",
+          "set": { "vcf.freq": 3.5, "vcf.res": 4, "vcf.env": 4 }
+        },
+        {
+          "title": "Swirl",
+          "module": "fx",
+          "why": "A phaser makes the snarl swirl.\n- SLOT 1 TYPE Phaser: the stereo phaser.\n- MIX 40 %: a strong swirl.\n- Listen for: a snarling, swirling bass.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "phaser",
+            "fx1.phaser.mix": 40
+          }
+        }
+      ],
+      "context": { "osc2.toneMod": "In this sound: how far each note’s tone sweeps." },
+      "tweaks": [
+        {
+          "id": "modEnv.decay",
+          "try": "Move between 3.5 and 6",
+          "hear": "From a quick snarl to a slow, talking sweep."
+        },
+        {
+          "id": "fx1.phaser.mix",
+          "try": "Move between 0 and 70",
+          "hear": "From a plain snarl to a swirling roar."
+        }
+      ]
+    },
+    {
+      "id": "riverdance-pipes",
+      "name": "Uilleann Pipe Air",
+      "ref": "In the style of Bill Whelan — Riverdance",
+      "artist": "Bill Whelan",
+      "tags": ["wind", "celtic", "90s"],
+      "level": 3,
+      "blurb": "A reedy, keening pipe melody that bends into its notes and soars in a hall.",
+      "how": "Uilleann pipes are reedy and keening, with grace notes and bends. A narrow pulse with the 2-pole filter and resonance gives the reed, portamento and a delayed vibrato from LFO 1 give the bends, and a hall reverb lifts it.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.2],
+          [0.25, 74, 1.6],
+          [2, 72, 0.45],
+          [2.5, 71, 0.45],
+          [3, 69, 0.9],
+          [4, 67, 0.2],
+          [4.25, 69, 2.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A reed",
+          "module": "osc",
+          "why": "A narrow pulse, one note at a time.\n- POLYPHONY MONO: one note, one voice.\n- OSC 1 Sawtooth off, Square on: OSC 1 on its square.\n- OSC 1 PWM 6 (79 %): narrowed.\n- VCF 2 POLE on: the gentler filter.\n- VCF FREQ 5.5 (1.3 kHz): middling.\n- VCF RES 4 (40 %): a reedy peak.\n- VCF KYBD 8 (80 %): the peak follows the melody.\n- Listen for: a reedy, keening tone.",
+          "set": {
+            "ui.page": "poly",
+            "voice.mode": "mono",
+            "osc1.saw": false,
+            "osc1.pulse": true,
+            "osc1.pwm": 6,
+            "vcf.twoPole": true,
+            "vcf.freq": 5.5,
+            "vcf.res": 4,
+            "vcf.kybd": 8
+          }
+        },
+        {
+          "title": "Bends",
+          "module": "lfo",
+          "why": "Portamento and a delayed vibrato.\n- PORTAMENTO 0.8 (64 ms): a short bend into each note.\n- OSC 1 PITCH MOD 0.6 (+0.1 st): a little vibrato from LFO 1.\n- LFO 1 RATE 4.7 (1.31 Hz): a vibrato speed.\n- LFO 1 DELAY TIME 3.5 (810 ms): the vibrato starts late.\n- Listen for: notes bending in, then wavering.",
+          "set": { "glide.time": 0.8, "osc1.pitchMod": 0.6, "lfo1.rate": 4.7, "lfo1.delay": 3.5 }
+        },
+        {
+          "title": "A hall",
+          "module": "fx",
+          "why": "A hall reverb.\n- SLOT 1 TYPE HallRev: a hall reverb.\n- DECAY 3.5 s: long.\n- MIX 32 %: a big space.\n- Listen for: a soaring, keening pipe air.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "hallrev",
+            "fx1.hallrev.dcy": 3.5,
+            "fx1.hallrev.mix": 32
+          }
+        }
+      ],
+      "context": { "lfo1.delay": "In this sound: how long a note holds before it wavers." },
+      "tweaks": [
+        {
+          "id": "vcf.res",
+          "try": "Move between 2 and 6",
+          "hear": "From a soft whistle to a keening reed."
+        },
+        {
+          "id": "glide.time",
+          "try": "Move between 0 and 2",
+          "hear": "From clean notes to sliding ones."
+        }
+      ]
+    },
+    {
+      "id": "rhapsody-clarinet",
+      "name": "Glissando Clarinet",
+      "ref": "In the style of George Gershwin — Rhapsody in Blue",
+      "artist": "George Gershwin",
+      "tags": ["wind", "jazz-classical", "1920s"],
+      "level": 3,
+      "blurb": "A woody clarinet that trills and then smears upwards in a long glissando.",
+      "how": "A clarinet is close to a square wave. A square through the 4-pole filter with a soft attack gives the wood, and a long portamento makes the famous upward smear from a low trill to a high note.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 58, 0.2],
+          [0.25, 60, 0.2],
+          [0.5, 58, 0.2],
+          [0.75, 60, 0.2],
+          [1, 58, 0.2],
+          [1.25, 60, 0.2],
+          [1.5, 58, 0.4],
+          [2, 82, 1.9],
+          [4, 80, 0.9],
+          [5, 77, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Wood",
+          "module": "osc",
+          "why": "A square, one note at a time.\n- POLYPHONY MONO: one note, one voice.\n- OSC 1 Sawtooth off, Square on: OSC 1 on its square.\n- VCF FREQ 6 (1.8 kHz): warm.\n- VCF KYBD 7 (70 %): the filter follows the melody.\n- VCA envelope A 2.5 (47 ms): a soft start.\n- Listen for: a woody, clarinet-like tone.",
+          "set": {
+            "ui.page": "poly",
+            "voice.mode": "mono",
+            "osc1.saw": false,
+            "osc1.pulse": true,
+            "vcf.freq": 6,
+            "vcf.kybd": 7,
+            "env.select": "vca",
+            "vcaEnv.attack": 2.5
+          }
+        },
+        {
+          "title": "The smear",
+          "module": "glide",
+          "why": "A long portamento smears up to the high note.\n- PORTAMENTO 3 (900 ms): long enough to hear the climb.\n- Listen for: a trill smearing up into a high note.",
+          "set": { "glide.time": 3 }
+        },
+        {
+          "title": "A concert hall",
+          "module": "fx",
+          "why": "A hall reverb.\n- SLOT 1 TYPE HallRev: a hall reverb.\n- MIX 25 %: a little space.\n- Listen for: a clarinet in a concert hall.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "hallrev",
+            "fx1.hallrev.mix": 25
+          }
+        }
+      ],
+      "context": { "glide.time": "In this sound: how slowly the clarinet smears up." },
+      "tweaks": [
+        {
+          "id": "glide.time",
+          "try": "Move between 1.5 and 4.5",
+          "hear": "From a quick slide to a long, lazy smear."
+        },
+        { "id": "osc1.pwm", "try": "Raise to 4", "hear": "A thinner, more nasal reed." }
+      ]
+    },
+    {
+      "id": "uptown-funk-horns",
+      "name": "Retro-Funk Horn Stabs",
+      "ref": "In the style of Mark Ronson — \"Uptown Funk\"",
+      "artist": "Mark Ronson",
+      "tags": ["brass", "funk", "10s"],
+      "level": 1,
+      "blurb": "Tight, punchy, bright horn stabs with a little room around them.",
+      "how": "Two sawtooths, OSC 2 a few cents off thanks to OSC DRIFT, with a fast, curved filter bark give punchy synth horns. A small room reverb puts them in a studio.",
+      "phrase": {
+        "bpm": 115,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.2],
+          [0, 65, 0.2],
+          [0, 69, 0.2],
+          [0.5, 62, 0.2],
+          [0.5, 65, 0.2],
+          [0.5, 69, 0.2],
+          [1.25, 63, 0.2],
+          [1.25, 67, 0.2],
+          [1.25, 70, 0.2],
+          [1.75, 62, 0.4],
+          [1.75, 65, 0.4],
+          [1.75, 69, 0.4],
+          [3, 60, 0.2],
+          [3, 64, 0.2],
+          [3, 67, 0.2],
+          [3.5, 62, 0.4],
+          [3.5, 65, 0.4],
+          [3.5, 69, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A section",
+          "module": "osc",
+          "why": "OSC 2 joins, and drift puts every voice slightly off.\n- OSC 2 LEVEL 10 (0.0 dB): as loud as OSC 1.\n- OSC DRIFT 4 (102): each voice wanders a little, like separate players.\n- VCA LEVEL -2.5 (-7.5 dB): lowered, as chords on two oscillators add up.\n- Listen for: a wide, buzzing chord.",
+          "set": { "vca.level": -2.5, "osc2.level": 10, "ui.page": "poly", "voice.drift": 4 }
+        },
+        {
+          "title": "A bark",
+          "module": "filter",
+          "why": "A fast filter bark.\n- VCF FREQ 4 (549 Hz): dark at rest.\n- VCF ENV 6 (60 %): a big opening.\n- VCF KYBD 5 (50 %): higher chords brighter.\n- VCF envelope A 1 (4 ms), D 4.5 (260 ms), S 4 (40 %): snaps open and falls back.\n- VCA envelope R 2.5 (47 ms): short.\n- Listen for: tight, punchy stabs.",
+          "set": {
+            "env.select": "vcf",
+            "vcf.freq": 4,
+            "vcf.env": 6,
+            "vcf.kybd": 5,
+            "vcfEnv.attack": 1,
+            "vcfEnv.decay": 4.5,
+            "vcfEnv.sustain": 4,
+            "vcaEnv.release": 2.5
+          }
+        },
+        {
+          "title": "A studio",
+          "module": "fx",
+          "why": "A small room.\n- SLOT 1 TYPE RoomRev: a room reverb.\n- Listen for: horns in a studio room.",
+          "set": { "ui.page": "fx", "ui.fxSlot": "1", "ui.fxPart": "a", "fx1.type": "roomrev" }
+        }
+      ],
+      "context": { "vcf.env": "In this sound: how hard the horns bark." },
+      "tweaks": [
+        {
+          "id": "vcf.env",
+          "try": "Move between 4 and 8",
+          "hear": "From mellow horns to a blaring section."
+        },
+        {
+          "id": "voice.drift",
+          "try": "Move between 0 and 8",
+          "hear": "From one tight player to a loose section."
+        }
+      ]
+    },
+    {
+      "id": "conga-brass",
+      "name": "Latin Party Brass",
+      "ref": "In the style of Miami Sound Machine — \"Conga\"",
+      "artist": "Miami Sound Machine",
+      "tags": ["brass", "latin pop", "80s"],
+      "level": 1,
+      "blurb": "Bright, bold, syncopated synth brass for a carnival dance.",
+      "how": "Two sawtooths an octave apart through an open-ish filter with a bright bark, playing a syncopated, carnival riff. A plate reverb gives them shine.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.3],
+          [0, 67, 0.3],
+          [0, 72, 0.3],
+          [0.75, 64, 0.3],
+          [0.75, 67, 0.3],
+          [0.75, 72, 0.3],
+          [1.5, 65, 0.3],
+          [1.5, 69, 0.3],
+          [1.5, 72, 0.3],
+          [2.25, 64, 0.3],
+          [2.25, 67, 0.3],
+          [2.25, 72, 0.3],
+          [3, 62, 0.9],
+          [3, 67, 0.9],
+          [3, 71, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bright",
+          "module": "osc",
+          "why": "OSC 2 an octave up.\n- OSC 2 LEVEL 7 (-14.4 dB): OSC 2 joins.\n- OSC 2 PITCH 12 (+12 st): an octave up.\n- Listen for: a bright chord.",
+          "set": { "osc2.level": 7, "osc2.pitch": 12 }
+        },
+        {
+          "title": "Bold",
+          "module": "filter",
+          "why": "A bright bark.\n- VCF FREQ 5 (1.0 kHz): middling.\n- VCF ENV 5 (50 %): a bark.\n- VCF KYBD 5 (50 %): higher chords brighter.\n- VCF envelope A 1 (4 ms), D 4.8 (330 ms), S 5 (50 %): quick, settling fairly high.\n- VCA envelope R 2.8 (61 ms): short.\n- Listen for: bold, syncopated brass.",
+          "set": {
+            "env.select": "vcf",
+            "vcf.freq": 5,
+            "vcf.env": 5,
+            "vcf.kybd": 5,
+            "vcfEnv.attack": 1,
+            "vcfEnv.decay": 4.8,
+            "vcfEnv.sustain": 5,
+            "vcaEnv.release": 2.8
+          }
+        },
+        {
+          "title": "Shine",
+          "module": "fx",
+          "why": "A plate reverb.\n- SLOT 1 TYPE PlateRev: a plate reverb.\n- MIX 22 %: a little shine.\n- Listen for: shining carnival brass.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "platerev",
+            "fx1.platerev.mix": 22
+          }
+        }
+      ],
+      "context": { "vcf.env": "In this sound: how bold the brass is." },
+      "tweaks": [
+        {
+          "id": "vcf.env",
+          "try": "Move between 3 and 7",
+          "hear": "From soft horns to blazing trumpets."
+        },
+        {
+          "id": "osc2.pitch",
+          "try": "Set to 0",
+          "hear": "OSC 2 in unison: a thicker, darker section."
+        }
+      ]
+    },
+    {
+      "id": "garden-party-brass",
+      "name": "Jazz-Funk Synth Brass",
+      "ref": "In the style of Mezzoforte — \"Garden Party\"",
+      "artist": "Mezzoforte",
+      "tags": ["brass", "jazz-funk", "80s"],
+      "level": 2,
+      "blurb": "A punchy, bright, bending synth-brass riff with a jazz-funk swagger.",
+      "how": "Two sawtooths with a quick bark, and the MOD envelope bending OSC 1 and 2 up into each note through PITCH MOD, give a punchy, swaggering brass that scoops in like a horn player.",
+      "phrase": {
+        "bpm": 116,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.4],
+          [0, 64, 0.4],
+          [0, 67, 0.4],
+          [0.5, 62, 0.4],
+          [0.5, 65, 0.4],
+          [0.5, 69, 0.4],
+          [1, 64, 0.9],
+          [1, 67, 0.9],
+          [1, 71, 0.9],
+          [2.5, 62, 0.4],
+          [2.5, 65, 0.4],
+          [2.5, 69, 0.4],
+          [3, 60, 0.9],
+          [3, 64, 0.9],
+          [3, 67, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A scoop into each note",
+          "module": "osc",
+          "why": "The MOD envelope bends both oscillators for an instant at the start.\n- OSC 2 LEVEL 9 (-4.8 dB): OSC 2 joins.\n- OSC 1 OSC1 PMOD SRC MOD ENV: pitch mod from the MOD envelope.\n- OSC 1 PITCH MOD 0.6 (+0.1 st): a small bend.\n- MOD envelope A 0 (1 ms), D 3.5 (120 ms), S 0 %: a quick dip.\n- VCA LEVEL -2 (-6.6 dB): lowered, as chords on two oscillators add up.\n- Listen for: each chord scooping up into pitch.",
+          "set": {
+            "vca.level": -2,
+            "osc2.level": 9,
+            "ui.page": "osc",
+            "osc1.pmSrc": "modEnv",
+            "osc1.pitchMod": 0.6,
+            "env.select": "mod",
+            "modEnv.attack": 0,
+            "modEnv.decay": 3.5,
+            "modEnv.sustain": 0
+          }
+        },
+        {
+          "title": "Punch",
+          "module": "filter",
+          "why": "A quick bark.\n- VCF FREQ 4.5 (741 Hz): middling.\n- VCF ENV 5.5 (55 %): a bark.\n- VCF KYBD 5 (50 %): higher chords brighter.\n- VCF envelope A 1 (4 ms), D 4.8 (330 ms), S 4 (40 %): quick.\n- VCA envelope R 3 (73 ms): short.\n- Listen for: a punchy, swaggering riff.",
+          "set": {
+            "env.select": "vcf",
+            "vcf.freq": 4.5,
+            "vcf.env": 5.5,
+            "vcf.kybd": 5,
+            "vcfEnv.attack": 1,
+            "vcfEnv.decay": 4.8,
+            "vcfEnv.sustain": 4,
+            "vcaEnv.release": 3
+          }
+        },
+        {
+          "title": "A little space",
+          "module": "fx",
+          "why": "A plate reverb.\n- SLOT 1 TYPE PlateRev: a plate reverb.\n- MIX 18 %: a little space.\n- Listen for: brass in a bright room.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "platerev",
+            "fx1.platerev.mix": 18
+          }
+        }
+      ],
+      "context": { "osc1.pitchMod": "In this sound: how far each chord scoops." },
+      "tweaks": [
+        {
+          "id": "osc1.pitchMod",
+          "try": "Move between 0 and 1.5",
+          "hear": "From a clean attack to a lazy, sliding scoop."
+        },
+        {
+          "id": "modEnv.decay",
+          "try": "Move between 2.5 and 5",
+          "hear": "From a quick flick to a slow bend."
+        }
+      ]
+    },
+    {
+      "id": "gonna-fly-now-fanfare",
+      "name": "Training-Montage Fanfare",
+      "ref": "In the style of Bill Conti — \"Gonna Fly Now\" (Rocky)",
+      "artist": "Bill Conti",
+      "tags": ["brass", "soundtrack", "70s"],
+      "level": 2,
+      "blurb": "A triumphant, rising brass fanfare that makes you want to run up steps.",
+      "how": "Two detuned sawtooths with a brassy filter swell and a long hall reverb make a triumphant fanfare, the call rising in octaves to a held chord.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.4],
+          [0, 69, 0.4],
+          [0.5, 57, 0.4],
+          [0.5, 69, 0.4],
+          [1, 64, 1.9],
+          [1, 76, 1.9],
+          [3, 62, 0.4],
+          [3, 74, 0.4],
+          [3.5, 64, 0.4],
+          [3.5, 76, 0.4],
+          [4, 60, 2.9],
+          [4, 64, 2.9],
+          [4, 67, 2.9],
+          [4, 72, 2.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A section",
+          "module": "osc",
+          "why": "OSC 2 joins, a few cents off.\n- OSC 2 LEVEL 10 (0.0 dB): as loud as OSC 1.\n- OSC DRIFT 3 (77): each voice wanders a little.\n- VCA LEVEL -3 (-8.4 dB): lowered, as chords on two oscillators add up.\n- Listen for: a wide, bold tone.",
+          "set": { "vca.level": -3, "osc2.level": 10, "ui.page": "poly", "voice.drift": 3 }
+        },
+        {
+          "title": "Triumph",
+          "module": "filter",
+          "why": "A brassy swell into each note.\n- VCF FREQ 4 (549 Hz): dark at rest.\n- VCF ENV 6 (60 %): a big opening.\n- VCF KYBD 5 (50 %): higher notes brighter.\n- VCF envelope A 3 (73 ms), D 5.5 (550 ms), S 7 (70 %): a short swell that holds high.\n- VCA envelope R 5 (380 ms): a tail.\n- Listen for: a triumphant, swelling call.",
+          "set": {
+            "env.select": "vcf",
+            "vcf.freq": 4,
+            "vcf.env": 6,
+            "vcf.kybd": 5,
+            "vcfEnv.attack": 3,
+            "vcfEnv.decay": 5.5,
+            "vcfEnv.sustain": 7,
+            "vcaEnv.release": 5
+          }
+        },
+        {
+          "title": "A big hall",
+          "module": "fx",
+          "why": "A hall reverb.\n- SLOT 1 TYPE HallRev: a hall reverb.\n- DECAY 3.2 s: long.\n- MIX 30 %: a big space.\n- Listen for: a fanfare filling a hall.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "hallrev",
+            "fx1.hallrev.dcy": 3.2,
+            "fx1.hallrev.mix": 30
+          }
+        }
+      ],
+      "context": { "vcfEnv.attack": "In this sound: how much the brass swells into each note." },
+      "tweaks": [
+        {
+          "id": "vcfEnv.attack",
+          "try": "Move between 1 and 5",
+          "hear": "From a hard bark to a grand swell."
+        },
+        {
+          "id": "fx1.hallrev.mix",
+          "try": "Move between 10 and 50",
+          "hear": "From a studio to a stadium."
+        }
+      ]
+    },
+    {
+      "id": "batman-brass",
+      "name": "Gothic Superhero Brass",
+      "ref": "In the style of Danny Elfman — \"The Batman Theme\" (Batman)",
+      "artist": "Danny Elfman",
+      "tags": ["brass", "soundtrack", "80s"],
+      "level": 2,
+      "blurb": "Dark, heavy, ominous brass that marches in low minor chords.",
+      "how": "Two sawtooths an octave apart, low, with OSC 2 an octave down, through a dark filter with a slow swell and a big, dark hall, give ominous gothic brass.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 48, 1.4],
+          [0, 55, 1.4],
+          [0, 60, 1.4],
+          [0, 63, 1.4],
+          [1.5, 48, 0.4],
+          [1.5, 55, 0.4],
+          [1.5, 60, 0.4],
+          [1.5, 63, 0.4],
+          [2, 50, 1.9],
+          [2, 56, 1.9],
+          [2, 62, 1.9],
+          [2, 65, 1.9],
+          [4, 51, 1.9],
+          [4, 55, 1.9],
+          [4, 60, 1.9],
+          [4, 63, 1.9],
+          [6, 47, 1.9],
+          [6, 55, 1.9],
+          [6, 59, 1.9],
+          [6, 62, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Low and heavy",
+          "module": "osc",
+          "why": "OSC 2 an octave down.\n- OSC 2 LEVEL 8 (-9.6 dB): OSC 2 joins.\n- OSC 2 PITCH -12 st: an octave down.\n- Listen for: a heavy, dark chord.",
+          "set": { "osc2.level": 8, "osc2.pitch": -12 }
+        },
+        {
+          "title": "Ominous",
+          "module": "filter",
+          "why": "A dark filter with a slow swell.\n- VCF FREQ 3.5 (407 Hz): dark.\n- VCF ENV 5 (50 %): a slow opening.\n- VCF envelope A 4.5 (260 ms), D 5.5 (550 ms), S 6 (60 %): a slow swell.\n- VCA envelope A 2.5 (47 ms), R 5 (380 ms): a soft start and a tail.\n- Listen for: dark, ominous brass.",
+          "set": {
+            "env.select": "vcf",
+            "vcf.freq": 3.5,
+            "vcf.env": 5,
+            "vcfEnv.attack": 4.5,
+            "vcfEnv.decay": 5.5,
+            "vcfEnv.sustain": 6,
+            "vcaEnv.attack": 2.5,
+            "vcaEnv.release": 5
+          }
+        },
+        {
+          "title": "A dark hall",
+          "module": "fx",
+          "why": "A dark hall reverb.\n- SLOT 1 TYPE HallRev: a hall reverb.\n- DECAY 4 (4.0 s): long.\n- MIX 32 %: big.\n- Listen for: gothic brass echoing in a cathedral.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "hallrev",
+            "fx1.hallrev.dcy": 4,
+            "fx1.hallrev.mix": 32
+          }
+        }
+      ],
+      "context": { "vcf.freq": "In this sound: how dark the brass is." },
+      "tweaks": [
+        {
+          "id": "vcf.freq",
+          "try": "Move between 2.5 and 5",
+          "hear": "From a distant rumble to blaring horns."
+        },
+        { "id": "vcfEnv.attack", "try": "Lower to 2", "hear": "A harder, more aggressive attack." }
+      ]
+    },
+    {
+      "id": "singularity-arp",
+      "name": "Melodic Techno Arpeggio",
+      "ref": "In the style of Stephan Bodzin — \"Singularity\"",
+      "artist": "Stephan Bodzin",
+      "tags": ["seq", "melodic techno", "10s"],
+      "level": 2,
+      "blurb": "A dark, driving, hypnotic arpeggio that builds over a held minor chord.",
+      "how": "The arpeggiator runs up and down a minor chord over two octaves. A resonant pluck and a delay give each step a ringing echo, and LFO 2 slowly opens the filter so the arpeggio builds.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 57, 15.8],
+          [0, 60, 15.8],
+          [0, 64, 15.8],
+          [0, 69, 15.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The arpeggiator",
+          "module": "mode",
+          "why": "The arpeggiator, up and down two octaves.\n- ARP ON/OFF on: starts it.\n- MODE UP-DOWN: up and back.\n- OCTAVES 2: two octaves.\n- ARP RATE 4 (122 BPM): the riff’s tempo.\n- Listen for: a running arpeggio.",
+          "set": {
+            "ui.page": "arp",
+            "arp.on": true,
+            "arp.mode": "updown",
+            "arp.octaves": 2,
+            "arp.rate": 4
+          }
+        },
+        {
+          "title": "A resonant pluck",
+          "module": "filter",
+          "why": "A pluck with resonance, slowly opened by LFO 2.\n- VCF FREQ 3.5 (407 Hz): low.\n- VCF RES 5 (50 %): a ring.\n- VCF ENV 5 (50 %): a pluck.\n- VCF LFO 3 (30 %): LFO 2 slowly opens and closes the filter.\n- LFO 2 RATE 1.5 (0.12 Hz): very slow.\n- VCF envelope A 0 (1 ms), D 4 (180 ms), S 1 (10 %): quick.\n- Listen for: the arpeggio building and receding.",
+          "set": {
+            "env.select": "vcf",
+            "vcf.freq": 3.5,
+            "vcf.res": 5,
+            "vcf.env": 5,
+            "vcf.lfo": 3,
+            "lfo2.rate": 1.5,
+            "vcfEnv.attack": 0,
+            "vcfEnv.decay": 4,
+            "vcfEnv.sustain": 1
+          }
+        },
+        {
+          "title": "Echo",
+          "module": "fx",
+          "why": "A delay.\n- SLOT 1 TYPE Delay: the stereo delay.\n- TIME 363 ms: a dotted eighth.\n- MIX 28 %: a clear echo.\n- Listen for: a hypnotic, echoing arpeggio.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "delay",
+            "fx1.delay.tim": 363,
+            "fx1.delay.mix": 28
+          }
+        }
+      ],
+      "context": { "vcf.lfo": "In this sound: how much the arpeggio builds and recedes." },
+      "tweaks": [
+        { "id": "arp.octaves", "try": "Set to 3", "hear": "The arpeggio spans three octaves." },
+        {
+          "id": "vcf.res",
+          "try": "Move between 3 and 7",
+          "hear": "From soft plucks to squealing ones."
+        }
+      ]
+    },
+    {
+      "id": "grey-arp",
+      "name": "Bittersweet Techno Arp",
+      "ref": "In the style of Kölsch — \"Grey\"",
+      "artist": "Kölsch",
+      "tags": ["seq", "melodic techno", "10s"],
+      "level": 2,
+      "blurb": "A soft, bittersweet, rolling arpeggio over a warm chord.",
+      "how": "The arpeggiator plays the chord in the order the keys went down, so the riff presses it from the middle out. A soft square, a gentle pluck and a reverb make it bittersweet.",
+      "phrase": {
+        "bpm": 122,
+        "loop": true,
+        "steps": [
+          [0, 64, 15.8],
+          [0.1, 69, 15.7],
+          [0.2, 60, 15.6],
+          [0.3, 72, 15.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "In the order played",
+          "module": "mode",
+          "why": "The arpeggiator in AS PLAYED order.\n- ARP ON/OFF on: starts it.\n- MODE AS PLAYED: the order the keys went down.\n- OCTAVES 2: two octaves.\n- ARP RATE 3.9 (119 BPM): the riff’s tempo.\n- Listen for: a rolling pattern starting from the middle.",
+          "set": {
+            "ui.page": "arp",
+            "arp.on": true,
+            "arp.mode": "played",
+            "arp.octaves": 2,
+            "arp.rate": 3.9
+          }
+        },
+        {
+          "title": "Soft",
+          "module": "filter",
+          "why": "A soft square and a gentle pluck.\n- OSC 1 Sawtooth off, Square on: the square.\n- VCF FREQ 5 (1.0 kHz): soft.\n- VCF ENV 3 (30 %): a gentle pluck.\n- VCF envelope A 0 (1 ms), D 4.5 (260 ms), S 3 (30 %): quick.\n- Listen for: soft, rolling notes.",
+          "set": {
+            "osc1.saw": false,
+            "osc1.pulse": true,
+            "env.select": "vcf",
+            "vcf.freq": 5,
+            "vcf.env": 3,
+            "vcfEnv.attack": 0,
+            "vcfEnv.decay": 4.5,
+            "vcfEnv.sustain": 3
+          }
+        },
+        {
+          "title": "Bittersweet",
+          "module": "fx",
+          "why": "A hall reverb.\n- SLOT 1 TYPE HallRev: a hall reverb.\n- MIX 28 %: a soft wash.\n- Listen for: a bittersweet, rolling arpeggio.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "hallrev",
+            "fx1.hallrev.mix": 28
+          }
+        }
+      ],
+      "context": { "arp.mode": "In this sound: AS PLAYED: the order the keys went down." },
+      "tweaks": [
+        {
+          "id": "arp.mode",
+          "try": "Set to UP",
+          "hear": "The same chord, now climbing from the bottom."
+        },
+        { "id": "arp.gate", "try": "Lower to 4", "hear": "Shorter, more staccato notes." }
+      ]
+    },
+    {
+      "id": "drone-logic-arp",
+      "name": "Acidic Techno Arp",
+      "ref": "In the style of Daniel Avery — \"Drone Logic\"",
+      "artist": "Daniel Avery",
+      "tags": ["seq", "techno", "10s"],
+      "level": 3,
+      "blurb": "A gritty, squelching, random arpeggio that churns in a dark warehouse.",
+      "how": "The arpeggiator in RANDOM order churns through a held chord. A resonant, plucked sawtooth with the filter envelope inverted, so it closes on each note, squelches oddly, and the FairComp in slot 1 squeezes it hard.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 45, 15.8],
+          [0, 48, 15.8],
+          [0, 52, 15.8],
+          [0, 57, 15.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Random churn",
+          "module": "mode",
+          "why": "The arpeggiator in RANDOM order.\n- ARP ON/OFF on: starts it.\n- MODE RANDOM: the next note by chance.\n- OCTAVES 2: two octaves.\n- ARP RATE 4 (122 BPM): the riff’s tempo.\n- Listen for: a churning stream.",
+          "set": {
+            "ui.page": "arp",
+            "arp.on": true,
+            "arp.mode": "random",
+            "arp.octaves": 2,
+            "arp.rate": 4
+          }
+        },
+        {
+          "title": "An odd squelch",
+          "module": "filter",
+          "why": "The filter envelope inverted, with resonance.\n- VCF FREQ 5.5 (1.3 kHz): middling.\n- VCF RES 6 (60 %): a strong peak.\n- VCF ENV 5 (50 %): a deep move.\n- VCF INVERT on: the envelope pushes the filter down.\n- VCF envelope A 0 (1 ms), D 4 (180 ms), S 0 %: quick.\n- Listen for: an odd, inside-out squelch.",
+          "set": {
+            "env.select": "vcf",
+            "vcf.freq": 5.5,
+            "vcf.res": 6,
+            "vcf.env": 5,
+            "vcf.invert": true,
+            "vcfEnv.attack": 0,
+            "vcfEnv.decay": 4,
+            "vcfEnv.sustain": 0
+          }
+        },
+        {
+          "title": "Squeeze",
+          "module": "fx",
+          "why": "A compressor squeezes the churn.\n- SLOT 1 TYPE FairComp: the FairComp compressor.\n- Listen for: a gritty, pumping arpeggio.",
+          "set": { "ui.page": "fx", "ui.fxSlot": "1", "ui.fxPart": "a", "fx1.type": "faircomp" }
+        }
+      ],
+      "context": {
+        "vcf.invert": "In this sound: turns the envelope upside down: each note closes the filter."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.invert",
+          "try": "Switch off",
+          "hear": "A normal pluck: each note opens the filter."
+        },
+        {
+          "id": "vcf.res",
+          "try": "Move between 3 and 8",
+          "hear": "From a dull churn to a squealing one."
+        }
+      ]
+    },
+    {
+      "id": "brightest-lights-arp",
+      "name": "Progressive House Pluck Arp",
+      "ref": "In the style of Lane 8 — \"Brightest Lights\"",
+      "artist": "Lane 8",
+      "tags": ["seq", "progressive house", "10s"],
+      "level": 2,
+      "blurb": "A soft, warm, rippling arpeggio that glows over a deep groove.",
+      "how": "The arpeggiator climbs a warm chord over three octaves. A soft pluck from a sawtooth and a square, with the Dimensional Chorus and a ping-pong delay, makes it ripple and glow.",
+      "phrase": {
+        "bpm": 122,
+        "loop": true,
+        "steps": [
+          [0, 54, 7.8],
+          [0, 57, 7.8],
+          [0, 61, 7.8],
+          [0, 64, 7.8],
+          [8, 50, 7.8],
+          [8, 54, 7.8],
+          [8, 57, 7.8],
+          [8, 61, 7.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Climb",
+          "module": "mode",
+          "why": "The arpeggiator, up three octaves.\n- ARP ON/OFF on: starts it.\n- MODE UP: upwards.\n- OCTAVES 3: three octaves.\n- ARP RATE 3.9 (119 BPM): the riff’s tempo.\n- Listen for: a climbing ripple.",
+          "set": {
+            "ui.page": "arp",
+            "arp.on": true,
+            "arp.mode": "up",
+            "arp.octaves": 3,
+            "arp.rate": 3.9
+          }
+        },
+        {
+          "title": "Soft pluck",
+          "module": "filter",
+          "why": "A sawtooth and a square, softly plucked.\n- OSC 1 Square on: the square joins the sawtooth.\n- VCF FREQ 4.8 (887 Hz): soft.\n- VCF ENV 3.5 (35 %): a gentle pluck.\n- VCF envelope A 0 (1 ms), D 4.5 (260 ms), S 2 (20 %): quick.\n- Listen for: soft, warm notes.",
+          "set": {
+            "osc1.pulse": true,
+            "env.select": "vcf",
+            "vcf.freq": 4.8,
+            "vcf.env": 3.5,
+            "vcfEnv.attack": 0,
+            "vcfEnv.decay": 4.5,
+            "vcfEnv.sustain": 2
+          }
+        },
+        {
+          "title": "Glow",
+          "module": "fx",
+          "why": "The Dimensional Chorus into a ping-pong delay.\n- SLOT 1 TYPE Chorus-D: the Dimensional Chorus.\n- SLOT 2 TYPE Delay: the stereo delay.\n- TIME 369 ms: a dotted eighth.\n- MIX 25 %: a soft echo.\n- Listen for: a warm, rippling, glowing arpeggio.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "2",
+            "ui.fxPart": "a",
+            "fx1.type": "chorus-d",
+            "fx2.type": "delay",
+            "fx2.delay.tim": 369,
+            "fx2.delay.mix": 25
+          }
+        }
+      ],
+      "context": { "arp.octaves": "In this sound: how far the ripple climbs." },
+      "tweaks": [
+        { "id": "arp.octaves", "try": "Set to 1", "hear": "A tight ripple in one octave." },
+        {
+          "id": "fx2.delay.mix",
+          "try": "Move between 0 and 45",
+          "hear": "From dry to a cascade of echoes."
+        }
+      ]
+    },
+    {
+      "id": "basic-instinct-strings",
+      "name": "Seductive Thriller Strings",
+      "ref": "In the style of Jerry Goldsmith — Basic Instinct",
+      "artist": "Jerry Goldsmith",
+      "tags": ["strings", "soundtrack", "90s"],
+      "level": 2,
+      "blurb": "Dark, sensual, slowly swelling strings full of tension.",
+      "how": "Two sawtooths, OSC DRIFT making every voice wander like separate players, through a soft filter with slow envelopes and a hall reverb, swell with dark tension.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 50, 3.8],
+          [0, 57, 3.8],
+          [0, 62, 3.8],
+          [0, 65, 3.8],
+          [4, 49, 3.8],
+          [4, 56, 3.8],
+          [4, 61, 3.8],
+          [4, 64, 3.8],
+          [8, 48, 3.8],
+          [8, 55, 3.8],
+          [8, 60, 3.8],
+          [8, 63, 3.8],
+          [12, 49, 3.8],
+          [12, 56, 3.8],
+          [12, 61, 3.8],
+          [12, 65, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Separate players",
+          "module": "osc",
+          "why": "OSC 2 joins, and drift makes each voice its own player.\n- OSC 2 LEVEL 8 (-9.6 dB): OSC 2 joins.\n- OSC DRIFT 5 (128): each voice wanders a little.\n- Listen for: a full, slightly moving section.",
+          "set": { "osc2.level": 8, "ui.page": "poly", "voice.drift": 5 }
+        },
+        {
+          "title": "Tension",
+          "module": "env",
+          "why": "A soft filter and slow envelopes.\n- VCF FREQ 5.5 (1.3 kHz): soft.\n- VCA envelope A 6.5 (1.2 s), R 6.5 (1.2 s): a slow swell and a long tail.\n- Listen for: dark, swelling strings.",
+          "set": {
+            "vcf.freq": 5.5,
+            "env.select": "vca",
+            "vcaEnv.attack": 6.5,
+            "vcaEnv.release": 6.5
+          }
+        },
+        {
+          "title": "A dark hall",
+          "module": "fx",
+          "why": "A hall reverb.\n- SLOT 1 TYPE HallRev: a hall reverb.\n- MIX 30 %: a big space.\n- Listen for: tense strings in a dark hall.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "hallrev",
+            "fx1.hallrev.mix": 30
+          }
+        }
+      ],
+      "context": { "voice.drift": "In this sound: how much each player wanders." },
+      "tweaks": [
+        {
+          "id": "voice.drift",
+          "try": "Move between 0 and 9",
+          "hear": "From a tight, synthetic section to a loose, human one."
+        },
+        {
+          "id": "vcaEnv.attack",
+          "try": "Move between 5 and 8",
+          "hear": "From a slow bow to a swell you hardly hear begin."
+        }
+      ]
+    },
+    {
+      "id": "firestone-pluck",
+      "name": "Tropical House Pluck",
+      "ref": "In the style of Kygo — \"Firestone\"",
+      "artist": "Kygo",
+      "tags": ["pluck", "tropical house", "10s"],
+      "level": 2,
+      "blurb": "A soft, mellow, marimba-like pluck that bounces in a sunny melody.",
+      "how": "A triangle-like tone, made by OSC 1’s square with its edges softened by a low filter, plucked short with a curved decay, gives a mellow marimba-like pluck, and a plate reverb adds sun.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.4],
+          [0.5, 76, 0.4],
+          [1, 79, 0.4],
+          [1.5, 76, 0.4],
+          [2, 74, 0.4],
+          [2.5, 72, 0.4],
+          [3, 69, 0.4],
+          [3.5, 72, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A soft tone",
+          "module": "osc",
+          "why": "OSC 1’s square, softened.\n- OSC 1 Sawtooth off, Square on: the square.\n- VCF FREQ 4.5 (741 Hz): low, rounding it off.\n- VCF KYBD 8 (80 %): high notes stay clear.\n- Listen for: a soft, round tone.",
+          "set": { "osc1.saw": false, "osc1.pulse": true, "vcf.freq": 4.5, "vcf.kybd": 8 }
+        },
+        {
+          "title": "A mellow pluck",
+          "module": "env",
+          "why": "A short, curved decay.\n- VCA envelope D 5 (380 ms), S 0 %: a quick fade.\n- CURVES on: shows the curve faders.\n- VCA envelope D 1.5 (fast start): falls fast at first, like a mallet.\n- Listen for: a mellow, marimba-like pluck.",
+          "set": {
+            "env.select": "vca",
+            "vcaEnv.decay": 5,
+            "vcaEnv.sustain": 0,
+            "env.curves": true,
+            "vcaEnv.decayCurve": 1.5
+          }
+        },
+        {
+          "title": "Sun",
+          "module": "fx",
+          "why": "A plate reverb.\n- SLOT 1 TYPE PlateRev: a plate reverb.\n- MIX 28 %: a sunny shine.\n- Listen for: a sunny, bouncing melody.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "platerev",
+            "fx1.platerev.mix": 28
+          }
+        }
+      ],
+      "context": { "vcaEnv.decayCurve": "In this sound: how mallet-like the pluck is." },
+      "tweaks": [
+        {
+          "id": "vcaEnv.decay",
+          "try": "Move between 4 and 6",
+          "hear": "From a dry woodblock to a ringing marimba."
+        },
+        {
+          "id": "vcf.freq",
+          "try": "Move between 3.5 and 6",
+          "hear": "From a soft mallet to a bright one."
+        }
+      ]
+    },
+    {
+      "id": "gated-snare",
+      "name": "Gated-Reverb Snare",
+      "ref": "In the style of 1980s gated-reverb snares",
+      "artist": "Gated reverb drums",
+      "tags": ["perc", "pop rock", "80s"],
+      "level": 2,
+      "blurb": "A huge, explosive snare whose reverb cuts off dead.",
+      "how": "The 80s snare is a burst of noise into a big reverb that a noise gate chops short. Loud noise over OSC 1’s sawtooth, a short envelope, and the GatedRev in slot 1 give the explosion and the cut.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [1, 60, 0.2],
+          [3, 60, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A burst of noise",
+          "module": "osc",
+          "why": "Noise over the sawtooth, which gives the snare its body.\n- NOISE LEVEL 10 (0.0 dB): full.\n- VCA LEVEL 5 (+6.0 dB): raised, as the reverb takes some of the level.\n- VCA envelope D 5 (380 ms), S 0 %: a short burst.\n- Listen for: a short crack of noise and tone.",
+          "set": {
+            "noise.level": 10,
+            "vca.level": 5,
+            "env.select": "vca",
+            "vcaEnv.decay": 5,
+            "vcaEnv.sustain": 0
+          }
+        },
+        {
+          "title": "Explode and cut",
+          "module": "fx",
+          "why": "A gated reverb.\n- SLOT 1 TYPE GatedRev: the gated reverb.\n- DECAY 380 ms: how long before the gate shuts.\n- MIX 45 %: a big burst.\n- Listen for: a huge snare that stops dead.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "gatedrev",
+            "fx1.gatedrev.dcy": 380,
+            "fx1.gatedrev.mix": 45
+          }
+        }
+      ],
+      "context": {
+        "fx1.gatedrev.dcy": "In this sound: how long the explosion lasts before the gate cuts it."
+      },
+      "tweaks": [
+        {
+          "id": "fx1.gatedrev.dcy",
+          "try": "Move between 200 and 700",
+          "hear": "From a tight crack to a long, booming blast."
+        },
+        { "id": "vcf.freq", "try": "Lower to 6", "hear": "A darker, tom-like snare." }
+      ]
+    },
+    {
+      "id": "bitcrush-glitch",
+      "name": "Bit-Crushed Echo Blips",
+      "ref": "In the style of 2000s glitch electronica",
+      "artist": "Glitch",
+      "tags": ["fx", "glitch", "00s"],
+      "level": 3,
+      "blurb": "Tiny blips shattered into crunchy, stuttering, downsampled echoes.",
+      "how": "Short random blips from the arpeggiator go into the Decimator delay, which downsamples and bit-reduces each echo so it crumbles, and feeds them back so they stutter on.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 72, 7.8],
+          [0, 79, 7.8],
+          [0, 84, 7.8],
+          [0, 91, 7.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Random blips",
+          "module": "mode",
+          "why": "The arpeggiator in RANDOM order, very short.\n- ARP ON/OFF on: starts it.\n- MODE RANDOM: the next note by chance.\n- ARP GATE TIME 1.5 (15 %): very short notes.\n- ARP RATE 3.9 (119 BPM): the riff’s tempo.\n- Listen for: tiny, random blips.",
+          "set": {
+            "ui.page": "arp",
+            "arp.on": true,
+            "arp.mode": "random",
+            "arp.gate": 1.5,
+            "arp.rate": 3.9
+          }
+        },
+        {
+          "title": "Crumble",
+          "module": "fx",
+          "why": "The Decimator delay crushes each echo.\n- SLOT 1 TYPE DecimDelay: the Decimator delay.\n- TIME 125 ms: a sixteenth.\n- MIX 55 %: loud.\n- DOWNSAMPLE 70 %: heavily downsampled.\n- BIT-REDUCE 5 bit: crunchy.\n- Listen for: blips shattering into crunchy echoes.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "1",
+            "ui.fxPart": "a",
+            "fx1.type": "decimdelay",
+            "fx1.decimdelay.tim": 125,
+            "fx1.decimdelay.mix": 55,
+            "fx1.decimdelay.dsm": 70,
+            "fx1.decimdelay.brc": 5
+          }
+        },
+        {
+          "title": "Stutter on",
+          "module": "fx",
+          "why": "Feedback makes the echoes stutter on.\n- FEED L 60 %, FEED R 60 %: on page 8-12, a lot of feedback.\n- Listen for: echoes stuttering and decaying.",
+          "set": { "ui.fxPart": "b", "fx1.decimdelay.fbl": 60, "fx1.decimdelay.fbr": 60 }
+        }
+      ],
+      "context": { "fx1.decimdelay.brc": "In this sound: how crunchy the echoes are." },
+      "tweaks": [
+        {
+          "id": "fx1.decimdelay.dsm",
+          "try": "Move between 20 and 95",
+          "hear": "From a gritty echo to a broken, aliasing one."
+        },
+        {
+          "id": "fx1.decimdelay.fbl",
+          "try": "Move between 20 and 85",
+          "hear": "From a few echoes to an endless stutter."
+        }
+      ]
+    },
+    {
+      "id": "canyon-flute",
+      "name": "Canyon Cedar Flute",
+      "ref": "In the style of R. Carlos Nakai — Canyon Trilogy",
+      "artist": "R. Carlos Nakai",
+      "tags": ["wind", "native american flute", "80s"],
+      "level": 2,
+      "blurb": "A breathy, haunting wooden flute that echoes across a canyon.",
+      "how": "The Native American flute is breathy and haunting. A triangle-like tone with noise for breath, a slow attack and a late vibrato from LFO 1, and a long delay into an ambient reverb echo it across a canyon.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 69, 1.9],
+          [2, 72, 0.9],
+          [3, 74, 0.9],
+          [4, 76, 2.9],
+          [7, 74, 0.45],
+          [7.5, 72, 0.45],
+          [8, 69, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Wood and breath",
+          "module": "osc",
+          "why": "A soft tone and breath, one note at a time.\n- POLYPHONY MONO: one note, one voice.\n- OSC 1 Sawtooth off, Square on: the square, softened below.\n- NOISE LEVEL 6 (-19.2 dB): breath.\n- VCF FREQ 4.5 (741 Hz): soft.\n- VCF KYBD 8 (80 %): the filter follows the melody.\n- VCA envelope A 4 (180 ms): a slow, breathy start.\n- Listen for: a breathy, hollow flute.",
+          "set": {
+            "ui.page": "poly",
+            "voice.mode": "mono",
+            "osc1.saw": false,
+            "osc1.pulse": true,
+            "noise.level": 6,
+            "vcf.freq": 4.5,
+            "vcf.kybd": 8,
+            "env.select": "vca",
+            "vcaEnv.attack": 4
+          }
+        },
+        {
+          "title": "A late vibrato",
+          "module": "lfo",
+          "why": "LFO 1 adds a vibrato that starts late.\n- OSC 1 PITCH MOD 0.6 (+0.1 st): a little vibrato.\n- LFO 1 RATE 4.5 (1.13 Hz): a vibrato speed.\n- LFO 1 DELAY TIME 4 (1.1 s): the vibrato starts late.\n- Listen for: long notes beginning to waver.",
+          "set": { "osc1.pitchMod": 0.6, "lfo1.rate": 4.5, "lfo1.delay": 4 }
+        },
+        {
+          "title": "The canyon",
+          "module": "fx",
+          "why": "A delay into an ambient reverb.\n- SLOT 1 TYPE Delay: the stereo delay.\n- TIME 750 ms: a long echo.\n- MIX 25 %: a distant echo.\n- SLOT 2 TYPE AmbVerb: an ambient reverb.\n- DECAY 5 (5.0 s): long.\n- MIX 35 %: a wide space.\n- Listen for: a flute echoing across a canyon.",
+          "set": {
+            "ui.page": "fx",
+            "ui.fxSlot": "2",
+            "ui.fxPart": "a",
+            "fx1.type": "delay",
+            "fx1.delay.tim": 750,
+            "fx1.delay.mix": 25,
+            "fx2.type": "ambverb",
+            "fx2.ambverb.dcy": 5,
+            "fx2.ambverb.mix": 35
+          }
+        }
+      ],
+      "context": { "noise.level": "In this sound: how breathy the flute is." },
+      "tweaks": [
+        {
+          "id": "noise.level",
+          "try": "Move between 3 and 8",
+          "hear": "From a clear flute to mostly breath."
+        },
+        {
+          "id": "fx1.delay.mix",
+          "try": "Move between 0 and 45",
+          "hear": "From a dry flute to a canyon of echoes."
+        }
+      ]
     }
   ]
 }

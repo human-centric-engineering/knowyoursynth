@@ -224,13 +224,13 @@ unusual-notes file.
 | Behringer Model 15       | `model-15`     |       37 |    48 |     12 | dsp-core                     | p1        | Has a manual extract                                            |
 | Behringer CAT            | `cat`          |       46 |    13 |     25 | dsp-core, paraphonic         | p2        | Has a manual extract                                            |
 | Behringer 2-XM           | `2-xm`         |       67 |    32 |     38 | dsp-core, poly               | p2        | Has a manual extract                                            |
-| Behringer Poly D         | `poly-d`       |       64 |     1 |     37 | dsp-core, paraphonic         | p2        | Has a manual extract                                            |
-| Behringer PRO-800        | `pro-800`      |       43 |     4 |     27 | dsp-core, poly               | p2        | Has a manual extract                                            |
-| Behringer UB-Xa D        | `ub-xa-d`      |       51 |     0 |     56 | dsp-core, poly               | p2        |                                                                 |
+| Behringer Poly D         | `poly-d`       |       64 |     1 |    150 | dsp-core, paraphonic         | p2        | Has a manual extract                                            |
+| Behringer PRO-800        | `pro-800`      |       43 |     4 |    150 | dsp-core, poly               | p2        | Has a manual extract                                            |
+| Behringer UB-Xa D        | `ub-xa-d`      |       51 |     0 |    150 | dsp-core, poly               | p2        |                                                                 |
 | Roland Jupiter-4         | `jupiter-4`    |       46 |     0 |     19 | dsp-core, poly               | p2        | Long keyboard: the long view                                    |
 | Roland Jupiter-6         | `jupiter-6`    |       70 |     0 |     18 | dsp-core, poly               | p2        | Long keyboard                                                   |
 | Roland Jupiter-8         | `jupiter-8`    |       61 |     0 |     20 | dsp-core, poly               | p2        | Long keyboard                                                   |
-| Behringer DeepMind 12D   | `deepmind-12d` |    1,568 |     0 |    122 | dsp-core, poly, plus `dm-fx` | p3        | 1,362 `fmt` functions; 1.3 MB serialised; its own effects table |
+| Behringer DeepMind 12D   | `deepmind-12d` |    1,568 |     0 |    150 | dsp-core, poly, plus `dm-fx` | p3        | 1,362 `fmt` functions; 1.3 MB serialised; its own effects table |
 | Behringer System 15      | `system-15`    |       63 |   158 |     13 | moog-core                    | p4        | Built from `moog900/modules.js`                                 |
 | Behringer System 35      | `system-35`    |       98 |   232 |      9 | moog-core                    | p4        |                                                                 |
 | Behringer System 55      | `system-55`    |      183 |   352 |     11 | moog-core                    | p4        |                                                                 |
