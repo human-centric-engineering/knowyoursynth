@@ -118,6 +118,58 @@
     {
       "sound": "jupiter-4/j4-qawwali-harmonium",
       "reason": "In the style of Nusrat Fateh Ali Khan: it names no work, and the batch’s “Mustt Mustt: drone and harmonium line” is another kind of part than its held chords, so the chords are the lesson’s own."
+    },
+    {
+      "sound": "grandmother/gm-muted-trumpet",
+      "reason": "The batch has the work’s bass line (“So What: the bass call”), not the trumpet line this sound plays; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "grandmother/gm-green-sine-swell",
+      "reason": "Names “Green”, which no pattern in this batch has yet; the tones are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-lid-fifth-drone",
+      "reason": "The batch’s “Requiem for Dying Mothers: a slow string line” is another part of the work; this sound holds one open fifth under it, a drone that is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-pearl-bells",
+      "reason": "The batch has the work’s held chords (“The Pearl: chords for the falling notes”), not the single line this sound plays; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-ocean-noise-wash",
+      "reason": "The sound is an effect made by the patch from noise or modulation, not a part with notes, so there is nothing to transcribe."
+    },
+    {
+      "sound": "grandmother/gm-prelude-in-c",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are Bach’s, held as the prelude’s harmony."
+    },
+    {
+      "sound": "grandmother/gm-daylight-strings",
+      "reason": "Names “On the Nature of Daylight”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-orinoco-pad",
+      "reason": "The batch has the work’s chords (“Orinoco Flow: the chords, held”), and this pad plays one held line; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-novelty-waves-seq",
+      "reason": "Names “Novelty Waves”, which no pattern in this batch has yet; the sequence is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-orinoco-pluck",
+      "reason": "The batch has the work’s chords (“Orinoco Flow: the chords, held”, “Orinoco Flow: the chords, held, an octave up”), not the pizzicato line this sound plays; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-sacrificial-code",
+      "reason": "The batch’s “The Sacrificial Code: slow organ chords” hold three notes, and this sound plays two voices; its two held lines are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "cat/cat-spain-lead",
+      "reason": "Names “Spain”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "cat/cat-doom-drone",
+      "reason": "Names “Aghartha”, which no pattern in this batch has yet; the drone is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -1362,7 +1414,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/sugar-plum-celesta", "super-gemini/sg-celesta", "mantis/mantis-celesta"],
+      "sounds": [
+        "model-d/sugar-plum-celesta",
+        "super-gemini/sg-celesta",
+        "mantis/mantis-celesta",
+        "grandmother/gm-sugar-plum-celesta"
+      ],
       "research": {
         "work": "P. I. Tchaikovsky, “Dance of the Sugar Plum Fairy”, The Nutcracker, 1892",
         "part": "The celesta’s first phrase, four bars of 2/4: G E G F♯, D♯ E and three Ds, three C♯s, three Cs, then B E C E B.",
@@ -1375,7 +1432,7 @@
             "url": "https://bitmidi.com/uploads/37483.mid"
           }
         ],
-        "notes": "From the file’s celesta track, bars 6–9: the top note of its chords, which is the tune, two octaves down to sit where the sounds’ riffs play it. The file voices the celesta in three- and four-note chords; the tune alone suits both sounds. The file plays the notes short; the pattern keeps their written values. The tempo is the file’s, about 60. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the file’s celesta track, bars 6–9: the top note of its chords, which is the tune, two octaves down to sit where the sounds’ riffs play it. The file voices the celesta in three- and four-note chords; the tune alone suits the sounds. The file plays the notes short; the pattern keeps their written values. The tempo is the file’s, about 60. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -7558,6 +7615,614 @@
       }
     },
     {
+      "key": "researched:lyle-mays/are-you-going-with-me-melody-high",
+      "name": "Are You Going with Me?: the melody, an octave up",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Lyle Mays"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 120,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 75,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 77,
+                    "gate": 7.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 78,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 26.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 77,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 75,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 32.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 32.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["cat/cat-are-you-going-with-me"],
+      "research": {
+        "work": "Pat Metheny Group, “Are You Going with Me?”, Offramp, 1982",
+        "part": "The melody’s first eight bars: C D E♭ F climbing to a long G, falling F E♭ to a long C, then B♭: the same part an octave up.",
+        "originalKey": "C minor",
+        "originalBpm": 120,
+        "leads": [
+          {
+            "citation": "Pat Metheny Group, “Are You Going with Me?”, fan MIDI file on BitMIDI (metheny-are-you-going-with-me.mid, thirteen unnamed tracks)",
+            "checkedAt": "2026-11-02",
+            "url": "https://bitmidi.com/uploads/73674.mid"
+          }
+        ],
+        "notes": "This copy is moved an octave up from researched:lyle-mays/are-you-going-with-me-melody, whose notes give the research. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:astor-piazzolla/libertango-theme",
       "name": "Libertango: the theme",
       "role": "lead_line",
@@ -9565,7 +10230,8 @@
         "take-5/t5-mr-lawrence-bell",
         "malevolent/mal-mr-lawrence-bell",
         "donner-b1/b1-sakamoto",
-        "jupiter-6/jp6-mr-lawrence-bells"
+        "jupiter-6/jp6-mr-lawrence-bells",
+        "grandmother/gm-merry-christmas-bells"
       ],
       "research": {
         "work": "Ryuichi Sakamoto, “Merry Christmas Mr. Lawrence”, Merry Christmas Mr. Lawrence, 1983",
@@ -11694,7 +12360,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/satchidananda-harp"],
+      "sounds": ["model-d/satchidananda-harp", "cat/cat-satchidananda-harp"],
       "research": {
         "work": "Alice Coltrane, “Journey in Satchidananda”, Journey in Satchidananda, 1971",
         "part": "A cascade up through C with a flat seventh to a held G, and back down to C.",
@@ -13400,7 +14066,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/duduk-lament"],
+      "sounds": ["model-d/duduk-lament", "2-xm/xm-duduk"],
       "research": {
         "work": "Djivan Gasparyan, “I Will Not Be Sad in This World”, 1983",
         "part": "A slow D minor line up to A and back to a long D, four bars.",
@@ -13759,6 +14425,184 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Nothing by Radigue was found on Songsterr or BitMIDI; her works are tape, not scores. The sound climbs its overtones by itself over a held key, so it gets held notes. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:eliane-radigue/kyema-drone-low",
+      "name": "Kyema: a drone and its overtones, an octave down",
+      "role": "held",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Éliane Radigue"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 60,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 33,
+                    "gate": 16.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 16.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["grandmother/gm-gated-drone"],
+      "research": {
+        "work": "Éliane Radigue, “Kyema”, Trilogie de la Mort, 1988",
+        "part": "A low A held for two bars, then a G: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave down from researched:eliane-radigue/kyema-drone, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -16017,7 +16861,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/fusion-electric-violin"],
+      "sounds": ["model-d/fusion-electric-violin", "cat/cat-enigmatic-ocean"],
       "research": {
         "work": "Jean-Luc Ponty, “Enigmatic Ocean”, Enigmatic Ocean, 1977",
         "part": "A singing line up to A and back to E, then up to C and down to G.",
@@ -16504,14 +17348,14 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/taiko-drum"],
+      "sounds": ["neutron/taiko-drum", "2-xm/xm-taiko"],
       "research": {
         "work": "Kodo, “O-daiko”",
         "part": "Two bars: big strokes on one and three, the last bar ending on a lower stroke.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
-        "notes": "Nothing for Kodo’s o-daiko pieces was found on Songsterr, BitMIDI or the Mutopia Project. The drum goes on the sound at its own pitch. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "Nothing for Kodo’s o-daiko pieces was found on Songsterr, BitMIDI or the Mutopia Project. The drum goes on each sound at its own pitch. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -16677,7 +17521,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/just-intonation-drone"],
+      "sounds": ["model-d/just-intonation-drone", "cat/cat-dream-house-drone"],
       "research": {
         "work": "La Monte Young, the Dream House drones",
         "part": "One G held for four bars; the sound tunes its fifth and octave above.",
@@ -17276,6 +18120,239 @@
       }
     },
     {
+      "key": "researched:leroy-anderson/plink-plank-plunk-line-low",
+      "name": "Plink, Plank, Plunk!: a plucked line, an octave down",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Leroy Anderson"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 120,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["grandmother/gm-plink-pizzicato"],
+      "research": {
+        "work": "Leroy Anderson, “Plink, Plank, Plunk!”, 1951",
+        "part": "Plucked eighths up a C chord to G and down, then up to E and home to C: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave down from researched:leroy-anderson/plink-plank-plunk-line, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:max-richter/sleep-melody",
       "name": "Sleep: a slow melody over the drone",
       "role": "ambient",
@@ -17654,6 +18731,190 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Nothing for Through the Looking Glass was found on Songsterr, BitMIDI or the Mutopia Project. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:midori-takada/looking-glass-pattern-low",
+      "name": "Through the Looking Glass: a repeating marimba figure, an octave down",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Midori Takada"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 108,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["cat/cat-looking-glass-marimba"],
+      "research": {
+        "work": "Midori Takada, Through the Looking Glass, 1983",
+        "part": "A figure of threes against the bar: E G B twice and C B, then D G A twice and B A: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave down from researched:midori-takada/looking-glass-pattern, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -18877,7 +20138,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/turangalila-ondes", "donner-b1/b1-ondes"],
+      "sounds": [
+        "neutron/turangalila-ondes",
+        "donner-b1/b1-ondes",
+        "grandmother/gm-ondes-turangalila"
+      ],
       "research": {
         "work": "Olivier Messiaen, Turangalîla-Symphonie, 1948",
         "part": "A slow, swooping line from G up to D and down to E.",
@@ -19233,7 +20498,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["jupiter-6/jp6-deep-listening-drone"],
+      "sounds": ["jupiter-6/jp6-deep-listening-drone", "grandmother/gm-deep-listening"],
       "research": {
         "work": "Pauline Oliveros, Deep Listening, 1989",
         "part": "An E held for two bars, then a B, each left to bloom: the same part an octave down.",
@@ -20941,7 +22206,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["b2600/roach-swaying-pad", "malevolent/mal-roach-swell"],
+      "sounds": [
+        "b2600/roach-swaying-pad",
+        "malevolent/mal-roach-swell",
+        "cat/cat-structures-silence"
+      ],
       "research": {
         "work": "Steve Roach, Structures from Silence, 1984",
         "part": "A C held for two bars, then an F; the sound sways its fifth itself.",
@@ -21642,6 +22911,214 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Nothing for Possible Musics was found on Songsterr, BitMIDI or the Mutopia Project. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:jon-hassell/fourth-world-line-low",
+      "name": "Fourth World: a slow modal horn line, an octave down",
+      "role": "ambient",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Jon Hassell"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 70,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 6.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["cat/cat-fourth-world"],
+      "research": {
+        "work": "Jon Hassell, Fourth World, Vol. 1: Possible Musics, 1980",
+        "part": "A slow line around D, up to G and down to C: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave down from researched:jon-hassell/fourth-world-line, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -22731,7 +24208,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["tb-303/tb-banjo-roll"],
+      "sounds": ["tb-303/tb-banjo-roll", "cat/cat-banjo-roll"],
       "research": {
         "work": "Flatt & Scruggs, “Foggy Mountain Breakdown”, 1949",
         "part": "The banjo’s first eight bars: the rolls on G with the C♯ to D slides, the drop to E minor, and the forward rolls back to G: the same part an octave down, where the TB-303’s “Banjo Roll” plays.",
@@ -22744,7 +24221,7 @@
             "url": "https://www.songsterr.com/a/wsa/earl-scruggs-foggy-mountain-breakdown-tab-s33641"
           }
         ],
-        "notes": "From the transcription’s banjo track, bars 2–9, an octave up where the sound’s riff plays. Where the banjo strikes two strings at once the pattern keeps the top note, and where two strings sound the same D it keeps one, because the sound plays one note at a time. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:earl-scruggs/foggy-mountain-breakdown-roll.",
+        "notes": "From the transcription’s banjo track, bars 2–9, an octave up where the sounds’ riffs play. Where the banjo strikes two strings at once the pattern keeps the top note, and where two strings sound the same D it keeps one, because the sounds play one note at a time. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:earl-scruggs/foggy-mountain-breakdown-roll.",
         "listenedAt": null
       }
     },

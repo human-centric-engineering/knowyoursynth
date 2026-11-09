@@ -30,6 +30,22 @@
     {
       "sound": "malevolent/mal-geiger-ticks",
       "reason": "An effect: the dry, ticking clicks of a Geiger counter. There is no part to write."
+    },
+    {
+      "sound": "grandmother/gm-autobahn-organ",
+      "reason": "The batch has the work’s bass line (“Autobahn: octave pulse”), not the organ line this sound plays; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "cat/cat-telephone-call",
+      "reason": "The sound is an effect made by the patch from noise or modulation, not a part with notes, so there is nothing to transcribe."
+    },
+    {
+      "sound": "pro-1/p1-geiger-clicks",
+      "reason": "The sound is an effect made by the patch from noise or modulation, not a part with notes, so there is nothing to transcribe."
+    },
+    {
+      "sound": "pro-1/p1-music-non-stop",
+      "reason": "Names “Musique Non-Stop”, which no pattern in this batch has yet; the percussion is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -1568,7 +1584,8 @@
         "super-gemini/sg-computer-love",
         "e7/e7-computer-melody",
         "mantis/mantis-computer-love",
-        "jupiter-6/jp6-computer-love"
+        "jupiter-6/jp6-computer-love",
+        "grandmother/gm-computer-love-lead"
       ],
       "research": {
         "work": "Kraftwerk, “Computer Love”, Computer World, 1981",

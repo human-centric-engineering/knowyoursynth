@@ -38,6 +38,14 @@
     {
       "sound": "jupiter-6/jp6-an-ending",
       "reason": "The batch’s “An Ending (Ascent): melody” is another part of the work; this sound plays the chords under it, a part that is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-nights-glide",
+      "reason": "Names the “Love Theme” from Blade Runner, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-dune-wind",
+      "reason": "The sound is an effect made by the patch from noise or modulation, not a part with notes, so there is nothing to transcribe."
     }
   ],
   "patterns": [
@@ -4027,7 +4035,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["cs-80/cs-fanfare", "e7/e7-olympic-arp", "take-5/t5-chariots-brass"],
+      "sounds": [
+        "cs-80/cs-fanfare",
+        "e7/e7-olympic-arp",
+        "take-5/t5-chariots-brass",
+        "cat/cat-chariots-keys"
+      ],
       "research": {
         "work": "Vangelis, “Titles”, Chariots of Fire, 1981",
         "part": "Four bars of the melody: A♭ and F, then the triplet run from D♭ up to a held A♭, twice, the second time falling to D♭.",
@@ -7252,7 +7265,8 @@
       "sounds": [
         "neutron/para-keys",
         "solar-42n/solar-hazy-nostalgia",
-        "mantis/mantis-tape-wobble-keys"
+        "mantis/mantis-tape-wobble-keys",
+        "grandmother/gm-spring-pluck"
       ],
       "research": {
         "work": "Boards of Canada, “Roygbiv”, Music Has the Right to Children, 1998",
@@ -9673,7 +9687,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["k2/eno-soft-bell-keys", "neutron/airports-tones"],
+      "sounds": [
+        "k2/eno-soft-bell-keys",
+        "neutron/airports-tones",
+        "grandmother/gm-airports-tones"
+      ],
       "research": {
         "work": "Brian Eno, “1/1”, Ambient 1: Music for Airports, 1978",
         "part": "Eight sparse bars in F minor: a rising F, A♭, C, answered by E♭ and D♭ falling to C, with long rests.",

@@ -34,6 +34,42 @@
     {
       "sound": "jupiter-6/jp6-west-end-stabs",
       "reason": "The batch’s “West End Girls: bass” is another part of the work; this sound plays the chords above it, a part that is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-girls-fun-lead",
+      "reason": "The batch’s “Girls Just Want to Have Fun: synth solo” is another part of the work; this sound plays the keyboard riff, a part that is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-separate-ways",
+      "reason": "The batch has the work’s riff as chords (“Separate Ways: synth riff”), and this sound plays one line; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-dont-you-lead",
+      "reason": "The batch has the work’s held strings (“Don’t You (Forget About Me): string pad”), not the lead line this sound plays; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "cat/cat-bostich-seq",
+      "reason": "Names “Bostich”, which no pattern in this batch has yet; the sequence is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "cat/cat-jump-fifths",
+      "reason": "The batch’s “Jump: synth riff” holds three-note chords, and the CAT plays two notes at once; the fifths are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "cat/cat-shout-bass",
+      "reason": "Names “Shout”, which no pattern in this batch has yet; the bass is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "cat/cat-air-tonight-toms",
+      "reason": "The batch’s “In the Air Tonight: snare” is another part of the work; this sound plays the tom fill, a part that is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "pro-1/p1-africa-kalimba",
+      "reason": "Names “Africa”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "pro-1/p1-rosanna-brass",
+      "reason": "The batch has the work’s brass riff as chords (“Rosanna: brass riff”), and this sound plays one line; the line is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -318,7 +354,8 @@
       "sounds": [
         "take-5/t5-take-on-me-lead",
         "deepmind-12d/bouncy-pop-keys",
-        "neutron/staccato-pulse-lead"
+        "neutron/staccato-pulse-lead",
+        "2-xm/xm-take-on-me"
       ],
       "research": {
         "work": "a-ha, “Take On Me”, Hunting High and Low, 1985",
@@ -2509,7 +2546,8 @@
         "super-gemini/sg-countdown-fanfare",
         "e7/e7-final-brass",
         "ub-xa-d/stab-brass",
-        "jupiter-8/jp8-final-brass"
+        "jupiter-8/jp8-final-brass",
+        "2-xm/xm-final-countdown"
       ],
       "research": {
         "work": "Europe, “The Final Countdown”, The Final Countdown, 1986",
@@ -9603,7 +9641,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["jupiter-6/jp6-lets-go-sync"],
+      "sounds": ["jupiter-6/jp6-lets-go-sync", "grandmother/gm-sync-scream"],
       "research": {
         "work": "The Cars, “Let’s Go”, Candy-O, 1979",
         "part": "The four-bar intro riff: F♯, D, the high B, D♯, B, then E, C♯, A falling to the low E; and a run down from the high C♯ to G♯ in the third bar: the same part an octave down.",
@@ -13260,7 +13298,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["pro-1/lfo-sync-lead", "mantis/mantis-wavetable-pluck"],
+      "sounds": [
+        "pro-1/lfo-sync-lead",
+        "mantis/mantis-wavetable-pluck",
+        "grandmother/gm-hp-band-pass"
+      ],
       "research": {
         "work": "Thomas Dolby, “She Blinded Me with Science”, single, 1982",
         "part": "The two-bar intro line: B, D, A, G♯, F♯, E; then D, F♯, C♯ up to a held B.",
@@ -14885,7 +14927,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-abacab-stab"],
+      "sounds": ["take-5/t5-abacab-stab", "cat/cat-abacab-lead"],
       "research": {
         "work": "Genesis, “Abacab”, Abacab, 1981",
         "part": "Four bars of the clipped keyboard riff on C, E♭, F and A♭.",
@@ -16655,7 +16697,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["jupiter-4/j4-roboto-riff"],
+      "sounds": ["jupiter-4/j4-roboto-riff", "cat/cat-mr-roboto"],
       "research": {
         "work": "Styx, “Mr. Roboto”, Kilroy Was Here, 1983",
         "part": "Four bars of the intro melody: B♭, A♭; C♯, C; A♭ and a long F♯: the same part an octave down.",

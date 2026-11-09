@@ -114,6 +114,78 @@
     {
       "sound": "jupiter-4/j4-pixel-dream-arp",
       "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "grandmother/gm-nightcall-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Nightcall: bass”, “Nightcall: chorus lead” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "grandmother/gm-interstellar-swell",
+      "reason": "Names “Cornfield Chase”, which no pattern in this batch has yet; the batch’s “Interstellar: opening figure” is another cue of the score. The swells are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-lightsaber",
+      "reason": "The sound is an effect made by the patch from noise or modulation, not a part with notes, so there is nothing to transcribe."
+    },
+    {
+      "sound": "pro-1/p1-droid-chatter",
+      "reason": "The sound is an effect made by the patch from noise or modulation, not a part with notes, so there is nothing to transcribe."
+    },
+    {
+      "sound": "grandmother/gm-western-twang",
+      "reason": "The batch’s “The Good, the Bad and the Ugly: theme” is another part of the work; this sound plays a twanging guitar figure, a part that is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-dirge-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "grandmother/gm-suspiria-ostinato",
+      "reason": "The batch’s “Suspiria: theme”, “Suspiria: drone” are other parts of the work; this sound plays a bass ostinato, a part that is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-arrival-cello",
+      "reason": "Names the “Arrival” score, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-jurassic-horn",
+      "reason": "Names the “Jurassic Park” theme, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-drive-pad",
+      "reason": "The batch has the score’s pad chords (“Drive: pad”), and this pad plays one held line; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-under-the-skin",
+      "reason": "The batch’s “Under the Skin: strings” hold two notes, and this sound plays one sliding line; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-comptine-toy-piano",
+      "reason": "Names “Comptine d’un autre été”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-das-boot-sonar",
+      "reason": "The sound is an effect made by the patch from noise or modulation, not a part with notes, so there is nothing to transcribe."
+    },
+    {
+      "sound": "2-xm/xm-it-follows-drone",
+      "reason": "The batch’s “It Follows: stabs” is another part of the score; this sound holds a drone under it, a part that is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-chernobyl-drone",
+      "reason": "Names the “Chernobyl” score, which no pattern in this batch has yet; the drone is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "cat/cat-zelda-ocarina",
+      "reason": "Names “The Legend of Zelda”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "cat/cat-close-encounters",
+      "reason": "Names “Close Encounters of the Third Kind”, which no pattern in this batch has yet; the riff plays the film’s five-note motif, written into the lesson rather than taken from a lead."
+    },
+    {
+      "sound": "pro-1/p1-brokendate-pad",
+      "reason": "The batch has the work’s lead line (“Brokendate: lead”), not the held pad this sound plays; the pad is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -687,7 +759,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-halloween-bell", "mantis/mantis-five-four-ostinato"],
+      "sounds": [
+        "take-5/t5-halloween-bell",
+        "mantis/mantis-five-four-ostinato",
+        "2-xm/xm-halloween-keys"
+      ],
       "research": {
         "work": "John Carpenter, “Halloween” (main title), Halloween, 1978",
         "part": "Six bars of the 5/4 piano figure in eighths: C♯ over F♯ for three bars, C over F for two, then B over E, each bar ending on the note a semitone above its top.",
@@ -700,7 +776,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Acoustic Piano” track, bars 1–6, an octave down to sit where the sound plays. Six bars of 5/4 are 30 beats, inside the 8-bar limit, so the figure loops whole rather than cut to 4/4. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Acoustic Piano” track, bars 1–6, an octave down to sit where the sounds play. Six bars of 5/4 are 30 beats, inside the 8-bar limit, so the figure loops whole rather than cut to 4/4. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -3220,7 +3296,8 @@
         "deepmind-12d/staccato-saw-lead",
         "e7/e7-axel-lead",
         "super-gemini/sg-axel-lead",
-        "take-5/t5-faltermeyer-lead"
+        "take-5/t5-faltermeyer-lead",
+        "grandmother/gm-axel-f-lead"
       ],
       "research": {
         "work": "Harold Faltermeyer, “Axel F”, Beverly Hills Cop, 1984",
@@ -5500,7 +5577,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/screaming-lead", "super-gemini/sg-hammer-guitar"],
+      "sounds": [
+        "ub-xa-d/screaming-lead",
+        "super-gemini/sg-hammer-guitar",
+        "grandmother/gm-crockett-lead"
+      ],
       "research": {
         "work": "Jan Hammer, “Crockett’s Theme”, Miami Vice II, 1986",
         "part": "Eight bars of the lead melody: D, C, A, F, G; F, G; G, F, G, G, F; G, F, D; then the phrase again, ending G, G, F, A, G, F and a held D.",
@@ -7836,6 +7917,403 @@
       }
     },
     {
+      "key": "researched:m83/midnight-city-hook-low",
+      "name": "Midnight City: hook, an octave down",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "M83"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 105,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 1.0
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["pro-1/p1-midnight-city-lead"],
+      "research": {
+        "work": "M83, “Midnight City”, Hurry Up, We’re Dreaming, 2011",
+        "part": "The four-bar hook: F♯, D, B, F♯ in each bar, the last bar’s F♯ repeated in sixteenths: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": 105,
+        "leads": [
+          {
+            "citation": "M83 — “Midnight City”, fan transcription by Jayden Castaneda on Songsterr (revision 5655256, 2026-03-11)",
+            "url": "https://www.songsterr.com/a/wsa/m83-midnight-city-tab-s461395",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "This copy is moved an octave down from researched:m83/midnight-city-hook, whose notes give the research. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:m83/midnight-city-chords",
       "name": "Midnight City: chords",
       "role": "chord_changes",
@@ -8343,6 +8821,260 @@
           }
         ],
         "notes": "From the transcription’s “Lead Synth” track, bars 14–17, an octave down to sit where the sounds play. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:the-weeknd/blinding-lights-riff-high",
+      "name": "Blinding Lights: riff, an octave up",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "The Weeknd"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 171,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 77,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 77,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 75,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 77,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 75,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 82,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 77,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 75,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 82,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 77,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 75,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 77,
+                    "gate": 1.0
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["pro-1/p1-blinding-lead"],
+      "research": {
+        "work": "The Weeknd, “Blinding Lights”, After Hours, 2019",
+        "part": "The four-bar synth riff: F, F, E♭; F, G, C, E♭; B♭, G, F, E♭; B♭, G, F, E♭, and the F held into the next bar: the same part an octave up.",
+        "originalKey": null,
+        "originalBpm": 171,
+        "leads": [
+          {
+            "citation": "The Weeknd — “Blinding Lights”, fan transcription by Kirill on Songsterr (revision 8568439, 2026-08-19)",
+            "url": "https://www.songsterr.com/a/wsa/the-weeknd-blinding-lights-tab-s469960",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "This copy is moved an octave up from researched:the-weeknd/blinding-lights-riff, whose notes give the research. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -8878,6 +9610,423 @@
           }
         ],
         "notes": "From the transcription’s “Oboe” track, bars 13–16, as written. The lead’s tempo moves with the phrase, from 50 to 63; the pattern holds 55. Bars 9–12 open the melody but mix sixteenths with sixteenth triplets, which no one step size holds. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:ennio-morricone/gabriels-oboe-melody-low",
+      "name": "Gabriel’s Oboe: melody, an octave down",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Ennio Morricone"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 55,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 56,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 6.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 58,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 68,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["grandmother/gm-gabriels-oboe"],
+      "research": {
+        "work": "Ennio Morricone, “Gabriel’s Oboe”, The Mission, 1986",
+        "part": "Four bars of the oboe melody: B♭, A♭, B♭ held, B♭; G, F, F, E♭ held, B♭; G, F, F, E♭ held, then D, E♭, D, E♭; C held, then C, E♭, A♭: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": 55,
+        "leads": [
+          {
+            "citation": "Ennio Morricone — “Gabriel's Oboe”, fan transcription by Michael Finnie on Songsterr (revision 271775, 2016-07-11)",
+            "url": "https://www.songsterr.com/a/wsa/ennio-morricone-gabriel-s-oboe-tab-s385516",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "This copy is moved an octave down from researched:ennio-morricone/gabriels-oboe-melody, whose notes give the research. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -16312,7 +17461,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/silk-road-lead"],
+      "sounds": ["neutron/silk-road-lead", "cat/cat-silk-road-lead"],
       "research": {
         "work": "Kitaro, “Silk Road”, Silk Road, 1980",
         "part": "A slow pentatonic line rising from A to E and back.",

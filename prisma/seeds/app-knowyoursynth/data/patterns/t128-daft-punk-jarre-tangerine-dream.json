@@ -90,6 +90,10 @@
     {
       "sound": "jupiter-8/jp8-tron-arp",
       "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “Derezzed: fifth stabs”, “Derezzed: arpeggiated riff” and “Derezzed: bass riff” are parts written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "2-xm/xm-sorcerer-pad",
+      "reason": "Names the “Sorcerer” score, which no pattern in this batch has yet; the pad is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -7998,7 +8002,8 @@
         "super-gemini/sg-oxygene-wash",
         "take-5/t5-oxygene-pad",
         "mantis/mantis-oxygene-swirl",
-        "jupiter-8/jp8-jarre-gallop-seq"
+        "jupiter-8/jp8-jarre-gallop-seq",
+        "grandmother/gm-oxygene-arp"
       ],
       "research": {
         "work": "Jean-Michel Jarre, “Oxygène (Part IV)”, Oxygène, 1976",
@@ -10015,6 +10020,628 @@
           }
         ],
         "notes": "From the transcription’s bass track, bars 16–23, moved up an octave. The transcription is at 157 bpm, which no other lead confirms, so the tempo is left unset and the pattern plays at the Équinoxe sequence sound’s 126. The melody is not taken. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:jean-michel-jarre/equinoxe-5-octave-bass-low",
+      "name": "Équinoxe 5: octave bass, an octave down",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "jean-michel-jarre-equinoxe"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 126,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 0.75
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 0.75
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["grandmother/gm-equinoxe-bassline"],
+      "research": {
+        "work": "Jean-Michel Jarre, “Équinoxe (Part 5)”, Équinoxe, 1978",
+        "part": "Eight bars of the bass that hops between each root and its octave: G, F, C: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [
+          {
+            "citation": "Jean-Michel Jarre — “Equinoxe 5”, fan transcription by Leonard on Songsterr (revision 61812, 2009-12-12)",
+            "url": "https://www.songsterr.com/a/wsa/jean-michel-jarre-equinoxe-5-tab-s46916",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "This copy is moved an octave down from researched:jean-michel-jarre/equinoxe-5-octave-bass, whose notes give the research. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -12439,7 +13066,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/arp-pulse"],
+      "sounds": ["deepmind-12d/arp-pulse", "cat/cat-real-train-seq"],
       "research": {
         "work": "Tangerine Dream, “Love on a Real Train”, Risky Business soundtrack, 1984",
         "part": "Four bars of the sequence the piece is built on: A, E, E, D, B, E, E, D, A, B, with the third bar held.",
@@ -15618,7 +16245,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/opening-ramp-seq", "tb-303/tb-berlin-sequence"],
+      "sounds": ["neutron/opening-ramp-seq", "tb-303/tb-berlin-sequence", "2-xm/xm-phaedra-seq"],
       "research": {
         "work": "Tangerine Dream, “Phaedra”, Phaedra, 1974, and Rubycon, 1975",
         "part": "Two bars of a sixteenth-note sequence in E minor climbing E, G, B and D, repeated with its top moved to E.",
@@ -16975,14 +17602,14 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/two-note-ostinato"],
+      "sounds": ["model-d/two-note-ostinato", "grandmother/gm-clocked-sh"],
       "research": {
         "work": "Tangerine Dream, Rubycon, 1975",
         "part": "Eight bars of held keys for a two-note pattern the patch plays itself: A for four bars, then G for four.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
-        "notes": "Nothing from Rubycon was found on Songsterr, BitMIDI, Hooktheory, MuseScore or Noteflight. Written by t-169 on 2026-11-02. The patch alternates the key with the fourth above it, so the pattern only holds the key. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "Nothing from Rubycon was found on Songsterr, BitMIDI, Hooktheory, MuseScore or Noteflight. Written by t-169 on 2026-11-02. The patch it was written for alternates the key with the fourth above it, so the pattern only holds the key; a patch that steps by itself plays its own line from it. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },

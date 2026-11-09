@@ -74,6 +74,38 @@
     {
       "sound": "jupiter-8/jp8-floyd-pad",
       "reason": "In the style of Richard Wright: it names no work, and the batch’s “Shine On You Crazy Diamond: Minimoog line” is another kind of part than its chords, so the chords are the lesson’s own."
+    },
+    {
+      "sound": "grandmother/gm-ladder-flute",
+      "reason": "Names “Bourrée”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-mellow-moog-lead",
+      "reason": "Names “Catherine Parr”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "grandmother/gm-fanfare-brass",
+      "reason": "Names “Fanfare for the Common Man”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-silver-machine",
+      "reason": "Names “Silver Machine”, which no pattern in this batch has yet; the swoops are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-heaven-las-vegas",
+      "reason": "The batch has the work’s guitar line and rhythm guitar (“Heaven or Las Vegas: guitar line”, “Heaven or Las Vegas: rhythm guitar”), not the held pad this sound plays; the pad is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "2-xm/xm-dreamer-wurly",
+      "reason": "The batch has the work’s Wurlitzer chords (“Dreamer: Wurlitzer”), and this sound plays one line; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "cat/cat-riders-keys",
+      "reason": "The batch has the work’s bass line (“Riders on the Storm: bass”), not the electric piano this sound plays; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "cat/cat-seagull-cries",
+      "reason": "The sound is an effect made by the patch from noise or modulation, not a part with notes, so there is nothing to transcribe."
     }
   ],
   "patterns": [
@@ -254,7 +286,8 @@
       "sounds": [
         "neutron/fast-filter-seq",
         "ems-vcs3/vcs3-run-sequence",
-        "solar-42n/solar-on-the-run"
+        "solar-42n/solar-on-the-run",
+        "grandmother/gm-on-the-run-seq"
       ],
       "research": {
         "work": "Pink Floyd, “On the Run”, The Dark Side of the Moon, 1973",
@@ -560,7 +593,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/speak-to-me-heartbeat", "take-5/t5-dark-side-heartbeat"],
+      "sounds": [
+        "model-d/speak-to-me-heartbeat",
+        "take-5/t5-dark-side-heartbeat",
+        "grandmother/gm-speak-heartbeat"
+      ],
       "research": {
         "work": "Pink Floyd, “Speak to Me”, The Dark Side of the Moon, 1973",
         "part": "The heartbeat: two eighths, swung, then a beat’s rest, twice to the bar. Two beats to the bar at 120 is a heart at 60.",
@@ -573,7 +610,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Ludwig Treated Bass Drum” track, bar 1, which marks the bass drum “treated to sound like a heartbeat”. Its hits are written as muted notes with no pitch, in an eighth-note triplet feel, so the pattern puts them on the triplet grid at the sound’s own pitch. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Ludwig Treated Bass Drum” track, bar 1, which marks the bass drum “treated to sound like a heartbeat”. Its hits are written as muted notes with no pitch, in an eighth-note triplet feel, so the pattern puts them on the triplet grid at each sound’s own pitch. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -892,6 +929,324 @@
           }
         ],
         "notes": "From the transcription’s “EMS VCS 3 | Synthesizer” bass track, bars 28–35, as written. The record’s throb is the VCS3 pulsing one held note, which both sounds’ patches do themselves, so the pattern holds the notes rather than writing the pulse as eighths, as the transcription’s other VCS3 track does. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:pink-floyd/welcome-to-the-machine-bass-low",
+      "name": "Welcome to the Machine: held bass, an octave down",
+      "role": "held",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "pink-floyd-welcome-to-the-machine",
+        "part": 0
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 135,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 24,
+                    "gate": 16.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 28,
+                    "gate": 32.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 24,
+                    "gate": 16.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["grandmother/gm-welcome-machine"],
+      "research": {
+        "work": "Pink Floyd, “Welcome to the Machine”, Wish You Were Here, 1975",
+        "part": "The VCS3’s held bass under the first verse: C for two bars, E for four, then C for two: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": 135,
+        "leads": [
+          {
+            "citation": "Pink Floyd — “Welcome To The Machine”, fan transcription by Norman on Songsterr (revision 7413061, 2026-06-17)",
+            "url": "https://www.songsterr.com/a/wsa/pink-floyd-welcome-to-the-machine-tab-s15543",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "This copy is moved an octave down from researched:pink-floyd/welcome-to-the-machine-bass, whose notes give the research. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -2649,7 +3004,8 @@
       "sounds": [
         "neutron/resonant-sweep-growl",
         "super-gemini/sg-sawyer-growl",
-        "mantis/mantis-sinking-growl"
+        "mantis/mantis-sinking-growl",
+        "pro-1/p1-tom-sawyer-growl"
       ],
       "research": {
         "work": "Rush, “Tom Sawyer”, Moving Pictures, 1981",
@@ -16827,7 +17183,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["td-3/td-tremolo-pick"],
+      "sounds": ["td-3/td-tremolo-pick", "grandmother/gm-misirlou-surf"],
       "research": {
         "work": "Dick Dale and His Del-Tones, “Misirlou”, Surfers’ Choice, 1962",
         "part": "The first verse melody: B held, a chromatic slide down from B♭ to F, E, F, G♯, A, B, C, D♯, C, E: the same part an octave down, where the TD-3’s “Tremolo Picking” plays.",
@@ -16840,7 +17196,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Lead Guitar” track, bars 6–9, two octaves up to sit where the sound plays. The tremolo picking is the patch’s; the transcription writes the notes it picks. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:dick-dale/misirlou-melody.",
+        "notes": "From the transcription’s “Lead Guitar” track, bars 6–9, two octaves up to sit where the sounds play. The tremolo picking is the sounds’ own; the transcription writes the notes it picks. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:dick-dale/misirlou-melody.",
         "listenedAt": null
       }
     },
@@ -19105,7 +19461,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/oldfield-tubular-bells", "take-5/t5-tubular-bells"],
+      "sounds": [
+        "model-d/oldfield-tubular-bells",
+        "take-5/t5-tubular-bells",
+        "grandmother/gm-tubular-bells-motif"
+      ],
       "research": {
         "work": "Mike Oldfield, “Tubular Bells” (Part One), Tubular Bells, 1973",
         "part": "The opening piano figure in eighths: A, E, B, E, G, A, E, C; E, D, E, B, C, E, in a bar of 4/4 and one of 3/4.",
@@ -19724,6 +20084,333 @@
           }
         ],
         "notes": "From the transcription’s “Lead Guitar” track, bars 162–169, as written: the only bars where it has notes. The swell is the patch’s. _In the style of_: the notes come from a transcription Songsterr generated by machine, a weaker starting point than a fan’s. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:sigur-ros/svefn-g-englar-guitar-low",
+      "name": "Svefn-g-englar: bowed guitar, an octave down",
+      "role": "held",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Sigur Rós"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 117,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 61,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 15.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 56,
+                    "gate": 11.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 54,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["2-xm/xm-svefn-pad"],
+      "research": {
+        "work": "Sigur Rós, “Svefn-g-englar”, Ágætis byrjun, 1999",
+        "part": "The bowed guitar’s long falling notes: C♯ to B held, A to G♯ held, then F♯: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": 117,
+        "leads": [
+          {
+            "citation": "Sigur Rós — “Svefn-g-englar”, transcription generated by Songsterr AI on Songsterr (revision 5161767, 2026-02-10)",
+            "url": "https://www.songsterr.com/a/wsa/sigur-r-s-svefn-g-englar-tab-s3941726",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "This copy is moved an octave down from researched:sigur-ros/svefn-g-englar-guitar, whose notes give the research. _In the style of_: the notes come from a transcription Songsterr generated by machine, a weaker starting point than a fan’s. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -21253,7 +21940,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/telstar-clavioline", "jupiter-4/j4-telstar-lead"],
+      "sounds": ["model-d/telstar-clavioline", "jupiter-4/j4-telstar-lead", "cat/cat-telstar-lead"],
       "research": {
         "work": "The Tornados, “Telstar”, single, 1962",
         "part": "The tune: A held, E, F♯, E, A, D, C♯, B, A, B, E, A, D, C♯, B, A, B, E, and a long high E.",
@@ -22410,7 +23097,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["e7/e7-dotted-pluck", "take-5/t5-streets-delay"],
+      "sounds": ["e7/e7-dotted-pluck", "take-5/t5-streets-delay", "2-xm/xm-streets-guitar"],
       "research": {
         "work": "U2, “Where the Streets Have No Name”, The Joshua Tree, 1987",
         "part": "The Edge’s introduction in 3/4 eighths: G, F♯, G, A, D, F♯, four times.",
@@ -22639,7 +23326,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/dream-weaver-lead"],
+      "sounds": ["model-d/dream-weaver-lead", "cat/cat-dream-weaver"],
       "research": {
         "work": "Gary Wright, “Dream Weaver”, The Dream Weaver, 1975",
         "part": "A slow, floating four-bar line around E.",
@@ -24371,7 +25058,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["mantis/mantis-lucky-man-lead", "malevolent/mal-lucky-man-glide"],
+      "sounds": [
+        "mantis/mantis-lucky-man-lead",
+        "malevolent/mal-lucky-man-glide",
+        "grandmother/gm-lucky-man-solo"
+      ],
       "research": {
         "work": "Emerson, Lake & Palmer, “Lucky Man”, Emerson, Lake & Palmer, 1970",
         "part": "Eight bars of the closing Moog solo in 6/8: a leap from D to high D, a fast run down, then held A, E and D, a climb and two pairs of repeated notes: the same part an octave up, where the Mantis’s “Portamento Solo” and the Malevolent’s “Gliding Solo” play.",

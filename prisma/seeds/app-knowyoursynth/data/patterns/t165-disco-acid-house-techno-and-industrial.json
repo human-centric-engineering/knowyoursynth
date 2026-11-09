@@ -70,6 +70,10 @@
     {
       "sound": "jupiter-4/j4-french-kiss-riff",
       "reason": "Names “French Kiss”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "pro-1/p1-bubble-metropolis",
+      "reason": "The sound is an effect made by the patch from noise or modulation, not a part with notes, so there is nothing to transcribe."
     }
   ],
   "patterns": [
@@ -391,7 +395,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-i-feel-love-bass", "model-d/seq-pulse"],
+      "sounds": [
+        "take-5/t5-i-feel-love-bass",
+        "model-d/seq-pulse",
+        "grandmother/gm-feel-love-pulse"
+      ],
       "research": {
         "work": "Donna Summer, “I Feel Love”, I Remember Yesterday, 1977 (Giorgio Moroder and Pete Bellotte)",
         "part": "The sequenced bass through the chord change: root, root, fifth and flat seventh in eighths, twice a bar, on C, E♭, F and G, a bar each.",
@@ -1413,7 +1421,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["e7/e7-chase-bass"],
+      "sounds": ["e7/e7-chase-bass", "pro-1/p1-chase-sequence"],
       "research": {
         "work": "Giorgio Moroder, “Chase”, Midnight Express (soundtrack), 1978",
         "part": "The galloping bass in sixteenths: B♭ into C, then F into G, a bar each, twice.",
@@ -1874,7 +1882,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-popcorn", "model-d/popping-pluck", "malevolent/mal-popcorn-pluck"],
+      "sounds": [
+        "take-5/t5-popcorn",
+        "model-d/popping-pluck",
+        "malevolent/mal-popcorn-pluck",
+        "grandmother/gm-popcorn-pluck"
+      ],
       "research": {
         "work": "Hot Butter, “Popcorn”, 1972 (Gershon Kingsley’s tune)",
         "part": "The theme’s first four bars: B, A, B, F♯, D, F♯, B twice, then the run up to D and back down to B.",
@@ -2296,6 +2309,409 @@
           }
         ],
         "notes": "From the transcription’s “Piste 1” track (written for nylon guitar), bars 19–22 of its first verse, as written. The databank says the Juno-106 plays the bass on “Genesis”. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:justice/genesis-bass-high",
+      "name": "Genesis: bass riff, an octave up",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "justice-cross-genesis-dance",
+        "part": 0
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 110,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 16.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 16.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["grandmother/gm-genesis-overdrive"],
+      "research": {
+        "work": "Justice, “Genesis”, †, 2007",
+        "part": "A held D, then the riff around D, F and E in sixteenths, twice: the same part an octave up.",
+        "originalKey": null,
+        "originalBpm": 110,
+        "leads": [
+          {
+            "citation": "Justice — “Genesis”, fan transcription by Knard25 on Songsterr (revision 78175, 2010-08-28)",
+            "url": "https://www.songsterr.com/a/wsa/justice-genesis-tab-s62242",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "This copy is moved an octave up from researched:justice/genesis-bass, whose notes give the research. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -4037,7 +4453,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["b2600/state808-acid-bass", "tb-303/tb-808-state"],
+      "sounds": ["b2600/state808-acid-bass", "tb-303/tb-808-state", "cat/cat-pacific-seq"],
       "research": {
         "work": "808 State, “Pacific 707”, 90, 1989 (the album version of “Pacific State”)",
         "part": "The snaking sixteenth-note bass around D, G and C, four bars.",
@@ -4050,7 +4466,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Electric Bass (finger)” track, bars 15–18, as written. The databank says an SH-101 plays it. The sound names early UK acid house rather than a work; this is 808 State’s best-known bass line. _In the style of_: the notes come from a transcription Songsterr generated by machine, a weaker starting point than a fan’s. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Electric Bass (finger)” track, bars 15–18, as written. The databank says an SH-101 plays it. One sound names early UK acid house rather than a work; this is 808 State’s best-known bass line. _In the style of_: the notes come from a transcription Songsterr generated by machine, a weaker starting point than a fan’s. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -4227,7 +4643,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/mussolini-bass"],
+      "sounds": ["neutron/mussolini-bass", "pro-1/p1-der-mussolini"],
       "research": {
         "work": "DAF, “Der Mussolini”, Alles ist gut, 1981",
         "part": "The sequenced bass in eighths on B, jumping to the octave, with E and D at the top of the first bar.",
@@ -6823,7 +7239,8 @@
       "sounds": [
         "model-d/industrial-pump-bass",
         "b2600/nin-grind-bass",
-        "mantis/mantis-industrial-clang"
+        "mantis/mantis-industrial-clang",
+        "grandmother/gm-closer-fm-growl"
       ],
       "research": {
         "work": "Nine Inch Nails, “Closer”, The Downward Spiral, 1994",
@@ -7977,7 +8394,8 @@
         "take-5/t5-acid-squelch",
         "deepmind-12d/acid-bass",
         "ub-xa-d/acid-poly-bass",
-        "neutron/acid-squelch"
+        "neutron/acid-squelch",
+        "grandmother/gm-acid-squelch"
       ],
       "research": {
         "work": "Phuture, “Acid Tracks”, 1987",
@@ -10992,6 +11410,254 @@
       }
     },
     {
+      "key": "researched:mr-fingers/can-you-feel-it-bass-low",
+      "name": "Can You Feel It: bass, an octave down",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "larry-heard-can-you-feel-it"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 120,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 29,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 29,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 32,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 29,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 32,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 27,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 27,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 27,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 32,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["grandmother/gm-can-you-feel-bass"],
+      "research": {
+        "work": "Mr. Fingers (Larry Heard), “Can You Feel It”, 1986",
+        "part": "A two-bar bass, F rising to C, then E♭ rising to B♭: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave down from researched:mr-fingers/can-you-feel-it-bass, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:larry-heard/can-you-feel-it-chords",
       "name": "Can You Feel It: chords",
       "role": "chord_changes",
@@ -11901,7 +12567,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/jeff-mills-bells"],
+      "sounds": ["neutron/jeff-mills-bells", "2-xm/xm-the-bells-seq"],
       "research": {
         "work": "Jeff Mills, “The Bells”, 1996",
         "part": "A two-bar bell riff in sixteenths around E, the second bar dropping to B.",
@@ -12516,7 +13182,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["k2/oizo-flat-bass", "neutron/rubber-drive-bass"],
+      "sounds": ["k2/oizo-flat-bass", "neutron/rubber-drive-bass", "pro-1/p1-flat-beat-bass"],
       "research": {
         "work": "Mr. Oizo, “Flat Beat”, 1999",
         "part": "A rubbery two-bar bass on B♭, kicking up to D♭, F and E♭.",
@@ -12684,6 +13350,166 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Nothing for “Spastik” was found on Songsterr or BitMIDI. The record is almost all percussion, so the pattern is a rhythm on two or three pitches. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:plastikman/spastik-pings-high-2",
+      "name": "Spastik: pings, an octave up",
+      "role": "percussive",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "plastikman"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 128,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 63,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 0.5
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 0.5
+                  }
+                ],
+                "accent": true
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["grandmother/gm-spastik-blip"],
+      "research": {
+        "work": "Plastikman, “Spastik”, Sheet One, 1993",
+        "part": "A bar of pinging sixteenths on C, rolling at the end: the same part an octave up.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave up from researched:plastikman/spastik-pings, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -13595,7 +14421,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-electro-kick", "mantis/mantis-boom-kick"],
+      "sounds": [
+        "take-5/t5-electro-kick",
+        "mantis/mantis-boom-kick",
+        "grandmother/gm-planet-rock-kick"
+      ],
       "research": {
         "work": "Afrika Bambaataa & the Soulsonic Force, “Planet Rock”, 1982",
         "part": "Two bars of 808 kick: the beat, then syncopations ahead of the third and fourth beats.",
