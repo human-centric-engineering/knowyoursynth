@@ -104,6 +104,8 @@ export function defaultPatchSound(def: SynthDef): CatalogueSound {
     ],
     context: {},
     tweaks: [],
+    // its one pattern is the riff it plays (t-224)
+    defaultPattern: { id: SCALE_PATTERN_VIEW.id, name: SCALE_PATTERN_VIEW.name },
   };
 }
 

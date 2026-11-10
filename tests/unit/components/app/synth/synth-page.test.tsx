@@ -1881,6 +1881,90 @@ describe('SynthPage player', () => {
     expect(tab()).toHaveAttribute('aria-expanded', 'true');
   });
 
+  /** A wide screen with a pointer that hovers, `queries` aside: where the Sound Design strip is a drawer. */
+  const pointerScreen = (...queries: string[]) =>
+    vi.spyOn(window, 'matchMedia').mockImplementation(
+      (query: string) =>
+        ({
+          matches: queries.includes(query),
+          media: query,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+        }) as unknown as MediaQueryList
+    );
+
+  it('takes the step’s light off the panel with the drawer, and puts it back when the drawer opens again (t-228)', () => {
+    pointerScreen('(hover: hover)');
+    twoSteps();
+    const tab = () => button('Learn sound design');
+
+    fireEvent.click(tab());
+    fireEvent.click(button('Lesson step 2: Close the filter'));
+    const lit = highlightStore.get();
+    expect(lit).toContain('filter.cutoff');
+
+    fireEvent.click(tab());
+    expect(tab()).toHaveAttribute('aria-expanded', 'false');
+    expect(highlightStore.get()).toEqual([]);
+
+    fireEvent.click(tab());
+    expect(highlightStore.get()).toEqual(lit);
+
+    // Opened again on that step, a press on the panel is turning a lit control: the drawer and the light stay.
+    fireEvent.pointerDown(screen.getByTestId('panel-frame'));
+    expect(tab()).toHaveAttribute('aria-expanded', 'true');
+    expect(highlightStore.get()).toEqual(lit);
+    // A press anywhere else is other work, as on any opening: it puts the drawer away, and the light with it.
+    fireEvent.pointerDown(document.body);
+    expect(tab()).toHaveAttribute('aria-expanded', 'false');
+    expect(highlightStore.get()).toEqual([]);
+
+    // Opened again on the step, and then another sound chosen: nothing is lit, so a press on the panel is other work.
+    fireEvent.click(tab());
+    expect(highlightStore.get()).toEqual(lit);
+    fireEvent.click(button(/^Choose a patch/));
+    fireEvent.click(
+      within(screen.getByRole('dialog', { name: 'Patches' }))
+        .getAllByRole('button')
+        .filter((b) => b.textContent?.includes('Default patch'))[0]
+    );
+    expect(highlightStore.get()).toEqual([]);
+    expect(tab()).toHaveAttribute('aria-expanded', 'true');
+    fireEvent.pointerDown(screen.getByTestId('panel-frame'));
+    expect(tab()).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('keeps the step’s light where the strip is no drawer: a wide touch screen, with the lesson card closed (t-228)', () => {
+    // no hover, and not small: the strip sits in the dock's flow, always on show
+    pointerScreen();
+    twoSteps();
+    fireEvent.click(button('Lesson step 2: Close the filter'));
+    const lit = highlightStore.get();
+    expect(lit).toContain('filter.cutoff');
+    fireEvent.click(button('Close the card'));
+    expect(within(player()).queryByTestId('lesson-card')).toBeNull();
+    expect(highlightStore.get()).toEqual(lit);
+  });
+
+  it('puts Learn sound design away from a press elsewhere on a wide touch screen too', () => {
+    // no hover, and not small: the strip is no drawer, but a press elsewhere is still other work
+    pointerScreen();
+    twoSteps();
+    const tab = () => button('Learn sound design');
+    fireEvent.click(tab());
+    expect(tab()).toHaveAttribute('aria-expanded', 'true');
+    fireEvent.pointerDown(document.body);
+    expect(tab()).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('says what Learn sound design is for, where it opens (t-227)', () => {
+    twoSteps();
+    fireEvent.click(button('Learn sound design'));
+    const strip = within(player()).getByRole('region', { name: 'Learn sound design' });
+    expect(strip.textContent).toMatch(/Follow along on your own synth and experiment/);
+    expect(strip.textContent).toMatch(/discover new sounds, and what your synth can do/);
+  });
+
   it('takes the lesson card away with the drawer, leaving the inspector; turning the panel over takes either (t-205)', () => {
     twoSteps();
     const tab = () => button('Learn sound design');

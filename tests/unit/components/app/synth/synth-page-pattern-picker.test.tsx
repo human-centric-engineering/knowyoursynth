@@ -212,9 +212,9 @@ function serve(extra: Record<string, unknown> = {}) {
   });
 }
 
-const page = () => {
+const page = (shown: SynthDetail = detail) => {
   storeSound(def, FAT_BASS);
-  return render(<SynthPage detail={detail} synths={[MODEL_D]} viewParam={null} />);
+  return render(<SynthPage detail={shown} synths={[MODEL_D]} viewParam={null} />);
 };
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
 const sent = () => engine.send.mock.calls.map((c) => c[0] as { type: string; bpm?: number });
@@ -250,11 +250,9 @@ afterEach(() => {
 });
 
 describe('the pattern picker beside Play', () => {
-  it('names the patch’s riff until a pattern is picked, and Play plays the riff', async () => {
+  it('names the riff by its sound until a pattern is picked, and Play plays the riff', async () => {
     page();
-    expect(picker().getAttribute('aria-label')).toBe(
-      'Choose what Play plays (now: The patch’s riff)'
-    );
+    expect(picker().getAttribute('aria-label')).toBe('Choose what Play plays (now: Fat bass)');
     await press('Play');
     expect(sent().at(-1)?.type).toBe('phrase');
   });
@@ -313,7 +311,19 @@ describe('the pattern picker beside Play', () => {
 
   it('marks the sound’s default as what plays while the riff is held, and picking it loads nothing', async () => {
     serve({ '/api/v1/synths/model-d/sounds/fat-bass/patterns': [ROLLING] });
-    page();
+    // The catalogue sends the sound with its default pattern's name (t-224).
+    page({
+      ...detail,
+      sounds: [{ ...FAT_BASS, defaultPattern: { id: ROLLING.id, name: ROLLING.name } }, WOBBLE],
+    });
+    // The riff is named for its default before the picker is opened, and naming it reads none of its patterns.
+    expect(picker().getAttribute('aria-label')).toBe(
+      'Choose what Play plays (now: Rolling eighths)'
+    );
+    expect(api.get).not.toHaveBeenCalledWith(
+      '/api/v1/synths/model-d/sounds/fat-bass/patterns',
+      undefined
+    );
     fireEvent.click(picker());
     const own = await screen.findByRole('list', { name: 'Fat bass’s patterns' }, { timeout: 3000 });
     const dflt = within(own).getByRole('button', { name: /Rolling eighths/ });
@@ -323,11 +333,11 @@ describe('the pattern picker beside Play', () => {
     });
     expect(screen.queryByRole('dialog', { name: 'Patterns' })).toBeNull();
     expect(picker().getAttribute('aria-label')).toBe(
-      'Choose what Play plays (now: The patch’s riff)'
+      'Choose what Play plays (now: Rolling eighths)'
     );
   });
 
-  it('goes back to the new patch’s riff when another patch is chosen', async () => {
+  it('goes back to the new patch’s riff, by name, when another patch is chosen', async () => {
     page();
     fireEvent.click(picker());
     const pick = await screen.findByRole('button', { name: /Rolling eighths/ }, { timeout: 3000 });
@@ -336,9 +346,7 @@ describe('the pattern picker beside Play', () => {
     });
     chooseSound('Wobble lead');
     await waitFor(() =>
-      expect(picker().getAttribute('aria-label')).toBe(
-        'Choose what Play plays (now: The patch’s riff)'
-      )
+      expect(picker().getAttribute('aria-label')).toBe('Choose what Play plays (now: Wobble lead)')
     );
     engine.send.mockClear();
     await press('Play');

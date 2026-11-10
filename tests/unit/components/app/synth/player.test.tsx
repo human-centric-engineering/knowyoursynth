@@ -215,6 +215,21 @@ describe('SoundDesign: the drawer', () => {
   });
 });
 
+describe('SoundDesign: what it is for (t-227)', () => {
+  const aim = /Follow along on your own synth and experiment/;
+
+  it('says so above a walkthrough', () => {
+    render(<SoundDesign steps={[]} step={null} onStep={vi.fn()} hasLesson open />);
+    expect(screen.getByText(aim)).toBeTruthy();
+  });
+
+  it('says nothing of following along on a patch with no walkthrough to follow', () => {
+    render(<SoundDesign steps={[]} step={null} onStep={vi.fn()} hasLesson={false} open />);
+    expect(screen.getByText(/This patch has no walkthrough/)).toBeTruthy();
+    expect(screen.queryByText(aim)).toBeNull();
+  });
+});
+
 describe('Wordmark: its lamp (t-204)', () => {
   const lamp = (lit: boolean, lesson?: boolean) => {
     const { container, unmount } = render(<Wordmark lit={lit} lesson={lesson} />);

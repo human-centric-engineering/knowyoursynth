@@ -17,6 +17,7 @@ import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
 import { designFromDb, type SynthDesign } from '@/lib/app/catalogue/designs';
 import { getHeardOn } from '@/lib/app/bank/read';
+import { ENABLED, headOf, PLACES } from '@/lib/app/patterns/library';
 import {
   summarisePublicLinks,
   summariseSongLinks,
@@ -49,8 +50,16 @@ export interface CatalogueSynth {
   soundCount: number;
 }
 
-/** A library sound, as the panel plays it. */
-export type CatalogueSound = Preset & { version: number };
+/**
+ * A library sound, as the panel plays it. `defaultPattern` is the library pattern its riff plays (t-224), by the rule
+ * that keeps the riff in step with it (`headOf`): what Play names the riff, and which of the sound's patterns the
+ * picker and the sequencer take for it. None when it has no default, when it plays its riff as it has it, named for
+ * the sound.
+ */
+export type CatalogueSound = Preset & {
+  version: number;
+  defaultPattern?: { id: string; name: string };
+};
 
 export type Limit = z.infer<typeof LimitSchema>;
 
@@ -158,7 +167,23 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
       where: { id, listed: true },
       select: {
         ...synthColumns,
-        sounds: { orderBy: [{ order: 'asc' }, { slug: 'asc' }] },
+        sounds: {
+          orderBy: [{ order: 'asc' }, { slug: 'asc' }],
+          include: {
+            // what its default is read from, as the sound's patterns read it, to name the riff it plays (t-224); a
+            // disabled pattern is never one, so it is not read
+            patterns: {
+              ...PLACES,
+              where: { pattern: ENABLED },
+              select: {
+                ...PLACES.select,
+                pattern: {
+                  select: { ...PLACES.select.pattern.select, name: true },
+                },
+              },
+            },
+          },
+        },
         lineage: true,
         bankInstruments: {
           select: { instrument: { select: { id: true, name: true } } },
@@ -223,7 +248,12 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
       });
       continue;
     }
-    sounds.push({ ...result.value, version: s.definitionVersion });
+    const head = headOf(s.patterns);
+    sounds.push({
+      ...result.value,
+      version: s.definitionVersion,
+      ...(head ? { defaultPattern: { id: head.patternId, name: head.pattern.name } } : {}),
+    });
   }
 
   let lineage: Lineage | null = null;

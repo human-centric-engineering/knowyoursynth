@@ -16,6 +16,14 @@ let planned: ReturnType<typeof planCatalogue> | undefined;
 /** The seed data, read and validated once per test module. */
 export const catalogueData = () => (data ??= loadCatalogueData());
 
+const none = (): StoredSoundPattern[] => [];
+
+/** One place on a stored sound's pattern list, as the detail reads it to name the sound's riff (t-224). */
+export interface StoredSoundPattern {
+  patternId: string;
+  pattern: { status: string; name: string; pattern: unknown };
+}
+
 export function synthRows(id: string) {
   // Planned once per test module: reading and validating every synth's sounds is the slow part, and it is the same
   // for every id.
@@ -29,7 +37,9 @@ export function synthRows(id: string) {
     stored: {
       ...synth,
       _count: { sounds: sounds.length },
-      sounds: sounds.map((s, i) => ({ id: `row-${i}`, editedAt: null, ...s })),
+      // Each with its pattern list as the read asks for it (t-224): none here, so each riff is named for its sound, as
+      // the seed names a sound's riff pattern.
+      sounds: sounds.map((s, i) => ({ id: `row-${i}`, editedAt: null, ...s, patterns: none() })),
       lineage: { ...lineage, editedAt: null },
       // The databank instrument it models (`f-link-suggestions` t-186): one, as most synths have.
       bankInstruments: [{ instrument: { id: `${id}-instrument`, name: synth.name } }],

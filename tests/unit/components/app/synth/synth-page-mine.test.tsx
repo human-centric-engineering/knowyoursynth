@@ -1114,7 +1114,10 @@ describe('a sound that plays a pattern by default (f-step-sequencer t-81)', () =
     fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
     await waitFor(() => expect(loadedName()).toBe('Night bass'));
     fireEvent.click(button('Sequencer'));
-    expect(strip().getByText('The patch’s riff')).toBeTruthy();
+    // With no lesson of its own it plays the library patch's riff under it, named for the sound on the panel, not
+    // for that stand-in (t-224).
+    expect(strip().getByText('Night bass', { selector: '.kys-seq-lib-value' })).toBeTruthy();
+    expect(strip().queryByText('Default patch')).toBeNull();
     expect(askedFor('/api/v1/sounds')).toBe(true);
     expect(api.get.mock.calls.some(([p]) => String(p).startsWith('/api/v1/patterns'))).toBe(false);
   });

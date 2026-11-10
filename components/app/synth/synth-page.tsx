@@ -118,6 +118,7 @@ import { SharedPatternStrip } from '@/components/app/sharing/shared-pattern-stri
 import { voiceMode } from '@/lib/app/synths/audio/pattern-player';
 import { useMyPatterns } from '@/components/app/sequencer/use-my-patterns';
 import type { PatternLibraryProps } from '@/components/app/sequencer/pattern-library';
+import { RIFF_FALLBACK } from '@/lib/app/patterns/riff-name';
 import { useSoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
 import { useSuggestedPatterns } from '@/components/app/sequencer/use-suggested-patterns';
 import { PatternPicker } from '@/components/app/synth/pattern-picker';
@@ -703,6 +704,10 @@ function Synth({
   // ── below `lg`: the side regions as bottom sheets ──
   const small = useMediaQuery(SMALL_QUERY);
   const coarse = useMediaQuery('(pointer: coarse)');
+  // With a pointer that hovers, from `lg` up, the Sound Design strip is a drawer standing on the dock, put away and
+  // brought up; without one it sits in the dock's flow, always on show (`synth.css`).
+  const hovers = useMediaQuery('(hover: hover)');
+  const drawer = hovers && !small;
   const [sheet, setSheet] = useState<SheetId | null>(null);
   const [dockSnap, setDockSnap] = useState<SheetSnap>('half');
   const libraryNode = useKeptNode();
@@ -750,6 +755,11 @@ function Synth({
   // Whether a chapter has been chosen since the drawer opened: then the panel is where the lesson is being followed,
   // and a press on it leaves the drawer up; before, a press on the panel is other work, and puts it away.
   const chapterChosen = useRef(false);
+  // Whether the panel is lit at a step picked here (t-228), as it is when the drawer opens again on one: then a press on
+  // the panel is turning a lit control, and leaves it up, while a press anywhere else is other work, as on any opening.
+  // Kept from the light itself, so a step that goes while the drawer is up (another sound, the lesson finished) takes
+  // it with it.
+  const panelLit = useRef(false);
   // Put away, the drawer takes the lesson it opened with it (t-205); the inspector and the effects, from the bar, stay.
   const closeDesign = useCallback(() => {
     chapterChosen.current = false;
@@ -787,6 +797,8 @@ function Synth({
     );
   };
   useEffect(() => {
+    // From `lg` up, with a pointer or a touch screen: the lesson card is over the panel either way, and a press
+    // elsewhere puts it away.
     if (!designOpen || small) return undefined;
     const onDown = (e: PointerEvent) => {
       const t = e.target;
@@ -797,6 +809,7 @@ function Synth({
       // (t-205): then only its tab or its head does, whatever is pressed meanwhile (the keys, Play, a dialog over the
       // page). Before, a press anywhere else is other work, and puts it away.
       if (chapterChosen.current) return;
+      if (panelLit.current && frameRef.current?.contains(t)) return;
       closeDesign();
     };
     document.addEventListener('pointerdown', onDown, true);
@@ -1303,7 +1316,6 @@ function Synth({
   // card is lifted by the drawer's open height (`--kys-strip-h`) to stay above it rather than behind it. Observed as it
   // slides, so the card rises with it. Where the strip is in the dock's flow (no hover), the dock's height already
   // counts it. Whether it floats is read once a run, and the run is redone when a keyboard or trackpad comes or goes.
-  const hovers = useMediaQuery('(hover: hover)');
   useEffect(() => {
     const root = rootRef.current;
     const design = dockRef.current?.querySelector<HTMLElement>('.kys-design');
@@ -1438,9 +1450,27 @@ function Synth({
   // read once the sequencer opens. One of the user's sounds, a shared one, a lesson's or the tutor's has none of its own.
   // Nor does a sound of theirs whose list is still being read: the library's preset is only standing in for it.
   const ownSoundPending = !!sess.soundId && (authPending || (signedIn && !mine.sounds));
+  // The name of the sound on the panel, as "Loaded:" shows it.
+  const panelName = openSound
+    ? openSound.name
+    : sharedPanel && shared
+      ? shared.name
+      : designed
+        ? designed.name
+        : preset
+          ? preset.name
+          : DEFAULT_PATCH_NAME;
+  // A library sound on the panel, as it came, whatever pattern a link has put in the sequencer.
+  const libraryPreset =
+    !openSound && !ownSoundPending && !sharedPanel && !ownLesson && preset ? preset : null;
   const librarySound =
-    !sharedPattern && !openSound && !ownSoundPending && !sharedPanel && !ownLesson && preset
-      ? { synthId, slug: preset.id, name: preset.name }
+    !sharedPattern && libraryPreset
+      ? {
+          synthId,
+          slug: libraryPreset.id,
+          name: libraryPreset.name,
+          defaultId: libraryPreset.defaultPattern?.id ?? null,
+        }
       : null;
   // The Play deck's pattern picker (`f-pattern-picker` t-213) lists them too, so they are read while it is open.
   const [patternsOpen, setPatternsOpen] = useState(false);
@@ -1487,10 +1517,20 @@ function Synth({
     ? null
     : seqLoaded
       ? (seqLoaded.libraryId ?? null)
-      : (soundPatterns?.patterns?.[0]?.id ?? null);
+      : (libraryPreset?.defaultPattern?.id ?? null);
+  // The riff by name (t-224). A library sound's is its default pattern's, which the catalogue sends with the sound, so
+  // naming it reads nothing; one with no default plays its riff as it has it, named for the sound. Any other sound on
+  // the panel plays the riff it was saved with, or the library's under it, and the riff takes the name the panel shows,
+  // not that stand-in's: none while one of the user's sounds is still being read. A pattern a link put in the sequencer
+  // leaves the sound's riff named as it is.
+  const riffName = libraryPreset
+    ? (libraryPreset.defaultPattern?.name ?? libraryPreset.name)
+    : ownSoundPending
+      ? RIFF_FALLBACK
+      : panelName;
   const playsName = playsPattern
-    ? `${seqLoaded?.name ?? 'The patch’s riff'}${seq.edited ? ' (edited)' : ''}`
-    : 'The patch’s riff';
+    ? `${seqLoaded?.name ?? riffName}${seq.edited ? ' (edited)' : ''}`
+    : riffName;
   const seqLibrary: PatternLibraryProps = {
     signedIn: authPending ? null : signedIn,
     // Save a copy is offered to someone else's pattern only; its owner saves it as any pattern of theirs.
@@ -1501,6 +1541,7 @@ function Synth({
     mine: myPatterns,
     soundPatterns,
     suggested,
+    riffName,
     sound: openSound
       ? {
           name: openSound.name,
@@ -2110,8 +2151,14 @@ function Synth({
       ? stepIds(step === START_STEP ? startStep(synthDef) : shown.steps[step]).join('|')
       : '';
   // From `lg` up the lesson is not on the page (it is in the card, when that is open), so the page lights the step's
-  // controls itself while the panel is at a step picked here, as the lesson does in its sheet below `lg`.
-  const litKey = litFor === synthId ? stepKey : '';
+  // controls itself while the panel is at a step picked here, as the lesson does in its sheet below `lg`. Only while
+  // the lesson is up, in the drawer or its card: put away, the drawer takes the step's light with it, and opening it
+  // again puts the light back (t-228).
+  // Without hover the strip is in the dock's flow, not a drawer, and stays on show: there the light stays with it.
+  const litKey = litFor === synthId && (!drawer || designOpen || card === 'build') ? stepKey : '';
+  useEffect(() => {
+    panelLit.current = litKey !== '';
+  }, [litKey]);
   // What a hovered chapter puts back when it is left: below `lg` the Lesson in its sheet keeps the step lit, and from
   // `lg` up so does the lesson card while it shows the lesson.
   const chapterLit = small || card === 'build' ? stepKey : litKey;
@@ -2327,15 +2374,6 @@ function Synth({
   const rowBtn =
     'inline-flex h-9 items-center rounded-md border border-(--kys-line) bg-(--kys-surface) px-3.5 text-xs font-semibold whitespace-nowrap text-(--kys-muted) hover:text-(--kys-text)';
 
-  const loadedName = openSound
-    ? openSound.name
-    : sharedPanel && shared
-      ? shared.name
-      : designed
-        ? designed.name
-        : preset
-          ? preset.name
-          : DEFAULT_PATCH_NAME;
   // What the description says about the sound: the one on the panel, so not a library sound's words under one of the
   // user's own, or under a shared sound, that has no lesson of its own.
   const described = openSound || sharedPanel ? ownLesson : (ownLesson ?? preset ?? null);
@@ -2705,7 +2743,7 @@ function Synth({
                         <SoundPicker
                           buttonRef={soundPickRef}
                           loading={loading}
-                          soundName={loadedName}
+                          soundName={panelName}
                           soundRef={described?.ref ?? null}
                           onChooseSound={chooseSound}
                           soundsOpen={!small && soundsOpen}

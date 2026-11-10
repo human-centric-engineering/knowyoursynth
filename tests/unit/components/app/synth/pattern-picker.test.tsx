@@ -80,7 +80,7 @@ const row = (id: string, name: string, over: Partial<RankedPattern> = {}): Ranke
 const OWN_A = view('patown00000000000000000a', 'Fat riff');
 const OWN_B = view('patown00000000000000000b', 'Octave walk');
 const OWN: SoundPatterns = {
-  sound: { synthId: 'model-d', slug: 'fat-bass', name: 'Fat bass' },
+  sound: { synthId: 'model-d', slug: 'fat-bass', name: 'Fat bass', defaultId: OWN_A.id },
   patterns: [OWN_A, OWN_B],
   error: false,
   retry: vi.fn(),
@@ -138,7 +138,7 @@ function Picker({
   return (
     <PatternPicker
       synthId="model-d"
-      plays="The patch’s riff"
+      plays="Fat bass"
       open={open}
       onOpenChange={setOpen}
       sheet={sheet}
@@ -173,7 +173,7 @@ describe('the pattern picker beside Play', () => {
   it('names what Play plays, and opens a list from the button', () => {
     render(<Picker startOpen={false} />);
     const btn = screen.getByRole('button', {
-      name: 'Choose what Play plays (now: The patch’s riff)',
+      name: 'Choose what Play plays (now: Fat bass)',
     });
     expect(btn.getAttribute('aria-expanded')).toBe('false');
     expect(screen.queryByRole('dialog')).toBeNull();

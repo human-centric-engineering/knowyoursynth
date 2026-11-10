@@ -17,6 +17,7 @@
  * Every write goes through the API, so a pattern saved here is the one a reload, or another device, opens.
  */
 
+import { RIFF_FALLBACK } from '@/lib/app/patterns/riff-name';
 import { useEffect, useId, useRef, useState } from 'react';
 import type { FormEvent, ReactNode } from 'react';
 import {
@@ -78,6 +79,8 @@ export interface PatternLibraryProps {
   soundPatterns?: SoundPatterns | null;
   /** Patterns that suit the patch on the panel (t-125). */
   suggested?: SuggestedPatterns | null;
+  /** What the riff is called while no pattern is held (t-224): the page's name for it, as Play's picker shows it. */
+  riffName?: string;
 }
 
 type Panel = 'mine' | 'library' | 'share' | 'sound' | null;
@@ -111,6 +114,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
     sharedHeld = false,
     soundPatterns = null,
     suggested = null,
+    riffName = RIFF_FALLBACK,
   } = library;
   const { loaded, edited, load } = seq;
   const [panel, setPanel] = useState<Panel>(null);
@@ -143,7 +147,8 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
   // so what is held is named, and has the pattern's own settings. Run again once a new sound's riff has arrived
   // (`loaded` back to null), so it never lands on another sound's riff. Once per sound on the panel: an Undo back to an
   // unedited riff is where the Undo said it would go.
-  const soundDefault = soundPatterns?.patterns?.[0] ?? null;
+  const defaultId = soundPatterns?.sound.defaultId ?? null;
+  const soundDefault = soundPatterns?.patterns?.find((p) => p.id === defaultId) ?? null;
   const soundKey = soundPatterns
     ? `${soundPatterns.sound.synthId}/${soundPatterns.sound.slug}`
     : null;
@@ -376,7 +381,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
       <div className="kys-seq-lib-row" role="toolbar" aria-label="Patterns">
         <p className="kys-seq-lib-name" aria-live="polite">
           <span className="kys-seq-lib-label">Pattern</span>
-          <span className="kys-seq-lib-value">{loaded?.name ?? 'The patch’s riff'}</span>
+          <span className="kys-seq-lib-value">{loaded?.name ?? riffName}</span>
           {edited && <span className="kys-seq-lib-edited">edited</span>}
         </p>
         <div className="kys-seq-tool-group">

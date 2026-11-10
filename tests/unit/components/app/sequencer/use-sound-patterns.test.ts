@@ -21,7 +21,12 @@ beforeEach(() => {
 
 describe('useSoundPatterns', () => {
   it('offers the Default patch its scale, and reads nothing', () => {
-    const sound = { synthId: 'model-d', slug: 'default-patch', name: 'Default patch' };
+    const sound = {
+      synthId: 'model-d',
+      slug: 'default-patch',
+      name: 'Default patch',
+      defaultId: SCALE_PATTERN_VIEW.id,
+    };
     const { result } = renderHook(() => useSoundPatterns(sound, true));
 
     expect(result.current).toMatchObject({ sound, patterns: [SCALE_PATTERN_VIEW], error: false });
@@ -30,7 +35,7 @@ describe('useSoundPatterns', () => {
 
   it('reads a library sound’s patterns once the sequencer is open', async () => {
     api.get.mockResolvedValue([SCALE_PATTERN_VIEW]);
-    const sound = { synthId: 'model-d', slug: 'fat-bass', name: 'Fat bass' };
+    const sound = { synthId: 'model-d', slug: 'fat-bass', name: 'Fat bass', defaultId: null };
     const { result, rerender } = renderHook(({ open }) => useSoundPatterns(sound, open), {
       initialProps: { open: false },
     });

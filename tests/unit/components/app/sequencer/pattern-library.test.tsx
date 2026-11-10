@@ -139,6 +139,7 @@ function Page({
         ],
         mine,
         sound,
+        riffName: 'Night bass',
       }}
     />
   );
@@ -146,7 +147,14 @@ function Page({
 
 const strip = () => within(screen.getByRole('toolbar', { name: 'Patterns' }));
 const button = (name: string | RegExp) => strip().getByRole('button', { name });
-const held = () => screen.getByText(/^(The patch’s riff|.+)$/, { selector: '.kys-seq-lib-value' });
+/** The name the strip shows for what it holds: a loaded pattern's, or the page's name for the riff (t-224). */
+const held = () => {
+  const el = screen
+    .getByRole('toolbar', { name: 'Patterns' })
+    .querySelector('.kys-seq-lib-name .kys-seq-lib-value');
+  if (!el) throw new Error('the strip names nothing it holds');
+  return el;
+};
 
 /** Chooses step `n` (a rest in the riff) and turns it on: an edit anyone could make. */
 const editStep = (n: number) => {
@@ -175,7 +183,7 @@ beforeEach(() => {
 describe('saving to My patterns', () => {
   it('names the edited pattern and saves it through the API, as it is in the sequencer', async () => {
     render(<Page />);
-    expect(held().textContent).toBe('The patch’s riff');
+    expect(held().textContent).toBe('Night bass');
     editStep2();
     const edited: Pattern = state.pattern;
     expect(screen.getByText('edited')).toBeTruthy();
@@ -231,7 +239,7 @@ describe('after a reload', () => {
 
     // a fresh page: the sound's riff again, and My patterns not read yet
     render(<Page />);
-    expect(held().textContent).toBe('The patch’s riff');
+    expect(held().textContent).toBe('Night bass');
     expect(state.pattern).not.toEqual(saved);
 
     await act(async () => fireEvent.click(button('My patterns')));
@@ -483,7 +491,7 @@ describe('Undo, and edits while a save is on its way', () => {
     await act(async () => fireEvent.click(within(list).getByRole('button', { name: /Other/ })));
     expect(held().textContent).toBe('Other');
     await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Undo' })));
-    expect(held().textContent).toBe('The patch’s riff');
+    expect(held().textContent).toBe('Night bass');
     expect(state.loaded).toBeNull();
     expect(button('Save to My patterns')).toBeTruthy();
     expect(strip().queryByRole('button', { name: 'Save Other' })).toBeNull();
