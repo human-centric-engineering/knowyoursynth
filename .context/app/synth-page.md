@@ -268,10 +268,12 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   Outline, Modular or Long), the magnifier and Hover help (the card that pops up when you point at a
   control; `kys.tips`): each its name in the panel's lettering, which explains it on hover, then its
   choices, each a word with an LED lit for the one in use (`aria-pressed` buttons in a named group). The
-  foot stays on one row (t-226): it is a size container (`kys-foot`), and as it narrows it closes up, the
-  settings take their short names (`Setting`'s `short`: Lens, Tips, and none for Drawn as and Layout, whose
-  choices say it), Zoom's name goes and the search narrows, each step at a wider rail when there is a Layout
-  setting.
+  foot stays on one row (t-226): `useFootFit` measures the rail's own width into `data-fit` (not a container
+  query, which would make the rail the containing block of its fixed-position tooltips), and as it narrows it
+  closes up, the settings take their short names (`Setting`'s `short`: Lens, Tips; `drop` for Drawn as and
+  Layout, whose choices say it, their tip then hanging from the whole setting), Zoom's name goes and the search
+  narrows, each step at a wider rail when there is a Layout setting. On a phone the search keeps a line of its
+  own. Zoom is not on the foot while the routing view shows, which is at no zoom.
 - **Signal** (`f-live-panel` t-150, `SignalMenu` in `player-tools.tsx`) is the head's layer for the patch's
   signal, a button with a menu of its modes (a popover inside the player, not portalled, as the tips are):
   **Off**; **In use**, the sound map's dimming of what the patch does not use (it was the Dim unused toggle, and

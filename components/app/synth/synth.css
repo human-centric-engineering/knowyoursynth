@@ -1507,97 +1507,53 @@ svg .kys-hit:focus-visible {
 }
 /*
  * The foot on one row (t-226). It is as wide as the panel is fitted, which is often narrower than the screen (a tall
- * panel, a short window, zoomed out), so it asks the rail's own width, not the screen's. As it narrows it closes up,
- * then the settings take their short names (`Setting`'s `short` in `player-tools.tsx`): Lens and Tips, and no name
- * where the choices say it (Hardware / Outline, Modular / Long); then Zoom's name goes beside its − Fit +, and the
- * search gives up width, its placeholder cut short. A synth with a Layout setting has four settings, not three, so
- * each step comes at a wider rail. Narrower than a phone's (`max-width: 767px` below), the search still takes a line
- * of its own.
+ * panel, a short window, zoomed out), so it goes by the rail's own width, not the screen's: `data-fit`, which
+ * `useFootFit` in `player-tools.tsx` measures. As it narrows it closes up (`close`), then the settings take their short
+ * names (`short`): Lens and Tips, and no name where the choices say it (Hardware / Outline, Modular / Long); then Zoom's
+ * name goes beside its − Fit +, and the search gives up width, its placeholder cut short (`narrow`). The spacing and
+ * the search's width are for a screen from 768px: on a phone's (`max-width: 767px` below) the search still takes a
+ * line of its own.
  */
 .kys-rail.is-foot {
-  container: kys-foot / inline-size;
   column-gap: 14px;
 }
-.kys-rail-find input {
+.kys-rail-find input:placeholder-shown {
   text-overflow: ellipsis;
 }
 .kys-name-short {
   display: none;
 }
-/* Closer. */
-@container kys-foot (max-width: 1149px) {
-  .kys-settings:not(:has(> :nth-child(4))) .kys-setting {
-    padding-inline: 10px;
+.kys-rail[data-fit~='short'] :is(.kys-name-long, .kys-setting-name.is-droppable),
+.kys-rail[data-fit~='narrow'] .kys-rail-zoom .is-droppable-narrow {
+  display: none;
+}
+.kys-rail[data-fit~='short'] .kys-name-short {
+  display: inline;
+}
+@media (min-width: 768px) {
+  .kys-rail[data-fit~='close'] .kys-setting {
+    padding-right: 10px;
   }
-  .kys-settings:not(:has(> :nth-child(4))) ~ .kys-rail-zoom {
+  .kys-rail[data-fit~='close'] .kys-setting + .kys-setting,
+  .kys-rail[data-fit~='close'] .kys-rail-zoom {
     padding-left: 10px;
   }
-  .kys-settings:not(:has(> :nth-child(4))) .kys-led-opt {
+  .kys-rail[data-fit~='close'] .kys-led-opt {
     padding-inline: 4px;
   }
-}
-@container kys-foot (max-width: 1399px) {
-  .kys-settings:has(> :nth-child(4)) .kys-setting {
-    padding-inline: 10px;
+  .kys-rail[data-fit~='narrow'] .kys-setting {
+    padding-right: 8px;
   }
-  .kys-settings:has(> :nth-child(4)) ~ .kys-rail-zoom {
-    padding-left: 10px;
+  .kys-rail[data-fit~='narrow'] .kys-setting + .kys-setting {
+    padding-left: 8px;
   }
-  .kys-settings:has(> :nth-child(4)) .kys-led-opt {
-    padding-inline: 4px;
-  }
-}
-/* The short names. */
-@container kys-foot (max-width: 1059px) {
-  .kys-settings:not(:has(> :nth-child(4))) :is(.kys-name-long, .kys-setting-name.is-droppable) {
-    display: none;
-  }
-  .kys-settings:not(:has(> :nth-child(4))) .kys-name-short {
-    display: inline;
-  }
-}
-@container kys-foot (max-width: 1299px) {
-  .kys-settings:has(> :nth-child(4)) :is(.kys-name-long, .kys-setting-name.is-droppable) {
-    display: none;
-  }
-  .kys-settings:has(> :nth-child(4)) .kys-name-short {
-    display: inline;
-  }
-}
-/* No name for Zoom, the settings closer still, and a narrower search. */
-@container kys-foot (max-width: 869px) {
-  .kys-settings:not(:has(> :nth-child(4))) .kys-setting {
-    padding-inline: 8px;
-  }
-  .kys-settings:not(:has(> :nth-child(4))) .kys-led-opt {
+  .kys-rail[data-fit~='narrow'] .kys-led-opt {
     letter-spacing: 0.04em;
   }
-  .kys-settings:not(:has(> :nth-child(4))) ~ .kys-rail-zoom .is-droppable-narrow {
-    display: none;
-  }
-  .kys-settings:not(:has(> :nth-child(4))) ~ .kys-rail-find {
+  .kys-rail[data-fit~='narrow'] .kys-rail-find {
     flex-basis: 100px;
     min-width: 100px;
   }
-}
-@container kys-foot (max-width: 1009px) {
-  .kys-settings:has(> :nth-child(4)) .kys-setting {
-    padding-inline: 8px;
-  }
-  .kys-settings:has(> :nth-child(4)) .kys-led-opt {
-    letter-spacing: 0.04em;
-  }
-  .kys-settings:has(> :nth-child(4)) ~ .kys-rail-zoom .is-droppable-narrow {
-    display: none;
-  }
-  .kys-settings:has(> :nth-child(4)) ~ .kys-rail-find {
-    flex-basis: 100px;
-    min-width: 100px;
-  }
-}
-/* The first setting starts at the rail's edge however close the rest are. */
-.kys-settings .kys-setting:first-child {
-  padding-left: 0;
 }
 
 /* Narrow, the search takes a line of its own under the settings. */

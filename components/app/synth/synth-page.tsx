@@ -141,6 +141,7 @@ import { PlayerTip, PlayerTips } from '@/components/app/synth/player-tip';
 import {
   LayerToggle,
   PlayerSettings,
+  useFootFit,
   SignalMenu,
   type SignalMode,
 } from '@/components/app/synth/player-tools';
@@ -2223,6 +2224,7 @@ function Synth({
       '--rail-face2': plate2,
       '--rail-print': print,
     };
+  const footRef = useFootFit(!!synthDef.modular);
   // The Sound Design strip and the lesson card are of the faceplate too, in its colours (t-201).
   const face = useMemo(() => faceRoles(plate, plate2, print), [plate, plate2, print]);
   const panelTaps = small
@@ -2691,6 +2693,7 @@ function Synth({
               panel's lip carries its smaller switches, the width of the panel as it fits the screen. */}
                   <div className="px-2">
                     <div
+                      ref={footRef}
                       className={`kys-rail is-foot mx-auto ${view.outline ? 'is-outline' : ''} ${lightFace ? 'is-light' : ''}`}
                       style={railStyle}
                     >
@@ -2703,8 +2706,9 @@ function Synth({
                         tipsOn={tipsOn}
                         onTips={setTipsOn}
                       />
-                      {/* How big the panel is drawn is the panel's, with how it is drawn (t-209). */}
-                      <PanelZoom scale={scale} onScale={setScale} />
+                      {/* How big the panel is drawn is the panel's, with how it is drawn (t-209). Not while the
+                      routing view shows: it takes the whole width, at no zoom. */}
+                      {!(routingOn && routing) && <PanelZoom scale={scale} onScale={setScale} />}
                       <Search
                         def={def}
                         up
