@@ -1881,6 +1881,23 @@ describe('SynthPage player', () => {
     expect(tab()).toHaveAttribute('aria-expanded', 'true');
   });
 
+  it('takes the step’s light off the panel with the drawer, and puts it back when the drawer opens again (t-228)', () => {
+    twoSteps();
+    const tab = () => button('Learn sound design');
+
+    fireEvent.click(tab());
+    fireEvent.click(button('Lesson step 2: Close the filter'));
+    const lit = highlightStore.get();
+    expect(lit).toContain('filter.cutoff');
+
+    fireEvent.click(tab());
+    expect(tab()).toHaveAttribute('aria-expanded', 'false');
+    expect(highlightStore.get()).toEqual([]);
+
+    fireEvent.click(tab());
+    expect(highlightStore.get()).toEqual(lit);
+  });
+
   it('takes the lesson card away with the drawer, leaving the inspector; turning the panel over takes either (t-205)', () => {
     twoSteps();
     const tab = () => button('Learn sound design');

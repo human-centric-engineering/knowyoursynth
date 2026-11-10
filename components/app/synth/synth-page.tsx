@@ -2115,8 +2115,10 @@ function Synth({
       ? stepIds(step === START_STEP ? startStep(synthDef) : shown.steps[step]).join('|')
       : '';
   // From `lg` up the lesson is not on the page (it is in the card, when that is open), so the page lights the step's
-  // controls itself while the panel is at a step picked here, as the lesson does in its sheet below `lg`.
-  const litKey = litFor === synthId ? stepKey : '';
+  // controls itself while the panel is at a step picked here, as the lesson does in its sheet below `lg`. Only while
+  // the lesson is up, in the drawer or its card: put away, the drawer takes the step's light with it, and opening it
+  // again puts the light back (t-228).
+  const litKey = litFor === synthId && (designOpen || card === 'build') ? stepKey : '';
   // What a hovered chapter puts back when it is left: below `lg` the Lesson in its sheet keeps the step lit, and from
   // `lg` up so does the lesson card while it shows the lesson.
   const chapterLit = small || card === 'build' ? stepKey : litKey;
