@@ -1,0 +1,6813 @@
+{
+  "schema_version": "0.13.0",
+  "device": {
+    "id": "roland-jp-8080",
+    "manufacturer": "Roland",
+    "model": "JP-8080",
+    "category": "10-voice virtual analogue synthesizer module (2U rack or desktop), two parts, with voice modulator (vocoder), arpeggiator, RPS phrase player and motion control",
+    "based_on": "The JP-8000 keyboard's analogue modelling engine (1996) in a module, released 1998; adds the Voice Modulator, external input synthesis, unison, distortion and 10-voice polyphony. Contains the JP-8000's 64 preset performances and 128 preset patches.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Roland JP-8080 Owner's Manual (English, JP-8080_e3)",
+        "kind": "user_manual",
+        "file": "JP-8080_Manual.pdf",
+        "pages": 220,
+        "note": "Panel guide, every sound parameter, performance functions, arpeggiator, RPS, motion control, Voice Modulator, edit-menu parameters, memory, initialise values, parameter lists, transmit/receive table, Voice Modulator initialise table, MIDI implementation (v1.00, April 1998), chart and specifications. Blue Voice Modulator panel legends read from the front panel drawing on page 12."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "synthesis_note": "Virtual analogue: DSP models of analogue oscillators, filter and amplifier, plus four DSP waveforms with no analogue equivalent (super saw, triangle mod, feedback osc, filtered noise on OSC 1).",
+    "signal_path": "digital",
+    "voices": 10,
+    "polyphony_mode": "10 voices (8 with the Voice Modulator on), newest note priority. Per patch: poly, MONO, LEGATO, UNISON or legato unison. Per performance: SINGLE, DUAL or SPLIT key mode, with Voice Assign splitting the voices between the parts in DUAL and SPLIT.",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "Two tiers. A patch is one sound (128 user, 384 preset in 3 groups of A/B banks of 64). A performance (64 user, 192 preset) holds complete copies of its Upper and Lower patches plus part, key mode, arpeggiator/RPS and Voice Modulator settings, so editing a stored patch does not change performances that used it. Edits go to a temporary area and must be written. RPS patterns (48), motions (2 sets of 2) and system settings are written directly. SmartMedia cards hold up to 64 x 64 performances and 128 x 64 patches.",
+    "semi_modular": false,
+    "panel_counts": {
+      "knobs": 30,
+      "sliders": 14,
+      "display": "16 x 2 backlit LCD"
+    },
+    "summary": "Per voice: OSC 1 offers seven waveforms, each with two waveform-specific CONTROL knobs; OSC 2 offers square, saw, triangle or noise (controls only for square and noise) or external audio, with RANGE, FINE/WIDE, SYNC to OSC 1 and RING modulation. OSC 2 can cross modulate OSC 1's frequency. An AD pitch envelope and LFO 1 act on both oscillators, OSC 2 only, or the cross mod depth. OSC BALANCE mixes the two into a 12/24 dB HPF, BPF or LPF with key follow, ADSR envelope and LFO 1; then the amp with ADSR, level and LFO 1 as tremolo, auto pan or manual pan. LFO 2 (triangle) is brought in by the mod wheel on pitch, filter and amp. Each patch has its own tone control, 13-type multi-effects and 5-type delay. Two parts play two patches; a Voice Modulator can turn them, external inputs or a robot oscillator into a vocoded or filter-banked signal. Velocity, aftertouch/breath (Control Up/Down), the voice (vocal morph) and recorded motions can each move almost every knob at once by preset widths."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "MIDI input and voice assigner",
+      "panel_section": "KEY MODE / PANEL SELECT / CONTROL",
+      "scope": "common",
+      "description": "There is no keyboard. Notes arrive at MIDI IN (on each Part MIDI channel) or REMOTE KBD IN (treated like the panel). The assigner gives Upper and Lower parts their voices per KEY MODE and Voice Assign, handles MONO/LEGATO/UNISON, and turns velocity, mod wheel, bend, aftertouch and breath into control signals. In Preview the BANK and NUMBER buttons play C4 to C5 at velocity 80.",
+      "properties": {
+        "voices": 10,
+        "voices_voice_mod_on": 8,
+        "parts": ["upper", "lower"],
+        "standard_velocity": 80,
+        "steal": "newest note priority, oldest note released"
+      },
+      "inputs": ["kbd.notes_in", "kbd.remote_in"],
+      "outputs": [
+        "kbd.pitch",
+        "kbd.gate",
+        "kbd.velocity",
+        "kbd.mod_wheel",
+        "kbd.bend",
+        "kbd.control_up",
+        "kbd.control_down",
+        "kbd.trigger",
+        "kbd.remote_notes",
+        "kbd.midi_out"
+      ]
+    },
+    {
+      "id": "pitch",
+      "type": "pitch_control",
+      "name": "Pitch processing",
+      "panel_section": "PORTAMENTO / OSC COMMON",
+      "scope": "per_voice",
+      "description": "Sums note pitch, portamento, OSC SHIFT, part transpose, part detune, bend, unison detune and master tune into the pitch both oscillators follow.",
+      "inputs": ["pitch.note", "pitch.bend"],
+      "outputs": ["pitch.cv"]
+    },
+    {
+      "id": "osc1",
+      "type": "oscillator",
+      "name": "Oscillator 1",
+      "panel_section": "OSC 1",
+      "scope": "per_voice",
+      "description": "Seven waveforms, each with its own meaning for CONTROL 1 and CONTROL 2 (see properties). Receives cross modulation from OSC 2 on its frequency, except with super saw or noise.",
+      "properties": {
+        "waveforms": {
+          "super_saw": {
+            "control1": "DETUNE: spread of the detuned saws",
+            "control2": "MIX: level of the detuned saws against the centre one",
+            "note": "Sounds like seven sawtooths"
+          },
+          "triangle_mod": {
+            "control1": "OFFSET: how far the triangle is reshaped; more overtones, little fundamental (like a high-passed square)",
+            "control2": "LFO 1 DEPTH on Offset"
+          },
+          "noise": {
+            "control1": "CUTOFF FREQ of a low-pass on noise; also raises level; tracks the key",
+            "control2": "RESONANCE; at 127 a sine (CUTOFF 64 = played pitch, one step per semitone)"
+          },
+          "feedback_osc": {
+            "control1": "HARMONICS",
+            "control2": "FEEDBACK AMOUNT: level of the harmonics",
+            "note": "Guitar-feedback tone; forces MONO or LEGATO and blocks UNISON"
+          },
+          "square": {
+            "control1": "PULSE WIDTH",
+            "control2": "PWM DEPTH from LFO 1"
+          },
+          "saw": {
+            "control1": "SHAPE: strong fundamental at either end, thin (high-passed) at centre",
+            "control2": "LFO 1 DEPTH on Shape"
+          },
+          "triangle": {
+            "control1": "SHAPE: towards a low-passed square",
+            "control2": "LFO 1 DEPTH on Shape"
+          }
+        }
+      },
+      "inputs": ["osc1.pitch_cv", "osc1.fm_in", "osc1.shape_cv"],
+      "outputs": ["osc1.out"]
+    },
+    {
+      "id": "osc2",
+      "type": "oscillator",
+      "name": "Oscillator 2",
+      "panel_section": "OSC 2",
+      "scope": "per_voice",
+      "description": "Square (PWM), saw, triangle or noise, pitched relative to OSC 1 by RANGE and FINE/WIDE. Hard sync to OSC 1 (not with noise or EXT). With EXT on the waveform is replaced by external audio, gated by note-on and GATE THRESHOLD and not pitched.",
+      "properties": {
+        "waveforms": {
+          "square": {
+            "control1": "PULSE WIDTH",
+            "control2": "PWM DEPTH from LFO 1"
+          },
+          "saw": {
+            "control1": null,
+            "control2": null
+          },
+          "triangle": {
+            "control1": null,
+            "control2": null
+          },
+          "noise": {
+            "control1": "CUTOFF FREQ (does not track the key)",
+            "control2": "RESONANCE; at 127 a sine (CUTOFF 64 = C4 on every key)"
+          },
+          "ext": {
+            "control1": "GATE THRESHOLD: minimum input level let through",
+            "control2": null
+          }
+        },
+        "range_semitones": [-24, 24],
+        "fine_cents": [-50, 50],
+        "wide_octaves": [-4, 4]
+      },
+      "inputs": ["osc2.pitch_cv", "osc2.sync_in", "osc2.shape_cv", "osc2.ext_in"],
+      "outputs": ["osc2.out"]
+    },
+    {
+      "id": "ring",
+      "type": "ring_modulator",
+      "name": "Ring modulator",
+      "panel_section": "OSC 2 [RING]",
+      "scope": "per_voice",
+      "description": "Multiplies OSC 1 by OSC 2; the result replaces OSC 2's output in the mix, so it is heard as OSC BALANCE moves towards OSC 2.",
+      "inputs": ["ring.in_a", "ring.in_b"],
+      "outputs": ["ring.out"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Oscillator balance",
+      "panel_section": "OSC COMMON [OSC BALANCE]",
+      "scope": "per_voice",
+      "description": "Crossfades OSC 1 and the OSC 2 path (OSC 2, ring or external input); equal at centre.",
+      "inputs": ["mixer.in1", "mixer.in2"],
+      "outputs": ["mixer.out"]
+    },
+    {
+      "id": "env_pitch",
+      "type": "envelope",
+      "name": "Pitch envelope",
+      "panel_section": "PITCH ENVELOPE",
+      "scope": "per_voice",
+      "description": "Attack-decay envelope to pitch or cross mod depth, chosen by LFO 1 & ENV DESTINATION; bipolar DEPTH.",
+      "properties": {
+        "stages": ["attack", "decay"]
+      },
+      "inputs": ["env_pitch.gate"],
+      "outputs": ["env_pitch.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "Filter",
+      "panel_section": "FILTER",
+      "scope": "per_voice",
+      "description": "Multimode HPF, BPF or LPF at -12 or -24 dB/octave, resonant to self-oscillation, with key follow.",
+      "properties": {
+        "modes": ["hpf", "bpf", "lpf"],
+        "slopes_db_per_octave": [12, 24],
+        "self_oscillates": true
+      },
+      "inputs": ["vcf.in", "vcf.cutoff_cv"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "env_filter",
+      "type": "envelope",
+      "name": "Filter envelope",
+      "panel_section": "FILTER ENVELOPE",
+      "scope": "per_voice",
+      "description": "ADSR to cutoff with bipolar DEPTH; release time follows note-off velocity when assigned.",
+      "properties": {
+        "stages": ["attack", "decay", "sustain", "release"]
+      },
+      "inputs": ["env_filter.gate", "env_filter.trigger"],
+      "outputs": ["env_filter.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "Amplifier",
+      "panel_section": "AMP",
+      "scope": "per_voice",
+      "description": "Patch level, amp envelope, LFO 1 as tremolo, auto pan or manual pan position.",
+      "inputs": ["vca.in", "vca.gain_cv", "vca.pan_cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "env_amp",
+      "type": "envelope",
+      "name": "Amp envelope",
+      "panel_section": "AMP ENVELOPE",
+      "scope": "per_voice",
+      "description": "ADSR to the amplifier; release time follows note-off velocity when assigned. With Env Type in Solo = ANALOG a new note continues from the current level.",
+      "properties": {
+        "stages": ["attack", "decay", "sustain", "release"]
+      },
+      "inputs": ["env_amp.gate", "env_amp.trigger"],
+      "outputs": ["env_amp.out"]
+    },
+    {
+      "id": "lfo1",
+      "type": "lfo",
+      "name": "LFO 1",
+      "panel_section": "LFO 1",
+      "scope": "per_voice",
+      "description": "Triangle, saw, square or sample and hold, with FADE (time to full depth after key-on). Depth is set where it is used: OSC COMMON, FILTER, AMP and the OSC 1/OSC 2 CONTROL 2 knobs. Rate can follow tempo (LFO Sync).",
+      "properties": {
+        "waveforms": ["triangle", "saw", "square", "sample_hold"]
+      },
+      "inputs": ["lfo1.trigger"],
+      "outputs": ["lfo1.out"]
+    },
+    {
+      "id": "lfo2",
+      "type": "lfo",
+      "name": "LFO 2 (MODULATION)",
+      "panel_section": "MODULATION (LFO 2)",
+      "scope": "per_voice",
+      "description": "Triangle LFO with its own rate, applied to pitch, filter and amp at three separate depths, scaled by the mod wheel (CC 1) of the controlling keyboard.",
+      "properties": {
+        "waveforms": ["triangle"]
+      },
+      "inputs": ["lfo2.depth_cv"],
+      "outputs": ["lfo2.out"]
+    },
+    {
+      "id": "tone",
+      "type": "effects",
+      "name": "Tone control",
+      "panel_section": "EFFECTS [TONE CONTROL]",
+      "scope": "common",
+      "description": "Bass and treble shelving boost/cut on the patch output.",
+      "inputs": ["tone.in"],
+      "outputs": ["tone.out"]
+    },
+    {
+      "id": "mfx",
+      "type": "effects",
+      "name": "Multi-effects",
+      "panel_section": "EFFECTS [MULTI-FX LEVEL]",
+      "scope": "common",
+      "description": "One of 13 types (super chorus x4, flanger x3, deep phasing, jet phasing, twisting, freeze phase x2, distortion) at MULTI-FX LEVEL. Chorus rate can follow tempo or LFO 1 (Chorus Sync).",
+      "properties": {
+        "types": [
+          "super_chorus_slw",
+          "super_chorus_mid",
+          "super_chorus_fst",
+          "super_chorus_clr",
+          "flanger_slow",
+          "flanger_deep",
+          "flanger_fast",
+          "deep_phasing_slw",
+          "jet_phasing",
+          "twisting",
+          "freeze_phase_1",
+          "freeze_phase_2",
+          "distortion"
+        ]
+      },
+      "inputs": ["mfx.in"],
+      "outputs": ["mfx.out"]
+    },
+    {
+      "id": "delay",
+      "type": "delay",
+      "name": "Delay",
+      "panel_section": "EFFECTS [DELAY]",
+      "scope": "common",
+      "description": "Five types (panning L>R, R>L, short; mono short, long) with TIME, FEEDBACK and LEVEL. Time can follow tempo (Delay Sync).",
+      "properties": {
+        "types": ["panning_l_r", "panning_r_l", "panning_short", "mono_short", "mono_long"],
+        "max_time_ms": {
+          "mono_long": 1250,
+          "panning_l_r": 625,
+          "panning_r_l": 625,
+          "panning_short": 156,
+          "mono_short": 156
+        }
+      },
+      "inputs": ["delay.in"],
+      "outputs": ["delay.out_l", "delay.out_r"]
+    },
+    {
+      "id": "ext",
+      "type": "external_input",
+      "name": "External inputs",
+      "panel_section": "EXTERNAL INPUT / rear EXT IN",
+      "scope": "common",
+      "description": "INST/LOWER and VOCAL/UPPER line inputs and the front MIC input (through the mic amp, chosen by REAR/FRONT), each with a level knob and a limiter. INST/LOWER feeds the Lower part's OSC 2 and the Voice Modulator's Inst Input; VOCAL/UPPER or MIC feeds the Upper part's OSC 2 and the Vocal Input. With only INST/LOWER plugged (REAR), it feeds both parts.",
+      "properties": {
+        "input_level_dbm": {
+          "inst_lower": [-30, 4],
+          "vocal_upper": [-30, 4],
+          "mic": [-60, -20]
+        },
+        "limiter": true
+      },
+      "inputs": ["ext.inst_in", "ext.vocal_in", "ext.mic_in"],
+      "outputs": ["ext.to_osc2", "ext.inst", "ext.vocal", "ext.trigger"]
+    },
+    {
+      "id": "morph",
+      "type": "modulation_bus",
+      "name": "Morphing and motion",
+      "panel_section": "CONTROL [VELOCITY] / MORPHING / MOTION CONTROL",
+      "scope": "common",
+      "description": "Adds offsets to almost every patch knob and slider at once. Velocity Assign and Control Assign store a width of change per parameter in the patch; Control Up (aftertouch by default) moves each parameter by its width and Control Down (breath) by the mirror image. Vocal morph control and motion playback add their own changes. Overlapping sources sum, except that Control Assign and vocal morph take the last message received.",
+      "inputs": [
+        "morph.velocity_in",
+        "morph.up_in",
+        "morph.down_in",
+        "morph.vocal_in",
+        "morph.motion_in"
+      ],
+      "outputs": ["morph.out"]
+    },
+    {
+      "id": "arp",
+      "type": "arpeggiator",
+      "name": "Arpeggiator",
+      "panel_section": "ARPEGGIATOR/RPS",
+      "scope": "common",
+      "description": "UP, DOWN, UP&DOWN or RANDOM over 1 to 4 octaves with 90 beat patterns, at TEMPO or MIDI clock. Driven only from REMOTE KBD IN or Preview; its notes go to MIDI OUT.",
+      "properties": {
+        "modes": ["up", "down", "up_down", "random"],
+        "beat_patterns": 90,
+        "tempo_bpm": [20, 250]
+      },
+      "inputs": ["arp.notes_in"],
+      "outputs": ["arp.notes_out"]
+    },
+    {
+      "id": "rps",
+      "type": "sequencer",
+      "name": "RPS (Realtime Phrase Sequence)",
+      "panel_section": "ARPEGGIATOR/RPS",
+      "scope": "common",
+      "description": "48 one-key patterns on C#2 to C6, each up to 4 measures of 4/4 at 24 ticks per quarter, up to 10 notes at once; loop-mix recording with quantise and gate time.",
+      "properties": {
+        "patterns": 48,
+        "keys": "C#2 (37) to C6 (84)",
+        "max_measures": 4,
+        "ppq": 24
+      },
+      "inputs": ["rps.notes_in"],
+      "outputs": ["rps.notes_out"]
+    },
+    {
+      "id": "motion",
+      "type": "sequencer",
+      "name": "Motion control",
+      "panel_section": "MOTION CONTROL [1]/[2]",
+      "scope": "common",
+      "description": "Records and plays back knob and slider moves (or controllers from REMOTE KBD IN) on the part chosen by PANEL SELECT: two sets (A, B) of two motions, loops of 1 to 8 measures or one pass up to 99.",
+      "properties": {
+        "motions": 4,
+        "loop_measures": [1, 8],
+        "play_once_measures": 99,
+        "switch_points_per_control": 11
+      },
+      "inputs": [],
+      "outputs": ["motion.out"]
+    },
+    {
+      "id": "vm_inst",
+      "type": "mixer",
+      "name": "Voice Modulator Inst Input",
+      "panel_section": "VOICE MODULATOR (internal)",
+      "scope": "common",
+      "description": "Sums what the formant filter imposes the voice on: the part output (VOICE MOD SEND), INST/LOWER (Ext->Inst Send), the robot oscillator and noise.",
+      "inputs": ["vm_inst.patch", "vm_inst.ext", "vm_inst.robot", "vm_inst.noise"],
+      "outputs": ["vm_inst.out"]
+    },
+    {
+      "id": "vm_robot",
+      "type": "oscillator",
+      "name": "Robot oscillator",
+      "panel_section": "VOICE MODULATOR",
+      "scope": "common",
+      "description": "Internal carrier so the formant filter talks with no instrument input; ROBOT PITCH and ROBOT CONTROL (thick to intelligible).",
+      "inputs": [],
+      "outputs": ["vm_robot.out"]
+    },
+    {
+      "id": "vm_noise",
+      "type": "noise",
+      "name": "Voice Modulator noise",
+      "panel_section": "VOICE MODULATOR",
+      "scope": "common",
+      "description": "Noise through a high-pass (V NOISE CUTOFF) mixed into the Inst Input for husky voices.",
+      "inputs": [],
+      "outputs": ["vm_noise.out"]
+    },
+    {
+      "id": "vm",
+      "type": "effects",
+      "name": "Voice Modulator (formant filter / filter bank)",
+      "panel_section": "VOICE MODULATOR",
+      "scope": "common",
+      "description": "Two identical sets of 12 band-pass filters. Formant filter (SOLID, SMOOTH, WIDE): the Vocal Input is analysed band by band and the detected levels shape the Inst Input in the same bands, with consonants (VOCAL MIX) added back, CHARACTER 1-12 band levels, RESONANCE, RELEASE, GATE THRESHOLD and VOCAL HOLD. Filter bank (FLT BANK WIDE, NARROW): both sets are 12-band graphic level controls, Inst Input left and Vocal Input right.",
+      "properties": {
+        "bands": 12,
+        "filter_sets": 2,
+        "algorithms": {
+          "solid": "formant: tight, strong",
+          "smooth": "formant: clean, smooth",
+          "wide": "formant: wider bands, for non-voice modulators",
+          "flt_bank_wide": "filter bank: wide bands",
+          "flt_bank_narrow": "filter bank: narrow bands, AM radio"
+        }
+      },
+      "inputs": ["vm.inst_in", "vm.vocal_in"],
+      "outputs": ["vm.out"]
+    },
+    {
+      "id": "vm_morph",
+      "type": "envelope_follower",
+      "name": "Vocal morph detector",
+      "panel_section": "VOICE MODULATOR (Vocal Morph Ctrl)",
+      "scope": "common",
+      "description": "Measures the Vocal Input around 1.2 kHz (so the vowel 'a' controls most) above a threshold and sends it as the Control Up or Control Down message by the sign of the sensitivity.",
+      "properties": {
+        "detection_band_hz": 1200
+      },
+      "inputs": ["vm_morph.in"],
+      "outputs": ["vm_morph.out"]
+    },
+    {
+      "id": "vm_ens",
+      "type": "chorus",
+      "name": "Voice Modulator ensemble",
+      "panel_section": "VOICE MODULATOR",
+      "scope": "common",
+      "description": "Ensemble, chorus, flanger or phaser types dedicated to the Voice Modulator output, deeper than the multi-effects chorus.",
+      "inputs": ["vm_ens.in"],
+      "outputs": ["vm_ens.out"]
+    },
+    {
+      "id": "vm_dly",
+      "type": "delay",
+      "name": "Voice Modulator delay",
+      "panel_section": "VOICE MODULATOR",
+      "scope": "common",
+      "description": "Delay dedicated to the Voice Modulator output, same five types and limits as the patch delay.",
+      "inputs": ["vm_dly.in"],
+      "outputs": ["vm_dly.out"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "OUTPUT / VOLUME",
+      "scope": "common",
+      "description": "Mixes both parts and the Voice Modulator to L and R (MIX OUT), or Lower to L and Upper to R (PARALLEL OUT); headphones carry the same; VOLUME LEVEL is not stored.",
+      "inputs": ["out.in_l", "out.in_r", "out.vm_in"],
+      "outputs": ["out.main_l", "out.main_r", "out.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "fx.bass",
+      "module": "tone",
+      "label": "TONE CONTROL BASS",
+      "kind": "integer",
+      "range": {
+        "min": -64,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 92",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Low-frequency boost (right) or cut (left)."
+    },
+    {
+      "id": "fx.treble",
+      "module": "tone",
+      "label": "TONE CONTROL TREBLE",
+      "kind": "integer",
+      "range": {
+        "min": -64,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 95",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "High-frequency boost (right) or cut (left)."
+    },
+    {
+      "id": "fx.mfx_level",
+      "module": "mfx",
+      "label": "MULTI-FX LEVEL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 93",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Amount of the multi-effect."
+    },
+    {
+      "id": "fx.delay_time",
+      "module": "delay",
+      "label": "DELAY TIME",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 12",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Delay time; maximum depends on Delay Type."
+    },
+    {
+      "id": "fx.delay_feedback",
+      "module": "delay",
+      "label": "DELAY FEEDBACK",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 13",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Number of repeats."
+    },
+    {
+      "id": "fx.delay_level",
+      "module": "delay",
+      "label": "DELAY LEVEL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 94",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Delay level against the dry sound."
+    },
+    {
+      "id": "fx.vm_send",
+      "module": "vm_inst",
+      "label": "VOICE MOD SEND",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Sends this part's patch to the Voice Modulator (Inst Input for formant algorithms; both inputs for filter bank). No effect unless the Voice Modulator is on."
+    },
+    {
+      "id": "fx.mfx_type",
+      "module": "mfx",
+      "label": "Multi-FX Type",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "super_chorus_slw"
+        },
+        {
+          "value": "super_chorus_mid"
+        },
+        {
+          "value": "super_chorus_fst"
+        },
+        {
+          "value": "super_chorus_clr"
+        },
+        {
+          "value": "flanger_slow"
+        },
+        {
+          "value": "flanger_deep"
+        },
+        {
+          "value": "flanger_fast"
+        },
+        {
+          "value": "deep_phasing_slw"
+        },
+        {
+          "value": "jet_phasing"
+        },
+        {
+          "value": "twisting"
+        },
+        {
+          "value": "freeze_phase_1"
+        },
+        {
+          "value": "freeze_phase_2"
+        },
+        {
+          "value": "distortion"
+        }
+      ],
+      "default": "super_chorus_slw",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PATCH] (BANK 4)"
+        }
+      ],
+      "function": "Multi-effect type."
+    },
+    {
+      "id": "fx.delay_type",
+      "module": "delay",
+      "label": "Delay Type",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "panning_l_r"
+        },
+        {
+          "value": "panning_r_l"
+        },
+        {
+          "value": "panning_short"
+        },
+        {
+          "value": "mono_short"
+        },
+        {
+          "value": "mono_long"
+        }
+      ],
+      "default": "panning_l_r",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PATCH] (BANK 4)"
+        }
+      ],
+      "function": "Delay type. Panning types fall back to mono with a mono output or PARALLEL OUT."
+    },
+    {
+      "id": "lfo1.waveform",
+      "module": "lfo1",
+      "label": "LFO 1 WAVEFORM",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "saw"
+        },
+        {
+          "value": "square",
+          "meaning": "alternates between two settings"
+        },
+        {
+          "value": "sample_hold",
+          "meaning": "random steps"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "LFO 1 shape."
+    },
+    {
+      "id": "lfo1.rate",
+      "module": "lfo1",
+      "label": "LFO 1 RATE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 16",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "LFO 1 speed (ignored when LFO Sync is on)."
+    },
+    {
+      "id": "lfo1.fade",
+      "module": "lfo1",
+      "label": "LFO 1 FADE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "sysex",
+          "note": "MODE1 sends and receives this control as SysEx"
+        },
+        {
+          "type": "midi",
+          "message": "CC 20",
+          "note": "MODE2 default assignment"
+        }
+      ],
+      "function": "Time from key-on until LFO 1 reaches full depth; no effect on auto pan."
+    },
+    {
+      "id": "lfo2.rate",
+      "module": "lfo2",
+      "label": "MODULATION RATE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 17",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "LFO 2 speed, common to its three depths."
+    },
+    {
+      "id": "lfo2.depth_select",
+      "module": "lfo2",
+      "label": "DEPTH SELECT",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "pitch"
+        },
+        {
+          "value": "filter"
+        },
+        {
+          "value": "amp"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Which of the three LFO 2 depths the DEPTH knob edits. Not a routing: all three depths act together."
+    },
+    {
+      "id": "lfo2.depth_pitch",
+      "module": "lfo2",
+      "label": "MODULATION DEPTH (PITCH)",
+      "kind": "integer",
+      "range": {
+        "min": -64,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "DEPTH knob with DEPTH SELECT on PITCH"
+        },
+        {
+          "type": "sysex",
+          "note": "MODE1"
+        },
+        {
+          "type": "midi",
+          "message": "CC 22",
+          "note": "MODE2 default"
+        }
+      ],
+      "function": "LFO 2 depth on pitch (vibrato) at full mod wheel; left of centre inverts."
+    },
+    {
+      "id": "lfo2.depth_filter",
+      "module": "lfo2",
+      "label": "MODULATION DEPTH (FILTER)",
+      "kind": "integer",
+      "range": {
+        "min": -64,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "DEPTH knob with DEPTH SELECT on FILTER"
+        },
+        {
+          "type": "sysex",
+          "note": "MODE1"
+        },
+        {
+          "type": "midi",
+          "message": "CC 23",
+          "note": "MODE2 default"
+        }
+      ],
+      "function": "LFO 2 depth on filter (wah) at full mod wheel; left of centre inverts."
+    },
+    {
+      "id": "lfo2.depth_amp",
+      "module": "lfo2",
+      "label": "MODULATION DEPTH (AMP)",
+      "kind": "integer",
+      "range": {
+        "min": -64,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "DEPTH knob with DEPTH SELECT on AMP"
+        },
+        {
+          "type": "sysex",
+          "note": "MODE1"
+        },
+        {
+          "type": "midi",
+          "message": "CC 24",
+          "note": "MODE2 default"
+        }
+      ],
+      "function": "LFO 2 depth on amp (tremolo) at full mod wheel; left of centre inverts."
+    },
+    {
+      "id": "pitch.portamento",
+      "module": "pitch",
+      "label": "PORTAMENTO ON",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 65"
+        }
+      ],
+      "function": "Portamento on/off."
+    },
+    {
+      "id": "pitch.portamento_time",
+      "module": "pitch",
+      "label": "PORTAMENTO TIME",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 5",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Glide time."
+    },
+    {
+      "id": "osc1.waveform",
+      "module": "osc1",
+      "label": "OSC 1 WAVEFORM",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "super_saw"
+        },
+        {
+          "value": "triangle_mod"
+        },
+        {
+          "value": "noise"
+        },
+        {
+          "value": "feedback_osc"
+        },
+        {
+          "value": "square",
+          "label": "SQR (PWM)"
+        },
+        {
+          "value": "saw"
+        },
+        {
+          "value": "triangle"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "OSC 1 waveform; sets what CONTROL 1 and 2 do."
+    },
+    {
+      "id": "osc1.control1",
+      "module": "osc1",
+      "label": "OSC 1 CONTROL 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 4",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Super saw DETUNE, triangle mod OFFSET, noise CUTOFF, feedback HARMONICS, square PULSE WIDTH, saw or triangle SHAPE."
+    },
+    {
+      "id": "osc1.control2",
+      "module": "osc1",
+      "label": "OSC 1 CONTROL 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 76",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Super saw MIX, triangle mod LFO 1 DEPTH, noise RESONANCE, feedback FEEDBACK AMOUNT, square PWM DEPTH, saw or triangle LFO 1 DEPTH."
+    },
+    {
+      "id": "osc2.waveform",
+      "module": "osc2",
+      "label": "OSC 2 WAVEFORM",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "square",
+          "label": "SQR (PWM)"
+        },
+        {
+          "value": "saw"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "noise"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "OSC 2 waveform. Pressing it also turns EXT off."
+    },
+    {
+      "id": "osc2.ext",
+      "module": "osc2",
+      "label": "EXT",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Replaces the OSC 2 waveform with external audio for this part (Upper: VOCAL/UPPER or MIC; Lower: INST/LOWER). Turned off by pressing WAVEFORM."
+    },
+    {
+      "id": "osc2.sync",
+      "module": "osc2",
+      "label": "SYNC",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Resets OSC 2 at each OSC 1 cycle. Not with noise or EXT."
+    },
+    {
+      "id": "osc2.range",
+      "module": "osc2",
+      "label": "OSC 2 RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-wide"
+        },
+        {
+          "value": -24
+        },
+        {
+          "value": -23
+        },
+        {
+          "value": -22
+        },
+        {
+          "value": -21
+        },
+        {
+          "value": -20
+        },
+        {
+          "value": -19
+        },
+        {
+          "value": -18
+        },
+        {
+          "value": -17
+        },
+        {
+          "value": -16
+        },
+        {
+          "value": -15
+        },
+        {
+          "value": -14
+        },
+        {
+          "value": -13
+        },
+        {
+          "value": -12
+        },
+        {
+          "value": -11
+        },
+        {
+          "value": -10
+        },
+        {
+          "value": -9
+        },
+        {
+          "value": -8
+        },
+        {
+          "value": -7
+        },
+        {
+          "value": -6
+        },
+        {
+          "value": -5
+        },
+        {
+          "value": -4
+        },
+        {
+          "value": -3
+        },
+        {
+          "value": -2
+        },
+        {
+          "value": -1
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 3
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 5
+        },
+        {
+          "value": 6
+        },
+        {
+          "value": 7
+        },
+        {
+          "value": 8
+        },
+        {
+          "value": 9
+        },
+        {
+          "value": 10
+        },
+        {
+          "value": 11
+        },
+        {
+          "value": 12
+        },
+        {
+          "value": 13
+        },
+        {
+          "value": 14
+        },
+        {
+          "value": 15
+        },
+        {
+          "value": 16
+        },
+        {
+          "value": 17
+        },
+        {
+          "value": 18
+        },
+        {
+          "value": 19
+        },
+        {
+          "value": 20
+        },
+        {
+          "value": 21
+        },
+        {
+          "value": 22
+        },
+        {
+          "value": 23
+        },
+        {
+          "value": 24
+        },
+        {
+          "value": "+wide"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "sysex",
+          "note": "MODE1"
+        },
+        {
+          "type": "midi",
+          "message": "CC 21",
+          "note": "MODE2 default"
+        }
+      ],
+      "function": "OSC 2 pitch from OSC 1 in semitones; at the ends, -WIDE or +WIDE hands coarse range to FINE/WIDE. -24, -12, 0, +12, +24 have wider detents."
+    },
+    {
+      "id": "osc2.fine_wide",
+      "module": "osc2",
+      "label": "OSC 2 FINE/WIDE",
+      "kind": "integer",
+      "physical": {
+        "min": -50,
+        "max": 50,
+        "unit": "cent",
+        "note": "or -4 to 0 / 0 to +4 octaves in the WIDE positions"
+      },
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 77"
+        }
+      ],
+      "function": "±50 cents when RANGE is -24 to +24; -4 to 0 octaves at -WIDE, 0 to +4 octaves at +WIDE (wider centre detent)."
+    },
+    {
+      "id": "osc2.control1",
+      "module": "osc2",
+      "label": "OSC 2 CONTROL 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 78",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Square PULSE WIDTH, noise CUTOFF, or GATE THRESHOLD with EXT on; nothing for saw or triangle."
+    },
+    {
+      "id": "osc2.control2",
+      "module": "osc2",
+      "label": "OSC 2 CONTROL 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 79",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Square PWM DEPTH or noise RESONANCE; nothing for saw, triangle or EXT."
+    },
+    {
+      "id": "osc2.ring",
+      "module": "ring",
+      "label": "RING",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Ring modulation of OSC 1 by OSC 2, heard on the OSC 2 side of OSC BALANCE."
+    },
+    {
+      "id": "mix.balance",
+      "module": "mixer",
+      "label": "OSC BALANCE",
+      "kind": "integer",
+      "range": {
+        "min": -64,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 8",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "OSC 1 (left) to OSC 2 (right); equal at centre."
+    },
+    {
+      "id": "osc.xmod_depth",
+      "module": "osc1",
+      "label": "X-MOD DEPTH",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 70",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Depth of OSC 2 modulating OSC 1's frequency. No effect on super saw or noise."
+    },
+    {
+      "id": "osc.lfo_env_dest",
+      "module": "pitch",
+      "label": "LFO 1 & ENV DESTINATION",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "osc1_2",
+          "label": "OSC1+2"
+        },
+        {
+          "value": "osc2",
+          "label": "OSC2"
+        },
+        {
+          "value": "xmod",
+          "label": "X-MOD",
+          "meaning": "cross mod depth instead of pitch"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Where the pitch envelope and the OSC COMMON LFO 1 depth act."
+    },
+    {
+      "id": "osc.lfo1_depth",
+      "module": "pitch",
+      "label": "OSC COMMON LFO 1 DEPTH",
+      "kind": "integer",
+      "range": {
+        "min": -64,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 18",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "LFO 1 on pitch (or cross mod depth); left of centre inverts."
+    },
+    {
+      "id": "osc.shift",
+      "module": "pitch",
+      "label": "OSC SHIFT",
+      "kind": "enum",
+      "values": [
+        {
+          "value": -2
+        },
+        {
+          "value": -1
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "-OCT and +OCT buttons"
+        }
+      ],
+      "function": "Octave shift of the patch. LEDs: -2 red/dark, -1 orange/dark, 0 dark/dark, +1 dark/orange, +2 dark/red."
+    },
+    {
+      "id": "env_pitch.depth",
+      "module": "env_pitch",
+      "label": "PITCH ENVELOPE DEPTH",
+      "kind": "integer",
+      "range": {
+        "min": -64,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "sysex",
+          "note": "MODE1 sends and receives this control as SysEx"
+        },
+        {
+          "type": "midi",
+          "message": "CC 25",
+          "note": "MODE2 default assignment"
+        }
+      ],
+      "function": "Envelope depth; below centre inverts; centre is none."
+    },
+    {
+      "id": "env_pitch.attack",
+      "module": "env_pitch",
+      "label": "PITCH ENVELOPE A",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "sysex",
+          "note": "MODE1 sends and receives this control as SysEx"
+        },
+        {
+          "type": "midi",
+          "message": "CC 26",
+          "note": "MODE2 default assignment"
+        }
+      ],
+      "function": "Time to the peak change."
+    },
+    {
+      "id": "env_pitch.decay",
+      "module": "env_pitch",
+      "label": "PITCH ENVELOPE D",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "sysex",
+          "note": "MODE1 sends and receives this control as SysEx"
+        },
+        {
+          "type": "midi",
+          "message": "CC 27",
+          "note": "MODE2 default assignment"
+        }
+      ],
+      "function": "Time back to normal pitch."
+    },
+    {
+      "id": "vcf.type",
+      "module": "vcf",
+      "label": "FILTER TYPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "hpf"
+        },
+        {
+          "value": "bpf"
+        },
+        {
+          "value": "lpf"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Filter type. High HPF or BPF cutoffs can silence some waveforms."
+    },
+    {
+      "id": "vcf.slope",
+      "module": "vcf",
+      "label": "-12dB/-24dB",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "LED off: -12 dB/octave. LED on: -24 dB/octave."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "CUTOFF FREQ",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 74",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Cutoff frequency."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RESONANCE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 71",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Emphasis at cutoff; high settings self-oscillate."
+    },
+    {
+      "id": "vcf.key_follow",
+      "module": "vcf",
+      "label": "KEY FOLLOW",
+      "kind": "integer",
+      "range": {
+        "min": -64,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "sysex",
+          "note": "MODE1 sends and receives this control as SysEx"
+        },
+        {
+          "type": "midi",
+          "message": "CC 30",
+          "note": "MODE2 default assignment"
+        }
+      ],
+      "function": "Cutoff tracking: centre none, +32 = 100 % (equal brightness across keys), +63 about 200 %; left lowers cutoff for higher notes."
+    },
+    {
+      "id": "vcf.lfo1_depth",
+      "module": "vcf",
+      "label": "FILTER LFO 1 DEPTH",
+      "kind": "integer",
+      "range": {
+        "min": -64,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 19",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "LFO 1 on cutoff; left of centre inverts."
+    },
+    {
+      "id": "env_filter.depth",
+      "module": "env_filter",
+      "label": "FILTER ENVELOPE DEPTH",
+      "kind": "integer",
+      "range": {
+        "min": -64,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 81",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Envelope depth on cutoff; below centre inverts."
+    },
+    {
+      "id": "env_filter.attack",
+      "module": "env_filter",
+      "label": "FILTER ENVELOPE A",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 82",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Attack time."
+    },
+    {
+      "id": "env_filter.decay",
+      "module": "env_filter",
+      "label": "FILTER ENVELOPE D",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 83",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Decay time."
+    },
+    {
+      "id": "env_filter.sustain",
+      "module": "env_filter",
+      "label": "FILTER ENVELOPE S",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "sysex",
+          "note": "MODE1 sends and receives this control as SysEx"
+        },
+        {
+          "type": "midi",
+          "message": "CC 28",
+          "note": "MODE2 default assignment"
+        }
+      ],
+      "function": "Sustain level."
+    },
+    {
+      "id": "env_filter.release",
+      "module": "env_filter",
+      "label": "FILTER ENVELOPE R",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "sysex",
+          "note": "MODE1 sends and receives this control as SysEx"
+        },
+        {
+          "type": "midi",
+          "message": "CC 29",
+          "note": "MODE2 default assignment"
+        }
+      ],
+      "function": "Release time."
+    },
+    {
+      "id": "amp.level",
+      "module": "vca",
+      "label": "AMP LEVEL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 7",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Patch volume (VOLUME LEVEL is the whole unit)."
+    },
+    {
+      "id": "amp.pan",
+      "module": "vca",
+      "label": "PAN",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off",
+          "meaning": "LFO 1 tremolo"
+        },
+        {
+          "value": "auto",
+          "meaning": "LFO 1 auto pan"
+        },
+        {
+          "value": "manual",
+          "meaning": "fixed pan position"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "What AMP LFO 1 DEPTH does."
+    },
+    {
+      "id": "amp.lfo1_depth",
+      "module": "vca",
+      "label": "AMP LFO 1 DEPTH",
+      "kind": "integer",
+      "range": {
+        "min": -64,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 80",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Tremolo or auto-pan depth (left inverts); with PAN on MANUAL, the pan position (-64 left to +63 right)."
+    },
+    {
+      "id": "env_amp.attack",
+      "module": "env_amp",
+      "label": "AMP ENVELOPE A",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 73",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Attack time."
+    },
+    {
+      "id": "env_amp.decay",
+      "module": "env_amp",
+      "label": "AMP ENVELOPE D",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 75",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Decay time."
+    },
+    {
+      "id": "env_amp.sustain",
+      "module": "env_amp",
+      "label": "AMP ENVELOPE S",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "sysex",
+          "note": "MODE1 sends and receives this control as SysEx"
+        },
+        {
+          "type": "midi",
+          "message": "CC 31",
+          "note": "MODE2 default assignment"
+        }
+      ],
+      "function": "Sustain level."
+    },
+    {
+      "id": "env_amp.release",
+      "module": "env_amp",
+      "label": "AMP ENVELOPE R",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 72",
+          "note": "Tx/Rx Edit Mode MODE1 (factory) and MODE2 default"
+        }
+      ],
+      "function": "Release time."
+    },
+    {
+      "id": "kbd.mono",
+      "module": "kbd",
+      "label": "SOLO SW MONO",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 126 (on) / CC 127 (off)"
+        }
+      ],
+      "function": "Monophonic, each note re-articulated. Forced on (or LEGATO) by feedback osc."
+    },
+    {
+      "id": "kbd.legato",
+      "module": "kbd",
+      "label": "SOLO SW LEGATO",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Monophonic; overlapping notes glide without re-attack. With UNISON (press both): legato unison."
+    },
+    {
+      "id": "kbd.unison",
+      "module": "kbd",
+      "label": "SOLO SW UNISON",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "All voices (or the part's Voice Assign share) on one note, spread by Unison Detune. Not with feedback osc."
+    },
+    {
+      "id": "morph.velocity",
+      "module": "morph",
+      "label": "VELOCITY",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Velocity on; off plays everything at 80 (note-on and note-off)."
+    },
+    {
+      "id": "morph.velocity_assign",
+      "module": "morph",
+      "label": "MORPHING VELOCITY ASSIGN",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Enters velocity assign: knob moves set each parameter's width from velocity 80 to 127 (mirrored to 0). WRITE clears all. LED lit when any widths are stored."
+    },
+    {
+      "id": "morph.control_assign",
+      "module": "morph",
+      "label": "MORPHING CONTROL ASSIGN",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Enters control assign: knob moves set each parameter's width for Control Up 0-127; Control Down gets the mirror. WRITE clears all (and Morph Bend Assign). LED lit when widths are stored."
+    },
+    {
+      "id": "morph.velocity_widths",
+      "module": "morph",
+      "label": "Velocity Assign widths",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold VELOCITY ASSIGN mode and move each knob or slider to its maximum-velocity position",
+          "when": "any_time"
+        }
+      ],
+      "function": "Per-parameter width of change from velocity; filter and amp R follow note-off velocity. Stored in the patch.",
+      "note": "Value list shows -127 to +127, -100 to +100 or -50 to +50 by parameter range."
+    },
+    {
+      "id": "morph.control_widths",
+      "module": "morph",
+      "label": "Control Assign widths",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold CONTROL ASSIGN mode and move each knob or slider to its full-aftertouch position",
+          "when": "any_time"
+        }
+      ],
+      "function": "Per-parameter width of change from Control Up (and mirrored from Control Down). Stored in the patch.",
+      "note": "Value list shows -127 to +127, -100 to +100 or -50 to +50 by parameter range."
+    },
+    {
+      "id": "patch.name",
+      "module": "kbd",
+      "label": "Patch Name",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "text",
+          "meaning": "16 characters; INIT PATCH after initialise"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PATCH] (BANK 4)"
+        }
+      ],
+      "function": "Up to 16 ASCII characters."
+    },
+    {
+      "id": "pitch.bend_up",
+      "module": "pitch",
+      "label": "Bend Range Up",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 24
+      },
+      "default": 2,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PATCH] (BANK 4)"
+        },
+        {
+          "type": "midi",
+          "message": "RPN 0 (sets both ranges)"
+        }
+      ],
+      "function": "Semitones at full upward bend; also the pitch rise from Control Up when Morph Bend Assign is on."
+    },
+    {
+      "id": "pitch.bend_down",
+      "module": "pitch",
+      "label": "Bend Range Down",
+      "kind": "integer",
+      "range": {
+        "min": -24,
+        "max": 0
+      },
+      "default": -2,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PATCH] (BANK 4)"
+        }
+      ],
+      "function": "Semitones at full downward bend; also the drop from Control Down when Morph Bend Assign is on."
+    },
+    {
+      "id": "morph.bend_assign",
+      "module": "morph",
+      "label": "Morph Bend Assign",
+      "kind": "boolean",
+      "default": false,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PATCH] (BANK 4)"
+        }
+      ],
+      "function": "Control Up/Down also bend pitch by the bend ranges (from REMOTE KBD IN only)."
+    },
+    {
+      "id": "kbd.unison_detune",
+      "module": "kbd",
+      "label": "Unison Detune",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 50
+      },
+      "default": 5,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PATCH] (BANK 4)"
+        }
+      ],
+      "function": "Spread between highest and lowest unison voice, up to 50 cents."
+    },
+    {
+      "id": "kbd.env_type_solo",
+      "module": "kbd",
+      "label": "Env Type in Solo",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "standard"
+        },
+        {
+          "value": "analog"
+        }
+      ],
+      "default": "standard",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PATCH] (BANK 4)"
+        }
+      ],
+      "function": "STANDARD: envelopes restart from zero in MONO/LEGATO/UNISON. ANALOG: a new note continues from the current envelope level."
+    },
+    {
+      "id": "vca.patch_gain",
+      "module": "vca",
+      "label": "Patch Gain",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "0dB"
+        },
+        {
+          "value": "+6dB"
+        },
+        {
+          "value": "+12dB"
+        }
+      ],
+      "default": "0dB",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PATCH] (BANK 4)"
+        }
+      ],
+      "function": "Output boost for quiet mono patches: +6 dB doubles, +12 dB quadruples the amplitude; may distort."
+    },
+    {
+      "id": "ext.trig_switch",
+      "module": "ext",
+      "label": "Ext Trig Switch",
+      "kind": "boolean",
+      "default": false,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PATCH] (BANK 4)"
+        }
+      ],
+      "function": "The part's external input (above OSC 2 GATE THRESHOLD) starts the chosen envelopes; keys alone then do not."
+    },
+    {
+      "id": "ext.trig_dest",
+      "module": "ext",
+      "label": "Ext Trig Dest",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "filter"
+        },
+        {
+          "value": "amp"
+        },
+        {
+          "value": "filter_amp"
+        }
+      ],
+      "default": "filter",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PATCH] (BANK 4)"
+        }
+      ],
+      "function": "Envelopes started by the external trigger."
+    },
+    {
+      "id": "perf.panel_select",
+      "module": "kbd",
+      "label": "PANEL SELECT",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lower"
+        },
+        {
+          "value": "upper"
+        },
+        {
+          "value": "lower_upper"
+        },
+        {
+          "value": "voice_mod"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Which part the panel edits and, in SINGLE, plays: LOWER, UPPER, both (press together; panel shows Upper), or the Voice Modulator panel (SHIFT + UPPER).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "perf.key_mode",
+      "module": "kbd",
+      "label": "KEY MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "single"
+        },
+        {
+          "value": "dual"
+        },
+        {
+          "value": "split"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "SINGLE: the PANEL SELECT part. DUAL: both layered. SPLIT: Lower below the split point, Upper from it.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "arp.on",
+      "module": "arp",
+      "label": "ARPEGGIATOR/RPS ON",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Arpeggiator on, or RPS on when MODE is RPS.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "arp.mode",
+      "module": "arp",
+      "label": "ARPEGGIATOR/RPS MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "up"
+        },
+        {
+          "value": "down"
+        },
+        {
+          "value": "up_down"
+        },
+        {
+          "value": "random"
+        },
+        {
+          "value": "rps"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Arpeggio order, or RPS. UP&DOWN lights both LEDs.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "arp.range",
+      "module": "arp",
+      "label": "ARPEGGIO RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1oct"
+        },
+        {
+          "value": "2oct"
+        },
+        {
+          "value": "3oct"
+        },
+        {
+          "value": "4oct"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Octave span.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "arp.hold",
+      "module": "arp",
+      "label": "HOLD",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Arpeggio or pattern continues after release; a new chord or key changes it.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "arp.tempo",
+      "module": "arp",
+      "label": "TEMPO",
+      "kind": "integer",
+      "physical": {
+        "min": 20,
+        "max": 250,
+        "unit": "BPM"
+      },
+      "range": {
+        "min": 20,
+        "max": 250
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Internal tempo for arpeggio, RPS, motion and synced effects (ignored while MIDI clock is followed). Not affected by morphing or motion.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.on",
+      "module": "vm",
+      "label": "VOICE MODULATOR ON",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Enables the formant filter, filter bank and vocal morph; reduces polyphony to 8.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "ext.rear_front",
+      "module": "ext",
+      "label": "REAR/FRONT",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Vocal source: off = rear VOCAL/UPPER jack, on = front MIC.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "ext.inst_level",
+      "module": "ext",
+      "label": "INST/LOWER level",
+      "kind": "continuous",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Input level of INST/LOWER, before the limiter. Not stored, not recordable in motion."
+    },
+    {
+      "id": "ext.vocal_level",
+      "module": "ext",
+      "label": "VOCAL/UPPER level",
+      "kind": "continuous",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Input level of VOCAL/UPPER or MIC, before the limiter. Not stored, not recordable in motion."
+    },
+    {
+      "id": "vm.control1",
+      "module": "vm",
+      "label": "VOICE MODULATOR CONTROL 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Live control of the Voice Modulator parameter chosen by Control1 Assign; always active while the Voice Modulator is on. Not affected by morphing or motion."
+    },
+    {
+      "id": "vm.control2",
+      "module": "vm",
+      "label": "VOICE MODULATOR CONTROL 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Live control of the Voice Modulator parameter chosen by Control2 Assign; always active while the Voice Modulator is on. Not affected by morphing or motion."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "VOLUME LEVEL",
+      "kind": "continuous",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Master volume of the unit; not stored."
+    },
+    {
+      "id": "perf.name",
+      "module": "kbd",
+      "label": "Performance Name",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "text",
+          "meaning": "16 characters; INIT PERFORMANCE after initialise"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PFM COMMON] (BANK 1)"
+        }
+      ],
+      "function": "Up to 16 ASCII characters.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "perf.part_detune",
+      "module": "pitch",
+      "label": "Part Detune",
+      "kind": "integer",
+      "range": {
+        "min": -50,
+        "max": 50
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PFM COMMON] (BANK 1)"
+        }
+      ],
+      "function": "DUAL only: + raises Upper and lowers Lower by up to 50 cents (minus the reverse).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "perf.output_assign",
+      "module": "out",
+      "label": "Output Assign",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "mix_out"
+        },
+        {
+          "value": "parallel_out"
+        }
+      ],
+      "default": "mix_out",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PFM COMMON] (BANK 1)"
+        }
+      ],
+      "function": "MIX OUT: both parts to L and R. PARALLEL OUT: Lower to L, Upper to R (disables pan and panning delay).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "perf.voice_assign",
+      "module": "kbd",
+      "label": "Voice Assign",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "8-2",
+          "meaning": "VM on 6-2"
+        },
+        {
+          "value": "7-3",
+          "meaning": "VM on 5-3"
+        },
+        {
+          "value": "6-4",
+          "meaning": "VM on 4-4"
+        },
+        {
+          "value": "5-5",
+          "meaning": "VM on 4-4"
+        },
+        {
+          "value": "4-6",
+          "meaning": "VM on 4-4"
+        },
+        {
+          "value": "3-7",
+          "meaning": "VM on 3-5"
+        },
+        {
+          "value": "2-8",
+          "meaning": "VM on 2-6"
+        }
+      ],
+      "default": "5-5",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PFM COMMON] (BANK 1)"
+        }
+      ],
+      "function": "DUAL and SPLIT: Lower-Upper voices with the Voice Modulator off (on in brackets).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "perf.split_point",
+      "module": "kbd",
+      "label": "Split Point",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "default": 60,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PFM COMMON] (BANK 1)"
+        }
+      ],
+      "function": "SPLIT only: lowest note of the Upper part (C-1 to G9 as MIDI 0-127).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "arp.dest",
+      "module": "arp",
+      "label": "Arpeggio Dest",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lower_upper"
+        },
+        {
+          "value": "lower"
+        },
+        {
+          "value": "upper"
+        }
+      ],
+      "default": "lower_upper",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PFM COMMON] (BANK 1)"
+        }
+      ],
+      "function": "DUAL only: which parts the arpeggio plays.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "arp.beat_pattern",
+      "module": "arp",
+      "label": "Arp Beat Pattern",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1/4"
+        },
+        {
+          "value": "1/6"
+        },
+        {
+          "value": "1/8"
+        },
+        {
+          "value": "1/12"
+        },
+        {
+          "value": "1/16"
+        },
+        {
+          "value": "1/32"
+        },
+        {
+          "value": "PORTA-A1"
+        },
+        {
+          "value": "PORTA-A2"
+        },
+        {
+          "value": "PORTA-A3"
+        },
+        {
+          "value": "PORTA-A4"
+        },
+        {
+          "value": "PORTA-A5"
+        },
+        {
+          "value": "PORTA-A6"
+        },
+        {
+          "value": "PORTA-A7"
+        },
+        {
+          "value": "PORTA-A8"
+        },
+        {
+          "value": "PORTA-A9"
+        },
+        {
+          "value": "PORTA-A10"
+        },
+        {
+          "value": "PORTA-A11"
+        },
+        {
+          "value": "PORTA-B1"
+        },
+        {
+          "value": "PORTA-B2"
+        },
+        {
+          "value": "PORTA-B3"
+        },
+        {
+          "value": "PORTA-B4"
+        },
+        {
+          "value": "PORTA-B5"
+        },
+        {
+          "value": "PORTA-B6"
+        },
+        {
+          "value": "PORTA-B7"
+        },
+        {
+          "value": "PORTA-B8"
+        },
+        {
+          "value": "PORTA-B9"
+        },
+        {
+          "value": "PORTA-B10"
+        },
+        {
+          "value": "PORTA-B11"
+        },
+        {
+          "value": "PORTA-B12"
+        },
+        {
+          "value": "PORTA-B13"
+        },
+        {
+          "value": "PORTA-B14"
+        },
+        {
+          "value": "PORTA-B15"
+        },
+        {
+          "value": "SEQUENCE-A1"
+        },
+        {
+          "value": "SEQUENCE-A2"
+        },
+        {
+          "value": "SEQUENCE-A3"
+        },
+        {
+          "value": "SEQUENCE-A4"
+        },
+        {
+          "value": "SEQUENCE-A5"
+        },
+        {
+          "value": "SEQUENCE-A6"
+        },
+        {
+          "value": "SEQUENCE-A7"
+        },
+        {
+          "value": "SEQUENCE-B1"
+        },
+        {
+          "value": "SEQUENCE-B2"
+        },
+        {
+          "value": "SEQUENCE-B3"
+        },
+        {
+          "value": "SEQUENCE-B4"
+        },
+        {
+          "value": "SEQUENCE-B5"
+        },
+        {
+          "value": "SEQUENCE-C1"
+        },
+        {
+          "value": "SEQUENCE-C2"
+        },
+        {
+          "value": "SEQUENCE-D1"
+        },
+        {
+          "value": "SEQUENCE-D2"
+        },
+        {
+          "value": "SEQUENCE-D3"
+        },
+        {
+          "value": "SEQUENCE-D4"
+        },
+        {
+          "value": "SEQUENCE-D5"
+        },
+        {
+          "value": "SEQUENCE-D6"
+        },
+        {
+          "value": "SEQUENCE-D7"
+        },
+        {
+          "value": "SEQUENCE-D8"
+        },
+        {
+          "value": "ECHO1"
+        },
+        {
+          "value": "ECHO2"
+        },
+        {
+          "value": "ECHO3"
+        },
+        {
+          "value": "MUTE1"
+        },
+        {
+          "value": "MUTE2"
+        },
+        {
+          "value": "MUTE3"
+        },
+        {
+          "value": "MUTE4"
+        },
+        {
+          "value": "MUTE5"
+        },
+        {
+          "value": "MUTE6"
+        },
+        {
+          "value": "MUTE7"
+        },
+        {
+          "value": "MUTE8"
+        },
+        {
+          "value": "MUTE9"
+        },
+        {
+          "value": "MUTE10"
+        },
+        {
+          "value": "MUTE11"
+        },
+        {
+          "value": "MUTE12"
+        },
+        {
+          "value": "MUTE13"
+        },
+        {
+          "value": "MUTE14"
+        },
+        {
+          "value": "MUTE15"
+        },
+        {
+          "value": "MUTE16"
+        },
+        {
+          "value": "STRUMMING1"
+        },
+        {
+          "value": "STRUMMING2"
+        },
+        {
+          "value": "STRUMMING3"
+        },
+        {
+          "value": "STRUMMING4"
+        },
+        {
+          "value": "STRUMMING5"
+        },
+        {
+          "value": "STRUMMING6"
+        },
+        {
+          "value": "STRUMMING7"
+        },
+        {
+          "value": "STRUMMING8"
+        },
+        {
+          "value": "REFRAIN1"
+        },
+        {
+          "value": "REFRAIN2"
+        },
+        {
+          "value": "PERCUSSION1"
+        },
+        {
+          "value": "PERCUSSION2"
+        },
+        {
+          "value": "PERCUSSION3"
+        },
+        {
+          "value": "PERCUSSION4"
+        },
+        {
+          "value": "WALKING BASS"
+        },
+        {
+          "value": "HARP"
+        },
+        {
+          "value": "RANDOM"
+        }
+      ],
+      "default": "1/16",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PFM COMMON] (BANK 1)"
+        }
+      ],
+      "function": "Accent and note-length pattern; 90 types.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "kbd.indv_trig",
+      "module": "kbd",
+      "label": "Indv Trig Switch",
+      "kind": "boolean",
+      "default": false,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PFM COMMON] (BANK 1)"
+        }
+      ],
+      "function": "Notes on the trigger channel (or below the split point from REMOTE KBD IN) start the chosen envelopes of held notes.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "kbd.indv_trig_dest",
+      "module": "kbd",
+      "label": "Indv Trig Dest",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "filter"
+        },
+        {
+          "value": "amp"
+        },
+        {
+          "value": "filter_amp"
+        }
+      ],
+      "default": "filter",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PFM COMMON] (BANK 1)"
+        }
+      ],
+      "function": "Envelopes the individual trigger starts.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "kbd.indv_trig_ch",
+      "module": "kbd",
+      "label": "Indv Trig Src CH",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "default": 15,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PFM COMMON] (BANK 1)"
+        }
+      ],
+      "function": "MIDI channel of trigger notes; must differ from the Part MIDI channels.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "kbd.indv_trig_note",
+      "module": "kbd",
+      "label": "IndvTrigSrc Note",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "C-1..G9"
+        },
+        {
+          "value": "all"
+        }
+      ],
+      "default": "all",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PFM COMMON] (BANK 1)"
+        }
+      ],
+      "function": "Which note number acts as the trigger, or ALL.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.algorithm",
+      "module": "vm",
+      "label": "Algorithm",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "solid"
+        },
+        {
+          "value": "smooth"
+        },
+        {
+          "value": "wide"
+        },
+        {
+          "value": "flt_bank_wide"
+        },
+        {
+          "value": "flt_bank_narrow"
+        }
+      ],
+      "default": "solid",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [VOICE MOD] (BANK 2)"
+        }
+      ],
+      "function": "Formant filter or filter bank type; also sets the internal routing.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.control1_assign",
+      "module": "vm",
+      "label": "Control1 Assign",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ensemble_level"
+        },
+        {
+          "value": "v_delay_time"
+        },
+        {
+          "value": "v_delay_feedback"
+        },
+        {
+          "value": "v_delay_level"
+        },
+        {
+          "value": "vocal_mix"
+        },
+        {
+          "value": "v_resonance"
+        },
+        {
+          "value": "v_release"
+        },
+        {
+          "value": "v_pan"
+        },
+        {
+          "value": "v_level"
+        },
+        {
+          "value": "v_noise_cutoff"
+        },
+        {
+          "value": "v_noise_level"
+        },
+        {
+          "value": "gate_threshold"
+        },
+        {
+          "value": "robot_pitch"
+        },
+        {
+          "value": "robot_control"
+        },
+        {
+          "value": "robot_level"
+        },
+        {
+          "value": "character1"
+        },
+        {
+          "value": "character2"
+        },
+        {
+          "value": "character3"
+        },
+        {
+          "value": "character4"
+        },
+        {
+          "value": "character5"
+        },
+        {
+          "value": "character6"
+        },
+        {
+          "value": "character7"
+        },
+        {
+          "value": "character8"
+        },
+        {
+          "value": "character9"
+        },
+        {
+          "value": "character10"
+        },
+        {
+          "value": "character11"
+        },
+        {
+          "value": "character12"
+        }
+      ],
+      "default": "vocal_mix",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [VOICE MOD] (BANK 2)"
+        }
+      ],
+      "function": "Parameter on Voice Modulator CONTROL 1.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.control2_assign",
+      "module": "vm",
+      "label": "Control2 Assign",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ensemble_level"
+        },
+        {
+          "value": "v_delay_time"
+        },
+        {
+          "value": "v_delay_feedback"
+        },
+        {
+          "value": "v_delay_level"
+        },
+        {
+          "value": "vocal_mix"
+        },
+        {
+          "value": "v_resonance"
+        },
+        {
+          "value": "v_release"
+        },
+        {
+          "value": "v_pan"
+        },
+        {
+          "value": "v_level"
+        },
+        {
+          "value": "v_noise_cutoff"
+        },
+        {
+          "value": "v_noise_level"
+        },
+        {
+          "value": "gate_threshold"
+        },
+        {
+          "value": "robot_pitch"
+        },
+        {
+          "value": "robot_control"
+        },
+        {
+          "value": "robot_level"
+        },
+        {
+          "value": "character1"
+        },
+        {
+          "value": "character2"
+        },
+        {
+          "value": "character3"
+        },
+        {
+          "value": "character4"
+        },
+        {
+          "value": "character5"
+        },
+        {
+          "value": "character6"
+        },
+        {
+          "value": "character7"
+        },
+        {
+          "value": "character8"
+        },
+        {
+          "value": "character9"
+        },
+        {
+          "value": "character10"
+        },
+        {
+          "value": "character11"
+        },
+        {
+          "value": "character12"
+        }
+      ],
+      "default": "ensemble_level",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [VOICE MOD] (BANK 2)"
+        }
+      ],
+      "function": "Parameter on Voice Modulator CONTROL 2.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.ext_inst_send",
+      "module": "vm_inst",
+      "label": "Ext->Inst Send",
+      "kind": "boolean",
+      "default": true,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [VOICE MOD] (BANK 2)"
+        }
+      ],
+      "function": "INST/LOWER directly into the Inst Input.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.ext_vocal_send",
+      "module": "vm",
+      "label": "Ext->Vocal Send",
+      "kind": "boolean",
+      "default": true,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [VOICE MOD] (BANK 2)"
+        }
+      ],
+      "function": "VOCAL/UPPER or MIC into the Vocal Input; needed for the formant filter and vocal morph.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.delay_type",
+      "module": "vm_dly",
+      "label": "V Delay Type",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "panning_l_r"
+        },
+        {
+          "value": "panning_r_l"
+        },
+        {
+          "value": "panning_short"
+        },
+        {
+          "value": "mono_short"
+        },
+        {
+          "value": "mono_long"
+        }
+      ],
+      "default": "panning_l_r",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [VOICE MOD] (BANK 2)"
+        }
+      ],
+      "function": "Voice Modulator delay type.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.delay_sync",
+      "module": "vm_dly",
+      "label": "V Delay Sync",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "1/16"
+        },
+        {
+          "value": "1/8T"
+        },
+        {
+          "value": "1/16."
+        },
+        {
+          "value": "1/8"
+        },
+        {
+          "value": "1/4T"
+        },
+        {
+          "value": "1/8."
+        },
+        {
+          "value": "1/4"
+        },
+        {
+          "value": "1/2T"
+        },
+        {
+          "value": "1/4."
+        },
+        {
+          "value": "1/2"
+        }
+      ],
+      "default": "off",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [VOICE MOD] (BANK 2)"
+        }
+      ],
+      "function": "Voice Modulator delay time from tempo; OFF uses V DELAY TIME. Halved when longer than the type allows.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.ensemble_type",
+      "module": "vm_ens",
+      "label": "Ensemble Type",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ensemble_mild"
+        },
+        {
+          "value": "ensemble_clean"
+        },
+        {
+          "value": "ensemble_fast"
+        },
+        {
+          "value": "super_chorus_slw"
+        },
+        {
+          "value": "super_chorus_mid"
+        },
+        {
+          "value": "super_chorus_fst"
+        },
+        {
+          "value": "super_chorus_clr"
+        },
+        {
+          "value": "flanger_slow"
+        },
+        {
+          "value": "flanger_deep"
+        },
+        {
+          "value": "flanger_fast"
+        },
+        {
+          "value": "deep_phasing_slw"
+        },
+        {
+          "value": "jet_phasing"
+        },
+        {
+          "value": "twisting"
+        },
+        {
+          "value": "freeze_phase_1"
+        },
+        {
+          "value": "freeze_phase_2"
+        }
+      ],
+      "default": "ensemble_mild",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [VOICE MOD] (BANK 2)"
+        }
+      ],
+      "function": "Voice Modulator ensemble effect.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.ensemble_sync",
+      "module": "vm_ens",
+      "label": "Ensemble Sync",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "1/16"
+        },
+        {
+          "value": "1/8T"
+        },
+        {
+          "value": "1/16."
+        },
+        {
+          "value": "1/8"
+        },
+        {
+          "value": "1/4T"
+        },
+        {
+          "value": "1/8."
+        },
+        {
+          "value": "1/4"
+        },
+        {
+          "value": "1/2T"
+        },
+        {
+          "value": "1/4."
+        },
+        {
+          "value": "1/2"
+        },
+        {
+          "value": "1/1T"
+        },
+        {
+          "value": "1/2."
+        },
+        {
+          "value": "1/1"
+        },
+        {
+          "value": "2/1T"
+        },
+        {
+          "value": "1/1."
+        },
+        {
+          "value": "2/1"
+        },
+        {
+          "value": "3_measures"
+        },
+        {
+          "value": "4_measures"
+        },
+        {
+          "value": "5_measures"
+        },
+        {
+          "value": "6_measures"
+        },
+        {
+          "value": "7_measures"
+        },
+        {
+          "value": "8_measures"
+        }
+      ],
+      "default": "off",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [VOICE MOD] (BANK 2)"
+        }
+      ],
+      "function": "Ensemble rate from tempo or MIDI clock.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.morph_ctrl",
+      "module": "vm_morph",
+      "label": "Vocal Morph Ctrl",
+      "kind": "boolean",
+      "default": false,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [VOICE MOD] (BANK 2)"
+        }
+      ],
+      "function": "Vocal morph control on.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.morph_sens",
+      "module": "vm_morph",
+      "label": "Vocal Morph Sens",
+      "kind": "integer",
+      "range": {
+        "min": -64,
+        "max": 63
+      },
+      "default": 32,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [VOICE MOD] (BANK 2)"
+        }
+      ],
+      "function": "+ sends Control Up, - sends Control Down; 0 none; ±32 typical (±10-20 with V RESONANCE raised).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.morph_threshold",
+      "module": "vm_morph",
+      "label": "VocalMorph Thrsh",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "default": 10,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [VOICE MOD] (BANK 2)"
+        }
+      ],
+      "function": "Minimum voice level that controls.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.ensemble_level",
+      "module": "vm_ens",
+      "label": "ENSEMBLE LEVEL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the MULTI-FX LEVEL knob (ENSEMBLE)"
+        }
+      ],
+      "function": "Ensemble depth.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.delay_time",
+      "module": "vm_dly",
+      "label": "V DELAY TIME",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the DELAY TIME knob"
+        }
+      ],
+      "function": "Voice Modulator delay time.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.delay_feedback",
+      "module": "vm_dly",
+      "label": "V DELAY FEEDBACK",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the DELAY FEEDBACK knob"
+        }
+      ],
+      "function": "Voice Modulator delay repeats.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.delay_level",
+      "module": "vm_dly",
+      "label": "V DELAY LEVEL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the DELAY LEVEL knob"
+        }
+      ],
+      "function": "Voice Modulator delay level.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.vocal_mix",
+      "module": "vm",
+      "label": "VOCAL MIX",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the CUTOFF FREQ slider"
+        }
+      ],
+      "function": "Consonants extracted from the Vocal Input mixed into the output (formant only).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.resonance",
+      "module": "vm",
+      "label": "V RESONANCE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the RESONANCE slider"
+        }
+      ],
+      "function": "Emphasis on all 12 bands; also raises vocal morph sensitivity.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.release",
+      "module": "vm",
+      "label": "V RELEASE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the FILTER LFO 1 DEPTH knob (RELEASE)"
+        }
+      ],
+      "function": "Decay of the output after the voice stops (formant only).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.vocal_hold",
+      "module": "vm",
+      "label": "VOCAL HOLD",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the AMP PAN button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 64 on the Performance Control channel"
+        }
+      ],
+      "function": "Freezes the current analysis so the formant persists without voice; forced off for filter bank; not stored (off on performance select)."
+    },
+    {
+      "id": "vm.pan",
+      "module": "vm",
+      "label": "V PAN",
+      "kind": "integer",
+      "range": {
+        "min": -64,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the AMP LFO 1 DEPTH knob (PAN)"
+        }
+      ],
+      "function": "Output pan (formant); L/R balance of Inst and Vocal sides (filter bank).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.level",
+      "module": "vm",
+      "label": "V LEVEL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the AMP LEVEL knob"
+        }
+      ],
+      "function": "Voice Modulator output level.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.noise_cutoff",
+      "module": "vm_noise",
+      "label": "V NOISE CUTOFF",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the MODULATION RATE knob (NOISE CUTOFF)"
+        }
+      ],
+      "function": "High-pass cutoff of the noise (formant only).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.noise_level",
+      "module": "vm_noise",
+      "label": "V NOISE LEVEL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the MODULATION DEPTH knob (NOISE LEVEL)"
+        }
+      ],
+      "function": "Noise mixed into the Inst Input (formant only).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.gate_threshold",
+      "module": "vm",
+      "label": "GATE THRESHOLD",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the PORTAMENTO TIME knob (GATE THRESHOLD)"
+        }
+      ],
+      "function": "Vocal level below which the formant filter closes; full right never opens (formant only).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.robot_pitch",
+      "module": "vm_robot",
+      "label": "ROBOT PITCH",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the OSC BALANCE knob (ROBOT PITCH)"
+        }
+      ],
+      "function": "Robot oscillator pitch; low for mechanical voices (formant only).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.robot_control",
+      "module": "vm_robot",
+      "label": "ROBOT CONTROL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the X-MOD DEPTH knob (ROBOT CONTROL)"
+        }
+      ],
+      "function": "Robot tone: thick (left) to intelligible (right); centre is the classic sound (formant only).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.robot_level",
+      "module": "vm_robot",
+      "label": "ROBOT LEVEL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the OSC COMMON LFO 1 DEPTH knob (ROBOT LEVEL)"
+        }
+      ],
+      "function": "Robot oscillator level into the Inst Input (formant only).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.character1",
+      "module": "vm",
+      "label": "CHARACTER 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the PITCH ENV DEPTH slider (1)"
+        }
+      ],
+      "function": "Level of band 1 of 12 (low to high), on the vocal analysis (formant) or on both inputs (filter bank).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.character2",
+      "module": "vm",
+      "label": "CHARACTER 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the PITCH ENV A slider (2)"
+        }
+      ],
+      "function": "Level of band 2 of 12 (low to high), on the vocal analysis (formant) or on both inputs (filter bank).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.character3",
+      "module": "vm",
+      "label": "CHARACTER 3",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the PITCH ENV D slider (3)"
+        }
+      ],
+      "function": "Level of band 3 of 12 (low to high), on the vocal analysis (formant) or on both inputs (filter bank).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.character4",
+      "module": "vm",
+      "label": "CHARACTER 4",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the FILTER ENV DEPTH slider (4)"
+        }
+      ],
+      "function": "Level of band 4 of 12 (low to high), on the vocal analysis (formant) or on both inputs (filter bank).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.character5",
+      "module": "vm",
+      "label": "CHARACTER 5",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the FILTER ENV A slider (5)"
+        }
+      ],
+      "function": "Level of band 5 of 12 (low to high), on the vocal analysis (formant) or on both inputs (filter bank).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.character6",
+      "module": "vm",
+      "label": "CHARACTER 6",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the FILTER ENV D slider (6)"
+        }
+      ],
+      "function": "Level of band 6 of 12 (low to high), on the vocal analysis (formant) or on both inputs (filter bank).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.character7",
+      "module": "vm",
+      "label": "CHARACTER 7",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the FILTER ENV S slider (7)"
+        }
+      ],
+      "function": "Level of band 7 of 12 (low to high), on the vocal analysis (formant) or on both inputs (filter bank).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.character8",
+      "module": "vm",
+      "label": "CHARACTER 8",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the FILTER ENV R slider (8)"
+        }
+      ],
+      "function": "Level of band 8 of 12 (low to high), on the vocal analysis (formant) or on both inputs (filter bank).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.character9",
+      "module": "vm",
+      "label": "CHARACTER 9",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the AMP ENV A slider (9)"
+        }
+      ],
+      "function": "Level of band 9 of 12 (low to high), on the vocal analysis (formant) or on both inputs (filter bank).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.character10",
+      "module": "vm",
+      "label": "CHARACTER 10",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the AMP ENV D slider (10)"
+        }
+      ],
+      "function": "Level of band 10 of 12 (low to high), on the vocal analysis (formant) or on both inputs (filter bank).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.character11",
+      "module": "vm",
+      "label": "CHARACTER 11",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the AMP ENV S slider (11)"
+        }
+      ],
+      "function": "Level of band 11 of 12 (low to high), on the vocal analysis (formant) or on both inputs (filter bank).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "vm.character12",
+      "module": "vm",
+      "label": "CHARACTER 12",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "Voice Modulator panel (hold SHIFT and press PANEL SELECT [UPPER]; both PANEL SELECT LEDs blink): the AMP ENV R slider (12)"
+        }
+      ],
+      "function": "Level of band 12 of 12 (low to high), on the vocal analysis (formant) or on both inputs (filter bank).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "part.transpose",
+      "module": "pitch",
+      "label": "Part Transpose",
+      "kind": "integer",
+      "range": {
+        "min": -24,
+        "max": 24
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PART] (BANK 3), per part"
+        },
+        {
+          "type": "midi",
+          "message": "RPN 2 (coarse tuning) on the Part MIDI channel"
+        }
+      ],
+      "function": "±24 semitones per part; MIDI OUT notes are not transposed.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "part.midi_ch",
+      "module": "kbd",
+      "label": "Part MIDI CH",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1..16"
+        },
+        {
+          "value": "off"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PART] (BANK 3), per part"
+        }
+      ],
+      "function": "MIDI IN/OUT channel of each part (Lower 2, Upper 1 by default).",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "part.chorus_sync",
+      "module": "mfx",
+      "label": "Chorus Sync",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "1/16"
+        },
+        {
+          "value": "1/8T"
+        },
+        {
+          "value": "1/16."
+        },
+        {
+          "value": "1/8"
+        },
+        {
+          "value": "1/4T"
+        },
+        {
+          "value": "1/8."
+        },
+        {
+          "value": "1/4"
+        },
+        {
+          "value": "1/2T"
+        },
+        {
+          "value": "1/4."
+        },
+        {
+          "value": "1/2"
+        },
+        {
+          "value": "1/1T"
+        },
+        {
+          "value": "1/2."
+        },
+        {
+          "value": "1/1"
+        },
+        {
+          "value": "2/1T"
+        },
+        {
+          "value": "1/1."
+        },
+        {
+          "value": "2/1"
+        },
+        {
+          "value": "3_measures"
+        },
+        {
+          "value": "4_measures"
+        },
+        {
+          "value": "5_measures"
+        },
+        {
+          "value": "6_measures"
+        },
+        {
+          "value": "7_measures"
+        },
+        {
+          "value": "8_measures"
+        },
+        {
+          "value": "lfo1"
+        }
+      ],
+      "default": "off",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PART] (BANK 3), per part"
+        }
+      ],
+      "function": "Multi-effect rate from tempo, MIDI clock or LFO 1 rate.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "part.delay_sync",
+      "module": "delay",
+      "label": "Delay Sync",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "1/16"
+        },
+        {
+          "value": "1/8T"
+        },
+        {
+          "value": "1/16."
+        },
+        {
+          "value": "1/8"
+        },
+        {
+          "value": "1/4T"
+        },
+        {
+          "value": "1/8."
+        },
+        {
+          "value": "1/4"
+        },
+        {
+          "value": "1/2T"
+        },
+        {
+          "value": "1/4."
+        },
+        {
+          "value": "1/2"
+        }
+      ],
+      "default": "off",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PART] (BANK 3), per part"
+        }
+      ],
+      "function": "Delay time from tempo or MIDI clock; halved if over the type's limit.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "part.lfo_sync",
+      "module": "lfo1",
+      "label": "LFO Sync",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "1/16"
+        },
+        {
+          "value": "1/8T"
+        },
+        {
+          "value": "1/16."
+        },
+        {
+          "value": "1/8"
+        },
+        {
+          "value": "1/4T"
+        },
+        {
+          "value": "1/8."
+        },
+        {
+          "value": "1/4"
+        },
+        {
+          "value": "1/2T"
+        },
+        {
+          "value": "1/4."
+        },
+        {
+          "value": "1/2"
+        },
+        {
+          "value": "1/1T"
+        },
+        {
+          "value": "1/2."
+        },
+        {
+          "value": "1/1"
+        },
+        {
+          "value": "2/1T"
+        },
+        {
+          "value": "1/1."
+        },
+        {
+          "value": "2/1"
+        },
+        {
+          "value": "3_measures"
+        },
+        {
+          "value": "4_measures"
+        },
+        {
+          "value": "5_measures"
+        },
+        {
+          "value": "6_measures"
+        },
+        {
+          "value": "7_measures"
+        },
+        {
+          "value": "8_measures"
+        }
+      ],
+      "default": "off",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [PART] (BANK 3), per part"
+        }
+      ],
+      "function": "LFO 1 rate from tempo or MIDI clock.",
+      "note": "Stored in the performance, not the patch."
+    },
+    {
+      "id": "sys.local",
+      "module": "kbd",
+      "label": "Local Switch",
+      "kind": "boolean",
+      "default": true,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [MIDI] (BANK 5)"
+        }
+      ],
+      "function": "Panel and REMOTE KBD IN control the engine; forced on at power-up."
+    },
+    {
+      "id": "sys.midi_sync",
+      "module": "arp",
+      "label": "MIDI Sync",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "midi_in"
+        },
+        {
+          "value": "remote_kbd_in"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [MIDI] (BANK 5)"
+        }
+      ],
+      "function": "Follow MIDI clock from MIDI IN or REMOTE KBD IN, or internal TEMPO."
+    },
+    {
+      "id": "sys.device_id",
+      "module": "kbd",
+      "label": "Device ID",
+      "kind": "integer",
+      "range": {
+        "min": 17,
+        "max": 32
+      },
+      "default": 17,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [MIDI] (BANK 5)"
+        }
+      ],
+      "function": "SysEx device ID."
+    },
+    {
+      "id": "sys.rx_exclusive",
+      "module": "kbd",
+      "label": "Rx Exclusive SW",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [MIDI] (BANK 5)"
+        }
+      ],
+      "function": "Receive SysEx at MIDI IN (REMOTE KBD IN always takes temporary-area SysEx)."
+    },
+    {
+      "id": "sys.perform_ctrl_ch",
+      "module": "kbd",
+      "label": "Perform Ctrl CH",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1..16"
+        },
+        {
+          "value": "off"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [MIDI] (BANK 5)"
+        }
+      ],
+      "function": "Channel for performance program changes, volume and Vocal Hold; wins over a matching Part channel."
+    },
+    {
+      "id": "sys.remote_kbd_ch",
+      "module": "kbd",
+      "label": "Remote KBD CH",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1..16"
+        },
+        {
+          "value": "all"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [MIDI] (BANK 5)"
+        }
+      ],
+      "function": "Channel accepted at REMOTE KBD IN."
+    },
+    {
+      "id": "sys.midi_thru",
+      "module": "kbd",
+      "label": "MIDI Thru",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on_without_sysex"
+        },
+        {
+          "value": "on_all"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [MIDI] (BANK 5)"
+        }
+      ],
+      "function": "Echo MIDI IN to MIDI OUT."
+    },
+    {
+      "id": "sys.tx_rx_edit",
+      "module": "kbd",
+      "label": "Tx/Rx Edit SW",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [MIDI] (BANK 5)"
+        }
+      ],
+      "function": "Send and receive panel edits as MIDI."
+    },
+    {
+      "id": "sys.tx_rx_mode",
+      "module": "kbd",
+      "label": "Tx/Rx Edit Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "mode1"
+        },
+        {
+          "value": "mode2"
+        }
+      ],
+      "default": "mode1",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [MIDI] (BANK 5)"
+        }
+      ],
+      "function": "MODE1: fixed CC/SysEx per control. MODE2: user CC per control (non-standard MIDI)."
+    },
+    {
+      "id": "sys.tx_rx_setting",
+      "module": "kbd",
+      "label": "Tx/Rx Setting",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "cc1..31"
+        },
+        {
+          "value": "cc33..95"
+        },
+        {
+          "value": "aftertouch"
+        },
+        {
+          "value": "exclusive"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [MIDI] (BANK 5)"
+        }
+      ],
+      "function": "MODE2 message for the control last moved: off, CC 1-31 or 33-95, aftertouch, or SysEx."
+    },
+    {
+      "id": "sys.prog_change",
+      "module": "kbd",
+      "label": "Tx/Rx ProgChg SW",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "pc"
+        },
+        {
+          "value": "bank_sel_pc"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [MIDI] (BANK 5)"
+        }
+      ],
+      "function": "Program change and bank select handling."
+    },
+    {
+      "id": "sys.control_up",
+      "module": "morph",
+      "label": "Control Up",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "cc1..31"
+        },
+        {
+          "value": "cc33..95"
+        },
+        {
+          "value": "aftertouch"
+        }
+      ],
+      "default": "aftertouch",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [MIDI] (BANK 5)"
+        }
+      ],
+      "function": "Message driving Control Assign upwards (and vocal morph +)."
+    },
+    {
+      "id": "sys.control_down",
+      "module": "morph",
+      "label": "Control Down",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "cc1..31"
+        },
+        {
+          "value": "cc33..95"
+        },
+        {
+          "value": "aftertouch"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [MIDI] (BANK 5)"
+        }
+      ],
+      "function": "Message driving the mirrored Control Assign (and vocal morph -); factory setting CC 2 (breath)."
+    },
+    {
+      "id": "sys.lcd_contrast",
+      "module": "kbd",
+      "label": "LCD Contrast",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 8
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [SETUP] (BANK 6)"
+        }
+      ],
+      "function": "Display contrast."
+    },
+    {
+      "id": "sys.master_tune",
+      "module": "pitch",
+      "label": "Master Tune",
+      "kind": "continuous",
+      "physical": {
+        "min": 427.5,
+        "max": 452.9,
+        "unit": "Hz"
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [SETUP] (BANK 6)"
+        },
+        {
+          "type": "midi",
+          "message": "RPN 1 (fine tuning) on the Performance Control channel"
+        }
+      ],
+      "function": "A4 reference, 1-cent steps over ±50 cents."
+    },
+    {
+      "id": "sys.power_up",
+      "module": "kbd",
+      "label": "Power Up Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "perform_u11"
+        },
+        {
+          "value": "last_set"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [SETUP] (BANK 6)"
+        }
+      ],
+      "function": "Start on performance U:11 or the last state."
+    },
+    {
+      "id": "rps.trigger_quantize",
+      "module": "rps",
+      "label": "Pattern Trig Qtz",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "beat"
+        },
+        {
+          "value": "measure"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [SETUP] (BANK 6)"
+        }
+      ],
+      "function": "When a newly pressed key switches pattern."
+    },
+    {
+      "id": "motion.restart",
+      "module": "motion",
+      "label": "Motion Restart",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "EDIT, [SETUP] (BANK 6)"
+        }
+      ],
+      "function": "Restart a playing motion on each new key after all are released."
+    },
+    {
+      "id": "rps.loop_length",
+      "module": "rps",
+      "label": "Pattern Loop Length",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 4
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "In RPS or motion record standby: NUMBER buttons LOOP LENGTH, QUANTIZE, GATE TIME, METRONOME"
+        }
+      ],
+      "function": "Measures looped while recording and playing.",
+      "note": "Stored with each pattern rather than in a patch."
+    },
+    {
+      "id": "rps.quantize",
+      "module": "rps",
+      "label": "Input Quantize",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "1/16T"
+        },
+        {
+          "value": "1/16"
+        },
+        {
+          "value": "1/8T"
+        },
+        {
+          "value": "1/8"
+        },
+        {
+          "value": "1/4T"
+        },
+        {
+          "value": "1/4"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "In RPS or motion record standby: NUMBER buttons LOOP LENGTH, QUANTIZE, GATE TIME, METRONOME"
+        }
+      ],
+      "function": "Recording quantise."
+    },
+    {
+      "id": "rps.gate_time",
+      "module": "rps",
+      "label": "Gate Time Ratio",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "real"
+        },
+        {
+          "value": "staccato"
+        },
+        {
+          "value": "33%"
+        },
+        {
+          "value": "50%"
+        },
+        {
+          "value": "66%"
+        },
+        {
+          "value": "100%"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "In RPS or motion record standby: NUMBER buttons LOOP LENGTH, QUANTIZE, GATE TIME, METRONOME"
+        }
+      ],
+      "function": "Recorded note length against the quantise step (ignored with quantise off)."
+    },
+    {
+      "id": "rps.metronome",
+      "module": "rps",
+      "label": "Metronome (pattern)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "beep_4..1"
+        },
+        {
+          "value": "off"
+        },
+        {
+          "value": "click_1..4"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "In RPS or motion record standby: NUMBER buttons LOOP LENGTH, QUANTIZE, GATE TIME, METRONOME"
+        }
+      ],
+      "function": "Metronome sound and level."
+    },
+    {
+      "id": "motion.loop_length",
+      "module": "motion",
+      "label": "Motion Loop Length",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 3
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 5
+        },
+        {
+          "value": 6
+        },
+        {
+          "value": 7
+        },
+        {
+          "value": 8
+        },
+        {
+          "value": 99,
+          "label": "99 (PLAY ONCE)"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "In RPS or motion record standby: NUMBER buttons LOOP LENGTH, QUANTIZE, GATE TIME, METRONOME"
+        }
+      ],
+      "function": "1-8 measures looped, or 99 = record up to 99 measures and play once."
+    },
+    {
+      "id": "motion.metronome",
+      "module": "motion",
+      "label": "Metronome (motion)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "beep_4..1"
+        },
+        {
+          "value": "off"
+        },
+        {
+          "value": "click_1..4"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "In RPS or motion record standby: NUMBER buttons LOOP LENGTH, QUANTIZE, GATE TIME, METRONOME"
+        }
+      ],
+      "function": "Metronome sound and level."
+    },
+    {
+      "id": "motion.play",
+      "module": "motion",
+      "label": "MOTION CONTROL 1 / 2",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Start or stop motion 1 or 2 of the current set; blinking while playing. Stopping leaves the sound as it stands."
+    },
+    {
+      "id": "motion.set",
+      "module": "motion",
+      "label": "Motion set",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "user_a"
+        },
+        {
+          "value": "user_b"
+        },
+        {
+          "value": "card1_a"
+        },
+        {
+          "value": "card1_b"
+        },
+        {
+          "value": "card2_a"
+        },
+        {
+          "value": "card2_b"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "SHIFT + NUMBER 3/4/5 (USER, CARD 1, CARD 2) and 7/8 (SET A, B)"
+        }
+      ],
+      "function": "USER, CARD 1 or CARD 2, set A or B."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.out_l",
+      "label": "OUTPUT L (MONO)",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "1/4 inch phone",
+      "node": "out.main_l",
+      "function": "Left output; mono sum when R is unplugged (disables pan and panning delay).",
+      "electrical": {
+        "output_impedance_ohm": 2200
+      }
+    },
+    {
+      "id": "jack.out_r",
+      "label": "OUTPUT R",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "1/4 inch phone",
+      "node": "out.main_r",
+      "function": "Right output.",
+      "electrical": {
+        "output_impedance_ohm": 2200
+      }
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "location": "front",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "stereo 1/4 inch phone",
+      "node": "out.phones",
+      "function": "Headphones; the main outputs stay live.",
+      "electrical": {
+        "output_impedance_ohm": 100
+      }
+    },
+    {
+      "id": "jack.ext_inst",
+      "label": "EXT IN INST/LOWER (MONO)",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "1/4 inch phone",
+      "node": "ext.inst_in",
+      "function": "Line input to the Lower OSC 2 and the Inst Input; feeds both parts alone with REAR selected.",
+      "electrical": {
+        "input_impedance_ohm": 24000,
+        "level_dbm": [-30, 4]
+      }
+    },
+    {
+      "id": "jack.ext_vocal",
+      "label": "EXT IN VOCAL/UPPER",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "1/4 inch phone",
+      "node": "ext.vocal_in",
+      "function": "Line input to the Upper OSC 2 and the Vocal Input (with REAR/FRONT off).",
+      "electrical": {
+        "input_impedance_ohm": 24000,
+        "level_dbm": [-30, 4]
+      }
+    },
+    {
+      "id": "jack.mic",
+      "label": "MIC",
+      "location": "front",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "1/4 inch phone",
+      "node": "ext.mic_in",
+      "function": "Microphone through the mic amp, to the Upper OSC 2 and the Vocal Input (with REAR/FRONT on).",
+      "electrical": {
+        "input_impedance_ohm": 5000,
+        "level_dbm": [-60, -20]
+      }
+    },
+    {
+      "id": "midi.in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "kbd.notes_in",
+      "function": "Notes per Part MIDI channel, controllers, program changes, clock, SysEx. Cannot drive the arpeggiator, RPS or motion recording."
+    },
+    {
+      "id": "midi.remote",
+      "label": "REMOTE KBD IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "kbd.remote_in",
+      "function": "Treated like the panel: drives arpeggiator, RPS, Preview-style playing and motion recording of incoming controllers."
+    },
+    {
+      "id": "midi.out",
+      "label": "MIDI OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "kbd.midi_out",
+      "function": "Panel edits, arpeggio, RPS and motion data, remote keyboard notes, MIDI thru."
+    },
+    {
+      "id": "power.ac",
+      "label": "AC IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "IEC inlet",
+      "node": null,
+      "function": "AC 117, 230 or 240 V, 17 W."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.remote_notes",
+      "to": "arp.notes_in",
+      "signal": "midi",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "arp.on",
+            "equals": true
+          },
+          {
+            "param": "arp.mode",
+            "not_equals": "rps"
+          }
+        ]
+      },
+      "note": "REMOTE KBD IN notes (or Preview); with ARP off they play the parts directly inside the assigner."
+    },
+    {
+      "id": "c02",
+      "from": "kbd.remote_notes",
+      "to": "rps.notes_in",
+      "signal": "midi",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "arp.on",
+            "equals": true
+          },
+          {
+            "param": "arp.mode",
+            "equals": "rps"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c03",
+      "from": "arp.notes_out",
+      "to": "kbd.notes_in",
+      "signal": "midi",
+      "kind": "fixed",
+      "note": "Arpeggiated notes; also sent to MIDI OUT."
+    },
+    {
+      "id": "c04",
+      "from": "rps.notes_out",
+      "to": "kbd.notes_in",
+      "signal": "midi",
+      "kind": "fixed",
+      "note": "Pattern notes; also sent to MIDI OUT."
+    },
+    {
+      "id": "c05",
+      "from": "kbd.pitch",
+      "to": "pitch.note",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c06",
+      "from": "kbd.bend",
+      "to": "pitch.bend",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.bend_up",
+      "note": "Bend Range Down below centre."
+    },
+    {
+      "id": "c07",
+      "from": "pitch.cv",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c08",
+      "from": "pitch.cv",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Offset by RANGE and FINE/WIDE."
+    },
+    {
+      "id": "c09",
+      "from": "env_pitch.out",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc.lfo_env_dest",
+        "equals": "osc1_2"
+      },
+      "amount": "env_pitch.depth"
+    },
+    {
+      "id": "c10",
+      "from": "env_pitch.out",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "osc.lfo_env_dest",
+            "equals": "osc1_2"
+          },
+          {
+            "param": "osc.lfo_env_dest",
+            "equals": "osc2"
+          }
+        ]
+      },
+      "amount": "env_pitch.depth"
+    },
+    {
+      "id": "c11",
+      "from": "lfo1.out",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc.lfo_env_dest",
+        "equals": "osc1_2"
+      },
+      "amount": "osc.lfo1_depth"
+    },
+    {
+      "id": "c12",
+      "from": "lfo1.out",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "osc.lfo_env_dest",
+            "equals": "osc1_2"
+          },
+          {
+            "param": "osc.lfo_env_dest",
+            "equals": "osc2"
+          }
+        ]
+      },
+      "amount": "osc.lfo1_depth"
+    },
+    {
+      "id": "c13",
+      "from": "lfo2.out",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "lfo2.depth_pitch",
+      "amount_expr": "lfo2.depth_pitch * mod_wheel",
+      "confidence": "inferred",
+      "note": "The manual says LFO 2 modulates pitch; that it reaches both oscillators is inferred."
+    },
+    {
+      "id": "c14",
+      "from": "lfo2.out",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "lfo2.depth_pitch",
+      "amount_expr": "lfo2.depth_pitch * mod_wheel",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c15",
+      "from": "kbd.mod_wheel",
+      "to": "lfo2.depth_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "CC 1 scales all three LFO 2 depths."
+    },
+    {
+      "id": "c16",
+      "from": "osc2.out",
+      "to": "osc1.fm_in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "osc1.waveform",
+            "not_equals": "super_saw"
+          },
+          {
+            "param": "osc1.waveform",
+            "not_equals": "noise"
+          }
+        ]
+      },
+      "amount": "osc.xmod_depth"
+    },
+    {
+      "id": "c17",
+      "from": "env_pitch.out",
+      "to": "osc1.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc.lfo_env_dest",
+        "equals": "xmod"
+      },
+      "amount": "env_pitch.depth",
+      "note": "Envelope moves cross mod depth instead of pitch."
+    },
+    {
+      "id": "c18",
+      "from": "lfo1.out",
+      "to": "osc1.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc.lfo_env_dest",
+        "equals": "xmod"
+      },
+      "amount": "osc.lfo1_depth"
+    },
+    {
+      "id": "c19",
+      "from": "osc1.out",
+      "to": "osc2.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "osc2.sync",
+            "equals": true
+          },
+          {
+            "param": "osc2.waveform",
+            "not_equals": "noise"
+          },
+          {
+            "param": "osc2.ext",
+            "equals": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "c20",
+      "from": "lfo1.out",
+      "to": "osc1.shape_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "osc1.waveform",
+            "equals": "triangle_mod"
+          },
+          {
+            "param": "osc1.waveform",
+            "equals": "square"
+          },
+          {
+            "param": "osc1.waveform",
+            "equals": "saw"
+          },
+          {
+            "param": "osc1.waveform",
+            "equals": "triangle"
+          }
+        ]
+      },
+      "amount": "osc1.control2",
+      "note": "Shape, offset or pulse width modulation."
+    },
+    {
+      "id": "c21",
+      "from": "lfo1.out",
+      "to": "osc2.shape_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "osc2.waveform",
+            "equals": "square"
+          },
+          {
+            "param": "osc2.ext",
+            "equals": false
+          }
+        ]
+      },
+      "amount": "osc2.control2",
+      "note": "PWM."
+    },
+    {
+      "id": "c22",
+      "from": "ext.to_osc2",
+      "to": "osc2.ext_in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.ext",
+        "equals": true
+      },
+      "amount": "osc2.control1",
+      "note": "Gated by GATE THRESHOLD (CONTROL 1) and by note-on; not pitched."
+    },
+    {
+      "id": "c23",
+      "from": "osc1.out",
+      "to": "ring.in_a",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.ring",
+        "equals": true
+      }
+    },
+    {
+      "id": "c24",
+      "from": "osc2.out",
+      "to": "ring.in_b",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.ring",
+        "equals": true
+      }
+    },
+    {
+      "id": "c25",
+      "from": "osc1.out",
+      "to": "mixer.in1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mix.balance"
+    },
+    {
+      "id": "c26",
+      "from": "osc2.out",
+      "to": "mixer.in2",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.ring",
+        "equals": false
+      },
+      "amount": "mix.balance"
+    },
+    {
+      "id": "c27",
+      "from": "ring.out",
+      "to": "mixer.in2",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.ring",
+        "equals": true
+      },
+      "amount": "mix.balance"
+    },
+    {
+      "id": "c28",
+      "from": "mixer.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c29",
+      "from": "env_filter.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "env_filter.depth"
+    },
+    {
+      "id": "c30",
+      "from": "lfo1.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.lfo1_depth"
+    },
+    {
+      "id": "c31",
+      "from": "lfo2.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "lfo2.depth_filter",
+      "amount_expr": "lfo2.depth_filter * mod_wheel"
+    },
+    {
+      "id": "c32",
+      "from": "kbd.pitch",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.key_follow"
+    },
+    {
+      "id": "c33",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c34",
+      "from": "env_amp.out",
+      "to": "vca.gain_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "amp.level"
+    },
+    {
+      "id": "c35",
+      "from": "lfo1.out",
+      "to": "vca.gain_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "amp.pan",
+        "equals": "off"
+      },
+      "amount": "amp.lfo1_depth",
+      "note": "Tremolo."
+    },
+    {
+      "id": "c36",
+      "from": "lfo1.out",
+      "to": "vca.pan_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "amp.pan",
+        "equals": "auto"
+      },
+      "amount": "amp.lfo1_depth",
+      "note": "Auto pan; LFO 1 FADE does not apply."
+    },
+    {
+      "id": "c37",
+      "from": "lfo2.out",
+      "to": "vca.gain_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "lfo2.depth_amp",
+      "amount_expr": "lfo2.depth_amp * mod_wheel"
+    },
+    {
+      "id": "c38",
+      "from": "kbd.gate",
+      "to": "env_pitch.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c39",
+      "from": "kbd.gate",
+      "to": "env_filter.gate",
+      "signal": "gate",
+      "kind": "fixed",
+      "note": "With Individual or External Trigger on the chosen envelopes wait for their trigger instead."
+    },
+    {
+      "id": "c40",
+      "from": "kbd.gate",
+      "to": "env_amp.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c41",
+      "from": "kbd.gate",
+      "to": "lfo1.trigger",
+      "signal": "gate",
+      "kind": "fixed",
+      "note": "Starts the FADE time."
+    },
+    {
+      "id": "c42",
+      "from": "kbd.trigger",
+      "to": "env_filter.trigger",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "kbd.indv_trig",
+            "equals": true
+          },
+          {
+            "any": [
+              {
+                "param": "kbd.indv_trig_dest",
+                "equals": "filter"
+              },
+              {
+                "param": "kbd.indv_trig_dest",
+                "equals": "filter_amp"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "c43",
+      "from": "kbd.trigger",
+      "to": "env_amp.trigger",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "kbd.indv_trig",
+            "equals": true
+          },
+          {
+            "any": [
+              {
+                "param": "kbd.indv_trig_dest",
+                "equals": "amp"
+              },
+              {
+                "param": "kbd.indv_trig_dest",
+                "equals": "filter_amp"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "c44",
+      "from": "ext.trigger",
+      "to": "env_filter.trigger",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "ext.trig_switch",
+            "equals": true
+          },
+          {
+            "any": [
+              {
+                "param": "ext.trig_dest",
+                "equals": "filter"
+              },
+              {
+                "param": "ext.trig_dest",
+                "equals": "filter_amp"
+              }
+            ]
+          }
+        ]
+      },
+      "note": "Input above OSC 2 GATE THRESHOLD; release when it falls below."
+    },
+    {
+      "id": "c45",
+      "from": "ext.trigger",
+      "to": "env_amp.trigger",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "ext.trig_switch",
+            "equals": true
+          },
+          {
+            "any": [
+              {
+                "param": "ext.trig_dest",
+                "equals": "amp"
+              },
+              {
+                "param": "ext.trig_dest",
+                "equals": "filter_amp"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "c46",
+      "from": "kbd.velocity",
+      "to": "morph.velocity_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "morph.velocity",
+        "equals": true
+      },
+      "note": "Off: fixed at 80."
+    },
+    {
+      "id": "c47",
+      "from": "kbd.control_up",
+      "to": "morph.up_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Message chosen by Control Up (aftertouch by default)."
+    },
+    {
+      "id": "c48",
+      "from": "kbd.control_down",
+      "to": "morph.down_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Message chosen by Control Down (breath, CC 2, by default)."
+    },
+    {
+      "id": "c49",
+      "from": "vm_morph.out",
+      "to": "morph.vocal_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "vm.on",
+            "equals": true
+          },
+          {
+            "param": "vm.morph_ctrl",
+            "equals": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "c50",
+      "from": "motion.out",
+      "to": "morph.motion_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "motion.play",
+        "not_equals": "off"
+      }
+    },
+    {
+      "id": "c51",
+      "from": "morph.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Representative: morph.out reaches every assigned parameter, not only cutoff (see behaviours b14).",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c52",
+      "from": "vca.out",
+      "to": "tone.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "All voices of the part sum here; the effects are per part."
+    },
+    {
+      "id": "c53",
+      "from": "tone.out",
+      "to": "mfx.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "confidence": "inferred",
+      "note": "Order tone, multi-effects, delay inferred from the patch diagram (p.55); not stated."
+    },
+    {
+      "id": "c54",
+      "from": "mfx.out",
+      "to": "delay.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c55",
+      "from": "delay.out_l",
+      "to": "out.in_l",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "vm.on",
+            "equals": false
+          },
+          {
+            "param": "fx.vm_send",
+            "equals": false
+          }
+        ]
+      },
+      "note": "Lower only to L with PARALLEL OUT."
+    },
+    {
+      "id": "c56",
+      "from": "delay.out_r",
+      "to": "out.in_r",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "vm.on",
+            "equals": false
+          },
+          {
+            "param": "fx.vm_send",
+            "equals": false
+          }
+        ]
+      },
+      "note": "Upper only to R with PARALLEL OUT."
+    },
+    {
+      "id": "c57",
+      "from": "delay.out_l",
+      "to": "vm_inst.patch",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "vm.on",
+            "equals": true
+          },
+          {
+            "param": "fx.vm_send",
+            "equals": true
+          }
+        ]
+      },
+      "confidence": "inferred",
+      "note": "Send point after the patch effects inferred from the switch's place in the EFFECTS section."
+    },
+    {
+      "id": "c58",
+      "from": "delay.out_r",
+      "to": "vm.vocal_in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "vm.on",
+            "equals": true
+          },
+          {
+            "param": "fx.vm_send",
+            "equals": true
+          },
+          {
+            "any": [
+              {
+                "param": "vm.algorithm",
+                "equals": "flt_bank_wide"
+              },
+              {
+                "param": "vm.algorithm",
+                "equals": "flt_bank_narrow"
+              }
+            ]
+          }
+        ]
+      },
+      "note": "Filter bank: the patch feeds both inputs.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c59",
+      "from": "ext.inst",
+      "to": "vm_inst.ext",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "vm.on",
+            "equals": true
+          },
+          {
+            "param": "vm.ext_inst_send",
+            "equals": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "c60",
+      "from": "ext.vocal",
+      "to": "vm.vocal_in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "vm.on",
+            "equals": true
+          },
+          {
+            "param": "vm.ext_vocal_send",
+            "equals": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "c61",
+      "from": "ext.vocal",
+      "to": "vm_morph.in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vm.morph_ctrl",
+        "equals": true
+      },
+      "amount": "vm.morph_sens"
+    },
+    {
+      "id": "c62",
+      "from": "vm_robot.out",
+      "to": "vm_inst.robot",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vm.on",
+        "equals": true
+      },
+      "amount": "vm.robot_level"
+    },
+    {
+      "id": "c63",
+      "from": "vm_noise.out",
+      "to": "vm_inst.noise",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vm.on",
+        "equals": true
+      },
+      "amount": "vm.noise_level"
+    },
+    {
+      "id": "c64",
+      "from": "vm_inst.out",
+      "to": "vm.inst_in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vm.on",
+        "equals": true
+      }
+    },
+    {
+      "id": "c65",
+      "from": "vm.out",
+      "to": "vm_ens.in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vm.on",
+        "equals": true
+      },
+      "amount": "vm.level"
+    },
+    {
+      "id": "c66",
+      "from": "vm_ens.out",
+      "to": "vm_dly.in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vm.on",
+        "equals": true
+      }
+    },
+    {
+      "id": "c67",
+      "from": "vm_dly.out",
+      "to": "out.vm_in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vm.on",
+        "equals": true
+      },
+      "amount": "vm.level"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "lcd",
+      "module": "kbd",
+      "label": "display",
+      "kind": "display",
+      "function": "16 x 2 backlit LCD: performance or patch number and name, edit pages, scope values; '*' marks an unsaved edit."
+    },
+    {
+      "id": "sig_limiter",
+      "module": "ext",
+      "label": "SIG/LIMITER (x2)",
+      "kind": "led",
+      "led_colour": "multi",
+      "function": "Per input: green with any signal, red when the limiter acts (aim for occasional red)."
+    },
+    {
+      "id": "osc_shift",
+      "module": "pitch",
+      "label": "OSC SHIFT -OCT/+OCT",
+      "kind": "led",
+      "led_colour": "multi",
+      "function": "Orange = one octave, red = two; in Preview the buttons blink and show green/orange/red for keyboard shift."
+    },
+    {
+      "id": "wave_leds",
+      "module": "osc1",
+      "label": "waveform, type and mode LEDs",
+      "kind": "led",
+      "function": "Selected OSC 1/OSC 2 and LFO 1 waveform, filter type, pan mode, LFO 2 depth target, LFO 1 & ENV destination, key mode, arpeggio mode and range."
+    },
+    {
+      "id": "button_leds",
+      "module": "kbd",
+      "label": "switch LEDs",
+      "kind": "led",
+      "function": "SYNC, RING, EXT, -24dB, SOLO, VELOCITY, PORTAMENTO, VOICE MOD SEND and ON, REAR/FRONT, ARP ON/HOLD: lit when on."
+    },
+    {
+      "id": "morph_leds",
+      "module": "morph",
+      "label": "VELOCITY ASSIGN / CONTROL ASSIGN",
+      "kind": "led",
+      "function": "Blink while assigning; lit when widths are stored; dark when none."
+    },
+    {
+      "id": "panel_select_leds",
+      "module": "kbd",
+      "label": "PANEL SELECT LOWER/UPPER",
+      "kind": "led",
+      "function": "Lit for the edited part; both blink for the Voice Modulator panel."
+    },
+    {
+      "id": "motion_leds",
+      "module": "motion",
+      "label": "MOTION CONTROL 1/2",
+      "kind": "led",
+      "function": "Blink while playing; lit after a play-once motion ends; blink with REC in record standby."
+    },
+    {
+      "id": "bank_number_leds",
+      "module": "kbd",
+      "label": "BANK / NUMBER LEDs",
+      "kind": "led",
+      "function": "Selected bank and number; BANK LEDs blink in EDIT; in Preview they show the playable keys."
+    }
+  ],
+  "led_legend": {
+    "rule": "LEDs show state; the only colour codes are SIG/LIMITER (green signal, red limiting) and OSC SHIFT (orange one octave, red two).",
+    "colours": [
+      {
+        "colour": "green",
+        "meaning": "signal present",
+        "modules": ["ext"]
+      },
+      {
+        "colour": "red",
+        "meaning": "limiter active, or two-octave shift",
+        "modules": ["ext", "pitch"]
+      },
+      {
+        "colour": "amber",
+        "meaning": "one-octave shift (printed as orange)",
+        "modules": ["pitch"]
+      }
+    ],
+    "confidence": "stated"
+  },
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Signal path",
+      "applies_to": ["osc1", "osc2", "ring", "mixer", "vcf", "vca", "tone", "mfx", "delay", "out"],
+      "rule": "Per voice: OSC 1 and the OSC 2 path (OSC 2, ring or external input) through OSC BALANCE, filter, amp. All voices of a part then pass that patch's tone control, multi-effect and delay. The two parts, and the Voice Modulator, mix at the outputs."
+    },
+    {
+      "id": "b02",
+      "name": "Two parts, one voice pool",
+      "applies_to": ["kbd"],
+      "rule": "A performance always holds an Upper and a Lower patch, each with its own effects. SINGLE plays the PANEL SELECT part; DUAL layers both (Part Detune spreads them); SPLIT puts Lower below the split point and Upper from it. In DUAL and SPLIT, Voice Assign fixes each part's share of the 10 voices (8 with the Voice Modulator on). New notes steal the oldest. On MIDI IN each part answers its own Part MIDI channel."
+    },
+    {
+      "id": "b03",
+      "name": "Waveform-dependent controls",
+      "applies_to": ["osc1", "osc2"],
+      "rule": "CONTROL 1 and 2 change meaning with the waveform (see module properties); the display names the parameter as you turn. OSC 2 saw and triangle have no controls; with EXT on, CONTROL 1 is the gate threshold. Noise with RESONANCE at 127 becomes a sine: on OSC 1 CUTOFF 64 gives the played pitch, on OSC 2 it gives C4 on every key; each step is a semitone."
+    },
+    {
+      "id": "b04",
+      "name": "Feedback osc forces mono",
+      "applies_to": ["osc1", "kbd"],
+      "rule": "Selecting FEEDBACK OSC turns MONO or LEGATO on, locks it on, and blocks UNISON."
+    },
+    {
+      "id": "b05",
+      "name": "Sync, ring and cross mod",
+      "applies_to": ["osc1", "osc2", "ring"],
+      "rule": "Sync resets OSC 2 at each OSC 1 cycle (not with noise or EXT); the tone changes with RANGE or FINE/WIDE while the pitch stays. Ring multiplies OSC 1 by OSC 2 and appears on the OSC 2 side of the balance. X-MOD lets OSC 2 frequency-modulate OSC 1 (not super saw or noise); sweep OSC 2 pitch for timbre changes. With LFO 1 & ENV DESTINATION on X-MOD the pitch envelope and LFO 1 move the cross mod depth: a positive envelope works best with low X-MOD DEPTH, a negative one with high."
+    },
+    {
+      "id": "b06",
+      "name": "Centre-zero depths",
+      "applies_to": ["env_pitch", "env_filter", "vcf", "vca", "lfo2", "pitch"],
+      "rule": "Envelope and LFO depths are bipolar: centre is none, below or left inverts. Velocity, Control Assign and vocal morph move these depths only away from zero on the side the control sits; they cannot cross zero."
+    },
+    {
+      "id": "b07",
+      "name": "Filter key follow",
+      "applies_to": ["vcf"],
+      "rule": "Centre fixes the cutoff; +32 tracks fully (100 %, equal brightness, also for HPF and BPF); +63 about 200 %; -64 about -100 %. Most audible with CUTOFF at centre."
+    },
+    {
+      "id": "b08",
+      "name": "Amp pan modes",
+      "applies_to": ["vca"],
+      "rule": "PAN off: AMP LFO 1 DEPTH is tremolo. AUTO: LFO 1 pans (FADE ignored). MANUAL: the knob sets a fixed position. Pan and panning delays are lost with a mono output or PARALLEL OUT."
+    },
+    {
+      "id": "b09",
+      "name": "LFO 2 on the mod wheel",
+      "applies_to": ["lfo2", "kbd"],
+      "rule": "LFO 2 is a triangle with one rate and three stored depths (pitch, filter, amp); DEPTH SELECT only picks which depth the knob edits. Nothing is heard until CC 1 arrives; CC 1 resets on a performance change but not a patch change."
+    },
+    {
+      "id": "b10",
+      "name": "Solo modes",
+      "applies_to": ["kbd", "env_filter", "env_amp"],
+      "rule": "MONO re-attacks every note; LEGATO glides overlapping notes without re-attack; UNISON stacks the part's voices with Unison Detune up to 50 cents; LEGATO+UNISON together give legato unison. Env Type in Solo ANALOG continues envelopes from their current level. Patch Gain compensates the lower level of mono patches."
+    },
+    {
+      "id": "b11",
+      "name": "Velocity morphing",
+      "applies_to": ["morph"],
+      "rule": "Set the sound for velocity 80, press VELOCITY ASSIGN, move controls to the velocity-127 sound, then return them. Each parameter then moves by its width above 80 and by the mirror below 80, relative to the current knob position. Filter and amp R follow note-off velocity, everything else note-on. Excluded: VOLUME, TEMPO, Voice Modulator CONTROL 1/2, input levels and the Voice Modulator panel."
+    },
+    {
+      "id": "b12",
+      "name": "Control assign (aftertouch and breath)",
+      "applies_to": ["morph", "kbd"],
+      "rule": "Set the sound for no controller, press CONTROL ASSIGN, move controls to the full-aftertouch sound, return them. Control Up 0-127 adds the width; Control Down adds its mirror, so one gesture can push a sound two ways (the JP-8000 ribbon sends aftertouch on its right, breath on its left). With Morph Bend Assign the pitch follows by the bend ranges (REMOTE KBD IN only). Control Up/Down can be any CC 1-31, 33-95 or aftertouch."
+    },
+    {
+      "id": "b13",
+      "name": "Motion control",
+      "applies_to": ["motion", "morph"],
+      "rule": "Record knob and slider moves in loops (1-8 measures, layered pass by pass) or one pass of up to 99 measures; moving a recorded control overwrites it. Playback applies to the PANEL SELECT part. Turning a knob during playback takes over once it passes one of its 11 switch points, until the motion loops. Stopping a motion leaves the sound changed; reselect the patch to restore it. Motion Restart can restart it with the first key, aligning it with a pattern."
+    },
+    {
+      "id": "b14",
+      "name": "Summing of morph sources",
+      "applies_to": ["morph"],
+      "rule": "Velocity, Control Assign, vocal morph and motion offsets add on overlapping parameters, except Control Assign and vocal morph, which share the same messages: the last one received sets the value. morph.out stands for an offset onto every assigned parameter."
+    },
+    {
+      "id": "b15",
+      "name": "Which part the controllers move",
+      "applies_to": ["kbd", "morph", "lfo2"],
+      "rule": "From REMOTE KBD IN: SINGLE and SPLIT act on the PANEL SELECT part, DUAL on both. From MIDI IN: the part whose Part MIDI channel matches the message."
+    },
+    {
+      "id": "b16",
+      "name": "Arpeggiator and RPS",
+      "applies_to": ["arp", "rps", "kbd"],
+      "rule": "Driven only from REMOTE KBD IN or Preview. SINGLE: the PANEL SELECT part; DUAL: per Arpeggio Dest (arpeggio) or both parts (RPS); SPLIT: Lower only. RPS assigns a 1-4 measure pattern to each key C#2-C6, recorded by loop-mix with quantise and gate time; Pattern Trig Qtz times switching; HOLD keeps playing; keys outside the range stop a held pattern. Results go out on MIDI OUT. Lower needs enough voices for the pattern's chords."
+    },
+    {
+      "id": "b17",
+      "name": "Tempo sync and halving",
+      "applies_to": ["delay", "vm_dly", "mfx", "vm_ens", "lfo1"],
+      "rule": "Chorus, delay, LFO 1, ensemble and Voice Modulator delay can follow TEMPO or MIDI clock (per MIDI Sync). Delays never exceed 1250 ms mono or 625 ms panning; a longer synced time is halved, repeating at half the interval."
+    },
+    {
+      "id": "b18",
+      "name": "Formant filter",
+      "applies_to": ["vm", "vm_inst", "vm_robot", "vm_noise"],
+      "rule": "Needs both an instrument (part via VOICE MOD SEND, INST/LOWER via Ext->Inst, or the robot oscillator) and a voice (VOCAL/UPPER or MIC via Ext->Vocal). 12 bands of the voice set the levels of the same 12 bands of the instrument. Sustained, bright sounds work best; percussion as the modulator also works (WIDE). GATE THRESHOLD closes it under a level; VOCAL HOLD freezes it. Parameters marked formant-only show 'x' and are ignored in filter-bank algorithms."
+    },
+    {
+      "id": "b19",
+      "name": "Filter bank",
+      "applies_to": ["vm"],
+      "rule": "FLT BANK WIDE/NARROW make both sets 12-band level controls (CHARACTER 1-12) for stereo use: Inst Input left, Vocal Input right; VOICE MOD SEND feeds both; V PAN balances them. VOCAL HOLD is forced off."
+    },
+    {
+      "id": "b20",
+      "name": "Vocal morph control",
+      "applies_to": ["vm_morph", "morph"],
+      "rule": "The Vocal Input's level around 1.2 kHz above Vocal Morph Thrsh becomes the Control Up (sensitivity +) or Control Down (-) message, moving the patch by its Control Assign widths. 'a' controls most; alternating vowels gives large and small changes. Does not need VOICE MOD SEND."
+    },
+    {
+      "id": "b21",
+      "name": "Voice Modulator initialise",
+      "applies_to": ["vm"],
+      "rule": "Nine set-ups write recommended performance values: F.FLT VINTAGE, SILKY, HUSKYVOICE, BREAKBEATS, ROBOT, HUSKYROBOT; F.BANK STANDARD, RADIO; VOCAL MORPH CTRL. INIT PERFORMANCE uses F.FLT VINTAGE."
+    },
+    {
+      "id": "b22",
+      "name": "External input synthesis",
+      "applies_to": ["ext", "osc2"],
+      "rule": "With EXT on, the part's input replaces OSC 2: heard only during note-on and above GATE THRESHOLD, at the filter and amp, without pitch. Set OSC BALANCE fully to OSC 2 to hear only the input. INST/LOWER goes to Lower; VOCAL/UPPER or MIC to Upper; INST/LOWER alone (REAR) to both."
+    },
+    {
+      "id": "b23",
+      "name": "Individual and external trigger",
+      "applies_to": ["kbd", "ext", "env_filter", "env_amp"],
+      "rule": "Held notes wait for a trigger to start the filter and/or amp envelope: a note on Indv Trig Src CH (MIDI IN, SINGLE or DUAL) or below the split point (REMOTE KBD IN, SPLIT, Upper only), or the part's external input crossing GATE THRESHOLD (attack on rising, release on falling). Without triggers those envelopes do not run."
+    },
+    {
+      "id": "b24",
+      "name": "Memory and editing",
+      "applies_to": ["kbd"],
+      "rule": "Selecting a performance or patch loads it into the temporary area; edits mark '*' and are lost on reselection unless written. Patches inside performances are copies. MANUAL (SHIFT) sets the part's patch to the physical knob positions. Temporary and Edit Scope show values; Velocity and Control Scope show widths."
+    },
+    {
+      "id": "b25",
+      "name": "Panel MIDI",
+      "applies_to": ["kbd"],
+      "rule": "With Tx/Rx Edit on, MODE1 sends each knob as the CC in its access list, or SysEx where none is assigned; MODE2 lets each knob use any CC 1-31, 33-95, aftertouch or SysEx (non-standard). Both ends must use the same mode. VOLUME, TEMPO, Voice Modulator CONTROL 1/2, input levels and the Voice Modulator panel are never sent."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on",
+        "note": "per Part MIDI channel; trigger notes per Indv Trig settings"
+      },
+      {
+        "message": "note_off",
+        "note": "release velocity used"
+      },
+      {
+        "message": "pitch_bend",
+        "note": "per patch bend ranges"
+      },
+      {
+        "message": "channel_pressure",
+        "note": "Control Up by default; or a MODE2 knob"
+      },
+      {
+        "message": "program_change",
+        "note": "Perform Ctrl CH selects performances; Part MIDI CH selects that part's patch"
+      },
+      {
+        "message": "control_change",
+        "cc": 0,
+        "parameter": "bank select MSB: 50H user, 51H preset, 52H card"
+      },
+      {
+        "message": "control_change",
+        "cc": 32,
+        "parameter": "bank select LSB: preset group or card number"
+      },
+      {
+        "message": "control_change",
+        "cc": 1,
+        "parameter": "modulation: LFO 2 depths"
+      },
+      {
+        "message": "control_change",
+        "cc": 2,
+        "parameter": "breath: Control Down by default"
+      },
+      {
+        "message": "control_change",
+        "cc": 5,
+        "parameter": "portamento time"
+      },
+      {
+        "message": "control_change",
+        "cc": 7,
+        "parameter": "volume (performance or part)"
+      },
+      {
+        "message": "control_change",
+        "cc": 10,
+        "parameter": "pan"
+      },
+      {
+        "message": "control_change",
+        "cc": 11,
+        "parameter": "expression (performance or part)"
+      },
+      {
+        "message": "control_change",
+        "cc": 64,
+        "parameter": "hold 1 (Vocal Hold on the Performance Control channel)"
+      },
+      {
+        "message": "control_change",
+        "cc": 65,
+        "parameter": "portamento on/off"
+      },
+      {
+        "message": "control_change",
+        "cc": 84,
+        "parameter": "portamento control (glide from a source note)"
+      },
+      {
+        "message": "control_change",
+        "note": "panel knobs per Tx/Rx Edit Mode (see parameter access); any CC 1-31 or 33-95 may serve as Control Up/Down"
+      },
+      {
+        "message": "rpn",
+        "number": 0,
+        "parameter": "pitch bend sensitivity (sets both bend ranges)"
+      },
+      {
+        "message": "rpn",
+        "number": 1,
+        "parameter": "fine tuning"
+      },
+      {
+        "message": "rpn",
+        "number": 2,
+        "parameter": "coarse tuning (Part Transpose)"
+      },
+      {
+        "message": "channel_mode",
+        "note": "120 all sound off, 121 reset all controllers, 123-125 all notes off, 126 mono (MONO on), 127 poly (MONO off)"
+      },
+      {
+        "message": "clock",
+        "note": "with MIDI Sync on"
+      },
+      {
+        "message": "start"
+      },
+      {
+        "message": "continue"
+      },
+      {
+        "message": "stop"
+      },
+      {
+        "message": "song_position"
+      },
+      {
+        "message": "active_sensing"
+      },
+      {
+        "message": "sysex",
+        "note": "Roland; device ID 17-32; patch, performance, pattern, motion and system data, bulk dump"
+      }
+    ],
+    "transmits": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "channel_pressure"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "control_change",
+        "note": "panel edits per Tx/Rx Edit Mode; bank select"
+      },
+      {
+        "message": "program_change"
+      },
+      {
+        "message": "sysex"
+      },
+      {
+        "message": "active_sensing"
+      },
+      {
+        "message": "note",
+        "note": "arpeggio, RPS and motion data and REMOTE KBD IN playing go to MIDI OUT; MIDI Thru optional"
+      }
+    ],
+    "channel_note": "Part MIDI CH per part (default Upper 1, Lower 2); Perform Ctrl CH for performance changes; Remote KBD CH (or ALL) for REMOTE KBD IN; Indv Trig Src CH for trigger notes. Mode 3.",
+    "cc_map": {
+      "92": "fx.bass",
+      "95": "fx.treble",
+      "93": "fx.mfx_level",
+      "12": "fx.delay_time",
+      "13": "fx.delay_feedback",
+      "94": "fx.delay_level",
+      "16": "lfo1.rate",
+      "17": "lfo2.rate",
+      "5": "pitch.portamento_time",
+      "4": "osc1.control1",
+      "76": "osc1.control2",
+      "77": "osc2.fine_wide",
+      "78": "osc2.control1",
+      "79": "osc2.control2",
+      "8": "mix.balance",
+      "70": "osc.xmod_depth",
+      "18": "osc.lfo1_depth",
+      "74": "vcf.cutoff",
+      "71": "vcf.resonance",
+      "19": "vcf.lfo1_depth",
+      "81": "env_filter.depth",
+      "82": "env_filter.attack",
+      "83": "env_filter.decay",
+      "80": "amp.lfo1_depth",
+      "7": "amp.level",
+      "73": "env_amp.attack",
+      "75": "env_amp.decay",
+      "72": "env_amp.release",
+      "65": "pitch.portamento"
+    },
+    "cc_map_note": "MODE1 (factory). In MODE2's factory table the SysEx-only controls gain CC 20-31: LFO 1 fade 20, OSC 2 range 21, LFO 2 depths 22-24, pitch envelope 25-27, filter S/R 28-29, key follow 30, amp S 31.",
+    "note": "From the MIDI implementation v1.00 (16 April 1998) and chart (14 April 1998). Every control is also addressable by Roland SysEx (address map pp.194-207, not transcribed)."
+  },
+  "specifications": {
+    "polyphony": {
+      "voice_modulator_off": 10,
+      "voice_modulator_on": 8
+    },
+    "parts": 2,
+    "key_modes": ["single", "dual", "split"],
+    "waveforms": {
+      "osc1": [
+        "super saw",
+        "triangle mod",
+        "noise",
+        "feedback osc",
+        "square (PWM)",
+        "saw",
+        "triangle"
+      ],
+      "osc2": ["square (PWM)", "saw", "triangle", "noise"]
+    },
+    "effects": {
+      "tone_control": true,
+      "multi_fx_types": 13,
+      "delay_types": 5,
+      "voice_modulator": "two 12-band band-pass filter sets, noise, robot oscillator, dedicated ensemble and delay"
+    },
+    "memory": {
+      "performances": {
+        "user": 64,
+        "preset": 192
+      },
+      "patches": {
+        "user": 128,
+        "preset": 384
+      },
+      "rps_patterns": 48,
+      "motions": "2 x 2 sets (A, B)"
+    },
+    "memory_card": {
+      "type": "SmartMedia",
+      "S2M-5": "2 MB: 64 x 32 performances, 128 x 32 patches, 48 patterns, 2 x 4 motions, system",
+      "S4M-5": "4 MB: 64 x 64 performances, 128 x 64 patches"
+    },
+    "arpeggiator": {
+      "modes": 4,
+      "beat_patterns": 90,
+      "range_octaves": [1, 4],
+      "tempo_bpm": [20, 250]
+    },
+    "rps": {
+      "patterns": 48,
+      "max_loop_measures": 4,
+      "ppq": 24,
+      "quantize": ["off", "1/16T", "1/16", "1/8T", "1/8", "1/4T", "1/4"],
+      "gate_time": ["real", "staccato", "33%", "50%", "66%", "100%"]
+    },
+    "motion": {
+      "max_loop_measures": 8,
+      "max_record_measures": 99,
+      "recording": "realtime loop and one-shot"
+    },
+    "display": "16 characters x 2 lines, backlit LCD",
+    "connectors": {
+      "midi": ["REMOTE KBD IN", "IN", "OUT"],
+      "outputs": "L (MONO), R: 1/4 inch phone",
+      "ext_in": "INST/LOWER (MONO), VOCAL/UPPER: 1/4 inch phone",
+      "mic": "1/4 inch phone",
+      "headphones": "stereo 1/4 inch phone"
+    },
+    "input_level_dbm": {
+      "inst_lower": [-30, 4],
+      "vocal_upper": [-30, 4],
+      "mic": [-60, -20]
+    },
+    "input_impedance_ohm": {
+      "inst_lower": 24000,
+      "vocal_upper": 24000,
+      "mic": 5000
+    },
+    "output_impedance_ohm": {
+      "outputs": 2200,
+      "headphones": 100
+    },
+    "power": {
+      "ac_v": [117, 230, 240],
+      "consumption_w": 17
+    },
+    "dimensions_mm": {
+      "width": 482,
+      "height": 88,
+      "depth": 264,
+      "note": "Printed as 482 (W) x 88 (D) x 264 (H); see source_inconsistencies."
+    },
+    "weight_kg": 4.5,
+    "delay_max_ms": {
+      "mono_long": 1250,
+      "panning": 625,
+      "short": 156
+    }
+  },
+  "omitted_from_source": [
+    "the Performance List (192 presets) and Patch List (384 presets), pp.176-181",
+    "the Roland SysEx address map and bulk dump formats, pp.194-207",
+    "memory card, bulk dump, copy and factory-reset procedures (chapters 10 and 11), beyond what behaviours need",
+    "the sound-making examples and Voice Modulator application examples (chapter 12 onward), the 'Understanding Sound' and 'What is MIDI?' primers, troubleshooting and error messages",
+    "the INIT PATCH knob and slider positions, which are drawn rather than listed",
+    "step-by-step button procedures for each edit page"
+  ],
+  "not_in_source": [
+    "envelope times, LFO rates, portamento times and filter cutoff in physical units; every control is 0-127 only",
+    "the band centre frequencies of the Voice Modulator's 12 filters",
+    "tone control frequencies and gain range",
+    "the order of tone control, multi-effects and delay (taken from the patch diagram)",
+    "the point where VOICE MOD SEND takes the patch (before or after its effects), and whether the dry patch is muted when sent",
+    "whether LFO 1 and LFO 2 run per voice or once per part",
+    "the super saw's detune curve and the internals of triangle mod and feedback osc",
+    "the robot oscillator's pitch range and waveform",
+    "how the JP-8080 handles a CC 10 pan message against the patch PAN setting"
+  ],
+  "source_inconsistencies": [
+    "OSC SHIFT is described as 'set independently for each performance' (p.71), but it sits in the patch section of the panel and in the Patch Parameters list (p.182); modelled as a patch parameter.",
+    "The RPS range is C#2 (note 37) to C6 (note 84) on p.92 and p.95, but the HOLD text on p.92 gives C#2 as note 36.",
+    "OSC 2 RANGE detents are listed as '24, -12, 0, +12 and +24' (p.69); -24 is presumably meant.",
+    "RPN 0 accepts 0-24 semitones (00H-18H) but the same entry says up to one octave can be set (p.192).",
+    "Ensemble Type lists FLANGER SLOW/DEEP/FAST in the parameter list (p.185) but only FLANGER SLOW and FAST in the Voice Modulator chapter (p.110); modelled with all three.",
+    "Dimensions are printed as 482 (W) x 88 (D) x 264 (H) mm; for a 2U rack unit 88 mm is the height and 264 mm the depth.",
+    "The LFO 2 and Bend Range pages (pp.87, 89) tell you to 'erase the control assign settings of the other Patch' to limit them to one part, apparently copied from the Control Assign page.",
+    "p.11 says motions can record 'nearly all' sliders and knobs 'for up to 99 measures, in four separate memories'; p.210 gives 99 measures as the recording length and 8 as the loop length, consistent only if 99 is the play-once mode."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Two parts",
+      "detail": "The schema has no per-part scope. One patch's voice architecture is modelled; at run time the Upper and Lower parts each run it with their own patch and their own tone control, multi-effect and delay (scope 'common' here means once per part). Part assignment of the external inputs is folded into ext.to_osc2."
+    },
+    {
+      "topic": "Performance memory tier",
+      "detail": "Schema memory values are patch, global or none. Performance-level settings are marked memory 'patch' with the note 'Stored in the performance, not the patch.' A 'performance' value (schema 0.14.0) would make this explicit."
+    },
+    {
+      "topic": "Morphing",
+      "detail": "Velocity Assign and Control Assign are per-parameter width tables stored in the patch, not slot-based routings, so they are not a mod_matrix. They are modelled as the morph module, two width parameters and behaviours b11-b14; morph.out is wired to cutoff only as a representative."
+    },
+    {
+      "topic": "Dual-function controls",
+      "detail": "Eighteen knobs and sliders also edit Voice Modulator parameters on the Voice Modulator panel. These are separate parameters whose access notes name the physical control (read from the blue legends on p.12)."
+    },
+    {
+      "topic": "DSP waveforms",
+      "detail": "Super saw (seven detuned saws), triangle mod, feedback osc and filtered noise are described only by their sound. A model needs measurements or the JP-8000's later documentation."
+    },
+    {
+      "topic": "Physical scaling",
+      "detail": "No times, rates or frequencies are given; all panel parameters are 0-127 or -64 to +63 as stored."
+    },
+    {
+      "topic": "MODE2 MIDI",
+      "detail": "Access lists record MODE1 and the MODE2 factory CCs; user MODE2 reassignment is a global table not enumerated."
+    },
+    {
+      "topic": "Presets",
+      "detail": "Preset performance and patch names are not included; the lists are in the manual (pp.176-181) if wanted."
+    }
+  ]
+}
