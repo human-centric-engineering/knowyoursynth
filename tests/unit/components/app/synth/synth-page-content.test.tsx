@@ -40,6 +40,8 @@ vi.mock('@/lib/app/links/read', () => ({
   summariseSongLinks: vi.fn(async () => new Map()),
 }));
 vi.mock('next/navigation', () => ({ useRouter: () => router }));
+// A sound's patterns, read to name its riff (t-224), are not this file's: none are read, so 200 sounds stay quick.
+vi.mock('@/components/app/sequencer/use-sound-patterns', () => ({ useSoundPatterns: () => null }));
 // Signed out. The real client's session-refresh timer can fire after jsdom tears down ("window is not defined").
 vi.mock('@/lib/auth/client', () => ({ useSession: () => ({ data: null, isPending: false }) }));
 vi.mock('@/components/app/synth/engine', () => ({

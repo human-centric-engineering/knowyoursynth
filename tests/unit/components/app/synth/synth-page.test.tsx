@@ -49,6 +49,8 @@ const { router, engine, events } = vi.hoisted(() => ({
 }));
 
 vi.mock('next/navigation', () => ({ useRouter: () => router }));
+// A sound's patterns, read to name its riff (t-224), are tested in synth-page-pattern-picker.test.tsx: none here.
+vi.mock('@/components/app/sequencer/use-sound-patterns', () => ({ useSoundPatterns: () => null }));
 // The real routings, unless a test takes Model D's away to see a synth without one.
 vi.mock('@/lib/app/synths/routing', async (importOriginal) => {
   const real = await importOriginal<typeof import('@/lib/app/synths/routing')>();

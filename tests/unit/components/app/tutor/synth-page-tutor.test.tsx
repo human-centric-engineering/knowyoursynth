@@ -67,18 +67,23 @@ vi.mock('@/lib/auth/client', () => ({
 vi.mock('@/lib/api/client', async (importOriginal) => {
   const real = await importOriginal<typeof import('@/lib/api/client')>();
   const account = (path: string) => path.startsWith('/api/v1/me/');
+  // A library sound's patterns, read to name its riff (t-224), answer "none": they are not what this file is about.
+  const soundPatterns = (path: string) =>
+    /^\/api\/v1\/synths\/[^/]+\/sounds\/[^/]+\/patterns$/.test(path);
   return {
     ...real,
     apiClient: {
       ...api,
       get: (path: string, opts?: unknown) =>
-        account(path)
-          ? Promise.resolve(
-              path === '/api/v1/me/settings'
-                ? { tips: null, dim: null, heat: null, harm: null, fx: null }
-                : null
-            )
-          : api.get(path, opts),
+        soundPatterns(path)
+          ? Promise.resolve([])
+          : account(path)
+            ? Promise.resolve(
+                path === '/api/v1/me/settings'
+                  ? { tips: null, dim: null, heat: null, harm: null, fx: null }
+                  : null
+              )
+            : api.get(path, opts),
       put: (path: string) => (account(path) ? Promise.resolve(null) : api.put(path)),
       patch: (path: string, opts?: unknown) =>
         account(path) ? Promise.resolve(null) : api.patch(path, opts),
