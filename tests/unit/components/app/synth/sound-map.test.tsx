@@ -80,8 +80,14 @@ describe('MapLegend', () => {
 
   it('counts progress while the first map is worked out', () => {
     act(() => mapStore.set({ ...MAP_OFF, status: 'working', progress: 0.42 }));
-    render(legend());
+    render(legend({ heatOn: false }));
     expect(screen.getByRole('status').textContent).toBe('Working out what is in this patch… 42%');
+  });
+
+  it('names the first map the way the bar over the panel does when Sensitive is on', () => {
+    act(() => mapStore.set({ ...MAP_OFF, status: 'working', progress: 0.4 }));
+    render(legend({ heatOn: true }));
+    expect(screen.getByRole('status').textContent).toBe('Finding the sensitive controls… 40%');
   });
 
   it('says the map could not be worked out, with no key and no progress', () => {
@@ -172,6 +178,19 @@ describe('MapProgress', () => {
     render(<MapProgress heatOn />);
     const bar = screen.getByRole('progressbar', { name: 'Finding the sensitive controls' });
     expect(bar.getAttribute('aria-valuenow')).toBe('0');
+    expect(screen.getByText('Finding the sensitive controls… 0%')).toBeTruthy();
+    // At 0% the fill still shows a sliver, so the bar reads as a bar.
+    expect((bar.firstElementChild as HTMLElement).style.width).toBe('3%');
+  });
+
+  it('starts the fill again from empty when the sound changes before the first map is drawn', () => {
+    act(() => mapStore.set({ ...MAP_OFF, status: 'working', progress: 0.9, key: 'a' }));
+    render(<MapProgress heatOn />);
+    const before = screen.getByRole('progressbar').firstElementChild;
+    act(() => mapStore.set({ ...MAP_OFF, status: 'working', key: 'b' }));
+    const after = screen.getByRole('progressbar').firstElementChild as HTMLElement;
+    expect(after).not.toBe(before);
+    expect(after.style.width).toBe('3%');
   });
 
   it('follows the progress, and names the mapping for Dim unused when Sensitive is off', () => {

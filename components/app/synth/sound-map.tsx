@@ -17,7 +17,7 @@ import type { Mapper } from '@/lib/app/synths/lib/soundmap';
 import type { Control, ControlValues, SynthDef } from '@/lib/app/synths/contract';
 import { movesUp } from '@/lib/app/synths/contract';
 import { findStore, focusStore, mapStore, useStore } from '@/components/app/synth/stores';
-import type { Door, WhyAnswer } from '@/components/app/synth/stores';
+import type { Door, SoundMap, WhyAnswer } from '@/components/app/synth/stores';
 
 // [name on the hardware view, name on the paper outline (where unused parts fade instead of going dark), meaning, wash, hatched]
 const KEY: [string, string, string, number, boolean][] = [
@@ -25,6 +25,16 @@ const KEY: [string, string, string, number, boolean][] = [
   ['Striped', 'Striped', 'at zero or switched off. Move it to bring that part in', 0.4, true],
   ['Dark', 'Faded', 'does nothing at the moment', 0.78, false],
 ];
+
+/** What the first working-out of the map is called, on the bar over the panel and in the strip under it alike. */
+function mapWork(heatOn: boolean): string {
+  return heatOn ? 'Finding the sensitive controls' : 'Working out what is in this patch';
+}
+
+/** How far the first working-out of the map has got (0..1), or `null` when no map is being worked out for the first time. */
+function firstMapProgress(m: SoundMap): number | null {
+  return m.status === 'working' && !m.state ? m.progress : null;
+}
 
 const HOW =
   'Worked out by playing two notes of the riff through the synth model again and again, each time with one control moved, and comparing the results. The mod wheel counts as it is set now, so wheel controls stay dark until you push it up.';
@@ -44,6 +54,7 @@ export interface MapLegendProps {
 export function MapLegend({ def, values, dimOn, heatOn, outline }: MapLegendProps) {
   const map = useStore(mapStore);
   if (map.status === 'off') return null;
+  const first = firstMapProgress(map);
   const cm = controlMap(def);
   const top = map.ranked
     .slice(0, 5)
@@ -56,9 +67,9 @@ export function MapLegend({ def, values, dimOn, heatOn, outline }: MapLegendProp
           Could not work out what is in this patch. Changing the patch tries again.
         </span>
       )}
-      {!map.state && map.status !== 'failed' && (
+      {first !== null && (
         <span role="status">
-          Working out what is in this patch… {Math.round(map.progress * 100)}%
+          {mapWork(heatOn)}… {Math.round(first * 100)}%
         </span>
       )}
       {map.state && dimOn && (
@@ -139,12 +150,12 @@ export function MapLegend({ def, values, dimOn, heatOn, outline }: MapLegendProp
  * a knob move leaves the old one up and shows no bar: the legend's "Updating…" covers that. Sits in a positioned parent.
  */
 export function MapProgress({ heatOn }: { heatOn: boolean }) {
-  const progress = useStore(mapStore, (m) =>
-    m.status === 'working' && !m.state ? m.progress : null
-  );
+  const progress = useStore(mapStore, firstMapProgress);
+  // A new sound starts the fill again from empty rather than sliding it back from where the last one had got to.
+  const key = useStore(mapStore, (m) => m.key);
   if (progress === null) return null;
   const pct = Math.round(progress * 100);
-  const label = heatOn ? 'Finding the sensitive controls' : 'Working out what is in this patch';
+  const label = mapWork(heatOn);
   return (
     <div className="pointer-events-none absolute inset-x-2 top-2 z-20 flex justify-center">
       <div className="flex min-w-56 flex-col gap-1.5 rounded-lg border border-(--kys-line) bg-(--kys-surface) px-3 py-2 text-xs text-(--kys-muted) shadow-md">
@@ -160,6 +171,7 @@ export function MapProgress({ heatOn }: { heatOn: boolean }) {
           className="h-1.5 overflow-hidden rounded-full bg-(--kys-line)"
         >
           <div
+            key={key}
             className="h-full rounded-full bg-(--kys-accent) transition-[width] duration-200"
             style={{ width: `${Math.max(pct, 3)}%` }}
           />
