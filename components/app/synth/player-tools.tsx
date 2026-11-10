@@ -16,7 +16,7 @@
  * The page owns every state these show; each is told what is true and calls back to change it.
  */
 
-import { useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import type { CSSProperties, ReactNode, Ref } from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import { ChevronDown, X } from 'lucide-react';
@@ -195,6 +195,7 @@ export function PlayerSettings({
       <Setting
         at={0}
         name="Drawn as"
+        drop
         help="Hardware is the faceplate; Outline is a plain diagram, easier to read."
       >
         {(d) => (
@@ -214,6 +215,7 @@ export function PlayerSettings({
         <Setting
           at={1}
           name="Layout"
+          drop
           help="Modular stacks the sections as modules; Long is the faceplate as it is on the keyboard."
         >
           {(d) => (
@@ -230,7 +232,12 @@ export function PlayerSettings({
           )}
         </Setting>
       )}
-      <Setting at={2} name="Magnifier" help="A lens that follows the pointer over the panel.">
+      <Setting
+        at={2}
+        name="Magnifier"
+        short="Lens"
+        help="A lens that follows the pointer over the panel."
+      >
         {(d) => (
           <LedSelect
             describedBy={d}
@@ -248,6 +255,7 @@ export function PlayerSettings({
       <Setting
         at={3}
         name="Hover help"
+        short="Tips"
         help="The card that pops up when you point at a knob, switch, jack or cable. The Inspector always explains it."
       >
         {(d) => (
@@ -271,31 +279,94 @@ export function PlayerSettings({
  * One setting: its name, which explains it on hover, beside its LEDs. The name cannot take focus, so what it says is
  * also the choice's description (`describedBy`), for a keyboard or screen reader. `at` is its place on the rail, which
  * times its LEDs in the sweep they light in when the panel is first shown.
+ *
+ * On a rail too narrow for the whole name (t-226, `useFootFit`), `short` is the shorter word it takes, and `drop` says
+ * the name goes, the choices saying what the setting is by themselves (Hardware / Outline). A dropped name's tip hangs
+ * from the whole setting, so it is still there to point at.
  */
 function Setting({
   at,
   name,
+  short,
+  drop = false,
   help,
   children,
 }: {
   at: number;
   name: string;
+  short?: string;
+  drop?: boolean;
   help: string;
   children: (describedBy: string) => ReactNode;
 }) {
   const id = useId();
   const place: CSSProperties & Record<'--at', number> = { '--at': at };
-  return (
+  const label = (
+    <span className={`kys-setting-name ${drop ? 'is-droppable' : ''}`}>
+      {short ? (
+        <>
+          <span className="kys-name-long">{name}</span>
+          <span className="kys-name-short">{short}</span>
+        </>
+      ) : (
+        name
+      )}
+    </span>
+  );
+  const setting = (
     <div className="kys-setting" style={place}>
-      <PlayerTip name={name} help={help}>
-        <span className="kys-setting-name">{name}</span>
-      </PlayerTip>
+      {drop ? (
+        label
+      ) : (
+        <PlayerTip name={name} help={help}>
+          {label}
+        </PlayerTip>
+      )}
       <span id={id} className="sr-only">
         {help}
       </span>
       {children(id)}
     </div>
   );
+  return drop ? (
+    <PlayerTip name={name} help={help}>
+      {setting}
+    </PlayerTip>
+  ) : (
+    setting
+  );
+}
+
+/**
+ * How close the panel's foot rail packs (t-226), from its own width: it is as wide as the panel is fitted, often
+ * narrower than the screen. Written as `data-fit` on the rail, which `synth.css` reads: `close` (the settings closer
+ * together), then `short` (their short names, and no name where the choices say it), then `narrow` (no name for Zoom,
+ * the settings closer still, a narrower search). Each step includes the ones before it. With a Layout setting the rail
+ * has four settings, not three, so each step comes at a wider rail. Measured rather than a container query: a query
+ * container contains its layout, which makes it the containing block of the rail's tooltips, positioned fixed.
+ */
+export function useFootFit(fourSettings: boolean) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const rail = ref.current;
+    if (!rail || typeof ResizeObserver === 'undefined') return undefined;
+    const [close, short, narrow] = fourSettings ? [1399, 1299, 1009] : [1149, 1059, 869];
+    const measure = () => {
+      const w = rail.offsetWidth;
+      const fit = [w <= close && 'close', w <= short && 'short', w <= narrow && 'narrow']
+        .filter(Boolean)
+        .join(' ');
+      if (fit) rail.dataset.fit = fit;
+      else delete rail.dataset.fit;
+    };
+    measure();
+    // Set on the element, not in state, so a resize does not render the page. Its width does not depend on what it
+    // writes (the rail is as wide as the panel), so writing it in the callback does not loop.
+    const ro = new ResizeObserver(measure);
+    ro.observe(rail);
+    return () => ro.disconnect();
+  }, [fourSettings]);
+  return ref;
 }
 
 /** A setting's choices: each a word with an LED before it, lit for the one in use. */

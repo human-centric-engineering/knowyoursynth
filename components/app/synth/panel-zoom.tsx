@@ -125,7 +125,7 @@ export function PanelZoom({
       aria-describedby={helpId}
     >
       <PlayerTip name="Zoom" help={ZOOM_HELP}>
-        <span className="kys-setting-name">Zoom</span>
+        <span className="kys-setting-name is-droppable-narrow">Zoom</span>
       </PlayerTip>
       <span id={helpId} className="sr-only">
         {ZOOM_HELP}
