@@ -878,6 +878,16 @@
       "app": ["mantis"],
       "text": "A British hybrid-analogue synth with 37 keys, completing the last design concept of Chris Huggett (EDP Wasp, OSCar): two mathematically generated oscillators per voice with OSCar wavetables, a sub and a density oscillator, a dual analogue state-variable filter with Wide Band and Wide Notch, two envelopes, two LFOs, six mod routes, Mono, Duophonic or four-voice Quad playing, an arpeggiator, a joystick, chorus and reverb, and 200 patches.",
       "source": "https://www.1pwm.com/mantisspecifications"
+    },
+    {
+      "id": "roland-jp-8080",
+      "name": "Roland JP-8080",
+      "maker": "Roland",
+      "year": "1998",
+      "kind": "module",
+      "app": ["jp-8080"],
+      "text": "The rack version of the JP-8000 analogue-modelling synth: ten voices in two parts, OSC 1 with the super saw, feedback osc, triangle mod and noise, OSC 2 with sync, ring and cross mod, a 12/24 dB multimode filter, unison, a multi-effect and delay per patch, an external input, the Voice Modulator vocoder, an arpeggiator, RPS and motion control.",
+      "source": "https://www.rolandus.com/blog/2014/02/19/roland-synth-chronicle-1973-through-2013/"
     }
   ]
 }

@@ -1,0 +1,66 @@
+{
+  "synth": "jp-8080",
+  "unusual": [
+    {
+      "target": "parts",
+      "text": "One set of knobs and sliders serves two complete patches. PANEL SELECT picks whether they edit the Upper or the Lower part, and each part keeps its own settings while the other is shown, so a knob’s position shows only the part that is lit."
+    },
+    {
+      "target": "up.osc1Wave",
+      "text": "Four of OSC 1’s seven waveforms are not analogue shapes at all but the JP-8000’s own DSP waves: the super saw (seven detuned sawtooths in one oscillator), triangle mod, filtered noise and the feedback osc."
+    },
+    {
+      "target": "up.osc1Ctl1",
+      "text": "CONTROL 1 and CONTROL 2 have no fixed job: they become DETUNE and MIX on the super saw, CUTOFF and RESONANCE on the noise, HARMONICS and FEEDBACK on the feedback osc, and pulse width and PWM depth on the square."
+    },
+    {
+      "target": "up.osc1Ctl2",
+      "text": "OSC 1’s noise has its own resonant filter that follows the keys: with RESONANCE at the top it rings as a near-sine, and CONTROL 1 at 64 puts it on the note played, each step a semitone. On OSC 2 the same noise rings at C4 on every key."
+    },
+    {
+      "target": "up.osc2Range",
+      "text": "RANGE runs two octaves either way in semitones, and its two end positions, -WIDE and +WIDE, turn FINE/WIDE from a ±50-cent tuner into a sweep across four octaves."
+    },
+    {
+      "target": "up.dest",
+      "text": "LFO 1 & ENV DESTINATION can aim the pitch envelope and LFO 1 at the cross mod depth instead of the pitch, so a note can start clangorous and settle, or the metallic edge can throb."
+    },
+    {
+      "target": "up.slope",
+      "text": "Every filter type, high-pass and band-pass as well as low-pass, can be -12 or -24 dB per octave: one switch, as on the Jupiter-8."
+    },
+    {
+      "target": "up.pan",
+      "text": "AMP LFO 1 DEPTH changes job with PAN: tremolo with both LEDs off, auto pan on AUTO, and a fixed stereo position on MANUAL."
+    },
+    {
+      "target": "lfo2",
+      "text": "LFO 2 has one rate and three depths, on pitch, filter and amp, all working at once and all brought in by the mod wheel. DEPTH SELECT only picks which of the three the one knob shows."
+    },
+    {
+      "target": "up.mono",
+      "text": "Choosing the feedback osc switches the part to MONO by itself and blocks UNISON: the feedback runs on one note at a time."
+    },
+    {
+      "target": "control",
+      "text": "The JP-8080 has no fixed velocity response. Velocity and aftertouch move the sound only through morphing: VELOCITY ASSIGN and CONTROL ASSIGN store how far each knob moves with them, so one gesture can reshape the whole patch."
+    }
+  ],
+  "limits": {
+    "intro": "Both patches are modelled, each a full voice: OSC 1 in all seven waveforms with CONTROL 1 and 2, OSC 2 in its four with RANGE, FINE/WIDE, SYNC and RING, X-MOD DEPTH, OSC SHIFT, OSC BALANCE, the pitch envelope and LFO 1 on both oscillators, OSC 2 or the cross mod depth, the filter in all three types at -12 and -24 dB with KEY FOLLOW and LFO 1, both ADSRs, the amp with LEVEL, tremolo and auto pan, LFO 2 on the mod wheel, portamento, MONO, LEGATO and UNISON, and each patch’s tone control, multi-effect and delay. KEY MODE plays SINGLE, DUAL and SPLIT, PANEL SELECT picks the part, and the arpeggiator and VOLUME work.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "The Voice Modulator (the vocoder, its robot oscillator, ensemble and delay, VOICE MOD SEND and its CONTROL knobs) and the external inputs: the app has no audio input, so OSC 2’s EXT only silences OSC 2. Morphing (VELOCITY, VELOCITY ASSIGN and CONTROL ASSIGN, so velocity changes nothing), motion control, RPS (MODE’s fifth setting stops the arpeggiator here), the individual and external triggers, pitch bend, the multi-effects TWISTING and the two FREEZE PHASEs (they play dry), PAN on MANUAL (the sound stays in the middle), SHAPE on OSC 1’s saw and triangle, the menus behind the display other than the two effect types, and the memory, card and MIDI keys."
+      },
+      {
+        "title": "Two parts in one engine",
+        "text": "In DUAL and SPLIT the two parts share one effects chain, the Upper patch’s tone control, multi-effect and delay, and one set of SOLO SW switches, the Upper patch’s; on the hardware each part has its own. DUAL gives each part five voices, as Voice Assign’s 5-5 does; in SPLIT the two sides share ten notes rather than five each, and the split point is fixed at C4. Part Detune, Part Transpose, Unison Detune (fixed at its 5 cents), Env Type in Solo and Patch Gain are not here. The arpeggiator plays both parts in DUAL and SPLIT, where the hardware plays the Lower part only in SPLIT, and steps in sixteenths only."
+      },
+      {
+        "title": "The voice is approximated",
+        "text": "The manual gives every control as 0-127 or -64 to +63 and no times, rates or frequencies, so the readouts in seconds and hertz, how far each depth moves its destination and the tone control’s frequencies are this app’s estimates. The super saw, triangle mod, feedback osc and filtered noise are described only by their sound, so their shapes are reasoned from it (the super saw’s spread is a published fit to the JP-8000). The -24 dB high-pass and band-pass are the engine’s 24 dB high-pass, the band-pass in series with its 24 dB low-pass, and the multi-effects are the effects engine’s chorus, flanger, phaser and amp in the JP-8080’s place. PANNING R>L bounces the same way as L>R."
+      }
+    ]
+  }
+}

@@ -21,7 +21,7 @@ python3 validate_synth.py --schema synth-blueprint.schema.json */*.synth.json
 
 Without `jsonschema` installed it runs the referential checks only.
 
-## In the app (36)
+## In the app (37)
 
 | Folder                                                     | Synth                                                                                                                                                            | Spec schema |
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
@@ -39,6 +39,7 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`jupiter-4`](./jupiter-4/README.md)                       | Roland Jupiter-4 Compuphonic (JP-4)                                                                                                                              | 0.10.0      |
 | [`jupiter-6`](./jupiter-6/README.md)                       | Roland Jupiter-6 (JP-6) Programmable Polyphonic Synthesizer                                                                                                      | 0.10.0      |
 | [`jupiter-8`](./jupiter-8/README.md)                       | Roland Jupiter-8 (JP-8) 8 Voice Polyphonic Synthesizer                                                                                                           | 0.10.0      |
+| [`jp-8080`](./jp-8080/README.md)                           | Roland JP-8080                                                                                                                                                   | 0.13.0      |
 | [`k2`](./k2/README.md)                                     | Behringer K-2                                                                                                                                                    | 0.5.0       |
 | [`kobol`](./kobol/README.md)                               | Behringer Kobol Expander                                                                                                                                         | 0.7.0       |
 | [`malevolent`](./malevolent/README.md)                     | PWM (Paul Whittington Group) Malevolent Modular Pure Analogue Synthesiser                                                                                        | 0.13.0      |

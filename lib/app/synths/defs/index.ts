@@ -49,6 +49,7 @@ import syntrxII from '@/lib/app/synths/defs/syntrx-ii';
 import solar42n from '@/lib/app/synths/defs/solar-42n';
 import malevolent from '@/lib/app/synths/defs/malevolent';
 import mantis from '@/lib/app/synths/defs/mantis';
+import jp8080 from '@/lib/app/synths/defs/jp-8080';
 
 /** A definition as the app holds it: always versioned. */
 export type AppSynthDef = SynthDef & { version: number };
@@ -91,6 +92,7 @@ export const SYNTH_DEFS: readonly AppSynthDef[] = [
   solar42n,
   malevolent,
   mantis,
+  jp8080,
 ];
 
 const byId = new Map(SYNTH_DEFS.map((d) => [d.id, d]));
