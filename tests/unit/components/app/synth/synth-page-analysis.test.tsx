@@ -336,11 +336,16 @@ describe('the sound map', () => {
     });
     page();
     chooseSignal('In use');
-    expect(screen.getByText(/Working out what is in this patch/)).toBeTruthy();
+    // Said twice while it works: in the bar over the panel (t-222) and in the legend under it.
+    expect(
+      screen.getByRole('progressbar', { name: 'Working out what is in this patch' })
+    ).toBeTruthy();
+    expect(screen.getAllByText(/Working out what is in this patch/)).toHaveLength(2);
     await settle(400 + 40 * 400);
     expect(n).toBe(5);
     expect(mapStore.get()).toMatchObject({ status: 'failed', state: null, heat: null });
     expect(screen.queryByText(/Working out what is in this patch/)).toBeNull();
+    expect(screen.queryByRole('progressbar')).toBeNull();
     expect(screen.getByText(/Could not work out what is in this patch/)).toBeTruthy();
     expect(error).toHaveBeenCalledWith('Sound-map analysis failed', expect.anything());
   });
