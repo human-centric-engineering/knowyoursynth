@@ -1654,7 +1654,7 @@ const ARP_ENGINE: Record<string, ArpMode> = {
   updown: 'updown',
   random: 'random',
 };
-const OSC_LEVEL = 0.5;
+const OSC_LEVEL = 0.4;
 
 /** The parameters an effect algorithm defaults to, in the effects engine's units. */
 const defaultsOf = (alg: string): Record<string, number | string> =>
