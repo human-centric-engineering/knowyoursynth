@@ -78,6 +78,8 @@ export interface PatternLibraryProps {
   soundPatterns?: SoundPatterns | null;
   /** Patterns that suit the patch on the panel (t-125). */
   suggested?: SuggestedPatterns | null;
+  /** What the riff is called while no pattern is held (t-224): the page's name for it, as Play's picker shows it. */
+  riffName?: string;
 }
 
 type Panel = 'mine' | 'library' | 'share' | 'sound' | null;
@@ -111,6 +113,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
     sharedHeld = false,
     soundPatterns = null,
     suggested = null,
+    riffName = 'Riff',
   } = library;
   const { loaded, edited, load } = seq;
   const [panel, setPanel] = useState<Panel>(null);
@@ -376,7 +379,9 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
       <div className="kys-seq-lib-row" role="toolbar" aria-label="Patterns">
         <p className="kys-seq-lib-name" aria-live="polite">
           <span className="kys-seq-lib-label">Pattern</span>
-          <span className="kys-seq-lib-value">{loaded?.name ?? 'The patch’s riff'}</span>
+          <span className="kys-seq-lib-value">
+            {loaded?.name ?? soundDefault?.name ?? riffName}
+          </span>
           {edited && <span className="kys-seq-lib-edited">edited</span>}
         </p>
         <div className="kys-seq-tool-group">

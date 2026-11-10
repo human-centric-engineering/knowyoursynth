@@ -1442,9 +1442,10 @@ function Synth({
     !sharedPattern && !openSound && !ownSoundPending && !sharedPanel && !ownLesson && preset
       ? { synthId, slug: preset.id, name: preset.name }
       : null;
-  // The Play deck's pattern picker (`f-pattern-picker` t-213) lists them too, so they are read while it is open.
+  // The Play deck's pattern picker (`f-pattern-picker` t-213) lists them too, and names the riff from the head of them
+  // (t-224), so they are read whenever a library sound is on the panel.
   const [patternsOpen, setPatternsOpen] = useState(false);
-  const soundPatterns = useSoundPatterns(librarySound, seqShown || patternsOpen);
+  const soundPatterns = useSoundPatterns(librarySound, true);
   // Patterns that suit the patch as it is now (t-125). A library sound is offered them once the patch has moved far
   // from how that sound came; anything else on the panel is offered them at once.
   // The Default patch is no sound the suggestions can be asked to leave out, so it is no start: it is offered them at once.
@@ -1488,9 +1489,12 @@ function Synth({
     : seqLoaded
       ? (seqLoaded.libraryId ?? null)
       : (soundPatterns?.patterns?.[0]?.id ?? null);
+  // The riff by name (t-224): its default pattern's, read with the sound's patterns; until then, or for a sound with no
+  // library patterns, the sound's own name, which is what its riff's pattern is named for.
+  const riffName = soundPatterns?.patterns?.[0]?.name ?? shown?.name ?? 'Riff';
   const playsName = playsPattern
-    ? `${seqLoaded?.name ?? 'The patch’s riff'}${seq.edited ? ' (edited)' : ''}`
-    : 'The patch’s riff';
+    ? `${seqLoaded?.name ?? riffName}${seq.edited ? ' (edited)' : ''}`
+    : riffName;
   const seqLibrary: PatternLibraryProps = {
     signedIn: authPending ? null : signedIn,
     // Save a copy is offered to someone else's pattern only; its owner saves it as any pattern of theirs.
@@ -1501,6 +1505,7 @@ function Synth({
     mine: myPatterns,
     soundPatterns,
     suggested,
+    riffName,
     sound: openSound
       ? {
           name: openSound.name,

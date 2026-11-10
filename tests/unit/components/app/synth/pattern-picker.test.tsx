@@ -138,7 +138,7 @@ function Picker({
   return (
     <PatternPicker
       synthId="model-d"
-      plays="The patch’s riff"
+      plays="Fat bass"
       open={open}
       onOpenChange={setOpen}
       sheet={sheet}
@@ -173,7 +173,7 @@ describe('the pattern picker beside Play', () => {
   it('names what Play plays, and opens a list from the button', () => {
     render(<Picker startOpen={false} />);
     const btn = screen.getByRole('button', {
-      name: 'Choose what Play plays (now: The patch’s riff)',
+      name: 'Choose what Play plays (now: Fat bass)',
     });
     expect(btn.getAttribute('aria-expanded')).toBe('false');
     expect(screen.queryByRole('dialog')).toBeNull();

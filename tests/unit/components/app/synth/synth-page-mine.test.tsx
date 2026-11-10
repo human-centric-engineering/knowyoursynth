@@ -54,10 +54,14 @@ vi.mock('@/lib/auth/client', () => ({
 // The account's settings and last panel (`f-my-sounds` s3) answer "nothing kept yet" here, and their writes are
 // dropped, so `api` sees only the sounds API this file is about. They are tested in synth-page-account.test.tsx. The
 // tutor's reads (`f-tutor` t-56) answer "no conversation yet"; the tutor is tested in tests/unit/components/app/tutor/.
+// A library sound's patterns, read to name its riff (t-224), answer "none": they are tested in
+// synth-page-pattern-picker.test.tsx.
 vi.mock('@/lib/api/client', async (importOriginal) => {
   const real = await importOriginal<typeof import('@/lib/api/client')>();
   const account = (path: string) => path.startsWith('/api/v1/me/');
   const tutor = (path: string) => path.startsWith('/api/v1/tutor/');
+  const soundPatterns = (path: string) =>
+    /^\/api\/v1\/synths\/[^/]+\/sounds\/[^/]+\/patterns$/.test(path);
   return {
     ...real,
     apiClient: {
@@ -69,13 +73,15 @@ vi.mock('@/lib/api/client', async (importOriginal) => {
                 ? { tips: null, dim: null, heat: null, harm: null, fx: null }
                 : null
             )
-          : tutor(path)
-            ? Promise.resolve(
-                path === '/api/v1/tutor/allowance'
-                  ? { limit: 30, used: 0, remaining: 30, resetsAt: '2026-10-19T00:00:00.000Z' }
-                  : { conversation: null }
-              )
-            : api.get(path, opts),
+          : soundPatterns(path)
+            ? Promise.resolve([])
+            : tutor(path)
+              ? Promise.resolve(
+                  path === '/api/v1/tutor/allowance'
+                    ? { limit: 30, used: 0, remaining: 30, resetsAt: '2026-10-19T00:00:00.000Z' }
+                    : { conversation: null }
+                )
+              : api.get(path, opts),
       put: (path: string) => (account(path) ? Promise.resolve(null) : api.put(path)),
       patch: (path: string, opts?: unknown) =>
         account(path) ? Promise.resolve(null) : api.patch(path, opts),
@@ -1114,7 +1120,8 @@ describe('a sound that plays a pattern by default (f-step-sequencer t-81)', () =
     fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
     await waitFor(() => expect(loadedName()).toBe('Night bass'));
     fireEvent.click(button('Sequencer'));
-    expect(strip().getByText('The patch’s riff')).toBeTruthy();
+    // With no lesson of its own, the riff it plays is the library patch's under it, named as that (t-224).
+    expect(strip().getByText('Default patch', { selector: '.kys-seq-lib-value' })).toBeTruthy();
     expect(askedFor('/api/v1/sounds')).toBe(true);
     expect(api.get.mock.calls.some(([p]) => String(p).startsWith('/api/v1/patterns'))).toBe(false);
   });
