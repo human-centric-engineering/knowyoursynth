@@ -1438,14 +1438,23 @@ function Synth({
   // read once the sequencer opens. One of the user's sounds, a shared one, a lesson's or the tutor's has none of its own.
   // Nor does a sound of theirs whose list is still being read: the library's preset is only standing in for it.
   const ownSoundPending = !!sess.soundId && (authPending || (signedIn && !mine.sounds));
+  // The name of the sound on the panel, as "Loaded:" shows it.
+  const panelName = openSound
+    ? openSound.name
+    : sharedPanel && shared
+      ? shared.name
+      : designed
+        ? designed.name
+        : preset
+          ? preset.name
+          : DEFAULT_PATCH_NAME;
   const librarySound =
     !sharedPattern && !openSound && !ownSoundPending && !sharedPanel && !ownLesson && preset
       ? { synthId, slug: preset.id, name: preset.name }
       : null;
-  // The Play deck's pattern picker (`f-pattern-picker` t-213) lists them too, and names the riff from the head of them
-  // (t-224), so they are read whenever a library sound is on the panel.
+  // The Play deck's pattern picker (`f-pattern-picker` t-213) lists them too, so they are read while it is open.
   const [patternsOpen, setPatternsOpen] = useState(false);
-  const soundPatterns = useSoundPatterns(librarySound, true);
+  const soundPatterns = useSoundPatterns(librarySound, seqShown || patternsOpen);
   // Patterns that suit the patch as it is now (t-125). A library sound is offered them once the patch has moved far
   // from how that sound came; anything else on the panel is offered them at once.
   // The Default patch is no sound the suggestions can be asked to leave out, so it is no start: it is offered them at once.
@@ -1489,9 +1498,15 @@ function Synth({
     : seqLoaded
       ? (seqLoaded.libraryId ?? null)
       : (soundPatterns?.patterns?.[0]?.id ?? null);
-  // The riff by name (t-224): its default pattern's, read with the sound's patterns; until then, or for a sound with no
-  // library patterns, the sound's own name, which is what its riff's pattern is named for.
-  const riffName = soundPatterns?.patterns?.[0]?.name ?? shown?.name ?? 'Riff';
+  // The riff by name (t-224). A library sound's is its default pattern's, which the catalogue sends with the sound, so
+  // naming it reads nothing; one with no default plays its riff as it has it, named for the sound. Any other sound on
+  // the panel plays the riff it was saved with, or the library's under it, and the riff takes the name the panel shows,
+  // not that stand-in's: none while one of the user's sounds is still being read.
+  const riffName = librarySound
+    ? (preset?.riffName ?? preset?.name ?? 'Riff')
+    : ownSoundPending
+      ? 'Riff'
+      : panelName;
   const playsName = playsPattern
     ? `${seqLoaded?.name ?? riffName}${seq.edited ? ' (edited)' : ''}`
     : riffName;
@@ -2334,15 +2349,6 @@ function Synth({
   const rowBtn =
     'inline-flex h-9 items-center rounded-md border border-(--kys-line) bg-(--kys-surface) px-3.5 text-xs font-semibold whitespace-nowrap text-(--kys-muted) hover:text-(--kys-text)';
 
-  const loadedName = openSound
-    ? openSound.name
-    : sharedPanel && shared
-      ? shared.name
-      : designed
-        ? designed.name
-        : preset
-          ? preset.name
-          : DEFAULT_PATCH_NAME;
   // What the description says about the sound: the one on the panel, so not a library sound's words under one of the
   // user's own, or under a shared sound, that has no lesson of its own.
   const described = openSound || sharedPanel ? ownLesson : (ownLesson ?? preset ?? null);
@@ -2712,7 +2718,7 @@ function Synth({
                         <SoundPicker
                           buttonRef={soundPickRef}
                           loading={loading}
-                          soundName={loadedName}
+                          soundName={panelName}
                           soundRef={described?.ref ?? null}
                           onChooseSound={chooseSound}
                           soundsOpen={!small && soundsOpen}
@@ -2833,7 +2839,9 @@ function Synth({
                   open={designOpen}
                   face={face}
                   onToggle={() => {
-                    chapterChosen.current = false;
+                    // Opened again on a step picked here, it puts that step's light back (t-228): the lesson is
+                    // being followed, so a press on a lit control leaves it up, as after choosing a chapter.
+                    chapterChosen.current = !designOpen && litFor === synthId && step != null;
                     if (designOpen) closeDesign();
                     else setDesignOpen(true);
                   }}

@@ -379,9 +379,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
       <div className="kys-seq-lib-row" role="toolbar" aria-label="Patterns">
         <p className="kys-seq-lib-name" aria-live="polite">
           <span className="kys-seq-lib-label">Pattern</span>
-          <span className="kys-seq-lib-value">
-            {loaded?.name ?? soundDefault?.name ?? riffName}
-          </span>
+          <span className="kys-seq-lib-value">{loaded?.name ?? riffName}</span>
           {edited && <span className="kys-seq-lib-edited">edited</span>}
         </p>
         <div className="kys-seq-tool-group">

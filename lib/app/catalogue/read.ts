@@ -17,6 +17,7 @@ import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
 import { designFromDb, type SynthDesign } from '@/lib/app/catalogue/designs';
 import { getHeardOn } from '@/lib/app/bank/read';
+import { DEFAULT_FIRST, headOf } from '@/lib/app/patterns/library';
 import {
   summarisePublicLinks,
   summariseSongLinks,
@@ -49,8 +50,11 @@ export interface CatalogueSynth {
   soundCount: number;
 }
 
-/** A library sound, as the panel plays it. */
-export type CatalogueSound = Preset & { version: number };
+/**
+ * A library sound, as the panel plays it. `riffName` names the riff it plays (t-224): its default pattern's name
+ * (`headOf`), or none when it has no default, when it plays its riff as it has it, named for the sound.
+ */
+export type CatalogueSound = Preset & { version: number; riffName?: string };
 
 export type Limit = z.infer<typeof LimitSchema>;
 
@@ -158,7 +162,16 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
       where: { id, listed: true },
       select: {
         ...synthColumns,
-        sounds: { orderBy: [{ order: 'asc' }, { slug: 'asc' }] },
+        sounds: {
+          orderBy: [{ order: 'asc' }, { slug: 'asc' }],
+          include: {
+            // what its default is read from, to name the riff it plays (t-224)
+            patterns: {
+              orderBy: DEFAULT_FIRST,
+              select: { pattern: { select: { status: true, pattern: true, name: true } } },
+            },
+          },
+        },
         lineage: true,
         bankInstruments: {
           select: { instrument: { select: { id: true, name: true } } },
@@ -223,7 +236,12 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
       });
       continue;
     }
-    sounds.push({ ...result.value, version: s.definitionVersion });
+    const riffName = headOf(s.patterns)?.pattern.name;
+    sounds.push({
+      ...result.value,
+      version: s.definitionVersion,
+      ...(riffName ? { riffName } : {}),
+    });
   }
 
   let lineage: Lineage | null = null;

@@ -243,12 +243,14 @@ export function SoundDesign({
             </h2>
             {mark}
           </div>
-          {/* What the area is for, met on entering it (t-227). */}
-          <p className="kys-design-aim">
-            Follow along on your own synth and experiment. Analog never sounds exactly the same
-            twice, so the aim isn&apos;t to copy a sound note for note: it&apos;s to discover new
-            sounds, and what your synth can do.
-          </p>
+          {/* What the area is for, met on entering it (t-227): a patch with a walkthrough to follow. */}
+          {hasLesson && (
+            <p className="kys-design-aim">
+              Follow along on your own synth and experiment. Analog never sounds exactly the same
+              twice, so the aim isn&apos;t to copy a sound note for note: it&apos;s to discover new
+              sounds, and what your synth can do.
+            </p>
+          )}
           <div className="kys-design-row">
             {hasLesson ? (
               n > 0 && (

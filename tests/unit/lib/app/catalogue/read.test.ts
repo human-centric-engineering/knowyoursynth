@@ -9,6 +9,8 @@ import { getSynthDetail, listSoundNames, listSynths } from '@/lib/app/catalogue/
 import { logger } from '@/lib/logging';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import { synthRows } from '@/tests/helpers/synth-detail';
+import { importPhrase } from '@/lib/app/sequencer/import';
+import type { Phrase } from '@/lib/app/synths/contract';
 import { bankDb } from '@/tests/helpers/bank-db';
 import {
   summarisePublicLinks,
@@ -200,6 +202,30 @@ describe('getSynthDetail', () => {
   it('is null for a synth the registry cannot play, without reading the database', async () => {
     expect(await getSynthDetail('no-such-synth')).toBeNull();
     expect(prisma.synth.findFirst).not.toHaveBeenCalled();
+  });
+
+  it('names each sound’s riff for its default pattern: the first enabled one that can be a riff (t-224)', async () => {
+    const s = stored();
+    const riff = (status: string, name: string, phrase: unknown) => ({
+      pattern: { status, name, pattern: importPhrase(phrase as Phrase) },
+    });
+    const [a, b] = [s.sounds[0], s.sounds[1]];
+    // a disabled pattern ahead of the default is passed over
+    s.sounds[0] = {
+      ...a,
+      patterns: [
+        riff('disabled', 'Put away', a.phrase),
+        riff('enabled', 'Rolling eighths', a.phrase),
+      ],
+    };
+    // a sound with nothing that can be its default carries no name for its riff
+    s.sounds[1] = { ...b, patterns: [riff('disabled', 'Put away', b.phrase)] };
+    vi.mocked(prisma.synth.findFirst).mockResolvedValue(s as never);
+
+    const detail = await getSynthDetail('model-d');
+
+    expect(detail?.sounds[0].riffName).toBe('Rolling eighths');
+    expect(detail?.sounds[1]).not.toHaveProperty('riffName');
   });
 
   it('validates sounds on read: one its definition rejects, or on another version, is logged and left out', async () => {

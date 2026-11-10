@@ -62,23 +62,18 @@ vi.mock('@/lib/api/client', async (importOriginal) => {
   const real = await importOriginal<typeof import('@/lib/api/client')>();
   const s3 = (path: string) =>
     path === '/api/v1/me/settings' || path.startsWith('/api/v1/me/panels/');
-  // A library sound's patterns, read to name its riff (t-224), answer "none": they are not what this file is about.
-  const soundPatterns = (path: string) =>
-    /^\/api\/v1\/synths\/[^/]+\/sounds\/[^/]+\/patterns$/.test(path);
   return {
     ...real,
     apiClient: {
       ...api,
       get: (path: string, opts?: unknown) =>
-        soundPatterns(path)
-          ? Promise.resolve([])
-          : s3(path)
-            ? Promise.resolve(
-                path === '/api/v1/me/settings'
-                  ? { tips: null, dim: null, heat: null, harm: null, fx: null }
-                  : null
-              )
-            : api.get(path, opts),
+        s3(path)
+          ? Promise.resolve(
+              path === '/api/v1/me/settings'
+                ? { tips: null, dim: null, heat: null, harm: null, fx: null }
+                : null
+            )
+          : api.get(path, opts),
       put: (path: string, opts?: unknown) =>
         s3(path) ? Promise.resolve(null) : api.put(path, opts),
       patch: () => Promise.resolve(null),

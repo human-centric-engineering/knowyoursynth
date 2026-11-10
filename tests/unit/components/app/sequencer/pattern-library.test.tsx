@@ -147,7 +147,14 @@ function Page({
 
 const strip = () => within(screen.getByRole('toolbar', { name: 'Patterns' }));
 const button = (name: string | RegExp) => strip().getByRole('button', { name });
-const held = () => screen.getByText(/^.+$/, { selector: '.kys-seq-lib-value' });
+/** The name the strip shows for what it holds: a loaded pattern's, or the page's name for the riff (t-224). */
+const held = () => {
+  const el = screen
+    .getByRole('toolbar', { name: 'Patterns' })
+    .querySelector('.kys-seq-lib-name .kys-seq-lib-value');
+  if (!el) throw new Error('the strip names nothing it holds');
+  return el;
+};
 
 /** Chooses step `n` (a rest in the riff) and turns it on: an edit anyone could make. */
 const editStep = (n: number) => {
