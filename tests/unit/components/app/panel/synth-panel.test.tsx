@@ -236,6 +236,52 @@ describe('design prop (D11)', () => {
   });
 });
 
+describe('english prop (a translated panel)', () => {
+  // The Model D fixture, its section names printed in Russian, with an English table for two of them.
+  const russian: SynthDef = {
+    ...modelD,
+    decor: [
+      ...modelD.decor,
+      { t: 'text', x: 100, y: 40, text: 'ФИЛЬТР' },
+      { t: 'text', x: 300, y: 40, text: 'ШУМ' },
+      { t: 'text', x: 500, y: 40, text: 'ГЛИССАНДО' },
+    ],
+    translation: { language: 'Russian', english: { ФИЛЬТР: 'FILTER (EN)', ШУМ: 'NOISE (EN)' } },
+  };
+  const printed = (english: boolean) =>
+    render(<SynthPanel {...props({ def: russian, english })} />).container.textContent ?? '';
+
+  it('prints what the hardware prints until it is switched to English', () => {
+    const text = printed(false);
+    expect(text).toContain('ФИЛЬТР');
+    expect(text).not.toContain('FILTER (EN)');
+  });
+
+  it('switched to English, prints each string the table has in English and leaves the rest as printed', () => {
+    const text = printed(true);
+    expect(text).toContain('FILTER (EN)');
+    expect(text).toContain('NOISE (EN)');
+    expect(text).not.toContain('ФИЛЬТР');
+    expect(text).toContain('ГЛИССАНДО');
+  });
+
+  it('never takes a printed string for an inherited member of the table', () => {
+    const odd: SynthDef = {
+      ...russian,
+      decor: [...modelD.decor, { t: 'text', x: 100, y: 40, text: 'constructor' }],
+    };
+    const text = render(<SynthPanel {...props({ def: odd, english: true })} />).container
+      .textContent;
+    expect(text).toContain('constructor');
+  });
+
+  it('changes nothing on a panel with no translation', () => {
+    const plain = render(<SynthPanel {...props()} />).container.innerHTML;
+    const english = render(<SynthPanel {...props({ english: true })} />).container.innerHTML;
+    expect(english).toBe(plain);
+  });
+});
+
 describe('neutralDef', () => {
   it('blanks the case brand and keeps a definition without a layout layout-free', () => {
     expect(neutralDef(portedModelD).layout).toBeUndefined();

@@ -78,6 +78,8 @@ export const STORAGE_KEYS = {
    * browser only, as `midiOut` is.
    */
   midiClock: 'kys.midiClock',
+  /** A panel printed in another language is shown in English (the Polivoks). Kept in this browser only. */
+  english: 'kys.english',
 } as const;
 
 /** One synth's panel, as it was left. */

@@ -41,6 +41,9 @@ export function panelSvg({ def, values, cables, design }: PanelSvgInput): {
       color: CABLE_COLORS[i % CABLE_COLORS.length],
     })),
     design,
+    // A panel printed in another language (the Polivoks's Russian) is drawn in English: the card's fonts are Latin only
+    // (`card-fonts.ts`), so its own lettering would rasterise as empty boxes.
+    english: true,
     onChange: noop,
     onConnect: noop,
     onRemoveCable: noop,

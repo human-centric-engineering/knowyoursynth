@@ -299,6 +299,7 @@ const TALL_QUERY = '(min-height: 900px)';
 const CardSideSchema = z.enum(['left', 'right']);
 /** Live, or Live + flow (`'flow'`); `false` = In use. A `true` kept before Live + flow was added reads as Live. */
 const LiveSchema = z.union([z.boolean(), z.literal('flow')]);
+const EnglishSchema = z.boolean();
 /** How long the pointer may rest before the player's secondary controls fade, as a video's do, in ms. */
 const IDLE_MS = 2500;
 /** How far above the dock the pointer lifts the Sound Design tab, inviting a press, in px. */
@@ -676,6 +677,9 @@ function Synth({
   // Live is that and the live glow, on a synth that has a routing to light, and Live + flow that and the lines between
   // the lit parts (t-153); either is kept in this browser only.
   const [liveOn, setLiveOn] = useStoredPref(STORAGE_KEYS.live, LiveSchema, false);
+  // A panel printed in another language reprinted in English (the Polivoks's Russian): one choice for every such
+  // synth, kept in this browser only.
+  const [english, setEnglish] = useStoredPref(STORAGE_KEYS.english, EnglishSchema, false);
   const liveOffered = !!routing;
   const signal: SignalMode = !dimOn
     ? 'off'
@@ -2656,6 +2660,7 @@ function Synth({
                             target={step == null ? target : null}
                             cables={sess.cables}
                             outline={view.outline}
+                            english={english}
                             zoom={zoom}
                             areasOn={areasOn}
                             dimOn={dimOn}
@@ -2705,6 +2710,9 @@ function Synth({
                         onZoom={setZoom}
                         tipsOn={tipsOn}
                         onTips={setTipsOn}
+                        language={synthDef.translation?.language}
+                        english={english}
+                        onEnglish={setEnglish}
                       />
                       {/* How big the panel is drawn is the panel's, with how it is drawn (t-209). Not while the
                       routing view shows: it takes the whole width, at no zoom. */}
