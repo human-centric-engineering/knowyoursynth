@@ -1333,7 +1333,7 @@
           "kbd": true,
           "level": 0.4,
           "mix": { "fnoise": 1 },
-          "nCut": -64,
+          "nCut": -48,
           "nRes": 0,
           "semi": 0,
           "syncTo": -1
@@ -1404,7 +1404,7 @@
           "kbd": false,
           "level": 0,
           "mix": { "fnoise": 1 },
-          "nCut": -64,
+          "nCut": -48,
           "nRes": 0,
           "semi": 0,
           "syncTo": -1
@@ -2911,7 +2911,7 @@
           "kbd": true,
           "level": 0.4,
           "mix": { "fnoise": 1 },
-          "nCut": -64,
+          "nCut": -48,
           "nRes": 0,
           "semi": 0,
           "syncTo": -1
@@ -2982,7 +2982,7 @@
           "kbd": false,
           "level": 0,
           "mix": { "fnoise": 1 },
-          "nCut": -64,
+          "nCut": -48,
           "nRes": 0,
           "semi": 0,
           "syncTo": -1

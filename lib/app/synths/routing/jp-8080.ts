@@ -48,12 +48,6 @@ function patch(s: Part): { blocks: RoutingBlock[]; edges: RoutingEdge[] } {
   });
   const extOff: RoutingWhen = { id: k('osc2Ext'), eq: false };
   const ringOn: RoutingWhen = { all: [{ id: k('ring'), eq: true }, extOff] };
-  const ringOff: RoutingWhen = {
-    any: [
-      { id: k('ring'), eq: false },
-      { id: k('osc2Ext'), eq: true },
-    ],
-  };
   const xmodOk: RoutingWhen = { all: [not('osc1Wave', ['superSaw', 'noise']), extOff] };
   const pitchBoth = pick('dest', ['osc12']);
   const pitch2 = pick('dest', ['osc12', 'osc2']);
@@ -238,7 +232,7 @@ function patch(s: Part): { blocks: RoutingBlock[]; edges: RoutingEdge[] } {
         to: b('osc2'),
         signal: 'cv',
         label: 'pitch',
-        when: not('osc2Wave', ['noise']),
+        when: { all: [not('osc2Wave', ['noise']), extOff] },
       },
       {
         id: b('c09'),
@@ -350,7 +344,7 @@ function patch(s: Part): { blocks: RoutingBlock[]; edges: RoutingEdge[] } {
         to: b('osc2'),
         signal: 'cv',
         label: 'pulse width',
-        when: pick('osc2Wave', ['square']),
+        when: { all: [pick('osc2Wave', ['square']), extOff] },
         levels: [k('osc2Ctl2')],
       },
       { id: b('c23'), from: b('osc1'), to: b('ring'), signal: 'audio', when: ringOn },
@@ -367,7 +361,7 @@ function patch(s: Part): { blocks: RoutingBlock[]; edges: RoutingEdge[] } {
         from: b('osc2'),
         to: b('mixer'),
         signal: 'audio',
-        when: { all: [ringOff, extOff] },
+        when: { all: [{ id: k('ring'), eq: false }, extOff] },
         levels: [{ id: k('balance'), off: -64 }],
       },
       {
@@ -428,7 +422,8 @@ function patch(s: Part): { blocks: RoutingBlock[]; edges: RoutingEdge[] } {
         to: b('vca'),
         signal: 'cv',
         label: 'auto pan',
-        when: pick('pan', ['auto']),
+        // the Lower part's own effects, its auto pan among them, run only when it plays alone
+        when: lead ? pick('pan', ['auto']) : { all: [pick('pan', ['auto']), sounds] },
         levels: [bi('ampLfo')],
       },
       {
@@ -529,7 +524,12 @@ export const routing: SynthRouting = {
       to: 'arp',
       signal: 'cv',
       label: 'notes',
-      when: { id: 'arp.on', eq: true },
+      when: {
+        all: [
+          { id: 'arp.on', eq: true },
+          { id: 'arp.mode', in: ['up', 'down', 'updown', 'random'] },
+        ],
+      },
     },
     {
       id: 'c03',

@@ -1,7 +1,8 @@
 /**
  * Roland JP-8080: the definition (D1). Positions are measured on the owner's straight-on photo of the rack unit
  * (`.context/app/synth-data/jp-8080/raw/Roland JP 8080.jpg`, local only, 3712 × 2057), scaled to 1800 × 997, and
- * written in those pixels, which are the view units; the rack ears are inside the view. The owner's spec is
+ * written in those pixels. The rack ears and the bare strips above and below the controls are cropped off at the end
+ * (`CROP`), so the view is the faceplate between the ears. The owner's spec is
  * `.context/app/synth-data/jp-8080/jp-8080.synth.json` (the JP-8080 Owner's Manual, JP-8080_e3, also in `raw/`).
  *
  * Written straight into the app, with no prototype version (`f-next-synths`), following `defs/super-gemini.ts` (two
@@ -78,8 +79,10 @@ const signed = (v: number): string => (v > 0 ? `+${v}` : String(v));
 const plain = (v: number): string => String(Math.round(v));
 
 // ── Photo → view ──────────────────────────────────────────────────────────
-const VIEW_W = 1800;
-const VIEW_H = 997;
+/** Where the cropped view starts in the photo's pixels: past the left rack ear and the bare strip above the badge. */
+const CROP = { x: 113, y: 25 };
+const VIEW_W = 1570;
+const VIEW_H = 933;
 const PANEL = '#46507f';
 const BOX = '#232428';
 const INK = '#ecebe6';
@@ -249,12 +252,6 @@ const ledSelect = (
 };
 
 // ── Faceplate furniture ───────────────────────────────────────────────────
-decor.push({ t: 'rect', x: 0, y: 8, w: 70, h: 980, r: 6, fill: '#414a76' });
-decor.push({ t: 'rect', x: 1730, y: 8, w: 70, h: 980, r: 6, fill: '#414a76' });
-for (const y of [150, 358, 636, 842]) {
-  decor.push({ t: 'circle', x: 47, y, r: 13, fill: '#c9a77a' });
-  decor.push({ t: 'circle', x: 1748, y, r: 13, fill: '#c9a77a' });
-}
 text(207, 65, 'Roland', 34, { weight: 700, brand: true, spacing: -0.5 });
 text(384, 65, 'JP-8080', 34, { weight: 500, fill: TITLE, brand: true, spacing: 1 });
 
@@ -1174,7 +1171,7 @@ function part(s: Part): void {
   button(id('mono'), 193, 702, {
     module: 'mode',
     name: nm('MONO'),
-    help: 'One note at a time, each one played afresh. The feedback osc turns it on by itself.',
+    help: 'One note at a time, each one played afresh. The feedback osc turns it on by itself. Here the two parts share one mono switch, so in DUAL and SPLIT either part’s MONO or LEGATO makes both mono (in SPLIT each side holds its own note).',
     show,
   });
   button(id('legato'), 250, 702, {
@@ -1814,7 +1811,7 @@ function patchVoice(v: ControlValues, s: Part, gain: number): LayerParams {
     route('lfo', 'pw1', 0.5 * c2);
   } else if (w1 === 'noise') {
     mix1.fnoise = 1;
-    osc1.nCut = n('osc1Ctl1') - 64;
+    osc1.nCut = Math.max(-48, n('osc1Ctl1') - 64);
     osc1.nRes = c2;
   } else if (w1 === 'feedback') {
     mix1.fbk = 1;
@@ -1852,14 +1849,14 @@ function patchVoice(v: ControlValues, s: Part, gain: number): LayerParams {
   if (w2 === 'square') {
     mix2.pulse = 1;
     osc2.pw = 0.5 - 0.46 * d1;
-    route('lfo', 'pw2', 0.45 * d2);
+    if (!ext) route('lfo', 'pw2', 0.45 * d2);
   } else if (w2 === 'noise') {
     // OSC 2's noise ignores the keys: at full RESONANCE, CUTOFF 64 rings at C4 on every key
     mix2.fnoise = 1;
     osc2.kbd = false;
     osc2.fixedNote = 60;
     osc2.semi = 0;
-    osc2.nCut = n('osc2Ctl1') - 64;
+    osc2.nCut = Math.max(-48, n('osc2Ctl1') - 64);
     osc2.nRes = d2;
   } else if (w2 === 'tri') mix2.tri = 1;
   else mix2.saw = 1;
@@ -1961,7 +1958,7 @@ function patchVoice(v: ControlValues, s: Part, gain: number): LayerParams {
   };
 }
 
-/** Voices per note and the mono switch: the SOLO SW of the part that leads, with the feedback osc forcing mono. */
+/** One part's SOLO SW: unison, and whether it plays one note at a time (the feedback osc forces mono). */
 function solo(v: ControlValues, s: Part): { mono: boolean; unison: boolean } {
   const fb = v[`${s}.osc1Wave`] === 'feedback';
   const unison = v[`${s}.unison`] === true && !fb;
@@ -1978,7 +1975,10 @@ function toEngine(v: ControlValues): EngineParams {
   const top = patchVoice(v, lead, gain);
   // DUAL shares the ten voices 5-5 (each note takes one of each part); SPLIT lets the two sides share ten notes
   const voices = mode === 'dual' ? 5 : 10;
-  const { mono, unison } = solo(v, lead);
+  // the engine has one mono switch for both parts: in DUAL and SPLIT either part's SOLO SW sets it (in SPLIT each
+  // side then holds its own note); unison stacks the lead part's voices only
+  const { mono: leadMono, unison } = solo(v, lead);
+  const mono = leadMono || (!single && solo(v, 'lo').mono);
   const arpMode = ARP_ENGINE[String(v['arp.mode'])];
   return {
     ...top,
@@ -2008,6 +2008,32 @@ function toEngine(v: ControlValues): EngineParams {
     fx: partFx(v, lead),
     volume: level10(num(v, 'out.volume') / 12.7, 1),
   };
+}
+
+// ── Crop: everything was placed in the photo's pixels; move it into the view ──
+for (const d of decor) {
+  if ('x' in d && 'y' in d) {
+    d.x -= CROP.x;
+    d.y -= CROP.y;
+  }
+}
+for (const c of controls) {
+  c.x -= CROP.x;
+  c.y -= CROP.y;
+  if (c.type === 'select') {
+    for (const o of c.options) {
+      if (o.x !== undefined && o.y !== undefined) {
+        o.x -= CROP.x;
+        o.y -= CROP.y;
+      }
+    }
+  }
+}
+for (const a of areas) {
+  for (const rc of a.rects) {
+    rc.x -= CROP.x;
+    rc.y -= CROP.y;
+  }
 }
 
 const init: ControlValues = Object.fromEntries(controls.map((c) => [c.id, c.def]));

@@ -88,7 +88,7 @@ describe('JP-8080 KEY MODE and PANEL SELECT', () => {
     expect(p.poly?.voices).toBe(5);
     expect(p.layer?.filter.cutoff).toBeCloseTo(exp(64 / 127, 20, 20000), 6);
     expect(p.layer?.split).toBeUndefined();
-    expect(p.vca.gain).toBeCloseTo((p.layer?.vca.gain ?? 0) * 1, 10);
+    expect(p.layer?.vca.gain).toBeCloseTo(p.vca.gain ?? NaN, 10);
     expect(p.vca.gain).toBeCloseTo(Math.pow(100 / 127, 1.7) * 0.75, 10);
   });
 
@@ -129,6 +129,8 @@ describe('JP-8080 OSC 1 waveforms', () => {
     expect(p.osc[0].nCut).toBe(12);
     expect(p.osc[0].nRes).toBe(1);
     expect(p.osc[0].kbd).toBe(true);
+    // CONTROL 1 below 16 holds at the contract's floor of -48
+    expect(osc1('noise', 0, 0).osc[0].nCut).toBe(-48);
   });
 
   it('FEEDBACK OSC: CONTROL 1 the harmonic, CONTROL 2 the amount, and the part goes MONO', () => {
@@ -191,6 +193,9 @@ describe('JP-8080 OSC 2, sync, ring and cross mod', () => {
 
   it('EXT silences OSC 2 (there is no audio input)', () => {
     expect(run({ 'up.balance': 63, 'up.osc2Ext': true }).osc[1].level).toBe(0);
+    const sq = { 'up.osc2Wave': 'square', 'up.osc2Ctl2': 100 };
+    expect(routeTo(run(sq), 'lfo', 'pw2')).toBeDefined();
+    expect(routeTo(run({ ...sq, 'up.osc2Ext': true }), 'lfo', 'pw2')).toBeUndefined();
   });
 
   it('RING takes OSC 2’s side of the balance through the ring modulator', () => {
@@ -343,6 +348,12 @@ describe('JP-8080 SOLO SW and portamento', () => {
     expect(p.poly?.mono).toBe(true);
     expect(p.trig.retrig).toBe(false);
     expect(p.glide).toEqual({ time: 5, legato: true });
+  });
+
+  it('in SPLIT and DUAL either part’s MONO makes the shared engine mono; SINGLE hears only the part it plays', () => {
+    expect(run({ 'perf.keyMode': 'split', 'lo.mono': true }).poly?.mono).toBe(true);
+    expect(run({ 'perf.keyMode': 'dual', 'lo.legato': true }).poly?.mono).toBe(true);
+    expect(run({ 'lo.mono': true }).poly?.mono).toBe(false);
   });
 
   it('UNISON: every voice of the part on one note, 5 cents apart', () => {
