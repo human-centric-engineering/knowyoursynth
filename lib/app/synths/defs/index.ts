@@ -50,6 +50,7 @@ import solar42n from '@/lib/app/synths/defs/solar-42n';
 import malevolent from '@/lib/app/synths/defs/malevolent';
 import mantis from '@/lib/app/synths/defs/mantis';
 import jp8080 from '@/lib/app/synths/defs/jp-8080';
+import polivoks from '@/lib/app/synths/defs/polivoks';
 
 /** A definition as the app holds it: always versioned. */
 export type AppSynthDef = SynthDef & { version: number };
@@ -93,6 +94,7 @@ export const SYNTH_DEFS: readonly AppSynthDef[] = [
   malevolent,
   mantis,
   jp8080,
+  polivoks,
 ];
 
 const byId = new Map(SYNTH_DEFS.map((d) => [d.id, d]));

@@ -22,6 +22,7 @@ export const NATIVE_SYNTHS: readonly string[] = [
   'malevolent',
   'mantis',
   'jp-8080',
+  'polivoks',
 ];
 
 export const isNativeSynth = (id: string): boolean => NATIVE_SYNTHS.includes(id);
