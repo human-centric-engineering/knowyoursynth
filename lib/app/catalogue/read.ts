@@ -17,7 +17,7 @@ import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
 import { designFromDb, type SynthDesign } from '@/lib/app/catalogue/designs';
 import { getHeardOn } from '@/lib/app/bank/read';
-import { DEFAULT_FIRST, headOf } from '@/lib/app/patterns/library';
+import { ENABLED, PLACES, servedHeadOf } from '@/lib/app/patterns/library';
 import {
   summarisePublicLinks,
   summariseSongLinks,
@@ -51,8 +51,9 @@ export interface CatalogueSynth {
 }
 
 /**
- * A library sound, as the panel plays it. `riffName` names the riff it plays (t-224): its default pattern's name
- * (`headOf`), or none when it has no default, when it plays its riff as it has it, named for the sound.
+ * A library sound, as the panel plays it. `riffName` names the riff it plays (t-224): its default pattern's name, the
+ * default its patterns are served with (`servedHeadOf`), or none when it has no default, when it plays its riff as it
+ * has it, named for the sound.
  */
 export type CatalogueSound = Preset & { version: number; riffName?: string };
 
@@ -165,10 +166,17 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
         sounds: {
           orderBy: [{ order: 'asc' }, { slug: 'asc' }],
           include: {
-            // what its default is read from, to name the riff it plays (t-224)
+            // what its default is read from, as the sound's patterns read it, to name the riff it plays (t-224); a
+            // disabled pattern is never one, so it is not read
             patterns: {
-              orderBy: DEFAULT_FIRST,
-              select: { pattern: { select: { status: true, pattern: true, name: true } } },
+              ...PLACES,
+              where: { pattern: ENABLED },
+              select: {
+                ...PLACES.select,
+                pattern: {
+                  select: { ...PLACES.select.pattern.select, sources: true, name: true },
+                },
+              },
             },
           },
         },
@@ -236,7 +244,7 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
       });
       continue;
     }
-    const riffName = headOf(s.patterns)?.pattern.name;
+    const riffName = servedHeadOf(s.patterns)?.pattern.name;
     sounds.push({
       ...result.value,
       version: s.definitionVersion,

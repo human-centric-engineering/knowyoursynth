@@ -118,6 +118,7 @@ import { SharedPatternStrip } from '@/components/app/sharing/shared-pattern-stri
 import { voiceMode } from '@/lib/app/synths/audio/pattern-player';
 import { useMyPatterns } from '@/components/app/sequencer/use-my-patterns';
 import type { PatternLibraryProps } from '@/components/app/sequencer/pattern-library';
+import { RIFF_FALLBACK } from '@/lib/app/patterns/riff-name';
 import { useSoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
 import { useSuggestedPatterns } from '@/components/app/sequencer/use-suggested-patterns';
 import { PatternPicker } from '@/components/app/synth/pattern-picker';
@@ -750,9 +751,13 @@ function Synth({
   // Whether a chapter has been chosen since the drawer opened: then the panel is where the lesson is being followed,
   // and a press on it leaves the drawer up; before, a press on the panel is other work, and puts it away.
   const chapterChosen = useRef(false);
+  // Whether it was opened again on a step picked here, which it lights again (t-228): then a press on the panel is
+  // turning a lit control, and leaves it up, while a press anywhere else is other work, as on any other opening.
+  const resumed = useRef(false);
   // Put away, the drawer takes the lesson it opened with it (t-205); the inspector and the effects, from the bar, stay.
   const closeDesign = useCallback(() => {
     chapterChosen.current = false;
+    resumed.current = false;
     setDesignOpen(false);
     setCard((c) => (c === 'build' ? null : c));
   }, []);
@@ -797,6 +802,7 @@ function Synth({
       // (t-205): then only its tab or its head does, whatever is pressed meanwhile (the keys, Play, a dialog over the
       // page). Before, a press anywhere else is other work, and puts it away.
       if (chapterChosen.current) return;
+      if (resumed.current && frameRef.current?.contains(t)) return;
       closeDesign();
     };
     document.addEventListener('pointerdown', onDown, true);
@@ -1501,12 +1507,15 @@ function Synth({
   // The riff by name (t-224). A library sound's is its default pattern's, which the catalogue sends with the sound, so
   // naming it reads nothing; one with no default plays its riff as it has it, named for the sound. Any other sound on
   // the panel plays the riff it was saved with, or the library's under it, and the riff takes the name the panel shows,
-  // not that stand-in's: none while one of the user's sounds is still being read.
-  const riffName = librarySound
-    ? (preset?.riffName ?? preset?.name ?? 'Riff')
-    : ownSoundPending
-      ? 'Riff'
-      : panelName;
+  // not that stand-in's: none while one of the user's sounds is still being read. A pattern a link put in the sequencer
+  // leaves the sound's riff named as it is.
+  const libraryPanel = !openSound && !ownSoundPending && !sharedPanel && !ownLesson && !!preset;
+  const riffName =
+    libraryPanel && preset
+      ? (preset.riffName ?? preset.name)
+      : ownSoundPending
+        ? RIFF_FALLBACK
+        : panelName;
   const playsName = playsPattern
     ? `${seqLoaded?.name ?? riffName}${seq.edited ? ' (edited)' : ''}`
     : riffName;
@@ -2133,7 +2142,9 @@ function Synth({
   // controls itself while the panel is at a step picked here, as the lesson does in its sheet below `lg`. Only while
   // the lesson is up, in the drawer or its card: put away, the drawer takes the step's light with it, and opening it
   // again puts the light back (t-228).
-  const litKey = litFor === synthId && (designOpen || card === 'build') ? stepKey : '';
+  // Without hover the strip is in the dock's flow, not a drawer, and stays on show: there the light stays with it.
+  const drawer = hovers && !small;
+  const litKey = litFor === synthId && (!drawer || designOpen || card === 'build') ? stepKey : '';
   // What a hovered chapter puts back when it is left: below `lg` the Lesson in its sheet keeps the step lit, and from
   // `lg` up so does the lesson card while it shows the lesson.
   const chapterLit = small || card === 'build' ? stepKey : litKey;
@@ -2839,9 +2850,9 @@ function Synth({
                   open={designOpen}
                   face={face}
                   onToggle={() => {
-                    // Opened again on a step picked here, it puts that step's light back (t-228): the lesson is
-                    // being followed, so a press on a lit control leaves it up, as after choosing a chapter.
-                    chapterChosen.current = !designOpen && litFor === synthId && step != null;
+                    chapterChosen.current = false;
+                    // Opened again on a step picked here, it puts that step's light back (t-228).
+                    resumed.current = !designOpen && litFor === synthId && step != null;
                     if (designOpen) closeDesign();
                     else setDesignOpen(true);
                   }}

@@ -17,7 +17,7 @@ import { PATTERN_ROLES } from '@/lib/app/patterns/library-facts';
 import {
   DEFAULT_FIRST,
   ENABLED,
-  headOf,
+  servedHeadOf,
   toView,
   type LibraryPatternView,
 } from '@/lib/app/patterns/library';
@@ -48,7 +48,7 @@ export async function getLibraryPattern(id: string): Promise<LibraryPatternView 
 /**
  * A listed, playable synth's sound's enabled patterns, default first, or `null` when there is no such sound. Every one
  * of a sound's enabled patterns is listed, whatever synth it was written for (`pattern-library.md`, The facts). The
- * default is the one its riff plays (`headOf`): the head of the list, or, while patterns ahead of it are disabled, the
+ * default is the one its riff plays (`servedHeadOf`): the head of the list, or, while patterns ahead of it are disabled, the
  * next that can be a riff, moved to the front.
  */
 export async function getSoundPatterns(
@@ -67,7 +67,7 @@ export async function getSoundPatterns(
   });
   if (!sound) return null;
   const enabled = sound.patterns.filter(({ pattern }) => pattern.status === 'enabled');
-  const head = headOf(enabled);
+  const head = servedHeadOf(enabled);
   const ordered = head ? [head, ...enabled.filter((p) => p !== head)] : enabled;
   return ordered.flatMap(({ pattern }) => served(pattern) ?? []);
 }

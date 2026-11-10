@@ -1881,7 +1881,20 @@ describe('SynthPage player', () => {
     expect(tab()).toHaveAttribute('aria-expanded', 'true');
   });
 
+  /** A wide screen with a pointer that hovers, `queries` aside: where the Sound Design strip is a drawer. */
+  const pointerScreen = (...queries: string[]) =>
+    vi.spyOn(window, 'matchMedia').mockImplementation(
+      (query: string) =>
+        ({
+          matches: queries.includes(query),
+          media: query,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+        }) as unknown as MediaQueryList
+    );
+
   it('takes the step’s light off the panel with the drawer, and puts it back when the drawer opens again (t-228)', () => {
+    pointerScreen('(hover: hover)');
     twoSteps();
     const tab = () => button('Learn sound design');
 
@@ -1897,10 +1910,25 @@ describe('SynthPage player', () => {
     fireEvent.click(tab());
     expect(highlightStore.get()).toEqual(lit);
 
-    // Opened again on that step, the lesson is being followed: a press on the panel, to turn a lit control, leaves the
-    // drawer up and the light on.
+    // Opened again on that step, a press on the panel is turning a lit control: the drawer and the light stay.
     fireEvent.pointerDown(screen.getByTestId('panel-frame'));
     expect(tab()).toHaveAttribute('aria-expanded', 'true');
+    expect(highlightStore.get()).toEqual(lit);
+    // A press anywhere else is other work, as on any opening: it puts the drawer away, and the light with it.
+    fireEvent.pointerDown(document.body);
+    expect(tab()).toHaveAttribute('aria-expanded', 'false');
+    expect(highlightStore.get()).toEqual([]);
+  });
+
+  it('keeps the step’s light where the strip is no drawer: a wide touch screen, with the lesson card closed (t-228)', () => {
+    // no hover, and not small: the strip sits in the dock's flow, always on show
+    pointerScreen();
+    twoSteps();
+    fireEvent.click(button('Lesson step 2: Close the filter'));
+    const lit = highlightStore.get();
+    expect(lit).toContain('filter.cutoff');
+    fireEvent.click(button('Close the card'));
+    expect(within(player()).queryByTestId('lesson-card')).toBeNull();
     expect(highlightStore.get()).toEqual(lit);
   });
 

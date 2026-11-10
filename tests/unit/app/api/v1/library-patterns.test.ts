@@ -1104,6 +1104,12 @@ describe('admin control (t-156)', () => {
       expect(await publicIds(0)).toEqual([id, riff(1).id]);
     });
 
+    it('leads with the next that can be the default when the default’s row no longer parses (t-224)', async () => {
+      withFallback();
+      riff(0).sources = 'not a list';
+      expect(await publicIds(0)).toEqual([riff(1).id]);
+    });
+
     it("warns before disabling a sound's last enabled pattern, and keeps its riff once acknowledged", async () => {
       const id = String(riff(1).id);
       const phrase = structuredClone(sound(1).phrase);

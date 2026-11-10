@@ -206,8 +206,8 @@ describe('getSynthDetail', () => {
 
   it('names each sound’s riff for its default pattern: the first enabled one that can be a riff (t-224)', async () => {
     const s = stored();
-    const riff = (status: string, name: string, phrase: unknown) => ({
-      pattern: { status, name, pattern: importPhrase(phrase as Phrase) },
+    const riff = (status: string, name: string, phrase: unknown, sources: unknown = []) => ({
+      pattern: { status, name, pattern: importPhrase(phrase as Phrase), sources },
     });
     const [a, b] = [s.sounds[0], s.sounds[1]];
     // a disabled pattern ahead of the default is passed over
@@ -220,12 +220,37 @@ describe('getSynthDetail', () => {
     };
     // a sound with nothing that can be its default carries no name for its riff
     s.sounds[1] = { ...b, patterns: [riff('disabled', 'Put away', b.phrase)] };
+    // a row that no longer parses is no default, as the sound's patterns are served: the next leads
+    const c = s.sounds[2];
+    s.sounds[2] = {
+      ...c,
+      patterns: [
+        riff('enabled', 'Broken', c.phrase, 'not a list'),
+        riff('enabled', 'Next up', c.phrase),
+      ],
+    };
     vi.mocked(prisma.synth.findFirst).mockResolvedValue(s as never);
 
     const detail = await getSynthDetail('model-d');
 
     expect(detail?.sounds[0].riffName).toBe('Rolling eighths');
     expect(detail?.sounds[1]).not.toHaveProperty('riffName');
+    expect(detail?.sounds[2].riffName).toBe('Next up');
+    // read as the sound's patterns are: in their order, enabled only
+    expect(prisma.synth.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        select: expect.objectContaining({
+          sounds: expect.objectContaining({
+            include: {
+              patterns: expect.objectContaining({
+                where: { pattern: { status: 'enabled' } },
+                orderBy: [{ order: 'asc' }, { patternId: 'asc' }],
+              }),
+            },
+          }),
+        }),
+      })
+    );
   });
 
   it('validates sounds on read: one its definition rejects, or on another version, is logged and left out', async () => {

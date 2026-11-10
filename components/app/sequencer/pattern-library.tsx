@@ -17,6 +17,7 @@
  * Every write goes through the API, so a pattern saved here is the one a reload, or another device, opens.
  */
 
+import { RIFF_FALLBACK } from '@/lib/app/patterns/riff-name';
 import { useEffect, useId, useRef, useState } from 'react';
 import type { FormEvent, ReactNode } from 'react';
 import {
@@ -113,7 +114,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
     sharedHeld = false,
     soundPatterns = null,
     suggested = null,
-    riffName = 'Riff',
+    riffName = RIFF_FALLBACK,
   } = library;
   const { loaded, edited, load } = seq;
   const [panel, setPanel] = useState<Panel>(null);
