@@ -1,0 +1,1262 @@
+{
+  "synth": "jp-8080",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "jp-supersaw-lead",
+      "name": "Super Saw Lead",
+      "ref": "In the style of late-1990s trance leads",
+      "artist": "Various",
+      "tags": ["lead", "trance", "90s"],
+      "level": 1,
+      "blurb": "The bright, shimmering wall of detuned sawtooths that late-1990s trance anthems were built on.",
+      "how": "OSC 1’s super saw is seven sawtooths in one oscillator, spread apart by CONTROL 1 and brought up against the centre one by CONTROL 2, so one note already sounds like a stack. A little filter envelope gives each note a bite, and the panning delay throws echoes from side to side.",
+      "phrase": {
+        "bpm": 138,
+        "loop": true,
+        "steps": [
+          [0.0, 69, 0.45, 0.85],
+          [0.5, 72, 0.45, 0.85],
+          [1.0, 76, 0.45, 0.85],
+          [1.5, 74, 0.45, 0.85],
+          [2.0, 72, 0.45, 0.85],
+          [2.5, 71, 0.45, 0.85],
+          [3.0, 69, 0.45, 0.85],
+          [3.5, 67, 0.45, 0.85],
+          [4.0, 69, 0.45, 0.85],
+          [4.5, 72, 0.45, 0.85],
+          [5.0, 76, 0.45, 0.85],
+          [5.5, 79, 0.45, 0.85],
+          [6.0, 76, 0.45, 0.85],
+          [6.5, 74, 0.45, 0.85],
+          [7.0, 72, 0.45, 0.85],
+          [7.5, 71, 0.45, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Seven saws in one",
+          "module": "osc",
+          "why": "The super saw is the JP-8000’s own waveform.\n- UPPER OSC 1 WAVEFORM SUPER SAW: seven sawtooths instead of one.\n- UPPER OSC 1 CONTROL 1 90: spread wide, so they beat against each other.\n- UPPER OSC 1 CONTROL 2 110: the six side saws almost as loud as the centre one.\n- Listen for: one plain sawtooth turning into a thick, moving chorus of them.",
+          "set": {
+            "up.osc1Wave": "superSaw",
+            "up.osc1Ctl1": 90,
+            "up.osc1Ctl2": 110
+          }
+        },
+        {
+          "title": "A bite at the start",
+          "module": "filter",
+          "why": "The filter envelope opens the cutoff a little on each note, then settles.\n- UPPER CUTOFF FREQ 100: a touch darker than wide open.\n- UPPER RESONANCE 20: a slight edge at the cutoff.\n- UPPER FILTER ENVELOPE DEPTH +20, D 60, S 80: a short lift at the front of each note.\n- Listen for: each note speaking a little brighter as it starts.",
+          "set": {
+            "up.cutoff": 100,
+            "up.res": 20,
+            "up.fDepth": 20,
+            "up.fD": 60,
+            "up.fS": 80
+          }
+        },
+        {
+          "title": "Echoes from side to side",
+          "module": "fx",
+          "why": "The delay is part of the trance lead sound.\n- UPPER DELAY TYPE PANNING L>R: the echoes bounce between the speakers.\n- UPPER DELAY TIME 70, FEEDBACK 50, LEVEL 60: a few clear repeats behind the dry sound.\n- UPPER AMP ENVELOPE R 50: each note rings on a little.\n- Listen for: the line filling out with echoes between the notes.",
+          "set": {
+            "up.dlyType": "panLR",
+            "up.dlyTime": 70,
+            "up.dlyFeedback": 50,
+            "up.dlyLevel": 60,
+            "up.aR": 50
+          }
+        }
+      ],
+      "context": {
+        "up.osc1Ctl1": "How far apart the seven saws are tuned: the width of the sound.",
+        "up.osc1Ctl2": "How loud the six side saws are against the centre one.",
+        "up.dlyLevel": "How loud the echoes are."
+      },
+      "tweaks": [
+        {
+          "id": "up.osc1Ctl1",
+          "try": "Turn down to 20",
+          "hear": "A tighter, cleaner stack, nearly one saw."
+        },
+        {
+          "id": "up.osc1Ctl2",
+          "try": "Turn down to 0",
+          "hear": "Only the centre saw: how much of the sound is the stack."
+        },
+        {
+          "id": "up.cutoff",
+          "try": "Lower to 60",
+          "hear": "A softer, darker lead."
+        }
+      ]
+    },
+    {
+      "id": "jp-supersaw-pad",
+      "name": "Super Saw Pad",
+      "ref": "In the style of late-1990s trance breakdown pads",
+      "artist": "Various",
+      "tags": ["pad", "trance", "90s"],
+      "level": 1,
+      "blurb": "A wide, slow wash of detuned sawtooths that swells in and hangs over the breakdown.",
+      "how": "The super saw gives each note its thickness, a slow amp attack and release turn it into a pad, and a lower cutoff takes off the fizz. The slow super chorus spreads it across the speakers.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.8, 0.8],
+          [0, 60, 3.8, 0.8],
+          [0, 64, 3.8, 0.8],
+          [0, 69, 3.8, 0.8],
+          [4, 53, 3.8, 0.8],
+          [4, 57, 3.8, 0.8],
+          [4, 60, 3.8, 0.8],
+          [4, 65, 3.8, 0.8],
+          [8, 55, 3.8, 0.8],
+          [8, 59, 3.8, 0.8],
+          [8, 62, 3.8, 0.8],
+          [8, 67, 3.8, 0.8],
+          [12, 52, 3.8, 0.8],
+          [12, 55, 3.8, 0.8],
+          [12, 60, 3.8, 0.8],
+          [12, 64, 3.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A thick super saw",
+          "module": "osc",
+          "why": "One super saw is already an ensemble.\n- UPPER OSC 1 WAVEFORM SUPER SAW.\n- UPPER OSC 1 CONTROL 1 70: spread enough to shimmer.\n- UPPER OSC 1 CONTROL 2 100: the side saws well up.\n- Listen for: chords that move and beat on their own.",
+          "set": {
+            "up.osc1Wave": "superSaw",
+            "up.osc1Ctl1": 70,
+            "up.osc1Ctl2": 100
+          }
+        },
+        {
+          "title": "Fade it in and out",
+          "module": "env",
+          "why": "The amp envelope makes it a pad.\n- UPPER AMP ENVELOPE A 80: each chord swells in.\n- UPPER AMP ENVELOPE R 85: a long tail, so the chords overlap.\n- Listen for: soft beginnings and long, melting endings.",
+          "set": {
+            "up.aA": 80,
+            "up.aR": 85
+          }
+        },
+        {
+          "title": "Darken and widen it",
+          "module": "fx",
+          "why": "A lower cutoff and the chorus make it sit behind everything else.\n- UPPER CUTOFF FREQ 85: warm rather than bright.\n- UPPER MULTI-FX SUPER CHORUS SLW at LEVEL 90: a slow, wide chorus.\n- Listen for: the pad spreading out across the speakers.",
+          "set": {
+            "up.cutoff": 85,
+            "up.mfxType": "chorusSlow",
+            "up.mfxLevel": 90
+          }
+        }
+      ],
+      "context": {
+        "up.aA": "How slowly each chord fades in.",
+        "up.cutoff": "How bright the pad is.",
+        "up.mfxLevel": "How much chorus spreads it."
+      },
+      "tweaks": [
+        {
+          "id": "up.aA",
+          "try": "Lower to 30",
+          "hear": "Chords that start sooner, more like strings."
+        },
+        {
+          "id": "up.mfxType",
+          "try": "Choose FLANGER SLOW",
+          "hear": "A slow jet-like sweep through the pad."
+        }
+      ]
+    },
+    {
+      "id": "jp-trance-pluck",
+      "name": "Trance Pluck",
+      "ref": "In the style of 2000s uplifting trance plucks",
+      "artist": "Various",
+      "tags": ["pluck", "trance", "2000s"],
+      "level": 2,
+      "blurb": "A short, bright stab of super saw that snaps shut, with echoes filling the gaps.",
+      "how": "The amp envelope has no sustain, so each note dies away, and the filter envelope opens the cutoff for an instant and closes it again: the pluck. The panning delay repeats the stabs between the speakers so a sparse riff sounds busy.",
+      "phrase": {
+        "bpm": 138,
+        "loop": true,
+        "steps": [
+          [0.5, 69, 0.3, 0.85],
+          [1.5, 72, 0.3, 0.85],
+          [2.5, 76, 0.3, 0.85],
+          [3.5, 72, 0.3, 0.85],
+          [4.5, 67, 0.3, 0.85],
+          [5.5, 71, 0.3, 0.85],
+          [6.5, 74, 0.3, 0.85],
+          [7.5, 71, 0.3, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Super saw",
+          "module": "osc",
+          "why": "Start from a medium super saw.\n- UPPER OSC 1 WAVEFORM SUPER SAW.\n- UPPER OSC 1 CONTROL 1 60, CONTROL 2 90.\n- Listen for: the thick saw stack, still held.",
+          "set": {
+            "up.osc1Wave": "superSaw",
+            "up.osc1Ctl1": 60,
+            "up.osc1Ctl2": 90
+          }
+        },
+        {
+          "title": "Make it die away",
+          "module": "env",
+          "why": "With no sustain the note fades by itself.\n- UPPER AMP ENVELOPE D 72: a short decay.\n- UPPER AMP ENVELOPE S 0: nothing held.\n- UPPER AMP ENVELOPE R 55.\n- Listen for: short notes even when the key is held.",
+          "set": {
+            "up.aD": 72,
+            "up.aS": 0,
+            "up.aR": 55
+          }
+        },
+        {
+          "title": "Snap the filter",
+          "module": "filter",
+          "why": "The filter envelope opens the cutoff for an instant.\n- UPPER CUTOFF FREQ 45: closed down to start with.\n- UPPER FILTER ENVELOPE DEPTH +40: a big jump open on each note.\n- UPPER FILTER ENVELOPE D 62, S 0, R 50: then straight back down.\n- Listen for: a bright click at the start of each note: the pluck.",
+          "set": {
+            "up.cutoff": 45,
+            "up.fDepth": 40,
+            "up.fD": 62,
+            "up.fS": 0,
+            "up.fR": 50
+          }
+        },
+        {
+          "title": "Fill the gaps",
+          "module": "fx",
+          "why": "The delay answers each stab.\n- UPPER DELAY TIME 80, FEEDBACK 60, LEVEL 70: echoes between the stabs, bouncing left and right.\n- Listen for: the off-beat riff turning into a rolling pattern.",
+          "set": {
+            "up.dlyTime": 80,
+            "up.dlyFeedback": 60,
+            "up.dlyLevel": 70
+          }
+        }
+      ],
+      "context": {
+        "up.fDepth": "How bright the start of each pluck is.",
+        "up.aD": "How long each pluck lasts.",
+        "up.dlyFeedback": "How many echoes follow each stab."
+      },
+      "tweaks": [
+        {
+          "id": "up.aD",
+          "try": "Raise to 75",
+          "hear": "Longer, softer plucks."
+        },
+        {
+          "id": "up.res",
+          "try": "Raise to 60",
+          "hear": "A squelchy, resonant snap."
+        }
+      ]
+    },
+    {
+      "id": "jp-trance-arp",
+      "name": "Trance Arpeggio",
+      "ref": "In the style of 1990s trance arpeggios",
+      "artist": "Various",
+      "tags": ["seq", "trance", "90s"],
+      "level": 2,
+      "blurb": "Held chords turned into a racing sixteenth-note arpeggio over two octaves.",
+      "how": "The arpeggiator plays the held notes one at a time at TEMPO, climbing through two octaves, while a short super saw pluck gives every step its own attack. Holding a new chord changes the pattern.",
+      "phrase": {
+        "bpm": 138,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.8, 0.8],
+          [0, 60, 3.8, 0.8],
+          [0, 64, 3.8, 0.8],
+          [4, 53, 3.8, 0.8],
+          [4, 57, 3.8, 0.8],
+          [4, 60, 3.8, 0.8],
+          [8, 55, 3.8, 0.8],
+          [8, 59, 3.8, 0.8],
+          [8, 62, 3.8, 0.8],
+          [12, 52, 3.8, 0.8],
+          [12, 55, 3.8, 0.8],
+          [12, 59, 3.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A short super saw",
+          "module": "osc",
+          "why": "Each arpeggio step needs its own attack.\n- UPPER OSC 1 WAVEFORM SUPER SAW, CONTROL 1 50, CONTROL 2 80.\n- UPPER AMP ENVELOPE D 62, S 0: short notes.\n- UPPER CUTOFF FREQ 60, FILTER ENVELOPE DEPTH +30, D 55, S 0: a little snap.\n- Listen for: a short, bright note on every key.",
+          "set": {
+            "up.osc1Wave": "superSaw",
+            "up.osc1Ctl1": 50,
+            "up.osc1Ctl2": 80,
+            "up.aD": 62,
+            "up.aS": 0,
+            "up.cutoff": 60,
+            "up.fDepth": 30,
+            "up.fD": 55,
+            "up.fS": 0
+          }
+        },
+        {
+          "title": "Turn on the arpeggiator",
+          "module": "mode",
+          "why": "The arpeggiator plays the chord a note at a time.\n- ARPEGGIATOR ON.\n- MODE UP: lowest to highest.\n- RANGE 2 OCT: then again an octave up.\n- TEMPO 138.\n- Listen for: the held chord racing up in sixteenths.",
+          "set": {
+            "arp.on": true,
+            "arp.mode": "up",
+            "arp.range": "2",
+            "arp.tempo": 138
+          }
+        },
+        {
+          "title": "A wider space",
+          "module": "fx",
+          "why": "A short panning delay spreads the steps.\n- UPPER DELAY TYPE PANNING SHORT, TIME 90, FEEDBACK 40, LEVEL 50.\n- Listen for: the arpeggio flickering between the speakers.",
+          "set": {
+            "up.dlyType": "panShort",
+            "up.dlyTime": 90,
+            "up.dlyFeedback": 40,
+            "up.dlyLevel": 50
+          }
+        }
+      ],
+      "context": {
+        "arp.range": "How many octaves the arpeggio climbs.",
+        "arp.mode": "The order of the notes.",
+        "up.aD": "How short each step is."
+      },
+      "tweaks": [
+        {
+          "id": "arp.mode",
+          "try": "Choose UP&DOWN",
+          "hear": "The pattern climbing and falling back."
+        },
+        {
+          "id": "arp.range",
+          "try": "Choose 4 OCT",
+          "hear": "A long climb over four octaves."
+        }
+      ]
+    },
+    {
+      "id": "jp-unison-lead",
+      "name": "Unison Saw Lead",
+      "ref": "In the style of 1990s hard trance leads",
+      "artist": "Various",
+      "tags": ["lead", "trance", "90s"],
+      "level": 2,
+      "blurb": "Every voice stacked on one note, slightly out of tune, for a huge mono lead that glides.",
+      "how": "UNISON puts all ten voices on the one note you play, detuned a little, and two sawtooths a fraction apart in each voice thicken it further. Portamento slides from note to note, and the mod wheel brings in LFO 2’s vibrato.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0.0, 64, 0.45, 0.85],
+          [1.0, 67, 0.45, 0.85],
+          [1.5, 69, 0.45, 0.85],
+          [2.5, 71, 0.45, 0.85],
+          [3.0, 69, 0.45, 0.85],
+          [3.5, 67, 0.45, 0.85],
+          [4.0, 64, 0.45, 0.85],
+          [5.0, 62, 0.45, 0.85],
+          [5.5, 64, 0.45, 0.85],
+          [7.0, 59, 0.45, 0.85],
+          [7.5, 62, 0.45, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two saws, slightly apart",
+          "module": "osc",
+          "why": "OSC 2 joins OSC 1 a few cents sharp.\n- UPPER OSC BALANCE 0: both oscillators equally.\n- UPPER OSC 2 FINE/WIDE +8: a slow beating between them.\n- Listen for: a thicker, gently moving saw.",
+          "set": {
+            "up.balance": 0,
+            "up.osc2Fine": 8
+          }
+        },
+        {
+          "title": "Every voice on one note",
+          "module": "mode",
+          "why": "UNISON stacks the whole part on each note.\n- UPPER UNISON on: ten voices on one note, a few cents apart.\n- UPPER PORTAMENTO ON, TIME 35: a quick slide between notes.\n- Listen for: a much bigger lead that plays one note at a time and glides.",
+          "set": {
+            "up.unison": true,
+            "up.porta": true,
+            "up.portaTime": 35
+          }
+        },
+        {
+          "title": "Shape and vibrato",
+          "module": "filter",
+          "why": "A little resonance and a wheel vibrato finish it.\n- UPPER CUTOFF FREQ 95, RESONANCE 30.\n- UPPER FILTER ENVELOPE DEPTH +25, D 70, S 60.\n- UPPER MODULATION DEPTH (PITCH) +20: vibrato when you push the mod wheel.\n- Listen for: a singing lead; push the mod wheel for vibrato.",
+          "set": {
+            "up.cutoff": 95,
+            "up.res": 30,
+            "up.fDepth": 25,
+            "up.fD": 70,
+            "up.fS": 60,
+            "up.lfo2Pitch": 20
+          }
+        }
+      ],
+      "context": {
+        "up.unison": "Stacks every voice on one note.",
+        "up.portaTime": "How long each glide takes.",
+        "up.lfo2Pitch": "How deep the mod wheel’s vibrato is."
+      },
+      "tweaks": [
+        {
+          "id": "up.unison",
+          "try": "Switch off",
+          "hear": "One voice: how much of the size is the stack."
+        },
+        {
+          "id": "up.osc2Fine",
+          "try": "Raise to +30",
+          "hear": "A wider, sourer detune."
+        }
+      ]
+    },
+    {
+      "id": "jp-feedback-lead",
+      "name": "Feedback Guitar Lead",
+      "ref": "In the style of 1990s synth leads imitating overdriven guitar",
+      "artist": "Various",
+      "tags": ["lead", "rock", "90s"],
+      "level": 2,
+      "blurb": "A singing, slightly unstable lead where one harmonic howls over the saw like guitar feedback.",
+      "how": "The feedback osc adds a harmonic to the sawtooth that feeds back on itself: CONTROL 1 picks which harmonic, CONTROL 2 how hard it drives. It forces the part to play one note at a time, as a guitarist sustains one note. The distortion and a wheel vibrato finish the guitar character.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.95, 0.85],
+          [1, 67, 0.95, 0.85],
+          [2, 69, 0.95, 0.85],
+          [3, 71, 0.95, 0.85],
+          [4, 69, 0.95, 0.85],
+          [5, 67, 0.95, 0.85],
+          [6, 69, 0.95, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The feedback osc",
+          "module": "osc",
+          "why": "One harmonic feeds back over the saw.\n- UPPER OSC 1 WAVEFORM FEEDBACK OSC: the part now plays one note at a time.\n- UPPER OSC 1 CONTROL 1 50: the harmonic that howls.\n- UPPER OSC 1 CONTROL 2 90: driven hard.\n- Listen for: a hollow, singing tone over the saw.",
+          "set": {
+            "up.osc1Wave": "feedback",
+            "up.osc1Ctl1": 50,
+            "up.osc1Ctl2": 90
+          }
+        },
+        {
+          "title": "Play it legato",
+          "module": "mode",
+          "why": "LEGATO lets notes slide on without restarting.\n- UPPER LEGATO on.\n- UPPER PORTAMENTO ON, TIME 30: overlapping notes slide.\n- Listen for: notes that join like a held string.",
+          "set": {
+            "up.legato": true,
+            "up.porta": true,
+            "up.portaTime": 30
+          }
+        },
+        {
+          "title": "Overdrive and vibrato",
+          "module": "fx",
+          "why": "The multi-effect’s distortion and LFO 2 add the guitar.\n- UPPER MULTI-FX DISTORTION at LEVEL 70.\n- UPPER CUTOFF FREQ 90, RESONANCE 25.\n- UPPER MODULATION DEPTH (PITCH) +25: push the mod wheel for vibrato.\n- Listen for: a gritty, singing lead; push the mod wheel on the long notes.",
+          "set": {
+            "up.mfxType": "distortion",
+            "up.mfxLevel": 70,
+            "up.cutoff": 90,
+            "up.res": 25,
+            "up.lfo2Pitch": 25
+          }
+        }
+      ],
+      "context": {
+        "up.osc1Ctl1": "Which harmonic the feedback adds.",
+        "up.osc1Ctl2": "How hard the feedback drives.",
+        "up.mfxLevel": "How much distortion."
+      },
+      "tweaks": [
+        {
+          "id": "up.osc1Ctl1",
+          "try": "Raise to 110",
+          "hear": "A higher, squealing harmonic."
+        },
+        {
+          "id": "up.osc1Ctl2",
+          "try": "Lower to 30",
+          "hear": "Closer to a plain saw."
+        }
+      ]
+    },
+    {
+      "id": "jp-sync-lead",
+      "name": "Sync Sweep Lead",
+      "ref": "In the style of 1980s and 1990s hard-sync leads",
+      "artist": "Various",
+      "tags": ["lead", "synth-pop", "80s"],
+      "level": 2,
+      "blurb": "A tearing, vocal lead whose tone sweeps down at the start of every note.",
+      "how": "SYNC restarts OSC 2 with each cycle of OSC 1, so OSC 2’s pitch changes its tone rather than its note. The pitch envelope, sent to OSC 2 alone, sweeps that tone on every key: the hard-sync tear.",
+      "phrase": {
+        "bpm": 116,
+        "loop": true,
+        "steps": [
+          [0.0, 60, 0.45, 0.85],
+          [1.0, 63, 0.45, 0.85],
+          [1.5, 65, 0.45, 0.85],
+          [2.5, 67, 0.45, 0.85],
+          [3.0, 70, 0.45, 0.85],
+          [3.5, 67, 0.45, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Hear OSC 2 alone, synced",
+          "module": "osc",
+          "why": "OSC 2 follows OSC 1’s pitch once it is synced.\n- UPPER OSC BALANCE +63: only OSC 2.\n- UPPER SYNC on: OSC 2 restarts with OSC 1.\n- UPPER OSC 2 RANGE +12: now a brighter tone, not a higher note.\n- Listen for: a hard, bright tone at the note you play.",
+          "set": {
+            "up.balance": 63,
+            "up.sync": true,
+            "up.osc2Range": 12
+          }
+        },
+        {
+          "title": "Sweep it with the pitch envelope",
+          "module": "env",
+          "why": "The pitch envelope moves OSC 2 alone.\n- UPPER LFO 1 & ENV DESTINATION OSC 2.\n- UPPER PITCH ENVELOPE DEPTH +40: a big rise at the start.\n- UPPER PITCH ENVELOPE D 70: falling back over half a second or so.\n- Listen for: the tearing sweep at the start of every note.",
+          "set": {
+            "up.dest": "osc2",
+            "up.pDepth": 40,
+            "up.pD": 70
+          }
+        },
+        {
+          "title": "One note at a time",
+          "module": "mode",
+          "why": "A lead plays one note at a time.\n- UPPER MONO on.\n- Listen for: each note cutting off the last.",
+          "set": {
+            "up.mono": true
+          }
+        }
+      ],
+      "context": {
+        "up.osc2Range": "The synced tone: higher is brighter and more nasal.",
+        "up.pDepth": "How far the sweep reaches.",
+        "up.pD": "How long the sweep takes."
+      },
+      "tweaks": [
+        {
+          "id": "up.sync",
+          "try": "Switch off",
+          "hear": "OSC 2 an octave up and swooping: sync is what keeps it on the note."
+        },
+        {
+          "id": "up.pD",
+          "try": "Raise to 100",
+          "hear": "A slower, wah-like sweep."
+        }
+      ]
+    },
+    {
+      "id": "jp-ring-bells",
+      "name": "Ring Mod Bells",
+      "ref": "In the style of 1980s ring-modulated synth bells",
+      "artist": "Various",
+      "tags": ["keys", "bells", "80s"],
+      "level": 2,
+      "blurb": "Glassy, slightly out-of-tune bells that ring and fade.",
+      "how": "RING multiplies OSC 1 by OSC 2, which gives the sum and difference of their pitches rather than either one: with OSC 2 an odd interval away and fine-tuned off, the result is inharmonic, like a bell. A long decay with no sustain lets each strike ring away.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.9, 0.8],
+          [1, 76, 0.9, 0.8],
+          [2, 79, 0.9, 0.8],
+          [3, 84, 0.9, 0.8],
+          [4, 79, 0.9, 0.8],
+          [5, 76, 0.9, 0.8],
+          [6, 74, 0.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Ring modulation",
+          "module": "osc",
+          "why": "The ring modulator takes OSC 2’s side of the balance.\n- UPPER OSC 1 WAVEFORM TRIANGLE and UPPER OSC 2 WAVEFORM TRIANGLE: soft waves to multiply.\n- UPPER RING on, UPPER OSC BALANCE +63: only the ring modulator.\n- UPPER OSC 2 RANGE +7 and FINE/WIDE +23: an interval that will not sit in tune.\n- Listen for: a metallic, bell-like clang on every key.",
+          "set": {
+            "up.osc1Wave": "tri",
+            "up.osc2Wave": "tri",
+            "up.ring": true,
+            "up.balance": 63,
+            "up.osc2Range": 7,
+            "up.osc2Fine": 23
+          }
+        },
+        {
+          "title": "Strike and ring",
+          "module": "env",
+          "why": "A bell is struck and rings away.\n- UPPER AMP ENVELOPE D 85, S 0: a long fade.\n- UPPER AMP ENVELOPE R 80: it rings on after the key.\n- Listen for: each note dying away slowly.",
+          "set": {
+            "up.aD": 85,
+            "up.aS": 0,
+            "up.aR": 80
+          }
+        },
+        {
+          "title": "A little shimmer",
+          "module": "fx",
+          "why": "The clear chorus adds movement.\n- UPPER MULTI-FX SUPER CHORUS CLR at LEVEL 50.\n- Listen for: a gentle shimmer on the tail.",
+          "set": {
+            "up.mfxType": "chorusClear",
+            "up.mfxLevel": 50
+          }
+        }
+      ],
+      "context": {
+        "up.osc2Range": "The interval behind the bell’s tone.",
+        "up.osc2Fine": "How far out of tune, and so how clangorous.",
+        "up.aD": "How long each bell rings."
+      },
+      "tweaks": [
+        {
+          "id": "up.osc2Range",
+          "try": "Set to +12",
+          "hear": "A tuned, organ-like ring."
+        },
+        {
+          "id": "up.balance",
+          "try": "Turn to 0",
+          "hear": "The plain triangle under the bell."
+        }
+      ]
+    },
+    {
+      "id": "jp-xmod-clang",
+      "name": "Cross Mod Clang",
+      "ref": "In the style of 1990s electronica metallic stabs",
+      "artist": "Various",
+      "tags": ["fx", "electronica", "90s"],
+      "level": 3,
+      "blurb": "A harsh, metallic strike that softens as it dies away.",
+      "how": "X-MOD DEPTH lets OSC 2 frequency-modulate OSC 1, which tears the tone into clangorous sidebands. With LFO 1 & ENV DESTINATION on X-MOD, the pitch envelope moves the cross mod depth instead of the pitch, so each note starts at its most metallic and smooths out.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0.0, 48, 0.45, 0.85],
+          [1.5, 55, 0.45, 0.85],
+          [2.5, 51, 0.45, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Cross mod",
+          "module": "mod",
+          "why": "OSC 2 modulates OSC 1’s frequency.\n- UPPER OSC 2 WAVEFORM SQR (PWM), RANGE -5: an odd interval for the modulator.\n- UPPER X-MOD DEPTH 70.\n- Listen for: a hard, metallic tone from OSC 1 alone.",
+          "set": {
+            "up.osc2Wave": "square",
+            "up.osc2Range": -5,
+            "up.xmod": 70
+          }
+        },
+        {
+          "title": "Let the clang fade",
+          "module": "env",
+          "why": "The pitch envelope moves the cross mod depth instead of the pitch.\n- UPPER LFO 1 & ENV DESTINATION X-MOD.\n- UPPER PITCH ENVELOPE DEPTH +50, D 60: extra cross mod at the start, falling away.\n- Listen for: each strike starting harsh and softening.",
+          "set": {
+            "up.dest": "xmod",
+            "up.pDepth": 50,
+            "up.pD": 60
+          }
+        },
+        {
+          "title": "A short strike",
+          "module": "env",
+          "why": "The amp envelope makes it a stab.\n- UPPER AMP ENVELOPE D 70, S 30, R 50.\n- Listen for: short, ringing hits.",
+          "set": {
+            "up.aD": 70,
+            "up.aS": 30,
+            "up.aR": 50
+          }
+        }
+      ],
+      "context": {
+        "up.xmod": "How metallic the tone is.",
+        "up.osc2Range": "Which sidebands the cross mod makes.",
+        "up.pDepth": "How much harsher the start of each note is."
+      },
+      "tweaks": [
+        {
+          "id": "up.osc2Range",
+          "try": "Sweep from -12 to +12",
+          "hear": "The clang changing character at every step."
+        },
+        {
+          "id": "up.xmod",
+          "try": "Lower to 30",
+          "hear": "A gentler, bell-like edge."
+        }
+      ]
+    },
+    {
+      "id": "jp-noise-whistle",
+      "name": "Resonant Noise Whistle",
+      "ref": "In the style of breathy synth flutes in 1990s ambient",
+      "artist": "Various",
+      "tags": ["wind", "ambient", "90s"],
+      "level": 3,
+      "blurb": "A breathy, pure whistle made from noise rung into a pitch.",
+      "how": "OSC 1’s noise runs through a resonant filter of its own that follows the keys. With CONTROL 1 at 64 the filter sits on the note you play, and CONTROL 2 at the top rings it so hard the noise becomes a near-sine with breath round it. A delayed vibrato from LFO 1 makes it sing.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.95, 0.75],
+          [1, 74, 0.95, 0.75],
+          [2, 76, 0.95, 0.75],
+          [3, 79, 0.95, 0.75],
+          [4, 76, 0.95, 0.75],
+          [5, 74, 0.95, 0.75],
+          [6, 72, 0.95, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Noise, rung into a note",
+          "module": "osc",
+          "why": "OSC 1’s noise has a resonant filter tuned by CONTROL 1.\n- UPPER OSC 1 WAVEFORM NOISE.\n- UPPER OSC 1 CONTROL 1 64: the filter on the note you play.\n- UPPER OSC 1 CONTROL 2 127: resonance so high it whistles.\n- Listen for: a pitched whistle with breath around it.",
+          "set": {
+            "up.osc1Wave": "noise",
+            "up.osc1Ctl1": 64,
+            "up.osc1Ctl2": 127
+          }
+        },
+        {
+          "title": "Breathe in and out",
+          "module": "env",
+          "why": "A soft attack and release make it a wind instrument.\n- UPPER AMP ENVELOPE A 30, R 50.\n- Listen for: notes that breathe in.",
+          "set": {
+            "up.aA": 30,
+            "up.aR": 50
+          }
+        },
+        {
+          "title": "Delayed vibrato",
+          "module": "lfo",
+          "why": "LFO 1 on the pitch, fading in after each note.\n- UPPER LFO 1 RATE 75.\n- UPPER LFO 1 FADE 60: the vibrato arrives on held notes.\n- UPPER OSC LFO 1 DEPTH +8.\n- Listen for: held notes starting straight and then singing.",
+          "set": {
+            "up.lfo1Rate": 75,
+            "up.lfo1Fade": 60,
+            "up.oscLfo": 8
+          }
+        }
+      ],
+      "context": {
+        "up.osc1Ctl1": "The whistle’s pitch: 64 is the note you play, each step a semitone.",
+        "up.osc1Ctl2": "How pure the whistle is: lower lets more breath through.",
+        "up.lfo1Fade": "How long before the vibrato comes in."
+      },
+      "tweaks": [
+        {
+          "id": "up.osc1Ctl2",
+          "try": "Lower to 90",
+          "hear": "Breathier, with more noise."
+        },
+        {
+          "id": "up.osc1Ctl1",
+          "try": "Raise to 76",
+          "hear": "The whistle an octave higher."
+        }
+      ]
+    },
+    {
+      "id": "jp-pwm-strings",
+      "name": "PWM Strings",
+      "ref": "In the style of 1980s synth string sections",
+      "artist": "Various",
+      "tags": ["strings", "synth-pop", "80s"],
+      "level": 2,
+      "blurb": "Soft, moving string chords from a pulse wave whose width LFO 1 sweeps.",
+      "how": "On the square, CONTROL 1 narrows the pulse and CONTROL 2 lets LFO 1 sweep its width: pulse-width modulation, the classic synth string. The gentler -12 dB filter, a slow attack and the mid chorus finish the section.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 60, 3.8, 0.8],
+          [0, 64, 3.8, 0.8],
+          [0, 67, 3.8, 0.8],
+          [4, 57, 3.8, 0.8],
+          [4, 60, 3.8, 0.8],
+          [4, 64, 3.8, 0.8],
+          [8, 53, 3.8, 0.8],
+          [8, 57, 3.8, 0.8],
+          [8, 62, 3.8, 0.8],
+          [12, 55, 3.8, 0.8],
+          [12, 59, 3.8, 0.8],
+          [12, 62, 3.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A swept pulse",
+          "module": "osc",
+          "why": "LFO 1 sweeps the pulse width.\n- UPPER OSC 1 WAVEFORM SQR (PWM), CONTROL 1 20: a little narrower than square.\n- UPPER OSC 1 CONTROL 2 60: LFO 1 sweeps the width.\n- UPPER LFO 1 RATE 45: a slow sweep.\n- Listen for: a hollow tone that moves like a section.",
+          "set": {
+            "up.osc1Wave": "square",
+            "up.osc1Ctl1": 20,
+            "up.osc1Ctl2": 60,
+            "up.lfo1Rate": 45
+          }
+        },
+        {
+          "title": "Bow it in",
+          "module": "env",
+          "why": "A slower attack and release.\n- UPPER AMP ENVELOPE A 60, R 70.\n- Listen for: chords that swell and linger.",
+          "set": {
+            "up.aA": 60,
+            "up.aR": 70
+          }
+        },
+        {
+          "title": "Soften and widen",
+          "module": "filter",
+          "why": "The -12 dB slope and the chorus.\n- UPPER -12dB/-24dB unlit: the gentler -12 dB slope.\n- UPPER CUTOFF FREQ 90.\n- UPPER MULTI-FX SUPER CHORUS MID at LEVEL 80.\n- Listen for: a softer, wider string section.",
+          "set": {
+            "up.slope": false,
+            "up.cutoff": 90,
+            "up.mfxType": "chorusMid",
+            "up.mfxLevel": 80
+          }
+        }
+      ],
+      "context": {
+        "up.osc1Ctl2": "How far LFO 1 sweeps the pulse.",
+        "up.lfo1Rate": "How fast the strings move.",
+        "up.mfxLevel": "How wide the section is."
+      },
+      "tweaks": [
+        {
+          "id": "up.osc1Ctl2",
+          "try": "Turn down to 0",
+          "hear": "A still pulse: the movement is the PWM."
+        },
+        {
+          "id": "up.slope",
+          "try": "Light it (-24 dB)",
+          "hear": "A firmer, darker cut."
+        }
+      ]
+    },
+    {
+      "id": "jp-tri-mod-bass",
+      "name": "Triangle Mod Bass",
+      "ref": "In the style of 1990s techno basslines",
+      "artist": "Various",
+      "tags": ["bass", "techno", "90s"],
+      "level": 2,
+      "blurb": "A round bass whose overtones grow and shrink as the triangle folds over.",
+      "how": "Triangle mod amplifies a triangle and folds it back at the edges: CONTROL 1 sets how far, so the soft fundamental gives way to bright overtones. CONTROL 2 lets LFO 1 move the fold, so the tone breathes, and OSC SHIFT takes it an octave down.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [
+          [0.0, 48, 0.4, 0.85],
+          [1.0, 48, 0.4, 0.85],
+          [1.5, 60, 0.4, 0.85],
+          [2.5, 48, 0.4, 0.85],
+          [3.0, 51, 0.4, 0.85],
+          [4.0, 48, 0.4, 0.85],
+          [5.0, 48, 0.4, 0.85],
+          [5.5, 58, 0.4, 0.85],
+          [6.5, 55, 0.4, 0.85],
+          [7.0, 53, 0.4, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A folded triangle",
+          "module": "osc",
+          "why": "Triangle mod folds the triangle over.\n- UPPER OSC 1 WAVEFORM TRIANGLE MOD.\n- UPPER OSC 1 CONTROL 1 60: folded into overtones.\n- Listen for: a round tone with a reedy edge.",
+          "set": {
+            "up.osc1Wave": "triMod",
+            "up.osc1Ctl1": 60
+          }
+        },
+        {
+          "title": "Let it breathe",
+          "module": "lfo",
+          "why": "LFO 1 moves the fold.\n- UPPER OSC 1 CONTROL 2 40: LFO 1 sweeps CONTROL 1.\n- UPPER LFO 1 RATE 50.\n- Listen for: the overtones swelling and fading under the riff.",
+          "set": {
+            "up.osc1Ctl2": 40,
+            "up.lfo1Rate": 50
+          }
+        },
+        {
+          "title": "Down an octave, one note at a time",
+          "module": "mode",
+          "why": "OSC SHIFT and MONO make it a bass.\n- UPPER OSC SHIFT -1: an octave down.\n- UPPER MONO on.\n- UPPER AMP ENVELOPE D 60, S 70; CUTOFF FREQ 80.\n- Listen for: a solid, moving bassline.",
+          "set": {
+            "up.shift": "-1",
+            "up.mono": true,
+            "up.aD": 60,
+            "up.aS": 70,
+            "up.cutoff": 80
+          }
+        }
+      ],
+      "context": {
+        "up.osc1Ctl1": "How far the triangle is folded.",
+        "up.osc1Ctl2": "How far LFO 1 moves the fold.",
+        "up.shift": "The bass octave."
+      },
+      "tweaks": [
+        {
+          "id": "up.osc1Ctl1",
+          "try": "Raise to 120",
+          "hear": "A buzzy, hollow tone."
+        },
+        {
+          "id": "up.lfo1Rate",
+          "try": "Raise to 90",
+          "hear": "A fast, watery wobble."
+        }
+      ]
+    },
+    {
+      "id": "jp-auto-pan-keys",
+      "name": "Auto Pan Keys",
+      "ref": "In the style of 1970s electric pianos through a stereo auto-panner",
+      "artist": "Various",
+      "tags": ["keys", "soul", "70s"],
+      "level": 2,
+      "blurb": "A mellow keyboard tone that swings gently from speaker to speaker.",
+      "how": "A triangle with a quieter square an octave above gives a soft, bell-edged tone, and a decay to a low sustain makes it a struck key. With PAN on AUTO, AMP LFO 1 DEPTH moves the sound across the stereo field at LFO 1’s rate, the stereo tremolo of an electric piano.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 60, 3.8, 0.75],
+          [0, 64, 3.8, 0.75],
+          [0, 67, 3.8, 0.75],
+          [0, 71, 3.8, 0.75],
+          [4, 57, 3.8, 0.75],
+          [4, 60, 3.8, 0.75],
+          [4, 64, 3.8, 0.75],
+          [4, 67, 3.8, 0.75],
+          [8, 62, 3.8, 0.75],
+          [8, 65, 3.8, 0.75],
+          [8, 69, 3.8, 0.75],
+          [8, 72, 3.8, 0.75],
+          [12, 55, 3.8, 0.75],
+          [12, 59, 3.8, 0.75],
+          [12, 62, 3.8, 0.75],
+          [12, 65, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A soft, struck tone",
+          "module": "osc",
+          "why": "A triangle with a square an octave above.\n- UPPER OSC 1 WAVEFORM TRIANGLE.\n- UPPER OSC 2 WAVEFORM SQR (PWM), RANGE +12.\n- UPPER OSC BALANCE -20: mostly the triangle.\n- UPPER AMP ENVELOPE D 70, S 30, R 55.\n- Listen for: a mellow key that fades to a soft hold.",
+          "set": {
+            "up.osc1Wave": "tri",
+            "up.osc2Wave": "square",
+            "up.osc2Range": 12,
+            "up.balance": -20,
+            "up.aD": 70,
+            "up.aS": 30,
+            "up.aR": 55
+          }
+        },
+        {
+          "title": "Swing it across the speakers",
+          "module": "amp",
+          "why": "PAN on AUTO turns AMP LFO 1 DEPTH into stereo panning.\n- UPPER PAN AUTO.\n- UPPER AMP LFO 1 DEPTH +50: a wide swing.\n- UPPER LFO 1 RATE 55.\n- Listen for: the chords moving from side to side.",
+          "set": {
+            "up.pan": "auto",
+            "up.ampLfo": 50,
+            "up.lfo1Rate": 55
+          }
+        },
+        {
+          "title": "Warm it",
+          "module": "filter",
+          "why": "Take the edge off the square.\n- UPPER CUTOFF FREQ 85.\n- Listen for: a softer, rounder key.",
+          "set": {
+            "up.cutoff": 85
+          }
+        }
+      ],
+      "context": {
+        "up.ampLfo": "How wide the panning swings.",
+        "up.lfo1Rate": "How fast it swings.",
+        "up.balance": "The mix of the soft triangle and the brighter square."
+      },
+      "tweaks": [
+        {
+          "id": "up.pan",
+          "try": "Press PAN until both LEDs are out",
+          "hear": "The same LFO as a tremolo instead."
+        },
+        {
+          "id": "up.lfo1Rate",
+          "try": "Raise to 85",
+          "hear": "A fast, shimmering pan."
+        }
+      ]
+    },
+    {
+      "id": "jp-band-pass-wah",
+      "name": "Band-Pass Wah Pad",
+      "ref": "In the style of 1990s progressive house filtered pads",
+      "artist": "Various",
+      "tags": ["pad", "house", "90s"],
+      "level": 2,
+      "blurb": "A thin, vocal band of super saw that LFO 1 sweeps up and down like a slow wah.",
+      "how": "The band-pass filter keeps only a band around the cutoff, and at -24 dB with plenty of resonance that band sings. LFO 1 on the filter sweeps it slowly, so the pad talks.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.8, 0.8],
+          [0, 60, 3.8, 0.8],
+          [0, 64, 3.8, 0.8],
+          [4, 57, 3.8, 0.8],
+          [4, 60, 3.8, 0.8],
+          [4, 64, 3.8, 0.8],
+          [8, 55, 3.8, 0.8],
+          [8, 59, 3.8, 0.8],
+          [8, 62, 3.8, 0.8],
+          [12, 55, 3.8, 0.8],
+          [12, 59, 3.8, 0.8],
+          [12, 62, 3.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Super saw into a band-pass",
+          "module": "filter",
+          "why": "BPF keeps only a band round the cutoff.\n- UPPER OSC 1 WAVEFORM SUPER SAW, CONTROL 1 60, CONTROL 2 90.\n- UPPER FILTER TYPE BPF.\n- UPPER CUTOFF FREQ 70, RESONANCE 90: a narrow, singing band.\n- Listen for: a thin, nasal stack.",
+          "set": {
+            "up.osc1Wave": "superSaw",
+            "up.osc1Ctl1": 60,
+            "up.osc1Ctl2": 90,
+            "up.vcfType": "bpf",
+            "up.cutoff": 70,
+            "up.res": 90
+          }
+        },
+        {
+          "title": "Sweep it",
+          "module": "lfo",
+          "why": "LFO 1 moves the band.\n- UPPER FILTER LFO 1 DEPTH +40.\n- UPPER LFO 1 RATE 30: a slow sweep.\n- Listen for: the band rising and falling: a slow wah.",
+          "set": {
+            "up.vcfLfo": 40,
+            "up.lfo1Rate": 30
+          }
+        },
+        {
+          "title": "Pad it out",
+          "module": "env",
+          "why": "Slow the edges and add space.\n- UPPER AMP ENVELOPE A 50, R 70.\n- UPPER DELAY LEVEL 45.\n- Listen for: a talking pad with echoes.",
+          "set": {
+            "up.aA": 50,
+            "up.aR": 70,
+            "up.dlyLevel": 45
+          }
+        }
+      ],
+      "context": {
+        "up.res": "How narrow and vocal the band is.",
+        "up.vcfLfo": "How far the band sweeps.",
+        "up.lfo1Rate": "How fast it sweeps."
+      },
+      "tweaks": [
+        {
+          "id": "up.vcfType",
+          "try": "Choose HPF",
+          "hear": "The bass cut away instead: an airy top."
+        },
+        {
+          "id": "up.slope",
+          "try": "Switch to -12 dB",
+          "hear": "A wider, softer band."
+        }
+      ]
+    },
+    {
+      "id": "jp-dual-octave-pad",
+      "name": "Dual Octave Pad",
+      "ref": "In the style of 1990s layered trance pads",
+      "artist": "Various",
+      "tags": ["pad", "trance", "90s"],
+      "level": 3,
+      "blurb": "A super saw pad with a soft square an octave below, both played on every key.",
+      "how": "The JP-8080 holds two patches. KEY MODE DUAL plays both on every key, so the Upper part’s super saw and the Lower part’s square an octave down sound together. PANEL SELECT chooses which part the knobs edit: the Lower part keeps its own settings while the Upper is shown.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 60, 3.8, 0.8],
+          [0, 64, 3.8, 0.8],
+          [0, 67, 3.8, 0.8],
+          [4, 57, 3.8, 0.8],
+          [4, 60, 3.8, 0.8],
+          [4, 64, 3.8, 0.8],
+          [8, 53, 3.8, 0.8],
+          [8, 57, 3.8, 0.8],
+          [8, 60, 3.8, 0.8],
+          [12, 55, 3.8, 0.8],
+          [12, 59, 3.8, 0.8],
+          [12, 62, 3.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The Upper part: a super saw pad",
+          "module": "osc",
+          "why": "Build the top layer first.\n- UPPER OSC 1 WAVEFORM SUPER SAW, CONTROL 1 70, CONTROL 2 100.\n- UPPER AMP ENVELOPE A 70, R 80.\n- UPPER CUTOFF FREQ 90.\n- Listen for: a shimmering pad.",
+          "set": {
+            "up.osc1Wave": "superSaw",
+            "up.osc1Ctl1": 70,
+            "up.osc1Ctl2": 100,
+            "up.aA": 70,
+            "up.aR": 80,
+            "up.cutoff": 90
+          }
+        },
+        {
+          "title": "Play both parts",
+          "module": "mode",
+          "why": "DUAL layers the Upper and Lower parts on every key.\n- KEY MODE DUAL: the Lower part, still a plain saw, joins under the pad.\n- Listen for: a second, plainer saw under the pad.",
+          "set": {
+            "perf.keyMode": "dual"
+          }
+        },
+        {
+          "title": "The Lower part: a soft square, an octave down",
+          "module": "osc",
+          "why": "PANEL SELECT LOWER: the knobs now edit the Lower part.\n- LOWER OSC 1 WAVEFORM SQR (PWM).\n- LOWER OSC SHIFT -1: an octave below the pad.\n- LOWER AMP ENVELOPE A 70, R 80: it swells with the pad.\n- LOWER CUTOFF FREQ 70: soft and round.\n- Listen for: a warm floor an octave under the super saw.",
+          "set": {
+            "perf.panel": "lower",
+            "lo.osc1Wave": "square",
+            "lo.shift": "-1",
+            "lo.aA": 70,
+            "lo.aR": 80,
+            "lo.cutoff": 70
+          }
+        }
+      ],
+      "context": {
+        "perf.keyMode": "DUAL plays both parts on every key.",
+        "perf.panel": "Which part the knobs edit.",
+        "lo.shift": "Puts the Lower part an octave down."
+      },
+      "tweaks": [
+        {
+          "id": "perf.keyMode",
+          "try": "Set to SINGLE",
+          "hear": "Only the part PANEL SELECT shows: here the Lower square."
+        },
+        {
+          "id": "lo.cutoff",
+          "try": "Raise to 110",
+          "hear": "A brighter lower layer."
+        }
+      ]
+    },
+    {
+      "id": "jp-split-bass-lead",
+      "name": "Split Bass and Lead",
+      "ref": "In the style of 1990s trance live sets",
+      "artist": "Various",
+      "tags": ["bass", "trance", "90s"],
+      "level": 3,
+      "blurb": "A squelchy mono bass under the left hand and a super saw lead under the right.",
+      "how": "KEY MODE SPLIT gives the Lower part the keys below C4 and the Upper part the rest, so one keyboard plays two different sounds. The Lower part is a resonant mono saw an octave down; the Upper part stays a super saw lead.",
+      "phrase": {
+        "bpm": 136,
+        "loop": true,
+        "steps": [
+          [0.0, 45, 0.4, 0.85],
+          [0, 69, 0.9, 0.85],
+          [1.0, 45, 0.4, 0.85],
+          [1, 72, 0.9, 0.85],
+          [1.5, 57, 0.4, 0.85],
+          [2, 76, 0.9, 0.85],
+          [2.5, 45, 0.4, 0.85],
+          [3.0, 43, 0.4, 0.85],
+          [3, 74, 0.9, 0.85],
+          [4.0, 45, 0.4, 0.85],
+          [4, 72, 0.9, 0.85],
+          [5.0, 45, 0.4, 0.85],
+          [5, 71, 0.9, 0.85],
+          [5.5, 57, 0.4, 0.85],
+          [6, 69, 0.9, 0.85],
+          [6.5, 45, 0.4, 0.85],
+          [7.0, 48, 0.4, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The Upper part: a super saw lead",
+          "module": "osc",
+          "why": "Build the right-hand sound first.\n- UPPER OSC 1 WAVEFORM SUPER SAW, CONTROL 1 70, CONTROL 2 100.\n- UPPER CUTOFF FREQ 100.\n- Listen for: the bright lead.",
+          "set": {
+            "up.osc1Wave": "superSaw",
+            "up.osc1Ctl1": 70,
+            "up.osc1Ctl2": 100,
+            "up.cutoff": 100
+          }
+        },
+        {
+          "title": "Split the keyboard",
+          "module": "mode",
+          "why": "SPLIT gives the keys below C4 to the Lower part.\n- KEY MODE SPLIT: the left hand now plays the Lower part, still a plain saw.\n- Listen for: low notes changing to a different sound.",
+          "set": {
+            "perf.keyMode": "split"
+          }
+        },
+        {
+          "title": "The Lower part: a squelchy mono bass",
+          "module": "filter",
+          "why": "PANEL SELECT LOWER: the knobs now edit the Lower part.\n- LOWER MONO on, LOWER OSC SHIFT -1.\n- LOWER CUTOFF FREQ 45, RESONANCE 70: dark with a peak.\n- LOWER FILTER ENVELOPE DEPTH +35, D 45, S 20: a squelch on every note.\n- Listen for: a resonant, plucked bassline under the lead.",
+          "set": {
+            "perf.panel": "lower",
+            "lo.mono": true,
+            "lo.shift": "-1",
+            "lo.cutoff": 45,
+            "lo.res": 70,
+            "lo.fDepth": 35,
+            "lo.fD": 45,
+            "lo.fS": 20
+          }
+        }
+      ],
+      "context": {
+        "perf.keyMode": "SPLIT puts Lower below C4 and Upper above.",
+        "lo.res": "How squelchy the bass is.",
+        "lo.fDepth": "How far each bass note opens the filter."
+      },
+      "tweaks": [
+        {
+          "id": "lo.res",
+          "try": "Raise to 110",
+          "hear": "An acid-like squelch."
+        },
+        {
+          "id": "perf.keyMode",
+          "try": "Set to DUAL",
+          "hear": "Both sounds on every key."
+        }
+      ]
+    }
+  ]
+}

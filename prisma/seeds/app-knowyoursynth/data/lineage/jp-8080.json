@@ -1,0 +1,43 @@
+{
+  "synth": "jp-8080",
+  "title": "From the Jupiter-8 to the super saw",
+  "intro": "The JP-8080 is the rack version of Roland’s JP-8000, the 1996 synth that modelled analogue circuits in software and put its own new waveform beside them: the super saw, seven detuned sawtooths in one oscillator. Within a few years that sound had become the lead and pad of trance. The rack added ten voices, unison, distortion, an external input and a vocoder, the Voice Modulator.",
+  "timeline": [
+    {
+      "year": "1981",
+      "name": "Roland Jupiter-8",
+      "tag": "The name",
+      "text": "Roland’s analogue flagship: two oscillators a voice with sync and cross modulation, a 12/24 dB filter, and a split and dual keyboard. The JP-8000’s name echoes it, and so do its cross mod, its -12/-24 dB switch and its Upper and Lower parts."
+    },
+    {
+      "year": "1996",
+      "name": "Roland JP-8000",
+      "tag": "Closest ancestor",
+      "text": "An eight-voice keyboard whose analogue voice is a DSP model, with the super saw, feedback osc, triangle mod and filtered noise on OSC 1, a ribbon, motion control and an arpeggiator. The JP-8080 contains its 64 preset performances and 128 preset patches."
+    },
+    {
+      "year": "1998",
+      "name": "Roland JP-8080",
+      "tag": "This synth",
+      "text": "The same engine in a 2U rack or desktop unit, with ten voices, unison, distortion among the multi-effects, an external input that can replace OSC 2, the Voice Modulator (a 12-band vocoder), RPS phrases and two parts played singly, layered or split."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Roland Jupiter-8",
+      "years": "1981",
+      "text": "The analogue flagship the JP-8000 was named after, with the same two-part keyboard and cross mod. This app plays it."
+    },
+    {
+      "name": "UDO Audio Super Gemini",
+      "years": "2023",
+      "text": "A hybrid flagship whose first oscillator holds its own super-wave stack, the JP-8000’s idea in an analogue-filtered voice, with two parts split or layered. This app plays it."
+    },
+    {
+      "name": "Novation Supernova",
+      "years": "1998",
+      "text": "A rival virtual-analogue rack synth of the same year, with more voices and parts, built on the same idea of modelling an analogue voice in DSP."
+    }
+  ],
+  "note": "None of the databank’s records name the JP-8080 yet."
+}

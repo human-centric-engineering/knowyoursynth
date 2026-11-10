@@ -35,6 +35,7 @@
     { "id": "syntrx-ii", "order": 32, "listed": true },
     { "id": "solar-42n", "order": 33, "listed": true },
     { "id": "malevolent", "order": 34, "listed": true },
-    { "id": "mantis", "order": 35, "listed": true }
+    { "id": "mantis", "order": 35, "listed": true },
+    { "id": "jp-8080", "order": 36, "listed": true }
   ]
 }
