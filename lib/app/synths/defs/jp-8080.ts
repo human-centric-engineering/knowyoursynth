@@ -512,6 +512,7 @@ for (const [y, t] of [
 
 // the display, the memory and edit keys: drawn only
 rect(885, 645, 245, 88, '#1a1c1a', 4);
+rect(890, 652, 235, 74, '#cfdcc4', 2);
 text(423, 773, 'PRE-\nVIEW', 9);
 dummyButton(423, 803);
 text(462, 766, 'PERFORM\nPATCH SELECT', 8, { anchor: 'start' });
