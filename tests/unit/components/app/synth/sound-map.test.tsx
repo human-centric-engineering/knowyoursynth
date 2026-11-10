@@ -9,7 +9,13 @@
 
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react';
-import { MapLegend, MapNote, WhyAsker, useWheelWanted } from '@/components/app/synth/sound-map';
+import {
+  MapLegend,
+  MapNote,
+  MapProgress,
+  WhyAsker,
+  useWheelWanted,
+} from '@/components/app/synth/sound-map';
 import { MAP_OFF, findStore, focusStore, mapStore } from '@/components/app/synth/stores';
 import type { Door, MapCellState, SoundMap } from '@/components/app/synth/stores';
 import { getSynthDef } from '@/lib/app/synths/defs';
@@ -74,8 +80,14 @@ describe('MapLegend', () => {
 
   it('counts progress while the first map is worked out', () => {
     act(() => mapStore.set({ ...MAP_OFF, status: 'working', progress: 0.42 }));
-    render(legend());
+    render(legend({ heatOn: false }));
     expect(screen.getByRole('status').textContent).toBe('Working out what is in this patch… 42%');
+  });
+
+  it('names the first map the way the bar over the panel does when Sensitive is on', () => {
+    act(() => mapStore.set({ ...MAP_OFF, status: 'working', progress: 0.4 }));
+    render(legend({ heatOn: true }));
+    expect(screen.getByRole('status').textContent).toBe('Finding the sensitive controls… 40%');
   });
 
   it('says the map could not be worked out, with no key and no progress', () => {
@@ -152,6 +164,63 @@ describe('MapLegend', () => {
     expect(line?.textContent).toContain('They are ringed on the panel.');
     fireEvent.click(screen.getByRole('button', { name: name(CUTOFF) }));
     expect(findStore.get()).toEqual({ kind: 'control', id: CUTOFF });
+  });
+});
+
+describe('MapProgress', () => {
+  it('shows nothing while the map is off', () => {
+    const { container } = render(<MapProgress heatOn />);
+    expect(container.textContent).toBe('');
+  });
+
+  it('goes up as soon as the first map starts, before any probe has come back', () => {
+    act(() => mapStore.set({ ...MAP_OFF, status: 'working', key: 'k' }));
+    render(<MapProgress heatOn />);
+    const bar = screen.getByRole('progressbar', { name: 'Finding the sensitive controls' });
+    expect(bar.getAttribute('aria-valuenow')).toBe('0');
+    expect(screen.getByText('Finding the sensitive controls… 0%')).toBeTruthy();
+    // At 0% the fill still shows a sliver, so the bar reads as a bar.
+    expect((bar.firstElementChild as HTMLElement).style.width).toBe('3%');
+  });
+
+  it('starts the fill again from empty when the sound changes before the first map is drawn', () => {
+    act(() => mapStore.set({ ...MAP_OFF, status: 'working', progress: 0.9, key: 'a' }));
+    render(<MapProgress heatOn />);
+    const before = screen.getByRole('progressbar').firstElementChild;
+    act(() => mapStore.set({ ...MAP_OFF, status: 'working', key: 'b' }));
+    const after = screen.getByRole('progressbar').firstElementChild as HTMLElement;
+    expect(after).not.toBe(before);
+    expect(after.style.width).toBe('3%');
+  });
+
+  it('follows the progress, and names the mapping for Dim unused when Sensitive is off', () => {
+    act(() => mapStore.set({ ...MAP_OFF, status: 'working', progress: 0.42 }));
+    render(<MapProgress heatOn={false} />);
+    const bar = screen.getByRole('progressbar', { name: 'Working out what is in this patch' });
+    expect(bar.getAttribute('aria-valuenow')).toBe('42');
+    act(() => mapStore.set((m) => ({ ...m, progress: 0.9 })));
+    expect(bar.getAttribute('aria-valuenow')).toBe('90');
+  });
+
+  it('comes down when the map is drawn', () => {
+    act(() => mapStore.set({ ...MAP_OFF, status: 'working', progress: 0.9 }));
+    render(<MapProgress heatOn />);
+    expect(screen.getByRole('progressbar')).toBeTruthy();
+    act(() => mapStore.set(ready()));
+    expect(screen.queryByRole('progressbar')).toBeNull();
+  });
+
+  it('comes down when the map could not be worked out', () => {
+    act(() => mapStore.set({ ...MAP_OFF, status: 'working', progress: 0.5 }));
+    render(<MapProgress heatOn />);
+    act(() => mapStore.set({ ...MAP_OFF, status: 'failed' }));
+    expect(screen.queryByRole('progressbar')).toBeNull();
+  });
+
+  it('stays down while a drawn map is redone after a knob move', () => {
+    act(() => mapStore.set(ready({ status: 'working', progress: 0.2 })));
+    render(<MapProgress heatOn />);
+    expect(screen.queryByRole('progressbar')).toBeNull();
   });
 });
 
