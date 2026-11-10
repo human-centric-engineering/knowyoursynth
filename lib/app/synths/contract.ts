@@ -2190,7 +2190,8 @@ export interface EngineParams {
    * back to the one pressed before. `'high'`: the highest key held (the Selmer Clavioline's top-note priority), so a
    * key pressed below it changes nothing and does not retrigger the envelopes, and letting go of the top key falls
    * back to the next highest held, gliding if glide is on. With `paraphonic` the second note is the next key in the
-   * same order. Ignored with `duo`, which has its own rule.
+   * same order. Ignored with `duo`, which has its own rule, and by `oscAssign` and `dualAssign`, which allocate keys
+   * by order pressed.
    */
   keyPriority?: 'last' | 'high';
   /** Signal `ring` = `ringA` × `ringB`; `ac` / `acB` block DC on A / B. */

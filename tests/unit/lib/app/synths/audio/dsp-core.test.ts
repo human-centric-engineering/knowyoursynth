@@ -788,6 +788,18 @@ describe('key priority (keyPriority)', () => {
     expect(sameSamples(under.out, alone.out)).toBe(true);
   });
 
+  it("'high' keeps the sounding note's velocity when a key is pressed below it", () => {
+    const len = 14400;
+    // the VCA follows the velocity-scaled envelope, so a velocity change would be heard
+    const p = { ...sineParams('high'), vca: { envSrc: 'env2v' as const, bias: 0 } };
+    const alone = render(p, { len, events: [on(0, E4)] });
+    const under = renderStable(p, {
+      len,
+      events: [on(0, E4), [4800, { type: 'noteOn', n: C4, v: 0.2 }]],
+    });
+    expect(sameSamples(under.out, alone.out)).toBe(true);
+  });
+
   it("'high' falls back to the next highest key held, not the one pressed last", () => {
     const { out } = renderStable(sineParams('high'), {
       len: 24000,
