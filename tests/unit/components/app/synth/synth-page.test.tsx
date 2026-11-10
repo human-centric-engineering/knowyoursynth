@@ -1946,6 +1946,17 @@ describe('SynthPage player', () => {
     expect(highlightStore.get()).toEqual(lit);
   });
 
+  it('puts Learn sound design away from a press elsewhere on a wide touch screen too', () => {
+    // no hover, and not small: the strip is no drawer, but a press elsewhere is still other work
+    pointerScreen();
+    twoSteps();
+    const tab = () => button('Learn sound design');
+    fireEvent.click(tab());
+    expect(tab()).toHaveAttribute('aria-expanded', 'true');
+    fireEvent.pointerDown(document.body);
+    expect(tab()).toHaveAttribute('aria-expanded', 'false');
+  });
+
   it('says what Learn sound design is for, where it opens (t-227)', () => {
     twoSteps();
     fireEvent.click(button('Learn sound design'));

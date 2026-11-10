@@ -797,7 +797,9 @@ function Synth({
     );
   };
   useEffect(() => {
-    if (!designOpen || !drawer) return undefined;
+    // From `lg` up, with a pointer or a touch screen: the lesson card is over the panel either way, and a press
+    // elsewhere puts it away.
+    if (!designOpen || small) return undefined;
     const onDown = (e: PointerEvent) => {
       const t = e.target;
       if (!(t instanceof Element)) return;
@@ -812,7 +814,7 @@ function Synth({
     };
     document.addEventListener('pointerdown', onDown, true);
     return () => document.removeEventListener('pointerdown', onDown, true);
-  }, [designOpen, drawer, closeDesign]);
+  }, [designOpen, small, closeDesign]);
   const [tutorOpen, setTutorOpen] = useState(false);
   // On a phone the panel settings are behind a button by the sound's name; from `md` up they are always on show.
   // The piano is out by default on a tall screen and put away on a short one, until the Piano button says otherwise.
@@ -1515,7 +1517,7 @@ function Synth({
     ? null
     : seqLoaded
       ? (seqLoaded.libraryId ?? null)
-      : (librarySound?.defaultId ?? null);
+      : (libraryPreset?.defaultPattern?.id ?? null);
   // The riff by name (t-224). A library sound's is its default pattern's, which the catalogue sends with the sound, so
   // naming it reads nothing; one with no default plays its riff as it has it, named for the sound. Any other sound on
   // the panel plays the riff it was saved with, or the library's under it, and the riff takes the name the panel shows,
