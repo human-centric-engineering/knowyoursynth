@@ -1,0 +1,1465 @@
+{
+  "schema_version": "0.13.0",
+  "device": {
+    "id": "formanta-polivoks",
+    "manufacturer": "Formanta (Formanta Radio Factory, Ufa, USSR)",
+    "model": "Polivoks (Поливокс) electronic music synthesizer",
+    "category": "duophonic analogue synthesizer, 49 keys (F-E), portable",
+    "based_on": "Original Soviet design by Vladimir Kuzmin; produced from 1982, sold only in the USSR. Technical conditions 3.849.014 TU.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Polivoks Operating Manual (Руководство по эксплуатации), Russian original",
+        "kind": "user_manual",
+        "file": "Polivoks_Owners_Manual.pdf",
+        "pages": 7,
+        "note": "Scanned with a broken text layer; re-OCRed in Russian. General notes, delivery set, safety, specifications, short description, front panel legend (controls 1-40), rear panel, tuning procedure, functional blocks (generators, modulator, mixer, filter, amplifier), fault table, warranty."
+      },
+      {
+        "id": "online",
+        "title": "Polynominal, Vintage Synth Explorer, MATRIXSYNTH (English panel translation), monosounds.studio",
+        "kind": "other",
+        "file": "https://www.polynominal.com/Polivoks-formanta/",
+        "note": "Five ranges 32'-2' and five shapes per generator; 49-key F-E magnetic keyboard; DIN connections; duophonic assignment (Generator I top key, II bottom key per Russian Wikipedia and Kuzmin)."
+      },
+      {
+        "id": "elta",
+        "title": "Elta Music Polivoks-8 description",
+        "kind": "other",
+        "file": "https://www.eltamusic.com/polivoks-8",
+        "note": "Kuzmin's filter on K140UD12 ICs: 12 dB/oct low-pass, 6 dB/oct band-pass."
+      },
+      {
+        "id": "erica_vca",
+        "title": "Erica Synths Polivoks VCA/Envelope (Eurorack) manual",
+        "kind": "other",
+        "file": "Polivoks_VCA_Manual.pdf",
+        "pages": 1,
+        "note": "Modern Polivoks-inspired module (ADSR with repeat, speed and delays); not part of the original instrument, cited for context only."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 2,
+    "polyphony_mode": "monophonic (1-voice) or duophonic (2-voice): Generator I follows the highest key held, Generator II the lowest; one filter and amplifier shared",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "patch_memory_note": "No memory.",
+    "semi_modular": false,
+    "panel_counts": {
+      "keys": 49,
+      "controls": 40
+    },
+    "summary": "Two wide-range generators (triangle, sawtooth, square and two pulse widths; 32' to 2'), Generator II detunable by about two tones and able to frequency-modulate Generator I; white noise and an external input; a mixer with four levels. The filter (Kuzmin's design on K140UD12 programmable op-amps) is low-pass or band-pass with cutoff, resonance ('characteristic harshness' at high settings), envelope and modulator depth, and pedal control. Filter and amplifier each have an envelope with attack, decay, pedestal (sustain level), after-sound (release) and a single or repeating ('накат') mode. One modulator: triangle, square, noise (random pulses) or stepped (sample and hold), routed to both generators, the filter and the amplifier. Glissando on Generator I; key-memory switch."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "Keyboard",
+      "panel_section": "keyboard / switches 2, 15",
+      "scope": "common",
+      "description": "49-key (F-E) keyboard with magnetically controlled reed contacts; duophonic scanner gives top and bottom key; mono or duo; key memory (ВКЛ.) holds the last key.",
+      "properties": {
+        "keys": 49,
+        "range": "F-E"
+      },
+      "inputs": ["kbd.pedal_in"],
+      "outputs": ["kbd.pitch_top", "kbd.pitch_bottom", "kbd.gate", "kbd.pedal"]
+    },
+    {
+      "id": "gen1",
+      "type": "oscillator",
+      "name": "Generator I (ГЕНЕРАТОР I)",
+      "panel_section": "ГЕНЕРАТОР I",
+      "scope": "per_voice",
+      "description": "Wide-range oscillator: range (ДИАПАЗОН, octave steps), shape (ФОРМА), modulator depth (МОДУЛЯЦИЯ), FM from Generator II (ГЕНЕРАТОР II); glissando.",
+      "properties": {
+        "ranges": ["32'", "16'", "8'", "4'", "2'"],
+        "shapes": ["triangle", "sawtooth", "square", "pulse_1", "pulse_2"]
+      },
+      "inputs": ["gen1.pitch_cv", "gen1.fm"],
+      "outputs": ["gen1.out"]
+    },
+    {
+      "id": "gen2",
+      "type": "oscillator",
+      "name": "Generator II (ГЕНЕРАТОР II)",
+      "panel_section": "ГЕНЕРАТОР II",
+      "scope": "per_voice",
+      "description": "Wide-range oscillator: range, shape, modulator depth and detune (РАССТРОЙКА, ±25 %, about ±2 tones) against Generator I.",
+      "properties": {
+        "ranges": ["32'", "16'", "8'", "4'", "2'"],
+        "shapes": ["triangle", "sawtooth", "square", "pulse_1", "pulse_2"]
+      },
+      "inputs": ["gen2.pitch_cv"],
+      "outputs": ["gen2.out"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise generator",
+      "panel_section": "МИКШЕР",
+      "scope": "common",
+      "description": "White noise for non-musical sounds (wind, surf, steam engine).",
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "extin",
+      "type": "preamp",
+      "name": "External input",
+      "panel_section": "rear panel",
+      "scope": "common",
+      "description": "External source (guitar, electric piano, organ) into the mixer.",
+      "inputs": ["extin.in"],
+      "outputs": ["extin.out"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Mixer (МИКШЕР)",
+      "panel_section": "МИКШЕР",
+      "scope": "per_voice",
+      "description": "Generator I, Generator II, noise and external levels, independent.",
+      "inputs": ["mixer.gen1", "mixer.gen2", "mixer.noise", "mixer.ext"],
+      "outputs": ["mixer.out"]
+    },
+    {
+      "id": "modulator",
+      "type": "lfo",
+      "name": "Modulator (МОДУЛЯТОР)",
+      "panel_section": "МОДУЛЯТОР",
+      "scope": "common",
+      "description": "Triangle, square, noise (chaotic pulses) or stepped (sample and hold) at ЧАСТОТА rate, with LED; feeds both generators, the filter and the amplifier.",
+      "inputs": [],
+      "outputs": ["modulator.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "Filter (ФИЛЬТР)",
+      "panel_section": "ФИЛЬТР",
+      "scope": "per_voice",
+      "description": "Kuzmin's state-variable filter on K140UD12 programmable op-amps: low-pass 12 dB/oct or band-pass 6 dB/oct (ПФ/ФНЧ); cutoff 100 Hz-10 kHz; resonance gives the characteristic harshness and self-oscillation.",
+      "properties": {
+        "modes": ["low_pass_12dB", "band_pass_6dB"],
+        "cutoff_hz": [100, 10000],
+        "ic": "K140UD12 (uA776 equivalent)"
+      },
+      "inputs": ["vcf.in", "vcf.cutoff_cv"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "fenv",
+      "type": "envelope",
+      "name": "Filter envelope",
+      "panel_section": "ФИЛЬТР",
+      "scope": "per_voice",
+      "description": "Attack, decay (ЗАТУХАНИЕ), pedestal (ПЬЕДЕСТАЛ, sustain level), after-sound (ПОСЛЕЗВУЧАНИЕ, release); single or repeating (накат) mode.",
+      "inputs": ["fenv.gate"],
+      "outputs": ["fenv.out"]
+    },
+    {
+      "id": "aenv",
+      "type": "envelope",
+      "name": "Amplifier envelope",
+      "panel_section": "УСИЛИТЕЛЬ",
+      "scope": "per_voice",
+      "description": "Attack, decay, pedestal, after-sound; single or repeating mode.",
+      "inputs": ["aenv.gate"],
+      "outputs": ["aenv.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "Amplifier (УСИЛИТЕЛЬ)",
+      "panel_section": "УСИЛИТЕЛЬ",
+      "scope": "per_voice",
+      "description": "Final stage: loudness under the amplifier envelope, plus modulator tremolo.",
+      "inputs": ["vca.in", "vca.cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "left panel / rear panel",
+      "scope": "common",
+      "description": "Output level and output switch; low (0.025 V) and high (0.25 V) level outputs into 10 kohm; headphones.",
+      "inputs": ["out.in"],
+      "outputs": ["out.main", "out.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "sys.power",
+      "module": "out",
+      "label": "СЕТЬ (power)",
+      "kind": "boolean",
+      "manual_ref": 1,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Mains power button."
+    },
+    {
+      "id": "kbd.key_memory",
+      "module": "kbd",
+      "label": "ВКЛ. (key memory)",
+      "kind": "enum",
+      "manual_ref": 2,
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "hold_last_key"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Back position: generators hold the last key pressed while the envelopes keep working."
+    },
+    {
+      "id": "vca.mod",
+      "module": "vca",
+      "label": "МОДУЛЯЦИЯ (amplifier)",
+      "kind": "continuous",
+      "manual_ref": 3,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of modulator on loudness (tremolo)."
+    },
+    {
+      "id": "vcf.mode",
+      "module": "vcf",
+      "label": "ПФ/ФНЧ",
+      "kind": "enum",
+      "manual_ref": 4,
+      "values": [
+        {
+          "value": "low_pass"
+        },
+        {
+          "value": "band_pass"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Band-pass (switch away) or low-pass."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "РЕЗОНАНС",
+      "kind": "continuous",
+      "manual_ref": 5,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Resonance at cutoff; towards the right gives the characteristic harshness."
+    },
+    {
+      "id": "vcf.env",
+      "module": "vcf",
+      "label": "ОГИБАЮЩАЯ (filter envelope depth)",
+      "kind": "continuous",
+      "manual_ref": 6,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Range of cutoff movement by the filter envelope."
+    },
+    {
+      "id": "vcf.mod",
+      "module": "vcf",
+      "label": "МОДУЛЯЦИЯ (filter)",
+      "kind": "continuous",
+      "manual_ref": 7,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of modulator on cutoff (timbral vibrato)."
+    },
+    {
+      "id": "gen2.detune",
+      "module": "gen2",
+      "label": "РАССТРОЙКА",
+      "kind": "continuous",
+      "manual_ref": 8,
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator II detune against Generator I, at least ±25 % (±2 tones)."
+    },
+    {
+      "id": "mixer.ext",
+      "module": "mixer",
+      "label": "ВНЕШ. (external)",
+      "kind": "continuous",
+      "manual_ref": 9,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "External source level."
+    },
+    {
+      "id": "mixer.noise",
+      "module": "mixer",
+      "label": "ШУМ",
+      "kind": "continuous",
+      "manual_ref": 10,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Noise level."
+    },
+    {
+      "id": "gen2.mod",
+      "module": "gen2",
+      "label": "МОДУЛЯЦИЯ (Generator II)",
+      "kind": "continuous",
+      "manual_ref": 11,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of modulator on Generator II pitch."
+    },
+    {
+      "id": "mixer.gen2",
+      "module": "mixer",
+      "label": "ГЕНЕРАТОР II (mixer)",
+      "kind": "continuous",
+      "manual_ref": 12,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator II level."
+    },
+    {
+      "id": "mixer.gen1",
+      "module": "mixer",
+      "label": "ГЕНЕРАТОР I (mixer)",
+      "kind": "continuous",
+      "manual_ref": 13,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator I level."
+    },
+    {
+      "id": "out.enable",
+      "module": "out",
+      "label": "ВЫХОД (output switch)",
+      "kind": "enum",
+      "manual_ref": 14,
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Output on/off."
+    },
+    {
+      "id": "kbd.voices",
+      "module": "kbd",
+      "label": "1-ГОЛ. / 2-ГОЛ.",
+      "kind": "enum",
+      "manual_ref": 15,
+      "values": [
+        {
+          "value": "1_voice"
+        },
+        {
+          "value": "2_voice"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Monophonic or duophonic."
+    },
+    {
+      "id": "out.level",
+      "module": "out",
+      "label": "Output level",
+      "kind": "continuous",
+      "manual_ref": 16,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Synthesizer output level."
+    },
+    {
+      "id": "gen1.glide",
+      "module": "gen1",
+      "label": "ГЛИССАНДО",
+      "kind": "continuous",
+      "manual_ref": 17,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Rate of pitch change of Generator I between notes."
+    },
+    {
+      "id": "out.level2",
+      "module": "out",
+      "label": "Output level (second)",
+      "kind": "continuous",
+      "manual_ref": 18,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Second output level control.",
+      "confidence": "inferred",
+      "note": "Legend item 18 is partly illegible in the scan ('регулятор выходного сигнала ...')."
+    },
+    {
+      "id": "gen.tune",
+      "module": "gen1",
+      "label": "НАСТРОЙКА (tune)",
+      "kind": "continuous",
+      "manual_ref": 19,
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Master tuning of both generators, at least ±12 % (±1 tone)."
+    },
+    {
+      "id": "modulator.rate",
+      "module": "modulator",
+      "label": "ЧАСТОТА (modulator)",
+      "kind": "continuous",
+      "manual_ref": 20,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Modulator rate (LED 21)."
+    },
+    {
+      "id": "modulator.shape",
+      "module": "modulator",
+      "label": "РЕЖИМ (modulator)",
+      "kind": "enum",
+      "manual_ref": 22,
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "noise"
+        },
+        {
+          "value": "stepped"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Modulator shape."
+    },
+    {
+      "id": "gen1.mod",
+      "module": "gen1",
+      "label": "МОДУЛЯЦИЯ (Generator I)",
+      "kind": "continuous",
+      "manual_ref": 23,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of modulator on Generator I pitch."
+    },
+    {
+      "id": "gen1.range",
+      "module": "gen1",
+      "label": "ДИАПАЗОН (Generator I)",
+      "kind": "enum",
+      "manual_ref": 24,
+      "values": [
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Octave range."
+    },
+    {
+      "id": "gen1.fm",
+      "module": "gen1",
+      "label": "ГЕНЕРАТОР II (FM depth)",
+      "kind": "continuous",
+      "manual_ref": 25,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Frequency modulation of Generator I by Generator II (Generator II should be in a lower range)."
+    },
+    {
+      "id": "gen1.shape",
+      "module": "gen1",
+      "label": "ФОРМА (Generator I)",
+      "kind": "enum",
+      "manual_ref": 26,
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "pulse_1"
+        },
+        {
+          "value": "pulse_2"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Waveform."
+    },
+    {
+      "id": "gen2.range",
+      "module": "gen2",
+      "label": "ДИАПАЗОН (Generator II)",
+      "kind": "enum",
+      "manual_ref": 27,
+      "values": [
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Octave range."
+    },
+    {
+      "id": "gen2.shape",
+      "module": "gen2",
+      "label": "ФОРМА (Generator II)",
+      "kind": "enum",
+      "manual_ref": 28,
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "pulse_1"
+        },
+        {
+          "value": "pulse_2"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Waveform."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "ЧАСТОТА СРЕЗА",
+      "kind": "continuous",
+      "manual_ref": 29,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 100,
+        "max": 10000,
+        "unit": "Hz"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Cutoff; at 0 there is no sound."
+    },
+    {
+      "id": "fenv.decay",
+      "module": "fenv",
+      "label": "ЗАТУХАНИЕ (filter)",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fall from the attack peak to the pedestal."
+    },
+    {
+      "id": "fenv.attack",
+      "module": "fenv",
+      "label": "АТАКА (filter)",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Rise time."
+    },
+    {
+      "id": "fenv.pedestal",
+      "module": "fenv",
+      "label": "ПЬЕДЕСТАЛ (filter)",
+      "kind": "continuous",
+      "manual_ref": 32,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level; fully right makes decay inactive."
+    },
+    {
+      "id": "fenv.mode",
+      "module": "fenv",
+      "label": "РЕЖИМ ГЕНЕРАТОРА ОГИБАЮЩЕЙ (filter)",
+      "kind": "enum",
+      "manual_ref": 33,
+      "values": [
+        {
+          "value": "single"
+        },
+        {
+          "value": "repeat"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Single or repeating (накат) while the key is held."
+    },
+    {
+      "id": "fenv.release",
+      "module": "fenv",
+      "label": "ПОСЛЕЗВУЧАНИЕ (filter)",
+      "kind": "continuous",
+      "manual_ref": 34,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Return after key release."
+    },
+    {
+      "id": "aenv.attack",
+      "module": "aenv",
+      "label": "АТАКА (amplifier)",
+      "kind": "continuous",
+      "manual_ref": 35,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Rise of loudness."
+    },
+    {
+      "id": "aenv.pedestal",
+      "module": "aenv",
+      "label": "ПЬЕДЕСТАЛ (amplifier)",
+      "kind": "continuous",
+      "manual_ref": 36,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level; fully right makes decay inactive."
+    },
+    {
+      "id": "aenv.decay",
+      "module": "aenv",
+      "label": "ЗАТУХАНИЕ (amplifier)",
+      "kind": "continuous",
+      "manual_ref": 37,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fall to the pedestal."
+    },
+    {
+      "id": "aenv.release",
+      "module": "aenv",
+      "label": "ПОСЛЕЗВУЧАНИЕ (amplifier)",
+      "kind": "continuous",
+      "manual_ref": 38,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fall to zero after key release."
+    },
+    {
+      "id": "aenv.mode",
+      "module": "aenv",
+      "label": "РЕЖИМ ГЕНЕРАТОРА ОГИБАЮЩЕЙ (amplifier)",
+      "kind": "enum",
+      "manual_ref": 39,
+      "values": [
+        {
+          "value": "single"
+        },
+        {
+          "value": "repeat"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Single or repeating while the key is held."
+    },
+    {
+      "id": "trim.offset1",
+      "module": "gen1",
+      "label": "СМЕЩЕНИЕ I (trimmer)",
+      "kind": "continuous",
+      "manual_ref": "Fig. 3",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "screwdriver trimmer under the removable front-panel cover"
+        }
+      ],
+      "function": "Tuning trimmer (offset, scale or register) used in the tuning procedure."
+    },
+    {
+      "id": "trim.tune1",
+      "module": "gen1",
+      "label": "СТРОЙ I (trimmer)",
+      "kind": "continuous",
+      "manual_ref": "Fig. 3",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "screwdriver trimmer under the removable front-panel cover"
+        }
+      ],
+      "function": "Tuning trimmer (offset, scale or register) used in the tuning procedure."
+    },
+    {
+      "id": "trim.reg1",
+      "module": "gen1",
+      "label": "РЕГИСТРЫ I (trimmer)",
+      "kind": "continuous",
+      "manual_ref": "Fig. 3",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "screwdriver trimmer under the removable front-panel cover"
+        }
+      ],
+      "function": "Tuning trimmer (offset, scale or register) used in the tuning procedure."
+    },
+    {
+      "id": "trim.offset2",
+      "module": "gen2",
+      "label": "СМЕЩЕНИЕ II (trimmer)",
+      "kind": "continuous",
+      "manual_ref": "Fig. 3",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "screwdriver trimmer under the removable front-panel cover"
+        }
+      ],
+      "function": "Tuning trimmer (offset, scale or register) used in the tuning procedure."
+    },
+    {
+      "id": "trim.tune2",
+      "module": "gen2",
+      "label": "СТРОЙ II (trimmer)",
+      "kind": "continuous",
+      "manual_ref": "Fig. 3",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "screwdriver trimmer under the removable front-panel cover"
+        }
+      ],
+      "function": "Tuning trimmer (offset, scale or register) used in the tuning procedure."
+    },
+    {
+      "id": "trim.reg2",
+      "module": "gen2",
+      "label": "РЕГИСТРЫ II (trimmer)",
+      "kind": "continuous",
+      "manual_ref": "Fig. 3",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "screwdriver trimmer under the removable front-panel cover"
+        }
+      ],
+      "function": "Tuning trimmer (offset, scale or register) used in the tuning procedure."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.out",
+      "label": "ВЫХОД",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "5-pin DIN",
+      "node": "out.main",
+      "function": "Audio output (low and high level)."
+    },
+    {
+      "id": "jack.phones",
+      "label": "Headphones",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "5-pin DIN",
+      "node": "out.phones",
+      "function": "Headphone output.",
+      "confidence": "inferred",
+      "note": "From online panel translations; not on the manual's rear-panel drawing text."
+    },
+    {
+      "id": "jack.in",
+      "label": "ВХОД",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "5-pin DIN",
+      "node": "extin.in",
+      "function": "External signal input."
+    },
+    {
+      "id": "jack.pedal",
+      "label": "ПЕДАЛЬ",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "5-pin DIN",
+      "node": "kbd.pedal_in",
+      "function": "Pedal: pressing moves the filter cutoff upward."
+    },
+    {
+      "id": "jack.mains",
+      "label": "СЕТЬ",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "captive cord",
+      "node": null,
+      "function": "220 V AC mains; fuse holder (ПРЕДОХР.)."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.pitch_top",
+      "to": "gen1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Glissando applies here; in 1-voice mode both generators take the same key."
+    },
+    {
+      "id": "c02",
+      "from": "kbd.pitch_bottom",
+      "to": "gen2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "kbd.voices",
+        "equals": "2_voice"
+      }
+    },
+    {
+      "id": "c03",
+      "from": "kbd.pitch_top",
+      "to": "gen2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "kbd.voices",
+        "equals": "1_voice"
+      }
+    },
+    {
+      "id": "c04",
+      "from": "gen2.out",
+      "to": "gen1.fm",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "gen1.fm"
+    },
+    {
+      "id": "c05",
+      "from": "modulator.out",
+      "to": "gen1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "gen1.mod"
+    },
+    {
+      "id": "c06",
+      "from": "modulator.out",
+      "to": "gen2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "gen2.mod"
+    },
+    {
+      "id": "c07",
+      "from": "gen1.out",
+      "to": "mixer.gen1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.gen1"
+    },
+    {
+      "id": "c08",
+      "from": "gen2.out",
+      "to": "mixer.gen2",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.gen2"
+    },
+    {
+      "id": "c09",
+      "from": "noise.out",
+      "to": "mixer.noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.noise"
+    },
+    {
+      "id": "c10",
+      "from": "extin.out",
+      "to": "mixer.ext",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.ext"
+    },
+    {
+      "id": "c11",
+      "from": "mixer.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c12",
+      "from": "fenv.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.env"
+    },
+    {
+      "id": "c13",
+      "from": "modulator.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.mod"
+    },
+    {
+      "id": "c14",
+      "from": "kbd.pedal",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Pedal raises the cutoff."
+    },
+    {
+      "id": "c15",
+      "from": "kbd.gate",
+      "to": "fenv.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c16",
+      "from": "kbd.gate",
+      "to": "aenv.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c17",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c18",
+      "from": "aenv.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c19",
+      "from": "modulator.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vca.mod"
+    },
+    {
+      "id": "c20",
+      "from": "vca.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out.level"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "mod_led",
+      "module": "modulator",
+      "label": "modulator rate indicator (21)",
+      "kind": "led",
+      "function": "Flashes at the modulator rate."
+    },
+    {
+      "id": "power_led",
+      "module": "out",
+      "label": "power indicator (40)",
+      "kind": "lamp",
+      "function": "Power on."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Signal path",
+      "applies_to": ["gen1", "gen2", "mixer", "vcf", "vca"],
+      "rule": "Generators, noise and external input mixed into one filter and one amplifier; both voices share them in duophonic mode."
+    },
+    {
+      "id": "b02",
+      "name": "Duophonic keyboard",
+      "applies_to": ["kbd"],
+      "rule": "2-ГОЛ.: Generator I follows the highest key held and Generator II the lowest (glissando on Generator I only). 1-ГОЛ.: both follow one key. ВКЛ. in the back position holds the last key's pitch while the envelopes keep working."
+    },
+    {
+      "id": "b03",
+      "name": "Envelopes",
+      "applies_to": ["fenv", "aenv"],
+      "rule": "Each key: rise at the attack rate, fall at the decay rate to the pedestal, and on release fall at the after-sound rate. Pedestal fully right disables the decay; pedestal at 0 returns to the start, and in repeat (накат) mode the cycle repeats until the key is released."
+    },
+    {
+      "id": "b04",
+      "name": "Filter",
+      "applies_to": ["vcf"],
+      "rule": "Low-pass or band-pass; cutoff 0 silences everything; resonance gives the famous harshness; the envelope moves the cutoff up from the ЧАСТОТА СРЕЗА setting; the pedal raises the cutoff."
+    },
+    {
+      "id": "b05",
+      "name": "Modulator",
+      "applies_to": ["modulator"],
+      "rule": "Triangle, square, noise or stepped waveform to Generator I and II pitch, filter cutoff and loudness, each with its own depth."
+    },
+    {
+      "id": "b06",
+      "name": "Tuning",
+      "applies_to": ["gen1", "gen2"],
+      "rule": "Warm up 10 minutes; remove the cover to reach eight trimmers; tune Generator I with СМЕЩЕНИЕ and СТРОЙ on the upper and lower A, then РЕГИСТРЫ across ranges; then Generator II against Generator I."
+    }
+  ],
+  "midi": {
+    "receives": [],
+    "transmits": [],
+    "note": "No MIDI or CV as built; retrofits for CV/gate and MIDI are common."
+  },
+  "specifications": {
+    "voices": 2,
+    "keyboard": "49 keys F-E, magnetic reed contacts",
+    "generators": "2 (5 ranges, 5 shapes)",
+    "filter": "low-pass 12 dB / band-pass 6 dB, 100 Hz-10 kHz",
+    "tuning_range": "±12 % (±1 tone)",
+    "gen2_detune": "±25 % (±2 tones)",
+    "frequency_drift": "≤0.5 % over 4 hours",
+    "dynamic_range_db": ">60",
+    "output": "0.025 V (low) / 0.25 V (high) into 10 kohm",
+    "power": "220 V AC, 10 VA max",
+    "operating_temp_c": "+10 to +35",
+    "dimensions_mm": {
+      "synth": "780 x 490 x 195",
+      "pedal": "273 x 93 x 52"
+    },
+    "weight_kg": "≤20 (complete set)",
+    "delivery_set": [
+      "synthesizer",
+      "pedal",
+      "amplifier cable",
+      "pedal cable",
+      "spare fuses",
+      "spare knobs",
+      "manual",
+      "box"
+    ]
+  },
+  "omitted_from_source": [
+    "warranty and safety text",
+    "fault table detail",
+    "precious metal content"
+  ],
+  "not_in_source": [
+    "circuit schematic (not freely confirmed online)",
+    "envelope and modulator time ranges",
+    "mono-mode key priority",
+    "exact output connector pinouts"
+  ],
+  "source_inconsistencies": [
+    "Polynominal lists 48 keys and a 'Lowpass / High pass' filter; the manual and other sources give 49 keys (F-E) and low-pass / band-pass.",
+    "Vintage Synth Explorer lists the modulator as triangle, saw, square and random; the manual describes triangle, square, noise (chaotic pulses) and stepped (sample and hold).",
+    "Kuzmin's article says only that one generator follows the top key and one the bottom; Russian Wikipedia assigns the top key to Generator I.",
+    "The manual's operating-temperature line OCRs as '+10...+35'; an English translation gives '-10 / +35'.",
+    "The manual describes generator shapes as triangle, sawtooth and 'rectangular with various duty cycles'; online sources name five shapes (triangle, saw, square, pulse 1, pulse 2)."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Scan quality",
+      "detail": "Russian OCR of a poor scan; legend items 16 and 18 are partly illegible (18 inferred as a second output level)."
+    },
+    {
+      "topic": "Not a build guide",
+      "detail": "This models the instrument's controls and signal flow; a working clone needs the service schematic, which was not available."
+    },
+    {
+      "topic": "Trimmers",
+      "detail": "Six of the eight tuning trimmers are named in Fig. 3; the other two are not legible."
+    }
+  ]
+}
