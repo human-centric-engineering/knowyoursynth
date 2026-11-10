@@ -267,7 +267,11 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   lit while it is over the panel. The foot (`.is-foot`) carries how the panel is drawn (Hardware or
   Outline, Modular or Long), the magnifier and Hover help (the card that pops up when you point at a
   control; `kys.tips`): each its name in the panel's lettering, which explains it on hover, then its
-  choices, each a word with an LED lit for the one in use (`aria-pressed` buttons in a named group).
+  choices, each a word with an LED lit for the one in use (`aria-pressed` buttons in a named group). The
+  foot stays on one row (t-226): it is a size container (`kys-foot`), and as it narrows it closes up, the
+  settings take their short names (`Setting`'s `short`: Lens, Tips, and none for Drawn as and Layout, whose
+  choices say it), Zoom's name goes and the search narrows, each step at a wider rail when there is a Layout
+  setting.
 - **Signal** (`f-live-panel` t-150, `SignalMenu` in `player-tools.tsx`) is the head's layer for the patch's
   signal, a button with a menu of its modes (a popover inside the player, not portalled, as the tips are):
   **Off**; **In use**, the sound map's dimming of what the patch does not use (it was the Dim unused toggle, and
@@ -367,7 +371,9 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   bottom. Hand-rolled rather than a layout library: a routing is a dozen or two blocks in a known shape, and a
   pure layout is the same every time and testable. **Drawn as a manual's flow diagram** (t-146): on the
   faceplate in its silkscreen ink, between the rails and at their width (the page wraps it in `railStyle`, so
-  `--rail-face` / `--rail-print` are the panel's colours in Hardware and paper and ink in Outline). Each block is
+  `--rail-face` / `--rail-print` are the panel's colours in Hardware and paper and ink in Outline). While it shows,
+  that width is the whole width, not the panel's, for the view and the rails alike (t-223): the diagram is not the
+  panel's shape, so a tall, narrow panel's fitted width would squeeze it. Each block is
   a square box with its schematic symbol and designator (VCO, VCF, EG) in a cell at the left, picked by module or
   by the block's own `symbol`; the module's colour is kept to the lamp in its corner. The synth's routes are ink
   lines with arrowheads, audio heavier, CV light, gate dotted; the player's cables are drawn over them cased, in
