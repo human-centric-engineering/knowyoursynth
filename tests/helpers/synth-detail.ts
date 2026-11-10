@@ -20,7 +20,8 @@ const none = (): StoredSoundPattern[] => [];
 
 /** One place on a stored sound's pattern list, as the detail reads it to name the sound's riff (t-224). */
 export interface StoredSoundPattern {
-  pattern: { status: string; name: string; pattern: unknown; sources: unknown };
+  patternId: string;
+  pattern: { status: string; name: string; pattern: unknown };
 }
 
 export function synthRows(id: string) {

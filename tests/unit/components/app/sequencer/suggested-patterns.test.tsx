@@ -137,7 +137,7 @@ function Page({
   const seq = useSequencer({ engine: null, ensureAudio: async () => false, riff: BASS.phrase });
   const mine = useMyPatterns();
   const soundPatterns = useSoundPatterns(
-    fromLibrary ? { synthId: 'model-d', slug: BASS.id, name: BASS.name } : null,
+    fromLibrary ? { synthId: 'model-d', slug: BASS.id, name: BASS.name, defaultId: OWN.id } : null,
     true
   );
   const suggested = useSuggestedPatterns({

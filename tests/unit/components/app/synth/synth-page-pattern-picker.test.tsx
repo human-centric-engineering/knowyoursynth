@@ -312,7 +312,10 @@ describe('the pattern picker beside Play', () => {
   it('marks the sound’s default as what plays while the riff is held, and picking it loads nothing', async () => {
     serve({ '/api/v1/synths/model-d/sounds/fat-bass/patterns': [ROLLING] });
     // The catalogue sends the sound with its default pattern's name (t-224).
-    page({ ...detail, sounds: [{ ...FAT_BASS, riffName: ROLLING.name }, WOBBLE] });
+    page({
+      ...detail,
+      sounds: [{ ...FAT_BASS, defaultPattern: { id: ROLLING.id, name: ROLLING.name } }, WOBBLE],
+    });
     // The riff is named for its default before the picker is opened, and naming it reads none of its patterns.
     expect(picker().getAttribute('aria-label')).toBe(
       'Choose what Play plays (now: Rolling eighths)'

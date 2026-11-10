@@ -598,24 +598,6 @@ export interface LibraryPatternView {
 export const ENABLED = { status: 'enabled' } as const satisfies Prisma.LibraryPatternWhereInput;
 
 /**
- * A sound's default as the public reads serve it: {@link headOf} over the enabled patterns on its list whose rows can
- * be served ({@link toView}). The sound's patterns (default first) and the catalogue's name for its riff (t-224) both
- * read it, so the name beside Play is the pattern the picker marks as playing. A row that cannot be served is one
- * changed by hand: it is logged where it is left out, and no read names it the default.
- */
-export function servedHeadOf<
-  P extends { pattern: Pick<LibraryPattern, 'status' | 'pattern' | 'sources'> },
->(places: P[]): P | null {
-  return headOf(
-    places.filter(
-      ({ pattern }) =>
-        pattern.status === 'enabled' &&
-        StoredPatternSourcesSchema.safeParse(pattern.sources).success
-    )
-  );
-}
-
-/**
  * A stored row as the API serves it, or `null` when its pattern or sources no longer parse: every write checks both,
  * so that is a row changed by hand, which the reader leaves out rather than send to a sequencer that cannot play it.
  */

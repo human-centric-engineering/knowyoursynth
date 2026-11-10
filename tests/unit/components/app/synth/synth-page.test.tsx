@@ -1918,6 +1918,20 @@ describe('SynthPage player', () => {
     fireEvent.pointerDown(document.body);
     expect(tab()).toHaveAttribute('aria-expanded', 'false');
     expect(highlightStore.get()).toEqual([]);
+
+    // Opened again on the step, and then another sound chosen: nothing is lit, so a press on the panel is other work.
+    fireEvent.click(tab());
+    expect(highlightStore.get()).toEqual(lit);
+    fireEvent.click(button(/^Choose a patch/));
+    fireEvent.click(
+      within(screen.getByRole('dialog', { name: 'Patches' }))
+        .getAllByRole('button')
+        .filter((b) => b.textContent?.includes('Default patch'))[0]
+    );
+    expect(highlightStore.get()).toEqual([]);
+    expect(tab()).toHaveAttribute('aria-expanded', 'true');
+    fireEvent.pointerDown(screen.getByTestId('panel-frame'));
+    expect(tab()).toHaveAttribute('aria-expanded', 'false');
   });
 
   it('keeps the step’s light where the strip is no drawer: a wide touch screen, with the lesson card closed (t-228)', () => {

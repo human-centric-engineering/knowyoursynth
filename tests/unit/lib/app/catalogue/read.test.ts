@@ -204,10 +204,12 @@ describe('getSynthDetail', () => {
     expect(prisma.synth.findFirst).not.toHaveBeenCalled();
   });
 
-  it('names each sound’s riff for its default pattern: the first enabled one that can be a riff (t-224)', async () => {
+  it('sends each sound with the pattern its riff plays: the first enabled one that can be a riff (t-224)', async () => {
     const s = stored();
-    const riff = (status: string, name: string, phrase: unknown, sources: unknown = []) => ({
-      pattern: { status, name, pattern: importPhrase(phrase as Phrase), sources },
+    let n = 0;
+    const riff = (status: string, name: string, phrase: unknown, pattern?: unknown) => ({
+      patternId: `pat-${(n += 1)}`,
+      pattern: { status, name, pattern: pattern ?? importPhrase(phrase as Phrase) },
     });
     const [a, b] = [s.sounds[0], s.sounds[1]];
     // a disabled pattern ahead of the default is passed over
@@ -220,12 +222,12 @@ describe('getSynthDetail', () => {
     };
     // a sound with nothing that can be its default carries no name for its riff
     s.sounds[1] = { ...b, patterns: [riff('disabled', 'Put away', b.phrase)] };
-    // a row that no longer parses is no default, as the sound's patterns are served: the next leads
+    // one that cannot be a riff is no default (`headOf`, as the riff follows it): the next is
     const c = s.sounds[2];
     s.sounds[2] = {
       ...c,
       patterns: [
-        riff('enabled', 'Broken', c.phrase, 'not a list'),
+        riff('enabled', 'Not a riff', c.phrase, 'not a pattern'),
         riff('enabled', 'Next up', c.phrase),
       ],
     };
@@ -233,9 +235,9 @@ describe('getSynthDetail', () => {
 
     const detail = await getSynthDetail('model-d');
 
-    expect(detail?.sounds[0].riffName).toBe('Rolling eighths');
-    expect(detail?.sounds[1]).not.toHaveProperty('riffName');
-    expect(detail?.sounds[2].riffName).toBe('Next up');
+    expect(detail?.sounds[0].defaultPattern).toEqual({ id: 'pat-2', name: 'Rolling eighths' });
+    expect(detail?.sounds[1]).not.toHaveProperty('defaultPattern');
+    expect(detail?.sounds[2].defaultPattern).toEqual({ id: 'pat-5', name: 'Next up' });
     // read as the sound's patterns are: in their order, enabled only
     expect(prisma.synth.findFirst).toHaveBeenCalledWith(
       expect.objectContaining({

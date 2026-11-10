@@ -147,7 +147,8 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
   // so what is held is named, and has the pattern's own settings. Run again once a new sound's riff has arrived
   // (`loaded` back to null), so it never lands on another sound's riff. Once per sound on the panel: an Undo back to an
   // unedited riff is where the Undo said it would go.
-  const soundDefault = soundPatterns?.patterns?.[0] ?? null;
+  const defaultId = soundPatterns?.sound.defaultId ?? null;
+  const soundDefault = soundPatterns?.patterns?.find((p) => p.id === defaultId) ?? null;
   const soundKey = soundPatterns
     ? `${soundPatterns.sound.synthId}/${soundPatterns.sound.slug}`
     : null;

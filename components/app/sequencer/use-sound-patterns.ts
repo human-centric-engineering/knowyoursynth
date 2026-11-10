@@ -26,6 +26,12 @@ export interface LibrarySound {
   synthId: string;
   slug: string;
   name: string;
+  /**
+   * The id of the pattern its riff plays, as the catalogue sends it (`CatalogueSound.defaultPattern`, t-224), or null
+   * for none. The default is found by it, not by place: one that cannot be served is not in the list, and then no
+   * pattern there is the riff.
+   */
+  defaultId: string | null;
 }
 
 export interface SoundPatterns {

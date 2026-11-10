@@ -126,15 +126,18 @@ function Page({
   enabled = true,
   slug = 'fat-bass',
   riff = RIFF,
+  defaultId = 'patdefault000000000001',
 }: {
   enabled?: boolean;
+  /** The pattern the sound's riff plays, as the catalogue sends it. */
+  defaultId?: string | null;
   slug?: string | null;
   riff?: Phrase;
 }) {
   const seq = useSequencer({ engine: null, ensureAudio: async () => false, riff });
   const mine = useMyPatterns();
   const soundPatterns = useSoundPatterns(
-    slug ? { synthId: 'model-d', slug, name: 'Fat bass' } : null,
+    slug ? { synthId: 'model-d', slug, name: 'Fat bass', defaultId } : null,
     enabled
   );
   state = seq;
@@ -176,6 +179,15 @@ beforeEach(() => {
 });
 
 describe('opening on the default', () => {
+  it('takes the default by the catalogue’s id, not by place: one not among those served holds nothing for it (t-224)', async () => {
+    // the default's row could not be served, so the patterns read left it out: the first served is not the riff
+    render(<Page defaultId="patunserved000000000009" />);
+    await waitFor(() => expect(apiClient.get as Mock).toHaveBeenCalledTimes(1));
+    await act(async () => undefined);
+    expect(state.loaded).toBeNull();
+    expect(state.pattern).not.toEqual(DEFAULT);
+  });
+
   it('reads the sound’s patterns once and holds its default in place of the riff, with no Undo to the riff', async () => {
     render(<Page />);
     await waitFor(() => expect(state.loaded?.libraryId).toBe('patdefault000000000001'));

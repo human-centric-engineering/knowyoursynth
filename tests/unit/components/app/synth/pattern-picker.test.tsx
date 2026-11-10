@@ -80,7 +80,7 @@ const row = (id: string, name: string, over: Partial<RankedPattern> = {}): Ranke
 const OWN_A = view('patown00000000000000000a', 'Fat riff');
 const OWN_B = view('patown00000000000000000b', 'Octave walk');
 const OWN: SoundPatterns = {
-  sound: { synthId: 'model-d', slug: 'fat-bass', name: 'Fat bass' },
+  sound: { synthId: 'model-d', slug: 'fat-bass', name: 'Fat bass', defaultId: OWN_A.id },
   patterns: [OWN_A, OWN_B],
   error: false,
   retry: vi.fn(),

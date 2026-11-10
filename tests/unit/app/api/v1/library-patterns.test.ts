@@ -1104,7 +1104,7 @@ describe('admin control (t-156)', () => {
       expect(await publicIds(0)).toEqual([id, riff(1).id]);
     });
 
-    it('leads with the next that can be the default when the default’s row no longer parses (t-224)', async () => {
+    it('leaves out a default whose row no longer parses, serving the rest (t-224)', async () => {
       withFallback();
       riff(0).sources = 'not a list';
       expect(await publicIds(0)).toEqual([riff(1).id]);

@@ -17,7 +17,7 @@ import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
 import { designFromDb, type SynthDesign } from '@/lib/app/catalogue/designs';
 import { getHeardOn } from '@/lib/app/bank/read';
-import { ENABLED, PLACES, servedHeadOf } from '@/lib/app/patterns/library';
+import { ENABLED, headOf, PLACES } from '@/lib/app/patterns/library';
 import {
   summarisePublicLinks,
   summariseSongLinks,
@@ -51,11 +51,15 @@ export interface CatalogueSynth {
 }
 
 /**
- * A library sound, as the panel plays it. `riffName` names the riff it plays (t-224): its default pattern's name, the
- * default its patterns are served with (`servedHeadOf`), or none when it has no default, when it plays its riff as it
- * has it, named for the sound.
+ * A library sound, as the panel plays it. `defaultPattern` is the library pattern its riff plays (t-224), by the rule
+ * that keeps the riff in step with it (`headOf`): what Play names the riff, and which of the sound's patterns the
+ * picker and the sequencer take for it. None when it has no default, when it plays its riff as it has it, named for
+ * the sound.
  */
-export type CatalogueSound = Preset & { version: number; riffName?: string };
+export type CatalogueSound = Preset & {
+  version: number;
+  defaultPattern?: { id: string; name: string };
+};
 
 export type Limit = z.infer<typeof LimitSchema>;
 
@@ -174,7 +178,7 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
               select: {
                 ...PLACES.select,
                 pattern: {
-                  select: { ...PLACES.select.pattern.select, sources: true, name: true },
+                  select: { ...PLACES.select.pattern.select, name: true },
                 },
               },
             },
@@ -244,11 +248,11 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
       });
       continue;
     }
-    const riffName = servedHeadOf(s.patterns)?.pattern.name;
+    const head = headOf(s.patterns);
     sounds.push({
       ...result.value,
       version: s.definitionVersion,
-      ...(riffName ? { riffName } : {}),
+      ...(head ? { defaultPattern: { id: head.patternId, name: head.pattern.name } } : {}),
     });
   }
 
