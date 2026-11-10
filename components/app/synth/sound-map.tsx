@@ -134,6 +134,42 @@ export function MapLegend({ def, values, dimOn, heatOn, outline }: MapLegendProp
 }
 
 /**
+ * A bar over the top of the panel while the map is worked out for the first time (t-222): it goes up as soon as Sensitive
+ * or Dim unused is switched on and comes down when the map is drawn, or could not be worked out. A map being redone after
+ * a knob move leaves the old one up and shows no bar: the legend's "Updating…" covers that. Sits in a positioned parent.
+ */
+export function MapProgress({ heatOn }: { heatOn: boolean }) {
+  const progress = useStore(mapStore, (m) =>
+    m.status === 'working' && !m.state ? m.progress : null
+  );
+  if (progress === null) return null;
+  const pct = Math.round(progress * 100);
+  const label = heatOn ? 'Finding the sensitive controls' : 'Working out what is in this patch';
+  return (
+    <div className="pointer-events-none absolute inset-x-2 top-2 z-20 flex justify-center">
+      <div className="flex min-w-56 flex-col gap-1.5 rounded-lg border border-(--kys-line) bg-(--kys-surface) px-3 py-2 text-xs text-(--kys-muted) shadow-md">
+        <span>
+          {label}… {pct}%
+        </span>
+        <div
+          role="progressbar"
+          aria-label={label}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={pct}
+          className="h-1.5 overflow-hidden rounded-full bg-(--kys-line)"
+        >
+          <div
+            className="h-full rounded-full bg-(--kys-accent) transition-[width] duration-200"
+            style={{ width: `${Math.max(pct, 3)}%` }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
  * Renders nothing. When a dark control is pointed at, asks the mapper why it is dark (once per control per map) and
  * files the answer in the map store, where the cards and the panel pick it up. An answer that failed is asked for
  * again once the control is pointed at after something else: it stays the one in question while the pointer leaves and

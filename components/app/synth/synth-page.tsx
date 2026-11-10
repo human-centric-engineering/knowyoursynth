@@ -184,7 +184,7 @@ import {
   createMeasureStore,
 } from '@/components/app/synth/scope';
 import { Search } from '@/components/app/synth/search';
-import { MapLegend, WhyAsker } from '@/components/app/synth/sound-map';
+import { MapLegend, MapProgress, WhyAsker } from '@/components/app/synth/sound-map';
 import {
   PanelViewSchema,
   STORAGE_KEYS,
@@ -2592,6 +2592,9 @@ function Synth({
                     default="none"
                   >
                     <div className="kys-flip">
+                      {mapOn && !areasOn && !(routingOn && routing) && (
+                        <MapProgress heatOn={heatOn} />
+                      )}
                       <div
                         ref={scrollerRef}
                         className={`kys-scroll kys-panel-scroller overflow-x-auto px-2 ${routingOn && routing ? 'is-away' : ''}`}
