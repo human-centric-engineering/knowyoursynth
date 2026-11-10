@@ -41,6 +41,7 @@ import { routing as e7 } from '@/lib/app/synths/routing/e7';
 import { routing as solar42n } from '@/lib/app/synths/routing/solar-42n';
 import { routing as malevolent } from '@/lib/app/synths/routing/malevolent';
 import { routing as mantis } from '@/lib/app/synths/routing/mantis';
+import { routing as jp8080 } from '@/lib/app/synths/routing/jp-8080';
 import { routing as emsVcs3 } from '@/lib/app/synths/routing/ems-vcs3';
 import { routing as syntrxIi } from '@/lib/app/synths/routing/syntrx-ii';
 
@@ -76,6 +77,7 @@ export const SYNTH_ROUTINGS: SynthRouting[] = [
   solar42n,
   malevolent,
   mantis,
+  jp8080,
   emsVcs3,
   syntrxIi,
 ];
