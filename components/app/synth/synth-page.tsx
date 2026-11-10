@@ -2208,7 +2208,9 @@ function Synth({
   const tapRef = useRef<{ x: number; y: number } | null>(null);
   const focusBefore = useRef<ReturnType<typeof focusStore.get>>(null);
   // The rails along the panel's head and foot are of its faceplate: its colour and its silkscreen ink, or the outline
-  // drawing's paper and ink. The width of the panel, zoomed with it, up to the screen's.
+  // drawing's paper and ink. The width of the panel, zoomed with it, up to the screen's. With the routing view showing,
+  // the whole width: the view is not the panel's shape, so a tall, narrow panel's width would squeeze it (t-223), and
+  // the rails stay the same width as the view between them.
   // A light faceplate takes a softer shadow on the light stage: the dark one a black panel casts reads as a smudge.
   const lightFace = !view.outline && isLightFace(def.theme.panel);
   const plate = view.outline ? PAPER : def.theme.panel;
@@ -2216,7 +2218,7 @@ function Synth({
   const print = view.outline ? INK : def.theme.ink;
   const railStyle: CSSProperties & Record<'--rail-face' | '--rail-face2' | '--rail-print', string> =
     {
-      ...panelRailStyle(faceView(def), scale),
+      ...(routingOn && routing ? { width: '100%' } : panelRailStyle(faceView(def), scale)),
       '--rail-face': plate,
       '--rail-face2': plate2,
       '--rail-print': print,
@@ -2667,7 +2669,7 @@ function Synth({
                         </div>
                       </div>
                       {routingOn && routing && (
-                        // The back of the faceplate, between its rails: their width, colour and ink.
+                        // The back of the faceplate, between its rails: their width (the whole width), colour and ink.
                         <div className="px-2">
                           <div className="mx-auto" style={railStyle}>
                             <RoutingView

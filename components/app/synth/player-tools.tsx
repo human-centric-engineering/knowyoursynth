@@ -195,6 +195,7 @@ export function PlayerSettings({
       <Setting
         at={0}
         name="Drawn as"
+        short=""
         help="Hardware is the faceplate; Outline is a plain diagram, easier to read."
       >
         {(d) => (
@@ -214,6 +215,7 @@ export function PlayerSettings({
         <Setting
           at={1}
           name="Layout"
+          short=""
           help="Modular stacks the sections as modules; Long is the faceplate as it is on the keyboard."
         >
           {(d) => (
@@ -230,7 +232,12 @@ export function PlayerSettings({
           )}
         </Setting>
       )}
-      <Setting at={2} name="Magnifier" help="A lens that follows the pointer over the panel.">
+      <Setting
+        at={2}
+        name="Magnifier"
+        short="Lens"
+        help="A lens that follows the pointer over the panel."
+      >
         {(d) => (
           <LedSelect
             describedBy={d}
@@ -248,6 +255,7 @@ export function PlayerSettings({
       <Setting
         at={3}
         name="Hover help"
+        short="Tips"
         help="The card that pops up when you point at a knob, switch, jack or cable. The Inspector always explains it."
       >
         {(d) => (
@@ -271,15 +279,20 @@ export function PlayerSettings({
  * One setting: its name, which explains it on hover, beside its LEDs. The name cannot take focus, so what it says is
  * also the choice's description (`describedBy`), for a keyboard or screen reader. `at` is its place on the rail, which
  * times its LEDs in the sweep they light in when the panel is first shown.
+ *
+ * `short` is the name on a rail too narrow for the whole of it (t-226, `.kys-rail.is-foot` in `synth.css`): a shorter
+ * word, or `''` where the choices say what the setting is by themselves (Hardware / Outline) and the name goes.
  */
 function Setting({
   at,
   name,
+  short,
   help,
   children,
 }: {
   at: number;
   name: string;
+  short?: string;
   help: string;
   children: (describedBy: string) => ReactNode;
 }) {
@@ -288,7 +301,16 @@ function Setting({
   return (
     <div className="kys-setting" style={place}>
       <PlayerTip name={name} help={help}>
-        <span className="kys-setting-name">{name}</span>
+        <span className={`kys-setting-name ${short === '' ? 'is-droppable' : ''}`}>
+          {short ? (
+            <>
+              <span className="kys-name-long">{name}</span>
+              <span className="kys-name-short">{short}</span>
+            </>
+          ) : (
+            name
+          )}
+        </span>
       </PlayerTip>
       <span id={id} className="sr-only">
         {help}
