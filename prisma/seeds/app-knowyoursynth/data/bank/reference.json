@@ -2419,13 +2419,13 @@
       "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7710"
     },
     {
-      "id": "formanta-polivoks",
-      "name": "Formanta Polivoks",
+      "id": "formanta-uds",
+      "name": "Formanta UDS",
       "maker": "Formanta",
-      "year": "1982",
-      "kind": "mono",
-      "text": "A Soviet duophonic analogue synthesiser with two oscillators, a filter switchable between low-pass and band-pass and a 48-key keyboard, of which around 32,000 were made.",
-      "source": "https://en.wikipedia.org/wiki/Polivoks"
+      "year": "1986",
+      "kind": "module",
+      "text": "A Soviet analogue drum synthesizer from the factory that built the Polivoks: seven channels (five tunable drum voices, hi-hats and cymbals) and a built-in sequencer with 16 patterns.",
+      "source": "https://www.beatportal.com/articles/292393-forgotten-artifacts-per-hammars-soviet-analog-drum-machine-the-formanta-uds"
     },
     {
       "id": "fuller-pp2000",

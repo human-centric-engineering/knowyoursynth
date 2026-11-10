@@ -890,7 +890,7 @@ const polivoks: SynthDef & { version: number } = {
   maker: 'Formanta',
   year: 1982,
   heritage:
-    'Designed by Vladimir Kuzmin and built by the Formanta radio factory in Ufa, sold only in the USSR',
+    'Designed by Vladimir Kuzmin and built by the Formanta radio factory, sold only in the USSR',
   summary:
     'A Soviet duophonic synth: two generators with five waveforms and five octave ranges, Generator II able to frequency-modulate Generator I, and noise, into a low-pass or band-pass filter famous for its harsh, screaming resonance. Hold two keys and Generator I plays the higher, Generator II the lower. The filter and the amplifier each have an envelope that can repeat, and one modulator reaches both generators, the filter and the amplifier.',
   view: { w: 1750, h: 625 },

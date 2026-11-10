@@ -80,6 +80,7 @@ describe('heardFor for a native synth', () => {
     malevolent: [],
     mantis: [],
     'jp-8080': [],
+    polivoks: [],
   };
   const records = (list: HeardEntry[]): [string, string?][] =>
     list.map((e) => (e.sound === undefined ? [e.song ?? ''] : [e.song ?? '', e.sound]));
