@@ -303,6 +303,13 @@ svg .kys-hit:focus-visible {
   font-size: 13px;
   color: var(--kys-muted);
 }
+/* What Learn sound design is for (t-227): a line under the strip's head, over the chapters. */
+.kys-design-aim {
+  margin: 0 0 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--kys-muted);
+}
 
 /* The patch picker (t-207): the patch's name under the panel, boxed as a select is, so it reads as the place the patch
    is chosen: a field in the raised surface with the caret in its own segment at the right. It is at least 360px wide
@@ -1708,6 +1715,9 @@ svg .kys-hit:focus-visible {
     height: 1px;
     overflow: hidden;
     clip-path: inset(50%);
+  }
+  .kys-dock .kys-design-aim {
+    padding: 0 12px;
   }
   .kys-dock .kys-design-row {
     padding: 0 12px 8px;

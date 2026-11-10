@@ -1898,6 +1898,14 @@ describe('SynthPage player', () => {
     expect(highlightStore.get()).toEqual(lit);
   });
 
+  it('says what Learn sound design is for, where it opens (t-227)', () => {
+    twoSteps();
+    fireEvent.click(button('Learn sound design'));
+    const strip = within(player()).getByRole('region', { name: 'Learn sound design' });
+    expect(strip.textContent).toMatch(/Follow along on your own synth and experiment/);
+    expect(strip.textContent).toMatch(/discover new sounds, and what your synth can do/);
+  });
+
   it('takes the lesson card away with the drawer, leaving the inspector; turning the panel over takes either (t-205)', () => {
     twoSteps();
     const tab = () => button('Learn sound design');
