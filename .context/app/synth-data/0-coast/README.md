@@ -20,5 +20,5 @@ repo is public, and the manual and photo are copyright.
 | `0-Coast.jpg`        | 0.1 MB  | `Make Noise 0-Coast/0-Coast.jpg`        |
 
 The manual is Make Noise’s REV 7 (5.19.16), 44 pages; the spec cites it as `0_Coast_Manual.pdf`. The
-photo is the panel straight on, 1200 × 675, and the panel is measured on it: its pixels are the view
-units.
+photo is the panel straight on, 1200 × 675, and the panel is measured on it; the definition doubles its
+pixels into view units.

@@ -21,10 +21,11 @@ python3 validate_synth.py --schema synth-blueprint.schema.json */*.synth.json
 
 Without `jsonschema` installed it runs the referential checks only.
 
-## In the app (38)
+## In the app (39)
 
 | Folder                                                     | Synth                                                                                                                                                            | Spec schema |
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| [`0-coast`](./0-coast/README.md)                           | Make Noise 0-COAST                                                                                                                                               | 0.13.0      |
 | [`2-xm`](./2-xm/README.md)                                 | Behringer 2-XM                                                                                                                                                   | 0.7.0       |
 | [`b2600`](./b2600/README.md)                               | Behringer 2600                                                                                                                                                   | 0.5.0       |
 | [`behringer-syncussion`](./behringer-syncussion/README.md) | Behringer SYNCUSSION SY-1                                                                                                                                        | 0.10.0      |

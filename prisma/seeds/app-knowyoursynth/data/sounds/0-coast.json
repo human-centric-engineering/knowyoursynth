@@ -1,0 +1,1216 @@
+{
+  "synth": "0-coast",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "zc-default-sound",
+      "name": "Default Sound",
+      "ref": "In the style of the manual’s Default Sound (Figure 8)",
+      "artist": "Make Noise",
+      "tags": ["lead", "west coast"],
+      "level": 1,
+      "blurb": "The 0-COAST as it comes, with no cables: a round tone with a little bite that is plucked and dies away.",
+      "how": "MIDI A plays the oscillator and fires CONTOUR, which opens DYNAMICS, a low-pass gate, so each note gets louder and brighter together and then darker as it fades. BALANCE half-way mixes the plain triangle with the harmonics OVERTONE and MULTIPLY add. The manual draws the other knobs, but its text states only DYNAMICS at 3:00 or more, so the rest are this lesson’s.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.5],
+          [1, 55, 0.5],
+          [2, 60, 0.5],
+          [3, 58, 0.5],
+          [4, 53, 0.5],
+          [5, 55, 0.5],
+          [6, 48, 1.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Add some harmonics",
+          "module": "osc",
+          "why": "The triangle is soft; OVERTONE and MULTIPLY add brightness to it, and BALANCE mixes the two.\n- OVERTONE 3: an odd harmonic over the triangle.\n- MULTIPLY 2: a little folding, for more harmonics above it.\n- BALANCE 5: half plain triangle (FUND), half the harmonics (OVRTN).\n- Listen for: a fuller, slightly reedy tone.",
+          "set": {
+            "overtone.amount": 3,
+            "multiply.amount": 2,
+            "balance.amount": 5
+          }
+        },
+        {
+          "title": "CONTOUR plays DYNAMICS",
+          "module": "amp",
+          "why": "With SUSTAIN down, CONTOUR rises and falls on each note, and DYNAMICS follows it: louder and brighter together.\n- CONTOUR SUSTAIN 0, DECAY 5: a pluck that dies away in about a quarter of a second.\n- DYNAMICS 8 (3:00), as the manual asks: CONTOUR opens the gate most of the way.\n- Listen for: each note starting bright and closing as it fades, like a plucked string.",
+          "set": {
+            "contour.sustain": 0,
+            "contour.decay": 5,
+            "dynamics.amount": 8
+          }
+        }
+      ],
+      "context": {
+        "overtone.amount": "In this sound: the one harmonic added to the triangle.",
+        "balance.amount": "In this sound: the mix of plain triangle and harmonics.",
+        "dynamics.amount": "In this sound: how far CONTOUR opens the gate on each note."
+      },
+      "tweaks": [
+        {
+          "id": "balance.amount",
+          "try": "Turn BALANCE to 10",
+          "hear": "Brighter and buzzier: the plain triangle has gone."
+        },
+        {
+          "id": "dynamics.amount",
+          "try": "Turn DYNAMICS to 4",
+          "hear": "Quieter and darker: CONTOUR only half opens the gate."
+        }
+      ]
+    },
+    {
+      "id": "zc-drone",
+      "name": "Drone",
+      "ref": "In the style of the manual’s Drone (Figure 9)",
+      "artist": "Make Noise",
+      "tags": ["drone", "patched"],
+      "level": 1,
+      "blurb": "A steady tone that never stops, played from MIDI and held open by a voltage.",
+      "how": "Voltage MATH, with nothing in CH2, puts out a steady voltage set by its CH2 knob. Patched into DYNAMICS CV it replaces CONTOUR, so the low-pass gate stays open whether a key is held or not, and the keys only change the pitch. The manual draws the knob; any positive setting opens the gate.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 48, 8],
+          [8, 43, 8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A tone to hold",
+          "module": "osc",
+          "why": "Give the drone some colour.\n- OVERTONE 6: past the middle, towards the even harmonic.\n- MULTIPLY 3: some folding on top.\n- BALANCE 6: a little more harmonics than triangle.\n- Listen for: nothing yet unless a note is played: CONTOUR still opens the gate.",
+          "set": {
+            "overtone.amount": 6,
+            "multiply.amount": 3,
+            "balance.amount": 6
+          }
+        },
+        {
+          "title": "Hold the gate open",
+          "module": "patch",
+          "why": "A steady voltage from Voltage MATH takes CONTOUR’s place at DYNAMICS.\n- Voltage MATH OUT 1 into DYNAMICS CV: CONTOUR is no longer heard: DYNAMICS takes its CV from the cable.\n- CH2 3: a steady positive voltage, so the gate stays part open.\n- DYNAMICS 8: how far that voltage opens it.\n- CONTOUR SUSTAIN 0, DECAY 4: set, but not heard here.\n- Listen for: a tone that sounds with no key held, and changes pitch when one is.",
+          "set": {
+            "vmath.ch2": 3,
+            "dynamics.amount": 8,
+            "contour.sustain": 0,
+            "contour.decay": 4
+          },
+          "cables": [["j.vmath_out1", "j.dynamics_cv"]]
+        }
+      ],
+      "context": {
+        "vmath.ch2": "In this sound: the steady voltage holding DYNAMICS open.",
+        "dynamics.amount": "In this sound: how far the steady voltage opens the gate."
+      },
+      "tweaks": [
+        {
+          "id": "vmath.ch2",
+          "try": "Turn CH2 to 5",
+          "hear": "Louder and brighter: the gate opens further."
+        },
+        {
+          "id": "vmath.ch2",
+          "try": "Turn CH2 to −3",
+          "hear": "Silence: a negative voltage cannot open the gate."
+        }
+      ]
+    },
+    {
+      "id": "zc-square-bass",
+      "name": "Square Fundamental Bass",
+      "ref": "In the style of the manual’s square-as-fundamental patch",
+      "artist": "Make Noise",
+      "tags": ["bass", "patched"],
+      "level": 1,
+      "blurb": "A hollow, woody bass from the square wave in place of the triangle.",
+      "how": "BALANCE’s FUND side is normally the triangle. A cable from SQUARE into BALANCE’s input replaces it, and with BALANCE fully left only that square is heard, through DYNAMICS. The square has strong odd harmonics, so it sounds hollow and brighter than the triangle.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.5],
+          [1, 36, 0.5],
+          [1.5, 43, 0.5],
+          [2, 46, 0.5],
+          [3, 36, 0.5],
+          [3.5, 48, 0.5],
+          [4, 41, 1],
+          [6, 43, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The square as FUND",
+          "module": "patch",
+          "why": "Patch the oscillator’s square in place of its triangle.\n- SQUARE into BALANCE’s input: the square replaces the triangle on the FUND side.\n- BALANCE 0: fully FUND, so only the square is heard.\n- Listen for: a hollow, buzzy tone in place of the soft triangle.",
+          "set": {
+            "balance.amount": 0
+          },
+          "cables": [["j.square", "j.balance_in"]]
+        },
+        {
+          "title": "A bass shape",
+          "module": "env",
+          "why": "Shape the notes with CONTOUR through DYNAMICS.\n- CONTOUR SUSTAIN 3, DECAY 5: a punchy start that settles.\n- DYNAMICS 9: the gate opens nearly all the way at the peak.\n- PITCH 5: in tune with the keys.\n- Listen for: each note starting bright and settling darker.",
+          "set": {
+            "contour.sustain": 3,
+            "contour.decay": 5,
+            "dynamics.amount": 9,
+            "osc.pitch": 5
+          }
+        }
+      ],
+      "context": {
+        "balance.amount": "In this sound: fully on FUND, which is now the square.",
+        "contour.sustain": "In this sound: how much of the brightness each held note keeps."
+      },
+      "tweaks": [
+        {
+          "id": "balance.amount",
+          "try": "Turn BALANCE to 5",
+          "hear": "The overtones join in, buzzier still."
+        },
+        {
+          "id": "contour.sustain",
+          "try": "Turn SUSTAIN to 0",
+          "hear": "Shorter, plucked notes."
+        }
+      ]
+    },
+    {
+      "id": "zc-hearing-dynamics",
+      "name": "Opening the Gate",
+      "ref": "In the style of the manual’s Hearing DYNAMICS exercise",
+      "artist": "Make Noise",
+      "tags": ["drone", "west coast"],
+      "level": 1,
+      "blurb": "A drone that grows louder and brighter together as DYNAMICS is turned up: the low-pass gate made audible.",
+      "how": "On the drone patch, the manual has DYNAMICS swept up from zero with OVERTONE on its even harmonic, BALANCE well towards OVRTN and MULTIPLY half-way. A low-pass gate is a filter and an amplifier moved by one control, so the level and the brightness rise together, which a VCA alone cannot do.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 45, 8]]
+      },
+      "steps": [
+        {
+          "title": "The drone, nearly shut",
+          "module": "patch",
+          "why": "Hold the gate with a steady voltage, and start with DYNAMICS low.\n- Voltage MATH OUT 1 into DYNAMICS CV, CH2 5: a full steady voltage.\n- DYNAMICS 2: only a little of it reaches the gate.\n- CONTOUR SUSTAIN 0, DECAY 4: set, but not heard here.\n- Listen for: a quiet, dull tone.",
+          "set": {
+            "vmath.ch2": 5,
+            "dynamics.amount": 2,
+            "contour.sustain": 0,
+            "contour.decay": 4
+          },
+          "cables": [["j.vmath_out1", "j.dynamics_cv"]]
+        },
+        {
+          "title": "Harmonics to open up",
+          "module": "osc",
+          "why": "Give the gate something bright to let through.\n- OVERTONE 8.5: the even harmonic.\n- MULTIPLY 5: half-way, more harmonics above it.\n- BALANCE 8: mostly the overtones.\n- Listen for: still muffled: the gate is holding the brightness back.",
+          "set": {
+            "overtone.amount": 8.5,
+            "multiply.amount": 5,
+            "balance.amount": 8
+          }
+        },
+        {
+          "title": "Turn DYNAMICS up",
+          "module": "amp",
+          "why": "Open the gate.\n- DYNAMICS 6: the gate well open.\n- Listen for: louder and brighter at once, as a filter and an amplifier moved together.",
+          "set": {
+            "dynamics.amount": 6
+          }
+        }
+      ],
+      "context": {
+        "dynamics.amount": "In this sound: how far the steady voltage opens the low-pass gate.",
+        "overtone.amount": "In this sound: the even harmonic."
+      },
+      "tweaks": [
+        {
+          "id": "dynamics.amount",
+          "try": "Turn DYNAMICS slowly from 0 to 10",
+          "hear": "Level and brightness rising together."
+        },
+        {
+          "id": "multiply.amount",
+          "try": "Turn MULTIPLY to 9",
+          "hear": "A harsher, folded tone for the gate to open."
+        }
+      ]
+    },
+    {
+      "id": "zc-random-overtone",
+      "name": "Random Overtone",
+      "ref": "In the style of the manual’s random OVERTONE patch",
+      "artist": "Make Noise",
+      "tags": ["seq", "random", "patched"],
+      "level": 2,
+      "blurb": "Repeated notes whose tone changes at random on every beat.",
+      "how": "The stepped random output gives a new voltage on every clock. Patched into OVERTONE CV it moves OVERTONE to a new harmonic each time, so a run of the same note changes colour by itself. The clock is 120 BPM here; on the hardware its rate is tapped on PGM_B.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0.0, 55, 0.4],
+          [0.5, 48, 0.4],
+          [1.0, 48, 0.4],
+          [1.5, 48, 0.4],
+          [2.0, 55, 0.4],
+          [2.5, 48, 0.4],
+          [3.0, 48, 0.4],
+          [3.5, 48, 0.4],
+          [4.0, 55, 0.4],
+          [4.5, 48, 0.4],
+          [5.0, 48, 0.4],
+          [5.5, 48, 0.4],
+          [6.0, 55, 0.4],
+          [6.5, 48, 0.4],
+          [7.0, 48, 0.4],
+          [7.5, 48, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Random into OVERTONE",
+          "module": "patch",
+          "why": "Let the stepped random move OVERTONE.\n- Stepped random OUT into OVERTONE CV.\n- OVERTONE 0, as the manual sets it: the random voltage adds from here.\n- OVERTONE CV 10: full depth.\n- BALANCE 5, as the manual sets it: half the triangle, half the overtones.\n- Listen for: the tone changing on every beat.",
+          "set": {
+            "overtone.amount": 0,
+            "overtone.cv": 10,
+            "balance.amount": 5
+          },
+          "cables": [["j.random", "j.overtone_cv"]]
+        },
+        {
+          "title": "Short notes",
+          "module": "env",
+          "why": "Keep the notes short so each new colour is clear.\n- MULTIPLY 3: a little folding, for more to change.\n- CONTOUR SUSTAIN 2, DECAY 4: short notes.\n- DYNAMICS 8.\n- Listen for: a pattern of the same note in shifting colours.",
+          "set": {
+            "multiply.amount": 3,
+            "contour.sustain": 2,
+            "contour.decay": 4,
+            "dynamics.amount": 8
+          }
+        }
+      ],
+      "context": {
+        "overtone.cv": "In this sound: how far each random step moves OVERTONE."
+      },
+      "tweaks": [
+        {
+          "id": "overtone.cv",
+          "try": "Turn OVERTONE CV to 4",
+          "hear": "Smaller changes from note to note."
+        },
+        {
+          "id": "multiply.amount",
+          "try": "Turn MULTIPLY to 7",
+          "hear": "Bigger, brighter jumps in tone."
+        }
+      ]
+    },
+    {
+      "id": "zc-vibrato",
+      "name": "Variable Vibrato Lead",
+      "ref": "In the style of the manual’s variable-depth vibrato patch",
+      "artist": "Make Noise",
+      "tags": ["lead", "vibrato", "patched"],
+      "level": 2,
+      "blurb": "A singing lead with a vibrato whose depth is set by Voltage MATH.",
+      "how": "Cycling SLOPE is an LFO. It goes into Voltage MATH’s CH2, whose knob scales it down to a small depth, and OUT 1 goes into 1V/OCT, where it adds to the pitch MIDI A plays. SLOPE only rises above zero, so the vibrato bends the pitch up from the note and back.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 60, 1.5],
+          [2, 64, 1],
+          [3, 67, 1],
+          [4, 65, 2],
+          [6, 62, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "SLOPE as an LFO",
+          "module": "env",
+          "why": "Make SLOPE cycle at a vibrato speed.\n- CYCLE lit: SLOPE repeats on its own.\n- RISE 6, FALL 6: about two and a half cycles a second.\n- Listen for: nothing yet: SLOPE is not patched anywhere you can hear.",
+          "set": {
+            "slope.cycle": true,
+            "slope.rise": 6,
+            "slope.fall": 6
+          }
+        },
+        {
+          "title": "Scaled into the pitch",
+          "module": "patch",
+          "why": "Voltage MATH sets how deep the vibrato is.\n- SLOPE OUT into Voltage MATH CH2, and OUT 1 into 1V/OCT.\n- CH2 0.4: a small depth, under a semitone.\n- Listen for: the pitch wavering gently.",
+          "set": {
+            "vmath.ch2": 0.4
+          },
+          "cables": [
+            ["j.slope_out", "j.vmath_ch2"],
+            ["j.vmath_out1", "j.voct"]
+          ]
+        },
+        {
+          "title": "A lead to sing",
+          "module": "env",
+          "why": "Make the notes hold, with a soft start.\n- OVERTONE 2, BALANCE 4: a little colour on the triangle.\n- CONTOUR ONSET 3, SUSTAIN 10, DECAY 4: notes that hold while the key is down.\n- DYNAMICS 8.\n- Listen for: a held, singing tone with vibrato.",
+          "set": {
+            "overtone.amount": 2,
+            "balance.amount": 4,
+            "contour.onset": 3,
+            "contour.sustain": 10,
+            "contour.decay": 4,
+            "dynamics.amount": 8
+          }
+        }
+      ],
+      "context": {
+        "vmath.ch2": "In this sound: the vibrato depth.",
+        "slope.rise": "In this sound: with FALL, the vibrato speed."
+      },
+      "tweaks": [
+        {
+          "id": "vmath.ch2",
+          "try": "Turn CH2 to 2",
+          "hear": "A wide, wobbling vibrato."
+        },
+        {
+          "id": "slope.fall",
+          "try": "Turn FALL to 8",
+          "hear": "A slow rise and fall in pitch rather than a vibrato."
+        }
+      ]
+    },
+    {
+      "id": "zc-inverted-overtone",
+      "name": "Overtone Against Contour",
+      "ref": "In the style of the manual’s inverted-CONTOUR OVERTONE patch",
+      "artist": "Make Noise",
+      "tags": ["keys", "patched"],
+      "level": 2,
+      "blurb": "An electric-piano-like tone whose harmonic moves the other way to its level.",
+      "how": "CONTOUR goes into Voltage MATH’s CH2 with the knob fully left, which turns it upside down, and OUT 1 goes into OVERTONE CV. So as CONTOUR rises OVERTONE falls back from its even harmonic, and as the note decays it returns, the opposite of most envelopes.",
+      "phrase": {
+        "bpm": 92,
+        "loop": true,
+        "steps": [
+          [0, 57, 1],
+          [1, 60, 1],
+          [2, 64, 1.5],
+          [4, 62, 1],
+          [5, 59, 1],
+          [6, 55, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "CONTOUR upside down",
+          "module": "patch",
+          "why": "Voltage MATH inverts CONTOUR on its way to OVERTONE.\n- CONTOUR OUT (CNTR) into Voltage MATH CH2, and OUT 1 into OVERTONE CV.\n- CH2 −5, as the manual sets it: CONTOUR fully inverted.\n- OVERTONE 10, OVERTONE CV 10, as the manual sets them: the inverted CONTOUR pulls OVERTONE back from the top.\n- Listen for: the harmonic moving as each note starts and fades.",
+          "set": {
+            "vmath.ch2": -5,
+            "overtone.amount": 10,
+            "overtone.cv": 10
+          },
+          "cables": [
+            ["j.contour_out", "j.vmath_ch2"],
+            ["j.vmath_out1", "j.overtone_cv"]
+          ]
+        },
+        {
+          "title": "A keyboard shape",
+          "module": "env",
+          "why": "Give the notes a quick start and a long fade.\n- MULTIPLY 3, BALANCE 7: mostly the moving overtones.\n- CONTOUR ONSET 2, SUSTAIN 5, DECAY 6.\n- DYNAMICS 8.\n- Listen for: notes that change tone as they ring.",
+          "set": {
+            "multiply.amount": 3,
+            "balance.amount": 7,
+            "contour.onset": 2,
+            "contour.sustain": 5,
+            "contour.decay": 6,
+            "dynamics.amount": 8
+          }
+        }
+      ],
+      "context": {
+        "vmath.ch2": "In this sound: turns CONTOUR upside down.",
+        "overtone.cv": "In this sound: how far the inverted CONTOUR moves OVERTONE."
+      },
+      "tweaks": [
+        {
+          "id": "vmath.ch2",
+          "try": "Turn CH2 to +5",
+          "hear": "CONTOUR the right way up: the harmonic now pushes up with the level."
+        },
+        {
+          "id": "contour.decay",
+          "try": "Turn DECAY to 8",
+          "hear": "A slower fade, and a slower return of the harmonic."
+        }
+      ]
+    },
+    {
+      "id": "zc-slope-fm",
+      "name": "Slope FM Bell",
+      "ref": "In the style of the manual’s SLOPE FM patch",
+      "artist": "Make Noise",
+      "tags": ["pluck", "fm", "bell"],
+      "level": 2,
+      "blurb": "A metallic, bell-like pluck from SLOPE frequency-modulating the oscillator.",
+      "how": "Cycling fast, SLOPE is a second oscillator. Patched into LIN FM it moves the oscillator’s pitch at audio rate, adding sidebands that are not in tune with the note, so the tone turns clangorous. SLOPE does not follow the keys, so each note has a different metallic colour. Here LIN FM is not AC-coupled as on the hardware, so SLOPE also raises the pitch a little: PITCH is turned down to match.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.5],
+          [2, 79, 1.5],
+          [4, 76, 1.5],
+          [6, 84, 1.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "SLOPE at audio rate",
+          "module": "env",
+          "why": "Make SLOPE cycle fast enough to be heard as a tone.\n- CYCLE lit, RISE 2, FALL 2, as the manual sets them: over a hundred cycles a second.\n- Vari-Response 5: straight, a triangle.\n- Listen for: nothing yet: SLOPE is not in the sound.",
+          "set": {
+            "slope.cycle": true,
+            "slope.rise": 2,
+            "slope.fall": 2,
+            "slope.response": 5
+          }
+        },
+        {
+          "title": "Into LIN FM",
+          "module": "patch",
+          "why": "Let SLOPE move the pitch.\n- SLOPE OUT into LIN FM, LIN FM 3: moderate FM.\n- PITCH 4.55: back in tune with the keys.\n- BALANCE 0: just the triangle, the plainest carrier.\n- Listen for: a metallic, inharmonic tone.",
+          "set": {
+            "osc.linfm": 3,
+            "osc.pitch": 4.55,
+            "balance.amount": 0
+          },
+          "cables": [["j.slope_out", "j.linfm"]]
+        },
+        {
+          "title": "Strike and ring",
+          "module": "env",
+          "why": "Shape it like a struck bell.\n- CONTOUR SUSTAIN 0, DECAY 7: a ring of about a second.\n- Vari-Response 10: expo, for a natural fade.\n- DYNAMICS 9.\n- Listen for: bell strokes that ring and darken as they fade.",
+          "set": {
+            "contour.sustain": 0,
+            "contour.decay": 7,
+            "contour.response": 10,
+            "dynamics.amount": 9
+          }
+        }
+      ],
+      "context": {
+        "osc.linfm": "In this sound: how much SLOPE modulates the pitch.",
+        "slope.rise": "In this sound: with FALL, the modulator’s pitch, and so the kind of bell."
+      },
+      "tweaks": [
+        {
+          "id": "osc.linfm",
+          "try": "Turn LIN FM to 6",
+          "hear": "Harsher and noisier metal."
+        },
+        {
+          "id": "slope.fall",
+          "try": "Turn FALL to 3",
+          "hear": "A lower modulator: a darker, gong-like tone."
+        }
+      ]
+    },
+    {
+      "id": "zc-random-time",
+      "name": "Random Slope Speeds",
+      "ref": "In the style of the manual’s random SLOPE TIME patch",
+      "artist": "Make Noise",
+      "tags": ["pad", "random", "patched"],
+      "level": 3,
+      "blurb": "A held tone whose folding moves at a new random speed on every cycle.",
+      "how": "SLOPE cycles and moves MULTIPLY through its normal. EOC into TEMPO clocks the stepped random once a cycle, and the random voltage goes into SLOPE TIME, so every cycle runs at a new speed. Here TEMPO clocks the random directly; on the hardware it sets the clock’s tempo, which clocks the random.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 48, 4],
+          [4, 51, 4],
+          [8, 46, 4],
+          [12, 43, 4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "SLOPE folds the sound",
+          "module": "env",
+          "why": "SLOPE is wired to MULTIPLY: let it cycle and turn its depth up.\n- CYCLE lit, RISE 5, FALL 6: a slow sweep.\n- MULTIPLY 2, MULTIPLY CV 3: SLOPE adds folds as it rises.\n- OVERTONE 5, BALANCE 8: mostly the overtones, for the folding to change.\n- Listen for: the tone brightening and darkening in a steady rhythm.",
+          "set": {
+            "slope.cycle": true,
+            "slope.rise": 5,
+            "slope.fall": 6,
+            "multiply.amount": 2,
+            "multiply.cv": 3,
+            "overtone.amount": 5,
+            "balance.amount": 8
+          }
+        },
+        {
+          "title": "A random speed each cycle",
+          "module": "patch",
+          "why": "The stepped random sets SLOPE’s speed, and EOC clocks it.\n- Stepped random OUT into SLOPE TIME.\n- EOC into TEMPO: a new random value as each fall begins.\n- Listen for: the sweeps speeding up and slowing down unpredictably.",
+          "cables": [
+            ["j.random", "j.slope_time"],
+            ["j.eoc", "j.tempo"]
+          ]
+        },
+        {
+          "title": "Long notes",
+          "module": "env",
+          "why": "Hold the notes so the movement can be heard.\n- CONTOUR ONSET 4, SUSTAIN 10, DECAY 5.\n- DYNAMICS 8.\n- Listen for: a slowly entering pad that never moves the same way twice.",
+          "set": {
+            "contour.onset": 4,
+            "contour.sustain": 10,
+            "contour.decay": 5,
+            "dynamics.amount": 8
+          }
+        }
+      ],
+      "context": {
+        "multiply.cv": "In this sound: how far SLOPE folds the wave.",
+        "slope.rise": "In this sound: the slowest the random speeds start from."
+      },
+      "tweaks": [
+        {
+          "id": "multiply.cv",
+          "try": "Turn MULTIPLY CV to −3",
+          "hear": "SLOPE now takes folds away as it rises: the sweeps turn darker."
+        },
+        {
+          "id": "slope.rise",
+          "try": "Turn RISE to 3",
+          "hear": "Much faster, fluttering sweeps."
+        }
+      ]
+    },
+    {
+      "id": "zc-random-multiply",
+      "name": "Randomised Multiply",
+      "ref": "In the style of the manual’s randomised MULTIPLY patch",
+      "artist": "Make Noise",
+      "tags": ["lead", "random", "patched"],
+      "level": 3,
+      "blurb": "A lead whose folding sweeps with SLOPE and jumps at random on top.",
+      "how": "Voltage MATH adds SLOPE (CH1) to the stepped random (CH2), and the sum moves MULTIPLY. With CH2 at the centre only SLOPE’s sweep is heard; turning CH2 up mixes in the random steps, so each sweep starts somewhere new.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 55, 1],
+          [1, 58, 1],
+          [2, 60, 2],
+          [4, 63, 1],
+          [5, 60, 1],
+          [6, 58, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sources, one sum",
+          "module": "patch",
+          "why": "Voltage MATH mixes SLOPE and the random into MULTIPLY CV.\n- SLOPE OUT into CH1, stepped random OUT into CH2, OUT 1 into MULTIPLY CV.\n- CH2 0, MULTIPLY 0, MULTIPLY CV 3, as the manual sets them: only SLOPE moves MULTIPLY for now.\n- CYCLE lit, RISE 6, FALL 6: a sweep of about half a second.\n- Listen for: the tone sweeping brighter and back, if a note is held.",
+          "set": {
+            "vmath.ch2": 0,
+            "multiply.amount": 0,
+            "multiply.cv": 3,
+            "slope.cycle": true,
+            "slope.rise": 6,
+            "slope.fall": 6
+          },
+          "cables": [
+            ["j.slope_out", "j.vmath_ch1"],
+            ["j.random", "j.vmath_ch2"],
+            ["j.vmath_out1", "j.multiply_cv"]
+          ]
+        },
+        {
+          "title": "A lead voice",
+          "module": "env",
+          "why": "Bring in the overtones and hold the notes.\n- OVERTONE 4, BALANCE 8: mostly the folded overtones.\n- CONTOUR SUSTAIN 6, DECAY 5, DYNAMICS 8.\n- Listen for: a held lead with a steady sweep.",
+          "set": {
+            "overtone.amount": 4,
+            "balance.amount": 8,
+            "contour.sustain": 6,
+            "contour.decay": 5,
+            "dynamics.amount": 8
+          }
+        },
+        {
+          "title": "Turn up the random",
+          "module": "util",
+          "why": "Now let the random steps into the sum, as the manual suggests.\n- CH2 2: the random steps add to SLOPE’s sweep.\n- Listen for: jumps in brightness on top of the sweep.",
+          "set": {
+            "vmath.ch2": 2
+          }
+        }
+      ],
+      "context": {
+        "vmath.ch2": "In this sound: how much random is added to SLOPE’s sweep.",
+        "multiply.cv": "In this sound: how far the sum moves MULTIPLY."
+      },
+      "tweaks": [
+        {
+          "id": "vmath.ch2",
+          "try": "Turn CH2 to −2",
+          "hear": "The random steps upside down: they take folds away instead."
+        },
+        {
+          "id": "multiply.cv",
+          "try": "Turn MULTIPLY CV to 5",
+          "hear": "Wider, harsher sweeps."
+        }
+      ]
+    },
+    {
+      "id": "zc-velocity-timbre",
+      "name": "Velocity Timbre",
+      "ref": "In the style of the manual’s velocity-to-MULTIPLY patch",
+      "artist": "Make Noise",
+      "tags": ["keys", "velocity", "patched"],
+      "level": 1,
+      "blurb": "A plucked keyboard tone that is brighter the harder each note is played.",
+      "how": "MIDI B’s CV is velocity as the 0-COAST comes. Patched into MULTIPLY CV, in place of SLOPE, it folds the wave more for a harder note, so playing dynamics change the tone as well as the level.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.9, 0.3],
+          [1, 64, 0.9, 0.6],
+          [2, 67, 0.9, 1],
+          [3, 72, 0.9, 0.5],
+          [4, 67, 0.9, 0.9],
+          [5, 64, 0.9, 0.4],
+          [6, 60, 1.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Velocity into MULTIPLY",
+          "module": "patch",
+          "why": "MIDI B CV carries how hard each note is played.\n- MIDI B CV into MULTIPLY CV: velocity takes SLOPE’s place.\n- MULTIPLY CV 4: harder notes fold further.\n- MULTIPLY 1, OVERTONE 3, BALANCE 8: a gently folded starting point.\n- Listen for: soft notes mellow, hard ones buzzy.",
+          "set": {
+            "multiply.cv": 4,
+            "multiply.amount": 1,
+            "overtone.amount": 3,
+            "balance.amount": 8
+          },
+          "cables": [["j.midi_b_cv", "j.multiply_cv"]]
+        },
+        {
+          "title": "A keyboard shape",
+          "module": "env",
+          "why": "Short, plucked notes that ring a little.\n- CONTOUR SUSTAIN 3, DECAY 5, DYNAMICS 9.\n- Listen for: brightness following your playing.",
+          "set": {
+            "contour.sustain": 3,
+            "contour.decay": 5,
+            "dynamics.amount": 9
+          }
+        }
+      ],
+      "context": {
+        "multiply.cv": "In this sound: how much velocity folds the wave."
+      },
+      "tweaks": [
+        {
+          "id": "multiply.cv",
+          "try": "Turn MULTIPLY CV to −4",
+          "hear": "Harder notes now darker: velocity takes folds away."
+        },
+        {
+          "id": "balance.amount",
+          "try": "Turn BALANCE to 3",
+          "hear": "Mostly triangle: velocity changes the tone much less."
+        }
+      ]
+    },
+    {
+      "id": "zc-simple-bass",
+      "name": "Simple Bass with Brightness",
+      "ref": "In the style of Tony Rolando’s “Simple Bass with Brightness” patch for the 0-COAST",
+      "artist": "Tony Rolando",
+      "tags": ["bass"],
+      "level": 1,
+      "blurb": "A round, punchy bass whose brightness and bite are set by BALANCE and DYNAMICS.",
+      "how": "Make Noise’s founder gives this as a starting bass: BALANCE a little left of centre, and DYNAMICS from 2:00 to 5:00 for more aggression. The manual’s drawing has cables and knob positions too small to read, so everything else here is this lesson’s.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.75],
+          [1, 36, 0.4],
+          [1.5, 39, 0.4],
+          [2, 43, 0.75],
+          [3, 41, 0.75],
+          [4, 36, 0.75],
+          [5, 46, 0.4],
+          [5.5, 43, 0.4],
+          [6, 39, 1.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The tone",
+          "module": "osc",
+          "why": "A little overtone and folding, mostly triangle.\n- OVERTONE 2, MULTIPLY 3.\n- BALANCE 4 (11:00), as stated: towards the fundamental. Turn it right for brighter.\n- Listen for: a warm tone with some edge.",
+          "set": {
+            "overtone.amount": 2,
+            "multiply.amount": 3,
+            "balance.amount": 4
+          }
+        },
+        {
+          "title": "A bass envelope",
+          "module": "amp",
+          "why": "A fast, punchy CONTOUR into DYNAMICS.\n- CONTOUR ONSET 0, SUSTAIN 2, DECAY 4: a quick pluck that settles low.\n- DYNAMICS 7 (2:00), as stated: turn it up towards 10 for more aggression.\n- Listen for: punchy bass notes.",
+          "set": {
+            "contour.onset": 0,
+            "contour.sustain": 2,
+            "contour.decay": 4,
+            "dynamics.amount": 7
+          }
+        }
+      ],
+      "context": {
+        "balance.amount": "In this sound: the brightness, as Tony Rolando suggests.",
+        "dynamics.amount": "In this sound: the aggression, as Tony Rolando suggests."
+      },
+      "tweaks": [
+        {
+          "id": "balance.amount",
+          "try": "Turn BALANCE to 6",
+          "hear": "Brighter, more cutting."
+        },
+        {
+          "id": "dynamics.amount",
+          "try": "Turn DYNAMICS to 10",
+          "hear": "Louder, brighter and more aggressive."
+        }
+      ]
+    },
+    {
+      "id": "zc-pitched-noise",
+      "name": "Pitched Noise Orbit",
+      "ref": "In the style of Tony Rolando’s “Pitched Noise Orbit” patch for the 0-COAST",
+      "artist": "Tony Rolando",
+      "tags": ["fx", "noise", "fm"],
+      "level": 3,
+      "blurb": "A tone that turns to pitched noise as LIN FM is turned up.",
+      "how": "With LIN FM fully left the oscillator is a plain tone; turned up, fast frequency modulation smears it into noise that still follows the keys. The manual states LIN FM from fully left to fully right and DYNAMICS from 12:00 upwards; its cables are too small to read, so the modulator here, SLOPE cycling at audio rate, is this lesson’s.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 48, 2],
+          [2, 55, 2],
+          [4, 53, 2],
+          [6, 46, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A fast modulator",
+          "module": "patch",
+          "why": "Cycle SLOPE at audio rate and patch it into LIN FM.\n- CYCLE lit, RISE 1, FALL 1: SLOPE a few hundred cycles a second.\n- SLOPE OUT into LIN FM, LIN FM 3: a little FM.\n- BALANCE 0: just the triangle.\n- Listen for: a buzzy, slightly metallic tone.",
+          "set": {
+            "slope.cycle": true,
+            "slope.rise": 1,
+            "slope.fall": 1,
+            "osc.linfm": 3,
+            "balance.amount": 0
+          },
+          "cables": [["j.slope_out", "j.linfm"]]
+        },
+        {
+          "title": "Into noise",
+          "module": "osc",
+          "why": "Turn LIN FM right up, as the manual says.\n- LIN FM 10: so much FM the tone becomes noise.\n- PITCH 0: the FM raises the pitch here, so PITCH comes down to keep it low.\n- Listen for: a roaring, pitched noise.",
+          "set": {
+            "osc.linfm": 10,
+            "osc.pitch": 0
+          }
+        },
+        {
+          "title": "Through the gate",
+          "module": "amp",
+          "why": "Let CONTOUR shape it through DYNAMICS.\n- CONTOUR SUSTAIN 8, DECAY 5.\n- DYNAMICS 5 (12:00), as stated: the gate only half open, so the noise is darker.\n- Listen for: swells of noise that follow the keys.",
+          "set": {
+            "contour.sustain": 8,
+            "contour.decay": 5,
+            "dynamics.amount": 5
+          }
+        }
+      ],
+      "context": {
+        "osc.linfm": "In this sound: how far the tone is pushed into noise.",
+        "dynamics.amount": "In this sound: how bright and loud the noise gets."
+      },
+      "tweaks": [
+        {
+          "id": "osc.linfm",
+          "try": "Turn LIN FM slowly down to 0",
+          "hear": "The noise focusing back into a plain tone."
+        },
+        {
+          "id": "dynamics.amount",
+          "try": "Turn DYNAMICS to 9",
+          "hear": "Brighter, harsher noise."
+        }
+      ]
+    },
+    {
+      "id": "zc-wobble-bass",
+      "name": "Wobble Bass",
+      "ref": "In the style of Walker Farrell’s “Wobble Bass” patch for the 0-COAST",
+      "artist": "Walker Farrell",
+      "tags": ["bass", "wobble", "patched"],
+      "level": 2,
+      "blurb": "A throbbing bass whose level wobbles with SLOPE while CONTOUR moves its harmonic.",
+      "how": "The manual’s text says SLOPE is on the amplitude and CONTOUR on OVERTONE. Here SLOPE, cycling, goes into DYNAMICS CV in place of CONTOUR, so it opens and closes the gate in a steady wobble, and CONTOUR goes into OVERTONE CV. In the manual the wobble speed follows the pitch through MIDI B’s note CV, which the app does not offer; the cables here are this lesson’s reading of the text.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 36, 2],
+          [2, 39, 1],
+          [3, 36, 1],
+          [4, 43, 2],
+          [6, 41, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "SLOPE on the amplitude",
+          "module": "patch",
+          "why": "Cycling SLOPE opens and closes the gate.\n- SLOPE OUT into DYNAMICS CV: CONTOUR is no longer heard: DYNAMICS takes its CV from the cable.\n- CYCLE lit, RISE 5, FALL 5: about six wobbles a second.\n- DYNAMICS 9.\n- Listen for: a tone that throbs on its own.",
+          "set": {
+            "slope.cycle": true,
+            "slope.rise": 5,
+            "slope.fall": 5,
+            "dynamics.amount": 9
+          },
+          "cables": [["j.slope_out", "j.dynamics_cv"]]
+        },
+        {
+          "title": "CONTOUR on OVERTONE",
+          "module": "patch",
+          "why": "Each note moves the harmonic.\n- CONTOUR OUT (CNTR) into OVERTONE CV, OVERTONE CV 10, OVERTONE 0: each note moves up towards the even harmonic and back.\n- CONTOUR SUSTAIN 0, DECAY 6.\n- MULTIPLY 4, BALANCE 7: plenty of overtones for the wobble to work on.\n- Listen for: each new note giving the wobble a brighter edge that fades.",
+          "set": {
+            "overtone.cv": 10,
+            "overtone.amount": 0,
+            "contour.sustain": 0,
+            "contour.decay": 6,
+            "multiply.amount": 4,
+            "balance.amount": 7
+          },
+          "cables": [["j.contour_out", "j.overtone_cv"]]
+        }
+      ],
+      "context": {
+        "slope.rise": "In this sound: with FALL, the wobble speed.",
+        "overtone.cv": "In this sound: how far each note moves the harmonic."
+      },
+      "tweaks": [
+        {
+          "id": "slope.rise",
+          "try": "Turn RISE and FALL to 6",
+          "hear": "A slower, deeper wobble."
+        },
+        {
+          "id": "slope.response",
+          "try": "Turn Vari-Response to 10",
+          "hear": "A sharper, more pulsing wobble."
+        }
+      ]
+    },
+    {
+      "id": "zc-synced-slope",
+      "name": "Synced Slope Bass",
+      "ref": "In the style of the Sound On Sound review’s SLOPE sync patch",
+      "artist": "Sound On Sound",
+      "tags": ["bass", "sync", "patched"],
+      "level": 3,
+      "blurb": "A bass whose tone is SLOPE itself, restarted on every cycle of the oscillator.",
+      "how": "The square into SLOPE TRIG restarts SLOPE on every oscillator cycle, so SLOPE runs at the oscillator’s pitch with its own shape: RISE, FALL and Vari-Response now set the waveform, like hard sync. SLOPE OUT into BALANCE’s input puts that wave on the FUND side. Here a trigger is held for at least four milliseconds, so the sync only works on low notes, and this is a bass.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 31, 0.75],
+          [1, 31, 0.4],
+          [1.5, 34, 0.4],
+          [2, 38, 0.75],
+          [3, 36, 0.75],
+          [4, 31, 1.5],
+          [6, 29, 1.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "SLOPE synced to the oscillator",
+          "module": "patch",
+          "why": "Each cycle of the square fires SLOPE again.\n- SQUARE into SLOPE TRIG: SLOPE fires on every cycle.\n- CYCLE lit, as the review has it: here the triggers take over.\n- RISE 1, FALL 3, Vari-Response 5: a quick rise and slower fall, a sawtooth-like wave.\n- Listen for: nothing yet: SLOPE is not in the sound.",
+          "set": {
+            "slope.cycle": true,
+            "slope.rise": 1,
+            "slope.fall": 3,
+            "slope.response": 5
+          },
+          "cables": [["j.square", "j.slope_trig"]]
+        },
+        {
+          "title": "SLOPE as the sound",
+          "module": "patch",
+          "why": "Put SLOPE on BALANCE’s FUND side.\n- SLOPE OUT into BALANCE’s input, BALANCE 0: only SLOPE is heard.\n- CONTOUR SUSTAIN 10, DECAY 3, DYNAMICS 9: a plain gate.\n- Listen for: a buzzy bass whose colour RISE and FALL change.",
+          "set": {
+            "balance.amount": 0,
+            "contour.sustain": 10,
+            "contour.decay": 3,
+            "dynamics.amount": 9
+          },
+          "cables": [["j.slope_out", "j.balance_in"]]
+        }
+      ],
+      "context": {
+        "slope.fall": "In this sound: the shape of the wave, and so its brightness.",
+        "slope.response": "In this sound: the curve of the wave."
+      },
+      "tweaks": [
+        {
+          "id": "slope.fall",
+          "try": "Turn FALL to 1",
+          "hear": "A thinner, brighter wave."
+        },
+        {
+          "id": "slope.response",
+          "try": "Turn Vari-Response to 0",
+          "hear": "A rounder, softer curve."
+        }
+      ]
+    },
+    {
+      "id": "zc-krell",
+      "name": "Krell Patch",
+      "ref": "In the style of Walker Farrell’s “Krell” patch for the 0-COAST, after Todd Barton",
+      "artist": "Walker Farrell",
+      "tags": ["fx", "generative", "patched"],
+      "level": 3,
+      "blurb": "A self-playing patch: random notes fired by SLOPE, each a slow swell.",
+      "how": "A Krell patch plays itself. Cycling SLOPE’s EOC fires CONTOUR and clocks the stepped random, which Voltage MATH offsets into 1V/OCT, so each cycle brings a new note. The manual states only CH2 at 3; its cables are too small to read, so the routing here is this lesson’s. The manual recommends reverb.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 48, 16]]
+      },
+      "steps": [
+        {
+          "title": "SLOPE as the clock",
+          "module": "env",
+          "why": "A slow cycling SLOPE, its EOC firing CONTOUR.\n- CYCLE lit, RISE 7, FALL 7: a cycle of about a second.\n- EOC into CONTOUR GATE: each SLOPE cycle plays a note, not the keys.\n- Listen for: a swell on every cycle, while a key is held for the pitch.",
+          "set": {
+            "slope.cycle": true,
+            "slope.rise": 7,
+            "slope.fall": 7
+          },
+          "cables": [["j.eoc", "j.contour_gate"]]
+        },
+        {
+          "title": "Random notes",
+          "module": "patch",
+          "why": "The stepped random sets the pitch, clocked by EOC.\n- EOC into TEMPO: a new random value each cycle.\n- Stepped random OUT into Voltage MATH CH1, OUT 1 into 1V/OCT.\n- CH2 3, as the manual sets it: an offset that raises the random range.\n- Listen for: each swell on a new pitch.",
+          "set": {
+            "vmath.ch2": 3
+          },
+          "cables": [
+            ["j.eoc", "j.tempo"],
+            ["j.random", "j.vmath_ch1"],
+            ["j.vmath_out1", "j.voct"]
+          ]
+        },
+        {
+          "title": "Slow swells",
+          "module": "env",
+          "why": "Shape each note as a slow, bright swell.\n- CONTOUR ONSET 5, SUSTAIN 0, DECAY 7.\n- OVERTONE 4, MULTIPLY 3, MULTIPLY CV 2, BALANCE 6: SLOPE also folds the tone.\n- DYNAMICS 9.\n- Listen for: an endless, wandering science-fiction melody.",
+          "set": {
+            "contour.onset": 5,
+            "contour.sustain": 0,
+            "contour.decay": 7,
+            "overtone.amount": 4,
+            "multiply.amount": 3,
+            "multiply.cv": 2,
+            "balance.amount": 6,
+            "dynamics.amount": 9
+          }
+        }
+      ],
+      "context": {
+        "vmath.ch2": "In this sound: lifts the random notes.",
+        "slope.rise": "In this sound: with FALL, how often a new note comes."
+      },
+      "tweaks": [
+        {
+          "id": "slope.rise",
+          "try": "Turn RISE and FALL to 5",
+          "hear": "Notes tumbling out several a second."
+        },
+        {
+          "id": "contour.onset",
+          "try": "Turn ONSET to 0",
+          "hear": "Plucked notes in place of swells."
+        }
+      ]
+    },
+    {
+      "id": "zc-west-coast-pluck",
+      "name": "West Coast Pluck",
+      "ref": "In the style of Buchla-style low-pass-gate plucks and bongos",
+      "artist": "Various",
+      "tags": ["perc", "west coast"],
+      "level": 1,
+      "blurb": "A short, woody pluck like a struck wooden bar: brightness and level dying away together.",
+      "how": "This is the sound a low-pass gate is famous for. A bright, folded tone goes through DYNAMICS, and CONTOUR, with no sustain, an instant onset and an expo shape, opens it for a moment, so the harmonics die away faster than the fundamental, as on a struck object.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.25],
+          [0.5, 67, 0.25],
+          [1, 63, 0.25],
+          [1.75, 60, 0.25],
+          [2, 70, 0.25],
+          [2.5, 67, 0.25],
+          [3, 65, 0.25],
+          [3.5, 63, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bright tone",
+          "module": "osc",
+          "why": "Plenty of harmonics for the gate to take away.\n- OVERTONE 7, MULTIPLY 6: a bright, folded wave.\n- BALANCE 9: nearly all overtones.\n- Listen for: a bright, buzzy tone.",
+          "set": {
+            "overtone.amount": 7,
+            "multiply.amount": 6,
+            "balance.amount": 9
+          }
+        },
+        {
+          "title": "Strike it",
+          "module": "env",
+          "why": "A short, percussive CONTOUR opens the gate.\n- CONTOUR ONSET 0, SUSTAIN 0, DECAY 4: a strike of about a tenth of a second.\n- Vari-Response 10: expo, faster and more percussive.\n- DYNAMICS 10: fully open at the strike.\n- Listen for: short, woody plucks.",
+          "set": {
+            "contour.onset": 0,
+            "contour.sustain": 0,
+            "contour.decay": 4,
+            "contour.response": 10,
+            "dynamics.amount": 10
+          }
+        }
+      ],
+      "context": {
+        "contour.decay": "In this sound: the length of each strike.",
+        "multiply.amount": "In this sound: how bright the strike starts."
+      },
+      "tweaks": [
+        {
+          "id": "contour.decay",
+          "try": "Turn DECAY to 6",
+          "hear": "Longer, ringing notes like a marimba."
+        },
+        {
+          "id": "multiply.amount",
+          "try": "Turn MULTIPLY to 0",
+          "hear": "A softer, rounder knock."
+        }
+      ]
+    },
+    {
+      "id": "zc-folding-pad",
+      "name": "Slow Folding Pad",
+      "ref": "In the style of West Coast ambient drones",
+      "artist": "Various",
+      "tags": ["pad", "ambient", "west coast"],
+      "level": 2,
+      "blurb": "A slow, swelling tone whose harmonics fold and unfold with a cycling SLOPE.",
+      "how": "SLOPE is wired to MULTIPLY CV inside. Cycling slowly, it folds the even harmonic into more and lets it go again, while a slow CONTOUR swells DYNAMICS. Nothing is patched: this is the 0-COAST’s normalled voice.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 48, 4],
+          [4, 51, 4],
+          [8, 55, 4],
+          [12, 50, 4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Even harmonics",
+          "module": "osc",
+          "why": "Start from OVERTONE’s even harmonic.\n- OVERTONE 8.5: the even harmonic, an octave up.\n- MULTIPLY 2, BALANCE 8: a little folding, mostly overtones.\n- Listen for: a hollow, octave-bright tone.",
+          "set": {
+            "overtone.amount": 8.5,
+            "multiply.amount": 2,
+            "balance.amount": 8
+          }
+        },
+        {
+          "title": "SLOPE folds it",
+          "module": "env",
+          "why": "Cycle SLOPE slowly into MULTIPLY.\n- CYCLE lit, RISE 8, FALL 8: a sweep of a few seconds.\n- MULTIPLY CV 4: SLOPE adds folds as it rises.\n- Listen for: harmonics slowly blooming and receding.",
+          "set": {
+            "slope.cycle": true,
+            "slope.rise": 8,
+            "slope.fall": 8,
+            "multiply.cv": 4
+          }
+        },
+        {
+          "title": "Slow swells",
+          "module": "amp",
+          "why": "A slow CONTOUR into DYNAMICS.\n- CONTOUR ONSET 6, SUSTAIN 10, DECAY 7.\n- DYNAMICS 8.\n- Listen for: a pad that swells in and out.",
+          "set": {
+            "contour.onset": 6,
+            "contour.sustain": 10,
+            "contour.decay": 7,
+            "dynamics.amount": 8
+          }
+        }
+      ],
+      "context": {
+        "multiply.cv": "In this sound: how far SLOPE folds the tone.",
+        "slope.rise": "In this sound: with FALL, the speed of the folding."
+      },
+      "tweaks": [
+        {
+          "id": "multiply.cv",
+          "try": "Turn MULTIPLY CV to −4",
+          "hear": "SLOPE now unfolds the tone as it rises."
+        },
+        {
+          "id": "slope.rise",
+          "try": "Turn RISE and FALL to 6",
+          "hear": "A faster, shimmering movement."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "synth": "0-coast",
+  "title": "The 0-COAST: no coast",
+  "intro": "Make Noise, a Eurorack maker from Asheville, North Carolina, released the 0-COAST in 2016 as its first desktop synth. It takes from both of the 1960s schools of synthesis without following either: a keyboard-style oscillator and envelope from the East Coast (Moog), and from the West Coast (Buchla) harmonics added by a waveshaper and folder rather than filtered away, and a low-pass gate in place of a filter and amplifier. Make Noise called the result “no coast” synthesis.",
+  "timeline": [
+    {
+      "year": "2016",
+      "name": "Make Noise 0-COAST",
+      "tag": "This synth",
+      "text": "One triangle-core oscillator, OVERTONE and MULTIPLY to add harmonics, BALANCE, the DYNAMICS low-pass gate, SLOPE and CONTOUR, Voltage MATH, a clock, stepped random and two channels of MIDI to CV, with 29 patch points and no filter."
+    },
+    {
+      "year": "2016",
+      "name": "Firmware update",
+      "text": "A November update added portamento synced to the clock and editing of the program pages by MIDI CC."
+    },
+    {
+      "year": "2021",
+      "name": "Make Noise Strega",
+      "text": "Make Noise’s second desktop instrument, made with Alessandro Cortini: an oscillator, a degrading delay, a filter, a function generator and touch plates, built for textures."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Buchla Music Easel",
+      "years": "1973",
+      "text": "The West Coast half of the idea: a complex oscillator with a wavefolder (TIMBRE) and low-pass gates in place of a filter and amplifier. This app plays it."
+    },
+    {
+      "name": "Buchla 292 lowpass gate",
+      "years": "1970s",
+      "text": "The module the 0-COAST’s DYNAMICS is compared to: a filter and amplifier moved by one control, built with vactrols, where the 0-COAST uses transistors."
+    },
+    {
+      "name": "Behringer MODEL D",
+      "years": "1970 (original)",
+      "text": "The East Coast half: the Minimoog’s oscillators, ladder filter and contour generators. This app plays its recreation."
+    }
+  ],
+  "note": "None of the databank’s records name the 0-COAST yet."
+}
