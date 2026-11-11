@@ -229,15 +229,16 @@ describe('the lesson on the page', () => {
       expect(moveStore.get()).toBeNull();
 
       // Replay with nothing playing: back to step 2, the riff on for the moves, and off once they are made.
-      const phrases = sent('phrase');
+      // The riff plays through the sequencer (t-234).
+      const runs = sent('pattern');
       fireEvent.click(screen.getAllByRole('button', { name: 'Replay changes' })[0]);
       expect(lastParams(engine.send)).toEqual(expectedParams(def, p, 1));
       await act(async () => undefined);
-      expect(sent('phrase')).toBe(phrases + 1);
-      const stops = sent('stopPhrase');
+      expect(sent('pattern')).toBe(runs + 1);
+      const stops = sent('stopPattern');
       all();
       expect(lastParams(engine.send)).toEqual(expectedParams(def, p, 2));
-      expect(sent('stopPhrase')).toBe(stops + 1);
+      expect(sent('stopPattern')).toBe(stops + 1);
     } finally {
       vi.useRealTimers();
     }

@@ -259,20 +259,37 @@ describe('the sequencer on the synth page', () => {
     expect(lamp()).toBeNull();
   });
 
-  it('takes over from a riff playing when it is opened, and a riff started stops the pattern', async () => {
+  it('shows the riff playing on the Sequencer button, and Play keeping its time, as any pattern (t-234)', async () => {
+    page();
+    const lamp = () => within(button('Sequencer')).queryByTestId('seq-step-lamp');
+    await press('Play');
+    expect(screen.queryByRole('region', { name: 'Sequencer' })).toBeNull();
+    expect(lamp()).toBeTruthy();
+    expect(button('Stop').classList.contains('is-stepped')).toBe(true);
+    await press('Stop');
+    expect(lamp()).toBeNull();
+    expect(button('Play').classList.contains('is-stepped')).toBe(false);
+  });
+
+  it('plays the riff through the sequencer, which plays on as the pattern when it is opened', async () => {
     page();
     await press('Play');
-    expect(lastSent('phrase')).toBeTruthy();
+    // The riff is the sequencer's run (t-234): the engine's own riff player is not used.
+    expect(lastSent('pattern')).toBeTruthy();
+    expect(lastSent('phrase')).toBeUndefined();
+    const runs = sent().filter((m) => m.type === 'pattern').length;
     await act(async () => {
       fireEvent.click(button('Sequencer'));
     });
-    expect(lastSent('pattern')).toBeTruthy();
+    // Opened, it is the same run: not started again.
+    expect(sent().filter((m) => m.type === 'pattern')).toHaveLength(runs);
     expect(button('Stop')).toBeTruthy();
-    // Closed, the bar plays the riff again: the pattern is told it has stopped.
+    // Closed, Stop stops it and Play plays the riff again, through the sequencer.
     fireEvent.click(button('Sequencer'));
     await press('Stop');
+    expect(sent().at(-1)?.type).toBe('stopPattern');
     await press('Play');
-    expect(sent().at(-1)?.type).toBe('phrase');
+    expect(sent().at(-1)?.type).toBe('pattern');
     expect(button('Stop')).toBeTruthy();
   });
 

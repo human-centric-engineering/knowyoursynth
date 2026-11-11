@@ -32,6 +32,7 @@ import { comeBackTo, storeSound } from '@/tests/helpers/synth-session';
 import { glideMotion } from '@/components/app/synth/motion';
 import { ARRIVE_MS } from '@/components/app/synth/use-panel-history';
 import { getSynthRouting } from '@/lib/app/synths/routing';
+import { expectRiff, patternsSent } from '@/tests/helpers/riff-sent';
 
 const { router, engine, events } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -226,6 +227,9 @@ const paramsSent = () =>
   engine.send.mock.calls
     .map((c) => c[0] as { type: string; p?: Record<string, unknown> })
     .filter((m) => m.type === 'params');
+/** Every message the page has sent the engine, in order. */
+const sentNow = () =>
+  engine.send.mock.calls.map((c) => c[0] as { type: string } & Record<string, unknown>);
 
 beforeEach(() => {
   window.localStorage.clear();
@@ -508,10 +512,12 @@ describe('SynthPage engine', () => {
       fireEvent.click(button('Play'));
     });
     expect(engine.resume).toHaveBeenCalledTimes(1);
-    expect(engine.send).toHaveBeenCalledWith({ type: 'phrase', phrase: FAT_BASS.phrase });
+    // Through the sequencer (t-234), as a pattern.
+    expectRiff(sentNow().at(-1), FAT_BASS.phrase);
+    expect(sentNow().some((m) => m.type === 'phrase')).toBe(false);
 
     fireEvent.click(button('Stop'));
-    expect(engine.send).toHaveBeenCalledWith({ type: 'stopPhrase' });
+    expect(sentNow().at(-1)).toEqual({ type: 'stopPattern' });
     expect(button('Play')).toBeTruthy();
   });
 
@@ -521,7 +527,7 @@ describe('SynthPage engine', () => {
     await act(async () => {
       fireEvent.click(button('Play'));
     });
-    expect(engine.send).toHaveBeenCalledWith({ type: 'phrase', phrase: WOBBLE.phrase });
+    expectRiff(patternsSent(sentNow()).at(-1), WOBBLE.phrase);
   });
 
   it('stops what it was playing when the page unmounts, and clears what it pointed at', () => {
@@ -1059,28 +1065,25 @@ describe('SynthPage glides', () => {
     choose('Wobble lead');
     // Not awaited: the load is a glide in real time, and Play decides at once whether it waits.
     fireEvent.click(button('Play'));
-    const sent = () => engine.send.mock.calls.map((c) => c[0] as { type: string });
-    expect(sent().filter((m) => m.type === 'phrase')).toHaveLength(0);
+    expect(patternsSent(sentNow())).toHaveLength(0);
     await act(async () => {
       settle();
     });
-    expect(sent().filter((m) => m.type === 'phrase')).toHaveLength(1);
+    expect(patternsSent(sentNow())).toHaveLength(1);
+    expectRiff(patternsSent(sentNow())[0], WOBBLE.phrase);
 
-    const before = sent().length;
+    // The riff runs on through the load, muted as a pattern is, and the new sound's starts from its top once it ends.
+    const before = sentNow().length;
     choose('Fat bass');
-    expect(sent().slice(before)).toContainEqual({ type: 'stopPhrase' });
-    expect(sent().filter((m) => m.type === 'phrase')).toHaveLength(1);
+    expect(sentNow().slice(before)).toContainEqual({ type: 'patternMute', muted: true });
+    expect(button('Stop')).toBeTruthy();
+    const during = patternsSent(sentNow()).length;
     await act(async () => {
       settle();
     });
-    expect(sent().filter((m) => m.type === 'phrase')).toHaveLength(2);
-    expect(
-      sent()
-        .filter((m) => m.type === 'phrase')
-        .at(-1)
-    ).toMatchObject({
-      phrase: { steps: FAT_BASS.phrase.steps },
-    });
+    expect(patternsSent(sentNow()).length).toBe(during + 1);
+    expectRiff(patternsSent(sentNow()).at(-1), FAT_BASS.phrase);
+    expect(patternsSent(sentNow()).at(-1)?.muted).toBe(false);
   });
 
   it('plays the riff of the sound on the panel once the load ends, when another load took over the first', async () => {
@@ -1092,11 +1095,9 @@ describe('SynthPage glides', () => {
     await act(async () => {
       settle();
     });
-    const phrases = engine.send.mock.calls
-      .map((c) => c[0] as { type: string })
-      .filter((m) => m.type === 'phrase');
-    expect(phrases).toHaveLength(1);
-    expect(phrases[0]).toMatchObject({ phrase: { steps: FAT_BASS.phrase.steps } });
+    const runs = patternsSent(sentNow());
+    expect(runs).toHaveLength(1);
+    expectRiff(runs[0], FAT_BASS.phrase);
   });
 
   it('plays nothing once a load ends when the sound was turned off while it loaded', async () => {
@@ -1112,9 +1113,7 @@ describe('SynthPage glides', () => {
     await act(async () => {
       settle();
     });
-    expect(engine.send.mock.calls.map((c) => c[0] as { type: string })).not.toContainEqual(
-      expect.objectContaining({ type: 'phrase' })
-    );
+    expect(patternsSent(sentNow())).toHaveLength(0);
     expect(engine.resume).not.toHaveBeenCalled();
     expect(button('Unmute')).toBeTruthy();
   });
@@ -1594,7 +1593,7 @@ describe('SynthPage computer keyboard', () => {
     fireEvent.click(button('Play'));
     expect(engine.resume).toHaveBeenCalledTimes(3);
     await act(async () => {});
-    expect(engine.send).toHaveBeenCalledWith({ type: 'phrase', phrase: FAT_BASS.phrase });
+    expectRiff(patternsSent(sentNow()).at(-1), FAT_BASS.phrase);
   });
 
   it('starts the audio on the first note, since a browser only allows it after a gesture', async () => {
@@ -2295,16 +2294,18 @@ describe('SynthPage player', () => {
 // ── edge behaviours ─────────────────────────────────────────────────────────
 
 describe('SynthPage riff and engine events', () => {
-  const fire = (e: { type: string }) => act(() => events.fn?.(e));
+  const fire = (e: { type: string; [k: string]: unknown }) => act(() => events.fn?.(e));
 
-  it('goes back to "Play" when the engine says the phrase ended', async () => {
+  it('goes back to "Play" when a riff that plays once reaches its end', async () => {
     page();
     await act(async () => {
       fireEvent.click(button('Play'));
     });
     expect(button('Stop')).toBeTruthy();
+    const run = patternsSent(sentNow()).at(-1)?.run;
 
-    fire({ type: 'phraseEnd' });
+    fire({ type: 'loop', index: 0, start: true, beat: 0, beats: 4, bpm: 120, frame: 0, run });
+    fire({ type: 'patternEnd', run });
 
     expect(button('Play')).toBeTruthy();
   });
@@ -2331,7 +2332,7 @@ describe('SynthPage riff and engine events', () => {
       fireEvent.click(button('Restore patch'));
     });
 
-    expect(engine.send).toHaveBeenCalledWith({ type: 'phrase', phrase: FAT_BASS.phrase });
+    expectRiff(patternsSent(sentNow()).at(-1), FAT_BASS.phrase);
   });
 
   it('does not start a riff when "Restore patch" is pressed while none plays', () => {
@@ -2339,9 +2340,7 @@ describe('SynthPage riff and engine events', () => {
     fireEvent.click(button('A-440'));
     engine.send.mockClear();
     fireEvent.click(button('Restore patch'));
-    expect(engine.send.mock.calls.some((c) => (c[0] as { type: string }).type === 'phrase')).toBe(
-      false
-    );
+    expect(patternsSent(sentNow())).toHaveLength(0);
   });
 });
 
@@ -2401,7 +2400,7 @@ describe('SynthPage sounds', () => {
     await act(async () => {
       fireEvent.click(button('Play'));
     });
-    expect(engine.send).toHaveBeenCalledWith({ type: 'phrase', phrase: SCALE_PHRASE });
+    expectRiff(patternsSent(sentNow()).at(-1), SCALE_PHRASE);
   });
 
   it('with no sounds the fresh session is the Default patch, which a moved control counts against and Restore puts back', () => {

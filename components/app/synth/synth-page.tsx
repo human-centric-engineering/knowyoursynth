@@ -643,6 +643,8 @@ function Synth({
   });
 
   const [audio, setAudio] = useState<AudioState>('off');
+  // Whether the sequencer's run is the sound's riff (t-234): Play pressed with nothing but the riff to play. A patch
+  // loading starts the riff again from its top once the new sound is on, as a pattern picked or opened runs on.
   const [playing, setPlaying] = useState(false);
   const [wheel, setWheel] = useState(0);
   const [octave, setOctave] = useState(0);
@@ -993,7 +995,6 @@ function Synth({
     // Coming from another synth, the sound may already be on.
     if (engine.running) setAudio('on');
     const unlisten = listen((e) => {
-      if (e.type === 'phraseEnd') setPlaying(false);
       seqEvents.current(e);
     });
     return () => {
@@ -1251,10 +1252,8 @@ function Synth({
   // that speed, and turning it while the riff plays moves the riff with it.
   const tempoValue = def.tempo ? sess.values[def.tempo] : null;
   const tempoBpm = typeof tempoValue === 'number' ? tempoValue : null;
-  const tempoRef = useRef(tempoBpm);
   // Not while a MIDI clock is followed: its tempo is the pattern's then.
   useEffect(() => {
-    tempoRef.current = tempoBpm;
     if (tempoBpm && !following) engine?.send({ type: 'tempo', bpm: tempoBpm });
   }, [engine, tempoBpm, following]);
   // The sequencer (`f-step-sequencer` t-80): it holds the sound's riff as a pattern. The bar's Play and the sequencer are one
@@ -1302,11 +1301,14 @@ function Synth({
   const stopRiff = useCallback(() => {
     replayRiff.current = false;
     afterLoad.current = null;
-    engine?.send({ type: 'stopPhrase' });
     setPlaying(false);
     stopPattern();
-  }, [engine, stopPattern]);
-  // A pattern starting stops a riff in the engine; the riff's button is told here. Not while a patch loads: then once it has.
+  }, [stopPattern]);
+  // The riff is the sequencer's run: it ends when the run does (a riff that plays once, at its end; a MIDI clock's Stop).
+  useEffect(() => {
+    if (!seq.playing) setPlaying(false);
+  }, [seq.playing]);
+  // A pattern starting is no longer the riff. Not while a patch loads: then once it has.
   const patternNow = useCallback(async () => {
     if (await startPattern()) setPlaying(false);
   }, [startPattern]);
@@ -1352,7 +1354,8 @@ function Synth({
   }, [small, seqDocked, hovers]);
 
   const seqShown = small ? sheet === 'sequencer' : seqOpen;
-  const transportPlaying = playing || seq.playing;
+  // The riff plays through the sequencer (t-234), so the sequencer playing is the page playing.
+  const transportPlaying = seq.playing;
   const { noteIn: seqNoteIn, noteOut: seqNoteOutFn } = seq;
   useEffect(() => {
     noteToSeq.current = seqShown ? seqNoteIn : () => false;
@@ -1514,9 +1517,9 @@ function Synth({
     enabled: !ownSoundPending,
   });
   // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked beside Play, the
-  // one a sound of the user's plays), and with no sound's riff to play; otherwise the riff. A new patch puts back its
-  // riff in the sequencer, and Play with it.
-  const playsPattern = seqShown || !!seqLoaded || !shown;
+  // one a sound of the user's plays) or the riff edited, and with no sound's riff to play; otherwise the riff, which the
+  // sequencer holds as it came. A new patch puts back its riff in the sequencer, and Play with it.
+  const playsPattern = seqShown || !!seqLoaded || seq.edited || !shown;
   // The library pattern held as it came, marked in the picker. The riff as it came is the sound's default pattern (the
   // sequencer's library puts the one in the other's place), so with nothing loaded the default is what plays.
   const pickerCurrent = seq.edited
@@ -1584,27 +1587,24 @@ function Synth({
       // open behind it to come back up when the sequencer closes.
       closeDesign();
     }
-    // Opened while the riff plays, the pattern takes over: it is the riff, until it is edited.
-    if (playing) void playPattern();
+    // Opened while the riff plays, it plays on as the pattern: it is the riff, until it is edited.
+    setPlaying(false);
   };
   const toggleSequencer = () => {
     if (!seqShown) openSequencer();
     else if (small) openSheet(null);
     else setSeqOpen(false);
   };
+  // The riff plays through the sequencer (t-234), which holds it as a pattern (at the tempo knob's tempo, and moved
+  // by it), so it shows on the bar as any pattern does. From its top, as another pattern playing gives way to it.
   const riffNow = useCallback(
-    async (ph: Phrase, still?: () => boolean) => {
-      // Not if what asked for it is over by the time audio has started (Replay's moves ended meanwhile).
-      if (!engine || !(await ensureAudio()) || (still && !still())) return;
-      // A riff stops a pattern in the engine, without a word: the sequencer is told here.
-      stopPattern();
-      engine.send({
-        type: 'phrase',
-        phrase: tempoRef.current ? { ...ph, bpm: tempoRef.current } : ph,
-      });
-      setPlaying(true);
+    async (still?: () => boolean) => {
+      // Not if what asked for it is over by the time audio has started (Replay's moves ended meanwhile). Otherwise
+      // the sequencer starts the audio, inside the gesture that pressed Play.
+      if (still && (!(await ensureAudio()) || !still())) return;
+      if (await startPattern()) setPlaying(true);
     },
-    [engine, ensureAudio, stopPattern]
+    [ensureAudio, startPattern]
   );
   // The riff of the sound on the panel once a load ends, which may not be the one loading when it was asked for (a
   // second load taking over the first); with none, nothing plays. Kept before any effect runs: with reduced motion
@@ -1615,20 +1615,17 @@ function Synth({
   });
   const riffShown = useCallback(
     (still?: () => boolean) => {
-      if (shownPhrase.current) void riffNow(shownPhrase.current, still);
-      else setPlaying(false);
+      if (shownPhrase.current) void riffNow(still);
+      else stopRiff();
     },
-    [riffNow]
+    [riffNow, stopRiff]
   );
   // Not while a patch loads: then once it has.
-  const playRiff = useCallback(
-    async (ph: Phrase) => {
-      replayRiff.current = false;
-      if (isLoading()) afterLoad.current = riffShown;
-      else await riffNow(ph);
-    },
-    [isLoading, riffNow, riffShown]
-  );
+  const playRiff = useCallback(async () => {
+    replayRiff.current = false;
+    if (isLoading()) afterLoad.current = riffShown;
+    else await riffNow();
+  }, [isLoading, riffNow, riffShown]);
   // As a load begins, what the page is sounding is let go: the keys held (and under Hold), the arp's keys in the
   // sequencer, and the riff, which plays again once the load ends (the sound's own, by then). The sequencer runs on,
   // muted through MIDI out's `silent`, and the player and MIDI out let go of their own notes. As it ends, what waited
@@ -1648,10 +1645,8 @@ function Synth({
       heldRef.current.clear();
       seqTook.current.forEach((_, n) => seqNoteOut.current(n));
       seqTook.current.clear();
-      if (playing) {
-        engine?.send({ type: 'stopPhrase' });
-        afterLoad.current = riffShown;
-      }
+      // The riff runs on through the load, muted as a pattern is, and starts again from its top (the new sound's).
+      if (playing) afterLoad.current = riffShown;
     };
   });
 
@@ -1817,7 +1812,7 @@ function Synth({
     leaveShared();
     setDesigned(null);
     glide(() => ({ presetId: id, step: null, soundId: null, ...presetState(synthDef, p) }));
-    if (playing) void playRiff(p.phrase);
+    if (playing) void playRiff();
   };
 
   // A sound the tutor designed opens as choosing a library sound does, with its own lesson in the Lesson panel. The
@@ -1834,7 +1829,7 @@ function Synth({
       soundId: null,
       ...presetState(synthDef, d.preset),
     }));
-    if (playing) void playRiff(d.preset.phrase);
+    if (playing) void playRiff();
     return () => {
       openSeq.current++;
       setDesigned(before.designed);
@@ -2899,7 +2894,7 @@ function Synth({
                         ? stopRiff()
                         : playsPattern || !shown
                           ? void playPattern()
-                          : void playRiff(shown.phrase)
+                          : void playRiff()
                     }
                   />
                 )}
@@ -2914,10 +2909,9 @@ function Synth({
                   ranked={ranked}
                   current={pickerCurrent}
                   load={loadPattern}
-                  // Picked while the riff plays, the pattern takes over, as it does when the sequencer opens.
-                  onPicked={() => {
-                    if (playing) void playPattern();
-                  }}
+                  // Picked while the riff plays, the pattern takes over (the sequencer starts it from its top), as it
+                  // does when the sequencer opens.
+                  onPicked={() => setPlaying(false)}
                 />
                 {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach; on a phone they take a row of their own under Play, leaving the fullscreen button beside it. */}
                 <div className="kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 max-sm:order-last max-sm:basis-full lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">
@@ -3234,7 +3228,7 @@ function Synth({
         phrase={shown?.phrase ?? null}
         playing={transportPlaying}
         // One transport: what the bar's Play plays, the scope's plays too.
-        onPlay={(ph) => void (playsPattern ? playPattern() : playRiff(ph))}
+        onPlay={() => void (playsPattern ? playPattern() : playRiff())}
         onStop={stopRiff}
         wheel={wheel}
         onWheel={setWheel}
