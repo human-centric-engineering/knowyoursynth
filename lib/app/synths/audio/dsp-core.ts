@@ -177,6 +177,10 @@ interface VoiceOsc {
   /** The filtered noise's SVF state. */
   nIc1: number;
   nIc2: number;
+  /** `mix.ovt` (0-COAST OVERTONE into MULTIPLY): its gain, and the overtone amount and its target, smoothed like `pw`. */
+  ovt: number;
+  ovtA: number;
+  ovtAT: number;
 }
 
 /** One envelope's running state. The optional fields are set by setParams and the stage changes. */
@@ -428,6 +432,7 @@ export const DESTS: string[] = [
   'hp6In',
   'vcfBpIn',
   'vcfHpIn',
+  'ovtIn',
   ...MOOG_DESTS,
   ...SOLAR_DESTS,
 ];
@@ -454,6 +459,8 @@ const LN2_12 = Math.LN2 / 12;
 const SS_DETUNE = [-0.11002313, -0.06288439, -0.01952356, 0.01991221, 0.06216538, 0.10745242];
 /** Where the side saws start. */
 const SS_PHASE0 = [0.13, 0.71, 0.37, 0.89, 0.52, 0.26];
+/** `mix.ovt`: the level of the added harmonic against the triangle (reasoned, not measured). */
+const OVT_HARM = 0.6;
 
 /**
  * −1..1 from an LFO's cycle count: a `common` LFO's sample and hold, the same value in every voice on the same cycle.
@@ -575,6 +582,9 @@ function createVoice(
     fbY: 0,
     nIc1: 0,
     nIc2: 0,
+    ovt: 0,
+    ovtA: 0,
+    ovtAT: 0,
   }));
   let nOsc = 0;
   const held: number[] = [];
@@ -881,6 +891,8 @@ function createVoice(
       o.fbk = m.fbk || 0;
       o.tfold = m.tfold || 0;
       o.fnoise = m.fnoise || 0;
+      o.ovt = m.ovt || 0;
+      o.ovtAT = q.ovt || 0;
       o.ssDetT = q.ssDetune || 0;
       o.ssMxT = q.ssMix || 0;
       o.fbHT = q.fbHarm || 0;
@@ -894,6 +906,7 @@ function createVoice(
         o.fbH = o.fbHT;
         o.fbA = o.fbAT;
         o.fold = o.foldT;
+        o.ovtA = o.ovtAT;
         o.nCut = o.nCutT;
         o.nRes = o.nResT;
       }
@@ -1227,13 +1240,21 @@ function createVoice(
 
   /**
    * The JP-8080's OSC 1 waveforms, summed at their `mix` gains: super saw, feedback osc, triangle mod and filtered
-   * noise. `saw` and `tri` are this oscillator's own, already computed, and `pwDest` its pulse-width input. The spec
-   * describes these only by their sound (its `modelling_gaps`), so each shape is a reasoned approximation.
+   * noise. `saw` and `tri` are this oscillator's own, already computed, `pwDest` its pulse-width input and `waveDest` its
+   * wave input (−1 for none). The spec describes these only by their sound (its `modelling_gaps`), so each shape is a
+   * reasoned approximation. The 0-COAST's `mix.ovt` is here too, as it shares the triangle folder.
    */
-  function jpWaves(o: VoiceOsc, pwDest: number, saw: number, tri: number): number {
+  function jpWaves(
+    o: VoiceOsc,
+    pwDest: number,
+    waveDest: number,
+    saw: number,
+    tri: number
+  ): number {
     const dt = o.inc;
     // the oscillator's pulse-width destination moves CONTROL 1, as the JP-8080's shape modulation does
-    const ctl1 = o.ssaw || o.fbk || o.tfold ? ev(pwDest) : 0;
+    const ctl1 = o.ssaw || o.fbk || o.tfold || o.ovt ? ev(pwDest) : 0;
+    if (o.tfold || o.ovt) o.fold += (o.foldT - o.fold) * sm;
     let y = 0;
     if (o.ssaw) {
       o.ssDet += (o.ssDetT - o.ssDet) * sm;
@@ -1288,13 +1309,32 @@ function createVoice(
       y += (saw - a * fb) * o.fbk;
     }
     if (o.tfold) {
-      o.fold += (o.foldT - o.fold) * sm;
       let f = o.fold + ctl1;
       f = f < 0 ? 0 : f > 1 ? 1 : f;
       // the triangle scaled up to three times and folded back at ±1: a triangle wave of the scaled value
       let u = (tri * (1 + 2 * f) + 1) * 0.25;
       u -= Math.floor(u);
       y += (u < 0.5 ? 4 * u - 1 : 3 - 4 * u) * o.tfold;
+    }
+    if (o.ovt) {
+      // 0-COAST OVERTONE into MULTIPLY, reasoned from the manual's description rather than measured. OVERTONE adds one
+      // harmonic to the triangle: the odd one (the triangle at three times the pitch, the triangle tripled and folded)
+      // at amount 0, the even one (at twice the pitch, the triangle rectified) at 1, and a blend of the two between.
+      // Dest `ovtIn` is added next (the SLOPE blend at full OVERTONE), then MULTIPLY folds it all with the same folder
+      // as `mix.tfold`: `fold` plus the pulse-width destination.
+      o.ovtA += (o.ovtAT - o.ovtA) * sm;
+      let a = o.ovtA + (waveDest >= 0 ? ev(waveDest) : 0);
+      a = a < 0 ? 0 : a > 1 ? 1 : a;
+      let u3 = (tri * 3 + 1) * 0.25;
+      u3 -= Math.floor(u3);
+      const odd = u3 < 0.5 ? 4 * u3 - 1 : 3 - 4 * u3;
+      const even = 2 * (tri < 0 ? -tri : tri) - 1;
+      const x = (tri + OVT_HARM * ((1 - a) * odd + a * even)) / (1 + OVT_HARM) + ev(DI.ovtIn);
+      let f = o.fold + ctl1;
+      f = f < 0 ? 0 : f > 1 ? 1 : f;
+      let u = (x * (1 + 2 * f) + 1) * 0.25;
+      u -= Math.floor(u);
+      y += (u < 0.5 ? 4 * u - 1 : 3 - 4 * u) * o.ovt;
     }
     if (o.fnoise) {
       // white noise through a resonant low-pass (a trapezoidal SVF) tuned from the oscillator's own pitch
@@ -2204,7 +2244,7 @@ function createVoice(
           if (o.rsaw) y -= saw * o.rsaw;
           let tri = 0;
           if (o.skew >= 0) o.skew += (o.skewT - o.skew) * sm;
-          if (outs || o.tri || o.shark || o.tfold)
+          if (outs || o.tri || o.shark || o.tfold || o.ovt)
             tri =
               o.skew >= 0
                 ? ph < o.skew
@@ -2261,8 +2301,14 @@ function createVoice(
             if (o.subL) mixSum += sq * o.subL;
             if (k === 1) S[SI.sub] = sq;
           }
-          if (o.ssaw || o.fbk || o.tfold || o.fnoise)
-            y += jpWaves(o, k === 2 && pwSplit ? DI.pw3 : DI.pw1 + (k > 1 ? 1 : k), saw, tri);
+          if (o.ssaw || o.fbk || o.tfold || o.fnoise || o.ovt)
+            y += jpWaves(
+              o,
+              k === 2 && pwSplit ? DI.pw3 : DI.pw1 + (k > 1 ? 1 : k),
+              k < 2 ? DI.wave1 + k : -1,
+              saw,
+              tri
+            );
           if (o.syncGate && o.syncTo >= 0 && o.syncTo < nOsc && osc[o.syncTo].phase >= 0.5) y = 0;
           if (outs && k < 3) {
             const w = OW[k];

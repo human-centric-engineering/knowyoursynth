@@ -1465,6 +1465,13 @@ export interface OscMix {
    * a near-sine at that pitch.
    */
   fnoise?: number;
+  /**
+   * 0-COAST OVERTONE into MULTIPLY: the triangle plus one added harmonic, odd at `ovt` 0 (the third) and even at 1 (the
+   * second), with a blend between; then audio dest `ovtIn` is added, and the sum is folded by `fold` as `tfold` is. The
+   * oscillator's wave destination (`wave1` / `wave2`, oscillators 1 and 2 only) adds to `ovt`, and its pulse-width
+   * destination to `fold`. At `ovt` 0, `fold` 0 and nothing at `ovtIn` it is the triangle with its third harmonic raised.
+   */
+  ovt?: number;
 }
 
 /** One oscillator (up to four; the fourth has signal `osc4`, dest `pitch4` and shares `pw2`). */
@@ -1503,8 +1510,13 @@ export interface OscParams {
   fbHarm?: number;
   /** `mix.fbk` 0..1 (CONTROL 2): the level of the fed-back harmonic and how hard it drives itself. */
   fbAmt?: number;
-  /** `mix.tfold` 0..1 (CONTROL 1, OFFSET): how far the triangle is folded. The pulse-width destination adds to it. */
+  /**
+   * `mix.tfold` 0..1 (CONTROL 1, OFFSET): how far the triangle is folded; for `mix.ovt`, MULTIPLY. The pulse-width
+   * destination adds to it.
+   */
   fold?: number;
+  /** `mix.ovt` 0..1 (OVERTONE): the added harmonic, odd at 0, even at 1. The wave destination adds to it. */
+  ovt?: number;
   /** `mix.fnoise` cutoff in semitones from the oscillator's pitch (default 0): −48..+48. */
   nCut?: number;
   /** `mix.fnoise` resonance 0..1 (default 0). */
