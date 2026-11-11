@@ -1490,7 +1490,7 @@
     },
     "j.balance_in": {
       "init": null,
-      "balance.amount=10": "BALANCE is fully right, on the overtones, so the FUND side this input feeds is not heard. Turn it left."
+      "balance.amount=10": "BALANCE is fully right, on the overtones, so the FUND side this input feeds is not heard, unless BALANCE CV is patched too. Turn it left."
     },
     "j.balance_cv": {
       "init": null,

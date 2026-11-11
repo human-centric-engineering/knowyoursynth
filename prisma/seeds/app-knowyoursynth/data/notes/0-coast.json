@@ -47,7 +47,7 @@
       },
       {
         "title": "Patching differences",
-        "text": "LIN FM here moves the pitch in semitones and is not AC-coupled, so a source that only rises, such as SLOPE, also raises the pitch on average. A trigger at SLOPE TRIG is held for at least 4 ms, so the square only syncs SLOPE on low notes, and the forum’s report that a trigger is ignored during the rise is not modelled. With BALANCE IN patched, the FUND side is set by the BALANCE knob alone, so BALANCE CV moves only the OVRTN side."
+        "text": "LIN FM here moves the pitch in semitones and is not AC-coupled, so a source that only rises, such as SLOPE, also raises the pitch on average. A trigger at SLOPE TRIG is held for at least 4 ms, so the square only syncs SLOPE on low notes, and the forum’s report that a trigger is ignored during the rise is not modelled. With BALANCE IN patched, the FUND side is set by the BALANCE knob alone, so BALANCE CV moves only the OVRTN side. A cable in SLOPE TRIG stops CYCLE: SLOPE fires once per trigger rather than cycling and restarting."
       }
     ]
   }

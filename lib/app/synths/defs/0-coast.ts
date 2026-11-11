@@ -406,13 +406,16 @@ jackIn('j.vmath_ch2', 308, 380, 'CH2', {
 });
 text(288, 425, '−', 22);
 text(326, 425, '+', 22);
+/** An attenuverter's reading: signed, with a true minus sign. */
+const fmtBipolar = (v: number) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(1)}`;
+
 knob('vmath.ch2', 302, 464, 26, 'CH2', {
   module: 'util',
   min: -5,
   max: 5,
   def: 0,
   name: 'Voltage MATH CH2',
-  fmt: (v) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(1)}`,
+  fmt: fmtBipolar,
   help: 'An attenuverter: at the centre CH2 adds nothing; turned right it adds CH2 the right way up, left upside down. With nothing in CH2 it is an offset, a steady voltage either side of zero.',
 });
 lampWindow(304, 516, 30, 'green');
@@ -438,7 +441,7 @@ decor.push({ t: 'wave', x: X(416), y: Y(162), size: 22, shape: 'tri', w: 3 });
 jackOut('j.square', 477, 125, 'SQUARE', {
   name: 'Oscillator SQUARE',
   signal: 'o1pulse',
-  help: 'The oscillator’s square. Into BALANCE’s input it replaces the triangle as the fundamental; into SLOPE TRIG it restarts a cycling SLOPE every cycle, for a synced tone.',
+  help: 'The oscillator’s square. Into BALANCE’s input it replaces the triangle as the fundamental; into SLOPE TRIG it fires SLOPE on every cycle, for a synced tone.',
 });
 decor.push({ t: 'wave', x: X(474), y: Y(162), size: 22, shape: 'sq', w: 3 });
 knob('osc.pitch', 449, 232, 46, 'PITCH', {
@@ -533,7 +536,7 @@ knob('multiply.cv', 602, 460, 22, 'MULTIPLY CV', {
   max: 5,
   def: 0,
   name: 'MULTIPLY CV depth',
-  fmt: (v) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(1)}`,
+  fmt: fmtBipolar,
   help: 'An attenuverter for the MULTIPLY CV input, which is SLOPE with nothing patched: right of centre it adds folds as the voltage rises, left of centre it takes them away.',
 });
 lampWindow(556, 488, 18, 'amber');
@@ -557,7 +560,7 @@ button('slope.cycle', 736, 126, {
   module: 'env',
   lamp: true,
   name: 'CYCLE',
-  help: 'Makes SLOPE repeat on its own, rising and falling over and over: an LFO when slow, an oscillator when fast. Lit while it cycles.',
+  help: 'Makes SLOPE repeat on its own, rising and falling over and over: an LFO when slow, an oscillator when fast. Lit while it is on. Here a cable in SLOPE TRIG overrides it.',
 });
 text(674, 212, 'RISE', 20);
 knob('slope.rise', 740, 202, 28, 'RISE', {
@@ -573,7 +576,7 @@ knob('slope.fall', 742, 310, 28, 'FALL', {
   fmt: (v) => fmtTime(slopeTime(v)),
   help: 'How long SLOPE takes to fall back to nothing. A short RISE with a long FALL is a sawtooth; the two equal, a triangle.',
 });
-lampWindow(680, 372, 22, 'green');
+lampWindow(680, 372, 22, 'green', { id: 'slope.cycle', eq: true });
 knob('slope.response', 736, 420, 22, 'Vari-Response', {
   module: 'env',
   def: 5,
@@ -601,7 +604,7 @@ jackIn('j.slope_trig', 684, 558, 'TRIG', {
   name: 'SLOPE TRIG',
   dest: 'trigIn',
   amt: 1,
-  help: 'A rising edge here fires SLOPE once: one rise and one fall, with no sustain. Nothing is wired here inside, so SLOPE stays still until it is triggered or CYCLE is lit. With CYCLE lit, each trigger starts it again from the rise.',
+  help: 'A rising edge here fires SLOPE once: one rise and one fall, with no sustain. Nothing is wired here inside, so SLOPE stays still until it is triggered or CYCLE is lit. On the hardware a trigger restarts a cycling SLOPE; here a cable in TRIG stops it cycling, so it fires once per trigger.',
 });
 text(742, 532, 'SLOPE', 18);
 jackOut('j.slope_out', 738, 558, 'SLOPE', {
@@ -674,7 +677,7 @@ jackIn('j.balance_in', 954, 122, 'BALANCE IN', {
   amt: 1,
   check: (v) =>
     num(v, 'balance.amount') >= 10
-      ? 'BALANCE is fully right, on the overtones, so the FUND side this input feeds is not heard. Turn it left.'
+      ? 'BALANCE is fully right, on the overtones, so the FUND side this input feeds is not heard, unless BALANCE CV is patched too. Turn it left.'
       : null,
   help: 'Replaces the triangle on BALANCE’s FUND side with whatever is patched here: the square for a hollower fundamental, or any other sound for DYNAMICS to play.',
 });
@@ -688,14 +691,14 @@ jackIn('j.balance_cv', 1060, 122, 'BALNC', {
     num(v, 'balance.amount') <= 0
       ? 'BALANCE is fully left, and with a cable here it is the cable’s depth, so nothing patched here is heard. Turn it up.'
       : null,
-  help: 'Moves BALANCE between FUND and OVRTN. A cable here turns the BALANCE knob into its depth: rising voltage brings in the overtones.',
+  help: 'Moves BALANCE between FUND and OVRTN. A cable here turns the BALANCE knob into its depth: rising voltage brings in the overtones. With BALANCE IN patched too it only raises the OVRTN side, the FUND side staying full.',
 });
 text(1002, 142, 'BALANCE', 20, { rotate: 90 });
 knob('balance.amount', 1014, 202, 28, 'BALANCE', {
   module: 'mixer',
   def: 5,
   scale: ends('FUND', 'OVRTN'),
-  help: 'Crossfades the plain triangle (FUND, left) against the overtones from OVERTONE and MULTIPLY (OVRTN, right): sweeping it right is like opening a filter. With a cable in BALANCE CV it is that cable’s depth instead.',
+  help: 'Crossfades the plain triangle (FUND, left) against the overtones from OVERTONE and MULTIPLY (OVRTN, right): sweeping it right is like opening a filter. With a cable in BALANCE CV it is that cable’s depth instead, and with BALANCE IN patched as well it no longer crossfades.',
 });
 
 // ── Dynamics and the output ────────────────────────────────────────────────
@@ -711,7 +714,7 @@ knob('out.level', 1002, 460, 20, 'LEVEL', {
   def: 7,
   help: 'The line output’s volume. On the hardware it is clean to about 8 and then clips, lighting OVL; here it stays clean.',
 });
-led(1052, 461, 10, 'red', 'overload');
+led(1052, 461, 10, 'red');
 text(1075, 457, 'LINE OUT', 15, { rotate: 90 });
 jackOut('j.line_out', 1062, 501, 'LINE OUT', {
   signal: 'out',

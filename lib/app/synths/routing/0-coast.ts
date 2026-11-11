@@ -195,7 +195,7 @@ export const routing: SynthRouting = {
       breaks: 'j.dynamics_cv',
     },
     { id: 'c13', from: 'dynamics', to: 'out', signal: 'audio', levels: ['out.level'] },
-    { id: 'c15', from: 'clock', to: 'random', signal: 'gate' },
+    { id: 'c15', from: 'clock', to: 'random', signal: 'gate', breaks: 'j.tempo' },
   ],
   jacks: {
     'j.midi_in': 'midi',
