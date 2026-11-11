@@ -1578,6 +1578,12 @@ function Synth({
     midiOut,
     clockIn,
   };
+  // The riff playing becomes the pattern: it plays on as it is. Midway through a load, the riff that load queued to
+  // start again once it ends is dropped with it, so it neither restarts the pattern as the riff nor stops it.
+  const riffToPattern = () => {
+    if (playing) afterLoad.current = null;
+    setPlaying(false);
+  };
   // Opened by the bar's Sequencer button or a panel button (t-85).
   const openSequencer = () => {
     if (small) openSheet('sequencer');
@@ -1588,7 +1594,7 @@ function Synth({
       closeDesign();
     }
     // Opened while the riff plays, it plays on as the pattern: it is the riff, until it is edited.
-    setPlaying(false);
+    riffToPattern();
   };
   const toggleSequencer = () => {
     if (!seqShown) openSequencer();
@@ -2911,7 +2917,7 @@ function Synth({
                   load={loadPattern}
                   // Picked while the riff plays, the pattern takes over (the sequencer starts it from its top), as it
                   // does when the sequencer opens.
-                  onPicked={() => setPlaying(false)}
+                  onPicked={riffToPattern}
                 />
                 {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach; on a phone they take a row of their own under Play, leaving the fullscreen button beside it. */}
                 <div className="kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 max-sm:order-last max-sm:basis-full lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">

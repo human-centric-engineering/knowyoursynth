@@ -1086,6 +1086,25 @@ describe('SynthPage glides', () => {
     expect(patternsSent(sentNow()).at(-1)?.muted).toBe(false);
   });
 
+  it('lets the riff run on as the pattern when the sequencer opens while a load is under way', async () => {
+    page();
+    settle();
+    choose('Wobble lead');
+    fireEvent.click(button('Play'));
+    await act(async () => {
+      settle();
+    });
+    choose('Fat bass');
+    fireEvent.click(button('Sequencer'));
+    const during = patternsSent(sentNow()).length;
+    await act(async () => {
+      settle();
+    });
+    // The riff the load queued is dropped with it: the pattern is not restarted as the riff once the load ends.
+    expect(patternsSent(sentNow()).length).toBe(during);
+    expect(button('Stop')).toBeTruthy();
+  });
+
   it('plays the riff of the sound on the panel once the load ends, when another load took over the first', async () => {
     page();
     settle();
