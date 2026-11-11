@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { EmailStatusCard } from '@/components/dashboard/email-status-card';
 import { User, Settings, Shield } from 'lucide-react';
 import { DEFAULT_USER_ROLE } from '@/lib/auth/roles';
-// FORK (Know Your Synth): the user's own sounds, favourites and lessons. See .context/app/divergences.md.
+// FORK (Know Your Synth): the user's own sounds, favourites and lessons. See .context/app/platform-divergences.md.
 import { SynthCards } from '@/components/app/dashboard/synth-cards';
 
 /**

@@ -212,7 +212,7 @@ describe('reserved fork tiers', () => {
       .filter((line) => /^\s*(model|enum|type|view)\s+\w+/.test(line));
 
     // FORK (Know Your Synth): pinned to the catalogue's, pattern library's, databank's, synth suggestions', user sounds', user preferences', s4's, the synth profile's and the owned synths', the links' and the link suggestions' declarations rather than deleted, as this
-    // file's header asks, so a stray extra declaration still fails. Ledger: .context/app/divergences.md.
+    // file's header asks, so a stray extra declaration still fails. Ledger: .context/app/platform-divergences.md.
     expect(
       declarations,
       'prisma/schema/app.prisma is fork-reserved and ships empty; platform ' +

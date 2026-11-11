@@ -44,7 +44,7 @@ import { requireOrgId } from '@/lib/tenancy/context';
 export function initAppJobs(): void {
   /* FORK (Know Your Synth): a held username (`f-profiles` r1) is only cleared when someone claims that name again, so
      without this a name given up and never re-claimed would be kept for good, after its hold and after its owner's
-     erasure. Ledger: .context/app/divergences.md. */
+     erasure. Ledger: .context/app/platform-divergences.md. */
   registerAppJob({
     name: 'app:prune-held-usernames',
     intervalMs: 6 * 60 * 60 * 1000,

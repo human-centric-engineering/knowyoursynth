@@ -14,7 +14,7 @@
 // ─── Catalogue (f-model-d, plan §9) ─────────────────────────────────────────
 //
 // Product content every org shares: on GLOBAL_CONFIG_MODELS in
-// lib/tenancy/classification.ts (divergence row in .context/app/divergences.md).
+// lib/tenancy/classification.ts (divergence row in .context/app/platform-divergences.md).
 // No row has a user foreign key, so none is on the export manifest.
 //
 // Seeded from prisma/seeds/app-knowyoursynth/data/ by `001-catalogue.ts`. After

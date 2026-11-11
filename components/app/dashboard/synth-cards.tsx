@@ -5,7 +5,7 @@ import { MySoundsCard } from '@/components/app/dashboard/my-sounds-card';
 /**
  * Know Your Synth's cards on `/dashboard`: the user's own sounds (`f-my-sounds` s2), then their favourites and lessons
  * (s4) side by side. One element in the platform's page, so a new card here is not another edit to it (divergence row
- * in `.context/app/divergences.md`).
+ * in `.context/app/platform-divergences.md`).
  */
 export function SynthCards({ userId }: { userId: string }) {
   return (

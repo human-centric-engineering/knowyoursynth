@@ -510,7 +510,7 @@ again shows as a lower number.
 **What a search found reaches the graders through a seam.** Sunrise's eval worker passed a grader only each tool
 call's name and arguments. Know Your Synth carries an edit that passes its `success`, `errorCode` and
 `resultPreview` too (owner ruling, 2026-10-19, journaled on `f-tutor-knowledge`; the row is in
-[`divergences.md`](./divergences.md)). `search_databank` and `web_search` write their preview as the links the panel
+[`platform-divergences.md`](./platform-divergences.md)). `search_databank` and `web_search` write their preview as the links the panel
 would show (`sourcesPreview` in `sources.ts`), in place of the default's first 480 characters of the result, which
 cut a page of rows off mid-row. The same preview is what an admin reads in a conversation's trace.
 

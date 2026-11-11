@@ -99,7 +99,7 @@ const nextConfig = {
     // It ships platform-specific `.node` binaries that must not be bundled.
     '@napi-rs/canvas',
     // Know Your Synth (t-50): the SVG rasteriser behind a shared sound's link preview. It loads a platform-specific
-    // `.node` binary by name, which bundling cannot resolve. Divergence row in `.context/app/divergences.md`.
+    // `.node` binary by name, which bundling cannot resolve. Divergence row in `.context/app/platform-divergences.md`.
     '@resvg/resvg-js',
   ],
 

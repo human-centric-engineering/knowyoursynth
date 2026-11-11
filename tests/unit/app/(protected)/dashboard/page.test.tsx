@@ -47,7 +47,7 @@ vi.mock('@/components/dashboard/email-status-card', () => ({
 }));
 
 // FORK (Know Your Synth): the app's cards are async server components with reads of their own, tested in
-// tests/unit/components/app/dashboard/. Stubbed like the email card. See .context/app/divergences.md.
+// tests/unit/components/app/dashboard/. Stubbed like the email card. See .context/app/platform-divergences.md.
 vi.mock('@/components/app/dashboard/synth-cards', () => ({
   SynthCards: () => <div data-testid="synth-cards" />,
 }));

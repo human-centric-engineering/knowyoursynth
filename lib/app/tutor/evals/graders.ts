@@ -10,7 +10,7 @@
  * turn's tool calls; nothing else of the case. So a case's expectation is its `expectedOutput`, as JSON
  * (`TutorExpectationSchema`). What a search returned is the call's `resultPreview`, which `search_databank` and
  * `web_search` write as the links the panel would show (`sourcesPreview`), with its `success` flag: a seam Know Your
- * Synth carries in Sunrise's eval worker (`.context/app/divergences.md`).
+ * Synth carries in Sunrise's eval worker (`.context/app/platform-divergences.md`).
  *
  * **A grader that does not apply scores null**, with no `passed`, so the run's stats leave the case out rather than
  * count it a pass. Each grader says which cases it covers.
