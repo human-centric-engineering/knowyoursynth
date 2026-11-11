@@ -350,7 +350,7 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
     };
 
   return (
-    <form noValidate onSubmit={(e) => void submit(e)} className="max-w-4xl space-y-6">
+    <form method="post" noValidate onSubmit={(e) => void submit(e)} className="max-w-4xl space-y-6">
       <RefusalSummary refusal={refusal} unplaced={placed.unplaced} />
 
       <section className="grid gap-4 sm:grid-cols-2">

@@ -333,6 +333,7 @@ export function PatternForm({ pattern, choices }: PatternFormProps) {
 
   return (
     <form
+      method="post"
       noValidate
       onSubmit={(e) => void submit(e)}
       className="space-y-6"

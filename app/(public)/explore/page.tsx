@@ -78,6 +78,7 @@ export default async function ExploreRoute({ searchParams }: Props) {
         <ExploreTabs current="sounds" />
       </header>
 
+      {/* form-method-ignore: a search box; its query belongs in the URL */}
       <form
         noValidate
         method="get"

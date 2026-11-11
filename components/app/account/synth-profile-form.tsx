@@ -124,7 +124,12 @@ export function SynthProfileForm({ profile }: { profile: ProfileView | null }) {
   const nextChange = saved?.nextChangeAt ? saved.nextChangeAt.slice(0, 10) : null;
 
   return (
-    <form onSubmit={(e) => void handleSubmit(onSubmit)(e)} className="space-y-6" noValidate>
+    <form
+      method="post"
+      onSubmit={(e) => void handleSubmit(onSubmit)(e)}
+      className="space-y-6"
+      noValidate
+    >
       <div className="space-y-2">
         <Label htmlFor="profile-username" className="flex items-center gap-1">
           Username

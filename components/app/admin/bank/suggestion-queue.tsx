@@ -202,7 +202,7 @@ function DecisionForm({
     setInstrument((prev) => ({ ...prev, [key]: value }));
 
   return (
-    <form onSubmit={(e) => void submit(e)} className="mt-3 space-y-3" noValidate>
+    <form method="post" onSubmit={(e) => void submit(e)} className="mt-3 space-y-3" noValidate>
       {mode === 'accept' && (
         <>
           <p className="text-muted-foreground text-sm">

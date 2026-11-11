@@ -231,6 +231,7 @@ function Comments({ id, comments }: { id: string; comments: PatternComment[] | n
         </ol>
       )}
       <form
+        method="post"
         noValidate
         onSubmit={(e) => void submit(e)}
         aria-label="Add a comment"

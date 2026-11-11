@@ -542,7 +542,7 @@ export function BankForm({ kind, detail }: BankFormProps) {
   };
 
   return (
-    <form noValidate onSubmit={(e) => void submit(e)} className="max-w-3xl space-y-5">
+    <form method="post" noValidate onSubmit={(e) => void submit(e)} className="max-w-3xl space-y-5">
       <RefusalSummary refusal={refusal} unplaced={placed.unplaced} />
 
       {isNew ? (

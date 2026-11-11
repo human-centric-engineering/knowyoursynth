@@ -60,6 +60,7 @@ export default async function ExplorePatternsRoute({ searchParams }: Props) {
         <ExploreTabs current="patterns" />
       </header>
 
+      {/* form-method-ignore: a search box; its query belongs in the URL */}
       <form
         noValidate
         method="get"
