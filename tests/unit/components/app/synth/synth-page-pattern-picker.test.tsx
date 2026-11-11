@@ -24,6 +24,7 @@ import type { LibraryPatternView } from '@/lib/app/patterns/library';
 import type { RankResult } from '@/lib/app/patterns/rank-read';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
+import { expectRiff, patternsSent } from '@/tests/helpers/riff-sent';
 
 const { router, engine, auth, api } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -217,7 +218,10 @@ const page = (shown: SynthDetail = detail) => {
   return render(<SynthPage detail={shown} synths={[MODEL_D]} viewParam={null} />);
 };
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
-const sent = () => engine.send.mock.calls.map((c) => c[0] as { type: string; bpm?: number });
+const sent = () =>
+  engine.send.mock.calls.map(
+    (c) => c[0] as { type: string; bpm?: number } & Record<string, unknown>
+  );
 const press = async (name: string | RegExp) => {
   await act(async () => {
     fireEvent.click(button(name));
@@ -254,7 +258,8 @@ describe('the pattern picker beside Play', () => {
     page();
     expect(picker().getAttribute('aria-label')).toBe('Choose what Play plays (now: Fat bass)');
     await press('Play');
-    expect(sent().at(-1)?.type).toBe('phrase');
+    // Through the sequencer (t-234).
+    expectRiff(sent().at(-1), FAT_BASS.phrase);
   });
 
   it('makes a picked pattern what Play plays with the sequencer closed', async () => {
@@ -295,7 +300,7 @@ describe('the pattern picker beside Play', () => {
   it('takes over from the riff when a pattern is picked while the riff plays', async () => {
     page();
     await press('Play');
-    expect(sent().at(-1)?.type).toBe('phrase');
+    expectRiff(sent().at(-1), FAT_BASS.phrase);
     fireEvent.click(picker());
     const pick = await screen.findByRole('button', { name: /Rolling eighths/ }, { timeout: 3000 });
     await act(async () => {
@@ -350,11 +355,8 @@ describe('the pattern picker beside Play', () => {
     );
     engine.send.mockClear();
     await press('Play');
-    await waitFor(() => expect(sent().some((m) => m.type === 'phrase')).toBe(true));
-    expect(sent().some((m) => m.type === 'pattern')).toBe(false);
-    expect(sent().find((m) => m.type === 'phrase')).toMatchObject({
-      phrase: { steps: WOBBLE.phrase.steps },
-    });
+    await waitFor(() => expect(patternsSent(sent())).toHaveLength(1));
+    expectRiff(patternsSent(sent())[0], WOBBLE.phrase);
   });
 });
 

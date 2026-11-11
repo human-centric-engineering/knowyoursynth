@@ -26,6 +26,7 @@ import type { UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
 import type { SoundLesson } from '@/lib/app/sounds/lesson';
 import { newPattern } from '@/lib/app/sequencer/pattern';
 import { openSide, reducedMotion, stepShown, tallScreen } from '@/tests/helpers/synth-side';
+import { expectRiff, patternsSent } from '@/tests/helpers/riff-sent';
 
 const { router, engine, auth, api } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -399,17 +400,18 @@ describe('My patches', () => {
     await act(async () => {
       fireEvent.click(button('Play'));
     });
-    const phrases = () =>
-      engine.send.mock.calls
-        .map((c) => c[0] as { type: string; phrase?: unknown })
-        .filter((m) => m.type === 'phrase');
-    expect(phrases()).toHaveLength(1);
+    // The riff plays through the sequencer (t-234): each start of it is a `pattern`.
+    const runs = () =>
+      patternsSent(
+        engine.send.mock.calls.map((c) => c[0] as { type: string } & Record<string, unknown>)
+      );
+    expect(runs()).toHaveLength(1);
     fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
     await waitFor(() => expect(loadedName()).toBe('Night bass'));
-    expect(engine.send).toHaveBeenCalledWith({ type: 'stopPhrase' });
-    // A sound of the user's own plays the scale.
-    await waitFor(() => expect(phrases()).toHaveLength(2));
-    expect(phrases()[1].phrase).toEqual(SCALE_PHRASE);
+    // Stopped for the load, then from its top once the load ends: a sound of the user's own plays the scale.
+    expect(engine.send).toHaveBeenCalledWith({ type: 'stopPattern' });
+    await waitFor(() => expectRiff(runs().at(-1), SCALE_PHRASE));
+    expect(runs().at(-1)?.muted).toBe(false);
     expect(button('Stop')).toBeTruthy();
   });
 

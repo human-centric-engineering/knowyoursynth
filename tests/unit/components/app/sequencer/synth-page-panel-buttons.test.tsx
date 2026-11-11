@@ -18,6 +18,7 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import { tallScreen } from '@/tests/helpers/synth-side';
+import { expectRiff } from '@/tests/helpers/riff-sent';
 
 const { router, engine, events } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -181,11 +182,45 @@ describe.each([
     await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: 'Play' }));
     });
-    expect(lastSent('phrase')).toBeDefined();
+    // The riff plays through the sequencer (t-234).
+    expect(lastSent('pattern')).toBeDefined();
     engine.send.mockClear();
     await pressPanel(run);
-    expect(lastSent('stopPhrase')).toEqual({ type: 'stopPhrase' });
+    expect(lastSent('stopPattern')).toEqual({ type: 'stopPattern' });
     expect(lastSent('pattern')).toBeUndefined();
+    expect(screen.getByRole('button', { name: 'Play' })).toBeTruthy();
+  });
+});
+
+describe('tb-303: the riff and the TEMPO knob (t-234)', () => {
+  const tempo = () => screen.getAllByRole('slider', { name: /^TEMPO/ })[0];
+  const runs = () => sent().filter((m) => m.type === 'pattern');
+
+  it('plays the riff through the sequencer at the knob’s tempo, and moves it as the knob turns, without a restart', async () => {
+    page('tb-303');
+    fireEvent.keyDown(tempo(), { key: 'ArrowUp' });
+    const knob = (lastSent('tempo') as { bpm?: number } | undefined)?.bpm;
+    expect(knob).toBeGreaterThan(120);
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Play' }));
+    });
+    expect(runs()).toHaveLength(1);
+    expectRiff(
+      runs()[0],
+      {
+        bpm: 120,
+        loop: true,
+        steps: [
+          [0, 36, 0.25],
+          [1, 43, 0.25],
+        ],
+      },
+      knob
+    );
+
+    fireEvent.keyDown(tempo(), { key: 'ArrowDown' });
+    expect(lastSent('tempo')).toEqual({ type: 'tempo', bpm: 120 });
+    expect(runs()).toHaveLength(1);
   });
 });
 
