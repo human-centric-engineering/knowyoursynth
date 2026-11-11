@@ -1586,10 +1586,18 @@ export interface EnvParams {
   curve?: { a: number; d: number; r: number };
   /** Key follow 0..1.2: times halve every two octaves above middle C at 1. */
   kf?: number;
-  /** While held: rise over `a`, fall to silence over `d`, repeat (WASP REPEAT). `s` is ignored. */
+  /**
+   * While held: rise over `a`, fall to silence over `d`, repeat (WASP REPEAT; the 0-COAST's SLOPE cycling). `s` is
+   * ignored. With `curve`, each rise and fall keeps its curve.
+   */
   loop?: boolean;
   /** The level stops where it is (WASP HOLD). */
   freeze?: boolean;
+  /**
+   * A new note does not restart it; only its own gate rising does. A looping envelope gated by a constant (normal
+   * `gate2` ← `one`) then runs freely across notes, as the 0-COAST's cycling SLOPE does.
+   */
+  free?: boolean;
 }
 
 export interface VcaParams {
@@ -2179,7 +2187,16 @@ export interface EngineParams {
   /** Gain on the `extIn` audio destination, into the mixer. */
   ext: { level: number };
   filter: FilterParams;
+  /**
+   * Signal `eon` is 1 from the end of Envelope 1's attack until it is back at zero (the 0-COAST's EON), and dest
+   * `env1DecRate` speeds its decay and release by 2^cv (CONTOUR DECAY: positive is faster, a reasoned choice, as the
+   * spec gives no polarity). Neither changes a sound that does not route it.
+   */
   env1: EnvParams;
+  /**
+   * Signal `eoc` is 0 while Envelope 2 falls (its decay or release) and 1 otherwise (the 0-COAST's SLOPE EOC), and dest
+   * `env2Rate` speeds every stage by 2^cv (SLOPE TIME; positive is faster, as for `env1DecRate`).
+   */
   env2: EnvParams;
   /** A third envelope, fired with the loudness envelope. */
   env3?: EnvParams;
