@@ -413,6 +413,7 @@ export function PublishDialog({
           </>
         ) : (
           <form
+            method="post"
             noValidate
             onSubmit={(e) => {
               e.preventDefault();

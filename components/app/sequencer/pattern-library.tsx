@@ -503,7 +503,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
       </div>
 
       {form && (
-        <form className="kys-seq-lib-form" onSubmit={submit} noValidate>
+        <form method="post" className="kys-seq-lib-form" onSubmit={submit} noValidate>
           <label htmlFor={nameId} className="kys-seq-lib-label">
             {form.mode === 'rename' ? 'New name' : 'Name the pattern'}
           </label>

@@ -586,6 +586,7 @@ function SoundForm({
 
   return (
     <form
+      method="post"
       onSubmit={submit}
       noValidate
       aria-labelledby="sound-form-h"

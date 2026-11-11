@@ -56,6 +56,7 @@ export function PatternTable({ rows, total, page, limit, filters, choices }: Pat
 
   return (
     <div className="space-y-4">
+      {/* form-method-ignore: a filter; its query belongs in the URL */}
       <form
         noValidate
         method="get"

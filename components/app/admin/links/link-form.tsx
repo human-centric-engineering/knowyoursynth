@@ -264,7 +264,12 @@ export function LinkForm({
   const selectClass = 'border-input bg-background h-9 w-full rounded-md border px-3 text-sm';
 
   return (
-    <form onSubmit={(e) => void handleSubmit(onSubmit)(e)} className="space-y-4" noValidate>
+    <form
+      method="post"
+      onSubmit={(e) => void handleSubmit(onSubmit)(e)}
+      className="space-y-4"
+      noValidate
+    >
       {fixedOwner ? (
         <div className="text-muted-foreground space-y-0.5 text-sm">
           <p>

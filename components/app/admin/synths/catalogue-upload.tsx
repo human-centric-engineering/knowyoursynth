@@ -123,6 +123,7 @@ export function CatalogueUpload({ synths }: CatalogueUploadProps) {
         <p className="text-muted-foreground text-sm">The catalogue has no synths yet.</p>
       ) : (
         <form
+          method="post"
           noValidate
           className="flex flex-wrap items-end gap-3"
           onSubmit={(e) => void submit(e)}

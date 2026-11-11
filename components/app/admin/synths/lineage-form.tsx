@@ -197,7 +197,7 @@ export function LineageForm({
   };
 
   return (
-    <form noValidate onSubmit={(e) => void submit(e)} className="max-w-3xl space-y-5">
+    <form method="post" noValidate onSubmit={(e) => void submit(e)} className="max-w-3xl space-y-5">
       <RefusalSummary refusal={refusal} unplaced={placed.unplaced} />
       {!exists && (
         <p className="text-muted-foreground text-sm">

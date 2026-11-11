@@ -124,6 +124,7 @@ export function SoundLinksForm({ sound, onSaved, onCancel, buttonClass }: SoundL
 
   return (
     <form
+      method="post"
       onSubmit={(e) => void submit(e)}
       noValidate
       aria-labelledby="sound-links-h"

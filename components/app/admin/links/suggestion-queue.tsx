@@ -203,7 +203,7 @@ function DeclineForm({
   }
 
   return (
-    <form onSubmit={(e) => void submit(e)} className="mt-3 space-y-3" noValidate>
+    <form method="post" onSubmit={(e) => void submit(e)} className="mt-3 space-y-3" noValidate>
       <div className="space-y-1">
         <Label htmlFor={id}>
           Reason{' '}

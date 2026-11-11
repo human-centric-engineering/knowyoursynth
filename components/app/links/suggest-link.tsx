@@ -216,6 +216,7 @@ function Suggest({
 
   return (
     <form
+      method="post"
       onSubmit={(e) => void submit(e)}
       noValidate
       aria-labelledby={`${uid}-heading`}
