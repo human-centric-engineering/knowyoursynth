@@ -47,6 +47,7 @@ describe('nativeSynthProblems', () => {
       'native synth mantis is not registered',
       'native synth jp-8080 is not registered',
       'native synth polivoks is not registered',
+      'native synth 0-coast is not registered',
     ]);
   });
 

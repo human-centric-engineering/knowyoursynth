@@ -61,6 +61,7 @@ const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {
   mantis: () => import('@/lib/app/synths/defs/mantis'),
   'jp-8080': () => import('@/lib/app/synths/defs/jp-8080'),
   polivoks: () => import('@/lib/app/synths/defs/polivoks'),
+  '0-coast': () => import('@/lib/app/synths/defs/0-coast'),
 };
 
 /** Every id a loader exists for. */
