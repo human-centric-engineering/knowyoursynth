@@ -411,15 +411,18 @@ export function PlayButton({
     <PlayerTip
       name={playing ? 'Stop' : 'Play'}
       help={
-        playing
-          ? undefined
-          : 'The pattern named beside it, played through the panel: the patch’s riff, unless another is chosen there or in the sequencer.'
+        waiting
+          ? 'Waiting for the patch to load before it plays. Press to cancel.'
+          : playing
+            ? undefined
+            : 'The pattern named beside it, played through the panel: the patch’s riff, unless another is chosen there or in the sequencer.'
       }
     >
       <button
         ref={ref}
         type="button"
         onClick={onClick}
+        aria-busy={waiting || undefined}
         className={`kys-play ${playing ? 'is-playing' : ''} ${stepped ? 'is-stepped' : ''}`}
       >
         <span className="kys-play-dot" aria-hidden="true">

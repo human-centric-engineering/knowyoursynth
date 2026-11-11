@@ -1311,6 +1311,12 @@ function Synth({
     setPlaying(false);
     stopPattern();
   }, [queue, stopPattern]);
+  // The riff held for a load, to start again from its top once the panel is set. Following a MIDI clock it runs on,
+  // muted, rather than stop: the clock is not the page's to stop, and the run keeps its place on the clock's beat.
+  const holdRiff = useCallback(() => {
+    queue('riff');
+    if (!following) stopPattern();
+  }, [queue, following, stopPattern]);
   // The riff is the sequencer's run: it ends when the run does (a riff that plays once, at its end; a MIDI clock's Stop).
   useEffect(() => {
     if (!seq.playing) setPlaying(false);
@@ -1361,8 +1367,9 @@ function Synth({
   }, [small, seqDocked, hovers]);
 
   const seqShown = small ? sheet === 'sequencer' : seqOpen;
-  // The riff plays through the sequencer (t-234), so the sequencer playing is the page playing.
-  const transportPlaying = seq.playing;
+  // The riff plays through the sequencer (t-234), so the sequencer playing is the page playing; so is a start waiting
+  // on a load, which every transport shows as Stop (cancelling it), and Replay does not start over.
+  const transportPlaying = seq.playing || waiting;
   const { noteIn: seqNoteIn, noteOut: seqNoteOutFn } = seq;
   useEffect(() => {
     noteToSeq.current = seqShown ? seqNoteIn : () => false;
@@ -1615,9 +1622,12 @@ function Synth({
       // Not if what asked for it is over by the time audio has started (Replay's moves ended meanwhile). Otherwise
       // the sequencer starts the audio, inside the gesture that pressed Play.
       if (still && (!(await ensureAudio()) || !still())) return;
-      if (await startPattern()) setPlaying(true);
+      if (!(await startPattern())) return;
+      // A load that began as the sound started (a patch picked straight after Play) holds it too.
+      if (isLoading()) holdRiff();
+      else setPlaying(true);
     },
-    [ensureAudio, startPattern]
+    [ensureAudio, startPattern, isLoading, holdRiff]
   );
   // The riff of the sound on the panel once a load ends, which may not be the one loading when it was asked for (a
   // second load taking over the first); with none, nothing plays. Kept before any effect runs: with reduced motion
@@ -1660,10 +1670,7 @@ function Synth({
       seqTook.current.forEach((_, n) => seqNoteOut.current(n));
       seqTook.current.clear();
       // The riff stops for the load and starts again from its top (the new sound's) once the panel is set.
-      if (playing) {
-        queue('riff');
-        stopPattern();
-      }
+      if (playing) holdRiff();
     };
   });
 
@@ -2902,13 +2909,13 @@ function Synth({
               <div className="kys-player-bar flex flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2 text-sm sm:px-4 lg:flex-nowrap">
                 {/* Always there while something plays, so a pattern can be stopped with the sequencer closed. The Play
                 deck's first and biggest control, outside the scrolling row so nothing clips its glow (t-210). */}
-                {(shown || seqShown || seqLoaded || transportPlaying || waiting) && (
+                {(shown || seqShown || seqLoaded || transportPlaying) && (
                   <PlayButton
-                    playing={transportPlaying || waiting}
+                    playing={transportPlaying}
                     waiting={waiting}
                     position={seq.playing ? seq.position : undefined}
                     onClick={() =>
-                      transportPlaying || waiting
+                      transportPlaying
                         ? stopRiff()
                         : playsPattern || !shown
                           ? void playPattern()

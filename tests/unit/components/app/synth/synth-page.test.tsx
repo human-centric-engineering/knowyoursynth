@@ -1088,6 +1088,28 @@ describe('SynthPage glides', () => {
     expect(patternsSent(sentNow()).at(-1)?.muted).toBe(false);
   });
 
+  it('holds a riff whose sound was still starting when a patch was picked, and plays it once the load ends', async () => {
+    page();
+    settle();
+    choose('Wobble lead');
+    settle();
+    // Play, and a patch picked before the sound has started: the riff is not left playing through the glide.
+    fireEvent.click(button('Play'));
+    choose('Fat bass');
+    // The sound starts while the patch still loads.
+    await act(async () => {});
+    await act(async () => {
+      settle();
+    });
+    const sent = sentNow();
+    const firstRun = sent.findIndex((m) => m.type === 'pattern');
+    expect(sent.slice(firstRun)).toContainEqual({ type: 'stopPattern' });
+    // Started again from its top once the panel is set, heard, with the new sound's riff.
+    expectRiff(patternsSent(sent).at(-1), FAT_BASS.phrase);
+    expect(patternsSent(sent).at(-1)?.muted).toBe(false);
+    expect(button('Stop')).toBeTruthy();
+  });
+
   it('cancels the riff waiting for a load when Stop is pressed meanwhile', async () => {
     page();
     settle();
