@@ -1,0 +1,2257 @@
+{
+  "schema_version": "0.13.0",
+  "device": {
+    "id": "make-noise-0-coast",
+    "manufacturer": "Make Noise",
+    "model": "0-COAST",
+    "category": "single-voice patchable (semi-modular) analogue synthesizer with MIDI-to-CV, desktop, Eurorack signal levels",
+    "based_on": "Original Make Noise design (manual REV 7, May 2016) mixing Moog ('East Coast') and Buchla ('West Coast') techniques without following either: 'no coast synthesis'. Retail $499. Current firmware 1.6.8.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Make Noise 0-COAST manual, REV 7 (5.19.16)",
+        "kind": "user_manual",
+        "file": "0_Coast_Manual.pdf",
+        "pages": 44,
+        "note": "Normalisation diagram, numbered panel legend (1-61), default sounds, MIDI and program pages, MIDI CC list, every circuit with patching examples, open patch points, overriding normals, Voltage MATH, signal levels, patch ideas (drawn) and MIDI pin-out. Knob settings are given as clock positions."
+      },
+      {
+        "id": "makenoise_product",
+        "title": "Make Noise, 0-COAST product page",
+        "kind": "spec_sheet",
+        "url": "https://www.makenoisemusic.com/synthesizers-and-controllers/0-coast/",
+        "note": "Dimensions; firmware 1.6.8 download; Max for Live programmer; patch sheets."
+      },
+      {
+        "id": "retail_specs",
+        "title": "Retailer specifications (Reverb / Chuck Levin's, Milk Audio Store, Midwest Modular)",
+        "kind": "other",
+        "url": "https://www.milkaudiostore.com/shop/make-noise-0-coast",
+        "note": "Weight 1.7 lb / 771 g; 15 V DC at 1 A on a 2.1 mm tip-positive plug; 45 HP wide; 13 patch sources and 14 destinations; retail $499."
+      },
+      {
+        "id": "sonicstate_fw",
+        "title": "Sonicstate, 'Makenoise 0-Coast Firmware Update Adds Easier Editing' (17 Nov 2016)",
+        "kind": "other",
+        "url": "https://sonicstate.com/news/2016/11/17/makenoise-0-coast-firmware-update-adds-easier-editing/",
+        "note": "The November 2016 update added clock-synced portamento and program-page editing by CC."
+      },
+      {
+        "id": "lines_coast_express",
+        "title": "Coast Express (lines forum and web app)",
+        "kind": "other",
+        "url": "https://llllllll.co/t/coast-express-0-coast-midi-settings-manager-for-web-and-max/33922",
+        "note": "From firmware 1.6.8, settings CCs are accepted only while in the program pages."
+      },
+      {
+        "id": "subsystem_midi",
+        "title": "Subsystem, Make Noise 0-COAST MIDI implementation (firmware 1.6.8)",
+        "kind": "other",
+        "url": "https://subsystem.co/supplemental/definitions/midi/instruments/make_noise/zero_coast",
+        "note": "Quotes the 1.6.8 updater note: the only MIDI change listed is a fix to MIDI B CV range for velocity and mod wheel."
+      },
+      {
+        "id": "sos_review",
+        "title": "Sound On Sound, Make Noise 0-Coast review",
+        "kind": "other",
+        "url": "https://www.soundonsound.com/reviews/make-noise-0-coast",
+        "note": "No filter; VCO tracks about four octaves; oscillator sync by triggering Slope from the square."
+      },
+      {
+        "id": "modwiggler_retrigger",
+        "title": "ModWiggler, 'No Coast slope/contour subharmonics - why?'",
+        "kind": "other",
+        "url": "https://www.modwiggler.com/forum/viewtopic.php?t=247211",
+        "note": "Forum explanation: the function generator ignores triggers during its rise but retriggers during its fall, which divides an audio-rate trigger into subharmonics."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "synthesis_note": "Hybrid East/West: one triangle-core VCO, additive harmonics from OVERTONE and MULTIPLY (wavefolding), a BALANCE crossfade and a low-pass gate (DYNAMICS); no conventional filter.",
+    "signal_path": "analogue",
+    "signal_path_note": "100 % analogue signal path; the MIDI circuit is digital.",
+    "voices": 1,
+    "polyphony_mode": "monophonic; legato or retrigger gate",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "patch_memory_note": "No sound memory. Program page settings are kept; holding PGM_A and PGM_B at power-on restores their defaults.",
+    "semi_modular": true,
+    "panel_counts": {
+      "knobs": 18,
+      "trimmers": 1,
+      "buttons": 3,
+      "patch_points": 29,
+      "patch_sources": 13,
+      "patch_destinations": 14,
+      "activity_windows": 12
+    },
+    "panel_counts_note": "29 = 13 patchable sources + 14 destinations (Make Noise's own figures, matching this file's ports) + MIDI IN + LINE OUT.",
+    "summary": "MIDI A sets the oscillator pitch (always, summed with the 1V/OCT input) and gates CONTOUR. The VCO's triangle and square feed OVERTONE, which adds one harmonic (odd, then even, then blends in SLOPE at full clockwise); MULTIPLY folds that into more overtones, modulated by SLOPE through a normal. BALANCE crossfades the plain triangle (FUND) against the overtone path (OVRTN) into DYNAMICS, a low-pass gate opened by CONTOUR, then the line output. SLOPE is a 0-8 V rise/fall function, triggered or cycling up to audio rate. Voltage MATH, a clock with tap tempo, stepped random and MIDI B (CV and gate from note, velocity, mod wheel or LFOs) are free to patch."
+  },
+  "modules": [
+    {
+      "id": "midi",
+      "type": "midi_to_cv",
+      "name": "MIDI A / MIDI B (MIDI-to-CV)",
+      "panel_section": "CTRL [MIDI IN, PGM_A, PGM_B]",
+      "description": "Two-channel MIDI-to-CV converter on a TRS minijack MIDI input (all channels by default). MIDI A CV is hardwired to the oscillator; MIDI A Gate is normalled to CONTOUR. MIDI B CV and Gate have jacks and selectable sources. Also hosts the arpeggiator (MIDI only) and clock-synced portamento.",
+      "properties": {
+        "channels": ["A", "B"],
+        "default_channel": "all",
+        "arp_max_notes": 20,
+        "dac": "calibrated to the internal VCO; MIDI B calibratable to an external VCO"
+      },
+      "inputs": ["midi.in", "midi.arp_clock"],
+      "outputs": ["midi.a_cv", "midi.a_gate", "midi.b_cv", "midi.b_gate", "midi.clock"]
+    },
+    {
+      "id": "clock",
+      "type": "gate_logic",
+      "name": "Clock",
+      "panel_section": "CTRL [TEMPO, CLK]",
+      "description": "Clock whose tempo comes from tapping PGM_B, pulses at TEMPO input and MIDI clock (if enabled), combined. Drives CLK OUT, stepped random, arpeggio and portamento timing.",
+      "inputs": ["clock.tempo_in", "clock.midi_in"],
+      "outputs": ["clock.out"]
+    },
+    {
+      "id": "random",
+      "type": "sample_hold",
+      "name": "Stepped random",
+      "panel_section": "CTRL [random output]",
+      "description": "A new random voltage (0 to +10 V) on each clock cycle.",
+      "properties": {
+        "range_v": [0, 10]
+      },
+      "inputs": ["random.clock"],
+      "outputs": ["random.out"]
+    },
+    {
+      "id": "vmath",
+      "type": "summer",
+      "name": "Voltage MATH",
+      "panel_section": "CTRL [Voltage MATH]",
+      "description": "CH1 (unity) plus CH2 (through an attenuverter; normalled to an offset) summed to two identical outputs: mixer, offset generator, inverter, attenuator and mult.",
+      "inputs": ["vmath.ch1", "vmath.ch2"],
+      "outputs": ["vmath.out1", "vmath.out2", "vmath.offset"]
+    },
+    {
+      "id": "osc",
+      "type": "oscillator",
+      "name": "Oscillator",
+      "panel_section": "OSCILLATOR",
+      "description": "Triangle-core VCO with triangle and square outputs (about 10 Vpp). Pitch from coarse and fine knobs, MIDI A, the 1V/OCT input (tracks about 4 octaves) and AC-coupled linear FM.",
+      "properties": {
+        "waveforms": ["triangle", "square"],
+        "core": "triangle",
+        "voct_tracking_octaves": 4,
+        "lin_fm": "AC coupled; overdrives above about 80 %"
+      },
+      "inputs": ["osc.pitch_cv", "osc.fm_in"],
+      "outputs": ["osc.tri", "osc.square"]
+    },
+    {
+      "id": "overtone",
+      "type": "effects",
+      "name": "Overtone",
+      "panel_section": "OVERTONE",
+      "description": "Uses the square to add a single harmonic to the triangle: odd harmonic counter-clockwise, a transitional state, even harmonic, and at full clockwise the SLOPE signal is blended into the audio path.",
+      "properties": {
+        "kind": "harmonic waveshaper",
+        "regions": ["odd", "transitional", "even", "slope blend"]
+      },
+      "inputs": ["overtone.tri_in", "overtone.square_in", "overtone.slope_in", "overtone.cv"],
+      "outputs": ["overtone.out"]
+    },
+    {
+      "id": "multiply",
+      "type": "effects",
+      "name": "Multiply",
+      "panel_section": "MULTIPLY",
+      "description": "Multiplies the single overtone into more overtones (a wave multiplier/folder): adds harmonics as it turns clockwise, the opposite of a low-pass filter.",
+      "properties": {
+        "kind": "wave multiplier (folder)"
+      },
+      "inputs": ["multiply.in", "multiply.cv"],
+      "outputs": ["multiply.out"]
+    },
+    {
+      "id": "slope",
+      "type": "envelope",
+      "name": "Slope",
+      "panel_section": "SLOPE",
+      "description": "Rise/fall function generator, 0 to +8 V, triggered once (no sustain) or self-cycling as an LFO up to audio rate. Vari-Response shapes the segments log, linear or expo. EOC is high except during the fall.",
+      "properties": {
+        "stages": ["rise", "fall"],
+        "range_v": [0, 8],
+        "modes": ["triggered", "cycle"],
+        "responses": ["log", "linear", "expo"],
+        "retrigger": "ignored during rise, accepted during fall (ModWiggler explanation)"
+      },
+      "inputs": ["slope.trig", "slope.time_cv"],
+      "outputs": ["slope.out", "slope.eoc"]
+    },
+    {
+      "id": "contour",
+      "type": "envelope",
+      "name": "Contour",
+      "panel_section": "CONTOUR",
+      "description": "Four-stage envelope, 0 to +8 V: ONSET (attack), DECAY (decay and release), SUSTAIN level, Vari-Response linear to expo. EON goes high at the end of onset until the decay finishes.",
+      "properties": {
+        "stages": ["onset", "decay", "sustain", "release (= decay)"],
+        "range_v": [0, 8],
+        "responses": ["linear", "expo"]
+      },
+      "inputs": ["contour.gate", "contour.decay_cv"],
+      "outputs": ["contour.out", "contour.eon"]
+    },
+    {
+      "id": "balance",
+      "type": "mixer",
+      "name": "Balance",
+      "panel_section": "BALANCE",
+      "description": "Crossfades FUND (normalled oscillator triangle, or the BALANCE input) against OVRTN (Multiply output). The combo pot sets the blend, or attenuates CV patched to BALANCE CV.",
+      "inputs": ["balance.fund", "balance.ovrtn", "balance.cv"],
+      "outputs": ["balance.out", "balance.offset"]
+    },
+    {
+      "id": "dynamics",
+      "type": "vca",
+      "name": "Dynamics",
+      "panel_section": "DYNAMICS",
+      "description": "Low-pass gate: one control makes the sound both louder and brighter, like a Buchla 292 but with transistors instead of vactrols. CV from CONTOUR (normalled); the knob attenuates it.",
+      "properties": {
+        "lowpass_gate": true,
+        "element": "transistor (not vactrol)"
+      },
+      "inputs": ["dynamics.in", "dynamics.cv"],
+      "outputs": ["dynamics.out"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Line output",
+      "panel_section": "DYNAMICS [LINE OUT, LEVEL]",
+      "description": "Line-level stereo TRS output (3 Vpp) with LEVEL, clean to about 80 % then clipping (OVL lights). The DYNMC output gives the same signal at 10 Vpp.",
+      "inputs": ["out.in"],
+      "outputs": ["out.line"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "midi.pgm_a",
+      "module": "midi",
+      "label": "PGM_A",
+      "kind": "boolean",
+      "manual_ref": 1,
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Hold: enter program pages (and in a page, reset it to default). Press: next page. Tap twice or more (outside pages): MIDI B LFO rate."
+    },
+    {
+      "id": "midi.pgm_b",
+      "module": "midi",
+      "label": "PGM_B",
+      "kind": "boolean",
+      "manual_ref": 7,
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Tap: clock tempo (and arpeggio rate). Hold: panic (stops MIDI and arp notes; clears Latch & Shift). In a page: step the value; hold to exit."
+    },
+    {
+      "id": "midi.arp_on",
+      "module": "midi",
+      "label": "Arpeggiator run/stop",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "press PGM_A and PGM_B together",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 117"
+        }
+      ],
+      "function": "Plays held MIDI notes at the clock rate (PGM_B lit)."
+    },
+    {
+      "id": "midi.arp_type",
+      "module": "midi",
+      "label": "Page 1: Arpeggiator type",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "traditional"
+        },
+        {
+          "value": "latch_shift"
+        }
+      ],
+      "default": "traditional",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "program page 1 (PGM_A lit), PGM_B off/on",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 119"
+        }
+      ],
+      "function": "Traditional (held notes in played order) or Latch & Shift (notes added and kept after release; replay removes; up to 20, oldest dropped)."
+    },
+    {
+      "id": "midi.legato",
+      "module": "midi",
+      "label": "Page 2: Legato",
+      "kind": "boolean",
+      "default": true,
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "program page 2, PGM_B on/off",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 118"
+        }
+      ],
+      "function": "On: MIDI A gate stays high until all notes are released (one Contour). Off: retrigger on every new note."
+    },
+    {
+      "id": "midi.ch_a",
+      "module": "midi",
+      "label": "Page 3: MIDI A channel",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1..16"
+        },
+        {
+          "value": "all"
+        }
+      ],
+      "default": "all",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "program page 3 (MIDI Learn), play on the channel, hold PGM_B",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 102",
+          "note": "0-15 = channel 1-16; 16-127 = all"
+        }
+      ],
+      "function": "Receive channel for MIDI A (learned)."
+    },
+    {
+      "id": "midi.ch_b",
+      "module": "midi",
+      "label": "Page 3: MIDI B channel",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1..16"
+        },
+        {
+          "value": "all"
+        }
+      ],
+      "default": "all",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "program page 3 (MIDI Learn), play on the channel, hold PGM_B",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 103",
+          "note": "0-15 = channel 1-16; 16-127 = all"
+        }
+      ],
+      "function": "Receive channel for MIDI B (learned)."
+    },
+    {
+      "id": "midi.b_cv_src",
+      "module": "midi",
+      "label": "Page 4: MIDI B CV source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "note"
+        },
+        {
+          "value": "velocity"
+        },
+        {
+          "value": "mod_wheel"
+        },
+        {
+          "value": "lfo",
+          "meaning": "triangle; rate tapped on PGM_A"
+        }
+      ],
+      "default": "velocity",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "program page 4, PGM_B off/on/pulse/flash",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 105"
+        }
+      ],
+      "function": "What MIDI B CV outputs."
+    },
+    {
+      "id": "midi.b_gate_src",
+      "module": "midi",
+      "label": "Page 5: MIDI B gate source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "note_on"
+        },
+        {
+          "value": "velocity_gt_50"
+        },
+        {
+          "value": "mod_wheel_gt_50"
+        },
+        {
+          "value": "lfo",
+          "meaning": "square; same rate as the MIDI B triangle"
+        }
+      ],
+      "default": "mod_wheel_gt_50",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "program page 5, PGM_B off/on/pulse/flash",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 107"
+        }
+      ],
+      "function": "What MIDI B Gate outputs."
+    },
+    {
+      "id": "midi.midi_clock",
+      "module": "midi",
+      "label": "Page 6: MIDI clock",
+      "kind": "boolean",
+      "default": false,
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "program page 6, PGM_B off/on",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 114"
+        }
+      ],
+      "function": "Clock follows incoming MIDI clock (1/1), added to tap and TEMPO input."
+    },
+    {
+      "id": "midi.calibrate",
+      "module": "midi",
+      "label": "Page 7: Calibrate",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "program page 7, press PGM_B",
+          "when": "any_time"
+        }
+      ],
+      "function": "Calibrates MIDI A to the VCO (about 3 min) or MIDI B to an external VCO via the TEMPO input (about 6 min). Warm up 20 minutes first."
+    },
+    {
+      "id": "midi.a_cv_src",
+      "module": "midi",
+      "label": "MIDI A CV source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "note"
+        },
+        {
+          "value": "velocity"
+        },
+        {
+          "value": "mod_wheel"
+        },
+        {
+          "value": "lfo",
+          "meaning": "rate set by clock"
+        }
+      ],
+      "default": "note",
+      "memory": "global",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 104"
+        }
+      ],
+      "function": "What MIDI A CV sends (normally note); CC only, while in program pages."
+    },
+    {
+      "id": "midi.a_gate_src",
+      "module": "midi",
+      "label": "MIDI A gate source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "note_on"
+        },
+        {
+          "value": "velocity_gt_50"
+        },
+        {
+          "value": "mod_wheel_gt_50"
+        },
+        {
+          "value": "lfo"
+        }
+      ],
+      "default": "note_on",
+      "memory": "global",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 106"
+        }
+      ],
+      "function": "What MIDI A Gate sends (normally note on); CC only, while in program pages."
+    },
+    {
+      "id": "midi.bend_a",
+      "module": "midi",
+      "label": "Pitch bend scale A",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 108"
+        }
+      ],
+      "function": "Bend range in semitones, centred on the active pitch; CC only, in program pages."
+    },
+    {
+      "id": "midi.after_a",
+      "module": "midi",
+      "label": "Aftertouch scale A",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 110"
+        }
+      ],
+      "function": "Aftertouch amount in semitones; CC only, in program pages."
+    },
+    {
+      "id": "midi.vel_a",
+      "module": "midi",
+      "label": "Velocity scale A",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 112"
+        }
+      ],
+      "function": "Minimum velocity value; CC only, in program pages."
+    },
+    {
+      "id": "midi.bend_b",
+      "module": "midi",
+      "label": "Pitch bend scale B",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 109"
+        }
+      ],
+      "function": "Bend range in semitones, centred on the active pitch; CC only, in program pages."
+    },
+    {
+      "id": "midi.after_b",
+      "module": "midi",
+      "label": "Aftertouch scale B",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 111"
+        }
+      ],
+      "function": "Aftertouch amount in semitones; CC only, in program pages."
+    },
+    {
+      "id": "midi.vel_b",
+      "module": "midi",
+      "label": "Velocity scale B",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 113"
+        }
+      ],
+      "function": "Minimum velocity value; CC only, in program pages."
+    },
+    {
+      "id": "clock.tempo_div",
+      "module": "midi",
+      "label": "TEMPO IN divisor",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 116"
+        }
+      ],
+      "function": "Divides pulses at the TEMPO input; CC only, in program pages."
+    },
+    {
+      "id": "midi.portamento",
+      "module": "midi",
+      "label": "Portamento on/off",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 65",
+          "note": "0 off, 1-127 on"
+        }
+      ],
+      "function": "Analogue portamento on MIDI A pitch."
+    },
+    {
+      "id": "midi.portamento_time",
+      "module": "midi",
+      "label": "Portamento time",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 5"
+        }
+      ],
+      "function": "Glide time in 64ths of the clock; 50 % takes one whole clock pulse; follows clock changes. 0 is off."
+    },
+    {
+      "id": "vmath.ch2_level",
+      "module": "vmath",
+      "label": "Voltage MATH CH2 attenuverter",
+      "kind": "continuous",
+      "manual_ref": 14,
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "attenuverter; 12:00 = 0 (no effect), full CCW = full inversion"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Scales and inverts CH2, or sets the offset when CH2 is unpatched."
+    },
+    {
+      "id": "osc.pitch",
+      "module": "osc",
+      "label": "PITCH",
+      "kind": "continuous",
+      "manual_ref": 20,
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "unmarked knob; 7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Coarse frequency (large grey knob)."
+    },
+    {
+      "id": "osc.fine",
+      "module": "osc",
+      "label": "FINE",
+      "kind": "continuous",
+      "manual_ref": 21,
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "unmarked knob; 7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine tune."
+    },
+    {
+      "id": "osc.linfm",
+      "module": "osc",
+      "label": "LIN FM attenuator",
+      "kind": "continuous",
+      "manual_ref": 22,
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "unmarked knob; 7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth (index) of linear FM from the LIN FM input; over about 80 % the FM bus overdrives and tracking suffers."
+    },
+    {
+      "id": "osc.calibration",
+      "module": "osc",
+      "label": "Calibration trimmer",
+      "kind": "continuous",
+      "manual_ref": 61,
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "unmarked knob; 7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "trimmer"
+        }
+      ],
+      "function": "Oscillator calibration trimmer."
+    },
+    {
+      "id": "overtone.amount",
+      "module": "overtone",
+      "label": "OVERTONE",
+      "kind": "continuous",
+      "manual_ref": 25,
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "unmarked knob; 7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Odd harmonic (CCW) through a transitional state to even, then blends in SLOPE at full clockwise."
+    },
+    {
+      "id": "overtone.cv_amount",
+      "module": "overtone",
+      "label": "OVERTONE CV attenuator",
+      "kind": "continuous",
+      "manual_ref": 26,
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "unmarked knob; 7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of CV at the OVERTONE input; zero at full CCW. Full CW gives 50 % modulation depth from the panel's centre."
+    },
+    {
+      "id": "multiply.amount",
+      "module": "multiply",
+      "label": "MULTIPLY",
+      "kind": "continuous",
+      "manual_ref": 27,
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "unmarked knob; 7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of added overtones."
+    },
+    {
+      "id": "multiply.cv_amount",
+      "module": "multiply",
+      "label": "MULTIPLY CV attenuverter",
+      "kind": "continuous",
+      "manual_ref": 28,
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "attenuverter; 12:00 = 0 (no effect), full CCW = full inversion"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth and direction of CV at the MULTIPLY input (normally SLOPE)."
+    },
+    {
+      "id": "slope.cycle",
+      "module": "slope",
+      "label": "CYCLE",
+      "kind": "boolean",
+      "manual_ref": 32,
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Self-cycles SLOPE as an LFO or audio-rate oscillator (button lit white)."
+    },
+    {
+      "id": "slope.rise",
+      "module": "slope",
+      "label": "RISE",
+      "kind": "continuous",
+      "manual_ref": 33,
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "unmarked knob; 7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Time to reach +8 V; clockwise is slower."
+    },
+    {
+      "id": "slope.fall",
+      "module": "slope",
+      "label": "FALL",
+      "kind": "continuous",
+      "manual_ref": 34,
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "unmarked knob; 7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Time back to 0 V; clockwise is slower."
+    },
+    {
+      "id": "slope.response",
+      "module": "slope",
+      "label": "Vari-Response",
+      "kind": "continuous",
+      "manual_ref": 36,
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "unmarked knob; 7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Segment shape from log through linear to expo; more expo is also faster."
+    },
+    {
+      "id": "contour.onset",
+      "module": "contour",
+      "label": "ONSET",
+      "kind": "continuous",
+      "manual_ref": 42,
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "unmarked knob; 7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attack time to +8 V."
+    },
+    {
+      "id": "contour.sustain",
+      "module": "contour",
+      "label": "SUSTAIN",
+      "kind": "continuous",
+      "manual_ref": 43,
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "unmarked knob; 7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level; full CCW gives an AD shape, full CW an ASR."
+    },
+    {
+      "id": "contour.decay",
+      "module": "contour",
+      "label": "DECAY",
+      "kind": "continuous",
+      "manual_ref": 44,
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "unmarked knob; 7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay time to the sustain level, and release time after the gate ends."
+    },
+    {
+      "id": "contour.response",
+      "module": "contour",
+      "label": "Vari-Response",
+      "kind": "continuous",
+      "manual_ref": 46,
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "unmarked knob; 7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Segment shape from linear to expo; more expo is faster and more percussive."
+    },
+    {
+      "id": "balance.amount",
+      "module": "balance",
+      "label": "BALANCE",
+      "kind": "continuous",
+      "manual_ref": 54,
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "unmarked knob; 7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "FUND (CCW) to OVRTN (CW); with a cable in BALANCE CV it attenuates that CV instead."
+    },
+    {
+      "id": "dynamics.amount",
+      "module": "dynamics",
+      "label": "DYNAMICS",
+      "kind": "continuous",
+      "manual_ref": 55,
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "unmarked knob; 7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attenuates the CV opening the low-pass gate (normally CONTOUR); set to at least 3:00 for the default sound."
+    },
+    {
+      "id": "out.level",
+      "module": "out",
+      "label": "LEVEL",
+      "kind": "continuous",
+      "manual_ref": 57,
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "unmarked knob; 7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Line output volume; clean to about 80 %, then clips (OVL)."
+    }
+  ],
+  "ports": [
+    {
+      "id": "midi.in",
+      "label": "MIDI IN",
+      "location": "top",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "3.5 mm TRS (MIDI)",
+      "node": "midi.in",
+      "function": "MIDI on a TRS minijack (Korg-style); DIN adapter included.",
+      "manual_ref": 3
+    },
+    {
+      "id": "jack.midi_b_cv",
+      "label": "MIDI B CV (Ext. CV Output)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "midi.b_cv",
+      "function": "MIDI B CV: note, velocity, mod wheel or triangle LFO.",
+      "manual_ref": 5
+    },
+    {
+      "id": "jack.midi_b_gate",
+      "label": "MIDI B GATE (Ext. Gate Output)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm jack",
+      "node": "midi.b_gate",
+      "function": "MIDI B gate: note, velocity or mod wheel over 50 %, or square LFO.",
+      "manual_ref": 6
+    },
+    {
+      "id": "jack.tempo",
+      "label": "TEMPO",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "3.5 mm jack",
+      "node": "clock.tempo_in",
+      "function": "Clock pulses (any hard edge) set the tempo, combined with tapping and MIDI clock. Also the calibration input for an external VCO.",
+      "manual_ref": 8
+    },
+    {
+      "id": "jack.clock_out",
+      "label": "CLK OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "clock",
+      "connector": "3.5 mm jack",
+      "node": "clock.out",
+      "function": "Gates at the clock tempo.",
+      "manual_ref": 10
+    },
+    {
+      "id": "jack.random",
+      "label": "Stepped random OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "random.out",
+      "function": "New random voltage each clock (0 to +10 V).",
+      "manual_ref": 11
+    },
+    {
+      "id": "jack.vmath_ch1",
+      "label": "Voltage MATH CH1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm jack",
+      "node": "vmath.ch1",
+      "function": "Unity input to the sum.",
+      "manual_ref": 12
+    },
+    {
+      "id": "jack.vmath_ch2",
+      "label": "Voltage MATH CH2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm jack",
+      "node": "vmath.ch2",
+      "function": "Attenuverted input; normalled to an offset.",
+      "manual_ref": 13
+    },
+    {
+      "id": "jack.vmath_out1",
+      "label": "Voltage MATH OUT 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm jack",
+      "node": "vmath.out1",
+      "function": "CH1 + CH2.",
+      "manual_ref": 16
+    },
+    {
+      "id": "jack.vmath_out2",
+      "label": "Voltage MATH OUT 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm jack",
+      "node": "vmath.out2",
+      "function": "Identical copy of OUT 1.",
+      "manual_ref": 17
+    },
+    {
+      "id": "jack.tri",
+      "label": "Oscillator TRIANGLE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm jack",
+      "node": "osc.tri",
+      "function": "Triangle, about 10 Vpp; patching it leaves the normal to BALANCE in place.",
+      "manual_ref": 18
+    },
+    {
+      "id": "jack.square",
+      "label": "Oscillator SQUARE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm jack",
+      "node": "osc.square",
+      "function": "Square, about 10 Vpp.",
+      "manual_ref": 19
+    },
+    {
+      "id": "jack.voct",
+      "label": "1V/OCT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "osc.pitch_cv",
+      "function": "Pitch CV, summed with MIDI A; tracks reasonably over 4 octaves.",
+      "manual_ref": 23,
+      "combine": "sum"
+    },
+    {
+      "id": "jack.linfm",
+      "label": "LIN FM",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm jack",
+      "node": "osc.fm_in",
+      "function": "AC-coupled linear FM at the LIN FM attenuator's depth.",
+      "manual_ref": 24
+    },
+    {
+      "id": "jack.overtone_cv",
+      "label": "OVERTONE CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "overtone.cv",
+      "function": "Modulates OVERTONE through its attenuator.",
+      "manual_ref": 30,
+      "combine": "sum"
+    },
+    {
+      "id": "jack.multiply_cv",
+      "label": "MULTIPLY CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "multiply.cv",
+      "function": "Modulates MULTIPLY through its attenuverter; normalled to SLOPE.",
+      "manual_ref": 31
+    },
+    {
+      "id": "jack.slope_time",
+      "label": "SLOPE TIME",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "slope.time_cv",
+      "function": "Modulates rise and fall time equally.",
+      "manual_ref": 38,
+      "combine": "sum"
+    },
+    {
+      "id": "jack.eoc",
+      "label": "EOC",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm jack",
+      "node": "slope.eoc",
+      "function": "End of cycle: high except while SLOPE falls.",
+      "manual_ref": 39
+    },
+    {
+      "id": "jack.slope_trig",
+      "label": "SLOPE TRIG",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm jack",
+      "node": "slope.trig",
+      "function": "Rising edge fires one rise/fall function.",
+      "manual_ref": 40
+    },
+    {
+      "id": "jack.slope_out",
+      "label": "SLOPE OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "slope.out",
+      "function": "SLOPE function, 0 to +8 V.",
+      "manual_ref": 41
+    },
+    {
+      "id": "jack.decay_cv",
+      "label": "CONTOUR DECAY",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "contour.decay_cv",
+      "function": "Modulates decay time.",
+      "manual_ref": 47,
+      "combine": "sum"
+    },
+    {
+      "id": "jack.contour_gate",
+      "label": "CONTOUR GATE",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm jack",
+      "node": "contour.gate",
+      "function": "Gate for CONTOUR; normalled to MIDI A gate.",
+      "manual_ref": 49
+    },
+    {
+      "id": "jack.eon",
+      "label": "EON",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm jack",
+      "node": "contour.eon",
+      "function": "End of onset: high from the end of onset until the decay finishes.",
+      "manual_ref": 50
+    },
+    {
+      "id": "jack.contour_out",
+      "label": "CONTOUR OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "contour.out",
+      "function": "CONTOUR function, 0 to +8 V.",
+      "manual_ref": 51
+    },
+    {
+      "id": "jack.balance_in",
+      "label": "BALANCE EXT input",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm jack",
+      "node": "balance.fund",
+      "function": "Replaces the triangle on the FUND side.",
+      "manual_ref": 52
+    },
+    {
+      "id": "jack.balance_cv",
+      "label": "BALANCE CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "balance.cv",
+      "function": "CV for the blend; the combo pot becomes its attenuator.",
+      "manual_ref": 53
+    },
+    {
+      "id": "jack.line_out",
+      "label": "LINE OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TRS",
+      "node": "out.line",
+      "function": "Stereo TRS line output, 3 Vpp, for headphones or a mixer (use TS into balanced inputs).",
+      "manual_ref": 58
+    },
+    {
+      "id": "jack.dynamics_cv",
+      "label": "DYNAMICS CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "dynamics.cv",
+      "function": "Opens the low-pass gate; normalled to CONTOUR.",
+      "manual_ref": 59
+    },
+    {
+      "id": "jack.dynamics_out",
+      "label": "DYNMC OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm jack",
+      "node": "dynamics.out",
+      "function": "Modular-level output, 10 Vpp; not for line equipment or headphones.",
+      "manual_ref": 60
+    },
+    {
+      "id": "power.dc",
+      "label": "DC IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "DC barrel",
+      "node": null,
+      "function": "15 V DC, tip positive; Make Noise adapter only.",
+      "manual_ref": null
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "midi.a_cv",
+      "to": "osc.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Hardwired: MIDI A always sets pitch; the 1V/OCT input adds to it. Portamento applies here when enabled."
+    },
+    {
+      "id": "c02",
+      "from": "midi.a_gate",
+      "to": "contour.gate",
+      "signal": "gate",
+      "kind": "normalled",
+      "broken_by": "jack.contour_gate"
+    },
+    {
+      "id": "c03",
+      "from": "osc.tri",
+      "to": "overtone.tri_in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Hardwired."
+    },
+    {
+      "id": "c04",
+      "from": "osc.square",
+      "to": "overtone.square_in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Hardwired."
+    },
+    {
+      "id": "c05",
+      "from": "slope.out",
+      "to": "overtone.slope_in",
+      "signal": "cv_or_audio",
+      "kind": "fixed",
+      "note": "Hardwired; heard only near full-clockwise OVERTONE."
+    },
+    {
+      "id": "c06",
+      "from": "overtone.out",
+      "to": "multiply.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Hardwired."
+    },
+    {
+      "id": "c07",
+      "from": "slope.out",
+      "to": "multiply.cv",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.multiply_cv",
+      "amount": "multiply.cv_amount"
+    },
+    {
+      "id": "c08",
+      "from": "multiply.out",
+      "to": "balance.ovrtn",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Hardwired to the OVRTN side."
+    },
+    {
+      "id": "c09",
+      "from": "osc.tri",
+      "to": "balance.fund",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.balance_in"
+    },
+    {
+      "id": "c10",
+      "from": "balance.offset",
+      "to": "balance.cv",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.balance_cv",
+      "amount": "balance.amount",
+      "note": "Internal offset, so the combo pot sets the blend with nothing patched."
+    },
+    {
+      "id": "c11",
+      "from": "balance.out",
+      "to": "dynamics.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Hardwired."
+    },
+    {
+      "id": "c12",
+      "from": "contour.out",
+      "to": "dynamics.cv",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.dynamics_cv",
+      "amount": "dynamics.amount"
+    },
+    {
+      "id": "c13",
+      "from": "dynamics.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out.level",
+      "note": "Hardwired; DYNMC OUT carries the same signal at modular level."
+    },
+    {
+      "id": "c14",
+      "from": "vmath.offset",
+      "to": "vmath.ch2",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vmath_ch2",
+      "amount": "vmath.ch2_level"
+    },
+    {
+      "id": "c15",
+      "from": "clock.out",
+      "to": "random.clock",
+      "signal": "clock",
+      "kind": "fixed",
+      "note": "A new random value each clock cycle."
+    },
+    {
+      "id": "c16",
+      "from": "clock.out",
+      "to": "midi.arp_clock",
+      "signal": "clock",
+      "kind": "fixed",
+      "note": "Arpeggio rate and portamento timing follow the clock."
+    },
+    {
+      "id": "c17",
+      "from": "midi.clock",
+      "to": "clock.midi_in",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "midi.midi_clock",
+        "equals": true
+      }
+    }
+  ],
+  "indicators": [
+    {
+      "id": "pgm_a",
+      "module": "midi",
+      "label": "PGM_A",
+      "kind": "led",
+      "led_colour": "white",
+      "function": "Lit in program pages and as a page indicator.",
+      "manual_ref": 1
+    },
+    {
+      "id": "midi_a",
+      "module": "midi",
+      "label": "MIDI A",
+      "kind": "led",
+      "led_colour": "red",
+      "function": "MIDI A activity; flashes twice on page entry or reset.",
+      "manual_ref": 2
+    },
+    {
+      "id": "midi_b",
+      "module": "midi",
+      "label": "MIDI B",
+      "kind": "led",
+      "led_colour": "red",
+      "function": "MIDI B activity; page indicator.",
+      "manual_ref": 4
+    },
+    {
+      "id": "pgm_b",
+      "module": "midi",
+      "label": "PGM_B",
+      "kind": "led",
+      "led_colour": "white",
+      "function": "Lit when the arpeggiator runs; shows the page value.",
+      "manual_ref": 7
+    },
+    {
+      "id": "tempo",
+      "module": "clock",
+      "label": "TEMPO",
+      "kind": "led",
+      "led_colour": "red",
+      "function": "Flashes at the clock rate.",
+      "manual_ref": 9
+    },
+    {
+      "id": "random",
+      "module": "random",
+      "label": "Stepped random",
+      "kind": "led",
+      "function": "Stepped random activity.",
+      "confidence": "inferred",
+      "note": "Mentioned in the calibration text; not in the panel legend."
+    },
+    {
+      "id": "vmath",
+      "module": "vmath",
+      "label": "Voltage MATH",
+      "kind": "led",
+      "led_colour": "multi",
+      "function": "Red/green for the output's polarity and level.",
+      "manual_ref": 15
+    },
+    {
+      "id": "multiply",
+      "module": "multiply",
+      "label": "MULTIPLY",
+      "kind": "led",
+      "led_colour": "amber",
+      "function": "Multiply activity (printed as orange).",
+      "manual_ref": 29
+    },
+    {
+      "id": "slope",
+      "module": "slope",
+      "label": "SLOPE",
+      "kind": "led",
+      "led_colour": "green",
+      "function": "Slope level.",
+      "manual_ref": 35
+    },
+    {
+      "id": "eoc",
+      "module": "slope",
+      "label": "EOC",
+      "kind": "led",
+      "led_colour": "yellow",
+      "function": "End of cycle gate.",
+      "manual_ref": 37
+    },
+    {
+      "id": "cycle",
+      "module": "slope",
+      "label": "CYCLE",
+      "kind": "led",
+      "led_colour": "white",
+      "function": "Lit when SLOPE self-cycles.",
+      "manual_ref": 32
+    },
+    {
+      "id": "contour",
+      "module": "contour",
+      "label": "CONTOUR",
+      "kind": "led",
+      "led_colour": "green",
+      "function": "Contour level.",
+      "manual_ref": 45
+    },
+    {
+      "id": "eon",
+      "module": "contour",
+      "label": "EON",
+      "kind": "led",
+      "led_colour": "yellow",
+      "function": "End of onset gate.",
+      "manual_ref": 48
+    },
+    {
+      "id": "dynamics",
+      "module": "dynamics",
+      "label": "DYNAMICS",
+      "kind": "led",
+      "led_colour": "amber",
+      "function": "Gate opening (printed as orange).",
+      "manual_ref": 56
+    },
+    {
+      "id": "ovl",
+      "module": "out",
+      "label": "OVL",
+      "kind": "led",
+      "function": "Line output clipping."
+    }
+  ],
+  "led_legend": {
+    "rule": "Activity windows by colour.",
+    "colours": [
+      {
+        "colour": "red",
+        "meaning": "MIDI activity, clock rate, negative Voltage MATH",
+        "modules": ["midi", "clock", "vmath"]
+      },
+      {
+        "colour": "green",
+        "meaning": "function levels; positive Voltage MATH",
+        "modules": ["slope", "contour", "vmath"]
+      },
+      {
+        "colour": "yellow",
+        "meaning": "EOC and EON gates",
+        "modules": ["slope", "contour"]
+      },
+      {
+        "colour": "amber",
+        "meaning": "MULTIPLY and DYNAMICS activity (printed as orange)",
+        "modules": ["multiply", "dynamics"]
+      },
+      {
+        "colour": "white",
+        "meaning": "illuminated buttons",
+        "modules": ["midi", "slope"]
+      }
+    ],
+    "confidence": "stated"
+  },
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Normalled voice",
+      "applies_to": [
+        "midi",
+        "osc",
+        "overtone",
+        "multiply",
+        "balance",
+        "dynamics",
+        "contour",
+        "slope"
+      ],
+      "rule": "With no cables: MIDI A pitch to the VCO, triangle and square into OVERTONE then MULTIPLY (modulated by SLOPE), BALANCE between triangle and overtones, DYNAMICS opened by CONTOUR, which MIDI A gates. Gold panel lines show the flow; arrows mark normals that a cable breaks."
+    },
+    {
+      "id": "b02",
+      "name": "Patching rules",
+      "applies_to": ["osc"],
+      "rule": "Every jack is an input or an output. Input to input does nothing; output to output is unpredictable but harmless. Patching an output never breaks its normals; patching an input does."
+    },
+    {
+      "id": "b03",
+      "name": "Signal levels",
+      "applies_to": ["osc", "slope", "contour", "dynamics"],
+      "rule": "Eurorack levels: audio about 10 Vpp, functions 0 to +8 V, gates +8 V, random 0 to +10 V, everything within ±10 V. Gate inputs respond to anything rising above about 2 V. Line out 3 Vpp; DYNMC out 10 Vpp."
+    },
+    {
+      "id": "b04",
+      "name": "Overtone",
+      "applies_to": ["overtone"],
+      "rule": "Turning OVERTONE clockwise moves the added harmonic from odd through a transitional state to even; at full clockwise SLOPE is blended into the audio path (inharmonic, ring-mod-like unless SLOPE is tuned to the VCO)."
+    },
+    {
+      "id": "b05",
+      "name": "Multiply",
+      "applies_to": ["multiply"],
+      "rule": "Adds overtones above the one from OVERTONE as it turns clockwise; additive (West Coast), the reverse of sweeping a low-pass filter."
+    },
+    {
+      "id": "b06",
+      "name": "Balance",
+      "applies_to": ["balance"],
+      "rule": "FUND (CCW) is the plain triangle, almost a sub-octave to the overtone side; OVRTN (CW) is the processed signal. Sweeping it is like opening a low-pass filter. A cable in BALANCE CV turns the knob into that CV's attenuator."
+    },
+    {
+      "id": "b07",
+      "name": "Low-pass gate",
+      "applies_to": ["dynamics", "contour"],
+      "rule": "DYNAMICS raises level and brightness together, like a Buchla 292 but with transistors, so it responds faster than a vactrol gate. CONTOUR opens it through the DYNAMICS knob; patch an offset to DYNAMICS CV for a drone."
+    },
+    {
+      "id": "b08",
+      "name": "Slope",
+      "applies_to": ["slope"],
+      "rule": "Trigger: one 0 V to +8 V rise and fall, no sustain (only the rising edge counts). A forum explanation adds that triggers are ignored during the rise but accepted during the fall, so an audio-rate trigger divides into subharmonics. CYCLE: repeats as an LFO, fast enough for audio. RISE and FALL set times and shape (fast rise, slow fall gives a saw). Vari-Response bends segments log, linear or expo, and expo also speeds it up. TIME CV scales both."
+    },
+    {
+      "id": "b09",
+      "name": "Contour",
+      "applies_to": ["contour"],
+      "rule": "Onset to +8 V, decay to SUSTAIN while the gate is high, then back to 0 V at the DECAY rate. SUSTAIN at minimum gives AD, at maximum ASR, between ADSR. Vari-Response from linear to expo, faster towards expo."
+    },
+    {
+      "id": "b10",
+      "name": "Voltage MATH",
+      "applies_to": ["vmath"],
+      "rule": "OUT 1 and OUT 2 both carry CH1 + attenuverted CH2. With CH2 unpatched the attenuverter sets a ±offset. Uses: mix two CVs, invert (e.g. Contour falling Overtone), scale (vibrato depth into 1V/OCT), and mult one source to two destinations."
+    },
+    {
+      "id": "b11",
+      "name": "Clock and random",
+      "applies_to": ["clock", "random"],
+      "rule": "Clock tempo is tapped on PGM_B, taken from TEMPO input pulses, or follows MIDI clock when enabled; the sources combine. Each clock gives a new stepped random value. Patching EOC to TEMPO syncs random to the slope cycle."
+    },
+    {
+      "id": "b12",
+      "name": "MIDI A",
+      "applies_to": ["midi", "osc", "contour"],
+      "rule": "Receives on all channels by default. CV is always on the oscillator and adds to 1V/OCT, which can act as transpose. Gate normals to CONTOUR; legato keeps one gate until all notes are released, retrigger regates each note."
+    },
+    {
+      "id": "b13",
+      "name": "MIDI B",
+      "applies_to": ["midi"],
+      "rule": "A second converter with jacks: CV from note, velocity (default), mod wheel or a triangle LFO; gate from note on, velocity or mod wheel above 50 % (default), or a square LFO; the LFOs share a rate tapped on PGM_A. Separate channels make the 0-Coast a two-channel MIDI-to-CV interface."
+    },
+    {
+      "id": "b14",
+      "name": "Arpeggiator",
+      "applies_to": ["midi"],
+      "rule": "MIDI only. Traditional: held notes in played order at the clock rate. Latch & Shift: notes are added and kept after release, replaying a note removes it, up to 20 notes."
+    },
+    {
+      "id": "b15",
+      "name": "Portamento",
+      "applies_to": ["midi"],
+      "rule": "CC 65 switches analogue portamento, CC 5 sets its time in 64ths of the clock (50 % takes a full pulse); it follows clock and CC changes, so it can be automated."
+    },
+    {
+      "id": "b16",
+      "name": "Program pages and CC",
+      "applies_to": ["midi"],
+      "rule": "Hold PGM_A to enter seven pages (arp type, legato, MIDI learn, MIDI B CV source, MIDI B gate source, MIDI clock, calibrate). PGM_B steps values; hold PGM_A to reset a page; hold PGM_B to exit. CC 102-119 set these and more, but only while in the pages. PGM_A + PGM_B at power-on restores defaults."
+    },
+    {
+      "id": "b17",
+      "name": "Calibration",
+      "applies_to": ["midi", "osc"],
+      "rule": "Calibrate MIDI A to the VCO (pitch full CCW, fine 10:00, about 3 min) or MIDI B to an external VCO via the TEMPO input (about 6 min); warm up 20 minutes, no cables."
+    },
+    {
+      "id": "b18",
+      "name": "Firmware",
+      "applies_to": ["midi"],
+      "rule": "The November 2016 update added clock-synced portamento (CC 5, 65) and program-page editing by CC (Sonicstate). From 1.6.8, settings CCs are accepted only in the program pages (Coast Express); its release note lists a fix to MIDI B CV range for velocity and mod wheel (as quoted by Subsystem)."
+    },
+    {
+      "id": "b19",
+      "name": "Oscillator sync",
+      "applies_to": ["osc", "slope"],
+      "rule": "Patching the square to SLOPE TRIG restarts the cycling Slope on every oscillator cycle; RISE, FALL and Vari-Response then shape a synced tone (Sound On Sound; the manual's Sync Bass patch)."
+    },
+    {
+      "id": "b20",
+      "name": "FM",
+      "applies_to": ["osc", "slope"],
+      "rule": "LIN FM is AC-coupled and keeps pitch tracking; cycling SLOPE at audio rate is the obvious modulator. Above about 80 % the FM bus overdrives. For exponential FM patch into 1V/OCT, through Voltage MATH for depth."
+    }
+  ],
+  "example_patches": [
+    {
+      "id": "default_sound",
+      "name": "Default Sound (Figure 8)",
+      "source": "manual p.9",
+      "settings": {
+        "dynamics.amount": 8
+      },
+      "description": "No cables; played from MIDI or CV/gate. Knob positions are drawn; the text asks for DYNAMICS at 3:00 or more.",
+      "confidence": "stated"
+    },
+    {
+      "id": "drone",
+      "name": "Drone (Figure 9)",
+      "source": "manual pp.9, 20",
+      "cords": [["jack.vmath_out1", "jack.dynamics_cv"]],
+      "settings": {
+        "vmath.ch2_level": 3
+      },
+      "description": "Voltage MATH offset holds DYNAMICS open. The attenuverter position is drawn; any positive setting opens the gate.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "square_fund",
+      "name": "Square as the fundamental",
+      "source": "manual p.22",
+      "cords": [["jack.square", "jack.balance_in"]],
+      "settings": {
+        "balance.amount": 0
+      },
+      "description": "Square replaces the triangle on the FUND side of BALANCE.",
+      "confidence": "stated"
+    },
+    {
+      "id": "overtone_mixer_drone",
+      "name": "Hearing DYNAMICS",
+      "source": "manual p.26",
+      "cords": [["jack.vmath_out1", "jack.dynamics_cv"]],
+      "settings": {
+        "dynamics.amount": 0,
+        "balance.amount": 8,
+        "multiply.amount": 5
+      },
+      "description": "On the drone, sweep DYNAMICS up from zero: louder and brighter together. OVERTONE at even.",
+      "confidence": "stated"
+    },
+    {
+      "id": "random_overtone",
+      "name": "Random overtone",
+      "source": "manual p.31",
+      "cords": [["jack.random", "jack.overtone_cv"]],
+      "settings": {
+        "overtone.amount": 0,
+        "balance.amount": 5
+      },
+      "description": "Raise the OVERTONE attenuator for more depth; tap PGM_B for the rate.",
+      "confidence": "stated"
+    },
+    {
+      "id": "vibrato",
+      "name": "Variable-depth vibrato",
+      "source": "manual p.20",
+      "cords": [
+        ["jack.slope_out", "jack.vmath_ch2"],
+        ["jack.vmath_out1", "jack.voct"]
+      ],
+      "settings": {
+        "slope.cycle": true
+      },
+      "description": "Cycling SLOPE through the CH2 attenuverter into 1V/OCT; MIDI still plays the pitch.",
+      "confidence": "stated"
+    },
+    {
+      "id": "inverted_overtone",
+      "name": "Overtone falling with Contour",
+      "source": "manual p.20",
+      "cords": [
+        ["jack.contour_out", "jack.vmath_ch2"],
+        ["jack.vmath_out1", "jack.overtone_cv"]
+      ],
+      "settings": {
+        "overtone.amount": 10,
+        "vmath.ch2_level": -5,
+        "overtone.cv_amount": 10
+      },
+      "description": "Overtone moves opposite to the level.",
+      "confidence": "stated"
+    },
+    {
+      "id": "slope_fm",
+      "name": "Slope FM",
+      "source": "manual p.32",
+      "cords": [["jack.slope_out", "jack.linfm"]],
+      "settings": {
+        "slope.cycle": true,
+        "slope.rise": 2,
+        "slope.fall": 2
+      },
+      "description": "Audio-rate SLOPE into LIN FM, Vari-Response linear; raise the LIN FM attenuator for a brighter timbre.",
+      "confidence": "stated"
+    },
+    {
+      "id": "random_time",
+      "name": "Random slope time",
+      "source": "manual p.33",
+      "cords": [
+        ["jack.random", "jack.slope_time"],
+        ["jack.eoc", "jack.tempo"]
+      ],
+      "settings": {
+        "slope.cycle": true
+      },
+      "description": "Each SLOPE cycle picks a new random speed.",
+      "confidence": "stated"
+    },
+    {
+      "id": "random_start",
+      "name": "Randomised Multiply modulation",
+      "source": "manual p.35",
+      "cords": [
+        ["jack.slope_out", "jack.vmath_ch1"],
+        ["jack.random", "jack.vmath_ch2"],
+        ["jack.vmath_out1", "jack.multiply_cv"]
+      ],
+      "settings": {
+        "vmath.ch2_level": 0,
+        "multiply.amount": 0,
+        "multiply.cv_amount": 3,
+        "slope.cycle": true
+      },
+      "description": "Turn the CH2 attenuverter up to add random to the SLOPE sweep.",
+      "confidence": "stated"
+    },
+    {
+      "id": "key_brightness",
+      "name": "Key tracking brightness",
+      "source": "manual p.14",
+      "cords": [["jack.midi_b_cv", "jack.balance_cv"]],
+      "settings": {
+        "midi.b_cv_src": "note"
+      },
+      "description": "Higher notes are brighter; the combo pot sets depth.",
+      "confidence": "stated"
+    },
+    {
+      "id": "velocity_timbre",
+      "name": "Velocity timbre",
+      "source": "manual p.14",
+      "cords": [["jack.midi_b_cv", "jack.multiply_cv"]],
+      "settings": {
+        "midi.b_cv_src": "velocity"
+      },
+      "description": "Harder notes are brighter.",
+      "confidence": "stated"
+    },
+    {
+      "id": "simple_bass",
+      "name": "Simple Bass with Brightness (Tony Rolando)",
+      "source": "manual p.37",
+      "settings": {
+        "balance.amount": 4,
+        "dynamics.amount": 7
+      },
+      "description": "Balance up to 11:00 for brighter; DYNAMICS from 2:00 to 5:00 for more aggression. Cables and other knobs drawn, not transcribed.",
+      "confidence": "stated"
+    },
+    {
+      "id": "fluttering_arps",
+      "name": "Fluttering Arpeggios (Tony Rolando)",
+      "source": "manual p.37",
+      "settings": {
+        "slope.cycle": true,
+        "midi.arp_on": true
+      },
+      "description": "Start from Simple Bass; drawn cables not transcribed.",
+      "confidence": "stated"
+    },
+    {
+      "id": "pitched_noise",
+      "name": "Pitched Noise Orbit (Tony Rolando)",
+      "source": "manual p.38",
+      "settings": {
+        "osc.linfm": 10,
+        "dynamics.amount": 5
+      },
+      "description": "LIN FM from full CCW (plain tone) to full CW (only noise); DYNAMICS 12:00 upwards. Drawn cables not transcribed.",
+      "confidence": "stated"
+    },
+    {
+      "id": "wobble_bass",
+      "name": "Wobble Bass (Walker Farrell)",
+      "source": "manual p.39",
+      "settings": {
+        "midi.b_cv_src": "note"
+      },
+      "description": "SLOPE on amplitude, CONTOUR on OVERTONE; wobble speed follows pitch. Drawn cables not transcribed.",
+      "confidence": "stated"
+    },
+    {
+      "id": "sync_bass",
+      "name": "Sync Bass (Walker Farrell)",
+      "source": "manual p.39",
+      "settings": {
+        "midi.b_cv_src": "lfo"
+      },
+      "description": "SLOPE as a sawtooth VCO synced to the oscillator; tap a very slow PGM_A rate. Drawn cables not transcribed.",
+      "confidence": "stated"
+    },
+    {
+      "id": "hard_sync",
+      "name": "Slope synced to the oscillator",
+      "source": "Sound On Sound review",
+      "cords": [["jack.square", "jack.slope_trig"]],
+      "settings": {
+        "slope.cycle": true
+      },
+      "description": "Slope restarts on each oscillator cycle; patch SLOPE OUT to the audio path (BALANCE input or OVERTONE full CW) and play with RISE, FALL and Vari-Response.",
+      "confidence": "stated"
+    },
+    {
+      "id": "krell",
+      "name": "Krell (Walker Farrell, after Todd Barton)",
+      "source": "manual p.40",
+      "settings": {
+        "vmath.ch2_level": 3
+      },
+      "description": "Self-playing; clear MIDI by holding PGM_B; reverb recommended. Drawn cables not transcribed.",
+      "confidence": "stated"
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on",
+        "note": "MIDI A and B by channel (default all)"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend",
+        "note": "scaled per channel by CC 108/109"
+      },
+      {
+        "message": "channel_pressure",
+        "note": "scaled per channel by CC 110/111"
+      },
+      {
+        "message": "control_change",
+        "cc": 1,
+        "parameter": "mod wheel: MIDI B CV/gate source"
+      },
+      {
+        "message": "control_change",
+        "cc": 5,
+        "parameter": "midi.portamento_time"
+      },
+      {
+        "message": "control_change",
+        "cc": 65,
+        "parameter": "midi.portamento"
+      },
+      {
+        "message": "clock",
+        "note": "when MIDI clock is enabled"
+      },
+      {
+        "message": "sysex",
+        "note": "mentioned as a programming method; not documented"
+      }
+    ],
+    "transmits": [],
+    "channel_note": "MIDI A and MIDI B each learn a channel or receive all (default).",
+    "cc_map": {
+      "5": "midi.portamento_time",
+      "65": "midi.portamento",
+      "102": "midi.ch_a",
+      "103": "midi.ch_b",
+      "104": "midi.a_cv_src",
+      "105": "midi.b_cv_src",
+      "106": "midi.a_gate_src",
+      "107": "midi.b_gate_src",
+      "108": "midi.bend_a",
+      "109": "midi.bend_b",
+      "110": "midi.after_a",
+      "111": "midi.after_b",
+      "112": "midi.vel_a",
+      "113": "midi.vel_b",
+      "114": "midi.midi_clock",
+      "116": "clock.tempo_div",
+      "117": "midi.arp_on",
+      "118": "midi.legato",
+      "119": "midi.arp_type"
+    },
+    "cc_map_note": "CC 102-119 act only while the unit is in the program pages; CC 5 and 65 work at any time. A Max for Live 'Page Programmer' device is offered.",
+    "note": "MIDI in only, on a TRS minijack: P1 pin 1, 2, 3 connect to DIN pins 5, 4, 2 (manual p.44)."
+  },
+  "specifications": {
+    "voices": 1,
+    "patch_points": 29,
+    "oscillator": {
+      "waveforms": ["triangle", "square"],
+      "level_vpp": 10,
+      "voct_tracking_octaves": 4
+    },
+    "functions_v": [0, 8],
+    "gate_high_v": 8,
+    "gate_threshold_v": 2,
+    "random_v": [0, 10],
+    "signal_range_v": [-10, 10],
+    "outputs": {
+      "line": "3.5 mm TRS stereo, 3 Vpp, LEVEL with OVL",
+      "dynamics": "10 Vpp modular level"
+    },
+    "midi": "TRS minijack in, DIN adapter included",
+    "power": {
+      "supply": "15 V DC, tip positive, 2.1 mm plug",
+      "current_a": 1,
+      "source": "retail specifications"
+    },
+    "dimensions": {
+      "inches": "5.5 x 9 x 0.75 (Make Noise)",
+      "mm": {
+        "depth": 140,
+        "width": 225,
+        "height": 19
+      },
+      "width_hp": 45,
+      "source": "Make Noise; mm and HP from Milk Audio Store"
+    },
+    "weight": {
+      "lb": 1.7,
+      "g": 771
+    },
+    "enclosure": "steel",
+    "includes": ["power adapter", "MIDI adapter", "mini to 1/4 inch adapter cable", "patch cables"],
+    "retail_price_usd": 499,
+    "firmware_current": "1.6.8"
+  },
+  "omitted_from_source": [
+    "the drawn knob positions of the default sounds and the cable routes and knob positions of the patch ideas (only text-stated settings are recorded)",
+    "warranty, FCC and safety text; the conceptual primers on signals, attenuation and FM beyond what behaviours need"
+  ],
+  "not_in_source": [
+    "the oscillator frequency range",
+    "SLOPE and CONTOUR time ranges",
+    "the DYNAMICS cutoff range and response",
+    "circuit detail for OVERTONE and MULTIPLY",
+    "the MIDI B CV scaling per source",
+    "the tempo range and TEMPO IN divisor values",
+    "SysEx format (mentioned in the manual; nothing found online)",
+    "Research filled: dimensions, weight, power rating, firmware history, source/destination counts and Slope retrigger behaviour; oscillator and time ranges were not found."
+  ],
+  "source_inconsistencies": [
+    "The CONTOUR AD description says gate length is ignored and only the rising edge counts (p.27), but sustain is held for as long as the gate is high (pp.27-28).",
+    "The Control Voltage Range page refers to 'the grey Frequency pot for VCO A' and a Voltage MATH attenuator on 1V/OCT while discussing MULTIPLY (p.21), apparently from another Make Noise manual.",
+    "MIDI B CV can be assigned to aftertouch according to p.17, but the program page offers only note, velocity, mod wheel and LFO (p.14).",
+    "The panel legend calls MIDI B's jacks 'Ext. CV Output' and 'Ext. Gate Output' (p.8); the text calls them MIDI B CV and Gate.",
+    "Contour and Slope are described as reaching +8 V, but the figures draw a +10 V axis (pp.27-28, 33).",
+    "The DYNMC output is 'more than 3 times' line level on p.29 and the triangle 'over 4 times hotter' on p.10, both about 10 Vpp.",
+    "MIDI A CV in LFO mode has its rate 'set by CLocK OUT' (CC 104), while MIDI B's LFO rate is tapped on PGM_A (p.15).",
+    "The contents list a '???' page (p.43) with no title.",
+    "Between sources: retailers say firmware 1.6.8 'adds Portamento and other MIDI features', but portamento arrived in the November 2016 update and the 1.6.8 note lists only a MIDI B range fix (Sonicstate, Subsystem).",
+    "Between sources: Make Noise gives 5.5 x 9 x 0.75 inches; a retailer gives 14 x 22.5 x 1.9 cm (5.5 x 8.9 x 0.75 in), consistent within rounding."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Waveshaper types",
+      "detail": "OVERTONE and MULTIPLY are typed 'effects' with a kind property; a 'wavefolder' or 'waveshaper' module type (schema 0.14.0) would describe them better."
+    },
+    {
+      "topic": "Low-pass gate",
+      "detail": "DYNAMICS is a 'vca' with lowpass_gate: true; its filtering is described, not modelled as a cutoff."
+    },
+    {
+      "topic": "Knob scales",
+      "detail": "Unmarked knobs mapped 7:00 = 0 to 5:00 = 10, attenuverters -5 to +5; manual clock positions are converted on that basis."
+    },
+    {
+      "topic": "Patch ideas",
+      "detail": "Cable routes are drawn too small to transcribe reliably; a higher-resolution manual would allow full cords."
+    }
+  ]
+}
