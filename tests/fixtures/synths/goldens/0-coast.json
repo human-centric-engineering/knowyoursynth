@@ -1,0 +1,1535 @@
+{
+  "id": "0-coast",
+  "readouts": {
+    "vmath.ch2": [
+      "−5.0",
+      "−4.0",
+      "−3.0",
+      "−2.0",
+      "−1.0",
+      "0.0",
+      "+1.0",
+      "+2.0",
+      "+3.0",
+      "+4.0",
+      "+5.0"
+    ],
+    "osc.pitch": [
+      "-24 st",
+      "-19.2 st",
+      "-14.4 st",
+      "-9.6 st",
+      "-4.8 st",
+      "0 st",
+      "+4.8 st",
+      "+9.6 st",
+      "+14.4 st",
+      "+19.2 st",
+      "+24 st"
+    ],
+    "osc.fine": [
+      "-1 st",
+      "-0.8 st",
+      "-0.6 st",
+      "-0.4 st",
+      "-0.2 st",
+      "0 st",
+      "+0.2 st",
+      "+0.4 st",
+      "+0.6 st",
+      "+0.8 st",
+      "+1 st"
+    ],
+    "multiply.cv": [
+      "−5.0",
+      "−4.0",
+      "−3.0",
+      "−2.0",
+      "−1.0",
+      "0.0",
+      "+1.0",
+      "+2.0",
+      "+3.0",
+      "+4.0",
+      "+5.0"
+    ],
+    "slope.rise": [
+      "1 ms",
+      "1 ms",
+      "4 ms",
+      "10 ms",
+      "28 ms",
+      "77 ms",
+      "210 ms",
+      "580 ms",
+      "1.6 s",
+      "4.4 s",
+      "12 s"
+    ],
+    "slope.fall": [
+      "1 ms",
+      "1 ms",
+      "4 ms",
+      "10 ms",
+      "28 ms",
+      "77 ms",
+      "210 ms",
+      "580 ms",
+      "1.6 s",
+      "4.4 s",
+      "12 s"
+    ],
+    "contour.onset": [
+      "1 ms",
+      "2 ms",
+      "6 ms",
+      "15 ms",
+      "36 ms",
+      "89 ms",
+      "220 ms",
+      "540 ms",
+      "1.3 s",
+      "3.3 s",
+      "8.0 s"
+    ],
+    "contour.decay": [
+      "5 ms",
+      "11 ms",
+      "24 ms",
+      "52 ms",
+      "110 ms",
+      "240 ms",
+      "530 ms",
+      "1.2 s",
+      "2.5 s",
+      "5.5 s",
+      "12 s"
+    ]
+  },
+  "engine": {
+    "init": {
+      "att": [0.8, 0.5],
+      "delay": { "on": false },
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0
+      },
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      },
+      "ext": { "level": 0 },
+      "filter": {
+        "cutoff": 50,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      },
+      "glide": { "legato": false, "time": 0 },
+      "lfo": { "keySync": false, "mix": { "sq": 1 }, "rate": 2 },
+      "noise": { "level": 0 },
+      "normals": {
+        "att1In": "env1",
+        "att2In": "one",
+        "gate2": null,
+        "gateIn": "gate",
+        "sum1B": ["one", 0],
+        "sum2A": ["sh", 0.5],
+        "sum2B": ["one", 0.5]
+      },
+      "od": { "on": false },
+      "osc": [
+        { "level": 1, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ],
+      "oscOuts": false,
+      "routes": [
+        { "amt": -1, "dst": "lvl1", "src": "att2" },
+        { "amt": 1, "dst": "lvl2", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "att1" },
+        { "amt": 9, "dst": "cutoff", "src": "att1" }
+      ],
+      "sh": { "clock": "lfo", "glide": 0, "rate": 2 },
+      "trig": { "drone": false, "repeat": false, "retrig": false },
+      "tune": 0,
+      "vca": { "bias": 0, "envSrc": "none" },
+      "volume": 0.5453391388693143
+    },
+    "midi.pgmA=true": {},
+    "midi.pgmB=true": {},
+    "vmath.ch2=-5": {
+      "normals": {
+        "att1In": "env1",
+        "att2In": "one",
+        "gate2": null,
+        "gateIn": "gate",
+        "sum1B": ["one", -1],
+        "sum2A": ["sh", 0.5],
+        "sum2B": ["one", 0.5]
+      }
+    },
+    "vmath.ch2=-2.5": {
+      "normals": {
+        "att1In": "env1",
+        "att2In": "one",
+        "gate2": null,
+        "gateIn": "gate",
+        "sum1B": ["one", -0.5],
+        "sum2A": ["sh", 0.5],
+        "sum2B": ["one", 0.5]
+      }
+    },
+    "vmath.ch2=2.5": {
+      "normals": {
+        "att1In": "env1",
+        "att2In": "one",
+        "gate2": null,
+        "gateIn": "gate",
+        "sum1B": ["one", 0.5],
+        "sum2A": ["sh", 0.5],
+        "sum2B": ["one", 0.5]
+      }
+    },
+    "vmath.ch2=5": {
+      "normals": {
+        "att1In": "env1",
+        "att2In": "one",
+        "gate2": null,
+        "gateIn": "gate",
+        "sum1B": ["one", 1],
+        "sum2A": ["sh", 0.5],
+        "sum2B": ["one", 0.5]
+      }
+    },
+    "osc.pitch=0": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": -24, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": -24,
+          "syncTo": 0
+        }
+      ]
+    },
+    "osc.pitch=2.5": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": -12, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": -12,
+          "syncTo": 0
+        }
+      ]
+    },
+    "osc.pitch=7.5": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 12, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 12,
+          "syncTo": 0
+        }
+      ]
+    },
+    "osc.pitch=10": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 24, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 24,
+          "syncTo": 0
+        }
+      ]
+    },
+    "osc.fine=0": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": -1, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": -1,
+          "syncTo": 0
+        }
+      ]
+    },
+    "osc.fine=2.5": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": -0.5, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": -0.5,
+          "syncTo": 0
+        }
+      ]
+    },
+    "osc.fine=7.5": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0.5, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 0.5,
+          "syncTo": 0
+        }
+      ]
+    },
+    "osc.fine=10": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 1, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 1,
+          "syncTo": 0
+        }
+      ]
+    },
+    "osc.linfm=2.5": {},
+    "osc.linfm=5": {},
+    "osc.linfm=7.5": {},
+    "osc.linfm=10": {},
+    "overtone.amount=2.5": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0.29411764705882354,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "overtone.amount=5": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0.5882352941176471,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "overtone.amount=7.5": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0.8823529411764706,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "overtone.amount=10": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 1,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ],
+      "routes": [
+        { "amt": 1, "dst": "ovtIn", "src": "env2" },
+        { "amt": -1, "dst": "lvl1", "src": "att2" },
+        { "amt": 1, "dst": "lvl2", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "att1" },
+        { "amt": 9, "dst": "cutoff", "src": "att1" }
+      ]
+    },
+    "overtone.cv=2.5": {},
+    "overtone.cv=5": {},
+    "overtone.cv=7.5": {},
+    "overtone.cv=10": {},
+    "multiply.amount=2.5": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 0.25,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "multiply.amount=5": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 0.5,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "multiply.amount=7.5": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 0.75,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "multiply.amount=10": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 1,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "multiply.cv=-5": {
+      "routes": [
+        { "amt": -1, "dst": "pw2", "src": "env2" },
+        { "amt": -1, "dst": "lvl1", "src": "att2" },
+        { "amt": 1, "dst": "lvl2", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "att1" },
+        { "amt": 9, "dst": "cutoff", "src": "att1" }
+      ]
+    },
+    "multiply.cv=-2.5": {
+      "routes": [
+        { "amt": -0.5, "dst": "pw2", "src": "env2" },
+        { "amt": -1, "dst": "lvl1", "src": "att2" },
+        { "amt": 1, "dst": "lvl2", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "att1" },
+        { "amt": 9, "dst": "cutoff", "src": "att1" }
+      ]
+    },
+    "multiply.cv=2.5": {
+      "routes": [
+        { "amt": 0.5, "dst": "pw2", "src": "env2" },
+        { "amt": -1, "dst": "lvl1", "src": "att2" },
+        { "amt": 1, "dst": "lvl2", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "att1" },
+        { "amt": 9, "dst": "cutoff", "src": "att1" }
+      ]
+    },
+    "multiply.cv=5": {
+      "routes": [
+        { "amt": 1, "dst": "pw2", "src": "env2" },
+        { "amt": -1, "dst": "lvl1", "src": "att2" },
+        { "amt": 1, "dst": "lvl2", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "att1" },
+        { "amt": 9, "dst": "cutoff", "src": "att1" }
+      ]
+    },
+    "slope.cycle=true": {
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "loop": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      },
+      "normals": {
+        "att1In": "env1",
+        "att2In": "one",
+        "gate2": "one",
+        "gateIn": "gate",
+        "sum1B": ["one", 0],
+        "sum2A": ["sh", 0.5],
+        "sum2B": ["one", 0.5]
+      }
+    },
+    "slope.rise=0": {
+      "env2": {
+        "a": 0.0005,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "slope.rise=2.5": {
+      "env2": {
+        "a": 0.006223329772884784,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "slope.rise=5": {
+      "env2": {
+        "a": 0.07745966692414834,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "slope.rise=7.5": {
+      "env2": {
+        "a": 0.9641141027335821,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "slope.rise=10": {
+      "env2": {
+        "a": 12,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "slope.fall=0": {
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.0005,
+        "free": true,
+        "r": 0.0005,
+        "s": 0
+      }
+    },
+    "slope.fall=2.5": {
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.006223329772884784,
+        "free": true,
+        "r": 0.006223329772884784,
+        "s": 0
+      }
+    },
+    "slope.fall=7.5": {
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.9641141027335821,
+        "free": true,
+        "r": 0.9641141027335821,
+        "s": 0
+      }
+    },
+    "slope.fall=10": {
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 12,
+        "free": true,
+        "r": 12,
+        "s": 0
+      }
+    },
+    "slope.response=0": {
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 0, "d": 1, "r": 1 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "slope.response=2.5": {
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 0.25, "d": 0.75, "r": 0.75 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "slope.response=7.5": {
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 0.75, "d": 0.25, "r": 0.25 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "slope.response=10": {
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 1, "d": 0, "r": 0 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "contour.onset=2.5": {
+      "env1": {
+        "a": 0.009457416090031758,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0
+      }
+    },
+    "contour.onset=5": {
+      "env1": {
+        "a": 0.08944271909999159,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0
+      }
+    },
+    "contour.onset=7.5": {
+      "env1": {
+        "a": 0.8458970107524513,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0
+      }
+    },
+    "contour.onset=10": {
+      "env1": {
+        "a": 8,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0
+      }
+    },
+    "contour.sustain=2.5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0.25
+      }
+    },
+    "contour.sustain=5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0.5
+      }
+    },
+    "contour.sustain=7.5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0.75
+      }
+    },
+    "contour.sustain=10": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 1
+      }
+    },
+    "contour.decay=0": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.005,
+        "r": 0.005,
+        "s": 0
+      }
+    },
+    "contour.decay=2.5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.03499635511580584,
+        "r": 0.03499635511580584,
+        "s": 0
+      }
+    },
+    "contour.decay=5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.2449489742783178,
+        "r": 0.2449489742783178,
+        "s": 0
+      }
+    },
+    "contour.decay=7.5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 1.71446425781928,
+        "r": 1.71446425781928,
+        "s": 0
+      }
+    },
+    "contour.decay=10": {
+      "env1": { "a": 0.001, "curve": { "a": 0.5, "d": 0.5, "r": 0.5 }, "d": 12, "r": 12, "s": 0 }
+    },
+    "contour.response=2.5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.625, "d": 0.375, "r": 0.375 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0
+      }
+    },
+    "contour.response=5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.75, "d": 0.25, "r": 0.25 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0
+      }
+    },
+    "contour.response=7.5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.875, "d": 0.125, "r": 0.125 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0
+      }
+    },
+    "contour.response=10": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 1, "d": 0, "r": 0 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0
+      }
+    },
+    "balance.amount=0": { "att": [0.8, 0] },
+    "balance.amount=2.5": { "att": [0.8, 0.25] },
+    "balance.amount=7.5": { "att": [0.8, 0.75] },
+    "balance.amount=10": { "att": [0.8, 1] },
+    "dynamics.amount=0": { "att": [0, 0.5] },
+    "dynamics.amount=2.5": { "att": [0.25, 0.5] },
+    "dynamics.amount=5": { "att": [0.5, 0.5] },
+    "dynamics.amount=7.5": { "att": [0.75, 0.5] },
+    "dynamics.amount=10": { "att": [1, 0.5] },
+    "out.level=0": { "volume": 0 },
+    "out.level=2.5": { "volume": 0.09473228540689989 },
+    "out.level=5": { "volume": 0.3077861033362291 },
+    "out.level=7.5": { "volume": 0.61320282613276 },
+    "out.level=10": { "volume": 1 },
+    "wheel=1": {},
+    "patched:j.midi_in": {},
+    "patched:j.midi_b_cv": {},
+    "patched:j.midi_b_gate": {},
+    "patched:j.tempo": {},
+    "patched:j.clk": {},
+    "patched:j.random": {},
+    "patched:j.vmath_ch1": {},
+    "patched:j.vmath_ch2": {},
+    "patched:j.vmath_out1": {},
+    "patched:j.vmath_out2": {},
+    "patched:j.tri": { "oscOuts": true },
+    "patched:j.square": { "oscOuts": true },
+    "patched:j.voct": {},
+    "patched:j.linfm": {},
+    "patched:j.overtone_cv": {},
+    "patched:j.multiply_cv": {},
+    "patched:j.slope_time": {},
+    "patched:j.eoc": {},
+    "patched:j.slope_trig": {
+      "trig": { "drone": false, "repeat": false, "retrig": false, "src": ["gate", "trig"] }
+    },
+    "patched:j.slope_out": {},
+    "patched:j.decay_cv": {},
+    "patched:j.contour_gate": {},
+    "patched:j.eon": {},
+    "patched:j.contour_out": {},
+    "patched:j.balance_in": {
+      "ext": { "level": 0.4 },
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ],
+      "routes": [
+        { "amt": 1, "dst": "lvl2", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "att1" },
+        { "amt": 9, "dst": "cutoff", "src": "att1" }
+      ]
+    },
+    "patched:j.balance_cv": {},
+    "patched:j.line_out": {},
+    "patched:j.dynamics_cv": {},
+    "patched:j.dynamics_out": {},
+    "patched:*": {
+      "ext": { "level": 0.8 },
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ],
+      "oscOuts": true,
+      "routes": [
+        { "amt": 1, "dst": "lvl2", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "att1" },
+        { "amt": 9, "dst": "cutoff", "src": "att1" }
+      ],
+      "trig": { "drone": false, "repeat": false, "retrig": false, "src": ["gate", "trig"] }
+    },
+    "patched:* midi.pgmA=true": {},
+    "patched:* midi.pgmB=true": {},
+    "patched:* vmath.ch2=-5": {
+      "normals": {
+        "att1In": "env1",
+        "att2In": "one",
+        "gate2": null,
+        "gateIn": "gate",
+        "sum1B": ["one", -1],
+        "sum2A": ["sh", 0.5],
+        "sum2B": ["one", 0.5]
+      }
+    },
+    "patched:* vmath.ch2=-2.5": {
+      "normals": {
+        "att1In": "env1",
+        "att2In": "one",
+        "gate2": null,
+        "gateIn": "gate",
+        "sum1B": ["one", -0.5],
+        "sum2A": ["sh", 0.5],
+        "sum2B": ["one", 0.5]
+      }
+    },
+    "patched:* vmath.ch2=2.5": {
+      "normals": {
+        "att1In": "env1",
+        "att2In": "one",
+        "gate2": null,
+        "gateIn": "gate",
+        "sum1B": ["one", 0.5],
+        "sum2A": ["sh", 0.5],
+        "sum2B": ["one", 0.5]
+      }
+    },
+    "patched:* vmath.ch2=5": {
+      "normals": {
+        "att1In": "env1",
+        "att2In": "one",
+        "gate2": null,
+        "gateIn": "gate",
+        "sum1B": ["one", 1],
+        "sum2A": ["sh", 0.5],
+        "sum2B": ["one", 0.5]
+      }
+    },
+    "patched:* osc.pitch=0": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": -24, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": -24,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* osc.pitch=2.5": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": -12, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": -12,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* osc.pitch=7.5": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 12, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 12,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* osc.pitch=10": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 24, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 24,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* osc.fine=0": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": -1, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": -1,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* osc.fine=2.5": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": -0.5, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": -0.5,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* osc.fine=7.5": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0.5, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 0.5,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* osc.fine=10": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 1, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 1,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* osc.linfm=2.5": {},
+    "patched:* osc.linfm=5": {},
+    "patched:* osc.linfm=7.5": {},
+    "patched:* osc.linfm=10": {},
+    "patched:* overtone.amount=2.5": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0.29411764705882354,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* overtone.amount=5": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0.5882352941176471,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* overtone.amount=7.5": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0.8823529411764706,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* overtone.amount=10": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 0,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 1,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ],
+      "routes": [
+        { "amt": 1, "dst": "ovtIn", "src": "env2" },
+        { "amt": 1, "dst": "lvl2", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "att1" },
+        { "amt": 9, "dst": "cutoff", "src": "att1" }
+      ]
+    },
+    "patched:* overtone.cv=2.5": {},
+    "patched:* overtone.cv=5": {},
+    "patched:* overtone.cv=7.5": {},
+    "patched:* overtone.cv=10": {},
+    "patched:* multiply.amount=2.5": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 0.25,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* multiply.amount=5": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 0.5,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* multiply.amount=7.5": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 0.75,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* multiply.amount=10": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 0.8 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        {
+          "fold": 1,
+          "level": 0,
+          "mix": { "ovt": 0.8 },
+          "ovt": 0,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* multiply.cv=-5": {},
+    "patched:* multiply.cv=-2.5": {},
+    "patched:* multiply.cv=2.5": {},
+    "patched:* multiply.cv=5": {},
+    "patched:* slope.cycle=true": {},
+    "patched:* slope.rise=0": {
+      "env2": {
+        "a": 0.0005,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "patched:* slope.rise=2.5": {
+      "env2": {
+        "a": 0.006223329772884784,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "patched:* slope.rise=5": {
+      "env2": {
+        "a": 0.07745966692414834,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "patched:* slope.rise=7.5": {
+      "env2": {
+        "a": 0.9641141027335821,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "patched:* slope.rise=10": {
+      "env2": {
+        "a": 12,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "patched:* slope.fall=0": {
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.0005,
+        "free": true,
+        "r": 0.0005,
+        "s": 0
+      }
+    },
+    "patched:* slope.fall=2.5": {
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.006223329772884784,
+        "free": true,
+        "r": 0.006223329772884784,
+        "s": 0
+      }
+    },
+    "patched:* slope.fall=7.5": {
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.9641141027335821,
+        "free": true,
+        "r": 0.9641141027335821,
+        "s": 0
+      }
+    },
+    "patched:* slope.fall=10": {
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 12,
+        "free": true,
+        "r": 12,
+        "s": 0
+      }
+    },
+    "patched:* slope.response=0": {
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 0, "d": 1, "r": 1 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "patched:* slope.response=2.5": {
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 0.25, "d": 0.75, "r": 0.75 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "patched:* slope.response=7.5": {
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 0.75, "d": 0.25, "r": 0.25 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "patched:* slope.response=10": {
+      "env2": {
+        "a": 0.010304653117863475,
+        "curve": { "a": 1, "d": 0, "r": 0 },
+        "d": 0.07745966692414834,
+        "free": true,
+        "r": 0.07745966692414834,
+        "s": 0
+      }
+    },
+    "patched:* contour.onset=2.5": {
+      "env1": {
+        "a": 0.009457416090031758,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0
+      }
+    },
+    "patched:* contour.onset=5": {
+      "env1": {
+        "a": 0.08944271909999159,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0
+      }
+    },
+    "patched:* contour.onset=7.5": {
+      "env1": {
+        "a": 0.8458970107524513,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0
+      }
+    },
+    "patched:* contour.onset=10": {
+      "env1": {
+        "a": 8,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0
+      }
+    },
+    "patched:* contour.sustain=2.5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0.25
+      }
+    },
+    "patched:* contour.sustain=5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0.5
+      }
+    },
+    "patched:* contour.sustain=7.5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0.75
+      }
+    },
+    "patched:* contour.sustain=10": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 1
+      }
+    },
+    "patched:* contour.decay=0": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.005,
+        "r": 0.005,
+        "s": 0
+      }
+    },
+    "patched:* contour.decay=2.5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.03499635511580584,
+        "r": 0.03499635511580584,
+        "s": 0
+      }
+    },
+    "patched:* contour.decay=5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 0.2449489742783178,
+        "r": 0.2449489742783178,
+        "s": 0
+      }
+    },
+    "patched:* contour.decay=7.5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.5, "d": 0.5, "r": 0.5 },
+        "d": 1.71446425781928,
+        "r": 1.71446425781928,
+        "s": 0
+      }
+    },
+    "patched:* contour.decay=10": {
+      "env1": { "a": 0.001, "curve": { "a": 0.5, "d": 0.5, "r": 0.5 }, "d": 12, "r": 12, "s": 0 }
+    },
+    "patched:* contour.response=2.5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.625, "d": 0.375, "r": 0.375 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0
+      }
+    },
+    "patched:* contour.response=5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.75, "d": 0.25, "r": 0.25 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0
+      }
+    },
+    "patched:* contour.response=7.5": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 0.875, "d": 0.125, "r": 0.125 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0
+      }
+    },
+    "patched:* contour.response=10": {
+      "env1": {
+        "a": 0.001,
+        "curve": { "a": 1, "d": 0, "r": 0 },
+        "d": 0.11247461131420951,
+        "r": 0.11247461131420951,
+        "s": 0
+      }
+    },
+    "patched:* balance.amount=0": { "att": [0.8, 0] },
+    "patched:* balance.amount=2.5": { "att": [0.8, 0.25] },
+    "patched:* balance.amount=7.5": { "att": [0.8, 0.75] },
+    "patched:* balance.amount=10": { "att": [0.8, 1] },
+    "patched:* dynamics.amount=0": { "att": [0, 0.5] },
+    "patched:* dynamics.amount=2.5": { "att": [0.25, 0.5] },
+    "patched:* dynamics.amount=5": { "att": [0.5, 0.5] },
+    "patched:* dynamics.amount=7.5": { "att": [0.75, 0.5] },
+    "patched:* dynamics.amount=10": { "att": [1, 0.5] },
+    "patched:* out.level=0": { "volume": 0 },
+    "patched:* out.level=2.5": { "volume": 0.09473228540689989 },
+    "patched:* out.level=5": { "volume": 0.3077861033362291 },
+    "patched:* out.level=7.5": { "volume": 0.61320282613276 },
+    "patched:* out.level=10": { "volume": 1 }
+  },
+  "checks": {
+    "j.vmath_ch2": {
+      "init": "The CH2 knob is at the centre, so nothing patched here reaches the outputs. Turn it either way.",
+      "vmath.ch2=-5": null,
+      "vmath.ch2=-2.5": null,
+      "vmath.ch2=2.5": null,
+      "vmath.ch2=5": null
+    },
+    "j.linfm": {
+      "init": "The LIN FM knob is at 0, so nothing patched here moves the pitch. Turn it up.",
+      "osc.linfm=2.5": null,
+      "osc.linfm=5": null,
+      "osc.linfm=7.5": null,
+      "osc.linfm=10": null
+    },
+    "j.overtone_cv": {
+      "init": "The OVERTONE CV knob is at 0, so nothing patched here moves OVERTONE. Turn it up.",
+      "overtone.cv=2.5": null,
+      "overtone.cv=5": null,
+      "overtone.cv=7.5": null,
+      "overtone.cv=10": null
+    },
+    "j.multiply_cv": {
+      "init": "The MULTIPLY CV knob is at the centre, so nothing patched here moves MULTIPLY. Turn it either way.",
+      "multiply.cv=-5": null,
+      "multiply.cv=-2.5": null,
+      "multiply.cv=2.5": null,
+      "multiply.cv=5": null
+    },
+    "j.balance_in": {
+      "init": null,
+      "balance.amount=10": "BALANCE is fully right, on the overtones, so the FUND side this input feeds is not heard, unless BALANCE CV is patched too. Turn it left."
+    },
+    "j.balance_cv": {
+      "init": null,
+      "balance.amount=0": "BALANCE is fully left, and with a cable here it is the cable’s depth, so nothing patched here is heard. Turn it up."
+    },
+    "j.dynamics_cv": {
+      "init": null,
+      "dynamics.amount=0": "DYNAMICS is at 0, so nothing patched here opens the low-pass gate. Turn it up."
+    }
+  },
+  "depths": {
+    "j.vmath_ch2": {
+      "init": 0,
+      "vmath.ch2=-5": -1,
+      "vmath.ch2=-2.5": -0.5,
+      "vmath.ch2=2.5": 0.5,
+      "vmath.ch2=5": 1
+    },
+    "j.linfm": {
+      "init": 0,
+      "osc.linfm=2.5": 3,
+      "osc.linfm=5": 12,
+      "osc.linfm=7.5": 27,
+      "osc.linfm=10": 48
+    },
+    "j.overtone_cv": {
+      "init": 0,
+      "overtone.cv=2.5": 0.125,
+      "overtone.cv=5": 0.25,
+      "overtone.cv=7.5": 0.375,
+      "overtone.cv=10": 0.5
+    },
+    "j.multiply_cv": {
+      "init": 0,
+      "multiply.cv=-5": -1,
+      "multiply.cv=-2.5": -0.5,
+      "multiply.cv=2.5": 0.5,
+      "multiply.cv=5": 1
+    }
+  },
+  "hears": {}
+}

@@ -68,6 +68,7 @@ const EXPORTED: {
   { id: 'mantis', sounds: 153, timeline: 3, relatives: 3, unusual: 8, limits: 3 },
   { id: 'jp-8080', sounds: 16, timeline: 3, relatives: 3, unusual: 11, limits: 3 },
   { id: 'polivoks', sounds: 16, timeline: 4, relatives: 3, unusual: 8, limits: 3 },
+  { id: '0-coast', sounds: 18, timeline: 3, relatives: 3, unusual: 8, limits: 3 },
   { id: 'jupiter-4', sounds: 150, timeline: 5, relatives: 3, unusual: 12, limits: 8 },
   { id: 'jupiter-6', sounds: 150, timeline: 5, relatives: 3, unusual: 25, limits: 10 },
   { id: 'jupiter-8', sounds: 150, timeline: 5, relatives: 3, unusual: 15, limits: 6 },
@@ -133,6 +134,7 @@ describe('the exported content', () => {
       { id: 'mantis', order: 35, listed: true },
       { id: 'jp-8080', order: 36, listed: true },
       { id: 'polivoks', order: 37, listed: true },
+      { id: '0-coast', order: 38, listed: true },
     ]);
   });
 

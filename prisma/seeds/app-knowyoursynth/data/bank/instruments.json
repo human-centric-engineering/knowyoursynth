@@ -898,6 +898,16 @@
       "app": ["polivoks"],
       "text": "A Soviet duophonic analogue synth designed by Vladimir Kuzmin and sold only in the USSR: two generators with five waveforms and five ranges, Generator II able to frequency-modulate Generator I, noise, a low-pass or band-pass filter famous for its harsh resonance, two envelopes that can repeat, one modulator, glissando and a 49-key keyboard.",
       "source": "https://en.wikipedia.org/wiki/Polivoks"
+    },
+    {
+      "id": "make-noise-0-coast",
+      "name": "Make Noise 0-Coast",
+      "maker": "Make Noise",
+      "year": "2016",
+      "kind": "semi-modular",
+      "app": ["0-coast"],
+      "text": "A single-voice patchable analogue synthesizer mixing Moog and Buchla approaches, with no filter: a triangle-core oscillator, OVERTONE and MULTIPLY to add harmonics, the DYNAMICS low-pass gate, SLOPE and CONTOUR, Voltage MATH and MIDI to CV, playable with or without patch cables.",
+      "source": "https://synthtopia.com/content/2016/07/13/make-noise-0-coast-synthesizer-review-an-affordable-introduction-to-west-coast-synthesis"
     }
   ]
 }

@@ -1,0 +1,54 @@
+{
+  "synth": "0-coast",
+  "unusual": [
+    {
+      "target": "balance",
+      "text": "There is no filter. BALANCE crossfades the plain triangle (FUND) against the harmonics OVERTONE and MULTIPLY add (OVRTN), and the manual compares sweeping it right to opening a low-pass filter."
+    },
+    {
+      "target": "dynamics.amount",
+      "text": "DYNAMICS is a low-pass gate: a filter and an amplifier moved by one control, so the sound gets louder and brighter together. It works like a Buchla 292 but is built with transistors rather than vactrols, so it responds faster."
+    },
+    {
+      "target": "overtone.amount",
+      "text": "OVERTONE adds a single harmonic to the triangle rather than taking any away: odd to the left, even to the right, and at the very end SLOPE itself is blended into the audio. Adding harmonics this way is the West Coast approach."
+    },
+    {
+      "target": "multiply.amount",
+      "text": "MULTIPLY is a wavefolder: turning it up adds harmonics, the reverse of turning a low-pass filter down. SLOPE is wired to its CV input, through an attenuverter that can turn it upside down."
+    },
+    {
+      "target": "slope",
+      "text": "SLOPE is a function generator rather than a plain envelope or LFO: it rises and falls once when triggered, or repeats with CYCLE lit, fast enough to be an oscillator. Nothing triggers it inside, so with nothing patched and CYCLE off it does nothing."
+    },
+    {
+      "target": "contour.decay",
+      "text": "One knob sets both the decay and the release, so CONTOUR has three knobs (ONSET, DECAY, SUSTAIN) for four stages."
+    },
+    {
+      "target": "j.eoc",
+      "text": "SLOPE and CONTOUR each give a gate of their own: EOC is high except while SLOPE falls, and EON from the end of CONTOUR’s onset until it has fallen away. Patched into a gate or trigger input, one function fires another."
+    },
+    {
+      "target": "midi",
+      "text": "There are no keys: the 0-COAST is played over MIDI. MIDI A’s pitch is always on the oscillator, so a voltage at 1V/OCT adds to the note played rather than replacing it."
+    }
+  ],
+  "limits": {
+    "intro": "The whole normalled voice is modelled: the oscillator with LIN FM and 1V/OCT, OVERTONE, MULTIPLY, BALANCE and its input, DYNAMICS, SLOPE triggered or cycling with TIME CV and EOC, CONTOUR with DECAY CV and EON, Voltage MATH, the stepped random, and every patch point that carries a signal.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "The program pages and everything they set: the arpeggiator, legato off (the app is always legato, as the 0-COAST comes), MIDI channels, MIDI B’s other sources, MIDI clock, calibration and portamento. MIDI B CV is always velocity and MIDI B GATE the mod wheel, as the 0-COAST comes. There is no tap tempo, so the clock runs at 120 BPM, and CLK OUT does not follow TEMPO, which clocks the stepped random directly. The calibration trimmer, the MIDI IN jack and LEVEL’s clipping above about 8, with its OVL light, are drawn only."
+      },
+      {
+        "title": "The voice is approximated",
+        "text": "The spec gives no oscillator range, no SLOPE or CONTOUR times and no cutoff for DYNAMICS, so PITCH’s two octaves either way, SLOPE’s half a millisecond to 12 seconds a stage, ONSET’s 1 ms to 8 s, DECAY’s 5 ms to 12 s and the gate’s filter, from 50 Hz up, are this app’s. OVERTONE and MULTIPLY are shaped from the manual’s description, not measured: here OVERTONE reaches the even harmonic at 8.5 and blends SLOPE in above it. Which way SLOPE TIME and CONTOUR DECAY turn is not given; here a rising voltage is faster. Knob positions are the spec’s, from the manual’s clock positions."
+      },
+      {
+        "title": "Patching differences",
+        "text": "LIN FM here moves the pitch in semitones and is not AC-coupled, so a source that only rises, such as SLOPE, also raises the pitch on average. A trigger at SLOPE TRIG is held for at least 4 ms, so the square only syncs SLOPE on low notes, and the forum’s report that a trigger is ignored during the rise is not modelled. With BALANCE IN patched, the FUND side is set by the BALANCE knob alone, so BALANCE CV moves only the OVRTN side. A cable in SLOPE TRIG stops CYCLE: SLOPE fires once per trigger rather than cycling and restarting."
+      }
+    ]
+  }
+}
