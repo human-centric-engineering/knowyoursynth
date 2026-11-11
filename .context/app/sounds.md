@@ -107,7 +107,7 @@ through `eraseUser()`, and the export.
   (`components/app/dashboard/my-sounds-card.tsx`, in-process reads, as the synth route makes
   them), each linking to `/synths/<id>?mine=<sound>`. A
   sound on a synth no longer listed has no link. The card is a platform-file edit, ledgered in
-  [`divergences.md`](./divergences.md).
+  [`platform-divergences.md`](./platform-divergences.md).
 
 ## Settings and the last panel, in the account (s3)
 

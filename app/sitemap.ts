@@ -13,7 +13,7 @@ import { sharingSitemapPaths } from '@/components/app/sharing/sitemap';
  * Phase 3.5: Landing Page & Marketing
  *
  * Know Your Synth: adds the databank's pages, and Explore with every published
- * sound, read from its tables per request (`.context/app/divergences.md`).
+ * sound, read from its tables per request (`.context/app/platform-divergences.md`).
  */
 export const dynamic = 'force-dynamic';
 

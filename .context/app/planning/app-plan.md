@@ -342,7 +342,7 @@ and this plan's decisions.
     `prisma/seeds/app-knowyoursynth/`, new routes under `app/`, and `.context/app/`.
   - The documented exceptions are the marketing thin-shims, `dashboard/page.tsx`,
     `privacy` and `terms`, `sitemap.ts` and `robots.ts`.
-  - Any other edit to a platform file gets a row in `.context/app/divergences.md` in the same
+  - Any other edit to a platform file gets a row in `.context/app/platform-divergences.md` in the same
     PR, with a deletion trigger (`sunrise.divergences`). It also gets an issue filed with
     Sunrise, as a completing act of the task (`B7`).
 - **The instrument is code; what is played on it and said about it is data** (D1). Nothing
@@ -513,7 +513,7 @@ the feature's done-when instead.
   - the nav, footer and auth-landing seams;
   - the brand theme for the consumer surface, light and dark;
   - the `.context/app/README.md` index and the reserved-tier declaration;
-  - an empty `divergences.md`.
+  - an empty `platform-divergences.md`.
 
   **Source:**
 
@@ -534,7 +534,7 @@ the feature's done-when instead.
 | Ref | Title                                                                   | Size | Depends on | Done when                                                                                                                                                                                                                                                                                                          | Files in scope                                                                                                      |
 | --- | ----------------------------------------------------------------------- | ---- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
 | a1  | Build the panel frame and fill the navigation and theme seams           | L    | —          | The `(panel)` layout, header and footer, with Cookie Preferences. The prototype's fonts are in the layout. The nav, footer, auth-landing, brand and surface seams are filled, with their `defaults.test.ts` rows re-pinned, not deleted. `brand-theme.css` covers light and dark. Component tests. Checked by eye. | `app/(panel)/`, `components/app/shell/`, `lib/app/public-nav.ts`, `lib/app/protected-nav.ts`, `app/brand-theme.css` |
-| a2  | Index the fork's docs, declare its tier and start the divergence ledger | XS   | —          | `.context/app/README.md` indexes the docs. The tier is declared in `lib/app/reserved-tiers.ts`, and its guard test passes. `divergences.md` exists with its column headings.                                                                                                                                       | `.context/app/README.md`, `.context/app/divergences.md`, `lib/app/reserved-tiers.ts`                                |
+| a2  | Index the fork's docs, declare its tier and start the divergence ledger | XS   | —          | `.context/app/README.md` indexes the docs. The tier is declared in `lib/app/reserved-tiers.ts`, and its guard test passes. `platform-divergences.md` exists with its column headings.                                                                                                                              | `.context/app/README.md`, `.context/app/platform-divergences.md`, `lib/app/reserved-tiers.ts`                       |
 
 #### `f-model-d` — Model D, end to end
 

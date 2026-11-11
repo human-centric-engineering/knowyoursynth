@@ -1,7 +1,7 @@
 /**
  * The seam Know Your Synth carries in Sunrise's eval worker (`f-tutor-knowledge` t-61): each tool call's `success`,
  * `errorCode` and `resultPreview` reach the graders, and the stored case metadata keeps only the slug and args it
- * always had (`.context/app/divergences.md`).
+ * always had (`.context/app/platform-divergences.md`).
  *
  * Drives the real worker with a tutor turn whose `search_databank` trace preview is the tool's own
  * `redactProvenance` output, and grades it with the real tutor grader, so the test fails if the worker drops the

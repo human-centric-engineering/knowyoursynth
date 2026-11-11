@@ -562,7 +562,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       __resetAppOwnerClassificationForTests();
       // The read triggers the lazy init, so this exercises the REAL file.
       // FORK (Know Your Synth): pinned to our user-linked models (t-77), none enforced, rather than deleted, so a
-      // stray extra or changed classification still fails. Ledger: .context/app/divergences.md.
+      // stray extra or changed classification still fails. Ledger: .context/app/platform-divergences.md.
       const own = { kind: 'personal', owner: { column: 'userId' } };
       expect(appOwnerClassifications()).toEqual({
         UserSound: own,
@@ -589,7 +589,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       __resetAppTenancyClassificationForTests();
       // The read triggers the lazy init, so this exercises the REAL file.
       // FORK (Know Your Synth): pinned to our thirty-five models by class (t-188), rather than deleted, so a stray
-      // extra or moved classification still fails. Ledger: .context/app/divergences.md.
+      // extra or moved classification still fails. Ledger: .context/app/platform-divergences.md.
       const as = (cls: string, models: string[]) => models.map((m) => [m, { cls, tier: 'app' }]);
       expect(Object.fromEntries(appTenancyClassifications())).toEqual(
         Object.fromEntries([
@@ -684,7 +684,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     risk: 'a stray key would make an unset env var fail boot on every install',
     // An empty z.object() accepts (and strips) anything → parses {} to {}.
     // FORK (Know Your Synth): pinned to the tutor's daily allowance (`f-tutor` t-54), which has a default, rather than
-    // deleted, so a stray key that fails boot when unset still fails here. Ledger: .context/app/divergences.md.
+    // deleted, so a stray key that fails boot when unset still fails here. Ledger: .context/app/platform-divergences.md.
     assert: () => expect(appEnvSchema.parse({})).toEqual({ TUTOR_DAILY_TURNS: 30 }),
   },
   {
@@ -692,11 +692,13 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     risk: 'a stray flat-config block would apply lint rules to every fork',
     // The root eslint.config.mjs spreads this array last; that spread itself is
     // exercised by every `npm run lint` run.
-    // FORK (Know Your Synth): pinned to the one ignore for the social card's generated panel renderer (t-50) rather
-    // than deleted, so a stray rule block still fails. Ledger: .context/app/divergences.md.
+    // FORK (Know Your Synth): pinned to the two ignores, the social card's generated panel renderer (t-50) and the
+    // prototype (t-235), rather than deleted, so a stray rule block still fails. Ledger:
+    // .context/app/platform-divergences.md.
     assert: () =>
       expect(appEslintConfig).toEqual([
         { ignores: ['components/app/sharing/generated/panel-render.mjs'] },
+        { ignores: ['prototype/**'] },
       ]),
   },
   {
@@ -708,7 +710,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       // FORK (Know Your Synth): pinned to the held-username prune (`f-profiles` r1), the databank's projection
       // (`f-tutor-knowledge` t-58) and the links' YouTube counts (`f-videos-and-links` t-180) rather than deleted, so a
       // stray fourth job still fails. Ledger:
-      // .context/app/divergences.md.
+      // .context/app/platform-divergences.md.
       expect(getAppJobs().map((j) => j.name)).toEqual([
         'app:prune-held-usernames',
         'app:project-databank',
@@ -826,7 +828,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       __resetAccountSectionRegistryForTests();
       // The read triggers the lazy init, so this exercises the REAL seam.
       // FORK (Know Your Synth): pinned to the synth profile (`f-profiles` r1) and the synths owned and wanted (r2), on
-      // settings only, rather than deleted, so a stray extra section still fails. Ledger: .context/app/divergences.md.
+      // settings only, rather than deleted, so a stray extra section still fails. Ledger: .context/app/platform-divergences.md.
       for (const surface of ACCOUNT_SURFACES) {
         expect(getRegisteredAccountSections(surface).map((s) => s.id)).toEqual(
           surface === 'settings' ? ['synth-profile', 'synth-lists'] : []
@@ -903,7 +905,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     risk: 'a stray pair fails the capability parity test on every install (for a slug no seed writes it is a pair nothing wrote, for a slug core already pairs a duplicate), and a stray unchecked seed switches the parity checks off for that seed',
     assert: () => {
       // FORK (Know Your Synth): pinned to the tutor's eight tools and our two content seeds (t-77) rather than
-      // deleted, so a stray pair or unchecked seed still fails. Ledger: .context/app/divergences.md.
+      // deleted, so a stray pair or unchecked seed still fails. Ledger: .context/app/platform-divergences.md.
       expect(APP_CAPABILITY_PAIRS.map((p) => p.slug)).toEqual([
         'get_panel',
         'describe_synth',
