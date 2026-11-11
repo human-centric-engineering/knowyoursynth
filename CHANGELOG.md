@@ -16,6 +16,122 @@ release process.
 
 ## [Unreleased]
 
+## [0.18.0] — 2026-11-09
+
+> **Alpha release.** Twenty-fifth tagged Sunrise release. **MINOR bump**: one
+> new seam and one security fix. A fork can now open some admin pages to
+> people narrower than an org admin, through a named tier it registers, such as
+> an agency given a client's design pages and nothing else. Every form now
+> posts, so a form submitted before the page loaded no longer puts its fields,
+> passwords included, in the URL. Measured against `v0.17.1`: 2 PRs merged, no
+> direct commits, 1 issue closed; the suite is 1,531 files and 31,904
+> tests.
+>
+> ## What a fork has to do
+>
+> **No migration, seed or dependency change.** Beside the version bump, the
+> merge edits the admin layout, sidebar and tier gate, the admin-tier and
+> authorization modules, and every core `<form>`. **Keep your own `version`**
+> in `package.json` and the lockfile if you set one.
+>
+> **A fork that edited `app/admin/layout.tsx` resolves that file by hand.** The
+> layout no longer works out the viewer's tier itself: it asks
+> `requestAdminReach()` once and judges each page with `reachesAdminPage()`.
+> Keep core's version and carry your edit onto it, with a divergence-ledger
+> row.
+>
+> **Your `validate` will flag** every `<form>` without `method="post"`, in your
+> components as in core's. Add it. A form whose fields belong in the URL, such
+> as a search box, takes `{/* form-method-ignore: <why> */}` on the line above
+> it.
+>
+> **Your type-check will flag:**
+>
+> - A layout that renders `<AdminSidebar>` or `<AdminTierGate>` with
+>   `viewerTier`. Pass `reach={await requestAdminReach()}` instead, and
+>   `namedTierPages={namedTierAdminPages()}` beside `orgTierPages`.
+> - A call to `viewerReaches()`, which is gone. Use `reachesTier(reach, tier)`.
+>
+> **Your tests will flag** `tests/unit/lib/app/defaults.test.ts`, if you
+> pinned the `lib/app/admin-tier.ts` row: it gains a `namedAdminTiers()` line.
+> Pin it; don't delete the row.
+>
+> **Changes a build will not catch:** if you replaced `canAdminister`, a named
+> tier now reaches it as `scope.tier`. Nothing changes until a fork registers
+> a tier, but once one does, a policy that answers only `'org'` and
+> `'platform'` decides that tier too. Delegate to
+> `DEFAULT_AUTHORIZATION_POLICY` for the tiers you don't answer.
+>
+> **Dependency alerts accepted for this release:** the same five as 0.17.0.
+> This release takes no dependency change.
+>
+> - `zod` < 4.6.6 (high), under `@vercel/blob`, which still accepts only
+>   `@vercel/oidc` 3.x. That copy reads the Vercel CLI's own config files on
+>   disk, not untrusted input.
+> - `postcss-selector-parser` (moderate), under `@tailwindcss/typography`. It
+>   parses only the app's own CSS, at build time.
+> - `glob` and `minimatch` (moderate), under `react-email`'s command-line tool,
+>   and `minimatch` under `typescript-eslint` too. Neither runs in the app.
+> - `deepmerge` (low), under `@react-email/components`. It merges the
+>   renderer's own options, not user input.
+
+### Added
+
+- **A fork can open some admin pages to people narrower than an org admin
+  (t-999, #1180).** Until now an admin page opened to the platform's admins,
+  or also to the org's OWNER/ADMIN, and nothing in between. So a client's
+  agency could not be given the client's design pages without making them an
+  admin of the whole org. `registerAdminTier(name, { holds, landing? })` in
+  `lib/auth/admin-tier.ts`, called from `initAppOrgTierAdminPages()`,
+  registers a named tier and says who holds it in the entered org. Declare it
+  where you declare `'org'`: `registerOrgTierAdminPage(pattern, { tier })`,
+  `withAdminAuth(handler, { tier })` and `NavItem.tier`. The default policy
+  admits the org's OWNER/ADMIN to a named-tier surface as to an `'org'` one,
+  and the tier's holders to that tier's surfaces only: no `'org'` surface, no
+  platform one, no other tier's. A tier nobody registered admits nobody. The
+  layout now asks the policy once per tier and judges each page by its own
+  tier; `/admin` sends a holder to their tier's `landing`, or else its first
+  page with no `[x]` segment. The roster test
+  checks named tiers as it checks `'org'`. Behaviour-neutral until a fork
+  registers one. **Forks:** if you replace `canAdminister`, a named tier
+  arrives as `scope.tier`; delegate to `DEFAULT_AUTHORIZATION_POLICY` for
+  tiers you do not answer. If you pinned the `lib/app/admin-tier.ts` row in
+  `tests/unit/lib/app/defaults.test.ts`, it gains a `namedAdminTiers()` line.
+  See `.context/auth/authorization.md` ("Named tiers").
+
+### Changed
+
+- **`<AdminSidebar>` and `<AdminTierGate>` take `reach` instead of
+  `viewerTier`, and an optional `namedTierPages` (t-999).** `reach` is what
+  the layout's new `requestAdminReach()` (`lib/auth/admin-page-viewer.ts`)
+  returns: `'platform'`, or the tiers the policy admitted the viewer to.
+  **Forks:** a fork that renders its own admin layout passes
+  `reach={await requestAdminReach()}` where it passed `viewerTier`, and
+  `namedTierPages={namedTierAdminPages()}` beside `orgTierPages`.
+  `adminPageViewerTier()` is unchanged.
+
+### Removed
+
+- **`viewerReaches()` from `lib/auth/admin-tier.ts` (t-999).** Nothing read it
+  once the gate and sidebar moved to `reachesTier()`. A fork that called it
+  uses `reachesTier(reach, tier)` instead.
+
+### Security
+
+- **A form submitted before the page had loaded put its fields in the URL
+  (t-998).** A server-rendered `<form>` with an `onSubmit` and no `method` is a
+  working HTML form until React attaches, so a press on a slow load, with a
+  script blocked, or with JavaScript off was a GET carrying every named field,
+  passwords and reset tokens included. Those URLs reach browser history and the logs of any
+  host, CDN or proxy in front of the site. Every `<form>` now sets
+  `method="post"`, and the sign-in, sign-up, reset, invitation, password,
+  contact and waitlist forms tell someone with no JavaScript that they can't
+  work. **Forks:** `npm run check:save-errors`, part of `validate`, now fails a
+  `<form>` without `method="post"`, so add it to your own forms. A form whose
+  fields belong in the URL, such as a search box, takes
+  `{/* form-method-ignore: <why> */}` on the line above it. See
+  `.context/ui/form-errors.md`.
+
 ## [0.17.1] — 2026-11-06
 
 > **Alpha release.** Twenty-fourth tagged Sunrise release. **PATCH bump**: one
@@ -10706,7 +10822,8 @@ Sunrise safe to fork and to merge upstream releases into.
 
 ---
 
-[Unreleased]: https://github.com/human-centric-engineering/sunrise/compare/v0.17.1...HEAD
+[Unreleased]: https://github.com/human-centric-engineering/sunrise/compare/v0.18.0...HEAD
+[0.18.0]: https://github.com/human-centric-engineering/sunrise/compare/v0.17.1...v0.18.0
 [0.17.1]: https://github.com/human-centric-engineering/sunrise/compare/v0.17.0...v0.17.1
 [0.17.0]: https://github.com/human-centric-engineering/sunrise/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/human-centric-engineering/sunrise/compare/v0.15.0...v0.16.0
