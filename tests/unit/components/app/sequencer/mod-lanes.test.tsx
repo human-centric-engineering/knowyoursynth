@@ -590,7 +590,7 @@ describe('following the playhead across pages', () => {
     expect(firstKey()).toMatch(/^Step 1:/);
     playheadOn(20);
     await aFrame();
-    expect(state.position()).toEqual({ step: 20, part: 0 });
+    expect(state.position()).toMatchObject({ step: 20, part: 0 });
     expect(firstKey()).toMatch(/^Step 1:/);
 
     playheadOn(33);
@@ -613,7 +613,7 @@ describe('following the playhead across pages', () => {
     fireEvent.pointerDown(strip, { button: 0, clientX: 0, clientY: 0, pointerId: 1 });
     playheadOn(16);
     await aFrame();
-    expect(state.position()).toEqual({ step: 16, part: 0 });
+    expect(state.position()).toMatchObject({ step: 16, part: 0 });
     expect(firstCell()).toBe('cutoff, step 1');
     fireEvent.pointerMove(strip, { clientX: 0, clientY: 0, pointerId: 1 });
     fireEvent.pointerUp(strip, { pointerId: 1 });
@@ -635,7 +635,7 @@ describe('following the playhead across pages', () => {
       playheadOn(step);
       for (let f = 0; f < 4; f++) await aFrame();
     }
-    expect(state.position()).toEqual({ step: 6, part: 0 });
+    expect(state.position()).toMatchObject({ step: 6, part: 0 });
     expect(stepKeys()[6]).toHaveAttribute('aria-label', expect.stringMatching(/^Step 7:/));
     expect(renders).toBe(6);
   });

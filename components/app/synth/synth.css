@@ -701,6 +701,19 @@ svg .kys-hit:focus-visible {
 .kys-play.is-playing:active {
   animation: none;
 }
+/* Running a pattern (t-225): lit from inside and held there, not breathing at its own pace. The pulse is the
+   playhead's, drawn from the page every fourth step as a brief brightening. */
+/* Not while pressed, so Stop still sinks onto its skirt as Play does. */
+.kys-play.is-playing.is-stepped:not(:active) {
+  animation: none;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.38),
+    inset 0 -1px 0 rgb(0 0 0 / 0.22),
+    inset 0 0 10px rgb(170 255 190 / 0.35),
+    0 0 0 1px var(--play-rim),
+    0 2px 0 1px var(--play-rim),
+    0 8px 18px -5px rgb(47 191 74 / 0.75);
+}
 
 /* The pattern picker beside Play (f-pattern-picker t-213): boxed as a select is, as the patch picker is, at Play's
    height, naming what Play will play. From `lg` up its list opens upward over the deck; below `lg` it is a bottom
@@ -947,6 +960,66 @@ svg .kys-hit:focus-visible {
 .kys-layer-x {
   margin-left: -2px;
   opacity: 0.75;
+}
+/* The Sequencer button's step strip (t-225): a pattern playing with the sequencer closed. A cell per step (a bar of
+   sixteen at a time), the one heard lit and fading before the next, brighter on every fourth; each beat's first cell
+   a little taller; then the step and the part's length. */
+.kys-step-lamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: -1px;
+}
+.kys-step-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 12px;
+}
+.kys-step-cell {
+  width: 3px;
+  height: 7px;
+  border-radius: 1px;
+  background: var(--kys-accent);
+  opacity: 0.22;
+}
+.kys-step-cell.is-bar {
+  height: 10px;
+  opacity: 0.38;
+}
+.kys-step-cell.is-off {
+  visibility: hidden;
+}
+.kys-step-cell.is-lit {
+  animation: kys-step-lit 0.18s ease-out forwards;
+}
+.kys-step-cell.is-beat {
+  animation: kys-step-beat 0.26s ease-out forwards;
+}
+@keyframes kys-step-lit {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.6;
+  }
+}
+@keyframes kys-step-beat {
+  from {
+    opacity: 1;
+    box-shadow: 0 0 5px 1px color-mix(in srgb, var(--kys-accent) 75%, transparent);
+  }
+  to {
+    opacity: 0.6;
+    box-shadow: none;
+  }
+}
+.kys-step-lamp-count {
+  min-width: 6ch;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--kys-accent);
+  text-align: left;
 }
 .kys-signal-caret {
   margin-left: -2px;

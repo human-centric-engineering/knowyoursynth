@@ -33,6 +33,7 @@ export function LayerToggle({
   hoverFill = false,
   onClick,
   ref,
+  children,
 }: {
   /** The accessible name, which the page's tests and a screen reader use. */
   label: string;
@@ -51,6 +52,8 @@ export function LayerToggle({
   onClick: () => void;
   /** For a toggle that something else hands focus back to when it closes. */
   ref?: Ref<HTMLButtonElement>;
+  /** Drawn after its word: what it is doing while closed (the Sequencer's step lamp, t-225). */
+  children?: ReactNode;
 }) {
   return (
     <PlayerTip name={label} help={title}>
@@ -64,6 +67,7 @@ export function LayerToggle({
       >
         {icon}
         <span className={keepShort ? undefined : 'lg:max-xl:hidden'}>{short}</span>
+        {children}
         {/* Open, it says a press closes it. */}
         {on && <X size={13} strokeWidth={2.5} aria-hidden="true" className="kys-layer-x" />}
       </button>

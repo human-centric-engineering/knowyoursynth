@@ -25,6 +25,9 @@ import { stepIds } from '@/components/app/synth/lesson';
 import { highlightStore } from '@/components/app/synth/stores';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 import { logger } from '@/lib/logging';
+import type { SeqPosition } from '@/components/app/sequencer/use-sequencer';
+import { onBeat, useStepTick } from '@/components/app/sequencer/use-step-tick';
+import { glideMotion } from '@/components/app/synth/motion';
 
 /**
  * The app's name over the panel. The LED is the sound's, lit while it is on, except while a lesson is being walked
@@ -367,8 +370,30 @@ export function Chapters({
 /**
  * The player's play button: the sound's riff, or the sequencer's pattern while the sequencer is open or holds a pattern
  * chosen beside Play (one transport, t-213). Named for what it will do.
+ *
+ * Given the sequencer's playhead (`position`, while a pattern plays), the key glows briefly every
+ * `PULSE_EVERY` steps heard, in time with what is heard, rather than breathing at its own pace (t-225). Not where the
+ * browser asks for less motion: there it stays lit, still.
  */
-export function PlayButton({ playing, onClick }: { playing: boolean; onClick: () => void }) {
+export function PlayButton({
+  playing,
+  onClick,
+  position,
+}: {
+  playing: boolean;
+  onClick: () => void;
+  position?: () => SeqPosition | null;
+}) {
+  const ref = useRef<HTMLButtonElement>(null);
+  const stepped = playing && !!position;
+  useStepTick(position, stepped, (at) => {
+    const el = ref.current;
+    if (!at || !el || !onBeat(at) || !glideMotion()) return;
+    el.animate?.([{ filter: 'brightness(1.28) saturate(1.1)' }, { filter: 'none' }], {
+      duration: 320,
+      easing: 'ease-out',
+    });
+  });
   return (
     <PlayerTip
       name={playing ? 'Stop' : 'Play'}
@@ -378,7 +403,12 @@ export function PlayButton({ playing, onClick }: { playing: boolean; onClick: ()
           : 'The pattern named beside it, played through the panel: the patch’s riff, unless another is chosen there or in the sequencer.'
       }
     >
-      <button type="button" onClick={onClick} className={`kys-play ${playing ? 'is-playing' : ''}`}>
+      <button
+        ref={ref}
+        type="button"
+        onClick={onClick}
+        className={`kys-play ${playing ? 'is-playing' : ''} ${stepped ? 'is-stepped' : ''}`}
+      >
         <span className="kys-play-dot" aria-hidden="true">
           {playing ? (
             <Square size={14} fill="currentColor" />

@@ -205,7 +205,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
 - **The foot of the player is the Play deck**: the bar, the piano and scope, MIDI and the docked sequencer, where the
   synth is played from (owner ruling, 2026-11-07). **Play is its first control** (`PlayButton`, t-210), outside the
   bar's scrolling row so nothing clips it, drawn as a lit green transport key at the bar's 44px; it glows from inside
-  while it runs.
+  while it runs, breathing at its own pace for a riff. While a pattern plays, the glow is held steady and brightens
+  every fourth step, from the playhead (`useStepTick`, t-225); under reduced motion it stays steady.
 - **Beside Play, the pattern picker chooses what Play plays** (`PatternPicker`, `f-pattern-picker` t-213): a
   select-like button at Play's height naming it ("The patch's riff", or the pattern's name, "(edited)" once changed).
   From `lg` up its list opens upward over the deck, a popover in the dock that closes on a press outside it, on Escape

@@ -243,6 +243,22 @@ describe('the sequencer on the synth page', () => {
     expect(button('Play')).toBeTruthy();
   });
 
+  it('shows the pattern playing on the Sequencer button only while the sequencer is closed (t-225)', async () => {
+    page();
+    const lamp = () => within(button('Sequencer')).queryByTestId('seq-step-lamp');
+    fireEvent.click(button('Sequencer'));
+    await press('Play');
+    expect(lamp()).toBeNull();
+    fireEvent.click(button('Sequencer'));
+    expect(button('Stop')).toBeTruthy();
+    expect(lamp()).toBeTruthy();
+    fireEvent.click(button('Sequencer'));
+    expect(lamp()).toBeNull();
+    fireEvent.click(button('Sequencer'));
+    await press('Stop');
+    expect(lamp()).toBeNull();
+  });
+
   it('takes over from a riff playing when it is opened, and a riff started stops the pattern', async () => {
     page();
     await press('Play');

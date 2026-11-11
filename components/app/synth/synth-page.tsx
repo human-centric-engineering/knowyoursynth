@@ -117,6 +117,7 @@ import {
 import { SharedPatternStrip } from '@/components/app/sharing/shared-pattern-strip';
 import { voiceMode } from '@/lib/app/synths/audio/pattern-player';
 import { useMyPatterns } from '@/components/app/sequencer/use-my-patterns';
+import { StepLamp } from '@/components/app/sequencer/step-lamp';
 import type { PatternLibraryProps } from '@/components/app/sequencer/pattern-library';
 import { RIFF_FALLBACK } from '@/lib/app/patterns/riff-name';
 import { useSoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
@@ -2892,6 +2893,7 @@ function Synth({
                 {(shown || seqShown || seqLoaded || transportPlaying) && (
                   <PlayButton
                     playing={transportPlaying}
+                    position={seq.playing ? seq.position : undefined}
                     onClick={() =>
                       transportPlaying
                         ? stopRiff()
@@ -2926,7 +2928,15 @@ function Synth({
                     on={seqShown}
                     title="Open the step sequencer under the panel, holding this patch's riff: edit it step by step, and hear each change as it plays."
                     onClick={toggleSequencer}
-                  />
+                  >
+                    {/* A pattern playing with the sequencer closed still shows on the bar, step by step (t-225). */}
+                    {seq.playing && !seqShown && (
+                      <StepLamp
+                        position={seq.position}
+                        lengths={seq.pattern.parts.map((p) => p.steps.length)}
+                      />
+                    )}
+                  </LayerToggle>
                   {/* Named for what it will do, as a video's mute button is: Mute while the sound is on. */}
                   <PlayerTip
                     name={
