@@ -212,6 +212,11 @@ interface VoiceEnv {
   from?: number;
   loop?: boolean;
   freeze?: boolean;
+  /** A new note does not restart it: only its own gate rising does (`EnvParams.free`). */
+  free?: boolean;
+  /** This sample's rate multipliers from dests `env2Rate` / `env1DecRate`: the attack's, and the decay's and release's. */
+  rA: number;
+  rD: number;
 }
 
 /** A phrase note event: at beat `b` (and sample `t` once timed), key `n` goes down (`on`, velocity `v`) or up. */
@@ -347,6 +352,8 @@ export const SIGNALS: string[] = [
   'kbdLo',
   'kbdHi',
   'lfo3',
+  'eoc',
+  'eon',
   ...MOOG_SIGNALS,
   ...SOLAR_SIGNALS,
 ];
@@ -433,6 +440,8 @@ export const DESTS: string[] = [
   'vcfBpIn',
   'vcfHpIn',
   'ovtIn',
+  'env2Rate',
+  'env1DecRate',
   ...MOOG_DESTS,
   ...SOLAR_DESTS,
 ];
@@ -519,6 +528,12 @@ function createVoice(
   let mmOn = false;
   /** Whether anything reaches dest `ovtIn`, so a `mix.ovt` oscillator skips it otherwise. */
   let ovtInOn = false;
+  /** Whether anything reaches dest `env2Rate` / `env1DecRate`, so the envelopes skip them otherwise. */
+  let env2RateOn = false,
+    env1DecOn = false;
+  /** Whether anything reads signal `eoc` / `eon`, so they are worked out only then. */
+  let eocOn = false,
+    eonOn = false;
   // Each oscillator's own output signal and pitch destination (the fourth was added later, so they are not contiguous).
   const OSC_SI = [SI.osc1, SI.osc2, SI.osc3, SI.osc4];
   const PITCH_DI = [DI.pitch1, DI.pitch2, DI.pitch3, DI.pitch4];
@@ -644,6 +659,8 @@ function createVoice(
     ba: 0.005,
     bd: 0.3,
     br: 0.2,
+    rA: 1,
+    rD: 1,
   });
   const env = [mkEnv(), mkEnv(), mkEnv()];
   let lfoHzNow = 0;
@@ -829,6 +846,13 @@ function createVoice(
   const sm = 1 - Math.exp(-1 / (0.004 * sr)); // 4 ms parameter smoothing
   const curveP = (c: number): number => Math.pow(2, (Math.min(Math.max(c, 0), 1) - 0.5) * 4);
   const expCoef = (t: number): number => 1 - Math.exp(-1 / (Math.max(t, 0.0005) * sr));
+  /** An `expCoef` coefficient for a time divided by `m`: 1 − (1 − c)^m. */
+  const rateCoef = (c: number, m: number): number => 1 - Math.pow(1 - c, m);
+  /** 2^`v` octaves of rate, held to 1/64..64 as the trapezoid's `decayCv` is. */
+  const rateMul = (v: number): number => {
+    const m = Math.exp(v * Math.LN2);
+    return m < 1 / 64 ? 1 / 64 : m > 64 ? 64 : m;
+  };
 
   function compile() {
     destSrc = DESTS.map(() => []);
@@ -871,6 +895,17 @@ function createVoice(
     mmOn = fed(DI.vcfBpIn) || fed(DI.vcfHpIn);
     if (!mmOn) fPrevBp = fPrevHp = 0;
     ovtInOn = fed(DI.ovtIn);
+    env2RateOn = fed(DI.env2Rate);
+    env1DecOn = fed(DI.env1DecRate);
+    if (!env2RateOn) env[1].rA = env[1].rD = 1;
+    if (!env1DecOn) env[0].rD = 1;
+    // a signal is read when a normal, a route or a route's `by` names it
+    const reads = (si: number): boolean =>
+      normSig.includes(si) ||
+      destSrc.some((a) => a.includes(si)) ||
+      destBy.some((a) => a.includes(si));
+    eocOn = reads(SI.eoc);
+    eonOn = reads(SI.eon);
   }
 
   function setParams(p: VoiceParams) {
@@ -982,6 +1017,7 @@ function createVoice(
       // `freeze` (Wasp HOLD): the level stops where it is; gate changes are still noted, so the envelope carries on when it thaws.
       t.loop = !!e.loop;
       t.freeze = !!e.freeze;
+      t.free = !!e.free;
     });
     if (first) {
       cutLog = cutLogT;
@@ -1374,7 +1410,7 @@ function createVoice(
 
   /** Timed stages with a shaped curve: each stage runs from where the level is to its target in exactly its time. */
   function runEnvC(e: VoiceEnv, g: boolean) {
-    if ((g && !e.prevGate) || (g && retrigFlag)) {
+    if ((g && !e.prevGate) || (g && retrigFlag && !e.free)) {
       e.stage = 1;
       e.t = 0;
       e.from = e.level;
@@ -1386,25 +1422,32 @@ function createVoice(
     e.prevGate = g;
     switch (e.stage) {
       case 1:
-        e.t! += 1 / (Math.max(e.a, 0.0002) * sr);
+        e.t! += e.rA / (Math.max(e.a, 0.0002) * sr);
         if (e.t! >= 1) {
           e.level = 1;
           e.stage = 2;
           e.t = 0;
         } else e.level = e.from! + (1 - e.from!) * Math.pow(e.t!, e.pa!);
         break;
-      case 2:
-        e.t! += 1 / (Math.max(e.d, 0.0005) * sr);
+      case 2: {
+        // `loop`: the fall goes to silence and the attack starts again, each stage keeping its curve
+        const s = e.loop ? 0 : e.s;
+        e.t! += e.rD / (Math.max(e.d, 0.0005) * sr);
         if (e.t! >= 1) {
-          e.level = e.s;
-          e.stage = 3;
-        } else e.level = e.s + (1 - e.s) * (1 - Math.pow(e.t!, e.pd!));
+          e.level = s;
+          if (e.loop) {
+            e.stage = 1;
+            e.t = 0;
+            e.from = 0;
+          } else e.stage = 3;
+        } else e.level = s + (1 - s) * (1 - Math.pow(e.t!, e.pd!));
         break;
+      }
       case 3:
         e.level += (e.s - e.level) * sm;
         break;
       case 4:
-        e.t! += 1 / (Math.max(e.r, 0.0005) * sr);
+        e.t! += e.rD / (Math.max(e.r, 0.0005) * sr);
         if (e.t! >= 1) {
           e.level = 0;
           e.stage = 0;
@@ -1442,7 +1485,7 @@ function createVoice(
 
   function runEnv(e: VoiceEnv, g: boolean) {
     if (e.curved) return runEnvC(e, g);
-    if ((g && !e.prevGate) || (g && retrigFlag)) {
+    if ((g && !e.prevGate) || (g && retrigFlag && !e.free)) {
       e.stage = e.dlyN > 0 ? 5 : 1;
       e.wait = e.dlyN;
     } else if (!g && e.prevGate) e.stage = 4;
@@ -1453,7 +1496,7 @@ function createVoice(
         if (--e.wait <= 0) e.stage = 1;
         break;
       case 1:
-        e.level += (1.25 - e.level) * e.ca;
+        e.level += (1.25 - e.level) * (e.rA === 1 ? e.ca : rateCoef(e.ca, e.rA));
         if (e.level >= 1) {
           e.level = 1;
           e.stage = e.holdN > 0 ? 6 : 2;
@@ -1465,12 +1508,12 @@ function createVoice(
         break;
       case 2:
         if (e.loop) {
-          e.level += (0 - e.level) * e.cd;
+          e.level += (0 - e.level) * (e.rD === 1 ? e.cd : rateCoef(e.cd, e.rD));
           if (e.level < 0.01) e.stage = 1;
-        } else e.level += (e.s - e.level) * e.cd;
+        } else e.level += (e.s - e.level) * (e.rD === 1 ? e.cd : rateCoef(e.cd, e.rD));
         break;
       case 4:
-        e.level += (0 - e.level) * e.cr;
+        e.level += (0 - e.level) * (e.rD === 1 ? e.cr : rateCoef(e.cr, e.rD));
         if (e.level < 0.00002) {
           e.level = 0;
           e.stage = 0;
@@ -2087,9 +2130,25 @@ function createVoice(
           ? true
           : ev(DI.gate2) > 0.5 && rep;
       if (ac) env[0].cd = accOn ? accCd : env[0].cdBase!;
+      // dests `env2Rate` (Envelope 2's attack, decay and release) and `env1DecRate` (Envelope 1's decay and release), in octaves of rate
+      if (env2RateOn) env[1].rA = env[1].rD = rateMul(ev(DI.env2Rate));
+      if (env1DecOn) env[0].rD = rateMul(ev(DI.env1DecRate));
       S[SI.env1] = tp ? runTrap(tp) : runEnv(env[0], g1);
       if (tp) S[SI.trap] = 1 - 2 * S[SI.env1];
       S[SI.env2] = runEnv(env[1], g2);
+      // the 0-COAST's gates, worked out only when read: EOC low only while Envelope 2 falls, EON high from the end of
+      // Envelope 1's attack until it is back at zero (so a held sustain of zero ends it)
+      if (eocOn) {
+        const st2 = envStage(env[1]);
+        S[SI.eoc] = st2 === 'decay' || st2 === 'release' ? 0 : 1;
+      }
+      if (eonOn) {
+        const st1 = envStage(env[0]);
+        S[SI.eon] =
+          st1 === 'idle' || st1 === 'attack' || st1 === 'delay' || env[0].level < SUSTAIN_NEAR
+            ? 0
+            : 1;
+      }
       S[SI.env1v] = S[SI.env1] * vel;
       S[SI.env2v] = S[SI.env2] * vel;
       if (p.env3) S[SI.env3] = runEnv(env[2], g2);

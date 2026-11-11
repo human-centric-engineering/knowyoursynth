@@ -190,25 +190,26 @@ The required core is one subtractive voice: `osc[]` (up to four), `noise`, `ext`
 `env1`, `env2`, `vca`, `lfo`, `glide`, `trig`, `volume`. Everything else is **opt-in and off
 when absent**, added synth by synth:
 
-| Feature                                | Fields                                                                                  | Added for          |
-| -------------------------------------- | --------------------------------------------------------------------------------------- | ------------------ |
-| Panel modulation and normals           | `routes`, `normals`, `att`, `sh`, `slew`, `od`, `delay`                                 | Model D, Neutron   |
-| Separate waves, duophony, utilities    | `oscOuts`, `pwSplit`, `duo`, `trig.src`, `ring`, `preamp`, `envf`, `rev`                | 2600               |
-| Series high-pass                       | `hpf`                                                                                   | K-2, Jupiters      |
-| Polyphony, arpeggiator, effects        | `poly`, `arp`, `post`, `env3`, `lfo2`, `drift`, `fx`                                    | DeepMind 12D       |
-| Two voices                             | `dual` (stereo)                                                                         | 2-XM               |
-| Morphing oscillators, sub, paraphony   | osc `morph`, `syncGate`, `mix.sub`, `note2Osc`, `oscAssign`, `chorus`                   | Kobol, CAT, Poly D |
-| Accent                                 | `acid`                                                                                  | TB-303, TD-3       |
-| VCS3                                   | osc `skew` / `sineShape`, `trap`, `joy`, `outAmps`, `rev.unit`                          | EMS VCS3           |
-| West Coast voice                       | `easel` (replaces the fixed voice)                                                      | Music Easel        |
-| Moog 900 modular, in volts             | `moog` (replaces the fixed voice)                                                       | System 15/35/55    |
-| Sub out, pink noise, utility high-pass | osc `subLevel`, `subOut`, `hp6`                                                         | Model 15           |
-| Two voices per note and their effects  | `layer`, `pulse`, `keyEnds`, `ringMod`, `tremolo`, `glide.steps`                        | Yamaha CS-80       |
-| Split layers                           | `layer.split`                                                                           | UDO Super Gemini   |
-| Third LFO, LFOs shared by the voices   | `lfo3`, `common` on `lfo` / `lfo2` / `lfo3`                                             | GS Music e7        |
-| Eight-voice drone machine, in stereo   | `solar` (replaces the fixed voice)                                                      | Elta SOLAR 42N     |
-| Band-pass and high-pass filter inputs  | dests `vcfBpIn`, `vcfHpIn` (SVF only, one core, summed into `vcf1`)                     | PWM Malevolent     |
-| Top-note priority                      | `keyPriority: 'high'` (default `'last'`; ignored with `duo`, `oscAssign`, `dualAssign`) | Selmer Clavioline  |
+| Feature                                 | Fields                                                                                                            | Added for          |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------ |
+| Panel modulation and normals            | `routes`, `normals`, `att`, `sh`, `slew`, `od`, `delay`                                                           | Model D, Neutron   |
+| Separate waves, duophony, utilities     | `oscOuts`, `pwSplit`, `duo`, `trig.src`, `ring`, `preamp`, `envf`, `rev`                                          | 2600               |
+| Series high-pass                        | `hpf`                                                                                                             | K-2, Jupiters      |
+| Polyphony, arpeggiator, effects         | `poly`, `arp`, `post`, `env3`, `lfo2`, `drift`, `fx`                                                              | DeepMind 12D       |
+| Two voices                              | `dual` (stereo)                                                                                                   | 2-XM               |
+| Morphing oscillators, sub, paraphony    | osc `morph`, `syncGate`, `mix.sub`, `note2Osc`, `oscAssign`, `chorus`                                             | Kobol, CAT, Poly D |
+| Accent                                  | `acid`                                                                                                            | TB-303, TD-3       |
+| VCS3                                    | osc `skew` / `sineShape`, `trap`, `joy`, `outAmps`, `rev.unit`                                                    | EMS VCS3           |
+| West Coast voice                        | `easel` (replaces the fixed voice)                                                                                | Music Easel        |
+| Moog 900 modular, in volts              | `moog` (replaces the fixed voice)                                                                                 | System 15/35/55    |
+| Sub out, pink noise, utility high-pass  | osc `subLevel`, `subOut`, `hp6`                                                                                   | Model 15           |
+| Two voices per note and their effects   | `layer`, `pulse`, `keyEnds`, `ringMod`, `tremolo`, `glide.steps`                                                  | Yamaha CS-80       |
+| Split layers                            | `layer.split`                                                                                                     | UDO Super Gemini   |
+| Third LFO, LFOs shared by the voices    | `lfo3`, `common` on `lfo` / `lfo2` / `lfo3`                                                                       | GS Music e7        |
+| Eight-voice drone machine, in stereo    | `solar` (replaces the fixed voice)                                                                                | Elta SOLAR 42N     |
+| Band-pass and high-pass filter inputs   | dests `vcfBpIn`, `vcfHpIn` (SVF only, one core, summed into `vcf1`)                                               | PWM Malevolent     |
+| Top-note priority                       | `keyPriority: 'high'` (default `'last'`; ignored with `duo`, `oscAssign`, `dualAssign`)                           | Selmer Clavioline  |
+| Overtone and folder, rise/fall function | osc `mix.ovt`, dest `ovtIn`; signals `eoc` / `eon`, dests `env2Rate` / `env1DecRate`, env `free`, a curved `loop` | Make Noise 0-COAST |
 
 A synth whose sound path is `easel`, `moog` or `solar` still returns the core stubs (`osc: []` etc.).
 `solar` runs eight voices of three kinds (`drone`, `srapa`, `vco`), each with its own gate and envelope, into

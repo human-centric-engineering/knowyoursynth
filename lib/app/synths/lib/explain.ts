@@ -87,6 +87,8 @@ const SIGNAL_NAMES: Record<string, string | undefined> = {
   velp: 'the key timing pulse',
   kbdLo: 'the low end of the keyboard',
   kbdHi: 'the high end of the keyboard',
+  eoc: 'the end-of-cycle gate',
+  eon: 'the end-of-onset gate',
 };
 const WAVE_WORD: Record<string, string> = {
   saw: 'sawtooth',
@@ -272,6 +274,8 @@ const DEST_NAMES: Record<string, string | undefined> = {
   lvl2: 'Oscillator 2 level',
   amp: 'the amplifier',
   ampExp: 'the amplifier',
+  env2Rate: 'the speed of Envelope 2',
+  env1DecRate: 'the decay and release speed of Envelope 1',
   res: 'the resonance',
   dryIn: 'the output',
 };
@@ -559,6 +563,8 @@ const unipolar = (leaf: Leaf) =>
     'velp',
     'kbdLo',
     'kbdHi',
+    'eoc',
+    'eon',
   ].includes(leaf.root);
 
 /** "the LFO (triangle, 5.2 Hz)" – the real source with the facts that matter right now. */
