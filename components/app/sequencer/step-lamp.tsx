@@ -52,7 +52,9 @@ export function StepLamp({
     if (count.current && at) {
       const part = lengths.length > 1 ? (PART_NAMES[at.part] ?? '') : '';
       const len = lengths[at.part];
-      count.current.textContent = `${part}${at.step + 1}${len ? `/${len}` : ''}`;
+      // Padded to the length's digits (05/16), so the count does not shift as the step reaches double figures.
+      const step = String(at.step + 1).padStart(len ? String(len).length : 0, '0');
+      count.current.textContent = `${part}${step}${len ? `/${len}` : ''}`;
     }
   });
   return (

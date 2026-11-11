@@ -58,19 +58,19 @@ describe('the Sequencer button’s step strip', () => {
     runFrame();
     expect(lit()).toEqual([0]);
     expect(cell(0).classList.contains('is-beat')).toBe(true);
-    expect(count().textContent).toBe('1/16');
+    expect(count().textContent).toBe('01/16');
 
     at = { step: 1, part: 0 };
     runFrame();
     expect(lit()).toEqual([1]);
     expect(cell(1).classList.contains('is-beat')).toBe(false);
-    expect(count().textContent).toBe('2/16');
+    expect(count().textContent).toBe('02/16');
 
     at = { step: 4, part: 0 };
     runFrame();
     expect(lit()).toEqual([4]);
     expect(cell(4).classList.contains('is-beat')).toBe(true);
-    expect(count().textContent).toBe('5/16');
+    expect(count().textContent).toBe('05/16');
   });
 
   it('marks the first cell of each beat, and shows only as many cells as the part has steps', () => {
@@ -99,8 +99,18 @@ describe('the Sequencer button’s step strip', () => {
     runFrame();
     at = null;
     runFrame();
-    expect(count().textContent).toBe('3/16');
+    expect(count().textContent).toBe('03/16');
     expect(lit()).toEqual([2]);
+  });
+
+  it('pads the step to the part’s length, so the count keeps its width', () => {
+    render(<StepLamp position={position} lengths={[8, 64]} />);
+    at = { step: 4, part: 0 };
+    runFrame();
+    expect(count().textContent).toBe('A5/8');
+    at = { step: 4, part: 1 };
+    runFrame();
+    expect(count().textContent).toBe('B05/64');
   });
 
   it('lights again on the same step of the other part', () => {

@@ -204,7 +204,8 @@ Opening the sequencer while the riff plays leaves it playing, as the pattern. Cl
 carries a step strip (`StepLamp`, `step-lamp.tsx`, t-225): a cell per step (sixteen at a time; a longer part shows the
 run of sixteen the playhead is in), each beat's first cell taller, the cell of the step heard lit, brighter every fourth
 step heard (by its place in the loop, so a reversed or random pattern keeps time), and the step out of its part's
-length (5/16, or B5/8 on a pattern of two), hidden from a screen reader. A patch's riff shows it as any pattern does.
+length (05/16, or B5/8 on a pattern of two: the step padded to the length's digits, so the count does not shift
+as it reaches double figures), hidden from a screen reader. A patch's riff shows it as any pattern does.
 The engine's own phrase player (`setPhrase` in `dsp-core.ts`) is no longer sent a riff by the page; the offline renders
 (`check-synths`, the Default patch's scale test) still play riffs through it. Both it and Play's pulse read `seq.position()` once a frame through
 `useStepTick` and draw straight onto their elements, so a playing pattern does not render the page once a step.
