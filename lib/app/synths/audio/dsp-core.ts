@@ -531,6 +531,9 @@ function createVoice(
   /** Whether anything reaches dest `env2Rate` / `env1DecRate`, so the envelopes skip them otherwise. */
   let env2RateOn = false,
     env1DecOn = false;
+  /** Whether anything reads signal `eoc` / `eon`, so they are worked out only then. */
+  let eocOn = false,
+    eonOn = false;
   // Each oscillator's own output signal and pitch destination (the fourth was added later, so they are not contiguous).
   const OSC_SI = [SI.osc1, SI.osc2, SI.osc3, SI.osc4];
   const PITCH_DI = [DI.pitch1, DI.pitch2, DI.pitch3, DI.pitch4];
@@ -896,6 +899,13 @@ function createVoice(
     env1DecOn = fed(DI.env1DecRate);
     if (!env2RateOn) env[1].rA = env[1].rD = 1;
     if (!env1DecOn) env[0].rD = 1;
+    // a signal is read when a normal, a route or a route's `by` names it
+    const reads = (si: number): boolean =>
+      normSig.includes(si) ||
+      destSrc.some((a) => a.includes(si)) ||
+      destBy.some((a) => a.includes(si));
+    eocOn = reads(SI.eoc);
+    eonOn = reads(SI.eon);
   }
 
   function setParams(p: VoiceParams) {
@@ -2120,18 +2130,25 @@ function createVoice(
           ? true
           : ev(DI.gate2) > 0.5 && rep;
       if (ac) env[0].cd = accOn ? accCd : env[0].cdBase!;
-      // dests `env2Rate` (every stage of Envelope 2) and `env1DecRate` (Envelope 1's decay and release), in octaves of rate
+      // dests `env2Rate` (Envelope 2's attack, decay and release) and `env1DecRate` (Envelope 1's decay and release), in octaves of rate
       if (env2RateOn) env[1].rA = env[1].rD = rateMul(ev(DI.env2Rate));
       if (env1DecOn) env[0].rD = rateMul(ev(DI.env1DecRate));
       S[SI.env1] = tp ? runTrap(tp) : runEnv(env[0], g1);
       if (tp) S[SI.trap] = 1 - 2 * S[SI.env1];
       S[SI.env2] = runEnv(env[1], g2);
-      // the 0-COAST's gates: EOC low only while Envelope 2 falls, EON high from the end of Envelope 1's attack until it is
-      // back at zero
-      const st2 = envStage(env[1]);
-      S[SI.eoc] = st2 === 'decay' || st2 === 'release' ? 0 : 1;
-      const st1 = envStage(env[0]);
-      S[SI.eon] = st1 === 'idle' || st1 === 'attack' || st1 === 'delay' ? 0 : 1;
+      // the 0-COAST's gates, worked out only when read: EOC low only while Envelope 2 falls, EON high from the end of
+      // Envelope 1's attack until it is back at zero (so a held sustain of zero ends it)
+      if (eocOn) {
+        const st2 = envStage(env[1]);
+        S[SI.eoc] = st2 === 'decay' || st2 === 'release' ? 0 : 1;
+      }
+      if (eonOn) {
+        const st1 = envStage(env[0]);
+        S[SI.eon] =
+          st1 === 'idle' || st1 === 'attack' || st1 === 'delay' || env[0].level < SUSTAIN_NEAR
+            ? 0
+            : 1;
+      }
       S[SI.env1v] = S[SI.env1] * vel;
       S[SI.env2v] = S[SI.env2] * vel;
       if (p.env3) S[SI.env3] = runEnv(env[2], g2);

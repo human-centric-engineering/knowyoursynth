@@ -2188,14 +2188,16 @@ export interface EngineParams {
   ext: { level: number };
   filter: FilterParams;
   /**
-   * Signal `eon` is 1 from the end of Envelope 1's attack until it is back at zero (the 0-COAST's EON), and dest
-   * `env1DecRate` speeds its decay and release by 2^cv (CONTOUR DECAY: positive is faster, a reasoned choice, as the
-   * spec gives no polarity). Neither changes a sound that does not route it.
+   * Signal `eon` is 1 from the end of Envelope 1's attack until it is back at zero (the 0-COAST's EON; a held sustain of
+   * zero ends it), and dest `env1DecRate` speeds its decay and release by 2^cv (CONTOUR DECAY: positive is faster, a
+   * reasoned choice, as the spec gives no polarity). Neither changes a sound that does not route it, and neither works
+   * with `trap`, which replaces Envelope 1.
    */
   env1: EnvParams;
   /**
    * Signal `eoc` is 0 while Envelope 2 falls (its decay or release) and 1 otherwise (the 0-COAST's SLOPE EOC), and dest
-   * `env2Rate` speeds every stage by 2^cv (SLOPE TIME; positive is faster, as for `env1DecRate`).
+   * `env2Rate` speeds its attack, decay and release by 2^cv, not `dly` or `hold` (SLOPE TIME; positive is faster, as for
+   * `env1DecRate`).
    */
   env2: EnvParams;
   /** A third envelope, fired with the loudness envelope. */

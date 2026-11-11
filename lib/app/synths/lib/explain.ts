@@ -275,7 +275,7 @@ const DEST_NAMES: Record<string, string | undefined> = {
   amp: 'the amplifier',
   ampExp: 'the amplifier',
   env2Rate: 'the speed of Envelope 2',
-  env1DecRate: 'the decay time of Envelope 1',
+  env1DecRate: 'the decay and release speed of Envelope 1',
   res: 'the resonance',
   dryIn: 'the output',
 };

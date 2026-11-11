@@ -122,6 +122,19 @@ describe('eon (CONTOUR end of onset)', () => {
     expect(win(b, 320, 360)).toBeGreaterThan(on * 0.9);
     expect(win(b, 800, 1000)).toBeLessThan(on * 0.01);
   });
+
+  it('ends when a held sustain of zero brings Envelope 1 back to zero, with the key still down', () => {
+    // an RC decay of 0.1 s is within reach of zero about 145 ms after the attack; the key is held throughout
+    for (const env1 of [
+      { a: 0.05, d: 0.1, s: 0, r: 0.1 },
+      { a: 0.05, d: 0.1, s: 0, r: 0.1, curve: { a: 0.5, d: 0.5, r: 0.5 } },
+    ]) {
+      const b = loudness({ env1 }, [{ src: 'eon', dst: 'amp', amt: 1 }]);
+      const on = win(b, 60, 90);
+      expect(on).toBeGreaterThan(0.05);
+      expect(win(b, 400, 900)).toBeLessThan(on * 0.01);
+    }
+  });
 });
 
 describe('time CV', () => {
