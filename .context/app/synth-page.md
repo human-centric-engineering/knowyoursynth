@@ -205,8 +205,9 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
 - **The foot of the player is the Play deck**: the bar, the piano and scope, MIDI and the docked sequencer, where the
   synth is played from (owner ruling, 2026-11-07). **Play is its first control** (`PlayButton`, t-210), outside the
   bar's scrolling row so nothing clips it, drawn as a lit green transport key at the bar's 44px; it glows from inside
-  while it runs, breathing at its own pace for a riff. While a pattern plays, the glow is held steady and brightens
-  every fourth step, from the playhead (`useStepTick`, t-225); under reduced motion it stays steady.
+  while it runs. While a pattern plays (the patch's riff included, which plays through the sequencer, t-234), the glow is
+  held steady and brightens every fourth step, from the playhead (`useStepTick`, t-225); under reduced motion it stays
+  steady.
 - **Beside Play, the pattern picker chooses what Play plays** (`PatternPicker`, `f-pattern-picker` t-213): a
   select-like button at Play's height naming it ("The patch's riff", or the pattern's name, "(edited)" once changed).
   From `lg` up its list opens upward over the deck, a popover in the dock that closes on a press outside it, on Escape
@@ -214,12 +215,13 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   and has focus as it opens. The list is the patch's own patterns, then the whole library by role, best suited first;
   how it is read and ordered is in [`pattern-library.md`](./pattern-library.md#the-play-decks-picker). Picking loads the
   pattern into the sequencer (`seq.load`, with Undo back to what was held) and leaves the sequencer closed; picked
-  while the riff plays, the pattern takes over at once.
+  while the riff plays, the pattern takes over at once, from its top.
 - **Play plays the sequencer whenever it holds a loaded pattern** (`playsPattern` in `synth-page.tsx`): while the
   sequencer is open, while it holds a pattern loaded into it (picked beside Play, picked in the sequencer's strip, or
-  the pattern one of the user's sounds plays), and with no riff to play. Otherwise Play plays the sound's riff, and an
-  edit to that riff in the sequencer is heard only while the sequencer is open. The scope's Play follows the same rule.
-  Another patch puts its riff back in the sequencer (`useSequencer`, keyed on the riff), and Play with it.
+  the pattern one of the user's sounds plays), while it holds the riff edited (named "(edited)"), and with no riff to
+  play. Otherwise Play plays the sound's riff, and it too plays through the sequencer, which holds it as it came
+  (`riffNow`, t-234): at the tempo knob's tempo, a riff that plays once stopping at its end. The scope's Play follows the
+  same rule. Another patch puts its riff back in the sequencer (`useSequencer`, keyed on the riff), and Play with it.
 - **The lesson's steps are the chapters**, one per step in its module's colour, each labelled with
   its number and the part of the synth it works on (`moduleOf(step.module).label`), and its title
   from `lg` up; under `sm`, the number alone. The first, narrower, is step 0 ("0 · Start", the Default
@@ -247,7 +249,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   **Replay changes** (beside "On the panel" on the card, under the chips on the Lesson's current
   step) puts the panel back to the step before and makes the step's moves again. With nothing
   playing, it plays the sound's riff while they are made and stops it once they are, unless Play
-  or Stop was pressed meanwhile (`replayRiff`). There is no Replay at the first step of a lesson
+  or Stop was pressed meanwhile (`replayRiff`). The riff plays through the sequencer (t-234), so
+  with a pattern picked it is that pattern that plays. There is no Replay at the first step of a lesson
   with no step 0 (the Default patch's own).
 - **From `lg` up the page lights the step's controls itself** while the panel is at a step, since
   the lesson is not on the page there — but only once a step has been picked on this synth since
@@ -351,8 +354,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   glide ends, a change through `patch` or Undo finishes it, or, with reduced motion, straight away;
   a new patch that changes nothing is no load. Meanwhile the page drops notes from the keys, MIDI
   in and the scope's keyboard (dropped, not queued); lets go, as the load begins, of the keys held
-  (Hold's too) and the arp's keys in the sequencer; stops a riff playing, and plays the sound's riff
-  again once it has loaded; holds a Play pressed meanwhile until then (the riff of the sound on the
+  (Hold's too) and the arp's keys in the sequencer; lets a riff playing run on muted, as a pattern
+  does, and plays the sound's riff again from its top once it has loaded; holds a Play pressed meanwhile until then (the riff of the sound on the
   panel by then, should a second load take over; Mute drops it); and passes `silent` to MIDI
   out, so a running pattern goes on in time but muted on the synth and on the output (see
   `sequencer.md`). The patch picker's LED pulses and its label says it is loading, so a dead key
