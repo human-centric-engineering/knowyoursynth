@@ -1105,7 +1105,7 @@ export const MenuRow = memo(function MenuRow({
         fill={fg}
         style={{ fontFamily: MONO, userSelect: 'none', pointerEvents: 'none' }}
       >
-        {c.label}
+        {c.label && printed(ctx, c.label)}
       </text>
       <rect
         x={right - vw - 4}
@@ -1691,7 +1691,7 @@ function ControlLabel({
 }) {
   if (!c.label || c.labelPos === 'none' || !c.labelPos) return null;
   const size = c.labelSize || (c.type === 'knob' ? 17 : 12);
-  const lines = c.label.split('\n').length;
+  const lines = printed(ctx, c.label).split('\n').length;
   const gap = c.labelGap || 0;
   if (c.labelPos === 'top')
     return (
@@ -3363,7 +3363,7 @@ export const Jack = memo(function Jack({
   // Themes with `outPlates` print output names on a solid plate, so ins and outs read apart at a glance.
   const showLabel = j.label && j.labelPos !== 'none';
   const plate = ctx.theme.outPlates && !ctx.outline && j.dir === 'out' && showLabel;
-  const pw = plate ? j.label.length * size * 0.56 + 9 : 0;
+  const pw = plate ? printed(ctx, j.label).length * size * 0.56 + 9 : 0;
   return (
     <g>
       {plate && (

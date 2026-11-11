@@ -165,7 +165,8 @@ export function formatValue(c: Control, v: ControlValue | null | undefined): str
   if (c.kind === 'bool') return v ? 'On' : 'Off';
   if (c.kind === 'enum') {
     const o = c.options.find((x) => x.v === v);
-    return (o && o.label) || WAVE_NAMES[String(v)] || String(v);
+    // an option printed as decor has no label of its own: its readout is the control's `fmt` (the Polivoks's rotaries)
+    return (o && o.label) || (o && c.fmt?.(o.v)) || WAVE_NAMES[String(v)] || String(v);
   }
   const num = Number(v);
   const n = (Math.round(num * 10) / 10).toFixed(1).replace(/\.0$/, '').replace('-', '−');

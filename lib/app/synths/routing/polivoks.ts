@@ -5,13 +5,41 @@
  *
  * Where the definition says more than the spec, it decides. The voices switch picks which key Generator II follows
  * (`c02`, `c03`), as the spec draws it. The modulation depths and the FM are squared, as `toEngine()` reads them, and
- * the mixer levels and VOLUME curved as it curves them; ВЫХОД breaks the way out (`c20`). The pedal (`c14`) is not
+ * the mixer levels and VOLUME curved as it curves them; ВЫХОД breaks the way out (`c20`). At the modulator's noise position the four modulation edges come from the
+ * noise generator instead, as `toEngine()` takes them (`c05n`, `c06n`, `c13n`, `c19n`, not in the spec). The pedal (`c14`) is not
  * modelled, and the external input, with nothing to plug into it, is left out.
  */
 import type { SynthRouting } from '@/lib/app/synths/contract';
 
 const lvl = (id: string) => [{ id, pow: 1.7 }];
 const sq = (id: string) => [{ id, pow: 2 }];
+
+/** A modulation edge: from the modulator, or from the noise generator while РЕЖИМ is at noise (`<id>n`), as `toEngine()` hears it. */
+const mod = (
+  id: string,
+  to: string,
+  label: string,
+  levels: { id: string; pow: number }[] | string[]
+) => [
+  {
+    id,
+    from: 'modulator',
+    to,
+    signal: 'cv' as const,
+    label,
+    levels,
+    when: { id: 'lfo.shape', in: ['triangle', 'square', 'stepped'] },
+  },
+  {
+    id: `${id}n`,
+    from: 'noise',
+    to,
+    signal: 'cv' as const,
+    label,
+    levels,
+    when: { id: 'lfo.shape', eq: 'noise' },
+  },
+];
 
 export const routing: SynthRouting = {
   synth: 'polivoks',
@@ -163,47 +191,19 @@ export const routing: SynthRouting = {
       when: { id: 'kbd.voices', eq: '1' },
     },
     { id: 'c04', from: 'gen2', to: 'gen1', signal: 'audio', label: 'FM', levels: sq('gen1.fm') },
-    {
-      id: 'c05',
-      from: 'modulator',
-      to: 'gen1',
-      signal: 'cv',
-      label: 'pitch',
-      levels: sq('gen1.mod'),
-    },
-    {
-      id: 'c06',
-      from: 'modulator',
-      to: 'gen2',
-      signal: 'cv',
-      label: 'pitch',
-      levels: sq('gen2.mod'),
-    },
+    ...mod('c05', 'gen1', 'pitch', sq('gen1.mod')),
+    ...mod('c06', 'gen2', 'pitch', sq('gen2.mod')),
     { id: 'c07', from: 'gen1', to: 'mixer', signal: 'audio', levels: lvl('mixer.gen1') },
     { id: 'c08', from: 'gen2', to: 'mixer', signal: 'audio', levels: lvl('mixer.gen2') },
     { id: 'c09', from: 'noise', to: 'mixer', signal: 'audio', levels: lvl('mixer.noise') },
     { id: 'c11', from: 'mixer', to: 'vcf', signal: 'audio' },
     { id: 'c12', from: 'fenv', to: 'vcf', signal: 'cv', label: 'cutoff', levels: ['vcf.env'] },
-    {
-      id: 'c13',
-      from: 'modulator',
-      to: 'vcf',
-      signal: 'cv',
-      label: 'cutoff',
-      levels: sq('vcf.mod'),
-    },
+    ...mod('c13', 'vcf', 'cutoff', sq('vcf.mod')),
     { id: 'c15', from: 'kbd', to: 'fenv', signal: 'gate' },
     { id: 'c16', from: 'kbd', to: 'aenv', signal: 'gate' },
     { id: 'c17', from: 'vcf', to: 'vca', signal: 'audio' },
     { id: 'c18', from: 'aenv', to: 'vca', signal: 'cv', label: 'loudness' },
-    {
-      id: 'c19',
-      from: 'modulator',
-      to: 'vca',
-      signal: 'cv',
-      label: 'tremolo',
-      levels: ['vca.mod'],
-    },
+    ...mod('c19', 'vca', 'tremolo', ['vca.mod']),
     {
       id: 'c20',
       from: 'vca',
