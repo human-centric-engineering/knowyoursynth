@@ -105,9 +105,17 @@ describe('overtone (mix.ovt)', () => {
     expect(h3).toBeLessThan(power(odd, F0 * 3));
   });
 
-  it('is moved by the oscillator’s wave destination', () => {
-    const moved = play(ovt(0), [{ src: 'one', dst: 'wave1', amt: 1 }]);
-    expect(maxDiff(moved, play(ovt(1)))).toBeLessThan(1e-5);
+  it('is moved by the oscillator’s wave destination, added to `ovt` and clamped to 0..1', () => {
+    // a partial amount adds rather than replaces: 0.25 + 0.5 lands on 0.75, not on 0.5
+    expect(
+      maxDiff(play(ovt(0.25), [{ src: 'one', dst: 'wave1', amt: 0.5 }]), play(ovt(0.75)))
+    ).toBeLessThan(1e-5);
+    expect(
+      maxDiff(play(ovt(0.5), [{ src: 'one', dst: 'wave1', amt: -1 }]), play(ovt(0)))
+    ).toBeLessThan(1e-5);
+    expect(
+      maxDiff(play(ovt(0.5), [{ src: 'one', dst: 'wave1', amt: 1 }]), play(ovt(1)))
+    ).toBeLessThan(1e-5);
   });
 
   it('folded by MULTIPLY, adds harmonics above the overtone', () => {
@@ -119,9 +127,9 @@ describe('overtone (mix.ovt)', () => {
     );
   });
 
-  it('takes MULTIPLY from the pulse-width destination too', () => {
-    const moved = play(ovt(0, 0), [{ src: 'one', dst: 'pw1', amt: 1 }]);
-    expect(maxDiff(moved, play(ovt(0, 1)))).toBeLessThan(1e-5);
+  it('takes MULTIPLY from the pulse-width destination too, added to `fold`', () => {
+    const moved = play(ovt(0, 0.25), [{ src: 'one', dst: 'pw1', amt: 0.5 }]);
+    expect(maxDiff(moved, play(ovt(0, 0.75)))).toBeLessThan(1e-5);
   });
 
   it('folds what reaches ovtIn along with the overtone', () => {
@@ -132,9 +140,49 @@ describe('overtone (mix.ovt)', () => {
     expect(power(withIn, F0 * 2)).toBeGreaterThan(power(without, F0 * 2) * 1000);
   });
 
-  it('leaves an oscillator without it as it was', () => {
-    // the shared folder is smoothed once per sample for either shape, so a tfold oscillator is unchanged
-    const tf = play({ level: 0.4, mix: { tfold: 1 }, semi: 0, fold: 0 });
-    expect(maxDiff(tf, tri)).toBeLessThan(1e-5);
+  it('leaves a tfold oscillator’s glide as it was: fold still smoothed, and once a sample', () => {
+    // fold steps 0 → 1 while the note plays. Smoothed, it glides; not smoothed, it would never move; smoothed twice
+    // with mix.ovt also on, it would arrive sooner than with tfold alone.
+    const AT = 128 * 90; // on a block boundary, where render() applies a message
+    const glide = (mix: OscParams['mix']): Float32Array => {
+      const at = (fold: number) =>
+        monoParams({
+          osc: [{ level: 0.4, mix, semi: 0, fold }],
+          filter: {
+            type: 'svf',
+            mode: 'lp',
+            cutoff: 20000,
+            res: 0,
+            envAmt: 0,
+            envSrc: 'env1',
+            kbd: 0,
+          },
+          vca: { envSrc: 'none', bias: 1 },
+        });
+      const p = at(0);
+      return render(p, {
+        sr: SR,
+        len: LEN,
+        events: [
+          [0, { type: 'noteOn', n: NOTE, v: 0.9 }],
+          [AT, { type: 'params', p: at(1) }],
+        ],
+      }).out;
+    };
+    const tf = glide({ tfold: 1 });
+    const folded = play({ level: 0.4, mix: { tfold: 1 }, semi: 0, fold: 1 });
+    const before = tf.subarray(0, AT);
+    expect(maxDiff(before, tri.subarray(0, AT))).toBeLessThan(1e-5);
+    // 1 ms in it is between the two; 100 ms in it has arrived (the phase is the same, as only fold changed)
+    const ms = SR / 1000;
+    const between = (i: number) => Math.abs(tf[i] - folded[i]);
+    let early = 0;
+    for (let i = AT + ms; i < AT + 2 * ms; i++) early = Math.max(early, between(i));
+    let late = 0;
+    for (let i = AT + 100 * ms; i < LEN; i++) late = Math.max(late, between(i));
+    expect(early).toBeGreaterThan(0.01);
+    expect(late).toBeLessThan(1e-4);
+    // with a negligible mix.ovt beside it, the tfold part glides the same way
+    expect(maxDiff(glide({ tfold: 1, ovt: 1e-9 }), tf)).toBeLessThan(1e-6);
   });
 });

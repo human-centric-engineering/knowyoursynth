@@ -191,6 +191,8 @@ const IN_STAGE: Record<string, number | undefined> = {
   vcfIn: 2,
   vcfBpIn: 2,
   vcfHpIn: 2,
+  // the 0-COAST's folder sits inside the oscillator, after its own wave (0) and before the mixer
+  ovtIn: 0.5,
   odIn: 3,
   vcaIn: 4,
   delayIn: 5,
@@ -203,6 +205,7 @@ const STAGE_NAME: Record<number, string | undefined> = {
   4: 'the amplifier',
   5: 'the delay',
   6: 'the output',
+  0.5: 'the wavefolder',
 };
 /** The stage of an audio input (NaN, which no comparison passes, where the prototype read `undefined`). */
 const inStage = (dest: string) => IN_STAGE[dest] ?? NaN;
@@ -239,6 +242,7 @@ const GROUP: Record<string, string | undefined> = {
   vcfIn: 'audioIn',
   vcfBpIn: 'audioIn',
   vcfHpIn: 'audioIn',
+  ovtIn: 'audioIn',
   odIn: 'audioIn',
   vcaIn: 'audioIn',
   delayIn: 'audioIn',
@@ -249,6 +253,7 @@ const DEST_NAMES: Record<string, string | undefined> = {
   vcfIn: 'the filter input',
   vcfBpIn: 'the filter’s band-pass input',
   vcfHpIn: 'the filter’s high-pass input',
+  ovtIn: 'the wavefolder input',
   vcaIn: 'the amplifier input',
   delayIn: 'the delay input',
   cutoff: 'the filter cutoff',

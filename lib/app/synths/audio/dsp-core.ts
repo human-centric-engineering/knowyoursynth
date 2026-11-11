@@ -462,6 +462,14 @@ const SS_PHASE0 = [0.13, 0.71, 0.37, 0.89, 0.52, 0.26];
 /** `mix.ovt`: the level of the added harmonic against the triangle (reasoned, not measured). */
 const OVT_HARM = 0.6;
 
+/** `v` scaled by 1 + 2·`f` (`f` clamped to 0..1) and folded back at ±1: a triangle wave of the scaled value. */
+function foldTri(v: number, f: number): number {
+  f = f < 0 ? 0 : f > 1 ? 1 : f;
+  let u = (v * (1 + 2 * f) + 1) * 0.25;
+  u -= Math.floor(u);
+  return u < 0.5 ? 4 * u - 1 : 3 - 4 * u;
+}
+
 /**
  * −1..1 from an LFO's cycle count: a `common` LFO's sample and hold, the same value in every voice on the same cycle.
  * `k` picks the LFO, so the three do not move together.
@@ -509,6 +517,8 @@ function createVoice(
   const cabled = new Uint8Array(ND);
   // The SVF's band-pass and high-pass inputs (`vcfBpIn`, `vcfHpIn`) have a source: the filter runs their states too
   let mmOn = false;
+  /** Whether anything reaches dest `ovtIn`, so a `mix.ovt` oscillator skips it otherwise. */
+  let ovtInOn = false;
   // Each oscillator's own output signal and pitch destination (the fourth was added later, so they are not contiguous).
   const OSC_SI = [SI.osc1, SI.osc2, SI.osc3, SI.osc4];
   const PITCH_DI = [DI.pitch1, DI.pitch2, DI.pitch3, DI.pitch4];
@@ -860,6 +870,7 @@ function createVoice(
       (normSig[d] >= 0 && normAmt[d] !== 0) || destAmt[d].some((a) => a !== 0);
     mmOn = fed(DI.vcfBpIn) || fed(DI.vcfHpIn);
     if (!mmOn) fPrevBp = fPrevHp = 0;
+    ovtInOn = fed(DI.ovtIn);
   }
 
   function setParams(p: VoiceParams) {
@@ -1308,14 +1319,8 @@ function createVoice(
       // the saw's own harmonics are negative sines, so the fed-back one is subtracted to reinforce its harmonic
       y += (saw - a * fb) * o.fbk;
     }
-    if (o.tfold) {
-      let f = o.fold + ctl1;
-      f = f < 0 ? 0 : f > 1 ? 1 : f;
-      // the triangle scaled up to three times and folded back at ±1: a triangle wave of the scaled value
-      let u = (tri * (1 + 2 * f) + 1) * 0.25;
-      u -= Math.floor(u);
-      y += (u < 0.5 ? 4 * u - 1 : 3 - 4 * u) * o.tfold;
-    }
+    // the triangle scaled up to three times and folded back at ±1
+    if (o.tfold) y += foldTri(tri, o.fold + ctl1) * o.tfold;
     if (o.ovt) {
       // 0-COAST OVERTONE into MULTIPLY, reasoned from the manual's description rather than measured. OVERTONE adds one
       // harmonic to the triangle: the odd one (the triangle at three times the pitch, the triangle tripled and folded)
@@ -1325,16 +1330,12 @@ function createVoice(
       o.ovtA += (o.ovtAT - o.ovtA) * sm;
       let a = o.ovtA + (waveDest >= 0 ? ev(waveDest) : 0);
       a = a < 0 ? 0 : a > 1 ? 1 : a;
-      let u3 = (tri * 3 + 1) * 0.25;
-      u3 -= Math.floor(u3);
-      const odd = u3 < 0.5 ? 4 * u3 - 1 : 3 - 4 * u3;
+      const odd = foldTri(tri, 1);
       const even = 2 * (tri < 0 ? -tri : tri) - 1;
-      const x = (tri + OVT_HARM * ((1 - a) * odd + a * even)) / (1 + OVT_HARM) + ev(DI.ovtIn);
-      let f = o.fold + ctl1;
-      f = f < 0 ? 0 : f > 1 ? 1 : f;
-      let u = (x * (1 + 2 * f) + 1) * 0.25;
-      u -= Math.floor(u);
-      y += (u < 0.5 ? 4 * u - 1 : 3 - 4 * u) * o.ovt;
+      const x =
+        (tri + OVT_HARM * ((1 - a) * odd + a * even)) / (1 + OVT_HARM) +
+        (ovtInOn ? ev(DI.ovtIn) : 0);
+      y += foldTri(x, o.fold + ctl1) * o.ovt;
     }
     if (o.fnoise) {
       // white noise through a resonant low-pass (a trapezoidal SVF) tuned from the oscillator's own pitch

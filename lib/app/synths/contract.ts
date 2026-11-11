@@ -1470,6 +1470,9 @@ export interface OscMix {
    * second), with a blend between; then audio dest `ovtIn` is added, and the sum is folded by `fold` as `tfold` is. The
    * oscillator's wave destination (`wave1` / `wave2`, oscillators 1 and 2 only) adds to `ovt`, and its pulse-width
    * destination to `fold`. At `ovt` 0, `fold` 0 and nothing at `ovtIn` it is the triangle with its third harmonic raised.
+   * `ovtIn` is one dest for the voice, heard by every oscillator with `mix.ovt` (the 0-COAST has one). The harmonics are
+   * built for a symmetric triangle, so with `skew` set they are no longer the second and third; and an oscillator with
+   * `morph` has no `mix`, so `ovt` there does nothing.
    */
   ovt?: number;
 }
