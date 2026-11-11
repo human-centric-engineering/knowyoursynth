@@ -961,25 +961,39 @@ svg .kys-hit:focus-visible {
   margin-left: -2px;
   opacity: 0.75;
 }
-/* The Sequencer button's step lamp (t-225): a pattern playing with the sequencer closed. A lamp lit on each step and
-   fading before the next, brighter on every fourth, and the step's number. */
+/* The Sequencer button's step strip (t-225): a pattern playing with the sequencer closed. A cell per step (a bar of
+   sixteen at a time), the one heard lit and fading before the next, brighter on every fourth; each beat's first cell
+   a little taller; then the step and the part's length. */
 .kys-step-lamp {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   margin-left: -1px;
 }
-.kys-step-lamp-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: var(--kys-accent);
-  opacity: 0.3;
+.kys-step-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 12px;
 }
-.kys-step-lamp-dot.is-lit {
+.kys-step-cell {
+  width: 3px;
+  height: 7px;
+  border-radius: 1px;
+  background: var(--kys-accent);
+  opacity: 0.22;
+}
+.kys-step-cell.is-bar {
+  height: 10px;
+  opacity: 0.38;
+}
+.kys-step-cell.is-off {
+  visibility: hidden;
+}
+.kys-step-cell.is-lit {
   animation: kys-step-lit 0.18s ease-out forwards;
 }
-.kys-step-lamp-dot.is-beat {
+.kys-step-cell.is-beat {
   animation: kys-step-beat 0.26s ease-out forwards;
 }
 @keyframes kys-step-lit {
@@ -987,21 +1001,21 @@ svg .kys-hit:focus-visible {
     opacity: 1;
   }
   to {
-    opacity: 0.35;
+    opacity: 0.6;
   }
 }
 @keyframes kys-step-beat {
   from {
     opacity: 1;
-    box-shadow: 0 0 6px 1px color-mix(in srgb, var(--kys-accent) 75%, transparent);
+    box-shadow: 0 0 5px 1px color-mix(in srgb, var(--kys-accent) 75%, transparent);
   }
   to {
-    opacity: 0.35;
+    opacity: 0.6;
     box-shadow: none;
   }
 }
 .kys-step-lamp-count {
-  min-width: 3ch;
+  min-width: 6ch;
   font-size: 11px;
   font-variant-numeric: tabular-nums;
   color: var(--kys-accent);

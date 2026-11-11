@@ -2931,7 +2931,10 @@ function Synth({
                   >
                     {/* A pattern playing with the sequencer closed still shows on the bar, step by step (t-225). */}
                     {seq.playing && !seqShown && (
-                      <StepLamp position={seq.position} parts={seq.pattern.parts.length} />
+                      <StepLamp
+                        position={seq.position}
+                        lengths={seq.pattern.parts.map((p) => p.steps.length)}
+                      />
                     )}
                   </LayerToggle>
                   {/* Named for what it will do, as a video's mute button is: Mute while the sound is on. */}

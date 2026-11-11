@@ -40,96 +40,122 @@ afterEach(() => {
   HTMLElement.prototype.animate = ANIMATE;
 });
 
-describe('the Sequencer button’s step lamp', () => {
-  const dot = () => screen.getByTestId('seq-step-lamp').firstElementChild as HTMLElement;
-  const count = () => screen.getByTestId('seq-step-lamp').lastElementChild as HTMLElement;
+describe('the Sequencer button’s step strip', () => {
+  const lamp = () => screen.getByTestId('seq-step-lamp');
+  const cells = () => Array.from(lamp().firstElementChild?.children ?? []) as HTMLElement[];
+  const cell = (i: number) => cells()[i];
+  const lit = () => cells().flatMap((c, i) => (c.classList.contains('is-lit') ? [i] : []));
+  const hidden = () => cells().filter((c) => c.classList.contains('is-off')).length;
+  const count = () => lamp().lastElementChild as HTMLElement;
 
-  it('lights on each step heard and shows its number, brighter on every fourth', () => {
-    render(<StepLamp position={position} />);
+  it('lights the cell of each step heard and shows the step out of the part’s length, brighter on every fourth', () => {
+    render(<StepLamp position={position} lengths={[16]} />);
     runFrame();
-    expect(dot().className).not.toContain('is-lit');
+    expect(lit()).toEqual([]);
     expect(count().textContent).toBe('');
 
     at = { step: 0, part: 0 };
     runFrame();
-    expect(dot().classList.contains('is-lit')).toBe(true);
-    expect(dot().classList.contains('is-beat')).toBe(true);
-    expect(count().textContent).toBe('1');
+    expect(lit()).toEqual([0]);
+    expect(cell(0).classList.contains('is-beat')).toBe(true);
+    expect(count().textContent).toBe('1/16');
 
     at = { step: 1, part: 0 };
     runFrame();
-    expect(dot().classList.contains('is-lit')).toBe(true);
-    expect(dot().classList.contains('is-beat')).toBe(false);
-    expect(count().textContent).toBe('2');
+    expect(lit()).toEqual([1]);
+    expect(cell(1).classList.contains('is-beat')).toBe(false);
+    expect(count().textContent).toBe('2/16');
 
     at = { step: 4, part: 0 };
     runFrame();
-    expect(dot().classList.contains('is-beat')).toBe(true);
-    expect(count().textContent).toBe('5');
+    expect(lit()).toEqual([4]);
+    expect(cell(4).classList.contains('is-beat')).toBe(true);
+    expect(count().textContent).toBe('5/16');
+  });
+
+  it('marks the first cell of each beat, and shows only as many cells as the part has steps', () => {
+    render(<StepLamp position={position} lengths={[6]} />);
+    at = { step: 0, part: 0 };
+    runFrame();
+    expect(hidden()).toBe(10);
+    expect(cells().flatMap((c, i) => (c.classList.contains('is-bar') ? [i] : []))).toEqual([
+      0, 4, 8, 12,
+    ]);
+    expect(count().textContent).toBe('1/6');
+  });
+
+  it('shows the run of sixteen the playhead is in on a longer part', () => {
+    render(<StepLamp position={position} lengths={[24]} />);
+    at = { step: 18, part: 0 };
+    runFrame();
+    expect(lit()).toEqual([2]);
+    expect(hidden()).toBe(8);
+    expect(count().textContent).toBe('19/24');
   });
 
   it('keeps the last step through a frame with no playhead (a loop being queued)', () => {
-    render(<StepLamp position={position} />);
+    render(<StepLamp position={position} lengths={[16]} />);
     at = { step: 2, part: 0 };
     runFrame();
     at = null;
     runFrame();
-    expect(count().textContent).toBe('3');
-    expect(dot().classList.contains('is-lit')).toBe(true);
+    expect(count().textContent).toBe('3/16');
+    expect(lit()).toEqual([2]);
   });
 
   it('lights again on the same step of the other part', () => {
-    render(<StepLamp position={position} />);
+    render(<StepLamp position={position} lengths={[16, 16]} />);
     at = { step: 1, part: 0 };
     runFrame();
-    dot().classList.remove('is-lit');
+    cell(1).classList.remove('is-lit');
     at = { step: 1, part: 1 };
     runFrame();
-    expect(dot().classList.contains('is-lit')).toBe(true);
+    expect(lit()).toEqual([1]);
   });
 
   it('is brighter on every fourth step heard, whatever order the steps play in', () => {
-    render(<StepLamp position={position} />);
+    render(<StepLamp position={position} lengths={[16]} />);
     // Reversed: the first step heard is the last step.
     at = { step: 15, part: 0, slot: 0, loop: 0 };
     runFrame();
-    expect(dot().classList.contains('is-beat')).toBe(true);
-    expect(count().textContent).toBe('16');
+    expect(cell(15).classList.contains('is-beat')).toBe(true);
+    expect(count().textContent).toBe('16/16');
     at = { step: 12, part: 0, slot: 3, loop: 0 };
     runFrame();
-    expect(dot().classList.contains('is-beat')).toBe(false);
+    expect(cell(12).classList.contains('is-beat')).toBe(false);
     at = { step: 11, part: 0, slot: 4, loop: 0 };
     runFrame();
-    expect(dot().classList.contains('is-beat')).toBe(true);
+    expect(cell(11).classList.contains('is-beat')).toBe(true);
   });
 
   it('lights again on a step heard twice running (random order, a one-step part)', () => {
-    render(<StepLamp position={position} />);
+    render(<StepLamp position={position} lengths={[16]} />);
     at = { step: 2, part: 0, slot: 0, loop: 0 };
     runFrame();
-    dot().classList.remove('is-lit');
+    cell(2).classList.remove('is-lit');
     at = { step: 2, part: 0, slot: 1, loop: 0 };
     runFrame();
-    expect(dot().classList.contains('is-lit')).toBe(true);
-    dot().classList.remove('is-lit');
+    expect(lit()).toEqual([2]);
+    cell(2).classList.remove('is-lit');
     at = { step: 2, part: 0, slot: 1, loop: 0 };
     runFrame();
-    expect(dot().classList.contains('is-lit')).toBe(false);
+    expect(lit()).toEqual([]);
     at = { step: 2, part: 0, slot: 1, loop: 1 };
     runFrame();
-    expect(dot().classList.contains('is-lit')).toBe(true);
+    expect(lit()).toEqual([2]);
   });
 
-  it('names the part with the step where the pattern has more than one', () => {
-    render(<StepLamp position={position} parts={2} />);
+  it('names the part with the step where the pattern has more than one, out of that part’s length', () => {
+    render(<StepLamp position={position} lengths={[16, 8]} />);
     at = { step: 2, part: 1 };
     runFrame();
-    expect(count().textContent).toBe('B3');
+    expect(count().textContent).toBe('B3/8');
+    expect(hidden()).toBe(8);
   });
 
   it('is hidden from a screen reader, which would otherwise read every step out', () => {
     render(<StepLamp position={position} />);
-    expect(screen.getByTestId('seq-step-lamp').getAttribute('aria-hidden')).toBe('true');
+    expect(lamp().getAttribute('aria-hidden')).toBe('true');
   });
 });
 
