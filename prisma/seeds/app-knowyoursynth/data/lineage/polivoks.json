@@ -1,0 +1,46 @@
+{
+  "synth": "polivoks",
+  "title": "The Polivoks and its filter",
+  "intro": "The Polivoks is a Soviet design by Vladimir Kuzmin, built by the Formanta factory from 1982 and sold only in the USSR. It was no copy of a Western synth: Kuzmin built its filter on K140UD12 programmable op-amps, and that filter's harsh, screaming resonance is what made it famous. Long after the factory stopped, makers in Latvia rebuilt the filter for new instruments.",
+  "timeline": [
+    {
+      "year": "1982",
+      "name": "Formanta Polivoks",
+      "tag": "This synth",
+      "text": "Two generators, each with five waveforms and five ranges, Generator II able to frequency-modulate Generator I, noise and an external input, a low-pass or band-pass filter, two envelopes that can repeat, one modulator, glissando on Generator I and a 49-key keyboard played one voice or two."
+    },
+    {
+      "year": "2020",
+      "name": "Elta Music SOLAR 50",
+      "text": "The Big Ambient Machine: fifty sawtooth oscillators in ten drone voices through a Polivoks low-pass filter."
+    },
+    {
+      "year": "2020",
+      "name": "Erica Synths Bassline DB-01",
+      "text": "A compact bass synth whose two-pole filter is based on the Polivoks's."
+    },
+    {
+      "year": "2025",
+      "name": "Elta Music SOLAR 42N",
+      "text": "A microtonal drone machine with a dual Polivoks filter, rebuilt so it no longer needs tuning. This app plays it."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Octave CAT",
+      "years": "1976",
+      "text": "Another duophonic synth of the time, two oscillators into one filter, with the higher key on one and the lower on the other. This app plays its recreation, the Behringer CAT."
+    },
+    {
+      "name": "ARP Odyssey",
+      "years": "1972",
+      "text": "The best-known duophonic synth of the West: two oscillators sharing one filter and amplifier, the higher key on one and the lower on the other."
+    },
+    {
+      "name": "Elta Music SOLAR 42N",
+      "years": "2025",
+      "text": "Its filters are the Polivoks's, doubled, and its manual calls them \"dirty and angry\". This app plays it."
+    }
+  ],
+  "note": "None of the databank’s records name the Polivoks yet."
+}

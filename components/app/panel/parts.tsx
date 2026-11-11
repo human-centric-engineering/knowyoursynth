@@ -58,7 +58,12 @@ export interface PanelCtx {
   ink: string;
   /** Faceplate colour: the theme's, or paper on the outline. */
   panelFill: string;
+  /** The panel switched to English: every printed string goes through it (`SynthDef.translation`). */
+  tr?: (printed: string) => string;
 }
+
+/** A printed string as this panel prints it: in English when the panel is switched to it and has the string. */
+export const printed = (ctx: PanelCtx, s: string): string => (ctx.tr ? ctx.tr(s) : s);
 
 /**
  * A control was moved: its id and new value. `null` puts it back where the
@@ -171,7 +176,7 @@ export function PanelText({
   weight,
   spacing,
 }: PanelTextProps) {
-  const lines = String(text).split('\n');
+  const lines = (typeof text === 'string' ? printed(ctx, text) : String(text)).split('\n');
   const f = fontFor(ctx.theme);
   return (
     <text
@@ -327,6 +332,8 @@ function Tab({
   gap?: boolean;
   ctx: PanelCtx;
 }) {
+  // Sized to what is printed: PanelText reads the English again, which finds nothing more to change.
+  text = printed(ctx, text);
   if (ctx.theme.tabs && !ctx.outline) {
     const w = text.length * size * 0.6 + 16;
     const h = size * 1.5;
@@ -1098,7 +1105,7 @@ export const MenuRow = memo(function MenuRow({
         fill={fg}
         style={{ fontFamily: MONO, userSelect: 'none', pointerEvents: 'none' }}
       >
-        {c.label}
+        {c.label && printed(ctx, c.label)}
       </text>
       <rect
         x={right - vw - 4}
@@ -1684,7 +1691,7 @@ function ControlLabel({
 }) {
   if (!c.label || c.labelPos === 'none' || !c.labelPos) return null;
   const size = c.labelSize || (c.type === 'knob' ? 17 : 12);
-  const lines = c.label.split('\n').length;
+  const lines = printed(ctx, c.label).split('\n').length;
   const gap = c.labelGap || 0;
   if (c.labelPos === 'top')
     return (
@@ -1745,6 +1752,7 @@ const KNOB_GEOM: Record<KnobStyle, KnobGeom> = {
   e7: { body: 1.08, tick: 1.34, num: 1.68 },
   solar: { body: 1.08, tick: 1.36, num: 1.7 },
   'solar-eye': { body: 1.0, tick: 1.1, num: 1.3 },
+  polivoks: { body: 1.0, tick: 1.2, num: 1.6 },
 };
 
 /** How far from a knob's centre a pointer on its rim sits: the lesson's ghost, and the live pointer (t-154). */
@@ -1985,6 +1993,38 @@ function KnobBody({ c, angle, ctx }: { c: KnobControl; angle: number; ctx: Panel
             stroke="#8d8d89"
             strokeWidth="0.8"
           />
+        </g>
+      </g>
+    );
+  }
+  if (st === 'polivoks') {
+    // Formanta Polivoks: a black knurled knob with a flat top crossed by a raised grip bar along the pointer, and a
+    // small white square on the rim that the panel's numbers are read against.
+    return (
+      <g transform={`translate(${c.x} ${c.y})`}>
+        <circle r={r * 1.04} fill="#000" opacity="0.5" transform="translate(3 5)" />
+        <circle r={r} fill="url(#kysBlack)" stroke="#000" strokeWidth="1.5" />
+        <circle
+          r={r * 0.92}
+          fill="none"
+          stroke="#37383b"
+          strokeWidth={r * 0.13}
+          strokeDasharray={`${r * 0.06} ${r * 0.06}`}
+        />
+        <circle r={r * 0.78} fill="#1c1d1f" stroke="#2e2f32" strokeWidth="1.5" />
+        <circle r={r * 0.78} fill="url(#kysSheen)" opacity="0.1" />
+        <g transform={`rotate(${angle})`}>
+          <rect
+            x={-r * 0.13}
+            y={-r * 0.74}
+            width={r * 0.26}
+            height={r * 1.48}
+            rx={r * 0.06}
+            fill="#121314"
+            stroke="#3b3c3f"
+            strokeWidth="1"
+          />
+          <rect x={-r * 0.12} y={-r * 1.02} width={r * 0.24} height={r * 0.24} fill="#f2efe4" />
         </g>
       </g>
     );
@@ -3323,7 +3363,7 @@ export const Jack = memo(function Jack({
   // Themes with `outPlates` print output names on a solid plate, so ins and outs read apart at a glance.
   const showLabel = j.label && j.labelPos !== 'none';
   const plate = ctx.theme.outPlates && !ctx.outline && j.dir === 'out' && showLabel;
-  const pw = plate ? j.label.length * size * 0.56 + 9 : 0;
+  const pw = plate ? printed(ctx, j.label).length * size * 0.56 + 9 : 0;
   return (
     <g>
       {plate && (

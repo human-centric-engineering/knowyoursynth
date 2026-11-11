@@ -12,11 +12,18 @@ import { LayerToggle, PlayerSettings, SignalMenu } from '@/components/app/synth/
 import { chooseSignal } from '@/tests/helpers/signal-menu';
 
 function settings(
-  over: { modular?: boolean; zoom?: number; view?: { outline: boolean; long: boolean } } = {}
+  over: {
+    modular?: boolean;
+    zoom?: number;
+    view?: { outline: boolean; long: boolean };
+    language?: string;
+    english?: boolean;
+  } = {}
 ) {
   const onView = vi.fn();
   const onZoom = vi.fn();
   const onTips = vi.fn();
+  const onEnglish = vi.fn();
   render(
     <PlayerSettings
       view={over.view ?? { outline: false, long: false }}
@@ -26,10 +33,13 @@ function settings(
       onZoom={onZoom}
       tipsOn
       onTips={onTips}
+      language={over.language}
+      english={over.english}
+      onEnglish={onEnglish}
     />
   );
   const menu = within(screen.getByRole('group', { name: 'Panel settings' }));
-  return { onView, onZoom, onTips, menu };
+  return { onView, onZoom, onTips, onEnglish, menu };
 }
 
 describe('PlayerSettings', () => {
@@ -54,6 +64,20 @@ describe('PlayerSettings', () => {
     fireEvent.click(lens.getByRole('button', { name: '3×' }));
     fireEvent.click(lens.getByRole('button', { name: 'Off' }));
     expect(onZoom.mock.calls).toEqual([[3], [0]]);
+  });
+
+  it('offers no Labels switch for a panel printed in English', () => {
+    expect(settings().menu.queryByRole('group', { name: 'Panel labels' })).toBeNull();
+  });
+
+  it('offers a panel printed in another language in that language or in English', () => {
+    const { menu, onEnglish } = settings({ language: 'Russian', english: false });
+    const labels = within(menu.getByRole('group', { name: 'Panel labels' }));
+    expect(labels.getByRole('button', { name: 'Russian' }).getAttribute('aria-pressed')).toBe(
+      'true'
+    );
+    fireEvent.click(labels.getByRole('button', { name: 'English' }));
+    expect(onEnglish.mock.calls).toEqual([[true]]);
   });
 
   it('offers no Modular or Long for a synth without a modular layout', () => {

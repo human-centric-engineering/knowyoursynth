@@ -173,6 +173,17 @@ friends, listed on `DecorFill`). `led` lights by `litWhen` (see `LitWhen`).
 `registry.test.ts` fails on any `logo` without the tag; a wordmark drawn as `text` has to be
 tagged by hand.
 
+**A panel printed in another language keeps its own lettering** and carries a `translation`:
+the language (`'Russian'`) and an `english` table keyed by whole printed strings (a control's
+`label`, an option or scale label, a `text`, `frame` or `tab` string, `\n` included). The foot
+rail's Labels setting appears only on such a synth and reprints every string the table has in
+English; anything it lacks prints as it is. Because keys are whole strings, a word printed in
+two places reads the same in both: print a caption as one word per `text` rather than one
+string with `\n` if a word in it also stands alone elsewhere. Names, help and search are
+English already and never change. The share card prints a translated panel in English, since
+its fonts are Latin only. The Polivoks (`defs/polivoks.ts`) is the worked example, and its test
+checks every Cyrillic string it prints has an entry and no entry is stale.
+
 ## `toEngine()` and `EngineParams`
 
 The required core is one subtractive voice: `osc[]` (up to four), `noise`, `ext`, `filter`,

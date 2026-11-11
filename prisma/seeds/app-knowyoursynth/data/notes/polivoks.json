@@ -1,0 +1,54 @@
+{
+  "synth": "polivoks",
+  "unusual": [
+    {
+      "target": "kbd.voices",
+      "text": "Duophonic, rare for its time: in 2-ГОЛ. hold two keys and Generator I plays the higher while Generator II plays the lower, both through the one filter and amplifier."
+    },
+    {
+      "target": "gen1.glide",
+      "text": "Only Generator I glides. Played two-voice, the top line slides while the bass line underneath steps."
+    },
+    {
+      "target": "gen1.fm",
+      "text": "Generator II can frequency-modulate Generator I from the panel, with no patching: set Generator II lower and it is a warble; bring it up to audio rate and the tone turns clangorous and harsh."
+    },
+    {
+      "target": "vcf.resonance",
+      "text": "The filter's harsh, aggressive edge at high resonance is what the Polivoks is known for. Kuzmin built it on K140UD12 programmable op-amps, a 12 dB low-pass and a 6 dB band-pass, which turn gritty and screaming as РЕЗОНАНС goes up."
+    },
+    {
+      "target": "fenv.mode",
+      "text": "Both envelopes can repeat (накат) while a key is held, so a held note pulses on its own, with no help from the modulator."
+    },
+    {
+      "target": "modulator",
+      "text": "One modulator feeds all four modulation knobs, on Generator I, Generator II, the filter and the amplifier, each with its own depth. Besides triangle and square it has noise (chaotic pulses) and stepped (sample and hold)."
+    },
+    {
+      "target": "fenv.pedestal",
+      "text": "The panel calls the sustain level the pedestal (ПЬЕДЕСТАЛ) and the release the after-sound (ПОСЛЕЗВУЧ.). Turned fully right, the pedestal makes the decay do nothing."
+    },
+    {
+      "target": "gen1.range",
+      "text": "The ranges are marked in organ feet, 32′ to 2′, five octaves in all, the same on both generators."
+    }
+  ],
+  "limits": {
+    "intro": "Both generators are modelled in all five ranges and waveforms, with НАСТРОЙКА, РАССТРОЙКА, glissando on Generator I and FM from Generator II, the noise, the filter as low-pass or band-pass with its envelope and the modulator, both envelopes single or repeating, the modulator in all four shapes on all four destinations, ГРОМКОСТЬ and ВЫХОД, and one or two voices.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "The key memory switch (ВКЛ.): the app's generators keep the last key's pitch in either position. The headphone level (ТЛФ.), the external input (ВНЕШ. has nothing to bring up), the pedal that raises the cutoff, the rear-panel connections and the mains button. The eight tuning trimmers under the front cover are not drawn."
+      },
+      {
+        "title": "The voice is approximated",
+        "text": "The manual gives no envelope or modulator times, so the readouts in seconds and hertz are this app's estimates; the cutoff's 100 Hz to 10 kHz and the tuning and detune ranges are the manual's. The widths of the two pulse waveforms are not given either, nor whether the filter follows the keys (here it does not). The harshness at high resonance is an overdrive after the filter here, driven harder as РЕЗОНАНС rises, and the modulator's noise position is the noise generator itself as the source."
+      },
+      {
+        "title": "Which key in one-voice mode",
+        "text": "The manual does not say which key wins in 1-ГОЛ. when more than one is held. Here it is the last key pressed. In 2-ГОЛ. the top key is on Generator I and the bottom on Generator II, as Russian Wikipedia gives it; Kuzmin's own article says only that one generator takes the top key and the other the bottom."
+      }
+    ]
+  }
+}

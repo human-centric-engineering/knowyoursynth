@@ -170,6 +170,21 @@ export interface SynthDef {
    * it on the definition it returns, and the renderer draws the case in place of the long faceplate when it is there.
    */
   layout?: PanelLayout;
+  /**
+   * An English reading of a panel printed in another language (the Polivoks's Russian). The panel prints what the
+   * hardware prints; the page offers a switch that reprints it in English, and every printed string (a control's
+   * label, an option or scale label, a text decor, a frame or tab label) found as a key in `english` is drawn as its
+   * value. Keys are whole printed strings, `\n` included, so one word may read differently in two places by being
+   * printed as part of a longer string. Names, help and search are written in English already and never change.
+   */
+  translation?: PanelTranslation;
+}
+
+/** The language a panel is printed in, and the English for each printed string. */
+export interface PanelTranslation {
+  /** The panel's language, as the switch names it (`Russian`). */
+  language: string;
+  english: Record<string, string>;
 }
 
 /** A synth's Default patch (`SynthDef.defaultPatch`): control values over `init`, and the cables in. */
@@ -422,7 +437,7 @@ export interface BoolValue {
 
 export type ControlKind = 'cont' | 'enum' | 'bool';
 
-/** Knob skirts and caps, one or more per maker. `vcs3` takes its cap colour from `cap`; `vcs3-dial` is a slow-motion dial; `e7` is white all over; `solar` is a black skirt under a big cap coloured by `cap`. */
+/** Knob skirts and caps, one or more per maker. `vcs3` takes its cap colour from `cap`; `vcs3-dial` is a slow-motion dial; `e7` is white all over; `solar` is a black skirt under a big cap coloured by `cap`; `polivoks` is a black knurled knob with a grip bar and a white rim marker. */
 export type KnobStyle =
   | 'd-silver'
   | 'd-chicken'
@@ -437,7 +452,8 @@ export type KnobStyle =
   | 'vcs3-dial'
   | 'e7'
   | 'solar'
-  | 'solar-eye';
+  | 'solar-eye'
+  | 'polivoks';
 
 /**
  * Printing round a knob. `nums` are panel values printed at their true angle;

@@ -111,6 +111,8 @@ export interface SynthPanelProps {
   cables: PatchCable[];
   /** Ink on paper (the worksheet) instead of the shaded hardware. */
   outline?: boolean;
+  /** Print the panel in English, where the definition has a `translation`; otherwise ignored. */
+  english?: boolean;
   /** Magnifier zoom; 0 for none. */
   zoom?: number;
   areasOn?: boolean;
@@ -184,6 +186,7 @@ export function SynthPanel({
   target,
   cables,
   outline = false,
+  english = false,
   zoom = 0,
   areasOn = false,
   dimOn = false,
@@ -217,14 +220,17 @@ export function SynthPanel({
   const cheekW = face.x;
   const scale = view.w / 2000;
 
+  const table = english ? def.translation?.english : undefined;
   const ctx = useMemo<PanelCtx>(
     () => ({
       outline,
       theme,
       ink: outline ? INK : theme.ink,
       panelFill: outline ? PAPER : theme.panel,
+      // `Object.hasOwn`: a printed string is never taken for an inherited member of the table
+      tr: table ? (s) => (Object.hasOwn(table, s) ? table[s] : s) : undefined,
     }),
-    [outline, theme]
+    [outline, theme, table]
   );
   const jackById = useMemo(() => Object.fromEntries(def.jacks.map((j) => [j.id, j])), [def]);
   // A control the lanes hold is turned from the value it draws: the change goes to the panel's own value instead.

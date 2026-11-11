@@ -1,0 +1,982 @@
+{
+  "synth": "polivoks",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "pv-harsh-bass",
+      "name": "Harsh Bass",
+      "ref": "In the style of dark techno basslines",
+      "artist": "Various",
+      "tags": ["bass", "techno"],
+      "level": 1,
+      "blurb": "A low, snarling sawtooth bass with a bite at the front of every note.",
+      "how": "Generator I an octave down into a fairly closed filter with some resonance: the Polivoks filter turns gritty even at middle settings. A short filter envelope opens it on each note and the amplifier stays up while the key is held.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0.0, 36, 0.2, 0.85],
+          [0.25, 36, 0.2, 0.85],
+          [0.5, 48, 0.2, 0.85],
+          [0.75, 36, 0.2, 0.85],
+          [1.0, 36, 0.2, 0.85],
+          [1.25, 39, 0.2, 0.85],
+          [1.5, 36, 0.2, 0.85],
+          [1.75, 43, 0.2, 0.85],
+          [2.0, 36, 0.2, 0.85],
+          [2.25, 36, 0.2, 0.85],
+          [2.5, 48, 0.2, 0.85],
+          [2.75, 36, 0.2, 0.85],
+          [3.0, 34, 0.2, 0.85],
+          [3.25, 36, 0.2, 0.85],
+          [3.5, 46, 0.2, 0.85],
+          [3.75, 36, 0.2, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Down an octave",
+          "module": "osc",
+          "why": "A bass starts with a low, bright waveform.\n- Generator I range (ДИАПАЗОН) 16′: one octave below the default.\n- Generator I waveform (ФОРМА) sawtooth: every harmonic, for the filter to carve.\n- Generator I level (ГЕНЕРАТОР I) 5: Generator I well up into the filter.\n- Listen for: a deep, buzzing note.",
+          "set": {
+            "gen1.range": "16'",
+            "gen1.shape": "sawtooth",
+            "mixer.gen1": 5
+          }
+        },
+        {
+          "title": "A gritty filter",
+          "module": "filter",
+          "why": "Close the filter and give it some edge.\n- Cutoff (ЧАСТОТА СРЕЗА) 2: dark, only the low harmonics through.\n- Resonance (РЕЗОНАНС) 3: halfway: the cutoff starts to rasp.\n- Filter envelope depth (ОГИБАЮЩАЯ) 4: the envelope opens it a long way on each note.\n- Filter decay (ЗАТУХАНИЕ) 2: and lets it close again quickly.\n- Listen for: a snarl at the start of each note, falling to a dark growl.",
+          "set": {
+            "vcf.cutoff": 2,
+            "vcf.resonance": 3,
+            "vcf.env": 4,
+            "fenv.decay": 2
+          }
+        },
+        {
+          "title": "Short notes",
+          "module": "env",
+          "why": "Let the notes stop as the keys come up.\n- Amplifier after-sound (ПОСЛЕЗВУЧ.) 0: no tail between the sixteenths.\n- Listen for: tight, separate notes.",
+          "set": {
+            "aenv.release": 0
+          }
+        }
+      ],
+      "context": {
+        "vcf.resonance": "How hard the filter rasps at the cutoff.",
+        "vcf.env": "How far each note opens the filter."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.resonance",
+          "try": "Turn up to 5",
+          "hear": "The filter screams on every note."
+        },
+        {
+          "id": "fenv.decay",
+          "try": "Turn up to 4",
+          "hear": "A slower, wah-like close."
+        }
+      ]
+    },
+    {
+      "id": "pv-screaming-lead",
+      "name": "Screaming Lead",
+      "ref": "In the style of 1980s Soviet rock synth solos",
+      "artist": "Various",
+      "tags": ["lead", "rock", "80s"],
+      "level": 2,
+      "blurb": "A sawtooth lead with the resonance high enough to scream, gliding between notes with a slow vibrato.",
+      "how": "High resonance is the Polivoks’s signature: the filter rings and turns harsh as the notes push into it. Glissando slides Generator I from note to note, and a touch of the modulator on its pitch adds vibrato.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.9],
+          [1, 72, 0.9],
+          [2, 76, 1.9],
+          [4, 74, 0.9],
+          [5, 72, 0.9],
+          [6, 69, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth lead",
+          "module": "osc",
+          "why": "Start from Generator I’s sawtooth at 8′.\n- Generator I waveform (ФОРМА) sawtooth: bright enough to cut through.\n- Generator I level (ГЕНЕРАТОР I) 5: well up into the filter.\n- Listen for: a plain, buzzy lead.",
+          "set": {
+            "gen1.shape": "sawtooth",
+            "mixer.gen1": 5
+          }
+        },
+        {
+          "title": "Make it scream",
+          "module": "filter",
+          "why": "Resonance is where the Polivoks earns its name.\n- Cutoff (ЧАСТОТА СРЕЗА) 3: half closed, so the resonance has something to sing on.\n- Resonance (РЕЗОНАНС) 5: near the top: harsh, whistling and gritty.\n- Filter envelope depth (ОГИБАЮЩАЯ) 2: a little lift at the start of each note.\n- Filter decay (ЗАТУХАНИЕ) 3: settling over half a second or so.\n- Listen for: a sharp, screaming edge on every note.",
+          "set": {
+            "vcf.cutoff": 3,
+            "vcf.resonance": 5,
+            "vcf.env": 2,
+            "fenv.decay": 3
+          }
+        },
+        {
+          "title": "Glide and vibrato",
+          "module": "glide",
+          "why": "A lead that slides and sings.\n- Glissando (ГЛИССАНДО) 2: Generator I slides between notes.\n- Modulator rate (ЧАСТОТА) 4: a vibrato speed.\n- Generator I modulation (МОДУЛЯЦИЯ) 1: just a little pitch wobble.\n- Listen for: each note sliding into the next, with a slight shimmer.",
+          "set": {
+            "gen1.glide": 2,
+            "lfo.rate": 4,
+            "gen1.mod": 1
+          }
+        }
+      ],
+      "context": {
+        "vcf.resonance": "The Polivoks’s scream.",
+        "gen1.glide": "How long Generator I takes to reach each new note."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.resonance",
+          "try": "Turn down to 2",
+          "hear": "A plain, polite lead: the scream is all resonance."
+        },
+        {
+          "id": "gen1.glide",
+          "try": "Turn up to 4",
+          "hear": "Long, swooping slides."
+        }
+      ]
+    },
+    {
+      "id": "pv-two-voices",
+      "name": "Two Voices",
+      "ref": "In the style of duophonic synth leads over a held bass note",
+      "artist": "Various",
+      "tags": ["lead", "duophonic"],
+      "level": 2,
+      "blurb": "A melody on top of a held bass note, both from one Polivoks: the top line glides, the bass stays put.",
+      "how": "In 2-ГОЛ. Generator I plays the highest key held and Generator II the lowest. Hold a bass note and play a tune above it, and the two run as separate voices through the one filter. Glissando moves only Generator I, so the melody slides while the bass never does.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 45, 7.9],
+          [0, 69, 0.9],
+          [1, 72, 0.9],
+          [2, 76, 1.9],
+          [4, 74, 0.9],
+          [5, 72, 0.9],
+          [6, 71, 1.9],
+          [8, 41, 7.9],
+          [8, 69, 1.9],
+          [10, 72, 1.9],
+          [12, 77, 1.9],
+          [14, 76, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two keys, two generators",
+          "module": "mode",
+          "why": "Switch the keyboard to two voices.\n- Voices (1-ГОЛ. / 2-ГОЛ.) 2-ГОЛ. (two voices): the top key on Generator I, the bottom key on Generator II.\n- Generator II waveform (ФОРМА) sawtooth: Generator II the same waveform, for the bass.\n- Generator II level (ГЕНЕРАТОР II) 4: and bring it into the mixer.\n- Listen for: the held bass note sounding under the melody.",
+          "set": {
+            "kbd.voices": "2",
+            "gen2.shape": "sawtooth",
+            "mixer.gen2": 4
+          }
+        },
+        {
+          "title": "A warm filter",
+          "module": "filter",
+          "why": "Round off both voices together.\n- Cutoff (ЧАСТОТА СРЕЗА) 4: a little closed.\n- Resonance (РЕЗОНАНС) 2: a slight edge.\n- Filter envelope depth (ОГИБАЮЩАЯ) 1: a small lift on each new key.\n- Filter decay (ЗАТУХАНИЕ) 3: settling quickly.\n- Listen for: a softer, warmer blend.",
+          "set": {
+            "vcf.cutoff": 4,
+            "vcf.resonance": 2,
+            "vcf.env": 1,
+            "fenv.decay": 3
+          }
+        },
+        {
+          "title": "Only the top slides",
+          "module": "glide",
+          "why": "Glissando belongs to Generator I alone.\n- Glissando (ГЛИССАНДО) 2: the melody slides; the bass never moves.\n- Listen for: the tune gliding over a bass that jumps cleanly when it changes.",
+          "set": {
+            "gen1.glide": 2
+          }
+        }
+      ],
+      "context": {
+        "kbd.voices": "One voice, or two keys on two generators.",
+        "gen1.glide": "Slides the top voice only."
+      },
+      "tweaks": [
+        {
+          "id": "kbd.voices",
+          "try": "Switch to 1-ГОЛ.",
+          "hear": "Both generators follow the last key: the bass disappears."
+        },
+        {
+          "id": "gen2.range",
+          "try": "Switch to 16'",
+          "hear": "The bass drops an octave."
+        }
+      ]
+    },
+    {
+      "id": "pv-fm-bell",
+      "name": "FM Bell",
+      "ref": "In the style of Soviet science-fiction film scores",
+      "artist": "Various",
+      "tags": ["pluck", "bell", "fm", "soundtrack"],
+      "level": 2,
+      "blurb": "A clangorous, metallic bell that rings out and fades.",
+      "how": "Generator II, unheard, frequency-modulates Generator I at audio rate: the sidebands it makes are not in tune with the note, so the tone turns metallic. A fast attack and a long decay with no pedestal shape it like a struck bell.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.5],
+          [2, 79, 1.5],
+          [4, 76, 1.5],
+          [6, 84, 1.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pure carrier",
+          "module": "osc",
+          "why": "Start from a soft waveform for the modulation to colour.\n- Generator I waveform (ФОРМА) triangle: nearly a sine: the FM adds all the harmonics.\n- Generator II waveform (ФОРМА) triangle: the modulator, Generator II.\n- Generator II range (ДИАПАЗОН) 4′: an octave above: an audio-rate modulator.\n- Generator II detune (РАССТРОЙКА) 1: off a simple ratio, for an inharmonic, bell-like tone.\n- Listen for: still a soft tone: Generator II is not in the mixer.",
+          "set": {
+            "gen1.shape": "triangle",
+            "gen2.shape": "triangle",
+            "gen2.range": "4'",
+            "gen2.detune": 1
+          }
+        },
+        {
+          "title": "Frequency modulation",
+          "module": "mod",
+          "why": "Let Generator II move Generator I’s pitch at audio rate.\n- Generator II to Generator I (ГЕНЕРАТОР II) 4: strong FM: metallic sidebands.\n- Listen for: the tone turning clangorous.",
+          "set": {
+            "gen1.fm": 4
+          }
+        },
+        {
+          "title": "Strike and ring",
+          "module": "env",
+          "why": "Shape it like a struck bell.\n- Amplifier pedestal (ПЬЕДЕСТАЛ) 0: no sustain: every note dies away.\n- Amplifier decay (ЗАТУХАНИЕ) 4: a long ring.\n- Amplifier after-sound (ПОСЛЕЗВУЧ.) 3: still ringing after the key comes up.\n- Cutoff (ЧАСТОТА СРЕЗА) 5: open, so the sidebands get through.\n- Filter envelope depth (ОГИБАЮЩАЯ) 0: no filter movement.\n- Filter decay (ЗАТУХАНИЕ) 0: the filter envelope is not used.\n- Listen for: bell strokes that ring and fade.",
+          "set": {
+            "aenv.pedestal": 0,
+            "aenv.decay": 4,
+            "aenv.release": 3,
+            "vcf.cutoff": 5,
+            "vcf.env": 0,
+            "fenv.decay": 0
+          }
+        }
+      ],
+      "context": {
+        "gen1.fm": "How strongly Generator II modulates Generator I.",
+        "gen2.detune": "The ratio between the two: what kind of bell."
+      },
+      "tweaks": [
+        {
+          "id": "gen2.detune",
+          "try": "Set to 0",
+          "hear": "A tuned ratio: hollow and organ-like rather than bell-like."
+        },
+        {
+          "id": "gen1.fm",
+          "try": "Turn up to 6",
+          "hear": "Harsher, noisier metal."
+        }
+      ]
+    },
+    {
+      "id": "pv-fm-growl",
+      "name": "FM Growl",
+      "ref": "In the style of industrial basslines",
+      "artist": "Various",
+      "tags": ["bass", "industrial", "fm"],
+      "level": 2,
+      "blurb": "A rough, growling bass: Generator II wobbles Generator I just below audio rate.",
+      "how": "With Generator II two octaves below Generator I, its frequency modulation is a fast, rough warble rather than a clean bell tone. The filter is half closed with resonance, so the growl is gritty.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0.0, 33, 0.22, 0.85],
+          [0.25, 33, 0.22, 0.85],
+          [0.5, 33, 0.22, 0.85],
+          [0.75, 45, 0.22, 0.85],
+          [1.0, 33, 0.22, 0.85],
+          [1.25, 33, 0.22, 0.85],
+          [1.5, 36, 0.22, 0.85],
+          [1.75, 33, 0.22, 0.85],
+          [2.0, 31, 0.22, 0.85],
+          [2.25, 31, 0.22, 0.85],
+          [2.5, 31, 0.22, 0.85],
+          [2.75, 43, 0.22, 0.85],
+          [3.0, 31, 0.22, 0.85],
+          [3.25, 31, 0.22, 0.85],
+          [3.5, 34, 0.22, 0.85],
+          [3.75, 31, 0.22, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Generator II far below",
+          "module": "osc",
+          "why": "Set the modulator well below the note.\n- Generator I range (ДИАПАЗОН) 16′: a bass register.\n- Generator II range (ДИАПАЗОН) 32′: an octave further down.\n- Generator II waveform (ФОРМА) square: a hard-edged modulator.\n- Listen for: no change yet: Generator II is not heard.",
+          "set": {
+            "gen1.range": "16'",
+            "gen2.range": "32'",
+            "gen2.shape": "square"
+          }
+        },
+        {
+          "title": "Growl",
+          "module": "mod",
+          "why": "Modulate Generator I from Generator II.\n- Generator II to Generator I (ГЕНЕРАТОР II) 3: a rough, buzzing wobble.\n- Listen for: the bass turning growly and unstable.",
+          "set": {
+            "gen1.fm": 3
+          }
+        },
+        {
+          "title": "Grit",
+          "module": "filter",
+          "why": "Close the filter on the growl.\n- Cutoff (ЧАСТОТА СРЕЗА) 3: take off the fizz.\n- Resonance (РЕЗОНАНС) 3: a gritty edge.\n- Filter envelope depth (ОГИБАЮЩАЯ) 2: a little push on each note.\n- Filter decay (ЗАТУХАНИЕ) 2: falling quickly.\n- Listen for: a thick, snarling bass.",
+          "set": {
+            "vcf.cutoff": 3,
+            "vcf.resonance": 3,
+            "vcf.env": 2,
+            "fenv.decay": 2
+          }
+        }
+      ],
+      "context": {
+        "gen1.fm": "How hard Generator II shakes Generator I’s pitch."
+      },
+      "tweaks": [
+        {
+          "id": "gen2.range",
+          "try": "Switch to 16'",
+          "hear": "The growl speeds up and turns more metallic."
+        }
+      ]
+    },
+    {
+      "id": "pv-band-pass-vox",
+      "name": "Band-pass Vox",
+      "ref": "In the style of 1980s synth-pop talking leads",
+      "artist": "Various",
+      "tags": ["lead", "band-pass", "80s"],
+      "level": 2,
+      "blurb": "A thin, vocal lead whose band of tone drifts slowly up and down.",
+      "how": "The band-pass keeps only a band of harmonics round the cutoff, so the sound is thin and nasal. Resonance narrows it, and the modulator sweeps the band slowly, like a voice saying “wah”.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 64, 1.9],
+          [2, 67, 0.9],
+          [3, 69, 0.9],
+          [4, 67, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A band, not a slope",
+          "module": "filter",
+          "why": "Switch the filter to band-pass.\n- Filter mode (ПФ / ФНЧ) ПФ (band-pass): only a band of harmonics round the cutoff.\n- Cutoff (ЧАСТОТА СРЕЗА) 3: the band low in the mid-range.\n- Resonance (РЕЗОНАНС) 4: a narrow, vocal band.\n- Filter envelope depth (ОГИБАЮЩАЯ) 0: no envelope on the filter.\n- Filter decay (ЗАТУХАНИЕ) 0: the filter envelope is not used.\n- Listen for: a thin, nasal tone.",
+          "set": {
+            "vcf.mode": "band_pass",
+            "vcf.cutoff": 3,
+            "vcf.resonance": 4,
+            "vcf.env": 0,
+            "fenv.decay": 0
+          }
+        },
+        {
+          "title": "A slow sweep",
+          "module": "lfo",
+          "why": "Let the modulator move the band.\n- Modulator shape (РЕЖИМ) triangle: a smooth up and down.\n- Modulator rate (ЧАСТОТА) 2: slow.\n- Filter modulation (МОДУЛЯЦИЯ) 3: a wide sweep.\n- Listen for: the tone talking slowly, “ow-wah”.",
+          "set": {
+            "lfo.shape": "triangle",
+            "lfo.rate": 2,
+            "vcf.mod": 3
+          }
+        }
+      ],
+      "context": {
+        "vcf.mode": "Band-pass keeps a band; low-pass keeps everything below."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.mode",
+          "try": "Switch to ФНЧ (low-pass)",
+          "hear": "Fuller and rounder: a wah rather than a voice."
+        }
+      ]
+    },
+    {
+      "id": "pv-repeat-pulse",
+      "name": "Repeating Pulse",
+      "ref": "In the style of Berlin-school synth pulses",
+      "artist": "Various",
+      "tags": ["seq", "pulse", "ambient"],
+      "level": 2,
+      "blurb": "A held chord of notes that pulses on its own, with no sequencer: the envelopes repeat.",
+      "how": "In repeat (накат) mode an envelope rises and falls over and over while the key is held. With both envelopes repeating, one key becomes a steady stream of plucks, its speed set by the attack and decay.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 57, 7.9],
+          [8, 55, 7.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Plucked notes",
+          "module": "env",
+          "why": "First make each note a short pluck.\n- Amplifier pedestal (ПЬЕДЕСТАЛ) 0: no sustain.\n- Amplifier decay (ЗАТУХАНИЕ) 1: a short fall.\n- Cutoff (ЧАСТОТА СРЕЗА) 2: fairly dark.\n- Filter envelope depth (ОГИБАЮЩАЯ) 4: the envelope opens the filter on each pluck.\n- Filter decay (ЗАТУХАНИЕ) 1: and closes it fast.\n- Resonance (РЕЗОНАНС) 3: a squelch on each one.\n- Listen for: one short pluck per key.",
+          "set": {
+            "aenv.pedestal": 0,
+            "aenv.decay": 1,
+            "vcf.cutoff": 2,
+            "vcf.env": 4,
+            "fenv.decay": 1,
+            "vcf.resonance": 3
+          }
+        },
+        {
+          "title": "Repeat while held",
+          "module": "env",
+          "why": "Switch both envelopes to repeat.\n- Amplifier envelope mode repeat (накат): the loudness rises and falls again and again.\n- Filter envelope mode repeat (накат): and so does the filter.\n- Listen for: the held note turning into a steady pulse.",
+          "set": {
+            "aenv.mode": "repeat",
+            "fenv.mode": "repeat"
+          }
+        }
+      ],
+      "context": {
+        "aenv.mode": "Single: once a key. Repeat: over and over while it is held."
+      },
+      "tweaks": [
+        {
+          "id": "aenv.decay",
+          "try": "Turn up to 2",
+          "hear": "A slower pulse."
+        },
+        {
+          "id": "fenv.decay",
+          "try": "Turn up to 3",
+          "hear": "Each pulse opens wider."
+        }
+      ]
+    },
+    {
+      "id": "pv-stepped-computer",
+      "name": "Computer Burble",
+      "ref": "In the style of 1970s and 80s science-fiction computers",
+      "artist": "Various",
+      "tags": ["fx", "sample and hold", "soundtrack"],
+      "level": 1,
+      "blurb": "A held note whose tone jumps to a new random setting several times a second: the film computer thinking.",
+      "how": "The modulator’s stepped shape holds a new random value on each beat of its rate. Sent to the cutoff of a resonant filter, it picks a new brightness each step, the burble of every film computer.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [[0, 60, 7.9]]
+      },
+      "steps": [
+        {
+          "title": "A resonant filter",
+          "module": "filter",
+          "why": "Give the random steps something to play.\n- Cutoff (ЧАСТОТА СРЕЗА) 3: in the middle.\n- Resonance (РЕЗОНАНС) 5: high, so each step rings.\n- Filter envelope depth (ОГИБАЮЩАЯ) 0: no envelope.\n- Filter decay (ЗАТУХАНИЕ) 0: the filter envelope is not used.\n- Listen for: a ringing, resonant tone.",
+          "set": {
+            "vcf.cutoff": 3,
+            "vcf.resonance": 5,
+            "vcf.env": 0,
+            "fenv.decay": 0
+          }
+        },
+        {
+          "title": "Random steps",
+          "module": "lfo",
+          "why": "The stepped modulator on the cutoff.\n- Modulator shape (РЕЖИМ) stepped: a new random value each beat.\n- Modulator rate (ЧАСТОТА) 4: several a second.\n- Filter modulation (МОДУЛЯЦИЯ) 4: wide jumps of tone.\n- Listen for: the tone hopping about at random.",
+          "set": {
+            "lfo.shape": "stepped",
+            "lfo.rate": 4,
+            "vcf.mod": 4
+          }
+        }
+      ],
+      "context": {
+        "lfo.shape": "Stepped is sample and hold: random, held steps."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Turn up to 5",
+          "hear": "A faster, more frantic burble."
+        },
+        {
+          "id": "gen1.mod",
+          "try": "Turn up to 2",
+          "hear": "The pitch jumps too."
+        }
+      ]
+    },
+    {
+      "id": "pv-siren",
+      "name": "Siren",
+      "ref": "In the style of 1980s Soviet electronic sound effects",
+      "artist": "Various",
+      "tags": ["fx", "siren"],
+      "level": 1,
+      "blurb": "A wailing siren: the modulator sweeps Generator I’s pitch up and down.",
+      "how": "The modulator’s triangle on Generator I’s pitch, slow and deep, glides the note up and down several semitones.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [[0, 72, 7.9]]
+      },
+      "steps": [
+        {
+          "title": "A bright tone",
+          "module": "osc",
+          "why": "A siren needs a cutting waveform.\n- Generator I waveform (ФОРМА) square: hollow and piercing.\n- Cutoff (ЧАСТОТА СРЕЗА) 5: open.\n- Filter envelope depth (ОГИБАЮЩАЯ) 0: no filter movement.\n- Filter decay (ЗАТУХАНИЕ) 0: the filter envelope is not used.\n- Listen for: a steady, hollow note.",
+          "set": {
+            "gen1.shape": "square",
+            "vcf.cutoff": 5,
+            "vcf.env": 0,
+            "fenv.decay": 0
+          }
+        },
+        {
+          "title": "Wail",
+          "module": "lfo",
+          "why": "Sweep the pitch.\n- Modulator shape (РЕЖИМ) triangle: smoothly up and down.\n- Modulator rate (ЧАСТОТА) 2: about a sweep a second.\n- Generator I modulation (МОДУЛЯЦИЯ) 4: deep: several semitones.\n- Listen for: the note wailing up and down.",
+          "set": {
+            "lfo.shape": "triangle",
+            "lfo.rate": 2,
+            "gen1.mod": 4
+          }
+        }
+      ],
+      "context": {
+        "gen1.mod": "How far the modulator moves Generator I’s pitch."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.shape",
+          "try": "Switch to square",
+          "hear": "A two-tone European siren."
+        }
+      ]
+    },
+    {
+      "id": "pv-wind",
+      "name": "Wind and Surf",
+      "ref": "In the style of Soviet radio-play sound effects",
+      "artist": "Various",
+      "tags": ["fx", "noise", "ambient"],
+      "level": 1,
+      "blurb": "Wind or surf: noise through a slowly moving filter, swelling in and dying away.",
+      "how": "The manual names wind and surf as jobs for the noise. Through a resonant low-pass whose cutoff the modulator moves slowly, the noise gusts and whistles.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 60, 7.5]]
+      },
+      "steps": [
+        {
+          "title": "Noise only",
+          "module": "mixer",
+          "why": "Swap the generators for noise.\n- Generator I level (ГЕНЕРАТОР I) 0: Generator I out.\n- Noise level (ШУМ) 5: white noise in.\n- Listen for: a hiss.",
+          "set": {
+            "mixer.gen1": 0,
+            "mixer.noise": 5
+          }
+        },
+        {
+          "title": "Gusts",
+          "module": "filter",
+          "why": "A resonant filter, moved slowly by the modulator.\n- Cutoff (ЧАСТОТА СРЕЗА) 3: a darker rush.\n- Resonance (РЕЗОНАНС) 3: a slight whistle.\n- Filter envelope depth (ОГИБАЮЩАЯ) 0: no envelope.\n- Filter decay (ЗАТУХАНИЕ) 0: the filter envelope is not used.\n- Modulator rate (ЧАСТОТА) 1: very slow.\n- Filter modulation (МОДУЛЯЦИЯ) 3: the wind rising and falling.\n- Listen for: gusts of wind.",
+          "set": {
+            "vcf.cutoff": 3,
+            "vcf.resonance": 3,
+            "vcf.env": 0,
+            "fenv.decay": 0,
+            "lfo.rate": 1,
+            "vcf.mod": 3
+          }
+        },
+        {
+          "title": "Swell and fade",
+          "module": "env",
+          "why": "Slow in and out.\n- Amplifier attack (АТАКА) 4: a slow swell.\n- Amplifier after-sound (ПОСЛЕЗВУЧ.) 4: dying away after the key.\n- Listen for: the wind rising as the key goes down, and fading after.",
+          "set": {
+            "aenv.attack": 4,
+            "aenv.release": 4
+          }
+        }
+      ],
+      "context": {
+        "mixer.noise": "White noise into the filter."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.mode",
+          "try": "Switch to ПФ (band-pass)",
+          "hear": "A thinner, whistling wind."
+        }
+      ]
+    },
+    {
+      "id": "pv-whistle",
+      "name": "Self-oscillating Whistle",
+      "ref": "In the style of experimental electronic music",
+      "artist": "Various",
+      "tags": ["fx", "resonance", "experimental"],
+      "level": 3,
+      "blurb": "The filter alone, resonance at the top: it rings by itself as a pure whistle.",
+      "how": "At full resonance the filter oscillates on its own. Take the generators out and only a whistle at the cutoff is left; a little noise kicks it, and the modulator wavers it.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 60, 7.5]]
+      },
+      "steps": [
+        {
+          "title": "Generators out",
+          "module": "mixer",
+          "why": "Leave only a breath of noise.\n- Generator I level (ГЕНЕРАТОР I) 0: Generator I out.\n- Noise level (ШУМ) 1: a whisper of noise to start the ring.\n- Listen for: almost nothing.",
+          "set": {
+            "mixer.gen1": 0,
+            "mixer.noise": 1
+          }
+        },
+        {
+          "title": "Ring",
+          "module": "filter",
+          "why": "Turn the resonance all the way.\n- Resonance (РЕЗОНАНС) 6: the filter oscillates by itself.\n- Cutoff (ЧАСТОТА СРЕЗА) 4: the pitch of the whistle.\n- Filter envelope depth (ОГИБАЮЩАЯ) 0: no envelope.\n- Filter decay (ЗАТУХАНИЕ) 0: the filter envelope is not used.\n- Listen for: a harsh, pure whistle.",
+          "set": {
+            "vcf.resonance": 6,
+            "vcf.cutoff": 4,
+            "vcf.env": 0,
+            "fenv.decay": 0
+          }
+        },
+        {
+          "title": "Waver",
+          "module": "lfo",
+          "why": "A little movement.\n- Modulator rate (ЧАСТОТА) 3: a moderate wobble.\n- Filter modulation (МОДУЛЯЦИЯ) 1: a slight waver in the whistle’s pitch.\n- Listen for: the whistle wavering, like a theremin.",
+          "set": {
+            "lfo.rate": 3,
+            "vcf.mod": 1
+          }
+        }
+      ],
+      "context": {
+        "vcf.resonance": "At the top the filter makes its own tone."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Turn to 5",
+          "hear": "A higher, shriller whistle."
+        }
+      ]
+    },
+    {
+      "id": "pv-trill",
+      "name": "Square Trill",
+      "ref": "In the style of 1980s video-game music",
+      "artist": "Various",
+      "tags": ["lead", "chiptune", "80s"],
+      "level": 1,
+      "blurb": "A note that flips quickly between two pitches: a trill from the modulator’s square.",
+      "how": "The modulator’s square jumps between two values. On Generator I’s pitch it makes a trill; its depth sets the interval.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.9],
+          [2, 76, 1.9],
+          [4, 79, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A thin pulse",
+          "module": "osc",
+          "why": "A narrow, game-like tone.\n- Generator I waveform (ФОРМА) pulse 1: thin and nasal.\n- Cutoff (ЧАСТОТА СРЕЗА) 5: open.\n- Filter envelope depth (ОГИБАЮЩАЯ) 0: no filter movement.\n- Filter decay (ЗАТУХАНИЕ) 0: the filter envelope is not used.\n- Listen for: a reedy note.",
+          "set": {
+            "gen1.shape": "pulse_1",
+            "vcf.cutoff": 5,
+            "vcf.env": 0,
+            "fenv.decay": 0
+          }
+        },
+        {
+          "title": "Trill",
+          "module": "lfo",
+          "why": "The square on the pitch.\n- Modulator shape (РЕЖИМ) square: two values, nothing between.\n- Modulator rate (ЧАСТОТА) 4: fast.\n- Generator I modulation (МОДУЛЯЦИЯ) 2: a couple of semitones.\n- Listen for: each note trilling.",
+          "set": {
+            "lfo.shape": "square",
+            "lfo.rate": 4,
+            "gen1.mod": 2
+          }
+        }
+      ],
+      "context": {
+        "gen1.mod": "The size of the trill."
+      },
+      "tweaks": [
+        {
+          "id": "gen1.mod",
+          "try": "Turn up to 3",
+          "hear": "A wider jump."
+        }
+      ]
+    },
+    {
+      "id": "pv-tremolo-organ",
+      "name": "Tremolo Organ",
+      "ref": "In the style of Soviet estrada organ sounds",
+      "artist": "Various",
+      "tags": ["keys", "organ", "tremolo"],
+      "level": 1,
+      "blurb": "A hollow organ tone with a throbbing tremolo.",
+      "how": "Generators I and II together at different ranges give an organ-like stack of octaves; the modulator on the amplifier pulses the loudness.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 60, 1.9],
+          [2, 64, 1.9],
+          [4, 67, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two footages",
+          "module": "osc",
+          "why": "Stack two octaves like organ stops.\n- Generator I waveform (ФОРМА) square: hollow.\n- Generator II waveform (ФОРМА) square: the same.\n- Generator II range (ДИАПАЗОН) 4′: an octave above.\n- Generator II level (ГЕНЕРАТОР II) 3: a little quieter than Generator I.\n- Cutoff (ЧАСТОТА СРЕЗА) 4: slightly dulled.\n- Filter envelope depth (ОГИБАЮЩАЯ) 0: no filter movement.\n- Filter decay (ЗАТУХАНИЕ) 0: the filter envelope is not used.\n- Listen for: a full, hollow organ tone.",
+          "set": {
+            "gen1.shape": "square",
+            "gen2.shape": "square",
+            "gen2.range": "4'",
+            "mixer.gen2": 3,
+            "vcf.cutoff": 4,
+            "vcf.env": 0,
+            "fenv.decay": 0
+          }
+        },
+        {
+          "title": "Tremolo",
+          "module": "amp",
+          "why": "Pulse the loudness.\n- Modulator rate (ЧАСТОТА) 4: a quick throb.\n- Amplifier modulation (МОДУЛЯЦИЯ) 3: a clear tremolo.\n- Listen for: the organ throbbing.",
+          "set": {
+            "lfo.rate": 4,
+            "vca.mod": 3
+          }
+        }
+      ],
+      "context": {
+        "vca.mod": "How much the modulator moves the loudness."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Turn down to 3",
+          "hear": "A slower, rolling tremolo."
+        }
+      ]
+    },
+    {
+      "id": "pv-brass",
+      "name": "Detuned Brass",
+      "ref": "In the style of 1980s synth-pop brass stabs",
+      "artist": "Various",
+      "tags": ["brass", "80s"],
+      "level": 2,
+      "blurb": "A fat, brassy tone: two detuned sawtooths with a slow filter swell at the front.",
+      "how": "Generator II slightly detuned against Generator I makes the two beat and sound thick. A filter envelope with some attack opens the tone like a brass player starting a note.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.9],
+          [1.5, 60, 0.4],
+          [2, 63, 1.4],
+          [4, 58, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two saws, beating",
+          "module": "osc",
+          "why": "Thicken the tone.\n- Generator II waveform (ФОРМА) sawtooth: a second sawtooth.\n- Generator II level (ГЕНЕРАТОР II) 4: as loud as Generator I.\n- Generator II detune (РАССТРОЙКА) 0.3: just off, so they beat.\n- Listen for: a thick, chorused tone.",
+          "set": {
+            "gen2.shape": "sawtooth",
+            "mixer.gen2": 4,
+            "gen2.detune": 0.3
+          }
+        },
+        {
+          "title": "Brass swell",
+          "module": "filter",
+          "why": "Open the filter slowly at the start of each note.\n- Cutoff (ЧАСТОТА СРЕЗА) 2: dark at rest.\n- Filter envelope depth (ОГИБАЮЩАЯ) 4: opened a long way by the envelope.\n- Filter attack (АТАКА) 2: a short swell.\n- Filter decay (ЗАТУХАНИЕ) 3: settling back.\n- Filter pedestal (ПЬЕДЕСТАЛ) 3: staying half open while held.\n- Listen for: each note blooming like brass.",
+          "set": {
+            "vcf.cutoff": 2,
+            "vcf.env": 4,
+            "fenv.attack": 2,
+            "fenv.decay": 3,
+            "fenv.pedestal": 3
+          }
+        }
+      ],
+      "context": {
+        "gen2.detune": "How far Generator II is from Generator I."
+      },
+      "tweaks": [
+        {
+          "id": "gen2.detune",
+          "try": "Set to 1",
+          "hear": "A wide, sour detune."
+        }
+      ]
+    },
+    {
+      "id": "pv-noise-snare",
+      "name": "Noise Snare",
+      "ref": "In the style of 1980s electro drum sounds",
+      "artist": "Various",
+      "tags": ["perc", "noise", "electro"],
+      "level": 1,
+      "blurb": "A snappy snare made from a burst of noise.",
+      "how": "Noise through a resonant filter, with the loudness envelope falling fast and no pedestal, is a snare drum.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [1, 60, 0.2],
+          [3, 60, 0.2],
+          [3.75, 60, 0.15],
+          [5, 60, 0.2],
+          [7, 60, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Noise only",
+          "module": "mixer",
+          "why": "A snare is noise.\n- Generator I level (ГЕНЕРАТОР I) 0: Generator I out.\n- Noise level (ШУМ) 6: noise all the way up.\n- Listen for: a hiss.",
+          "set": {
+            "mixer.gen1": 0,
+            "mixer.noise": 6
+          }
+        },
+        {
+          "title": "Snap",
+          "module": "env",
+          "why": "A short burst.\n- Amplifier pedestal (ПЬЕДЕСТАЛ) 0: no sustain.\n- Amplifier decay (ЗАТУХАНИЕ) 2: a quick fall, about a tenth of a second.\n- Amplifier after-sound (ПОСЛЕЗВУЧ.) 0: no tail.\n- Cutoff (ЧАСТОТА СРЕЗА) 4: bright but not fizzy.\n- Resonance (РЕЗОНАНС) 2: a little body.\n- Filter envelope depth (ОГИБАЮЩАЯ) 0: no filter movement.\n- Filter decay (ЗАТУХАНИЕ) 0: the filter envelope is not used.\n- Listen for: snare hits.",
+          "set": {
+            "aenv.pedestal": 0,
+            "aenv.decay": 2,
+            "aenv.release": 0,
+            "vcf.cutoff": 4,
+            "vcf.resonance": 2,
+            "vcf.env": 0,
+            "fenv.decay": 0
+          }
+        }
+      ],
+      "context": {
+        "aenv.decay": "The length of the hit."
+      },
+      "tweaks": [
+        {
+          "id": "aenv.decay",
+          "try": "Turn up to 3",
+          "hear": "A longer, splashier hit."
+        }
+      ]
+    },
+    {
+      "id": "pv-acid-line",
+      "name": "Squelch Line",
+      "ref": "In the style of acid house",
+      "artist": "Various",
+      "tags": ["bass", "acid", "house"],
+      "level": 3,
+      "blurb": "A squelchy, resonant line that slides from note to note.",
+      "how": "A square through a resonant filter with a short, deep envelope squelches on every note. A short glissando on Generator I slides each note into the next.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.2],
+          [0.5, 36, 0.2],
+          [0.75, 48, 0.5],
+          [1.25, 46, 0.2],
+          [1.5, 36, 0.2],
+          [2, 39, 0.2],
+          [2.5, 36, 0.2],
+          [3, 43, 0.6],
+          [3.5, 41, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A square bass",
+          "module": "osc",
+          "why": "The square gives a hollow, woody squelch.\n- Generator I waveform (ФОРМА) square: hollow.\n- Generator I range (ДИАПАЗОН) 16′: down an octave.\n- Generator I level (ГЕНЕРАТОР I) 5: well up.\n- Listen for: a hollow bass.",
+          "set": {
+            "gen1.shape": "square",
+            "gen1.range": "16'",
+            "mixer.gen1": 5
+          }
+        },
+        {
+          "title": "Squelch",
+          "module": "filter",
+          "why": "Resonance and a short, deep envelope.\n- Cutoff (ЧАСТОТА СРЕЗА) 1: closed.\n- Resonance (РЕЗОНАНС) 5: high: the squelch.\n- Filter envelope depth (ОГИБАЮЩАЯ) 5: opened a long way.\n- Filter decay (ЗАТУХАНИЕ) 1: and snapped shut.\n- Listen for: every note squelching.",
+          "set": {
+            "vcf.cutoff": 1,
+            "vcf.resonance": 5,
+            "vcf.env": 5,
+            "fenv.decay": 1
+          }
+        },
+        {
+          "title": "Slides",
+          "module": "glide",
+          "why": "A short glissando.\n- Glissando (ГЛИССАНДО) 1: each note slides briefly into the next.\n- Amplifier after-sound (ПОСЛЕЗВУЧ.) 0: clean stops.\n- Listen for: the line sliding up and down between notes.",
+          "set": {
+            "gen1.glide": 1,
+            "aenv.release": 0
+          }
+        }
+      ],
+      "context": {
+        "fenv.decay": "How fast each squelch closes."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.resonance",
+          "try": "Turn up to 6",
+          "hear": "A screaming, self-oscillating squelch."
+        }
+      ]
+    }
+  ]
+}

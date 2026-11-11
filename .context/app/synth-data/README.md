@@ -21,7 +21,7 @@ python3 validate_synth.py --schema synth-blueprint.schema.json */*.synth.json
 
 Without `jsonschema` installed it runs the referential checks only.
 
-## In the app (37)
+## In the app (38)
 
 | Folder                                                     | Synth                                                                                                                                                            | Spec schema |
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
@@ -47,6 +47,7 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`model-15`](./model-15/README.md)                         | Behringer MODEL 15 Analog Semi-Modular Synthesizer                                                                                                               | 0.10.0      |
 | [`model-d`](./model-d/README.md)                           | Behringer MODEL D                                                                                                                                                | 0.1.0       |
 | [`neutron`](./neutron/README.md)                           | Behringer NEUTRON                                                                                                                                                | 0.2.0       |
+| [`polivoks`](./polivoks/README.md)                         | Formanta Polivoks (Поливокс) electronic music synthesizer                                                                                                        | 0.13.0      |
 | [`pearl-syncussion`](./pearl-syncussion/README.md)         | Pearl Syncussion SY-1 (Syncussion-1) control board                                                                                                               | 0.10.0      |
 | [`poly-d`](./poly-d/README.md)                             | Behringer Poly D                                                                                                                                                 | 0.7.0       |
 | [`pro-1`](./pro-1/README.md)                               | Behringer PRO-1                                                                                                                                                  | 0.5.0       |

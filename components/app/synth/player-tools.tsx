@@ -180,11 +180,18 @@ export function PlayerSettings({
   onZoom,
   tipsOn,
   onTips,
+  language,
+  english = false,
+  onEnglish,
 }: {
   view: PanelView;
   onView: (v: PanelView) => void;
   /** Whether the synth has a modular layout to switch to. */
   modular: boolean;
+  /** The language the panel is printed in, when it has an English reading to switch to (`SynthDef.translation`). */
+  language?: string;
+  english?: boolean;
+  onEnglish?: (on: boolean) => void;
   zoom: number;
   onZoom: (z: 0 | 2 | 3) => void;
   tipsOn: boolean;
@@ -211,6 +218,27 @@ export function PlayerSettings({
           />
         )}
       </Setting>
+      {language && onEnglish && (
+        <Setting
+          at={1}
+          name="Labels"
+          drop
+          help={`The panel is printed in ${language}. English reprints every label on it in English; the names in the cards and the search are English either way.`}
+        >
+          {(d) => (
+            <LedSelect
+              describedBy={d}
+              label="Panel labels"
+              options={[
+                [false, language],
+                [true, 'English'],
+              ]}
+              value={english}
+              onChange={onEnglish}
+            />
+          )}
+        </Setting>
+      )}
       {modular && (
         <Setting
           at={1}

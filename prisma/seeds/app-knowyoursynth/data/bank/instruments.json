@@ -888,6 +888,16 @@
       "app": ["jp-8080"],
       "text": "The rack version of the JP-8000 analogue-modelling synth: ten voices in two parts, OSC 1 with the super saw, feedback osc, triangle mod and noise, OSC 2 with sync, ring and cross mod, a 12/24 dB multimode filter, unison, a multi-effect and delay per patch, an external input, the Voice Modulator vocoder, an arpeggiator, RPS and motion control.",
       "source": "https://www.rolandus.com/blog/2014/02/19/roland-synth-chronicle-1973-through-2013/"
+    },
+    {
+      "id": "formanta-polivoks",
+      "name": "Formanta Polivoks",
+      "maker": "Formanta",
+      "year": "1982",
+      "kind": "mono",
+      "app": ["polivoks"],
+      "text": "A Soviet duophonic analogue synth designed by Vladimir Kuzmin and sold only in the USSR: two generators with five waveforms and five ranges, Generator II able to frequency-modulate Generator I, noise, a low-pass or band-pass filter famous for its harsh resonance, two envelopes that can repeat, one modulator, glissando and a 49-key keyboard.",
+      "source": "https://en.wikipedia.org/wiki/Polivoks"
     }
   ]
 }
