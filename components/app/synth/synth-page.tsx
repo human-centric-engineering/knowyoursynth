@@ -644,7 +644,8 @@ function Synth({
 
   const [audio, setAudio] = useState<AudioState>('off');
   // Whether the sequencer's run is the sound's riff (t-234): Play pressed with nothing but the riff to play. A patch
-  // loading starts the riff again from its top once the new sound is on, as a pattern picked or opened runs on.
+  // loading stops the riff and starts it again from its top once the new sound is on, as a pattern picked or opened
+  // runs on.
   const [playing, setPlaying] = useState(false);
   const [wheel, setWheel] = useState(0);
   const [octave, setOctave] = useState(0);
@@ -1294,16 +1295,22 @@ function Synth({
   useEffect(() => {
     seqEvents.current = seqOnEvent;
   }, [seqOnEvent]);
-  // What starts once a load ends: a Play pressed meanwhile, or the riff that was playing as it began.
-  const afterLoad = useRef<(() => void) | null>(null);
+  // What starts once a load ends: a Play pressed meanwhile, or the riff that was playing as it began. Nothing plays
+  // until the panel is set; Play shows it is waiting with a spinner (`waiting`), and pressing it then cancels the wait.
+  const afterLoad = useRef<'riff' | 'pattern' | null>(null);
+  const [waiting, setWaiting] = useState(false);
+  const queue = useCallback((what: 'riff' | 'pattern' | null) => {
+    afterLoad.current = what;
+    setWaiting(what !== null);
+  }, []);
   // The riff Replay changes started (below), stopped as the moves end: not once the riff has been played or stopped.
   const replayRiff = useRef(false);
   const stopRiff = useCallback(() => {
     replayRiff.current = false;
-    afterLoad.current = null;
+    queue(null);
     setPlaying(false);
     stopPattern();
-  }, [stopPattern]);
+  }, [queue, stopPattern]);
   // The riff is the sequencer's run: it ends when the run does (a riff that plays once, at its end; a MIDI clock's Stop).
   useEffect(() => {
     if (!seq.playing) setPlaying(false);
@@ -1314,9 +1321,9 @@ function Synth({
   }, [startPattern]);
   const playPattern = useCallback(async () => {
     replayRiff.current = false;
-    if (isLoading()) afterLoad.current = () => void patternNow();
+    if (isLoading()) queue('pattern');
     else await patternNow();
-  }, [isLoading, patternNow]);
+  }, [isLoading, patternNow, queue]);
   // Open in the dock from `lg` up, in its sheet below it.
   const seqDocked = !small && seqOpen;
 
@@ -1578,10 +1585,10 @@ function Synth({
     midiOut,
     clockIn,
   };
-  // The riff playing becomes the pattern: it plays on as it is. Midway through a load, the riff that load queued to
-  // start again once it ends is dropped with it, so it neither restarts the pattern as the riff nor stops it.
+  // The riff playing becomes the pattern: it plays on as it is. Midway through a load, a riff waiting for it to end
+  // starts then as the pattern, so it is not taken for the riff (nor stopped, should the new sound have none).
   const riffToPattern = () => {
-    if (playing) afterLoad.current = null;
+    if (afterLoad.current === 'riff') queue('pattern');
     setPlaying(false);
   };
   // Opened by the bar's Sequencer button or a panel button (t-85).
@@ -1629,19 +1636,20 @@ function Synth({
   // Not while a patch loads: then once it has.
   const playRiff = useCallback(async () => {
     replayRiff.current = false;
-    if (isLoading()) afterLoad.current = riffShown;
+    if (isLoading()) queue('riff');
     else await riffNow();
-  }, [isLoading, riffNow, riffShown]);
+  }, [isLoading, queue, riffNow]);
   // As a load begins, what the page is sounding is let go: the keys held (and under Hold), the arp's keys in the
-  // sequencer, and the riff, which plays again once the load ends (the sound's own, by then). The sequencer runs on,
-  // muted through MIDI out's `silent`, and the player and MIDI out let go of their own notes. As it ends, what waited
-  // starts.
+  // sequencer, and the riff, which stops and plays again from its top once the load ends (the sound's own, by then). A
+  // pattern runs on, muted through MIDI out's `silent`, and the player and MIDI out let go of their own notes. As it
+  // ends, what waited starts.
   useEffect(() => {
     loadHandler.current = (on) => {
       if (!on) {
         const then = afterLoad.current;
-        afterLoad.current = null;
-        then?.();
+        queue(null);
+        if (then === 'riff') riffShown();
+        else if (then === 'pattern') void patternNow();
         return;
       }
       new Set([...downRef.current.keys(), ...heldRef.current]).forEach((n) =>
@@ -1651,8 +1659,11 @@ function Synth({
       heldRef.current.clear();
       seqTook.current.forEach((_, n) => seqNoteOut.current(n));
       seqTook.current.clear();
-      // The riff runs on through the load, muted as a pattern is, and starts again from its top (the new sound's).
-      if (playing) afterLoad.current = riffShown;
+      // The riff stops for the load and starts again from its top (the new sound's) once the panel is set.
+      if (playing) {
+        queue('riff');
+        stopPattern();
+      }
     };
   });
 
@@ -2279,7 +2290,7 @@ function Synth({
     if (!engine) return;
     if (audio === 'on') {
       // A Play waiting on a load is not to turn the sound back on once it has loaded.
-      afterLoad.current = null;
+      queue(null);
       setPlaying(false);
       stopPattern();
       await engine.suspend();
@@ -2891,12 +2902,13 @@ function Synth({
               <div className="kys-player-bar flex flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2 text-sm sm:px-4 lg:flex-nowrap">
                 {/* Always there while something plays, so a pattern can be stopped with the sequencer closed. The Play
                 deck's first and biggest control, outside the scrolling row so nothing clips its glow (t-210). */}
-                {(shown || seqShown || seqLoaded || transportPlaying) && (
+                {(shown || seqShown || seqLoaded || transportPlaying || waiting) && (
                   <PlayButton
-                    playing={transportPlaying}
+                    playing={transportPlaying || waiting}
+                    waiting={waiting}
                     position={seq.playing ? seq.position : undefined}
                     onClick={() =>
-                      transportPlaying
+                      transportPlaying || waiting
                         ? stopRiff()
                         : playsPattern || !shown
                           ? void playPattern()

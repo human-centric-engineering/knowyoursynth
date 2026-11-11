@@ -408,8 +408,8 @@ describe('My patches', () => {
     expect(runs()).toHaveLength(1);
     fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
     await waitFor(() => expect(loadedName()).toBe('Night bass'));
-    // Muted through the load, then from its top once the load ends: a sound of the user's own plays the scale.
-    expect(engine.send).toHaveBeenCalledWith({ type: 'patternMute', muted: true });
+    // Stopped for the load, then from its top once the load ends: a sound of the user's own plays the scale.
+    expect(engine.send).toHaveBeenCalledWith({ type: 'stopPattern' });
     await waitFor(() => expectRiff(runs().at(-1), SCALE_PHRASE));
     expect(runs().at(-1)?.muted).toBe(false);
     expect(button('Stop')).toBeTruthy();

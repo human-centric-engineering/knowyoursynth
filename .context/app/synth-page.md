@@ -354,9 +354,11 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   glide ends, a change through `patch` or Undo finishes it, or, with reduced motion, straight away;
   a new patch that changes nothing is no load. Meanwhile the page drops notes from the keys, MIDI
   in and the scope's keyboard (dropped, not queued); lets go, as the load begins, of the keys held
-  (Hold's too) and the arp's keys in the sequencer; lets a riff playing run on muted, as a pattern
-  does, and plays the sound's riff again from its top once it has loaded; holds a Play pressed meanwhile until then (the riff of the sound on the
-  panel by then, should a second load take over; Mute drops it); and passes `silent` to MIDI
+  (Hold's too) and the arp's keys in the sequencer; stops a riff playing and plays the sound's
+  riff again from its top once it has loaded, so nothing starts while the knobs move; holds a Play pressed meanwhile
+  until then (the riff of the sound on the panel by then, should a second load take over; Mute drops it). While a
+  start waits on the load (`waiting`), Play shows a spinner and reads Stop, which cancels it. Opening the sequencer or
+  picking a pattern meanwhile makes a waiting riff start as the pattern (`riffToPattern`). It passes `silent` to MIDI
   out, so a running pattern goes on in time but muted on the synth and on the output (see
   `sequencer.md`). The patch picker's LED pulses and its label says it is loading, so a dead key
   reads as "wait". The synth arriving is a load too, from the Default patch: it waits `ARRIVE_MS`

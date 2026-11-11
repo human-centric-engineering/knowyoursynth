@@ -1072,11 +1072,13 @@ describe('SynthPage glides', () => {
     expect(patternsSent(sentNow())).toHaveLength(1);
     expectRiff(patternsSent(sentNow())[0], WOBBLE.phrase);
 
-    // The riff runs on through the load, muted as a pattern is, and the new sound's starts from its top once it ends.
+    // The riff stops for the load, Play waiting with a spinner, and the new sound's starts from its top once the
+    // knobs are set: nothing plays while they move.
     const before = sentNow().length;
     choose('Fat bass');
-    expect(sentNow().slice(before)).toContainEqual({ type: 'patternMute', muted: true });
-    expect(button('Stop')).toBeTruthy();
+    expect(sentNow().slice(before)).toContainEqual({ type: 'stopPattern' });
+    expect(patternsSent(sentNow().slice(before))).toHaveLength(0);
+    expect(button('Stop').querySelector('.animate-spin')).not.toBeNull();
     const during = patternsSent(sentNow()).length;
     await act(async () => {
       settle();
@@ -1086,7 +1088,25 @@ describe('SynthPage glides', () => {
     expect(patternsSent(sentNow()).at(-1)?.muted).toBe(false);
   });
 
-  it('lets the riff run on as the pattern when the sequencer opens while a load is under way', async () => {
+  it('cancels the riff waiting for a load when Stop is pressed meanwhile', async () => {
+    page();
+    settle();
+    choose('Wobble lead');
+    fireEvent.click(button('Play'));
+    await act(async () => {
+      settle();
+    });
+    choose('Fat bass');
+    const during = patternsSent(sentNow()).length;
+    fireEvent.click(button('Stop'));
+    await act(async () => {
+      settle();
+    });
+    expect(patternsSent(sentNow()).length).toBe(during);
+    expect(button('Play').querySelector('.animate-spin')).toBeNull();
+  });
+
+  it('starts the riff as the pattern once a load ends, when the sequencer opens while it is under way', async () => {
     page();
     settle();
     choose('Wobble lead');
@@ -1100,8 +1120,9 @@ describe('SynthPage glides', () => {
     await act(async () => {
       settle();
     });
-    // The riff the load queued is dropped with it: the pattern is not restarted as the riff once the load ends.
-    expect(patternsSent(sentNow()).length).toBe(during);
+    // It starts once, as the pattern the sequencer holds (the new sound's riff), not again as the riff.
+    expect(patternsSent(sentNow()).length).toBe(during + 1);
+    expectRiff(patternsSent(sentNow()).at(-1), FAT_BASS.phrase);
     expect(button('Stop')).toBeTruthy();
   });
 

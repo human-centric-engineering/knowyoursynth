@@ -17,7 +17,17 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 import type { CSSProperties, ReactNode, RefObject } from 'react';
-import { Check, ChevronDown, ChevronUp, Maximize, Minimize, Play, Square, X } from 'lucide-react';
+import {
+  Check,
+  ChevronDown,
+  ChevronUp,
+  Loader2,
+  Maximize,
+  Minimize,
+  Play,
+  Square,
+  X,
+} from 'lucide-react';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
 import { START_STEP } from '@/lib/app/synths/default-patch';
 import type { PresetStep } from '@/lib/app/synths/contract';
@@ -377,10 +387,13 @@ export function Chapters({
  */
 export function PlayButton({
   playing,
+  waiting = false,
   onClick,
   position,
 }: {
   playing: boolean;
+  /** A start waiting for a patch to load: a spinner in place of Stop's square, and pressing it cancels the start. */
+  waiting?: boolean;
   onClick: () => void;
   position?: () => SeqPosition | null;
 }) {
@@ -410,7 +423,9 @@ export function PlayButton({
         className={`kys-play ${playing ? 'is-playing' : ''} ${stepped ? 'is-stepped' : ''}`}
       >
         <span className="kys-play-dot" aria-hidden="true">
-          {playing ? (
+          {waiting ? (
+            <Loader2 size={16} className="animate-spin motion-reduce:animate-none" />
+          ) : playing ? (
             <Square size={14} fill="currentColor" />
           ) : (
             <Play size={19} fill="currentColor" className="translate-x-px" />
