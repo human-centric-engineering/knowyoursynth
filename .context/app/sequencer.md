@@ -199,7 +199,10 @@ riff's. Undo does not count it, and what Undo goes back to takes the knob's temp
 **One transport.** With the sequencer open, the bar's Play plays the pattern. In the bottom sheet, which can cover the
 bar, the module has a Play button of its own, the same
 transport. A pattern starting stops a riff, a riff starting stops the pattern, and Stop stops both. Opening the
-sequencer while the riff plays hands over to the pattern. Closing it while the pattern plays leaves it playing, and the bar's Stop stays to stop it.
+sequencer while the riff plays hands over to the pattern. Closing it while the pattern plays leaves it playing, and the bar's Stop stays to stop it. The Sequencer button then
+carries a step lamp (`StepLamp`, `step-lamp.tsx`, t-225): a dot lit on each step heard, brighter every fourth, and the
+step's number, hidden from a screen reader. Both it and Play's pulse read `seq.position()` once a frame through
+`useStepTick` and draw straight onto their elements, so a playing pattern does not render the page once a step.
 
 **Playing.** Play compiles loop 0 and sends `pattern`. Each `loop` event with `start` set compiles the loop after it and
 queues it (`patternNext`). A pattern with Loop off queues its end instead. Every loop is compiled from its own seed,
