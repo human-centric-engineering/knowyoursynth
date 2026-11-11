@@ -11,9 +11,17 @@
 
 import { useRef } from 'react';
 import type { SeqPosition } from '@/components/app/sequencer/use-sequencer';
-import { PULSE_EVERY, useStepTick } from '@/components/app/sequencer/use-step-tick';
+import { onBeat, useStepTick } from '@/components/app/sequencer/use-step-tick';
+import { PART_NAMES } from '@/components/app/sequencer/labels';
 
-export function StepLamp({ position }: { position: () => SeqPosition | null }) {
+export function StepLamp({
+  position,
+  parts = 1,
+}: {
+  position: () => SeqPosition | null;
+  /** How many parts the pattern has: more than one, and the count names the part as well (A3, B3). */
+  parts?: number;
+}) {
   const lamp = useRef<HTMLSpanElement>(null);
   const count = useRef<HTMLSpanElement>(null);
   useStepTick(position, true, (at) => {
@@ -24,10 +32,13 @@ export function StepLamp({ position }: { position: () => SeqPosition | null }) {
       if (at) {
         void dot.offsetWidth;
         dot.classList.add('is-lit');
-        if (at.step % PULSE_EVERY === 0) dot.classList.add('is-beat');
+        if (onBeat(at)) dot.classList.add('is-beat');
       }
     }
-    if (count.current) count.current.textContent = at ? String(at.step + 1) : '';
+    if (count.current)
+      count.current.textContent = at
+        ? `${parts > 1 ? (PART_NAMES[at.part] ?? '') : ''}${at.step + 1}`
+        : '';
   });
   return (
     // What it shows changes every step, which a screen reader would read out each time: Play, named Stop, already says a pattern plays.

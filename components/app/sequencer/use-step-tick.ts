@@ -31,7 +31,7 @@ export function useStepTick(
     let raf = 0;
     const tick = () => {
       const now = position();
-      if (now && (!last || now.step !== last.step || now.part !== last.part)) handler.current(now);
+      if (now && (!last || !sameStep(now, last))) handler.current(now);
       // Between loops (or before the first is heard) the position is null for a moment: the step is still the last one.
       if (now) last = now;
       raf = requestAnimationFrame(tick);
@@ -44,10 +44,15 @@ export function useStepTick(
   }, [active, position]);
 }
 
-/** Whether the browser asks for less motion: a glow that pulses is left out, a lamp that lights is not. */
-export function prefersLessMotion(): boolean {
-  return (
-    typeof window !== 'undefined' &&
-    !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-  );
-}
+/**
+ * The same step heard, not only the same step: in random order (or a one-step part) a step can come round again, and
+ * is lit again. Compared on the playhead's loop and place in it where it gives them.
+ */
+const sameStep = (a: SeqPosition, b: SeqPosition): boolean =>
+  a.step === b.step && a.part === b.part && a.slot === b.slot && a.loop === b.loop;
+
+/**
+ * Whether this step heard is on the beat: every `PULSE_EVERY` steps heard from the loop's start, so a pattern played
+ * in reverse or at random pulses in time as a forward one does. Without the place heard, the step's own number.
+ */
+export const onBeat = (at: SeqPosition): boolean => (at.slot ?? at.step) % PULSE_EVERY === 0;

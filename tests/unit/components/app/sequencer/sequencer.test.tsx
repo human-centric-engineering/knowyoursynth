@@ -269,11 +269,12 @@ describe('the transport', () => {
     fire(loopEvent());
     // 0.75 beats in at 120 bpm is 0.375 s: the fourth sixteenth.
     engine.frame = 0.375 * 48000;
-    expect(state.position()).toEqual({ step: 3, part: 0 });
+    expect(state.position()).toEqual({ step: 3, part: 0, slot: 3, loop: 0 });
     // Reverse plays the last step first.
     pick(screen, 'Direction', 'Reverse');
     engine.frame = 0;
-    expect(state.position()).toEqual({ step: 7, part: 0 });
+    // Heard first: the first place in the loop, so the beat a step falls on is the slot's, not the step's (t-225).
+    expect(state.position()).toEqual({ step: 7, part: 0, slot: 0, loop: 0 });
   });
 });
 
@@ -658,7 +659,7 @@ describe('what it refuses, and a page that is late', () => {
     fire(loopEvent());
     fire(loopEvent({ index: 2 }));
     engine.frame = 0.375 * 48000;
-    expect(state.position()).toEqual({ step: 3, part: 0 });
+    expect(state.position()).toEqual({ step: 3, part: 0, slot: 3, loop: 2 });
   });
 
   it('ignores the engine’s events while it is stopped, and draws no playhead without a sound', async () => {
@@ -720,7 +721,7 @@ describe('what the code review found', () => {
     fire(loopEvent({ index: 1, frame: 96000 }));
     pick(screen, 'Step', '1/8');
     engine.frame = 0.375 * 48000;
-    expect(state.position()).toEqual({ step: 3, part: 0 });
+    expect(state.position()).toEqual({ step: 3, part: 0, slot: 3, loop: 0 });
   });
 });
 

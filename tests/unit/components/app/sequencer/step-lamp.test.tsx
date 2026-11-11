@@ -10,6 +10,7 @@ import { act, render, screen } from '@testing-library/react';
 import { StepLamp } from '@/components/app/sequencer/step-lamp';
 import { PlayButton } from '@/components/app/synth/player';
 import type { SeqPosition } from '@/components/app/sequencer/use-sequencer';
+import { glideMotion } from '@/components/app/synth/motion';
 
 let frames: FrameRequestCallback[] = [];
 const runFrame = () =>
@@ -23,18 +24,6 @@ const ANIMATE = HTMLElement.prototype.animate;
 let at: SeqPosition | null = null;
 const position = () => at;
 
-function lessMotion(on: boolean) {
-  vi.spyOn(window, 'matchMedia').mockImplementation(
-    (query: string) =>
-      ({
-        matches: on && query === '(prefers-reduced-motion: reduce)',
-        media: query,
-        addEventListener: () => undefined,
-        removeEventListener: () => undefined,
-      }) as unknown as MediaQueryList
-  );
-}
-
 beforeEach(() => {
   frames = [];
   at = null;
@@ -43,7 +32,8 @@ beforeEach(() => {
     return frames.length;
   });
   vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => undefined);
-  lessMotion(false);
+  // Motion on, as a browser that hasn't asked for less (the setup turns it off for every test).
+  vi.mocked(glideMotion).mockReturnValue(true);
 });
 afterEach(() => {
   vi.restoreAllMocks();
@@ -98,6 +88,45 @@ describe('the Sequencer button’s step lamp', () => {
     expect(dot().classList.contains('is-lit')).toBe(true);
   });
 
+  it('is brighter on every fourth step heard, whatever order the steps play in', () => {
+    render(<StepLamp position={position} />);
+    // Reversed: the first step heard is the last step.
+    at = { step: 15, part: 0, slot: 0, loop: 0 };
+    runFrame();
+    expect(dot().classList.contains('is-beat')).toBe(true);
+    expect(count().textContent).toBe('16');
+    at = { step: 12, part: 0, slot: 3, loop: 0 };
+    runFrame();
+    expect(dot().classList.contains('is-beat')).toBe(false);
+    at = { step: 11, part: 0, slot: 4, loop: 0 };
+    runFrame();
+    expect(dot().classList.contains('is-beat')).toBe(true);
+  });
+
+  it('lights again on a step heard twice running (random order, a one-step part)', () => {
+    render(<StepLamp position={position} />);
+    at = { step: 2, part: 0, slot: 0, loop: 0 };
+    runFrame();
+    dot().classList.remove('is-lit');
+    at = { step: 2, part: 0, slot: 1, loop: 0 };
+    runFrame();
+    expect(dot().classList.contains('is-lit')).toBe(true);
+    dot().classList.remove('is-lit');
+    at = { step: 2, part: 0, slot: 1, loop: 0 };
+    runFrame();
+    expect(dot().classList.contains('is-lit')).toBe(false);
+    at = { step: 2, part: 0, slot: 1, loop: 1 };
+    runFrame();
+    expect(dot().classList.contains('is-lit')).toBe(true);
+  });
+
+  it('names the part with the step where the pattern has more than one', () => {
+    render(<StepLamp position={position} parts={2} />);
+    at = { step: 2, part: 1 };
+    runFrame();
+    expect(count().textContent).toBe('B3');
+  });
+
   it('is hidden from a screen reader, which would otherwise read every step out', () => {
     render(<StepLamp position={position} />);
     expect(screen.getByTestId('seq-step-lamp').getAttribute('aria-hidden')).toBe('true');
@@ -120,7 +149,7 @@ describe('Play while a pattern plays', () => {
   });
 
   it('does not pulse where the browser asks for less motion', () => {
-    lessMotion(true);
+    vi.mocked(glideMotion).mockReturnValue(false);
     const animate = vi.fn();
     HTMLElement.prototype.animate = animate;
     render(<PlayButton playing onClick={() => undefined} position={position} />);

@@ -105,6 +105,13 @@ const LANE_RESEND_MS = 50;
 export interface SeqPosition {
   step: number;
   part: number;
+  /**
+   * The place in the loop being heard (0 for its first step heard), and which loop: the beat a step falls on and a
+   * step heard again, whatever order the pattern plays its steps in (t-225). Absent on a position not read from the
+   * playhead.
+   */
+  slot?: number;
+  loop?: number;
 }
 
 /** What one loop was compiled with, to draw its playhead and to compile it again after an edit. */
@@ -1078,7 +1085,7 @@ export function useSequencer({
     if (!info) return null;
     const slot = Math.floor(at.beat * info.perBeat + 1e-9);
     const step = info.order[Math.min(slot, info.order.length - 1)];
-    return step === undefined ? null : { step, part: info.part };
+    return step === undefined ? null : { step, part: info.part, slot, loop: at.index };
   }, [engine]);
 
   // While a pattern with lanes plays, what they set on the step being heard, for the panel: read once a frame, and

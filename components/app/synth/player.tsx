@@ -26,11 +26,8 @@ import { highlightStore } from '@/components/app/synth/stores';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 import { logger } from '@/lib/logging';
 import type { SeqPosition } from '@/components/app/sequencer/use-sequencer';
-import {
-  PULSE_EVERY,
-  prefersLessMotion,
-  useStepTick,
-} from '@/components/app/sequencer/use-step-tick';
+import { onBeat, useStepTick } from '@/components/app/sequencer/use-step-tick';
+import { glideMotion } from '@/components/app/synth/motion';
 
 /**
  * The app's name over the panel. The LED is the sound's, lit while it is on, except while a lesson is being walked
@@ -375,7 +372,7 @@ export function Chapters({
  * chosen beside Play (one transport, t-213). Named for what it will do.
  *
  * Given the sequencer's playhead (`position`, while a pattern plays), the key glows briefly every
- * `PULSE_EVERY` steps, in time with what is heard, rather than breathing at its own pace (t-225). Not where the
+ * `PULSE_EVERY` steps heard, in time with what is heard, rather than breathing at its own pace (t-225). Not where the
  * browser asks for less motion: there it stays lit, still.
  */
 export function PlayButton({
@@ -391,7 +388,7 @@ export function PlayButton({
   const stepped = playing && !!position;
   useStepTick(position, stepped, (at) => {
     const el = ref.current;
-    if (!at || !el || at.step % PULSE_EVERY !== 0 || prefersLessMotion()) return;
+    if (!at || !el || !onBeat(at) || !glideMotion()) return;
     el.animate?.([{ filter: 'brightness(1.28) saturate(1.1)' }, { filter: 'none' }], {
       duration: 320,
       easing: 'ease-out',
