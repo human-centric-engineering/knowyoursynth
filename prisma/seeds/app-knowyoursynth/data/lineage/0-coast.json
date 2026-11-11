@@ -1,7 +1,7 @@
 {
   "synth": "0-coast",
   "title": "The 0-COAST: no coast",
-  "intro": "Make Noise, a Eurorack maker from Asheville, North Carolina, released the 0-COAST in 2016 as its first desktop synth. It takes from both of the 1960s schools of synthesis without following either: a keyboard-style oscillator and envelope from the East Coast (Moog), and from the West Coast (Buchla) harmonics added by a waveshaper and folder rather than filtered away, and a low-pass gate in place of a filter and amplifier. Make Noise called the result “no coast” synthesis.",
+  "intro": "Make Noise, a Eurorack maker from Asheville, North Carolina, released the 0-COAST in 2016, a synth of its own rather than a module for a case. It takes from both of the 1960s schools of synthesis without following either: a keyboard-style oscillator and envelope from the East Coast (Moog), and from the West Coast (Buchla) harmonics added by a waveshaper and folder rather than filtered away, and a low-pass gate in place of a filter and amplifier. Make Noise called the result “no coast” synthesis.",
   "timeline": [
     {
       "year": "2016",
@@ -17,7 +17,7 @@
     {
       "year": "2021",
       "name": "Make Noise Strega",
-      "text": "Make Noise’s second desktop instrument, made with Alessandro Cortini: an oscillator, a degrading delay, a filter, a function generator and touch plates, built for textures."
+      "text": "A later Make Noise desktop instrument, made with Alessandro Cortini: an oscillator, a degrading delay, a filter, a function generator and touch plates, built for textures."
     }
   ],
   "relatives": [
