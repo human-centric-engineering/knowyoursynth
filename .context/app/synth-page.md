@@ -265,14 +265,15 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   head (`.is-top`) carries Sections, Signal and Sensitive, the inspector, Signal routing, then the
   tour and its help at the right; each layer is its icon (with its word from `xl` up and below `lg`) and an LED
   lit while it is over the panel. The foot (`.is-foot`) carries how the panel is drawn (Hardware or
-  Outline, Modular or Long), the magnifier and Hover help (the card that pops up when you point at a
+  Outline, Modular or Long; and on a panel printed in another language, its Labels in that language or
+  English, `kys.english`, kept in this browser), the magnifier and Hover help (the card that pops up when you point at a
   control; `kys.tips`): each its name in the panel's lettering, which explains it on hover, then its
   choices, each a word with an LED lit for the one in use (`aria-pressed` buttons in a named group). The
   foot stays on one row (t-226): `useFootFit` measures the rail's own width into `data-fit` (not a container
   query, which would make the rail the containing block of its fixed-position tooltips), and as it narrows it
-  closes up, the settings take their short names (`Setting`'s `short`: Lens, Tips; `drop` for Drawn as and
-  Layout, whose choices say it, their tip then hanging from the whole setting), Zoom's name goes and the search
-  narrows, each step at a wider rail when there is a Layout setting. On a phone the search keeps a line of its
+  closes up, the settings take their short names (`Setting`'s `short`: Lens, Tips; `drop` for Drawn as,
+  Layout and Labels, whose choices say it, their tip then hanging from the whole setting), Zoom's name goes and the search
+  narrows, each step at a wider rail when there is a Layout or Labels setting. On a phone the search keeps a line of its
   own. Zoom is not on the foot while the routing view shows, which is at no zoom.
 - **Signal** (`f-live-panel` t-150, `SignalMenu` in `player-tools.tsx`) is the head's layer for the patch's
   signal, a button with a menu of its modes (a popover inside the player, not portalled, as the tips are):

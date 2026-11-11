@@ -2228,7 +2228,8 @@ function Synth({
       '--rail-face2': plate2,
       '--rail-print': print,
     };
-  const footRef = useFootFit(!!synthDef.modular);
+  // A fourth setting (Layout on a modular, Labels on a translated panel) needs the wider breakpoints
+  const footRef = useFootFit(!!synthDef.modular || !!synthDef.translation);
   // The Sound Design strip and the lesson card are of the faceplate too, in its colours (t-201).
   const face = useMemo(() => faceRoles(plate, plate2, print), [plate, plate2, print]);
   const panelTaps = small
