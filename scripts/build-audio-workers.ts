@@ -37,10 +37,13 @@ const AUDIO_WORKERS: { entry: string; out: string }[] = [
   { entry: 'lib/app/synths/audio/probe-worker-entry.ts', out: 'kys-probe.js' },
 ];
 
-function options(entry: string, outfile: string, plugins: Plugin[]): BuildOptions {
+/** Both bundles from one esbuild context: one build, and in watch mode one watcher and one rebuild per change. */
+function options(plugins: Plugin[]): BuildOptions {
   return {
-    entryPoints: [join(ROOT, entry)],
-    outfile,
+    entryPoints: Object.fromEntries(
+      AUDIO_WORKERS.map(({ entry, out }) => [out.replace(/\.js$/, ''), join(ROOT, entry)])
+    ),
+    outdir: OUT_DIR,
     bundle: true,
     minify: true,
     format: 'iife',
@@ -54,10 +57,10 @@ function options(entry: string, outfile: string, plugins: Plugin[]): BuildOption
 }
 
 /**
- * Says when a watched bundle is rebuilt, and whether it built. Not for the first two builds: `main`'s own, which it
- * reports, and the one `watch()` starts with.
+ * Says when the watched bundles are rebuilt, and whether they built. Not for the first two builds: `main`'s own,
+ * which it reports, and the one `watch()` starts with (esbuild 0.28 runs one; check this count on an upgrade).
  */
-function reportRebuilds(entry: string, outfile: string): Plugin {
+function reportRebuilds(): Plugin {
   let quiet = 2;
   return {
     name: 'report-rebuilds',
@@ -67,11 +70,10 @@ function reportRebuilds(entry: string, outfile: string): Plugin {
           quiet -= 1;
           return;
         }
-        const ok = result.errors.length === 0;
         console.log(
-          ok
-            ? `audio worker rebuilt: ${relative(ROOT, outfile)} (reload the page to hear it)`
-            : `audio worker: ${entry} failed to rebuild; the last good bundle stays`
+          result.errors.length === 0
+            ? `audio workers rebuilt in ${relative(ROOT, OUT_DIR)} (reload the page to hear it)`
+            : 'audio workers failed to rebuild; the last good bundles stay'
         );
       });
     },
@@ -80,38 +82,41 @@ function reportRebuilds(entry: string, outfile: string): Plugin {
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
-  const watch = args[0] === '--watch';
   const dash = args.indexOf('--');
+  const flags = dash >= 0 ? args.slice(0, dash) : args;
   const command = dash >= 0 ? args.slice(dash + 1) : [];
-  if (watch && command.length === 0) throw new Error('--watch needs a command to run after --');
+  const watch = flags.includes('--watch');
+  if (watch !== command.length > 0) throw new Error('--watch and a command after -- go together');
 
   mkdirSync(OUT_DIR, { recursive: true });
-  const contexts: BuildContext[] = [];
+  const ctx: BuildContext = await context(options(watch ? [reportRebuilds()] : []));
+  // The first build is awaited either way: a broken engine fails the start, as it did before watching.
+  await ctx.rebuild();
   for (const { entry, out } of AUDIO_WORKERS) {
-    const outfile = join(OUT_DIR, out);
-    const ctx = await context(
-      options(entry, outfile, watch ? [reportRebuilds(entry, outfile)] : [])
-    );
-    // The first build is awaited either way: a broken engine fails the start, as it did before watching.
-    await ctx.rebuild();
-    console.log(`audio worker: ${entry} → ${relative(ROOT, outfile)}`);
-    if (watch) await ctx.watch();
-    else await ctx.dispose();
-    contexts.push(ctx);
+    console.log(`audio worker: ${entry} → ${relative(ROOT, join(OUT_DIR, out))}`);
   }
-  if (!watch) return;
+  if (!watch) {
+    await ctx.dispose();
+    return;
+  }
+  await ctx.watch();
 
   const [bin, ...rest] = command;
   const child = spawn(bin, rest, { cwd: ROOT, stdio: 'inherit' });
   for (const signal of ['SIGINT', 'SIGTERM'] as const) {
     process.on(signal, () => child.kill(signal));
   }
+  // If this process dies some other way (an uncaught error), take the dev server with it rather than orphan it on
+  // its port. A no-op once the child has exited.
+  process.on('exit', () => {
+    if (child.exitCode === null && child.signalCode === null) child.kill();
+  });
   child.on('error', (err) => {
     console.error(`build-audio-workers: could not start ${bin}: ${err.message}`);
     process.exit(1);
   });
   child.on('exit', (code, signal) => {
-    void Promise.all(contexts.map((c) => c.dispose())).finally(() => {
+    void ctx.dispose().finally(() => {
       // The child's signal is the shell's to see, as a normal Ctrl-C rather than exit 0.
       if (signal) {
         process.removeAllListeners(signal);
