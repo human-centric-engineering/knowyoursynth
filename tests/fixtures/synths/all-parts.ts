@@ -410,6 +410,8 @@ const controls: Control[] = [
       { v: 'p2', label: 'Page 2', x: 620, y: 470 },
     ],
     def: 'p1',
+    // a sprung lever that steps the page (the minilogue xd's OCTAVE levers)
+    lever: { x: 600, y: 440, len: 18, orient: 'h' },
   },
   {
     id: 'menu.cont',

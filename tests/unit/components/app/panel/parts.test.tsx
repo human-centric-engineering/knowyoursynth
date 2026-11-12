@@ -451,6 +451,36 @@ describe('select buttons', () => {
   });
 });
 
+describe('a select’s sprung lever', () => {
+  it('steps the choice the way it is pushed, stopping at the ends', () => {
+    const onChange = vi.fn();
+    const { rerender } = render(<SynthPanel {...props({ onChange })} />);
+    const right = screen.getByRole('button', { name: 'page: push right' });
+    const left = screen.getByRole('button', { name: 'page: push left' });
+    fireEvent.click(right);
+    expect(onChange).toHaveBeenLastCalledWith('page', 'p2');
+    // at the first option, a push left stays there
+    fireEvent.click(left);
+    expect(onChange).toHaveBeenLastCalledWith('page', 'p1');
+    rerender(<SynthPanel {...props({ onChange, values: with_({ page: 'p2' }) })} />);
+    fireEvent.keyDown(screen.getByRole('button', { name: 'page: push left' }), { key: 'Enter' });
+    expect(onChange).toHaveBeenLastCalledWith('page', 'p1');
+    fireEvent.keyDown(screen.getByRole('button', { name: 'page: push right' }), { key: ' ' });
+    expect(onChange).toHaveBeenLastCalledWith('page', 'p2');
+  });
+
+  it('leans while pressed and springs back on release', () => {
+    const { container } = render(<SynthPanel {...props()} />);
+    const right = screen.getByRole('button', { name: 'page: push right' });
+    const bat = () => container.querySelector('line[x1="600"][y1="440"]');
+    expect(bat()).toBeNull();
+    fireEvent.pointerDown(right);
+    expect(bat()?.getAttribute('x2')).toBe('618');
+    fireEvent.pointerUp(right);
+    expect(bat()).toBeNull();
+  });
+});
+
 describe('menu rows', () => {
   it('print the value, formatted when the control has a readout', () => {
     render(<SynthPanel {...props()} />);

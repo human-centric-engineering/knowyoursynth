@@ -1469,9 +1469,105 @@ export const Select = memo(function Select({
           </g>
         );
       })}
+      {c.lever && <SprungLever c={c} value={value} ctx={ctx} onChange={onChange} hover={hover} />}
     </g>
   );
 });
+
+/** The option a push on a select's sprung lever picks: the one before (`dir` −1) or after (+1), stopping at the ends. */
+export function leverStep(c: SelectControl, value: ControlValue, dir: -1 | 1): ControlValue {
+  const i = Math.min(c.options.length - 1, Math.max(0, optionIndex(c, value) + dir));
+  return c.options[i].v;
+}
+
+/**
+ * A select's sprung lever (`SelectControl.lever`), seen from above: at rest only the bat's end shows over the nut;
+ * pressed, it leans towards the half pressed and the choice steps that way, and on release it springs back.
+ */
+function SprungLever({
+  c,
+  value,
+  ctx,
+  onChange,
+  hover,
+}: Pick<ControlPartProps<SelectControl>, 'c' | 'value' | 'ctx' | 'onChange'> & {
+  hover: ReturnType<typeof useHover>;
+}) {
+  const [push, setPush] = useState<-1 | 0 | 1>(0);
+  if (!c.lever) return null;
+  const { x, y, len } = c.lever;
+  const h = c.lever.orient === 'h';
+  const r = 13;
+  const bx = h ? x + push * len : x;
+  const by = h ? y : y + push * len;
+  const step = (dir: -1 | 1) => onChange(c.id, leverStep(c, value, dir));
+  const name = cleanName(c);
+  const half = (dir: -1 | 1) => {
+    const lo = dir < 0;
+    const words = h ? (lo ? 'left' : 'right') : lo ? 'up' : 'down';
+    return (
+      <rect
+        key={dir}
+        x={h ? (lo ? x - len - 10 : x) : x - r - 6}
+        y={h ? y - r - 6 : lo ? y - len - 10 : y}
+        width={h ? len + 10 : 2 * r + 12}
+        height={h ? 2 * r + 12 : len + 10}
+        fill="transparent"
+        tabIndex={0}
+        role="button"
+        aria-label={`${name}: push ${words}`}
+        className="kys-hit"
+        style={{ cursor: 'pointer' }}
+        {...hover}
+        onPointerDown={() => setPush(dir)}
+        onPointerUp={() => setPush(0)}
+        onPointerLeave={() => setPush(0)}
+        onPointerCancel={() => setPush(0)}
+        onClick={(e) => {
+          focusStore.set({ kind: 'control', id: c.id, x: e.clientX, y: e.clientY, tip: false });
+          step(dir);
+        }}
+        onKeyDown={(e) => {
+          if ((e.key === 'Enter' || e.key === ' ') && !e.repeat) {
+            e.preventDefault();
+            step(dir);
+          }
+        }}
+      />
+    );
+  };
+  const body = ctx.outline ? (
+    <g stroke={INK} strokeWidth="2" fill={PAPER}>
+      <circle cx={x} cy={y} r={r} />
+      {push !== 0 && <line x1={x} y1={y} x2={bx} y2={by} />}
+      <circle cx={bx} cy={by} r={r * 0.45} fill={INK} stroke="none" />
+    </g>
+  ) : (
+    <g>
+      <circle cx={x + 2} cy={y + 3} r={r} fill="#0007" />
+      <circle cx={x} cy={y} r={r} fill="url(#kysNut)" stroke="#0009" strokeWidth="1.2" />
+      {push !== 0 && (
+        <line
+          x1={x}
+          y1={y}
+          x2={bx}
+          y2={by}
+          stroke="#d6d6d0"
+          strokeWidth={r * 0.5}
+          strokeLinecap="round"
+        />
+      )}
+      <circle cx={bx} cy={by} r={r * 0.6} fill="#c9cacd" stroke="#0008" strokeWidth="1" />
+    </g>
+  );
+  return (
+    <g>
+      {body}
+      {half(-1)}
+      {half(1)}
+    </g>
+  );
+}
 const cleanName = (c: Control) => (c.label || c.id).replace(/\n/g, ' ');
 const CAPTION_DARK = '#1b1b1d',
   CAPTION_LIGHT = '#f1f0e9';

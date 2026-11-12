@@ -1,8 +1,9 @@
 /**
  * Korg minilogue xd: the definition (D1). Positions are measured on the 1800 × 1132 product photo of the keyboard
  * (`.context/app/synth-data/minilogue-xd/raw/Korg Minilogue XD.jpg`, local only) and written in view units of half a
- * photo pixel, from photo (10, 95): view x = (photo x − 10) × 2, y = (photo y − 95) × 2. The view is the faceplate down
- * to the logo strip; the keys are left out. The owner's spec is `.context/app/synth-data/minilogue-xd/minilogue-xd.synth.json`
+ * photo pixel, from photo (105, 95): view x = (photo x − 105) × 2, y = (photo y − 95) × 2. The view is the faceplate from
+ * the joystick to the effects and down to the joystick, cropped close; the logo strip (its marks are left out) and the
+ * keys are not in it. The owner's spec is `.context/app/synth-data/minilogue-xd/minilogue-xd.synth.json`
  * (the minilogue xd / xd module Owner's Manual).
  *
  * Written straight into the app, with no prototype version (`f-next-synths`), following `defs/take-5.ts`, the nearest
@@ -74,7 +75,7 @@ type MenuRest = OmitEach<
 >;
 type TextRest = Partial<Pick<TextDecor, 'fill' | 'weight' | 'spacing' | 'brand' | 'anchor'>>;
 
-const X = (x: number): number => (x - 10) * 2;
+const X = (x: number): number => (x - 105) * 2;
 const Y = (y: number): number => (y - 95) * 2;
 const INK = '#d4d5d8';
 const SLOT = '#08090a';
@@ -162,7 +163,7 @@ const knob = (
   });
   if (lab) label(x, y + 43, lab);
 };
-/** A lever switch: an enum of three, top to bottom (or a bool, on at the top). */
+/** A lever switch: an enum of three, top to bottom (or a bool, on at the top), its bat long as the hardware's. */
 const lever = (id: string, x: number, y: number, rest: ToggleRest): void => {
   slot(x, y, 22, 66);
   controls.push({
@@ -171,6 +172,7 @@ const lever = (id: string, x: number, y: number, rest: ToggleRest): void => {
     x: X(x),
     y: Y(y),
     w: 30,
+    lean: 3.6,
     labelPos: 'none',
     tip: '#c9cacd',
     ...rest,
@@ -262,13 +264,13 @@ controls.push({
   kind: 'enum',
   def: '0',
   options: OCTS,
+  lever: { x: X(177), y: Y(385), len: 46, orient: 'h' },
   module: 'mode',
   label: 'OCTAVE',
   labelPos: 'none',
-  help: 'Moves the keyboard up or down by up to two octaves; the lamps show where it is. On the hardware the lever below steps it. Here press a lamp. It is not saved with a sound.',
+  help: 'Moves the keyboard up or down by up to two octaves; the lamps show where it is. Push the lever below left or right to step it; it springs back. A lamp can also be pressed. It is not saved with a sound.',
 });
 slot(177, 385, 66, 22);
-decor.push({ t: 'circle', x: X(177), y: Y(385), r: 13, fill: '#c9cacd' });
 label(178, 413, 'OCTAVE');
 
 // ── Joystick ──────────────────────────────────────────────────────────────
@@ -496,14 +498,14 @@ const waveGlyphs = (x: number, y: number): void => {
     kind: 'enum',
     def: "8'",
     options: FEET.map((o, i) => ({ ...o, x: X(443), y: Y(y - 30 + i * 20) })),
+    lever: { x: X(402), y: Y(y), len: 46 },
     module: 'osc',
     label: 'OCTAVE',
     name: `${vco} OCTAVE`,
     labelPos: 'none',
-    help: `Sets ${vco} in octaves, in organ feet: 16′ is the lowest, 2′ three octaves above it, and 8′ the keyboard’s own pitch. The lamps show which. On the hardware the lever beside them steps it; here press a lamp.`,
+    help: `Sets ${vco} in octaves, in organ feet: 16′ is the lowest, 2′ three octaves above it, and 8′ the keyboard’s own pitch. The lamps show which. Push the lever beside them up or down to step it; it springs back. A lamp can also be pressed.`,
   });
   slot(402, y, 22, 66);
-  decor.push({ t: 'circle', x: X(402), y: Y(y), r: 13, fill: '#c9cacd' });
   label(406, y + 43, 'OCTAVE');
   knob(`vco${n}.pitch`, 503, y, 'PITCH', {
     kind: 'cont',
@@ -2085,7 +2087,7 @@ const minilogueXd: SynthDef & { version: number } = {
   heritage: 'The 2016 minilogue’s successor, with the prologue’s digital MULTI ENGINE',
   summary:
     'Four analogue voices, each two VCOs (sawtooth, triangle or square, each with SHAPE, and sync, ring and cross mod) and a digital MULTI ENGINE of filtered noise or a VPM oscillator → a resonant low-pass filter with drive → the VCA, with an ADSR, an attack-decay EG and an LFO. Voice modes for duo, unison and chords, an arpeggiator, a joystick, and modulation, delay and reverb effects.',
-  view: { w: X(1790), h: Y(615) },
+  view: { w: X(1690), h: Y(540) },
   theme: {
     panel: '#202123',
     panel2: '#18191b',
