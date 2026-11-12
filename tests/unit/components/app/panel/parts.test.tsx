@@ -12,10 +12,23 @@ import { describe, it, expect, vi, afterEach, beforeAll } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { SynthPanel } from '@/components/app/panel/synth-panel';
 import type { SynthPanelProps } from '@/components/app/panel/synth-panel';
-import { optionIndex, polar, swingStep, valueAngle, wavePath } from '@/components/app/panel/parts';
+import {
+  leverStep,
+  optionIndex,
+  polar,
+  swingStep,
+  valueAngle,
+  wavePath,
+} from '@/components/app/panel/parts';
 import { focusStore, highlightStore, meterStore } from '@/components/app/synth/stores';
 import { allPartsDef } from '@/tests/fixtures/synths/all-parts';
-import type { Control, ControlValues, FaderControl, PatchCable } from '@/lib/app/synths/contract';
+import type {
+  Control,
+  ControlValues,
+  FaderControl,
+  PatchCable,
+  SelectControl,
+} from '@/lib/app/synths/contract';
 
 const IDENTITY = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 };
 
@@ -448,6 +461,127 @@ describe('select buttons', () => {
     );
     expect(screen.queryByRole('radio', { name: 'select.mode: Off' })).toBeNull();
     expect(container.querySelector('circle[r="6"][fill="#f6a63a"]')).not.toBeNull();
+  });
+});
+
+describe('a select’s sprung lever', () => {
+  it('steps the choice the way it is pushed, stopping at the ends', () => {
+    const onChange = vi.fn();
+    const { rerender } = render(<SynthPanel {...props({ onChange })} />);
+    const right = screen.getByRole('button', { name: 'page: push right' });
+    const left = screen.getByRole('button', { name: 'page: push left' });
+    fireEvent.click(right);
+    expect(onChange).toHaveBeenLastCalledWith('page', 'p2');
+    // at the first option, a push left stays there
+    fireEvent.click(left);
+    expect(onChange).toHaveBeenLastCalledWith('page', 'p1');
+    rerender(<SynthPanel {...props({ onChange, values: with_({ page: 'p2' }) })} />);
+    fireEvent.keyDown(screen.getByRole('button', { name: 'page: push left' }), { key: 'Enter' });
+    expect(onChange).toHaveBeenLastCalledWith('page', 'p1');
+    fireEvent.keyDown(screen.getByRole('button', { name: 'page: push right' }), { key: ' ' });
+    expect(onChange).toHaveBeenLastCalledWith('page', 'p2');
+  });
+
+  it('leans while pressed and springs back on release', () => {
+    const { container } = render(<SynthPanel {...props()} />);
+    const right = screen.getByRole('button', { name: 'page: push right' });
+    const bat = () => container.querySelector('line[x1="600"][y1="440"]');
+    expect(bat()).toBeNull();
+    fireEvent.pointerDown(right);
+    expect(bat()?.getAttribute('x2')).toBe('618');
+    fireEvent.pointerUp(right);
+    expect(bat()).toBeNull();
+    // a key press leans it too, until the key comes up
+    fireEvent.keyDown(right, { key: 'Enter' });
+    expect(bat()?.getAttribute('x2')).toBe('618');
+    fireEvent.keyUp(right, { key: 'Enter' });
+    expect(bat()).toBeNull();
+  });
+
+  it('lets the hover card go when the pointer leaves, and springs back', () => {
+    const { container } = render(<SynthPanel {...props()} />);
+    const right = screen.getByRole('button', { name: 'page: push right' });
+    fireEvent.pointerEnter(right, { pointerType: 'mouse', clientX: 3, clientY: 4 });
+    expect(focusStore.get()).toMatchObject({ id: 'page', tip: true });
+    fireEvent.pointerDown(right);
+    fireEvent.pointerLeave(right);
+    expect(focusStore.get()).toMatchObject({ id: 'page', tip: false });
+    expect(container.querySelector('line[x1="600"][y1="440"]')).toBeNull();
+  });
+
+  it('pulses with the lamps while the control is highlighted', () => {
+    const { container } = render(<SynthPanel {...props()} />);
+    const before = container.querySelectorAll('.kys-pulse').length;
+    act(() => highlightStore.set(['page']));
+    // one pulse per lamp, and one round the lever
+    expect(container.querySelectorAll('.kys-pulse').length - before).toBe(3);
+  });
+});
+
+describe('leverStep', () => {
+  const sel = (over: Partial<SelectControl> = {}): SelectControl => ({
+    id: 's',
+    type: 'select',
+    x: 0,
+    y: 0,
+    w: 10,
+    h: 10,
+    module: 'util',
+    help: '',
+    kind: 'enum',
+    options: [
+      { v: 'off', label: 'OFF', hide: true },
+      { v: 'a', label: 'A' },
+      { v: 'b', label: 'B' },
+      { v: 'c', label: 'C' },
+    ],
+    def: 'b',
+    ...over,
+  });
+
+  it('steps over an option with no button of its own', () => {
+    expect(leverStep(sel(), 'a', -1)).toBe('a');
+    expect(leverStep(sel(), 'a', 1)).toBe('b');
+    expect(leverStep(sel(), 'c', 1)).toBe('c');
+  });
+
+  it('steps from the default when the value is not one of the choices', () => {
+    expect(leverStep(sel(), 'gone', 1)).toBe('c');
+    expect(leverStep(sel(), 'off', -1)).toBe('a');
+  });
+});
+
+describe('a toggle with a long bat', () => {
+  it('can be pressed on the bat’s end, past the nut', () => {
+    const long: Control = {
+      id: 'long',
+      type: 'toggle',
+      x: 100,
+      y: 100,
+      w: 30,
+      lean: 3.6,
+      module: 'util',
+      help: '',
+      kind: 'enum',
+      options: [
+        { v: 'u', label: 'U' },
+        { v: 'm', label: 'M' },
+        { v: 'd', label: 'D' },
+      ],
+      def: 'm',
+    };
+    render(
+      <SynthPanel
+        {...props({
+          def: { ...allPartsDef, controls: [long] },
+          values: { long: 'm' },
+        })}
+      />
+    );
+    const hit = screen.getByRole('button', { name: 'long' });
+    // the bat reaches 3.6 radii (54) with its tip (6.3) beyond: the hit area spans it
+    expect(Number(hit.getAttribute('height'))).toBeGreaterThanOrEqual(2 * (54 + 6));
+    expect(hit.getAttribute('width')).toBe('40');
   });
 });
 

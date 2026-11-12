@@ -72,7 +72,8 @@ const MODULAR = LISTED.filter((id) => getSynthDef(id)?.modular);
  * Listed synths whose panel prints no maker's marks. Every other definition must tag its marks `brand`, so a port that
  * forgot to tag them fails here; a synth with no marks is named here rather than given a tag it has no mark for.
  */
-const UNBRANDED = new Set<string>(['ems-vcs3']);
+// the minilogue xd's marks are on its logo strip, cropped out of the view
+const UNBRANDED = new Set<string>(['ems-vcs3', 'minilogue-xd']);
 
 const IDENTITY = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 };
 

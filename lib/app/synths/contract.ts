@@ -587,6 +587,12 @@ export type SelectControl = ControlCommon & {
   capColor?: string;
   /** Pressing the lit button again sets this value (the Jupiter-8 arpeggio MODE buttons switch it off). */
   offValue?: OptionValue;
+  /**
+   * A sprung lever that steps the choice (the minilogue xd's OCTAVE levers), drawn at (x, y) over a slot in the decor.
+   * It rests in the centre; a push towards the top (the left with `orient: 'h'`) picks the option listed before, towards
+   * the bottom (right) the one after, stopping at either end, and it springs back. `len` is how far the bat leans.
+   */
+  lever?: { x: number; y: number; len: number; orient?: 'h' };
 } & EnumValue;
 
 /** One row of a display page: `label` on the left, the value in an inverted box on the right. Pair with `lcd` decor. */
