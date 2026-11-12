@@ -69,7 +69,7 @@ const EXPORTED: {
   { id: 'jp-8080', sounds: 16, timeline: 3, relatives: 3, unusual: 11, limits: 3 },
   { id: 'polivoks', sounds: 125, timeline: 4, relatives: 3, unusual: 8, limits: 3 },
   { id: '0-coast', sounds: 125, timeline: 3, relatives: 3, unusual: 8, limits: 3 },
-  { id: 'minilogue-xd', sounds: 17, timeline: 5, relatives: 3, unusual: 8, limits: 3 },
+  { id: 'minilogue-xd', sounds: 125, timeline: 5, relatives: 3, unusual: 8, limits: 3 },
   { id: 'jupiter-4', sounds: 150, timeline: 5, relatives: 3, unusual: 12, limits: 8 },
   { id: 'jupiter-6', sounds: 150, timeline: 5, relatives: 3, unusual: 25, limits: 10 },
   { id: 'jupiter-8', sounds: 150, timeline: 5, relatives: 3, unusual: 15, limits: 6 },
