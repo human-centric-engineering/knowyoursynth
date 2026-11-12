@@ -52,7 +52,10 @@ them:
 
 - **`package.json` and `package-lock.json`** (§7): the name `knowyoursynth@0.1.0`, its description,
   keywords and URLs, our scripts (`predev`, `prebuild`, `build:audio-workers`,
-  `build:panel-renderer`, `check:synths`, the `smoke:*` additions, `bank:reindex`) and our
+  `build:panel-renderer`, `check:synths`, the `smoke:*` additions, `bank:reindex`), our `dev`,
+  which runs Sunrise's `node scripts/dev-server.mjs next-dev` under the worklet watcher
+  (`tsx scripts/build-audio-workers.ts --watch -- …`, t-248; keep that wrapper round whatever
+  upstream's `dev` becomes), and our
   dependencies (`esbuild`, the `@fontsource/*` faces, `@resvg/resvg-js`). On conflict: keep ours for
   identity, take the union of scripts and dependencies, then run `npm install --package-lock-only`
   and `npm run fix:lockfile-libc` (local npm strips every `libc` field).

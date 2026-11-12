@@ -21,6 +21,10 @@ This page is the guidance the types cannot carry. For the fields themselves, rea
 `contract.ts`: every type and field is doc-commented. Where `CONTRACT.md` and the prototype
 code disagreed, the types follow the code (see [Where the code won](#where-the-code-won)).
 
+The worklet and probe worker are bundled by `scripts/build-audio-workers.ts`, not by Next.
+`npm run dev` runs it in watch mode around the dev server, so an engine change rebuilds them while
+the server runs; reload the page to hear it. `npm run build:audio-workers` builds them once.
+
 ## Rules that break things when ignored
 
 - **`toEngine()` is pure.** Same values and context in, same params out. No randomness, no

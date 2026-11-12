@@ -8,8 +8,8 @@
     "npm": ">=11.11.0"
   },
   "scripts": {
-    "predev": "tsx scripts/build-audio-workers.ts && tsx scripts/build-panel-renderer.ts",
-    "dev": "node scripts/dev-server.mjs next-dev",
+    "predev": "tsx scripts/build-panel-renderer.ts",
+    "dev": "tsx scripts/build-audio-workers.ts --watch -- node scripts/dev-server.mjs next-dev",
     "prebuild": "tsx scripts/build-audio-workers.ts && tsx scripts/build-panel-renderer.ts",
     "build": "next build",
     "build:audio-workers": "tsx scripts/build-audio-workers.ts",

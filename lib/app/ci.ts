@@ -126,8 +126,9 @@ export const appCoverageExclusions: AppCoverageExclusion[] = [
   {
     pattern: 'scripts/build-audio-workers.ts',
     reason:
-      'a standalone tsx CLI run as `predev` / `prebuild`: one esbuild call per entry point, ' +
-      'writing `public/worklets/`. Nothing imports it, so vitest never executes it; a broken ' +
+      'a standalone tsx CLI run by `npm run dev` (in watch mode, around the dev server) and ' +
+      '`prebuild`: one esbuild context for both entry points, writing `public/worklets/`. Nothing ' +
+      'imports it, so vitest never executes it; a broken ' +
       'bundle fails `npm run dev` and `npm run build` at once. The two entry points it bundles ' +
       'are tested in `tests/unit/lib/app/synths/audio/worker-entries.test.ts`.',
   },
