@@ -1,0 +1,1462 @@
+{
+  "synth": "minilogue-xd",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "mxd-poly-pad",
+      "name": "Warm Poly Pad",
+      "ref": "In the style of 1980s synth-pop pads",
+      "artist": "Various",
+      "tags": ["pad", "synth-pop", "80s"],
+      "level": 1,
+      "blurb": "Two slightly detuned sawtooths, softened and slowed, with chorus and a hall around them.",
+      "how": "VCO 2 joins VCO 1 a few cents sharp, so the two beat slowly against each other. The filter takes the edge off, the AMP EG fades each chord in and out, and the chorus and the hall reverb widen it.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.9],
+          [0, 60, 3.9],
+          [0, 64, 3.9],
+          [4, 53, 3.9],
+          [4, 57, 3.9],
+          [4, 60, 3.9],
+          [8, 55, 3.9],
+          [8, 60, 3.9],
+          [8, 64, 3.9],
+          [12, 55, 3.9],
+          [12, 59, 3.9],
+          [12, 62, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two detuned sawtooths",
+          "module": "osc",
+          "why": "Bring VCO 2 in beside VCO 1, a little sharp.\n- Mixer VCO 1 88 %, Mixer VCO 2 88 %: both sawtooths, at the same level\n- VCO 2 PITCH +8 cents: a few cents apart, so they beat slowly\n- Listen for: a slow, rich shimmer instead of a single buzz.",
+          "set": {
+            "mix.vco2": 900,
+            "vco2.pitch": 8,
+            "mix.vco1": 900
+          }
+        },
+        {
+          "title": "Soften the top",
+          "module": "filter",
+          "why": "Close the filter part way, so the pad sits back.\n- CUTOFF 878 Hz: the brightness taken off\n- RESONANCE 15 %: a touch of emphasis\n- KEY TRACK 50 %: high chords stay a little brighter\n- Listen for: a warm, rounded tone.",
+          "set": {
+            "vcf.cutoff": 560,
+            "vcf.resonance": 150,
+            "vcf.keytrack": "50"
+          }
+        },
+        {
+          "title": "A slow swell",
+          "module": "amp",
+          "why": "Fade each chord in and let it die away slowly.\n- AMP EG ATTACK 600 ms: the swell in\n- AMP EG DECAY 1.2 s, AMP EG SUSTAIN 83 %: settles a little\n- AMP EG RELEASE 1.2 s: the tail after the keys\n- Listen for: chords that breathe in and overlap.",
+          "set": {
+            "amp.attack": 620,
+            "amp.decay": 700,
+            "amp.sustain": 850,
+            "amp.release": 700
+          }
+        },
+        {
+          "title": "Chorus",
+          "module": "fx",
+          "why": "Turn on the modulation effect: DEL/REV/MOD at MOD, then the switch to ON.\n- MOD on: the chorus, the MOD effect’s first type\n- MOD TIME 25 %, MOD DEPTH 60 %: a slow, fairly deep sweep\n- Listen for: the pad spreading across the speakers.",
+          "set": {
+            "fx.select": "mod",
+            "mod.on": true,
+            "mod.time": 25,
+            "mod.depth": 60
+          }
+        },
+        {
+          "title": "A hall around it",
+          "module": "fx",
+          "why": "Now the reverb: DEL/REV/MOD at REV, then the switch to ON.\n- REVERB on: the hall, the reverb’s first type\n- REVERB TIME 60 %, REVERB DEPTH 45 %: a long tail, under the dry sound\n- Listen for: the chords hanging in a room.",
+          "set": {
+            "fx.select": "rev",
+            "rev.on": true,
+            "rev.time": 60,
+            "rev.depth": 45
+          }
+        }
+      ],
+      "context": {
+        "vco2.pitch": "In this sound: the few cents of detune that make the shimmer.",
+        "vcf.cutoff": "In this sound: how dark the pad is.",
+        "amp.attack": "In this sound: the slow fade-in of each chord.",
+        "mod.depth": "In this sound: how wide the chorus spreads it."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.pitch",
+          "try": "Turn PITCH to 25",
+          "hear": "A faster, more seasick beating."
+        },
+        {
+          "id": "amp.attack",
+          "try": "Turn ATTACK to 300",
+          "hear": "Chords that start at once."
+        }
+      ]
+    },
+    {
+      "id": "mxd-brass",
+      "name": "Poly Brass",
+      "ref": "In the style of 1980s synth brass",
+      "artist": "Various",
+      "tags": ["brass", "80s"],
+      "level": 1,
+      "blurb": "Bright, punchy brass chords that blare open at the start of every note.",
+      "how": "Two sawtooths through a filter that the EG opens and closes on every note: the blare of a brass section is the brightness rising with the attack. EG Velocity makes harder notes blare more.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.9, 0.9],
+          [0, 64, 0.9, 0.9],
+          [0, 67, 0.9, 0.9],
+          [1.5, 60, 0.4, 0.6],
+          [1.5, 64, 0.4, 0.6],
+          [1.5, 67, 0.4, 0.6],
+          [2, 62, 1.9, 0.8],
+          [2, 65, 1.9, 0.8],
+          [2, 69, 1.9, 0.8],
+          [4, 59, 0.9, 0.9],
+          [4, 62, 0.9, 0.9],
+          [4, 67, 0.9, 0.9],
+          [5.5, 59, 0.4, 0.6],
+          [5.5, 62, 0.4, 0.6],
+          [5.5, 67, 0.4, 0.6],
+          [6, 60, 1.9, 0.8],
+          [6, 64, 1.9, 0.8],
+          [6, 67, 1.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths",
+          "module": "osc",
+          "why": "A second sawtooth thickens the section.\n- Mixer VCO 2 88 %: VCO 2 in\n- VCO 2 PITCH +7 cents: slightly sharp\n- Listen for: a thicker, buzzier tone.",
+          "set": {
+            "mix.vco2": 900,
+            "vco2.pitch": 7
+          }
+        },
+        {
+          "title": "The blare",
+          "module": "env",
+          "why": "Close the filter and let the EG open it at the start of every note.\n- CUTOFF 260 Hz: dark between notes\n- EG TARGET CUTOFF, EG INT +45 %: the EG opens the filter\n- EG ATTACK 68 ms, EG DECAY 370 ms: a quick rise and a slower fall\n- Listen for: each chord brightening as it starts, then mellowing.",
+          "set": {
+            "vcf.cutoff": 380,
+            "eg.target": "cutoff",
+            "eg.int": 45,
+            "eg.attack": 380,
+            "eg.decay": 560
+          }
+        },
+        {
+          "title": "Shape the loudness",
+          "module": "amp",
+          "why": "A short swell in and a quick release.\n- AMP EG ATTACK 31 ms: a quick swell, as players breathe in\n- AMP EG SUSTAIN 78 %, AMP EG RELEASE 100 ms: a held note, cut off cleanly\n- Listen for: stabs that start with a puff.",
+          "set": {
+            "amp.attack": 300,
+            "amp.decay": 600,
+            "amp.sustain": 800,
+            "amp.release": 420
+          }
+        },
+        {
+          "title": "Play it harder",
+          "module": "env",
+          "why": "On the hardware this is PROGRAM EDIT, button 8; here the LFO / VELOCITY page of the display.\n- EG Velocity 80: harder notes open the filter further\n- Listen for: the accented chords blaring brighter than the soft ones.",
+          "set": {
+            "ui.page": "lfo",
+            "eg.velocity": 80
+          }
+        }
+      ],
+      "context": {
+        "eg.int": "In this sound: how far the blare opens the filter.",
+        "eg.attack": "In this sound: how fast the brass speaks.",
+        "eg.velocity": "In this sound: how much harder playing brightens it."
+      },
+      "tweaks": [
+        {
+          "id": "eg.attack",
+          "try": "Turn ATTACK to 500",
+          "hear": "A slower, swelling horn section."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Turn RESONANCE to 400",
+          "hear": "A nasal, synthier brass."
+        }
+      ]
+    },
+    {
+      "id": "mxd-duo-lead",
+      "name": "Duo Lead",
+      "ref": "In the style of 2010s synthwave leads",
+      "artist": "Various",
+      "tags": ["lead", "synthwave"],
+      "level": 2,
+      "blurb": "A fat lead with two voices on every key, gliding between notes, with vibrato and an echo.",
+      "how": "VOICE MODE DEPTH turned up in POLY mode is DUO: every key takes two of the four voices, detuned against each other. A sawtooth and a square, a little glide, a vibrato and a delay make the classic synthwave lead.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 69, 1.4],
+          [1.5, 72, 0.5],
+          [2, 71, 1],
+          [3, 67, 1],
+          [4, 69, 2.9],
+          [7, 64, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two voices per key",
+          "module": "mode",
+          "why": "In POLY, turn VOICE MODE DEPTH up: the voice mode becomes DUO.\n- VOICE MODE DEPTH (POLY) DUO 700: two voices on every key, detuned\n- Listen for: a wider, thicker note.",
+          "set": {
+            "voice.duo": 700
+          }
+        },
+        {
+          "title": "Sawtooth and square",
+          "module": "osc",
+          "why": "VCO 2 on its square adds a hollow body under the sawtooth.\n- VCO 2 WAVE Square, Mixer VCO 2 68 %: VCO 2’s square under VCO 1’s sawtooth\n- Listen for: more weight in the middle.",
+          "set": {
+            "mix.vco2": 700,
+            "vco2.wave": "sqr"
+          }
+        },
+        {
+          "title": "Tone and glide",
+          "module": "filter",
+          "why": "Round the tone and let the notes slide.\n- CUTOFF 1.6 kHz, RESONANCE 29 %: a little darker, with some bite\n- PORTAMENTO 220 ms: a short slide between overlapping notes\n- Listen for: notes that bend into each other when played legato.",
+          "set": {
+            "vcf.cutoff": 650,
+            "vcf.resonance": 300,
+            "glide.time": 30
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "lfo",
+          "why": "The LFO is on PITCH already; INT brings it in.\n- LFO INT 60: a gentle vibrato\n- LFO RATE 5.02 Hz: about five wobbles a second\n- Listen for: a singing waver on held notes.",
+          "set": {
+            "lfo.int": 60,
+            "lfo.rate": 745
+          }
+        },
+        {
+          "title": "An echo",
+          "module": "fx",
+          "why": "DEL/REV/MOD at DEL, then the switch to ON.\n- DELAY on: the stereo delay\n- DELAY TIME 55 %, DELAY DEPTH 40 %: a medium echo that repeats a few times\n- Listen for: the melody echoing behind itself.",
+          "set": {
+            "fx.select": "del",
+            "del.on": true,
+            "del.time": 55,
+            "del.depth": 40
+          }
+        }
+      ],
+      "context": {
+        "voice.duo": "In this sound: how far apart the two voices on each key are.",
+        "glide.time": "In this sound: the slide between legato notes.",
+        "lfo.int": "In this sound: the depth of the vibrato."
+      },
+      "tweaks": [
+        {
+          "id": "voice.duo",
+          "try": "Turn VOICE MODE DEPTH to 1023",
+          "hear": "A wider, more out-of-tune pair."
+        },
+        {
+          "id": "glide.time",
+          "try": "Turn PORTAMENTO to 60",
+          "hear": "Long, swooping slides."
+        }
+      ]
+    },
+    {
+      "id": "mxd-unison-bass",
+      "name": "Unison Bass",
+      "ref": "In the style of 1990s techno basslines",
+      "artist": "Various",
+      "tags": ["bass", "techno", "90s"],
+      "level": 1,
+      "blurb": "All four voices stacked on one low note, plucked by the filter and pushed through the drive.",
+      "how": "UNISON puts all four voices on one note, detuned by VOICE MODE DEPTH, for a mono bass as thick as a chord. The EG flicks the filter open on each note and DRIVE adds grit.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4],
+          [0.5, 36, 0.2],
+          [0.75, 48, 0.2],
+          [1, 36, 0.4],
+          [1.5, 39, 0.4],
+          [2, 36, 0.4],
+          [2.5, 36, 0.2],
+          [2.75, 46, 0.2],
+          [3, 36, 0.4],
+          [3.5, 43, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Four voices on one note",
+          "module": "mode",
+          "why": "VOICE MODE to UNISON, and DEPTH sets the detune.\n- VOICE MODE UNISON: all four voices on each note\n- VOICE MODE DEPTH (UNISON) 20 cents: detuned enough to sound thick\n- Listen for: one huge, chorused note.",
+          "set": {
+            "voice.mode": "unison",
+            "voice.detune": 400
+          }
+        },
+        {
+          "title": "Down an octave",
+          "module": "osc",
+          "why": "Both VCOs to 16′, with VCO 2 on its square.\n- VCO 1 OCTAVE 16', VCO 2 OCTAVE 16': an octave down\n- VCO 2 WAVE Square, Mixer VCO 2 78 %: a square for weight\n- Listen for: a deep, full bass.",
+          "set": {
+            "vco1.octave": "16'",
+            "mix.vco2": 800,
+            "vco2.wave": "sqr",
+            "vco2.octave": "16'"
+          }
+        },
+        {
+          "title": "Pluck it",
+          "module": "env",
+          "why": "Close the filter and let the EG flick it open.\n- CUTOFF 186 Hz, RESONANCE 34 %: dark, with some resonance\n- EG INT +50 %, EG DECAY 100 ms: a short flick open on each note\n- Listen for: a \"dow\" on every note.",
+          "set": {
+            "vcf.cutoff": 330,
+            "vcf.resonance": 350,
+            "eg.int": 50,
+            "eg.decay": 420
+          }
+        },
+        {
+          "title": "Short notes",
+          "module": "amp",
+          "why": "Let each note fall away while held.\n- AMP EG DECAY 140 ms, AMP EG SUSTAIN 29 %, AMP EG RELEASE 31 ms: a punch that settles low\n- Listen for: tight, bouncing notes.",
+          "set": {
+            "amp.decay": 450,
+            "amp.sustain": 300,
+            "amp.release": 300
+          }
+        },
+        {
+          "title": "Drive",
+          "module": "filter",
+          "why": "The DRIVE switch to its middle position.\n- DRIVE 50 %: half the drive circuit\n- Listen for: a gritty, harder edge.",
+          "set": {
+            "vcf.drive": "50"
+          }
+        }
+      ],
+      "context": {
+        "voice.detune": "In this sound: how thick the stacked voices sound.",
+        "eg.int": "In this sound: how far each note flicks the filter.",
+        "vcf.drive": "In this sound: the grit."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.drive",
+          "try": "Set DRIVE to 100 %",
+          "hear": "A dirtier, more distorted bass."
+        },
+        {
+          "id": "voice.detune",
+          "try": "Turn VOICE MODE DEPTH to 0",
+          "hear": "A cleaner, narrower note."
+        }
+      ]
+    },
+    {
+      "id": "mxd-chord-stab",
+      "name": "Minor Seventh Stab",
+      "ref": "In the style of 1990s deep house chord stabs",
+      "artist": "Various",
+      "tags": ["keys", "house", "90s"],
+      "level": 2,
+      "blurb": "A whole minor-seventh chord from a single key, short and plucked, in a small room.",
+      "how": "CHORD mode plays a chord, built up from each key, from one finger: VOICE MODE DEPTH picks the chord, here a minor seventh, which takes all four voices. A filter pluck and a room reverb make the house stab.",
+      "phrase": {
+        "bpm": 122,
+        "loop": true,
+        "steps": [
+          [0.5, 57, 0.3],
+          [1.5, 57, 0.3],
+          [2.25, 57, 0.3],
+          [3, 55, 0.6],
+          [4.5, 53, 0.3],
+          [5.5, 53, 0.3],
+          [6.25, 53, 0.3],
+          [7, 55, 0.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A chord on one key",
+          "module": "mode",
+          "why": "VOICE MODE to CHORD; DEPTH chooses the chord.\n- VOICE MODE CHORD: each key plays a chord\n- VOICE MODE DEPTH (CHORD) m7: root, minor third, fifth and minor seventh\n- Listen for: a full chord under one finger.",
+          "set": {
+            "voice.mode": "chord",
+            "voice.chord": "m7"
+          }
+        },
+        {
+          "title": "Pluck the filter",
+          "module": "env",
+          "why": "Close the filter and let the EG open it briefly.\n- CUTOFF 341 Hz, RESONANCE 24 %: dark and slightly nasal\n- EG INT +40 %, EG DECAY 140 ms: a quick bright flick\n- Listen for: each stab starting bright and closing.",
+          "set": {
+            "vcf.cutoff": 420,
+            "vcf.resonance": 250,
+            "eg.int": 40,
+            "eg.decay": 450
+          }
+        },
+        {
+          "title": "Short notes",
+          "module": "amp",
+          "why": "No sustain: each chord dies away on its own.\n- AMP EG DECAY 170 ms, AMP EG SUSTAIN 0 %, AMP EG RELEASE 68 ms: a short stab\n- Listen for: clipped, percussive chords.",
+          "set": {
+            "amp.decay": 470,
+            "amp.sustain": 0,
+            "amp.release": 380
+          }
+        },
+        {
+          "title": "A small room",
+          "module": "fx",
+          "why": "The reverb’s type is on the EFFECTS page of the display; then DEL/REV/MOD at REV and the switch to ON.\n- REVERB type Room: a small room\n- REVERB on, REVERB TIME 40 %, REVERB DEPTH 40 %: a short tail\n- Listen for: the stabs sitting in a space.",
+          "set": {
+            "ui.page": "fx",
+            "rev.type": "room",
+            "fx.select": "rev",
+            "rev.on": true,
+            "rev.time": 40,
+            "rev.depth": 40
+          }
+        }
+      ],
+      "context": {
+        "voice.chord": "In this sound: the chord every key plays.",
+        "eg.decay": "In this sound: how long the filter stays open.",
+        "amp.decay": "In this sound: the length of each stab."
+      },
+      "tweaks": [
+        {
+          "id": "voice.chord",
+          "try": "Choose m",
+          "hear": "A plainer minor triad."
+        },
+        {
+          "id": "voice.chord",
+          "try": "Choose 7sus4",
+          "hear": "An open, unresolved chord."
+        }
+      ]
+    },
+    {
+      "id": "mxd-sync-lead",
+      "name": "Sync Sweep Lead",
+      "ref": "In the style of early 1980s new-wave sync leads",
+      "artist": "Various",
+      "tags": ["lead", "new wave", "80s"],
+      "level": 2,
+      "blurb": "A tearing lead whose tone sweeps down at the start of every note.",
+      "how": "With SYNC on, VCO 2 restarts with every cycle of VCO 1, so its pitch changes only its tone. The EG on PITCH 2 sweeps VCO 2 down on each note, which sweeps the harmonics: the sound of a sync lead.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.9],
+          [1, 67, 0.9],
+          [2, 69, 1.4],
+          [3.5, 67, 0.4],
+          [4, 64, 1.9],
+          [6, 62, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sync VCO 2",
+          "module": "osc",
+          "why": "Hear VCO 2 alone, synced to VCO 1 and tuned above it.\n- SYNC on: VCO 2 restarts with VCO 1\n- Mixer VCO 1 0 %, Mixer VCO 2 100 %: VCO 2 alone\n- VCO 2 PITCH +700 cents: its pitch now sets the tone\n- Listen for: a hard, nasal tone at VCO 1’s pitch.",
+          "set": {
+            "vco2.sync": true,
+            "mix.vco1": 0,
+            "mix.vco2": 1023,
+            "vco2.pitch": 700
+          }
+        },
+        {
+          "title": "Sweep it",
+          "module": "env",
+          "why": "The EG on PITCH 2 sweeps VCO 2 alone.\n- EG TARGET PITCH 2: VCO 2’s pitch\n- EG INT +55 %, EG DECAY 510 ms: a sweep down from more than an octave up, over half a second\n- Listen for: the tearing \"neeow\" at the start of each note.",
+          "set": {
+            "eg.target": "pitch2",
+            "eg.int": 55,
+            "eg.decay": 600
+          }
+        },
+        {
+          "title": "Tame the top",
+          "module": "filter",
+          "why": "A little filtering keeps the sync from being shrill.\n- CUTOFF 3.4 kHz, RESONANCE 20 %: the harshest highs taken off\n- Listen for: a smoother, still biting lead.",
+          "set": {
+            "vcf.cutoff": 760,
+            "vcf.resonance": 200
+          }
+        }
+      ],
+      "context": {
+        "vco2.sync": "In this sound: what makes VCO 2’s pitch a tone control.",
+        "eg.int": "In this sound: how far the sweep goes.",
+        "vco2.pitch": "In this sound: the tone the sweep settles on."
+      },
+      "tweaks": [
+        {
+          "id": "eg.decay",
+          "try": "Turn DECAY to 760",
+          "hear": "A slower, longer sweep."
+        },
+        {
+          "id": "vco2.pitch",
+          "try": "Turn PITCH to 1200",
+          "hear": "A brighter, more vocal tone."
+        }
+      ]
+    },
+    {
+      "id": "mxd-ring-bell",
+      "name": "Ring Bell",
+      "ref": "In the style of 1970s BBC Radiophonic Workshop bells",
+      "artist": "Various",
+      "tags": ["keys", "bells", "70s"],
+      "level": 2,
+      "blurb": "A metallic bell from two triangles ring-modulated together, ringing out in a plate reverb.",
+      "how": "RING multiplies VCO 2 by VCO 1, which gives the sum and difference of their pitches instead of either. With VCO 2 tuned to an awkward interval those land off the harmonic series, so it rings like metal rather than a string.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.9],
+          [2, 79, 1.9],
+          [4, 76, 1.9],
+          [6, 67, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two triangles, multiplied",
+          "module": "osc",
+          "why": "Turn RING on and hear only VCO 2’s channel, which now carries the ring modulation.\n- RING on: VCO 2 multiplied by VCO 1\n- VCO 1 WAVE Triangle, VCO 2 WAVE Triangle: soft triangles, for a clean bell\n- VCO 2 OCTAVE 4', VCO 2 PITCH +386 cents: an octave and a bit above, off the harmonics\n- Mixer VCO 1 0 %, Mixer VCO 2 100 %: only the ring-modulated channel\n- Listen for: a clangorous, metallic tone.",
+          "set": {
+            "vco2.ring": true,
+            "mix.vco1": 0,
+            "mix.vco2": 1023,
+            "vco1.wave": "tri",
+            "vco2.wave": "tri",
+            "vco2.octave": "4'",
+            "vco2.pitch": 386
+          }
+        },
+        {
+          "title": "Strike it",
+          "module": "amp",
+          "why": "No sustain and a long decay: the note rings away like a struck bell.\n- AMP EG DECAY 1.9 s, AMP EG SUSTAIN 0 %, AMP EG RELEASE 1.9 s: a long ring with no hold\n- Listen for: each note dying away slowly.",
+          "set": {
+            "amp.decay": 760,
+            "amp.sustain": 0,
+            "amp.release": 760
+          }
+        },
+        {
+          "title": "A plate",
+          "module": "fx",
+          "why": "The plate reverb, on the EFFECTS page of the display.\n- REVERB type Plate: a bright metal plate\n- REVERB on, REVERB TIME 55 %, REVERB DEPTH 50 %: a long tail\n- Listen for: the bell blooming out.",
+          "set": {
+            "ui.page": "fx",
+            "rev.type": "plate",
+            "fx.select": "rev",
+            "rev.on": true,
+            "rev.time": 55,
+            "rev.depth": 50
+          }
+        }
+      ],
+      "context": {
+        "vco2.ring": "In this sound: what makes it metallic.",
+        "vco2.pitch": "In this sound: the interval that decides the bell’s colour.",
+        "amp.decay": "In this sound: how long the bell rings."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.pitch",
+          "try": "Turn PITCH to 0",
+          "hear": "A plainer, octave-like tone."
+        },
+        {
+          "id": "vco2.pitch",
+          "try": "Turn PITCH to 640",
+          "hear": "A darker, gong-like clang."
+        }
+      ]
+    },
+    {
+      "id": "mxd-xmod-growl",
+      "name": "Cross Mod Growl",
+      "ref": "In the style of 2010s dubstep basses",
+      "artist": "Various",
+      "tags": ["bass", "dubstep"],
+      "level": 3,
+      "blurb": "A snarling bass from cross modulation, wobbled by the LFO in time with the tempo.",
+      "how": "CROSS MOD DEPTH lets VCO 1 frequency-modulate VCO 2, which turns VCO 2 rough and inharmonic. The LFO, locked to the tempo in BPM mode, sweeps the filter in eighth notes for the wobble, and DRIVE at full adds the snarl.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 31, 1.4],
+          [1.5, 31, 0.4],
+          [2, 34, 1.9],
+          [4, 29, 1.4],
+          [5.5, 29, 0.4],
+          [6, 33, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Cross modulation",
+          "module": "osc",
+          "why": "Both VCOs down an octave, VCO 2 mostly, and VCO 1 modulating it.\n- VCO 1 OCTAVE 16', VCO 2 OCTAVE 16': deep\n- Mixer VCO 1 29 %, Mixer VCO 2 100 %: mostly VCO 2\n- CROSS MOD DEPTH 49 %: VCO 1 roughening VCO 2\n- Listen for: a growling, metallic bass.",
+          "set": {
+            "vco1.octave": "16'",
+            "vco2.octave": "16'",
+            "mix.vco1": 300,
+            "mix.vco2": 1023,
+            "vco2.xmod": 500
+          }
+        },
+        {
+          "title": "Wobble in time",
+          "module": "lfo",
+          "why": "The LFO on the cutoff, its speed a note value at the tempo.\n- CUTOFF 260 Hz, RESONANCE 39 %: dark, with resonance\n- LFO MODE BPM, LFO RATE (BPM) 1/8: one sweep per eighth note\n- LFO TARGET CUTOFF, LFO INT 400: a deep sweep of the filter\n- Listen for: the \"wub wub\" in time.",
+          "set": {
+            "vcf.cutoff": 380,
+            "vcf.resonance": 400,
+            "lfo.mode": "bpm",
+            "lfo.div": "1/8",
+            "lfo.target": "cutoff",
+            "lfo.int": 400
+          }
+        },
+        {
+          "title": "Snarl",
+          "module": "filter",
+          "why": "DRIVE fully up.\n- DRIVE 100 %: the drive circuit at full\n- Listen for: a harder, distorted edge.",
+          "set": {
+            "vcf.drive": "100"
+          }
+        }
+      ],
+      "context": {
+        "vco2.xmod": "In this sound: how rough the growl is.",
+        "lfo.div": "In this sound: the speed of the wobble against the tempo.",
+        "lfo.int": "In this sound: how deep the wobble is."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.div",
+          "try": "Choose 1/16",
+          "hear": "A faster, stuttering wobble."
+        },
+        {
+          "id": "vco2.xmod",
+          "try": "Turn CROSS MOD DEPTH to 900",
+          "hear": "Close to noise."
+        }
+      ]
+    },
+    {
+      "id": "mxd-fm-epiano",
+      "name": "FM Electric Piano",
+      "ref": "In the style of the 1980s FM electric piano",
+      "artist": "Various",
+      "tags": ["keys", "80s"],
+      "level": 2,
+      "blurb": "A glassy, bell-tinged electric piano from the VPM oscillator, brighter when played harder.",
+      "how": "The MULTI ENGINE’s VPM oscillator is a small phase-modulation (FM-style) voice. The Decay1 type’s own envelope fades the modulation on each note, so the tine’s bright attack mellows, as on the FM pianos of the 1980s. It goes past the filter (Post VCF), and Amp Velocity makes it follow how hard you play.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 52, 1.9, 0.8],
+          [0, 59, 1.9, 0.8],
+          [0, 62, 1.9, 0.8],
+          [0, 67, 1.9, 0.8],
+          [2, 69, 0.9, 0.6],
+          [3, 67, 0.9, 0.5],
+          [4, 48, 3.9, 0.7],
+          [4, 55, 3.9, 0.7],
+          [4, 59, 3.9, 0.7],
+          [4, 64, 3.9, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The VPM oscillator",
+          "module": "osc",
+          "why": "Switch the MULTI ENGINE to VPM, choose Decay1, and hear it alone.\n- NOISE/VPM/USR VPM, TYPE (VPM) Decay1: phase modulation that fades on each note\n- MULTI ENGINE SHAPE 34 %: a moderate depth\n- Mixer VCO 1 0 %, Mixer MULTI 100 %: the MULTI ENGINE alone\n- Listen for: a bright \"tine\" at each note’s start, mellowing.",
+          "set": {
+            "multi.engine": "vpm",
+            "multi.vpm": "decay1",
+            "mix.vco1": 0,
+            "mix.multi": 1023,
+            "multi.shape": 350
+          }
+        },
+        {
+          "title": "Past the filter",
+          "module": "osc",
+          "why": "On the hardware, Multi Routing is PROGRAM EDIT button 9; here the MULTI ENGINE page of the display.\n- Multi Routing Post VCF: the filter cannot dull it\n- Listen for: the same tone, with nothing taken off the top.",
+          "set": {
+            "ui.page": "multi",
+            "multi.routing": "post"
+          }
+        },
+        {
+          "title": "A piano’s decay",
+          "module": "amp",
+          "why": "No sustain: each note dies away like a struck tine.\n- AMP EG DECAY 2.2 s, AMP EG SUSTAIN 0 %, AMP EG RELEASE 510 ms: a long fade, even while held\n- Listen for: notes that ring and fade.",
+          "set": {
+            "amp.decay": 780,
+            "amp.sustain": 0,
+            "amp.release": 600
+          }
+        },
+        {
+          "title": "Touch",
+          "module": "amp",
+          "why": "Amp Velocity is on the LFO / VELOCITY page of the display.\n- Amp Velocity 90: soft notes quieter than hard ones\n- Listen for: the melody softer than the chords.",
+          "set": {
+            "ui.page": "lfo",
+            "amp.velocity": 90
+          }
+        },
+        {
+          "title": "Chorus",
+          "module": "fx",
+          "why": "DEL/REV/MOD at MOD, then the switch to ON.\n- MOD on, MOD TIME 30 %, MOD DEPTH 40 %: a gentle chorus\n- Listen for: the classic shimmer of a chorused electric piano.",
+          "set": {
+            "fx.select": "mod",
+            "mod.on": true,
+            "mod.time": 30,
+            "mod.depth": 40
+          }
+        }
+      ],
+      "context": {
+        "multi.vpm": "In this sound: the type whose modulation fades with each note.",
+        "multi.shape": "In this sound: how bright the attack of each note is.",
+        "amp.velocity": "In this sound: how much the loudness follows your touch."
+      },
+      "tweaks": [
+        {
+          "id": "multi.shape",
+          "try": "Turn SHAPE to 600",
+          "hear": "A harder, more metallic tine."
+        },
+        {
+          "id": "multi.vpm",
+          "try": "Choose Sin1",
+          "hear": "A steady tone with no fading attack."
+        }
+      ]
+    },
+    {
+      "id": "mxd-air-flute",
+      "name": "Breathy Flute",
+      "ref": "In the style of 1980s new-age flute leads",
+      "artist": "Various",
+      "tags": ["wind", "new age", "80s"],
+      "level": 2,
+      "blurb": "A soft, breathy flute from the VPM oscillator’s noise-modulated sine, with vibrato and a hall.",
+      "how": "The Air1 VPM type adds noise to the modulator, so a pure sine carrier comes out breathy, like air across a mouthpiece. A gentle attack and a vibrato on the pitch do the rest.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.9],
+          [2, 74, 0.9],
+          [3, 76, 0.9],
+          [4, 79, 2.9],
+          [7, 76, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Air1",
+          "module": "osc",
+          "why": "The MULTI ENGINE to VPM, type Air1, alone.\n- NOISE/VPM/USR VPM, TYPE (VPM) Air1: a sine with noise in its modulation\n- MULTI ENGINE SHAPE 24 %: a little modulation, so it stays pure\n- Mixer VCO 1 0 %, Mixer MULTI 100 %: the MULTI ENGINE alone\n- Listen for: a soft tone with breath in it.",
+          "set": {
+            "multi.engine": "vpm",
+            "multi.vpm": "air1",
+            "mix.vco1": 0,
+            "mix.multi": 1023,
+            "multi.shape": 250
+          }
+        },
+        {
+          "title": "Breathe in",
+          "module": "amp",
+          "why": "A gentle start and a short release.\n- AMP EG ATTACK 270 ms, AMP EG RELEASE 370 ms: a soft onset and tail\n- Listen for: notes that blow in rather than start.",
+          "set": {
+            "amp.attack": 520,
+            "amp.release": 560
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "lfo",
+          "why": "The LFO on PITCH, gently.\n- LFO INT 55, LFO RATE 5.02 Hz: a light vibrato, about five times a second\n- Listen for: a player’s waver.",
+          "set": {
+            "lfo.int": 55,
+            "lfo.rate": 745
+          }
+        },
+        {
+          "title": "A hall",
+          "module": "fx",
+          "why": "DEL/REV/MOD at REV, then the switch to ON.\n- REVERB on, REVERB TIME 65 %, REVERB DEPTH 50 %: a long hall\n- Listen for: the flute in a big space.",
+          "set": {
+            "fx.select": "rev",
+            "rev.on": true,
+            "rev.time": 65,
+            "rev.depth": 50
+          }
+        }
+      ],
+      "context": {
+        "multi.vpm": "In this sound: the breathy type.",
+        "amp.attack": "In this sound: the breath before the note.",
+        "lfo.int": "In this sound: the vibrato."
+      },
+      "tweaks": [
+        {
+          "id": "multi.vpm",
+          "try": "Choose Air2",
+          "hear": "Less breath, more tone."
+        },
+        {
+          "id": "multi.shape",
+          "try": "Turn SHAPE to 500",
+          "hear": "A reedier, brighter tone."
+        }
+      ]
+    },
+    {
+      "id": "mxd-snare",
+      "name": "Drum-Machine Snare",
+      "ref": "In the style of 1980s drum-machine snares",
+      "artist": "Various",
+      "tags": ["perc", "80s"],
+      "level": 2,
+      "blurb": "A snappy snare: a falling triangle for the drum and high-passed noise for the wires.",
+      "how": "The MULTI ENGINE’s High noise is the snare wires. VCO 1’s triangle is the drum head, and the EG on PITCH drops it quickly on each hit. No sustain, so every hit dies away on its own.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [1, 60, 0.2, 0.9],
+          [3, 60, 0.2, 0.9],
+          [3.75, 60, 0.2, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Head and wires",
+          "module": "osc",
+          "why": "VCO 1 on its triangle, and the MULTI ENGINE’s High noise beside it.\n- VCO 1 WAVE Triangle, Mixer VCO 1 68 %: the drum’s body\n- Mixer MULTI 100 %, MULTI ENGINE SHAPE 59 %: high-passed noise for the wires\n- Listen for: a tone with hiss over it.",
+          "set": {
+            "vco1.wave": "tri",
+            "mix.vco1": 700,
+            "mix.multi": 1023,
+            "multi.shape": 600
+          }
+        },
+        {
+          "title": "Drop the pitch",
+          "module": "env",
+          "why": "The EG on PITCH, short and steep.\n- EG TARGET PITCH, EG INT +45 %, EG DECAY 42 ms: a quick fall in pitch on each hit\n- Listen for: a thud rather than a tone.",
+          "set": {
+            "eg.target": "pitch",
+            "eg.int": 45,
+            "eg.decay": 330
+          }
+        },
+        {
+          "title": "A hit",
+          "module": "amp",
+          "why": "No sustain: a short hit.\n- AMP EG DECAY 170 ms, AMP EG SUSTAIN 0 %, AMP EG RELEASE 140 ms: a short hit, gone in under a quarter of a second\n- Listen for: a crisp snare.",
+          "set": {
+            "amp.decay": 470,
+            "amp.sustain": 0,
+            "amp.release": 450
+          }
+        },
+        {
+          "title": "A small room",
+          "module": "fx",
+          "why": "The room reverb, from the EFFECTS page of the display.\n- REVERB type Room, REVERB on, REVERB TIME 30 %, REVERB DEPTH 35 %: a short room\n- Listen for: a bit of space around the hit.",
+          "set": {
+            "ui.page": "fx",
+            "rev.type": "room",
+            "fx.select": "rev",
+            "rev.on": true,
+            "rev.time": 30,
+            "rev.depth": 35
+          }
+        }
+      ],
+      "context": {
+        "multi.shape": "In this sound: how bright the wires are.",
+        "eg.int": "In this sound: how far the drum’s pitch falls.",
+        "amp.decay": "In this sound: the length of the hit."
+      },
+      "tweaks": [
+        {
+          "id": "multi.shape",
+          "try": "Turn SHAPE to 800",
+          "hear": "Thinner, sizzling wires."
+        },
+        {
+          "id": "mix.vco1",
+          "try": "Turn VCO 1 to 0",
+          "hear": "All wires, no drum."
+        }
+      ]
+    },
+    {
+      "id": "mxd-pitched-wind",
+      "name": "Pitched Wind",
+      "ref": "In the style of 1970s synthesizer sound effects",
+      "artist": "Various",
+      "tags": ["fx", "texture", "70s"],
+      "level": 2,
+      "blurb": "Wind that whistles in tune, its band of noise widening and narrowing as it blows.",
+      "how": "The Peak noise is a band of noise centred on the note you play, so it whistles in tune. The LFO, aimed at the MULTI ENGINE’s SHAPE alone, widens and narrows the band, which is the gusting.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 72, 3.9],
+          [4, 79, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A band of noise",
+          "module": "osc",
+          "why": "The MULTI ENGINE’s Peak noise, alone and narrow.\n- TYPE (NOISE) Peak: noise in a band around the note\n- MULTI ENGINE SHAPE 12 %: a narrow band, so it whistles\n- Mixer VCO 1 0 %, Mixer MULTI 100 %: the noise alone\n- Listen for: a breathy whistle at the note’s pitch.",
+          "set": {
+            "mix.vco1": 0,
+            "mix.multi": 1023,
+            "multi.noise": "peak",
+            "multi.shape": 120
+          }
+        },
+        {
+          "title": "Gusts",
+          "module": "lfo",
+          "why": "The LFO on SHAPE; LFO Target OSC, on the LFO / VELOCITY page of the display, aims it at the MULTI ENGINE alone.\n- LFO TARGET SHAPE, LFO Target OSC Multi: the noise’s bandwidth\n- LFO INT 300, LFO RATE 0.32 Hz: a slow, deep swing\n- Listen for: the wind rising and falling.",
+          "set": {
+            "lfo.target": "shape",
+            "lfo.int": 300,
+            "lfo.rate": 300,
+            "ui.page": "lfo",
+            "lfo.targetOsc": "multi"
+          }
+        },
+        {
+          "title": "Fade in and out",
+          "module": "amp",
+          "why": "A slow start and a long tail.\n- AMP EG ATTACK 770 ms, AMP EG RELEASE 1.7 s: gusts that swell and die away\n- Listen for: no hard edges.",
+          "set": {
+            "amp.attack": 650,
+            "amp.release": 750
+          }
+        },
+        {
+          "title": "Open space",
+          "module": "fx",
+          "why": "The Space reverb, from the EFFECTS page of the display.\n- REVERB type Space, REVERB on, REVERB TIME 70 %, REVERB DEPTH 55 %: a long, unstable reverb\n- Listen for: the wind across a wide landscape.",
+          "set": {
+            "ui.page": "fx",
+            "rev.type": "space",
+            "fx.select": "rev",
+            "rev.on": true,
+            "rev.time": 70,
+            "rev.depth": 55
+          }
+        }
+      ],
+      "context": {
+        "multi.noise": "In this sound: the noise that follows the key.",
+        "multi.shape": "In this sound: how narrow, and so how pitched, the wind is.",
+        "lfo.targetOsc": "In this sound: keeps the LFO on the noise alone."
+      },
+      "tweaks": [
+        {
+          "id": "multi.shape",
+          "try": "Turn SHAPE to 600",
+          "hear": "A broad, rushing wind with no whistle."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Turn RATE to 500",
+          "hear": "Faster, choppier gusts."
+        }
+      ]
+    },
+    {
+      "id": "mxd-decim-hat",
+      "name": "Lo-Fi Hi-Hat",
+      "ref": "In the style of lo-fi hip-hop drums",
+      "artist": "Various",
+      "tags": ["perc", "lo-fi", "hip-hop"],
+      "level": 1,
+      "blurb": "A gritty, crunchy hi-hat from noise played back at a lowered sample rate.",
+      "how": "The Decim noise holds each sample for longer, as an old sampler at a low rate does, so the noise turns crunchy and digital. A short AMP EG makes each note a closed hat.",
+      "phrase": {
+        "bpm": 86,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.1, 0.9],
+          [0.5, 72, 0.1, 0.5],
+          [1, 72, 0.1, 0.8],
+          [1.5, 72, 0.1, 0.5],
+          [2, 72, 0.1, 0.9],
+          [2.5, 72, 0.1, 0.5],
+          [2.75, 72, 0.1, 0.4],
+          [3, 72, 0.1, 0.8],
+          [3.5, 72, 0.1, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Decimated noise",
+          "module": "osc",
+          "why": "The MULTI ENGINE’s Decim noise, alone.\n- TYPE (NOISE) Decim, MULTI ENGINE SHAPE 68 %: noise at a lowered sample rate\n- Mixer VCO 1 0 %, Mixer MULTI 100 %: the noise alone\n- Listen for: a crunchy, digital hiss.",
+          "set": {
+            "mix.vco1": 0,
+            "mix.multi": 1023,
+            "multi.noise": "decim",
+            "multi.shape": 700
+          }
+        },
+        {
+          "title": "A closed hat",
+          "module": "amp",
+          "why": "Very short notes with no sustain.\n- AMP EG DECAY 68 ms, AMP EG SUSTAIN 0 %, AMP EG RELEASE 51 ms: a tick of noise\n- Listen for: tight, clicking hats.",
+          "set": {
+            "amp.decay": 380,
+            "amp.sustain": 0,
+            "amp.release": 350
+          }
+        },
+        {
+          "title": "Accents",
+          "module": "amp",
+          "why": "Amp Velocity, on the LFO / VELOCITY page of the display.\n- Amp Velocity 70: the offbeats quieter\n- Listen for: a swinging, human pattern.",
+          "set": {
+            "ui.page": "lfo",
+            "amp.velocity": 70
+          }
+        }
+      ],
+      "context": {
+        "multi.shape": "In this sound: the sample rate, and so the crunch.",
+        "amp.decay": "In this sound: how closed the hat is."
+      },
+      "tweaks": [
+        {
+          "id": "multi.shape",
+          "try": "Turn SHAPE to 400",
+          "hear": "A lower, grainier crunch."
+        },
+        {
+          "id": "amp.decay",
+          "try": "Turn DECAY to 520",
+          "hear": "An open hat."
+        }
+      ]
+    },
+    {
+      "id": "mxd-oneshot-swell",
+      "name": "One-Shot Swell",
+      "ref": "In the style of 1990s trance pads",
+      "artist": "Various",
+      "tags": ["pad", "trance", "90s"],
+      "level": 2,
+      "blurb": "A pad whose filter opens once on every chord and stays open, with echoes behind it.",
+      "how": "In 1-SHOT mode each chord starts the LFO, which runs half a cycle and stops: on the triangle that is one sweep to the top, held there. Aimed at the cutoff, it is an extra envelope that opens the filter over a second or two.",
+      "phrase": {
+        "bpm": 136,
+        "loop": true,
+        "steps": [
+          [0, 57, 7.8],
+          [0, 61, 7.8],
+          [0, 64, 7.8],
+          [8, 54, 7.8],
+          [8, 57, 7.8],
+          [8, 61, 7.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths",
+          "module": "osc",
+          "why": "VCO 2 in, slightly flat.\n- Mixer VCO 2 88 %, VCO 2 PITCH −9 cents: a detuned second sawtooth\n- Listen for: a thick, beating tone.",
+          "set": {
+            "mix.vco2": 900,
+            "vco2.pitch": -9
+          }
+        },
+        {
+          "title": "Close the filter",
+          "module": "filter",
+          "why": "Start dark, so the sweep has somewhere to go.\n- CUTOFF 260 Hz, RESONANCE 24 %: dark and a little resonant\n- Listen for: a muffled chord.",
+          "set": {
+            "vcf.cutoff": 380,
+            "vcf.resonance": 250
+          }
+        },
+        {
+          "title": "One sweep per chord",
+          "module": "lfo",
+          "why": "The LFO MODE to 1-SHOT and its TARGET to CUTOFF.\n- LFO MODE 1-SHOT: half a cycle per chord, then it holds\n- LFO TARGET CUTOFF, LFO INT 380: a deep sweep of the filter\n- LFO RATE 0.25 Hz: slow, so the half cycle takes a couple of seconds\n- Listen for: each chord opening up once and staying bright.",
+          "set": {
+            "lfo.mode": "oneshot",
+            "lfo.target": "cutoff",
+            "lfo.int": 380,
+            "lfo.rate": 260
+          }
+        },
+        {
+          "title": "Swell and tail",
+          "module": "amp",
+          "why": "A soft start and a long release.\n- AMP EG ATTACK 370 ms, AMP EG RELEASE 770 ms: a soft onset and a long tail\n- Listen for: chords that bloom.",
+          "set": {
+            "amp.attack": 560,
+            "amp.release": 650
+          }
+        },
+        {
+          "title": "Echoes",
+          "module": "fx",
+          "why": "DEL/REV/MOD at DEL, then the switch to ON.\n- DELAY on, DELAY TIME 60 %, DELAY DEPTH 45 %: long, repeating echoes\n- Listen for: the pad trailing behind itself.",
+          "set": {
+            "fx.select": "del",
+            "del.on": true,
+            "del.time": 60,
+            "del.depth": 45
+          }
+        }
+      ],
+      "context": {
+        "lfo.mode": "In this sound: makes the LFO an extra envelope.",
+        "lfo.rate": "In this sound: how long the opening takes.",
+        "lfo.int": "In this sound: how far the filter opens."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Turn RATE to 500",
+          "hear": "A quick opening, like a filter envelope."
+        },
+        {
+          "id": "lfo.mode",
+          "try": "Set MODE to NORMAL",
+          "hear": "The filter sweeping up and down for as long as the chord lasts."
+        }
+      ]
+    },
+    {
+      "id": "mxd-fold-lead",
+      "name": "Folded Saw Lead",
+      "ref": "In the style of 2010s electro-house leads",
+      "artist": "Various",
+      "tags": ["lead", "electro house"],
+      "level": 3,
+      "blurb": "A lead whose sawtooth is folded back on itself, the fold swept by the LFO, with ping-pong echoes in time.",
+      "how": "SHAPE on the sawtooth folds the wave back at the top, which adds overtones a filter cannot: around halfway it turns hollow, beyond that brighter and buzzier. The LFO on SHAPE moves the fold, so the tone churns as the note is held. The delay bounces between the speakers in time with the tempo.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 67, 0.4],
+          [0.5, 67, 0.4],
+          [1, 70, 0.4],
+          [1.5, 72, 0.9],
+          [2.5, 70, 0.4],
+          [3, 67, 0.9],
+          [4, 65, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Fold the sawtooth",
+          "module": "osc",
+          "why": "SHAPE on both sawtooths, VCO 2 slightly flat.\n- VCO 1 SHAPE 44 %, VCO 2 SHAPE 29 %: each sawtooth folded part way\n- Mixer VCO 2 68 %, VCO 2 PITCH −10 cents: a second, detuned folded saw\n- Listen for: a hollow, reedy brightness that a plain saw does not have.",
+          "set": {
+            "vco1.shape": 450,
+            "mix.vco2": 700,
+            "vco2.shape": 300,
+            "vco2.pitch": -10
+          }
+        },
+        {
+          "title": "Churn the fold",
+          "module": "lfo",
+          "why": "The LFO to SHAPE.\n- LFO TARGET SHAPE, LFO INT 200, LFO RATE 0.44 Hz: a slow sweep of both VCOs’ fold\n- Listen for: the tone moving under held notes.",
+          "set": {
+            "lfo.target": "shape",
+            "lfo.int": 200,
+            "lfo.rate": 350
+          }
+        },
+        {
+          "title": "Tone and glide",
+          "module": "filter",
+          "why": "A little filtering and a short slide.\n- CUTOFF 2.3 kHz, RESONANCE 15 %: the harshest top taken off\n- PORTAMENTO 99 ms: a short slide on legato notes\n- Listen for: a bright but not shrill lead.",
+          "set": {
+            "vcf.cutoff": 700,
+            "vcf.resonance": 150,
+            "glide.time": 20
+          }
+        },
+        {
+          "title": "Ping-pong in time",
+          "module": "fx",
+          "why": "The delay type is on the EFFECTS page of the display; Ping BPM bounces between the speakers at the tempo.\n- DELAY type Ping BPM: echoes bouncing left and right, timed to the tempo\n- DELAY on, DELAY TIME 50 %, DELAY DEPTH 35 %: a few repeats\n- Listen for: the riff answering itself from side to side.",
+          "set": {
+            "ui.page": "fx",
+            "del.type": "pingbpm",
+            "fx.select": "del",
+            "del.on": true,
+            "del.time": 50,
+            "del.depth": 35
+          }
+        }
+      ],
+      "context": {
+        "vco1.shape": "In this sound: how far VCO 1’s sawtooth is folded.",
+        "lfo.int": "In this sound: how far the fold moves.",
+        "del.type": "In this sound: echoes in time with the riff."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.shape",
+          "try": "Turn SHAPE to 1023",
+          "hear": "A buzzy tone an octave up in character."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Turn RATE to 600",
+          "hear": "A fast, warbling churn."
+        }
+      ]
+    },
+    {
+      "id": "mxd-italo-arp",
+      "name": "Italo Arpeggio",
+      "ref": "In the style of 1980s Italo disco arpeggios",
+      "artist": "Various",
+      "tags": ["seq", "italo disco", "80s"],
+      "level": 2,
+      "blurb": "Held chords broken into a rising arpeggio over two octaves, plucked and echoing.",
+      "how": "VOICE MODE at ARP/LATCH turns the keys over to the arpeggiator, and VOICE MODE DEPTH picks its pattern: RISE 2 climbs through the held notes. Each step is a short filter pluck, and the delay fills the gaps.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.9],
+          [0, 60, 3.9],
+          [0, 64, 3.9],
+          [4, 53, 3.9],
+          [4, 57, 3.9],
+          [4, 60, 3.9],
+          [8, 55, 3.9],
+          [8, 59, 3.9],
+          [8, 62, 3.9],
+          [12, 52, 3.9],
+          [12, 55, 3.9],
+          [12, 59, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The arpeggiator",
+          "module": "mode",
+          "why": "VOICE MODE to ARP/LATCH; DEPTH chooses the pattern, and TEMPO its speed.\n- VOICE MODE ARP/LATCH: held keys play one at a time\n- VOICE MODE DEPTH (ARP) RISE 2: climbing through the held notes\n- TEMPO 118 BPM: sixteenth notes at this tempo\n- Listen for: a running pattern instead of chords.",
+          "set": {
+            "voice.mode": "arp",
+            "voice.arp": "rise2",
+            "seq.tempo": 118
+          }
+        },
+        {
+          "title": "Shorter steps",
+          "module": "mode",
+          "why": "ARP Gate Time, on the OTHER page of the display (SEQ EDIT on the hardware).\n- ARP Gate Time 45 %: each note shorter than its step\n- Listen for: crisper, separated notes.",
+          "set": {
+            "ui.page": "other",
+            "arp.gate": 45
+          }
+        },
+        {
+          "title": "A pluck",
+          "module": "env",
+          "why": "Close the filter and let the EG flick it, with no sustain.\n- CUTOFF 418 Hz, RESONANCE 34 %: dark and resonant\n- EG INT +45 %, EG DECAY 83 ms: a quick flick open\n- AMP EG DECAY 140 ms, AMP EG SUSTAIN 0 %, AMP EG RELEASE 68 ms: short notes\n- Listen for: a \"pew\" on every step.",
+          "set": {
+            "vcf.cutoff": 450,
+            "vcf.resonance": 350,
+            "eg.int": 45,
+            "eg.decay": 400,
+            "amp.decay": 450,
+            "amp.sustain": 0,
+            "amp.release": 380
+          }
+        },
+        {
+          "title": "Echoes",
+          "module": "fx",
+          "why": "DEL/REV/MOD at DEL, then the switch to ON.\n- DELAY on, DELAY TIME 50 %, DELAY DEPTH 40 %: echoes between the notes\n- Listen for: the pattern thickening.",
+          "set": {
+            "fx.select": "del",
+            "del.on": true,
+            "del.time": 50,
+            "del.depth": 40
+          }
+        }
+      ],
+      "context": {
+        "voice.arp": "In this sound: the arpeggio’s pattern.",
+        "arp.gate": "In this sound: how clipped each note is.",
+        "eg.int": "In this sound: the pluck on each step."
+      },
+      "tweaks": [
+        {
+          "id": "voice.arp",
+          "try": "Choose RANDOM 1",
+          "hear": "The same notes in a new order every time."
+        },
+        {
+          "id": "arp.latch",
+          "try": "Press LATCH",
+          "hear": "The arpeggio keeps going after you let go."
+        }
+      ]
+    },
+    {
+      "id": "mxd-pwm-strings",
+      "name": "PWM Strings",
+      "ref": "In the style of 1970s string machines",
+      "artist": "Various",
+      "tags": ["strings", "70s"],
+      "level": 2,
+      "blurb": "Two squares whose width is swept by the LFO, through the ensemble effect: lush, slightly unsteady strings.",
+      "how": "SHAPE narrows a square into a pulse, and the LFO on SHAPE sweeps the width back and forth (pulse-width modulation), which sounds like several detuned oscillators. The ensemble effect, after string machines’ own, thickens it further.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 55, 3.9],
+          [0, 59, 3.9],
+          [0, 62, 3.9],
+          [0, 67, 3.9],
+          [4, 57, 3.9],
+          [4, 60, 3.9],
+          [4, 64, 3.9],
+          [4, 69, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two squares",
+          "module": "osc",
+          "why": "Both VCOs on their squares, VCO 2 slightly sharp, VCO 1 a little narrowed.\n- VCO 1 WAVE Square, VCO 2 WAVE Square: hollow squares\n- Mixer VCO 1 68 %, Mixer VCO 2 64 %, VCO 2 PITCH +6 cents: a second, detuned, both a little down so the chords do not overload\n- VCO 1 SHAPE 29 %: VCO 1 narrowed a little\n- Listen for: a reedy, hollow tone.",
+          "set": {
+            "vco1.wave": "sqr",
+            "vco2.wave": "sqr",
+            "mix.vco1": 700,
+            "mix.vco2": 650,
+            "vco2.pitch": 6,
+            "vco1.shape": 300
+          }
+        },
+        {
+          "title": "Sweep the width",
+          "module": "lfo",
+          "why": "The LFO on SHAPE, aimed at the two VCOs with LFO Target OSC on the LFO / VELOCITY page of the display.\n- LFO TARGET SHAPE, LFO Target OSC VCO1+2: both squares’ width\n- LFO INT 220, LFO RATE 2.05 Hz: a moderate sweep, a couple of times a second\n- Listen for: the tone swirling like a section.",
+          "set": {
+            "lfo.target": "shape",
+            "lfo.int": 220,
+            "lfo.rate": 600,
+            "ui.page": "lfo",
+            "lfo.targetOsc": "vco12"
+          }
+        },
+        {
+          "title": "Strings’ shape",
+          "module": "amp",
+          "why": "A slower start, a long tail, and a softer top.\n- CUTOFF 1.1 kHz: the edge taken off\n- AMP EG ATTACK 370 ms, AMP EG RELEASE 1.2 s: bowed rather than struck\n- Listen for: chords that swell in.",
+          "set": {
+            "vcf.cutoff": 600,
+            "amp.attack": 560,
+            "amp.release": 700
+          }
+        },
+        {
+          "title": "Ensemble",
+          "module": "fx",
+          "why": "The MOD effect’s type is on the EFFECTS page of the display: Ensemble.\n- MOD type Ensemble: a three-phase chorus\n- MOD on, MOD TIME 40 %, MOD DEPTH 60 %: a rich, moving sweep\n- Listen for: the lush string-machine sound.",
+          "set": {
+            "ui.page": "fx",
+            "mod.type": "ensemble",
+            "fx.select": "mod",
+            "mod.on": true,
+            "mod.time": 40,
+            "mod.depth": 60
+          }
+        }
+      ],
+      "context": {
+        "vco1.shape": "In this sound: the starting pulse width.",
+        "lfo.int": "In this sound: how far the width swings.",
+        "mod.type": "In this sound: the ensemble that thickens it."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Turn RATE to 600",
+          "hear": "A faster, more nervous shimmer."
+        },
+        {
+          "id": "mod.on",
+          "try": "Turn the effect off",
+          "hear": "The plain PWM, thinner."
+        }
+      ]
+    }
+  ]
+}

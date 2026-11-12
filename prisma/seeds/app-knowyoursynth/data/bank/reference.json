@@ -3513,15 +3513,6 @@
       "source": "https://en.wikipedia.org/wiki/List_of_Korg_products"
     },
     {
-      "id": "korg-minilogue-xd",
-      "name": "Korg Minilogue XD",
-      "maker": "Korg",
-      "year": "2019",
-      "kind": "poly",
-      "text": "A four-voice analogue polysynth with two VCOs per voice plus a digital multi-engine, digital effects, an expanded sequencer and microtuning.",
-      "source": "https://en.wikipedia.org/wiki/Korg_Minilogue"
-    },
-    {
       "id": "korg-minilogue-xd-module",
       "name": "Korg Minilogue XD Module",
       "maker": "Korg",

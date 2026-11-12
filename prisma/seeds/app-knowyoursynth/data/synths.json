@@ -38,6 +38,7 @@
     { "id": "mantis", "order": 35, "listed": true },
     { "id": "jp-8080", "order": 36, "listed": true },
     { "id": "polivoks", "order": 37, "listed": true },
-    { "id": "0-coast", "order": 38, "listed": true }
+    { "id": "0-coast", "order": 38, "listed": true },
+    { "id": "minilogue-xd", "order": 39, "listed": true }
   ]
 }

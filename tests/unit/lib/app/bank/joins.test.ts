@@ -82,6 +82,7 @@ describe('heardFor for a native synth', () => {
     'jp-8080': [],
     polivoks: [],
     '0-coast': [],
+    'minilogue-xd': [],
   };
   const records = (list: HeardEntry[]): [string, string?][] =>
     list.map((e) => (e.sound === undefined ? [e.song ?? ''] : [e.song ?? '', e.sound]));

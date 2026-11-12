@@ -1,0 +1,51 @@
+{
+  "synth": "minilogue-xd",
+  "title": "The minilogue xd: the minilogue with the prologue’s digital engine",
+  "intro": "Korg began its “logue” series in 2016 with the minilogue, a four-voice analogue polysynth with 37 slim keys and a polyphonic step sequencer. The monophonic monologue followed, and in 2018 the prologue, the series’ flagship, added a digital multi-engine and DSP effects. The minilogue xd, released in 2019, takes the prologue’s analogue voice, multi-engine and effects into the minilogue’s four-voice, 37-key format, and adds microtuning and an expanded sequencer.",
+  "timeline": [
+    {
+      "year": "2016",
+      "name": "Korg minilogue",
+      "text": "A four-voice analogue polysynth with two VCOs per voice, two- and four-pole resonant low-pass filters, 200 presets, a polyphonic step sequencer and 37 slim keys."
+    },
+    {
+      "year": "2017",
+      "name": "Korg monologue",
+      "text": "A monophonic sibling with two VCOs, an MS-20-style filter, a drive control, microtuning, a step sequencer and 25 slim keys."
+    },
+    {
+      "year": "2018",
+      "name": "Korg prologue",
+      "text": "The flagship of the series: an analogue polysynth with a digital multi-engine and DSP effects, with 8 or 16 voices."
+    },
+    {
+      "year": "2019",
+      "name": "Korg minilogue xd",
+      "tag": "This synth",
+      "text": "Four analogue voices of two VCOs each, the digital MULTI ENGINE (noise, a VPM oscillator or user oscillators), a low-pass VCF with drive, modulation, delay and reverb effects, a 16-step sequencer with motion, voice modes, an arpeggiator, microtuning and a joystick."
+    },
+    {
+      "year": "2019",
+      "name": "Korg minilogue xd module",
+      "text": "The same instrument without the keys, with its sixteen buttons as a keyboard, and poly chain to join two units for eight voices."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Korg Polysix",
+      "years": "1981",
+      "text": "An earlier Korg polysynth whose chord-memory mode played a stored chord from a single key, as the minilogue xd’s CHORD voice mode does with its fourteen built-in chords."
+    },
+    {
+      "name": "Yamaha DX7",
+      "years": "1983",
+      "text": "The digital FM synthesizer of the 1980s, its sine-wave operators modulating each other. The MULTI ENGINE’s VPM oscillator works the same way with one carrier and one modulator."
+    },
+    {
+      "name": "Korg NTS-1",
+      "years": "2019",
+      "text": "A small digital kit synthesizer from the same year that runs custom oscillators and effects written with the logue SDK, as the MULTI ENGINE’s USR slots and the user effects do."
+    }
+  ],
+  "note": "No recording in the databank credits the minilogue xd yet."
+}
