@@ -1460,6 +1460,13 @@ export interface OscMix {
    */
   tfold?: number;
   /**
+   * minilogue xd saw SHAPE: the saw folded back at the rails by `fold`, as `tfold` folds the triangle (the pulse-width
+   * destination adds to `fold`); at `fold` 0 it is the plain saw, at 0.5 the ramp folds into a triangle (odd harmonics
+   * only), and by 1 its second harmonic is louder than the fundamental. The manual says only that SHAPE sets the
+   * wave's "final shape, complexity", so the fold is reasoned, not measured.
+   */
+  sfold?: number;
+  /**
    * JP-8080 NOISE on an oscillator: white noise through a resonant low-pass tuned `nCut` semitones from this
    * oscillator's pitch (so it tracks the key when the oscillator does), with resonance `nRes`; at `nRes` 1 it rings as
    * a near-sine at that pitch.
@@ -1636,6 +1643,12 @@ export interface LfoParams {
    * the same value. `keySync` and `lfoTrig` are then ignored, and the rate is not modulated per voice: route nothing to `lfoRate`.
    */
   common?: boolean;
+  /**
+   * The minilogue xd's 1-SHOT: each note (or a rising `lfoTrig`) starts the LFO from the beginning of its cycle, and it
+   * stops half a cycle later, holding where it got to (a triangle or square at its top, a saw at its middle). Not with
+   * `common`.
+   */
+  oneShot?: boolean;
 }
 
 /** A second LFO: signals `lfo2` and `lfo2Uni`. The same shape is the third LFO, `lfo3`. */
@@ -1762,6 +1775,12 @@ export interface PolyParams {
   mono: boolean;
   /** Semitones. */
   detune?: number;
+  /**
+   * A chord on every key (the minilogue xd's CHORD voice mode): the voices of a stack play these semitone offsets from
+   * the key instead of the `detune` spread, and the stack is as long as the list (`stack` is then ignored). With `mono`,
+   * a new key moves the whole chord.
+   */
+  chord?: number[];
 }
 
 export type ArpMode = 'up' | 'down' | 'updown' | 'downup' | 'random' | 'played';

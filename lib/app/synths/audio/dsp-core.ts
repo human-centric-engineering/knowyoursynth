@@ -152,6 +152,8 @@ interface VoiceOsc {
   ssaw: number;
   fbk: number;
   tfold: number;
+  /** `mix.sfold`: the minilogue xd's saw SHAPE, the saw through the triangle folder. */
+  sfold: number;
   fnoise: number;
   ssDet: number;
   ssDetT: number;
@@ -470,6 +472,8 @@ const SS_DETUNE = [-0.11002313, -0.06288439, -0.01952356, 0.01991221, 0.06216538
 const SS_PHASE0 = [0.13, 0.71, 0.37, 0.89, 0.52, 0.26];
 /** `mix.ovt`: the level of the added harmonic against the triangle (reasoned, not measured). */
 const OVT_HARM = 0.6;
+/** Where a 1-SHOT LFO holds: just short of half a cycle, so the triangle and square stay at their top. */
+const LFO_HALF = 0.5 - 1e-9;
 
 /** `v` scaled by 1 + 2·`f` (`f` clamped to 0..1) and folded back at ±1: a triangle wave of the scaled value. */
 function foldTri(v: number, f: number): number {
@@ -585,6 +589,7 @@ function createVoice(
     ssaw: 0,
     fbk: 0,
     tfold: 0,
+    sfold: 0,
     fnoise: 0,
     ssDet: 0,
     ssDetT: 0,
@@ -936,6 +941,7 @@ function createVoice(
       o.ssaw = m.ssaw || 0;
       o.fbk = m.fbk || 0;
       o.tfold = m.tfold || 0;
+      o.sfold = m.sfold || 0;
       o.fnoise = m.fnoise || 0;
       o.ovt = m.ovt || 0;
       o.ovtAT = q.ovt || 0;
@@ -1300,8 +1306,8 @@ function createVoice(
   ): number {
     const dt = o.inc;
     // the oscillator's pulse-width destination moves CONTROL 1, as the JP-8080's shape modulation does
-    const ctl1 = o.ssaw || o.fbk || o.tfold || o.ovt ? ev(pwDest) : 0;
-    if (o.tfold || o.ovt) o.fold += (o.foldT - o.fold) * sm;
+    const ctl1 = o.ssaw || o.fbk || o.tfold || o.ovt || o.sfold ? ev(pwDest) : 0;
+    if (o.tfold || o.ovt || o.sfold) o.fold += (o.foldT - o.fold) * sm;
     let y = 0;
     if (o.ssaw) {
       o.ssDet += (o.ssDetT - o.ssDet) * sm;
@@ -1357,6 +1363,8 @@ function createVoice(
     }
     // the triangle scaled up to three times and folded back at ±1
     if (o.tfold) y += foldTri(tri, o.fold + ctl1) * o.tfold;
+    // the minilogue xd's saw SHAPE: the same folder on the saw (reasoned: the manual says only "shape, complexity")
+    if (o.sfold) y += foldTri(saw, o.fold + ctl1) * o.sfold;
     if (o.ovt) {
       // 0-COAST OVERTONE into MULTIPLY, reasoned from the manual's description rather than measured. OVERTONE adds one
       // harmonic to the triangle: the odd one (the triangle at three times the pitch, the triangle tripled and folded)
@@ -2025,10 +2033,16 @@ function createVoice(
       const lfoHz = Math.min(p.lfo.rate * Math.exp(ev(DI.lfoRate) * Math.LN2), sr * 0.4);
       lfoHzNow = lfoHz;
       const trig = ev(DI.lfoTrig);
-      if (!lCom && ((trig > 0.5 && lfoTrigPrev <= 0.5) || (retrigFlag && p.lfo.keySync)))
+      const oneShot = !!p.lfo.oneShot && !lCom;
+      if (
+        !lCom &&
+        ((trig > 0.5 && lfoTrigPrev <= 0.5) || (retrigFlag && (p.lfo.keySync || oneShot)))
+      )
         lfoPhase = 0;
       lfoTrigPrev = trig;
       lfoPhase += lfoHz / sr;
+      // 1-SHOT: half a cycle from the note, then held just short of the half (top of the triangle and square)
+      if (oneShot && lfoPhase > LFO_HALF) lfoPhase = LFO_HALF;
       const lfoWrapped = lfoPhase >= 1;
       if (lfoWrapped) {
         lfoCyc[0] += Math.floor(lfoPhase);
@@ -2298,7 +2312,7 @@ function createVoice(
             mixSum += y * Math.max(0, o.level + (k < 2 ? ev(DI.lvl1 + k) : 0));
             continue;
           }
-          if (outs || o.saw || o.rsaw || o.shark || o.tmod || o.ssaw || o.fbk)
+          if (outs || o.saw || o.rsaw || o.shark || o.tmod || o.ssaw || o.fbk || o.sfold)
             saw = 2 * ph - 1 - blep(ph, dt);
           if (o.saw) y += saw * o.saw;
           if (o.rsaw) y -= saw * o.rsaw;
@@ -2361,7 +2375,7 @@ function createVoice(
             if (o.subL) mixSum += sq * o.subL;
             if (k === 1) S[SI.sub] = sq;
           }
-          if (o.ssaw || o.fbk || o.tfold || o.fnoise || o.ovt)
+          if (o.ssaw || o.fbk || o.tfold || o.fnoise || o.ovt || o.sfold)
             y += jpWaves(
               o,
               k === 2 && pwSplit ? DI.pw3 : DI.pw1 + (k > 1 ? 1 : k),
@@ -2976,8 +2990,14 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
   const emit = (e: SynthEvent): void => {
     if (onEvent) onEvent(e);
   };
-  const stackOf = (): number => Math.max(1, P!.poly!.stack || 1);
+  // `poly.chord` (minilogue xd CHORD): the stack is the chord, one voice per interval
+  const stackOf = (): number => {
+    const ch = P!.poly!.chord;
+    return ch && ch.length ? ch.length : Math.max(1, P!.poly!.stack || 1);
+  };
   const offsetOf = (j: number): number => {
+    const ch = P!.poly!.chord;
+    if (ch && ch.length) return ch[j] || 0;
     const st = stackOf();
     return st < 2 ? 0 : ((j - (st - 1) / 2) / ((st - 1) / 2)) * (P!.poly!.detune || 0);
   };
@@ -3635,7 +3655,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
     const boost = post.boost ? 3 : 0; // +12 dB below about 110 Hz
     const volT = P.volume == null ? 0.7 : P.volume;
     // one voice about as loud as a mono synth; a unison stack is scaled down so it is not twelve times louder
-    const vGain = 1.1 / Math.sqrt(Math.max(1, P.poly!.stack || 1));
+    const vGain = 1.1 / Math.sqrt(stackOf());
     for (let s = 0; s < n; s++) {
       let x = out[s] * vGain;
       bLp += (x - bLp) * cBoost;
