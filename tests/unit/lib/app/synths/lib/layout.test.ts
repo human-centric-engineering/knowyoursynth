@@ -16,6 +16,7 @@ import type {
   ModularLayout,
   SynthDef,
 } from '@/lib/app/synths/contract';
+import { getSynthDef } from '@/lib/app/synths/defs';
 import { makeMiniD } from '@/tests/fixtures/synths/mini-d';
 
 /** Two rows: [osc | mixer] (300 short of the widest row → a blank), then [mod/filter (named) | patch bay]. */
@@ -306,5 +307,42 @@ describe('layoutDef and layoutKind', () => {
     expect(layoutKind(def)).toBe('compact');
     expect(layoutDef(def)).toBe(compactDef(def));
     expect(layoutDef(def, true)).toBe(def);
+  });
+});
+
+describe('the Grandmother, compact (t-229)', () => {
+  const full = getSynthDef('grandmother')!;
+  const compact = layoutDef(full);
+
+  it('opens compact, shorter than the full faceplate', () => {
+    expect(layoutKind(full)).toBe('compact');
+    expect(compact.view.h).toBeLessThan(full.view.h);
+    expect(compact.view.w / compact.view.h).toBeGreaterThan(full.view.w / full.view.h);
+  });
+
+  it('leaves the keys out', () => {
+    const keys = (d: SynthDef) =>
+      d.decor.filter((x) => x.t === 'rect' && (x.fill === '#f4f4f0' || x.fill === '#111113'));
+    expect(keys(full).length).toBeGreaterThan(19);
+    expect(keys(compact)).toEqual([]);
+  });
+
+  it('keeps GLIDE and PLAY / HOLD / TAP on the panel, in their own areas', () => {
+    for (const [id, area] of [
+      ['glide', 'glide'],
+      ['arp.play', 'lhc'],
+      ['arp.hold', 'lhc'],
+      ['arp.tap', 'lhc'],
+    ] as const) {
+      const c = find<Control>(compact.controls, id);
+      expect(c.x).toBeGreaterThan(0);
+      expect(c.x).toBeLessThan(compact.view.w);
+      expect(c.y).toBeGreaterThan(0);
+      expect(c.y).toBeLessThan(compact.view.h);
+      const r = find(compact.areas, area).rects;
+      expect(r.some((q) => c.x >= q.x && c.x <= q.x + q.w && c.y >= q.y && c.y <= q.y + q.h)).toBe(
+        true
+      );
+    }
   });
 });
