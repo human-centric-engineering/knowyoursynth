@@ -1460,6 +1460,13 @@ export interface OscMix {
    */
   tfold?: number;
   /**
+   * minilogue xd saw SHAPE: the saw folded back at the rails by `fold`, as `tfold` folds the triangle (the pulse-width
+   * destination adds to `fold`); at `fold` 0 it is the plain saw, at 0.5 the ramp folds into a triangle (odd harmonics
+   * only), and by 1 its second harmonic is louder than the fundamental. The manual says only that SHAPE sets the
+   * wave's "final shape, complexity", so the fold is reasoned, not measured.
+   */
+  sfold?: number;
+  /**
    * JP-8080 NOISE on an oscillator: white noise through a resonant low-pass tuned `nCut` semitones from this
    * oscillator's pitch (so it tracks the key when the oscillator does), with resonance `nRes`; at `nRes` 1 it rings as
    * a near-sine at that pitch.
@@ -1704,6 +1711,12 @@ export interface LfoParams {
    * the same value. `keySync` and `lfoTrig` are then ignored, and the rate is not modulated per voice: route nothing to `lfoRate`.
    */
   common?: boolean;
+  /**
+   * The minilogue xd's 1-SHOT: each note that retriggers the envelopes (or a rising `lfoTrig`) starts the LFO from the
+   * beginning of its cycle, with a fresh sample and hold, and it stops half a cycle later, holding where it got to: a
+   * triangle or square at its top, a saw at its middle, a sine back at zero. Not with `common`.
+   */
+  oneShot?: boolean;
 }
 
 /** A second LFO: signals `lfo2` and `lfo2Uni`. The same shape is the third LFO, `lfo3`. */
@@ -1824,13 +1837,25 @@ export interface ReverbParams {
 /** A pool of voices behind a note allocator. Without it the engine is the single voice. */
 export interface PolyParams {
   voices: number;
-  /** Voices per note, spread ±`detune`. */
+  /** Voices per note, spread ±`detune` (ignored with `chord`). */
   stack: number;
   /** Every key to one stack, legato like a mono synth. */
   mono: boolean;
   /** Semitones. */
   detune?: number;
+  /**
+   * A chord on every key (the minilogue xd's CHORD voice mode): the voices of a stack play these semitone offsets from
+   * the key instead of the `detune` spread, and the stack is as long as the list, up to `voices` (`stack` and `detune`
+   * are then ignored). With `mono`, a new key moves the whole chord.
+   */
+  chord?: number[];
 }
+
+/** How many voices one note takes in `poly`: its chord's length (up to `voices`), or `stack`; at least one. */
+export const polyStack = (poly: PolyParams): number =>
+  poly.chord && poly.chord.length
+    ? Math.max(1, Math.min(poly.chord.length, poly.voices))
+    : Math.max(1, poly.stack || 1);
 
 export type ArpMode = 'up' | 'down' | 'updown' | 'downup' | 'random' | 'played';
 
