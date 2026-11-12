@@ -4,10 +4,10 @@ Not in the app yet.
 
 ## Committed
 
-| File                           | What                | Copied from                                         |
-| ------------------------------ | ------------------- | --------------------------------------------------- |
-| `korg-minilogue-xd.synth.json` | spec, schema 0.12.0 | `synths-modeller-pack/korg-minilogue-xd_synth.json` |
-| `build_minilogue_xd.py`        | build script        | `synths-modeller-pack/build_minilogue_xd.py`        |
+| File                      | What                | Copied from                                         |
+| ------------------------- | ------------------- | --------------------------------------------------- |
+| `minilogue-xd.synth.json` | spec, schema 0.12.0 | `synths-modeller-pack/korg-minilogue-xd_synth.json` |
+| `build_minilogue_xd.py`   | build script        | `synths-modeller-pack/build_minilogue_xd.py`        |
 
 ## Local only (`raw/`, git-ignored)
 
