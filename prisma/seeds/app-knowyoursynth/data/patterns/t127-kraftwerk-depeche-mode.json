@@ -1585,7 +1585,8 @@
         "e7/e7-computer-melody",
         "mantis/mantis-computer-love",
         "jupiter-6/jp6-computer-love",
-        "grandmother/gm-computer-love-lead"
+        "grandmother/gm-computer-love-lead",
+        "minilogue-xd/mxd-computer-love"
       ],
       "research": {
         "work": "Kraftwerk, “Computer Love”, Computer World, 1981",
@@ -1689,7 +1690,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["k2/clipped-count-bass"],
+      "sounds": ["k2/clipped-count-bass", "0-coast/zc-accent-seq"],
       "research": {
         "work": "Kraftwerk, “Numbers”, Computer World, 1981",
         "part": "The syncopated one-note bass from bar 36: one bar, repeated.",
@@ -1702,7 +1703,7 @@
             "checkedAt": "2026-11-01"
           }
         ],
-        "notes": "From the Songsterr bass track, bars 36–40, moved up an octave (G♯1 to G♯2) to suit this sound. One transcription only. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the Songsterr bass track, bars 36–40, moved up an octave (G♯1 to G♯2) to suit the sounds. One transcription only. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -2887,7 +2888,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["2-xm/xm-robot-bass"],
+      "sounds": ["2-xm/xm-robot-bass", "polivoks/pv-robot-seq"],
       "research": {
         "work": "Kraftwerk, “The Robots”, The Man-Machine, 1978",
         "part": "The second sequencer line from the second intro: D and C in pairs of sixteenths, ending on F, then dropping to D2. Two bars.",
@@ -3668,6 +3669,265 @@
           }
         ],
         "notes": "The two leads were made apart and agree note for note (Songsterr track 6, bars 5–8; the MIDI file’s second channel, bars 5–8), which is the best support in the batch. Even so they are not sources by the method, so it stays _In the style of_; the owner’s listen could make it _Reconstructed_. Moved up an octave, G1 to G2, to suit these sounds. The Super Gemini sound names no work; this is the Depeche Mode bass line a transcription was found for. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:depeche-mode/just-cant-get-enough-bass-low",
+      "name": "Just Can’t Get Enough: bass, an octave down",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "depeche-mode-just-cant-get-enough"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 128,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 35,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 35,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1.0
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["0-coast/zc-hollow-pulse-bass"],
+      "research": {
+        "work": "Depeche Mode, “Just Can’t Get Enough”, Speak & Spell, 1981",
+        "part": "Andy Fletcher’s bass under the verse: G, G, C, B twice, then C, C, F, E and C four times. Four bars: the same part an octave down.",
+        "originalKey": "G major",
+        "originalBpm": 128,
+        "leads": [
+          {
+            "citation": "Depeche Mode — “Just Can't Get Enough”, fan transcription by Alex Conant on Songsterr (revision 6430130, 2026-04-23)",
+            "url": "https://www.songsterr.com/a/wsa/depeche-mode-just-cant-get-enough-tab-s64831",
+            "checkedAt": "2026-11-01"
+          },
+          {
+            "citation": "“Depeche Mode - Just Can't Get Enough.mid”, fan-made MIDI file on BitMIDI, uploader unknown",
+            "url": "https://bitmidi.com/depeche-mode-just-cant-get-enough-mid",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "This copy is moved an octave down from researched:depeche-mode/just-cant-get-enough-bass, whose notes give the research. _In the style of_; the owner’s listen could make it _Reconstructed_. Moved up an octave, G1 to G2, to suit these sounds. The Super Gemini sound names no work; this is the Depeche Mode bass line a transcription was found for. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },

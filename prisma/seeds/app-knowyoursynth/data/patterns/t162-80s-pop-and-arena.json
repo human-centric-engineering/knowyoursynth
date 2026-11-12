@@ -70,6 +70,18 @@
     {
       "sound": "pro-1/p1-rosanna-brass",
       "reason": "The batch has the work’s brass riff as chords (“Rosanna: brass riff”), and this sound plays one line; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jp-8080/jp-psb-arp",
+      "reason": "Its arpeggiator plays the line from the chords it holds, and the batch has “West End Girls” only as its bass, written out."
+    },
+    {
+      "sound": "minilogue-xd/mxd-doubled-square",
+      "reason": "Names no work, and the batch has Tears for Fears only as the shuffle and chords of “Everybody Wants to Rule the World”, not a lead; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "polivoks/pv-africa-brass",
+      "reason": "Names “Africa”, which no pattern in this batch has yet; the swells are the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -355,7 +367,8 @@
         "take-5/t5-take-on-me-lead",
         "deepmind-12d/bouncy-pop-keys",
         "neutron/staccato-pulse-lead",
-        "2-xm/xm-take-on-me"
+        "2-xm/xm-take-on-me",
+        "jp-8080/jp-aha-hook"
       ],
       "research": {
         "work": "a-ha, “Take On Me”, Hunting High and Low, 1985",
@@ -2547,7 +2560,8 @@
         "e7/e7-final-brass",
         "ub-xa-d/stab-brass",
         "jupiter-8/jp8-final-brass",
-        "2-xm/xm-final-countdown"
+        "2-xm/xm-final-countdown",
+        "jp-8080/jp-final-countdown-brass"
       ],
       "research": {
         "work": "Europe, “The Final Countdown”, The Final Countdown, 1986",
@@ -9895,7 +9909,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["b2600/cars-newwave-lead"],
+      "sounds": ["b2600/cars-newwave-lead", "polivoks/pv-tearing-fm"],
       "research": {
         "work": "The Cars, “Just What I Needed”, The Cars, 1978",
         "part": "The four-bar outro line: E, B, G♯, F♯ held, B, G♯ held, then C♯ to D♯; the same again, ending on C♯.",
@@ -9908,7 +9922,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Greg Hawkes | Mini-Korg 700S | Synths” track, bars 103–106, as written. The sound names the early albums, and this is the debut’s single. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Greg Hawkes | Mini-Korg 700S | Synths” track, bars 103–106, as written. The 2600’s “New Wave Keyboard Lead” names the early albums, and this is the debut’s single. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -11729,6 +11743,373 @@
       }
     },
     {
+      "key": "researched:phil-collins/in-the-air-tonight-snare-low",
+      "name": "In the Air Tonight: snare, an octave down",
+      "role": "percussive",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "phil-collins-in-the-air-tonight"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 95,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1.0
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["minilogue-xd/mxd-gated-snare"],
+      "research": {
+        "work": "Phil Collins, “In the Air Tonight”, Face Value, 1981",
+        "part": "Four bars of the snare after the famous fill: the big snare on two and four, with a sixteenth pickup before some bars: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": 95,
+        "leads": [
+          {
+            "citation": "Phil Collins — “In The Air Tonight”, fan transcription by PeanutA7x on Songsterr (revision 8997419, 2026-09-10)",
+            "url": "https://www.songsterr.com/a/wsa/phil-collins-in-the-air-tonight-tab-s50420",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "This copy is moved an octave down from researched:phil-collins/in-the-air-tonight-snare, whose notes give the research. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:tears-for-fears/rule-the-world-shuffle",
       "name": "Everybody Wants to Rule the World: shuffle figure",
       "role": "arp",
@@ -13316,6 +13697,167 @@
           }
         ],
         "notes": "From the transcription’s “Synth Brass 1” track, bars 1–2, as written. The transcription’s tracks are each marked “retranscribed”, which suggests Songsterr’s machine had a hand in them. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:thomas-dolby/she-blinded-me-with-science-line-high",
+      "name": "She Blinded Me with Science: intro line, an octave up",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "thomas-dolby-she-blinded-me-with-science",
+        "part": 0
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 130,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 81,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 80,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 78,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 78,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 85,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 83,
+                    "gate": 5.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jp-8080/jp-dolby-flange"],
+      "research": {
+        "work": "Thomas Dolby, “She Blinded Me with Science”, single, 1982",
+        "part": "The two-bar intro line: B, D, A, G♯, F♯, E; then D, F♯, C♯ up to a held B: the same part an octave up.",
+        "originalKey": null,
+        "originalBpm": 130,
+        "leads": [
+          {
+            "citation": "Thomas Dolby — “She Blinded me with Science”, fan transcription by Alan Brito on Songsterr (revision 9395315, 2026-09-29)",
+            "url": "https://www.songsterr.com/a/wsa/thomas-dolby-she-blinded-me-with-science-tab-s1252237",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "This copy is moved an octave up from researched:thomas-dolby/she-blinded-me-with-science-line, whose notes give the research. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -18653,7 +19195,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["mantis/mantis-jump-brass", "jupiter-8/jp8-jump-stab"],
+      "sounds": [
+        "mantis/mantis-jump-brass",
+        "jupiter-8/jp8-jump-stab",
+        "minilogue-xd/mxd-jump-brass"
+      ],
       "research": {
         "work": "Van Halen, “Jump”, 1984, 1984",
         "part": "The four-bar intro riff in triads: G, C over G, F twice, G and G held; then C over G, F, F over C, C and the held Csus2: the same part an octave down.",

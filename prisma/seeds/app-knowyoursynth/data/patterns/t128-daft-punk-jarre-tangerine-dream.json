@@ -94,6 +94,10 @@
     {
       "sound": "2-xm/xm-sorcerer-pad",
       "reason": "Names the “Sorcerer” score, which no pattern in this batch has yet; the pad is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jp-8080/jp-jet-phasing",
+      "reason": "Names “Zoolook”, which no pattern in this batch has yet; the chords are the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -2756,7 +2760,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["poly-d/pd-gliding-solo"],
+      "sounds": ["poly-d/pd-gliding-solo", "0-coast/zc-vowel-lead"],
       "research": {
         "work": "Daft Punk, “Digital Love”, Discovery, 2001",
         "part": "The second phrase of the synth solo: a rise to D, then down to A and E. Four bars.",
@@ -4259,6 +4263,220 @@
           }
         ],
         "notes": "The bass line is its own pattern (researched:daft-punk/around-the-world-bass). From the transcription’s pluck synth track, bars 21–22, which double each note at the octave: the lower note only, moved down two octaves for a mono bass. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:daft-punk/around-the-world-pluck-high",
+      "name": "Around the World: pluck line, low, an octave up",
+      "role": "bass_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "daft-punk"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 121,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 47,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 47,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jp-8080/jp-bpf-pluck"],
+      "research": {
+        "work": "Daft Punk, “Around the World”, Homework, 1997",
+        "part": "The two-bar pluck synth line, E–G–B–D then A–G–B–D, here as a bass: the same part an octave up.",
+        "originalKey": null,
+        "originalBpm": 121,
+        "leads": [
+          {
+            "citation": "Daft Punk — “Around The World (Radio Edit)”, fan transcription by guytolyou on Songsterr (revision 8764321, 2026-08-29)",
+            "url": "https://www.songsterr.com/a/wsa/daft-punk-around-the-world-radio-edit-tab-s83791",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "This copy is moved an octave up from researched:daft-punk/around-the-world-pluck, whose notes give the research. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -8003,7 +8221,8 @@
         "take-5/t5-oxygene-pad",
         "mantis/mantis-oxygene-swirl",
         "jupiter-8/jp8-jarre-gallop-seq",
-        "grandmother/gm-oxygene-arp"
+        "grandmother/gm-oxygene-arp",
+        "minilogue-xd/mxd-ensemble-strings"
       ],
       "research": {
         "work": "Jean-Michel Jarre, “Oxygène (Part IV)”, Oxygène, 1976",
@@ -10005,7 +10224,8 @@
         "b2600/jarre-octave-seq",
         "ub-xa-d/pizzicato",
         "take-5/t5-equinoxe-seq",
-        "super-gemini/sg-equinoxe-seq"
+        "super-gemini/sg-equinoxe-seq",
+        "polivoks/pv-equinoxe-seq"
       ],
       "research": {
         "work": "Jean-Michel Jarre, “Équinoxe (Part 5)”, Équinoxe, 1978",
@@ -15606,7 +15826,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/berlin-lfo-pulse"],
+      "sounds": ["model-d/berlin-lfo-pulse", "polivoks/pv-phaedra-sweep"],
       "research": {
         "work": "Tangerine Dream, “Phaedra”, Phaedra, 1974",
         "part": "Eight bars of held keys for a pulse the patch plays itself: A for four bars, F for two and G for two.",
@@ -16245,7 +16465,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/opening-ramp-seq", "tb-303/tb-berlin-sequence", "2-xm/xm-phaedra-seq"],
+      "sounds": [
+        "neutron/opening-ramp-seq",
+        "tb-303/tb-berlin-sequence",
+        "2-xm/xm-phaedra-seq",
+        "0-coast/zc-berlin-seq"
+      ],
       "research": {
         "work": "Tangerine Dream, “Phaedra”, Phaedra, 1974, and Rubycon, 1975",
         "part": "Two bars of a sixteenth-note sequence in E minor climbing E, G, B and D, repeated with its top moved to E.",
@@ -19812,7 +20037,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/wah-pad", "jupiter-8/jp8-tangerine-pad"],
+      "sounds": [
+        "ub-xa-d/wah-pad",
+        "jupiter-8/jp8-tangerine-pad",
+        "minilogue-xd/mxd-sync-sweep-pad"
+      ],
       "research": {
         "work": "Tangerine Dream, “Love on a Real Train”, Risky Business (soundtrack), 1984",
         "part": "Eight bars of the progression as Hooktheory gives it: D♭add9 and E♭ for two bars each, then Fm7 for four.",

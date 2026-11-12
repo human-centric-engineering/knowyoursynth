@@ -158,6 +158,54 @@
     {
       "sound": "pro-1/p1-xtal-pad",
       "reason": "Names “Xtal”, which no pattern in this batch has yet; the pad is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "0-coast/zc-fold-scream",
+      "reason": "Names no work, and the batch has Aphex Twin as an acid bass line and the chords and top line of “Rhubarb”, not a lead; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "0-coast/zc-random-balance",
+      "reason": "Its clock plays the pulse from one held key, so a written part would be played over again; the batch has no pattern of Autechre’s yet."
+    },
+    {
+      "sound": "0-coast/zc-hopkins-arp",
+      "reason": "Names “Immunity”, whose patterns in this batch are the bass, roots and drone of “Open Eye Signal”, and this sound plays an arpeggio; the arpeggio is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jp-8080/jp-gated-supersaw",
+      "reason": "Its LFO 1 gates the held chords into the rhythm, so a written part would be played over again; the batch has Paul van Dyk only as lines from “For an Angel”."
+    },
+    {
+      "sound": "jp-8080/jp-halcyon-trimod",
+      "reason": "The batch has the work’s chords (“Halcyon: chords”), and this sound plays a lead; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jp-8080/jp-four-tet-pluck",
+      "reason": "The batch has the work’s chords (“Two Thousand and Seventeen: chords”), and this sound plays one line; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jp-8080/jp-chemical-lead",
+      "reason": "Names “Block Rockin’ Beats”, whose pattern in this batch is the bass, and this sound plays the lead; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jp-8080/jp-deadmau5-saw",
+      "reason": "Names no work, and the batch has deadmau5 only as chords and an organ, not a lead; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jp-8080/jp-prydz-dual",
+      "reason": "Names no work, and the batch has Eric Prydz only as the held chords of “Opus”, not a lead; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jp-8080/jp-fsol-bells",
+      "reason": "Names “Papua New Guinea”, which no pattern in this batch has yet; the bells are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jp-8080/jp-schnauss-trimod",
+      "reason": "Names “On My Own”, which no pattern in this batch has yet; the chords are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "minilogue-xd/mxd-phased-strings",
+      "reason": "Names “La Femme d’Argent”, whose pattern in this batch is the bass, and this sound plays chords; the chords are the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -4398,6 +4446,197 @@
       }
     },
     {
+      "key": "researched:aphex-twin/rhubarb-chords-high",
+      "name": "Rhubarb: chords, an octave up",
+      "role": "chord_changes",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "aphex-twin"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 57,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 78,
+                    "gate": 2.0
+                  },
+                  {
+                    "note": 74,
+                    "gate": 2.0
+                  },
+                  {
+                    "note": 69,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 73,
+                    "gate": 6.0
+                  },
+                  {
+                    "note": 69,
+                    "gate": 6.0
+                  },
+                  {
+                    "note": 66,
+                    "gate": 6.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 2.0
+                  },
+                  {
+                    "note": 73,
+                    "gate": 2.0
+                  },
+                  {
+                    "note": 69,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 2.0
+                  },
+                  {
+                    "note": 68,
+                    "gate": 2.0
+                  },
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 8.0
+                  },
+                  {
+                    "note": 66,
+                    "gate": 8.0
+                  },
+                  {
+                    "note": 62,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jp-8080/jp-xmod-env-keys"],
+      "research": {
+        "work": "Aphex Twin, “#3” (known as “Rhubarb”), Selected Ambient Works Volume II, 1994",
+        "part": "The slow chord cycle, two bars of 5/4: D, F♯ minor and A, then E and a long D: the same part an octave up.",
+        "originalKey": null,
+        "originalBpm": 57,
+        "leads": [
+          {
+            "citation": "Aphex Twin — “Rhubarb”, fan transcription by Leonard on Songsterr (revision 86033, 2011-02-16)",
+            "url": "https://www.songsterr.com/a/wsa/aphex-twin-rhubarb-tab-s68760",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "This copy is moved an octave up from researched:aphex-twin/rhubarb-chords, whose notes give the research. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:aphex-twin/rhubarb-top-line",
       "name": "Rhubarb: line over the chords",
       "role": "ambient",
@@ -5079,7 +5318,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-garage-bass"],
+      "sounds": ["take-5/t5-garage-bass", "jp-8080/jp-artful-bass"],
       "research": {
         "work": "Artful Dodger featuring Craig David, “Re-Rewind (The Crowd Say Bo Selecta)”, 1999",
         "part": "A two-step sub bass on A: a pushed root, a slide up to C and back, and a walk down to E.",
@@ -6641,7 +6880,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-sandstorm-lead", "jupiter-6/jp6-sandstorm-lead"],
+      "sounds": [
+        "take-5/t5-sandstorm-lead",
+        "jupiter-6/jp6-sandstorm-lead",
+        "jp-8080/jp-anthem-saw"
+      ],
       "research": {
         "work": "Darude, “Sandstorm”, Before the Storm, 1999",
         "part": "The sixteenth-note riff on B, the jump to E and D, and back to B.",
@@ -7735,7 +7978,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/quadraverb-pad", "jupiter-6/jp6-1431-pad"],
+      "sounds": ["deepmind-12d/quadraverb-pad", "jupiter-6/jp6-1431-pad", "jp-8080/jp-global-air"],
       "research": {
         "work": "Global Communication, 76:14, 1994",
         "part": "Two slow chords, two bars each: C major seventh and A minor seventh.",
@@ -8786,14 +9029,14 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/horizons-liquid-pad", "mantis/mantis-liquid-pad"],
+      "sounds": ["neutron/horizons-liquid-pad", "mantis/mantis-liquid-pad", "jp-8080/jp-bukem-pad"],
       "research": {
         "work": "LTJ Bukem, “Horizons”, 1995",
         "part": "Soft fourths, a bar each, moving down and back: E–A, D–G, C–F, D–G.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
-        "notes": "Nothing for this work was found on Songsterr or BitMIDI. The sound plays two notes at a time, so the guess is pairs. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "Nothing for this work was found on Songsterr or BitMIDI. The Neutron’s “Liquid Atmosphere Pad” plays two notes at a time, so the guess is pairs. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -12011,7 +12254,8 @@
       "sounds": [
         "take-5/t5-mysterons-theremin",
         "malevolent/mal-mysterons-theremin",
-        "donner-b1/b1-portishead"
+        "donner-b1/b1-portishead",
+        "polivoks/pv-theremin"
       ],
       "research": {
         "work": "Portishead, “Mysterons”, Dummy, 1994",
@@ -13207,7 +13451,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["syntrx-ii/syntrx-prodigy-rave"],
+      "sounds": ["syntrx-ii/syntrx-prodigy-rave", "minilogue-xd/mxd-prodigy-hoover"],
       "research": {
         "work": "The Prodigy, “Out of Space”, The Prodigy Experience, 1992",
         "part": "The rave riff, a bar each on G♯, D♯, E and F♯.",
@@ -13220,7 +13464,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Techno synth” track, bars 43–46, as written. The sound names The Prodigy rather than a work, so it took this one. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Techno synth” track, bars 43–46, as written. The sounds name The Prodigy rather than a work, so they took this one. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -13653,7 +13897,8 @@
         "neutron/eple-pluck",
         "take-5/t5-eple-bell",
         "super-gemini/sg-nordic-bells",
-        "pro-1/p1-eple-lead"
+        "pro-1/p1-eple-lead",
+        "minilogue-xd/mxd-eple-pluck"
       ],
       "research": {
         "work": "Röyksopp, “Eple”, Melody A.M., 2001",
@@ -14429,7 +14674,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/scary-monsters-growl", "malevolent/mal-growl-bass"],
+      "sounds": [
+        "neutron/scary-monsters-growl",
+        "malevolent/mal-growl-bass",
+        "minilogue-xd/mxd-bpm-wobble"
+      ],
       "research": {
         "work": "Skrillex, “Scary Monsters and Nice Sprites”, 2010",
         "part": "The drop’s bass: a held B♭, then G hammered in the rhythm of the drop.",
@@ -17344,7 +17593,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/born-slippy-bass", "b2600/underworld-roll-bass"],
+      "sounds": [
+        "neutron/born-slippy-bass",
+        "b2600/underworld-roll-bass",
+        "0-coast/zc-self-wah-bass"
+      ],
       "research": {
         "work": "Underworld, “Born Slippy .NUXX”, 1995",
         "part": "A rolling sixteenth-note bass on E, flicking up to G and A.",
@@ -19409,7 +19662,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["donner-b1/b1-burial"],
+      "sounds": ["donner-b1/b1-burial", "0-coast/zc-sub-bass"],
       "research": {
         "work": "Burial, “Archangel”, Untrue, 2007",
         "part": "The held bass: A♭, G and F a bar each, with a short F to end: at the octave the lead writes it, where the B1’s “Night Bus Sub” plays.",
@@ -19422,7 +19675,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Synth Bass 1” track, bars 36–39, an octave up, where the sound sits. The sound names Untrue, the album “Archangel” is on. _In the style of_: the notes come from a transcription Songsterr generated by machine, a weaker starting point than a fan’s. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down, back to the octave the lead writes, from researched:burial/archangel-bass.",
+        "notes": "From the transcription’s “Synth Bass 1” track, bars 36–39, an octave up, where the sounds sit. The sounds name Untrue, the album “Archangel” is on. _In the style of_: the notes come from a transcription Songsterr generated by machine, a weaker starting point than a fan’s. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down, back to the octave the lead writes, from researched:burial/archangel-bass.",
         "listenedAt": null
       }
     },
