@@ -10,8 +10,8 @@
  * instrument: a compact modern polysynth with effects, a display and a sequencer, here four voices, each two VCOs and
  * the digital MULTI ENGINE → the mixer → a resonant low-pass VCF with DRIVE → the VCA, with an ADSR on the VCA, an
  * attack-decay EG to pitch or cutoff, and an LFO. The joystick is the Mantis's (`defs/mantis.ts`). No content (sounds,
- * lineage, unusual notes), a `version`, the maker's marks tagged `brand` (the KORG logo and the minilogue xd
- * lettering), and panel values read through `num()`.
+ * lineage, unusual notes), a `version`, no maker's marks (the KORG logo and the minilogue xd lettering are on the
+ * logo strip, outside the view), and panel values read through `num()`.
  *
  * The engine work this needed is t-243 (the MULTI ENGINE: `mix.mnoise`, `mix.vpm`) and t-244 (the CHORD voice mode,
  * the 1-SHOT LFO and the saw SHAPE: `poly.chord`, `lfo.oneShot`, `mix.sfold`). The MULTI ENGINE is the engine's third
@@ -217,13 +217,6 @@ const SECTIONS: [number, number, string][] = [
   [1525, 127, 'EFFECTS'],
 ];
 SECTIONS.forEach(([x, y, t]) => label(x, y, t, 26, { weight: 500 }));
-text(190, 584, 'KORG', 76, { weight: 800, spacing: 2, brand: true });
-text(378, 572, 'minilogue xd', 64, { weight: 500, brand: true });
-text(280, 589, 'POLYPHONIC ANALOGUE SYNTHESIZER', 19, {
-  weight: 500,
-  brand: true,
-  anchor: 'start',
-});
 
 // ── Master: MASTER, TEMPO, OCTAVE ─────────────────────────────────────────
 knob('out.master', 172, 165, 'MASTER', {

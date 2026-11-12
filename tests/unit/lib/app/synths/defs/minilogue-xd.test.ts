@@ -442,10 +442,9 @@ describe('minilogue xd panel', () => {
     }
   });
 
-  it('tags the KORG and minilogue xd lettering as the maker’s marks', () => {
-    const brand = xd.decor
-      .filter((d): d is TextDecor => d.t === 'text' && !!d.brand)
-      .map((d) => d.text);
-    expect(brand).toEqual(['KORG', 'minilogue xd', 'POLYPHONIC ANALOGUE SYNTHESIZER']);
+  it('carries no maker’s marks: the logo strip they are on is cropped out of the view', () => {
+    expect(xd.decor.filter((d) => d.brand)).toEqual([]);
+    const lettering = xd.decor.filter((d): d is TextDecor => d.t === 'text');
+    for (const d of lettering) expect(d.y, d.text).toBeLessThan(xd.view.h);
   });
 });

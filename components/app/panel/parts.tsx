@@ -1469,15 +1469,27 @@ export const Select = memo(function Select({
           </g>
         );
       })}
-      {c.lever && <SprungLever c={c} value={value} ctx={ctx} onChange={onChange} hover={hover} />}
+      {c.lever && (
+        <SprungLever
+          c={c}
+          value={value}
+          ctx={ctx}
+          onChange={onChange}
+          hover={hover}
+          hl={hl ? col : null}
+        />
+      )}
     </g>
   );
 });
 
 /** The option a push on a select's sprung lever picks: the one before (`dir` −1) or after (+1), stopping at the ends. */
 export function leverStep(c: SelectControl, value: ControlValue, dir: -1 | 1): ControlValue {
-  const i = Math.min(c.options.length - 1, Math.max(0, optionIndex(c, value) + dir));
-  return c.options[i].v;
+  // only the options with a button of their own (not `hide`); a value not among them steps from the default
+  const opts = c.options.filter((o) => !o.hide);
+  const at = (v: ControlValue) => opts.findIndex((o) => o.v === v);
+  const from = at(value) >= 0 ? at(value) : Math.max(0, at(c.def));
+  return opts[Math.min(opts.length - 1, Math.max(0, from + dir))].v;
 }
 
 /**
@@ -1490,8 +1502,11 @@ function SprungLever({
   ctx,
   onChange,
   hover,
+  hl,
 }: Pick<ControlPartProps<SelectControl>, 'c' | 'value' | 'ctx' | 'onChange'> & {
   hover: ReturnType<typeof useHover>;
+  /** The highlight's colour while the control is highlighted: the lever pulses with its lamps. */
+  hl: string | null;
 }) {
   const [push, setPush] = useState<-1 | 0 | 1>(0);
   if (!c.lever) return null;
@@ -1501,7 +1516,7 @@ function SprungLever({
   const bx = h ? x + push * len : x;
   const by = h ? y : y + push * len;
   const step = (dir: -1 | 1) => onChange(c.id, leverStep(c, value, dir));
-  const name = cleanName(c);
+  const name = c.name || cleanName(c);
   const half = (dir: -1 | 1) => {
     const lo = dir < 0;
     const words = h ? (lo ? 'left' : 'right') : lo ? 'up' : 'down';
@@ -1521,7 +1536,10 @@ function SprungLever({
         {...hover}
         onPointerDown={() => setPush(dir)}
         onPointerUp={() => setPush(0)}
-        onPointerLeave={() => setPush(0)}
+        onPointerLeave={() => {
+          hover.onPointerLeave();
+          setPush(0);
+        }}
         onPointerCancel={() => setPush(0)}
         onClick={(e) => {
           focusStore.set({ kind: 'control', id: c.id, x: e.clientX, y: e.clientY, tip: false });
@@ -1530,9 +1548,12 @@ function SprungLever({
         onKeyDown={(e) => {
           if ((e.key === 'Enter' || e.key === ' ') && !e.repeat) {
             e.preventDefault();
+            setPush(dir);
             step(dir);
           }
         }}
+        onKeyUp={() => setPush(0)}
+        onBlur={() => setPush(0)}
       />
     );
   };
@@ -1562,6 +1583,20 @@ function SprungLever({
   );
   return (
     <g>
+      {hl && (
+        <rect
+          className="kys-pulse"
+          x={h ? x - len - r - 8 : x - r - 8}
+          y={h ? y - r - 8 : y - len - r - 8}
+          width={h ? 2 * (len + r + 8) : 2 * (r + 8)}
+          height={h ? 2 * (r + 8) : 2 * (len + r + 8)}
+          rx="9"
+          fill="none"
+          stroke={hl}
+          strokeWidth="4"
+          pointerEvents="none"
+        />
+      )}
       {body}
       {half(-1)}
       {half(1)}
@@ -2939,6 +2974,8 @@ export const Switch = memo(function Switch({
     body = ctx.outline ? (
       <g stroke={INK} strokeWidth="2" fill={PAPER}>
         <circle cx={x} cy={y} r={r} />
+        {/* a bat long enough to reach past the nut is drawn joined to it */}
+        {(c.lean || 0.42) > 1 && <line x1={x} y1={y} x2={bx} y2={by} />}
         <circle cx={bx} cy={by} r={r * 0.36} fill={INK} stroke="none" />
       </g>
     ) : (
@@ -3015,6 +3052,10 @@ export const Switch = memo(function Switch({
       </g>
     );
   }
+  // A toggle's bat can reach past its nut (`lean`): the hit area and the highlight take it in.
+  const reach = c.type === 'toggle' ? (w / 2) * ((c.lean || 0.42) + 0.42) : 0;
+  const hitW = c.type === 'toggle' && c.orient === 'h' ? Math.max(w, 2 * reach) : w;
+  const hitH = c.type === 'toggle' && c.orient !== 'h' ? Math.max(h, 2 * reach) : h;
   let ghost = null;
   if (tpos != null && c.type !== 'button') {
     const f = (tpos + 0.5) / n - 0.5;
@@ -3048,14 +3089,14 @@ export const Switch = memo(function Switch({
         extentTop={h / 2 + 9}
         extentBottom={c.labelPos === 'bottom' ? h / 2 + 4 : w / 2 + 8}
       />
-      <Highlight c={c} r={Math.max(w, h) * 0.78} />
+      <Highlight c={c} r={Math.max(Math.max(w, h) * 0.78, reach + 6)} />
       {body}
       {ghost}
       <rect
-        x={x - w / 2 - 5}
-        y={y - h / 2 - 5}
-        width={w + 10}
-        height={h + 10}
+        x={x - hitW / 2 - 5}
+        y={y - hitH / 2 - 5}
+        width={hitW + 10}
+        height={hitH + 10}
         fill="transparent"
         tabIndex={0}
         // a long slide is a slider of named positions; every other switch is a button that steps on
