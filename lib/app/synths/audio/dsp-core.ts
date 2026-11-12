@@ -11,6 +11,8 @@ import type {
   EaselParams,
   NormalSource,
   OscMix,
+  MultiNoiseParams,
+  VpmParams,
   OverdriveParams,
   DelayParams,
   SampleHoldParams,
@@ -181,6 +183,32 @@ interface VoiceOsc {
   ovt: number;
   ovtA: number;
   ovtAT: number;
+  /** `mix.mnoise` and `mix.vpm` (minilogue xd MULTI ENGINE): their gains and settings, set by setParams. */
+  mnoise: number;
+  vpm: number;
+  mnP: MultiNoiseParams | null;
+  vpP: VpmParams | null;
+  /** `mix.mnoise` SHAPE and its target, smoothed like `pw`. */
+  mnSh: number;
+  mnShT: number;
+  /** `mix.mnoise`'s SVF coefficients and state, and the cutoff and damping they were worked out for. */
+  mnKey: Float64Array;
+  mnCo: Float64Array;
+  mnIc1: number;
+  mnIc2: number;
+  /** `decim`: where the held sample's period has reached, and the value held. */
+  mnAcc: number;
+  mnHold: number;
+  /** `mix.vpm` MOD DEPTH and its target, smoothed like `pw`. */
+  vpDep: number;
+  vpDepT: number;
+  /** The modulator's phase and last output (its feedback). */
+  vpPh: number;
+  vpY: number;
+  /** The internal envelope: its level, stage (0 idle, 1 rising, 2 falling) and per-sample decay factor. */
+  vpEg: number;
+  vpEgSt: number;
+  vpDecC: number;
 }
 
 /** One envelope's running state. The optional fields are set by setParams and the stage changes. */
@@ -470,6 +498,13 @@ const SS_DETUNE = [-0.11002313, -0.06288439, -0.01952356, 0.01991221, 0.06216538
 const SS_PHASE0 = [0.13, 0.71, 0.37, 0.89, 0.52, 0.26];
 /** `mix.ovt`: the level of the added harmonic against the triangle (reasoned, not measured). */
 const OVT_HARM = 0.6;
+/** `mix.vpm`: the phase-modulation index in radians at MOD DEPTH 1, and the feedback's at FEEDBACK 1 (both reasoned). */
+const VPM_INDEX = 2 * Math.PI;
+const VPM_FB = 1.5;
+/** `mix.mnoise` SHAPE's spans, as logs: cutoff 10 Hz × 2100, decimation 240 Hz × 200, peak bandwidth 110 Hz × 8. */
+const LN_CUT_SPAN = Math.log(2100);
+const LN_RATE_SPAN = Math.log(200);
+const LN_BW_SPAN = Math.log(8);
 
 /** `v` scaled by 1 + 2·`f` (`f` clamped to 0..1) and folded back at ±1: a triangle wave of the scaled value. */
 function foldTri(v: number, f: number): number {
@@ -610,6 +645,25 @@ function createVoice(
     ovt: 0,
     ovtA: 0,
     ovtAT: 0,
+    mnoise: 0,
+    vpm: 0,
+    mnP: null,
+    vpP: null,
+    mnSh: 0,
+    mnShT: 0,
+    mnKey: Float64Array.of(-1, 0),
+    mnCo: new Float64Array(3),
+    mnIc1: 0,
+    mnIc2: 0,
+    mnAcc: 0,
+    mnHold: 0,
+    vpDep: 0,
+    vpDepT: 0,
+    vpPh: 0,
+    vpY: 0,
+    vpEg: 0,
+    vpEgSt: 0,
+    vpDecC: 0,
   }));
   let nOsc = 0;
   const held: number[] = [];
@@ -626,6 +680,8 @@ function createVoice(
   let velp = 0,
     velpFire = false;
   let retrigFlag = false;
+  /** A note started on this sample (the envelopes' retrigger), kept for `mix.vpm`'s internal envelope. */
+  let noteHit = false;
   // EngineParams `acid` (TB-303): whether the note playing is accented, and the accent sweep circuit's capacitor
   let accOn = false,
     accSweep = 0;
@@ -634,6 +690,8 @@ function createVoice(
   const slotKey = new Int32Array(4).fill(-1),
     slotHeld = new Uint8Array(4),
     slotT = new Float64Array(4);
+  /** The note each oscillator is playing this sample (its fixed note when off the keyboard), for `mix.mnoise` and `mix.vpm` key tracking. */
+  const oscNote = new Float64Array(4).fill(60);
   const slotN = new Float64Array(4).fill(60),
     slotNT = new Float64Array(4).fill(60);
   const slotG = new Float64Array(4),
@@ -939,6 +997,14 @@ function createVoice(
       o.fnoise = m.fnoise || 0;
       o.ovt = m.ovt || 0;
       o.ovtAT = q.ovt || 0;
+      o.mnoise = m.mnoise && q.mnoise ? m.mnoise : 0;
+      o.mnP = q.mnoise || null;
+      o.mnShT = q.mnoise ? q.mnoise.shape : 0;
+      o.vpm = m.vpm && q.vpm ? m.vpm : 0;
+      o.vpP = q.vpm || null;
+      o.vpDepT = q.vpm ? q.vpm.depth : 0;
+      // MOD DECAY: falls to 1 % over `d` seconds
+      o.vpDecC = q.vpm && q.vpm.eg ? Math.exp(Math.log(0.01) / Math.max(1, q.vpm.eg.d * sr)) : 0;
       o.ssDetT = q.ssDetune || 0;
       o.ssMxT = q.ssMix || 0;
       o.fbHT = q.fbHarm || 0;
@@ -953,6 +1019,8 @@ function createVoice(
         o.fbA = o.fbAT;
         o.fold = o.foldT;
         o.ovtA = o.ovtAT;
+        o.mnSh = o.mnShT;
+        o.vpDep = o.vpDepT;
         o.nCut = o.nCutT;
         o.nRes = o.nResT;
       }
@@ -1404,6 +1472,123 @@ function createVoice(
       o.nIc2 = 2 * v2 - o.nIc2;
       // the resonant peak rises as 1/kd; scaling by the square root keeps a ringing filter near a full-scale sine
       y += v2 * co[3] * o.fnoise;
+    }
+    return y;
+  }
+
+  /**
+   * The minilogue xd's MULTI ENGINE shapes, summed at their `mix` gains: filtered noise (`mix.mnoise`) and the VPM
+   * oscillator (`mix.vpm`). `pwDest` is the oscillator's pulse-width input, which moves SHAPE (the noise's parameter,
+   * the VPM's MOD DEPTH) as the xd's LFO and EG do; `kn` is the note the oscillator is playing, for the key tracking.
+   * The manual describes these in a line each (`VpmParams`, `MultiNoiseParams`), so they are reasoned, not measured.
+   */
+  function multiEngine(o: VoiceOsc, pwDest: number, kn: number): number {
+    const cv = ev(pwDest);
+    let y = 0;
+    if (o.mnoise) {
+      const q = o.mnP!;
+      o.mnSh += (o.mnShT - o.mnSh) * sm;
+      let s = o.mnSh + cv;
+      s = s < 0 ? 0 : s > 1 ? 1 : s;
+      const white = Math.random() * 2 - 1;
+      if (q.type === 'decim') {
+        // white noise held for a sample period of 240 Hz → 48 kHz, which follows the key with KEY TRACK
+        let rate = 240 * Math.exp(s * LN_RATE_SPAN);
+        if (q.keyTrack) rate *= Math.exp((kn - 60) * LN2_12 * q.keyTrack);
+        o.mnAcc += rate / sr;
+        if (o.mnAcc >= 1) {
+          o.mnAcc -= Math.floor(o.mnAcc);
+          o.mnHold = white;
+        }
+        y += o.mnHold * o.mnoise;
+      } else {
+        // a 12 dB state-variable filter: High and Low at 10 Hz → 21 kHz, Peak on the oscillator's pitch with a
+        // bandwidth of 110 → 880 Hz
+        const peak = q.type === 'peak';
+        let fc = peak ? o.inc * sr : 10 * Math.exp(s * LN_CUT_SPAN);
+        if (fc > sr * 0.45) fc = sr * 0.45;
+        let kd = Math.SQRT2;
+        if (peak) {
+          // damping is bandwidth over centre: wider than the centre on low notes, so it is not capped at a Q of 0.5
+          kd = (110 * Math.exp(s * LN_BW_SPAN)) / fc;
+          kd = kd < 0.005 ? 0.005 : kd > 40 ? 40 : kd;
+        }
+        const key = o.mnKey,
+          co = o.mnCo;
+        if (key[0] !== fc || key[1] !== kd) {
+          key[0] = fc;
+          key[1] = kd;
+          const g = Math.tan((Math.PI * fc) / sr);
+          co[0] = 1 / (1 + g * (g + kd));
+          co[1] = g * co[0];
+          co[2] = g * co[1];
+        }
+        const v3 = white - o.mnIc2;
+        const v1 = co[0] * o.mnIc1 + co[1] * v3;
+        const v2 = o.mnIc2 + co[1] * o.mnIc1 + co[2] * v3;
+        o.mnIc1 = 2 * v1 - o.mnIc1;
+        o.mnIc2 = 2 * v2 - o.mnIc2;
+        let out: number;
+        if (q.type === 'lp') out = v2;
+        else if (q.type === 'hp') out = white - kd * v1 - v2;
+        else {
+          // the band at unity gain, then raised by its noise bandwidth (π·B/2 of the sr/2 band) back to white's level
+          const bw = kd * fc;
+          out = v1 * kd * Math.min(30, Math.sqrt(sr / (Math.PI * bw)));
+        }
+        y += out * o.mnoise;
+      }
+    }
+    if (o.vpm) {
+      const q = o.vpP!;
+      o.vpDep += (o.vpDepT - o.vpDep) * sm;
+      // the internal envelope: restarted by each note, a straight rise over MOD ATTACK, then a fall over MOD DECAY
+      // each note starts the modulator in step with the carrier, so a patch sounds the same on every voice
+      if (noteHit) {
+        o.vpPh = o.phase * q.ratio;
+        o.vpPh -= Math.floor(o.vpPh);
+        o.vpY = 0;
+      }
+      const eg = q.eg;
+      if (eg) {
+        if (noteHit) o.vpEgSt = 1;
+        if (o.vpEgSt === 1) {
+          o.vpEg += eg.a > 0 ? 1 / (eg.a * sr) : 1;
+          if (o.vpEg >= 1) {
+            o.vpEg = 1;
+            o.vpEgSt = 2;
+          }
+        } else if (o.vpEgSt === 2) {
+          o.vpEg *= o.vpDecC;
+          if (o.vpEg < 1e-5) {
+            o.vpEg = 0;
+            o.vpEgSt = 0;
+          }
+        }
+      }
+      let d = o.vpDep + cv + (eg ? eg.amt * o.vpEg : 0);
+      if (q.keyTrack) d *= Math.exp(-(kn - 60) * LN2_12 * q.keyTrack);
+      d = d < 0 ? 0 : d > 2 ? 2 : d;
+      // the modulator: a sine at RATIO × the carrier, fed back into its own phase, with noise added after it
+      o.vpPh += o.inc * q.ratio;
+      o.vpPh -= Math.floor(o.vpPh);
+      let m = Math.sin(TWO_PI * o.vpPh + (q.fb || 0) * VPM_FB * o.vpY);
+      o.vpY = m;
+      if (q.noise) m += q.noise * (Math.random() * 2 - 1);
+      const pm = d * VPM_INDEX * m;
+      // the carrier, read at its own phase pushed by the modulator
+      let c: number;
+      if (!q.carrier || q.carrier === 'sine') c = Math.sin(TWO_PI * o.phase + pm);
+      else {
+        let u = o.phase + pm / TWO_PI;
+        u -= Math.floor(u);
+        c = q.carrier === 'saw' ? 2 * u - 1 : u < 0.5 ? 1 : -1;
+      }
+      if (q.drive) {
+        const g = 1 + 4 * q.drive;
+        c = Math.tanh(g * c) / Math.tanh(g);
+      }
+      y += c * o.vpm;
     }
     return y;
   }
@@ -2133,6 +2318,8 @@ function createVoice(
       // dests `env2Rate` (Envelope 2's attack, decay and release) and `env1DecRate` (Envelope 1's decay and release), in octaves of rate
       if (env2RateOn) env[1].rA = env[1].rD = rateMul(ev(DI.env2Rate));
       if (env1DecOn) env[0].rD = rateMul(ev(DI.env1DecRate));
+      // a note, or Envelope 1's gate rising (a trigger source, a repeat or a cable), restarts `mix.vpm`'s envelope
+      noteHit = hitKey || (g1 && !env[0].prevGate);
       S[SI.env1] = tp ? runTrap(tp) : runEnv(env[0], g1);
       if (tp) S[SI.trap] = 1 - 2 * S[SI.env1];
       S[SI.env2] = runEnv(env[1], g2);
@@ -2247,6 +2434,7 @@ function createVoice(
           if (o.mo) o.morph += (o.morphT - o.morph) * sm;
           o.semi += (o.semiT - o.semi) * sm;
           const kn = assign ? slotN[k] : k === hiOsc && p.paraphonic ? note2 : note;
+          oscNote[k] = o.kbd ? kn : o.fixed;
           const base = o.kbd ? kn + pmAll + (p.tune || 0) + vOff + drift : o.fixed;
           const nn = base + o.semi + ev(PITCH_DI[k]);
           let hz = 440 * Math.exp((nn - 69) * LN2_12);
@@ -2369,6 +2557,8 @@ function createVoice(
               saw,
               tri
             );
+          if (o.mnoise || o.vpm)
+            y += multiEngine(o, k === 2 && pwSplit ? DI.pw3 : DI.pw1 + (k > 1 ? 1 : k), oscNote[k]);
           if (o.syncGate && o.syncTo >= 0 && o.syncTo < nOsc && osc[o.syncTo].phase >= 0.5) y = 0;
           if (outs && k < 3) {
             const w = OW[k];
