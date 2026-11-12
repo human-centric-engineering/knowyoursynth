@@ -1124,7 +1124,7 @@ const VPM_PARAMS: [string, string, string][] = [
   [
     'multi.modInt',
     'SHAPE MOD INT',
-    'How far the VPM’s own envelope moves the modulation depth. At −100 % the envelope does nothing, which on the Decay, Creep and Throat types holds them still.',
+    'How far the VPM’s own envelope moves the modulation depth. At −100 % the envelope does nothing, which on the Decay, Creep and Throat types holds them still; at +100 % it moves the depth as far as it goes.',
   ],
   ['multi.modAttack', 'MOD ATTACK', 'How long the VPM’s own envelope takes to rise.'],
   ['multi.modDecay', 'MOD DECAY', 'How long the VPM’s own envelope takes to fall away.'],
@@ -1816,8 +1816,13 @@ function vpmOf(v: ControlValues, depth: number): VpmParams {
   const off = (id: string): number => clamp(num(v, id) / 100, -1, 1);
   const eg = type.eg;
   const amtOff = off('multi.modInt');
-  // Shape Mod Int: on an enveloped type −100 % stills the envelope and +100 % doubles it; on the others it opens it either way
-  const amt = clamp(eg ? eg.amt * (1 + amtOff) : amtOff, -1, 1);
+  // Shape Mod Int: on an enveloped type −100 % stills the envelope and +100 % takes it to the engine's full depth (1),
+  // so a type already at full (Decay2) has no room upwards; on the others it opens it either way
+  const amt = eg
+    ? amtOff < 0
+      ? eg.amt * (1 + amtOff)
+      : eg.amt + (1 - eg.amt) * amtOff
+    : clamp(amtOff, -1, 1);
   return {
     ...(type.carrier ? { carrier: type.carrier } : {}),
     ratio: type.ratio * Number(v['multi.ratio'] || 1),

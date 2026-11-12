@@ -181,6 +181,16 @@ describe('minilogue xd MULTI ENGINE', () => {
     expect(at(100)).toBe(1);
   });
 
+  it('takes a part-depth envelope up to full at Shape Mod Int +100 %, in proportion on the way', () => {
+    const at = (modInt: number) =>
+      run({ 'multi.engine': 'vpm', 'multi.vpm': 'decay1', 'multi.modInt': modInt }).osc[2].vpm?.eg
+        ?.amt;
+    expect(at(0)).toBe(0.8);
+    expect(at(50)).toBeCloseTo(0.9, 12);
+    expect(at(100)).toBe(1);
+    expect(at(-50)).toBeCloseTo(0.4, 12);
+  });
+
   it('is silent with USR, which is not modelled', () => {
     const p = run({ 'multi.engine': 'usr', 'mix.multi': 1023, 'multi.routing': 'post' });
     expect(p.osc[2].mix).toEqual({});
