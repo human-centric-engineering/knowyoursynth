@@ -170,6 +170,34 @@
     {
       "sound": "cat/cat-dream-house-drone",
       "reason": "The batch’s “Dream House: a held root” holds one key for a patch that tunes its fifth above it, and this sound holds its fifth as a second key; the interval is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "0-coast/zc-budd-swell",
+      "reason": "The batch has the work’s chords (“The Pearl: chords”), and this sound plays one line; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "0-coast/zc-yoshimura-breath",
+      "reason": "Its SLOPE opens and closes the gate by itself, so the swells come from each held note and a written part would play over them; the batch has Hiroshi Yoshimura only as lines."
+    },
+    {
+      "sound": "0-coast/zc-sakamoto-fm-pad",
+      "reason": "Names no work, and the batch has Ryuichi Sakamoto only as the ostinato of “Merry Christmas Mr. Lawrence” and the chords of “async”, and this pad plays one line; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jp-8080/jp-bach-oboe",
+      "reason": "Names no work, and the batch has Bach only as the Toccata’s opening and the first Cello Suite’s prelude, not an aria; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "minilogue-xd/mxd-riser-swell",
+      "reason": "Names “Ravedeath, 1972”, whose pattern in this batch is its drone, and this sound plays chords; the chords are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "minilogue-xd/mxd-richter-cello",
+      "reason": "Names “On the Nature of Daylight”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "polivoks/pv-breathing-pad",
+      "reason": "Its repeating filter envelope makes the breathing from one held note, so a written part would play over it; the batch has Stars of the Lid as chords and a line."
     }
   ],
   "patterns": [
@@ -4608,7 +4636,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/motor-vibraphone", "take-5/t5-vibes", "donner-b1/b1-vibraphone"],
+      "sounds": [
+        "model-d/motor-vibraphone",
+        "take-5/t5-vibes",
+        "donner-b1/b1-vibraphone",
+        "0-coast/zc-vibraphone"
+      ],
       "research": {
         "work": "Miles Davis, “Bags’ Groove”, Bags’ Groove, 1957, with Milt Jackson on vibraphone",
         "part": "The first four bars of the blues head: a long C, then B♭ and A♭ turning down through F to E♭, and the F pickup into the next chorus.",
@@ -6261,7 +6294,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/bluegrass-banjo"],
+      "sounds": ["model-d/bluegrass-banjo", "0-coast/zc-scruggs-banjo"],
       "research": {
         "work": "Flatt & Scruggs, “Foggy Mountain Breakdown”, 1949",
         "part": "The banjo’s first eight bars: the rolls on G with the C♯ to D slides, the drop to E minor, and the forward rolls back to G.",
@@ -6274,7 +6307,7 @@
             "url": "https://www.songsterr.com/a/wsa/earl-scruggs-foggy-mountain-breakdown-tab-s33641"
           }
         ],
-        "notes": "From the transcription’s banjo track, bars 2–9, an octave up where the sound’s riff plays. Where the banjo strikes two strings at once the pattern keeps the top note, and where two strings sound the same D it keeps one, because the sound plays one note at a time. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s banjo track, bars 2–9, an octave up where the sounds’ riffs play. Where the banjo strikes two strings at once the pattern keeps the top note, and where two strings sound the same D it keeps one, because the sounds play one note at a time. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -8205,7 +8238,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["cat/cat-are-you-going-with-me"],
+      "sounds": ["cat/cat-are-you-going-with-me", "jp-8080/jp-fade-vibrato"],
       "research": {
         "work": "Pat Metheny Group, “Are You Going with Me?”, Offramp, 1982",
         "part": "The melody’s first eight bars: C D E♭ F climbing to a long G, falling F E♭ to a long C, then B♭: the same part an octave up.",
@@ -9130,7 +9163,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/glass-pad"],
+      "sounds": ["ub-xa-d/glass-pad", "minilogue-xd/mxd-enya-bells"],
       "research": {
         "work": "Enya, “Orinoco Flow”, Watermark, 1988",
         "part": "The verse’s two bars, twice: G for a bar, then F and C.",
@@ -9747,7 +9780,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/blues-harp"],
+      "sounds": ["model-d/blues-harp", "polivoks/pv-harmonica"],
       "research": {
         "work": "Little Walter, “Juke”, 1952",
         "part": "The riff, two bars: a shuffled E on the beat, and the E G♯ B C♯ climb back up to it.",
@@ -9760,7 +9793,7 @@
             "url": "https://bitmidi.com/uploads/63854.mid"
           }
         ],
-        "notes": "From the file’s harp track, bars 3–4, rounded to the eighth-note triplet: its timing is played in. Where the harp plays B and E together the pattern keeps the E, because the sound plays one note at a time. The file is Jim Beebe’s sequence. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the file’s harp track, bars 3–4, rounded to the eighth-note triplet: its timing is played in. Where the harp plays B and E together the pattern keeps the E, because the sounds play one note at a time. The file is Jim Beebe’s sequence. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -10633,6 +10666,389 @@
           }
         ],
         "notes": "From the transcription’s guitar track, bars 13–20, an octave down where its sounds’ riffs play. The transcription has guitar, bass and drums only; the theme is taken from the guitar, the nearest it has to Corea’s lead. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:chick-corea/duel-of-the-jester-theme-high",
+      "name": "Duel of the Jester and the Tyrant: the opening theme, an octave up",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "chick-corea-romantic-warrior",
+        "part": 0
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 160,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 83,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 78,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 84,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 83,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 78,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 77,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 78,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["0-coast/zc-touch-lead"],
+      "research": {
+        "work": "Return to Forever, “Duel of the Jester and the Tyrant”, Romantic Warrior, 1976",
+        "part": "The opening theme in half notes, eight bars: B G, F♯ E, G D, D C, twice, the second time turning to F and F♯: the same part an octave up.",
+        "originalKey": null,
+        "originalBpm": 160,
+        "leads": [
+          {
+            "citation": "Return to Forever — “Duel of the Jester and the Tyrant”, fan transcription by Gabriel Mrozik on Songsterr (revision 4100410, 2025-12-04)",
+            "checkedAt": "2026-11-02",
+            "url": "https://www.songsterr.com/a/wsa/return-to-forever-duel-of-the-jester-and-the-tyrant-tab-s914514"
+          }
+        ],
+        "notes": "This copy is moved an octave up from researched:chick-corea/duel-of-the-jester-theme, whose notes give the research. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -12360,7 +12776,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/satchidananda-harp", "cat/cat-satchidananda-harp"],
+      "sounds": ["model-d/satchidananda-harp", "cat/cat-satchidananda-harp", "polivoks/pv-harp"],
       "research": {
         "work": "Alice Coltrane, “Journey in Satchidananda”, Journey in Satchidananda, 1971",
         "part": "A cascade up through C with a flat seventh to a held G, and back down to C.",
@@ -13457,6 +13873,184 @@
       }
     },
     {
+      "key": "researched:biosphere/poa-alpina-tones-low",
+      "name": "Poa Alpina: two held tones, an octave down",
+      "role": "held",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Biosphere"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 60,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 16.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 16.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jp-8080/jp-biosphere-drone"],
+      "research": {
+        "work": "Biosphere, “Poa Alpina”, Substrata, 1997",
+        "part": "A G held for two bars, then a C, for the tone that follows the keys: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave down from researched:biosphere/poa-alpina-tones, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:chick-corea/rhodes-comping",
       "name": "Return to Forever: Rhodes comping",
       "role": "chord_stabs",
@@ -14417,14 +15011,18 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/overtone-sweep-drone", "malevolent/mal-radigue-drone"],
+      "sounds": [
+        "neutron/overtone-sweep-drone",
+        "malevolent/mal-radigue-drone",
+        "polivoks/pv-radigue-drone"
+      ],
       "research": {
         "work": "Éliane Radigue, “Kyema”, Trilogie de la Mort, 1988",
         "part": "A low A held for two bars, then a G.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
-        "notes": "Nothing by Radigue was found on Songsterr or BitMIDI; her works are tape, not scores. The sound climbs its overtones by itself over a held key, so it gets held notes. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "Nothing by Radigue was found on Songsterr or BitMIDI; her works are tape, not scores. The sounds climb their overtones by themselves over a held key, so they get held notes. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -17086,6 +17684,249 @@
       }
     },
     {
+      "key": "researched:jean-luc-ponty/enigmatic-ocean-line-low",
+      "name": "Enigmatic Ocean: a violin line, an octave down",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Jean-Luc Ponty"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 116,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 59,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jp-8080/jp-ponty-violin"],
+      "research": {
+        "work": "Jean-Luc Ponty, “Enigmatic Ocean”, Enigmatic Ocean, 1977",
+        "part": "A singing line up to A and back to E, then up to C and down to G: the same part an octave down.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave down from researched:jean-luc-ponty/enigmatic-ocean-line, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:kali-malone/sacrificial-code-chords",
       "name": "The Sacrificial Code: slow organ chords",
       "role": "chord_changes",
@@ -17907,10 +18748,10 @@
         ],
         "chain": [0]
       },
-      "sounds": ["syntrx-ii/syntrx-young-drone"],
+      "sounds": ["syntrx-ii/syntrx-young-drone", "0-coast/zc-harmonic-drone"],
       "research": {
         "work": "La Monte Young, the Dream House drones",
-        "part": "One A held for four bars; the sound tunes its chord above.",
+        "part": "One A held for four bars; the SYNTRX II’s “Just Drone” tunes its chord above.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
@@ -18321,7 +19162,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/plink-plank-pizzicato", "malevolent/mal-pizzicato"],
+      "sounds": [
+        "model-d/plink-plank-pizzicato",
+        "malevolent/mal-pizzicato",
+        "0-coast/zc-pizzicato"
+      ],
       "research": {
         "work": "Leroy Anderson, “Plink, Plank, Plunk!”, 1951",
         "part": "Plucked eighths up a C chord to G and down, then up to E and home to C.",
@@ -19338,7 +20183,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/harmon-mute-trumpet"],
+      "sounds": ["model-d/harmon-mute-trumpet", "0-coast/zc-harmon-trumpet"],
       "research": {
         "work": "Miles Davis Quintet, “It Never Entered My Mind”, Workin’, 1959",
         "part": "A ballad phrase up to C and down by steps to a long D, four bars.",
@@ -19703,10 +20548,10 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/mustt-harmonium"],
+      "sounds": ["neutron/mustt-harmonium", "minilogue-xd/mxd-harmonium"],
       "research": {
         "work": "Nusrat Fateh Ali Khan, “Mustt Mustt”, Mustt Mustt, 1990",
-        "part": "A low C held under a line around G and A♭, falling to E♭: the sound’s two voices.",
+        "part": "A low C held under a line around G and A♭, falling to E♭: two voices.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
@@ -19913,6 +20758,208 @@
         "originalBpm": null,
         "leads": [],
         "notes": "Nothing for “Saman” was found on Songsterr, BitMIDI or the Mutopia Project. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:olafur-arnalds/saman-chords-high",
+      "name": "Saman: two hushed chords, an octave up",
+      "role": "chord_changes",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Ólafur Arnalds"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 60,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 16.0
+                  },
+                  {
+                    "note": 60,
+                    "gate": 16.0
+                  },
+                  {
+                    "note": 64,
+                    "gate": 16.0
+                  },
+                  {
+                    "note": 69,
+                    "gate": 16.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 16.0
+                  },
+                  {
+                    "note": 62,
+                    "gate": 16.0
+                  },
+                  {
+                    "note": 67,
+                    "gate": 16.0
+                  },
+                  {
+                    "note": 71,
+                    "gate": 16.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["minilogue-xd/mxd-arnalds-arp"],
+      "research": {
+        "work": "Ólafur Arnalds, “Saman”, Island Songs, 2016",
+        "part": "F major 7 held for two bars, then G: the same part an octave up.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave up from researched:olafur-arnalds/saman-chords, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -20533,7 +21580,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["solar-42n/solar-deep-listening"],
+      "sounds": ["solar-42n/solar-deep-listening", "0-coast/zc-oliveros-drone"],
       "research": {
         "work": "Pauline Oliveros, Deep Listening, 1989",
         "part": "An E held for two bars, then a B, each left to bloom.",
@@ -21344,7 +22391,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/glass-harmonica"],
+      "sounds": ["model-d/glass-harmonica", "0-coast/zc-glass-armonica"],
       "research": {
         "work": "W. A. Mozart, Adagio in C for Glass Harmonica, K. 356 (617a), 1791",
         "part": "A slow C major line, up to E and back to a long C, four bars.",
@@ -21844,6 +22891,262 @@
         "originalBpm": null,
         "leads": [],
         "notes": "The tune is traditional, with no one recording to follow, and nothing was found. A real mbira part interlocks two hands; the sound plays one note at a time, so this is one hand. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:shona-mbira-tradition/nhemamusasa-pattern-high",
+      "name": "Nhemamusasa: an interlocking figure, an octave up",
+      "role": "arp",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Shona mbira tradition"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 120,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 86,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 83,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 81,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 86,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 84,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 83,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 84,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 83,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 83,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 1.0
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["polivoks/pv-kalimba"],
+      "research": {
+        "work": "Traditional, “Nhemamusasa”, Shona mbira music",
+        "part": "Twenty-four pulses of one hand’s part: high and low notes alternating over the cycle’s four chords: the same part an octave up.",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "This copy is moved an octave up from researched:shona-mbira-tradition/nhemamusasa-pattern, whose notes give the research. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -24756,7 +26059,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["td-3/td-doom-drone"],
+      "sounds": ["td-3/td-doom-drone", "0-coast/zc-doom-drone"],
       "research": {
         "work": "Sunn O))), “It Took the Night to Believe”, Black One, 2005",
         "part": "The drone bass’s two bars: A held, then E♭ and B: the same part an octave down, where the TD-3’s “Doom Drone” plays.",
@@ -24769,7 +26072,7 @@
             "url": "https://www.songsterr.com/a/wsa/sunn-o-it-took-the-night-to-believe-tab-s399746"
           }
         ],
-        "notes": "From the transcription’s drone-bass track, bars 3–4, an octave up where the sound’s riff plays. The second bar is 5/4, so the loop is nine beats. The sound gives each held note its own fifth. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:sunn-o/it-took-the-night-to-believe-drone.",
+        "notes": "From the transcription’s drone-bass track, bars 3–4, an octave up where the sounds’ riffs play. The second bar is 5/4, so the loop is nine beats. The TD-3’s “Doom Drone” gives each held note its own fifth. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:sunn-o/it-took-the-night-to-believe-drone.",
         "listenedAt": null
       }
     },
@@ -25481,7 +26784,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["donner-b1/b1-celesta"],
+      "sounds": ["donner-b1/b1-celesta", "0-coast/zc-celesta"],
       "research": {
         "work": "P. I. Tchaikovsky, “Dance of the Sugar Plum Fairy”, The Nutcracker, 1892",
         "part": "The celesta’s first phrase, four bars of 2/4: G E G F♯, D♯ E and three Ds, three C♯s, three Cs, then B E C E B: the same part an octave down, where the B1’s “Celesta Sparkle” plays.",
@@ -25494,7 +26797,7 @@
             "url": "https://bitmidi.com/uploads/37483.mid"
           }
         ],
-        "notes": "From the file’s celesta track, bars 6–9: the top note of its chords, which is the tune, two octaves down to sit where the sounds’ riffs play it. The file voices the celesta in three- and four-note chords; the tune alone suits both sounds. The file plays the notes short; the pattern keeps their written values. The tempo is the file’s, about 60. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:tchaikovsky/sugar-plum-fairy-theme.",
+        "notes": "From the file’s celesta track, bars 6–9: the top note of its chords, which is the tune, two octaves down to sit where the sounds’ riffs play it. The file voices the celesta in three- and four-note chords; the tune alone suits the sounds. The file plays the notes short; the pattern keeps their written values. The tempo is the file’s, about 60. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:tchaikovsky/sugar-plum-fairy-theme.",
         "listenedAt": null
       }
     },

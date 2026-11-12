@@ -230,6 +230,50 @@
     {
       "sound": "cat/cat-sh-vco-seq",
       "reason": "Its sample and hold plays the pattern from one held key, so a written line would be played over again; the batch’s “The Expanding Universe: a slow pattern” is a part written out."
+    },
+    {
+      "sound": "0-coast/zc-ciani-lead",
+      "reason": "Names no work, and the batch has Suzanne Ciani only as the dyads of “Sunergy”, not a lead; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "0-coast/zc-radiophonic-bell",
+      "reason": "Names no work, and the batch has Delia Derbyshire only as the gallop and melody of the “Doctor Who” theme, not bells; the chimes are the lesson’s own."
+    },
+    {
+      "sound": "0-coast/zc-riley-repeats",
+      "reason": "Its SLOPE fires CONTOUR, so each held key repeats by itself and a written part would be played over again; the batch has “A Rainbow in Curved Air” as its run and keys, written out."
+    },
+    {
+      "sound": "0-coast/zc-subotnick",
+      "reason": "Names “Silver Apples of the Moon”, which no pattern in this batch has yet; its SLOPE plays the pattern from each held key."
+    },
+    {
+      "sound": "0-coast/zc-barbieri-arp",
+      "reason": "Names “Fantas”, which no pattern in this batch has yet; the arpeggio is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jp-8080/jp-plantasia-bass",
+      "reason": "The batch has the work’s melody (“Plantasia: the melody”), and this sound plays the bass; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jp-8080/jp-tomita-dual",
+      "reason": "Names “Snowflakes Are Dancing”, whose patterns in this batch are lines, figures and an ostinato, and this sound plays held dyads; the dyads are the lesson’s own."
+    },
+    {
+      "sound": "minilogue-xd/mxd-folded-tri-lead",
+      "reason": "Names “Resurrect”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "polivoks/pv-cosmic-wash",
+      "reason": "It is an effect: a wash of swept noise, with no part to write."
+    },
+    {
+      "sound": "polivoks/pv-barron-random",
+      "reason": "It is an effect: its stepped modulator plays random notes from one held key, with no part to write."
+    },
+    {
+      "sound": "polivoks/pv-suicide-pulse",
+      "reason": "Its modulator chops one held key into the pulse, so a written part would be played over again; the batch has “Ghost Rider” as its riff and root, written out."
     }
   ],
   "patterns": [
@@ -628,7 +672,8 @@
       "sounds": [
         "model-d/baroque-line-voice",
         "solar-42n/solar-switched-on-bach",
-        "malevolent/mal-switched-on-bach"
+        "malevolent/mal-switched-on-bach",
+        "polivoks/pv-switched-on-bach"
       ],
       "research": {
         "work": "Wendy Carlos, “Two-Part Invention in F Major” (J. S. Bach, BWV 779), Switched-On Bach, 1968",
@@ -5977,7 +6022,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-motorik-pulse", "tb-303/tb-motorik", "grandmother/gm-kraut-motorik"],
+      "sounds": [
+        "take-5/t5-motorik-pulse",
+        "tb-303/tb-motorik",
+        "grandmother/gm-kraut-motorik",
+        "polivoks/pv-motorik-bass"
+      ],
       "research": {
         "work": "Neu!, “Hallogallo”, Neu!, 1972",
         "part": "The low E in straight eighths that runs under the whole track, two bars.",
@@ -7314,7 +7364,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/rockmore-theremin"],
+      "sounds": ["model-d/rockmore-theremin", "0-coast/zc-rockmore"],
       "research": {
         "work": "Clara Rockmore, “The Swan” (Camille Saint-Saëns, The Carnival of the Animals), The Art of the Theremin, 1977",
         "part": "The melody’s first four bars of 6/4: down from G through B and D, the long A, and the climb up the scale to B.",
@@ -7327,7 +7377,7 @@
             "url": "https://bitmidi.com/uploads/35278.mid"
           }
         ],
-        "notes": "From the file’s cello track, bars 2–5, an octave up for the sound; Rockmore plays the cello line. The file is played in, so its lengths are rounded to the half beat. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the file’s cello track, bars 2–5, an octave up for the sounds; Rockmore plays the cello line. The file is played in, so its lengths are rounded to the half beat. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -11952,10 +12002,10 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/says-swelling-arp", "donner-b1/b1-nils-frahm"],
+      "sounds": ["neutron/says-swelling-arp", "donner-b1/b1-nils-frahm", "0-coast/zc-felt-piano"],
       "research": {
         "work": "Nils Frahm, “Says”, Spaces, 2013",
-        "part": "A minor broken in sixteenths for a bar, then F over A, for the sound to swell.",
+        "part": "A minor broken in sixteenths for a bar, then F over A, for the sounds to swell.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
@@ -12411,7 +12461,8 @@
       "sounds": [
         "take-5/t5-reich-marimba",
         "mantis/mantis-reich-marimba",
-        "grandmother/gm-reich-marimba"
+        "grandmother/gm-reich-marimba",
+        "polivoks/pv-marimba"
       ],
       "research": {
         "work": "Steve Reich, Music for 18 Musicians, 1978",
@@ -12745,14 +12796,14 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-silver-apples-osc"],
+      "sounds": ["take-5/t5-silver-apples-osc", "minilogue-xd/mxd-ring-robot"],
       "research": {
         "work": "Silver Apples, “Oscillations”, Silver Apples, 1968",
         "part": "A short tune on A, up to D and down to E.",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
-        "notes": "Nothing for “Oscillations” was found on Songsterr or BitMIDI. The sound’s arpeggiator turns each held note into a pulse, so a single line pulses as it plays. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "Nothing for “Oscillations” was found on Songsterr or BitMIDI. The Take 5’s “Oscillator Chime” runs its arpeggiator, which turns each held note into a pulse, so a single line pulses as it plays. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },

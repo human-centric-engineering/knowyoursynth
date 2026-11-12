@@ -46,6 +46,10 @@
     {
       "sound": "2-xm/xm-dune-wind",
       "reason": "The sound is an effect made by the patch from noise or modulation, not a part with notes, so there is nothing to transcribe."
+    },
+    {
+      "sound": "polivoks/pv-tidal-swell",
+      "reason": "Names “Music for Airports”, whose patterns in this batch are its figures, tones and chords; this sound’s repeating envelope makes the swells from one held note, so a written part would play over them."
     }
   ],
   "patterns": [
@@ -735,7 +739,8 @@
         "deepmind-12d/noir-pad",
         "e7/e7-vangelis-brass",
         "super-gemini/sg-blade-brass",
-        "take-5/t5-blade-runner-brass"
+        "take-5/t5-blade-runner-brass",
+        "minilogue-xd/mxd-blade-runner-chords"
       ],
       "research": {
         "work": "Vangelis, “End Titles”, Blade Runner, 1982 (released 1994)",
@@ -3489,7 +3494,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/sub-drone-bass"],
+      "sounds": ["ub-xa-d/sub-drone-bass", "polivoks/pv-swell-bass"],
       "research": {
         "work": "Vangelis, “End Titles”, Blade Runner, 1982 (released 1994)",
         "part": "The sixteenth-note sequence under the first eight bars of the theme: C, C, D, E♭ for four bars, then on G for two and D for two. At the pitch the bass plays it.",
@@ -4054,6 +4059,547 @@
           }
         ],
         "notes": "From the MIDI file’s synth brass track, bars 30–33. The file doubles it at the octave; this is the upper octave. Its timing is played in, so starts and lengths are rounded to the triplet sixteenth, which holds both the eighths and the triplets. The pickup at the end of bar 33 is the one that starts the next phrase, so the loop leads back into itself. The Songsterr transcription (Leonard, 2010) is a solo-guitar arrangement in G, so nothing confirms it. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:vangelis/chariots-of-fire-melody-high",
+      "name": "Chariots of Fire: melody, an octave up",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "work",
+        "songId": "vangelis-chariots-of-fire",
+        "part": 0
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 70,
+        "stepSize": "1/16t",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 80,
+                    "gate": 6.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 77,
+                    "gate": 7.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 73,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 78,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 80,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 82,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 80,
+                    "gate": 14.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 73,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 78,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 80,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 82,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 80,
+                    "gate": 6.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 77,
+                    "gate": 8.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 77,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 78,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 77,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 73,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 73,
+                    "gate": 15.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 73,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 78,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 80,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 82,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["polivoks/pv-breathy-lead"],
+      "research": {
+        "work": "Vangelis, “Titles”, Chariots of Fire, 1981",
+        "part": "Four bars of the melody: A♭ and F, then the triplet run from D♭ up to a held A♭, twice, the second time falling to D♭: the same part an octave up.",
+        "originalKey": "D♭ major",
+        "originalBpm": 70,
+        "leads": [
+          {
+            "citation": "“VANGELIS.Chariots of Fire.mid”, fan-made MIDI file on BitMIDI, uploader unknown",
+            "url": "https://bitmidi.com/vangelis-chariots-of-fire-mid",
+            "checkedAt": "2026-11-01"
+          }
+        ],
+        "notes": "This copy is moved an octave up from researched:vangelis/chariots-of-fire-melody, whose notes give the research. _In the style of_: the notes come from fan transcriptions, which the method counts as starting points, not sources. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -6356,7 +6902,8 @@
         "k2/boc-drifting-pad",
         "model-d/tape-wow-keys",
         "pro-1/hazy-drift-pad",
-        "tb-303/tb-hazy-melody"
+        "tb-303/tb-hazy-melody",
+        "polivoks/pv-boc-glass"
       ],
       "research": {
         "work": "Boards of Canada, “Olson”, Music Has the Right to Children, 1998",
@@ -6554,7 +7101,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/worn-tape-echo-pad", "ub-xa-d/wavering-pad"],
+      "sounds": [
+        "neutron/worn-tape-echo-pad",
+        "ub-xa-d/wavering-pad",
+        "minilogue-xd/mxd-shape-swell-keys"
+      ],
       "research": {
         "work": "Boards of Canada, “Olson”, Music Has the Right to Children, 1998",
         "part": "The four-bar pad in two-note chords that the piece is built on, under the melody.",
@@ -8700,7 +9251,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/blade-runner-blues-lead"],
+      "sounds": ["neutron/blade-runner-blues-lead", "0-coast/zc-delayed-bloom"],
       "research": {
         "work": "Vangelis, “Blade Runner Blues”, Blade Runner, 1982",
         "part": "Four slow bars in E minor: G bending down to E, then A sliding to G and back to E.",
@@ -20166,7 +20717,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["mantis/mantis-ascent-swell"],
+      "sounds": ["mantis/mantis-ascent-swell", "minilogue-xd/mxd-ascent-pad"],
       "research": {
         "work": "Brian Eno, “An Ending (Ascent)”, Apollo: Atmospheres and Soundtracks, 1983",
         "part": "The six bars of melody the transcription has: E, B, D; C, B, A; then the rise to G and the fall back to G and A: the same part an octave down, where the Mantis’s “Ascent Swell” plays.",

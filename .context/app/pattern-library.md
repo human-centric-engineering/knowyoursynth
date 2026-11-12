@@ -976,6 +976,26 @@ the M.G.’s", "CHVRCHES"), since the roster test matches names exactly and a va
   sentence was written for. Rubycon's part no longer describes one patch's line, and Clair de Lune's closing passage
   now opens "_In the style of_:", so its octave copy keeps a whole sentence.
 
+**The Polivoks, 0-COAST, minilogue xd and JP-8080 sounds (t-250)**, placed by the same rules. Of their 433 new sounds,
+169 are by artists a batch covers, in all twelve batches.
+
+- **86 sit on a pattern**: the work the sound names (or, for one naming an album, a part of the same kind on it:
+  "Speak to Me" for The Dark Side of the Moon, "I'm Only Sleeping" for Revolver's reversed swells), the part first and
+  the register second. The minilogue xd's and JP-8080's arpeggiator sounds take held chords ("Chase: chords",
+  "Stranger Things: the arpeggio as a chord"). A two-voice Polivoks sound may sit on a single line, as its riff plays
+  both voices from one keyboard.
+- **22 of those sit on an octave copy**, 21 copies new, an octave each, written as the sweep's are; the two Jan Hammer
+  leads share "Miami Vice Theme: lead, an octave up". The Halloween figure's copy is `halloween-piano-figure-low-2`,
+  since the plain `-low` is two octaves down. The Biosphere drone names Substrata and takes "Poa Alpina", a track on
+  it, an octave down, as the sweep copies move one octave only.
+- **61 keep a reason**: the work has no pattern yet; the work's pattern is another part; the batch has the part as
+  chords and the sound plays one line, or as written chords where the minilogue xd's CHORD mode builds a chord from
+  each key; the work's chords have more notes than the minilogue xd's four voices; its arpeggiator would play a written
+  part over again; it plays its own rhythm from a held key (the 0-COAST's EOC and clock patches, the Polivoks's
+  repeating envelopes and stepped modulator, the JP-8080's gate and sample and hold); or it is an effect.
+- Twenty-five patterns' notes that spoke of "the sound" now say "the sounds" where it holds for all of them, and name
+  the patch otherwise ("The 2600's “Funk Solo Lead” names no work").
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on

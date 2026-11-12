@@ -106,6 +106,26 @@
     {
       "sound": "cat/cat-seagull-cries",
       "reason": "The sound is an effect made by the patch from noise or modulation, not a part with notes, so there is nothing to transcribe."
+    },
+    {
+      "sound": "jp-8080/jp-tull-flute",
+      "reason": "Names “Bourrée”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "jp-8080/jp-ring-sitar",
+      "reason": "Names “Within You Without You”, which no pattern in this batch has yet; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "minilogue-xd/mxd-jet-pad",
+      "reason": "Names no work, and the batch has no pattern of Hawkwind’s yet; the chords are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "minilogue-xd/mxd-doors-organ",
+      "reason": "Names no work, and the batch has The Doors only as the bass of “Riders on the Storm”, not the organ; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "polivoks/pv-tubular-bell",
+      "reason": "The batch has the work’s ostinato (“Tubular Bells: ostinato”), and this sound is the bell; the tune is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -596,7 +616,8 @@
       "sounds": [
         "model-d/speak-to-me-heartbeat",
         "take-5/t5-dark-side-heartbeat",
-        "grandmother/gm-speak-heartbeat"
+        "grandmother/gm-speak-heartbeat",
+        "polivoks/pv-heartbeat"
       ],
       "research": {
         "work": "Pink Floyd, “Speak to Me”, The Dark Side of the Moon, 1973",
@@ -2098,7 +2119,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/shine-lead"],
+      "sounds": ["model-d/shine-lead", "minilogue-xd/mxd-tape-echo-lead"],
       "research": {
         "work": "Pink Floyd, “Shine On You Crazy Diamond (Parts I–V)”, Wish You Were Here, 1975",
         "part": "Richard Wright’s Minimoog line in Part I: G held, then B♭, A, G, D; C held; B♭, F and G held two bars; then B♭ falling to A, twice.",
@@ -6060,7 +6081,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-backwards-swell", "model-d/backwards-guitar-swell"],
+      "sounds": [
+        "take-5/t5-backwards-swell",
+        "model-d/backwards-guitar-swell",
+        "0-coast/zc-reverse-swell"
+      ],
       "research": {
         "work": "The Beatles, “I’m Only Sleeping”, Revolver, 1966",
         "part": "The end of the backwards guitar solo: B♭, C♯, D♯, B♭, D♯, F; then F♯, G♯ and B.",
@@ -9532,7 +9557,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/fast-prog-lead"],
+      "sounds": ["model-d/fast-prog-lead", "polivoks/pv-fm-rasp"],
       "research": {
         "work": "Yes, “Close to the Edge”, Close to the Edge, 1972",
         "part": "The top of Wakeman’s Minimoog chords before the chorus, in 6/4: E four times, G, F♯; D four times, F, E.",
@@ -11691,7 +11716,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["solar-42n/solar-glide-guitar"],
+      "sounds": ["solar-42n/solar-glide-guitar", "polivoks/pv-shoegaze"],
       "research": {
         "work": "My Bloody Valentine, “Only Shallow”, Loveless, 1991",
         "part": "The chorus lead off the beat: A, high D, A, G, each bar.",
@@ -11704,7 +11729,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Synths” track, bars 26–27, two octaves down to sit where the sound plays. The bend in and out of tune is the patch’s. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Synths” track, bars 26–27, two octaves down to sit where the sounds play. The bend in and out of tune is each patch’s own. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -16761,7 +16786,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/misirlou-tremolo"],
+      "sounds": ["neutron/misirlou-tremolo", "polivoks/pv-surf-tremolo"],
       "research": {
         "work": "Dick Dale and His Del-Tones, “Misirlou”, Surfers’ Choice, 1962",
         "part": "The first verse melody: B held, a chromatic slide down from B♭ to F, E, F, G♯, A, B, C, D♯, C, E.",
@@ -16774,7 +16799,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s “Lead Guitar” track, bars 6–9, two octaves up to sit where the sound plays. The tremolo picking is the patch’s; the transcription writes the notes it picks. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s “Lead Guitar” track, bars 6–9, two octaves up to sit where the sounds play. The tremolo is each patch’s own; the transcription writes the notes it picks. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -20070,7 +20095,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/svefn-bowed-swell"],
+      "sounds": ["neutron/svefn-bowed-swell", "jp-8080/jp-sigur-hpf-pad"],
       "research": {
         "work": "Sigur Rós, “Svefn-g-englar”, Ágætis byrjun, 1999",
         "part": "The bowed guitar’s long falling notes: C♯ to B held, A to G♯ held, then F♯.",
@@ -23097,7 +23122,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["e7/e7-dotted-pluck", "take-5/t5-streets-delay", "2-xm/xm-streets-guitar"],
+      "sounds": [
+        "e7/e7-dotted-pluck",
+        "take-5/t5-streets-delay",
+        "2-xm/xm-streets-guitar",
+        "minilogue-xd/mxd-edge-delay"
+      ],
       "research": {
         "work": "U2, “Where the Streets Have No Name”, The Joshua Tree, 1987",
         "part": "The Edge’s introduction in 3/4 eighths: G, F♯, G, A, D, F♯, four times.",
@@ -25061,7 +25091,8 @@
       "sounds": [
         "mantis/mantis-lucky-man-lead",
         "malevolent/mal-lucky-man-glide",
-        "grandmother/gm-lucky-man-solo"
+        "grandmother/gm-lucky-man-solo",
+        "minilogue-xd/mxd-lucky-man"
       ],
       "research": {
         "work": "Emerson, Lake & Palmer, “Lucky Man”, Emerson, Lake & Palmer, 1970",

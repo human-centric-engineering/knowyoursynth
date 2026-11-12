@@ -98,6 +98,46 @@
     {
       "sound": "pro-1/p1-cant-go-for-that",
       "reason": "The batch has the work’s chords (“I Can’t Go for That: electric piano”), and this sound plays one line; the riff is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "0-coast/zc-brass-swell",
+      "reason": "Names no work, and the batch has Earth, Wind & Fire only as the kalimba figure of “Kalimba Story”, not horn stabs; the stabs are the lesson’s own."
+    },
+    {
+      "sound": "0-coast/zc-green-onions-organ",
+      "reason": "The batch has the work’s organ as chords (“Green Onions: organ”), and this sound plays one line; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "0-coast/zc-worrell-wah",
+      "reason": "Names “Flash Light”, whose pattern in this batch is the bass, and this sound plays a lead; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "0-coast/zc-beat-wah",
+      "reason": "Its clock plays the wah from one held key, so a written part would be played over again; the batch has “Theme from Shaft” as its wah guitar, written out."
+    },
+    {
+      "sound": "jp-8080/jp-parliament-sh",
+      "reason": "Its LFO 1 on SH plays the filter’s steps from one held note, so a written part would be played over again; the batch has “Flash Light” only as its bass."
+    },
+    {
+      "sound": "jp-8080/jp-teardrop-pad",
+      "reason": "Names “Teardrop”, which no pattern in this batch has yet; the chords are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "minilogue-xd/mxd-sync-bass",
+      "reason": "Names “1999”, whose patterns in this batch are its stabs and their top line, and this sound plays the bass; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "minilogue-xd/mxd-dilla-keys",
+      "reason": "Names “Donuts”, which no pattern in this batch has yet; the chords are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "polivoks/pv-sh-filter",
+      "reason": "Its stepped modulator plays the filter’s steps from one held note, so a written part would be played over again; the batch has Herbie Hancock only as “Chameleon”."
+    },
+    {
+      "sound": "polivoks/pv-talk-box",
+      "reason": "Names no work, and the batch has Zapp only as the bass of “More Bounce to the Ounce”, not a lead; the line is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [
@@ -3622,7 +3662,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["wasp-deluxe/wasp-sliding-funk-bass"],
+      "sounds": ["wasp-deluxe/wasp-sliding-funk-bass", "polivoks/pv-pulse-funk-bass"],
       "research": {
         "work": "Talking Heads, “Slippery People”, Speaking in Tongues, 1983",
         "part": "The two-bar bass: A, C, D, D, C, A, then E, E, D, D, C, G.",
@@ -3635,7 +3675,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s bass track, bars 1–2, moved up an octave to sit where the sound plays. The sound names the Stop Making Sense performance; the transcription is of the record. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s bass track, bars 1–2, moved up an octave to sit where the sounds play. The WASP Deluxe’s “Sliding Funk Bass” names the Stop Making Sense performance; the transcription is of the record. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -5229,7 +5269,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["b2600/hancock-funk-solo"],
+      "sounds": ["b2600/hancock-funk-solo", "0-coast/zc-chameleon-clav"],
       "research": {
         "work": "Herbie Hancock, “Chameleon”, Head Hunters, 1973",
         "part": "Four bars of the first theme: B♭, A♭, B♭ in pairs, the C♯, then the turn B♭, A♭, F, A♭.",
@@ -5242,7 +5282,7 @@
             "checkedAt": "2026-11-02"
           }
         ],
-        "notes": "From the transcription’s synth track (“Herbie Hancock, clavier”), bars 38–41, as written. The sound names no work, only the Head Hunters synth solos; the theme is the Head Hunters synth line the free web has. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the transcription’s synth track (“Herbie Hancock, clavier”), bars 38–41, as written. The 2600’s “Funk Solo Lead” names no work, only the Head Hunters synth solos; the theme is the Head Hunters synth line the free web has. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -7571,7 +7611,8 @@
       "sounds": [
         "take-5/t5-superstition-clav",
         "malevolent/mal-superstition-clav",
-        "grandmother/gm-superstition-clav"
+        "grandmother/gm-superstition-clav",
+        "polivoks/pv-clav"
       ],
       "research": {
         "work": "Stevie Wonder, “Superstition”, Talking Book, 1972",
@@ -8512,7 +8553,8 @@
         "model-d/squelch-clav-bass",
         "super-gemini/sg-boogie-bass",
         "take-5/t5-boogie-bass",
-        "grandmother/gm-boogie-bass"
+        "grandmother/gm-boogie-bass",
+        "0-coast/zc-even-bass"
       ],
       "research": {
         "work": "Stevie Wonder, “Boogie On Reggae Woman”, Fulfillingness’ First Finale, 1974",
@@ -9314,6 +9356,220 @@
       }
     },
     {
+      "key": "researched:george-duke/reach-for-it-riff-high",
+      "name": "Reach for It: riff, an octave up",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "artist",
+        "artistId": "george-duke"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 90,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 93,
+                    "gate": 4.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 81,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 84,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 81,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["jp-8080/jp-duke-lead"],
+      "research": {
+        "work": "George Duke, “Reach for It”, Reach for It, 1977",
+        "part": "Two bars of the riff: the high A, then E, G, E, A, E, C, A: the same part an octave up.",
+        "originalKey": null,
+        "originalBpm": 90,
+        "leads": [
+          {
+            "citation": "George Duke — “Reach For It”, transcription generated by Songsterr AI on Songsterr (revision 4024422, 2025-11-28)",
+            "url": "https://www.songsterr.com/a/wsa/george-duke-reach-for-it-tab-s3063528",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "This copy is moved an octave up from researched:george-duke/reach-for-it-riff, whose notes give the research. _In the style of_: the notes come from a transcription Songsterr generated by machine, a weaker starting point than a fan’s. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
       "key": "researched:george-duke/jazz-funk-rhodes",
       "name": "Jazz-funk Rhodes comping",
       "role": "chord_stabs",
@@ -9740,6 +9996,166 @@
           }
         ],
         "notes": "From the transcription’s second guitar track, bars 1–2, moved up an octave to sit where the sounds play. The transcription gives the Wurlitzer’s riff to guitar. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:ray-charles/whatd-i-say-riff-high",
+      "name": "What’d I Say: electric piano riff, an octave up",
+      "role": "lead_line",
+      "tempo": null,
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Ray Charles"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 177,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 3.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 76,
+                    "gate": 2.0
+                  }
+                ]
+              },
+              {
+                "on": true,
+                "notes": []
+              }
+            ]
+          }
+        ],
+        "chain": [0]
+      },
+      "sounds": ["0-coast/zc-wurlitzer"],
+      "research": {
+        "work": "Ray Charles, “What’d I Say”, 1959",
+        "part": "The two-bar riff: E, B, B, D, E, then the same without the low E: the same part an octave up.",
+        "originalKey": null,
+        "originalBpm": 177,
+        "leads": [
+          {
+            "citation": "Ray Charles — “What'd I Say”, fan transcription by H on Songsterr (revision 6272651, 2026-04-14)",
+            "url": "https://www.songsterr.com/a/wsa/ray-charles-whatd-i-say-tab-s16208",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "notes": "This copy is moved an octave up from researched:ray-charles/whatd-i-say-riff, whose notes give the research. _In the style of_: the notes come from a fan transcription, which the method counts as a starting point, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -11446,7 +11862,8 @@
         "super-gemini/sg-gfunk",
         "super-gemini/sg-whistle",
         "mantis/mantis-gfunk-whistle",
-        "grandmother/gm-g-funk-whine"
+        "grandmother/gm-g-funk-whine",
+        "polivoks/pv-gfunk-whine"
       ],
       "research": {
         "work": "Dr. Dre featuring Snoop Doggy Dogg, “Nuthin’ but a ‘G’ Thang”, The Chronic, 1992",
@@ -12400,7 +12817,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-alpert-trumpet", "grandmother/gm-rise-trumpet"],
+      "sounds": [
+        "take-5/t5-alpert-trumpet",
+        "grandmother/gm-rise-trumpet",
+        "minilogue-xd/mxd-alpert-trumpet"
+      ],
       "research": {
         "work": "Herb Alpert, “Rise”, Rise, 1979",
         "part": "Four bars of the melody: F, G, A♭, B♭ up to the held C, then C, C, C, C♯ falling to B♭.",
@@ -13154,7 +13575,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/jimmy-smith-organ", "take-5/t5-jimmy-smith-organ"],
+      "sounds": [
+        "model-d/jimmy-smith-organ",
+        "take-5/t5-jimmy-smith-organ",
+        "jp-8080/jp-jimmy-smith-organ"
+      ],
       "research": {
         "work": "Jimmy Smith, “The Sermon!”, The Sermon!, 1959",
         "part": "Two bars of a blues lick in F, with the B♮ and the repeated C.",
@@ -13956,7 +14381,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/stacked-night-bass", "pro-1/p1-thriller-bass"],
+      "sounds": [
+        "model-d/stacked-night-bass",
+        "pro-1/p1-thriller-bass",
+        "minilogue-xd/mxd-thriller-bass"
+      ],
       "research": {
         "work": "Michael Jackson, “Thriller”, Thriller, 1982",
         "part": "The one-bar synth bass: B, C♯, E, F♯, then C♯ and the low C♯.",
