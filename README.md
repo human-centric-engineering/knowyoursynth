@@ -68,9 +68,10 @@ npm run db:migrate:dev
 npm run dev
 ```
 
-Open http://localhost:3024. The port is set by `PORT` in the committed
-`.env.development`, which `npm run dev` reads. Know Your Synth uses **3024**;
-Sunrise itself is on 3010 and BeatBreaker on 3022.
+Open http://localhost:3041. The port is set by `PORT` in the committed
+`.env.development`, which `npm run dev` reads. Know Your Synth uses **3041**,
+registered in the HCE [dev-proxy](https://github.com/human-centric-engineering/dev-proxy)
+(https://knowyoursynth.test once the proxy is applied).
 
 ### The prototype
 
@@ -82,13 +83,13 @@ node prototype/check.mjs model-d          # validate and render one synth's soun
 ### First admin account
 
 There are **no default credentials**. On a fresh database, the first account you
-create at [`/signup`](http://localhost:3024/signup) is promoted to `ADMIN`;
+create at [`/signup`](http://localhost:3041/signup) is promoted to `ADMIN`;
 every account after that is a regular `USER`.
 
 ## Essential Commands
 
 ```bash
-npm run dev              # Start dev server (port 3024)
+npm run dev              # Start dev server (port 3041)
 npm run validate         # CHANGELOG + Node version + type-check + lint + format
 npm run db:studio        # Open Prisma Studio
 npm test                 # Run tests
