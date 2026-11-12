@@ -211,6 +211,7 @@ when absent**, added synth by synth:
 | Top-note priority                       | `keyPriority: 'high'` (default `'last'`; ignored with `duo`, `oscAssign`, `dualAssign`)                           | Selmer Clavioline  |
 | Overtone and folder, rise/fall function | osc `mix.ovt`, dest `ovtIn`; signals `eoc` / `eon`, dests `env2Rate` / `env1DecRate`, env `free`, a curved `loop` | Make Noise 0-COAST |
 | Chord stack, one-shot LFO, saw folder   | `poly.chord`, `lfo.oneShot`, osc `mix.sfold` (with `fold`)                                                        | Korg minilogue xd  |
+| Filtered noise, VPM oscillator          | osc `mix.mnoise` / `mix.vpm`, with osc `mnoise` / `vpm` settings; SHAPE rides the pulse-width dest                | Korg minilogue xd  |
 
 A synth whose sound path is `easel`, `moog` or `solar` still returns the core stubs (`osc: []` etc.).
 `solar` runs eight voices of three kinds (`drone`, `srapa`, `vco`), each with its own gate and envelope, into

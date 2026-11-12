@@ -1482,6 +1482,13 @@ export interface OscMix {
    * `morph` has no `mix`, so `ovt` there does nothing.
    */
   ovt?: number;
+  /**
+   * minilogue xd MULTI ENGINE NOISE: white noise through the filter `OscParams.mnoise` sets ({@link MultiNoiseParams}).
+   * Like `ovt`, it does nothing on an oscillator with `morph`, which has no `mix`.
+   */
+  mnoise?: number;
+  /** minilogue xd MULTI ENGINE VPM: a two-operator phase-modulation voice set by `OscParams.vpm` ({@link VpmParams}); not with `morph`. */
+  vpm?: number;
 }
 
 /** One oscillator (up to four; the fourth has signal `osc4`, dest `pitch4` and shares `pw2`). */
@@ -1531,6 +1538,67 @@ export interface OscParams {
   nCut?: number;
   /** `mix.fnoise` resonance 0..1 (default 0). */
   nRes?: number;
+  /** `mix.mnoise`'s filter and SHAPE (required with it). */
+  mnoise?: MultiNoiseParams;
+  /** `mix.vpm`'s carrier, modulator and envelope (required with it). */
+  vpm?: VpmParams;
+}
+
+/**
+ * The minilogue xd's MULTI ENGINE NOISE (`mix.mnoise`): white noise through one of four filters, set by SHAPE. The
+ * manual gives each type's range and a line on what it does, not the filter slopes, so the slopes are reasoned: a
+ * 12 dB/oct state-variable filter for `hp`, `lp` and `peak`.
+ */
+export interface MultiNoiseParams {
+  /**
+   * `hp` High and `lp` Low: high- or low-pass at a cutoff that does not follow the key. `peak`: a band-pass centred on
+   * the oscillator's pitch, so it plays in tune. `decim`: the noise held at a lower sample rate.
+   */
+  type: 'hp' | 'lp' | 'peak' | 'decim';
+  /**
+   * SHAPE 0..1, exponential across each type's range: the `hp` / `lp` cutoff from 10 Hz to 21 kHz, the `peak`
+   * bandwidth from 110 to 880 Hz, the `decim` rate from 240 Hz to 48 kHz (capped at the sample rate). The oscillator's
+   * pulse-width destination adds to it.
+   */
+  shape: number;
+  /**
+   * `decim` only, 0..1 (SHIFT + SHAPE, KEY TRACK): the rate follows the oscillator's note (its fixed note when off the
+   * keyboard), an octave per octave from C4 at 1.
+   */
+  keyTrack?: number;
+}
+
+/**
+ * The minilogue xd's VPM oscillator (`mix.vpm`): one carrier phase-modulated by one modulator, from the manual's block
+ * diagram (modulator with feedback and added noise → index → carrier → drive) and its one-line description of each of
+ * the 16 types. Nothing in the manual gives the index scale, the curves or the drive, so all three are reasoned, not
+ * measured. The definition sets these values per type; the engine knows no type names.
+ */
+export interface VpmParams {
+  /** The carrier's wave: a sine (default), or a phase-modulated saw or square, which are not band-limited. */
+  carrier?: 'sine' | 'saw' | 'sqr';
+  /** The modulator's frequency as a multiple of the carrier's (RATIO and its OFFSET): 0.25 is a subharmonic. */
+  ratio: number;
+  /** SHAPE 0..1, MOD DEPTH: the index, up to 2π radians at 1. The oscillator's pulse-width destination adds to it. */
+  depth: number;
+  /** 0..1: the modulator's self-feedback (FEEDBACK). */
+  fb?: number;
+  /** 0..1: white noise added to the modulator's output (NOISE DEPTH). */
+  noise?: number;
+  /** 0..1: the carrier driven into a soft clip, at a matched level. */
+  drive?: number;
+  /**
+   * The internal envelope on the index, restarted with each note (and whenever Envelope 1's gate rises): a straight rise over `a` seconds, then an
+   * exponential fall to 1 % over `d` seconds (MOD ATTACK, MOD DECAY). `amt` −1..1 (SHAPE MOD INT) is how far it moves
+   * the depth: the depth is `depth` + `amt` × the envelope, scaled by `keyTrack`, then held to 0..2. Each note also
+   * starts the modulator in step with the carrier.
+   */
+  eg?: { a: number; d: number; amt: number };
+  /**
+   * 0..1 (MOD KEY TRACK): the index falls as the key rises, halving each octave above C4 at 1 (and rises below, to the
+   * same ceiling). It follows the oscillator's own note, its fixed note when it is off the keyboard.
+   */
+  keyTrack?: number;
 }
 
 export interface NoiseParams {
