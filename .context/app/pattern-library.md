@@ -1545,11 +1545,11 @@ octave above its key, or is thin at the bottom (the low note 9 dB or more below 
 
 #### Agreement with the library
 
-Measured on 2026-11-09 over the library's 4,524 sounds:
+Measured on 2026-11-12 over the library's 5,024 sounds:
 
-- **The detector reads the sound's own category for 2,222 of them (49.1%).** Picking the commonest category, bass, every
-  time would get 17.5%.
-- **Cross-validated: 2,189 (48.4%).** Each fifth of the library is measured on a model fitted to the other four fifths.
+- **The detector reads the sound's own category for 2,445 of them (48.7%).** Picking the commonest category, bass, every
+  time would get 17.3%.
+- **Cross-validated: 2,402 (47.8%).** Each fifth of the library is measured on a model fitted to the other four fifths.
 - **5 sounds are silent on the probe notes**: `model-d/just-intonation-drone`, `model-d/slow-breaking-waves`,
   `pro-1/filter-clave`, `malevolent/mal-extreme` and `grandmother/gm-ringing-ladder-ping`. `check:synths` hears each one play its riff, so they do make sound, but not on a held G3 within
   the probe's 0.85 s. The two filter pings (the clave and the Grandmother's) have no oscillator in the mixer, only a
@@ -1559,7 +1559,7 @@ When it was last measured there (t-191), CI's Linux x64 read one fx sound as lea
 the platforms' maths can differ in the last bit, and a sound near a feature's threshold can tip. The figures here are
 the macOS ones.
 
-`soundkind-library.test.ts` pins the 49.1% (its floor is one sound below the macOS count, for that tip), so a change to the probe, the engine, the features or the library can't
+`soundkind-library.test.ts` pins the 48.7% (its floor is one sound below the macOS count, for that tip), so a change to the probe, the engine, the features or the library can't
 make the detector worse without someone deciding it should. It renders the whole library, about three minutes of CPU,
 so it is the slowest test in the app. It sweeps on two worker threads rather than one per core: a sweep across every
 core starved the tests vitest runs alongside it into timeouts. It runs when something it imports changes (the probe
@@ -1570,18 +1570,18 @@ sound was read as strings or wind, so those columns are left out.
 
 | Label   |    bass |    lead |     pad |  pluck |    keys |      fx |  drone |    perc |     seq | brass | silent | Agree |
 | ------- | ------: | ------: | ------: | -----: | ------: | ------: | -----: | ------: | ------: | ----: | -----: | ----: |
-| bass    | **644** |      47 |       4 |      6 |      34 |       3 |      8 |      13 |      30 |     2 |      · |   81% |
-| lead    |      89 | **487** |      41 |     11 |      58 |      22 |      5 |       6 |      13 |     3 |      · |   66% |
-| pad     |       · |      35 | **342** |      · |      18 |       9 |     11 |       1 |      13 |     · |      · |   80% |
-| pluck   |      43 |      21 |       6 | **63** |      97 |       4 |      · |      14 |      18 |     · |      · |   24% |
-| keys    |      65 |      70 |      28 |     33 | **250** |       6 |      2 |      14 |      35 |     4 |      · |   49% |
-| fx      |      45 |     108 |      28 |     10 |      18 | **141** |     13 |      33 |      31 |     · |      2 |   33% |
-| drone   |      18 |      39 |      58 |      · |       7 |      15 | **42** |       · |       8 |     · |      1 |   22% |
-| perc    |      56 |      16 |       · |     14 |      34 |      20 |      2 | **142** |      17 |     · |      2 |   47% |
-| seq     |     100 |      36 |      35 |     29 |      67 |      23 |      4 |      16 | **103** |     · |      · |   25% |
-| brass   |      27 |      44 |      38 |      · |      35 |       · |      · |       2 |       1 | **8** |      · |    5% |
-| strings |      10 |      33 |      88 |      · |      18 |       1 |      2 |       · |       4 |     · |      · |    0% |
-| wind    |      17 |     101 |      13 |      · |       5 |      11 |      1 |       · |       · |     4 |      · |    0% |
+| bass    | **700** |      54 |       5 |      8 |      36 |       3 |      9 |      18 |      32 |     2 |      · |   81% |
+| lead    |      94 | **545** |      48 |      9 |      69 |      25 |      4 |       6 |      15 |     3 |      · |   67% |
+| pad     |       2 |      39 | **375** |      · |      18 |      12 |     11 |       1 |      14 |     · |      · |   79% |
+| pluck   |      45 |      22 |       7 | **77** |     113 |       4 |      · |      17 |      18 |     · |      · |   25% |
+| keys    |      71 |      85 |      28 |     43 | **270** |      11 |      4 |      18 |      41 |     5 |      · |   47% |
+| fx      |      44 |     125 |      31 |     12 |      18 | **151** |     14 |      39 |      37 |     · |      2 |   32% |
+| drone   |      19 |      45 |      66 |      · |       8 |      18 | **41** |       · |       8 |     · |      1 |   20% |
+| perc    |      56 |      17 |       · |     20 |      41 |      23 |      2 | **162** |      16 |     · |      2 |   48% |
+| seq     |     102 |      46 |      38 |     33 |      69 |      25 |      4 |      17 | **117** |     · |      · |   26% |
+| brass   |      33 |      52 |      41 |      · |      39 |       · |      · |       · |       · | **7** |      · |    4% |
+| strings |      12 |      36 |      99 |      · |      19 |       1 |      2 |       · |       5 |     · |      · |    0% |
+| wind    |      16 |     118 |      14 |      · |       3 |      14 |      1 |       · |       1 |     6 |      · |    0% |
 
 #### The disagreements
 
@@ -1589,7 +1589,7 @@ The review on 2026-10-31 sorted the disagreements by how sure the detector was. 
 are not a wrong detector. They are a label on a different axis from the sound:
 
 - **Orchestral names.** _Strings_, _wind_ and _brass_ name the instrument a patch imitates, not how it behaves. A string
-  ensemble swells and holds like a pad (88 of 156 read as pad), and a synth flute plays like a lead (101 of 152). The
+  ensemble swells and holds like a pad (99 of 174 read as pad), and a synth flute plays like a lead (118 of 173). The
   detector hears timbre the way a filter shapes it, and none of its features can hear formants. These three
   categories are where it is weakest, and suggestions lose almost nothing by it, because the roles that suit a string
   pad are the roles that suit a pad.
@@ -1598,7 +1598,7 @@ are not a wrong detector. They are a label on a different axis from the sound:
   and a bass clarinet (`neutron/bitches-brew-bass-clarinet`, wind) read as bass too.
 - **Drones that are pads.** A slow-attack, held, polyphonic drone (`deepmind-12d/cosmic-drone`, `pro-800/p8-drone`)
   reads as pad. Drone and pad suit much the same roles, led by _Drone_ (see [Category to role](#category-to-role)).
-- **Pluck against keys.** 97 of the 266 plucks read as keys. A pluck and an electric piano both start at once and decay
+- **Pluck against keys.** 113 of the 303 plucks read as keys. A pluck and an electric piano both start at once and decay
   while held, and the probe can't tell a decay that is the sound from one that is the player's.
 
 The detector is plainly wrong on a few kinds:
