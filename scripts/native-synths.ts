@@ -24,6 +24,7 @@ export const NATIVE_SYNTHS: readonly string[] = [
   'jp-8080',
   'polivoks',
   '0-coast',
+  'minilogue-xd',
 ];
 
 export const isNativeSynth = (id: string): boolean => NATIVE_SYNTHS.includes(id);
