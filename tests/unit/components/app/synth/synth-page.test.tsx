@@ -75,6 +75,7 @@ const IDENTITY = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 };
 beforeAll(async () => {
   // The page loads its definition on its own (`defs/load.ts`). Loaded here, it renders without suspending.
   await loadSynthDef('model-d');
+  await loadSynthDef('grandmother');
   // happy-dom has no SVG geometry or pointer capture; the panel only needs the identity.
   Object.assign(SVGElement.prototype, {
     getScreenCTM: () => ({ ...IDENTITY, inverse: () => IDENTITY }),
@@ -1289,6 +1290,59 @@ describe('SynthPage view', () => {
     window.localStorage.setItem('kys.view', JSON.stringify({ outline: 'yes' }));
     page();
     expect(outline().getAttribute('aria-pressed')).toBe('false');
+  });
+
+  describe('Long / Full, kept per kind of layout', () => {
+    const GRANDMOTHER: CatalogueSynth = {
+      ...MODEL_D_SYNTH,
+      id: 'grandmother',
+      name: 'Grandmother',
+      definitionVersion: getSynthDef('grandmother')?.version ?? 1,
+      soundCount: 0,
+    };
+    const grandmother = () =>
+      page({
+        detail: {
+          ...detail,
+          synth: GRANDMOTHER,
+          sounds: [],
+          notes: { ...detail.notes, unusual: {} },
+        },
+        synths: [GRANDMOTHER, MODEL_D_SYNTH],
+      });
+    const pressed = (name: string) => setting(name).getAttribute('aria-pressed');
+
+    it('opens the Grandmother compact after Long was chosen on a modular synth', () => {
+      window.localStorage.setItem('kys.view', JSON.stringify({ outline: false, long: true }));
+      window.localStorage.setItem('kys.layouts', JSON.stringify({ modular: true }));
+      grandmother();
+      expect(pressed('Compact')).toBe('true');
+      expect(pressed('Full')).toBe('false');
+    });
+
+    it('stores Full for compact layouts only, leaving the modular choice alone', () => {
+      window.localStorage.setItem('kys.layouts', JSON.stringify({ modular: false }));
+      grandmother();
+      fireEvent.click(setting('Full'));
+      expect(readStored('kys.layouts')).toEqual({ modular: false, compact: true });
+    });
+
+    it('opens the Grandmother Full when Full was its last choice, and says so in the URL', () => {
+      window.localStorage.setItem('kys.layouts', JSON.stringify({ compact: true }));
+      const replace = vi.spyOn(window.history, 'replaceState');
+      grandmother();
+      expect(pressed('Full')).toBe('true');
+      expect(replace).toHaveBeenCalledWith(null, '', '/synths/grandmother?view=long');
+    });
+
+    it('does not carry a stored Long to a synth with no layout of its own', () => {
+      window.localStorage.setItem('kys.view', JSON.stringify({ outline: false, long: true }));
+      window.localStorage.setItem('kys.layouts', JSON.stringify({ modular: true, compact: true }));
+      const replace = vi.spyOn(window.history, 'replaceState');
+      page();
+      expect(replace).not.toHaveBeenCalled();
+      expect(readStored('kys.layouts')).toEqual({ modular: true, compact: true });
+    });
   });
 });
 

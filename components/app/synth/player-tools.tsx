@@ -176,12 +176,18 @@ export interface PanelView {
   long: boolean;
 }
 
-/** The Layout setting's help: what its two halves are, for each kind of layout a synth can open in. */
-const LAYOUT_HELP = {
-  modular:
-    'Modular stacks the sections as modules; Long is the faceplate as it is on the keyboard.',
-  compact:
-    'Compact leaves out what the app does not need, such as keys the keyboard below the panel replaces, so every control is drawn bigger; Full is the whole faceplate as it is on the hardware.',
+/** The Layout setting for each kind of layout a synth can open in: its two halves' words, and its help. */
+const LAYOUT_SETTING = {
+  modular: {
+    own: 'Modular',
+    full: 'Long',
+    help: 'Modular stacks the sections as modules; Long is the faceplate as it is on the keyboard.',
+  },
+  compact: {
+    own: 'Compact',
+    full: 'Full',
+    help: "Compact leaves out what the app does not need, such as keys the keyboard below the panel replaces, so the panel is shorter and is drawn bigger wherever the screen's height is what limits it; Full is the whole faceplate as it is on the hardware.",
+  },
 } as const;
 
 export function PlayerSettings({
@@ -252,14 +258,14 @@ export function PlayerSettings({
         </Setting>
       )}
       {layout && (
-        <Setting at={1} name="Layout" drop help={LAYOUT_HELP[layout]}>
+        <Setting at={1} name="Layout" drop help={LAYOUT_SETTING[layout].help}>
           {(d) => (
             <LedSelect
               describedBy={d}
               label="Panel layout"
               options={[
-                [false, layout === 'modular' ? 'Modular' : 'Compact'],
-                [true, layout === 'modular' ? 'Long' : 'Full'],
+                [false, LAYOUT_SETTING[layout].own],
+                [true, LAYOUT_SETTING[layout].full],
               ]}
               value={view.long}
               onChange={(long) => onView({ ...view, long })}

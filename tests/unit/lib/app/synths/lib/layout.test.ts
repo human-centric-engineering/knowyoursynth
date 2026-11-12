@@ -271,6 +271,69 @@ describe('compactDef', () => {
     expect(() => compactDef(def)).toThrow(/^mini-d compact: pieces 0 and 1 overlap$/);
   });
 
+  it('throws when two pieces cut the same part of the long panel', () => {
+    const def = makeMiniD({
+      theme: NO_CHEEKS,
+      compact: {
+        pieces: [
+          { cut: [0, 0, 1000, 380], at: [0, 0] },
+          { cut: [900, 0, 1300, 320], at: [0, 380] },
+        ],
+      },
+    });
+    expect(() => compactDef(def)).toThrow(
+      /^mini-d compact: pieces 0 and 1 cut the same part of the panel$/
+    );
+  });
+
+  it('throws when a piece is put down left of or above the faceplate', () => {
+    const at = (x: number, y: number) =>
+      makeMiniD({
+        theme: NO_CHEEKS,
+        compact: { pieces: [COMPACT.pieces[0], { cut: [1000, 0, 1300, 320], at: [x, y] }] },
+      });
+    expect(() => compactDef(at(-20, 380))).toThrow(
+      /^mini-d compact: piece 1 is put down outside the faceplate, at -20,380$/
+    );
+    expect(() => compactDef(at(0, -1))).toThrow(/piece 1 is put down outside the faceplate/);
+  });
+
+  it('moves a mark by the piece its centre is in, and drops one in no piece', () => {
+    const mark = (id: string, x: number, y: number) => ({
+      id,
+      name: id,
+      help: 'A mark.',
+      module: 'osc' as const,
+      rect: { x, y, w: 20, h: 10 },
+    });
+    const m = compactDef(
+      makeMiniD({
+        theme: NO_CHEEKS,
+        compact: COMPACT,
+        marks: [mark('logo', 1020, 30), mark('strip', 400, 385)],
+      })
+    );
+    // the patch bay piece: dx = −1000, dy = +380
+    expect(m.marks).toEqual([mark('logo', 20, 410)]);
+  });
+
+  it('moves the pin matrix with its piece, and throws when it runs out of it', () => {
+    const matrix = (x: number) => ({
+      x,
+      y: 40,
+      pitch: 20,
+      rows: ['a', 'b'],
+      cols: ['c', 'd', 'e'],
+      legend: { row: [10, 10] as [number, number], col: [10, 10] as [number, number] },
+    });
+    const m = compactDef(makeMiniD({ theme: NO_CHEEKS, compact: COMPACT, matrix: matrix(1100) }));
+    expect(m.matrix).toMatchObject({ x: 100, y: 420 });
+    // its far column (980 + 2 × 20 = 1020) is in the patch bay piece, its first hole in the first
+    expect(() =>
+      compactDef(makeMiniD({ theme: NO_CHEEKS, compact: COMPACT, matrix: matrix(980) }))
+    ).toThrow(/^mini-d compact: the matrix runs out of its piece at 1020,60$/);
+  });
+
   it('throws when a control sits in no piece', () => {
     const def = makeMiniD({
       theme: NO_CHEEKS,

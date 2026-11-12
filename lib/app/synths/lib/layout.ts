@@ -91,14 +91,20 @@ function clipLine(
   return [x1 + t0 * dx, y1 + t0 * dy, x1 + t1 * dx, y1 + t1 * dy];
 }
 
-/** The overlap of a rect { x, y, w, h } with a module cut, or null. */
-function clipRect(r: ViewRect, m: Module): ViewRect | null {
-  const x = Math.max(r.x, m.x0);
-  const y = Math.max(r.y, m.y0);
-  const w = Math.min(r.x + r.w, m.x1) - x;
-  const h = Math.min(r.y + r.h, m.y1) - y;
+/** The overlap of two rects, or null when they share less than half a unit each way (touching is not overlapping). */
+export function overlap(a: ViewRect, b: ViewRect): ViewRect | null {
+  const x = Math.max(a.x, b.x);
+  const y = Math.max(a.y, b.y);
+  const w = Math.min(a.x + a.w, b.x + b.w) - x;
+  const h = Math.min(a.y + a.h, b.y + b.h) - y;
   return w > 0.5 && h > 0.5 ? { x, y, w, h } : null;
 }
+
+/** A module's cut as a rect on the long panel. */
+const cutRect = (m: Module): ViewRect => ({ x: m.x0, y: m.y0, w: m.w, h: m.h });
+
+/** The overlap of a rect { x, y, w, h } with a module cut, or null. */
+const clipRect = (r: ViewRect, m: Module): ViewRect | null => overlap(r, cutRect(m));
 
 /** Lay the rows out: each module gets its plate, and its cut's offset into the case. */
 function place(spec: ModularLayout) {
@@ -188,15 +194,16 @@ function moveDecor(d: Decor, mods: Module[], out: Decor[]): void {
 }
 
 /**
- * Every control, option, jack, decor item and area of `def`, moved by the cut it sits in. A control or jack in no cut
- * throws (`<id> <what>: control <id> at x,y is in no <unit>`); decor and area parts in no cut are dropped.
+ * Every control, option, jack, decor item, area, mark and the pin matrix of `def`, moved by the cut it sits in. A
+ * control, jack or matrix in no cut throws (`<id> <what>: control <id> at x,y is in no <unit>`), as does a matrix whose
+ * far corner is in another cut than its first hole; decor, area parts and marks (by their centre) in no cut are dropped.
  */
 function moveAll(
   def: SynthDef,
   mods: Module[],
   what: string,
   unit: string
-): Pick<SynthDef, 'controls' | 'jacks' | 'decor' | 'areas'> {
+): Pick<SynthDef, 'controls' | 'jacks' | 'decor' | 'areas' | 'marks' | 'matrix'> {
   const at = (p: { x: number; y: number }, thing: string) => {
     const m = mods.find((k) => within(k, p.x, p.y));
     if (!m) throw new Error(`${def.id} ${what}: ${thing} at ${p.x},${p.y} is in no ${unit}`);
@@ -229,7 +236,29 @@ function moveAll(
         .filter((x): x is ViewRect => !!x)
     ),
   }));
-  return { controls, jacks, decor, areas };
+  const marks = def.marks?.flatMap((k) => {
+    const m = mods.find((c) => within(c, k.rect.x + k.rect.w / 2, k.rect.y + k.rect.h / 2));
+    return m ? [{ ...k, rect: { ...k.rect, x: r1(k.rect.x + m.dx), y: r1(k.rect.y + m.dy) } }] : [];
+  });
+  let matrix = def.matrix;
+  if (matrix) {
+    const m = at(matrix, 'matrix');
+    const far = {
+      x: matrix.x + matrix.pitch * (matrix.cols.length - 1),
+      y: matrix.y + matrix.pitch * (matrix.rows.length - 1),
+    };
+    if (!within(m, far.x, far.y))
+      throw new Error(`${def.id} ${what}: the matrix runs out of its ${unit} at ${far.x},${far.y}`);
+    matrix = { ...matrix, x: r1(matrix.x + m.dx), y: r1(matrix.y + m.dy) };
+  }
+  return {
+    controls,
+    jacks,
+    decor,
+    areas,
+    ...(marks ? { marks } : {}),
+    ...(matrix ? { matrix } : {}),
+  };
 }
 
 const cache = new WeakMap<SynthDef, SynthDef>();
@@ -261,19 +290,26 @@ export function modularDef(def: SynthDef): SynthDef {
   return out;
 }
 
-/** The pieces of a compact spec as modules: each cut, and its offset to where it is put down on `def`'s faceplate. */
-function pieces(def: SynthDef, spec: CompactLayout): Module[] {
-  const face = faceView(def);
-  const mods = spec.pieces.map(({ cut: [x0, y0, x1, y1], at: [ax, ay] }): Module => {
+/**
+ * The pieces of a compact spec as modules: each cut, and its offset to where it is put down on the faceplate `face`.
+ * Throws when a piece is put down left of or above the faceplate's corner, or when two pieces overlap, either as cut
+ * from the long panel (that part would be drawn twice) or as put down.
+ */
+function pieces(def: SynthDef, spec: CompactLayout, face: { x: number }): Module[] {
+  const mods = spec.pieces.map(({ cut: [x0, y0, x1, y1], at: [ax, ay] }, i): Module => {
+    if (ax < 0 || ay < 0)
+      throw new Error(
+        `${def.id} compact: piece ${i} is put down outside the faceplate, at ${ax},${ay}`
+      );
     const plate = { x: face.x + ax, y: ay, w: x1 - x0, h: y1 - y0 };
     return { x0, y0, x1, y1, w: plate.w, h: plate.h, plate, dx: plate.x - x0, dy: plate.y - y0 };
   });
   mods.forEach((a, i) =>
     mods.slice(i + 1).forEach((b, j) => {
-      const over =
-        Math.min(a.plate.x + a.w, b.plate.x + b.w) - Math.max(a.plate.x, b.plate.x) > 0.5 &&
-        Math.min(a.plate.y + a.h, b.plate.y + b.h) - Math.max(a.plate.y, b.plate.y) > 0.5;
-      if (over) throw new Error(`${def.id} compact: pieces ${i} and ${i + j + 1} overlap`);
+      const which = `pieces ${i} and ${i + j + 1}`;
+      if (overlap(cutRect(a), cutRect(b)))
+        throw new Error(`${def.id} compact: ${which} cut the same part of the panel`);
+      if (overlap(a.plate, b.plate)) throw new Error(`${def.id} compact: ${which} overlap`);
     })
   );
   return mods;
@@ -289,8 +325,8 @@ export function compactDef(def: SynthDef): SynthDef {
   if (!def.compact) return def;
   const hit = compactCache.get(def);
   if (hit) return hit;
-  const mods = pieces(def, def.compact);
   const face = faceView(def);
+  const mods = pieces(def, def.compact, face);
   const w = Math.max(0, ...mods.map((m) => m.plate.x + m.w - face.x));
   const h = Math.max(0, ...mods.map((m) => m.plate.y + m.h));
   const out: SynthDef = {

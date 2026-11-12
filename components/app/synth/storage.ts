@@ -23,8 +23,13 @@ import { MAX_STEP, START_STEP, type PanelPrefInput } from '@/lib/app/sounds/pref
 export const STORAGE_KEYS = {
   /** The last synth opened: `/synths` reopens it. */
   synth: 'kys.synth',
-  /** The last panel view chosen, for a URL that does not say. */
+  /** The last panel view chosen, for a URL that does not say. Its `long` is not read back: `layouts` holds that. */
   view: 'kys.view',
+  /**
+   * The Layout setting's last choice for each kind of layout (`layoutKind`): the full faceplate (`true`) or the synth's
+   * own layout. Kept per kind, so Long on a Jupiter does not open the Grandmother Full, nor the other way round.
+   */
+  layouts: 'kys.layouts',
   /** Info cards on hover. */
   tips: 'kys.tips',
   /** The effects rack's settings. */
@@ -132,6 +137,12 @@ export function useStoredPref<T>(
 export const PanelViewSchema: z.ZodType<PanelView> = z.object({
   outline: z.boolean(),
   long: z.boolean(),
+});
+
+/** `STORAGE_KEYS.layouts`: Long / Full chosen (`true`) or not, for each kind of layout a synth can open in. */
+export const LayoutLongSchema = z.object({
+  modular: z.boolean().optional(),
+  compact: z.boolean().optional(),
 });
 
 /** One synth's panel: the sound it came from, the lesson step, and what has been moved and plugged since. */

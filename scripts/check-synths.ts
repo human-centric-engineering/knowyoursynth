@@ -85,7 +85,7 @@ import {
 } from '@/scripts/native-synths';
 import { loadPrototypeSynths } from '@/scripts/prototype-synths';
 import { explainCable } from '@/lib/app/synths/lib/explain';
-import { layoutDef, layoutKind } from '@/lib/app/synths/lib/layout';
+import { layoutDef, layoutKind, overlap } from '@/lib/app/synths/lib/layout';
 import {
   presetState,
   cablesToEngine,
@@ -591,11 +591,7 @@ async function main(): Promise<void> {
         const rs = md.areas.flatMap((a) => a.rects.map((r) => ({ ...r, id: a.id })));
         rs.forEach((a, i) =>
           rs.slice(i + 1).forEach((b) => {
-            if (
-              a.id !== b.id &&
-              Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x) > 0.5 &&
-              Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y) > 0.5
-            )
+            if (a.id !== b.id && overlap(a, b))
               E(`${def.id} ${kind}: areas ${a.id} and ${b.id} overlap`);
           })
         );
