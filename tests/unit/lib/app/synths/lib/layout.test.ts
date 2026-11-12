@@ -1,5 +1,6 @@
 /**
- * Modular layout tests: a long panel cut into modules and stacked like a case.
+ * Layout tests: a long panel cut into modules and stacked like a case (modular), or cut into pieces and put down on
+ * one faceplate with what no piece cuts left out (compact), and the one selector every panel surface draws through.
  *
  * The expected positions are worked out by hand from the layout constants (plate margins 26 top / 30 bottom / 12
  * sides, 8 between modules, 26 between rows, 22 case border, blanks only for a row at least 200 short).
@@ -7,8 +8,14 @@
  * @see lib/app/synths/lib/layout.ts
  */
 import { describe, expect, it } from 'vitest';
-import { modularDef } from '@/lib/app/synths/lib/layout';
-import type { Control, Jack, ModularLayout, SynthDef } from '@/lib/app/synths/contract';
+import { compactDef, layoutDef, layoutKind, modularDef } from '@/lib/app/synths/lib/layout';
+import type {
+  CompactLayout,
+  Control,
+  Jack,
+  ModularLayout,
+  SynthDef,
+} from '@/lib/app/synths/contract';
 import { makeMiniD } from '@/tests/fixtures/synths/mini-d';
 
 /** Two rows: [osc | mixer] (300 short of the widest row → a blank), then [mod/filter (named) | patch bay]. */
@@ -165,5 +172,139 @@ describe('modularDef', () => {
     expect(() => modularDef(def)).toThrow(
       /^mini-d modular: control mix\.osc1 at 400,80 is in no module$/
     );
+  });
+});
+
+/**
+ * The panel without its bottom strip (y 380..400, no controls), and the patch bay moved under the rest: the first piece
+ * stays where it is, the second (the patch bay to y 320) is put down at (0, 380).
+ */
+const COMPACT: CompactLayout = {
+  pieces: [
+    { cut: [0, 0, 1000, 380], at: [0, 0] },
+    { cut: [1000, 0, 1300, 320], at: [0, 380] },
+  ],
+};
+const NO_CHEEKS = {
+  panel: '#222',
+  panel2: '#111',
+  ink: '#eee',
+  font: 'din',
+  cheeks: 'none',
+} as const;
+
+describe('compactDef', () => {
+  it('returns the definition itself when it has no compact spec', () => {
+    const def = makeMiniD();
+    expect(compactDef(def)).toBe(def);
+  });
+
+  it('sizes the faceplate to the box round the pieces as they are put down, with no case', () => {
+    const m = compactDef(makeMiniD({ compact: COMPACT, theme: NO_CHEEKS }));
+
+    // the first piece is 1000 wide and the widest; the second ends at 380 + 320
+    expect(m.view).toEqual({ w: 1000, h: 700 });
+    expect(m.layout).toBeUndefined();
+    expect(m.theme).toEqual(NO_CHEEKS);
+  });
+
+  it('places each cut, keeping ids, values and areas', () => {
+    const def = makeMiniD({ compact: COMPACT, theme: NO_CHEEKS });
+    const m = compactDef(def);
+
+    // mix.osc1 is in the first piece, which stays put
+    expect(find<Control>(m.controls, 'mix.osc1')).toMatchObject({ x: 400, y: 80, def: 10 });
+    const select = find<Control>(m.controls, 'osc2.wave');
+    expect(select.kind === 'enum' && select.options.map((o) => [o.x, o.y])).toEqual([
+      [140, 200],
+      [180, 200],
+    ]);
+    // lfo.tri (1030, 40) is in the patch bay: dx = 0 − 1000, dy = 380 − 0
+    expect(find<Jack>(m.jacks, 'lfo.tri')).toMatchObject({ x: 30, y: 420, signal: 'lfoTri' });
+    expect(m.controls.map((c) => c.id)).toEqual(def.controls.map((c) => c.id));
+    expect(m.jacks.map((j) => j.id)).toEqual(def.jacks.map((j) => j.id));
+    // the patch bay's area keeps the part its piece cut (y 0..320), moved with it
+    expect(find(m.areas, 'patch').rects).toEqual([{ x: 0, y: 380, w: 300, h: 320 }]);
+    // and an area crossing a piece's edge keeps only the part inside it
+    expect(find(m.areas, 'mod').rects).toEqual([
+      { x: 800, y: 0, w: 200, h: 250 },
+      { x: 800, y: 250, w: 200, h: 130 },
+    ]);
+    expect(m.init).toBe(def.init);
+    expect(m.toEngine).toBe(def.toEngine);
+  });
+
+  it('leaves out the decor no piece cuts', () => {
+    const m = compactDef(makeMiniD({ compact: COMPACT, theme: NO_CHEEKS }));
+
+    // the bottom strip (y 380..400) is in neither piece; the frame (to y 390) and the line at x = 500 are cut at the
+    // first piece's foot, the frame squared off
+    expect(m.decor).toEqual([
+      { t: 'frame', x: 10, y: 10, w: 280, h: 370, r: 0, label: 'OSCILLATOR BANK' },
+      { t: 'text', x: 400, y: 30, text: 'MIXER' },
+      { t: 'line', x1: 500, y1: 0, x2: 500, y2: 380 },
+      { t: 'path', d: 'M820 260 H980', shift: [0, 0] },
+    ]);
+  });
+
+  it('puts the pieces down inside the end cheeks and keeps them', () => {
+    const theme = { ...NO_CHEEKS, cheeks: 'wood', cheekW: 30 } as const;
+    const m = compactDef(makeMiniD({ compact: COMPACT, theme }));
+
+    expect(m.view).toEqual({ w: 1060, h: 700 });
+    expect(m.theme).toEqual(theme);
+    expect(find<Control>(m.controls, 'mix.osc1')).toMatchObject({ x: 430, y: 80 });
+    expect(find<Jack>(m.jacks, 'lfo.tri')).toMatchObject({ x: 60, y: 420 });
+  });
+
+  it('throws when two pieces are put down over each other', () => {
+    const def = makeMiniD({
+      theme: NO_CHEEKS,
+      compact: {
+        pieces: [
+          { cut: [0, 0, 1000, 380], at: [0, 0] },
+          { cut: [1000, 0, 1300, 320], at: [900, 0] },
+        ],
+      },
+    });
+    expect(() => compactDef(def)).toThrow(/^mini-d compact: pieces 0 and 1 overlap$/);
+  });
+
+  it('throws when a control sits in no piece', () => {
+    const def = makeMiniD({
+      theme: NO_CHEEKS,
+      compact: { pieces: [{ cut: [0, 0, 300, 400], at: [0, 0] }] },
+    });
+    expect(() => compactDef(def)).toThrow(
+      /^mini-d compact: control mix\.osc1 at 400,80 is in no piece$/
+    );
+  });
+
+  it('returns the same object for the same definition', () => {
+    const def = makeMiniD({ compact: COMPACT });
+    expect(compactDef(def)).toBe(compactDef(def));
+  });
+});
+
+describe('layoutDef and layoutKind', () => {
+  it('draws a synth with no layout of its own as defined, either way', () => {
+    const def = makeMiniD();
+    expect(layoutKind(def)).toBeNull();
+    expect(layoutDef(def)).toBe(def);
+    expect(layoutDef(def, true)).toBe(def);
+  });
+
+  it('opens a modular synth in its case, and Long is the faceplate as defined', () => {
+    const def = makeMiniD({ modular: SPEC });
+    expect(layoutKind(def)).toBe('modular');
+    expect(layoutDef(def)).toBe(modularDef(def));
+    expect(layoutDef(def, true)).toBe(def);
+  });
+
+  it('opens a compact synth compact, and Long is the full faceplate', () => {
+    const def = makeMiniD({ compact: COMPACT });
+    expect(layoutKind(def)).toBe('compact');
+    expect(layoutDef(def)).toBe(compactDef(def));
+    expect(layoutDef(def, true)).toBe(def);
   });
 });

@@ -68,7 +68,7 @@ import { SynthPanel } from '@/components/app/panel/synth-panel';
 import type { CableEnd } from '@/components/app/panel/synth-panel';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef, loadedSynthDef } from '@/lib/app/synths/defs/load';
-import { modularDef } from '@/lib/app/synths/lib/layout';
+import { layoutDef, layoutKind } from '@/lib/app/synths/lib/layout';
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
 import {
   cablesToEngine,
@@ -502,11 +502,9 @@ function Synth({
     if (stored.success && (stored.data.outline || stored.data.long)) setView(stored.data);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
 
-  // The panel as drawn. Only positions differ from `synthDef`.
-  const def = useMemo(
-    () => (view.long || !synthDef.modular ? synthDef : modularDef(synthDef)),
-    [synthDef, view.long]
-  );
+  // The panel as drawn: the synth's own layout (modular or compact), or the full faceplate with Long. Only positions
+  // and the view differ from `synthDef`.
+  const def = useMemo(() => layoutDef(synthDef, view.long), [synthDef, view.long]);
 
   // The session is read before the panel: signed in, the account's last panel replaces the browser's once it arrives.
   const { data: auth, isPending: authPending } = useSession();
@@ -2249,7 +2247,7 @@ function Synth({
       '--rail-print': print,
     };
   // A fourth setting (Layout on a modular, Labels on a translated panel) needs the wider breakpoints
-  const footRef = useFootFit(!!synthDef.modular || !!synthDef.translation);
+  const footRef = useFootFit(!!layoutKind(synthDef) || !!synthDef.translation);
   // The Sound Design strip and the lesson card are of the faceplate too, in its colours (t-201).
   const face = useMemo(() => faceRoles(plate, plate2, print), [plate, plate2, print]);
   const panelTaps = small
@@ -2726,7 +2724,7 @@ function Synth({
                       <PlayerSettings
                         view={view}
                         onView={setView}
-                        modular={!!synthDef.modular}
+                        layout={layoutKind(synthDef)}
                         zoom={zoom}
                         onZoom={setZoom}
                         tipsOn={tipsOn}

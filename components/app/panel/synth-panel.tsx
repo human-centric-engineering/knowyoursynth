@@ -95,8 +95,8 @@ export function neutralDef(def: SynthDef): SynthDef {
 
 export interface SynthPanelProps {
   /**
-   * The synth. Its views: the long faceplate as defined, or (with `layout`, from `modularDef()`) the modular case.
-   * Which of the two is the caller's choice: pass the definition, or `modularDef(definition)`.
+   * The synth. Its views: the long faceplate as defined, the compact panel (`compactDef()`), or (with `layout`, from
+   * `modularDef()`) the modular case. Which is the caller's choice, made through `layoutDef()` (the layout library).
    */
   def: SynthDef;
   values: ControlValues;

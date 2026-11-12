@@ -40,7 +40,12 @@ the server runs; reload the page to hear it. `npm run build:audio-workers` build
   ignore them.
 - **Every control and every jack sits inside exactly one area**, and areas do not overlap (the
   rects of one area may touch). The search, the cards, the cell map and the tour depend on it.
-  With a `modular` layout this must still hold after the cut.
+  With a `modular` or `compact` layout this must still hold after the cut (`check:synths` checks it).
+- **A layout of its own is `modular` or `compact`, never both.** `modular` stacks cuts of the panel as modules in a
+  case (the Jupiters); `compact` puts cuts down on one faceplate and leaves out what no cut takes (a keybed, a band
+  with no controls). The synth opens in it, and the Layout setting's Long / Full is the faceplate as defined. Draw a
+  panel through `layoutDef()` (`lib/layout.ts`), never by choosing a layout yourself; see
+  [`synth-page.md`](./synth-page.md) (Layout).
 - **Ids are stable.** Sounds, lessons, unusual notes and the databank refer to control and jack
   ids; renaming one orphans them. `annotate()` throws on an unusual note whose id matches
   nothing; `validate.ts` refuses a sound that names a control or jack the synth does not have

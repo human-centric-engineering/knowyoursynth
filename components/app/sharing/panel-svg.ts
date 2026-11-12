@@ -1,7 +1,7 @@
 import { renderPanel } from '@/components/app/sharing/panel-render';
 import type { SynthDesign } from '@/lib/app/catalogue/designs';
 import type { SynthDef } from '@/lib/app/synths/contract';
-import { modularDef } from '@/lib/app/synths/lib/layout';
+import { layoutDef } from '@/lib/app/synths/lib/layout';
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
 import { faceView, sanitizeCables, sanitizeSet } from '@/lib/app/synths/lib/patch';
 
@@ -31,7 +31,8 @@ export function panelSvg({ def, values, cables, design }: PanelSvgInput): {
   width: number;
   height: number;
 } {
-  const shown = def.modular ? modularDef(def) : def;
+  // The synth's own layout (modular or compact), as the page opens it.
+  const shown = layoutDef(def);
   const markup = renderPanel({
     def: shown,
     values: { ...def.init, ...sanitizeSet(def, values) },
