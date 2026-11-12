@@ -26,6 +26,7 @@ import type {
   TremoloParams,
   EnvStage,
 } from '@/lib/app/synths/contract';
+import { polyStack } from '@/lib/app/synths/contract';
 import { createFx } from '@/lib/app/synths/audio/dm-fx';
 import {
   createMoog,
@@ -1363,8 +1364,14 @@ function createVoice(
     }
     // the triangle scaled up to three times and folded back at ±1
     if (o.tfold) y += foldTri(tri, o.fold + ctl1) * o.tfold;
-    // the minilogue xd's saw SHAPE: the same folder on the saw (reasoned: the manual says only "shape, complexity")
-    if (o.sfold) y += foldTri(saw, o.fold + ctl1) * o.sfold;
+    if (o.sfold) {
+      // the minilogue xd's saw SHAPE: the same folder on the saw (reasoned: the manual says only "shape, complexity").
+      // The plain ramp is folded, then band-limited at its reset by a blep the size of the folded jump (an odd fold, so
+      // the ramp's ends land at ±a): folding the blep-corrected saw would fold the correction into a click.
+      const ph = o.phase;
+      const a = foldTri(1, o.fold + ctl1);
+      y += (foldTri(2 * ph - 1, o.fold + ctl1) - a * blep(ph, dt)) * o.sfold;
+    }
     if (o.ovt) {
       // 0-COAST OVERTONE into MULTIPLY, reasoned from the manual's description rather than measured. OVERTONE adds one
       // harmonic to the triangle: the odd one (the triangle at three times the pitch, the triangle tripled and folded)
@@ -2037,8 +2044,11 @@ function createVoice(
       if (
         !lCom &&
         ((trig > 0.5 && lfoTrigPrev <= 0.5) || (retrigFlag && (p.lfo.keySync || oneShot)))
-      )
+      ) {
         lfoPhase = 0;
+        // a one-shot never wraps, so its sample and hold takes its new value as it restarts
+        if (oneShot && lShOn) lfoSh = Math.random() * 2 - 1;
+      }
       lfoTrigPrev = trig;
       lfoPhase += lfoHz / sr;
       // 1-SHOT: half a cycle from the note, then held just short of the half (top of the triangle and square)
@@ -2991,10 +3001,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
     if (onEvent) onEvent(e);
   };
   // `poly.chord` (minilogue xd CHORD): the stack is the chord, one voice per interval
-  const stackOf = (): number => {
-    const ch = P!.poly!.chord;
-    return ch && ch.length ? ch.length : Math.max(1, P!.poly!.stack || 1);
-  };
+  const stackOf = (): number => polyStack(P!.poly!);
   const offsetOf = (j: number): number => {
     const ch = P!.poly!.chord;
     if (ch && ch.length) return ch[j] || 0;

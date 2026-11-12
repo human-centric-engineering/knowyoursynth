@@ -18,6 +18,7 @@ import { KIND_MODEL } from '@/lib/app/synths/lib/soundkind-model';
 import type { CableLike } from '@/lib/app/synths/lib/patch';
 import {
   PRESET_CATEGORIES,
+  polyStack,
   type ControlValues,
   type EngineParams,
   type PresetCategory,
@@ -196,7 +197,7 @@ export function voicesOf(p: EngineParams): number {
   if (p.poly) {
     if (p.poly.mono) return 1;
     // A layer plays every note on two stacks of voices.
-    const block = Math.max(1, p.poly.stack || 1) * (p.layer ? 2 : 1);
+    const block = polyStack(p.poly) * (p.layer ? 2 : 1);
     return Math.max(1, Math.floor(p.poly.voices / block));
   }
   // The engine assigns notes to the first four oscillators that follow the keyboard.

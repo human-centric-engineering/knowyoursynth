@@ -1644,9 +1644,9 @@ export interface LfoParams {
    */
   common?: boolean;
   /**
-   * The minilogue xd's 1-SHOT: each note (or a rising `lfoTrig`) starts the LFO from the beginning of its cycle, and it
-   * stops half a cycle later, holding where it got to (a triangle or square at its top, a saw at its middle). Not with
-   * `common`.
+   * The minilogue xd's 1-SHOT: each note that retriggers the envelopes (or a rising `lfoTrig`) starts the LFO from the
+   * beginning of its cycle, with a fresh sample and hold, and it stops half a cycle later, holding where it got to: a
+   * triangle or square at its top, a saw at its middle, a sine back at zero. Not with `common`.
    */
   oneShot?: boolean;
 }
@@ -1769,7 +1769,7 @@ export interface ReverbParams {
 /** A pool of voices behind a note allocator. Without it the engine is the single voice. */
 export interface PolyParams {
   voices: number;
-  /** Voices per note, spread ±`detune`. */
+  /** Voices per note, spread ±`detune` (ignored with `chord`). */
   stack: number;
   /** Every key to one stack, legato like a mono synth. */
   mono: boolean;
@@ -1777,11 +1777,17 @@ export interface PolyParams {
   detune?: number;
   /**
    * A chord on every key (the minilogue xd's CHORD voice mode): the voices of a stack play these semitone offsets from
-   * the key instead of the `detune` spread, and the stack is as long as the list (`stack` is then ignored). With `mono`,
-   * a new key moves the whole chord.
+   * the key instead of the `detune` spread, and the stack is as long as the list, up to `voices` (`stack` and `detune`
+   * are then ignored). With `mono`, a new key moves the whole chord.
    */
   chord?: number[];
 }
+
+/** How many voices one note takes in `poly`: its chord's length (up to `voices`), or `stack`; at least one. */
+export const polyStack = (poly: PolyParams): number =>
+  poly.chord && poly.chord.length
+    ? Math.max(1, Math.min(poly.chord.length, poly.voices))
+    : Math.max(1, poly.stack || 1);
 
 export type ArpMode = 'up' | 'down' | 'updown' | 'downup' | 'random' | 'played';
 

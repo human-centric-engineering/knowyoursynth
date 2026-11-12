@@ -169,3 +169,42 @@ describe('saw SHAPE (mix.sfold)', () => {
     expect(m).toBeLessThan(1e-5);
   });
 });
+
+describe('review round (t-244)', () => {
+  it('a chord longer than the voices plays only as many as there are', () => {
+    const b = play(open({ poly: { voices: 2, stack: 1, mono: true, chord: [0, 4, 7] } }));
+    expect(power(b, semi(4))).toBeGreaterThan(power(b, F0) * 0.5);
+    expect(power(b, semi(7))).toBeLessThan(power(b, F0) * 1e-3);
+  });
+
+  it('a one-shot LFO’s sample and hold takes a new value on each note', () => {
+    const p = open({
+      lfo: { rate: 4, mix: { sh: 1 }, keySync: false, oneShot: true },
+      routes: [{ src: 'lfo', dst: 'pitch1', amt: 12 }],
+    });
+    const b = render(p, {
+      sr: SR,
+      len: LEN,
+      events: [
+        [0, { type: 'noteOn', n: NOTE, v: 0.9 }],
+        [11904, { type: 'noteOff', n: NOTE }],
+        [12032, { type: 'noteOn', n: NOTE, v: 0.9 }],
+      ],
+    }).out;
+    // the pitch each note holds: where the zero crossings say it is
+    const hz = (from: number, to: number): number => {
+      let z = 0;
+      for (let i = from + 1; i < to; i++) if (b[i - 1] < 0 && b[i] >= 0) z++;
+      return (z * SR) / (to - from);
+    };
+    expect(Math.abs(hz(4800, 11000) - hz(16800, 24000))).toBeGreaterThan(5);
+  });
+
+  it('the folded saw has no click at its reset: no sample jumps far past its neighbours', () => {
+    const b = play(open({ osc: [{ level: 0.4, mix: { sfold: 1 }, semi: 0, fold: 0.5 }] }));
+    let worst = 0;
+    for (let i = LEN / 2 + 1; i < LEN; i++) worst = Math.max(worst, Math.abs(b[i] - b[i - 1]));
+    // at fold 0.5 the wave is a continuous triangle: steps of about 4 × level × 220 / 48000 per sample
+    expect(worst).toBeLessThan(0.02);
+  });
+});
