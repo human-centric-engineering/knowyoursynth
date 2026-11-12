@@ -979,13 +979,13 @@ the M.G.’s", "CHVRCHES"), since the roster test matches names exactly and a va
 **The Polivoks, 0-COAST, minilogue xd and JP-8080 sounds (t-250)**, placed by the same rules. Of their 433 new sounds,
 169 are by artists a batch covers, in all twelve batches.
 
-- **86 sit on a pattern**: the work the sound names (or, for one naming an album, a part of the same kind on it:
+- **108 sit on a pattern**: the work the sound names (or, for one naming an album, a part of the same kind on it:
   "Speak to Me" for The Dark Side of the Moon, "I'm Only Sleeping" for Revolver's reversed swells), the part first and
   the register second. The minilogue xd's and JP-8080's arpeggiator sounds take held chords ("Chase: chords",
   "Stranger Things: the arpeggio as a chord"). A two-voice Polivoks sound may sit on a single line, as its riff plays
   both voices from one keyboard.
-- **22 of those sit on an octave copy**, 21 copies new, an octave each, written as the sweep's are; the two Jan Hammer
-  leads share "Miami Vice Theme: lead, an octave up". The Halloween figure's copy is `halloween-piano-figure-low-2`,
+- **27 of those sit on an octave copy**: 22 on 21 new copies, an octave each, written as the sweep's are (the two Jan
+  Hammer leads share "Miami Vice Theme: lead, an octave up"), and 5 on copies an earlier task made. The Halloween figure's copy is `halloween-piano-figure-low-2`,
   since the plain `-low` is two octaves down. The Biosphere drone names Substrata and takes "Poa Alpina", a track on
   it, an octave down, as the sweep copies move one octave only.
 - **61 keep a reason**: the work has no pattern yet; the work's pattern is another part; the batch has the part as
