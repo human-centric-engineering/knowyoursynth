@@ -135,8 +135,8 @@ export class Engine {
         node = wn;
         this.mode = 'worklet';
       } catch (err) {
-        // A host that blocks worklets lands here, and so does a missing bundle (`public/worklets/` is built by the
-        // predev/prebuild hooks): say which, since the fallback works either way and would otherwise hide it.
+        // A host that blocks worklets lands here, and so does a missing bundle (`public/worklets/` is built by `npm run
+        // dev` and the prebuild hook): say which, since the fallback works either way and would otherwise hide it.
         logger.warn('Synth worklet unavailable; using the main-thread fallback', {
           url: WORKLET_URL,
           error: err instanceof Error ? err.message : String(err),
