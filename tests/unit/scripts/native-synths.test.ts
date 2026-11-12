@@ -48,6 +48,7 @@ describe('nativeSynthProblems', () => {
       'native synth jp-8080 is not registered',
       'native synth polivoks is not registered',
       'native synth 0-coast is not registered',
+      'native synth minilogue-xd is not registered',
     ]);
   });
 

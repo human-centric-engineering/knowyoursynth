@@ -52,6 +52,7 @@ import mantis from '@/lib/app/synths/defs/mantis';
 import jp8080 from '@/lib/app/synths/defs/jp-8080';
 import polivoks from '@/lib/app/synths/defs/polivoks';
 import zeroCoast from '@/lib/app/synths/defs/0-coast';
+import minilogueXd from '@/lib/app/synths/defs/minilogue-xd';
 
 /** A definition as the app holds it: always versioned. */
 export type AppSynthDef = SynthDef & { version: number };
@@ -97,6 +98,7 @@ export const SYNTH_DEFS: readonly AppSynthDef[] = [
   jp8080,
   polivoks,
   zeroCoast,
+  minilogueXd,
 ];
 
 const byId = new Map(SYNTH_DEFS.map((d) => [d.id, d]));

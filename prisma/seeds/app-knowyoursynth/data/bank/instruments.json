@@ -908,6 +908,16 @@
       "app": ["0-coast"],
       "text": "A single-voice patchable analogue synthesizer mixing Moog and Buchla approaches, with no filter: a triangle-core oscillator, OVERTONE and MULTIPLY to add harmonics, the DYNAMICS low-pass gate, SLOPE and CONTOUR, Voltage MATH and MIDI to CV, playable with or without patch cables.",
       "source": "https://synthtopia.com/content/2016/07/13/make-noise-0-coast-synthesizer-review-an-affordable-introduction-to-west-coast-synthesis"
+    },
+    {
+      "id": "korg-minilogue-xd",
+      "name": "Korg minilogue xd",
+      "maker": "Korg",
+      "year": "2019",
+      "kind": "poly",
+      "app": ["minilogue-xd"],
+      "text": "A four-voice analogue polysynth with two VCOs per voice plus a digital multi-engine of filtered noise, a VPM oscillator or user oscillators, digital modulation, delay and reverb effects, an expanded sequencer with motion, microtuning and a joystick.",
+      "source": "https://en.wikipedia.org/wiki/Korg_Minilogue"
     }
   ]
 }

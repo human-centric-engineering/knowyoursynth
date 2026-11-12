@@ -1,0 +1,54 @@
+{
+  "synth": "minilogue-xd",
+  "unusual": [
+    {
+      "target": "multi",
+      "text": "Beside the two analogue VCOs sits a third sound source that is digital: the MULTI ENGINE, which is four filtered noises, a VPM phase-modulation oscillator, or an oscillator someone has written with Korg’s logue SDK. It is mixed with the VCOs, or after the filter."
+    },
+    {
+      "target": "voice.mode",
+      "text": "One switch and one knob decide how the four voices are shared out. VOICE MODE DEPTH changes job with the mode: in POLY it stacks two voices per key (DUO), in UNISON it detunes, in CHORD it picks one of fourteen chords to play from a single key, and in ARP/LATCH it picks the arpeggio."
+    },
+    {
+      "target": "vco1.shape",
+      "text": "SHAPE works on every wave, not only the square: on the square it narrows the pulse, as pulse width does on most synths, and on the triangle and sawtooth it reshapes the wave itself."
+    },
+    {
+      "target": "lfo.mode",
+      "text": "In 1-SHOT the LFO runs half a cycle from each note and then holds, so it becomes a third envelope, attack only, for the cutoff, the pitch or the oscillators’ shape."
+    },
+    {
+      "target": "eg.target",
+      "text": "There is one modulation envelope, attack and decay only, with a switch for what it moves. PITCH 2 sweeps VCO 2 alone, which with SYNC on is the classic sync sweep."
+    },
+    {
+      "target": "multi.routing",
+      "text": "Multi Routing can take the MULTI ENGINE past the filter, straight to the amplifier, so a noise or VPM tone stays bright however the filter is set."
+    },
+    {
+      "target": "joy.x",
+      "text": "A joystick takes the place of pitch and mod wheels. Left and right bend, each with its own range; up and down each move any of 29 parameters, chosen per sound."
+    },
+    {
+      "target": "effects",
+      "text": "Three effects run at once, a modulation effect, a delay and a reverb, from one switch and two knobs: DEL/REV/MOD chooses which one the knobs set, and each keeps its own settings."
+    }
+  ],
+  "limits": {
+    "intro": "The voice is modelled: both VCOs with every wave, SHAPE, sync, ring and cross mod, the MULTI ENGINE’s four noises and sixteen VPM types with their six parameters and RATIO OFFSET, Multi Routing, the filter with drive and key tracking, both envelopes, the LFO in all three modes with its target oscillators, key and voice sync, the four voice modes, the arpeggiator, the joystick, velocity, portamento, and the three effects.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "Program memory, favourites and the PROGRAM/VALUE knob; the sequencer’s motion lanes and the step edit pages (the app’s own sequencer plays the riffs); user oscillators and user effects (with USR or User chosen the MULTI ENGINE is silent and the MOD effect passes dry); microtuning, the scale key, transpose and program tuning; the effect sub-types beyond one of each MOD type; the octave-shifted echoes of the Riser and Submarine reverbs, which play as a bright and a dark hall; the arpeggiator’s POLY types, which play upwards; the CV inputs, SYNC IN and OUT, the damper, poly chain, MIDI and the global settings."
+      },
+      {
+        "title": "The voice is approximated",
+        "text": "The manual gives no envelope times, VCO range, filter slope, cutoff range or modulation depths, so these are this app’s: envelope stages from under a millisecond to 12 seconds, a 12 dB filter from 20 Hz to 20 kHz, EG INT up to four octaves of pitch or six of cutoff, and LFO INT up to an octave of vibrato. The manual says SHAPE sets the triangle’s and sawtooth’s “final shape, complexity” without saying how; here it folds the wave. The VPM types are built from Korg’s one-line description of each, not measured, and the drive is a saturation stage after the filter."
+      },
+      {
+        "title": "Effects",
+        "text": "The effects run on this app’s DeepMind effects engine, each type the nearest algorithm there, in the order modulation, delay, reverb; the manual does not give the order. TIME and DEPTH map onto each algorithm’s main settings, and the BPM delays pick a note value from a 32nd to a whole note at the TEMPO."
+      }
+    ]
+  }
+}
