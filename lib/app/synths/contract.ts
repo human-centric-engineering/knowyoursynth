@@ -1475,9 +1475,12 @@ export interface OscMix {
    * `morph` has no `mix`, so `ovt` there does nothing.
    */
   ovt?: number;
-  /** minilogue xd MULTI ENGINE NOISE: white noise through the filter `OscParams.mnoise` sets ({@link MultiNoiseParams}). */
+  /**
+   * minilogue xd MULTI ENGINE NOISE: white noise through the filter `OscParams.mnoise` sets ({@link MultiNoiseParams}).
+   * Like `ovt`, it does nothing on an oscillator with `morph`, which has no `mix`.
+   */
   mnoise?: number;
-  /** minilogue xd MULTI ENGINE VPM: a two-operator phase-modulation voice set by `OscParams.vpm` ({@link VpmParams}). */
+  /** minilogue xd MULTI ENGINE VPM: a two-operator phase-modulation voice set by `OscParams.vpm` ({@link VpmParams}); not with `morph`. */
   vpm?: number;
 }
 
@@ -1551,7 +1554,10 @@ export interface MultiNoiseParams {
    * pulse-width destination adds to it.
    */
   shape: number;
-  /** `decim` only, 0..1 (SHIFT + SHAPE, KEY TRACK): the rate follows the key, an octave per octave from C4 at 1. */
+  /**
+   * `decim` only, 0..1 (SHIFT + SHAPE, KEY TRACK): the rate follows the oscillator's note (its fixed note when off the
+   * keyboard), an octave per octave from C4 at 1.
+   */
   keyTrack?: number;
 }
 
@@ -1575,12 +1581,16 @@ export interface VpmParams {
   /** 0..1: the carrier driven into a soft clip, at a matched level. */
   drive?: number;
   /**
-   * The internal envelope on the index, restarted with each note: a straight rise over `a` seconds, then an
+   * The internal envelope on the index, restarted with each note (and whenever Envelope 1's gate rises): a straight rise over `a` seconds, then an
    * exponential fall to 1 % over `d` seconds (MOD ATTACK, MOD DECAY). `amt` −1..1 (SHAPE MOD INT) is how far it moves
-   * the depth: the depth is `depth` + `amt` × the envelope, held to 0..2.
+   * the depth: the depth is `depth` + `amt` × the envelope, scaled by `keyTrack`, then held to 0..2. Each note also
+   * starts the modulator in step with the carrier.
    */
   eg?: { a: number; d: number; amt: number };
-  /** 0..1 (MOD KEY TRACK): the index falls as the key rises, halving each octave above C4 at 1 (and rises below). */
+  /**
+   * 0..1 (MOD KEY TRACK): the index falls as the key rises, halving each octave above C4 at 1 (and rises below, to the
+   * same ceiling). It follows the oscillator's own note, its fixed note when it is off the keyboard.
+   */
   keyTrack?: number;
 }
 

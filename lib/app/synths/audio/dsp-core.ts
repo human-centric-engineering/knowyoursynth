@@ -501,6 +501,10 @@ const OVT_HARM = 0.6;
 /** `mix.vpm`: the phase-modulation index in radians at MOD DEPTH 1, and the feedback's at FEEDBACK 1 (both reasoned). */
 const VPM_INDEX = 2 * Math.PI;
 const VPM_FB = 1.5;
+/** `mix.mnoise` SHAPE's spans, as logs: cutoff 10 Hz × 2100, decimation 240 Hz × 200, peak bandwidth 110 Hz × 8. */
+const LN_CUT_SPAN = Math.log(2100);
+const LN_RATE_SPAN = Math.log(200);
+const LN_BW_SPAN = Math.log(8);
 
 /** `v` scaled by 1 + 2·`f` (`f` clamped to 0..1) and folded back at ±1: a triangle wave of the scaled value. */
 function foldTri(v: number, f: number): number {
@@ -686,7 +690,7 @@ function createVoice(
   const slotKey = new Int32Array(4).fill(-1),
     slotHeld = new Uint8Array(4),
     slotT = new Float64Array(4);
-  /** The note each oscillator is playing this sample, for `mix.mnoise` and `mix.vpm` key tracking. */
+  /** The note each oscillator is playing this sample (its fixed note when off the keyboard), for `mix.mnoise` and `mix.vpm` key tracking. */
   const oscNote = new Float64Array(4).fill(60);
   const slotN = new Float64Array(4).fill(60),
     slotNT = new Float64Array(4).fill(60);
@@ -1489,7 +1493,7 @@ function createVoice(
       const white = Math.random() * 2 - 1;
       if (q.type === 'decim') {
         // white noise held for a sample period of 240 Hz → 48 kHz, which follows the key with KEY TRACK
-        let rate = 240 * Math.exp(s * Math.log(200));
+        let rate = 240 * Math.exp(s * LN_RATE_SPAN);
         if (q.keyTrack) rate *= Math.exp((kn - 60) * LN2_12 * q.keyTrack);
         o.mnAcc += rate / sr;
         if (o.mnAcc >= 1) {
@@ -1501,12 +1505,13 @@ function createVoice(
         // a 12 dB state-variable filter: High and Low at 10 Hz → 21 kHz, Peak on the oscillator's pitch with a
         // bandwidth of 110 → 880 Hz
         const peak = q.type === 'peak';
-        let fc = peak ? o.inc * sr : 10 * Math.exp(s * Math.log(2100));
+        let fc = peak ? o.inc * sr : 10 * Math.exp(s * LN_CUT_SPAN);
         if (fc > sr * 0.45) fc = sr * 0.45;
         let kd = Math.SQRT2;
         if (peak) {
-          kd = (110 * Math.exp(s * Math.log(8))) / fc;
-          kd = kd < 0.005 ? 0.005 : kd > 2 ? 2 : kd;
+          // damping is bandwidth over centre: wider than the centre on low notes, so it is not capped at a Q of 0.5
+          kd = (110 * Math.exp(s * LN_BW_SPAN)) / fc;
+          kd = kd < 0.005 ? 0.005 : kd > 40 ? 40 : kd;
         }
         const key = o.mnKey,
           co = o.mnCo;
@@ -1538,6 +1543,12 @@ function createVoice(
       const q = o.vpP!;
       o.vpDep += (o.vpDepT - o.vpDep) * sm;
       // the internal envelope: restarted by each note, a straight rise over MOD ATTACK, then a fall over MOD DECAY
+      // each note starts the modulator in step with the carrier, so a patch sounds the same on every voice
+      if (noteHit) {
+        o.vpPh = o.phase * q.ratio;
+        o.vpPh -= Math.floor(o.vpPh);
+        o.vpY = 0;
+      }
       const eg = q.eg;
       if (eg) {
         if (noteHit) o.vpEgSt = 1;
@@ -1556,8 +1567,8 @@ function createVoice(
         }
       }
       let d = o.vpDep + cv + (eg ? eg.amt * o.vpEg : 0);
-      d = d < 0 ? 0 : d > 2 ? 2 : d;
       if (q.keyTrack) d *= Math.exp(-(kn - 60) * LN2_12 * q.keyTrack);
+      d = d < 0 ? 0 : d > 2 ? 2 : d;
       // the modulator: a sine at RATIO × the carrier, fed back into its own phase, with noise added after it
       o.vpPh += o.inc * q.ratio;
       o.vpPh -= Math.floor(o.vpPh);
@@ -2291,7 +2302,6 @@ function createVoice(
 
       // ── gates & envelopes ──
       const hitKey = retrigFlag;
-      noteHit = hitKey;
       const tr = p.trig;
       const rep = tr.repeat ? sqV > 0 : true;
       const g1 = trigSrc
@@ -2308,6 +2318,8 @@ function createVoice(
       // dests `env2Rate` (Envelope 2's attack, decay and release) and `env1DecRate` (Envelope 1's decay and release), in octaves of rate
       if (env2RateOn) env[1].rA = env[1].rD = rateMul(ev(DI.env2Rate));
       if (env1DecOn) env[0].rD = rateMul(ev(DI.env1DecRate));
+      // a note, or Envelope 1's gate rising (a trigger source, a repeat or a cable), restarts `mix.vpm`'s envelope
+      noteHit = hitKey || (g1 && !env[0].prevGate);
       S[SI.env1] = tp ? runTrap(tp) : runEnv(env[0], g1);
       if (tp) S[SI.trap] = 1 - 2 * S[SI.env1];
       S[SI.env2] = runEnv(env[1], g2);
@@ -2422,7 +2434,7 @@ function createVoice(
           if (o.mo) o.morph += (o.morphT - o.morph) * sm;
           o.semi += (o.semiT - o.semi) * sm;
           const kn = assign ? slotN[k] : k === hiOsc && p.paraphonic ? note2 : note;
-          oscNote[k] = kn;
+          oscNote[k] = o.kbd ? kn : o.fixed;
           const base = o.kbd ? kn + pmAll + (p.tune || 0) + vOff + drift : o.fixed;
           const nn = base + o.semi + ev(PITCH_DI[k]);
           let hz = 440 * Math.exp((nn - 69) * LN2_12);

@@ -34,7 +34,12 @@ const FLOOR = 1e-4;
 const ABSENT = 1e-3;
 
 /** One oscillator straight out: the SVF open and flat, the VCA open with no envelope; `routes` as given. */
-function play(osc: OscParams, note = NOTE, routes: EngineRoute[] = []): Float32Array {
+function play(
+  osc: OscParams,
+  note = NOTE,
+  routes: EngineRoute[] = [],
+  seed?: number
+): Float32Array {
   const p = monoParams({
     osc: [osc],
     filter: {
@@ -53,6 +58,7 @@ function play(osc: OscParams, note = NOTE, routes: EngineRoute[] = []): Float32A
     sr: SR,
     len: LEN,
     events: [[0, { type: 'noteOn', n: note, v: 0.9 }]],
+    seed,
   }).out;
 }
 
@@ -144,6 +150,14 @@ describe('MULTI ENGINE noise (mix.mnoise)', () => {
     expect(off(wide)).toBeGreaterThan(off(narrow) * 4);
   });
 
+  it('Peak’s SHAPE still widens the band on a low note, where the bandwidth is wider than the pitch', () => {
+    // A1, 55 Hz: even SHAPE 0's 110 Hz band is twice the centre
+    const narrow = play(noise({ type: 'peak', shape: 0 }), 33);
+    const wide = play(noise({ type: 'peak', shape: 1 }), 33);
+    const off = (b: Float32Array): number => band(b, 500, 600) / band(b, 40, 70);
+    expect(off(wide)).toBeGreaterThan(off(narrow) * 4);
+  });
+
   it('Decim holds the noise at its rate: a null in the spectrum at the rate, not halfway to it', () => {
     const d = play(noise({ type: 'decim', shape: rateShape(2000) }));
     expect(rms(d)).toBeGreaterThan(0.05);
@@ -165,6 +179,15 @@ describe('MULTI ENGINE noise (mix.mnoise)', () => {
       { src: 'one', dst: 'pw1', amt: 0.4 },
     ]);
     expect(maxDiff(viaCv, play(noise({ type: 'lp', shape: 0.6 })))).toBeLessThan(1e-5);
+  });
+
+  it('KEY TRACK follows an off-keyboard oscillator’s fixed note, not the key played', () => {
+    const fixed = (): OscParams => ({
+      ...noise({ type: 'decim', shape: rateShape(2000), keyTrack: 1 }),
+      kbd: false,
+      fixedNote: 60,
+    });
+    expect(maxDiff(play(fixed(), 45), play(fixed(), 81))).toBeLessThan(1e-6);
   });
 
   it('is silent without its settings', () => {
@@ -253,6 +276,22 @@ describe('MULTI ENGINE VPM (mix.vpm)', () => {
     expect(maxDiff(viaCv, play(vpm({ depth: 0.3 })))).toBeLessThan(1e-5);
     expect(
       maxDiff(play(vpm({ depth: 0.4, keyTrack: 1 }), 72), play(vpm({ depth: 0.2 }), 72))
+    ).toBeLessThan(1e-5);
+  });
+
+  it('starts the modulator in step with the carrier, so every voice gets the same harmonics', () => {
+    // the carrier starts at a random phase; the seed changes it, and the harmonic balance must not move with it
+    const h2 = (seed: number): number => {
+      const b = play(vpm({ depth: 0.5 }), NOTE, [], seed);
+      return power(b, F0 * 2) / power(b, F0);
+    };
+    expect(h2(1)).toBeCloseTo(h2(2), 6);
+    expect(h2(1)).toBeCloseTo(h2(3), 6);
+  });
+
+  it('MOD KEY TRACK below C4 stops at the same ceiling as the depth', () => {
+    expect(
+      maxDiff(play(vpm({ depth: 1, keyTrack: 1 }), 36), play(vpm({ depth: 2 }), 36))
     ).toBeLessThan(1e-5);
   });
 
