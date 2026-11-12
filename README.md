@@ -68,10 +68,12 @@ npm run db:migrate:dev
 npm run dev
 ```
 
-Open http://localhost:3041. The port is set by `PORT` in the committed
-`.env.development`, which `npm run dev` reads. Know Your Synth uses **3041**,
-registered in the HCE [dev-proxy](https://github.com/human-centric-engineering/dev-proxy)
-(https://knowyoursynth.test once the proxy is applied).
+Open http://localhost:3041, after setting `BETTER_AUTH_URL` and
+`NEXT_PUBLIC_APP_URL` in `.env.local` to that URL (`.env.example` ships them on
+`:3000`). The port is set by `PORT` in the committed `.env.development`, which
+`npm run dev` reads. Know Your Synth uses **3041**, registered in the HCE
+[dev-proxy](https://github.com/human-centric-engineering/dev-proxy). With the
+proxy applied, use https://knowyoursynth.test instead, and point both URLs at it.
 
 ### The prototype
 
