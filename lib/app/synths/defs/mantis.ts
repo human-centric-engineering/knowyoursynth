@@ -3,7 +3,8 @@
  * `.context/app/synth-data/mantis/raw/pwm-mantis.jpg` (3000 × 3000, the synth seen square-on from above), turned into
  * view units by X() / Y() (offset to the faceplate's top-left corner, then scaled by K so the panel is about as wide as
  * the other synths'). The view is the faceplate and the left-hand controller beside the keys, with the tops of the keys
- * for reference. The data model is the owner's spec, `.context/app/synth-data/mantis/mantis.synth.json` (0.13.0).
+ * for reference. That is the full (Long) view; the synth opens compact (`compact`), with the keys left out. The data
+ * model is the owner's spec, `.context/app/synth-data/mantis/mantis.synth.json` (0.13.0).
  *
  * Engine notes: a four-voice `poly` synth (Mono, Duophonic or Quad). Each voice has four oscillators: Oscillator 1,
  * Oscillator 2, the density oscillator (a detuned copy of Oscillator 2) and the sub (a copy of Oscillator 1 an octave
@@ -1820,6 +1821,18 @@ const mantis: SynthDef & { version: number } = {
     cutoffHp: 'the second filter',
     wave1: 'Oscillator 1’s shape',
     wave2: 'Oscillator 2’s shape',
+  },
+  // Compact (`f-compact-panels` t-230), the view it opens in: the keys are left out, since the app's keyboard under
+  // the panel plays, and the left-hand controller (ARP, MODE / SET ARP, OCTAVE, the joystick and HOLD) moves into the
+  // empty column under the PWM MANTIS mark, left of VOLUME, its foot level with the faceplate's. The faceplate is cut
+  // round that column (the band with the mark, then everything right of it), each part left where it was, so the panel
+  // is no bigger than the faceplate and the joystick stays inline. Long is the full drawing.
+  compact: {
+    pieces: [
+      { cut: [0, 0, 1656, 58], at: [0, 0] },
+      { cut: [182, 58, 1656, 470], at: [182, 58] },
+      { cut: [6, 508, 186, 849], at: [1, 470 - 341] },
+    ],
   },
   decor,
   areas,

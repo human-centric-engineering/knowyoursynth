@@ -1,8 +1,9 @@
 /**
  * PWM Malevolent: the definition. Positions are pixels on the owner's product photo,
- * `.context/app/synth-data/malevolent/raw/pwm-malevolent.jpg` (2000 × 2000, the synth seen square-on from above), turned
- * into view units by X() / Y() (full scale, offset to the faceplate's top-left corner). The view is the faceplate and
- * the left-hand controller beside the keys, with the tops of the keys for reference. The data model is the owner's spec,
+ * `.context/app/synth-data/malevolent/raw/pwm-malevolent.jpg` (2000 × 2000, the synth seen square-on from above),
+ * turned into view units by X() / Y() (full scale, offset to the faceplate's top-left corner). The view is the
+ * faceplate and the left-hand controller beside the keys, with the tops of the keys for reference. That is the full
+ * (Long) view; the synth opens compact (`compact`), with the keys left out. The data model is the owner's spec,
  * `.context/app/synth-data/malevolent/malevolent.synth.json` (0.13.0): controls, patch points, the printed normals.
  *
  * Engine notes: a two-VCO voice run as a one-voice `poly` synth so the engine's arpeggiator can play it. Each VCO's
@@ -1042,6 +1043,16 @@ const malevolent: SynthDef & { version: number } = {
     joyX: 'the joystick (left-right)',
   },
   destNames: { extIn: 'the mixer’s AUX', odIn: 'the VCA input' },
+  // Compact (`f-compact-panels` t-230), the view it opens in: the keys are left out, since the app's keyboard under
+  // the panel plays, and the left-hand controller (ARP, VIBRATO, OCTAVE, the joystick and HOLD) moves up beside the
+  // KEYS section, its foot level with the faceplate's, so the panel is only as tall as the faceplate. The joystick
+  // stays inline: the controller is shorter than the faceplate, so it adds no height. Long is the full drawing.
+  compact: {
+    pieces: [
+      { cut: [5, 535, 335, 855], at: [0, 530 - 320] },
+      { cut: [0, 0, 1635, 530], at: [330, 0] },
+    ],
+  },
   decor,
   areas,
   controls,

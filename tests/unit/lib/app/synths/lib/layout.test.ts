@@ -15,6 +15,7 @@ import type {
   Jack,
   ModularLayout,
   SynthDef,
+  ViewRect,
 } from '@/lib/app/synths/contract';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { makeMiniD } from '@/tests/fixtures/synths/mini-d';
@@ -407,5 +408,103 @@ describe('the Grandmother, compact (t-229)', () => {
         true
       );
     }
+  });
+});
+
+describe.each([
+  {
+    id: 'malevolent',
+    keys: ['#f4f4f0', '#111113'],
+    kept: {
+      perf: [
+        'keys.arp',
+        'keys.vibrato',
+        'keys.octDown',
+        'keys.octUp',
+        'joy.x',
+        'joy.y',
+        'keys.hold',
+      ],
+    },
+    hovers: [],
+    joystick: true,
+  },
+  {
+    id: 'mantis',
+    keys: ['#f4f4f0', '#111113'],
+    kept: {
+      perf: ['arp.on', 'arp.set', 'kbd.octDown', 'kbd.octUp', 'joy.x', 'joy.y', 'kbd.hold'],
+    },
+    hovers: [],
+    joystick: true,
+  },
+  {
+    id: 'super-gemini',
+    keys: ['#f4f3ef', '#111113', '#1d1d1f'],
+    kept: {
+      porta: ['perf.octave', 'perf.porta', 'perf.portaLayer'],
+      lfo2: [
+        'lfo2.wave',
+        'lfo2.rate',
+        'lfo2.delay',
+        'lfo2.trig',
+        'lfo2.rateMod',
+        'lfo2.dds',
+        'lfo2.vcf',
+        'lfo2.vca',
+      ],
+      dest: ['perf.oscDest', 'perf.modLayer', 'ui.bendDds', 'ui.bendVcf'],
+    },
+    // drawn only, with a hover card each: they stay
+    hovers: ['bender', 'ribbon'],
+    joystick: false,
+  },
+])('the $id, compact (t-230)', ({ id, keys, kept, hovers, joystick }) => {
+  const full = getSynthDef(id)!;
+  const compact = layoutDef(full);
+  const inside = (p: { x: number; y: number }, q: ViewRect) =>
+    p.x >= q.x && p.x <= q.x + q.w && p.y >= q.y && p.y <= q.y + q.h;
+
+  it('opens compact, one wide band shorter than the full faceplate', () => {
+    expect(layoutKind(full)).toBe('compact');
+    expect(compact.view.h).toBeLessThan(full.view.h * 0.7);
+    expect(compact.view.w / compact.view.h).toBeGreaterThan(3);
+  });
+
+  it('leaves the keys out', () => {
+    const keyRects = (d: SynthDef) =>
+      d.decor.filter((x) => x.t === 'rect' && keys.includes(String(x.fill)));
+    expect(keyRects(full).length).toBeGreaterThan(19);
+    expect(keyRects(compact)).toEqual([]);
+  });
+
+  it('keeps every left-hand control on the panel, in its own area and no other', () => {
+    for (const [area, ids] of Object.entries(kept)) {
+      for (const cid of ids) {
+        const c = find<Control>(compact.controls, cid);
+        expect(inside(c, { x: 0, y: 0, ...compact.view })).toBe(true);
+        const holding = compact.areas
+          .filter((a) => a.rects.some((q) => inside(c, q)))
+          .map((a) => a.id);
+        expect(holding, cid).toEqual([area]);
+      }
+    }
+  });
+
+  it.runIf(hovers.length > 0)('keeps the areas drawn only for their hover card', () => {
+    for (const area of hovers) {
+      const rects = find(compact.areas, area).rects;
+      expect(rects.length).toBeGreaterThan(0);
+      for (const q of rects) expect(inside(q, { x: 0, y: 0, ...compact.view })).toBe(true);
+    }
+  });
+
+  it.runIf(joystick)('keeps the joystick whole: both axes at one spot, the same size', () => {
+    const x = find<Control>(compact.controls, 'joy.x');
+    const y = find<Control>(compact.controls, 'joy.y');
+    const was = find<Control>(full.controls, 'joy.x');
+    expect(Math.abs(x.x - y.x)).toBeLessThan(1);
+    expect(Math.abs(x.y - y.y)).toBeLessThan(2);
+    expect(x).toMatchObject({ type: 'joystick', pair: 'joy.y', r: (was as { r?: number }).r });
   });
 });
