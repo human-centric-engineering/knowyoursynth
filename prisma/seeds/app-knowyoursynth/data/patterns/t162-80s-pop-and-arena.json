@@ -82,6 +82,10 @@
     {
       "sound": "polivoks/pv-africa-brass",
       "reason": "Names “Africa”, which no pattern in this batch has yet; the swells are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "system-55/s55-collins-tom-fill",
+      "reason": "The batch’s “In the Air Tonight” patterns are its chords, roots and snare; this sound is the tom fill, which the 960 plays from one held key."
     }
   ],
   "patterns": [

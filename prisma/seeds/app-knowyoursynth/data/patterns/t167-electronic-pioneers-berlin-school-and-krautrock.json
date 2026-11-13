@@ -274,6 +274,46 @@
     {
       "sound": "polivoks/pv-suicide-pulse",
       "reason": "Its modulator chops one held key into the pulse, so a written part would be played over again; the batch has “Ghost Rider” as its riff and root, written out."
+    },
+    {
+      "sound": "system-15/s15-scott-bongo-clock",
+      "reason": "The patch plays itself: the 921 clocks the bongos from one held key, swung by a slow 921B. It names no one work, and there is no part to write."
+    },
+    {
+      "sound": "system-15/s15-krell-circuit",
+      "reason": "An effect: a self-oscillating filter burbling under audio-rate modulation, as the Barrons’ circuits did on Forbidden Planet. There is no part to write."
+    },
+    {
+      "sound": "system-15/s15-radiophonic-swoop",
+      "reason": "An effect: swoops of filtered noise, not the “Doctor Who” gallop or melody the batch has. There is no part to write."
+    },
+    {
+      "sound": "system-15/s15-cross-fm-chaos",
+      "reason": "Names “Silver Apples of the Moon”, which no pattern in this batch has yet; the tangle of tones is the patch’s cross-modulation, not a part."
+    },
+    {
+      "sound": "system-35/s35-sunra-saturn-organ",
+      "reason": "The batch has no pattern from Sun Ra — “Space Is the Place”; the riff is written to the style and taken from no record."
+    },
+    {
+      "sound": "system-35/s35-oram-splinters",
+      "reason": "An effect: sine tones falling from far above, as on Oram’s tape pieces. There is no part to write."
+    },
+    {
+      "sound": "system-35/s35-schaeffer-train",
+      "reason": "An effect: steam chuffs speeding up. Schaeffer’s “Étude aux chemins de fer” is made from recorded trains; there is no part to write."
+    },
+    {
+      "sound": "system-55/s55-schulze-surge",
+      "reason": "Names Moondawn, which no pattern in this batch has yet; and the 960 sequencer plays the sequence from one held key, so a written part would be played over again."
+    },
+    {
+      "sound": "system-55/s55-payne-whale",
+      "reason": "A recorded sound: Songs of the Humpback Whale is hydrophone recordings of whales, not a part anyone played. There is no part to write."
+    },
+    {
+      "sound": "model-15/m15-ghost-rider-rhythm",
+      "reason": "The patch plays itself: its LFO and sample and hold make the rhythm box from one held key, and the batch’s “Ghost Rider” patterns are the riff and the root."
     }
   ],
   "patterns": [
@@ -3404,7 +3444,8 @@
         "model-d/thin-high-strings",
         "solar-42n/solar-tomita-whistle",
         "take-5/t5-tomita-whistle",
-        "malevolent/mal-tomita-whistle"
+        "malevolent/mal-tomita-whistle",
+        "system-35/s35-tomita-whistle"
       ],
       "research": {
         "work": "Isao Tomita, “Clair de Lune” (Claude Debussy), Snowflakes Are Dancing, 1974",
@@ -3418,7 +3459,7 @@
             "url": "https://www.mutopiaproject.org/ftp/DebussyC/L75/debussy_Ste_Bergamesq_Clair/debussy_Ste_Bergamesq_Clair.mid"
           }
         ],
-        "notes": "From the edition’s upper part, bars 1–4, the top note of each third, so a single line carries it; the last C is cut at the loop. The tempo is the file’s, not Debussy’s marking (Andante très expressif). The two whistle sounds name only the album, so they got its best-known melody, which sits in their range. The score is a tier-1 source for Debussy’s notes, but not for Tomita’s part: the record’s octaves, ornaments, tempo and registration are his, and only a listen can say how far they differ. _In the style of_: for Tomita’s part the score is a starting point like any other lead here, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "From the edition’s upper part, bars 1–4, the top note of each third, so a single line carries it; the last C is cut at the loop. The tempo is the file’s, not Debussy’s marking (Andante très expressif). The whistle sounds name only the album, so they got its best-known melody, which sits in their range. The score is a tier-1 source for Debussy’s notes, but not for Tomita’s part: the record’s octaves, ornaments, tempo and registration are his, and only a listen can say how far they differ. _In the style of_: for Tomita’s part the score is a starting point like any other lead here, not a source. Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -7364,7 +7405,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/rockmore-theremin", "0-coast/zc-rockmore"],
+      "sounds": ["model-d/rockmore-theremin", "0-coast/zc-rockmore", "model-15/m15-ether-theremin"],
       "research": {
         "work": "Clara Rockmore, “The Swan” (Camille Saint-Saëns, The Carnival of the Animals), The Art of the Theremin, 1977",
         "part": "The melody’s first four bars of 6/4: down from G through B and D, the long A, and the climb up the scale to B.",
@@ -12940,7 +12981,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["jupiter-4/j4-oscillations"],
+      "sounds": ["jupiter-4/j4-oscillations", "model-15/m15-oscillations-fm"],
       "research": {
         "work": "Silver Apples, “Oscillations”, Silver Apples, 1968",
         "part": "A short tune on A, up to D and down to E: the same part an octave down.",
@@ -13647,7 +13688,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["pro-1/p1-aguirre-drone"],
+      "sounds": ["pro-1/p1-aguirre-drone", "system-35/s35-popol-aguirre"],
       "research": {
         "work": "Popol Vuh, “Aguirre I”, Aguirre, 1975",
         "part": "D, E, F and back, a note or two a bar: Florian Fricke’s choir organ, an instrument, not singers: the same part an octave down.",
@@ -15502,7 +15543,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["malevolent/mal-expanding-universe"],
+      "sounds": ["malevolent/mal-expanding-universe", "system-35/s35-spiegel-two-lfo"],
       "research": {
         "work": "Laurie Spiegel, The Expanding Universe, 1980",
         "part": "Up and down a pentatonic shape on C, then the same with A for G: the same part an octave down, where the Malevolent’s “Self-Playing Pings” plays.",

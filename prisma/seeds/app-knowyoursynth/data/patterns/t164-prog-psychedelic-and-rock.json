@@ -126,6 +126,10 @@
     {
       "sound": "polivoks/pv-tubular-bell",
       "reason": "The batch has the work’s ostinato (“Tubular Bells: ostinato”), and this sound is the bell; the tune is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "system-55/s55-oldfield-fifteen",
+      "reason": "The 960 and 962 play the fifteen-step ostinato from one held key, so the batch’s “Tubular Bells: piano ostinato” would be played over again."
     }
   ],
   "patterns": [

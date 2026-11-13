@@ -996,6 +996,18 @@ the M.G.’s", "CHVRCHES"), since the roster test matches names exactly and a va
 - Twenty-five patterns' notes that spoke of "the sound" now say "the sounds" where it holds for all of them, and name
   the patch otherwise ("The 2600's “Funk Solo Lead” names no work").
 
+**The System 15, System 35, System 55 and MODEL 15 sounds (t-193)**, placed by the same rules. Of their 555 new
+sounds, 37 are by artists a batch covers, in six batches (t-162 to t-165, t-167 and t-168).
+
+- **12 sit on a pattern**: the work the sound names (or, for one naming no work, a part of the same kind by its
+  artist: La Monte Young's harmonic drone holds "Dream House: a held root"), in its register. 3 of them sit on an octave copy
+  an earlier task made (Aguirre's choir, The Expanding Universe and Oscillations, each an octave down). No copy is new.
+- **25 keep a reason**: it is an effect, or a recorded sound; the System 55's 960 sequencer, or a patch that plays
+  itself, makes the part from one held key, so a written part would be played over again; the work has no pattern
+  yet; or the work's pattern is another part (Libertango's theme under a tango rhythm, In the Air Tonight's snare
+  under a tom fill, the khöömei's held fundamental under a patch whose keys pick the overtones).
+- Clair de Lune's notes now say "the whistle sounds", not "the two", as more of them share it.
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on

@@ -202,6 +202,14 @@
     {
       "sound": "minilogue-xd/mxd-williams-horn",
       "reason": "Names no work, and the batch has John Williams only as the horn chords of “Star Wars”, and this sound plays one line; the line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "system-15/s15-droid-chatter",
+      "reason": "An effect: stepped robot chatter the patch makes from two summed LFOs. There is no part to write."
+    },
+    {
+      "sound": "system-55/s55-murch-engine",
+      "reason": "An effect: an engine idling and revving, made by the patch’s feedback. There is no part to write."
     }
   ],
   "patterns": [

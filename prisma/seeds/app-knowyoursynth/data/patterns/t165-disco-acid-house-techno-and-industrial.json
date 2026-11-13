@@ -86,6 +86,10 @@
     {
       "sound": "minilogue-xd/mxd-may-sus4-stab",
       "reason": "The batch has the work’s stabs as written chords (“Strings of Life: stabs”), and this sound plays a chord from each key in CHORD mode, so written chords would be stacked again; the stabs are the lesson’s own."
+    },
+    {
+      "sound": "system-55/s55-moroder-gallop",
+      "reason": "The 960 sequencer plays the gallop from one held key, so the batch’s “Chase: bass” would be played over again."
     }
   ],
   "patterns": [
