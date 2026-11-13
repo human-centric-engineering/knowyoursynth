@@ -478,13 +478,15 @@ describe.each([
     expect(keyRects(compact)).toEqual([]);
   });
 
-  it('keeps every left-hand control on the panel, in its own area', () => {
+  it('keeps every left-hand control on the panel, in its own area and no other', () => {
     for (const [area, ids] of Object.entries(kept)) {
-      const rects = find(compact.areas, area).rects;
       for (const cid of ids) {
         const c = find<Control>(compact.controls, cid);
         expect(inside(c, { x: 0, y: 0, ...compact.view })).toBe(true);
-        expect(rects.some((q) => inside(c, q))).toBe(true);
+        const holding = compact.areas
+          .filter((a) => a.rects.some((q) => inside(c, q)))
+          .map((a) => a.id);
+        expect(holding, cid).toEqual([area]);
       }
     }
   });
