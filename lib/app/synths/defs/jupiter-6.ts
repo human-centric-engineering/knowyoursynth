@@ -1691,8 +1691,10 @@ function toEngine(v: ControlValues, ctx?: Partial<EngineContext>): EngineParams 
 
 const init: ControlValues = Object.fromEntries(controls.map((c) => [c.id, c.def]));
 
-// The modular layout: each printed section cut out as a module (cuts are [x0, y0, x1, y1] on the long panel), four
-// rows. The panel left of the keyboard (BEND, LFO-2) joins the memory row.
+// The modular layout: each printed section cut out as a module (cuts are [x0, y0, x1, y1] on the long panel), three
+// rows, each full without a blank panel and the case about twice as wide as it is tall. The voice runs along the top;
+// VCA, the envelopes, TUNE and the memory under it, the memory in a row of its own height; and the panel left of the
+// keyboard (BEND, LFO-2), the tallest modules, starts the bottom row with the performance controls.
 const CUTS: [number, number, number, number][][] = [
   [
     [781, 236, 946, 528],
@@ -1701,26 +1703,24 @@ const CUTS: [number, number, number, number][][] = [
     [1474, 236, 1698, 528],
     [1698, 236, 2086, 528],
     [2086, 236, 2526, 528],
-  ],
-  [
     [2526, 236, 2713, 528],
     [2713, 236, 3236, 528],
+  ],
+  [
     [3236, 236, 3430, 528],
     [3430, 236, 3817, 528],
     [3817, 236, 4165, 528],
+    [3898, 528, 4165, 830],
+    [2528, 528, 3898, 830],
   ],
   [
+    [26, 345, 265, 830],
+    [265, 345, 666, 830],
     [781, 528, 1045, 830],
     [1045, 528, 1321, 830],
     [1321, 528, 1698, 830],
     [1698, 528, 2170, 830],
     [2170, 528, 2528, 830],
-    [3898, 528, 4165, 830],
-  ],
-  [
-    [26, 345, 265, 830],
-    [265, 345, 666, 830],
-    [2528, 528, 3898, 830],
   ],
 ];
 const modular: ModularLayout = {

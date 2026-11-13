@@ -138,8 +138,10 @@ function definitionDrift(ported: SynthDef, prototype: SynthDef): string | null {
     'help',
     'seqButtons',
     'defaultPatch',
-    // the app's compact layout (`f-compact-panels`): the prototype draws only the long panel
+    // the app's own layouts (`f-compact-panels`): the compact one, which the prototype never had, and the modular case,
+    // re-packed without its blank plates (t-232). Both are cut from the long panel, which is still compared here.
     'compact',
+    'modular',
   ]);
   const plain = (def: SynthDef): unknown =>
     JSON.parse(

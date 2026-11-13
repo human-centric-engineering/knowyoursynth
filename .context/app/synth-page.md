@@ -459,7 +459,12 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   (t-231): the CS-80's memory cover and YAMAHA band go, its performance panel moving into the cover's place and its
   ribbon kept as a slim strip; the DeepMind's title band and blank logo cell go, its VOICES lamps moving into the
   display section's empty name bar; the UB-Xa D's title band goes; the SOLAR's logo band shrinks to the DUAL
-  EFFECTOR's top, its rear sockets and power legend either side of it. The CS-80's memory cover is the one hover card a
+  EFFECTOR's top, its rear sockets and power legend either side of it. The Jupiters' cases and the System 15 lose their blank
+  plates (t-232): each Jupiter's modules are re-packed into three rows full enough that none is padded with a blank
+  (the Jupiter-6's memory in a row of its own height), and the System 15 opens compact: the hardware's BP56 and BP28
+  left out, the 921 VCO closing the top row and the rest of the bottom row closed up, two 98 HP rows in place of 140,
+  with the maker's strip cut on its own so the wordmark stays centred. The modular case, like the compact pieces, is
+  left out of `check:synths`'s comparison with the prototype; the long panel is still compared. The CS-80's memory cover is the one hover card a
   compact panel drops, since it covers memories the app does not model; an area every part of which is cut away is
   left out of the compact def, so the tour and the search do not offer it. A compact panel is wider for its height than the full drawing, so it is
   drawn bigger only where the screen's height limits the panel; where its width does (a narrow window, a phone, the
