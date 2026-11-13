@@ -199,7 +199,7 @@ describe('the research batches', () => {
         'Wham!',
         'Yello',
       ],
-      138,
+      139,
     ],
     [
       't-163',
@@ -237,7 +237,7 @@ describe('the research batches', () => {
         'Walter Murch',
         'Yann Tiersen',
       ],
-      160,
+      162,
     ],
     [
       't-164',
@@ -286,7 +286,7 @@ describe('the research batches', () => {
         'Thom Yorke',
         'U2',
       ],
-      145,
+      146,
     ],
     [
       't-165',
@@ -329,7 +329,7 @@ describe('the research batches', () => {
         'Robin S',
         'Second Phase',
       ],
-      160,
+      161,
     ],
     [
       't-166',
@@ -409,7 +409,7 @@ describe('the research batches', () => {
         'Popol Vuh',
         'Roger Payne',
       ],
-      158,
+      173,
     ],
     [
       't-168',
@@ -469,7 +469,7 @@ describe('the research batches', () => {
         'Yo-Yo Ma',
         'Yoshida Brothers',
       ],
-      200,
+      217,
     ],
   ];
 

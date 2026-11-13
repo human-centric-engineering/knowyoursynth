@@ -198,6 +198,46 @@
     {
       "sound": "polivoks/pv-breathing-pad",
       "reason": "Its repeating filter envelope makes the breathing from one held note, so a written part would play over it; the batch has Stars of the Lid as chords and a line."
+    },
+    {
+      "sound": "system-15/s15-messiaen-birds",
+      "reason": "An effect: the patch’s clock fires a burst of falling chirps on every key, so a written birdsong line would be played over again. There is no part to write."
+    },
+    {
+      "sound": "system-15/s15-khoomei",
+      "reason": "The batch has the held fundamental (“Khoomei: the held fundamental”); in this patch the drone is fixed and the keys pick the overtone melody above it, so the held root would leave the whistle still."
+    },
+    {
+      "sound": "system-35/s35-budd-pearl",
+      "reason": "The batch has the work’s held chords (“The Pearl: chords for the falling notes”), not the single line this sound plays; the line is the lesson’s own, written to the style."
+    },
+    {
+      "sound": "system-35/s35-oliveros-filter-osc",
+      "reason": "Names “Bye Bye Butterfly”, which no pattern in this batch has yet; the batch has Oliveros as the tones of Deep Listening and for the delay."
+    },
+    {
+      "sound": "system-35/s35-piazzolla-bandoneon",
+      "reason": "The batch’s “Libertango: the theme” is another part of the work; this sound marks the tango rhythm under it, a part that is the lesson’s own."
+    },
+    {
+      "sound": "system-55/s55-kodo-taiko",
+      "reason": "The 960 sequencer plays the drum pattern from one held key, so the batch’s “O-daiko: a slow drum pattern” would be played over again."
+    },
+    {
+      "sound": "system-55/s55-anderson-clock",
+      "reason": "Names “The Syncopated Clock”, which no pattern in this batch has yet; the 960 plays the ticking from one held key."
+    },
+    {
+      "sound": "system-55/s55-scruggs-banjo-roll",
+      "reason": "The 960 sequencer plays the roll from each held chord root, so the batch’s “Foggy Mountain Breakdown: the first break” would be played over again."
+    },
+    {
+      "sound": "system-55/s55-chambers-walking-bass",
+      "reason": "The 960 sequencer walks the bass from one held key; and the batch’s “So What: the bass call” is another part, not a walking line."
+    },
+    {
+      "sound": "model-15/m15-pier-surf",
+      "reason": "An effect: surf from swelling pink noise. There is no part to write."
     }
   ],
   "patterns": [
@@ -1168,7 +1208,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["neutron/cello-prelude", "tb-303/tb-cello-prelude"],
+      "sounds": ["neutron/cello-prelude", "tb-303/tb-cello-prelude", "system-55/s55-yoyoma-cello"],
       "research": {
         "work": "Yo-Yo Ma, “Prelude”, Cello Suite No. 1 in G major (J. S. Bach, BWV 1007)",
         "part": "The first four bars: the broken chords on the open G, over G, C, D and G again.",
@@ -3783,7 +3823,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/fretless-continuum"],
+      "sounds": ["model-d/fretless-continuum", "system-35/s35-jaco-fretless"],
       "research": {
         "work": "Jaco Pastorius, “Continuum”, Jaco Pastorius, 1976",
         "part": "The melody’s first four bars: B to a long C♯, the A♭ F♯ pickup, B to a long E♭, and the pickup again.",
@@ -10264,7 +10304,8 @@
         "malevolent/mal-mr-lawrence-bell",
         "donner-b1/b1-sakamoto",
         "jupiter-6/jp6-mr-lawrence-bells",
-        "grandmother/gm-merry-christmas-bells"
+        "grandmother/gm-merry-christmas-bells",
+        "system-35/s35-sakamoto-fm-bell"
       ],
       "research": {
         "work": "Ryuichi Sakamoto, “Merry Christmas Mr. Lawrence”, Merry Christmas Mr. Lawrence, 1983",
@@ -12776,7 +12817,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/satchidananda-harp", "cat/cat-satchidananda-harp", "polivoks/pv-harp"],
+      "sounds": [
+        "model-d/satchidananda-harp",
+        "cat/cat-satchidananda-harp",
+        "polivoks/pv-harp",
+        "system-35/s35-coltrane-harp"
+      ],
       "research": {
         "work": "Alice Coltrane, “Journey in Satchidananda”, Journey in Satchidananda, 1971",
         "part": "A cascade up through C with a flat seventh to a held G, and back down to C.",
@@ -14660,7 +14706,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/duduk-lament", "2-xm/xm-duduk"],
+      "sounds": ["model-d/duduk-lament", "2-xm/xm-duduk", "system-35/s35-gasparyan-duduk"],
       "research": {
         "work": "Djivan Gasparyan, “I Will Not Be Sad in This World”, 1983",
         "part": "A slow D minor line up to A and back to a long D, four bars.",
@@ -18575,7 +18621,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/just-intonation-drone"],
+      "sounds": ["model-d/just-intonation-drone", "system-35/s35-lamonte-seventh"],
       "research": {
         "work": "La Monte Young, the Dream House drones",
         "part": "One G held for four bars; the sound tunes its fifth and octave above.",
@@ -19781,7 +19827,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/looking-glass-marimba", "jupiter-8/jp8-midori-takada"],
+      "sounds": [
+        "model-d/looking-glass-marimba",
+        "jupiter-8/jp8-midori-takada",
+        "system-35/s35-takada-marimba"
+      ],
       "research": {
         "work": "Midori Takada, Through the Looking Glass, 1983",
         "part": "A figure of threes against the bar: E G B twice and C B, then D G A twice and B A.",

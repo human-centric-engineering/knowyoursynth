@@ -75,10 +75,10 @@ const EXPORTED: {
   { id: 'jupiter-8', sounds: 150, timeline: 5, relatives: 3, unusual: 15, limits: 6 },
   // The 900 systems' notes are mostly the shared moog900/unusual.js ones, expanded by the export: their own files
   // hold one note (System 35) or three (System 55), and the System 15's none.
-  { id: 'system-15', sounds: 13, timeline: 7, relatives: 3, unusual: 18, limits: 5 },
-  { id: 'system-35', sounds: 9, timeline: 7, relatives: 4, unusual: 27, limits: 5 },
-  { id: 'system-55', sounds: 11, timeline: 7, relatives: 4, unusual: 38, limits: 8 },
-  { id: 'model-15', sounds: 12, timeline: 5, relatives: 4, unusual: 14, limits: 5 },
+  { id: 'system-15', sounds: 150, timeline: 7, relatives: 3, unusual: 18, limits: 5 },
+  { id: 'system-35', sounds: 150, timeline: 7, relatives: 4, unusual: 27, limits: 5 },
+  { id: 'system-55', sounds: 150, timeline: 7, relatives: 4, unusual: 38, limits: 8 },
+  { id: 'model-15', sounds: 150, timeline: 5, relatives: 4, unusual: 14, limits: 5 },
   { id: 'grandmother', sounds: 150, timeline: 5, relatives: 3, unusual: 15, limits: 4 },
 ];
 

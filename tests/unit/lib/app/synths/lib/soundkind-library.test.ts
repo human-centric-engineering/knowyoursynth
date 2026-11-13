@@ -23,11 +23,11 @@ import { KIND_MODEL } from '@/lib/app/synths/lib/soundkind-model';
 import { sweepLibrary, sweepShard } from '@/scripts/soundkind-sweep';
 
 /**
- * Measured 2026-11-12 over the library's 5,024 sounds: 2,445 agree (48.67%) on macOS arm64. At an earlier measure
+ * Measured 2026-11-13 over the library's 5,579 sounds: 2,634 agree (47.21%) on macOS arm64. At an earlier measure
  * (2,998 sounds), CI's Linux x64 read one fx sound as lead: renders are seeded, but the platforms' maths can differ in
- * the last bit. So the floor is one sound below, 2,444 (48.64%).
+ * the last bit. So the floor is one sound below, 2,633 (47.19%).
  */
-const MEASURED = 0.4864;
+const MEASURED = 0.4719;
 
 /** Threads for the sweep (see above). */
 const SWEEP_THREADS = 2;
