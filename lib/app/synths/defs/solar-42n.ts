@@ -2339,6 +2339,22 @@ const solar42n: SynthDef & { version: number } = {
     cheeks: 'none',
     jack: 'black',
   },
+  // Compact (`f-compact-panels` t-231), the view it opens in: the logo band (SOLAR 42 N, AMBIENT MACHINE) is left out,
+  // so the band above the modules is only as tall as the DUAL EFFECTOR's top, which stands above them. The rear
+  // sockets (EXT. AUDIO, WET OUT R and L) sit left of it in that band, the power legend right of it. The touch plates,
+  // joystick and drone-voice pads stay, by the feature's ruling. The effector's column is a piece of its own down to
+  // the third row, so its frame is never cut across; every piece but the two in the band moves up by the same amount.
+  // Long is the full drawing.
+  compact: {
+    pieces: [
+      { cut: [X(42), Y(262), X(240), Y(300)], at: [X(42), 0] },
+      { cut: [X(1110), Y(280), X(1196), Y(294)], at: [X(1110), 20] },
+      { cut: [X(445), Y(346), X(832), Y(698.5)], at: [X(445), 2] },
+      { cut: [0, Y(383), X(445), Y(698.5)], at: [0, 76] },
+      { cut: [X(832), Y(383), 1196 * K, Y(698.5)], at: [X(832), 76] },
+      { cut: [0, Y(698.5), 1196 * K, 768 * K], at: [0, Y(698.5) - Y(346) + 2] },
+    ],
+  },
   signalNames: {
     sol1: 'Drone 1',
     sol2: 'Drone 2',

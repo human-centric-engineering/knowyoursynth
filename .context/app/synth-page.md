@@ -455,7 +455,12 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   ARP/SEQ section, so the panel is the faceplate's height. The Malevolent, the Mantis and the Super Gemini followed
   (t-230): each left-hand block moves beside the faceplate (the Mantis's into the empty column under its mark), its
   joystick inline and still draggable, since none of the blocks is taller than the faceplate; the Super Gemini keeps
-  its ribbon strip, which has a hover card. A compact panel is wider for its height than the full drawing, so it is
+  its ribbon strip, which has a hover card. The CS-80, DeepMind 12D, UB-Xa D and SOLAR 42N lose their empty bands
+  (t-231): the CS-80's memory cover and YAMAHA band go, its performance panel moving into the cover's place and its
+  ribbon kept as a slim strip; the DeepMind's title band and blank logo cell go, its VOICES lamps moving into the
+  display section's empty name bar; the UB-Xa D's title band goes; the SOLAR's logo band shrinks to the DUAL
+  EFFECTOR's top, its rear sockets and power legend either side of it. The CS-80's memory cover is the one hover card a
+  compact panel drops, since it covers memories the app does not model. A compact panel is wider for its height than the full drawing, so it is
   drawn bigger only where the screen's height limits the panel; where its width does (a narrow window, a phone, the
   share card), compact is a little smaller than Full, and the help says no more than that. A compact spec cannot
   cut the same part of the long panel twice or put a piece left of or above the faceplate's corner; marks move with

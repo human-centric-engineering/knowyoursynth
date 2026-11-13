@@ -508,3 +508,103 @@ describe.each([
     expect(x).toMatchObject({ type: 'joystick', pair: 'joy.y', r: (was as { r?: number }).r });
   });
 });
+
+describe.each([
+  {
+    id: 'cs-80',
+    // the memory cover is print only (its block diagram); the task leaves it out with the YAMAHA band
+    dropped: { areas: ['cover'], prints: ['YAMAHA', 'MEMORY 1 · 2 · 3 · 4  (BENEATH THIS COVER)'] },
+    kept: ['RIBBON CONTROLLER'],
+  },
+  {
+    id: 'deepmind-12d',
+    dropped: {
+      areas: [],
+      prints: ['DeepMind 12', 'ANALOG 12-VOICE POLYPHONIC SYNTHESIZER', 'behringer'],
+    },
+    kept: ['VOICES'],
+  },
+  {
+    id: 'ub-xa-d',
+    dropped: { areas: [], prints: ['behringer'] },
+    // the name in the display stays
+    kept: ['UB-Xa D'],
+  },
+  {
+    id: 'solar-42n',
+    dropped: { areas: [], prints: ['SOLAR', '42', 'N', 'AMBIENT', 'MACHINE'] },
+    kept: ['EXT.', 'WET OUT', 'POWER   12V DC', 'DUAL EFFECTOR'],
+  },
+])('the $id, compact (t-231)', ({ id, dropped, kept }) => {
+  const full = getSynthDef(id)!;
+  const compact = layoutDef(full);
+  const inside = (p: { x: number; y: number }, q: ViewRect) =>
+    p.x >= q.x && p.x <= q.x + q.w && p.y >= q.y && p.y <= q.y + q.h;
+  const view = { x: 0, y: 0, ...compact.view };
+  const holding = (d: SynthDef, p: { x: number; y: number }) =>
+    (d.areas || []).filter((a) => a.rects.some((q) => inside(p, q))).map((a) => a.id);
+  const prints = (d: SynthDef) =>
+    d.decor.flatMap((x) => (x.t === 'text' || x.t === 'logo' ? [x.text] : []));
+
+  it('opens compact, as wide as the full faceplate and shorter', () => {
+    expect(layoutKind(full)).toBe('compact');
+    expect(compact.view.w).toBe(full.view.w);
+    expect(compact.view.h).toBeLessThan(full.view.h * 0.9);
+  });
+
+  it('leaves the empty band out: its print is gone', () => {
+    for (const t of dropped.prints) {
+      expect(prints(full), t).toContain(t);
+      expect(prints(compact), t).not.toContain(t);
+    }
+    for (const t of kept) expect(prints(compact), t).toContain(t);
+  });
+
+  it('keeps every control and jack on the panel, in the areas that held it on the full one', () => {
+    for (const p of [...compact.controls, ...compact.jacks]) {
+      const was = [...full.controls, ...full.jacks].find((c) => c.id === p.id)!;
+      expect(inside(p, view), p.id).toBe(true);
+      expect(holding(compact, p), p.id).toEqual(holding(full, was));
+    }
+  });
+
+  it('keeps every hover card on the panel but the ones the task leaves out', () => {
+    const ids = (full.areas || []).map((a) => a.id).filter((a) => !dropped.areas.includes(a));
+    for (const area of ids) {
+      const rects = find(compact.areas || [], area).rects;
+      expect(rects.length, area).toBeGreaterThan(0);
+      for (const q of rects) expect(inside(q, view), area).toBe(true);
+    }
+    for (const area of dropped.areas) expect(find(compact.areas || [], area).rects).toEqual([]);
+  });
+});
+
+describe('the DeepMind 12D, compact (t-231): the VOICES lamps', () => {
+  it('keeps all twelve lamps, lit by their voices, inside the Voice lamps hover card', () => {
+    const compact = layoutDef(getSynthDef('deepmind-12d')!);
+    const card = find(compact.areas || [], 'voices').rects;
+    const lamps = compact.decor.flatMap((d) =>
+      d.t === 'led' && d.litWhen && 'voice' in d.litWhen ? [d] : []
+    );
+    expect(lamps.map((d) => d.litWhen)).toEqual(
+      Array.from({ length: 12 }, (_, i) => ({ voice: i }))
+    );
+    for (const d of lamps)
+      expect(
+        card.some((q) => d.x >= q.x && d.x <= q.x + q.w && d.y >= q.y && d.y <= q.y + q.h)
+      ).toBe(true);
+  });
+});
+
+describe('the SOLAR 42N, compact (t-231): the jacks', () => {
+  it('keeps the rear sockets where they were and moves every other jack up by one step', () => {
+    const full = getSynthDef('solar-42n')!;
+    const compact = layoutDef(full);
+    const rear = ['ext.in', 'out.r', 'out.l'];
+    for (const j of full.jacks) {
+      const now = find<Jack>(compact.jacks, j.id);
+      expect(now.x, j.id).toBe(j.x);
+      expect(Math.round(j.y - now.y), j.id).toBe(rear.includes(j.id) ? 0 : 166);
+    }
+  });
+});

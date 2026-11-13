@@ -1063,6 +1063,11 @@ const ubXaD: SynthDef & { version: number } = {
     cheekW: 62,
     button: 'black',
   },
+  // Compact (`f-compact-panels` t-231), the view it opens in: the title band above the sections (the UB-Xa D and
+  // behringer wordmarks) is left out; the name is still in the display. Long is the full drawing.
+  compact: {
+    pieces: [{ cut: [62, 112, 2000 - 62, 945], at: [0, 0] }],
+  },
   decor,
   areas,
   controls,
