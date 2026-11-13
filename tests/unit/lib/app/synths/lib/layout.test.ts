@@ -584,7 +584,7 @@ describe('the DeepMind 12D, compact (t-231): the VOICES lamps', () => {
     const compact = layoutDef(getSynthDef('deepmind-12d')!);
     const card = find(compact.areas || [], 'voices').rects;
     const lamps = compact.decor.flatMap((d) =>
-      d.t === 'led' && d.litWhen && 'voice' in d.litWhen ? [d] : []
+      d.t === 'led' && typeof d.litWhen === 'object' && 'voice' in d.litWhen ? [d] : []
     );
     expect(lamps.map((d) => d.litWhen)).toEqual(
       Array.from({ length: 12 }, (_, i) => ({ voice: i }))
