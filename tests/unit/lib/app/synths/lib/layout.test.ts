@@ -35,6 +35,17 @@ const find = <T extends { id: string }>(list: T[], id: string): T => {
   return x;
 };
 
+/** Whether a point lies in a rect, edges included. */
+const inside = (p: { x: number; y: number }, q: ViewRect) =>
+  p.x >= q.x && p.x <= q.x + q.w && p.y >= q.y && p.y <= q.y + q.h;
+
+/** Whether a rect lies wholly in another: both its corners are inside it. */
+const within = (r: ViewRect, q: ViewRect) =>
+  inside(r, q) && inside({ x: r.x + r.w, y: r.y + r.h }, q);
+
+/** No hover card part is a sliver a cut left over: anything this thin is the edge of a card cut in the wrong place. */
+const SLIVER = 8;
+
 describe('modularDef', () => {
   it('returns the definition itself when it has no modular spec', () => {
     const def = makeMiniD();
@@ -462,8 +473,6 @@ describe.each([
 ])('the $id, compact (t-230)', ({ id, keys, kept, hovers, joystick }) => {
   const full = getSynthDef(id)!;
   const compact = layoutDef(full);
-  const inside = (p: { x: number; y: number }, q: ViewRect) =>
-    p.x >= q.x && p.x <= q.x + q.w && p.y >= q.y && p.y <= q.y + q.h;
 
   it('opens compact, one wide band shorter than the full faceplate', () => {
     expect(layoutKind(full)).toBe('compact');
@@ -495,7 +504,7 @@ describe.each([
     for (const area of hovers) {
       const rects = find(compact.areas, area).rects;
       expect(rects.length).toBeGreaterThan(0);
-      for (const q of rects) expect(inside(q, { x: 0, y: 0, ...compact.view })).toBe(true);
+      for (const q of rects) expect(within(q, { x: 0, y: 0, ...compact.view })).toBe(true);
     }
   });
 
@@ -538,8 +547,6 @@ describe.each([
 ])('the $id, compact (t-231)', ({ id, dropped, kept }) => {
   const full = getSynthDef(id)!;
   const compact = layoutDef(full);
-  const inside = (p: { x: number; y: number }, q: ViewRect) =>
-    p.x >= q.x && p.x <= q.x + q.w && p.y >= q.y && p.y <= q.y + q.h;
   const view = { x: 0, y: 0, ...compact.view };
   const holding = (d: SynthDef, p: { x: number; y: number }) =>
     (d.areas || []).filter((a) => a.rects.some((q) => inside(p, q))).map((a) => a.id);
@@ -568,14 +575,19 @@ describe.each([
     }
   });
 
-  it('keeps every hover card on the panel but the ones the task leaves out', () => {
+  it('keeps every hover card on the panel, with no slivers, but the ones the task leaves out', () => {
     const ids = (full.areas || []).map((a) => a.id).filter((a) => !dropped.areas.includes(a));
     for (const area of ids) {
       const rects = find(compact.areas || [], area).rects;
       expect(rects.length, area).toBeGreaterThan(0);
-      for (const q of rects) expect(inside(q, view), area).toBe(true);
+      for (const q of rects) {
+        expect(within(q, view), area).toBe(true);
+        expect(Math.min(q.w, q.h), area).toBeGreaterThanOrEqual(SLIVER);
+      }
     }
-    for (const area of dropped.areas) expect(find(compact.areas || [], area).rects).toEqual([]);
+    // left out altogether, so the tour and the search cannot offer a card that lights nothing
+    for (const area of dropped.areas)
+      expect((compact.areas || []).map((a) => a.id)).not.toContain(area);
   });
 });
 
@@ -589,10 +601,7 @@ describe('the DeepMind 12D, compact (t-231): the VOICES lamps', () => {
     expect(lamps.map((d) => d.litWhen)).toEqual(
       Array.from({ length: 12 }, (_, i) => ({ voice: i }))
     );
-    for (const d of lamps)
-      expect(
-        card.some((q) => d.x >= q.x && d.x <= q.x + q.w && d.y >= q.y && d.y <= q.y + q.h)
-      ).toBe(true);
+    for (const d of lamps) expect(card.some((q) => inside(d, q))).toBe(true);
   });
 });
 
@@ -601,10 +610,14 @@ describe('the SOLAR 42N, compact (t-231): the jacks', () => {
     const full = getSynthDef('solar-42n')!;
     const compact = layoutDef(full);
     const rear = ['ext.in', 'out.r', 'out.l'];
+    const shifts = new Set<number>();
     for (const j of full.jacks) {
       const now = find<Jack>(compact.jacks, j.id);
       expect(now.x, j.id).toBe(j.x);
-      expect(Math.round(j.y - now.y), j.id).toBe(rear.includes(j.id) ? 0 : 166);
+      if (rear.includes(j.id)) expect(now.y, j.id).toBe(j.y);
+      else shifts.add(Math.round(j.y - now.y));
     }
+    expect(shifts.size).toBe(1);
+    expect([...shifts][0]).toBeGreaterThan(0);
   });
 });

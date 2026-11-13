@@ -1064,9 +1064,10 @@ const ubXaD: SynthDef & { version: number } = {
     button: 'black',
   },
   // Compact (`f-compact-panels` t-231), the view it opens in: the title band above the sections (the UB-Xa D and
-  // behringer wordmarks) is left out; the name is still in the display. Long is the full drawing.
+  // behringer wordmarks, and the blue rule under them at y 124) is left out, the sections put down 12 below the top so
+  // their headings keep a margin; the name is still in the display. Long is the full drawing.
   compact: {
-    pieces: [{ cut: [62, 112, 2000 - 62, 945], at: [0, 0] }],
+    pieces: [{ cut: [62, 126, 2000 - 62, 945], at: [0, 12] }],
   },
   decor,
   areas,

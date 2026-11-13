@@ -196,7 +196,8 @@ function moveDecor(d: Decor, mods: Module[], out: Decor[]): void {
 /**
  * Every control, option, jack, decor item, area, mark and the pin matrix of `def`, moved by the cut it sits in. A
  * control, jack or matrix in no cut throws (`<id> <what>: control <id> at x,y is in no <unit>`), as does a matrix whose
- * far corner is in another cut than its first hole; decor, area parts and marks (by their centre) in no cut are dropped.
+ * far corner is in another cut than its first hole; decor, area parts and marks (by their centre) in no cut are
+ * dropped, and so is an area left with no parts.
  */
 function moveAll(
   def: SynthDef,
@@ -225,17 +226,19 @@ function moveAll(
   const jacks = def.jacks.map((j): Jack => ({ ...j, ...move(j, `jack ${j.id}`) }));
   const decor: Decor[] = [];
   def.decor.forEach((d) => moveDecor(d, mods, decor));
-  const areas = (def.areas || []).map((a) => ({
-    ...a,
-    rects: a.rects.flatMap((r) =>
+  // An area every part of which was cut away is dropped, not kept with no rects: the tour, the search and the find
+  // highlight would each offer it and light nothing.
+  const areas = (def.areas || []).flatMap((a) => {
+    const rects = a.rects.flatMap((r) =>
       mods
         .map((m) => {
           const c = clipRect(r, m);
           return c && { x: r1(c.x + m.dx), y: r1(c.y + m.dy), w: r1(c.w), h: r1(c.h) };
         })
         .filter((x): x is ViewRect => !!x)
-    ),
-  }));
+    );
+    return rects.length ? [{ ...a, rects }] : [];
+  });
   const marks = def.marks?.flatMap((k) => {
     const m = mods.find((c) => within(c, k.rect.x + k.rect.w / 2, k.rect.y + k.rect.h / 2));
     return m ? [{ ...k, rect: { ...k.rect, x: r1(k.rect.x + m.dx), y: r1(k.rect.y + m.dy) } }] : [];

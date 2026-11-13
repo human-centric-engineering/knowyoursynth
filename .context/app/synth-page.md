@@ -460,7 +460,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   ribbon kept as a slim strip; the DeepMind's title band and blank logo cell go, its VOICES lamps moving into the
   display section's empty name bar; the UB-Xa D's title band goes; the SOLAR's logo band shrinks to the DUAL
   EFFECTOR's top, its rear sockets and power legend either side of it. The CS-80's memory cover is the one hover card a
-  compact panel drops, since it covers memories the app does not model. A compact panel is wider for its height than the full drawing, so it is
+  compact panel drops, since it covers memories the app does not model; an area every part of which is cut away is
+  left out of the compact def, so the tour and the search do not offer it. A compact panel is wider for its height than the full drawing, so it is
   drawn bigger only where the screen's height limits the panel; where its width does (a narrow window, a phone, the
   share card), compact is a little smaller than Full, and the help says no more than that. A compact spec cannot
   cut the same part of the long panel twice or put a piece left of or above the faceplate's corner; marks move with

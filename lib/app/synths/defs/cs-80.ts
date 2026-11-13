@@ -1652,7 +1652,7 @@ const cs80: SynthDef & { version: number } = {
   },
   // Compact (`f-compact-panels` t-231), the view it opens in: the memory cover (its block diagram is print only) and
   // the band with the YAMAHA nameplate are left out. The performance panel (foot pedal, sustain, portamento, tremolo /
-  // chorus) moves up into the cover's place beside the programmable panels, centred on them, and the
+  // chorus) moves up into the cover's place beside the programmable panels, its sections centred on theirs (y 66 to 500), and the
   // ribbon, which is drawn only, stays as a slim strip under the lower strip, its name beside it, so its hover card is
   // still there. Long is the full drawing.
   compact: {
