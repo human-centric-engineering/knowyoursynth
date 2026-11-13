@@ -1412,6 +1412,23 @@ const deepmind12d: SynthDef & { version: number } = {
     cheeks: 'wood',
     cheekW: X(119),
   },
+  // Compact (`f-compact-panels` t-231), the view it opens in: the title band (the DeepMind 12 wordmark and its
+  // strapline) and the blank behringer cell left of ARP / SEQ are left out. The VOICES lamps, which light as voices
+  // sound, move down into the band the display section's empty name bar held, so the display's frame starts under
+  // them; VOLUME and PORTAMENTO stay in the left-hand column, one beside each row. The cuts follow the hover cards'
+  // edges (display to 1809, the main body from 236), so no card leaves a sliver in a neighbouring piece. Long is the
+  // full drawing.
+  compact: {
+    pieces: [
+      { cut: [230, 134, 962, 528], at: [230 - X(119), 0] },
+      { cut: [962, 182, 1809, 528], at: [962 - X(119), 48] },
+      { cut: [1809, 134, X(1107) - X(119), 528], at: [1809 - X(119), 0] },
+      { cut: [1236, 76, 1880, 118], at: [1062 - X(119), 6] },
+      { cut: [236, 528, X(1107) - X(119), 992], at: [236 - X(119), 394] },
+      { cut: [X(119), 555, 230, 715], at: [0, 117] },
+      { cut: [X(119), 715, 230, 890], at: [0, 539] },
+    ],
+  },
   decor,
   areas,
   controls,

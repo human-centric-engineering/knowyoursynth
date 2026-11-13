@@ -35,6 +35,17 @@ const find = <T extends { id: string }>(list: T[], id: string): T => {
   return x;
 };
 
+/** Whether a point lies in a rect, edges included. */
+const inside = (p: { x: number; y: number }, q: ViewRect) =>
+  p.x >= q.x && p.x <= q.x + q.w && p.y >= q.y && p.y <= q.y + q.h;
+
+/** Whether a rect lies wholly in another: both its corners are inside it. */
+const within = (r: ViewRect, q: ViewRect) =>
+  inside(r, q) && inside({ x: r.x + r.w, y: r.y + r.h }, q);
+
+/** No hover card part is a sliver a cut left over: anything this thin is the edge of a card cut in the wrong place. */
+const SLIVER = 8;
+
 describe('modularDef', () => {
   it('returns the definition itself when it has no modular spec', () => {
     const def = makeMiniD();
@@ -462,8 +473,6 @@ describe.each([
 ])('the $id, compact (t-230)', ({ id, keys, kept, hovers, joystick }) => {
   const full = getSynthDef(id)!;
   const compact = layoutDef(full);
-  const inside = (p: { x: number; y: number }, q: ViewRect) =>
-    p.x >= q.x && p.x <= q.x + q.w && p.y >= q.y && p.y <= q.y + q.h;
 
   it('opens compact, one wide band shorter than the full faceplate', () => {
     expect(layoutKind(full)).toBe('compact');
@@ -495,7 +504,7 @@ describe.each([
     for (const area of hovers) {
       const rects = find(compact.areas, area).rects;
       expect(rects.length).toBeGreaterThan(0);
-      for (const q of rects) expect(inside(q, { x: 0, y: 0, ...compact.view })).toBe(true);
+      for (const q of rects) expect(within(q, { x: 0, y: 0, ...compact.view })).toBe(true);
     }
   });
 
@@ -506,5 +515,109 @@ describe.each([
     expect(Math.abs(x.x - y.x)).toBeLessThan(1);
     expect(Math.abs(x.y - y.y)).toBeLessThan(2);
     expect(x).toMatchObject({ type: 'joystick', pair: 'joy.y', r: (was as { r?: number }).r });
+  });
+});
+
+describe.each([
+  {
+    id: 'cs-80',
+    // the memory cover is print only (its block diagram); the task leaves it out with the YAMAHA band
+    dropped: { areas: ['cover'], prints: ['YAMAHA', 'MEMORY 1 · 2 · 3 · 4  (BENEATH THIS COVER)'] },
+    kept: ['RIBBON CONTROLLER'],
+  },
+  {
+    id: 'deepmind-12d',
+    dropped: {
+      areas: [],
+      prints: ['DeepMind 12', 'ANALOG 12-VOICE POLYPHONIC SYNTHESIZER', 'behringer'],
+    },
+    kept: ['VOICES'],
+  },
+  {
+    id: 'ub-xa-d',
+    dropped: { areas: [], prints: ['behringer'] },
+    // the name in the display stays
+    kept: ['UB-Xa D'],
+  },
+  {
+    id: 'solar-42n',
+    dropped: { areas: [], prints: ['SOLAR', '42', 'N', 'AMBIENT', 'MACHINE'] },
+    kept: ['EXT.', 'WET OUT', 'POWER   12V DC', 'DUAL EFFECTOR'],
+  },
+])('the $id, compact (t-231)', ({ id, dropped, kept }) => {
+  const full = getSynthDef(id)!;
+  const compact = layoutDef(full);
+  const view = { x: 0, y: 0, ...compact.view };
+  const holding = (d: SynthDef, p: { x: number; y: number }) =>
+    (d.areas || []).filter((a) => a.rects.some((q) => inside(p, q))).map((a) => a.id);
+  const prints = (d: SynthDef) =>
+    d.decor.flatMap((x) => (x.t === 'text' || x.t === 'logo' ? [x.text] : []));
+
+  it('opens compact, as wide as the full faceplate and shorter', () => {
+    expect(layoutKind(full)).toBe('compact');
+    expect(compact.view.w).toBe(full.view.w);
+    expect(compact.view.h).toBeLessThan(full.view.h * 0.9);
+  });
+
+  it('leaves the empty band out: its print is gone', () => {
+    for (const t of dropped.prints) {
+      expect(prints(full), t).toContain(t);
+      expect(prints(compact), t).not.toContain(t);
+    }
+    for (const t of kept) expect(prints(compact), t).toContain(t);
+  });
+
+  it('keeps every control and jack on the panel, in the areas that held it on the full one', () => {
+    for (const p of [...compact.controls, ...compact.jacks]) {
+      const was = [...full.controls, ...full.jacks].find((c) => c.id === p.id)!;
+      expect(inside(p, view), p.id).toBe(true);
+      expect(holding(compact, p), p.id).toEqual(holding(full, was));
+    }
+  });
+
+  it('keeps every hover card on the panel, with no slivers, but the ones the task leaves out', () => {
+    const ids = (full.areas || []).map((a) => a.id).filter((a) => !dropped.areas.includes(a));
+    for (const area of ids) {
+      const rects = find(compact.areas || [], area).rects;
+      expect(rects.length, area).toBeGreaterThan(0);
+      for (const q of rects) {
+        expect(within(q, view), area).toBe(true);
+        expect(Math.min(q.w, q.h), area).toBeGreaterThanOrEqual(SLIVER);
+      }
+    }
+    // left out altogether, so the tour and the search cannot offer a card that lights nothing
+    for (const area of dropped.areas)
+      expect((compact.areas || []).map((a) => a.id)).not.toContain(area);
+  });
+});
+
+describe('the DeepMind 12D, compact (t-231): the VOICES lamps', () => {
+  it('keeps all twelve lamps, lit by their voices, inside the Voice lamps hover card', () => {
+    const compact = layoutDef(getSynthDef('deepmind-12d')!);
+    const card = find(compact.areas || [], 'voices').rects;
+    const lamps = compact.decor.flatMap((d) =>
+      d.t === 'led' && typeof d.litWhen === 'object' && 'voice' in d.litWhen ? [d] : []
+    );
+    expect(lamps.map((d) => d.litWhen)).toEqual(
+      Array.from({ length: 12 }, (_, i) => ({ voice: i }))
+    );
+    for (const d of lamps) expect(card.some((q) => inside(d, q))).toBe(true);
+  });
+});
+
+describe('the SOLAR 42N, compact (t-231): the jacks', () => {
+  it('keeps the rear sockets where they were and moves every other jack up by one step', () => {
+    const full = getSynthDef('solar-42n')!;
+    const compact = layoutDef(full);
+    const rear = ['ext.in', 'out.r', 'out.l'];
+    const shifts = new Set<number>();
+    for (const j of full.jacks) {
+      const now = find<Jack>(compact.jacks, j.id);
+      expect(now.x, j.id).toBe(j.x);
+      if (rear.includes(j.id)) expect(now.y, j.id).toBe(j.y);
+      else shifts.add(Math.round(j.y - now.y));
+    }
+    expect(shifts.size).toBe(1);
+    expect([...shifts][0]).toBeGreaterThan(0);
   });
 });
