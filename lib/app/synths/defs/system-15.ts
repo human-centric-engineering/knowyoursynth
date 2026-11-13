@@ -13,6 +13,7 @@
 import type { SynthDef } from '@/lib/app/synths/contract';
 import {
   HP,
+  ROW_H,
   SYSTEM_THEME,
   appOut,
   blank,
@@ -65,13 +66,24 @@ cm1a(rack, X(134), BOT);
 
 const { controls, jacks, decor, areas } = rack;
 const ROW = 385; // where the top row's cut ends: its modules and the rail under them
+const RAIL = 9; // the rail between the rows, the last of the top row's cut
 const STRIP = 742; // the maker's strip under the bottom row
+const EDGE = 12; // the case's edge either side of the rail and the strip
 const W = X(98) + 20; // the compact case: two 98 HP rows
 // the case: a rail between the rows and the maker's strip under them
 decor.unshift(
   { t: 'rect', x: 0, y: 0, w: 2000, h: 800, r: 10, fill: '#0b0b0c', hw: true },
-  { t: 'rect', x: 12, y: 376, w: 1976, h: 9, r: 2, fill: '#050505', hw: true },
-  { t: 'rect', x: 12, y: 742, w: 1976, h: 54, r: 6, fill: '#121213', hw: true }
+  {
+    t: 'rect',
+    x: EDGE,
+    y: ROW - RAIL,
+    w: 2000 - EDGE * 2,
+    h: RAIL,
+    r: 2,
+    fill: '#050505',
+    hw: true,
+  },
+  { t: 'rect', x: EDGE, y: STRIP, w: 2000 - EDGE * 2, h: 54, r: 6, fill: '#121213', hw: true }
 );
 decor.push(caseWordmark(1000, 782));
 
@@ -98,15 +110,22 @@ const system15: SynthDef & { version: number } = {
   defaultPatch: MOOG900_DEFAULT_PATCH,
   compact: {
     pieces: [
-      // top row: 914 to the second 911, then the 921 from the bottom row where BP56 was
+      // top row: 914 to the second 911, the case's left edge and the rail under them
       { cut: [0, 0, X(84), ROW], at: [0, 0] },
-      { cut: [X(24), ROW, X(38), STRIP], at: [X(84), TOP - 1] },
+      // then the 921 from the bottom row where BP56 was, with the case above it and the rail under it, cut from over
+      // and under BP56, and the case's right edge
+      { cut: [X(84), 0, X(98), TOP], at: [X(84), 0] },
+      { cut: [X(24), BOT, X(38), BOT + ROW_H], at: [X(84), TOP] },
+      { cut: [X(84), TOP + ROW_H, X(98), ROW], at: [X(84), TOP + ROW_H] },
+      { cut: [2000 - 20, 0, 2000, ROW], at: [X(98), 0] },
       // bottom row: 921A and the 921Bs, CP3A-M to 961, then BP12 (the app's output), CM1A and the case's edge
       { cut: [0, ROW, X(24), STRIP], at: [0, ROW] },
       { cut: [X(38), ROW, X(94), STRIP], at: [X(24), ROW] },
       { cut: [X(122), ROW, 2000, STRIP], at: [X(80), ROW] },
-      // the maker's strip, cut so the wordmark (at 1000) stays in the middle
-      { cut: [1000 - W / 2, STRIP, 1000 + W / 2, 800], at: [0, STRIP] },
+      // the maker's strip: its middle, cut so the wordmark (at 1000) stays in the middle, between the case's edges
+      { cut: [0, STRIP, EDGE, 800], at: [0, STRIP] },
+      { cut: [1000 - W / 2 + EDGE, STRIP, 1000 + W / 2 - EDGE, 800], at: [EDGE, STRIP] },
+      { cut: [2000 - EDGE, STRIP, 2000, 800], at: [W - EDGE, STRIP] },
     ],
   },
   toEngine: (v) => rackToEngine(rack, v),
