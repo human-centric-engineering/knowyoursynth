@@ -1567,7 +1567,7 @@ Measured on 2026-11-13 over the library's 5,579 sounds:
   the probe's 0.85 s. The two filter pings (the clave and the Grandmother's) have no oscillator in the mixer, only a
   filter struck by a short envelope. Why has not been looked into. They count as disagreements.
 
-The figure fell from 48.7% over 5,024 sounds (t-250) because of what the library gained, not a change to the detector: t-193's 555 System 15, 35, 55 and MODEL 15 sounds added 189 agreements (34%). Most of them are strings, winds, drones, effects, percussion and sequences, the categories below where the detector is weakest. The same five sounds are silent.
+The figure fell from 48.7% over 5,024 sounds (t-250) because of what the library gained, not a change to the detector's probe or features (the model was only refit to the grown library): t-193's 555 System 15, 35, 55 and MODEL 15 sounds added 189 agreements (34%). Most of them are strings, winds, drones, effects, percussion and sequences, the categories below where the detector is weakest. The same five sounds are silent.
 
 When it was last measured there (t-191), CI's Linux x64 read one fx sound as lead instead: the renders are seeded, but
 the platforms' maths can differ in the last bit, and a sound near a feature's threshold can tip. The figures here are
