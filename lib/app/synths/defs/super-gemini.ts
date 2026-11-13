@@ -11,6 +11,7 @@
  * with drive; a VCA with ENV 2 or a fixed envelope; ENV 1 with hold stages, invert and loop; LFO 1; and a delay send.
  * KEYBOARD plays one layer (SINGLE, the one LAYER picks), both stacked (DUAL, the engine's `layer`) or one each side of
  * C4 (SPLIT, `layer.split`, t-133). The view adds the performance section beside the keys and the top of the keys.
+ * That is the full (Long) view; the synth opens compact (`compact`), with the keys left out.
  *
  * Approximations, all in the notes' limits: DDS 1's super core is the centre oscillator and two detuned sisters (three
  * of the engine's four oscillators, DDS 2 the fourth; the sine or square sub takes the third); PW/WAVE morphs DDS 1's
@@ -2267,6 +2268,17 @@ const superGemini: SynthDef & { version: number } = {
     ink: INK,
     font: 'helv',
     cheeks: 'none',
+  },
+  // Compact (`f-compact-panels` t-230), the view it opens in: the keys are left out, since the app's keyboard under
+  // the panel plays, and the performance section (transpose, portamento, LFO 2 and its DEST, the bender) moves to the
+  // left of the two rows of controls, its foot level with the ribbon's. The ribbon stays (it has its hover card), with
+  // the U·D·O mark beside it, where it was under the rows. Long is the full drawing.
+  compact: {
+    pieces: [
+      { cut: [40, 625, 460, 1140], at: [0, 745 - 515] },
+      { cut: [0, 0, 2800, 620], at: [420, 0] },
+      { cut: [530, 640, 2740, 745], at: [420 + 530, 640] },
+    ],
   },
   decor,
   areas,

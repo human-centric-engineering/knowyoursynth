@@ -452,9 +452,12 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   drawn layout. A compact spec is a list of pieces, each a `cut` on the long panel (`[x0, y0, x1, y1]`) and where its
   top-left goes (`at`, from the faceplate's top-left, inside any end cheeks); pieces may not overlap, and a control or
   jack in no piece is an error. The Grandmother is the first: no keys, and GLIDE with PLAY / HOLD / TAP beside the
-  ARP/SEQ section, so the panel is the faceplate's height. That makes it wider for its height than the full drawing, so
-  it is drawn bigger only where the screen's height limits the panel; where its width does (a narrow window, a phone,
-  the share card), compact is a little smaller than Full, and the help says no more than that. A compact spec cannot
+  ARP/SEQ section, so the panel is the faceplate's height. The Malevolent, the Mantis and the Super Gemini followed
+  (t-230): each left-hand block moves beside the faceplate (the Mantis's into the empty column under its mark), its
+  joystick inline and still draggable, since none of the blocks is taller than the faceplate; the Super Gemini keeps
+  its ribbon strip, which has a hover card. A compact panel is wider for its height than the full drawing, so it is
+  drawn bigger only where the screen's height limits the panel; where its width does (a narrow window, a phone, the
+  share card), compact is a little smaller than Full, and the help says no more than that. A compact spec cannot
   cut the same part of the long panel twice or put a piece left of or above the faceplate's corner; marks move with
   the piece their centre is in, and a pin matrix must sit in one piece.
 - **The player's buttons carry their own tooltip** (`PlayerTip`, `player-tip.tsx`): the button's
