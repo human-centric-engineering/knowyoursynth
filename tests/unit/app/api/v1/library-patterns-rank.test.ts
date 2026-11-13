@@ -192,7 +192,9 @@ describe('POST /api/v1/library-patterns/rank', () => {
     expect(data.reading).toMatchObject({ category: 'bass', role: 'bass_line', register: 'low' });
     expect(data.sections.map((s) => s.role).sort()).toEqual([...PATTERN_ROLES].sort());
     expect(data.sections[0]).toMatchObject({ role: 'bass_line', label: 'Bass line' });
-    expect(data.sections[0].share).toBeGreaterThan(0.5);
+    // Clearly first, not by a hair. Relative, not a fixed share: the shares come from the fitted model, which a refit
+    // to a grown library moves (t-193's refit read these features as bass a little less surely, 0.474).
+    expect(data.sections[0].share).toBeGreaterThan(2 * data.sections[1].share);
     // Every pattern once but the sound's own, which the picker lists first.
     expect(listed(data).sort()).toEqual(
       ROWS.map((r) => r.id)
