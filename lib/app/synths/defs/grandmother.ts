@@ -6,7 +6,8 @@
  * lean away from the camera in the photo, so each knob is placed on its printed tick ring or, where
  * there is none, centred over its own label. The faceplate ends at the blue GRANDMOTHER strip. Below
  * it the view adds the left-hand controller (GLIDE and the PLAY / HOLD / TAP buttons), which sits
- * beside the keys on the hardware, and the top of the keys for reference. The data model is
+ * beside the keys on the hardware, and the top of the keys for reference. That is the full (Long)
+ * view; the synth opens compact (`compact` below), with the keys left out. The data model is
  * ref/moog-grandmother.synth.json (from the owner's manual: controls, patch points, normals).
  *
  * Engine notes: the voice is the Model 15's (Behringer's copy of this panel), run as a one-voice
@@ -1486,6 +1487,15 @@ const grandmother: SynthDef & { version: number } = {
     vel: 'KB VEL OUT',
   },
   destNames: { extIn: 'the mixer', revIn: 'the spring reverb', hp6In: 'the HIGH PASS filter' },
+  // Compact (`f-compact-panels` t-229), the view it opens in: the keys are left out, since the app's keyboard under
+  // the panel plays, and the left-hand controller (GLIDE, PLAY / HOLD / TAP) moves up beside the ARP/SEQ section, its
+  // foot level with the GRANDMOTHER strip's, so the panel is only as tall as the faceplate. Long is the full drawing.
+  compact: {
+    pieces: [
+      { cut: [15, 712, 392, 846], at: [0, 705 - 134] },
+      { cut: [0, 0, 1930, 705], at: [377, 0] },
+    ],
+  },
   decor,
   areas,
   controls,

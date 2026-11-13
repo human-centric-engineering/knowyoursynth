@@ -6,7 +6,7 @@
  *
  * - **The ported engine** — `createSynth`, `SIGNALS`, `DESTS` from `lib/app/synths/audio/dsp-core.ts` — and the
  *   ported libraries: `presetState`, `cablesToEngine`, `controlMap`, `jackMap` (`lib/app/synths/lib/patch.ts`),
- *   `explainCable` (`…/lib/explain.ts`) and `modularDef` (`…/lib/layout.ts`).
+ *   `explainCable` (`…/lib/explain.ts`) and `layoutDef` (`…/lib/layout.ts`).
  * - **The ported definitions** from the registry, `lib/app/synths/defs/`. A synth not ported yet runs on the
  *   prototype's definition: this script bundles `prototype/src/synths/index.js` with esbuild when it runs, exactly as
  *   `check.mjs` does, and loads the bundle from a temporary file. That is a build of a file path, not an import
@@ -85,7 +85,7 @@ import {
 } from '@/scripts/native-synths';
 import { loadPrototypeSynths } from '@/scripts/prototype-synths';
 import { explainCable } from '@/lib/app/synths/lib/explain';
-import { modularDef } from '@/lib/app/synths/lib/layout';
+import { layoutDef, layoutKind, overlap } from '@/lib/app/synths/lib/layout';
 import {
   presetState,
   cablesToEngine,
@@ -138,6 +138,8 @@ function definitionDrift(ported: SynthDef, prototype: SynthDef): string | null {
     'help',
     'seqButtons',
     'defaultPatch',
+    // the app's compact layout (`f-compact-panels`): the prototype draws only the long panel
+    'compact',
   ]);
   const plain = (def: SynthDef): unknown =>
     JSON.parse(
@@ -555,11 +557,14 @@ async function main(): Promise<void> {
         if (n.length !== 1)
           E(`${def.id} ${p.id} is in ${n.length} areas${n.length ? ` (${n.join(', ')})` : ''}`);
       }
-    // The modular layout must keep every control in one area of its own, inside the case, with no areas overlapping.
-    if (def.modular) {
+    // A modular or compact layout must keep every control in one area of its own, inside the panel, with no areas
+    // overlapping.
+    const kind = layoutKind(def);
+    if (def.modular && def.compact) E(`${def.id} has both a modular and a compact layout`);
+    if (kind) {
       let m: SynthDef | null = null;
       try {
-        m = modularDef(def);
+        m = layoutDef(def);
       } catch (err) {
         E(err instanceof Error ? err.message : String(err));
       }
@@ -578,20 +583,16 @@ async function main(): Promise<void> {
           const n = at(p);
           if (n.length !== 1 || n[0] !== was[0])
             E(
-              `${def.id} modular: ${p.id} is in ${n.join(', ') || 'no area'}, was ${was.join(', ')}`
+              `${def.id} ${kind}: ${p.id} is in ${n.join(', ') || 'no area'}, was ${was.join(', ')}`
             );
           if (p.x < 0 || p.y < 0 || p.x > md.view.w || p.y > md.view.h)
-            E(`${def.id} modular: ${p.id} is outside the case`);
+            E(`${def.id} ${kind}: ${p.id} is outside the panel`);
         }
         const rs = md.areas.flatMap((a) => a.rects.map((r) => ({ ...r, id: a.id })));
         rs.forEach((a, i) =>
           rs.slice(i + 1).forEach((b) => {
-            if (
-              a.id !== b.id &&
-              Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x) > 0.5 &&
-              Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y) > 0.5
-            )
-              E(`${def.id} modular: areas ${a.id} and ${b.id} overlap`);
+            if (a.id !== b.id && overlap(a, b))
+              E(`${def.id} ${kind}: areas ${a.id} and ${b.id} overlap`);
           })
         );
       }

@@ -5,7 +5,7 @@
  * - the sound's values and cables are what is drawn, checked against the synth as the page checks them, and fitted
  *   exactly as the page fits them (`fitPanel`, which the card cannot import: it is client code);
  * - each design path: `neutral` leaves the maker's marks out, `faithful` keeps them;
- * - a modular synth is drawn as the page opens it, as the modular case;
+ * - a modular synth is drawn as the page opens it, as the modular case, and a compact one compact, keys left out;
  * - a picture cannot be played: the faceplate's handlers change nothing;
  * - the PNG fits the box, by width or by height as the panel's shape decides.
  *
@@ -30,7 +30,7 @@ import { panelSvg } from '@/components/app/sharing/panel-svg';
 import { renderPanel } from '@/components/app/sharing/panel-render';
 import { fitPanel } from '@/components/app/synth/storage';
 import { getSynthDef } from '@/lib/app/synths/defs';
-import { modularDef } from '@/lib/app/synths/lib/layout';
+import { compactDef, modularDef } from '@/lib/app/synths/lib/layout';
 
 const modelD = getSynthDef('model-d')!;
 
@@ -127,6 +127,20 @@ describe('panelSvg', () => {
     const { width, height } = panelSvg({ def, values: {}, cables: [], design: 'neutral' });
     expect([width, height]).toEqual([modularDef(def).view.w, modularDef(def).view.h]);
     expect(width).not.toBe(def.view.w);
+  });
+
+  it('draws a compact synth compact, as the page opens it: the Grandmother without its keys', () => {
+    const def = getSynthDef('grandmother')!;
+    const compact = compactDef(def);
+    const { width, height } = panelSvg({ def, values: {}, cables: [], design: 'neutral' });
+    expect([width, height]).toEqual([compact.view.w, compact.view.h]);
+    // shorter than the full faceplate, which draws the keys under it
+    expect(height).toBeLessThan(def.view.h);
+    // GLIDE is still drawn, moved with its piece
+    const { def: drawn } = vi.mocked(renderPanel).mock.lastCall![0];
+    expect(drawn.controls.find((c) => c.id === 'glide')).toMatchObject(
+      compact.controls.find((c) => c.id === 'glide')!
+    );
   });
 });
 

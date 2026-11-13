@@ -31,6 +31,13 @@ and `LOADERS` (`defs/load.ts`); `registry.test.ts` fails if one is missing.
   engine does not have, that is engine work, planned on its own, not part of adding the synth.
 - Controls the app cannot model yet (a sequencer's buttons, MIDI settings) are still drawn, and
   their help says what they do on the hardware and what they do here (the TB-303 precedent).
+- **No keybed, and no empty bands.** The app's keyboard under the panel plays every synth, so a drawn keybed only
+  makes every control smaller. Leave the keys out unless they are part of the instrument: a step sequencer's keys, a
+  touch plate with controls of its own. Leave out bands with no controls too (a blank strip, a wide gap). Draw the
+  panel without them from the start where you can; where the photo puts controls beside the keys (a left-hand
+  controller: glide, pitch and mod), give the definition a `compact` layout that cuts those out and puts them down
+  beside the panel, and keep the long drawing as the Full view (the Grandmother's `compact`; [`synths.md`](./synths.md)
+  and [`synth-page.md`](./synth-page.md), Layout).
 
 Add the id to `NATIVE_SYNTHS` in `scripts/native-synths.ts`. That explicit list is how the
 scripts and tests tell a native synth from a ported one; a typo in a registry is otherwise

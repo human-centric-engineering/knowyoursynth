@@ -166,6 +166,12 @@ export interface SynthDef {
   /** The same panel cut into modules and stacked like a modular case (the Jupiters). */
   modular?: ModularLayout;
   /**
+   * The same panel with what the app does not need left out (a keybed the app's keyboard replaces, a band with no
+   * controls): sections cut from the long panel and placed, on one faceplate, with no case. A definition has this or
+   * `modular`, never both; either is the view the synth opens in, and the full faceplate is the Layout setting's Long.
+   */
+  compact?: CompactLayout;
+  /**
    * The case a modular layout is drawn in. Never written in a definition: `modularDef()` (the layout library) sets
    * it on the definition it returns, and the renderer draws the case in place of the long faceplate when it is there.
    */
@@ -289,6 +295,17 @@ export interface ModularLayout {
   brand: string;
   /** Rows of modules, left to right. Each `cut` is `[x0, y0, x1, y1]` on the long panel, normally one printed section. */
   rows: { cut: [number, number, number, number]; name?: string }[][];
+}
+
+/**
+ * The compact layout. Built into a renderable definition by `compactDef()` (the layout library). Each piece is a cut of
+ * the long panel, `[x0, y0, x1, y1]` in its view units, put down with its top-left corner at `at`, measured from the
+ * faceplate's top-left (inside any end cheeks). Whatever no piece cuts is left out: its decor is dropped, and a
+ * control or jack in it is an error. Pieces may not overlap where they are put down; the faceplate is the box round
+ * them all.
+ */
+export interface CompactLayout {
+  pieces: { cut: [number, number, number, number]; at: [number, number] }[];
 }
 
 /** One module's faceplate in the case, in view units of the modular layout. */

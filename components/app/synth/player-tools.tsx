@@ -176,10 +176,24 @@ export interface PanelView {
   long: boolean;
 }
 
+/** The Layout setting for each kind of layout a synth can open in: its two halves' words, and its help. */
+const LAYOUT_SETTING = {
+  modular: {
+    own: 'Modular',
+    full: 'Long',
+    help: 'Modular stacks the sections as modules; Long is the faceplate as it is on the keyboard.',
+  },
+  compact: {
+    own: 'Compact',
+    full: 'Full',
+    help: "Compact leaves out what the app does not need, such as keys the keyboard below the panel replaces, so the panel is shorter and is drawn bigger wherever the screen's height is what limits it; Full is the whole faceplate as it is on the hardware.",
+  },
+} as const;
+
 export function PlayerSettings({
   view,
   onView,
-  modular,
+  layout,
   zoom,
   onZoom,
   tipsOn,
@@ -190,8 +204,8 @@ export function PlayerSettings({
 }: {
   view: PanelView;
   onView: (v: PanelView) => void;
-  /** Whether the synth has a modular layout to switch to. */
-  modular: boolean;
+  /** The layout the synth opens in besides its full faceplate, if it has one (`layoutKind`): the Layout setting's other half. */
+  layout: 'modular' | 'compact' | null;
   /** The language the panel is printed in, when it has an English reading to switch to (`SynthDef.translation`). */
   language?: string;
   english?: boolean;
@@ -243,20 +257,15 @@ export function PlayerSettings({
           )}
         </Setting>
       )}
-      {modular && (
-        <Setting
-          at={1}
-          name="Layout"
-          drop
-          help="Modular stacks the sections as modules; Long is the faceplate as it is on the keyboard."
-        >
+      {layout && (
+        <Setting at={1} name="Layout" drop help={LAYOUT_SETTING[layout].help}>
           {(d) => (
             <LedSelect
               describedBy={d}
               label="Panel layout"
               options={[
-                [false, 'Modular'],
-                [true, 'Long'],
+                [false, LAYOUT_SETTING[layout].own],
+                [true, LAYOUT_SETTING[layout].full],
               ]}
               value={view.long}
               onChange={(long) => onView({ ...view, long })}

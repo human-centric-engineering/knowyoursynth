@@ -9,7 +9,7 @@
 
 import { bankHashRoute } from '@/components/app/bank/routes';
 
-/** How the panel is drawn: ink on paper or the shaded hardware, and the long faceplate or the modular case. */
+/** How the panel is drawn: ink on paper or the shaded hardware, and the full faceplate (`long`) or the synth's own layout. */
 export interface PanelView {
   outline: boolean;
   long: boolean;

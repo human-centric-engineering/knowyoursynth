@@ -68,7 +68,7 @@ import { SynthPanel } from '@/components/app/panel/synth-panel';
 import type { CableEnd } from '@/components/app/panel/synth-panel';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef, loadedSynthDef } from '@/lib/app/synths/defs/load';
-import { modularDef } from '@/lib/app/synths/lib/layout';
+import { layoutDef, layoutKind } from '@/lib/app/synths/lib/layout';
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
 import {
   cablesToEngine,
@@ -189,6 +189,7 @@ import {
 import { Search } from '@/components/app/synth/search';
 import { MapLegend, MapProgress, WhyAsker } from '@/components/app/synth/sound-map';
 import {
+  LayoutLongSchema,
   PanelViewSchema,
   STORAGE_KEYS,
   fitPanel,
@@ -463,13 +464,22 @@ function Synth({
           : synthHref(synthId, v),
     [synthId, sharedSlug, patternSlug]
   );
+  // Which half of the Layout setting the synth shows besides its full faceplate, if any: Long / Full is kept per kind.
+  const ownLayout = layoutKind(synthDef);
   const setView = useCallback(
     (next: PanelView) => {
       setViewState(next);
       writeStored(STORAGE_KEYS.view, next);
+      if (ownLayout) {
+        const longs = LayoutLongSchema.safeParse(readStored(STORAGE_KEYS.layouts));
+        writeStored(STORAGE_KEYS.layouts, {
+          ...(longs.success ? longs.data : {}),
+          [ownLayout]: next.long,
+        });
+      }
       window.history.replaceState(null, '', hereHref(next));
     },
-    [hereHref]
+    [hereHref, ownLayout]
   );
 
   // Whether this synth was chosen over another (`f-default-patch`): the last synth opened was a different one, or none.
@@ -498,15 +508,19 @@ function Synth({
       return;
     }
     if (urlView) return;
+    // Outline is one choice for every synth; Long / Full is this kind of layout's own (`STORAGE_KEYS.layouts`).
     const stored = PanelViewSchema.safeParse(readStored(STORAGE_KEYS.view));
-    if (stored.success && (stored.data.outline || stored.data.long)) setView(stored.data);
+    const longs = LayoutLongSchema.safeParse(readStored(STORAGE_KEYS.layouts));
+    const restored = {
+      outline: stored.success && stored.data.outline,
+      long: !!ownLayout && longs.success && !!longs.data[ownLayout],
+    };
+    if (restored.outline || restored.long) setView(restored);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
 
-  // The panel as drawn. Only positions differ from `synthDef`.
-  const def = useMemo(
-    () => (view.long || !synthDef.modular ? synthDef : modularDef(synthDef)),
-    [synthDef, view.long]
-  );
+  // The panel as drawn: the synth's own layout (modular or compact), or the full faceplate with Long. Only positions
+  // and the view differ from `synthDef`.
+  const def = useMemo(() => layoutDef(synthDef, view.long), [synthDef, view.long]);
 
   // The session is read before the panel: signed in, the account's last panel replaces the browser's once it arrives.
   const { data: auth, isPending: authPending } = useSession();
@@ -2249,7 +2263,7 @@ function Synth({
       '--rail-print': print,
     };
   // A fourth setting (Layout on a modular, Labels on a translated panel) needs the wider breakpoints
-  const footRef = useFootFit(!!synthDef.modular || !!synthDef.translation);
+  const footRef = useFootFit(!!ownLayout || !!synthDef.translation);
   // The Sound Design strip and the lesson card are of the faceplate too, in its colours (t-201).
   const face = useMemo(() => faceRoles(plate, plate2, print), [plate, plate2, print]);
   const panelTaps = small
@@ -2726,7 +2740,7 @@ function Synth({
                       <PlayerSettings
                         view={view}
                         onView={setView}
-                        modular={!!synthDef.modular}
+                        layout={ownLayout}
                         zoom={zoom}
                         onZoom={setZoom}
                         tipsOn={tipsOn}

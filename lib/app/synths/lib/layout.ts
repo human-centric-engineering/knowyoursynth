@@ -1,11 +1,18 @@
-// The modular layout: a long keyboard faceplate cut into modules and stacked in rows, like a modular case.
+// The layouts a panel can be drawn in besides its long faceplate. Each cuts the long panel into pieces and puts them
+// down somewhere else; the sound, the ids and the presets are untouched, so everything that reads a SynthDef (search,
+// sections, sound map, tour, cables, routing crops) works on the result as it does on the long panel.
 //
-// A SynthDef opts in with `modular` (see contract.ts). `modularDef(def)` returns a new SynthDef with every control, jack,
-// decor item and area moved to its module's place; the sound, the ids and the presets are untouched, so everything that
-// reads a SynthDef (search, sections, sound map, tour, cables) works on it as it does on the long panel.
+// - modular (the Jupiters): the cuts become modules, stacked in rows in a case. `modularDef(def)`.
+// - compact: the cuts are put down on one faceplate, and what no piece cuts (a keybed the app's keyboard replaces, a
+//   band with no controls) is left out. `compactDef(def)`.
 //
-// Transliterated from the prototype file `src/lib/layout.js` (decision D3).
+// `layoutDef(def, long)` is the one every surface that draws a panel calls: the synth's own layout, or with `long`
+// (the Layout setting's Long) the full faceplate.
+//
+// The modular layout is transliterated from the prototype file `src/lib/layout.js` (decision D3); the compact one is
+// the app's own (`f-compact-panels` t-229).
 import type {
+  CompactLayout,
   Control,
   ControlOption,
   Decor,
@@ -15,6 +22,7 @@ import type {
   SynthDef,
   ViewRect,
 } from '@/lib/app/synths/contract';
+import { faceView } from '@/lib/app/synths/lib/patch';
 
 const PLATE = { t: 26, b: 30, s: 12 }; // plate margin round each module's cut: room for the screws and the module name
 const GAP = 8; // between modules in a row
@@ -22,7 +30,7 @@ const ROW_GAP = 26; // between rows: the case rail shows through
 const EDGE = 22; // case border
 const BLANK_MIN = 200; // narrowest blank panel worth drawing
 
-/** A module's cut on the long panel, and (once placed) its plate and its offset into the case. */
+/** A module's (or piece's) cut on the long panel, and (once placed) its plate and its offset into the case. */
 interface Module {
   name?: string;
   x0: number;
@@ -83,14 +91,20 @@ function clipLine(
   return [x1 + t0 * dx, y1 + t0 * dy, x1 + t1 * dx, y1 + t1 * dy];
 }
 
-/** The overlap of a rect { x, y, w, h } with a module cut, or null. */
-function clipRect(r: ViewRect, m: Module): ViewRect | null {
-  const x = Math.max(r.x, m.x0);
-  const y = Math.max(r.y, m.y0);
-  const w = Math.min(r.x + r.w, m.x1) - x;
-  const h = Math.min(r.y + r.h, m.y1) - y;
+/** The overlap of two rects, or null when they share less than half a unit each way (touching is not overlapping). */
+export function overlap(a: ViewRect, b: ViewRect): ViewRect | null {
+  const x = Math.max(a.x, b.x);
+  const y = Math.max(a.y, b.y);
+  const w = Math.min(a.x + a.w, b.x + b.w) - x;
+  const h = Math.min(a.y + a.h, b.y + b.h) - y;
   return w > 0.5 && h > 0.5 ? { x, y, w, h } : null;
 }
+
+/** A module's cut as a rect on the long panel. */
+const cutRect = (m: Module): ViewRect => ({ x: m.x0, y: m.y0, w: m.w, h: m.h });
+
+/** The overlap of a rect { x, y, w, h } with a module cut, or null. */
+const clipRect = (r: ViewRect, m: Module): ViewRect | null => overlap(r, cutRect(m));
 
 /** Lay the rows out: each module gets its plate, and its cut's offset into the case. */
 function place(spec: ModularLayout) {
@@ -179,22 +193,24 @@ function moveDecor(d: Decor, mods: Module[], out: Decor[]): void {
   if (m) out.push({ ...d, x: r1(d.x + m.dx), y: r1(d.y + m.dy) });
 }
 
-const cache = new WeakMap<SynthDef, SynthDef>();
-
-/** The modular form of a SynthDef that has a `modular` spec; the def itself when it has none. */
-export function modularDef(def: SynthDef): SynthDef {
-  if (!def.modular) return def;
-  const hit = cache.get(def);
-  if (hit) return hit;
-  const lay = place(def.modular);
-  const mods = lay.rows.flatMap((r) => r.cuts);
-  const at = (p: { x: number; y: number }, what: string) => {
+/**
+ * Every control, option, jack, decor item, area, mark and the pin matrix of `def`, moved by the cut it sits in. A
+ * control, jack or matrix in no cut throws (`<id> <what>: control <id> at x,y is in no <unit>`), as does a matrix whose
+ * far corner is in another cut than its first hole; decor, area parts and marks (by their centre) in no cut are dropped.
+ */
+function moveAll(
+  def: SynthDef,
+  mods: Module[],
+  what: string,
+  unit: string
+): Pick<SynthDef, 'controls' | 'jacks' | 'decor' | 'areas' | 'marks' | 'matrix'> {
+  const at = (p: { x: number; y: number }, thing: string) => {
     const m = mods.find((k) => within(k, p.x, p.y));
-    if (!m) throw new Error(`${def.id} modular: ${what} at ${p.x},${p.y} is in no module`);
+    if (!m) throw new Error(`${def.id} ${what}: ${thing} at ${p.x},${p.y} is in no ${unit}`);
     return m;
   };
-  const move = (p: { x: number; y: number }, what: string) => {
-    const m = at(p, what);
+  const move = (p: { x: number; y: number }, thing: string) => {
+    const m = at(p, thing);
     return { x: r1(p.x + m.dx), y: r1(p.y + m.dy) };
   };
   const moveOption = (c: Control, o: ControlOption): ControlOption =>
@@ -220,16 +236,47 @@ export function modularDef(def: SynthDef): SynthDef {
         .filter((x): x is ViewRect => !!x)
     ),
   }));
+  const marks = def.marks?.flatMap((k) => {
+    const m = mods.find((c) => within(c, k.rect.x + k.rect.w / 2, k.rect.y + k.rect.h / 2));
+    return m ? [{ ...k, rect: { ...k.rect, x: r1(k.rect.x + m.dx), y: r1(k.rect.y + m.dy) } }] : [];
+  });
+  let matrix = def.matrix;
+  if (matrix) {
+    const m = at(matrix, 'matrix');
+    const far = {
+      x: matrix.x + matrix.pitch * (matrix.cols.length - 1),
+      y: matrix.y + matrix.pitch * (matrix.rows.length - 1),
+    };
+    if (!within(m, far.x, far.y))
+      throw new Error(`${def.id} ${what}: the matrix runs out of its ${unit} at ${far.x},${far.y}`);
+    matrix = { ...matrix, x: r1(matrix.x + m.dx), y: r1(matrix.y + m.dy) };
+  }
+  return {
+    controls,
+    jacks,
+    decor,
+    areas,
+    ...(marks ? { marks } : {}),
+    ...(matrix ? { matrix } : {}),
+  };
+}
+
+const cache = new WeakMap<SynthDef, SynthDef>();
+
+/** The modular form of a SynthDef that has a `modular` spec; the def itself when it has none. */
+export function modularDef(def: SynthDef): SynthDef {
+  if (!def.modular) return def;
+  const hit = cache.get(def);
+  if (hit) return hit;
+  const lay = place(def.modular);
+  const mods = lay.rows.flatMap((r) => r.cuts);
   const plates: ModulePlate[] = mods.map((m) => ({ ...m.plate, name: m.name }));
 
   // The prototype stripped its `_` cache keys off the definition here; the caches now live in WeakMaps, so a plain
   // copy carries nothing that belongs to the long panel.
   const out: SynthDef = {
     ...def,
-    controls,
-    jacks,
-    decor,
-    areas,
+    ...moveAll(def, mods, 'modular', 'module'),
     view: lay.view,
     theme: { ...def.theme, cheeks: 'none' },
     layout: {
@@ -241,4 +288,71 @@ export function modularDef(def: SynthDef): SynthDef {
   };
   cache.set(def, out);
   return out;
+}
+
+/**
+ * The pieces of a compact spec as modules: each cut, and its offset to where it is put down on the faceplate `face`.
+ * Throws when a piece is put down left of or above the faceplate's corner, or when two pieces overlap, either as cut
+ * from the long panel (that part would be drawn twice) or as put down.
+ */
+function pieces(def: SynthDef, spec: CompactLayout, face: { x: number }): Module[] {
+  const mods = spec.pieces.map(({ cut: [x0, y0, x1, y1], at: [ax, ay] }, i): Module => {
+    if (ax < 0 || ay < 0)
+      throw new Error(
+        `${def.id} compact: piece ${i} is put down outside the faceplate, at ${ax},${ay}`
+      );
+    const plate = { x: face.x + ax, y: ay, w: x1 - x0, h: y1 - y0 };
+    return { x0, y0, x1, y1, w: plate.w, h: plate.h, plate, dx: plate.x - x0, dy: plate.y - y0 };
+  });
+  mods.forEach((a, i) =>
+    mods.slice(i + 1).forEach((b, j) => {
+      const which = `pieces ${i} and ${i + j + 1}`;
+      if (overlap(cutRect(a), cutRect(b)))
+        throw new Error(`${def.id} compact: ${which} cut the same part of the panel`);
+      if (overlap(a.plate, b.plate)) throw new Error(`${def.id} compact: ${which} overlap`);
+    })
+  );
+  return mods;
+}
+
+const compactCache = new WeakMap<SynthDef, SynthDef>();
+
+/**
+ * The compact form of a SynthDef that has a `compact` spec; the def itself when it has none. One faceplate, the box
+ * round the pieces as they are put down, with the definition's own end cheeks either side; no case.
+ */
+export function compactDef(def: SynthDef): SynthDef {
+  if (!def.compact) return def;
+  const hit = compactCache.get(def);
+  if (hit) return hit;
+  const face = faceView(def);
+  const mods = pieces(def, def.compact, face);
+  const w = Math.max(0, ...mods.map((m) => m.plate.x + m.w - face.x));
+  const h = Math.max(0, ...mods.map((m) => m.plate.y + m.h));
+  const out: SynthDef = {
+    ...def,
+    ...moveAll(def, mods, 'compact', 'piece'),
+    view: { w: r1(w + face.x * 2), h: r1(h) },
+  };
+  compactCache.set(def, out);
+  return out;
+}
+
+/** Which layout a synth opens in besides the long faceplate, if it has one. */
+export function layoutKind(def: SynthDef): 'modular' | 'compact' | null {
+  if (def.modular) return 'modular';
+  if (def.compact) return 'compact';
+  return null;
+}
+
+/**
+ * The definition a panel is drawn from: the synth's own layout (modular or compact), or with `long` the full
+ * faceplate as defined. Every surface that draws a panel (the synth page, the share card and hero, the routing crops)
+ * goes through this, so they all draw the same one. Only positions and the view differ from `def`.
+ */
+export function layoutDef(def: SynthDef, long = false): SynthDef {
+  if (long) return def;
+  if (def.modular) return modularDef(def);
+  if (def.compact) return compactDef(def);
+  return def;
 }

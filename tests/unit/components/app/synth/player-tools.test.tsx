@@ -13,7 +13,7 @@ import { chooseSignal } from '@/tests/helpers/signal-menu';
 
 function settings(
   over: {
-    modular?: boolean;
+    layout?: 'modular' | 'compact';
     zoom?: number;
     view?: { outline: boolean; long: boolean };
     language?: string;
@@ -28,7 +28,7 @@ function settings(
     <PlayerSettings
       view={over.view ?? { outline: false, long: false }}
       onView={onView}
-      modular={over.modular ?? false}
+      layout={over.layout ?? null}
       zoom={over.zoom ?? 0}
       onZoom={onZoom}
       tipsOn
@@ -44,7 +44,7 @@ function settings(
 
 describe('PlayerSettings', () => {
   it('shows every setting at once, with no button to open them', () => {
-    const { menu } = settings({ modular: true });
+    const { menu } = settings({ layout: 'modular' });
     expect(screen.queryByRole('button', { name: 'Panel settings' })).toBeNull();
     for (const name of ['Panel view', 'Panel layout', 'Magnifier', 'Hover help']) {
       expect(menu.getByRole('group', { name })).toBeTruthy();
@@ -80,18 +80,33 @@ describe('PlayerSettings', () => {
     expect(onEnglish.mock.calls).toEqual([[true]]);
   });
 
-  it('offers no Modular or Long for a synth without a modular layout', () => {
+  it('offers no Layout setting for a synth with only its full faceplate', () => {
     expect(settings().menu.queryByRole('group', { name: 'Panel layout' })).toBeNull();
   });
 
   it('switches the layout without touching Hardware or Outline', () => {
-    const { menu, onView } = settings({ modular: true, view: { outline: true, long: false } });
+    const { menu, onView } = settings({ layout: 'modular', view: { outline: true, long: false } });
     fireEvent.click(
       within(menu.getByRole('group', { name: 'Panel layout' })).getByRole('button', {
         name: 'Long',
       })
     );
     expect(onView).toHaveBeenCalledExactlyOnceWith({ outline: true, long: true });
+  });
+
+  it('names the compact layout Compact and the whole faceplate Full, and says what Compact leaves out', () => {
+    const { menu, onView } = settings({ layout: 'compact' });
+    const layout = menu.getByRole('group', { name: 'Panel layout' });
+    expect(layout).toHaveAccessibleDescription(
+      /Compact leaves out .*keys.*Full is the whole faceplate/
+    );
+    const buttons = within(layout);
+    expect(buttons.getByRole('button', { name: 'Compact' }).getAttribute('aria-pressed')).toBe(
+      'true'
+    );
+    expect(buttons.queryByRole('button', { name: 'Modular' })).toBeNull();
+    fireEvent.click(buttons.getByRole('button', { name: 'Full' }));
+    expect(onView).toHaveBeenCalledExactlyOnceWith({ outline: false, long: true });
   });
 
   it('turns the hover cards off', () => {

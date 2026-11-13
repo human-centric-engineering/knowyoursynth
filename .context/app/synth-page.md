@@ -269,7 +269,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   head (`.is-top`) carries Sections, Signal and Sensitive, the inspector, Signal routing, then the
   tour and its help at the right; each layer is its icon (with its word from `xl` up and below `lg`) and an LED
   lit while it is over the panel. The foot (`.is-foot`) carries how the panel is drawn (Hardware or
-  Outline, Modular or Long; and on a panel printed in another language, its Labels in that language or
+  Outline; Layout, on a synth with a layout of its own (below): Modular or Long, or Compact or Full; and on a panel printed in another language, its Labels in that language or
   English, `kys.english`, kept in this browser), the magnifier and Hover help (the card that pops up when you point at a
   control; `kys.tips`): each its name in the panel's lettering, which explains it on hover, then its
   choices, each a word with an LED lit for the one in use (`aria-pressed` buttons in a named group). The
@@ -434,7 +434,29 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   crop dimmed. The crop is padded round each control's and jack's reach (`controlReach`, `jackReach`, which the
   find's spotlight uses too). A block spread past 840 × 660 units is drawn as one crop per cluster, in a row at
   one scale; past three crops, or with nothing on the panel, there is no picture. The page passes the panel's
-  definition (`panel`) to `RoutingView`, since a modular's case places the parts where its definition does not.
+  definition (`panel`) to `RoutingView`, since a modular's case or a compact panel places the parts where its
+  definition does not.
+- **Layout: the panel as drawn** (`layoutDef()`, `lib/app/synths/lib/layout.ts`; `f-compact-panels` t-229). A
+  definition may carry a layout of its own besides the full faceplate, and opens in it: `modular` (the Jupiters) cuts
+  the long panel into modules stacked in rows in a case; `compact` cuts it into pieces put down on one faceplate, with
+  no case, and leaves out whatever no piece cuts: a keybed the app's keyboard under the panel replaces, a band with no
+  controls. A definition has one or the other, never both (`check:synths` refuses both). Either way only positions and
+  the view change: ids, values, areas (clipped to the cuts) and the sound are the definition's, so the search, the
+  cards, the sound map, the tour and cables work unchanged. The Layout setting on the foot keeps the full faceplate one
+  toggle away (`view.long`, `?view=long`): Modular or Long on a modular, Compact or Full on a compact one, its help
+  saying what each half is. Which half was last chosen is kept per kind of layout (`kys.layouts`), not for every
+  synth at once. **Every surface that draws a panel goes through `layoutDef()`**, so they all draw the
+  same one: the page's `def` (the live panel, the find's spotlight, the inspector, the routing view and its block
+  crops, `panelCrops()`), and `panelSvg()` (`components/app/sharing/panel-svg.ts`) for the share card and the home
+  page's hero, which draw the synth's own layout. The sound map and the routing model read the definition, not the
+  drawn layout. A compact spec is a list of pieces, each a `cut` on the long panel (`[x0, y0, x1, y1]`) and where its
+  top-left goes (`at`, from the faceplate's top-left, inside any end cheeks); pieces may not overlap, and a control or
+  jack in no piece is an error. The Grandmother is the first: no keys, and GLIDE with PLAY / HOLD / TAP beside the
+  ARP/SEQ section, so the panel is the faceplate's height. That makes it wider for its height than the full drawing, so
+  it is drawn bigger only where the screen's height limits the panel; where its width does (a narrow window, a phone,
+  the share card), compact is a little smaller than Full, and the help says no more than that. A compact spec cannot
+  cut the same part of the long panel twice or put a piece left of or above the faceplate's corner; marks move with
+  the piece their centre is in, and a pin matrix must sit in one piece.
 - **The player's buttons carry their own tooltip** (`PlayerTip`, `player-tip.tsx`): the button's
   name and a line on what it does, on hover or focus, in place of the browser's slow `title`. It
   is a Radix popup that is not portalled, so it works full screen.
@@ -567,7 +589,8 @@ when the page comes back to the synth in `kys.synth`; one chosen over another op
 | Key                    | Holds                                                                                                                                                                                                                                                              |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `kys.synth`            | The last synth opened                                                                                                                                                                                                                                              |
-| `kys.view`             | The last panel view                                                                                                                                                                                                                                                |
+| `kys.view`             | The last panel view: its Outline; its `long` is not read back                                                                                                                                                                                                      |
+| `kys.layouts`          | The Layout setting's last choice for each kind of layout (`{ modular?, compact? }`), so Long on a Jupiter does not open the Grandmother Full                                                                                                                       |
 | `kys.session.<id>`     | That synth's panel: sound, lesson step, values, cables, the user's own sound open on it (`soundId`), when it was changed (`savedAt`) and who was signed in then (`owner`). Written 400 ms after the panel goes still, and checked against the definition when read |
 | `kys.tips`             | Info cards on                                                                                                                                                                                                                                                      |
 | `kys.fx`, `kys.fxOpen` | The effects rack and whether it is unfolded                                                                                                                                                                                                                        |
