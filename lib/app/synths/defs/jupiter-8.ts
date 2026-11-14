@@ -1792,8 +1792,9 @@ function toEngine(v: ControlValues, ctx?: Partial<EngineContext>): EngineParams 
 
 const init: ControlValues = Object.fromEntries(controls.map((c) => [c.id, c.def]));
 
-// The modular layout: each printed section cut out as a module (cuts are [x0, y0, x1, y1] on the long panel), four
-// rows. The panel left of the keyboard (BENDER, LFO MOD, PORTAMENTO) joins the second row.
+// The modular layout: each printed section cut out as a module (cuts are [x0, y0, x1, y1] on the long panel), three
+// rows, each full without a blank panel and the case about twice as wide as it is tall. The patch number display ends
+// the top row; the panel left of the keyboard (BENDER, LFO MOD, PORTAMENTO) and MASTER TUNE join the second.
 const CUTS: [number, number, number, number][][] = [
   [
     [433, 78, 720, 333],
@@ -1801,19 +1802,17 @@ const CUTS: [number, number, number, number][][] = [
     [889, 78, 1139, 333],
     [1139, 78, 1348, 333],
     [1348, 78, 1680, 333],
+    [1436, 333, 1761, 474],
   ],
   [
     [1680, 78, 2245, 333],
     [2245, 78, 2708, 333],
     [14, 194, 419, 500],
+    [433, 333, 630, 474],
   ],
   [
-    [433, 333, 630, 474],
     [630, 333, 1218, 474],
     [1218, 333, 1436, 474],
-    [1436, 333, 1761, 474],
-  ],
-  [
     [1761, 333, 2130, 474],
     [2130, 333, 2516, 474],
     [2516, 333, 2708, 474],

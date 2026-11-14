@@ -162,7 +162,7 @@ describe('panelPng', () => {
 
   it('fits a tall panel to the box’s height', async () => {
     const { width, height } = await panelPng({
-      def: getSynthDef('jupiter-4')!,
+      def: getSynthDef('jupiter-6')!,
       values: {},
       cables: [],
       design: 'neutral',

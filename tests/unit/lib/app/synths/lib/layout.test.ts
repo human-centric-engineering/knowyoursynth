@@ -621,3 +621,60 @@ describe('the SOLAR 42N, compact (t-231): the jacks', () => {
     expect([...shifts][0]).toBeGreaterThan(0);
   });
 });
+
+describe('the Jupiters and the System 15 without their blank plates (t-232)', () => {
+  it.each(['jupiter-4', 'jupiter-6', 'jupiter-8'])(
+    'opens the %s case with every row full and no blank panel',
+    (id) => {
+      const full = getSynthDef(id)!;
+      const m = layoutDef(full);
+      expect(m.layout?.kind).toBe('modular');
+      expect(m.layout?.blanks).toEqual([]);
+      // three rows, so the case is landscape: about twice as wide as it is tall, not taller than wide as four would be
+      expect(full.modular?.rows).toHaveLength(3);
+      expect(m.view.w / m.view.h).toBeGreaterThan(1.8);
+      expect(m.view.w / m.view.h).toBeLessThan(3);
+      expect(m.controls.map((c) => c.id)).toEqual(full.controls.map((c) => c.id));
+      // the Long view is the definition as written
+      expect(layoutDef(full, true)).toBe(full);
+    }
+  );
+
+  it('opens the System 15 compact, two 98 HP rows with no BP56 or BP28, every control and cable end kept', () => {
+    const full = getSynthDef('system-15')!;
+    const compact = layoutDef(full);
+    const printed = (def: SynthDef) => def.decor.flatMap((d) => (d.t === 'text' ? [d.text] : []));
+    expect(printed(full)).toEqual(expect.arrayContaining(['BP56', 'BP28', 'BP12']));
+    expect(printed(compact)).not.toContain('BP56');
+    expect(printed(compact)).not.toContain('BP28');
+    expect(printed(compact)).toContain('BP12');
+    expect(compact.view).toEqual({ w: 20 + 98 * 14 + 20, h: 800 });
+    expect(compact.controls.map((c) => c.id)).toEqual(full.controls.map((c) => c.id));
+    expect(compact.jacks.map((j) => j.id)).toEqual(full.jacks.map((j) => j.id));
+    for (const [from, to] of full.defaultPatch?.cables ?? []) {
+      for (const id of [from, to]) {
+        const j = find<Jack>(compact.jacks, id);
+        expect(inside(j, { x: 0, y: 0, ...compact.view }), id).toBe(true);
+      }
+    }
+  });
+
+  it('draws the System 15 compact case whole: no hole in it, and the rail and the strip edge to edge inside its edges', () => {
+    const compact = layoutDef(getSynthDef('system-15')!);
+    const { w, h } = compact.view;
+    const rects = compact.decor.flatMap((d) => (d.t === 'rect' && d.hw ? [d] : []));
+    const fill = (f: string) => rects.filter((r) => r.fill === f);
+    const covered = (x: number, y: number) =>
+      fill('#0b0b0c').some((r) => x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h);
+    for (let x = 1; x < w; x += 4)
+      for (let y = 1; y < h; y += 4) expect(covered(x, y), `${x},${y}`).toBe(true);
+    // the rail and the strip run on from piece to piece, 12 units in from the case's sides
+    for (const f of ['#050505', '#121213']) {
+      const parts = fill(f).sort((a, b) => a.x - b.x);
+      expect(parts[0].x, f).toBe(12);
+      parts.slice(1).forEach((p, i) => expect(p.x, f).toBe(parts[i].x + parts[i].w));
+      const last = parts[parts.length - 1];
+      expect(last.x + last.w, f).toBe(w - 12);
+    }
+  });
+});

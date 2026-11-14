@@ -141,10 +141,13 @@ function definitionDrift(ported: SynthDef, prototype: SynthDef): string | null {
     // the app's compact layout (`f-compact-panels`): the prototype draws only the long panel
     'compact',
   ]);
+  // The modular case's rows are the app's own too, re-packed without their blank plates (t-232); they are cut from the
+  // long panel, which is still compared here, as is the rest of the `modular` spec.
   const plain = (def: SynthDef): unknown =>
     JSON.parse(
-      JSON.stringify(def, (k, v: unknown) =>
-        OMIT.has(k) ? undefined : typeof v === 'function' ? '[function]' : v
+      JSON.stringify(
+        def.modular ? { ...def, modular: { ...def.modular, rows: undefined } } : def,
+        (k, v: unknown) => (OMIT.has(k) ? undefined : typeof v === 'function' ? '[function]' : v)
       )
     );
   const diff = (a: unknown, b: unknown, path: string): string | null => {

@@ -1220,33 +1220,34 @@ function toEngine(v: ControlValues, ctx?: Partial<EngineContext>): EngineParams 
 
 const init: ControlValues = Object.fromEntries(controls.map((c) => [c.id, c.def]));
 
-// The modular layout: each printed section cut out as a module (cuts are [x0, y0, x1, y1] on the long panel), five
-// rows.
+// The modular layout: each printed section cut out as a module (cuts are [x0, y0, x1, y1] on the long panel), three
+// rows, each full without a blank panel. The voice and TRANSPOSE run along the top; BEND / MODULATION and the
+// performance sections under it, ending with the badge plate (VOLUME, TUNING); the memories, the presets and ENSEMBLE
+// at the bottom. Four rows would be as close to the page's shape the other way, taller than it is wide, and draw
+// every control smaller on a landscape screen.
 const CUTS: [number, number, number, number][][] = [
   [
     [92, 182, 285, 408],
     [285, 182, 675, 408],
     [675, 182, 783, 408],
     [783, 182, 1178, 408],
-  ],
-  [
     [1178, 182, 1378, 408],
     [1378, 182, 1588, 408],
-    [1040, 60, 1588, 182],
-  ],
-  [
-    [92, 408, 303, 527],
-    [303, 408, 523, 527],
-    [523, 408, 661, 527],
     [661, 408, 765, 527],
-    [1253, 408, 1588, 527],
   ],
   [
     [765, 408, 1253, 527],
-    [92, 527, 300, 620],
-    [300, 527, 680, 620],
+    [92, 408, 303, 527],
+    [303, 408, 523, 527],
+    [523, 408, 661, 527],
+    [1040, 60, 1588, 182],
   ],
-  [[680, 527, 1588, 620]],
+  [
+    [1253, 408, 1588, 527],
+    [680, 527, 1588, 620],
+    [300, 527, 680, 620],
+    [92, 527, 300, 620],
+  ],
 ];
 const modular: ModularLayout = {
   brand: 'JUPITER-4',
