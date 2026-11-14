@@ -15669,7 +15669,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["malevolent/mal-pfunk-bass"],
+      "sounds": ["malevolent/mal-pfunk-bass", "sub-37/s37-feedback-growl"],
       "research": {
         "work": "Parliament, “Flash Light”, Funkentelechy vs. the Placebo Syndrome, 1977",
         "part": "The two-bar Minimoog bass under the chant: C down through B♭, G and F♯ to F, then up A, B♭, B: the same part an octave up, where the Malevolent’s “P-Funk Synth Bass” plays.",

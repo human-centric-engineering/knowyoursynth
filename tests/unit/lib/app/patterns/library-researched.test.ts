@@ -94,7 +94,7 @@ describe('the research batches', () => {
    */
   const rosters: [string, string[], number][] = [
     ['t-127', ['Kraftwerk', 'Depeche Mode'], 65],
-    ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 110],
+    ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 111],
     ['t-129', ['Brian Eno', 'Daniel Lanois', 'Vangelis', 'Boards of Canada'], 105],
     [
       't-160',
@@ -131,7 +131,7 @@ describe('the research batches', () => {
         'Public Enemy',
         'Whitney Houston',
       ],
-      162,
+      163,
     ],
     [
       't-161',
@@ -289,7 +289,7 @@ describe('the research batches', () => {
         'Thom Yorke',
         'U2',
       ],
-      147,
+      148,
     ],
     [
       't-165',
@@ -332,7 +332,7 @@ describe('the research batches', () => {
         'Robin S',
         'Second Phase',
       ],
-      161,
+      162,
     ],
     [
       't-166',
@@ -412,7 +412,7 @@ describe('the research batches', () => {
         'Popol Vuh',
         'Roger Payne',
       ],
-      191,
+      193,
     ],
     [
       't-168',
@@ -472,7 +472,7 @@ describe('the research batches', () => {
         'Yo-Yo Ma',
         'Yoshida Brothers',
       ],
-      230,
+      231,
     ],
   ];
 

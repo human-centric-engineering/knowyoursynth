@@ -1437,7 +1437,12 @@
         ],
         "chain": [0]
       },
-      "sounds": ["e7/e7-chase-bass", "pro-1/p1-chase-sequence", "polivoks/pv-octave-disco"],
+      "sounds": [
+        "e7/e7-chase-bass",
+        "pro-1/p1-chase-sequence",
+        "polivoks/pv-octave-disco",
+        "sub-37/s37-chase-arp"
+      ],
       "research": {
         "work": "Giorgio Moroder, “Chase”, Midnight Express (soundtrack), 1978",
         "part": "The galloping bass in sixteenths: B♭ into C, then F into G, a bar each, twice.",

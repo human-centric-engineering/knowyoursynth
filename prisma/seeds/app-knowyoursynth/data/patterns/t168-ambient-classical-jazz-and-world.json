@@ -18864,7 +18864,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/just-intonation-drone", "system-35/s35-lamonte-seventh"],
+      "sounds": [
+        "model-d/just-intonation-drone",
+        "system-35/s35-lamonte-seventh",
+        "sub-37/s37-latched-drone"
+      ],
       "research": {
         "work": "La Monte Young, the Dream House drones",
         "part": "One G held for four bars; the sound tunes its fifth and octave above.",
