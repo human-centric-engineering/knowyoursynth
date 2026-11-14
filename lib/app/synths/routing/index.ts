@@ -45,6 +45,7 @@ import { routing as jp8080 } from '@/lib/app/synths/routing/jp-8080';
 import { routing as polivoks } from '@/lib/app/synths/routing/polivoks';
 import { routing as zeroCoast } from '@/lib/app/synths/routing/0-coast';
 import { routing as minilogueXd } from '@/lib/app/synths/routing/minilogue-xd';
+import { routing as sub37 } from '@/lib/app/synths/routing/sub-37';
 import { routing as emsVcs3 } from '@/lib/app/synths/routing/ems-vcs3';
 import { routing as syntrxIi } from '@/lib/app/synths/routing/syntrx-ii';
 
@@ -84,6 +85,7 @@ export const SYNTH_ROUTINGS: SynthRouting[] = [
   polivoks,
   zeroCoast,
   minilogueXd,
+  sub37,
   emsVcs3,
   syntrxIi,
 ];
