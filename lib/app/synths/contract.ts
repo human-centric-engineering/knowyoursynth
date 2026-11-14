@@ -1665,6 +1665,11 @@ export interface FilterParams {
   kbd: number;
   /** Input gain before the ladder's saturation (default 0.8). */
   drive?: number;
+  /**
+   * Ladder only: the low-pass is taken after this many of its four stages, 6 dB/oct each (Sub 37 SLOPE; default 4).
+   * The resonance is always fed back from the fourth, so a 1- or 2-pole slope still peaks and self-oscillates.
+   */
+  poles?: 1 | 2 | 3 | 4;
   /** 0..1 for `mode: 'morph'`. */
   morph?: number;
 }
@@ -1689,6 +1694,11 @@ export interface EnvParams {
    * ignored. With `curve`, each rise and fall keeps its curve.
    */
   loop?: boolean;
+  /**
+   * With `loop` (Sub 37 LOOP): each cycle runs every stage, `dly`, the attack, `hold`, the decay to `s` and the release
+   * to silence, and starts again from `dly` while the gate is held. Not with `curve`.
+   */
+  loopAll?: boolean;
   /** The level stops where it is (WASP HOLD). */
   freeze?: boolean;
   /**
@@ -2299,6 +2309,7 @@ export interface SolarParams {
 export interface EngineParams {
   /** Up to four oscillators. */
   osc: OscParams[];
+  /** Dest `noiseLvl` adds to its level (Sub 37 NOISE LEVEL), held at zero from below. */
   noise: NoiseParams;
   /** Gain on the `extIn` audio destination, into the mixer. */
   ext: { level: number };
@@ -2306,8 +2317,9 @@ export interface EngineParams {
   /**
    * Signal `eon` is 1 from the end of Envelope 1's attack until it is back at zero (the 0-COAST's EON; a held sustain of
    * zero ends it), and dest `env1DecRate` speeds its decay and release by 2^cv (CONTOUR DECAY: positive is faster, a
-   * reasoned choice, as the spec gives no polarity). Neither changes a sound that does not route it, and neither works
-   * with `trap`, which replaces Envelope 1.
+   * reasoned choice, as the spec gives no polarity). Dest `env1Rate` speeds its attack, decay and release by 2^cv, not
+   * `dly` or `hold`, multiplying with `env1DecRate` (Sub 37 EG TIME, which a definition sends negated: there, positive is
+   * longer). None of them changes a sound that does not route it, and none works with `trap`, which replaces Envelope 1.
    */
   env1: EnvParams;
   /**
@@ -2320,6 +2332,7 @@ export interface EngineParams {
   env3?: EnvParams;
   vca: VcaParams;
   lfo: LfoParams;
+  /** Dest `lfo2Rate` moves its rate in octaves, as `lfoRate` does LFO 1's (Sub 37 MOD 1 DEST LFO RATE). Not with `common`. */
   lfo2?: Lfo2Params;
   /** A third LFO: signal `lfo3` (the e7's LFO 3, usually `common` and brought in by the mod wheel through a route's `by`). */
   lfo3?: Lfo2Params;

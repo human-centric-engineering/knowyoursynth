@@ -242,10 +242,12 @@ interface VoiceEnv {
   t?: number;
   from?: number;
   loop?: boolean;
+  /** With `loop`: each cycle runs delay, attack, hold, decay to the sustain level and release to zero (`EnvParams.loopAll`). */
+  loopAll?: boolean;
   freeze?: boolean;
   /** A new note does not restart it: only its own gate rising does (`EnvParams.free`). */
   free?: boolean;
-  /** This sample's rate multipliers from dests `env2Rate` / `env1DecRate`: the attack's, and the decay's and release's. */
+  /** This sample's rate multipliers from dests `env2Rate` / `env1Rate` / `env1DecRate`: the attack's, and the decay's and release's. */
   rA: number;
   rD: number;
 }
@@ -473,6 +475,9 @@ export const DESTS: string[] = [
   'ovtIn',
   'env2Rate',
   'env1DecRate',
+  'lfo2Rate',
+  'noiseLvl',
+  'env1Rate',
   ...MOOG_DESTS,
   ...SOLAR_DESTS,
 ];
@@ -570,7 +575,8 @@ function createVoice(
   let ovtInOn = false;
   /** Whether anything reaches dest `env2Rate` / `env1DecRate`, so the envelopes skip them otherwise. */
   let env2RateOn = false,
-    env1DecOn = false;
+    env1DecOn = false,
+    env1RateOn = false;
   /** Whether anything reads signal `eoc` / `eon`, so they are worked out only then. */
   let eocOn = false,
     eonOn = false;
@@ -961,8 +967,10 @@ function createVoice(
     ovtInOn = fed(DI.ovtIn);
     env2RateOn = fed(DI.env2Rate);
     env1DecOn = fed(DI.env1DecRate);
+    env1RateOn = fed(DI.env1Rate);
     if (!env2RateOn) env[1].rA = env[1].rD = 1;
-    if (!env1DecOn) env[0].rD = 1;
+    if (!env1RateOn) env[0].rA = 1;
+    if (!env1DecOn && !env1RateOn) env[0].rD = 1;
     // a signal is read when a normal, a route or a route's `by` names it
     const reads = (si: number): boolean =>
       normSig.includes(si) ||
@@ -1091,6 +1099,7 @@ function createVoice(
       // `loop` (Wasp REPEAT): while the gate is held the envelope runs attack, decay to silence, attack again, and so on.
       // `freeze` (Wasp HOLD): the level stops where it is; gate changes are still noted, so the envelope carries on when it thaws.
       t.loop = !!e.loop;
+      t.loopAll = !!e.loop && !!e.loopAll;
       t.freeze = !!e.freeze;
       t.free = !!e.free;
     });
@@ -1678,6 +1687,8 @@ function createVoice(
         return 'delay';
       case 6:
         return 'hold';
+      case 7:
+        return 'release';
       default:
         return 'idle';
     }
@@ -1707,7 +1718,11 @@ function createVoice(
         if (--e.wait <= 0) e.stage = 2;
         break;
       case 2:
-        if (e.loop) {
+        if (e.loopAll) {
+          // `loopAll` (Sub 37 LOOP): decay to the sustain level, then on into the loop's own release
+          e.level += (e.s - e.level) * (e.rD === 1 ? e.cd : rateCoef(e.cd, e.rD));
+          if (Math.abs(e.level - e.s) < SUSTAIN_NEAR) e.stage = 7;
+        } else if (e.loop) {
           e.level += (0 - e.level) * (e.rD === 1 ? e.cd : rateCoef(e.cd, e.rD));
           if (e.level < 0.01) e.stage = 1;
         } else e.level += (e.s - e.level) * (e.rD === 1 ? e.cd : rateCoef(e.cd, e.rD));
@@ -1717,6 +1732,13 @@ function createVoice(
         if (e.level < 0.00002) {
           e.level = 0;
           e.stage = 0;
+        }
+        break;
+      case 7: // `loopAll`'s release with the gate still held: fall to silence, then start again from the delay
+        e.level += (0 - e.level) * (e.rD === 1 ? e.cr : rateCoef(e.cr, e.rD));
+        if (e.level < 0.01) {
+          e.stage = e.dlyN > 0 ? 5 : 1;
+          e.wait = e.dlyN;
         }
         break;
       default:
@@ -2032,6 +2054,7 @@ function createVoice(
     const p = P;
     const f = p.filter;
     const ladder = f.type !== 'svf';
+    const poles = f.poles === 1 || f.poles === 2 || f.poles === 3 ? f.poles : 4;
     const morph = f.morph == null ? 0 : f.morph < 0 ? 0 : f.morph > 1 ? 1 : f.morph;
     const glideC = expCoef(Math.max(p.glide.time, 0.001) / 3);
     const gliss = !!p.glide.steps;
@@ -2268,7 +2291,10 @@ function createVoice(
       S[SI.lfoUni] = (lfoV + 1) * 0.5;
       if (L2) {
         if (retrigFlag && L2.keySync && !l2Com) lfo2.phase = 0;
-        lfo2.phase += Math.min(L2.rate, sr * 0.4) / sr;
+        // dest `lfo2Rate`, in octaves (Sub 37 MOD 1 DEST LFO RATE)
+        const l2Oct = ev(DI.lfo2Rate);
+        lfo2.phase +=
+          Math.min(l2Oct ? L2.rate * Math.exp(l2Oct * Math.LN2) : L2.rate, sr * 0.4) / sr;
         let w2 = false;
         if (lfo2.phase >= 1) {
           lfoCyc[1] += Math.floor(lfo2.phase);
@@ -2341,7 +2367,12 @@ function createVoice(
       if (ac) env[0].cd = accOn ? accCd : env[0].cdBase!;
       // dests `env2Rate` (Envelope 2's attack, decay and release) and `env1DecRate` (Envelope 1's decay and release), in octaves of rate
       if (env2RateOn) env[1].rA = env[1].rD = rateMul(ev(DI.env2Rate));
-      if (env1DecOn) env[0].rD = rateMul(ev(DI.env1DecRate));
+      // dest `env1Rate` (Sub 37 EG TIME): all of Envelope 1's timed stages, times whatever `env1DecRate` adds
+      if (env1RateOn) {
+        const m = rateMul(ev(DI.env1Rate));
+        env[0].rA = m;
+        env[0].rD = env1DecOn ? rateMul(ev(DI.env1DecRate)) * m : m;
+      } else if (env1DecOn) env[0].rD = rateMul(ev(DI.env1DecRate));
       // a note, or Envelope 1's gate rising (a trigger source, a repeat or a cable), restarts `mix.vpm`'s envelope
       noteHit = hitKey || (g1 && !env[0].prevGate);
       S[SI.env1] = tp ? runTrap(tp) : runEnv(env[0], g1);
@@ -2626,7 +2657,8 @@ function createVoice(
         nz *= nzGain;
         S[SI.noise] = nz;
         S[SI.pink] = pink * nzGain;
-        const mixer = mixSum + nz * noiseL + ev(DI.extIn) * (p.ext ? p.ext.level : 0);
+        const nzL = noiseL + ev(DI.noiseLvl);
+        const mixer = mixSum + nz * (nzL > 0 ? nzL : 0) + ev(DI.extIn) * (p.ext ? p.ext.level : 0);
         S[SI.mixer] = mixer;
         const am = mixer < 0 ? -mixer : mixer;
         if (am > overloadPeak) overloadPeak = am;
@@ -2722,7 +2754,9 @@ function createVoice(
             const y4 = v + s4;
             s4 = y4 + v;
             if (os) {
-              const lp = y4 * 1.25,
+              // `poles` (Sub 37 SLOPE): the low-pass taken after the first, second or third stage, the resonance still fed
+              // back from the fourth
+              const lp = (poles === 4 ? y4 : poles === 3 ? y3 : poles === 2 ? y2 : y1) * 1.25,
                 hp = (u - 4 * y1 + 6 * y2 - 4 * y3 + y4) * 1.1,
                 bp = (y2 - y4) * 3;
               v1o = f.mode === 'hp' ? hp : f.mode === 'bp' ? bp : lp;
