@@ -6751,7 +6751,7 @@
       "artist": "Steve Reich",
       "tags": ["seq", "minimalism", "pulse", "fm"],
       "level": 3,
-      "blurb": "A steady stream of eighth-note mallet strikes on each held note, the chord changing every bar, the pulses swelling brighter and softer with the touch.",
+      "blurb": "A steady stream of eighth-note mallet strikes on each held note, the note changing every bar, the pulses swelling brighter and softer with the touch.",
       "how": "The pulser runs as a clock and strikes the envelope on every eighth note, whatever key is held, so a held note becomes a pulse of repeated mallet strikes, the pulsing of Reich’s ensemble. The modulation oscillator at four to one adds a metallic, vibraphone-like ring through the modulation input. Pressure goes to TIMBRE, so the notes played firmly pulse brighter: the swell of the players’ breath.",
       "phrase": {
         "bpm": 120,

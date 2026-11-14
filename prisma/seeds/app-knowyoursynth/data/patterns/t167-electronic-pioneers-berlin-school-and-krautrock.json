@@ -329,7 +329,7 @@
     },
     {
       "sound": "ems-vcs3/vcs3-notes-across-the-room",
-      "reason": "The batch has no pattern from Suzanne Ciani — “Seven Waves”; the broken chords are the lesson’s own, written to the style rather than taken from the record."
+      "reason": "Names Suzanne Ciani’s “Seven Waves”, which no pattern in this batch has yet; the broken chords are the lesson’s own, written to the style rather than taken from the record."
     },
     {
       "sound": "ems-vcs3/vcs3-six-marimbas",
@@ -361,7 +361,7 @@
     },
     {
       "sound": "buchla-easel/easel-trill-warble-lead",
-      "reason": "Names Forbidden Planet, whose score is circuits left to burble, recorded to tape: there is no part to write. The line is the lesson’s own."
+      "reason": "Names Forbidden Planet, whose score is circuits left to burble, recorded to tape, so there is no written part to take from it. The trilling line is the lesson’s own, written to the style."
     },
     {
       "sound": "buchla-easel/easel-expanding-arp",
@@ -369,7 +369,7 @@
     },
     {
       "sound": "buchla-easel/easel-pulsing-mallets",
-      "reason": "Its pulser re-strikes each held note in steady eighths, so the batch’s “Music for 18 Musicians: a marimba pattern” would be played over again; the chords are the lesson’s own."
+      "reason": "Its pulser re-strikes each held note in steady eighths, so the batch’s “Music for 18 Musicians: a marimba pattern” would be played over again; the held notes are the lesson’s own."
     }
   ],
   "patterns": [

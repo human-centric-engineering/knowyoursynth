@@ -88,7 +88,10 @@ describe('the research batches', () => {
     expect(named.filter((s) => !sounds.has(s))).toEqual([]);
   });
 
-  /** Each batch's artists and how many of their sounds the catalogue held when it was researched. */
+  /**
+   * Each batch's artists and how many of their sounds the catalogue holds now. A task that adds
+   * sounds by a batch's artist places each one (a pattern, or a reason it has none) and raises the count.
+   */
   const rosters: [string, string[], number][] = [
     ['t-127', ['Kraftwerk', 'Depeche Mode'], 65],
     ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 110],
