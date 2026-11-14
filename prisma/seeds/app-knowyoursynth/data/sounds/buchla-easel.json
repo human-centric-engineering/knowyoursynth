@@ -1985,14 +1985,14 @@
       ]
     },
     {
-      "id": "easel-five-against-seven",
-      "name": "Five Against Seven",
+      "id": "easel-five-against-six",
+      "name": "Five Against Six",
       "ref": "In the style of Caterina Barbieri — “Ecstatic Computation” (2019)",
       "artist": "Caterina Barbieri",
       "tags": ["seq", "arpeggio", "polymeter", "minimalism"],
       "level": 3,
-      "blurb": "A fast, even arpeggio through a seven-note chord whose tone shifts in a five-step pattern, so the accents keep sliding against the notes.",
-      "how": "The 218’s arpeggiator plays the seven held keys from the bottom up, one at a time. Every new arpeggio note is a fresh touch, so it also steps the sequencer, which is set to the keyboard as its trigger. The sequencer drives TIMBRE in a five-stage pattern of folding, so a seven-note cycle of pitches meets a five-note cycle of tones: the pattern only comes round again after thirty-five notes, the slow-shifting phase music Barbieri builds from a few voltages.",
+      "blurb": "A fast, even arpeggio through a six-note chord whose tone shifts in a five-step pattern, so the accents keep sliding against the notes.",
+      "how": "The 218’s arpeggiator plays the six held keys from the bottom up, one at a time. Every new arpeggio note is a fresh touch, so it also steps the sequencer, which is set to the keyboard as its trigger. The sequencer drives TIMBRE in a five-stage pattern of folding, so a six-note cycle of pitches meets a five-note cycle of tones: the pattern only comes round again after thirty notes, the slow-shifting phase music Barbieri builds from a few voltages.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -2003,14 +2003,12 @@
           [0, 67, 7.9],
           [0, 69, 7.9],
           [0, 72, 7.9],
-          [0, 76, 7.9],
           [8, 55, 7.9],
           [8, 59, 7.9],
           [8, 62, 7.9],
           [8, 65, 7.9],
           [8, 67, 7.9],
-          [8, 71, 7.9],
-          [8, 74, 7.9]
+          [8, 71, 7.9]
         ]
       },
       "steps": [
@@ -2035,7 +2033,7 @@
         {
           "title": "The arpeggiator",
           "module": "mode",
-          "why": "The 218 plays the held keys in turn, from the lowest up.\n- ARPEGGIATION PATTERN: ascending, ARPEGGIATION RATE 7.8 · 8.8 notes a second: sixteenths at 132.\n- Listen for: an even, rippling run up the seven notes, again and again.",
+          "why": "The 218 plays the held keys in turn, from the lowest up.\n- ARPEGGIATION PATTERN: ascending, ARPEGGIATION RATE 7.8 · 8.8 notes a second: sixteenths at 132.\n- Listen for: an even, rippling run up the six notes, again and again.",
           "set": {
             "kbd.arp": "up",
             "kbd.arpRate": 7.77
@@ -2068,7 +2066,7 @@
         }
       ],
       "context": {
-        "seq.stages": "In this sound: the length of the timbre cycle. 5 against the seven keys.",
+        "seq.stages": "In this sound: the length of the timbre cycle. 5 against the six keys.",
         "kbd.arpRate": "In this sound: the speed of the run.",
         "cosc.timbreCv": "In this sound: how hard the accents fold."
       },
@@ -2076,7 +2074,7 @@
         {
           "id": "seq.stages",
           "try": "Set Sequencer STAGES to 4",
-          "hear": "A four-against-seven pattern with a different drift."
+          "hear": "A four-against-six pattern with a different drift."
         },
         {
           "id": "kbd.arp",
@@ -7032,7 +7030,7 @@
       "tags": ["pluck", "harp", "ambient", "arpeggio"],
       "level": 2,
       "blurb": "Sweeping harp glissandi up through wide, two-octave chords, each string a bright pluck with a twang, ringing together in a long reverb.",
-      "how": "Eight held keys over two octaves and a fast ascending arpeggio make a harp glissando, sweeping up the chord over and over. Each arpeggio note fires a short envelope that both opens Gate 1 in combination and folds the triangle through TIMBRE, so every string is plucked bright and settles, and the long REVERBERATION lets the strings ring together.",
+      "how": "Six held keys over two octaves and a fast ascending arpeggio make a harp glissando, sweeping up the chord over and over. Each arpeggio note fires a short envelope that both opens Gate 1 in combination and folds the triangle through TIMBRE, so every string is plucked bright and settles, and the long REVERBERATION lets the strings ring together.",
       "phrase": {
         "bpm": 70,
         "loop": true,
@@ -7043,16 +7041,12 @@
           [0, 64, 5.9],
           [0, 67, 5.9],
           [0, 72, 5.9],
-          [0, 76, 5.9],
-          [0, 79, 5.9],
           [6, 45, 5.9],
           [6, 52, 5.9],
           [6, 57, 5.9],
           [6, 60, 5.9],
           [6, 64, 5.9],
-          [6, 69, 5.9],
-          [6, 72, 5.9],
-          [6, 76, 5.9]
+          [6, 69, 5.9]
         ]
       },
       "steps": [
@@ -7087,7 +7081,7 @@
         {
           "title": "The glissando",
           "module": "mode",
-          "why": "A fast ascending arpeggio through the eight held keys.\n- ARPEGGIATION PATTERN: ascending, ARPEGGIATION RATE 8.1 · 10.0 notes a second.\n- Listen for: a sweep up the strings, again and again.",
+          "why": "A fast ascending arpeggio through the six held keys.\n- ARPEGGIATION PATTERN: ascending, ARPEGGIATION RATE 8.1 · 10.0 notes a second.\n- Listen for: a sweep up the strings, again and again.",
           "set": {
             "kbd.arp": "up",
             "kbd.arpRate": 8.12

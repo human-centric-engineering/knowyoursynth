@@ -46,6 +46,14 @@
     {
       "sound": "pro-1/p1-music-non-stop",
       "reason": "Names “Musique Non-Stop”, which no pattern in this batch has yet; the percussion is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "ems-vcs3/vcs3-autobahn-pass-by",
+      "reason": "An effect: cars passing, made by the patch. There is no part to write."
+    },
+    {
+      "sound": "buchla-easel/easel-geiger-counter",
+      "reason": "An effect: random ticks and bursts, as the Geiger counter that opens “Radio-Activity”. There is no part to write."
     }
   ],
   "patterns": [

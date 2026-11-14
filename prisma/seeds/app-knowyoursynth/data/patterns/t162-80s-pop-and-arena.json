@@ -86,6 +86,10 @@
     {
       "sound": "system-55/s55-collins-tom-fill",
       "reason": "The batch’s “In the Air Tonight” patterns are its chords, roots and snare; this sound is the tom fill, which the 960 plays from one held key."
+    },
+    {
+      "sound": "ems-vcs3/vcs3-scooping-oboe-lead",
+      "reason": "Names “Ladytron”, which no pattern in this batch has yet; the batch has Roxy Music only as the VCS3 solo of “Editions of You”. The line is the lesson’s own, written to the style."
     }
   ],
   "patterns": [

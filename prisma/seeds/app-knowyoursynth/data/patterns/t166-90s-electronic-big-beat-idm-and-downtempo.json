@@ -206,6 +206,14 @@
     {
       "sound": "minilogue-xd/mxd-phased-strings",
       "reason": "Names “La Femme d’Argent”, whose pattern in this batch is the bass, and this sound plays chords; the chords are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "buchla-easel/easel-bubblebath-bass",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from the work, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "buchla-easel/easel-stuttering-grain",
+      "reason": "The patch plays itself: the sequencer and pulser make the stuttering figure from one held key. There is no part to write."
     }
   ],
   "patterns": [

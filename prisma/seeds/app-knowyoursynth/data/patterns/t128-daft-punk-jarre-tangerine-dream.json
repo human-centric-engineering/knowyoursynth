@@ -98,6 +98,10 @@
     {
       "sound": "jp-8080/jp-jet-phasing",
       "reason": "Names “Zoolook”, which no pattern in this batch has yet; the chords are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "ems-vcs3/vcs3-self-clocked-ratchet",
+      "reason": "Its envelope repeats by itself, so each held key stutters into four plucks and a written sequence would be played over again; the riff is the lesson’s own."
     }
   ],
   "patterns": [
