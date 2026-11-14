@@ -1008,6 +1008,18 @@ sounds, 37 are by artists a batch covers, in six batches (t-162 to t-165, t-167 
   under a tom fill, the khöömei's held fundamental under a patch whose keys pick the overtones).
 - Clair de Lune's notes now say "the whistle sounds", not "the two", as more of them share it.
 
+**The VCS3 and Music Easel sounds (t-197)**, placed by the same rules. Of their 250 new sounds, 40 are by artists a
+batch covers, in eight batches (t-127, t-128, t-162 to t-164, and t-166 to t-168).
+
+- **12 sit on a pattern**: the work the sound names, in its register. The Easel's Riley arpeggio plays from held
+  chords, so it takes "A Rainbow in Curved Air: held chords", not the modal run. The two Nine Post Cards keys sounds
+  share one new copy, "Music for Nine Postcards: a floating phrase, an octave down", since the phrase sits seven and ten
+  semitones above them.
+- **28 keep a reason**: it is an effect; the patch plays itself (the VCS3's repeating envelope, the Easel's pulser,
+  sequencer and random source), so a written part would be played over again; its arpeggiator plays the line from
+  held chords and the work has only parts written out; the work has no pattern yet; or the batch has the work's part
+  as chords and the sound plays one line.
+
 ## Rights
 
 _Proposed. The owner's call; goes to the `f-launch` legal review._ The owner dropped one proposed limit on
@@ -1557,23 +1569,23 @@ octave above its key, or is thin at the bottom (the low note 9 dB or more below 
 
 #### Agreement with the library
 
-Measured on 2026-11-13 over the library's 5,579 sounds:
+Measured on 2026-11-14 over the library's 5,829 sounds:
 
-- **The detector reads the sound's own category for 2,634 of them (47.2%).** Picking the commonest category, bass, every
+- **The detector reads the sound's own category for 2,693 of them (46.2%).** Picking the commonest category, bass, every
   time would get 16.7%.
-- **Cross-validated: 2,610 (46.8%).** Each fifth of the library is measured on a model fitted to the other four fifths.
-- **5 sounds are silent on the probe notes**: `model-d/just-intonation-drone`, `model-d/slow-breaking-waves`,
-  `pro-1/filter-clave`, `malevolent/mal-extreme` and `grandmother/gm-ringing-ladder-ping`. `check:synths` hears each one play its riff, so they do make sound, but not on a held G3 within
+- **Cross-validated: 2,670 (45.8%).** Each fifth of the library is measured on a model fitted to the other four fifths.
+- **7 sounds are silent on the probe notes**: `model-d/just-intonation-drone`, `model-d/slow-breaking-waves`,
+  `pro-1/filter-clave`, `malevolent/mal-extreme`, `grandmother/gm-ringing-ladder-ping`, `buchla-easel/easel-rainforest-cross-feedback` and `buchla-easel/easel-sonar-ping`. `check:synths` hears each one play its riff, so they do make sound, but not on a held G3 within
   the probe's 0.85 s. The two filter pings (the clave and the Grandmother's) have no oscillator in the mixer, only a
-  filter struck by a short envelope. Why has not been looked into. They count as disagreements.
+  filter struck by a short envelope. The two Easel effects play themselves and first speak about 1 s and 1.5 s in, after the probe's note has ended. Why the pings are silent has not been looked into. They count as disagreements.
 
-The figure fell from 48.7% over 5,024 sounds (t-250) because of what the library gained, not a change to the detector's probe or features (the model was only refit to the grown library): t-193's 555 System 15, 35, 55 and MODEL 15 sounds added 189 agreements (34%). Most of them are strings, winds, drones, effects, percussion and sequences, the categories below where the detector is weakest. The same five sounds are silent.
+The figure fell from 48.7% over 5,024 sounds (t-250) to 47.2% over 5,579 (t-193) and to 46.2% now, because of what the library gained, not a change to the detector's probe or features (the model was only refit to the grown library). t-193's 555 System 15, 35, 55 and MODEL 15 sounds added 189 agreements (34%), and t-197's 250 VCS3 and Music Easel sounds 59 (24%). Most of them are strings, winds, drones, effects, percussion and sequences, the categories below where the detector is weakest. Two of t-197's effects joined the five silent sounds.
 
 When it was last measured there (t-191), CI's Linux x64 read one fx sound as lead instead: the renders are seeded, but
 the platforms' maths can differ in the last bit, and a sound near a feature's threshold can tip. The figures here are
 the macOS ones.
 
-`soundkind-library.test.ts` pins the 47.2% (its floor is one sound below the macOS count, for that tip), so a change to the probe, the engine, the features or the library can't
+`soundkind-library.test.ts` pins the 46.2% (its floor is one sound below the macOS count, for that tip), so a change to the probe, the engine, the features or the library can't
 make the detector worse without someone deciding it should. It renders the whole library, about three minutes of CPU,
 so it is the slowest test in the app. It sweeps on two worker threads rather than one per core: a sweep across every
 core starved the tests vitest runs alongside it into timeouts. It runs when something it imports changes (the probe
@@ -1584,18 +1596,18 @@ sound was read as strings or wind, so those columns are left out.
 
 | Label   |    bass |    lead |     pad |  pluck |    keys |      fx |  drone |    perc |     seq | brass | silent | Agree |
 | ------- | ------: | ------: | ------: | -----: | ------: | ------: | -----: | ------: | ------: | ----: | -----: | ----: |
-| bass    | **734** |      57 |       6 |      9 |      37 |       9 |     11 |      22 |      45 |     2 |      · |   79% |
-| lead    |     106 | **563** |      55 |      7 |      70 |      26 |      3 |       5 |      33 |     1 |      · |   65% |
-| pad     |       2 |      42 | **401** |      1 |      19 |      11 |     17 |       1 |      19 |     · |      · |   78% |
-| pluck   |      47 |      25 |       7 | **80** |     126 |       4 |      · |      23 |      25 |     · |      · |   24% |
-| keys    |      73 |      86 |      32 |     51 | **296** |      11 |      6 |      17 |      49 |     5 |      · |   47% |
-| fx      |      46 |     131 |      33 |     13 |      22 | **161** |     16 |      48 |      46 |     · |      2 |   31% |
-| drone   |      18 |      49 |      81 |      · |      10 |      17 | **50** |       · |       8 |     · |      1 |   21% |
-| perc    |      72 |      18 |       · |     23 |      44 |      27 |      4 | **176** |      22 |     · |      2 |   45% |
-| seq     |     115 |      64 |      45 |     33 |      79 |      44 |      4 |      24 | **166** |     1 |      · |   29% |
-| brass   |      39 |      55 |      43 |      · |      40 |       · |      · |       · |       1 | **7** |      · |    4% |
-| strings |      12 |      44 |     110 |      · |      19 |       3 |      2 |       · |       7 |     · |      · |    0% |
-| wind    |      21 |     145 |      16 |      · |       2 |      11 |      2 |       · |       6 |     2 |      · |    0% |
+| bass    | **740** |      68 |       6 |     11 |      38 |      10 |      9 |      19 |      48 |     2 |      · |   78% |
+| lead    |     113 | **574** |      61 |      9 |      70 |      27 |      3 |       5 |      38 |     1 |      · |   64% |
+| pad     |       2 |      47 | **408** |      1 |      21 |      11 |     17 |       1 |      22 |     · |      · |   77% |
+| pluck   |      48 |      28 |       6 | **78** |     130 |       5 |      · |      22 |      35 |     · |      · |   22% |
+| keys    |      80 |      90 |      33 |     52 | **301** |      15 |      4 |      16 |      49 |     4 |      · |   47% |
+| fx      |      51 |     133 |      37 |     14 |      22 | **179** |     16 |      52 |      48 |     · |      4 |   32% |
+| drone   |      20 |      54 |      86 |      · |      11 |      20 | **50** |       · |      10 |     · |      1 |   20% |
+| perc    |      74 |      28 |       · |     24 |      49 |      39 |      5 | **174** |      26 |     · |      2 |   41% |
+| seq     |     119 |      74 |      44 |     34 |      81 |      54 |      4 |      22 | **183** |     · |      · |   30% |
+| brass   |      41 |      58 |      43 |      · |      40 |       1 |      · |       · |       2 | **6** |      · |    3% |
+| strings |      14 |      46 |     110 |      · |      19 |       3 |      3 |       · |       7 |     · |      · |    0% |
+| wind    |      25 |     143 |      17 |      · |       2 |      10 |      3 |       · |      12 |     2 |      · |    0% |
 
 #### The disagreements
 
@@ -1603,7 +1615,7 @@ The review on 2026-10-31 sorted the disagreements by how sure the detector was. 
 are not a wrong detector. They are a label on a different axis from the sound:
 
 - **Orchestral names.** _Strings_, _wind_ and _brass_ name the instrument a patch imitates, not how it behaves. A string
-  ensemble swells and holds like a pad (110 of 197 read as pad), and a synth flute plays like a lead (145 of 205). The
+  ensemble swells and holds like a pad (110 of 202 read as pad), and a synth flute plays like a lead (143 of 214). The
   detector hears timbre the way a filter shapes it, and none of its features can hear formants. These three
   categories are where it is weakest, and suggestions lose almost nothing by it, because the roles that suit a string
   pad are the roles that suit a pad.
@@ -1612,7 +1624,7 @@ are not a wrong detector. They are a label on a different axis from the sound:
   and a bass clarinet (`neutron/bitches-brew-bass-clarinet`, wind) read as bass too.
 - **Drones that are pads.** A slow-attack, held, polyphonic drone (`deepmind-12d/cosmic-drone`, `pro-800/p8-drone`)
   reads as pad. Drone and pad suit much the same roles, led by _Drone_ (see [Category to role](#category-to-role)).
-- **Pluck against keys.** 126 of the 337 plucks read as keys. A pluck and an electric piano both start at once and decay
+- **Pluck against keys.** 130 of the 352 plucks read as keys. A pluck and an electric piano both start at once and decay
   while held, and the probe can't tell a decay that is the sound from one that is the player's.
 
 The detector is plainly wrong on a few kinds:

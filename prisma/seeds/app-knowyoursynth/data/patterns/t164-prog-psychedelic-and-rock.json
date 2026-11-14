@@ -130,6 +130,10 @@
     {
       "sound": "system-55/s55-oldfield-fifteen",
       "reason": "The 960 and 962 play the fifteen-step ostinato from one held key, so the batch’s “Tubular Bells: piano ostinato” would be played over again."
+    },
+    {
+      "sound": "ems-vcs3/vcs3-space-rock-rasp",
+      "reason": "Names “Silver Machine”, which no pattern in this batch has yet; the bass line is the lesson’s own, written to the style rather than taken from the record."
     }
   ],
   "patterns": [

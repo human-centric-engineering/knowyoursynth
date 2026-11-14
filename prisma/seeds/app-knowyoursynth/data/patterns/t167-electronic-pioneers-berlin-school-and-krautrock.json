@@ -314,6 +314,62 @@
     {
       "sound": "model-15/m15-ghost-rider-rhythm",
       "reason": "The patch plays itself: its LFO and sample and hold make the rhythm box from one held key, and the batch’s “Ghost Rider” patterns are the riff and the root."
+    },
+    {
+      "sound": "ems-vcs3/vcs3-berlin-ostinato",
+      "reason": "Names “Picture Music”, which no pattern in this batch has yet; the bass line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "ems-vcs3/vcs3-hosianna-choir-drone",
+      "reason": "Names “Hosianna Mantra”, which no pattern in this batch has yet; the drone is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "ems-vcs3/vcs3-blue-veils-ring",
+      "reason": "Names “Blue Veils and Golden Sands”, which no pattern in this batch has yet; the batch has Delia Derbyshire only as the gallop and melody of the “Doctor Who” theme. The drone is the patch’s own."
+    },
+    {
+      "sound": "ems-vcs3/vcs3-notes-across-the-room",
+      "reason": "Names Suzanne Ciani’s “Seven Waves”, which no pattern in this batch has yet; the broken chords are the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "ems-vcs3/vcs3-six-marimbas",
+      "reason": "Names “Six Marimbas”, which no pattern in this batch has yet; the batch has Steve Reich as the marimba pattern of “Music for 18 Musicians”, another work. The pattern is the lesson’s own."
+    },
+    {
+      "sound": "ems-vcs3/vcs3-dying-circuits",
+      "reason": "An effect: a whistling circuit that swoops and chirps by itself, as the Barrons’ circuits did on Forbidden Planet. There is no part to write."
+    },
+    {
+      "sound": "ems-vcs3/vcs3-steam-train",
+      "reason": "An effect: steam chuffs and rail clicks. Schaeffer’s “Étude aux chemins de fer” is made from recorded trains; there is no part to write."
+    },
+    {
+      "sound": "ems-vcs3/vcs3-silver-apples-gesture",
+      "reason": "The patch plays itself: a stream of ticks that speeds up and slows down from one held key. There is no part to write."
+    },
+    {
+      "sound": "buchla-easel/easel-silver-apples-pulse",
+      "reason": "The patch plays itself: the pulser clocks the sequencer through its five stages from one held key, so a written part would be played over again."
+    },
+    {
+      "sound": "buchla-easel/easel-ciani-concert-sequence",
+      "reason": "The batch has no pattern from Suzanne Ciani’s Buchla concerts; the sequencer plays the figure from each held key, so a written part would be played over again."
+    },
+    {
+      "sound": "buchla-easel/easel-five-against-six",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch has no pattern from “Ecstatic Computation”, and the chords are the lesson’s own."
+    },
+    {
+      "sound": "buchla-easel/easel-trill-warble-lead",
+      "reason": "Names Forbidden Planet, whose score is circuits left to burble, recorded to tape, so there is no written part to take from it. The trilling line is the lesson’s own, written to the style."
+    },
+    {
+      "sound": "buchla-easel/easel-expanding-arp",
+      "reason": "Its arpeggiator plays the line from the chords its riff holds; the batch’s “The Expanding Universe: a slow pattern” is a part written out, which the arpeggiator would play over again. The chords are the lesson’s own."
+    },
+    {
+      "sound": "buchla-easel/easel-pulsing-mallets",
+      "reason": "Its pulser re-strikes each held note in steady eighths, so the batch’s “Music for 18 Musicians: a marimba pattern” would be played over again; the held notes are the lesson’s own."
     }
   ],
   "patterns": [
@@ -9829,7 +9885,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/rainbow-arp", "ub-xa-d/tremolo-drone"],
+      "sounds": [
+        "deepmind-12d/rainbow-arp",
+        "ub-xa-d/tremolo-drone",
+        "buchla-easel/easel-curved-air-arp"
+      ],
       "research": {
         "work": "Terry Riley, “A Rainbow in Curved Air”, 1969",
         "part": "D with an added E, then C with the fourth, two bars each.",
@@ -10806,7 +10866,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/kosmische-bells", "neutron/sowiesoso-tones"],
+      "sounds": [
+        "deepmind-12d/kosmische-bells",
+        "neutron/sowiesoso-tones",
+        "ems-vcs3/vcs3-noise-struck-mallet"
+      ],
       "research": {
         "work": "Cluster, “Sowiesoso”, Sowiesoso, 1976",
         "part": "A slow, repeating tune on G, up to D and back, two bars.",
@@ -11203,7 +11267,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["model-d/noise-torn-solo"],
+      "sounds": ["model-d/noise-torn-solo", "buchla-easel/easel-cosmic-freak-out"],
       "research": {
         "work": "Sun Ra, My Brother the Wind, 1970",
         "part": "Wide leaps across four octaves, short high stabs against long low notes.",
@@ -12837,7 +12901,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-silver-apples-osc", "minilogue-xd/mxd-ring-robot"],
+      "sounds": [
+        "take-5/t5-silver-apples-osc",
+        "minilogue-xd/mxd-ring-robot",
+        "ems-vcs3/vcs3-oscillations-throb"
+      ],
       "research": {
         "work": "Silver Apples, “Oscillations”, Silver Apples, 1968",
         "part": "A short tune on A, up to D and down to E.",

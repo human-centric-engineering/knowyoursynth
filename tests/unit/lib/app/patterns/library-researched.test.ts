@@ -88,10 +88,13 @@ describe('the research batches', () => {
     expect(named.filter((s) => !sounds.has(s))).toEqual([]);
   });
 
-  /** Each batch's artists and how many of their sounds the catalogue held when it was researched. */
+  /**
+   * Each batch's artists and how many of their sounds the catalogue holds now. A task that adds
+   * sounds by a batch's artist places each one (a pattern, or a reason it has none) and raises the count.
+   */
   const rosters: [string, string[], number][] = [
-    ['t-127', ['Kraftwerk', 'Depeche Mode'], 63],
-    ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 109],
+    ['t-127', ['Kraftwerk', 'Depeche Mode'], 65],
+    ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 110],
     ['t-129', ['Brian Eno', 'Daniel Lanois', 'Vangelis', 'Boards of Canada'], 105],
     [
       't-160',
@@ -199,7 +202,7 @@ describe('the research batches', () => {
         'Wham!',
         'Yello',
       ],
-      139,
+      140,
     ],
     [
       't-163',
@@ -237,7 +240,7 @@ describe('the research batches', () => {
         'Walter Murch',
         'Yann Tiersen',
       ],
-      162,
+      164,
     ],
     [
       't-164',
@@ -286,7 +289,7 @@ describe('the research batches', () => {
         'Thom Yorke',
         'U2',
       ],
-      146,
+      147,
     ],
     [
       't-165',
@@ -370,7 +373,7 @@ describe('the research batches', () => {
         'Ulrich Schnauss',
         'Wiley',
       ],
-      169,
+      171,
     ],
     [
       't-167',
@@ -409,7 +412,7 @@ describe('the research batches', () => {
         'Popol Vuh',
         'Roger Payne',
       ],
-      173,
+      191,
     ],
     [
       't-168',
@@ -469,7 +472,7 @@ describe('the research batches', () => {
         'Yo-Yo Ma',
         'Yoshida Brothers',
       ],
-      217,
+      230,
     ],
   ];
 

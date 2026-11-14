@@ -210,6 +210,14 @@
     {
       "sound": "system-55/s55-murch-engine",
       "reason": "An effect: an engine idling and revving, made by the patch’s feedback. There is no part to write."
+    },
+    {
+      "sound": "ems-vcs3/vcs3-helicopter-blades",
+      "reason": "An effect: helicopter blades, noise chopped by the patch. There is no part to write."
+    },
+    {
+      "sound": "buchla-easel/easel-droid-chatter",
+      "reason": "An effect: robot chatter the random source makes from a held key. There is no part to write."
     }
   ],
   "patterns": [

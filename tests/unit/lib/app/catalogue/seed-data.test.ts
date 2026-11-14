@@ -50,8 +50,8 @@ const EXPORTED: {
   { id: 'wasp-deluxe', sounds: 150, timeline: 4, relatives: 2, unusual: 17, limits: 5 },
   { id: 'poly-d', sounds: 150, timeline: 5, relatives: 5, unusual: 29, limits: 5 },
   { id: 'pro-800', sounds: 150, timeline: 4, relatives: 3, unusual: 21, limits: 5 },
-  { id: 'ems-vcs3', sounds: 29, timeline: 6, relatives: 3, unusual: 19, limits: 6 },
-  { id: 'buchla-easel', sounds: 21, timeline: 5, relatives: 4, unusual: 16, limits: 6 },
+  { id: 'ems-vcs3', sounds: 150, timeline: 6, relatives: 3, unusual: 19, limits: 6 },
+  { id: 'buchla-easel', sounds: 150, timeline: 5, relatives: 4, unusual: 16, limits: 6 },
   { id: 'tb-303', sounds: 150, timeline: 5, relatives: 3, unusual: 9, limits: 4 },
   { id: 'td-3', sounds: 150, timeline: 4, relatives: 3, unusual: 9, limits: 4 },
   // Written straight into the app (`scripts/native-synths.ts`), not exported: these counts are its own files'.
