@@ -2292,7 +2292,9 @@ function createVoice(
       if (L2) {
         if (retrigFlag && L2.keySync && !l2Com) lfo2.phase = 0;
         // dest `lfo2Rate`, in octaves (Sub 37 MOD 1 DEST LFO RATE)
-        lfo2.phase += Math.min(L2.rate * Math.exp(ev(DI.lfo2Rate) * Math.LN2), sr * 0.4) / sr;
+        const l2Oct = ev(DI.lfo2Rate);
+        lfo2.phase +=
+          Math.min(l2Oct ? L2.rate * Math.exp(l2Oct * Math.LN2) : L2.rate, sr * 0.4) / sr;
         let w2 = false;
         if (lfo2.phase >= 1) {
           lfoCyc[1] += Math.floor(lfo2.phase);

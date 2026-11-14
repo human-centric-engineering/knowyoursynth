@@ -263,7 +263,7 @@ describe('env loopAll (Sub 37 LOOP)', () => {
       win(plain, 300 + i * 5, 305 + i * 5)
     ).filter((v) => v / peak > 0.4 && v / peak < 0.6);
 
-    // Assert: it loops, and no three 5 ms windows in a row sit at half
+    // Assert: it loops, and it spends no more than a few 5 ms windows passing through half
     expect(risesThrough(plain, peak * 0.8)).toBeGreaterThanOrEqual(2);
     expect(sustaining.length).toBeLessThan(6);
   });

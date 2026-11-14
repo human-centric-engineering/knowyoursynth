@@ -227,6 +227,7 @@ const GROUP: Record<string, string | undefined> = {
   amp: 'amp',
   ampExp: 'amp',
   lfoRate: 'lfoRate',
+  lfo2Rate: 'lfoRate',
   delayTime: 'delayTime',
   gate1: 'trig',
   gate2: 'trig',
@@ -276,6 +277,9 @@ const DEST_NAMES: Record<string, string | undefined> = {
   ampExp: 'the amplifier',
   env2Rate: 'the speed of Envelope 2',
   env1DecRate: 'the decay and release speed of Envelope 1',
+  env1Rate: 'the speed of Envelope 1',
+  lfo2Rate: 'the speed of LFO 2',
+  noiseLvl: 'the noise level',
   res: 'the resonance',
   dryIn: 'the output',
 };

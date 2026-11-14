@@ -240,7 +240,8 @@ after `toEngine()`; a definition never returns them.
 
 **Engine vocabulary.** Signals and destinations are the engine's `SIGNALS` / `DESTS` lists
 (typed as strings, because the Moog 900 names are generated per slot). Units at a destination:
-pitch in semitones, `cutoff` / `cutoffHp` / `lfoRate` / `lfo2Rate` / `delayTime` in octaves, `pw*` ± duty,
+pitch in semitones, `cutoff` / `cutoffHp` / `lfoRate` / `lfo2Rate` / `delayTime` in octaves, `env2Rate` /
+`env1Rate` / `env1DecRate` in octaves of rate, `noiseLvl` added to the noise level, `pw*` ± duty,
 `amp` linear gain, gates above 0.5, audio and utility inputs at unit gain. Bipolar signals run
 −1..1, envelopes and gates 0..1, `kbd` is (note − 60) / 12 octaves. On the Moog systems every
 signal is in volts and jack `amt` is 1 (0.2 into the app's OUTPUT jacks).
