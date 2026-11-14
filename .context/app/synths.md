@@ -221,6 +221,7 @@ when absent**, added synth by synth:
 | Overtone and folder, rise/fall function | osc `mix.ovt`, dest `ovtIn`; signals `eoc` / `eon`, dests `env2Rate` / `env1DecRate`, env `free`, a curved `loop` | Make Noise 0-COAST |
 | Chord stack, one-shot LFO, saw folder   | `poly.chord`, `lfo.oneShot`, osc `mix.sfold` (with `fold`)                                                        | Korg minilogue xd  |
 | Filtered noise, VPM oscillator          | osc `mix.mnoise` / `mix.vpm`, with osc `mnoise` / `vpm` settings; SHAPE rides the pulse-width dest                | Korg minilogue xd  |
+| Filter slopes, full-stage envelope loop | filter `poles`, env `loopAll`; dests `lfo2Rate`, `noiseLvl`, `env1Rate`                                           | Moog Sub 37        |
 
 A synth whose sound path is `easel`, `moog` or `solar` still returns the core stubs (`osc: []` etc.).
 `solar` runs eight voices of three kinds (`drone`, `srapa`, `vco`), each with its own gate and envelope, into
@@ -239,7 +240,7 @@ after `toEngine()`; a definition never returns them.
 
 **Engine vocabulary.** Signals and destinations are the engine's `SIGNALS` / `DESTS` lists
 (typed as strings, because the Moog 900 names are generated per slot). Units at a destination:
-pitch in semitones, `cutoff` / `cutoffHp` / `lfoRate` / `delayTime` in octaves, `pw*` ± duty,
+pitch in semitones, `cutoff` / `cutoffHp` / `lfoRate` / `lfo2Rate` / `delayTime` in octaves, `pw*` ± duty,
 `amp` linear gain, gates above 0.5, audio and utility inputs at unit gain. Bipolar signals run
 −1..1, envelopes and gates 0..1, `kbd` is (note − 60) / 12 octaves. On the Moog systems every
 signal is in volts and jack `amt` is 1 (0.2 into the app's OUTPUT jacks).
