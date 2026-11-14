@@ -407,6 +407,57 @@ describe('Sub 37 output and panel modes', () => {
   });
 });
 
+describe('Sub 37 readouts', () => {
+  const fmt = (id: string, v: number | string) => {
+    const c = sub37.controls.find((x) => x.id === id);
+    if (!c || !('fmt' in c) || !c.fmt) throw new Error(`no readout for ${id}`);
+    return (c.fmt as (x: number | string) => string)(v);
+  };
+
+  it('reads the ranges the manual gives at the ends of their knobs', () => {
+    expect(fmt('vcf.cutoff', 0)).toBe('20 Hz');
+    expect(fmt('vcf.cutoff', 10)).toBe('20 kHz');
+    expect(fmt('lfo1.rate', 0)).toBe('0.10 Hz');
+    expect(fmt('lfo2.rate', 10)).toBe('100 Hz');
+    expect(fmt('envF.attack', 0)).toBe('1 ms');
+    expect(fmt('envA.release', 10)).toBe('10 s');
+    expect(fmt('arp.rate', 0)).toBe('2 BPM');
+    expect(fmt('arp.rate', 10)).toBe('280 BPM');
+  });
+
+  it('reads DELAY and HOLD as 0 at the bottom, and times above it', () => {
+    expect(fmt('envA.delay', 0)).toBe('0');
+    expect(fmt('envF.hold', 5)).toBe('100 ms');
+  });
+
+  it('signs the bipolar and offset controls', () => {
+    expect(fmt('mod1.pitchAmt', -2.5)).toBe('−2.5');
+    expect(fmt('vcf.egAmt', 0)).toBe('0.0');
+    expect(fmt('osc.fineTune', 50)).toBe('+50 cents');
+    expect(fmt('osc2.frequency', -7)).toBe('−7.00 st');
+    expect(fmt('osc2.beat', 3.5)).toBe('+3.50 Hz');
+    expect(fmt('mod2.wheelDepth', -40)).toBe('−40 %');
+    expect(fmt('kbd.transpose', 12)).toBe('+12 st');
+  });
+
+  it('names the wave between the shapes', () => {
+    expect(
+      ['triangle', 'tri → saw', 'sawtooth', 'saw → square', 'square', 'narrowing pulse'].map(
+        (_, i) => fmt('osc1.wave', [0, 2, 3.33, 5, 6.67, 9][i])
+      )
+    ).toEqual(['triangle', 'tri → saw', 'sawtooth', 'saw → square', 'square', 'narrowing pulse']);
+  });
+
+  it('reads glide as a time, the source by name and the percentages whole', () => {
+    expect(fmt('glide.time', 10)).toBe('5.0 s');
+    expect(fmt('mod1.source', 'feg_pgm')).toBe('F.EG/PGM');
+    expect(fmt('mod1.source', 'other')).toBe('other');
+    expect(fmt('lfo1.kbTrack', 100)).toBe('100 %');
+    expect(fmt('arp.gateLen', 50)).toBe('50 %');
+    expect(fmt('mixer.osc1', 7)).toBe('7.0');
+  });
+});
+
 describe('Sub 37 maker’s marks', () => {
   it('tags the badge, the strapline and the logo as brand, and nothing else', () => {
     const brand = sub37.decor.filter((d) => d.brand);
