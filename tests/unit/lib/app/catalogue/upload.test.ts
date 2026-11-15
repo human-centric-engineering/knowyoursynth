@@ -22,7 +22,8 @@ import {
   type CatalogueTables,
 } from '@/tests/helpers/catalogue-db';
 import { seedCatalogue } from '@/lib/app/catalogue/seed';
-import { riffKey, syncRiffPatterns, type LibraryDb } from '@/lib/app/patterns/library';
+import { phraseOf, riffKey, syncRiffPatterns, type LibraryDb } from '@/lib/app/patterns/library';
+import { PatternSchema } from '@/lib/app/sequencer/pattern';
 import {
   checkSynthContent,
   readJsonBody,
@@ -241,6 +242,23 @@ describe('writeSynthContent', () => {
     expect(row().blurb).toBe('A new blurb');
     expect(row().editedAt).toBeInstanceOf(Date);
     expect(row().order).toBe(order);
+  });
+
+  it('keeps a sound whose default is another pattern playing that pattern, whatever riff the file gives it (t-254)', async () => {
+    const file = content(3);
+    const [first, second] = file.sounds.map((s) =>
+      db.synthSound.rows.find((r) => r.slug === s.id)!
+    );
+    // The second sound's default is the first sound's riff pattern, as a seeded researched default would be.
+    const other = db.libraryPattern.rows.find(
+      (p) => p.key === riffKey('model-d', String(first.slug))
+    )!;
+    db.synthSoundPattern.rows.push({ soundId: second.id, patternId: other.id, order: -1 });
+    file.sounds[1].phrase = { ...file.sounds[1].phrase, bpm: file.sounds[1].phrase.bpm + 7 };
+
+    await upload(file);
+
+    expect(second.phrase).toEqual(phraseOf(PatternSchema.parse(other.pattern)));
   });
 
   it('skips a row an admin edited, and leaves it as the admin left it', async () => {

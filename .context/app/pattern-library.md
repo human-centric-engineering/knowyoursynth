@@ -1129,8 +1129,11 @@ The owner reviews riffs per sound, in the admin editor (t-126), and marks each o
 - **Demote**: another of the sound's patterns becomes the default. The demoted riff stays in the sound's list and in the
   library, and can still be chosen and suggested.
 
-Demoting is the only way a riff stops being a default. A researched pattern becomes a sound's default only after the
-owner has listened to it, and the riff it replaces is demoted, never removed.
+Demoting is the only way a riff stops being a default, and the riff it replaces is demoted, never removed. A
+researched pattern becomes a sound's default by an admin's reorder, or when `data/pattern-defaults.json` names it for
+the sound ([Researched defaults](#researched-defaults)). _Owner ruling, 2026-11-15_: a sound whose ref names a song,
+artist or style, and that a researched pattern of it already names, plays that pattern as its default without waiting
+for the owner's listen. It replaced the 2026-11-01 ruling, under which no researched pattern had become a default.
 
 ## The library as built
 
@@ -1226,8 +1229,8 @@ batch pattern is stored as _AI-generated_.
 The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.ts`:
 
 - **Behind, never in front.** Each pattern goes at the end of each of its sounds' lists, so every riff stays its sound's
-  default and nothing a sound plays changes. A researched pattern becomes a default only when an admin reorders the
-  sound after the owner's listen.
+  default and nothing a sound plays changes. A researched pattern becomes a default when an admin reorders the sound,
+  or by the [researched defaults](#researched-defaults) pass that runs next.
 - **A re-run writes nothing, and nor does an empty batch.** Measured on the dev database: the pilot created 17
   patterns and 26 places, and left the 2,293 riffs unchanged. The second batch (t-128) created 20 and 33, left the
   pilot's 17 unchanged, and skipped nothing. The hooks (t-159) created 15 and 26, which brought the totals to 52 and 85, and
@@ -1249,7 +1252,8 @@ The rules, each tested in `tests/unit/lib/app/patterns/library-researched.test.t
   and every riff unchanged. The eleventh (t-167) created 43 and 56, which brought them to 511 and 731, left the rest
   and every riff unchanged, and skipped nothing. The twelfth (t-168) created 73 and 83, which brought them to 584 and
   814, left the rest and every riff unchanged, and skipped nothing.
-- **An admin's pattern is never written**: one an admin edited, or made any sound's default.
+- **An admin's pattern is never written**: one an admin edited, or made any sound's default. A default the defaults
+  pass made, on a sound no admin has edited, is not an admin's: a changed batch still rewrites it, and the riff follows.
 - **Nothing is moved or removed.** A sound newly named in a batch gets the pattern at the end of its list. A pattern
   taken out of a batch file stays in the library and on its sounds.
 - **A key is used once across every batch file.** The loader refuses one in two files and names both, so the seed
@@ -1279,6 +1283,45 @@ than one pattern of a batch, but a sound with a pattern never also has a reason.
 
 The catalogue unit's hash leaves the `patterns/` folder out, as it does `bank/`, so a batch edit re-runs only this
 unit.
+
+#### Researched defaults
+
+t-254. The batches put every researched pattern behind its sounds' riffs, and no admin reorder followed, so even the
+TEO-5's _Jump Brass_ ("In the style of Van Halen — “Jump”") opened with its own riff while _Jump: synth riff, an
+octave down_ sat second on its list. The owner's 2026-11-15 ruling ([Reviewing the current riffs](#reviewing-the-current-riffs)) is carried out by
+`prisma/seeds/app-knowyoursynth/data/pattern-defaults.json`, read by `pattern-data.ts`'s `loadPatternDefaults` and
+checked by `PatternDefaultsSchema`:
+
+- `defaults`: each sound and the researched pattern it plays as its default. A committed list, not a rule worked out at
+  seed time, so each choice is read in review.
+- `notDefault`: each sound a batch names that keeps its own riff, with why. Two reasons occur: the pattern ends in
+  rests, which a riff cannot do (`riffProblem`: a riff loops where its last note ends, so it would come round early),
+  or the sound names one work and the pattern is from another.
+
+How the list was made: for each sound a batch names, its patterns are matched to its ref. A pattern of the work the
+ref quotes (by the databank song's title or the pattern's name, either containing the other) comes first; where the
+ref names no work, a pattern of its artist or style, or the one the batch chose for it. Ties go to the pattern whose
+role suits the sound's first tag, then to the batch's order. A ref naming an album takes a pattern of a track on it.
+
+The same unit runs it last (`syncResearchedDefaults`, `lib/app/patterns/library-defaults.ts`). The rules, each tested
+in `tests/unit/lib/app/patterns/library-defaults.test.ts`:
+
+- **In front, the riff kept.** The pattern goes ahead of the sound's own riff pattern, which stays on the list.
+- **The riff follows** (`syncSoundPhrases`), without marking the sound edited: it stays the seed's to write.
+- **The catalogue seed writes such a riff only on create** (`followsPattern`), which is what the sound's own riff
+  pattern is made from, and its record leaves the riff out, so the catalogue's reconcile page does not call the
+  row changed. Otherwise the two seeds would take turns at the riff.
+- **An admin's sound is never moved**: one an admin edited, or whose default is a pattern other than its own riff.
+- **A re-run writes nothing, and nor does an empty list.**
+- **Nothing is moved back.** An entry taken out of the file leaves the sound as it is; demoting is an admin's act.
+- **A sound, pattern or place that is not there, or a pattern that cannot be a default, is skipped and reported.**
+
+Over the real data, the test checks that the TEO-5's Jump Brass plays the Jump riff, that every entry names a sound and
+a pattern that are there and on each other, that every default can be one, and that every sound a batch names is
+decided once, as a default or a reason. A new batch that names a sound therefore decides it here too.
+
+An upload (`lib/app/catalogue/upload.ts`) keeps a sound whose default is another pattern playing that pattern, whatever
+riff the file gives it, as the edit page refuses the change (`riffLeadsDefault`).
 
 ### The API
 

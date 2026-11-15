@@ -17,6 +17,7 @@ import {
   catalogueDataFiles,
   loadCatalogueData,
 } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
+import { loadPatternDefaults } from '@/prisma/seeds/app-knowyoursynth/pattern-data';
 
 vi.mock('@/lib/app/catalogue/seed', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/lib/app/catalogue/seed')>()),
@@ -281,7 +282,10 @@ describe('the seed unit', () => {
     const prisma = {};
     const logger = { info: vi.fn() };
     await unit.run({ prisma, logger } as never);
-    expect(seedCatalogue).toHaveBeenCalledWith(prisma, data);
+    // With the sounds whose riff follows a researched default (t-254), from `pattern-defaults.json`.
+    const followsPattern = loadPatternDefaults().defaults.map((d) => d.sound);
+    expect(followsPattern).toContain('teo-5/teo-jump-brass');
+    expect(seedCatalogue).toHaveBeenCalledWith(prisma, { ...data, followsPattern });
     expect(logger.info).toHaveBeenCalledWith('Catalogue seeded', expect.any(Object));
   });
 });

@@ -1,0 +1,5417 @@
+{
+  "task": "t-254",
+  "ruling": "Owner ruling, 2026-11-15: a sound whose ref names a song, artist or style, and that a researched pattern of that song, artist or style already names, plays that pattern as its default, without waiting for the owner’s listen.",
+  "defaults": [
+    {
+      "sound": "0-coast/zc-accent-seq",
+      "pattern": "researched:kraftwerk/numbers-bass"
+    },
+    {
+      "sound": "0-coast/zc-berlin-seq",
+      "pattern": "researched:tangerine-dream/phaedra-rubycon-ramp"
+    },
+    {
+      "sound": "0-coast/zc-celesta",
+      "pattern": "researched:tchaikovsky/sugar-plum-fairy-theme-low"
+    },
+    {
+      "sound": "0-coast/zc-deep-house-bass",
+      "pattern": "researched:mr-fingers/can-you-feel-it-bass-low"
+    },
+    {
+      "sound": "0-coast/zc-delayed-bloom",
+      "pattern": "researched:vangelis/blade-runner-blues-lead"
+    },
+    {
+      "sound": "0-coast/zc-doom-drone",
+      "pattern": "researched:sunn-o/it-took-the-night-to-believe-drone-low"
+    },
+    {
+      "sound": "0-coast/zc-even-bass",
+      "pattern": "researched:stevie-wonder/boogie-on-reggae-woman-bass"
+    },
+    {
+      "sound": "0-coast/zc-felt-piano",
+      "pattern": "researched:nils-frahm/says-arpeggio"
+    },
+    {
+      "sound": "0-coast/zc-glass-armonica",
+      "pattern": "researched:mozart/glass-harmonica-adagio"
+    },
+    {
+      "sound": "0-coast/zc-harmonic-drone",
+      "pattern": "researched:la-monte-young/just-drone-root"
+    },
+    {
+      "sound": "0-coast/zc-hollow-pulse-bass",
+      "pattern": "researched:depeche-mode/just-cant-get-enough-bass-low"
+    },
+    {
+      "sound": "0-coast/zc-mills-stab",
+      "pattern": "researched:jeff-mills/the-bells-riff-low"
+    },
+    {
+      "sound": "0-coast/zc-oliveros-drone",
+      "pattern": "researched:pauline-oliveros/deep-listening-tones"
+    },
+    {
+      "sound": "0-coast/zc-reverse-swell",
+      "pattern": "researched:the-beatles/im-only-sleeping-backwards-guitar"
+    },
+    {
+      "sound": "0-coast/zc-ring-bass",
+      "pattern": "researched:nine-inch-nails/closer-bass"
+    },
+    {
+      "sound": "0-coast/zc-scruggs-banjo",
+      "pattern": "researched:earl-scruggs/foggy-mountain-breakdown-roll"
+    },
+    {
+      "sound": "0-coast/zc-self-wah-bass",
+      "pattern": "researched:underworld/born-slippy-bass"
+    },
+    {
+      "sound": "0-coast/zc-square-chip",
+      "pattern": "researched:koji-kondo/song-of-storms-melody"
+    },
+    {
+      "sound": "0-coast/zc-sync-scream",
+      "pattern": "researched:tubeway-army/are-friends-electric-intro"
+    },
+    {
+      "sound": "0-coast/zc-touch-lead",
+      "pattern": "researched:chick-corea/duel-of-the-jester-theme-high"
+    },
+    {
+      "sound": "0-coast/zc-vibraphone",
+      "pattern": "researched:milt-jackson/bags-groove-head"
+    },
+    {
+      "sound": "0-coast/zc-vowel-lead",
+      "pattern": "researched:daft-punk/digital-love-solo"
+    },
+    {
+      "sound": "0-coast/zc-wurlitzer",
+      "pattern": "researched:ray-charles/whatd-i-say-riff-high"
+    },
+    {
+      "sound": "2-xm/aquatic-bubbles",
+      "pattern": "researched:mark-mothersbaugh/life-aquatic-bubbles"
+    },
+    {
+      "sound": "2-xm/duo-counterpoint",
+      "pattern": "researched:kyle-dixon-michael-stein/stranger-things-arpeggio"
+    },
+    {
+      "sound": "2-xm/xm-angel-dub-bass",
+      "pattern": "researched:massive-attack/angel-bass"
+    },
+    {
+      "sound": "2-xm/xm-angela-rhodes",
+      "pattern": "researched:bob-james/angela-theme"
+    },
+    {
+      "sound": "2-xm/xm-duduk",
+      "pattern": "researched:djivan-gasparyan/duduk-lament"
+    },
+    {
+      "sound": "2-xm/xm-final-countdown",
+      "pattern": "researched:europe/final-countdown-riff"
+    },
+    {
+      "sound": "2-xm/xm-halloween-keys",
+      "pattern": "researched:john-carpenter/halloween-piano-figure"
+    },
+    {
+      "sound": "2-xm/xm-phaedra-seq",
+      "pattern": "researched:tangerine-dream/phaedra-rubycon-ramp"
+    },
+    {
+      "sound": "2-xm/xm-robot-bass",
+      "pattern": "researched:kraftwerk/the-robots-sequence"
+    },
+    {
+      "sound": "2-xm/xm-rubber-glide-lead",
+      "pattern": "researched:funkadelic/one-nation-synth-line"
+    },
+    {
+      "sound": "2-xm/xm-sombre-low-pad",
+      "pattern": "researched:brian-eno/warszawa-line"
+    },
+    {
+      "sound": "2-xm/xm-steel-swell",
+      "pattern": "researched:daniel-lanois/frozen-melody"
+    },
+    {
+      "sound": "2-xm/xm-streets-guitar",
+      "pattern": "researched:u2/where-the-streets-have-no-name-guitar"
+    },
+    {
+      "sound": "2-xm/xm-taiko",
+      "pattern": "researched:kodo/o-daiko-pattern"
+    },
+    {
+      "sound": "2-xm/xm-take-on-me",
+      "pattern": "researched:a-ha/take-on-me-riff"
+    },
+    {
+      "sound": "2-xm/xm-talking-riff",
+      "pattern": "researched:daft-punk/harder-better-bass"
+    },
+    {
+      "sound": "2-xm/xm-the-bells-seq",
+      "pattern": "researched:jeff-mills/the-bells-riff"
+    },
+    {
+      "sound": "b2600/cars-newwave-lead",
+      "pattern": "researched:the-cars/just-what-i-needed-outro"
+    },
+    {
+      "sound": "b2600/chem-fuzz-bass",
+      "pattern": "researched:chemical-brothers/block-rockin-beats-bass"
+    },
+    {
+      "sound": "b2600/clarke-hard-seq-bass",
+      "pattern": "researched:vince-clarke/new-life-bass"
+    },
+    {
+      "sound": "b2600/clarke-pop-square-lead",
+      "pattern": "researched:erasure/a-little-respect-brass"
+    },
+    {
+      "sound": "b2600/dm-dirty-drive-bass",
+      "pattern": "researched:depeche-mode/enjoy-the-silence-bass"
+    },
+    {
+      "sound": "b2600/dm-metal-lead",
+      "pattern": "researched:depeche-mode/enjoy-the-silence-riff"
+    },
+    {
+      "sound": "b2600/duo-steel-swell",
+      "pattern": "researched:daniel-lanois/opera-steel-pairs"
+    },
+    {
+      "sound": "b2600/eno-triangle-pad",
+      "pattern": "researched:brian-eno/airports-2-2-tones"
+    },
+    {
+      "sound": "b2600/gleeson-space-lead",
+      "pattern": "researched:patrick-gleeson/sextant-lead"
+    },
+    {
+      "sound": "b2600/hannett-atmosphere",
+      "pattern": "researched:martin-hannett/the-eternal-keyboard"
+    },
+    {
+      "sound": "b2600/jarre-octave-seq",
+      "pattern": "researched:jean-michel-jarre/equinoxe-5-octave-bass"
+    },
+    {
+      "sound": "b2600/jarre-oxygene-whistle",
+      "pattern": "researched:jean-michel-jarre/oxygene-iv-melody"
+    },
+    {
+      "sound": "b2600/kraftwerk-geiger-drone",
+      "pattern": "researched:kraftwerk/radioactivity-morse"
+    },
+    {
+      "sound": "b2600/murky-marsh-drone",
+      "pattern": "researched:brian-eno/lantern-marsh-drone"
+    },
+    {
+      "sound": "b2600/nin-grind-bass",
+      "pattern": "researched:nine-inch-nails/closer-bass"
+    },
+    {
+      "sound": "b2600/nin-metal-hit",
+      "pattern": "researched:nine-inch-nails/closer-snare"
+    },
+    {
+      "sound": "b2600/nin-scream-lead",
+      "pattern": "researched:nine-inch-nails/closer-lead"
+    },
+    {
+      "sound": "b2600/orbital-bright-pluck",
+      "pattern": "researched:orbital/belfast-arpeggio"
+    },
+    {
+      "sound": "b2600/roach-swaying-pad",
+      "pattern": "researched:steve-roach/structures-from-silence-held"
+    },
+    {
+      "sound": "b2600/schulze-beating-drone",
+      "pattern": "researched:klaus-schulze/wahnfried-drone"
+    },
+    {
+      "sound": "b2600/state808-acid-bass",
+      "pattern": "researched:808-state/pacific-bass"
+    },
+    {
+      "sound": "b2600/stevie-arp-funk-bass",
+      "pattern": "researched:stevie-wonder/superstition-moog-bass"
+    },
+    {
+      "sound": "b2600/sync-whoop-glide-lead",
+      "pattern": "researched:parliament/black-hole-whoop"
+    },
+    {
+      "sound": "b2600/td-drifting-strings",
+      "pattern": "researched:tangerine-dream/mysterious-semblance-strings"
+    },
+    {
+      "sound": "b2600/td-slow-drone-pad",
+      "pattern": "researched:tangerine-dream/slow-drone"
+    },
+    {
+      "sound": "b2600/td-soaring-lead",
+      "pattern": "researched:tangerine-dream/stratosfear-theme"
+    },
+    {
+      "sound": "b2600/tomita-soft-pluck",
+      "pattern": "researched:isao-tomita/arabesque-figure"
+    },
+    {
+      "sound": "b2600/underworld-roll-bass",
+      "pattern": "researched:underworld/born-slippy-bass"
+    },
+    {
+      "sound": "b2600/wakeman-prog-pedal",
+      "pattern": "researched:rick-wakeman/close-to-the-edge-pedal"
+    },
+    {
+      "sound": "b2600/zawinul-filter-sine-keys",
+      "pattern": "researched:joe-zawinul/a-remark-you-made-synth-lead"
+    },
+    {
+      "sound": "buchla-easel/easel-arp-plucks",
+      "pattern": "researched:kaitlyn-aurelia-smith/euclid-chords"
+    },
+    {
+      "sound": "buchla-easel/easel-beating-unison-drone",
+      "pattern": "researched:eliane-radigue/kyema-drone-low"
+    },
+    {
+      "sound": "buchla-easel/easel-cistern-resonance",
+      "pattern": "researched:pauline-oliveros/deep-listening-tones-low"
+    },
+    {
+      "sound": "buchla-easel/easel-cosmic-freak-out",
+      "pattern": "researched:sun-ra/my-brother-the-wind-solo"
+    },
+    {
+      "sound": "buchla-easel/easel-curved-air-arp",
+      "pattern": "researched:terry-riley/rainbow-chords"
+    },
+    {
+      "sound": "buchla-easel/easel-spring-pad",
+      "pattern": "researched:kaitlyn-aurelia-smith/ears-slow-line"
+    },
+    {
+      "sound": "buchla-easel/easel-two-partial-marimba",
+      "pattern": "researched:midori-takada/looking-glass-pattern"
+    },
+    {
+      "sound": "cat/big-beat-squelch",
+      "pattern": "researched:chemical-brothers/hey-boy-hey-girl-lead-bass"
+    },
+    {
+      "sound": "cat/bubble-life-kit",
+      "pattern": "researched:squarepusher/bubble-life-kit"
+    },
+    {
+      "sound": "cat/cat-a-forest-strings",
+      "pattern": "researched:the-cure/a-forest-synth"
+    },
+    {
+      "sound": "cat/cat-abacab-lead",
+      "pattern": "researched:genesis/abacab-riff"
+    },
+    {
+      "sound": "cat/cat-are-you-going-with-me",
+      "pattern": "researched:lyle-mays/are-you-going-with-me-melody-high"
+    },
+    {
+      "sound": "cat/cat-banjo-roll",
+      "pattern": "researched:earl-scruggs/foggy-mountain-breakdown-roll-low"
+    },
+    {
+      "sound": "cat/cat-blue-monday-bass",
+      "pattern": "researched:new-order/blue-monday-bass-low"
+    },
+    {
+      "sound": "cat/cat-chariots-keys",
+      "pattern": "researched:vangelis/chariots-of-fire-melody"
+    },
+    {
+      "sound": "cat/cat-chime-seq",
+      "pattern": "researched:orbital/chime-riff"
+    },
+    {
+      "sound": "cat/cat-dont-go-bass",
+      "pattern": "researched:yazoo/dont-go-bass-low"
+    },
+    {
+      "sound": "cat/cat-dream-weaver",
+      "pattern": "researched:gary-wright/dream-weaver-lead"
+    },
+    {
+      "sound": "cat/cat-enigmatic-ocean",
+      "pattern": "researched:jean-luc-ponty/enigmatic-ocean-line"
+    },
+    {
+      "sound": "cat/cat-fourth-world",
+      "pattern": "researched:jon-hassell/fourth-world-line-low"
+    },
+    {
+      "sound": "cat/cat-looking-glass-marimba",
+      "pattern": "researched:midori-takada/looking-glass-pattern-low"
+    },
+    {
+      "sound": "cat/cat-mr-roboto",
+      "pattern": "researched:styx/mr-roboto-intro-low"
+    },
+    {
+      "sound": "cat/cat-pacific-seq",
+      "pattern": "researched:808-state/pacific-bass"
+    },
+    {
+      "sound": "cat/cat-plantasia",
+      "pattern": "researched:mort-garson/plantasia-melody-low"
+    },
+    {
+      "sound": "cat/cat-reach-for-it",
+      "pattern": "researched:george-duke/reach-for-it-riff"
+    },
+    {
+      "sound": "cat/cat-real-train-seq",
+      "pattern": "researched:tangerine-dream/love-on-a-real-train-sequence"
+    },
+    {
+      "sound": "cat/cat-satchidananda-harp",
+      "pattern": "researched:alice-coltrane/satchidananda-cascade"
+    },
+    {
+      "sound": "cat/cat-silk-road-lead",
+      "pattern": "researched:kitaro/silk-road-melody"
+    },
+    {
+      "sound": "cat/cat-structures-silence",
+      "pattern": "researched:steve-roach/structures-from-silence-held"
+    },
+    {
+      "sound": "cat/cat-telstar-lead",
+      "pattern": "researched:the-tornados/telstar-melody"
+    },
+    {
+      "sound": "cat/cat-zelda-ocarina",
+      "pattern": "researched:koji-kondo/song-of-storms-melody"
+    },
+    {
+      "sound": "cat/daftpunk-voyager-bass",
+      "pattern": "researched:daft-punk/voyager-bass"
+    },
+    {
+      "sound": "cat/duo-steel-swell",
+      "pattern": "researched:daniel-lanois/the-maker-steel"
+    },
+    {
+      "sound": "cat/enz-break-lead",
+      "pattern": "researched:split-enz/i-got-you-break"
+    },
+    {
+      "sound": "cat/kraftwerk-dummies-pulse",
+      "pattern": "researched:kraftwerk/showroom-dummies-pulse"
+    },
+    {
+      "sound": "cat/rubber-glide-squelch-lead",
+      "pattern": "researched:parliament/p-funk-squelch-lead"
+    },
+    {
+      "sound": "cat/slow-wavering-dusk-pad",
+      "pattern": "researched:brian-eno/subterraneans-chords"
+    },
+    {
+      "sound": "cs-80/cs-blade-brass",
+      "pattern": "researched:vangelis/blade-runner-end-titles-theme"
+    },
+    {
+      "sound": "cs-80/cs-fanfare",
+      "pattern": "researched:vangelis/chariots-of-fire-melody"
+    },
+    {
+      "sound": "deepmind-12d/acid-bass",
+      "pattern": "researched:phuture/acid-tracks-line"
+    },
+    {
+      "sound": "deepmind-12d/airport-loops",
+      "pattern": "researched:brian-eno/airports-2-1-tones"
+    },
+    {
+      "sound": "deepmind-12d/arctic-pad",
+      "pattern": "researched:biosphere/substrata-fifths"
+    },
+    {
+      "sound": "deepmind-12d/arena-riff",
+      "pattern": "researched:journey/separate-ways-riff"
+    },
+    {
+      "sound": "deepmind-12d/arp-pulse",
+      "pattern": "researched:tangerine-dream/love-on-a-real-train-pulse"
+    },
+    {
+      "sound": "deepmind-12d/ascent-swell-pad",
+      "pattern": "researched:brian-eno/an-ending-ascent-melody"
+    },
+    {
+      "sound": "deepmind-12d/aurora-pad",
+      "pattern": "researched:ulrich-schnauss/strangely-isolated-place-pad"
+    },
+    {
+      "sound": "deepmind-12d/bark-rhodes",
+      "pattern": "researched:chick-corea/rhodes-comping"
+    },
+    {
+      "sound": "deepmind-12d/berlin-sequence",
+      "pattern": "researched:tangerine-dream/phaedra-sequence"
+    },
+    {
+      "sound": "deepmind-12d/bloom-chord-pad",
+      "pattern": "researched:daft-punk/something-about-us-chords"
+    },
+    {
+      "sound": "deepmind-12d/bouncy-pop-keys",
+      "pattern": "researched:a-ha/take-on-me-riff"
+    },
+    {
+      "sound": "deepmind-12d/bowed-drone",
+      "pattern": "researched:johann-johannsson/bowed-drone"
+    },
+    {
+      "sound": "deepmind-12d/bubbling-arp",
+      "pattern": "researched:duran-duran/hungry-like-the-wolf-sequence"
+    },
+    {
+      "sound": "deepmind-12d/cathedral-drone",
+      "pattern": "researched:kali-malone/sacrificial-code-chords"
+    },
+    {
+      "sound": "deepmind-12d/chorus-rhodes",
+      "pattern": "researched:bob-james/angela-theme"
+    },
+    {
+      "sound": "deepmind-12d/chorus-strings",
+      "pattern": "researched:enya/layered-string-chords"
+    },
+    {
+      "sound": "deepmind-12d/cosmic-drone",
+      "pattern": "researched:tangerine-dream/zeit-drone"
+    },
+    {
+      "sound": "deepmind-12d/deep-house-bass",
+      "pattern": "researched:mr-fingers/can-you-feel-it-bass"
+    },
+    {
+      "sound": "deepmind-12d/dyno-rhodes",
+      "pattern": "researched:80s-ballads/ballad-rhodes"
+    },
+    {
+      "sound": "deepmind-12d/echoplex-rhodes",
+      "pattern": "researched:herbie-hancock/mwandishi-rhodes"
+    },
+    {
+      "sound": "deepmind-12d/felt-chords",
+      "pattern": "researched:ryuichi-sakamoto/async-chords"
+    },
+    {
+      "sound": "deepmind-12d/fripp-loop",
+      "pattern": "researched:fripp-and-eno/no-pussyfooting-notes"
+    },
+    {
+      "sound": "deepmind-12d/frozen-wash",
+      "pattern": "researched:aphex-twin/rhubarb-chords"
+    },
+    {
+      "sound": "deepmind-12d/funk-bow-bass",
+      "pattern": "researched:zapp/more-bounce-bass"
+    },
+    {
+      "sound": "deepmind-12d/glass-rain",
+      "pattern": "researched:harold-budd-and-brian-eno/the-pearl-chords"
+    },
+    {
+      "sound": "deepmind-12d/haunting-lead",
+      "pattern": "researched:kyle-dixon-michael-stein/stranger-things-swell"
+    },
+    {
+      "sound": "deepmind-12d/hollow-vibrato-lead",
+      "pattern": "researched:omd/enola-gay-pre-theme"
+    },
+    {
+      "sound": "deepmind-12d/jump-brass",
+      "pattern": "researched:van-halen/jump-riff"
+    },
+    {
+      "sound": "deepmind-12d/juno-ballad-pad",
+      "pattern": "researched:cyndi-lauper/time-after-time-chords"
+    },
+    {
+      "sound": "deepmind-12d/kosmische-bells",
+      "pattern": "researched:cluster/sowiesoso-melody"
+    },
+    {
+      "sound": "deepmind-12d/metal-cowbell",
+      "pattern": "researched:afrika-bambaataa/planet-rock-cowbell-a"
+    },
+    {
+      "sound": "deepmind-12d/mono-bass",
+      "pattern": "researched:depeche-mode/just-cant-get-enough-bass"
+    },
+    {
+      "sound": "deepmind-12d/neosoul-rhodes",
+      "pattern": "researched:dangelo/neo-soul-rhodes"
+    },
+    {
+      "sound": "deepmind-12d/noir-pad",
+      "pattern": "researched:vangelis/blade-runner-end-titles-chords"
+    },
+    {
+      "sound": "deepmind-12d/noise-snare",
+      "pattern": "researched:kraftwerk/numbers-snare"
+    },
+    {
+      "sound": "deepmind-12d/octave-arp-bass",
+      "pattern": "researched:giorgio-moroder/i-feel-love-roots"
+    },
+    {
+      "sound": "deepmind-12d/phaser-pad",
+      "pattern": "researched:jean-michel-jarre/equinoxe-phased-pad"
+    },
+    {
+      "sound": "deepmind-12d/phaser-rhodes",
+      "pattern": "researched:george-duke/jazz-funk-rhodes"
+    },
+    {
+      "sound": "deepmind-12d/pianet",
+      "pattern": "researched:the-zombies/shes-not-there-pianet"
+    },
+    {
+      "sound": "deepmind-12d/poly-pluck",
+      "pattern": "researched:tears-for-fears/rule-the-world-chords"
+    },
+    {
+      "sound": "deepmind-12d/prog-glide-lead",
+      "pattern": "researched:rick-wakeman/catherine-of-aragon-theme"
+    },
+    {
+      "sound": "deepmind-12d/pwm-pad",
+      "pattern": "researched:rush/subdivisions-pad"
+    },
+    {
+      "sound": "deepmind-12d/quadraverb-pad",
+      "pattern": "researched:global-communication/76-14-pad"
+    },
+    {
+      "sound": "deepmind-12d/rainbow-arp",
+      "pattern": "researched:terry-riley/rainbow-chords"
+    },
+    {
+      "sound": "deepmind-12d/random-arp",
+      "pattern": "researched:duran-duran/rio-arpeggio"
+    },
+    {
+      "sound": "deepmind-12d/rave-hoover",
+      "pattern": "researched:joey-beltram/mentasm-hoover"
+    },
+    {
+      "sound": "deepmind-12d/reverse-swell",
+      "pattern": "researched:cocteau-twins/heaven-or-las-vegas-guitar"
+    },
+    {
+      "sound": "deepmind-12d/rhodes-bass",
+      "pattern": "researched:the-doors/riders-on-the-storm-bass"
+    },
+    {
+      "sound": "deepmind-12d/rotary-drone",
+      "pattern": "researched:pink-floyd/shine-on-solina"
+    },
+    {
+      "sound": "deepmind-12d/rotary-organ",
+      "pattern": "researched:booker-t-and-the-mgs/green-onions-organ"
+    },
+    {
+      "sound": "deepmind-12d/rubycon-lead",
+      "pattern": "researched:tangerine-dream/rubycon-lead"
+    },
+    {
+      "sound": "deepmind-12d/shimmer-ensemble",
+      "pattern": "researched:kraftwerk/neon-lights-strings"
+    },
+    {
+      "sound": "deepmind-12d/shimmer-pad",
+      "pattern": "researched:brian-eno/shimmer-chords"
+    },
+    {
+      "sound": "deepmind-12d/silvertop-rhodes",
+      "pattern": "researched:herbie-hancock/chameleon-comping"
+    },
+    {
+      "sound": "deepmind-12d/sim-tom",
+      "pattern": "researched:spandau-ballet/true-toms"
+    },
+    {
+      "sound": "deepmind-12d/slow-bloom",
+      "pattern": "researched:stars-of-the-lid/slow-bloom-chords"
+    },
+    {
+      "sound": "deepmind-12d/soft-chorus-keys",
+      "pattern": "researched:wham/last-christmas-chords"
+    },
+    {
+      "sound": "deepmind-12d/squelch-glide-lead",
+      "pattern": "researched:parliament/chocolate-city-lead"
+    },
+    {
+      "sound": "deepmind-12d/steel-pan",
+      "pattern": "researched:cyndi-lauper/girls-just-want-to-have-fun-solo"
+    },
+    {
+      "sound": "deepmind-12d/steel-swell-line",
+      "pattern": "researched:daniel-lanois/two-worlds-steel"
+    },
+    {
+      "sound": "deepmind-12d/storms-arp",
+      "pattern": "researched:enya/storms-in-africa-chords"
+    },
+    {
+      "sound": "deepmind-12d/sub-swell",
+      "pattern": "researched:eliane-radigue/sub-drone"
+    },
+    {
+      "sound": "deepmind-12d/suitcase-rhodes",
+      "pattern": "researched:herbie-hancock/butterfly-rhodes"
+    },
+    {
+      "sound": "deepmind-12d/swelling-brass",
+      "pattern": "researched:vangelis/blade-runner-end-titles-chords"
+    },
+    {
+      "sound": "deepmind-12d/sync-drone",
+      "pattern": "researched:klaus-schulze/timewind-drone"
+    },
+    {
+      "sound": "deepmind-12d/sync-lead",
+      "pattern": "researched:the-cars/lets-go-riff"
+    },
+    {
+      "sound": "deepmind-12d/tape-drift",
+      "pattern": "researched:boards-of-canada/roygbiv-chords"
+    },
+    {
+      "sound": "deepmind-12d/tidal-swell",
+      "pattern": "researched:future-sound-of-london/lifeforms-pad"
+    },
+    {
+      "sound": "deepmind-12d/unison-lead",
+      "pattern": "researched:paul-van-dyk/for-an-angel-top"
+    },
+    {
+      "sound": "deepmind-12d/wah-rhodes",
+      "pattern": "researched:herbie-hancock/hang-up-your-hang-ups-wah"
+    },
+    {
+      "sound": "deepmind-12d/wall-of-light",
+      "pattern": "researched:m83/midnight-city-chords"
+    },
+    {
+      "sound": "deepmind-12d/white-eagle",
+      "pattern": "researched:tangerine-dream/white-eagle-chords"
+    },
+    {
+      "sound": "deepmind-12d/wurli-clean",
+      "pattern": "researched:supertramp/dreamer-wurlitzer"
+    },
+    {
+      "sound": "deepmind-12d/wurli-drive",
+      "pattern": "researched:pink-floyd/money-wurlitzer"
+    },
+    {
+      "sound": "deepmind-12d/wurli-tremolo",
+      "pattern": "researched:ray-charles/whatd-i-say-riff"
+    },
+    {
+      "sound": "donner-b1/b1-air-moon",
+      "pattern": "researched:air/la-femme-dargent-bass"
+    },
+    {
+      "sound": "donner-b1/b1-autobahn",
+      "pattern": "researched:kraftwerk/autobahn-octave-pulse-low"
+    },
+    {
+      "sound": "donner-b1/b1-blue-monday",
+      "pattern": "researched:new-order/blue-monday-bass-low"
+    },
+    {
+      "sound": "donner-b1/b1-celesta",
+      "pattern": "researched:tchaikovsky/sugar-plum-fairy-theme-low"
+    },
+    {
+      "sound": "donner-b1/b1-depeche",
+      "pattern": "researched:depeche-mode/behind-the-wheel-pulse-low"
+    },
+    {
+      "sound": "donner-b1/b1-dilla-bass",
+      "pattern": "researched:j-dilla/sliding-sub-bass-low"
+    },
+    {
+      "sound": "donner-b1/b1-e2-e4",
+      "pattern": "researched:manuel-gottsching/e2-e4-arpeggio-low"
+    },
+    {
+      "sound": "donner-b1/b1-frippertronics",
+      "pattern": "researched:fripp-and-eno/no-pussyfooting-notes-low"
+    },
+    {
+      "sound": "donner-b1/b1-halcyon-arp",
+      "pattern": "researched:orbital/belfast-arpeggio-low"
+    },
+    {
+      "sound": "donner-b1/b1-human-league",
+      "pattern": "researched:the-human-league/being-boiled-bass"
+    },
+    {
+      "sound": "donner-b1/b1-jon-hopkins",
+      "pattern": "researched:jon-hopkins/open-eye-signal-bass-low"
+    },
+    {
+      "sound": "donner-b1/b1-melodica-dub",
+      "pattern": "researched:augustus-pablo/east-of-the-river-nile-line"
+    },
+    {
+      "sound": "donner-b1/b1-nils-frahm",
+      "pattern": "researched:nils-frahm/says-arpeggio"
+    },
+    {
+      "sound": "donner-b1/b1-numbers",
+      "pattern": "researched:kraftwerk/numbers-snare-low"
+    },
+    {
+      "sound": "donner-b1/b1-omd",
+      "pattern": "researched:omd/enola-gay-pre-theme-low"
+    },
+    {
+      "sound": "donner-b1/b1-ondes",
+      "pattern": "researched:olivier-messiaen/turangalila-ondes"
+    },
+    {
+      "sound": "donner-b1/b1-pet-shop",
+      "pattern": "researched:pet-shop-boys/west-end-girls-bass-low"
+    },
+    {
+      "sound": "donner-b1/b1-portishead",
+      "pattern": "researched:portishead/mysterons-line"
+    },
+    {
+      "sound": "donner-b1/b1-rainbow-curved",
+      "pattern": "researched:terry-riley/rainbow-run"
+    },
+    {
+      "sound": "donner-b1/b1-sakamoto",
+      "pattern": "researched:ryuichi-sakamoto/merry-christmas-mr-lawrence-ostinato"
+    },
+    {
+      "sound": "donner-b1/b1-snowflakes",
+      "pattern": "researched:isao-tomita/arabesque-figure-high"
+    },
+    {
+      "sound": "donner-b1/b1-sweet-dreams",
+      "pattern": "researched:eurythmics/sweet-dreams-riff-low"
+    },
+    {
+      "sound": "donner-b1/b1-teardrop",
+      "pattern": "researched:massive-attack/angel-bass"
+    },
+    {
+      "sound": "donner-b1/b1-tycho",
+      "pattern": "researched:tycho/awake-melody"
+    },
+    {
+      "sound": "donner-b1/b1-underworld",
+      "pattern": "researched:underworld/born-slippy-bass-low"
+    },
+    {
+      "sound": "donner-b1/b1-vangelis-triplets",
+      "pattern": "researched:vangelis/blade-runner-end-titles-sequence"
+    },
+    {
+      "sound": "donner-b1/b1-vibraphone",
+      "pattern": "researched:milt-jackson/bags-groove-head"
+    },
+    {
+      "sound": "donner-b1/b1-ymo",
+      "pattern": "researched:yellow-magic-orchestra/technopolis-bass-high"
+    },
+    {
+      "sound": "e7/e7-acid-bass",
+      "pattern": "researched:acid-house/acid-line"
+    },
+    {
+      "sound": "e7/e7-acid-lead",
+      "pattern": "researched:acid-house/acid-line-high"
+    },
+    {
+      "sound": "e7/e7-airport",
+      "pattern": "researched:brian-eno/airports-2-1-tones"
+    },
+    {
+      "sound": "e7/e7-berlin-sequence",
+      "pattern": "researched:tangerine-dream/stratosfear-sequence"
+    },
+    {
+      "sound": "e7/e7-blinding-riff",
+      "pattern": "researched:the-weeknd/blinding-lights-riff"
+    },
+    {
+      "sound": "e7/e7-chase-bass",
+      "pattern": "researched:giorgio-moroder/chase-bass"
+    },
+    {
+      "sound": "e7/e7-choir-pad",
+      "pattern": "researched:80s-ballads/ballad-pad"
+    },
+    {
+      "sound": "e7/e7-computer-melody",
+      "pattern": "researched:kraftwerk/computer-love-melody"
+    },
+    {
+      "sound": "e7/e7-dotted-pluck",
+      "pattern": "researched:u2/where-the-streets-have-no-name-guitar"
+    },
+    {
+      "sound": "e7/e7-eighties-arp",
+      "pattern": "researched:kyle-dixon-michael-stein/stranger-things-arpeggio"
+    },
+    {
+      "sound": "e7/e7-final-brass",
+      "pattern": "researched:europe/final-countdown-riff"
+    },
+    {
+      "sound": "e7/e7-gfunk-lead",
+      "pattern": "researched:dr-dre/nuthin-but-a-g-thang-lead"
+    },
+    {
+      "sound": "e7/e7-giallo-arp",
+      "pattern": "researched:goblin/suspiria-theme-low"
+    },
+    {
+      "sound": "e7/e7-horror-ostinato",
+      "pattern": "researched:john-carpenter/escape-from-new-york-ostinato"
+    },
+    {
+      "sound": "e7/e7-indie-pluck",
+      "pattern": "researched:chvrches/the-mother-we-share-pluck"
+    },
+    {
+      "sound": "e7/e7-jarre-lead",
+      "pattern": "researched:jean-michel-jarre/oxygene-iv-arpeggio"
+    },
+    {
+      "sound": "e7/e7-jump-brass",
+      "pattern": "researched:van-halen/jump-riff"
+    },
+    {
+      "sound": "e7/e7-kosmische",
+      "pattern": "researched:klaus-schulze/kosmische-chords"
+    },
+    {
+      "sound": "e7/e7-lucky-lead",
+      "pattern": "researched:emerson-lake-palmer/lucky-man-moog-solo"
+    },
+    {
+      "sound": "e7/e7-metal-bell-lead",
+      "pattern": "researched:depeche-mode/metal-bell-lead"
+    },
+    {
+      "sound": "e7/e7-miami-lead",
+      "pattern": "researched:jan-hammer/miami-vice-theme-lead"
+    },
+    {
+      "sound": "e7/e7-midnight-pad",
+      "pattern": "researched:m83/midnight-city-chords"
+    },
+    {
+      "sound": "e7/e7-minneapolis-stab",
+      "pattern": "researched:prince/1999-stabs"
+    },
+    {
+      "sound": "e7/e7-new-wave-riff",
+      "pattern": "researched:a-ha/take-on-me-riff-low"
+    },
+    {
+      "sound": "e7/e7-olympic-arp",
+      "pattern": "researched:vangelis/chariots-of-fire-melody"
+    },
+    {
+      "sound": "e7/e7-psych-lead",
+      "pattern": "researched:tame-impala/elephant-synth"
+    },
+    {
+      "sound": "e7/e7-sax-lead",
+      "pattern": "researched:80s-ballads/ballad-sax-line"
+    },
+    {
+      "sound": "e7/e7-sixteenth-octave-bass",
+      "pattern": "researched:new-order/blue-monday-bass"
+    },
+    {
+      "sound": "e7/e7-sweet-dreams-bass",
+      "pattern": "researched:eurythmics/sweet-dreams-riff"
+    },
+    {
+      "sound": "e7/e7-sync-bass",
+      "pattern": "researched:kraftwerk/numbers-sync-bass"
+    },
+    {
+      "sound": "e7/e7-vangelis-brass",
+      "pattern": "researched:vangelis/blade-runner-end-titles-theme"
+    },
+    {
+      "sound": "e7/e7-vince-bass",
+      "pattern": "researched:erasure/oh-lamour-bass"
+    },
+    {
+      "sound": "e7/e7-whistle-lead",
+      "pattern": "researched:dr-dre/nuthin-but-a-g-thang-lead"
+    },
+    {
+      "sound": "ems-vcs3/vcs3-adnos-feedback-drone",
+      "pattern": "researched:eliane-radigue/feedback-drone"
+    },
+    {
+      "sound": "ems-vcs3/vcs3-blooming-spring-pad",
+      "pattern": "researched:steve-roach/structures-from-silence-line"
+    },
+    {
+      "sound": "ems-vcs3/vcs3-machine-throb",
+      "pattern": "researched:pink-floyd/welcome-to-the-machine-bass"
+    },
+    {
+      "sound": "ems-vcs3/vcs3-noise-struck-mallet",
+      "pattern": "researched:cluster/sowiesoso-melody"
+    },
+    {
+      "sound": "ems-vcs3/vcs3-organ-chop",
+      "pattern": "researched:the-who/wont-get-fooled-again-organ-top"
+    },
+    {
+      "sound": "ems-vcs3/vcs3-oscillations-throb",
+      "pattern": "researched:silver-apples/oscillations-melody"
+    },
+    {
+      "sound": "ems-vcs3/vcs3-run-sequence",
+      "pattern": "researched:pink-floyd/on-the-run-sequence"
+    },
+    {
+      "sound": "grandmother/gm-acid-squelch",
+      "pattern": "researched:phuture/acid-tracks-line"
+    },
+    {
+      "sound": "grandmother/gm-airports-tones",
+      "pattern": "researched:brian-eno/airports-1-1-figure"
+    },
+    {
+      "sound": "grandmother/gm-baroque-hoedown",
+      "pattern": "researched:perrey-and-kingsley/baroque-hoedown"
+    },
+    {
+      "sound": "grandmother/gm-being-boiled",
+      "pattern": "researched:the-human-league/being-boiled-bass"
+    },
+    {
+      "sound": "grandmother/gm-boogie-bass",
+      "pattern": "researched:stevie-wonder/boogie-on-reggae-woman-bass"
+    },
+    {
+      "sound": "grandmother/gm-can-you-feel-bass",
+      "pattern": "researched:mr-fingers/can-you-feel-it-bass-low"
+    },
+    {
+      "sound": "grandmother/gm-chameleon-velocity",
+      "pattern": "researched:herbie-hancock/chameleon-bass"
+    },
+    {
+      "sound": "grandmother/gm-clocked-sh",
+      "pattern": "researched:tangerine-dream/rubycon-ostinato-keys"
+    },
+    {
+      "sound": "grandmother/gm-closer-fm-growl",
+      "pattern": "researched:nine-inch-nails/closer-bass"
+    },
+    {
+      "sound": "grandmother/gm-computer-love-lead",
+      "pattern": "researched:kraftwerk/computer-love-melody"
+    },
+    {
+      "sound": "grandmother/gm-crockett-lead",
+      "pattern": "researched:jan-hammer/crocketts-theme-lead"
+    },
+    {
+      "sound": "grandmother/gm-deep-listening",
+      "pattern": "researched:pauline-oliveros/deep-listening-tones-low"
+    },
+    {
+      "sound": "grandmother/gm-donuts-bass",
+      "pattern": "researched:j-dilla/sliding-sub-bass"
+    },
+    {
+      "sound": "grandmother/gm-enola-lead",
+      "pattern": "researched:omd/enola-gay-theme"
+    },
+    {
+      "sound": "grandmother/gm-equinoxe-bassline",
+      "pattern": "researched:jean-michel-jarre/equinoxe-5-octave-bass-low"
+    },
+    {
+      "sound": "grandmother/gm-feedback-snarl",
+      "pattern": "researched:suicide/ghost-rider-riff-low"
+    },
+    {
+      "sound": "grandmother/gm-feel-love-pulse",
+      "pattern": "researched:giorgio-moroder/i-feel-love-bass"
+    },
+    {
+      "sound": "grandmother/gm-g-funk-whine",
+      "pattern": "researched:dr-dre/nuthin-but-a-g-thang-lead"
+    },
+    {
+      "sound": "grandmother/gm-gabriels-oboe",
+      "pattern": "researched:ennio-morricone/gabriels-oboe-melody-low"
+    },
+    {
+      "sound": "grandmother/gm-gallifrey-lead",
+      "pattern": "researched:bbc-radiophonic-workshop/doctor-who-melody"
+    },
+    {
+      "sound": "grandmother/gm-gallop-bass",
+      "pattern": "researched:bbc-radiophonic-workshop/doctor-who-gallop"
+    },
+    {
+      "sound": "grandmother/gm-garage-organ-bass",
+      "pattern": "researched:artful-dodger/re-rewind-bass-high"
+    },
+    {
+      "sound": "grandmother/gm-gated-drone",
+      "pattern": "researched:eliane-radigue/kyema-drone-low"
+    },
+    {
+      "sound": "grandmother/gm-genesis-overdrive",
+      "pattern": "researched:justice/genesis-bass-high"
+    },
+    {
+      "sound": "grandmother/gm-hp-band-pass",
+      "pattern": "researched:thomas-dolby/she-blinded-me-with-science-line"
+    },
+    {
+      "sound": "grandmother/gm-kraut-motorik",
+      "pattern": "researched:neu/hallogallo-pulse"
+    },
+    {
+      "sound": "grandmother/gm-lucky-man-solo",
+      "pattern": "researched:emerson-lake-palmer/lucky-man-moog-solo-high"
+    },
+    {
+      "sound": "grandmother/gm-merry-christmas-bells",
+      "pattern": "researched:ryuichi-sakamoto/merry-christmas-mr-lawrence-ostinato"
+    },
+    {
+      "sound": "grandmother/gm-misirlou-surf",
+      "pattern": "researched:dick-dale/misirlou-melody-low"
+    },
+    {
+      "sound": "grandmother/gm-on-the-run-seq",
+      "pattern": "researched:pink-floyd/on-the-run-sequence"
+    },
+    {
+      "sound": "grandmother/gm-ondes-turangalila",
+      "pattern": "researched:olivier-messiaen/turangalila-ondes"
+    },
+    {
+      "sound": "grandmother/gm-oxygene-arp",
+      "pattern": "researched:jean-michel-jarre/oxygene-iv-chords"
+    },
+    {
+      "sound": "grandmother/gm-planet-rock-kick",
+      "pattern": "researched:afrika-bambaataa/planet-rock-kick"
+    },
+    {
+      "sound": "grandmother/gm-popcorn-pluck",
+      "pattern": "researched:hot-butter/popcorn-theme"
+    },
+    {
+      "sound": "grandmother/gm-rainbow-curved-air",
+      "pattern": "researched:terry-riley/rainbow-chords-low"
+    },
+    {
+      "sound": "grandmother/gm-reich-marimba",
+      "pattern": "researched:steve-reich/eighteen-marimba"
+    },
+    {
+      "sound": "grandmother/gm-ring-my-bell-tom",
+      "pattern": "researched:anita-ward/ring-my-bell-syndrum-low"
+    },
+    {
+      "sound": "grandmother/gm-rydeen-lead",
+      "pattern": "researched:yellow-magic-orchestra/rydeen-theme"
+    },
+    {
+      "sound": "grandmother/gm-spastik-blip",
+      "pattern": "researched:plastikman/spastik-pings-high-2"
+    },
+    {
+      "sound": "grandmother/gm-spring-pluck",
+      "pattern": "researched:boards-of-canada/roygbiv-melody"
+    },
+    {
+      "sound": "grandmother/gm-sugar-plum-celesta",
+      "pattern": "researched:tchaikovsky/sugar-plum-fairy-theme"
+    },
+    {
+      "sound": "grandmother/gm-superstition-clav",
+      "pattern": "researched:stevie-wonder/superstition-clavinet-high"
+    },
+    {
+      "sound": "grandmother/gm-switched-on-bach",
+      "pattern": "researched:wendy-carlos/invention-in-b-flat"
+    },
+    {
+      "sound": "grandmother/gm-sync-scream",
+      "pattern": "researched:the-cars/lets-go-riff-low"
+    },
+    {
+      "sound": "grandmother/gm-tomita-moonlight",
+      "pattern": "researched:isao-tomita/clair-de-lune-melody-low"
+    },
+    {
+      "sound": "grandmother/gm-tubular-bells-motif",
+      "pattern": "researched:mike-oldfield/tubular-bells-ostinato"
+    },
+    {
+      "sound": "grandmother/gm-welcome-machine",
+      "pattern": "researched:pink-floyd/welcome-to-the-machine-bass-low"
+    },
+    {
+      "sound": "jp-8080/jp-aha-hook",
+      "pattern": "researched:a-ha/take-on-me-riff"
+    },
+    {
+      "sound": "jp-8080/jp-anthem-saw",
+      "pattern": "researched:darude/sandstorm-riff"
+    },
+    {
+      "sound": "jp-8080/jp-artful-bass",
+      "pattern": "researched:artful-dodger/re-rewind-bass"
+    },
+    {
+      "sound": "jp-8080/jp-biosphere-drone",
+      "pattern": "researched:biosphere/poa-alpina-tones-low"
+    },
+    {
+      "sound": "jp-8080/jp-bukem-pad",
+      "pattern": "researched:ltj-bukem/horizons-pad"
+    },
+    {
+      "sound": "jp-8080/jp-dolby-flange",
+      "pattern": "researched:thomas-dolby/she-blinded-me-with-science-line-high"
+    },
+    {
+      "sound": "jp-8080/jp-duke-lead",
+      "pattern": "researched:george-duke/reach-for-it-riff-high"
+    },
+    {
+      "sound": "jp-8080/jp-fade-vibrato",
+      "pattern": "researched:lyle-mays/are-you-going-with-me-melody-high"
+    },
+    {
+      "sound": "jp-8080/jp-fatboy-acid",
+      "pattern": "researched:fatboy-slim/everybody-needs-a-303-line"
+    },
+    {
+      "sound": "jp-8080/jp-final-countdown-brass",
+      "pattern": "researched:europe/final-countdown-riff"
+    },
+    {
+      "sound": "jp-8080/jp-flat-beat",
+      "pattern": "researched:mr-oizo/flat-beat-bass"
+    },
+    {
+      "sound": "jp-8080/jp-global-air",
+      "pattern": "researched:global-communication/76-14-pad"
+    },
+    {
+      "sound": "jp-8080/jp-jimmy-smith-organ",
+      "pattern": "researched:jimmy-smith/organ-blues-lick"
+    },
+    {
+      "sound": "jp-8080/jp-johannsson-cello",
+      "pattern": "researched:johann-johannsson/flight-from-the-city-strings-low"
+    },
+    {
+      "sound": "jp-8080/jp-justice-feedback",
+      "pattern": "researched:justice/genesis-bass-low"
+    },
+    {
+      "sound": "jp-8080/jp-ladytron-lead",
+      "pattern": "researched:ladytron/seventeen-synth-high"
+    },
+    {
+      "sound": "jp-8080/jp-ponty-violin",
+      "pattern": "researched:jean-luc-ponty/enigmatic-ocean-line-low"
+    },
+    {
+      "sound": "jp-8080/jp-van-helden-bass",
+      "pattern": "researched:armand-van-helden/you-dont-know-me-bass-low"
+    },
+    {
+      "sound": "jupiter-4/j4-dilla-wobble-bass",
+      "pattern": "researched:j-dilla/sliding-sub-bass"
+    },
+    {
+      "sound": "jupiter-4/j4-far-east-melodica",
+      "pattern": "researched:augustus-pablo/east-of-the-river-nile-line"
+    },
+    {
+      "sound": "jupiter-4/j4-fourth-world-trumpet",
+      "pattern": "researched:jon-hassell/fourth-world-line"
+    },
+    {
+      "sound": "jupiter-4/j4-haunting-rave-pad",
+      "pattern": "researched:bicep/glue-pad"
+    },
+    {
+      "sound": "jupiter-4/j4-naive-melody",
+      "pattern": "researched:talking-heads/this-must-be-the-place-melody"
+    },
+    {
+      "sound": "jupiter-4/j4-oh-yeah-bass",
+      "pattern": "researched:yello/oh-yeah-bass"
+    },
+    {
+      "sound": "jupiter-4/j4-oscillations",
+      "pattern": "researched:silver-apples/oscillations-melody-low"
+    },
+    {
+      "sound": "jupiter-4/j4-rio-arp",
+      "pattern": "researched:duran-duran/rio-arpeggio"
+    },
+    {
+      "sound": "jupiter-4/j4-roboto-riff",
+      "pattern": "researched:styx/mr-roboto-intro-low"
+    },
+    {
+      "sound": "jupiter-4/j4-space-whoosh",
+      "pattern": "researched:gong/space-rock-pad"
+    },
+    {
+      "sound": "jupiter-4/j4-synthwave-brass",
+      "pattern": "researched:gunship/tech-noir-chords"
+    },
+    {
+      "sound": "jupiter-4/j4-telstar-lead",
+      "pattern": "researched:the-tornados/telstar-melody"
+    },
+    {
+      "sound": "jupiter-4/j4-what-is-love-stabs",
+      "pattern": "researched:haddaway/what-is-love-stabs"
+    },
+    {
+      "sound": "jupiter-6/jp6-1431-pad",
+      "pattern": "researched:global-communication/76-14-pad"
+    },
+    {
+      "sound": "jupiter-6/jp6-amelie-waltz",
+      "pattern": "researched:yann-tiersen/la-valse-damelie-melody"
+    },
+    {
+      "sound": "jupiter-6/jp6-aquatic-electro",
+      "pattern": "researched:drexciya/bubble-metropolis-bass"
+    },
+    {
+      "sound": "jupiter-6/jp6-big-beat-squelch",
+      "pattern": "researched:chemical-brothers/hey-boy-hey-girl-riff"
+    },
+    {
+      "sound": "jupiter-6/jp6-blue-monday-bass",
+      "pattern": "researched:new-order/blue-monday-bass-low"
+    },
+    {
+      "sound": "jupiter-6/jp6-can-you-feel-it",
+      "pattern": "researched:larry-heard/can-you-feel-it-chords"
+    },
+    {
+      "sound": "jupiter-6/jp6-computer-love",
+      "pattern": "researched:kraftwerk/computer-love-melody"
+    },
+    {
+      "sound": "jupiter-6/jp6-curved-air",
+      "pattern": "researched:terry-riley/rainbow-chords-high"
+    },
+    {
+      "sound": "jupiter-6/jp6-deep-listening-drone",
+      "pattern": "researched:pauline-oliveros/deep-listening-tones-low"
+    },
+    {
+      "sound": "jupiter-6/jp6-dream-pop-shimmer",
+      "pattern": "researched:cocteau-twins/heaven-or-las-vegas-rhythm-high"
+    },
+    {
+      "sound": "jupiter-6/jp6-electro-zap",
+      "pattern": "researched:electro/zap-percussion-low-2"
+    },
+    {
+      "sound": "jupiter-6/jp6-enola-hook",
+      "pattern": "researched:omd/enola-gay-theme"
+    },
+    {
+      "sound": "jupiter-6/jp6-ethereal-chant",
+      "pattern": "researched:dead-can-dance/host-of-seraphim-pad-low"
+    },
+    {
+      "sound": "jupiter-6/jp6-kids-hook",
+      "pattern": "researched:mgmt/kids-keyboard-riff"
+    },
+    {
+      "sound": "jupiter-6/jp6-last-christmas-keys",
+      "pattern": "researched:wham/last-christmas-chords"
+    },
+    {
+      "sound": "jupiter-6/jp6-lets-go-sync",
+      "pattern": "researched:the-cars/lets-go-riff-low"
+    },
+    {
+      "sound": "jupiter-6/jp6-mid-fi-lead",
+      "pattern": "researched:com-truise/brokendate-lead-low"
+    },
+    {
+      "sound": "jupiter-6/jp6-moon-safari-lead",
+      "pattern": "researched:air/kelly-watch-the-stars-melody-high"
+    },
+    {
+      "sound": "jupiter-6/jp6-mr-lawrence-bells",
+      "pattern": "researched:ryuichi-sakamoto/merry-christmas-mr-lawrence-ostinato"
+    },
+    {
+      "sound": "jupiter-6/jp6-overtone-singer",
+      "pattern": "researched:huun-huur-tu/khoomei-drone-low"
+    },
+    {
+      "sound": "jupiter-6/jp6-reese-bass",
+      "pattern": "researched:kevin-saunderson/reese-bass-low"
+    },
+    {
+      "sound": "jupiter-6/jp6-reverse-sync",
+      "pattern": "researched:the-cars/lets-go-riff"
+    },
+    {
+      "sound": "jupiter-6/jp6-sandstorm-lead",
+      "pattern": "researched:darude/sandstorm-riff"
+    },
+    {
+      "sound": "jupiter-6/jp6-strings-of-life",
+      "pattern": "researched:derrick-may/strings-of-life-stabs-high"
+    },
+    {
+      "sound": "jupiter-6/jp6-sweet-dreams-seq",
+      "pattern": "researched:eurythmics/sweet-dreams-riff-low"
+    },
+    {
+      "sound": "jupiter-6/jp6-tangerine-seq",
+      "pattern": "researched:tangerine-dream/tangram-sequence"
+    },
+    {
+      "sound": "jupiter-8/jp8-aha-riff",
+      "pattern": "researched:a-ha/take-on-me-riff-low"
+    },
+    {
+      "sound": "jupiter-8/jp8-air-tonight-pad",
+      "pattern": "researched:phil-collins/in-the-air-tonight-chords"
+    },
+    {
+      "sound": "jupiter-8/jp8-aphex-ambient",
+      "pattern": "researched:aphex-twin/rhubarb-chords"
+    },
+    {
+      "sound": "jupiter-8/jp8-blinding-synth",
+      "pattern": "researched:the-weeknd/blinding-lights-riff"
+    },
+    {
+      "sound": "jupiter-8/jp8-boc-pad",
+      "pattern": "researched:boards-of-canada/roygbiv-chords"
+    },
+    {
+      "sound": "jupiter-8/jp8-chvrches-pluck",
+      "pattern": "researched:chvrches/the-mother-we-share-pluck"
+    },
+    {
+      "sound": "jupiter-8/jp8-cold-new-wave-pad",
+      "pattern": "researched:tears-for-fears/rule-the-world-chords"
+    },
+    {
+      "sound": "jupiter-8/jp8-depeche-pluck",
+      "pattern": "researched:depeche-mode/metal-bell-lead-low"
+    },
+    {
+      "sound": "jupiter-8/jp8-drive-pad",
+      "pattern": "researched:cliff-martinez/drive-pad-high"
+    },
+    {
+      "sound": "jupiter-8/jp8-eno-shimmer",
+      "pattern": "researched:brian-eno/airports-2-2-tones"
+    },
+    {
+      "sound": "jupiter-8/jp8-enya-pizz",
+      "pattern": "researched:enya/orinoco-flow-chords-high"
+    },
+    {
+      "sound": "jupiter-8/jp8-final-brass",
+      "pattern": "researched:europe/final-countdown-riff"
+    },
+    {
+      "sound": "jupiter-8/jp8-fog-pad",
+      "pattern": "researched:john-carpenter/halloween-low-strings-high"
+    },
+    {
+      "sound": "jupiter-8/jp8-fusion-lead",
+      "pattern": "researched:chick-corea/duel-of-the-jester-theme"
+    },
+    {
+      "sound": "jupiter-8/jp8-george-duke",
+      "pattern": "researched:george-duke/reach-for-it-riff"
+    },
+    {
+      "sound": "jupiter-8/jp8-goblin-organ",
+      "pattern": "researched:goblin/suspiria-theme-low"
+    },
+    {
+      "sound": "jupiter-8/jp8-harold-budd",
+      "pattern": "researched:harold-budd/first-light-melody"
+    },
+    {
+      "sound": "jupiter-8/jp8-jarre-gallop-seq",
+      "pattern": "researched:jean-michel-jarre/oxygene-iv-chords"
+    },
+    {
+      "sound": "jupiter-8/jp8-jump-stab",
+      "pattern": "researched:van-halen/jump-riff-low"
+    },
+    {
+      "sound": "jupiter-8/jp8-koji-kondo",
+      "pattern": "researched:koji-kondo/song-of-storms-melody-low"
+    },
+    {
+      "sound": "jupiter-8/jp8-laser-harp",
+      "pattern": "researched:jean-michel-jarre/rendez-vous-laser-harp"
+    },
+    {
+      "sound": "jupiter-8/jp8-lyle-mays",
+      "pattern": "researched:lyle-mays/are-you-going-with-me-melody"
+    },
+    {
+      "sound": "jupiter-8/jp8-m83-swell",
+      "pattern": "researched:m83/midnight-city-chords"
+    },
+    {
+      "sound": "jupiter-8/jp8-midori-takada",
+      "pattern": "researched:midori-takada/looking-glass-pattern"
+    },
+    {
+      "sound": "jupiter-8/jp8-minneapolis-stab",
+      "pattern": "researched:prince/1999-stabs-high"
+    },
+    {
+      "sound": "jupiter-8/jp8-moderat",
+      "pattern": "researched:moderat/a-new-error-bass"
+    },
+    {
+      "sound": "jupiter-8/jp8-neo-soul",
+      "pattern": "researched:dangelo/neo-soul-rhodes"
+    },
+    {
+      "sound": "jupiter-8/jp8-nervous-new-wave-seq",
+      "pattern": "researched:duran-duran/rio-bass"
+    },
+    {
+      "sound": "jupiter-8/jp8-prayer-arp",
+      "pattern": "researched:duran-duran/save-a-prayer-sequence"
+    },
+    {
+      "sound": "jupiter-8/jp8-pwm-strings-lush",
+      "pattern": "researched:80s-ballads/ballad-pad"
+    },
+    {
+      "sound": "jupiter-8/jp8-royksopp",
+      "pattern": "researched:royksopp/eple-melody-low"
+    },
+    {
+      "sound": "jupiter-8/jp8-rush-lead",
+      "pattern": "researched:rush/tom-sawyer-synth-break"
+    },
+    {
+      "sound": "jupiter-8/jp8-schnauss",
+      "pattern": "researched:ulrich-schnauss/strangely-isolated-place-pad"
+    },
+    {
+      "sound": "jupiter-8/jp8-schulze-arp",
+      "pattern": "researched:klaus-schulze/kosmische-chords-high"
+    },
+    {
+      "sound": "jupiter-8/jp8-separate-ways",
+      "pattern": "researched:journey/separate-ways-riff"
+    },
+    {
+      "sound": "jupiter-8/jp8-soft-cell",
+      "pattern": "researched:soft-cell/say-hello-wave-goodbye-figure"
+    },
+    {
+      "sound": "jupiter-8/jp8-solo-acid-squelch",
+      "pattern": "researched:acid-house/acid-line"
+    },
+    {
+      "sound": "jupiter-8/jp8-stars-of-the-lid",
+      "pattern": "researched:stars-of-the-lid/slow-bloom-chords"
+    },
+    {
+      "sound": "jupiter-8/jp8-supertramp-ep",
+      "pattern": "researched:supertramp/dreamer-wurlitzer-low"
+    },
+    {
+      "sound": "jupiter-8/jp8-tame-impala",
+      "pattern": "researched:tame-impala/elephant-synth"
+    },
+    {
+      "sound": "jupiter-8/jp8-tangerine-pad",
+      "pattern": "researched:tangerine-dream/love-on-a-real-train-pad"
+    },
+    {
+      "sound": "jupiter-8/jp8-vangelis-brass",
+      "pattern": "researched:vangelis/blade-runner-end-titles-chords-low"
+    },
+    {
+      "sound": "jupiter-8/jp8-vice-pad",
+      "pattern": "researched:jan-hammer/miami-vice-theme-pad"
+    },
+    {
+      "sound": "jupiter-8/jp8-vienna-strings",
+      "pattern": "researched:ultravox/vienna-strings"
+    },
+    {
+      "sound": "jupiter-8/jp8-wakeman-lead",
+      "pattern": "researched:rick-wakeman/catherine-of-aragon-theme"
+    },
+    {
+      "sound": "k2/acid-303-line",
+      "pattern": "researched:acid-house/acid-line"
+    },
+    {
+      "sound": "k2/air-nylon-pluck",
+      "pattern": "researched:air/alone-in-kyoto-figure"
+    },
+    {
+      "sound": "k2/aphex-glass-pad",
+      "pattern": "researched:aphex-twin/rhubarb-chords"
+    },
+    {
+      "sound": "k2/biosphere-filter-tones",
+      "pattern": "researched:biosphere/poa-alpina-tones"
+    },
+    {
+      "sound": "k2/boc-drifting-pad",
+      "pattern": "researched:boards-of-canada/olson-melody"
+    },
+    {
+      "sound": "k2/chem-squiggle-line",
+      "pattern": "researched:chemical-brothers/the-big-jump-held"
+    },
+    {
+      "sound": "k2/clipped-count-bass",
+      "pattern": "researched:kraftwerk/numbers-bass"
+    },
+    {
+      "sound": "k2/cluster-overtone-steps",
+      "pattern": "researched:cluster-and-eno/ho-renomo-held"
+    },
+    {
+      "sound": "k2/eno-soft-bell-keys",
+      "pattern": "researched:brian-eno/airports-1-1-figure"
+    },
+    {
+      "sound": "k2/goldfrapp-late-vibrato-cello",
+      "pattern": "researched:goldfrapp/pilots-cello"
+    },
+    {
+      "sound": "k2/hopkins-driving-bass",
+      "pattern": "researched:jon-hopkins/open-eye-signal-bass"
+    },
+    {
+      "sound": "k2/k2-delayed-vibrato-glide-lead",
+      "pattern": "researched:parliament/dr-funkenstein-horn-figure"
+    },
+    {
+      "sound": "k2/k2-pedal-steel-bend",
+      "pattern": "researched:brian-eno/apollo-pedal-steel"
+    },
+    {
+      "sound": "k2/k2-sliding-steel-swell",
+      "pattern": "researched:daniel-lanois/transmitter-steel"
+    },
+    {
+      "sound": "k2/kimbie-lofi-bass",
+      "pattern": "researched:mount-kimbie/delta-bass"
+    },
+    {
+      "sound": "k2/ms20-lead",
+      "pattern": "researched:vangelis/blade-runner-end-titles-theme"
+    },
+    {
+      "sound": "k2/nin-mechanical-bass",
+      "pattern": "researched:nine-inch-nails/head-like-a-hole-bass"
+    },
+    {
+      "sound": "k2/oizo-flat-bass",
+      "pattern": "researched:mr-oizo/flat-beat-bass"
+    },
+    {
+      "sound": "k2/portishead-harsh-lead",
+      "pattern": "researched:portishead/the-rip-arpeggio"
+    },
+    {
+      "sound": "k2/prodigy-fuzz-bass",
+      "pattern": "researched:the-prodigy/girls-bass"
+    },
+    {
+      "sound": "k2/radiohead-warped-keys",
+      "pattern": "researched:radiohead/kid-a-rhodes"
+    },
+    {
+      "sound": "k2/royksopp-windup",
+      "pattern": "researched:royksopp/vision-one-bass"
+    },
+    {
+      "sound": "k2/rubber-funk",
+      "pattern": "researched:daft-punk/da-funk-breakdown-figure-low"
+    },
+    {
+      "sound": "k2/sh-melody",
+      "pattern": "researched:tangerine-dream/stratosfear-bass"
+    },
+    {
+      "sound": "k2/short-pop-pluck",
+      "pattern": "researched:omd/enola-gay-pre-theme"
+    },
+    {
+      "sound": "k2/skinny-puppy-hit",
+      "pattern": "researched:skinny-puppy/assimilate-snare"
+    },
+    {
+      "sound": "k2/snarling-drive-riff",
+      "pattern": "researched:daft-punk/derezzed-riff"
+    },
+    {
+      "sound": "k2/ymo-bright-lead",
+      "pattern": "researched:yellow-magic-orchestra/rydeen-bridge"
+    },
+    {
+      "sound": "k2/ymo-tight-bass",
+      "pattern": "researched:yellow-magic-orchestra/technopolis-bass"
+    },
+    {
+      "sound": "k2/yorke-amok-lead",
+      "pattern": "researched:thom-yorke/amok-lead"
+    },
+    {
+      "sound": "kobol/kobol-aero-arp",
+      "pattern": "researched:daft-punk/aerodynamic-arpeggio"
+    },
+    {
+      "sound": "kobol/kobol-dark-drift-pad",
+      "pattern": "researched:brian-eno/zawinul-lava-line"
+    },
+    {
+      "sound": "kobol/kobol-metro-pulse",
+      "pattern": "researched:kraftwerk/metropolis-pulse"
+    },
+    {
+      "sound": "kobol/kobol-rubber-scoop-bass",
+      "pattern": "researched:parliament/rumpofsteelskin-bass"
+    },
+    {
+      "sound": "kobol/kobol-sequencer",
+      "pattern": "researched:tangerine-dream/stratosfear-sequence"
+    },
+    {
+      "sound": "kobol/kobol-steel-bender",
+      "pattern": "researched:daniel-lanois/sioux-lookout-steel"
+    },
+    {
+      "sound": "kobol/kobol-sync-lead",
+      "pattern": "researched:the-cars/lets-go-riff"
+    },
+    {
+      "sound": "malevolent/mal-accent-acid",
+      "pattern": "researched:hardfloor/acperience-line"
+    },
+    {
+      "sound": "malevolent/mal-acid-line",
+      "pattern": "researched:acid-house/acid-line"
+    },
+    {
+      "sound": "malevolent/mal-angela-rhodes",
+      "pattern": "researched:bob-james/angela-theme"
+    },
+    {
+      "sound": "malevolent/mal-autobahn-bass",
+      "pattern": "researched:kraftwerk/autobahn-octave-pulse"
+    },
+    {
+      "sound": "malevolent/mal-cars-lead",
+      "pattern": "researched:gary-numan/cars-bridge-melody"
+    },
+    {
+      "sound": "malevolent/mal-da-funk-lead",
+      "pattern": "researched:daft-punk/da-funk-breakdown-figure"
+    },
+    {
+      "sound": "malevolent/mal-deep-house-bass",
+      "pattern": "researched:mr-fingers/can-you-feel-it-bass"
+    },
+    {
+      "sound": "malevolent/mal-escape-ostinato",
+      "pattern": "researched:john-carpenter/escape-from-new-york-ostinato"
+    },
+    {
+      "sound": "malevolent/mal-expanding-universe",
+      "pattern": "researched:laurie-spiegel/expanding-universe-pattern-low"
+    },
+    {
+      "sound": "malevolent/mal-garage-bass",
+      "pattern": "researched:artful-dodger/re-rewind-bass-high"
+    },
+    {
+      "sound": "malevolent/mal-ghost-rider-pulse",
+      "pattern": "researched:suicide/ghost-rider-root"
+    },
+    {
+      "sound": "malevolent/mal-growl-bass",
+      "pattern": "researched:skrillex/scary-monsters-bass"
+    },
+    {
+      "sound": "malevolent/mal-head-like-a-hole",
+      "pattern": "researched:nine-inch-nails/head-like-a-hole-bass"
+    },
+    {
+      "sound": "malevolent/mal-hoedown-blip",
+      "pattern": "researched:perrey-and-kingsley/baroque-hoedown"
+    },
+    {
+      "sound": "malevolent/mal-lucky-man-glide",
+      "pattern": "researched:emerson-lake-palmer/lucky-man-moog-solo-high"
+    },
+    {
+      "sound": "malevolent/mal-mr-lawrence-bell",
+      "pattern": "researched:ryuichi-sakamoto/merry-christmas-mr-lawrence-ostinato"
+    },
+    {
+      "sound": "malevolent/mal-mysterons-theremin",
+      "pattern": "researched:portishead/mysterons-line"
+    },
+    {
+      "sound": "malevolent/mal-oxygene-lead",
+      "pattern": "researched:jean-michel-jarre/oxygene-iv-melody"
+    },
+    {
+      "sound": "malevolent/mal-pfunk-bass",
+      "pattern": "researched:parliament/flash-light-bass-high"
+    },
+    {
+      "sound": "malevolent/mal-plantasia-lead",
+      "pattern": "researched:mort-garson/plantasia-melody"
+    },
+    {
+      "sound": "malevolent/mal-popcorn-pluck",
+      "pattern": "researched:hot-butter/popcorn-theme"
+    },
+    {
+      "sound": "malevolent/mal-radigue-drone",
+      "pattern": "researched:eliane-radigue/kyema-drone"
+    },
+    {
+      "sound": "malevolent/mal-roach-swell",
+      "pattern": "researched:steve-roach/structures-from-silence-held"
+    },
+    {
+      "sound": "malevolent/mal-spin-me-bass",
+      "pattern": "researched:dead-or-alive/you-spin-me-round-bass-high"
+    },
+    {
+      "sound": "malevolent/mal-stratosfear-lead",
+      "pattern": "researched:tangerine-dream/stratosfear-theme"
+    },
+    {
+      "sound": "malevolent/mal-substrata-pulse",
+      "pattern": "researched:biosphere/poa-alpina-tones"
+    },
+    {
+      "sound": "malevolent/mal-superstition-clav",
+      "pattern": "researched:stevie-wonder/superstition-clavinet-high"
+    },
+    {
+      "sound": "malevolent/mal-switched-on-bach",
+      "pattern": "researched:wendy-carlos/invention-in-f-subject"
+    },
+    {
+      "sound": "malevolent/mal-tee-lead",
+      "pattern": "researched:kraftwerk/trans-europe-express-descent"
+    },
+    {
+      "sound": "malevolent/mal-thursday-swell",
+      "pattern": "researched:brian-eno/thursday-afternoon-bells"
+    },
+    {
+      "sound": "malevolent/mal-tomita-whistle",
+      "pattern": "researched:isao-tomita/clair-de-lune-melody"
+    },
+    {
+      "sound": "malevolent/mal-trip-hop-bass",
+      "pattern": "researched:massive-attack/angel-bass"
+    },
+    {
+      "sound": "malevolent/mal-wright-solo",
+      "pattern": "researched:richard-wright/shine-on-minimoog-high"
+    },
+    {
+      "sound": "malevolent/mal-zeit-drone",
+      "pattern": "researched:tangerine-dream/zeit-drone"
+    },
+    {
+      "sound": "mantis/mantis-acid-line",
+      "pattern": "researched:acid-house/acid-line"
+    },
+    {
+      "sound": "mantis/mantis-airport-pad",
+      "pattern": "researched:brian-eno/airports-2-1-tones"
+    },
+    {
+      "sound": "mantis/mantis-anthem-supersaw",
+      "pattern": "researched:paul-van-dyk/for-an-angel-top-low"
+    },
+    {
+      "sound": "mantis/mantis-ascent-swell",
+      "pattern": "researched:brian-eno/an-ending-ascent-melody-low"
+    },
+    {
+      "sound": "mantis/mantis-bad-guy-bass",
+      "pattern": "researched:billie-eilish/bad-guy-bass-high"
+    },
+    {
+      "sound": "mantis/mantis-blade-runner-brass",
+      "pattern": "researched:vangelis/blade-runner-main-titles-swell"
+    },
+    {
+      "sound": "mantis/mantis-blinding-lead",
+      "pattern": "researched:the-weeknd/blinding-lights-riff"
+    },
+    {
+      "sound": "mantis/mantis-boom-kick",
+      "pattern": "researched:afrika-bambaataa/planet-rock-kick"
+    },
+    {
+      "sound": "mantis/mantis-celesta",
+      "pattern": "researched:tchaikovsky/sugar-plum-fairy-theme"
+    },
+    {
+      "sound": "mantis/mantis-chameleon-bass",
+      "pattern": "researched:herbie-hancock/chameleon-bass"
+    },
+    {
+      "sound": "mantis/mantis-choir-aah",
+      "pattern": "researched:vangelis/conquest-of-paradise-strings-low"
+    },
+    {
+      "sound": "mantis/mantis-cluster-pad",
+      "pattern": "researched:gyorgy-ligeti/atmospheres-semitones"
+    },
+    {
+      "sound": "mantis/mantis-computer-love",
+      "pattern": "researched:kraftwerk/computer-love-melody"
+    },
+    {
+      "sound": "mantis/mantis-cornfield-organ",
+      "pattern": "researched:hans-zimmer/interstellar-organ-figure-high"
+    },
+    {
+      "sound": "mantis/mantis-crazy-diamond-pad",
+      "pattern": "researched:pink-floyd/shine-on-solina-low"
+    },
+    {
+      "sound": "mantis/mantis-duo-thirds",
+      "pattern": "researched:chick-corea/duel-of-the-jester-theme"
+    },
+    {
+      "sound": "mantis/mantis-five-four-ostinato",
+      "pattern": "researched:john-carpenter/halloween-piano-figure"
+    },
+    {
+      "sound": "mantis/mantis-gabriels-oboe",
+      "pattern": "researched:ennio-morricone/gabriels-oboe-melody"
+    },
+    {
+      "sound": "mantis/mantis-gallop-bass",
+      "pattern": "researched:bbc-radiophonic-workshop/doctor-who-gallop"
+    },
+    {
+      "sound": "mantis/mantis-genesis-bass",
+      "pattern": "researched:justice/genesis-bass"
+    },
+    {
+      "sound": "mantis/mantis-gfunk-whistle",
+      "pattern": "researched:dr-dre/nuthin-but-a-g-thang-lead"
+    },
+    {
+      "sound": "mantis/mantis-grime-square",
+      "pattern": "researched:wiley/eskimo-bass"
+    },
+    {
+      "sound": "mantis/mantis-hoover",
+      "pattern": "researched:joey-beltram/mentasm-hoover"
+    },
+    {
+      "sound": "mantis/mantis-industrial-clang",
+      "pattern": "researched:nine-inch-nails/closer-bass"
+    },
+    {
+      "sound": "mantis/mantis-jump-brass",
+      "pattern": "researched:van-halen/jump-riff-low"
+    },
+    {
+      "sound": "mantis/mantis-liquid-pad",
+      "pattern": "researched:ltj-bukem/horizons-pad"
+    },
+    {
+      "sound": "mantis/mantis-lucky-man-lead",
+      "pattern": "researched:emerson-lake-palmer/lucky-man-moog-solo-high"
+    },
+    {
+      "sound": "mantis/mantis-metal-bell-lead",
+      "pattern": "researched:depeche-mode/everything-counts-hook"
+    },
+    {
+      "sound": "mantis/mantis-midnight-city",
+      "pattern": "researched:m83/midnight-city-hook"
+    },
+    {
+      "sound": "mantis/mantis-minimal-blip",
+      "pattern": "researched:plastikman/spastik-pings-high"
+    },
+    {
+      "sound": "mantis/mantis-minneapolis-stab",
+      "pattern": "researched:prince/1999-stabs"
+    },
+    {
+      "sound": "mantis/mantis-nightcall-bass",
+      "pattern": "researched:kavinsky/nightcall-bass"
+    },
+    {
+      "sound": "mantis/mantis-organ-house-bass",
+      "pattern": "researched:robin-s/show-me-love-bass-high"
+    },
+    {
+      "sound": "mantis/mantis-oxygene-swirl",
+      "pattern": "researched:jean-michel-jarre/oxygene-iv-chords"
+    },
+    {
+      "sound": "mantis/mantis-reich-marimba",
+      "pattern": "researched:steve-reich/eighteen-marimba"
+    },
+    {
+      "sound": "mantis/mantis-shoegaze-wall",
+      "pattern": "researched:my-bloody-valentine/only-shallow-guitar"
+    },
+    {
+      "sound": "mantis/mantis-sinking-growl",
+      "pattern": "researched:rush/tom-sawyer-growl"
+    },
+    {
+      "sound": "mantis/mantis-solaris-glass",
+      "pattern": "researched:cliff-martinez/solaris-figure"
+    },
+    {
+      "sound": "mantis/mantis-strings-of-life",
+      "pattern": "researched:derrick-may/strings-of-life-stabs-top"
+    },
+    {
+      "sound": "mantis/mantis-take-on-me-lead",
+      "pattern": "researched:a-ha/take-on-me-riff-low"
+    },
+    {
+      "sound": "mantis/mantis-tape-wobble-keys",
+      "pattern": "researched:boards-of-canada/roygbiv-melody"
+    },
+    {
+      "sound": "mantis/mantis-twin-peaks-pad",
+      "pattern": "researched:angelo-badalamenti/laura-palmers-theme-strings"
+    },
+    {
+      "sound": "mantis/mantis-untrue-pad",
+      "pattern": "researched:burial/archangel-pad-high"
+    },
+    {
+      "sound": "mantis/mantis-wavetable-pluck",
+      "pattern": "researched:thomas-dolby/she-blinded-me-with-science-line"
+    },
+    {
+      "sound": "minilogue-xd/mxd-acid-bass",
+      "pattern": "researched:josh-wink/higher-state-line"
+    },
+    {
+      "sound": "minilogue-xd/mxd-arnalds-arp",
+      "pattern": "researched:olafur-arnalds/saman-chords-high"
+    },
+    {
+      "sound": "minilogue-xd/mxd-ascent-pad",
+      "pattern": "researched:brian-eno/an-ending-ascent-melody-low"
+    },
+    {
+      "sound": "minilogue-xd/mxd-blade-runner-chords",
+      "pattern": "researched:vangelis/blade-runner-end-titles-chords"
+    },
+    {
+      "sound": "minilogue-xd/mxd-bpm-wobble",
+      "pattern": "researched:skrillex/scary-monsters-bass"
+    },
+    {
+      "sound": "minilogue-xd/mxd-chase-arp",
+      "pattern": "researched:giorgio-moroder/chase-chords"
+    },
+    {
+      "sound": "minilogue-xd/mxd-computer-love",
+      "pattern": "researched:kraftwerk/computer-love-melody"
+    },
+    {
+      "sound": "minilogue-xd/mxd-edge-delay",
+      "pattern": "researched:u2/where-the-streets-have-no-name-guitar"
+    },
+    {
+      "sound": "minilogue-xd/mxd-ensemble-strings",
+      "pattern": "researched:jean-michel-jarre/oxygene-iv-chords"
+    },
+    {
+      "sound": "minilogue-xd/mxd-enya-bells",
+      "pattern": "researched:enya/orinoco-flow-chords"
+    },
+    {
+      "sound": "minilogue-xd/mxd-eple-pluck",
+      "pattern": "researched:royksopp/eple-melody"
+    },
+    {
+      "sound": "minilogue-xd/mxd-gated-snare",
+      "pattern": "researched:phil-collins/in-the-air-tonight-snare-low"
+    },
+    {
+      "sound": "minilogue-xd/mxd-harmonium",
+      "pattern": "researched:nusrat-fateh-ali-khan/mustt-mustt-harmonium"
+    },
+    {
+      "sound": "minilogue-xd/mxd-jump-brass",
+      "pattern": "researched:van-halen/jump-riff-low"
+    },
+    {
+      "sound": "minilogue-xd/mxd-lucky-man",
+      "pattern": "researched:emerson-lake-palmer/lucky-man-moog-solo-high"
+    },
+    {
+      "sound": "minilogue-xd/mxd-prodigy-hoover",
+      "pattern": "researched:the-prodigy/out-of-space-riff"
+    },
+    {
+      "sound": "minilogue-xd/mxd-reese-unison",
+      "pattern": "researched:kevin-saunderson/reese-bass-low"
+    },
+    {
+      "sound": "minilogue-xd/mxd-ring-robot",
+      "pattern": "researched:silver-apples/oscillations-melody"
+    },
+    {
+      "sound": "minilogue-xd/mxd-shape-swell-keys",
+      "pattern": "researched:boards-of-canada/olson-pad"
+    },
+    {
+      "sound": "minilogue-xd/mxd-sync-sweep-pad",
+      "pattern": "researched:tangerine-dream/love-on-a-real-train-pad"
+    },
+    {
+      "sound": "minilogue-xd/mxd-tape-echo-lead",
+      "pattern": "researched:richard-wright/shine-on-minimoog"
+    },
+    {
+      "sound": "minilogue-xd/mxd-thriller-bass",
+      "pattern": "researched:michael-jackson/thriller-bass"
+    },
+    {
+      "sound": "minilogue-xd/mxd-upside-down-arp",
+      "pattern": "researched:kyle-dixon-michael-stein/stranger-things-arpeggio-chord"
+    },
+    {
+      "sound": "minilogue-xd/mxd-vpm-feedback-lead",
+      "pattern": "researched:jan-hammer/miami-vice-theme-lead-high"
+    },
+    {
+      "sound": "model-15/m15-oscillations-fm",
+      "pattern": "researched:silver-apples/oscillations-melody-low"
+    },
+    {
+      "sound": "model-d/aguirre-choir",
+      "pattern": "researched:popol-vuh/aguirre-choir"
+    },
+    {
+      "sound": "model-d/are-you-going-lead",
+      "pattern": "researched:lyle-mays/are-you-going-with-me-melody"
+    },
+    {
+      "sound": "model-d/ascent-swell-pad",
+      "pattern": "researched:brian-eno/an-ending-ascent-melody"
+    },
+    {
+      "sound": "model-d/backwards-guitar-swell",
+      "pattern": "researched:the-beatles/im-only-sleeping-backwards-guitar"
+    },
+    {
+      "sound": "model-d/baroque-hoedown-pluck",
+      "pattern": "researched:perrey-and-kingsley/baroque-hoedown"
+    },
+    {
+      "sound": "model-d/baroque-line-voice",
+      "pattern": "researched:wendy-carlos/invention-in-f-subject"
+    },
+    {
+      "sound": "model-d/berlin-lfo-pulse",
+      "pattern": "researched:tangerine-dream/phaedra-pulse-keys"
+    },
+    {
+      "sound": "model-d/bluegrass-banjo",
+      "pattern": "researched:earl-scruggs/foggy-mountain-breakdown-roll"
+    },
+    {
+      "sound": "model-d/blues-harp",
+      "pattern": "researched:little-walter/juke-riff"
+    },
+    {
+      "sound": "model-d/bouncy-two-osc-bass",
+      "pattern": "researched:howard-jones/what-is-love-bass"
+    },
+    {
+      "sound": "model-d/breathy-flute-lead",
+      "pattern": "researched:duran-duran/the-chauffeur-figure"
+    },
+    {
+      "sound": "model-d/bubbling-res-bass",
+      "pattern": "researched:parliament/aqua-boogie-bass"
+    },
+    {
+      "sound": "model-d/chopped-drive-bass",
+      "pattern": "researched:depeche-mode/behind-the-wheel-pulse"
+    },
+    {
+      "sound": "model-d/clang-am-lead",
+      "pattern": "researched:brian-eno/warm-jets-lead"
+    },
+    {
+      "sound": "model-d/clay-ocarina",
+      "pattern": "researched:koji-kondo/song-of-storms-melody"
+    },
+    {
+      "sound": "model-d/computer-love-melody",
+      "pattern": "researched:kraftwerk/computer-love-melody"
+    },
+    {
+      "sound": "model-d/concert-timpani",
+      "pattern": "researched:isao-tomita/mars-ostinato"
+    },
+    {
+      "sound": "model-d/creeping-tritone-drone",
+      "pattern": "researched:goblin/suspiria-drone"
+    },
+    {
+      "sound": "model-d/dark-tail-pluck",
+      "pattern": "researched:vangelis/la-petite-fille-de-la-mer-pluck"
+    },
+    {
+      "sound": "model-d/disintegrating-tape-loop",
+      "pattern": "researched:william-basinski/disintegration-loop-phrase"
+    },
+    {
+      "sound": "model-d/dream-weaver-lead",
+      "pattern": "researched:gary-wright/dream-weaver-lead"
+    },
+    {
+      "sound": "model-d/driven-bend-lead",
+      "pattern": "researched:jan-hammer/miami-vice-theme-lead"
+    },
+    {
+      "sound": "model-d/duduk-lament",
+      "pattern": "researched:djivan-gasparyan/duduk-lament"
+    },
+    {
+      "sound": "model-d/ecstasy-soprano",
+      "pattern": "researched:ennio-morricone/ecstasy-of-gold-strings"
+    },
+    {
+      "sound": "model-d/enola-gay-lead",
+      "pattern": "researched:omd/enola-gay-theme"
+    },
+    {
+      "sound": "model-d/erhu-moon",
+      "pattern": "researched:abing/erquan-yingyue-line"
+    },
+    {
+      "sound": "model-d/expanding-universe-pluck",
+      "pattern": "researched:laurie-spiegel/expanding-universe-pattern"
+    },
+    {
+      "sound": "model-d/fast-prog-lead",
+      "pattern": "researched:rick-wakeman/close-to-the-edge-chords-top"
+    },
+    {
+      "sound": "model-d/feedback-chug-bass",
+      "pattern": "researched:brian-eno/third-uncle-bass"
+    },
+    {
+      "sound": "model-d/feels-so-good-flugelhorn",
+      "pattern": "researched:chuck-mangione/feels-so-good-melody"
+    },
+    {
+      "sound": "model-d/fixed-filter-tone-drone",
+      "pattern": "researched:brian-eno/lizard-point-drone"
+    },
+    {
+      "sound": "model-d/flight-strings",
+      "pattern": "researched:johann-johannsson/flight-from-the-city-strings"
+    },
+    {
+      "sound": "model-d/fretless-continuum",
+      "pattern": "researched:jaco-pastorius/continuum-melody"
+    },
+    {
+      "sound": "model-d/funk-bass",
+      "pattern": "researched:parliament/flash-light-bass"
+    },
+    {
+      "sound": "model-d/fusion-electric-violin",
+      "pattern": "researched:jean-luc-ponty/enigmatic-ocean-line"
+    },
+    {
+      "sound": "model-d/gfunk-whistle",
+      "pattern": "researched:dr-dre/nuthin-but-a-g-thang-lead"
+    },
+    {
+      "sound": "model-d/glass-harmonica",
+      "pattern": "researched:mozart/glass-harmonica-adagio"
+    },
+    {
+      "sound": "model-d/growl-filter-lead",
+      "pattern": "researched:emerson-lake-palmer/tarkus-moog"
+    },
+    {
+      "sound": "model-d/harmon-mute-trumpet",
+      "pattern": "researched:miles-davis/it-never-entered-my-mind-line"
+    },
+    {
+      "sound": "model-d/heavy-slow-bass",
+      "pattern": "researched:the-human-league/being-boiled-bass"
+    },
+    {
+      "sound": "model-d/highland-pipes",
+      "pattern": "researched:scottish-pipe-band-tradition/scotland-the-brave"
+    },
+    {
+      "sound": "model-d/industrial-pump-bass",
+      "pattern": "researched:nine-inch-nails/closer-bass"
+    },
+    {
+      "sound": "model-d/jester-fusion-lead",
+      "pattern": "researched:chick-corea/duel-of-the-jester-theme"
+    },
+    {
+      "sound": "model-d/jimmy-smith-organ",
+      "pattern": "researched:jimmy-smith/organ-blues-lick"
+    },
+    {
+      "sound": "model-d/just-intonation-drone",
+      "pattern": "researched:la-monte-young/dream-house-root"
+    },
+    {
+      "sound": "model-d/kaytranada-bounce-bass",
+      "pattern": "researched:kaytranada/youre-the-one-bass"
+    },
+    {
+      "sound": "model-d/kids-indie-lead",
+      "pattern": "researched:mgmt/kids-keyboard-riff"
+    },
+    {
+      "sound": "model-d/lfo-closed-hats",
+      "pattern": "researched:the-human-league/early-synth-hats"
+    },
+    {
+      "sound": "model-d/looking-glass-marimba",
+      "pattern": "researched:midori-takada/looking-glass-pattern"
+    },
+    {
+      "sound": "model-d/lucky-lead",
+      "pattern": "researched:emerson-lake-palmer/lucky-man-moog-solo"
+    },
+    {
+      "sound": "model-d/machine-gun-stutter",
+      "pattern": "researched:jimi-hendrix/machine-gun-riff"
+    },
+    {
+      "sound": "model-d/mbira-nhemamusasa",
+      "pattern": "researched:shona-mbira-tradition/nhemamusasa-pattern"
+    },
+    {
+      "sound": "model-d/mellow-drift-lead",
+      "pattern": "researched:zero-7/destiny-lead"
+    },
+    {
+      "sound": "model-d/mission-oboe",
+      "pattern": "researched:ennio-morricone/gabriels-oboe-melody"
+    },
+    {
+      "sound": "model-d/motor-vibraphone",
+      "pattern": "researched:milt-jackson/bags-groove-head"
+    },
+    {
+      "sound": "model-d/muted-house-bass",
+      "pattern": "researched:daft-punk/around-the-world-bass"
+    },
+    {
+      "sound": "model-d/nightcall-bass",
+      "pattern": "researched:kavinsky/nightcall-bass"
+    },
+    {
+      "sound": "model-d/noise-torn-solo",
+      "pattern": "researched:sun-ra/my-brother-the-wind-solo"
+    },
+    {
+      "sound": "model-d/octave-seq-bass",
+      "pattern": "researched:new-order/blue-monday-bass"
+    },
+    {
+      "sound": "model-d/octave-sequence-bass",
+      "pattern": "researched:daft-punk/giorgio-by-moroder-sequence"
+    },
+    {
+      "sound": "model-d/oldfield-tubular-bells",
+      "pattern": "researched:mike-oldfield/tubular-bells-ostinato"
+    },
+    {
+      "sound": "model-d/oxygene-lead",
+      "pattern": "researched:jean-michel-jarre/oxygene-iv-arpeggio"
+    },
+    {
+      "sound": "model-d/paris-musette",
+      "pattern": "researched:yann-tiersen/la-valse-damelie-melody"
+    },
+    {
+      "sound": "model-d/paris-texas-slide",
+      "pattern": "researched:ry-cooder/paris-texas-melody"
+    },
+    {
+      "sound": "model-d/plain-pulse-lead",
+      "pattern": "researched:kraftwerk/the-model-counter-line"
+    },
+    {
+      "sound": "model-d/planet-rock-bass",
+      "pattern": "researched:afrika-bambaataa/planet-rock-bass"
+    },
+    {
+      "sound": "model-d/plantasia-lead",
+      "pattern": "researched:mort-garson/plantasia-melody"
+    },
+    {
+      "sound": "model-d/popping-pluck",
+      "pattern": "researched:hot-butter/popcorn-theme"
+    },
+    {
+      "sound": "model-d/radiophonic-gallop-bass",
+      "pattern": "researched:bbc-radiophonic-workshop/doctor-who-gallop"
+    },
+    {
+      "sound": "model-d/rainbow-organ-arp",
+      "pattern": "researched:terry-riley/rainbow-run"
+    },
+    {
+      "sound": "model-d/reach-for-it-lead",
+      "pattern": "researched:george-duke/reach-for-it-riff"
+    },
+    {
+      "sound": "model-d/receding-arpeggio",
+      "pattern": "researched:klaus-schulze/crystal-lake-arpeggio"
+    },
+    {
+      "sound": "model-d/resonant-sweep-lead",
+      "pattern": "researched:rush/tom-sawyer-synth-break"
+    },
+    {
+      "sound": "model-d/ribbon-slide-lead",
+      "pattern": "researched:george-harrison/here-comes-the-sun-moog"
+    },
+    {
+      "sound": "model-d/riders-piano-bass",
+      "pattern": "researched:the-doors/riders-on-the-storm-bass"
+    },
+    {
+      "sound": "model-d/round-melodic-bass",
+      "pattern": "researched:air/la-femme-dargent-bass"
+    },
+    {
+      "sound": "model-d/round-staccato-bass",
+      "pattern": "researched:kraftwerk/autobahn-octave-pulse"
+    },
+    {
+      "sound": "model-d/satchidananda-harp",
+      "pattern": "researched:alice-coltrane/satchidananda-cascade"
+    },
+    {
+      "sound": "model-d/seq-pulse",
+      "pattern": "researched:giorgio-moroder/i-feel-love-bass"
+    },
+    {
+      "sound": "model-d/shine-lead",
+      "pattern": "researched:richard-wright/shine-on-minimoog"
+    },
+    {
+      "sound": "model-d/singing-filter-lead",
+      "pattern": "researched:manfred-mann/blinded-by-the-light-lead"
+    },
+    {
+      "sound": "model-d/singing-saw",
+      "pattern": "researched:neutral-milk-hotel/aeroplane-singing-saw"
+    },
+    {
+      "sound": "model-d/sliding-round-sub",
+      "pattern": "researched:j-dilla/sliding-sub-bass"
+    },
+    {
+      "sound": "model-d/slow-growl-bass",
+      "pattern": "researched:gary-numan/films-bass"
+    },
+    {
+      "sound": "model-d/soft-front-deep-bass",
+      "pattern": "researched:pet-shop-boys/west-end-girls-bass"
+    },
+    {
+      "sound": "model-d/squelch-brass-stab",
+      "pattern": "researched:talking-heads/girlfriend-is-better-synth"
+    },
+    {
+      "sound": "model-d/squelch-clav-bass",
+      "pattern": "researched:stevie-wonder/boogie-on-reggae-woman-bass"
+    },
+    {
+      "sound": "model-d/staccato-quack-bass",
+      "pattern": "researched:herbie-hancock/chameleon-bass-high"
+    },
+    {
+      "sound": "model-d/stacked-night-bass",
+      "pattern": "researched:michael-jackson/thriller-bass"
+    },
+    {
+      "sound": "model-d/stately-swell-lead",
+      "pattern": "researched:kraftwerk/trans-europe-express-descent"
+    },
+    {
+      "sound": "model-d/steel-swell-lead",
+      "pattern": "researched:daniel-lanois/deep-blue-day-steel"
+    },
+    {
+      "sound": "model-d/sugar-plum-celesta",
+      "pattern": "researched:tchaikovsky/sugar-plum-fairy-theme"
+    },
+    {
+      "sound": "model-d/swelling-wail-lead",
+      "pattern": "researched:radiohead/the-national-anthem-ondes"
+    },
+    {
+      "sound": "model-d/swoop-up-fill",
+      "pattern": "researched:talking-heads/burning-down-the-house-swoop"
+    },
+    {
+      "sound": "model-d/tape-wow-keys",
+      "pattern": "researched:boards-of-canada/olson-melody"
+    },
+    {
+      "sound": "model-d/telstar-clavioline",
+      "pattern": "researched:the-tornados/telstar-melody"
+    },
+    {
+      "sound": "model-d/thin-high-strings",
+      "pattern": "researched:isao-tomita/clair-de-lune-melody"
+    },
+    {
+      "sound": "model-d/thin-plucked-keys",
+      "pattern": "researched:prince/when-doves-cry-synth"
+    },
+    {
+      "sound": "model-d/throbbing-machine-bass",
+      "pattern": "researched:pink-floyd/welcome-to-the-machine-bass"
+    },
+    {
+      "sound": "model-d/tomita-french-horn",
+      "pattern": "researched:isao-tomita/jupiter-tune"
+    },
+    {
+      "sound": "model-d/tremolo-keys",
+      "pattern": "researched:portishead/roads-top"
+    },
+    {
+      "sound": "model-d/triangle-swell-pad",
+      "pattern": "researched:steve-roach/structures-from-silence-line"
+    },
+    {
+      "sound": "model-d/tsugaru-shamisen",
+      "pattern": "researched:yoshida-brothers/rising-riff"
+    },
+    {
+      "sound": "model-d/two-note-ostinato",
+      "pattern": "researched:tangerine-dream/rubycon-ostinato-keys"
+    },
+    {
+      "sound": "model-d/tycho-awake-pluck",
+      "pattern": "researched:tycho/awake-melody"
+    },
+    {
+      "sound": "model-d/vienna-lead",
+      "pattern": "researched:ultravox/vienna-intro-melody"
+    },
+    {
+      "sound": "model-d/warbling-glide-lead",
+      "pattern": "researched:parliament/mothership-warble"
+    },
+    {
+      "sound": "model-d/wavering-saw-lead",
+      "pattern": "researched:tubeway-army/are-friends-electric-riff"
+    },
+    {
+      "sound": "model-d/whatd-i-say-wurlitzer",
+      "pattern": "researched:ray-charles/whatd-i-say-riff"
+    },
+    {
+      "sound": "neutron/acid-squelch",
+      "pattern": "researched:phuture/acid-tracks-line"
+    },
+    {
+      "sound": "neutron/airports-tones",
+      "pattern": "researched:brian-eno/airports-1-1-figure"
+    },
+    {
+      "sound": "neutron/assimilate-grind",
+      "pattern": "researched:skinny-puppy/assimilate-bass"
+    },
+    {
+      "sound": "neutron/atmospheres-cluster",
+      "pattern": "researched:gyorgy-ligeti/atmospheres-semitones"
+    },
+    {
+      "sound": "neutron/bandpass-buzz-sub-bass",
+      "pattern": "researched:air/sexy-boy-bass"
+    },
+    {
+      "sound": "neutron/bitches-brew-bass-clarinet",
+      "pattern": "researched:bennie-maupin/bitches-brew-line"
+    },
+    {
+      "sound": "neutron/blade-runner-blues-lead",
+      "pattern": "researched:vangelis/blade-runner-blues-lead"
+    },
+    {
+      "sound": "neutron/born-slippy-bass",
+      "pattern": "researched:underworld/born-slippy-bass"
+    },
+    {
+      "sound": "neutron/born-to-run-glock",
+      "pattern": "researched:bruce-springsteen/born-to-run-glockenspiel"
+    },
+    {
+      "sound": "neutron/brass-swell",
+      "pattern": "researched:vangelis/blade-runner-main-titles-swell"
+    },
+    {
+      "sound": "neutron/breathy-horn-lead",
+      "pattern": "researched:soft-cell/say-hello-wave-goodbye-figure"
+    },
+    {
+      "sound": "neutron/bubbling-arp-pluck",
+      "pattern": "researched:duran-duran/rio-arpeggio"
+    },
+    {
+      "sound": "neutron/cello-prelude",
+      "pattern": "researched:yo-yo-ma/cello-suite-1-prelude"
+    },
+    {
+      "sound": "neutron/chorus-strings",
+      "pattern": "researched:joy-division/love-will-tear-us-apart-synth"
+    },
+    {
+      "sound": "neutron/click-front-seq-bass",
+      "pattern": "researched:yazoo/dont-go-bass"
+    },
+    {
+      "sound": "neutron/courtship-chip-lead",
+      "pattern": "researched:crystal-castles/courtship-dating-riff"
+    },
+    {
+      "sound": "neutron/cutoff-feedback-screech",
+      "pattern": "researched:daft-punk/rollin-and-scratchin-screech"
+    },
+    {
+      "sound": "neutron/danse-macabre-xylophone",
+      "pattern": "researched:camille-saint-saens/danse-macabre-xylophone"
+    },
+    {
+      "sound": "neutron/dark-arp",
+      "pattern": "researched:kyle-dixon-michael-stein/stranger-things-arpeggio"
+    },
+    {
+      "sound": "neutron/dark-drone",
+      "pattern": "researched:tim-hecker/ravedeath-drone"
+    },
+    {
+      "sound": "neutron/deep-rounded-glide-bass",
+      "pattern": "researched:pet-shop-boys/west-end-girls-bass"
+    },
+    {
+      "sound": "neutron/derezzed-arp-bass",
+      "pattern": "researched:daft-punk/derezzed-bass"
+    },
+    {
+      "sound": "neutron/drexciya-bubble-bass",
+      "pattern": "researched:drexciya/bubble-metropolis-bass"
+    },
+    {
+      "sound": "neutron/drifting-slow-tones",
+      "pattern": "researched:brian-eno/discreet-music-tones"
+    },
+    {
+      "sound": "neutron/electro-snare",
+      "pattern": "researched:afrika-bambaataa/planet-rock-snare"
+    },
+    {
+      "sound": "neutron/env-res-bubble-bass",
+      "pattern": "researched:parliament/flash-light-bass"
+    },
+    {
+      "sound": "neutron/env-sync-yelp-glide-lead",
+      "pattern": "researched:parliament/bop-gun-intro-line"
+    },
+    {
+      "sound": "neutron/env-width-pulse-lead",
+      "pattern": "researched:howard-jones/new-song-lead"
+    },
+    {
+      "sound": "neutron/eple-pluck",
+      "pattern": "researched:royksopp/eple-melody"
+    },
+    {
+      "sound": "neutron/escape-ny-bass",
+      "pattern": "researched:john-carpenter/escape-from-new-york-ostinato"
+    },
+    {
+      "sound": "neutron/fast-filter-seq",
+      "pattern": "researched:pink-floyd/on-the-run-sequence"
+    },
+    {
+      "sound": "neutron/favorite-things-soprano",
+      "pattern": "researched:john-coltrane/my-favorite-things-theme"
+    },
+    {
+      "sound": "neutron/for-an-angel-pluck",
+      "pattern": "researched:paul-van-dyk/for-an-angel-pluck"
+    },
+    {
+      "sound": "neutron/fretless-slide-bass",
+      "pattern": "researched:japan/visions-of-china-bass"
+    },
+    {
+      "sound": "neutron/funk-drive-lead",
+      "pattern": "researched:daft-punk/da-funk-breakdown-figure"
+    },
+    {
+      "sound": "neutron/geiger-counter-clicks",
+      "pattern": "researched:kraftwerk/radioactivity-morse"
+    },
+    {
+      "sound": "neutron/ghost-rider-pulse",
+      "pattern": "researched:suicide/ghost-rider-riff"
+    },
+    {
+      "sound": "neutron/gliding-echo-lead",
+      "pattern": "researched:kraftwerk/spacelab-whole-tone-rise"
+    },
+    {
+      "sound": "neutron/glue-rave-pad",
+      "pattern": "researched:bicep/glue-pad"
+    },
+    {
+      "sound": "neutron/growing-wobble-lead",
+      "pattern": "researched:tame-impala/elephant-synth"
+    },
+    {
+      "sound": "neutron/headhunter-ebm-bass",
+      "pattern": "researched:front-242/headhunter-bass"
+    },
+    {
+      "sound": "neutron/heavy-glide-saw-lead",
+      "pattern": "researched:tubeway-army/are-friends-electric-intro"
+    },
+    {
+      "sound": "neutron/higher-ground-clav",
+      "pattern": "researched:stevie-wonder/higher-ground-clavinet"
+    },
+    {
+      "sound": "neutron/hollow-seq-bass",
+      "pattern": "researched:eurythmics/sweet-dreams-riff-up"
+    },
+    {
+      "sound": "neutron/hoover-lead",
+      "pattern": "researched:joey-beltram/mentasm-hoover"
+    },
+    {
+      "sound": "neutron/horizons-liquid-pad",
+      "pattern": "researched:ltj-bukem/horizons-pad"
+    },
+    {
+      "sound": "neutron/iron-man-power-chord",
+      "pattern": "researched:black-sabbath/iron-man-riff"
+    },
+    {
+      "sound": "neutron/itchycoo-flange-pad",
+      "pattern": "researched:small-faces/itchycoo-park-top"
+    },
+    {
+      "sound": "neutron/jazz-funk-dry-bass",
+      "pattern": "researched:herbie-hancock/chameleon-bass"
+    },
+    {
+      "sound": "neutron/jeff-mills-bells",
+      "pattern": "researched:jeff-mills/the-bells-riff"
+    },
+    {
+      "sound": "neutron/kalimba-story",
+      "pattern": "researched:earth-wind-and-fire/kalimba-story-figure"
+    },
+    {
+      "sound": "neutron/khoomei-overtones",
+      "pattern": "researched:huun-huur-tu/khoomei-drone"
+    },
+    {
+      "sound": "neutron/lagging-brightness-keys",
+      "pattern": "researched:harold-budd/first-light-melody"
+    },
+    {
+      "sound": "neutron/late-second-strings",
+      "pattern": "researched:stars-of-the-lid/requiem-line"
+    },
+    {
+      "sound": "neutron/lfo-bleep-bass",
+      "pattern": "researched:lfo/lfo-bass"
+    },
+    {
+      "sound": "neutron/lfo-pulsed-echo-drone",
+      "pattern": "researched:brian-eno/in-dark-trees-bass"
+    },
+    {
+      "sound": "neutron/lfo-swept-grit-riff",
+      "pattern": "researched:daft-punk/rock-n-roll-riff"
+    },
+    {
+      "sound": "neutron/mellow-glide-delay-lead",
+      "pattern": "researched:zero-7/destiny-lead"
+    },
+    {
+      "sound": "neutron/midnight-city-lead",
+      "pattern": "researched:m83/midnight-city-hook"
+    },
+    {
+      "sound": "neutron/misirlou-tremolo",
+      "pattern": "researched:dick-dale/misirlou-melody"
+    },
+    {
+      "sound": "neutron/mussolini-bass",
+      "pattern": "researched:daf/der-mussolini-bass"
+    },
+    {
+      "sound": "neutron/mustt-harmonium",
+      "pattern": "researched:nusrat-fateh-ali-khan/mustt-mustt-harmonium"
+    },
+    {
+      "sound": "neutron/neg-lfo-flange-keys",
+      "pattern": "researched:the-cure/a-forest-synth"
+    },
+    {
+      "sound": "neutron/noise-closed-hat",
+      "pattern": "researched:the-normal/warm-leatherette-hats"
+    },
+    {
+      "sound": "neutron/norwegian-wood-sitar",
+      "pattern": "researched:the-beatles/norwegian-wood-sitar"
+    },
+    {
+      "sound": "neutron/notch-phase-pad",
+      "pattern": "researched:gong/space-rock-pad"
+    },
+    {
+      "sound": "neutron/octave-bloom-strings",
+      "pattern": "researched:angelo-badalamenti/laura-palmers-theme-strings"
+    },
+    {
+      "sound": "neutron/oh-yeah-bow-bass",
+      "pattern": "researched:yello/oh-yeah-bass"
+    },
+    {
+      "sound": "neutron/open-eye-pulse",
+      "pattern": "researched:jon-hopkins/open-eye-signal-roots"
+    },
+    {
+      "sound": "neutron/opening-ramp-seq",
+      "pattern": "researched:tangerine-dream/phaedra-rubycon-ramp"
+    },
+    {
+      "sound": "neutron/opposite-drift-pad",
+      "pattern": "researched:aphex-twin/rhubarb-top-line"
+    },
+    {
+      "sound": "neutron/orbital-chime",
+      "pattern": "researched:orbital/chime-riff"
+    },
+    {
+      "sound": "neutron/organ-filter-chop",
+      "pattern": "researched:the-who/wont-get-fooled-again-organ"
+    },
+    {
+      "sound": "neutron/overtone-sweep-drone",
+      "pattern": "researched:eliane-radigue/kyema-drone"
+    },
+    {
+      "sound": "neutron/pablo-melodica",
+      "pattern": "researched:augustus-pablo/east-of-the-river-nile-line"
+    },
+    {
+      "sound": "neutron/para-keys",
+      "pattern": "researched:boards-of-canada/roygbiv-melody"
+    },
+    {
+      "sound": "neutron/perotin-organum",
+      "pattern": "researched:perotin/viderunt-omnes-organum"
+    },
+    {
+      "sound": "neutron/piazzolla-bandoneon",
+      "pattern": "researched:astor-piazzolla/libertango-theme"
+    },
+    {
+      "sound": "neutron/pinged-filter-bubbles",
+      "pattern": "researched:talking-heads/once-in-a-lifetime-arpeggio"
+    },
+    {
+      "sound": "neutron/punchy-octave-top-bass",
+      "pattern": "researched:depeche-mode/enjoy-the-silence-bass"
+    },
+    {
+      "sound": "neutron/pussyfooting-loop",
+      "pattern": "researched:fripp-and-eno/no-pussyfooting-notes"
+    },
+    {
+      "sound": "neutron/random-rate-solo",
+      "pattern": "researched:roxy-music/editions-of-you-solo"
+    },
+    {
+      "sound": "neutron/reese-bass",
+      "pattern": "researched:kevin-saunderson/reese-bass"
+    },
+    {
+      "sound": "neutron/resonant-sweep-growl",
+      "pattern": "researched:rush/tom-sawyer-growl"
+    },
+    {
+      "sound": "neutron/rubber-drive-bass",
+      "pattern": "researched:mr-oizo/flat-beat-bass"
+    },
+    {
+      "sound": "neutron/rydeen-lead",
+      "pattern": "researched:yellow-magic-orchestra/rydeen-theme"
+    },
+    {
+      "sound": "neutron/sakamoto-bell-lead",
+      "pattern": "researched:ryuichi-sakamoto/merry-christmas-mr-lawrence-ostinato"
+    },
+    {
+      "sound": "neutron/says-swelling-arp",
+      "pattern": "researched:nils-frahm/says-arpeggio"
+    },
+    {
+      "sound": "neutron/scary-monsters-growl",
+      "pattern": "researched:skrillex/scary-monsters-bass"
+    },
+    {
+      "sound": "neutron/scoop-rubber-bass",
+      "pattern": "researched:funkadelic/knee-deep-bass"
+    },
+    {
+      "sound": "neutron/self-fading-arp",
+      "pattern": "researched:manuel-gottsching/e2-e4-arpeggio"
+    },
+    {
+      "sound": "neutron/seraphim-choir",
+      "pattern": "researched:dead-can-dance/host-of-seraphim-pad"
+    },
+    {
+      "sound": "neutron/seventeen-electroclash-bass",
+      "pattern": "researched:ladytron/seventeen-synth"
+    },
+    {
+      "sound": "neutron/silk-road-lead",
+      "pattern": "researched:kitaro/silk-road-melody"
+    },
+    {
+      "sound": "neutron/silver-apples-oscillations",
+      "pattern": "researched:silver-apples/oscillations-drone-and-tune"
+    },
+    {
+      "sound": "neutron/smeared-brass-stab",
+      "pattern": "researched:prince/1999-stabs-top-line"
+    },
+    {
+      "sound": "neutron/soft-sustain-keys",
+      "pattern": "researched:radiohead/everything-in-its-right-place-dyads"
+    },
+    {
+      "sound": "neutron/solaris-shimmer",
+      "pattern": "researched:cliff-martinez/solaris-figure"
+    },
+    {
+      "sound": "neutron/sowiesoso-tones",
+      "pattern": "researched:cluster/sowiesoso-melody"
+    },
+    {
+      "sound": "neutron/speed-garage-warp-bass",
+      "pattern": "researched:armand-van-helden/you-dont-know-me-bass"
+    },
+    {
+      "sound": "neutron/staccato-pulse-lead",
+      "pattern": "researched:a-ha/take-on-me-riff"
+    },
+    {
+      "sound": "neutron/staircase-bleep-arp",
+      "pattern": "researched:kraftwerk/home-computer-riff"
+    },
+    {
+      "sound": "neutron/strawberry-fields-flute",
+      "pattern": "researched:the-beatles/strawberry-fields-forever-flutes"
+    },
+    {
+      "sound": "neutron/strings-of-life-stab",
+      "pattern": "researched:derrick-may/strings-of-life-stabs-top"
+    },
+    {
+      "sound": "neutron/sunergy-random-drift",
+      "pattern": "researched:kaitlyn-aurelia-smith/sunergy-dyads"
+    },
+    {
+      "sound": "neutron/sunn-doom-drone",
+      "pattern": "researched:sunn-o/it-took-the-night-to-believe-drone"
+    },
+    {
+      "sound": "neutron/sustained-fuzz-lead",
+      "pattern": "researched:robert-fripp/heroes-lead"
+    },
+    {
+      "sound": "neutron/sync-buzz-glam-bass",
+      "pattern": "researched:goldfrapp/strict-machine-bass"
+    },
+    {
+      "sound": "neutron/sync-lead",
+      "pattern": "researched:the-cars/lets-go-riff"
+    },
+    {
+      "sound": "neutron/taiko-drum",
+      "pattern": "researched:kodo/o-daiko-pattern"
+    },
+    {
+      "sound": "neutron/tick-of-clock-pad",
+      "pattern": "researched:chromatics/tick-of-the-clock-pad"
+    },
+    {
+      "sound": "neutron/tremolo-keys",
+      "pattern": "researched:portishead/roads-top-two"
+    },
+    {
+      "sound": "neutron/turangalila-ondes",
+      "pattern": "researched:olivier-messiaen/turangalila-ondes"
+    },
+    {
+      "sound": "neutron/twin-guitar-harmony",
+      "pattern": "researched:thin-lizzy/boys-are-back-in-town-lead"
+    },
+    {
+      "sound": "neutron/two-speed-pwm-strings",
+      "pattern": "researched:gary-numan/cars-strings-line"
+    },
+    {
+      "sound": "neutron/under-the-skin-strings",
+      "pattern": "researched:mica-levi/under-the-skin-strings"
+    },
+    {
+      "sound": "neutron/upside-down-keys-lead",
+      "pattern": "researched:joe-zawinul/black-market-theme-inverted"
+    },
+    {
+      "sound": "neutron/volume-swell-steel-lead",
+      "pattern": "researched:daniel-lanois/rocco-steel"
+    },
+    {
+      "sound": "neutron/worn-tape-echo-pad",
+      "pattern": "researched:boards-of-canada/olson-pad"
+    },
+    {
+      "sound": "neutron/zap-kick",
+      "pattern": "researched:kraftwerk/numbers-kick"
+    },
+    {
+      "sound": "polivoks/pv-acid-scream",
+      "pattern": "researched:hardfloor/acperience-line-high"
+    },
+    {
+      "sound": "polivoks/pv-boc-glass",
+      "pattern": "researched:boards-of-canada/olson-melody"
+    },
+    {
+      "sound": "polivoks/pv-bp-acid",
+      "pattern": "researched:phuture/acid-tracks-line"
+    },
+    {
+      "sound": "polivoks/pv-breathy-lead",
+      "pattern": "researched:vangelis/chariots-of-fire-melody-high"
+    },
+    {
+      "sound": "polivoks/pv-carpenter-arp",
+      "pattern": "researched:john-carpenter/halloween-piano-figure-low-2"
+    },
+    {
+      "sound": "polivoks/pv-clav",
+      "pattern": "researched:stevie-wonder/superstition-clavinet-high"
+    },
+    {
+      "sound": "polivoks/pv-ebm-bass",
+      "pattern": "researched:front-242/headhunter-bass"
+    },
+    {
+      "sound": "polivoks/pv-electro-pluck",
+      "pattern": "researched:afrika-bambaataa/planet-rock-bass"
+    },
+    {
+      "sound": "polivoks/pv-equinoxe-seq",
+      "pattern": "researched:jean-michel-jarre/equinoxe-5-octave-bass"
+    },
+    {
+      "sound": "polivoks/pv-fm-rasp",
+      "pattern": "researched:rick-wakeman/close-to-the-edge-chords-top"
+    },
+    {
+      "sound": "polivoks/pv-gfunk-whine",
+      "pattern": "researched:dr-dre/nuthin-but-a-g-thang-lead"
+    },
+    {
+      "sound": "polivoks/pv-harmonica",
+      "pattern": "researched:little-walter/juke-riff"
+    },
+    {
+      "sound": "polivoks/pv-harp",
+      "pattern": "researched:alice-coltrane/satchidananda-cascade"
+    },
+    {
+      "sound": "polivoks/pv-kalimba",
+      "pattern": "researched:shona-mbira-tradition/nhemamusasa-pattern-high"
+    },
+    {
+      "sound": "polivoks/pv-marimba",
+      "pattern": "researched:steve-reich/eighteen-marimba"
+    },
+    {
+      "sound": "polivoks/pv-mentasm-hoover",
+      "pattern": "researched:joey-beltram/mentasm-hoover"
+    },
+    {
+      "sound": "polivoks/pv-motorik-bass",
+      "pattern": "researched:neu/hallogallo-pulse"
+    },
+    {
+      "sound": "polivoks/pv-octave-disco",
+      "pattern": "researched:giorgio-moroder/chase-bass"
+    },
+    {
+      "sound": "polivoks/pv-phaedra-sweep",
+      "pattern": "researched:tangerine-dream/phaedra-pulse-keys"
+    },
+    {
+      "sound": "polivoks/pv-pulse-funk-bass",
+      "pattern": "researched:talking-heads/slippery-people-bass"
+    },
+    {
+      "sound": "polivoks/pv-radigue-drone",
+      "pattern": "researched:eliane-radigue/kyema-drone"
+    },
+    {
+      "sound": "polivoks/pv-robot-seq",
+      "pattern": "researched:kraftwerk/the-robots-sequence"
+    },
+    {
+      "sound": "polivoks/pv-shoegaze",
+      "pattern": "researched:my-bloody-valentine/only-shallow-lead"
+    },
+    {
+      "sound": "polivoks/pv-surf-tremolo",
+      "pattern": "researched:dick-dale/misirlou-melody"
+    },
+    {
+      "sound": "polivoks/pv-swell-bass",
+      "pattern": "researched:vangelis/blade-runner-end-titles-bass"
+    },
+    {
+      "sound": "polivoks/pv-switched-on-bach",
+      "pattern": "researched:wendy-carlos/invention-in-f-subject"
+    },
+    {
+      "sound": "polivoks/pv-synthwave-bass",
+      "pattern": "researched:kavinsky/nightcall-bass"
+    },
+    {
+      "sound": "polivoks/pv-tearing-fm",
+      "pattern": "researched:the-cars/just-what-i-needed-outro"
+    },
+    {
+      "sound": "polivoks/pv-theremin",
+      "pattern": "researched:portishead/mysterons-line"
+    },
+    {
+      "sound": "polivoks/pv-wail",
+      "pattern": "researched:jan-hammer/miami-vice-theme-lead-high"
+    },
+    {
+      "sound": "polivoks/pv-ymo-octave",
+      "pattern": "researched:yellow-magic-orchestra/rydeen-theme"
+    },
+    {
+      "sound": "poly-d/pd-autobahn-bass",
+      "pattern": "researched:kraftwerk/autobahn-octave-pulse"
+    },
+    {
+      "sound": "poly-d/pd-buzz-lead",
+      "pattern": "researched:tubeway-army/are-friends-electric-riff"
+    },
+    {
+      "sound": "poly-d/pd-clean-melody",
+      "pattern": "researched:kraftwerk/computer-love-melody"
+    },
+    {
+      "sound": "poly-d/pd-funk-bass",
+      "pattern": "researched:parliament/flash-light-bass"
+    },
+    {
+      "sound": "poly-d/pd-gliding-solo",
+      "pattern": "researched:daft-punk/digital-love-solo"
+    },
+    {
+      "sound": "poly-d/pd-sonar-drone-pad",
+      "pattern": "researched:brian-eno/signals-chords"
+    },
+    {
+      "sound": "poly-d/pd-squelch-glide-lead",
+      "pattern": "researched:parliament/give-up-the-funk-riff"
+    },
+    {
+      "sound": "poly-d/pd-steel-swell-duo",
+      "pattern": "researched:daniel-lanois/agave-steel-pairs"
+    },
+    {
+      "sound": "pro-1/abrasive-fm-drone",
+      "pattern": "researched:the-human-league/dignity-of-labour-drone"
+    },
+    {
+      "sound": "pro-1/acid-slide-line",
+      "pattern": "researched:josh-wink/higher-state-line"
+    },
+    {
+      "sound": "pro-1/blooming-organ-drone",
+      "pattern": "researched:brian-eno/big-ship-roots"
+    },
+    {
+      "sound": "pro-1/bubble-lofreq-bass",
+      "pattern": "researched:parliament/flash-light-bass"
+    },
+    {
+      "sound": "pro-1/clocked-filter-pulse",
+      "pattern": "researched:the-who/baba-oriley-organ-loop"
+    },
+    {
+      "sound": "pro-1/dark-eighths-bass",
+      "pattern": "researched:john-carpenter/escape-from-new-york-ostinato"
+    },
+    {
+      "sound": "pro-1/dark-swell-pad",
+      "pattern": "researched:phil-collins/in-the-air-tonight-roots"
+    },
+    {
+      "sound": "pro-1/deep-round-bass",
+      "pattern": "researched:pet-shop-boys/west-end-girls-bass"
+    },
+    {
+      "sound": "pro-1/dry-clav-comp",
+      "pattern": "researched:talking-heads/born-under-punches-comp"
+    },
+    {
+      "sound": "pro-1/ebm-sync-bass",
+      "pattern": "researched:front-242/headhunter-bass-high"
+    },
+    {
+      "sound": "pro-1/envelope-thump-bass",
+      "pattern": "researched:yazoo/situation-bass"
+    },
+    {
+      "sound": "pro-1/flat-glide-riff-lead",
+      "pattern": "researched:gary-numan/we-are-glass-riff"
+    },
+    {
+      "sound": "pro-1/hazy-drift-pad",
+      "pattern": "researched:boards-of-canada/olson-melody"
+    },
+    {
+      "sound": "pro-1/interlock-pluck",
+      "pattern": "researched:king-crimson/discipline-figure"
+    },
+    {
+      "sound": "pro-1/lfo-sync-lead",
+      "pattern": "researched:thomas-dolby/she-blinded-me-with-science-line"
+    },
+    {
+      "sound": "pro-1/mellow-horn-lead",
+      "pattern": "researched:soft-cell/say-hello-wave-goodbye-figure"
+    },
+    {
+      "sound": "pro-1/mellow-swell-bass",
+      "pattern": "researched:zero-7/in-the-waiting-line-bass"
+    },
+    {
+      "sound": "pro-1/minneapolis-brass-stab",
+      "pattern": "researched:prince/1999-stabs-top-line"
+    },
+    {
+      "sound": "pro-1/nasal-loop-riff",
+      "pattern": "researched:daft-punk/technologic-loop"
+    },
+    {
+      "sound": "pro-1/nasal-reed-lead",
+      "pattern": "researched:depeche-mode/everything-counts-hook"
+    },
+    {
+      "sound": "pro-1/noise-tick-pluck",
+      "pattern": "researched:depeche-mode/any-second-now-pluck"
+    },
+    {
+      "sound": "pro-1/octave-seq-bass",
+      "pattern": "researched:new-order/temptation-bass"
+    },
+    {
+      "sound": "pro-1/octave-stack-bass",
+      "pattern": "researched:eurythmics/sweet-dreams-riff"
+    },
+    {
+      "sound": "pro-1/one-osc-punch-bass",
+      "pattern": "researched:soft-cell/bedsitter-bass"
+    },
+    {
+      "sound": "pro-1/open-fifth-slow-swell",
+      "pattern": "researched:brian-eno/becalmed-swell"
+    },
+    {
+      "sound": "pro-1/p1-aguirre-drone",
+      "pattern": "researched:popol-vuh/aguirre-choir-low"
+    },
+    {
+      "sound": "pro-1/p1-blinding-lead",
+      "pattern": "researched:the-weeknd/blinding-lights-riff-high"
+    },
+    {
+      "sound": "pro-1/p1-chase-sequence",
+      "pattern": "researched:giorgio-moroder/chase-bass"
+    },
+    {
+      "sound": "pro-1/p1-der-mussolini",
+      "pattern": "researched:daf/der-mussolini-bass"
+    },
+    {
+      "sound": "pro-1/p1-doves-cry-keys",
+      "pattern": "researched:prince/when-doves-cry-synth"
+    },
+    {
+      "sound": "pro-1/p1-eple-lead",
+      "pattern": "researched:royksopp/eple-melody"
+    },
+    {
+      "sound": "pro-1/p1-flat-beat-bass",
+      "pattern": "researched:mr-oizo/flat-beat-bass"
+    },
+    {
+      "sound": "pro-1/p1-midnight-city-lead",
+      "pattern": "researched:m83/midnight-city-hook-low"
+    },
+    {
+      "sound": "pro-1/p1-mother-we-share",
+      "pattern": "researched:chvrches/the-mother-we-share-pluck"
+    },
+    {
+      "sound": "pro-1/p1-thriller-bass",
+      "pattern": "researched:michael-jackson/thriller-bass"
+    },
+    {
+      "sound": "pro-1/p1-tom-sawyer-growl",
+      "pattern": "researched:rush/tom-sawyer-growl"
+    },
+    {
+      "sound": "pro-1/pedal-glide-drone",
+      "pattern": "researched:vangelis/blade-runner-blues-glide"
+    },
+    {
+      "sound": "pro-1/pop-riff",
+      "pattern": "researched:yazoo/dont-go-riff-low"
+    },
+    {
+      "sound": "pro-1/pulsing-seq-bass",
+      "pattern": "researched:japan/quiet-life-bass"
+    },
+    {
+      "sound": "pro-1/pw-snap-bass",
+      "pattern": "researched:howard-jones/new-song-bass"
+    },
+    {
+      "sound": "pro-1/quiet-bloom-arp",
+      "pattern": "researched:new-order/your-silent-face-loop"
+    },
+    {
+      "sound": "pro-1/rasp-filter-riff",
+      "pattern": "researched:daft-punk/da-funk-breakdown-figure"
+    },
+    {
+      "sound": "pro-1/reese-bass",
+      "pattern": "researched:90s-drum-and-bass/reese-bass"
+    },
+    {
+      "sound": "pro-1/round-bounce-bass",
+      "pattern": "researched:kraftwerk/tour-de-france-bounce"
+    },
+    {
+      "sound": "pro-1/rounded-ep-keys",
+      "pattern": "researched:radiohead/everything-in-its-right-place-keys"
+    },
+    {
+      "sound": "pro-1/rubber-squelch-bass",
+      "pattern": "researched:george-clinton/atomic-dog-bass"
+    },
+    {
+      "sound": "pro-1/soft-pulse-pluck",
+      "pattern": "researched:yazoo/only-you-arpeggio"
+    },
+    {
+      "sound": "pro-1/square-pop-lead",
+      "pattern": "researched:depeche-mode/just-cant-get-enough-counter-line"
+    },
+    {
+      "sound": "pro-1/steel-swell-bend",
+      "pattern": "researched:daniel-lanois/still-water-steel"
+    },
+    {
+      "sound": "pro-1/stretched-key-bleeps",
+      "pattern": "researched:kraftwerk/pocket-calculator-bleeps"
+    },
+    {
+      "sound": "pro-1/swoop-answer-lead",
+      "pattern": "researched:talking-heads/burning-down-the-house-answer"
+    },
+    {
+      "sound": "pro-1/tremolo-filter-keys",
+      "pattern": "researched:portishead/roads-top"
+    },
+    {
+      "sound": "pro-1/two-speed-ensemble-strings",
+      "pattern": "researched:joy-division/atmosphere-synth"
+    },
+    {
+      "sound": "pro-1/uneven-warble-lead",
+      "pattern": "researched:air/kelly-watch-the-stars-melody"
+    },
+    {
+      "sound": "pro-1/wandering-sine-tones",
+      "pattern": "researched:brian-eno/neroli-keys"
+    },
+    {
+      "sound": "pro-1/wavering-detune-lead",
+      "pattern": "researched:duran-duran/save-a-prayer-lead"
+    },
+    {
+      "sound": "pro-1/wobbly-sweet-lead",
+      "pattern": "researched:talking-heads/this-must-be-the-place-melody"
+    },
+    {
+      "sound": "pro-800/p8-air-pad",
+      "pattern": "researched:phil-collins/in-the-air-tonight-chords"
+    },
+    {
+      "sound": "pro-800/p8-carpenter-bass",
+      "pattern": "researched:john-carpenter/escape-from-new-york-ostinato"
+    },
+    {
+      "sound": "pro-800/p8-glassy-chords",
+      "pattern": "researched:kraftwerk/radioland-chords"
+    },
+    {
+      "sound": "pro-800/p8-hazy-chords",
+      "pattern": "researched:daft-punk/nightvision-chords"
+    },
+    {
+      "sound": "pro-800/p8-slow-soft-bells",
+      "pattern": "researched:brian-eno/thursday-afternoon-bells"
+    },
+    {
+      "sound": "pro-800/p8-squelch-riff",
+      "pattern": "researched:talking-heads/once-in-a-lifetime-synth"
+    },
+    {
+      "sound": "pro-800/p8-steel-swell",
+      "pattern": "researched:daniel-lanois/carla-steel"
+    },
+    {
+      "sound": "pro-800/p8-sync-lead",
+      "pattern": "researched:the-cars/lets-go-riff"
+    },
+    {
+      "sound": "solar-42n/solar-airport-loops",
+      "pattern": "researched:brian-eno/airports-2-1-tones"
+    },
+    {
+      "sound": "solar-42n/solar-carpenter-ostinato",
+      "pattern": "researched:john-carpenter/escape-from-new-york-ostinato"
+    },
+    {
+      "sound": "solar-42n/solar-deep-listening",
+      "pattern": "researched:pauline-oliveros/deep-listening-tones"
+    },
+    {
+      "sound": "solar-42n/solar-deep-sleep",
+      "pattern": "researched:max-richter/sleep-melody"
+    },
+    {
+      "sound": "solar-42n/solar-disintegrating-loop",
+      "pattern": "researched:william-basinski/disintegration-loop-phrase"
+    },
+    {
+      "sound": "solar-42n/solar-eighties-arp",
+      "pattern": "researched:kyle-dixon-michael-stein/stranger-things-arpeggio"
+    },
+    {
+      "sound": "solar-42n/solar-forest-pulse",
+      "pattern": "researched:gas/pop-drone"
+    },
+    {
+      "sound": "solar-42n/solar-fourth-world-horn",
+      "pattern": "researched:jon-hassell/fourth-world-line"
+    },
+    {
+      "sound": "solar-42n/solar-frippertronics",
+      "pattern": "researched:fripp-and-eno/no-pussyfooting-notes"
+    },
+    {
+      "sound": "solar-42n/solar-g-funk-whine",
+      "pattern": "researched:dr-dre/nuthin-but-a-g-thang-lead"
+    },
+    {
+      "sound": "solar-42n/solar-galloping-bass",
+      "pattern": "researched:bbc-radiophonic-workshop/doctor-who-gallop"
+    },
+    {
+      "sound": "solar-42n/solar-glide-guitar",
+      "pattern": "researched:my-bloody-valentine/only-shallow-lead"
+    },
+    {
+      "sound": "solar-42n/solar-hazy-nostalgia",
+      "pattern": "researched:boards-of-canada/roygbiv-melody"
+    },
+    {
+      "sound": "solar-42n/solar-octave-sequence",
+      "pattern": "researched:giorgio-moroder/i-feel-love-roots"
+    },
+    {
+      "sound": "solar-42n/solar-on-the-run",
+      "pattern": "researched:pink-floyd/on-the-run-sequence"
+    },
+    {
+      "sound": "solar-42n/solar-oxygene-strings",
+      "pattern": "researched:jean-michel-jarre/oxygene-string-line"
+    },
+    {
+      "sound": "solar-42n/solar-pocket-calculator",
+      "pattern": "researched:kraftwerk/pocket-calculator-plucks"
+    },
+    {
+      "sound": "solar-42n/solar-polivoks-acid",
+      "pattern": "researched:acid-house/acid-line"
+    },
+    {
+      "sound": "solar-42n/solar-radiophonic-swoops",
+      "pattern": "researched:bbc-radiophonic-workshop/doctor-who-melody"
+    },
+    {
+      "sound": "solar-42n/solar-soft-pedal-piano",
+      "pattern": "researched:harold-budd/first-light-melody"
+    },
+    {
+      "sound": "solar-42n/solar-sun-ra-organ",
+      "pattern": "researched:sun-ra/cosmic-organ-trills"
+    },
+    {
+      "sound": "solar-42n/solar-switched-on-bach",
+      "pattern": "researched:wendy-carlos/invention-in-f-subject"
+    },
+    {
+      "sound": "solar-42n/solar-tears-in-rain",
+      "pattern": "researched:vangelis/blade-runner-end-titles-theme"
+    },
+    {
+      "sound": "solar-42n/solar-tomita-whistle",
+      "pattern": "researched:isao-tomita/clair-de-lune-melody"
+    },
+    {
+      "sound": "sub-37/s37-chase-arp",
+      "pattern": "researched:giorgio-moroder/chase-bass"
+    },
+    {
+      "sound": "sub-37/s37-feedback-growl",
+      "pattern": "researched:parliament/flash-light-bass-high"
+    },
+    {
+      "sound": "sub-37/s37-latched-drone",
+      "pattern": "researched:la-monte-young/dream-house-root"
+    },
+    {
+      "sound": "sub-37/s37-lucky-glide",
+      "pattern": "researched:emerson-lake-palmer/lucky-man-moog-solo-high"
+    },
+    {
+      "sound": "sub-37/s37-morph-drone",
+      "pattern": "researched:klaus-schulze/timewind-drone"
+    },
+    {
+      "sound": "sub-37/s37-velocity-length-keys",
+      "pattern": "researched:steve-reich/eighteen-marimba"
+    },
+    {
+      "sound": "super-gemini/sg-acid-bass",
+      "pattern": "researched:acid-house/acid-line"
+    },
+    {
+      "sound": "super-gemini/sg-acid-lead",
+      "pattern": "researched:acid-house/acid-line-high"
+    },
+    {
+      "sound": "super-gemini/sg-airports-pad",
+      "pattern": "researched:brian-eno/airports-2-1-tones"
+    },
+    {
+      "sound": "super-gemini/sg-basildon-bass",
+      "pattern": "researched:depeche-mode/just-cant-get-enough-bass"
+    },
+    {
+      "sound": "super-gemini/sg-berlin-school",
+      "pattern": "researched:tangerine-dream/stratosfear-sequence"
+    },
+    {
+      "sound": "super-gemini/sg-blade-brass",
+      "pattern": "researched:vangelis/blade-runner-end-titles-theme"
+    },
+    {
+      "sound": "super-gemini/sg-blinding-riff",
+      "pattern": "researched:the-weeknd/blinding-lights-riff"
+    },
+    {
+      "sound": "super-gemini/sg-blue-monday-bass",
+      "pattern": "researched:new-order/blue-monday-bass"
+    },
+    {
+      "sound": "super-gemini/sg-blush-arp",
+      "pattern": "researched:vangelis/blade-runner-end-titles-sequence"
+    },
+    {
+      "sound": "super-gemini/sg-boogie-bass",
+      "pattern": "researched:stevie-wonder/boogie-on-reggae-woman-bass"
+    },
+    {
+      "sound": "super-gemini/sg-bright-pluck-pop",
+      "pattern": "researched:chvrches/the-mother-we-share-pluck"
+    },
+    {
+      "sound": "super-gemini/sg-celesta",
+      "pattern": "researched:tchaikovsky/sugar-plum-fairy-theme"
+    },
+    {
+      "sound": "super-gemini/sg-chameleon-bass",
+      "pattern": "researched:herbie-hancock/chameleon-bass"
+    },
+    {
+      "sound": "super-gemini/sg-chariots-pad",
+      "pattern": "researched:vangelis/chariots-of-fire-strings"
+    },
+    {
+      "sound": "super-gemini/sg-choir-pad",
+      "pattern": "researched:80s-ballads/ballad-pad"
+    },
+    {
+      "sound": "super-gemini/sg-cluster-drone",
+      "pattern": "researched:gyorgy-ligeti/atmospheres-cluster"
+    },
+    {
+      "sound": "super-gemini/sg-computer-love",
+      "pattern": "researched:kraftwerk/computer-love-melody"
+    },
+    {
+      "sound": "super-gemini/sg-countdown-fanfare",
+      "pattern": "researched:europe/final-countdown-riff"
+    },
+    {
+      "sound": "super-gemini/sg-cowbell",
+      "pattern": "researched:afrika-bambaataa/planet-rock-cowbell"
+    },
+    {
+      "sound": "super-gemini/sg-crockett-pad",
+      "pattern": "researched:jan-hammer/crocketts-theme-strings"
+    },
+    {
+      "sound": "super-gemini/sg-deep-sub-bass",
+      "pattern": "researched:moderat/a-new-error-bass"
+    },
+    {
+      "sound": "super-gemini/sg-dont-go-lead",
+      "pattern": "researched:yazoo/dont-go-riff"
+    },
+    {
+      "sound": "super-gemini/sg-dont-you-want-me",
+      "pattern": "researched:the-human-league/dont-you-want-me-riff-top"
+    },
+    {
+      "sound": "super-gemini/sg-downtempo-keys",
+      "pattern": "researched:bonobo/kerala-keys"
+    },
+    {
+      "sound": "super-gemini/sg-dual-octave-pad",
+      "pattern": "researched:80s-ballads/ballad-pad"
+    },
+    {
+      "sound": "super-gemini/sg-equinoxe-seq",
+      "pattern": "researched:jean-michel-jarre/equinoxe-5-octave-bass"
+    },
+    {
+      "sound": "super-gemini/sg-feel-love-seq",
+      "pattern": "researched:giorgio-moroder/i-feel-love-roots"
+    },
+    {
+      "sound": "super-gemini/sg-filter-house",
+      "pattern": "researched:daft-punk/digital-love-chord-stabs"
+    },
+    {
+      "sound": "super-gemini/sg-gfunk",
+      "pattern": "researched:dr-dre/nuthin-but-a-g-thang-lead"
+    },
+    {
+      "sound": "super-gemini/sg-halloween-pulse",
+      "pattern": "researched:john-carpenter/halloween-low-strings"
+    },
+    {
+      "sound": "super-gemini/sg-hammer-guitar",
+      "pattern": "researched:jan-hammer/crocketts-theme-lead"
+    },
+    {
+      "sound": "super-gemini/sg-hans-organ",
+      "pattern": "researched:hans-zimmer/interstellar-organ-figure"
+    },
+    {
+      "sound": "super-gemini/sg-hazy-keys",
+      "pattern": "researched:boards-of-canada/roygbiv-chords"
+    },
+    {
+      "sound": "super-gemini/sg-hopkins-pulse",
+      "pattern": "researched:jon-hopkins/drone-fifths"
+    },
+    {
+      "sound": "super-gemini/sg-jarre-laser-harp",
+      "pattern": "researched:jean-michel-jarre/rendez-vous-laser-harp"
+    },
+    {
+      "sound": "super-gemini/sg-jump-brass",
+      "pattern": "researched:van-halen/jump-riff"
+    },
+    {
+      "sound": "super-gemini/sg-justice-bass",
+      "pattern": "researched:justice/genesis-bass"
+    },
+    {
+      "sound": "super-gemini/sg-levels-lead",
+      "pattern": "researched:avicii/levels-riff"
+    },
+    {
+      "sound": "super-gemini/sg-mau5-pluck",
+      "pattern": "researched:deadmau5/ghosts-n-stuff-chords"
+    },
+    {
+      "sound": "super-gemini/sg-midnight-pad",
+      "pattern": "researched:m83/midnight-city-chords"
+    },
+    {
+      "sound": "super-gemini/sg-minneapolis-stab",
+      "pattern": "researched:prince/1999-stabs"
+    },
+    {
+      "sound": "super-gemini/sg-neoclassical-pad",
+      "pattern": "researched:olafur-arnalds/near-light-pad"
+    },
+    {
+      "sound": "super-gemini/sg-nightcall-bass",
+      "pattern": "researched:kavinsky/nightcall-bass"
+    },
+    {
+      "sound": "super-gemini/sg-nordic-bells",
+      "pattern": "researched:royksopp/eple-melody"
+    },
+    {
+      "sound": "super-gemini/sg-oxygene-wash",
+      "pattern": "researched:jean-michel-jarre/oxygene-iv-chords"
+    },
+    {
+      "sound": "super-gemini/sg-prydz-sweep",
+      "pattern": "researched:eric-prydz/opus-chords"
+    },
+    {
+      "sound": "super-gemini/sg-rimshot",
+      "pattern": "researched:kraftwerk/numbers-rimshot"
+    },
+    {
+      "sound": "super-gemini/sg-rule-the-world",
+      "pattern": "researched:tears-for-fears/rule-the-world-shuffle"
+    },
+    {
+      "sound": "super-gemini/sg-sawyer-growl",
+      "pattern": "researched:rush/tom-sawyer-growl"
+    },
+    {
+      "sound": "super-gemini/sg-sweet-dreams",
+      "pattern": "researched:eurythmics/sweet-dreams-riff"
+    },
+    {
+      "sound": "super-gemini/sg-switched-on-lead",
+      "pattern": "researched:wendy-carlos/invention-in-d-minor"
+    },
+    {
+      "sound": "super-gemini/sg-sync-bass",
+      "pattern": "researched:kraftwerk/numbers-sync-bass"
+    },
+    {
+      "sound": "super-gemini/sg-sync-lead",
+      "pattern": "researched:daft-punk/robot-rock-riff"
+    },
+    {
+      "sound": "super-gemini/sg-synthwave-brass",
+      "pattern": "researched:gunship/tech-noir-chords"
+    },
+    {
+      "sound": "super-gemini/sg-take-on-me",
+      "pattern": "researched:a-ha/take-on-me-riff-low"
+    },
+    {
+      "sound": "super-gemini/sg-top-gun-anthem",
+      "pattern": "researched:harold-faltermeyer/top-gun-anthem-chords"
+    },
+    {
+      "sound": "super-gemini/sg-toto-brass",
+      "pattern": "researched:toto/rosanna-brass"
+    },
+    {
+      "sound": "super-gemini/sg-truise-lead",
+      "pattern": "researched:com-truise/brokendate-lead"
+    },
+    {
+      "sound": "super-gemini/sg-tycho-pad",
+      "pattern": "researched:tycho/awake-chords"
+    },
+    {
+      "sound": "super-gemini/sg-upside-down-arp",
+      "pattern": "researched:kyle-dixon-michael-stein/stranger-things-arpeggio-chord"
+    },
+    {
+      "sound": "super-gemini/sg-west-end-bass",
+      "pattern": "researched:pet-shop-boys/west-end-girls-bass"
+    },
+    {
+      "sound": "super-gemini/sg-whistle",
+      "pattern": "researched:dr-dre/nuthin-but-a-g-thang-lead"
+    },
+    {
+      "sound": "super-gemini/sg-zap-perc",
+      "pattern": "researched:electro/zap-percussion"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-acid-bass",
+      "pattern": "researched:acid-house/acid-line"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-aphex-acid",
+      "pattern": "researched:aphex-twin/acid-line"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-barbieri",
+      "pattern": "researched:caterina-barbieri/evolving-pattern"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-berlin",
+      "pattern": "researched:tangerine-dream/stratosfear-sequence"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-chemical-squelch",
+      "pattern": "researched:chemical-brothers/hey-boy-hey-girl-riff"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-hopkins-pulse",
+      "pattern": "researched:jon-hopkins/open-eye-signal-roots-high"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-joy-bass",
+      "pattern": "researched:acid-house/acid-line"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-oliveros",
+      "pattern": "researched:pauline-oliveros/delay-tones"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-on-the-run",
+      "pattern": "researched:pink-floyd/on-the-run-sequence-high"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-prodigy-rave",
+      "pattern": "researched:the-prodigy/out-of-space-riff"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-radigue",
+      "pattern": "researched:eliane-radigue/feedback-drone"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-riley",
+      "pattern": "researched:terry-riley/rainbow-run"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-schulze",
+      "pattern": "researched:klaus-schulze/timewind-drone"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-silver-apples",
+      "pattern": "researched:silver-apples/drone-held"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-spiegel",
+      "pattern": "researched:laurie-spiegel/expanding-universe-pattern"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-suicide",
+      "pattern": "researched:suicide/ghost-rider-root"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-sync-bass",
+      "pattern": "researched:kraftwerk/numbers-sync-bass"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-who-organ",
+      "pattern": "researched:the-who/wont-get-fooled-again-organ-top-low"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-young-drone",
+      "pattern": "researched:la-monte-young/just-drone-root"
+    },
+    {
+      "sound": "syntrx-ii/syntrx-zap-kick",
+      "pattern": "researched:kraftwerk/numbers-kick-low"
+    },
+    {
+      "sound": "system-35/s35-coltrane-harp",
+      "pattern": "researched:alice-coltrane/satchidananda-cascade"
+    },
+    {
+      "sound": "system-35/s35-gasparyan-duduk",
+      "pattern": "researched:djivan-gasparyan/duduk-lament"
+    },
+    {
+      "sound": "system-35/s35-jaco-fretless",
+      "pattern": "researched:jaco-pastorius/continuum-melody"
+    },
+    {
+      "sound": "system-35/s35-lamonte-seventh",
+      "pattern": "researched:la-monte-young/dream-house-root"
+    },
+    {
+      "sound": "system-35/s35-popol-aguirre",
+      "pattern": "researched:popol-vuh/aguirre-choir-low"
+    },
+    {
+      "sound": "system-35/s35-sakamoto-fm-bell",
+      "pattern": "researched:ryuichi-sakamoto/merry-christmas-mr-lawrence-ostinato"
+    },
+    {
+      "sound": "system-35/s35-spiegel-two-lfo",
+      "pattern": "researched:laurie-spiegel/expanding-universe-pattern-low"
+    },
+    {
+      "sound": "system-35/s35-takada-marimba",
+      "pattern": "researched:midori-takada/looking-glass-pattern"
+    },
+    {
+      "sound": "system-35/s35-tomita-whistle",
+      "pattern": "researched:isao-tomita/clair-de-lune-melody"
+    },
+    {
+      "sound": "system-55/s55-berlin",
+      "pattern": "researched:tangerine-dream/phaedra-sequence-keys"
+    },
+    {
+      "sound": "system-55/s55-hi-nrg",
+      "pattern": "researched:giorgio-moroder/i-feel-love-roots-high"
+    },
+    {
+      "sound": "system-55/s55-yoyoma-cello",
+      "pattern": "researched:yo-yo-ma/cello-suite-1-prelude"
+    },
+    {
+      "sound": "take-5/t5-1999-stabs",
+      "pattern": "researched:prince/1999-stabs"
+    },
+    {
+      "sound": "take-5/t5-96-tears-organ",
+      "pattern": "researched:mysterians/96-tears-organ"
+    },
+    {
+      "sound": "take-5/t5-abacab-stab",
+      "pattern": "researched:genesis/abacab-riff"
+    },
+    {
+      "sound": "take-5/t5-acid-squelch",
+      "pattern": "researched:phuture/acid-tracks-line"
+    },
+    {
+      "sound": "take-5/t5-air-tonight-pad",
+      "pattern": "researched:phil-collins/in-the-air-tonight-chords"
+    },
+    {
+      "sound": "take-5/t5-airports-pad",
+      "pattern": "researched:brian-eno/airports-2-1-tones"
+    },
+    {
+      "sound": "take-5/t5-amelie-toy-piano",
+      "pattern": "researched:yann-tiersen/la-valse-damelie-melody"
+    },
+    {
+      "sound": "take-5/t5-angel-bass",
+      "pattern": "researched:massive-attack/angel-bass"
+    },
+    {
+      "sound": "take-5/t5-archangel-pad",
+      "pattern": "researched:burial/archangel-pad"
+    },
+    {
+      "sound": "take-5/t5-arnalds-pad",
+      "pattern": "researched:olafur-arnalds/saman-chords"
+    },
+    {
+      "sound": "take-5/t5-backwards-swell",
+      "pattern": "researched:the-beatles/im-only-sleeping-backwards-guitar"
+    },
+    {
+      "sound": "take-5/t5-bad-guy-bass",
+      "pattern": "researched:billie-eilish/bad-guy-bass"
+    },
+    {
+      "sound": "take-5/t5-ballad-epiano",
+      "pattern": "researched:whitney-houston/saving-all-my-love-rhodes"
+    },
+    {
+      "sound": "take-5/t5-baroque-hoedown",
+      "pattern": "researched:perrey-and-kingsley/baroque-hoedown"
+    },
+    {
+      "sound": "take-5/t5-big-snare",
+      "pattern": "researched:phil-collins/in-the-air-tonight-snare"
+    },
+    {
+      "sound": "take-5/t5-blade-runner-brass",
+      "pattern": "researched:vangelis/blade-runner-end-titles-theme"
+    },
+    {
+      "sound": "take-5/t5-blinding-arp",
+      "pattern": "researched:the-weeknd/blinding-lights-riff"
+    },
+    {
+      "sound": "take-5/t5-blue-monday-bass",
+      "pattern": "researched:new-order/blue-monday-bass"
+    },
+    {
+      "sound": "take-5/t5-boogie-bass",
+      "pattern": "researched:stevie-wonder/boogie-on-reggae-woman-bass"
+    },
+    {
+      "sound": "take-5/t5-born-slippy-stab",
+      "pattern": "researched:underworld/born-slippy-stabs"
+    },
+    {
+      "sound": "take-5/t5-can-you-feel-pad",
+      "pattern": "researched:larry-heard/can-you-feel-it-chords"
+    },
+    {
+      "sound": "take-5/t5-carlos-baroque",
+      "pattern": "researched:wendy-carlos/invention-in-b-flat"
+    },
+    {
+      "sound": "take-5/t5-chameleon-bass",
+      "pattern": "researched:herbie-hancock/chameleon-bass"
+    },
+    {
+      "sound": "take-5/t5-chariots-brass",
+      "pattern": "researched:vangelis/chariots-of-fire-melody"
+    },
+    {
+      "sound": "take-5/t5-cocteau-shimmer",
+      "pattern": "researched:cocteau-twins/heaven-or-las-vegas-rhythm"
+    },
+    {
+      "sound": "take-5/t5-com-truise-lead",
+      "pattern": "researched:com-truise/brokendate-lead"
+    },
+    {
+      "sound": "take-5/t5-conquest-choir",
+      "pattern": "researched:vangelis/conquest-of-paradise-strings"
+    },
+    {
+      "sound": "take-5/t5-da-funk-lead",
+      "pattern": "researched:daft-punk/da-funk-breakdown-figure"
+    },
+    {
+      "sound": "take-5/t5-derezzed-bass",
+      "pattern": "researched:daft-punk/derezzed-stabs"
+    },
+    {
+      "sound": "take-5/t5-doctor-who-lead",
+      "pattern": "researched:bbc-radiophonic-workshop/doctor-who-melody"
+    },
+    {
+      "sound": "take-5/t5-dolby-blip",
+      "pattern": "researched:thomas-dolby/she-blinded-me-with-science-dyads"
+    },
+    {
+      "sound": "take-5/t5-dont-you-want-brass",
+      "pattern": "researched:the-human-league/dont-you-want-me-riff"
+    },
+    {
+      "sound": "take-5/t5-doves-lead",
+      "pattern": "researched:prince/when-doves-cry-synth"
+    },
+    {
+      "sound": "take-5/t5-dream-house-drone",
+      "pattern": "researched:la-monte-young/beating-fifths"
+    },
+    {
+      "sound": "take-5/t5-dreamer-wurli",
+      "pattern": "researched:supertramp/dreamer-wurlitzer"
+    },
+    {
+      "sound": "take-5/t5-drive-pad",
+      "pattern": "researched:cliff-martinez/drive-pad"
+    },
+    {
+      "sound": "take-5/t5-electro-kick",
+      "pattern": "researched:afrika-bambaataa/planet-rock-kick"
+    },
+    {
+      "sound": "take-5/t5-eple-bell",
+      "pattern": "researched:royksopp/eple-melody"
+    },
+    {
+      "sound": "take-5/t5-equinoxe-seq",
+      "pattern": "researched:jean-michel-jarre/equinoxe-5-octave-bass"
+    },
+    {
+      "sound": "take-5/t5-escape-ny-bass",
+      "pattern": "researched:john-carpenter/escape-from-new-york-ostinato-low"
+    },
+    {
+      "sound": "take-5/t5-eskimo-bass",
+      "pattern": "researched:wiley/eskimo-bass"
+    },
+    {
+      "sound": "take-5/t5-film-horns",
+      "pattern": "researched:john-williams/star-wars-horns"
+    },
+    {
+      "sound": "take-5/t5-flash-light-bass",
+      "pattern": "researched:parliament/flash-light-bass"
+    },
+    {
+      "sound": "take-5/t5-forget-about-pad",
+      "pattern": "researched:simple-minds/dont-you-strings"
+    },
+    {
+      "sound": "take-5/t5-four-tet-bells",
+      "pattern": "researched:four-tet/two-thousand-and-seventeen-chords"
+    },
+    {
+      "sound": "take-5/t5-g-funk-whine",
+      "pattern": "researched:dr-dre/nuthin-but-a-g-thang-lead"
+    },
+    {
+      "sound": "take-5/t5-garage-bass",
+      "pattern": "researched:artful-dodger/re-rewind-bass"
+    },
+    {
+      "sound": "take-5/t5-ghost-rider-organ",
+      "pattern": "researched:suicide/ghost-rider-riff"
+    },
+    {
+      "sound": "take-5/t5-ghosts-pluck",
+      "pattern": "researched:deadmau5/ghosts-n-stuff-chords"
+    },
+    {
+      "sound": "take-5/t5-green-onions-organ",
+      "pattern": "researched:booker-t-and-the-mgs/green-onions-organ"
+    },
+    {
+      "sound": "take-5/t5-gunship-pad",
+      "pattern": "researched:gunship/tech-noir-chords"
+    },
+    {
+      "sound": "take-5/t5-halcyon-pad",
+      "pattern": "researched:orbital/halcyon-chords"
+    },
+    {
+      "sound": "take-5/t5-halloween-bell",
+      "pattern": "researched:john-carpenter/halloween-piano-figure"
+    },
+    {
+      "sound": "take-5/t5-i-feel-love-bass",
+      "pattern": "researched:giorgio-moroder/i-feel-love-bass"
+    },
+    {
+      "sound": "take-5/t5-in-c-pulse",
+      "pattern": "researched:terry-riley/in-c-pulse"
+    },
+    {
+      "sound": "take-5/t5-industrial-clang",
+      "pattern": "researched:nine-inch-nails/closer-snare"
+    },
+    {
+      "sound": "take-5/t5-interstellar-organ",
+      "pattern": "researched:hans-zimmer/interstellar-organ-figure"
+    },
+    {
+      "sound": "take-5/t5-itchycoo-flange",
+      "pattern": "researched:small-faces/itchycoo-park-chords"
+    },
+    {
+      "sound": "take-5/t5-jimmy-smith-organ",
+      "pattern": "researched:jimmy-smith/organ-blues-lick"
+    },
+    {
+      "sound": "take-5/t5-just-cant-pluck",
+      "pattern": "researched:depeche-mode/just-cant-get-enough-octave-bounce"
+    },
+    {
+      "sound": "take-5/t5-justice-bass",
+      "pattern": "researched:justice/genesis-bass"
+    },
+    {
+      "sound": "take-5/t5-kalimba",
+      "pattern": "researched:earth-wind-and-fire/kalimba-story-figure"
+    },
+    {
+      "sound": "take-5/t5-kerala-keys",
+      "pattern": "researched:bonobo/kerala-keys"
+    },
+    {
+      "sound": "take-5/t5-lamour-lead",
+      "pattern": "researched:gigi-dagostino/lamour-toujours-riff"
+    },
+    {
+      "sound": "take-5/t5-let-it-happen-warp",
+      "pattern": "researched:tame-impala/let-it-happen-chords"
+    },
+    {
+      "sound": "take-5/t5-lets-go-sync",
+      "pattern": "researched:the-cars/lets-go-riff"
+    },
+    {
+      "sound": "take-5/t5-levels-lead",
+      "pattern": "researched:avicii/levels-riff"
+    },
+    {
+      "sound": "take-5/t5-lucky-man-lead",
+      "pattern": "researched:emerson-lake-palmer/lucky-man-moog-solo"
+    },
+    {
+      "sound": "take-5/t5-mays-lead",
+      "pattern": "researched:lyle-mays/are-you-going-with-me-melody"
+    },
+    {
+      "sound": "take-5/t5-metal-sync-bass",
+      "pattern": "researched:gary-numan/metal-riff"
+    },
+    {
+      "sound": "take-5/t5-miami-pad",
+      "pattern": "researched:jan-hammer/miami-vice-theme-pad"
+    },
+    {
+      "sound": "take-5/t5-midnight-city-lead",
+      "pattern": "researched:m83/midnight-city-hook"
+    },
+    {
+      "sound": "take-5/t5-model-lead",
+      "pattern": "researched:kraftwerk/the-model-counter-line"
+    },
+    {
+      "sound": "take-5/t5-mother-share-pluck",
+      "pattern": "researched:chvrches/the-mother-we-share-pluck"
+    },
+    {
+      "sound": "take-5/t5-motorik-pulse",
+      "pattern": "researched:neu/hallogallo-pulse"
+    },
+    {
+      "sound": "take-5/t5-mr-fingers-bass",
+      "pattern": "researched:mr-fingers/mystery-of-love-bass"
+    },
+    {
+      "sound": "take-5/t5-mr-lawrence-bell",
+      "pattern": "researched:ryuichi-sakamoto/merry-christmas-mr-lawrence-ostinato"
+    },
+    {
+      "sound": "take-5/t5-mysterons-theremin",
+      "pattern": "researched:portishead/mysterons-line"
+    },
+    {
+      "sound": "take-5/t5-new-error-stab",
+      "pattern": "researched:moderat/a-new-error-piano"
+    },
+    {
+      "sound": "take-5/t5-nightcall-bass",
+      "pattern": "researched:kavinsky/nightcall-bass"
+    },
+    {
+      "sound": "take-5/t5-oblivion-bass",
+      "pattern": "researched:grimes/oblivion-bass"
+    },
+    {
+      "sound": "take-5/t5-only-you-chime",
+      "pattern": "researched:yazoo/only-you-arpeggio"
+    },
+    {
+      "sound": "take-5/t5-open-eye-pulse",
+      "pattern": "researched:jon-hopkins/open-eye-signal-bass"
+    },
+    {
+      "sound": "take-5/t5-opus-arp",
+      "pattern": "researched:eric-prydz/opus-chords"
+    },
+    {
+      "sound": "take-5/t5-oxygene-pad",
+      "pattern": "researched:jean-michel-jarre/oxygene-iv-chords"
+    },
+    {
+      "sound": "take-5/t5-perturbator-lead",
+      "pattern": "researched:perturbator/future-club-riff"
+    },
+    {
+      "sound": "take-5/t5-phaedra-seq",
+      "pattern": "researched:tangerine-dream/phaedra-sequence"
+    },
+    {
+      "sound": "take-5/t5-phaedra-whistle",
+      "pattern": "researched:tangerine-dream/phaedra-whistle"
+    },
+    {
+      "sound": "take-5/t5-pizzicato",
+      "pattern": "researched:tchaikovsky/sugar-plum-fairy-pizzicato"
+    },
+    {
+      "sound": "take-5/t5-plantasia-lead",
+      "pattern": "researched:mort-garson/plantasia-melody"
+    },
+    {
+      "sound": "take-5/t5-plastikman-ping",
+      "pattern": "researched:plastikman/spastik-pings"
+    },
+    {
+      "sound": "take-5/t5-poly-brass",
+      "pattern": "researched:van-halen/jump-riff"
+    },
+    {
+      "sound": "take-5/t5-popcorn",
+      "pattern": "researched:hot-butter/popcorn-theme"
+    },
+    {
+      "sound": "take-5/t5-precinct-lead",
+      "pattern": "researched:john-carpenter/assault-on-precinct-13-riff"
+    },
+    {
+      "sound": "take-5/t5-radigue-drone",
+      "pattern": "researched:eliane-radigue/overtone-fifths"
+    },
+    {
+      "sound": "take-5/t5-reese-bass",
+      "pattern": "researched:kevin-saunderson/reese-bass"
+    },
+    {
+      "sound": "take-5/t5-reich-marimba",
+      "pattern": "researched:steve-reich/eighteen-marimba"
+    },
+    {
+      "sound": "take-5/t5-rio-arp",
+      "pattern": "researched:duran-duran/rio-arpeggio"
+    },
+    {
+      "sound": "take-5/t5-roygbiv-pad",
+      "pattern": "researched:boards-of-canada/roygbiv-chords"
+    },
+    {
+      "sound": "take-5/t5-rule-world-arp",
+      "pattern": "researched:tears-for-fears/rule-the-world-shuffle"
+    },
+    {
+      "sound": "take-5/t5-sandstorm-lead",
+      "pattern": "researched:darude/sandstorm-riff"
+    },
+    {
+      "sound": "take-5/t5-shaft-wah",
+      "pattern": "researched:isaac-hayes/shaft-wah-guitar"
+    },
+    {
+      "sound": "take-5/t5-shine-on-strings",
+      "pattern": "researched:pink-floyd/shine-on-solina-low"
+    },
+    {
+      "sound": "take-5/t5-shoegaze-noise-pad",
+      "pattern": "researched:my-bloody-valentine/only-shallow-guitar"
+    },
+    {
+      "sound": "take-5/t5-show-me-love-organ",
+      "pattern": "researched:robin-s/show-me-love-bass"
+    },
+    {
+      "sound": "take-5/t5-silver-apples-osc",
+      "pattern": "researched:silver-apples/oscillations-melody"
+    },
+    {
+      "sound": "take-5/t5-simmons-tom",
+      "pattern": "researched:duran-duran/hungry-like-the-wolf-simmons"
+    },
+    {
+      "sound": "take-5/t5-soul-rhodes",
+      "pattern": "researched:donny-hathaway/soul-rhodes"
+    },
+    {
+      "sound": "take-5/t5-spin-me-bass",
+      "pattern": "researched:dead-or-alive/you-spin-me-round-bass"
+    },
+    {
+      "sound": "take-5/t5-stranger-arp",
+      "pattern": "researched:kyle-dixon-michael-stein/stranger-things-arpeggio-chord"
+    },
+    {
+      "sound": "take-5/t5-streets-delay",
+      "pattern": "researched:u2/where-the-streets-have-no-name-guitar"
+    },
+    {
+      "sound": "take-5/t5-strings-of-life-stab",
+      "pattern": "researched:derrick-may/strings-of-life-stabs"
+    },
+    {
+      "sound": "take-5/t5-subdivisions-lead",
+      "pattern": "researched:rush/subdivisions-synth-lead"
+    },
+    {
+      "sound": "take-5/t5-superstition-clav",
+      "pattern": "researched:stevie-wonder/superstition-clavinet-high"
+    },
+    {
+      "sound": "take-5/t5-suspiria-bell",
+      "pattern": "researched:goblin/suspiria-theme"
+    },
+    {
+      "sound": "take-5/t5-sweet-dreams-riff",
+      "pattern": "researched:eurythmics/sweet-dreams-riff"
+    },
+    {
+      "sound": "take-5/t5-syndrum-pew",
+      "pattern": "researched:anita-ward/ring-my-bell-syndrum"
+    },
+    {
+      "sound": "take-5/t5-take-on-me-lead",
+      "pattern": "researched:a-ha/take-on-me-riff"
+    },
+    {
+      "sound": "take-5/t5-tomita-whistle",
+      "pattern": "researched:isao-tomita/clair-de-lune-melody"
+    },
+    {
+      "sound": "take-5/t5-tubular-bells",
+      "pattern": "researched:mike-oldfield/tubular-bells-ostinato"
+    },
+    {
+      "sound": "take-5/t5-tull-flute",
+      "pattern": "researched:jethro-tull/locomotive-breath-flute"
+    },
+    {
+      "sound": "take-5/t5-tycho-arp",
+      "pattern": "researched:tycho/awake-chords"
+    },
+    {
+      "sound": "take-5/t5-vibes",
+      "pattern": "researched:milt-jackson/bags-groove-head"
+    },
+    {
+      "sound": "take-5/t5-vroom-metal-bass",
+      "pattern": "researched:sophie/vroom-vroom-bass"
+    },
+    {
+      "sound": "take-5/t5-west-end-bass",
+      "pattern": "researched:pet-shop-boys/west-end-girls-bass-low"
+    },
+    {
+      "sound": "take-5/t5-what-is-love-stab",
+      "pattern": "researched:haddaway/what-is-love-stabs"
+    },
+    {
+      "sound": "tb-303/tb-808-state",
+      "pattern": "researched:808-state/pacific-bass"
+    },
+    {
+      "sound": "tb-303/tb-a3-blues-acid",
+      "pattern": "researched:alabama-3/woke-up-this-morning-bass"
+    },
+    {
+      "sound": "tb-303/tb-a3-gospel",
+      "pattern": "researched:alabama-3/gospel-octave-bass"
+    },
+    {
+      "sound": "tb-303/tb-a3-shuffle",
+      "pattern": "researched:alabama-3/aint-goin-to-goa-bass"
+    },
+    {
+      "sound": "tb-303/tb-analord",
+      "pattern": "researched:aphex-twin/acid-line"
+    },
+    {
+      "sound": "tb-303/tb-banjo-roll",
+      "pattern": "researched:earl-scruggs/foggy-mountain-breakdown-roll-low"
+    },
+    {
+      "sound": "tb-303/tb-berlin-sequence",
+      "pattern": "researched:tangerine-dream/phaedra-rubycon-ramp"
+    },
+    {
+      "sound": "tb-303/tb-carpenter-five",
+      "pattern": "researched:john-carpenter/halloween-piano-figure-low"
+    },
+    {
+      "sound": "tb-303/tb-cello-prelude",
+      "pattern": "researched:yo-yo-ma/cello-suite-1-prelude"
+    },
+    {
+      "sound": "tb-303/tb-clav-funk",
+      "pattern": "researched:stevie-wonder/superstition-clavinet"
+    },
+    {
+      "sound": "tb-303/tb-cowbell",
+      "pattern": "researched:afrika-bambaataa/planet-rock-cowbell-high"
+    },
+    {
+      "sound": "tb-303/tb-detroit-electro",
+      "pattern": "researched:drexciya/bubble-metropolis-bass-low"
+    },
+    {
+      "sound": "tb-303/tb-dotted-phase",
+      "pattern": "researched:emmanuel-top/acid-phase-line"
+    },
+    {
+      "sound": "tb-303/tb-ebm-drive",
+      "pattern": "researched:daf/der-mussolini-bass-low"
+    },
+    {
+      "sound": "tb-303/tb-feel-love-bass",
+      "pattern": "researched:giorgio-moroder/i-feel-love-bass-low"
+    },
+    {
+      "sound": "tb-303/tb-first-squelch",
+      "pattern": "researched:phuture/acid-tracks-line"
+    },
+    {
+      "sound": "tb-303/tb-funk-stab",
+      "pattern": "researched:daft-punk/da-funk-breakdown-figure-low"
+    },
+    {
+      "sound": "tb-303/tb-grime-square",
+      "pattern": "researched:wiley/eskimo-bass-low"
+    },
+    {
+      "sound": "tb-303/tb-hazy-melody",
+      "pattern": "researched:boards-of-canada/olson-melody"
+    },
+    {
+      "sound": "tb-303/tb-jack-house",
+      "pattern": "researched:armando/land-of-confusion-line"
+    },
+    {
+      "sound": "tb-303/tb-motorik",
+      "pattern": "researched:neu/hallogallo-pulse"
+    },
+    {
+      "sound": "tb-303/tb-needs-a-303",
+      "pattern": "researched:fatboy-slim/everybody-needs-a-303-line"
+    },
+    {
+      "sound": "tb-303/tb-pulse-ensemble",
+      "pattern": "researched:steve-reich/eighteen-marimba-low"
+    },
+    {
+      "sound": "tb-303/tb-raga-bhupali",
+      "pattern": "researched:charanjit-singh/ten-ragas-line"
+    },
+    {
+      "sound": "tb-303/tb-raga-line",
+      "pattern": "researched:charanjit-singh/ten-ragas-line"
+    },
+    {
+      "sound": "tb-303/tb-revolution-909",
+      "pattern": "researched:daft-punk/revolution-909-bass-low"
+    },
+    {
+      "sound": "tb-303/tb-rising-acid",
+      "pattern": "researched:josh-wink/higher-state-line"
+    },
+    {
+      "sound": "tb-303/tb-shaft-wah",
+      "pattern": "researched:isaac-hayes/shaft-wah-guitar"
+    },
+    {
+      "sound": "tb-303/tb-slide-acid",
+      "pattern": "researched:hardfloor/acperience-line"
+    },
+    {
+      "sound": "tb-303/tb-synth-pop-pulse",
+      "pattern": "researched:vince-clarke/new-life-bass-low"
+    },
+    {
+      "sound": "tb-303/tb-synthwave-pulse",
+      "pattern": "researched:kavinsky/nightcall-bass"
+    },
+    {
+      "sound": "tb-303/tb-tom-fill",
+      "pattern": "researched:electro/zap-percussion-low"
+    },
+    {
+      "sound": "td-3/td-blues-harp",
+      "pattern": "researched:little-walter/juke-riff-low"
+    },
+    {
+      "sound": "td-3/td-body-music",
+      "pattern": "researched:front-242/headhunter-bass"
+    },
+    {
+      "sound": "td-3/td-cosmic-harp",
+      "pattern": "researched:alice-coltrane/satchidananda-cascade-low"
+    },
+    {
+      "sound": "td-3/td-country-two-step",
+      "pattern": "researched:alabama-3/aint-goin-to-goa-bass"
+    },
+    {
+      "sound": "td-3/td-dirty-blues",
+      "pattern": "researched:alabama-3/woke-up-this-morning-bass-high"
+    },
+    {
+      "sound": "td-3/td-distorted-acid",
+      "pattern": "researched:josh-wink/higher-state-line"
+    },
+    {
+      "sound": "td-3/td-doom-drone",
+      "pattern": "researched:sunn-o/it-took-the-night-to-believe-drone-low"
+    },
+    {
+      "sound": "td-3/td-electro-funk-acid",
+      "pattern": "researched:kraftwerk/numbers-sync-bass"
+    },
+    {
+      "sound": "td-3/td-electro-industrial",
+      "pattern": "researched:skinny-puppy/assimilate-bass"
+    },
+    {
+      "sound": "td-3/td-first-squelch",
+      "pattern": "researched:phuture/acid-tracks-line"
+    },
+    {
+      "sound": "td-3/td-fuzz-solo",
+      "pattern": "researched:jimi-hendrix/machine-gun-riff"
+    },
+    {
+      "sound": "td-3/td-g-funk-whine",
+      "pattern": "researched:dr-dre/nuthin-but-a-g-thang-lead-low"
+    },
+    {
+      "sound": "td-3/td-gospel-call",
+      "pattern": "researched:alabama-3/power-in-the-blood-bass"
+    },
+    {
+      "sound": "td-3/td-high-lead",
+      "pattern": "researched:daft-punk/da-funk-breakdown-figure"
+    },
+    {
+      "sound": "td-3/td-justice-bass",
+      "pattern": "researched:justice/genesis-bass"
+    },
+    {
+      "sound": "td-3/td-oxygene-sequence",
+      "pattern": "researched:jean-michel-jarre/oxygene-iv-arpeggio-low"
+    },
+    {
+      "sound": "td-3/td-rollin-scratchin",
+      "pattern": "researched:daft-punk/rollin-and-scratchin-screech-low"
+    },
+    {
+      "sound": "td-3/td-rolling-sixteenths",
+      "pattern": "researched:hardfloor/acperience-line"
+    },
+    {
+      "sound": "td-3/td-square-line",
+      "pattern": "researched:fatboy-slim/everybody-needs-a-303-line"
+    },
+    {
+      "sound": "td-3/td-suicide-pulse",
+      "pattern": "researched:suicide/ghost-rider-riff-low"
+    },
+    {
+      "sound": "td-3/td-survive-arp",
+      "pattern": "researched:kyle-dixon-michael-stein/stranger-things-arpeggio"
+    },
+    {
+      "sound": "td-3/td-swamp-burn",
+      "pattern": "researched:alabama-3/swamp-slow-burn"
+    },
+    {
+      "sound": "td-3/td-talking-filter",
+      "pattern": "researched:acid-house/acid-line"
+    },
+    {
+      "sound": "td-3/td-tremolo-pick",
+      "pattern": "researched:dick-dale/misirlou-melody-low"
+    },
+    {
+      "sound": "td-3/td-zap-snare",
+      "pattern": "researched:electro/zap-percussion-low-2"
+    },
+    {
+      "sound": "td-3/td-zapp-bass",
+      "pattern": "researched:zapp/more-bounce-bass"
+    },
+    {
+      "sound": "teo-5/teo-1999-stabs",
+      "pattern": "researched:prince/1999-stabs"
+    },
+    {
+      "sound": "teo-5/teo-jump-brass",
+      "pattern": "researched:van-halen/jump-riff-low"
+    },
+    {
+      "sound": "teo-5/teo-roboto-lead",
+      "pattern": "researched:styx/mr-roboto-intro"
+    },
+    {
+      "sound": "teo-5/teo-subdivisions-lead",
+      "pattern": "researched:rush/subdivisions-synth-lead"
+    },
+    {
+      "sound": "ub-xa-d/acid-poly-bass",
+      "pattern": "researched:phuture/acid-tracks-line"
+    },
+    {
+      "sound": "ub-xa-d/arp-sparkle",
+      "pattern": "researched:giorgio-moroder/chase-chords"
+    },
+    {
+      "sound": "ub-xa-d/broad-swell-pad",
+      "pattern": "researched:kraftwerk/europe-endless-chords"
+    },
+    {
+      "sound": "ub-xa-d/choir-pad",
+      "pattern": "researched:jean-michel-jarre/oxygene-iv-chords"
+    },
+    {
+      "sound": "ub-xa-d/clav-funk",
+      "pattern": "researched:stevie-wonder/superstition-clavinet"
+    },
+    {
+      "sound": "ub-xa-d/dark-arp",
+      "pattern": "researched:kyle-dixon-michael-stein/stranger-things-arpeggio-chord"
+    },
+    {
+      "sound": "ub-xa-d/electric-piano",
+      "pattern": "researched:hall-and-oates/i-cant-go-for-that-keys"
+    },
+    {
+      "sound": "ub-xa-d/ensemble-strings",
+      "pattern": "researched:ultravox/vienna-strings"
+    },
+    {
+      "sound": "ub-xa-d/evolving-pad",
+      "pattern": "researched:brian-eno/airports-chords"
+    },
+    {
+      "sound": "ub-xa-d/fifth-bells",
+      "pattern": "researched:alphaville/forever-young-arpeggio"
+    },
+    {
+      "sound": "ub-xa-d/floating-triangle-pad",
+      "pattern": "researched:brian-eno/weightless-chords"
+    },
+    {
+      "sound": "ub-xa-d/funk-sync-bass",
+      "pattern": "researched:zapp/more-bounce-bass"
+    },
+    {
+      "sound": "ub-xa-d/glass-pad",
+      "pattern": "researched:enya/orinoco-flow-chords"
+    },
+    {
+      "sound": "ub-xa-d/harpsichord",
+      "pattern": "researched:the-stranglers/golden-brown-harpsichord"
+    },
+    {
+      "sound": "ub-xa-d/jump-brass",
+      "pattern": "researched:van-halen/jump-riff"
+    },
+    {
+      "sound": "ub-xa-d/lush-pad",
+      "pattern": "researched:tears-for-fears/rule-the-world-chords"
+    },
+    {
+      "sound": "ub-xa-d/marimba-pluck",
+      "pattern": "researched:talking-heads/this-must-be-the-place-melody"
+    },
+    {
+      "sound": "ub-xa-d/minneapolis-stab",
+      "pattern": "researched:prince/1999-stabs"
+    },
+    {
+      "sound": "ub-xa-d/noise-snare",
+      "pattern": "researched:kraftwerk/numbers-snare"
+    },
+    {
+      "sound": "ub-xa-d/ob-lead",
+      "pattern": "researched:styx/mr-roboto-intro"
+    },
+    {
+      "sound": "ub-xa-d/pizzicato",
+      "pattern": "researched:jean-michel-jarre/equinoxe-5-octave-bass"
+    },
+    {
+      "sound": "ub-xa-d/poly-pluck",
+      "pattern": "researched:prince/little-red-corvette-chords"
+    },
+    {
+      "sound": "ub-xa-d/pwm-strings",
+      "pattern": "researched:rush/time-stand-still-synth"
+    },
+    {
+      "sound": "ub-xa-d/screaming-lead",
+      "pattern": "researched:jan-hammer/crocketts-theme-lead"
+    },
+    {
+      "sound": "ub-xa-d/sequence-pulse",
+      "pattern": "researched:tangerine-dream/tangram-sequence"
+    },
+    {
+      "sound": "ub-xa-d/sliding-funk-stabs",
+      "pattern": "researched:talking-heads/burning-down-the-house-keys"
+    },
+    {
+      "sound": "ub-xa-d/square-lead",
+      "pattern": "researched:gary-numan/cars-bridge-melody"
+    },
+    {
+      "sound": "ub-xa-d/stab-brass",
+      "pattern": "researched:europe/final-countdown-riff"
+    },
+    {
+      "sound": "ub-xa-d/stately-arp",
+      "pattern": "researched:daft-punk/veridis-quo-bass-arp"
+    },
+    {
+      "sound": "ub-xa-d/sub-drone-bass",
+      "pattern": "researched:vangelis/blade-runner-end-titles-bass"
+    },
+    {
+      "sound": "ub-xa-d/swell-brass",
+      "pattern": "researched:journey/separate-ways-riff"
+    },
+    {
+      "sound": "ub-xa-d/swelling-slide-lead",
+      "pattern": "researched:daniel-lanois/silver-morning-slide"
+    },
+    {
+      "sound": "ub-xa-d/sync-drone",
+      "pattern": "researched:tangerine-dream/rubycon-drone"
+    },
+    {
+      "sound": "ub-xa-d/sync-sweep",
+      "pattern": "researched:the-cars/lets-go-riff"
+    },
+    {
+      "sound": "ub-xa-d/synth-pop-bass",
+      "pattern": "researched:duran-duran/rio-bass"
+    },
+    {
+      "sound": "ub-xa-d/synth-tom",
+      "pattern": "researched:spandau-ballet/true-toms"
+    },
+    {
+      "sound": "ub-xa-d/tremolo-drone",
+      "pattern": "researched:terry-riley/rainbow-chords"
+    },
+    {
+      "sound": "ub-xa-d/tremolo-organ",
+      "pattern": "researched:booker-t-and-the-mgs/green-onions-organ"
+    },
+    {
+      "sound": "ub-xa-d/triangle-flute",
+      "pattern": "researched:tangerine-dream/phaedra-flute"
+    },
+    {
+      "sound": "ub-xa-d/vibrato-lead",
+      "pattern": "researched:van-halen/jump-solo"
+    },
+    {
+      "sound": "ub-xa-d/wah-pad",
+      "pattern": "researched:tangerine-dream/love-on-a-real-train-pad"
+    },
+    {
+      "sound": "ub-xa-d/wavering-pad",
+      "pattern": "researched:boards-of-canada/olson-pad"
+    },
+    {
+      "sound": "wasp-deluxe/wasp-cold-machine",
+      "pattern": "researched:john-foxx/underpass-bass"
+    },
+    {
+      "sound": "wasp-deluxe/wasp-dream-riff",
+      "pattern": "researched:eurythmics/sweet-dreams-riff-up"
+    },
+    {
+      "sound": "wasp-deluxe/wasp-filter-house-bass",
+      "pattern": "researched:daft-punk/revolution-909-bass"
+    },
+    {
+      "sound": "wasp-deluxe/wasp-pop-wobble",
+      "pattern": "researched:metronomy/holiday-line"
+    },
+    {
+      "sound": "wasp-deluxe/wasp-rave-stab",
+      "pattern": "researched:orbital/wonky-stab"
+    },
+    {
+      "sound": "wasp-deluxe/wasp-sliding-funk-bass",
+      "pattern": "researched:talking-heads/slippery-people-bass"
+    },
+    {
+      "sound": "wasp-deluxe/wasp-steel-swell",
+      "pattern": "researched:daniel-lanois/aquatic-steel"
+    }
+  ],
+  "notDefault": [
+    {
+      "sound": "0-coast/zc-chameleon-clav",
+      "pattern": "researched:herbie-hancock/chameleon-theme",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "0-coast/zc-harmon-trumpet",
+      "pattern": "researched:miles-davis/it-never-entered-my-mind-line",
+      "reason": "It names Miles Davis’s “Kind of Blue”; the pattern is “It Never Entered My Mind”, which is not on that album."
+    },
+    {
+      "sound": "0-coast/zc-pizzicato",
+      "pattern": "researched:leroy-anderson/plink-plank-plunk-line",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "0-coast/zc-rockmore",
+      "pattern": "researched:clara-rockmore/the-swan-melody",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "0-coast/zc-self-fm",
+      "pattern": "researched:vince-clarke/new-life-lead",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "0-coast/zc-sub-bass",
+      "pattern": "researched:burial/archangel-bass-low",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "2-xm/xm-svefn-pad",
+      "pattern": "researched:sigur-ros/svefn-g-englar-guitar-low",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "b2600/dm-staircase-seq",
+      "pattern": "researched:depeche-mode/waiting-for-the-night-staircase",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "b2600/hancock-funk-solo",
+      "pattern": "researched:herbie-hancock/chameleon-theme",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "b2600/jazz-funk-line",
+      "pattern": "researched:joe-zawinul/birdland-theme",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "b2600/monster-sync-lead",
+      "pattern": "researched:edgar-winter/frankenstein-riff",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "buchla-easel/easel-postcard-fm-keys",
+      "pattern": "researched:hiroshi-yoshimura/nine-postcards-phrase-low",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "cat/devo-buzz-riff",
+      "pattern": "researched:devo/whip-it-riff",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "deepmind-12d/staccato-saw-lead",
+      "pattern": "researched:harold-faltermeyer/axel-f-theme",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "donner-b1/b1-burial",
+      "pattern": "researched:burial/archangel-bass-low",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "donner-b1/b1-numan",
+      "pattern": "researched:gary-numan/this-wreckage-arpeggio",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "e7/e7-axel-lead",
+      "pattern": "researched:harold-faltermeyer/axel-f-theme",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "ems-vcs3/vcs3-plink-plank-pizzicato",
+      "pattern": "researched:leroy-anderson/plink-plank-plunk-line",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "ems-vcs3/vcs3-postcard-sine-keys",
+      "pattern": "researched:hiroshi-yoshimura/nine-postcards-phrase-low",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "grandmother/gm-axel-f-lead",
+      "pattern": "researched:harold-faltermeyer/axel-f-theme",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "grandmother/gm-green-sine-swell",
+      "pattern": "researched:hiroshi-yoshimura/creek-line-low",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "grandmother/gm-plink-pizzicato",
+      "pattern": "researched:leroy-anderson/plink-plank-plunk-line-low",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "grandmother/gm-rise-trumpet",
+      "pattern": "researched:herb-alpert/rise-melody",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "grandmother/gm-speak-heartbeat",
+      "pattern": "researched:pink-floyd/speak-to-me-heartbeat",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "jp-8080/jp-bpf-pluck",
+      "pattern": "researched:daft-punk/around-the-world-pluck-high",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "jp-8080/jp-sigur-hpf-pad",
+      "pattern": "researched:sigur-ros/svefn-g-englar-guitar",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "jp-8080/jp-xmod-env-keys",
+      "pattern": "researched:aphex-twin/rhubarb-chords-high",
+      "reason": "It names “Selected Ambient Works 85–92”; the pattern is “Rhubarb”, from Volume II."
+    },
+    {
+      "sound": "jupiter-6/jp6-western-whistle",
+      "pattern": "researched:ennio-morricone/good-bad-ugly-theme",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "jupiter-8/jp8-axel-lead",
+      "pattern": "researched:harold-faltermeyer/axel-f-theme-low",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "jupiter-8/jp8-pop-stab",
+      "pattern": "researched:howard-jones/what-is-love-stabs",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "jupiter-8/jp8-relax-bass",
+      "pattern": "researched:frankie-goes-to-hollywood/relax-bass",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "jupiter-8/jp8-yoshimura",
+      "pattern": "researched:hiroshi-yoshimura/nine-postcards-phrase",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "k2/clarke-erasure-lead",
+      "pattern": "researched:vince-clarke/new-life-lead",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "k2/k2-sawing-ring-line",
+      "pattern": "researched:brian-eno/sky-saw-line",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "malevolent/mal-pizzicato",
+      "pattern": "researched:leroy-anderson/plink-plank-plunk-line",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "malevolent/mal-western-whistle",
+      "pattern": "researched:ennio-morricone/good-bad-ugly-theme",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "minilogue-xd/mxd-alpert-trumpet",
+      "pattern": "researched:herb-alpert/rise-melody",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "model-15/m15-ether-theremin",
+      "pattern": "researched:clara-rockmore/the-swan-melody",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "model-d/bright-seq-arp",
+      "pattern": "researched:yazoo/only-you-arpeggio-high",
+      "reason": "An admin made “Only You: arpeggio” its default."
+    },
+    {
+      "sound": "model-d/clockwork-funeral-brass",
+      "pattern": "researched:wendy-carlos/clockwork-orange-march",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "model-d/dawn-chorus-birds",
+      "pattern": "researched:olivier-messiaen/birdsong-calls",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "model-d/dry-blip-pluck",
+      "pattern": "researched:talking-heads/born-under-punches-blips",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "model-d/hard-blip-stab",
+      "pattern": "researched:soft-cell/tainted-love-bink",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "model-d/open-buzz-bass",
+      "pattern": "researched:gary-numan/cars-bass",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "model-d/plink-plank-pizzicato",
+      "pattern": "researched:leroy-anderson/plink-plank-plunk-line",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "model-d/rockmore-theremin",
+      "pattern": "researched:clara-rockmore/the-swan-melody",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "model-d/scoop-bend-lead",
+      "pattern": "researched:bernie-worrell/knee-deep-synth-line",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "model-d/speak-to-me-heartbeat",
+      "pattern": "researched:pink-floyd/speak-to-me-heartbeat",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "model-d/toccata-pedal-organ",
+      "pattern": "researched:johann-sebastian-bach/toccata-opening",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "model-d/walking-upright-bass",
+      "pattern": "researched:paul-chambers/so-what-bass",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "neutron/filter-theremin",
+      "pattern": "researched:the-beach-boys/good-vibrations-theremin",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "neutron/it-follows-dread",
+      "pattern": "researched:disasterpeace/it-follows-stabs",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "neutron/joga-volcanic-bass",
+      "pattern": "researched:bjork/joga-bass",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "neutron/svefn-bowed-swell",
+      "pattern": "researched:sigur-ros/svefn-g-englar-guitar",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "neutron/tuned-resonance-pluck",
+      "pattern": "researched:hiroshi-yoshimura/creek-line",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "polivoks/pv-heartbeat",
+      "pattern": "researched:pink-floyd/speak-to-me-heartbeat",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "polivoks/pv-morricone-whistle",
+      "pattern": "researched:ennio-morricone/good-bad-ugly-theme-low",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "pro-1/ghost-metal-tones",
+      "pattern": "researched:japan/ghosts-tones",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "pro-1/growl-funk-lead",
+      "pattern": "researched:bernie-worrell/knee-deep-synth-line",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "pro-1/pitch-dip-squiggle-lead",
+      "pattern": "researched:bernie-worrell/knee-deep-synth-line",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "pro-1/pitch-drop-blip",
+      "pattern": "researched:soft-cell/tainted-love-bink",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "pro-1/smooth-layer-line",
+      "pattern": "researched:gary-numan/this-wreckage-arpeggio",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "pro-1/squelch-funk-stabs",
+      "pattern": "researched:talking-heads/girlfriend-is-better-stabs",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "solar-42n/solar-curved-air",
+      "pattern": "researched:terry-riley/curved-air-keys",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "solar-42n/solar-night-bus",
+      "pattern": "researched:burial/archangel-bass",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "solar-42n/solar-water-garden",
+      "pattern": "researched:hiroshi-yoshimura/nine-postcards-phrase",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "super-gemini/sg-axel-lead",
+      "pattern": "researched:harold-faltermeyer/axel-f-theme",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "super-gemini/sg-cars-lead",
+      "pattern": "researched:gary-numan/cars-riff",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "super-gemini/sg-darksynth-bass",
+      "pattern": "researched:perturbator/future-club-roots",
+      "reason": "An admin made “Future Club: bass” its default."
+    },
+    {
+      "sound": "super-gemini/sg-outrun-lead",
+      "pattern": "researched:kavinsky/nightcall-chorus-lead",
+      "reason": "It names Kavinsky’s “Outrun”; the pattern is “Nightcall”, which is not on that album."
+    },
+    {
+      "sound": "super-gemini/sg-tainted-blip",
+      "pattern": "researched:soft-cell/tainted-love-bink",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "super-gemini/sg-vienna-strings",
+      "pattern": "researched:ultravox/vienna-strings-low",
+      "reason": "An admin made “Vienna: strings” its default."
+    },
+    {
+      "sound": "super-gemini/sg-zawinul-lead",
+      "pattern": "researched:joe-zawinul/birdland-theme",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "system-15/s15-brass",
+      "pattern": "researched:wendy-carlos/wachet-auf-chorale",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "take-5/t5-alpert-trumpet",
+      "pattern": "researched:herb-alpert/rise-melody",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "take-5/t5-cars-vox",
+      "pattern": "researched:gary-numan/cars-strings-line-low",
+      "reason": "An admin made “Cars: string line” its default."
+    },
+    {
+      "sound": "take-5/t5-dark-side-heartbeat",
+      "pattern": "researched:pink-floyd/speak-to-me-heartbeat",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "take-5/t5-faltermeyer-lead",
+      "pattern": "researched:harold-faltermeyer/axel-f-theme",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "take-5/t5-healing-clap",
+      "pattern": "researched:marvin-gaye/sexual-healing-clap",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "take-5/t5-morricone-whistle",
+      "pattern": "researched:ennio-morricone/good-bad-ugly-theme",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "take-5/t5-ponty-violin",
+      "pattern": "researched:jean-luc-ponty/trans-love-express-run",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "take-5/t5-strobe-pad",
+      "pattern": "researched:deadmau5/strobe-organ",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "take-5/t5-tainted-bink",
+      "pattern": "researched:soft-cell/tainted-love-bink",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "take-5/t5-vienna-pad",
+      "pattern": "researched:ultravox/vienna-strings-low",
+      "reason": "An admin made “Vienna: strings” its default."
+    },
+    {
+      "sound": "take-5/t5-zawinul-lead",
+      "pattern": "researched:joe-zawinul/birdland-theme",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "tb-303/tb-a3-slow-blues",
+      "pattern": "researched:alabama-3/slow-blues-bass",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "tb-303/tb-computer-world",
+      "pattern": "researched:kraftwerk/computer-love-sequence-low",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "tb-303/tb-new-wave-robot",
+      "pattern": "researched:devo/whip-it-riff-low",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "tb-303/tb-sheet-one",
+      "pattern": "researched:plastikman/spastik-pings-low",
+      "reason": "It names Plastikman’s “Sheet One”; the pattern is “Spastik”, which is not on that album."
+    },
+    {
+      "sound": "td-3/td-toccata-organ",
+      "pattern": "researched:johann-sebastian-bach/toccata-opening",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "td-3/td-western-whistle",
+      "pattern": "researched:ennio-morricone/good-bad-ugly-theme-low",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "ub-xa-d/unison-bass",
+      "pattern": "researched:frankie-goes-to-hollywood/relax-bass",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    },
+    {
+      "sound": "wasp-deluxe/wasp-warbling-lurch-bass",
+      "pattern": "researched:brian-eno/fat-lady-of-limbourg-bass",
+      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
+    }
+  ]
+}

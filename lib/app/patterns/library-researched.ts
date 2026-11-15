@@ -4,8 +4,9 @@
  * method.
  *
  * A batch is a data file under the seed's `data/patterns/`. Each pattern names the sounds it is for, and the seed puts
- * it on each one **behind** what the sound already has, never in front: a researched pattern becomes a sound's default
- * only once the owner has listened to it, by an admin's reorder (owner ruling, 2026-11-01). The rules the seed keeps,
+ * it on each one **behind** what the sound already has, never in front. A researched pattern becomes a sound's default
+ * by an admin's reorder, or when `data/pattern-defaults.json` names it for the sound (`library-defaults.ts`, owner
+ * ruling 2026-11-15, which replaced 2026-11-01's wait for the owner's listen). The rules the seed keeps,
  * each tested:
  *
  * - **A re-run writes nothing**, and **an empty batch writes nothing**.
@@ -13,7 +14,8 @@
  *   it was researched, with its research record (the owner's listen included) for the admin page. Its rights risk
  *   follows its fidelity until an admin sets one, and its status is never the seed's to write.
  * - **An admin's pattern is never written**: one an admin has edited, or put at the head of a sound's list (its notes
- *   are that sound's riff now, so the seed changing them would split the pair).
+ *   are that sound's riff now, so the seed changing them would split the pair). A default the seed made itself, on a
+ *   sound no admin has edited, is still the batch's: the defaults pass that runs next brings the riff along.
  * - **Nothing is deleted or moved.** A pattern taken out of a batch file stays in the library and on its sounds.
  * - **A pattern whose sound or link is not there is skipped and reported**, not written, so the seed is safe on an
  *   empty catalogue. The batch's test checks every name against the seed data, so the seed only meets one an admin
@@ -24,6 +26,7 @@ import type { LibraryPattern, Prisma } from '@prisma/client';
 import { PatternSchema, PATTERN_VERSION, MIN_BPM, MAX_BPM } from '@/lib/app/sequencer/pattern';
 import { PATTERN_ROLES } from '@/lib/app/patterns/library-roles';
 import { sameValue } from '@/lib/app/catalogue/seed';
+import type { PatternDefault } from '@/lib/app/patterns/library-defaults';
 import {
   DEFAULT_FIRST,
   defaultRightsRisk,
@@ -293,7 +296,9 @@ async function planResearched(
  */
 export async function syncResearchedPatterns(
   db: LibraryDb,
-  batches: ResearchBatch[]
+  batches: ResearchBatch[],
+  /** The defaults the seed itself makes (`library-defaults.ts`): a pattern that is one is still the batch's to write. */
+  seeded: PatternDefault[] = []
 ): Promise<ResearchedSyncCounts> {
   const counts: ResearchedSyncCounts = {
     created: 0,
@@ -332,7 +337,10 @@ export async function syncResearchedPatterns(
     )
   );
   // Any sound an admin made one of them the default of, the batch's own sounds or not: its default now, or a disabled
-  // pattern ahead of the default, which becomes it once enabled.
+  // pattern ahead of the default, which becomes it once enabled. A default the seed made, on a sound no admin has
+  // edited, is not an admin's.
+  const seededFor = new Map(seeded.map((d) => [d.sound, d.pattern]));
+  const keyOf = new Map([...stored.values()].map((p) => [p.id, p.key]));
   const heads = new Set(
     stored.size
       ? (
@@ -340,10 +348,13 @@ export async function syncResearchedPatterns(
             where: {
               patterns: { some: { patternId: { in: [...stored.values()].map((p) => p.id) } } },
             },
-            select: { patterns: PLACES },
+            select: { synthId: true, slug: true, editedAt: true, patterns: PLACES },
           })
         ).flatMap((s) => {
           const head = headOf(s.patterns);
+          const seededKey = seededFor.get(`${s.synthId}/${s.slug}`);
+          if (head && !s.editedAt && seededKey && seededKey === keyOf.get(head.patternId))
+            return [];
           const ahead = head ? s.patterns.slice(0, s.patterns.indexOf(head)) : s.patterns;
           return [
             ...(head ? [head.patternId] : []),
