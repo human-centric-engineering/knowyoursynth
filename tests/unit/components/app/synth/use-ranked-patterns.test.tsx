@@ -4,7 +4,8 @@
  * The library ranked for the Play deck's pattern picker (`f-pattern-picker` t-213): nothing while the picker is closed;
  * once it is open and the panel has settled, one reading and one `POST /rank`; the answer held while it stays open,
  * and kept for each reading; a reading that fails asked for without features; a read that fails said, and tried again
- * on the next opening. The sound detector and the API are fakes, so these are about when it asks and with what.
+ * on the next opening. The start sound is read once per start (t-255): a patch not moved far from it asks `asCame`, so
+ * the library is limited to that sound's category; one moved far, or whose start could not be read, does not. The sound detector and the API are fakes, so these are about when it asks and with what.
  *
  * @see components/app/synth/use-ranked-patterns.ts
  */
@@ -17,6 +18,7 @@ import { apiClient } from '@/lib/api/client';
 import type { RankResult } from '@/lib/app/patterns/rank-read';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
+import type { SoundFeatures } from '@/lib/app/synths/lib/soundkind';
 
 vi.mock('@/lib/logging', () => ({
   logger: { warn: vi.fn(), error: vi.fn(), info: vi.fn(), debug: vi.fn() },
@@ -35,15 +37,35 @@ beforeAll(async () => {
   await loadSynthDef('model-d');
 });
 
-const RESULT: RankResult = { reading: null, sections: [] };
+const RESULT: RankResult = { reading: null, category: null, sections: [] };
 const PANEL = { values: { ...def.init }, cables: [] };
-const FEATURES = { silent: false, attack: 0.01 };
+/** The library sound the patch started as: the same object while it is the same sound. */
+const START = { slug: 'fat-bass', panel: () => PANEL };
+/** A whole reading, so how far the patch is from the start sound (`movedFar`) can be worked out. */
+const FEATURES: SoundFeatures = {
+  silent: false,
+  attack: 0.01,
+  decay: 0.3,
+  sustain: 0.5,
+  release: 0.2,
+  pulses: 0,
+  wobble: 0,
+  brightness: 0,
+  brightMove: 0,
+  noise: 0,
+  clarity: 1,
+  pitch: 0,
+  tracking: 1,
+  drift: 0,
+  levels: { low: -10, mid: -12, high: -30 },
+  voices: 1,
+};
 
 const base = (over: Partial<RankInput> = {}): RankInput => ({
   synthId: 'model-d',
   def,
   panel: PANEL,
-  sound: 'fat-bass',
+  start: START,
   open: false,
   ...over,
 });
@@ -88,18 +110,19 @@ describe('useRankedPatterns', () => {
     await settle(SETTLE_MS - 1);
     expect(post).not.toHaveBeenCalled();
     await settle(1);
+    // the patch reads as the start sound did: it is that sound as it came
     expect(post).toHaveBeenCalledWith('/api/v1/library-patterns/rank', {
-      body: { synthId: 'model-d', sound: 'fat-bass', features: FEATURES },
+      body: { synthId: 'model-d', sound: 'fat-bass', features: FEATURES, asCame: true },
     });
     expect(result.current).toEqual({ state: 'ready', result: RESULT });
   });
 
   it('opens on a panel long settled without waiting, and names no sound when the patch started as none', async () => {
     const { result, rerender } = renderHook((p: RankInput) => useRankedPatterns(p), {
-      initialProps: base({ sound: null }),
+      initialProps: base({ start: null }),
     });
     await settle(SETTLE_MS * 2);
-    rerender(base({ sound: null, open: true }));
+    rerender(base({ start: null, open: true }));
     await settle(0);
     expect(post).toHaveBeenCalledWith('/api/v1/library-patterns/rank', {
       body: { synthId: 'model-d', features: FEATURES },
@@ -138,16 +161,17 @@ describe('useRankedPatterns', () => {
     rerender(base());
     rerender(base({ open: true }));
     await settle();
-    expect(detector.read).toHaveBeenCalledTimes(1);
+    // the panel and the start sound, each once
+    expect(detector.read).toHaveBeenCalledTimes(2);
     expect(post).toHaveBeenCalledTimes(1);
     expect(result.current).toEqual({ state: 'ready', result: RESULT });
 
-    // a panel that changed is read again, and when it reads the same its answer is the one already kept
+    // a panel that changed is read again, the start sound not, and when it reads the same its answer is the one kept
     const same = { values: { ...def.init }, cables: [] };
     rerender(base({ panel: same }));
     rerender(base({ open: true, panel: same }));
     await settle();
-    expect(detector.read).toHaveBeenCalledTimes(2);
+    expect(detector.read).toHaveBeenCalledTimes(3);
     expect(post).toHaveBeenCalledTimes(1);
   });
 
@@ -163,7 +187,8 @@ describe('useRankedPatterns', () => {
     await settle(100);
     expect(detector.read).not.toHaveBeenCalled();
     await settle(SETTLE_MS - 100);
-    expect(detector.read).toHaveBeenCalledTimes(1);
+    // the panel as it settled, and the start sound
+    expect(detector.read).toHaveBeenCalledTimes(2);
     expect(post).toHaveBeenCalledTimes(1);
   });
 
@@ -176,9 +201,10 @@ describe('useRankedPatterns', () => {
     rerender(base());
     rerender(base({ open: true }));
     await settle();
-    expect(detector.read).toHaveBeenCalledTimes(2);
+    // the panel twice; the start sound, read the first time, is not read again
+    expect(detector.read).toHaveBeenCalledTimes(3);
     expect(post.mock.calls[1][1]).toEqual({
-      body: { synthId: 'model-d', sound: 'fat-bass', features: FEATURES },
+      body: { synthId: 'model-d', sound: 'fat-bass', features: FEATURES, asCame: true },
     });
   });
 
@@ -188,10 +214,21 @@ describe('useRankedPatterns', () => {
       initialProps: base({ open: true }),
     });
     await settle();
+    // nothing heard to go by, so the start sound's category is
     expect(post).toHaveBeenCalledWith('/api/v1/library-patterns/rank', {
-      body: { synthId: 'model-d', sound: 'fat-bass' },
+      body: { synthId: 'model-d', sound: 'fat-bass', asCame: true },
     });
     expect(result.current.state).toBe('ready');
+  });
+
+  it('goes by what it hears when the start sound could not be read', async () => {
+    // the panel's reading first, then the start sound's
+    detector.read.mockResolvedValueOnce(FEATURES).mockRejectedValueOnce(new Error('no audio'));
+    renderHook((p: RankInput) => useRankedPatterns(p), { initialProps: base({ open: true }) });
+    await settle();
+    expect(post).toHaveBeenCalledWith('/api/v1/library-patterns/rank', {
+      body: { synthId: 'model-d', sound: 'fat-bass', features: FEATURES },
+    });
   });
 
   it('says the library could not be read, and asks again the next time it opens', async () => {

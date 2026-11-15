@@ -5,8 +5,8 @@
  * play, which opens a searchable list of patterns to play instead. From `lg` up it opens upward over the deck; below
  * `lg` it is a bottom sheet, as the page's other regions are.
  *
- * The list is the patch's own patterns first (`useSoundPatterns`, the default marked), then the whole public library
- * in a section per role, ordered by how well each suits the patch (`useRankedPatterns`, `POST /library-patterns/rank`).
+ * The list is the patch's own patterns first (`useSoundPatterns`, the default marked), then the public library's
+ * patterns of the patch's category (t-255) in a section per role, ordered by how well each suits the patch (`useRankedPatterns`, `POST /library-patterns/rank`).
  * Each section shows its best few, with "Show all N". The search, at the top as the patch library's is, filters every
  * section by name and Inspired by. A library row has no notes, so a pick reads its one pattern
  * (`GET /api/v1/library-patterns/:id`) and loads it into the sequencer (`seq.load`), leaving the sequencer closed: Play
@@ -330,8 +330,8 @@ function PickerBody({
         {result &&
           line(
             result.reading
-              ? `Heard: ${result.reading.summary}. The library’s parts that suit it come first.`
-              : 'Without a reading of the patch, the library is listed by part and name.'
+              ? `Heard: ${result.reading.summary}. ${result.category ? `The library’s ${result.category} patterns` : 'The library'}, the parts that suit it first.`
+              : `Without a reading of the patch, ${result.category ? `the library’s ${result.category} patterns are` : 'the library is'} listed by part and name.`
           )}
         {nothing && line('No pattern matches that. Clear the search to see them all.')}
         {sectionsShown.map((s) => {

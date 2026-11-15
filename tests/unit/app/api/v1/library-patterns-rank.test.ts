@@ -7,6 +7,7 @@
  * - a body that is not a reading is refused naming the field, and reads nothing;
  * - an unknown synth or sound is a 404;
  * - the answer: what the patch sounds like, then every role's section of lean rows, the sound's own left out;
+ * - only the patch's category (t-255): the start sound's tag when it is that sound as it came, else the one heard;
  * - with no features, or a silent patch, every pattern still, by role and name;
  * - the library kept for a minute is the one suggestions keep: no second read;
  * - the route sits under the section rate limit with no handler work.
@@ -18,6 +19,7 @@ import type { LibraryPattern } from '@prisma/client';
 const mockPrisma = vi.hoisted(() => ({
   synthSound: { findFirst: vi.fn() },
   libraryPattern: { findMany: vi.fn() },
+  synthSoundPattern: { findMany: vi.fn() },
 }));
 vi.mock('@/lib/db/client', () => ({ prisma: mockPrisma }));
 
@@ -110,6 +112,7 @@ const line = (notes: number[], len = 0.4): Phrase => ({
 });
 
 const OWN = 'patbassownsound00000001';
+const LEAD = 'patleadline000000000006';
 const ROWS = [
   row(OWN, 'Own bass', 'bass_line', line([36, 36, 43, 36])),
   row('patbasshigh000000000003', 'A high bass', 'bass_line', line([45, 47, 43, 45])),
@@ -125,7 +128,14 @@ const ROWS = [
     ],
   }),
   row('pathit00000000000000005', 'Hit', 'percussive', line([60, 60, 60], 0.1)),
+  row(LEAD, 'Lead line', 'lead_line', line([72, 74, 76, 79])),
 ];
+
+/** The sounds that list each pattern, by their category: a lead sound lists `LEAD`, a bass sound every other. */
+const LISTED = ROWS.map((r) => ({
+  patternId: r.id,
+  sound: { tags: [r.id === LEAD ? 'lead' : 'bass', 'funk'] },
+}));
 
 const post = (body: unknown) =>
   POST(
@@ -151,7 +161,9 @@ beforeEach(() => {
   vi.clearAllMocks();
   forgetSuggestLibrary();
   mockPrisma.libraryPattern.findMany.mockResolvedValue(ROWS);
+  mockPrisma.synthSoundPattern.findMany.mockResolvedValue(LISTED);
   mockPrisma.synthSound.findFirst.mockResolvedValue({
+    tags: ['bass', 'funk'],
     patterns: [{ patternId: OWN, pattern: { inspiredArtistId: null, status: 'enabled' } }],
   });
 });
@@ -164,6 +176,7 @@ describe('POST /api/v1/library-patterns/rank', () => {
       [{ features: BASS }, 'synthId'],
       [{ synthId: 'Model D!' }, 'synthId'],
       [{ synthId: 'model-d', sound: '../x' }, 'sound'],
+      [{ synthId: 'model-d', asCame: 'yes' }, 'asCame'],
     ] as const) {
       const res = await post(body);
       expect(res.status).toBe(400);
@@ -185,11 +198,12 @@ describe('POST /api/v1/library-patterns/rank', () => {
     );
   });
 
-  it('says what the patch sounds like and lists every other pattern by role, best suited first, without notes', async () => {
+  it('says what the patch sounds like and lists every other pattern of its category by role, best suited first, without notes', async () => {
     const res = await post({ synthId: 'model-d', sound: 'funk-bass', features: BASS });
     expect(res.status).toBe(200);
     const data = await answer(res);
     expect(data.reading).toMatchObject({ category: 'bass', role: 'bass_line', register: 'low' });
+    expect(data.category).toBe('bass');
     expect(data.sections.map((s) => s.role).sort()).toEqual([...PATTERN_ROLES].sort());
     expect(data.sections[0]).toMatchObject({ role: 'bass_line', label: 'Bass line' });
     // Clearly first, not by a hair. Relative, not a fixed share: the shares come from the fitted model, which a refit
@@ -197,10 +211,10 @@ describe('POST /api/v1/library-patterns/rank', () => {
     const [topShare, nextShare] = data.sections.map((s) => s.share);
     expect(nextShare).not.toBeNull();
     expect(topShare).toBeGreaterThan(2 * (nextShare ?? Infinity));
-    // Every pattern once but the sound's own, which the picker lists first.
+    // Every bass sound's pattern once but the sound's own, which the picker lists first; not the lead sound's.
     expect(listed(data).sort()).toEqual(
       ROWS.map((r) => r.id)
-        .filter((id) => id !== OWN)
+        .filter((id) => id !== OWN && id !== LEAD)
         .sort()
     );
     // The lower line suits a low patch better, whatever its name.
@@ -239,6 +253,8 @@ describe('POST /api/v1/library-patterns/rank', () => {
     ]) {
       const data = await answer(await post(body));
       expect(data.reading).toBeNull();
+      // no sound to go by and nothing heard: the whole library
+      expect(data.category).toBeNull();
       expect(data.sections.map((s) => s.role)).toEqual([...PATTERN_ROLES]);
       expect(listed(data)).toHaveLength(ROWS.length);
       expect(patternsOf(data, 'bass_line').map((p) => p.name)).toEqual([
@@ -248,6 +264,30 @@ describe('POST /api/v1/library-patterns/rank', () => {
       ]);
       expect(data.sections.every((s) => s.share === null)).toBe(true);
     }
+  });
+
+  it('lists by the start sound’s tag while the patch is that sound as it came, and by what it hears once it is not', async () => {
+    mockPrisma.synthSound.findFirst.mockResolvedValue({ tags: ['lead'], patterns: [] });
+    // as it came: the sound's tag, whatever the detector makes of it, and with nothing heard at all
+    for (const body of [
+      { synthId: 'model-d', sound: 'a-lead', features: BASS, asCame: true },
+      { synthId: 'model-d', sound: 'a-lead', asCame: true },
+      { synthId: 'model-d', sound: 'a-lead', features: { ...BASS, silent: true }, asCame: true },
+    ]) {
+      const data = await answer(await post(body));
+      expect(data.category).toBe('lead');
+      expect(listed(data)).toEqual([LEAD]);
+    }
+    // moved far: what it hears
+    const moved = await answer(await post({ synthId: 'model-d', sound: 'a-lead', features: BASS }));
+    expect(moved.category).toBe('bass');
+    expect(listed(moved)).not.toContain(LEAD);
+    expect(listed(moved)).toContain(OWN);
+    // a sound whose first tag is not a category gives none to go by
+    mockPrisma.synthSound.findFirst.mockResolvedValue({ tags: ['funk'], patterns: [] });
+    const untagged = await answer(await post({ synthId: 'model-d', sound: 'odd', asCame: true }));
+    expect(untagged.category).toBeNull();
+    expect(listed(untagged)).toHaveLength(ROWS.length);
   });
 
   it('reads the library suggestions keep, once a minute between them', async () => {

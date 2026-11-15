@@ -177,6 +177,7 @@ const ROLLING = (() => {
 })();
 const RANKED: RankResult = {
   reading: null,
+  category: null,
   sections: [
     {
       role: 'bass_line',

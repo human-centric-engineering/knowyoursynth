@@ -1540,7 +1540,7 @@ function Synth({
     synthId,
     def: synthDef,
     panel: suggestPanel,
-    sound: startSlug,
+    start: suggestStart,
     open: patternsOpen,
     enabled: !ownSoundPending,
   });

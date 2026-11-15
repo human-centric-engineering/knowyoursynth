@@ -108,6 +108,7 @@ const SECTIONS: RankSection[] = [
 const READY: RankedPatterns = {
   state: 'ready',
   result: {
+    category: 'lead',
     reading: {
       category: 'lead',
       role: 'lead_line',
@@ -335,7 +336,7 @@ describe('the pattern picker beside Play', () => {
     render(
       <Picker
         own={null}
-        ranked={{ state: 'ready', result: { reading: null, sections: SECTIONS } }}
+        ranked={{ state: 'ready', result: { reading: null, category: null, sections: SECTIONS } }}
       />
     );
     expect(within(dialog()).getByText(/listed by part and name/)).toBeTruthy();

@@ -48,6 +48,7 @@ vi.mock('@/lib/api/client', () => ({
       if (path !== '/api/v1/library-patterns/suggest') throw new Error(`unexpected POST ${path}`);
       if (server.fail) throw new Error('Server error');
       const result: SuggestResult = {
+        category: 'pad',
         reading: {
           category: 'pad',
           role: 'held',

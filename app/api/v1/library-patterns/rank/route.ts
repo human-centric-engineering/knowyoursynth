@@ -3,11 +3,13 @@
  * (`f-pattern-picker` t-212): what the Play deck's pattern picker lists.
  *
  * POST /api/v1/library-patterns/rank
- *   { synthId, sound?, features? }
+ *   { synthId, sound?, features?, asCame? }
  *
  * `features` is what the sound detector heard (`soundFeatures`, run in the browser's probe worker), once it has; with
  * none, or a silent patch, the sections are in role order and the patterns by name. `sound` is the library sound the
- * patch started as, if it did: its own patterns are left out. Each pattern is a lean row, without its notes. A POST
+ * patch started as, if it did: its own patterns are left out. `asCame` says the patch is still that sound as it came,
+ * so only patterns of its category (its first tag) are listed; otherwise only those of the category the features say.
+ * Each pattern is a lean row, without its notes. A POST
  * because the features are a body, but it writes nothing.
  *
  * Public: no session needed. The section rate limit applies (`proxy.ts`), with no handler cap. An unknown synth or
@@ -30,6 +32,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       synthId: body.synthId,
       sound: body.sound,
       role: result.reading?.role,
+      category: result.category,
       count: result.sections.reduce((n, s) => n + s.patterns.length, 0),
     });
     return successResponse(result);
