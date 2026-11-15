@@ -50,6 +50,7 @@ describe('nativeSynthProblems', () => {
       'native synth 0-coast is not registered',
       'native synth minilogue-xd is not registered',
       'native synth sub-37 is not registered',
+      'native synth teo-5 is not registered',
     ]);
   });
 

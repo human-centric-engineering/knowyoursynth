@@ -64,6 +64,7 @@ const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {
   '0-coast': () => import('@/lib/app/synths/defs/0-coast'),
   'minilogue-xd': () => import('@/lib/app/synths/defs/minilogue-xd'),
   'sub-37': () => import('@/lib/app/synths/defs/sub-37'),
+  'teo-5': () => import('@/lib/app/synths/defs/teo-5'),
 };
 
 /** Every id a loader exists for. */
