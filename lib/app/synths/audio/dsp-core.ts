@@ -71,6 +71,8 @@ export interface MeterEvent {
   overload: number;
   gate: boolean;
   lfo: number;
+  /** LFO 2, where the synth has one (the Sub 37's MOD 2 lamp). */
+  lfo2?: number;
   env1: number;
   env2: number;
   /**
@@ -83,6 +85,8 @@ export interface MeterEvent {
   oscs?: number;
   /** The LFO's rate now, in Hz. */
   lfoHz?: number;
+  /** LFO 2's rate now, in Hz, where the synth has one. */
+  lfo2Hz?: number;
   /** Each oscillator's output now (−1..1), its pitch in Hz and its mixer level (0 while switched out). */
   oscV?: number[];
   oscHz?: number[];
@@ -733,7 +737,8 @@ function createVoice(
     rD: 1,
   });
   const env = [mkEnv(), mkEnv(), mkEnv()];
-  let lfoHzNow = 0;
+  let lfoHzNow = 0,
+    lfo2HzNow = 0;
   let lfoPhase = 0,
     lfoTrigPrev = 0;
   // Opt-in extras (added for the DeepMind): LFO delay + fade-in, sample-and-hold shapes, a second LFO, a per-voice pitch
@@ -2155,8 +2160,12 @@ function createVoice(
     const dPer = dAmt > 0 ? Math.max(1, Math.round((p.drift!.rate || 1) * sr)) : 0;
     const dC = dAmt > 0 ? expCoef(p.drift!.rate || 1) : 0;
     const vg = p.vca.gain == null ? 1 : p.vca.gain;
-    // `note2Osc`: the oscillator that follows the second note when `paraphonic` (default 1; the CAT's VCO 1, osc 0, takes the high note)
-    const hiOsc = p.note2Osc == null ? 1 : p.note2Osc;
+    // `note2Osc`: the oscillator(s) that follow the second note when `paraphonic` (default 1; the CAT's VCO 1, osc 0, takes the high
+    // note; the Sub 37's sub oscillator goes with Oscillator 1), as a bit per oscillator
+    const n2 = p.note2Osc == null ? 1 : p.note2Osc;
+    let hiMask = 0;
+    if (typeof n2 === 'number') hiMask = 1 << n2;
+    else for (const k of n2) hiMask |= 1 << k;
     const shLfo = sh.clock === 'lfo';
     const assign = !!p.oscAssign;
     const ez = p.easel || null;
@@ -2293,8 +2302,8 @@ function createVoice(
         if (retrigFlag && L2.keySync && !l2Com) lfo2.phase = 0;
         // dest `lfo2Rate`, in octaves (Sub 37 MOD 1 DEST LFO RATE)
         const l2Oct = ev(DI.lfo2Rate);
-        lfo2.phase +=
-          Math.min(l2Oct ? L2.rate * Math.exp(l2Oct * Math.LN2) : L2.rate, sr * 0.4) / sr;
+        lfo2HzNow = Math.min(l2Oct ? L2.rate * Math.exp(l2Oct * Math.LN2) : L2.rate, sr * 0.4);
+        lfo2.phase += lfo2HzNow / sr;
         let w2 = false;
         if (lfo2.phase >= 1) {
           lfoCyc[1] += Math.floor(lfo2.phase);
@@ -2488,7 +2497,7 @@ function createVoice(
           o.pw += (o.pwT - o.pw) * sm;
           if (o.mo) o.morph += (o.morphT - o.morph) * sm;
           o.semi += (o.semiT - o.semi) * sm;
-          const kn = assign ? slotN[k] : k === hiOsc && p.paraphonic ? note2 : note;
+          const kn = assign ? slotN[k] : (hiMask >> k) & 1 && p.paraphonic ? note2 : note;
           oscNote[k] = o.kbd ? kn : o.fixed;
           const base = o.kbd ? kn + pmAll + (p.tune || 0) + vOff + drift : o.fixed;
           const nn = base + o.semi + ev(PITCH_DI[k]);
@@ -2947,6 +2956,7 @@ function createVoice(
           overload: overloadPeak,
           gate: env[1].prevGate || env[0].prevGate,
           lfo: S[SI.lfo],
+          lfo2: S[SI.lfo2],
           env1: S[SI.env1],
           env2: S[SI.env2],
           env1Stage: P.easel || P.moog || P.trap ? undefined : envStage(env[0]),
@@ -2955,6 +2965,7 @@ function createVoice(
           amp: P.easel || P.moog || P.solar ? undefined : vcaGain,
           oscs: oscMask(),
           lfoHz: lfoHzNow,
+          lfo2Hz: L2 ? lfo2HzNow : undefined,
           ...oscMeters(),
           ...(P.easel ? { gate: gate > 0, seq: ezSeqSt, pulser: ezPul } : null),
           // the CM1A's lamp: the key held, not the engine's own envelopes, which the 900 path does not use
@@ -3135,7 +3146,7 @@ function createTremolo(sr: number): {
  * stage after the voices are summed (`post`: the DeepMind's 6 dB high-pass and bass boost), then the effects engine
  * (`fx`, see dm-fx.js), which is the one stereo part of the synth.
  *   poly: { voices, stack, mono, detune /*semitones, outermost voice of a stack*\/ }
- *   arp:  { on, bpm, gate /*0..1 of a step*\/, mode: 'up'|'down'|'updown'|'downup'|'random'|'played', octaves, hold }
+ *   arp:  { on, bpm, gate /*0..1 of a step*\/, mode: 'up'|'down'|'updown'|'downup'|'random'|'played'|'playedupdown', octaves, hold }
  *   post: { hpf /*Hz*\/, boost /*bool*\/ }
  *   fx:   { mode, routing, slots } (dm-fx.js)
  * process(out, n, outR): with `outR` the output is stereo; without it, `out` gets the mono sum.
@@ -3551,6 +3562,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         overload: over,
         gate: keys.length > 0,
         lfo: m.lfo || 0,
+        lfo2: m.lfo2 || 0,
         env1: m.env1 || 0,
         env2: m.env2 || 0,
         env1Stage: rest && m.env1Stage ? 'idle' : m.env1Stage,
@@ -3558,6 +3570,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         cutoff: rest ? undefined : m.cutoff,
         amp: rest ? undefined : m.amp,
         lfoHz: m.lfoHz,
+        lfo2Hz: m.lfo2Hz,
         oscV: m.oscV,
         oscHz: m.oscHz,
         oscLv: m.oscLv,
@@ -3609,13 +3622,13 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
   function arpSeq() {
     const a = P!.arp!;
     const base =
-      a.mode === 'played' || a.mode === 'random'
+      a.mode === 'played' || a.mode === 'playedupdown' || a.mode === 'random'
         ? arpNotes.slice()
         : arpNotes.slice().sort((x, y) => x - y);
     const seq: number[] = [];
     for (let o = 0; o < Math.max(1, a.octaves || 1); o++) base.forEach((n) => seq.push(n + 12 * o));
     if (a.mode === 'down' || a.mode === 'downup') seq.reverse();
-    if ((a.mode === 'updown' || a.mode === 'downup') && seq.length > 2)
+    if ((a.mode === 'updown' || a.mode === 'downup' || a.mode === 'playedupdown') && seq.length > 2)
       for (let i = seq.length - 2; i > 0; i--) seq.push(seq[i]);
     return seq;
   }
@@ -3935,6 +3948,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         overload: over,
         gate: keys.length > 0 || arpCur >= 0,
         lfo: m.lfo || 0,
+        lfo2: m.lfo2 || 0,
         env1: m.env1 || 0,
         env2: m.env2 || 0,
         env1Stage: rest && m.env1Stage ? 'idle' : m.env1Stage,
@@ -3942,6 +3956,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         cutoff: rest ? undefined : m.cutoff,
         amp: rest ? undefined : m.amp,
         lfoHz: m.lfoHz,
+        lfo2Hz: m.lfo2Hz,
         oscV: m.oscV,
         oscHz: m.oscHz,
         oscLv: m.oscLv,

@@ -102,6 +102,10 @@
     {
       "sound": "ems-vcs3/vcs3-self-clocked-ratchet",
       "reason": "Its envelope repeats by itself, so each held key stutters into four plucks and a written sequence would be played over again; the riff is the lesson’s own."
+    },
+    {
+      "sound": "sub-37/s37-loop-pulse",
+      "reason": "Its looping envelope pulses one held note, so a written sequence would be played over the pulses; the batch’s Phaedra sequence plays chords, and the lesson’s held bass notes are its own."
     }
   ],
   "patterns": [

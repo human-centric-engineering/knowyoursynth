@@ -160,7 +160,12 @@ export function jackMap(def: SynthDef): Record<string, Jack | undefined> {
   return m;
 }
 
-export function formatValue(c: Control, v: ControlValue | null | undefined): string {
+/** `values`: the whole panel, where the caller has it, for a readout another control changes (`ContinuousValue.fmt`). */
+export function formatValue(
+  c: Control,
+  v: ControlValue | null | undefined,
+  values?: ControlValues
+): string {
   if (v == null) return '—';
   if (c.kind === 'bool') return v ? 'On' : 'Off';
   if (c.kind === 'enum') {
@@ -172,7 +177,7 @@ export function formatValue(c: Control, v: ControlValue | null | undefined): str
   const n = (Math.round(num * 10) / 10).toFixed(1).replace(/\.0$/, '').replace('-', '−');
   if (c.fmt) {
     try {
-      return `${n} · ${c.fmt(num)}`;
+      return `${n} · ${c.fmt(num, values)}`;
     } catch {
       return n;
     }

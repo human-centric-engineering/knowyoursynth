@@ -391,6 +391,12 @@ function Lane({
     return mod && Object.hasOwn(mod, id) ? mod[id] : undefined;
   };
   const restValue = c ? (panel[c.id] ?? c.def) : undefined;
+  // The panel as step i plays it, every lane's change on that step over the panel's values: a readout another control
+  // changes (`ContinuousValue.fmt`) follows the step.
+  const panelAt = (i: number): ControlValues => {
+    const mod = steps[i]?.mod;
+    return mod ? { ...panel, ...mod } : panel;
+  };
   const set = (i: number, v: ControlValue | null, group?: string) =>
     onEdit((q) => setLaneStep(q, part, i, id, v), group);
 
@@ -446,7 +452,7 @@ function Lane({
   const readout =
     shownAt === null || !c
       ? null
-      : `Step ${shownAt + 1}: ${shownValue === undefined ? `panel (${formatValue(c, restValue)})` : formatValue(c, shownValue)}`;
+      : `Step ${shownAt + 1}: ${shownValue === undefined ? `panel (${formatValue(c, restValue, panelAt(shownAt))})` : formatValue(c, shownValue, panelAt(shownAt))}`;
   const restPos = c && restValue !== undefined ? lanePos(c, restValue) : null;
 
   return (
@@ -555,8 +561,8 @@ function Lane({
                     ? 'nothing set'
                     : String(v)
                   : v === undefined
-                    ? `panel value, ${formatValue(c, restValue)}`
-                    : formatValue(c, v)
+                    ? `panel value, ${formatValue(c, restValue, panelAt(i))}`
+                    : formatValue(c, v, panelAt(i))
               }
               aria-disabled={!c || undefined}
               data-beat={i % 4 === 0 || undefined}

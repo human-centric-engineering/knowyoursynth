@@ -1,0 +1,1289 @@
+{
+  "synth": "sub-37",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "s37-sub-bass",
+      "name": "Sub Oscillator Bass",
+      "ref": "In the style of 2010s synthwave basses",
+      "artist": "Various",
+      "tags": ["bass", "synthwave", "moog"],
+      "level": 1,
+      "blurb": "A round, heavy bass: the sawtooth with the sub oscillator an octave under it, plucked by the ladder filter.",
+      "how": "The sub oscillator adds a square an octave below Oscillator 1, which gives the weight. The filter sits low and the filter envelope opens it briefly at the start of every note, so each one has a soft pluck before it settles.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.45],
+          [0.5, 45, 0.45],
+          [1, 33, 0.45],
+          [1.5, 45, 0.45],
+          [2, 33, 0.45],
+          [2.5, 45, 0.45],
+          [3, 36, 0.45],
+          [3.5, 48, 0.45],
+          [4, 29, 0.45],
+          [4.5, 41, 0.45],
+          [5, 29, 0.45],
+          [5.5, 41, 0.45],
+          [6, 31, 0.45],
+          [6.5, 43, 0.45],
+          [7, 31, 0.45],
+          [7.5, 43, 0.45]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Add the sub oscillator",
+          "module": "osc",
+          "why": "Bring the sub in under Oscillator 1.\n- SUB 1 6.0: a square an octave down\n- Listen for: the same notes with far more weight under them.",
+          "set": {
+            "mixer.sub": 6
+          }
+        },
+        {
+          "title": "Close the filter",
+          "module": "filter",
+          "why": "Take the brightness off, and let the cutoff follow the keys.\n- CUTOFF 224 Hz: low, so the bass is dark\n- EG AMT +2.5: the filter envelope opens it on each note\n- KB TRACK 5.0: higher notes stay as bright as low ones\n- Listen for: a darker, rounder tone with a brighter start to each note.",
+          "set": {
+            "vcf.cutoff": 3.5,
+            "vcf.egAmt": 2.5,
+            "vcf.kbTrack": 5
+          }
+        },
+        {
+          "title": "Pluck it",
+          "module": "env",
+          "why": "Make the filter envelope a quick fall, and shorten the loudness.\n- F DECAY 250 ms: the filter falls back quickly\n- F SUSTAIN 2.0: and settles low\n- A RELEASE 40 ms: a clean stop between notes\n- Listen for: a pluck at the start of each note, then a deep hum.",
+          "set": {
+            "envF.decay": 6,
+            "envF.sustain": 2,
+            "envA.release": 4
+          }
+        }
+      ],
+      "context": {
+        "mixer.sub": "In this sound: the weight under the bass.",
+        "vcf.egAmt": "In this sound: how bright the pluck is.",
+        "envF.decay": "In this sound: how long the pluck lasts."
+      },
+      "tweaks": [
+        {
+          "id": "mixer.sub",
+          "try": "Turn SUB 1 to 10",
+          "hear": "A heavier bass that starts to overdrive the filter."
+        },
+        {
+          "id": "envF.decay",
+          "try": "Turn the filter DECAY to 7.5",
+          "hear": "A slower, wah-like opening on every note."
+        }
+      ]
+    },
+    {
+      "id": "s37-feedback-growl",
+      "name": "Feedback Growl Bass",
+      "ref": "In the style of Bernie Worrell’s Minimoog bass — “Flash Light” (Parliament)",
+      "artist": "Bernie Worrell",
+      "tags": ["bass", "funk", "70s", "feedback"],
+      "level": 2,
+      "blurb": "A fat, growling funk bass that slides between notes, thickened by the mixer’s own output fed back into it.",
+      "how": "Two oscillators a hair apart make the bass wide. FDBK/EXT IN sends the mixer’s output back into the mixer, which thickens and roughens it, the way players once patched a Minimoog’s output back to its external input. Glide with LEGATO makes the joined notes slide.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4],
+          [0.75, 36, 0.2],
+          [1, 48, 0.6],
+          [1.5, 46, 0.6],
+          [2, 43, 0.4],
+          [2.75, 43, 0.2],
+          [3, 41, 0.5],
+          [3.5, 39, 0.6],
+          [4, 36, 0.4],
+          [4.75, 36, 0.2],
+          [5, 48, 0.6],
+          [5.5, 51, 0.6],
+          [6, 53, 0.4],
+          [6.5, 51, 0.6],
+          [7, 48, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two oscillators, a hair apart",
+          "module": "osc",
+          "why": "Bring Oscillator 2 in with Oscillator 1, beating slowly against it.\n- OSC 2 5.0: level with Oscillator 1\n- BEAT FREQ +0.60 Hz: a slow beat between the two\n- Listen for: a wider, moving bass.",
+          "set": {
+            "mixer.osc2": 5,
+            "osc2.beat": 0.6
+          }
+        },
+        {
+          "title": "Feed the mixer back",
+          "module": "mixer",
+          "why": "Turn up the feedback channel.\n- FDBK/EXT IN 6.0: the mixer’s output back into itself\n- Listen for: the tone thickening, with a growl in the low end.",
+          "set": {
+            "mixer.fbext": 6
+          }
+        },
+        {
+          "title": "The funk filter",
+          "module": "filter",
+          "why": "Close the filter, and give each note a short wah.\n- CUTOFF 317 Hz: a dark starting point\n- RESONANCE 2.0: a little bite\n- EG AMT +3.0: the envelope opens it\n- F DECAY 160 ms: a quick wah\n- F SUSTAIN 3.0: settling low\n- Listen for: each note snapping open and closing again.",
+          "set": {
+            "vcf.cutoff": 4,
+            "vcf.resonance": 2,
+            "vcf.egAmt": 3,
+            "envF.decay": 5.5,
+            "envF.sustain": 3
+          }
+        },
+        {
+          "title": "Slide the joined notes",
+          "module": "glide",
+          "why": "Switch glide on, only between notes played joined.\n- GLIDE ON on: glide in\n- TIME 110 ms: a short slide\n- LEGATO on: only when a key is still held\n- Listen for: the overlapping notes sliding up and down, the detached ones jumping.",
+          "set": {
+            "glide.on": true,
+            "glide.time": 1.5,
+            "glide.legato": true
+          }
+        }
+      ],
+      "context": {
+        "mixer.fbext": "In this sound: the growl.",
+        "glide.legato": "In this sound: why only some notes slide."
+      },
+      "tweaks": [
+        {
+          "id": "mixer.fbext",
+          "try": "Turn FDBK/EXT IN to 10",
+          "hear": "A distorted, almost fuzzed bass."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Turn RESONANCE to 5",
+          "hear": "A squelchier, more vocal wah."
+        }
+      ]
+    },
+    {
+      "id": "s37-lucky-glide",
+      "name": "Portamento Lead",
+      "ref": "In the style of Keith Emerson’s Moog solo — “Lucky Man” (Emerson, Lake & Palmer)",
+      "artist": "Keith Emerson",
+      "tags": ["lead", "prog", "70s", "glide"],
+      "level": 1,
+      "blurb": "A big, singing mono lead that slides slowly from note to note, with vibrato on the mod wheel.",
+      "how": "Two oscillators, one between sawtooth and square and the other square, through a part-open filter. A long glide makes every note slide into the next, and MOD 1 puts LFO 1 on the pitch, as far as the mod wheel goes.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 67, 1.9],
+          [2, 74, 1.4],
+          [3.5, 72, 0.4],
+          [4, 71, 1.9],
+          [6, 67, 1.9],
+          [8, 79, 2.9],
+          [11, 77, 0.9],
+          [12, 74, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two shapes",
+          "module": "osc",
+          "why": "Move Oscillator 1 towards the square, and bring in Oscillator 2 as a square.\n- OSC 1 WAVE 5.0: halfway from sawtooth to square\n- OSC 2 5.0: Oscillator 2 in\n- OSC 2 WAVE 6.7: a square\n- Listen for: a hollower, horn-like buzz.",
+          "set": {
+            "osc1.wave": 5,
+            "mixer.osc2": 5,
+            "osc2.wave": 6.7
+          }
+        },
+        {
+          "title": "Soften it",
+          "module": "filter",
+          "why": "Close the filter part way, with a little envelope.\n- CUTOFF 1.3 kHz: the top taken off\n- EG AMT +1.5: a slight brightening on each note\n- F DECAY 400 ms: it falls back gently\n- F SUSTAIN 5.0: to halfway\n- Listen for: a warm, singing lead.",
+          "set": {
+            "vcf.cutoff": 6,
+            "vcf.egAmt": 1.5,
+            "envF.decay": 6.5,
+            "envF.sustain": 5
+          }
+        },
+        {
+          "title": "The slide",
+          "module": "glide",
+          "why": "Switch glide on with a long TIME.\n- GLIDE ON on: glide in\n- TIME 610 ms: a slow slide between notes\n- Listen for: every note sweeping up or down into the next.",
+          "set": {
+            "glide.on": true,
+            "glide.time": 3.5
+          }
+        },
+        {
+          "title": "Vibrato on the wheel",
+          "module": "mod",
+          "why": "MOD 1 follows the mod wheel: give it a little pitch, at a vibrato rate.\n- MOD 1 PITCH AMT +1.0: about a semitone either way at full\n- LFO 1 RATE 6.31 Hz: a singer’s vibrato\n- Listen for: nothing until you push the mod wheel, then a vibrato that deepens as it goes up.",
+          "set": {
+            "mod1.pitchAmt": 1,
+            "lfo1.rate": 6
+          }
+        }
+      ],
+      "context": {
+        "glide.time": "In this sound: how slowly each note slides into the next.",
+        "mod1.pitchAmt": "In this sound: the deepest the vibrato goes on the wheel."
+      },
+      "tweaks": [
+        {
+          "id": "glide.time",
+          "try": "Turn glide TIME to 6",
+          "hear": "Long, swooping slides."
+        },
+        {
+          "id": "osc2.frequency",
+          "try": "Turn FREQUENCY to +7",
+          "hear": "Oscillator 2 a fifth up: a hollow, organ-like lead."
+        }
+      ]
+    },
+    {
+      "id": "s37-duo-fifths",
+      "name": "Duo Interval Lead",
+      "ref": "In the style of 1970s prog-rock two-voice leads",
+      "artist": "Various",
+      "tags": ["lead", "prog", "duo"],
+      "level": 2,
+      "blurb": "Hold two keys and each oscillator plays one: parallel fourths and fifths through one filter.",
+      "how": "DUO MODE gives each oscillator its own key: with KB CTRL at HI, Oscillator 2 the higher one and Oscillator 1 the lower. Both still go through the one filter and amplifier, so the two notes share a single envelope, as on a duophonic synth of the 1970s.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.9],
+          [0, 69, 0.9],
+          [1, 64, 0.9],
+          [1, 71, 0.9],
+          [2, 65, 1.9],
+          [2, 72, 1.9],
+          [4, 67, 0.9],
+          [4, 72, 0.9],
+          [5, 65, 0.9],
+          [5, 70, 0.9],
+          [6, 64, 1.9],
+          [6, 69, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two notes",
+          "module": "osc",
+          "why": "Switch DUO MODE on, and bring Oscillator 2 in.\n- DUO MODE on: one key for each oscillator\n- KB CTRL: Oscillator 2 on the higher key (HI, as it starts)\n- OSC 2 5.0: level with Oscillator 1\n- Listen for: two notes at once from two keys, one from a single key.",
+          "set": {
+            "osc.duo": true,
+            "mixer.osc2": 5
+          }
+        },
+        {
+          "title": "A brassy filter",
+          "module": "filter",
+          "why": "Close the filter a little and add some resonance.\n- CUTOFF 893 Hz: part open\n- RESONANCE 3.0: a touch of edge\n- EG AMT +1.5: a brighter start\n- F DECAY 250 ms: a short fall\n- F SUSTAIN 6.0: most of the way up\n- Listen for: the intervals sounding like one bright, slightly nasal instrument.",
+          "set": {
+            "vcf.cutoff": 5.5,
+            "vcf.resonance": 3,
+            "vcf.egAmt": 1.5,
+            "envF.decay": 6,
+            "envF.sustain": 6
+          }
+        }
+      ],
+      "context": {
+        "osc.duo": "In this sound: what lets two keys sound at once."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.kbCtrl",
+          "try": "Press KB CTRL until LO lights",
+          "hear": "The oscillators swap keys: the lower note now on Oscillator 2."
+        },
+        {
+          "id": "osc2.wave",
+          "try": "Turn OSC 2 WAVE to 10",
+          "hear": "A thin, reedy top line over the lower note."
+        }
+      ]
+    },
+    {
+      "id": "s37-sync-sweep",
+      "name": "Sync Sweep Lead",
+      "ref": "In the style of 1980s new-wave sync leads",
+      "artist": "Various",
+      "tags": ["lead", "sync", "new wave", "80s"],
+      "level": 2,
+      "blurb": "A tearing, vocal lead: Oscillator 2 hard-synced to Oscillator 1 and swept by the filter envelope through MOD 2.",
+      "how": "HARD SYNC restarts Oscillator 2 with every cycle of Oscillator 1, so raising Oscillator 2’s pitch changes its tone, not its note. MOD 2, set to F.EG/PGM, sends the filter envelope to Oscillator 2’s pitch alone, so each note starts with a sweep down through its harmonics.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.9],
+          [1, 67, 0.4],
+          [1.5, 69, 1.4],
+          [3, 67, 0.9],
+          [4, 72, 1.9],
+          [6, 71, 0.9],
+          [7, 67, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sync Oscillator 2",
+          "module": "osc",
+          "why": "Hear Oscillator 2 alone, synced and tuned up.\n- OSC 1 on off: Oscillator 1 out of the mixer, still running as the master\n- OSC 2 6.0: Oscillator 2 in\n- HARD SYNC on: Oscillator 2 restarts with Oscillator 1\n- FREQUENCY +5.00 st: tuned up, so it changes tone, not note\n- Listen for: a hard, nasal tone at Oscillator 1’s pitch.",
+          "set": {
+            "mixer.osc1On": false,
+            "mixer.osc2": 6,
+            "osc2.hardSync": true,
+            "osc2.frequency": 5
+          }
+        },
+        {
+          "title": "Sweep it with the envelope",
+          "module": "mod",
+          "why": "Set MOD 2’s SOURCE to F.EG/PGM and send it to Oscillator 2’s pitch.\n- MOD 2 SOURCE: the filter envelope (F.EG/PGM)\n- MOD 2 OSC: Oscillator 2 only (press OSC until only 2 lights)\n- MOD 2 PITCH AMT +4.0: a wide sweep\n- F DECAY 400 ms: how long the sweep takes\n- F SUSTAIN 0.0: it falls all the way\n- Listen for: each note tearing down from a scream to a buzz.",
+          "set": {
+            "mod2.source": "feg_pgm",
+            "mod2.pitchOsc": "osc2",
+            "mod2.pitchAmt": 4,
+            "envF.decay": 6.5,
+            "envF.sustain": 0
+          }
+        },
+        {
+          "title": "Open the filter",
+          "module": "filter",
+          "why": "Leave the top bright, with a hint of resonance.\n- CUTOFF 2.5 kHz: bright\n- RESONANCE 1.0: a little edge\n- Listen for: the sweep cutting through.",
+          "set": {
+            "vcf.cutoff": 7,
+            "vcf.resonance": 1
+          }
+        }
+      ],
+      "context": {
+        "osc2.hardSync": "In this sound: what turns the pitch sweep into a tone sweep.",
+        "mod2.pitchAmt": "In this sound: how far the sync sweeps."
+      },
+      "tweaks": [
+        {
+          "id": "mod2.pitchAmt",
+          "try": "Turn MOD 2 PITCH AMT to 5",
+          "hear": "A wilder, longer tear."
+        },
+        {
+          "id": "envF.decay",
+          "try": "Turn the filter DECAY to 7.5",
+          "hear": "A slow, talking sweep."
+        }
+      ]
+    },
+    {
+      "id": "s37-two-pole-pluck",
+      "name": "Two-Pole Pluck",
+      "ref": "In the style of 2010s synth-pop plucks",
+      "artist": "Various",
+      "tags": ["pluck", "synth-pop", "filter"],
+      "level": 1,
+      "blurb": "A bright, glassy pluck: the filter at 12 dB an octave keeps more of the top than the classic 24.",
+      "how": "SLOPE sets how steeply the filter cuts above the cutoff. At 12 dB an octave it lets more of the harmonics through, so a pluck stays bright and airy even with the filter low; at 24 it would be rounder and darker.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.4],
+          [0.5, 76, 0.4],
+          [1, 79, 0.4],
+          [1.75, 76, 0.4],
+          [2.5, 74, 0.4],
+          [3, 72, 0.4],
+          [4, 69, 0.4],
+          [4.5, 72, 0.4],
+          [5, 76, 0.4],
+          [5.75, 74, 0.4],
+          [6.5, 72, 0.4],
+          [7, 67, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The gentler slope",
+          "module": "filter",
+          "why": "Set the slope to 12 dB, close the filter and let the envelope pluck it.\n- SLOPE: 12 dB an octave (press SLOPE until 12 lights)\n- CUTOFF 159 Hz: low between notes\n- EG AMT +3.5: a bright attack\n- F DECAY 160 ms: a quick fall\n- F SUSTAIN 0.0: all the way back\n- Listen for: a pluck that keeps an airy top even as it closes.",
+          "set": {
+            "vcf.slope": "-12",
+            "vcf.cutoff": 3,
+            "vcf.egAmt": 3.5,
+            "envF.decay": 5.5,
+            "envF.sustain": 0
+          }
+        },
+        {
+          "title": "Let it ring and fade",
+          "module": "env",
+          "why": "Make the loudness die away whether or not the key is held.\n- A DECAY 400 ms: the note fades\n- A SUSTAIN 0.0: to nothing\n- A RELEASE 250 ms: a short tail after the key\n- Listen for: short, ringing notes.",
+          "set": {
+            "envA.decay": 6.5,
+            "envA.sustain": 0,
+            "envA.release": 6
+          }
+        },
+        {
+          "title": "An octave on top",
+          "module": "osc",
+          "why": "Add Oscillator 2 an octave up.\n- OSC 2 4.0: a little under Oscillator 1\n- OSC 2 OCTAVE: 4′, an octave up\n- Listen for: a brighter, glassier pluck.",
+          "set": {
+            "mixer.osc2": 4,
+            "osc2.octave": "4'"
+          }
+        }
+      ],
+      "context": {
+        "vcf.slope": "In this sound: why the pluck stays bright."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.slope",
+          "try": "Press SLOPE until 24 lights",
+          "hear": "The classic Moog slope: a rounder, darker pluck."
+        },
+        {
+          "id": "vcf.slope",
+          "try": "Press SLOPE until 6 lights",
+          "hear": "Barely filtered: a thin, buzzy pluck."
+        }
+      ]
+    },
+    {
+      "id": "s37-loop-pulse",
+      "name": "Looping Envelope Pulse",
+      "ref": "In the style of Tangerine Dream — “Phaedra”",
+      "artist": "Tangerine Dream",
+      "tags": ["seq", "berlin school", "70s", "loop"],
+      "level": 3,
+      "blurb": "Hold a note and it pulses on its own, while the filter swells and falls on a slower loop of its own.",
+      "how": "LOOP makes an envelope run its delay, attack, hold, decay and release over and over while a key is held. The amp envelope, short and looping, turns one held note into a stream of pulses; the filter envelope loops too, more slowly, so the pulses brighten and darken in long waves.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 40, 7.9],
+          [8, 43, 7.9],
+          [16, 38, 7.9],
+          [24, 40, 7.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Pulse the loudness",
+          "module": "env",
+          "why": "Loop the amp envelope, short, with no sustain, and a gap at the start of each cycle (KNOB SHIFT, then the ATTACK knob is DELAY).\n- A LOOP on: the envelope repeats\n- A DECAY 130 ms: each pulse falls quickly\n- A SUSTAIN 0.0: to nothing\n- A DELAY 100 ms: the gap before each pulse\n- Listen for: a held note turning into a steady stream of pulses.",
+          "set": {
+            "envA.loop": true,
+            "envA.decay": 5.3,
+            "envA.sustain": 0,
+            "env.knobShift": true,
+            "envA.delay": 5
+          }
+        },
+        {
+          "title": "A slow filter wave",
+          "module": "filter",
+          "why": "Loop the filter envelope too, much more slowly, over a low, resonant filter.\n- CUTOFF 159 Hz: low\n- RESONANCE 4.0: a vocal edge\n- EG AMT +3.5: a wide swell\n- F LOOP on: the filter envelope repeats\n- F ATTACK 400 ms: a slow rise\n- F DECAY 630 ms: a slower fall\n- F SUSTAIN 0.0: all the way down\n- F RELEASE 250 ms: the swell dies quickly when the key lifts\n- Listen for: the pulses brightening and darkening in long waves.",
+          "set": {
+            "vcf.cutoff": 3,
+            "vcf.resonance": 4,
+            "vcf.egAmt": 3.5,
+            "envF.loop": true,
+            "envF.attack": 6.5,
+            "envF.decay": 7,
+            "envF.sustain": 0,
+            "envF.release": 6
+          }
+        },
+        {
+          "title": "Thicken it",
+          "module": "osc",
+          "why": "Bring in Oscillator 2 an octave down.\n- OSC 2 5.0: Oscillator 2 in\n- OSC 2 OCTAVE: 16′, an octave down\n- Listen for: a deeper, fuller pulse.",
+          "set": {
+            "mixer.osc2": 5,
+            "osc2.octave": "16'"
+          }
+        }
+      ],
+      "context": {
+        "envA.loop": "In this sound: what makes one held note pulse.",
+        "envA.delay": "In this sound: the gap between pulses.",
+        "envF.loop": "In this sound: the slow swell over the pulses."
+      },
+      "tweaks": [
+        {
+          "id": "envA.delay",
+          "try": "With KNOB SHIFT on, turn the amp DELAY to 6.5",
+          "hear": "Slower, more spaced pulses."
+        },
+        {
+          "id": "envA.hold",
+          "try": "With KNOB SHIFT on, turn the amp HOLD to 5",
+          "hear": "Longer, organ-like pulses."
+        }
+      ]
+    },
+    {
+      "id": "s37-morph-drone",
+      "name": "Shape-Shifting Drone",
+      "ref": "In the style of Klaus Schulze — “Timewind”",
+      "artist": "Klaus Schulze",
+      "tags": ["drone", "ambient", "kosmische", "70s"],
+      "level": 2,
+      "blurb": "A slow, living drone: MOD 2 sweeps both oscillators’ shapes while MOD 1 drifts the filter.",
+      "how": "MOD 2’s DEST at OSC 1 and OSC 2 WAVE turns both WAVE knobs back and forth together with LFO 2, so the tone moves between triangle, sawtooth and square. MOD 1, taken off the mod wheel in its CONTROLLERS menu, drifts the cutoff even more slowly, and the two never quite line up.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 38, 15.9],
+          [16, 41, 15.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two oscillators, slowly beating",
+          "module": "osc",
+          "why": "Bring in Oscillator 2, beating against Oscillator 1.\n- OSC 2 5.0: Oscillator 2 in\n- BEAT FREQ +0.80 Hz: a slow beat\n- Listen for: a gently moving tone.",
+          "set": {
+            "mixer.osc2": 5,
+            "osc2.beat": 0.8
+          }
+        },
+        {
+          "title": "Sweep the shapes",
+          "module": "mod",
+          "why": "MOD 2 starts on VCA LEVEL: press DEST until both WAVE lamps light, and slow LFO 2 right down.\n- MOD 2 DEST: OSC 1 and OSC 2 WAVE, both lit\n- MOD 2 AMT +4.0: most of the way across the shapes\n- LFO 2 RATE 0.28 Hz: a sweep every few seconds\n- Listen for: the tone slowly changing colour, from hollow to buzzy and back.",
+          "set": {
+            "mod2.dest": "osc1_osc2_wave",
+            "mod2.modAmt": 4,
+            "lfo2.rate": 1.5
+          }
+        },
+        {
+          "title": "Drift the filter",
+          "module": "mod",
+          "why": "Take MOD 1 off the mod wheel (CURSOR to MOD 1 DEPTH), then let it move the cutoff very slowly.\n- MOD WHEEL 0 %: MOD 1 always on\n- MOD 1 FILTER AMT +1.5: a gentle drift\n- LFO 1 RATE 0.17 Hz: slower than LFO 2\n- CUTOFF 632 Hz: halfway\n- RESONANCE 3.0: a little colour\n- Listen for: the brightness drifting out of step with the shape.",
+          "set": {
+            "ui.page": "m1d",
+            "mod1.wheelDepth": 0,
+            "mod1.filterAmt": 1.5,
+            "lfo1.rate": 0.8,
+            "vcf.cutoff": 5,
+            "vcf.resonance": 3
+          }
+        },
+        {
+          "title": "Fade in and out",
+          "module": "env",
+          "why": "Slow the loudness’s attack and release.\n- A ATTACK 1.0 s: a slow fade-in\n- A RELEASE 1.6 s: a long tail\n- Listen for: the drone rising out of silence and sinking back.",
+          "set": {
+            "envA.attack": 7.5,
+            "envA.release": 8
+          }
+        }
+      ],
+      "context": {
+        "mod2.modAmt": "In this sound: how far the shapes move.",
+        "lfo2.rate": "In this sound: how fast the shapes move."
+      },
+      "tweaks": [
+        {
+          "id": "lfo2.rate",
+          "try": "Turn LFO 2 RATE to 4",
+          "hear": "A faster, pulsing change of colour."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Turn RESONANCE to 6",
+          "hear": "A whistling edge that follows the drift."
+        }
+      ]
+    },
+    {
+      "id": "s37-chase-arp",
+      "name": "Octave Arpeggio",
+      "ref": "In the style of Giorgio Moroder — “Chase”",
+      "artist": "Giorgio Moroder",
+      "tags": ["seq", "arp", "disco", "70s"],
+      "level": 1,
+      "blurb": "The arpeggiator turning one held bass note into a driving octave pattern in sixteenths, plucked by the filter.",
+      "how": "ARP ON plays the held keys one at a time at RATE, a sixteenth each; RANGE +1 runs them up through a second octave, so a single held note becomes the disco octave bass. The short filter envelope makes each note pluck, and the sub oscillator gives the low ones weight.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 33, 7.9],
+          [8, 31, 7.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Run the arpeggiator",
+          "module": "mode",
+          "why": "Switch the arpeggiator on, two octaves wide, at the song’s tempo.\n- ARP ON on: the held keys play in turn\n- RANGE: +1: up through a second octave\n- RATE 130 BPM: a sixteenth each\n- Listen for: a running octave pattern from one held key.",
+          "set": {
+            "arp.on": true,
+            "arp.range": "+1",
+            "arp.rate": 5.25
+          }
+        },
+        {
+          "title": "Pluck each note",
+          "module": "filter",
+          "why": "Close the filter, and give each note a short envelope.\n- CUTOFF 448 Hz: dark\n- RESONANCE 2.0: a little click\n- EG AMT +2.5: a bright start\n- F DECAY 100 ms: a quick fall\n- F SUSTAIN 1.0: to a little above the cutoff, not all the way down\n- A DECAY 160 ms: each note dies away\n- A SUSTAIN 3.0: to a third\n- Listen for: tight, plucked sixteenths.",
+          "set": {
+            "vcf.cutoff": 4.5,
+            "vcf.resonance": 2,
+            "vcf.egAmt": 2.5,
+            "envF.decay": 5,
+            "envF.sustain": 1,
+            "envA.decay": 5.5,
+            "envA.sustain": 3
+          }
+        },
+        {
+          "title": "Weight under it",
+          "module": "osc",
+          "why": "Add the sub oscillator.\n- SUB 1 4.0: a square an octave down\n- Listen for: the low notes of the pattern pushing harder.",
+          "set": {
+            "mixer.sub": 4
+          }
+        }
+      ],
+      "context": {
+        "arp.range": "In this sound: how far up the pattern climbs."
+      },
+      "tweaks": [
+        {
+          "id": "arp.pattern",
+          "try": "Turn PATTERN to RND",
+          "hear": "The same notes in a random order."
+        },
+        {
+          "id": "arp.backForth",
+          "try": "Press BACK / FORTH",
+          "hear": "The pattern runs up and back down."
+        }
+      ]
+    },
+    {
+      "id": "s37-velocity-wah",
+      "name": "Velocity Wah Bass",
+      "ref": "In the style of 1970s funk synth bass",
+      "artist": "Various",
+      "tags": ["bass", "funk", "70s", "velocity"],
+      "level": 2,
+      "blurb": "Play hard and the filter opens wide; play softly and it only just moves.",
+      "how": "With KNOB SHIFT on, the filter envelope’s SUSTAIN knob is VEL AMT: how much the strength of each key sets the envelope’s height. At 8 a soft note barely opens the filter and a hard one opens it all the way, so the line’s accents come from the playing.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4, 1],
+          [0.75, 36, 0.2, 0.4],
+          [1, 39, 0.4, 0.5],
+          [1.5, 41, 0.4, 0.9],
+          [2.5, 36, 0.4, 0.4],
+          [3, 43, 0.4, 1],
+          [3.5, 41, 0.4, 0.5],
+          [4, 36, 0.4, 1],
+          [4.75, 48, 0.2, 0.6],
+          [5, 46, 0.4, 0.4],
+          [5.5, 43, 0.4, 0.9],
+          [6.5, 39, 0.4, 0.5],
+          [7, 41, 0.4, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A resonant wah",
+          "module": "filter",
+          "why": "Close the filter, add resonance, and let the envelope open it.\n- CUTOFF 159 Hz: low\n- RESONANCE 4.0: a vocal peak\n- EG AMT +4.0: a wide sweep\n- F DECAY 210 ms: a quick wah\n- F SUSTAIN 1.0: nearly closed\n- Listen for: every note going “wow”.",
+          "set": {
+            "vcf.cutoff": 3,
+            "vcf.resonance": 4,
+            "vcf.egAmt": 4,
+            "envF.decay": 5.8,
+            "envF.sustain": 1
+          }
+        },
+        {
+          "title": "Let the playing set it",
+          "module": "env",
+          "why": "Press KNOB SHIFT, so the SUSTAIN knobs are VEL AMT, and turn both up.\n- KNOB SHIFT on: the second job of each knob\n- F VEL AMT 8.0: harder keys open the filter more\n- A VEL AMT 4.0: and play a little louder\n- Listen for: the accented notes wah wide, the soft ones barely move.",
+          "set": {
+            "env.knobShift": true,
+            "envF.velAmt": 8,
+            "envA.velAmt": 4
+          }
+        }
+      ],
+      "context": {
+        "envF.velAmt": "In this sound: how much the playing sets the wah."
+      },
+      "tweaks": [
+        {
+          "id": "envF.velAmt",
+          "try": "With KNOB SHIFT on, turn the filter VEL AMT to 0",
+          "hear": "Every note opens the same, however it is played."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Turn RESONANCE to 6",
+          "hear": "A squelchier, more liquid wah."
+        }
+      ]
+    },
+    {
+      "id": "s37-random-bleeps",
+      "name": "Random Computer Bleeps",
+      "ref": "In the style of 1970s science-fiction film computers",
+      "artist": "Various",
+      "tags": ["fx", "random", "sci-fi", "70s"],
+      "level": 2,
+      "blurb": "Hold a key and the pitch jumps to a new random note several times a second.",
+      "how": "MOD 2’s SOURCE at sample and hold takes a new random value from LFO 2 at every cycle and holds it, so the pitch steps instead of sliding. A little of the same signal on the filter makes each step a different brightness.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 72, 7.9],
+          [8, 67, 7.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Random steps on the pitch",
+          "module": "mod",
+          "why": "Turn MOD 2’s SOURCE to sample and hold, and send it to the pitch.\n- MOD 2 SOURCE: sample and hold\n- LFO 2 RATE 8.91 Hz: a new note this many times a second\n- MOD 2 PITCH AMT +4.0: over an octave either way\n- Listen for: a stream of random notes from one held key.",
+          "set": {
+            "mod2.source": "sample_hold",
+            "lfo2.rate": 6.5,
+            "mod2.pitchAmt": 4
+          }
+        },
+        {
+          "title": "Random brightness too",
+          "module": "filter",
+          "why": "Close the filter, add resonance, and send MOD 2 to it.\n- CUTOFF 1.3 kHz: part open\n- RESONANCE 6.0: a ringing peak\n- MOD 2 FILTER AMT +2.0: each step a different brightness\n- Listen for: the bleeps chirping, some bright, some muffled.",
+          "set": {
+            "vcf.cutoff": 6,
+            "vcf.resonance": 6,
+            "mod2.filterAmt": 2
+          }
+        }
+      ],
+      "context": {
+        "lfo2.rate": "In this sound: how fast the notes change."
+      },
+      "tweaks": [
+        {
+          "id": "lfo2.rate",
+          "try": "Turn LFO 2 RATE to 8",
+          "hear": "A frantic, babbling computer."
+        },
+        {
+          "id": "mod2.source",
+          "try": "Turn MOD 2 SOURCE to the square",
+          "hear": "A two-note trill instead of random notes."
+        }
+      ]
+    },
+    {
+      "id": "s37-surf",
+      "name": "Ocean Surf",
+      "ref": "In the style of 1970s analogue-synthesizer sound effects",
+      "artist": "Various",
+      "tags": ["fx", "noise", "ambient"],
+      "level": 2,
+      "blurb": "Waves breaking: pink noise through the filter, swelling and fading on a slow LFO.",
+      "how": "The oscillators are switched out and the noise in. MOD 2, slowed right down, sweeps the cutoff and the VCA’s level together, so the noise rises bright and loud like a wave and sinks back dark and quiet.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 60, 15.9]]
+      },
+      "steps": [
+        {
+          "title": "Noise alone",
+          "module": "mixer",
+          "why": "Switch Oscillator 1 out and turn the noise up.\n- OSC 1 on off: Oscillator 1 out\n- NOISE 7.0: pink noise in\n- Listen for: a steady hiss.",
+          "set": {
+            "mixer.osc1On": false,
+            "mixer.noise": 7
+          }
+        },
+        {
+          "title": "The waves",
+          "module": "mod",
+          "why": "Slow LFO 2 right down and let it sweep the filter and the level (MOD 2’s DEST starts at VCA LEVEL).\n- CUTOFF 317 Hz: dark at rest\n- RESONANCE 3.0: a little colour\n- LFO 2 RATE 0.28 Hz: a wave every few seconds\n- MOD 2 FILTER AMT +3.5: the wave brightens\n- MOD 2 AMT +3.0: and swells\n- Listen for: the surf rolling in and drawing back.",
+          "set": {
+            "vcf.cutoff": 4,
+            "vcf.resonance": 3,
+            "lfo2.rate": 1.5,
+            "mod2.filterAmt": 3.5,
+            "mod2.modAmt": 3
+          }
+        },
+        {
+          "title": "Soft edges",
+          "module": "env",
+          "why": "Fade the sound in and out.\n- A ATTACK 630 ms: a slow start\n- A RELEASE 1.6 s: a long tail\n- Listen for: the sea fading in when a key goes down and out when it is let go.",
+          "set": {
+            "envA.attack": 7,
+            "envA.release": 8
+          }
+        }
+      ],
+      "context": {
+        "mod2.filterAmt": "In this sound: how bright each wave gets."
+      },
+      "tweaks": [
+        {
+          "id": "lfo2.rate",
+          "try": "Turn LFO 2 RATE to 3",
+          "hear": "Choppier, faster waves."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Turn RESONANCE to 7",
+          "hear": "A whistling wind over the waves."
+        }
+      ]
+    },
+    {
+      "id": "s37-acid-line",
+      "name": "Squelching Acid Line",
+      "ref": "In the style of 1980s Chicago acid house",
+      "artist": "Various",
+      "tags": ["bass", "acid house", "80s", "squelch"],
+      "level": 2,
+      "blurb": "A rubbery, squelching sixteenth-note line with slides and accents, pushed through MultiDrive.",
+      "how": "A resonant ladder filter, nearly closed, opened briefly by the filter envelope on each note. Joined notes slide with LEGATO glide, harder notes open further through VEL AMT, and MULTIDRIVE after the filter roughens it all up.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.2, 1],
+          [0.25, 36, 0.2, 0.5],
+          [0.5, 48, 0.2, 0.6],
+          [0.75, 36, 0.4, 0.5],
+          [1, 39, 0.2, 1],
+          [1.25, 36, 0.2, 0.5],
+          [1.5, 46, 0.3, 0.6],
+          [1.75, 48, 0.2, 0.9],
+          [2, 36, 0.2, 1],
+          [2.25, 43, 0.2, 0.5],
+          [2.5, 36, 0.2, 0.6],
+          [2.75, 41, 0.4, 0.5],
+          [3, 43, 0.2, 1],
+          [3.25, 36, 0.2, 0.5],
+          [3.5, 51, 0.3, 0.9],
+          [3.75, 48, 0.2, 0.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Squelch",
+          "module": "filter",
+          "why": "Close the filter, turn the resonance well up and let a short envelope open it.\n- CUTOFF 138 Hz: almost shut\n- RESONANCE 6.5: a strong peak, just under ringing\n- EG AMT +3.5: each note opens it\n- F DECAY 120 ms: a quick squelch\n- F SUSTAIN 0.0: shut again\n- Listen for: a rubbery, vocal “yow” on each note.",
+          "set": {
+            "vcf.cutoff": 2.8,
+            "vcf.resonance": 6.5,
+            "vcf.egAmt": 3.5,
+            "envF.decay": 5.2,
+            "envF.sustain": 0
+          }
+        },
+        {
+          "title": "Slides and accents",
+          "module": "glide",
+          "why": "Slide the joined notes, and let the harder notes open the filter further (KNOB SHIFT, then filter VEL AMT).\n- GLIDE ON on: glide in\n- TIME 72 ms: a quick slide\n- LEGATO on: only between joined notes\n- F VEL AMT 6.0: accents squelch harder\n- Listen for: the line sliding and the accented notes jumping out.",
+          "set": {
+            "glide.on": true,
+            "glide.time": 1.2,
+            "glide.legato": true,
+            "env.knobShift": true,
+            "envF.velAmt": 6
+          }
+        },
+        {
+          "title": "Drive it",
+          "module": "filter",
+          "why": "Overdrive the filter’s output with MULTIDRIVE.\n- MULTIDRIVE 4.0: grit after the filter\n- Listen for: a thicker, rougher squelch.",
+          "set": {
+            "drive.amount": 4
+          }
+        }
+      ],
+      "context": {
+        "vcf.resonance": "In this sound: the squelch.",
+        "drive.amount": "In this sound: the grit."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Turn CUTOFF to 4",
+          "hear": "A brighter, less muffled line."
+        },
+        {
+          "id": "envF.decay",
+          "try": "Turn the filter DECAY to 6.5",
+          "hear": "Longer, wetter squelches."
+        }
+      ]
+    },
+    {
+      "id": "s37-velocity-length-keys",
+      "name": "Velocity-Length Mallets",
+      "ref": "In the style of Steve Reich’s mallet patterns — “Music for 18 Musicians”",
+      "artist": "Steve Reich",
+      "tags": ["keys", "mallet", "minimal", "velocity"],
+      "level": 3,
+      "blurb": "Struck, marimba-like notes that ring longer the harder they are played, and shorter up the keyboard.",
+      "how": "MOD 2 at F.EG/PGM, with PGM SRC at VELOCITY and DEST at EG TIME/PGM, makes the strength of each key stretch both envelopes’ times. The amp envelope’s KB TRACK shortens the high notes, as a struck bar does.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.4, 1],
+          [0.5, 64, 0.4, 0.5],
+          [1, 67, 0.4, 0.7],
+          [1.5, 64, 0.4, 0.4],
+          [2, 62, 0.4, 0.9],
+          [2.5, 65, 0.4, 0.5],
+          [3, 69, 0.4, 0.7],
+          [3.5, 65, 0.4, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A struck tone",
+          "module": "osc",
+          "why": "Triangle waves, an octave apart.\n- OSC 1 WAVE 0.0: a triangle\n- OSC 2 4.0: a bright overtone\n- OSC 2 WAVE 0.0: a triangle too\n- OSC 2 OCTAVE: 4′, an octave up\n- Listen for: a soft, woody tone.",
+          "set": {
+            "osc1.wave": 0,
+            "mixer.osc2": 4,
+            "osc2.wave": 0,
+            "osc2.octave": "4'"
+          }
+        },
+        {
+          "title": "Let it ring and die",
+          "module": "env",
+          "why": "No sustain on the loudness, and the high notes shorter (KNOB SHIFT, then the amp KB TRACK).\n- A DECAY 400 ms: a ringing fall\n- A SUSTAIN 0.0: to nothing\n- A RELEASE 250 ms: the same after the key\n- A KB TRACK 6.0: high notes die sooner\n- Listen for: mallet strokes that fade on their own.",
+          "set": {
+            "envA.decay": 6.5,
+            "envA.sustain": 0,
+            "envA.release": 6,
+            "env.knobShift": true,
+            "envA.kbTrack": 6
+          }
+        },
+        {
+          "title": "Harder rings longer",
+          "module": "mod",
+          "why": "Set MOD 2 to F.EG/PGM, then on the MOD 2 PGM page PGM SRC to VELOCITY, and DEST to EG TIME/PGM.\n- MOD 2 SOURCE: F.EG/PGM\n- PGM SRC: VELOCITY: the strength of each key\n- MOD 2 DEST: EG TIME/PGM, with PGM DST at EG TIME\n- MOD 2 AMT +3.0: harder notes stretch the envelopes\n- Listen for: the accented notes ringing on, the soft ones short and dry.",
+          "set": {
+            "mod2.source": "feg_pgm",
+            "ui.page": "m2p",
+            "mod2.pgmSrc": "velocity",
+            "mod2.dest": "eg_time_pgm",
+            "mod2.modAmt": 3
+          }
+        }
+      ],
+      "context": {
+        "mod2.modAmt": "In this sound: how much the playing stretches each note."
+      },
+      "tweaks": [
+        {
+          "id": "mod2.modAmt",
+          "try": "Turn MOD 2 AMT to −3",
+          "hear": "Turned over: soft notes ring, hard ones clip short."
+        },
+        {
+          "id": "envA.decay",
+          "try": "Turn the amp DECAY to 7.5",
+          "hear": "Longer, vibraphone-like notes."
+        }
+      ]
+    },
+    {
+      "id": "s37-drone-chanter",
+      "name": "Drone and Chanter",
+      "ref": "In the style of the Highland bagpipes",
+      "artist": "Scottish piping tradition",
+      "tags": ["lead", "folk", "drone", "duo"],
+      "level": 3,
+      "blurb": "A reedy melody over a steady drone: Oscillator 2 holds its note while Oscillator 1 plays.",
+      "how": "In DUO MODE, KB CTRL at OFF takes Oscillator 2 off the keys altogether: it drones at its own pitch, set by OCTAVE and FREQUENCY, which now reaches three octaves. Oscillator 1 still plays the keys, so the melody runs over the held note, as a chanter does over a bagpipe’s drones.",
+      "phrase": {
+        "bpm": 92,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.9],
+          [1, 71, 0.4],
+          [1.5, 73, 0.4],
+          [2, 76, 0.9],
+          [3, 74, 0.4],
+          [3.5, 73, 0.4],
+          [4, 71, 0.9],
+          [5, 69, 0.4],
+          [5.5, 67, 0.4],
+          [6, 69, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A drone",
+          "module": "osc",
+          "why": "Switch DUO MODE on, press KB CTRL until neither lamp lights, and tune Oscillator 2 down to A.\n- DUO MODE on: the oscillators split\n- KB CTRL: OFF: Oscillator 2 off the keys\n- OSC 2 4.0: the drone a little under the melody\n- OSC 2 OCTAVE: 16′\n- FREQUENCY −2.98 st: with KB CTRL OFF the knob reaches three octaves, so a small turn is three semitones down, to A\n- Listen for: a steady low A under every note.",
+          "set": {
+            "osc.duo": true,
+            "osc2.kbCtrl": "off",
+            "mixer.osc2": 4,
+            "osc2.octave": "16'",
+            "osc2.frequency": -0.58
+          }
+        },
+        {
+          "title": "A reedy chanter",
+          "module": "osc",
+          "why": "Move Oscillator 1 most of the way to the square, and take the top off.\n- OSC 1 WAVE 6.0: nearly a square: hollow and reedy\n- CUTOFF 1.8 kHz: the harshest top taken off\n- RESONANCE 2.0: a nasal edge\n- Listen for: a piping melody over the drone.",
+          "set": {
+            "osc1.wave": 6,
+            "vcf.cutoff": 6.5,
+            "vcf.resonance": 2
+          }
+        }
+      ],
+      "context": {
+        "osc2.kbCtrl": "In this sound: what makes Oscillator 2 drone."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.frequency",
+          "try": "Turn FREQUENCY to +0.58",
+          "hear": "The drone on C instead: a brighter, major colour."
+        },
+        {
+          "id": "osc2.kbCtrl",
+          "try": "Press KB CTRL until HI lights",
+          "hear": "The drone follows the keys again."
+        }
+      ]
+    },
+    {
+      "id": "s37-wheel-wobble",
+      "name": "Wheel-Speed Wobble Bass",
+      "ref": "In the style of 2010s dubstep wobble basses",
+      "artist": "Various",
+      "tags": ["bass", "dubstep", "wobble", "2010s"],
+      "level": 3,
+      "blurb": "LFO 2 wobbles the filter, and the mod wheel speeds the wobble up through MOD 1.",
+      "how": "MOD 2 sweeps the cutoff with LFO 2. MOD 1’s DEST at LFO RATE reaches LFO 2’s rate, and with its SOURCE at F.EG/PGM and PGM SRC at CONST ON it sends a steady amount there, so pushing the mod wheel (which sets MOD 1’s depth) speeds the wobble up.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 31, 3.9],
+          [4, 31, 1.9],
+          [6, 34, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A deep, driven bass",
+          "module": "osc",
+          "why": "Oscillator 1 an octave down, the sub under it, and MultiDrive.\n- OSC 1 OCTAVE: 16′, an octave down\n- SUB 1 6.0: deeper still\n- MULTIDRIVE 5.0: grit\n- Listen for: a heavy, rough bass.",
+          "set": {
+            "osc1.octave": "16'",
+            "mixer.sub": 6,
+            "drive.amount": 5
+          }
+        },
+        {
+          "title": "The wobble",
+          "module": "mod",
+          "why": "Close the filter and let LFO 2 sweep it through MOD 2.\n- CUTOFF 112 Hz: shut at rest\n- RESONANCE 4.0: a vowel in the sweep\n- LFO 2 RATE 1.58 Hz: a slow wobble\n- MOD 2 FILTER AMT +4.0: a wide sweep\n- Listen for: a “wub, wub” on every note.",
+          "set": {
+            "vcf.cutoff": 2.5,
+            "vcf.resonance": 4,
+            "lfo2.rate": 4,
+            "mod2.filterAmt": 4
+          }
+        },
+        {
+          "title": "Speed it up from the wheel",
+          "module": "mod",
+          "why": "Set MOD 1’s SOURCE to F.EG/PGM, PGM SRC to CONST ON (the MOD 1 PGM page), and DEST to LFO 2 RATE.\n- MOD 1 SOURCE: F.EG/PGM\n- PGM SRC: CONST ON: a steady amount\n- MOD 1 DEST: LFO 2 RATE\n- MOD 1 AMT +4.0: up to three octaves faster\n- Listen for: the same slow wobble, until the mod wheel goes up and it races.",
+          "set": {
+            "mod1.source": "feg_pgm",
+            "ui.page": "m1p",
+            "mod1.pgmSrc": "const_on",
+            "mod1.dest": "lfo_rate",
+            "mod1.modAmt": 4
+          }
+        }
+      ],
+      "context": {
+        "mod1.modAmt": "In this sound: how much faster the wheel makes the wobble.",
+        "lfo2.rate": "In this sound: the wobble with the wheel down."
+      },
+      "tweaks": [
+        {
+          "id": "mod2.source",
+          "try": "Turn MOD 2 SOURCE to the square",
+          "hear": "A hard, gated on-off wobble."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Turn RESONANCE to 6",
+          "hear": "A yowling, talking wobble."
+        }
+      ]
+    },
+    {
+      "id": "s37-latched-drone",
+      "name": "Latched Feedback Drone",
+      "ref": "In the style of La Monte Young’s drone music",
+      "artist": "La Monte Young",
+      "tags": ["drone", "minimal", "feedback"],
+      "level": 3,
+      "blurb": "A drone that plays with no key held, thickened by the feedback channel and breathing on a slow filter drift.",
+      "how": "LATCH ON holds the amp envelope at its sustain as if a key were always down, so the oscillators sound with no keys. The feedback channel and two slowly beating oscillators thicken the tone, and MOD 1, off the mod wheel, drifts the filter.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 38, 15.9]]
+      },
+      "steps": [
+        {
+          "title": "Hold the amplifier open",
+          "module": "env",
+          "why": "Press the amp envelope’s LATCH ON.\n- A LATCH ON on: the amp held open\n- Listen for: the sound continuing after the key is let go, and with none held.",
+          "set": {
+            "envA.latch": true
+          }
+        },
+        {
+          "title": "Thicken it",
+          "module": "mixer",
+          "why": "Bring in Oscillator 2, beating very slowly, and the feedback channel.\n- OSC 2 5.0: Oscillator 2 in\n- BEAT FREQ +0.30 Hz: a very slow beat\n- FDBK/EXT IN 7.0: a thick, rough core\n- CUTOFF 224 Hz: dark\n- RESONANCE 5.0: a singing peak\n- Listen for: a dense, buzzing drone.",
+          "set": {
+            "mixer.osc2": 5,
+            "osc2.beat": 0.3,
+            "mixer.fbext": 7,
+            "vcf.cutoff": 3.5,
+            "vcf.resonance": 5
+          }
+        },
+        {
+          "title": "Breathe",
+          "module": "mod",
+          "why": "Take MOD 1 off the mod wheel (the MOD 1 DEPTH page) and drift the filter slowly.\n- MOD WHEEL 0 %: MOD 1 always on\n- MOD 1 FILTER AMT +1.0: a gentle drift\n- LFO 1 RATE 0.20 Hz: very slow\n- Listen for: the drone slowly opening and closing.",
+          "set": {
+            "ui.page": "m1d",
+            "mod1.wheelDepth": 0,
+            "mod1.filterAmt": 1,
+            "lfo1.rate": 1
+          }
+        }
+      ],
+      "context": {
+        "envA.latch": "In this sound: why it plays with no keys."
+      },
+      "tweaks": [
+        {
+          "id": "mixer.fbext",
+          "try": "Turn FDBK/EXT IN to 10",
+          "hear": "A rougher, more distorted drone."
+        },
+        {
+          "id": "osc2.frequency",
+          "try": "Turn FREQUENCY to +7",
+          "hear": "A drone on a fifth."
+        }
+      ]
+    },
+    {
+      "id": "s37-filter-whistle",
+      "name": "Filter Whistle Lead",
+      "ref": "In the style of the theremin in 1950s science-fiction films",
+      "artist": "Various",
+      "tags": ["lead", "sine", "sci-fi", "filter"],
+      "level": 2,
+      "blurb": "The ladder filter whistling on its own as a pure tone, gliding and wavering like a theremin.",
+      "how": "Past 7, RESONANCE makes the filter ring as a sine wave with nothing going into it. With KB TRACK at half (1:1) its pitch follows the keys, so it plays as an oscillator; glide slides it, and MOD 2 on the cutoff wavers it.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.9],
+          [2, 76, 1.9],
+          [4, 79, 2.9],
+          [7, 77, 0.9],
+          [8, 76, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Let the filter ring",
+          "module": "filter",
+          "why": "Switch Oscillator 1 out, and turn the resonance up until the filter sings.\n- OSC 1 on off: nothing into the filter\n- RESONANCE 8.0: past 7: the filter rings\n- KB TRACK 5.0: 1:1, so it follows the keys\n- CUTOFF 632 Hz: where it sings\n- Listen for: a pure, whistling tone that plays the keys.",
+          "set": {
+            "mixer.osc1On": false,
+            "vcf.resonance": 8,
+            "vcf.kbTrack": 5,
+            "vcf.cutoff": 5
+          }
+        },
+        {
+          "title": "Slide and waver",
+          "module": "glide",
+          "why": "Switch glide on, and give MOD 2 a little of the cutoff at a vibrato rate.\n- GLIDE ON on: glide in\n- TIME 800 ms: a slow slide\n- LFO 2 RATE 6.31 Hz: a vibrato rate\n- MOD 2 FILTER AMT +0.1: a slight waver\n- Listen for: an eerie, wavering glide from note to note.",
+          "set": {
+            "glide.on": true,
+            "glide.time": 4,
+            "lfo2.rate": 6,
+            "mod2.filterAmt": 0.1
+          }
+        }
+      ],
+      "context": {
+        "vcf.resonance": "In this sound: the whistle itself."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Turn CUTOFF to 6",
+          "hear": "The whistle higher, about an octave up."
+        },
+        {
+          "id": "mod2.filterAmt",
+          "try": "Turn MOD 2 FILTER AMT to 0.3",
+          "hear": "A wide, wobbling vibrato."
+        }
+      ]
+    }
+  ]
+}

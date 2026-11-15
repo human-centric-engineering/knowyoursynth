@@ -320,7 +320,11 @@ export function Tooltip({
             ? displayName(def, c)
             : j && `${jackName(j)} · ${j.dir === 'out' ? 'output' : 'input'}`}
         </span>
-        {c && <span className="font-mono text-(--kys-text)">{formatValue(c, values[c.id])}</span>}
+        {c && (
+          <span className="font-mono text-(--kys-text)">
+            {formatValue(c, values[c.id], values)}
+          </span>
+        )}
       </div>
       <p className="mt-1.5 leading-snug text-(--kys-text)/90">{item.help}</p>
       <Unusual def={def} text={item.unusual} />
@@ -340,7 +344,7 @@ export function Tooltip({
       )}
       {c && target && target[c.id] !== values[c.id] && (
         <p className="mt-2 font-mono text-xs text-(--kys-accent)">
-          Patch setting: {formatValue(c, target[c.id])}
+          Patch setting: {formatValue(c, target[c.id], target)}
         </p>
       )}
       {here.length > 0 && (
@@ -645,7 +649,7 @@ export function Inspector({
             <span className="h-2 w-2 rounded-full" style={{ background: mod.color }} />
             {mod.label}
           </h2>
-          {c && <span className="font-mono text-sm">{formatValue(c, values[c.id])}</span>}
+          {c && <span className="font-mono text-sm">{formatValue(c, values[c.id], values)}</span>}
         </div>
         <p className="kys-display mt-1 text-[15px] leading-tight">
           {c ? displayName(def, c) : j && `${jackName(j)} ${j.dir === 'out' ? 'output' : 'input'}`}
@@ -663,7 +667,9 @@ export function Inspector({
           <div className="mt-3 flex items-center justify-between gap-2 text-sm">
             <span className="text-(--kys-muted)">
               The patch has this at{' '}
-              <span className="font-mono text-(--kys-accent)">{formatValue(c, target[c.id])}</span>
+              <span className="font-mono text-(--kys-accent)">
+                {formatValue(c, target[c.id], target)}
+              </span>
             </span>
             <button
               type="button"

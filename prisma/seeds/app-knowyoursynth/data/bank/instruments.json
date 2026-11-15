@@ -918,6 +918,16 @@
       "app": ["minilogue-xd"],
       "text": "A four-voice analogue polysynth with two VCOs per voice plus a digital multi-engine of filtered noise, a VPM oscillator or user oscillators, digital modulation, delay and reverb effects, an expanded sequencer with motion, microtuning and a joystick.",
       "source": "https://en.wikipedia.org/wiki/Korg_Minilogue"
+    },
+    {
+      "id": "moog-sub-37",
+      "name": "Moog Sub 37",
+      "maker": "Moog Music",
+      "year": "2014",
+      "kind": "paraphonic",
+      "app": ["sub-37"],
+      "text": "A 37-key analogue synthesizer on the Sub Phatty engine: two oscillators, a sub oscillator, noise and a feedback channel into the ladder filter, duo mode for two notes, two mod buses, looping envelopes, an arpeggiator and step sequencer, aftertouch and 256 presets.",
+      "source": "https://en.wikipedia.org/wiki/Moog_Sub_37"
     }
   ]
 }

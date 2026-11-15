@@ -1,0 +1,62 @@
+{
+  "synth": "sub-37",
+  "unusual": [
+    {
+      "target": "mixer.fbext",
+      "text": "The fifth mixer channel is the mixer’s own output fed back into it: a little thickens the sound, more makes it growl. Players once patched a Minimoog’s output back into its external input for the same effect; here it is a knob, and a plug in EXT IN on the back takes its place."
+    },
+    {
+      "target": "osc.duo",
+      "text": "DUO MODE gives each oscillator its own key, through the one filter and amplifier, so two notes sound at once. KB CTRL decides which oscillator takes the higher key, or (OFF) takes Oscillator 2 off the keys to drone."
+    },
+    {
+      "target": "osc1.wave",
+      "text": "WAVE is continuous: it sweeps from triangle through sawtooth and square to a narrow pulse, so the shapes in between, and a mod bus sweeping it, are part of the sound."
+    },
+    {
+      "target": "mixer.sub",
+      "text": "The sub oscillator is a square an octave below Oscillator 1, on its own mixer channel, so a bass gets its weight without giving up an oscillator."
+    },
+    {
+      "target": "vcf.slope",
+      "text": "The ladder filter’s slope can be 6, 12, 18 or the classic Moog 24 dB an octave, switched while playing; the resonance works at every slope."
+    },
+    {
+      "target": "envA.loop",
+      "text": "Both envelopes have delay and hold as well as ADSR, and LOOP runs every stage round and round while a key is held, so an envelope becomes a many-stage LFO. The amp envelope’s DELAY only works with LOOP on."
+    },
+    {
+      "target": "env.knobShift",
+      "text": "There are no separate DELAY, HOLD, VEL AMT and KB TRACK knobs: KNOB SHIFT turns each envelope’s four knobs into them."
+    },
+    {
+      "target": "mod1",
+      "text": "Each mod bus sends one source to three places at once, the oscillators’ pitch, the cutoff and a switched destination, each with its own amount either way. Its depth can be set by the mod wheel, velocity, aftertouch and a fourth controller together; MOD 1 follows the wheel unless told not to, MOD 2 does not."
+    },
+    {
+      "target": "osc2.beat",
+      "text": "BEAT FREQ detunes Oscillator 2 by a fixed number of hertz rather than a fraction of a semitone, so on the hardware the two oscillators beat at the same speed at every note."
+    },
+    {
+      "target": "drive.amount",
+      "text": "MultiDrive comes after the filter, not before it, so it roughens the filtered sound; the mixer levels past 5 overdrive the filter’s input as well."
+    }
+  ],
+  "limits": {
+    "intro": "The voice is modelled: both oscillators with their continuous WAVE, FREQUENCY, BEAT FREQ and HARD SYNC, the sub oscillator, noise, the feedback channel, the ladder filter at all four slopes with RESONANCE, EG AMT, KB TRACK and MULTIDRIVE, both DAHDSR envelopes with KNOB SHIFT, VEL AMT, KB TRACK, MULTI TRIG, LOOP and LATCH ON, both mod buses with every SOURCE, OSC and DEST and their depth controllers, LFO HI RANGE, KB RESET and key tracking, DUO MODE and KB CTRL, glide with LEGATO, and the arpeggiator.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "The presets and banks, PRESET and PANEL modes, COMPARE and SAVE, and the MIDI and GLOBAL menus; the 64-step sequencer and step edit (the app’s own sequencer plays the riffs, from the PRESET buttons); the arpeggiator’s INVERT, SYNC and tap tempo, swing, end notes and the 0/−2 and 0/+2 ranges, and all but six clock divisions; SYNC to the clock on the LFOs and envelopes; the envelopes’ RESET, exponential attack and gate source; OSC KB RESET; glide’s OSC, TYPE and GATED; the pitch wheel and bend ranges, KB OCTAVE (the app’s keyboard has its own) and key priority; the breath controller; the PGM sources and destinations beyond the six and three on the display; the rear CV and gate inputs, EXT IN (the channel is always the feedback), the headphone level and poly chain."
+      },
+      {
+        "title": "The voice is approximated",
+        "text": "The ranges are the manual’s: the cutoff 20 Hz to 20 kHz, the envelope stages 1 ms to 10 s, the LFOs 0.1 to 100 Hz (ten times that with HI RANGE), the arpeggiator 2 to 280 BPM, FREQUENCY seven semitones and BEAT FREQ 3.5 Hz. The curves between, and how far each amount reaches at full, are this app’s: EG AMT up to eight octaves, PITCH AMT two octaves, FILTER AMT five octaves and glide up to five seconds. BEAT FREQ is set at middle C, so it beats faster on higher notes. The feedback channel’s gain is held under unity, the sub oscillator follows the lower key in DUO MODE whichever oscillator plays it, and one MULTI TRIG on either envelope retriggers both."
+      },
+      {
+        "title": "The mod buses’ depth",
+        "text": "The manual says the mod wheel, velocity, aftertouch and CTRL4 amounts set a bus’s depth, but not how they combine. Here each amount takes its share of the depth, which that controller then sets from nothing to full, and whatever share none of them claims is always there: at the defaults MOD 1 is all mod wheel and MOD 2 is always on."
+      }
+    ]
+  }
+}

@@ -7955,7 +7955,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["deepmind-12d/sync-drone", "syntrx-ii/syntrx-schulze"],
+      "sounds": ["deepmind-12d/sync-drone", "syntrx-ii/syntrx-schulze", "sub-37/s37-morph-drone"],
       "research": {
         "work": "Klaus Schulze, Timewind, 1975",
         "part": "One low A held for four bars.",
@@ -12567,7 +12567,8 @@
         "take-5/t5-reich-marimba",
         "mantis/mantis-reich-marimba",
         "grandmother/gm-reich-marimba",
-        "polivoks/pv-marimba"
+        "polivoks/pv-marimba",
+        "sub-37/s37-velocity-length-keys"
       ],
       "research": {
         "work": "Steve Reich, Music for 18 Musicians, 1978",

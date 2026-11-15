@@ -36,6 +36,9 @@ export interface ActivityMeters {
   /** The LFO, −1..1, and its rate in Hz. */
   lfo: number;
   lfoHz: number;
+  /** LFO 2, where the synth has one, and its rate. */
+  lfo2?: number;
+  lfo2Hz?: number;
   /** Each engine oscillator: its output now (−1..1), its pitch in Hz and its mixer level. */
   osc: { v: number; hz: number; lv: number }[];
   /** The output's level, 0..1 (`levelOfRms()`). */
@@ -127,6 +130,10 @@ function reading(
   if (meter === 'env1' || meter === 'env2') return [clamp(m[meter]), false];
   // A free-running LFO is always working: steady, it glows at three quarters.
   if (meter === 'lfo') return [wave(m.lfo, m.lfoHz, 0.75), blur(m.lfoHz) < 1];
+  if (meter === 'lfo2') {
+    const hz = m.lfo2Hz ?? 0;
+    return [wave(m.lfo2 ?? 0, hz, 0.75), blur(hz) < 1];
+  }
   const o = m.osc[OSC_METERS[meter] ?? -1];
   if (!o) return null;
   const steady = clamp(m.out) * (o.lv > 0 && loudest > 0 ? o.lv / loudest : 0.5);
@@ -213,6 +220,7 @@ export function steadyMeters(meters: ActivityMeters): ActivityMeters {
   return {
     ...meters,
     lfoHz: Math.max(meters.lfoHz, FAST_HZ),
+    ...(meters.lfo2Hz !== undefined && { lfo2Hz: Math.max(meters.lfo2Hz, FAST_HZ) }),
     osc: meters.osc.map((o) => ({ ...o, hz: fast(o.hz) })),
     ...(meters.moog && { moog: { ...meters.moog, vcoHz: meters.moog.vcoHz.map(fast) } }),
   };

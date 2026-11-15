@@ -1,0 +1,45 @@
+{
+  "synth": "sub-37",
+  "title": "The Sub 37: the Sub Phatty grown into a two-note synth with a sequencer",
+  "intro": "Moog Music’s Phatty line began in 2006 with the Little Phatty, the last instrument Bob Moog worked on, a programmable two-oscillator mono synth with the ladder filter. The Sub Phatty of 2013 added a sub oscillator, a feedback channel and MultiDrive in a smaller, knob-per-function box. The Sub 37, released in 2014, develops the Sub Phatty: duo mode for two notes, a second mod bus, looping envelopes with delay and hold, an arpeggiator and a 64-step sequencer, 256 presets and 37 keys. The first edition, the Tribute Edition, carries Bob Moog’s signature.",
+  "timeline": [
+    {
+      "year": "2006",
+      "name": "Moog Little Phatty",
+      "text": "A programmable two-oscillator mono synth with the ladder filter and 37 keys, the last instrument Bob Moog worked on; its first edition was the Tribute Edition."
+    },
+    {
+      "year": "2013",
+      "name": "Moog Sub Phatty",
+      "text": "Two oscillators, a sub oscillator, noise and a feedback channel into the ladder filter with MultiDrive, and two envelopes, on a 25-key keyboard with a control for most functions."
+    },
+    {
+      "year": "2014",
+      "name": "Moog Sub 37 Tribute Edition",
+      "tag": "This synth",
+      "text": "The Sub Phatty’s voice with duo mode, two mod buses, looping DAHDSR envelopes, a filter slope of 6 to 24 dB, an arpeggiator and 64-step sequencer, 256 presets and 37 keys with aftertouch."
+    },
+    {
+      "year": "2017",
+      "name": "Moog Subsequent 37",
+      "text": "The Sub 37’s successor, with a reworked mixer and more headroom, and a few panel changes."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Minimoog Model D",
+      "years": "1970",
+      "text": "The first Moog with a keyboard, mixer and ladder filter in one portable case. Players patched its output back into its external input to fatten it, the trick the Sub 37’s FDBK/EXT IN channel builds in."
+    },
+    {
+      "name": "Minimoog Voyager",
+      "years": "2002",
+      "text": "Moog’s programmable return to the Minimoog’s design, with presets and a touch surface: an older, larger relative of the Sub 37."
+    },
+    {
+      "name": "Moog Sub 25",
+      "years": "2016",
+      "text": "A smaller sibling on the same engine, with 25 keys, duo mode and a latching arpeggiator but one mod bus and fewer knobs."
+    }
+  ]
+}

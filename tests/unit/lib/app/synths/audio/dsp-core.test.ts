@@ -235,6 +235,25 @@ describe('mono voice', () => {
     expect(m.oscLv?.map((l) => Number(l.toFixed(2)))).toEqual([0.8, 0.5, 0.3]);
   });
 
+  it('sends the second note to every oscillator note2Osc lists', () => {
+    const two: Timed[] = [
+      [0, { type: 'noteOn', n: 48 }],
+      [0, { type: 'noteOn', n: 60 }],
+    ];
+    const hz = (note2Osc: number | number[]) =>
+      meters(
+        render(monoParams({ paraphonic: true, note2Osc }), { len: 9600, events: two }).events
+      )[2].oscHz ?? [];
+    // MIDI 60 and 48 held: each oscillator plays its note, the second an octave under it and the third a fifth over
+    const sung = (note2Osc: number | number[]) => hz(note2Osc).map((f) => Number(f.toFixed(2)));
+    // nothing listed: every oscillator stays on the high note
+    expect(sung([])).toEqual([261.63, 130.81, 392]);
+    // the default: the second oscillator alone takes the low note
+    expect(sung(1)).toEqual([261.63, 65.41, 392]);
+    // the Sub 37's KB CTRL LO: Oscillator 1 (0) and the sub (2) take the low note, the second keeps the high one
+    expect(sung([0, 2])).toEqual([130.81, 130.81, 196]);
+  });
+
   it('meters an oscillator’s level as the mix hears it, a cable into its level input included', () => {
     const { events } = render(monoParams({ cables: [cable('one', 'lvl1', 0.5)] }), { len: 9600 });
     expect(Number(meters(events)[2].oscLv?.[0].toFixed(2))).toBe(1.3);
@@ -1428,7 +1447,7 @@ describe('polyphonic synth', () => {
   });
 
   describe('arpeggiator', () => {
-    const modes = ['up', 'down', 'updown', 'downup', 'random', 'played'] as const;
+    const modes = ['up', 'down', 'updown', 'downup', 'random', 'played', 'playedupdown'] as const;
     const held: Timed[] = [
       [0, { type: 'noteOn', n: 60 }],
       [0, { type: 'noteOn', n: 64 }],

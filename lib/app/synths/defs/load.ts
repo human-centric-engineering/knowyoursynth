@@ -63,6 +63,7 @@ const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {
   polivoks: () => import('@/lib/app/synths/defs/polivoks'),
   '0-coast': () => import('@/lib/app/synths/defs/0-coast'),
   'minilogue-xd': () => import('@/lib/app/synths/defs/minilogue-xd'),
+  'sub-37': () => import('@/lib/app/synths/defs/sub-37'),
 };
 
 /** Every id a loader exists for. */

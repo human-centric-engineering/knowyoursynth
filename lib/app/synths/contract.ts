@@ -405,8 +405,11 @@ export interface ContinuousValue {
   def: number;
   /** Shown after the value (the Moog 900 systems use `'V'`). */
   unit?: string;
-  /** Readout string for a value, e.g. `'420 ms'`. */
-  fmt?: (v: number) => string;
+  /**
+   * Readout string for a value, e.g. `'420 ms'`. `values`, the whole panel where the caller has it, is for a readout
+   * whose meaning another control changes (the Sub 37's OSC 2 FREQUENCY spans three octaves in drone mode).
+   */
+  fmt?: (v: number, values?: ControlValues) => string;
   /** `'log'`: dragging moves the value by ratio (frequencies, times). Only applies when `min > 0`. */
   taper?: 'log';
   /** Values are rounded to this step. */
@@ -961,6 +964,7 @@ export type LitWhen =
   | 'power'
   | 'gate'
   | 'lfo'
+  | 'lfo2'
   | 'overload'
   | 'env1'
   | 'pulser'
@@ -1392,11 +1396,11 @@ export type RoutingSymbol =
   | 'util';
 
 /**
- * The engine meters a block can follow (`MeterEvent`): the gate, the first two envelopes, the LFO, an oscillator by
- * its place in the engine's (`osc1` is the first), and a 900-series module by its slot.
+ * The engine meters a block can follow (`MeterEvent`): the gate, the first two envelopes, the LFO and LFO 2, an
+ * oscillator by its place in the engine's (`osc1` is the first), and a 900-series module by its slot.
  */
 export type RoutingMeter =
-  'gate' | 'env1' | 'env2' | 'lfo' | 'osc1' | 'osc2' | 'osc3' | 'osc4' | ModuleMeter;
+  'gate' | 'env1' | 'env2' | 'lfo' | 'lfo2' | 'osc1' | 'osc2' | 'osc3' | 'osc4' | ModuleMeter;
 
 /**
  * One 900-series module's own reading, by its engine slot (1-based, as in the signal names: `vco:3` is the oscillator
@@ -1890,7 +1894,8 @@ export const polyStack = (poly: PolyParams): number =>
     ? Math.max(1, Math.min(poly.chord.length, poly.voices))
     : Math.max(1, poly.stack || 1);
 
-export type ArpMode = 'up' | 'down' | 'updown' | 'downup' | 'random' | 'played';
+/** `playedupdown`: the notes in the order played, then back again (the Sub 37's ORDER with BACK/FORTH). */
+export type ArpMode = 'up' | 'down' | 'updown' | 'downup' | 'random' | 'played' | 'playedupdown';
 
 /** Arpeggiator (poly only), sixteenth notes. */
 export interface ArpParams {
@@ -2344,8 +2349,8 @@ export interface EngineParams {
   tune?: number;
   /** Oscillator `note2Osc` follows the second held note. */
   paraphonic?: boolean;
-  /** Which oscillator follows the second note with `paraphonic` (default 1). */
-  note2Osc?: number;
+  /** Which oscillator follows the second note with `paraphonic` (default 1); a list when more than one does (the Sub 37's sub oscillator goes with Oscillator 1). */
+  note2Osc?: number | number[];
   /** Panel modulation routings. */
   routes?: EngineRoute[];
   /** Destination → what feeds it with no cable. Overrides the engine's built-in normals. */

@@ -51,6 +51,8 @@ export function createMeterReader(): (
       env2: m.env2 ?? 0,
       lfo: m.lfo,
       lfoHz: m.lfoHz ?? 0,
+      lfo2: m.lfo2 ?? 0,
+      lfo2Hz: m.lfo2Hz ?? 0,
       osc: (m.oscV ?? []).map((v, k) => ({ v, hz: m.oscHz?.[k] ?? 0, lv: m.oscLv?.[k] ?? 0 })),
       out,
       moog: m.moog,

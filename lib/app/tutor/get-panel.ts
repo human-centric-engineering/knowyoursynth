@@ -78,7 +78,7 @@ export class GetPanelCapability extends BaseCapability<Args, PanelData> {
         id: c.id,
         label: displayName(def, c),
         value: diff.values[c.id],
-        shown: formatValue(c, diff.values[c.id]),
+        shown: formatValue(c, diff.values[c.id], values),
       }));
     return Promise.resolve(
       this.success({
