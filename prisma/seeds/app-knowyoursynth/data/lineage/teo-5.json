@@ -1,0 +1,66 @@
+{
+  "synth": "teo-5",
+  "title": "From the SEM to the TEO-5",
+  "intro": "The TEO-5 is Oberheim’s compact five-voice polysynth, released in 2024 and made with Sequential on the platform of the Take 5. Where the Take 5 has a low-pass filter, the TEO-5 has a 12 dB state-variable filter after Tom Oberheim’s SEM, swept from low-pass through a notch to high-pass, with envelope curves after the OB-8’s. Oberheim names the OB-X, the Four Voice and the TVS among its ancestors.",
+  "timeline": [
+    {
+      "year": "1974",
+      "name": "Oberheim SEM",
+      "tag": "The filter’s ancestor",
+      "text": "The Synthesizer Expander Module: two oscillators and a 12 dB state-variable filter whose mode knob sweeps from low-pass through a notch to high-pass. The TEO-5’s STATE knob is that knob."
+    },
+    {
+      "year": "1975",
+      "name": "Oberheim Two Voice and Four Voice",
+      "tag": "Ancestors",
+      "text": "Two and four SEMs in one case, played from a keyboard: the first Oberheim polysynths, and among the first anywhere."
+    },
+    {
+      "year": "1979",
+      "name": "Oberheim OB-X",
+      "tag": "Ancestor",
+      "text": "Oberheim’s first polysynth built into one case, with patch memory. Oberheim names it as an ancestor of the TEO-5."
+    },
+    {
+      "year": "1983",
+      "name": "Oberheim OB-8",
+      "tag": "Ancestor",
+      "text": "The last of the OB line from the original company. The TEO-5’s envelopes follow its curves."
+    },
+    {
+      "year": "2021",
+      "name": "Sequential Take 5",
+      "tag": "Closest relative",
+      "text": "A five-voice compact poly whose platform and layout the TEO-5 shares: ENV ROUTING, a global LFO 1 and per-voice LFO 2, the mod matrix, overdrive, effects and reverb, the arpeggiator and the sequencer."
+    },
+    {
+      "year": "2024",
+      "name": "Oberheim TEO-5",
+      "tag": "This synth",
+      "text": "Five analogue voices on 44 keys: two VCOs with any mix of triangle, sawtooth and pulse, a sub, X-Mod and sync, the SEM-style filter with STATE and a band-pass, two envelopes, two LFOs, a 16-slot mod matrix, VINTAGE, overdrive, one of twelve effects plus a plate reverb, an arpeggiator and a 64-step sequencer."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Sequential Take 5",
+      "years": "2021",
+      "text": "The same platform and panel layout with a low-pass filter and morphing oscillator shapes in place of the TEO-5’s state-variable filter and wave buttons. This app plays it too."
+    },
+    {
+      "name": "Oberheim OB-X8",
+      "years": "2022",
+      "text": "Oberheim’s eight-voice flagship of the same years, also made with Sequential, combining the voices of the OB-X, OB-Xa and OB-8."
+    },
+    {
+      "name": "Behringer UB-Xa D",
+      "years": "2024",
+      "text": "A recreation of the OB-Xa, the OB-X’s successor, which this app also plays."
+    },
+    {
+      "name": "Behringer 2-XM",
+      "years": "2025",
+      "text": "A recreation of the Two Voice, two SEM-style voices with their multimode filters, which this app also plays."
+    }
+  ],
+  "note": "None of the databank’s records name the TEO-5 yet."
+}

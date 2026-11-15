@@ -131,7 +131,7 @@ describe('the research batches', () => {
         'Public Enemy',
         'Whitney Houston',
       ],
-      163,
+      164,
     ],
     [
       't-161',
@@ -202,7 +202,7 @@ describe('the research batches', () => {
         'Wham!',
         'Yello',
       ],
-      140,
+      142,
     ],
     [
       't-163',
@@ -289,7 +289,7 @@ describe('the research batches', () => {
         'Thom Yorke',
         'U2',
       ],
-      148,
+      149,
     ],
     [
       't-165',

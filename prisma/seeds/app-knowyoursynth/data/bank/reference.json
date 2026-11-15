@@ -4632,15 +4632,6 @@
       "source": "https://oberheim.com/news/oberheim-begins-shipping-ob-x8-analog-synth/"
     },
     {
-      "id": "oberheim-teo-5",
-      "name": "Oberheim TEO-5",
-      "maker": "Oberheim",
-      "year": "2024",
-      "kind": "poly",
-      "text": "A compact five-voice analogue polysynth with VCOs, an SEM-style filter morphing between low-pass, notch and high-pass with a band-pass mode, and a 64-step polyphonic sequencer.",
-      "source": "https://oberheim.com/news/introducing-the-new-oberheim-teo-5-polyphonic-synthesizer/"
-    },
-    {
       "id": "oberheim-eight-voice",
       "name": "Oberheim Eight Voice",
       "maker": "Oberheim Electronics",

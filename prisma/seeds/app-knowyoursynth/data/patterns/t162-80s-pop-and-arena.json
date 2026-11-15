@@ -17043,7 +17043,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/ob-lead"],
+      "sounds": ["ub-xa-d/ob-lead", "teo-5/teo-roboto-lead"],
       "research": {
         "work": "Styx, “Mr. Roboto”, Kilroy Was Here, 1983",
         "part": "Four bars of the intro melody: B♭, A♭; C♯, C; A♭ and a long F♯.",
@@ -19206,7 +19206,8 @@
       "sounds": [
         "mantis/mantis-jump-brass",
         "jupiter-8/jp8-jump-stab",
-        "minilogue-xd/mxd-jump-brass"
+        "minilogue-xd/mxd-jump-brass",
+        "teo-5/teo-jump-brass"
       ],
       "research": {
         "work": "Van Halen, “Jump”, 1984, 1984",

@@ -4065,7 +4065,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["take-5/t5-subdivisions-lead"],
+      "sounds": ["take-5/t5-subdivisions-lead", "teo-5/teo-subdivisions-lead"],
       "research": {
         "work": "Rush, “Subdivisions”, Signals, 1982",
         "part": "The first half of the synth lead after the chorus, in 6/4: B held, C♯, D; B, A, F♯ and a run down to C♯; B, C♯, D; then the run down from high D.",
