@@ -1,7 +1,7 @@
 /**
  * The pattern library's seed unit, `005-library-patterns` (t-254): it hashes the researched defaults, runs the riff,
- * batch and defaults passes in that order with the defaults handed to the batch pass, and warns on what any pass
- * skipped. The passes themselves are tested in `tests/unit/lib/app/patterns/`. Also the defaults file's loader, which
+ * batch and defaults passes in that order, then has the catalogue's record forget the riffs they took over, and warns
+ * on what any pass skipped. The passes themselves are tested in `tests/unit/lib/app/patterns/`. Also the defaults file's loader, which
  * names the file when it cannot read it.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -20,6 +20,17 @@ vi.mock('@/lib/app/patterns/library', async (importOriginal) => ({
   syncRiffPatterns: vi.fn(async () => {
     calls.push('riffs');
     return {};
+  }),
+  riffFollowers: vi.fn(async () => {
+    calls.push('followers');
+    return new Set(['teo-5/teo-jump-brass']);
+  }),
+}));
+vi.mock('@/lib/app/catalogue/seed', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/app/catalogue/seed')>()),
+  forgetFollowedRiffs: vi.fn(async () => {
+    calls.push('records');
+    return 1;
   }),
 }));
 vi.mock('@/lib/app/patterns/library-researched', async (importOriginal) => ({
@@ -40,6 +51,7 @@ vi.mock('@/lib/app/patterns/library-defaults', async (importOriginal) => ({
 import unit from '@/prisma/seeds/app-knowyoursynth/005-library-patterns';
 import { syncResearchedPatterns } from '@/lib/app/patterns/library-researched';
 import { syncResearchedDefaults } from '@/lib/app/patterns/library-defaults';
+import { forgetFollowedRiffs } from '@/lib/app/catalogue/seed';
 import {
   PATTERN_DATA_DIR,
   PATTERN_DEFAULTS_FILE,
@@ -68,12 +80,13 @@ describe('005-library-patterns', () => {
     expect(inputs).toContain(PATTERN_DEFAULTS_FILE);
   });
 
-  it('runs the riffs, then the batches with the defaults, then the defaults', async () => {
+  it('runs the riffs, the batches, the defaults, then clears the riffs they took from the catalogue record', async () => {
     const { prisma } = await run();
     const { defaults } = loadPatternDefaults();
-    expect(calls).toEqual(['riffs', 'researched', 'defaults']);
-    expect(syncResearchedPatterns).toHaveBeenCalledWith(prisma, expect.any(Array), defaults);
+    expect(calls).toEqual(['riffs', 'researched', 'defaults', 'followers', 'records']);
+    expect(syncResearchedPatterns).toHaveBeenCalledWith(prisma, expect.any(Array));
     expect(syncResearchedDefaults).toHaveBeenCalledWith(prisma, defaults);
+    expect(forgetFollowedRiffs).toHaveBeenCalledWith(prisma, new Set(['teo-5/teo-jump-brass']));
   });
 
   it('warns on what the batch and defaults passes skipped, and only then', async () => {

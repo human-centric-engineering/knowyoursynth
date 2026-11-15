@@ -283,6 +283,24 @@ describe('writeSynthContent', () => {
     expect(sound.phrase).toEqual(riff);
   });
 
+  it('leaves the riff of a sound whose own riff pattern an admin gave other notes, as the edit page does', async () => {
+    const file = content(3);
+    const sound = db.synthSound.rows.find((r) => r.slug === file.sounds[0].id)!;
+    const own = db.libraryPattern.rows.find(
+      (p) => p.key === riffKey('model-d', String(sound.slug))
+    )!;
+    const notes = PatternSchema.parse(own.pattern);
+    notes.transpose = 5;
+    Object.assign(own, { editedAt: new Date(), pattern: notes });
+    const kept = structuredClone(sound.phrase);
+    file.sounds[0].phrase = { ...file.sounds[0].phrase, bpm: file.sounds[0].phrase.bpm + 7 };
+
+    const report = await upload(file);
+
+    expect(report.sounds.updated).toBe(0);
+    expect(sound.phrase).toEqual(kept);
+  });
+
   it('skips a row an admin edited, and leaves it as the admin left it', async () => {
     const file = content(3);
     const slug = file.sounds[0].id;

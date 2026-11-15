@@ -1,7 +1,8 @@
 import { readdirSync } from 'fs';
 import { dirname, join, relative } from 'path';
 import { fileURLToPath } from 'url';
-import { syncRiffPatterns } from '@/lib/app/patterns/library';
+import { riffFollowers, syncRiffPatterns } from '@/lib/app/patterns/library';
+import { forgetFollowedRiffs } from '@/lib/app/catalogue/seed';
 import type { SeedUnit } from '@/prisma/runner';
 import {
   CATALOGUE_DATA_DIR,
@@ -28,7 +29,9 @@ import {
  * admin left, not the file's. Then the research batches under `data/patterns/` (t-127 on), each pattern behind what its
  * sounds already list (`syncResearchedPatterns`, `lib/app/patterns/library-researched.ts`). Last, the researched
  * defaults in `data/pattern-defaults.json` (t-254): each listed pattern moved in front of its sound's riff, and the
- * riff rewritten to it (`syncResearchedDefaults`, `lib/app/patterns/library-defaults.ts`).
+ * riff rewritten to it (`syncResearchedDefaults`, `lib/app/patterns/library-defaults.ts`). Then the catalogue's seed
+ * record forgets the file's riff for every sound whose riff follows another pattern (`forgetFollowedRiffs`), since the
+ * catalogue unit wrote that record before these passes ran.
  *
  * The runner re-runs a unit only when its hash changes, so the hash takes in what decides those rows: the catalogue,
  * databank and pattern data, and the library's code with the sequencer it imports riffs through.
@@ -57,9 +60,11 @@ const unit: SeedUnit = {
   async run({ prisma, logger }) {
     const { defaults } = loadPatternDefaults();
     const report = await syncRiffPatterns(prisma);
-    const researched = await syncResearchedPatterns(prisma, loadPatternData(), defaults);
+    const researched = await syncResearchedPatterns(prisma, loadPatternData());
     const defaulted = await syncResearchedDefaults(prisma, defaults);
-    logger.info('Library patterns seeded', { report, researched, defaulted });
+    // The catalogue unit ran first and recorded the file's riff for sounds whose riff these passes rewrote.
+    const records = await forgetFollowedRiffs(prisma, await riffFollowers(prisma));
+    logger.info('Library patterns seeded', { report, researched, defaulted, records });
     // A batch names only what its test found in the seed data, so a skip means a row was removed or not seeded yet.
     if (researched.skipped.length)
       logger.warn('Researched patterns skipped', { skipped: researched.skipped });

@@ -485,10 +485,11 @@ export async function syncSoundPhrases(
 }
 
 /**
- * The sounds (`<synthId>/<slug>`, by `catalogueKey.SOUND`) whose default is a pattern other than their own riff
- * pattern: an admin's reorder, or a researched default the seed made (`library-defaults.ts`). Their riff plays that
- * pattern, so the catalogue seed and an upload write a riff for them only when they create the row. Read from what
- * the sound leads with now, not from any list, so a default undone or never made gives the riff back to the file.
+ * The sounds (`<synthId>/<slug>`, by `catalogueKey.SOUND`) whose riff does not lead their default
+ * ({@link riffLeadsDefault}): an admin's reorder, a researched default the seed made (`library-defaults.ts`), or the
+ * sound's own riff pattern with notes or a source an admin gave it. Their riff plays that pattern, so the catalogue
+ * seed and an upload write a riff for them only when they create the row. Read from what each sound leads with now,
+ * not from any list, so a default undone or never made gives the riff back to the file.
  */
 export async function riffFollowers(
   db: LibraryDb,
@@ -499,21 +500,13 @@ export async function riffFollowers(
     select: {
       synthId: true,
       slug: true,
-      patterns: {
-        orderBy: DEFAULT_FIRST,
-        select: {
-          patternId: true,
-          pattern: { select: { key: true, status: true, pattern: true } },
-        },
-      },
+      phrase: true,
+      patterns: { orderBy: DEFAULT_FIRST, select: { pattern: true } },
     },
   });
   return new Set(
     sounds
-      .filter((s) => {
-        const head = headOf(s.patterns);
-        return head !== null && head.pattern.key !== riffKey(s.synthId, s.slug);
-      })
+      .filter((s) => !leadsDefault(s, headOf(s.patterns)?.pattern ?? null))
       .map((s) => `${s.synthId}/${s.slug}`)
   );
 }
@@ -550,9 +543,17 @@ async function defaultOf(db: LibraryDb, soundId: string) {
  * and is changed as a pattern, never by flattening a riff into it.
  */
 export async function riffLeadsDefault(db: LibraryDb, soundId: string): Promise<boolean> {
-  const { sound, head, own } = await defaultOf(db, soundId);
+  const { sound, head } = await defaultOf(db, soundId);
+  return leadsDefault(sound, head);
+}
+
+/** {@link riffLeadsDefault}'s rule, on a sound and its default as read. */
+function leadsDefault(
+  sound: { synthId: string; slug: string; phrase: unknown },
+  head: LibraryPattern | null
+): boolean {
   if (!head) return true;
-  if (!own) return false;
+  if (head.key !== riffKey(sound.synthId, sound.slug)) return false;
   if (!head.editedAt) return true;
   // A transcribed or reconstructed pattern names its sources for these notes; a new riff would not be them.
   if (head.fidelity !== 'in_the_style_of') return false;

@@ -17,8 +17,9 @@
  *   sound that leads with another pattern only when it creates the row (`riffFollowers`, `seedCatalogue`'s
  *   `followsPattern`), so the two never take turns at it.
  * - **An admin's sound is never moved**: one an admin edited (a reorder that changes the default marks it), whose
- *   default is a pattern other than its own riff, or with any other pattern ahead of its default (a disabled pick of
- *   an admin's, which becomes the default once enabled).
+ *   default is a pattern other than its own riff or a researched one, or with any other pattern ahead of its default
+ *   (a disabled pick of an admin's, which becomes the default once enabled). An entry changed to another pattern
+ *   moves the new one in front of the old, which stays on the list.
  * - **A re-run writes nothing**, and **an empty list writes nothing**.
  * - **Nothing is moved back.** Taking an entry out of the file leaves the sound as it is; demoting is an admin's act.
  * - **A sound, pattern or place that is not there is skipped and reported**, as is a pattern that cannot be a default
@@ -147,13 +148,16 @@ export async function syncResearchedDefaults(
     const head = headOf(sound.patterns);
     const own = riffKey(sound.synthId, sound.slug);
     // Ahead of the default, only the sound's own riff or this pattern is the seed's: anything else an admin put there,
-    // a disabled pick that becomes the default once enabled.
-    const ahead = head ? sound.patterns.slice(0, sound.patterns.indexOf(head)) : sound.patterns;
+    // a disabled pick that becomes the default once enabled. With no default, what is ahead of the riff pattern.
+    const stop = head ?? sound.patterns.find((p) => p.pattern.key === own);
+    const ahead = stop ? sound.patterns.slice(0, sound.patterns.indexOf(stop)) : sound.patterns;
     if (head?.patternId === place.patternId) {
       counts.unchanged++;
     } else if (
       sound.editedAt ||
-      (head && head.pattern.key !== own) ||
+      // Its own riff, or a researched default the seed made before (this entry changed since): an admin's reorder
+      // that changes the default marks the sound, so an unedited sound leads with one of these only by the seed.
+      (head && head.pattern.key !== own && !head.pattern.key.startsWith('researched:')) ||
       ahead.some((p) => p.pattern.key !== own && p.patternId !== place.patternId)
     ) {
       counts.edited++;

@@ -45,9 +45,11 @@ import { lockSynth, SoundSlugSchema } from '@/lib/app/catalogue/edit';
 import { riffFollowers, syncRiffPatterns } from '@/lib/app/patterns/library';
 import {
   catalogueKey,
+  contentOf,
   planSynthContent,
   sameValue,
   soundPlacement,
+  type Placement,
   type SeedCounts,
   type SynthContentRows,
 } from '@/lib/app/catalogue/seed';
@@ -186,17 +188,13 @@ async function bringIn<Row extends object>(
   /** Writes only while the row is still unedited, and returns how many rows it wrote. */
   update: (row: Row & { editedAt: Date }) => Promise<{ count: number }>,
   /** Columns written on create only. A function picks them per row. */
-  placement: readonly string[] | ((row: Row) => readonly string[]) = []
+  placement: Placement<Row> = []
 ): Promise<SeedCounts> {
   const c = counts();
   const now = new Date();
   for (const row of planned) {
     const current = stored.get(keyOf(row));
-    const createOnly: readonly string[] =
-      typeof placement === 'function' ? placement(row) : placement;
-    const content = Object.fromEntries(
-      Object.entries(row).filter(([column]) => !createOnly.includes(column))
-    ) as Row;
+    const content = contentOf(row, placement);
     if (!current) {
       await create({ ...row, editedAt: now });
       c.created++;

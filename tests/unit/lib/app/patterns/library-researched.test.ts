@@ -1377,6 +1377,8 @@ describe('syncResearchedPatterns', () => {
     const keptModel = structuredClone(model);
     const link = db.synthSoundPattern.rows.find((l) => l.patternId === jcge.id)!;
     link.order = -1;
+    // A reorder that changes a sound's default marks the sound (`setSoundPatterns`).
+    db.synthSound.rows.find((r) => r.id === link.soundId)!.editedAt = new Date();
     const keptJcge = structuredClone(jcge);
     const changed = testBatch();
     for (const p of changed.patterns) p.name = 'Renamed in the batch';

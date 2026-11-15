@@ -378,15 +378,10 @@ async function reconcile<Row extends object>(
   create: (row: Row) => Promise<unknown>,
   update: (row: Row) => Promise<unknown>,
   /** Columns written on create only: neither compared nor updated after. A function picks them per row. */
-  placement: readonly (keyof Row)[] | ((row: Row) => readonly (keyof Row)[]) = []
+  placement: Placement<Row> = []
 ): Promise<SeedCounts> {
   const c = counts();
-  const content = (row: Row): Row => {
-    const createOnly = typeof placement === 'function' ? placement(row) : placement;
-    return Object.fromEntries(
-      Object.entries(row).filter(([column]) => !createOnly.includes(column as keyof Row))
-    ) as Row;
-  };
+  const content = (row: Row): Row => contentOf(row, placement);
   for (const row of planned) {
     const current = existing.get(keyOf(row));
     if (!current) {
@@ -422,6 +417,17 @@ export const catalogueKey = {
   LINEAGE: (r: { synthId: string }) => r.synthId,
   NOTE: (r: { key: string }) => r.key,
 } satisfies Record<CatalogueTable, unknown>;
+
+/** A row's create-only columns, a list or picked per row. */
+export type Placement<Row> = readonly (keyof Row)[] | ((row: Row) => readonly (keyof Row)[]);
+
+/** A row without its create-only columns: what is compared with, and written over, a row that exists. */
+export function contentOf<Row extends object>(row: Row, placement: Placement<Row>): Row {
+  const createOnly = typeof placement === 'function' ? placement(row) : placement;
+  return Object.fromEntries(
+    Object.entries(row).filter(([column]) => !createOnly.includes(column as keyof Row))
+  ) as Row;
+}
 
 /** Columns the seed writes only when it creates a row. They are placement, not content, so no record holds them. */
 const PLACEMENT = { SYNTH: ['listed', 'order'], SOUND: ['order'] } as const;
@@ -523,6 +529,35 @@ async function rewriteSeedRecord(
     c.removed = stored.size;
   }
   return c;
+}
+
+/**
+ * Leave the riff out of the record of each sound that now follows another pattern (`riffFollowers`), as the catalogue
+ * seed would have had it known. The pattern library's seed unit runs this last: it rewrites riffs after the catalogue
+ * unit recorded the file's, which the reconcile page would otherwise show as a change the seed never brings in.
+ * Returns how many records it rewrote.
+ */
+export async function forgetFollowedRiffs(
+  prisma: TenancyClient,
+  followers: ReadonlySet<string>
+): Promise<number> {
+  if (!followers.size) return 0;
+  let rewritten = 0;
+  for (const r of await prisma.catalogueSeedRecord.findMany({
+    where: { table: 'SOUND', key: { in: [...followers] } },
+  })) {
+    const values = r.values;
+    if (r.table !== 'SOUND' || !followers.has(r.key)) continue;
+    if (typeof values !== 'object' || values === null || Array.isArray(values)) continue;
+    if (!('phrase' in values)) continue;
+    const { phrase: _phrase, ...rest } = values;
+    await prisma.catalogueSeedRecord.update({
+      where: { table_key: { table: r.table, key: r.key } },
+      data: { values: toJson(rest) },
+    });
+    rewritten++;
+  }
+  return rewritten;
 }
 
 /** Check the data, then write it. Throws {@link CatalogueDataError}, having written nothing, when the data is wrong. */

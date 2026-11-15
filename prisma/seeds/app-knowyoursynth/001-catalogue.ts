@@ -33,8 +33,11 @@ const unit: SeedUnit = {
     ...catalogueDataFiles().map((f) => relative(here, join(CATALOGUE_DATA_DIR, f))),
     './catalogue-data.ts',
     ...tsIn('lib/app/catalogue'),
-    // Which sounds' riffs follow another pattern, and so are written only on create (`riffFollowers`).
+    // Which sounds' riffs follow another pattern, and so are written only on create (`riffFollowers`), with what
+    // decides a sound's default and whether a riff still leads it.
     '../../../lib/app/patterns/library.ts',
+    '../../../lib/app/sequencer/pattern.ts',
+    '../../../lib/app/sequencer/import.ts',
     ...tsIn('lib/app/synths/defs'),
     // What a sound is checked against: the validator, the vocabulary it checks with, and its control lookup.
     '../../../lib/app/synths/validate.ts',
