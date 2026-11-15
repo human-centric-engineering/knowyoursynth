@@ -74,6 +74,8 @@ import { appProtectedRoutes } from '@/lib/app/protected-routes';
 import { appCredentialPaths } from '@/lib/app/credential-paths';
 import { appEnvSchema } from '@/lib/app/env';
 import { footerCopyright } from '@/lib/app/footer';
+import { appSegmentLabels } from '@/lib/app/admin-breadcrumbs';
+import { appConfigHealthChecks } from '@/lib/app/config-health';
 import { APP_API_KEY_SCOPES } from '@/lib/app/api-key-scopes';
 import { listValidApiKeyScopes, CORE_API_KEY_SCOPES } from '@/lib/auth/api-key-scopes';
 import appEslintConfig from '@/lib/app/eslint.config.mjs';
@@ -169,6 +171,11 @@ import {
   appTenancyClassifications,
   __resetAppTenancyClassificationForTests,
 } from '@/lib/tenancy/classification';
+import {
+  getPrivacyAdapters,
+  __resetPrivacyAdaptersForTests,
+} from '@/lib/privacy/adapters/registry';
+import { corePrivacyAdapters } from '@/lib/privacy/adapters/core-defaults';
 import {
   DEFAULT_AUTHORIZATION_POLICY,
   getAuthorizationPolicy,
@@ -381,6 +388,11 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       // Know Your Synth fills the label only: the landing stays /dashboard, called My synths.
       expect(appAuthLandingLabel).toBe('My synths');
     },
+  },
+  {
+    seam: 'lib/app/admin-breadcrumbs.ts',
+    risk: 'a stray label would rename a breadcrumb segment, and the page title, on every install’s admin',
+    assert: () => expect(appSegmentLabels).toEqual({}),
   },
   {
     seam: 'lib/app/footer.ts',
@@ -675,6 +687,11 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     assert: () => expect(appProtectedRoutes).toEqual([]),
   },
   {
+    seam: 'lib/app/config-health.ts',
+    risk: 'a stray check would flag a setting as missing on every install, on the overview and, if critical, on every admin page',
+    assert: () => expect(appConfigHealthChecks).toEqual([]),
+  },
+  {
     seam: 'lib/app/credential-paths.ts',
     risk: 'a stray pattern would blank a route word out of every install’s logs and analytics',
     assert: () => expect(appCredentialPaths).toEqual([]),
@@ -779,6 +796,32 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       const expected = [...CORE_PLATFORM_AGENTS, TUTOR_AGENT];
       expect(listPlatformAgents()).toEqual(expected);
       listPlatformAgents().forEach((definition, i) => expect(definition).toBe(expected[i]));
+    },
+  },
+  {
+    seam: 'lib/app/privacy-adapters.ts',
+    risk: 'a stray detector would scan every install\u2019s provider calls, and one with external egress would send their text to another processor; a stray replace would turn a core detector off; a stray resolver or token strategy would change what every protected call sends',
+    assert: () => {
+      __resetPrivacyAdaptersForTests();
+      // The read triggers the lazy init, so this exercises the REAL file. What
+      // is left is exactly Sunrise's own defaults, compared by id against the
+      // core list so the row stays true as core gains adapters.
+      const core = corePrivacyAdapters();
+      const adapters = getPrivacyAdapters();
+      expect(adapters.appInitFailure).toBeNull();
+      expect(adapters.coreFailure).toBeNull();
+      // Sorted, because the registry orders detectors by egress, not by the
+      // order core declares them.
+      expect(adapters.detectors.map((r) => r.id).sort()).toEqual(
+        core.detectors.map((d) => d.detector.id).sort()
+      );
+      expect(adapters.detectors.every((r) => r.core)).toBe(true);
+      expect(adapters.tokenStrategy?.id ?? null).toBe(core.tokenStrategy?.id ?? null);
+      expect(adapters.policyResolvers.map((r) => r.resolver.id)).toEqual(
+        core.policyResolvers.map((r) => r.resolver.id)
+      );
+      expect(adapters.observers.map((o) => o.id)).toEqual(core.observers.map((o) => o.id));
+      expect(adapters.replacedCoreDetectors).toEqual([]);
     },
   },
   {
