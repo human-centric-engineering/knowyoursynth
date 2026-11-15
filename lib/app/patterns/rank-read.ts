@@ -43,7 +43,10 @@ export type RankBody = z.infer<typeof RankBodySchema>;
 export interface RankResult {
   /** What the patch sounds like, or null when it is silent or no features were sent: then nothing is ranked by fit. */
   reading: SoundReading | null;
-  /** The category the sections are limited to; null when nothing said one, or none is of it: every pattern is listed. */
+  /**
+   * The category the sections are limited to; null when nothing said one, or no pattern is of it: then every pattern
+   * is listed.
+   */
   category: PresetCategory | null;
   /** Every role, each with every public pattern of it and the category but the sound's own. */
   sections: RankSection[];

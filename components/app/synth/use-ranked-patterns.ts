@@ -15,8 +15,9 @@
  *
  * Only patterns of the patch's category are listed (t-255). So the start sound is read too, once per start: a patch not
  * moved far from it (`movedFar`) is that sound as it came (`asCame`), listed by its tag; one moved far, or with no
- * start, by the category the detector hears. A reading that fails (the detector could not run, the panel could not be worked out) asks for
- * the library without features, which the endpoint lists by role and name, so the picker is never empty.
+ * start, by the category the detector hears. A reading that fails (the detector could not run, the panel could not be
+ * worked out) asks for the library without features, which the endpoint lists by role and name, so the picker is never
+ * empty.
  */
 
 import { useEffect, useRef, useState } from 'react';

@@ -6,7 +6,8 @@
  * `lg` it is a bottom sheet, as the page's other regions are.
  *
  * The list is the patch's own patterns first (`useSoundPatterns`, the default marked), then the public library's
- * patterns of the patch's category (t-255) in a section per role, ordered by how well each suits the patch (`useRankedPatterns`, `POST /library-patterns/rank`).
+ * patterns of the patch's category (t-255) in a section per role, ordered by how well each suits the patch
+ * (`useRankedPatterns`, `POST /library-patterns/rank`).
  * Each section shows its best few, with "Show all N". The search, at the top as the patch library's is, filters every
  * section by name and Inspired by. A library row has no notes, so a pick reads its one pattern
  * (`GET /api/v1/library-patterns/:id`) and loads it into the sequencer (`seq.load`), leaving the sequencer closed: Play
