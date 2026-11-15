@@ -1805,7 +1805,7 @@ Which category (`patchCategory`):
 - **Anything else** (moved far, one of the user's sounds, a shared one, the Default patch, the tutor's): the category
   the detector hears (`kind.category`).
 - **Neither** (no reading yet and no sound to go by, or a sound whose first tag is not a category), **or a category no
-  public pattern is of**: the whole library, so the picker is never empty.
+  public pattern is of but the start sound's own** (which are never offered again): the whole library, so the picker is never empty.
 
 Both answers say the category they went by (`category`, null for the whole library), and the Play deck's picker names it
 in its line. When it lists the sound's tag and the detector hears another category, the line says it lists the

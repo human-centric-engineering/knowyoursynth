@@ -63,7 +63,8 @@ export async function rankLibraryFor(body: RankBody): Promise<RankResult | null>
   if (!ctx) return null;
   const { category, views } = limitToCategory(
     await library,
-    patchCategory(ctx.category, body.asCame, kind)
+    patchCategory(ctx.category, body.asCame, kind),
+    ctx.exclude
   );
   return {
     reading: kind ? readingOf(kind) : null,

@@ -297,6 +297,18 @@ describe('POST /api/v1/library-patterns/rank', () => {
     expect(listed(data)).toHaveLength(ROWS.length);
   });
 
+  it('lists the whole library when the only patterns of the patch’s category are the sound’s own', async () => {
+    // the one lead pattern is the start sound's own, which is left out
+    mockPrisma.synthSound.findFirst.mockResolvedValue({
+      tags: ['lead'],
+      patterns: [{ patternId: LEAD, pattern: { inspiredArtistId: null, status: 'enabled' } }],
+    });
+    const data = await answer(await post({ synthId: 'model-d', sound: 'a-lead', asCame: true }));
+    expect(data.category).toBeNull();
+    expect(listed(data)).toHaveLength(ROWS.length - 1);
+    expect(listed(data)).not.toContain(LEAD);
+  });
+
   it('reads the library suggestions keep, once a minute between them', async () => {
     await post({ synthId: 'model-d', features: BASS });
     await SUGGEST(

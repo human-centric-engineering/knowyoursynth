@@ -97,15 +97,19 @@ export function publicLibrary(now = Date.now()): Promise<PublicLibrary> {
 
 /**
  * The library's patterns of one category: those a sound of it lists, and the category they are of. With no category to
- * go by, or one no public pattern is of, all of them and no category, so the patch is still offered the library.
+ * go by, or one no public pattern is of but those left out (`exclude`, the start sound's own, which ranking drops), all
+ * of them and no category, so the patch is still offered the library.
  */
 export function limitToCategory(
   library: PublicLibrary,
-  category: PresetCategory | null
+  category: PresetCategory | null,
+  exclude: ReadonlySet<string> = new Set()
 ): { category: PresetCategory | null; views: LibraryPatternView[] } {
   if (!category) return { category: null, views: library.views };
   const views = library.views.filter((v) => library.categories.get(v.id)?.has(category));
-  return views.length > 0 ? { category, views } : { category: null, views: library.views };
+  return views.some((v) => !exclude.has(v.id))
+    ? { category, views }
+    : { category: null, views: library.views };
 }
 
 /**
@@ -198,7 +202,8 @@ export async function suggestPatterns(body: SuggestBody): Promise<SuggestResult 
   // the picker's sections are.
   const { category, views } = limitToCategory(
     await library,
-    patchCategory(ctx.category, body.asCame, kind)
+    patchCategory(ctx.category, body.asCame, kind),
+    ctx.exclude
   );
   const byId = new Map(views.map((v) => [v.id, v]));
   const ranked = rankPatterns(
