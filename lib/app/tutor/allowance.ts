@@ -15,6 +15,7 @@ import { TUTOR_AGENT_SLUG } from '@/lib/app/tutor/agent';
 import { prisma } from '@/lib/db/client';
 import { env } from '@/lib/env';
 import { platformSlugWhere } from '@/lib/orchestration/agents/platform-agent-guard';
+import { PRIVACY_BLOCKED } from '@/lib/orchestration/llm/provider';
 
 /** The tool whose calls count against the allowance as turns do: each one is a paid Brave request. */
 export const WEB_SEARCH_TOOL = 'web_search';
@@ -48,10 +49,23 @@ function startOfUtcDay(now: Date): Date {
  * A turn counts once `streamChat` saves the message, which is before the model answers, so a turn the provider fails
  * still counts, and a learner who retries through a provider outage spends a turn on each try. Counting only answered
  * turns would put the transcript's shape into the query; that is worth it only if outages turn out to be common.
+ *
+ * A turn the privacy layer refused under `block` does not count: no provider was called for it, and the learner is told
+ * to ask again without the personal details, which should not spend a second turn. `streamChat` marks that turn's
+ * message `metadata.excludedFromHistory`, and so it marks an earlier message from the same conversation that held the
+ * details, which was answered. That gives such a turn back too; it can only happen to one written before the mode was
+ * `block`, and a turn given back is the safe side of a cost cap. A web search in a refused turn still counts: Brave was
+ * paid for it. The refused turns are counted on their own and taken off, because a filter that leaves them out would
+ * have to say "this key is absent" of a JSON column that is null on most rows.
  */
 export async function readAllowance(userId: string, now = new Date()): Promise<TutorAllowance> {
   const dayStart = startOfUtcDay(now);
-  const used = await prisma.aiMessage.count({
+  // The tutor as the route loads it: the platform's row, never an org's own agent under the same slug.
+  const tutorConversation = {
+    userId,
+    agent: { slug: TUTOR_AGENT_SLUG, ...platformSlugWhere(TUTOR_AGENT_SLUG) },
+  };
+  const counted = prisma.aiMessage.count({
     where: {
       OR: [
         { role: 'user' },
@@ -63,13 +77,23 @@ export async function readAllowance(userId: string, now = new Date()): Promise<T
         },
       ],
       createdAt: { gte: dayStart },
-      // The tutor as the route loads it: the platform's row, never an org's own agent under the same slug.
-      conversation: {
-        userId,
-        agent: { slug: TUTOR_AGENT_SLUG, ...platformSlugWhere(TUTOR_AGENT_SLUG) },
-      },
+      conversation: tutorConversation,
     },
   });
+  const refused = prisma.aiMessage.count({
+    where: {
+      OR: [
+        {
+          role: 'user',
+          metadata: { path: ['excludedFromHistory'], equals: PRIVACY_BLOCKED },
+        },
+      ],
+      createdAt: { gte: dayStart },
+      conversation: tutorConversation,
+    },
+  });
+  const [all, refusedTurns] = await Promise.all([counted, refused]);
+  const used = Math.max(0, all - refusedTurns);
   const limit = tutorDailyTurns();
   return {
     limit,

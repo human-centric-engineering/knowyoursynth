@@ -923,6 +923,30 @@ describe('what a failed turn tells the learner', () => {
       TUTOR_ERRORS.conversations,
     ],
     [
+      'personal details in the question, under the privacy block',
+      { type: 'error', code: 'privacy_blocked', message: 'Personal details were not sent.' },
+      TUTOR_ERRORS.privacy,
+    ],
+    [
+      'personal details in an earlier message, under the privacy block',
+      {
+        type: 'error',
+        code: 'privacy_blocked_earlier',
+        message: 'Personal details were not sent.',
+      },
+      TUTOR_ERRORS.privacyEarlier,
+    ],
+    [
+      'personal details in a memory, under the privacy block',
+      { type: 'error', code: 'privacy_blocked_memory', message: 'Personal details were not sent.' },
+      TUTOR_ERRORS.privacyMemory,
+    ],
+    [
+      "personal details in the tutor's setup, under the privacy block",
+      { type: 'error', code: 'privacy_blocked_setup', message: 'Personal details were not sent.' },
+      TUTOR_ERRORS.privacySetup,
+    ],
+    [
       'an answer over the per-turn cost cap',
       {
         type: 'budget_exceeded_per_turn',

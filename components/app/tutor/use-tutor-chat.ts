@@ -177,6 +177,16 @@ export const TUTOR_ERRORS = {
     'That answer cost more than one question is allowed, so it may have stopped early. Try a simpler question.',
   conversations:
     "The tutor can't start another conversation for your account. The synth and everything else on the page still work.",
+  // The privacy layer's `block` mode refused the turn (Sunrise §127). Each says what the learner can do, and the setup
+  // case says that nothing they write will help.
+  privacy:
+    "The tutor didn't send that, because it holds personal details, such as a name or an email address. Ask again without them.",
+  privacyEarlier:
+    'Earlier messages in this conversation hold personal details, such as a name or an email address, that the tutor does not send. Ask again: it now leaves those messages out, so it may not remember everything said before.',
+  privacyMemory:
+    "Something the tutor remembered about you held personal details, so it has forgotten it. Ask again, and don't include them.",
+  privacySetup:
+    "The tutor can't answer at the moment because of how it is set up, and asking another way won't help. The synth and everything else on the page still work.",
   stopped: 'Stopped.',
   pastFailed: 'The tutor could not answer this one.',
 } as const;
@@ -200,6 +210,14 @@ function streamError(code: string): string {
       return TUTOR_ERRORS.budget;
     case 'conversation_cap_reached':
       return TUTOR_ERRORS.conversations;
+    case 'privacy_blocked':
+      return TUTOR_ERRORS.privacy;
+    case 'privacy_blocked_earlier':
+      return TUTOR_ERRORS.privacyEarlier;
+    case 'privacy_blocked_memory':
+      return TUTOR_ERRORS.privacyMemory;
+    case 'privacy_blocked_setup':
+      return TUTOR_ERRORS.privacySetup;
     default:
       return TUTOR_ERRORS.generic;
   }
