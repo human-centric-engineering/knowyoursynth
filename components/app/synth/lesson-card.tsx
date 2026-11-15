@@ -20,7 +20,7 @@
  * Below `lg` the lesson stays in its bottom sheet (`lesson.tsx`), and this is not drawn.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type {
   CSSProperties,
   KeyboardEvent as ReactKeyboardEvent,
@@ -30,7 +30,13 @@ import type {
 import { ArrowLeftRight, Check, ChevronLeft, ChevronRight, RotateCcw, X } from 'lucide-react';
 import { stepBadges } from '@/lib/app/synths/lib/history';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
-import { controlMap, displayName, formatValue, jackMap } from '@/lib/app/synths/lib/patch';
+import {
+  controlMap,
+  displayName,
+  formatValue,
+  jackMap,
+  presetState,
+} from '@/lib/app/synths/lib/patch';
 import type { Preset, PresetStep, SynthDef } from '@/lib/app/synths/contract';
 import { START_STEP, hasStartStep, startStep } from '@/lib/app/synths/default-patch';
 import {
@@ -165,6 +171,11 @@ export function LessonCard({
   const begin = hasStartStep(preset) ? START_STEP : 0;
   // The move being made on the panel, while Next step or Replay changes shows the step's moves.
   const moving = useStore(moveStore, (m) => m?.id ?? null);
+  // The panel as this step leaves it, for a readout another control changes (`ContinuousValue.fmt`).
+  const stepValues = useMemo(
+    () => (step != null && step >= 0 ? presetState(def, preset, step).values : undefined),
+    [def, preset, step]
+  );
 
   // The panel's numbers follow the card: the step's moves, or, with the finished sound on, the tweaks' controls. Step 0
   // sets the whole patch, so it has no moves to number.
@@ -363,6 +374,7 @@ export function LessonCard({
     const cm = controlMap(def);
     const jm = jackMap(def);
     const moves = stepBadges(current);
+    const values = stepValues;
     eyebrow = (
       <span style={{ color: moduleInk(m.color) }}>
         Step {step + 1} of {n} · {m.label}
@@ -408,7 +420,7 @@ export function LessonCard({
                     >
                       <Num n={moves.indexOf(id) + 1} now={moving === id} />
                       <span className="kys-label text-(--kys-muted)">{displayName(def, c)}</span>
-                      <span className="ml-auto font-mono">{formatValue(c, v)}</span>
+                      <span className="ml-auto font-mono">{formatValue(c, v, values)}</span>
                     </button>
                   </li>
                 );

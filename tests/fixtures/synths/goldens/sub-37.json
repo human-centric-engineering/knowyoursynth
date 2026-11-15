@@ -962,7 +962,7 @@
       ]
     },
     "osc.kbReset=true": {},
-    "osc2.kbCtrl=\"lo\"": { "note2Osc": 0 },
+    "osc2.kbCtrl=\"lo\"": { "note2Osc": [0, 2] },
     "osc2.kbCtrl=\"off\"": {},
     "osc.duo=true": { "duo": true, "paraphonic": true },
     "osc2.frequency=-7": {
@@ -2373,7 +2373,7 @@
       ]
     },
     "patched:* osc.kbReset=true": {},
-    "patched:* osc2.kbCtrl=\"lo\"": { "note2Osc": 0 },
+    "patched:* osc2.kbCtrl=\"lo\"": { "note2Osc": [0, 2] },
     "patched:* osc2.kbCtrl=\"off\"": {},
     "patched:* osc.duo=true": { "duo": true, "paraphonic": true },
     "patched:* osc2.frequency=-7": {

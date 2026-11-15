@@ -11,6 +11,7 @@ import { describe, expect, it } from 'vitest';
 import type { ControlValues } from '@/lib/app/synths/contract';
 import type { CableLike } from '@/lib/app/synths/lib/patch';
 import modelD from '@/lib/app/synths/defs/model-d';
+import sub37 from '@/lib/app/synths/defs/sub-37';
 import system55 from '@/lib/app/synths/defs/system-55';
 import { routingState } from '@/lib/app/synths/lib/routing';
 import {
@@ -22,6 +23,7 @@ import {
   settle,
   SILENT,
   SLOW_HZ,
+  steadyMeters,
   type ActivityMeters,
 } from '@/lib/app/synths/lib/routing-activity';
 import { getSynthRouting } from '@/lib/app/synths/routing';
@@ -183,6 +185,48 @@ describe('routingActivity on Model D', () => {
     expect(a.blocks.filter_contour).toBe(1);
     expect(a.blocks.loudness_contour).toBe(0);
     expect(a.blocks.vca).toBe(0);
+  });
+});
+
+describe('routingActivity on the Sub 37: LFO 2 has its own meter', () => {
+  const sub37Routing = getSynthRouting(sub37);
+  const sub37State = (set: ControlValues = {}) =>
+    routingState(sub37, sub37Routing!, {
+      values: { ...sub37.init, ...set },
+      cables: [],
+      wheel: 0,
+    });
+  // MOD 2 on its LFO, sending it to the cutoff
+  const MOD2_LFO: ControlValues = { 'mod2.source': 'triangle', 'mod2.filterAmt': 5 };
+
+  it('pulses LFO 2 with LFO 2’s wave, not LFO 1’s', () => {
+    const routed = sub37State(MOD2_LFO);
+    expect(routed.blocks.lfo2).toBe(true);
+    const peak = routingActivity(sub37Routing!, routed, {
+      ...SILENT,
+      lfo: -1,
+      lfoHz: 1,
+      lfo2: 1,
+      lfo2Hz: 1,
+    });
+    const trough = routingActivity(sub37Routing!, routed, {
+      ...SILENT,
+      lfo: 1,
+      lfoHz: 1,
+      lfo2: -1,
+      lfo2Hz: 1,
+    });
+    expect(peak.blocks.lfo2).toBe(1);
+    expect(peak.pulsing.lfo2).toBe(true);
+    expect(trough.blocks.lfo2).toBeCloseTo(0.12, 5);
+  });
+
+  it('draws a fast LFO 2 as a steady glow, and steadyMeters steadies it', () => {
+    const routed = sub37State(MOD2_LFO);
+    const fast = routingActivity(sub37Routing!, routed, { ...SILENT, lfo2: -1, lfo2Hz: 20 });
+    expect(fast.blocks.lfo2).toBe(0.75);
+    expect(fast.pulsing.lfo2).toBe(false);
+    expect(steadyMeters({ ...SILENT, lfo2: 1, lfo2Hz: 1 }).lfo2Hz).toBe(FAST_HZ);
   });
 });
 

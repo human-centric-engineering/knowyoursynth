@@ -169,8 +169,8 @@ export class ProposePanelChangeCapability extends BaseCapability<Args, ProposalD
         label: displayName(def, c),
         from,
         to,
-        fromShown: formatValue(c, from),
-        toShown: formatValue(c, to),
+        fromShown: formatValue(c, from, values),
+        toShown: formatValue(c, to, { ...values, ...checked }),
       });
     }
     if (!changes.length && !args.addCables.length && !args.removeCables.length)

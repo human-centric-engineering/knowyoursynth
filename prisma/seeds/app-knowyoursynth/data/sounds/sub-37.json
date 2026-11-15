@@ -500,7 +500,7 @@
         {
           "title": "A slow filter wave",
           "module": "filter",
-          "why": "Loop the filter envelope too, much more slowly, over a low, resonant filter.\n- CUTOFF 159 Hz: low\n- RESONANCE 4.0: a vocal edge\n- EG AMT +3.5: a wide swell\n- F LOOP on: the filter envelope repeats\n- F ATTACK 400 ms: a slow rise\n- F DECAY 630 ms: a slower fall\n- F SUSTAIN 0.0: all the way down\n- Listen for: the pulses brightening and darkening in long waves.",
+          "why": "Loop the filter envelope too, much more slowly, over a low, resonant filter.\n- CUTOFF 159 Hz: low\n- RESONANCE 4.0: a vocal edge\n- EG AMT +3.5: a wide swell\n- F LOOP on: the filter envelope repeats\n- F ATTACK 400 ms: a slow rise\n- F DECAY 630 ms: a slower fall\n- F SUSTAIN 0.0: all the way down\n- F RELEASE 250 ms: the swell dies quickly when the key lifts\n- Listen for: the pulses brightening and darkening in long waves.",
           "set": {
             "vcf.cutoff": 3,
             "vcf.resonance": 4,
@@ -648,7 +648,7 @@
         {
           "title": "Pluck each note",
           "module": "filter",
-          "why": "Close the filter, and give each note a short envelope.\n- CUTOFF 448 Hz: dark\n- RESONANCE 2.0: a little click\n- EG AMT +2.5: a bright start\n- F DECAY 100 ms: a quick fall\n- A DECAY 160 ms: each note dies away\n- A SUSTAIN 3.0: to a third\n- Listen for: tight, plucked sixteenths.",
+          "why": "Close the filter, and give each note a short envelope.\n- CUTOFF 448 Hz: dark\n- RESONANCE 2.0: a little click\n- EG AMT +2.5: a bright start\n- F DECAY 100 ms: a quick fall\n- F SUSTAIN 1.0: to a little above the cutoff, not all the way down\n- A DECAY 160 ms: each note dies away\n- A SUSTAIN 3.0: to a third\n- Listen for: tight, plucked sixteenths.",
           "set": {
             "vcf.cutoff": 4.5,
             "vcf.resonance": 2,
@@ -1056,7 +1056,7 @@
         {
           "title": "A drone",
           "module": "osc",
-          "why": "Switch DUO MODE on, press KB CTRL until neither lamp lights, and tune Oscillator 2 down to A.\n- DUO MODE on: the oscillators split\n- KB CTRL: OFF: Oscillator 2 off the keys\n- OSC 2 4.0: the drone a little under the melody\n- OSC 2 OCTAVE: 16′\n- FREQUENCY −0.58 st: with KB CTRL OFF it reaches three octaves, so this is three semitones down, to A\n- Listen for: a steady low A under every note.",
+          "why": "Switch DUO MODE on, press KB CTRL until neither lamp lights, and tune Oscillator 2 down to A.\n- DUO MODE on: the oscillators split\n- KB CTRL: OFF: Oscillator 2 off the keys\n- OSC 2 4.0: the drone a little under the melody\n- OSC 2 OCTAVE: 16′\n- FREQUENCY −2.98 st: with KB CTRL OFF the knob reaches three octaves, so a small turn is three semitones down, to A\n- Listen for: a steady low A under every note.",
           "set": {
             "osc.duo": true,
             "osc2.kbCtrl": "off",

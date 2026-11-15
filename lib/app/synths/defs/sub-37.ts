@@ -35,6 +35,7 @@
  * is a reasoned figure, said so where it is defined.
  */
 import type {
+  ArpMode,
   Area,
   ButtonControl,
   Control,
@@ -238,6 +239,9 @@ const PM5: KnobScale = {
 };
 const fmt10 = (v: number): string => v.toFixed(1);
 const fmtPm = (v: number): string => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(1)}`;
+/** DUO MODE with KB CTRL OFF: Oscillator 2 drones at its own pitch, and FREQUENCY spans three octaves, not seven semitones. */
+const isDrone = (v: ControlValues): boolean => !!v['osc.duo'] && String(v['osc2.kbCtrl']) === 'off';
+const DRONE_SPAN = 36 / 7;
 const fmtPct = (v: number): string =>
   `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(Math.round(v))} %`;
 
@@ -260,7 +264,7 @@ SECTIONS.slice(1).forEach(([x]) => line(x, 104, x, x < 380 ? 440 : 492, 1.6));
 line(105, 492, 1415, 492, 1.6);
 
 // ── Programming ───────────────────────────────────────────────────────────
-const LCD = { x0: 114, y0: 127, x1: 220, y1: 196 };
+const LCD = { x0: 112, y0: 127, x1: 206, y1: 196 };
 const PAGES: [string, string][] = [
   ['prog', 'PRESET'],
   ['m1d', 'MOD 1 DEPTH'],
@@ -286,7 +290,7 @@ decor.push({
   h: (LCD.y1 - LCD.y0) * 2,
   page: 'ui.page',
   titles: Object.fromEntries(PAGES),
-  notes: { prog: 'CURSOR steps\nthrough the\nmenus. Click a\nvalue to set it.' },
+  notes: { prog: 'CURSOR steps\nthe menus.\nClick a value\nto set it.' },
   titleH: 26,
 });
 const rows: Record<string, number> = {};
@@ -300,7 +304,7 @@ const menu = (page: string, id: string, lab: string, rest: MenuRest): void => {
     w: (LCD.x1 - LCD.x0) * 2 - 10,
     h: 22,
     size: 12,
-    vw: 84,
+    vw: 72,
     show: { id: 'ui.page', eq: page },
     label: lab,
     deep: true,
@@ -309,36 +313,42 @@ const menu = (page: string, id: string, lab: string, rest: MenuRest): void => {
 };
 (
   [
-    ['ui.down', 140, '▼', 'Steps down through the presets, or down a menu’s values. ' + NOT_HERE],
-    ['ui.up', 172, '▲', 'Steps up through the presets, or up a menu’s values. ' + NOT_HERE],
+    ['ui.down', 130, '▼', 'Steps down through the presets, or down a menu’s values. ' + NOT_HERE],
+    ['ui.up', 159, '▲', 'Steps up through the presets, or up a menu’s values. ' + NOT_HERE],
   ] as const
 ).forEach(([id, x, lab, help]) =>
-  btn(id, x, 219, { label: lab, name: lab === '▼' ? 'Down' : 'Up', ui: true, help })
+  btn(id, x, 219, { label: lab, name: lab === '▼' ? 'Down' : 'Up', ui: true, help }, 52)
 );
-btn('ui.page', 205, 219, {
-  kind: 'enum',
-  def: 'prog',
-  options: PAGES.map(([v, t]) => ({ v, label: t })),
-  lit: 'always',
-  ui: true,
-  label: 'CURSOR',
-  help: 'On the hardware CURSOR moves along a menu on the display; the menus are opened by CONTROLLERS, EDIT, MIDI and GLOBAL. Here it steps through the pages the app models: each mod bus’s depth controllers and programmable source and destination, and PRESET EDIT.',
-});
-label(140, 241, '▼', 12);
-label(172, 241, '▲', 12);
-label(205, 241, 'CURSOR', 11);
+btn(
+  'ui.page',
+  188,
+  219,
+  {
+    kind: 'enum',
+    def: 'prog',
+    options: PAGES.map(([v, t]) => ({ v, label: t })),
+    lit: 'always',
+    ui: true,
+    label: 'CURSOR',
+    help: 'On the hardware CURSOR moves along a menu on the display; the menus are opened by CONTROLLERS, EDIT, MIDI and GLOBAL. Here it steps through the pages the app models: each mod bus’s depth controllers and programmable source and destination, and PRESET EDIT.',
+  },
+  52
+);
+label(130, 241, '▼', 12);
+label(159, 241, '▲', 12);
+label(188, 241, 'CURSOR', 11);
 (
   [
     [
       'ui.compare',
-      152,
+      144,
       267,
       'COMPARE',
       'Plays the stored preset, to hear it against the edited one. ' + NOT_HERE,
     ],
     [
       'ui.save',
-      205,
+      189,
       267,
       'SAVE',
       'Saves the panel as a preset, with its own sequence. Here the page’s Save keeps a sound. ' +
@@ -346,14 +356,14 @@ label(205, 241, 'CURSOR', 11);
     ],
     [
       'ui.midi',
-      152,
+      144,
       315,
       'MIDI',
       'Opens the MIDI menu: channels, clock, the ports and local control. ' + NOT_HERE,
     ],
     [
       'ui.global',
-      205,
+      189,
       315,
       'GLOBAL',
       'Opens the GLOBAL menu: tuning, calibration, the CV inputs’ mapping and the poly chain. ' +
@@ -361,14 +371,14 @@ label(205, 241, 'CURSOR', 11);
     ],
     [
       'ui.preset',
-      159,
+      151,
       367,
       'PRESET',
       'PRESET mode plays the stored sound until a knob moves; with EDIT (held) it opens PRESET EDIT. Here the presets are the library’s sounds, and CURSOR opens PRESET EDIT.',
     ],
     [
       'ui.panel',
-      207,
+      191,
       367,
       'PANEL',
       'PANEL mode plays the knobs as they are set; with INIT (held) it starts from a plain sound. Here the panel is always live.',
@@ -378,8 +388,8 @@ label(205, 241, 'CURSOR', 11);
   btn(id, x, y, { label: lab, ui: true, help, ...(id === 'ui.preset' ? { lamp: LAMP } : {}) });
   label(x, y + 22, lab, 11);
 });
-label(159, 349, 'EDIT', 9);
-label(207, 349, 'INIT', 9);
+label(151, 349, 'EDIT', 9);
+label(191, 349, 'INIT', 9);
 knob('osc.fineTune', 167, 442, 20, 'FINE TUNE', {
   kind: 'cont',
   min: -100,
@@ -670,7 +680,7 @@ function modSection(n: 1 | 2, bx: number): void {
     help: `The speed of LFO ${n}, 0.1 to 100 Hz, or ten times that with HI RANGE: from a slow sweep to a buzz at audio rate.`,
   });
   label(X(45), 130, `LFO ${n} RATE`, 13);
-  led(X(89), 130, n === 1 ? 'lfo' : undefined);
+  led(X(89), 130, n === 1 ? 'lfo' : 'lfo2');
   label(X(45), 213, 'SYNC', 8);
   knob(`${m}.source`, X(147), 183, 14, null, {
     kind: 'enum',
@@ -996,7 +1006,10 @@ knob('osc2.frequency', 921, 466, 20, 'FREQUENCY', {
     ticks: 15,
     size: 9,
   },
-  fmt: (v) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(2)} st`,
+  fmt: (v, values) => {
+    const st = values && isDrone(values) ? v * DRONE_SPAN : v;
+    return `${st > 0 ? '+' : st < 0 ? '−' : ''}${Math.abs(st).toFixed(2)} st`;
+  },
   help: 'Tunes Oscillator 2 against Oscillator 1, up to seven semitones (a fifth) either way; with DUO MODE on and KB CTRL OFF, three octaves either way.',
 });
 knob('osc2.beat', 1018, 466, 20, 'BEAT FREQ', {
@@ -1639,6 +1652,13 @@ const ARP_MODE: Record<string, 'up' | 'down' | 'played' | 'random'> = {
   order: 'played',
   random: 'random',
 };
+/** BACK/FORTH plays the pattern forward then back: ORDER in the order played, RANDOM unchanged. */
+const ARP_BACK_FORTH: Record<'up' | 'down' | 'played' | 'random', ArpMode> = {
+  up: 'updown',
+  down: 'downup',
+  played: 'playedupdown',
+  random: 'random',
+};
 const ARP_DIVS: [string, number][] = [
   ['1/4', 1],
   ['1/8', 1 / 2],
@@ -1685,12 +1705,15 @@ function toEngine(v: ControlValues, ctx: EngineContext): EngineParams {
   // the oscillators: Osc 1, Osc 2, and the sub oscillator as a square an octave under Osc 1
   const duo = !!v['osc.duo'];
   const kbCtrl = String(v['osc2.kbCtrl']);
-  const drone = duo && kbCtrl === 'off';
+  const drone = isDrone(v);
   const ch = (k: string): number =>
     v[`mixer.${k}On`] ? level10(num(v, `mixer.${k}`), MIX_MAX) : 0;
   const over = (k: string): number =>
     v[`mixer.${k}On`] ? Math.max(0, num(v, `mixer.${k}`) - 5) / 5 : 0;
   const semi1 = FOOT_SEMI[String(v['osc1.octave'])] ?? 0;
+  // FINE TUNE and TRANSPOSE move the whole synth; the engine leaves `tune` out of a fixed oscillator, so the drone takes
+  // them in its own note
+  const fineAndTranspose = num(v, 'osc.fineTune') / 100 + num(v, 'kbd.transpose');
   const osc1: OscParams = {
     level: ch('osc1'),
     morph: waveMorph(num(v, 'osc1.wave')),
@@ -1703,10 +1726,10 @@ function toEngine(v: ControlValues, ctx: EngineContext): EngineParams {
     morph: waveMorph(num(v, 'osc2.wave')),
     semi:
       (FOOT_SEMI[String(v['osc2.octave'])] ?? 0) +
-      num(v, 'osc2.frequency') * (drone ? 36 / 7 : 1) +
+      num(v, 'osc2.frequency') * (drone ? DRONE_SPAN : 1) +
       beatSemi(num(v, 'osc2.beat')),
     kbd: !drone,
-    ...(drone ? { fixedNote: 60 } : {}),
+    ...(drone ? { fixedNote: 60 + fineAndTranspose } : {}),
     syncTo: v['osc2.hardSync'] ? 0 : -1,
   };
   const sub: OscParams = {
@@ -1735,18 +1758,36 @@ function toEngine(v: ControlValues, ctx: EngineContext): EngineParams {
     const c4 = CTRL4_SIG[String(v[`${m}.ctrl4Src`])] ?? null;
     const dC = c4 ? levelOf(n, 'ctrl4Depth') : 0;
     // each controller sets its share of the depth; whatever none of them claims is always there
-    const base = 1 - Math.abs(dW) - Math.abs(dV) - Math.abs(dA) - Math.abs(dC) + dW * wheel;
+    // (never below none: controllers that claim more than all of it leave the bus at rest)
+    const base =
+      Math.max(0, 1 - Math.abs(dW) - Math.abs(dV) - Math.abs(dA) - Math.abs(dC)) + dW * wheel;
+    // a LATCHed envelope sits at its sustain, for the mod buses as for the filter and the VCA
+    const held = (s: EngineSignal): number | null =>
+      s === 'env1' && fLatch ? env1.s : s === 'env2' && aLatch ? env2.s : null;
+    const hs = held(sig);
+    const src: EngineSignal = hs == null ? sig : 'one';
+    const k = hs == null ? 1 : hs;
+    const hc = c4 ? held(c4) : null;
     const send = (dst: EngineDest, amt: number): void => {
-      if (!amt) return;
-      if (Math.abs(base) > 1e-6) routes.push({ src: sig, dst, amt: amt * base });
-      if (dV) routes.push({ src: sig, dst, amt: amt * dV, by: 'vel' });
-      if (dA) routes.push({ src: sig, dst, amt: amt * dA, by: 'press' });
-      if (dC && c4) routes.push({ src: sig, dst, amt: amt * dC, by: c4 });
+      if (!amt || !k) return;
+      const a = amt * k;
+      if (Math.abs(base) > 1e-6) routes.push({ src, dst, amt: a * base });
+      if (dV) routes.push({ src, dst, amt: a * dV, by: 'vel' });
+      if (dA) routes.push({ src, dst, amt: a * dA, by: 'press' });
+      if (dC && c4)
+        routes.push(
+          hc == null ? { src, dst, amt: a * dC, by: c4 } : { src, dst, amt: a * dC * hc }
+        );
     };
     const pitch = MOD_PITCH_ST * signedSq(num(v, `${m}.pitchAmt`));
     const po = String(v[`${m}.pitchOsc`]);
-    if (po === 'both') send('pitchAll', pitch);
-    else if (po === 'osc1') {
+    // the engine leaves `pitchAll` out of a fixed oscillator, so a droning Oscillator 2 takes BOTH on its own
+    if (po === 'both' && !drone) send('pitchAll', pitch);
+    else if (po === 'both') {
+      send('pitch1', pitch);
+      send('pitch2', pitch);
+      send('pitch3', pitch);
+    } else if (po === 'osc1') {
       send('pitch1', pitch);
       send('pitch3', pitch);
     } else send('pitch2', pitch);
@@ -1821,7 +1862,7 @@ function toEngine(v: ControlValues, ctx: EngineContext): EngineParams {
   const arpOn = !!v['arp.on'] && !!arpMode;
   const range = Number(v['arp.range']) || 0;
   const div = ARP_DIVS.find(([d]) => d === v['arp.clockDiv']) ?? ARP_DIVS[3];
-  const mode = v['arp.backForth'] ? (arpMode === 'down' ? 'downup' : 'updown') : (arpMode ?? 'up');
+  const mode: ArpMode = !v['arp.backForth'] ? (arpMode ?? 'up') : ARP_BACK_FORTH[arpMode ?? 'up'];
 
   const lfo = (n: 1 | 2) => ({
     rate: lfoHz(num(v, `lfo${n}.rate`)) * (v[`lfo${n}.hiRange`] ? 10 : 1),
@@ -1858,7 +1899,8 @@ function toEngine(v: ControlValues, ctx: EngineContext): EngineParams {
     trig: { retrig: !!v['envF.multiTrig'] || !!v['envA.multiTrig'], drone: false, repeat: false },
     duo: duo && !drone,
     paraphonic: duo && !drone,
-    note2Osc: kbCtrl === 'lo' ? 0 : 1,
+    // KB CTRL LO: Oscillator 1 takes the high note, and the sub oscillator, an octave under it, goes with it
+    note2Osc: kbCtrl === 'lo' ? [0, 2] : 1,
     routes,
     normals: { extIn: 'mixer' },
     od:
@@ -1878,10 +1920,7 @@ function toEngine(v: ControlValues, ctx: EngineContext): EngineParams {
       hold: !!v['arp.latch'],
     },
     // a range below the keys: the arpeggio climbs from that many octaves down
-    tune:
-      num(v, 'osc.fineTune') / 100 +
-      num(v, 'kbd.transpose') +
-      (arpOn && range < 0 ? 12 * range : 0),
+    tune: fineAndTranspose + (arpOn && range < 0 ? 12 * range : 0),
     volume: v['out.mute'] ? 0 : level10(num(v, 'out.volume'), 1),
   };
 }

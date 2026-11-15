@@ -7,6 +7,12 @@
  * filter, MultiDrive and the VCA. Each mod bus takes its LFO (or the filter envelope at F.EG/PGM) to pitch, cutoff and
  * its switched destination; the mod wheel, velocity and aftertouch set its depth. The pitch wheel's two edges are
  * omitted, as the app has no pitch bend, and so are the sequencer's per-step mod values, which are not modelled.
+ *
+ * Each bus also has edges the engine models that the spec does not draw, with the spec id of their nearest edge and a
+ * suffix: the PGM SRC sources besides the filter envelope (`a` amp envelope, `v` velocity, `p` aftertouch, `k` key
+ * position), CTRL4's sources (`e` filter envelope, `a` amp envelope, `l` this bus's LFO, `o` the other LFO), the
+ * PGM DST resonance (`r`) and oscillator levels (`1`, `2`), the pitch to the sub oscillator with Osc 1's (`s`) and the
+ * LFO's key tracking (`k`). PGM SRC CONST ON has no block to come from.
  */
 import type { RoutingEdge, RoutingWhen, SynthRouting } from '@/lib/app/synths/contract';
 
@@ -21,7 +27,32 @@ function busEdges(n: 1 | 2, ids: string[]): RoutingEdge[] {
     all: [dest(['eg_time_pgm']), { id: `${m}.pgmDst`, eq: 'eg_time' }],
   };
   const amt = [{ id: `${m}.modAmt`, off: 0 }];
+  const pgmDst = (d: string): RoutingWhen => ({
+    all: [dest(['eg_time_pgm']), { id: `${m}.pgmDst`, eq: d }],
+  });
   const [lfo, feg, wheel, vel, at, p1, p2, cut, rate, vca, w1, w2, noise, tf, ta, reset] = ids;
+  const pgmSrc = (suffix: string, from: string, src: string, label?: string): RoutingEdge => ({
+    id: `${feg}${suffix}`,
+    from,
+    to: m,
+    signal: 'cv',
+    ...(label ? { label } : {}),
+    when: {
+      all: [
+        { id: `${m}.source`, eq: 'feg_pgm' },
+        { id: `${m}.pgmSrc`, eq: src },
+      ],
+    },
+  });
+  const ctrl4 = (suffix: string, from: string, src: string): RoutingEdge => ({
+    id: `${wheel}${suffix}`,
+    from,
+    to: m,
+    signal: 'cv',
+    label: 'depth',
+    when: { id: `${m}.ctrl4Src`, eq: src },
+    levels: [{ id: `${m}.ctrl4Depth`, off: 0 }],
+  });
   return [
     { id: lfo, from: `lfo${n}`, to: m, signal: 'cv', when: { id: `${m}.source`, in: LFO_WAVES } },
     {
@@ -36,6 +67,14 @@ function busEdges(n: 1 | 2, ids: string[]): RoutingEdge[] {
         ],
       },
     },
+    pgmSrc('a', 'env_a', 'amp_eg'),
+    pgmSrc('v', 'kbd', 'velocity', 'velocity'),
+    pgmSrc('p', 'kbd', 'pressure', 'aftertouch'),
+    pgmSrc('k', 'kbd', 'kb_track', 'key'),
+    ctrl4('e', 'env_f', 'filter_eg'),
+    ctrl4('a', 'env_a', 'amp_eg'),
+    ctrl4('l', `lfo${n}`, n === 1 ? 'lfo1' : 'lfo2'),
+    ctrl4('o', other, n === 1 ? 'lfo2' : 'lfo1'),
     {
       id: wheel,
       from: 'wheels',
@@ -64,6 +103,15 @@ function busEdges(n: 1 | 2, ids: string[]): RoutingEdge[] {
       id: p1,
       from: m,
       to: 'osc1',
+      signal: 'cv',
+      label: 'pitch',
+      when: { id: `${m}.pitchOsc`, in: ['both', 'osc1'] },
+      levels: [{ id: `${m}.pitchAmt`, off: 0 }],
+    },
+    {
+      id: `${p1}s`,
+      from: m,
+      to: 'sub',
       signal: 'cv',
       label: 'pitch',
       when: { id: `${m}.pitchOsc`, in: ['both', 'osc1'] },
@@ -134,12 +182,47 @@ function busEdges(n: 1 | 2, ids: string[]): RoutingEdge[] {
     { id: tf, from: m, to: 'env_f', signal: 'cv', label: 'time', when: egTime, levels: amt },
     { id: ta, from: m, to: 'env_a', signal: 'cv', label: 'time', when: egTime, levels: amt },
     {
+      id: `${tf}r`,
+      from: m,
+      to: 'vcf',
+      signal: 'cv',
+      label: 'resonance',
+      when: pgmDst('filter_res'),
+      levels: amt,
+    },
+    {
+      id: `${tf}1`,
+      from: m,
+      to: 'osc1',
+      signal: 'cv',
+      label: 'level',
+      when: pgmDst('osc_levels'),
+      levels: amt,
+    },
+    {
+      id: `${tf}2`,
+      from: m,
+      to: 'osc2',
+      signal: 'cv',
+      label: 'level',
+      when: pgmDst('osc_levels'),
+      levels: amt,
+    },
+    {
       id: reset,
       from: 'kbd',
       to: `lfo${n}`,
       signal: 'gate',
       label: 'reset',
       when: { id: `lfo${n}.kbReset`, eq: true },
+    },
+    {
+      id: `${reset}k`,
+      from: 'kbd',
+      to: `lfo${n}`,
+      signal: 'cv',
+      label: 'rate',
+      levels: [{ id: `lfo${n}.kbTrack`, off: 0 }],
     },
   ];
 }
@@ -264,6 +347,7 @@ export const routing: SynthRouting = {
       id: 'lfo2',
       name: 'LFO 2',
       module: 'lfo',
+      meter: 'lfo2',
       controls: lfoControls(2),
       description: 'MOD 2’s LFO, the same as LFO 1.',
       specs: [{ label: 'Rate', value: '0.1–100 Hz (1–1000 Hz HI RANGE)' }],

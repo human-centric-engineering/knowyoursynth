@@ -226,7 +226,7 @@ export function proposalRows(def: SynthDef, basis: PanelState, p: Proposal): str
     const c = cm[id];
     if (c)
       rows.push(
-        `${displayName(def, c)}: ${formatValue(c, basis.values[id])} → ${formatValue(c, to)}`
+        `${displayName(def, c)}: ${formatValue(c, basis.values[id], basis.values)} → ${formatValue(c, to, { ...basis.values, ...p.set })}`
       );
   }
   for (const [from, to] of p.removeCables) rows.push(`Unplug ${jack(from)} → ${jack(to)}`);

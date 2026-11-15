@@ -122,8 +122,8 @@ describe('Sub 37 duo mode', () => {
     expect(p.note2Osc).toBe(1);
   });
 
-  it('gives Oscillator 1 the highest key with KB CTRL LO', () => {
-    expect(run({ 'osc.duo': true, 'osc2.kbCtrl': 'lo' }).note2Osc).toBe(0);
+  it('gives Oscillator 1 the highest key with KB CTRL LO, and the sub goes with it', () => {
+    expect(run({ 'osc.duo': true, 'osc2.kbCtrl': 'lo' }).note2Osc).toEqual([0, 2]);
   });
 
   it('drones Oscillator 2 at middle C with KB CTRL OFF, FREQUENCY reaching three octaves', () => {
@@ -131,6 +131,29 @@ describe('Sub 37 duo mode', () => {
     expect(p.duo).toBe(false);
     expect(p.paraphonic).toBe(false);
     expect(p.osc[1]).toMatchObject({ kbd: false, fixedNote: 60, semi: 36 });
+  });
+
+  it('moves the drone with FINE TUNE and TRANSPOSE, which the engine leaves out of a fixed note', () => {
+    const p = run({
+      'osc.duo': true,
+      'osc2.kbCtrl': 'off',
+      'osc.fineTune': 50,
+      'kbd.transpose': 2,
+    });
+    expect(p.osc[1].fixedNote).toBe(62.5);
+    expect(p.tune).toBe(2.5);
+  });
+
+  it('sends a mod bus’s PITCH on BOTH to the droning Oscillator 2 as well, which `pitchAll` leaves out', () => {
+    const p = run({
+      'osc.duo': true,
+      'osc2.kbCtrl': 'off',
+      'mod2.pitchAmt': 5,
+      'mod2.pitchOsc': 'both',
+    });
+    expect(route(p.routes, 'lfo2', 'pitchAll')).toEqual([]);
+    for (const dst of ['pitch1', 'pitch2', 'pitch3'] as const)
+      expect(route(p.routes, 'lfo2', dst)).toHaveLength(1);
   });
 
   it('ignores KB CTRL OFF without DUO MODE', () => {
@@ -241,6 +264,37 @@ describe('Sub 37 envelopes', () => {
     expect(p.filter.envAmt).toBe(0);
     expect(p.filter.cutoff).toBeCloseTo(exp(0.5, 20, 20000) * Math.pow(2, 4 * 0.5), 6);
   });
+
+  it('holds a LATCHed envelope at its sustain for the mod buses too', () => {
+    const p = run({
+      'envF.latch': true,
+      'envF.sustain': 5,
+      'mod2.source': 'feg_pgm',
+      'mod2.filterAmt': 5,
+    });
+    expect(p.routes).toEqual([{ src: 'one', dst: 'cutoff', amt: 2.5 }]);
+    // a LATCHed envelope at sustain 0 sends nothing, not a route of 0
+    expect(
+      run({
+        'envF.latch': true,
+        'envF.sustain': 0,
+        'mod2.source': 'feg_pgm',
+        'mod2.filterAmt': 5,
+        'mod2.velDepth': 50,
+      }).routes
+    ).toEqual([]);
+    const q = run({
+      'envA.latch': true,
+      'envA.sustain': 8,
+      'mod2.filterAmt': 5,
+      'mod2.ctrl4Src': 'amp_eg',
+      'mod2.ctrl4Depth': 50,
+    });
+    expect(q.routes).toEqual([
+      { src: 'lfo2', dst: 'cutoff', amt: 2.5 },
+      { src: 'lfo2', dst: 'cutoff', amt: 2 },
+    ]);
+  });
 });
 
 describe('Sub 37 mod buses', () => {
@@ -277,6 +331,14 @@ describe('Sub 37 mod buses', () => {
     ]);
     expect(route(p.routes, 'lfo2', 'cutoff', 'env2')).toEqual([
       { src: 'lfo2', dst: 'cutoff', amt: 1.25, by: 'env2' },
+    ]);
+  });
+
+  it('leaves the bus at rest when the controllers claim more than all of its depth', () => {
+    const p = run({ 'mod1.pitchAmt': 5, 'mod1.velDepth': 100 });
+    expect(route(p.routes, 'lfo', 'pitchAll')).toEqual([]);
+    expect(route(p.routes, 'lfo', 'pitchAll', 'vel')).toEqual([
+      { src: 'lfo', dst: 'pitchAll', amt: 24, by: 'vel' },
     ]);
   });
 
@@ -369,6 +431,15 @@ describe('Sub 37 glide and arpeggiator', () => {
     expect(run({ 'arp.on': true, 'arp.pattern': 'down', 'arp.backForth': true }).arp?.mode).toBe(
       'downup'
     );
+    expect(run({ 'arp.on': true, 'arp.pattern': 'up', 'arp.backForth': true }).arp?.mode).toBe(
+      'updown'
+    );
+    expect(run({ 'arp.on': true, 'arp.pattern': 'order', 'arp.backForth': true }).arp?.mode).toBe(
+      'playedupdown'
+    );
+    expect(run({ 'arp.on': true, 'arp.pattern': 'random', 'arp.backForth': true }).arp?.mode).toBe(
+      'random'
+    );
     expect(run({ 'arp.on': true, 'arp.latch': true }).arp?.hold).toBe(true);
     expect(run({ 'arp.on': true, 'arp.pattern': 'seq' }).arp?.on).toBe(false);
   });
@@ -408,10 +479,10 @@ describe('Sub 37 output and panel modes', () => {
 });
 
 describe('Sub 37 readouts', () => {
-  const fmt = (id: string, v: number | string) => {
+  const fmt = (id: string, v: number | string, values?: ControlValues) => {
     const c = sub37.controls.find((x) => x.id === id);
     if (!c || !('fmt' in c) || !c.fmt) throw new Error(`no readout for ${id}`);
-    return (c.fmt as (x: number | string) => string)(v);
+    return (c.fmt as (x: number | string, vs?: ControlValues) => string)(v, values);
   };
 
   it('reads the ranges the manual gives at the ends of their knobs', () => {
@@ -435,9 +506,16 @@ describe('Sub 37 readouts', () => {
     expect(fmt('vcf.egAmt', 0)).toBe('0.0');
     expect(fmt('osc.fineTune', 50)).toBe('+50 cents');
     expect(fmt('osc2.frequency', -7)).toBe('−7.00 st');
+    expect(fmt('osc2.frequency', 7, { ...sub37.init, 'osc.duo': true })).toBe('+7.00 st');
     expect(fmt('osc2.beat', 3.5)).toBe('+3.50 Hz');
     expect(fmt('mod2.wheelDepth', -40)).toBe('−40 %');
     expect(fmt('kbd.transpose', 12)).toBe('+12 st');
+  });
+
+  it('reads OSC 2 FREQUENCY over three octaves while it drones', () => {
+    const drone = { ...sub37.init, 'osc.duo': true, 'osc2.kbCtrl': 'off' };
+    expect(fmt('osc2.frequency', 7, drone)).toBe('+36.00 st');
+    expect(fmt('osc2.frequency', -0.58, drone)).toBe('−2.98 st');
   });
 
   it('names the wave between the shapes', () => {
@@ -455,6 +533,15 @@ describe('Sub 37 readouts', () => {
     expect(fmt('lfo1.kbTrack', 100)).toBe('100 %');
     expect(fmt('arp.gateLen', 50)).toBe('50 %');
     expect(fmt('mixer.osc1', 7)).toBe('7.0');
+  });
+});
+
+describe('Sub 37 lamps', () => {
+  it('flashes each mod bus’s rate lamp with its own LFO', () => {
+    const lamps = sub37.decor.filter(
+      (d) => d.t === 'led' && (d.litWhen === 'lfo' || d.litWhen === 'lfo2')
+    );
+    expect(lamps.map((d) => d.t === 'led' && d.litWhen)).toEqual(['lfo', 'lfo2']);
   });
 });
 

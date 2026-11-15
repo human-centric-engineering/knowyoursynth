@@ -8,12 +8,19 @@
  * owns the panel and moves it to a step through `onStep`.
  */
 
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
-import { controlMap, displayName, formatValue, jackMap } from '@/lib/app/synths/lib/patch';
+import {
+  controlMap,
+  displayName,
+  formatValue,
+  jackMap,
+  presetState,
+} from '@/lib/app/synths/lib/patch';
 import type {
   CablePair,
   ControlValue,
+  ControlValues,
   Preset,
   PresetStep,
   SynthDef,
@@ -101,12 +108,15 @@ function Chip({
   def,
   id,
   value,
+  values,
   base,
   now = false,
 }: {
   def: SynthDef;
   id: string;
   value: ControlValue;
+  /** The panel as this step leaves it, for a readout another control changes (`ContinuousValue.fmt`). */
+  values: ControlValues;
   base: string[];
   /** The move being made on the panel (`f-step-moves`). */
   now?: boolean;
@@ -129,7 +139,7 @@ function Chip({
         style={{ background: moduleOf(c.module).color }}
       />
       <span className="kys-label text-(--kys-muted)">{displayName(def, c)}</span>
-      <span className="font-mono text-(--kys-text)">{formatValue(c, value)}</span>
+      <span className="font-mono text-(--kys-text)">{formatValue(c, value, values)}</span>
     </button>
   );
 }
@@ -307,6 +317,7 @@ const reduced = () =>
 function StepCarousel({
   def,
   steps,
+  phrase,
   step,
   onStep,
   base,
@@ -315,6 +326,8 @@ function StepCarousel({
 }: {
   def: SynthDef;
   steps: PresetStep[];
+  /** The sound's riff, whose BPM the panel starts at (`presetState`). */
+  phrase: Preset['phrase'];
   step: number | null;
   onStep: (k: number | null, how?: StepHow) => void;
   base: string[];
@@ -324,6 +337,16 @@ function StepCarousel({
 }) {
   const n = steps.length;
   const walking = step != null;
+  // The panel as each step leaves it: the Default patch and every step up to it, folded forward once.
+  const stepValues = useMemo(() => {
+    const out: ControlValues[] = [];
+    let prev = presetState(def, { steps, phrase }, -1).values;
+    for (const s of steps) {
+      prev = { ...prev, ...s.set };
+      out.push(prev);
+    }
+    return out;
+  }, [def, steps, phrase]);
   // The step in view for the panel's: step 0 is no card of the track's, so its first.
   const starting = step === START_STEP;
   const at = step == null || starting ? 0 : step;
@@ -449,6 +472,7 @@ function StepCarousel({
           const m = moduleOf(s.module);
           const state = !walking ? 'done' : i < step ? 'done' : i === step ? 'now' : 'todo';
           const ids = stepIds(s);
+          const values = stepValues[i];
           return (
             <li
               key={i}
@@ -488,6 +512,7 @@ function StepCarousel({
                       def={def}
                       id={id}
                       value={v}
+                      values={values}
                       base={base}
                       now={state === 'now' && moving === id}
                     />
@@ -770,6 +795,7 @@ export function Lesson({
                 <StepCarousel
                   def={def}
                   steps={preset.steps}
+                  phrase={preset.phrase}
                   step={step}
                   onStep={onStep}
                   base={base}

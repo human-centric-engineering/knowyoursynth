@@ -55,7 +55,7 @@ const state = (over: Partial<LampState> = {}): LampState => ({
 });
 
 describe('every definition’s sequencer buttons', () => {
-  it('name buttons the synth has, and only the five synths with sequencer buttons map any', () => {
+  it('name buttons the synth has, and only the six synths with sequencer buttons map any', () => {
     const mapped = SYNTH_DEFS.filter((d) => d.seqButtons).map((d) => d.id);
     expect(mapped.sort()).toEqual([
       'donner-b1',

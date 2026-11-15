@@ -250,6 +250,7 @@ function Led({ d, ctx, values }: { d: LedDecor; ctx: PanelCtx; values: ControlVa
   if (w === 'power') level = 1;
   else if (w === 'gate') level = meters.gate ? 1 : 0;
   else if (w === 'lfo') level = meters.lfo > 0 ? 1 : 0;
+  else if (w === 'lfo2') level = (meters.lfo2 || 0) > 0 ? 1 : 0;
   else if (w === 'overload') level = meters.overload > 1.35 ? 1 : 0;
   // 'env1': brightness follows Envelope 1 over a dim glow (the VCS3 lamp: bright for attack and on, dim for decay and off)
   else if (w === 'env1') level = 0.22 + 0.78 * Math.min(1, Math.max(0, meters.env1 || 0));

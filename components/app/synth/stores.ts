@@ -55,6 +55,8 @@ export function useStore<T, S>(store: Store<T>, selector?: (state: T) => S): T |
 export interface Meters {
   gate: boolean;
   lfo: number;
+  /** LFO 2, where the synth has one. */
+  lfo2?: number;
   overload: number;
   power: boolean;
   /** Bit per voice that is sounding. */
@@ -68,6 +70,8 @@ export interface Meters {
   env2Stage?: EnvStage;
   /** The LFO's rate in Hz, and each oscillator's output, pitch and mixer level: the routing view's lamps. */
   lfoHz?: number;
+  /** LFO 2's rate in Hz, where the synth has one. */
+  lfo2Hz?: number;
   oscV?: number[];
   oscHz?: number[];
   oscLv?: number[];

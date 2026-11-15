@@ -625,7 +625,7 @@ function attribute(
         key: c.id,
         kind: 'control',
         name: displayName(def, c),
-        value: formatValue(c, cur),
+        value: formatValue(c, cur, values),
         module: c.module,
       },
       r.stages,
