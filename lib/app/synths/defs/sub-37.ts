@@ -1079,14 +1079,14 @@ MIXER.forEach(([k, lab, short, kx, ky, bx, by, tx, what]) => {
     def: k === 'osc1' ? 5 : 0,
     module: 'mixer',
     label: lab,
-    name: `${lab.replace('\n', ' ')} level`,
+    name: `${lab.replaceAll('\n', ' ')} level`,
     scale: S10,
     fmt: fmt10,
     help: `The level of ${what}. Past 5 it drives the filter’s input harder, for the overdriven Moog sound.`,
   });
   lamp(`mixer.${k}On`, bx, by, {
     label: lab,
-    name: `${lab.replace('\n', ' ')} on`,
+    name: `${lab.replaceAll('\n', ' ')} on`,
     module: 'mixer',
     def: true,
     help: `Switches ${short} into the mixer, or out of it without moving its level.`,
