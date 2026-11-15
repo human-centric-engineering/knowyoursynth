@@ -61,6 +61,8 @@ export interface MessageRow {
   /** A tool row's tool, and whether its result was a success (`metadata.result.success`). */
   capabilitySlug?: string;
   succeeded?: boolean;
+  /** A row `streamChat` left out of later history (`metadata.excludedFromHistory`), as it does a privacy refusal. */
+  excludedFromHistory?: string;
 }
 
 type RoleWhere = {
@@ -79,9 +81,14 @@ function matchesRole(m: MessageRow, w: RoleWhere): boolean {
   if (m.role !== w.role) return false;
   if (w.capabilitySlug !== undefined && m.capabilitySlug !== w.capabilitySlug) return false;
   if (w.metadata) {
-    // The only metadata path the allowance reads.
-    if (w.metadata.path.join('.') !== 'result.success') return false;
-    if ((m.succeeded ?? false) !== w.metadata.equals) return false;
+    // The only metadata paths the allowance reads. A path the row lacks matches nothing, as in the database.
+    const path = w.metadata.path.join('.');
+    if (path === 'result.success') {
+      if ((m.succeeded ?? false) !== w.metadata.equals) return false;
+    } else if (path === 'excludedFromHistory') {
+      if (m.excludedFromHistory === undefined || m.excludedFromHistory !== w.metadata.equals)
+        return false;
+    } else return false;
   }
   return true;
 }
@@ -122,6 +129,16 @@ export function tutorTurns(
     role: 'user' as const,
     createdAt: new Date(from.getTime() + i * 60_000),
   }));
+}
+
+/** `n` turns `userId` sent to the tutor that `streamChat` marked left out of history, with `reason` as the mark. */
+export function refusedTutorTurns(
+  userId: string,
+  n: number,
+  from: Date,
+  reason = 'privacy_blocked'
+): MessageRow[] {
+  return tutorTurns(userId, n, from).map((row) => ({ ...row, excludedFromHistory: reason }));
 }
 
 /** `n` web searches the tutor ran for `userId`, as the tool rows `streamChat` saves; `succeeded: false` for refusals. */

@@ -11,6 +11,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   fakeMessageTable,
+  refusedTutorTurns,
   tutorSearches,
   tutorTurns,
   type MessageRow,
@@ -116,6 +117,26 @@ describe('readAllowance', () => {
     ]);
 
     expect((await readAllowance('user-1', NOW)).used).toBe(3);
+  });
+
+  it('does not count a turn the privacy layer refused, but still counts a search that ran in it', async () => {
+    withMessages([
+      ...tutorTurns('user-1', 3, TODAY),
+      ...refusedTutorTurns('user-1', 2, TODAY),
+      ...tutorSearches('user-1', 1, TODAY),
+    ]);
+
+    expect(await readAllowance('user-1', NOW)).toMatchObject({ used: 4, remaining: 26 });
+  });
+
+  it("counts a turn left out of history for another reason, and doesn't take another person's refusals off", async () => {
+    withMessages([
+      ...tutorTurns('user-1', 3, TODAY),
+      ...refusedTutorTurns('user-1', 1, TODAY, 'some_later_reason'),
+      ...refusedTutorTurns('user-2', 2, TODAY),
+    ]);
+
+    expect((await readAllowance('user-1', NOW)).used).toBe(4);
   });
 
   it('counts a turn that proposed a pattern as one turn, as any other: the tool call is not one more (t-84)', async () => {
