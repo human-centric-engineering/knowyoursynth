@@ -11,14 +11,20 @@
  *
  * The answer holds while the picker is open, so nothing jumps under the pointer: a knob turned meanwhile is read the
  * next time it opens. A panel unchanged since it was last read is not read again, and the answer for each reading is
- * kept for the visit, so a patch that comes back to where it was is not asked about again. A reading that fails (the detector could not run, the panel could not be worked out) asks for
- * the library without features, which the endpoint lists by role and name, so the picker is never empty.
+ * kept for the visit, so a patch that comes back to where it was is not asked about again.
+ *
+ * Only patterns of the patch's category are listed (t-255). So the start sound is read too, once per start: a patch not
+ * moved far from it (`movedFar`) is that sound as it came (`asCame`), listed by its tag; one moved far, or with no
+ * start, by the category the detector hears. A reading that fails (the detector could not run, the panel could not be
+ * worked out) asks for the library without features, which the endpoint lists by role and name, so the picker is never
+ * empty.
  */
 
 import { useEffect, useRef, useState } from 'react';
 import { apiClient } from '@/lib/api/client';
 import { logger } from '@/lib/logging';
 import { createKindReader, type KindReader } from '@/lib/app/patterns/suggest-detect';
+import { movedFar } from '@/lib/app/patterns/suggest';
 // Type only: this module reaches the browser, and the read module holds the database client.
 import type { RankResult } from '@/lib/app/patterns/rank-read';
 import { SETTLE_MS, type PanelState } from '@/components/app/sequencer/use-suggested-patterns';
@@ -31,8 +37,11 @@ export interface RankInput {
   def: SynthDef;
   /** The panel now. */
   panel: PanelState;
-  /** The library sound the patch started as, if it did: its own patterns are left out of the sections. */
-  sound: string | null;
+  /**
+   * The library sound the patch started as, if it did, as `useSuggestedPatterns` takes it: its own patterns are left
+   * out of the sections, and while the patch has not moved far from it the library is limited to its category.
+   */
+  start: { slug: string; panel: () => PanelState } | null;
   /** Whether the picker is open: nothing is read while it is not. */
   open: boolean;
   /** False while what is on the panel is not settled yet (one of the user's sounds still loading). */
@@ -57,10 +66,18 @@ const OFF: RankedPatterns = { state: 'off', result: null };
 const READING: RankedPatterns = { state: 'reading', result: null };
 
 export function useRankedPatterns(input: RankInput): RankedPatterns {
-  const { synthId, def, panel, sound, open, enabled = true } = input;
+  const { synthId, def, panel, start, open, enabled = true } = input;
+  const sound = start?.slug ?? null;
   const [status, setStatus] = useState<RankedPatterns>(OFF);
   const reader = useRef<KindReader | null>(null);
   const answers = useRef(new Map<string, Promise<RankResult>>());
+  // Each start's reading, by the start itself: a new sound, or a new lesson step of it, is a new start.
+  const starts = useRef(new WeakMap<object, Promise<SoundFeatures | null>>());
+  // The start as it is when the picker reads it: a new lesson step while it is open does not rank it again.
+  const startRef = useRef(start);
+  useEffect(() => {
+    startRef.current = start;
+  }, [start]);
   // The last panel the detector read, and what it heard.
   const lastRead = useRef<
     (PanelState & { def: SynthDef; features: Promise<SoundFeatures | null> }) | null
@@ -91,6 +108,7 @@ export function useRankedPatterns(input: RankInput): RankedPatterns {
     }
     let live = true;
     setStatus(READING);
+    const read = () => (reader.current ??= createKindReader());
     const rank = () => {
       const now = panelRef.current;
       // The panel read last time, unchanged since, is not read again; one that could not be read is tried again.
@@ -101,7 +119,6 @@ export function useRankedPatterns(input: RankInput): RankedPatterns {
         heard.values !== now.values ||
         heard.cables !== now.cables
       ) {
-        const read = (reader.current ??= createKindReader());
         const entry = {
           def,
           values: now.values,
@@ -110,7 +127,7 @@ export function useRankedPatterns(input: RankInput): RankedPatterns {
         };
         // Working out the panel's sound (engineOf) can throw: that is a reading that failed, ranked without features.
         entry.features = Promise.resolve()
-          .then(() => read.read(engineOf(def, now.values, now.cables, 0)))
+          .then(() => read().read(engineOf(def, now.values, now.cables, 0)))
           .catch((err: unknown): SoundFeatures | null => {
             if (lastRead.current === entry) lastRead.current = null;
             logger.warn('pattern picker: the patch could not be read', {
@@ -122,10 +139,36 @@ export function useRankedPatterns(input: RankInput): RankedPatterns {
         heard = entry;
         lastRead.current = entry;
       }
-      heard.features
-        .then((features) => {
+      // The start sound as it came, read once per start.
+      const from = startRef.current;
+      let startRead: Promise<SoundFeatures | null> = Promise.resolve(null);
+      if (from) {
+        let kept = starts.current.get(from);
+        if (!kept) {
+          kept = Promise.resolve()
+            .then(() => {
+              const p = from.panel();
+              return read().read(engineOf(def, p.values, p.cables, 0));
+            })
+            .catch((err: unknown): SoundFeatures | null => {
+              starts.current.delete(from);
+              logger.warn('pattern picker: the start sound could not be read', {
+                synthId,
+                err: String(err),
+              });
+              return null;
+            });
+          starts.current.set(from, kept);
+        }
+        startRead = kept;
+      }
+      Promise.all([startRead, heard.features])
+        .then(([was, features]) => {
           if (!live) return null;
-          const key = `${synthId}|${sound ?? ''}|${features ? JSON.stringify(features) : ''}`;
+          // Still the sound as it came: listed by its tag. A patch or start that could not be read is taken to be, as
+          // nothing says it has moved.
+          const asCame = !!from && (!features || !was || !movedFar(was, features));
+          const key = `${synthId}|${sound ?? ''}|${asCame}|${features ? JSON.stringify(features) : ''}`;
           let asked = answers.current.get(key);
           if (!asked) {
             asked = apiClient.post<RankResult>('/api/v1/library-patterns/rank', {
@@ -133,6 +176,7 @@ export function useRankedPatterns(input: RankInput): RankedPatterns {
                 synthId,
                 ...(sound ? { sound } : {}),
                 ...(features ? { features } : {}),
+                ...(asCame ? { asCame } : {}),
               },
             });
             answers.current.set(key, asked);

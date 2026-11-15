@@ -1347,13 +1347,13 @@ Public, no session needed, in `lib/app/patterns/library-read.ts`. A pattern is s
 a synth the catalogue serves (listed, and in the registry). So hiding a synth hides its riffs, and a pattern on no
 sound yet (an admin's, still being written) is admin only.
 
-| Route                                             | Does                                                                                    |
-| ------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| `GET /api/v1/synths/:id/sounds/:slug/patterns`    | A sound's patterns, default first, with their facts.                                    |
-| `GET /api/v1/library-patterns?role=&page=&limit=` | A page of the library by name, optionally one role.                                     |
-| `GET /api/v1/library-patterns/:id`                | One pattern.                                                                            |
-| `POST /api/v1/library-patterns/suggest`           | Patterns that suit a reading of a patch, with why. See [Suggestions](#suggestions).     |
-| `POST /api/v1/library-patterns/rank`              | Every pattern, by role, best suited first. See [The whole library](#the-whole-library). |
+| Route                                             | Does                                                                                                            |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `GET /api/v1/synths/:id/sounds/:slug/patterns`    | A sound's patterns, default first, with their facts.                                                            |
+| `GET /api/v1/library-patterns?role=&page=&limit=` | A page of the library by name, optionally one role.                                                             |
+| `GET /api/v1/library-patterns/:id`                | One pattern.                                                                                                    |
+| `POST /api/v1/library-patterns/suggest`           | Patterns that suit a reading of a patch, with why. See [Suggestions](#suggestions).                             |
+| `POST /api/v1/library-patterns/rank`              | Every pattern of the patch's category, by role, best suited first. See [The whole library](#the-whole-library). |
 
 Admin, in `lib/app/patterns/library-edit.ts`, over the catalogue's guard and audit (`lib/app/catalogue/admin-route.ts`).
 Every write is `writesSharedSettings` and audited: a pattern as `library_pattern`, a sound's list or riff as
@@ -1420,12 +1420,14 @@ the sequencer closed (`components/app/synth/pattern-picker.tsx`; where it sits a
 
 - **The sound's own first.** `useSoundPatterns` reads them while this picker is open as well as while the sequencer
   is shown, so they show at once, default marked, before anything is ranked.
-- **Then the whole library**, from [`/rank`](#the-whole-library), in its sections. `useRankedPatterns`
+- **Then the library's patterns of the patch's category** ([By category](#by-category)), from
+  [`/rank`](#the-whole-library), in its sections. `useRankedPatterns`
   (`components/app/synth/use-ranked-patterns.ts`) reads the patch once the panel has settled (`SETTLE_MS` since it
   last changed, waiting again if it changes before then, as a patch's glide does), in the probe worker
   (`createKindReader`), and asks `/rank` with the features and the library sound
   the patch started as, which leaves that sound's own out. There is no `movedFar` gate: the sound's own lead the list
-  anyway. A panel unchanged since it was last read is not read again, and each reading's answer is kept for the
+  anyway. It reads the start sound too, once per start, and says `asCame` while the patch is not moved far from it
+  (or could not be read), so `/rank` limits the list to that sound's tag. A panel unchanged since it was last read is not read again, and each reading's answer is kept for the
   visit (up to 50).
 - **While it is read**, the sound's own show and a line says the patch is being listened to. A reading that fails is
   asked for without features, which `/rank` lists by role and name, so the sections always come. A read of `/rank`
@@ -1729,7 +1731,7 @@ The worker is the sound map's (`PROBE_WORKER_URL`): a `kind` message, answered w
 workers, or the worker doesn’t answer its first reading within 15 s, the page reads on its own thread instead (`suggest-detect.ts`).
 `PATTERN_ROLES` lives in `library-roles.ts`, which imports nothing, so the worker doesn't bundle the sequencer.
 
-The endpoint takes `{ synthId, sound?, features, limit? }`. `features` is validated field by field
+The endpoint takes `{ synthId, sound?, features, asCame?, limit? }` (`asCame`: see [By category](#by-category)). `features` is validated field by field
 (`SoundFeaturesSchema`), and `sound` is the library sound the patch started as. It returns what the patch sounds like
 (category, role, register, traits and a summary) and up to `limit` suggestions (8 by default, 20 at most). Each one has
 the pattern itself, its score and its reason, so the picker reads nothing per pattern. It writes nothing. It sits under
@@ -1785,13 +1787,37 @@ title (the traits and the three roles that suit it most) and each reason as its 
 What it doesn't weigh yet: tempo range, and slides against a synth with no glide (the features don't say whether the
 patch glides).
 
+#### By category
+
+t-255 (`f-pattern-picker`, owner ruling 2026-11-15). Both `/suggest` and `/rank` offer only patterns of the patch's
+**category** (a sound's first tag: bass, lead, pad …). A pattern has no category of its own: it is in every category of
+the library sounds that list it (`SynthSoundPattern`), on any listed synth. So a bass patch is offered every pattern a
+bass sound lists, whoever's synth it is on. `listPublicPatternCategories` (`library-read.ts`) reads them, kept with the
+library in `publicLibrary`, and `limitToCategory` (`suggest-read.ts`) filters. On 2026-11-15 every enabled pattern was
+listed by some sound, and every category had between 226 and 1,119.
+
+Which category (`patchCategory`):
+
+- **The library sound as it came** (`asCame`, taken by both): its tag. The page says so while the patch has not moved
+  far from it (`movedFar`), or when the patch or the start sound could not be read, since nothing says it has moved.
+  `/suggest` is asked about a sound as it came only when it has no patterns of its own, and then goes by its tag too,
+  so Suits this sound and the picker's sections never disagree about one patch.
+- **Anything else** (moved far, one of the user's sounds, a shared one, the Default patch, the tutor's): the category
+  the detector hears (`kind.category`).
+- **Neither** (no reading yet and no sound to go by, or a sound whose first tag is not a category), **or a category no
+  public pattern is of but the start sound's own** (which are never offered again): the whole library, so the picker is never empty.
+
+Both answers say the category they went by (`category`, null for the whole library), and the Play deck's picker names it
+in its line. When it lists the sound's tag and the detector hears another category, the line says it lists the
+category as the sound came.
+
 #### The whole library
 
 t-212 (`f-pattern-picker`). The Play deck's pattern picker lists the patch's own patterns, then every other public
 pattern, in a section per role, best suited first. `/suggest` returns at most 20, so the whole library has its own
 endpoint, `POST /api/v1/library-patterns/rank`.
 
-It takes `{ synthId, sound?, features? }`, validated as `/suggest`'s are (`RankBodySchema`, `rank-read.ts`).
+It takes `{ synthId, sound?, features?, asCame? }`, validated as `/suggest`'s are (`RankBodySchema`, `rank-read.ts`).
 `features` is optional, because the picker asks before the detector has read the patch. An unknown synth, or a sound
 not on a listed synth, is a 404. It writes nothing, and sits under the `/api/v1/**` section cap with no handler cap.
 It shares `/suggest`'s reads (`suggest-read.ts`): the sound, if one is named, and the public library kept for a minute
@@ -1814,8 +1840,8 @@ and its patterns. A pattern is a lean row, without its notes, which a pick reads
 
 The order, in `rankLibrary` (`lib/app/patterns/rank.ts`):
 
-1. **Every enabled public pattern once**, except the sound's own, which the picker lists first. Nothing else is left
-   out: where `/suggest` drops a role under 5% and a pattern needing more voices, the whole library lists both.
+1. **Every enabled public pattern of the category once** ([By category](#by-category)), except the sound's own, which
+   the picker lists first. Nothing else is left out: where `/suggest` drops a role under 5% and a pattern needing more voices, the whole library lists both.
 2. **Sections by the patch's share** of each role, largest first. A role the patch barely suits comes last, still
    listed.
 3. **Within a section, by fit** with the researched lift, the order `rankPatterns` gives a role

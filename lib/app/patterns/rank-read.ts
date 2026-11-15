@@ -5,7 +5,11 @@
  *
  * The reads are `/suggest`'s (`suggest-read.ts`): the sound the patch started as, when there is one, and the public
  * library, kept for a minute and shared with suggestions. The library is read whatever the reading, because a silent
- * patch, or one not read yet, still gets every pattern, by role and name.
+ * patch, or one not read yet, still gets every pattern of its category, by role and name.
+ *
+ * Only the patch's category is listed (t-255, `limitToCategory`): the start sound's tag while the patch is that sound
+ * as it came (`asCame`), else the category the detector hears. With neither (a patch of the user's not read yet), the
+ * whole library, as when no public pattern is of the category, so the picker is never empty.
  */
 import { z } from 'zod';
 import { SoundSlugSchema, SynthIdSchema } from '@/lib/app/catalogue/edit';
@@ -13,7 +17,10 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import { kindOf } from '@/lib/app/synths/lib/soundkind';
 import { rankLibrary, type RankSection } from '@/lib/app/patterns/rank';
 import { SoundFeaturesSchema } from '@/lib/app/patterns/suggest';
+import type { PresetCategory } from '@/lib/app/synths/contract';
 import {
+  limitToCategory,
+  patchCategory,
   publicLibrary,
   readingOf,
   soundContext,
@@ -27,6 +34,8 @@ export const RankBodySchema = z.object({
   sound: SoundSlugSchema.optional(),
   /** What the detector heard (`soundFeatures`), once it has. */
   features: SoundFeaturesSchema.optional(),
+  /** Whether the patch is still `sound` as it came (not moved far from it): then it is listed by that sound's tag. */
+  asCame: z.boolean().default(false),
 });
 export type RankBody = z.infer<typeof RankBodySchema>;
 
@@ -34,7 +43,12 @@ export type RankBody = z.infer<typeof RankBodySchema>;
 export interface RankResult {
   /** What the patch sounds like, or null when it is silent or no features were sent: then nothing is ranked by fit. */
   reading: SoundReading | null;
-  /** Every role, each with every public pattern of it but the sound's own. */
+  /**
+   * The category the sections are limited to; null when nothing said one, or no pattern is of it: then every pattern
+   * is listed.
+   */
+  category: PresetCategory | null;
+  /** Every role, each with every public pattern of it and the category but the sound's own. */
   sections: RankSection[];
 }
 
@@ -50,9 +64,14 @@ export async function rankLibraryFor(body: RankBody): Promise<RankResult | null>
   const library = publicLibrary();
   const ctx = await soundContext(body.synthId, body.sound);
   if (!ctx) return null;
-  const views = await library;
+  const { category, views } = limitToCategory(
+    await library,
+    patchCategory(ctx.category, body.asCame, kind),
+    ctx.exclude
+  );
   return {
     reading: kind ? readingOf(kind) : null,
+    category,
     sections: rankLibrary(kind, views, ctx),
   };
 }

@@ -46,7 +46,8 @@ export interface SuggestInput {
   start: { slug: string; panel: () => PanelState } | null;
   /**
    * How many patterns the start sound has of its own, null while they are being read. A sound with none brought
-   * nothing to the picker, so it is offered more at once, as a patch with no start is.
+   * nothing to the picker, so it is offered more at once, limited to its tag while it is as it came (as the picker's
+   * sections are) and to the category heard once it has moved far.
    */
   ownPatterns?: number | null;
   /** False while what is on the panel is not settled yet (one of the user's sounds still loading). */
@@ -75,7 +76,10 @@ const READING = { state: 'reading', result: null } as const;
 
 export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
   const { synthId, def, panel, enabled = true } = input;
-  const start = input.ownPatterns === 0 ? null : input.start;
+  const { start } = input;
+  // A start with no patterns of its own brought nothing to the picker: it is offered more at once, by its tag while it
+  // is as it came (t-255).
+  const noneOwn = input.ownPatterns === 0;
   const [wanted, setWanted] = useState(false);
   const [status, setStatusNow] = useState<{ state: SuggestState; result: SuggestResult | null }>(
     OFF
@@ -131,21 +135,29 @@ export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
           starts.current.set(start, kept);
           kept.catch(() => starts.current.delete(start));
         }
-        startRead = kept;
+        // Offered more whatever the start reads as, a start that cannot be read is taken to be as it came.
+        startRead = noneOwn ? kept.catch(() => null) : kept;
       }
       Promise.all([startRead, readPanel(() => ({ values, cables }))])
         .then(([was, now]) => {
           if (!live) return null;
-          if (!movedFar(was, now)) {
+          const far = !!was && movedFar(was, now);
+          if (!noneOwn && start && !far) {
             setStatus({ state: 'near', result: null });
             return null;
           }
           const slug = start?.slug;
-          const key = `${synthId}|${slug ?? ''}|${JSON.stringify(now)}`;
+          const asCame = noneOwn && !!start && !far;
+          const key = `${synthId}|${slug ?? ''}|${asCame}|${JSON.stringify(now)}`;
           let asked = answers.current.get(key);
           if (!asked) {
             asked = apiClient.post<SuggestResult>('/api/v1/library-patterns/suggest', {
-              body: { synthId, ...(slug ? { sound: slug } : {}), features: now },
+              body: {
+                synthId,
+                ...(slug ? { sound: slug } : {}),
+                features: now,
+                ...(asCame ? { asCame } : {}),
+              },
             });
             answers.current.set(key, asked);
             const oldest = answers.current.keys().next().value;
@@ -174,7 +186,7 @@ export function useSuggestedPatterns(input: SuggestInput): SuggestedPatterns {
       live = false;
       clearTimeout(t);
     };
-  }, [wanted, enabled, synthId, def, start, values, cables, setStatus]);
+  }, [wanted, enabled, synthId, def, start, noneOwn, values, cables, setStatus]);
 
   return { state: status.state, result: status.result, want };
 }

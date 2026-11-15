@@ -9,6 +9,7 @@
  * - the answer: what the patch sounds like, then patterns that suit it, each with the pattern itself and why, the
  *   sound's own left out;
  * - at most two reads a call, and the library read at most once a minute: no read per pattern;
+ * - only patterns a sound of the heard category lists are offered (t-255);
  * - a silent patch is offered nothing;
  * - the route sits under the section rate limit with no handler work.
  */
@@ -19,6 +20,7 @@ import type { LibraryPattern } from '@prisma/client';
 const mockPrisma = vi.hoisted(() => ({
   synthSound: { findFirst: vi.fn() },
   libraryPattern: { findMany: vi.fn() },
+  synthSoundPattern: { findMany: vi.fn() },
 }));
 vi.mock('@/lib/db/client', () => ({ prisma: mockPrisma }));
 
@@ -117,7 +119,15 @@ const ROWS = [
     ],
   }),
   row('pathit00000000000000005', 'percussive', line([60, 60, 60], 0.1)),
+  // a bass line only a lead sound lists: not one for a bass patch
+  row('patleadsbass00000000006', 'bass_line', line([34, 36, 41, 33])),
 ];
+
+/** The sounds that list each pattern, by their category: every row a bass sound's but the last, a lead sound's. */
+const LISTED = ROWS.map((r) => ({
+  patternId: r.id,
+  sound: { tags: [r.id === 'patleadsbass00000000006' ? 'lead' : 'bass', 'funk'] },
+}));
 
 const post = (body: unknown) =>
   POST(
@@ -139,7 +149,9 @@ beforeEach(() => {
   vi.clearAllMocks();
   forgetSuggestLibrary();
   mockPrisma.libraryPattern.findMany.mockResolvedValue(ROWS);
+  mockPrisma.synthSoundPattern.findMany.mockResolvedValue(LISTED);
   mockPrisma.synthSound.findFirst.mockResolvedValue({
+    tags: ['bass', 'funk'],
     patterns: [
       { patternId: 'patbassownsound00000001', pattern: { inspiredArtistId: 'kraftwerk' } },
     ],
@@ -181,12 +193,14 @@ describe('POST /api/v1/library-patterns/suggest', () => {
     expect(res.status).toBe(200);
     const data = await answer(res);
     expect(data.reading).toMatchObject({ category: 'bass', role: 'bass_line', register: 'low' });
+    expect(data.category).toBe('bass');
     expect(data.reading?.summary).toMatch(/→ bass line/);
     const ids = data.suggestions.map((s) => s.id);
     expect(ids[0]).toBe('patbasslow0000000000002'); // the lower line suits a low patch better
     expect(ids).toContain('patbasshigh000000000003');
     expect(ids).not.toContain('patbassownsound00000001'); // the sound lists it already
     expect(ids).not.toContain('patchords00000000000004'); // a mono patch plays no chords
+    expect(ids).not.toContain('patleadsbass00000000006'); // only a lead sound lists it
     for (const s of data.suggestions) {
       expect(s.pattern.id).toBe(s.id);
       expect(s.pattern.pattern.parts.length).toBeGreaterThan(0);
@@ -215,8 +229,43 @@ describe('POST /api/v1/library-patterns/suggest', () => {
 
   it('offers a silent patch nothing, without reading the library', async () => {
     const res = await post({ synthId: 'model-d', features: { ...BASS, silent: true } });
-    expect(await answer(res)).toEqual({ reading: null, suggestions: [] });
+    expect(await answer(res)).toEqual({ reading: null, category: null, suggestions: [] });
     expect(mockPrisma.libraryPattern.findMany).not.toHaveBeenCalled();
+  });
+
+  it('offers the patterns of the category it hears, whatever the sound the patch started as', async () => {
+    // the patch started as a lead sound but has moved far, and now sounds like a bass
+    mockPrisma.synthSound.findFirst.mockResolvedValueOnce({ tags: ['lead'], patterns: [] });
+    const data = await answer(await post({ synthId: 'model-d', sound: 'a-lead', features: BASS }));
+    expect(data.category).toBe('bass');
+    const ids = data.suggestions.map((s) => s.id);
+    expect(ids).toContain('patbassownsound00000001');
+    expect(ids).not.toContain('patleadsbass00000000006');
+    // the categories are read from listed sounds of enabled patterns, kept with the library
+    expect(mockPrisma.synthSoundPattern.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ pattern: { status: 'enabled' } }),
+      })
+    );
+  });
+
+  it('offers a patch still the sound it came as the patterns of that sound’s tag', async () => {
+    // a lead sound with none of its own, unmoved, that the detector hears as a bass
+    mockPrisma.synthSound.findFirst.mockResolvedValueOnce({ tags: ['lead'], patterns: [] });
+    const data = await answer(
+      await post({ synthId: 'model-d', sound: 'a-lead', features: BASS, asCame: true })
+    );
+    expect(data.category).toBe('lead');
+    expect(data.suggestions.map((s) => s.id)).toEqual(['patleadsbass00000000006']);
+  });
+
+  it('offers the whole library, with no category, when no public pattern is of the patch’s', async () => {
+    mockPrisma.synthSound.findFirst.mockResolvedValueOnce({ tags: ['fx'], patterns: [] });
+    const data = await answer(
+      await post({ synthId: 'model-d', sound: 'a-zap', features: BASS, asCame: true })
+    );
+    expect(data.category).toBeNull();
+    expect(data.suggestions.length).toBeGreaterThan(1);
   });
 
   it('returns no more than it is asked for', async () => {

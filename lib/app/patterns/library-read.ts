@@ -14,6 +14,7 @@ import { prisma } from '@/lib/db/client';
 import { logger } from '@/lib/logging';
 import { getSynthDef, SYNTH_DEFS } from '@/lib/app/synths/defs';
 import { PATTERN_ROLES } from '@/lib/app/patterns/library-facts';
+import { PRESET_CATEGORIES, type PresetCategory } from '@/lib/app/synths/contract';
 import {
   DEFAULT_FIRST,
   ENABLED,
@@ -22,12 +23,15 @@ import {
   type LibraryPatternView,
 } from '@/lib/app/patterns/library';
 
+/** A sound of a listed synth the app can play: what makes a pattern on it public. */
+const SERVED_SOUND = {
+  synth: { listed: true, id: { in: SYNTH_DEFS.map((d) => d.id) } },
+} satisfies Prisma.SynthSoundWhereInput;
+
 /** Where a pattern may be read from: enabled, and on a sound of a listed synth the app can play. */
 const PUBLIC: Prisma.LibraryPatternWhereInput = {
   ...ENABLED,
-  sounds: {
-    some: { sound: { synth: { listed: true, id: { in: SYNTH_DEFS.map((d) => d.id) } } } },
-  },
+  sounds: { some: { sound: SERVED_SOUND } },
 };
 
 function served(row: Parameters<typeof toView>[0]): LibraryPatternView | null {
@@ -102,4 +106,36 @@ export async function listLibraryPatterns(
 export async function listAllPublicPatterns(): Promise<LibraryPatternView[]> {
   const rows = await prisma.libraryPattern.findMany({ where: PUBLIC, orderBy: { id: 'asc' } });
   return rows.flatMap((r) => served(r) ?? []);
+}
+
+/** A sound's first tag, when it is a category. */
+export const PresetCategorySchema = z.enum(PRESET_CATEGORIES);
+
+/** A sound's category: its first tag, when that is one. */
+export function categoryOfTags(tags: readonly string[]): PresetCategory | null {
+  const tag = PresetCategorySchema.safeParse(tags[0]);
+  return tag.success ? tag.data : null;
+}
+
+/**
+ * The categories each public pattern belongs to, by pattern id (t-255): the category (first tag) of every sound of a
+ * listed synth that lists it. What limits the patterns a patch is offered to those of its category. A sound whose
+ * first tag is not a category (validation refuses one on write) gives its patterns none.
+ */
+export async function listPublicPatternCategories(): Promise<
+  Map<string, ReadonlySet<PresetCategory>>
+> {
+  const rows = await prisma.synthSoundPattern.findMany({
+    where: { pattern: ENABLED, sound: SERVED_SOUND },
+    select: { patternId: true, sound: { select: { tags: true } } },
+  });
+  const out = new Map<string, Set<PresetCategory>>();
+  for (const { patternId, sound } of rows) {
+    const category = categoryOfTags(sound.tags);
+    if (!category) continue;
+    let set = out.get(patternId);
+    if (!set) out.set(patternId, (set = new Set()));
+    set.add(category);
+  }
+  return out;
 }
