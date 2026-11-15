@@ -1,0 +1,58 @@
+{
+  "synth": "teo-5",
+  "unusual": [
+    {
+      "target": "vcf.state",
+      "text": "The filter has no fixed type. STATE sweeps it from low-pass through a notch to high-pass, the knob of Oberheim’s 1974 SEM, so a sound can sit anywhere between them."
+    },
+    {
+      "target": "vcf.resonance",
+      "text": "However far RESONANCE is turned, this filter never rings on its own, unlike most synth filters: it peaks but does not self-oscillate."
+    },
+    {
+      "target": "osc1.tri",
+      "text": "No wave selector: each oscillator has a button per wave, and any of them can be on at once, summed."
+    },
+    {
+      "target": "osc1.sync",
+      "text": "Oscillator 1 is the one that is synced, to Oscillator 2. Many synths sync the second oscillator to the first, so the roles here are the other way round."
+    },
+    {
+      "target": "osc.xmod",
+      "text": "X-MOD is through-zero FM, from Oscillator 2’s triangle to Oscillator 1: it stays in tune as it deepens, where the exponential FM of most analogue synths goes sharp."
+    },
+    {
+      "target": "mixer",
+      "text": "The mixer is four buttons, not knobs. Each channel’s level is set by holding its button and turning VALUE, and turning a channel on sets it to full."
+    },
+    {
+      "target": "env.routing",
+      "text": "The envelopes have no fixed jobs. ENV ROUTING picks one of three: Envelope 1 on the filter and Envelope 2 on the volume; Envelope 2 on both, freeing Envelope 1 for its own destination (Aux); or the same with the volume gated by the key instead of shaped by an envelope."
+    },
+    {
+      "target": "lfo1",
+      "text": "LFO 1 is a single wave shared by all five voices (MONO); LFO 2 runs separately in each voice (POLY), so a chord can wobble out of step with itself."
+    },
+    {
+      "target": "voice.vintage",
+      "text": "VINTAGE deliberately makes the five voices differ from each other in pitch, filter and envelopes, the way the hand-tuned voices of an old Oberheim did."
+    }
+  ],
+  "limits": {
+    "intro": "The voice is modelled: both oscillators with FREQUENCY, their triangle, sawtooth and pulse buttons, PULSE WIDTH, OSC 2 DETUNE, SYNC and X-MOD, the sub-oscillator and white or pink noise, the mixer buttons and their levels, Osc 2 Filter Bypass and Key On, the filter with CUTOFF, RESONANCE, STATE, Bandpass and key tracking, both envelopes with VELOCITY, delay, repeat and all three ENV ROUTING settings, LFO 1 and LFO 2 with their shapes, amounts and destinations, VINTAGE, PORTAMENTO, UNISON with its voices and detune, OCTAVE, OVERDRIVE, the effect and the plate reverb. The arpeggiator plays at the BPM and CLK DIVIDE with its MODE and OCTAVE. The settings with no knob are rows on the display, paged by PROGRAM. HOLD is the page’s Hold, and RECORD and PLAY drive the app’s sequencer under the panel.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "The 16-slot mod matrix (SOURCE and DESTINATION): it is left empty, so the mod wheel, pressure and the pedals move nothing. Of the 62 direct destinations, an LFO or Envelope 1 can reach seven here: the pitch of either or both oscillators, both pulse widths, the cutoff and the resonance. The LFOs’ clock sync, slew and note reset, the effect’s CLK SYNC, TAP TEMPO, the arpeggiator’s REPEAT and relatch, and the TEO-5’s own 64-step sequencer (the app’s sequencer stands in). LOW SPLIT. Program memory: FACTORY, BANK, the sixteen program buttons, MANUAL, COMPARE and WRITE, and the GLOBAL menu with SELECT and VALUE. Chord memory and the unison key priority. Glide mode and per-oscillator glide, pitch-bend range, transpose and alternative tunings. Pan and the stereo spread of the voices; MIDI and the rear sockets."
+      },
+      {
+        "title": "What the spec does not give",
+        "text": "The spec, from the TEO-5 User Guide, gives the LFOs’ range (0.022 to 500 Hz), the oscillators’ range and the detune, but no envelope times, cutoff range, effect parameter ranges or the full list of direct destinations. Here the envelope times run from 1 ms to 20 s, the cutoff from 20 Hz to 18 kHz, and how far an LFO or envelope moves its destination is the app’s estimate, the Take 5’s where the two share a control. The guide does not say where on FREQUENCY’s 63 steps the key’s own pitch is; here it is step 24. Nor does it say what the VCA does with Envelope 2’s AMOUNT left of the centre; here it stays shut."
+      },
+      {
+        "title": "The circuit is approximated",
+        "text": "X-MOD here bends Oscillator 1’s pitch exponentially, so deep settings go out of tune where the hardware’s through-zero FM stays in tune. Each oscillator keeps its own pulse width on the hardware, which PULSE WIDTH moves together; here the two share one. With Bandpass on, STATE steps here from low-pass to band-pass to high-pass rather than sweeping between them. VINTAGE here only lets each voice’s pitch drift, and the envelopes are the app’s, without the OB-8’s curves. OVERDRIVE drives each voice after its filter rather than the summed voices. The effects run on the app’s DeepMind effects engine, each on the nearest algorithm, with the three knobs mapped onto it; the ring modulator runs on the app’s own, with no pitch tracking."
+      }
+    ]
+  }
+}

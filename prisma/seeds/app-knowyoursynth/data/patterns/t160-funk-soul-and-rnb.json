@@ -6367,7 +6367,8 @@
         "super-gemini/sg-minneapolis-stab",
         "take-5/t5-1999-stabs",
         "ub-xa-d/minneapolis-stab",
-        "mantis/mantis-minneapolis-stab"
+        "mantis/mantis-minneapolis-stab",
+        "teo-5/teo-1999-stabs"
       ],
       "research": {
         "work": "Prince, “1999”, 1999, 1982",

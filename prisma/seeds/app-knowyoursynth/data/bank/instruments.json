@@ -799,6 +799,17 @@
       "source": "https://sequential.com/2021/08/take-5-compact-poly-synth/"
     },
     {
+      "id": "oberheim-teo-5",
+      "name": "Oberheim TEO-5",
+      "maker": "Oberheim",
+      "year": "2024",
+      "kind": "poly",
+      "people": ["tom-oberheim"],
+      "app": ["teo-5"],
+      "text": "Oberheim’s compact five-voice analogue polysynth, made with Sequential on the Take 5’s platform: two VCOs per voice with triangle, sawtooth and pulse together, a sub-oscillator, X-Mod and sync, a 12 dB SEM-style state-variable filter that sweeps from low-pass through notch to high-pass, two envelopes, a global and a per-voice LFO, overdrive, one of twelve effects plus plate reverb, an arpeggiator, a 64-step sequencer and 44 keys.",
+      "source": "https://oberheim.com/news/introducing-the-new-oberheim-teo-5-polyphonic-synthesizer/"
+    },
+    {
       "id": "udo-super-gemini",
       "name": "UDO Audio Super Gemini",
       "maker": "UDO Audio",
