@@ -6,12 +6,12 @@ sync would rediscover these edits as conflicts, or clobber them. The format is S
 `hub://process/sunrise-fork`. **An edit to a platform-owned file gets a row here in the same PR**,
 and each row names what deletes it.
 
-- **Base:** Sunrise `v0.18.0` (`68df9103e`). `lib/sunrise-version.ts` reads `0.18.0`. The fork was
+- **Base:** Sunrise `v0.19.0` (`d371c11cf`). `lib/sunrise-version.ts` reads `0.19.0`. The fork was
   cut from `main` at `0e685744` (`v0.13.0-29`). It took `v0.14.0` in t-16, `v0.15.0` in t-77,
-  `v0.16.0` in t-136, `v0.17.0` with `v0.17.1` in t-188, and `v0.18.0` in t-216. After a sync,
-  move the base to the commit merged.
+  `v0.16.0` in t-136, `v0.17.0` with `v0.17.1` in t-188, `v0.18.0` in t-216, and `v0.19.0` in
+  t-251. After a sync, move the base to the commit merged.
 - **Re-derive the list (modified and deleted files) with:**
-  `git diff --diff-filter=MD --name-only 68df9103e HEAD -- . ':!lib/app' ':!components/app' ':!.context/app' ':!prisma/schema/app*.prisma' ':!prototype'`
+  `git diff --diff-filter=MD --name-only d371c11cf HEAD -- . ':!lib/app' ':!components/app' ':!.context/app' ':!prisma/schema/app*.prisma' ':!prototype'`
   Every file it prints is a row below, or is under "Routine edits" or "Excluded".
 - **At a sync** (`CUSTOMIZATION.md` §9): read the rows before you merge, not after. For each row,
   check its **Delete when**. For a row citing `sunrise#N`, check the issue itself with
@@ -76,7 +76,7 @@ These aren't rows. A new file can't conflict until Sunrise adds a file at the sa
 add/add conflict, and the modified-files list never shows one. List the fork's new files outside
 the reserved namespaces with:
 
-`git diff --diff-filter=A --name-only 68df9103e HEAD -- . ':!lib/app' ':!components/app' ':!.context/app' ':!prisma/schema/app*.prisma'`
+`git diff --diff-filter=A --name-only d371c11cf HEAD -- . ':!lib/app' ':!components/app' ':!.context/app' ':!prisma/schema/app*.prisma'`
 
 The command's output is the list: re-run it before a sync rather than trusting this summary. Today
 it covers:
