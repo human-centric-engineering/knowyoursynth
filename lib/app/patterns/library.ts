@@ -484,6 +484,40 @@ export async function syncSoundPhrases(
   return rewritten;
 }
 
+/**
+ * The sounds (`<synthId>/<slug>`, by `catalogueKey.SOUND`) whose default is a pattern other than their own riff
+ * pattern: an admin's reorder, or a researched default the seed made (`library-defaults.ts`). Their riff plays that
+ * pattern, so the catalogue seed and an upload write a riff for them only when they create the row. Read from what
+ * the sound leads with now, not from any list, so a default undone or never made gives the riff back to the file.
+ */
+export async function riffFollowers(
+  db: LibraryDb,
+  where: Prisma.SynthSoundWhereInput = {}
+): Promise<Set<string>> {
+  const sounds = await db.synthSound.findMany({
+    where,
+    select: {
+      synthId: true,
+      slug: true,
+      patterns: {
+        orderBy: DEFAULT_FIRST,
+        select: {
+          patternId: true,
+          pattern: { select: { key: true, status: true, pattern: true } },
+        },
+      },
+    },
+  });
+  return new Set(
+    sounds
+      .filter((s) => {
+        const head = headOf(s.patterns);
+        return head !== null && head.pattern.key !== riffKey(s.synthId, s.slug);
+      })
+      .map((s) => `${s.synthId}/${s.slug}`)
+  );
+}
+
 /** A library pattern an admin write changed, before and after, for the caller to audit. */
 export interface PatternChange {
   id: string;

@@ -8,10 +8,7 @@ import {
   catalogueDataFiles,
   loadCatalogueData,
 } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
-import {
-  PATTERN_DEFAULTS_FILE,
-  loadPatternDefaults,
-} from '@/prisma/seeds/app-knowyoursynth/pattern-data';
+import { riffFollowers } from '@/lib/app/patterns/library';
 
 /**
  * The catalogue: synths, their sounds, lineage and notes, from `./data/` (plan §9). The rules it keeps (checked
@@ -35,9 +32,9 @@ const unit: SeedUnit = {
   hashInputs: [
     ...catalogueDataFiles().map((f) => relative(here, join(CATALOGUE_DATA_DIR, f))),
     './catalogue-data.ts',
-    // Which sounds' riffs follow a researched default, and so are written only on create.
-    relative(here, PATTERN_DEFAULTS_FILE),
     ...tsIn('lib/app/catalogue'),
+    // Which sounds' riffs follow another pattern, and so are written only on create (`riffFollowers`).
+    '../../../lib/app/patterns/library.ts',
     ...tsIn('lib/app/synths/defs'),
     // What a sound is checked against: the validator, the vocabulary it checks with, and its control lookup.
     '../../../lib/app/synths/validate.ts',
@@ -45,7 +42,8 @@ const unit: SeedUnit = {
     '../../../lib/app/synths/lib/patch.ts',
   ],
   async run({ prisma, logger }) {
-    const followsPattern = loadPatternDefaults().defaults.map((d) => d.sound);
+    // From what each sound leads with now, so a default undone or never made gives the riff back to the file.
+    const followsPattern = [...(await riffFollowers(prisma))];
     const report = await seedCatalogue(prisma, { ...loadCatalogueData(), followsPattern });
     logger.info('Catalogue seeded', { report });
   },

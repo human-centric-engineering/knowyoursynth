@@ -19,8 +19,9 @@
  * - **Idempotent.** A row that already holds what the file has is not written, so a re-upload writes nothing.
  * - **Never deletes.** A row the file does not have stays, so an empty or partial file cannot empty the synth.
  * - **Placement is set once.** A new sound goes after the synth's last; an existing sound keeps its place.
- * - **A riff plays its sound's default.** A sound whose default is a pattern other than its own riff keeps that
- *   pattern's notes as its riff, whatever the file gives it, as the edit page refuses the change (`riffLeadsDefault`).
+ * - **A riff plays its sound's default.** A sound whose default is a pattern other than its own riff
+ *   (`riffFollowers`) keeps that pattern's notes as its riff: the file's riff is written only on create, as the seed
+ *   does, and the edit page refuses the change (`riffLeadsDefault`).
  *
  * The write runs in one transaction holding the synth's row, so it is all or nothing and cannot interleave with a new
  * sound or a reorder on the same synth. Other edits do not take that lock, so an update writes only a row that is
@@ -41,11 +42,12 @@ import {
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { MAX_CONTENT_BYTES, SynthContentSchema, toSeedFiles } from '@/lib/app/catalogue/data';
 import { lockSynth, SoundSlugSchema } from '@/lib/app/catalogue/edit';
-import { syncRiffPatterns, syncSoundPhrases } from '@/lib/app/patterns/library';
+import { riffFollowers, syncRiffPatterns } from '@/lib/app/patterns/library';
 import {
   catalogueKey,
   planSynthContent,
   sameValue,
+  soundPlacement,
   type SeedCounts,
   type SynthContentRows,
 } from '@/lib/app/catalogue/seed';
@@ -183,14 +185,17 @@ async function bringIn<Row extends object>(
   create: (row: Row & { editedAt: Date }) => Promise<unknown>,
   /** Writes only while the row is still unedited, and returns how many rows it wrote. */
   update: (row: Row & { editedAt: Date }) => Promise<{ count: number }>,
-  placement: readonly string[] = []
+  /** Columns written on create only. A function picks them per row. */
+  placement: readonly string[] | ((row: Row) => readonly string[]) = []
 ): Promise<SeedCounts> {
   const c = counts();
   const now = new Date();
   for (const row of planned) {
     const current = stored.get(keyOf(row));
+    const createOnly: readonly string[] =
+      typeof placement === 'function' ? placement(row) : placement;
     const content = Object.fromEntries(
-      Object.entries(row).filter(([column]) => !placement.includes(column))
+      Object.entries(row).filter(([column]) => !createOnly.includes(column))
     ) as Row;
     if (!current) {
       await create({ ...row, editedAt: now });
@@ -237,6 +242,8 @@ async function writeUpload(id: string, rows: SynthContentRows): Promise<UploadOu
         throw new NotFoundError('Synth not found');
 
       const storedSounds = await tx.synthSound.findMany({ where: { synthId: id } });
+      // A sound whose default is another pattern plays that pattern's notes, so its riff is not the file's to change.
+      const followers = await riffFollowers(tx, { synthId: id });
       let next = storedSounds.reduce((max, s) => Math.max(max, s.order), -1) + 1;
       const sounds = await bringIn(
         rows.sounds,
@@ -248,7 +255,7 @@ async function writeUpload(id: string, rows: SynthContentRows): Promise<UploadOu
           }),
         ({ synthId, slug, ...data }) =>
           tx.synthSound.updateMany({ where: { synthId, slug, editedAt: null }, data }),
-        ['order']
+        soundPlacement(followers)
       );
 
       const lineage = await bringIn(
@@ -273,9 +280,6 @@ async function writeUpload(id: string, rows: SynthContentRows): Promise<UploadOu
 
       // Each new or changed sound's riff becomes, or updates, its library pattern, as the seed would make it.
       const { rewritten } = await syncRiffPatterns(tx, { synthId: id }, { markEdited: true });
-      // A sound whose default is another pattern plays that pattern's notes, whatever riff the file gave it: its riff
-      // is changed as that pattern, never by upload (`riffLeadsDefault`). A seeded researched default is one (t-254).
-      await syncSoundPhrases(tx, { synthId: id });
 
       return {
         sounds,

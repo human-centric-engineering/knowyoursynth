@@ -18,6 +18,7 @@ import {
 import {
   phraseOf,
   riffKey,
+  riffFollowers,
   riffProblem,
   syncRiffPatterns,
   type LibraryDb,
@@ -230,6 +231,53 @@ describe('syncResearchedDefaults', () => {
     expect(writes()).toBe(0);
   });
 
+  it('leaves alone a sound with a disabled pattern an admin put ahead of its riff, its default once enabled', async () => {
+    keyed(JCGE).status = 'disabled';
+    db.synthSoundPattern.rows.push({
+      soundId: soundRow(0).id,
+      patternId: keyed(JCGE).id,
+      order: -5,
+    });
+    const counts = await syncResearchedDefaults(lib(), [{ sound: ref(0), pattern: JUMP }]);
+    expect(counts).toMatchObject({ promoted: 0, edited: 1 });
+    expect(listOf(0)).toEqual([keyed(JCGE).id, riffOf(0).id, keyed(JUMP).id]);
+    expect(writes()).toBe(0);
+  });
+
+  it('brings the riff back to the riff pattern when a changed batch leaves a seeded default unplayable', async () => {
+    await syncResearchedDefaults(lib(), defaults());
+    const changed = testBatch();
+    const rests = changed.patterns[0].pattern;
+    rests.parts[0].steps.push({ on: true, notes: [] }, { on: true, notes: [] });
+    await syncResearchedPatterns(lib(), [changed], defaults());
+    expect(riffProblem(PatternSchema.parse(keyed(JUMP).pattern))).not.toBeNull();
+
+    const counts = await syncResearchedDefaults(lib(), defaults());
+
+    expect(counts.skipped).toEqual([
+      { sound: ref(0), reason: expect.stringContaining('cannot end in rests') },
+    ]);
+    expect(counts.rewritten).toBe(1);
+    expect(soundRow(0).phrase).toEqual(phraseOf(PatternSchema.parse(riffOf(0).pattern)));
+  });
+
+  it('keeps a disabled pattern an admin put ahead of a seeded default as theirs', async () => {
+    await syncResearchedDefaults(lib(), [{ sound: ref(0), pattern: JUMP }]);
+    keyed(JCGE).status = 'disabled';
+    db.synthSoundPattern.rows.push({
+      soundId: soundRow(0).id,
+      patternId: keyed(JCGE).id,
+      order: -5,
+    });
+    const before = structuredClone(keyed(JCGE).pattern);
+    const changed = testBatch();
+    changed.patterns[1].pattern.transpose = 3;
+
+    await syncResearchedPatterns(lib(), [changed], [{ sound: ref(0), pattern: JUMP }]);
+
+    expect(keyed(JCGE).pattern).toEqual(before);
+  });
+
   it('lets a changed batch rewrite a default the seed made, and the riff follows it', async () => {
     await syncResearchedDefaults(lib(), defaults());
     const changed = testBatch();
@@ -253,7 +301,10 @@ describe('the catalogue seed, for a sound whose riff follows a researched defaul
     await syncResearchedDefaults(lib(), defaults());
     const followed = soundRow(0).phrase;
     clearWrites();
-    const data = { ...sample(), followsPattern: [ref(0), ref(2)] };
+    // Read from what each sound leads with: the two promoted, not sound 1, which still leads with its riff.
+    const followsPattern = [...(await riffFollowers(lib()))].sort();
+    expect(followsPattern).toEqual([ref(0), ref(2)].sort());
+    const data = { ...sample(), followsPattern };
 
     const report = await seedCatalogue(prisma(), data);
     expect(report.sounds).toMatchObject({ updated: 0 });
@@ -264,6 +315,13 @@ describe('the catalogue seed, for a sound whose riff follows a researched defaul
     // Without it, the seed puts the file's riff back: the turn-taking it prevents.
     await seedCatalogue(prisma(), sample());
     expect(soundRow(0).phrase).not.toEqual(followed);
+  });
+
+  it('gives the riff back to the file once the sound leads with its own riff again', async () => {
+    await syncResearchedDefaults(lib(), defaults());
+    // An admin disables the promoted pattern: the sound plays its riff pattern, so the file decides its riff again.
+    keyed(JUMP).status = 'disabled';
+    expect([...(await riffFollowers(lib()))]).toEqual([ref(2)]);
   });
 
   it('still writes the file’s riff when it creates the row, which the sound’s own riff pattern is made from', async () => {

@@ -353,11 +353,12 @@ export async function syncResearchedPatterns(
         ).flatMap((s) => {
           const head = headOf(s.patterns);
           const seededKey = seededFor.get(`${s.synthId}/${s.slug}`);
-          if (head && !s.editedAt && seededKey && seededKey === keyOf.get(head.patternId))
-            return [];
+          // Only the head itself: a disabled pattern an admin put ahead of a seeded default is still theirs.
+          const seededHead =
+            !!head && !s.editedAt && !!seededKey && seededKey === keyOf.get(head.patternId);
           const ahead = head ? s.patterns.slice(0, s.patterns.indexOf(head)) : s.patterns;
           return [
-            ...(head ? [head.patternId] : []),
+            ...(head && !seededHead ? [head.patternId] : []),
             // Only one that could be the default once enabled: one that cannot be a riff never is.
             ...ahead
               .filter(

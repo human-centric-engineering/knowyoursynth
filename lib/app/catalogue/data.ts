@@ -116,8 +116,9 @@ export interface CatalogueSeedData {
   notes: NotesFile[];
   shared: SharedNotesFile;
   /**
-   * Sounds (`<synthId>/<slug>`) whose default is a researched pattern the seed makes it (`library-defaults.ts`). Their
-   * riff follows that pattern, so the seed writes it only when it creates the row, and its record leaves it out.
+   * Sounds (`<synthId>/<slug>`) whose default is a pattern other than their own riff pattern, as stored now
+   * (`riffFollowers`). Their riff follows that pattern, so the seed writes it only when it creates the row, and its
+   * record leaves it out.
    */
   followsPattern?: string[];
 }

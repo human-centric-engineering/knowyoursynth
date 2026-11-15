@@ -14,9 +14,11 @@
  *   and never after. A row added to a list that already has rows goes after the last of them, whatever its place in
  *   the file. An admin reorders and hides without setting `editedAt` (`lib/app/catalogue/edit.ts`), so the seed
  *   keeps updating the row's content while leaving its place alone.
- * - **A riff that follows a researched default is written once** (`followsPattern`, t-254). The pattern library
- *   rewrites it to that pattern's first loop, so the seed writes the file's riff only when it creates the row, which
- *   is where the sound's own riff pattern is made from, and its record leaves the riff out.
+ * - **A riff that follows another pattern is written once** (`followsPattern`, t-254): one whose sound's default is not
+ *   its own riff pattern, read from the tables (`riffFollowers`). The pattern library rewrites such a riff to that
+ *   pattern's first loop, so the seed writes the file's riff only when it creates the row, which is where the sound's
+ *   own riff pattern is made from, and its record leaves the riff out. A change to that riff in the file reaches
+ *   nothing until the sound leads with its own riff again: it is changed as the pattern, as on the edit page.
  * - **Never deletes.** A row the data no longer has stays, so an empty or partial source cannot empty a table. Retiring
  *   content is an admin's act.
  *
@@ -425,10 +427,10 @@ export const catalogueKey = {
 const PLACEMENT = { SYNTH: ['listed', 'order'], SOUND: ['order'] } as const;
 
 /**
- * A sound's create-only columns: its place, and its riff when that follows a researched default (`followsPattern`).
+ * A sound's create-only columns: its place, and its riff when that follows another pattern (`followsPattern`).
  * The pattern library rewrites such a riff, so writing the file's back would make the two take turns at it.
  */
-const soundPlacement =
+export const soundPlacement =
   (followsPattern: ReadonlySet<string>) =>
   (row: { synthId: string; slug: string }): readonly ('order' | 'phrase')[] =>
     followsPattern.has(catalogueKey.SOUND(row)) ? ['order', 'phrase'] : PLACEMENT.SOUND;

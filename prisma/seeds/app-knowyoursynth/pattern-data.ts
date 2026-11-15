@@ -2,8 +2,7 @@
  * Read the research batches from `./data/patterns/` (`f-pattern-library` t-127 on): the researched patterns, the
  * sounds each is for, and the record kept with each (`.context/app/pattern-library.md`, Research method).
  *
- * Read by the seed units `005-library-patterns.ts` and, for which sounds' riffs follow a researched default,
- * `001-catalogue.ts`, as the catalogue's loader is: the live app reads the tables.
+ * Read by the seed unit `005-library-patterns.ts` only, as the catalogue's loader is: the live app reads the tables.
  * Not a seed unit itself: its name has no `NNN-` prefix, so the runner does not pick it up.
  */
 import { readdirSync, readFileSync } from 'fs';

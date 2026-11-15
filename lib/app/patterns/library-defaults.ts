@@ -13,14 +13,17 @@
  *
  * - **In front, the riff kept.** The pattern goes ahead of the sound's own riff pattern, which stays on the list.
  * - **The riff follows.** The sound's riff is rewritten to the pattern's first loop, as an admin's reorder rewrites it
- *   (`syncSoundPhrases`), so the panel and the sequencer play the same notes. The catalogue seed writes such a sound's
- *   riff only when it creates the row (`seedCatalogue`'s `followsPattern`), so the two never take turns at it.
- * - **An admin's sound is never moved**: one an admin edited (a reorder that changes the default marks it), or whose
- *   default is a pattern other than its own riff.
+ *   (`syncSoundPhrases`), so the panel and the sequencer play the same notes. The catalogue seed writes the riff of a
+ *   sound that leads with another pattern only when it creates the row (`riffFollowers`, `seedCatalogue`'s
+ *   `followsPattern`), so the two never take turns at it.
+ * - **An admin's sound is never moved**: one an admin edited (a reorder that changes the default marks it), whose
+ *   default is a pattern other than its own riff, or with any other pattern ahead of its default (a disabled pick of
+ *   an admin's, which becomes the default once enabled).
  * - **A re-run writes nothing**, and **an empty list writes nothing**.
  * - **Nothing is moved back.** Taking an entry out of the file leaves the sound as it is; demoting is an admin's act.
  * - **A sound, pattern or place that is not there is skipped and reported**, as is a pattern that cannot be a default
- *   (disabled, or `riffProblem`).
+ *   (`headOf`: disabled, or `riffProblem`). A sound skipped so still has its riff brought to what it leads with, so a
+ *   batch change that leaves a seeded default unplayable gives it its riff pattern's notes back.
  */
 import { z } from 'zod';
 import { PatternSchema } from '@/lib/app/sequencer/pattern';
@@ -142,24 +145,35 @@ export async function syncResearchedDefaults(
       continue;
     }
     const head = headOf(sound.patterns);
+    const own = riffKey(sound.synthId, sound.slug);
+    // Ahead of the default, only the sound's own riff or this pattern is the seed's: anything else an admin put there,
+    // a disabled pick that becomes the default once enabled.
+    const ahead = head ? sound.patterns.slice(0, sound.patterns.indexOf(head)) : sound.patterns;
     if (head?.patternId === place.patternId) {
       counts.unchanged++;
     } else if (
       sound.editedAt ||
-      (head && head.pattern.key !== riffKey(sound.synthId, sound.slug))
+      (head && head.pattern.key !== own) ||
+      ahead.some((p) => p.pattern.key !== own && p.patternId !== place.patternId)
     ) {
       counts.edited++;
       continue;
     } else {
-      const parsed = PatternSchema.safeParse(place.pattern.pattern);
-      const problem =
-        place.pattern.status !== 'enabled'
-          ? 'It is disabled'
-          : !parsed.success
-            ? 'It does not parse'
-            : riffProblem(parsed.data);
-      if (problem) {
+      // `headOf` decides, as every read of the default does; the rest only words why not.
+      if (!headOf([place])) {
+        const parsed = PatternSchema.safeParse(place.pattern.pattern);
+        const problem =
+          place.pattern.status !== 'enabled'
+            ? 'It is disabled'
+            : !parsed.success
+              ? 'It does not parse'
+              : (riffProblem(parsed.data) ?? 'It cannot be a riff');
         skip(`${d.pattern} cannot be its default: ${problem}`);
+        // The sound plays what leads it now, its riff pattern: a riff left on this pattern's old notes follows that.
+        if (head) {
+          followed.push(sound.id);
+          heads.add(head.patternId);
+        }
         continue;
       }
       const first = Math.min(...sound.patterns.map((p) => p.order));

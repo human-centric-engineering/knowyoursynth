@@ -1310,8 +1310,14 @@ in `tests/unit/lib/app/patterns/library-defaults.test.ts`:
 - **The riff follows** (`syncSoundPhrases`), without marking the sound edited: it stays the seed's to write.
 - **The catalogue seed writes such a riff only on create** (`followsPattern`), which is what the sound's own riff
   pattern is made from, and its record leaves the riff out, so the catalogue's reconcile page does not call the
-  row changed. Otherwise the two seeds would take turns at the riff.
-- **An admin's sound is never moved**: one an admin edited, or whose default is a pattern other than its own riff.
+  row changed. Otherwise the two seeds would take turns at the riff. Which sounds those are is read from the tables
+  (`riffFollowers`: any sound whose default is not its own riff pattern), not from this file, so a default never
+  made or later undone gives the riff back to the file. An upload follows the same rule. While a sound leads with
+  another pattern, a change to its riff in the sounds file reaches nothing: the riff is changed as that pattern.
+- **An admin's sound is never moved**: one an admin edited, whose default is a pattern other than its own riff, or
+  with any other pattern ahead of its default (a disabled pick that becomes the default once enabled).
+- **A default the batch makes unplayable gives the riff back.** The sound is skipped, and its riff follows the riff
+  pattern it now leads with.
 - **A re-run writes nothing, and nor does an empty list.**
 - **Nothing is moved back.** An entry taken out of the file leaves the sound as it is; demoting is an admin's act.
 - **A sound, pattern or place that is not there, or a pattern that cannot be a default, is skipped and reported.**
