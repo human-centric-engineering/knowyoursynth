@@ -1,17 +1,22 @@
 import { readdirSync } from 'fs';
 import { dirname, join, relative } from 'path';
 import { fileURLToPath } from 'url';
-import { syncRiffPatterns } from '@/lib/app/patterns/library';
+import { riffFollowers, syncRiffPatterns } from '@/lib/app/patterns/library';
+import { fileRiffs, planCatalogue, syncFollowedRiffRecords } from '@/lib/app/catalogue/seed';
 import type { SeedUnit } from '@/prisma/runner';
 import {
   CATALOGUE_DATA_DIR,
   catalogueDataFiles,
+  loadCatalogueData,
 } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import { BANK_DATA_DIR, bankDataFiles } from '@/prisma/seeds/app-knowyoursynth/bank-data';
 import { syncResearchedPatterns } from '@/lib/app/patterns/library-researched';
+import { syncResearchedDefaults } from '@/lib/app/patterns/library-defaults';
 import {
   PATTERN_DATA_DIR,
+  PATTERN_DEFAULTS_FILE,
   loadPatternData,
+  loadPatternDefaults,
   patternDataFiles,
 } from '@/prisma/seeds/app-knowyoursynth/pattern-data';
 
@@ -23,7 +28,11 @@ import {
  *
  * It reads the stored sounds rather than the data files, so a sound an admin edited gives its pattern the riff the
  * admin left, not the file's. Then the research batches under `data/patterns/` (t-127 on), each pattern behind what its
- * sounds already list (`syncResearchedPatterns`, `lib/app/patterns/library-researched.ts`).
+ * sounds already list (`syncResearchedPatterns`, `lib/app/patterns/library-researched.ts`). Last, the researched
+ * defaults in `data/pattern-defaults.json` (t-254): each listed pattern moved in front of its sound's riff, and the
+ * riff rewritten to it (`syncResearchedDefaults`, `lib/app/patterns/library-defaults.ts`). Then the catalogue's seed
+ * record leaves out the riff of every sound whose riff follows another pattern, and has the file's back for every sound
+ * that no longer does (`syncFollowedRiffRecords`), since the catalogue unit wrote that record before these passes ran.
  *
  * The runner re-runs a unit only when its hash changes, so the hash takes in what decides those rows: the catalogue,
  * databank and pattern data, and the library's code with the sequencer it imports riffs through.
@@ -42,6 +51,7 @@ const unit: SeedUnit = {
     ...catalogueDataFiles().map((f) => relative(here, join(CATALOGUE_DATA_DIR, f))),
     ...bankDataFiles().map((f) => relative(here, join(BANK_DATA_DIR, f))),
     ...patternDataFiles().map((f) => relative(here, join(PATTERN_DATA_DIR, f))),
+    relative(here, PATTERN_DEFAULTS_FILE),
     ...tsIn('lib/app/patterns', 'library'),
     ...tsIn('lib/app/sequencer'),
     // sameValue, which decides whether a row has changed, and what a riff is checked against.
@@ -49,12 +59,22 @@ const unit: SeedUnit = {
     '../../../lib/app/synths/validate.ts',
   ],
   async run({ prisma, logger }) {
+    const { defaults } = loadPatternDefaults();
     const report = await syncRiffPatterns(prisma);
     const researched = await syncResearchedPatterns(prisma, loadPatternData());
-    logger.info('Library patterns seeded', { report, researched });
+    const defaulted = await syncResearchedDefaults(prisma, defaults);
+    // The catalogue unit ran first, and wrote its record before these passes changed which riffs follow a pattern.
+    const records = await syncFollowedRiffRecords(
+      prisma,
+      await riffFollowers(prisma),
+      fileRiffs(planCatalogue(loadCatalogueData()))
+    );
+    logger.info('Library patterns seeded', { report, researched, defaulted, records });
     // A batch names only what its test found in the seed data, so a skip means a row was removed or not seeded yet.
     if (researched.skipped.length)
       logger.warn('Researched patterns skipped', { skipped: researched.skipped });
+    if (defaulted.skipped.length)
+      logger.warn('Researched defaults skipped', { skipped: defaulted.skipped });
   },
 };
 

@@ -14,6 +14,11 @@
  *   and never after. A row added to a list that already has rows goes after the last of them, whatever its place in
  *   the file. An admin reorders and hides without setting `editedAt` (`lib/app/catalogue/edit.ts`), so the seed
  *   keeps updating the row's content while leaving its place alone.
+ * - **A riff that follows another pattern is written once** (`followsPattern`, t-254): one whose sound's default is not
+ *   its own riff pattern, read from the tables (`riffFollowers`). The pattern library rewrites such a riff to that
+ *   pattern's first loop, so the seed writes the file's riff only when it creates the row, which is where the sound's
+ *   own riff pattern is made from, and its record leaves the riff out. A change to that riff in the file reaches
+ *   nothing until the sound leads with its own riff again: it is changed as the pattern, as on the edit page.
  * - **Never deletes.** A row the data no longer has stays, so an empty or partial source cannot empty a table. Retiring
  *   content is an admin's act.
  *
@@ -372,14 +377,11 @@ async function reconcile<Row extends object>(
   existing: Map<string, Record<string, unknown> & { editedAt: Date | null }>,
   create: (row: Row) => Promise<unknown>,
   update: (row: Row) => Promise<unknown>,
-  /** Columns written on create only: neither compared nor updated after. */
-  placement: readonly (keyof Row)[] = []
+  /** Columns written on create only: neither compared nor updated after. A function picks them per row. */
+  placement: Placement<Row> = []
 ): Promise<SeedCounts> {
   const c = counts();
-  const content = (row: Row): Row =>
-    Object.fromEntries(
-      Object.entries(row).filter(([column]) => !placement.includes(column as keyof Row))
-    ) as Row;
+  const content = (row: Row): Row => contentOf(row, placement);
   for (const row of planned) {
     const current = existing.get(keyOf(row));
     if (!current) {
@@ -416,8 +418,28 @@ export const catalogueKey = {
   NOTE: (r: { key: string }) => r.key,
 } satisfies Record<CatalogueTable, unknown>;
 
+/** A row's create-only columns, a list or picked per row. */
+export type Placement<Row> = readonly (keyof Row)[] | ((row: Row) => readonly (keyof Row)[]);
+
+/** A row without its create-only columns: what is compared with, and written over, a row that exists. */
+export function contentOf<Row extends object>(row: Row, placement: Placement<Row>): Row {
+  const createOnly = typeof placement === 'function' ? placement(row) : placement;
+  return Object.fromEntries(
+    Object.entries(row).filter(([column]) => !createOnly.includes(column as keyof Row))
+  ) as Row;
+}
+
 /** Columns the seed writes only when it creates a row. They are placement, not content, so no record holds them. */
 const PLACEMENT = { SYNTH: ['listed', 'order'], SOUND: ['order'] } as const;
+
+/**
+ * A sound's create-only columns: its place, and its riff when that follows another pattern (`followsPattern`).
+ * The pattern library rewrites such a riff, so writing the file's back would make the two take turns at it.
+ */
+export const soundPlacement =
+  (followsPattern: ReadonlySet<string>) =>
+  (row: { synthId: string; slug: string }): readonly ('order' | 'phrase')[] =>
+    followsPattern.has(catalogueKey.SOUND(row)) ? ['order', 'phrase'] : PLACEMENT.SOUND;
 
 const withoutPlacement = (
   row: object,
@@ -434,7 +456,11 @@ export interface SeedRecord {
 }
 
 /** The record of every planned row: its content columns, placement left out. */
-export function seedRecords(rows: CatalogueRows): SeedRecord[] {
+export function seedRecords(
+  rows: CatalogueRows,
+  followsPattern: ReadonlySet<string> = new Set()
+): SeedRecord[] {
+  const placeSound = soundPlacement(followsPattern);
   return [
     ...rows.synths.map((r) => ({
       table: 'SYNTH' as const,
@@ -446,7 +472,7 @@ export function seedRecords(rows: CatalogueRows): SeedRecord[] {
       table: 'SOUND' as const,
       key: catalogueKey.SOUND(r),
       synthId: r.synthId,
-      values: withoutPlacement(r, PLACEMENT.SOUND),
+      values: withoutPlacement(r, placeSound(r)),
     })),
     ...rows.lineage.map((r) => ({
       table: 'LINEAGE' as const,
@@ -505,6 +531,46 @@ async function rewriteSeedRecord(
   return c;
 }
 
+/** Each planned sound's riff (`planCatalogue`), by `catalogueKey.SOUND`, as the seed's record holds it. */
+export function fileRiffs(rows: Pick<CatalogueRows, 'sounds'>): Map<string, unknown> {
+  return new Map(rows.sounds.map((r) => [catalogueKey.SOUND(r), r.phrase]));
+}
+
+/**
+ * Bring the riffs in the seed's record in line with which sounds follow another pattern now (`riffFollowers`): left
+ * out for each that does, as the catalogue seed leaves it out, and the file's riff back for each that no longer does.
+ * The pattern library's seed unit runs this last, since it changes which sounds follow after the catalogue unit wrote
+ * the record; otherwise the reconcile page would show a change the seed never brings in. Returns how many records it
+ * rewrote.
+ */
+export async function syncFollowedRiffRecords(
+  prisma: TenancyClient,
+  followers: ReadonlySet<string>,
+  riffs: ReadonlyMap<string, unknown>
+): Promise<number> {
+  let rewritten = 0;
+  for (const r of await prisma.catalogueSeedRecord.findMany({ where: { table: 'SOUND' } })) {
+    const values = r.values;
+    if (typeof values !== 'object' || values === null || Array.isArray(values)) continue;
+    const { phrase, ...rest } = values;
+    const riff = riffs.get(r.key);
+    const next = followers.has(r.key)
+      ? phrase === undefined
+        ? null
+        : rest
+      : phrase === undefined && riff !== undefined
+        ? { ...rest, phrase: riff }
+        : null;
+    if (!next) continue;
+    await prisma.catalogueSeedRecord.update({
+      where: { table_key: { table: r.table, key: r.key } },
+      data: { values: toJson(next) },
+    });
+    rewritten++;
+  }
+  return rewritten;
+}
+
 /** Check the data, then write it. Throws {@link CatalogueDataError}, having written nothing, when the data is wrong. */
 export async function seedCatalogue(
   prisma: TenancyClient,
@@ -513,6 +579,7 @@ export async function seedCatalogue(
 ): Promise<SeedReport> {
   const rows = planCatalogue(data, getDef);
   const synthIds = rows.synths.map((s) => s.id);
+  const followsPattern = new Set(data.followsPattern);
 
   // Synths first: every other row points at one.
   const placeSynth = placer((await prisma.synth.aggregate({ _max: { order: true } }))._max.order);
@@ -542,7 +609,7 @@ export async function seedCatalogue(
       }),
     ({ synthId, slug, ...data }) =>
       prisma.synthSound.update({ where: { synthId_slug: { synthId, slug } }, data }),
-    PLACEMENT.SOUND
+    soundPlacement(followsPattern)
   );
 
   const lineage = await reconcile(
@@ -568,7 +635,7 @@ export async function seedCatalogue(
   );
 
   // Last, so a run that fails part way leaves the record of the run before, which the next run completes.
-  const records = await rewriteSeedRecord(prisma, seedRecords(rows));
+  const records = await rewriteSeedRecord(prisma, seedRecords(rows, followsPattern));
 
   return { synths, sounds, lineage, notes, records };
 }

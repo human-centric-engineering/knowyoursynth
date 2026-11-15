@@ -22,7 +22,8 @@ import {
   type CatalogueTables,
 } from '@/tests/helpers/catalogue-db';
 import { seedCatalogue } from '@/lib/app/catalogue/seed';
-import { riffKey, syncRiffPatterns, type LibraryDb } from '@/lib/app/patterns/library';
+import { phraseOf, riffKey, syncRiffPatterns, type LibraryDb } from '@/lib/app/patterns/library';
+import { PatternSchema } from '@/lib/app/sequencer/pattern';
 import {
   checkSynthContent,
   readJsonBody,
@@ -241,6 +242,66 @@ describe('writeSynthContent', () => {
     expect(row().blurb).toBe('A new blurb');
     expect(row().editedAt).toBeInstanceOf(Date);
     expect(row().order).toBe(order);
+  });
+
+  it('keeps a sound whose default is another pattern playing that pattern, whatever riff the file gives it (t-254)', async () => {
+    const file = content(3);
+    const [first, second] = file.sounds.map((s) =>
+      db.synthSound.rows.find((r) => r.slug === s.id)!
+    );
+    // The second sound's default is the first sound's riff pattern, its riff already following it, as a seeded
+    // researched default leaves it.
+    const other = db.libraryPattern.rows.find(
+      (p) => p.key === riffKey('model-d', String(first.slug))
+    )!;
+    db.synthSoundPattern.rows.push({ soundId: second.id, patternId: other.id, order: -1 });
+    const followed = phraseOf(PatternSchema.parse(other.pattern));
+    second.phrase = followed;
+    file.sounds[1].phrase = { ...file.sounds[1].phrase, bpm: file.sounds[1].phrase.bpm + 7 };
+
+    const report = await upload(file);
+
+    // The riff is not the file's to change, so the row holds what the file has otherwise and is not written, and the
+    // outcome names it rather than dropping the file's riff silently.
+    expect(report.sounds).toEqual({ created: 0, updated: 0, unchanged: 3, edited: 0 });
+    expect(report.riffsKept).toEqual([`model-d/${String(second.slug)}`]);
+    expect(second.phrase).toEqual(followed);
+    expect(second.editedAt).toBeNull();
+  });
+
+  it('writes a new riff for a sound that leads with its own riff pattern, even one an admin edited', async () => {
+    const file = content(3);
+    const sound = db.synthSound.rows.find((r) => r.slug === file.sounds[0].id)!;
+    const own = db.libraryPattern.rows.find(
+      (p) => p.key === riffKey('model-d', String(sound.slug))
+    )!;
+    own.editedAt = new Date();
+    const riff = { ...file.sounds[0].phrase, bpm: file.sounds[0].phrase.bpm + 7 };
+    file.sounds[0].phrase = riff;
+
+    const report = await upload(file);
+
+    expect(report.sounds.updated).toBe(1);
+    expect(sound.phrase).toEqual(riff);
+  });
+
+  it('leaves the riff of a sound whose own riff pattern an admin gave other notes, as the edit page does', async () => {
+    const file = content(3);
+    const sound = db.synthSound.rows.find((r) => r.slug === file.sounds[0].id)!;
+    const own = db.libraryPattern.rows.find(
+      (p) => p.key === riffKey('model-d', String(sound.slug))
+    )!;
+    const notes = PatternSchema.parse(own.pattern);
+    notes.transpose = 5;
+    Object.assign(own, { editedAt: new Date(), pattern: notes });
+    const kept = structuredClone(sound.phrase);
+    file.sounds[0].phrase = { ...file.sounds[0].phrase, bpm: file.sounds[0].phrase.bpm + 7 };
+
+    const report = await upload(file);
+
+    expect(report.sounds.updated).toBe(0);
+    expect(report.riffsKept).toEqual([`model-d/${String(sound.slug)}`]);
+    expect(sound.phrase).toEqual(kept);
   });
 
   it('skips a row an admin edited, and leaves it as the admin left it', async () => {

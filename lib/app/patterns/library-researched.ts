@@ -4,8 +4,9 @@
  * method.
  *
  * A batch is a data file under the seed's `data/patterns/`. Each pattern names the sounds it is for, and the seed puts
- * it on each one **behind** what the sound already has, never in front: a researched pattern becomes a sound's default
- * only once the owner has listened to it, by an admin's reorder (owner ruling, 2026-11-01). The rules the seed keeps,
+ * it on each one **behind** what the sound already has, never in front. A researched pattern becomes a sound's default
+ * by an admin's reorder, or when `data/pattern-defaults.json` names it for the sound (`library-defaults.ts`, owner
+ * ruling 2026-11-15, which replaced 2026-11-01's wait for the owner's listen). The rules the seed keeps,
  * each tested:
  *
  * - **A re-run writes nothing**, and **an empty batch writes nothing**.
@@ -13,7 +14,9 @@
  *   it was researched, with its research record (the owner's listen included) for the admin page. Its rights risk
  *   follows its fidelity until an admin sets one, and its status is never the seed's to write.
  * - **An admin's pattern is never written**: one an admin has edited, or put at the head of a sound's list (its notes
- *   are that sound's riff now, so the seed changing them would split the pair).
+ *   are that sound's riff now, so the seed changing them would split the pair). A researched default on a sound no
+ *   admin has edited is the seed's (`library-defaults.ts`), listed in the defaults file or no longer: the batch
+ *   still writes it, and the sound's riff follows.
  * - **Nothing is deleted or moved.** A pattern taken out of a batch file stays in the library and on its sounds.
  * - **A pattern whose sound or link is not there is skipped and reported**, not written, so the seed is safe on an
  *   empty catalogue. The batch's test checks every name against the seed data, so the seed only meets one an admin
@@ -32,6 +35,7 @@ import {
   PatternSourceSchema,
   PatternSourcesSchema,
   phraseOf,
+  syncSoundPhrases,
   toJson,
   type LibraryDb,
 } from '@/lib/app/patterns/library';
@@ -332,7 +336,9 @@ export async function syncResearchedPatterns(
     )
   );
   // Any sound an admin made one of them the default of, the batch's own sounds or not: its default now, or a disabled
-  // pattern ahead of the default, which becomes it once enabled.
+  // pattern ahead of the default, which becomes it once enabled. A researched default on a sound no admin has edited
+  // is the seed's (`library-defaults.ts`): an admin's reorder that changes the default marks the sound.
+  const researched = new Set([...stored.values()].map((p) => p.id));
   const heads = new Set(
     stored.size
       ? (
@@ -340,13 +346,15 @@ export async function syncResearchedPatterns(
             where: {
               patterns: { some: { patternId: { in: [...stored.values()].map((p) => p.id) } } },
             },
-            select: { patterns: PLACES },
+            select: { editedAt: true, patterns: PLACES },
           })
         ).flatMap((s) => {
           const head = headOf(s.patterns);
+          // Only the head itself: a disabled pattern an admin put ahead of a seeded default is still theirs.
+          const seededHead = !!head && !s.editedAt && researched.has(head.patternId);
           const ahead = head ? s.patterns.slice(0, s.patterns.indexOf(head)) : s.patterns;
           return [
-            ...(head ? [head.patternId] : []),
+            ...(head && !seededHead ? [head.patternId] : []),
             // Only one that could be the default once enabled: one that cannot be a riff never is.
             ...ahead
               .filter(
@@ -360,6 +368,7 @@ export async function syncResearchedPatterns(
       : []
   );
 
+  const changed: string[] = [];
   for (const p of patterns) {
     const lost = p.sounds.filter((s) => !sounds.has(s));
     if (lost.length) {
@@ -395,6 +404,7 @@ export async function syncResearchedPatterns(
         counts.unchanged++;
       else {
         await db.libraryPattern.update({ where: { id }, data: planned });
+        changed.push(id);
         counts.updated++;
       }
     }
@@ -408,5 +418,12 @@ export async function syncResearchedPatterns(
       counts.placed++;
     }
   }
+  // A sound the seed gave one of them as its default plays what it leads with now: the new notes, or its riff
+  // pattern's when the change left the pattern unable to be a default. The riff follows, still the seed's to write.
+  if (changed.length)
+    await syncSoundPhrases(db, {
+      editedAt: null,
+      patterns: { some: { patternId: { in: changed } } },
+    });
   return counts;
 }

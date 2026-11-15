@@ -19,6 +19,9 @@
  * - **Idempotent.** A row that already holds what the file has is not written, so a re-upload writes nothing.
  * - **Never deletes.** A row the file does not have stays, so an empty or partial file cannot empty the synth.
  * - **Placement is set once.** A new sound goes after the synth's last; an existing sound keeps its place.
+ * - **A riff plays its sound's default.** A sound whose riff does not lead its default (`riffFollowers`, the edit
+ *   page's `riffLeadsDefault` rule) keeps the riff it has: the file's riff is written only on create, as the seed
+ *   does. Each such sound the file gave a different riff is named in the outcome (`riffsKept`), not dropped silently.
  *
  * The write runs in one transaction holding the synth's row, so it is all or nothing and cannot interleave with a new
  * sound or a reorder on the same synth. Other edits do not take that lock, so an update writes only a row that is
@@ -39,11 +42,14 @@ import {
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { MAX_CONTENT_BYTES, SynthContentSchema, toSeedFiles } from '@/lib/app/catalogue/data';
 import { lockSynth, SoundSlugSchema } from '@/lib/app/catalogue/edit';
-import { syncRiffPatterns } from '@/lib/app/patterns/library';
+import { riffFollowers, syncRiffPatterns } from '@/lib/app/patterns/library';
 import {
   catalogueKey,
+  contentOf,
   planSynthContent,
   sameValue,
+  soundPlacement,
+  type Placement,
   type SeedCounts,
   type SynthContentRows,
 } from '@/lib/app/catalogue/seed';
@@ -61,7 +67,11 @@ export type UploadReport = Record<'sounds' | 'lineage' | 'notes', SeedCounts>;
  * What a write did: the report, and other sounds whose riffs followed a riff pattern it changed, because an admin had
  * made it their default. The route audits both.
  */
-export type UploadOutcome = UploadReport & { riffsFollowed: string[] };
+export type UploadOutcome = UploadReport & {
+  riffsFollowed: string[];
+  /** Sounds whose riff the file changed and the upload kept, as their riff follows another pattern (`riffFollowers`). */
+  riffsKept: string[];
+};
 
 /**
  * Read the request body as UTF-8 text, refusing it once it passes `max` bytes, whatever the `Content-Length` header
@@ -181,15 +191,14 @@ async function bringIn<Row extends object>(
   create: (row: Row & { editedAt: Date }) => Promise<unknown>,
   /** Writes only while the row is still unedited, and returns how many rows it wrote. */
   update: (row: Row & { editedAt: Date }) => Promise<{ count: number }>,
-  placement: readonly string[] = []
+  /** Columns written on create only. A function picks them per row. */
+  placement: Placement<Row> = []
 ): Promise<SeedCounts> {
   const c = counts();
   const now = new Date();
   for (const row of planned) {
     const current = stored.get(keyOf(row));
-    const content = Object.fromEntries(
-      Object.entries(row).filter(([column]) => !placement.includes(column))
-    ) as Row;
+    const content = contentOf(row, placement);
     if (!current) {
       await create({ ...row, editedAt: now });
       c.created++;
@@ -235,18 +244,28 @@ async function writeUpload(id: string, rows: SynthContentRows): Promise<UploadOu
         throw new NotFoundError('Synth not found');
 
       const storedSounds = await tx.synthSound.findMany({ where: { synthId: id } });
+      // A sound whose default is another pattern plays that pattern's notes, so its riff is not the file's to change.
+      const followers = await riffFollowers(tx, { synthId: id });
+      const storedByKey = byKey(storedSounds, catalogueKey.SOUND);
+      const riffsKept = rows.sounds
+        .map((r) => ({ key: catalogueKey.SOUND(r), r }))
+        .filter(({ key, r }) => {
+          const current = storedByKey.get(key);
+          return followers.has(key) && current && !sameValue(current.phrase, r.phrase);
+        })
+        .map(({ key }) => key);
       let next = storedSounds.reduce((max, s) => Math.max(max, s.order), -1) + 1;
       const sounds = await bringIn(
         rows.sounds,
         catalogueKey.SOUND,
-        byKey(storedSounds, catalogueKey.SOUND),
+        storedByKey,
         (data) =>
           tx.synthSound.create({
             data: { ...data, order: storedSounds.length ? next++ : data.order },
           }),
         ({ synthId, slug, ...data }) =>
           tx.synthSound.updateMany({ where: { synthId, slug, editedAt: null }, data }),
-        ['order']
+        soundPlacement(followers)
       );
 
       const lineage = await bringIn(
@@ -277,6 +296,7 @@ async function writeUpload(id: string, rows: SynthContentRows): Promise<UploadOu
         lineage,
         notes,
         riffsFollowed: rewritten.map((r) => `${r.synthId}/${r.slug}`),
+        riffsKept,
       };
     },
     // A whole library is a few hundred row reads and writes: more than the default five seconds allows for.

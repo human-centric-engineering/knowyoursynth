@@ -9,6 +9,7 @@ import { readdirSync, readFileSync } from 'fs';
 import { dirname, join, relative } from 'path';
 import { fileURLToPath } from 'url';
 import { ResearchBatchSchema, type ResearchBatch } from '@/lib/app/patterns/library-researched';
+import { PatternDefaultsSchema, type PatternDefaults } from '@/lib/app/patterns/library-defaults';
 
 /** The data folder. */
 export const PATTERN_DATA_DIR = join(dirname(fileURLToPath(import.meta.url)), 'data', 'patterns');
@@ -43,4 +44,22 @@ export function loadPatternData(dir = PATTERN_DATA_DIR): ResearchBatch[] {
     }
     return parsed.data;
   });
+}
+
+/** The researched defaults (t-254): beside the batches, not among them, since the batch loader reads every file there. */
+export const PATTERN_DEFAULTS_FILE = join(dirname(PATTERN_DATA_DIR), 'pattern-defaults.json');
+
+/** Read and shape-check the researched defaults. Whether each sound and pattern resolves is the seed's check. */
+export function loadPatternDefaults(file = PATTERN_DEFAULTS_FILE): PatternDefaults {
+  let json: unknown;
+  try {
+    json = JSON.parse(readFileSync(file, 'utf8'));
+  } catch (error) {
+    throw new Error(
+      `pattern-defaults.json: ${error instanceof Error ? error.message : String(error)}`
+    );
+  }
+  const parsed = PatternDefaultsSchema.safeParse(json);
+  if (!parsed.success) throw new Error(`pattern-defaults.json: ${parsed.error.message}`);
+  return parsed.data;
 }

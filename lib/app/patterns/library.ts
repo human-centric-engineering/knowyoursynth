@@ -484,6 +484,34 @@ export async function syncSoundPhrases(
   return rewritten;
 }
 
+/**
+ * The sounds (`<synthId>/<slug>`, by `catalogueKey.SOUND`) whose riff does not lead their default
+ * ({@link riffLeadsDefault}): an admin's reorder, a researched default the seed made (`library-defaults.ts`), or the
+ * sound's own riff pattern with notes or a source an admin gave it. Their riff plays that pattern, so the catalogue
+ * seed and an upload write a riff for them only when they create the row. Read from what each sound leads with now,
+ * not from any list, so a default undone or never made gives the riff back to the file.
+ */
+export async function riffFollowers(
+  db: LibraryDb,
+  where: Prisma.SynthSoundWhereInput = {}
+): Promise<Set<string>> {
+  const sounds = await db.synthSound.findMany({
+    where,
+    select: {
+      synthId: true,
+      slug: true,
+      phrase: true,
+      // Only what decides the default and whether the riff leads it, not each pattern's whole row.
+      patterns: { orderBy: DEFAULT_FIRST, select: { pattern: { select: LEADS } } },
+    },
+  });
+  return new Set(
+    sounds
+      .filter((s) => !leadsDefault(s, headOf(s.patterns)?.pattern ?? null))
+      .map((s) => `${s.synthId}/${s.slug}`)
+  );
+}
+
 /** A library pattern an admin write changed, before and after, for the caller to audit. */
 export interface PatternChange {
   id: string;
@@ -516,9 +544,26 @@ async function defaultOf(db: LibraryDb, soundId: string) {
  * and is changed as a pattern, never by flattening a riff into it.
  */
 export async function riffLeadsDefault(db: LibraryDb, soundId: string): Promise<boolean> {
-  const { sound, head, own } = await defaultOf(db, soundId);
+  const { sound, head } = await defaultOf(db, soundId);
+  return leadsDefault(sound, head);
+}
+
+/** The columns {@link leadsDefault} reads, with what {@link headOf} decides on. */
+const LEADS = {
+  key: true,
+  status: true,
+  pattern: true,
+  editedAt: true,
+  fidelity: true,
+} as const satisfies Prisma.LibraryPatternSelect;
+
+/** {@link riffLeadsDefault}'s rule, on a sound and its default as read. */
+function leadsDefault(
+  sound: { synthId: string; slug: string; phrase: unknown },
+  head: Pick<LibraryPattern, keyof typeof LEADS> | null
+): boolean {
   if (!head) return true;
-  if (!own) return false;
+  if (head.key !== riffKey(sound.synthId, sound.slug)) return false;
   if (!head.editedAt) return true;
   // A transcribed or reconstructed pattern names its sources for these notes; a new riff would not be them.
   if (head.fidelity !== 'in_the_style_of') return false;

@@ -17,6 +17,8 @@ import {
   catalogueDataFiles,
   loadCatalogueData,
 } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
+import { loadPatternData } from '@/prisma/seeds/app-knowyoursynth/pattern-data';
+import { riffKey } from '@/lib/app/patterns/library';
 
 vi.mock('@/lib/app/catalogue/seed', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/lib/app/catalogue/seed')>()),
@@ -278,10 +280,29 @@ describe('the seed unit', () => {
   it('seeds the loaded data through the context’s client', async () => {
     const { default: unit } = await import('@/prisma/seeds/app-knowyoursynth/001-catalogue');
     const { seedCatalogue } = await import('@/lib/app/catalogue/seed');
-    const prisma = {};
+    // One sound leading with a researched pattern, one with its own riff: only the first follows another pattern.
+    const jump = loadPatternData()
+      .flatMap((b) => b.patterns)
+      .find((p) => p.key === 'researched:van-halen/jump-riff-low')!;
+    const place = (key: string) => ({
+      patternId: key,
+      pattern: { key, status: 'enabled', pattern: jump.pattern },
+    });
+    const prisma = {
+      synthSound: {
+        findMany: vi.fn(async () => [
+          { synthId: 'teo-5', slug: 'teo-jump-brass', patterns: [place(jump.key)] },
+          { synthId: 'teo-5', slug: 'teo-other', patterns: [place(riffKey('teo-5', 'teo-other'))] },
+        ]),
+      },
+    };
     const logger = { info: vi.fn() };
     await unit.run({ prisma, logger } as never);
-    expect(seedCatalogue).toHaveBeenCalledWith(prisma, data);
+    // With the sounds whose riff follows another pattern (t-254), read from what each leads with now.
+    expect(seedCatalogue).toHaveBeenCalledWith(prisma, {
+      ...data,
+      followsPattern: ['teo-5/teo-jump-brass'],
+    });
     expect(logger.info).toHaveBeenCalledWith('Catalogue seeded', expect.any(Object));
   });
 });

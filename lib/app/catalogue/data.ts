@@ -115,6 +115,11 @@ export interface CatalogueSeedData {
   lineage: LineageFile[];
   notes: NotesFile[];
   shared: SharedNotesFile;
+  /**
+   * Sounds (`<synthId>/<slug>`) whose riff does not lead their default, as stored now (`riffFollowers`). Their riff follows that pattern, so the seed writes it only when it creates the row, and its
+   * record leaves it out.
+   */
+  followsPattern?: string[];
 }
 
 /**

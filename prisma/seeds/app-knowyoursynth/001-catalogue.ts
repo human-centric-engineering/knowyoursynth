@@ -8,6 +8,7 @@ import {
   catalogueDataFiles,
   loadCatalogueData,
 } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
+import { riffFollowers } from '@/lib/app/patterns/library';
 
 /**
  * The catalogue: synths, their sounds, lineage and notes, from `./data/` (plan §9). The rules it keeps (checked
@@ -32,6 +33,11 @@ const unit: SeedUnit = {
     ...catalogueDataFiles().map((f) => relative(here, join(CATALOGUE_DATA_DIR, f))),
     './catalogue-data.ts',
     ...tsIn('lib/app/catalogue'),
+    // Which sounds' riffs follow another pattern, and so are written only on create (`riffFollowers`), with what
+    // decides a sound's default and whether a riff still leads it.
+    '../../../lib/app/patterns/library.ts',
+    '../../../lib/app/sequencer/pattern.ts',
+    '../../../lib/app/sequencer/import.ts',
     ...tsIn('lib/app/synths/defs'),
     // What a sound is checked against: the validator, the vocabulary it checks with, and its control lookup.
     '../../../lib/app/synths/validate.ts',
@@ -39,7 +45,9 @@ const unit: SeedUnit = {
     '../../../lib/app/synths/lib/patch.ts',
   ],
   async run({ prisma, logger }) {
-    const report = await seedCatalogue(prisma, loadCatalogueData());
+    // From what each sound leads with now, so a default undone or never made gives the riff back to the file.
+    const followsPattern = [...(await riffFollowers(prisma))];
+    const report = await seedCatalogue(prisma, { ...loadCatalogueData(), followsPattern });
     logger.info('Catalogue seeded', { report });
   },
 };
