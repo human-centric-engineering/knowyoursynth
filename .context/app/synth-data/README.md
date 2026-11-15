@@ -21,7 +21,7 @@ python3 validate_synth.py --schema synth-blueprint.schema.json */*.synth.json
 
 Without `jsonschema` installed it runs the referential checks only.
 
-## In the app (41)
+## In the app (42)
 
 | Folder                                                     | Synth                                                                                                                                                            | Spec schema |
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
@@ -62,12 +62,13 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`system-35`](./system-35/README.md)                       | Behringer System 35                                                                                                                                              | 0.10.0      |
 | [`system-55`](./system-55/README.md)                       | Behringer System 55                                                                                                                                              | 0.10.0      |
 | [`take-5`](./take-5/README.md)                             | Sequential Take 5                                                                                                                                                | 0.13.0      |
+| [`teo-5`](./teo-5/README.md)                               | Oberheim TEO-5                                                                                                                                                   | 0.12.0      |
 | [`tb-303`](./tb-303/README.md)                             | Roland TB-303 Computer Controlled Bass Line                                                                                                                      | 0.10.0      |
 | [`td-3`](./td-3/README.md)                                 | Behringer TD-3 Analog Bass Line Synthesizer                                                                                                                      | 0.10.0      |
 | [`ub-xa-d`](./ub-xa-d/README.md)                           | Behringer UB-Xa D                                                                                                                                                | 0.7.0       |
 | [`wasp-deluxe`](./wasp-deluxe/README.md)                   | Behringer WASP Deluxe                                                                                                                                            | 0.7.0       |
 
-## Not in the app yet (15)
+## Not in the app yet (14)
 
 | Folder                                                                                 | Synth                                                                                                      | Spec schema |
 | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------- |
@@ -81,7 +82,6 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`morphor-echon-6`](./morphor-echon-6/README.md)                                       | Morphor ECHON 6                                                                                            | 0.12.0      |
 | [`novation-bass-station-ii`](./novation-bass-station-ii/README.md)                     | Novation Bass Station II                                                                                   | 0.11.0      |
 | [`novation-peak`](./novation-peak/README.md)                                           | Novation Peak                                                                                              | 0.12.0      |
-| [`oberheim-teo-5`](./oberheim-teo-5/README.md)                                         | Oberheim TEO-5                                                                                             | 0.12.0      |
 | [`sequential-circuits-prophet-5-rev3`](./sequential-circuits-prophet-5-rev3/README.md) | Sequential Circuits Prophet-5 (Model 1000), Revision 3.3                                                   | 0.12.0      |
 | [`sequential-fourm`](./sequential-fourm/README.md)                                     | Sequential Fourm                                                                                           | 0.12.0      |
 | [`udo-audio-super-6`](./udo-audio-super-6/README.md)                                   | UDO Audio Super 6                                                                                          | 0.12.0      |
