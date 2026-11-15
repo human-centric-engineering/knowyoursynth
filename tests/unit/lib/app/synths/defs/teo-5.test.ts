@@ -448,3 +448,66 @@ describe('TEO-5 panel', () => {
     for (const c of teo5.controls) expect(teo5.init[c.id], c.id).toBe(c.def);
   });
 });
+
+describe('TEO-5 cases the init patch does not reach', () => {
+  const enumReadout = (id: string, v: string): string => {
+    const c = control(id);
+    if (c.kind !== 'enum' || !c.fmt) throw new Error(`${id} has no enum readout`);
+    return c.fmt(v);
+  };
+
+  it('reads the enum knobs in words', () => {
+    expect(enumReadout('arp.octave', '1')).toBe('1 octave');
+    expect(enumReadout('arp.octave', '3')).toBe('3 octaves');
+    expect(enumReadout('arp.mode', 'updown')).toBe('Up+Down');
+    expect(enumReadout('arp.repeat', '0')).toBe('off');
+    expect(enumReadout('arp.repeat', '2')).toBe('×3');
+    expect(enumReadout('fx.type', 'lofi')).toBe('Lo-fi');
+    expect(enumReadout('clock.div', '1/8T')).toBe('1/8T');
+  });
+
+  it('sends Envelope 1 as Aux with velocity, and Envelope 2 with velocity to the filter', () => {
+    const p = run({
+      'env.routing': 'aux-filteramp',
+      'env1.vel': true,
+      'env2.vel': true,
+      'env1.amount': 5,
+      'env1.dest': 'osc2',
+    });
+    expect(p.routes).toEqual([{ src: 'env1v', dst: 'pitch2', amt: 12 }]);
+    expect(p.filter.envSrc).toBe('env2v');
+    expect(run({ 'lfo1.amt': 5, 'lfo1.dest': 'osc1' }).routes).toEqual([
+      { src: 'lfo', dst: 'pitch1', amt: 12 },
+    ]);
+  });
+
+  it('colours the tape delays apart and slows the rotor below half TIME', () => {
+    const tape1 = slots({ 'fx.on': true, 'fx.type': 'tape1' })[0];
+    expect(tape1).toMatchObject({ alg: 't-raydelay', p: { WOB: 25, TON: 60 } });
+    const slow = slots({ 'fx.on': true, 'fx.type': 'rotary', 'fx.time': 2 })[0];
+    expect(slow).toMatchObject({ alg: 'rotaryspkr', p: { SPD: 'SLOW' } });
+  });
+
+  it('falls back to its defaults for values a sound could not hold', () => {
+    const p = teo5.toEngine(
+      {
+        ...teo5.init,
+        'voice.unison': true,
+        'voice.uniVoices': 'x',
+        'clock.div': 'x',
+        'lfo1.shape': 'x',
+        'lfo2.shape': 'x',
+        'arp.mode': 'x',
+        'arp.octave': 'x',
+        'kbd.octave': 'x',
+      },
+      CTX
+    );
+    expect(p.poly.stack).toBe(5);
+    expect(p.arp).toMatchObject({ bpm: 120, mode: 'up', octaves: 1 });
+    expect(p.lfo.mix).toEqual({ tri: 1 });
+    expect(p.lfo2?.mix).toEqual({ tri: 1 });
+    const { 'kbd.octave': _drop, ...rest } = teo5.init;
+    expect(teo5.toEngine(rest, CTX).tune).toBe(0);
+  });
+});
