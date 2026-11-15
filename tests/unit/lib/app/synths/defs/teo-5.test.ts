@@ -26,10 +26,10 @@ const control = (id: string): Control => {
   if (!c) throw new Error(`no control ${id}`);
   return c;
 };
-const readout = (id: string, v: number): string => {
+const readout = (id: string, v: number, values?: ControlValues): string => {
   const c = control(id);
   if (c.kind !== 'cont' || !c.fmt) throw new Error(`${id} has no continuous readout`);
-  return c.fmt(v);
+  return c.fmt(v, values);
 };
 /** `expMap` worked out: min × (max / min)^t. */
 const exp = (t: number, min: number, max: number) => min * Math.pow(max / min, t);
@@ -91,7 +91,7 @@ describe('TEO-5 toEngine at the init patch', () => {
     expect(p.drift).toEqual({ depth: 0, rate: 1.2 });
     expect(p.routes).toEqual([]);
     expect(p.tune).toBe(0);
-    expect(p.oscOuts).toBe(true);
+    expect(p.oscOuts).toBe(false);
     expect(p.volume).toBeCloseTo(level(7, 1), 10);
   });
 
@@ -138,6 +138,8 @@ describe('TEO-5 oscillators', () => {
   it('sends Oscillator 2’s triangle to Oscillator 1’s pitch with X-MOD, squared', () => {
     expect(run({ 'osc.xmod': 5 }).routes).toEqual([{ src: 'o2tri', dst: 'pitch1', amt: 6 }]);
     expect(run({ 'osc.xmod': 10 }).routes).toEqual([{ src: 'o2tri', dst: 'pitch1', amt: 24 }]);
+    // the separate waveform outputs are filled only while X-MOD reads one of them
+    expect(run({ 'osc.xmod': 5 }).oscOuts).toBe(true);
   });
 });
 
@@ -408,6 +410,11 @@ describe('TEO-5 readouts', () => {
     expect(readout('vcf.state', 0)).toBe('low-pass');
     expect(readout('vcf.state', 5)).toBe('notch');
     expect(readout('vcf.state', 10)).toBe('high-pass');
+    // with Bandpass on, the readout names filterMode()'s three steps
+    const bp: ControlValues = { 'vcf.bp': 'on' };
+    expect(readout('vcf.state', 2, bp)).toBe('low-pass');
+    expect(readout('vcf.state', 5, bp)).toBe('band-pass');
+    expect(readout('vcf.state', 8, bp)).toBe('high-pass');
     expect(readout('vcf.cutoff', 0)).toMatch(/20 ?Hz/);
     expect(readout('env1.attack', 0)).toMatch(/1 ?ms/);
     expect(readout('env1.release', 10)).toMatch(/20 ?s/);
@@ -503,7 +510,7 @@ describe('TEO-5 cases the init patch does not reach', () => {
       },
       CTX
     );
-    expect(p.poly.stack).toBe(5);
+    expect(p.poly?.stack).toBe(5);
     expect(p.arp).toMatchObject({ bpm: 120, mode: 'up', octaves: 1 });
     expect(p.lfo.mix).toEqual({ tri: 1 });
     expect(p.lfo2?.mix).toEqual({ tri: 1 });

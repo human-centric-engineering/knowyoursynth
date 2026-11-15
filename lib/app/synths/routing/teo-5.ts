@@ -30,7 +30,7 @@ const AUX: RoutingWhen = { id: 'env.routing', in: ['aux-filteramp', 'aux-filterg
 const OSC_SPECS = [
   { label: 'Range', value: '5 octaves and a minor third, in semitones' },
   { label: 'Waves', value: 'Triangle, sawtooth and pulse, any together' },
-  { label: 'Pulse width', value: '50 % to 100 % (silent)' },
+  { label: 'Pulse width', value: '50 % to 97 %' },
 ];
 const LFO_SPECS = [
   { label: 'Rate', value: '0.022 to 500 Hz' },

@@ -586,7 +586,7 @@
         },
         { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
       ],
-      "oscOuts": true,
+      "oscOuts": false,
       "paraphonic": false,
       "poly": { "detune": 0, "mono": false, "stack": 1, "voices": 5 },
       "routes": [],
@@ -1452,10 +1452,16 @@
         { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0.49200000000000005, "syncTo": -1 }
       ]
     },
-    "osc.xmod=2.5": { "routes": [{ "amt": 1.5, "dst": "pitch1", "src": "o2tri" }] },
-    "osc.xmod=5": { "routes": [{ "amt": 6, "dst": "pitch1", "src": "o2tri" }] },
-    "osc.xmod=7.5": { "routes": [{ "amt": 13.5, "dst": "pitch1", "src": "o2tri" }] },
-    "osc.xmod=10": { "routes": [{ "amt": 24, "dst": "pitch1", "src": "o2tri" }] },
+    "osc.xmod=2.5": {
+      "oscOuts": true,
+      "routes": [{ "amt": 1.5, "dst": "pitch1", "src": "o2tri" }]
+    },
+    "osc.xmod=5": { "oscOuts": true, "routes": [{ "amt": 6, "dst": "pitch1", "src": "o2tri" }] },
+    "osc.xmod=7.5": {
+      "oscOuts": true,
+      "routes": [{ "amt": 13.5, "dst": "pitch1", "src": "o2tri" }]
+    },
+    "osc.xmod=10": { "oscOuts": true, "routes": [{ "amt": 24, "dst": "pitch1", "src": "o2tri" }] },
     "osc1.sync=true": {
       "osc": [
         {
@@ -2663,10 +2669,22 @@
         { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0.49200000000000005, "syncTo": -1 }
       ]
     },
-    "patched:* osc.xmod=2.5": { "routes": [{ "amt": 1.5, "dst": "pitch1", "src": "o2tri" }] },
-    "patched:* osc.xmod=5": { "routes": [{ "amt": 6, "dst": "pitch1", "src": "o2tri" }] },
-    "patched:* osc.xmod=7.5": { "routes": [{ "amt": 13.5, "dst": "pitch1", "src": "o2tri" }] },
-    "patched:* osc.xmod=10": { "routes": [{ "amt": 24, "dst": "pitch1", "src": "o2tri" }] },
+    "patched:* osc.xmod=2.5": {
+      "oscOuts": true,
+      "routes": [{ "amt": 1.5, "dst": "pitch1", "src": "o2tri" }]
+    },
+    "patched:* osc.xmod=5": {
+      "oscOuts": true,
+      "routes": [{ "amt": 6, "dst": "pitch1", "src": "o2tri" }]
+    },
+    "patched:* osc.xmod=7.5": {
+      "oscOuts": true,
+      "routes": [{ "amt": 13.5, "dst": "pitch1", "src": "o2tri" }]
+    },
+    "patched:* osc.xmod=10": {
+      "oscOuts": true,
+      "routes": [{ "amt": 24, "dst": "pitch1", "src": "o2tri" }]
+    },
     "patched:* osc1.sync=true": {
       "osc": [
         {

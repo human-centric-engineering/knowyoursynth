@@ -1047,7 +1047,7 @@ knob('osc.pw', 391, 202.5, 'PULSE WIDTH', 223, {
   module: 'osc',
   label: 'PULSE WIDTH',
   fmt: (v) => `${Math.round(50 + 4.7 * v)} %`,
-  help: 'The width of both oscillators’ pulse waves: a hollow square at 50 %, narrowing to a thin, nasal buzz, and silent at 100 %. On the hardware each oscillator keeps its own width, which this knob moves together; here they share one.',
+  help: 'The width of both oscillators’ pulse waves: a hollow square at 50 %, narrowing to a thin, nasal buzz at 97 %. On the hardware the wave thins to silence at 100 %; here it stops just short. On the hardware each oscillator keeps its own width, which this knob moves together; here they share one.',
 });
 knob('osc2.detune', 391, 261, 'OSC 2 DETUNE', 280, {
   kind: 'cont',
@@ -1125,8 +1125,21 @@ knob('vcf.state', 736, 202.5, 'STATE', 223, {
   def: 0,
   module: 'filter',
   label: 'STATE',
-  fmt: (v) =>
-    v < 0.5 ? 'low-pass' : v > 9.5 ? 'high-pass' : Math.abs(v - 5) < 0.5 ? 'notch' : pct(v),
+  // with Bandpass on, `filterMode()` plays three steps, not the morph: the readout names the step
+  fmt: (v, values) =>
+    values?.['vcf.bp'] === 'on'
+      ? v < 10 / 3
+        ? 'low-pass'
+        : v > 20 / 3
+          ? 'high-pass'
+          : 'band-pass'
+      : v < 0.5
+        ? 'low-pass'
+        : v > 9.5
+          ? 'high-pass'
+          : Math.abs(v - 5) < 0.5
+            ? 'notch'
+            : pct(v),
   help: 'Sweeps the filter from low-pass (left) through a notch (top) to high-pass (right), as the SEM’s mode knob does: the low-pass fades as the high-pass comes in. With Bandpass on, on the FILTER page of the display, the middle is a band-pass.',
 });
 label(736, 185, 'NOTCH', 10, { weight: 500 });
@@ -1792,7 +1805,8 @@ function toEngine(v: ControlValues): EngineParams {
     drift: { depth: vintage > 0 ? 0.3 * vintage * vintage : 0, rate: 1.2 },
     routes,
     normals: {},
-    oscOuts: true,
+    // the separate waveform outputs feed only X-MOD's o2tri route
+    oscOuts: xm > 0,
     od: drive > 0 ? { on: true, drive, tone: 0.5, level: 0.8 } : { on: false },
     delay: { on: false },
     ...(ring
