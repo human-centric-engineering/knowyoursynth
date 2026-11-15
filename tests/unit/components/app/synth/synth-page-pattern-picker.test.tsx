@@ -54,7 +54,25 @@ vi.mock('@/lib/auth/client', () => ({
 }));
 vi.mock('@/lib/app/patterns/suggest-detect', () => ({
   createKindReader: () => ({
-    read: async () => ({ silent: false, attack: 0.01 }),
+    // a whole reading, so how far the patch is from its sound (`movedFar`) can be worked out
+    read: async () => ({
+      silent: false,
+      attack: 0.01,
+      decay: 0.3,
+      sustain: 0.5,
+      release: 0.2,
+      pulses: 0,
+      wobble: 0,
+      brightness: 0,
+      brightMove: 0,
+      noise: 0,
+      clarity: 1,
+      pitch: 0,
+      tracking: 1,
+      drift: 0,
+      levels: { low: -10, mid: -12, high: -30 },
+      voices: 1,
+    }),
     dispose: () => undefined,
   }),
 }));
@@ -271,13 +289,19 @@ describe('the pattern picker beside Play', () => {
       { name: /Rolling eighths/ },
       { timeout: 3000 }
     );
-    // the sound's own are read for it, and the library ranked without the sound's own
+    // the sound's own are read for it, and the library ranked without the sound's own, by its category while the
+    // patch is the sound as it came
     expect(api.get).toHaveBeenCalledWith(
       '/api/v1/synths/model-d/sounds/fat-bass/patterns',
       undefined
     );
     expect(api.post).toHaveBeenCalledWith('/api/v1/library-patterns/rank', {
-      body: { synthId: 'model-d', sound: 'fat-bass', features: { silent: false, attack: 0.01 } },
+      body: {
+        synthId: 'model-d',
+        sound: 'fat-bass',
+        features: expect.objectContaining({ silent: false, attack: 0.01 }),
+        asCame: true,
+      },
     });
     await act(async () => {
       fireEvent.click(pick);
