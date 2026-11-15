@@ -418,12 +418,12 @@ export async function syncResearchedPatterns(
       counts.placed++;
     }
   }
-  // A sound the seed gave one of them as its default plays its new notes: the riff follows, still the seed's to write.
+  // A sound the seed gave one of them as its default plays what it leads with now: the new notes, or its riff
+  // pattern's when the change left the pattern unable to be a default. The riff follows, still the seed's to write.
   if (changed.length)
-    await syncSoundPhrases(
-      db,
-      { editedAt: null, patterns: { some: { patternId: { in: changed } } } },
-      { heads: changed }
-    );
+    await syncSoundPhrases(db, {
+      editedAt: null,
+      patterns: { some: { patternId: { in: changed } } },
+    });
   return counts;
 }

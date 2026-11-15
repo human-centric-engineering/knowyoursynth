@@ -531,29 +531,40 @@ async function rewriteSeedRecord(
   return c;
 }
 
+/** Each planned sound's riff (`planCatalogue`), by `catalogueKey.SOUND`, as the seed's record holds it. */
+export function fileRiffs(rows: Pick<CatalogueRows, 'sounds'>): Map<string, unknown> {
+  return new Map(rows.sounds.map((r) => [catalogueKey.SOUND(r), r.phrase]));
+}
+
 /**
- * Leave the riff out of the record of each sound that now follows another pattern (`riffFollowers`), as the catalogue
- * seed would have had it known. The pattern library's seed unit runs this last: it rewrites riffs after the catalogue
- * unit recorded the file's, which the reconcile page would otherwise show as a change the seed never brings in.
- * Returns how many records it rewrote.
+ * Bring the riffs in the seed's record in line with which sounds follow another pattern now (`riffFollowers`): left
+ * out for each that does, as the catalogue seed leaves it out, and the file's riff back for each that no longer does.
+ * The pattern library's seed unit runs this last, since it changes which sounds follow after the catalogue unit wrote
+ * the record; otherwise the reconcile page would show a change the seed never brings in. Returns how many records it
+ * rewrote.
  */
-export async function forgetFollowedRiffs(
+export async function syncFollowedRiffRecords(
   prisma: TenancyClient,
-  followers: ReadonlySet<string>
+  followers: ReadonlySet<string>,
+  riffs: ReadonlyMap<string, unknown>
 ): Promise<number> {
-  if (!followers.size) return 0;
   let rewritten = 0;
-  for (const r of await prisma.catalogueSeedRecord.findMany({
-    where: { table: 'SOUND', key: { in: [...followers] } },
-  })) {
+  for (const r of await prisma.catalogueSeedRecord.findMany({ where: { table: 'SOUND' } })) {
     const values = r.values;
-    if (r.table !== 'SOUND' || !followers.has(r.key)) continue;
     if (typeof values !== 'object' || values === null || Array.isArray(values)) continue;
-    if (!('phrase' in values)) continue;
-    const { phrase: _phrase, ...rest } = values;
+    const { phrase, ...rest } = values;
+    const riff = riffs.get(r.key);
+    const next = followers.has(r.key)
+      ? phrase === undefined
+        ? null
+        : rest
+      : phrase === undefined && riff !== undefined
+        ? { ...rest, phrase: riff }
+        : null;
+    if (!next) continue;
     await prisma.catalogueSeedRecord.update({
       where: { table_key: { table: r.table, key: r.key } },
-      data: { values: toJson(rest) },
+      data: { values: toJson(next) },
     });
     rewritten++;
   }

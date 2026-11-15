@@ -18,7 +18,7 @@ import { Label } from '@/components/ui/label';
 import { apiClient, APIClientError } from '@/lib/api/client';
 import type { SeedCounts } from '@/lib/app/catalogue/seed';
 import { MAX_CONTENT_BYTES } from '@/lib/app/catalogue/data';
-import type { UploadProblem, UploadReport } from '@/lib/app/catalogue/upload';
+import type { UploadOutcome, UploadProblem, UploadReport } from '@/lib/app/catalogue/upload';
 
 const MAX_MB = `${MAX_CONTENT_BYTES / (1024 * 1024)} MB`;
 
@@ -36,7 +36,7 @@ const COLUMNS: { key: keyof SeedCounts; label: string }[] = [
 ];
 
 type Outcome =
-  | { kind: 'done'; synth: string; report: UploadReport }
+  | { kind: 'done'; synth: string; report: UploadOutcome }
   | { kind: 'refused'; message: string; problems: UploadProblem[] };
 
 function problemsOf(details: Record<string, unknown> | undefined): UploadProblem[] {
@@ -81,7 +81,7 @@ export function CatalogueUpload({ synths }: CatalogueUploadProps) {
     try {
       // The file itself, not its text: `apiClient`'s `body` would serialise it again, and decoding it here would
       // replace bytes that are not UTF-8 before the server's check could refuse them.
-      const { report } = await apiClient.post<{ report: UploadReport }>(
+      const { report } = await apiClient.post<{ report: UploadOutcome }>(
         `/api/v1/admin/synths/${encodeURIComponent(synthId)}/content`,
         { options: { body: file } }
       );
@@ -203,6 +203,12 @@ export function CatalogueUpload({ synths }: CatalogueUploadProps) {
               ))}
             </tbody>
           </table>
+          {outcome.report.riffsKept.length > 0 && (
+            <p className="text-muted-foreground text-sm">
+              Riffs kept, as each plays its sound&apos;s default pattern (change the pattern
+              instead): <span className="font-mono">{outcome.report.riffsKept.join(', ')}</span>
+            </p>
+          )}
         </div>
       )}
     </section>

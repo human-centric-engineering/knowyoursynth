@@ -501,7 +501,8 @@ export async function riffFollowers(
       synthId: true,
       slug: true,
       phrase: true,
-      patterns: { orderBy: DEFAULT_FIRST, select: { pattern: true } },
+      // Only what decides the default and whether the riff leads it, not each pattern's whole row.
+      patterns: { orderBy: DEFAULT_FIRST, select: { pattern: { select: LEADS } } },
     },
   });
   return new Set(
@@ -547,10 +548,19 @@ export async function riffLeadsDefault(db: LibraryDb, soundId: string): Promise<
   return leadsDefault(sound, head);
 }
 
+/** The columns {@link leadsDefault} reads, with what {@link headOf} decides on. */
+const LEADS = {
+  key: true,
+  status: true,
+  pattern: true,
+  editedAt: true,
+  fidelity: true,
+} as const satisfies Prisma.LibraryPatternSelect;
+
 /** {@link riffLeadsDefault}'s rule, on a sound and its default as read. */
 function leadsDefault(
   sound: { synthId: string; slug: string; phrase: unknown },
-  head: LibraryPattern | null
+  head: Pick<LibraryPattern, keyof typeof LEADS> | null
 ): boolean {
   if (!head) return true;
   if (head.key !== riffKey(sound.synthId, sound.slug)) return false;

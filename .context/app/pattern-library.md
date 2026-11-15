@@ -1314,7 +1314,8 @@ in `tests/unit/lib/app/patterns/library-defaults.test.ts`:
   (`riffFollowers`: any sound whose default is not its own riff pattern), not from this file, so a default never
   made or later undone gives the riff back to the file. An upload follows the same rule. While a sound leads with
   another pattern, a change to its riff in the sounds file reaches nothing: the riff is changed as that pattern.
-- **The catalogue's record forgets the riffs these passes took over** (`forgetFollowedRiffs`). The catalogue unit runs
+- **The catalogue's record keeps up with which riffs follow a pattern** (`syncFollowedRiffRecords`): the riff left
+  out for each sound that follows one, the file's riff back for each that no longer does. The catalogue unit runs
   first and records the file's riff, so without this the reconcile page would list every promoted sound as a change
   the seed never brings in.
 - **An admin's sound is never moved**: one an admin edited, whose default is a pattern other than its own riff or a
@@ -1322,7 +1323,11 @@ in `tests/unit/lib/app/patterns/library-defaults.test.ts`:
   enabled). A reorder or status change that changes a sound's default marks it edited, so an unedited sound leading
   with a researched pattern is the seed's. An entry changed to another pattern moves the new one in front of the old.
 - **A batch still writes a default the seed made**, whether or not the file still lists it, and the sound's riff
-  follows in the same pass.
+  follows in the same pass: to the new notes, or to its riff pattern's when the change left the default unplayable.
+- **An upload names the riffs it kept** (`riffsKept`, shown under the upload's counts): a sound whose riff follows a
+  pattern keeps it whatever the file says, so the admin sees which riffs to change as patterns instead.
+- **The file rules on each sound and pattern once**: the schema refuses a pair that is both a default and not one,
+  or listed twice under `notDefault`.
 - **A default the batch makes unplayable gives the riff back.** The sound is skipped, and its riff follows the riff
   pattern it now leads with.
 - **A re-run writes nothing, and nor does an empty list.**

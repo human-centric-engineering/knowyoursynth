@@ -29,7 +29,12 @@ import {
   syncResearchedDefaults,
   type PatternDefault,
 } from '@/lib/app/patterns/library-defaults';
-import { forgetFollowedRiffs, seedCatalogue } from '@/lib/app/catalogue/seed';
+import {
+  fileRiffs,
+  planCatalogue,
+  seedCatalogue,
+  syncFollowedRiffRecords,
+} from '@/lib/app/catalogue/seed';
 import type { CatalogueSeedData } from '@/lib/app/catalogue/data';
 import type { TenancyClient } from '@/lib/db/tenancy-extension';
 import {
@@ -82,6 +87,16 @@ describe('the defaults file', () => {
       defaults: [file.defaults[0], { ...file.defaults[0], pattern: file.defaults[1].pattern }],
     };
     expect(PatternDefaultsSchema.safeParse(twice).success).toBe(false);
+  });
+
+  it('refuses a sound and pattern ruled on twice: both a default and not one, or twice not one', () => {
+    const [d] = file.defaults;
+    const both = { ...file, notDefault: [...file.notDefault, { ...d, reason: 'Keeps its riff' }] };
+    expect(PatternDefaultsSchema.safeParse(both).success).toBe(false);
+    const [n] = file.notDefault;
+    expect(
+      PatternDefaultsSchema.safeParse({ ...file, notDefault: [...file.notDefault, n] }).success
+    ).toBe(false);
   });
 });
 
@@ -231,6 +246,22 @@ describe('syncResearchedDefaults', () => {
     expect(writes()).toBe(0);
   });
 
+  it('leaves the riff of an admin’s sound alone, even where its default is already the listed one', async () => {
+    await syncResearchedDefaults(lib(), defaults());
+    soundRow(0).editedAt = new Date();
+    // An admin's riff: its own riff pattern's notes, not the default's.
+    soundRow(0).phrase = phraseOf(PatternSchema.parse(riffOf(0).pattern));
+    const kept = structuredClone(soundRow(0).phrase);
+    clearWrites();
+
+    expect(await syncResearchedDefaults(lib(), defaults())).toMatchObject({
+      unchanged: 2,
+      rewritten: 0,
+    });
+    expect(soundRow(0).phrase).toEqual(kept);
+    expect(writes()).toBe(0);
+  });
+
   it('leaves alone a sound with a disabled pattern an admin put ahead of its riff, its default once enabled', async () => {
     keyed(JCGE).status = 'disabled';
     db.synthSoundPattern.rows.push({
@@ -257,7 +288,8 @@ describe('syncResearchedDefaults', () => {
     expect(counts.skipped).toEqual([
       { sound: ref(0), reason: expect.stringContaining('cannot end in rests') },
     ]);
-    expect(counts.rewritten).toBe(1);
+    // The batch pass already brought the riff along; the defaults pass agrees and has nothing to write.
+    expect(counts.rewritten).toBe(0);
     expect(soundRow(0).phrase).toEqual(phraseOf(PatternSchema.parse(riffOf(0).pattern)));
   });
 
@@ -294,6 +326,20 @@ describe('syncResearchedDefaults', () => {
     soundRow(2).editedAt = new Date();
     changed.patterns[0].pattern.transpose = 4;
     expect(await syncResearchedPatterns(lib(), [changed])).toMatchObject({ updated: 0, edited: 2 });
+  });
+
+  it('gives a sound no longer listed its riff pattern’s notes back when a batch leaves its default unplayable', async () => {
+    await syncResearchedDefaults(lib(), defaults());
+    const changed = testBatch();
+    changed.patterns[0].pattern.parts[0].steps.push(
+      { on: true, notes: [] },
+      { on: true, notes: [] }
+    );
+
+    // The batch pass alone, as for a sound taken out of the defaults file: no defaults pass to repair it.
+    await syncResearchedPatterns(lib(), [changed]);
+
+    expect(soundRow(0).phrase).toEqual(phraseOf(PatternSchema.parse(riffOf(0).pattern)));
   });
 
   it('moves a changed entry’s new pattern in front of the one it made before', async () => {
@@ -351,18 +397,31 @@ describe('the catalogue seed, for a sound whose riff follows a researched defaul
     expect(soundRow(0).phrase).not.toEqual(followed);
   });
 
-  it('has the record the catalogue wrote before the defaults pass forget the riffs it took over', async () => {
+  it('brings the riffs in the catalogue’s record in line with which sounds follow a pattern, both ways', async () => {
     // A fresh database: the catalogue unit records every file riff, then the defaults pass rewrites two of them.
-    expect(records.rows.get(`SOUND:${ref(0)}`)?.values).toHaveProperty('phrase');
+    const recorded = (i: number) => records.rows.get(`SOUND:${ref(i)}`)?.values;
+    const sync = async () =>
+      syncFollowedRiffRecords(
+        prisma(),
+        await riffFollowers(lib()),
+        fileRiffs(planCatalogue(sample()))
+      );
+    const fileRiff = fileRiffs(planCatalogue(sample())).get(ref(0));
+    expect(recorded(0)).toHaveProperty('phrase', fileRiff);
     await syncResearchedDefaults(lib(), defaults());
 
-    expect(await forgetFollowedRiffs(prisma(), await riffFollowers(lib()))).toBe(2);
-    expect(records.rows.get(`SOUND:${ref(0)}`)?.values).not.toHaveProperty('phrase');
-    expect(records.rows.get(`SOUND:${ref(2)}`)?.values).not.toHaveProperty('phrase');
-    expect(records.rows.get(`SOUND:${ref(1)}`)?.values).toHaveProperty('phrase');
+    expect(await sync()).toBe(2);
+    expect(recorded(0)).not.toHaveProperty('phrase');
+    expect(recorded(2)).not.toHaveProperty('phrase');
+    expect(recorded(1)).toHaveProperty('phrase');
     // The rest of the record stays, and a second run has nothing to do.
-    expect(records.rows.get(`SOUND:${ref(0)}`)?.values).toHaveProperty('name');
-    expect(await forgetFollowedRiffs(prisma(), await riffFollowers(lib()))).toBe(0);
+    expect(recorded(0)).toHaveProperty('name');
+    expect(await sync()).toBe(0);
+
+    // Sound 0 leads with its own riff again: the record has the file's riff back.
+    keyed(JUMP).status = 'disabled';
+    expect(await sync()).toBe(1);
+    expect(recorded(0)).toHaveProperty('phrase', fileRiff);
   });
 
   it('gives the riff back to the file once the sound leads with its own riff again', async () => {

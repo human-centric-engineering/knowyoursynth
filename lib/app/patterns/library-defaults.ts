@@ -73,6 +73,18 @@ export const PatternDefaultsSchema = z
         });
       seen.add(d.sound);
     });
+    // A sound and pattern ruled on once: not both a default and not one, nor twice not one.
+    const ruled = new Set(f.defaults.map((d) => `${d.sound} ${d.pattern}`));
+    f.notDefault.forEach((d, i) => {
+      const pair = `${d.sound} ${d.pattern}`;
+      if (ruled.has(pair))
+        ctx.addIssue({
+          code: 'custom',
+          path: ['notDefault', i],
+          message: `${d.sound} and ${d.pattern} are ruled on twice`,
+        });
+      ruled.add(pair);
+    });
   });
 export type PatternDefaults = z.infer<typeof PatternDefaultsSchema>;
 export type PatternDefault = PatternDefaults['defaults'][number];
@@ -148,11 +160,13 @@ export async function syncResearchedDefaults(
     const head = headOf(sound.patterns);
     const own = riffKey(sound.synthId, sound.slug);
     // Ahead of the default, only the sound's own riff or this pattern is the seed's: anything else an admin put there,
-    // a disabled pick that becomes the default once enabled. With no default, what is ahead of the riff pattern.
-    const stop = head ?? sound.patterns.find((p) => p.pattern.key === own);
-    const ahead = stop ? sound.patterns.slice(0, sound.patterns.indexOf(stop)) : sound.patterns;
+    // a disabled pick that becomes the default once enabled. A sound with no default has nothing that could be one,
+    // this pattern included, so it is skipped below with the reason.
+    const ahead = head ? sound.patterns.slice(0, sound.patterns.indexOf(head)) : [];
     if (head?.patternId === place.patternId) {
       counts.unchanged++;
+      // Its default already, but an admin's sound: its riff is theirs too.
+      if (sound.editedAt) continue;
     } else if (
       sound.editedAt ||
       // Its own riff, or a researched default the seed made before (this entry changed since): an admin's reorder

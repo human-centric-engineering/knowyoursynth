@@ -261,8 +261,10 @@ describe('writeSynthContent', () => {
 
     const report = await upload(file);
 
-    // The riff is not the file's to change, so the row holds what the file has otherwise and is not written.
+    // The riff is not the file's to change, so the row holds what the file has otherwise and is not written, and the
+    // outcome names it rather than dropping the file's riff silently.
     expect(report.sounds).toEqual({ created: 0, updated: 0, unchanged: 3, edited: 0 });
+    expect(report.riffsKept).toEqual([`model-d/${String(second.slug)}`]);
     expect(second.phrase).toEqual(followed);
     expect(second.editedAt).toBeNull();
   });
@@ -298,6 +300,7 @@ describe('writeSynthContent', () => {
     const report = await upload(file);
 
     expect(report.sounds.updated).toBe(0);
+    expect(report.riffsKept).toEqual([`model-d/${String(sound.slug)}`]);
     expect(sound.phrase).toEqual(kept);
   });
 

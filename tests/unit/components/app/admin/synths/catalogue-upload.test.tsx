@@ -16,7 +16,7 @@ import userEvent from '@testing-library/user-event';
 
 import { CatalogueUpload } from '@/components/app/admin/synths/catalogue-upload';
 import { apiClient, APIClientError } from '@/lib/api/client';
-import type { UploadReport } from '@/lib/app/catalogue/upload';
+import type { UploadOutcome } from '@/lib/app/catalogue/upload';
 
 const mockRefresh = vi.hoisted(() => vi.fn());
 vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: mockRefresh }) }));
@@ -31,10 +31,12 @@ const SYNTHS = [
   { id: 'tb-303', name: 'TB-303' },
 ];
 
-const REPORT: UploadReport = {
+const REPORT: UploadOutcome = {
   sounds: { created: 2, updated: 1, unchanged: 5, edited: 1 },
   lineage: { created: 0, updated: 0, unchanged: 1, edited: 0 },
   notes: { created: 3, updated: 0, unchanged: 0, edited: 0 },
+  riffsFollowed: [],
+  riffsKept: [],
 };
 
 const jsonFile = (text: string, name = 'tb-303.content.json') =>
@@ -71,6 +73,20 @@ describe('CatalogueUpload', () => {
         .map((c) => c.textContent)
     ).toEqual(['2', '1', '5', '1']);
     expect(mockRefresh).toHaveBeenCalledTimes(1);
+    expect(status).not.toHaveTextContent('Riffs kept');
+  });
+
+  it('names each riff the upload kept because it plays its sound’s default pattern', async () => {
+    post.mockResolvedValue({
+      report: { ...REPORT, riffsKept: ['tb-303/acid-line', 'tb-303/squelch'] },
+      file: { path: 'x', size: 1 },
+    });
+
+    await choose(jsonFile('{\n  "synth": "tb-303",  "version": 1,\n  "sounds": []\n}\n'));
+
+    const status = await screen.findByRole('status');
+    expect(status).toHaveTextContent('Riffs kept');
+    expect(status).toHaveTextContent('tb-303/acid-line, tb-303/squelch');
   });
 
   it('lists every problem the server names when it refuses the file', async () => {
