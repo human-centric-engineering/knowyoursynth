@@ -27,6 +27,7 @@ export const NATIVE_SYNTHS: readonly string[] = [
   'minilogue-xd',
   'sub-37',
   'teo-5',
+  'nymphes',
 ];
 
 export const isNativeSynth = (id: string): boolean => NATIVE_SYNTHS.includes(id);
