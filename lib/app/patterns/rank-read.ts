@@ -9,7 +9,7 @@
  *
  * Only the patch's category is listed (t-255, `limitToCategory`): the start sound's tag while the patch is that sound
  * as it came (`asCame`), else the category the detector hears. With neither (a patch of the user's not read yet), the
- * whole library.
+ * whole library, as when no public pattern is of the category, so the picker is never empty.
  */
 import { z } from 'zod';
 import { SoundSlugSchema, SynthIdSchema } from '@/lib/app/catalogue/edit';
@@ -43,7 +43,7 @@ export type RankBody = z.infer<typeof RankBodySchema>;
 export interface RankResult {
   /** What the patch sounds like, or null when it is silent or no features were sent: then nothing is ranked by fit. */
   reading: SoundReading | null;
-  /** The category the sections are limited to; null when nothing said one, and every pattern is listed. */
+  /** The category the sections are limited to; null when nothing said one, or none is of it: every pattern is listed. */
   category: PresetCategory | null;
   /** Every role, each with every public pattern of it and the category but the sound's own. */
   sections: RankSection[];
@@ -61,8 +61,10 @@ export async function rankLibraryFor(body: RankBody): Promise<RankResult | null>
   const library = publicLibrary();
   const ctx = await soundContext(body.synthId, body.sound);
   if (!ctx) return null;
-  const category = patchCategory(ctx.category, body.asCame, kind);
-  const views = limitToCategory(await library, category);
+  const { category, views } = limitToCategory(
+    await library,
+    patchCategory(ctx.category, body.asCame, kind)
+  );
   return {
     reading: kind ? readingOf(kind) : null,
     category,

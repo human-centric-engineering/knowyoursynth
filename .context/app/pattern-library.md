@@ -1731,7 +1731,7 @@ The worker is the sound map's (`PROBE_WORKER_URL`): a `kind` message, answered w
 workers, or the worker doesn’t answer its first reading within 15 s, the page reads on its own thread instead (`suggest-detect.ts`).
 `PATTERN_ROLES` lives in `library-roles.ts`, which imports nothing, so the worker doesn't bundle the sequencer.
 
-The endpoint takes `{ synthId, sound?, features, limit? }`. `features` is validated field by field
+The endpoint takes `{ synthId, sound?, features, asCame?, limit? }` (`asCame`: see [By category](#by-category)). `features` is validated field by field
 (`SoundFeaturesSchema`), and `sound` is the library sound the patch started as. It returns what the patch sounds like
 (category, role, register, traits and a summary) and up to `limit` suggestions (8 by default, 20 at most). Each one has
 the pattern itself, its score and its reason, so the picker reads nothing per pattern. It writes nothing. It sits under
@@ -1798,15 +1798,18 @@ listed by some sound, and every category had between 226 and 1,119.
 
 Which category (`patchCategory`):
 
-- **The library sound as it came** (`/rank`'s `asCame`): its tag. The page says so while the patch has not moved far
-  from it (`movedFar`), or when the patch could not be read.
+- **The library sound as it came** (`asCame`, taken by both): its tag. The page says so while the patch has not moved
+  far from it (`movedFar`), or when the patch or the start sound could not be read, since nothing says it has moved.
+  `/suggest` is asked about a sound as it came only when it has no patterns of its own, and then goes by its tag too,
+  so Suits this sound and the picker's sections never disagree about one patch.
 - **Anything else** (moved far, one of the user's sounds, a shared one, the Default patch, the tutor's): the category
-  the detector hears (`kind.category`). `/suggest` is asked only then, so it always goes by what it hears.
-- **Neither** (no reading yet and no sound to go by, or a sound whose first tag is not a category): the whole library,
-  so the picker is never empty.
+  the detector hears (`kind.category`).
+- **Neither** (no reading yet and no sound to go by, or a sound whose first tag is not a category), **or a category no
+  public pattern is of**: the whole library, so the picker is never empty.
 
 Both answers say the category they went by (`category`, null for the whole library), and the Play deck's picker names it
-in its line.
+in its line. When it lists the sound's tag and the detector hears another category, the line says it lists the
+category as the sound came.
 
 #### The whole library
 

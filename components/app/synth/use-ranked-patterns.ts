@@ -138,7 +138,7 @@ export function useRankedPatterns(input: RankInput): RankedPatterns {
         heard = entry;
         lastRead.current = entry;
       }
-      // The start sound as it came, read once per start. One that cannot be read is no sound to be near.
+      // The start sound as it came, read once per start.
       const from = startRef.current;
       let startRead: Promise<SoundFeatures | null> = Promise.resolve(null);
       if (from) {
@@ -164,8 +164,9 @@ export function useRankedPatterns(input: RankInput): RankedPatterns {
       Promise.all([startRead, heard.features])
         .then(([was, features]) => {
           if (!live) return null;
-          // Still the sound as it came: listed by its tag. A patch that could not be read is taken to be.
-          const asCame = !!from && (!features || !movedFar(was, features));
+          // Still the sound as it came: listed by its tag. A patch or start that could not be read is taken to be, as
+          // nothing says it has moved.
+          const asCame = !!from && (!features || !was || !movedFar(was, features));
           const key = `${synthId}|${sound ?? ''}|${asCame}|${features ? JSON.stringify(features) : ''}`;
           let asked = answers.current.get(key);
           if (!asked) {

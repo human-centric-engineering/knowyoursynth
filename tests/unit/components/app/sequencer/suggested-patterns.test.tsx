@@ -289,8 +289,19 @@ describe('Suits this sound', () => {
     await waitForState('ready');
     expect(screen.getByText(`${BASS.name} has no patterns yet.`)).toBeTruthy();
     expect(screen.getByRole('list', { name: 'Suits this sound' })).toBeTruthy();
+    // As it came, it is limited to its own tag, as the picker's sections are.
     const [, options] = post().mock.calls[0] as [string, { body: Record<string, unknown> }];
-    expect(options.body).not.toHaveProperty('sound');
+    expect(options.body).toMatchObject({ sound: BASS.id, asCame: true });
+  });
+
+  it('offers a library sound with no patterns of its own, moved far, by what it hears', async () => {
+    server.own = [];
+    render(<Page panel={FAR} />);
+    await open(`${BASS.name}’s patterns`);
+    await waitForState('ready');
+    const [, options] = post().mock.calls[0] as [string, { body: Record<string, unknown> }];
+    expect(options.body).toMatchObject({ sound: BASS.id });
+    expect(options.body).not.toHaveProperty('asCame');
   });
 
   it('stops working them out when the sequencer closes with the picker open', async () => {

@@ -111,6 +111,12 @@ export async function listAllPublicPatterns(): Promise<LibraryPatternView[]> {
 /** A sound's first tag, when it is a category. */
 export const PresetCategorySchema = z.enum(PRESET_CATEGORIES);
 
+/** A sound's category: its first tag, when that is one. */
+export function categoryOfTags(tags: readonly string[]): PresetCategory | null {
+  const tag = PresetCategorySchema.safeParse(tags[0]);
+  return tag.success ? tag.data : null;
+}
+
 /**
  * The categories each public pattern belongs to, by pattern id (t-255): the category (first tag) of every sound of a
  * listed synth that lists it. What limits the patterns a patch is offered to those of its category. A sound whose
@@ -125,11 +131,11 @@ export async function listPublicPatternCategories(): Promise<
   });
   const out = new Map<string, Set<PresetCategory>>();
   for (const { patternId, sound } of rows) {
-    const category = PresetCategorySchema.safeParse(sound.tags[0]);
-    if (!category.success) continue;
+    const category = categoryOfTags(sound.tags);
+    if (!category) continue;
     let set = out.get(patternId);
     if (!set) out.set(patternId, (set = new Set()));
-    set.add(category.data);
+    set.add(category);
   }
   return out;
 }

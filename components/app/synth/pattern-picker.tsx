@@ -330,7 +330,13 @@ function PickerBody({
         {result &&
           line(
             result.reading
-              ? `Heard: ${result.reading.summary}. ${result.category ? `The library’s ${result.category} patterns` : 'The library'}, the parts that suit it first.`
+              ? `Heard: ${result.reading.summary}. ${
+                  !result.category
+                    ? 'The library'
+                    : result.category === result.reading.category
+                      ? `The library’s ${result.category} patterns`
+                      : `As the sound came, the library’s ${result.category} patterns`
+                }, the parts that suit it first.`
               : `Without a reading of the patch, ${result.category ? `the library’s ${result.category} patterns are` : 'the library is'} listed by part and name.`
           )}
         {nothing && line('No pattern matches that. Clear the search to see them all.')}

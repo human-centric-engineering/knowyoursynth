@@ -221,13 +221,13 @@ describe('useRankedPatterns', () => {
     expect(result.current.state).toBe('ready');
   });
 
-  it('goes by what it hears when the start sound could not be read', async () => {
+  it('takes the patch to be the sound as it came when the start sound could not be read', async () => {
     // the panel's reading first, then the start sound's
     detector.read.mockResolvedValueOnce(FEATURES).mockRejectedValueOnce(new Error('no audio'));
     renderHook((p: RankInput) => useRankedPatterns(p), { initialProps: base({ open: true }) });
     await settle();
     expect(post).toHaveBeenCalledWith('/api/v1/library-patterns/rank', {
-      body: { synthId: 'model-d', sound: 'fat-bass', features: FEATURES },
+      body: { synthId: 'model-d', sound: 'fat-bass', features: FEATURES, asCame: true },
     });
   });
 

@@ -329,6 +329,19 @@ describe('the pattern picker beside Play', () => {
     expect(within(dialog()).getByRole('status').textContent).toMatch(/Listening to the patch/);
   });
 
+  it('says which category it lists, and that it is the sound’s as it came when that is not the one heard', () => {
+    const { unmount } = render(<Picker />);
+    expect(
+      within(dialog()).getByText(/The library’s lead patterns, the parts that suit it first/)
+    ).toBeTruthy();
+    unmount();
+    const asCame = { ...READY.result!, category: 'bass' as const };
+    render(<Picker ranked={{ state: 'ready', result: asCame }} />);
+    expect(
+      within(dialog()).getByText(/As the sound came, the library’s bass patterns/)
+    ).toBeTruthy();
+  });
+
   it('says the library could not be read, and lists it by part and name with no reading', () => {
     const { unmount } = render(<Picker ranked={{ state: 'error', result: null }} />);
     expect(within(dialog()).getByText(/The library could not be read/)).toBeTruthy();

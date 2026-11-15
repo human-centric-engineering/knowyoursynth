@@ -290,6 +290,13 @@ describe('POST /api/v1/library-patterns/rank', () => {
     expect(listed(untagged)).toHaveLength(ROWS.length);
   });
 
+  it('lists the whole library, with no category, when no public pattern is of the patch’s', async () => {
+    mockPrisma.synthSound.findFirst.mockResolvedValue({ tags: ['fx'], patterns: [] });
+    const data = await answer(await post({ synthId: 'model-d', sound: 'a-zap', asCame: true }));
+    expect(data.category).toBeNull();
+    expect(listed(data)).toHaveLength(ROWS.length);
+  });
+
   it('reads the library suggestions keep, once a minute between them', async () => {
     await post({ synthId: 'model-d', features: BASS });
     await SUGGEST(

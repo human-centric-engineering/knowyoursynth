@@ -22,8 +22,8 @@ import type { PresetCategory } from '@/lib/app/synths/contract';
 import { DEFAULT_FIRST, type LibraryPatternView } from '@/lib/app/patterns/library';
 import {
   listAllPublicPatterns,
+  categoryOfTags,
   listPublicPatternCategories,
-  PresetCategorySchema,
 } from '@/lib/app/patterns/library-read';
 import {
   kindSummary,
@@ -43,6 +43,8 @@ export const SuggestBodySchema = z.object({
   sound: SoundSlugSchema.optional(),
   /** What the detector heard (`soundFeatures`). */
   features: SoundFeaturesSchema,
+  /** Whether the patch is still `sound` as it came (not moved far from it): then it is limited to that sound's tag. */
+  asCame: z.boolean().default(false),
   limit: z.number().int().min(1).max(SUGGEST_MAX).default(SUGGEST_DEFAULT),
 });
 export type SuggestBody = z.infer<typeof SuggestBodySchema>;
@@ -61,7 +63,10 @@ export interface SoundReading {
 export interface SuggestResult {
   /** What the patch sounds like, or null when it is silent: then nothing is suggested. */
   reading: SoundReading | null;
-  /** The category the suggestions are limited to: the reading's. Null when there is no reading. */
+  /**
+   * The category the suggestions are limited to: the start sound's tag while the patch is that sound as it came, else
+   * the reading's. Null when there is no reading, or no public pattern is of the category (then the whole library).
+   */
   category: PresetCategory | null;
   /** Best first, each with the pattern, so the picker reads nothing more. */
   suggestions: (Suggestion & { pattern: LibraryPatternView })[];
@@ -91,15 +96,16 @@ export function publicLibrary(now = Date.now()): Promise<PublicLibrary> {
 }
 
 /**
- * The library's patterns of one category: those a sound of it lists. With no category to go by, all of them, so a
- * patch nothing is known about yet is still offered the library.
+ * The library's patterns of one category: those a sound of it lists, and the category they are of. With no category to
+ * go by, or one no public pattern is of, all of them and no category, so the patch is still offered the library.
  */
 export function limitToCategory(
   library: PublicLibrary,
   category: PresetCategory | null
-): LibraryPatternView[] {
-  if (!category) return library.views;
-  return library.views.filter((v) => library.categories.get(v.id)?.has(category));
+): { category: PresetCategory | null; views: LibraryPatternView[] } {
+  if (!category) return { category: null, views: library.views };
+  const views = library.views.filter((v) => library.categories.get(v.id)?.has(category));
+  return views.length > 0 ? { category, views } : { category: null, views: library.views };
 }
 
 /**
@@ -164,8 +170,7 @@ export async function soundContext(
       },
     });
     if (!found) return null;
-    const tag = PresetCategorySchema.safeParse(found.tags[0]);
-    if (tag.success) category = tag.data;
+    category = categoryOfTags(found.tags);
     for (const { patternId, pattern } of found.patterns) {
       exclude.add(patternId);
       // A disabled pattern says nothing to users, so not who the sound is after either.
@@ -188,10 +193,13 @@ export async function suggestPatterns(body: SuggestBody): Promise<SuggestResult 
   const ctx = await soundContext(body.synthId, body.sound);
   if (!ctx) return null;
   if (!kind || !library) return { reading: null, category: null, suggestions: [] };
-  // Suggestions are asked for once the patch has moved far from the sound it came as (`movedFar`), or for a patch whose
-  // start brought no patterns of its own (then no sound is sent), so the category is the one heard.
-  const category = kind.category;
-  const views = limitToCategory(await library, category);
+  // Suggestions are asked for once the patch has moved far from the sound it came as (`movedFar`), then by the category
+  // heard, or at once for a start that brought no patterns of its own, by its tag while it is as it came (`asCame`), as
+  // the picker's sections are.
+  const { category, views } = limitToCategory(
+    await library,
+    patchCategory(ctx.category, body.asCame, kind)
+  );
   const byId = new Map(views.map((v) => [v.id, v]));
   const ranked = rankPatterns(
     kind,

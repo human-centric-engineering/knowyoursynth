@@ -249,6 +249,25 @@ describe('POST /api/v1/library-patterns/suggest', () => {
     );
   });
 
+  it('offers a patch still the sound it came as the patterns of that sound’s tag', async () => {
+    // a lead sound with none of its own, unmoved, that the detector hears as a bass
+    mockPrisma.synthSound.findFirst.mockResolvedValueOnce({ tags: ['lead'], patterns: [] });
+    const data = await answer(
+      await post({ synthId: 'model-d', sound: 'a-lead', features: BASS, asCame: true })
+    );
+    expect(data.category).toBe('lead');
+    expect(data.suggestions.map((s) => s.id)).toEqual(['patleadsbass00000000006']);
+  });
+
+  it('offers the whole library, with no category, when no public pattern is of the patch’s', async () => {
+    mockPrisma.synthSound.findFirst.mockResolvedValueOnce({ tags: ['fx'], patterns: [] });
+    const data = await answer(
+      await post({ synthId: 'model-d', sound: 'a-zap', features: BASS, asCame: true })
+    );
+    expect(data.category).toBeNull();
+    expect(data.suggestions.length).toBeGreaterThan(1);
+  });
+
   it('returns no more than it is asked for', async () => {
     const data = await answer(await post({ synthId: 'model-d', features: BASS, limit: 1 }));
     expect(data.suggestions).toHaveLength(1);
