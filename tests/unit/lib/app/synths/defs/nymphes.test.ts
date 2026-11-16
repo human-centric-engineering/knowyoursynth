@@ -213,7 +213,7 @@ describe('Nymphes LFOs', () => {
 
   /** The lowest and highest a parameter reaches with LFO 2's route on it, which swings ±amt around its base. */
   const span = (p: ReturnType<typeof run>, dst: string, base: number): [number, number] => {
-    const amt = p.routes.find((r) => r.src === 'lfo2' && r.dst === dst)?.amt ?? 0;
+    const amt = (p.routes ?? []).find((r) => r.src === 'lfo2' && r.dst === dst)?.amt ?? 0;
     return [base - amt, base + amt];
   };
 
