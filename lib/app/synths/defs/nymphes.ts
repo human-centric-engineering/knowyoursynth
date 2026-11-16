@@ -84,8 +84,10 @@ const lfoLowHz = (v: number): number => expMap(v / 10, 0.03, 30);
 const lfoHighHz = (v: number): number => expMap(v / 10, 1, 1000);
 const lfoDelay = (v: number): number => 5 * Math.pow(v / 10, 2);
 const glideTime = (v: number): number => 2 * Math.pow(v / 10, 2);
-/** DTN at full: semitones of spread between stacked voices. */
+/** DTN at full: semitones each way the stacked voices spread (the engine spreads ±detune). */
 const DETUNE_SEMI = 0.6;
+/** DEC: the reverb's decay in seconds, the readout and the engine alike. */
+const revDecay = (v: number): number => expMap(v / 10, 0.2, 4.9);
 /** EG (pitch) at full: semitones, squared below. */
 const EG_PITCH_SEMI = 24;
 /** LFO (pitch) at full: semitones each way, squared below. */
@@ -568,7 +570,7 @@ fader('rev.decay', 10, 'fx', on(['reverb']), {
   label: 'DEC',
   name: 'Reverb DEC',
   def: 5,
-  fmt: (v) => fmtTime(expMap(v / 10, 0.2, 4.9)),
+  fmt: (v) => fmtTime(revDecay(v)),
   help: `How long the reverb’s tail rings on.${REVERB}`,
 });
 fader('rev.filter', 11, 'fx', on(['reverb']), {
@@ -915,19 +917,15 @@ const areas: Area[] = [
 ];
 
 // ── toEngine ──────────────────────────────────────────────────────────────
-/** Each effects algorithm's parameter defaults, by id. */
-const FX_DEFAULTS = new Map(
-  FX_ALGOS.map((a) => [a.id, Object.fromEntries(a.params.map((q) => [q.ref, q.def]))])
-);
 /** FILT: no filtering at 0, closing to 800 Hz at 10. */
 function revCut(v: number): number {
   return expMap(1 - v / 10, 800, 20000);
 }
 /** The hall's defaults, looked up once: a miss is an algorithm renamed in the effects table, not a value from a sound. */
 const HALL_BASE = (() => {
-  const base = FX_DEFAULTS.get('hallrev');
-  if (!base) throw new Error('Nymphes: no effects algorithm hallrev');
-  return base;
+  const hall = FX_ALGOS.find((a) => a.id === 'hallrev');
+  if (!hall) throw new Error('Nymphes: no effects algorithm hallrev');
+  return Object.fromEntries(hall.params.map((q) => [q.ref, q.def]));
 })();
 function reverbSlot(v: ControlValues): FxSlot {
   return {
@@ -936,7 +934,7 @@ function reverbSlot(v: ControlValues): FxSlot {
     p: {
       ...HALL_BASE,
       SIZ: Math.round(expMap(num(v, 'rev.size') / 10, 2, 200)),
-      DCY: Number(expMap(num(v, 'rev.decay') / 10, 0.2, 4.9).toFixed(2)),
+      DCY: Number(revDecay(num(v, 'rev.decay')).toFixed(2)),
       HC: Math.round(revCut(num(v, 'rev.filter'))),
       MIX: Math.round(num(v, 'rev.mix') * 10),
     },
