@@ -1589,8 +1589,8 @@ export interface MultiNoiseParams {
    */
   shape: number;
   /**
-   * `decim` only, 0..1 (SHIFT + SHAPE, KEY TRACK): the rate follows the oscillator's note (its fixed note when off the
-   * keyboard), an octave per octave from C4 at 1.
+   * `decim` only, 0..1 (SHIFT + SHAPE, KEY TRACK): the rate follows the pitch the oscillator sounds (its octave, the
+   * tune and pitch modulation included; from its fixed note when off the keyboard), an octave per octave from C4 at 1.
    */
   keyTrack?: number;
 }
@@ -1622,8 +1622,9 @@ export interface VpmParams {
    */
   eg?: { a: number; d: number; amt: number };
   /**
-   * 0..1 (MOD KEY TRACK): the index falls as the key rises, halving each octave above C4 at 1 (and rises below, to the
-   * same ceiling). It follows the oscillator's own note, its fixed note when it is off the keyboard.
+   * 0..1 (MOD KEY TRACK): the index falls as the pitch rises, halving each octave above C4 at 1 (and rises below, to
+   * the same ceiling). It follows the pitch the oscillator sounds (its octave, the tune and pitch modulation included;
+   * from its fixed note when it is off the keyboard), not the key played.
    */
   keyTrack?: number;
 }
