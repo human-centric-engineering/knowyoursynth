@@ -194,19 +194,76 @@ describe('Nymphes LFOs', () => {
 
   it('sends LFO 2 to PW, LVL, NOISE, CUT and RES by their depths', () => {
     const p = run({
+      'noise.level': 10,
       'lfo2.pw': 10,
       'lfo2.level': 10,
       'lfo2.noise': 10,
       'lfo2.cutoff': 5,
       'lfo2.res': 5,
     });
+    // PW and CUT swing either side on LFO 2. LVL and NOISE at full depth sit half their level down and swing half their
+    // level either side, in step with LFO 2. RES at 0 rises on LFO 2's one-sided signal, by half its range at half depth.
     expect(p.routes).toEqual([
       { src: 'lfo2', dst: 'pw1', amt: 0.45 },
-      { src: 'lfo2', dst: 'lvl1', amt: 0.5 },
-      { src: 'lfo2', dst: 'noiseLvl', amt: 0.6 },
+      { src: 'one', dst: 'lvl1', amt: -0.25 },
+      { src: 'lfo2', dst: 'lvl1', amt: 0.25 },
+      { src: 'one', dst: 'noiseLvl', amt: -0.3 },
+      { src: 'lfo2', dst: 'noiseLvl', amt: 0.3 },
       { src: 'lfo2', dst: 'cutoff', amt: 2.5 },
-      { src: 'lfo2', dst: 'res', amt: 0.5 },
+      { src: 'lfo2Uni', dst: 'res', amt: 0.55 },
     ]);
+  });
+
+  /**
+   * The lowest and highest a parameter reaches with LFO 2's routes on it: the constant signal adds its amount, LFO 2
+   * ±amount, and LFO 2's one-sided signal 0 to its amount.
+   */
+  const span = (p: ReturnType<typeof run>, dst: string, base: number): [number, number] => {
+    const amt = (src: string) =>
+      (p.routes ?? []).filter((r) => r.src === src && r.dst === dst).reduce((a, r) => a + r.amt, 0);
+    const mid = base + amt('one');
+    const uni = amt('lfo2Uni');
+    const bi = Math.abs(amt('lfo2'));
+    return [mid - bi + Math.min(0, uni), mid + bi + Math.max(0, uni)];
+  };
+
+  it('keeps LFO 2 → LVL between 0 and LVL, so a full depth never passes the slider’s top', () => {
+    const p = run({ 'osc.level': 10, 'lfo2.level': 10 });
+    const [lo, hi] = span(p, 'lvl1', p.osc[0].level);
+    expect(lo).toBeCloseTo(0, 10);
+    expect(hi).toBeCloseTo(0.5, 10);
+    const half = run({ 'osc.level': 7, 'lfo2.level': 5 });
+    const [lo2, hi2] = span(half, 'lvl1', half.osc[0].level);
+    expect(lo2).toBeCloseTo(level(7, 0.5) * 0.5, 10);
+    expect(hi2).toBeCloseTo(level(7, 0.5), 10);
+  });
+
+  it('keeps LFO 2 → NOISE between 0 and NOISE', () => {
+    const p = run({ 'noise.level': 8, 'lfo2.noise': 10 });
+    const [lo, hi] = span(p, 'noiseLvl', p.noise.level);
+    expect(lo).toBeCloseTo(0, 10);
+    expect(hi).toBeCloseTo(level(8, 0.6), 10);
+  });
+
+  it('leaves a muted oscillator and noise silent at any LFO 2 depth', () => {
+    const p = run({ 'osc.level': 0, 'noise.level': 0, 'lfo2.level': 10, 'lfo2.noise': 10 });
+    expect(p.osc[0].level).toBe(0);
+    expect(p.noise.level).toBe(0);
+    expect(p.routes).toEqual([]);
+  });
+
+  it('raises RES by LFO 2 toward the slider’s top and never past it, short of the engine’s 1.15 cap', () => {
+    const full = run({ 'lfo2.res': 10 });
+    expect(full.filter.res).toBe(0);
+    expect(span(full, 'res', full.filter.res)).toEqual([0, 1.1]);
+    const mid = run({ 'vcf.res': 6, 'lfo2.res': 10 });
+    const [lo, hi] = span(mid, 'res', mid.filter.res);
+    expect(lo).toBeCloseTo(0.66, 10);
+    expect(hi).toBeCloseTo(1.1, 10);
+    // at the top there is no room left, so LFO 2 does nothing
+    const top = run({ 'vcf.res': 10, 'lfo2.res': 10 });
+    expect(top.filter.res).toBeCloseTo(1.1, 10);
+    expect(top.routes).toEqual([]);
   });
 
   it('ignores FADE, which the engine has no stage for', () => {
@@ -253,9 +310,31 @@ describe('Nymphes reverb', () => {
       MIX: 40,
       SIZ: 200,
       DCY: 4.9,
+      DMP: 6000,
       HC: 800,
     });
     expect(fx?.slots?.slice(1)).toEqual([{ alg: null }, { alg: null }, { alg: null }]);
+  });
+
+  it('leaves the tail undamped and uncut with FILT at 0', () => {
+    const slot = run({ 'rev.mix': 4, 'rev.filter': 0 }).fx?.slots?.[0];
+    expect(slot && slot.alg !== null ? slot.p : {}).toMatchObject({ DMP: 20000, HC: 20000 });
+  });
+
+  it('reads SIZE as the share of the hall’s 2–200 size it plays', () => {
+    // worked by hand: SIZ = round(2 × 100^(v/10)), read as round(SIZ / 2) %
+    const cases: [number, number, string][] = [
+      [0, 2, '1 %'],
+      [3, 8, '4 %'],
+      [5, 20, '10 %'],
+      [8, 80, '40 %'],
+      [10, 200, '100 %'],
+    ];
+    for (const [v, siz, shown] of cases) {
+      const slot = run({ 'rev.mix': 4, 'rev.size': v }).fx?.slots?.[0];
+      expect(slot && slot.alg !== null ? slot.p.SIZ : NaN).toBe(siz);
+      expect(readout('rev.size', v)).toBe(shown);
+    }
   });
 });
 
