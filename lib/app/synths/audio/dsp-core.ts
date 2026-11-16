@@ -706,7 +706,7 @@ function createVoice(
   const slotKey = new Int32Array(4).fill(-1),
     slotHeld = new Uint8Array(4),
     slotT = new Float64Array(4);
-  /** The note each oscillator is playing this sample (its fixed note when off the keyboard), for `mix.mnoise` and `mix.vpm` key tracking. */
+  /** The pitch each oscillator sounds this sample, as a note (from its fixed note when off the keyboard), for `mix.mnoise` and `mix.vpm` key tracking. */
   const oscNote = new Float64Array(4).fill(60);
   const slotN = new Float64Array(4).fill(60),
     slotNT = new Float64Array(4).fill(60);
@@ -1508,7 +1508,8 @@ function createVoice(
   /**
    * The minilogue xd's MULTI ENGINE shapes, summed at their `mix` gains: filtered noise (`mix.mnoise`) and the VPM
    * oscillator (`mix.vpm`). `pwDest` is the oscillator's pulse-width input, which moves SHAPE (the noise's parameter,
-   * the VPM's MOD DEPTH) as the xd's LFO and EG do; `kn` is the note the oscillator is playing, for the key tracking.
+   * the VPM's MOD DEPTH) as the xd's LFO and EG do; `kn` is the pitch the oscillator sounds, as a note (its octave, the
+   * tune and pitch modulation already in it), for the key tracking.
    * The manual describes these in a line each (`VpmParams`, `MultiNoiseParams`), so they are reasoned, not measured.
    */
   function multiEngine(o: VoiceOsc, pwDest: number, kn: number): number {
@@ -1521,7 +1522,7 @@ function createVoice(
       s = s < 0 ? 0 : s > 1 ? 1 : s;
       const white = Math.random() * 2 - 1;
       if (q.type === 'decim') {
-        // white noise held for a sample period of 240 Hz → 48 kHz, which follows the key with KEY TRACK
+        // white noise held for a sample period of 240 Hz → 48 kHz, which follows the pitch with KEY TRACK
         let rate = 240 * Math.exp(s * LN_RATE_SPAN);
         if (q.keyTrack) rate *= Math.exp((kn - 60) * LN2_12 * q.keyTrack);
         o.mnAcc += rate / sr;
@@ -2498,9 +2499,11 @@ function createVoice(
           if (o.mo) o.morph += (o.morphT - o.morph) * sm;
           o.semi += (o.semiT - o.semi) * sm;
           const kn = assign ? slotN[k] : (hiMask >> k) & 1 && p.paraphonic ? note2 : note;
-          oscNote[k] = o.kbd ? kn : o.fixed;
           const base = o.kbd ? kn + pmAll + (p.tune || 0) + vOff + drift : o.fixed;
           const nn = base + o.semi + ev(PITCH_DI[k]);
+          // the MULTI ENGINE's key tracking follows the pitch the oscillator sounds (octave, tune, bend, pitch mod), as
+          // its peak noise does through `inc`, not the bare key
+          oscNote[k] = nn;
           let hz = 440 * Math.exp((nn - 69) * LN2_12);
           if (hz > sr * 0.45) hz = sr * 0.45;
           o.inc = hz / sr;
