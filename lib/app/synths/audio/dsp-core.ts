@@ -706,7 +706,7 @@ function createVoice(
   const slotKey = new Int32Array(4).fill(-1),
     slotHeld = new Uint8Array(4),
     slotT = new Float64Array(4);
-  /** The note each oscillator is playing this sample (its fixed note when off the keyboard), for `mix.mnoise` and `mix.vpm` key tracking. */
+  /** The pitch each oscillator sounds this sample, as a note (from its fixed note when off the keyboard), for `mix.mnoise` and `mix.vpm` key tracking. */
   const oscNote = new Float64Array(4).fill(60);
   const slotN = new Float64Array(4).fill(60),
     slotNT = new Float64Array(4).fill(60);
@@ -2498,9 +2498,11 @@ function createVoice(
           if (o.mo) o.morph += (o.morphT - o.morph) * sm;
           o.semi += (o.semiT - o.semi) * sm;
           const kn = assign ? slotN[k] : (hiMask >> k) & 1 && p.paraphonic ? note2 : note;
-          oscNote[k] = o.kbd ? kn : o.fixed;
           const base = o.kbd ? kn + pmAll + (p.tune || 0) + vOff + drift : o.fixed;
           const nn = base + o.semi + ev(PITCH_DI[k]);
+          // the MULTI ENGINE's key tracking follows the pitch the oscillator sounds (octave, tune, bend, pitch mod), as
+          // its peak noise does through `inc`, not the bare key
+          oscNote[k] = nn;
           let hz = 440 * Math.exp((nn - 69) * LN2_12);
           if (hz > sr * 0.45) hz = sr * 0.45;
           o.inc = hz / sr;
