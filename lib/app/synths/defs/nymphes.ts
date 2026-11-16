@@ -9,8 +9,8 @@
  * both are analogue polys programmed from faders, with a 6 dB high-pass on the summed voices (`post`) and a digital
  * reverb (here on the DeepMind's effects engine, `audio/dm-fx.ts`, as its hall). Six voices, each one oscillator whose
  * WAVE morphs sawtooth → square → triangle, a square sub an octave down and white noise → a 24 dB resonant ladder
- * low-pass → the VCA. No content (sounds, lineage, unusual notes), a `version`, the maker's marks tagged `brand` (the
- * NYMPHES wordmark and the dre:adbox logo), and panel values read through `num()`.
+ * low-pass → the VCA. A `version`, the maker's marks tagged `brand` (the NYMPHES wordmark and the dre:adbox logo),
+ * and panel values read through `num()`.
  *
  * Fourteen sliders control 28 parameters: the label under a slider normally, the one above it while SHIFT is lit
  * (`ui.shift`), following the Sub 37's KNOB SHIFT. MENU (`ui.page`) steps through the three menu pages that change what
@@ -24,7 +24,8 @@
  * curves are the app's estimates. Of the assignable modulation (four sources, each with a depth on most slider
  * parameters), LFO 2's depth on PW, LVL, NOISE, CUT and RES is modelled, as engine routes, added rather than mixed in;
  * the mod wheel, velocity and aftertouch pages are not. The seven chords are programmed by playing them and the spec
- * gives none, so CHORD is drawn and not modelled; nor is LFO FADE, which the engine has no stage for.
+ * gives none, so CHORD is drawn and not modelled; nor is LFO FADE, which the engine has no stage for, or LFO 2's KEY
+ * SYNC, which the engine does not apply to an LFO the voices share.
  */
 import type {
   Area,
@@ -742,7 +743,7 @@ fader('lfo2.sync', 14, 'lfo', on(['mode'], true), {
   max: 1,
   step: 1,
   fmt: onOff,
-  help: `On: LFO 2 starts its cycle again with each note. Off: it runs freely.${MODE_PAGE} With SHIFT lit.`,
+  help: `On the hardware, on: LFO 2 starts its cycle again with each note; off: it runs freely. The app’s engine does not restart an LFO shared by all the voices, so here it does nothing.${MODE_PAGE} With SHIFT lit.`,
 });
 
 // The knobs and buttons

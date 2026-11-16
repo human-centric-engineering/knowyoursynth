@@ -220,6 +220,10 @@ describe('Nymphes LFOs', () => {
   it('ignores FADE, which the engine has no stage for', () => {
     expect(run({ 'lfo1.fade': 10, 'lfo2.fade': 10 })).toEqual(run());
   });
+
+  it('ignores LFO 2 KEY SYNC, since the engine does not restart a shared LFO', () => {
+    expect(run({ 'lfo2.sync': 1 })).toEqual(run());
+  });
 });
 
 describe('Nymphes play modes, glide and chords', () => {

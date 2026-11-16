@@ -874,7 +874,7 @@
         {
           "title": "Random steps",
           "module": "lfo",
-          "why": "LFO 1 WAVE at the top is random. With SHIFT lit, the LFO slider in FILTER sends it to the cutoff.\n- LFO 1 WAVE random\n- LFO 1 RATE 6 · 1.89 Hz\n- LFO (filter) 6 · ±2.4 oct: with SHIFT lit\n- Listen for: the filter leaping to a new place several times a second.",
+          "why": "LFO 1 WAVE at the top is random. With SHIFT lit, the LFO slider in FILTER sends it to the cutoff.\n- LFO 1 WAVE random\n- LFO 1 RATE 6 · 1.89 Hz\n- LFO (filter) 6 · ±2.4 oct: with SHIFT lit\n- Listen for: the filter leaping to a new place about twice a second.",
           "set": {
             "lfo1.wave": 4,
             "lfo1.rate": 6,

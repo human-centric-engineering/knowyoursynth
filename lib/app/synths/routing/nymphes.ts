@@ -222,6 +222,14 @@ export const routing: SynthRouting = {
       levels: [{ id: 'env1.pitch', pow: 2 }],
     },
     {
+      id: 'c09_sub',
+      from: 'env_f',
+      to: 'sub',
+      signal: 'cv',
+      label: 'pitch',
+      levels: [{ id: 'env1.pitch', pow: 2 }],
+    },
+    {
       id: 'c10',
       from: 'osc',
       to: 'mixer',
