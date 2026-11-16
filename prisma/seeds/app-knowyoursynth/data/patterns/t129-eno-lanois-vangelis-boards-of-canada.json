@@ -7817,7 +7817,8 @@
         "neutron/para-keys",
         "solar-42n/solar-hazy-nostalgia",
         "mantis/mantis-tape-wobble-keys",
-        "grandmother/gm-spring-pluck"
+        "grandmother/gm-spring-pluck",
+        "nymphes/nym-chord-swell"
       ],
       "research": {
         "work": "Boards of Canada, “Roygbiv”, Music Has the Right to Children, 1998",
@@ -20717,7 +20718,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["mantis/mantis-ascent-swell", "minilogue-xd/mxd-ascent-pad"],
+      "sounds": [
+        "mantis/mantis-ascent-swell",
+        "minilogue-xd/mxd-ascent-pad",
+        "nymphes/nym-ethereal-pad"
+      ],
       "research": {
         "work": "Brian Eno, “An Ending (Ascent)”, Apollo: Atmospheres and Soundtracks, 1983",
         "part": "The six bars of melody the transcription has: E, B, D; C, B, A; then the rise to G and the fall back to G and A: the same part an octave down, where the Mantis’s “Ascent Swell” plays.",

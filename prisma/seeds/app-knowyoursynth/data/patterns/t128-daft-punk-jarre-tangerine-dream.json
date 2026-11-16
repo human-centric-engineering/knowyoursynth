@@ -106,6 +106,10 @@
     {
       "sound": "sub-37/s37-loop-pulse",
       "reason": "Its looping envelope pulses one held note, so a written sequence would be played over the pulses; the batch’s Phaedra sequence plays chords, and the lesson’s held bass notes are its own."
+    },
+    {
+      "sound": "nymphes/nym-sample-hold-filter",
+      "reason": "The sound’s point is a random filter pattern made by the patch over held notes, not one of “Phaedra”’s sequenced parts, so there is nothing to transcribe."
     }
   ],
   "patterns": [
