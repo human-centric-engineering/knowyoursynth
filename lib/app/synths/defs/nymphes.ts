@@ -22,10 +22,11 @@
  * The manual gives the cutoff's range (32.7 Hz to 16.7 kHz) and that the filter self-oscillates and tracks 1:1 at full
  * TRACK; it gives no envelope or LFO times, glide rate, detune, high-pass or reverb ranges (`not_in_source`), so those
  * curves are the app's estimates. Of the assignable modulation (four sources, each with a depth on most slider
- * parameters), LFO 2's depth on PW, LVL, NOISE, CUT and RES is modelled as engine routes, each kept inside its slider's range;
- * the mod wheel, velocity and aftertouch pages are not. The seven chords are programmed by playing them and the spec
- * gives none, so CHORD is drawn and not modelled; nor is LFO FADE, which the engine has no stage for, or LFO 2's KEY
- * SYNC, which the engine does not apply to an LFO the voices share.
+ * parameters), LFO 2's depth on PW, LVL, NOISE, CUT and RES is modelled as engine routes, with LVL, NOISE and RES kept
+ * inside their sliders' ranges; the mod wheel, velocity and aftertouch pages are not. The seven chords are programmed
+ * by playing them and the spec gives none, so CHORD is drawn and not modelled; nor is LFO FADE, which the engine has no
+ * stage for, or LFO 2's KEY SYNC, which the engine does not apply to an LFO the voices share. While LFO 2's DELAY
+ * holds it off, LVL, NOISE and RES sit halfway along their swing, since the engine's one-sided LFO 2 rests at its middle.
  */
 import type {
   Area,
@@ -941,6 +942,7 @@ const HALL_BASE = (() => {
   return Object.fromEntries(hall.params.map((q) => [q.ref, q.def]));
 })();
 function reverbSlot(v: ControlValues): FxSlot {
+  const cut = Math.round(revCut(num(v, 'rev.filter')));
   return {
     alg: 'hallrev',
     level: 1,
@@ -948,9 +950,9 @@ function reverbSlot(v: ControlValues): FxSlot {
       ...HALL_BASE,
       SIZ: Math.round(revSize(num(v, 'rev.size'))),
       DCY: Number(revDecay(num(v, 'rev.decay')).toFixed(2)),
-      // FILT sets the tail's damping as well as the high cut: the hall's own damping (6 kHz) would darken it at 0
-      DMP: Math.round(revCut(num(v, 'rev.filter'))),
-      HC: Math.round(revCut(num(v, 'rev.filter'))),
+      // FILT opens the tail's damping above the hall's own (6 kHz), which would otherwise darken it at 0
+      DMP: Math.max(Number(HALL_BASE.DMP), cut),
+      HC: cut,
       MIX: Math.round(num(v, 'rev.mix') * 10),
     },
   };
@@ -965,20 +967,23 @@ function toEngine(v: ControlValues): EngineParams {
   route('lfo', 'pitchAll', LFO_PITCH_SEMI * Math.pow(num(v, 'lfo1.pitch') / 10, 2));
   route('env1', 'pitchAll', EG_PITCH_SEMI * Math.pow(num(v, 'env1.pitch') / 10, 2));
   route('lfo', 'cutoff', (LFO_CUT_OCT * num(v, 'vcf.lfo')) / 10);
-  // LFO 2's depths. The engine adds a route to its parameter, so LVL, NOISE and RES are offset by half the swing to keep
-  // it inside the slider's range: LVL and NOISE dip from where they are set (a muted source stays muted), RES rises
-  // toward the slider's top (short of the engine's cap, where the sweep would flatten).
+  // LFO 2's depths. PW and CUT swing either side of their setting. LVL, NOISE and RES stay inside the slider's range,
+  // moving in step with LFO 2 as PW and CUT do. LVL and NOISE dip from where they are set (a muted source stays muted):
+  // a steady offset of half the depth down, on the constant signal, with LFO 2 swinging half the depth either side of
+  // it. RES rises toward the slider's top (short of the engine's cap, where the sweep would flatten), on LFO 2's
+  // one-sided signal (0–1). The panel settings stay as they are in the engine's own fields.
   const oscLvl = level10(num(v, 'osc.level'), 0.5);
   const noiseLvl = level10(num(v, 'noise.level'), 0.6);
   const res = (num(v, 'vcf.res') / 10) * RES_MAX;
-  const lvlSwing = (oscLvl * num(v, 'lfo2.level')) / 20;
-  const noiseSwing = (noiseLvl * num(v, 'lfo2.noise')) / 20;
-  const resSwing = ((RES_MAX - res) * num(v, 'lfo2.res')) / 20;
+  const dip = (dst: string, level: number, depth: number): void => {
+    route('one', dst, (-level * depth) / 20);
+    route('lfo2', dst, (level * depth) / 20);
+  };
   route('lfo2', 'pw1', 0.45 * (num(v, 'lfo2.pw') / 10));
-  route('lfo2', 'lvl1', lvlSwing);
-  route('lfo2', 'noiseLvl', noiseSwing);
+  dip('lvl1', oscLvl, num(v, 'lfo2.level'));
+  dip('noiseLvl', noiseLvl, num(v, 'lfo2.noise'));
   route('lfo2', 'cutoff', (LFO2_CUT_OCT * num(v, 'lfo2.cutoff')) / 10);
-  route('lfo2', 'res', resSwing);
+  route('lfo2Uni', 'res', ((RES_MAX - res) * num(v, 'lfo2.res')) / 10);
 
   const mode = PLAY_MODES.find((m) => m.v === v['voice.mode']) ?? PLAY_MODES[0];
   const revOn = num(v, 'rev.mix') > 0;
@@ -993,7 +998,7 @@ function toEngine(v: ControlValues): EngineParams {
   return {
     osc: [
       {
-        level: oscLvl - lvlSwing,
+        level: oscLvl,
         mix: waveMix(num(v, 'osc.wave')),
         pw: pulseWidth(num(v, 'osc.pw')),
         semi: 0,
@@ -1002,13 +1007,13 @@ function toEngine(v: ControlValues): EngineParams {
         subLevel: level10(num(v, 'osc.sub'), 0.5),
       },
     ],
-    noise: { level: noiseLvl - noiseSwing, color: 'white' },
+    noise: { level: noiseLvl, color: 'white' },
     ext: { level: 0 },
     filter: {
       type: 'ladder',
       mode: 'lp',
       cutoff: vcfHz(num(v, 'vcf.cutoff')),
-      res: res + resSwing,
+      res,
       envAmt: (EG_CUT_OCT * num(v, 'vcf.env')) / 10,
       envSrc: 'env1',
       kbd: num(v, 'vcf.track') / 10,

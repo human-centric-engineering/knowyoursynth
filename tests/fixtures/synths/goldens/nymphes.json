@@ -1263,60 +1263,28 @@
     "lfo2.pw=7.5": { "routes": [{ "amt": 0.3375, "dst": "pw1", "src": "lfo2" }] },
     "lfo2.pw=10": { "routes": [{ "amt": 0.45, "dst": "pw1", "src": "lfo2" }] },
     "lfo2.level=2.5": {
-      "osc": [
-        {
-          "kbd": true,
-          "level": 0.4375,
-          "mix": { "pulse": 0, "saw": 1, "tri": 0 },
-          "pw": 0.5,
-          "semi": 0,
-          "subLevel": 0,
-          "syncTo": -1
-        }
-      ],
-      "routes": [{ "amt": 0.0625, "dst": "lvl1", "src": "lfo2" }]
+      "routes": [
+        { "amt": -0.0625, "dst": "lvl1", "src": "one" },
+        { "amt": 0.0625, "dst": "lvl1", "src": "lfo2" }
+      ]
     },
     "lfo2.level=5": {
-      "osc": [
-        {
-          "kbd": true,
-          "level": 0.375,
-          "mix": { "pulse": 0, "saw": 1, "tri": 0 },
-          "pw": 0.5,
-          "semi": 0,
-          "subLevel": 0,
-          "syncTo": -1
-        }
-      ],
-      "routes": [{ "amt": 0.125, "dst": "lvl1", "src": "lfo2" }]
+      "routes": [
+        { "amt": -0.125, "dst": "lvl1", "src": "one" },
+        { "amt": 0.125, "dst": "lvl1", "src": "lfo2" }
+      ]
     },
     "lfo2.level=7.5": {
-      "osc": [
-        {
-          "kbd": true,
-          "level": 0.3125,
-          "mix": { "pulse": 0, "saw": 1, "tri": 0 },
-          "pw": 0.5,
-          "semi": 0,
-          "subLevel": 0,
-          "syncTo": -1
-        }
-      ],
-      "routes": [{ "amt": 0.1875, "dst": "lvl1", "src": "lfo2" }]
+      "routes": [
+        { "amt": -0.1875, "dst": "lvl1", "src": "one" },
+        { "amt": 0.1875, "dst": "lvl1", "src": "lfo2" }
+      ]
     },
     "lfo2.level=10": {
-      "osc": [
-        {
-          "kbd": true,
-          "level": 0.25,
-          "mix": { "pulse": 0, "saw": 1, "tri": 0 },
-          "pw": 0.5,
-          "semi": 0,
-          "subLevel": 0,
-          "syncTo": -1
-        }
-      ],
-      "routes": [{ "amt": 0.25, "dst": "lvl1", "src": "lfo2" }]
+      "routes": [
+        { "amt": -0.25, "dst": "lvl1", "src": "one" },
+        { "amt": 0.25, "dst": "lvl1", "src": "lfo2" }
+      ]
     },
     "lfo2.noise=2.5": {},
     "lfo2.noise=5": {},
@@ -1326,54 +1294,10 @@
     "lfo2.cutoff=5": { "routes": [{ "amt": 2.5, "dst": "cutoff", "src": "lfo2" }] },
     "lfo2.cutoff=7.5": { "routes": [{ "amt": 3.75, "dst": "cutoff", "src": "lfo2" }] },
     "lfo2.cutoff=10": { "routes": [{ "amt": 5, "dst": "cutoff", "src": "lfo2" }] },
-    "lfo2.res=2.5": {
-      "filter": {
-        "cutoff": 16744,
-        "envAmt": 0,
-        "envSrc": "env1",
-        "kbd": 0,
-        "mode": "lp",
-        "res": 0.1375,
-        "type": "ladder"
-      },
-      "routes": [{ "amt": 0.1375, "dst": "res", "src": "lfo2" }]
-    },
-    "lfo2.res=5": {
-      "filter": {
-        "cutoff": 16744,
-        "envAmt": 0,
-        "envSrc": "env1",
-        "kbd": 0,
-        "mode": "lp",
-        "res": 0.275,
-        "type": "ladder"
-      },
-      "routes": [{ "amt": 0.275, "dst": "res", "src": "lfo2" }]
-    },
-    "lfo2.res=7.5": {
-      "filter": {
-        "cutoff": 16744,
-        "envAmt": 0,
-        "envSrc": "env1",
-        "kbd": 0,
-        "mode": "lp",
-        "res": 0.4125,
-        "type": "ladder"
-      },
-      "routes": [{ "amt": 0.4125, "dst": "res", "src": "lfo2" }]
-    },
-    "lfo2.res=10": {
-      "filter": {
-        "cutoff": 16744,
-        "envAmt": 0,
-        "envSrc": "env1",
-        "kbd": 0,
-        "mode": "lp",
-        "res": 0.55,
-        "type": "ladder"
-      },
-      "routes": [{ "amt": 0.55, "dst": "res", "src": "lfo2" }]
-    },
+    "lfo2.res=2.5": { "routes": [{ "amt": 0.275, "dst": "res", "src": "lfo2Uni" }] },
+    "lfo2.res=5": { "routes": [{ "amt": 0.55, "dst": "res", "src": "lfo2Uni" }] },
+    "lfo2.res=7.5": { "routes": [{ "amt": 0.825, "dst": "res", "src": "lfo2Uni" }] },
+    "lfo2.res=10": { "routes": [{ "amt": 1.1, "dst": "res", "src": "lfo2Uni" }] },
     "voice.mode=\"uniA\"": { "poly": { "detune": 0, "mono": true, "stack": 6, "voices": 6 } },
     "voice.mode=\"uniB\"": { "poly": { "detune": 0, "mono": true, "stack": 4, "voices": 6 } },
     "voice.mode=\"tri\"": { "poly": { "detune": 0, "mono": false, "stack": 2, "voices": 6 } },
@@ -2142,60 +2066,28 @@
     "patched:* lfo2.pw=7.5": { "routes": [{ "amt": 0.3375, "dst": "pw1", "src": "lfo2" }] },
     "patched:* lfo2.pw=10": { "routes": [{ "amt": 0.45, "dst": "pw1", "src": "lfo2" }] },
     "patched:* lfo2.level=2.5": {
-      "osc": [
-        {
-          "kbd": true,
-          "level": 0.4375,
-          "mix": { "pulse": 0, "saw": 1, "tri": 0 },
-          "pw": 0.5,
-          "semi": 0,
-          "subLevel": 0,
-          "syncTo": -1
-        }
-      ],
-      "routes": [{ "amt": 0.0625, "dst": "lvl1", "src": "lfo2" }]
+      "routes": [
+        { "amt": -0.0625, "dst": "lvl1", "src": "one" },
+        { "amt": 0.0625, "dst": "lvl1", "src": "lfo2" }
+      ]
     },
     "patched:* lfo2.level=5": {
-      "osc": [
-        {
-          "kbd": true,
-          "level": 0.375,
-          "mix": { "pulse": 0, "saw": 1, "tri": 0 },
-          "pw": 0.5,
-          "semi": 0,
-          "subLevel": 0,
-          "syncTo": -1
-        }
-      ],
-      "routes": [{ "amt": 0.125, "dst": "lvl1", "src": "lfo2" }]
+      "routes": [
+        { "amt": -0.125, "dst": "lvl1", "src": "one" },
+        { "amt": 0.125, "dst": "lvl1", "src": "lfo2" }
+      ]
     },
     "patched:* lfo2.level=7.5": {
-      "osc": [
-        {
-          "kbd": true,
-          "level": 0.3125,
-          "mix": { "pulse": 0, "saw": 1, "tri": 0 },
-          "pw": 0.5,
-          "semi": 0,
-          "subLevel": 0,
-          "syncTo": -1
-        }
-      ],
-      "routes": [{ "amt": 0.1875, "dst": "lvl1", "src": "lfo2" }]
+      "routes": [
+        { "amt": -0.1875, "dst": "lvl1", "src": "one" },
+        { "amt": 0.1875, "dst": "lvl1", "src": "lfo2" }
+      ]
     },
     "patched:* lfo2.level=10": {
-      "osc": [
-        {
-          "kbd": true,
-          "level": 0.25,
-          "mix": { "pulse": 0, "saw": 1, "tri": 0 },
-          "pw": 0.5,
-          "semi": 0,
-          "subLevel": 0,
-          "syncTo": -1
-        }
-      ],
-      "routes": [{ "amt": 0.25, "dst": "lvl1", "src": "lfo2" }]
+      "routes": [
+        { "amt": -0.25, "dst": "lvl1", "src": "one" },
+        { "amt": 0.25, "dst": "lvl1", "src": "lfo2" }
+      ]
     },
     "patched:* lfo2.noise=2.5": {},
     "patched:* lfo2.noise=5": {},
@@ -2205,54 +2097,10 @@
     "patched:* lfo2.cutoff=5": { "routes": [{ "amt": 2.5, "dst": "cutoff", "src": "lfo2" }] },
     "patched:* lfo2.cutoff=7.5": { "routes": [{ "amt": 3.75, "dst": "cutoff", "src": "lfo2" }] },
     "patched:* lfo2.cutoff=10": { "routes": [{ "amt": 5, "dst": "cutoff", "src": "lfo2" }] },
-    "patched:* lfo2.res=2.5": {
-      "filter": {
-        "cutoff": 16744,
-        "envAmt": 0,
-        "envSrc": "env1",
-        "kbd": 0,
-        "mode": "lp",
-        "res": 0.1375,
-        "type": "ladder"
-      },
-      "routes": [{ "amt": 0.1375, "dst": "res", "src": "lfo2" }]
-    },
-    "patched:* lfo2.res=5": {
-      "filter": {
-        "cutoff": 16744,
-        "envAmt": 0,
-        "envSrc": "env1",
-        "kbd": 0,
-        "mode": "lp",
-        "res": 0.275,
-        "type": "ladder"
-      },
-      "routes": [{ "amt": 0.275, "dst": "res", "src": "lfo2" }]
-    },
-    "patched:* lfo2.res=7.5": {
-      "filter": {
-        "cutoff": 16744,
-        "envAmt": 0,
-        "envSrc": "env1",
-        "kbd": 0,
-        "mode": "lp",
-        "res": 0.4125,
-        "type": "ladder"
-      },
-      "routes": [{ "amt": 0.4125, "dst": "res", "src": "lfo2" }]
-    },
-    "patched:* lfo2.res=10": {
-      "filter": {
-        "cutoff": 16744,
-        "envAmt": 0,
-        "envSrc": "env1",
-        "kbd": 0,
-        "mode": "lp",
-        "res": 0.55,
-        "type": "ladder"
-      },
-      "routes": [{ "amt": 0.55, "dst": "res", "src": "lfo2" }]
-    },
+    "patched:* lfo2.res=2.5": { "routes": [{ "amt": 0.275, "dst": "res", "src": "lfo2Uni" }] },
+    "patched:* lfo2.res=5": { "routes": [{ "amt": 0.55, "dst": "res", "src": "lfo2Uni" }] },
+    "patched:* lfo2.res=7.5": { "routes": [{ "amt": 0.825, "dst": "res", "src": "lfo2Uni" }] },
+    "patched:* lfo2.res=10": { "routes": [{ "amt": 1.1, "dst": "res", "src": "lfo2Uni" }] },
     "patched:* voice.mode=\"uniA\"": {
       "poly": { "detune": 0, "mono": true, "stack": 6, "voices": 6 }
     },

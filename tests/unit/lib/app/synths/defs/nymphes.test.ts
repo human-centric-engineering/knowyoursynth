@@ -201,20 +201,30 @@ describe('Nymphes LFOs', () => {
       'lfo2.cutoff': 5,
       'lfo2.res': 5,
     });
-    // LVL and NOISE at full swing by half their level each way; RES at 0 by a quarter of its range at half depth
+    // PW and CUT swing either side on LFO 2. LVL and NOISE at full depth sit half their level down and swing half their
+    // level either side, in step with LFO 2. RES at 0 rises on LFO 2's one-sided signal, by half its range at half depth.
     expect(p.routes).toEqual([
       { src: 'lfo2', dst: 'pw1', amt: 0.45 },
+      { src: 'one', dst: 'lvl1', amt: -0.25 },
       { src: 'lfo2', dst: 'lvl1', amt: 0.25 },
+      { src: 'one', dst: 'noiseLvl', amt: -0.3 },
       { src: 'lfo2', dst: 'noiseLvl', amt: 0.3 },
       { src: 'lfo2', dst: 'cutoff', amt: 2.5 },
-      { src: 'lfo2', dst: 'res', amt: 0.275 },
+      { src: 'lfo2Uni', dst: 'res', amt: 0.55 },
     ]);
   });
 
-  /** The lowest and highest a parameter reaches with LFO 2's route on it, which swings ±amt around its base. */
+  /**
+   * The lowest and highest a parameter reaches with LFO 2's routes on it: the constant signal adds its amount, LFO 2
+   * ±amount, and LFO 2's one-sided signal 0 to its amount.
+   */
   const span = (p: ReturnType<typeof run>, dst: string, base: number): [number, number] => {
-    const amt = (p.routes ?? []).find((r) => r.src === 'lfo2' && r.dst === dst)?.amt ?? 0;
-    return [base - amt, base + amt];
+    const amt = (src: string) =>
+      (p.routes ?? []).filter((r) => r.src === src && r.dst === dst).reduce((a, r) => a + r.amt, 0);
+    const mid = base + amt('one');
+    const uni = amt('lfo2Uni');
+    const bi = Math.abs(amt('lfo2'));
+    return [mid - bi + Math.min(0, uni), mid + bi + Math.max(0, uni)];
   };
 
   it('keeps LFO 2 → LVL between 0 and LVL, so a full depth never passes the slider’s top', () => {
@@ -244,6 +254,7 @@ describe('Nymphes LFOs', () => {
 
   it('raises RES by LFO 2 toward the slider’s top and never past it, short of the engine’s 1.15 cap', () => {
     const full = run({ 'lfo2.res': 10 });
+    expect(full.filter.res).toBe(0);
     expect(span(full, 'res', full.filter.res)).toEqual([0, 1.1]);
     const mid = run({ 'vcf.res': 6, 'lfo2.res': 10 });
     const [lo, hi] = span(mid, 'res', mid.filter.res);
@@ -299,7 +310,7 @@ describe('Nymphes reverb', () => {
       MIX: 40,
       SIZ: 200,
       DCY: 4.9,
-      DMP: 800,
+      DMP: 6000,
       HC: 800,
     });
     expect(fx?.slots?.slice(1)).toEqual([{ alg: null }, { alg: null }, { alg: null }]);
