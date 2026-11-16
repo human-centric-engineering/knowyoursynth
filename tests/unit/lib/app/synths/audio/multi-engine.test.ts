@@ -114,8 +114,9 @@ const cutShape = (hz: number): number => Math.log(hz / 10) / Math.log(2100);
 const rateShape = (hz: number): number => Math.log(hz / 240) / Math.log(200);
 
 /**
- * C4 raised an octave three ways (MULTI OCTAVE, the global tune, a pitch route), each played next to C5 played
- * straight: key tracking that follows the sounding pitch hears the same note in all four.
+ * C4 raised an octave four ways (MULTI OCTAVE, the global tune, the oscillator's pitch route, the all-oscillator pitch
+ * route a bend drives), each played next to C5 played straight: key tracking that follows the sounding pitch hears the
+ * same note in all five.
  */
 function octaveUp(osc: (semi: number) => OscParams): Record<string, Float32Array> {
   return {
@@ -123,6 +124,7 @@ function octaveUp(osc: (semi: number) => OscParams): Record<string, Float32Array
     semi: play(osc(12), 60),
     tune: play(osc(0), 60, [], undefined, 12),
     pitchMod: play(osc(0), 60, [{ src: 'one', dst: 'pitch1', amt: 12 }]),
+    bend: play(osc(0), 60, [{ src: 'one', dst: 'pitchAll', amt: 12 }]),
     bare: play(osc(0), 60),
   };
 }
@@ -206,6 +208,21 @@ describe('MULTI ENGINE noise (mix.mnoise)', () => {
     expect(maxDiff(play(fixed(), 45), play(fixed(), 81))).toBeLessThan(1e-6);
   });
 
+  it('KEY TRACK off the keyboard follows the fixed note’s octave and pitch route too', () => {
+    const fixed = (fixedNote: number, semi = 0): OscParams => ({
+      ...noise({ type: 'decim', shape: rateShape(2000), keyTrack: 1 }),
+      kbd: false,
+      fixedNote,
+      semi,
+    });
+    const c5 = play(fixed(72));
+    expect(maxDiff(play(fixed(60, 12)), c5)).toBeLessThan(1e-6);
+    expect(
+      maxDiff(play(fixed(60), NOTE, [{ src: 'one', dst: 'pitch1', amt: 12 }]), c5)
+    ).toBeLessThan(1e-6);
+    expect(maxDiff(play(fixed(60)), c5)).toBeGreaterThan(0.01);
+  });
+
   it('Decim’s KEY TRACK follows the pitch it sounds: the octave, the tune and pitch modulation, not the key', () => {
     const r = octaveUp((semi) => ({
       ...noise({ type: 'decim', shape: rateShape(2000), keyTrack: 1 }),
@@ -213,7 +230,7 @@ describe('MULTI ENGINE noise (mix.mnoise)', () => {
     }));
     // C4 an octave up: the 4 kHz rate C5 gets, the 2 kHz null filled in
     expect(band(r.semi, 1960, 2040)).toBeGreaterThan(band(r.semi, 3960, 4040) * 10);
-    for (const way of ['semi', 'tune', 'pitchMod'])
+    for (const way of ['semi', 'tune', 'pitchMod', 'bend'])
       expect(maxDiff(r[way], r.straight), way).toBeLessThan(1e-6);
     // and C4 at its own octave keeps the 2 kHz rate
     expect(maxDiff(r.bare, r.semi)).toBeGreaterThan(0.01);
@@ -322,7 +339,7 @@ describe('MULTI ENGINE VPM (mix.vpm)', () => {
   it('MOD KEY TRACK follows the pitch it sounds: the octave, the tune and pitch modulation, not the key', () => {
     const r = octaveUp((semi) => ({ ...vpm({ depth: 0.4, keyTrack: 1 }), semi }));
     // C4 an octave up has its depth halved, as C5 does
-    for (const way of ['semi', 'tune', 'pitchMod'])
+    for (const way of ['semi', 'tune', 'pitchMod', 'bend'])
       expect(maxDiff(r[way], r.straight), way).toBeLessThan(1e-5);
     expect(maxDiff(r.semi, play({ ...vpm({ depth: 0.2 }), semi: 12 }, 60))).toBeLessThan(1e-5);
     // C4 at its own octave keeps the full depth

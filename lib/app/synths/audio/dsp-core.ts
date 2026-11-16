@@ -1508,7 +1508,8 @@ function createVoice(
   /**
    * The minilogue xd's MULTI ENGINE shapes, summed at their `mix` gains: filtered noise (`mix.mnoise`) and the VPM
    * oscillator (`mix.vpm`). `pwDest` is the oscillator's pulse-width input, which moves SHAPE (the noise's parameter,
-   * the VPM's MOD DEPTH) as the xd's LFO and EG do; `kn` is the note the oscillator is playing, for the key tracking.
+   * the VPM's MOD DEPTH) as the xd's LFO and EG do; `kn` is the pitch the oscillator sounds, as a note (its octave, the
+   * tune and pitch modulation already in it), for the key tracking.
    * The manual describes these in a line each (`VpmParams`, `MultiNoiseParams`), so they are reasoned, not measured.
    */
   function multiEngine(o: VoiceOsc, pwDest: number, kn: number): number {
@@ -1521,7 +1522,7 @@ function createVoice(
       s = s < 0 ? 0 : s > 1 ? 1 : s;
       const white = Math.random() * 2 - 1;
       if (q.type === 'decim') {
-        // white noise held for a sample period of 240 Hz → 48 kHz, which follows the key with KEY TRACK
+        // white noise held for a sample period of 240 Hz → 48 kHz, which follows the pitch with KEY TRACK
         let rate = 240 * Math.exp(s * LN_RATE_SPAN);
         if (q.keyTrack) rate *= Math.exp((kn - 60) * LN2_12 * q.keyTrack);
         o.mnAcc += rate / sr;
