@@ -9,14 +9,9 @@
  * @see lib/app/synths/defs/nymphes.ts
  */
 import { describe, expect, it } from 'vitest';
-import type {
-  Control,
-  ControlValues,
-  EngineContext,
-  ShowCondition,
-  TextDecor,
-} from '@/lib/app/synths/contract';
+import type { Control, ControlValues, EngineContext, TextDecor } from '@/lib/app/synths/contract';
 import nymphes, { waveMix } from '@/lib/app/synths/defs/nymphes';
+import { isShown } from '@/lib/app/synths/lib/patch';
 
 const CTX: EngineContext = { wheel: 0, patched: {} };
 const run = (set: ControlValues = {}) => nymphes.toEngine({ ...nymphes.init, ...set }, CTX);
@@ -37,11 +32,8 @@ const exp = (t: number, min: number, max: number) => min * Math.pow(max / min, t
 const level = (v: number, max: number) => Math.pow(v / 10, 1.7) * max;
 
 /** Whether a control shows for this page and SHIFT state. */
-const shows = (c: Control, page: string, shift: boolean): boolean => {
-  const conds: ShowCondition[] = c.show ? (Array.isArray(c.show) ? c.show : [c.show]) : [];
-  const values: ControlValues = { 'ui.page': page, 'ui.shift': shift };
-  return conds.every((s) => ('eq' in s ? values[s.id] === s.eq : s.in.includes(values[s.id])));
-};
+const shows = (c: Control, page: string, shift: boolean): boolean =>
+  isShown(c, { 'ui.page': page, 'ui.shift': shift });
 /** The control showing on a slider (by its x) for a page and SHIFT state. */
 const onSlider = (x: number, page: string, shift: boolean): string[] =>
   nymphes.controls

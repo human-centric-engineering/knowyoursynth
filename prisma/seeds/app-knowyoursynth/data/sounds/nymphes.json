@@ -884,7 +884,7 @@
         {
           "title": "Free-running, with a tail",
           "module": "fx",
-          "why": "Press MENU until MODE is chosen: slider 14 turns LFO 1’s KEY SYNC off, so the pattern runs across notes. Then MENU until REVERB, for some space.\n- LFO 1 KEY SYNC off\n- Reverb SIZE 6 · 60 %\n- Reverb DEC 6 · 1.4 s\n- Reverb MIX 3 · 30 %\n- Listen for: an endless, bubbling pattern in a large room.",
+          "why": "Turn SHIFT off and press MENU until MODE is chosen: slider 14 turns LFO 1’s KEY SYNC off, so the pattern runs across notes. Then MENU until REVERB, for some space.\n- LFO 1 KEY SYNC off\n- Reverb SIZE 6 · 60 %\n- Reverb DEC 6 · 1.4 s\n- Reverb MIX 3 · 30 %\n- Listen for: an endless, bubbling pattern in a large room.",
           "set": {
             "lfo1.sync": 0,
             "rev.size": 6,

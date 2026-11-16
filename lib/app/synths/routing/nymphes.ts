@@ -50,7 +50,6 @@ export const routing: SynthRouting = {
       id: 'sub',
       name: 'Sub oscillator',
       module: 'osc',
-      controls: ['osc.sub'],
       description: 'A square an octave below the oscillator, following it.',
     },
     {
@@ -58,7 +57,6 @@ export const routing: SynthRouting = {
       name: 'Noise',
       module: 'mixer',
       symbol: 'noise',
-      controls: ['noise.level'],
       description: 'White noise.',
     },
     {

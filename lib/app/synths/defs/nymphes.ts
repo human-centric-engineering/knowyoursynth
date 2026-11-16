@@ -45,7 +45,15 @@ import type {
 } from '@/lib/app/synths/contract';
 import { FX_ALGOS } from '@/lib/app/synths/defs/deepmind-12d-fx';
 import { num } from '@/lib/app/synths/lib/def-kit';
-import { type CurvePoint, expMap, fmtHz, fmtTime, level10, pwl } from '@/lib/app/synths/lib/maps';
+import {
+  clamp,
+  type CurvePoint,
+  expMap,
+  fmtHz,
+  fmtTime,
+  level10,
+  pwl,
+} from '@/lib/app/synths/lib/maps';
 
 type FaderRest = Omit<ControlCommon, 'id' | 'x' | 'y' | 'module' | 'show'> &
   Partial<Omit<ContinuousValue, 'kind'>>;
@@ -92,7 +100,7 @@ const pct = (v: number): string => `${Math.round(v * 10)} %`;
 
 /** WAVE: sawtooth at the bottom, square halfway, triangle at the top, crossfading between them. */
 export const waveMix = (v: number): { saw: number; pulse: number; tri: number } => {
-  const w = Math.min(1, Math.max(0, v / 10));
+  const w = clamp(v / 10, 0, 1);
   return {
     saw: Math.max(0, 1 - 2 * w),
     pulse: 1 - Math.abs(2 * w - 1),
@@ -111,10 +119,10 @@ const LFO_SHAPES: { name: string; mix: LfoMix }[] = [
   { name: 'random', mix: { sh: 1 } },
 ];
 const lfoShape = (v: number): { name: string; mix: LfoMix } =>
-  LFO_SHAPES[Math.min(4, Math.max(0, Math.round(v)))];
+  LFO_SHAPES[clamp(Math.round(v), 0, 4)];
 /** LFO TYPE, slider position 0–3. */
 const LFO_TYPES = ['LOW', 'HIGH', 'TRACK', 'BPM'];
-const lfoType = (v: number): string => LFO_TYPES[Math.min(3, Math.max(0, Math.round(v)))];
+const lfoType = (v: number): string => LFO_TYPES[clamp(Math.round(v), 0, 3)];
 const lfoHz = (rate: number, type: number): number =>
   lfoType(type) === 'HIGH' ? lfoHighHz(rate) : lfoLowHz(rate);
 const onOff = (v: number): string => (Math.round(v) >= 1 ? 'on' : 'off');
@@ -915,15 +923,18 @@ const FX_DEFAULTS = new Map(
 function revCut(v: number): number {
   return expMap(1 - v / 10, 800, 20000);
 }
-function reverbSlot(v: ControlValues): FxSlot {
+/** The hall's defaults, looked up once: a miss is an algorithm renamed in the effects table, not a value from a sound. */
+const HALL_BASE = (() => {
   const base = FX_DEFAULTS.get('hallrev');
-  // a literal id: a miss is an algorithm renamed in the effects table, not a value from a sound
   if (!base) throw new Error('Nymphes: no effects algorithm hallrev');
+  return base;
+})();
+function reverbSlot(v: ControlValues): FxSlot {
   return {
     alg: 'hallrev',
     level: 1,
     p: {
-      ...base,
+      ...HALL_BASE,
       SIZ: Math.round(expMap(num(v, 'rev.size') / 10, 2, 200)),
       DCY: Number(expMap(num(v, 'rev.decay') / 10, 0.2, 4.9).toFixed(2)),
       HC: Math.round(revCut(num(v, 'rev.filter'))),
