@@ -753,7 +753,7 @@
         {
           "title": "A burst of room",
           "module": "fx",
-          "why": "Press MENU until REVERB is chosen.\n- Reverb SIZE 6 · 16 %\n- Reverb DEC 3 · 520 ms\n- Reverb MIX 4 · 40 %\n- Listen for: a big, short space around each hit.",
+          "why": "Press MENU until REVERB is chosen.\n- Reverb SIZE 6 · 16 %\n- Reverb DEC 3 · 520 ms\n- Reverb MIX 4 · 40 %\n- Listen for: a short burst of room around each hit.",
           "set": {
             "rev.size": 6,
             "rev.decay": 3,
@@ -884,7 +884,7 @@
         {
           "title": "Free-running, with a tail",
           "module": "fx",
-          "why": "Turn SHIFT off and press MENU until MODE is chosen: slider 14 turns LFO 1’s KEY SYNC off, so the pattern runs across notes. Then MENU until REVERB, for some space.\n- LFO 1 KEY SYNC off\n- Reverb SIZE 6 · 16 %\n- Reverb DEC 6 · 1.4 s\n- Reverb MIX 3 · 30 %\n- Listen for: an endless, bubbling pattern in a large room.",
+          "why": "Turn SHIFT off and press MENU until MODE is chosen: slider 14 turns LFO 1’s KEY SYNC off, so the pattern runs across notes. Then MENU until REVERB, for some space.\n- LFO 1 KEY SYNC off\n- Reverb SIZE 6 · 16 %\n- Reverb DEC 6 · 1.4 s\n- Reverb MIX 3 · 30 %\n- Listen for: an endless, bubbling pattern in a room.",
           "set": {
             "lfo1.sync": 0,
             "rev.size": 6,
@@ -1093,7 +1093,7 @@
         {
           "title": "A short amp, a long room",
           "module": "fx",
-          "why": "With SHIFT lit, shorten the amp envelope; then MENU until REVERB.\n- Amp EG D 4.5 · 190 ms\n- Amp EG S 0 · 0 %\n- Amp EG R 4 · 120 ms\n- Reverb SIZE 7 · 25 %\n- Reverb DEC 6 · 1.4 s\n- Reverb MIX 4 · 40 %\n- Listen for: quick notes trailing into a big space.",
+          "why": "With SHIFT lit, shorten the amp envelope; then MENU until REVERB.\n- Amp EG D 4.5 · 190 ms\n- Amp EG S 0 · 0 %\n- Amp EG R 4 · 120 ms\n- Reverb SIZE 7 · 25 %\n- Reverb DEC 6 · 1.4 s\n- Reverb MIX 4 · 40 %\n- Listen for: quick notes trailing into a hall.",
           "set": {
             "env2.decay": 4.5,
             "env2.sustain": 0,

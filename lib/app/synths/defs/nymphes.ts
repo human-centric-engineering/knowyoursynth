@@ -568,7 +568,7 @@ fader('rev.size', 9, 'fx', on(['reverb']), {
   label: 'SIZE',
   name: 'Reverb SIZE',
   def: 5,
-  fmt: (v) => `${Math.round(revSize(v) / 2)} %`,
+  fmt: (v) => `${Math.round(Math.round(revSize(v)) / 2)} %`,
   help: `The size of the reverb’s space, from a small room to a hall. It grows slowly low down and quickly near the top.${REVERB}`,
 });
 fader('rev.decay', 10, 'fx', on(['reverb']), {

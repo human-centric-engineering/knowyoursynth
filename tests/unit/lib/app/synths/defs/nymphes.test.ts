@@ -325,8 +325,8 @@ describe('Nymphes reverb', () => {
     for (const v of [0, 3, 5, 8, 10]) {
       const slot = run({ 'rev.mix': 4, 'rev.size': v }).fx?.slots?.[0];
       const siz = slot && slot.alg !== null ? Number(slot.p.SIZ) : NaN;
-      expect(readout('rev.size', v)).toBe(`${Math.round(exp(v / 10, 2, 200) / 2)} %`);
       expect(siz).toBe(Math.round(exp(v / 10, 2, 200)));
+      expect(readout('rev.size', v)).toBe(`${Math.round(siz / 2)} %`);
     }
     expect(readout('rev.size', 5)).toBe('10 %');
     expect(readout('rev.size', 10)).toBe('100 %');
