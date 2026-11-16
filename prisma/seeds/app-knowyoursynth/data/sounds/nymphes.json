@@ -56,7 +56,7 @@
         {
           "title": "A long reverb",
           "module": "fx",
-          "why": "Press MENU until REVERB is chosen: the envelope sliders now set the reverb.\n- Reverb SIZE 8 · 80 %\n- Reverb DEC 8 · 2.6 s\n- Reverb FILT 4 · 5.5 kHz\n- Reverb MIX 5 · 50 %\n- Listen for: the chord sitting in a large, dark space, its tail running into the next.",
+          "why": "Press MENU until REVERB is chosen: the envelope sliders now set the reverb.\n- Reverb SIZE 8 · 40 %\n- Reverb DEC 8 · 2.6 s\n- Reverb FILT 4 · 5.5 kHz\n- Reverb MIX 5 · 50 %\n- Listen for: the chord sitting in a large, dark space, its tail running into the next.",
           "set": {
             "rev.size": 8,
             "rev.decay": 8,
@@ -293,7 +293,7 @@
         {
           "title": "Put it in a room",
           "module": "fx",
-          "why": "Press MENU until REVERB is chosen.\n- Reverb SIZE 3 · 30 %\n- Reverb DEC 3 · 520 ms\n- Reverb MIX 2.5 · 25 %\n- Listen for: a short room around the chords.",
+          "why": "Press MENU until REVERB is chosen.\n- Reverb SIZE 3 · 4 %\n- Reverb DEC 3 · 520 ms\n- Reverb MIX 2.5 · 25 %\n- Listen for: a short room around the chords.",
           "set": {
             "rev.size": 3,
             "rev.decay": 3,
@@ -376,7 +376,7 @@
         {
           "title": "A hall",
           "module": "fx",
-          "why": "Press MENU until REVERB is chosen.\n- Reverb SIZE 7 · 70 %\n- Reverb DEC 6 · 1.4 s\n- Reverb MIX 3.5 · 35 %\n- Listen for: the section placed in a hall.",
+          "why": "Press MENU until REVERB is chosen.\n- Reverb SIZE 7 · 25 %\n- Reverb DEC 6 · 1.4 s\n- Reverb MIX 3.5 · 35 %\n- Listen for: the section placed in a hall.",
           "set": {
             "rev.size": 7,
             "rev.decay": 6,
@@ -753,7 +753,7 @@
         {
           "title": "A burst of room",
           "module": "fx",
-          "why": "Press MENU until REVERB is chosen.\n- Reverb SIZE 6 · 60 %\n- Reverb DEC 3 · 520 ms\n- Reverb MIX 4 · 40 %\n- Listen for: a big, short space around each hit.",
+          "why": "Press MENU until REVERB is chosen.\n- Reverb SIZE 6 · 16 %\n- Reverb DEC 3 · 520 ms\n- Reverb MIX 4 · 40 %\n- Listen for: a big, short space around each hit.",
           "set": {
             "rev.size": 6,
             "rev.decay": 3,
@@ -884,7 +884,7 @@
         {
           "title": "Free-running, with a tail",
           "module": "fx",
-          "why": "Turn SHIFT off and press MENU until MODE is chosen: slider 14 turns LFO 1’s KEY SYNC off, so the pattern runs across notes. Then MENU until REVERB, for some space.\n- LFO 1 KEY SYNC off\n- Reverb SIZE 6 · 60 %\n- Reverb DEC 6 · 1.4 s\n- Reverb MIX 3 · 30 %\n- Listen for: an endless, bubbling pattern in a large room.",
+          "why": "Turn SHIFT off and press MENU until MODE is chosen: slider 14 turns LFO 1’s KEY SYNC off, so the pattern runs across notes. Then MENU until REVERB, for some space.\n- LFO 1 KEY SYNC off\n- Reverb SIZE 6 · 16 %\n- Reverb DEC 6 · 1.4 s\n- Reverb MIX 3 · 30 %\n- Listen for: an endless, bubbling pattern in a large room.",
           "set": {
             "lfo1.sync": 0,
             "rev.size": 6,
@@ -929,27 +929,27 @@
         {
           "title": "Noise, darkened",
           "module": "mixer",
-          "why": "Take the oscillator out; bring the noise up and the filter down.\n- LVL 0 · 0 %\n- NOISE 7 · 70 %\n- CUT (cutoff) 5.5 · 1.0 kHz\n- Listen for: a soft, steady rush.",
+          "why": "Take the oscillator out; bring the noise up and the filter down.\n- LVL 0 · 0 %\n- NOISE 9 · 90 %\n- CUT (cutoff) 5.5 · 1.0 kHz\n- Listen for: a soft, steady rush.",
           "set": {
             "osc.level": 0,
-            "noise.level": 7,
+            "noise.level": 9,
             "vcf.cutoff": 5.5
           }
         },
         {
           "title": "The swell",
           "module": "lfo",
-          "why": "Press MENU until LFO 2 is chosen. A slow triangle on the noise level and the cutoff.\n- LFO 2 RATE 2.5 · 0.17 Hz\n- LFO 2 → NOISE 4 · 40 %\n- LFO 2 → CUT 3 · ±1.5 oct\n- Listen for: the rush surging up and falling back every few seconds.",
+          "why": "Press MENU until LFO 2 is chosen. A slow triangle on the noise level and the cutoff.\n- LFO 2 RATE 2.5 · 0.17 Hz\n- LFO 2 → NOISE 10 · 100 %\n- LFO 2 → CUT 3 · ±1.5 oct\n- Listen for: the rush surging up and falling away to nothing every few seconds.",
           "set": {
             "lfo2.rate": 2.5,
-            "lfo2.noise": 4,
+            "lfo2.noise": 10,
             "lfo2.cutoff": 3
           }
         },
         {
           "title": "Fade in, the shore",
           "module": "fx",
-          "why": "Press MENU until REVERB is chosen, then off; with SHIFT lit, slow the amp envelope.\n- Reverb SIZE 9 · 90 %\n- Reverb DEC 7 · 1.9 s\n- Reverb MIX 5 · 50 %\n- Amp EG A 5 · 300 ms: with SHIFT lit, MENU off\n- Amp EG R 8 · 3.6 s: with SHIFT lit\n- Listen for: the sea fading in and rolling on, wide and distant.",
+          "why": "Press MENU until REVERB is chosen, then off; with SHIFT lit, slow the amp envelope.\n- Reverb SIZE 9 · 63 %\n- Reverb DEC 7 · 1.9 s\n- Reverb MIX 5 · 50 %\n- Amp EG A 5 · 300 ms: with SHIFT lit, MENU off\n- Amp EG R 8 · 3.6 s: with SHIFT lit\n- Listen for: the sea fading in and rolling on, wide and distant.",
           "set": {
             "rev.size": 9,
             "rev.decay": 7,
@@ -960,7 +960,7 @@
         }
       ],
       "context": {
-        "lfo2.noise": "How far LFO 2 raises and lowers the noise: the waves.",
+        "lfo2.noise": "How far LFO 2 dips the noise below NOISE and lets it back up: the waves.",
         "lfo2.rate": "How often a wave comes in.",
         "rev.mix": "The open space of the shore."
       },
@@ -1093,7 +1093,7 @@
         {
           "title": "A short amp, a long room",
           "module": "fx",
-          "why": "With SHIFT lit, shorten the amp envelope; then MENU until REVERB.\n- Amp EG D 4.5 · 190 ms\n- Amp EG S 0 · 0 %\n- Amp EG R 4 · 120 ms\n- Reverb SIZE 7 · 70 %\n- Reverb DEC 6 · 1.4 s\n- Reverb MIX 4 · 40 %\n- Listen for: quick notes trailing into a big space.",
+          "why": "With SHIFT lit, shorten the amp envelope; then MENU until REVERB.\n- Amp EG D 4.5 · 190 ms\n- Amp EG S 0 · 0 %\n- Amp EG R 4 · 120 ms\n- Reverb SIZE 7 · 25 %\n- Reverb DEC 6 · 1.4 s\n- Reverb MIX 4 · 40 %\n- Listen for: quick notes trailing into a big space.",
           "set": {
             "env2.decay": 4.5,
             "env2.sustain": 0,
@@ -1169,7 +1169,7 @@
         {
           "title": "Shimmer",
           "module": "fx",
-          "why": "Press MENU until REVERB is chosen.\n- Reverb SIZE 8 · 80 %\n- Reverb DEC 7 · 1.9 s\n- Reverb FILT 2 · 11 kHz\n- Reverb MIX 4.5 · 45 %\n- Listen for: bells ringing out into a bright hall.",
+          "why": "Press MENU until REVERB is chosen.\n- Reverb SIZE 8 · 40 %\n- Reverb DEC 7 · 1.9 s\n- Reverb FILT 2 · 11 kHz\n- Reverb MIX 4.5 · 45 %\n- Listen for: bells ringing out into a bright hall.",
           "set": {
             "rev.size": 8,
             "rev.decay": 7,

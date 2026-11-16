@@ -194,19 +194,65 @@ describe('Nymphes LFOs', () => {
 
   it('sends LFO 2 to PW, LVL, NOISE, CUT and RES by their depths', () => {
     const p = run({
+      'noise.level': 10,
       'lfo2.pw': 10,
       'lfo2.level': 10,
       'lfo2.noise': 10,
       'lfo2.cutoff': 5,
       'lfo2.res': 5,
     });
+    // LVL and NOISE at full swing by half their level each way; RES at 0 by a quarter of its range at half depth
     expect(p.routes).toEqual([
       { src: 'lfo2', dst: 'pw1', amt: 0.45 },
-      { src: 'lfo2', dst: 'lvl1', amt: 0.5 },
-      { src: 'lfo2', dst: 'noiseLvl', amt: 0.6 },
+      { src: 'lfo2', dst: 'lvl1', amt: 0.25 },
+      { src: 'lfo2', dst: 'noiseLvl', amt: 0.3 },
       { src: 'lfo2', dst: 'cutoff', amt: 2.5 },
-      { src: 'lfo2', dst: 'res', amt: 0.5 },
+      { src: 'lfo2', dst: 'res', amt: 0.275 },
     ]);
+  });
+
+  /** The lowest and highest a parameter reaches with LFO 2's route on it, which swings ±amt around its base. */
+  const span = (p: ReturnType<typeof run>, dst: string, base: number): [number, number] => {
+    const amt = p.routes.find((r) => r.src === 'lfo2' && r.dst === dst)?.amt ?? 0;
+    return [base - amt, base + amt];
+  };
+
+  it('keeps LFO 2 → LVL between 0 and LVL, so a full depth never passes the slider’s top', () => {
+    const p = run({ 'osc.level': 10, 'lfo2.level': 10 });
+    const [lo, hi] = span(p, 'lvl1', p.osc[0].level);
+    expect(lo).toBeCloseTo(0, 10);
+    expect(hi).toBeCloseTo(0.5, 10);
+    const half = run({ 'osc.level': 7, 'lfo2.level': 5 });
+    const [lo2, hi2] = span(half, 'lvl1', half.osc[0].level);
+    expect(lo2).toBeCloseTo(level(7, 0.5) * 0.5, 10);
+    expect(hi2).toBeCloseTo(level(7, 0.5), 10);
+  });
+
+  it('keeps LFO 2 → NOISE between 0 and NOISE', () => {
+    const p = run({ 'noise.level': 8, 'lfo2.noise': 10 });
+    const [lo, hi] = span(p, 'noiseLvl', p.noise.level);
+    expect(lo).toBeCloseTo(0, 10);
+    expect(hi).toBeCloseTo(level(8, 0.6), 10);
+  });
+
+  it('leaves a muted oscillator and noise silent at any LFO 2 depth', () => {
+    const p = run({ 'osc.level': 0, 'noise.level': 0, 'lfo2.level': 10, 'lfo2.noise': 10 });
+    expect(p.osc[0].level).toBe(0);
+    expect(p.noise.level).toBe(0);
+    expect(p.routes).toEqual([]);
+  });
+
+  it('raises RES by LFO 2 toward the slider’s top and never past it, short of the engine’s 1.15 cap', () => {
+    const full = run({ 'lfo2.res': 10 });
+    expect(span(full, 'res', full.filter.res)).toEqual([0, 1.1]);
+    const mid = run({ 'vcf.res': 6, 'lfo2.res': 10 });
+    const [lo, hi] = span(mid, 'res', mid.filter.res);
+    expect(lo).toBeCloseTo(0.66, 10);
+    expect(hi).toBeCloseTo(1.1, 10);
+    // at the top there is no room left, so LFO 2 does nothing
+    const top = run({ 'vcf.res': 10, 'lfo2.res': 10 });
+    expect(top.filter.res).toBeCloseTo(1.1, 10);
+    expect(top.routes).toEqual([]);
   });
 
   it('ignores FADE, which the engine has no stage for', () => {
@@ -253,9 +299,26 @@ describe('Nymphes reverb', () => {
       MIX: 40,
       SIZ: 200,
       DCY: 4.9,
+      DMP: 800,
       HC: 800,
     });
     expect(fx?.slots?.slice(1)).toEqual([{ alg: null }, { alg: null }, { alg: null }]);
+  });
+
+  it('leaves the tail undamped and uncut with FILT at 0', () => {
+    const slot = run({ 'rev.mix': 4, 'rev.filter': 0 }).fx?.slots?.[0];
+    expect(slot && slot.alg !== null ? slot.p : {}).toMatchObject({ DMP: 20000, HC: 20000 });
+  });
+
+  it('reads SIZE as the share of the hall’s 2–200 size it plays', () => {
+    for (const v of [0, 3, 5, 8, 10]) {
+      const slot = run({ 'rev.mix': 4, 'rev.size': v }).fx?.slots?.[0];
+      const siz = slot && slot.alg !== null ? Number(slot.p.SIZ) : NaN;
+      expect(readout('rev.size', v)).toBe(`${Math.round(exp(v / 10, 2, 200) / 2)} %`);
+      expect(siz).toBe(Math.round(exp(v / 10, 2, 200)));
+    }
+    expect(readout('rev.size', 5)).toBe('10 %');
+    expect(readout('rev.size', 10)).toBe('100 %');
   });
 });
 
