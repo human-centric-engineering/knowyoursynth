@@ -322,14 +322,19 @@ describe('Nymphes reverb', () => {
   });
 
   it('reads SIZE as the share of the hall’s 2–200 size it plays', () => {
-    for (const v of [0, 3, 5, 8, 10]) {
+    // worked by hand: SIZ = round(2 × 100^(v/10)), read as round(SIZ / 2) %
+    const cases: [number, number, string][] = [
+      [0, 2, '1 %'],
+      [3, 8, '4 %'],
+      [5, 20, '10 %'],
+      [8, 80, '40 %'],
+      [10, 200, '100 %'],
+    ];
+    for (const [v, siz, shown] of cases) {
       const slot = run({ 'rev.mix': 4, 'rev.size': v }).fx?.slots?.[0];
-      const siz = slot && slot.alg !== null ? Number(slot.p.SIZ) : NaN;
-      expect(siz).toBe(Math.round(exp(v / 10, 2, 200)));
-      expect(readout('rev.size', v)).toBe(`${Math.round(siz / 2)} %`);
+      expect(slot && slot.alg !== null ? slot.p.SIZ : NaN).toBe(siz);
+      expect(readout('rev.size', v)).toBe(shown);
     }
-    expect(readout('rev.size', 5)).toBe('10 %');
-    expect(readout('rev.size', 10)).toBe('100 %');
   });
 });
 

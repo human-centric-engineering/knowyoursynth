@@ -638,7 +638,7 @@ fader('lfo2.delay', 13, 'lfo', on(['lfo2'], true), {
   name: 'LFO 2 DELAY',
   def: 0,
   fmt: (v) => (v <= 0 ? 'off' : fmtTime(lfoDelay(v))),
-  help: `How long after a note LFO 2 waits before fading in.${NOT_GIVEN}${LFO2}`,
+  help: `How long after a note LFO 2 waits before fading in. While it waits, the app holds LVL, NOISE and RES halfway along the swing LFO 2 is set to give them, not at their sliders’ settings.${NOT_GIVEN}${LFO2}`,
 });
 fader('lfo2.wave', 14, 'lfo', on(['lfo2'], false), {
   label: 'WAVE',
