@@ -1546,15 +1546,6 @@
       "source": "https://musictech.com/reviews/hardware-instruments/the-big-review-dreadbox-typhon"
     },
     {
-      "id": "dreadbox-nymphes",
-      "name": "Dreadbox Nymphes",
-      "maker": "Dreadbox",
-      "year": "2021",
-      "kind": "module",
-      "text": "A USB-powered six-voice analogue polysynth with one wave-forming oscillator, sub-oscillator and noise per voice, a 24dB low-pass and a high-pass filter, a digital reverb and six playing modes.",
-      "source": "https://www.gearnews.com/superbooth-2021-dreadbox-nymphes-6-voice-analog-synthesizer"
-    },
-    {
       "id": "dreadbox-murmux-adept",
       "name": "Dreadbox Murmux Adept",
       "maker": "Dreadbox",

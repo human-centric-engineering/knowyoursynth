@@ -74,6 +74,7 @@ const EXPORTED: {
   { id: 'minilogue-xd', sounds: 125, timeline: 5, relatives: 3, unusual: 8, limits: 3 },
   { id: 'sub-37', sounds: 18, timeline: 4, relatives: 3, unusual: 10, limits: 3 },
   { id: 'teo-5', sounds: 18, timeline: 6, relatives: 4, unusual: 9, limits: 3 },
+  { id: 'nymphes', sounds: 18, timeline: 5, relatives: 3, unusual: 9, limits: 3 },
   { id: 'jupiter-4', sounds: 150, timeline: 5, relatives: 3, unusual: 12, limits: 8 },
   { id: 'jupiter-6', sounds: 150, timeline: 5, relatives: 3, unusual: 25, limits: 10 },
   { id: 'jupiter-8', sounds: 150, timeline: 5, relatives: 3, unusual: 15, limits: 6 },
@@ -143,6 +144,7 @@ describe('the exported content', () => {
       { id: 'minilogue-xd', order: 39, listed: true },
       { id: 'sub-37', order: 40, listed: true },
       { id: 'teo-5', order: 41, listed: true },
+      { id: 'nymphes', order: 42, listed: true },
     ]);
   });
 

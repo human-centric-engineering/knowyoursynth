@@ -1,0 +1,58 @@
+{
+  "synth": "nymphes",
+  "unusual": [
+    {
+      "target": "ui.shift",
+      "text": "Fourteen sliders carry 28 parameters: the label under each slider normally, the one printed above it while SHIFT is lit. Most synths give each parameter a control of its own."
+    },
+    {
+      "target": "ui.page",
+      "text": "The menu pages reuse the sliders again: on REVERB four of them set the reverb, and on LFO 2 each slider sets how far LFO 2 moves its own parameter, so a modulation is assigned by moving the slider of what it should move."
+    },
+    {
+      "target": "osc.wave",
+      "text": "No wave switch: one slider morphs the wave continuously from sawtooth through square to triangle, in that order, where most morphing oscillators start from the triangle."
+    },
+    {
+      "target": "osc",
+      "text": "Each voice has a single oscillator, as on the Sequential Six-Trak that inspired it; the thickness most polys get from two oscillators comes here from stacking voices in the play modes."
+    },
+    {
+      "target": "voice.mode",
+      "text": "Six play modes share out the six voices differently: one per note, all six or four on one note, three notes of two voices, or two of three. The middle four can also play a stored chord from one key."
+    },
+    {
+      "target": "env1.pitch",
+      "text": "There is no separate pitch envelope: the filter envelope bends the pitch as well as the cutoff, by its own depth slider, and only upwards."
+    },
+    {
+      "target": "hpf.cutoff",
+      "text": "The high-pass works on all six voices summed, not on each voice, after their low-pass filters; together the two make a band-pass."
+    },
+    {
+      "target": "lfo1.fade",
+      "text": "Besides a DELAY before the LFO comes in, there is a FADE after which it dies away; with DELAY at 0 and FADE full, LFO 1 runs a single cycle, a second envelope shaped like its wave."
+    },
+    {
+      "target": "lfo",
+      "text": "LFO 1 runs in each voice and is wired only to the pitch and the cutoff; LFO 2 is one LFO for all six voices and reaches almost every slider parameter, but only through its menu page."
+    }
+  ],
+  "limits": {
+    "intro": "The voice is modelled: WAVE with PW, LVL, SUB and NOISE, the 24 dB low-pass with CUT, RES (self-oscillating), TRACK and both depths, the high-pass, both envelopes, LFO 1 with its rate, five shapes, DELAY, type and key sync and its depths on the pitch and cutoff, the filter envelope on the pitch, glide with LEGATO, DTN and the six play modes, and the reverb. LFO 2 is modelled with its rate, shape, delay and type and its depth on PW, LVL, NOISE, CUT and RES. SHIFT shows the labels above the sliders, and MENU steps through the MODE, LFO 2 and REVERB pages.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "The CHORD slider and the seven programmed chords: the chords are the player’s own, stored by playing them, and the spec gives none. LFO FADE on both LFOs, so the one-shot LFO is missing too. LFO 2’s KEY SYNC, since the engine does not restart an LFO all the voices share. LFO 2’s depths on the other nineteen of its destinations (WAVE, SUB, glide, detune, CHORD, the pitch and filter depths, HPF, TRACK and the envelope stages), and the MOD W, VELO and AFTER pages, so the mod wheel, velocity, aftertouch and MPE move nothing. The TRACK and BPM LFO types, which play as LOW here (as BPM does on the hardware with no clock). Preset memory (the rotary switch, LOAD and SAVE), auto-tune, the global settings (pitch-bend range, fine tune, slider catch, CC and program change), MIDI C, SysEx, and the patch level sent as CC 7."
+      },
+      {
+        "title": "What the spec does not give",
+        "text": "The manual gives the cutoff’s range, 32.7 Hz to 16.7 kHz, and that the filter self-oscillates and tracks 1:1 at full TRACK. It gives no envelope or LFO times, glide rate, detune amount, high-pass range or reverb ranges, and the menu map that places the LFO types, key sync and LEGATO is an image the spec could not read. Here the envelopes run from 1 ms to 15 s, the LFOs from 0.03 to 30 Hz (LOW) and 1 Hz to 1 kHz (HIGH), the high-pass from 20 Hz to 2 kHz, DTN to ±60 cents and glide to 2 s, all the app’s estimates; and the LFO types, key sync and LEGATO sit on the MODE page."
+      },
+      {
+        "title": "The circuit is approximated",
+        "text": "WAVE crossfades between a sawtooth, a square and a triangle rather than reshaping one wave. Glide is a fixed rate on the hardware, so a wider leap takes longer; here it is a time. LFO 2 is mixed into a parameter on the hardware, so at full depth the slider’s own setting no longer counts; here it is added to it. DTN does nothing in POLY and MONO here, where on the hardware it can still set the voices apart. The reverb runs on the app’s DeepMind effects engine as its hall reverb, with SIZE, DEC, FILT and MIX mapped onto it."
+      }
+    ]
+  }
+}
