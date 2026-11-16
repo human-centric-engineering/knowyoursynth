@@ -21,7 +21,7 @@ python3 validate_synth.py --schema synth-blueprint.schema.json */*.synth.json
 
 Without `jsonschema` installed it runs the referential checks only.
 
-## In the app (42)
+## In the app (43)
 
 | Folder                                                     | Synth                                                                                                                                                            | Spec schema |
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
@@ -49,6 +49,7 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`model-15`](./model-15/README.md)                         | Behringer MODEL 15 Analog Semi-Modular Synthesizer                                                                                                               | 0.10.0      |
 | [`model-d`](./model-d/README.md)                           | Behringer MODEL D                                                                                                                                                | 0.1.0       |
 | [`neutron`](./neutron/README.md)                           | Behringer NEUTRON                                                                                                                                                | 0.2.0       |
+| [`nymphes`](./nymphes/README.md)                           | Dreadbox Nymphes                                                                                                                                                 | 0.12.0      |
 | [`polivoks`](./polivoks/README.md)                         | Formanta Polivoks (Поливокс) electronic music synthesizer                                                                                                        | 0.13.0      |
 | [`pearl-syncussion`](./pearl-syncussion/README.md)         | Pearl Syncussion SY-1 (Syncussion-1) control board                                                                                                               | 0.10.0      |
 | [`poly-d`](./poly-d/README.md)                             | Behringer Poly D                                                                                                                                                 | 0.7.0       |
@@ -68,7 +69,7 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`ub-xa-d`](./ub-xa-d/README.md)                           | Behringer UB-Xa D                                                                                                                                                | 0.7.0       |
 | [`wasp-deluxe`](./wasp-deluxe/README.md)                   | Behringer WASP Deluxe                                                                                                                                            | 0.7.0       |
 
-## Not in the app yet (14)
+## Not in the app yet (13)
 
 | Folder                                                                                 | Synth                                                                                                      | Spec schema |
 | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------- |
@@ -76,7 +77,6 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`behringer-jn-80`](./behringer-jn-80/README.md)                                       | Behringer JN-80 Classic Analog 8-Voice Programmable Polyphonic Synth                                       | 0.12.0      |
 | [`behringer-odyssey`](./behringer-odyssey/README.md)                                   | Behringer ODYSSEY                                                                                          | 0.10.0      |
 | [`behringer-wave`](./behringer-wave/README.md)                                         | Behringer WAVE Legendary 8-Voice Multi-Timbral Hybrid Synthesizer                                          | 0.13.0      |
-| [`dreadbox-nymphes`](./dreadbox-nymphes/README.md)                                     | Dreadbox Nymphes                                                                                           | 0.12.0      |
 | [`gamechanger-audio-motor-synth-mkii`](./gamechanger-audio-motor-synth-mkii/README.md) | Gamechanger Audio MOTOR Synth MKII                                                                         | 0.13.0      |
 | [`moog-matriarch`](./moog-matriarch/README.md)                                         | Moog Music Matriarch                                                                                       | 0.12.0      |
 | [`morphor-echon-6`](./morphor-echon-6/README.md)                                       | Morphor ECHON 6                                                                                            | 0.12.0      |

@@ -1,0 +1,1332 @@
+{
+  "synth": "nymphes",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "nym-ethereal-pad",
+      "name": "Ethereal Pad",
+      "ref": "In the style of Brian Eno — “An Ending (Ascent)”",
+      "artist": "Brian Eno",
+      "tags": ["pad", "ambient"],
+      "level": 2,
+      "blurb": "A slow, glassy pad that swells in and hangs in a long reverb: the sound the Nymphes is best known for.",
+      "how": "WAVE between square and triangle gives a soft, hollow tone. Slow envelopes let each chord bloom and fade, LFO 2 moves the cutoff of all six voices together, and the reverb, the only digital part of the synth, carries the tail.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 57, 7.5],
+          [0, 64, 7.5],
+          [0, 69, 7.5],
+          [0, 72, 7.5],
+          [8, 53, 7.5],
+          [8, 60, 7.5],
+          [8, 65, 7.5],
+          [8, 69, 7.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A hollow tone, darker",
+          "module": "osc",
+          "why": "The oscillator starts on a bright sawtooth. Soften it.\n- WAVE 7 · square → triangle: most of the way from square to triangle\n- CUT (cutoff) 5.5 · 1.0 kHz\n- Listen for: a soft, flute-like tone with the edge taken off.",
+          "set": {
+            "osc.wave": 7,
+            "vcf.cutoff": 5.5
+          }
+        },
+        {
+          "title": "Swell in, fade away",
+          "module": "env",
+          "why": "Light SHIFT: the four envelope sliders now move the amp envelope.\n- Amp EG A 7 · 1.6 s\n- Amp EG R 7.5 · 2.5 s\n- Listen for: each chord fading up over a couple of seconds and dying away slowly after the keys come up.",
+          "set": {
+            "env2.attack": 7,
+            "env2.release": 7.5
+          }
+        },
+        {
+          "title": "Let the filter breathe",
+          "module": "lfo",
+          "why": "Press MENU until LFO 2 is chosen. Turn SHIFT off: the sliders now set how far LFO 2 moves each parameter, and RATE is LFO 2’s.\n- LFO 2 RATE 2 · 0.12 Hz\n- LFO 2 → CUT 3 · ±1.5 oct\n- Listen for: the whole chord brightening and darkening together, very slowly.",
+          "set": {
+            "lfo2.rate": 2,
+            "lfo2.cutoff": 3
+          }
+        },
+        {
+          "title": "A long reverb",
+          "module": "fx",
+          "why": "Press MENU until REVERB is chosen: the envelope sliders now set the reverb.\n- Reverb SIZE 8 · 80 %\n- Reverb DEC 8 · 2.6 s\n- Reverb FILT 4 · 5.5 kHz\n- Reverb MIX 5 · 50 %\n- Listen for: the chord sitting in a large, dark space, its tail running into the next.",
+          "set": {
+            "rev.size": 8,
+            "rev.decay": 8,
+            "rev.filter": 4,
+            "rev.mix": 5
+          }
+        }
+      ],
+      "context": {
+        "osc.wave": "Where the tone sits between square and triangle: hollow and soft.",
+        "env2.attack": "How slowly each chord swells in.",
+        "rev.mix": "How much of the sound is the reverb’s tail."
+      },
+      "tweaks": [
+        {
+          "id": "lfo2.cutoff",
+          "try": "Raise to 6",
+          "hear": "A deeper, more obvious sweep through every chord."
+        },
+        {
+          "id": "osc.wave",
+          "try": "Pull down to 0",
+          "hear": "The same pad on a sawtooth: brighter and more like strings."
+        }
+      ]
+    },
+    {
+      "id": "nym-unison-bass",
+      "name": "Unison Bass",
+      "ref": "In the style of synthwave bass",
+      "artist": "Synthwave",
+      "tags": ["bass", "synthwave"],
+      "level": 2,
+      "blurb": "All six voices stacked on one note and pulled apart in tune: a wide, heavy bass.",
+      "how": "UNI A puts every voice on the one key, and DTN spreads them so they beat against each other. The sub adds the octave below, and a short filter envelope gives each note its pluck.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.4],
+          [0.5, 33, 0.4],
+          [1, 45, 0.4],
+          [1.5, 33, 0.4],
+          [2, 33, 0.4],
+          [2.5, 36, 0.4],
+          [3, 38, 0.4],
+          [3.5, 40, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Six voices on one key",
+          "module": "mode",
+          "why": "Press MENU until MODE is chosen, and pick UNI A on the right-hand column.\n- Play MODE UNI A\n- Listen for: one note at a time, thicker and louder than a single voice.",
+          "set": {
+            "voice.mode": "uniA"
+          }
+        },
+        {
+          "title": "Pull them apart, add the sub",
+          "module": "osc",
+          "why": "Press MENU until it is off again. With SHIFT lit, DTN spreads the stacked voices; with it off, SUB adds the octave below.\n- DTN 2.5 · ±15 cents\n- SUB 7 · 70 %\n- Listen for: a wide, gently beating note with weight under it.",
+          "set": {
+            "voice.detune": 2.5,
+            "osc.sub": 7
+          }
+        },
+        {
+          "title": "The pluck",
+          "module": "filter",
+          "why": "SHIFT off. Close the filter and let the filter envelope open it on each note.\n- CUT (cutoff) 2.5 · 156 Hz\n- EG (filter) 5 · +3.5 oct\n- Filter EG D 3.5 · 75 ms\n- Filter EG S 1 · 10 %\n- RES (resonance) 3 · 30 %\n- Listen for: a bright snap at the front of each note that settles into a dark, round tail.",
+          "set": {
+            "vcf.cutoff": 2.5,
+            "vcf.env": 5,
+            "env1.decay": 3.5,
+            "env1.sustain": 1,
+            "vcf.res": 3
+          }
+        }
+      ],
+      "context": {
+        "voice.mode": "UNI A stacks all six voices on the note you play.",
+        "voice.detune": "How far apart the stacked voices are tuned: the width.",
+        "vcf.env": "How bright the pluck at the start of each note is."
+      },
+      "tweaks": [
+        {
+          "id": "voice.detune",
+          "try": "Raise to 6",
+          "hear": "A sour, chorused spread, almost two notes at once."
+        },
+        {
+          "id": "env1.decay",
+          "try": "Raise to 5",
+          "hear": "A slower, more vocal sweep on every note."
+        }
+      ]
+    },
+    {
+      "id": "nym-tri-lead",
+      "name": "Gliding Lead",
+      "ref": "In the style of 1980s synth-pop leads",
+      "artist": "Synth-pop",
+      "tags": ["lead", "synth-pop", "80s"],
+      "level": 2,
+      "blurb": "A fat two-voice lead that glides between notes and grows a vibrato as each one is held.",
+      "how": "TRI gives every note two voices, detuned a little. Glide slides each note into the next, and LFO 1 on the pitch, held back by DELAY, adds vibrato only once a note has sounded.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 69, 1.5],
+          [1.5, 72, 0.5],
+          [2, 74, 1],
+          [3, 76, 2.5],
+          [5.5, 74, 0.5],
+          [6, 72, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two voices a note",
+          "module": "mode",
+          "why": "Press MENU until MODE is chosen and pick TRI.\n- Play MODE TRI\n- Listen for: each note a little fuller; up to three notes still sound together.",
+          "set": {
+            "voice.mode": "tri"
+          }
+        },
+        {
+          "title": "Detune and glide",
+          "module": "glide",
+          "why": "Press MENU until it is off. Light SHIFT: DTN and GLD are the labels above the sliders.\n- DTN 1.5 · ±9 cents\n- GLD 3.5 · 240 ms\n- Listen for: a gently beating tone that slides from note to note.",
+          "set": {
+            "voice.detune": 1.5,
+            "glide.time": 3.5
+          }
+        },
+        {
+          "title": "Vibrato that waits",
+          "module": "lfo",
+          "why": "SHIFT off sets the depth and rate; SHIFT on sets DELAY.\n- LFO (pitch) 2.5 · ±0.75 st\n- LFO 1 RATE 5.5 · 1.34 Hz\n- LFO 1 DELAY 5 · 1.3 s: with SHIFT lit\n- Listen for: held notes start steady, then begin to waver.",
+          "set": {
+            "lfo1.pitch": 2.5,
+            "lfo1.rate": 5.5,
+            "lfo1.delay": 5
+          }
+        },
+        {
+          "title": "Take the top off",
+          "module": "filter",
+          "why": "A little darker, with a touch of resonance.\n- CUT (cutoff) 6.5 · 1.9 kHz\n- RES (resonance) 2 · 20 %\n- Listen for: a smoother, more vocal lead.",
+          "set": {
+            "vcf.cutoff": 6.5,
+            "vcf.res": 2
+          }
+        }
+      ],
+      "context": {
+        "glide.time": "How long each note takes to slide into the next.",
+        "lfo1.delay": "How long a held note waits before the vibrato comes in.",
+        "voice.mode": "TRI: two voices on every note."
+      },
+      "tweaks": [
+        {
+          "id": "glide.time",
+          "try": "Raise to 6",
+          "hear": "Long, swooping slides between notes."
+        },
+        {
+          "id": "lfo1.pitch",
+          "try": "Raise to 4",
+          "hear": "A wide, operatic vibrato."
+        }
+      ]
+    },
+    {
+      "id": "nym-synth-brass",
+      "name": "Synth Brass",
+      "ref": "In the style of 1980s synth brass",
+      "artist": "Synth-pop",
+      "tags": ["brass", "80s"],
+      "level": 1,
+      "blurb": "Bright, biting brass chords from a single sawtooth per voice.",
+      "how": "The filter starts nearly closed and the filter envelope throws it open on each chord, then lets it settle: the “blat” of a brass section. A slight attack on the amp envelope softens the very front.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.4],
+          [0, 64, 0.4],
+          [0, 67, 0.4],
+          [0.5, 60, 0.4],
+          [0.5, 64, 0.4],
+          [0.5, 67, 0.4],
+          [1.5, 62, 0.4],
+          [1.5, 65, 0.4],
+          [1.5, 69, 0.4],
+          [2, 62, 1.5],
+          [2, 65, 1.5],
+          [2, 69, 1.5],
+          [4, 58, 0.4],
+          [4, 62, 0.4],
+          [4, 65, 0.4],
+          [4.5, 58, 0.4],
+          [4.5, 62, 0.4],
+          [4.5, 65, 0.4],
+          [5.5, 57, 2],
+          [5.5, 60, 2],
+          [5.5, 65, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The bite",
+          "module": "filter",
+          "why": "Close the filter, then let the filter envelope open it quickly and fall back part way.\n- CUT (cutoff) 3.5 · 290 Hz\n- EG (filter) 5 · +3.5 oct\n- Filter EG A 2.5 · 30 ms\n- Filter EG D 5 · 300 ms\n- Filter EG S 4 · 40 %\n- Listen for: a brassy blat at the front of every chord.",
+          "set": {
+            "vcf.cutoff": 3.5,
+            "vcf.env": 5,
+            "env1.attack": 2.5,
+            "env1.decay": 5,
+            "env1.sustain": 4
+          }
+        },
+        {
+          "title": "A softer front, a short tail",
+          "module": "env",
+          "why": "Light SHIFT for the amp envelope.\n- Amp EG A 1.5 · 8 ms\n- Amp EG R 4 · 120 ms\n- Listen for: the chords breathing in, as a brass section does, and ringing on for a moment.",
+          "set": {
+            "env2.attack": 1.5,
+            "env2.release": 4
+          }
+        },
+        {
+          "title": "Put it in a room",
+          "module": "fx",
+          "why": "Press MENU until REVERB is chosen.\n- Reverb SIZE 3 · 30 %\n- Reverb DEC 3 · 520 ms\n- Reverb MIX 2.5 · 25 %\n- Listen for: a short room around the chords.",
+          "set": {
+            "rev.size": 3,
+            "rev.decay": 3,
+            "rev.mix": 2.5
+          }
+        }
+      ],
+      "context": {
+        "vcf.env": "How hard the filter opens on each chord: the bite.",
+        "env1.decay": "How quickly the bite settles back.",
+        "env2.attack": "The swell into each chord."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.env",
+          "try": "Raise to 7",
+          "hear": "A brighter, harder, more aggressive brass."
+        },
+        {
+          "id": "osc.wave",
+          "try": "Raise to 4",
+          "hear": "Some square in the wave: a hollower, more nasal horn."
+        }
+      ]
+    },
+    {
+      "id": "nym-pwm-strings",
+      "name": "PWM Strings",
+      "ref": "In the style of 1970s string machines",
+      "artist": "Disco",
+      "tags": ["strings", "70s"],
+      "level": 2,
+      "blurb": "Lush, moving strings from a pulse wave whose width LFO 2 keeps shifting.",
+      "how": "With WAVE on the square, PW has something to work on. LFO 2, routed to PW on its menu page, sweeps the width back and forth, which sounds like several detuned oscillators. Slow envelopes and the high-pass keep it light.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 55, 3.8],
+          [0, 62, 3.8],
+          [0, 67, 3.8],
+          [0, 71, 3.8],
+          [4, 57, 3.8],
+          [4, 60, 3.8],
+          [4, 64, 3.8],
+          [4, 69, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A square wave, a little narrowed",
+          "module": "osc",
+          "why": "WAVE halfway is the square; with SHIFT lit, PW narrows it.\n- WAVE 5 · square\n- PW 2 · 41 %: with SHIFT lit\n- Listen for: a hollow, reedy tone.",
+          "set": {
+            "osc.wave": 5,
+            "osc.pw": 2
+          }
+        },
+        {
+          "title": "Sweep the width",
+          "module": "lfo",
+          "why": "Press MENU until LFO 2 is chosen. With SHIFT lit, the first slider is LFO 2’s depth on PW; with it off, RATE is LFO 2’s speed.\n- LFO 2 → PW 5 · 50 %\n- LFO 2 RATE 4.5 · 0.67 Hz\n- Listen for: the tone swirling, as if a section of players were slightly out of step.",
+          "set": {
+            "lfo2.pw": 5,
+            "lfo2.rate": 4.5
+          }
+        },
+        {
+          "title": "Soft edges",
+          "module": "env",
+          "why": "Press MENU until it is off. With SHIFT lit, slow the amp envelope; with it off, tame the top and thin the bass.\n- Amp EG A 5.5 · 460 ms\n- Amp EG R 6 · 700 ms\n- CUT (cutoff) 6.5 · 1.9 kHz\n- HPF 3 · 80 Hz: with SHIFT lit\n- Listen for: strings that swell in and hang on, light enough to sit above other parts.",
+          "set": {
+            "env2.attack": 5.5,
+            "env2.release": 6,
+            "vcf.cutoff": 6.5,
+            "hpf.cutoff": 3
+          }
+        },
+        {
+          "title": "A hall",
+          "module": "fx",
+          "why": "Press MENU until REVERB is chosen.\n- Reverb SIZE 7 · 70 %\n- Reverb DEC 6 · 1.4 s\n- Reverb MIX 3.5 · 35 %\n- Listen for: the section placed in a hall.",
+          "set": {
+            "rev.size": 7,
+            "rev.decay": 6,
+            "rev.mix": 3.5
+          }
+        }
+      ],
+      "context": {
+        "lfo2.pw": "How far LFO 2 swings the pulse width: the movement in the strings.",
+        "osc.wave": "The square, so there is a pulse for PW to work on.",
+        "hpf.cutoff": "Thins the bass so the strings sit higher."
+      },
+      "tweaks": [
+        {
+          "id": "lfo2.rate",
+          "try": "Raise to 6.5",
+          "hear": "A faster, more nervous shimmer."
+        },
+        {
+          "id": "osc.wave",
+          "try": "Pull down to 0",
+          "hear": "No pulse left, so the sweep stops: plain sawtooth strings."
+        }
+      ]
+    },
+    {
+      "id": "nym-soft-keys",
+      "name": "Soft Keys",
+      "ref": "In the style of lo-fi hip-hop keys",
+      "artist": "Lo-fi hip hop",
+      "tags": ["keys", "lo-fi"],
+      "level": 1,
+      "blurb": "A mellow electric-piano tone that dies away under the fingers.",
+      "how": "A triangle is soft to begin with. The amp envelope has no sustain, so each note fades however long it is held, and the filter envelope adds a little brightness to the strike.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 53, 1.5],
+          [0, 57, 1.5],
+          [0, 60, 1.5],
+          [0, 64, 1.5],
+          [2, 52, 1.5],
+          [2, 55, 1.5],
+          [2, 59, 1.5],
+          [2, 62, 1.5],
+          [4, 50, 1.5],
+          [4, 53, 1.5],
+          [4, 57, 1.5],
+          [4, 60, 1.5],
+          [6, 55, 1.5],
+          [6, 59, 1.5],
+          [6, 62, 1.5],
+          [6, 65, 1.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A triangle, darkened",
+          "module": "osc",
+          "why": "WAVE to the top for the triangle.\n- WAVE 10 · triangle\n- CUT (cutoff) 4.5 · 542 Hz\n- Listen for: a round, quiet tone like a muted bell.",
+          "set": {
+            "osc.wave": 10,
+            "vcf.cutoff": 4.5
+          }
+        },
+        {
+          "title": "Strike and fade",
+          "module": "env",
+          "why": "Light SHIFT: the amp envelope. No sustain, so the note always dies away.\n- Amp EG D 7 · 1.6 s\n- Amp EG S 0 · 0 %\n- Amp EG R 5.5 · 460 ms\n- Listen for: each chord fading like a struck key.",
+          "set": {
+            "env2.decay": 7,
+            "env2.sustain": 0,
+            "env2.release": 5.5
+          }
+        },
+        {
+          "title": "A brighter strike",
+          "module": "filter",
+          "why": "SHIFT off: let the filter envelope open the filter at the start of each note.\n- EG (filter) 3 · +2.1 oct\n- Filter EG D 4.5 · 190 ms\n- Filter EG S 0 · 0 %\n- Listen for: a little more “tine” at the front.",
+          "set": {
+            "vcf.env": 3,
+            "env1.decay": 4.5,
+            "env1.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "env2.sustain": "At zero, every note fades away like a piano’s.",
+        "env2.decay": "How long the notes take to fade while held.",
+        "osc.wave": "The triangle: soft, with few overtones."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.env",
+          "try": "Raise to 5",
+          "hear": "A harder, more electric strike."
+        },
+        {
+          "id": "lfo1.pitch",
+          "try": "Raise to 1",
+          "hear": "A slight wobble, like worn tape."
+        }
+      ]
+    },
+    {
+      "id": "nym-combo-organ",
+      "name": "Combo Organ",
+      "ref": "In the style of 1960s combo organ",
+      "artist": "Garage rock",
+      "tags": ["keys", "60s"],
+      "level": 1,
+      "blurb": "A buzzy, steady organ with the octave below underneath.",
+      "how": "The square wave and the sub an octave lower are an organ’s two footages. Organs do not fade, so the amp envelope is a plain on and off, with a short release to take the click off.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.4],
+          [0, 64, 0.4],
+          [0, 67, 0.4],
+          [0.5, 60, 0.4],
+          [0.5, 64, 0.4],
+          [0.5, 67, 0.4],
+          [1, 60, 0.9],
+          [1, 64, 0.9],
+          [1, 67, 0.9],
+          [2, 62, 0.4],
+          [2, 65, 0.4],
+          [2, 69, 0.4],
+          [2.5, 62, 0.4],
+          [2.5, 65, 0.4],
+          [2.5, 69, 0.4],
+          [3, 62, 0.9],
+          [3, 65, 0.9],
+          [3, 69, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Square and sub",
+          "module": "osc",
+          "why": "The square, with the sub added.\n- WAVE 5 · square\n- SUB 7 · 70 %\n- CUT (cutoff) 7 · 2.6 kHz\n- Listen for: a hollow, buzzy tone with an octave beneath it.",
+          "set": {
+            "osc.wave": 5,
+            "osc.sub": 7,
+            "vcf.cutoff": 7
+          }
+        },
+        {
+          "title": "On and off",
+          "module": "env",
+          "why": "Light SHIFT: the amp envelope at full sustain already; shorten the release.\n- Amp EG R 1 · 4 ms\n- Listen for: notes that stop as soon as the keys come up.",
+          "set": {
+            "env2.release": 1
+          }
+        },
+        {
+          "title": "A little movement",
+          "module": "lfo",
+          "why": "SHIFT off. A fast, shallow LFO 1 on the pitch, like a vibrato tab.\n- LFO (pitch) 1 · ±0.12 st\n- LFO 1 RATE 6.5 · 2.67 Hz\n- Listen for: a quick shimmer on every note.",
+          "set": {
+            "lfo1.pitch": 1,
+            "lfo1.rate": 6.5
+          }
+        }
+      ],
+      "context": {
+        "osc.sub": "The octave below, like an organ’s 16′ stop.",
+        "env2.release": "A short release: an organ stops when the key does.",
+        "lfo1.rate": "A fast LFO for an organ’s vibrato."
+      },
+      "tweaks": [
+        {
+          "id": "osc.pw",
+          "try": "Raise to 6",
+          "hear": "A thinner, reedier organ."
+        },
+        {
+          "id": "hpf.cutoff",
+          "try": "Raise to 4",
+          "hear": "A small, transistor-radio organ."
+        }
+      ]
+    },
+    {
+      "id": "nym-breathy-flute",
+      "name": "Breathy Flute",
+      "ref": "In the style of progressive-rock flute leads",
+      "artist": "Progressive rock",
+      "tags": ["wind", "prog"],
+      "level": 2,
+      "blurb": "A single breathy voice with vibrato that comes in late, like a player’s.",
+      "how": "MONO plays one voice. A triangle with some noise is the tone and the breath; a soft attack and LFO 1 on the pitch, held back by DELAY, are the player’s phrasing.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 72, 1],
+          [1, 74, 0.5],
+          [1.5, 76, 2],
+          [4, 79, 1],
+          [5, 77, 0.5],
+          [5.5, 76, 2.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One voice",
+          "module": "mode",
+          "why": "Press MENU until MODE is chosen and pick MONO, then MENU until it is off.\n- Play MODE MONO\n- Listen for: only one note at a time.",
+          "set": {
+            "voice.mode": "mono"
+          }
+        },
+        {
+          "title": "Tone and breath",
+          "module": "osc",
+          "why": "A triangle, a touch of noise, and the filter half closed.\n- WAVE 10 · triangle\n- NOISE 2.5 · 25 %\n- CUT (cutoff) 5.5 · 1.0 kHz\n- Listen for: a soft, airy tone.",
+          "set": {
+            "osc.wave": 10,
+            "noise.level": 2.5,
+            "vcf.cutoff": 5.5
+          }
+        },
+        {
+          "title": "Blow into it",
+          "module": "env",
+          "why": "Light SHIFT for the amp envelope.\n- Amp EG A 3.5 · 75 ms\n- Amp EG R 3.5 · 75 ms\n- Listen for: each note breathing in and out.",
+          "set": {
+            "env2.attack": 3.5,
+            "env2.release": 3.5
+          }
+        },
+        {
+          "title": "Late vibrato",
+          "module": "lfo",
+          "why": "SHIFT off for the depth and rate; SHIFT on for DELAY.\n- LFO (pitch) 2 · ±0.48 st\n- LFO 1 RATE 5.5 · 1.34 Hz\n- LFO 1 DELAY 6 · 1.8 s: with SHIFT lit\n- Listen for: long notes beginning to waver after a moment.",
+          "set": {
+            "lfo1.pitch": 2,
+            "lfo1.rate": 5.5,
+            "lfo1.delay": 6
+          }
+        }
+      ],
+      "context": {
+        "noise.level": "The breath in the tone.",
+        "env2.attack": "How softly each note starts, like a breath.",
+        "lfo1.delay": "How long before the vibrato comes in."
+      },
+      "tweaks": [
+        {
+          "id": "noise.level",
+          "try": "Raise to 4.5",
+          "hear": "A pan-pipe, mostly air."
+        },
+        {
+          "id": "glide.time",
+          "try": "With SHIFT lit, raise to 2",
+          "hear": "Notes that bend into each other."
+        }
+      ]
+    },
+    {
+      "id": "nym-filter-kick",
+      "name": "Analogue Kick",
+      "ref": "In the style of techno kick drums",
+      "artist": "Techno",
+      "tags": ["perc", "techno", "drums"],
+      "level": 3,
+      "blurb": "A kick drum from a filter ringing on its own, its pitch thrown down by the envelope.",
+      "how": "With no oscillator, a self-oscillating filter is a sine wave. The filter envelope sweeps its pitch down fast, which is the thump, and a short amp envelope stops it.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.3],
+          [1, 36, 0.3],
+          [2, 36, 0.3],
+          [3, 36, 0.3]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Only the filter",
+          "module": "filter",
+          "why": "Take the oscillator out, and turn RES up until the filter rings. With SHIFT lit, TRACK at the top keeps the ring in tune with the key.\n- LVL 0 · 0 %\n- RES (resonance) 10 · 100 %\n- CUT (cutoff) 2 · 114 Hz\n- TRACK 10 · 100 %: with SHIFT lit\n- Listen for: a pure, low sine on each key.",
+          "set": {
+            "osc.level": 0,
+            "vcf.res": 10,
+            "vcf.cutoff": 2,
+            "vcf.track": 10
+          }
+        },
+        {
+          "title": "The thump",
+          "module": "env",
+          "why": "SHIFT off: the filter envelope sweeps the ringing pitch down fast.\n- EG (filter) 5 · +3.5 oct\n- Filter EG D 3 · 48 ms\n- Filter EG S 0 · 0 %\n- Listen for: a drop in pitch at the start of every hit.",
+          "set": {
+            "vcf.env": 5,
+            "env1.decay": 3,
+            "env1.sustain": 0
+          }
+        },
+        {
+          "title": "Short and tight",
+          "module": "env",
+          "why": "Light SHIFT for the amp envelope.\n- Amp EG D 4.5 · 190 ms\n- Amp EG S 0 · 0 %\n- Amp EG R 3 · 48 ms\n- Listen for: a kick drum.",
+          "set": {
+            "env2.decay": 4.5,
+            "env2.sustain": 0,
+            "env2.release": 3
+          }
+        }
+      ],
+      "context": {
+        "vcf.res": "At the top the filter rings on its own: it is the drum.",
+        "vcf.env": "How far the pitch drops on each hit.",
+        "env2.decay": "How long the drum rings."
+      },
+      "tweaks": [
+        {
+          "id": "env1.decay",
+          "try": "Raise to 4.5",
+          "hear": "A slower drop: a tom-like boom."
+        },
+        {
+          "id": "noise.level",
+          "try": "Raise to 2",
+          "hear": "A click of noise on the attack."
+        }
+      ]
+    },
+    {
+      "id": "nym-noise-snare",
+      "name": "Noise Snare",
+      "ref": "In the style of 1980s drum-machine snares",
+      "artist": "Synth-pop",
+      "tags": ["perc", "80s", "drums"],
+      "level": 2,
+      "blurb": "A snare from noise and a triangle, with a burst of room.",
+      "how": "The triangle is the drum’s body, the noise its wires. A short amp envelope with no sustain makes a hit, and the reverb gives it the gated-room size of the 1980s.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [1, 50, 0.2],
+          [3, 50, 0.2],
+          [3.75, 50, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Body and wires",
+          "module": "mixer",
+          "why": "A triangle at half level with plenty of noise.\n- WAVE 10 · triangle\n- LVL 5 · 50 %\n- NOISE 9 · 90 %\n- CUT (cutoff) 8 · 4.8 kHz\n- Listen for: a hiss with a tone inside it.",
+          "set": {
+            "osc.wave": 10,
+            "osc.level": 5,
+            "noise.level": 9,
+            "vcf.cutoff": 8
+          }
+        },
+        {
+          "title": "A hit",
+          "module": "env",
+          "why": "Light SHIFT: the amp envelope falls straight away, with no sustain.\n- Amp EG D 3.5 · 75 ms\n- Amp EG S 0 · 0 %\n- Amp EG R 3 · 48 ms\n- Listen for: a crack, then nothing.",
+          "set": {
+            "env2.decay": 3.5,
+            "env2.sustain": 0,
+            "env2.release": 3
+          }
+        },
+        {
+          "title": "A burst of room",
+          "module": "fx",
+          "why": "Press MENU until REVERB is chosen.\n- Reverb SIZE 6 · 60 %\n- Reverb DEC 3 · 520 ms\n- Reverb MIX 4 · 40 %\n- Listen for: a big, short space around each hit.",
+          "set": {
+            "rev.size": 6,
+            "rev.decay": 3,
+            "rev.mix": 4
+          }
+        }
+      ],
+      "context": {
+        "noise.level": "The snare’s wires.",
+        "env2.decay": "How long each hit lasts.",
+        "rev.mix": "The room around it."
+      },
+      "tweaks": [
+        {
+          "id": "env1.pitch",
+          "try": "With SHIFT lit, raise to 4",
+          "hear": "A pitch blip at the front: a sharper attack."
+        },
+        {
+          "id": "hpf.cutoff",
+          "try": "With SHIFT lit, raise to 5",
+          "hear": "A thinner, more electronic snare."
+        }
+      ]
+    },
+    {
+      "id": "nym-closed-hat",
+      "name": "Closed Hat",
+      "ref": "In the style of house hi-hats",
+      "artist": "House",
+      "tags": ["perc", "house", "drums"],
+      "level": 1,
+      "blurb": "A tight hi-hat from noise alone, high-passed.",
+      "how": "Noise with the oscillator taken out, and the high-pass up so only the hiss at the top is left. A very short amp envelope makes it a tick.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0.5, 60, 0.1],
+          [1.5, 60, 0.1],
+          [2.5, 60, 0.1],
+          [3.5, 60, 0.1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Noise only",
+          "module": "mixer",
+          "why": "Take the oscillator out and bring the noise up.\n- LVL 0 · 0 %\n- NOISE 10 · 100 %\n- Listen for: a steady hiss while a key is held.",
+          "set": {
+            "osc.level": 0,
+            "noise.level": 10
+          }
+        },
+        {
+          "title": "Only the top",
+          "module": "filter",
+          "why": "Light SHIFT: HPF is the label above CUT.\n- HPF 9 · 1.3 kHz\n- Listen for: thin, high hiss.",
+          "set": {
+            "hpf.cutoff": 9
+          }
+        },
+        {
+          "title": "A tick",
+          "module": "env",
+          "why": "Still with SHIFT lit: a very short amp envelope.\n- Amp EG D 2.5 · 30 ms\n- Amp EG S 0 · 0 %\n- Amp EG R 2 · 15 ms\n- Listen for: a closed hi-hat.",
+          "set": {
+            "env2.decay": 2.5,
+            "env2.sustain": 0,
+            "env2.release": 2
+          }
+        }
+      ],
+      "context": {
+        "hpf.cutoff": "Cuts everything below the hiss of a cymbal.",
+        "env2.decay": "How long the hat rings."
+      },
+      "tweaks": [
+        {
+          "id": "env2.decay",
+          "try": "Raise to 5",
+          "hear": "An open hat."
+        },
+        {
+          "id": "vcf.res",
+          "try": "Raise to 6",
+          "hear": "A metallic ring in the hiss."
+        }
+      ]
+    },
+    {
+      "id": "nym-sample-hold-filter",
+      "name": "Random Filter",
+      "ref": "In the style of Tangerine Dream — “Phaedra”",
+      "artist": "Tangerine Dream",
+      "tags": ["seq", "berlin-school", "70s"],
+      "level": 2,
+      "blurb": "A held note whose resonant filter jumps to a new random place on every beat.",
+      "how": "LFO 1 on its random shape is sample and hold: a new value each cycle. Sent to the cutoff, with resonance up, it makes the bubbling, computer-like patterns of 1970s Berlin School.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 45, 3.8],
+          [4, 43, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A resonant, darker tone",
+          "module": "filter",
+          "why": "Close the filter part way and give it resonance.\n- CUT (cutoff) 4.5 · 542 Hz\n- RES (resonance) 6.5 · 65 %\n- Listen for: a sharp, whistling peak in the tone.",
+          "set": {
+            "vcf.cutoff": 4.5,
+            "vcf.res": 6.5
+          }
+        },
+        {
+          "title": "Random steps",
+          "module": "lfo",
+          "why": "LFO 1 WAVE at the top is random. With SHIFT lit, the LFO slider in FILTER sends it to the cutoff.\n- LFO 1 WAVE random\n- LFO 1 RATE 6 · 1.89 Hz\n- LFO (filter) 6 · ±2.4 oct: with SHIFT lit\n- Listen for: the filter leaping to a new place several times a second.",
+          "set": {
+            "lfo1.wave": 4,
+            "lfo1.rate": 6,
+            "vcf.lfo": 6
+          }
+        },
+        {
+          "title": "Free-running, with a tail",
+          "module": "fx",
+          "why": "Press MENU until MODE is chosen: slider 14 turns LFO 1’s KEY SYNC off, so the pattern runs across notes. Then MENU until REVERB, for some space.\n- LFO 1 KEY SYNC off\n- Reverb SIZE 6 · 60 %\n- Reverb DEC 6 · 1.4 s\n- Reverb MIX 3 · 30 %\n- Listen for: an endless, bubbling pattern in a large room.",
+          "set": {
+            "lfo1.sync": 0,
+            "rev.size": 6,
+            "rev.decay": 6,
+            "rev.mix": 3
+          }
+        }
+      ],
+      "context": {
+        "lfo1.wave": "Random: sample and hold, a new value each cycle.",
+        "vcf.lfo": "How far the random steps move the cutoff.",
+        "vcf.res": "Makes each step a ringing blip."
+      },
+      "tweaks": [
+        {
+          "id": "lfo1.rate",
+          "try": "Raise to 7.5",
+          "hear": "A faster, more frantic pattern."
+        },
+        {
+          "id": "lfo1.wave",
+          "try": "Set to square (3)",
+          "hear": "Two steps, back and forth: a trill."
+        }
+      ]
+    },
+    {
+      "id": "nym-seaside",
+      "name": "Seaside",
+      "ref": "In the style of ambient field recordings",
+      "artist": "Ambient",
+      "tags": ["fx", "ambient"],
+      "level": 2,
+      "blurb": "Waves rolling in and out, made from noise and LFO 2.",
+      "how": "Noise alone through the filter, with LFO 2 slowly raising and lowering both its level and the cutoff: the surge and wash of surf. The reverb makes it a shore.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 60, 15.5]]
+      },
+      "steps": [
+        {
+          "title": "Noise, darkened",
+          "module": "mixer",
+          "why": "Take the oscillator out; bring the noise up and the filter down.\n- LVL 0 · 0 %\n- NOISE 6 · 60 %\n- CUT (cutoff) 5 · 740 Hz\n- Listen for: a soft, steady rush.",
+          "set": {
+            "osc.level": 0,
+            "noise.level": 6,
+            "vcf.cutoff": 5
+          }
+        },
+        {
+          "title": "The swell",
+          "module": "lfo",
+          "why": "Press MENU until LFO 2 is chosen. A slow triangle on the noise level and the cutoff.\n- LFO 2 RATE 1.5 · 0.08 Hz\n- LFO 2 → NOISE 6 · 60 %\n- LFO 2 → CUT 4 · ±2.0 oct\n- Listen for: the rush surging up and falling back every few seconds.",
+          "set": {
+            "lfo2.rate": 1.5,
+            "lfo2.noise": 6,
+            "lfo2.cutoff": 4
+          }
+        },
+        {
+          "title": "Fade in, the shore",
+          "module": "fx",
+          "why": "Press MENU until REVERB is chosen, then off; with SHIFT lit, slow the amp envelope.\n- Reverb SIZE 9 · 90 %\n- Reverb DEC 7 · 1.9 s\n- Reverb MIX 5 · 50 %\n- Amp EG A 7 · 1.6 s: with SHIFT lit, MENU off\n- Amp EG R 8 · 3.6 s: with SHIFT lit\n- Listen for: the sea fading in and rolling on, wide and distant.",
+          "set": {
+            "rev.size": 9,
+            "rev.decay": 7,
+            "rev.mix": 5,
+            "env2.attack": 7,
+            "env2.release": 8
+          }
+        }
+      ],
+      "context": {
+        "lfo2.noise": "How far LFO 2 raises and lowers the noise: the waves.",
+        "lfo2.rate": "How often a wave comes in.",
+        "rev.mix": "The open space of the shore."
+      },
+      "tweaks": [
+        {
+          "id": "lfo2.rate",
+          "try": "Raise to 3",
+          "hear": "A choppier sea."
+        },
+        {
+          "id": "vcf.res",
+          "try": "Raise to 6",
+          "hear": "A whistling wind over the waves."
+        }
+      ]
+    },
+    {
+      "id": "nym-filter-whistle",
+      "name": "Filter Whistle",
+      "ref": "In the style of 1950s science-fiction film scores",
+      "artist": "Film score",
+      "tags": ["lead", "sci-fi"],
+      "level": 3,
+      "blurb": "A pure, theremin-like tone played by the filter itself.",
+      "how": "The manual’s recipe for playing the filter alone: no oscillator, RES at full so the filter sings a sine, and TRACK at full so it follows the keys in tune. Glide and a slow vibrato make it a theremin.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 67, 2],
+          [2, 72, 1],
+          [3, 71, 1],
+          [4, 64, 3.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The filter alone, in tune",
+          "module": "filter",
+          "why": "LVL down, CUT down and RES up; with SHIFT lit, TRACK to the top.\n- LVL 0 · 0 %\n- CUT (cutoff) 0 · 33 Hz\n- RES (resonance) 10 · 100 %\n- TRACK 10 · 100 %: with SHIFT lit\n- Listen for: a pure sine following the keys.",
+          "set": {
+            "osc.level": 0,
+            "vcf.cutoff": 0,
+            "vcf.res": 10,
+            "vcf.track": 10
+          }
+        },
+        {
+          "title": "Slide and sing",
+          "module": "glide",
+          "why": "With SHIFT lit, GLD slides each note into the next; with it off, LFO 1 adds vibrato.\n- GLD 4 · 320 ms: with SHIFT lit\n- LFO (pitch) 2 · ±0.48 st\n- LFO 1 RATE 5 · 0.95 Hz\n- Listen for: an eerie, swooping voice.",
+          "set": {
+            "glide.time": 4,
+            "lfo1.pitch": 2,
+            "lfo1.rate": 5
+          }
+        },
+        {
+          "title": "One voice, a room",
+          "module": "mode",
+          "why": "Press MENU until MODE is chosen and pick MONO, then MENU until REVERB.\n- Play MODE MONO\n- Reverb MIX 3 · 30 %\n- Listen for: a single theremin line in a space.",
+          "set": {
+            "voice.mode": "mono",
+            "rev.mix": 3
+          }
+        }
+      ],
+      "context": {
+        "vcf.res": "At the top the filter makes its own sine wave.",
+        "vcf.track": "At the top the sine follows the keys note for note.",
+        "glide.time": "The theremin’s slide between notes."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Raise to 3",
+          "hear": "The whole line moves up in pitch."
+        },
+        {
+          "id": "lfo1.pitch",
+          "try": "Raise to 3.5",
+          "hear": "A wide, wobbling vibrato."
+        }
+      ]
+    },
+    {
+      "id": "nym-duo-pluck",
+      "name": "Duo Pluck",
+      "ref": "In the style of synthwave arpeggios",
+      "artist": "Synthwave",
+      "tags": ["pluck", "synthwave"],
+      "level": 2,
+      "blurb": "A short, bright pluck with three voices to each note, in a wash of reverb.",
+      "how": "DUO gives each of up to two notes three voices, detuned for width. Both envelopes are short with no sustain, so each note is a pluck, and the reverb fills the gaps.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.2],
+          [0.5, 64, 0.2],
+          [1, 69, 0.2],
+          [1.5, 72, 0.2],
+          [2, 57, 0.2],
+          [2.5, 64, 0.2],
+          [3, 69, 0.2],
+          [3.5, 76, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Three voices a note",
+          "module": "mode",
+          "why": "Press MENU until MODE is chosen and pick DUO, then MENU until off. With SHIFT lit, DTN spreads the three.\n- Play MODE DUO\n- DTN 2 · ±12 cents: with SHIFT lit\n- Listen for: a wide, chorused note.",
+          "set": {
+            "voice.mode": "duo",
+            "voice.detune": 2
+          }
+        },
+        {
+          "title": "Pluck the filter",
+          "module": "filter",
+          "why": "SHIFT off: close the filter and let a short envelope snap it open.\n- CUT (cutoff) 3 · 212 Hz\n- EG (filter) 5.5 · +3.9 oct\n- Filter EG D 3.5 · 75 ms\n- Filter EG S 0 · 0 %\n- Listen for: a bright pluck on every note.",
+          "set": {
+            "vcf.cutoff": 3,
+            "vcf.env": 5.5,
+            "env1.decay": 3.5,
+            "env1.sustain": 0
+          }
+        },
+        {
+          "title": "A short amp, a long room",
+          "module": "fx",
+          "why": "With SHIFT lit, shorten the amp envelope; then MENU until REVERB.\n- Amp EG D 4.5 · 190 ms\n- Amp EG S 0 · 0 %\n- Amp EG R 4 · 120 ms\n- Reverb SIZE 7 · 70 %\n- Reverb DEC 6 · 1.4 s\n- Reverb MIX 4 · 40 %\n- Listen for: quick notes trailing into a big space.",
+          "set": {
+            "env2.decay": 4.5,
+            "env2.sustain": 0,
+            "env2.release": 4,
+            "rev.size": 7,
+            "rev.decay": 6,
+            "rev.mix": 4
+          }
+        }
+      ],
+      "context": {
+        "voice.mode": "DUO: three voices on each note.",
+        "env1.decay": "How quickly the pluck closes.",
+        "rev.mix": "The wash between the notes."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.res",
+          "try": "Raise to 5",
+          "hear": "A squelchier, more resonant pluck."
+        },
+        {
+          "id": "osc.wave",
+          "try": "Raise to 5",
+          "hear": "A hollow, square-wave pluck."
+        }
+      ]
+    },
+    {
+      "id": "nym-band-pass-bells",
+      "name": "Band-Pass Bells",
+      "ref": "In the style of dream-pop keys",
+      "artist": "Dream pop",
+      "tags": ["keys", "dream-pop"],
+      "level": 2,
+      "blurb": "Thin, glassy bell tones from the two filters squeezed together.",
+      "how": "The high-pass after the low-pass makes a band-pass: raise HPF and lower CUT and only a narrow band is left. Resonance makes it ring, and a decaying amp envelope makes each note a bell.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 76, 0.9],
+          [1, 79, 0.9],
+          [2, 83, 0.9],
+          [3, 81, 0.9],
+          [4, 76, 0.9],
+          [5, 74, 0.9],
+          [6, 72, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Narrow the band",
+          "module": "filter",
+          "why": "Low-pass part way down with resonance; with SHIFT lit, HPF up and TRACK so the band follows the keys.\n- CUT (cutoff) 6 · 1.4 kHz\n- RES (resonance) 6 · 60 %\n- HPF 6.5 · 399 Hz: with SHIFT lit\n- TRACK 7 · 70 %: with SHIFT lit\n- Listen for: a thin, nasal, ringing tone.",
+          "set": {
+            "vcf.cutoff": 6,
+            "vcf.res": 6,
+            "hpf.cutoff": 6.5,
+            "vcf.track": 7
+          }
+        },
+        {
+          "title": "Strike and ring",
+          "module": "env",
+          "why": "With SHIFT lit: an amp envelope that dies away.\n- Amp EG D 7 · 1.6 s\n- Amp EG S 0 · 0 %\n- Amp EG R 6.5 · 1.1 s\n- Listen for: each note like a struck glass.",
+          "set": {
+            "env2.decay": 7,
+            "env2.sustain": 0,
+            "env2.release": 6.5
+          }
+        },
+        {
+          "title": "Shimmer",
+          "module": "fx",
+          "why": "Press MENU until REVERB is chosen.\n- Reverb SIZE 8 · 80 %\n- Reverb DEC 7 · 1.9 s\n- Reverb FILT 2 · 11 kHz\n- Reverb MIX 4.5 · 45 %\n- Listen for: bells ringing out into a bright hall.",
+          "set": {
+            "rev.size": 8,
+            "rev.decay": 7,
+            "rev.filter": 2,
+            "rev.mix": 4.5
+          }
+        }
+      ],
+      "context": {
+        "hpf.cutoff": "With the low-pass, makes a narrow band-pass.",
+        "vcf.res": "Makes the band ring like a bell.",
+        "env2.decay": "How long each bell rings."
+      },
+      "tweaks": [
+        {
+          "id": "hpf.cutoff",
+          "try": "Pull down to 2",
+          "hear": "The bottom comes back: a fuller, softer tone."
+        },
+        {
+          "id": "osc.wave",
+          "try": "Raise to 10",
+          "hear": "A purer, flute-like bell."
+        }
+      ]
+    },
+    {
+      "id": "nym-arcade-zap",
+      "name": "Arcade Zap",
+      "ref": "In the style of 1980s arcade sound effects",
+      "artist": "Sound design",
+      "tags": ["fx", "80s"],
+      "level": 1,
+      "blurb": "A laser zap: the pitch flung up and dropping at once.",
+      "how": "The filter envelope moves the pitch too (EG above the fifth slider). At full, with a fast decay and no sustain, each note jumps up two octaves and falls straight back.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.3],
+          [1, 72, 0.3],
+          [1.5, 76, 0.3],
+          [3, 79, 0.3]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Fling the pitch",
+          "module": "env",
+          "why": "With SHIFT lit, EG above slider 5 is the filter envelope’s depth on the pitch. Then, SHIFT off, make that envelope fast.\n- EG (pitch) 10 · +24.0 st: with SHIFT lit\n- Filter EG D 3.5 · 75 ms\n- Filter EG S 0 · 0 %\n- Listen for: every note starting with a downward swoop.",
+          "set": {
+            "env1.pitch": 10,
+            "env1.decay": 3.5,
+            "env1.sustain": 0
+          }
+        },
+        {
+          "title": "Short and bright",
+          "module": "env",
+          "why": "A square wave and some resonance; with SHIFT lit, a short amp envelope.\n- WAVE 5 · square\n- RES (resonance) 4 · 40 %\n- Amp EG D 4 · 120 ms: with SHIFT lit\n- Amp EG S 0 · 0 %: with SHIFT lit\n- Listen for: a laser shot.",
+          "set": {
+            "osc.wave": 5,
+            "vcf.res": 4,
+            "env2.decay": 4,
+            "env2.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "env1.pitch": "How far each note’s pitch jumps up before falling.",
+        "env1.decay": "How fast it falls back."
+      },
+      "tweaks": [
+        {
+          "id": "env1.decay",
+          "try": "Raise to 5",
+          "hear": "A slower fall: a dropping bomb."
+        },
+        {
+          "id": "lfo1.pitch",
+          "try": "Raise to 3 with LFO 1 RATE at 8",
+          "hear": "A warbling alarm."
+        }
+      ]
+    },
+    {
+      "id": "nym-chord-swell",
+      "name": "Detuned Swell",
+      "ref": "In the style of Boards of Canada — “Roygbiv”",
+      "artist": "Boards of Canada",
+      "tags": ["pad", "electronica"],
+      "level": 3,
+      "blurb": "A warm, wobbling pad with the woozy, out-of-tune feel of old tape.",
+      "how": "UNI B stacks four voices on one note with a slight detune, and LFO 1 at a slow rate wobbles the pitch, which is the tape wow. A dark filter and slow amp envelope make it a swell.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 62, 3.8],
+          [4, 60, 1.8],
+          [6, 57, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Four voices, slightly apart",
+          "module": "mode",
+          "why": "Press MENU until MODE is chosen and pick UNI B, then MENU until off. With SHIFT lit, DTN.\n- Play MODE UNI B\n- DTN 1.5 · ±9 cents: with SHIFT lit\n- Listen for: a thick, slowly beating note.",
+          "set": {
+            "voice.mode": "uniB",
+            "voice.detune": 1.5
+          }
+        },
+        {
+          "title": "Warm and dark",
+          "module": "filter",
+          "why": "SHIFT off: a darker filter, the sub for warmth.\n- CUT (cutoff) 4 · 397 Hz\n- SUB 5 · 50 %\n- Listen for: a muffled, round tone.",
+          "set": {
+            "vcf.cutoff": 4,
+            "osc.sub": 5
+          }
+        },
+        {
+          "title": "Tape wow",
+          "module": "lfo",
+          "why": "A slow LFO 1 on the pitch, just enough to sound out of tune now and then.\n- LFO (pitch) 2 · ±0.48 st\n- LFO 1 RATE 3 · 0.24 Hz\n- Listen for: the pitch drifting slightly flat and back.",
+          "set": {
+            "lfo1.pitch": 2,
+            "lfo1.rate": 3
+          }
+        },
+        {
+          "title": "Swell",
+          "module": "env",
+          "why": "With SHIFT lit, slow the amp envelope.\n- Amp EG A 6 · 700 ms\n- Amp EG R 6.5 · 1.1 s\n- Listen for: notes that fade up and away, woozy and warm.",
+          "set": {
+            "env2.attack": 6,
+            "env2.release": 6.5
+          }
+        }
+      ],
+      "context": {
+        "lfo1.pitch": "The slow pitch wobble of worn tape.",
+        "voice.detune": "How far apart the four stacked voices are.",
+        "vcf.cutoff": "Keeps it dark and warm."
+      },
+      "tweaks": [
+        {
+          "id": "lfo1.rate",
+          "try": "Raise to 5",
+          "hear": "A faster, seasick warble."
+        },
+        {
+          "id": "noise.level",
+          "try": "Raise to 1.5",
+          "hear": "Some hiss, as off an old cassette."
+        }
+      ]
+    }
+  ]
+}

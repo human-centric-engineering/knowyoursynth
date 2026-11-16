@@ -41,6 +41,7 @@
     { "id": "0-coast", "order": 38, "listed": true },
     { "id": "minilogue-xd", "order": 39, "listed": true },
     { "id": "sub-37", "order": 40, "listed": true },
-    { "id": "teo-5", "order": 41, "listed": true }
+    { "id": "teo-5", "order": 41, "listed": true },
+    { "id": "nymphes", "order": 42, "listed": true }
   ]
 }

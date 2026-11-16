@@ -1,0 +1,55 @@
+{
+  "synth": "nymphes",
+  "title": "From the Six-Trak to the Nymphes",
+  "intro": "The Nymphes is a six-voice analogue polysynth from Dreadbox of Athens, released in 2021 and powered over USB. Its makers took the idea from Sequential’s Six-Trak: one oscillator and noise per voice through a filter and an amplifier, played into a reverb. They kept the simplicity and added a sub, a high-pass filter, a second LFO, six ways of sharing out the voices and a modulation matrix, all reached from fourteen sliders.",
+  "timeline": [
+    {
+      "year": "1984",
+      "name": "Sequential Circuits Six-Trak",
+      "tag": "Inspiration",
+      "text": "A six-voice analogue polysynth with one oscillator per voice and the first multitimbral synth. Dreadbox name it as the starting point: an oscillator and noise through a filter and an amp, which with only a reverb pedal covers a wide range of sounds."
+    },
+    {
+      "year": "2014",
+      "name": "Dreadbox Murmux",
+      "tag": "The maker’s first",
+      "text": "Dreadbox’s first synthesizer line: a handmade analogue monosynth with two VCOs, a four-pole low-pass filter and separate filter and amp envelopes."
+    },
+    {
+      "year": "2017",
+      "name": "Dreadbox Abyss",
+      "tag": "Closest ancestor",
+      "text": "Dreadbox’s first polysynth: four voices, each one oscillator and a sub through a four-pole low-pass filter, with built-in effects. The Nymphes keeps its one-oscillator voice."
+    },
+    {
+      "year": "2020",
+      "name": "Dreadbox Typhon",
+      "tag": "USB powered",
+      "text": "An analogue monosynth under digital control, powered over USB, with presets and digital effects: the approach the Nymphes takes to a poly."
+    },
+    {
+      "year": "2021",
+      "name": "Dreadbox Nymphes",
+      "tag": "This synth",
+      "text": "Six analogue voices, each one oscillator morphing sawtooth to square to triangle, a sub and white noise, a 24 dB resonant low-pass and two envelopes and an LFO per voice; a 6 dB high-pass and a digital reverb on the sum, a shared LFO 2, six play modes with programmable chords, and 98 presets. No keyboard: it is played over MIDI."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Dreadbox Murmux Adept",
+      "years": "2024",
+      "text": "An eight-voice Dreadbox poly with two VCOs per voice, and the Nymphes’s pairing of a 24 dB low-pass with a 6 dB high-pass."
+    },
+    {
+      "name": "Dreadbox Artemis",
+      "years": "2025",
+      "text": "A six-voice Dreadbox desktop poly with two VCOs per voice and effects made with Sinevibes."
+    },
+    {
+      "name": "Korg minilogue xd",
+      "years": "2020",
+      "text": "A four-voice analogue poly of the same years with voice modes that stack or chord its voices and a digital reverb. This app plays it too."
+    }
+  ],
+  "note": "None of the databank’s records name the Nymphes yet."
+}

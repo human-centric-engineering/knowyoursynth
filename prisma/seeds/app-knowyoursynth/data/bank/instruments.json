@@ -810,6 +810,16 @@
       "source": "https://oberheim.com/news/introducing-the-new-oberheim-teo-5-polyphonic-synthesizer/"
     },
     {
+      "id": "dreadbox-nymphes",
+      "name": "Dreadbox Nymphes",
+      "maker": "Dreadbox",
+      "year": "2021",
+      "kind": "poly",
+      "app": ["nymphes"],
+      "text": "Dreadbox’s six-voice analogue desktop polysynth from Athens, powered over USB and inspired by the simplicity of the Sequential Six-Trak: one oscillator morphing sawtooth, square and triangle, a sub-oscillator and noise per voice, a 24 dB resonant low-pass and a 6 dB high-pass, two envelopes and an LFO per voice, a shared LFO 2, a digital reverb and six play modes, set from fourteen sliders and a SHIFT button.",
+      "source": "https://www.gearnews.com/superbooth-2021-dreadbox-nymphes-6-voice-analog-synthesizer"
+    },
+    {
       "id": "udo-super-gemini",
       "name": "UDO Audio Super Gemini",
       "maker": "UDO Audio",
