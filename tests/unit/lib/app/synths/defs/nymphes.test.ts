@@ -125,7 +125,7 @@ describe('Nymphes oscillator and mixer', () => {
     const p = run({ 'osc.level': 5, 'osc.sub': 6, 'noise.level': 4 });
     expect(p.osc[0].level).toBeCloseTo(level(5, 0.5), 10);
     expect(p.osc[0].subLevel).toBeCloseTo(level(6, 0.5), 10);
-    expect(p.noise.level).toBeCloseTo(level(4, 0.35), 10);
+    expect(p.noise.level).toBeCloseTo(level(4, 0.6), 10);
     expect(run({ 'osc.level': 0 }).osc[0].level).toBe(0);
   });
 
@@ -211,7 +211,7 @@ describe('Nymphes LFOs', () => {
     expect(p.routes).toEqual([
       { src: 'lfo2', dst: 'pw1', amt: 0.45 },
       { src: 'lfo2', dst: 'lvl1', amt: 0.5 },
-      { src: 'lfo2', dst: 'noiseLvl', amt: 0.35 },
+      { src: 'lfo2', dst: 'noiseLvl', amt: 0.6 },
       { src: 'lfo2', dst: 'cutoff', amt: 2.5 },
       { src: 'lfo2', dst: 'res', amt: 0.5 },
     ]);

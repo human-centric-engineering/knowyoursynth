@@ -943,7 +943,7 @@ function toEngine(v: ControlValues): EngineParams {
   // LFO 2's depths
   route('lfo2', 'pw1', 0.45 * (num(v, 'lfo2.pw') / 10));
   route('lfo2', 'lvl1', 0.5 * (num(v, 'lfo2.level') / 10));
-  route('lfo2', 'noiseLvl', 0.35 * (num(v, 'lfo2.noise') / 10));
+  route('lfo2', 'noiseLvl', 0.6 * (num(v, 'lfo2.noise') / 10));
   route('lfo2', 'cutoff', (LFO2_CUT_OCT * num(v, 'lfo2.cutoff')) / 10);
   route('lfo2', 'res', num(v, 'lfo2.res') / 10);
 
@@ -969,7 +969,7 @@ function toEngine(v: ControlValues): EngineParams {
         subLevel: level10(num(v, 'osc.sub'), 0.5),
       },
     ],
-    noise: { level: level10(num(v, 'noise.level'), 0.35), color: 'white' },
+    noise: { level: level10(num(v, 'noise.level'), 0.6), color: 'white' },
     ext: { level: 0 },
     filter: {
       type: 'ladder',

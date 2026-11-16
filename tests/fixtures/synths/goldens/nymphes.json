@@ -840,10 +840,10 @@
       "poly": { "detune": 0.44999999999999996, "mono": false, "stack": 1, "voices": 6 }
     },
     "voice.detune=10": { "poly": { "detune": 0.6, "mono": false, "stack": 1, "voices": 6 } },
-    "noise.level=2.5": { "noise": { "color": "white", "level": 0.03315629989241496 } },
-    "noise.level=5": { "noise": { "color": "white", "level": 0.10772513616768017 } },
-    "noise.level=7.5": { "noise": { "color": "white", "level": 0.214620989146466 } },
-    "noise.level=10": { "noise": { "color": "white", "level": 0.35 } },
+    "noise.level=2.5": { "noise": { "color": "white", "level": 0.05683937124413993 } },
+    "noise.level=5": { "noise": { "color": "white", "level": 0.18467166200173743 } },
+    "noise.level=7.5": { "noise": { "color": "white", "level": 0.367921695679656 } },
+    "noise.level=10": { "noise": { "color": "white", "level": 0.6 } },
     "voice.chord=2.5": {},
     "voice.chord=5": {},
     "voice.chord=7.5": {},
@@ -1266,12 +1266,12 @@
     "lfo2.level=5": { "routes": [{ "amt": 0.25, "dst": "lvl1", "src": "lfo2" }] },
     "lfo2.level=7.5": { "routes": [{ "amt": 0.375, "dst": "lvl1", "src": "lfo2" }] },
     "lfo2.level=10": { "routes": [{ "amt": 0.5, "dst": "lvl1", "src": "lfo2" }] },
-    "lfo2.noise=2.5": { "routes": [{ "amt": 0.0875, "dst": "noiseLvl", "src": "lfo2" }] },
-    "lfo2.noise=5": { "routes": [{ "amt": 0.175, "dst": "noiseLvl", "src": "lfo2" }] },
+    "lfo2.noise=2.5": { "routes": [{ "amt": 0.15, "dst": "noiseLvl", "src": "lfo2" }] },
+    "lfo2.noise=5": { "routes": [{ "amt": 0.3, "dst": "noiseLvl", "src": "lfo2" }] },
     "lfo2.noise=7.5": {
-      "routes": [{ "amt": 0.26249999999999996, "dst": "noiseLvl", "src": "lfo2" }]
+      "routes": [{ "amt": 0.44999999999999996, "dst": "noiseLvl", "src": "lfo2" }]
     },
-    "lfo2.noise=10": { "routes": [{ "amt": 0.35, "dst": "noiseLvl", "src": "lfo2" }] },
+    "lfo2.noise=10": { "routes": [{ "amt": 0.6, "dst": "noiseLvl", "src": "lfo2" }] },
     "lfo2.cutoff=2.5": { "routes": [{ "amt": 1.25, "dst": "cutoff", "src": "lfo2" }] },
     "lfo2.cutoff=5": { "routes": [{ "amt": 2.5, "dst": "cutoff", "src": "lfo2" }] },
     "lfo2.cutoff=7.5": { "routes": [{ "amt": 3.75, "dst": "cutoff", "src": "lfo2" }] },
@@ -1557,10 +1557,10 @@
     "patched:* voice.detune=10": {
       "poly": { "detune": 0.6, "mono": false, "stack": 1, "voices": 6 }
     },
-    "patched:* noise.level=2.5": { "noise": { "color": "white", "level": 0.03315629989241496 } },
-    "patched:* noise.level=5": { "noise": { "color": "white", "level": 0.10772513616768017 } },
-    "patched:* noise.level=7.5": { "noise": { "color": "white", "level": 0.214620989146466 } },
-    "patched:* noise.level=10": { "noise": { "color": "white", "level": 0.35 } },
+    "patched:* noise.level=2.5": { "noise": { "color": "white", "level": 0.05683937124413993 } },
+    "patched:* noise.level=5": { "noise": { "color": "white", "level": 0.18467166200173743 } },
+    "patched:* noise.level=7.5": { "noise": { "color": "white", "level": 0.367921695679656 } },
+    "patched:* noise.level=10": { "noise": { "color": "white", "level": 0.6 } },
     "patched:* voice.chord=2.5": {},
     "patched:* voice.chord=5": {},
     "patched:* voice.chord=7.5": {},
@@ -2051,12 +2051,12 @@
     "patched:* lfo2.level=5": { "routes": [{ "amt": 0.25, "dst": "lvl1", "src": "lfo2" }] },
     "patched:* lfo2.level=7.5": { "routes": [{ "amt": 0.375, "dst": "lvl1", "src": "lfo2" }] },
     "patched:* lfo2.level=10": { "routes": [{ "amt": 0.5, "dst": "lvl1", "src": "lfo2" }] },
-    "patched:* lfo2.noise=2.5": { "routes": [{ "amt": 0.0875, "dst": "noiseLvl", "src": "lfo2" }] },
-    "patched:* lfo2.noise=5": { "routes": [{ "amt": 0.175, "dst": "noiseLvl", "src": "lfo2" }] },
+    "patched:* lfo2.noise=2.5": { "routes": [{ "amt": 0.15, "dst": "noiseLvl", "src": "lfo2" }] },
+    "patched:* lfo2.noise=5": { "routes": [{ "amt": 0.3, "dst": "noiseLvl", "src": "lfo2" }] },
     "patched:* lfo2.noise=7.5": {
-      "routes": [{ "amt": 0.26249999999999996, "dst": "noiseLvl", "src": "lfo2" }]
+      "routes": [{ "amt": 0.44999999999999996, "dst": "noiseLvl", "src": "lfo2" }]
     },
-    "patched:* lfo2.noise=10": { "routes": [{ "amt": 0.35, "dst": "noiseLvl", "src": "lfo2" }] },
+    "patched:* lfo2.noise=10": { "routes": [{ "amt": 0.6, "dst": "noiseLvl", "src": "lfo2" }] },
     "patched:* lfo2.cutoff=2.5": { "routes": [{ "amt": 1.25, "dst": "cutoff", "src": "lfo2" }] },
     "patched:* lfo2.cutoff=5": { "routes": [{ "amt": 2.5, "dst": "cutoff", "src": "lfo2" }] },
     "patched:* lfo2.cutoff=7.5": { "routes": [{ "amt": 3.75, "dst": "cutoff", "src": "lfo2" }] },
