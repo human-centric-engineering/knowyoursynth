@@ -3083,6 +3083,14 @@
       "pattern": "researched:kraftwerk/numbers-kick"
     },
     {
+      "sound": "nymphes/nym-chord-swell",
+      "pattern": "researched:boards-of-canada/roygbiv-melody"
+    },
+    {
+      "sound": "nymphes/nym-ethereal-pad",
+      "pattern": "researched:brian-eno/an-ending-ascent-melody-low"
+    },
+    {
       "sound": "polivoks/pv-acid-scream",
       "pattern": "researched:hardfloor/acperience-line-high"
     },
