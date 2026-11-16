@@ -51,7 +51,7 @@
       },
       {
         "title": "The circuit is approximated",
-        "text": "WAVE crossfades between a sawtooth, a square and a triangle rather than reshaping one wave. Glide is a fixed rate on the hardware, so a wider leap takes longer; here it is a time. LFO 2 is mixed into a parameter on the hardware, so at full depth the slider’s own setting no longer counts; here it is added to it. DTN does nothing in POLY and MONO here, where on the hardware it can still set the voices apart. The reverb runs on the app’s DeepMind effects engine as its hall reverb, with SIZE, DEC, FILT and MIX mapped onto it."
+        "text": "WAVE crossfades between a sawtooth, a square and a triangle rather than reshaping one wave. Glide is a fixed rate on the hardware, so a wider leap takes longer; here it is a time. LFO 2 is mixed into a parameter on the hardware, so at full depth the slider’s own setting no longer counts; here it moves the parameter from the slider’s setting and stays inside the slider’s range: LVL and NOISE dip below their setting, RES rises toward the top, and PW and CUT swing either side. DTN does nothing in POLY and MONO here, where on the hardware it can still set the voices apart. The reverb runs on the app’s DeepMind effects engine as its hall reverb, with SIZE, DEC, FILT and MIX mapped onto it."
       }
     ]
   }
