@@ -1102,7 +1102,7 @@ menu('multi', 'multi.keytrack', 'KEY TRACK', {
   module: 'osc',
   name: 'Decim KEY TRACK',
   fmt: (v) => `${Math.round(v)} %`,
-  help: 'With Decim noise: how far the sample rate follows the keyboard, so the grit rises with the note. Set on the hardware by turning SHAPE with SHIFT held.',
+  help: 'With Decim noise: how far the sample rate follows the pitch the MULTI ENGINE plays, so the grit rises with the note, with its OCTAVE and with any pitch modulation. Set on the hardware by turning SHAPE with SHIFT held.',
 });
 // VPM (PROGRAM EDIT button 10)
 const VPM_PARAMS: [string, string, string][] = [
@@ -1126,7 +1126,7 @@ const VPM_PARAMS: [string, string, string][] = [
   [
     'multi.modKey',
     'MOD KEY TRACK',
-    'How much the modulation thins out as you play higher, which keeps high notes from turning harsh.',
+    'How much the modulation thins out as the pitch rises (a higher note, the MULTI ENGINE’s OCTAVE, a pitch sweep), which keeps high notes from turning harsh.',
   ],
 ];
 VPM_PARAMS.forEach(([id, lab, help]) =>
