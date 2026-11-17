@@ -31,6 +31,10 @@ import path from 'node:path';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { ownModuleProblems, scaffoldsOnDisk, unlistedSeams } from '@/tests/helpers/app-scaffolds';
 
+// FORK (Know Your Synth): `initApp` reads the public pattern library ahead (`f-pattern-prefetch` t-262).
+const mockWarmPublicLibrary = vi.hoisted(() => vi.fn(() => Promise.resolve()));
+vi.mock('@/lib/app/patterns/suggest-read', () => ({ warmPublicLibrary: mockWarmPublicLibrary }));
+
 // FORK (Know Your Synth): the data-export collector reads the synth suggestions table (`f-databank` t-37), the link
 // suggestions table (`f-link-suggestions` t-185) and the rest below.
 vi.mock('@/lib/db/client', () => ({
@@ -656,8 +660,12 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     risk: 'a stray default would run one-time work on every install boot',
     // That instrumentation calls this in all envs, try/catch-isolated, is
     // covered by tests/unit/instrumentation.test.ts.
+    // FORK (Know Your Synth): pinned to our one boot job, reading the public pattern library ahead (t-262), which
+    // start-up does not wait on. Its failure path is tests/unit/lib/app/bootstrap.test.ts.
     assert: async () => {
+      mockWarmPublicLibrary.mockClear();
       await expect(initApp()).resolves.toBeUndefined();
+      await vi.waitFor(() => expect(mockWarmPublicLibrary).toHaveBeenCalledTimes(1));
     },
   },
   {

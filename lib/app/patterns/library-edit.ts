@@ -628,7 +628,8 @@ async function withAuthors(
 
 /**
  * Once a write that can change what players see has committed, drop the library suggestions keep, so the next
- * suggestion reads it afresh (in this process; another instance's copy lasts out its minute).
+ * suggestion reads it afresh (in this process; another instance's copy is served until a call past its minute starts
+ * a refresh, and once more while that is on its way).
  */
 async function fresh<T>(write: Promise<T>): Promise<T> {
   const result = await write;

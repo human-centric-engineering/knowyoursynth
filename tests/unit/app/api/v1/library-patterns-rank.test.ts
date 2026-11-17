@@ -309,7 +309,7 @@ describe('POST /api/v1/library-patterns/rank', () => {
     expect(listed(data)).not.toContain(LEAD);
   });
 
-  it('reads the library suggestions keep, once a minute between them', async () => {
+  it('reads the library suggestions keep, once between them', async () => {
     await post({ synthId: 'model-d', features: BASS });
     await SUGGEST(
       new NextRequest('http://localhost:3000/api/v1/library-patterns/suggest', {

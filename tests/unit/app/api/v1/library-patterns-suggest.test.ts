@@ -208,7 +208,7 @@ describe('POST /api/v1/library-patterns/suggest', () => {
     }
   });
 
-  it('reads the sound and the library once each, and the library at most once a minute', async () => {
+  it('reads the sound and the library once each, and the library once while it is kept', async () => {
     await post({ synthId: 'model-d', sound: 'funk-bass', features: BASS });
     await post({ synthId: 'model-d', features: { ...BASS, attack: 0.3 } });
     expect(mockPrisma.libraryPattern.findMany).toHaveBeenCalledTimes(1);
