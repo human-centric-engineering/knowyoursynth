@@ -123,7 +123,7 @@ import { RIFF_FALLBACK } from '@/lib/app/patterns/riff-name';
 import { useSoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
 import { useSuggestedPatterns } from '@/components/app/sequencer/use-suggested-patterns';
 import { PatternPicker } from '@/components/app/synth/pattern-picker';
-import { useBacking } from '@/components/app/sequencer/use-backing';
+import { useBacking, useBackingPref } from '@/components/app/sequencer/use-backing';
 import { useRankedPatterns } from '@/components/app/synth/use-ranked-patterns';
 import { useFavourites } from '@/components/app/synth/favourites';
 import { FxRack } from '@/components/app/synth/fx-rack';
@@ -1512,7 +1512,12 @@ function Synth({
       : null;
   // The Play deck's pattern picker (`f-pattern-picker` t-213) lists them too, so they are read while it is open.
   const [patternsOpen, setPatternsOpen] = useState(false);
-  const soundPatterns = useSoundPatterns(librarySound, seqShown || patternsOpen);
+  // Read too while the drums match the patch (t-267): Match goes by its default pattern's Inspired by.
+  const backingPref = useBackingPref();
+  const soundPatterns = useSoundPatterns(
+    librarySound,
+    seqShown || patternsOpen || backingPref[0].drums === 'auto'
+  );
   // Patterns that suit the patch as it is now (t-125). A library sound is offered them once the patch has moved far
   // from how that sound came; anything else on the panel is offered them at once.
   // The Default patch is no sound the suggestions can be asked to leave out, so it is no start: it is offered them at once.
@@ -1550,7 +1555,10 @@ function Synth({
   const soundDefaultView = soundPatterns?.patterns?.find(
     (p) => p.id === soundPatterns.sound.defaultId
   );
-  const backing = useBacking(seq, soundDefaultView?.inspiredBy.label ?? null);
+  const backing = useBacking(seq, backingPref, {
+    fallbackInspiredBy: soundDefaultView?.inspiredBy.label ?? null,
+    patchKey: shown ? `${synthId}/${shown.id}` : null,
+  });
   // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked beside Play, the
   // one a sound of the user's plays) or the riff edited, and with no sound's riff to play; otherwise the riff, which the
   // sequencer holds as it came. A new patch puts back its riff in the sequencer, and Play with it.

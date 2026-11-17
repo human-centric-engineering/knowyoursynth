@@ -17,7 +17,7 @@ import {
   useSequencer,
   type Sequencer as SeqState,
 } from '@/components/app/sequencer/use-sequencer';
-import { useBacking } from '@/components/app/sequencer/use-backing';
+import { useBacking, useBackingPref } from '@/components/app/sequencer/use-backing';
 import { importPhrase } from '@/lib/app/sequencer/import';
 import { DRUM_VOICES } from '@/lib/app/synths/audio/backing';
 import type { Phrase } from '@/lib/app/synths/contract';
@@ -37,9 +37,9 @@ const engine = {
 };
 let state: SeqState;
 
-function Harness({ riff = RIFF }: { riff?: Phrase }) {
+function Harness({ riff = RIFF, patch = 'model-d/fat-bass' }: { riff?: Phrase; patch?: string }) {
   const seq = useSequencer({ engine, ensureAudio: async () => true, riff });
-  const backing = useBacking(seq);
+  const backing = useBacking(seq, useBackingPref(), { patchKey: patch });
   state = seq;
   return (
     <Sequencer
@@ -188,6 +188,23 @@ describe('drums', () => {
     expect(screen.getByRole('combobox', { name: 'Drums' }).textContent).toContain(
       'Match: One drop'
     );
+  });
+
+  it('goes back to Match when another patch is chosen, and stays off when off', () => {
+    const { rerender } = render(<Harness />);
+    pickDrums('Funk');
+    rerender(<Harness patch="model-d/wobble" />);
+    expect(screen.getByRole('combobox', { name: 'Drums' }).textContent).toMatch(/^.*Match: /);
+    pickDrums('Off');
+    rerender(<Harness patch="model-d/fat-bass" />);
+    expect(screen.getByRole('combobox', { name: 'Drums' }).textContent).toContain('Off');
+  });
+
+  it('keeps a beat chosen by name while the patch stays', () => {
+    const { rerender } = render(<Harness />);
+    pickDrums('Funk');
+    rerender(<Harness />);
+    expect(screen.getByRole('combobox', { name: 'Drums' }).textContent).toContain('Funk');
   });
 
   it('plays no beat for a style that has none, and says so', () => {

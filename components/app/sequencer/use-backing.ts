@@ -9,9 +9,15 @@
  * matched beat: another pattern opened can match another beat, and the beat swings with the pattern's swing. Match
  * goes by what the pattern was inspired by, or by `fallbackInspiredBy` (the sound's default pattern's, for the sound's
  * own riff), then by the tempo and swing (`drumStyleFor`).
+ *
+ * Another patch (`patchKey` changing) brings the drums back to Match, so the beat is the one that suits the new patch
+ * rather than one chosen for the last. Off stays off.
+ *
+ * The stored setting is read by `useBackingPref`, apart from the rest, so the page can know whether Match is on before
+ * it has read what Match goes by.
  */
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { z } from 'zod';
 import { STORAGE_KEYS, useStoredPref } from '@/components/app/synth/storage';
 import {
@@ -32,7 +38,7 @@ const BackingPrefSchema = z.object({
   countIn: z.boolean(),
   drums: z.enum(DRUM_CHOICES),
 });
-type BackingPref = z.infer<typeof BackingPrefSchema>;
+export type BackingPref = z.infer<typeof BackingPrefSchema>;
 
 export const DEFAULT_BACKING: BackingPref = { metronome: false, countIn: true, drums: 'off' };
 
@@ -49,11 +55,26 @@ export interface Backing {
   beat: DrumBeatId | null;
 }
 
+/** The stored Metronome, Count-in and Drums. */
+export function useBackingPref(): [BackingPref, (next: BackingPref) => void] {
+  return useStoredPref(STORAGE_KEYS.backing, BackingPrefSchema, DEFAULT_BACKING);
+}
+
 export function useBacking(
   seq: Pick<Sequencer, 'pattern' | 'loaded' | 'setBacking'>,
-  fallbackInspiredBy: string | null = null
+  [pref, setPref]: [BackingPref, (next: BackingPref) => void],
+  {
+    fallbackInspiredBy = null,
+    patchKey = null,
+  }: { fallbackInspiredBy?: string | null; patchKey?: string | null } = {}
 ): Backing {
-  const [pref, setPref] = useStoredPref(STORAGE_KEYS.backing, BackingPrefSchema, DEFAULT_BACKING);
+  // Another patch: a beat chosen by name gives way to the one that matches it.
+  const lastPatch = useRef(patchKey);
+  useEffect(() => {
+    if (lastPatch.current === patchKey) return;
+    lastPatch.current = patchKey;
+    if (pref.drums !== 'off' && pref.drums !== 'auto') setPref({ ...pref, drums: 'auto' });
+  }, [patchKey, pref, setPref]);
   const { bpm, swing } = seq.pattern;
   const inspiredBy = seq.loaded ? (seq.loaded.inspiredBy ?? null) : fallbackInspiredBy;
   const matched = useMemo(() => drumStyleFor(inspiredBy, bpm, swing), [inspiredBy, bpm, swing]);
