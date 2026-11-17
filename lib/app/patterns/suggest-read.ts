@@ -6,7 +6,7 @@
  * the artist it is inspired by lifts researched patterns of theirs), and the library. The library is the same for
  * every caller and costs up to a second to read and work out the facts of, so it is kept, and read again behind the
  * kept copy once that is a minute old (`publicLibrary`): an admin's edit reaches suggestions at once, a catalogue
- * edit within a minute or so. The whole library's ranking (`rank-read.ts`) shares the kept library, the sound's
+ * edit on the call after the refresh that the first call past the minute starts. The whole library's ranking (`rank-read.ts`) shares the kept library, the sound's
  * lookup and the reading.
  *
  * Both offer only patterns of the patch's category (t-255): those a library sound of that category lists, on any
@@ -100,12 +100,14 @@ const readLibrary = (): Promise<PublicLibrary> =>
  * The public library, read once and kept (`f-pattern-prefetch` t-262). A cold read takes the best part of a second, so
  * no call waits on one after the first: once the kept copy is older than `KEEP_MS`, the call still gets it, and one
  * fresh read starts behind it and replaces it when it lands. An admin's edit (`forgetSuggestLibrary`) is seen on the
- * next call; a catalogue edit reaches the call after the refresh it starts. A first read that fails is not kept; a
- * refresh that fails keeps the copy it would have replaced.
+ * next call; a catalogue edit reaches the call after the refresh it starts. There is no upper bound on the kept copy's
+ * age: after a quiet spell the first call is answered from it however old it is, and the refresh it starts serves the
+ * next. A first read that fails is not kept; a refresh that fails keeps the copy it would have replaced, and is tried
+ * again once another `KEEP_MS` has passed.
  */
 export function publicLibrary(now = Date.now()): Promise<PublicLibrary> {
   if (kept) {
-    if (now - kept.at >= KEEP_MS && !kept.refreshing) refresh(kept);
+    if (now - kept.at >= KEEP_MS && !kept.refreshing) refresh(kept, now);
     return kept.library;
   }
   const mine: Kept = { at: now, library: readLibrary(), refreshing: false };
@@ -116,15 +118,17 @@ export function publicLibrary(now = Date.now()): Promise<PublicLibrary> {
   return mine.library;
 }
 
-function refresh(old: Kept): void {
+/** `now` is the caller's clock: the new copy is stamped with it, and a failed read waits out `KEEP_MS` from it. */
+function refresh(old: Kept, now: number): void {
   old.refreshing = true;
   readLibrary().then(
     (library) => {
       // Forgotten meanwhile (an admin's edit): the read began before it, so it is not kept.
-      if (kept === old)
-        kept = { at: Date.now(), library: Promise.resolve(library), refreshing: false };
+      if (kept === old) kept = { at: now, library: Promise.resolve(library), refreshing: false };
     },
     (err: unknown) => {
+      // Not tried again for another `KEEP_MS`, so a database that is down is not read on every call.
+      old.at = now;
       old.refreshing = false;
       logger.warn('pattern suggestions: the public library could not be read again', {
         err: String(err),
@@ -170,7 +174,8 @@ export function patchCategory(
 
 /**
  * Forgets the kept library, so the next suggestion or ranking reads it afresh. The pattern library's admin writes call
- * it (`library-edit.ts`), and tests do. Catalogue edits don't yet: theirs reach suggestions within the minute.
+ * it (`library-edit.ts`), and tests do. Catalogue edits don't yet: theirs reach suggestions on the call after the
+ * refresh that the first call past `KEEP_MS` starts.
  */
 export function forgetSuggestLibrary(): void {
   kept = null;

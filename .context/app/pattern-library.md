@@ -1521,7 +1521,8 @@ when. A comment goes with its pattern (`Cascade`), though nothing deletes one.
 - **The public reads** (`library-read.ts`) serve enabled patterns only. A sound's list leads with its default. The
   suggestions' kept library is the same read. The pattern library's own writes (an edit, a reorder, rights risk or
   status) drop it in the process that made them; a catalogue edit (a sound's riff, a synth listed or hidden) and
-  another instance's copy last out the minute.
+  another instance's copy are served until a call past the minute starts a refresh, and once more while it is on its
+  way.
 - **The seed leaves alone a researched pattern that is a sound's default, or disabled ahead of it**, since enabling it
   makes its notes the riff again.
 
@@ -1739,7 +1740,8 @@ the `/api/v1/**` section cap (100 a minute) with no work in the handler. It read
 public library. The library is the same for every caller and costs up to a second to read cold and work out the facts
 of, so it is kept (`publicLibrary`, `f-pattern-prefetch` t-262). Once the kept copy is a minute old (`KEEP_MS`), a call
 is still answered from it, and one fresh read starts behind it and replaces it when it lands, so no call after the
-first waits on the database. A refresh that fails keeps the old copy. The server reads it once at start
+first waits on the database. The copy has no upper bound on age: after a quiet spell, the first call is answered
+from it however old it is. A refresh that fails keeps the old copy and is not tried again for another minute. The server reads it once at start
 (`initApp` → `warmPublicLibrary`), without waiting on it. An admin's write to the library (`library-edit.ts`) calls
 `forgetSuggestLibrary`, so the next call reads afresh; anything else (a catalogue edit) reaches suggestions on the call
 after the refresh it starts.

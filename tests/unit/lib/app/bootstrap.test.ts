@@ -20,7 +20,7 @@ vi.mock('@/lib/logging', () => ({ logger: mockLog }));
 
 import { initApp } from '@/lib/app/bootstrap';
 
-/** Lets the dynamic imports and the warm's callbacks run. */
+/** Lets the dynamic import and the warm's callbacks run. */
 const settle = () => new Promise((r) => setTimeout(r, 20));
 
 beforeEach(() => {

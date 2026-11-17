@@ -4,7 +4,8 @@
  * - Within `KEEP_MS` the kept copy is served and nothing is read.
  * - After it, the call still gets the kept copy at once, one refresh starts behind it, and the next call gets the
  *   refreshed copy.
- * - A refresh that fails keeps the old copy, and a later call tries again.
+ * - A refresh that fails keeps the old copy, and it is not tried again until another `KEEP_MS` has passed.
+ * - A refreshed copy is stamped with the caller's clock, so it goes stale `KEEP_MS` after the call that started it.
  * - `forgetSuggestLibrary()` makes the next call read afresh, and a refresh that began before it is not kept.
  * - `warmPublicLibrary()` fills the kept copy.
  */
@@ -85,7 +86,7 @@ describe('publicLibrary', () => {
     expect(mockRead.listAllPublicPatterns).toHaveBeenCalledTimes(2);
   });
 
-  it('keeps the old copy when a refresh fails, logs it, and tries again on a later call', async () => {
+  it('keeps the old copy when a refresh fails, logs it, and tries again only after another KEEP_MS', async () => {
     mockRead.listAllPublicPatterns.mockResolvedValueOnce(viewsOf('first'));
     const t0 = 1_000_000;
     await publicLibrary(t0);
@@ -98,12 +99,36 @@ describe('publicLibrary', () => {
       expect.objectContaining({ err: 'Error: db down' })
     );
 
+    // Within KEEP_MS of the failed try: the old copy, and no other read.
+    expect((await publicLibrary(t0 + 2 * KEEP_MS - 1)).views).toEqual([{ id: 'first' }]);
+    expect(mockRead.listAllPublicPatterns).toHaveBeenCalledTimes(2);
+
     mockRead.listAllPublicPatterns.mockResolvedValueOnce(viewsOf('third'));
-    const after = await publicLibrary(t0 + KEEP_MS + 1);
+    const after = await publicLibrary(t0 + 2 * KEEP_MS);
     expect(after.views).toEqual([{ id: 'first' }]);
     expect(mockRead.listAllPublicPatterns).toHaveBeenCalledTimes(3);
     await flush();
-    expect((await publicLibrary(t0 + KEEP_MS + 2)).views).toEqual([{ id: 'third' }]);
+    expect((await publicLibrary(t0 + 2 * KEEP_MS + 1)).views).toEqual([{ id: 'third' }]);
+  });
+
+  it("stamps a refreshed copy with the caller's clock, so it is refreshed again KEEP_MS later", async () => {
+    mockRead.listAllPublicPatterns.mockResolvedValueOnce(viewsOf('first'));
+    const t0 = 1_000_000;
+    await publicLibrary(t0);
+
+    mockRead.listAllPublicPatterns.mockResolvedValueOnce(viewsOf('second'));
+    await publicLibrary(t0 + KEEP_MS);
+    await flush();
+
+    // Fresh until KEEP_MS after the call that started the refresh: no read.
+    expect((await publicLibrary(t0 + 2 * KEEP_MS - 1)).views).toEqual([{ id: 'second' }]);
+    expect(mockRead.listAllPublicPatterns).toHaveBeenCalledTimes(2);
+
+    mockRead.listAllPublicPatterns.mockResolvedValueOnce(viewsOf('third'));
+    await publicLibrary(t0 + 2 * KEEP_MS);
+    expect(mockRead.listAllPublicPatterns).toHaveBeenCalledTimes(3);
+    await flush();
+    expect((await publicLibrary(t0 + 2 * KEEP_MS + 1)).views).toEqual([{ id: 'third' }]);
   });
 
   it('does not keep a first read that fails', async () => {
