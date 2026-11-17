@@ -4,7 +4,7 @@
  * `lib/app/patterns/rank.ts`).
  *
  * The reads are `/suggest`'s (`suggest-read.ts`): the sound the patch started as, when there is one, and the public
- * library, kept for a minute and shared with suggestions. The library is read whatever the reading, because a silent
+ * library, kept and shared with suggestions (read again behind the kept copy once it is a minute old). The library is read whatever the reading, because a silent
  * patch, or one not read yet, still gets every pattern of its category, by role and name.
  *
  * Only the patch's category is listed (t-255, `limitToCategory`): the start sound's tag while the patch is that sound

@@ -155,6 +155,22 @@ describe('publicLibrary', () => {
     expect(mockRead.listAllPublicPatterns).toHaveBeenCalledTimes(2);
   });
 
+  it('stamps a slow first read with when it landed, so it is fresh for KEEP_MS after it', async () => {
+    const first = deferred<{ id: string }[]>();
+    mockRead.listAllPublicPatterns.mockReturnValueOnce(first.promise);
+    const t0 = 1_000_000;
+    const pending = publicLibrary(t0);
+    // The cold read takes 2 s.
+    vi.mocked(Date.now).mockReturnValue(2_000);
+    first.resolve(viewsOf('first'));
+    await pending;
+    await flush();
+
+    // Landed at t0 + 2 s: still fresh at t0 + KEEP_MS + 1 s, so no read.
+    await publicLibrary(t0 + KEEP_MS + 1_000);
+    expect(mockRead.listAllPublicPatterns).toHaveBeenCalledTimes(1);
+  });
+
   it('starts no refresh while the first read is still on its way', async () => {
     const first = deferred<{ id: string }[]>();
     mockRead.listAllPublicPatterns.mockReturnValueOnce(first.promise);

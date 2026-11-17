@@ -118,10 +118,13 @@ export function publicLibrary(now = Date.now()): Promise<PublicLibrary> {
     if (now - kept.at >= KEEP_MS && !kept.reading) refresh(kept, now);
     return kept.library;
   }
+  const started = Date.now();
   const mine: Kept = { at: now, library: readLibrary(), reading: true };
   holder.kept = mine;
   mine.library.then(
     () => {
+      // Stamped when it landed, as a refresh is, so it is fresh for a whole `KEEP_MS` after.
+      mine.at = now + (Date.now() - started);
       mine.reading = false;
     },
     () => {
