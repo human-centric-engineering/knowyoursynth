@@ -207,6 +207,11 @@ export interface LoadOptions {
    * Undo goes back to the riff, as none goes back past a sound's riff arriving.
    */
   quiet?: boolean;
+  /**
+   * Counted in, if it starts while one plays (t-266): a pattern the user opened. Not the sound's default (`quiet`), nor
+   * one the tutor wrote. True unless said otherwise.
+   */
+  countIn?: boolean;
 }
 
 export interface Sequencer {
@@ -743,8 +748,8 @@ export function useSequencer({
       if (!o.quiet) past.current = [...past.current.slice(-(UNDO_DEPTH - 1)), was];
       setUndoable(past.current.length > 0);
       lastGroup.current = null;
-      // Another pattern opened while one plays starts from its first step, counted in.
-      if (playingRef.current) restart(next, true);
+      // Another pattern opened while one plays starts from its first step, counted in if the user opened it.
+      if (playingRef.current) restart(next, !o.quiet && o.countIn !== false);
       return next;
     },
     [restart, replaced, setLoaded, setBaseline]

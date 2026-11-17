@@ -1222,10 +1222,6 @@ const MIDI_OUT_NOTE: Partial<Record<MidiOut['status'], string>> = {
   asking: 'Waiting for the browser to allow MIDI…',
 };
 
-/**
- * The clock the sequencer runs on (`f-midi-hardware-lead` t-91): its own, or a MIDI input's. A chosen input that is not
- * plugged in stays listed, so the choice is not lost while it is away, and the sequencer is its own clock meanwhile.
- */
 /** The drum beat that plays along (t-267): none, the one that matches the pattern, or any by name. */
 function DrumsSelect({ backing }: { backing: Backing }) {
   const { matched } = backing;
@@ -1255,6 +1251,10 @@ function DrumsSelect({ backing }: { backing: Backing }) {
   );
 }
 
+/**
+ * The clock the sequencer runs on (`f-midi-hardware-lead` t-91): its own, or a MIDI input's. A chosen input that is not
+ * plugged in stays listed, so the choice is not lost while it is away, and the sequencer is its own clock meanwhile.
+ */
 function ClockSelect({ clock }: { clock: ClockIn }) {
   const chosen = clock.source;
   const options: [string, string][] = [

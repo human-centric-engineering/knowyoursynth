@@ -44,6 +44,10 @@ export interface SoundPatterns {
   retry: () => void;
 }
 
+/** The sound's default pattern (its riff), found by its id once the patterns are read; null before, or with none. */
+export const soundDefaultOf = (sp: SoundPatterns | null | undefined): LibraryPatternView | null =>
+  sp?.patterns?.find((p) => p.id === sp.sound.defaultId) ?? null;
+
 const keyOf = (s: LibrarySound) => `${s.synthId}/${s.slug}`;
 
 /** `sound`'s patterns once `enabled` (the sequencer open), or null with no library sound on the panel. */

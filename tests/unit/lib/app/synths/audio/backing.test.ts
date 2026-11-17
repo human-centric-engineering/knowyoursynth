@@ -141,6 +141,18 @@ describe('count-in', () => {
     expect(loops[0]).toMatchObject({ index: 3, frame: 0 });
   });
 
+  it('cuts the count short, and starts at once, when the run is muted during it (MIDI out only)', () => {
+    const { out, loops } = play(5 * BEAT, [
+      [0, { type: 'pattern', loop: loop([[0, 60, 0.5]]), bpm: BPM, countIn: 4 }],
+      [BEAT + 1000, { type: 'patternMute', muted: true }],
+    ]);
+    // The mute lands at the block holding sample 9,000, and loop 0 starts in that block, not a bar after the start.
+    const block = Math.floor((BEAT + 1000) / 128) * 128;
+    expect(loops[0]).toMatchObject({ index: 0 });
+    expect(loops[0].frame).toBe(block);
+    expect(onsets(out).length).toBe(2);
+  });
+
   it('stops counting, and plays nothing, when the pattern is stopped during the count', () => {
     const { out, loops, notes } = play(5 * BEAT, [
       [0, { type: 'pattern', loop: loop([[0, 60, 0.5]]), bpm: BPM, countIn: 4 }],
@@ -149,6 +161,24 @@ describe('count-in', () => {
     expect(loops).toEqual([]);
     expect(notes).toEqual([]);
     expect(onsets(out).length).toBe(2);
+  });
+
+  it('keeps the bar from the pattern’s first step on a start part-way through', () => {
+    // Joined at loop 3 of a 2-beat loop, beat 1: beat 7 from the top, so the next bar (a rim on step 0) is a beat away.
+    const { out } = play(3 * BEAT, [
+      [
+        0,
+        {
+          type: 'pattern',
+          loop: loop([[0, 60, 0.5]], 2),
+          bpm: BPM,
+          index: 3,
+          beat: 1,
+          backing: rims([0]),
+        },
+      ],
+    ]);
+    expectNear(onsets(out), [BEAT]);
   });
 
   it('a new start during the count counts again from its top', () => {

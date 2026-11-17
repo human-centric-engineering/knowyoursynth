@@ -42,7 +42,7 @@ import {
   SoundPatternPicker,
   type PatternGroup,
 } from '@/components/app/sequencer/sound-pattern-picker';
-import type { SoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
+import { soundDefaultOf, type SoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
 import type { SuggestedPatterns } from '@/components/app/sequencer/use-suggested-patterns';
 import type { LibraryPatternView } from '@/lib/app/patterns/library';
 import { PlayerTip } from '@/components/app/synth/player-tip';
@@ -147,8 +147,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
   // so what is held is named, and has the pattern's own settings. Run again once a new sound's riff has arrived
   // (`loaded` back to null), so it never lands on another sound's riff. Once per sound on the panel: an Undo back to an
   // unedited riff is where the Undo said it would go.
-  const defaultId = soundPatterns?.sound.defaultId ?? null;
-  const soundDefault = soundPatterns?.patterns?.find((p) => p.id === defaultId) ?? null;
+  const soundDefault = soundDefaultOf(soundPatterns);
   const soundKey = soundPatterns
     ? `${soundPatterns.sound.synthId}/${soundPatterns.sound.slug}`
     : null;

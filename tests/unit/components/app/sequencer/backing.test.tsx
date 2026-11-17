@@ -37,7 +37,13 @@ const engine = {
 };
 let state: SeqState;
 
-function Harness({ riff = RIFF, patch = 'model-d/fat-bass' }: { riff?: Phrase; patch?: string }) {
+function Harness({
+  riff = RIFF,
+  patch = 'model-d/fat-bass',
+}: {
+  riff?: Phrase;
+  patch?: string | null;
+}) {
   const seq = useSequencer({ engine, ensureAudio: async () => true, riff });
   const backing = useBacking(seq, useBackingPref(), { patchKey: patch });
   state = seq;
@@ -114,6 +120,22 @@ describe('count-in', () => {
     expect(restart).not.toHaveProperty('index');
     expect(restart).not.toHaveProperty('beat');
     expect(restart?.loop.notes).toEqual([[0, 36, 1]]);
+  });
+
+  it('does not count in the sound’s default pattern, nor one the tutor writes, landing while it plays', async () => {
+    render(<Harness />);
+    await play();
+    const quiet = { ...importPhrase({ bpm: 120, loop: true, steps: [[0, 36, 1]] }) };
+    act(() => {
+      state.load(quiet, { id: null, name: 'Default', libraryId: 'lib-1' }, { quiet: true });
+    });
+    expect(lastOf('pattern')?.loop.notes).toEqual([[0, 36, 1]]);
+    expect(lastOf('pattern')?.countIn).toBeUndefined();
+    act(() => {
+      state.load(importPhrase(RIFF), { id: null, name: 'Tutor' }, { countIn: false });
+    });
+    expect(lastOf('pattern')?.loop.notes).toEqual([[0, 48, 0.25]]);
+    expect(lastOf('pattern')?.countIn).toBeUndefined();
   });
 
   it('does not count in for another sound’s riff arriving while it plays', async () => {
@@ -198,6 +220,22 @@ describe('drums', () => {
     pickDrums('Off');
     rerender(<Harness patch="model-d/fat-bass" />);
     expect(screen.getByRole('combobox', { name: 'Drums' }).textContent).toContain('Off');
+  });
+
+  it('keeps a beat chosen by name through a reload on the same patch', () => {
+    const first = render(<Harness />);
+    pickDrums('Funk');
+    first.unmount();
+    render(<Harness />);
+    expect(screen.getByRole('combobox', { name: 'Drums' }).textContent).toContain('Funk');
+  });
+
+  it('keeps it while the page has yet to say which patch is open', () => {
+    const { rerender } = render(<Harness />);
+    pickDrums('Funk');
+    rerender(<Harness patch={null} />);
+    rerender(<Harness />);
+    expect(screen.getByRole('combobox', { name: 'Drums' }).textContent).toContain('Funk');
   });
 
   it('keeps a beat chosen by name while the patch stays', () => {

@@ -368,9 +368,11 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     // A count-in only before a start from the top: a Continue joins a beat already counted.
     const counting = from === 0 && pos === 0 ? count : 0;
     pre = counting > 0 ? Math.round(counting * spb()) : 0;
-    beatsDone = 0;
+    // Joined at a later loop (a Continue), the bar is counted from the first loop as if it had played: the loops
+    // before are taken to be as long as this one, which they are unless a chain's loops differ in length.
+    beatsDone = from * loop.beats;
     backing.set(accompany);
-    backing.start(counting > 0 ? -counting : pos / spb(), counting);
+    backing.start(counting > 0 ? -counting : beatsDone + pos / spb(), counting);
   }
 
   /** What is left of this loop becomes the edited loop's notes that start from the playhead on. */
@@ -524,6 +526,8 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
         // Muting lets go of what the synth holds; unmuted, it plays from the next note on.
         if (m.muted && !muted) release();
         muted = m.muted === true;
+        // A count-in no one hears holds nothing back: the run starts now, MIDI out with it.
+        if (muted) pre = 0;
         sinceTick = 0;
         return;
       case 'patternNext':
