@@ -52,6 +52,7 @@ describe('nativeSynthProblems', () => {
       'native synth sub-37 is not registered',
       'native synth teo-5 is not registered',
       'native synth nymphes is not registered',
+      'native synth behringer-odyssey is not registered',
     ]);
   });
 

@@ -48,6 +48,7 @@ import { routing as minilogueXd } from '@/lib/app/synths/routing/minilogue-xd';
 import { routing as sub37 } from '@/lib/app/synths/routing/sub-37';
 import { routing as teo5 } from '@/lib/app/synths/routing/teo-5';
 import { routing as nymphes } from '@/lib/app/synths/routing/nymphes';
+import { routing as behringerOdyssey } from '@/lib/app/synths/routing/behringer-odyssey';
 import { routing as emsVcs3 } from '@/lib/app/synths/routing/ems-vcs3';
 import { routing as syntrxIi } from '@/lib/app/synths/routing/syntrx-ii';
 
@@ -90,6 +91,7 @@ export const SYNTH_ROUTINGS: SynthRouting[] = [
   sub37,
   teo5,
   nymphes,
+  behringerOdyssey,
   emsVcs3,
   syntrxIi,
 ];
