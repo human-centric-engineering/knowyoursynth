@@ -4,8 +4,9 @@
  *
  * Two reads at most: the sound the patch started as, when there is one (its own patterns are not suggested again, and
  * the artist it is inspired by lifts researched patterns of theirs), and the library. The library is the same for
- * every caller and costs about 80 ms to read and work out the facts of, so it is kept for a minute: an admin's edit
- * reaches suggestions within that. The whole library's ranking (`rank-read.ts`) shares the kept library, the sound's
+ * every caller and costs up to a second to read and work out the facts of, so it is kept, and read again behind the
+ * kept copy once that is a minute old (`publicLibrary`): an admin's edit reaches suggestions at once, a catalogue
+ * edit within a minute or so. The whole library's ranking (`rank-read.ts`) shares the kept library, the sound's
  * lookup and the reading.
  *
  * Both offer only patterns of the patch's category (t-255): those a library sound of that category lists, on any
@@ -14,6 +15,7 @@
  */
 import { z } from 'zod';
 import { prisma } from '@/lib/db/client';
+import { logger } from '@/lib/logging';
 import { SoundSlugSchema, SynthIdSchema } from '@/lib/app/catalogue/edit';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { kindOf, type KindRegister, type SoundKind } from '@/lib/app/synths/lib/soundkind';
@@ -78,21 +80,62 @@ export interface PublicLibrary {
   categories: ReadonlyMap<string, ReadonlySet<PresetCategory>>;
 }
 
-const KEEP_MS = 60_000;
-let kept: { at: number; library: Promise<PublicLibrary> } | null = null;
+/** How long the kept library is fresh: after it, a call still gets it, and one fresh read starts behind it. */
+export const KEEP_MS = 60_000;
 
-/** The public library, read at most once a minute. A read that fails is not kept. */
-export function publicLibrary(now = Date.now()): Promise<PublicLibrary> {
-  if (kept && now - kept.at < KEEP_MS) return kept.library;
-  const library = Promise.all([listAllPublicPatterns(), listPublicPatternCategories()]).then(
+interface Kept {
+  at: number;
+  library: Promise<PublicLibrary>;
+  /** The read replacing it, while one is on its way. */
+  refreshing: boolean;
+}
+let kept: Kept | null = null;
+
+const readLibrary = (): Promise<PublicLibrary> =>
+  Promise.all([listAllPublicPatterns(), listPublicPatternCategories()]).then(
     ([views, categories]) => ({ views, categories })
   );
-  const mine = { at: now, library };
+
+/**
+ * The public library, read once and kept (`f-pattern-prefetch` t-262). A cold read takes the best part of a second, so
+ * no call waits on one after the first: once the kept copy is older than `KEEP_MS`, the call still gets it, and one
+ * fresh read starts behind it and replaces it when it lands. An admin's edit (`forgetSuggestLibrary`) is seen on the
+ * next call; a catalogue edit reaches the call after the refresh it starts. A first read that fails is not kept; a
+ * refresh that fails keeps the copy it would have replaced.
+ */
+export function publicLibrary(now = Date.now()): Promise<PublicLibrary> {
+  if (kept) {
+    if (now - kept.at >= KEEP_MS && !kept.refreshing) refresh(kept);
+    return kept.library;
+  }
+  const mine: Kept = { at: now, library: readLibrary(), refreshing: false };
   kept = mine;
-  library.catch(() => {
+  mine.library.catch(() => {
     if (kept === mine) kept = null;
   });
-  return library;
+  return mine.library;
+}
+
+function refresh(old: Kept): void {
+  old.refreshing = true;
+  readLibrary().then(
+    (library) => {
+      // Forgotten meanwhile (an admin's edit): the read began before it, so it is not kept.
+      if (kept === old)
+        kept = { at: Date.now(), library: Promise.resolve(library), refreshing: false };
+    },
+    (err: unknown) => {
+      old.refreshing = false;
+      logger.warn('pattern suggestions: the public library could not be read again', {
+        err: String(err),
+      });
+    }
+  );
+}
+
+/** Reads the library into the kept copy, so the first ranking after the server starts does not wait on it. */
+export async function warmPublicLibrary(): Promise<void> {
+  await publicLibrary();
 }
 
 /**

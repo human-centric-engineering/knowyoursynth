@@ -29,6 +29,18 @@
  *
  * Full guide: CUSTOMIZATION.md §4 · the reserved `/framework` fork tier.
  */
-export async function initApp(): Promise<void> {
-  // No app boot work by default.
+export function initApp(): Promise<void> {
+  // The public pattern library, read into its kept copy so the first picker open after a start does not wait on it
+  // (`f-pattern-prefetch` t-262). Not awaited: start-up never waits on the database, and a failed read is logged and
+  // read again by the first ranking. Imported here, not at the top, so the database client stays out of whatever
+  // imports this file.
+  void import('@/lib/app/patterns/suggest-read')
+    .then((m) => m.warmPublicLibrary())
+    .catch(async (err: unknown) => {
+      const { logger } = await import('@/lib/logging');
+      logger.warn('app boot: the public pattern library could not be read ahead', {
+        err: String(err),
+      });
+    });
+  return Promise.resolve();
 }
