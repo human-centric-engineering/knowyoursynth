@@ -47,6 +47,7 @@ import {
   NO_BACKING,
   countInBeats,
   createBacking,
+  isNumber,
   playableBacking,
   type BackingSettings,
 } from '@/lib/app/synths/audio/backing';
@@ -172,8 +173,6 @@ export function createPlayhead(): {
 /** Which voice settings play: mono, poly or dual. A change between them lets go of every held note. */
 export const voiceMode = (p: EngineParams): 'mono' | 'poly' | 'dual' =>
   p.dual ? 'dual' : p.poly ? 'poly' : 'mono';
-
-const isNumber = (x: unknown): x is number => typeof x === 'number' && Number.isFinite(x);
 
 /** A note from the page: a start at or after beat 0, a key, a length above 0, and a velocity if it has one. */
 function playableNote(x: unknown): boolean {
@@ -365,8 +364,9 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     while (pi < pev.length && pev[pi].t <= pos) pi++;
     if (pi > 0) apply(pev[pi - 1].p);
     announce = true;
-    // A count-in only before a start from the top: a Continue joins a beat already counted.
-    const counting = from === 0 && pos === 0 ? count : 0;
+    // A count-in only before a start from the top: a Continue joins a beat already counted. None on a muted run: a
+    // count no one hears would only hold MIDI out back.
+    const counting = from === 0 && pos === 0 && !mute ? count : 0;
     pre = counting > 0 ? Math.round(counting * spb()) : 0;
     // Joined at a later loop (a Continue), the bar is counted from the first loop as if it had played: the loops
     // before are taken to be as long as this one, which they are unless a chain's loops differ in length.

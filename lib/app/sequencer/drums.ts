@@ -200,7 +200,10 @@ const RULES: readonly [DrumBeatId | null, RegExp][] = [
     'four',
     /house|trance|\bedm\b|\brave\b|eurodance|big room|deadmau5|van dyk|daft punk|swedish house|tiësto|tiesto/,
   ],
-  ['techno', /techno|industrial|\bebm\b|basic channel|saunderson|jeff mills|richie hawtin|minimal/],
+  [
+    'techno',
+    /techno|industrial|\bebm\b|basic channel|saunderson|jeff mills|richie hawtin|minimal(?! (wave|synth))/,
+  ],
   ['disco', /disco|hi-?nrg|moroder|patrick cowley|cerrone|boogie/],
   ['electro', /\belectro\b|miami bass|\b808\b|freestyle|bambaataa|mantronix|kraftwerk/],
   ['funk', /funk|\bsoul\b|r&b|booker t|billy preston|parliament|stevie wonder|herbie hancock/],

@@ -44,7 +44,8 @@ export interface BackingSettings {
 
 export const NO_BACKING: BackingSettings = { click: false, drums: null };
 
-const isNumber = (x: unknown): x is number => typeof x === 'number' && Number.isFinite(x);
+/** A finite number: what every number the audio thread is sent is checked to be. */
+export const isNumber = (x: unknown): x is number => typeof x === 'number' && Number.isFinite(x);
 
 function playableHit(x: unknown): boolean {
   if (!Array.isArray(x)) return false;

@@ -163,6 +163,13 @@ describe('count-in', () => {
     expect(onsets(out).length).toBe(2);
   });
 
+  it('does not count in a run that starts muted (MIDI out only)', () => {
+    const { loops } = play(BEAT, [
+      [0, { type: 'pattern', loop: loop([[0, 60, 0.5]]), bpm: BPM, countIn: 4, muted: true }],
+    ]);
+    expect(loops[0]).toMatchObject({ index: 0, frame: 0 });
+  });
+
   it('keeps the bar from the pattern’s first step on a start part-way through', () => {
     // Joined at loop 3 of a 2-beat loop, beat 1: beat 7 from the top, so the next bar (a rim on step 0) is a beat away.
     const { out } = play(3 * BEAT, [

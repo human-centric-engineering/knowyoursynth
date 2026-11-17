@@ -81,6 +81,8 @@ describe('drumStyleFor', () => {
     ['Jungle', 'breakbeat'],
     ['Dub', 'onedrop'],
     ['Dub techno', 'techno'],
+    ['Minimal techno', 'techno'],
+    ['Minimal wave', 'backbeat'],
     ['King Tubby', 'onedrop'],
     ['Dubstep', 'halftime'],
     ['Burial', 'halftime'],
