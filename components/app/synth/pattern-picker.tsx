@@ -230,7 +230,13 @@ function PickerBody({
       if (!live.current || n !== pickN.current) return;
       setReading(null);
     }
-    if (!page.current.load(view.pattern, { id: null, name: view.name, libraryId: view.id })) {
+    const from = {
+      id: null,
+      name: view.name,
+      libraryId: view.id,
+      inspiredBy: view.inspiredBy.label,
+    };
+    if (!page.current.load(view.pattern, from)) {
       setStatus(`${row.name} cannot be played.`);
       return;
     }

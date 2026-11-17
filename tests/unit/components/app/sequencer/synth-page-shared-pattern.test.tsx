@@ -237,6 +237,8 @@ describe('signed out', () => {
       loop: { notes: NOTES, beats: 3 },
       run: expect.any(Number),
       muted: false,
+      // Play counts in a bar (t-266).
+      countIn: 4,
     });
   });
 

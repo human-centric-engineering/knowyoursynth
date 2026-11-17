@@ -196,6 +196,7 @@ describe('opening on the default', () => {
       id: null,
       name: 'Fat bass',
       libraryId: 'patdefault000000000001',
+      inspiredBy: expect.any(String),
     });
     expect(state.canUndo).toBe(false);
     expect(state.edited).toBe(false);
@@ -308,6 +309,7 @@ describe('picking a pattern', () => {
       id: null,
       name: 'The Model, verse',
       libraryId: 'patsecond0000000000002',
+      inspiredBy: expect.any(String),
     });
     expect(screen.getByRole('status').textContent).toBe(
       'Opened The Model, verse. Undo goes back to what was here.'

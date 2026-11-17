@@ -854,3 +854,27 @@ dropout and none while stopped, a run it did not start, nothing after a stop); `
 choice kept, an unplugged source, only the chosen input read, Start, Continue part-way and Stop driving the
 sequencer, a dropout on the timer, the input let go of, another pattern mid-run, the tempo not the pattern's, the
 clock-out lock and its release; and the readout's Clock select and read-only Tempo).
+
+## Playing along: count-in, metronome and drums
+
+What plays along with a pattern (t-266, t-267) is rendered by the pattern player on the audio thread
+(`lib/app/synths/audio/backing.ts`), so every click and hit lands on its sample, in time with the notes. It is added to
+the synth's output after its effects, dry, and is silent on a muted (MIDI-only) run.
+
+- **Count-in** (on by default). `pattern` can carry `countIn` (beats; the sequencer sends `COUNT_IN_BEATS`, one bar of
+  4). The player holds the loop for that many beats while it clicks, the first accented, and only then announces loop
+  0, so the playhead, MIDI out and its clock start on the downbeat after the count. The sequencer asks for it when Play
+  starts the pattern, and when a pattern is opened while one plays (which starts it again from its first step). There is
+  no count-in while a MIDI clock is followed, on a muted run, for a start part-way (a Continue), for another sound's
+  riff arriving while it plays, for a lesson's Replay, or for the riff starting again after a patch load.
+- **Metronome** (off by default): a click on every beat from beat 0, accented on each bar of four.
+- **Drums** (off by default): one of the beats in `lib/app/sequencer/drums.ts`, a bar of sixteen sixteenths played by
+  synthesised voices (kick, snare, clap, closed and open hat, rim), swung by the pattern's swing. **Match** picks the
+  beat with `drumStyleFor`: words in the pattern's Inspired by (a genre, or an artist known for one) first, with
+  beatless styles (ambient, drone, film scores, classical) getting none; otherwise the tempo and swing.
+
+The bar is always four beats from the pattern's first step, whatever the loop's length. `backing` on `pattern`, or
+`patternBacking` while it plays, carries the metronome and the beat's hits; the player checks both
+(`playableBacking`) as it checks a loop. The three settings are a screen setting kept in this browser (`kys.backing`,
+`components/app/sequencer/use-backing.ts`). Where a pattern came from the library, `LoadedPattern.inspiredBy` carries
+its Inspired by for Match; the sound's own riff goes by its default pattern's, once read.

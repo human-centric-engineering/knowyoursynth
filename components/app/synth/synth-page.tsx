@@ -123,6 +123,7 @@ import { RIFF_FALLBACK } from '@/lib/app/patterns/riff-name';
 import { useSoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
 import { useSuggestedPatterns } from '@/components/app/sequencer/use-suggested-patterns';
 import { PatternPicker } from '@/components/app/synth/pattern-picker';
+import { useBacking } from '@/components/app/sequencer/use-backing';
 import { useRankedPatterns } from '@/components/app/synth/use-ranked-patterns';
 import { useFavourites } from '@/components/app/synth/favourites';
 import { FxRack } from '@/components/app/synth/fx-rack';
@@ -1544,6 +1545,12 @@ function Synth({
     open: patternsOpen,
     enabled: !ownSoundPending,
   });
+  // What plays along with the pattern (t-266, t-267). The sound's own riff matches a drum beat by its default pattern's
+  // Inspired by, once that has been read.
+  const soundDefaultView = soundPatterns?.patterns?.find(
+    (p) => p.id === soundPatterns.sound.defaultId
+  );
+  const backing = useBacking(seq, soundDefaultView?.inspiredBy.label ?? null);
   // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked beside Play, the
   // one a sound of the user's plays) or the riff edited, and with no sound's riff to play; otherwise the riff, which the
   // sequencer holds as it came. A new patch puts back its riff in the sequencer, and Play with it.
@@ -1605,6 +1612,7 @@ function Synth({
     hold: { on: hold, set: setHoldMode },
     midiOut,
     clockIn,
+    backing,
   };
   // The riff playing becomes the pattern: it plays on as it is. Midway through a load, a riff waiting for it to end
   // starts then as the pattern, so it is not taken for the riff (nor stopped, should the new sound have none).
@@ -1632,11 +1640,12 @@ function Synth({
   // The riff plays through the sequencer (t-234), which holds it as a pattern (at the tempo knob's tempo, and moved
   // by it), so it shows on the bar as any pattern does. From its top, as another pattern playing gives way to it.
   const riffNow = useCallback(
-    async (still?: () => boolean) => {
+    async (still?: () => boolean, countIn = false) => {
       // Not if what asked for it is over by the time audio has started (Replay's moves ended meanwhile). Otherwise
       // the sequencer starts the audio, inside the gesture that pressed Play.
       if (still && (!(await ensureAudio()) || !still())) return;
-      if (!(await startPattern())) return;
+      // Counted in only for Play (t-266): not for a lesson's Replay, nor the riff starting again after a load.
+      if (!(await startPattern({ countIn }))) return;
       // A load that began as the sound started (a patch picked straight after Play) holds it too.
       if (isLoading()) holdRiff();
       else setPlaying(true);
@@ -1661,7 +1670,7 @@ function Synth({
   const playRiff = useCallback(async () => {
     replayRiff.current = false;
     if (isLoading()) queue('riff');
-    else await riffNow();
+    else await riffNow(undefined, true);
   }, [isLoading, queue, riffNow]);
   // As a load begins, what the page is sounding is let go: the keys held (and under Hold), the arp's keys in the
   // sequencer, and the riff, which stops and plays again from its top once the load ends (the sound's own, by then). A

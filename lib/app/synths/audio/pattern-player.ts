@@ -29,6 +29,12 @@
  * its way from the run before a fast Stop and Play is told apart: on MIDI out, taking it for the new run's would send
  * notes twice or leave one held.
  *
+ * Along with the notes it plays a backing (`backing.ts`, t-266, t-267): a count-in, a metronome and a drum beat, timed
+ * on the same samples. `pattern` can carry `countIn`, a number of beats it clicks through before the loop's first
+ * sample: the loop's start, and its `loop` event, wait for them, so the page's playhead and MIDI out begin on the
+ * downbeat after the count. `backing` (on `pattern`, or `patternBacking` while it plays) says whether the metronome
+ * clicks and which drum beat plays; neither touches the synth or the events.
+ *
  * `muted` (on `pattern`, or `patternMute` while it plays) keeps the timing and the events but sends the synth no notes:
  * the pattern is heard on a MIDI output alone, and the clock MIDI is locked to still runs here. Muted, it also reports a
  * `patternTick` every {@link TICK_SECONDS}: the tab is silent then, so the browser slows the page's timers, but not
@@ -37,6 +43,13 @@
 import type { ControlValues, EngineParams, PhraseNote } from '@/lib/app/synths/contract';
 import type { Synth, SynthEventHandler, SynthMessage } from '@/lib/app/synths/audio/dsp-core';
 import { byBeat, noteEvents, type NoteEvent } from '@/lib/app/synths/audio/note-events';
+import {
+  NO_BACKING,
+  countInBeats,
+  createBacking,
+  playableBacking,
+  type BackingSettings,
+} from '@/lib/app/synths/audio/backing';
 
 /**
  * From `beat` of the loop on, the synth plays with these settings: the panel with the mod lanes' values in it. `null`
@@ -78,7 +91,12 @@ export type PatternMessage =
       index?: number;
       /** The beat of the loop to start from: 0 if left out. */
       beat?: number;
+      /** Beats of clicks before the first loop starts: none if left out. */
+      countIn?: number;
+      /** What plays along: the metronome and a drum beat. None if left out. */
+      backing?: BackingSettings;
     }
+  | { type: 'patternBacking'; backing: BackingSettings }
   | { type: 'patternNext'; loop: PatternLoop | null }
   | { type: 'patternEdit'; loop: PatternLoop }
   | { type: 'patternMute'; muted: boolean }
@@ -234,6 +252,11 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
   /** Samples since the last `patternTick`, and how many between two. */
   let sinceTick = 0;
   const tickEvery = Math.max(1, Math.round(sr * TICK_SECONDS));
+  /** Samples of count-in still to play before the loop starts. */
+  let pre = 0;
+  /** Beats played in the loops before this one, since the run started: where the backing's grid is. */
+  let beatsDone = 0;
+  const backing = createBacking(sr);
 
   const spb = () => (60 / bpm) * sr;
   const time = (evs: { b: number; t: number }[]) => {
@@ -300,6 +323,8 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     next = undefined;
     carry = null;
     announce = null;
+    pre = 0;
+    backing.stop();
     apply(null);
     release();
     if (!silent && onEvent)
@@ -312,7 +337,9 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     id: number | undefined,
     mute: boolean,
     from: number,
-    at: number
+    at: number,
+    count: number,
+    accompany: BackingSettings
   ) {
     stop(true);
     run = id;
@@ -338,6 +365,12 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     while (pi < pev.length && pev[pi].t <= pos) pi++;
     if (pi > 0) apply(pev[pi - 1].p);
     announce = true;
+    // A count-in only before a start from the top: a Continue joins a beat already counted.
+    const counting = from === 0 && pos === 0 ? count : 0;
+    pre = counting > 0 ? Math.round(counting * spb()) : 0;
+    beatsDone = 0;
+    backing.set(accompany);
+    backing.start(counting > 0 ? -counting : pos / spb(), counting);
   }
 
   /** What is left of this loop becomes the edited loop's notes that start from the playhead on. */
@@ -369,8 +402,11 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
 
   function tempo(value: number) {
     if (!(value > 0)) return;
+    const was = spb();
     bpm = value;
     if (!cur) return;
+    // The count-in still to play is as many beats as it was.
+    if (pre > 0) pre = Math.max(1, Math.round((pre * spb()) / was));
     const old = cur.len;
     time(cur.base);
     time(cur.evs);
@@ -404,6 +440,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     } else {
       carry = null;
     }
+    beatsDone += c.beats;
     if (next) {
       c.base = next.base;
       c.beats = next.beats;
@@ -474,10 +511,15 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
           Number.isFinite(m.run) ? m.run : undefined,
           m.muted === true,
           typeof from === 'number' && Number.isInteger(from) && from >= 0 ? from : 0,
-          typeof at === 'number' && Number.isFinite(at) && at > 0 ? at : 0
+          typeof at === 'number' && Number.isFinite(at) && at > 0 ? at : 0,
+          countInBeats(m.countIn),
+          playableBacking(m.backing) ? m.backing : NO_BACKING
         );
         return;
       }
+      case 'patternBacking':
+        if (playableBacking(m.backing)) backing.set(m.backing);
+        return;
       case 'patternMute':
         // Muting lets go of what the synth holds; unmuted, it plays from the next note on.
         if (m.muted && !muted) release();
@@ -528,6 +570,17 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     }
     let i = 0;
     while (i < n) {
+      if (pre > 0) {
+        // The count-in: the synth runs on (a tail, a held key), and the clicks are laid over it.
+        const k = Math.min(pre, n - i);
+        if (i === 0 && k === n) synth.process(out, n, outR);
+        else synth.process(out.subarray(i, i + k), k, outR && outR.subarray(i, i + k));
+        backing.process(out, outR, i, k, -pre / spb(), spb(), muted);
+        pre -= k;
+        frames += k;
+        i += k;
+        continue;
+      }
       fire();
       if (!cur) {
         synth.process(out.subarray(i, n), n - i, outR && outR.subarray(i, n));
@@ -542,6 +595,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
       const k = Math.min(Math.max(1, due - pos), n - i);
       if (i === 0 && k === n) synth.process(out, n, outR);
       else synth.process(out.subarray(i, i + k), k, outR && outR.subarray(i, i + k));
+      backing.process(out, outR, i, k, beatsDone + pos / spb(), spb(), muted);
       pos += k;
       frames += k;
       i += k;

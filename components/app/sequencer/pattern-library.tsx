@@ -159,7 +159,12 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
     defaultFor.current = soundKey;
     load(
       soundDefault.pattern,
-      { id: null, name: soundDefault.name, libraryId: soundDefault.id },
+      {
+        id: null,
+        name: soundDefault.name,
+        libraryId: soundDefault.id,
+        inspiredBy: soundDefault.inspiredBy.label,
+      },
       { quiet: true }
     );
   }, [soundDefault, soundKey, loaded, edited, load]);
@@ -288,7 +293,9 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
       setPanel(null);
       return;
     }
-    if (!load(p.pattern, { id: null, name: p.name, libraryId: p.id })) {
+    if (
+      !load(p.pattern, { id: null, name: p.name, libraryId: p.id, inspiredBy: p.inspiredBy.label })
+    ) {
       setStatus(`${p.name} cannot be opened in the sequencer.`);
       return;
     }
