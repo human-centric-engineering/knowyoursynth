@@ -309,7 +309,8 @@ describe('picking a pattern', () => {
       id: null,
       name: 'The Model, verse',
       libraryId: 'patsecond0000000000002',
-      inspiredBy: expect.any(String),
+      // inspired by a work: its title says nothing of a style, so Match has no words to go by (t-267)
+      inspiredBy: undefined,
     });
     expect(screen.getByRole('status').textContent).toBe(
       'Opened The Model, verse. Undo goes back to what was here.'

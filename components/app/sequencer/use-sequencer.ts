@@ -192,7 +192,7 @@ export interface LoadedPattern {
   name: string;
   /** The library pattern it was opened from (`f-pattern-library` t-123), for the picker to mark. */
   libraryId?: string;
-  /** What the library pattern was inspired by (a genre, an artist, a work): what a drum beat is matched to (t-267). */
+  /** The words of the library pattern's Inspired by that say its style (`styleWordsOf`): what Match goes by (t-267). */
   inspiredBy?: string;
 }
 
@@ -1005,7 +1005,8 @@ export function useSequencer({
         !arpStarted.current
       ) {
         arpStarted.current = true;
-        play().then(
+        // A key starts the arp at once: no count-in before its first note.
+        play({ countIn: false }).then(
           (ok) => {
             if (!ok) arpStarted.current = false;
             else if (arpStarted.current && arpKeys.current.held.length === 0) stop();

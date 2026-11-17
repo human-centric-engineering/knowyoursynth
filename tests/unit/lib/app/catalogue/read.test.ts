@@ -207,9 +207,18 @@ describe('getSynthDetail', () => {
   it('sends each sound with the pattern its riff plays: the first enabled one that can be a riff (t-224)', async () => {
     const s = stored();
     let n = 0;
-    const riff = (status: string, name: string, phrase: unknown, pattern?: unknown) => ({
+    const riff = (
+      status: string,
+      name: string,
+      phrase: unknown,
+      pattern?: unknown,
+      inspired: { inspiration: string; inspiredBy: string } = {
+        inspiration: 'work',
+        inspiredBy: 'A song',
+      }
+    ) => ({
       patternId: `pat-${(n += 1)}`,
-      pattern: { status, name, pattern: pattern ?? importPhrase(phrase as Phrase) },
+      pattern: { status, name, pattern: pattern ?? importPhrase(phrase as Phrase), ...inspired },
     });
     const [a, b] = [s.sounds[0], s.sounds[1]];
     // a disabled pattern ahead of the default is passed over
@@ -217,7 +226,10 @@ describe('getSynthDetail', () => {
       ...a,
       patterns: [
         riff('disabled', 'Put away', a.phrase),
-        riff('enabled', 'Rolling eighths', a.phrase),
+        riff('enabled', 'Rolling eighths', a.phrase, undefined, {
+          inspiration: 'genre',
+          inspiredBy: 'Deep house',
+        }),
       ],
     };
     // a sound with nothing that can be its default carries no name for its riff
@@ -235,7 +247,12 @@ describe('getSynthDetail', () => {
 
     const detail = await getSynthDetail('model-d');
 
-    expect(detail?.sounds[0].defaultPattern).toEqual({ id: 'pat-2', name: 'Rolling eighths' });
+    // with the style its Inspired by says, for the drums' Match (t-267): a genre's words, but not a song's title
+    expect(detail?.sounds[0].defaultPattern).toEqual({
+      id: 'pat-2',
+      name: 'Rolling eighths',
+      style: 'Deep house',
+    });
     expect(detail?.sounds[1]).not.toHaveProperty('defaultPattern');
     expect(detail?.sounds[2].defaultPattern).toEqual({ id: 'pat-5', name: 'Next up' });
     // read as the sound's patterns are: in their order, enabled only

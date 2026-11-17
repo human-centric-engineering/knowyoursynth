@@ -34,6 +34,7 @@ import {
 import { apiClient } from '@/lib/api/client';
 import type { SynthDetail } from '@/lib/app/catalogue/read';
 import { importPhrase } from '@/lib/app/sequencer/import';
+import { styleWordsOf } from '@/lib/app/sequencer/drums';
 import { PatternNameSchema } from '@/lib/app/patterns/data';
 import type { Sequencer } from '@/components/app/sequencer/use-sequencer';
 import type { MyPatterns } from '@/components/app/sequencer/use-my-patterns';
@@ -162,7 +163,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
         id: null,
         name: soundDefault.name,
         libraryId: soundDefault.id,
-        inspiredBy: soundDefault.inspiredBy.label,
+        inspiredBy: styleWordsOf(soundDefault.inspiredBy) ?? undefined,
       },
       { quiet: true }
     );
@@ -293,7 +294,12 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
       return;
     }
     if (
-      !load(p.pattern, { id: null, name: p.name, libraryId: p.id, inspiredBy: p.inspiredBy.label })
+      !load(p.pattern, {
+        id: null,
+        name: p.name,
+        libraryId: p.id,
+        inspiredBy: styleWordsOf(p.inspiredBy) ?? undefined,
+      })
     ) {
       setStatus(`${p.name} cannot be opened in the sequencer.`);
       return;

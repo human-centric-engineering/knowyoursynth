@@ -317,6 +317,40 @@ describe('drum beat', () => {
   });
 });
 
+describe('a stop', () => {
+  it('fades a ringing kick out over a few milliseconds rather than dropping it to silence', () => {
+    const sr = 48000;
+    const kick = DRUM_VOICES.indexOf('kick');
+    const b = createBacking(sr);
+    b.set({ click: false, drums: { hits: [[0, kick, 1]], swing: 50 } });
+    b.start(0, 0);
+    // 0.1 s in, the kick is still ringing loud: the stop lands then, and its tail plays on through tail().
+    const out = new Float32Array(sr / 10 + sr / 50);
+    b.process(out, undefined, 0, sr / 10, 0, sr, false);
+    b.stop();
+    b.tail(out, undefined, sr / 10, sr / 50);
+    const before = Math.abs(out[sr / 10 - 1]);
+    expect(before).toBeGreaterThan(0.05);
+    let jump = 0;
+    for (let i = sr / 10 - 1; i < out.length - 1; i++)
+      jump = Math.max(jump, Math.abs(out[i + 1] - out[i]));
+    // No step bigger than the kick's own sample-to-sample movement: it fades, it is not cut.
+    expect(jump).toBeLessThan(0.02);
+    // And 5 ms on, it is gone.
+    expect(out.subarray(sr / 10 + sr / 200 + 1).every((x) => x === 0)).toBe(true);
+  });
+
+  it('lets a stopped pattern’s drums fade through the player', () => {
+    const { out } = play(2 * BEAT, [
+      [0, { type: 'pattern', loop: loop([[0, 60, 0.5]]), bpm: BPM, backing: rims([0]) }],
+      [200, { type: 'stopPattern' }],
+    ]);
+    // The stop lands before the second block (sample 128): the rim struck on sample 0 sounds on into it, then fades.
+    expect(out.subarray(128, 160).some((x) => x !== 0)).toBe(true);
+    expect(out.subarray(1000).every((x) => x === 0)).toBe(true);
+  });
+});
+
 describe('what the page may send', () => {
   it('takes a count-in in whole beats, up to eight', () => {
     expect(countInBeats(4)).toBe(4);

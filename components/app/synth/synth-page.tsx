@@ -120,7 +120,7 @@ import { useMyPatterns } from '@/components/app/sequencer/use-my-patterns';
 import { StepLamp } from '@/components/app/sequencer/step-lamp';
 import type { PatternLibraryProps } from '@/components/app/sequencer/pattern-library';
 import { RIFF_FALLBACK } from '@/lib/app/patterns/riff-name';
-import { soundDefaultOf, useSoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
+import { useSoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
 import { useSuggestedPatterns } from '@/components/app/sequencer/use-suggested-patterns';
 import { PatternPicker } from '@/components/app/synth/pattern-picker';
 import { useBacking, useBackingPref } from '@/components/app/sequencer/use-backing';
@@ -1313,12 +1313,10 @@ function Synth({
   // What starts once a load ends: a Play pressed meanwhile, or the riff that was playing as it began. Nothing plays
   // until the panel is set; Play shows it is waiting with a spinner (`waiting`), and pressing it then cancels the wait.
   // Counted in as it starts only if Play asked for it (t-266), not for the riff the load held.
-  const afterLoad = useRef<'riff' | 'pattern' | null>(null);
-  const afterLoadCount = useRef(false);
+  const afterLoad = useRef<{ what: 'riff' | 'pattern'; countIn: boolean } | null>(null);
   const [waiting, setWaiting] = useState(false);
   const queue = useCallback((what: 'riff' | 'pattern' | null, countIn = false) => {
-    afterLoad.current = what;
-    afterLoadCount.current = what !== null && countIn;
+    afterLoad.current = what ? { what, countIn } : null;
     setWaiting(what !== null);
   }, []);
   // The riff Replay changes started (below), stopped as the moves end: not once the riff has been played or stopped.
@@ -1420,7 +1418,9 @@ function Synth({
     let live = true;
     openPattern(soundPatternId)
       .then((d) => {
-        if (live && d.pattern) loadPattern(d.pattern, { id: d.id, name: d.name });
+        // A patch was picked, not a pattern: one playing goes on into it without a count-in.
+        if (live && d.pattern)
+          loadPattern(d.pattern, { id: d.id, name: d.name }, { countIn: false });
       })
       .catch(() => undefined); // the sound's own riff stays, as it would with no pattern
     return () => {
@@ -1518,12 +1518,7 @@ function Synth({
       : null;
   // The Play deck's pattern picker (`f-pattern-picker` t-213) lists them too, so they are read while it is open.
   const [patternsOpen, setPatternsOpen] = useState(false);
-  // Read too while the drums match the patch (t-267): Match goes by its default pattern's Inspired by.
-  const backingPref = useBackingPref();
-  const soundPatterns = useSoundPatterns(
-    librarySound,
-    seqShown || patternsOpen || backingPref[0].drums === 'auto'
-  );
+  const soundPatterns = useSoundPatterns(librarySound, seqShown || patternsOpen);
   // Patterns that suit the patch as it is now (t-125). A library sound is offered them once the patch has moved far
   // from how that sound came; anything else on the panel is offered them at once.
   // The Default patch is no sound the suggestions can be asked to leave out, so it is no start: it is offered them at once.
@@ -1557,7 +1552,7 @@ function Synth({
     enabled: !ownSoundPending,
   });
   // What plays along with the pattern (t-266, t-267). The sound's own riff matches a drum beat by its default pattern's
-  // Inspired by, once that has been read.
+  // style, as the catalogue sends it.
   // The patch as chosen, not as read: one of the user's sounds is named before their list has arrived to show it.
   const patchKey = designed
     ? `${synthId}/${designed.preset.id}`
@@ -1566,9 +1561,8 @@ function Synth({
       : sess.soundId
         ? `${synthId}/mine:${sess.soundId}`
         : `${synthId}/${sess.presetId ?? ''}`;
-  const soundDefaultView = soundDefaultOf(soundPatterns);
-  const backing = useBacking(seq, backingPref, {
-    fallbackInspiredBy: soundDefaultView?.inspiredBy.label ?? null,
+  const backing = useBacking(seq, useBackingPref(), {
+    fallbackInspiredBy: libraryPreset?.defaultPattern?.style ?? null,
     patchKey,
   });
   // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked beside Play, the
@@ -1637,7 +1631,7 @@ function Synth({
   // The riff playing becomes the pattern: it plays on as it is. Midway through a load, a riff waiting for it to end
   // starts then as the pattern, so it is not taken for the riff (nor stopped, should the new sound have none).
   const riffToPattern = () => {
-    if (afterLoad.current === 'riff') queue('pattern', afterLoadCount.current);
+    if (afterLoad.current?.what === 'riff') queue('pattern', afterLoad.current.countIn);
     setPlaying(false);
   };
   // Opened by the bar's Sequencer button or a panel button (t-85).
@@ -1704,10 +1698,9 @@ function Synth({
     loadHandler.current = (on) => {
       if (!on) {
         const then = afterLoad.current;
-        const countIn = afterLoadCount.current;
         queue(null);
-        if (then === 'riff') riffShown(undefined, countIn);
-        else if (then === 'pattern') void patternNow(countIn);
+        if (then?.what === 'riff') riffShown(undefined, then.countIn);
+        else if (then?.what === 'pattern') void patternNow(then.countIn);
         return;
       }
       new Set([...downRef.current.keys(), ...heldRef.current]).forEach((n) =>

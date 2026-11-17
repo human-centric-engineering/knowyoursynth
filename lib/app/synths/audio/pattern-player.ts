@@ -569,6 +569,8 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
   function process(out: Float32Array, n: number, outR?: Float32Array) {
     if (!cur) {
       synth.process(out, n, outR);
+      // A stopped run's drums fade out rather than stop on a sample.
+      backing.tail(out, outR, 0, n);
       frames += n;
       return;
     }
@@ -588,6 +590,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
       fire();
       if (!cur) {
         synth.process(out.subarray(i, n), n - i, outR && outR.subarray(i, n));
+        backing.tail(out, outR, i, n - i);
         frames += n - i;
         return;
       }

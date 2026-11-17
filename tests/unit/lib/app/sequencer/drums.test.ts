@@ -12,6 +12,7 @@ import {
   beatGrid,
   drumBeat,
   drumStyleFor,
+  styleWordsOf,
 } from '@/lib/app/sequencer/drums';
 import { BEAT_STEPS, DRUM_VOICES, playableBacking } from '@/lib/app/synths/audio/backing';
 
@@ -79,6 +80,7 @@ describe('drumStyleFor', () => {
     ['Drum and bass', 'breakbeat'],
     ['Jungle', 'breakbeat'],
     ['Dub', 'onedrop'],
+    ['Dub techno', 'techno'],
     ['King Tubby', 'onedrop'],
     ['Dubstep', 'halftime'],
     ['Burial', 'halftime'],
@@ -93,6 +95,11 @@ describe('drumStyleFor', () => {
     }
   );
 
+  it('does not hear Bach in Burt Bacharach', () => {
+    expect(drumStyleFor('Burt Bacharach', 120, 50).beat).not.toBeNull();
+    expect(drumStyleFor('J.S. Bach', 120, 50).beat).toBeNull();
+  });
+
   it.each([
     [90, 62, 'hiphop'],
     [112, 62, 'funk'],
@@ -105,5 +112,14 @@ describe('drumStyleFor', () => {
     expect(drumStyleFor(null, bpm, swing)).toEqual({ beat, by: 'tempo' });
     // An Inspired by that names no style it knows is no help either.
     expect(drumStyleFor('Chiptune', bpm, swing)).toEqual({ beat, by: 'tempo' });
+  });
+});
+
+describe('styleWordsOf', () => {
+  it('reads a genre or an artist, not a work’s title nor a synth’s name', () => {
+    expect(styleWordsOf({ kind: 'genre', label: 'Deep house' })).toBe('Deep house');
+    expect(styleWordsOf({ kind: 'artist', label: 'King Tubby' })).toBe('King Tubby');
+    expect(styleWordsOf({ kind: 'work', label: 'Pop Muzik' })).toBeNull();
+    expect(styleWordsOf({ kind: 'synth', label: 'PPG Wave' })).toBeNull();
   });
 });

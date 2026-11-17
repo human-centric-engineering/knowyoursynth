@@ -7,15 +7,14 @@
  *
  * It hands the sequencer what to play (`seq.setBacking`) whenever any of it changes, including the pattern under a
  * matched beat: another pattern opened can match another beat, and the beat swings with the pattern's swing. Match
- * goes by what the pattern was inspired by, or by `fallbackInspiredBy` (the sound's default pattern's, for the sound's
- * own riff), then by the tempo and swing (`drumStyleFor`).
+ * goes by what the pattern was inspired by, or by `fallbackInspiredBy` (the style the catalogue sends with the sound's
+ * default pattern, for the sound's own riff), then by the tempo and swing (`drumStyleFor`).
  *
  * Another patch brings the drums back to Match, so the beat is the one that suits the new patch rather than one chosen
  * for the last. Off stays off. A beat chosen by name is kept with the patch it was chosen on (`drumsFor`), so it lasts
  * through a reload, and through the moments a page takes to read which patch is open, until `patchKey` names another.
  *
- * The stored setting is read by `useBackingPref`, apart from the rest, so the page can know whether Match is on before
- * it has read what Match goes by.
+ * The stored setting is read by `useBackingPref`, apart from the rest.
  */
 
 import { useEffect, useMemo } from 'react';

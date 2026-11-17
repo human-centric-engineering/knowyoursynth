@@ -881,4 +881,6 @@ The bar is always four beats from the pattern's first step, whatever the loop's 
 (`playableBacking`) as it checks a loop. The three settings are a screen setting kept in this browser (`kys.backing`,
 `components/app/sequencer/use-backing.ts`). Choosing another patch brings a beat chosen by name back to Match (Off
 stays off); the beat is stored with the patch it was chosen on (`drumsFor`), so a reload keeps it. Where a pattern came from the library, `LoadedPattern.inspiredBy` carries
-its Inspired by for Match; the sound's own riff goes by its default pattern's, once read.
+its Inspired by for Match, when that is a genre or an artist (`styleWordsOf`: a work's title or a synth's name says
+nothing of a style); the sound's own riff goes by its default pattern's, which the catalogue sends as
+`defaultPattern.style`.

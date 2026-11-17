@@ -186,7 +186,7 @@ export function beatGrid(beat: DrumBeat, swing: number): DrumGrid {
 const RULES: readonly [DrumBeatId | null, RegExp][] = [
   [
     null,
-    /ambient|drone|orchestral|film scor|scores?\b|soundtrack|baroque|classical|sound effects?|radiophonic|music box|sound design|sci-fi|berlin school|new age|choral|minimalis|bach|tchaikovsky|scarlatti|messiaen|reich|philip glass|terry riley|la monte young|radigue|oliveros|harold budd|yoshimura|stars of the lid|morricone|herrmann|john williams|lustmord|biosphere|laraaji|steve roach/,
+    /ambient|drone|orchestral|film scor|scores?\b|soundtrack|baroque|classical|sound effects?|radiophonic|music box|sound design|sci-fi|berlin school|new age|choral|minimalis|\bbach\b|tchaikovsky|scarlatti|messiaen|reich|philip glass|terry riley|la monte young|radigue|oliveros|harold budd|yoshimura|stars of the lid|morricone|herrmann|john williams|lustmord|biosphere|laraaji|steve roach/,
   ],
   ['trap', /\btrap\b|\bdrill\b/],
   ['halftime', /dubstep|future garage|half-?time|downtempo|burial/],
@@ -195,7 +195,7 @@ const RULES: readonly [DrumBeatId | null, RegExp][] = [
     /drum (and|&|n) bass|\bdnb\b|jungle|breakbeat|big beat|\bamen\b|prodigy|chemical brothers/,
   ],
   ['hiphop', /hip-?hop|lo-?fi|boom bap|g-funk|trip-?hop|\brap\b|nujabes|dilla|dr\.? dre/],
-  ['onedrop', /\bdub\b|reggae|\bska\b|king tubby|lee .?scratch.? perry|scientist/],
+  ['onedrop', /\bdub\b(?! techno)|reggae|\bska\b|king tubby|lee .?scratch.? perry|scientist/],
   [
     'four',
     /house|trance|\bedm\b|\brave\b|eurodance|big room|deadmau5|van dyk|daft punk|swedish house|tiësto|tiesto/,
@@ -209,6 +209,14 @@ const RULES: readonly [DrumBeatId | null, RegExp][] = [
     /\bpop\b|synth-?pop|rock|wave|\b80s\b|ballad|punk|kraut|motorik|indie|kavinsky|carpenter brut|com truise|the weeknd|m83|röyksopp|royksopp|alabama 3|depeche|new order|gary numan|human league|tears for fears|a-ha|vangelis/,
   ],
 ];
+
+/**
+ * The words in a pattern's Inspired by that say its style: a genre, or an artist known for one. A work's title or a
+ * synth's name says nothing of it ("Pop Muzik", a "PPG Wave"), so Match goes by the tempo for those.
+ */
+export function styleWordsOf(inspiredBy: { kind: string; label: string }): string | null {
+  return inspiredBy.kind === 'genre' || inspiredBy.kind === 'artist' ? inspiredBy.label : null;
+}
 
 /** Which beat suits a pattern, and what it was chosen by. */
 export interface DrumStyle {

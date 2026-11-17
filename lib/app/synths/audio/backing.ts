@@ -70,7 +70,7 @@ export function playableBacking(x: unknown): x is BackingSettings {
   const b = x as { click?: unknown; drums?: unknown };
   if (typeof b.click !== 'boolean') return false;
   if (b.drums === null) return true;
-  if (typeof b.drums !== 'object' || b.drums === undefined) return false;
+  if (typeof b.drums !== 'object') return false;
   const d = b.drums as { hits?: unknown; swing?: unknown };
   return (
     isNumber(d.swing) &&
@@ -105,6 +105,8 @@ const CLICK_GAIN = 0.4;
 const POOL = 16;
 /** A grid time this close to a sample's beat is on it: float beats from a tempo change never miss a hit. */
 const EPS = 1e-9;
+/** How long a hit sounding when the run stops takes to fade out. */
+const FADE = 0.005;
 
 interface Voice {
   kind: number;
@@ -116,6 +118,8 @@ interface Voice {
   /** Two one-pole filter states, for the noise. */
   lp: number;
   lp2: number;
+  /** Cut short by a stop: faded out over its last `FADE` seconds rather than dropped to silence (a click). */
+  cut: boolean;
 }
 
 export interface Backing {
@@ -123,8 +127,10 @@ export interface Backing {
   set(s: BackingSettings): void;
   /** A run starts at `beat` (negative for a count-in of that many beats): the grid is placed there. */
   start(beat: number, countIn: number): void;
-  /** The run is over: nothing more is struck, and what sounds is cut. */
+  /** The run is over: nothing more is struck, and what sounds fades out over a few milliseconds. */
   stop(): void;
+  /** Adds what still sounds (a stopped run's fading tails) to `k` samples from `off`, striking nothing. */
+  tail(out: Float32Array, outR: Float32Array | undefined, off: number, k: number): void;
   /**
    * Adds `k` samples from `off` in `out` (and `outR`), the first at beat `beat`, at `spb` samples a beat. `muted`
    * keeps the grid moving and strikes nothing.
@@ -155,6 +161,7 @@ export function createBacking(sr: number): Backing {
     phase: 0,
     lp: 0,
     lp2: 0,
+    cut: false,
   }));
   const coef = (hz: number) => 1 - Math.exp((-2 * Math.PI * Math.min(hz, sr * 0.45)) / sr);
   const LP_SNARE = coef(1800),
@@ -199,6 +206,7 @@ export function createBacking(sr: number): Backing {
     pick.phase = 0;
     pick.lp = 0;
     pick.lp2 = 0;
+    pick.cut = false;
   }
 
   /** What sixteenth `g` strikes. */
@@ -261,6 +269,30 @@ export function createBacking(sr: number): Backing {
     }
   }
 
+  /** One sample of every voice sounding, or null when none is. */
+  function mix(): number | null {
+    let sum = 0;
+    let any = false;
+    const fade = sr * FADE;
+    for (const v of voices) {
+      if (v.kind < 0) continue;
+      any = true;
+      const g = v.cut ? Math.min(1, (v.len - v.t) / fade) : 1;
+      sum += sample(v) * v.amp * g;
+      if (++v.t >= v.len) v.kind = -1;
+    }
+    return any ? sum : null;
+  }
+
+  function tail(out: Float32Array, outR: Float32Array | undefined, off: number, k: number) {
+    for (let j = 0; j < k; j++) {
+      const sum = mix();
+      if (sum === null) return;
+      out[off + j] += sum;
+      if (outR) outR[off + j] += sum;
+    }
+  }
+
   return {
     set(s) {
       settings = s;
@@ -272,10 +304,19 @@ export function createBacking(sr: number): Backing {
     },
     stop() {
       running = false;
-      for (const v of voices) v.kind = -1;
+      const fade = Math.max(1, Math.round(sr * FADE));
+      for (const v of voices) {
+        if (v.kind < 0 || v.len - v.t <= fade) continue;
+        v.len = v.t + fade;
+        v.cut = true;
+      }
     },
+    tail,
     process(out, outR, off, k, beat, spb, muted) {
-      if (!running) return;
+      if (!running) {
+        tail(out, outR, off, k);
+        return;
+      }
       const per = 1 / spb;
       // The beat jumped (a tempo change mid-span, a restart): the grid is placed again from here.
       if (timeOf(next - 1) > beat + EPS || timeOf(next) < beat - 2 * per) next = firstFrom(beat);
@@ -292,15 +333,9 @@ export function createBacking(sr: number): Backing {
           next++;
         }
         if (!sounding) continue;
-        let sum = 0;
-        let any = false;
-        for (const v of voices) {
-          if (v.kind < 0) continue;
-          sum += sample(v) * v.amp;
-          if (++v.t >= v.len) v.kind = -1;
-          else any = true;
-        }
-        sounding = any;
+        const sum = mix();
+        sounding = sum !== null;
+        if (sum === null) continue;
         out[off + j] += sum;
         if (outR) outR[off + j] += sum;
       }
