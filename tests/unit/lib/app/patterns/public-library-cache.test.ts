@@ -5,7 +5,10 @@
  * - After it, the call still gets the kept copy at once, one refresh starts behind it, and the next call gets the
  *   refreshed copy.
  * - A refresh that fails keeps the old copy, and it is not tried again until another `KEEP_MS` has passed.
- * - A refreshed copy is stamped with the caller's clock, so it goes stale `KEEP_MS` after the call that started it.
+ * - A refreshed copy is stamped with the caller's clock plus the time the read took, so it is fresh for `KEEP_MS` after
+ *   it lands; no refresh starts while the first read is on its way; a refresh that fails after a forget reports nothing.
+ * - The kept copy is shared across module graphs (`globalThis`), so the boot warm in `instrumentation.ts` reaches the
+ *   routes.
  * - `forgetSuggestLibrary()` makes the next call read afresh, and a refresh that began before it is not kept.
  * - `warmPublicLibrary()` fills the kept copy.
  */
@@ -50,6 +53,9 @@ const flush = () => new Promise((r) => setTimeout(r, 0));
 
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.restoreAllMocks();
+  // The real clock only measures how long a refresh took; held still, a read takes no time unless a test says so.
+  vi.spyOn(Date, 'now').mockReturnValue(0);
   forgetSuggestLibrary();
   mockRead.listPublicPatternCategories.mockResolvedValue(new Map());
 });
@@ -129,6 +135,69 @@ describe('publicLibrary', () => {
     expect(mockRead.listAllPublicPatterns).toHaveBeenCalledTimes(3);
     await flush();
     expect((await publicLibrary(t0 + 2 * KEEP_MS + 1)).views).toEqual([{ id: 'third' }]);
+  });
+
+  it('stamps a slow refresh with when it landed, so it is fresh for KEEP_MS after it', async () => {
+    mockRead.listAllPublicPatterns.mockResolvedValueOnce(viewsOf('first'));
+    const t0 = 1_000_000;
+    await publicLibrary(t0);
+
+    const refresh = deferred<{ id: string }[]>();
+    mockRead.listAllPublicPatterns.mockReturnValueOnce(refresh.promise);
+    await publicLibrary(t0 + KEEP_MS);
+    // The read takes 50 s.
+    vi.mocked(Date.now).mockReturnValue(50_000);
+    refresh.resolve(viewsOf('second'));
+    await flush();
+
+    // Landed at t0 + KEEP_MS + 50 s: still fresh 59 s later, so no read.
+    expect((await publicLibrary(t0 + 2 * KEEP_MS + 49_000)).views).toEqual([{ id: 'second' }]);
+    expect(mockRead.listAllPublicPatterns).toHaveBeenCalledTimes(2);
+  });
+
+  it('starts no refresh while the first read is still on its way', async () => {
+    const first = deferred<{ id: string }[]>();
+    mockRead.listAllPublicPatterns.mockReturnValueOnce(first.promise);
+    const t0 = 1_000_000;
+    const pending = publicLibrary(t0);
+    // Past KEEP_MS with the first read still out: the same read, no second.
+    expect(publicLibrary(t0 + KEEP_MS)).toBe(pending);
+    expect(mockRead.listAllPublicPatterns).toHaveBeenCalledTimes(1);
+
+    first.resolve(viewsOf('first'));
+    await flush();
+    mockRead.listAllPublicPatterns.mockResolvedValueOnce(viewsOf('second'));
+    await publicLibrary(t0 + KEEP_MS + 1);
+    expect(mockRead.listAllPublicPatterns).toHaveBeenCalledTimes(2);
+  });
+
+  it('reports nothing when a refresh fails after the copy it would replace was forgotten', async () => {
+    mockRead.listAllPublicPatterns.mockResolvedValueOnce(viewsOf('first'));
+    const t0 = 1_000_000;
+    await publicLibrary(t0);
+
+    const refresh = deferred<{ id: string }[]>();
+    mockRead.listAllPublicPatterns.mockReturnValueOnce(refresh.promise);
+    await publicLibrary(t0 + KEEP_MS);
+    forgetSuggestLibrary();
+    mockRead.listAllPublicPatterns.mockResolvedValueOnce(viewsOf('edited'));
+    await publicLibrary(t0 + KEEP_MS + 1);
+
+    refresh.reject(new Error('db down'));
+    await flush();
+    expect(mockLog.warn).not.toHaveBeenCalled();
+    expect((await publicLibrary(t0 + KEEP_MS + 2)).views).toEqual([{ id: 'edited' }]);
+  });
+
+  it('is shared with another module graph, so the boot warm reaches the routes', async () => {
+    mockRead.listAllPublicPatterns.mockResolvedValueOnce(viewsOf('warm'));
+    await warmPublicLibrary();
+
+    // A fresh evaluation of the module, as the route bundle has: it sees the copy the boot warm kept.
+    vi.resetModules();
+    const other = await import('@/lib/app/patterns/suggest-read');
+    expect((await other.publicLibrary()).views).toEqual([{ id: 'warm' }]);
+    expect(mockRead.listAllPublicPatterns).toHaveBeenCalledTimes(1);
   });
 
   it('does not keep a first read that fails', async () => {

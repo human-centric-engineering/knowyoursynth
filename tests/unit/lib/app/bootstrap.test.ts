@@ -20,9 +20,6 @@ vi.mock('@/lib/logging', () => ({ logger: mockLog }));
 
 import { initApp } from '@/lib/app/bootstrap';
 
-/** Lets the dynamic import and the warm's callbacks run. */
-const settle = () => new Promise((r) => setTimeout(r, 20));
-
 beforeEach(() => {
   vi.clearAllMocks();
 });
@@ -31,8 +28,7 @@ describe('initApp', () => {
   it('reads the public pattern library ahead', async () => {
     mockWarm.mockResolvedValue(undefined);
     await initApp();
-    await settle();
-    expect(mockWarm).toHaveBeenCalledTimes(1);
+    await vi.waitFor(() => expect(mockWarm).toHaveBeenCalledTimes(1));
     expect(mockLog.warn).not.toHaveBeenCalled();
   });
 
@@ -44,10 +40,11 @@ describe('initApp', () => {
   it('logs a read that fails, and does not throw', async () => {
     mockWarm.mockRejectedValue(new Error('db down'));
     await expect(initApp()).resolves.toBeUndefined();
-    await settle();
-    expect(mockLog.warn).toHaveBeenCalledWith(
-      'app boot: the public pattern library could not be read ahead',
-      { err: 'Error: db down' }
+    await vi.waitFor(() =>
+      expect(mockLog.warn).toHaveBeenCalledWith(
+        'app boot: the public pattern library could not be read ahead',
+        { err: 'Error: db down' }
+      )
     );
   });
 });

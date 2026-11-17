@@ -6,8 +6,8 @@
  * the artist it is inspired by lifts researched patterns of theirs), and the library. The library is the same for
  * every caller and costs up to a second to read and work out the facts of, so it is kept, and read again behind the
  * kept copy once that is a minute old (`publicLibrary`): an admin's edit reaches suggestions at once, a catalogue
- * edit on the call after the refresh that the first call past the minute starts. The whole library's ranking (`rank-read.ts`) shares the kept library, the sound's
- * lookup and the reading.
+ * edit on the call after the refresh that the first call past the minute starts. The whole library's ranking
+ * (`rank-read.ts`) shares the kept library, the sound's lookup and the reading.
  *
  * Both offer only patterns of the patch's category (t-255): those a library sound of that category lists, on any
  * synth (`limitToCategory`). The category is the start sound's tag while the patch is that sound as it came, and what
@@ -86,10 +86,17 @@ export const KEEP_MS = 60_000;
 interface Kept {
   at: number;
   library: Promise<PublicLibrary>;
-  /** The read replacing it, while one is on its way. */
-  refreshing: boolean;
+  /** A read is on its way: the first, or one replacing this copy. No other starts meanwhile. */
+  reading: boolean;
 }
-let kept: Kept | null = null;
+
+/**
+ * The kept copy lives on `globalThis`, not in this module: `instrumentation.ts` (where the boot warm runs) and the route
+ * handlers are separate module graphs, each with its own module state, so a module-level copy warmed at boot would
+ * never be the one the routes read (the same reason as `lib/db/client.ts`'s stores, #1138).
+ */
+const store = globalThis as typeof globalThis & { kysPublicLibrary?: { kept: Kept | null } };
+const holder = (store.kysPublicLibrary ??= { kept: null });
 
 const readLibrary = (): Promise<PublicLibrary> =>
   Promise.all([listAllPublicPatterns(), listPublicPatternCategories()]).then(
@@ -106,30 +113,44 @@ const readLibrary = (): Promise<PublicLibrary> =>
  * again once another `KEEP_MS` has passed.
  */
 export function publicLibrary(now = Date.now()): Promise<PublicLibrary> {
+  const kept = holder.kept;
   if (kept) {
-    if (now - kept.at >= KEEP_MS && !kept.refreshing) refresh(kept, now);
+    if (now - kept.at >= KEEP_MS && !kept.reading) refresh(kept, now);
     return kept.library;
   }
-  const mine: Kept = { at: now, library: readLibrary(), refreshing: false };
-  kept = mine;
-  mine.library.catch(() => {
-    if (kept === mine) kept = null;
-  });
+  const mine: Kept = { at: now, library: readLibrary(), reading: true };
+  holder.kept = mine;
+  mine.library.then(
+    () => {
+      mine.reading = false;
+    },
+    () => {
+      if (holder.kept === mine) holder.kept = null;
+    }
+  );
   return mine.library;
 }
 
-/** `now` is the caller's clock: the new copy is stamped with it, and a failed read waits out `KEEP_MS` from it. */
+/**
+ * `now` is the caller's clock. The new copy is stamped with it plus the time the read took, so it is fresh for a whole
+ * `KEEP_MS` after it lands; a read that fails waits out `KEEP_MS` from when it failed.
+ */
 function refresh(old: Kept, now: number): void {
-  old.refreshing = true;
+  old.reading = true;
+  const started = Date.now();
+  const landed = () => now + (Date.now() - started);
   readLibrary().then(
     (library) => {
       // Forgotten meanwhile (an admin's edit): the read began before it, so it is not kept.
-      if (kept === old) kept = { at: now, library: Promise.resolve(library), refreshing: false };
+      if (holder.kept === old)
+        holder.kept = { at: landed(), library: Promise.resolve(library), reading: false };
     },
     (err: unknown) => {
+      // Forgotten meanwhile: what is served now is not this copy, so there is nothing to back off or report.
+      if (holder.kept !== old) return;
       // Not tried again for another `KEEP_MS`, so a database that is down is not read on every call.
-      old.at = now;
-      old.refreshing = false;
+      old.at = landed();
+      old.reading = false;
       logger.warn('pattern suggestions: the public library could not be read again', {
         err: String(err),
       });
@@ -178,7 +199,7 @@ export function patchCategory(
  * refresh that the first call past `KEEP_MS` starts.
  */
 export function forgetSuggestLibrary(): void {
-  kept = null;
+  holder.kept = null;
 }
 
 /** What a reading says, for the patch on the panel. */

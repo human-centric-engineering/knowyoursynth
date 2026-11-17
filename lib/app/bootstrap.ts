@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logging';
+
 /**
  * App boot seam — one-time server startup work.
  *
@@ -29,8 +31,8 @@
  *
  * Full guide: CUSTOMIZATION.md §4 · the reserved `/framework` fork tier.
  */
-import { logger } from '@/lib/logging';
-
+// Not `async`: nothing here is awaited (`require-await`), so it returns its promise itself; the seam's contract is still
+// a promise, and `instrumentation.ts` contains a throw either way.
 export function initApp(): Promise<void> {
   // The public pattern library, read into its kept copy so the first picker open after a start does not wait on it
   // (`f-pattern-prefetch` t-262). Not awaited: start-up never waits on the database, and a failed read is logged and

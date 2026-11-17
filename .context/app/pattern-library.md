@@ -1741,8 +1741,10 @@ public library. The library is the same for every caller and costs up to a secon
 of, so it is kept (`publicLibrary`, `f-pattern-prefetch` t-262). Once the kept copy is a minute old (`KEEP_MS`), a call
 is still answered from it, and one fresh read starts behind it and replaces it when it lands, so no call after the
 first waits on the database. The copy has no upper bound on age: after a quiet spell, the first call is answered
-from it however old it is. A refresh that fails keeps the old copy and is not tried again for another minute. The server reads it once at start
-(`initApp` → `warmPublicLibrary`), without waiting on it. An admin's write to the library (`library-edit.ts`) calls
+from it however old it is. A refresh that fails keeps the old copy and is not tried again for another minute. The
+server reads it once at start (`initApp` → `warmPublicLibrary`), without waiting on it. The copy is kept on
+`globalThis`, not in the module, because `instrumentation.ts` and the route handlers are separate module graphs: a
+module-level copy warmed at boot would not be the one the routes read. An admin's write to the library (`library-edit.ts`) calls
 `forgetSuggestLibrary`, so the next call reads afresh; anything else (a catalogue edit) reaches suggestions on the call
 after the refresh it starts.
 
