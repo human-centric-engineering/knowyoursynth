@@ -17,6 +17,7 @@
  */
 
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { styleWordsOf } from '@/lib/app/sequencer/drums';
 import { ChevronUp, Search } from 'lucide-react';
 import { apiClient } from '@/lib/api/client';
 import { logger } from '@/lib/logging';
@@ -230,7 +231,13 @@ function PickerBody({
       if (!live.current || n !== pickN.current) return;
       setReading(null);
     }
-    if (!page.current.load(view.pattern, { id: null, name: view.name, libraryId: view.id })) {
+    const from = {
+      id: null,
+      name: view.name,
+      libraryId: view.id,
+      inspiredBy: styleWordsOf(view.inspiredBy) ?? undefined,
+    };
+    if (!page.current.load(view.pattern, from)) {
       setStatus(`${row.name} cannot be played.`);
       return;
     }

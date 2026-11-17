@@ -34,6 +34,7 @@ import {
 import { apiClient } from '@/lib/api/client';
 import type { SynthDetail } from '@/lib/app/catalogue/read';
 import { importPhrase } from '@/lib/app/sequencer/import';
+import { styleWordsOf } from '@/lib/app/sequencer/drums';
 import { PatternNameSchema } from '@/lib/app/patterns/data';
 import type { Sequencer } from '@/components/app/sequencer/use-sequencer';
 import type { MyPatterns } from '@/components/app/sequencer/use-my-patterns';
@@ -42,7 +43,7 @@ import {
   SoundPatternPicker,
   type PatternGroup,
 } from '@/components/app/sequencer/sound-pattern-picker';
-import type { SoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
+import { soundDefaultOf, type SoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
 import type { SuggestedPatterns } from '@/components/app/sequencer/use-suggested-patterns';
 import type { LibraryPatternView } from '@/lib/app/patterns/library';
 import { PlayerTip } from '@/components/app/synth/player-tip';
@@ -147,8 +148,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
   // so what is held is named, and has the pattern's own settings. Run again once a new sound's riff has arrived
   // (`loaded` back to null), so it never lands on another sound's riff. Once per sound on the panel: an Undo back to an
   // unedited riff is where the Undo said it would go.
-  const defaultId = soundPatterns?.sound.defaultId ?? null;
-  const soundDefault = soundPatterns?.patterns?.find((p) => p.id === defaultId) ?? null;
+  const soundDefault = soundDefaultOf(soundPatterns);
   const soundKey = soundPatterns
     ? `${soundPatterns.sound.synthId}/${soundPatterns.sound.slug}`
     : null;
@@ -159,7 +159,12 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
     defaultFor.current = soundKey;
     load(
       soundDefault.pattern,
-      { id: null, name: soundDefault.name, libraryId: soundDefault.id },
+      {
+        id: null,
+        name: soundDefault.name,
+        libraryId: soundDefault.id,
+        inspiredBy: styleWordsOf(soundDefault.inspiredBy) ?? undefined,
+      },
       { quiet: true }
     );
   }, [soundDefault, soundKey, loaded, edited, load]);
@@ -288,7 +293,14 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
       setPanel(null);
       return;
     }
-    if (!load(p.pattern, { id: null, name: p.name, libraryId: p.id })) {
+    if (
+      !load(p.pattern, {
+        id: null,
+        name: p.name,
+        libraryId: p.id,
+        inspiredBy: styleWordsOf(p.inspiredBy) ?? undefined,
+      })
+    ) {
       setStatus(`${p.name} cannot be opened in the sequencer.`);
       return;
     }

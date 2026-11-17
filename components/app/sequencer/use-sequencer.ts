@@ -37,6 +37,12 @@
  * events: one from an earlier run (on its way when Stop and Play were pressed) is dropped. MIDI out (`out`) is told
  * everything sent to the player and every event of this run, and says whether the synth's own notes are muted.
  *
+ * What plays along (`setBacking`, t-266, t-267): a one-bar count-in before a pattern started from its top by Play or by
+ * opening another pattern while one plays, the metronome, and a drum beat. The player plays them
+ * (`lib/app/synths/audio/backing.ts`); this says when there is a count-in and sends a change of the rest at once. No
+ * count-in while a MIDI clock is followed (its Start is the downbeat), on a muted run (MIDI out alone: nothing would
+ * click), for a sound's riff arriving while it plays, or for a start part-way.
+ *
  * Following a MIDI clock (`clock`, `f-midi-hardware-lead` t-91), it is told the same, and its transport is the
  * clock's: Start and Continue play from a beat (a loop part-way through for Continue), Stop stops, and the tempo is the
  * clock's, sent to the player without editing the pattern. The pattern's own tempo and the panel's tempo knob are not
@@ -81,6 +87,7 @@ import {
   type ParamChange,
   type PatternLoop,
 } from '@/lib/app/synths/audio/pattern-player';
+import { NO_BACKING, type BackingSettings } from '@/lib/app/synths/audio/backing';
 import { logger } from '@/lib/logging';
 import type { ChosenStep, StepButton } from '@/components/app/sequencer/panel-buttons';
 import type { SequencerOut } from '@/components/app/sequencer/use-midi-out';
@@ -92,6 +99,15 @@ export interface SequencerEngine {
   /** The frame being heard now, on the clock `loop` events use. */
   readonly frame: number;
   readonly ctx: { readonly sampleRate: number } | null;
+}
+
+/** The count-in's length in beats: one bar of four. */
+export const COUNT_IN_BEATS = 4;
+
+/** What plays along with the pattern: whether a start counts in, and the metronome and drum beat. */
+export interface SequencerBacking {
+  countIn: boolean;
+  settings: BackingSettings;
 }
 
 /** The most edits Undo goes back through. */
@@ -176,6 +192,13 @@ export interface LoadedPattern {
   name: string;
   /** The library pattern it was opened from (`f-pattern-library` t-123), for the picker to mark. */
   libraryId?: string;
+  /** The words of the library pattern's Inspired by that say its style (`styleWordsOf`): what Match goes by (t-267). */
+  inspiredBy?: string;
+}
+
+export interface PlayOptions {
+  /** Counts in first, if the count-in is on. True unless said otherwise. */
+  countIn?: boolean;
 }
 
 export interface LoadOptions {
@@ -184,6 +207,11 @@ export interface LoadOptions {
    * Undo goes back to the riff, as none goes back past a sound's riff arriving.
    */
   quiet?: boolean;
+  /**
+   * Counted in, if it starts while one plays (t-266): a pattern the user opened. Not the sound's default (`quiet`), nor
+   * one the tutor wrote. True unless said otherwise.
+   */
+  countIn?: boolean;
 }
 
 export interface Sequencer {
@@ -221,8 +249,13 @@ export interface Sequencer {
   undo: () => void;
   canUndo: boolean;
   playing: boolean;
-  /** Starts the pattern from its first step. False if the sound could not be turned on. */
-  play: () => Promise<boolean>;
+  /**
+   * Starts the pattern from its first step, after a bar's count-in if that is on (and not `countIn: false`). False if
+   * the sound could not be turned on.
+   */
+  play: (o?: PlayOptions) => Promise<boolean>;
+  /** What plays along from now on: heard at once while it plays, and the count-in from the next start. */
+  setBacking: (b: SequencerBacking) => void;
   stop: () => void;
   /** While Fill is held, steps with a fill condition play (and those with "not fill" do not), from the next loop. */
   fill: boolean;
@@ -524,12 +557,32 @@ export function useSequencer({
     [compile, send]
   );
 
+  const backingRef = useRef<SequencerBacking>({ countIn: false, settings: NO_BACKING });
+  const setBacking = useCallback(
+    (b: SequencerBacking) => {
+      const was = backingRef.current.settings;
+      backingRef.current = b;
+      if (playingRef.current && JSON.stringify(was) !== JSON.stringify(b.settings))
+        send({ type: 'patternBacking', backing: b.settings });
+    },
+    [send]
+  );
+
   /**
    * Starts `p` at loop `at.index`, beat `at.beat` of it: 0 and 0 but for a MIDI clock's Continue. At `bpm`, the clock's
-   * tempo while one is followed, or the pattern's own (`null`).
+   * tempo while one is followed, or the pattern's own (`null`). `countIn` asks for the count-in, which plays only from
+   * the top, with it on, no clock followed and the synth heard.
    */
   const start = useCallback(
-    (p: Pattern, at: { index: number; beat: number }, bpm: number | null) => {
+    (p: Pattern, at: { index: number; beat: number }, bpm: number | null, countIn = false) => {
+      const b = backingRef.current;
+      const counting =
+        countIn &&
+        b.countIn &&
+        at.index === 0 &&
+        at.beat === 0 &&
+        !clockRef.current?.following &&
+        !outRef.current?.muted;
       loops.current.clear();
       playhead.current.clear();
       current.current = at.index;
@@ -543,6 +596,8 @@ export function useSequencer({
         muted: outRef.current?.muted ?? false,
         ...(at.index > 0 && { index: at.index }),
         ...(at.beat > 0 && { beat: at.beat }),
+        ...(counting && { countIn: COUNT_IN_BEATS }),
+        ...((b.settings.click || b.settings.drums) && { backing: b.settings }),
       });
     },
     [compile, send]
@@ -554,12 +609,12 @@ export function useSequencer({
    * is past its end).
    */
   const restart = useCallback(
-    (p: Pattern) => {
+    (p: Pattern, countIn = false) => {
       const c = clockRef.current;
       const beat = c?.following ? c.beat() : null;
       const at = beat !== null ? where(p, beat) : null;
       if (c && beat !== null && at) c.rejoin(beat);
-      start(p, at ?? { index: 0, beat: 0 }, c?.following ? c.bpm : null);
+      start(p, at ?? { index: 0, beat: 0 }, c?.following ? c.bpm : null, countIn);
     },
     [start]
   );
@@ -693,7 +748,8 @@ export function useSequencer({
       if (!o.quiet) past.current = [...past.current.slice(-(UNDO_DEPTH - 1)), was];
       setUndoable(past.current.length > 0);
       lastGroup.current = null;
-      if (playingRef.current) restart(next);
+      // Another pattern opened while one plays starts from its first step, counted in if the user opened it.
+      if (playingRef.current) restart(next, !o.quiet && o.countIn !== false);
       return next;
     },
     [restart, replaced, setLoaded, setBaseline]
@@ -749,7 +805,7 @@ export function useSequencer({
   /** A Play waiting for the sound: an arp press then joins it rather than starting a run of its own. */
   const starting = useRef(false);
   const playFrom = useCallback(
-    async (beat: number, bpm: number | null) => {
+    async (beat: number, bpm: number | null, countIn = false) => {
       // A Stop (or a riff) while the sound is still starting cancels this Play: it is a newer run than this one.
       const run = ++runs.current;
       if (!engine) return false;
@@ -761,13 +817,14 @@ export function useSequencer({
       if (!at) return false;
       playingRef.current = true;
       setPlaying(true);
-      start(p, at, bpm);
+      start(p, at, bpm, countIn);
       return true;
     },
     [engine, ensureAudio, start]
   );
   const play = useCallback(
-    () => playFrom(0, clockRef.current?.following ? clockRef.current.bpm : null),
+    (o?: PlayOptions) =>
+      playFrom(0, clockRef.current?.following ? clockRef.current.bpm : null, o?.countIn !== false),
     [playFrom]
   );
 
@@ -948,7 +1005,8 @@ export function useSequencer({
         !arpStarted.current
       ) {
         arpStarted.current = true;
-        play().then(
+        // A key starts the arp at once: no count-in before its first note.
+        play({ countIn: false }).then(
           (ok) => {
             if (!ok) arpStarted.current = false;
             else if (arpStarted.current && arpKeys.current.held.length === 0) stop();
@@ -1130,6 +1188,7 @@ export function useSequencer({
     canUndo: undoable,
     playing,
     play,
+    setBacking,
     stop,
     fill,
     setFill,

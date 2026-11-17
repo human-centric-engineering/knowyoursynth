@@ -83,6 +83,11 @@ export const STORAGE_KEYS = {
    * browser only, as `midiOut` is.
    */
   midiClock: 'kys.midiClock',
+  /**
+   * What plays along with the sequencer (`f-step-sequencer` t-266, t-267): the metronome, the count-in and the drum
+   * beat. A screen setting: kept in this browser only.
+   */
+  backing: 'kys.backing',
   /** A panel printed in another language is shown in English (the Polivoks). Kept in this browser only. */
   english: 'kys.english',
 } as const;

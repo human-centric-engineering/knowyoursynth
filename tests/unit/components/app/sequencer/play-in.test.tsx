@@ -385,6 +385,14 @@ describe('arp mode', () => {
     expect(screen.getByText('Playing C3 G3 E3')).toBeTruthy();
   });
 
+  it('starts on the key at once, with no count-in even with Count-in on', async () => {
+    open(RIFF);
+    act(() => state.setBacking({ countIn: true, settings: { click: false, drums: null } }));
+    pick('Keys', 'Arp');
+    expect(await pressNow(48)).toBe(true);
+    expect(sentOf('pattern').at(-1)).not.toHaveProperty('countIn');
+  });
+
   it('plays the order and octaves chosen', async () => {
     open(RIFF);
     pick('Keys', 'Arp');

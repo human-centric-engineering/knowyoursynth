@@ -402,10 +402,19 @@ export function useFootFit(fourSettings: boolean) {
     };
     measure();
     // Set on the element, not in state, so a resize does not render the page. Its width does not depend on what it
-    // writes (the rail is as wide as the panel), so writing it in the callback does not loop.
-    const ro = new ResizeObserver(measure);
+    // writes (the rail is as wide as the panel), but its height does: a closer fit unwraps it (t-268). Written in the
+    // observer's callback, that height change was a notification the browser could not deliver that frame, which it
+    // reports as a ResizeObserver loop error. So it is written on the next frame, outside the observer's delivery.
+    let frame = 0;
+    const ro = new ResizeObserver(() => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(measure);
+    });
     ro.observe(rail);
-    return () => ro.disconnect();
+    return () => {
+      cancelAnimationFrame(frame);
+      ro.disconnect();
+    };
   }, [fourSettings]);
   return ref;
 }

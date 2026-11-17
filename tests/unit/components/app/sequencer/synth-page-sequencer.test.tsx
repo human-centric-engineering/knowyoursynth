@@ -203,6 +203,8 @@ describe('the sequencer on the synth page', () => {
       loop: { notes: FAT_BASS.phrase.steps, beats: 2 },
       run: expect.any(Number),
       muted: false,
+      // Play counts in a bar (t-266).
+      countIn: 4,
     });
     // One transport, on the bar: the dock has no Play of its own.
     expect(within(sequencer()).queryByRole('button', { name: /^(Play|Stop)$/ })).toBeNull();

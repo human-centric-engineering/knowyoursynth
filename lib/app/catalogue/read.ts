@@ -18,6 +18,7 @@ import { validatePreset } from '@/lib/app/synths/validate';
 import { designFromDb, type SynthDesign } from '@/lib/app/catalogue/designs';
 import { getHeardOn } from '@/lib/app/bank/read';
 import { ENABLED, headOf, PLACES } from '@/lib/app/patterns/library';
+import { styleWordsOf } from '@/lib/app/sequencer/drums';
 import {
   summarisePublicLinks,
   summariseSongLinks,
@@ -54,11 +55,12 @@ export interface CatalogueSynth {
  * A library sound, as the panel plays it. `defaultPattern` is the library pattern its riff plays (t-224), by the rule
  * that keeps the riff in step with it (`headOf`): what Play names the riff, and which of the sound's patterns the
  * picker and the sequencer take for it. None when it has no default, when it plays its riff as it has it, named for
- * the sound.
+ * the sound. Its `style` is the words of its Inspired by that say its style (`styleWordsOf`), what the drums' Match
+ * goes by for the riff (t-267); absent for a work or a synth.
  */
 export type CatalogueSound = Preset & {
   version: number;
-  defaultPattern?: { id: string; name: string };
+  defaultPattern?: { id: string; name: string; style?: string };
 };
 
 export type Limit = z.infer<typeof LimitSchema>;
@@ -178,7 +180,12 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
               select: {
                 ...PLACES.select,
                 pattern: {
-                  select: { ...PLACES.select.pattern.select, name: true },
+                  select: {
+                    ...PLACES.select.pattern.select,
+                    name: true,
+                    inspiration: true,
+                    inspiredBy: true,
+                  },
                 },
               },
             },
@@ -249,10 +256,21 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
       continue;
     }
     const head = headOf(s.patterns);
+    const style = head
+      ? styleWordsOf({ kind: head.pattern.inspiration, label: head.pattern.inspiredBy })
+      : null;
     sounds.push({
       ...result.value,
       version: s.definitionVersion,
-      ...(head ? { defaultPattern: { id: head.patternId, name: head.pattern.name } } : {}),
+      ...(head
+        ? {
+            defaultPattern: {
+              id: head.patternId,
+              name: head.pattern.name,
+              ...(style ? { style } : {}),
+            },
+          }
+        : {}),
     });
   }
 

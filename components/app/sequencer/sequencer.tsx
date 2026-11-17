@@ -4,7 +4,8 @@
  * The sequencer module (`f-step-sequencer` t-80): under the synth's panel, opened from the player bar, styled as a
  * hardware step sequencer. From `lg` up it is in the dock under the bar; below it, in a bottom sheet.
  *
- * - The head: the transport (Play and Stop, Fill) and the pattern's controls: tempo, swing, length, transpose, step
+ * - The head: the transport (Play and Stop, Fill, Loop, and what plays along: Count-in, Metronome and Drums, t-266,
+ *   t-267) and the pattern's controls: tempo, swing, length, transpose, step
  *   size, direction, root and scale, the parts (A and B) and the order they chain in.
  * - The step keys, sixteen to a page, lit where a step plays and with the playhead running across them, turning to the
  *   page it is on while it plays (t-87). A key is
@@ -110,6 +111,8 @@ import {
   type MidiOut,
 } from '@/components/app/sequencer/use-midi-out';
 import type { ClockIn } from '@/components/app/sequencer/use-clock-in';
+import { DRUM_CHOICES, type Backing } from '@/components/app/sequencer/use-backing';
+import { DRUM_BEATS, drumBeat } from '@/lib/app/sequencer/drums';
 import type { MidiPortInfo } from '@/components/app/synth/use-midi';
 import { noteInOctave, type StepButton } from '@/components/app/sequencer/panel-buttons';
 import { HelpButton } from '@/components/app/synth/bar-controls';
@@ -135,6 +138,14 @@ export const SEQ_HELP: readonly (readonly [string, string])[] = [
   [
     'Fill',
     'While it is on, steps set to “Only with Fill” play and steps set to “Not with Fill” do not, from the next loop.',
+  ],
+  [
+    'Count-in and Metronome',
+    'Count-in clicks one bar before the pattern starts, from Play or when you open another pattern while one plays. Metronome clicks every beat while it plays, louder on the first of each bar.',
+  ],
+  [
+    'Drums',
+    'A drum beat that plays along, at the pattern’s tempo and swing. Match picks the beat that suits the pattern’s style, from what it was inspired by, or else from its tempo and swing; some styles, like ambient, have none.',
   ],
   [
     'Tempo and swing',
@@ -233,8 +244,11 @@ export function Sequencer({
   hold,
   midiOut,
   clockIn,
+  backing,
 }: {
   seq: SequencerState;
+  /** What plays along: count-in, metronome and drums (t-266, t-267). Left out, the module has none of their controls. */
+  backing?: Backing;
   /** Following a MIDI clock (`f-midi-hardware-lead` t-91). Left out, the module has no Clock select. */
   clockIn?: ClockIn;
   /** MIDI out (`f-midi-out` t-88): the pattern played on a MIDI output. Left out, the module has no MIDI out row. */
@@ -590,6 +604,22 @@ export function Sequencer({
             help="Plays the pattern again from the top. Off, it plays once and stops."
             onClick={() => setP('loop', !p.loop)}
           />
+          {backing && (
+            <>
+              <Toggle
+                label="Count-in"
+                on={backing.countIn}
+                help="Clicks one bar before the pattern starts: from Play, and when you open another pattern while one plays."
+                onClick={() => backing.setCountIn(!backing.countIn)}
+              />
+              <Toggle
+                label="Metronome"
+                on={backing.metronome}
+                help="Clicks every beat while the pattern plays, louder on the first of each bar."
+                onClick={() => backing.setMetronome(!backing.metronome)}
+              />
+            </>
+          )}
         </div>
         <div className="kys-seq-controls">
           <Encoder
@@ -609,6 +639,7 @@ export function Sequencer({
           {clockIn && (clockIn.status === 'on' || clockIn.source) && (
             <ClockSelect clock={clockIn} />
           )}
+          {backing && <DrumsSelect backing={backing} />}
           <Encoder
             label="Swing"
             value={p.swing}
@@ -1190,6 +1221,35 @@ const MIDI_OUT_NOTE: Partial<Record<MidiOut['status'], string>> = {
   blocked: 'MIDI was not allowed. The MIDI button on the bar says how to allow it.',
   asking: 'Waiting for the browser to allow MIDI…',
 };
+
+/** The drum beat that plays along (t-267): none, the one that matches the pattern, or any by name. */
+function DrumsSelect({ backing }: { backing: Backing }) {
+  const { matched } = backing;
+  const match = matched.beat ? `Match: ${drumBeat(matched.beat).name}` : 'Match: none suits it';
+  const options: [string, string][] = [
+    ['off', 'Off'],
+    ['auto', match],
+    ...DRUM_BEATS.map((b): [string, string] => [b.id, b.name]),
+  ];
+  const why =
+    matched.beat === null
+      ? 'This pattern’s style has no beat, so Match plays none.'
+      : matched.by === 'style'
+        ? `Match plays ${drumBeat(matched.beat).name} (${drumBeat(matched.beat).styles}) for this pattern’s style.`
+        : `Match plays ${drumBeat(matched.beat).name}, going by this pattern’s tempo and swing.`;
+  return (
+    <Select
+      label="Drums"
+      help={`A drum beat that plays along, at the pattern’s tempo and swing. ${why}`}
+      value={backing.drums}
+      options={options}
+      onChange={(v) => {
+        const d = DRUM_CHOICES.find((c) => c === v);
+        if (d) backing.setDrums(d);
+      }}
+    />
+  );
+}
 
 /**
  * The clock the sequencer runs on (`f-midi-hardware-lead` t-91): its own, or a MIDI input's. A chosen input that is not

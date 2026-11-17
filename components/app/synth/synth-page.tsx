@@ -123,6 +123,7 @@ import { RIFF_FALLBACK } from '@/lib/app/patterns/riff-name';
 import { useSoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
 import { useSuggestedPatterns } from '@/components/app/sequencer/use-suggested-patterns';
 import { PatternPicker } from '@/components/app/synth/pattern-picker';
+import { useBacking, useBackingPref } from '@/components/app/sequencer/use-backing';
 import { useRankedPatterns } from '@/components/app/synth/use-ranked-patterns';
 import { useFavourites } from '@/components/app/synth/favourites';
 import { FxRack } from '@/components/app/synth/fx-rack';
@@ -1311,10 +1312,11 @@ function Synth({
   }, [seqOnEvent]);
   // What starts once a load ends: a Play pressed meanwhile, or the riff that was playing as it began. Nothing plays
   // until the panel is set; Play shows it is waiting with a spinner (`waiting`), and pressing it then cancels the wait.
-  const afterLoad = useRef<'riff' | 'pattern' | null>(null);
+  // Counted in as it starts only if Play asked for it (t-266), not for the riff the load held.
+  const afterLoad = useRef<{ what: 'riff' | 'pattern'; countIn: boolean } | null>(null);
   const [waiting, setWaiting] = useState(false);
-  const queue = useCallback((what: 'riff' | 'pattern' | null) => {
-    afterLoad.current = what;
+  const queue = useCallback((what: 'riff' | 'pattern' | null, countIn = false) => {
+    afterLoad.current = what ? { what, countIn } : null;
     setWaiting(what !== null);
   }, []);
   // The riff Replay changes started (below), stopped as the moves end: not once the riff has been played or stopped.
@@ -1336,12 +1338,15 @@ function Synth({
     if (!seq.playing) setPlaying(false);
   }, [seq.playing]);
   // A pattern starting is no longer the riff. Not while a patch loads: then once it has.
-  const patternNow = useCallback(async () => {
-    if (await startPattern()) setPlaying(false);
-  }, [startPattern]);
+  const patternNow = useCallback(
+    async (countIn = true) => {
+      if (await startPattern({ countIn })) setPlaying(false);
+    },
+    [startPattern]
+  );
   const playPattern = useCallback(async () => {
     replayRiff.current = false;
-    if (isLoading()) queue('pattern');
+    if (isLoading()) queue('pattern', true);
     else await patternNow();
   }, [isLoading, patternNow, queue]);
   // Open in the dock from `lg` up, in its sheet below it.
@@ -1413,7 +1418,9 @@ function Synth({
     let live = true;
     openPattern(soundPatternId)
       .then((d) => {
-        if (live && d.pattern) loadPattern(d.pattern, { id: d.id, name: d.name });
+        // A patch was picked, not a pattern: one playing goes on into it without a count-in.
+        if (live && d.pattern)
+          loadPattern(d.pattern, { id: d.id, name: d.name }, { countIn: false });
       })
       .catch(() => undefined); // the sound's own riff stays, as it would with no pattern
     return () => {
@@ -1544,6 +1551,20 @@ function Synth({
     open: patternsOpen,
     enabled: !ownSoundPending,
   });
+  // What plays along with the pattern (t-266, t-267). The sound's own riff matches a drum beat by its default pattern's
+  // style, as the catalogue sends it.
+  // The patch as chosen, not as read: one of the user's sounds is named before their list has arrived to show it.
+  const patchKey = designed
+    ? `${synthId}/${designed.preset.id}`
+    : sharedPanel
+      ? `${synthId}/shared:${shared?.slug ?? ''}`
+      : sess.soundId
+        ? `${synthId}/mine:${sess.soundId}`
+        : `${synthId}/${sess.presetId ?? ''}`;
+  const backing = useBacking(seq, useBackingPref(), {
+    fallbackInspiredBy: libraryPreset?.defaultPattern?.style ?? null,
+    patchKey,
+  });
   // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked beside Play, the
   // one a sound of the user's plays) or the riff edited, and with no sound's riff to play; otherwise the riff, which the
   // sequencer holds as it came. A new patch puts back its riff in the sequencer, and Play with it.
@@ -1605,11 +1626,12 @@ function Synth({
     hold: { on: hold, set: setHoldMode },
     midiOut,
     clockIn,
+    backing,
   };
   // The riff playing becomes the pattern: it plays on as it is. Midway through a load, a riff waiting for it to end
   // starts then as the pattern, so it is not taken for the riff (nor stopped, should the new sound have none).
   const riffToPattern = () => {
-    if (afterLoad.current === 'riff') queue('pattern');
+    if (afterLoad.current?.what === 'riff') queue('pattern', afterLoad.current.countIn);
     setPlaying(false);
   };
   // Opened by the bar's Sequencer button or a panel button (t-85).
@@ -1632,11 +1654,12 @@ function Synth({
   // The riff plays through the sequencer (t-234), which holds it as a pattern (at the tempo knob's tempo, and moved
   // by it), so it shows on the bar as any pattern does. From its top, as another pattern playing gives way to it.
   const riffNow = useCallback(
-    async (still?: () => boolean) => {
+    async (still?: () => boolean, countIn = false) => {
       // Not if what asked for it is over by the time audio has started (Replay's moves ended meanwhile). Otherwise
       // the sequencer starts the audio, inside the gesture that pressed Play.
       if (still && (!(await ensureAudio()) || !still())) return;
-      if (!(await startPattern())) return;
+      // Counted in only for Play (t-266): not for a lesson's Replay, nor the riff starting again after a load.
+      if (!(await startPattern({ countIn }))) return;
       // A load that began as the sound started (a patch picked straight after Play) holds it too.
       if (isLoading()) holdRiff();
       else setPlaying(true);
@@ -1651,18 +1674,22 @@ function Synth({
     shownPhrase.current = shown?.phrase ?? null;
   });
   const riffShown = useCallback(
-    (still?: () => boolean) => {
-      if (shownPhrase.current) void riffNow(still);
+    (still?: () => boolean, countIn = false) => {
+      if (shownPhrase.current) void riffNow(still, countIn);
       else stopRiff();
     },
     [riffNow, stopRiff]
   );
-  // Not while a patch loads: then once it has.
-  const playRiff = useCallback(async () => {
-    replayRiff.current = false;
-    if (isLoading()) queue('riff');
-    else await riffNow();
-  }, [isLoading, queue, riffNow]);
+  // Not while a patch loads: then once it has. Counted in for Play, not for the riff starting again as a patch is
+  // picked while it plays.
+  const playRiff = useCallback(
+    async (countIn = true) => {
+      replayRiff.current = false;
+      if (isLoading()) queue('riff', countIn);
+      else await riffNow(undefined, countIn);
+    },
+    [isLoading, queue, riffNow]
+  );
   // As a load begins, what the page is sounding is let go: the keys held (and under Hold), the arp's keys in the
   // sequencer, and the riff, which stops and plays again from its top once the load ends (the sound's own, by then). A
   // pattern runs on, muted through MIDI out's `silent`, and the player and MIDI out let go of their own notes. As it
@@ -1672,8 +1699,8 @@ function Synth({
       if (!on) {
         const then = afterLoad.current;
         queue(null);
-        if (then === 'riff') riffShown();
-        else if (then === 'pattern') void patternNow();
+        if (then?.what === 'riff') riffShown(undefined, then.countIn);
+        else if (then?.what === 'pattern') void patternNow(then.countIn);
         return;
       }
       new Set([...downRef.current.keys(), ...heldRef.current]).forEach((n) =>
@@ -1850,7 +1877,7 @@ function Synth({
     leaveShared();
     setDesigned(null);
     glide(() => ({ presetId: id, step: null, soundId: null, ...presetState(synthDef, p) }));
-    if (playing) void playRiff();
+    if (playing) void playRiff(false);
   };
 
   // A sound the tutor designed opens as choosing a library sound does, with its own lesson in the Lesson panel. The
@@ -1867,7 +1894,7 @@ function Synth({
       soundId: null,
       ...presetState(synthDef, d.preset),
     }));
-    if (playing) void playRiff();
+    if (playing) void playRiff(false);
     return () => {
       openSeq.current++;
       setDesigned(before.designed);
@@ -1890,7 +1917,9 @@ function Synth({
   const { edit: seqEdit, load: seqLoad, undo: seqUndo } = seq;
   const setTutorPattern = useCallback(
     (p: Pattern, o: { blank: boolean }) => {
-      const held = o.blank ? seqLoad(p, { id: null, name: TUTOR_PATTERN_NAME }) : seqEdit(p);
+      const held = o.blank
+        ? seqLoad(p, { id: null, name: TUTOR_PATTERN_NAME }, { countIn: false })
+        : seqEdit(p);
       if (!held) return null;
       if (!small) setSeqOpen(true);
       return { held, undo: seqUndo };

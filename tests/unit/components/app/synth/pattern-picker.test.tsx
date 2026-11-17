@@ -243,6 +243,7 @@ describe('the pattern picker beside Play', () => {
       id: null,
       name: 'Long note',
       libraryId: HELD.id,
+      inspiredBy: HELD.inspiredBy.label,
     });
     expect(onPicked).toHaveBeenCalledTimes(1);
     expect(screen.queryByRole('dialog')).toBeNull();
@@ -259,6 +260,7 @@ describe('the pattern picker beside Play', () => {
       id: null,
       name: 'Octave walk',
       libraryId: OWN_B.id,
+      inspiredBy: OWN_B.inspiredBy.label,
     });
   });
 
@@ -287,7 +289,12 @@ describe('the pattern picker beside Play', () => {
     });
     await act(async () => first(view(HELD.id, 'Long note')));
     expect(load).toHaveBeenCalledTimes(1);
-    expect(load.mock.calls[0][1]).toEqual({ id: null, name: 'Big stab', libraryId: CHORD.id });
+    expect(load.mock.calls[0][1]).toEqual({
+      id: null,
+      name: 'Big stab',
+      libraryId: CHORD.id,
+      inspiredBy: CHORD.inspiredBy.label,
+    });
   });
 
   it('loads through the page as it is once a read lands, not as it was when the row was pressed', async () => {

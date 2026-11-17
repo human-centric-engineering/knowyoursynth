@@ -1072,6 +1072,8 @@ describe('SynthPage glides', () => {
     });
     expect(patternsSent(sentNow())).toHaveLength(1);
     expectRiff(patternsSent(sentNow())[0], WOBBLE.phrase);
+    // Play pressed during the load still counts in a bar (t-266).
+    expect(patternsSent(sentNow())[0]?.countIn).toBe(4);
 
     // The riff stops for the load, Play waiting with a spinner, and the new sound's starts from its top once the
     // knobs are set: nothing plays while they move.
@@ -1087,6 +1089,8 @@ describe('SynthPage glides', () => {
     expect(patternsSent(sentNow()).length).toBe(during + 1);
     expectRiff(patternsSent(sentNow()).at(-1), FAT_BASS.phrase);
     expect(patternsSent(sentNow()).at(-1)?.muted).toBe(false);
+    // The riff the load held is not counted in again.
+    expect(patternsSent(sentNow()).at(-1)?.countIn).toBeUndefined();
   });
 
   it('holds a riff whose sound was still starting when a patch was picked, and plays it once the load ends', async () => {
@@ -1143,9 +1147,10 @@ describe('SynthPage glides', () => {
     await act(async () => {
       settle();
     });
-    // It starts once, as the pattern the sequencer holds (the new sound's riff), not again as the riff.
+    // It starts once, as the pattern the sequencer holds (the new sound's riff), not again as the riff, nor counted in.
     expect(patternsSent(sentNow()).length).toBe(during + 1);
     expectRiff(patternsSent(sentNow()).at(-1), FAT_BASS.phrase);
+    expect(patternsSent(sentNow()).at(-1)?.countIn).toBeUndefined();
     expect(button('Stop')).toBeTruthy();
   });
 
