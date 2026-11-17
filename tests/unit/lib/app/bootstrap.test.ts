@@ -1,6 +1,10 @@
 /**
  * The app boot seam (`lib/app/bootstrap.ts`): it reads the public pattern library ahead (`f-pattern-prefetch` t-262),
  * without start-up waiting on it, and a failed read is logged, not thrown.
+ *
+ * FORK NOTE: this is Know Your Synth's own test of the boot seam it fills, so it reads `initApp` for real on purpose.
+ * Upstream's no-op row for the seam is re-pinned in `tests/unit/lib/app/defaults.test.ts` (ledger row 9). A boot job
+ * added to `initApp` later belongs in both: its behaviour here, and its pin there.
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 

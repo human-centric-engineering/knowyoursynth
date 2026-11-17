@@ -126,5 +126,6 @@ row 9.
   `lib/app/footer.ts` (the not-affiliated notice, t-63), `lib/app/owner-classification.ts`,
   `lib/app/capability-seed-pairs.ts`, `lib/app/own-modules.ts` (our `lib/app/` directories, which
   are app code rather than seams), `lib/app/csp.ts` (the embed players' origins as `frame-src`,
-  t-182; `appFrameSrc` stays last in the file) and `lib/app/tenancy-classification.ts` (our models
-  without `orgId`, t-188).
+  t-182; `appFrameSrc` stays last in the file), `lib/app/tenancy-classification.ts` (our models
+  without `orgId`, t-188) and `lib/app/bootstrap.ts` (reads the public pattern library ahead at start,
+  t-262).
