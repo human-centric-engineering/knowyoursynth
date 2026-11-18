@@ -1,9 +1,9 @@
 'use client';
 
 /**
- * The Play deck's pattern picker (`f-pattern-picker` t-213): beside Play, a select-like button naming what Play will
- * play, which opens a searchable list of patterns to play instead. From `lg` up it opens upward over the deck; below
- * `lg` it is a bottom sheet, as the page's other regions are.
+ * The sequencer's pattern picker (`f-pattern-picker` t-213; beside Play until t-279): the sequencer's Pattern readout,
+ * which names the pattern it holds and is pressed to open a searchable list of patterns to play instead. From `lg` up
+ * it opens upward over the deck; below `lg` it is a bottom sheet, as the page's other regions are.
  *
  * The list is the patch's own patterns first (`useSoundPatterns`, the default marked), then the public library's
  * patterns of the patch's category (t-255) in a section per role, ordered by how well each suits the patch
@@ -16,9 +16,9 @@
  * The page owns whether it is open, so the reads it needs run only while it is.
  */
 
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { styleWordsOf } from '@/lib/app/sequencer/drums';
-import { ChevronUp, Search } from 'lucide-react';
+import { ChevronDown, ChevronUp, Search } from 'lucide-react';
 import { apiClient } from '@/lib/api/client';
 import { logger } from '@/lib/logging';
 import type { LibraryPatternView } from '@/lib/app/patterns/library';
@@ -35,8 +35,10 @@ export const SECTION_FEW = 5;
 
 export interface PatternPickerProps {
   synthId: string;
-  /** What Play will play now: the button's text. */
+  /** What Play will play now: the pattern the sequencer holds, by name. */
   plays: string;
+  /** The pattern has been changed since it was loaded: marked after its name. */
+  edited?: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   /** Below `lg`: a bottom sheet, rather than a popover over the deck. */
@@ -54,7 +56,7 @@ export interface PatternPickerProps {
 }
 
 export function PatternPicker(props: PatternPickerProps) {
-  const { plays, open, onOpenChange, sheet } = props;
+  const { plays, edited = false, open, onOpenChange, sheet } = props;
   const button = useRef<HTMLButtonElement | null>(null);
   const pop = useRef<HTMLDivElement | null>(null);
   const popId = useId();
@@ -87,6 +89,29 @@ export function PatternPicker(props: PatternPickerProps) {
     };
   }, [open, sheet, onOpenChange]);
 
+  // The page holds whether the list is open, but the picker is drawn only while the sequencer is: put away with it, the
+  // list is closed, so it does not open again with the sequencer, nor keep reading for a list no one can see.
+  const closeRef = useRef(onOpenChange);
+  useLayoutEffect(() => {
+    closeRef.current = onOpenChange;
+  });
+  useEffect(() => () => closeRef.current(false), []);
+
+  // The readout is near the top of the sequencer, so the popover opens whichever way has more of the screen, and no
+  // taller than that room, rather than off the top of it.
+  const [place, setPlace] = useState<{ down: boolean; max: number } | null>(null);
+  useLayoutEffect(() => {
+    if (!open || sheet || !button.current) return;
+    const r = button.current.getBoundingClientRect();
+    const above = r.top - 16;
+    const below = window.innerHeight - r.bottom - 16;
+    setPlace({
+      down: below > above,
+      // No taller than the room, short of a list too short to use.
+      max: Math.max(160, Math.min(560, Math.max(above, below) - 10)),
+    });
+  }, [open, sheet]);
+
   const close = () => {
     onOpenChange(false);
     button.current?.focus({ preventScroll: true });
@@ -101,18 +126,30 @@ export function PatternPicker(props: PatternPickerProps) {
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-controls={open && !sheet ? popId : undefined}
-        aria-label={`Choose what Play plays (now: ${plays})`}
+        aria-label={`Choose what Play plays (now: ${plays}${edited ? ', edited' : ''})`}
         title={plays}
         onClick={() => onOpenChange(!open)}
       >
-        <span className="kys-patpick-kicker" aria-hidden="true">
-          Plays
+        <span className="kys-seq-lib-label" aria-hidden="true">
+          Pattern
         </span>
-        <span className="kys-patpick-name">{plays}</span>
-        <span className="kys-patpick-caret" aria-hidden="true">
-          <ChevronUp size={16} />
-        </span>
+        <span className="kys-seq-lib-value">{plays}</span>
+        {edited && (
+          <span className="kys-seq-lib-edited" aria-hidden="true">
+            edited
+          </span>
+        )}
+        {/* Pointing the way the list opens: up, unless it has opened down. */}
+        {open && !sheet && place?.down ? (
+          <ChevronDown size={14} className="kys-patpick-caret" aria-hidden="true" />
+        ) : (
+          <ChevronUp size={14} className="kys-patpick-caret" aria-hidden="true" />
+        )}
       </button>
+      {/* The readout said a new name, or "edited", as it changed: so does the picker that is it now. */}
+      <span className="sr-only" aria-live="polite">
+        {`Pattern: ${plays}${edited ? ', edited' : ''}`}
+      </span>
       {sheet ? (
         <BottomSheet
           title="Patterns"
@@ -124,7 +161,14 @@ export function PatternPicker(props: PatternPickerProps) {
         </BottomSheet>
       ) : (
         open && (
-          <div ref={pop} id={popId} className="kys-patpick-pop" role="dialog" aria-label="Patterns">
+          <div
+            ref={pop}
+            id={popId}
+            className={`kys-patpick-pop ${place?.down ? 'is-down' : ''}`}
+            style={place ? { maxHeight: place.max } : undefined}
+            role="dialog"
+            aria-label="Patterns"
+          >
             <PickerBody {...props} onDone={close} />
           </div>
         )

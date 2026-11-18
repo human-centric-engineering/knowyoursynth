@@ -193,7 +193,7 @@ function page(over: Partial<SynthPageProps> = {}) {
 }
 
 /** The sound named after "Loaded:" over the panel. The library and the lesson name it too. */
-const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
+const loadedName = () => screen.getByText('Patch:').nextElementSibling?.textContent;
 beforeEach(() => {
   window.localStorage.clear();
   tallScreen();
@@ -306,10 +306,10 @@ describe('at lg and up', () => {
 });
 
 describe('below lg', () => {
-  it('turns the panel face up from Signal routing when the Inspector sheet opens', () => {
+  it('turns the panel face up from Signal diagram when the Inspector sheet opens', () => {
     phone();
     page();
-    fireEvent.click(screen.getByRole('button', { name: 'Signal routing' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Signal diagram' }));
     expect(screen.getByRole('group', { name: 'Model D signal routing' })).toBeTruthy();
     fireEvent.click(within(bar()).getByRole('button', { name: 'Inspector' }));
     expect(

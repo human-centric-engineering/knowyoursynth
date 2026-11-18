@@ -360,6 +360,26 @@ svg .kys-hit:focus-visible {
 .kys-title-pick[aria-expanded='true'] .kys-title-pick-caret {
   color: var(--kys-accent);
 }
+/* In the Play deck's bar, before Play (t-279): at Play's height, as wide as the bar can spare, its name at the bar's
+   size. On a phone it takes the row's room beside Play. */
+.kys-title-pick.is-compact {
+  flex: 0 1 280px;
+  gap: 8px;
+  min-width: 0;
+  height: 42px;
+  padding-left: 12px;
+}
+.kys-title-pick.is-compact .kys-sound-title {
+  font-size: 16px;
+}
+.kys-title-pick.is-compact .kys-title-pick-caret {
+  padding: 0 10px;
+}
+@media (max-width: 639px) {
+  .kys-title-pick.is-compact {
+    flex: 1 1 0;
+  }
+}
 
 /* The chapters: one labelled segment per step, filled to where the panel is. */
 .kys-chapters {
@@ -715,74 +735,42 @@ svg .kys-hit:focus-visible {
     0 8px 18px -5px rgb(47 191 74 / 0.75);
 }
 
-/* The pattern picker beside Play (f-pattern-picker t-213): boxed as a select is, as the patch picker is, at Play's
-   height, naming what Play will play. From `lg` up its list opens upward over the deck; below `lg` it is a bottom
-   sheet. On a phone it takes the row's room between Play and the full-screen button. */
+/* The pattern picker (f-pattern-picker t-213): the sequencer's Pattern readout, pressed to choose another (beside
+   Play, boxed as a select, until t-279). Drawn as the readout is, on its LCD, with a caret to say it opens. From `lg`
+   up its list opens upward over the deck; below `lg` it is a bottom sheet. */
 .kys-patpick {
   position: relative;
-  flex: 0 1 280px;
   min-width: 0;
-}
-/* On a phone the name needs the room: the button's label still says what it is. */
-@media (max-width: 639px) {
-  .kys-patpick {
-    flex: 1 1 0;
-  }
-  .kys-patpick-kicker {
-    display: none;
-  }
+  max-width: 100%;
 }
 .kys-patpick-btn {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
-  width: 100%;
-  height: 42px;
-  padding: 0 0 0 12px;
-  border-radius: 10px;
-  color: var(--kys-text);
+  min-width: 0;
+  max-width: 100%;
+  padding: 5px 10px;
+  border-radius: 6px;
   text-align: left;
-  background: var(--kys-surface);
-  box-shadow:
-    inset 0 0 0 1px var(--kys-line),
-    0 1px 2px rgb(0 0 0 / 0.12);
-  transition:
-    background-color 0.15s ease,
-    box-shadow 0.15s ease;
+  background: var(--lcd);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  box-shadow: inset 0 0 0 1px transparent;
+  transition: box-shadow 0.15s ease;
 }
 .kys-patpick-btn:hover,
 .kys-patpick-btn:focus-visible,
 .kys-patpick-btn[aria-expanded='true'] {
-  background: color-mix(in srgb, var(--kys-surface) 92%, rgb(246 166 58));
-  box-shadow:
-    inset 0 0 0 1px rgb(246 166 58 / 0.6),
-    0 1px 2px rgb(0 0 0 / 0.12);
-}
-.kys-patpick-kicker {
-  flex: none;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--kys-faint);
-}
-.kys-patpick-name {
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow: hidden;
-  font-size: 13.5px;
-  font-weight: 600;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  box-shadow: inset 0 0 0 1px rgb(246 166 58 / 0.6);
 }
 .kys-patpick-caret {
-  display: flex;
   flex: none;
-  align-items: center;
-  align-self: stretch;
-  padding: 0 10px;
-  color: var(--kys-muted);
-  box-shadow: inset 1px 0 0 var(--kys-line);
+  align-self: center;
+  color: var(--lcd-label);
+  transition: color 0.15s ease;
+}
+.kys-patpick-btn:hover .kys-patpick-caret,
+.kys-patpick-btn[aria-expanded='true'] .kys-patpick-caret {
+  color: var(--lcd-ink);
 }
 .kys-patpick-pop {
   position: absolute;
@@ -799,6 +787,12 @@ svg .kys-hit:focus-visible {
   background: var(--kys-surface);
   box-shadow: 0 -18px 48px -16px var(--kys-shadow);
   animation: kys-fade 0.12s ease-out;
+}
+/* Opened down, over the sequencer, where there is more room below the readout than above it. */
+.kys-patpick-pop.is-down {
+  top: calc(100% + 10px);
+  bottom: auto;
+  box-shadow: 0 18px 48px -16px var(--kys-shadow);
 }
 .kys-patpick-body {
   display: flex;
@@ -1024,10 +1018,6 @@ svg .kys-hit:focus-visible {
   font-variant-numeric: tabular-nums;
   color: var(--kys-accent);
   text-align: left;
-}
-.kys-signal-caret {
-  margin-left: -2px;
-  opacity: 0.75;
 }
 .kys-layer.is-on {
   color: var(--kys-accent);
@@ -1323,8 +1313,9 @@ svg .kys-hit:focus-visible {
   color: var(--rail-ink-hi);
 }
 
-/* The head: Signal routing and the layers at the left; at the right Undo and
-   Redo, the inspector and Explain sections, then the tour and its help (t-276).
+/* The head: Signal (its diagram, Dim unused and Live signal, t-279) and the
+   layers at the left; at the right Undo and Redo, the inspector and Explain
+   sections, then the tour and its help (t-276).
    Each toggle is an icon (with its word where there is room) and an LED lit
    while it is over the panel. */
 .kys-rail-group {
@@ -3904,57 +3895,6 @@ button.kys-routing-card-item:focus-visible {
 .kys-routing-card-none,
 .kys-routing-card-hint {
   font-size: 11.5px;
-  color: var(--kys-muted);
-}
-
-/* The Signal layer's menu (`f-live-panel` t-150): its modes as LEDs, each with a line on what it does, in the page's
-   raised surface as the player's tips are. */
-.kys-signal-menu {
-  z-index: 70;
-  width: min(280px, calc(100vw - 32px));
-  padding: 6px;
-  border-radius: 10px;
-  color: var(--kys-text);
-  background: var(--kys-raised);
-  box-shadow:
-    0 0 0 1px rgb(var(--kys-wash) / 0.1),
-    0 12px 32px -10px var(--kys-shadow);
-  animation: kys-fade 0.12s ease-out;
-  outline: none;
-}
-.kys-signal-modes {
-  display: flex;
-  flex-direction: column;
-}
-.kys-signal-menu .kys-signal-opt {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  column-gap: 8px;
-  align-items: center;
-  padding: 7px 8px;
-  text-align: left;
-  white-space: normal;
-  color: var(--kys-text);
-}
-.kys-signal-menu .kys-signal-opt:hover,
-.kys-signal-menu .kys-signal-opt:focus-visible {
-  background: rgb(var(--kys-wash) / 0.07);
-  outline: none;
-}
-.kys-signal-menu .kys-signal-opt[aria-pressed='true'] {
-  color: var(--kys-accent);
-}
-.kys-signal-menu .kys-led-dot {
-  animation: none;
-}
-.kys-signal-help {
-  grid-column: 2;
-  font-family: inherit;
-  font-size: 12.5px;
-  font-weight: 400;
-  letter-spacing: normal;
-  line-height: 1.35;
-  text-transform: none;
   color: var(--kys-muted);
 }
 

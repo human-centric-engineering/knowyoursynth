@@ -35,7 +35,7 @@ import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { AccountSettings, PanelPref } from '@/lib/app/sounds/preference-data';
 import { tallScreen } from '@/tests/helpers/synth-side';
-import { chooseSignal, signalShown } from '@/tests/helpers/signal-menu';
+import { signalOn, turnSignal } from '@/tests/helpers/signal-switches';
 
 const { router, engine, auth, api } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -229,8 +229,8 @@ describe('signed out', () => {
     await act(async () => vi.advanceTimersByTimeAsync(0));
 
     expect(cutoff()).toBe('3');
-    expect(signalShown()).toBe('In use');
-    chooseSignal('Off');
+    expect(signalOn('Dim unused parts')).toBe(true);
+    turnSignal('Dim unused parts', false);
     fireEvent.keyDown(cutoffSlider(), { key: 'ArrowUp' });
     await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_MAX_WAIT_MS * 2));
     const moved = Number(cutoff());
@@ -312,7 +312,7 @@ describe('signed in, opening a synth', () => {
     account.settings = { ...NO_SETTINGS, dim: true, updatedAt: KEPT_AT };
     page();
     await act(async () => vi.advanceTimersByTimeAsync(0));
-    expect(signalShown()).toBe('In use');
+    expect(signalOn('Dim unused parts')).toBe(true);
     expect(readStored('kys.dim')).toBe(true);
     expect(readStored('kys.settingsAt')).toBe(Date.parse(KEPT_AT));
     expect(readStored('kys.settingsBy')).toBe('user-1');
@@ -378,7 +378,7 @@ describe('signed in, opening a synth', () => {
     account.settings = { ...NO_SETTINGS, dim: false, harm: true, tips: false };
     page();
     await waitFor(() => expect(pressed('Show harmonics')).toBe('true'));
-    expect(signalShown()).toBe('Off');
+    expect(signalOn('Dim unused parts')).toBe(false);
     const cards = within(screen.getByRole('group', { name: 'Hover help' }));
     expect(cards.getByRole('button', { name: 'Off' }).getAttribute('aria-pressed')).toBe('true');
   });
@@ -409,7 +409,7 @@ describe('signed in, opening a synth', () => {
       },
     });
     expect(pressed('Show sensitive controls')).toBe('true');
-    expect(signalShown()).toBe('In use');
+    expect(signalOn('Dim unused parts')).toBe(true);
 
     // Once: nothing more goes while nothing changes.
     await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_MAX_WAIT_MS * 2));
@@ -503,7 +503,7 @@ describe('signed in, opening a synth', () => {
     page();
     await act(async () => vi.advanceTimersByTimeAsync(0));
     fireEvent.keyDown(cutoffSlider(), { key: 'ArrowUp' });
-    chooseSignal('In use');
+    turnSignal('Dim unused parts', true);
     await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_MAX_WAIT_MS * 2));
     expect(api.put).not.toHaveBeenCalled();
     expect(api.patch).not.toHaveBeenCalled();
@@ -596,9 +596,9 @@ describe('signed in, writing to the account', () => {
   );
 
   it('sends a setting after the same delay, gathering changes made meanwhile into one', async () => {
-    chooseSignal('In use');
+    turnSignal('Dim unused parts', true);
     fireEvent.click(screen.getByRole('button', { name: 'Show harmonics' }));
-    chooseSignal('Off');
+    turnSignal('Dim unused parts', false);
     expect(readStored('kys.dim')).toBe(false);
     expect(readStored('kys.harm')).toBe(true);
     expect(settingsPatches()).toHaveLength(0);
@@ -659,7 +659,7 @@ describe('signed in, guarding the account', () => {
     expect(accountGets().filter((p) => p === PANEL_PATH)).toHaveLength(1);
     // A moves the panel and flips a setting, then signs out before either is sent.
     fireEvent.keyDown(cutoffSlider(), { key: 'ArrowUp' });
-    chooseSignal('In use');
+    turnSignal('Dim unused parts', true);
     auth.signedIn = false;
     rerender(synthPage());
     await act(async () => vi.advanceTimersByTimeAsync(0));

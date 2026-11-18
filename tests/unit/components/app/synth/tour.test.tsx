@@ -62,9 +62,9 @@ afterEach(() => {
   });
 });
 
-function setup() {
+function setup(routed = true) {
   const onClose = vi.fn();
-  const utils = render(<Tour def={def} notes={notes} onClose={onClose} />);
+  const utils = render(<Tour def={def} notes={notes} routed={routed} onClose={onClose} />);
   return { ...utils, onClose };
 }
 
@@ -157,11 +157,25 @@ describe('Tour', () => {
     expect(onClose).toHaveBeenCalledTimes(3);
   });
 
-  it('ends by pointing at the panel switches: sections, the Signal layer and the sensitive controls', () => {
+  it('ends by pointing at the panel switches: sections, the Signal switches and the sensitive controls', () => {
     setup();
     goTo(stops.length - 1);
-    for (const name of ['Explain sections', 'Signal', 'Show sensitive controls'])
+    for (const name of [
+      'Explain sections',
+      'Dim unused',
+      'Live signal',
+      'Signal diagram',
+      'Show sensitive controls',
+    ])
       expect(within(dialog()).getByText(name)).toBeTruthy();
+  });
+
+  it('leaves Live signal and Signal diagram out on a synth without a routing, where they are not on the rail', () => {
+    setup(false);
+    goTo(stops.length - 1);
+    expect(within(dialog()).getByText('Dim unused')).toBeTruthy();
+    expect(within(dialog()).queryByText('Live signal')).toBeNull();
+    expect(within(dialog()).queryByText('Signal diagram')).toBeNull();
   });
 
   it('rings a naming note’s controls on hover, and finds the first on the panel on click', () => {

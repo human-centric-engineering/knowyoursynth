@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * The live flow on the panel's face (`f-live-panel` t-153, Signal ▾ Live + flow): a faint line from each lit part to
+ * The live flow on the panel's face (`f-live-panel` t-153, part of Live signal since t-279): a faint line from each lit part to
  * the part it feeds, drawn only while the patch routes signal along it, in the routing view's style (audio heavy,
  * control light, gate dotted) and its source's colour. Where the lines go is `liveFlows()`; how brightly each glows,
  * and the dashes running along it in the direction of flow, are written by the live glow's frame loop (`LiveLayer`):

@@ -356,7 +356,7 @@ describe('signed in', () => {
     page();
     // the sound is open as theirs once the list is read
     await waitFor(() =>
-      expect(screen.getByText('Loaded:').nextElementSibling?.textContent).toBe('Night bass')
+      expect(screen.getByText('Patch:').nextElementSibling?.textContent).toBe('Night bass')
     );
     await act(async () => undefined);
     expect(api.get).not.toHaveBeenCalledWith('/api/v1/patterns/cmpat9');

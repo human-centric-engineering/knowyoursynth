@@ -33,6 +33,7 @@ import { glideMotion } from '@/components/app/synth/motion';
 import { ARRIVE_MS } from '@/components/app/synth/use-panel-history';
 import { getSynthRouting } from '@/lib/app/synths/routing';
 import { expectRiff, patternsSent } from '@/tests/helpers/riff-sent';
+import { signalOn, turnSignal } from '@/tests/helpers/signal-switches';
 
 const { router, engine, events } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -223,7 +224,7 @@ const chooseDefaultPatch = () => {
 const setting = (name: string | RegExp) =>
   within(screen.getByRole('group', { name: 'Panel settings' })).getByRole('button', { name });
 /** The sound named after "Loaded:" over the panel. The library and the lesson name it too. */
-const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
+const loadedName = () => screen.getByText('Patch:').nextElementSibling?.textContent;
 const paramsSent = () =>
   engine.send.mock.calls
     .map((c) => c[0] as { type: string; p?: Record<string, unknown> })
@@ -323,7 +324,7 @@ describe('SynthPage layout', () => {
       'Behringer Model D · Modelled on the 1970 Minimoog Model D'
     );
     expect(loadedName()).toBe('Default patch');
-    expect(screen.getByText('Loaded:')).toBeTruthy();
+    expect(screen.getByText('Patch:')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'About ›' })).toBeTruthy();
     expect(screen.getByText(MODEL_D_SYNTH.summary)).toBeTruthy();
   });
@@ -355,10 +356,10 @@ describe('SynthPage layout', () => {
     expect(screen.queryByText(/controls? moved/)).toBeNull();
     // Chosen from the patches drawer, where it is first: the bar has no button of its own for it (t-208).
     expect(screen.queryByRole('button', { name: 'Default patch' })).toBeNull();
-    // The patch is chosen from its name under the panel, not from the Play deck's bar (t-207).
+    // The patch is chosen in the Play deck's bar, before Play (t-279); under the panel it is only named.
     const pick = button(/^Choose a patch/);
-    expect(pick.closest('section[aria-label="The patch on the panel"]')).not.toBeNull();
-    expect(pick.closest('.kys-player-bar')).toBeNull();
+    expect(pick.closest('.kys-player-bar')).not.toBeNull();
+    expect(pick.closest('section[aria-label="The patch on the panel"]')).toBeNull();
     expect(screen.queryByRole('button', { name: 'Restore patch' })).toBeNull();
     // Model D's Default patch opens the filter all the way, where init leaves it at 1.
     expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
@@ -395,13 +396,13 @@ describe('SynthPage layout', () => {
 
   it('orders the top rail: routing and the layers at the left, the inspector and Explain sections beside the tour', () => {
     page();
-    const rail = button('Signal routing').closest('.kys-rail');
+    const rail = button('Signal diagram').closest('.kys-rail');
     if (!rail) throw new Error('the routing toggle is on the rail');
     const names = Array.from(rail.querySelectorAll('button[aria-label]'), (b) =>
       b.getAttribute('aria-label')
     );
     const order = [
-      'Signal routing',
+      'Signal diagram',
       'Show sensitive controls',
       'Undo',
       'Redo',
@@ -428,7 +429,7 @@ describe('SynthPage layout', () => {
         }) as unknown as MediaQueryList
     );
     page();
-    const rail = button('Signal routing').closest('.kys-rail');
+    const rail = button('Signal diagram').closest('.kys-rail');
     if (!rail) throw new Error('the routing toggle is on the rail');
     const names = Array.from(rail.querySelectorAll('button[aria-label]'), (b) =>
       b.getAttribute('aria-label')
@@ -2227,8 +2228,8 @@ describe('SynthPage player', () => {
     expect(card()?.textContent).toMatch(/What is under the pointer/);
 
     // Turned over to the routing view, the panel's card goes, whatever it shows.
-    fireEvent.click(button('Signal routing'));
-    expect(button('Signal routing')).toHaveAttribute('aria-pressed', 'true');
+    fireEvent.click(button('Signal diagram'));
+    expect(button('Signal diagram')).toHaveAttribute('aria-pressed', 'true');
     expect(card()).toBeNull();
   });
 
@@ -2605,7 +2606,7 @@ describe('SynthPage engine errors', () => {
 describe('SynthPage sounds', () => {
   // At `lg` and up the region these use is in its drawer (t-70).
 
-  const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
+  const loadedName = () => screen.getByText('Patch:').nextElementSibling?.textContent;
 
   it('with no sounds it opens on the Default patch, which plays its scale', async () => {
     page({ detail: { ...detail, sounds: [] } });
@@ -2796,7 +2797,7 @@ describe('SynthPage patch edge cases', () => {
 });
 
 describe('SynthPage signal routing', () => {
-  const toggle = () => button('Signal routing');
+  const toggle = () => button('Signal diagram');
   const diagram = () => screen.queryByRole('group', { name: 'Model D signal routing' });
   const scroller = () => screen.getByTestId('panel-frame').closest('.kys-panel-scroller');
   const lit = (sel: string) => document.querySelector(sel)?.getAttribute('data-live');
@@ -2820,6 +2821,38 @@ describe('SynthPage signal routing', () => {
     expect(diagram()).toBeNull();
     expect(scroller()).not.toHaveClass('is-away');
     expect(scroller()).not.toHaveAttribute('inert');
+  });
+
+  it('groups the diagram with Live signal, and Dim unused parts with Sensitive after the rule', () => {
+    page();
+    const names = (group: string) =>
+      Array.from(
+        screen.getByRole('group', { name: group }).querySelectorAll('button[aria-label]'),
+        (b) => b.getAttribute('aria-label')
+      );
+    expect(names('Signal')).toEqual(['Signal diagram', 'Live signal']);
+    expect(names('Layers over the panel')).toEqual(['Dim unused parts', 'Show sensitive controls']);
+  });
+
+  it.each([['Dim unused parts'], ['Live signal']] as const)(
+    'turns the panel face up when %s is turned on over the diagram',
+    (name) => {
+      page();
+      fireEvent.click(toggle());
+      expect(diagram()).not.toBeNull();
+      turnSignal(name, true);
+      expect(diagram()).toBeNull();
+      expect(toggle()).toHaveAttribute('aria-pressed', 'false');
+      expect(signalOn(name)).toBe(true);
+    }
+  );
+
+  it('leaves the diagram showing when a face switch is turned off over it', () => {
+    page();
+    turnSignal('Dim unused parts', true);
+    fireEvent.click(toggle());
+    turnSignal('Dim unused parts', false);
+    expect(diagram()).not.toBeNull();
   });
 
   it('draws the patch on the panel, and follows it as it changes while the diagram shows', async () => {
@@ -2899,7 +2932,7 @@ describe('SynthPage signal routing', () => {
     vi.mocked(getSynthRouting).mockImplementation(() => undefined);
     try {
       page();
-      expect(screen.queryByRole('button', { name: 'Signal routing' })).toBeNull();
+      expect(screen.queryByRole('button', { name: 'Signal diagram' })).toBeNull();
       // The rest of the rail is there.
       expect(button('Explain sections')).toBeTruthy();
     } finally {

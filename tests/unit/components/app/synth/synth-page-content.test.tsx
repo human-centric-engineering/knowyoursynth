@@ -102,7 +102,7 @@ function page() {
 }
 
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
-const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
+const loadedName = () => screen.getByText('Patch:').nextElementSibling?.textContent;
 const library = () => {
   openSide('Sounds');
   const section = screen.getByRole('heading', { name: 'Patch library' }).closest('section');

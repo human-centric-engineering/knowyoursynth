@@ -1414,9 +1414,10 @@ Tested in `tests/unit/components/app/sequencer/sound-pattern-picker.test.tsx`.
 
 ### The Play deck's picker
 
-t-213 (`f-pattern-picker`). Beside Play, at the head of the Play deck, a second picker chooses what Play plays with
-the sequencer closed (`components/app/synth/pattern-picker.tsx`; where it sits and how Play follows it are in
-[`synth-page.md`](./synth-page.md#the-player)). The sequencer's own strip above is unchanged.
+t-213 (`f-pattern-picker`). A second picker chooses what Play plays (`components/app/synth/pattern-picker.tsx`;
+where it sits and how Play follows it are in [`synth-page.md`](./synth-page.md#the-player)). It was beside Play, at the
+head of the Play deck; since t-279 it is the sequencer's Pattern readout, pressed to open it, and the heading keeps its
+old name for the links to it. The rest of the sequencer's strip is unchanged.
 
 - **The sound's own first.** `useSoundPatterns` reads them while this picker is open as well as while the sequencer
   is shown, so they show at once, default marked, before anything is ranked.

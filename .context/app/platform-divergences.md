@@ -97,7 +97,7 @@ it covers:
 - `tests/fixtures/synths/**` and `tests/fixtures/bank/**`;
 - `tests/helpers/`: `admin-library-pattern`, `admin-synth-detail`, `bank-db`, `bank-store`,
   `catalogue-db`, `links-store`, `model-d-detail`, `public-profile-db`, `riff-sent`,
-  `signal-menu`, `synth-detail`, `synth-engine`, `synth-session`, `synth-side` and `tutor`
+  `signal-switches`, `synth-detail`, `synth-engine`, `synth-session`, `synth-side` and `tutor`
   (all `.ts`);
 - `tests/unit/prototype-boundary.test.ts`;
 - the tests for fork-owned code: `tests/unit/lib/app/**`, `tests/unit/components/app/**`,

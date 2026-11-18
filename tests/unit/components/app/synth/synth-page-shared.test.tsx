@@ -193,7 +193,7 @@ function page(over: Partial<SynthPageProps> = {}) {
 }
 
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
-const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
+const loadedName = () => screen.getByText('Patch:').nextElementSibling?.textContent;
 const cutoff = () =>
   screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow');
 

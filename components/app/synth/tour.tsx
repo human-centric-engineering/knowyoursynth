@@ -99,7 +99,16 @@ function Chips({ def, controls, jacks }: { def: SynthDef; controls: Control[]; j
   );
 }
 
-function StopBody({ def, stop }: { def: SynthDef; stop: TourStop }) {
+function StopBody({
+  def,
+  stop,
+  routed,
+}: {
+  def: SynthDef;
+  stop: TourStop;
+  /** The synth has a routing, so Live signal and Signal diagram are on its rail. */
+  routed: boolean;
+}) {
   if (stop.kind === 'intro') {
     const { controls, jacks, sections } = stop.counts;
     return (
@@ -149,10 +158,18 @@ function StopBody({ def, stop }: { def: SynthDef; stop: TourStop }) {
             panel itself: point at any coloured region to read what it does.
           </li>
           <li>
-            <span className="text-(--kys-text)">Signal</span>, set to In use, darkens everything
-            that is doing nothing in the patch you have loaded, which is the fastest way to see a
-            patch as a picture. Set to Live, the parts it uses light up as you play; Live + flow
-            adds lines from each part to the next.
+            <span className="text-(--kys-text)">Dim unused</span> darkens everything that is doing
+            nothing in the patch you have loaded, which is the fastest way to see a patch as a
+            picture.
+            {routed && (
+              <>
+                {' '}
+                <span className="text-(--kys-text)">Live signal</span> lights the parts it uses as
+                you play, with a line from each to the next, and{' '}
+                <span className="text-(--kys-text)">Signal diagram</span> turns the panel over to
+                show how its parts are wired.
+              </>
+            )}
           </li>
           <li>
             <span className="text-(--kys-text)">Show sensitive controls</span> glows behind the
@@ -208,10 +225,12 @@ export interface TourProps {
   def: SynthDef;
   /** The catalogue's "Unusual on…" notes: id → text. */
   notes: UnusualNotes;
+  /** The synth has a routing: its last stop names Live signal and Signal diagram, which only such a synth has. */
+  routed: boolean;
   onClose: () => void;
 }
 
-export function Tour({ def, notes, onClose }: TourProps) {
+export function Tour({ def, notes, routed, onClose }: TourProps) {
   const stops = useMemo(() => buildTour(def, notes), [def, notes]);
   const [i, setI] = useState(0);
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -302,7 +321,7 @@ export function Tour({ def, notes, onClose }: TourProps) {
           className="kys-scroll max-h-[38vh] overflow-y-auto px-4 py-3"
         >
           {stop.kind === 'intro' && <p className="mb-1.5 text-(--kys-muted)">{stop.lead}</p>}
-          <StopBody def={def} stop={stop} />
+          <StopBody def={def} stop={stop} routed={routed} />
         </div>
 
         <nav

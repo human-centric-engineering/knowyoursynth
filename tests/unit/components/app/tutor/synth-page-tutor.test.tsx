@@ -245,7 +245,7 @@ const tutor = () => {
   openSide('Tutor');
   return screen.getByRole('region', { name: 'AI tutor' });
 };
-const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
+const loadedName = () => screen.getByText('Patch:').nextElementSibling?.textContent;
 const cutoff = () =>
   screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow');
 // At `lg` and up the lesson and the library open over the panel (t-74): each helper opens the one it reads.

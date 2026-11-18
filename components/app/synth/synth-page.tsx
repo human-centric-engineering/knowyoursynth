@@ -91,6 +91,7 @@ import {
   Activity,
   AudioWaveform,
   Columns4,
+  EyeOff,
   Flame,
   Piano,
   Play,
@@ -139,14 +140,8 @@ import {
   panelRailStyle,
   useKeepCentre,
 } from '@/components/app/synth/panel-zoom';
-import { PlayerTip, PlayerTips } from '@/components/app/synth/player-tip';
-import {
-  LayerToggle,
-  PlayerSettings,
-  useFootFit,
-  SignalMenu,
-  type SignalMode,
-} from '@/components/app/synth/player-tools';
+import { PlayerTip, PlayerTips, TipSide } from '@/components/app/synth/player-tip';
+import { LayerToggle, PlayerSettings, useFootFit } from '@/components/app/synth/player-tools';
 import { RoutingView } from '@/components/app/synth/routing-view';
 import type { RoutingShowTarget } from '@/components/app/synth/routing-card';
 import { getSynthRouting } from '@/lib/app/synths/routing';
@@ -300,8 +295,12 @@ const DeckSchema = z.boolean().nullable();
 const TALL_QUERY = '(min-height: 900px)';
 /** The side of the panel the lesson card floats on, as stored. */
 const CardSideSchema = z.enum(['left', 'right']);
-/** Live, or Live + flow (`'flow'`); `false` = In use. A `true` kept before Live + flow was added reads as Live. */
-const LiveSchema = z.union([z.boolean(), z.literal('flow')]);
+/**
+ * Live signal on (`'on'`). Before t-279 Live was kept as `true` and Live + flow as `'flow'`, and showed only while the
+ * dimming was on, so Off on another browser (which syncs only the dimming) could leave one behind: those are read as
+ * they were then, on only while Dim unused is.
+ */
+const LiveSchema = z.union([z.boolean(), z.literal('flow'), z.literal('on')]);
 const EnglishSchema = z.boolean();
 /** How long the pointer may rest before the player's secondary controls fade, as a video's do, in ms. */
 const IDLE_MS = 2500;
@@ -701,34 +700,23 @@ function Synth({
   const settings = useSettings(userId);
   const [tipsOn, setTipsOn] = settings.tips;
   const [dimOn, setDimOn] = settings.dim;
-  // The Signal layer (`f-live-panel` t-150): In use is the sound map's "Dim unused parts", kept with the settings;
-  // Live is that and the live glow, on a synth that has a routing to light, and Live + flow that and the lines between
-  // the lit parts (t-153); either is kept in this browser only.
-  const [liveOn, setLiveOn] = useStoredPref(STORAGE_KEYS.live, LiveSchema, false);
+  // Signal on the panel's face (`f-live-panel` t-150, three buttons since t-279): Dim unused is the sound map's
+  // "Dim unused parts", kept with the settings; Live signal is the live glow with the lines between the lit parts
+  // (t-153), on a synth that has a routing to light, kept in this browser only. Each is its own switch.
+  const [liveStored, setLiveOn] = useStoredPref(STORAGE_KEYS.live, LiveSchema, false);
   // A panel printed in another language reprinted in English (the Polivoks's Russian): one choice for every such
   // synth, kept in this browser only.
   const [english, setEnglish] = useStoredPref(STORAGE_KEYS.english, EnglishSchema, false);
-  const liveOffered = !!routing;
-  const signal: SignalMode = !dimOn
-    ? 'off'
-    : liveOn && liveOffered
-      ? liveOn === 'flow'
-        ? 'flow'
-        : 'live'
-      : 'inUse';
-  const setSignal = (m: SignalMode) => {
-    setDimOn(m !== 'off');
-    // Off clears Live too, so a dim synced back on from the account opens In use. In use is left alone where Live is
-    // not offered, so a synth without a routing does not clear the choice made on the others.
-    if (m !== 'inUse' || liveOffered) setLiveOn(m === 'flow' ? 'flow' : m === 'live');
-  };
+  const liveOn = !!routing && (liveStored === 'on' || (dimOn && !!liveStored));
   const [heatOn, setHeatOn] = settings.heat;
-  // A synth chosen over another starts with the Signal layer and the sensitive controls off: both are kept as settings,
-  // so they would otherwise carry over from the synth before (owner ruling, 2026-11-03). After the settings have read
+  // A synth chosen over another starts with Dim unused, Live signal and the sensitive controls off: they are kept (Dim
+  // unused and Sensitive as settings, Live signal in this browser), so would otherwise carry over from the synth before
+  // (owner ruling, 2026-11-03). After the settings have read
   // the browser, so what they read is not put back over this.
   useEffect(() => {
     if (!switchedTo.current) return;
-    setSignal('off');
+    setDimOn(false);
+    setLiveOn(false);
     setHeatOn(false);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
   const [harmOn, setHarmOn] = settings.harm;
@@ -999,10 +987,10 @@ function Synth({
   // What the live glow lights: what the patch routes now, worked out only while it is showing on the panel's face.
   const liveGlow = useMemo<LiveGlow | null>(
     () =>
-      (signal === 'live' || signal === 'flow') && routing && !routingOn
+      liveOn && routing && !routingOn
         ? {
             routing,
-            flow: signal === 'flow',
+            flow: true,
             state: routingState(synthDef, routing, {
               values: sess.values,
               cables: sess.cables,
@@ -1011,7 +999,7 @@ function Synth({
             source: engine,
           }
         : null,
-    [signal, routing, routingOn, synthDef, sess.values, sess.cables, wheel, engine]
+    [liveOn, routing, routingOn, synthDef, sess.values, sess.cables, wheel, engine]
   );
   // The sequencer hears the engine's events too (its loops and the playhead): handed over once it exists, below.
   const seqEvents = useRef<(e: SynthEvent) => void>(() => undefined);
@@ -1535,7 +1523,7 @@ function Synth({
           defaultId: libraryPreset.defaultPattern?.id ?? null,
         }
       : null;
-  // The Play deck's pattern picker (`f-pattern-picker` t-213) lists them too, so they are read while it is open.
+  // The sequencer's pattern picker (`f-pattern-picker` t-213) lists them too, so they are read while it is open.
   const [patternsOpen, setPatternsOpen] = useState(false);
   const soundPatterns = useSoundPatterns(librarySound, seqShown || patternsOpen);
   // Patterns that suit the patch as it is now (t-125). A library sound is offered them once the patch has moved far
@@ -1582,7 +1570,7 @@ function Synth({
     arrivedOnPatch.current = false;
     newPatch();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
-  // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked beside Play, the
+  // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked in the sequencer, the
   // one a sound of the user's plays) or the riff edited, and with no sound's riff to play; otherwise the riff, which the
   // sequencer holds as it came. A new patch puts back its riff in the sequencer, and Play with it.
   const playsPattern = seqShown || !!seqLoaded || seq.edited || !shown;
@@ -1608,9 +1596,6 @@ function Synth({
     : ownSoundPending
       ? RIFF_FALLBACK
       : panelName;
-  const playsName = playsPattern
-    ? `${seqLoaded?.name ?? riffName}${seq.edited ? ' (edited)' : ''}`
-    : riffName;
   const seqLibrary: PatternLibraryProps = {
     signedIn: authPending ? null : signedIn,
     // Save a copy is offered to someone else's pattern only; its owner saves it as any pattern of theirs.
@@ -1635,6 +1620,25 @@ function Synth({
           },
         }
       : null,
+    // The sequencer's Pattern readout is the pattern picker (t-213; beside Play until t-279): the patch's own
+    // patterns, then the whole library.
+    picker: (name, edited) => (
+      <PatternPicker
+        synthId={synthId}
+        plays={name}
+        edited={edited}
+        open={patternsOpen}
+        onOpenChange={setPatternsOpen}
+        sheet={small}
+        own={soundPatterns}
+        ranked={ranked}
+        current={pickerCurrent}
+        load={loadPattern}
+        // The sequencer is open, so the riff has already handed over to the pattern; this hands over a riff still
+        // waiting on a load, as opening the sequencer does.
+        onPicked={riffToPattern}
+      />
+    ),
   };
   // What the module is handed in the dock and in the sheet alike: the pattern and the page's one transport.
   const seqProps = {
@@ -2632,120 +2636,144 @@ function Synth({
                 default="none"
               >
                 <div className="kys-instrument">
-                  {/* The panel's top rail: the routing view and the layers over the panel at the left; at the right the
+                  {/* The panel's top rail: Signal (the diagram and the flow) and the layers over the panel at the left; at the right the
               history, the inspector, Explain sections, the tour and its help (t-276), on a strip of
               the faceplate along its head, as the rail at its foot carries how it is drawn. */}
                   <div className="px-2 pt-2">
-                    <div
-                      className={`kys-rail is-top mx-auto ${view.outline ? 'is-outline' : ''} ${lightFace ? 'is-light' : ''}`}
-                      style={railStyle}
-                    >
-                      {routing && (
-                        <div role="group" aria-label="Views" className="kys-rail-group">
-                          <LayerToggle
-                            ref={routingToggleRef}
-                            label="Signal routing"
-                            short="Signal routing"
-                            icon={<Waypoints size={17} aria-hidden="true" />}
-                            on={routingOn}
-                            title="Turn the panel over to see how its parts are wired. What the patch uses now is lit, and follows the panel as it changes."
-                            onClick={() => flipPanel(!routingOn)}
-                          />
-                        </div>
-                      )}
+                    {/* Its tips open below it, over the panel: above it is the page's header (t-279). */}
+                    <TipSide side="bottom">
                       <div
-                        role="group"
-                        aria-label="Layers over the panel"
-                        className="kys-rail-group"
+                        className={`kys-rail is-top mx-auto ${view.outline ? 'is-outline' : ''} ${lightFace ? 'is-light' : ''}`}
+                        style={railStyle}
                       >
-                        <SignalMenu
-                          mode={signal}
-                          onMode={setSignal}
-                          live={liveOffered}
-                          icon={<Activity size={17} aria-hidden="true" />}
-                        />
-                        <LayerToggle
-                          label="Show sensitive controls"
-                          short="Sensitive"
-                          icon={<Flame size={17} aria-hidden="true" />}
-                          on={heatOn}
-                          title="Put a glow behind the controls where a small move changes the sound most. The bigger and stronger the glow, the more effect. The three strongest are numbered."
-                          onClick={() => setHeatOn(!heatOn)}
-                        />
-                      </div>
-                      <div className="kys-rail-end">
-                        {/* Undo and Redo, on the panel's own rail: they take back what was done to it. */}
-                        <span role="group" aria-label="History" className="kys-rail-history">
-                          <PlayerTip
-                            name="Undo"
-                            help="Take back the last change to the panel's controls or cables. ⌘Z"
-                          >
-                            <button
-                              type="button"
-                              className={`kys-layer ${historyShown === 'undo' ? 'is-lit' : ''}`}
-                              aria-label="Undo"
-                              disabled={!canUndo}
-                              onClick={undo}
-                            >
-                              <Undo2 size={16} aria-hidden="true" />
-                            </button>
-                          </PlayerTip>
-                          <PlayerTip name="Redo" help="Put back the change last undone. ⇧⌘Z">
-                            <button
-                              type="button"
-                              className={`kys-layer ${historyShown === 'redo' ? 'is-lit' : ''}`}
-                              aria-label="Redo"
-                              disabled={!canRedo}
-                              onClick={redo}
-                            >
-                              <Redo2 size={16} aria-hidden="true" />
-                            </button>
-                          </PlayerTip>
-                        </span>
+                        {/* Signal (t-279): two ways to see where the sound goes, side by side with no rule between
+                        them. The diagram is the panel's back and Live signal is on its face, so turning Live signal on
+                        turns the face up. A synth with no routing has neither. */}
+                        {routing && (
+                          <div role="group" aria-label="Signal" className="kys-rail-group">
+                            <LayerToggle
+                              ref={routingToggleRef}
+                              label="Signal diagram"
+                              short="Diagram"
+                              icon={<Waypoints size={17} aria-hidden="true" />}
+                              on={routingOn}
+                              title="Turn the panel over to see how its parts are wired, as a block diagram. What the patch uses is drawn solid, and lights as signal goes through it."
+                              onClick={() => flipPanel(!routingOn)}
+                            />
+                            <LayerToggle
+                              label="Live signal"
+                              short="Live signal"
+                              icon={<Activity size={17} aria-hidden="true" />}
+                              on={liveOn}
+                              title="Light each part the patch uses as signal goes through it, with a line from each part to the next: audio heavy, control light, gate dotted. It needs a sound to show anything: play a note on the Piano or a MIDI keyboard, or start a Sequencer pattern."
+                              onClick={() => {
+                                if (!liveOn && routingOn) flipPanel(false);
+                                setLiveOn(liveOn ? false : 'on');
+                              }}
+                            />
+                          </div>
+                        )}
                         <div
                           role="group"
-                          aria-label="Inspect and explain"
+                          aria-label="Layers over the panel"
                           className="kys-rail-group"
                         >
-                          {!small && (
-                            <LayerToggle
-                              label="Inspector"
-                              short="Inspect"
-                              icon={<ScanSearch size={17} aria-hidden="true" />}
-                              on={card === 'inspector'}
-                              title="Open the inspector over the panel: what the control under the pointer does, and its value."
-                              onClick={() => openSection('inspector')}
-                            />
-                          )}
+                          {/* Dim unused (t-279) sits with Sensitive, after the rule: both mark the panel's face as it is
+                          set, still, where Signal's two show the sound moving. Turning it on turns the face up. */}
                           <LayerToggle
-                            label="Explain sections"
-                            short="Sections"
-                            icon={<Shapes size={17} aria-hidden="true" />}
-                            on={areasOn}
-                            title="Colour in every named part of the panel, and explain what it does when you point at it."
+                            label="Dim unused parts"
+                            short="Dim unused"
+                            icon={<EyeOff size={17} aria-hidden="true" />}
+                            on={dimOn}
+                            title="Darken every part of the panel the patch does not use as it is set now. Point at a dark control to see what would bring it in."
                             onClick={() => {
-                              setAreasOn(!areasOn);
-                              setTourOn(false);
-                              findStore.set(null);
-                              focusStore.set((f) => (f && f.kind === 'area' ? null : f));
+                              if (!dimOn && routingOn) flipPanel(false);
+                              setDimOn(!dimOn);
                             }}
                           />
+                          <LayerToggle
+                            label="Show sensitive controls"
+                            short="Sensitive"
+                            icon={<Flame size={17} aria-hidden="true" />}
+                            on={heatOn}
+                            title="Put a glow behind the controls where a small move changes the sound most. The bigger and stronger the glow, the more effect. The three strongest are numbered."
+                            onClick={() => setHeatOn(!heatOn)}
+                          />
                         </div>
-                        <PanelSwitch
-                          label="Orientation tour"
-                          short="Tour"
-                          tone="start"
-                          on={tourOn}
-                          title={`A guided walk round the ${def.name}: what its words mean, then every section in the order the sound passes through it. It changes nothing on the panel.`}
-                          onClick={() => {
-                            setTourOn(!tourOn);
-                            setAreasOn(false);
-                            findStore.set(null);
-                          }}
-                        />
-                        <HelpButton title="How to use the panel" items={PANEL_HELP} />
+                        <div className="kys-rail-end">
+                          {/* Undo and Redo, on the panel's own rail: they take back what was done to it. */}
+                          <span role="group" aria-label="History" className="kys-rail-history">
+                            <PlayerTip
+                              name="Undo"
+                              help="Take back the last change to the panel's controls or cables. ⌘Z"
+                            >
+                              <button
+                                type="button"
+                                className={`kys-layer ${historyShown === 'undo' ? 'is-lit' : ''}`}
+                                aria-label="Undo"
+                                disabled={!canUndo}
+                                onClick={undo}
+                              >
+                                <Undo2 size={16} aria-hidden="true" />
+                              </button>
+                            </PlayerTip>
+                            <PlayerTip name="Redo" help="Put back the change last undone. ⇧⌘Z">
+                              <button
+                                type="button"
+                                className={`kys-layer ${historyShown === 'redo' ? 'is-lit' : ''}`}
+                                aria-label="Redo"
+                                disabled={!canRedo}
+                                onClick={redo}
+                              >
+                                <Redo2 size={16} aria-hidden="true" />
+                              </button>
+                            </PlayerTip>
+                          </span>
+                          <div
+                            role="group"
+                            aria-label="Inspect and explain"
+                            className="kys-rail-group"
+                          >
+                            {!small && (
+                              <LayerToggle
+                                label="Inspector"
+                                short="Inspect"
+                                icon={<ScanSearch size={17} aria-hidden="true" />}
+                                on={card === 'inspector'}
+                                title="Open the inspector over the panel: what the control under the pointer does, and its value."
+                                onClick={() => openSection('inspector')}
+                              />
+                            )}
+                            <LayerToggle
+                              label="Explain sections"
+                              short="Sections"
+                              icon={<Shapes size={17} aria-hidden="true" />}
+                              on={areasOn}
+                              title="Colour in every named part of the panel, and explain what it does when you point at it."
+                              onClick={() => {
+                                setAreasOn(!areasOn);
+                                setTourOn(false);
+                                findStore.set(null);
+                                focusStore.set((f) => (f && f.kind === 'area' ? null : f));
+                              }}
+                            />
+                          </div>
+                          <PanelSwitch
+                            label="Orientation tour"
+                            short="Tour"
+                            tone="start"
+                            on={tourOn}
+                            title={`A guided walk round the ${def.name}: what its words mean, then every section in the order the sound passes through it. It changes nothing on the panel.`}
+                            onClick={() => {
+                              setTourOn(!tourOn);
+                              setAreasOn(false);
+                              findStore.set(null);
+                            }}
+                          />
+                          <HelpButton title="How to use the panel" items={PANEL_HELP} />
+                        </div>
                       </div>
-                    </div>
+                    </TipSide>
                   </div>
                   {/* The panel, or its back: the routing view. The panel stays laid out under the view, hidden and inert,
                   so its fit and its scroll are kept for the flip back. */}
@@ -2868,16 +2896,11 @@ function Synth({
                     {/* The sound's name, and beside it what can be done with it: keep it. */}
                     <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
                       <p className="flex max-w-full min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1.5">
-                        <span className="sr-only">Loaded:</span>
-                        {/* The patch is chosen from its name (t-207): the Play deck's bar is for playing. */}
-                        <SoundPicker
-                          buttonRef={soundPickRef}
-                          loading={loading}
-                          soundName={panelName}
-                          soundRef={described?.ref ?? null}
-                          onChooseSound={chooseSound}
-                          soundsOpen={!small && soundsOpen}
-                        />
+                        {/* The patch by name: it is chosen in the Play deck's bar, beside Play (t-279). */}
+                        <span className="flex min-w-0 items-baseline gap-2">
+                          <span className="shrink-0 text-sm text-(--kys-muted)">Patch:</span>
+                          <span className="kys-sound-title truncate">{panelName}</span>
+                        </span>
                         {openSound && (
                           <span className="shrink-0 rounded border border-(--kys-line) px-1.5 py-0.5 font-mono text-xs text-(--kys-muted)">
                             mine
@@ -3002,8 +3025,18 @@ function Synth({
               )}
 
               <div className="kys-player-bar flex flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2 text-sm sm:px-4 lg:flex-nowrap">
+                {/* The patch is chosen here, before Play (t-279; under the panel's name from t-207): the bar plays it. */}
+                <SoundPicker
+                  buttonRef={soundPickRef}
+                  loading={loading}
+                  soundName={panelName}
+                  soundRef={described?.ref ?? null}
+                  onChooseSound={chooseSound}
+                  soundsOpen={!small && soundsOpen}
+                  compact
+                />
                 {/* Always there while something plays, so a pattern can be stopped with the sequencer closed. The Play
-                deck's first and biggest control, outside the scrolling row so nothing clips its glow (t-210). */}
+                deck's biggest control, outside the scrolling row so nothing clips its glow (t-210). */}
                 {(shown || seqShown || seqLoaded || transportPlaying) && (
                   <PlayButton
                     playing={transportPlaying}
@@ -3018,21 +3051,6 @@ function Synth({
                     }
                   />
                 )}
-                {/* What Play plays, beside it (t-213): the patch's own patterns, then the whole library. */}
-                <PatternPicker
-                  synthId={synthId}
-                  plays={playsName}
-                  open={patternsOpen}
-                  onOpenChange={setPatternsOpen}
-                  sheet={small}
-                  own={soundPatterns}
-                  ranked={ranked}
-                  current={pickerCurrent}
-                  load={loadPattern}
-                  // Picked while the riff plays, the pattern takes over (the sequencer starts it from its top), as it
-                  // does when the sequencer opens.
-                  onPicked={riffToPattern}
-                />
                 {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach; on a phone they take a row of their own under Play, leaving the fullscreen button beside it. */}
                 <div className="kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 max-sm:order-last max-sm:basis-full lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">
                   <LayerToggle
@@ -3228,7 +3246,9 @@ function Synth({
               preset={shown ?? null}
               cables={sess.cables}
             />
-            {tourOn && <Tour def={def} notes={detail.notes.unusual} onClose={closeTour} />}
+            {tourOn && (
+              <Tour def={def} notes={detail.notes.unusual} routed={!!routing} onClose={closeTour} />
+            )}
           </section>
           {/* Under the player: its instruments' videos and links, closed until asked for (`f-videos-and-links`). */}
           <LinksSection
