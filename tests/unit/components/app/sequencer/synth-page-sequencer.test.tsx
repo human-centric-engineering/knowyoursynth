@@ -201,6 +201,10 @@ describe('the sequencer on the synth page', () => {
     expect(rack).not.toBeNull();
     expect(rack?.closest('.kys-dock')).toBeNull();
     expect(rack?.previousElementSibling?.classList.contains('kys-player-stage')).toBe(true);
+    // Its help is on the faceplate (t-282), and only there.
+    const help = screen.getAllByRole('button', { name: 'How the sequencer works' });
+    expect(help).toHaveLength(1);
+    expect(help[0].closest('.kys-rack-plate')).not.toBeNull();
     // Its Run lamp is lit while the pattern plays.
     expect(rack?.hasAttribute('data-running')).toBe(false);
     await press('Play');

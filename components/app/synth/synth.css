@@ -2420,6 +2420,15 @@ svg .kys-hit:focus-visible {
   height: 2px;
   background: linear-gradient(var(--rack-groove-dark) 50%, var(--rack-groove-light) 50%);
 }
+/* The module's help, on the plate by the Run lamp (t-282): a ? no taller than the plate. */
+.kys-rack-help {
+  display: flex;
+}
+.kys-rack-help button {
+  width: 22px;
+  height: 22px;
+  font-size: 11px;
+}
 .kys-rack-run {
   display: flex;
   align-items: center;
@@ -2666,6 +2675,23 @@ svg .kys-hit:focus-visible {
   flex-direction: column;
   gap: 10px;
   min-width: 0;
+  container: seq-main / inline-size;
+}
+/* The page tabs, over the steps they page (t-282): as wide as their buttons, not the column. */
+.kys-seq-pages {
+  align-self: flex-start;
+}
+/* Under the steps and the inspector, what notes played do and MIDI out, side by side where there is room. Its columns
+   are the body's from lg up, so Keys sits under the steps and MIDI out under the inspector. */
+.kys-seq-foot {
+  display: grid;
+  gap: 6px 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgb(var(--kys-wash, 255 255 255) / 0.08);
+}
+.kys-seq-foot .kys-seq-keys-row {
+  margin-top: 0;
+  align-content: flex-start;
 }
 
 /* The readout: one strip of cells that wrap one by one where it is narrow. */
@@ -2681,7 +2707,8 @@ svg .kys-hit:focus-visible {
   display: contents;
 }
 @media (min-width: 1024px) {
-  .kys-seq-body {
+  .kys-seq-body,
+  .kys-seq-foot {
     grid-template-columns: minmax(0, 1fr) minmax(290px, 340px);
   }
 }
@@ -3302,8 +3329,9 @@ svg .kys-hit:focus-visible {
 .kys-seq-undo {
   margin-left: auto;
 }
-/* Between lg and a wide desktop the tool row would wrap: its words give way to their icons, named by their tooltips. */
-@media (min-width: 1024px) and (max-width: 1359px) {
+/* Where the steps' column is too narrow for the tool row on one line, its words give way to their icons, named by
+   their tooltips. The column's width, not the screen's: the rack, the sheet and the inspector beside it all change it. */
+@container seq-main (max-width: 899px) {
   .kys-seq-tool-text {
     display: none;
   }
@@ -3621,6 +3649,12 @@ svg .kys-hit:focus-visible {
   background: var(--kys-surface);
   box-shadow: inset 0 0 0 1px rgb(var(--kys-wash, 255 255 255) / 0.07);
 }
+/* Beside the steps it is as tall as what it holds, not the column (t-282). */
+@media (min-width: 1024px) {
+  .kys-seq-inspect {
+    align-self: start;
+  }
+}
 .kys-seq-inspect-head {
   display: flex;
   flex-wrap: wrap;
@@ -3648,6 +3682,15 @@ svg .kys-hit:focus-visible {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+}
+/* Its cells share out each line's width, so the rows end flush at the right rather than ragged. */
+.kys-seq-inspect-row > .kys-cell,
+.kys-seq-note > .kys-cell {
+  flex: 1 1 auto;
+}
+.kys-seq-inspect-row > .kys-cell > *,
+.kys-seq-note > .kys-cell > * {
+  flex: 1;
 }
 .kys-seq-notes {
   display: flex;

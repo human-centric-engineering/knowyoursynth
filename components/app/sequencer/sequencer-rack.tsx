@@ -3,7 +3,8 @@
 /**
  * The sequencer's chassis from `lg` up (t-281): a rack unit bolted in under the synth's panel, as if the two shared
  * one rack. Ears with their screws either side, a faceplate with the unit's name engraved along its top and a power
- * switch that puts the module away (the bar's Sequencer button brings it back). Below `lg` the sequencer is a bottom
+ * switch that puts the module away (the bar's Sequencer button brings it back). The module's help is on the faceplate
+ * too, by the Run lamp, rather than in its tool row (t-282). Below `lg` the sequencer is a bottom
  * sheet and has no chassis.
  *
  * Drawn in CSS only (`.kys-rack` in `synth.css`). No `transform` on it: the module's tooltips are positioned `fixed`.
@@ -12,6 +13,8 @@
 import type { ReactNode, Ref } from 'react';
 import { Power } from 'lucide-react';
 import { PlayerTip } from '@/components/app/synth/player-tip';
+import { HelpButton } from '@/components/app/synth/bar-controls';
+import { SEQ_HELP } from '@/components/app/sequencer/sequencer';
 
 /** One rack ear: two screws, top and bottom, with an engraving between them. */
 function Ear({ side, engraving }: { side: 'left' | 'right'; engraving: string }) {
@@ -49,6 +52,9 @@ export function SequencerRack({
             Step sequencer
           </span>
           <span className="kys-rack-groove" aria-hidden="true" />
+          <span className="kys-rack-help">
+            <HelpButton title="How the sequencer works" items={SEQ_HELP} wide />
+          </span>
           <span className="kys-rack-run" aria-hidden="true">
             <span className="kys-rack-run-led" />
             Run

@@ -357,7 +357,11 @@ describe('the readout row', () => {
   it('offers to connect before MIDI is on', () => {
     const m = fake({});
     render(<Row midiOut={m} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Connect MIDI' }));
+    const connect = screen.getByRole('button', { name: 'Connect MIDI' });
+    // An icon and its word, neither hidden where the tool row's words give way (t-282): it was an empty button there.
+    expect(connect.querySelector('svg')).not.toBeNull();
+    expect(connect.querySelector('.kys-seq-tool-text')).toBeNull();
+    fireEvent.click(connect);
     expect(m.connect).toHaveBeenCalledTimes(1);
   });
 
