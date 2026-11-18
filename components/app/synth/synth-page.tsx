@@ -1324,6 +1324,8 @@ function Synth({
   // Counted in for a Play pressed meanwhile (t-266) and for what the load held (t-278), as the new patch's drums come in.
   const afterLoad = useRef<{ what: 'riff' | 'pattern'; countIn: boolean } | null>(null);
   const [waiting, setWaiting] = useState(false);
+  // Counts the loads that have ended with something waiting, for the start that follows them (below the load handler).
+  const [loadEnded, setLoadEnded] = useState(0);
   const queue = useCallback((what: 'riff' | 'pattern' | null, countIn = false) => {
     afterLoad.current = what ? { what, countIn } : null;
     setWaiting(what !== null);
@@ -1694,8 +1696,8 @@ function Synth({
     shownPhrase.current = shown?.phrase ?? null;
   });
   const riffShown = useCallback(
-    (still?: () => boolean, countIn = false) => {
-      if (shownPhrase.current) void riffNow(still, countIn);
+    async (still?: () => boolean, countIn = false) => {
+      if (shownPhrase.current) await riffNow(still, countIn);
       else stopRiff();
     },
     [riffNow, stopRiff]
@@ -1716,14 +1718,11 @@ function Synth({
   // in the sequencer; otherwise the riff of the sound on the panel, or nothing for a sound with none.
   useEffect(() => {
     loadHandler.current = (on) => {
+      // What waited starts once the page has rendered out of the load (below), not here: the load ends inside the
+      // panel history's own update, while the sequencer still has MIDI out `silent`, and a start then would go out
+      // muted and without its count-in.
       if (!on) {
-        const then = afterLoad.current;
-        queue(null);
-        if (then?.what === 'riff') riffShown(undefined, then.countIn);
-        else if (then?.what === 'pattern') {
-          if (playsPatternRef.current) void patternNow(then.countIn);
-          else riffShown(undefined, then.countIn);
-        }
+        if (afterLoad.current) setLoadEnded((n) => n + 1);
         return;
       }
       new Set([...downRef.current.keys(), ...heldRef.current]).forEach((n) =>
@@ -1737,6 +1736,22 @@ function Synth({
       else if (seq.playing) holdForLoad('pattern');
     };
   });
+
+  // A load has ended and the page has rendered out of it: what waited starts, Play's spinner held until now. Stop
+  // pressed meanwhile cleared it; a second load begun meanwhile waits for its own end.
+  useEffect(() => {
+    if (!loadEnded || loading) return;
+    const then = afterLoad.current;
+    if (!then) return;
+    // The spinner stays until the start has gone out (the sound may still be starting): Play does not flash back.
+    afterLoad.current = null;
+    const done = () => {
+      if (!afterLoad.current) setWaiting(false);
+    };
+    if (then.what === 'pattern' && playsPatternRef.current)
+      void patternNow(then.countIn).finally(done);
+    else void riffShown(undefined, then.countIn).finally(done);
+  }, [loadEnded, loading]); // eslint-disable-line react-hooks/exhaustive-deps -- on a load's end, once rendered
 
   // computer keyboard. Each key remembers the note it started, so a key held across an octave change (or a Hold
   // toggle, which re-registers these listeners) still stops the note it is sounding.
@@ -2217,7 +2232,7 @@ function Synth({
       const replay = how === 'replay' && (replayRiff.current || !transportPlaying);
       if (walk(fn, from, moves, endReplayRiff) && replay) {
         replayRiff.current = true;
-        riffShown(() => replayRiff.current);
+        void riffShown(() => replayRiff.current);
       }
     };
     if (ownLesson) {
