@@ -108,6 +108,7 @@ import {
 } from 'lucide-react';
 import { getEngine, listen } from '@/components/app/synth/engine';
 import { PAGE as SEQ_PAGE, Sequencer } from '@/components/app/sequencer/sequencer';
+import { SequencerRack } from '@/components/app/sequencer/sequencer-rack';
 import { sameValues, seqButtonFor, seqLamps } from '@/components/app/sequencer/panel-buttons';
 import {
   useSequencer,
@@ -1356,8 +1357,17 @@ function Synth({
     if (isLoading()) queue('pattern', true);
     else await patternNow();
   }, [isLoading, patternNow, queue]);
-  // Open in the dock from `lg` up, in its sheet below it.
+  // Open under the panel from `lg` up (a rack module, t-281), in its sheet below it.
   const seqDocked = !small && seqOpen;
+  // Opened from the bar, the module is brought into view under the panel, above the pinned dock (its scroll margin).
+  const rackRef = useRef<HTMLDivElement>(null);
+  const revealRack = useRef(false);
+  useEffect(() => {
+    if (!seqDocked || !revealRack.current) return;
+    revealRack.current = false;
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    rackRef.current?.scrollIntoView?.({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
+  }, [seqDocked]);
 
   // With a pointer, the Sound Design strip is a drawer standing on the dock, outside the dock's height, so the lesson
   // card is lifted by the drawer's open height (`--kys-strip-h`) to stay above it rather than behind it. Observed as it
@@ -1664,6 +1674,7 @@ function Synth({
   const openSequencer = () => {
     if (small) openSheet('sequencer');
     else {
+      revealRack.current = true;
       setSeqOpen(true);
       // The docked sequencer takes the strip's place: the drawer is put away, the lesson with it, rather than left
       // open behind it to come back up when the sequencer closes.
@@ -2988,12 +2999,21 @@ function Synth({
               )}
             </div>
 
+            {/* The sequencer from `lg` up (t-281): a rack module in the page directly under the panel, as if bolted
+            into the same rack, rather than in the dock. Its power switch puts it away; so does the bar's Sequencer
+            button, which brings it back. */}
+            {seqDocked && (
+              <SequencerRack ref={rackRef} running={seq.playing} onPower={() => setSeqOpen(false)}>
+                <Sequencer {...seqProps} />
+              </SequencerRack>
+            )}
+
             {/* The dock: the Sound Design strip, the bar and the deck. From `lg` up it is pinned to the bottom of the
             screen, and what opens from it (the lesson card, the sounds, the tutor) floats over the panel, so it never
             changes height unless the piano is put away. With a pointer, the strip floats over the foot of the panel and
             shows only while the pointer is near the dock. */}
             <div ref={dockRef} className="kys-dock">
-              {/* The sequencer in the dock takes the strip's place: what is being played is the pattern, not a lesson. */}
+              {/* The open sequencer takes the strip's place: what is being played is the pattern, not a lesson. */}
               {!seqDocked && (
                 <SoundDesign
                   steps={steps}
@@ -3152,12 +3172,6 @@ function Synth({
                   <FullscreenButton target={playerRef} />
                 </div>
               </div>
-
-              {seqDocked && (
-                <div className="kys-seq-dock">
-                  <Sequencer {...seqProps} />
-                </div>
-              )}
 
               {/* With the piano put away the deck still holds the harmonics, while they are on. */}
               <div className="kys-player-deck p-3 sm:p-4" hidden={!small && !deckOn && !harmOn}>

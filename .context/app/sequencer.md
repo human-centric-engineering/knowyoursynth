@@ -187,9 +187,14 @@ from the first note after the load. Play pressed meanwhile starts the pattern on
 
 The sequencer module sits under the panel on every synth page. The **Sequencer** button on the player bar opens it,
 and closes it again: an open toggle on the bar shows a ×.
-From `lg` up it is in the dock, between the bar and the piano, and takes the place of the Learn sound design strip
-while it is open. Below `lg` it is a docked bottom sheet at half height,
-with the panel live above it.
+From `lg` up it is a rack module in the page directly under the panel, not in the pinned dock (t-281): a 19-inch unit
+(`SequencerRack`, `sequencer-rack.tsx`) with screwed ears, a brushed faceplate, the unit's name and a Run lamp along its
+top, and a power switch that puts it away, as the bar's button does. Opened from the bar, it is scrolled into view
+above the dock. While it is open the Learn sound design strip is put away. Below `lg` it is a docked bottom sheet at
+half height, with the panel live above it.
+
+The pattern picker's line carries what plays along at its right: Count-in, Metronome and Drums (t-281; they were in
+the readout before).
 
 The page owns the pattern through `useSequencer` (`use-sequencer.ts`), so closing the module keeps every edit. The
 hook is handed the riff of the sound on the panel and imports it whenever that riff's content changes. Choosing another sound replaces the pattern. If the pattern had been edited, one Undo brings it back. A sound read again with the same riff (a rename, a save)

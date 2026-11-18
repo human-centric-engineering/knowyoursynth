@@ -203,7 +203,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   rendered in the player outside its stage, so it stacks over the dock), or the Library sheet below `lg`, and puts
   focus in its search. Its "In the style of…" is its tooltip. The Default patch is first in the library; the bar has
   no button of its own for it (t-208).
-- **The foot of the player is the Play deck**: the bar, the piano and scope, MIDI and the docked sequencer, where the
+- **The foot of the player is the Play deck**: the bar, the piano and scope, and MIDI, where the
   synth is played from (owner ruling, 2026-11-07). **Play is its biggest control** (`PlayButton`, t-210), after the patch picker, outside the
   bar's scrolling row so nothing clips it, drawn as a lit green transport key at the bar's 44px; it glows from inside
   while it runs. While a pattern plays (the patch's riff included, which plays through the sequencer, t-234), the glow is

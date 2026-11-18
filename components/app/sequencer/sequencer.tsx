@@ -2,10 +2,12 @@
 
 /**
  * The sequencer module (`f-step-sequencer` t-80): under the synth's panel, opened from the player bar, styled as a
- * hardware step sequencer. From `lg` up it is in the dock under the bar; below it, in a bottom sheet.
+ * hardware step sequencer. From `lg` up it is a rack module in the page under the panel (`sequencer-rack.tsx`,
+ * t-281); below it, in a bottom sheet.
  *
- * - The head: the transport (Play and Stop, Fill, Loop, and what plays along: Count-in, Metronome and Drums, t-266,
- *   t-267) and the pattern's controls: tempo, swing, length, transpose, step
+ * - The pattern's line: the pattern picker and the patterns strip, with what plays along at its right (Count-in,
+ *   Metronome and Drums, t-266, t-267; moved there in t-281).
+ * - The head: the transport (Play and Stop, Fill, Loop) and the pattern's controls: tempo, swing, length, transpose, step
  *   size, direction, root and scale, the parts (A and B) and the order they chain in.
  * - The step keys, sixteen to a page, lit where a step plays and with the playhead running across them, turning to the
  *   page it is on while it plays (t-87). A key is
@@ -566,9 +568,35 @@ export function Sequencer({
     </PlayerTip>
   );
 
+  // What plays along, on the pattern's line at its right (t-281): the drums are chosen for the pattern.
+  const playAlong = backing && (
+    <div className="kys-seq-backing" role="group" aria-label="Play along">
+      <span className="kys-seq-backing-label" aria-hidden="true">
+        Drums
+      </span>
+      <Toggle
+        label="Count-in"
+        on={backing.countIn}
+        help="Clicks one bar before the pattern starts: from Play, and when you open another pattern while one plays."
+        onClick={() => backing.setCountIn(!backing.countIn)}
+      />
+      <Toggle
+        label="Metronome"
+        on={backing.metronome}
+        help="Clicks every beat while the pattern plays, louder on the first of each bar."
+        onClick={() => backing.setMetronome(!backing.metronome)}
+      />
+      <DrumsSelect backing={backing} />
+    </div>
+  );
+
   return (
     <section className="kys-seq" aria-label="Sequencer">
-      {library && <PatternLibrary seq={seq} library={library} />}
+      {library ? (
+        <PatternLibrary seq={seq} library={library} aside={playAlong} />
+      ) : (
+        playAlong && <div className="kys-seq-lib-row">{playAlong}</div>
+      )}
       <div className="kys-seq-head">
         <div className="kys-seq-transport">
           {transport && (
@@ -604,22 +632,6 @@ export function Sequencer({
             help="Plays the pattern again from the top. Off, it plays once and stops."
             onClick={() => setP('loop', !p.loop)}
           />
-          {backing && (
-            <>
-              <Toggle
-                label="Count-in"
-                on={backing.countIn}
-                help="Clicks one bar before the pattern starts: from Play, and when you open another pattern while one plays."
-                onClick={() => backing.setCountIn(!backing.countIn)}
-              />
-              <Toggle
-                label="Metronome"
-                on={backing.metronome}
-                help="Clicks every beat while the pattern plays, louder on the first of each bar."
-                onClick={() => backing.setMetronome(!backing.metronome)}
-              />
-            </>
-          )}
         </div>
         <div className="kys-seq-controls">
           <Encoder
@@ -639,7 +651,6 @@ export function Sequencer({
           {clockIn && (clockIn.status === 'on' || clockIn.source) && (
             <ClockSelect clock={clockIn} />
           )}
-          {backing && <DrumsSelect backing={backing} />}
           <Encoder
             label="Swing"
             value={p.swing}
