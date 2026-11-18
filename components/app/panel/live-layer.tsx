@@ -4,12 +4,12 @@
  * The live glow on the panel's face (`f-live-panel` t-150): each part of the synth lights over its own controls as
  * signal goes through it, and fades with the note's release; the LFO and a slow oscillator pulse with their waves.
  * It is the routing view's lamps (`routingActivity()`), drawn where the knobs and patched jacks of each part are (`liveAreas()`),
- * over the Path ("In use") wash, so the still picture and the live one read together.
+ * over the Dim unused wash where that is on too, so the still picture and the live one read together.
  *
  * Over a contour, the knob for the stage its envelope is in lights too (t-152, `liveStages()`): Attack, then Decay,
  * then Sustain while the key is held, then Release after it, as the engine reports the stage (`env1Stage`).
  *
- * With Flow ▾ Live + lines (t-153, `LiveFlow`), a line runs from each lit part to the part it feeds while the patch
+ * With it (t-153, `LiveFlow`; always, as Live signal, since t-279), a line runs from each lit part to the part it feeds while the patch
  * routes signal along it, glowing with the edge or pin it stands for (`routingActivity()`'s `edges` and `cables`), its
  * dashes running in the direction of flow.
  *
@@ -32,7 +32,7 @@ import type { ControlValues, PatchCable, SynthDef, SynthRouting } from '@/lib/ap
 
 /**
  * What the panel needs to glow live: the synth's routing, what the patch routes now, and the engine to listen to;
- * `flow` = draw the lines between the lit parts too (Live + lines).
+ * `flow` = draw the lines between the lit parts too (the page always does, t-279).
  */
 export interface LiveGlow {
   routing: SynthRouting;

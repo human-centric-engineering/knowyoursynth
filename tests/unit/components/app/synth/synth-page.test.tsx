@@ -33,7 +33,7 @@ import { glideMotion } from '@/components/app/synth/motion';
 import { ARRIVE_MS } from '@/components/app/synth/use-panel-history';
 import { getSynthRouting } from '@/lib/app/synths/routing';
 import { expectRiff, patternsSent } from '@/tests/helpers/riff-sent';
-import { chooseSignal, signalShown } from '@/tests/helpers/signal-menu';
+import { signalOn, turnSignal } from '@/tests/helpers/signal-switches';
 
 const { router, engine, events } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -2823,20 +2823,35 @@ describe('SynthPage signal routing', () => {
     expect(scroller()).not.toHaveAttribute('inert');
   });
 
-  it('sits beside Flow under one Signal name, and turns the panel face up when Flow is turned on', () => {
+  it('sits with Dim unused parts and Live signal in one group, Sensitive outside it', () => {
     page();
     const signal = screen.getByRole('group', { name: 'Signal' });
-    expect(signal).toContainElement(toggle());
-    expect(signal.querySelector('button[aria-label^="Signal flow:"]')).not.toBeNull();
-    // Sensitive is a layer of its own, not part of Signal.
+    const names = Array.from(signal.querySelectorAll('button[aria-label]'), (b) =>
+      b.getAttribute('aria-label')
+    );
+    expect(names).toEqual(['Signal diagram', 'Dim unused parts', 'Live signal']);
     expect(signal).not.toContainElement(button('Show sensitive controls'));
+  });
 
+  it.each([['Dim unused parts'], ['Live signal']] as const)(
+    'turns the panel face up when %s is turned on over the diagram',
+    (name) => {
+      page();
+      fireEvent.click(toggle());
+      expect(diagram()).not.toBeNull();
+      turnSignal(name, true);
+      expect(diagram()).toBeNull();
+      expect(toggle()).toHaveAttribute('aria-pressed', 'false');
+      expect(signalOn(name)).toBe(true);
+    }
+  );
+
+  it('leaves the diagram showing when a face switch is turned off over it', () => {
+    page();
+    turnSignal('Dim unused parts', true);
     fireEvent.click(toggle());
+    turnSignal('Dim unused parts', false);
     expect(diagram()).not.toBeNull();
-    chooseSignal('Live');
-    expect(diagram()).toBeNull();
-    expect(toggle()).toHaveAttribute('aria-pressed', 'false');
-    expect(signalShown()).toBe('Live');
   });
 
   it('draws the patch on the panel, and follows it as it changes while the diagram shows', async () => {

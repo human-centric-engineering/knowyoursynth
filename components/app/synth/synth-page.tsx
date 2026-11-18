@@ -89,6 +89,7 @@ import { usePanelHistory } from '@/components/app/synth/use-panel-history';
 import { stepFrom, stepMoves } from '@/lib/app/synths/lib/history';
 import {
   Activity,
+  SunDim,
   AudioWaveform,
   Columns4,
   Flame,
@@ -140,14 +141,7 @@ import {
   useKeepCentre,
 } from '@/components/app/synth/panel-zoom';
 import { PlayerTip, PlayerTips } from '@/components/app/synth/player-tip';
-import {
-  LayerToggle,
-  PlayerSettings,
-  useFootFit,
-  useHeadFit,
-  SignalFlow,
-  type SignalMode,
-} from '@/components/app/synth/player-tools';
+import { LayerToggle, PlayerSettings, useFootFit } from '@/components/app/synth/player-tools';
 import { RoutingView } from '@/components/app/synth/routing-view';
 import type { RoutingShowTarget } from '@/components/app/synth/routing-card';
 import { getSynthRouting } from '@/lib/app/synths/routing';
@@ -301,7 +295,7 @@ const DeckSchema = z.boolean().nullable();
 const TALL_QUERY = '(min-height: 900px)';
 /** The side of the panel the lesson card floats on, as stored. */
 const CardSideSchema = z.enum(['left', 'right']);
-/** Live, or Live + lines (`'flow'`); `false` = Path. A `true` kept before Live + lines was added reads as Live. */
+/** Live signal on. Kept before t-279 as `true` (Live) or `'flow'` (Live + flow): either reads as on. */
 const LiveSchema = z.union([z.boolean(), z.literal('flow')]);
 const EnglishSchema = z.boolean();
 /** How long the pointer may rest before the player's secondary controls fade, as a video's do, in ms. */
@@ -702,34 +696,23 @@ function Synth({
   const settings = useSettings(userId);
   const [tipsOn, setTipsOn] = settings.tips;
   const [dimOn, setDimOn] = settings.dim;
-  // The Signal layer, Flow on the rail (`f-live-panel` t-150, t-279): Path is the sound map's "Dim unused parts", kept
-  // with the settings; Live is that and the live glow, on a synth that has a routing to light, and Live + lines that and the lines between
-  // the lit parts (t-153); either is kept in this browser only.
-  const [liveOn, setLiveOn] = useStoredPref(STORAGE_KEYS.live, LiveSchema, false);
+  // Signal on the panel's face (`f-live-panel` t-150, three buttons since t-279): Dim unused is the sound map's
+  // "Dim unused parts", kept with the settings; Live signal is the live glow with the lines between the lit parts
+  // (t-153), on a synth that has a routing to light, kept in this browser only. Each is its own switch.
+  const [liveStored, setLiveOn] = useStoredPref(STORAGE_KEYS.live, LiveSchema, false);
   // A panel printed in another language reprinted in English (the Polivoks's Russian): one choice for every such
   // synth, kept in this browser only.
   const [english, setEnglish] = useStoredPref(STORAGE_KEYS.english, EnglishSchema, false);
-  const liveOffered = !!routing;
-  const signal: SignalMode = !dimOn
-    ? 'off'
-    : liveOn && liveOffered
-      ? liveOn === 'flow'
-        ? 'flow'
-        : 'live'
-      : 'inUse';
-  const setSignal = (m: SignalMode) => {
-    setDimOn(m !== 'off');
-    // Off clears Live too, so a dim synced back on from the account opens Path. Path is left alone where Live is
-    // not offered, so a synth without a routing does not clear the choice made on the others.
-    if (m !== 'inUse' || liveOffered) setLiveOn(m === 'flow' ? 'flow' : m === 'live');
-  };
+  // A `true` or `'flow'` kept before t-279 (Live, Live + flow) is Live signal on.
+  const liveOn = !!liveStored && !!routing;
   const [heatOn, setHeatOn] = settings.heat;
   // A synth chosen over another starts with the Signal layer and the sensitive controls off: both are kept as settings,
   // so they would otherwise carry over from the synth before (owner ruling, 2026-11-03). After the settings have read
   // the browser, so what they read is not put back over this.
   useEffect(() => {
     if (!switchedTo.current) return;
-    setSignal('off');
+    setDimOn(false);
+    setLiveOn(false);
     setHeatOn(false);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
   const [harmOn, setHarmOn] = settings.harm;
@@ -1000,10 +983,10 @@ function Synth({
   // What the live glow lights: what the patch routes now, worked out only while it is showing on the panel's face.
   const liveGlow = useMemo<LiveGlow | null>(
     () =>
-      (signal === 'live' || signal === 'flow') && routing && !routingOn
+      liveOn && routing && !routingOn
         ? {
             routing,
-            flow: signal === 'flow',
+            flow: true,
             state: routingState(synthDef, routing, {
               values: sess.values,
               cables: sess.cables,
@@ -1012,7 +995,7 @@ function Synth({
             source: engine,
           }
         : null,
-    [signal, routing, routingOn, synthDef, sess.values, sess.cables, wheel, engine]
+    [liveOn, routing, routingOn, synthDef, sess.values, sess.cables, wheel, engine]
   );
   // The sequencer hears the engine's events too (its loops and the playhead): handed over once it exists, below.
   const seqEvents = useRef<(e: SynthEvent) => void>(() => undefined);
@@ -2340,7 +2323,6 @@ function Synth({
       '--rail-print': print,
     };
   // A fourth setting (Layout on a modular, Labels on a translated panel) needs the wider breakpoints
-  const headRef = useHeadFit();
   const footRef = useFootFit(!!ownLayout || !!synthDef.translation);
   // The Sound Design strip and the lesson card are of the faceplate too, in its colours (t-201).
   const face = useMemo(() => faceRoles(plate, plate2, print), [plate, plate2, print]);
@@ -2639,16 +2621,13 @@ function Synth({
               the faceplate along its head, as the rail at its foot carries how it is drawn. */}
                   <div className="px-2 pt-2">
                     <div
-                      ref={headRef}
                       className={`kys-rail is-top mx-auto ${view.outline ? 'is-outline' : ''} ${lightFace ? 'is-light' : ''}`}
                       style={railStyle}
                     >
-                      {/* Signal (t-279): the diagram on the panel's back and the flow on its face, two ways of
-                      showing where the sound goes, under one name in the panel's lettering. */}
-                      <div role="group" aria-label="Signal" className="kys-rail-group is-signal">
-                        <span className="kys-setting-name kys-rail-label" aria-hidden="true">
-                          Signal
-                        </span>
+                      {/* Signal (t-279): three ways to see where the sound goes, side by side with no rule between
+                      them. The diagram is the panel's back; Dim unused and Live signal are on its face, so turning
+                      either on turns the face up. */}
+                      <div role="group" aria-label="Signal" className="kys-rail-group">
                         {routing && (
                           <LayerToggle
                             ref={routingToggleRef}
@@ -2660,16 +2639,30 @@ function Synth({
                             onClick={() => flipPanel(!routingOn)}
                           />
                         )}
-                        <SignalFlow
-                          mode={signal}
-                          onMode={(m) => {
-                            // The diagram shows the flow already: a mode chosen for the face turns the face up.
-                            if (m !== 'off' && routingOn) flipPanel(false);
-                            setSignal(m);
+                        <LayerToggle
+                          label="Dim unused parts"
+                          short="Dim unused"
+                          icon={<SunDim size={17} aria-hidden="true" />}
+                          on={dimOn}
+                          title="Darken every part of the panel the patch does not use as it is set now. Point at a dark control to see what would bring it in."
+                          onClick={() => {
+                            if (!dimOn && routingOn) flipPanel(false);
+                            setDimOn(!dimOn);
                           }}
-                          live={liveOffered}
-                          icon={<Activity size={17} aria-hidden="true" />}
                         />
+                        {routing && (
+                          <LayerToggle
+                            label="Live signal"
+                            short="Live signal"
+                            icon={<Activity size={17} aria-hidden="true" />}
+                            on={liveOn}
+                            title="Light each part the patch uses as signal goes through it when you play, with a line from each part to the next: audio heavy, control light, gate dotted."
+                            onClick={() => {
+                              if (!liveOn && routingOn) flipPanel(false);
+                              setLiveOn(!liveOn);
+                            }}
+                          />
+                        )}
                       </div>
                       <div
                         role="group"

@@ -77,7 +77,7 @@ break shared links for no visible gain. "Sound" on screen means what you hear ("
   `kys.synth`, the last synth opened, with this one (`switchedTo`), and only a refresh, which comes back to the same
   synth, restores the stored panel. The Default patch is then set as a change the visitor made, so the browser and
   the account keep it and the account's older panel does not replace it; `?sound=`, a shared sound and `?mine=` still
-  open their own sound over it. The same switch turns Flow (the Signal layer) and Show sensitive controls off: both are kept
+  open their own sound over it. The same switch turns Dim unused, Live signal and Show sensitive controls off: all are kept
   as settings, so they would otherwise carry over from the synth before. A dated history of each synth's recent
   panels, to get one back, is Hub idea #32. The library lists it
   above its sounds, outside their search, categories and count; it is no catalogue row. So nothing that reads or
@@ -266,8 +266,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   the screen, as a hardware panel's lip carries its smaller switches. They take the synth's own
   faceplate colour and print in its silkscreen ink (`theme.panel`, `panel2` and `ink`, passed as
   `--rail-face`, `--rail-face2` and `--rail-print`), or the outline drawing's paper and ink. The
-  head (`.is-top`) carries Signal (Diagram and Flow, under the word SIGNAL in the panel's lettering and with no
-  rule between them, t-279) and Sensitive at the left, and at the right Undo and
+  head (`.is-top`) carries Signal (three toggles with no rule between them, t-279: Diagram, Dim unused, Live
+  signal) and Sensitive at the left, and at the right Undo and
   Redo, the inspector, Sections, then the tour and its help (t-276); each layer is its icon (with its word from `xl` up and below `lg`) and an LED
   lit while it is over the panel. The foot (`.is-foot`) carries how the panel is drawn (Hardware or
   Outline; Layout, on a synth with a layout of its own (below): Modular or Long, or Compact or Full; and on a panel printed in another language, its Labels in that language or
@@ -280,18 +280,13 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   Layout and Labels, whose choices say it, their tip then hanging from the whole setting), Zoom's name goes and the search
   narrows, each step at a wider rail when there is a Layout or Labels setting. On a phone the search keeps a line of its
   own. Zoom is not on the foot while the routing view shows, which is at no zoom.
-- **Flow** (`f-live-panel` t-150, renamed from Signal in t-279; `SignalFlow` in `player-tools.tsx`) is the head's
-  layer for the patch's signal, a split button: its main press turns on the mode last used (Live the first time,
-  or Path where Live is not offered) or turns it off, and its caret opens a menu of its modes (a popover inside the
-  player, not portalled, as the tips are), each drawn small as three knobs look in that mode (`ModePreview`).
-  Where the head rail is at least 1180px wide, `useHeadFit` writes `data-fit="wide"` on it (measured, as the foot
-  is, not a container query) and the modes sit on the rail as LEDs instead, the split button put away; Off's LED
-  stays dark when chosen. Choosing a mode while the Diagram shows turns the panel face up: the diagram already
-  shows the path and the live signal. The modes:
-  **Off**; **Path** (was In use), the sound map's dimming of what the patch does not use (it was the Dim unused
-  toggle, and is still `kys.dim`, kept in the account); and **Live**, Path with each part the patch uses lit over its
-  controls as signal goes through it. Live is offered wherever the synth has a routing (`getSynthRouting()`) and
-  is kept in this browser (`kys.live`). Its glow (`LiveLayer`, `components/app/panel/live-layer.tsx`) is the
+- **Dim unused** and **Live signal** (`f-live-panel` t-150; a Signal menu of modes until t-279, now two toggles
+  of their own in the head rail's Signal group, beside Diagram) are the patch's signal on the panel's face. Either
+  turned on while the diagram shows turns the panel face up; turned off, they leave the diagram where it is.
+  **Dim unused** is the sound map's dimming of what the patch does not use (it was the Dim unused toggle, then the
+  Signal menu's In use; still `kys.dim`, kept in the account). **Live signal** lights each part the patch uses over its
+  controls as signal goes through it, with or without the dimming. It is offered wherever the synth has a routing
+  (`getSynthRouting()`) and is kept in this browser (`kys.live`). Its glow (`LiveLayer`, `components/app/panel/live-layer.tsx`) is the
   routing view's activity (`routingActivity()`) drawn over each block's cells (`liveAreas()`, the same
   `panelCells()` the dimming uses): its controls', and its jacks' with a cable in them, which is what carries
   a modular's or a pin matrix's module (a section of jacks that are all one block's lights whole once one is
@@ -309,7 +304,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   metered value off `toEngine()` across that travel. None on the Easel, the SOLAR 42N or the 900 series, whose
   voices do not use the engine's filter and VCA. Hidden while under the control's own pointer; eased between
   meters, straight to each under reduced motion.
-  **Live + lines** (t-153, was Live + flow; `LiveFlow`, `components/app/panel/live-flow.tsx`) is Live with a line from each lit
+  Its lines (t-153, the Live + flow mode until t-279, part of Live signal since; `LiveFlow`, `components/app/panel/live-flow.tsx`) is Live with a line from each lit
   part to the part it feeds while the patch routes signal along it (`liveFlows()`,
   `lib/app/synths/lib/live-flow.ts`), in the routing view's style: audio heavy, control light, gate dotted, in
   the source's colour, with an arrowhead. A line runs between the boxes of the two blocks' glow areas, and is a
@@ -380,8 +375,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   the player's, because their tooltips are inside them. The foot's height (`RAIL_H`) is counted in
   the room the panel is fitted to; the head is above the scroller, so it is counted already. The
   tutor stays in the row over the panel. Harmonics is in the deck, beside the scope it extends.
-- **Diagram turns the panel over** (`f-routing-view` t-142, `routing-view.tsx`; named Signal routing until
-  t-279, and named "Signal diagram" for a screen reader): a toggle in the head rail's Signal group, at every width, for a synth with a routing (`getSynthRouting`, see
+- **Diagram turns the panel over** (`f-routing-view` t-142, `routing-view.tsx`; Signal routing until t-279, and
+  "Signal diagram" in full, its tooltip and accessible name): the first toggle in the head rail's Signal group, at every width, for a synth with a routing (`getSynthRouting`, see
   [`synths.md`](./synths.md#signal-routing)); a synth without one has no toggle. Its back is a diagram of the
   synth's blocks, laid out by `layoutRouting()`
   (`lib/app/synths/lib/routing-layout.ts`): left to right, the audio band (sources, mixer, filter, amplifier,
@@ -617,8 +612,8 @@ when the page comes back to the synth in `kys.synth`; one chosen over another op
 | `kys.tips`             | Info cards on                                                                                                                                                                                                                                                      |
 | `kys.fx`, `kys.fxOpen` | The effects rack and whether it is unfolded                                                                                                                                                                                                                        |
 | `kys.midi`             | Reconnect MIDI on the next visit                                                                                                                                                                                                                                   |
-| `kys.dim`, `kys.heat`  | Flow's Path (the sound map's "Dim unused parts"; on under Live too) and "Show sensitive controls"                                                                                                                                                                  |
-| `kys.live`             | Flow is Live (`true`) or Live + lines (`"flow"`) rather than Path (`f-live-panel`). In this browser only, never kept in the account                                                                                                                                |
+| `kys.dim`, `kys.heat`  | Dim unused (the sound map's "Dim unused parts") and "Show sensitive controls"                                                                                                                                                                                      |
+| `kys.live`             | Live signal is on (`true`; a `"flow"` kept before t-279 reads as on too) (`f-live-panel`). In this browser only, never kept in the account                                                                                                                         |
 | `kys.harm`             | The harmonics strip under the panel                                                                                                                                                                                                                                |
 | `kys.english`          | A panel printed in another language (the Polivoks) is shown in English: the foot rail's Labels. In this browser only, never kept in the account                                                                                                                    |
 | `kys.rotateSeen`       | The small-screen note above the panel has been put away                                                                                                                                                                                                            |

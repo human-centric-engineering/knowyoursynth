@@ -25,7 +25,7 @@ import { controlMap, displayName } from '@/lib/app/synths/lib/patch';
 import { modelDRows } from '@/tests/helpers/model-d-detail';
 import { logger } from '@/lib/logging';
 import { openSide, tallScreen } from '@/tests/helpers/synth-side';
-import { chooseSignal, signalShown } from '@/tests/helpers/signal-menu';
+import { signalOn, turnSignal } from '@/tests/helpers/signal-switches';
 
 const { router, engine } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -189,9 +189,9 @@ describe('the panel switches', () => {
   it('remembers the Signal layer, Show sensitive controls and Show harmonics in browser storage', () => {
     vi.stubGlobal('Worker', undefined);
     const { unmount } = page();
-    expect(signalShown()).toBe('Off');
-    chooseSignal('Path');
-    expect(signalShown()).toBe('Path');
+    expect(signalOn('Dim unused parts')).toBe(false);
+    turnSignal('Dim unused parts', true);
+    expect(signalOn('Dim unused parts')).toBe(true);
     for (const name of ['Show sensitive controls', 'Show harmonics']) {
       expect(pressed(name)).toBe('false');
       fireEvent.click(button(name));
@@ -204,57 +204,47 @@ describe('the panel switches', () => {
     ]);
     unmount();
     page();
-    expect(signalShown()).toBe('Path');
+    expect(signalOn('Dim unused parts')).toBe(true);
     expect(pressed('Show harmonics')).toBe('true');
   });
 
-  it('opens a stored "Dim unused parts" as Path, and keeps Live in this browser beside it', () => {
+  it('keeps Live signal in this browser, a switch of its own beside Dim unused parts', () => {
     vi.stubGlobal('Worker', undefined);
     window.localStorage.setItem('kys.dim', 'true');
     const { unmount } = page();
-    expect(signalShown()).toBe('Path');
+    expect(signalOn('Dim unused parts')).toBe(true);
+    expect(signalOn('Live signal')).toBe(false);
     expect(screen.queryByTestId('live-layer')).toBeNull();
-    chooseSignal('Live');
-    expect(signalShown()).toBe('Live');
-    // Its accessible name says the mode, as its word does.
-    expect(document.querySelector('button[aria-label="Signal flow: Live"]')).toBeTruthy();
+    turnSignal('Live signal', true);
+    // Live signal is the glow and the lines between the lit parts together.
     expect(screen.getByTestId('live-layer')).toBeTruthy();
+    expect(screen.getByTestId('live-flow')).toBeTruthy();
     expect(window.localStorage.getItem('kys.live')).toBe('true');
     expect(window.localStorage.getItem('kys.dim')).toBe('true');
     unmount();
     page();
-    expect(signalShown()).toBe('Live');
-    chooseSignal('Off');
-    expect(signalShown()).toBe('Off');
-    expect(screen.queryByTestId('live-layer')).toBeNull();
+    expect(signalOn('Live signal')).toBe(true);
+    // Dimming off leaves the live signal on.
+    turnSignal('Dim unused parts', false);
+    expect(signalOn('Live signal')).toBe(true);
+    expect(screen.getByTestId('live-layer')).toBeTruthy();
     expect(window.localStorage.getItem('kys.dim')).toBe('false');
-    // Off clears Live as well, so a dim synced back on from the account opens Path, not Live.
-    expect(window.localStorage.getItem('kys.live')).toBe('false');
-    expect(document.querySelector('button[aria-label="Signal flow: Off"]')).toBeTruthy();
-    // Back on, Path is Path: Live is a choice of its own.
-    chooseSignal('Path');
-    expect(signalShown()).toBe('Path');
+    turnSignal('Live signal', false);
+    expect(screen.queryByTestId('live-layer')).toBeNull();
+    expect(screen.queryByTestId('live-flow')).toBeNull();
     expect(window.localStorage.getItem('kys.live')).toBe('false');
   });
 
-  it('draws the flow with Live + lines, keeps it in this browser, and drops it back in Live', () => {
-    vi.stubGlobal('Worker', undefined);
-    window.localStorage.setItem('kys.dim', 'true');
-    const { unmount } = page();
-    chooseSignal('Live');
-    expect(screen.getByTestId('live-layer')).toBeTruthy();
-    expect(screen.queryByTestId('live-flow')).toBeNull();
-    chooseSignal('Live + lines');
-    expect(signalShown()).toBe('Live + lines');
-    expect(screen.getByTestId('live-flow')).toBeTruthy();
-    expect(window.localStorage.getItem('kys.live')).toBe('"flow"');
-    unmount();
-    page();
-    expect(signalShown()).toBe('Live + lines');
-    chooseSignal('Live');
-    expect(screen.queryByTestId('live-flow')).toBeNull();
-    expect(window.localStorage.getItem('kys.live')).toBe('true');
-  });
+  it.each([['true'], ['"flow"']])(
+    'opens Live signal on, with its lines, from a Live or Live + flow kept before (kys.live = %s)',
+    (kept) => {
+      vi.stubGlobal('Worker', undefined);
+      window.localStorage.setItem('kys.live', kept);
+      page();
+      expect(signalOn('Live signal')).toBe(true);
+      expect(screen.getByTestId('live-flow')).toBeTruthy();
+    }
+  );
 });
 
 describe('the sound map', () => {
@@ -278,7 +268,7 @@ describe('the sound map', () => {
   it('falls back to the main thread when workers are unavailable, and the map still arrives', async () => {
     vi.stubGlobal('Worker', undefined);
     page();
-    chooseSignal('Path');
+    turnSignal('Dim unused parts', true);
     expect(mapStore.get().status).toBe('working');
     await settle(400 + 40 * 400);
     expect(createProbe).toHaveBeenCalled();
@@ -292,7 +282,7 @@ describe('the sound map', () => {
   it('says in the inspector what the map found for the control pointed at', async () => {
     vi.stubGlobal('Worker', FakeWorker);
     page();
-    chooseSignal('Path');
+    turnSignal('Dim unused parts', true);
     await settle(400);
     openSide('Inspect');
     act(() => focusStore.set({ kind: 'control', id: GLIDE, x: 0, y: 0, tip: false }));
@@ -305,7 +295,7 @@ describe('the sound map', () => {
     held.length = 0;
     vi.stubGlobal('Worker', HoldingWorker);
     page();
-    chooseSignal('Path');
+    turnSignal('Dim unused parts', true);
     await settle(300); // the first sound's analysis is under way, its answers held
     const other = detail.sounds[1];
     openSide('Sounds');
@@ -335,7 +325,7 @@ describe('the sound map', () => {
       },
     });
     page();
-    chooseSignal('Path');
+    turnSignal('Dim unused parts', true);
     // Said twice while it works: in the bar over the panel (t-222) and in the legend under it.
     expect(
       screen.getByRole('progressbar', { name: 'Working out what is in this patch' })
@@ -362,7 +352,7 @@ describe('the sound map', () => {
       },
     });
     page();
-    chooseSignal('Path');
+    turnSignal('Dim unused parts', true);
     await settle(400 + 40 * 400);
     expect(mapStore.get().status).toBe('failed');
     fireEvent.keyDown(screen.getByRole('slider', { name: 'Mod wheel' }), { key: 'ArrowUp' });
@@ -382,10 +372,10 @@ describe('the sound map', () => {
       },
     });
     page();
-    chooseSignal('Path');
+    turnSignal('Dim unused parts', true);
     await settle(400 + 40 * 400);
     expect(mapStore.get().status).toBe('failed');
-    chooseSignal('Off');
+    turnSignal('Dim unused parts', false);
     expect(mapStore.get()).toEqual(MAP_OFF);
     expect(screen.queryByText(/Could not work out/)).toBeNull();
   });
@@ -401,7 +391,7 @@ describe('the sound map', () => {
       },
     });
     page();
-    chooseSignal('Path');
+    turnSignal('Dim unused parts', true);
     await settle(300 + 8); // the first analysis is under way on the main thread
     const key = mapStore.get().key;
     const measured = n;
@@ -419,7 +409,7 @@ describe('the sound map', () => {
   it('works the map out again for another sound, and clears it when both switches go off', async () => {
     vi.stubGlobal('Worker', FakeWorker);
     page();
-    chooseSignal('Path');
+    turnSignal('Dim unused parts', true);
     await settle(400);
     const first = mapStore.get().key;
     const other = detail.sounds[1];
@@ -432,7 +422,7 @@ describe('the sound map', () => {
     await settle(400);
     expect(mapStore.get().key).not.toBe(first);
     expect(mapStore.get().key).toContain(other.id);
-    chooseSignal('Off');
+    turnSignal('Dim unused parts', false);
     expect(mapStore.get().status).toBe('off');
     expect(screen.queryByText('Bright:')).toBeNull();
   });

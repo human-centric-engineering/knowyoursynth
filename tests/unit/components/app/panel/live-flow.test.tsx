@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
 /**
- * The live flow on Model D's panel (`f-live-panel` t-153, Flow ▾ Live + lines): a line for each route the patch
+ * The live flow on Model D's panel (`f-live-panel` t-153, part of Live signal since t-279): a line for each route the patch
  * carries signal along, styled by its signal, glowing with what the engine says goes along it, its dashes running
  * frame by frame; standing still for a visitor who asks for less motion; and nothing at all in plain Live.
  *

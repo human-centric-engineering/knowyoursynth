@@ -4,12 +4,10 @@
  * The player's tools (`f-player` t-72): the learning layers as toggles over the panel, as a video player carries its
  * captions button, and how the panel is drawn, as switches under it.
  *
- * - `LayerToggle`: one layer or tool over the panel (Sections, Sensitive, Inspect over it, Ask AI at its far right; Piano,
+ * - `LayerToggle`: one layer or tool over the panel (Signal diagram, Dim unused, Live signal, Sections, Sensitive,
+ *   Inspect over it, Ask AI at its far right; Piano,
  *   Harmonics, Effects on the bar). An icon, with its word from `xl` up and below `lg` (a phone has no tooltips to name it); the full name is the
  *   accessible name and the tooltip at every width.
- * - `SignalFlow`: the Signal layer over the panel (`f-live-panel` t-150), named Flow (t-279): a split button with a menu of
- *   its modes, each drawn small: off, the parts the patch uses ("Path", once "Dim unused"), those parts lit live as
- *   signal goes through them, and that with lines between them.
  * - `PlayerSettings`: on the panel's rail (the strip along its foot, by the search). Hardware or Outline, Modular or
  *   Long, the magnifier and the hover help, each named in the panel's lettering with an LED by each choice, lit
  *   for the one in use, as a hardware selector shows its position. What each does is on hover.
@@ -17,10 +15,9 @@
  * The page owns every state these show; each is told what is true and calls back to change it.
  */
 
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef } from 'react';
 import type { CSSProperties, ReactNode, Ref } from 'react';
-import * as Popover from '@radix-ui/react-popover';
-import { ChevronDown, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 
 export function LayerToggle({
@@ -73,181 +70,6 @@ export function LayerToggle({
         {on && <X size={13} strokeWidth={2.5} aria-hidden="true" className="kys-layer-x" />}
       </button>
     </PlayerTip>
-  );
-}
-
-/**
- * The Signal layer's modes: nothing, the parts the patch uses (its path), those lit live as signal goes through them,
- * and that with lines from each lit part to the next.
- */
-export type SignalMode = 'off' | 'inUse' | 'live' | 'flow';
-
-const SIGNAL_MODES: readonly { mode: SignalMode; name: string; help: string }[] = [
-  { mode: 'off', name: 'Off', help: 'Nothing over the panel.' },
-  {
-    mode: 'inUse',
-    name: 'Path',
-    help: 'Darken every part of the panel the patch does not use as it is set now. Point at a dark control to see what would bring it in.',
-  },
-  {
-    mode: 'live',
-    name: 'Live',
-    help: 'As Path, and each part the patch uses lights up as signal goes through it when you play.',
-  },
-  {
-    mode: 'flow',
-    name: 'Live + lines',
-    help: 'As Live, with a line from each part to the next while signal runs along it: audio heavy, control light, gate dotted.',
-  },
-];
-
-/**
- * A mode drawn small, as the menu shows it (t-279): three knobs in a row, as they look on the panel in that mode.
- * Off, all plain; Path, the middle one dark (the patch does not use it); Live, the other two glowing; Live + lines,
- * that with a line running from the first to the last.
- */
-function ModePreview({ mode }: { mode: SignalMode }) {
-  const lit = mode === 'live' || mode === 'flow';
-  const knobs = [8, 26, 44];
-  return (
-    <svg
-      className={`kys-flow-preview is-${mode}`}
-      viewBox="0 0 52 22"
-      width="52"
-      height="22"
-      aria-hidden="true"
-      focusable="false"
-    >
-      {mode === 'flow' && (
-        <path className="kys-flow-preview-line" d="M8 11 C 16 -1, 36 -1, 44 11" fill="none" />
-      )}
-      {knobs.map((x, i) => {
-        const dark = mode !== 'off' && i === 1;
-        const glow = lit && i !== 1;
-        return (
-          <g key={x} className={dark ? 'is-dark' : glow ? 'is-glow' : undefined}>
-            {glow && <circle className="kys-flow-preview-halo" cx={x} cy={11} r={7.5} />}
-            <circle className="kys-flow-preview-knob" cx={x} cy={11} r={4.5} />
-            <line className="kys-flow-preview-tick" x1={x} y1={11} x2={x + 2.4} y2={7.6} />
-          </g>
-        );
-      })}
-    </svg>
-  );
-}
-
-/**
- * The Signal layer over the panel (`f-live-panel` t-150), named Flow (t-279): a split button. Its main press turns
- * on the mode last used (Live, the first time, where the synth can show it; Path where it cannot) or turns it off;
- * the caret beside it opens the menu of every mode, each drawn small. Where the rail has the room (`useHeadFit`
- * measures it), the modes are on the rail itself instead, as LEDs, as the foot rail's settings are.
- */
-export function SignalFlow({
-  mode,
-  onMode,
-  live,
-  icon,
-}: {
-  mode: SignalMode;
-  onMode: (m: SignalMode) => void;
-  /** Whether the synth can show its signal live (it has a routing): without it, Live and Live + lines are not offered. */
-  live: boolean;
-  icon: ReactNode;
-}) {
-  const [open, setOpen] = useState(false);
-  const [last, setLast] = useState<SignalMode>(live ? 'live' : 'inUse');
-  const modes = SIGNAL_MODES.filter((m) => live || (m.mode !== 'live' && m.mode !== 'flow'));
-  const on = mode !== 'off';
-  const name = SIGNAL_MODES.find((m) => m.mode === mode)?.name;
-  const choose = (m: SignalMode) => {
-    if (m !== 'off') setLast(m);
-    onMode(m);
-  };
-  const press = () => {
-    if (on) {
-      setLast(mode);
-      onMode('off');
-    } else onMode(live || last === 'inUse' ? last : 'inUse');
-  };
-  return (
-    <div className="kys-flow">
-      <div className="kys-flow-split">
-        <PlayerTip
-          name="Signal flow"
-          help="Light the parts of the panel the patch uses, live as you play. The arrow beside it has the other ways to show it."
-        >
-          <button
-            type="button"
-            aria-pressed={on}
-            aria-label={`Signal flow: ${name}`}
-            onClick={press}
-            className={`kys-layer kys-flow-main ${on ? 'is-on' : ''}`}
-          >
-            {icon}
-            <span className="lg:max-xl:hidden">{on ? `Flow: ${name}` : 'Flow'}</span>
-          </button>
-        </PlayerTip>
-        <Popover.Root open={open} onOpenChange={setOpen}>
-          <Popover.Trigger asChild>
-            <button
-              type="button"
-              aria-label="Ways to show the signal flow"
-              className={`kys-layer kys-flow-caret ${on ? 'is-on' : ''}`}
-            >
-              <ChevronDown size={13} strokeWidth={2.5} aria-hidden="true" />
-            </button>
-          </Popover.Trigger>
-          {/* Not portalled, as the tips are not: it opens inside the player and comes with it into full screen. */}
-          <Popover.Content
-            side="bottom"
-            align="start"
-            sideOffset={6}
-            collisionPadding={12}
-            className="kys-signal-menu"
-          >
-            <div role="group" aria-label="Signal flow" className="kys-signal-modes">
-              {modes.map((m) => (
-                <button
-                  key={m.mode}
-                  type="button"
-                  aria-pressed={mode === m.mode}
-                  onClick={() => {
-                    choose(m.mode);
-                    setOpen(false);
-                  }}
-                  className="kys-led-opt kys-signal-opt"
-                >
-                  <ModePreview mode={m.mode} />
-                  <span className="kys-signal-name">{m.name}</span>
-                  <span className="kys-signal-help">{m.help}</span>
-                </button>
-              ))}
-            </div>
-          </Popover.Content>
-        </Popover.Root>
-      </div>
-      {/* The modes on the rail, where it is wide enough (`synth.css`); the split button is put away then. */}
-      <div role="group" aria-label="Signal flow modes" className="kys-flow-inline">
-        <span className="kys-setting-name" aria-hidden="true">
-          Flow
-        </span>
-        <div className="kys-leds">
-          {modes.map((m) => (
-            <PlayerTip key={m.mode} name={m.name} help={m.help}>
-              <button
-                type="button"
-                aria-pressed={mode === m.mode}
-                onClick={() => choose(m.mode)}
-                className={`kys-led-opt ${m.mode === 'off' ? 'is-off' : ''}`}
-              >
-                <span className="kys-led-dot" aria-hidden="true" />
-                {m.name}
-              </button>
-            </PlayerTip>
-          ))}
-        </div>
-      </div>
-    </div>
   );
 }
 
@@ -496,38 +318,6 @@ export function useFootFit(fourSettings: boolean) {
       ro.disconnect();
     };
   }, [fourSettings]);
-  return ref;
-}
-
-/** How wide the top rail must be for Flow's modes to sit on it as LEDs rather than behind its caret (t-279), in px. */
-const HEAD_WIDE = 1180;
-
-/**
- * Whether the panel's top rail has room for Flow's modes on it (t-279), from its own width, written as
- * `data-fit="wide"` on the rail for `synth.css`: measured, as the foot rail is (`useFootFit`), not a container query.
- */
-export function useHeadFit() {
-  const ref = useRef<HTMLDivElement | null>(null);
-  useEffect(() => {
-    const rail = ref.current;
-    if (!rail || typeof ResizeObserver === 'undefined') return undefined;
-    const measure = () => {
-      if (rail.offsetWidth >= HEAD_WIDE) rail.dataset.fit = 'wide';
-      else delete rail.dataset.fit;
-    };
-    measure();
-    // On the next frame, outside the observer's delivery, as `useFootFit` does: the fit changes the rail's height.
-    let frame = 0;
-    const ro = new ResizeObserver(() => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(measure);
-    });
-    ro.observe(rail);
-    return () => {
-      cancelAnimationFrame(frame);
-      ro.disconnect();
-    };
-  }, []);
   return ref;
 }
 
