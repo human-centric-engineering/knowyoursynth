@@ -1363,11 +1363,27 @@ function Synth({
   const rackRef = useRef<HTMLDivElement>(null);
   const revealRack = useRef(false);
   useEffect(() => {
-    if (!seqDocked || !revealRack.current) return;
+    if (!seqDocked || !revealRack.current) return undefined;
     revealRack.current = false;
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    rackRef.current?.scrollIntoView?.({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
+    // Two frames on: the strip put away as the module opens changes the dock's height, which is measured on the next
+    // frame, and the module's scroll margin is that height.
+    let raf = requestAnimationFrame(() => {
+      raf = requestAnimationFrame(() =>
+        rackRef.current?.scrollIntoView?.({
+          block: 'nearest',
+          behavior: reduce ? 'auto' : 'smooth',
+        })
+      );
+    });
+    return () => cancelAnimationFrame(raf);
   }, [seqDocked]);
+  // The bar's Sequencer button, which focus returns to when the module's power switch puts it away.
+  const seqBtnRef = useRef<HTMLButtonElement | null>(null);
+  const powerOff = () => {
+    setSeqOpen(false);
+    seqBtnRef.current?.focus();
+  };
 
   // With a pointer, the Sound Design strip is a drawer standing on the dock, outside the dock's height, so the lesson
   // card is lifted by the drawer's open height (`--kys-strip-h`) to stay above it rather than behind it. Observed as it
@@ -1456,6 +1472,8 @@ function Synth({
   const loadSharedPattern = () => {
     if (!sharedPattern?.pattern || !sharedFrom) return;
     loadPattern(sharedPattern.pattern, sharedFrom);
+    // Brought into view: the pattern opened is what the link was for.
+    revealRack.current = true;
     setSeqOpen(true);
     if (small) openSheet('sequencer');
   };
@@ -1670,11 +1688,12 @@ function Synth({
     if (afterLoad.current?.what === 'riff') queue('pattern', afterLoad.current.countIn);
     setPlaying(false);
   };
-  // Opened by the bar's Sequencer button or a panel button (t-85).
-  const openSequencer = () => {
+  // Opened by the bar's Sequencer button or a panel button (t-85). A panel button leaves the page where it is: the
+  // control just pressed stays in view rather than scroll away under the player's hand.
+  const openSequencer = (reveal = true) => {
     if (small) openSheet('sequencer');
     else {
-      revealRack.current = true;
+      revealRack.current = reveal;
       setSeqOpen(true);
       // The docked sequencer takes the strip's place: the drawer is put away, the lesson with it, rather than left
       // open behind it to come back up when the sequencer closes.
@@ -1854,7 +1873,7 @@ function Synth({
       else {
         if (b === 'arp') flipKeys('arp');
         else if (b === 'record') flipKeys('step');
-        if (!seqShown) openSequencer();
+        if (!seqShown) openSequencer(false);
         else if (b !== 'arp' && b !== 'record') seq.panelIn(b);
       }
     };
@@ -1979,7 +1998,11 @@ function Synth({
         ? seqLoad(p, { id: null, name: TUTOR_PATTERN_NAME }, { countIn: false })
         : seqEdit(p);
       if (!held) return null;
-      if (!small) setSeqOpen(true);
+      if (!small) {
+        // Brought into view under the panel, to show the tutor's pattern.
+        revealRack.current = true;
+        setSeqOpen(true);
+      }
       return { held, undo: seqUndo };
     },
     [seqEdit, seqLoad, seqUndo, small]
@@ -3003,7 +3026,7 @@ function Synth({
             into the same rack, rather than in the dock. Its power switch puts it away; so does the bar's Sequencer
             button, which brings it back. */}
             {seqDocked && (
-              <SequencerRack ref={rackRef} running={seq.playing} onPower={() => setSeqOpen(false)}>
+              <SequencerRack ref={rackRef} running={transportPlaying} onPower={powerOff}>
                 <Sequencer {...seqProps} />
               </SequencerRack>
             )}
@@ -3074,6 +3097,7 @@ function Synth({
                 {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach; on a phone they take a row of their own under Play, leaving the fullscreen button beside it. */}
                 <div className="kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 max-sm:order-last max-sm:basis-full lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">
                   <LayerToggle
+                    ref={seqBtnRef}
                     label="Sequencer"
                     short="Sequencer"
                     icon={<Columns4 size={17} aria-hidden="true" />}

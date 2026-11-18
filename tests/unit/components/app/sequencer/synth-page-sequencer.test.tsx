@@ -209,6 +209,8 @@ describe('the sequencer on the synth page', () => {
     fireEvent.click(button('Put the sequencer away'));
     expect(screen.queryByRole('region', { name: 'Sequencer' })).toBeNull();
     expect(button('Sequencer').getAttribute('aria-pressed')).toBe('false');
+    // Focus goes back to the bar's button, which brings the module back, rather than to the top of the page.
+    expect(document.activeElement).toBe(button('Sequencer'));
     fireEvent.click(button('Sequencer'));
     expect(sequencer()).toBeTruthy();
   });

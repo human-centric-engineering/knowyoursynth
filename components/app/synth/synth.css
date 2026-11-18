@@ -2217,6 +2217,7 @@ svg .kys-hit:focus-visible {
  * player's tooltips at the top of the screen. The sheet is outside the
  * player, where `--kys-wash` is set, so the sequencer falls back to white.
  */
+/* The admin pattern form's frame for the module (`pattern-form.tsx`); the synth page draws it in `.kys-rack`. */
 .kys-seq-dock {
   border-top: 1px solid rgb(var(--kys-wash, 255 255 255) / 0.06);
   background: linear-gradient(var(--kys-stage), var(--kys-stage-hi));
@@ -2226,7 +2227,8 @@ svg .kys-hit:focus-visible {
    under the panel, as if the synth and it shared one rack. Ears with Phillips
    screws either side, a brushed, anodised faceplate, the unit's name engraved
    along its top with a run lamp, vents and a power switch. It slides out of the
-   rack as it opens: a clip, not a transform, as its tooltips are `fixed`. */
+   rack as it opens: a clip (wide of its shadow), not a transform, as its
+   tooltips are `fixed`. */
 .kys-rack {
   --rack-face: #15171c;
   --rack-face-hi: rgb(255 255 255 / 0.05);
@@ -2283,11 +2285,11 @@ svg .kys-hit:focus-visible {
 }
 @keyframes kys-rack-in {
   from {
-    clip-path: inset(0 0 100% 0 round 6px);
+    clip-path: inset(-48px -48px 100% -48px);
     opacity: 0.3;
   }
   to {
-    clip-path: inset(0 0 0 0 round 6px);
+    clip-path: inset(-48px);
     opacity: 1;
   }
 }
@@ -2521,6 +2523,12 @@ svg .kys-hit:focus-visible {
   margin-left: auto;
   padding-left: 12px;
   border-left: 1px solid rgb(var(--kys-wash, 255 255 255) / 0.08);
+}
+/* Alone on its row (a module with no patterns strip), it has nothing to be ruled off from. */
+.kys-seq-backing:first-child {
+  margin-left: 0;
+  padding-left: 0;
+  border-left: 0;
 }
 /* The patterns' tools are no longer the row's last: the rule is Drums' own, on its left. */
 .kys-seq-lib-row > .kys-seq-tool-group {

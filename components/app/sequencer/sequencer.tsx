@@ -572,7 +572,7 @@ export function Sequencer({
   const playAlong = backing && (
     <div className="kys-seq-backing" role="group" aria-label="Play along">
       <span className="kys-seq-backing-label" aria-hidden="true">
-        Drums
+        Play along
       </span>
       <Toggle
         label="Count-in"
