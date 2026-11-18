@@ -468,7 +468,7 @@ export function usePanelHistory<S extends Panelled>(
       if (
         e.target instanceof Element &&
         e.target.closest(
-          'input, textarea, select, [contenteditable="true"], dialog, .kys-seq, .kys-seq-skin'
+          'input, textarea, select, [contenteditable="true"], dialog, .kys-seq, .kys-seq-skin, .kys-rack'
         )
       )
         return;

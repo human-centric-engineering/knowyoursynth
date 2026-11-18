@@ -2,11 +2,13 @@
 
 /**
  * The sequencer on the synth page (`f-step-sequencer` t-80): opened from the player bar, it holds the sound's riff,
- * and the bar's Play and the sequencer are one transport. From `lg` up it is in the dock; below it, in a bottom sheet.
+ * and the bar's Play and the sequencer are one transport. From `lg` up it is a rack module under the panel (t-281);
+ * below it, in a bottom sheet.
  * The audio engine is a fake that records what it is sent; the page, the panel and the sequencer are real.
  *
  * @see components/app/synth/synth-page.tsx
  * @see components/app/sequencer/sequencer.tsx
+ * @see components/app/sequencer/sequencer-rack.tsx
  */
 
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
@@ -163,7 +165,7 @@ afterEach(() => {
 });
 
 describe('the sequencer on the synth page', () => {
-  it('opens from the bar, in the dock, holding the sound’s riff', () => {
+  it('opens from the bar, under the panel, holding the sound’s riff', () => {
     page();
     expect(screen.queryByRole('region', { name: 'Sequencer' })).toBeNull();
     fireEvent.click(button('Sequencer'));
@@ -190,6 +192,64 @@ describe('the sequencer on the synth page', () => {
     expect(screen.queryByRole('heading', { name: 'Learn sound design' })).toBeNull();
     fireEvent.click(button('Sequencer'));
     expect(screen.getByRole('heading', { name: 'Learn sound design' })).toBeTruthy();
+  });
+
+  it('sits under the panel as a rack module, out of the pinned dock, which its power switch puts away (t-281)', async () => {
+    page();
+    fireEvent.click(button('Sequencer'));
+    const rack = sequencer().closest('.kys-rack');
+    expect(rack).not.toBeNull();
+    expect(rack?.closest('.kys-dock')).toBeNull();
+    expect(rack?.previousElementSibling?.classList.contains('kys-player-stage')).toBe(true);
+    // Its Run lamp is lit while the pattern plays.
+    expect(rack?.hasAttribute('data-running')).toBe(false);
+    await press('Play');
+    expect(sequencer().closest('.kys-rack')?.hasAttribute('data-running')).toBe(true);
+    await press('Stop');
+    fireEvent.click(button('Put the sequencer away'));
+    expect(screen.queryByRole('region', { name: 'Sequencer' })).toBeNull();
+    expect(button('Sequencer').getAttribute('aria-pressed')).toBe('false');
+    // Focus goes back to the bar's button, which brings the module back, rather than to the top of the page.
+    expect(document.activeElement).toBe(button('Sequencer'));
+    fireEvent.click(button('Sequencer'));
+    expect(sequencer()).toBeTruthy();
+  });
+
+  it('brings the rack into view under the panel when the bar opens it, on the next frame (t-281)', async () => {
+    const scrolled = vi.fn();
+    Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
+      configurable: true,
+      value: scrolled,
+    });
+    try {
+      page();
+      fireEvent.click(button('Sequencer'));
+      await act(async () => {
+        await new Promise((r) => requestAnimationFrame(() => r(undefined)));
+      });
+      expect(scrolled).toHaveBeenCalledTimes(1);
+      expect(scrolled.mock.contexts[0]).toBe(sequencer().closest('.kys-rack'));
+      expect(scrolled.mock.calls[0][0]).toMatchObject({ block: 'nearest' });
+      // Put away by its own switch, it is not scrolled to.
+      fireEvent.click(button('Put the sequencer away'));
+      await act(async () => {
+        await new Promise((r) => requestAnimationFrame(() => r(undefined)));
+      });
+      expect(scrolled).toHaveBeenCalledTimes(1);
+    } finally {
+      Reflect.deleteProperty(HTMLElement.prototype, 'scrollIntoView');
+    }
+  });
+
+  it('puts Count-in, Metronome and Drums on the pattern’s line, at its end (t-281)', () => {
+    page();
+    fireEvent.click(button('Sequencer'));
+    const row = within(sequencer()).getByRole('toolbar', { name: 'Patterns' });
+    const along = within(row).getByRole('group', { name: 'Play along' });
+    expect(row.lastElementChild).toBe(along);
+    expect(within(along).getByRole('button', { name: 'Count-in' })).toBeTruthy();
+    expect(within(along).getByRole('button', { name: 'Metronome' })).toBeTruthy();
+    expect(within(along).getByRole('combobox', { name: 'Drums' })).toBeTruthy();
   });
 
   it('makes Play play the pattern while it is open: the riff’s notes, as the pattern player plays them', async () => {

@@ -108,6 +108,7 @@ import {
 } from 'lucide-react';
 import { getEngine, listen } from '@/components/app/synth/engine';
 import { PAGE as SEQ_PAGE, Sequencer } from '@/components/app/sequencer/sequencer';
+import { SequencerRack } from '@/components/app/sequencer/sequencer-rack';
 import { sameValues, seqButtonFor, seqLamps } from '@/components/app/sequencer/panel-buttons';
 import {
   useSequencer,
@@ -869,9 +870,15 @@ function Synth({
   };
 
   // From `lg` up the dock is pinned to the bottom of the screen. The page keeps room under it to scroll past, and the
-  // panel is fitted to the height between the top of the panel and the dock (`panelFrameStyle` reads the variables).
+  // panel is fitted to the height between the top of the panel and the dock (`panelFrameStyle` reads the variables),
+  // less the sequencer's rack while it is open under the panel (t-281), so the two are on screen together.
   const rootRef = useRef<HTMLDivElement | null>(null);
   const dockRef = useRef<HTMLDivElement | null>(null);
+  // The sequencer is open; under the panel from `lg` up (a rack module, t-281), in its sheet below it.
+  const [seqOpen, setSeqOpen] = useState(false);
+  const seqDocked = !small && seqOpen;
+  // The sequencer's rack under the panel, from `lg` up while it is open.
+  const rackRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const root = rootRef.current;
     const dock = dockRef.current;
@@ -882,8 +889,11 @@ function Synth({
       root.style.removeProperty('--kys-fit-chrome');
       return undefined;
     }
+    const rack = rackRef.current;
     const measure = () => {
       const dockH = dock.offsetHeight;
+      // The rack with its margins (10px over it, 12px under it, in `.kys-rack`).
+      const rackH = rack?.isConnected ? rack.offsetHeight + 22 : 0;
       // Full screen, what is above the panel is the player's own top, not the page's header.
       const full = document.fullscreenElement;
       const top = full?.contains(scroller)
@@ -891,11 +901,14 @@ function Synth({
         : scroller.getBoundingClientRect().top + window.scrollY;
       root.style.setProperty('--kys-dock-h', `${dockH}px`);
       // The space over the panel and under it: what is above it on the page, the scroller's padding, the panel's
-      // rail and the dock.
-      root.style.setProperty('--kys-fit-chrome', `${Math.round(top + dockH + 40 + RAIL_H)}px`);
+      // rail, the rack and the dock.
+      root.style.setProperty(
+        '--kys-fit-chrome',
+        `${Math.round(top + dockH + rackH + 40 + RAIL_H)}px`
+      );
     };
     measure();
-    // Written on the next frame, not inside the observer's callback: a tall dock (the sequencer open) refits the
+    // Written on the next frame, not inside the observer's callback: a taller dock (the piano shown) or rack refits the
     // panel, which resizes the root it also watches, and a resize inside the callback is a "ResizeObserver loop".
     let frame = 0;
     const ro = new ResizeObserver(() => {
@@ -904,13 +917,14 @@ function Synth({
     });
     ro.observe(dock);
     ro.observe(root);
+    if (rack) ro.observe(rack);
     document.addEventListener('fullscreenchange', measure);
     return () => {
       cancelAnimationFrame(frame);
       ro.disconnect();
       document.removeEventListener('fullscreenchange', measure);
     };
-  }, [small, scrollerRef]);
+  }, [small, scrollerRef, seqDocked]);
 
   // The Sound Design tab lifts as the pointer comes near the dock (`stripNear`), inviting a press: not while the panel
   // is being worked (a drag, or a press or wheel on it within `PANEL_QUIET_MS`), so a turn of a knob at the panel's
@@ -1271,7 +1285,7 @@ function Synth({
   }, [engine, tempoBpm, following]);
   // The sequencer (`f-step-sequencer` t-80): it holds the sound's riff as a pattern. The bar's Play and the sequencer are one
   // transport: with the sequencer open, Play plays the pattern; either one starting stops the other, and Stop stops both.
-  const [seqOpen, setSeqOpen] = useState(false);
+  // (`seqOpen` is declared over the dock's measurement, which fits the panel around it.)
   // Mod lanes (t-82) play the panel with a lane's values in place of the panel's: the settings the voice gets, made the
   // same way, with those controls changed. A lane can't move the voice between mono, poly and dual, which would let go
   // of every held note on each step it did: a step that would plays the panel's settings.
@@ -1356,8 +1370,37 @@ function Synth({
     if (isLoading()) queue('pattern', true);
     else await patternNow();
   }, [isLoading, patternNow, queue]);
-  // Open in the dock from `lg` up, in its sheet below it.
-  const seqDocked = !small && seqOpen;
+  // Opened (from the bar, a panel button, the tutor or a shared pattern's link), the module is brought into view under
+  // the panel, above the pinned dock. Asked for by a count, so asking again with it already open scrolls to it too,
+  // and a request made below `lg`, where it is a sheet, is not taken up later.
+  const [revealAsked, setRevealAsked] = useState(0);
+  const revealShown = useRef(0);
+  const revealRack = useCallback(() => {
+    if (!small) setRevealAsked((n) => n + 1);
+  }, [small]);
+  useEffect(() => {
+    if (!seqDocked || revealAsked === revealShown.current) return undefined;
+    revealShown.current = revealAsked;
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    // On the next frame, once the dock is laid out without the strip the module put away; its scroll margin is the
+    // dock's height as it is then, read rather than taken from `--kys-dock-h`, which is written a frame later.
+    const raf = requestAnimationFrame(() => {
+      const rack = rackRef.current;
+      if (!rack) return;
+      const dockH = dockRef.current?.offsetHeight;
+      if (dockH !== undefined) rack.style.scrollMarginBottom = `${dockH + 16}px`;
+      rack.scrollIntoView?.({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
+      // The target is worked out as the scroll starts: from here the stylesheet's margin, which follows the dock, holds.
+      rack.style.removeProperty('scroll-margin-bottom');
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [seqDocked, revealAsked]);
+  // The bar's Sequencer button, which focus returns to when the module's power switch puts it away.
+  const seqBtnRef = useRef<HTMLButtonElement | null>(null);
+  const powerOff = () => {
+    setSeqOpen(false);
+    seqBtnRef.current?.focus();
+  };
 
   // With a pointer, the Sound Design strip is a drawer standing on the dock, outside the dock's height, so the lesson
   // card is lifted by the drawer's open height (`--kys-strip-h`) to stay above it rather than behind it. Observed as it
@@ -1446,6 +1489,8 @@ function Synth({
   const loadSharedPattern = () => {
     if (!sharedPattern?.pattern || !sharedFrom) return;
     loadPattern(sharedPattern.pattern, sharedFrom);
+    // Brought into view: the pattern opened is what the link was for.
+    revealRack();
     setSeqOpen(true);
     if (small) openSheet('sequencer');
   };
@@ -1664,6 +1709,7 @@ function Synth({
   const openSequencer = () => {
     if (small) openSheet('sequencer');
     else {
+      revealRack();
       setSeqOpen(true);
       // The docked sequencer takes the strip's place: the drawer is put away, the lesson with it, rather than left
       // open behind it to come back up when the sequencer closes.
@@ -1968,10 +2014,14 @@ function Synth({
         ? seqLoad(p, { id: null, name: TUTOR_PATTERN_NAME }, { countIn: false })
         : seqEdit(p);
       if (!held) return null;
-      if (!small) setSeqOpen(true);
+      if (!small) {
+        // Brought into view under the panel, to show the tutor's pattern.
+        revealRack();
+        setSeqOpen(true);
+      }
       return { held, undo: seqUndo };
     },
-    [seqEdit, seqLoad, seqUndo, small]
+    [seqEdit, seqLoad, seqUndo, small, revealRack]
   );
   const tutorPanel = useMemo(
     () => ({ values: stored.values, cables: stored.cables }),
@@ -2988,12 +3038,21 @@ function Synth({
               )}
             </div>
 
+            {/* The sequencer from `lg` up (t-281): a rack module in the page directly under the panel, as if bolted
+            into the same rack, rather than in the dock. Its power switch puts it away; so does the bar's Sequencer
+            button, which brings it back. */}
+            {seqDocked && (
+              <SequencerRack ref={rackRef} running={transportPlaying} onPower={powerOff}>
+                <Sequencer {...seqProps} />
+              </SequencerRack>
+            )}
+
             {/* The dock: the Sound Design strip, the bar and the deck. From `lg` up it is pinned to the bottom of the
             screen, and what opens from it (the lesson card, the sounds, the tutor) floats over the panel, so it never
             changes height unless the piano is put away. With a pointer, the strip floats over the foot of the panel and
             shows only while the pointer is near the dock. */}
             <div ref={dockRef} className="kys-dock">
-              {/* The sequencer in the dock takes the strip's place: what is being played is the pattern, not a lesson. */}
+              {/* The open sequencer takes the strip's place: what is being played is the pattern, not a lesson. */}
               {!seqDocked && (
                 <SoundDesign
                   steps={steps}
@@ -3054,6 +3113,7 @@ function Synth({
                 {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach; on a phone they take a row of their own under Play, leaving the fullscreen button beside it. */}
                 <div className="kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 max-sm:order-last max-sm:basis-full lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">
                   <LayerToggle
+                    ref={seqBtnRef}
                     label="Sequencer"
                     short="Sequencer"
                     icon={<Columns4 size={17} aria-hidden="true" />}
@@ -3152,12 +3212,6 @@ function Synth({
                   <FullscreenButton target={playerRef} />
                 </div>
               </div>
-
-              {seqDocked && (
-                <div className="kys-seq-dock">
-                  <Sequencer {...seqProps} />
-                </div>
-              )}
 
               {/* With the piano put away the deck still holds the harmonics, while they are on. */}
               <div className="kys-player-deck p-3 sm:p-4" hidden={!small && !deckOn && !harmOn}>

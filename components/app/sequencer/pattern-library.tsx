@@ -109,7 +109,16 @@ const capitalise = (text: string) => text.charAt(0).toUpperCase() + text.slice(1
 const failure = (err: unknown) =>
   err instanceof Error && err.message ? err.message : 'Try again.';
 
-export function PatternLibrary({ seq, library }: { seq: Sequencer; library: PatternLibraryProps }) {
+export function PatternLibrary({
+  seq,
+  library,
+  aside,
+}: {
+  seq: Sequencer;
+  library: PatternLibraryProps;
+  /** Shown at the row's right, after the patterns' tools: what plays along (t-281). */
+  aside?: ReactNode;
+}) {
   const {
     signedIn,
     signInHref,
@@ -521,6 +530,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
               { disabled: !own, pressed: playsWithSound, text: 'With patch' }
             )}
         </div>
+        {aside}
       </div>
 
       {form && (

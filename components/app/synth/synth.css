@@ -2208,17 +2208,342 @@ svg .kys-hit:focus-visible {
  * are drawn in the module's own skin: the tokens below, a dark unit with amber
  * windows in the dark theme and a light one with pale windows in the light theme.
  *
- * From `lg` up (the dock) it is one row of two columns: the readout, the keys
- * and the tools on the left (Help at the end of the tools), the step inspector on
- * the right. The bar's Sequencer button closes it. Below it (the
+ * From `lg` up (a rack module under the panel, t-281) it is one row of two
+ * columns: the readout, the keys and the tools on the left (Help at the end of
+ * the tools), the step inspector on the right. Its power switch and the bar's
+ * Sequencer button put it away. Below it (the
  * bottom sheet) it stacks. Media queries, not container queries: a size
  * container is the containing block of its fixed descendants, which put the
  * player's tooltips at the top of the screen. The sheet is outside the
  * player, where `--kys-wash` is set, so the sequencer falls back to white.
  */
+/* The admin pattern form's frame for the module (`pattern-form.tsx`); the synth page draws it in `.kys-rack`. */
 .kys-seq-dock {
   border-top: 1px solid rgb(var(--kys-wash, 255 255 255) / 0.06);
   background: linear-gradient(var(--kys-stage), var(--kys-stage-hi));
+}
+
+/* The rack (t-281): from `lg` up the sequencer is a 19-inch unit bolted in
+   under the panel, as if the synth and it shared one rack. Ears with Phillips
+   screws either side, a brushed, anodised faceplate, the unit's name engraved
+   along its top with a run lamp, vents and a power switch. It slides out of the
+   rack as it opens: a clip (wide of its shadow), not a transform, which would
+   move its `fixed` tooltips with it. A tip shown during the 0.42s slide is
+   clipped with the rest until it ends. */
+.kys-rack {
+  --rack-face: #15171c;
+  --rack-face-hi: rgb(255 255 255 / 0.05);
+  --rack-brush: rgb(255 255 255 / 0.014);
+  --rack-edge: #050608;
+  --rack-bevel: rgb(255 255 255 / 0.07);
+  --rack-ear: #1b1d23;
+  --rack-ear-hi: #2a2d35;
+  --rack-groove-dark: rgb(0 0 0 / 0.6);
+  --rack-groove-light: rgb(255 255 255 / 0.06);
+  --rack-ink: #b9bdc6;
+  --rack-engrave: #5d6472;
+  --rack-screw-hi: #e4e6ea;
+  --rack-screw-mid: #8b909a;
+  --rack-screw-lo: #33363d;
+  --rack-vent: #050608;
+  --rack-led-off: #3a1510;
+  --rack-power: #ff5a3c;
+  --rack-power-glow: rgb(255 90 60 / 0.65);
+  --rack-run: #ffb547;
+  --rack-run-glow: rgb(255 166 58 / 0.7);
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 28px;
+  margin: 10px 10px 12px;
+  border-radius: 6px;
+  box-shadow:
+    0 0 0 1px var(--rack-edge),
+    0 22px 36px -22px var(--kys-shadow);
+  scroll-margin-top: 16px;
+  scroll-margin-bottom: calc(var(--kys-dock-h, 0px) + 16px);
+  animation: kys-rack-in 0.42s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+:root:not(.dark) .kys-rack {
+  --rack-face: #e3e6ea;
+  --rack-face-hi: rgb(255 255 255 / 0.7);
+  --rack-brush: rgb(0 0 0 / 0.018);
+  --rack-edge: #a9b1bc;
+  --rack-bevel: rgb(255 255 255 / 0.9);
+  --rack-ear: #d3d8de;
+  --rack-ear-hi: #eef0f3;
+  --rack-groove-dark: rgb(20 28 40 / 0.22);
+  --rack-groove-light: rgb(255 255 255 / 0.9);
+  --rack-ink: #2a313d;
+  --rack-engrave: #6f7888;
+  --rack-screw-hi: #ffffff;
+  --rack-screw-mid: #a7adb6;
+  --rack-screw-lo: #6c727c;
+  --rack-vent: #7f8793;
+  --rack-led-off: #e7cfc9;
+  --rack-power: #e2401f;
+  --rack-power-glow: rgb(226 64 31 / 0.35);
+  --rack-run: #f59a1f;
+  --rack-run-glow: rgb(245 154 31 / 0.45);
+}
+@keyframes kys-rack-in {
+  from {
+    clip-path: inset(-48px -48px 100% -48px);
+    opacity: 0.3;
+  }
+  to {
+    clip-path: inset(-48px);
+    opacity: 1;
+  }
+}
+
+/* The ears: brushed metal, a screw at each end, the maker's engraving between. */
+.kys-rack-ear {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 0.25), transparent 30%, transparent 70%, rgb(0 0 0 / 0.3)),
+    repeating-linear-gradient(0deg, var(--rack-brush) 0 1px, transparent 1px 3px),
+    linear-gradient(var(--rack-ear-hi), var(--rack-ear));
+  box-shadow: inset 0 1px 0 var(--rack-bevel);
+}
+.kys-rack-ear.is-left {
+  border-radius: 6px 0 0 6px;
+  box-shadow:
+    inset 0 1px 0 var(--rack-bevel),
+    inset -1px 0 0 var(--rack-edge);
+}
+.kys-rack-ear.is-right {
+  border-radius: 0 6px 6px 0;
+  box-shadow:
+    inset 0 1px 0 var(--rack-bevel),
+    inset 1px 0 0 var(--rack-edge);
+}
+.kys-rack-ear-text {
+  writing-mode: vertical-rl;
+  font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
+  font-size: 7.5px;
+  letter-spacing: 0.32em;
+  color: var(--rack-engrave);
+  text-shadow: 0 1px 0 var(--rack-groove-light);
+  user-select: none;
+}
+.kys-rack-ear.is-left .kys-rack-ear-text {
+  rotate: 180deg;
+}
+/* A Phillips screw, lit from the top left, sunk in its hole. */
+.kys-rack-screw {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 30%,
+    var(--rack-screw-hi),
+    var(--rack-screw-mid) 45%,
+    var(--rack-screw-lo) 80%
+  );
+  box-shadow:
+    0 0 0 1.5px var(--rack-edge),
+    0 1px 1px 1.5px var(--rack-groove-light);
+}
+.kys-rack-screw::before,
+.kys-rack-screw::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 1.5px;
+  margin: -0.75px 0 0 -3.5px;
+  border-radius: 1px;
+  background: var(--rack-screw-lo);
+  rotate: 20deg;
+}
+.kys-rack-screw::after {
+  rotate: 110deg;
+}
+.kys-rack-ear .kys-rack-screw:last-child::before {
+  rotate: -35deg;
+}
+.kys-rack-ear .kys-rack-screw:last-child::after {
+  rotate: 55deg;
+}
+
+/* The faceplate: anodised, brushed side to side, bevelled at its top edge. The
+   module's own skin draws the readout and the keys on it. */
+.kys-rack-face {
+  min-width: 0;
+  background:
+    linear-gradient(var(--rack-face-hi), transparent 90px),
+    repeating-linear-gradient(90deg, var(--rack-brush) 0 1px, transparent 1px 4px), var(--rack-face);
+  box-shadow:
+    inset 0 1px 0 var(--rack-bevel),
+    inset 0 -1px 0 var(--rack-edge);
+}
+
+/* The plate along the top: model, name, an engraved groove, the run lamp, vents and power. */
+.kys-rack-plate {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 30px;
+  padding: 0 10px 0 14px;
+  box-shadow: 0 1px 0 var(--rack-groove-light);
+  border-bottom: 1px solid var(--rack-groove-dark);
+  user-select: none;
+}
+.kys-rack-model {
+  font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--kys-accent);
+  white-space: nowrap;
+}
+.kys-rack-model-dot {
+  padding: 0 0.12em;
+  color: var(--rack-engrave);
+}
+.kys-rack-name {
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--rack-ink);
+  white-space: nowrap;
+}
+.kys-rack-groove {
+  flex: 1;
+  min-width: 24px;
+  height: 2px;
+  background: linear-gradient(var(--rack-groove-dark) 50%, var(--rack-groove-light) 50%);
+}
+.kys-rack-run {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--rack-engrave);
+}
+.kys-rack-run-led,
+.kys-rack-power-led {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rack-led-off);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.45);
+  transition:
+    background 0.12s ease,
+    box-shadow 0.12s ease;
+}
+.kys-rack[data-running] .kys-rack-run-led {
+  background: var(--rack-run);
+  box-shadow:
+    0 0 6px 1px var(--rack-run-glow),
+    inset 0 0 0 1px rgb(255 255 255 / 0.25);
+}
+.kys-rack[data-running] .kys-rack-run {
+  color: var(--rack-ink);
+}
+.kys-rack-vents {
+  width: 46px;
+  height: 10px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(90deg, var(--rack-vent) 0 3px, transparent 3px 6px);
+  box-shadow: 0 1px 0 var(--rack-groove-light);
+  opacity: 0.85;
+}
+/* The power switch: a small square cap with its lamp lit while the module is in. */
+.kys-rack-power {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 4px;
+  color: var(--rack-ink);
+  background: linear-gradient(var(--rack-ear-hi), var(--rack-ear));
+  box-shadow:
+    inset 0 1px 0 var(--rack-bevel),
+    0 0 0 1px var(--rack-edge),
+    0 1px 2px rgb(0 0 0 / 0.35);
+  transition: color 0.12s ease;
+}
+.kys-rack-power:hover {
+  color: var(--kys-text);
+}
+.kys-rack-power:focus-visible {
+  outline: 2px solid var(--kys-accent);
+  outline-offset: 2px;
+}
+.kys-rack-power:active {
+  box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.5);
+}
+.kys-rack-power-led {
+  background: var(--rack-power);
+  box-shadow:
+    0 0 6px 1px var(--rack-power-glow),
+    inset 0 0 0 1px rgb(255 255 255 / 0.25);
+  animation: kys-rack-power-on 0.6s steps(1) 0.12s backwards;
+}
+@keyframes kys-rack-power-on {
+  0% {
+    opacity: 0.15;
+  }
+  25% {
+    opacity: 1;
+  }
+  45% {
+    opacity: 0.35;
+  }
+  60% {
+    opacity: 1;
+  }
+}
+.kys-rack .kys-seq {
+  padding: 12px 14px 14px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .kys-rack,
+  .kys-rack-power-led {
+    animation: none;
+  }
+}
+
+/* What plays along (t-281): Count-in, Metronome and Drums, on the pattern's
+   line at its right, behind an engraved name. */
+.kys-seq-backing {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  padding-left: 12px;
+  border-left: 1px solid rgb(var(--kys-wash, 255 255 255) / 0.08);
+}
+/* Alone on its row (a module with no patterns strip), it has nothing to be ruled off from. */
+.kys-seq-backing:first-child {
+  margin-left: 0;
+  padding-left: 0;
+  border-left: 0;
+}
+/* Followed by Play along, the patterns' tools leave the rule to it, on its left. */
+.kys-seq-tool-group:has(+ .kys-seq-backing) {
+  padding-right: 0;
+  border-right: 0;
+}
+.kys-seq-backing-label {
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--kys-faint);
 }
 /* The module's skin. `.kys-seq-skin` carries it to what the module opens outside itself (View all's dialog). */
 .kys-seq,
@@ -2627,7 +2952,9 @@ svg .kys-hit:focus-visible {
 .kys-seq-toggle.is-on {
   color: var(--kys-text);
 }
-.kys-seq-head .kys-seq-toggle {
+/* Play along's keys (t-281) are drawn as the readout's. */
+.kys-seq-head .kys-seq-toggle,
+.kys-seq-backing .kys-seq-toggle {
   height: 44px;
   flex-direction: column;
   justify-content: center;
@@ -3405,6 +3732,7 @@ svg .kys-hit:focus-visible {
     height: 44px;
   }
   .kys-seq-head .kys-seq-toggle,
+  .kys-seq-backing .kys-seq-toggle,
   .kys-seq-play {
     height: 48px;
   }

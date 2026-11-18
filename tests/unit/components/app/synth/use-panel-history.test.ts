@@ -178,6 +178,19 @@ describe('usePanelHistory', () => {
     sheet.parentElement?.remove();
     expect(result.current.canUndo).toBe(false);
   });
+
+  it('leaves ⌘Z on the sequencer rack’s faceplate to the sequencer, not the panel (t-281)', () => {
+    const { result, turn } = setup();
+    turn(1);
+    const rack = document.createElement('div');
+    rack.className = 'kys-rack';
+    const power = document.createElement('button');
+    rack.appendChild(power);
+    document.body.appendChild(rack);
+    fireEvent.keyDown(power, { key: 'z', metaKey: true });
+    rack.remove();
+    expect(result.current.canUndo).toBe(true);
+  });
 });
 
 describe('usePanelHistory loads (f-default-patch t-172)', () => {
