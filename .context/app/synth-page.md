@@ -266,8 +266,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   the screen, as a hardware panel's lip carries its smaller switches. They take the synth's own
   faceplate colour and print in its silkscreen ink (`theme.panel`, `panel2` and `ink`, passed as
   `--rail-face`, `--rail-face2` and `--rail-print`), or the outline drawing's paper and ink. The
-  head (`.is-top`) carries Sections, Signal and Sensitive, the inspector, Signal routing, then the
-  tour and its help at the right; each layer is its icon (with its word from `xl` up and below `lg`) and an LED
+  head (`.is-top`) carries Signal routing, Signal and Sensitive at the left, and at the right Undo and
+  Redo, the inspector, Sections, then the tour and its help (t-276); each layer is its icon (with its word from `xl` up and below `lg`) and an LED
   lit while it is over the panel. The foot (`.is-foot`) carries how the panel is drawn (Hardware or
   Outline; Layout, on a synth with a layout of its own (below): Modular or Long, or Compact or Full; and on a panel printed in another language, its Labels in that language or
   English, `kys.english`, kept in this browser), the magnifier and Hover help (the card that pops up when you point at a
