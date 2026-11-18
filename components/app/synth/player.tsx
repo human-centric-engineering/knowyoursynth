@@ -53,8 +53,8 @@ export function Wordmark({ lit, lesson = false }: { lit: boolean; lesson?: boole
 }
 
 /**
- * The patch picker (t-74): the patch's name under the panel, as a button that opens the library (t-207, from the start
- * of the player bar before). It opens the library as a drawer down the left of the screen (`SoundsDrawer`), over the
+ * The patch picker (t-74): the patch's name as a button that opens the library: at the start of the Play deck's bar,
+ * before Play (t-279; under the panel from t-207 until then, where the name now only reads). It opens the library as a drawer down the left of the screen (`SoundsDrawer`), over the
  * panel and the Play deck, so it has the screen's height whatever the deck holds (a bottom sheet below `lg`). Its LED
  * pulses while a patch loads, when the keys are silent (`f-default-patch` t-172), so a dead key reads as "wait", not as
  * broken. Its text is the name alone, which a long one can run past: its tooltip is the whole name, with its "In the
@@ -67,6 +67,7 @@ export function SoundPicker({
   soundsOpen = false,
   loading = false,
   buttonRef,
+  compact = false,
 }: {
   /** What is on the panel: a library sound, one of the user's, or "Default patch". */
   soundName: string;
@@ -80,12 +81,14 @@ export function SoundPicker({
   loading?: boolean;
   /** The button, for the drawer: a press on it toggles the drawer rather than closing it, and focus comes back to it. */
   buttonRef?: RefObject<HTMLButtonElement | null>;
+  /** In the Play deck's bar, before Play (t-279): at Play's height, its name in the bar's size. */
+  compact?: boolean;
 }) {
   return (
     <button
       ref={buttonRef}
       type="button"
-      className="kys-title-pick"
+      className={`kys-title-pick ${compact ? 'is-compact' : ''}`}
       onClick={onChooseSound}
       aria-expanded={soundsOpen}
       aria-label={`Choose a patch (now: ${soundName}${loading ? ', loading' : ''})`}

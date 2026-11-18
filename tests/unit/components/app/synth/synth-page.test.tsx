@@ -224,7 +224,7 @@ const chooseDefaultPatch = () => {
 const setting = (name: string | RegExp) =>
   within(screen.getByRole('group', { name: 'Panel settings' })).getByRole('button', { name });
 /** The sound named after "Loaded:" over the panel. The library and the lesson name it too. */
-const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
+const loadedName = () => screen.getByText('Patch:').nextElementSibling?.textContent;
 const paramsSent = () =>
   engine.send.mock.calls
     .map((c) => c[0] as { type: string; p?: Record<string, unknown> })
@@ -324,7 +324,7 @@ describe('SynthPage layout', () => {
       'Behringer Model D · Modelled on the 1970 Minimoog Model D'
     );
     expect(loadedName()).toBe('Default patch');
-    expect(screen.getByText('Loaded:')).toBeTruthy();
+    expect(screen.getByText('Patch:')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'About ›' })).toBeTruthy();
     expect(screen.getByText(MODEL_D_SYNTH.summary)).toBeTruthy();
   });
@@ -356,10 +356,10 @@ describe('SynthPage layout', () => {
     expect(screen.queryByText(/controls? moved/)).toBeNull();
     // Chosen from the patches drawer, where it is first: the bar has no button of its own for it (t-208).
     expect(screen.queryByRole('button', { name: 'Default patch' })).toBeNull();
-    // The patch is chosen from its name under the panel, not from the Play deck's bar (t-207).
+    // The patch is chosen in the Play deck's bar, before Play (t-279); under the panel it is only named.
     const pick = button(/^Choose a patch/);
-    expect(pick.closest('section[aria-label="The patch on the panel"]')).not.toBeNull();
-    expect(pick.closest('.kys-player-bar')).toBeNull();
+    expect(pick.closest('.kys-player-bar')).not.toBeNull();
+    expect(pick.closest('section[aria-label="The patch on the panel"]')).toBeNull();
     expect(screen.queryByRole('button', { name: 'Restore patch' })).toBeNull();
     // Model D's Default patch opens the filter all the way, where init leaves it at 1.
     expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
@@ -2606,7 +2606,7 @@ describe('SynthPage engine errors', () => {
 describe('SynthPage sounds', () => {
   // At `lg` and up the region these use is in its drawer (t-70).
 
-  const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
+  const loadedName = () => screen.getByText('Patch:').nextElementSibling?.textContent;
 
   it('with no sounds it opens on the Default patch, which plays its scale', async () => {
     page({ detail: { ...detail, sounds: [] } });

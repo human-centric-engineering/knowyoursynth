@@ -82,6 +82,11 @@ export interface PatternLibraryProps {
   suggested?: SuggestedPatterns | null;
   /** What the riff is called while no pattern is held (t-224): the page's name for it, as Play's picker shows it. */
   riffName?: string;
+  /**
+   * The page's pattern picker (t-279), drawn in place of the Pattern readout, with what it reads: the readout becomes
+   * the place a pattern is chosen from the patch's own and the library's.
+   */
+  picker?: (name: string, edited: boolean) => ReactNode;
 }
 
 type Panel = 'mine' | 'library' | 'share' | 'sound' | null;
@@ -391,11 +396,15 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
   return (
     <div className="kys-seq-lib">
       <div className="kys-seq-lib-row" role="toolbar" aria-label="Patterns">
-        <p className="kys-seq-lib-name" aria-live="polite">
-          <span className="kys-seq-lib-label">Pattern</span>
-          <span className="kys-seq-lib-value">{loaded?.name ?? riffName}</span>
-          {edited && <span className="kys-seq-lib-edited">edited</span>}
-        </p>
+        {library.picker ? (
+          library.picker(loaded?.name ?? riffName, edited)
+        ) : (
+          <p className="kys-seq-lib-name" aria-live="polite">
+            <span className="kys-seq-lib-label">Pattern</span>
+            <span className="kys-seq-lib-value">{loaded?.name ?? riffName}</span>
+            {edited && <span className="kys-seq-lib-edited">edited</span>}
+          </p>
+        )}
         <div className="kys-seq-tool-group">
           {signedIn === false ? (
             <a className="kys-seq-lib-signin" href={signInHref}>

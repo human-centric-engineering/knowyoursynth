@@ -193,7 +193,7 @@ function page(over: Partial<SynthPageProps> = {}) {
 }
 
 /** The sound named after "Loaded:" over the panel. The library and the lesson name it too. */
-const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
+const loadedName = () => screen.getByText('Patch:').nextElementSibling?.textContent;
 beforeEach(() => {
   window.localStorage.clear();
   tallScreen();

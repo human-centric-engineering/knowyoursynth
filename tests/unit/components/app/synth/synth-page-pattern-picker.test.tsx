@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 
 /**
- * The pattern picker in the Play deck (`f-pattern-picker` t-213), on the synth page: a pattern picked beside Play is
- * what Play plays with the sequencer closed, one of the user's sounds that points at a pattern plays it the same way,
- * and another patch puts back its riff. The page, the panel and the sequencer are real; the audio engine records what
+ * The pattern picker (`f-pattern-picker` t-213), on the synth page: the sequencer's Pattern readout since t-279 (beside
+ * Play before). A pattern picked there is what Play plays, the sequencer open or closed after, one of the user's sounds
+ * that points at a pattern plays it the same way, and another patch puts back its riff. The page, the panel and the sequencer are real; the audio engine records what
  * it is sent, the API is a fake behind `apiClient`, and the sound detector answers at once, since what it hears is not
  * what these tests are about.
  *
@@ -247,6 +247,8 @@ const press = async (name: string | RegExp) => {
   });
 };
 const picker = () => button(/^Choose what Play plays/);
+/** Opens or closes the sequencer, whose Pattern readout the picker is. */
+const sequencer = () => fireEvent.click(button('Sequencer'));
 const chooseSound = (name: string) => {
   fireEvent.click(button(/^Choose a patch/));
   fireEvent.click(
@@ -272,17 +274,28 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('the pattern picker beside Play', () => {
+describe('the pattern picker in the sequencer', () => {
+  it('is not on the page while the sequencer is closed', () => {
+    page();
+    expect(screen.queryByRole('button', { name: /^Choose what Play plays/ })).toBeNull();
+    sequencer();
+    expect(picker().closest('.kys-seq-lib-row')).not.toBeNull();
+    expect(picker().textContent).toContain('Pattern');
+    expect(picker().textContent).not.toContain('Plays');
+  });
+
   it('names the riff by its sound until a pattern is picked, and Play plays the riff', async () => {
     page();
+    sequencer();
     expect(picker().getAttribute('aria-label')).toBe('Choose what Play plays (now: Fat bass)');
     await press('Play');
     // Through the sequencer (t-234).
     expectRiff(sent().at(-1), FAT_BASS.phrase);
   });
 
-  it('makes a picked pattern what Play plays with the sequencer closed', async () => {
+  it('makes a picked pattern what Play plays once the sequencer is closed', async () => {
     page();
+    sequencer();
     fireEvent.click(picker());
     const pick = await within(screen.getByRole('dialog', { name: 'Patterns' })).findByRole(
       'button',
@@ -310,7 +323,8 @@ describe('the pattern picker beside Play', () => {
     expect(picker().getAttribute('aria-label')).toBe(
       'Choose what Play plays (now: Rolling eighths)'
     );
-    expect(screen.queryByRole('region', { name: 'Sequencer' })).toBeNull();
+    sequencer();
+    expect(screen.queryByRole('button', { name: /^Choose what Play plays/ })).toBeNull();
 
     engine.send.mockClear();
     await press('Play');
@@ -326,6 +340,7 @@ describe('the pattern picker beside Play', () => {
     page();
     await press('Play');
     expectRiff(sent().at(-1), FAT_BASS.phrase);
+    sequencer();
     fireEvent.click(picker());
     const pick = await screen.findByRole('button', { name: /Rolling eighths/ }, { timeout: 3000 });
     await act(async () => {
@@ -346,13 +361,15 @@ describe('the pattern picker beside Play', () => {
       ...detail,
       sounds: [{ ...FAT_BASS, defaultPattern: { id: ROLLING.id, name: ROLLING.name } }, WOBBLE],
     });
-    // The riff is named for its default before the picker is opened, and naming it reads none of its patterns.
-    expect(picker().getAttribute('aria-label')).toBe(
-      'Choose what Play plays (now: Rolling eighths)'
-    );
+    // Naming the riff for its default reads none of the sound's patterns: the sequencer, opened, reads them.
     expect(api.get).not.toHaveBeenCalledWith(
       '/api/v1/synths/model-d/sounds/fat-bass/patterns',
       undefined
+    );
+    sequencer();
+    // The riff is named for its default before the picker is opened.
+    expect(picker().getAttribute('aria-label')).toBe(
+      'Choose what Play plays (now: Rolling eighths)'
     );
     fireEvent.click(picker());
     const own = await screen.findByRole('list', { name: 'Fat bass’s patterns' }, { timeout: 3000 });
@@ -369,6 +386,7 @@ describe('the pattern picker beside Play', () => {
 
   it('goes back to the new patch’s riff, by name, when another patch is chosen', async () => {
     page();
+    sequencer();
     fireEvent.click(picker());
     const pick = await screen.findByRole('button', { name: /Rolling eighths/ }, { timeout: 3000 });
     await act(async () => {
@@ -426,7 +444,7 @@ describe('one of the user’s sounds that plays a pattern', () => {
   };
   SAVED.pattern.parts[0].steps[0] = { on: true, notes: [{ note: 36, gate: 1 }] };
 
-  it('plays it with the sequencer closed, as Play names it', async () => {
+  it('plays it with the sequencer closed, as the sequencer names it', async () => {
     auth.signedIn = true;
     serve({
       '/api/v1/sounds': [summary],
@@ -437,10 +455,11 @@ describe('one of the user’s sounds that plays a pattern', () => {
     fireEvent.click(button(/^Choose a patch/));
     const patches = screen.getByRole('dialog', { name: 'Patches' });
     fireEvent.click(await within(patches).findByRole('button', { name: /Night bass/ }));
+    sequencer();
     await waitFor(() =>
       expect(picker().getAttribute('aria-label')).toBe('Choose what Play plays (now: Night groove)')
     );
-    expect(screen.queryByRole('region', { name: 'Sequencer' })).toBeNull();
+    sequencer();
     engine.send.mockClear();
     await press('Play');
     expect(sent().some((m) => m.type === 'phrase')).toBe(false);

@@ -1523,7 +1523,7 @@ function Synth({
           defaultId: libraryPreset.defaultPattern?.id ?? null,
         }
       : null;
-  // The Play deck's pattern picker (`f-pattern-picker` t-213) lists them too, so they are read while it is open.
+  // The sequencer's pattern picker (`f-pattern-picker` t-213) lists them too, so they are read while it is open.
   const [patternsOpen, setPatternsOpen] = useState(false);
   const soundPatterns = useSoundPatterns(librarySound, seqShown || patternsOpen);
   // Patterns that suit the patch as it is now (t-125). A library sound is offered them once the patch has moved far
@@ -1570,7 +1570,7 @@ function Synth({
     arrivedOnPatch.current = false;
     newPatch();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
-  // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked beside Play, the
+  // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked in the sequencer, the
   // one a sound of the user's plays) or the riff edited, and with no sound's riff to play; otherwise the riff, which the
   // sequencer holds as it came. A new patch puts back its riff in the sequencer, and Play with it.
   const playsPattern = seqShown || !!seqLoaded || seq.edited || !shown;
@@ -1596,9 +1596,6 @@ function Synth({
     : ownSoundPending
       ? RIFF_FALLBACK
       : panelName;
-  const playsName = playsPattern
-    ? `${seqLoaded?.name ?? riffName}${seq.edited ? ' (edited)' : ''}`
-    : riffName;
   const seqLibrary: PatternLibraryProps = {
     signedIn: authPending ? null : signedIn,
     // Save a copy is offered to someone else's pattern only; its owner saves it as any pattern of theirs.
@@ -1623,6 +1620,25 @@ function Synth({
           },
         }
       : null,
+    // The sequencer's Pattern readout is the pattern picker (t-213; beside Play until t-279): the patch's own
+    // patterns, then the whole library.
+    picker: (name, edited) => (
+      <PatternPicker
+        synthId={synthId}
+        plays={name}
+        edited={edited}
+        open={patternsOpen}
+        onOpenChange={setPatternsOpen}
+        sheet={small}
+        own={soundPatterns}
+        ranked={ranked}
+        current={pickerCurrent}
+        load={loadPattern}
+        // Picked while the riff plays, the pattern takes over (the sequencer starts it from its top), as it does when
+        // the sequencer opens.
+        onPicked={riffToPattern}
+      />
+    ),
   };
   // What the module is handed in the dock and in the sheet alike: the pattern and the page's one transport.
   const seqProps = {
@@ -2880,16 +2896,11 @@ function Synth({
                     {/* The sound's name, and beside it what can be done with it: keep it. */}
                     <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
                       <p className="flex max-w-full min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1.5">
-                        <span className="sr-only">Loaded:</span>
-                        {/* The patch is chosen from its name (t-207): the Play deck's bar is for playing. */}
-                        <SoundPicker
-                          buttonRef={soundPickRef}
-                          loading={loading}
-                          soundName={panelName}
-                          soundRef={described?.ref ?? null}
-                          onChooseSound={chooseSound}
-                          soundsOpen={!small && soundsOpen}
-                        />
+                        {/* The patch by name: it is chosen in the Play deck's bar, beside Play (t-279). */}
+                        <span className="flex min-w-0 items-baseline gap-2">
+                          <span className="shrink-0 text-sm text-(--kys-muted)">Patch:</span>
+                          <span className="kys-sound-title truncate">{panelName}</span>
+                        </span>
                         {openSound && (
                           <span className="shrink-0 rounded border border-(--kys-line) px-1.5 py-0.5 font-mono text-xs text-(--kys-muted)">
                             mine
@@ -3014,8 +3025,18 @@ function Synth({
               )}
 
               <div className="kys-player-bar flex flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2 text-sm sm:px-4 lg:flex-nowrap">
+                {/* The patch is chosen here, before Play (t-279; under the panel's name from t-207): the bar plays it. */}
+                <SoundPicker
+                  buttonRef={soundPickRef}
+                  loading={loading}
+                  soundName={panelName}
+                  soundRef={described?.ref ?? null}
+                  onChooseSound={chooseSound}
+                  soundsOpen={!small && soundsOpen}
+                  compact
+                />
                 {/* Always there while something plays, so a pattern can be stopped with the sequencer closed. The Play
-                deck's first and biggest control, outside the scrolling row so nothing clips its glow (t-210). */}
+                deck's biggest control, outside the scrolling row so nothing clips its glow (t-210). */}
                 {(shown || seqShown || seqLoaded || transportPlaying) && (
                   <PlayButton
                     playing={transportPlaying}
@@ -3030,21 +3051,6 @@ function Synth({
                     }
                   />
                 )}
-                {/* What Play plays, beside it (t-213): the patch's own patterns, then the whole library. */}
-                <PatternPicker
-                  synthId={synthId}
-                  plays={playsName}
-                  open={patternsOpen}
-                  onOpenChange={setPatternsOpen}
-                  sheet={small}
-                  own={soundPatterns}
-                  ranked={ranked}
-                  current={pickerCurrent}
-                  load={loadPattern}
-                  // Picked while the riff plays, the pattern takes over (the sequencer starts it from its top), as it
-                  // does when the sequencer opens.
-                  onPicked={riffToPattern}
-                />
                 {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach; on a phone they take a row of their own under Play, leaving the fullscreen button beside it. */}
                 <div className="kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 max-sm:order-last max-sm:basis-full lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">
                   <LayerToggle

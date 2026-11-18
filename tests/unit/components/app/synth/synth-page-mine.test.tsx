@@ -201,7 +201,7 @@ const soundLibrary = () => {
   openSide('Sounds');
   return screen.getByRole('region', { name: 'Patch library' });
 };
-const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
+const loadedName = () => screen.getByText('Patch:').nextElementSibling?.textContent;
 const cutoff = () =>
   screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow');
 const mySounds = () => {
