@@ -117,7 +117,7 @@ export interface SynthPanelProps {
   zoom?: number;
   areasOn?: boolean;
   dimOn?: boolean;
-  /** The live glow over "In use" (`f-live-panel`): what to light and the engine to listen to. Null = none. */
+  /** Live signal's glow (`f-live-panel`), over the dimming or without it: what to light and the engine to listen to. Null = none. */
   liveGlow?: LiveGlow | null;
   heatOn?: boolean;
   onChange: ControlChange;

@@ -226,11 +226,11 @@ export interface TourProps {
   /** The catalogue's "Unusual on…" notes: id → text. */
   notes: UnusualNotes;
   /** The synth has a routing: its last stop names Live signal and Signal diagram, which only such a synth has. */
-  routed?: boolean;
+  routed: boolean;
   onClose: () => void;
 }
 
-export function Tour({ def, notes, routed = false, onClose }: TourProps) {
+export function Tour({ def, notes, routed, onClose }: TourProps) {
   const stops = useMemo(() => buildTour(def, notes), [def, notes]);
   const [i, setI] = useState(0);
   const bodyRef = useRef<HTMLDivElement>(null);

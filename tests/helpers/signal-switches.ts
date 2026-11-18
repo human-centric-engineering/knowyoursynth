@@ -1,6 +1,6 @@
 /**
  * Signal's switches on the panel's top rail (`f-live-panel` t-150, t-279), for page tests: Dim unused parts (once
- * "In use", then "Path") and Live signal, each a toggle of its own, and whether each is on.
+ * the Signal menu's "In use") and Live signal, each a toggle of its own, and whether each is on.
  *
  * Found by their labels with a selector rather than by role: the synth page is large, and a role query over all of it
  * takes seconds in happy-dom.
