@@ -10,16 +10,17 @@
  * goes by what the pattern was inspired by, or by `fallbackInspiredBy` (the style the catalogue sends with the sound's
  * default pattern, for the sound's own riff), then by the tempo and swing (`drumStyleFor`).
  *
- * Another patch brings the drums back to Match, so the beat is the one that suits the new patch rather than one chosen
- * for the last. Off stays off. A beat chosen by name is kept with the patch it was chosen on (`drumsFor`), so it lasts
- * through a reload, and through the moments a page takes to read which patch is open, until `patchKey` names another.
+ * Every patch chosen starts with the drums on Match and the Count-in on (t-277), whatever was set on the last one, Off
+ * included: the beat is the one that suits the new patch. The Metronome is left as it was. What is chosen on a patch is
+ * kept with it (`drumsFor`), so it lasts through a reload, and through the moments a page takes to read which patch is
+ * open, until `patchKey` names another.
  *
  * The stored setting is read by `useBackingPref`, apart from the rest.
  */
 
 import { useEffect, useMemo } from 'react';
 import { z } from 'zod';
-import { STORAGE_KEYS, useStoredPref } from '@/components/app/synth/storage';
+import { STORAGE_KEYS, readStored, useStoredPref } from '@/components/app/synth/storage';
 import {
   DRUM_BEAT_IDS,
   beatGrid,
@@ -37,12 +38,12 @@ const BackingPrefSchema = z.object({
   metronome: z.boolean(),
   countIn: z.boolean(),
   drums: z.enum(DRUM_CHOICES),
-  /** The patch a beat chosen by name was chosen on. */
+  /** The patch the drums and the Count-in were last set for. */
   drumsFor: z.string().nullable().optional(),
 });
 export type BackingPref = z.infer<typeof BackingPrefSchema>;
 
-export const DEFAULT_BACKING: BackingPref = { metronome: false, countIn: true, drums: 'off' };
+export const DEFAULT_BACKING: BackingPref = { metronome: false, countIn: true, drums: 'auto' };
 
 export interface Backing {
   metronome: boolean;
@@ -70,12 +71,16 @@ export function useBacking(
     patchKey = null,
   }: { fallbackInspiredBy?: string | null; patchKey?: string | null } = {}
 ): Backing {
-  // Another patch: a beat chosen by name gives way to the one that matches it.
-  const named = pref.drums !== 'off' && pref.drums !== 'auto';
+  // Another patch: the drums go to the beat that matches it, and the Count-in comes on.
+  // The stored setting is read from storage here, not from `pref`: the page's first render holds the default until
+  // storage is read after it, and deciding on that would overwrite a choice made on this patch before a reload.
   useEffect(() => {
-    if (named && patchKey !== null && pref.drumsFor !== patchKey)
-      setPref({ ...pref, drums: 'auto', drumsFor: null });
-  }, [named, patchKey, pref, setPref]);
+    if (patchKey === null) return;
+    const stored = BackingPrefSchema.safeParse(readStored(STORAGE_KEYS.backing));
+    const now = stored.success ? stored.data : pref;
+    if (now.drumsFor !== patchKey)
+      setPref({ ...now, drums: 'auto', countIn: true, drumsFor: patchKey });
+  }, [patchKey, pref, setPref]);
   const { bpm, swing } = seq.pattern;
   const inspiredBy = seq.loaded ? (seq.loaded.inspiredBy ?? null) : fallbackInspiredBy;
   const matched = useMemo(() => drumStyleFor(inspiredBy, bpm, swing), [inspiredBy, bpm, swing]);
@@ -94,9 +99,9 @@ export function useBacking(
     metronome,
     setMetronome: (on) => setPref({ ...pref, metronome: on }),
     countIn,
-    setCountIn: (on) => setPref({ ...pref, countIn: on }),
+    setCountIn: (on) => setPref({ ...pref, countIn: on, drumsFor: patchKey ?? pref.drumsFor }),
     drums: pref.drums,
-    setDrums: (d) => setPref({ ...pref, drums: d, drumsFor: patchKey }),
+    setDrums: (d) => setPref({ ...pref, drums: d, drumsFor: patchKey ?? pref.drumsFor }),
     matched,
     beat,
   };

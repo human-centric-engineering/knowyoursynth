@@ -879,8 +879,8 @@ The bar is always four beats from the pattern's first step, whatever the loop's 
 `index` takes the loops before to be as long as this one. `backing` on `pattern`, or
 `patternBacking` while it plays, carries the metronome and the beat's hits; the player checks both
 (`playableBacking`) as it checks a loop. The three settings are a screen setting kept in this browser (`kys.backing`,
-`components/app/sequencer/use-backing.ts`). Choosing another patch brings a beat chosen by name back to Match (Off
-stays off); the beat is stored with the patch it was chosen on (`drumsFor`), so a reload keeps it. Where a pattern came from the library, `LoadedPattern.inspiredBy` carries
+`components/app/sequencer/use-backing.ts`). Choosing another patch puts the drums on Match and the Count-in on, from Off too
+(t-277; the Metronome is left be); what is chosen on a patch is stored with it (`drumsFor`), so a reload keeps it. Where a pattern came from the library, `LoadedPattern.inspiredBy` carries
 its Inspired by for Match, when that is a genre or an artist (`styleWordsOf`: a work's title or a synth's name says
 nothing of a style); the sound's own riff goes by its default pattern's, which the catalogue sends as
 `defaultPattern.style`.

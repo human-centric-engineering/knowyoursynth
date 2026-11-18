@@ -79,12 +79,13 @@ beforeEach(() => {
 });
 
 describe('count-in', () => {
-  it('counts in a bar when Play starts the pattern, with nothing else playing along to begin with', async () => {
+  it('counts in a bar when Play starts the pattern, with the matched drums and no metronome to begin with', async () => {
     render(<Harness />);
     await play();
     const start = lastOf('pattern');
     expect(start?.countIn).toBe(COUNT_IN_BEATS);
-    expect(start?.backing).toBeUndefined();
+    expect(start?.backing?.click).toBe(false);
+    expect(start?.backing?.drums).not.toBeNull();
   });
 
   it('plays straight away with Count-in off, and keeps that choice in this browser', async () => {
@@ -151,6 +152,7 @@ describe('count-in', () => {
 describe('metronome', () => {
   it('is off to begin with, and turned on while it plays is sent at once', async () => {
     render(<Harness />);
+    pickDrums('Off');
     expect(button('Metronome').getAttribute('aria-pressed')).toBe('false');
     await play();
     fireEvent.click(button('Metronome'));
@@ -162,6 +164,7 @@ describe('metronome', () => {
 
   it('goes with the next start, and sends nothing while stopped', async () => {
     render(<Harness />);
+    pickDrums('Off');
     fireEvent.click(button('Metronome'));
     expect(sentOf('patternBacking')).toEqual([]);
     await play();
@@ -170,10 +173,10 @@ describe('metronome', () => {
 });
 
 describe('drums', () => {
-  it('are off to begin with; a beat chosen while it plays is sent, swung as the pattern is', async () => {
+  it('are on Match to begin with; a beat chosen while it plays is sent, swung as the pattern is', async () => {
     render(<Harness />);
     await play();
-    expect(screen.getByRole('combobox', { name: 'Drums' }).textContent).toContain('Off');
+    expect(screen.getByRole('combobox', { name: 'Drums' }).textContent).toMatch(/^.*Match: /);
     pickDrums('Funk');
     const drums = lastOf('patternBacking')?.backing.drums;
     expect(drums?.swing).toBe(state.pattern.swing);
@@ -212,13 +215,24 @@ describe('drums', () => {
     );
   });
 
-  it('goes back to Match when another patch is chosen, and stays off when off', () => {
+  it('puts the drums on Match and the Count-in on when another patch is chosen, from Off too', async () => {
     const { rerender } = render(<Harness />);
     pickDrums('Funk');
     rerender(<Harness patch="model-d/wobble" />);
     expect(screen.getByRole('combobox', { name: 'Drums' }).textContent).toMatch(/^.*Match: /);
     pickDrums('Off');
+    fireEvent.click(button('Count-in'));
     rerender(<Harness patch="model-d/fat-bass" />);
+    expect(screen.getByRole('combobox', { name: 'Drums' }).textContent).toMatch(/^.*Match: /);
+    await play();
+    expect(lastOf('pattern')?.countIn).toBe(COUNT_IN_BEATS);
+  });
+
+  it('keeps Drums off through a reload on the patch it was turned off on', () => {
+    const first = render(<Harness />);
+    pickDrums('Off');
+    first.unmount();
+    render(<Harness />);
     expect(screen.getByRole('combobox', { name: 'Drums' }).textContent).toContain('Off');
   });
 
