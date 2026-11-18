@@ -43,7 +43,16 @@ import type {
   WaveShape,
 } from '@/lib/app/synths/contract';
 import { type OmitEach, num } from '@/lib/app/synths/lib/def-kit';
-import { clamp, expMap, fmtHz, fmtSemi, fmtTime, level10 } from '@/lib/app/synths/lib/maps';
+import {
+  clamp,
+  expMap,
+  fmtHz,
+  fmtSemi,
+  fmtTime,
+  level10,
+  noteName,
+  noteOf,
+} from '@/lib/app/synths/lib/maps';
 
 // ── Photo → view ──────────────────────────────────────────────────────────
 const X = (px: number): number => Math.round((px - 14) * 14) / 10;
@@ -78,17 +87,11 @@ export const fmDepth = (v: number, range: number): number =>
   range * Math.pow(clamp(v, 0, 10) / 10, 2);
 /** PULSE WIDTH: 50 % at the bottom, the narrowest at MIN; PWM swings the width up to this much. */
 export const PW_SWING = 0.45;
-/** Octaves of cutoff at the top of each VCF modulation slider. */
-export const VCF_OCT = { mixer: 3, sh: 3, lfo: 3, env: 8 } as const;
+/** Octaves of cutoff at the top of each VCF modulation slider (`kbd`: 1, full keyboard tracking). */
+export const VCF_OCT = { kbd: 1, mixer: 3, sh: 3, lfo: 3, env: 8 } as const;
 /** The proportional pitch pad's vibrato (the mod wheel here), semitones at full. */
 export const PAD_VIB_SEMI = 1;
 
-const noteOf = (hz: number): number => 69 + (12 * Math.log(hz / 440)) / Math.LN2;
-const NOTE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
-const noteName = (hz: number): string => {
-  const n = Math.round(noteOf(hz));
-  return `${NOTE_NAMES[((n % 12) + 12) % 12]}${Math.floor(n / 12) - 1}`;
-};
 const pct = (v: number): string => `${Math.round(v * 10)}%`;
 /** C4 on the FREQUENCY sliders. */
 const C4 = Math.round(5 * Math.log10(261.6256 / 20) * 1000) / 1000;
@@ -1413,8 +1416,6 @@ const areas: Area[] = [
 ];
 
 // ── toEngine ──────────────────────────────────────────────────────────────
-const isNum = (v: number): boolean => Number.isFinite(v);
-
 /** TRANSPOSE in semitones. */
 const TRANSPOSE_SEMI: Record<string, number> = { up_2: 24, normal: 0, down_2: -24 };
 
@@ -1422,7 +1423,7 @@ function toEngine(v: ControlValues, ctx: EngineContext): EngineParams {
   const wheel = clamp(ctx.wheel || 0, 0, 1);
   const routes: EngineRoute[] = [];
   const route = (src: string, dst: string, amt: number, by?: string): void => {
-    if (isNum(amt) && Math.abs(amt) > 0.0005)
+    if (Number.isFinite(amt) && Math.abs(amt) > 0.0005)
       routes.push(by ? { src, dst, amt, by } : { src, dst, amt });
   };
   const fine = (n: number): number => ((num(v, `vco${n}.fine`) - 5) / 5) * FINE_SEMI;
@@ -1488,9 +1489,10 @@ function toEngine(v: ControlValues, ctx: EngineContext): EngineParams {
   // the filter's modulation sliders
   const mod1 = num(v, 'vcf.mod1') / 10;
   if (v['vcf.mod1_src'] === 'snh_mixer') route('sum1', 'cutoff', mod1 * VCF_OCT.mixer);
-  else route('kbd2', 'cutoff', mod1);
+  else route('kbd2', 'cutoff', mod1 * VCF_OCT.kbd);
   const mod2 = num(v, 'vcf.mod2') / 10;
-  route(v['vcf.mod2_src'] === 'lfo_sine' ? 'lfoSine' : 'sh', 'cutoff', mod2 * VCF_OCT.sh);
+  if (v['vcf.mod2_src'] === 'lfo_sine') route('lfoSine', 'cutoff', mod2 * VCF_OCT.lfo);
+  else route('sh', 'cutoff', mod2 * VCF_OCT.sh);
 
   // LFO REPEAT: an envelope on it fires from envClk, the LFO square (only with a key down on KYBD REPEAT)
   const adsrSrc: EnvTrigSource = v['repeat.adsr'] === 'lfo_repeat' ? 'sh' : 'gate';

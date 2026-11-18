@@ -29,7 +29,16 @@ import type {
   WaveShape,
 } from '@/lib/app/synths/contract';
 import { type OmitEach, num } from '@/lib/app/synths/lib/def-kit';
-import { clamp, expMap, fmtHz, fmtSemi, fmtTime, level10 } from '@/lib/app/synths/lib/maps';
+import {
+  clamp,
+  expMap,
+  fmtHz,
+  fmtSemi,
+  fmtTime,
+  level10,
+  noteName,
+  noteOf,
+} from '@/lib/app/synths/lib/maps';
 
 type FaderRest = Omit<
   FaderControl,
@@ -46,12 +55,6 @@ type Hear = (v: ControlValues, x: JackHearContext) => string;
 // In LF the same marks read .03 · .3 · 3 · 30 Hz, so LF is the audio frequency ÷ 333.
 const oscHz = (v: number): number => Math.pow(10, 1 + (v - 0.74) / 2.7);
 const vcfHz = (v: number): number => Math.pow(10, 1 + (v - 0.87) / 2.7);
-const noteOf = (hz: number): number => 69 + (12 * Math.log(hz / 440)) / Math.LN2;
-const NOTE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
-const noteName = (hz: number): string => {
-  const n = Math.round(noteOf(hz));
-  return `${NOTE_NAMES[((n % 12) + 12) % 12]}${Math.floor(n / 12) - 1}`;
-};
 const envA = (v: number): number => expMap(v / 10, 0.0015, 8);
 const envDR = (v: number): number => expMap(v / 10, 0.006, 12);
 const lfoHz = (v: number): number => expMap(v / 10, 0.25, 25);
