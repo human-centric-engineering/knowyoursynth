@@ -190,8 +190,8 @@ describe('the panel switches', () => {
     vi.stubGlobal('Worker', undefined);
     const { unmount } = page();
     expect(signalShown()).toBe('Off');
-    chooseSignal('In use');
-    expect(signalShown()).toBe('In use');
+    chooseSignal('Path');
+    expect(signalShown()).toBe('Path');
     for (const name of ['Show sensitive controls', 'Show harmonics']) {
       expect(pressed(name)).toBe('false');
       fireEvent.click(button(name));
@@ -204,20 +204,20 @@ describe('the panel switches', () => {
     ]);
     unmount();
     page();
-    expect(signalShown()).toBe('In use');
+    expect(signalShown()).toBe('Path');
     expect(pressed('Show harmonics')).toBe('true');
   });
 
-  it('opens a stored "Dim unused parts" as In use, and keeps Live in this browser beside it', () => {
+  it('opens a stored "Dim unused parts" as Path, and keeps Live in this browser beside it', () => {
     vi.stubGlobal('Worker', undefined);
     window.localStorage.setItem('kys.dim', 'true');
     const { unmount } = page();
-    expect(signalShown()).toBe('In use');
+    expect(signalShown()).toBe('Path');
     expect(screen.queryByTestId('live-layer')).toBeNull();
     chooseSignal('Live');
     expect(signalShown()).toBe('Live');
     // Its accessible name says the mode, as its word does.
-    expect(document.querySelector('button[aria-label="Signal on the panel: Live"]')).toBeTruthy();
+    expect(document.querySelector('button[aria-label="Signal flow: Live"]')).toBeTruthy();
     expect(screen.getByTestId('live-layer')).toBeTruthy();
     expect(window.localStorage.getItem('kys.live')).toBe('true');
     expect(window.localStorage.getItem('kys.dim')).toBe('true');
@@ -228,29 +228,29 @@ describe('the panel switches', () => {
     expect(signalShown()).toBe('Off');
     expect(screen.queryByTestId('live-layer')).toBeNull();
     expect(window.localStorage.getItem('kys.dim')).toBe('false');
-    // Off clears Live as well, so a dim synced back on from the account opens In use, not Live.
+    // Off clears Live as well, so a dim synced back on from the account opens Path, not Live.
     expect(window.localStorage.getItem('kys.live')).toBe('false');
-    expect(document.querySelector('button[aria-label="Signal on the panel: Off"]')).toBeTruthy();
-    // Back on, In use is In use: Live is a choice of its own.
-    chooseSignal('In use');
-    expect(signalShown()).toBe('In use');
+    expect(document.querySelector('button[aria-label="Signal flow: Off"]')).toBeTruthy();
+    // Back on, Path is Path: Live is a choice of its own.
+    chooseSignal('Path');
+    expect(signalShown()).toBe('Path');
     expect(window.localStorage.getItem('kys.live')).toBe('false');
   });
 
-  it('draws the flow with Live + flow, keeps it in this browser, and drops it back in Live', () => {
+  it('draws the flow with Live + lines, keeps it in this browser, and drops it back in Live', () => {
     vi.stubGlobal('Worker', undefined);
     window.localStorage.setItem('kys.dim', 'true');
     const { unmount } = page();
     chooseSignal('Live');
     expect(screen.getByTestId('live-layer')).toBeTruthy();
     expect(screen.queryByTestId('live-flow')).toBeNull();
-    chooseSignal('Live + flow');
-    expect(signalShown()).toBe('Live + flow');
+    chooseSignal('Live + lines');
+    expect(signalShown()).toBe('Live + lines');
     expect(screen.getByTestId('live-flow')).toBeTruthy();
     expect(window.localStorage.getItem('kys.live')).toBe('"flow"');
     unmount();
     page();
-    expect(signalShown()).toBe('Live + flow');
+    expect(signalShown()).toBe('Live + lines');
     chooseSignal('Live');
     expect(screen.queryByTestId('live-flow')).toBeNull();
     expect(window.localStorage.getItem('kys.live')).toBe('true');
@@ -278,7 +278,7 @@ describe('the sound map', () => {
   it('falls back to the main thread when workers are unavailable, and the map still arrives', async () => {
     vi.stubGlobal('Worker', undefined);
     page();
-    chooseSignal('In use');
+    chooseSignal('Path');
     expect(mapStore.get().status).toBe('working');
     await settle(400 + 40 * 400);
     expect(createProbe).toHaveBeenCalled();
@@ -292,7 +292,7 @@ describe('the sound map', () => {
   it('says in the inspector what the map found for the control pointed at', async () => {
     vi.stubGlobal('Worker', FakeWorker);
     page();
-    chooseSignal('In use');
+    chooseSignal('Path');
     await settle(400);
     openSide('Inspect');
     act(() => focusStore.set({ kind: 'control', id: GLIDE, x: 0, y: 0, tip: false }));
@@ -305,7 +305,7 @@ describe('the sound map', () => {
     held.length = 0;
     vi.stubGlobal('Worker', HoldingWorker);
     page();
-    chooseSignal('In use');
+    chooseSignal('Path');
     await settle(300); // the first sound's analysis is under way, its answers held
     const other = detail.sounds[1];
     openSide('Sounds');
@@ -335,7 +335,7 @@ describe('the sound map', () => {
       },
     });
     page();
-    chooseSignal('In use');
+    chooseSignal('Path');
     // Said twice while it works: in the bar over the panel (t-222) and in the legend under it.
     expect(
       screen.getByRole('progressbar', { name: 'Working out what is in this patch' })
@@ -362,7 +362,7 @@ describe('the sound map', () => {
       },
     });
     page();
-    chooseSignal('In use');
+    chooseSignal('Path');
     await settle(400 + 40 * 400);
     expect(mapStore.get().status).toBe('failed');
     fireEvent.keyDown(screen.getByRole('slider', { name: 'Mod wheel' }), { key: 'ArrowUp' });
@@ -382,7 +382,7 @@ describe('the sound map', () => {
       },
     });
     page();
-    chooseSignal('In use');
+    chooseSignal('Path');
     await settle(400 + 40 * 400);
     expect(mapStore.get().status).toBe('failed');
     chooseSignal('Off');
@@ -401,7 +401,7 @@ describe('the sound map', () => {
       },
     });
     page();
-    chooseSignal('In use');
+    chooseSignal('Path');
     await settle(300 + 8); // the first analysis is under way on the main thread
     const key = mapStore.get().key;
     const measured = n;
@@ -419,7 +419,7 @@ describe('the sound map', () => {
   it('works the map out again for another sound, and clears it when both switches go off', async () => {
     vi.stubGlobal('Worker', FakeWorker);
     page();
-    chooseSignal('In use');
+    chooseSignal('Path');
     await settle(400);
     const first = mapStore.get().key;
     const other = detail.sounds[1];

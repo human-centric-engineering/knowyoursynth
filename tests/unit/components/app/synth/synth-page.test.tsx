@@ -33,6 +33,7 @@ import { glideMotion } from '@/components/app/synth/motion';
 import { ARRIVE_MS } from '@/components/app/synth/use-panel-history';
 import { getSynthRouting } from '@/lib/app/synths/routing';
 import { expectRiff, patternsSent } from '@/tests/helpers/riff-sent';
+import { chooseSignal, signalShown } from '@/tests/helpers/signal-menu';
 
 const { router, engine, events } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -395,13 +396,13 @@ describe('SynthPage layout', () => {
 
   it('orders the top rail: routing and the layers at the left, the inspector and Explain sections beside the tour', () => {
     page();
-    const rail = button('Signal routing').closest('.kys-rail');
+    const rail = button('Signal diagram').closest('.kys-rail');
     if (!rail) throw new Error('the routing toggle is on the rail');
     const names = Array.from(rail.querySelectorAll('button[aria-label]'), (b) =>
       b.getAttribute('aria-label')
     );
     const order = [
-      'Signal routing',
+      'Signal diagram',
       'Show sensitive controls',
       'Undo',
       'Redo',
@@ -428,7 +429,7 @@ describe('SynthPage layout', () => {
         }) as unknown as MediaQueryList
     );
     page();
-    const rail = button('Signal routing').closest('.kys-rail');
+    const rail = button('Signal diagram').closest('.kys-rail');
     if (!rail) throw new Error('the routing toggle is on the rail');
     const names = Array.from(rail.querySelectorAll('button[aria-label]'), (b) =>
       b.getAttribute('aria-label')
@@ -2227,8 +2228,8 @@ describe('SynthPage player', () => {
     expect(card()?.textContent).toMatch(/What is under the pointer/);
 
     // Turned over to the routing view, the panel's card goes, whatever it shows.
-    fireEvent.click(button('Signal routing'));
-    expect(button('Signal routing')).toHaveAttribute('aria-pressed', 'true');
+    fireEvent.click(button('Signal diagram'));
+    expect(button('Signal diagram')).toHaveAttribute('aria-pressed', 'true');
     expect(card()).toBeNull();
   });
 
@@ -2796,7 +2797,7 @@ describe('SynthPage patch edge cases', () => {
 });
 
 describe('SynthPage signal routing', () => {
-  const toggle = () => button('Signal routing');
+  const toggle = () => button('Signal diagram');
   const diagram = () => screen.queryByRole('group', { name: 'Model D signal routing' });
   const scroller = () => screen.getByTestId('panel-frame').closest('.kys-panel-scroller');
   const lit = (sel: string) => document.querySelector(sel)?.getAttribute('data-live');
@@ -2820,6 +2821,22 @@ describe('SynthPage signal routing', () => {
     expect(diagram()).toBeNull();
     expect(scroller()).not.toHaveClass('is-away');
     expect(scroller()).not.toHaveAttribute('inert');
+  });
+
+  it('sits beside Flow under one Signal name, and turns the panel face up when Flow is turned on', () => {
+    page();
+    const signal = screen.getByRole('group', { name: 'Signal' });
+    expect(signal).toContainElement(toggle());
+    expect(signal.querySelector('button[aria-label^="Signal flow:"]')).not.toBeNull();
+    // Sensitive is a layer of its own, not part of Signal.
+    expect(signal).not.toContainElement(button('Show sensitive controls'));
+
+    fireEvent.click(toggle());
+    expect(diagram()).not.toBeNull();
+    chooseSignal('Live');
+    expect(diagram()).toBeNull();
+    expect(toggle()).toHaveAttribute('aria-pressed', 'false');
+    expect(signalShown()).toBe('Live');
   });
 
   it('draws the patch on the panel, and follows it as it changes while the diagram shows', async () => {
@@ -2899,7 +2916,7 @@ describe('SynthPage signal routing', () => {
     vi.mocked(getSynthRouting).mockImplementation(() => undefined);
     try {
       page();
-      expect(screen.queryByRole('button', { name: 'Signal routing' })).toBeNull();
+      expect(screen.queryByRole('button', { name: 'Signal diagram' })).toBeNull();
       // The rest of the rail is there.
       expect(button('Explain sections')).toBeTruthy();
     } finally {

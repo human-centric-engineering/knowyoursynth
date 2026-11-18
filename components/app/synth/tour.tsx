@@ -149,10 +149,11 @@ function StopBody({ def, stop }: { def: SynthDef; stop: TourStop }) {
             panel itself: point at any coloured region to read what it does.
           </li>
           <li>
-            <span className="text-(--kys-text)">Signal</span>, set to In use, darkens everything
-            that is doing nothing in the patch you have loaded, which is the fastest way to see a
-            patch as a picture. Set to Live, the parts it uses light up as you play; Live + flow
-            adds lines from each part to the next.
+            <span className="text-(--kys-text)">Flow</span>, set to Path, darkens everything that is
+            doing nothing in the patch you have loaded, which is the fastest way to see a patch as a
+            picture. Set to Live, the parts it uses light up as you play; Live + lines adds lines
+            from each part to the next. <span className="text-(--kys-text)">Diagram</span> beside it
+            turns the panel over to show how its parts are wired.
           </li>
           <li>
             <span className="text-(--kys-text)">Show sensitive controls</span> glows behind the

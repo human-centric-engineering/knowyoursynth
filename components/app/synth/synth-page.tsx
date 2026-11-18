@@ -144,7 +144,8 @@ import {
   LayerToggle,
   PlayerSettings,
   useFootFit,
-  SignalMenu,
+  useHeadFit,
+  SignalFlow,
   type SignalMode,
 } from '@/components/app/synth/player-tools';
 import { RoutingView } from '@/components/app/synth/routing-view';
@@ -300,7 +301,7 @@ const DeckSchema = z.boolean().nullable();
 const TALL_QUERY = '(min-height: 900px)';
 /** The side of the panel the lesson card floats on, as stored. */
 const CardSideSchema = z.enum(['left', 'right']);
-/** Live, or Live + flow (`'flow'`); `false` = In use. A `true` kept before Live + flow was added reads as Live. */
+/** Live, or Live + lines (`'flow'`); `false` = Path. A `true` kept before Live + lines was added reads as Live. */
 const LiveSchema = z.union([z.boolean(), z.literal('flow')]);
 const EnglishSchema = z.boolean();
 /** How long the pointer may rest before the player's secondary controls fade, as a video's do, in ms. */
@@ -701,8 +702,8 @@ function Synth({
   const settings = useSettings(userId);
   const [tipsOn, setTipsOn] = settings.tips;
   const [dimOn, setDimOn] = settings.dim;
-  // The Signal layer (`f-live-panel` t-150): In use is the sound map's "Dim unused parts", kept with the settings;
-  // Live is that and the live glow, on a synth that has a routing to light, and Live + flow that and the lines between
+  // The Signal layer, Flow on the rail (`f-live-panel` t-150, t-279): Path is the sound map's "Dim unused parts", kept
+  // with the settings; Live is that and the live glow, on a synth that has a routing to light, and Live + lines that and the lines between
   // the lit parts (t-153); either is kept in this browser only.
   const [liveOn, setLiveOn] = useStoredPref(STORAGE_KEYS.live, LiveSchema, false);
   // A panel printed in another language reprinted in English (the Polivoks's Russian): one choice for every such
@@ -718,7 +719,7 @@ function Synth({
       : 'inUse';
   const setSignal = (m: SignalMode) => {
     setDimOn(m !== 'off');
-    // Off clears Live too, so a dim synced back on from the account opens In use. In use is left alone where Live is
+    // Off clears Live too, so a dim synced back on from the account opens Path. Path is left alone where Live is
     // not offered, so a synth without a routing does not clear the choice made on the others.
     if (m !== 'inUse' || liveOffered) setLiveOn(m === 'flow' ? 'flow' : m === 'live');
   };
@@ -2339,6 +2340,7 @@ function Synth({
       '--rail-print': print,
     };
   // A fourth setting (Layout on a modular, Labels on a translated panel) needs the wider breakpoints
+  const headRef = useHeadFit();
   const footRef = useFootFit(!!ownLayout || !!synthDef.translation);
   // The Sound Design strip and the lesson card are of the faceplate too, in its colours (t-201).
   const face = useMemo(() => faceRoles(plate, plate2, print), [plate, plate2, print]);
@@ -2632,38 +2634,48 @@ function Synth({
                 default="none"
               >
                 <div className="kys-instrument">
-                  {/* The panel's top rail: the routing view and the layers over the panel at the left; at the right the
+                  {/* The panel's top rail: Signal (the diagram and the flow) and the layers over the panel at the left; at the right the
               history, the inspector, Explain sections, the tour and its help (t-276), on a strip of
               the faceplate along its head, as the rail at its foot carries how it is drawn. */}
                   <div className="px-2 pt-2">
                     <div
+                      ref={headRef}
                       className={`kys-rail is-top mx-auto ${view.outline ? 'is-outline' : ''} ${lightFace ? 'is-light' : ''}`}
                       style={railStyle}
                     >
-                      {routing && (
-                        <div role="group" aria-label="Views" className="kys-rail-group">
+                      {/* Signal (t-279): the diagram on the panel's back and the flow on its face, two ways of
+                      showing where the sound goes, under one name in the panel's lettering. */}
+                      <div role="group" aria-label="Signal" className="kys-rail-group is-signal">
+                        <span className="kys-setting-name kys-rail-label" aria-hidden="true">
+                          Signal
+                        </span>
+                        {routing && (
                           <LayerToggle
                             ref={routingToggleRef}
-                            label="Signal routing"
-                            short="Signal routing"
+                            label="Signal diagram"
+                            short="Diagram"
                             icon={<Waypoints size={17} aria-hidden="true" />}
                             on={routingOn}
-                            title="Turn the panel over to see how its parts are wired. What the patch uses now is lit, and follows the panel as it changes."
+                            title="Turn the panel over to see how its parts are wired, as a block diagram. What the patch uses is drawn solid, and lights as signal goes through it."
                             onClick={() => flipPanel(!routingOn)}
                           />
-                        </div>
-                      )}
+                        )}
+                        <SignalFlow
+                          mode={signal}
+                          onMode={(m) => {
+                            // The diagram shows the flow already: a mode chosen for the face turns the face up.
+                            if (m !== 'off' && routingOn) flipPanel(false);
+                            setSignal(m);
+                          }}
+                          live={liveOffered}
+                          icon={<Activity size={17} aria-hidden="true" />}
+                        />
+                      </div>
                       <div
                         role="group"
                         aria-label="Layers over the panel"
                         className="kys-rail-group"
                       >
-                        <SignalMenu
-                          mode={signal}
-                          onMode={setSignal}
-                          live={liveOffered}
-                          icon={<Activity size={17} aria-hidden="true" />}
-                        />
                         <LayerToggle
                           label="Show sensitive controls"
                           short="Sensitive"

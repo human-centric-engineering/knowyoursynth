@@ -2,8 +2,8 @@
 
 /**
  * The routing view (`f-routing-view` t-142, drawn as a manual's flow diagram in t-146): the back of the panel, a
- * diagram of how the synth's parts are wired. The page flips the panel over to it from the Signal routing toggle on
- * the panel's top rail.
+ * diagram of how the synth's parts are wired. The page flips the panel over to it from the Diagram toggle (Signal ›
+ * Diagram, t-279) on the panel's top rail.
  *
  * It is drawn on the faceplate in its silkscreen ink, as the rails are (`--rail-face` / `--rail-print`, from the
  * page), so it is the panel's colours in Hardware and ink on paper in Outline. Blocks are laid out by

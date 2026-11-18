@@ -1323,10 +1323,10 @@ svg .kys-hit:focus-visible {
   color: var(--rail-ink-hi);
 }
 
-/* The head: Signal routing and the layers at the left; at the right Undo and
-   Redo, the inspector and Explain sections, then the tour and its help (t-276).
-   Each toggle is an icon (with its word where there is room) and an LED lit
-   while it is over the panel. */
+/* The head: Signal (the diagram and the flow, t-279) and the layers at the left;
+   at the right Undo and Redo, the inspector and Explain sections, then the tour
+   and its help (t-276). Each toggle is an icon (with its word where there is
+   room) and an LED lit while it is over the panel. */
 .kys-rail-group {
   display: flex;
   flex-wrap: wrap;
@@ -1336,6 +1336,66 @@ svg .kys-hit:focus-visible {
 .kys-rail-group + .kys-rail-group {
   padding-left: 14px;
   border-left: 1px solid var(--rail-rule);
+}
+/* Signal's name on the rail, engraved as the faceplate names a section: it, not
+   a rule, holds the diagram and the flow together. */
+.kys-rail-group.is-signal {
+  gap: 2px 4px;
+}
+.kys-rail-label {
+  margin-right: 4px;
+  cursor: default;
+}
+/* Flow: a split button, its main press and its caret one key with a hairline
+   between them. The caret carries no LED: the main press's says what is on. */
+.kys-flow,
+.kys-flow-split {
+  display: flex;
+  align-items: center;
+}
+.kys-rail .kys-flow-main {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  padding-right: 7px;
+}
+.kys-rail .kys-flow-caret {
+  position: relative;
+  padding: 0 6px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.kys-rail .kys-layer.kys-flow-caret::before {
+  content: none;
+}
+.kys-rail .kys-flow-caret::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  border-left: 1px solid var(--rail-rule);
+}
+/* Where the rail is wide (`useHeadFit`), the modes sit on it as LEDs and the
+   split button is put away. */
+.kys-flow-inline {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding-left: 6px;
+}
+.kys-rail[data-fit~='wide'] .kys-flow-inline {
+  display: flex;
+}
+.kys-rail[data-fit~='wide'] .kys-flow-split {
+  display: none;
+}
+/* Off chosen is nothing on: its word is lit, but not its LED, which would say
+   something is over the panel. */
+.kys-flow-inline .kys-led-opt.is-off[aria-pressed='true'] .kys-led-dot {
+  background: color-mix(in srgb, var(--rail-face, #16181e) 55%, #000);
+  box-shadow:
+    inset 0 1px 1px rgb(0 0 0 / 0.7),
+    0 0 0 1px var(--rail-rule);
 }
 .kys-rail .kys-layer {
   height: 30px;
@@ -3907,11 +3967,11 @@ button.kys-routing-card-item:focus-visible {
   color: var(--kys-muted);
 }
 
-/* The Signal layer's menu (`f-live-panel` t-150): its modes as LEDs, each with a line on what it does, in the page's
+/* Flow's menu (`f-live-panel` t-150, t-279): its modes each drawn small, with a line on what it does, in the page's
    raised surface as the player's tips are. */
 .kys-signal-menu {
   z-index: 70;
-  width: min(280px, calc(100vw - 32px));
+  width: min(320px, calc(100vw - 32px));
   padding: 6px;
   border-radius: 10px;
   color: var(--kys-text);
@@ -3929,9 +3989,10 @@ button.kys-routing-card-item:focus-visible {
 .kys-signal-menu .kys-signal-opt {
   display: grid;
   grid-template-columns: auto 1fr;
-  column-gap: 8px;
+  column-gap: 12px;
+  row-gap: 2px;
   align-items: center;
-  padding: 7px 8px;
+  padding: 8px 10px 8px 8px;
   text-align: left;
   white-space: normal;
   color: var(--kys-text);
@@ -3944,8 +4005,73 @@ button.kys-routing-card-item:focus-visible {
 .kys-signal-menu .kys-signal-opt[aria-pressed='true'] {
   color: var(--kys-accent);
 }
-.kys-signal-menu .kys-led-dot {
-  animation: none;
+/* A mode drawn small (`ModePreview`): three knobs as the panel shows them in that mode, in a recessed well. */
+.kys-flow-preview {
+  grid-row: span 2;
+  align-self: start;
+  margin-top: 1px;
+  padding: 3px 2px;
+  box-sizing: content-box;
+  border-radius: 6px;
+  background: rgb(var(--kys-wash) / 0.05);
+  box-shadow: inset 0 0 0 1px rgb(var(--kys-wash) / 0.08);
+  overflow: visible;
+}
+.kys-flow-preview-knob {
+  fill: color-mix(in srgb, var(--kys-text) 22%, var(--kys-raised));
+  stroke: color-mix(in srgb, var(--kys-text) 55%, transparent);
+  stroke-width: 1;
+}
+.kys-flow-preview-tick {
+  stroke: var(--kys-text);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+}
+.kys-flow-preview .is-dark {
+  opacity: 0.22;
+}
+.kys-flow-preview .is-glow .kys-flow-preview-knob {
+  stroke: var(--kys-accent);
+}
+.kys-flow-preview-halo {
+  fill: var(--kys-accent);
+  opacity: 0.28;
+  filter: blur(2px);
+  animation: kys-flow-pulse 1.6s ease-in-out infinite;
+}
+.kys-flow-preview .is-glow:last-child .kys-flow-preview-halo {
+  animation-delay: 0.4s;
+}
+.kys-flow-preview-line {
+  stroke: var(--kys-accent);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-dasharray: 3 3;
+  animation: kys-flow-run 0.9s linear infinite;
+}
+@keyframes kys-flow-pulse {
+  50% {
+    opacity: 0.6;
+  }
+}
+@keyframes kys-flow-run {
+  to {
+    stroke-dashoffset: -6;
+  }
+}
+/* Still, unless pointed at or chosen: a menu of four pulsing pictures is noise. */
+.kys-signal-opt:not(:hover, :focus-visible, [aria-pressed='true'])
+  :is(.kys-flow-preview-halo, .kys-flow-preview-line) {
+  animation-play-state: paused;
+}
+.kys-signal-opt[aria-pressed='true'] .kys-flow-preview {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kys-accent) 55%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .kys-flow-preview-halo,
+  .kys-flow-preview-line {
+    animation: none;
+  }
 }
 .kys-signal-help {
   grid-column: 2;

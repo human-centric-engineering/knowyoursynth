@@ -8,7 +8,12 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen, within } from '@testing-library/react';
-import { LayerToggle, PlayerSettings, SignalMenu } from '@/components/app/synth/player-tools';
+import {
+  LayerToggle,
+  PlayerSettings,
+  SignalFlow,
+  type SignalMode,
+} from '@/components/app/synth/player-tools';
 import { chooseSignal } from '@/tests/helpers/signal-menu';
 
 function settings(
@@ -138,32 +143,91 @@ describe('LayerToggle', () => {
   });
 });
 
-describe('SignalMenu', () => {
-  function draw(live: boolean) {
+describe('SignalFlow', () => {
+  function draw(live: boolean, mode: SignalMode = 'inUse') {
     const onMode = vi.fn();
-    render(<SignalMenu mode="inUse" onMode={onMode} live={live} icon={null} />);
-    return onMode;
+    const view = render(<SignalFlow mode={mode} onMode={onMode} live={live} icon={null} />);
+    return { onMode, view };
   }
   const offered = () => {
-    fireEvent.click(screen.getByRole('button', { name: 'Signal on the panel: In use' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Ways to show the signal flow' }));
     return [...document.querySelectorAll('.kys-signal-name')].map((n) => n.textContent);
   };
+  const main = (name: string) => screen.getByRole('button', { name: `Signal flow: ${name}` });
 
   it('offers Live on a synth whose signal it can show, and chooses it', () => {
-    const onMode = draw(true);
+    const { onMode } = draw(true);
     chooseSignal('Live');
     expect(onMode).toHaveBeenCalledWith('live');
-    expect(offered()).toEqual(['Off', 'In use', 'Live', 'Live + flow']);
+    expect(offered()).toEqual(['Off', 'Path', 'Live', 'Live + lines']);
   });
 
-  it('offers Live + flow beside it, and chooses it', () => {
-    const onMode = draw(true);
-    chooseSignal('Live + flow');
+  it('offers Live + lines beside it, and chooses it', () => {
+    const { onMode } = draw(true);
+    chooseSignal('Live + lines');
     expect(onMode).toHaveBeenCalledWith('flow');
   });
 
-  it('leaves Live and Live + flow out on a synth without a routing', () => {
+  it('leaves Live and Live + lines out on a synth without a routing', () => {
     draw(false);
-    expect(offered()).toEqual(['Off', 'In use']);
+    expect(offered()).toEqual(['Off', 'Path']);
+  });
+
+  it('draws each mode in the menu', () => {
+    draw(true);
+    offered();
+    const drawn = [...document.querySelectorAll('.kys-signal-opt .kys-flow-preview')].map((svg) =>
+      svg.getAttribute('class')
+    );
+    expect(drawn).toEqual([
+      'kys-flow-preview is-off',
+      'kys-flow-preview is-inUse',
+      'kys-flow-preview is-live',
+      'kys-flow-preview is-flow',
+    ]);
+    // Only Live + lines draws the line between the parts.
+    expect(document.querySelectorAll('.kys-flow-preview-line')).toHaveLength(1);
+  });
+
+  it('turns on Live from its main press the first time, where the synth can show it', () => {
+    const { onMode } = draw(true, 'off');
+    expect(main('Off')).toHaveAttribute('aria-pressed', 'false');
+    fireEvent.click(main('Off'));
+    expect(onMode).toHaveBeenLastCalledWith('live');
+  });
+
+  it('turns on Path from its main press on a synth without a routing', () => {
+    const { onMode } = draw(false, 'off');
+    fireEvent.click(main('Off'));
+    expect(onMode).toHaveBeenLastCalledWith('inUse');
+  });
+
+  it('turns off from its main press, and back on in the mode it was in', () => {
+    const { onMode, view } = draw(true, 'flow');
+    fireEvent.click(main('Live + lines'));
+    expect(onMode).toHaveBeenLastCalledWith('off');
+    view.rerender(<SignalFlow mode="off" onMode={onMode} live icon={null} />);
+    fireEvent.click(main('Off'));
+    expect(onMode).toHaveBeenLastCalledWith('flow');
+  });
+
+  it('turns back on in the mode last chosen from the rail', () => {
+    const { onMode, view } = draw(true, 'off');
+    const rail = screen.getByRole('group', { name: 'Signal flow modes' });
+    fireEvent.click(within(rail).getByRole('button', { name: 'Path' }));
+    expect(onMode).toHaveBeenLastCalledWith('inUse');
+    view.rerender(<SignalFlow mode="off" onMode={onMode} live icon={null} />);
+    fireEvent.click(main('Off'));
+    expect(onMode).toHaveBeenLastCalledWith('inUse');
+  });
+
+  it('has its modes on the rail as LEDs too, the one in use pressed', () => {
+    draw(true, 'live');
+    const rail = screen.getByRole('group', { name: 'Signal flow modes' });
+    const pressed = within(rail)
+      .getAllByRole('button')
+      .filter((b) => b.getAttribute('aria-pressed') === 'true')
+      .map((b) => b.textContent);
+    expect(pressed).toEqual(['Live']);
   });
 });

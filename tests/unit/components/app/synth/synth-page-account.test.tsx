@@ -229,7 +229,7 @@ describe('signed out', () => {
     await act(async () => vi.advanceTimersByTimeAsync(0));
 
     expect(cutoff()).toBe('3');
-    expect(signalShown()).toBe('In use');
+    expect(signalShown()).toBe('Path');
     chooseSignal('Off');
     fireEvent.keyDown(cutoffSlider(), { key: 'ArrowUp' });
     await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_MAX_WAIT_MS * 2));
@@ -312,7 +312,7 @@ describe('signed in, opening a synth', () => {
     account.settings = { ...NO_SETTINGS, dim: true, updatedAt: KEPT_AT };
     page();
     await act(async () => vi.advanceTimersByTimeAsync(0));
-    expect(signalShown()).toBe('In use');
+    expect(signalShown()).toBe('Path');
     expect(readStored('kys.dim')).toBe(true);
     expect(readStored('kys.settingsAt')).toBe(Date.parse(KEPT_AT));
     expect(readStored('kys.settingsBy')).toBe('user-1');
@@ -409,7 +409,7 @@ describe('signed in, opening a synth', () => {
       },
     });
     expect(pressed('Show sensitive controls')).toBe('true');
-    expect(signalShown()).toBe('In use');
+    expect(signalShown()).toBe('Path');
 
     // Once: nothing more goes while nothing changes.
     await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_MAX_WAIT_MS * 2));
@@ -503,7 +503,7 @@ describe('signed in, opening a synth', () => {
     page();
     await act(async () => vi.advanceTimersByTimeAsync(0));
     fireEvent.keyDown(cutoffSlider(), { key: 'ArrowUp' });
-    chooseSignal('In use');
+    chooseSignal('Path');
     await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_MAX_WAIT_MS * 2));
     expect(api.put).not.toHaveBeenCalled();
     expect(api.patch).not.toHaveBeenCalled();
@@ -596,7 +596,7 @@ describe('signed in, writing to the account', () => {
   );
 
   it('sends a setting after the same delay, gathering changes made meanwhile into one', async () => {
-    chooseSignal('In use');
+    chooseSignal('Path');
     fireEvent.click(screen.getByRole('button', { name: 'Show harmonics' }));
     chooseSignal('Off');
     expect(readStored('kys.dim')).toBe(false);
@@ -659,7 +659,7 @@ describe('signed in, guarding the account', () => {
     expect(accountGets().filter((p) => p === PANEL_PATH)).toHaveLength(1);
     // A moves the panel and flips a setting, then signs out before either is sent.
     fireEvent.keyDown(cutoffSlider(), { key: 'ArrowUp' });
-    chooseSignal('In use');
+    chooseSignal('Path');
     auth.signedIn = false;
     rerender(synthPage());
     await act(async () => vi.advanceTimersByTimeAsync(0));
