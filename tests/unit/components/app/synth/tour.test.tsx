@@ -157,10 +157,10 @@ describe('Tour', () => {
     expect(onClose).toHaveBeenCalledTimes(3);
   });
 
-  it('ends by pointing at the panel switches: sections, the Signal layer and the sensitive controls', () => {
+  it('ends by pointing at the panel switches: sections, Flow, Diagram and the sensitive controls', () => {
     setup();
     goTo(stops.length - 1);
-    for (const name of ['Explain sections', 'Signal', 'Show sensitive controls'])
+    for (const name of ['Explain sections', 'Flow', 'Diagram', 'Show sensitive controls'])
       expect(within(dialog()).getByText(name)).toBeTruthy();
   });
 
