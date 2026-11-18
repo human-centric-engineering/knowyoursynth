@@ -4454,7 +4454,11 @@
         ],
         "chain": [0]
       },
-      "sounds": ["ub-xa-d/synth-pop-bass", "jupiter-8/jp8-nervous-new-wave-seq"],
+      "sounds": [
+        "ub-xa-d/synth-pop-bass",
+        "jupiter-8/jp8-nervous-new-wave-seq",
+        "behringer-odyssey/ody-drive-bass"
+      ],
       "research": {
         "work": "Duran Duran, “Rio”, Rio, 1982",
         "part": "The four-bar verse bass: low E jumping to its octave, D, G, G♯, A, twice; then A and C with their fifths.",

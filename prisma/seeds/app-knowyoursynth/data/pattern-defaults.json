@@ -283,6 +283,14 @@
       "pattern": "researched:joe-zawinul/a-remark-you-made-synth-lead"
     },
     {
+      "sound": "behringer-odyssey/ody-drive-bass",
+      "pattern": "researched:duran-duran/rio-bass"
+    },
+    {
+      "sound": "behringer-odyssey/ody-funk-bass",
+      "pattern": "researched:herbie-hancock/chameleon-bass"
+    },
+    {
       "sound": "buchla-easel/easel-arp-plucks",
       "pattern": "researched:kaitlyn-aurelia-smith/euclid-chords"
     },

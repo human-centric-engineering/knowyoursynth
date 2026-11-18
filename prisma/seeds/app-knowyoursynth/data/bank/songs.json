@@ -239,8 +239,8 @@
         {
           "instruments": ["arp-odyssey"],
           "on": "ARP Odyssey",
-          "synths": ["neutron"],
-          "sounds": { "neutron": "jazz-funk-dry-bass" },
+          "synths": ["neutron", "behringer-odyssey"],
+          "sounds": { "neutron": "jazz-funk-dry-bass", "behringer-odyssey": "ody-funk-bass" },
           "text": "The bass line: a synth doing the job of the bass guitar on a hit jazz-funk record."
         }
       ]
@@ -2577,6 +2577,8 @@
         {
           "instruments": ["arp-odyssey"],
           "on": "ARP Odyssey",
+          "synths": ["behringer-odyssey"],
+          "sounds": { "behringer-odyssey": "ody-sync-lead" },
           "text": "Duke has said he made the Odyssey his instrument and played it mostly with Zappa, on studio albums such as Apostrophe (’) and One Size Fits All, where he is credited with synthesizer."
         }
       ]

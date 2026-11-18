@@ -58,7 +58,7 @@ describe('heardFor for a native synth', () => {
   // No prototype list to hold these to, so each one's list is written here: the records in order, and the library
   // sound each links to. The bank has no song with a Donner B1, Take 5, Super Gemini or Syncussion part yet; the CS-80's are the
   // databank's records of the Yamaha CS-80, two of them linked to its lessons. A change to the data changes this on
-  // purpose.
+  // purpose. The ODYSSEY's are the databank's records of the ARP Odyssey, two of them linked to its lessons.
   const expected: Record<string, [song: string, sound?: string][]> = {
     'donner-b1': [],
     'take-5': [],
@@ -86,6 +86,16 @@ describe('heardFor for a native synth', () => {
     'sub-37': [],
     'teo-5': [],
     nymphes: [],
+    'behringer-odyssey': [
+      ['herbie-hancock-chameleon', 'ody-funk-bass'],
+      ['george-duke-with-frank-zappa', 'ody-sync-lead'],
+      ['klaus-schulze-timewind'],
+      ['chick-corea-romantic-warrior'],
+      ['ultravox-billy-curries-odyssey-leads'],
+      ['bbc-radiophonic-workshop-doctor-who-theme-1980'],
+      ['visage-visage'],
+      ['survive-floating-cube'],
+    ],
   };
   const records = (list: HeardEntry[]): [string, string?][] =>
     list.map((e) => (e.sound === undefined ? [e.song ?? ''] : [e.song ?? '', e.sound]));

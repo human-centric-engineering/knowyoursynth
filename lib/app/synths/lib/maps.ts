@@ -50,6 +50,15 @@ export const fmtSemi = (s: number): string => {
   return `${r > 0 ? '+' : ''}${r} st`;
 };
 
+/** A frequency as a MIDI note number (A4 = 69), fractional. */
+export const noteOf = (hz: number): number => 69 + (12 * Math.log(hz / 440)) / Math.LN2;
+const NOTE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+/** The nearest note to a frequency, as `C4` (middle C) or `F♯2`. */
+export const noteName = (hz: number): string => {
+  const n = Math.round(noteOf(hz));
+  return `${NOTE_NAMES[((n % 12) + 12) % 12]}${Math.floor(n / 12) - 1}`;
+};
+
 /** Anything an unusual note can be attached to: a control, a jack or an area. */
 export interface Annotatable {
   id: string;

@@ -1,0 +1,912 @@
+{
+  "synth": "behringer-odyssey",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "ody-funk-bass",
+      "name": "Funk Bass",
+      "ref": "In the style of Herbie Hancock — “Chameleon”",
+      "artist": "Herbie Hancock",
+      "tags": ["bass", "funk"],
+      "level": 1,
+      "blurb": "A round, snapping bass: two oscillators through a closed filter that the ADSR flicks open on every note.",
+      "how": "VCO-2’s pulse joins VCO-1’s sawtooth, a hair out of tune, for weight. The filter sits low with some resonance, and the ADSR opens it with a quick decay, so each note starts with a bright snap and settles dark.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 34, 0.4],
+          [0.75, 34, 0.2],
+          [1, 46, 0.2],
+          [1.5, 41, 0.4],
+          [2, 44, 0.3],
+          [2.5, 46, 0.2],
+          [3, 34, 0.4],
+          [3.5, 37, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two oscillators",
+          "module": "mixer",
+          "why": "Bring in VCO-2 on its pulse beside VCO-1’s sawtooth, and pull it slightly out of tune.\n- Mixer VCO-2 7 · 70%\n- Mixer VCO-2 wave VCO-2 pulse\n- VCO-2 FINE 5.4 · +0.2 st\n- Listen for: a fuller note with a slow beat in it.",
+          "set": {
+            "mixer.vco2": 7,
+            "mixer.vco2_src": "pulse",
+            "vco2.fine": 5.4
+          }
+        },
+        {
+          "title": "Close the filter",
+          "module": "filter",
+          "why": "Switch to the 4035 and bring the cutoff down, with a little resonance.\n- VCF MODE 4-POLE (4035)\n- VCF FREQ 3.5 · 180 Hz\n- VCF RESONANCE 4 · 40%\n- Listen for: a dark, muffled bass with a slight hum at the cutoff.",
+          "set": {
+            "vcf.mode": "4035",
+            "vcf.freq": 3.5,
+            "vcf.resonance": 4
+          }
+        },
+        {
+          "title": "The snap",
+          "module": "env",
+          "why": "Let the ADSR open the filter on each note and close it again quickly.\n- VCF ADSR or AR 6 · 60%\n- ADSR ATTACK 0 · 5 ms\n- ADSR DECAY 3.5 · 110 ms\n- ADSR SUSTAIN 2 · 20%\n- ADSR RELEASE 1 · 29 ms\n- Listen for: a bright bite at the front of each note that falls straight back.",
+          "set": {
+            "vcf.env": 6,
+            "adsr.attack": 0,
+            "adsr.decay": 3.5,
+            "adsr.sustain": 2,
+            "adsr.release": 1
+          }
+        }
+      ],
+      "context": {
+        "vcf.freq": "How dark the bass sits between notes.",
+        "vcf.env": "How bright the snap at the start of each note is.",
+        "adsr.decay": "How quickly the snap closes."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 7",
+          "hear": "A rubbery, quacking bass."
+        },
+        {
+          "id": "adsr.decay",
+          "try": "Raise to 5",
+          "hear": "A slower, more vocal wah on every note."
+        }
+      ]
+    },
+    {
+      "id": "ody-sync-lead",
+      "name": "Sync Sweep Lead",
+      "ref": "In the style of George Duke’s Odyssey solos with Frank Zappa",
+      "artist": "George Duke",
+      "tags": ["lead", "jazz fusion"],
+      "level": 2,
+      "blurb": "A tearing, vocal lead: VCO-2 synced to VCO-1, its pitch swept by the ADSR on every note.",
+      "how": "With SYNC on, VCO-2 restarts with each cycle of VCO-1, so it plays VCO-1’s pitch and its own pitch changes the tone instead. The ADSR pushes VCO-2’s pitch up at the start of each note and lets it fall, sweeping the harmonics.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.75],
+          [0.75, 72, 0.25],
+          [1, 74, 1],
+          [2, 76, 0.5],
+          [2.5, 74, 0.5],
+          [3, 72, 1],
+          [4, 69, 1.5],
+          [6, 67, 0.5],
+          [6.5, 69, 1.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sync VCO-2",
+          "module": "osc",
+          "why": "Hear VCO-2 alone, synced to VCO-1, and raise its pitch.\n- Mixer VCO-1 0 · 0%\n- Mixer VCO-2 9 · 90%\n- VCO-2 SYNC on\n- VCO-2 COARSE 7 · 502 Hz (B4 at C4)\n- Listen for: the note still at VCO-1’s pitch, but hard and nasal.",
+          "set": {
+            "mixer.vco1": 0,
+            "mixer.vco2": 9,
+            "vco2.sync": true,
+            "vco2.coarse": 7
+          }
+        },
+        {
+          "title": "Sweep it",
+          "module": "osc",
+          "why": "Switch VCO-2’s second FM slider to the ADSR and raise it.\n- VCO-2 FM source (S/H or ADSR) ADSR\n- VCO-2 FM (S/H or ADSR) 6 · 17.3 st\n- ADSR DECAY 5 · 320 ms\n- ADSR SUSTAIN 3 · 30%\n- Listen for: each note opening with a tearing sweep that settles.",
+          "set": {
+            "vco2.fm2_src": "adsr",
+            "vco2.fm2": 6,
+            "adsr.decay": 5,
+            "adsr.sustain": 3
+          }
+        },
+        {
+          "title": "Take the edge off",
+          "module": "filter",
+          "why": "Bring the cutoff down a little.\n- VCF FREQ 7.5 · 2.8 kHz\n- VCF RESONANCE 2 · 20%\n- Listen for: the same sweep, less harsh at the top.",
+          "set": {
+            "vcf.freq": 7.5,
+            "vcf.resonance": 2
+          }
+        },
+        {
+          "title": "Vibrato and glide",
+          "module": "lfo",
+          "why": "A touch of the LFO on VCO-1 (VCO-2 follows it through the sync), and a little portamento.\n- VCO-1 FM (LFO) 2.5 · ±0.8 st\n- LFO FREQ 6 · 3.17 Hz\n- PORTAMENTO 2 · 120 ms\n- Listen for: a singing lead that slides between notes.",
+          "set": {
+            "vco1.fm1": 2.5,
+            "lfo.freq": 6,
+            "kbd.portamento": 2
+          }
+        }
+      ],
+      "context": {
+        "vco2.sync": "Locks VCO-2 to VCO-1: the source of the tearing tone.",
+        "vco2.fm2": "How far the ADSR sweeps VCO-2 at the start of each note.",
+        "vco2.coarse": "Where the sweep settles: the tone of the held note."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.coarse",
+          "try": "Raise to 8.5",
+          "hear": "A brighter, more metallic held note."
+        },
+        {
+          "id": "vco2.fm2",
+          "try": "Raise to 9",
+          "hear": "A wilder, longer sweep on every note."
+        }
+      ]
+    },
+    {
+      "id": "ody-duo-fifths",
+      "name": "Duophonic Fifths",
+      "ref": "In the style of progressive rock leads",
+      "artist": "Progressive rock",
+      "tags": ["lead", "prog"],
+      "level": 1,
+      "blurb": "Two notes at once: hold two keys and each VCO takes one, gliding as the pair moves.",
+      "how": "The ODYSSEY is duophonic: VCO-1 plays the lowest key held and VCO-2 the highest. With both in the mixer, a pair of keys sounds as an interval, through one filter and one envelope.",
+      "phrase": {
+        "bpm": 92,
+        "loop": true,
+        "steps": [
+          [0, 57, 1],
+          [0, 64, 1],
+          [1, 59, 1],
+          [1, 66, 1],
+          [2, 60, 1.5],
+          [2, 67, 1.5],
+          [3.5, 62, 0.5],
+          [3.5, 69, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bring in VCO-2",
+          "module": "mixer",
+          "why": "Raise VCO-2 in the mixer, then hold two keys.\n- Mixer VCO-2 9 · 90%\n- Listen for: two notes at once, VCO-1 on the lower key and VCO-2 on the upper.",
+          "set": {
+            "mixer.vco2": 9
+          }
+        },
+        {
+          "title": "Shape the tone",
+          "module": "filter",
+          "why": "Darken the filter and let the ADSR open it a little on each note.\n- VCF FREQ 6.5 · 1.4 kHz\n- VCF RESONANCE 3 · 30%\n- VCF ADSR or AR 3 · 30%\n- ADSR DECAY 4 · 160 ms\n- ADSR SUSTAIN 5 · 50%\n- Listen for: a warmer pair with a soft attack.",
+          "set": {
+            "vcf.freq": 6.5,
+            "vcf.resonance": 3,
+            "vcf.env": 3,
+            "adsr.decay": 4,
+            "adsr.sustain": 5
+          }
+        },
+        {
+          "title": "Glide between",
+          "module": "glide",
+          "why": "Add portamento: both VCOs slide to their new keys.\n- PORTAMENTO 3 · 270 ms\n- Listen for: the interval sliding from one pair of keys to the next.",
+          "set": {
+            "kbd.portamento": 3
+          }
+        }
+      ],
+      "context": {
+        "mixer.vco2": "VCO-2 is the upper note of the pair.",
+        "kbd.portamento": "How slowly both notes slide."
+      },
+      "tweaks": [
+        {
+          "id": "mixer.vco1",
+          "try": "Pull down to 0",
+          "hear": "Only the top note of each pair."
+        },
+        {
+          "id": "vco2.sync",
+          "try": "Turn on",
+          "hear": "Both keys at the lower pitch, the upper one now changing the tone."
+        }
+      ]
+    },
+    {
+      "id": "ody-ring-bells",
+      "name": "Ring-Mod Bells",
+      "ref": "In the style of 1970s science-fiction soundtracks",
+      "artist": "Science-fiction soundtracks",
+      "tags": ["pluck", "sci-fi"],
+      "level": 2,
+      "blurb": "Clanging, inharmonic bells from the ring modulator, ringing away after each key.",
+      "how": "The ring modulator multiplies VCO-1’s and VCO-2’s pulses. With VCO-2 tuned to an awkward interval above VCO-1, the result has tones that belong to neither: a bell. The AR’s long release lets each strike ring.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.5],
+          [1, 79, 0.5],
+          [1.5, 76, 0.5],
+          [2, 84, 1],
+          [3, 77, 0.5],
+          [4, 72, 0.5],
+          [5, 74, 0.5],
+          [6, 67, 1.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The ring modulator",
+          "module": "mixer",
+          "why": "Switch the first mixer channel to RING MOD and raise it; take VCO-1 out of the mixer.\n- Mixer NOISE or RING MOD RING MOD\n- NOISE or RING MOD 9 · 90%\n- Mixer VCO-1 0 · 0%\n- Listen for: no bell yet: with both VCOs on the same pitch there is nothing for them to clash with.",
+          "set": {
+            "mixer.noise_ring_src": "ring_mod",
+            "mixer.noise_ring": 9,
+            "mixer.vco1": 0
+          }
+        },
+        {
+          "title": "Tune them apart",
+          "module": "osc",
+          "why": "Move VCO-2 to an awkward interval above VCO-1.\n- VCO-2 COARSE 7.2 · 551 Hz (C♯5 at C4)\n- VCO-1 PULSE WIDTH 3 · 37%\n- Listen for: a clangorous, metallic tone that no longer sounds one clear pitch.",
+          "set": {
+            "vco2.coarse": 7.2,
+            "vco1.pw": 3
+          }
+        },
+        {
+          "title": "Let it ring",
+          "module": "env",
+          "why": "Give the AR a long release, and let it close the filter as the note dies.\n- AR RELEASE 7 · 1.3 s\n- VCF envelope (ADSR or AR) AR\n- VCF ADSR or AR 4 · 40%\n- VCF FREQ 6.5 · 1.4 kHz\n- Listen for: each strike ringing on and softening as it fades.",
+          "set": {
+            "ar.release": 7,
+            "vcf.env_src": "ar",
+            "vcf.env": 4,
+            "vcf.freq": 6.5
+          }
+        }
+      ],
+      "context": {
+        "mixer.noise_ring_src": "RING MOD: the two VCOs multiplied.",
+        "vco2.coarse": "The interval between the VCOs decides the bell’s colour.",
+        "ar.release": "How long each bell rings."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.coarse",
+          "try": "Move to 6.4",
+          "hear": "A different, darker bell."
+        },
+        {
+          "id": "vco2.sync",
+          "try": "Turn on",
+          "hear": "The bell collapses: synced, the VCOs no longer beat against each other."
+        }
+      ]
+    },
+    {
+      "id": "ody-sh-burble",
+      "name": "Sample and Hold Burble",
+      "ref": "In the style of 1970s science-fiction soundtracks",
+      "artist": "Science-fiction soundtracks",
+      "tags": ["fx", "sci-fi"],
+      "level": 1,
+      "blurb": "The computer-at-work sound: random steps of the filter, ticking at the LFO’s rate.",
+      "how": "The S/H mixer starts with the noise at full, and the sample and hold reads it on each LFO cycle: a new random value every tick. On the filter’s S/H slider, with resonance, each value is a new burbling note.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 48, 4],
+          [4, 43, 4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Random steps into the filter",
+          "module": "filter",
+          "why": "Bring the cutoff down, raise the resonance, and raise the filter’s S/H slider.\n- VCF FREQ 4.5 · 358 Hz\n- VCF RESONANCE 7 · 70%\n- VCF S/H or LFO 6 · 60%\n- Listen for: the filter jumping to a new random place twice a second.",
+          "set": {
+            "vcf.freq": 4.5,
+            "vcf.resonance": 7,
+            "vcf.mod2": 6
+          }
+        },
+        {
+          "title": "Speed up the clock",
+          "module": "lfo",
+          "why": "The LFO clocks the sample and hold: raise it.\n- LFO FREQ 7.5 · 6.32 Hz\n- Listen for: a fast, chattering burble; the RATE light flickers with it.",
+          "set": {
+            "lfo.freq": 7.5
+          }
+        },
+        {
+          "title": "Smooth it a little",
+          "module": "mod",
+          "why": "OUTPUT LAG rounds off each step.\n- OUTPUT LAG 3 · 15 ms\n- Listen for: the steps blurring into quick slides.",
+          "set": {
+            "snh.lag": 3
+          }
+        }
+      ],
+      "context": {
+        "vcf.mod2": "How far the random steps move the cutoff.",
+        "lfo.freq": "How often a new step comes.",
+        "snh.mix2": "Noise in the S/H mixer is what makes the steps random."
+      },
+      "tweaks": [
+        {
+          "id": "snh.mix1",
+          "try": "Raise to 6",
+          "hear": "VCO-1 joins the noise in the S/H mixer: the steps fall into patterns."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 9",
+          "hear": "Each step whistles: a random melody."
+        }
+      ]
+    },
+    {
+      "id": "ody-repeat-pulse",
+      "name": "LFO Repeat Pulse",
+      "ref": "In the style of Berlin-school sequences",
+      "artist": "Berlin school",
+      "tags": ["seq", "berlin school"],
+      "level": 2,
+      "blurb": "One held key becomes a run of pulses: the LFO fires the AR over and over.",
+      "how": "With the AR on LFO REPEAT, the LFO square triggers it on every cycle while a key is down (KYBD REPEAT). The AR also opens the filter, so every pulse is a pluck, and VCO-2 an octave up brightens it.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 45, 4],
+          [4, 48, 4],
+          [8, 43, 4],
+          [12, 40, 4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Repeat the AR",
+          "module": "env",
+          "why": "Switch the AR to LFO REPEAT and set the LFO’s speed. Hold a key.\n- AR KYBD GATE or LFO REPEAT LFO REPEAT\n- LFO FREQ 6.5 · 3.99 Hz\n- AR RELEASE 3 · 79 ms\n- Listen for: a steady stream of notes from one held key, stopping when you let go.",
+          "set": {
+            "repeat.ar": "lfo_repeat",
+            "lfo.freq": 6.5,
+            "ar.release": 3
+          }
+        },
+        {
+          "title": "A pluck on every pulse",
+          "module": "filter",
+          "why": "Let the AR open the filter as well.\n- VCF FREQ 4 · 254 Hz\n- VCF RESONANCE 5 · 50%\n- VCF envelope (ADSR or AR) AR\n- VCF ADSR or AR 5 · 50%\n- Listen for: each pulse a short, resonant pluck.",
+          "set": {
+            "vcf.freq": 4,
+            "vcf.resonance": 5,
+            "vcf.env_src": "ar",
+            "vcf.env": 5
+          }
+        },
+        {
+          "title": "An octave above",
+          "module": "osc",
+          "why": "Add VCO-2 an octave up.\n- Mixer VCO-2 6 · 60%\n- VCO-2 COARSE 7.09 · 524 Hz (C5 at C4)\n- Listen for: a brighter, ringing pulse.",
+          "set": {
+            "mixer.vco2": 6,
+            "vco2.coarse": 7.09
+          }
+        }
+      ],
+      "context": {
+        "repeat.ar": "LFO REPEAT: the LFO fires the AR, not the key.",
+        "lfo.freq": "How fast the pulses come.",
+        "vcf.env": "How bright each pulse is."
+      },
+      "tweaks": [
+        {
+          "id": "repeat.mode",
+          "try": "Switch to AUTO REPEAT",
+          "hear": "The pulses carry on with no key held."
+        },
+        {
+          "id": "lfo.freq",
+          "try": "Raise to 8",
+          "hear": "A fast, buzzing ripple."
+        }
+      ]
+    },
+    {
+      "id": "ody-pwm-strings",
+      "name": "PWM Strings",
+      "ref": "In the style of synth-pop string lines",
+      "artist": "Synth-pop",
+      "tags": ["strings", "synth-pop"],
+      "level": 2,
+      "blurb": "A slow, shimmering string sound from two pulse waves whose widths move with the LFO.",
+      "how": "Both VCOs on their pulse, narrowed a little, with the LFO sine moving each width: the pulse width modulation that sounds like an ensemble. The ADSR takes over the loudness, with a slow attack and release.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 60, 4],
+          [0, 67, 4],
+          [4, 58, 4],
+          [4, 65, 4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two pulses",
+          "module": "mixer",
+          "why": "Switch both mixer channels to the pulse and bring in VCO-2, slightly detuned.\n- Mixer VCO-1 wave VCO-1 pulse\n- Mixer VCO-2 8 · 80%\n- Mixer VCO-2 wave VCO-2 pulse\n- VCO-2 FINE 5.3 · +0.1 st\n- Listen for: a hollow, reedy tone.",
+          "set": {
+            "mixer.vco1_src": "pulse",
+            "mixer.vco2": 8,
+            "mixer.vco2_src": "pulse",
+            "vco2.fine": 5.3
+          }
+        },
+        {
+          "title": "Move the widths",
+          "module": "osc",
+          "why": "Narrow each pulse a little and let the LFO sine sweep its width.\n- VCO-1 PULSE WIDTH 3 · 37%\n- VCO-2 PULSE WIDTH 3 · 37%\n- VCO-1 PULSE WIDTH MOD 5 · 50%\n- VCO-2 PULSE WIDTH MOD 5 · 50%\n- LFO FREQ 3.5 · 1.00 Hz\n- Listen for: a slow, shimmering movement, like several players at once.",
+          "set": {
+            "vco1.pw": 3,
+            "vco2.pw": 3,
+            "vco1.pwm": 5,
+            "vco2.pwm": 5,
+            "lfo.freq": 3.5
+          }
+        },
+        {
+          "title": "Swell in, fade away",
+          "module": "env",
+          "why": "Give the loudness to the ADSR, slow at both ends, and soften the filter.\n- VCA envelope (AR or ADSR) ADSR\n- ADSR ATTACK 6.5 · 450 ms\n- ADSR DECAY 6 · 630 ms\n- ADSR SUSTAIN 8 · 80%\n- ADSR RELEASE 6.5 · 1.0 s\n- VCF FREQ 6.5 · 1.4 kHz\n- Listen for: each chord swelling in and dying away after the keys come up.",
+          "set": {
+            "vca.env_src": "adsr",
+            "adsr.attack": 6.5,
+            "adsr.decay": 6,
+            "adsr.sustain": 8,
+            "adsr.release": 6.5,
+            "vcf.freq": 6.5
+          }
+        }
+      ],
+      "context": {
+        "vco1.pwm": "How far the LFO moves VCO-1’s width: the shimmer.",
+        "lfo.freq": "How fast the shimmer moves.",
+        "adsr.attack": "How slowly each chord swells in."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.freq",
+          "try": "Raise to 5.5",
+          "hear": "A faster, more nervous shimmer."
+        },
+        {
+          "id": "vcf.freq",
+          "try": "Pull down to 5",
+          "hear": "A softer, darker string."
+        }
+      ]
+    },
+    {
+      "id": "ody-whistle",
+      "name": "Filter Whistle",
+      "ref": "In the style of 1970s library music",
+      "artist": "Library music",
+      "tags": ["lead", "library music"],
+      "level": 3,
+      "blurb": "No oscillators at all: the filter ringing on its own, played in tune from the keys.",
+      "how": "At full RESONANCE the 4-pole filter oscillates by itself as a sine. With the VCOs out of the mixer and KYBD CV at full, the keys move the cutoff a semitone a key, so the whistle plays in tune. The LFO on the cutoff gives it vibrato.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 60, 1],
+          [1, 64, 1],
+          [2, 67, 1.5],
+          [3.5, 65, 0.5],
+          [4, 64, 2],
+          [6, 62, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Silence the VCOs, let the filter ring",
+          "module": "filter",
+          "why": "Take VCO-1 out of the mixer and turn RESONANCE fully up.\n- Mixer VCO-1 0 · 0%\n- VCF RESONANCE 10 · 100%\n- VCF FREQ 5.05 · 524 Hz\n- Listen for: a pure whistle with every key at the same pitch.",
+          "set": {
+            "mixer.vco1": 0,
+            "vcf.resonance": 10,
+            "vcf.freq": 5.05
+          }
+        },
+        {
+          "title": "Play it in tune",
+          "module": "filter",
+          "why": "KYBD CV at the top makes the cutoff follow the keys one to one.\n- VCF KYBD CV or S/H MIXER 10 · 100%\n- Listen for: the whistle playing the tune.",
+          "set": {
+            "vcf.mod1": 10
+          }
+        },
+        {
+          "title": "Vibrato and a soft start",
+          "module": "lfo",
+          "why": "A little LFO sine on the cutoff, and a slower attack.\n- VCF source (S/H or LFO) LFO sine\n- VCF S/H or LFO 0.3 · 3%\n- LFO FREQ 6 · 3.17 Hz\n- AR ATTACK 3 · 40 ms\n- AR RELEASE 4 · 160 ms\n- Listen for: a theremin-like line that fades in and wavers.",
+          "set": {
+            "vcf.mod2_src": "lfo_sine",
+            "vcf.mod2": 0.3,
+            "lfo.freq": 6,
+            "ar.attack": 3,
+            "ar.release": 4
+          }
+        }
+      ],
+      "context": {
+        "vcf.resonance": "SELF OSC: the filter is the sound.",
+        "vcf.mod1": "Keyboard tracking, which keeps the whistle in tune.",
+        "vcf.freq": "The whistle’s pitch at middle C."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.mode",
+          "try": "Switch to 2-POLE (4023)",
+          "hear": "A different, often weaker whistle from the 2-pole filter."
+        },
+        {
+          "id": "mixer.vco1",
+          "try": "Raise to 3",
+          "hear": "The sawtooth fighting the whistle: a squealing, unstable tone."
+        }
+      ]
+    },
+    {
+      "id": "ody-2pole-brass",
+      "name": "2-Pole Brass",
+      "ref": "In the style of disco horn stabs",
+      "artist": "Disco",
+      "tags": ["brass", "disco"],
+      "level": 2,
+      "blurb": "Bright brass stabs from the gentler 2-pole filter and a slow-opening envelope.",
+      "how": "The 4023 filter at 2 poles lets more of the sawtooth through than the 4-pole ones: brighter and brassier. The ADSR opens it with a short attack, the swell at the front of a horn note, and also shapes the loudness.",
+      "phrase": {
+        "bpm": 116,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.5],
+          [0, 67, 0.5],
+          [1.5, 60, 0.5],
+          [1.5, 67, 0.5],
+          [2.5, 62, 0.25],
+          [2.5, 69, 0.25],
+          [3, 63, 1],
+          [3, 70, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The 2-pole filter",
+          "module": "filter",
+          "why": "Switch VCF MODE to the 4023 and bring in VCO-2, slightly detuned.\n- VCF MODE 2-POLE (4023)\n- Mixer VCO-2 8 · 80%\n- VCO-2 FINE 5.5 · +0.2 st\n- Listen for: a bright, thick pair of sawtooths.",
+          "set": {
+            "vcf.mode": "4023",
+            "mixer.vco2": 8,
+            "vco2.fine": 5.5
+          }
+        },
+        {
+          "title": "The swell",
+          "module": "env",
+          "why": "Lower the cutoff and let the ADSR open it with a short attack.\n- VCF FREQ 4.5 · 358 Hz\n- VCF ADSR or AR 6 · 60%\n- ADSR ATTACK 3.5 · 56 ms\n- ADSR DECAY 5 · 320 ms\n- ADSR SUSTAIN 5 · 50%\n- Listen for: each note blooming bright, as a horn does.",
+          "set": {
+            "vcf.freq": 4.5,
+            "vcf.env": 6,
+            "adsr.attack": 3.5,
+            "adsr.decay": 5,
+            "adsr.sustain": 5
+          }
+        },
+        {
+          "title": "The ADSR on the loudness",
+          "module": "amp",
+          "why": "Switch the VCA to the ADSR too, with a short release.\n- VCA envelope (AR or ADSR) ADSR\n- ADSR RELEASE 3 · 110 ms\n- Listen for: stabs that ease in and drop away, rather than switching on and off.",
+          "set": {
+            "vca.env_src": "adsr",
+            "adsr.release": 3
+          }
+        }
+      ],
+      "context": {
+        "vcf.mode": "The 4023’s 2 poles keep it bright.",
+        "adsr.attack": "The swell at the front of each stab."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.mode",
+          "try": "Switch to 4-POLE (4075)",
+          "hear": "A rounder, darker brass."
+        },
+        {
+          "id": "adsr.attack",
+          "try": "Raise to 5",
+          "hear": "Slower, softer stabs."
+        }
+      ]
+    },
+    {
+      "id": "ody-drive-bass",
+      "name": "Driven Pulse Bass",
+      "ref": "In the style of new-wave bass lines",
+      "artist": "New wave",
+      "tags": ["bass", "new wave"],
+      "level": 2,
+      "blurb": "A gritty pulse bass with DRIVE on and the boom taken out by the high-pass.",
+      "how": "A narrowed pulse through the 4035 with resonance and a short envelope, then DRIVE for grit. The high-pass trims the lowest bass so the drive does not turn to mud.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.4],
+          [0.5, 40, 0.4],
+          [1, 52, 0.4],
+          [1.5, 40, 0.4],
+          [2, 43, 0.4],
+          [2.5, 40, 0.4],
+          [3, 45, 0.4],
+          [3.5, 47, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A narrow pulse",
+          "module": "osc",
+          "why": "Switch VCO-1 to its pulse and narrow it.\n- Mixer VCO-1 wave VCO-1 pulse\n- VCO-1 PULSE WIDTH 4 · 32%\n- Listen for: a thin, nasal tone.",
+          "set": {
+            "mixer.vco1_src": "pulse",
+            "vco1.pw": 4
+          }
+        },
+        {
+          "title": "Pluck it",
+          "module": "filter",
+          "why": "Close the 4035 with resonance and let the ADSR pluck it.\n- VCF MODE 4-POLE (4035)\n- VCF FREQ 3 · 127 Hz\n- VCF RESONANCE 6 · 60%\n- VCF ADSR or AR 5 · 50%\n- ADSR DECAY 3 · 79 ms\n- ADSR SUSTAIN 0 · 0%\n- Listen for: short, squelchy bass notes.",
+          "set": {
+            "vcf.mode": "4035",
+            "vcf.freq": 3,
+            "vcf.resonance": 6,
+            "vcf.env": 5,
+            "adsr.decay": 3,
+            "adsr.sustain": 0
+          }
+        },
+        {
+          "title": "Drive, and trim the boom",
+          "module": "amp",
+          "why": "Turn DRIVE on, and raise the high-pass a little.\n- DRIVE on\n- HPF CUTOFF FREQ 2 · 64 Hz\n- Listen for: a louder, gritty bass that stays tight at the bottom.",
+          "set": {
+            "drive.on": true,
+            "hpf.cutoff": 2
+          }
+        }
+      ],
+      "context": {
+        "drive.on": "The grit.",
+        "hpf.cutoff": "Keeps the lowest notes from going muddy.",
+        "vcf.resonance": "The squelch in each note."
+      },
+      "tweaks": [
+        {
+          "id": "drive.on",
+          "try": "Turn off",
+          "hear": "The same line, cleaner and quieter."
+        },
+        {
+          "id": "hpf.cutoff",
+          "try": "Raise to 4",
+          "hear": "A thin, telephone-like bass."
+        }
+      ]
+    },
+    {
+      "id": "ody-laser",
+      "name": "Laser Zap",
+      "ref": "In the style of 1970s science-fiction soundtracks",
+      "artist": "Science-fiction soundtracks",
+      "tags": ["fx", "sci-fi"],
+      "level": 1,
+      "blurb": "A falling zap: the ADSR throws VCO-1’s pitch up three octaves and lets it drop.",
+      "how": "VCO-1’s second FM slider on the ADSR at near full raises its pitch by over three octaves at the start of a note; with no sustain the pitch falls straight back, in the decay time.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.25],
+          [1, 60, 0.25],
+          [1.5, 67, 0.25],
+          [2, 55, 0.25],
+          [3, 60, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Throw the pitch up",
+          "module": "osc",
+          "why": "Switch VCO-1’s second FM slider to the ADSR and raise it nearly to the top. Take the sustain away.\n- VCO-1 FM source (S/H or ADSR) ADSR\n- VCO-1 FM (S/H or ADSR) 9 · 38.9 st\n- ADSR DECAY 3.5 · 110 ms\n- ADSR SUSTAIN 0 · 0%\n- Listen for: a high pitch diving down to the note.",
+          "set": {
+            "vco1.fm2_src": "adsr",
+            "vco1.fm2": 9,
+            "adsr.decay": 3.5,
+            "adsr.sustain": 0
+          }
+        },
+        {
+          "title": "A short tail",
+          "module": "env",
+          "why": "Lengthen the AR’s release a little.\n- AR RELEASE 3 · 79 ms\n- Listen for: each zap ending with a short fade.",
+          "set": {
+            "ar.release": 3
+          }
+        }
+      ],
+      "context": {
+        "vco1.fm2": "How far up the pitch is thrown.",
+        "adsr.decay": "How fast it falls."
+      },
+      "tweaks": [
+        {
+          "id": "adsr.decay",
+          "try": "Raise to 5.5",
+          "hear": "A slow, falling siren."
+        },
+        {
+          "id": "vco1.fm2_src",
+          "try": "Switch to S/H",
+          "hear": "Random jumps instead of a fall."
+        }
+      ]
+    },
+    {
+      "id": "ody-trill",
+      "name": "LFO Square Trill",
+      "ref": "In the style of jazz-fusion synth solos",
+      "artist": "Jazz fusion",
+      "tags": ["lead", "jazz fusion"],
+      "level": 1,
+      "blurb": "A rapid trill from one key: the LFO square flips VCO-1 between two pitches.",
+      "how": "VCO-1’s first FM source switched to the LFO square jumps its pitch up and down instead of bending it. A small depth makes it a trill a tone wide.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 67, 2],
+          [2, 69, 1],
+          [3, 72, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Square-wave FM",
+          "module": "osc",
+          "why": "Switch VCO-1’s first FM source to the LFO square and raise the slider a little.\n- VCO-1 FM source (LFO sine or square) LFO square\n- VCO-1 FM (LFO) 2.9 · ±1 st\n- LFO FREQ 7 · 5.02 Hz\n- Listen for: the note flipping quickly between two pitches.",
+          "set": {
+            "vco1.fm1_src": "lfo_square",
+            "vco1.fm1": 2.9,
+            "lfo.freq": 7
+          }
+        },
+        {
+          "title": "Soften the tone",
+          "module": "filter",
+          "why": "Lower the cutoff and add a little resonance.\n- VCF FREQ 7 · 2.0 kHz\n- VCF RESONANCE 3 · 30%\n- Listen for: a rounder trill.",
+          "set": {
+            "vcf.freq": 7,
+            "vcf.resonance": 3
+          }
+        }
+      ],
+      "context": {
+        "vco1.fm1_src": "The square jumps the pitch where the sine would bend it.",
+        "vco1.fm1": "How wide the trill is."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.fm1",
+          "try": "Raise to 5",
+          "hear": "A wider, wilder jump."
+        },
+        {
+          "id": "vco1.fm1_src",
+          "try": "Switch to LFO sine",
+          "hear": "Vibrato instead of a trill."
+        }
+      ]
+    },
+    {
+      "id": "ody-gain-drone",
+      "name": "Gain Drone",
+      "ref": "In the style of ambient drones",
+      "artist": "Ambient",
+      "tags": ["drone", "ambient"],
+      "level": 2,
+      "blurb": "A sound that never stops: VCA GAIN holds the amplifier open, and the LFO slowly moves the filter.",
+      "how": "VCA GAIN opens the VCA with no key held, so the VCOs drone on. Two detuned sawtooths and a little pink noise go through a low cutoff, which the LFO sine sweeps very slowly.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 36, 8]]
+      },
+      "steps": [
+        {
+          "title": "Hold the VCA open",
+          "module": "amp",
+          "why": "Raise VCA GAIN: the sound plays with no key held.\n- VCA GAIN 4 · 40%\n- Listen for: a constant tone at middle C.",
+          "set": {
+            "vca.gain": 4
+          }
+        },
+        {
+          "title": "Two sawtooths and some air",
+          "module": "mixer",
+          "why": "Lower VCO-1 a little, bring in VCO-2, detuned, and add a little pink noise.\n- Mixer VCO-1 7 · 70%\n- Mixer VCO-2 6 · 60%\n- VCO-2 FINE 5.2 · +0.1 st\n- NOISE or RING MOD 3 · 30%\n- NOISE GEN PINK\n- Listen for: a slowly beating drone with breath in it.",
+          "set": {
+            "mixer.vco1": 7,
+            "mixer.vco2": 6,
+            "vco2.fine": 5.2,
+            "mixer.noise_ring": 3,
+            "noise.colour": "pink"
+          }
+        },
+        {
+          "title": "Slow movement",
+          "module": "filter",
+          "why": "Lower the cutoff and let the LFO sine sweep it slowly.\n- VCF FREQ 4.5 · 358 Hz\n- VCF source (S/H or LFO) LFO sine\n- VCF S/H or LFO 3 · 30%\n- LFO FREQ 1.5 · 0.40 Hz\n- Listen for: the drone brightening and darkening over a few seconds.",
+          "set": {
+            "vcf.freq": 4.5,
+            "vcf.mod2_src": "lfo_sine",
+            "vcf.mod2": 3,
+            "lfo.freq": 1.5
+          }
+        }
+      ],
+      "context": {
+        "vca.gain": "Holds the amplifier open: the drone.",
+        "vcf.mod2": "How far the slow LFO moves the cutoff."
+      },
+      "tweaks": [
+        {
+          "id": "vca.gain",
+          "try": "Pull down to 0",
+          "hear": "Silence until a key is played."
+        },
+        {
+          "id": "noise.colour",
+          "try": "Switch to WHITE",
+          "hear": "A brighter, hissier breath."
+        }
+      ]
+    }
+  ]
+}

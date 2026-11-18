@@ -1,0 +1,60 @@
+{
+  "synth": "behringer-odyssey",
+  "title": "From the ARP Odyssey to the ODYSSEY",
+  "intro": "The ARP Odyssey was ARP Instruments’ answer to the Minimoog: a portable, duophonic synth whose modules are wired inside and set by sliders and switches, the 2600’s ideas without the patch cords. It went through three revisions, each with a different filter. Behringer’s ODYSSEY copies the last of them and puts all three filters on one switch, adding a sequencer, an arpeggiator and Klark Teknik effects.",
+  "timeline": [
+    {
+      "year": "1971",
+      "name": "ARP 2600",
+      "tag": "The parent",
+      "text": "ARP’s semi-modular: three VCOs, a filter, two envelopes, sample and hold and a ring modulator, pre-wired and set by sliders. The Odyssey takes its voice and fixes the routing behind switches."
+    },
+    {
+      "year": "1972",
+      "name": "ARP Odyssey Mk I",
+      "tag": "The original",
+      "text": "Two VCOs, duophonic, a sample and hold, a ring modulator, a high-pass after the low-pass, and an ADSR and an AR, in a white-faced case. Its low-pass is the 2-pole 4023."
+    },
+    {
+      "year": "1975",
+      "name": "ARP Odyssey Mk II",
+      "tag": "The 4035",
+      "text": "A black-and-gold panel, and during its run a 4-pole filter, the 4035, a ladder design. ARP replaced it with its own 4075 after Moog objected that it copied the patented ladder."
+    },
+    {
+      "year": "1978",
+      "name": "ARP Odyssey Mk III",
+      "tag": "Black and orange",
+      "text": "The black-and-orange panel the ODYSSEY copies, with the 4075 filter and the PROPORTIONAL PITCH CONTROL pads in place of a bend knob. ARP closed in 1981."
+    },
+    {
+      "year": "2015",
+      "name": "Korg ARP Odyssey",
+      "tag": "The first reissue",
+      "text": "A reissue made with ARP’s co-founder David Friend, on a smaller keyboard, with the three revisions’ filters on one switch."
+    },
+    {
+      "year": "2019",
+      "name": "Behringer ODYSSEY",
+      "tag": "This synth",
+      "text": "The Mk III panel on 37 full-size keys, the three filters on one switch, drive, a 32-step sequencer with 64 patterns, an eight-mode arpeggiator, and 32 Klark Teknik effects."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Behringer 2600",
+      "years": "2020",
+      "text": "Behringer’s copy of the ARP 2600, the Odyssey’s parent: the same kind of voice with every connection breakable by a patch cord. This app plays it too."
+    },
+    {
+      "name": "ARP Axxe",
+      "years": "1975",
+      "text": "ARP’s smaller sibling: one VCO, the same slider-and-switch layout, and a sample and hold."
+    },
+    {
+      "name": "Minimoog Model D",
+      "years": "1970",
+      "text": "The portable monosynth the Odyssey was built to compete with. This app plays the Model D."
+    }
+  ]
+}

@@ -21,13 +21,14 @@ python3 validate_synth.py --schema synth-blueprint.schema.json */*.synth.json
 
 Without `jsonschema` installed it runs the referential checks only.
 
-## In the app (43)
+## In the app (44)
 
 | Folder                                                     | Synth                                                                                                                                                            | Spec schema |
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | [`0-coast`](./0-coast/README.md)                           | Make Noise 0-COAST                                                                                                                                               | 0.13.0      |
 | [`2-xm`](./2-xm/README.md)                                 | Behringer 2-XM                                                                                                                                                   | 0.7.0       |
 | [`b2600`](./b2600/README.md)                               | Behringer 2600                                                                                                                                                   | 0.5.0       |
+| [`behringer-odyssey`](./behringer-odyssey/README.md)       | Behringer ODYSSEY                                                                                                                                                | 0.10.0      |
 | [`behringer-syncussion`](./behringer-syncussion/README.md) | Behringer SYNCUSSION SY-1                                                                                                                                        | 0.10.0      |
 | [`buchla-easel`](./buchla-easel/README.md)                 | Buchla and Associates (Berkeley, California) Music Easel: Model 208 Stored Program Sound Source and Model 218 Touch Activated Voltage Source (original, 1973-74) | 0.10.0      |
 | [`cat`](./cat/README.md)                                   | Behringer CAT                                                                                                                                                    | 0.7.0       |
@@ -69,13 +70,12 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`ub-xa-d`](./ub-xa-d/README.md)                           | Behringer UB-Xa D                                                                                                                                                | 0.7.0       |
 | [`wasp-deluxe`](./wasp-deluxe/README.md)                   | Behringer WASP Deluxe                                                                                                                                            | 0.7.0       |
 
-## Not in the app yet (13)
+## Not in the app yet (12)
 
 | Folder                                                                                 | Synth                                                                                                      | Spec schema |
 | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------- |
 | [`behringer-bds-3`](./behringer-bds-3/README.md)                                       | Behringer BDS-3 Classic 4-Channel Analog Drum Synthesizer with Special Effects Channel and Eurorack Format | 0.10.0      |
 | [`behringer-jn-80`](./behringer-jn-80/README.md)                                       | Behringer JN-80 Classic Analog 8-Voice Programmable Polyphonic Synth                                       | 0.12.0      |
-| [`behringer-odyssey`](./behringer-odyssey/README.md)                                   | Behringer ODYSSEY                                                                                          | 0.10.0      |
 | [`behringer-wave`](./behringer-wave/README.md)                                         | Behringer WAVE Legendary 8-Voice Multi-Timbral Hybrid Synthesizer                                          | 0.13.0      |
 | [`gamechanger-audio-motor-synth-mkii`](./gamechanger-audio-motor-synth-mkii/README.md) | Gamechanger Audio MOTOR Synth MKII                                                                         | 0.13.0      |
 | [`moog-matriarch`](./moog-matriarch/README.md)                                         | Moog Music Matriarch                                                                                       | 0.12.0      |
