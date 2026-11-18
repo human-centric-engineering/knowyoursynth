@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import '@/app/globals.css';
 import '@/app/brand-theme.css'; // fork-owned per-surface palette; must cascade after globals
 import { ThemeProvider } from '@/hooks/use-theme';
-import { NO_FLASH_THEME_SCRIPT } from '@/lib/theme';
+import { ThemeScript } from '@/components/app/theme-script';
 import { ErrorHandlingProvider } from '@/app/error-handling-provider';
 import { ConsentProvider } from '@/lib/consent';
 import { CookieBanner } from '@/components/cookie-consent';
@@ -42,13 +42,7 @@ export default async function RootLayout({
   return (
     <html lang="en" data-surface={surface} suppressHydrationWarning>
       <head>
-        <script
-          nonce={nonce}
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{
-            __html: NO_FLASH_THEME_SCRIPT,
-          }}
-        />
+        <ThemeScript nonce={nonce} />
       </head>
       <body suppressHydrationWarning>
         <SurfaceSync />

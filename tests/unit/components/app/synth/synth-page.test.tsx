@@ -393,6 +393,51 @@ describe('SynthPage layout', () => {
     expect(frame.style.width).toMatch(/^calc\(1 \* min\(100%, min\(var\(--kys-fit-max, 1560px\), /);
   });
 
+  it('orders the top rail: routing and the layers at the left, the inspector and Explain sections beside the tour', () => {
+    page();
+    const rail = button('Signal routing').closest('.kys-rail');
+    if (!rail) throw new Error('the routing toggle is on the rail');
+    const names = Array.from(rail.querySelectorAll('button[aria-label]'), (b) =>
+      b.getAttribute('aria-label')
+    );
+    const order = [
+      'Signal routing',
+      'Show sensitive controls',
+      'Undo',
+      'Redo',
+      'Inspector',
+      'Explain sections',
+      'Orientation tour',
+    ];
+    const at = order.map((n) => names.indexOf(n));
+    expect(at).not.toContain(-1);
+    expect([...at].sort((a, b) => a - b)).toEqual(at);
+    // Explain sections sits directly left of the tour.
+    expect(names.indexOf('Orientation tour') - names.indexOf('Explain sections')).toBe(1);
+    expect(names.indexOf('Explain sections') - names.indexOf('Inspector')).toBe(1);
+  });
+
+  it('keeps Explain sections beside the tour on a small screen, where the inspector is not on the rail', () => {
+    vi.spyOn(window, 'matchMedia').mockImplementation(
+      (query: string) =>
+        ({
+          matches: query === '(max-width: 1023px)',
+          media: query,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+        }) as unknown as MediaQueryList
+    );
+    page();
+    const rail = button('Signal routing').closest('.kys-rail');
+    if (!rail) throw new Error('the routing toggle is on the rail');
+    const names = Array.from(rail.querySelectorAll('button[aria-label]'), (b) =>
+      b.getAttribute('aria-label')
+    );
+    expect(names).not.toContain('Inspector');
+    expect(names.indexOf('Explain sections') - names.indexOf('Redo')).toBe(1);
+    expect(names.indexOf('Orientation tour') - names.indexOf('Explain sections')).toBe(1);
+  });
+
   it("draws the panel's rails in its faceplate's colour and ink, and in the outline's paper and ink", () => {
     if (!def) throw new Error('model-d is not registered');
     page();
@@ -553,6 +598,19 @@ describe('SynthPage engine', () => {
 
 describe('SynthPage patch', () => {
   // At `lg` and up the region these use is in its drawer (t-70).
+
+  it('keeps the drums and Count-in as set when the patch is restored, which is not another patch (t-277)', () => {
+    storeSound(def, FAT_BASS);
+    page();
+    fireEvent.click(button('Sequencer'));
+    fireEvent.click(screen.getByRole('combobox', { name: 'Drums' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Off' }));
+    fireEvent.click(button('Count-in'));
+    fireEvent.click(button('A-440'));
+    fireEvent.click(button('Restore patch'));
+    expect(screen.getByRole('combobox', { name: 'Drums' }).textContent).toContain('Off');
+    expect(button('Count-in').getAttribute('aria-pressed')).toBe('false');
+  });
 
   it('counts the controls moved off the sound, and restores the sound', () => {
     storeSound(def, FAT_BASS);
@@ -1089,8 +1147,43 @@ describe('SynthPage glides', () => {
     expect(patternsSent(sentNow()).length).toBe(during + 1);
     expectRiff(patternsSent(sentNow()).at(-1), FAT_BASS.phrase);
     expect(patternsSent(sentNow()).at(-1)?.muted).toBe(false);
-    // The riff the load held is not counted in again.
-    expect(patternsSent(sentNow()).at(-1)?.countIn).toBeUndefined();
+    // The riff the load held starts again counted in, with the new patch's drums (t-278).
+    expect(patternsSent(sentNow()).at(-1)?.countIn).toBe(4);
+  });
+
+  it('stops a pattern playing when a patch is picked, waits on Play, and starts it again counted in once loaded', async () => {
+    page();
+    settle();
+    fireEvent.click(button('Sequencer'));
+    await act(async () => {
+      fireEvent.click(button('Play'));
+    });
+    expect(patternsSent(sentNow())).toHaveLength(1);
+    const before = sentNow().length;
+    choose('Fat bass');
+    expect(sentNow().slice(before)).toContainEqual({ type: 'stopPattern' });
+    expect(patternsSent(sentNow().slice(before))).toHaveLength(0);
+    expect(button('Stop').querySelector('.animate-spin')).not.toBeNull();
+    await act(async () => {
+      settle();
+    });
+    const restart = patternsSent(sentNow().slice(before));
+    expect(restart).toHaveLength(1);
+    expect(restart[0]?.muted).toBe(false);
+    expect(restart[0]?.countIn).toBe(4);
+    expect(button('Stop').querySelector('.animate-spin')).toBeNull();
+  });
+
+  it('does not start anything when a patch is picked while stopped', async () => {
+    page();
+    settle();
+    fireEvent.click(button('Sequencer'));
+    choose('Fat bass');
+    await act(async () => {
+      settle();
+    });
+    expect(patternsSent(sentNow())).toHaveLength(0);
+    expect(button('Play').querySelector('.animate-spin')).toBeNull();
   });
 
   it('holds a riff whose sound was still starting when a patch was picked, and plays it once the load ends', async () => {
@@ -1147,10 +1240,11 @@ describe('SynthPage glides', () => {
     await act(async () => {
       settle();
     });
-    // It starts once, as the pattern the sequencer holds (the new sound's riff), not again as the riff, nor counted in.
+    // It starts once, as the pattern the sequencer holds (the new sound's riff), not again as the riff; counted in
+    // as the riff it was would have been (t-278).
     expect(patternsSent(sentNow()).length).toBe(during + 1);
     expectRiff(patternsSent(sentNow()).at(-1), FAT_BASS.phrase);
-    expect(patternsSent(sentNow()).at(-1)?.countIn).toBeUndefined();
+    expect(patternsSent(sentNow()).at(-1)?.countIn).toBe(4);
     expect(button('Stop')).toBeTruthy();
   });
 

@@ -562,8 +562,14 @@ function Synth({
   // Set as a change the visitor made, so it is what the browser and the account keep: a refresh comes back to it, and
   // the account's older panel does not replace it. Declared after the stored session, so it lands after the restore,
   // and before `?sound=`, a shared sound and `?mine=`, which still open their own sound over it.
+  // A synth switched to, or a sound opened by `?sound=`, is a patch chosen (t-277): the backing goes to Match and the
+  // Count-in on, once the stored setting has been read (`arrivedOnPatch`, below `useBacking`).
+  const arrivedOnPatch = useRef(false);
   useEffect(() => {
-    if (switchedTo.current) setSess(() => freshSession(synthDef, defaultSound));
+    if (switchedTo.current) {
+      setSess(() => freshSession(synthDef, defaultSound));
+      arrivedOnPatch.current = true;
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
   // `?sound=` loads that sound over whatever was stored, as a fresh panel, then drops out of the URL: a reload should
   // not throw away what was done on the panel since. Declared after the stored session, so it lands after the restore.
@@ -576,7 +582,10 @@ function Synth({
     const away = hashTarget(hash, (id) => synths.some((s) => s.id === id));
     if (bankHashRoute(hash) || (away && away.id !== synthId)) return;
     const p = sounds.find((x) => x.id === soundParam);
-    if (p) glide(() => freshSession(synthDef, p));
+    if (p) {
+      glide(() => freshSession(synthDef, p));
+      arrivedOnPatch.current = true;
+    }
     const url = new URL(window.location.href);
     url.searchParams.delete('sound');
     window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
@@ -1312,9 +1321,11 @@ function Synth({
   }, [seqOnEvent]);
   // What starts once a load ends: a Play pressed meanwhile, or the riff that was playing as it began. Nothing plays
   // until the panel is set; Play shows it is waiting with a spinner (`waiting`), and pressing it then cancels the wait.
-  // Counted in as it starts only if Play asked for it (t-266), not for the riff the load held.
+  // Counted in for a Play pressed meanwhile (t-266) and for what the load held (t-278), as the new patch's drums come in.
   const afterLoad = useRef<{ what: 'riff' | 'pattern'; countIn: boolean } | null>(null);
   const [waiting, setWaiting] = useState(false);
+  // Counts the loads that have ended with something waiting, for the start that follows them (below the load handler).
+  const [loadEnded, setLoadEnded] = useState(0);
   const queue = useCallback((what: 'riff' | 'pattern' | null, countIn = false) => {
     afterLoad.current = what ? { what, countIn } : null;
     setWaiting(what !== null);
@@ -1327,12 +1338,17 @@ function Synth({
     setPlaying(false);
     stopPattern();
   }, [queue, stopPattern]);
-  // The riff held for a load, to start again from its top once the panel is set. Following a MIDI clock it runs on,
-  // muted, rather than stop: the clock is not the page's to stop, and the run keeps its place on the clock's beat.
-  const holdRiff = useCallback(() => {
-    queue('riff');
-    if (!following) stopPattern();
-  }, [queue, following, stopPattern]);
+  // The riff or pattern held for a load, to start again from its top, counted in, once the panel is set (t-278).
+  // Following a MIDI clock it runs on, muted, rather than stop: the clock is not the page's to stop, and the run keeps
+  // its place on the clock's beat. The riff then still starts again as the new sound's; a pattern simply comes back in.
+  const holdForLoad = useCallback(
+    (what: 'riff' | 'pattern') => {
+      if (what === 'pattern' && following) return;
+      queue(what, true);
+      if (!following) stopPattern();
+    },
+    [queue, following, stopPattern]
+  );
   // The riff is the sequencer's run: it ends when the run does (a riff that plays once, at its end; a MIDI clock's Stop).
   useEffect(() => {
     if (!seq.playing) setPlaying(false);
@@ -1340,9 +1356,12 @@ function Synth({
   // A pattern starting is no longer the riff. Not while a patch loads: then once it has.
   const patternNow = useCallback(
     async (countIn = true) => {
-      if (await startPattern({ countIn })) setPlaying(false);
+      if (!(await startPattern({ countIn }))) return;
+      setPlaying(false);
+      // A load that began while the sound was starting (a patch picked straight after Play) holds it too (t-278).
+      if (isLoading()) holdForLoad('pattern');
     },
-    [startPattern]
+    [startPattern, isLoading, holdForLoad]
   );
   const playPattern = useCallback(async () => {
     replayRiff.current = false;
@@ -1553,22 +1572,25 @@ function Synth({
   });
   // What plays along with the pattern (t-266, t-267). The sound's own riff matches a drum beat by its default pattern's
   // style, as the catalogue sends it.
-  // The patch as chosen, not as read: one of the user's sounds is named before their list has arrived to show it.
-  const patchKey = designed
-    ? `${synthId}/${designed.preset.id}`
-    : sharedPanel
-      ? `${synthId}/shared:${shared?.slug ?? ''}`
-      : sess.soundId
-        ? `${synthId}/mine:${sess.soundId}`
-        : `${synthId}/${sess.presetId ?? ''}`;
   const backing = useBacking(seq, useBackingPref(), {
     fallbackInspiredBy: libraryPreset?.defaultPattern?.style ?? null,
-    patchKey,
   });
+  // Declared after the backing's stored setting is read, so the reset lands on it rather than on the default.
+  const { newPatch } = backing;
+  useEffect(() => {
+    if (!arrivedOnPatch.current) return;
+    arrivedOnPatch.current = false;
+    newPatch();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
   // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked beside Play, the
   // one a sound of the user's plays) or the riff edited, and with no sound's riff to play; otherwise the riff, which the
   // sequencer holds as it came. A new patch puts back its riff in the sequencer, and Play with it.
   const playsPattern = seqShown || !!seqLoaded || seq.edited || !shown;
+  // Read as a load ends, which with reduced motion is in an effect of the render that put the new sound on the panel.
+  const playsPatternRef = useRef(playsPattern);
+  useLayoutEffect(() => {
+    playsPatternRef.current = playsPattern;
+  });
   // The library pattern held as it came, marked in the picker. The riff as it came is the sound's default pattern (the
   // sequencer's library puts the one in the other's place), so with nothing loaded the default is what plays.
   const pickerCurrent = seq.edited
@@ -1658,13 +1680,13 @@ function Synth({
       // Not if what asked for it is over by the time audio has started (Replay's moves ended meanwhile). Otherwise
       // the sequencer starts the audio, inside the gesture that pressed Play.
       if (still && (!(await ensureAudio()) || !still())) return;
-      // Counted in only for Play (t-266): not for a lesson's Replay, nor the riff starting again after a load.
+      // Counted in for Play (t-266) and for the riff starting again after a load (t-278), not for a lesson's Replay.
       if (!(await startPattern({ countIn }))) return;
       // A load that began as the sound started (a patch picked straight after Play) holds it too.
-      if (isLoading()) holdRiff();
+      if (isLoading()) holdForLoad('riff');
       else setPlaying(true);
     },
-    [ensureAudio, startPattern, isLoading, holdRiff]
+    [ensureAudio, startPattern, isLoading, holdForLoad]
   );
   // The riff of the sound on the panel once a load ends, which may not be the one loading when it was asked for (a
   // second load taking over the first); with none, nothing plays. Kept before any effect runs: with reduced motion
@@ -1674,14 +1696,13 @@ function Synth({
     shownPhrase.current = shown?.phrase ?? null;
   });
   const riffShown = useCallback(
-    (still?: () => boolean, countIn = false) => {
-      if (shownPhrase.current) void riffNow(still, countIn);
+    async (still?: () => boolean, countIn = false) => {
+      if (shownPhrase.current) await riffNow(still, countIn);
       else stopRiff();
     },
     [riffNow, stopRiff]
   );
-  // Not while a patch loads: then once it has. Counted in for Play, not for the riff starting again as a patch is
-  // picked while it plays.
+  // Not while a patch loads: then once it has, counted in.
   const playRiff = useCallback(
     async (countIn = true) => {
       replayRiff.current = false;
@@ -1691,16 +1712,17 @@ function Synth({
     [isLoading, queue, riffNow]
   );
   // As a load begins, what the page is sounding is let go: the keys held (and under Hold), the arp's keys in the
-  // sequencer, and the riff, which stops and plays again from its top once the load ends (the sound's own, by then). A
-  // pattern runs on, muted through MIDI out's `silent`, and the player and MIDI out let go of their own notes. As it
-  // ends, what waited starts.
+  // sequencer, and the riff or pattern playing, which stops and plays again from its top, counted in, once the load ends
+  // (t-278). One following a MIDI clock runs on, muted through MIDI out's `silent`. As it ends, what waited starts: a
+  // pattern as the pattern only if Play would play the pattern now (`playsPattern`), since opening a sound puts its riff
+  // in the sequencer; otherwise the riff of the sound on the panel, or nothing for a sound with none.
   useEffect(() => {
     loadHandler.current = (on) => {
+      // What waited starts once the page has rendered out of the load (below), not here: the load ends inside the
+      // panel history's own update, while the sequencer still has MIDI out `silent`, and a start then would go out
+      // muted and without its count-in.
       if (!on) {
-        const then = afterLoad.current;
-        queue(null);
-        if (then?.what === 'riff') riffShown(undefined, then.countIn);
-        else if (then?.what === 'pattern') void patternNow(then.countIn);
+        if (afterLoad.current) setLoadEnded((n) => n + 1);
         return;
       }
       new Set([...downRef.current.keys(), ...heldRef.current]).forEach((n) =>
@@ -1710,10 +1732,26 @@ function Synth({
       heldRef.current.clear();
       seqTook.current.forEach((_, n) => seqNoteOut.current(n));
       seqTook.current.clear();
-      // The riff stops for the load and starts again from its top (the new sound's) once the panel is set.
-      if (playing) holdRiff();
+      if (playing) holdForLoad('riff');
+      else if (seq.playing) holdForLoad('pattern');
     };
   });
+
+  // A load has ended and the page has rendered out of it: what waited starts, Play's spinner held until now. Stop
+  // pressed meanwhile cleared it; a second load begun meanwhile waits for its own end.
+  useEffect(() => {
+    if (!loadEnded || loading) return;
+    const then = afterLoad.current;
+    if (!then) return;
+    // The spinner stays until the start has gone out (the sound may still be starting): Play does not flash back.
+    afterLoad.current = null;
+    const done = () => {
+      if (!afterLoad.current) setWaiting(false);
+    };
+    if (then.what === 'pattern' && playsPatternRef.current)
+      void patternNow(then.countIn).finally(done);
+    else void riffShown(undefined, then.countIn).finally(done);
+  }, [loadEnded, loading]); // eslint-disable-line react-hooks/exhaustive-deps -- on a load's end, once rendered
 
   // computer keyboard. Each key remembers the note it started, so a key held across an octave change (or a Hold
   // toggle, which re-registers these listeners) still stops the note it is sounding.
@@ -1877,7 +1915,10 @@ function Synth({
     leaveShared();
     setDesigned(null);
     glide(() => ({ presetId: id, step: null, soundId: null, ...presetState(synthDef, p) }));
-    if (playing) void playRiff(false);
+    // Restore, or the same sound picked again, is not another patch: the drums and Count-in stay as set.
+    if (id !== sess.presetId || sess.soundId || designed || sharedPanel) backing.newPatch();
+    // Counted in as it starts again on the new patch (t-278).
+    if (playing) void playRiff();
   };
 
   // A sound the tutor designed opens as choosing a library sound does, with its own lesson in the Lesson panel. The
@@ -1894,7 +1935,9 @@ function Synth({
       soundId: null,
       ...presetState(synthDef, d.preset),
     }));
-    if (playing) void playRiff(false);
+    backing.newPatch();
+    // Counted in as it starts again on the new patch (t-278).
+    if (playing) void playRiff();
     return () => {
       openSeq.current++;
       setDesigned(before.designed);
@@ -1970,6 +2013,7 @@ function Synth({
     leaveShared();
     setDesigned(null);
     glide(() => ({ presetId: lib, step: null, soundId: d.id, ...panel }));
+    backing.newPatch();
     setSaved({ id: d.id, ...panel });
     mine.put(d);
     if (!d.panel)
@@ -2027,7 +2071,10 @@ function Synth({
     setDesigned(null);
     // Kept, it still counts as the visitor's change, so the account's last panel arriving later does not replace it.
     if (keep) patch((s) => s);
-    else glide(() => ({ presetId: lib, step: null, soundId: null, ...panel }));
+    else {
+      glide(() => ({ presetId: lib, step: null, soundId: null, ...panel }));
+      backing.newPatch();
+    }
     writeStored(sharedFromKey(synthId), shared.slug);
     setSharedPanel(panel);
     setSharedNotice(
@@ -2185,7 +2232,7 @@ function Synth({
       const replay = how === 'replay' && (replayRiff.current || !transportPlaying);
       if (walk(fn, from, moves, endReplayRiff) && replay) {
         replayRiff.current = true;
-        riffShown(() => replayRiff.current);
+        void riffShown(() => replayRiff.current);
       }
     };
     if (ownLesson) {
@@ -2585,31 +2632,32 @@ function Synth({
                 default="none"
               >
                 <div className="kys-instrument">
-                  {/* The panel's top rail: the layers over the panel, the inspector, the tour and its help, on a strip of
+                  {/* The panel's top rail: the routing view and the layers over the panel at the left; at the right the
+              history, the inspector, Explain sections, the tour and its help (t-276), on a strip of
               the faceplate along its head, as the rail at its foot carries how it is drawn. */}
                   <div className="px-2 pt-2">
                     <div
                       className={`kys-rail is-top mx-auto ${view.outline ? 'is-outline' : ''} ${lightFace ? 'is-light' : ''}`}
                       style={railStyle}
                     >
+                      {routing && (
+                        <div role="group" aria-label="Views" className="kys-rail-group">
+                          <LayerToggle
+                            ref={routingToggleRef}
+                            label="Signal routing"
+                            short="Signal routing"
+                            icon={<Waypoints size={17} aria-hidden="true" />}
+                            on={routingOn}
+                            title="Turn the panel over to see how its parts are wired. What the patch uses now is lit, and follows the panel as it changes."
+                            onClick={() => flipPanel(!routingOn)}
+                          />
+                        </div>
+                      )}
                       <div
                         role="group"
                         aria-label="Layers over the panel"
                         className="kys-rail-group"
                       >
-                        <LayerToggle
-                          label="Explain sections"
-                          short="Sections"
-                          icon={<Shapes size={17} aria-hidden="true" />}
-                          on={areasOn}
-                          title="Colour in every named part of the panel, and explain what it does when you point at it."
-                          onClick={() => {
-                            setAreasOn(!areasOn);
-                            setTourOn(false);
-                            findStore.set(null);
-                            focusStore.set((f) => (f && f.kind === 'area' ? null : f));
-                          }}
-                        />
                         <SignalMenu
                           mode={signal}
                           onMode={setSignal}
@@ -2625,32 +2673,7 @@ function Synth({
                           onClick={() => setHeatOn(!heatOn)}
                         />
                       </div>
-                      {!small && (
-                        <div role="group" aria-label="Over the panel" className="kys-rail-group">
-                          <LayerToggle
-                            label="Inspector"
-                            short="Inspect"
-                            icon={<ScanSearch size={17} aria-hidden="true" />}
-                            on={card === 'inspector'}
-                            title="Open the inspector over the panel: what the control under the pointer does, and its value."
-                            onClick={() => openSection('inspector')}
-                          />
-                        </div>
-                      )}
-                      {routing && (
-                        <div role="group" aria-label="Views" className="kys-rail-group">
-                          <LayerToggle
-                            ref={routingToggleRef}
-                            label="Signal routing"
-                            short="Signal routing"
-                            icon={<Waypoints size={17} aria-hidden="true" />}
-                            on={routingOn}
-                            title="Turn the panel over to see how its parts are wired. What the patch uses now is lit, and follows the panel as it changes."
-                            onClick={() => flipPanel(!routingOn)}
-                          />
-                        </div>
-                      )}
-                      <span className="kys-rail-end">
+                      <div className="kys-rail-end">
                         {/* Undo and Redo, on the panel's own rail: they take back what was done to it. */}
                         <span role="group" aria-label="History" className="kys-rail-history">
                           <PlayerTip
@@ -2679,6 +2702,35 @@ function Synth({
                             </button>
                           </PlayerTip>
                         </span>
+                        <div
+                          role="group"
+                          aria-label="Inspect and explain"
+                          className="kys-rail-group"
+                        >
+                          {!small && (
+                            <LayerToggle
+                              label="Inspector"
+                              short="Inspect"
+                              icon={<ScanSearch size={17} aria-hidden="true" />}
+                              on={card === 'inspector'}
+                              title="Open the inspector over the panel: what the control under the pointer does, and its value."
+                              onClick={() => openSection('inspector')}
+                            />
+                          )}
+                          <LayerToggle
+                            label="Explain sections"
+                            short="Sections"
+                            icon={<Shapes size={17} aria-hidden="true" />}
+                            on={areasOn}
+                            title="Colour in every named part of the panel, and explain what it does when you point at it."
+                            onClick={() => {
+                              setAreasOn(!areasOn);
+                              setTourOn(false);
+                              findStore.set(null);
+                              focusStore.set((f) => (f && f.kind === 'area' ? null : f));
+                            }}
+                          />
+                        </div>
                         <PanelSwitch
                           label="Orientation tour"
                           short="Tour"
@@ -2692,7 +2744,7 @@ function Synth({
                           }}
                         />
                         <HelpButton title="How to use the panel" items={PANEL_HELP} />
-                      </span>
+                      </div>
                     </div>
                   </div>
                   {/* The panel, or its back: the routing view. The panel stays laid out under the view, hidden and inert,

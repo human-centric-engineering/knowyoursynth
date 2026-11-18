@@ -266,8 +266,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   the screen, as a hardware panel's lip carries its smaller switches. They take the synth's own
   faceplate colour and print in its silkscreen ink (`theme.panel`, `panel2` and `ink`, passed as
   `--rail-face`, `--rail-face2` and `--rail-print`), or the outline drawing's paper and ink. The
-  head (`.is-top`) carries Sections, Signal and Sensitive, the inspector, Signal routing, then the
-  tour and its help at the right; each layer is its icon (with its word from `xl` up and below `lg`) and an LED
+  head (`.is-top`) carries Signal routing, Signal and Sensitive at the left, and at the right Undo and
+  Redo, the inspector, Sections, then the tour and its help (t-276); each layer is its icon (with its word from `xl` up and below `lg`) and an LED
   lit while it is over the panel. The foot (`.is-foot`) carries how the panel is drawn (Hardware or
   Outline; Layout, on a synth with a layout of its own (below): Modular or Long, or Compact or Full; and on a panel printed in another language, its Labels in that language or
   English, `kys.english`, kept in this browser), the magnifier and Hover help (the card that pops up when you point at a
@@ -356,14 +356,15 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   in and the scope's keyboard (dropped, not queued); lets go, as the load begins, of the keys held
   (Hold's too) and the arp's keys in the sequencer; stops a riff playing and plays the sound's
   riff again from its top once it has loaded, so nothing starts while the knobs move (`holdRiff`; a riff whose
-  sound was still starting as the load began is held too). Following a MIDI clock, the riff runs on muted instead:
-  the clock is not the page's to stop. It holds a Play pressed meanwhile until then (the riff of the sound on the
+  sound was still starting as the load began is held too). A pattern playing is stopped and started again from its
+  top the same way (t-278), and both start again counted in, with the new patch's drums (t-277). Following a MIDI
+  clock, the riff or pattern runs on muted instead: the clock is not the page's to stop. It holds a Play pressed meanwhile until then (the riff of the sound on the
   panel by then, should a second load take over; Mute drops it). A start waiting on the load (`waiting`) counts as
   playing for every transport (the bar's Play, the scope's, the sequencer's, a panel's Run button), so each reads Stop
   and cancels it, and Replay does not start the riff over it; the bar's Play shows a spinner and is `aria-busy`.
   Opening the sequencer or picking a pattern meanwhile makes a waiting riff start as the pattern (`riffToPattern`). It passes `silent` to MIDI
-  out, so a running pattern goes on in time but muted on the synth and on the output (see
-  `sequencer.md`). The patch picker's LED pulses and its label says it is loading, so a dead key
+  out, so a pattern still running (one following a clock) goes on in time but muted on the synth and on the output
+  (see `sequencer.md`). The patch picker's LED pulses and its label says it is loading, so a dead key
   reads as "wait". The synth arriving is a load too, from the Default patch: it waits `ARRIVE_MS`
   on it, and the stored panel landing meanwhile carries the glide on.
   Choosing another synth turns the instrument on a turntable (`ViewTransition`, transition type
@@ -489,7 +490,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   the theme; the faceplate keeps its own colours). **MIDI** is one button in the bar, opening a
   dialog with the status, Connect / Try again / Stop, and how to connect a keyboard.
 - **On a phone** the bar's buttons wrap rather than scroll, with their words, at 44px on a touch
-  screen; the head rail's layers wrap as the rail narrows; below `md` the foot rail's search takes a line of its
+  screen; the head rail's layers, and its right-hand end (Undo and Redo, the inspector, Sections, the tour), wrap as the rail narrows; below `md` the foot rail's search takes a line of its
   own under the settings; the wordmark hides below `md`. The strip over the keys scrolls them by a drag the page handles, so a
   mouse drags it too. **Full screen** lifts the panel's 1560px cap (`--kys-fit-max`), so it takes
   the screen's width. The step the panel is at is not repeated here: the
