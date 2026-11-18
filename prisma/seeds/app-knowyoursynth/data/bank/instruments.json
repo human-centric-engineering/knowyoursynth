@@ -71,6 +71,7 @@
       "year": "1972",
       "kind": "mono",
       "people": ["alan-r-pearlman", "david-friend"],
+      "app": ["behringer-odyssey"],
       "text": "A smaller, keyboard-only cousin of the 2600 with two oscillators, sync, ring modulation and sliders for every setting. ARP’s answer to the Minimoog."
     },
     {

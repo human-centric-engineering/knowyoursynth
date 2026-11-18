@@ -136,6 +136,10 @@
       "reason": "Its stepped modulator plays the filter’s steps from one held note, so a written part would be played over again; the batch has Herbie Hancock only as “Chameleon”."
     },
     {
+      "sound": "behringer-odyssey/ody-sync-lead",
+      "reason": "Names George Duke’s Odyssey solos with Frank Zappa, which no pattern in this batch has; the batch has George Duke only as “Reach for It”, and the line is the lesson’s own, written to the style rather than taken from a record."
+    },
+    {
       "sound": "polivoks/pv-talk-box",
       "reason": "Names no work, and the batch has Zapp only as the bass of “More Bounce to the Ounce”, not a lead; the line is the lesson’s own, written to the style rather than taken from the record."
     }
@@ -4656,7 +4660,8 @@
         "take-5/t5-chameleon-bass",
         "neutron/jazz-funk-dry-bass",
         "mantis/mantis-chameleon-bass",
-        "grandmother/gm-chameleon-velocity"
+        "grandmother/gm-chameleon-velocity",
+        "behringer-odyssey/ody-funk-bass"
       ],
       "research": {
         "work": "Herbie Hancock, “Chameleon”, Head Hunters, 1973",

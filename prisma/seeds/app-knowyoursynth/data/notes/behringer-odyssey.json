@@ -1,0 +1,58 @@
+{
+  "synth": "behringer-odyssey",
+  "unusual": [
+    {
+      "target": "vco2",
+      "text": "Duophonic, as the ARP Odyssey was: hold two keys and VCO-1 takes the lower, VCO-2 the higher, through one filter and one pair of envelopes. Most monosynths play only one of the two."
+    },
+    {
+      "target": "vco1.fm1",
+      "text": "No modulation matrix and no knobs: each destination has its own depth sliders, and a switch under each slider picks its source, ARP’s fader-and-switch way of routing."
+    },
+    {
+      "target": "vcf.mode",
+      "text": "VCF MODE switches between the filters of the three ARP Odyssey revisions: the 2-pole 4023 of the first, the 4035 of the second and the 4075 of the third. ARP replaced the 4035 with its own 4075 after Moog objected that it copied the patented ladder."
+    },
+    {
+      "target": "hpf.cutoff",
+      "text": "A high-pass filter after the resonant low-pass, as on the original: together they thin the sound from both ends, where most monosynths have the low-pass alone."
+    },
+    {
+      "target": "lfo_sh",
+      "text": "The S/H mixer is a modulation source in its own right, before it is sampled: VCO-2’s FM and the filter can take the unsampled mix of VCO-1 and the noise or VCO-2."
+    },
+    {
+      "target": "repeat.adsr",
+      "text": "Either envelope can be fired by the LFO square instead of the keys (LFO REPEAT), only while a key is held or all the time: a held key becomes a rhythm."
+    },
+    {
+      "target": "vca.gain",
+      "text": "VCA GAIN opens the amplifier by itself, with no key held: the ARP way of making a drone, where other synths have a hold switch."
+    },
+    {
+      "target": "vco1.kybd",
+      "text": "VCO-1 can drop to sub-audio rates and leave the keys (LF KYBD OFF), becoming a second LFO for the S/H mixer or the ring modulator."
+    },
+    {
+      "target": "controller",
+      "text": "The PROPORTIONAL PITCH CONTROL: three pressure pads, bend down, vibrato and bend up, in place of the usual pitch and mod wheels."
+    }
+  ],
+  "limits": {
+    "intro": "The voice is modelled: both VCOs with COARSE, FINE, SYNC, LF KYBD OFF, pulse width and every FM and PWM slider and source switch, the duophonic keyboard, the ring modulator, white and pink noise, the S/H mixer and sample and hold with OUTPUT LAG, the three filter modes, RESONANCE to self-oscillation and the three filter modulation sliders, the high-pass, DRIVE, both envelopes with KYBD and LFO REPEAT, VCA GAIN and its envelope slider, PORTAMENTO and TRANSPOSE. The sequencer’s buttons and TEMPO drive the app’s sequencer, and the mod wheel is the vibrato pad.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "The Klark Teknik effects: the guide records 32 programs, not what each does, so FX ON, FX SEND, PROGRAM/VALUE and the parameter buttons change nothing. The S/H TRIGGER’s KYBD TRIG position: the sample and hold always reads on the LFO. The pitch-bend pads (the app has no pitch bend), the pedal input, so the S/H MIXER OR PEDAL positions are always the S/H mixer, and the portamento MODE button. Velocity and accent, the sequencer’s own patterns, banks, pages, swing, ratchets and SHIFT functions, the arpeggiator’s eight orders (the app’s sequencer has its own), MIDI, CV, gate and trigger, and the external audio input."
+      },
+      {
+        "title": "What the spec does not give",
+        "text": "The guide gives the envelope times: attack 5 ms to 5 s, decay 10 ms to 10 s, release 15 ms to 10 s (10 ms to 10 s on the AR). It does not give the VCO and LFO ranges, which are read from the panel’s print (20 Hz to 2 kHz, .2 to 20 Hz for LF, the LFO .2 to 20 Hz, both filters 16 Hz to 16 kHz). It does not say which of the two keys the filter tracks; here it is the higher, as the spec infers. It does not give where the drive and effects sit, the ring modulator’s inputs, the fine tuning’s span, any modulation depth, the glide time or the tempo’s range: here FINE is a tone either way, the ring modulator multiplies the two pulses, glide runs to 3 s, TEMPO 40 to 300 BPM, and the depths are the app’s estimates."
+      },
+      {
+        "title": "The circuit is approximated",
+        "text": "All three filter modes are one ladder filter, at 2 poles for the 4023 and 4 for the 4035 and 4075, the 4075 driven a little harder; their different circuits are not modelled. The high-pass is a gentle one-pole and sits before the low-pass here, not after it. DRIVE is a fixed overdrive. The FM sliders are square law, so their lower half gives small amounts."
+      }
+    ]
+  }
+}
