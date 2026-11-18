@@ -870,9 +870,15 @@ function Synth({
   };
 
   // From `lg` up the dock is pinned to the bottom of the screen. The page keeps room under it to scroll past, and the
-  // panel is fitted to the height between the top of the panel and the dock (`panelFrameStyle` reads the variables).
+  // panel is fitted to the height between the top of the panel and the dock (`panelFrameStyle` reads the variables),
+  // less the sequencer's rack while it is open under the panel (t-281), so the two are on screen together.
   const rootRef = useRef<HTMLDivElement | null>(null);
   const dockRef = useRef<HTMLDivElement | null>(null);
+  // The sequencer is open; under the panel from `lg` up (a rack module, t-281), in its sheet below it.
+  const [seqOpen, setSeqOpen] = useState(false);
+  const seqDocked = !small && seqOpen;
+  // The sequencer's rack under the panel, from `lg` up while it is open.
+  const rackRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const root = rootRef.current;
     const dock = dockRef.current;
@@ -883,8 +889,11 @@ function Synth({
       root.style.removeProperty('--kys-fit-chrome');
       return undefined;
     }
+    const rack = rackRef.current;
     const measure = () => {
       const dockH = dock.offsetHeight;
+      // The rack with its margins (10px over it, 12px under it, in `.kys-rack`).
+      const rackH = rack?.isConnected ? rack.offsetHeight + 22 : 0;
       // Full screen, what is above the panel is the player's own top, not the page's header.
       const full = document.fullscreenElement;
       const top = full?.contains(scroller)
@@ -892,11 +901,14 @@ function Synth({
         : scroller.getBoundingClientRect().top + window.scrollY;
       root.style.setProperty('--kys-dock-h', `${dockH}px`);
       // The space over the panel and under it: what is above it on the page, the scroller's padding, the panel's
-      // rail and the dock.
-      root.style.setProperty('--kys-fit-chrome', `${Math.round(top + dockH + 40 + RAIL_H)}px`);
+      // rail, the rack and the dock.
+      root.style.setProperty(
+        '--kys-fit-chrome',
+        `${Math.round(top + dockH + rackH + 40 + RAIL_H)}px`
+      );
     };
     measure();
-    // Written on the next frame, not inside the observer's callback: a taller dock (the piano shown) refits the
+    // Written on the next frame, not inside the observer's callback: a taller dock (the piano shown) or rack refits the
     // panel, which resizes the root it also watches, and a resize inside the callback is a "ResizeObserver loop".
     let frame = 0;
     const ro = new ResizeObserver(() => {
@@ -905,13 +917,14 @@ function Synth({
     });
     ro.observe(dock);
     ro.observe(root);
+    if (rack) ro.observe(rack);
     document.addEventListener('fullscreenchange', measure);
     return () => {
       cancelAnimationFrame(frame);
       ro.disconnect();
       document.removeEventListener('fullscreenchange', measure);
     };
-  }, [small, scrollerRef]);
+  }, [small, scrollerRef, seqDocked]);
 
   // The Sound Design tab lifts as the pointer comes near the dock (`stripNear`), inviting a press: not while the panel
   // is being worked (a drag, or a press or wheel on it within `PANEL_QUIET_MS`), so a turn of a knob at the panel's
@@ -1272,7 +1285,7 @@ function Synth({
   }, [engine, tempoBpm, following]);
   // The sequencer (`f-step-sequencer` t-80): it holds the sound's riff as a pattern. The bar's Play and the sequencer are one
   // transport: with the sequencer open, Play plays the pattern; either one starting stops the other, and Stop stops both.
-  const [seqOpen, setSeqOpen] = useState(false);
+  // (`seqOpen` is declared over the dock's measurement, which fits the panel around it.)
   // Mod lanes (t-82) play the panel with a lane's values in place of the panel's: the settings the voice gets, made the
   // same way, with those controls changed. A lane can't move the voice between mono, poly and dual, which would let go
   // of every held note on each step it did: a step that would plays the panel's settings.
@@ -1357,12 +1370,9 @@ function Synth({
     if (isLoading()) queue('pattern', true);
     else await patternNow();
   }, [isLoading, patternNow, queue]);
-  // Open under the panel from `lg` up (a rack module, t-281), in its sheet below it.
-  const seqDocked = !small && seqOpen;
   // Opened (from the bar, a panel button, the tutor or a shared pattern's link), the module is brought into view under
   // the panel, above the pinned dock. Asked for by a count, so asking again with it already open scrolls to it too,
   // and a request made below `lg`, where it is a sheet, is not taken up later.
-  const rackRef = useRef<HTMLDivElement>(null);
   const [revealAsked, setRevealAsked] = useState(0);
   const revealShown = useRef(0);
   const revealRack = useCallback(() => {
@@ -1380,6 +1390,8 @@ function Synth({
       const dockH = dockRef.current?.offsetHeight;
       if (dockH !== undefined) rack.style.scrollMarginBottom = `${dockH + 16}px`;
       rack.scrollIntoView?.({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
+      // The target is worked out as the scroll starts: from here the stylesheet's margin, which follows the dock, holds.
+      rack.style.removeProperty('scroll-margin-bottom');
     });
     return () => cancelAnimationFrame(raf);
   }, [seqDocked, revealAsked]);
