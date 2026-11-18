@@ -417,6 +417,27 @@ describe('SynthPage layout', () => {
     expect(names.indexOf('Explain sections') - names.indexOf('Inspector')).toBe(1);
   });
 
+  it('keeps Explain sections beside the tour on a small screen, where the inspector is not on the rail', () => {
+    vi.spyOn(window, 'matchMedia').mockImplementation(
+      (query: string) =>
+        ({
+          matches: query === '(max-width: 1023px)',
+          media: query,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+        }) as unknown as MediaQueryList
+    );
+    page();
+    const rail = button('Signal routing').closest('.kys-rail');
+    if (!rail) throw new Error('the routing toggle is on the rail');
+    const names = Array.from(rail.querySelectorAll('button[aria-label]'), (b) =>
+      b.getAttribute('aria-label')
+    );
+    expect(names).not.toContain('Inspector');
+    expect(names.indexOf('Explain sections') - names.indexOf('Redo')).toBe(1);
+    expect(names.indexOf('Orientation tour') - names.indexOf('Explain sections')).toBe(1);
+  });
+
   it("draws the panel's rails in its faceplate's colour and ink, and in the outline's paper and ink", () => {
     if (!def) throw new Error('model-d is not registered');
     page();

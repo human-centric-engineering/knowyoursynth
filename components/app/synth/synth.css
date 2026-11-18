@@ -1323,9 +1323,10 @@ svg .kys-hit:focus-visible {
   color: var(--rail-ink-hi);
 }
 
-/* The head: the layers and the inspector, each an icon (with its word where
-   there is room) and an LED lit while it is over the panel; the tour and its
-   help at the right. */
+/* The head: Signal routing and the layers at the left; at the right Undo and
+   Redo, the inspector and Explain sections, then the tour and its help (t-276).
+   Each toggle is an icon (with its word where there is room) and an LED lit
+   while it is over the panel. */
 .kys-rail-group {
   display: flex;
   flex-wrap: wrap;
@@ -1369,7 +1370,7 @@ svg .kys-hit:focus-visible {
   background: color-mix(in srgb, var(--rail-print, #ece9e2) 10%, transparent);
   box-shadow: none;
 }
-/* Undo and Redo: two quiet keys in the rail's print, before the tour, ruled off from it. */
+/* Undo and Redo: two quiet keys in the rail's print, ruled off from the inspector and Explain sections. */
 .kys-rail-history {
   display: flex;
   gap: 2px;
@@ -1396,9 +1397,16 @@ svg .kys-hit:focus-visible {
 }
 .kys-rail-end {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   align-items: center;
-  gap: 8px;
+  gap: 4px 8px;
   margin-left: auto;
+}
+/* The inspector and Explain sections, ruled off from the tour as Undo and Redo are from them. */
+.kys-rail-end > .kys-rail-group {
+  padding-right: 8px;
+  border-right: 1px solid var(--rail-rule);
 }
 .kys-rail-end > button {
   height: 28px;

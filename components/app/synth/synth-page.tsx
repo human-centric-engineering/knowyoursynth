@@ -2626,7 +2626,7 @@ function Synth({
                           onClick={() => setHeatOn(!heatOn)}
                         />
                       </div>
-                      <span className="kys-rail-end">
+                      <div className="kys-rail-end">
                         {/* Undo and Redo, on the panel's own rail: they take back what was done to it. */}
                         <span role="group" aria-label="History" className="kys-rail-history">
                           <PlayerTip
@@ -2655,7 +2655,11 @@ function Synth({
                             </button>
                           </PlayerTip>
                         </span>
-                        <div role="group" aria-label="Over the panel" className="kys-rail-group">
+                        <div
+                          role="group"
+                          aria-label="Inspect and explain"
+                          className="kys-rail-group"
+                        >
                           {!small && (
                             <LayerToggle
                               label="Inspector"
@@ -2693,7 +2697,7 @@ function Synth({
                           }}
                         />
                         <HelpButton title="How to use the panel" items={PANEL_HELP} />
-                      </span>
+                      </div>
                     </div>
                   </div>
                   {/* The panel, or its back: the routing view. The panel stays laid out under the view, hidden and inert,

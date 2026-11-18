@@ -489,7 +489,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   the theme; the faceplate keeps its own colours). **MIDI** is one button in the bar, opening a
   dialog with the status, Connect / Try again / Stop, and how to connect a keyboard.
 - **On a phone** the bar's buttons wrap rather than scroll, with their words, at 44px on a touch
-  screen; the head rail's layers wrap as the rail narrows; below `md` the foot rail's search takes a line of its
+  screen; the head rail's layers, and its right-hand end (Undo and Redo, the inspector, Sections, the tour), wrap as the rail narrows; below `md` the foot rail's search takes a line of its
   own under the settings; the wordmark hides below `md`. The strip over the keys scrolls them by a drag the page handles, so a
   mouse drags it too. **Full screen** lifts the panel's 1560px cap (`--kys-fit-max`), so it takes
   the screen's width. The step the panel is at is not repeated here: the
