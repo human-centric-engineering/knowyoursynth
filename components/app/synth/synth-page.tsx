@@ -2630,11 +2630,11 @@ function Synth({
                         className={`kys-rail is-top mx-auto ${view.outline ? 'is-outline' : ''} ${lightFace ? 'is-light' : ''}`}
                         style={railStyle}
                       >
-                        {/* Signal (t-279): three ways to see where the sound goes, side by side with no rule between
-                        them. The diagram is the panel's back; Dim unused and Live signal are on its face, so turning
-                        either on turns the face up. */}
-                        <div role="group" aria-label="Signal" className="kys-rail-group">
-                          {routing && (
+                        {/* Signal (t-279): two ways to see where the sound goes, side by side with no rule between
+                        them. The diagram is the panel's back and Live signal is on its face, so turning Live signal on
+                        turns the face up. A synth with no routing has neither. */}
+                        {routing && (
+                          <div role="group" aria-label="Signal" className="kys-rail-group">
                             <LayerToggle
                               ref={routingToggleRef}
                               label="Signal diagram"
@@ -2644,7 +2644,26 @@ function Synth({
                               title="Turn the panel over to see how its parts are wired, as a block diagram. What the patch uses is drawn solid, and lights as signal goes through it."
                               onClick={() => flipPanel(!routingOn)}
                             />
-                          )}
+                            <LayerToggle
+                              label="Live signal"
+                              short="Live signal"
+                              icon={<Activity size={17} aria-hidden="true" />}
+                              on={liveOn}
+                              title="Light each part the patch uses as signal goes through it, with a line from each part to the next: audio heavy, control light, gate dotted. It needs a sound to show anything: play a note on the Piano or a MIDI keyboard, or start a Sequencer pattern."
+                              onClick={() => {
+                                if (!liveOn && routingOn) flipPanel(false);
+                                setLiveOn(liveOn ? false : 'on');
+                              }}
+                            />
+                          </div>
+                        )}
+                        <div
+                          role="group"
+                          aria-label="Layers over the panel"
+                          className="kys-rail-group"
+                        >
+                          {/* Dim unused (t-279) sits with Sensitive, after the rule: both mark the panel's face as it is
+                          set, still, where Signal's two show the sound moving. Turning it on turns the face up. */}
                           <LayerToggle
                             label="Dim unused parts"
                             short="Dim unused"
@@ -2656,25 +2675,6 @@ function Synth({
                               setDimOn(!dimOn);
                             }}
                           />
-                          {routing && (
-                            <LayerToggle
-                              label="Live signal"
-                              short="Live signal"
-                              icon={<Activity size={17} aria-hidden="true" />}
-                              on={liveOn}
-                              title="Light each part the patch uses as signal goes through it when you play, with a line from each part to the next: audio heavy, control light, gate dotted."
-                              onClick={() => {
-                                if (!liveOn && routingOn) flipPanel(false);
-                                setLiveOn(liveOn ? false : 'on');
-                              }}
-                            />
-                          )}
-                        </div>
-                        <div
-                          role="group"
-                          aria-label="Layers over the panel"
-                          className="kys-rail-group"
-                        >
                           <LayerToggle
                             label="Show sensitive controls"
                             short="Sensitive"

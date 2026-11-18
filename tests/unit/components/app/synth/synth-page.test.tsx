@@ -2823,14 +2823,15 @@ describe('SynthPage signal routing', () => {
     expect(scroller()).not.toHaveAttribute('inert');
   });
 
-  it('sits with Dim unused parts and Live signal in one group, Sensitive outside it', () => {
+  it('groups the diagram with Live signal, and Dim unused parts with Sensitive after the rule', () => {
     page();
-    const signal = screen.getByRole('group', { name: 'Signal' });
-    const names = Array.from(signal.querySelectorAll('button[aria-label]'), (b) =>
-      b.getAttribute('aria-label')
-    );
-    expect(names).toEqual(['Signal diagram', 'Dim unused parts', 'Live signal']);
-    expect(signal).not.toContainElement(button('Show sensitive controls'));
+    const names = (group: string) =>
+      Array.from(
+        screen.getByRole('group', { name: group }).querySelectorAll('button[aria-label]'),
+        (b) => b.getAttribute('aria-label')
+      );
+    expect(names('Signal')).toEqual(['Signal diagram', 'Live signal']);
+    expect(names('Layers over the panel')).toEqual(['Dim unused parts', 'Show sensitive controls']);
   });
 
   it.each([['Dim unused parts'], ['Live signal']] as const)(

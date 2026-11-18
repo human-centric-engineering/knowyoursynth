@@ -266,8 +266,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   the screen, as a hardware panel's lip carries its smaller switches. They take the synth's own
   faceplate colour and print in its silkscreen ink (`theme.panel`, `panel2` and `ink`, passed as
   `--rail-face`, `--rail-face2` and `--rail-print`), or the outline drawing's paper and ink. The
-  head (`.is-top`) carries Signal (three toggles with no rule between them, t-279: Diagram, Dim unused, Live
-  signal) and Sensitive at the left, and at the right Undo and
+  head (`.is-top`) carries Signal (Diagram and Live signal, with no rule between them, t-279; only on a synth with a
+  routing), then after a rule Dim unused and Sensitive, at the left, and at the right Undo and
   Redo, the inspector, Sections, then the tour and its help (t-276); each layer is its icon (with its word from `xl` up and below `lg`) and an LED
   lit while it is over the panel. The head's tips open below it, over the panel, not up into the page's header
   (`TipSide` in `player-tip.tsx`, t-279). The foot (`.is-foot`) carries how the panel is drawn (Hardware or
@@ -282,11 +282,13 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   narrows, each step at a wider rail when there is a Layout or Labels setting. On a phone the search keeps a line of its
   own. Zoom is not on the foot while the routing view shows, which is at no zoom.
 - **Dim unused** and **Live signal** (`f-live-panel` t-150; a Signal menu of modes until t-279, now two toggles
-  of their own in the head rail's Signal group, beside Diagram) are the patch's signal on the panel's face. Either
+  of their own: Live signal in the head rail's Signal group beside Diagram, Dim unused after the rule beside
+  Sensitive) are the patch's signal on the panel's face. Either
   turned on while the diagram shows turns the panel face up; turned off, they leave the diagram where it is.
   **Dim unused** is the sound map's dimming of what the patch does not use (it was the Dim unused toggle, then the
   Signal menu's In use; still `kys.dim`, kept in the account). **Live signal** lights each part the patch uses over its
-  controls as signal goes through it, with or without the dimming. It is offered wherever the synth has a routing
+  controls as signal goes through it, with or without the dimming. It shows nothing until there is sound, so its tip says to play the Piano or a MIDI keyboard, or start a
+  Sequencer pattern. It is offered wherever the synth has a routing
   (`getSynthRouting()`) and is kept in this browser (`kys.live`). Its glow (`LiveLayer`, `components/app/panel/live-layer.tsx`) is the
   routing view's activity (`routingActivity()`) drawn over each block's cells (`liveAreas()`, the same
   `panelCells()` the dimming uses): its controls', and its jacks' with a cable in them, which is what carries
