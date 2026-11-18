@@ -55,9 +55,10 @@ const state = (over: Partial<LampState> = {}): LampState => ({
 });
 
 describe('every definition’s sequencer buttons', () => {
-  it('name buttons the synth has, and only the seven synths with sequencer buttons map any', () => {
+  it('name buttons the synth has, and only the eight synths with sequencer buttons map any', () => {
     const mapped = SYNTH_DEFS.filter((d) => d.seqButtons).map((d) => d.id);
     expect(mapped.sort()).toEqual([
+      'behringer-odyssey',
       'donner-b1',
       'minilogue-xd',
       'sub-37',
