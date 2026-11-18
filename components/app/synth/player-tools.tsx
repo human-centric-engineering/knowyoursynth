@@ -139,8 +139,8 @@ function ModePreview({ mode }: { mode: SignalMode }) {
 /**
  * The Signal layer over the panel (`f-live-panel` t-150), named Flow (t-279): a split button. Its main press turns
  * on the mode last used (Live, the first time, where the synth can show it; Path where it cannot) or turns it off;
- * the caret beside it opens the menu of every mode, each drawn small. Where the rail has the room (a container query
- * on the top rail, `synth.css`), the modes are on the rail itself instead, as LEDs, as the foot rail's settings are.
+ * the caret beside it opens the menu of every mode, each drawn small. Where the rail has the room (`useHeadFit`
+ * measures it), the modes are on the rail itself instead, as LEDs, as the foot rail's settings are.
  */
 export function SignalFlow({
   mode,
