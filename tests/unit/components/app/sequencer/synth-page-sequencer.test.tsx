@@ -215,6 +215,32 @@ describe('the sequencer on the synth page', () => {
     expect(sequencer()).toBeTruthy();
   });
 
+  it('brings the rack into view under the panel when the bar opens it, on the next frame (t-281)', async () => {
+    const scrolled = vi.fn();
+    Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
+      configurable: true,
+      value: scrolled,
+    });
+    try {
+      page();
+      fireEvent.click(button('Sequencer'));
+      await act(async () => {
+        await new Promise((r) => requestAnimationFrame(() => r(undefined)));
+      });
+      expect(scrolled).toHaveBeenCalledTimes(1);
+      expect(scrolled.mock.contexts[0]).toBe(sequencer().closest('.kys-rack'));
+      expect(scrolled.mock.calls[0][0]).toMatchObject({ block: 'nearest' });
+      // Put away by its own switch, it is not scrolled to.
+      fireEvent.click(button('Put the sequencer away'));
+      await act(async () => {
+        await new Promise((r) => requestAnimationFrame(() => r(undefined)));
+      });
+      expect(scrolled).toHaveBeenCalledTimes(1);
+    } finally {
+      Reflect.deleteProperty(HTMLElement.prototype, 'scrollIntoView');
+    }
+  });
+
   it('puts Count-in, Metronome and Drums on the pattern’s line, at its end (t-281)', () => {
     page();
     fireEvent.click(button('Sequencer'));

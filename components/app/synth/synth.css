@@ -2227,8 +2227,9 @@ svg .kys-hit:focus-visible {
    under the panel, as if the synth and it shared one rack. Ears with Phillips
    screws either side, a brushed, anodised faceplate, the unit's name engraved
    along its top with a run lamp, vents and a power switch. It slides out of the
-   rack as it opens: a clip (wide of its shadow), not a transform, as its
-   tooltips are `fixed`. */
+   rack as it opens: a clip (wide of its shadow), not a transform, which would
+   move its `fixed` tooltips with it. A tip shown during the 0.42s slide is
+   clipped with the rest until it ends. */
 .kys-rack {
   --rack-face: #15171c;
   --rack-face-hi: rgb(255 255 255 / 0.05);
@@ -2530,8 +2531,8 @@ svg .kys-hit:focus-visible {
   padding-left: 0;
   border-left: 0;
 }
-/* The patterns' tools are no longer the row's last: the rule is Drums' own, on its left. */
-.kys-seq-lib-row > .kys-seq-tool-group {
+/* Followed by Play along, the patterns' tools leave the rule to it, on its left. */
+.kys-seq-tool-group:has(+ .kys-seq-backing) {
   padding-right: 0;
   border-right: 0;
 }

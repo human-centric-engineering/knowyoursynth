@@ -595,7 +595,7 @@ export function Sequencer({
       {library ? (
         <PatternLibrary seq={seq} library={library} aside={playAlong} />
       ) : (
-        playAlong && <div className="kys-seq-lib-row">{playAlong}</div>
+        playAlong && <div className="kys-seq-lib">{playAlong}</div>
       )}
       <div className="kys-seq-head">
         <div className="kys-seq-transport">

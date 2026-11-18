@@ -896,7 +896,7 @@ function Synth({
       root.style.setProperty('--kys-fit-chrome', `${Math.round(top + dockH + 40 + RAIL_H)}px`);
     };
     measure();
-    // Written on the next frame, not inside the observer's callback: a tall dock (the sequencer open) refits the
+    // Written on the next frame, not inside the observer's callback: a taller dock (the piano shown) refits the
     // panel, which resizes the root it also watches, and a resize inside the callback is a "ResizeObserver loop".
     let frame = 0;
     const ro = new ResizeObserver(() => {
@@ -1359,25 +1359,30 @@ function Synth({
   }, [isLoading, patternNow, queue]);
   // Open under the panel from `lg` up (a rack module, t-281), in its sheet below it.
   const seqDocked = !small && seqOpen;
-  // Opened from the bar, the module is brought into view under the panel, above the pinned dock (its scroll margin).
+  // Opened (from the bar, a panel button, the tutor or a shared pattern's link), the module is brought into view under
+  // the panel, above the pinned dock. Asked for by a count, so asking again with it already open scrolls to it too,
+  // and a request made below `lg`, where it is a sheet, is not taken up later.
   const rackRef = useRef<HTMLDivElement>(null);
-  const revealRack = useRef(false);
+  const [revealAsked, setRevealAsked] = useState(0);
+  const revealShown = useRef(0);
+  const revealRack = useCallback(() => {
+    if (!small) setRevealAsked((n) => n + 1);
+  }, [small]);
   useEffect(() => {
-    if (!seqDocked || !revealRack.current) return undefined;
-    revealRack.current = false;
+    if (!seqDocked || revealAsked === revealShown.current) return undefined;
+    revealShown.current = revealAsked;
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    // Two frames on: the strip put away as the module opens changes the dock's height, which is measured on the next
-    // frame, and the module's scroll margin is that height.
-    let raf = requestAnimationFrame(() => {
-      raf = requestAnimationFrame(() =>
-        rackRef.current?.scrollIntoView?.({
-          block: 'nearest',
-          behavior: reduce ? 'auto' : 'smooth',
-        })
-      );
+    // On the next frame, once the dock is laid out without the strip the module put away; its scroll margin is the
+    // dock's height as it is then, read rather than taken from `--kys-dock-h`, which is written a frame later.
+    const raf = requestAnimationFrame(() => {
+      const rack = rackRef.current;
+      if (!rack) return;
+      const dockH = dockRef.current?.offsetHeight;
+      if (dockH !== undefined) rack.style.scrollMarginBottom = `${dockH + 16}px`;
+      rack.scrollIntoView?.({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
     });
     return () => cancelAnimationFrame(raf);
-  }, [seqDocked]);
+  }, [seqDocked, revealAsked]);
   // The bar's Sequencer button, which focus returns to when the module's power switch puts it away.
   const seqBtnRef = useRef<HTMLButtonElement | null>(null);
   const powerOff = () => {
@@ -1473,7 +1478,7 @@ function Synth({
     if (!sharedPattern?.pattern || !sharedFrom) return;
     loadPattern(sharedPattern.pattern, sharedFrom);
     // Brought into view: the pattern opened is what the link was for.
-    revealRack.current = true;
+    revealRack();
     setSeqOpen(true);
     if (small) openSheet('sequencer');
   };
@@ -1688,12 +1693,11 @@ function Synth({
     if (afterLoad.current?.what === 'riff') queue('pattern', afterLoad.current.countIn);
     setPlaying(false);
   };
-  // Opened by the bar's Sequencer button or a panel button (t-85). A panel button leaves the page where it is: the
-  // control just pressed stays in view rather than scroll away under the player's hand.
-  const openSequencer = (reveal = true) => {
+  // Opened by the bar's Sequencer button or a panel button (t-85).
+  const openSequencer = () => {
     if (small) openSheet('sequencer');
     else {
-      revealRack.current = reveal;
+      revealRack();
       setSeqOpen(true);
       // The docked sequencer takes the strip's place: the drawer is put away, the lesson with it, rather than left
       // open behind it to come back up when the sequencer closes.
@@ -1873,7 +1877,7 @@ function Synth({
       else {
         if (b === 'arp') flipKeys('arp');
         else if (b === 'record') flipKeys('step');
-        if (!seqShown) openSequencer(false);
+        if (!seqShown) openSequencer();
         else if (b !== 'arp' && b !== 'record') seq.panelIn(b);
       }
     };
@@ -2000,12 +2004,12 @@ function Synth({
       if (!held) return null;
       if (!small) {
         // Brought into view under the panel, to show the tutor's pattern.
-        revealRack.current = true;
+        revealRack();
         setSeqOpen(true);
       }
       return { held, undo: seqUndo };
     },
-    [seqEdit, seqLoad, seqUndo, small]
+    [seqEdit, seqLoad, seqUndo, small, revealRack]
   );
   const tutorPanel = useMemo(
     () => ({ values: stored.values, cables: stored.cables }),
