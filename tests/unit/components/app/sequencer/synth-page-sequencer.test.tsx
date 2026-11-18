@@ -445,7 +445,7 @@ describe('the sequencer while a sound loads (f-default-patch t-172)', () => {
     await press('Play');
     // Outside a load, the synth plays the pattern.
     expect(lastSent('pattern')).toMatchObject({ muted: false });
-    const run = lastSent('pattern')?.run ?? 0;
+    const runs = sent().filter((m) => m.type === 'pattern').length;
 
     choose('Wobble lead');
     expect(lastSent('stopPattern')).toEqual({ type: 'stopPattern' });
@@ -455,7 +455,7 @@ describe('the sequencer while a sound loads (f-default-patch t-172)', () => {
       fireEvent.keyDown(screen.getAllByRole('slider', { name: /^TUNE/ })[0], { key: 'ArrowUp' });
     });
     expect(lastSent('pattern')).toMatchObject({ muted: false, countIn: 4 });
-    expect(lastSent('pattern')?.run).toBeGreaterThan(run);
+    expect(sent().filter((m) => m.type === 'pattern')).toHaveLength(runs + 1);
     expect(button('Stop').querySelector('.animate-spin')).toBeNull();
   });
 

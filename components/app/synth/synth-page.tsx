@@ -1312,7 +1312,7 @@ function Synth({
   }, [seqOnEvent]);
   // What starts once a load ends: a Play pressed meanwhile, or the riff that was playing as it began. Nothing plays
   // until the panel is set; Play shows it is waiting with a spinner (`waiting`), and pressing it then cancels the wait.
-  // Counted in as it starts only if Play asked for it (t-266), not for the riff the load held.
+  // Counted in for a Play pressed meanwhile (t-266) and for what the load held (t-278), as the new patch's drums come in.
   const afterLoad = useRef<{ what: 'riff' | 'pattern'; countIn: boolean } | null>(null);
   const [waiting, setWaiting] = useState(false);
   const queue = useCallback((what: 'riff' | 'pattern' | null, countIn = false) => {
@@ -1327,13 +1327,17 @@ function Synth({
     setPlaying(false);
     stopPattern();
   }, [queue, stopPattern]);
-  // The riff held for a load, to start again from its top once the panel is set. Following a MIDI clock it runs on,
-  // muted, rather than stop: the clock is not the page's to stop, and the run keeps its place on the clock's beat.
-  const holdRiff = useCallback(() => {
-    // Counted in as it starts again (t-278), as the new patch's drums come in with it.
-    queue('riff', true);
-    if (!following) stopPattern();
-  }, [queue, following, stopPattern]);
+  // The riff or pattern held for a load, to start again from its top, counted in, once the panel is set (t-278).
+  // Following a MIDI clock it runs on, muted, rather than stop: the clock is not the page's to stop, and the run keeps
+  // its place on the clock's beat. The riff then still starts again as the new sound's; a pattern simply comes back in.
+  const holdForLoad = useCallback(
+    (what: 'riff' | 'pattern') => {
+      if (what === 'pattern' && following) return;
+      queue(what, true);
+      if (!following) stopPattern();
+    },
+    [queue, following, stopPattern]
+  );
   // The riff is the sequencer's run: it ends when the run does (a riff that plays once, at its end; a MIDI clock's Stop).
   useEffect(() => {
     if (!seq.playing) setPlaying(false);
@@ -1554,22 +1558,18 @@ function Synth({
   });
   // What plays along with the pattern (t-266, t-267). The sound's own riff matches a drum beat by its default pattern's
   // style, as the catalogue sends it.
-  // The patch as chosen, not as read: one of the user's sounds is named before their list has arrived to show it.
-  const patchKey = designed
-    ? `${synthId}/${designed.preset.id}`
-    : sharedPanel
-      ? `${synthId}/shared:${shared?.slug ?? ''}`
-      : sess.soundId
-        ? `${synthId}/mine:${sess.soundId}`
-        : `${synthId}/${sess.presetId ?? ''}`;
   const backing = useBacking(seq, useBackingPref(), {
     fallbackInspiredBy: libraryPreset?.defaultPattern?.style ?? null,
-    patchKey,
   });
   // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked beside Play, the
   // one a sound of the user's plays) or the riff edited, and with no sound's riff to play; otherwise the riff, which the
   // sequencer holds as it came. A new patch puts back its riff in the sequencer, and Play with it.
   const playsPattern = seqShown || !!seqLoaded || seq.edited || !shown;
+  // Read as a load ends, which with reduced motion is in an effect of the render that put the new sound on the panel.
+  const playsPatternRef = useRef(playsPattern);
+  useLayoutEffect(() => {
+    playsPatternRef.current = playsPattern;
+  });
   // The library pattern held as it came, marked in the picker. The riff as it came is the sound's default pattern (the
   // sequencer's library puts the one in the other's place), so with nothing loaded the default is what plays.
   const pickerCurrent = seq.edited
@@ -1662,10 +1662,10 @@ function Synth({
       // Counted in for Play (t-266) and for the riff starting again after a load (t-278), not for a lesson's Replay.
       if (!(await startPattern({ countIn }))) return;
       // A load that began as the sound started (a patch picked straight after Play) holds it too.
-      if (isLoading()) holdRiff();
+      if (isLoading()) holdForLoad('riff');
       else setPlaying(true);
     },
-    [ensureAudio, startPattern, isLoading, holdRiff]
+    [ensureAudio, startPattern, isLoading, holdForLoad]
   );
   // The riff of the sound on the panel once a load ends, which may not be the one loading when it was asked for (a
   // second load taking over the first); with none, nothing plays. Kept before any effect runs: with reduced motion
@@ -1691,16 +1691,20 @@ function Synth({
     [isLoading, queue, riffNow]
   );
   // As a load begins, what the page is sounding is let go: the keys held (and under Hold), the arp's keys in the
-  // sequencer, and the riff, which stops and plays again from its top once the load ends (the sound's own, by then). A
-  // pattern runs on, muted through MIDI out's `silent`, and the player and MIDI out let go of their own notes. As it
-  // ends, what waited starts.
+  // sequencer, and the riff or pattern playing, which stops and plays again from its top, counted in, once the load ends
+  // (t-278). One following a MIDI clock runs on, muted through MIDI out's `silent`. As it ends, what waited starts: a
+  // pattern as the pattern only if Play would play the pattern now (`playsPattern`), since opening a sound puts its riff
+  // in the sequencer; otherwise the riff of the sound on the panel, or nothing for a sound with none.
   useEffect(() => {
     loadHandler.current = (on) => {
       if (!on) {
         const then = afterLoad.current;
         queue(null);
         if (then?.what === 'riff') riffShown(undefined, then.countIn);
-        else if (then?.what === 'pattern') void patternNow(then.countIn);
+        else if (then?.what === 'pattern') {
+          if (playsPatternRef.current) void patternNow(then.countIn);
+          else riffShown(undefined, then.countIn);
+        }
         return;
       }
       new Set([...downRef.current.keys(), ...heldRef.current]).forEach((n) =>
@@ -1710,14 +1714,8 @@ function Synth({
       heldRef.current.clear();
       seqTook.current.forEach((_, n) => seqNoteOut.current(n));
       seqTook.current.clear();
-      // The riff stops for the load and starts again from its top (the new sound's) once the panel is set. So does a
-      // pattern (t-278): Play shows the wait, and it starts again counted in, with the new patch's drums. Following a
-      // MIDI clock it runs on, muted, as the riff does: the clock is not the page's to stop.
-      if (playing) holdRiff();
-      else if (seq.playing && !following) {
-        queue('pattern', true);
-        stopPattern();
-      }
+      if (playing) holdForLoad('riff');
+      else if (seq.playing) holdForLoad('pattern');
     };
   });
 
@@ -1883,8 +1881,9 @@ function Synth({
     leaveShared();
     setDesigned(null);
     glide(() => ({ presetId: id, step: null, soundId: null, ...presetState(synthDef, p) }));
+    backing.newPatch();
     // Counted in as it starts again on the new patch (t-278).
-    if (playing) void playRiff(true);
+    if (playing) void playRiff();
   };
 
   // A sound the tutor designed opens as choosing a library sound does, with its own lesson in the Lesson panel. The
@@ -1901,8 +1900,9 @@ function Synth({
       soundId: null,
       ...presetState(synthDef, d.preset),
     }));
+    backing.newPatch();
     // Counted in as it starts again on the new patch (t-278).
-    if (playing) void playRiff(true);
+    if (playing) void playRiff();
     return () => {
       openSeq.current++;
       setDesigned(before.designed);
@@ -1978,6 +1978,7 @@ function Synth({
     leaveShared();
     setDesigned(null);
     glide(() => ({ presetId: lib, step: null, soundId: d.id, ...panel }));
+    backing.newPatch();
     setSaved({ id: d.id, ...panel });
     mine.put(d);
     if (!d.panel)
@@ -2035,7 +2036,10 @@ function Synth({
     setDesigned(null);
     // Kept, it still counts as the visitor's change, so the account's last panel arriving later does not replace it.
     if (keep) patch((s) => s);
-    else glide(() => ({ presetId: lib, step: null, soundId: null, ...panel }));
+    else {
+      glide(() => ({ presetId: lib, step: null, soundId: null, ...panel }));
+      backing.newPatch();
+    }
     writeStored(sharedFromKey(synthId), shared.slug);
     setSharedPanel(panel);
     setSharedNotice(
