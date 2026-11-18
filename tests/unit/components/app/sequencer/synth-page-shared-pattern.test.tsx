@@ -237,8 +237,9 @@ describe('signed out', () => {
       loop: { notes: NOTES, beats: 3 },
       run: expect.any(Number),
       muted: false,
-      // Play counts in a bar (t-266).
+      // Play counts in a bar (t-266), with the drums on Match for the patch (t-277).
       countIn: 4,
+      backing: { click: false, drums: expect.objectContaining({ hits: expect.any(Array) }) },
     });
   });
 
