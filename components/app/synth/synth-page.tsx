@@ -1330,7 +1330,8 @@ function Synth({
   // The riff held for a load, to start again from its top once the panel is set. Following a MIDI clock it runs on,
   // muted, rather than stop: the clock is not the page's to stop, and the run keeps its place on the clock's beat.
   const holdRiff = useCallback(() => {
-    queue('riff');
+    // Counted in as it starts again (t-278), as the new patch's drums come in with it.
+    queue('riff', true);
     if (!following) stopPattern();
   }, [queue, following, stopPattern]);
   // The riff is the sequencer's run: it ends when the run does (a riff that plays once, at its end; a MIDI clock's Stop).
@@ -1658,7 +1659,7 @@ function Synth({
       // Not if what asked for it is over by the time audio has started (Replay's moves ended meanwhile). Otherwise
       // the sequencer starts the audio, inside the gesture that pressed Play.
       if (still && (!(await ensureAudio()) || !still())) return;
-      // Counted in only for Play (t-266): not for a lesson's Replay, nor the riff starting again after a load.
+      // Counted in for Play (t-266) and for the riff starting again after a load (t-278), not for a lesson's Replay.
       if (!(await startPattern({ countIn }))) return;
       // A load that began as the sound started (a patch picked straight after Play) holds it too.
       if (isLoading()) holdRiff();
@@ -1680,8 +1681,7 @@ function Synth({
     },
     [riffNow, stopRiff]
   );
-  // Not while a patch loads: then once it has. Counted in for Play, not for the riff starting again as a patch is
-  // picked while it plays.
+  // Not while a patch loads: then once it has, counted in.
   const playRiff = useCallback(
     async (countIn = true) => {
       replayRiff.current = false;
@@ -1710,8 +1710,14 @@ function Synth({
       heldRef.current.clear();
       seqTook.current.forEach((_, n) => seqNoteOut.current(n));
       seqTook.current.clear();
-      // The riff stops for the load and starts again from its top (the new sound's) once the panel is set.
+      // The riff stops for the load and starts again from its top (the new sound's) once the panel is set. So does a
+      // pattern (t-278): Play shows the wait, and it starts again counted in, with the new patch's drums. Following a
+      // MIDI clock it runs on, muted, as the riff does: the clock is not the page's to stop.
       if (playing) holdRiff();
+      else if (seq.playing && !following) {
+        queue('pattern', true);
+        stopPattern();
+      }
     };
   });
 
@@ -1877,7 +1883,8 @@ function Synth({
     leaveShared();
     setDesigned(null);
     glide(() => ({ presetId: id, step: null, soundId: null, ...presetState(synthDef, p) }));
-    if (playing) void playRiff(false);
+    // Counted in as it starts again on the new patch (t-278).
+    if (playing) void playRiff(true);
   };
 
   // A sound the tutor designed opens as choosing a library sound does, with its own lesson in the Lesson panel. The
@@ -1894,7 +1901,8 @@ function Synth({
       soundId: null,
       ...presetState(synthDef, d.preset),
     }));
-    if (playing) void playRiff(false);
+    // Counted in as it starts again on the new patch (t-278).
+    if (playing) void playRiff(true);
     return () => {
       openSeq.current++;
       setDesigned(before.designed);

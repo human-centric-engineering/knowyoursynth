@@ -1134,8 +1134,43 @@ describe('SynthPage glides', () => {
     expect(patternsSent(sentNow()).length).toBe(during + 1);
     expectRiff(patternsSent(sentNow()).at(-1), FAT_BASS.phrase);
     expect(patternsSent(sentNow()).at(-1)?.muted).toBe(false);
-    // The riff the load held is not counted in again.
-    expect(patternsSent(sentNow()).at(-1)?.countIn).toBeUndefined();
+    // The riff the load held starts again counted in, with the new patch's drums (t-278).
+    expect(patternsSent(sentNow()).at(-1)?.countIn).toBe(4);
+  });
+
+  it('stops a pattern playing when a patch is picked, waits on Play, and starts it again counted in once loaded', async () => {
+    page();
+    settle();
+    fireEvent.click(button('Sequencer'));
+    await act(async () => {
+      fireEvent.click(button('Play'));
+    });
+    expect(patternsSent(sentNow())).toHaveLength(1);
+    const before = sentNow().length;
+    choose('Fat bass');
+    expect(sentNow().slice(before)).toContainEqual({ type: 'stopPattern' });
+    expect(patternsSent(sentNow().slice(before))).toHaveLength(0);
+    expect(button('Stop').querySelector('.animate-spin')).not.toBeNull();
+    await act(async () => {
+      settle();
+    });
+    const restart = patternsSent(sentNow().slice(before));
+    expect(restart).toHaveLength(1);
+    expect(restart[0]?.muted).toBe(false);
+    expect(restart[0]?.countIn).toBe(4);
+    expect(button('Stop').querySelector('.animate-spin')).toBeNull();
+  });
+
+  it('does not start anything when a patch is picked while stopped', async () => {
+    page();
+    settle();
+    fireEvent.click(button('Sequencer'));
+    choose('Fat bass');
+    await act(async () => {
+      settle();
+    });
+    expect(patternsSent(sentNow())).toHaveLength(0);
+    expect(button('Play').querySelector('.animate-spin')).toBeNull();
   });
 
   it('holds a riff whose sound was still starting when a patch was picked, and plays it once the load ends', async () => {
@@ -1192,10 +1227,11 @@ describe('SynthPage glides', () => {
     await act(async () => {
       settle();
     });
-    // It starts once, as the pattern the sequencer holds (the new sound's riff), not again as the riff, nor counted in.
+    // It starts once, as the pattern the sequencer holds (the new sound's riff), not again as the riff; counted in
+    // as the riff it was would have been (t-278).
     expect(patternsSent(sentNow()).length).toBe(during + 1);
     expectRiff(patternsSent(sentNow()).at(-1), FAT_BASS.phrase);
-    expect(patternsSent(sentNow()).at(-1)?.countIn).toBeUndefined();
+    expect(patternsSent(sentNow()).at(-1)?.countIn).toBe(4);
     expect(button('Stop')).toBeTruthy();
   });
 
