@@ -3330,10 +3330,13 @@ svg .kys-hit:focus-visible {
   margin-left: auto;
 }
 /* Where the steps' column is too narrow for the tool row on one line, its words give way to their icons, named by
-   their tooltips. The column's width, not the screen's: the rack, the sheet and the inspector beside it all change it. */
+   their tooltips. The column's width, not the screen's: the rack, the sheet and the inspector beside it all change it.
+   Only where there is hover to show a tooltip: a finger keeps the words, and the row wraps instead. */
 @container seq-main (max-width: 899px) {
-  .kys-seq-tool-text {
-    display: none;
+  @media (hover: hover) {
+    .kys-seq-tool-text {
+      display: none;
+    }
   }
 }
 .kys-seq-tool {
@@ -3688,8 +3691,8 @@ svg .kys-hit:focus-visible {
 .kys-seq-note > .kys-cell {
   flex: 1 1 auto;
 }
-.kys-seq-inspect-row > .kys-cell > *,
-.kys-seq-note > .kys-cell > * {
+.kys-seq-inspect-row > .kys-cell > :is(.kys-cell-hit, .kys-cell-select),
+.kys-seq-note > .kys-cell > :is(.kys-cell-hit, .kys-cell-select) {
   flex: 1;
 }
 .kys-seq-notes {
@@ -3787,6 +3790,12 @@ svg .kys-hit:focus-visible {
   }
   .kys-seq-key {
     height: 64px;
+  }
+  /* The faceplate's ? keeps its look and the plate its height: the target grows past it on every side. */
+  .kys-rack-help button {
+    width: 44px;
+    height: 44px;
+    margin: -11px;
   }
   .kys-seq-menuitem {
     height: 44px;

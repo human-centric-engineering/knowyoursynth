@@ -13,8 +13,7 @@
 import type { ReactNode, Ref } from 'react';
 import { Power } from 'lucide-react';
 import { PlayerTip } from '@/components/app/synth/player-tip';
-import { HelpButton } from '@/components/app/synth/bar-controls';
-import { SEQ_HELP } from '@/components/app/sequencer/sequencer';
+import { SequencerHelp } from '@/components/app/sequencer/sequencer';
 
 /** One rack ear: two screws, top and bottom, with an engraving between them. */
 function Ear({ side, engraving }: { side: 'left' | 'right'; engraving: string }) {
@@ -53,7 +52,7 @@ export function SequencerRack({
           </span>
           <span className="kys-rack-groove" aria-hidden="true" />
           <span className="kys-rack-help">
-            <HelpButton title="How the sequencer works" items={SEQ_HELP} wide />
+            <SequencerHelp />
           </span>
           <span className="kys-rack-run" aria-hidden="true">
             <span className="kys-rack-run-led" />

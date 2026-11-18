@@ -199,6 +199,11 @@ export const SEQ_HELP: readonly (readonly [string, string])[] = [
   ],
 ];
 
+/** The module's help: at the end of the tool row in the sheet, on the faceplate in the rack (t-282). */
+export function SequencerHelp() {
+  return <HelpButton title="How the sequencer works" items={SEQ_HELP} wide />;
+}
+
 /** The note new notes start on: the pattern's last note before `at`, else the first after it, else C3 above the root. */
 function nearbyNote(steps: readonly Step[], at: number, root: number): number {
   for (let i = at; i >= 0; i--) {
@@ -251,7 +256,7 @@ export function Sequencer({
   rack = false,
 }: {
   seq: SequencerState;
-  /** In the rack (t-281), whose faceplate carries the module's help: the tool row then has none. */
+  /** In the rack, whose faceplate (t-282) carries the module's help: the tool row then has none. */
   rack?: boolean;
   /** What plays along: count-in, metronome and drums (t-266, t-267). Left out, the module has none of their controls. */
   backing?: Backing;
@@ -1069,7 +1074,7 @@ export function Sequencer({
                   disabled: !seq.canUndo,
                 }
               )}
-              {!rack && <HelpButton title="How the sequencer works" items={SEQ_HELP} wide />}
+              {!rack && <SequencerHelp />}
             </div>
           </div>
         </div>
