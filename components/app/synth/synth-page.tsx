@@ -3043,7 +3043,7 @@ function Synth({
             button, which brings it back. */}
             {seqDocked && (
               <SequencerRack ref={rackRef} running={transportPlaying} onPower={powerOff}>
-                <Sequencer {...seqProps} />
+                <Sequencer {...seqProps} rack />
               </SequencerRack>
             )}
 

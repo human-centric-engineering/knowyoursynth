@@ -38,6 +38,7 @@ import {
   Copy,
   Dices,
   Eraser,
+  MidiPort,
   Play,
   Shuffle,
   SlidersVertical,
@@ -198,6 +199,11 @@ export const SEQ_HELP: readonly (readonly [string, string])[] = [
   ],
 ];
 
+/** The module's help: at the end of the tool row in the sheet, on the faceplate in the rack (t-282). */
+export function SequencerHelp() {
+  return <HelpButton title="How the sequencer works" items={SEQ_HELP} wide />;
+}
+
 /** The note new notes start on: the pattern's last note before `at`, else the first after it, else C3 above the root. */
 function nearbyNote(steps: readonly Step[], at: number, root: number): number {
   for (let i = at; i >= 0; i--) {
@@ -247,8 +253,11 @@ export function Sequencer({
   midiOut,
   clockIn,
   backing,
+  rack = false,
 }: {
   seq: SequencerState;
+  /** In the rack, whose faceplate (t-282) carries the module's help: the tool row then has none. */
+  rack?: boolean;
   /** What plays along: count-in, metronome and drums (t-266, t-267). Left out, the module has none of their controls. */
   backing?: Backing;
   /** Following a MIDI clock (`f-midi-hardware-lead` t-91). Left out, the module has no Clock select. */
@@ -776,34 +785,35 @@ export function Sequencer({
             />
           )}
         </div>
-        {pages > 1 && (
-          <div className="kys-cell kys-cell-part">
-            <span className="kys-cell-label" aria-hidden="true">
-              Page
-            </span>
-            <div className="kys-seq-part-row" role="group" aria-label="Pages">
-              {Array.from({ length: pages }, (_, k) => {
-                const lit = at !== null && at.part === editing && Math.floor(at.step / PAGE) === k;
-                return (
-                  <button
-                    key={k}
-                    type="button"
-                    aria-pressed={page === k}
-                    aria-label={`Page ${k + 1}, steps ${k * PAGE + 1} to ${Math.min(len, (k + 1) * PAGE)}`}
-                    className={`kys-seq-page ${page === k ? 'is-on' : ''}`}
-                    onClick={() => choose(k * PAGE + (sel % PAGE), false)}
-                  >
-                    <span className={`kys-led ${lit ? 'is-lit' : ''}`} aria-hidden="true" />
-                    {k + 1}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
       </div>
       <div className="kys-seq-body">
         <div className="kys-seq-main">
+          {pages > 1 && (
+            <div className="kys-cell kys-cell-part kys-seq-pages">
+              <span className="kys-cell-label" aria-hidden="true">
+                Page
+              </span>
+              <div className="kys-seq-part-row" role="group" aria-label="Pages">
+                {Array.from({ length: pages }, (_, k) => {
+                  const lit =
+                    at !== null && at.part === editing && Math.floor(at.step / PAGE) === k;
+                  return (
+                    <button
+                      key={k}
+                      type="button"
+                      aria-pressed={page === k}
+                      aria-label={`Page ${k + 1}, steps ${k * PAGE + 1} to ${Math.min(len, (k + 1) * PAGE)}`}
+                      className={`kys-seq-page ${page === k ? 'is-on' : ''}`}
+                      onClick={() => choose(k * PAGE + (sel % PAGE), false)}
+                    >
+                      <span className={`kys-led ${lit ? 'is-lit' : ''}`} aria-hidden="true" />
+                      {k + 1}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
           <div
             className="kys-seq-keys"
             role="group"
@@ -1064,17 +1074,9 @@ export function Sequencer({
                   disabled: !seq.canUndo,
                 }
               )}
-              <HelpButton title="How the sequencer works" items={SEQ_HELP} wide />
+              {!rack && <SequencerHelp />}
             </div>
           </div>
-          <KeysRow
-            seq={seq}
-            hold={hold}
-            step={sel}
-            onRest={() => restOrTie(false)}
-            onTie={() => restOrTie(true)}
-          />
-          {midiOut && <MidiOutRow midi={midiOut} clockFrom={followed?.source ?? null} />}
         </div>
         <StepInspector
           key={`${editing}:${sel}`}
@@ -1084,6 +1086,17 @@ export function Sequencer({
           defaultNote={defaultNote}
           onChange={(fn, group) => changeStep(sel, fn, group)}
         />
+      </div>
+      {/* Playing into it and out of it, side by side under the steps and the inspector. */}
+      <div className="kys-seq-foot">
+        <KeysRow
+          seq={seq}
+          hold={hold}
+          step={sel}
+          onRest={() => restOrTie(false)}
+          onTie={() => restOrTie(true)}
+        />
+        {midiOut && <MidiOutRow midi={midiOut} clockFrom={followed?.source ?? null} />}
       </div>
     </section>
   );
@@ -1433,7 +1446,8 @@ function MidiOutRow({
             help="The browser asks once, for MIDI keyboards and outputs alike."
           >
             <button type="button" className="kys-seq-tool" onClick={midi.connect}>
-              <span className="kys-seq-tool-text">Connect MIDI</span>
+              <MidiPort size={15} aria-hidden="true" />
+              Connect MIDI
             </button>
           </PlayerTip>
         )

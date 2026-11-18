@@ -864,6 +864,29 @@ describe('the help', () => {
       expect(slider(name)).toBeTruthy();
     expect(button('How the sequencer works')).toBeTruthy();
   });
+
+  it('leaves its help to the rack’s faceplate when it is in the rack (t-282)', () => {
+    function InRack() {
+      const seq = useSequencer({ engine, ensureAudio: async () => true, riff: RIFF });
+      return <Sequencer seq={seq} playing={false} onPlay={() => {}} onStop={() => {}} rack />;
+    }
+    render(<InRack />);
+    expect(screen.queryByRole('button', { name: 'How the sequencer works' })).toBeNull();
+    expect(button('Undo')).toBeTruthy();
+  });
+});
+
+describe('the layout (t-282)', () => {
+  it('puts the page tabs over the steps, and Keys under the steps and the inspector', () => {
+    open();
+    fireEvent.keyDown(slider('Length'), { key: 'PageUp' });
+    const pages = screen.getByRole('group', { name: 'Pages' });
+    const main = screen.getByRole('group', { name: /^Steps of part/ }).parentElement;
+    expect(main?.contains(pages)).toBe(true);
+    const keysRow = screen.getByRole('group', { name: 'Playing into the sequencer' });
+    expect(keysRow.parentElement?.classList.contains('kys-seq-foot')).toBe(true);
+    expect(main?.contains(keysRow)).toBe(false);
+  });
 });
 
 describe('MIDI out (f-midi-out t-88)', () => {

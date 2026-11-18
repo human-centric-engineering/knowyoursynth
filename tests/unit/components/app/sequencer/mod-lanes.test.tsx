@@ -491,11 +491,21 @@ describe('the lanes playing', () => {
     act(() => state.onEvent(loopEvent()));
     const before = sentOf('patternEdit').length;
     const queued = sentOf('patternNext').at(-1)!.loop;
-    rerender(<Harness panel={{ cutoff: 40, res: 1 }} />);
-    rerender(<Harness panel={{ cutoff: 40, res: 2 }} />);
-    rerender(<Harness panel={{ cutoff: 40, res: 3 }} />);
-    expect(sentOf('patternEdit')).toHaveLength(before + 1);
-    await waitFor(() => expect(sentOf('patternEdit')).toHaveLength(before + 2));
+    // The clock stands still over the three moves: on the wall clock, three renders of the module can outlast the
+    // window under load (coverage, a full scoped run), and the third then goes at once instead of waiting.
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
+    try {
+      rerender(<Harness panel={{ cutoff: 40, res: 1 }} />);
+      rerender(<Harness panel={{ cutoff: 40, res: 2 }} />);
+      rerender(<Harness panel={{ cutoff: 40, res: 3 }} />);
+      expect(sentOf('patternEdit')).toHaveLength(before + 1);
+      act(() => {
+        vi.advanceTimersByTime(60);
+      });
+      expect(sentOf('patternEdit')).toHaveLength(before + 2);
+    } finally {
+      vi.useRealTimers();
+    }
     expect(sentOf('patternEdit').at(-1)!.loop.params?.[0]).toEqual([
       0,
       madeFor({ cutoff: 80 }, { cutoff: 40, res: 3 }),
