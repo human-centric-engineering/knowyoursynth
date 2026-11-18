@@ -62,9 +62,9 @@ afterEach(() => {
   });
 });
 
-function setup() {
+function setup(routed = true) {
   const onClose = vi.fn();
-  const utils = render(<Tour def={def} notes={notes} onClose={onClose} />);
+  const utils = render(<Tour def={def} notes={notes} routed={routed} onClose={onClose} />);
   return { ...utils, onClose };
 }
 
@@ -168,6 +168,14 @@ describe('Tour', () => {
       'Show sensitive controls',
     ])
       expect(within(dialog()).getByText(name)).toBeTruthy();
+  });
+
+  it('leaves Live signal and Signal diagram out on a synth without a routing, where they are not on the rail', () => {
+    setup(false);
+    goTo(stops.length - 1);
+    expect(within(dialog()).getByText('Dim unused')).toBeTruthy();
+    expect(within(dialog()).queryByText('Live signal')).toBeNull();
+    expect(within(dialog()).queryByText('Signal diagram')).toBeNull();
   });
 
   it('rings a naming note’s controls on hover, and finds the first on the panel on click', () => {

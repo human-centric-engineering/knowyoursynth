@@ -295,8 +295,12 @@ const DeckSchema = z.boolean().nullable();
 const TALL_QUERY = '(min-height: 900px)';
 /** The side of the panel the lesson card floats on, as stored. */
 const CardSideSchema = z.enum(['left', 'right']);
-/** Live signal on. Kept before t-279 as `true` (Live) or `'flow'` (Live + flow): either reads as on. */
-const LiveSchema = z.union([z.boolean(), z.literal('flow')]);
+/**
+ * Live signal on (`'on'`). Before t-279 Live was kept as `true` and Live + flow as `'flow'`, and showed only while the
+ * dimming was on, so Off on another browser (which syncs only the dimming) could leave one behind: those are read as
+ * they were then, on only while Dim unused is.
+ */
+const LiveSchema = z.union([z.boolean(), z.literal('flow'), z.literal('on')]);
 const EnglishSchema = z.boolean();
 /** How long the pointer may rest before the player's secondary controls fade, as a video's do, in ms. */
 const IDLE_MS = 2500;
@@ -703,11 +707,11 @@ function Synth({
   // A panel printed in another language reprinted in English (the Polivoks's Russian): one choice for every such
   // synth, kept in this browser only.
   const [english, setEnglish] = useStoredPref(STORAGE_KEYS.english, EnglishSchema, false);
-  // A `true` or `'flow'` kept before t-279 (Live, Live + flow) is Live signal on.
-  const liveOn = !!liveStored && !!routing;
+  const liveOn = !!routing && (liveStored === 'on' || (dimOn && !!liveStored));
   const [heatOn, setHeatOn] = settings.heat;
-  // A synth chosen over another starts with the Signal layer and the sensitive controls off: both are kept as settings,
-  // so they would otherwise carry over from the synth before (owner ruling, 2026-11-03). After the settings have read
+  // A synth chosen over another starts with Dim unused, Live signal and the sensitive controls off: they are kept (Dim
+  // unused and Sensitive as settings, Live signal in this browser), so would otherwise carry over from the synth before
+  // (owner ruling, 2026-11-03). After the settings have read
   // the browser, so what they read is not put back over this.
   useEffect(() => {
     if (!switchedTo.current) return;
@@ -2661,7 +2665,7 @@ function Synth({
                               title="Light each part the patch uses as signal goes through it when you play, with a line from each part to the next: audio heavy, control light, gate dotted."
                               onClick={() => {
                                 if (!liveOn && routingOn) flipPanel(false);
-                                setLiveOn(!liveOn);
+                                setLiveOn(liveOn ? false : 'on');
                               }}
                             />
                           )}
@@ -3236,7 +3240,9 @@ function Synth({
               preset={shown ?? null}
               cables={sess.cables}
             />
-            {tourOn && <Tour def={def} notes={detail.notes.unusual} onClose={closeTour} />}
+            {tourOn && (
+              <Tour def={def} notes={detail.notes.unusual} routed={!!routing} onClose={closeTour} />
+            )}
           </section>
           {/* Under the player: its instruments' videos and links, closed until asked for (`f-videos-and-links`). */}
           <LinksSection

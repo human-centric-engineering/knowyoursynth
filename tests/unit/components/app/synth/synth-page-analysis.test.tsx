@@ -219,7 +219,7 @@ describe('the panel switches', () => {
     // Live signal is the glow and the lines between the lit parts together.
     expect(screen.getByTestId('live-layer')).toBeTruthy();
     expect(screen.getByTestId('live-flow')).toBeTruthy();
-    expect(window.localStorage.getItem('kys.live')).toBe('true');
+    expect(window.localStorage.getItem('kys.live')).toBe('"on"');
     expect(window.localStorage.getItem('kys.dim')).toBe('true');
     unmount();
     page();
@@ -236,15 +236,25 @@ describe('the panel switches', () => {
   });
 
   it.each([['true'], ['"flow"']])(
-    'opens Live signal on, with its lines, from a Live or Live + flow kept before (kys.live = %s)',
+    'reads a Live or Live + flow kept before as it was read then: on with the dimming (kys.live = %s)',
     (kept) => {
       vi.stubGlobal('Worker', undefined);
       window.localStorage.setItem('kys.live', kept);
+      window.localStorage.setItem('kys.dim', 'true');
       page();
       expect(signalOn('Live signal')).toBe(true);
       expect(screen.getByTestId('live-flow')).toBeTruthy();
     }
   );
+
+  it('leaves a Live kept before off without the dimming, as Off on another browser left it', () => {
+    vi.stubGlobal('Worker', undefined);
+    window.localStorage.setItem('kys.live', 'true');
+    window.localStorage.setItem('kys.dim', 'false');
+    page();
+    expect(signalOn('Live signal')).toBe(false);
+    expect(screen.queryByTestId('live-layer')).toBeNull();
+  });
 });
 
 describe('the sound map', () => {
