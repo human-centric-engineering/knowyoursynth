@@ -8,6 +8,7 @@
  *
  * @see components/app/synth/synth-page.tsx
  * @see components/app/sequencer/sequencer.tsx
+ * @see components/app/sequencer/sequencer-rack.tsx
  */
 
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
