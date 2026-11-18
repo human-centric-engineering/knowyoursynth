@@ -269,7 +269,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   head (`.is-top`) carries Signal (three toggles with no rule between them, t-279: Diagram, Dim unused, Live
   signal) and Sensitive at the left, and at the right Undo and
   Redo, the inspector, Sections, then the tour and its help (t-276); each layer is its icon (with its word from `xl` up and below `lg`) and an LED
-  lit while it is over the panel. The foot (`.is-foot`) carries how the panel is drawn (Hardware or
+  lit while it is over the panel. The head's tips open below it, over the panel, not up into the page's header
+  (`TipSide` in `player-tip.tsx`, t-279). The foot (`.is-foot`) carries how the panel is drawn (Hardware or
   Outline; Layout, on a synth with a layout of its own (below): Modular or Long, or Compact or Full; and on a panel printed in another language, its Labels in that language or
   English, `kys.english`, kept in this browser), the magnifier and Hover help (the card that pops up when you point at a
   control; `kys.tips`): each its name in the panel's lettering, which explains it on hover, then its

@@ -89,9 +89,9 @@ import { usePanelHistory } from '@/components/app/synth/use-panel-history';
 import { stepFrom, stepMoves } from '@/lib/app/synths/lib/history';
 import {
   Activity,
-  SunDim,
   AudioWaveform,
   Columns4,
+  EyeOff,
   Flame,
   Piano,
   Play,
@@ -140,7 +140,7 @@ import {
   panelRailStyle,
   useKeepCentre,
 } from '@/components/app/synth/panel-zoom';
-import { PlayerTip, PlayerTips } from '@/components/app/synth/player-tip';
+import { PlayerTip, PlayerTips, TipSide } from '@/components/app/synth/player-tip';
 import { LayerToggle, PlayerSettings, useFootFit } from '@/components/app/synth/player-tools';
 import { RoutingView } from '@/components/app/synth/routing-view';
 import type { RoutingShowTarget } from '@/components/app/synth/routing-card';
@@ -2620,137 +2620,140 @@ function Synth({
               history, the inspector, Explain sections, the tour and its help (t-276), on a strip of
               the faceplate along its head, as the rail at its foot carries how it is drawn. */}
                   <div className="px-2 pt-2">
-                    <div
-                      className={`kys-rail is-top mx-auto ${view.outline ? 'is-outline' : ''} ${lightFace ? 'is-light' : ''}`}
-                      style={railStyle}
-                    >
-                      {/* Signal (t-279): three ways to see where the sound goes, side by side with no rule between
-                      them. The diagram is the panel's back; Dim unused and Live signal are on its face, so turning
-                      either on turns the face up. */}
-                      <div role="group" aria-label="Signal" className="kys-rail-group">
-                        {routing && (
-                          <LayerToggle
-                            ref={routingToggleRef}
-                            label="Signal diagram"
-                            short="Diagram"
-                            icon={<Waypoints size={17} aria-hidden="true" />}
-                            on={routingOn}
-                            title="Turn the panel over to see how its parts are wired, as a block diagram. What the patch uses is drawn solid, and lights as signal goes through it."
-                            onClick={() => flipPanel(!routingOn)}
-                          />
-                        )}
-                        <LayerToggle
-                          label="Dim unused parts"
-                          short="Dim unused"
-                          icon={<SunDim size={17} aria-hidden="true" />}
-                          on={dimOn}
-                          title="Darken every part of the panel the patch does not use as it is set now. Point at a dark control to see what would bring it in."
-                          onClick={() => {
-                            if (!dimOn && routingOn) flipPanel(false);
-                            setDimOn(!dimOn);
-                          }}
-                        />
-                        {routing && (
-                          <LayerToggle
-                            label="Live signal"
-                            short="Live signal"
-                            icon={<Activity size={17} aria-hidden="true" />}
-                            on={liveOn}
-                            title="Light each part the patch uses as signal goes through it when you play, with a line from each part to the next: audio heavy, control light, gate dotted."
-                            onClick={() => {
-                              if (!liveOn && routingOn) flipPanel(false);
-                              setLiveOn(!liveOn);
-                            }}
-                          />
-                        )}
-                      </div>
+                    {/* Its tips open below it, over the panel: above it is the page's header (t-279). */}
+                    <TipSide side="bottom">
                       <div
-                        role="group"
-                        aria-label="Layers over the panel"
-                        className="kys-rail-group"
+                        className={`kys-rail is-top mx-auto ${view.outline ? 'is-outline' : ''} ${lightFace ? 'is-light' : ''}`}
+                        style={railStyle}
                       >
-                        <LayerToggle
-                          label="Show sensitive controls"
-                          short="Sensitive"
-                          icon={<Flame size={17} aria-hidden="true" />}
-                          on={heatOn}
-                          title="Put a glow behind the controls where a small move changes the sound most. The bigger and stronger the glow, the more effect. The three strongest are numbered."
-                          onClick={() => setHeatOn(!heatOn)}
-                        />
-                      </div>
-                      <div className="kys-rail-end">
-                        {/* Undo and Redo, on the panel's own rail: they take back what was done to it. */}
-                        <span role="group" aria-label="History" className="kys-rail-history">
-                          <PlayerTip
-                            name="Undo"
-                            help="Take back the last change to the panel's controls or cables. ⌘Z"
-                          >
-                            <button
-                              type="button"
-                              className={`kys-layer ${historyShown === 'undo' ? 'is-lit' : ''}`}
-                              aria-label="Undo"
-                              disabled={!canUndo}
-                              onClick={undo}
-                            >
-                              <Undo2 size={16} aria-hidden="true" />
-                            </button>
-                          </PlayerTip>
-                          <PlayerTip name="Redo" help="Put back the change last undone. ⇧⌘Z">
-                            <button
-                              type="button"
-                              className={`kys-layer ${historyShown === 'redo' ? 'is-lit' : ''}`}
-                              aria-label="Redo"
-                              disabled={!canRedo}
-                              onClick={redo}
-                            >
-                              <Redo2 size={16} aria-hidden="true" />
-                            </button>
-                          </PlayerTip>
-                        </span>
-                        <div
-                          role="group"
-                          aria-label="Inspect and explain"
-                          className="kys-rail-group"
-                        >
-                          {!small && (
+                        {/* Signal (t-279): three ways to see where the sound goes, side by side with no rule between
+                        them. The diagram is the panel's back; Dim unused and Live signal are on its face, so turning
+                        either on turns the face up. */}
+                        <div role="group" aria-label="Signal" className="kys-rail-group">
+                          {routing && (
                             <LayerToggle
-                              label="Inspector"
-                              short="Inspect"
-                              icon={<ScanSearch size={17} aria-hidden="true" />}
-                              on={card === 'inspector'}
-                              title="Open the inspector over the panel: what the control under the pointer does, and its value."
-                              onClick={() => openSection('inspector')}
+                              ref={routingToggleRef}
+                              label="Signal diagram"
+                              short="Diagram"
+                              icon={<Waypoints size={17} aria-hidden="true" />}
+                              on={routingOn}
+                              title="Turn the panel over to see how its parts are wired, as a block diagram. What the patch uses is drawn solid, and lights as signal goes through it."
+                              onClick={() => flipPanel(!routingOn)}
                             />
                           )}
                           <LayerToggle
-                            label="Explain sections"
-                            short="Sections"
-                            icon={<Shapes size={17} aria-hidden="true" />}
-                            on={areasOn}
-                            title="Colour in every named part of the panel, and explain what it does when you point at it."
+                            label="Dim unused parts"
+                            short="Dim unused"
+                            icon={<EyeOff size={17} aria-hidden="true" />}
+                            on={dimOn}
+                            title="Darken every part of the panel the patch does not use as it is set now. Point at a dark control to see what would bring it in."
                             onClick={() => {
-                              setAreasOn(!areasOn);
-                              setTourOn(false);
-                              findStore.set(null);
-                              focusStore.set((f) => (f && f.kind === 'area' ? null : f));
+                              if (!dimOn && routingOn) flipPanel(false);
+                              setDimOn(!dimOn);
                             }}
                           />
+                          {routing && (
+                            <LayerToggle
+                              label="Live signal"
+                              short="Live signal"
+                              icon={<Activity size={17} aria-hidden="true" />}
+                              on={liveOn}
+                              title="Light each part the patch uses as signal goes through it when you play, with a line from each part to the next: audio heavy, control light, gate dotted."
+                              onClick={() => {
+                                if (!liveOn && routingOn) flipPanel(false);
+                                setLiveOn(!liveOn);
+                              }}
+                            />
+                          )}
                         </div>
-                        <PanelSwitch
-                          label="Orientation tour"
-                          short="Tour"
-                          tone="start"
-                          on={tourOn}
-                          title={`A guided walk round the ${def.name}: what its words mean, then every section in the order the sound passes through it. It changes nothing on the panel.`}
-                          onClick={() => {
-                            setTourOn(!tourOn);
-                            setAreasOn(false);
-                            findStore.set(null);
-                          }}
-                        />
-                        <HelpButton title="How to use the panel" items={PANEL_HELP} />
+                        <div
+                          role="group"
+                          aria-label="Layers over the panel"
+                          className="kys-rail-group"
+                        >
+                          <LayerToggle
+                            label="Show sensitive controls"
+                            short="Sensitive"
+                            icon={<Flame size={17} aria-hidden="true" />}
+                            on={heatOn}
+                            title="Put a glow behind the controls where a small move changes the sound most. The bigger and stronger the glow, the more effect. The three strongest are numbered."
+                            onClick={() => setHeatOn(!heatOn)}
+                          />
+                        </div>
+                        <div className="kys-rail-end">
+                          {/* Undo and Redo, on the panel's own rail: they take back what was done to it. */}
+                          <span role="group" aria-label="History" className="kys-rail-history">
+                            <PlayerTip
+                              name="Undo"
+                              help="Take back the last change to the panel's controls or cables. ⌘Z"
+                            >
+                              <button
+                                type="button"
+                                className={`kys-layer ${historyShown === 'undo' ? 'is-lit' : ''}`}
+                                aria-label="Undo"
+                                disabled={!canUndo}
+                                onClick={undo}
+                              >
+                                <Undo2 size={16} aria-hidden="true" />
+                              </button>
+                            </PlayerTip>
+                            <PlayerTip name="Redo" help="Put back the change last undone. ⇧⌘Z">
+                              <button
+                                type="button"
+                                className={`kys-layer ${historyShown === 'redo' ? 'is-lit' : ''}`}
+                                aria-label="Redo"
+                                disabled={!canRedo}
+                                onClick={redo}
+                              >
+                                <Redo2 size={16} aria-hidden="true" />
+                              </button>
+                            </PlayerTip>
+                          </span>
+                          <div
+                            role="group"
+                            aria-label="Inspect and explain"
+                            className="kys-rail-group"
+                          >
+                            {!small && (
+                              <LayerToggle
+                                label="Inspector"
+                                short="Inspect"
+                                icon={<ScanSearch size={17} aria-hidden="true" />}
+                                on={card === 'inspector'}
+                                title="Open the inspector over the panel: what the control under the pointer does, and its value."
+                                onClick={() => openSection('inspector')}
+                              />
+                            )}
+                            <LayerToggle
+                              label="Explain sections"
+                              short="Sections"
+                              icon={<Shapes size={17} aria-hidden="true" />}
+                              on={areasOn}
+                              title="Colour in every named part of the panel, and explain what it does when you point at it."
+                              onClick={() => {
+                                setAreasOn(!areasOn);
+                                setTourOn(false);
+                                findStore.set(null);
+                                focusStore.set((f) => (f && f.kind === 'area' ? null : f));
+                              }}
+                            />
+                          </div>
+                          <PanelSwitch
+                            label="Orientation tour"
+                            short="Tour"
+                            tone="start"
+                            on={tourOn}
+                            title={`A guided walk round the ${def.name}: what its words mean, then every section in the order the sound passes through it. It changes nothing on the panel.`}
+                            onClick={() => {
+                              setTourOn(!tourOn);
+                              setAreasOn(false);
+                              findStore.set(null);
+                            }}
+                          />
+                          <HelpButton title="How to use the panel" items={PANEL_HELP} />
+                        </div>
                       </div>
-                    </div>
+                    </TipSide>
                   </div>
                   {/* The panel, or its back: the routing view. The panel stays laid out under the view, hidden and inert,
                   so its fit and its scroll are kept for the flip back. */}
