@@ -1634,8 +1634,8 @@ function Synth({
         ranked={ranked}
         current={pickerCurrent}
         load={loadPattern}
-        // Picked while the riff plays, the pattern takes over (the sequencer starts it from its top), as it does when
-        // the sequencer opens.
+        // The sequencer is open, so the riff has already handed over to the pattern; this hands over a riff still
+        // waiting on a load, as opening the sequencer does.
         onPicked={riffToPattern}
       />
     ),

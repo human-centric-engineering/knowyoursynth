@@ -170,7 +170,34 @@ beforeEach(() => {
   get.mockReset();
 });
 
-describe('the pattern picker beside Play', () => {
+describe('the pattern picker (the sequencer’s Pattern readout)', () => {
+  it('reads as the Pattern readout, says its name as it changes, and is closed when put away', () => {
+    const onOpenChange = vi.fn();
+    const props = {
+      synthId: 'model-d',
+      open: true,
+      onOpenChange,
+      sheet: false,
+      own: null,
+      ranked: READY,
+      current: null,
+      load: vi.fn<LoadFn>(() => newPattern(8)),
+    };
+    const { rerender, unmount } = render(<PatternPicker {...props} plays="Fat bass" />);
+    const btn = screen.getByRole('button', { name: /^Choose what Play plays/ });
+    expect(btn.textContent).toContain('Pattern');
+    expect(btn.textContent).not.toContain('Plays');
+    // With no room measured above it, the list opens down, and the caret says so.
+    expect(dialog().className).toContain('is-down');
+    rerender(<PatternPicker {...props} plays="Rolling eighths" edited />);
+    expect(screen.getByText('Pattern: Rolling eighths, edited').getAttribute('aria-live')).toBe(
+      'polite'
+    );
+    onOpenChange.mockClear();
+    unmount();
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
   it('names what Play plays, and opens a list from the button', () => {
     render(<Picker startOpen={false} />);
     const btn = screen.getByRole('button', {

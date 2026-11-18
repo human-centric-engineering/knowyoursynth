@@ -18,7 +18,7 @@
 
 import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { styleWordsOf } from '@/lib/app/sequencer/drums';
-import { ChevronUp, Search } from 'lucide-react';
+import { ChevronDown, ChevronUp, Search } from 'lucide-react';
 import { apiClient } from '@/lib/api/client';
 import { logger } from '@/lib/logging';
 import type { LibraryPatternView } from '@/lib/app/patterns/library';
@@ -89,6 +89,14 @@ export function PatternPicker(props: PatternPickerProps) {
     };
   }, [open, sheet, onOpenChange]);
 
+  // The page holds whether the list is open, but the picker is drawn only while the sequencer is: put away with it, the
+  // list is closed, so it does not open again with the sequencer, nor keep reading for a list no one can see.
+  const closeRef = useRef(onOpenChange);
+  useLayoutEffect(() => {
+    closeRef.current = onOpenChange;
+  });
+  useEffect(() => () => closeRef.current(false), []);
+
   // The readout is near the top of the sequencer, so the popover opens whichever way has more of the screen, and no
   // taller than that room, rather than off the top of it.
   const [place, setPlace] = useState<{ down: boolean; max: number } | null>(null);
@@ -99,7 +107,8 @@ export function PatternPicker(props: PatternPickerProps) {
     const below = window.innerHeight - r.bottom - 16;
     setPlace({
       down: below > above,
-      max: Math.max(240, Math.min(560, Math.max(above, below) - 10)),
+      // No taller than the room, short of a list too short to use.
+      max: Math.max(160, Math.min(560, Math.max(above, below) - 10)),
     });
   }, [open, sheet]);
 
@@ -130,8 +139,17 @@ export function PatternPicker(props: PatternPickerProps) {
             edited
           </span>
         )}
-        <ChevronUp size={14} className="kys-patpick-caret" aria-hidden="true" />
+        {/* Pointing the way the list opens: up, unless it has opened down. */}
+        {open && !sheet && place?.down ? (
+          <ChevronDown size={14} className="kys-patpick-caret" aria-hidden="true" />
+        ) : (
+          <ChevronUp size={14} className="kys-patpick-caret" aria-hidden="true" />
+        )}
       </button>
+      {/* The readout said a new name, or "edited", as it changed: so does the picker that is it now. */}
+      <span className="sr-only" aria-live="polite">
+        {`Pattern: ${plays}${edited ? ', edited' : ''}`}
+      </span>
       {sheet ? (
         <BottomSheet
           title="Patterns"

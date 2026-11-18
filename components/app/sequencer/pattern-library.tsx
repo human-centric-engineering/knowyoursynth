@@ -80,7 +80,7 @@ export interface PatternLibraryProps {
   soundPatterns?: SoundPatterns | null;
   /** Patterns that suit the patch on the panel (t-125). */
   suggested?: SuggestedPatterns | null;
-  /** What the riff is called while no pattern is held (t-224): the page's name for it, as Play's picker shows it. */
+  /** What the riff is called while no pattern is held (t-224): the page's name for it, as the Pattern readout shows it. */
   riffName?: string;
   /**
    * The page's pattern picker (t-279), drawn in place of the Pattern readout, with what it reads: the readout becomes

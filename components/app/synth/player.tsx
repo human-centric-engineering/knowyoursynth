@@ -6,7 +6,8 @@
  *
  * - `Wordmark`: the app's name at the right of the Sound Design strip's heading, with an LED that is lit while the sound is on,
  *   and lit yellow while a lesson is being walked (t-204).
- * - `SoundPicker`: the patch's name under the panel, which opens the library (`SoundsDrawer`). Its LED pulses while a
+ * - `SoundPicker`: the patch's name at the start of the Play deck's bar, before Play (t-279), which opens the library
+ *   (`SoundsDrawer`). Its LED pulses while a
  *   patch loads, when the keys are silent (`f-default-patch` t-172), so a dead key reads as "wait", not as broken.
  * - `SoundDesign`: the strip over the bar that teaches how the sound is built: the lesson's steps as a video's
  *   chapters. Each opens the lesson card over the panel (`lesson-card.tsx`).
