@@ -438,22 +438,25 @@ describe('the sequencer while a sound loads (f-default-patch t-172)', () => {
     );
   };
 
-  it('plays on in time but silent, and comes back in once the sound has loaded', async () => {
+  it('stops for the load, waiting on Play, and starts again from the top, counted in, once the sound has loaded (t-278)', async () => {
     page();
     settle();
     fireEvent.click(button('Sequencer'));
     await press('Play');
     // Outside a load, the synth plays the pattern.
     expect(lastSent('pattern')).toMatchObject({ muted: false });
-    expect(lastSent('patternMute')).toBeUndefined();
+    const run = lastSent('pattern')?.run ?? 0;
 
     choose('Wobble lead');
-    expect(lastSent('patternMute')).toEqual({ type: 'patternMute', muted: true });
-    expect(lastSent('stopPattern')).toBeUndefined();
-    expect(button('Stop')).toBeTruthy();
+    expect(lastSent('stopPattern')).toEqual({ type: 'stopPattern' });
+    expect(button('Stop').querySelector('.animate-spin')).not.toBeNull();
 
-    settle();
-    expect(lastSent('patternMute')).toEqual({ type: 'patternMute', muted: false });
+    await act(async () => {
+      fireEvent.keyDown(screen.getAllByRole('slider', { name: /^TUNE/ })[0], { key: 'ArrowUp' });
+    });
+    expect(lastSent('pattern')).toMatchObject({ muted: false, countIn: 4 });
+    expect(lastSent('pattern')?.run).toBeGreaterThan(run);
+    expect(button('Stop').querySelector('.animate-spin')).toBeNull();
   });
 
   it('waits for the load before Play starts the pattern', async () => {
