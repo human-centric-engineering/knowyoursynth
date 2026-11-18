@@ -562,8 +562,14 @@ function Synth({
   // Set as a change the visitor made, so it is what the browser and the account keep: a refresh comes back to it, and
   // the account's older panel does not replace it. Declared after the stored session, so it lands after the restore,
   // and before `?sound=`, a shared sound and `?mine=`, which still open their own sound over it.
+  // A synth switched to, or a sound opened by `?sound=`, is a patch chosen (t-277): the backing goes to Match and the
+  // Count-in on, once the stored setting has been read (`arrivedOnPatch`, below `useBacking`).
+  const arrivedOnPatch = useRef(false);
   useEffect(() => {
-    if (switchedTo.current) setSess(() => freshSession(synthDef, defaultSound));
+    if (switchedTo.current) {
+      setSess(() => freshSession(synthDef, defaultSound));
+      arrivedOnPatch.current = true;
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
   // `?sound=` loads that sound over whatever was stored, as a fresh panel, then drops out of the URL: a reload should
   // not throw away what was done on the panel since. Declared after the stored session, so it lands after the restore.
@@ -576,7 +582,10 @@ function Synth({
     const away = hashTarget(hash, (id) => synths.some((s) => s.id === id));
     if (bankHashRoute(hash) || (away && away.id !== synthId)) return;
     const p = sounds.find((x) => x.id === soundParam);
-    if (p) glide(() => freshSession(synthDef, p));
+    if (p) {
+      glide(() => freshSession(synthDef, p));
+      arrivedOnPatch.current = true;
+    }
     const url = new URL(window.location.href);
     url.searchParams.delete('sound');
     window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
@@ -1345,9 +1354,12 @@ function Synth({
   // A pattern starting is no longer the riff. Not while a patch loads: then once it has.
   const patternNow = useCallback(
     async (countIn = true) => {
-      if (await startPattern({ countIn })) setPlaying(false);
+      if (!(await startPattern({ countIn }))) return;
+      setPlaying(false);
+      // A load that began while the sound was starting (a patch picked straight after Play) holds it too (t-278).
+      if (isLoading()) holdForLoad('pattern');
     },
-    [startPattern]
+    [startPattern, isLoading, holdForLoad]
   );
   const playPattern = useCallback(async () => {
     replayRiff.current = false;
@@ -1561,6 +1573,13 @@ function Synth({
   const backing = useBacking(seq, useBackingPref(), {
     fallbackInspiredBy: libraryPreset?.defaultPattern?.style ?? null,
   });
+  // Declared after the backing's stored setting is read, so the reset lands on it rather than on the default.
+  const { newPatch } = backing;
+  useEffect(() => {
+    if (!arrivedOnPatch.current) return;
+    arrivedOnPatch.current = false;
+    newPatch();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
   // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked beside Play, the
   // one a sound of the user's plays) or the riff edited, and with no sound's riff to play; otherwise the riff, which the
   // sequencer holds as it came. A new patch puts back its riff in the sequencer, and Play with it.
@@ -1881,7 +1900,8 @@ function Synth({
     leaveShared();
     setDesigned(null);
     glide(() => ({ presetId: id, step: null, soundId: null, ...presetState(synthDef, p) }));
-    backing.newPatch();
+    // Restore, or the same sound picked again, is not another patch: the drums and Count-in stay as set.
+    if (id !== sess.presetId || sess.soundId || designed || sharedPanel) backing.newPatch();
     // Counted in as it starts again on the new patch (t-278).
     if (playing) void playRiff();
   };

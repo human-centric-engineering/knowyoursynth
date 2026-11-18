@@ -599,6 +599,19 @@ describe('SynthPage engine', () => {
 describe('SynthPage patch', () => {
   // At `lg` and up the region these use is in its drawer (t-70).
 
+  it('keeps the drums and Count-in as set when the patch is restored, which is not another patch (t-277)', () => {
+    storeSound(def, FAT_BASS);
+    page();
+    fireEvent.click(button('Sequencer'));
+    fireEvent.click(screen.getByRole('combobox', { name: 'Drums' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Off' }));
+    fireEvent.click(button('Count-in'));
+    fireEvent.click(button('A-440'));
+    fireEvent.click(button('Restore patch'));
+    expect(screen.getByRole('combobox', { name: 'Drums' }).textContent).toContain('Off');
+    expect(button('Count-in').getAttribute('aria-pressed')).toBe('false');
+  });
+
   it('counts the controls moved off the sound, and restores the sound', () => {
     storeSound(def, FAT_BASS);
     page();

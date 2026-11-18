@@ -19,9 +19,10 @@
  * The stored setting is read by `useBackingPref`, apart from the rest.
  */
 
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { z } from 'zod';
-import { STORAGE_KEYS, useStoredPref } from '@/components/app/synth/storage';
+import { STORAGE_KEYS } from '@/components/app/synth/storage';
+import { useLocalStorage } from '@/lib/hooks/use-local-storage';
 import {
   DRUM_BEAT_IDS,
   beatGrid,
@@ -59,14 +60,29 @@ export interface Backing {
   newPatch: () => void;
 }
 
+const parsePref = (raw: unknown): BackingPref => {
+  const parsed = BackingPrefSchema.safeParse(raw);
+  return parsed.success ? parsed.data : DEFAULT_BACKING;
+};
+
+/** Sets the stored setting, or updates it from the latest stored value (not the one a render closed over). */
+export type SetBackingPref = (next: BackingPref | ((prev: BackingPref) => BackingPref)) => void;
+
 /** The stored Metronome, Count-in and Drums. */
-export function useBackingPref(): [BackingPref, (next: BackingPref) => void] {
-  return useStoredPref(STORAGE_KEYS.backing, BackingPrefSchema, DEFAULT_BACKING);
+export function useBackingPref(): [BackingPref, SetBackingPref] {
+  const [raw, setRaw] = useLocalStorage<unknown>(STORAGE_KEYS.backing, DEFAULT_BACKING);
+  const pref = useMemo(() => parsePref(raw), [raw]);
+  const set = useCallback<SetBackingPref>(
+    (next) =>
+      setRaw((prev: unknown) => (typeof next === 'function' ? next(parsePref(prev)) : next)),
+    [setRaw]
+  );
+  return [pref, set];
 }
 
 export function useBacking(
   seq: Pick<Sequencer, 'pattern' | 'loaded' | 'setBacking'>,
-  [pref, setPref]: [BackingPref, (next: BackingPref) => void],
+  [pref, setPref]: [BackingPref, SetBackingPref],
   { fallbackInspiredBy = null }: { fallbackInspiredBy?: string | null } = {}
 ): Backing {
   const { bpm, swing } = seq.pattern;
@@ -92,9 +108,6 @@ export function useBacking(
     setDrums: (d) => setPref({ ...pref, drums: d }),
     matched,
     beat,
-    newPatch: () => {
-      if (pref.drums !== 'auto' || !pref.countIn)
-        setPref({ ...pref, drums: 'auto', countIn: true });
-    },
+    newPatch: () => setPref((p) => ({ ...p, drums: 'auto', countIn: true })),
   };
 }
