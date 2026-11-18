@@ -393,6 +393,30 @@ describe('SynthPage layout', () => {
     expect(frame.style.width).toMatch(/^calc\(1 \* min\(100%, min\(var\(--kys-fit-max, 1560px\), /);
   });
 
+  it('orders the top rail: routing and the layers at the left, the inspector and Explain sections beside the tour', () => {
+    page();
+    const rail = button('Signal routing').closest('.kys-rail');
+    if (!rail) throw new Error('the routing toggle is on the rail');
+    const names = Array.from(rail.querySelectorAll('button[aria-label]'), (b) =>
+      b.getAttribute('aria-label')
+    );
+    const order = [
+      'Signal routing',
+      'Show sensitive controls',
+      'Undo',
+      'Redo',
+      'Inspector',
+      'Explain sections',
+      'Orientation tour',
+    ];
+    const at = order.map((n) => names.indexOf(n));
+    expect(at).not.toContain(-1);
+    expect([...at].sort((a, b) => a - b)).toEqual(at);
+    // Explain sections sits directly left of the tour.
+    expect(names.indexOf('Orientation tour') - names.indexOf('Explain sections')).toBe(1);
+    expect(names.indexOf('Explain sections') - names.indexOf('Inspector')).toBe(1);
+  });
+
   it("draws the panel's rails in its faceplate's colour and ink, and in the outline's paper and ink", () => {
     if (!def) throw new Error('model-d is not registered');
     page();

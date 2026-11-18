@@ -2585,31 +2585,32 @@ function Synth({
                 default="none"
               >
                 <div className="kys-instrument">
-                  {/* The panel's top rail: the layers over the panel, the inspector, the tour and its help, on a strip of
+                  {/* The panel's top rail: the routing view and the layers over the panel at the left; at the right the
+              history, the inspector, Explain sections, the tour and its help (t-276), on a strip of
               the faceplate along its head, as the rail at its foot carries how it is drawn. */}
                   <div className="px-2 pt-2">
                     <div
                       className={`kys-rail is-top mx-auto ${view.outline ? 'is-outline' : ''} ${lightFace ? 'is-light' : ''}`}
                       style={railStyle}
                     >
+                      {routing && (
+                        <div role="group" aria-label="Views" className="kys-rail-group">
+                          <LayerToggle
+                            ref={routingToggleRef}
+                            label="Signal routing"
+                            short="Signal routing"
+                            icon={<Waypoints size={17} aria-hidden="true" />}
+                            on={routingOn}
+                            title="Turn the panel over to see how its parts are wired. What the patch uses now is lit, and follows the panel as it changes."
+                            onClick={() => flipPanel(!routingOn)}
+                          />
+                        </div>
+                      )}
                       <div
                         role="group"
                         aria-label="Layers over the panel"
                         className="kys-rail-group"
                       >
-                        <LayerToggle
-                          label="Explain sections"
-                          short="Sections"
-                          icon={<Shapes size={17} aria-hidden="true" />}
-                          on={areasOn}
-                          title="Colour in every named part of the panel, and explain what it does when you point at it."
-                          onClick={() => {
-                            setAreasOn(!areasOn);
-                            setTourOn(false);
-                            findStore.set(null);
-                            focusStore.set((f) => (f && f.kind === 'area' ? null : f));
-                          }}
-                        />
                         <SignalMenu
                           mode={signal}
                           onMode={setSignal}
@@ -2625,31 +2626,6 @@ function Synth({
                           onClick={() => setHeatOn(!heatOn)}
                         />
                       </div>
-                      {!small && (
-                        <div role="group" aria-label="Over the panel" className="kys-rail-group">
-                          <LayerToggle
-                            label="Inspector"
-                            short="Inspect"
-                            icon={<ScanSearch size={17} aria-hidden="true" />}
-                            on={card === 'inspector'}
-                            title="Open the inspector over the panel: what the control under the pointer does, and its value."
-                            onClick={() => openSection('inspector')}
-                          />
-                        </div>
-                      )}
-                      {routing && (
-                        <div role="group" aria-label="Views" className="kys-rail-group">
-                          <LayerToggle
-                            ref={routingToggleRef}
-                            label="Signal routing"
-                            short="Signal routing"
-                            icon={<Waypoints size={17} aria-hidden="true" />}
-                            on={routingOn}
-                            title="Turn the panel over to see how its parts are wired. What the patch uses now is lit, and follows the panel as it changes."
-                            onClick={() => flipPanel(!routingOn)}
-                          />
-                        </div>
-                      )}
                       <span className="kys-rail-end">
                         {/* Undo and Redo, on the panel's own rail: they take back what was done to it. */}
                         <span role="group" aria-label="History" className="kys-rail-history">
@@ -2679,6 +2655,31 @@ function Synth({
                             </button>
                           </PlayerTip>
                         </span>
+                        <div role="group" aria-label="Over the panel" className="kys-rail-group">
+                          {!small && (
+                            <LayerToggle
+                              label="Inspector"
+                              short="Inspect"
+                              icon={<ScanSearch size={17} aria-hidden="true" />}
+                              on={card === 'inspector'}
+                              title="Open the inspector over the panel: what the control under the pointer does, and its value."
+                              onClick={() => openSection('inspector')}
+                            />
+                          )}
+                          <LayerToggle
+                            label="Explain sections"
+                            short="Sections"
+                            icon={<Shapes size={17} aria-hidden="true" />}
+                            on={areasOn}
+                            title="Colour in every named part of the panel, and explain what it does when you point at it."
+                            onClick={() => {
+                              setAreasOn(!areasOn);
+                              setTourOn(false);
+                              findStore.set(null);
+                              focusStore.set((f) => (f && f.kind === 'area' ? null : f));
+                            }}
+                          />
+                        </div>
                         <PanelSwitch
                           label="Orientation tour"
                           short="Tour"
