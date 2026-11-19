@@ -3206,7 +3206,7 @@ function Synth({
                   />
                 )}
                 {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach; on a phone they take a row of their own under Play, leaving the fullscreen button beside it. */}
-                <div className="kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 max-sm:order-last max-sm:basis-full lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">
+                <div className="kys-bar-tools kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 max-sm:order-last max-sm:basis-full lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">
                   <LayerToggle
                     ref={seqBtnRef}
                     label="Sequencer"
@@ -3240,7 +3240,7 @@ function Synth({
                     <button
                       type="button"
                       onClick={() => void toggleAudio()}
-                      className={`flex h-9 items-center gap-2 rounded-full px-3 text-[13px] font-semibold pointer-coarse:h-11 ${audio === 'on' ? 'text-(--kys-good)' : audio === 'error' ? 'text-(--kys-warn)' : 'text-(--kys-muted) hover:text-(--kys-text)'} hover:bg-(--kys-raised)`}
+                      className={`kys-bar-mute flex h-9 items-center gap-2 rounded-full px-3 text-[13px] font-semibold pointer-coarse:h-11 ${audio === 'on' ? 'text-(--kys-good)' : audio === 'error' ? 'text-(--kys-warn)' : 'text-(--kys-muted) hover:text-(--kys-text)'} hover:bg-(--kys-raised)`}
                     >
                       {audio === 'on' ? (
                         <Volume2 size={17} aria-hidden="true" />
@@ -3261,9 +3261,16 @@ function Synth({
                       name="Restore patch"
                       help="Put the patch back as it was before you moved its controls."
                     >
-                      <button type="button" onClick={restoreSound} className="kys-layer">
+                      <button
+                        type="button"
+                        onClick={restoreSound}
+                        className="kys-layer"
+                        aria-label="Restore patch"
+                      >
                         <RotateCcw size={16} aria-hidden="true" />
-                        Restore patch
+                        {/* On a phone its caption is the short word (t-287). */}
+                        <span className="max-sm:hidden">Restore patch</span>
+                        <span className="sm:hidden">Restore</span>
                       </button>
                     </PlayerTip>
                   )}

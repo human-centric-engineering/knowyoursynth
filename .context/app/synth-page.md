@@ -548,9 +548,12 @@ phone. `f-phone-and-tablet` t-65 made the panel and keyboard work on touch:
   controls themselves are `touch-action: none`. The magnifier lens is a separate control and is
   kept. A synth with its own layout is capped at a width that fits the height left between the
   header and the dock, but never below 1100 px (or the page's width): a tall panel such as the
-  2600 is drawn at a working size and the page scrolls, rather than shrinking it to fit. On a phone or tablet (touch the main pointer,
-  under 1100 px; a landscape tablet, a narrow desktop window, or a touch laptop worked by its trackpad still fits) the fitted panel is drawn no narrower than `--kys-fit-min` (1100 px), or
-  than fills the screen's height if that is less, and is swiped sideways (t-285); on a desktop it is unset. From
+  2600 is drawn at a working size and the page scrolls, rather than shrinking it to fit. On a screen under 1100 px (a phone, a tablet
+  held upright, a narrow window) the fitted panel is drawn no narrower than `--kys-fit-min` (1600 px), or than fills
+  the screen's height if that is less, and is swiped or scrolled sideways (t-285, t-287); a landscape tablet and a
+  desktop fit as before. On a phone the bar's tools are one row, each an icon over a short caption (`.kys-bar-tools`),
+  and an open sequencer keeps a 760 px working width, its rack's face scrolling sideways between the ears, sixteen
+  steps to a row (t-287). From
   `lg` up the header over the panel is one row that never wraps.
 - **Under 1024 px a note sits above the panel.** It tells a tablet held upright (portrait, at
   least 600 px wide, with a touch screen) to turn sideways. Anything else under 1024 px is told the panel is made for a
