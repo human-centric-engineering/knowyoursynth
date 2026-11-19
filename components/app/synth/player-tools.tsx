@@ -17,14 +17,14 @@
  * The page owns every state these show; each is told what is true and calls back to change it.
  */
 
-import { useEffect, useId, useRef } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
+import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import type { CSSProperties, ReactNode, Ref } from 'react';
 import { ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
-  DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -252,8 +252,10 @@ export function PlayerSettings({
  * or a flag.
  */
 function SettingsMenu({ settings }: { settings: SettingSpec[] }) {
+  // Held here, so the menu renders again as it opens and finds the full-screen player, if one is showing.
+  const [open, setOpen] = useState(false);
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <button
           type="button"
@@ -265,29 +267,62 @@ function SettingsMenu({ settings }: { settings: SettingSpec[] }) {
           <ChevronDown size={14} aria-hidden="true" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="kys-rail-menu">
+      <MenuContent>
         {settings.map((st, i) => (
-          <div key={st.label}>
-            {i > 0 && <DropdownMenuSeparator />}
-            <DropdownMenuLabel>{st.name}</DropdownMenuLabel>
-            <DropdownMenuRadioGroup
-              aria-label={st.label}
-              value={String(st.options.findIndex(([v]) => v === st.value))}
-              onValueChange={(at) => {
-                const picked = st.options[Number(at)];
-                if (picked) st.onChange(picked[0]);
-              }}
-            >
-              {st.options.map(([, word], j) => (
-                <DropdownMenuRadioItem key={word} value={String(j)}>
-                  {word}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-          </div>
+          <SettingsMenuGroup key={st.label} setting={st} first={i === 0} />
         ))}
-      </DropdownMenuContent>
+      </MenuContent>
     </DropdownMenu>
+  );
+}
+
+/** One setting in the Display menu: its name, its choices, and what it does, read with them as their description. */
+function SettingsMenuGroup({ setting: st, first }: { setting: SettingSpec; first: boolean }) {
+  const helpId = useId();
+  return (
+    <div>
+      {!first && <DropdownMenuSeparator />}
+      <DropdownMenuLabel>{st.name}</DropdownMenuLabel>
+      <span id={helpId} className="sr-only">
+        {st.help}
+      </span>
+      <DropdownMenuRadioGroup
+        aria-label={st.label}
+        aria-describedby={helpId}
+        value={String(st.options.findIndex(([v]) => v === st.value))}
+        onValueChange={(at) => {
+          const picked = st.options[Number(at)];
+          if (picked) st.onChange(picked[0]);
+        }}
+      >
+        {st.options.map(([, word], j) => (
+          <DropdownMenuRadioItem key={word} value={String(j)}>
+            {word}
+          </DropdownMenuRadioItem>
+        ))}
+      </DropdownMenuRadioGroup>
+    </div>
+  );
+}
+
+/**
+ * A rail menu's content, in the rail's lettering. The shared `DropdownMenuContent` always portals to the body, which is
+ * not drawn while the player is full screen: this one portals into the full-screen element while there is one, so the
+ * menu shows over it.
+ */
+function MenuContent({ children }: { children: ReactNode }) {
+  const container =
+    typeof document === 'undefined' ? undefined : (document.fullscreenElement ?? undefined);
+  return (
+    <DropdownMenuPrimitive.Portal container={container}>
+      <DropdownMenuPrimitive.Content
+        align="start"
+        sideOffset={4}
+        className="kys-rail-menu bg-popover text-popover-foreground z-50 max-h-[var(--radix-dropdown-menu-content-available-height)] overflow-y-auto rounded-md border p-1 shadow-md"
+      >
+        {children}
+      </DropdownMenuPrimitive.Content>
+    </DropdownMenuPrimitive.Portal>
   );
 }
 
@@ -297,6 +332,8 @@ export interface RailMenuItem {
   icon: ReactNode;
   on: boolean;
   onClick: () => void;
+  /** What it does, under its name: what the toggle's tooltip says on a wider screen. */
+  help: string;
 }
 
 /**
@@ -321,8 +358,9 @@ export function RailMenu({
 }) {
   const shown = groups.filter((g) => g.length > 0);
   const anyOn = shown.some((g) => g.some((item) => item.on));
+  const [open, setOpen] = useState(false);
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <button
           ref={ref}
@@ -335,25 +373,42 @@ export function RailMenu({
           <ChevronDown size={14} aria-hidden="true" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="kys-rail-menu">
+      <MenuContent>
         {shown.map((g, i) => (
           <div key={g[0].label}>
             {i > 0 && <DropdownMenuSeparator />}
             {g.map((item) => (
-              <DropdownMenuCheckboxItem
-                key={item.label}
-                checked={item.on}
-                onCheckedChange={item.onClick}
-                onSelect={(e) => e.preventDefault()}
-              >
-                <span className="mr-2 inline-flex">{item.icon}</span>
-                {item.label}
-              </DropdownMenuCheckboxItem>
+              <RailMenuEntry key={item.label} item={item} />
             ))}
           </div>
         ))}
-      </DropdownMenuContent>
+      </MenuContent>
     </DropdownMenu>
+  );
+}
+
+/**
+ * One layer in the View menu: its icon and name, and under them what it does, which is its description, not part of
+ * its name. It stays open when picked, for the next.
+ */
+function RailMenuEntry({ item }: { item: RailMenuItem }) {
+  const helpId = useId();
+  return (
+    <DropdownMenuCheckboxItem
+      checked={item.on}
+      onCheckedChange={item.onClick}
+      onSelect={(e) => e.preventDefault()}
+      aria-describedby={helpId}
+      className="items-start"
+    >
+      <span className="mt-0.5 mr-2 inline-flex">{item.icon}</span>
+      <span className="flex flex-col">
+        {item.label}
+        <span id={helpId} aria-hidden="true" className="kys-rail-menu-help">
+          {item.help}
+        </span>
+      </span>
+    </DropdownMenuCheckboxItem>
   );
 }
 
@@ -500,7 +555,10 @@ export function useTopFit() {
     observeParts();
     // A part that comes later (the phone's menu once the page knows it is on a phone, the inspector as the screen
     // widens) is observed too, and the rail measured again with it.
-    const mo = new MutationObserver(() => {
+    const mo = new MutationObserver((records) => {
+      for (const r of records)
+        for (const gone of Array.from(r.removedNodes))
+          if (gone instanceof Element) ro.unobserve(gone);
       observeParts();
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(measure);

@@ -29,9 +29,9 @@ describe('panelRailStyle', () => {
 });
 
 describe('panelFrameStyle', () => {
-  it('fits a drawn panel to the scroller, up to 1560 px, no narrower than a phone or tablet floor', () => {
+  it('fits a drawn panel to the scroller, up to 1560 px, with no floor where there is no panel to measure', () => {
     expect(panelFrameStyle(null, 1)).toEqual({
-      width: 'calc(1 * max(min(100%, var(--kys-fit-max, 1560px)), var(--kys-fit-min, 0px)))',
+      width: 'calc(1 * min(100%, var(--kys-fit-max, 1560px)))',
     });
   });
 
@@ -54,9 +54,7 @@ describe('panelFrameStyle', () => {
   });
 
   it('multiplies the fitted width by the scale', () => {
-    expect(panelFrameStyle(null, 2).width).toBe(
-      'calc(2 * max(min(100%, var(--kys-fit-max, 1560px)), var(--kys-fit-min, 0px)))'
-    );
+    expect(panelFrameStyle(null, 2).width).toBe('calc(2 * min(100%, var(--kys-fit-max, 1560px)))');
     expect(panelFrameStyle({ w: 4000, h: 1000 }, 0.9).width).toBe(
       'calc(0.9 * max(min(100%, min(var(--kys-fit-max, 1560px), max(1100px, calc((100vh - var(--kys-fit-chrome, 18vh)) * 4.0000)))), min(var(--kys-fit-min, 0px), calc((100svh - var(--kys-fit-chrome, 18vh)) * 4.0000))))'
     );

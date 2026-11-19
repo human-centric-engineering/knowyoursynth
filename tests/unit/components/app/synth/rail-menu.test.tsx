@@ -8,17 +8,22 @@
  */
 
 import { createRef } from 'react';
-import { describe, it, expect, vi } from 'vitest';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { PlayerSettings, RailMenu } from '@/components/app/synth/player-tools';
 import type { RailMenuItem } from '@/components/app/synth/player-tools';
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 const item = (label: string, on = false, onClick = vi.fn()): RailMenuItem => ({
   label,
   icon: <svg aria-hidden="true" />,
   on,
   onClick,
+  help: `What ${label} does.`,
 });
 
 function layers(groups: RailMenuItem[][]) {
@@ -58,14 +63,42 @@ describe('RailMenu', () => {
     );
     const menu = screen.getByRole('menu');
     const items = within(menu).getAllByRole('menuitemcheckbox');
-    expect(items.map((i) => i.textContent)).toEqual([
-      'Dim unused parts',
-      'Show sensitive controls',
-    ]);
+    expect(items).toHaveLength(2);
+    expect(items[0]).toHaveAccessibleName('Dim unused parts');
+    expect(items[1]).toHaveAccessibleName('Show sensitive controls');
     expect(items[0]).toHaveAttribute('aria-checked', 'true');
     expect(items[1]).toHaveAttribute('aria-checked', 'false');
     // The empty group draws no rule before the first.
     expect(within(menu).queryAllByRole('separator')).toHaveLength(0);
+  });
+
+  it('says what each layer does under its name, as its description, not as part of its name', async () => {
+    const user = userEvent.setup();
+    await user.click(layers([[item('Live signal')]]));
+    const live = screen.getByRole('menuitemcheckbox', { name: 'Live signal' });
+    expect(live).toHaveAccessibleDescription('What Live signal does.');
+    expect(live).toHaveTextContent('What Live signal does.');
+  });
+
+  it('opens into the full-screen player while there is one, which is all that is drawn then', async () => {
+    const user = userEvent.setup();
+    const player = document.createElement('div');
+    document.body.appendChild(player);
+    // The test DOM has no full screen; the page reads only this.
+    Object.defineProperty(document, 'fullscreenElement', { configurable: true, get: () => player });
+    try {
+      await user.click(layers([[item('Dim unused parts')]]));
+      expect(player.contains(screen.getByRole('menu'))).toBe(true);
+    } finally {
+      Reflect.deleteProperty(document, 'fullscreenElement');
+      player.remove();
+    }
+  });
+
+  it('opens into the body when nothing is full screen', async () => {
+    const user = userEvent.setup();
+    await user.click(layers([[item('Dim unused parts')]]));
+    expect(screen.getByRole('menu').parentElement?.parentElement).toBe(document.body);
   });
 
   it('rules groups off from each other', async () => {
@@ -158,6 +191,14 @@ describe('PlayerSettings as a menu', () => {
       'aria-checked',
       'false'
     );
+  });
+
+  it("reads what each setting does as its choices' description", async () => {
+    const user = userEvent.setup();
+    settingsMenu();
+    await user.click(screen.getByRole('button', { name: 'Display settings' }));
+    const lens = within(screen.getByRole('menu')).getByRole('group', { name: 'Magnifier' });
+    expect(lens).toHaveAccessibleDescription('A lens that follows the pointer over the panel.');
   });
 
   it('sends the picked choice as its own value: a flag, a number', async () => {

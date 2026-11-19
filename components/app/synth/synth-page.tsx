@@ -2743,12 +2743,14 @@ function Synth({
                                 ? [
                                     {
                                       label: 'Signal diagram',
+                                      help: 'Turn the panel over to see how its parts are wired, as a block diagram.',
                                       icon: <Waypoints size={16} aria-hidden="true" />,
                                       on: routingOn,
                                       onClick: toggleDiagram,
                                     },
                                     {
                                       label: 'Live signal',
+                                      help: 'Light each part as signal goes through it. Play a note or start a pattern to see it.',
                                       icon: <Activity size={16} aria-hidden="true" />,
                                       on: liveOn,
                                       onClick: toggleLive,
@@ -2758,12 +2760,14 @@ function Synth({
                               [
                                 {
                                   label: 'Dim unused parts',
+                                  help: 'Darken every part the patch does not use as it is set now.',
                                   icon: <EyeOff size={16} aria-hidden="true" />,
                                   on: dimOn,
                                   onClick: toggleDim,
                                 },
                                 {
                                   label: 'Show sensitive controls',
+                                  help: 'Glow behind the controls where a small move changes the sound most.',
                                   icon: <Flame size={16} aria-hidden="true" />,
                                   on: heatOn,
                                   onClick: toggleHeat,
@@ -2772,6 +2776,7 @@ function Synth({
                               [
                                 {
                                   label: 'Explain sections',
+                                  help: 'Colour in every named part of the panel, and explain it when you tap it.',
                                   icon: <Shapes size={16} aria-hidden="true" />,
                                   on: areasOn,
                                   onClick: toggleSections,

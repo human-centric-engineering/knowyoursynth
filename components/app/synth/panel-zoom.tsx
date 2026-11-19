@@ -53,9 +53,9 @@ export function panelFrameStyle(
   // than fills the screen's height, whichever is less: taller than the screen's width would draw it, and swiped
   // sideways. Unset, it is 0 and changes nothing. Its height is `svh`, not the cap's `vh`: on a phone `vh` is the screen
   // with the browser's bars hidden, so a panel that filled it would run under them while they show.
-  const floor = aspect
-    ? `min(var(--kys-fit-min, 0px), calc((100svh - var(--kys-fit-chrome, 18vh)) * ${aspect}))`
-    : 'var(--kys-fit-min, 0px)';
+  // With no drawn panel to measure there is no height to fill, so no floor either.
+  if (!aspect) return { width: `calc(${scale} * min(100%, ${cap}))` };
+  const floor = `min(var(--kys-fit-min, 0px), calc((100svh - var(--kys-fit-chrome, 18vh)) * ${aspect}))`;
   return { width: `calc(${scale} * max(min(100%, ${cap}), ${floor}))` };
 }
 

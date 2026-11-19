@@ -170,8 +170,9 @@ svg .kys-hit:focus-visible {
     0 40px 80px -40px rgb(20 28 40 / 0.3);
 }
 /* On a phone or tablet the fitted panel is drawn at a working size and swiped sideways, not squeezed to the screen's
-   width (`panelFrameStyle`): a touch screen up to a landscape iPad Pro's width. A narrow desktop window still fits. */
-@media (any-pointer: coarse) and (max-width: 1366px) {
+   width (`panelFrameStyle`): where touch is the main pointer, up to a landscape iPad Pro's width. A narrow desktop
+   window, or a touch-screen laptop's worked by its trackpad, still fits. */
+@media (pointer: coarse) and (max-width: 1366px) {
   .kys-instrument {
     --kys-fit-min: 1100px;
   }
@@ -1472,6 +1473,13 @@ svg .kys-hit:focus-visible {
   min-width: 13rem;
   font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
   letter-spacing: 0.04em;
+}
+.kys-rail-menu-help {
+  margin-top: 1px;
+  font-size: 12.5px;
+  line-height: 1.3;
+  letter-spacing: 0;
+  color: var(--color-muted-foreground);
 }
 .kys-rail-menu [role='menuitemcheckbox'],
 .kys-rail-menu [role='menuitemradio'] {
