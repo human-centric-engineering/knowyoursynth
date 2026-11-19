@@ -153,7 +153,7 @@
       "blurb": "Rhythms at two, three and four beats, under a chord in the same ratios.",
       "how": "Henry Cowell’s Rhythmicon played rhythms in whole-number ratios, each a note of the matching harmonic, so pitch and pulse were one idea. The Subharmonicon’s rhythm generators are that idea: here three rhythms step Sequencer 1 at /2, /3 and /4 of the tempo, while VCO 1’s subs sound the chord at /3 and /4 of its pitch. The pattern repeats every twelve clocks.",
       "phrase": {
-        "bpm": 315,
+        "bpm": 300,
         "loop": false,
         "steps": [[0, 60, 0.25]]
       },
@@ -565,7 +565,7 @@
       "blurb": "Each sequencer rewrites its own rhythm, with the clocks playing filter and VCA.",
       "how": "The manual’s Point Zero feeds each sequencer back into a rhythm generator (SEQ 1 into RHYTHM 1, SEQ 2 into RHYTHM 2), so every step changes when the next one comes, and patches SEQ 1 CLK into CUTOFF and SEQ 2 CLK into the VCA. VCF ATTACK sets how long each sweep takes. The manual’s patch sheet transcribes the cables; its knobs and buttons are drawn, not written, so the settings here are this lesson’s.",
       "phrase": {
-        "bpm": 404,
+        "bpm": 300,
         "loop": false,
         "steps": [[0, 60, 0.25]]
       },
@@ -874,7 +874,7 @@
       "blurb": "High, glittering sequences whose third rhythm the filter envelope keeps moving.",
       "how": "The manual’s Star-Gate runs high sequences, patches VCA EG OUT into CUTOFF and VCF EG OUT into RHYTHM 3, and asks you to vary Rhythms 2 to 4 on Sequencer 2 and VCA DECAY, and to ride the mixer while it plays. The manual’s patch sheet transcribes the cables; its knobs and buttons are drawn, not written, so the settings here are this lesson’s.",
       "phrase": {
-        "bpm": 315,
+        "bpm": 300,
         "loop": false,
         "steps": [[0, 60, 0.25]]
       },
@@ -952,12 +952,12 @@
     {
       "id": "shc-just-drone",
       "name": "Just Fifths Drone",
-      "ref": "In the style of La Monte Young’s just-intonation drones",
-      "artist": "La Monte Young",
+      "ref": "In the style of just-intonation drone music",
+      "artist": "Drone music",
       "tags": ["drone", "just intonation"],
       "level": 1,
       "blurb": "A held drone of fifths and undertones that switches from beating to still with QUANTIZE.",
-      "how": "Drone music tuned in just intonation, as La Monte Young’s is, keeps its intervals in pure whole-number ratios, so the notes lock together instead of beating. The Subharmonicon’s subs are whole-number ratios already; QUANTIZE’s 12-JI tunes VCO 2’s fifth to an exact 3 : 2 as well. EG held holds both envelopes open: a drone with no key at all.",
+      "how": "Drone music tuned in just intonation, such as La Monte Young’s, keeps its intervals in pure whole-number ratios, so the notes lock together instead of beating. The Subharmonicon’s subs are whole-number ratios already; QUANTIZE’s 12-JI tunes VCO 2’s fifth to an exact 3 : 2 as well. EG held holds both envelopes open: a drone with no key at all.",
       "phrase": {
         "bpm": 60,
         "loop": true,
@@ -1097,7 +1097,7 @@
       "blurb": "Two short melodies, one stepping every third clock and one every fourth, slowly shifting against each other.",
       "how": "Minimalist composers such as Steve Reich and Terry Riley built pieces from short repeating patterns heard against each other, so new figures emerge from the overlap. Here Sequencer 1 steps every three clocks and Sequencer 2 every four: their four-note melodies line up again only every forty-eight clocks.",
       "phrase": {
-        "bpm": 404,
+        "bpm": 300,
         "loop": false,
         "steps": [[0, 60, 0.25]]
       },
@@ -1166,7 +1166,7 @@
       "blurb": "Sequencer 1 moves the subs’ divisors, not the pitch: an arpeggio down the undertone series.",
       "how": "The ASSIGN buttons can send a sequencer to the subs’ divisors instead of the VCO’s pitch. Then each step picks a different undertone under a VCO that never moves, so the arpeggio always stays inside its subharmonic chord: an otherworldly, kosmische sound with nothing to tune. Here VCO 1 is silent and only its subs play.",
       "phrase": {
-        "bpm": 315,
+        "bpm": 300,
         "loop": false,
         "steps": [[0, 60, 0.25]]
       },
@@ -1234,7 +1234,7 @@
       "blurb": "Screeching, chattering cries from fast high steps and short envelopes.",
       "how": "Oskar Sala made the bird cries in Hitchcock’s The Birds on his Mixtur-Trautonium. A rough idea of them comes from fast, high, unquantised steps on both VCOs, short envelopes and a resonant filter, with two rhythms per sequencer so the chatter never settles into a beat.",
       "phrase": {
-        "bpm": 519,
+        "bpm": 300,
         "loop": false,
         "steps": [[0, 60, 0.25]]
       },
