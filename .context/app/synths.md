@@ -222,11 +222,16 @@ when absent**, added synth by synth:
 | Chord stack, one-shot LFO, saw folder   | `poly.chord`, `lfo.oneShot`, osc `mix.sfold` (with `fold`)                                                        | Korg minilogue xd  |
 | Filtered noise, VPM oscillator          | osc `mix.mnoise` / `mix.vpm`, with osc `mnoise` / `vpm` settings; SHAPE rides the pulse-width dest                | Korg minilogue xd  |
 | Filter slopes, full-stage envelope loop | filter `poles`, env `loopAll`; dests `lfo2Rate`, `noiseLvl`, `env1Rate`                                           | Moog Sub 37        |
+| Subharmonics, polyrhythmic sequencers   | `subharm` (replaces the oscillators; the voice's filter, envelopes and VCA follow)                                | Moog Subharmonicon |
 
 A synth whose sound path is `easel`, `moog` or `solar` still returns the core stubs (`osc: []` etc.).
 `solar` runs eight voices of three kinds (`drone`, `srapa`, `vco`), each with its own gate and envelope, into
 a stereo mixer, a dual filter (with the 42N's distortion after it, `vcf.dist`) and two `dm-fx` cartridges; its signals and destinations are numbered by the
 voice's place in `solar.voices` (`sol3`, `solG3`), and `audio/solar-core.ts` documents them.
+`subharm` takes the oscillators' place only: two VCOs with two dividing subs each, mixed into the voice's own ladder
+filter, envelopes and VCA, and a clock divided by four rhythm generators into two 4-step sequencers. It writes the
+envelopes' gates as signals `sbhEg1` / `sbhEg2`, so a definition normals `gate1` / `gate2` to them, gives both
+envelopes `free` and leaves `osc` empty; its `sbh*` signals and destinations are documented in `audio/subharm-core.ts`.
 `layer`, `ringMod` and `tremolo` are poly only: `layer` gives every note a second voice with
 its own settings, so `poly.voices` counts notes; with `layer.split` a key below the split plays
 only the layer and one at or above it only the top-level settings. A `common` LFO keeps one phase
