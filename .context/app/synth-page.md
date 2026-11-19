@@ -271,8 +271,10 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   `--rail-face`, `--rail-face2` and `--rail-print`), or the outline drawing's paper and ink. The
   head (`.is-top`) carries Signal (Diagram and Live signal, with no rule between them, t-279; only on a synth with a
   routing), then after a rule Dim unused and Sensitive, at the left, and at the right Undo and
-  Redo, the inspector, Sections, then the tour and its help (t-276); each layer is its icon (with its word from `xl` up and below `lg`) and an LED
-  lit while it is over the panel. The head's tips open below it, over the panel, not up into the page's header
+  Redo, the inspector, Sections, then the tour and its help (t-276); each layer is its icon, with its word, and an LED
+  lit while it is over the panel. The head stays on one row as long as it can (t-284): `useTopFit` tries `data-fit`
+  steps until every button sits on one line, `short` (closer together, the tour's short name "Tour") then `short
+icons` (the toggles' icons and LEDs without their words, which stay in their tooltips), and wraps only past that. The head's tips open below it, over the panel, not up into the page's header
   (`TipSide` in `player-tip.tsx`, t-279). The foot (`.is-foot`) carries how the panel is drawn (Hardware or
   Outline; Layout, on a synth with a layout of its own (below): Modular or Long, or Compact or Full; and on a panel printed in another language, its Labels in that language or
   English, `kys.english`, kept in this browser), the magnifier and Hover help (the card that pops up when you point at a
@@ -541,7 +543,9 @@ phone. `f-phone-and-tablet` t-65 made the panel and keyboard work on touch:
   controls themselves are `touch-action: none`. The magnifier lens is a separate control and is
   kept. A synth with its own layout is capped at a width that fits the height left between the
   header and the dock, but never below 1100 px (or the page's width): a tall panel such as the
-  2600 is drawn at a working size and the page scrolls, rather than shrinking it to fit. From
+  2600 is drawn at a working size and the page scrolls, rather than shrinking it to fit. On a phone or tablet (under
+  1024 px, or a touch screen up to 1366 px) the fitted panel is drawn no narrower than `--kys-fit-min` (1100 px), or
+  than fills the screen's height if that is less, and is swiped sideways (t-285); on a desktop it is unset. From
   `lg` up the header over the panel is one row that never wraps.
 - **Under 1024 px a note sits above the panel.** It tells a tablet held upright (portrait, at
   least 600 px wide, with a touch screen) to turn sideways. Anything else under 1024 px is told the panel is made for a
