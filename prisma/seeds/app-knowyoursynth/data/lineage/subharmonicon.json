@@ -1,0 +1,50 @@
+{
+  "synth": "subharmonicon",
+  "title": "The Subharmonicon: undertones and polyrhythms from the 1930s, in a Moog semi-modular",
+  "intro": "Moog Music released the Subharmonicon in 2020, after showing it as a limited instrument at Moogfest 2018. It takes two ideas from the 1930s. Oskar Sala’s Mixtur-Trautonium divided each note into subharmonics, lower notes in whole-number ratios to it; the Subharmonicon’s four subharmonic oscillators do the same to its two VCOs. Henry Cowell’s Rhythmicon, built by Léon Theremin, played rhythms in whole-number ratios; the Subharmonicon’s four rhythm generators divide its tempo the same way into two 4-step sequencers. Moog made it a semi-modular companion to the Mother-32 and DFAM, desktop or 60HP Eurorack.",
+  "timeline": [
+    {
+      "year": "1931",
+      "name": "Rhythmicon",
+      "text": "Built by Léon Theremin for Henry Cowell: each key plays a repeating pulse at a rate in a whole-number ratio to the others, at the matching harmonic’s pitch."
+    },
+    {
+      "year": "1952",
+      "name": "Mixtur-Trautonium",
+      "text": "Oskar Sala’s development of the Trautonium, adding subharmonic generators that divide each note into undertones; he used it for the bird sounds of Hitchcock’s The Birds (1963)."
+    },
+    {
+      "year": "2015",
+      "name": "Moog Mother-32",
+      "text": "Moog’s first desktop and Eurorack semi-modular: one VCO, a ladder filter and a 32-step sequencer."
+    },
+    {
+      "year": "2018",
+      "name": "Moog DFAM",
+      "text": "The Drummer From Another Mother: a semi-modular analogue percussion synth with an 8-step sequencer, built to sit beside the Mother-32."
+    },
+    {
+      "year": "2020",
+      "name": "Moog Subharmonicon",
+      "tag": "This synth",
+      "text": "Two VCOs, each with two subharmonic oscillators at /1 to /16, a ladder filter and two attack–decay envelopes; four rhythm generators stepping two 4-step sequencers, with quantising to equal or just tunings and a 32-point patchbay."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Moog Mother-32",
+      "years": "2015",
+      "text": "The semi-modular the Subharmonicon was made to join: its ASSIGN output set to a clock can drive the Subharmonicon’s CLOCK input."
+    },
+    {
+      "name": "Moog DFAM",
+      "years": "2018",
+      "text": "The percussion companion: the Subharmonicon’s CLOCK OUT, TRIGGER or SEQ CLK outputs can clock it."
+    },
+    {
+      "name": "Behringer Spice",
+      "years": "2024",
+      "text": "A desktop semi-modular after the Subharmonicon, with the same two oscillators, four sub-oscillators and two four-step polyrhythmic sequencers, patched through a matrix."
+    }
+  ]
+}

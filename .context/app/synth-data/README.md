@@ -21,7 +21,7 @@ python3 validate_synth.py --schema synth-blueprint.schema.json */*.synth.json
 
 Without `jsonschema` installed it runs the referential checks only.
 
-## In the app (44)
+## In the app (45)
 
 | Folder                                                     | Synth                                                                                                                                                            | Spec schema |
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
@@ -58,6 +58,7 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`pro-800`](./pro-800/README.md)                           | Behringer PRO-800                                                                                                                                                | 0.7.0       |
 | [`solar-42n`](./solar-42n/README.md)                       | Elta Music SOLAR 42N (spec: the original SOLAR 42 Ambient Machine)                                                                                               | 0.12.0      |
 | [`sub-37`](./sub-37/README.md)                             | Moog Music Sub 37 Tribute Edition                                                                                                                                | 0.11.0      |
+| [`subharmonicon`](./subharmonicon/README.md)               | Moog Music Subharmonicon                                                                                                                                         | 0.13.0      |
 | [`super-gemini`](./super-gemini/README.md)                 | UDO Audio Super Gemini                                                                                                                                           | 0.13.0      |
 | [`syntrx-ii`](./syntrx-ii/README.md)                       | Erica Synths SYNTRX II                                                                                                                                           | 0.12.0      |
 | [`system-15`](./system-15/README.md)                       | Behringer System 15                                                                                                                                              | 0.10.0      |
