@@ -35,6 +35,7 @@ export function toStores(e: SynthEvent): void {
       oscHz: e.oscHz,
       oscLv: e.oscLv,
       seq: e.seq == null ? -1 : e.seq,
+      seq2: e.seq2 == null ? -1 : e.seq2,
       pulser: e.pulser || 0,
       eyes: e.eyes,
       moog: e.moog,

@@ -602,6 +602,7 @@ const decor: Decor[] = [
   { t: 'led', x: 270, y: 750, color: 'red', litWhen: { id: 'knob.d-silver', eq: 4, near: 1 } },
   { t: 'led', x: 290, y: 750, color: 'red', litWhen: { id: 'slide.h', eq: true, not: true }, r: 4 },
   { t: 'led', x: 310, y: 750, color: 'red' },
+  { t: 'led', x: 330, y: 750, color: 'red', litWhen: { seq2: 2 } },
   {
     t: 'lcd',
     x: 540,

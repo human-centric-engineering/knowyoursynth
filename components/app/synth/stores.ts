@@ -77,6 +77,8 @@ export interface Meters {
   oscLv?: number[];
   /** The sequencer stage (0-based), −1 when stopped. */
   seq?: number;
+  /** The Subharmonicon's Sequencer 2 stage (0-based), −1 when stopped. */
+  seq2?: number;
   pulser?: number;
   /** The SOLAR 42N's light on each voice's photosensor, 0..1. */
   eyes?: number[];

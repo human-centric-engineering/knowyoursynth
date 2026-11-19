@@ -258,6 +258,8 @@ function Led({ d, ctx, values }: { d: LedDecor; ctx: PanelCtx; values: ControlVa
   else if (w === 'pulser') level = Math.min(1, Math.max(0, meters.pulser || 0));
   // { seq: n } (Easel): the sequencer is on stage n (0-based)
   else if (w && typeof w === 'object' && 'seq' in w) level = meters.seq === w.seq ? 1 : 0;
+  // { seq2: n } (Subharmonicon): Sequencer 2 is on stage n
+  else if (w && typeof w === 'object' && 'seq2' in w) level = meters.seq2 === w.seq2 ? 1 : 0;
   else if (w && typeof w === 'object' && 'voice' in w)
     level = (meters.voices || 0) & (1 << w.voice) ? 1 : 0;
   else if (w && typeof w === 'object' && 'osc' in w)

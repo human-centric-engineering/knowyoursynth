@@ -958,7 +958,8 @@ export type LedColor = 'red' | 'amber' | 'blue' | 'green' | 'white' | 'yellow';
  *   allows a tolerance for a number; `not` inverts the test).
  * - `{ id, morph }` one lamp of a row a continuous knob fades across (Neutron SHAPE).
  * - `{ voice }` / `{ osc }` while that voice / oscillator sounds; `{ seq }` while
- *   the sequencer is on that stage (0-based).
+ *   the sequencer is on that stage (0-based), `{ seq2 }` while the second one is
+ *   (the Subharmonicon's Sequencer 2).
  */
 export type LitWhen =
   | 'power'
@@ -972,7 +973,8 @@ export type LitWhen =
   | { id: string; morph: number }
   | { voice: number }
   | { osc: number }
-  | { seq: number };
+  | { seq: number }
+  | { seq2: number };
 
 export interface LedDecor extends DecorCommon {
   t: 'led';
