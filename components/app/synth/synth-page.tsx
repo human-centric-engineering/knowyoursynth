@@ -77,6 +77,7 @@ import {
   presetState,
   type PanelState,
 } from '@/lib/app/synths/lib/patch';
+import { tempoBpmOf } from '@/lib/app/synths/lib/tempo';
 import { predict } from '@/lib/app/synths/lib/predict';
 import type { Prediction } from '@/lib/app/synths/lib/predict';
 import { createMapper, probeNotes } from '@/lib/app/synths/lib/soundmap';
@@ -1287,10 +1288,9 @@ function Synth({
     silent: loading,
   });
 
-  // SynthDef `tempo` names the control whose value is the riff's BPM (the TB-303's TEMPO knob): the riff plays at
-  // that speed, and turning it while the riff plays moves the riff with it.
-  const tempoValue = def.tempo ? sess.values[def.tempo] : null;
-  const tempoBpm = typeof tempoValue === 'number' ? tempoValue : null;
+  // SynthDef `tempo` names the control that sets the riff's BPM (the TB-303's TEMPO knob, or the Subharmonicon's through
+  // its `tempoMap`): the riff plays at that speed, and turning it while the riff plays moves the riff with it.
+  const tempoBpm = tempoBpmOf(def, sess.values);
   // Not while a MIDI clock is followed: its tempo is the pattern's then.
   useEffect(() => {
     if (tempoBpm && !following) engine?.send({ type: 'tempo', bpm: tempoBpm });
@@ -1893,8 +1893,13 @@ function Synth({
     };
     seqPress.current = (id, v) => {
       const b = seqButtonFor(synthDef, id, seqShown);
-      if (!b) onChange(id, v);
-      else if (b === 'run') {
+      if (!b) {
+        onChange(id, v);
+        // A synth's own sequencer runs on the app's clock (`f-own-sequencer`): lighting its run control (the
+        // Subharmonicon's PLAY) while nothing plays presses Play, so the sequencer starts as it does on the hardware.
+        if (v === true && id === synthDef.ownSequencer?.run && !transportPlaying)
+          void playPattern();
+      } else if (b === 'run') {
         if (transportPlaying) stopRiff();
         else void playPattern();
       } else if (b === 'hold') setHoldMode(!hold);
@@ -2948,7 +2953,11 @@ function Synth({
                             dimOn={dimOn}
                             liveGlow={liveGlow}
                             heatOn={heatOn}
-                            onChange={synthDef.seqButtons ? onPanelChange : onChange}
+                            onChange={
+                              synthDef.seqButtons || synthDef.ownSequencer
+                                ? onPanelChange
+                                : onChange
+                            }
                             onConnect={onConnect}
                             onRemoveCable={onRemoveCable}
                             onMoveCable={onMoveCable}

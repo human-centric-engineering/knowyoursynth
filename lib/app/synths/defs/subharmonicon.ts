@@ -42,7 +42,7 @@ import type {
   TextDecor,
   ViewRect,
 } from '@/lib/app/synths/contract';
-import { DIV_PER_VOLT, quantize } from '@/lib/app/synths/audio/subharm-core';
+import { DIV_PER_VOLT, quantize, SUBHARM_PPQ } from '@/lib/app/synths/audio/subharm-core';
 import { num } from '@/lib/app/synths/lib/def-kit';
 import {
   clamp,
@@ -74,7 +74,24 @@ const EG_OCT = 8;
 const attackS = (v: number): number => expMap(clamp(v, 0, 10) / 10, 0.001, 10);
 const decayS = (v: number): number => expMap(clamp(v, 0, 10) / 10, 0.005, 10);
 /** TEMPO: 0.333 to 50 Hz, 20 to 3,000 BPM at one clock a beat (the spec), exponential. */
-const tempoHz = (v: number): number => expMap(clamp(v, 0, 10) / 10, 0.333, 50);
+const TEMPO_LO = 0.333,
+  TEMPO_HI = 50;
+const tempoHz = (v: number): number => expMap(clamp(v, 0, 10) / 10, TEMPO_LO, TEMPO_HI);
+/**
+ * TEMPO as the app's tempo (`SynthDef.tempoMap`, `f-own-sequencer`): on a MIDI clock the Subharmonicon takes four clocks
+ * a beat (the spec's 4 PPQ), so the app's BPM is a quarter of TEMPO's clocks a minute, and the app's transport clocks
+ * the sequencers at the speed TEMPO runs them. Whole BPM, as the knob's positions are stored to a hundredth of a turn:
+ * a riff's 120 comes back as 120, not 119.8.
+ */
+const tempoMap = {
+  toBpm: (v: number): number => Math.round((tempoHz(v) * 60) / SUBHARM_PPQ),
+  fromBpm: (bpm: number): number =>
+    clamp(
+      (10 * Math.log((bpm * SUBHARM_PPQ) / 60 / TEMPO_LO)) / Math.log(TEMPO_HI / TEMPO_LO),
+      0,
+      10
+    ),
+};
 /** The mixer levels: straight 0..1 (the core's mixer overdrives near the top of the six together). */
 const mixLevel = (v: number): number => clamp(v, 0, 10) / 10;
 /** A QUANTIZE setting the engine knows. */
@@ -277,8 +294,8 @@ knob('clock.tempo', 322, 745, 44, {
   module: 'mod',
   def: 3.6,
   label: 'TEMPO',
-  fmt: (v) => `${Math.round(tempoHz(v) * 60)} BPM`,
-  help: 'The master clock, from 20 to 3,000 beats a minute, one clock a beat. The four rhythm generators divide it; it runs only while PLAY is lit, and a cable in CLOCK takes over from it.',
+  fmt: (v) => `${Math.round(tempoHz(v) * 60)} BPM · ♩ = ${tempoMap.toBpm(v)}`,
+  help: 'The master clock, from 20 to 3,000 beats a minute, one clock a beat. The four rhythm generators divide it; it runs only while PLAY is lit, and a cable in CLOCK takes over from it. In this app it is also the tempo on the bar (♩): on a MIDI clock the Subharmonicon counts four clocks to a beat, so a beat of the app is four of its clocks, and the app’s Play clocks it as a MIDI clock would.',
 });
 button(
   'transport.reset',
@@ -330,7 +347,7 @@ button('transport.play', 456, 764, 64, 36, 'PLAY', {
   module: 'mod',
   kind: 'bool',
   def: false,
-  help: 'Starts and stops the clock, the rhythm generators and the sequencers (and CLOCK OUT). Lit while it runs. A cable in the PLAY input takes over from it.',
+  help: 'Starts and stops the clock, the rhythm generators and the sequencers (and CLOCK OUT). A cable in the PLAY input takes over from it. In this app the clock is the app’s, as a MIDI clock is on the hardware: lit, the sequencers run while Play on the bar runs, from step 1 on its downbeat, and stop with Stop. Lighting it while nothing plays presses Play for you.',
 });
 button(
   'transport.trigger',
@@ -977,6 +994,8 @@ function toEngine(v: ControlValues): EngineParams {
     delay: { on: false },
     tune: 0,
     volume: level10(num(v, 'vca.volume'), 1),
+    // the sequencers run on the app's clock (`f-own-sequencer`): a lit PLAY waits for Play on the bar
+    follow: true,
   };
 }
 
@@ -1047,6 +1066,9 @@ const subharmonicon: SynthDef & { version: number } = {
   controls,
   jacks,
   init,
+  tempo: 'clock.tempo',
+  tempoMap,
+  ownSequencer: { run: 'transport.play', ppq: SUBHARM_PPQ },
   // Init is already the Default patch: VCO 1 alone on its sawtooth at C4 (so keys sound as played), the filter fully
   // open with no envelope on it, the VCA EG a 1 ms attack and a short decay, so a held key holds the peak like a gate.
   toEngine,

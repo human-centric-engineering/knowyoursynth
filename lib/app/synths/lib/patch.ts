@@ -6,6 +6,7 @@
 // functions take `unknown` (they read AI output) and check its shape as they go. Their strict counterpart, which
 // refuses instead of repairing, is `lib/app/synths/validate.ts`.
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
+import { withRiffTempo } from '@/lib/app/synths/lib/tempo';
 import {
   SYNTH_MODULES,
   type CablePair,
@@ -225,7 +226,7 @@ export function presetState(
   (def.defaultPatch?.cables || []).forEach(plug);
   if (!preset) return { values, cables };
   // A synth whose TEMPO knob sets the riff's speed (SynthDef `tempo`) starts each sound at its own riff's BPM.
-  if (def.tempo && preset.phrase && preset.phrase.bpm) values[def.tempo] = preset.phrase.bpm;
+  withRiffTempo(def, values, preset.phrase?.bpm);
   const last = upto == null ? preset.steps.length - 1 : upto;
   preset.steps.forEach((s, i) => {
     if (i > last) return;

@@ -106,17 +106,17 @@
       "+24 st"
     ],
     "clock.tempo": [
-      "20 BPM",
-      "33 BPM",
-      "54 BPM",
-      "90 BPM",
-      "148 BPM",
-      "245 BPM",
-      "404 BPM",
-      "667 BPM",
-      "1101 BPM",
-      "1817 BPM",
-      "3000 BPM"
+      "20 BPM · ♩ = 5",
+      "33 BPM · ♩ = 8",
+      "54 BPM · ♩ = 14",
+      "90 BPM · ♩ = 22",
+      "148 BPM · ♩ = 37",
+      "245 BPM · ♩ = 61",
+      "404 BPM · ♩ = 101",
+      "667 BPM · ♩ = 167",
+      "1101 BPM · ♩ = 275",
+      "1817 BPM · ♩ = 454",
+      "3000 BPM · ♩ = 750"
     ],
     "vco1.freq": [
       "C4 · 262 Hz",
@@ -250,6 +250,7 @@
         "res": 0,
         "type": "ladder"
       },
+      "follow": true,
       "glide": { "legato": false, "time": 0 },
       "lfo": { "keySync": false, "mix": {}, "rate": 1 },
       "noise": { "level": 0 },

@@ -268,3 +268,36 @@ describe('Subharmonicon panel', () => {
     ]);
   });
 });
+
+describe('Subharmonicon on the app’s clock (f-own-sequencer)', () => {
+  it('follows the app’s clock, and names PLAY as its sequencer’s run control', () => {
+    expect(run().follow).toBe(true);
+    expect(run({ 'transport.play': true }).follow).toBe(true);
+    expect(subharmonicon.ownSequencer).toEqual({ run: 'transport.play', ppq: 4 });
+    expect(subharmonicon.controls.some((c) => c.id === subharmonicon.ownSequencer?.run)).toBe(true);
+  });
+
+  it('makes TEMPO the app’s tempo at four clocks a beat, both ways', () => {
+    const map = subharmonicon.tempoMap;
+    if (!map) throw new Error('no tempoMap');
+    expect(subharmonicon.tempo).toBe('clock.tempo');
+    // fully left 20 clocks a minute, fully right 3,000: a quarter of each in the app's BPM, to the whole beat
+    expect(map.toBpm(0)).toBe(Math.round((exp(0, 0.333, 50) * 60) / 4));
+    expect(map.toBpm(10)).toBe(750);
+    // a riff's BPM comes back whole, from the knob stored to a hundredth as the page stores it
+    for (const bpm of [20, 61, 120, 300]) {
+      expect(map.toBpm(map.fromBpm(bpm))).toBe(bpm);
+      expect(map.toBpm(Math.round(map.fromBpm(bpm) * 100) / 100)).toBe(bpm);
+    }
+    // 120 BPM in the app is 480 of the Subharmonicon's clocks a minute: 8 Hz
+    expect(sh({ 'clock.tempo': map.fromBpm(120) }).tempo).toBeCloseTo(8, 9);
+  });
+
+  it('reads TEMPO in its own clocks and in the app’s BPM', () => {
+    const tempo = subharmonicon.controls.find((c) => c.id === 'clock.tempo');
+    if (!tempo || tempo.type !== 'knob' || !('fmt' in tempo) || !tempo.fmt)
+      throw new Error('no TEMPO');
+    const at = subharmonicon.tempoMap!.fromBpm(120);
+    expect(tempo.fmt(at)).toBe('480 BPM · ♩ = 120');
+  });
+});

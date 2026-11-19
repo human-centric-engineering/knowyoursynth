@@ -151,8 +151,15 @@ export interface SynthDef {
   signalNames?: Record<EngineSignal, string>;
   /** What this synth calls an engine destination when the explainer lists where a panel route sends a signal. */
   destNames?: Record<EngineDest, string>;
-  /** The control whose value is the riff's BPM (TB-303 and TD-3 `seq.tempo`). */
+  /**
+   * The control whose value is the riff's BPM (TB-303 and TD-3 `seq.tempo`), or, with `tempoMap`, sets it (the
+   * Subharmonicon's TEMPO).
+   */
   tempo?: string;
+  /** How `tempo`'s value and the BPM turn into each other, where the value is not the BPM itself. */
+  tempoMap?: TempoMap;
+  /** A sequencer of the synth's own that the app's transport clocks (`f-own-sequencer`). */
+  ownSequencer?: OwnSequencer;
   /**
    * Panel buttons that drive the app's sequencer, by control id (`f-step-sequencer` t-85): the TB-303's RUN/STOP and
    * keys, the B1's step keys and ARP. A button the sequencer takes does not change its own value; its lamp shows what
@@ -2330,6 +2337,26 @@ export interface SubharmParams {
 }
 
 /**
+ * A synth whose sequencer is its own, in its engine (`SynthDef.ownSequencer`, `f-own-sequencer`): the app's transport is
+ * its master clock, as a MIDI clock is to the hardware. See `.context/app/sequencer-synths.md`.
+ */
+export interface OwnSequencer {
+  /** The control lit when the sound uses the sequencer (the Subharmonicon's PLAY). */
+  run: string;
+  /** The clocks the sequencer takes a beat from a MIDI clock (the Subharmonicon: 4, a sixteenth each). */
+  ppq: number;
+}
+
+/**
+ * A tempo control whose value is not itself the BPM (`SynthDef.tempoMap`): how its value and the app's BPM turn into
+ * each other. `fromBpm` is where a sound's riff puts the control; `toBpm` is the tempo the control then sets.
+ */
+export interface TempoMap {
+  toBpm: (v: number) => number;
+  fromBpm: (bpm: number) => number;
+}
+
+/**
  * The Elta Music SOLAR 42's own sound path, run in place of the fixed voice: eight voices of three kinds, each with
  * its own gate and envelope, a ten-channel stereo mixer, a dual 12 dB filter (left and right) and a stereo effector.
  * The voice writes both sides itself.
@@ -2493,6 +2520,12 @@ export interface EngineParams {
   solar?: SolarParams;
   /** The Subharmonicon's VCOs, subs, rhythm generators and sequencers, in place of `osc` (see `audio/subharm-core.ts`). */
   subharm?: SubharmParams;
+  /**
+   * The synth's own sequencer runs only on the clock of whatever plays its riff or a pattern (the `clock` messages the
+   * riff and pattern players send), and stands still otherwise: the app's transport is its master clock
+   * (`SynthDef.ownSequencer`, `f-own-sequencer`).
+   */
+  follow?: boolean;
   /** Set by the app after `toEngine()`, from the cables (`cablesToEngine()`). Not returned by a definition. */
   cables?: EngineCable[];
   /** Set by the app after `toEngine()`: the mod wheel. Not returned by a definition. */

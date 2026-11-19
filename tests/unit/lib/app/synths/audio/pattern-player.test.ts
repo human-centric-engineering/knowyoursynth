@@ -37,11 +37,14 @@ function standIn() {
   let at = 0;
   const notes: [at: number, on: boolean, n: number][] = [];
   const other: SynthMessage[] = [];
+  /** The app's clock (`f-own-sequencer`), kept apart with the sample each arrived at. */
+  const clocks: [at: number, what: string][] = [];
   const buffers: Float32Array[] = [];
   const synth: Synth = {
     handle: (m) => {
       if (m.type === 'noteOn') notes.push([at, true, m.n]);
       else if (m.type === 'noteOff') notes.push([at, false, m.n]);
+      else if (m.type === 'clock') clocks.push([at, m.at]);
       else other.push(m);
     },
     process: (out, n) => {
@@ -49,7 +52,7 @@ function standIn() {
       at += n;
     },
   };
-  return { synth, notes, other, buffers };
+  return { synth, notes, other, clocks, buffers };
 }
 
 /**
@@ -783,5 +786,56 @@ describe('on the real synth', () => {
       events: [[0, { type: 'pattern', loop: { notes: steps, beats: 2 }, bpm: 150 }]],
     });
     expect(sameSamples(riff.out, pattern.out)).toBe(true);
+  });
+});
+
+describe('the app’s clock to a synth with its own sequencer (f-own-sequencer)', () => {
+  const follows: Timed = [0, { type: 'params', p: { ...monoParams({}), follow: true } }];
+  const pulses = (clocks: [number, string][]) => clocks.filter(([, w]) => w === 'pulse');
+
+  it('starts it on the loop’s first sample after the count-in, then pulses 24 a beat before the notes there', () => {
+    const r = play(3000, [
+      follows,
+      [0, { type: 'pattern', loop: loop([[0, 60, 1]], 1), bpm: BPM, countIn: 1 }],
+    ]);
+    expect(r.clocks[0]).toEqual([1000, 'start']);
+    const p = pulses(r.clocks);
+    expect(p[0][0]).toBe(1000);
+    // a pulse every 1,000 / 24 samples, rounded, counted on across the loop's boundary
+    expect(p.slice(0, 4).map(([at]) => at)).toEqual([1000, 1042, 1083, 1125]);
+    expect(p.find(([at]) => at === 2000)).toBeDefined();
+    expect(p).toHaveLength(48);
+  });
+
+  it('stops it when the pattern stops, and when the run is muted', () => {
+    const stopped = play(3000, [
+      follows,
+      [0, { type: 'pattern', loop: loop([[0, 60, 1]], 1), bpm: BPM }],
+      [1500, { type: 'stopPattern' }],
+    ]);
+    expect(stopped.clocks.at(-1)).toEqual([1408, 'stop']);
+    const muted = play(3000, [
+      follows,
+      [0, { type: 'pattern', loop: loop([[0, 60, 1]], 1), bpm: BPM }],
+      [1500, { type: 'patternMute', muted: true }],
+    ]);
+    expect(muted.clocks.at(-1)?.[1]).toBe('stop');
+    expect(muted.clocks.filter(([at]) => at > 1500)).toEqual([]);
+  });
+
+  it('starts it again where the run is when it is unmuted', () => {
+    const r = play(3000, [
+      follows,
+      [0, { type: 'pattern', loop: loop([[0, 60, 1]], 1), bpm: BPM }],
+      [500, { type: 'patternMute', muted: true }],
+      [1500, { type: 'patternMute', muted: false }],
+    ]);
+    const starts = r.clocks.filter(([, w]) => w === 'start');
+    expect(starts.map(([at]) => at)).toEqual([0, 1408]);
+  });
+
+  it('sends nothing to a synth that does not follow', () => {
+    const r = play(3000, [[0, { type: 'pattern', loop: loop([[0, 60, 1]], 1), bpm: BPM }]]);
+    expect(r.clocks).toEqual([]);
   });
 });

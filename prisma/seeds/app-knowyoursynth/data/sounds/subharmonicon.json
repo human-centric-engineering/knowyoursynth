@@ -12,9 +12,9 @@
       "blurb": "Four notes from Sequencer 1, stepped by two rhythms at once: two against three.",
       "how": "The manual starts here: VCO 1 alone, Sequencer 1 moving its pitch in a chromatic scale, and one rhythm generator stepping it. A second rhythm on the same sequencer adds its own steps, so the four notes fall in a pattern that only comes round again when the two rhythms meet on a downbeat. The manual sets ±2 octaves and 12-ET; the step values and tempo here are this lesson’s.",
       "phrase": {
-        "bpm": 245,
-        "loop": false,
-        "steps": [[0, 60, 0.25]]
+        "bpm": 61,
+        "loop": true,
+        "steps": [[0, 60, 4]]
       },
       "steps": [
         {
@@ -34,9 +34,8 @@
         {
           "title": "A rhythm, then PLAY",
           "module": "mod",
-          "why": "Rhythm 1 steps Sequencer 1 on every second clock, and each step plays the envelopes (EG is on).\n- TEMPO 5 · 245 BPM\n- RHYTHM 1 ÷2\n- RHYTHM 1 SEQ 1 lit\n- PLAY lit\n- VCA DECAY 5 · 220 ms\n- CUTOFF 6 · 1.3 kHz\n- VCF EG AMT 2 · +3.2 oct\n- VCF DECAY 4 · 100 ms\n- Listen for: C, E♭, G, B♭ round and round, each note a soft pluck.",
+          "why": "Rhythm 1 steps Sequencer 1 on every second clock, and each step plays the envelopes (EG is on).\n- RHYTHM 1 ÷2\n- RHYTHM 1 SEQ 1 lit\n- PLAY lit\n- VCA DECAY 5 · 220 ms\n- CUTOFF 6 · 1.3 kHz\n- VCF EG AMT 2 · +3.2 oct\n- VCF DECAY 4 · 100 ms\n- Listen for: C, E♭, G, B♭ round and round, each note a soft pluck.",
           "set": {
-            "clock.tempo": 5,
             "rhythm1.div": 2,
             "rhythm1.seq1": true,
             "transport.play": true,
@@ -153,9 +152,9 @@
       "blurb": "Rhythms at two, three and four beats, under a chord in the same ratios.",
       "how": "Henry Cowell’s Rhythmicon played rhythms in whole-number ratios, each a note of the matching harmonic, so pitch and pulse were one idea. The Subharmonicon’s rhythm generators are that idea: here three rhythms step Sequencer 1 at /2, /3 and /4 of the tempo, while VCO 1’s subs sound the chord at /3 and /4 of its pitch. The pattern repeats every twelve clocks.",
       "phrase": {
-        "bpm": 300,
-        "loop": false,
-        "steps": [[0, 60, 0.25]]
+        "bpm": 79,
+        "loop": true,
+        "steps": [[0, 60, 4]]
       },
       "steps": [
         {
@@ -174,12 +173,11 @@
         {
           "title": "Three rhythms on one sequencer",
           "module": "mod",
-          "why": "Rhythms 2, 3 and 4 (at /2, /3 and /4 as they come) all step Sequencer 1, and every step plays the envelopes.\n- RHYTHM 2 SEQ 1 lit\n- RHYTHM 3 SEQ 1 lit\n- RHYTHM 4 SEQ 1 lit\n- TEMPO 5.5 · 315 BPM\n- VCA DECAY 4 · 100 ms\n- CUTOFF 6.5 · 1.8 kHz\n- VCF EG AMT 2.5 · +4 oct\n- VCF DECAY 3 · 49 ms\n- PLAY lit\n- Listen for: a knocking pulse that bunches and spreads, the same twelve clocks over and over.",
+          "why": "Rhythms 2, 3 and 4 (at /2, /3 and /4 as they come) all step Sequencer 1, and every step plays the envelopes.\n- RHYTHM 2 SEQ 1 lit\n- RHYTHM 3 SEQ 1 lit\n- RHYTHM 4 SEQ 1 lit\n- VCA DECAY 4 · 100 ms\n- CUTOFF 6.5 · 1.8 kHz\n- VCF EG AMT 2.5 · +4 oct\n- VCF DECAY 3 · 49 ms\n- PLAY lit\n- Listen for: a knocking pulse that bunches and spreads, the same twelve clocks over and over.",
           "set": {
             "rhythm2.seq1": true,
             "rhythm3.seq1": true,
             "rhythm4.seq1": true,
-            "clock.tempo": 5.5,
             "vca_eg.decay": 4,
             "vcf.cutoff": 6.5,
             "vcf_eg.amount": 2.5,
@@ -228,9 +226,9 @@
       "blurb": "Sub chords stepped by both sequencers, with a drum pulse from CLOCK OUT.",
       "how": "The manual’s Poly Rock tunes the four subs to chord shapes and patches CLOCK OUT into the VCA input for “drums”: every clock opens the amplifier a little on its own, a beat under the sequenced chords. The manual’s patch sheet transcribes the cables; its knobs and buttons are drawn, not written, so the settings here are this lesson’s.",
       "phrase": {
-        "bpm": 191,
-        "loop": false,
-        "steps": [[0, 60, 0.25]]
+        "bpm": 48,
+        "loop": true,
+        "steps": [[0, 60, 4]]
       },
       "steps": [
         {
@@ -251,7 +249,7 @@
         {
           "title": "Both sequencers move",
           "module": "mod",
-          "why": "Each sequencer moves its VCO’s pitch; Rhythm 1 steps Sequencer 1 and Rhythm 2 Sequencer 2.\n- SEQ OCT ±1\n- SEQ 1 ASSIGN OSC 1 lit\n- SEQ 2 ASSIGN OSC 2 lit\n- SEQ 1 STEP 2 -2.08 · -5 st\n- SEQ 1 STEP 3 1.25 · +3 st\n- SEQ 1 STEP 4 -0.83 · -2 st\n- SEQ 2 STEP 2 0.83 · +2 st\n- SEQ 2 STEP 3 -1.25 · -3 st\n- SEQ 2 STEP 4 2.08 · +5 st\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 2 SEQ 2 lit\n- TEMPO 4.5 · 191 BPM\n- CUTOFF 5.5 · 893 Hz\n- RESONANCE 2\n- VCF EG AMT 2 · +3.2 oct\n- VCF DECAY 4 · 100 ms\n- VCA DECAY 4.5 · 150 ms\n- PLAY lit\n- Listen for: two riffs at different speeds, chords colliding into new ones.",
+          "why": "Each sequencer moves its VCO’s pitch; Rhythm 1 steps Sequencer 1 and Rhythm 2 Sequencer 2.\n- SEQ OCT ±1\n- SEQ 1 ASSIGN OSC 1 lit\n- SEQ 2 ASSIGN OSC 2 lit\n- SEQ 1 STEP 2 -2.08 · -5 st\n- SEQ 1 STEP 3 1.25 · +3 st\n- SEQ 1 STEP 4 -0.83 · -2 st\n- SEQ 2 STEP 2 0.83 · +2 st\n- SEQ 2 STEP 3 -1.25 · -3 st\n- SEQ 2 STEP 4 2.08 · +5 st\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 2 SEQ 2 lit\n- CUTOFF 5.5 · 893 Hz\n- RESONANCE 2\n- VCF EG AMT 2 · +3.2 oct\n- VCF DECAY 4 · 100 ms\n- VCA DECAY 4.5 · 150 ms\n- PLAY lit\n- Listen for: two riffs at different speeds, chords colliding into new ones.",
           "set": {
             "seq.oct": 1,
             "seq1.assign_osc": true,
@@ -264,7 +262,6 @@
             "seq2.step4": 2.08,
             "rhythm1.seq1": true,
             "rhythm2.seq2": true,
-            "clock.tempo": 4.5,
             "vcf.cutoff": 5.5,
             "vcf.resonance": 2,
             "vcf_eg.amount": 2,
@@ -307,9 +304,9 @@
       "blurb": "Slow, soft chords from both sequencers, with no cables at all.",
       "how": "The manual’s Cloud Path uses no cables: both sequencers and all four subs, tuned with their levels open, then faded in while it plays; RHYTHM 3 SEQ 1 doubles Sequencer 1’s pace. Long envelopes blur each step into the next. The manual’s patch sheet transcribes the cables; its knobs and buttons are drawn, not written, so the settings here are this lesson’s.",
       "phrase": {
-        "bpm": 90,
-        "loop": false,
-        "steps": [[0, 60, 0.25]]
+        "bpm": 22,
+        "loop": true,
+        "steps": [[0, 60, 4]]
       },
       "steps": [
         {
@@ -332,7 +329,7 @@
         {
           "title": "Slow steps, long envelopes",
           "module": "mod",
-          "why": "Both sequencers move their VCOs on the C major scale, slowly, and the envelopes take their time.\n- SEQ OCT ±1\n- SEQ 1 ASSIGN OSC 1 lit\n- SEQ 2 ASSIGN OSC 2 lit\n- SEQ 1 STEP 2 1.46 · +3.5 st\n- SEQ 1 STEP 3 0.83 · +2 st\n- SEQ 1 STEP 4 2.92 · +7 st\n- SEQ 2 STEP 2 -0.83 · -2 st\n- SEQ 2 STEP 3 0.42 · +1 st\n- SEQ 2 STEP 4 -1.67 · -4 st\n- RHYTHM 1 ÷2\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 2 ÷3\n- RHYTHM 2 SEQ 2 lit\n- TEMPO 3 · 90 BPM\n- CUTOFF 4.5 · 448 Hz\n- VCF EG AMT 1.5 · +2.4 oct\n- VCF ATTACK 6 · 250 ms\n- VCF DECAY 7 · 1.0 s\n- VCA ATTACK 6 · 250 ms\n- VCA DECAY 7.5 · 1.5 s\n- PLAY lit\n- Listen for: chords that drift in and dissolve, never quite the same twice in a row.",
+          "why": "Both sequencers move their VCOs on the C major scale, slowly, and the envelopes take their time.\n- SEQ OCT ±1\n- SEQ 1 ASSIGN OSC 1 lit\n- SEQ 2 ASSIGN OSC 2 lit\n- SEQ 1 STEP 2 1.46 · +3.5 st\n- SEQ 1 STEP 3 0.83 · +2 st\n- SEQ 1 STEP 4 2.92 · +7 st\n- SEQ 2 STEP 2 -0.83 · -2 st\n- SEQ 2 STEP 3 0.42 · +1 st\n- SEQ 2 STEP 4 -1.67 · -4 st\n- RHYTHM 1 ÷2\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 2 ÷3\n- RHYTHM 2 SEQ 2 lit\n- CUTOFF 4.5 · 448 Hz\n- VCF EG AMT 1.5 · +2.4 oct\n- VCF ATTACK 6 · 250 ms\n- VCF DECAY 7 · 1.0 s\n- VCA ATTACK 6 · 250 ms\n- VCA DECAY 7.5 · 1.5 s\n- PLAY lit\n- Listen for: chords that drift in and dissolve, never quite the same twice in a row.",
           "set": {
             "seq.oct": 1,
             "seq1.assign_osc": true,
@@ -347,7 +344,6 @@
             "rhythm1.seq1": true,
             "rhythm2.div": 3,
             "rhythm2.seq2": true,
-            "clock.tempo": 3,
             "vcf.cutoff": 4.5,
             "vcf_eg.amount": 1.5,
             "vcf_eg.attack": 6,
@@ -394,9 +390,9 @@
       "blurb": "Each sequencer plays the other VCO, and the envelopes bend the rhythms.",
       "how": "The manual’s Aquatic Chords crosses the sequencers over, SEQ 1 into VCO 2 and SEQ 2 into VCO 1, patches the two envelopes into Rhythms 1 and 2 so each note changes the next rhythm, and fires the envelopes from SEQ 1 CLK alone. The manual’s patch sheet transcribes the cables; its knobs and buttons are drawn, not written, so the settings here are this lesson’s.",
       "phrase": {
-        "bpm": 245,
-        "loop": false,
-        "steps": [[0, 60, 0.25]]
+        "bpm": 61,
+        "loop": true,
+        "steps": [[0, 60, 4]]
       },
       "steps": [
         {
@@ -423,7 +419,7 @@
         {
           "title": "Cross the sequencers",
           "module": "patch",
-          "why": "Tune the steps, run each sequencer from a rhythm, and patch each one into the other VCO.\n- SEQ OCT ±1\n- SEQ 1 STEP 2 1.46 · +3.5 st\n- SEQ 1 STEP 3 -1.25 · -3 st\n- SEQ 1 STEP 4 0.83 · +2 st\n- SEQ 2 STEP 2 -0.42 · -1 st\n- SEQ 2 STEP 3 2.08 · +5 st\n- SEQ 2 STEP 4 1.25 · +3 st\n- RHYTHM 1 ÷3\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 2 ÷4\n- RHYTHM 2 SEQ 2 lit\n- TEMPO 5 · 245 BPM\n- EG Off\n- PLAY lit\n- Patch SEQ 2 OUT to VCO 1 input\n- Patch SEQ 1 OUT to VCO 2 input\n- Patch SEQ 1 CLK OUT to TRIGGER input\n- Listen for: chords sliding under each other, struck only on Sequencer 1’s steps.",
+          "why": "Tune the steps, run each sequencer from a rhythm, and patch each one into the other VCO.\n- SEQ OCT ±1\n- SEQ 1 STEP 2 1.46 · +3.5 st\n- SEQ 1 STEP 3 -1.25 · -3 st\n- SEQ 1 STEP 4 0.83 · +2 st\n- SEQ 2 STEP 2 -0.42 · -1 st\n- SEQ 2 STEP 3 2.08 · +5 st\n- SEQ 2 STEP 4 1.25 · +3 st\n- RHYTHM 1 ÷3\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 2 ÷4\n- RHYTHM 2 SEQ 2 lit\n- EG Off\n- PLAY lit\n- Patch SEQ 2 OUT to VCO 1 input\n- Patch SEQ 1 OUT to VCO 2 input\n- Patch SEQ 1 CLK OUT to TRIGGER input\n- Listen for: chords sliding under each other, struck only on Sequencer 1’s steps.",
           "set": {
             "seq.oct": 1,
             "seq1.step2": 1.46,
@@ -436,7 +432,6 @@
             "rhythm1.seq1": true,
             "rhythm2.div": 4,
             "rhythm2.seq2": true,
-            "clock.tempo": 5,
             "transport.eg": "off",
             "transport.play": true
           },
@@ -488,9 +483,9 @@
       "blurb": "Sequencer 1 sets the pulse width and Sequencer 2 moves the filter.",
       "how": "The manual’s Mellow Harmonies patches SEQ 1 into VCO 1 PWM, so each step gives the square a different width, and SEQ 2 into CUTOFF, so the other sequencer plays the filter. The manual’s patch sheet transcribes the cables; its knobs and buttons are drawn, not written, so the settings here are this lesson’s.",
       "phrase": {
-        "bpm": 191,
-        "loop": false,
-        "steps": [[0, 60, 0.25]]
+        "bpm": 48,
+        "loop": true,
+        "steps": [[0, 60, 4]]
       },
       "steps": [
         {
@@ -514,7 +509,7 @@
         {
           "title": "Steps play the tone",
           "module": "patch",
-          "why": "Sequencer 1 sets VCO 1’s pulse width on each step, and Sequencer 2 moves the cutoff.\n- SEQ OCT ±2\n- SEQ 1 STEP 1 -3 · -14.4 st\n- SEQ 1 STEP 2 1 · +4.8 st\n- SEQ 1 STEP 3 -1 · -4.8 st\n- SEQ 1 STEP 4 3 · +14.4 st\n- SEQ 2 STEP 1 -1 · -4.8 st\n- SEQ 2 STEP 2 1.5 · +7.2 st\n- SEQ 2 STEP 3 0.5 · +2.4 st\n- SEQ 2 STEP 4 2.5 · +12 st\n- RHYTHM 1 ÷2\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 2 ÷3\n- RHYTHM 2 SEQ 2 lit\n- TEMPO 4.5 · 191 BPM\n- PLAY lit\n- Patch SEQ 1 OUT to VCO 1 PWM input\n- Patch SEQ 2 OUT to CUTOFF input\n- Listen for: the same chord on every step, its tone and brightness changing on two different rhythms.",
+          "why": "Sequencer 1 sets VCO 1’s pulse width on each step, and Sequencer 2 moves the cutoff.\n- SEQ OCT ±2\n- SEQ 1 STEP 1 -3 · -14.4 st\n- SEQ 1 STEP 2 1 · +4.8 st\n- SEQ 1 STEP 3 -1 · -4.8 st\n- SEQ 1 STEP 4 3 · +14.4 st\n- SEQ 2 STEP 1 -1 · -4.8 st\n- SEQ 2 STEP 2 1.5 · +7.2 st\n- SEQ 2 STEP 3 0.5 · +2.4 st\n- SEQ 2 STEP 4 2.5 · +12 st\n- RHYTHM 1 ÷2\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 2 ÷3\n- RHYTHM 2 SEQ 2 lit\n- PLAY lit\n- Patch SEQ 1 OUT to VCO 1 PWM input\n- Patch SEQ 2 OUT to CUTOFF input\n- Listen for: the same chord on every step, its tone and brightness changing on two different rhythms.",
           "set": {
             "seq.oct": 2,
             "seq1.step1": -3,
@@ -529,7 +524,6 @@
             "rhythm1.seq1": true,
             "rhythm2.div": 3,
             "rhythm2.seq2": true,
-            "clock.tempo": 4.5,
             "transport.play": true
           },
           "cables": [
@@ -565,9 +559,9 @@
       "blurb": "Each sequencer rewrites its own rhythm, with the clocks playing filter and VCA.",
       "how": "The manual’s Point Zero feeds each sequencer back into a rhythm generator (SEQ 1 into RHYTHM 1, SEQ 2 into RHYTHM 2), so every step changes when the next one comes, and patches SEQ 1 CLK into CUTOFF and SEQ 2 CLK into the VCA. VCF ATTACK sets how long each sweep takes. The manual’s patch sheet transcribes the cables; its knobs and buttons are drawn, not written, so the settings here are this lesson’s.",
       "phrase": {
-        "bpm": 300,
-        "loop": false,
-        "steps": [[0, 60, 0.25]]
+        "bpm": 101,
+        "loop": true,
+        "steps": [[0, 60, 4]]
       },
       "steps": [
         {
@@ -598,13 +592,12 @@
         {
           "title": "Sequencers rewrite their rhythms",
           "module": "patch",
-          "why": "Centre-ish rhythms, so each sequencer’s step voltage can push its rhythm either way.\n- RHYTHM 1 ÷6\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 2 ÷7\n- RHYTHM 2 SEQ 2 lit\n- TEMPO 6 · 404 BPM\n- CUTOFF 4 · 317 Hz\n- RESONANCE 4\n- VCF EG AMT 2 · +3.2 oct\n- VCF ATTACK 4 · 40 ms\n- VCF DECAY 4 · 100 ms\n- VCA DECAY 4 · 100 ms\n- PLAY lit\n- Patch SEQ 1 OUT to RHYTHM 1 input\n- Patch SEQ 2 OUT to RHYTHM 2 input\n- Listen for: an uneven, self-made groove: each step decides how long until the next.",
+          "why": "Centre-ish rhythms, so each sequencer’s step voltage can push its rhythm either way.\n- RHYTHM 1 ÷6\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 2 ÷7\n- RHYTHM 2 SEQ 2 lit\n- CUTOFF 4 · 317 Hz\n- RESONANCE 4\n- VCF EG AMT 2 · +3.2 oct\n- VCF ATTACK 4 · 40 ms\n- VCF DECAY 4 · 100 ms\n- VCA DECAY 4 · 100 ms\n- PLAY lit\n- Patch SEQ 1 OUT to RHYTHM 1 input\n- Patch SEQ 2 OUT to RHYTHM 2 input\n- Listen for: an uneven, self-made groove: each step decides how long until the next.",
           "set": {
             "rhythm1.div": 6,
             "rhythm1.seq1": true,
             "rhythm2.div": 7,
             "rhythm2.seq2": true,
-            "clock.tempo": 6,
             "vcf.cutoff": 4,
             "vcf.resonance": 4,
             "vcf_eg.amount": 2,
@@ -655,15 +648,15 @@
       "blurb": "Two sequenced lines, with the filter envelope pushing Rhythm 1 faster on each note.",
       "how": "The manual’s Three Hands on the Wheel needs one cable, VCF EG OUT into RHYTHM 1: each time the envelopes fire, Rhythm 1 speeds up for a moment, so the two lines pull ahead and fall back like three hands steering. Its sequencer pitches are suggestions. The manual’s patch sheet transcribes the cables; its knobs and buttons are drawn, not written, so the settings here are this lesson’s.",
       "phrase": {
-        "bpm": 245,
-        "loop": false,
-        "steps": [[0, 60, 0.25]]
+        "bpm": 61,
+        "loop": true,
+        "steps": [[0, 60, 4]]
       },
       "steps": [
         {
           "title": "Two lines",
           "module": "mod",
-          "why": "Each sequencer moves its VCO; Rhythm 1 steps Sequencer 1, Rhythms 2 and 3 Sequencer 2.\n- VCO 2 FREQ 1.46 · G4 · 392 Hz\n- VCO 1 LEVEL 4\n- VCO 1 SUB 1 LEVEL 3\n- VCO 2 LEVEL 3\n- VCO 2 SUB 1 LEVEL 3\n- QUANTIZE 8-ET\n- SEQ OCT ±1\n- SEQ 1 ASSIGN OSC 1 lit\n- SEQ 2 ASSIGN OSC 2 lit\n- SEQ 1 STEP 2 1.25 · +3 st\n- SEQ 1 STEP 3 2.08 · +5 st\n- SEQ 1 STEP 4 0.83 · +2 st\n- SEQ 2 STEP 2 -0.83 · -2 st\n- SEQ 2 STEP 3 0.42 · +1 st\n- SEQ 2 STEP 4 -1.67 · -4 st\n- RHYTHM 1 ÷8\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 2 SEQ 2 lit\n- RHYTHM 3 SEQ 2 lit\n- TEMPO 5 · 245 BPM\n- CUTOFF 5 · 632 Hz\n- VCF EG AMT 2.5 · +4 oct\n- VCF DECAY 3.5 · 72 ms\n- VCA DECAY 4.5 · 150 ms\n- PLAY lit\n- Listen for: two interlocking lines in C major, one slow and one busy.",
+          "why": "Each sequencer moves its VCO; Rhythm 1 steps Sequencer 1, Rhythms 2 and 3 Sequencer 2.\n- VCO 2 FREQ 1.46 · G4 · 392 Hz\n- VCO 1 LEVEL 4\n- VCO 1 SUB 1 LEVEL 3\n- VCO 2 LEVEL 3\n- VCO 2 SUB 1 LEVEL 3\n- QUANTIZE 8-ET\n- SEQ OCT ±1\n- SEQ 1 ASSIGN OSC 1 lit\n- SEQ 2 ASSIGN OSC 2 lit\n- SEQ 1 STEP 2 1.25 · +3 st\n- SEQ 1 STEP 3 2.08 · +5 st\n- SEQ 1 STEP 4 0.83 · +2 st\n- SEQ 2 STEP 2 -0.83 · -2 st\n- SEQ 2 STEP 3 0.42 · +1 st\n- SEQ 2 STEP 4 -1.67 · -4 st\n- RHYTHM 1 ÷8\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 2 SEQ 2 lit\n- RHYTHM 3 SEQ 2 lit\n- CUTOFF 5 · 632 Hz\n- VCF EG AMT 2.5 · +4 oct\n- VCF DECAY 3.5 · 72 ms\n- VCA DECAY 4.5 · 150 ms\n- PLAY lit\n- Listen for: two interlocking lines in C major, one slow and one busy.",
           "set": {
             "vco2.freq": 1.46,
             "mix.vco1": 4,
@@ -684,7 +677,6 @@
             "rhythm1.seq1": true,
             "rhythm2.seq2": true,
             "rhythm3.seq2": true,
-            "clock.tempo": 5,
             "vcf.cutoff": 5,
             "vcf_eg.amount": 2.5,
             "vcf_eg.decay": 3.5,
@@ -725,15 +717,15 @@
       "blurb": "A pitched kick from the filter and envelopes, its tuning set by Sequencer 1.",
       "how": "The manual’s Bateria (Portuguese for a drum kit) turns the synth into a kick: SEQ 1 into CUTOFF tunes each hit, SEQ 2 into VCO 1 PWM changes its texture, and VCF DECAY and EG AMT give it its flavour. Short envelopes and a resonant filter swept down do the drumming. The manual’s patch sheet transcribes the cables; its knobs and buttons are drawn, not written, so the settings here are this lesson’s.",
       "phrase": {
-        "bpm": 245,
-        "loop": false,
-        "steps": [[0, 60, 0.25]]
+        "bpm": 61,
+        "loop": true,
+        "steps": [[0, 60, 4]]
       },
       "steps": [
         {
           "title": "A low thud",
           "module": "filter",
-          "why": "A low square with its sub an octave down, a resonant filter, and a short sweep from the VCF EG.\n- VCO 1 WAVE Square\n- VCO 1 FREQ 0 · C4 · 262 Hz\n- VCO 1 LEVEL 3\n- VCO 1 SUB 1 FREQ ÷4\n- VCO 1 SUB 1 LEVEL 6\n- CUTOFF 2.5 · 112 Hz\n- RESONANCE 7\n- VCF EG AMT 4 · +6.4 oct\n- VCF DECAY 3 · 49 ms\n- VCA DECAY 4 · 100 ms\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 3 ÷3\n- RHYTHM 3 SEQ 1 lit\n- TEMPO 5 · 245 BPM\n- PLAY lit\n- Listen for: a deep, boomy drum on each step.",
+          "why": "A low square with its sub an octave down, a resonant filter, and a short sweep from the VCF EG.\n- VCO 1 WAVE Square\n- VCO 1 FREQ 0 · C4 · 262 Hz\n- VCO 1 LEVEL 3\n- VCO 1 SUB 1 FREQ ÷4\n- VCO 1 SUB 1 LEVEL 6\n- CUTOFF 2.5 · 112 Hz\n- RESONANCE 7\n- VCF EG AMT 4 · +6.4 oct\n- VCF DECAY 3 · 49 ms\n- VCA DECAY 4 · 100 ms\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 3 ÷3\n- RHYTHM 3 SEQ 1 lit\n- PLAY lit\n- Listen for: a deep, boomy drum on each step.",
           "set": {
             "vco1.wave": "square",
             "vco1.freq": 0,
@@ -748,7 +740,6 @@
             "rhythm1.seq1": true,
             "rhythm3.div": 3,
             "rhythm3.seq1": true,
-            "clock.tempo": 5,
             "transport.play": true
           }
         },
@@ -798,9 +789,9 @@
       "blurb": "Chords with a fifth and a major third in the subs, swelling through the filter.",
       "how": "The manual’s Spiral Ways tunes VCO 1 SUB 1 to a fifth and VCO 2 SUB 2 to a major third, and patches VCA EG OUT into CUTOFF, so the filter opens as each note swells; VCF ATTACK sets how deep the crescendo is. The manual’s patch sheet transcribes the cables; its knobs and buttons are drawn, not written, so the settings here are this lesson’s.",
       "phrase": {
-        "bpm": 191,
-        "loop": false,
-        "steps": [[0, 60, 0.25]]
+        "bpm": 48,
+        "loop": true,
+        "steps": [[0, 60, 4]]
       },
       "steps": [
         {
@@ -821,7 +812,7 @@
         {
           "title": "Swells",
           "module": "patch",
-          "why": "Slow attacks, and the VCA EG into CUTOFF, so the filter opens with the volume.\n- CUTOFF 3.5 · 224 Hz\n- RESONANCE 3\n- VCF ATTACK 5 · 100 ms\n- VCF DECAY 6 · 480 ms\n- VCF EG AMT 1.5 · +2.4 oct\n- VCA ATTACK 5 · 100 ms\n- VCA DECAY 6.5 · 700 ms\n- SEQ OCT ±1\n- SEQ 1 ASSIGN OSC 1 lit\n- SEQ 2 ASSIGN OSC 2 lit\n- SEQ 1 STEP 2 1.46 · +3.5 st\n- SEQ 1 STEP 3 0.83 · +2 st\n- SEQ 1 STEP 4 -0.83 · -2 st\n- SEQ 2 STEP 2 0.42 · +1 st\n- SEQ 2 STEP 3 -1.25 · -3 st\n- SEQ 2 STEP 4 1.25 · +3 st\n- RHYTHM 2 SEQ 1 lit\n- RHYTHM 3 SEQ 2 lit\n- TEMPO 4.5 · 191 BPM\n- PLAY lit\n- Patch VCA EG OUT to CUTOFF input\n- Listen for: each chord blooming open as it grows, then closing as it fades.",
+          "why": "Slow attacks, and the VCA EG into CUTOFF, so the filter opens with the volume.\n- CUTOFF 3.5 · 224 Hz\n- RESONANCE 3\n- VCF ATTACK 5 · 100 ms\n- VCF DECAY 6 · 480 ms\n- VCF EG AMT 1.5 · +2.4 oct\n- VCA ATTACK 5 · 100 ms\n- VCA DECAY 6.5 · 700 ms\n- SEQ OCT ±1\n- SEQ 1 ASSIGN OSC 1 lit\n- SEQ 2 ASSIGN OSC 2 lit\n- SEQ 1 STEP 2 1.46 · +3.5 st\n- SEQ 1 STEP 3 0.83 · +2 st\n- SEQ 1 STEP 4 -0.83 · -2 st\n- SEQ 2 STEP 2 0.42 · +1 st\n- SEQ 2 STEP 3 -1.25 · -3 st\n- SEQ 2 STEP 4 1.25 · +3 st\n- RHYTHM 2 SEQ 1 lit\n- RHYTHM 3 SEQ 2 lit\n- PLAY lit\n- Patch VCA EG OUT to CUTOFF input\n- Listen for: each chord blooming open as it grows, then closing as it fades.",
           "set": {
             "vcf.cutoff": 3.5,
             "vcf.resonance": 3,
@@ -841,7 +832,6 @@
             "seq2.step4": 1.25,
             "rhythm2.seq1": true,
             "rhythm3.seq2": true,
-            "clock.tempo": 4.5,
             "transport.play": true
           },
           "cables": [["j.vca_eg_out", "j.cutoff_in"]]
@@ -874,9 +864,9 @@
       "blurb": "High, glittering sequences whose third rhythm the filter envelope keeps moving.",
       "how": "The manual’s Star-Gate runs high sequences, patches VCA EG OUT into CUTOFF and VCF EG OUT into RHYTHM 3, and asks you to vary Rhythms 2 to 4 on Sequencer 2 and VCA DECAY, and to ride the mixer while it plays. The manual’s patch sheet transcribes the cables; its knobs and buttons are drawn, not written, so the settings here are this lesson’s.",
       "phrase": {
-        "bpm": 300,
-        "loop": false,
-        "steps": [[0, 60, 0.25]]
+        "bpm": 79,
+        "loop": true,
+        "steps": [[0, 60, 4]]
       },
       "steps": [
         {
@@ -910,7 +900,7 @@
         {
           "title": "Rhythms that wander",
           "module": "patch",
-          "why": "Rhythm 1 on Sequencer 1, Rhythms 2 to 4 on Sequencer 2, and the envelopes patched back into the filter and Rhythm 3.\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 2 SEQ 2 lit\n- RHYTHM 3 ÷9\n- RHYTHM 3 SEQ 2 lit\n- RHYTHM 4 ÷5\n- RHYTHM 4 SEQ 2 lit\n- TEMPO 5.5 · 315 BPM\n- CUTOFF 4 · 317 Hz\n- RESONANCE 3\n- VCF EG AMT 2 · +3.2 oct\n- VCF DECAY 4 · 100 ms\n- VCA DECAY 4 · 100 ms\n- PLAY lit\n- Patch VCA EG OUT to CUTOFF input\n- Patch VCF EG OUT to RHYTHM 3 input\n- Listen for: a busy, sparkling pattern that keeps changing its rhythm.",
+          "why": "Rhythm 1 on Sequencer 1, Rhythms 2 to 4 on Sequencer 2, and the envelopes patched back into the filter and Rhythm 3.\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 2 SEQ 2 lit\n- RHYTHM 3 ÷9\n- RHYTHM 3 SEQ 2 lit\n- RHYTHM 4 ÷5\n- RHYTHM 4 SEQ 2 lit\n- CUTOFF 4 · 317 Hz\n- RESONANCE 3\n- VCF EG AMT 2 · +3.2 oct\n- VCF DECAY 4 · 100 ms\n- VCA DECAY 4 · 100 ms\n- PLAY lit\n- Patch VCA EG OUT to CUTOFF input\n- Patch VCF EG OUT to RHYTHM 3 input\n- Listen for: a busy, sparkling pattern that keeps changing its rhythm.",
           "set": {
             "rhythm1.seq1": true,
             "rhythm2.seq2": true,
@@ -918,7 +908,6 @@
             "rhythm3.seq2": true,
             "rhythm4.div": 5,
             "rhythm4.seq2": true,
-            "clock.tempo": 5.5,
             "vcf.cutoff": 4,
             "vcf.resonance": 3,
             "vcf_eg.amount": 2,
@@ -1024,9 +1013,9 @@
       "blurb": "A rolling sequenced bass, its weight from subs two octaves down.",
       "how": "Berlin School music of the 1970s built long pieces on rolling, repeating sequencer bass lines through a resonant filter. Here Sequencer 1 plays a four-note line on C major, stepped on every clock, and VCO 1’s subs at /2 and /4 give it its depth; the VCF EG plucks every note.",
       "phrase": {
-        "bpm": 245,
-        "loop": false,
-        "steps": [[0, 60, 0.25]]
+        "bpm": 61,
+        "loop": true,
+        "steps": [[0, 60, 4]]
       },
       "steps": [
         {
@@ -1056,7 +1045,7 @@
         {
           "title": "The sequence",
           "module": "mod",
-          "why": "Sequencer 1 moves VCO 1 on C major, one step a clock.\n- QUANTIZE 8-ET\n- SEQ OCT ±1\n- SEQ 1 ASSIGN OSC 1 lit\n- SEQ 1 STEP 2 2.92 · +7 st\n- SEQ 1 STEP 3 1.46 · +3.5 st\n- SEQ 1 STEP 4 4.17 · +10 st\n- RHYTHM 1 SEQ 1 lit\n- TEMPO 5 · 245 BPM\n- PLAY lit\n- Listen for: a driving four-note bass line, round and round.",
+          "why": "Sequencer 1 moves VCO 1 on C major, one step a clock.\n- QUANTIZE 8-ET\n- SEQ OCT ±1\n- SEQ 1 ASSIGN OSC 1 lit\n- SEQ 1 STEP 2 2.92 · +7 st\n- SEQ 1 STEP 3 1.46 · +3.5 st\n- SEQ 1 STEP 4 4.17 · +10 st\n- RHYTHM 1 SEQ 1 lit\n- PLAY lit\n- Listen for: a driving four-note bass line, round and round.",
           "set": {
             "vco.quantize": "8-ET",
             "seq.oct": 1,
@@ -1065,7 +1054,6 @@
             "seq1.step3": 1.46,
             "seq1.step4": 4.17,
             "rhythm1.seq1": true,
-            "clock.tempo": 5,
             "transport.play": true
           }
         }
@@ -1097,9 +1085,9 @@
       "blurb": "Two short melodies, one stepping every third clock and one every fourth, slowly shifting against each other.",
       "how": "Minimalist composers such as Steve Reich and Terry Riley built pieces from short repeating patterns heard against each other, so new figures emerge from the overlap. Here Sequencer 1 steps every three clocks and Sequencer 2 every four: their four-note melodies line up again only every forty-eight clocks.",
       "phrase": {
-        "bpm": 300,
-        "loop": false,
-        "steps": [[0, 60, 0.25]]
+        "bpm": 101,
+        "loop": true,
+        "steps": [[0, 60, 4]]
       },
       "steps": [
         {
@@ -1121,7 +1109,7 @@
         {
           "title": "Two melodies, two rhythms",
           "module": "mod",
-          "why": "Each sequencer moves its VCO; Rhythm 3 (/3) steps Sequencer 1 and Rhythm 4 (/4) Sequencer 2.\n- SEQ OCT ±1\n- SEQ 1 ASSIGN OSC 1 lit\n- SEQ 2 ASSIGN OSC 2 lit\n- SEQ 1 STEP 2 1.25 · +3 st\n- SEQ 1 STEP 3 2.08 · +5 st\n- SEQ 1 STEP 4 0.83 · +2 st\n- SEQ 2 STEP 2 -0.83 · -2 st\n- SEQ 2 STEP 3 0.42 · +1 st\n- SEQ 2 STEP 4 1.67 · +4 st\n- RHYTHM 3 SEQ 1 lit\n- RHYTHM 4 SEQ 2 lit\n- TEMPO 6 · 404 BPM\n- PLAY lit\n- Listen for: two interlocking figures whose combination keeps changing.",
+          "why": "Each sequencer moves its VCO; Rhythm 3 (/3) steps Sequencer 1 and Rhythm 4 (/4) Sequencer 2.\n- SEQ OCT ±1\n- SEQ 1 ASSIGN OSC 1 lit\n- SEQ 2 ASSIGN OSC 2 lit\n- SEQ 1 STEP 2 1.25 · +3 st\n- SEQ 1 STEP 3 2.08 · +5 st\n- SEQ 1 STEP 4 0.83 · +2 st\n- SEQ 2 STEP 2 -0.83 · -2 st\n- SEQ 2 STEP 3 0.42 · +1 st\n- SEQ 2 STEP 4 1.67 · +4 st\n- RHYTHM 3 SEQ 1 lit\n- RHYTHM 4 SEQ 2 lit\n- PLAY lit\n- Listen for: two interlocking figures whose combination keeps changing.",
           "set": {
             "seq.oct": 1,
             "seq1.assign_osc": true,
@@ -1134,7 +1122,6 @@
             "seq2.step4": 1.67,
             "rhythm3.seq1": true,
             "rhythm4.seq2": true,
-            "clock.tempo": 6,
             "transport.play": true
           }
         }
@@ -1166,9 +1153,9 @@
       "blurb": "Sequencer 1 moves the subs’ divisors, not the pitch: an arpeggio down the undertone series.",
       "how": "The ASSIGN buttons can send a sequencer to the subs’ divisors instead of the VCO’s pitch. Then each step picks a different undertone under a VCO that never moves, so the arpeggio always stays inside its subharmonic chord: an otherworldly, kosmische sound with nothing to tune. Here VCO 1 is silent and only its subs play.",
       "phrase": {
-        "bpm": 300,
-        "loop": false,
-        "steps": [[0, 60, 0.25]]
+        "bpm": 79,
+        "loop": true,
+        "steps": [[0, 60, 4]]
       },
       "steps": [
         {
@@ -1192,7 +1179,7 @@
         {
           "title": "Step the divisors",
           "module": "mod",
-          "why": "Sequencer 1 moves both subs’ divisors; a step turned right lowers them, so the sub climbs.\n- SEQ OCT ±2\n- SEQ 1 ASSIGN SUB 1 lit\n- SEQ 1 ASSIGN SUB 2 lit\n- SEQ 1 STEP 2 1.67 · divisor −1\n- SEQ 1 STEP 3 3.33 · divisor −2\n- SEQ 1 STEP 4 -1.67 · divisor +1\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 3 SEQ 1 lit\n- TEMPO 5.5 · 315 BPM\n- PLAY lit\n- Listen for: an arpeggio jumping between undertones, always in tune with itself.",
+          "why": "Sequencer 1 moves both subs’ divisors; a step turned right lowers them, so the sub climbs.\n- SEQ OCT ±2\n- SEQ 1 ASSIGN SUB 1 lit\n- SEQ 1 ASSIGN SUB 2 lit\n- SEQ 1 STEP 2 1.67 · divisor −1\n- SEQ 1 STEP 3 3.33 · divisor −2\n- SEQ 1 STEP 4 -1.67 · divisor +1\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 3 SEQ 1 lit\n- PLAY lit\n- Listen for: an arpeggio jumping between undertones, always in tune with itself.",
           "set": {
             "seq.oct": 2,
             "seq1.assign_sub1": true,
@@ -1202,7 +1189,6 @@
             "seq1.step4": -1.67,
             "rhythm1.seq1": true,
             "rhythm3.seq1": true,
-            "clock.tempo": 5.5,
             "transport.play": true
           }
         }
@@ -1234,9 +1220,9 @@
       "blurb": "Screeching, chattering cries from fast high steps and short envelopes.",
       "how": "Oskar Sala made the bird cries in Hitchcock’s The Birds on his Mixtur-Trautonium. A rough idea of them comes from fast, high, unquantised steps on both VCOs, short envelopes and a resonant filter, with two rhythms per sequencer so the chatter never settles into a beat.",
       "phrase": {
-        "bpm": 300,
-        "loop": false,
-        "steps": [[0, 60, 0.25]]
+        "bpm": 130,
+        "loop": true,
+        "steps": [[0, 60, 4]]
       },
       "steps": [
         {
@@ -1260,7 +1246,7 @@
         {
           "title": "Chatter",
           "module": "mod",
-          "why": "Unquantised steps up to two octaves, two rhythms on each sequencer, a fast clock.\n- SEQ OCT ±2\n- SEQ 1 ASSIGN OSC 1 lit\n- SEQ 2 ASSIGN OSC 2 lit\n- SEQ 1 STEP 1 1.3 · +6.2 st\n- SEQ 1 STEP 2 -2.2 · -10.6 st\n- SEQ 1 STEP 3 3.1 · +14.9 st\n- SEQ 1 STEP 4 -0.7 · -3.4 st\n- SEQ 2 STEP 1 -1.6 · -7.7 st\n- SEQ 2 STEP 2 2.6 · +12.5 st\n- SEQ 2 STEP 3 -3.3 · -15.8 st\n- SEQ 2 STEP 4 0.9 · +4.3 st\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 3 SEQ 1 lit\n- RHYTHM 2 SEQ 2 lit\n- RHYTHM 4 ÷5\n- RHYTHM 4 SEQ 2 lit\n- TEMPO 6.5 · 519 BPM\n- PLAY lit\n- Listen for: a flock of cries crossing each other at unpredictable moments.",
+          "why": "Unquantised steps up to two octaves, two rhythms on each sequencer, a fast clock.\n- SEQ OCT ±2\n- SEQ 1 ASSIGN OSC 1 lit\n- SEQ 2 ASSIGN OSC 2 lit\n- SEQ 1 STEP 1 1.3 · +6.2 st\n- SEQ 1 STEP 2 -2.2 · -10.6 st\n- SEQ 1 STEP 3 3.1 · +14.9 st\n- SEQ 1 STEP 4 -0.7 · -3.4 st\n- SEQ 2 STEP 1 -1.6 · -7.7 st\n- SEQ 2 STEP 2 2.6 · +12.5 st\n- SEQ 2 STEP 3 -3.3 · -15.8 st\n- SEQ 2 STEP 4 0.9 · +4.3 st\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 3 SEQ 1 lit\n- RHYTHM 2 SEQ 2 lit\n- RHYTHM 4 ÷5\n- RHYTHM 4 SEQ 2 lit\n- PLAY lit\n- Listen for: a flock of cries crossing each other at unpredictable moments.",
           "set": {
             "seq.oct": 2,
             "seq1.assign_osc": true,
@@ -1278,7 +1264,6 @@
             "rhythm2.seq2": true,
             "rhythm4.div": 5,
             "rhythm4.seq2": true,
-            "clock.tempo": 6.5,
             "transport.play": true
           }
         }

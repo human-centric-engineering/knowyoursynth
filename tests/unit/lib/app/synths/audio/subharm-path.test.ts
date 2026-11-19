@@ -598,3 +598,187 @@ describe('in the voice', () => {
     expect(rms(played, 0, SR / 10)).toBeGreaterThan(0.05);
   });
 });
+
+describe('the app’s master clock (f-own-sequencer)', () => {
+  /** Rhythm 1 (÷1) on Sequencer 1, PLAY lit, TEMPO fast enough to be told apart from the app's clock. */
+  const clocked = withRhythms({ ...subharm(), play: true, tempo: 50 }, [{ seq1: true }]);
+
+  /** Run the rig, sending a pulse every `every` samples from `from` on (a start first), and record SEQ 1 CLK. */
+  const pulsed = (
+    t: ReturnType<typeof rig>,
+    n: number,
+    every: number,
+    o: { start?: boolean; note?: number; keyGate?: boolean } = {}
+  ) => {
+    const clk = new Float64Array(n);
+    const eg = new Float64Array(n);
+    if (o.start !== false) t.core.clock('start');
+    for (let i = 0; i < n; i++) {
+      if (i % every === 0) t.core.clock('pulse');
+      t.core.step(o.note ?? 60, o.keyGate ?? false, false);
+      clk[i] = t.S[t.SI.sbhSeq1Clk];
+      eg[i] = t.S[t.SI.sbhEg1];
+    }
+    return { clk, eg };
+  };
+
+  it('following it, a lit PLAY waits for the clock instead of running at TEMPO', () => {
+    const t = rig(clocked);
+    t.core.set(clocked, true);
+    const r = t.run(SR / 2, ['sbhSeq1Clk', 'sbhClock']);
+    expect(edges(r.sbhSeq1Clk)).toEqual([]);
+    expect(edges(r.sbhClock)).toEqual([]);
+    // without `follow` the same panel runs at once, at TEMPO
+    expect(edges(rig(clocked).run(SR / 2, ['sbhSeq1Clk']).sbhSeq1Clk).length).toBeGreaterThan(5);
+  });
+
+  it('clocks on every sixth pulse (4 PPQ on a 24 PPQ clock) from the start, overriding TEMPO', () => {
+    const t = rig(clocked);
+    t.core.set(clocked, true);
+    // 60 pulses, 100 samples apart: ten clocks, the first on the start's own pulse
+    const { clk } = pulsed(t, 6000, 100);
+    expect(edges(clk)).toEqual([0, 600, 1200, 1800, 2400, 3000, 3600, 4200, 4800, 5400]);
+  });
+
+  it('starts from step 1 on its first clock however far the sequencers had gone, and stops on stop', () => {
+    const t = rig(clocked);
+    t.core.set(clocked, true);
+    pulsed(t, 1300, 100);
+    expect(t.core.stages()[0]).toBe(2);
+    t.core.clock('stop');
+    t.run(10, []);
+    expect(t.core.running()).toBe(false);
+    const before = t.core.stages()[0];
+    for (let i = 0; i < 2000; i++) {
+      if (i % 100 === 0) t.core.clock('pulse');
+      t.core.step(60, false, false);
+    }
+    expect(t.core.stages()[0]).toBe(before);
+    pulsed(t, 1, 100);
+    expect(t.core.stages()[0]).toBe(0);
+    expect(t.core.running()).toBe(true);
+  });
+
+  it('runs on the clock only while PLAY is lit, from the next clock when it is lit mid-run', () => {
+    const off = { ...clocked, play: false };
+    const t = rig(off);
+    t.core.set(off, true);
+    expect(edges(pulsed(t, 1300, 100).clk)).toEqual([]);
+    t.core.set(clocked, true);
+    let first = -1;
+    for (let i = 0; i < 1200 && first < 0; i++) {
+      if (i % 100 === 0) t.core.clock('pulse');
+      t.core.step(60, false, false);
+      if (t.S[t.SI.sbhSeq1Clk] > 0.5) first = i;
+    }
+    // 13 pulses were sent before PLAY was lit; the next clock is on the 19th, five pulses on
+    expect(first).toBe(500);
+  });
+
+  it('while the steps fire the envelopes, a held key transposes the sequence but does not hold them open', () => {
+    const slow = withRhythms({ ...subharm(), play: true }, [{ div: 4, seq1: true }]);
+    const t = rig(slow);
+    t.core.set(slow, true);
+    // a clock every 300 samples, so Rhythm 1 ÷4 fires every 1,200
+    const { eg } = pulsed(t, 4800, 50, { note: 67, keyGate: true });
+    // the gate opens for each clock's attack and closes between them, though the key is held throughout
+    expect(edges(eg).length).toBeGreaterThan(1);
+    expect(eg.filter((x) => x === 0).length).toBeGreaterThan(4000);
+    // stopped, the same held key holds them open
+    t.core.clock('stop');
+    const held = t.run(200, ['sbhEg1'], 67, true);
+    expect(held.sbhEg1.slice(10).every((x) => x === 1)).toBe(true);
+  });
+
+  it('with EG off, a key struck while they run fires the envelopes once, and holding it does not hold them', () => {
+    const off = withRhythms({ ...subharm(), play: true, eg: 'off' }, [{ seq1: true }]);
+    const t = rig(off);
+    t.core.set(off, true);
+    t.core.clock('start');
+    t.core.clock('pulse');
+    const g: number[] = [];
+    for (let i = 0; i < 2000; i++) {
+      t.core.step(60, i >= 100, i === 100);
+      g.push(t.S[t.SI.sbhEg1]);
+    }
+    expect(edges(Float64Array.from(g))).toEqual([100]);
+    expect(g[1999]).toBe(0);
+  });
+
+  /** In the voice, the riff or a pattern is the clock: Rhythm 1 ÷4 (a beat) fires the envelopes on each beat. */
+  const params = (s: SubharmParams): EngineParams => ({
+    ...monoParams({
+      osc: [],
+      subharm: s,
+      normals: { gate1: 'sbhEg1', gate2: 'sbhEg2' },
+      filter: {
+        type: 'ladder',
+        mode: 'lp',
+        cutoff: 8000,
+        res: 0,
+        envAmt: 0,
+        envSrc: 'env1',
+        kbd: 0,
+      },
+      env1: { a: 0.002, d: 0.05, s: 1, r: 0.05, free: true },
+      env2: { a: 0.002, d: 0.05, s: 1, r: 0.05, free: true },
+    }),
+    follow: true,
+  });
+  const onBeats = withRhythms(
+    { ...withVco(subharm(), 0, { level: [0.8, 0, 0] }), play: true, tempo: 50 },
+    [{ div: 4, seq1: true }]
+  );
+  const BEAT = SR / 2; // 120 BPM
+  /** Loud just after each beat, quiet just before the next. */
+  const onEachBeat = (out: Float32Array, beats: number, from = 0) => {
+    for (let b = 0; b < beats; b++) {
+      const at = from + b * BEAT;
+      expect(rms(out, at, at + SR / 100)).toBeGreaterThan(0.05);
+      expect(rms(out, at + BEAT - SR / 50, at + BEAT - 10)).toBeLessThan(0.01);
+    }
+  };
+
+  it('a riff of one held C4 plays the sequence on the riff’s beat, and nothing before it', () => {
+    const quiet = render(params(onBeats), { events: [], len: SR / 2 }).out;
+    expect(rms(quiet)).toBe(0);
+    const out = render(params(onBeats), {
+      events: [[0, { type: 'phrase', phrase: { bpm: 120, loop: true, steps: [[0, 60, 2]] } }]],
+      len: 3 * BEAT,
+    }).out;
+    expect(allFinite(out)).toBe(true);
+    onEachBeat(out, 3);
+  });
+
+  it('a pattern is the clock too: the sequence waits out the count-in and starts on the downbeat', () => {
+    const out = render(params(onBeats), {
+      events: [
+        [
+          0,
+          {
+            type: 'pattern',
+            loop: { notes: [[0, 60, 2]], beats: 2 },
+            bpm: 120,
+            countIn: 2,
+          },
+        ],
+      ],
+      len: 5 * BEAT,
+    }).out;
+    // the count-in's clicks only, then a step on each beat
+    expect(rms(out, BEAT / 2, BEAT - 10)).toBeLessThan(0.01);
+    onEachBeat(out, 3, 2 * BEAT);
+  });
+
+  it('stops with the pattern', () => {
+    const out = render(params(onBeats), {
+      events: [
+        [0, { type: 'pattern', loop: { notes: [[0, 60, 2]], beats: 2 }, bpm: 120 }],
+        [BEAT + BEAT / 2, { type: 'stopPattern' }],
+      ],
+      len: 4 * BEAT,
+    }).out;
+    onEachBeat(out, 1);
+    expect(rms(out, 2 * BEAT, 4 * BEAT)).toBeLessThan(0.001);
+  });
+});
