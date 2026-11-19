@@ -2865,6 +2865,12 @@ function Synth({
                             onRemoveCable={onRemoveCable}
                             onMoveCable={onMoveCable}
                             onNote={(n, on) => (on ? noteOn(n) : noteOff(n))}
+                            onPress={(name) => {
+                              // as a key: dropped while a patch loads
+                              if (!engine || isLoading()) return;
+                              void ensureAudio();
+                              engine.send({ type: 'press', name });
+                            }}
                             design={detail.synth.design}
                           />
                         </div>

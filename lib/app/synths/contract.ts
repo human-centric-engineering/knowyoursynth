@@ -555,6 +555,11 @@ export type ButtonControl = ControlCommon & {
    * clear plate over its decor. It holds no value (give it `ui: true`).
    */
   note?: number;
+  /**
+   * A momentary button (the Subharmonicon's RESET, NEXT and TRIGGER): each click tells the engine `press` once. It
+   * holds no value (give it `ui: true`), so loading a patch, undoing or a lane never presses it.
+   */
+  press?: SubharmPress;
 } & (BoolValue | EnumValue);
 
 /** Fader colours. `led` colours the lamp in the cap; `cap` replaces the lamp cap with a round coloured one. */
@@ -958,7 +963,8 @@ export type LedColor = 'red' | 'amber' | 'blue' | 'green' | 'white' | 'yellow';
  *   allows a tolerance for a number; `not` inverts the test).
  * - `{ id, morph }` one lamp of a row a continuous knob fades across (Neutron SHAPE).
  * - `{ voice }` / `{ osc }` while that voice / oscillator sounds; `{ seq }` while
- *   the sequencer is on that stage (0-based).
+ *   the sequencer is on that stage (0-based), `{ seq2 }` while the second one is
+ *   (the Subharmonicon's Sequencer 2).
  */
 export type LitWhen =
   | 'power'
@@ -972,7 +978,8 @@ export type LitWhen =
   | { id: string; morph: number }
   | { voice: number }
   | { osc: number }
-  | { seq: number };
+  | { seq: number }
+  | { seq2: number };
 
 export interface LedDecor extends DecorCommon {
   t: 'led';
@@ -2288,6 +2295,9 @@ export interface SubharmRhythm {
   seq2: boolean;
 }
 
+/** A momentary button the engine is told about when it is clicked (`ButtonControl.press`, `SynthMessage` `press`). */
+export type SubharmPress = 'reset' | 'next' | 'trigger';
+
 /**
  * The Moog Subharmonicon's sources and sequencers (see `audio/subharm-core.ts`): two VCOs, each with two subs at its
  * frequency divided by 1..16, mixed in place of the fixed voice's oscillators into its own filter, envelopes and VCA;
@@ -2311,8 +2321,6 @@ export interface SubharmParams {
   play: boolean;
   /** EG: steps do not trigger the envelopes, they do, or the envelopes are held open. */
   eg: 'off' | 'on' | 'held';
-  /** RESET, NEXT and TRIGGER: a change of the number is a press. */
-  press: { reset: number; next: number; trigger: number };
   /** Held QUANTIZE: the SEQ outputs are not quantised (the VCOs still are). */
   seqOutRaw?: boolean;
   /** Held SEQ OCT: the SEQ outputs always span ±5 (the VCOs still follow SEQ OCT). */

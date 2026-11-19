@@ -62,7 +62,7 @@ import {
   useStore,
 } from '@/components/app/synth/stores';
 import type { CableFocus } from '@/components/app/synth/stores';
-import type { ControlValues, PatchCable, SynthDef } from '@/lib/app/synths/contract';
+import type { ControlValues, PatchCable, SubharmPress, SynthDef } from '@/lib/app/synths/contract';
 import type { SynthDesign } from '@/lib/app/catalogue/designs';
 
 /**
@@ -127,6 +127,8 @@ export interface SynthPanelProps {
   onMoveCable?: (i: number, end: CableEnd, jackId: string) => void;
   /** Plays a touch plate's note (a `button` with `note`). Without it the plates only explain themselves. */
   onNote?: NotePress;
+  /** Tells the engine a momentary button was clicked (a `button` with `press`). It holds no value to change. */
+  onPress?: (press: SubharmPress) => void;
   /** D11. Default `neutral`: faithful needs a recorded approval. */
   design?: PanelDesign;
 }
@@ -197,6 +199,7 @@ export function SynthPanel({
   onRemoveCable,
   onMoveCable,
   onNote,
+  onPress,
   design = 'neutral',
 }: SynthPanelProps) {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -585,6 +588,20 @@ export function SynthPanel({
             );
           if (c.type === 'button' && c.note != null)
             return <Plate key={c.id} c={c} onNote={onNote} />;
+          // a momentary button: drawn off, and each click is a press, never a value
+          if (c.type === 'button' && c.press) {
+            const name = c.press;
+            return (
+              <Switch
+                key={c.id}
+                c={c}
+                value={false}
+                target={t}
+                ctx={ctx}
+                onChange={() => onPress?.(name)}
+              />
+            );
+          }
           // const Comp = knob ? Knob : fader ? Fader : select ? Select : menu ? MenuRow : Switch
           if (c.type === 'knob')
             return <Knob key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;

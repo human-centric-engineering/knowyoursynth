@@ -152,6 +152,15 @@ describe('lamps', () => {
     expect(litCount(container)).toBeGreaterThan(before);
   });
 
+  it('light a { seq2 } lamp from Sequencer 2’s stage, not Sequencer 1’s', () => {
+    const { container } = render(<SynthPanel {...props()} />);
+    const lamp = () => container.querySelector('circle[cx="330"][cy="750"][opacity]');
+    act(() => meterStore.set({ gate: false, lfo: 0, overload: 0, power: false, seq: 2, seq2: 0 }));
+    expect(lamp()).toBeNull();
+    act(() => meterStore.set({ gate: false, lfo: 0, overload: 0, power: false, seq: 0, seq2: 2 }));
+    expect(lamp()).not.toBeNull();
+  });
+
   it('draw ink dots on paper', () => {
     const { container } = render(<SynthPanel {...props({ outline: true })} />);
     expect(container.querySelectorAll('circle[fill="#1c2530"][opacity]').length).toBeGreaterThan(0);

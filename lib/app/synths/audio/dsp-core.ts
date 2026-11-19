@@ -9,6 +9,7 @@
 import type {
   EngineParams,
   EaselParams,
+  SubharmPress,
   NormalSource,
   OscMix,
   MultiNoiseParams,
@@ -57,6 +58,8 @@ export type SynthMessage =
   | { type: 'tempo'; bpm: number }
   | { type: 'stopPhrase' }
   | { type: 'panic' }
+  /** A click on a momentary button (`ButtonControl.press`). */
+  | { type: 'press'; name: SubharmPress }
   | { type: 'offset'; semi?: number }
   /** LFO phases. A value past 1 also counts the cycles, which a `common` LFO's sample and hold is drawn from. */
   | { type: 'phase'; lfo?: number; lfo2?: number; lfo3?: number }
@@ -1352,6 +1355,9 @@ function createVoice(
       case 'panic':
         stopPhrase(true);
         panic();
+        break;
+      case 'press':
+        subharm.press(m.name);
         break;
       case 'offset':
         vOff = m.semi || 0;
@@ -3834,6 +3840,9 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
       case 'panic':
         stopPhrase(true);
         panic();
+        break;
+      case 'press':
+        (polyOn ? voices : parts).forEach((v) => v.handle(m));
         break;
       default:
         break;

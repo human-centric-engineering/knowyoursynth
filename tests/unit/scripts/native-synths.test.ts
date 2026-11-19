@@ -53,6 +53,7 @@ describe('nativeSynthProblems', () => {
       'native synth teo-5 is not registered',
       'native synth nymphes is not registered',
       'native synth behringer-odyssey is not registered',
+      'native synth subharmonicon is not registered',
     ]);
   });
 

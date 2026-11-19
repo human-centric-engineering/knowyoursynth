@@ -22,7 +22,7 @@
 // from a centred knob spans the range, as the manual's "centre the knob" implies), in both the sub and rhythm CVs;
 // the 12-JI ratios are the 5-limit chromatic scale; XOR with three or more rhythms advances only on exactly one; keys
 // gate the envelopes as a gate would, and play their pitch as an offset from C4 on both VCOs.
-import type { SubharmParams } from '@/lib/app/synths/contract';
+import type { SubharmParams, SubharmPress } from '@/lib/app/synths/contract';
 
 /** Signals (outputs): the six sources, the mix, both sequencers' CV and clock, CLOCK OUT, TRIGGER OUT, the EG gates. */
 export const SUBHARM_SIGNALS: string[] = [
@@ -126,6 +126,11 @@ export function quantize(semi: number, q: SubharmParams['quantize']): number {
 export interface Subharm {
   /** The settings. */
   set: (p: SubharmParams) => void;
+  /**
+   * A click on RESET, NEXT or TRIGGER, taken on the next sample. Presses come only from here, never from the settings,
+   * so loading a patch, undoing or a lane moving a knob never presses a button.
+   */
+  press: (name: SubharmPress) => void;
   /** The voice has left the Subharmonicon: the next `set` starts afresh (counters synced, a lit PLAY ticks at once). */
   off: () => void;
   /** Whether the clock is running (a running clock opens its own gates, so the voice is never idle). */
@@ -205,7 +210,8 @@ export function createSubharm(
     extPeriod = 0,
     count = 0,
     trigOut = 0;
-  const last = { reset: 0, next: 0, trigger: 0 };
+  // RESET, NEXT and TRIGGER pressed since the last sample (`press()`), taken by the next one
+  const pending = { reset: false, next: false, trigger: false };
   // per sequencer: its step, whether the next advance plays step 1 (just reset), and its SEQ CLK pulse
   const stage = [0, 0],
     armed = [true, true],
@@ -226,12 +232,8 @@ export function createSubharm(
       // a start ticks at once, so the first step plays from the start
       if (running) clkPh = 1;
     }
-    if (first) {
-      last.reset = p.press.reset;
-      last.next = p.press.next;
-      last.trigger = p.press.trigger;
+    if (first)
       for (let k = 0; k < 2; k++) for (let j = 0; j < 3; j++) lvl[k][j] = p.vco[k].level[j];
-    }
     P = p;
   }
 
@@ -241,6 +243,7 @@ export function createSubharm(
     running = false;
     clkPh = 0;
     trigOut = 0;
+    pending.reset = pending.next = pending.trigger = false;
     playCab = clkCab = false;
     playPrev = clkPrev = resetPrev = trigInPrev = false;
     extSince = -1;
@@ -288,9 +291,9 @@ export function createSubharm(
     }
     // a gate at RESET holds the sequencers where they are; NEXT still moves them
     const hold = ev(DI.sbhReset) > 0.5;
-    if ((hold && !resetPrev) || p.press.reset !== last.reset) reset();
+    if ((hold && !resetPrev) || pending.reset) reset();
+    pending.reset = false;
     resetPrev = hold;
-    last.reset = p.press.reset;
 
     // ── clock and rhythm generators ──
     let tick = false,
@@ -345,8 +348,8 @@ export function createSubharm(
         if (p.eg === 'on') egHit = true;
       }
     }
-    if (p.press.next !== last.next) {
-      last.next = p.press.next;
+    if (pending.next) {
+      pending.next = false;
       // NEXT always moves on a step, even just after a RESET (it is a manual advance, not a clock)
       for (let s = 0; s < 2; s++) {
         stage[s] = (stage[s] + 1) % 4;
@@ -362,8 +365,8 @@ export function createSubharm(
 
     // ── envelope gates ──
     const tIn = ev(DI.sbhTrigIn) > 0.5;
-    const pressed = p.press.trigger !== last.trigger;
-    last.trigger = p.press.trigger;
+    const pressed = pending.trigger;
+    pending.trigger = false;
     // TRIGGER and the TRIGGER input do nothing while EG holds the envelopes (firmware 1.1.0)
     if (p.eg !== 'held' && ((tIn && !trigInPrev) || pressed || keyHit)) egHit = true;
     trigInPrev = tIn;
@@ -457,5 +460,10 @@ export function createSubharm(
     return mix;
   }
 
-  return { set, off, step, running: () => running, stages: () => [stage[0], stage[1]] };
+  function press(name: SubharmPress) {
+    // a press before the Subharmonicon is set up, or after it has gone, has nothing to press
+    if (P) pending[name] = true;
+  }
+
+  return { set, press, off, step, running: () => running, stages: () => [stage[0], stage[1]] };
 }

@@ -1,0 +1,58 @@
+{
+  "synth": "subharmonicon",
+  "unusual": [
+    {
+      "target": "sub11.div",
+      "text": "The sub oscillators are true dividers: each counts its VCO’s cycles and plays its frequency divided by a whole number, 1 to 16. So a sub can only land on a note of the undertone series under its VCO, and it follows the VCO’s pitch and wave. The knob turns the wrong way for a pitch: fully right is unison, fully left the lowest."
+    },
+    {
+      "target": "vco1.wave",
+      "text": "One switch sets the wave of a VCO and both its subs. In the middle the VCO is a pulse whose width SUB 1’s sawtooth moves, which adds a pitched ripple at SUB 1’s note even with SUB 1’s level down."
+    },
+    {
+      "target": "rhythm",
+      "text": "There is no step length or gate pattern: four rhythm generators divide one tempo by whole numbers and each steps either or both sequencers. Two or more on one sequencer make a polyrhythm that repeats when they meet on a downbeat."
+    },
+    {
+      "target": "seq1.assign_sub1",
+      "text": "A sequencer can move a sub’s divisor instead of its VCO’s pitch: the steps then climb and fall the undertone series under a VCO that stays put, so a sequence can never go out of key with its chord."
+    },
+    {
+      "target": "vco.quantize",
+      "text": "QUANTIZE snaps both VCOs and both sequencers at once, and offers just intonation as well as equal temperament: 12-JI and 8-JI tune intervals to whole-number ratios, so chords stop beating. The 8-step scales are C major, rooted on C."
+    },
+    {
+      "target": "seq.oct",
+      "text": "SEQ OCT is shared: one button sets how far a step reaches on both sequencers, ±1, ±2 or ±5 octaves. The sequencers cannot push a VCO above about 10 kHz, so the widest range wants FREQ fully left."
+    },
+    {
+      "target": "transport.eg",
+      "text": "The envelopes have only attack and decay, and are played by the sequencer steps rather than by keys: EG off lets the steps change pitch without playing a note, and EG held opens both envelopes for a drone. An envelope cannot restart during its own attack, so a long attack lets only some steps through."
+    },
+    {
+      "target": "vcf_eg.amount",
+      "text": "VCF EG AMT works both ways: right of centre the envelope opens the filter, left of centre it closes it."
+    },
+    {
+      "target": "vco1.freq",
+      "text": "Keys (MIDI notes on the hardware) play as an offset from C4 on both VCOs, so with FREQ fully left they sound as written; with PLAY lit they transpose the running sequence."
+    }
+  ],
+  "limits": {
+    "intro": "The sound path and the sequencing are modelled: both VCOs with their three waves, the four subs as true dividers, the six-level mixer, the ladder filter, both attack–decay envelopes and the VCA; the clock, the four rhythm generators, both sequencers with ASSIGN, SEQ OCT and QUANTIZE (12-ET, 8-ET, 12-JI and 8-JI), PLAY, RESET, NEXT, TRIGGER and EG off, on and held; and every patch point but MIDI IN, with the hardware’s normals.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "Holding QUANTIZE or SEQ OCT to decouple the SEQ outputs; Fine Tune; Rhythm Generator Logic, which is set over MIDI on the hardware and is always OR here; holding RESET to hold step 1 (a gate at the RESET input does it) and holding TRIGGER as a gate with EG off; MIDI clock, MIDI CCs, note priority, the MIDI channel and transport settings."
+      },
+      {
+        "title": "The app’s readings of the manual",
+        "text": "The manual prints no knob numbering, so knobs here run 0 to 10 and the STEP knobs and VCF EG AMT −5 to +5. Its ranges are used where it gives them (FREQ C4 to C8, CUTOFF 20 Hz to 20 kHz, ATTACK 1 ms to 10 s, DECAY 5 ms to 10 s, TEMPO 20 to 3,000 BPM); the tapers between them, VCF EG AMT’s depth at full (eight octaves here), how far a volt moves a divisor (1.5 here), and the 12-JI ratios are this app’s. The 8-JI ratios are the manual’s just C major example, not confirmed."
+      },
+      {
+        "title": "What the sources leave open",
+        "text": "How MIDI notes gate the envelopes, and whether they reach both VCOs, are not described: here a key gates both envelopes and plays on both VCOs. XOR with three or more rhythms on one sequencer is not stated. The pitch bend range is not published."
+      }
+    ]
+  }
+}

@@ -950,6 +950,16 @@
       "app": ["sub-37"],
       "text": "A 37-key analogue synthesizer on the Sub Phatty engine: two oscillators, a sub oscillator, noise and a feedback channel into the ladder filter, duo mode for two notes, two mod buses, looping envelopes, an arpeggiator and step sequencer, aftertouch and 256 presets.",
       "source": "https://en.wikipedia.org/wiki/Moog_Sub_37"
+    },
+    {
+      "id": "moog-subharmonicon",
+      "name": "Moog Subharmonicon",
+      "maker": "Moog Music",
+      "year": "2020",
+      "kind": "semi-modular",
+      "app": ["subharmonicon"],
+      "text": "A semi-modular polyrhythmic synthesizer with two VCOs, four subharmonic oscillators, two four-step sequencers and four rhythm generators, playing six-tone subharmonic chords.",
+      "source": "https://www.musicincmag.com/news/detail/moog-commercially-releases-subharmonicon"
     }
   ]
 }

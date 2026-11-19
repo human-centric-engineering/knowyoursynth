@@ -53,6 +53,7 @@ describe('toStores', () => {
       env1: 0,
       env2: 0,
       seq: -1,
+      seq2: -1,
       pulser: 0,
       power: false,
     });
@@ -72,6 +73,7 @@ describe('toStores', () => {
         env1Stage: 'decay',
         env2Stage: 'sustain',
         seq: 0,
+        seq2: 2,
         pulser: 0.2,
         cutoff: 880,
         amp: 0.6,
@@ -84,6 +86,7 @@ describe('toStores', () => {
       env1Stage: 'decay',
       env2Stage: 'sustain',
       seq: 0,
+      seq2: 2,
       pulser: 0.2,
       cutoff: 880,
       amp: 0.6,

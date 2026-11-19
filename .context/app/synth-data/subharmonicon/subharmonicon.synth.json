@@ -1,0 +1,2748 @@
+{
+  "schema_version": "0.13.0",
+  "device": {
+    "id": "moog-subharmonicon",
+    "manufacturer": "Moog Music",
+    "model": "Subharmonicon",
+    "category": "semi-modular analogue polyrhythmic synthesizer, desktop or 60HP Eurorack, two VCOs with four subharmonic oscillators, two 4-step sequencers, four rhythm generators",
+    "based_on": "Original Moog design (2020), drawing on Oskar Sala's Mixtur-Trautonium (subharmonic oscillators) and the Theremin/Cowell/Schillinger Rhythmicon (integer-ratio polyrhythms). Companion to the Mother-32 and DFAM.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Moog Subharmonicon User Manual, Version 1 (2020)",
+        "kind": "user_manual",
+        "file": "MOOG-Subharmonicon.pdf",
+        "pages": 58,
+        "note": "History, guided exploration, every control with ranges, patchbay levels and normals, transport, rhythm generators, DFAM/Mother-32 sync, Eurorack install, fine tune, MIDI CC table, ten preset patch sheets (cables legible, knob positions drawn), signal flow and specifications."
+      },
+      {
+        "id": "fw110",
+        "title": "Moog Subharmonicon firmware v1.1.0 announcement (8 March 2022), via Sonicstate, Recording Magazine, Rekkerd and MusicTech",
+        "kind": "other",
+        "url": "https://sonicstate.com/news/2022/03/09/moog-releases-subharmonicon-firmware-update/",
+        "note": "MIDI note transpose of running sequences; note priority by CC 91; TRIGGER ignored while EG is held; SEQ CLK outputs brought into phase with the clock."
+      },
+      {
+        "id": "rubadub",
+        "title": "Rubadub, 'Subharmonicon firmware v1.1.0 now available'",
+        "kind": "other",
+        "url": "https://rubadub.co.uk/blogs/rad/subharmonicon-firmware-v1-1-0-now-available",
+        "note": "Lists MIDI pitch bend among the v1.1.0 features."
+      },
+      {
+        "id": "modwiggler_quant",
+        "title": "ModWiggler, 'Moogfest Sub-Harmonicon - What Is It?' thread",
+        "kind": "other",
+        "url": "https://www.modwiggler.com/forum/viewtopic.php?t=198086&start=300",
+        "note": "From Loopop's video: 8-ET and 8-JI are fixed to a root of C and step C, D, E...; Andrew Huang showed a standard JI diatonic scale."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "synthesis_note": "Subharmonic: each VCO's two subs divide its frequency by integers 1-16 (the undertone series); rhythm generators divide the tempo by integers 1-16.",
+    "signal_path": "analogue",
+    "voices": 1,
+    "polyphony_mode": "paraphonic sources (two VCOs and four subs, independently tuned) through one filter and VCA",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "patch_memory_note": "No sound memory; fine tune, quantise and sequencer-output modes persist. Patch sheets are supplied for recall.",
+    "semi_modular": true,
+    "panel_counts": {
+      "knobs": 33,
+      "waveform_switches": 2,
+      "buttons": 21,
+      "patch_points": 32,
+      "patch_inputs": 17,
+      "patch_outputs": 15
+    },
+    "summary": "Two VCOs (4 octaves each, C4 to C8) give square, pulse or saw; each has two subs set to f/1 to f/16 that share its waveform. Six mixer levels feed the ladder filter (20 Hz to 20 kHz, resonant to self-oscillation) and the VCA, each with its own attack/decay envelope. Sequencer 1 belongs to VCO 1, Sequencer 2 to VCO 2; each step can move the VCO pitch and/or either sub's divisor. The tempo (20 to 3,000 BPM) feeds four rhythm generators, each dividing it by 1-16 and assigned to either or both sequencers, combined by OR or XOR. Quantise and sequencer octave range are shared."
+  },
+  "modules": [
+    {
+      "id": "clock",
+      "type": "gate_logic",
+      "name": "Tempo / clock",
+      "panel_section": "TEMPO",
+      "description": "Master clock, 0.333 to 50 Hz (20 to 3,000 BPM at 1 PPQ). A CLOCK input overrides it; MIDI clock overrides both (then 4 PPQ). Runs only while PLAY is lit.",
+      "properties": {
+        "rate_hz": [0.333, 50],
+        "bpm": [20, 3000],
+        "ppq_internal": 1,
+        "ppq_midi": 4,
+        "priority": "MIDI > CLOCK input > TEMPO"
+      },
+      "inputs": ["clock.ext_in", "clock.midi_in", "clock.run"],
+      "outputs": ["clock.out"]
+    },
+    {
+      "id": "rhythm1",
+      "type": "gate_logic",
+      "name": "Rhythm generator 1",
+      "panel_section": "POLYRHYTHM",
+      "description": "Divides the clock by an integer 1-16 (knob or CV) and sends the result to Sequencer 1, 2 or both. Reset to its starting phase by RESET.",
+      "properties": {
+        "divisor": [1, 16]
+      },
+      "inputs": ["rhythm1.clock", "rhythm1.cv"],
+      "outputs": ["rhythm1.out"]
+    },
+    {
+      "id": "rhythm2",
+      "type": "gate_logic",
+      "name": "Rhythm generator 2",
+      "panel_section": "POLYRHYTHM",
+      "description": "Divides the clock by an integer 1-16 (knob or CV) and sends the result to Sequencer 1, 2 or both. Reset to its starting phase by RESET.",
+      "properties": {
+        "divisor": [1, 16]
+      },
+      "inputs": ["rhythm2.clock", "rhythm2.cv"],
+      "outputs": ["rhythm2.out"]
+    },
+    {
+      "id": "rhythm3",
+      "type": "gate_logic",
+      "name": "Rhythm generator 3",
+      "panel_section": "POLYRHYTHM",
+      "description": "Divides the clock by an integer 1-16 (knob or CV) and sends the result to Sequencer 1, 2 or both. Reset to its starting phase by RESET.",
+      "properties": {
+        "divisor": [1, 16]
+      },
+      "inputs": ["rhythm3.clock", "rhythm3.cv"],
+      "outputs": ["rhythm3.out"]
+    },
+    {
+      "id": "rhythm4",
+      "type": "gate_logic",
+      "name": "Rhythm generator 4",
+      "panel_section": "POLYRHYTHM",
+      "description": "Divides the clock by an integer 1-16 (knob or CV) and sends the result to Sequencer 1, 2 or both. Reset to its starting phase by RESET.",
+      "properties": {
+        "divisor": [1, 16]
+      },
+      "inputs": ["rhythm4.clock", "rhythm4.cv"],
+      "outputs": ["rhythm4.out"]
+    },
+    {
+      "id": "seq1",
+      "type": "sequencer",
+      "name": "Sequencer 1",
+      "panel_section": "SEQUENCER 1",
+      "description": "Four steps, each a bipolar offset (±1, ±2 or ±5 octaves, quantised or not) applied to VCO 1 pitch and/or its subs' divisors per SEQ 1 ASSIGN. Advances on clocks from assigned rhythm generators (OR or XOR).",
+      "properties": {
+        "steps": 4,
+        "octave_ranges": ["±1", "±2", "±5"]
+      },
+      "inputs": ["seq1.clock", "seq1.reset"],
+      "outputs": ["seq1.cv", "seq1.clk"]
+    },
+    {
+      "id": "seq2",
+      "type": "sequencer",
+      "name": "Sequencer 2",
+      "panel_section": "SEQUENCER 2",
+      "description": "Four steps, each a bipolar offset (±1, ±2 or ±5 octaves, quantised or not) applied to VCO 2 pitch and/or its subs' divisors per SEQ 2 ASSIGN. Advances on clocks from assigned rhythm generators (OR or XOR).",
+      "properties": {
+        "steps": 4,
+        "octave_ranges": ["±1", "±2", "±5"]
+      },
+      "inputs": ["seq2.clock", "seq2.reset"],
+      "outputs": ["seq2.cv", "seq2.clk"]
+    },
+    {
+      "id": "transport",
+      "type": "gate_logic",
+      "name": "Transport and EG triggering",
+      "panel_section": "TRANSPORT",
+      "description": "PLAY, RESET, NEXT, TRIGGER and EG mode. Combines sequencer steps (EG on), the TRIGGER button and the TRIGGER input into envelope triggers, also sent to TRIGGER OUT (1 ms, 5 V).",
+      "inputs": [
+        "transport.play_in",
+        "transport.reset_in",
+        "transport.trig_in",
+        "transport.step1",
+        "transport.step2",
+        "transport.midi_gate"
+      ],
+      "outputs": ["transport.run", "transport.reset", "transport.eg_trig"]
+    },
+    {
+      "id": "pitchbus",
+      "type": "mult",
+      "name": "VCO CV normal",
+      "panel_section": "patchbay VCO 1 / VCO 2 inputs",
+      "description": "The VCO 1 input also feeds VCO 2 until a cable is in the VCO 2 input.",
+      "inputs": ["pitchbus.in"],
+      "outputs": ["pitchbus.to_vco1", "pitchbus.to_vco2"]
+    },
+    {
+      "id": "midi",
+      "type": "midi_to_cv",
+      "name": "MIDI input",
+      "panel_section": "patchbay MIDI IN",
+      "description": "Type A TRS minijack MIDI: clock, notes (offset from C4 on the VCOs), CCs for VCO and sub tuning and EG times, rhythm logic.",
+      "inputs": ["midi.in"],
+      "outputs": ["midi.note", "midi.gate", "midi.clock"]
+    },
+    {
+      "id": "vco1",
+      "type": "oscillator",
+      "name": "VCO 1",
+      "panel_section": "OSCILLATOR 1",
+      "description": "Analogue VCO, 4 octaves (262 Hz to 4,186 Hz from the knob), optionally quantised. WAVE: square (up), pulse with PWM from SUB 1's saw (middle), saw (down); its two subs follow the switch.",
+      "properties": {
+        "range_hz": [262, 4186],
+        "waveforms": ["square", "pulse (PWM)", "saw"],
+        "max_seq_hz": 10000
+      },
+      "inputs": ["vco1.pitch_cv", "vco1.pwm"],
+      "outputs": ["vco1.out", "vco1.sub_src"]
+    },
+    {
+      "id": "sub11",
+      "type": "oscillator",
+      "name": "VCO 1 SUB 1",
+      "panel_section": "OSCILLATOR 1",
+      "description": "Subharmonic oscillator: VCO 1's frequency divided by 1-16. Square, or saw in the middle and down switch positions.",
+      "properties": {
+        "divisor": [1, 16],
+        "accuracy_note": "not accurate above about 10 kHz"
+      },
+      "inputs": ["sub11.src", "sub11.div_cv"],
+      "outputs": ["sub11.out"]
+    },
+    {
+      "id": "sub12",
+      "type": "oscillator",
+      "name": "VCO 1 SUB 2",
+      "panel_section": "OSCILLATOR 1",
+      "description": "Subharmonic oscillator: VCO 1's frequency divided by 1-16. Square, or saw in the middle and down switch positions.",
+      "properties": {
+        "divisor": [1, 16],
+        "accuracy_note": "not accurate above about 10 kHz"
+      },
+      "inputs": ["sub12.src", "sub12.div_cv"],
+      "outputs": ["sub12.out"]
+    },
+    {
+      "id": "vco2",
+      "type": "oscillator",
+      "name": "VCO 2",
+      "panel_section": "OSCILLATOR 2",
+      "description": "Analogue VCO, 4 octaves (262 Hz to 4,186 Hz from the knob), optionally quantised. WAVE: square (up), pulse with PWM from SUB 1's saw (middle), saw (down); its two subs follow the switch.",
+      "properties": {
+        "range_hz": [262, 4186],
+        "waveforms": ["square", "pulse (PWM)", "saw"],
+        "max_seq_hz": 10000
+      },
+      "inputs": ["vco2.pitch_cv", "vco2.pwm"],
+      "outputs": ["vco2.out", "vco2.sub_src"]
+    },
+    {
+      "id": "sub21",
+      "type": "oscillator",
+      "name": "VCO 2 SUB 1",
+      "panel_section": "OSCILLATOR 2",
+      "description": "Subharmonic oscillator: VCO 2's frequency divided by 1-16. Square, or saw in the middle and down switch positions.",
+      "properties": {
+        "divisor": [1, 16],
+        "accuracy_note": "not accurate above about 10 kHz"
+      },
+      "inputs": ["sub21.src", "sub21.div_cv"],
+      "outputs": ["sub21.out"]
+    },
+    {
+      "id": "sub22",
+      "type": "oscillator",
+      "name": "VCO 2 SUB 2",
+      "panel_section": "OSCILLATOR 2",
+      "description": "Subharmonic oscillator: VCO 2's frequency divided by 1-16. Square, or saw in the middle and down switch positions.",
+      "properties": {
+        "divisor": [1, 16],
+        "accuracy_note": "not accurate above about 10 kHz"
+      },
+      "inputs": ["sub22.src", "sub22.div_cv"],
+      "outputs": ["sub22.out"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Mixer",
+      "panel_section": "MIXER",
+      "description": "Six levels into the filter; near maximum the mixer overdrives warmly.",
+      "inputs": [
+        "mixer.vco1",
+        "mixer.sub11",
+        "mixer.sub12",
+        "mixer.vco2",
+        "mixer.sub21",
+        "mixer.sub22"
+      ],
+      "outputs": ["mixer.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "VCF (Moog ladder)",
+      "panel_section": "FILTER",
+      "description": "4-pole (-24 dB/octave) low-pass ladder filter, 20 Hz to 20 kHz, resonant to self-oscillation.",
+      "properties": {
+        "mode": "low-pass",
+        "slope_db_per_octave": 24,
+        "cutoff_hz": [20, 20000],
+        "self_oscillates": true,
+        "cv_range_octaves": 5
+      },
+      "inputs": ["vcf.in", "vcf.cutoff_cv"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "vcf_eg",
+      "type": "envelope",
+      "name": "VCF EG",
+      "panel_section": "ENVELOPES",
+      "description": "Attack 1 ms to 10 s, decay 5 ms to 10 s; holds at peak while a gate is high. Cannot restart during its attack.",
+      "properties": {
+        "stages": ["attack", "decay"],
+        "attack_s": [0.001, 10],
+        "decay_s": [0.005, 10],
+        "output_v": [0, 8]
+      },
+      "inputs": ["vcf_eg.gate"],
+      "outputs": ["vcf_eg.out"]
+    },
+    {
+      "id": "vca_eg",
+      "type": "envelope",
+      "name": "VCA EG",
+      "panel_section": "ENVELOPES",
+      "description": "Attack 1 ms to 10 s, decay 5 ms to 10 s; holds at peak while a gate is high. Cannot restart during its attack.",
+      "properties": {
+        "stages": ["attack", "decay"],
+        "attack_s": [0.001, 10],
+        "decay_s": [0.005, 10],
+        "output_v": [0, 8]
+      },
+      "inputs": ["vca_eg.gate"],
+      "outputs": ["vca_eg.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "AMPLIFIER",
+      "description": "Output amplifier: VCA EG scaled to the VOLUME setting, summed with the VCA CV input.",
+      "inputs": ["vca.in", "vca.cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Audio output",
+      "panel_section": "rear panel",
+      "description": "1/4 inch output for an instrument cable or headphones (same signal both ears); VCA OUT patch point at Eurorack level (10 Vpp).",
+      "inputs": ["out.in"],
+      "outputs": ["out.main", "out.modular"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "vco1.freq",
+      "module": "vco1",
+      "label": "VCO 1 FREQ",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "panel numbering not stated; 0 = full CCW, 10 = full CW"
+      },
+      "physical": {
+        "min": 262,
+        "max": 4186,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 4 (MSB) / 36 (LSB)"
+        }
+      ],
+      "function": "Initial pitch over 4 octaves, C4 (CCW) to C8 (CW); stepped when quantised. MIDI CC adds ±2.5 octaves."
+    },
+    {
+      "id": "vco1.wave",
+      "module": "vco1",
+      "label": "VCO 1 WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "square",
+          "label": "UP",
+          "meaning": "square on VCO and subs"
+        },
+        {
+          "value": "pwm",
+          "label": "MIDDLE",
+          "meaning": "VCO pulse with PWM from SUB 1 saw; subs saw"
+        },
+        {
+          "value": "saw",
+          "label": "DOWN",
+          "meaning": "saw on VCO and subs"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Waveform for the VCO and its subs."
+    },
+    {
+      "id": "sub11.div",
+      "module": "sub11",
+      "label": "VCO 1 SUB 1 FREQ",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16,
+        "note": "integer divisor; full CW = 1, full CCW = 16"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 103 (0-7 = 16 ... 120-127 = 1)"
+        }
+      ],
+      "function": "Divisor of VCO 1's pitch: 1 (unison, CW) to 16 (CCW). A MIDI CC replaces it until the knob moves."
+    },
+    {
+      "id": "mix.sub11",
+      "module": "mixer",
+      "label": "VCO 1 SUB 1 LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "panel numbering not stated; 0 = full CCW, 10 = full CW"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of VCO 1 SUB 1."
+    },
+    {
+      "id": "sub12.div",
+      "module": "sub12",
+      "label": "VCO 1 SUB 2 FREQ",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16,
+        "note": "integer divisor; full CW = 1, full CCW = 16"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 104 (0-7 = 16 ... 120-127 = 1)"
+        }
+      ],
+      "function": "Divisor of VCO 1's pitch: 1 (unison, CW) to 16 (CCW). A MIDI CC replaces it until the knob moves."
+    },
+    {
+      "id": "mix.sub12",
+      "module": "mixer",
+      "label": "VCO 1 SUB 2 LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "panel numbering not stated; 0 = full CCW, 10 = full CW"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of VCO 1 SUB 2."
+    },
+    {
+      "id": "mix.vco1",
+      "module": "mixer",
+      "label": "VCO 1 LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "panel numbering not stated; 0 = full CCW, 10 = full CW"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of VCO 1."
+    },
+    {
+      "id": "vco2.freq",
+      "module": "vco2",
+      "label": "VCO 2 FREQ",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "panel numbering not stated; 0 = full CCW, 10 = full CW"
+      },
+      "physical": {
+        "min": 262,
+        "max": 4186,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 12 (MSB) / 44 (LSB)"
+        }
+      ],
+      "function": "Initial pitch over 4 octaves, C4 (CCW) to C8 (CW); stepped when quantised. MIDI CC adds ±2.5 octaves."
+    },
+    {
+      "id": "vco2.wave",
+      "module": "vco2",
+      "label": "VCO 2 WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "square",
+          "label": "UP",
+          "meaning": "square on VCO and subs"
+        },
+        {
+          "value": "pwm",
+          "label": "MIDDLE",
+          "meaning": "VCO pulse with PWM from SUB 1 saw; subs saw"
+        },
+        {
+          "value": "saw",
+          "label": "DOWN",
+          "meaning": "saw on VCO and subs"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Waveform for the VCO and its subs."
+    },
+    {
+      "id": "sub21.div",
+      "module": "sub21",
+      "label": "VCO 2 SUB 1 FREQ",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16,
+        "note": "integer divisor; full CW = 1, full CCW = 16"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 105 (0-7 = 16 ... 120-127 = 1)"
+        }
+      ],
+      "function": "Divisor of VCO 2's pitch: 1 (unison, CW) to 16 (CCW). A MIDI CC replaces it until the knob moves."
+    },
+    {
+      "id": "mix.sub21",
+      "module": "mixer",
+      "label": "VCO 2 SUB 1 LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "panel numbering not stated; 0 = full CCW, 10 = full CW"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of VCO 2 SUB 1."
+    },
+    {
+      "id": "sub22.div",
+      "module": "sub22",
+      "label": "VCO 2 SUB 2 FREQ",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16,
+        "note": "integer divisor; full CW = 1, full CCW = 16"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 106 (0-7 = 16 ... 120-127 = 1)"
+        }
+      ],
+      "function": "Divisor of VCO 2's pitch: 1 (unison, CW) to 16 (CCW). A MIDI CC replaces it until the knob moves."
+    },
+    {
+      "id": "mix.sub22",
+      "module": "mixer",
+      "label": "VCO 2 SUB 2 LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "panel numbering not stated; 0 = full CCW, 10 = full CW"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of VCO 2 SUB 2."
+    },
+    {
+      "id": "mix.vco2",
+      "module": "mixer",
+      "label": "VCO 2 LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "panel numbering not stated; 0 = full CCW, 10 = full CW"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of VCO 2."
+    },
+    {
+      "id": "vco.quantize",
+      "module": "vco1",
+      "label": "QUANTIZE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "12-ET",
+          "meaning": "chromatic, equal temperament"
+        },
+        {
+          "value": "8-ET",
+          "meaning": "C major (C D E F G A B C), equal temperament"
+        },
+        {
+          "value": "12-JI",
+          "meaning": "chromatic, just intonation"
+        },
+        {
+          "value": "8-JI",
+          "meaning": "C major in just intonation, presumably C 1/1, D 9/8, E 5/4, F 4/3, G 3/2, A 5/3, B 15/8"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Shared by both VCOs: off, 12-ET, 8-ET, 12-JI or 8-JI. Also quantises the SEQ outputs unless held to decouple.",
+      "note": "The 8-step scales are fixed to a root of C (ModWiggler, from Loopop's demonstration). The 8-JI ratios are the manual's own just C major example (p.17) and are inferred, not confirmed."
+    },
+    {
+      "id": "vco.quantize_seq_out",
+      "module": "vco1",
+      "label": "QUANTIZE hold: SEQ outputs unquantised",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Hold QUANTIZE until its LED flashes: VCOs stay quantised, SEQ 1/2 outputs do not.",
+      "note": "Persistence across power cycles not stated."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "CUTOFF",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "panel numbering not stated; 0 = full CCW, 10 = full CW"
+      },
+      "physical": {
+        "min": 20,
+        "max": 20000,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Cutoff frequency, 20 Hz to 20 kHz."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RESONANCE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "panel numbering not stated; 0 = full CCW, 10 = full CW"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Resonant peak; self-oscillates at maximum with low cutoff."
+    },
+    {
+      "id": "vcf_eg.amount",
+      "module": "vcf",
+      "label": "VCF EG AMT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar envelope depth on cutoff; centre none."
+    },
+    {
+      "id": "vcf_eg.attack",
+      "module": "vcf_eg",
+      "label": "VCF ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "panel numbering not stated; 0 = full CCW, 10 = full CW"
+      },
+      "physical": {
+        "min": 0.001,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 23 (MSB) / 55 (LSB)"
+        }
+      ],
+      "function": "Attack time."
+    },
+    {
+      "id": "vcf_eg.decay",
+      "module": "vcf_eg",
+      "label": "VCF DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "panel numbering not stated; 0 = full CCW, 10 = full CW"
+      },
+      "physical": {
+        "min": 0.005,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 24 (MSB) / 56 (LSB)"
+        }
+      ],
+      "function": "Decay time."
+    },
+    {
+      "id": "vca_eg.attack",
+      "module": "vca_eg",
+      "label": "VCA ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "panel numbering not stated; 0 = full CCW, 10 = full CW"
+      },
+      "physical": {
+        "min": 0.001,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 28 (MSB) / 60 (LSB)"
+        }
+      ],
+      "function": "Attack time."
+    },
+    {
+      "id": "vca_eg.decay",
+      "module": "vca_eg",
+      "label": "VCA DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "panel numbering not stated; 0 = full CCW, 10 = full CW"
+      },
+      "physical": {
+        "min": 0.005,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 29 (MSB) / 61 (LSB)"
+        }
+      ],
+      "function": "Decay time."
+    },
+    {
+      "id": "vca.volume",
+      "module": "vca",
+      "label": "VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "panel numbering not stated; 0 = full CCW, 10 = full CW"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Output level; the VCA EG peaks at this level."
+    },
+    {
+      "id": "clock.tempo",
+      "module": "clock",
+      "label": "TEMPO",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "panel numbering not stated; 0 = full CCW, 10 = full CW"
+      },
+      "physical": {
+        "min": 0.333,
+        "max": 50,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Master tempo, 0.333-50 Hz (20-3,000 BPM). In Fine Tune mode it sets fine tune instead."
+    },
+    {
+      "id": "seq1.step1",
+      "module": "seq1",
+      "label": "SEQ 1 STEP 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar offset for this step within the SEQ OCT range; centre none; quantised per QUANTIZE."
+    },
+    {
+      "id": "seq1.step2",
+      "module": "seq1",
+      "label": "SEQ 1 STEP 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar offset for this step within the SEQ OCT range; centre none; quantised per QUANTIZE."
+    },
+    {
+      "id": "seq1.step3",
+      "module": "seq1",
+      "label": "SEQ 1 STEP 3",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar offset for this step within the SEQ OCT range; centre none; quantised per QUANTIZE."
+    },
+    {
+      "id": "seq1.step4",
+      "module": "seq1",
+      "label": "SEQ 1 STEP 4",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar offset for this step within the SEQ OCT range; centre none; quantised per QUANTIZE."
+    },
+    {
+      "id": "seq1.assign_osc",
+      "module": "seq1",
+      "label": "SEQ 1 ASSIGN OSC 1",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Sequencer 1 moves VCO 1 pitch (subs follow)."
+    },
+    {
+      "id": "seq1.assign_sub1",
+      "module": "seq1",
+      "label": "SEQ 1 ASSIGN SUB 1",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Sequencer 1 moves the SUB 1 divisor."
+    },
+    {
+      "id": "seq1.assign_sub2",
+      "module": "seq1",
+      "label": "SEQ 1 ASSIGN SUB 2",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Sequencer 1 moves the SUB 2 divisor."
+    },
+    {
+      "id": "seq2.step1",
+      "module": "seq2",
+      "label": "SEQ 2 STEP 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar offset for this step within the SEQ OCT range; centre none; quantised per QUANTIZE."
+    },
+    {
+      "id": "seq2.step2",
+      "module": "seq2",
+      "label": "SEQ 2 STEP 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar offset for this step within the SEQ OCT range; centre none; quantised per QUANTIZE."
+    },
+    {
+      "id": "seq2.step3",
+      "module": "seq2",
+      "label": "SEQ 2 STEP 3",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar offset for this step within the SEQ OCT range; centre none; quantised per QUANTIZE."
+    },
+    {
+      "id": "seq2.step4",
+      "module": "seq2",
+      "label": "SEQ 2 STEP 4",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar offset for this step within the SEQ OCT range; centre none; quantised per QUANTIZE."
+    },
+    {
+      "id": "seq2.assign_osc",
+      "module": "seq2",
+      "label": "SEQ 2 ASSIGN OSC 2",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Sequencer 2 moves VCO 2 pitch (subs follow)."
+    },
+    {
+      "id": "seq2.assign_sub1",
+      "module": "seq2",
+      "label": "SEQ 2 ASSIGN SUB 1",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Sequencer 2 moves the SUB 1 divisor."
+    },
+    {
+      "id": "seq2.assign_sub2",
+      "module": "seq2",
+      "label": "SEQ 2 ASSIGN SUB 2",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Sequencer 2 moves the SUB 2 divisor."
+    },
+    {
+      "id": "seq.oct",
+      "module": "seq1",
+      "label": "SEQ OCT",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "±5"
+        },
+        {
+          "value": "±2"
+        },
+        {
+          "value": "±1"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Step range shared by both sequencers."
+    },
+    {
+      "id": "seq.oct_out_fixed",
+      "module": "seq1",
+      "label": "SEQ OCT hold: SEQ outputs at ±5",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Hold SEQ OCT until it flashes: SEQ outputs always span ±5 while the VCOs follow SEQ OCT.",
+      "note": "Persistence across power cycles not stated."
+    },
+    {
+      "id": "rhythm1.div",
+      "module": "rhythm1",
+      "label": "RHYTHM 1",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16,
+        "note": "integer divisor; full CW = 1, full CCW = 16"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Tempo divisor: 1 (CW) to 16 (CCW)."
+    },
+    {
+      "id": "rhythm1.seq1",
+      "module": "rhythm1",
+      "label": "RHYTHM 1 SEQ 1",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Rhythm drives Sequencer 1."
+    },
+    {
+      "id": "rhythm1.seq2",
+      "module": "rhythm1",
+      "label": "RHYTHM 1 SEQ 2",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Rhythm drives Sequencer 2."
+    },
+    {
+      "id": "rhythm2.div",
+      "module": "rhythm2",
+      "label": "RHYTHM 2",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16,
+        "note": "integer divisor; full CW = 1, full CCW = 16"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Tempo divisor: 1 (CW) to 16 (CCW)."
+    },
+    {
+      "id": "rhythm2.seq1",
+      "module": "rhythm2",
+      "label": "RHYTHM 2 SEQ 1",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Rhythm drives Sequencer 1."
+    },
+    {
+      "id": "rhythm2.seq2",
+      "module": "rhythm2",
+      "label": "RHYTHM 2 SEQ 2",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Rhythm drives Sequencer 2."
+    },
+    {
+      "id": "rhythm3.div",
+      "module": "rhythm3",
+      "label": "RHYTHM 3",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16,
+        "note": "integer divisor; full CW = 1, full CCW = 16"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Tempo divisor: 1 (CW) to 16 (CCW)."
+    },
+    {
+      "id": "rhythm3.seq1",
+      "module": "rhythm3",
+      "label": "RHYTHM 3 SEQ 1",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Rhythm drives Sequencer 1."
+    },
+    {
+      "id": "rhythm3.seq2",
+      "module": "rhythm3",
+      "label": "RHYTHM 3 SEQ 2",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Rhythm drives Sequencer 2."
+    },
+    {
+      "id": "rhythm4.div",
+      "module": "rhythm4",
+      "label": "RHYTHM 4",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16,
+        "note": "integer divisor; full CW = 1, full CCW = 16"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Tempo divisor: 1 (CW) to 16 (CCW)."
+    },
+    {
+      "id": "rhythm4.seq1",
+      "module": "rhythm4",
+      "label": "RHYTHM 4 SEQ 1",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Rhythm drives Sequencer 1."
+    },
+    {
+      "id": "rhythm4.seq2",
+      "module": "rhythm4",
+      "label": "RHYTHM 4 SEQ 2",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Rhythm drives Sequencer 2."
+    },
+    {
+      "id": "transport.play",
+      "module": "transport",
+      "label": "PLAY",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Starts/stops sequencers, rhythm generators and CLOCK OUT."
+    },
+    {
+      "id": "transport.trigger",
+      "module": "transport",
+      "label": "TRIGGER",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "EG on: restarts both EGs (not during attack). EG off: acts as a gate, holding the EGs at peak. EG held: no effect."
+    },
+    {
+      "id": "transport.reset",
+      "module": "transport",
+      "label": "RESET",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Resets sequencers to step 1 and rhythm generators to their start; held, it holds step 1 while EGs keep triggering."
+    },
+    {
+      "id": "transport.next",
+      "module": "transport",
+      "label": "NEXT",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Advances the sequencers one step without triggering the EGs (except while RESET is held)."
+    },
+    {
+      "id": "transport.eg",
+      "module": "transport",
+      "label": "EG",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        },
+        {
+          "value": "held"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Off: steps do not trigger EGs. On: steps trigger EGs. Held (long press, blinking): EGs held open at maximum."
+    },
+    {
+      "id": "sys.fine_tune",
+      "module": "vco1",
+      "label": "Fine Tune",
+      "kind": "continuous",
+      "physical": {
+        "min": -50,
+        "max": 50,
+        "unit": "cent"
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold SEQ 1 ASSIGN OSC 1 and SEQ 2 ASSIGN OSC 2, then turn TEMPO",
+          "when": "any_time"
+        }
+      ],
+      "function": "Overall tuning ±50 cents, stored; hold OSC 1 and OSC 2 until the QUANTIZE LEDs flash, set with TEMPO, exit with QUANTIZE."
+    },
+    {
+      "id": "sys.rhythm_logic",
+      "module": "seq1",
+      "label": "Rhythm Generator Logic",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "or"
+        },
+        {
+          "value": "xor"
+        }
+      ],
+      "default": "or",
+      "memory": "global",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 113 (0-63 OR, 64-127 XOR)"
+        }
+      ],
+      "function": "OR: a sequencer advances on any assigned rhythm. XOR: only when exactly one fires."
+    },
+    {
+      "id": "sys.note_priority",
+      "module": "midi",
+      "label": "Keyboard Note Priority",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "low"
+        },
+        {
+          "value": "high"
+        },
+        {
+          "value": "last"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 91"
+        }
+      ],
+      "function": "Which held MIDI note the Subharmonicon follows (firmware 1.1.0).",
+      "note": "Default and CC value ranges not published in the sources found."
+    },
+    {
+      "id": "sys.midi_channel",
+      "module": "midi",
+      "label": "MIDI Channel",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1..16"
+        },
+        {
+          "value": "all"
+        }
+      ],
+      "default": "1..16",
+      "memory": "global",
+      "access": [
+        {
+          "type": "sysex",
+          "note": "SysEx files from moogmusic.com"
+        }
+      ],
+      "function": "Receive channel 1-16 or all; set by SysEx.",
+      "note": "Default channel 1."
+    },
+    {
+      "id": "sys.midi_transport",
+      "module": "transport",
+      "label": "Play (MIDI Transport)",
+      "kind": "boolean",
+      "default": true,
+      "memory": "global",
+      "access": [
+        {
+          "type": "sysex",
+          "note": "SysEx files from moogmusic.com"
+        }
+      ],
+      "function": "Respond to MIDI start/stop; set by SysEx."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.vco1_in",
+      "label": "VCO 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "pitchbus.in",
+      "function": "1 V/oct for VCO 1, -5 to +5 V; normalled to VCO 2.",
+      "manual_ref": "patchbay row 1"
+    },
+    {
+      "id": "jack.vco1_sub_in",
+      "label": "VCO 1 SUB",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "sub11.div_cv",
+      "function": "Divisor CV for both VCO 1 subs, -5 to +5 V (centre the SUB knobs).",
+      "manual_ref": "patchbay row 1"
+    },
+    {
+      "id": "jack.vco1_pwm",
+      "label": "VCO 1 PWM",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vco1.pwm",
+      "function": "PWM for VCO 1 and its subs (square selected), -5 to +5 V = 1-99 % duty; replaces the SUB 1 saw normal.",
+      "manual_ref": "patchbay row 1"
+    },
+    {
+      "id": "jack.vca_out",
+      "label": "VCA OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm jack",
+      "node": "out.modular",
+      "function": "Synth output at Eurorack level, 10 Vpp.",
+      "manual_ref": "patchbay row 1"
+    },
+    {
+      "id": "jack.vco1_out",
+      "label": "VCO 1 OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm jack",
+      "node": "vco1.out",
+      "function": "VCO 1, 10 Vpp.",
+      "manual_ref": "patchbay row 2"
+    },
+    {
+      "id": "jack.sub11_out",
+      "label": "VCO 1 SUB 1 OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm jack",
+      "node": "sub11.out",
+      "function": "VCO 1 SUB 1, 10 Vpp.",
+      "manual_ref": "patchbay row 2"
+    },
+    {
+      "id": "jack.sub12_out",
+      "label": "VCO 1 SUB 2 OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm jack",
+      "node": "sub12.out",
+      "function": "VCO 1 SUB 2, 10 Vpp.",
+      "manual_ref": "patchbay row 2"
+    },
+    {
+      "id": "jack.vca_in",
+      "label": "VCA",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vca.cv",
+      "function": "Volume CV, 0 to +8 V, summed with the VCA EG.",
+      "manual_ref": "patchbay row 2"
+    },
+    {
+      "id": "jack.vco2_in",
+      "label": "VCO 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vco2.pitch_cv",
+      "function": "1 V/oct for VCO 2, -5 to +5 V; breaks the normal from VCO 1.",
+      "manual_ref": "patchbay row 3"
+    },
+    {
+      "id": "jack.vco2_sub_in",
+      "label": "VCO 2 SUB",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "sub21.div_cv",
+      "function": "Divisor CV for both VCO 2 subs, -5 to +5 V.",
+      "manual_ref": "patchbay row 3"
+    },
+    {
+      "id": "jack.vco2_pwm",
+      "label": "VCO 2 PWM",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vco2.pwm",
+      "function": "PWM for VCO 2 and its subs (square selected), -5 to +5 V; replaces the SUB 1 saw normal.",
+      "manual_ref": "patchbay row 3"
+    },
+    {
+      "id": "jack.vca_eg_out",
+      "label": "VCA EG OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vca_eg.out",
+      "function": "VCA envelope, 0 to +8 V.",
+      "manual_ref": "patchbay row 3"
+    },
+    {
+      "id": "jack.vco2_out",
+      "label": "VCO 2 OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm jack",
+      "node": "vco2.out",
+      "function": "VCO 2, 10 Vpp.",
+      "manual_ref": "patchbay row 4"
+    },
+    {
+      "id": "jack.sub21_out",
+      "label": "VCO 2 SUB 1 OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm jack",
+      "node": "sub21.out",
+      "function": "VCO 2 SUB 1, 10 Vpp.",
+      "manual_ref": "patchbay row 4"
+    },
+    {
+      "id": "jack.sub22_out",
+      "label": "VCO 2 SUB 2 OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm jack",
+      "node": "sub22.out",
+      "function": "VCO 2 SUB 2, 10 Vpp.",
+      "manual_ref": "patchbay row 4"
+    },
+    {
+      "id": "jack.cutoff_in",
+      "label": "CUTOFF",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vcf.cutoff_cv",
+      "function": "Cutoff CV, -5 to +5 V, up to ±5 octaves.",
+      "manual_ref": "patchbay row 4"
+    },
+    {
+      "id": "jack.play_in",
+      "label": "PLAY",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm jack",
+      "node": "transport.play_in",
+      "function": "Gate 0-10 V: rising edge plays, falling edge stops; the button overrides.",
+      "manual_ref": "patchbay row 5"
+    },
+    {
+      "id": "jack.reset_in",
+      "label": "RESET",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm jack",
+      "node": "transport.reset_in",
+      "function": "Trigger resets; a held gate holds step 1 (EGs keep triggering).",
+      "manual_ref": "patchbay row 5"
+    },
+    {
+      "id": "jack.trigger_in",
+      "label": "TRIGGER",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm jack",
+      "node": "transport.trig_in",
+      "function": "Rising edge triggers both EGs (not during attack).",
+      "manual_ref": "patchbay row 5"
+    },
+    {
+      "id": "jack.vcf_eg_out",
+      "label": "VCF EG OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vcf_eg.out",
+      "function": "Filter envelope, 0 to +8 V.",
+      "manual_ref": "patchbay row 5"
+    },
+    {
+      "id": "jack.rhythm1_in",
+      "label": "RHYTHM 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "rhythm1.cv",
+      "function": "Divisor CV for Rhythm 1, -5 to +5 V (centre the knob).",
+      "manual_ref": "patchbay row 6"
+    },
+    {
+      "id": "jack.rhythm2_in",
+      "label": "RHYTHM 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "rhythm2.cv",
+      "function": "Divisor CV for Rhythm 2, -5 to +5 V (centre the knob).",
+      "manual_ref": "patchbay row 6"
+    },
+    {
+      "id": "jack.rhythm3_in",
+      "label": "RHYTHM 3",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "rhythm3.cv",
+      "function": "Divisor CV for Rhythm 3, -5 to +5 V (centre the knob).",
+      "manual_ref": "patchbay row 6"
+    },
+    {
+      "id": "jack.rhythm4_in",
+      "label": "RHYTHM 4",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "rhythm4.cv",
+      "function": "Divisor CV for Rhythm 4, -5 to +5 V (centre the knob).",
+      "manual_ref": "patchbay row 6"
+    },
+    {
+      "id": "jack.seq1_out",
+      "label": "SEQ 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "seq1.cv",
+      "function": "Sequencer 1 step CV, -5 to +5 V, following QUANTIZE and SEQ OCT unless decoupled.",
+      "manual_ref": "patchbay row 7"
+    },
+    {
+      "id": "jack.seq1_clk",
+      "label": "SEQ 1 CLK",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "clock",
+      "connector": "3.5 mm jack",
+      "node": "seq1.clk",
+      "function": "Sequencer 1's clock, 0 to +5 V.",
+      "manual_ref": "patchbay row 7"
+    },
+    {
+      "id": "jack.seq2_out",
+      "label": "SEQ 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "seq2.cv",
+      "function": "Sequencer 2 step CV, -5 to +5 V.",
+      "manual_ref": "patchbay row 7"
+    },
+    {
+      "id": "jack.seq2_clk",
+      "label": "SEQ 2 CLK",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "clock",
+      "connector": "3.5 mm jack",
+      "node": "seq2.clk",
+      "function": "Sequencer 2's clock, 0 to +5 V.",
+      "manual_ref": "patchbay row 7"
+    },
+    {
+      "id": "midi.in",
+      "label": "MIDI IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "3.5 mm jack",
+      "node": "midi.in",
+      "function": "MIDI via the Type A DIN-to-3.5 mm adapter; LED shows activity.",
+      "manual_ref": "patchbay row 8"
+    },
+    {
+      "id": "jack.clock_in",
+      "label": "CLOCK",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "3.5 mm jack",
+      "node": "clock.ext_in",
+      "function": "External clock, rising edge 0-10 V; overrides TEMPO.",
+      "manual_ref": "patchbay row 8"
+    },
+    {
+      "id": "jack.clock_out",
+      "label": "CLOCK OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "clock",
+      "connector": "3.5 mm jack",
+      "node": "clock.out",
+      "function": "Current clock (internal, external or MIDI), 0-10 V, only while playing.",
+      "manual_ref": "patchbay row 8"
+    },
+    {
+      "id": "jack.trigger_out",
+      "label": "TRIGGER OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm jack",
+      "node": "transport.eg_trig",
+      "function": "1 ms, 5 V pulse each time the EGs are triggered.",
+      "manual_ref": "patchbay row 8"
+    },
+    {
+      "id": "jack.audio_out",
+      "label": "AUDIO OUT / headphones",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "1/4 inch jack",
+      "node": "out.main",
+      "function": "1/4 inch: TS instrument cable or TRS headphones (mono to both ears). Not for balanced TRS line use."
+    },
+    {
+      "id": "power.dc",
+      "label": "12 VDC",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "DC barrel",
+      "node": null,
+      "function": "12 V DC 1,200 mA centre-positive adapter; no power switch. Eurorack: 360 mA max from +12 V only."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "clock.out",
+      "to": "rhythm1.clock",
+      "signal": "clock",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "clock.out",
+      "to": "rhythm2.clock",
+      "signal": "clock",
+      "kind": "fixed"
+    },
+    {
+      "id": "c03",
+      "from": "clock.out",
+      "to": "rhythm3.clock",
+      "signal": "clock",
+      "kind": "fixed"
+    },
+    {
+      "id": "c04",
+      "from": "clock.out",
+      "to": "rhythm4.clock",
+      "signal": "clock",
+      "kind": "fixed"
+    },
+    {
+      "id": "c05",
+      "from": "rhythm1.out",
+      "to": "seq1.clock",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "rhythm1.seq1",
+        "equals": true
+      },
+      "note": "Combined OR or XOR per Rhythm Generator Logic."
+    },
+    {
+      "id": "c06",
+      "from": "rhythm1.out",
+      "to": "seq2.clock",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "rhythm1.seq2",
+        "equals": true
+      }
+    },
+    {
+      "id": "c07",
+      "from": "rhythm2.out",
+      "to": "seq1.clock",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "rhythm2.seq1",
+        "equals": true
+      },
+      "note": "Combined OR or XOR per Rhythm Generator Logic."
+    },
+    {
+      "id": "c08",
+      "from": "rhythm2.out",
+      "to": "seq2.clock",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "rhythm2.seq2",
+        "equals": true
+      }
+    },
+    {
+      "id": "c09",
+      "from": "rhythm3.out",
+      "to": "seq1.clock",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "rhythm3.seq1",
+        "equals": true
+      },
+      "note": "Combined OR or XOR per Rhythm Generator Logic."
+    },
+    {
+      "id": "c10",
+      "from": "rhythm3.out",
+      "to": "seq2.clock",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "rhythm3.seq2",
+        "equals": true
+      }
+    },
+    {
+      "id": "c11",
+      "from": "rhythm4.out",
+      "to": "seq1.clock",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "rhythm4.seq1",
+        "equals": true
+      },
+      "note": "Combined OR or XOR per Rhythm Generator Logic."
+    },
+    {
+      "id": "c12",
+      "from": "rhythm4.out",
+      "to": "seq2.clock",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "rhythm4.seq2",
+        "equals": true
+      }
+    },
+    {
+      "id": "c13",
+      "from": "midi.clock",
+      "to": "clock.midi_in",
+      "signal": "clock",
+      "kind": "fixed",
+      "note": "MIDI clock overrides CLOCK input and TEMPO."
+    },
+    {
+      "id": "c14",
+      "from": "transport.run",
+      "to": "clock.run",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c15",
+      "from": "transport.reset",
+      "to": "seq1.reset",
+      "signal": "gate",
+      "kind": "fixed",
+      "note": "RESET also returns the rhythm generators to their starting phase."
+    },
+    {
+      "id": "c16",
+      "from": "transport.reset",
+      "to": "seq2.reset",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c17",
+      "from": "seq1.clk",
+      "to": "transport.step1",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "transport.eg",
+        "equals": "on"
+      }
+    },
+    {
+      "id": "c18",
+      "from": "seq2.clk",
+      "to": "transport.step2",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "transport.eg",
+        "equals": "on"
+      }
+    },
+    {
+      "id": "c19",
+      "from": "midi.gate",
+      "to": "transport.midi_gate",
+      "signal": "gate",
+      "kind": "fixed",
+      "confidence": "inferred",
+      "note": "The EG text says triggers or gates may come from an external keyboard via MIDI; the note-to-gate path is not described."
+    },
+    {
+      "id": "c20",
+      "from": "transport.eg_trig",
+      "to": "vcf_eg.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c21",
+      "from": "transport.eg_trig",
+      "to": "vca_eg.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c22",
+      "from": "pitchbus.to_vco1",
+      "to": "vco1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c23",
+      "from": "pitchbus.to_vco2",
+      "to": "vco2.pitch_cv",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco2_in"
+    },
+    {
+      "id": "c24",
+      "from": "midi.note",
+      "to": "vco1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Notes as offsets from C4; with VCO FREQ fully CCW they play unchanged."
+    },
+    {
+      "id": "c25",
+      "from": "midi.note",
+      "to": "vco2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "confidence": "inferred",
+      "note": "The manual implies both VCOs respond (both FREQ knobs at C4)."
+    },
+    {
+      "id": "c26",
+      "from": "seq1.cv",
+      "to": "vco1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "seq1.assign_osc",
+        "equals": true
+      }
+    },
+    {
+      "id": "c27",
+      "from": "seq1.cv",
+      "to": "sub11.div_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "seq1.assign_sub1",
+        "equals": true
+      }
+    },
+    {
+      "id": "c28",
+      "from": "seq1.cv",
+      "to": "sub12.div_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "seq1.assign_sub2",
+        "equals": true
+      }
+    },
+    {
+      "id": "c29",
+      "from": "seq2.cv",
+      "to": "vco2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "seq2.assign_osc",
+        "equals": true
+      }
+    },
+    {
+      "id": "c30",
+      "from": "seq2.cv",
+      "to": "sub21.div_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "seq2.assign_sub1",
+        "equals": true
+      }
+    },
+    {
+      "id": "c31",
+      "from": "seq2.cv",
+      "to": "sub22.div_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "seq2.assign_sub2",
+        "equals": true
+      }
+    },
+    {
+      "id": "c32",
+      "from": "vco1.sub_src",
+      "to": "sub11.src",
+      "signal": "sync",
+      "kind": "fixed",
+      "note": "The sub divides the VCO's frequency."
+    },
+    {
+      "id": "c33",
+      "from": "vco1.sub_src",
+      "to": "sub12.src",
+      "signal": "sync",
+      "kind": "fixed",
+      "note": "The sub divides the VCO's frequency."
+    },
+    {
+      "id": "c34",
+      "from": "sub11.out",
+      "to": "vco1.pwm",
+      "signal": "cv_or_audio",
+      "kind": "normalled",
+      "broken_by": "jack.vco1_pwm",
+      "note": "Audible only with WAVE in the middle position."
+    },
+    {
+      "id": "c35",
+      "from": "vco1.out",
+      "to": "mixer.vco1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mix.vco1"
+    },
+    {
+      "id": "c36",
+      "from": "sub11.out",
+      "to": "mixer.sub11",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mix.sub11"
+    },
+    {
+      "id": "c37",
+      "from": "sub12.out",
+      "to": "mixer.sub12",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mix.sub12"
+    },
+    {
+      "id": "c38",
+      "from": "vco2.sub_src",
+      "to": "sub21.src",
+      "signal": "sync",
+      "kind": "fixed",
+      "note": "The sub divides the VCO's frequency."
+    },
+    {
+      "id": "c39",
+      "from": "vco2.sub_src",
+      "to": "sub22.src",
+      "signal": "sync",
+      "kind": "fixed",
+      "note": "The sub divides the VCO's frequency."
+    },
+    {
+      "id": "c40",
+      "from": "sub21.out",
+      "to": "vco2.pwm",
+      "signal": "cv_or_audio",
+      "kind": "normalled",
+      "broken_by": "jack.vco2_pwm",
+      "note": "Audible only with WAVE in the middle position."
+    },
+    {
+      "id": "c41",
+      "from": "vco2.out",
+      "to": "mixer.vco2",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mix.vco2"
+    },
+    {
+      "id": "c42",
+      "from": "sub21.out",
+      "to": "mixer.sub21",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mix.sub21"
+    },
+    {
+      "id": "c43",
+      "from": "sub22.out",
+      "to": "mixer.sub22",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mix.sub22"
+    },
+    {
+      "id": "c44",
+      "from": "mixer.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c45",
+      "from": "vcf_eg.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf_eg.amount"
+    },
+    {
+      "id": "c46",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c47",
+      "from": "vca_eg.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vca.volume"
+    },
+    {
+      "id": "c48",
+      "from": "vca.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "step_leds",
+      "module": "seq1",
+      "label": "STEP LEDs (2 x 4)",
+      "kind": "led",
+      "function": "Current step of each sequencer."
+    },
+    {
+      "id": "quantize_leds",
+      "module": "vco1",
+      "label": "QUANTIZE LEDs (12-ET, 8-ET, 12-JI, 8-JI)",
+      "kind": "led",
+      "function": "Current scale; all flashing in Fine Tune mode; flashing for unquantised SEQ outputs."
+    },
+    {
+      "id": "seq_oct_leds",
+      "module": "seq1",
+      "label": "SEQ OCT LEDs (±5, ±2, ±1)",
+      "kind": "led",
+      "function": "Current range; flashing when SEQ outputs are fixed at ±5."
+    },
+    {
+      "id": "midi_led",
+      "module": "midi",
+      "label": "MIDI IN",
+      "kind": "led",
+      "function": "MIDI data received."
+    },
+    {
+      "id": "button_leds",
+      "module": "transport",
+      "label": "button LEDs",
+      "kind": "led",
+      "function": "Lit for active ASSIGN, rhythm SEQ, PLAY and EG buttons; EG blinks when held."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Signal path",
+      "applies_to": ["vco1", "vco2", "mixer", "vcf", "vca", "out"],
+      "rule": "VCO 1, its two subs, VCO 2 and its two subs are mixed into the ladder filter, then the VCA (VCA EG at VOLUME), then the audio output."
+    },
+    {
+      "id": "b02",
+      "name": "Subharmonics",
+      "applies_to": ["sub11", "sub12", "sub21", "sub22"],
+      "rule": "Each sub plays its VCO's frequency divided by 1-16 (unison fully CW). Subs follow their VCO's pitch and waveform; they are not accurate above about 10 kHz."
+    },
+    {
+      "id": "b03",
+      "name": "Waveform switch",
+      "applies_to": ["vco1", "vco2"],
+      "rule": "UP: square on VCO and subs. MIDDLE: VCO pulse width-modulated by SUB 1's saw (an extra pitched component even with SUB 1 silent), subs saw. DOWN: saw on all. A cable in VCO PWM replaces the SUB 1 normal."
+    },
+    {
+      "id": "b04",
+      "name": "Quantise",
+      "applies_to": ["vco1", "vco2", "seq1", "seq2"],
+      "rule": "Shared: off, 12-ET, 8-ET, 12-JI, 8-JI. Steps the FREQ knobs and sequencer steps; JI chords lose the beating of ET minor chords."
+    },
+    {
+      "id": "b05",
+      "name": "Sequencers",
+      "applies_to": ["seq1", "seq2"],
+      "rule": "Sequencer 1 belongs to VCO 1, Sequencer 2 to VCO 2. Each step adds a bipolar offset (±1, ±2 or ±5 octaves) to the VCO pitch (subs follow) and/or to each sub's divisor, per the ASSIGN buttons. A sequencer only moves when at least one rhythm generator drives it."
+    },
+    {
+      "id": "b06",
+      "name": "Rhythm generators",
+      "applies_to": ["rhythm1", "rhythm2", "rhythm3", "rhythm4", "clock"],
+      "rule": "Each divides the tempo by 1-16 and drives Sequencer 1, 2 or both. Several on one sequencer make a polyrhythm that repeats when they meet on a downbeat. OR advances on any; XOR only when exactly one fires (CC 113)."
+    },
+    {
+      "id": "b07",
+      "name": "Clock sources",
+      "applies_to": ["clock", "midi"],
+      "rule": "TEMPO 20-3,000 BPM at 1 PPQ; a CLOCK input overrides it; MIDI clock overrides both and runs at 4 PPQ. CLOCK OUT sends the current clock only while playing."
+    },
+    {
+      "id": "b08",
+      "name": "Envelopes",
+      "applies_to": ["vcf_eg", "vca_eg", "transport"],
+      "rule": "Attack/decay, attack 1 ms-10 s, decay 5 ms-10 s. A trigger runs attack then decay; a gate holds the peak. Neither restarts during its attack. EG mode: off (steps do not trigger), on, or held open."
+    },
+    {
+      "id": "b09",
+      "name": "Transport",
+      "applies_to": ["transport"],
+      "rule": "PLAY runs sequencers, rhythms and CLOCK OUT. RESET returns everything to the start (held: holds step 1 while EGs keep firing; NEXT then steps). NEXT advances without triggering. TRIGGER restarts EGs (EG on) or gates them (EG off)."
+    },
+    {
+      "id": "b10",
+      "name": "Normals",
+      "applies_to": ["pitchbus", "vco2", "vco1"],
+      "rule": "The VCO 1 input also drives VCO 2 until VCO 2 is patched. SUB 1's saw modulates the VCO's pulse width until VCO PWM is patched."
+    },
+    {
+      "id": "b11",
+      "name": "Pitch limits",
+      "applies_to": ["vco1", "vco2"],
+      "rule": "Sequencers cannot push the VCOs above about 10 kHz; for the full ±5 octave range set FREQ fully CCW. CV inputs can still drive the VCOs higher."
+    },
+    {
+      "id": "b12",
+      "name": "MIDI",
+      "applies_to": ["midi", "vco1"],
+      "rule": "Notes are offsets from C4 (FREQ fully CCW plays them as sent). 14-bit CCs move VCO pitch ±2.5 octaves and EG times; 7-bit CCs set the four sub divisors (inverted: low values = 16). Channel and transport by SysEx."
+    },
+    {
+      "id": "b13",
+      "name": "Sync with other Moogs",
+      "applies_to": ["clock"],
+      "rule": "CLOCK OUT (or TRIGGER, SEQ CLK outputs) clocks a DFAM; a Mother-32 ASSIGN output set to clock drives CLOCK IN."
+    },
+    {
+      "id": "b14",
+      "name": "Eurorack",
+      "applies_to": ["out"],
+      "rule": "Removes from its case as a 60HP module (26 mm deep); 360 mA maximum from +12 V, no -12 V."
+    },
+    {
+      "id": "b15",
+      "name": "Firmware 1.1.0",
+      "applies_to": ["midi", "transport", "seq1", "seq2"],
+      "rule": "March 2022: MIDI notes transpose running sequences (for following key changes from a keyboard); note priority low/high/last by CC 91; MIDI pitch bend; TRIGGER button and input ignored while EG is held (previously they dropped the EGs to zero); SEQ 1/2 CLK outputs now in phase with the clock (previously one pulse late)."
+    },
+    {
+      "id": "b16",
+      "name": "Fine tune",
+      "applies_to": ["vco1", "vco2"],
+      "rule": "Hold OSC 1 and OSC 2 until the QUANTIZE LEDs flash; TEMPO sets ±50 cents; QUANTIZE exits; the value is kept at power-up."
+    }
+  ],
+  "example_patches": [
+    {
+      "id": "aquatic_chords",
+      "name": "Aquatic Chords",
+      "source": "manual p.45",
+      "cords": [
+        ["jack.seq2_out", "jack.vco1_in"],
+        ["jack.seq1_out", "jack.vco2_in"],
+        ["jack.vca_eg_out", "jack.rhythm2_in"],
+        ["jack.vcf_eg_out", "jack.rhythm1_in"],
+        ["jack.seq1_clk", "jack.trigger_in"]
+      ],
+      "description": "Sequencers cross-patched to the other VCO; envelopes modulate rhythm divisors. Knob and button settings are drawn, not transcribed.",
+      "confidence": "stated"
+    },
+    {
+      "id": "mellow_harmonies",
+      "name": "Mellow Harmonies",
+      "source": "manual p.45",
+      "cords": [
+        ["jack.seq1_out", "jack.vco1_pwm"],
+        ["jack.seq2_out", "jack.cutoff_in"]
+      ],
+      "description": "Sequencer 1 sets pulse width; Sequencer 2 moves the filter. Knob and button settings are drawn, not transcribed.",
+      "confidence": "stated"
+    },
+    {
+      "id": "slip_fall",
+      "name": "Slip & Fall",
+      "source": "manual p.46",
+      "cords": [
+        ["jack.seq1_out", "jack.vco2_in"],
+        ["jack.seq2_out", "jack.cutoff_in"]
+      ],
+      "description": "Sequencer pitches are suggestions. Knob and button settings are drawn, not transcribed.",
+      "confidence": "stated"
+    },
+    {
+      "id": "point_zero",
+      "name": "Point Zero",
+      "source": "manual p.46",
+      "cords": [
+        ["jack.seq1_out", "jack.rhythm1_in"],
+        ["jack.seq2_out", "jack.rhythm2_in"],
+        ["jack.seq1_clk", "jack.cutoff_in"],
+        ["jack.seq2_clk", "jack.vca_in"]
+      ],
+      "description": "Tune SEQ 1 and 2; tune all subs to taste; VCF ATTACK sets the sweep length. Knob and button settings are drawn, not transcribed.",
+      "confidence": "stated"
+    },
+    {
+      "id": "three_hands",
+      "name": "Three Hands on the Wheel",
+      "source": "manual p.47",
+      "cords": [["jack.vcf_eg_out", "jack.rhythm1_in"]],
+      "description": "Sequencer pitches are suggestions. Knob and button settings are drawn, not transcribed.",
+      "confidence": "stated"
+    },
+    {
+      "id": "bateria",
+      "name": "Bateria",
+      "source": "manual p.47",
+      "cords": [
+        ["jack.seq2_out", "jack.vco1_pwm"],
+        ["jack.seq1_out", "jack.cutoff_in"]
+      ],
+      "description": "Kick tuning on CUTOFF; VCF DECAY and EG AMT change its flavour. Knob and button settings are drawn, not transcribed.",
+      "confidence": "stated"
+    },
+    {
+      "id": "spiral_ways",
+      "name": "Spiral Ways",
+      "source": "manual p.48",
+      "cords": [["jack.vca_eg_out", "jack.cutoff_in"]],
+      "description": "VCO 1 SUB 1 to a fifth, VCO 2 SUB 2 to a major third; VCF ATTACK for crescendo depth. Knob and button settings are drawn, not transcribed.",
+      "confidence": "stated"
+    },
+    {
+      "id": "star_gate",
+      "name": "Star-Gate",
+      "source": "manual p.48",
+      "cords": [
+        ["jack.vca_eg_out", "jack.cutoff_in"],
+        ["jack.vcf_eg_out", "jack.rhythm3_in"]
+      ],
+      "description": "High sequences; vary rhythms 2-4 on SEQ 2 and VCA DECAY; ride the mixer. Knob and button settings are drawn, not transcribed.",
+      "confidence": "stated"
+    },
+    {
+      "id": "poly_rock",
+      "name": "Poly Rock",
+      "source": "manual p.49",
+      "cords": [["jack.clock_out", "jack.vca_in"]],
+      "description": "CLOCK OUT to VCA IN for 'drums' (from the notes; the drawing shows no cable). Tune subs to chord shapes. Knob and button settings are drawn, not transcribed.",
+      "confidence": "stated"
+    },
+    {
+      "id": "cloud_path",
+      "name": "Cloud Path",
+      "source": "manual p.49",
+      "settings": {
+        "rhythm3.seq1": true
+      },
+      "description": "No cables. Tune SEQ 1 and 2 and the subs with levels open, then fade levels in during playback; RHYTHM 3 SEQ 1 for double time.",
+      "confidence": "stated"
+    },
+    {
+      "id": "exploration",
+      "name": "Exploring your Subharmonicon",
+      "source": "manual pp.12-15",
+      "settings": {
+        "transport.eg": "held",
+        "mix.vco1": 5,
+        "vco.quantize": "12-ET",
+        "seq1.assign_osc": true,
+        "rhythm1.seq1": true,
+        "seq.oct": "±2"
+      },
+      "description": "Guided start: hold EG, half VCO 1 level, 12-ET, sequence VCO 1 with Rhythm 1, then release EG, PLAY, and add RHYTHM 2 SEQ 1 for a polyrhythm.",
+      "confidence": "stated"
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on",
+        "note": "offset from C4 on the VCOs; transposes running sequences (firmware 1.1.0)"
+      },
+      {
+        "message": "pitch_bend",
+        "note": "firmware 1.1.0 (Rubadub)"
+      },
+      {
+        "message": "clock",
+        "note": "overrides internal and analogue clock; 4 PPQ"
+      },
+      {
+        "message": "start"
+      },
+      {
+        "message": "stop"
+      },
+      {
+        "message": "control_change",
+        "note": "see cc_map"
+      },
+      {
+        "message": "sysex",
+        "note": "MIDI channel and transport settings (files from moogmusic.com)"
+      }
+    ],
+    "transmits": [],
+    "cc_map": {
+      "4": "vco1.freq (MSB)",
+      "36": "vco1.freq (LSB)",
+      "103": "sub11.div",
+      "104": "sub12.div",
+      "12": "vco2.freq (MSB)",
+      "44": "vco2.freq (LSB)",
+      "105": "sub21.div",
+      "106": "sub22.div",
+      "23": "vcf_eg.attack (MSB)",
+      "55": "vcf_eg.attack (LSB)",
+      "24": "vcf_eg.decay (MSB)",
+      "56": "vcf_eg.decay (LSB)",
+      "28": "vca_eg.attack (MSB)",
+      "60": "vca_eg.attack (LSB)",
+      "29": "vca_eg.decay (MSB)",
+      "61": "vca_eg.decay (LSB)",
+      "91": "sys.note_priority",
+      "113": "sys.rhythm_logic"
+    },
+    "cc_map_note": "VCO frequency CCs add ±2.5 octaves to the knob; sub and EG CCs replace the knob until it is moved. Sub CCs are inverted in eighths (0-7 = 16 ... 120-127 = 1).",
+    "channel_note": "Channel 1 by default, 1-16 or all by SysEx."
+  },
+  "specifications": {
+    "sources": "VCO 1, SUB 1, SUB 2 / VCO 2, SUB 1, SUB 2",
+    "vco_range_hz": [262, 4186],
+    "sub_divisors": [1, 16],
+    "filter": "self-oscillating ladder, low-pass, 4-pole (-24 dB/octave), 20 Hz to 20 kHz",
+    "envelopes": {
+      "attack_s": [0.001, 10],
+      "decay_s": [0.005, 10]
+    },
+    "sequencers": {
+      "count": 2,
+      "steps": 4,
+      "quantize": ["12-ET", "8-ET", "12-JI", "8-JI"],
+      "octave_ranges": ["±1", "±2", "±5"]
+    },
+    "rhythm_generators": {
+      "count": 4,
+      "divisors": [1, 16]
+    },
+    "clock_bpm": [20, 3000],
+    "patchbay": {
+      "jacks": 32,
+      "inputs": 17,
+      "outputs": 15,
+      "connector": "3.5 mm"
+    },
+    "levels": {
+      "audio_vpp": 10,
+      "eg_out_v": [0, 8],
+      "seq_out_v": [-5, 5],
+      "seq_clk_v": [0, 5],
+      "clock_v": [0, 10],
+      "trigger_out": "5 V, 1 ms",
+      "cv_in_v": [-5, 5],
+      "vca_in_v": [0, 8]
+    },
+    "rear": {
+      "audio": "1/4 inch TRS headphone or TS instrument",
+      "security": "Kensington slot"
+    },
+    "dimensions_in": {
+      "width": 12.57,
+      "depth": 4.21,
+      "height": 5.24
+    },
+    "weight_lb": 3.5,
+    "power": {
+      "adapter": "100-240 V AC in, +12 V DC 1,200 mA out, centre positive",
+      "typical_w": 4.8
+    },
+    "eurorack": {
+      "width_hp": 60,
+      "depth_mm": 26,
+      "current_ma_plus12": 360,
+      "minus12": "not used"
+    }
+  },
+  "omitted_from_source": [
+    "knob and button settings drawn on the ten preset patch sheets (cables are transcribed)",
+    "history and introductory theory beyond what behaviours need",
+    "safety, warranty and accessory lists"
+  ],
+  "not_in_source": [
+    "how MIDI notes gate the envelopes (not found in research either)",
+    "whether MIDI notes reach both VCOs (implied by the manual and the transpose feature)",
+    "the knob panel numbering",
+    "the exact 8-JI ratios (C major root confirmed; ratios inferred from the manual's example)",
+    "pitch bend range",
+    "CC 91 value ranges for each priority",
+    "whether the SEQ output decoupling settings persist at power-up (a forum comment says 1.1.0 fixed settings not always being stored at power-off)",
+    "XOR behaviour with three or more rhythms on one sequencer",
+    "Research filled: 8-step scales as C major with a fixed C root, firmware 1.1.0 changes (note transpose, note priority CC 91, pitch bend, TRIGGER while held, SEQ CLK phase)."
+  ],
+  "source_inconsistencies": [
+    "VCA DECAY is introduced as 'The VCF DECAY knob determines...' (p.25).",
+    "VCF EG AMT inverse values are said to open the filter on 'the Release stage'; the envelope has attack and decay only (p.24).",
+    "8-ET and 8-JI are called 'Diatonic (8-step)' scales; a diatonic scale has seven notes (eight with the octave) (p.21).",
+    "Poly Rock's notes say 'Patch CLOCK OUT to VCA IN', but its drawing shows no cable (p.49).",
+    "Poly Rock's notes refer to 'SUB OSC 1, 2, 3, and 4'; the panel names them VCO 1 SUB 1/2 and VCO 2 SUB 1/2 (p.49).",
+    "Spiral Ways' notes say 'SUB VCO 1 FREQ 1' and 'SUB VCO 2 SUB 2' for VCO 1 SUB 1 and VCO 2 SUB 2 (p.48).",
+    "The XOR description covers two rhythm generators ('if both are true'); behaviour with more is not stated (p.44)."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Rhythm combination",
+      "detail": "OR/XOR combining of rhythm clocks into each sequencer is a global setting, recorded on the connections' note rather than as a combine property."
+    },
+    {
+      "topic": "Shared controls",
+      "detail": "QUANTIZE and SEQ OCT are shared by both oscillators and sequencers; they are attached to vco1 and seq1 with that noted."
+    },
+    {
+      "topic": "Sub divisor CV",
+      "detail": "Each VCO SUB input moves both of that VCO's subs; it is attached to SUB 1's node with the dual role in the port description."
+    }
+  ]
+}

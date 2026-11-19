@@ -76,6 +76,7 @@ const EXPORTED: {
   { id: 'teo-5', sounds: 18, timeline: 6, relatives: 4, unusual: 9, limits: 3 },
   { id: 'nymphes', sounds: 18, timeline: 5, relatives: 3, unusual: 9, limits: 3 },
   { id: 'behringer-odyssey', sounds: 13, timeline: 6, relatives: 3, unusual: 9, limits: 3 },
+  { id: 'subharmonicon', sounds: 17, timeline: 5, relatives: 3, unusual: 9, limits: 3 },
   { id: 'jupiter-4', sounds: 150, timeline: 5, relatives: 3, unusual: 12, limits: 8 },
   { id: 'jupiter-6', sounds: 150, timeline: 5, relatives: 3, unusual: 25, limits: 10 },
   { id: 'jupiter-8', sounds: 150, timeline: 5, relatives: 3, unusual: 15, limits: 6 },
@@ -147,6 +148,7 @@ describe('the exported content', () => {
       { id: 'teo-5', order: 41, listed: true },
       { id: 'nymphes', order: 42, listed: true },
       { id: 'behringer-odyssey', order: 43, listed: true },
+      { id: 'subharmonicon', order: 44, listed: true },
     ]);
   });
 
