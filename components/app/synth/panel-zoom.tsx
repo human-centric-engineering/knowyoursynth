@@ -37,15 +37,25 @@ const MIN_FIT_PX = 1100;
  * The height it fits is the screen's less `--kys-fit-chrome`, which the page sets from `lg` up to what is above the
  * panel and the dock pinned under it (t-74). Without it, the panel may take 82% of the screen's height. Fitting to the
  * height never draws it narrower than `MIN_FIT_PX`: a tall panel is drawn at a working size and scrolled instead.
+ *
+ * On a phone or tablet the screen's width would draw it too small to see or work, so there it is drawn at least
+ * `--kys-fit-min` wide, or as wide as fills the screen's height if that is less, and is swiped sideways.
  */
 export function panelFrameStyle(
   view: { w: number; h: number } | null,
   scale: PanelScale
 ): CSSProperties {
-  const cap = view
-    ? `min(${MAX_FIT}, max(${MIN_FIT_PX}px, calc((100vh - var(--kys-fit-chrome, 18vh)) * ${(view.w / view.h).toFixed(4)})))`
+  const aspect = view ? (view.w / view.h).toFixed(4) : null;
+  const cap = aspect
+    ? `min(${MAX_FIT}, max(${MIN_FIT_PX}px, calc((100vh - var(--kys-fit-chrome, 18vh)) * ${aspect})))`
     : MAX_FIT;
-  return { width: `calc(${scale} * min(100%, ${cap}))` };
+  // On a phone or tablet (`--kys-fit-min`, set in `synth.css`) the fitted panel is drawn no narrower than that, nor
+  // than fills the screen's height, whichever is less: taller than the screen's width would draw it, and swiped
+  // sideways. Unset, it is 0 and changes nothing.
+  const floor = aspect
+    ? `min(var(--kys-fit-min, 0px), calc((100svh - var(--kys-fit-chrome, 18vh)) * ${aspect}))`
+    : 'var(--kys-fit-min, 0px)';
+  return { width: `calc(${scale} * max(min(100%, ${cap}), ${floor}))` };
 }
 
 /**
