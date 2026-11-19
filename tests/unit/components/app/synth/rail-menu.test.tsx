@@ -7,6 +7,7 @@
  * @see components/app/synth/player-tools.tsx
  */
 
+import { createRef } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -21,8 +22,10 @@ const item = (label: string, on = false, onClick = vi.fn()): RailMenuItem => ({
 });
 
 function layers(groups: RailMenuItem[][]) {
-  render(<RailMenu label="Layers over the panel" short="View" icon={<svg />} groups={groups} />);
-  return screen.getByRole('button', { name: 'Layers over the panel' });
+  render(
+    <RailMenu label="View layers over the panel" short="View" icon={<svg />} groups={groups} />
+  );
+  return screen.getByRole('button', { name: 'View layers over the panel' });
 }
 
 describe('RailMenu', () => {
@@ -71,6 +74,33 @@ describe('RailMenu', () => {
     expect(within(screen.getByRole('menu')).getAllByRole('separator')).toHaveLength(1);
   });
 
+  it('hands its key to a ref, for focus to come back to once the routing view closes', () => {
+    const ref = createRef<HTMLButtonElement>();
+    render(
+      <RailMenu
+        ref={ref}
+        label="View layers"
+        short="View"
+        icon={<svg />}
+        groups={[[item('Signal diagram')]]}
+      />
+    );
+    expect(ref.current).toBe(screen.getByRole('button', { name: 'View layers' }));
+  });
+
+  it('names its key starting with the word it shows, so a voice command can name it', () => {
+    render(
+      <RailMenu
+        label="View layers over the panel"
+        short="View"
+        icon={<svg />}
+        groups={[[item('Dim unused parts')]]}
+      />
+    );
+    const key = screen.getByRole('button', { name: 'View layers over the panel' });
+    expect(key.getAttribute('aria-label')?.startsWith(key.textContent ?? '?')).toBe(true);
+  });
+
   it('turns a layer on, and stays open for the next', async () => {
     const user = userEvent.setup();
     const onClick = vi.fn();
@@ -106,7 +136,7 @@ function settingsMenu(over: { layout?: 'modular'; language?: string } = {}) {
 describe('PlayerSettings as a menu', () => {
   it('is one key, with no line of LEDs', () => {
     settingsMenu();
-    expect(screen.getByRole('button', { name: 'Panel settings' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Display settings' })).toBeInTheDocument();
     expect(screen.queryByRole('group', { name: 'Panel settings' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Outline' })).toBeNull();
   });
@@ -114,7 +144,7 @@ describe('PlayerSettings as a menu', () => {
   it('opens onto each setting by name, its choice in use marked', async () => {
     const user = userEvent.setup();
     settingsMenu();
-    await user.click(screen.getByRole('button', { name: 'Panel settings' }));
+    await user.click(screen.getByRole('button', { name: 'Display settings' }));
     const menu = screen.getByRole('menu');
     expect(within(menu).getByText('Drawn as')).toBeInTheDocument();
     expect(within(menu).getByText('Magnifier')).toBeInTheDocument();
@@ -133,7 +163,7 @@ describe('PlayerSettings as a menu', () => {
   it('sends the picked choice as its own value: a flag, a number', async () => {
     const user = userEvent.setup();
     const { onView, onZoom } = settingsMenu();
-    const open = () => user.click(screen.getByRole('button', { name: 'Panel settings' }));
+    const open = () => user.click(screen.getByRole('button', { name: 'Display settings' }));
     await open();
     await user.click(screen.getByRole('menuitemradio', { name: 'Outline' }));
     expect(onView).toHaveBeenCalledWith({ outline: true, long: false });
@@ -145,7 +175,7 @@ describe('PlayerSettings as a menu', () => {
   it('turns hover help off', async () => {
     const user = userEvent.setup();
     const { onTips } = settingsMenu();
-    await user.click(screen.getByRole('button', { name: 'Panel settings' }));
+    await user.click(screen.getByRole('button', { name: 'Display settings' }));
     const tips = within(screen.getByRole('menu')).getByRole('group', { name: 'Hover help' });
     await user.click(within(tips).getByRole('menuitemradio', { name: 'Off' }));
     expect(onTips).toHaveBeenCalledWith(false);
@@ -154,7 +184,7 @@ describe('PlayerSettings as a menu', () => {
   it('carries Layout and Labels where the synth has them', async () => {
     const user = userEvent.setup();
     const { onView, onEnglish } = settingsMenu({ layout: 'modular', language: 'Deutsch' });
-    const open = () => user.click(screen.getByRole('button', { name: 'Panel settings' }));
+    const open = () => user.click(screen.getByRole('button', { name: 'Display settings' }));
     await open();
     await user.click(screen.getByRole('menuitemradio', { name: 'Long' }));
     expect(onView).toHaveBeenCalledWith({ outline: false, long: true });

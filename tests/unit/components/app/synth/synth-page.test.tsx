@@ -454,20 +454,20 @@ describe('SynthPage layout', () => {
         }) as unknown as MediaQueryList
     );
     page();
-    const head = button('Layers over the panel').closest('.kys-rail');
+    const head = button('View layers over the panel').closest('.kys-rail');
     if (!head) throw new Error('the layers menu is on the head rail');
     expect(head).toHaveClass('is-top');
     const names = Array.from(head.querySelectorAll('button[aria-label]'), (b) =>
       b.getAttribute('aria-label')
     );
     expect(names).toEqual([
-      'Layers over the panel',
+      'View layers over the panel',
       'Undo',
       'Redo',
       'Orientation tour',
       'How to use the panel',
     ]);
-    expect(button('Panel settings').closest('.kys-rail')).toHaveClass('is-foot');
+    expect(button('Display settings').closest('.kys-rail')).toHaveClass('is-foot');
     expect(screen.queryByRole('group', { name: 'Panel settings' })).toBeNull();
     // Zoom stays on the foot, beside the menu.
     expect(button('Zoom in').closest('.kys-rail')).toHaveClass('is-foot');

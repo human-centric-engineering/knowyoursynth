@@ -258,7 +258,7 @@ function SettingsMenu({ settings }: { settings: SettingSpec[] }) {
         <button
           type="button"
           className="kys-layer kys-rail-menu-trigger is-plain"
-          aria-label="Panel settings"
+          aria-label="Display settings"
         >
           <SlidersHorizontal size={16} aria-hidden="true" />
           <span>Display</span>
@@ -309,11 +309,15 @@ export function RailMenu({
   short,
   icon,
   groups,
+  ref,
 }: {
+  /** The accessible name, which starts with the visible word (`short`), so a voice command can name it. */
   label: string;
   short: string;
   icon: ReactNode;
   groups: RailMenuItem[][];
+  /** The key, where focus goes back to once the routing view it opened closes. */
+  ref?: Ref<HTMLButtonElement>;
 }) {
   const shown = groups.filter((g) => g.length > 0);
   const anyOn = shown.some((g) => g.some((item) => item.on));
@@ -321,6 +325,7 @@ export function RailMenu({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
+          ref={ref}
           type="button"
           className={`kys-layer kys-rail-menu-trigger ${anyOn ? 'is-on' : ''}`}
           aria-label={label}
@@ -488,11 +493,23 @@ export function useTopFit() {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(measure);
     });
+    const observeParts = () => {
+      for (const part of Array.from(rail.children)) ro.observe(part);
+    };
     ro.observe(rail);
-    for (const part of Array.from(rail.children)) ro.observe(part);
+    observeParts();
+    // A part that comes later (the phone's menu once the page knows it is on a phone, the inspector as the screen
+    // widens) is observed too, and the rail measured again with it.
+    const mo = new MutationObserver(() => {
+      observeParts();
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(measure);
+    });
+    mo.observe(rail, { childList: true });
     return () => {
       cancelAnimationFrame(frame);
       ro.disconnect();
+      mo.disconnect();
     };
   }, []);
   return ref;

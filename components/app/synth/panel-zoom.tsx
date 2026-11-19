@@ -51,7 +51,8 @@ export function panelFrameStyle(
     : MAX_FIT;
   // On a phone or tablet (`--kys-fit-min`, set in `synth.css`) the fitted panel is drawn no narrower than that, nor
   // than fills the screen's height, whichever is less: taller than the screen's width would draw it, and swiped
-  // sideways. Unset, it is 0 and changes nothing.
+  // sideways. Unset, it is 0 and changes nothing. Its height is `svh`, not the cap's `vh`: on a phone `vh` is the screen
+  // with the browser's bars hidden, so a panel that filled it would run under them while they show.
   const floor = aspect
     ? `min(var(--kys-fit-min, 0px), calc((100svh - var(--kys-fit-chrome, 18vh)) * ${aspect}))`
     : 'var(--kys-fit-min, 0px)';

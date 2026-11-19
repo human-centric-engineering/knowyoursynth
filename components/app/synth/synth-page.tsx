@@ -2734,7 +2734,8 @@ function Synth({
                         turns the face up. A synth with no routing has neither. */}
                         {phone ? (
                           <RailMenu
-                            label="Layers over the panel"
+                            ref={routingToggleRef}
+                            label="View layers over the panel"
                             short="View"
                             icon={<Layers size={17} aria-hidden="true" />}
                             groups={[

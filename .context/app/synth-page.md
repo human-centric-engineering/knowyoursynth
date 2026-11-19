@@ -287,8 +287,8 @@ icons` (the toggles' icons and LEDs without their words, which stay in their too
   narrows, each step at a wider rail when there is a Layout or Labels setting. On a phone the search keeps a line of its
   own. Zoom is not on the foot while the routing view shows, which is at no zoom.
   On a phone (`PHONE_QUERY`, under 640 px; t-286) each rail puts its line in one dropdown: the head's layers in a
-  View menu (`RailMenu`: checkable items by their full names, its LED lit while any is on), Undo, Redo, the tour and help
-  staying on the rail; the foot's settings in a Display menu (`PlayerSettings` with `menu`: a radio group per
+  View menu ("View layers over the panel", `RailMenu`: checkable items by their full names, its LED lit while any is on), Undo, Redo, the tour and help
+  staying on the rail; the foot's settings in a Display menu ("Display settings", `PlayerSettings` with `menu`: a radio group per
   setting), Zoom and the search staying on the rail. The menus' items are drawn only while open, so nothing is on the
   page twice.
 - **Dim unused** and **Live signal** (`f-live-panel` t-150; a Signal menu of modes until t-279, now two toggles
@@ -548,8 +548,8 @@ phone. `f-phone-and-tablet` t-65 made the panel and keyboard work on touch:
   controls themselves are `touch-action: none`. The magnifier lens is a separate control and is
   kept. A synth with its own layout is capped at a width that fits the height left between the
   header and the dock, but never below 1100 px (or the page's width): a tall panel such as the
-  2600 is drawn at a working size and the page scrolls, rather than shrinking it to fit. On a phone or tablet (under
-  1024 px, or a touch screen up to 1366 px) the fitted panel is drawn no narrower than `--kys-fit-min` (1100 px), or
+  2600 is drawn at a working size and the page scrolls, rather than shrinking it to fit. On a phone or tablet (a touch screen up to
+  1366 px; a narrow desktop window still fits) the fitted panel is drawn no narrower than `--kys-fit-min` (1100 px), or
   than fills the screen's height if that is less, and is swiped sideways (t-285); on a desktop it is unset. From
   `lg` up the header over the panel is one row that never wraps.
 - **Under 1024 px a note sits above the panel.** It tells a tablet held upright (portrait, at

@@ -124,6 +124,20 @@ describe('useTopFit', () => {
     expect(observedCount).toBe(2);
   });
 
+  it('observes a part that comes later, and measures the rail again with it', async () => {
+    room = 950;
+    const { getByTestId } = render(<Rail />);
+    const rail = getByTestId('rail');
+    expect(rail.dataset.fit).toBe('short');
+    room = 1200;
+    rail.appendChild(document.createElement('div'));
+    // The MutationObserver's records are delivered as a microtask.
+    await act(async () => Promise.resolve());
+    expect(observedCount).toBe(2 + 2);
+    flush();
+    expect(rail.dataset.fit).toBeUndefined();
+  });
+
   it('takes a rail with no buttons as fitting', () => {
     room = 100;
     const { getByTestId } = render(<Rail buttons={0} />);
