@@ -549,7 +549,7 @@ phone. `f-phone-and-tablet` t-65 made the panel and keyboard work on touch:
   kept. A synth with its own layout is capped at a width that fits the height left between the
   header and the dock, but never below 1100 px (or the page's width): a tall panel such as the
   2600 is drawn at a working size and the page scrolls, rather than shrinking it to fit. On a phone or tablet (touch the main pointer,
-  up to 1366 px; a narrow desktop window, or a touch laptop worked by its trackpad, still fits) the fitted panel is drawn no narrower than `--kys-fit-min` (1100 px), or
+  under 1100 px; a landscape tablet, a narrow desktop window, or a touch laptop worked by its trackpad still fits) the fitted panel is drawn no narrower than `--kys-fit-min` (1100 px), or
   than fills the screen's height if that is less, and is swiped sideways (t-285); on a desktop it is unset. From
   `lg` up the header over the panel is one row that never wraps.
 - **Under 1024 px a note sits above the panel.** It tells a tablet held upright (portrait, at

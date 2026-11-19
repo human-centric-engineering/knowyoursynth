@@ -68,7 +68,8 @@ beforeEach(() => {
     const rail = this.closest<HTMLElement>('[data-testid="rail"]');
     const needs = NEEDS[rail?.dataset.fit ?? 'none'];
     const wrapped = room < needs && this.dataset.i === '1';
-    return { top: wrapped ? 40 : 0, height: 30 } as DOMRect;
+    if (this.hidden) return { top: 0, height: 0, width: 0 } as DOMRect;
+    return { top: wrapped ? 40 : 0, height: 30, width: 30 } as DOMRect;
   });
 });
 afterEach(() => {
@@ -136,6 +137,22 @@ describe('useTopFit', () => {
     expect(observedCount).toBe(2 + 2);
     flush();
     expect(rail.dataset.fit).toBeUndefined();
+  });
+
+  it('leaves out a button that is not drawn: it has no box, and would read as at the top', () => {
+    function WithHidden() {
+      const ref = useTopFit();
+      return (
+        <div ref={ref} data-testid="rail">
+          <button type="button" data-i="0" />
+          <button type="button" hidden />
+        </div>
+      );
+    }
+    room = 100;
+    const { getByTestId } = render(<WithHidden />);
+    // Wrapped only by a hidden button, it would have dropped to its last step.
+    expect(getByTestId('rail').dataset.fit).toBeUndefined();
   });
 
   it('takes a rail with no buttons as fitting', () => {

@@ -2743,6 +2743,7 @@ function Synth({
                                 ? [
                                     {
                                       label: 'Signal diagram',
+                                      closes: true,
                                       help: 'Turn the panel over to see how its parts are wired, as a block diagram.',
                                       icon: <Waypoints size={16} aria-hidden="true" />,
                                       on: routingOn,

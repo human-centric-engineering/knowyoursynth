@@ -47,7 +47,7 @@ export function LayerToggle({
 }: {
   /** The accessible name, which the page's tests and a screen reader use. */
   label: string;
-  /** The word on the bar from `xl` up. */
+  /** Its word on the bar. On the panel's head rail the rail's fit (`useTopFit`, `data-fit`) says whether it shows. */
   short: string;
   /** What it does, in its tooltip. */
   title: string;
@@ -55,7 +55,8 @@ export function LayerToggle({
   on: boolean;
   /** What it controls is switched on (the effects, say), whether or not it is open: the button is filled. */
   filled?: boolean;
-  /** Its word is on show at every width, not only from `xl` up and below `lg`. */
+  /** No breakpoint hides its word (elsewhere it goes between `lg` and `xl`). The head rail's toggles all pass it: their
+   * words go by the rail's own fit (`.kys-layer-word`), not the screen's width. */
   keepShort?: boolean;
   /** Filled with the accent on hover, as a filled button is: for a button that invites a click (Ask AI). */
   hoverFill?: boolean;
@@ -279,15 +280,16 @@ function SettingsMenu({ settings }: { settings: SettingSpec[] }) {
 /** One setting in the Display menu: its name, its choices, and what it does, read with them as their description. */
 function SettingsMenuGroup({ setting: st, first }: { setting: SettingSpec; first: boolean }) {
   const helpId = useId();
+  const nameId = useId();
   return (
     <div>
       {!first && <DropdownMenuSeparator />}
-      <DropdownMenuLabel>{st.name}</DropdownMenuLabel>
+      <DropdownMenuLabel id={nameId}>{st.name}</DropdownMenuLabel>
       <span id={helpId} className="sr-only">
         {st.help}
       </span>
       <DropdownMenuRadioGroup
-        aria-label={st.label}
+        aria-labelledby={nameId}
         aria-describedby={helpId}
         value={String(st.options.findIndex(([v]) => v === st.value))}
         onValueChange={(at) => {
@@ -334,6 +336,8 @@ export interface RailMenuItem {
   onClick: () => void;
   /** What it does, under its name: what the toggle's tooltip says on a wider screen. */
   help: string;
+  /** Picking it closes the menu, for one that changes the whole view under it (Signal diagram). */
+  closes?: boolean;
 }
 
 /**
@@ -397,7 +401,9 @@ function RailMenuEntry({ item }: { item: RailMenuItem }) {
     <DropdownMenuCheckboxItem
       checked={item.on}
       onCheckedChange={item.onClick}
-      onSelect={(e) => e.preventDefault()}
+      onSelect={(e) => {
+        if (!item.closes) e.preventDefault();
+      }}
       aria-describedby={helpId}
       className="items-start"
     >
@@ -528,10 +534,10 @@ export function useTopFit() {
     const rail = ref.current;
     if (!rail || typeof ResizeObserver === 'undefined') return undefined;
     const oneLine = () => {
-      const mids = Array.from(rail.querySelectorAll('button'), (b) => {
-        const r = b.getBoundingClientRect();
-        return r.top + r.height / 2;
-      });
+      // A button not drawn (`display: none`) has no box, and would read as sitting at the top.
+      const mids = Array.from(rail.querySelectorAll('button'), (b) => b.getBoundingClientRect())
+        .filter((r) => r.width > 0 && r.height > 0)
+        .map((r) => r.top + r.height / 2);
       return mids.length === 0 || Math.max(...mids) - Math.min(...mids) < 8;
     };
     const measure = () => {
@@ -563,7 +569,7 @@ export function useTopFit() {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(measure);
     });
-    mo.observe(rail, { childList: true });
+    mo.observe(rail, { childList: true, subtree: true });
     return () => {
       cancelAnimationFrame(frame);
       ro.disconnect();

@@ -170,9 +170,10 @@ svg .kys-hit:focus-visible {
     0 40px 80px -40px rgb(20 28 40 / 0.3);
 }
 /* On a phone or tablet the fitted panel is drawn at a working size and swiped sideways, not squeezed to the screen's
-   width (`panelFrameStyle`): where touch is the main pointer, up to a landscape iPad Pro's width. A narrow desktop
-   window, or a touch-screen laptop's worked by its trackpad, still fits. */
-@media (pointer: coarse) and (max-width: 1366px) {
+   width (`panelFrameStyle`): where touch is the main pointer and the screen is narrower than the floor itself (a
+   phone, a tablet held upright). A landscape tablet, a narrow desktop window, or a touch-screen laptop worked by its
+   trackpad still fits. */
+@media (pointer: coarse) and (max-width: 1099px) {
   .kys-instrument {
     --kys-fit-min: 1100px;
   }

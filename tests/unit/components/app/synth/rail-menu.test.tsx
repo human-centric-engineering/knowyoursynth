@@ -101,6 +101,13 @@ describe('RailMenu', () => {
     expect(screen.getByRole('menu').parentElement?.parentElement).toBe(document.body);
   });
 
+  it('closes when a layer that changes the whole view is picked', async () => {
+    const user = userEvent.setup();
+    await user.click(layers([[{ ...item('Signal diagram'), closes: true }]]));
+    await user.click(screen.getByRole('menuitemcheckbox', { name: 'Signal diagram' }));
+    expect(screen.queryByRole('menu')).toBeNull();
+  });
+
   it('rules groups off from each other', async () => {
     const user = userEvent.setup();
     await user.click(layers([[item('Signal diagram')], [item('Dim unused parts')]]));
@@ -197,6 +204,10 @@ describe('PlayerSettings as a menu', () => {
     const user = userEvent.setup();
     settingsMenu();
     await user.click(screen.getByRole('button', { name: 'Display settings' }));
+    // Each group is named by the heading shown over it.
+    expect(
+      within(screen.getByRole('menu')).getByRole('group', { name: 'Drawn as' })
+    ).toBeInTheDocument();
     const lens = within(screen.getByRole('menu')).getByRole('group', { name: 'Magnifier' });
     expect(lens).toHaveAccessibleDescription('A lens that follows the pointer over the panel.');
   });
